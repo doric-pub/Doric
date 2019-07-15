@@ -1,0 +1,19 @@
+{
+  "name": "hego-jsframework",
+  "version": "0.1.0",
+  "description": "The JS Framework of Hego",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/penfeizhou/hego.git"
+  },
+  "author": "pengfeizhou",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/penfeizhou/hego/issues"
+  },
+  "homepage": "https://github.com/penfeizhou/hego#readme"
+}

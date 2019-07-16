@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsc -p .&& node ../build/index.js"
+    "dev": "tsc -p .&& node ./build/index.js"
   },
   "repository": {
     "type": "git",
@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/penfeizhou/hego/issues"
   },
-  "homepage": "https://github.com/penfeizhou/hego#readme"
+  "homepage": "https://github.com/penfeizhou/hego#readme",
+  "dependencies": {
+    "reflect-metadata": "^0.1.13"
+  }
 }

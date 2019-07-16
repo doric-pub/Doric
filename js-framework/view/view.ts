@@ -1,8 +1,12 @@
 import { Color, GradientColor } from "../util/color"
-import { Property, IWatcher, Modeling, Model } from "../util/types";
+import { Modeling, Model } from "../util/types";
+import "reflect-metadata"
 
+export function Property(target: Object, propKey: string) {
+    Reflect.defineMetadata(propKey, true, target)
+}
 
-export abstract class View implements IWatcher, Modeling {
+export abstract class View implements Modeling {
     @Property
     width: number = 0
 
@@ -29,7 +33,21 @@ export abstract class View implements IWatcher, Modeling {
 
     @Property
     alpha?: number
-
+    constructor() {
+        return new Proxy(this, {
+            get: (target, p) => {
+                return Reflect.get(target, p)
+            },
+            set: (target, p, v) => {
+                const oldV = Reflect.get(target, p)
+                const ret = Reflect.set(target, p, v)
+                if (Reflect.getMetadata(p, target)) {
+                    this.onPropertyChanged(p.toString(), oldV, v)
+                }
+                return ret
+            }
+        })
+    }
     /** Anchor start*/
     get left() {
         return this.x
@@ -62,13 +80,9 @@ export abstract class View implements IWatcher, Modeling {
     }
     /** Anchor end*/
 
-    __dirty_props__?: { [index: string]: Model | undefined }
+    __dirty_props__: { [index: string]: Model | undefined } = {}
 
     onPropertyChanged(propKey: string, oldV: Model, newV: Model): void {
-        //console.log(`onPropertyChanged:${propKey},old value is ${oldV},new value is ${newV}`)
-        if (this.__dirty_props__ === undefined) {
-            this.__dirty_props__ = {}
-        }
         if (newV instanceof Object
             && Reflect.has(newV, 'toModel')
             && Reflect.get(newV, 'toModel') instanceof Function) {

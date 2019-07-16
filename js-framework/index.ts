@@ -12,6 +12,6 @@ v.config = {
 }
 console.log(v.toModel())
 
-const layout = new Text
-
+const layout = new VLayout
+layout.space = 10
 console.log(layout.toModel())

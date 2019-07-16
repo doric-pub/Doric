@@ -83,6 +83,7 @@ export abstract class View implements IWatcher, Modeling {
 }
 
 export class Group extends View {
+    @Property
     children: View[] = []
 
     add(v: View) {
@@ -90,12 +91,35 @@ export class Group extends View {
     }
 }
 
-export class Text extends View {
+export class Stack extends Group {
 
 }
 
-export class Image extends View {
+export class VLayout extends Group {
 
+}
+
+export class HLayout extends Group {
+
+}
+
+export class Text extends View {
+    @Property
+    text?: string
+
+    @Property
+    textColor?: Color
+
+    @Property
+    textSize?: number
+
+    @Property
+    maxLines?: number
+}
+
+export class Image extends View {
+    @Property
+    imageUrl?: string
 }
 
 export class List extends View {

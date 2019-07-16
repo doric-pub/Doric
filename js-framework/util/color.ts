@@ -1,7 +1,10 @@
+import { Modeling } from "./types";
+
 /**
  *  Store color as format AARRGGBB or RRGGBB
  */
-export class Color {
+export class Color implements Modeling {
+
     static TRANSPARENT = new Color(0)
     _value: number = 0
 
@@ -32,7 +35,8 @@ export class Color {
             return color
         }
     }
-    toNumber() {
+
+    toModel() {
         return this._value
     }
 }

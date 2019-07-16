@@ -1,9 +1,8 @@
 import { Color, GradientColor } from "../util/color"
-import { Property, IWatcher } from "../util/types";
+import { Property, IWatcher, Modeling, Model } from "../util/types";
 
 
-export abstract class View implements IWatcher {
-
+export abstract class View implements IWatcher, Modeling {
     @Property
     width: number = 0
 
@@ -63,8 +62,23 @@ export abstract class View implements IWatcher {
     }
     /** Anchor end*/
 
-    onPropertyChanged(propKey: string, oldV: any, newV: any): void {
-        console.log(`onPropertyChanged:${propKey},old value is ${oldV},new value is ${newV}`)
+    __dirty_props__?: { [index: string]: Model | undefined }
+
+    onPropertyChanged(propKey: string, oldV: Model, newV: Model): void {
+        //console.log(`onPropertyChanged:${propKey},old value is ${oldV},new value is ${newV}`)
+        if (this.__dirty_props__ === undefined) {
+            this.__dirty_props__ = {}
+        }
+        if (newV instanceof Object
+            && Reflect.has(newV, 'toModel')
+            && Reflect.get(newV, 'toModel') instanceof Function) {
+            newV = Reflect.apply(Reflect.get(newV, 'toModel'), newV, [])
+        }
+        this.__dirty_props__[propKey] = newV
+    }
+
+    toModel() {
+        return this.__dirty_props__ || {}
     }
 }
 

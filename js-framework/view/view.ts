@@ -80,27 +80,73 @@ export abstract class View implements IWatcher, Modeling {
     toModel() {
         return this.__dirty_props__ || {}
     }
+
+    @Property
+    padding?: {
+        left?: number,
+        right?: number,
+        top?: number,
+        bottom?: number,
+    }
+
+    @Property
+    config?: Config
 }
 
-export class Group extends View {
+export enum Alignment {
+    center = 0,
+    start,
+    end,
+}
+
+export enum Gravity {
+    center = 0,
+    left,
+    right,
+    top,
+    bottom,
+}
+
+export interface Config {
+    margin?: {
+        left?: number,
+        right?: number,
+        top?: number,
+        bottom?: number,
+    }
+    alignment?: Alignment
+}
+
+export interface StackConfig extends Config {
+
+}
+
+export interface LayoutConfig extends Config {
+    weight?: number
+}
+
+export abstract class Group extends View {
     @Property
     children: View[] = []
-
-    add(v: View) {
-        this.children.push(v)
-    }
 }
 
 export class Stack extends Group {
-
+    @Property
+    gravity?: number
 }
 
-export class VLayout extends Group {
+class LinearLayout extends Group {
+    @Property
+    space?: number
 
+    @Property
+    gravity?: number
 }
 
-export class HLayout extends Group {
+export class VLayout extends LinearLayout {
+}
 
+export class HLayout extends LinearLayout {
 }
 
 export class Text extends View {

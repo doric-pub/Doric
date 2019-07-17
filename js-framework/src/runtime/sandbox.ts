@@ -77,6 +77,7 @@ export function jsCallReject(contextId: string, callbackId: string, args?: any) 
 }
 
 export class Context {
+    holder: any
     id: string
     callbacks: Map<string, { resolve: Function, reject: Function }> = new Map
     constructor(id: string) {
@@ -92,6 +93,9 @@ export class Context {
                 reject,
             })
         })
+    }
+    registor(instance: Object) {
+        this.holder = instance
     }
 }
 

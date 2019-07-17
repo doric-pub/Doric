@@ -1,4 +1,14 @@
 import { View } from "./view";
+import { } from '../runtime/global'
+
+export function Registor<T extends { new(...args: any[]): {} }>(constructor: T) {
+    const ret = class extends constructor {
+        context = context
+    }
+    context.registor(new ret)
+    return ret
+}
+
 
 export abstract class Page {
     onCreate(): void { }

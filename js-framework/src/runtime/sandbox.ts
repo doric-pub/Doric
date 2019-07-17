@@ -1,3 +1,5 @@
+import { uniqueId } from "../util/uniqueId";
+
 /**
  * ``` TypeScript
  * // load script in global scope
@@ -25,11 +27,6 @@ declare function nativeRequire(moduleName: string): boolean
 
 declare function nativeBridge(contextId: string, namespace: string, method: string, args?: any, callbackId?: string): boolean
 
-let __uniqueId__: number = 0
-
-function uniqueId(prefix: string) {
-    return `__${prefix}_${__uniqueId__++}__`;
-}
 
 export function log(message: any) {
     console.log(message)
@@ -132,7 +129,20 @@ export function jsRegisterModule(name: string, moduleObject: any) {
     gModules.set(name, moduleObject)
 }
 
-export function jsCall() {
-
+export function jsCallContextMethod(contextId: string, methodName: string, args?: any) {
+    const context = gContexts.get(contextId)
+    if (context === undefined) {
+        loge(`Cannot find context for context id:${contextId}`)
+        return
+    }
+    if (Reflect.has(context, methodName)) {
+        const argumentsList: any = []
+        for (let i = 2; i < arguments.length; i++) {
+            argumentsList.push(arguments[i])
+        }
+        return Reflect.apply(Reflect.get(context, methodName), context, argumentsList)
+    } else {
+        loge(`Cannot find method for context id:${contextId},method name is:${methodName}`)
+    }
 }
 

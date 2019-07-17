@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsc -p .&& node ./build/index.js"
+    "dev": "tsc -p .&& node ./build/index.js",
+    "build": "tsc -p . && rollup -c "
   },
   "repository": {
     "type": "https",
@@ -18,6 +19,10 @@
   },
   "homepage": "https://github.com/penfeizhou/hego#readme",
   "dependencies": {
-    "reflect-metadata": "^0.1.13"
+    "reflect-metadata": "^0.1.13",
+    "rollup": "^1.17.0",
+    "rollup-plugin-commonjs": "^10.0.1",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "tslib": "^1.10.0"
   }
 }

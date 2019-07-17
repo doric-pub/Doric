@@ -15,3 +15,6 @@ console.log(v.toModel())
 const layout = new VLayout
 layout.space = 10
 console.log(layout.toModel())
+export * from "./src/ui/view"
+export * from "./src/ui/page"
+export * from "./src/util/color"

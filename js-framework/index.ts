@@ -1,5 +1,5 @@
-import { Text, Alignment, VLayout, Gravity } from "./view/view";
-import { Color } from "./util/color";
+import { Text, Alignment, VLayout, Gravity } from "./src/ui/view";
+import { Color } from "./src/util/color";
 
 const v = new Text
 v.width = 20

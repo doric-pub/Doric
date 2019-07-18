@@ -8,6 +8,8 @@ package com.github.pengfeizhou.hego.utils;
 public class HegoConstant {
     public static final String INJECT_LOG = "nativeLog";
     public static final String INJECT_REQUIRE = "nativeRequire";
+    public static final String INJECT_TIMER_SET = "nativeSetTimer";
+    public static final String INJECT_TIMER_CLEAR = "nativeClearTimer";
     public static final String INJECT_BRIDGE = "nativeBridge";
 
     public static final String TEMPLATE_CONTEXT_CREATE = "Reflect.apply(" +
@@ -33,4 +35,5 @@ public class HegoConstant {
     public static final String GLOBAL_HEGO = "hego";
     public static final String HEGO_CONTEXT_RELEASE = "jsReleaseContext";
     public static final String HEGO_CONTEXT_INVOKE = "jsCallEntityMethod";
+    public static final String HEGO_TIMER_CALLBACK = "jsCallbackTimer";
 }

@@ -15,6 +15,19 @@ const layout = new VLayout
 layout.space = 10
 console.log(layout.viewId)
 console.log(layout.toModel())
+log('console', Object.getOwnPropertyNames(console))
+
+setTimeout(() => {
+    log('exec setTimeout')
+}, 1000)
+const timerId = setInterval(() => {
+    log('exec setInterval')
+}, 1000)
+
+setTimeout(() => {
+    log('exec cancelTimer')
+    clearInterval(timerId)
+}, 5000)
 
 @Registor(context)
 export class MyPage extends Panel {

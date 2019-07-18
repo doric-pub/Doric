@@ -16,14 +16,35 @@ function toString(message: any) {
     }
 }
 
-export function log(message: any) {
-    nativeLog('d', toString(message))
+export function log(...args: any) {
+    let out = ""
+    for (let i = 0; i < arguments.length; i++) {
+        if (i > 0) {
+            out += ','
+        }
+        out += toString(arguments[i])
+    }
+    nativeLog('d', out)
 }
 
-export function loge(message: any) {
-    nativeLog('e', toString(message))
+export function loge(...message: any) {
+    let out = ""
+    for (let i = 0; i < arguments.length; i++) {
+        if (i > 0) {
+            out += ','
+        }
+        out += toString(arguments[i])
+    }
+    nativeLog('e', out)
 }
 
-export function logw(message: any) {
-    nativeLog('w', toString(message))
+export function logw(...message: any) {
+    let out = ""
+    for (let i = 0; i < arguments.length; i++) {
+        if (i > 0) {
+            out += ','
+        }
+        out += toString(arguments[i])
+    }
+    nativeLog('w', out)
 }

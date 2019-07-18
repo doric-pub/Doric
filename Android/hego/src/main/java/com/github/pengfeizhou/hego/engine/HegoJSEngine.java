@@ -10,7 +10,9 @@ import com.github.pengfeizhou.hego.Hego;
 import com.github.pengfeizhou.hego.utils.HegoConstant;
 import com.github.pengfeizhou.hego.utils.HegoLog;
 import com.github.pengfeizhou.hego.utils.HegoSettableFuture;
+import com.github.pengfeizhou.hego.utils.HegoTimerExtension;
 import com.github.pengfeizhou.hego.utils.HegoUtils;
+import com.github.pengfeizhou.jscore.ArchiveException;
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JavaFunction;
 import com.github.pengfeizhou.jscore.JavaValue;
@@ -24,9 +26,10 @@ import java.util.ArrayList;
  * @Author: pengfei.zhou
  * @CreateDate: 2019-07-18
  */
-public class HegoJSEngine implements Handler.Callback {
+public class HegoJSEngine implements Handler.Callback, HegoTimerExtension.TimerCallback {
     private final Handler mJSHandler;
     private IHegoJSE mHegoJSE;
+    private HegoTimerExtension mTimerExtension;
 
     public HegoJSEngine() {
         HandlerThread handlerThread = new HandlerThread(this.getClass().getSimpleName());
@@ -40,6 +43,7 @@ public class HegoJSEngine implements Handler.Callback {
                 initHugoRuntime();
             }
         });
+        mTimerExtension = new HegoTimerExtension(looper, this);
     }
 
 
@@ -65,7 +69,7 @@ public class HegoJSEngine implements Handler.Callback {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                return new JavaValue();
+                return null;
             }
         });
         mHegoJSE.injectGlobalJSFunction(HegoConstant.INJECT_REQUIRE, new JavaFunction() {
@@ -84,6 +88,31 @@ public class HegoJSEngine implements Handler.Callback {
                     e.printStackTrace();
                     return new JavaValue(false);
                 }
+            }
+        });
+        mHegoJSE.injectGlobalJSFunction(HegoConstant.INJECT_TIMER_SET, new JavaFunction() {
+            @Override
+            public JavaValue exec(JSDecoder[] args) {
+                try {
+                    mTimerExtension.setTimer(
+                            args[0].number().longValue(),
+                            args[1].number().longValue(),
+                            args[2].bool());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        });
+        mHegoJSE.injectGlobalJSFunction(HegoConstant.INJECT_TIMER_CLEAR, new JavaFunction() {
+            @Override
+            public JavaValue exec(JSDecoder[] args) {
+                try {
+                    mTimerExtension.clearTimer(args[0].number().longValue());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
             }
         });
     }
@@ -175,6 +204,8 @@ public class HegoJSEngine implements Handler.Callback {
                         values.add(new JavaValue((String) arg));
                     } else if (arg instanceof Integer) {
                         values.add(new JavaValue((Integer) arg));
+                    } else if (arg instanceof Long) {
+                        values.add(new JavaValue((Long) arg));
                     } else if (arg instanceof Double) {
                         values.add(new JavaValue((Double) arg));
                     } else if (arg instanceof Boolean) {
@@ -191,5 +222,10 @@ public class HegoJSEngine implements Handler.Callback {
         };
         doOnJSThread(runnable);
         return settableFuture;
+    }
+
+    @Override
+    public void callback(long timerId) {
+        invokeHegoMethod(HegoConstant.HEGO_TIMER_CALLBACK, timerId);
     }
 }

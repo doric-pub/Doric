@@ -145,3 +145,44 @@ export function jsCallEntityMethod(contextId: string, methodName: string, args?:
     }
 }
 
+const global = Function('return this')()
+let __timerId__ = 0
+const timerCallbacks: Map<number, () => void> = new Map
+
+declare function nativeSetTimer(timerId: number, interval: number, repeat: boolean): void
+declare function nativeClearTimer(timerId: number): void
+
+global.setTimeout = (handler: Function, timeout?: number | undefined, ...args: any[]) => {
+    const id = __timerId__++
+    timerCallbacks.set(id, () => {
+        Reflect.apply(handler, undefined, args)
+        timerCallbacks.delete(id)
+    })
+    nativeSetTimer(id, timeout || 0, false)
+    return id
+}
+global.setInterval = (handler: Function, timeout?: number | undefined, ...args: any[]) => {
+    const id = __timerId__++
+    timerCallbacks.set(id, () => {
+        Reflect.apply(handler, undefined, args)
+    })
+    nativeSetTimer(id, timeout || 0, true)
+    return id
+}
+
+global.clearTimeout = (timerId: number) => {
+    timerCallbacks.delete(timerId)
+    nativeClearTimer(timerId)
+}
+
+global.clearInterval = (timerId: number) => {
+    timerCallbacks.delete(timerId)
+    nativeClearTimer(timerId)
+}
+
+export function jsCallbackTimer(timerId: number) {
+    const timerCallback = timerCallbacks.get(timerId)
+    if (timerCallback instanceof Function) {
+        Reflect.apply(timerCallback, undefined, [])
+    }
+}

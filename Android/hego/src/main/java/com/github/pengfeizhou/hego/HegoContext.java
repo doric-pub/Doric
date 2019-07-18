@@ -1,5 +1,8 @@
 package com.github.pengfeizhou.hego;
 
+import com.github.pengfeizhou.hego.utils.HegoSettableFuture;
+import com.github.pengfeizhou.jscore.JSDecoder;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -21,8 +24,8 @@ public class HegoContext {
         return new HegoContext(contextId);
     }
 
-    public void callEntity(String methodName, Object... args) {
-        HegoDriver.getInstance().invokeContextMethod(mContextId, methodName, args);
+    public HegoSettableFuture<JSDecoder> callEntity(String methodName, Object... args) {
+        return HegoDriver.getInstance().invokeContextMethod(mContextId, methodName, args);
     }
 
     public void teardown() {

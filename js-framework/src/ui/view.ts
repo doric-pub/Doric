@@ -2,6 +2,7 @@ import { Color, GradientColor } from "../util/color"
 import { Modeling, Model } from "../util/types";
 import "reflect-metadata"
 import { uniqueId } from "../util/uniqueId";
+import { loge } from "../util/log";
 
 export function Property(target: Object, propKey: string) {
     Reflect.defineMetadata(propKey, true, target)
@@ -40,6 +41,19 @@ export abstract class View implements Modeling {
 
     @Property
     viewId = uniqueId('ViewId')
+
+    callbacks: Map<String, Function> = new Map
+
+    private callback2Id(f: Function) {
+        const id = uniqueId('Function')
+        this.callbacks.set(id, f)
+        return id
+    }
+
+    private id2Callback(id: string) {
+        const f = this.callbacks.get(id)
+        return f
+    }
 
     constructor() {
         return new Proxy(this, {
@@ -91,7 +105,9 @@ export abstract class View implements Modeling {
     __dirty_props__: { [index: string]: Model | undefined } = {}
 
     onPropertyChanged(propKey: string, oldV: Model, newV: Model): void {
-        if (newV instanceof Object
+        if (newV instanceof Function) {
+            newV = this.callback2Id(newV)
+        } else if (newV instanceof Object
             && Reflect.has(newV, 'toModel')
             && Reflect.get(newV, 'toModel') instanceof Function) {
             newV = Reflect.apply(Reflect.get(newV, 'toModel'), newV, [])
@@ -99,6 +115,18 @@ export abstract class View implements Modeling {
         this.__dirty_props__[propKey] = newV
     }
 
+    responseCallback(id: string) {
+        const f = this.id2Callback(id)
+        if (f instanceof Function) {
+            const argumentsList: any = []
+            for (let i = 1; i < arguments.length; i++) {
+                argumentsList.push(arguments[i])
+            }
+            Reflect.apply(f, this, argumentsList)
+        } else {
+            loge(`Cannot find callback:${id} for ${JSON.stringify(this.toModel())}`)
+        }
+    }
     toModel() {
         return {
             id: this.viewId,

@@ -43,7 +43,7 @@ export abstract class Panel {
         return this.build()
     }
 
-    private __responed__(viewId: string, action: string, args: any) {
+    private __responedCallback__(viewId: string, callbackId: string) {
 
     }
 }

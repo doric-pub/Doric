@@ -1,4 +1,5 @@
 import { uniqueId } from "../util/uniqueId";
+import { loge } from "../util/log";
 
 /**
  * ``` TypeScript
@@ -26,19 +27,6 @@ import { uniqueId } from "../util/uniqueId";
 declare function nativeRequire(moduleName: string): boolean
 
 declare function nativeBridge(contextId: string, namespace: string, method: string, args?: any, callbackId?: string): boolean
-
-
-export function log(message: any) {
-    console.log(message)
-}
-
-export function loge(message: any) {
-    console.error(message)
-}
-
-export function logw(message: any) {
-    console.warn(message)
-}
 
 export function jsCallResolve(contextId: string, callbackId: string, args?: any) {
     const context = gContexts.get(contextId)

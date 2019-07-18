@@ -1,12 +1,13 @@
 import { View } from "./view";
-import { } from '../runtime/global'
 
-export function Registor<T extends { new(...args: any[]): {} }>(constructor: T) {
-    const ret = class extends constructor {
-        context = context
+export function Registor(context: any) {
+    return <T extends { new(...args: any[]): {} }>(constructor: T) => {
+        const ret = class extends constructor {
+            context = context
+        }
+        context.register(new ret)
+        return ret
     }
-    context.register(new ret)
-    return ret
 }
 
 

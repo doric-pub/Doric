@@ -155,7 +155,7 @@ public class HegoJSEngine implements Handler.Callback {
         if (args.length > 0) {
             System.arraycopy(args, 0, nArgs, 2, args.length);
         }
-        return invokeHegoMethod(HegoConstant.HEGO_CONTEXT_INVOKE, args);
+        return invokeHegoMethod(HegoConstant.HEGO_CONTEXT_INVOKE, nArgs);
     }
 
 

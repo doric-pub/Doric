@@ -16,7 +16,7 @@ layout.space = 10
 console.log(layout.viewId)
 console.log(layout.toModel())
 
-@Registor
+@Registor(context)
 export class MyPage extends Panel {
     build() {
         return layout

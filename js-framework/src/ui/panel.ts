@@ -5,7 +5,7 @@ export function Registor<T extends { new(...args: any[]): {} }>(constructor: T) 
     const ret = class extends constructor {
         context = context
     }
-    context.registor(new ret)
+    context.register(new ret)
     return ret
 }
 

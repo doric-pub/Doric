@@ -2,6 +2,9 @@ package com.github.pengfeizhou.hego;
 
 import android.app.Application;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * @Description: Android
  * @Author: pengfei.zhou
@@ -16,5 +19,15 @@ public class Hego {
 
     public static Application application() {
         return sApplication;
+    }
+
+    private static Map<String, String> bundles = new ConcurrentHashMap<>();
+
+    public static void registerJSModuleContent(String name, String bundle) {
+        bundles.put(name, bundle);
+    }
+
+    public static String getJSModuleContent(String name) {
+        return bundles.get(name);
     }
 }

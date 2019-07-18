@@ -13,11 +13,21 @@ public class HegoConstant {
     public static final String TEMPLATE_CONTEXT_CREATE = "Reflect.apply(" +
             "function(hego,context,require,exports){" + "\n" +
             "%s" + "\n" +
-            "},hego.jsObtainContext(%s),[" +
+            "},hego.jsObtainContext(\"%s\"),[" +
             "undefined," +
-            "hego.jsObtainContext(%s)," +
+            "hego.jsObtainContext(\"%s\")," +
             "hego.__require__" +
             ",{}" +
+            "])";
+
+    public static final String TEMPLATE_MODULE = "Reflect.apply(hego.jsRegisterModule,this,[" +
+            "\"%s\"," +
+            "Reflect.apply(function(__module){" +
+            "(function(module,exports,require){" + "\n" +
+            "%s" + "\n" +
+            "})(__module,__module.exports,hego.__require__);" +
+            "\nreturn __module.exports;" +
+            "},this,[{exports:{}}])" +
             "])";
     public static final String TEMPLATE_CONTEXT_DESTORY = "hego.jsRelease(%s)";
     public static final String GLOBAL_HEGO = "hego";

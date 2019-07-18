@@ -9,7 +9,7 @@ export default [
         output: {
             name: "hego",
             format: "iife",
-            file: "bundle/sandbox.js",
+            file: "bundle/hego-sandbox.js",
         },
         sourceMap: true,
         plugins: [
@@ -21,12 +21,11 @@ export default [
         input: "build/index.js",
         output: {
             format: "cjs",
-            file: "bundle/bundle.js",
+            file: "bundle/hego-lib.js",
         },
         sourceMap: true,
         plugins: [
             resolve({ jsnext: true, main: true }),
-            commonjs()
         ]
     },
     {

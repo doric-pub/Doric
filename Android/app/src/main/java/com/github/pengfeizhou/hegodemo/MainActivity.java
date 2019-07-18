@@ -12,7 +12,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        HegoContext hegoContext = HegoContext.createContext(HegoUtils.readAssetFile("test.js"), "demo");
+        HegoContext hegoContext = HegoContext.createContext(HegoUtils.readAssetFile("demo.js"), "demo");
         hegoContext.callJS("");
     }
 }

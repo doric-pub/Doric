@@ -4,9 +4,11 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
+import android.text.TextUtils;
 
 import com.github.pengfeizhou.hego.jse.HegoJSExecutor;
 import com.github.pengfeizhou.hego.jse.IHegoJSE;
+import com.github.pengfeizhou.jscore.ArchiveException;
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JavaFunction;
 import com.github.pengfeizhou.jscore.JavaValue;
@@ -50,13 +52,13 @@ public class HegoJSEngine implements Handler.Callback {
                     String message = args[1].string();
                     switch (type) {
                         case "w":
-                            HegoLog.w("js", message);
+                            HegoLog.w(message, "_js");
                             break;
                         case "e":
-                            HegoLog.e("js", message);
+                            HegoLog.e(message, "_js");
                             break;
                         default:
-                            HegoLog.d("js", message);
+                            HegoLog.d(message, "_js");
                             break;
                     }
                 } catch (Exception e) {
@@ -65,10 +67,31 @@ public class HegoJSEngine implements Handler.Callback {
                 return new JavaValue();
             }
         });
+        mHegoJSE.injectGlobalJSFunction(HegoConstant.INJECT_REQUIRE, new JavaFunction() {
+            @Override
+            public JavaValue exec(JSDecoder[] args) {
+                try {
+                    String name = args[0].string();
+                    String content = Hego.getJSModuleContent(name);
+                    if (TextUtils.isEmpty(content)) {
+                        HegoLog.e("error");
+                        return new JavaValue(false);
+                    }
+                    mHegoJSE.loadJS(packageModuleScript(name, content), "Module://" + name);
+                    return new JavaValue(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return new JavaValue(false);
+                }
+            }
+        });
     }
 
     private void initHugoRuntime() {
-        loadBuiltinJS("sandbox.js");
+        loadBuiltinJS("hego-sandbox.js");
+        String libName = "./index";
+        String libJS = HegoUtils.readAssetFile("hego-lib.js");
+        mHegoJSE.loadJS(packageModuleScript(libName, libJS), "Module://" + libName);
     }
 
     @Override
@@ -89,7 +112,7 @@ public class HegoJSEngine implements Handler.Callback {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                mHegoJSE.loadJS(packageContextScript(script, contextId), "Context://" + source);
+                mHegoJSE.loadJS(packageContextScript(contextId, script), "Context://" + source);
             }
         };
         doOnJSThread(runnable);
@@ -113,8 +136,12 @@ public class HegoJSEngine implements Handler.Callback {
         doOnJSThread(runnable);
     }
 
-    private String packageContextScript(String content, String contextId) {
+    private String packageContextScript(String contextId, String content) {
         return String.format(HegoConstant.TEMPLATE_CONTEXT_CREATE, content, contextId, contextId);
+    }
+
+    private String packageModuleScript(String moduleName, String content) {
+        return String.format(HegoConstant.TEMPLATE_MODULE, moduleName, content);
     }
 
     public boolean isJSThread() {

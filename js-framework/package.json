@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsc -p .&& rollup -c && node ./bundle/bundle.js",
-    "build": "tsc -p . && rollup -c "
+    "build": "tsc -p . && rollup -c ",
+    "clean": "rm -rf build && rm -rf demo && rm -rf bundle"
   },
   "repository": {
     "type": "https",

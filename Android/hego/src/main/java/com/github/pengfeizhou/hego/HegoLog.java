@@ -10,15 +10,27 @@ import android.util.Log;
 public class HegoLog {
     private static String TAG = Hego.class.getSimpleName();
 
-    public static void d(String suffix, String message) {
-        Log.d(TAG + suffix, message);
+    public static void d(String message, String... suffix) {
+        StringBuilder stringBuilder = new StringBuilder(TAG);
+        for (String s : suffix) {
+            stringBuilder.append(s);
+        }
+        Log.d(stringBuilder.toString(), message);
     }
 
-    public static void w(String suffix, String message) {
-        Log.w(TAG + suffix, message);
+    public static void w(String message, String... suffix) {
+        StringBuilder stringBuilder = new StringBuilder(TAG);
+        for (String s : suffix) {
+            stringBuilder.append(s);
+        }
+        Log.w(stringBuilder.toString(), message);
     }
 
-    public static void e(String suffix, String message) {
-        Log.e(TAG + suffix, message);
+    public static void e(String message, String... suffix) {
+        StringBuilder stringBuilder = new StringBuilder(TAG);
+        for (String s : suffix) {
+            stringBuilder.append(s);
+        }
+        Log.e(stringBuilder.toString(), message);
     }
 }

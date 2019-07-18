@@ -14,11 +14,13 @@ import { loge } from "../util/log";
  * hego.__require__,
  * ])
  * // load module in global scope
- * Reflect.apply(hego.registerModule,this,[
+ * Reflect.apply(hego.jsRegisterModule,this,[
  *  moduleName,
  *  Reflect.apply(function(__module){
- *          return function(module,export,require){
- *                  })(__module,__module.exports,hego.__require__)
+ *           (function(module,exports,require){
+ *                      //module content
+ *                  })(__module,__module.exports,hego.__require__);
+ *           return __module.exports
  *      },this,[{exports:{}}])
  * ])
  * 
@@ -83,7 +85,7 @@ export class Context {
             })
         })
     }
-    registor(instance: Object) {
+    register(instance: Object) {
         this.entity = instance
     }
 }

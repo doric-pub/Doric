@@ -11,11 +11,11 @@ import com.github.pengfeizhou.jscore.JavaValue;
  * @Author: pengfei.zhou
  * @CreateDate: 2019-07-18
  */
-public class HugoJSExecutor implements IHugoJSE {
+public class HegoJSExecutor implements IHegoJSE {
 
     private final JSExecutor mJSExecutor;
 
-    public HugoJSExecutor() {
+    public HegoJSExecutor() {
         this.mJSExecutor = JSExecutor.create();
     }
 

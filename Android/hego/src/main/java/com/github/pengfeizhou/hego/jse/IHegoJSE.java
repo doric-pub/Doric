@@ -10,7 +10,7 @@ import com.github.pengfeizhou.jscore.JavaValue;
  * @Author: pengfei.zhou
  * @CreateDate: 2019-07-18
  */
-public interface IHugoJSE {
+public interface IHegoJSE {
     /**
      * 执行JS语句
      *

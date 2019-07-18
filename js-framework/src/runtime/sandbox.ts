@@ -8,9 +8,9 @@ import { loge } from "../util/log";
  * function(hego,context,require){
  *  //Script content
  *  REG()
- * },hego.obtainContext(id),[
+ * },hego.jsObtainContext(id),[
  * undefined,
- * hego.obtainContext(id),
+ * hego.jsObtainContext(id),
  * hego.__require__,
  * ])
  * // load module in global scope
@@ -24,6 +24,7 @@ import { loge } from "../util/log";
  * 
  * ```
  */
+
 declare function nativeRequire(moduleName: string): boolean
 
 declare function nativeBridge(contextId: string, namespace: string, method: string, args?: any, callbackId?: string): boolean

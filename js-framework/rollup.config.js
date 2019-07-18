@@ -29,4 +29,17 @@ export default [
             commonjs()
         ]
     },
+    {
+        input: "build/index.test.js",
+        output: {
+            format: "cjs",
+            file: "bundle/test.js",
+        },
+        sourceMap: true,
+        plugins: [
+            resolve({ jsnext: true, main: true }),
+            commonjs()
+        ],
+        external: ['./index'],
+    },
 ]

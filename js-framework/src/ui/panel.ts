@@ -10,11 +10,11 @@ export function Registor<T extends { new(...args: any[]): {} }>(constructor: T) 
 }
 
 
-export abstract class Page {
-    onCreate(): void { }
-    onDestory(): void { }
-    onShow(): void { }
-    onHidden(): void { }
+export abstract class Panel {
+    onCreate() { }
+    onDestory() { }
+    onShow() { }
+    onHidden() { }
 
     abstract build(): View
 
@@ -22,15 +22,16 @@ export abstract class Page {
     /**
      * Native Call
      */
-    private __onCreate__(): void {
+    private __onCreate__() {
+        Reflect.defineMetadata(Symbol.for("context"), context, Reflect.getPrototypeOf(context))
         this.onCreate()
     }
 
-    private __onDestory__(): void {
+    private __onDestory__() {
         this.onDestory()
     }
 
-    private __onShow__(): void {
+    private __onShow__() {
         this.onShow()
     }
 
@@ -40,5 +41,9 @@ export abstract class Page {
 
     private __build__(): View {
         return this.build()
+    }
+
+    private __responed__(viewId: string, action: string, args: any) {
+
     }
 }

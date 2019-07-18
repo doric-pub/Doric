@@ -1,12 +1,12 @@
-import { Page } from '../ui/page'
+import { Panel } from '../ui/panel'
 import { View } from '../ui/view'
 
 export interface Driver {
     /**
      * Create and destory page
      */
-    createPage(): Page
-    destoryPage(): Page
+    createPage(): Panel
+    destoryPage(): Panel
 
     /**
      * Page lifecycle
@@ -20,4 +20,9 @@ export interface Driver {
      * Page render
      */
     dispatchBuild(): View
+}
+
+export interface Responser {
+    constructor(): void
+    respond(action: string, extra: any): void
 }

@@ -1,6 +1,7 @@
 import { Color, GradientColor } from "../util/color"
 import { Modeling, Model } from "../util/types";
 import "reflect-metadata"
+import { uniqueId } from "../util/uniqueId";
 
 export function Property(target: Object, propKey: string) {
     Reflect.defineMetadata(propKey, true, target)
@@ -33,6 +34,13 @@ export abstract class View implements Modeling {
 
     @Property
     alpha?: number
+
+    @Property
+    hidden?: boolean
+
+    @Property
+    viewId = uniqueId('ViewId')
+
     constructor() {
         return new Proxy(this, {
             get: (target, p) => {
@@ -92,7 +100,11 @@ export abstract class View implements Modeling {
     }
 
     toModel() {
-        return this.__dirty_props__ || {}
+        return {
+            id: this.viewId,
+            type: this.constructor.name,
+            props: this.__dirty_props__,
+        }
     }
 
     @Property

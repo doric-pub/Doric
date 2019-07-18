@@ -14,7 +14,7 @@ export default [
         sourceMap: true,
         plugins: [
             resolve({ jsnext: true, main: true }),
-            // commonjs()
+            commonjs()
         ]
     },
     {

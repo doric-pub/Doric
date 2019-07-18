@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsc -p .&& node ./build/index.js",
+    "dev": "tsc -p .&& rollup -c && node ./bundle/bundle.js",
     "build": "tsc -p . && rollup -c "
   },
   "repository": {

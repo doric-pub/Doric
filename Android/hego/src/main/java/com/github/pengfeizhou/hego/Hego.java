@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * @Description: Android
+ * @Description: Hego
  * @Author: pengfei.zhou
  * @CreateDate: 2019-07-18
  */

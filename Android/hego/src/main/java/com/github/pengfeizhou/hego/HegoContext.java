@@ -3,7 +3,7 @@ package com.github.pengfeizhou.hego;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * @Description: Android
+ * @Description: Hego
  * @Author: pengfei.zhou
  * @CreateDate: 2019-07-18
  */
@@ -21,7 +21,7 @@ public class HegoContext {
         return new HegoContext(contextId);
     }
 
-    public void callJS(String methodName, Object... args) {
+    public void callEntity(String methodName, Object... args) {
         HegoDriver.getInstance().invokeContextMethod(mContextId, methodName, args);
     }
 

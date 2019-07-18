@@ -4,7 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.github.pengfeizhou.hego.HegoContext;
-import com.github.pengfeizhou.hego.HegoUtils;
+import com.github.pengfeizhou.hego.utils.HegoUtils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -13,6 +13,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         HegoContext hegoContext = HegoContext.createContext(HegoUtils.readAssetFile("demo.js"), "demo");
-        hegoContext.callJS("log");
+        hegoContext.callEntity("log");
     }
 }

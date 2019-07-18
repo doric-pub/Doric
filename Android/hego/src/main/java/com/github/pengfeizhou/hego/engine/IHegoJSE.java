@@ -1,4 +1,4 @@
-package com.github.pengfeizhou.hego.jse;
+package com.github.pengfeizhou.hego.engine;
 
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSRuntimeException;
@@ -6,7 +6,7 @@ import com.github.pengfeizhou.jscore.JavaFunction;
 import com.github.pengfeizhou.jscore.JavaValue;
 
 /**
- * @Description: Android
+ * @Description: Hego
  * @Author: pengfei.zhou
  * @CreateDate: 2019-07-18
  */

@@ -1,9 +1,11 @@
-package com.github.pengfeizhou.hego;
+package com.github.pengfeizhou.hego.utils;
 
 import android.util.Log;
 
+import com.github.pengfeizhou.hego.Hego;
+
 /**
- * @Description: Android
+ * @Description: Hego
  * @Author: pengfei.zhou
  * @CreateDate: 2019-07-18
  */

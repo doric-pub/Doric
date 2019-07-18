@@ -5,7 +5,7 @@ import android.app.Application;
 import com.github.pengfeizhou.hego.Hego;
 
 /**
- * @Description: Android
+ * @Description: Hego
  * @Author: pengfei.zhou
  * @CreateDate: 2019-07-18
  */

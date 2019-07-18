@@ -1,12 +1,14 @@
-package com.github.pengfeizhou.hego;
+package com.github.pengfeizhou.hego.utils;
 
 import android.content.res.AssetManager;
+
+import com.github.pengfeizhou.hego.Hego;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * @Description: Android
+ * @Description: Hego
  * @Author: pengfei.zhou
  * @CreateDate: 2019-07-18
  */

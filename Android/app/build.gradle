@@ -18,7 +18,7 @@ android {
     }
     sourceSets {
         main {
-            assets.srcDirs = [project.rootDir.getParent() + "/js-framework/bundle"]
+            assets.srcDirs = [project.rootDir.getParent() + "/js-framework/demo"]
         }
     }
 }

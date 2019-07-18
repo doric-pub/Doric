@@ -30,10 +30,10 @@ export default [
         ]
     },
     {
-        input: "build/index.test.js",
+        input: "build/demo.js",
         output: {
             format: "cjs",
-            file: "bundle/test.js",
+            file: "demo/demo.js",
         },
         sourceMap: true,
         plugins: [

@@ -2,15 +2,18 @@ package com.github.pengfeizhou.doric.extension.bridge;
 
 import android.text.TextUtils;
 
+import com.github.pengfeizhou.doric.Doric;
 import com.github.pengfeizhou.doric.DoricContext;
 import com.github.pengfeizhou.doric.DoricContextManager;
 import com.github.pengfeizhou.doric.DoricDriver;
 import com.github.pengfeizhou.doric.plugin.DoricNativePlugin;
 import com.github.pengfeizhou.doric.plugin.ModalPlugin;
 import com.github.pengfeizhou.doric.utils.DoricLog;
+import com.github.pengfeizhou.doric.utils.DoricUtils;
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JavaValue;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,10 +55,35 @@ public class DoricBridgeExtension {
             return new JavaValue(false);
         }
         DoricMethod doricMethod = method.getAnnotation(DoricMethod.class);
+        try {
+            Class[] classes = method.getParameterTypes();
+            Object ret;
+            if (classes.length == 0) {
+                ret = method.invoke(doricNativePlugin);
+            } else if (classes.length == 1) {
+                ret = method.invoke(doricNativePlugin, createParam(context, classes[0], callbackId, jsDecoder));
+            } else {
+                ret = method.invoke(doricNativePlugin,
+                        createParam(context, classes[0], callbackId, jsDecoder),
+                        createParam(context, classes[1], callbackId, jsDecoder));
+            }
+            return DoricUtils.toJavaValue(ret);
+        } catch (Exception e) {
+            DoricLog.e("callNative error:%s", e.getLocalizedMessage());
+            return new JavaValue(false);
+        }
+    }
 
-        Class[] classes = method.getParameterTypes();
-
-
-        return new JavaValue(true);
+    private Object createParam(DoricContext context, Class clz, String callbackId, JSDecoder jsDecoder) {
+        if (clz == DoricPromise.class) {
+            return new DoricPromise(context, callbackId);
+        } else {
+            try {
+                return DoricUtils.toJavaObject(clz, jsDecoder);
+            } catch (Exception e) {
+                DoricLog.e("createParam error:%s", e.getLocalizedMessage());
+            }
+            return null;
+        }
     }
 }

@@ -60,13 +60,13 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
                     String message = args[1].string();
                     switch (type) {
                         case "w":
-                            DoricLog.w("_js", message);
+                            DoricLog.suffix_w("_js", message);
                             break;
                         case "e":
-                            DoricLog.e("_js", message);
+                            DoricLog.suffix_e("_js", message);
                             break;
                         default:
-                            DoricLog.d("_js", message);
+                            DoricLog.suffix_d("_js", message);
                             break;
                     }
                 } catch (Exception e) {

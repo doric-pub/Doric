@@ -35,7 +35,7 @@ public class DoricPanel extends FrameLayout {
     }
 
     public void config(String script, String alias) {
-        DoricContext doricContext = DoricContext.createContext(script, alias);
+        DoricContext doricContext = DoricContext.create(getContext(), script, alias);
         config(doricContext);
     }
 

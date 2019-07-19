@@ -25,7 +25,7 @@ public class DoricPluginInfo {
 
     public DoricPluginInfo(Class<? extends DoricNativePlugin> pluginClass) {
         try {
-            this.pluginConstructor = pluginClass.getConstructor(DoricContext.class);
+            this.pluginConstructor = pluginClass.getDeclaredConstructor(DoricContext.class);
             DoricComponent doricComponent = pluginClass.getAnnotation(DoricComponent.class);
             this.name = doricComponent.name();
             Method[] methods = pluginClass.getMethods();

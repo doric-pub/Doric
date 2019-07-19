@@ -27,16 +27,15 @@ public class DoricLog {
         Log.e(suffixTag(null), format(message, args));
     }
 
-    public static void d(String suffix, String message, Object... args) {
+    public static void suffix_d(String suffix, String message, Object... args) {
         Log.d(suffixTag(suffix), format(message, args));
     }
 
-    public static void w(String suffix, String message, Object... args) {
+    public static void suffix_w(String suffix, String message, Object... args) {
         Log.w(suffixTag(suffix), format(message, args));
-
     }
 
-    public static void e(String suffix, String message, Object... args) {
+    public static void suffix_e(String suffix, String message, Object... args) {
         Log.e(suffixTag(suffix), format(message, args));
     }
 

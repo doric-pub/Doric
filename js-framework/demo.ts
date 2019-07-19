@@ -19,6 +19,7 @@ log('console', Object.getOwnPropertyNames(console))
 
 setTimeout(() => {
     log('exec setTimeout')
+    context.callNative("modal", "toast", "Hello,Doric!")
 }, 1000)
 const timerId = setInterval(() => {
     log('exec setInterval')

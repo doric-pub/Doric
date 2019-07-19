@@ -1,5 +1,7 @@
 package com.github.pengfeizhou.doric;
 
+import android.content.Context;
+
 import com.github.pengfeizhou.doric.async.AsyncResult;
 import com.github.pengfeizhou.doric.plugin.DoricNativePlugin;
 import com.github.pengfeizhou.doric.extension.bridge.DoricPluginInfo;
@@ -16,13 +18,15 @@ import java.util.Map;
 public class DoricContext {
     private final String mContextId;
     private final Map<String, DoricNativePlugin> mPluginMap = new HashMap<>();
+    private final Context mContext;
 
-    DoricContext(String contextId) {
+    DoricContext(Context context, String contextId) {
+        this.mContext = context;
         this.mContextId = contextId;
     }
 
-    public static DoricContext createContext(String script, String alias) {
-        return DoricContextManager.getInstance().createContext(script, alias);
+    public static DoricContext create(Context context, String script, String alias) {
+        return DoricContextManager.getInstance().createContext(context, script, alias);
     }
 
     public AsyncResult<JSDecoder> callEntity(String methodName, Object... args) {
@@ -33,6 +37,9 @@ public class DoricContext {
         return DoricDriver.getInstance();
     }
 
+    public Context getContext() {
+        return mContext;
+    }
 
     public String getContextId() {
         return mContextId;

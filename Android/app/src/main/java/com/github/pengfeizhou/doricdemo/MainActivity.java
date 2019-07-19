@@ -12,7 +12,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        DoricContext doricContext = DoricContext.createContext(DoricUtils.readAssetFile("demo.js"), "demo");
+        DoricContext doricContext = DoricContext.create(this, DoricUtils.readAssetFile("demo.js"), "demo");
         doricContext.callEntity("log");
     }
 }

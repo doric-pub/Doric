@@ -3,14 +3,21 @@ package com.github.pengfeizhou.doric.utils;
 import android.content.res.AssetManager;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 
 import com.github.pengfeizhou.doric.Doric;
+import com.github.pengfeizhou.jscore.ArchiveException;
+import com.github.pengfeizhou.jscore.JSArray;
+import com.github.pengfeizhou.jscore.JSDecoder;
+import com.github.pengfeizhou.jscore.JSNull;
+import com.github.pengfeizhou.jscore.JSValue;
 import com.github.pengfeizhou.jscore.JavaValue;
 
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 
 /**
  * @Description: Doric
@@ -63,4 +70,45 @@ public class DoricUtils {
         }
     }
 
+    public static Object toJavaObject(@NonNull Class clz, JSDecoder decoder) throws Exception {
+        if (clz == JSDecoder.class) {
+            return decoder;
+        } else {
+            return toJavaObject(clz, decoder.decode());
+        }
+    }
+
+    public static Object toJavaObject(@NonNull Class clz, JSValue jsValue) throws Exception {
+        if (clz == JSValue.class || JSValue.class.isAssignableFrom(clz)) {
+            return jsValue;
+        } else if (clz == String.class) {
+            return jsValue.asString();
+        } else if (clz == boolean.class || clz == Boolean.class) {
+            return jsValue.asBoolean();
+        } else if (clz == int.class || clz == Integer.class) {
+            return jsValue.asNumber().toInt();
+        } else if (clz == long.class || clz == Long.class) {
+            return jsValue.asNumber().toLong();
+        } else if (clz == float.class || clz == Float.class) {
+            return jsValue.asNumber().toFloat();
+        } else if (clz == double.class || clz == Double.class) {
+            return jsValue.asNumber().toDouble();
+        } else if (clz.isArray()) {
+            Class elementClass = clz.getComponentType();
+            Object ret;
+            if (jsValue.isArray()) {
+                JSArray jsArray = jsValue.asArray();
+                ret = Array.newInstance(clz, jsArray.size());
+                for (int i = 0; i < jsArray.size(); i++) {
+                    Array.set(ret, i, toJavaObject(elementClass, jsArray.get(i)));
+                }
+            } else if (jsValue.isNull()) {
+                ret = Array.newInstance(clz, 0);
+            } else {
+                ret = null;
+            }
+            return ret;
+        }
+        return null;
+    }
 }

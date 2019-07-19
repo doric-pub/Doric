@@ -10,7 +10,7 @@ import com.github.pengfeizhou.doric.DoricContext;
 public abstract class DoricNativePlugin {
     private final DoricContext doricContext;
 
-    protected DoricNativePlugin(DoricContext doricContext) {
+    public DoricNativePlugin(DoricContext doricContext) {
         this.doricContext = doricContext;
     }
 

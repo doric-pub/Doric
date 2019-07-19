@@ -1,5 +1,7 @@
 package com.github.pengfeizhou.doric;
 
+import android.content.Context;
+
 import com.github.pengfeizhou.doric.async.AsyncCall;
 import com.github.pengfeizhou.doric.async.AsyncResult;
 import com.github.pengfeizhou.doric.utils.DoricLog;
@@ -31,9 +33,9 @@ public class DoricContextManager {
         return Inner.sInstance;
     }
 
-    DoricContext createContext(final String script, final String source) {
+    DoricContext createContext(Context context, final String script, final String source) {
         final String contextId = String.valueOf(counter.incrementAndGet());
-        final DoricContext doricContext = new DoricContext(contextId);
+        final DoricContext doricContext = new DoricContext(context, contextId);
         doricContextMap.put(contextId, doricContext);
         doricContext.getDriver().createContext(contextId, script, source);
         return doricContext;

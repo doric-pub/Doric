@@ -11,7 +11,6 @@ public class DoricConstant {
     public static final String DORIC_MODULE_LIB = "./index";
 
 
-
     public static final String INJECT_LOG = "nativeLog";
     public static final String INJECT_REQUIRE = "nativeRequire";
     public static final String INJECT_TIMER_SET = "nativeSetTimer";
@@ -42,4 +41,6 @@ public class DoricConstant {
     public static final String DORIC_CONTEXT_RELEASE = "jsReleaseContext";
     public static final String DORIC_CONTEXT_INVOKE = "jsCallEntityMethod";
     public static final String DORIC_TIMER_CALLBACK = "jsCallbackTimer";
+    public static final String DORIC_BRIDGE_RESOLVE = "jsCallResolve";
+    public static final String DORIC_BRIDGE_REJECT = "jsCallReject";
 }

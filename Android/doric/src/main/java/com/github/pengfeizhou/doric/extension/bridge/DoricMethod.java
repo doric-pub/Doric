@@ -1,4 +1,4 @@
-package com.github.pengfeizhou.doric.extension;
+package com.github.pengfeizhou.doric.extension.bridge;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -12,8 +12,16 @@ import java.lang.annotation.Target;
  * @CreateDate: 2019-07-18
  */
 @Documented
-@Target(ElementType.TYPE)
+@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface DoricComponent {
+public @interface DoricMethod {
     String name() default "";
+
+    Mode thread() default Mode.INDEPENDENT;
+
+    enum Mode {
+        UI,
+        JS,
+        INDEPENDENT,
+    }
 }

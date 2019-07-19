@@ -1,11 +1,11 @@
-package com.github.pengfeizhou.doric.extension;
+package com.github.pengfeizhou.doric.extension.bridge;
 
 import android.text.TextUtils;
 
 import com.github.pengfeizhou.doric.DoricContext;
 import com.github.pengfeizhou.doric.DoricDriver;
-import com.github.pengfeizhou.doric.bridge.DoricNativePlugin;
-import com.github.pengfeizhou.doric.bridge.ModalPlugin;
+import com.github.pengfeizhou.doric.plugin.DoricNativePlugin;
+import com.github.pengfeizhou.doric.plugin.ModalPlugin;
 import com.github.pengfeizhou.doric.utils.DoricLog;
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JavaValue;
@@ -50,6 +50,7 @@ public class DoricBridgeExtension {
             DoricLog.e("Cannot find plugin method in class:%s,method:%s", module, methodName);
             return new JavaValue(false);
         }
+        DoricMethod doricMethod = method.getAnnotation(DoricMethod.class);
 
         Class[] classes = method.getParameterTypes();
 

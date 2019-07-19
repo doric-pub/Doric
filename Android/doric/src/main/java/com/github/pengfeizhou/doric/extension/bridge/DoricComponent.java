@@ -1,4 +1,4 @@
-package com.github.pengfeizhou.doric.extension;
+package com.github.pengfeizhou.doric.extension.bridge;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -12,8 +12,8 @@ import java.lang.annotation.Target;
  * @CreateDate: 2019-07-18
  */
 @Documented
-@Target(ElementType.METHOD)
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface DoricMethod {
+public @interface DoricComponent {
     String name() default "";
 }

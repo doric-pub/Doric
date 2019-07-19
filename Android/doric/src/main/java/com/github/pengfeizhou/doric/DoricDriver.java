@@ -1,11 +1,20 @@
 package com.github.pengfeizhou.doric;
 
+import android.os.Handler;
+import android.os.Looper;
+
+import com.github.pengfeizhou.doric.async.AsyncCall;
 import com.github.pengfeizhou.doric.async.AsyncResult;
 import com.github.pengfeizhou.doric.engine.DoricJSEngine;
+import com.github.pengfeizhou.doric.utils.DoricConstant;
+import com.github.pengfeizhou.doric.utils.DoricLog;
 import com.github.pengfeizhou.jscore.JSDecoder;
 
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -17,9 +26,32 @@ public class DoricDriver {
     private final DoricJSEngine doricJSEngine;
     private final AtomicInteger counter = new AtomicInteger();
     private final Map<String, DoricContext> doricContextMap = new ConcurrentHashMap<>();
+    private final ExecutorService mBridgeExecutor;
+    private final Handler mUIHandler;
+    private final Handler mJSHandler;
 
-    public AsyncResult<JSDecoder> invokeContextMethod(final String contextId, final String method, final Object... args) {
-        return doricJSEngine.invokeContextEntityMethod(contextId, method, args);
+    public AsyncResult<JSDecoder> invokeContextEntityMethod(final String contextId, final String method, final Object... args) {
+        final Object[] nArgs = new Object[args.length + 2];
+        nArgs[0] = contextId;
+        nArgs[1] = method;
+        if (args.length > 0) {
+            System.arraycopy(args, 0, nArgs, 2, args.length);
+        }
+        return invokeDoricMethod(DoricConstant.DORIC_CONTEXT_INVOKE, nArgs);
+    }
+
+    public AsyncResult<JSDecoder> invokeDoricMethod(final String method, final Object... args) {
+        return AsyncCall.ensureRunInHandler(mJSHandler, new Callable<JSDecoder>() {
+            @Override
+            public JSDecoder call() {
+                try {
+                    return doricJSEngine.invokeDoricMethod(method, args);
+                } catch (Exception e) {
+                    DoricLog.e("invokeDoricMethod(%s,...),error is %s", method, e.getLocalizedMessage());
+                    return new JSDecoder(null);
+                }
+            }
+        });
     }
 
     private static class Inner {
@@ -28,6 +60,21 @@ public class DoricDriver {
 
     private DoricDriver() {
         doricJSEngine = new DoricJSEngine();
+        mBridgeExecutor = Executors.newCachedThreadPool();
+        mUIHandler = new Handler(Looper.getMainLooper());
+        mJSHandler = doricJSEngine.getJSHandler();
+    }
+
+    public void runOnJS(Runnable runnable) {
+        mJSHandler.post(runnable);
+    }
+
+    public void runOnUI(Runnable runnable) {
+        mUIHandler.post(runnable);
+    }
+
+    public void runIndependently(Runnable runnable) {
+        mBridgeExecutor.execute(runnable);
     }
 
     public static DoricDriver getInstance() {
@@ -35,26 +82,37 @@ public class DoricDriver {
     }
 
     DoricContext createContext(final String script, final String source) {
-        String contextId = String.valueOf(counter.incrementAndGet());
+        final String contextId = String.valueOf(counter.incrementAndGet());
         DoricContext doricContext = new DoricContext(contextId);
-        doricJSEngine.prepareContext(contextId, script, source);
         doricContextMap.put(contextId, doricContext);
+        AsyncCall.ensureRunInHandler(mJSHandler, new Callable<Boolean>() {
+            @Override
+            public Boolean call() {
+                try {
+                    doricJSEngine.prepareContext(contextId, script, source);
+                    return true;
+                } catch (Exception e) {
+                    DoricLog.e("createContext %s error is %s", source, e.getLocalizedMessage());
+                    return false;
+                }
+            }
+        });
+
         return doricContext;
     }
 
-    void destroyContext(final String contextId) {
-        doricJSEngine.destroyContext(contextId).setCallback(new AsyncResult.Callback<Boolean>() {
+    AsyncResult<Boolean> destroyContext(final String contextId) {
+        return AsyncCall.ensureRunInHandler(mJSHandler, new Callable<Boolean>() {
             @Override
-            public void onResult(Boolean result) {
-            }
-
-            @Override
-            public void onError(Throwable t) {
-            }
-
-            @Override
-            public void onFinish() {
-                doricContextMap.remove(contextId);
+            public Boolean call() {
+                try {
+                    doricJSEngine.destroyContext(contextId);
+                    doricContextMap.remove(contextId);
+                    return true;
+                } catch (Exception e) {
+                    DoricLog.e("destroyContext %s error is %s", contextId, e.getLocalizedMessage());
+                    return false;
+                }
             }
         });
     }

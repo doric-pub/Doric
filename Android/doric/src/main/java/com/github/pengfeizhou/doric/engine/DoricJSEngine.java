@@ -7,20 +7,16 @@ import android.os.Message;
 import android.text.TextUtils;
 
 import com.github.pengfeizhou.doric.Doric;
-import com.github.pengfeizhou.doric.async.AsyncCall;
-import com.github.pengfeizhou.doric.extension.DoricBridgeExtension;
-import com.github.pengfeizhou.doric.async.AsyncResult;
+import com.github.pengfeizhou.doric.extension.bridge.DoricBridgeExtension;
 import com.github.pengfeizhou.doric.utils.DoricConstant;
 import com.github.pengfeizhou.doric.utils.DoricLog;
-import com.github.pengfeizhou.doric.async.SettableFuture;
-import com.github.pengfeizhou.doric.extension.DoricTimerExtension;
+import com.github.pengfeizhou.doric.extension.timer.DoricTimerExtension;
 import com.github.pengfeizhou.doric.utils.DoricUtils;
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JavaFunction;
 import com.github.pengfeizhou.jscore.JavaValue;
 
 import java.util.ArrayList;
-import java.util.concurrent.Callable;
 
 /**
  * @Description: Doric
@@ -47,6 +43,10 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
         });
         mTimerExtension = new DoricTimerExtension(looper, this);
         mDoricBridgeExtension = new DoricBridgeExtension();
+    }
+
+    public Handler getJSHandler() {
+        return mJSHandler;
     }
 
 
@@ -157,34 +157,12 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
         mDoricJSE.loadJS(script, "Assets://" + assetName);
     }
 
-    public AsyncResult<Boolean> prepareContext(final String contextId, final String script, final String source) {
-        return AsyncCall.ensureRunInHandler(mJSHandler, new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                try {
-                    mDoricJSE.loadJS(packageContextScript(contextId, script), "Context://" + source);
-                    return true;
-                } catch (Exception e) {
-                    DoricLog.e("Prepare Context error:%s", e.getLocalizedMessage());
-                    return false;
-                }
-            }
-        });
+    public void prepareContext(final String contextId, final String script, final String source) {
+        mDoricJSE.loadJS(packageContextScript(contextId, script), "Context://" + source);
     }
 
-    public AsyncResult<Boolean> destroyContext(final String contextId) {
-        return AsyncCall.ensureRunInHandler(mJSHandler, new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                try {
-                    mDoricJSE.loadJS(String.format(DoricConstant.TEMPLATE_CONTEXT_DESTROY, contextId), "_Context://" + contextId);
-                    return true;
-                } catch (Exception e) {
-                    DoricLog.e("Prepare Context error:%s", e.getLocalizedMessage());
-                    return false;
-                }
-            }
-        });
+    public void destroyContext(final String contextId) {
+        mDoricJSE.loadJS(String.format(DoricConstant.TEMPLATE_CONTEXT_DESTROY, contextId), "_Context://" + contextId);
     }
 
     private String packageContextScript(String contextId, String content) {
@@ -195,7 +173,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
         return String.format(DoricConstant.TEMPLATE_MODULE, moduleName, content);
     }
 
-    public AsyncResult<JSDecoder> invokeContextEntityMethod(final String contextId, final String method, final Object... args) {
+    public JSDecoder invokeContextEntityMethod(final String contextId, final String method, final Object... args) {
         final Object[] nArgs = new Object[args.length + 2];
         nArgs[0] = contextId;
         nArgs[1] = method;
@@ -206,18 +184,13 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
     }
 
 
-    public AsyncResult<JSDecoder> invokeDoricMethod(final String method, final Object... args) {
-        return AsyncCall.ensureRunInHandler(mJSHandler, new Callable<JSDecoder>() {
-            @Override
-            public JSDecoder call() throws Exception {
-                ArrayList<JavaValue> values = new ArrayList<>();
-                for (Object arg : args) {
-                    values.add(DoricUtils.toJavaValue(arg));
-                }
-                return mDoricJSE.invokeMethod(DoricConstant.GLOBAL_DORIC, method,
-                        values.toArray(new JavaValue[values.size()]), true);
-            }
-        });
+    public JSDecoder invokeDoricMethod(final String method, final Object... args) {
+        ArrayList<JavaValue> values = new ArrayList<>();
+        for (Object arg : args) {
+            values.add(DoricUtils.toJavaValue(arg));
+        }
+        return mDoricJSE.invokeMethod(DoricConstant.GLOBAL_DORIC, method,
+                values.toArray(new JavaValue[values.size()]), true);
     }
 
     @Override

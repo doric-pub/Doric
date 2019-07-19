@@ -1,9 +1,9 @@
-package com.github.pengfeizhou.doric.extension;
+package com.github.pengfeizhou.doric.extension.bridge;
 
 import android.text.TextUtils;
 
 import com.github.pengfeizhou.doric.DoricContext;
-import com.github.pengfeizhou.doric.bridge.DoricNativePlugin;
+import com.github.pengfeizhou.doric.plugin.DoricNativePlugin;
 import com.github.pengfeizhou.doric.utils.DoricLog;
 
 import java.lang.reflect.Constructor;
@@ -21,7 +21,6 @@ public class DoricPluginInfo {
     private Constructor<? extends DoricNativePlugin> pluginConstructor;
 
     private Map<String, Method> methodMap = new ConcurrentHashMap<>();
-    public boolean stringify = false;
     private String name;
 
     public DoricPluginInfo(Class<? extends DoricNativePlugin> pluginClass) {

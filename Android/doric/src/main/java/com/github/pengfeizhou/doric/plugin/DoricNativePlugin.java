@@ -1,4 +1,4 @@
-package com.github.pengfeizhou.doric.bridge;
+package com.github.pengfeizhou.doric.plugin;
 
 import com.github.pengfeizhou.doric.DoricContext;
 

@@ -1,9 +1,8 @@
 package com.github.pengfeizhou.doric;
 
 import com.github.pengfeizhou.doric.async.AsyncResult;
-import com.github.pengfeizhou.doric.bridge.DoricNativePlugin;
-import com.github.pengfeizhou.doric.extension.DoricPluginInfo;
-import com.github.pengfeizhou.doric.async.SettableFuture;
+import com.github.pengfeizhou.doric.plugin.DoricNativePlugin;
+import com.github.pengfeizhou.doric.extension.bridge.DoricPluginInfo;
 import com.github.pengfeizhou.jscore.JSDecoder;
 
 import java.util.HashMap;
@@ -27,7 +26,11 @@ public class DoricContext {
     }
 
     public AsyncResult<JSDecoder> callEntity(String methodName, Object... args) {
-        return DoricDriver.getInstance().invokeContextMethod(mContextId, methodName, args);
+        return getDriver().invokeContextEntityMethod(mContextId, methodName, args);
+    }
+
+    public DoricDriver getDriver() {
+        return DoricDriver.getInstance();
     }
 
 
@@ -36,8 +39,22 @@ public class DoricContext {
     }
 
     public void teardown() {
-        DoricDriver.getInstance().destroyContext(mContextId);
-        mPluginMap.clear();
+        DoricDriver.getInstance().destroyContext(mContextId).setCallback(new AsyncResult.Callback<Boolean>() {
+            @Override
+            public void onResult(Boolean result) {
+
+            }
+
+            @Override
+            public void onError(Throwable t) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                mPluginMap.clear();
+            }
+        });
     }
 
     public DoricNativePlugin obtainPlugin(DoricPluginInfo doricPluginInfo) {

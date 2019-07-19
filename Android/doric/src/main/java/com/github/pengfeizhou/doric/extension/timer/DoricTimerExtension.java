@@ -1,4 +1,4 @@
-package com.github.pengfeizhou.doric.extension;
+package com.github.pengfeizhou.doric.extension.timer;
 
 import android.os.Handler;
 import android.os.Looper;

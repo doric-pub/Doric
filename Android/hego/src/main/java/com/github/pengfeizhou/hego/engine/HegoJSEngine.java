@@ -7,12 +7,12 @@ import android.os.Message;
 import android.text.TextUtils;
 
 import com.github.pengfeizhou.hego.Hego;
+import com.github.pengfeizhou.hego.extension.HegoBridgeExtension;
 import com.github.pengfeizhou.hego.utils.HegoConstant;
 import com.github.pengfeizhou.hego.utils.HegoLog;
 import com.github.pengfeizhou.hego.utils.HegoSettableFuture;
-import com.github.pengfeizhou.hego.utils.HegoTimerExtension;
+import com.github.pengfeizhou.hego.extension.HegoTimerExtension;
 import com.github.pengfeizhou.hego.utils.HegoUtils;
-import com.github.pengfeizhou.jscore.ArchiveException;
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JavaFunction;
 import com.github.pengfeizhou.jscore.JavaValue;
@@ -28,6 +28,7 @@ import java.util.ArrayList;
  */
 public class HegoJSEngine implements Handler.Callback, HegoTimerExtension.TimerCallback {
     private final Handler mJSHandler;
+    private final HegoBridgeExtension mHegoBridgeExtensio;
     private IHegoJSE mHegoJSE;
     private HegoTimerExtension mTimerExtension;
 
@@ -44,6 +45,7 @@ public class HegoJSEngine implements Handler.Callback, HegoTimerExtension.TimerC
             }
         });
         mTimerExtension = new HegoTimerExtension(looper, this);
+        mHegoBridgeExtensio = new HegoBridgeExtension();
     }
 
 
@@ -109,6 +111,22 @@ public class HegoJSEngine implements Handler.Callback, HegoTimerExtension.TimerC
             public JavaValue exec(JSDecoder[] args) {
                 try {
                     mTimerExtension.clearTimer(args[0].number().longValue());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        });
+        mHegoJSE.injectGlobalJSFunction(HegoConstant.INJECT_BRIDGE, new JavaFunction() {
+            @Override
+            public JavaValue exec(JSDecoder[] args) {
+                try {
+                    String contextId = args[0].string();
+                    String module = args[1].string();
+                    String method = args[2].string();
+                    String callbackId = args[3].string();
+                    JSDecoder jsDecoder = args[4];
+                    return mHegoBridgeExtensio.callNative(contextId, module, method, callbackId, jsDecoder);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

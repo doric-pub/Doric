@@ -1,4 +1,4 @@
-package com.github.pengfeizhou.hego.utils;
+package com.github.pengfeizhou.hego.extension;
 
 import android.os.Handler;
 import android.os.Looper;

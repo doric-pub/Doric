@@ -29,7 +29,7 @@ import { loge } from "../util/log";
 
 declare function nativeRequire(moduleName: string): boolean
 
-declare function nativeBridge(contextId: string, namespace: string, method: string, args?: any, callbackId?: string): boolean
+declare function nativeBridge(contextId: string, namespace: string, method: string, callbackId?: string, args?: any): boolean
 
 export function jsCallResolve(contextId: string, callbackId: string, args?: any) {
     const context = gContexts.get(contextId)
@@ -77,7 +77,7 @@ export class Context {
     callNative(namespace: string, method: string, args?: any): Promise<any> {
         const callbackId = uniqueId('callback')
 
-        nativeBridge(this.id, namespace, method, args, callbackId)
+        nativeBridge(this.id, namespace, method, callbackId, args)
         return new Promise((resolve, reject) => {
             this.callbacks.set(callbackId, {
                 resolve,

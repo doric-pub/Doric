@@ -82,9 +82,9 @@ public class DoricUtils {
         if (clz == JSValue.class || JSValue.class.isAssignableFrom(clz)) {
             return jsValue;
         } else if (clz == String.class) {
-            return jsValue.asString();
+            return jsValue.asString().value();
         } else if (clz == boolean.class || clz == Boolean.class) {
-            return jsValue.asBoolean();
+            return jsValue.asBoolean().value();
         } else if (clz == int.class || clz == Integer.class) {
             return jsValue.asNumber().toInt();
         } else if (clz == long.class || clz == Long.class) {

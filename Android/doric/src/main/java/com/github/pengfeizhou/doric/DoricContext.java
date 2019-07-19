@@ -14,18 +14,21 @@ public class DoricContext {
     private static AtomicInteger sCounter = new AtomicInteger();
     private final String mContextId;
 
-    private DoricContext(String contextId) {
+    DoricContext(String contextId) {
         this.mContextId = contextId;
     }
 
     public static DoricContext createContext(String script, String alias) {
-        String contextId = String.valueOf(sCounter.incrementAndGet());
-        DoricDriver.getInstance().createContext(contextId, script, alias);
-        return new DoricContext(contextId);
+        return DoricDriver.getInstance().createContext(script, alias);
     }
 
     public DoricSettableFuture<JSDecoder> callEntity(String methodName, Object... args) {
         return DoricDriver.getInstance().invokeContextMethod(mContextId, methodName, args);
+    }
+
+
+    public String getContextId() {
+        return mContextId;
     }
 
     public void teardown() {

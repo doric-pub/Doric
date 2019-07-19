@@ -28,11 +28,11 @@ public class DoricDriver {
         return Inner.sInstance;
     }
 
-    public void createPage(final String contextId, final String script, final String source) {
+    public void createContext(final String contextId, final String script, final String source) {
         doricJSEngine.prepareContext(contextId, script, source);
     }
 
-    public void destoryContext(String contextId) {
+    public void destroyContext(String contextId) {
         doricJSEngine.destroyContext(contextId);
     }
 

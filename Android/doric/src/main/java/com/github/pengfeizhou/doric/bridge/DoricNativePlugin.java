@@ -7,12 +7,14 @@ import com.github.pengfeizhou.doric.DoricContext;
  * @Author: pengfei.zhou
  * @CreateDate: 2019-07-18
  */
-public abstract class BaseModule {
+public abstract class DoricNativePlugin {
     private final DoricContext doricContext;
 
-    protected BaseModule(DoricContext doricContext) {
+    protected DoricNativePlugin(DoricContext doricContext) {
         this.doricContext = doricContext;
     }
 
-    public abstract String moduleName();
+    public DoricContext getDoricContext() {
+        return doricContext;
+    }
 }

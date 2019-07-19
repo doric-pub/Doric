@@ -17,8 +17,6 @@ import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JavaFunction;
 import com.github.pengfeizhou.jscore.JavaValue;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 /**
@@ -214,25 +212,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
             public void run() {
                 ArrayList<JavaValue> values = new ArrayList<>();
                 for (Object arg : args) {
-                    if (arg == null) {
-                        values.add(new JavaValue());
-                    } else if (arg instanceof JSONObject) {
-                        values.add(new JavaValue((JSONObject) arg));
-                    } else if (arg instanceof String) {
-                        values.add(new JavaValue((String) arg));
-                    } else if (arg instanceof Integer) {
-                        values.add(new JavaValue((Integer) arg));
-                    } else if (arg instanceof Long) {
-                        values.add(new JavaValue((Long) arg));
-                    } else if (arg instanceof Double) {
-                        values.add(new JavaValue((Double) arg));
-                    } else if (arg instanceof Boolean) {
-                        values.add(new JavaValue((Boolean) arg));
-                    } else if (arg instanceof JavaValue) {
-                        values.add((JavaValue) arg);
-                    } else {
-                        values.add(new JavaValue(String.valueOf(arg)));
-                    }
+                    values.add(DoricUtils.toJavaValue(arg));
                 }
                 settableFuture.set(mDoricJSE.invokeMethod(DoricConstant.GLOBAL_DORIC, method,
                         values.toArray(new JavaValue[values.size()]), true));

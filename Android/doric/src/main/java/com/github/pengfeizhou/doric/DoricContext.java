@@ -20,7 +20,7 @@ public class DoricContext {
 
     public static DoricContext createContext(String script, String alias) {
         String contextId = String.valueOf(sCounter.incrementAndGet());
-        DoricDriver.getInstance().createPage(contextId, script, alias);
+        DoricDriver.getInstance().createContext(contextId, script, alias);
         return new DoricContext(contextId);
     }
 
@@ -29,6 +29,6 @@ public class DoricContext {
     }
 
     public void teardown() {
-        DoricDriver.getInstance().destoryContext(mContextId);
+        DoricDriver.getInstance().destroyContext(mContextId);
     }
 }

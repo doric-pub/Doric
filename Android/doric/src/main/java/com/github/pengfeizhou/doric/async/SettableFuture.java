@@ -1,7 +1,7 @@
-package com.github.pengfeizhou.doric.utils;
+package com.github.pengfeizhou.doric.async;
 
 /**
- * @Description: Doric
+ * @Description: com.github.pengfeizhou.doric.async
  * @Author: pengfei.zhou
  * @CreateDate: 2019-07-18
  */
@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
  * A super simple Future-like class that can safely notify another Thread when a value is ready.
  * Does not support setting errors or canceling.
  */
-public class DoricSettableFuture<T> {
+public class SettableFuture<T> {
 
     private final CountDownLatch mReadyLatch = new CountDownLatch(1);
     private volatile

@@ -1,8 +1,9 @@
 package com.github.pengfeizhou.doric;
 
+import com.github.pengfeizhou.doric.async.AsyncResult;
 import com.github.pengfeizhou.doric.bridge.DoricNativePlugin;
 import com.github.pengfeizhou.doric.extension.DoricPluginInfo;
-import com.github.pengfeizhou.doric.utils.DoricSettableFuture;
+import com.github.pengfeizhou.doric.async.SettableFuture;
 import com.github.pengfeizhou.jscore.JSDecoder;
 
 import java.util.HashMap;
@@ -25,7 +26,7 @@ public class DoricContext {
         return DoricDriver.getInstance().createContext(script, alias);
     }
 
-    public DoricSettableFuture<JSDecoder> callEntity(String methodName, Object... args) {
+    public AsyncResult<JSDecoder> callEntity(String methodName, Object... args) {
         return DoricDriver.getInstance().invokeContextMethod(mContextId, methodName, args);
     }
 

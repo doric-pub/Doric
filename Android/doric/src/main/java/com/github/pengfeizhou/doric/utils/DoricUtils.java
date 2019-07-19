@@ -1,6 +1,8 @@
 package com.github.pengfeizhou.doric.utils;
 
 import android.content.res.AssetManager;
+import android.os.Handler;
+import android.os.Looper;
 
 import com.github.pengfeizhou.doric.Doric;
 import com.github.pengfeizhou.jscore.JavaValue;
@@ -60,4 +62,5 @@ public class DoricUtils {
             return new JavaValue(String.valueOf(arg));
         }
     }
+
 }

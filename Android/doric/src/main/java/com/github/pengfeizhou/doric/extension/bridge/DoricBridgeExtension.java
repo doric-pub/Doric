@@ -3,6 +3,7 @@ package com.github.pengfeizhou.doric.extension.bridge;
 import android.text.TextUtils;
 
 import com.github.pengfeizhou.doric.DoricContext;
+import com.github.pengfeizhou.doric.DoricContextManager;
 import com.github.pengfeizhou.doric.DoricDriver;
 import com.github.pengfeizhou.doric.plugin.DoricNativePlugin;
 import com.github.pengfeizhou.doric.plugin.ModalPlugin;
@@ -34,7 +35,7 @@ public class DoricBridgeExtension {
     }
 
     public JavaValue callNative(String contextId, String module, String methodName, String callbackId, JSDecoder jsDecoder) {
-        DoricContext context = DoricDriver.getInstance().getContext(contextId);
+        DoricContext context = DoricContextManager.getContext(contextId);
         DoricPluginInfo pluginInfo = pluginInfoMap.get(module);
         if (pluginInfo == null) {
             DoricLog.e("Cannot find plugin class:%s", module);

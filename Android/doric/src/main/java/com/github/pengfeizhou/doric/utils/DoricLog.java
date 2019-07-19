@@ -41,7 +41,7 @@ public class DoricLog {
     }
 
     private static String suffixTag(String suffix) {
-        return TextUtils.isEmpty(suffix) ? TAG : suffix + TAG;
+        return TextUtils.isEmpty(suffix) ? TAG : TAG + suffix;
     }
 
     private static String format(String message, Object... args) {

@@ -22,14 +22,14 @@ public class DoricContext {
     }
 
     public static DoricContext createContext(String script, String alias) {
-        return DoricDriver.getInstance().createContext(script, alias);
+        return DoricContextManager.getInstance().createContext(script, alias);
     }
 
     public AsyncResult<JSDecoder> callEntity(String methodName, Object... args) {
         return getDriver().invokeContextEntityMethod(mContextId, methodName, args);
     }
 
-    public DoricDriver getDriver() {
+    public IDoricDriver getDriver() {
         return DoricDriver.getInstance();
     }
 
@@ -39,7 +39,7 @@ public class DoricContext {
     }
 
     public void teardown() {
-        DoricDriver.getInstance().destroyContext(mContextId).setCallback(new AsyncResult.Callback<Boolean>() {
+        DoricContextManager.getInstance().destroyContext(this).setCallback(new AsyncResult.Callback<Boolean>() {
             @Override
             public void onResult(Boolean result) {
 

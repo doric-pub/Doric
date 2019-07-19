@@ -10,22 +10,17 @@ import com.github.pengfeizhou.doric.utils.DoricConstant;
 import com.github.pengfeizhou.doric.utils.DoricLog;
 import com.github.pengfeizhou.jscore.JSDecoder;
 
-import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @Description: Doric
  * @Author: pengfei.zhou
  * @CreateDate: 2019-07-18
  */
-public class DoricDriver {
+public class DoricDriver implements IDoricDriver {
     private final DoricJSEngine doricJSEngine;
-    private final AtomicInteger counter = new AtomicInteger();
-    private final Map<String, DoricContext> doricContextMap = new ConcurrentHashMap<>();
     private final ExecutorService mBridgeExecutor;
     private final Handler mUIHandler;
     private final Handler mJSHandler;
@@ -81,11 +76,8 @@ public class DoricDriver {
         return Inner.sInstance;
     }
 
-    DoricContext createContext(final String script, final String source) {
-        final String contextId = String.valueOf(counter.incrementAndGet());
-        DoricContext doricContext = new DoricContext(contextId);
-        doricContextMap.put(contextId, doricContext);
-        AsyncCall.ensureRunInHandler(mJSHandler, new Callable<Boolean>() {
+    public AsyncResult<Boolean> createContext(final String contextId, final String script, final String source) {
+        return AsyncCall.ensureRunInHandler(mJSHandler, new Callable<Boolean>() {
             @Override
             public Boolean call() {
                 try {
@@ -97,17 +89,15 @@ public class DoricDriver {
                 }
             }
         });
-
-        return doricContext;
     }
 
-    AsyncResult<Boolean> destroyContext(final String contextId) {
+    @Override
+    public AsyncResult<Boolean> destroyContext(final String contextId) {
         return AsyncCall.ensureRunInHandler(mJSHandler, new Callable<Boolean>() {
             @Override
             public Boolean call() {
                 try {
                     doricJSEngine.destroyContext(contextId);
-                    doricContextMap.remove(contextId);
                     return true;
                 } catch (Exception e) {
                     DoricLog.e("destroyContext %s error is %s", contextId, e.getLocalizedMessage());
@@ -116,9 +106,4 @@ public class DoricDriver {
             }
         });
     }
-
-    public DoricContext getContext(String contextId) {
-        return doricContextMap.get(contextId);
-    }
-
 }

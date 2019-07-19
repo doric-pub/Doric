@@ -1,2 +1,2 @@
-# hego
+# Doric
 A cross-platform development framework for Android &amp; iOS

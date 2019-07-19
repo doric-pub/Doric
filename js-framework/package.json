@@ -1,7 +1,7 @@
 {
-  "name": "hego-js-framework",
+  "name": "doric-js-framework",
   "version": "0.1.0",
-  "description": "The JS Framework of Hego",
+  "description": "The JS Framework of Doric",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "https",
-    "url": "https://github.com/penfeizhou/hego.git"
+    "url": "https://github.com/penfeizhou/doric.git"
   },
   "author": "pengfeizhou",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/penfeizhou/hego/issues"
+    "url": "https://github.com/penfeizhou/doric/issues"
   },
-  "homepage": "https://github.com/penfeizhou/hego#readme",
+  "homepage": "https://github.com/penfeizhou/doric#readme",
   "dependencies": {
     "reflect-metadata": "^0.1.13",
     "rollup": "^1.17.0",

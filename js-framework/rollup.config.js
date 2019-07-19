@@ -7,9 +7,9 @@ export default [
     {
         input: "build/index.runtime.js",
         output: {
-            name: "hego",
+            name: "doric",
             format: "iife",
-            file: "bundle/hego-sandbox.js",
+            file: "bundle/doric-sandbox.js",
         },
         sourceMap: true,
         plugins: [
@@ -21,7 +21,7 @@ export default [
         input: "build/index.js",
         output: {
             format: "cjs",
-            file: "bundle/hego-lib.js",
+            file: "bundle/doric-lib.js",
         },
         sourceMap: true,
         plugins: [

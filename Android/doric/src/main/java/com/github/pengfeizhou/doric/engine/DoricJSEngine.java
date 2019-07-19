@@ -57,13 +57,13 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
                     String message = args[1].string();
                     switch (type) {
                         case "w":
-                            DoricLog.w(message, "_js");
+                            DoricLog.w("_js", message);
                             break;
                         case "e":
-                            DoricLog.e(message, "_js");
+                            DoricLog.e("_js", message);
                             break;
                         default:
-                            DoricLog.d(message, "_js");
+                            DoricLog.d("_js", message);
                             break;
                     }
                 } catch (Exception e) {
@@ -79,7 +79,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
                     String name = args[0].string();
                     String content = Doric.getJSBundle(name);
                     if (TextUtils.isEmpty(content)) {
-                        DoricLog.e("error");
+                        DoricLog.e("require js bundle:%s is empty", name);
                         return new JavaValue(false);
                     }
                     mDoricJSE.loadJS(packageModuleScript(name, content), "Module://" + name);

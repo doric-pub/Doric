@@ -1,6 +1,7 @@
 import { } from './../runtime/global';
 import { View, Stack, Group } from "./view";
 import { log } from 'util';
+import { loge } from '../util/log';
 
 export function Link(context: any) {
     return <T extends { new(...args: any[]): {} }>(constructor: T) => {
@@ -82,8 +83,25 @@ export abstract class Panel {
     }
 
     @NativeCall
-    private __responedCallback__(viewId: string, callbackId: string) {
+    private __responedCallback__(viewIds: string[], callbackId: string) {
+        const v = this.retrospectView(viewIds)
+        if (v === undefined) {
+            loge(`Cannot find view for ${viewIds}`)
+        }
+        const argumentsList: any = [callbackId]
+        for (let i = 2; i < arguments.length; i++) {
+            argumentsList.push(arguments[i])
+        }
+        Reflect.apply(v.responseCallback, v, argumentsList)
+    }
 
+    private retrospectView(ids: string[]): View {
+        return ids.reduce((acc: View, cur) => {
+            if (acc instanceof Group) {
+                return acc.children.filter(e => e.viewId === cur)[0]
+            }
+            return acc
+        }, this.__rootView__)
     }
 
     private __hookBeforeNativeCall__() {

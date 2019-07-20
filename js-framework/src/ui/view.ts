@@ -128,7 +128,7 @@ export abstract class View implements Modeling {
     isDirty() {
         return Reflect.ownKeys(this.__dirty_props__).length === 0
     }
-    responseCallback(id: string) {
+    responseCallback(id: string, ...args: any) {
         const f = this.id2Callback(id)
         if (f instanceof Function) {
             const argumentsList: any = []

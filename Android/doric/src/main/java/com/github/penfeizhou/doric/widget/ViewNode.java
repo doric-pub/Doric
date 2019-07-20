@@ -1,4 +1,4 @@
-package com.github.penfeizhou.doric.extension.render;
+package com.github.penfeizhou.doric.widget;
 
 import android.content.Context;
 import android.view.View;
@@ -17,8 +17,10 @@ import com.github.pengfeizhou.jscore.JSObject;
  * @CreateDate: 2019-07-20
  */
 public abstract class ViewNode<T extends View> extends DoricComponent {
-    private T mView;
-    private String mId;
+    protected T mView;
+    String id;
+
+    int index;
 
     public ViewNode(DoricContext doricContext) {
         super(doricContext);
@@ -26,10 +28,6 @@ public abstract class ViewNode<T extends View> extends DoricComponent {
 
     public T getView() {
         return mView;
-    }
-
-    private void setId(String id) {
-        mId = id;
     }
 
     public Context getContext() {
@@ -62,7 +60,7 @@ public abstract class ViewNode<T extends View> extends DoricComponent {
         DoricRegistry registry = doricContext.getDriver().getRegistry();
         DoricMetaInfo<ViewNode> clz = registry.acquireViewNodeInfo(type);
         ViewNode node = clz.createInstance(doricContext);
-        node.setId(id);
+        node.id = id;
         return node;
     }
 }

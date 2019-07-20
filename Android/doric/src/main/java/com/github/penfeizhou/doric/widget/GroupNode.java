@@ -1,11 +1,12 @@
 package com.github.penfeizhou.doric.widget;
 
+import android.util.SparseArray;
 import android.view.ViewGroup;
 
 import com.github.penfeizhou.doric.DoricContext;
-import com.github.penfeizhou.doric.extension.render.ViewNode;
 import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSObject;
+import com.github.pengfeizhou.jscore.JSValue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +17,8 @@ import java.util.Map;
  * @CreateDate: 2019-07-20
  */
 public abstract class GroupNode extends ViewNode<ViewGroup> {
-    private Map<String, ViewNode> mChildren = new HashMap<>();
+    private Map<String, ViewNode> mChildrenNode = new HashMap<>();
+    private SparseArray<ViewNode> mIndexInfo = new SparseArray<>();
 
     public GroupNode(DoricContext doricContext) {
         super(doricContext);
@@ -26,19 +28,31 @@ public abstract class GroupNode extends ViewNode<ViewGroup> {
     public void blend(JSObject jsObject) {
         super.blend(jsObject);
         JSArray jsArray = jsObject.getProperty("children").asArray();
-        for (int i = 0; i < jsArray.size(); i++) {
-            JSObject childObj = jsArray.get(i).asObject();
+        int i;
+        for (i = 0; i < jsArray.size(); i++) {
+            JSValue jsValue = jsArray.get(i);
+            if (!jsValue.isObject()) {
+                continue;
+            }
+            JSObject childObj = jsValue.asObject();
             String type = childObj.getProperty("type").asString().value();
             String id = childObj.getProperty("id").asString().value();
-            ViewNode child = mChildren.get(id);
+            ViewNode child = mChildrenNode.get(id);
             if (child == null) {
                 child = ViewNode.create(getDoricContext(), id, type);
-                mChildren.put(id, child);
-            }
-            if (getView().getChildAt(i) == null) {
-                getView().addView(child.getView());
+                child.index = i;
+                mChildrenNode.put(id, child);
+                mView.addView(child.mView, i);
+            } else if (i != child.index) {
+                mView.removeView(child.mView);
+                mView.addView(child.mView, i);
             }
             child.blend(childObj.getProperty("props").asObject());
+            mIndexInfo.put(i, child);
+        }
+        while (i < mView.getChildCount()) {
+            mView.removeViewAt(mView.getChildCount() - 1);
+            mChildrenNode.remove(mIndexInfo.get(i).id);
         }
     }
 }

@@ -4,7 +4,6 @@ import android.widget.TextView;
 
 import com.github.penfeizhou.doric.DoricContext;
 import com.github.penfeizhou.doric.extension.render.DoricNode;
-import com.github.penfeizhou.doric.extension.render.ViewNode;
 import com.github.pengfeizhou.jscore.JSObject;
 
 /**

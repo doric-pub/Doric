@@ -2,7 +2,7 @@ package com.github.penfeizhou.doric;
 
 import android.text.TextUtils;
 
-import com.github.penfeizhou.doric.extension.render.ViewNode;
+import com.github.penfeizhou.doric.widget.ViewNode;
 import com.github.penfeizhou.doric.utils.DoricMetaInfo;
 import com.github.penfeizhou.doric.plugin.DoricJavaPlugin;
 import com.github.penfeizhou.doric.plugin.ModalPlugin;

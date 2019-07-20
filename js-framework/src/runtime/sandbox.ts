@@ -71,8 +71,22 @@ export class Context {
     entity: any
     id: string
     callbacks: Map<string, { resolve: Function, reject: Function }> = new Map
+    bridge: { [index: string]: (args?: any) => Promise<any> }
+
     constructor(id: string) {
         this.id = id
+        this.bridge = new Proxy({}, {
+            get: (target, p: any) => {
+                if (typeof p === 'string') {
+                    return (args?: any) => {
+                        const array = p.split('_')
+                        return this.callNative(array[0], array[1], args)
+                    }
+                } else {
+                    return Reflect.get(target, p)
+                }
+            }
+        })
     }
     callNative(namespace: string, method: string, args?: any): Promise<any> {
         const callbackId = uniqueId('callback')

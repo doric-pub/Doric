@@ -43,7 +43,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
             }
         });
         mTimerExtension = new DoricTimerExtension(looper, this);
-        mDoricBridgeExtension = new DoricBridgeExtension();
+        mDoricBridgeExtension = new DoricBridgeExtension(mDoricRegistry);
     }
 
     public Handler getJSHandler() {
@@ -174,17 +174,6 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
         return String.format(DoricConstant.TEMPLATE_MODULE, moduleName, content);
     }
 
-    public JSDecoder invokeContextEntityMethod(final String contextId, final String method, final Object... args) {
-        final Object[] nArgs = new Object[args.length + 2];
-        nArgs[0] = contextId;
-        nArgs[1] = method;
-        if (args.length > 0) {
-            System.arraycopy(args, 0, nArgs, 2, args.length);
-        }
-        return invokeDoricMethod(DoricConstant.DORIC_CONTEXT_INVOKE, nArgs);
-    }
-
-
     public JSDecoder invokeDoricMethod(final String method, final Object... args) {
         ArrayList<JavaValue> values = new ArrayList<>();
         for (Object arg : args) {
@@ -196,6 +185,11 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
 
     @Override
     public void callback(long timerId) {
-        invokeDoricMethod(DoricConstant.DORIC_TIMER_CALLBACK, timerId);
+        try {
+            invokeDoricMethod(DoricConstant.DORIC_TIMER_CALLBACK, timerId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            DoricLog.e("Timer Callback error:%s", e.getLocalizedMessage());
+        }
     }
 }

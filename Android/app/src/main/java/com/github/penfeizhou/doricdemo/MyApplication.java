@@ -3,6 +3,7 @@ package com.github.penfeizhou.doricdemo;
 import android.app.Application;
 
 import com.github.penfeizhou.doric.Doric;
+import com.github.penfeizhou.doric.DoricRegistry;
 
 /**
  * @Description: Doric
@@ -14,5 +15,6 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         Doric.init(this);
+        DoricRegistry.register(new DemoLibrary());
     }
 }

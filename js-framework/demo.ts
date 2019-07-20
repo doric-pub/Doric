@@ -19,7 +19,7 @@ log('console', Object.getOwnPropertyNames(console))
 
 setTimeout(() => {
     log('exec setTimeout')
-    context.callNative("modal", "toast", "Hello,Doric!")
+    // context.callNative("modal", "toast", "Hello,Doric!")
 }, 1000)
 const timerId = setInterval(() => {
     log('exec setInterval')
@@ -39,5 +39,8 @@ export class MyPage extends Panel {
         log("Hello.HEGO")
         logw("Hello.HEGO")
         loge("Hello.HEGO")
+        setTimeout(() => {
+            context.bridge.demo_test()
+        }, 1000)
     }
 }

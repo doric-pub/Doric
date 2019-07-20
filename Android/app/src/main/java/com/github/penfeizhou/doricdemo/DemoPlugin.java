@@ -6,6 +6,7 @@ import com.github.penfeizhou.doric.DoricContext;
 import com.github.penfeizhou.doric.extension.bridge.DoricMethod;
 import com.github.penfeizhou.doric.extension.bridge.DoricPlugin;
 import com.github.penfeizhou.doric.plugin.DoricJavaPlugin;
+import com.github.penfeizhou.doric.utils.ThreadMode;
 
 /**
  * @Description: com.github.penfeizhou.doricdemo
@@ -18,8 +19,13 @@ public class DemoPlugin extends DoricJavaPlugin {
         super(doricContext);
     }
 
-    @DoricMethod
+    @DoricMethod(thread = ThreadMode.UI)
     public void test() {
+        Toast.makeText(getDoricContext().getContext(), "test", Toast.LENGTH_SHORT).show();
+    }
+
+    @DoricMethod(thread = ThreadMode.UI)
+    public void testPromise() {
         Toast.makeText(getDoricContext().getContext(), "test", Toast.LENGTH_SHORT).show();
     }
 }

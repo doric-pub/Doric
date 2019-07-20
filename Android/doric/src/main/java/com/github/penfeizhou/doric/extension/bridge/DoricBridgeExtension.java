@@ -1,21 +1,17 @@
 package com.github.penfeizhou.doric.extension.bridge;
 
-import android.text.TextUtils;
-
 import com.github.penfeizhou.doric.DoricContext;
 import com.github.penfeizhou.doric.DoricRegistry;
 import com.github.penfeizhou.doric.async.AsyncResult;
 import com.github.penfeizhou.doric.plugin.DoricJavaPlugin;
-import com.github.penfeizhou.doric.plugin.ModalPlugin;
 import com.github.penfeizhou.doric.DoricContextManager;
 import com.github.penfeizhou.doric.utils.DoricLog;
+import com.github.penfeizhou.doric.utils.DoricMetaInfo;
 import com.github.penfeizhou.doric.utils.DoricUtils;
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JavaValue;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.Callable;
 
 /**
@@ -33,7 +29,7 @@ public class DoricBridgeExtension {
 
     public JavaValue callNative(String contextId, String module, String methodName, final String callbackId, final JSDecoder jsDecoder) {
         final DoricContext context = DoricContextManager.getContext(contextId);
-        DoricPluginInfo pluginInfo = mRegistry.acquirePluginInfo(module);
+        DoricMetaInfo<DoricJavaPlugin> pluginInfo = mRegistry.acquirePluginInfo(module);
         if (pluginInfo == null) {
             DoricLog.e("Cannot find plugin class:%s", module);
             return new JavaValue(false);

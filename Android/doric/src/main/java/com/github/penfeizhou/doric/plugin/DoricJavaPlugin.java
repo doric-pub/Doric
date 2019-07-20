@@ -1,20 +1,15 @@
 package com.github.penfeizhou.doric.plugin;
 
 import com.github.penfeizhou.doric.DoricContext;
+import com.github.penfeizhou.doric.utils.DoricComponent;
 
 /**
  * @Description: Doric
  * @Author: pengfei.zhou
  * @CreateDate: 2019-07-18
  */
-public abstract class DoricJavaPlugin {
-    private final DoricContext doricContext;
-
+public abstract class DoricJavaPlugin extends DoricComponent {
     public DoricJavaPlugin(DoricContext doricContext) {
-        this.doricContext = doricContext;
-    }
-
-    public DoricContext getDoricContext() {
-        return doricContext;
+        super(doricContext);
     }
 }

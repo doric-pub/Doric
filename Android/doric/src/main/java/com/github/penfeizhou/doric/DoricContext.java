@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.github.penfeizhou.doric.async.AsyncResult;
 import com.github.penfeizhou.doric.plugin.DoricJavaPlugin;
-import com.github.penfeizhou.doric.extension.bridge.DoricPluginInfo;
+import com.github.penfeizhou.doric.utils.DoricMetaInfo;
 import com.github.pengfeizhou.jscore.JSDecoder;
 
 import java.util.HashMap;
@@ -64,11 +64,11 @@ public class DoricContext {
         });
     }
 
-    public DoricJavaPlugin obtainPlugin(DoricPluginInfo doricPluginInfo) {
-        DoricJavaPlugin plugin = mPluginMap.get(doricPluginInfo.getName());
+    public DoricJavaPlugin obtainPlugin(DoricMetaInfo<DoricJavaPlugin> doricMetaInfo) {
+        DoricJavaPlugin plugin = mPluginMap.get(doricMetaInfo.getName());
         if (plugin == null) {
-            plugin = doricPluginInfo.createPlugin(this);
-            mPluginMap.put(doricPluginInfo.getName(), plugin);
+            plugin = doricMetaInfo.createInstance(this);
+            mPluginMap.put(doricMetaInfo.getName(), plugin);
         }
         return plugin;
     }

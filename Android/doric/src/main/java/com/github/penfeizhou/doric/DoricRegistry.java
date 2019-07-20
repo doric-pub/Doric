@@ -2,7 +2,8 @@ package com.github.penfeizhou.doric;
 
 import android.text.TextUtils;
 
-import com.github.penfeizhou.doric.extension.bridge.DoricPluginInfo;
+import com.github.penfeizhou.doric.render.ViewNode;
+import com.github.penfeizhou.doric.utils.DoricMetaInfo;
 import com.github.penfeizhou.doric.plugin.DoricJavaPlugin;
 import com.github.penfeizhou.doric.plugin.ModalPlugin;
 
@@ -19,7 +20,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DoricRegistry {
     private static Map<String, String> bundles = new ConcurrentHashMap<>();
-    private Map<String, DoricPluginInfo> pluginInfoMap = new HashMap<>();
+    private Map<String, DoricMetaInfo<DoricJavaPlugin>> pluginInfoMap = new HashMap<>();
+    private Map<String, DoricMetaInfo<ViewNode>> nodeInfoMap = new HashMap<>();
     private static Set<DoricLibrary> doricLibraries = new HashSet<>();
 
     private static void initRegistry(DoricRegistry doricRegistry) {
@@ -43,14 +45,25 @@ public class DoricRegistry {
     }
 
     public void registerNativePlugin(Class<? extends DoricJavaPlugin> pluginClass) {
-        DoricPluginInfo doricPluginInfo = new DoricPluginInfo(pluginClass);
-        if (!TextUtils.isEmpty(doricPluginInfo.getName())) {
-            pluginInfoMap.put(doricPluginInfo.getName(), doricPluginInfo);
+        DoricMetaInfo<DoricJavaPlugin> doricMetaInfo = new DoricMetaInfo<>(pluginClass);
+        if (!TextUtils.isEmpty(doricMetaInfo.getName())) {
+            pluginInfoMap.put(doricMetaInfo.getName(), doricMetaInfo);
         }
     }
 
-    public DoricPluginInfo acquirePluginInfo(String name) {
+    public DoricMetaInfo<DoricJavaPlugin> acquirePluginInfo(String name) {
         return pluginInfoMap.get(name);
+    }
+
+    public void registerViewNode(Class<? extends ViewNode> pluginClass) {
+        DoricMetaInfo<ViewNode> doricMetaInfo = new DoricMetaInfo<>(pluginClass);
+        if (!TextUtils.isEmpty(doricMetaInfo.getName())) {
+            nodeInfoMap.put(doricMetaInfo.getName(), doricMetaInfo);
+        }
+    }
+
+    public DoricMetaInfo<ViewNode> acquireViewNodeInfo(String name) {
+        return nodeInfoMap.get(name);
     }
 
     public String acquireJSBundle(String name) {

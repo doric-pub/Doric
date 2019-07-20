@@ -1,10 +1,10 @@
-package com.github.penfeizhou.doric.extension.bridge;
+package com.github.penfeizhou.doric.utils;
 
 import android.text.TextUtils;
 
 import com.github.penfeizhou.doric.DoricContext;
-import com.github.penfeizhou.doric.plugin.DoricJavaPlugin;
-import com.github.penfeizhou.doric.utils.DoricLog;
+import com.github.penfeizhou.doric.extension.bridge.DoricMethod;
+import com.github.penfeizhou.doric.extension.bridge.DoricPlugin;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -16,14 +16,14 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Author: pengfei.zhou
  * @CreateDate: 2019-07-18
  */
-public class DoricPluginInfo {
+public class DoricMetaInfo<T extends DoricComponent> {
 
-    private Constructor<? extends DoricJavaPlugin> pluginConstructor;
+    private Constructor<? extends T> pluginConstructor;
 
     private Map<String, Method> methodMap = new ConcurrentHashMap<>();
     private String name;
 
-    public DoricPluginInfo(Class<? extends DoricJavaPlugin> pluginClass) {
+    public DoricMetaInfo(Class<? extends T> pluginClass) {
         try {
             this.pluginConstructor = pluginClass.getDeclaredConstructor(DoricContext.class);
             DoricPlugin doricPlugin = pluginClass.getAnnotation(DoricPlugin.class);
@@ -48,7 +48,7 @@ public class DoricPluginInfo {
         return name;
     }
 
-    public DoricJavaPlugin createPlugin(DoricContext doricContext) {
+    public T createInstance(DoricContext doricContext) {
         try {
             return pluginConstructor.newInstance(doricContext);
         } catch (Exception e) {

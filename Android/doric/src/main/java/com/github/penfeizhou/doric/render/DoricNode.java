@@ -1,4 +1,4 @@
-package com.github.penfeizhou.doric.extension.bridge;
+package com.github.penfeizhou.doric.render;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -7,13 +7,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @Description: Doric
+ * @Description: com.github.penfeizhou.doric.render
  * @Author: pengfei.zhou
- * @CreateDate: 2019-07-18
+ * @CreateDate: 2019-07-20
  */
 @Documented
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface DoricPlugin {
+public @interface DoricNode {
     String name();
 }

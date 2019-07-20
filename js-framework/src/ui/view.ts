@@ -1,5 +1,5 @@
 import { Color, GradientColor } from "../util/color"
-import { Modeling, Model } from "../util/types";
+import { Modeling, Model, obj2Model } from "../util/types";
 import "reflect-metadata"
 import { uniqueId } from "../util/uniqueId";
 import { loge } from "../util/log";
@@ -41,6 +41,8 @@ export abstract class View implements Modeling {
 
     @Property
     viewId = uniqueId('ViewId')
+
+    parent?: Group
 
     callbacks: Map<String, Function> = new Map
 
@@ -107,12 +109,21 @@ export abstract class View implements Modeling {
     onPropertyChanged(propKey: string, oldV: Model, newV: Model): void {
         if (newV instanceof Function) {
             newV = this.callback2Id(newV)
-        } else if (newV instanceof Object
-            && Reflect.has(newV, 'toModel')
-            && Reflect.get(newV, 'toModel') instanceof Function) {
-            newV = Reflect.apply(Reflect.get(newV, 'toModel'), newV, [])
+        } else {
+            newV = obj2Model(newV)
         }
         this.__dirty_props__[propKey] = newV
+        if (this.parent instanceof Group) {
+            this.parent.onChildPropertyChanged(this, propKey, oldV, newV)
+        }
+    }
+
+    clean() {
+        for (const key in this.__dirty_props__) {
+            if (this.__dirty_props__.hasOwnProperty(key)) {
+                this.__dirty_props__[key] = undefined
+            }
+        }
     }
 
     responseCallback(id: string) {
@@ -180,8 +191,43 @@ export interface LayoutConfig extends Config {
 }
 
 export abstract class Group extends View {
+
     @Property
-    children: View[] = []
+    children: View[] = new Proxy([], {
+        set: (target, index, value) => {
+            if (typeof index === 'number' && value instanceof View) {
+                value.parent = this
+                const childrenModel = this.getDirtyChildrenModel()
+                childrenModel[index] = value.toModel()
+            } else if (index === 'length') {
+                this.getDirtyChildrenModel().length = value as number
+            }
+            return Reflect.set(target, index, value)
+        }
+    })
+
+    clean() {
+        this.children.forEach(e => { e.clean() })
+        super.clean()
+    }
+
+    getDirtyChildrenModel(): Model[] {
+        if (this.__dirty_props__.children === undefined) {
+            this.__dirty_props__.children = []
+        }
+        return this.__dirty_props__.children as Model[]
+    }
+
+    toModel() {
+        if (this.__dirty_props__.children != undefined) {
+            (this.__dirty_props__.children as Model[]).length = this.children.length
+        }
+        return super.toModel()
+    }
+
+    onChildPropertyChanged(child: View, propKey: string, oldV: Model, newV: Model) {
+
+    }
 }
 
 export class Stack extends Group {

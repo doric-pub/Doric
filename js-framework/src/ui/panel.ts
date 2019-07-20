@@ -83,7 +83,7 @@ export abstract class Panel {
     }
 
     @NativeCall
-    private __responedCallback__(viewIds: string[], callbackId: string) {
+    private __response__(viewIds: string[], callbackId: string) {
         const v = this.retrospectView(viewIds)
         if (v === undefined) {
             loge(`Cannot find view for ${viewIds}`)

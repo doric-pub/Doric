@@ -7,9 +7,14 @@ import android.view.ViewGroup;
 import com.github.penfeizhou.doric.DoricContext;
 import com.github.penfeizhou.doric.DoricRegistry;
 import com.github.penfeizhou.doric.utils.DoricComponent;
+import com.github.penfeizhou.doric.utils.DoricConstant;
 import com.github.penfeizhou.doric.utils.DoricMetaInfo;
 import com.github.penfeizhou.doric.utils.DoricUtils;
 import com.github.pengfeizhou.jscore.JSObject;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @Description: Render
@@ -18,9 +23,9 @@ import com.github.pengfeizhou.jscore.JSObject;
  */
 public abstract class ViewNode<T extends View> extends DoricComponent {
     protected T mView;
-    String id;
-
     int index;
+
+    ArrayList<String> ids = new ArrayList<>();
 
     public ViewNode(DoricContext doricContext) {
         super(doricContext);
@@ -43,6 +48,10 @@ public abstract class ViewNode<T extends View> extends DoricComponent {
         setFrame(mView.getLayoutParams(), jsObject);
     }
 
+    public String getId() {
+        return ids.get(ids.size() - 1);
+    }
+
     public void setFrame(ViewGroup.LayoutParams layoutParams, JSObject jsObject) {
         float width = jsObject.getProperty("width").asNumber().toFloat();
         float height = jsObject.getProperty("height").asNumber().toFloat();
@@ -56,11 +65,19 @@ public abstract class ViewNode<T extends View> extends DoricComponent {
         }
     }
 
-    public static ViewNode create(DoricContext doricContext, String id, String type) {
+    public void callJSRespone(String funcId, Object... args) {
+        final Object[] nArgs = new Object[args.length + 2];
+        nArgs[0] = ids.toArray(new String[0]);
+        nArgs[1] = funcId;
+        if (args.length > 0) {
+            System.arraycopy(args, 0, nArgs, 2, args.length);
+        }
+        getDoricContext().callEntity(DoricConstant.DORIC_ENTITY_RESPONSE, nArgs);
+    }
+
+    public static ViewNode create(DoricContext doricContext, String type) {
         DoricRegistry registry = doricContext.getDriver().getRegistry();
         DoricMetaInfo<ViewNode> clz = registry.acquireViewNodeInfo(type);
-        ViewNode node = clz.createInstance(doricContext);
-        node.id = id;
-        return node;
+        return clz.createInstance(doricContext);
     }
 }

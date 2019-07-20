@@ -43,4 +43,7 @@ public class DoricConstant {
     public static final String DORIC_TIMER_CALLBACK = "jsCallbackTimer";
     public static final String DORIC_BRIDGE_RESOLVE = "jsCallResolve";
     public static final String DORIC_BRIDGE_REJECT = "jsCallReject";
+
+
+    public static final String DORIC_ENTITY_RESPONSE = "__response__";
 }

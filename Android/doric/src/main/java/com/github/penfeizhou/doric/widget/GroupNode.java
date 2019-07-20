@@ -39,11 +39,15 @@ public abstract class GroupNode extends ViewNode<ViewGroup> {
             String id = childObj.getProperty("id").asString().value();
             ViewNode child = mChildrenNode.get(id);
             if (child == null) {
-                child = ViewNode.create(getDoricContext(), id, type);
+                child = ViewNode.create(getDoricContext(), type);
                 child.index = i;
+                child.ids.addAll(this.ids);
+                child.ids.add(id);
                 mChildrenNode.put(id, child);
                 mView.addView(child.mView, i);
             } else if (i != child.index) {
+                mIndexInfo.remove(child.index);
+                child.index = i;
                 mView.removeView(child.mView);
                 mView.addView(child.mView, i);
             }
@@ -52,7 +56,10 @@ public abstract class GroupNode extends ViewNode<ViewGroup> {
         }
         while (i < mView.getChildCount()) {
             mView.removeViewAt(mView.getChildCount() - 1);
-            mChildrenNode.remove(mIndexInfo.get(i).id);
+            if (mIndexInfo.get(i) != null) {
+                mChildrenNode.remove(mIndexInfo.get(i).getId());
+                mIndexInfo.remove(i);
+            }
         }
     }
 }

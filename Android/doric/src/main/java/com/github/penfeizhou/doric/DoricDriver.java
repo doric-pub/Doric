@@ -8,6 +8,7 @@ import com.github.penfeizhou.doric.async.AsyncResult;
 import com.github.penfeizhou.doric.engine.DoricJSEngine;
 import com.github.penfeizhou.doric.utils.DoricConstant;
 import com.github.penfeizhou.doric.utils.DoricLog;
+import com.github.penfeizhou.doric.utils.ThreadMode;
 import com.github.pengfeizhou.jscore.JSDecoder;
 
 import java.util.concurrent.Callable;
@@ -25,6 +26,7 @@ public class DoricDriver implements IDoricDriver {
     private final Handler mUIHandler;
     private final Handler mJSHandler;
 
+    @Override
     public AsyncResult<JSDecoder> invokeContextEntityMethod(final String contextId, final String method, final Object... args) {
         final Object[] nArgs = new Object[args.length + 2];
         nArgs[0] = contextId;
@@ -35,6 +37,7 @@ public class DoricDriver implements IDoricDriver {
         return invokeDoricMethod(DoricConstant.DORIC_CONTEXT_INVOKE, nArgs);
     }
 
+    @Override
     public AsyncResult<JSDecoder> invokeDoricMethod(final String method, final Object... args) {
         return AsyncCall.ensureRunInHandler(mJSHandler, new Callable<JSDecoder>() {
             @Override
@@ -49,6 +52,20 @@ public class DoricDriver implements IDoricDriver {
         });
     }
 
+    @Override
+    public <T> AsyncResult<T> asyncCall(Callable<T> callable, ThreadMode threadMode) {
+        switch (threadMode) {
+            case JS:
+                return AsyncCall.ensureRunInHandler(mJSHandler, callable);
+            case UI:
+                return AsyncCall.ensureRunInHandler(mUIHandler, callable);
+            case INDEPENDENT:
+            default:
+                return AsyncCall.ensureRunIExecutor(mBridgeExecutor, callable);
+        }
+    }
+
+
     private static class Inner {
         private static final DoricDriver sInstance = new DoricDriver();
     }
@@ -60,22 +77,12 @@ public class DoricDriver implements IDoricDriver {
         mJSHandler = doricJSEngine.getJSHandler();
     }
 
-    public void runOnJS(Runnable runnable) {
-        mJSHandler.post(runnable);
-    }
-
-    public void runOnUI(Runnable runnable) {
-        mUIHandler.post(runnable);
-    }
-
-    public void runIndependently(Runnable runnable) {
-        mBridgeExecutor.execute(runnable);
-    }
 
     public static DoricDriver getInstance() {
         return Inner.sInstance;
     }
 
+    @Override
     public AsyncResult<Boolean> createContext(final String contextId, final String script, final String source) {
         return AsyncCall.ensureRunInHandler(mJSHandler, new Callable<Boolean>() {
             @Override

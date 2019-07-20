@@ -2,7 +2,10 @@ package com.github.penfeizhou.doric;
 
 
 import com.github.penfeizhou.doric.async.AsyncResult;
+import com.github.penfeizhou.doric.utils.ThreadMode;
 import com.github.pengfeizhou.jscore.JSDecoder;
+
+import java.util.concurrent.Callable;
 
 /**
  * @Description: com.github.pengfeizhou.doric
@@ -14,11 +17,7 @@ public interface IDoricDriver {
 
     AsyncResult<JSDecoder> invokeDoricMethod(final String method, final Object... args);
 
-    void runOnJS(Runnable runnable);
-
-    void runOnUI(Runnable runnable);
-
-    void runIndependently(Runnable runnable);
+    <T> AsyncResult<T> asyncCall(Callable<T> callable, ThreadMode threadMode);
 
     AsyncResult<Boolean> createContext(final String contextId, final String script, final String source);
 

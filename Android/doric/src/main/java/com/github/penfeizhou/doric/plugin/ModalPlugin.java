@@ -6,6 +6,7 @@ import com.github.penfeizhou.doric.DoricContext;
 import com.github.penfeizhou.doric.extension.bridge.DoricComponent;
 import com.github.penfeizhou.doric.extension.bridge.DoricMethod;
 import com.github.penfeizhou.doric.extension.bridge.DoricPromise;
+import com.github.penfeizhou.doric.utils.ThreadMode;
 import com.github.pengfeizhou.jscore.ArchiveException;
 import com.github.pengfeizhou.jscore.JSDecoder;
 
@@ -21,7 +22,7 @@ public class ModalPlugin extends DoricNativePlugin {
         super(doricContext);
     }
 
-    @DoricMethod(name = "toast", thread = DoricMethod.Mode.UI)
+    @DoricMethod(name = "toast", thread = ThreadMode.UI)
     public void toast(JSDecoder decoder, DoricPromise promise) {
         try {
             Toast.makeText(getDoricContext().getContext(), decoder.string(), Toast.LENGTH_SHORT).show();

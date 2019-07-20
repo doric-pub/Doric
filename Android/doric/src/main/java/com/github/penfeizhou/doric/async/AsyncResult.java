@@ -27,6 +27,14 @@ public class AsyncResult<R> {
         }
     }
 
+    public boolean hasResult() {
+        return result != EMPTY;
+    }
+
+    public R getResult() {
+        return (R) result;
+    }
+
     public void setCallback(Callback<R> callback) {
         this.callback = callback;
         if (result instanceof Throwable) {

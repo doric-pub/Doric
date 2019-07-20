@@ -1,5 +1,7 @@
 package com.github.penfeizhou.doric.extension.bridge;
 
+import com.github.penfeizhou.doric.utils.ThreadMode;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -17,11 +19,5 @@ import java.lang.annotation.Target;
 public @interface DoricMethod {
     String name() default "";
 
-    Mode thread() default Mode.INDEPENDENT;
-
-    enum Mode {
-        UI,
-        JS,
-        INDEPENDENT,
-    }
+    ThreadMode thread() default ThreadMode.INDEPENDENT;
 }

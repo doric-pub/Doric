@@ -22,4 +22,6 @@ public interface IDoricDriver {
     AsyncResult<Boolean> createContext(final String contextId, final String script, final String source);
 
     AsyncResult<Boolean> destroyContext(final String contextId);
+
+    DoricRegistry getRegistry();
 }

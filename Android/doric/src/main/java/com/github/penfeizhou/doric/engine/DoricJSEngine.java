@@ -25,10 +25,10 @@ import java.util.ArrayList;
  */
 public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.TimerCallback {
     private final Handler mJSHandler;
-    private final DoricBridgeExtension mDoricBridgeExtension;
+    private final DoricBridgeExtension mDoricBridgeExtension = new DoricBridgeExtension();
     private IDoricJSE mDoricJSE;
-    private DoricTimerExtension mTimerExtension;
-    private DoricRegistry mDoricRegistry = new DoricRegistry();
+    private final DoricTimerExtension mTimerExtension;
+    private final DoricRegistry mDoricRegistry = new DoricRegistry();
 
     public DoricJSEngine() {
         HandlerThread handlerThread = new HandlerThread(this.getClass().getSimpleName());
@@ -43,7 +43,6 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
             }
         });
         mTimerExtension = new DoricTimerExtension(looper, this);
-        mDoricBridgeExtension = new DoricBridgeExtension(mDoricRegistry);
     }
 
     public Handler getJSHandler() {
@@ -191,5 +190,9 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
             e.printStackTrace();
             DoricLog.e("Timer Callback error:%s", e.getLocalizedMessage());
         }
+    }
+
+    public DoricRegistry getRegistry() {
+        return mDoricRegistry;
     }
 }

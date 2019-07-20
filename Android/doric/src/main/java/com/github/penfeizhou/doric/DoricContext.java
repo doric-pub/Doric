@@ -3,6 +3,7 @@ package com.github.penfeizhou.doric;
 import android.content.Context;
 
 import com.github.penfeizhou.doric.async.AsyncResult;
+import com.github.penfeizhou.doric.extension.render.DoricShader;
 import com.github.penfeizhou.doric.plugin.DoricJavaPlugin;
 import com.github.penfeizhou.doric.utils.DoricMetaInfo;
 import com.github.pengfeizhou.jscore.JSDecoder;
@@ -19,6 +20,7 @@ public class DoricContext {
     private final String mContextId;
     private final Map<String, DoricJavaPlugin> mPluginMap = new HashMap<>();
     private final Context mContext;
+    private DoricShader doricShader = new DoricShader(getDriver().getRegistry());
 
     DoricContext(Context context, String contextId) {
         this.mContext = context;

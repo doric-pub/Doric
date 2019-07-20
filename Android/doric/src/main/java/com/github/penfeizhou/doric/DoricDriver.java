@@ -113,4 +113,9 @@ public class DoricDriver implements IDoricDriver {
             }
         });
     }
+
+    @Override
+    public DoricRegistry getRegistry() {
+        return doricJSEngine.getRegistry();
+    }
 }

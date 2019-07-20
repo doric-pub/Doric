@@ -1,7 +1,11 @@
 package com.github.penfeizhou.doric.utils;
 
+import android.content.Context;
 import android.content.res.AssetManager;
 import android.support.annotation.NonNull;
+import android.util.DisplayMetrics;
+import android.view.Display;
+import android.view.WindowManager;
 
 import com.github.penfeizhou.doric.Doric;
 import com.github.pengfeizhou.jscore.JSArray;
@@ -14,6 +18,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 
 /**
  * @Description: Doric
@@ -107,4 +112,96 @@ public class DoricUtils {
         }
         return null;
     }
+
+    private static int sScreenWidthPixels;
+    private static int sScreenHeightPixels;
+
+    public static int getScreenWidth(Context context) {
+        if (context == null) {
+            context = Doric.application();
+        }
+        if (sScreenWidthPixels > 0) {
+            return sScreenWidthPixels;
+        }
+        DisplayMetrics dm = new DisplayMetrics();
+        WindowManager manager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+
+        Display display = manager.getDefaultDisplay();
+        if (display != null) {
+            display.getMetrics(dm);
+            sScreenWidthPixels = dm.widthPixels;
+            sScreenHeightPixels = dm.heightPixels;
+        }
+        return sScreenWidthPixels;
+    }
+
+    public static int getScreenWidth() {
+        return getScreenWidth(null);
+    }
+
+    public static int getScreenHeight(Context context) {
+        if (context == null) {
+            context = Doric.application();
+        }
+        if (sScreenHeightPixels > 0) {
+            return sScreenHeightPixels;
+        }
+        DisplayMetrics dm = new DisplayMetrics();
+        WindowManager manager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+
+        Display display = manager.getDefaultDisplay();
+        if (display != null) {
+            display.getMetrics(dm);
+            sScreenWidthPixels = dm.widthPixels;
+            sScreenHeightPixels = dm.heightPixels;
+        }
+        return sScreenHeightPixels;
+    }
+
+    public static int getScreenHeight() {
+        return getScreenHeight(null);
+    }
+
+    public static float px2dp(int pxValue) {
+        return px2dp(null, pxValue);
+    }
+
+    public static float px2dp(Context context, int pxValue) {
+        if (context == null) {
+            context = Doric.application();
+        }
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return pxValue / scale;
+    }
+
+    public static int dp2px(float dpValue) {
+        return dp2px(null, dpValue);
+    }
+
+    public static int dp2px(Context context, float dipValue) {
+        if (context == null) {
+            context = Doric.application();
+        }
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dipValue * scale + (dipValue > 0 ? 0.5f : -0.5f));
+    }
+
+
+    public static int getStatusBarHeight(Context context) {
+        Class<?> c = null;
+        Object obj = null;
+        Field field = null;
+        int x = 0, sbar = 0;
+        try {
+            c = Class.forName("com.android.internal.R$dimen");
+            obj = c.newInstance();
+            field = c.getField("status_bar_height");
+            x = Integer.parseInt(field.get(obj).toString());
+            sbar = context.getResources().getDimensionPixelSize(x);
+        } catch (Exception E) {
+            E.printStackTrace();
+        }
+        return sbar;
+    }
+
 }

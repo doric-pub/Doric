@@ -1,4 +1,4 @@
-package com.github.penfeizhou.doric.render;
+package com.github.penfeizhou.doric.extension.render;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

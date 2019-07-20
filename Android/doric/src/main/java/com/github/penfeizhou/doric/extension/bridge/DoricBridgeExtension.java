@@ -21,15 +21,12 @@ import java.util.concurrent.Callable;
  */
 public class DoricBridgeExtension {
 
-    private final DoricRegistry mRegistry;
-
-    public DoricBridgeExtension(DoricRegistry doricRegistry) {
-        mRegistry = doricRegistry;
+    public DoricBridgeExtension() {
     }
 
     public JavaValue callNative(String contextId, String module, String methodName, final String callbackId, final JSDecoder jsDecoder) {
         final DoricContext context = DoricContextManager.getContext(contextId);
-        DoricMetaInfo<DoricJavaPlugin> pluginInfo = mRegistry.acquirePluginInfo(module);
+        DoricMetaInfo<DoricJavaPlugin> pluginInfo = context.getDriver().getRegistry().acquirePluginInfo(module);
         if (pluginInfo == null) {
             DoricLog.e("Cannot find plugin class:%s", module);
             return new JavaValue(false);

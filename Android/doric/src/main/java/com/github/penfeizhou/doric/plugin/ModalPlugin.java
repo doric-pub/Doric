@@ -3,7 +3,7 @@ package com.github.penfeizhou.doric.plugin;
 import android.widget.Toast;
 
 import com.github.penfeizhou.doric.DoricContext;
-import com.github.penfeizhou.doric.extension.bridge.DoricComponent;
+import com.github.penfeizhou.doric.extension.bridge.DoricPlugin;
 import com.github.penfeizhou.doric.extension.bridge.DoricMethod;
 import com.github.penfeizhou.doric.extension.bridge.DoricPromise;
 import com.github.penfeizhou.doric.utils.ThreadMode;
@@ -15,8 +15,8 @@ import com.github.pengfeizhou.jscore.JSDecoder;
  * @Author: pengfei.zhou
  * @CreateDate: 2019-07-18
  */
-@DoricComponent(name = "modal")
-public class ModalPlugin extends DoricNativePlugin {
+@DoricPlugin(name = "modal")
+public class ModalPlugin extends DoricJavaPlugin {
 
     public ModalPlugin(DoricContext doricContext) {
         super(doricContext);

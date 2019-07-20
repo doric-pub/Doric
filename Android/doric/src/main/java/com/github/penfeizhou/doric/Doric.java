@@ -2,9 +2,6 @@ package com.github.penfeizhou.doric;
 
 import android.app.Application;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 /**
  * @Description: Doric
  * @Author: pengfei.zhou
@@ -21,13 +18,4 @@ public class Doric {
         return sApplication;
     }
 
-    private static Map<String, String> bundles = new ConcurrentHashMap<>();
-
-    public static void registerJSBundle(String name, String bundle) {
-        bundles.put(name, bundle);
-    }
-
-    public static String getJSBundle(String name) {
-        return bundles.get(name);
-    }
 }

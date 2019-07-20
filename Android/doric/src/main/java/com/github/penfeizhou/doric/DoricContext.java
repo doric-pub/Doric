@@ -3,7 +3,7 @@ package com.github.penfeizhou.doric;
 import android.content.Context;
 
 import com.github.penfeizhou.doric.async.AsyncResult;
-import com.github.penfeizhou.doric.plugin.DoricNativePlugin;
+import com.github.penfeizhou.doric.plugin.DoricJavaPlugin;
 import com.github.penfeizhou.doric.extension.bridge.DoricPluginInfo;
 import com.github.pengfeizhou.jscore.JSDecoder;
 
@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class DoricContext {
     private final String mContextId;
-    private final Map<String, DoricNativePlugin> mPluginMap = new HashMap<>();
+    private final Map<String, DoricJavaPlugin> mPluginMap = new HashMap<>();
     private final Context mContext;
 
     DoricContext(Context context, String contextId) {
@@ -64,8 +64,8 @@ public class DoricContext {
         });
     }
 
-    public DoricNativePlugin obtainPlugin(DoricPluginInfo doricPluginInfo) {
-        DoricNativePlugin plugin = mPluginMap.get(doricPluginInfo.getName());
+    public DoricJavaPlugin obtainPlugin(DoricPluginInfo doricPluginInfo) {
+        DoricJavaPlugin plugin = mPluginMap.get(doricPluginInfo.getName());
         if (plugin == null) {
             plugin = doricPluginInfo.createPlugin(this);
             mPluginMap.put(doricPluginInfo.getName(), plugin);

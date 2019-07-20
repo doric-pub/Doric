@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.github.pengfeizhou.doric.test", appContext.getPackageName());
+        assertEquals("com.github.penfeizhou.doric.test", appContext.getPackageName());
     }
 }

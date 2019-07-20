@@ -1,7 +1,7 @@
 package com.github.penfeizhou.doric.async;
 
 /**
- * @Description: com.github.pengfeizhou.doric.async
+ * @Description: com.github.penfeizhou.doric.async
  * @Author: pengfei.zhou
  * @CreateDate: 2019-07-18
  */

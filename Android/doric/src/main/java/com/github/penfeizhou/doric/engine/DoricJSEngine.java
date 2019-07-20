@@ -6,7 +6,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 
-import com.github.penfeizhou.doric.Doric;
+import com.github.penfeizhou.doric.DoricRegistry;
 import com.github.penfeizhou.doric.extension.bridge.DoricBridgeExtension;
 import com.github.penfeizhou.doric.extension.timer.DoricTimerExtension;
 import com.github.penfeizhou.doric.utils.DoricConstant;
@@ -28,6 +28,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
     private final DoricBridgeExtension mDoricBridgeExtension;
     private IDoricJSE mDoricJSE;
     private DoricTimerExtension mTimerExtension;
+    private DoricRegistry mDoricRegistry = new DoricRegistry();
 
     public DoricJSEngine() {
         HandlerThread handlerThread = new HandlerThread(this.getClass().getSimpleName());
@@ -80,7 +81,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
             public JavaValue exec(JSDecoder[] args) {
                 try {
                     String name = args[0].string();
-                    String content = Doric.getJSBundle(name);
+                    String content = mDoricRegistry.acquireJSBundle(name);
                     if (TextUtils.isEmpty(content)) {
                         DoricLog.e("require js bundle:%s is empty", name);
                         return new JavaValue(false);

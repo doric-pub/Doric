@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * @Description: com.github.pengfeizhou.doric
+ * @Description: com.github.penfeizhou.doric
  * @Author: pengfei.zhou
  * @CreateDate: 2019-07-19
  */

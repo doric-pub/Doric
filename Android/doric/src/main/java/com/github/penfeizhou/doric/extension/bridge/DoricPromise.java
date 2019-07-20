@@ -5,7 +5,7 @@ import com.github.penfeizhou.doric.utils.DoricConstant;
 import com.github.pengfeizhou.jscore.JavaValue;
 
 /**
- * @Description: com.github.pengfeizhou.doric.extension.bridge
+ * @Description: com.github.penfeizhou.doric.extension.bridge
  * @Author: pengfei.zhou
  * @CreateDate: 2019-07-19
  */

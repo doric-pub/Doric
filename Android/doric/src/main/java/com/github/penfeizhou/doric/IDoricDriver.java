@@ -8,7 +8,7 @@ import com.github.pengfeizhou.jscore.JSDecoder;
 import java.util.concurrent.Callable;
 
 /**
- * @Description: com.github.pengfeizhou.doric
+ * @Description: com.github.penfeizhou.doric
  * @Author: pengfei.zhou
  * @CreateDate: 2019-07-19
  */

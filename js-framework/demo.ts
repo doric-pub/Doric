@@ -1,4 +1,4 @@
-import { Text, Alignment, Color, VLayout, Registor, Panel, log, logw, loge } from "./index"
+import { Text, Alignment, Color, VLayout, Link, Panel, log, logw, loge } from "./index"
 
 const v = new Text
 v.width = 20
@@ -30,7 +30,7 @@ setTimeout(() => {
     clearInterval(timerId)
 }, 5000)
 
-@Registor(context)
+@Link(context)
 export class MyPage extends Panel {
     build() {
         return layout

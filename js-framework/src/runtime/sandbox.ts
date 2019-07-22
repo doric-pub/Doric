@@ -1,16 +1,18 @@
 import { uniqueId } from "../util/uniqueId";
 import { loge } from "../util/log";
+import "reflect-metadata"
 
 /**
  * ``` TypeScript
  * // load script in global scope
  * Reflect.apply(
- * function(hego,context,require){
+ * function(hego,context,Entry,require){
  *  //Script content
  *  REG()
  * },hego.jsObtainContext(id),[
  * undefined,
  * hego.jsObtainContext(id),
+ * hego.jsObtainEntry(id),
  * hego.__require__,
  * ])
  * // load module in global scope
@@ -31,6 +33,31 @@ declare function nativeRequire(moduleName: string): boolean
 
 declare function nativeBridge(contextId: string, namespace: string, method: string, callbackId?: string, args?: any): boolean
 
+declare function nativeSetTimer(timerId: number, interval: number, repeat: boolean): void
+
+declare function nativeClearTimer(timerId: number): void
+
+function hookBeforeNativeCall(context?: Context) {
+    if (context) {
+        Reflect.defineMetadata('__doric_context__', context, global)
+        context.hookBeforeNativeCall()
+    }
+}
+
+function hookAfterNativeCall(context?: Context) {
+    if (context) {
+        context.hookAfterNativeCall()
+    }
+}
+
+function getContext(): Context | undefined {
+    return Reflect.getMetadata('__doric_context__', global)
+}
+
+function setContext(context?: Context) {
+    Reflect.defineMetadata('__doric_context__', context, global)
+}
+
 export function jsCallResolve(contextId: string, callbackId: string, args?: any) {
     const context = gContexts.get(contextId)
     if (context === undefined) {
@@ -46,7 +73,9 @@ export function jsCallResolve(contextId: string, callbackId: string, args?: any)
     for (let i = 2; i < arguments.length; i++) {
         argumentsList.push(arguments[i])
     }
+    hookBeforeNativeCall(context)
     Reflect.apply(callback.resolve, context, argumentsList)
+    hookAfterNativeCall(context)
 }
 
 export function jsCallReject(contextId: string, callbackId: string, args?: any) {
@@ -64,7 +93,9 @@ export function jsCallReject(contextId: string, callbackId: string, args?: any) 
     for (let i = 2; i < arguments.length; i++) {
         argumentsList.push(arguments[i])
     }
-    Reflect.apply(callback.reject, context, argumentsList)
+    hookBeforeNativeCall(context)
+    Reflect.apply(callback.reject, context.entity, argumentsList)
+    hookAfterNativeCall(context)
 }
 
 export class Context {
@@ -72,6 +103,18 @@ export class Context {
     id: string
     callbacks: Map<string, { resolve: Function, reject: Function }> = new Map
     bridge: { [index: string]: (args?: any) => Promise<any> }
+
+    hookBeforeNativeCall() {
+        if (this.entity && Reflect.has(this.entity, 'hookBeforeNativeCall')) {
+            Reflect.apply(Reflect.get(this.entity, 'hookBeforeNativeCall'), this.entity, [])
+        }
+    }
+
+    hookAfterNativeCall() {
+        if (this.entity && Reflect.has(this.entity, 'hookAfterNativeCall')) {
+            Reflect.apply(Reflect.get(this.entity, 'hookAfterNativeCall'), this.entity, [])
+        }
+    }
 
     constructor(id: string) {
         this.id = id
@@ -110,10 +153,13 @@ const gModules: Map<string, any> = new Map
 
 export function jsObtainContext(id: string) {
     if (gContexts.has(id)) {
-        return gContexts.get(id)
+        const context = gContexts.get(id)
+        setContext(context)
+        return context
     } else {
         const context: Context = new Context(id)
         gContexts.set(id, context)
+        setContext(context)
         return context
     }
 }
@@ -153,50 +199,77 @@ export function jsCallEntityMethod(contextId: string, methodName: string, args?:
         for (let i = 2; i < arguments.length; i++) {
             argumentsList.push(arguments[i])
         }
-        return Reflect.apply(Reflect.get(context.entity, methodName), context.entity, argumentsList)
+        hookBeforeNativeCall(context)
+        const ret = Reflect.apply(Reflect.get(context.entity, methodName), context.entity, argumentsList)
+        hookAfterNativeCall(context)
+        return ret
     } else {
         loge(`Cannot find method for context id:${contextId},method name is:${methodName}`)
     }
 }
 
+export function jsObtainEntry(contextId: string) {
+    const context = jsObtainContext(contextId)
+    return <T extends { new(...args: any[]): {} }>(constructor: T) => {
+        const ret = class extends constructor {
+            context = context
+        }
+        if (context) {
+            context.register(new ret)
+        }
+        return ret
+    }
+}
+
+
 const global = Function('return this')()
 let __timerId__ = 0
-const timerCallbacks: Map<number, () => void> = new Map
 
-declare function nativeSetTimer(timerId: number, interval: number, repeat: boolean): void
-declare function nativeClearTimer(timerId: number): void
+const timerInfos: Map<number, { callback: () => void, context?: Context }> = new Map
+
 
 global.setTimeout = (handler: Function, timeout?: number | undefined, ...args: any[]) => {
     const id = __timerId__++
-    timerCallbacks.set(id, () => {
-        Reflect.apply(handler, undefined, args)
-        timerCallbacks.delete(id)
+    timerInfos.set(id, {
+        callback: () => {
+            Reflect.apply(handler, undefined, args)
+            timerInfos.delete(id)
+        },
+        context: getContext(),
     })
     nativeSetTimer(id, timeout || 0, false)
     return id
 }
 global.setInterval = (handler: Function, timeout?: number | undefined, ...args: any[]) => {
     const id = __timerId__++
-    timerCallbacks.set(id, () => {
-        Reflect.apply(handler, undefined, args)
+    timerInfos.set(id, {
+        callback: () => {
+            Reflect.apply(handler, undefined, args)
+        },
+        context: getContext(),
     })
     nativeSetTimer(id, timeout || 0, true)
     return id
 }
 
 global.clearTimeout = (timerId: number) => {
-    timerCallbacks.delete(timerId)
+    timerInfos.delete(timerId)
     nativeClearTimer(timerId)
 }
 
 global.clearInterval = (timerId: number) => {
-    timerCallbacks.delete(timerId)
+    timerInfos.delete(timerId)
     nativeClearTimer(timerId)
 }
 
 export function jsCallbackTimer(timerId: number) {
-    const timerCallback = timerCallbacks.get(timerId)
-    if (timerCallback instanceof Function) {
-        Reflect.apply(timerCallback, undefined, [])
+    const timerInfo = timerInfos.get(timerId)
+    if (timerInfo === undefined) {
+        return
+    }
+    if (timerInfo.callback instanceof Function) {
+        hookBeforeNativeCall(timerInfo.context)
+        Reflect.apply(timerInfo.callback, timerInfo.context, [])
+        hookAfterNativeCall(timerInfo.context)
     }
 }

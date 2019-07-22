@@ -1,44 +1,18 @@
-import { Text, Alignment, Color, VLayout, Link, Panel, log, logw, loge } from "./index"
+import { Text, Alignment, Color, VLayout, Panel, log, logw, loge } from "./index"
+import { NativeCall } from "./src/ui/panel";
 
-const v = new Text
-v.width = 20
-v.height = 30
-v.left = 5
-v.top = 5
-v.bgColor = Color.parse('#00ff00')
-v.config = {
-    alignment: Alignment.start
-}
-// console.log(v.toModel())
 
-const layout = new VLayout
-layout.space = 10
-console.log(layout.viewId)
-console.log(layout.toModel())
-// log('console', Object.getOwnPropertyNames(console))
 
-// setTimeout(() => {
-//     log('exec setTimeout')
-//     // context.callNative("modal", "toast", "Hello,Doric!")
-// }, 1000)
-// const timerId = setInterval(() => {
-//     log('exec setInterval')
-// }, 1000)
-
-// setTimeout(() => {
-//     log('exec cancelTimer')
-//     clearInterval(timerId)
-// }, 5000)
-
-@Link(context)
+@Entry
 export class MyPage extends Panel {
     build() {
-        return layout
+        return new Text
     }
+    @NativeCall
     log() {
-        // log("Hello.HEGO")
-        // logw("Hello.HEGO")
-        // loge("Hello.HEGO")
+        log("Hello.HEGO")
+        logw("Hello.HEGO")
+        loge("Hello.HEGO")
         context.bridge.demo_testPromise(true).then((r) => {
             log('resolve', r)
         }, (e) => {
@@ -49,5 +23,8 @@ export class MyPage extends Panel {
         }, (e) => {
             log('reject', e)
         })
+        setTimeout(function () {
+            log('settimeout')
+        }, 1000)
     }
 }

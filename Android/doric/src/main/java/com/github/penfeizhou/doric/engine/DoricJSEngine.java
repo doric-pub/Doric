@@ -166,7 +166,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
     }
 
     private String packageContextScript(String contextId, String content) {
-        return String.format(DoricConstant.TEMPLATE_CONTEXT_CREATE, content, contextId, contextId);
+        return String.format(DoricConstant.TEMPLATE_CONTEXT_CREATE, content, contextId, contextId, contextId);
     }
 
     private String packageModuleScript(String moduleName, String content) {

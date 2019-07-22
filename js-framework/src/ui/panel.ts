@@ -2,26 +2,11 @@ import { } from './../runtime/global';
 import { View, Stack, Group } from "./view";
 import { loge, log } from '../util/log';
 
-export function Link(context: any) {
-    return <T extends { new(...args: any[]): {} }>(constructor: T) => {
-        const ret = class extends constructor {
-            context = context
-        }
-        context.register(new ret)
-        return ret
-    }
-}
 
 export function NativeCall(target: Panel, propertyKey: string, descriptor: PropertyDescriptor) {
     const originVal = descriptor.value
     descriptor.value = function () {
-        const args = []
-        for (let index in arguments) {
-            args.push(arguments[index]);
-        }
-        Reflect.apply(Reflect.get(target, '__hookBeforeNativeCall__'), this, [])
-        const ret = Reflect.apply(originVal, this, args)
-        Reflect.apply(Reflect.get(target, '__hookAfterNativeCall__'), this, [])
+        const ret = Reflect.apply(originVal, this, arguments)
         return ret
     }
     return descriptor
@@ -103,11 +88,11 @@ export abstract class Panel {
         }, this.__rootView__)
     }
 
-    private __hookBeforeNativeCall__() {
+    private hookBeforeNativeCall() {
         log('__hookBeforeNativeCall__')
     }
 
-    private __hookAfterNativeCall__() {
+    private hookAfterNativeCall() {
         log('__hookAfterNativeCall__')
         if (this.__rootView__.isDirty()) {
             const model = this.__rootView__.toModel()

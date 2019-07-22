@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import com.github.penfeizhou.doric.Doric;
 import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSDecoder;
+import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSValue;
 import com.github.pengfeizhou.jscore.JavaValue;
 
@@ -52,6 +53,8 @@ public class DoricUtils {
     public static JavaValue toJavaValue(Object arg) {
         if (arg == null) {
             return new JavaValue();
+        } else if (arg instanceof JSONBuilder) {
+            return new JavaValue(((JSONBuilder) arg).toJSONObject());
         } else if (arg instanceof JSONObject) {
             return new JavaValue((JSONObject) arg);
         } else if (arg instanceof String) {

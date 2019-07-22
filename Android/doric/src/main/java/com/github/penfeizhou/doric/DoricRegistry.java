@@ -2,6 +2,7 @@ package com.github.penfeizhou.doric;
 
 import android.text.TextUtils;
 
+import com.github.penfeizhou.doric.plugin.ShaderPlugin;
 import com.github.penfeizhou.doric.widget.ViewNode;
 import com.github.penfeizhou.doric.utils.DoricMetaInfo;
 import com.github.penfeizhou.doric.plugin.DoricJavaPlugin;
@@ -36,6 +37,7 @@ public class DoricRegistry {
     }
 
     public DoricRegistry() {
+        this.registerNativePlugin(ShaderPlugin.class);
         this.registerNativePlugin(ModalPlugin.class);
         initRegistry(this);
     }

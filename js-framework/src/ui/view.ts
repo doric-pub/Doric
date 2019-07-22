@@ -119,13 +119,13 @@ export abstract class View implements Modeling {
 
     clean() {
         for (const key in this.__dirty_props__) {
-            if (this.__dirty_props__.hasOwnProperty(key)) {
-                this.__dirty_props__[key] = undefined
+            if (Reflect.has(this.__dirty_props__, key)) {
+                Reflect.deleteProperty(this.__dirty_props__, key)
             }
         }
     }
     isDirty() {
-        return Reflect.ownKeys(this.__dirty_props__).length === 0
+        return Reflect.ownKeys(this.__dirty_props__).length !== 0
     }
     responseCallback(id: string, ...args: any) {
         const f = this.id2Callback(id)

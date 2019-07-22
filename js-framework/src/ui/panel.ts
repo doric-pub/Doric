@@ -1,6 +1,8 @@
-import { } from './../runtime/global';
+import './../runtime/global'
 import { View, Stack, Group } from "./view";
 import { loge, log } from '../util/log';
+import { Model } from '../util/types';
+import { Context } from '../runtime/sandbox';
 
 
 export function NativeCall(target: Panel, propertyKey: string, descriptor: PropertyDescriptor) {
@@ -15,7 +17,7 @@ export function NativeCall(target: Panel, propertyKey: string, descriptor: Prope
 type Frame = { width: number, height: number }
 
 export abstract class Panel {
-
+    context?: Context
     onCreate() { }
     onDestory() { }
     onShow() { }
@@ -35,6 +37,7 @@ export abstract class Panel {
 
     @NativeCall
     private __init__(frame: Frame, data: any) {
+        log('__init__:', frame, data)
         this.__data__ = data
         this.__rootView__.width = frame.width
         this.__rootView__.height = frame.height
@@ -88,15 +91,19 @@ export abstract class Panel {
         }, this.__rootView__)
     }
 
+    private nativeRender(model: Model) {
+        if (this.context) {
+            this.context.bridge.shader_render(model)
+        }
+    }
+
     private hookBeforeNativeCall() {
-        log('__hookBeforeNativeCall__')
     }
 
     private hookAfterNativeCall() {
-        log('__hookAfterNativeCall__')
         if (this.__rootView__.isDirty()) {
             const model = this.__rootView__.toModel()
-            log('needRefresh:' + JSON.stringify(model))
+            this.nativeRender(model)
             this.__rootView__.clean()
         }
     }

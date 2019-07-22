@@ -1,5 +1,5 @@
 import { Context } from "./sandbox";
-require('reflect-metadata');
+export * from 'reflect-metadata'
 
 declare global {
     const context: Context;

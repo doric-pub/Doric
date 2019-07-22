@@ -26,6 +26,7 @@ export default [
         plugins: [
             resolve({ jsnext: true, main: true }),
         ],
+        external: ['reflect-metadata']
     },
     {
         input: "build/demo.js",

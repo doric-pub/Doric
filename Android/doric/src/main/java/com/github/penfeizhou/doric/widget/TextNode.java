@@ -3,7 +3,7 @@ package com.github.penfeizhou.doric.widget;
 import android.widget.TextView;
 
 import com.github.penfeizhou.doric.DoricContext;
-import com.github.penfeizhou.doric.extension.render.DoricNode;
+import com.github.penfeizhou.doric.extension.bridge.DoricPlugin;
 import com.github.pengfeizhou.jscore.JSObject;
 
 /**
@@ -11,7 +11,7 @@ import com.github.pengfeizhou.jscore.JSObject;
  * @Author: pengfei.zhou
  * @CreateDate: 2019-07-20
  */
-@DoricNode(name = "Text")
+@DoricPlugin(name = "Text")
 public class TextNode extends ViewNode<TextView> {
     public TextNode(DoricContext doricContext) {
         super(doricContext);

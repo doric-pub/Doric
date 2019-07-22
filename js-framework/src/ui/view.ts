@@ -235,7 +235,9 @@ export class Stack extends Group {
     @Property
     gravity?: number
 }
+export class Root extends Stack {
 
+}
 class LinearLayout extends Group {
     @Property
     space?: number

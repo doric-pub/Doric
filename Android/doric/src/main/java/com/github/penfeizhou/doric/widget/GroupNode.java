@@ -16,7 +16,7 @@ import java.util.Map;
  * @Author: pengfei.zhou
  * @CreateDate: 2019-07-20
  */
-public abstract class GroupNode extends ViewNode<ViewGroup> {
+public abstract class GroupNode<F extends ViewGroup> extends ViewNode<F> {
     private Map<String, ViewNode> mChildrenNode = new HashMap<>();
     private SparseArray<ViewNode> mIndexInfo = new SparseArray<>();
 

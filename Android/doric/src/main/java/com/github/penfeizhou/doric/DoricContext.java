@@ -1,11 +1,16 @@
 package com.github.penfeizhou.doric;
 
 import android.content.Context;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.github.penfeizhou.doric.async.AsyncResult;
 import com.github.penfeizhou.doric.extension.render.DoricShader;
 import com.github.penfeizhou.doric.plugin.DoricJavaPlugin;
 import com.github.penfeizhou.doric.utils.DoricMetaInfo;
+import com.github.penfeizhou.doric.widget.GroupNode;
+import com.github.penfeizhou.doric.widget.RootNode;
+import com.github.penfeizhou.doric.widget.StackNode;
 import com.github.pengfeizhou.jscore.JSDecoder;
 
 import java.util.HashMap;
@@ -21,6 +26,7 @@ public class DoricContext {
     private final Map<String, DoricJavaPlugin> mPluginMap = new HashMap<>();
     private final Context mContext;
     private DoricShader doricShader = new DoricShader(getDriver().getRegistry());
+    private RootNode mRootNode = new RootNode(this);
 
     DoricContext(Context context, String contextId) {
         this.mContext = context;
@@ -37,6 +43,10 @@ public class DoricContext {
 
     public IDoricDriver getDriver() {
         return DoricDriver.getInstance();
+    }
+
+    public RootNode getRootNode() {
+        return mRootNode;
     }
 
     public Context getContext() {

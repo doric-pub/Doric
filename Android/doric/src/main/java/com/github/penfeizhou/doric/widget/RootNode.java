@@ -1,5 +1,6 @@
 package com.github.penfeizhou.doric.widget;
 
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.github.penfeizhou.doric.DoricContext;
@@ -11,14 +12,18 @@ import com.github.pengfeizhou.jscore.JSObject;
  * @Author: pengfei.zhou
  * @CreateDate: 2019-07-20
  */
-@DoricPlugin(name = "Stack")
-public class StackNode extends GroupNode<FrameLayout> {
-    public StackNode(DoricContext doricContext) {
+@DoricPlugin(name = "Root")
+public class RootNode extends GroupNode<FrameLayout> {
+    public RootNode(DoricContext doricContext) {
         super(doricContext);
     }
 
     @Override
     public FrameLayout build(JSObject jsObject) {
         return new FrameLayout(getContext());
+    }
+
+    public void setRootView(FrameLayout rootView) {
+        this.mView = rootView;
     }
 }

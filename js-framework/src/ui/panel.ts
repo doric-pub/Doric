@@ -1,5 +1,5 @@
 import './../runtime/global'
-import { View, Stack, Group } from "./view";
+import { View, Group, Root } from "./view";
 import { loge, log } from '../util/log';
 import { Model } from '../util/types';
 
@@ -25,7 +25,7 @@ export abstract class Panel {
     abstract build(rootView: Group): void
 
     private __data__: any
-    private __rootView__: Group = new Stack
+    private __rootView__ = new Root
 
     getRootView() {
         return this.__rootView__

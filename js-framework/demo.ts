@@ -11,6 +11,7 @@ export class MyPage extends Panel {
         const text = new Text
         text.text = "hello"
         rootView.children.push(text)
+        rootView.bgColor = Color.safeParse('#00ff00')
     }
 
     @NativeCall

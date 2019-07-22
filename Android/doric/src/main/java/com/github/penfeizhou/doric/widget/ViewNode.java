@@ -13,8 +13,6 @@ import com.github.penfeizhou.doric.utils.DoricUtils;
 import com.github.pengfeizhou.jscore.JSObject;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * @Description: Render
@@ -44,6 +42,11 @@ public abstract class ViewNode<T extends View> extends DoricComponent {
     public void blend(JSObject jsObject) {
         if (mView == null) {
             mView = build(jsObject);
+        }
+        if (mView.getLayoutParams() == null) {
+            mView.setLayoutParams(new ViewGroup.MarginLayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT));
         }
         setFrame(mView.getLayoutParams(), jsObject);
     }

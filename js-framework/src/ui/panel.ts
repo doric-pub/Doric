@@ -25,10 +25,10 @@ export abstract class Panel {
     abstract build(rootView: Group): void
 
     private __data__: any
-    private __rootView__ = new Root
+    private __root__ = new Root
 
     getRootView() {
-        return this.__rootView__
+        return this.__root__
     }
     getInitData() {
         return this.__data__
@@ -38,9 +38,9 @@ export abstract class Panel {
     private __init__(frame: Frame, data: any) {
         log('__init__:', frame, data)
         this.__data__ = data
-        this.__rootView__.width = frame.width
-        this.__rootView__.height = frame.height
-        this.build(this.__rootView__)
+        this.__root__.width = frame.width
+        this.__root__.height = frame.height
+        this.build(this.__root__)
     }
 
     @NativeCall
@@ -65,7 +65,7 @@ export abstract class Panel {
 
     @NativeCall
     private __build__() {
-        this.build(this.__rootView__)
+        this.build(this.__root__)
     }
 
     @NativeCall
@@ -87,7 +87,7 @@ export abstract class Panel {
                 return acc.children.filter(e => e.viewId === cur)[0]
             }
             return acc
-        }, this.__rootView__)
+        }, this.__root__)
     }
 
     private nativeRender(model: Model) {
@@ -100,10 +100,10 @@ export abstract class Panel {
     }
 
     private hookAfterNativeCall() {
-        if (this.__rootView__.isDirty()) {
-            const model = this.__rootView__.toModel()
+        if (this.__root__.isDirty()) {
+            const model = this.__root__.toModel()
             this.nativeRender(model)
-            this.__rootView__.clean()
+            this.__root__.clean()
         }
     }
 

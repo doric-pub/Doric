@@ -61,11 +61,11 @@ export abstract class View implements Modeling {
             get: (target, p) => {
                 return Reflect.get(target, p)
             },
-            set: (target, p, v) => {
+            set: (target, p, v, receiver) => {
                 const oldV = Reflect.get(target, p)
                 const ret = Reflect.set(target, p, v)
                 if (Reflect.getMetadata(p, target)) {
-                    this.onPropertyChanged(p.toString(), oldV, v)
+                    receiver.onPropertyChanged(p.toString(), oldV, v)
                 }
                 return ret
             }
@@ -105,6 +105,12 @@ export abstract class View implements Modeling {
 
     __dirty_props__: { [index: string]: Model | undefined } = {}
 
+    nativeViewModel = {
+        id: this.viewId,
+        type: this.constructor.name,
+        props: this.__dirty_props__,
+    }
+
     onPropertyChanged(propKey: string, oldV: Model, newV: Model): void {
         if (newV instanceof Function) {
             newV = this.callback2Id(newV)
@@ -139,12 +145,9 @@ export abstract class View implements Modeling {
             loge(`Cannot find callback:${id} for ${JSON.stringify(this.toModel())}`)
         }
     }
+
     toModel() {
-        return {
-            id: this.viewId,
-            type: this.constructor.name,
-            props: this.__dirty_props__,
-        }
+        return this.nativeViewModel
     }
 
     @Property
@@ -196,12 +199,14 @@ export abstract class Group extends View {
     @Property
     children: View[] = new Proxy([], {
         set: (target, index, value) => {
-            if (typeof index === 'number' && value instanceof View) {
+            if (index === 'length') {
+                this.getDirtyChildrenModel().length = value as number
+            } else if (typeof index === 'string'
+                && parseInt(index) >= 0
+                && value instanceof View) {
                 value.parent = this
                 const childrenModel = this.getDirtyChildrenModel()
-                childrenModel[index] = value.toModel()
-            } else if (index === 'length') {
-                this.getDirtyChildrenModel().length = value as number
+                childrenModel[parseInt(index)] = value.nativeViewModel
             }
             return Reflect.set(target, index, value)
         }
@@ -227,7 +232,8 @@ export abstract class Group extends View {
     }
 
     onChildPropertyChanged(child: View, propKey: string, oldV: Model, newV: Model) {
-
+        loge('onChildPropertyChanged:' + (this.children.indexOf(child)))
+        this.getDirtyChildrenModel()[this.children.indexOf(child)] = child.nativeViewModel
     }
 }
 

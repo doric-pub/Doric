@@ -11,6 +11,7 @@ import com.github.penfeizhou.doric.utils.DoricConstant;
 import com.github.penfeizhou.doric.utils.DoricMetaInfo;
 import com.github.penfeizhou.doric.utils.DoricUtils;
 import com.github.pengfeizhou.jscore.JSObject;
+import com.github.pengfeizhou.jscore.JSValue;
 
 import java.util.ArrayList;
 
@@ -39,7 +40,7 @@ public abstract class ViewNode<T extends View> extends DoricComponent {
 
     public abstract T build(JSObject jsObject);
 
-    public void blend(JSObject jsObject) {
+    void blend(JSObject jsObject) {
         if (mView == null) {
             mView = build(jsObject);
         }
@@ -48,7 +49,38 @@ public abstract class ViewNode<T extends View> extends DoricComponent {
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT));
         }
-        setFrame(mView.getLayoutParams(), jsObject);
+        for (String prop : jsObject.propertySet()) {
+            blend(mView, prop, jsObject.getProperty(prop));
+        }
+        mView.setLayoutParams(mView.getLayoutParams());
+    }
+
+    protected void blend(T view, String name, JSValue prop) {
+        switch (name) {
+            case "width":
+                view.getLayoutParams().width = DoricUtils.dp2px(prop.asNumber().toFloat());
+                break;
+            case "height":
+                view.getLayoutParams().height = DoricUtils.dp2px(prop.asNumber().toFloat());
+                break;
+            case "x":
+                if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+                    float x = prop.asNumber().toFloat();
+                    ((ViewGroup.MarginLayoutParams) mView.getLayoutParams()).leftMargin = DoricUtils.dp2px(x);
+                }
+                break;
+            case "y":
+                if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+                    float y = prop.asNumber().toFloat();
+                    ((ViewGroup.MarginLayoutParams) mView.getLayoutParams()).topMargin = DoricUtils.dp2px(y);
+                }
+                break;
+            case "bgColor":
+                view.setBackgroundColor(prop.asNumber().toInt());
+                break;
+            default:
+                break;
+        }
     }
 
     public String getId() {

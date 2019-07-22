@@ -44,15 +44,16 @@ public abstract class GroupNode<F extends ViewGroup> extends ViewNode<F> {
                 child.ids.addAll(this.ids);
                 child.ids.add(id);
                 mChildrenNode.put(id, child);
-                mView.addView(child.mView, i);
             } else if (i != child.index) {
-                mIndexInfo.remove(child.index);
+                mIndexInfo.remove(i);
                 child.index = i;
                 mView.removeView(child.mView);
-                mView.addView(child.mView, i);
             }
             child.blend(childObj.getProperty("props").asObject());
-            mIndexInfo.put(i, child);
+            if (mIndexInfo.get(i) == null) {
+                mView.addView(child.mView, i);
+                mIndexInfo.put(i, child);
+            }
         }
         while (i < mView.getChildCount()) {
             mView.removeViewAt(mView.getChildCount() - 1);

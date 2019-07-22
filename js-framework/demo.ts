@@ -1,5 +1,4 @@
-import { Text, Alignment, Color, VLayout, Panel, log, logw, loge } from "./index"
-import { NativeCall } from "./src/ui/panel";
+import { NativeCall, Text, Alignment, Color, VLayout, Panel, log, logw, loge } from "./index"
 
 
 

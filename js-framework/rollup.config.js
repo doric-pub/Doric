@@ -14,7 +14,6 @@ export default [
         sourceMap: true,
         plugins: [
             resolve({ jsnext: true, main: true }),
-            commonjs()
         ]
     },
     {
@@ -26,7 +25,7 @@ export default [
         sourceMap: true,
         plugins: [
             resolve({ jsnext: true, main: true }),
-        ]
+        ],
     },
     {
         input: "build/demo.js",

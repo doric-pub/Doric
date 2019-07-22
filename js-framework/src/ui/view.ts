@@ -1,6 +1,5 @@
 import { Color, GradientColor } from "../util/color"
 import { Modeling, Model, obj2Model } from "../util/types";
-import "reflect-metadata"
 import { uniqueId } from "../util/uniqueId";
 import { loge } from "../util/log";
 

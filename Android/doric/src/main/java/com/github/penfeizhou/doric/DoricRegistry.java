@@ -3,11 +3,11 @@ package com.github.penfeizhou.doric;
 import android.text.TextUtils;
 
 import com.github.penfeizhou.doric.plugin.ShaderPlugin;
-import com.github.penfeizhou.doric.widget.ImageNode;
-import com.github.penfeizhou.doric.widget.RootNode;
-import com.github.penfeizhou.doric.widget.StackNode;
-import com.github.penfeizhou.doric.widget.TextNode;
-import com.github.penfeizhou.doric.widget.ViewNode;
+import com.github.penfeizhou.doric.shader.ImageNode;
+import com.github.penfeizhou.doric.shader.RootNode;
+import com.github.penfeizhou.doric.shader.StackNode;
+import com.github.penfeizhou.doric.shader.TextNode;
+import com.github.penfeizhou.doric.shader.ViewNode;
 import com.github.penfeizhou.doric.utils.DoricMetaInfo;
 import com.github.penfeizhou.doric.plugin.DoricJavaPlugin;
 import com.github.penfeizhou.doric.plugin.ModalPlugin;

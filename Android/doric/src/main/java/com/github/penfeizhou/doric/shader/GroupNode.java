@@ -1,4 +1,4 @@
-package com.github.penfeizhou.doric.widget;
+package com.github.penfeizhou.doric.shader;
 
 import android.util.SparseArray;
 import android.view.ViewGroup;

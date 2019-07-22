@@ -1,6 +1,5 @@
-package com.github.penfeizhou.doric.widget;
+package com.github.penfeizhou.doric.shader;
 
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.github.penfeizhou.doric.DoricContext;

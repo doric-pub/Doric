@@ -1,14 +1,11 @@
 package com.github.penfeizhou.doric.plugin;
 
-import android.view.ViewGroup;
-
 import com.github.penfeizhou.doric.DoricContext;
 import com.github.penfeizhou.doric.extension.bridge.DoricMethod;
 import com.github.penfeizhou.doric.extension.bridge.DoricPlugin;
 import com.github.penfeizhou.doric.utils.DoricLog;
 import com.github.penfeizhou.doric.utils.ThreadMode;
-import com.github.penfeizhou.doric.widget.GroupNode;
-import com.github.penfeizhou.doric.widget.RootNode;
+import com.github.penfeizhou.doric.shader.RootNode;
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSObject;
 

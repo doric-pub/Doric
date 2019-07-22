@@ -19,18 +19,22 @@ public class DoricPromise {
     }
 
     public void resolve(JavaValue... javaValue) {
+        Object[] params = new Object[javaValue.length + 2];
+        params[0] = context.getContextId();
+        params[1] = callbackId;
+        System.arraycopy(javaValue, 0, params, 2, javaValue.length);
         context.getDriver().invokeDoricMethod(
                 DoricConstant.DORIC_BRIDGE_RESOLVE,
-                context.getContextId(),
-                callbackId,
-                javaValue);
+                params);
     }
 
     public void reject(JavaValue... javaValue) {
+        Object[] params = new Object[javaValue.length + 2];
+        params[0] = context.getContextId();
+        params[1] = callbackId;
+        System.arraycopy(javaValue, 0, params, 2, javaValue.length);
         context.getDriver().invokeDoricMethod(
                 DoricConstant.DORIC_BRIDGE_REJECT,
-                context.getContextId(),
-                callbackId,
-                javaValue);
+                params);
     }
 }

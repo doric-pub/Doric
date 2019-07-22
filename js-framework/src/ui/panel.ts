@@ -1,7 +1,6 @@
 import { } from './../runtime/global';
 import { View, Stack, Group } from "./view";
-import { log } from 'util';
-import { loge } from '../util/log';
+import { loge, log } from '../util/log';
 
 export function Link(context: any) {
     return <T extends { new(...args: any[]): {} }>(constructor: T) => {

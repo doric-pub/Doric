@@ -46,7 +46,7 @@ export function jsCallResolve(contextId: string, callbackId: string, args?: any)
     for (let i = 2; i < arguments.length; i++) {
         argumentsList.push(arguments[i])
     }
-    Reflect.apply(callback.resolve, context, args)
+    Reflect.apply(callback.resolve, context, argumentsList)
 }
 
 export function jsCallReject(contextId: string, callbackId: string, args?: any) {
@@ -64,7 +64,7 @@ export function jsCallReject(contextId: string, callbackId: string, args?: any) 
     for (let i = 2; i < arguments.length; i++) {
         argumentsList.push(arguments[i])
     }
-    Reflect.apply(callback.reject, context, args)
+    Reflect.apply(callback.reject, context, argumentsList)
 }
 
 export class Context {

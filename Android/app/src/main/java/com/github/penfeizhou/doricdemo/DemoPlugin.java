@@ -5,8 +5,10 @@ import android.widget.Toast;
 import com.github.penfeizhou.doric.DoricContext;
 import com.github.penfeizhou.doric.extension.bridge.DoricMethod;
 import com.github.penfeizhou.doric.extension.bridge.DoricPlugin;
+import com.github.penfeizhou.doric.extension.bridge.DoricPromise;
 import com.github.penfeizhou.doric.plugin.DoricJavaPlugin;
 import com.github.penfeizhou.doric.utils.ThreadMode;
+import com.github.pengfeizhou.jscore.JavaValue;
 
 /**
  * @Description: com.github.penfeizhou.doricdemo
@@ -25,7 +27,12 @@ public class DemoPlugin extends DoricJavaPlugin {
     }
 
     @DoricMethod(thread = ThreadMode.UI)
-    public void testPromise() {
+    public void testPromise(boolean b, DoricPromise doricPromise) {
+        if (b) {
+            doricPromise.resolve(new JavaValue("resolved by me"));
+        } else {
+            doricPromise.reject(new JavaValue("rejected by me"));
+        }
         Toast.makeText(getDoricContext().getContext(), "test", Toast.LENGTH_SHORT).show();
     }
 }

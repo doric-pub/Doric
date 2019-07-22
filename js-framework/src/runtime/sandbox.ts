@@ -102,7 +102,6 @@ export class Context {
     entity: any
     id: string
     callbacks: Map<string, { resolve: Function, reject: Function }> = new Map
-    bridge: { [index: string]: (args?: any) => Promise<any> }
 
     hookBeforeNativeCall() {
         if (this.entity && Reflect.has(this.entity, 'hookBeforeNativeCall')) {
@@ -118,22 +117,36 @@ export class Context {
 
     constructor(id: string) {
         this.id = id
-        this.bridge = new Proxy({}, {
+        return new Proxy(this, {
             get: (target, p: any) => {
-                if (typeof p === 'string') {
-                    return (args?: any) => {
-                        const array = p.split('_')
-                        return this.callNative(array[0], array[1], args)
-                    }
-                } else {
+                if (Reflect.has(target, p)) {
                     return Reflect.get(target, p)
+                } else {
+                    const namespace = p
+                    return new Proxy({}, {
+                        get: (target, p: any) => {
+                            if (Reflect.has(target, p)) {
+                                return Reflect.get(target, p)
+                            } else {
+                                const context = this
+                                return function () {
+                                    const args = []
+                                    args.push(namespace)
+                                    args.push(p)
+                                    for (let arg of arguments) {
+                                        args.push(arg)
+                                    }
+                                    return Reflect.apply(context.callNative, context, args)
+                                }
+                            }
+                        }
+                    })
                 }
             }
         })
     }
     callNative(namespace: string, method: string, args?: any): Promise<any> {
         const callbackId = uniqueId('callback')
-
         nativeBridge(this.id, namespace, method, callbackId, args)
         return new Promise((resolve, reject) => {
             this.callbacks.set(callbackId, {

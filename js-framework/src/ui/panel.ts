@@ -2,7 +2,6 @@ import './../runtime/global'
 import { View, Stack, Group } from "./view";
 import { loge, log } from '../util/log';
 import { Model } from '../util/types';
-import { Context } from '../runtime/sandbox';
 
 
 export function NativeCall(target: Panel, propertyKey: string, descriptor: PropertyDescriptor) {
@@ -17,7 +16,7 @@ export function NativeCall(target: Panel, propertyKey: string, descriptor: Prope
 type Frame = { width: number, height: number }
 
 export abstract class Panel {
-    context?: Context
+    context?: any
     onCreate() { }
     onDestory() { }
     onShow() { }
@@ -93,7 +92,7 @@ export abstract class Panel {
 
     private nativeRender(model: Model) {
         if (this.context) {
-            this.context.bridge.shader_render(model)
+            this.context.shader.render(model)
         }
     }
 

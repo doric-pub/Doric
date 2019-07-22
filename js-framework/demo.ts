@@ -18,12 +18,12 @@ export class MyPage extends Panel {
         log("Hello.HEGO")
         logw("Hello.HEGO")
         loge("Hello.HEGO")
-        context.bridge.demo_testPromise(true).then((r) => {
+        context.demo.testPromise(true).then((r) => {
             log('resolve', r)
         }, (e) => {
             log('reject', e)
         })
-        context.bridge.demo_testPromise(false).then((r) => {
+        context.demo.testPromise(false).then((r) => {
             log('resolve', r)
         }, (e) => {
             log('reject', e)

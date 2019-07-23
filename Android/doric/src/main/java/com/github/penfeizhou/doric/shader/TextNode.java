@@ -1,5 +1,6 @@
 package com.github.penfeizhou.doric.shader;
 
+import android.util.TypedValue;
 import android.widget.TextView;
 
 import com.github.penfeizhou.doric.DoricContext;
@@ -28,6 +29,12 @@ public class TextNode extends ViewNode<TextView> {
         switch (name) {
             case "text":
                 view.setText(prop.asString().toString());
+                break;
+            case "textSize":
+                view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, prop.asNumber().toFloat());
+                break;
+            case "textColor":
+                view.setTextColor(prop.asNumber().toInt());
                 break;
             default:
                 super.blend(view, name, prop);

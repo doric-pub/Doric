@@ -5,16 +5,31 @@ import { Group } from "./src/ui/view";
 
 @Entry
 export class MyPage extends Panel {
-    text?: Text
+    state = {
+        count: 0
+    }
+
     build(rootView: Group): void {
-        this.text = new Text
-        this.text.text = "hello"
-        this.text.width = 50
-        this.text.height = 50
-        this.text.y = 100
-        rootView.children.push(this.text)
+        const numberView = new Text
+        numberView.width = 100
+        numberView.height = 200
+        numberView.top = 50
+        numberView.text = this.state.count.toString()
+        numberView.textSize = 40
+        numberView.centerX = rootView.width / 2
+        rootView.addChild(numberView)
+        const click = new Text
+        click.width = click.height = 100
+        click.textSize = 20
+        click.text = '点击计数'
+        click.onClick = () => {
+            this.state.count++
+            numberView.text = this.state.count.toString()
+        }
+        click.centerX = rootView.width / 2
+        click.top = numberView.bottom + 20
+        rootView.addChild(click)
         rootView.bgColor = Color.safeParse('#00ff00')
-        log('build view:', JSON.stringify(rootView.toModel()))
     }
 
     @NativeCall
@@ -22,29 +37,5 @@ export class MyPage extends Panel {
         log("Hello.HEGO")
         logw("Hello.HEGO")
         loge("Hello.HEGO")
-
-        context.demo.testPromise(true).then((r) => {
-            log('resolve', r)
-        }, (e) => {
-            log('reject', e)
-        })
-
-        context.demo.testPromise(false).then((r) => {
-            log('resolve', r)
-        }, (e) => {
-            log('reject', e)
-        })
-
-        setTimeout(function () {
-            log('settimeout')
-        }, 1000)
-
-        setInterval(() => {
-            log('setInterval')
-            if (this.text) {
-                this.text.y += 10
-            }
-            log('build view:', JSON.stringify(this.getRootView().toModel()))
-        }, 1000)
     }
 }

@@ -58,12 +58,12 @@ export abstract class View implements Modeling {
 
     constructor() {
         return new Proxy(this, {
-            get: (target, p) => {
-                return Reflect.get(target, p)
+            get: (target, p, receiver) => {
+                return Reflect.get(target, p, receiver)
             },
             set: (target, p, v, receiver) => {
-                const oldV = Reflect.get(target, p)
-                const ret = Reflect.set(target, p, v)
+                const oldV = Reflect.get(target, p, receiver)
+                const ret = Reflect.set(target, p, v, receiver)
                 if (Reflect.getMetadata(p, target)) {
                     receiver.onPropertyChanged(p.toString(), oldV, v)
                 }
@@ -100,6 +100,22 @@ export abstract class View implements Modeling {
 
     set bottom(v: number) {
         this.y = v - this.height
+    }
+
+    get centerX() {
+        return this.x + this.width / 2
+    }
+
+    get centerY() {
+        return this.y + this.height / 2
+    }
+
+    set centerX(v: number) {
+        this.x = v - this.width / 2
+    }
+
+    set centerY(v: number) {
+        this.y = v - this.height / 2
     }
     /** Anchor end*/
 
@@ -212,6 +228,9 @@ export abstract class Group extends View {
         }
     })
 
+    addChild(view: View) {
+        this.children.push(view)
+    }
     clean() {
         this.children.forEach(e => { e.clean() })
         super.clean()
@@ -232,7 +251,6 @@ export abstract class Group extends View {
     }
 
     onChildPropertyChanged(child: View, propKey: string, oldV: Model, newV: Model) {
-        loge('onChildPropertyChanged:' + (this.children.indexOf(child)))
         this.getDirtyChildrenModel()[this.children.indexOf(child)] = child.nativeViewModel
     }
 }
@@ -270,6 +288,9 @@ export class Text extends View {
 
     @Property
     maxLines?: number
+
+    @Property
+    onClick?: Function
 }
 
 export class Image extends View {

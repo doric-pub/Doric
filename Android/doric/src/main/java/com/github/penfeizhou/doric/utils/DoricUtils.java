@@ -14,6 +14,7 @@ import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSValue;
 import com.github.pengfeizhou.jscore.JavaValue;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -69,6 +70,12 @@ public class DoricUtils {
             return new JavaValue((Boolean) arg);
         } else if (arg instanceof JavaValue) {
             return (JavaValue) arg;
+        } else if (arg instanceof Object[]) {
+            JSONArray jsonArray = new JSONArray();
+            for (Object o : (Object[]) arg) {
+                jsonArray.put(o);
+            }
+            return new JavaValue(jsonArray);
         } else {
             return new JavaValue(String.valueOf(arg));
         }

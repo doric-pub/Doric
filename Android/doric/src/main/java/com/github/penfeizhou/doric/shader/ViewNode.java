@@ -78,6 +78,15 @@ public abstract class ViewNode<T extends View> extends DoricComponent {
             case "bgColor":
                 view.setBackgroundColor(prop.asNumber().toInt());
                 break;
+            case "onClick":
+                final String functionId = prop.asString().value();
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callJSResponse(functionId);
+                    }
+                });
+                break;
             default:
                 break;
         }
@@ -100,7 +109,7 @@ public abstract class ViewNode<T extends View> extends DoricComponent {
         }
     }
 
-    public void callJSRespone(String funcId, Object... args) {
+    public void callJSResponse(String funcId, Object... args) {
         final Object[] nArgs = new Object[args.length + 2];
         nArgs[0] = ids.toArray(new String[0]);
         nArgs[1] = funcId;

@@ -36,7 +36,6 @@ export abstract class Panel {
 
     @NativeCall
     private __init__(frame: Frame, data: any) {
-        log('__init__:', frame, data)
         this.__data__ = data
         this.__root__.width = frame.width
         this.__root__.height = frame.height

@@ -2,7 +2,6 @@ import { StackConfig, ViewHolder, VMPanel, View, ViewModel, WRAP_CONTENT, Gravit
 
 interface CountModel {
     count: number
-    add: () => void
 }
 
 class CounterView extends ViewHolder {
@@ -38,12 +37,14 @@ class CounterView extends ViewHolder {
 }
 
 class CounterVM extends ViewModel<CountModel, CounterView> {
+
     binding(v: CounterView, model: CountModel): void {
-        v.setCounter(model.add)
         v.setNumber(model.count)
+        v.setCounter(() => {
+            this.getModel().count++
+        })
     }
 }
-
 
 class MyPage extends VMPanel<CountModel, CounterView>{
 
@@ -74,9 +75,50 @@ class MyPage extends VMPanel<CountModel, CounterView>{
 }
 
 
+type Postion = { x: number, y: number }
 
+enum Location {
+    left = 0,
+    right = 1,
+    top = 2,
+    bottom = 3,
+}
 
 class Snake {
+    direction: "left" | "right" | "top" | "bottom" = "right"
+    length: number = 1
+    width: number = 1
+    height: number = 1
+
+    head: Postion = { x: 1, y: 0 }
+    body: Location[] = []
+
+    crash() {
+
+    }
+
+    step() {
+        switch (this.direction) {
+            case "left":
+                const head = this.body[0]
+                if (head.x - 1 < 0) {
+                    this.crash()
+                }
+                head.x -= 1
+                this.body.reduce((pre, cur) => {
+
+                    return cur
+                })
+                break
+            case "right":
+                break
+            case "top":
+                break
+            case "bottom":
+                break
+        }
+    }
+
 
 }
 

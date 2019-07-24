@@ -3,6 +3,8 @@ package com.github.penfeizhou.doric.shader;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.github.penfeizhou.doric.DoricContext;
 import com.github.penfeizhou.doric.DoricRegistry;
@@ -13,7 +15,7 @@ import com.github.penfeizhou.doric.utils.DoricUtils;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * @Description: Render
@@ -23,8 +25,8 @@ import java.util.ArrayList;
 public abstract class ViewNode<T extends View> extends DoricComponent {
     protected T mView;
     int index;
-
-    ArrayList<String> ids = new ArrayList<>();
+    ViewNode<ViewGroup> mParent;
+    String mId;
 
     public ViewNode(DoricContext doricContext) {
         super(doricContext);
@@ -40,47 +42,42 @@ public abstract class ViewNode<T extends View> extends DoricComponent {
 
     public abstract T build(JSObject jsObject);
 
-    void blend(JSObject jsObject) {
+    void blend(JSObject jsObject, ViewGroup.LayoutParams layoutParams) {
         if (mView == null) {
             mView = build(jsObject);
         }
-        if (mView.getLayoutParams() == null) {
-            mView.setLayoutParams(new ViewGroup.MarginLayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT));
-        }
         for (String prop : jsObject.propertySet()) {
-            blend(mView, prop, jsObject.getProperty(prop));
+            blend(mView, layoutParams, prop, jsObject.getProperty(prop));
         }
-        mView.setLayoutParams(mView.getLayoutParams());
+        mView.setLayoutParams(layoutParams);
     }
 
-    protected void blend(T view, String name, JSValue prop) {
+    protected void blend(T view, ViewGroup.LayoutParams layoutParams, String name, JSValue prop) {
         switch (name) {
             case "width":
                 if (prop.asNumber().toInt() < 0) {
-                    view.getLayoutParams().width = prop.asNumber().toInt();
+                    layoutParams.width = prop.asNumber().toInt();
                 } else {
-                    view.getLayoutParams().width = DoricUtils.dp2px(prop.asNumber().toFloat());
+                    layoutParams.width = DoricUtils.dp2px(prop.asNumber().toFloat());
                 }
                 break;
             case "height":
                 if (prop.asNumber().toInt() < 0) {
-                    view.getLayoutParams().height = prop.asNumber().toInt();
+                    layoutParams.height = prop.asNumber().toInt();
                 } else {
-                    view.getLayoutParams().height = DoricUtils.dp2px(prop.asNumber().toFloat());
+                    layoutParams.height = DoricUtils.dp2px(prop.asNumber().toFloat());
                 }
                 break;
             case "x":
-                if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+                if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
                     float x = prop.asNumber().toFloat();
-                    ((ViewGroup.MarginLayoutParams) mView.getLayoutParams()).leftMargin = DoricUtils.dp2px(x);
+                    ((ViewGroup.MarginLayoutParams) layoutParams).leftMargin = DoricUtils.dp2px(x);
                 }
                 break;
             case "y":
-                if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+                if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
                     float y = prop.asNumber().toFloat();
-                    ((ViewGroup.MarginLayoutParams) mView.getLayoutParams()).topMargin = DoricUtils.dp2px(y);
+                    ((ViewGroup.MarginLayoutParams) layoutParams).topMargin = DoricUtils.dp2px(y);
                 }
                 break;
             case "bgColor":
@@ -95,31 +92,36 @@ public abstract class ViewNode<T extends View> extends DoricComponent {
                     }
                 });
                 break;
+            case "layoutConfig":
+                JSObject layoutConfig = prop.asObject();
+                JSValue jsValue = layoutConfig.getProperty("alignment");
+                if (jsValue.isNumber()) {
+                    if (layoutParams instanceof LinearLayout.LayoutParams) {
+                        ((LinearLayout.LayoutParams) layoutParams).gravity = jsValue.asNumber().toInt();
+                    } else if (layoutParams instanceof FrameLayout.LayoutParams) {
+                        ((FrameLayout.LayoutParams) layoutParams).gravity = jsValue.asNumber().toInt();
+                    }
+                }
+                break;
             default:
                 break;
         }
     }
 
-    public String getId() {
-        return ids.get(ids.size() - 1);
-    }
+    String[] getIdList() {
+        LinkedList<String> ids = new LinkedList<>();
+        ViewNode viewNode = this;
+        do {
+            ids.push(viewNode.mId);
+            viewNode = viewNode.mParent;
+        } while (viewNode != null && !(viewNode instanceof RootNode));
 
-    public void setFrame(ViewGroup.LayoutParams layoutParams, JSObject jsObject) {
-        float width = jsObject.getProperty("width").asNumber().toFloat();
-        float height = jsObject.getProperty("height").asNumber().toFloat();
-        layoutParams.width = DoricUtils.dp2px(width);
-        layoutParams.height = DoricUtils.dp2px(height);
-        if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
-            float x = jsObject.getProperty("x").asNumber().toFloat();
-            float y = jsObject.getProperty("y").asNumber().toFloat();
-            ((ViewGroup.MarginLayoutParams) layoutParams).leftMargin = DoricUtils.dp2px(x);
-            ((ViewGroup.MarginLayoutParams) layoutParams).topMargin = DoricUtils.dp2px(y);
-        }
+        return ids.toArray(new String[0]);
     }
 
     public void callJSResponse(String funcId, Object... args) {
         final Object[] nArgs = new Object[args.length + 2];
-        nArgs[0] = ids.toArray(new String[0]);
+        nArgs[0] = getIdList();
         nArgs[1] = funcId;
         if (args.length > 0) {
             System.arraycopy(args, 0, nArgs, 2, args.length);
@@ -131,5 +133,16 @@ public abstract class ViewNode<T extends View> extends DoricComponent {
         DoricRegistry registry = doricContext.getDriver().getRegistry();
         DoricMetaInfo<ViewNode> clz = registry.acquireViewNodeInfo(type);
         return clz.createInstance(doricContext);
+    }
+
+    public ViewGroup.LayoutParams getLayoutParams() {
+        if (mView != null) {
+            return mView.getLayoutParams();
+        }
+        return null;
+    }
+
+    public String getId() {
+        return mId;
     }
 }

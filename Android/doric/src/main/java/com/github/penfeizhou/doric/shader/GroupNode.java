@@ -1,6 +1,7 @@
 package com.github.penfeizhou.doric.shader;
 
 import android.util.SparseArray;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.penfeizhou.doric.DoricContext;
@@ -25,8 +26,8 @@ public abstract class GroupNode<F extends ViewGroup> extends ViewNode<F> {
     }
 
     @Override
-    public void blend(JSObject jsObject) {
-        super.blend(jsObject);
+    public void blend(JSObject jsObject, ViewGroup.LayoutParams layoutParams) {
+        super.blend(jsObject, layoutParams);
         JSArray jsArray = jsObject.getProperty("children").asArray();
         int i;
         for (i = 0; i < jsArray.size(); i++) {
@@ -41,15 +42,19 @@ public abstract class GroupNode<F extends ViewGroup> extends ViewNode<F> {
             if (child == null) {
                 child = ViewNode.create(getDoricContext(), type);
                 child.index = i;
-                child.ids.addAll(this.ids);
-                child.ids.add(id);
+                child.mParent = this;
+                child.mId = id;
                 mChildrenNode.put(id, child);
             } else if (i != child.index) {
                 mIndexInfo.remove(i);
                 child.index = i;
                 mView.removeView(child.mView);
             }
-            child.blend(childObj.getProperty("props").asObject());
+            ViewGroup.LayoutParams params = child.getLayoutParams();
+            if (params == null) {
+                params = generateDefaultLayoutParams();
+            }
+            child.blend(childObj.getProperty("props").asObject(), params);
             if (mIndexInfo.get(i) == null) {
                 mView.addView(child.mView, i);
                 mIndexInfo.put(i, child);
@@ -62,5 +67,9 @@ public abstract class GroupNode<F extends ViewGroup> extends ViewNode<F> {
                 mIndexInfo.remove(i);
             }
         }
+    }
+
+    protected ViewGroup.LayoutParams generateDefaultLayoutParams() {
+        return new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 }

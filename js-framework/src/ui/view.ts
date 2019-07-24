@@ -182,7 +182,7 @@ export abstract class View implements Modeling {
     }
 
     @Property
-    config?: Config
+    layoutConfig?: Config
 
     @Property
     onClick?: Function

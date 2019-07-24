@@ -23,6 +23,11 @@ export class MyPage extends Panel {
             state.set(state.get() + 1)
         }
         click.top = numberView.bottom + 20
+
+        click.layoutConfig = {
+            alignment: new Gravity().centerX()
+        }
+
         rootView.addChild(click)
 
         const vlayout = new VLayout

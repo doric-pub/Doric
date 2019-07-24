@@ -4,11 +4,17 @@ export interface Modeling {
 export function obj2Model(obj: Model): Model {
     if (obj instanceof Array) {
         return obj.map(e => obj2Model(e)) as Model
-    } else if (obj instanceof Object
-        && Reflect.has(obj, 'toModel')
-        && Reflect.get(obj, 'toModel') instanceof Function) {
-        obj = Reflect.apply(Reflect.get(obj, 'toModel'), obj, [])
-        return obj
+    } else if (obj instanceof Object) {
+        if (Reflect.has(obj, 'toModel') && Reflect.get(obj, 'toModel') instanceof Function) {
+            obj = Reflect.apply(Reflect.get(obj, 'toModel'), obj, [])
+            return obj
+        } else {
+            for (let key in obj) {
+                const val = Reflect.get(obj, key)
+                Reflect.set(obj, key, obj2Model(val))
+            }
+            return obj
+        }
     } else {
         return obj
     }

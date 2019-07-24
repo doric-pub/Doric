@@ -1,5 +1,6 @@
 package com.github.penfeizhou.doric.shader;
 
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.github.penfeizhou.doric.DoricContext;
@@ -24,13 +25,13 @@ public class StackNode extends GroupNode<FrameLayout> {
     }
 
     @Override
-    protected void blend(FrameLayout view, String name, JSValue prop) {
+    protected void blend(FrameLayout view, ViewGroup.LayoutParams layoutParams, String name, JSValue prop) {
         switch (name) {
             case "gravity":
                 view.setForegroundGravity(prop.asNumber().toInt());
                 break;
             default:
-                super.blend(view, name, prop);
+                super.blend(view, layoutParams, name, prop);
         }
     }
 }

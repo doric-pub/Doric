@@ -30,7 +30,7 @@ public class ShaderPlugin extends DoricJavaPlugin {
                 @Override
                 public Object call() throws Exception {
                     RootNode rootNode = getDoricContext().getRootNode();
-                    rootNode.blend(jsObject.getProperty("props").asObject());
+                    rootNode.render(jsObject.getProperty("props").asObject());
                     return null;
                 }
             }, ThreadMode.UI);

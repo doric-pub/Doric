@@ -1,6 +1,7 @@
 package com.github.penfeizhou.doric.shader;
 
 import android.graphics.drawable.ShapeDrawable;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.github.penfeizhou.doric.DoricContext;
@@ -24,7 +25,7 @@ public class LinearNode extends GroupNode<LinearLayout> {
     }
 
     @Override
-    protected void blend(LinearLayout view, String name, JSValue prop) {
+    protected void blend(LinearLayout view, ViewGroup.LayoutParams params, String name, JSValue prop) {
         switch (name) {
             case "space":
                 ShapeDrawable shapeDrawable;
@@ -47,7 +48,7 @@ public class LinearNode extends GroupNode<LinearLayout> {
                 view.setGravity(prop.asNumber().toInt());
                 break;
             default:
-                super.blend(view, name, prop);
+                super.blend(view, params, name, prop);
                 break;
         }
     }

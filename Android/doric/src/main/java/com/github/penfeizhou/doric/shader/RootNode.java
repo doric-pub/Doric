@@ -25,4 +25,8 @@ public class RootNode extends GroupNode<FrameLayout> {
     public void setRootView(FrameLayout rootView) {
         this.mView = rootView;
     }
+
+    public void render(JSObject props) {
+        blend(props, mView.getLayoutParams());
+    }
 }

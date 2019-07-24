@@ -1,6 +1,7 @@
 package com.github.penfeizhou.doric.shader;
 
 import android.util.TypedValue;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.penfeizhou.doric.DoricContext;
@@ -25,7 +26,7 @@ public class TextNode extends ViewNode<TextView> {
     }
 
     @Override
-    protected void blend(TextView view, String name, JSValue prop) {
+    protected void blend(TextView view, ViewGroup.LayoutParams params, String name, JSValue prop) {
         switch (name) {
             case "text":
                 view.setText(prop.asString().toString());
@@ -37,7 +38,7 @@ public class TextNode extends ViewNode<TextView> {
                 view.setTextColor(prop.asNumber().toInt());
                 break;
             default:
-                super.blend(view, name, prop);
+                super.blend(view, params, name, prop);
                 break;
         }
     }

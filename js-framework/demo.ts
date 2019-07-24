@@ -2,7 +2,6 @@ import { StackConfig, ViewHolder, VMPanel, View, ViewModel, WRAP_CONTENT, Gravit
 
 interface CountModel {
     count: number
-    add: () => void
 }
 
 class CounterView extends ViewHolder {
@@ -38,12 +37,14 @@ class CounterView extends ViewHolder {
 }
 
 class CounterVM extends ViewModel<CountModel, CounterView> {
+
     binding(v: CounterView, model: CountModel): void {
-        v.setCounter(model.add)
         v.setNumber(model.count)
+        v.setCounter(() => {
+            this.getModel().count++
+        })
     }
 }
-
 
 class MyPage extends VMPanel<CountModel, CounterView>{
 
@@ -74,10 +75,120 @@ class MyPage extends VMPanel<CountModel, CounterView>{
 }
 
 
+type Postion = { x: number, y: number }
+
+enum Direction {
+    left = 0,
+    right = 1,
+    up = 2,
+    down = 3,
+}
+
+interface SnakeNode {
+    prev?: SnakeNode
+    next?: SnakeNode
+    x: number
+    y: number
+}
+
+enum State {
+    idel,
+    run,
+    fail,
+}
+
+class SnakeModel {
+    state = State.idel
+    direction = Direction.left
+    width = 10
+    height = 10
+
+    food = { x: 0, y: 0 }
+
+    head: SnakeNode = {
+        x: 0,
+        y: 0,
+    }
+
+    refreshFood() {
+        this.food.x = Math.floor(Math.random() * (this.width - 1))
+        this.food.y = Math.floor(Math.random() * (this.height - 1))
+    }
+
+    get tail() {
+        let node = this.head
+        while (node.next !== undefined) {
+            node = node.next
+        }
+        return node
+    }
+    get score() {
+        let node = this.head
+        let n = 0
+        while (node.next !== undefined) {
+            n++
+            node = node.next
+        }
+        return n
+    }
+
+    forward(node: SnakeNode) {
+        switch (this.direction) {
+            case Direction.left:
+                node.x -= 10
+                break;
+            case Direction.right:
+                node.x += 10
+                break;
+            case Direction.up:
+                node.y -= 10
+                break;
+            case Direction.down:
+                node.y += 10
+                break;
+        }
+    }
 
 
-class Snake {
+    step() {
+        if (this.state !== State.run) {
+            return
+        }
+        let tail = this.tail
+        while (tail.prev != undefined) {
+            tail.x = tail.prev.x
+            tail.y = tail.prev.y
+            tail = tail.prev
+        }
+        this.forward(this.head)
+        if (this.head.x < 0 || this.head.x >= this.width
+            || this.head.y < 0 || this.head.y >= this.height) {
+            //If out of bound
+            this.state = State.fail
+        } else if (this.head.x == this.food.x && this.head.y == this.food.y) {
+            //If eat food
+            let head = { x: this.food.x, y: this.food.y, next: this.head }
+            this.head.prev = head
+            this.forward(head)
+            this.head = head
+            this.refreshFood()
+        }
+        if (this.crashAtSelf()) {
+            //If crash at self
+            this.state = State.fail
+        }
+    }
 
+    crashAtSelf() {
+        let cur = this.head.next
+        while (cur) {
+            if (cur.x == this.head.x && cur.y == this.head.y) {
+                return true
+            }
+            cur = cur.next
+        }
+        return false
+    }
 }
 
 class SnakeView extends ViewHolder {
@@ -98,19 +209,19 @@ class SnakeView extends ViewHolder {
     }
 }
 
-class SnakeVM extends ViewModel<Snake, SnakeView>{
-    binding(v: SnakeView, model: Snake) {
+class SnakeVM extends ViewModel<SnakeModel, SnakeView>{
+    binding(v: SnakeView, model: SnakeModel) {
 
     }
 }
 
 @Entry
-class SnakePanel extends VMPanel<Snake, SnakeView>{
+class SnakePanel extends VMPanel<SnakeModel, SnakeView>{
     getVMClass() {
         return SnakeVM
     }
     getModel() {
-        return new Snake
+        return new SnakeModel
     }
 
     getViewHolder() {

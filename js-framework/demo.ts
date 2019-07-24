@@ -1,53 +1,48 @@
-import { Gravity, Mutable, NativeCall, Text, Color, VLayout, Panel, log, logw, loge, Group, Stack, } from "./index"
-import { WRAP_CONTENT } from "./src/ui/view";
+import { VMPanel, View, ViewModel, WRAP_CONTENT, Gravity, Mutable, NativeCall, Text, Color, VLayout, Panel, log, logw, loge, Group, Stack, } from "./index"
+import { CENTER } from "./src/util/gravity";
+
+interface CountModel {
+    count: number
+}
+
+class CounterVM extends ViewModel<CountModel> {
+    build(root: Group, model: CountModel) {
+        const vlayout = new VLayout
+        const number = new Text
+        number.textSize = 40
+        number.layoutConfig = {
+            alignment: new Gravity().center()
+        }
+        const counter = new Text
+        counter.text = "点击计数"
+        counter.textSize = 20
+
+        vlayout.space = 20
+        vlayout.layoutConfig = {
+            alignment: new Gravity().center()
+        }
+        vlayout.addChild(number)
+        vlayout.addChild(counter)
+        root.addChild(vlayout)
+
+        this.bind((data) => {
+            number.text = data.count.toString()
+            loge(`data changed:${data.count},${vlayout.isDirty()}`)
+        })
+        counter.onClick = () => {
+            model.count++
+            loge('onclick', model.count)
+
+        }
+    }
+}
 
 
 @Entry
-export class MyPage extends Panel {
+class MyPage extends VMPanel<CountModel>{
 
-    build(rootView: Group): void {
-        const state = Mutable.of(1)
-        const numberView = new Text
-        numberView.width = WRAP_CONTENT
-        numberView.height = WRAP_CONTENT
-        numberView.top = 50
-        state.bind((v) => {
-            numberView.text = v.toString()
-        })
-        numberView.textSize = 40
-        numberView.layoutConfig = {
-            alignment: new Gravity().centerX()
-        }
-        rootView.addChild(numberView)
-        const click = new Text
-        click.textSize = 20
-        click.text = '点击计数'
-        click.onClick = () => {
-            state.set(state.get() + 1)
-        }
-        click.top = 200
-
-        click.layoutConfig = {
-            alignment: new Gravity().centerX()
-        }
-
-        rootView.addChild(click)
-
-        const vlayout = new VLayout
-        vlayout.width = this.getRootView().width
-        vlayout.height = 500
-        vlayout.bgColor = Color.parse('#ff00ff')
-        vlayout.top = 50
-        vlayout.centerX = this.getRootView().width / 2
-        vlayout.space = 0
-        vlayout.gravity = (new Gravity()).bottom()
-        vlayout.onClick = () => {
-            const stack = new Stack
-            stack.width = stack.height = 50
-            stack.bgColor = Color.safeParse('#00ff00')
-            vlayout.addChild(stack)
-        }
-        rootView.addChild(vlayout)
+    createVM(): ViewModel<CountModel> {
+        return new CounterVM({ count: 0 })
     }
 
     @NativeCall

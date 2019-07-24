@@ -28,6 +28,11 @@ public class LinearNode extends GroupNode<LinearLayout> {
     }
 
     @Override
+    protected ViewGroup.LayoutParams generateDefaultLayoutParams() {
+        return new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+    }
+
+    @Override
     public LinearLayout build(JSObject jsObject) {
         return new LinearLayout(getContext());
     }

@@ -252,6 +252,10 @@ export abstract class Group extends View {
 
     onChildPropertyChanged(child: View) {
         this.getDirtyChildrenModel()[this.children.indexOf(child)] = child.nativeViewModel
+        this.getDirtyChildrenModel().length = this.children.length
+        if (this.parent) {
+            this.parent.onChildPropertyChanged(this)
+        }
     }
 
     isDirty() {

@@ -100,9 +100,14 @@ enum State {
 class SnakeModel {
     state = State.idel
     direction = Direction.left
-    width = 10
-    height = 10
 
+    width: number
+    height: number
+
+    constructor(w: number, h: number) {
+        this.width = w
+        this.height = h
+    }
     food = { x: 0, y: 0 }
 
     head: SnakeNode = {
@@ -192,6 +197,7 @@ class SnakeModel {
 }
 
 class SnakeView extends ViewHolder {
+    panel: Stack = new Stack
 
     build(root: Group): void {
         root.bgColor = Color.parse('#000000')
@@ -205,23 +211,66 @@ class SnakeView extends ViewHolder {
                 top: 20
             }
         } as StackConfig
+        root.addChild(this.panel)
         root.addChild(title)
     }
 }
 
 class SnakeVM extends ViewModel<SnakeModel, SnakeView>{
-    binding(v: SnakeView, model: SnakeModel) {
+    timerId?: any
 
+    start() {
+        if (this.timerId !== undefined) {
+            clearInterval(this.timerId)
+        }
+        this.timerId = setInterval(() => {
+            this.getModel().step()
+        }, 1000)
+    }
+
+    stop() {
+        if (this.timerId !== undefined) {
+            clearInterval(this.timerId)
+            this.timerId = undefined
+        }
+    }
+
+    binding(v: SnakeView, model: SnakeModel) {
+        v.panel.width = model.width * 10
+        v.panel.height = model.height * 10
+        let node: SnakeNode | undefined = model.head
+        let nodes: SnakeNode[] = []
+        while (node != undefined) {
+            nodes.push(node)
+            node = node.next
+        }
+        nodes.forEach((e, index) => {
+            let item = v.panel.children[index]
+            if (item) {
+                item.x = e.x * 10
+                item.height = e.y * 10
+            } else {
+                item = new Stack
+                item.bgColor = Color.parse('#0000ff')
+                item.width = item.height = 10
+                v.panel.addChild(item)
+            }
+        })
+        if (nodes.length < v.panel.children.length) {
+            v.panel.children.length = nodes.length
+        }
     }
 }
 
 @Entry
 class SnakePanel extends VMPanel<SnakeModel, SnakeView>{
+
     getVMClass() {
         return SnakeVM
     }
+
     getModel() {
-        return new SnakeModel
+        return new SnakeModel(this.getRootView().width / 10, this.getRootView().width / 10)
     }
 
     getViewHolder() {

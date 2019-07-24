@@ -25,8 +25,9 @@ import java.util.LinkedList;
 public abstract class ViewNode<T extends View> extends DoricComponent {
     protected T mView;
     int index;
-    ViewNode<ViewGroup> mParent;
+    GroupNode mParent;
     String mId;
+    private ViewGroup.LayoutParams mLayoutParams;
 
     public ViewNode(DoricContext doricContext) {
         super(doricContext);
@@ -43,6 +44,7 @@ public abstract class ViewNode<T extends View> extends DoricComponent {
     public abstract T build(JSObject jsObject);
 
     void blend(JSObject jsObject, ViewGroup.LayoutParams layoutParams) {
+        mLayoutParams = layoutParams;
         if (mView == null) {
             mView = build(jsObject);
         }
@@ -93,14 +95,8 @@ public abstract class ViewNode<T extends View> extends DoricComponent {
                 });
                 break;
             case "layoutConfig":
-                JSObject layoutConfig = prop.asObject();
-                JSValue jsValue = layoutConfig.getProperty("alignment");
-                if (jsValue.isNumber()) {
-                    if (layoutParams instanceof LinearLayout.LayoutParams) {
-                        ((LinearLayout.LayoutParams) layoutParams).gravity = jsValue.asNumber().toInt();
-                    } else if (layoutParams instanceof FrameLayout.LayoutParams) {
-                        ((FrameLayout.LayoutParams) layoutParams).gravity = jsValue.asNumber().toInt();
-                    }
+                if (prop.isObject() && mParent != null) {
+                    mParent.blendChild(this, prop.asObject());
                 }
                 break;
             default:
@@ -136,10 +132,7 @@ public abstract class ViewNode<T extends View> extends DoricComponent {
     }
 
     public ViewGroup.LayoutParams getLayoutParams() {
-        if (mView != null) {
-            return mView.getLayoutParams();
-        }
-        return null;
+        return mLayoutParams;
     }
 
     public String getId() {

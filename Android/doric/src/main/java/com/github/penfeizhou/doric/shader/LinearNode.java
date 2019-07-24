@@ -20,6 +20,14 @@ public class LinearNode extends GroupNode<LinearLayout> {
     }
 
     @Override
+    public void blendChild(ViewNode viewNode, JSObject layoutConfig) {
+        JSValue jsValue = layoutConfig.getProperty("alignment");
+        if (jsValue.isNumber()) {
+            ((LinearLayout.LayoutParams) viewNode.getLayoutParams()).gravity = jsValue.asNumber().toInt();
+        }
+    }
+
+    @Override
     public LinearLayout build(JSObject jsObject) {
         return new LinearLayout(getContext());
     }

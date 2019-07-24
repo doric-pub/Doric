@@ -140,7 +140,7 @@ export abstract class View implements Modeling {
         }
         this.__dirty_props__[propKey] = newV
         if (this.parent instanceof Group) {
-            this.parent.onChildPropertyChanged(this, propKey, oldV, newV)
+            this.parent.onChildPropertyChanged(this)
         }
     }
 
@@ -220,6 +220,10 @@ export abstract class Group extends View {
                 const childrenModel = this.getDirtyChildrenModel()
                 childrenModel[parseInt(index)] = value.nativeViewModel
             }
+            if (this.parent) {
+                this.parent.onChildPropertyChanged(this)
+            }
+
             return Reflect.set(target, index, value)
         }
     })
@@ -246,8 +250,12 @@ export abstract class Group extends View {
         return super.toModel()
     }
 
-    onChildPropertyChanged(child: View, propKey: string, oldV: Model, newV: Model) {
+    onChildPropertyChanged(child: View) {
         this.getDirtyChildrenModel()[this.children.indexOf(child)] = child.nativeViewModel
+    }
+
+    isDirty() {
+        return super.isDirty()
     }
 }
 

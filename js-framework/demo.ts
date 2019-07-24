@@ -1,8 +1,7 @@
 import { VMPanel, View, ViewModel, WRAP_CONTENT, Gravity, Mutable, NativeCall, Text, Color, VLayout, Panel, log, logw, loge, Group, Stack, } from "./index"
-import { CENTER } from "./src/util/gravity";
-
 interface CountModel {
     count: number
+    add: () => void
 }
 
 class CounterVM extends ViewModel<CountModel> {
@@ -23,17 +22,15 @@ class CounterVM extends ViewModel<CountModel> {
         }
         vlayout.addChild(number)
         vlayout.addChild(counter)
+
         root.addChild(vlayout)
 
         this.bind((data) => {
+            loge('bind:', data)
             number.text = data.count.toString()
-            loge(`data changed:${data.count},${vlayout.isDirty()}`)
+            counter.onClick = data.add
         })
-        counter.onClick = () => {
-            model.count++
-            loge('onclick', model.count)
 
-        }
     }
 }
 
@@ -42,7 +39,12 @@ class CounterVM extends ViewModel<CountModel> {
 class MyPage extends VMPanel<CountModel>{
 
     createVM(): ViewModel<CountModel> {
-        return new CounterVM({ count: 0 })
+        return new CounterVM({
+            count: 0,
+            add: function () {
+                this.count++
+            }
+        })
     }
 
     @NativeCall

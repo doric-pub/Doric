@@ -1,12 +1,17 @@
 import { View, Group } from "../ui/view";
 import { Panel } from "../ui/panel";
+import { loge } from "../util/log";
 
 
 function listen<T extends Object>(obj: T, listener: Function): T {
     return new Proxy(obj, {
         get: (target, prop, receiver) => {
             const ret = Reflect.get(target, prop, receiver)
-            if (ret instanceof Object) {
+            if (ret instanceof Function) {
+                return () => {
+                    return Reflect.apply(ret, receiver, arguments)
+                }
+            } else if (ret instanceof Object) {
                 return listen(ret, listener)
             } else {
                 return ret

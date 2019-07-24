@@ -65,7 +65,7 @@ export abstract class ViewModel<M extends Object, V extends ViewHolder> {
     build(root: Group) {
         this.viewHolder.build(root)
         this.bind((data: M) => {
-            this.binding(this.viewHolder, this.model)
+            this.binding(this.viewHolder, data)
         })
     }
 

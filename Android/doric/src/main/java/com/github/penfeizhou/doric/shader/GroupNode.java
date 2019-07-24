@@ -4,6 +4,7 @@ import android.util.SparseArray;
 import android.view.ViewGroup;
 
 import com.github.penfeizhou.doric.DoricContext;
+import com.github.penfeizhou.doric.utils.DoricUtils;
 import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
@@ -79,5 +80,26 @@ public abstract class GroupNode<F extends ViewGroup> extends ViewNode<F> {
         return new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
-    public abstract void blendChild(ViewNode viewNode, JSObject jsObject);
+    protected void blendChild(ViewNode viewNode, JSObject jsObject) {
+        JSValue jsValue = jsObject.getProperty("margin");
+        ViewGroup.LayoutParams layoutParams = viewNode.getLayoutParams();
+        if (jsValue.isObject() && layoutParams instanceof ViewGroup.MarginLayoutParams) {
+            JSValue topVal = jsValue.asObject().getProperty("top");
+            if (topVal.isNumber()) {
+                ((ViewGroup.MarginLayoutParams) layoutParams).topMargin = DoricUtils.dp2px(topVal.asNumber().toFloat());
+            }
+            JSValue leftVal = jsValue.asObject().getProperty("left");
+            if (leftVal.isNumber()) {
+                ((ViewGroup.MarginLayoutParams) layoutParams).leftMargin = DoricUtils.dp2px(leftVal.asNumber().toFloat());
+            }
+            JSValue rightVal = jsValue.asObject().getProperty("right");
+            if (rightVal.isNumber()) {
+                ((ViewGroup.MarginLayoutParams) layoutParams).rightMargin = DoricUtils.dp2px(rightVal.asNumber().toFloat());
+            }
+            JSValue bottomVal = jsValue.asObject().getProperty("bottom");
+            if (bottomVal.isNumber()) {
+                ((ViewGroup.MarginLayoutParams) layoutParams).bottomMargin = DoricUtils.dp2px(bottomVal.asNumber().toFloat());
+            }
+        }
+    }
 }

@@ -1,4 +1,4 @@
-import { ViewHolder, VMPanel, View, ViewModel, WRAP_CONTENT, Gravity, Mutable, NativeCall, Text, Color, VLayout, Panel, log, logw, loge, Group, Stack, } from "./index"
+import { StackConfig, ViewHolder, VMPanel, View, ViewModel, WRAP_CONTENT, Gravity, Mutable, NativeCall, Text, Color, VLayout, Panel, log, logw, loge, Group, Stack, } from "./index"
 
 interface CountModel {
     count: number
@@ -45,7 +45,6 @@ class CounterVM extends ViewModel<CountModel, CounterView> {
 }
 
 
-@Entry
 class MyPage extends VMPanel<CountModel, CounterView>{
 
     getVMClass() {
@@ -71,5 +70,50 @@ class MyPage extends VMPanel<CountModel, CounterView>{
         log("Hello.HEGO")
         logw("Hello.HEGO")
         loge("Hello.HEGO")
+    }
+}
+
+
+
+
+class Snake {
+
+}
+
+class SnakeView extends ViewHolder {
+
+    build(root: Group): void {
+        root.bgColor = Color.parse('#000000')
+        const title = new Text
+        title.text = "Snake"
+        title.textSize = 20
+        title.textColor = Color.parse("#ffffff")
+        title.layoutConfig = {
+            alignment: new Gravity().centerX().top(),
+            margin: {
+                top: 20
+            }
+        } as StackConfig
+        root.addChild(title)
+    }
+}
+
+class SnakeVM extends ViewModel<Snake, SnakeView>{
+    binding(v: SnakeView, model: Snake) {
+
+    }
+}
+
+@Entry
+class SnakePanel extends VMPanel<Snake, SnakeView>{
+    getVMClass() {
+        return SnakeVM
+    }
+    getModel() {
+        return new Snake
+    }
+
+    getViewHolder() {
+        return new SnakeView
     }
 }

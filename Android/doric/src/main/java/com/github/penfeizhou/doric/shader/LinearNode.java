@@ -20,10 +20,15 @@ public class LinearNode extends GroupNode<LinearLayout> {
     }
 
     @Override
-    public void blendChild(ViewNode viewNode, JSObject layoutConfig) {
+    protected void blendChild(ViewNode viewNode, JSObject layoutConfig) {
+        super.blendChild(viewNode, layoutConfig);
         JSValue jsValue = layoutConfig.getProperty("alignment");
         if (jsValue.isNumber()) {
             ((LinearLayout.LayoutParams) viewNode.getLayoutParams()).gravity = jsValue.asNumber().toInt();
+        }
+        JSValue weight = layoutConfig.getProperty("weight");
+        if (weight.isNumber()) {
+            ((LinearLayout.LayoutParams) viewNode.getLayoutParams()).weight = weight.asNumber().toInt();
         }
     }
 
@@ -33,7 +38,7 @@ public class LinearNode extends GroupNode<LinearLayout> {
     }
 
     @Override
-    public LinearLayout build(JSObject jsObject) {
+    protected LinearLayout build(JSObject jsObject) {
         return new LinearLayout(getContext());
     }
 

@@ -20,7 +20,8 @@ public class StackNode extends GroupNode<FrameLayout> {
     }
 
     @Override
-    public void blendChild(ViewNode viewNode, JSObject jsObject) {
+    protected void blendChild(ViewNode viewNode, JSObject jsObject) {
+        super.blendChild(viewNode, jsObject);
         JSValue jsValue = jsObject.getProperty("alignment");
         if (jsValue.isNumber()) {
             ((FrameLayout.LayoutParams) viewNode.getLayoutParams()).gravity = jsValue.asNumber().toInt();
@@ -28,7 +29,7 @@ public class StackNode extends GroupNode<FrameLayout> {
     }
 
     @Override
-    public FrameLayout build(JSObject jsObject) {
+    protected FrameLayout build(JSObject jsObject) {
         return new FrameLayout(getContext());
     }
 

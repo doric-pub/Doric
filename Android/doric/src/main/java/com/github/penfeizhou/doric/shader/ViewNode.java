@@ -41,7 +41,7 @@ public abstract class ViewNode<T extends View> extends DoricComponent {
         return getDoricContext().getContext();
     }
 
-    public abstract T build(JSObject jsObject);
+    protected abstract T build(JSObject jsObject);
 
     void blend(JSObject jsObject, ViewGroup.LayoutParams layoutParams) {
         mLayoutParams = layoutParams;

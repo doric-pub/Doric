@@ -21,7 +21,7 @@ public class TextNode extends ViewNode<TextView> {
     }
 
     @Override
-    public TextView build(JSObject jsObject) {
+    protected TextView build(JSObject jsObject) {
         return new TextView(getContext());
     }
 

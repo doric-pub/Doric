@@ -18,7 +18,7 @@ public class VLayoutNode extends LinearNode {
     }
 
     @Override
-    public LinearLayout build(JSObject jsObject) {
+    protected LinearLayout build(JSObject jsObject) {
         LinearLayout linearLayout = super.build(jsObject);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         return linearLayout;

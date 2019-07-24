@@ -3,10 +3,12 @@ package com.github.penfeizhou.doric;
 import android.text.TextUtils;
 
 import com.github.penfeizhou.doric.plugin.ShaderPlugin;
+import com.github.penfeizhou.doric.shader.HLayoutNode;
 import com.github.penfeizhou.doric.shader.ImageNode;
 import com.github.penfeizhou.doric.shader.RootNode;
 import com.github.penfeizhou.doric.shader.StackNode;
 import com.github.penfeizhou.doric.shader.TextNode;
+import com.github.penfeizhou.doric.shader.VLayoutNode;
 import com.github.penfeizhou.doric.shader.ViewNode;
 import com.github.penfeizhou.doric.utils.DoricMetaInfo;
 import com.github.penfeizhou.doric.plugin.DoricJavaPlugin;
@@ -47,6 +49,8 @@ public class DoricRegistry {
         this.registerViewNode(TextNode.class);
         this.registerViewNode(ImageNode.class);
         this.registerViewNode(StackNode.class);
+        this.registerViewNode(VLayoutNode.class);
+        this.registerViewNode(HLayoutNode.class);
         initRegistry(this);
     }
 

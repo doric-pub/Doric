@@ -5,6 +5,8 @@ function from(obj: Object) {
         }
     })
 }
+
+
 class Wrapper {
     val: any
     constructor(val: any) {

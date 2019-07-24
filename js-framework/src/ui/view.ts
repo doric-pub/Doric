@@ -1,7 +1,12 @@
 import { Color, GradientColor } from "../util/color"
 import { Modeling, Model, obj2Model } from "../util/types";
 import { uniqueId } from "../util/uniqueId";
+import { Gravity } from "../util/gravity";
 import { loge } from "../util/log";
+
+export const MATCH_PARENT = -1
+
+export const WRAP_CONTENT = -2
 
 export function Property(target: Object, propKey: string) {
     Reflect.defineMetadata(propKey, true, target)
@@ -9,10 +14,10 @@ export function Property(target: Object, propKey: string) {
 
 export abstract class View implements Modeling {
     @Property
-    width: number = 0
+    width: number = WRAP_CONTENT
 
     @Property
-    height: number = 0
+    height: number = WRAP_CONTENT
 
     @Property
     x: number = 0
@@ -146,9 +151,11 @@ export abstract class View implements Modeling {
             }
         }
     }
+
     isDirty() {
         return Reflect.ownKeys(this.__dirty_props__).length !== 0
     }
+
     responseCallback(id: string, ...args: any) {
         const f = this.id2Callback(id)
         if (f instanceof Function) {
@@ -176,20 +183,9 @@ export abstract class View implements Modeling {
 
     @Property
     config?: Config
-}
 
-export enum Alignment {
-    center = 0,
-    start,
-    end,
-}
-
-export enum Gravity {
-    center = 0,
-    left,
-    right,
-    top,
-    bottom,
+    @Property
+    onClick?: Function
 }
 
 export interface Config {
@@ -199,14 +195,14 @@ export interface Config {
         top?: number,
         bottom?: number,
     }
-    alignment?: Alignment
+    alignment?: Gravity
 }
 
 export interface StackConfig extends Config {
 
 }
 
-export interface LayoutConfig extends Config {
+export interface LinearConfig extends Config {
     weight?: number
 }
 
@@ -257,7 +253,7 @@ export abstract class Group extends View {
 
 export class Stack extends Group {
     @Property
-    gravity?: number
+    gravity?: Gravity
 }
 export class Root extends Stack {
 
@@ -267,7 +263,7 @@ class LinearLayout extends Group {
     space?: number
 
     @Property
-    gravity?: number
+    gravity?: Gravity
 }
 
 export class VLayout extends LinearLayout {
@@ -288,9 +284,6 @@ export class Text extends View {
 
     @Property
     maxLines?: number
-
-    @Property
-    onClick?: Function
 }
 
 export class Image extends View {
@@ -304,4 +297,25 @@ export class List extends View {
 
 export class Slide extends View {
 
+}
+
+export function stack() {
+
+}
+
+export function vlayout(providers: Array<() => View>, config: {
+    width: number
+    height: number
+    space?: number
+}) {
+    const vlayout = new VLayout
+    vlayout.width = config.width
+    vlayout.height = config.height
+    if (config.space !== undefined) {
+        vlayout.space = config.space
+    }
+    providers.forEach(e => {
+        vlayout.addChild(e())
+    })
+    return vlayout
 }

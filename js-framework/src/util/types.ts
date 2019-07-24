@@ -16,3 +16,35 @@ export function obj2Model(obj: Model): Model {
 
 type _M = string | number | boolean | Modeling | { [index: string]: Model | undefined }
 export type Model = _M | Array<_M>
+
+export type Binder<T> = (v: T) => void
+
+export class Mutable<T>{
+    private val: T
+
+    private binders: Set<Binder<T>> = new Set
+
+    get = () => {
+        return this.val
+    }
+
+    set = (v: T) => {
+        this.val = v
+        this.binders.forEach(e => {
+            Reflect.apply(e, undefined, [this.val])
+        })
+    }
+
+    private constructor(v: T) {
+        this.val = v
+    }
+
+    bind(binder: Binder<T>) {
+        this.binders.add(binder)
+        Reflect.apply(binder, undefined, [this.val])
+    }
+
+    static of<E>(v: E) {
+        return new Mutable(v)
+    }
+}

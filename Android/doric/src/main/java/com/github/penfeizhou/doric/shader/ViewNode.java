@@ -58,10 +58,18 @@ public abstract class ViewNode<T extends View> extends DoricComponent {
     protected void blend(T view, String name, JSValue prop) {
         switch (name) {
             case "width":
-                view.getLayoutParams().width = DoricUtils.dp2px(prop.asNumber().toFloat());
+                if (prop.asNumber().toInt() < 0) {
+                    view.getLayoutParams().width = prop.asNumber().toInt();
+                } else {
+                    view.getLayoutParams().width = DoricUtils.dp2px(prop.asNumber().toFloat());
+                }
                 break;
             case "height":
-                view.getLayoutParams().height = DoricUtils.dp2px(prop.asNumber().toFloat());
+                if (prop.asNumber().toInt() < 0) {
+                    view.getLayoutParams().height = prop.asNumber().toInt();
+                } else {
+                    view.getLayoutParams().height = DoricUtils.dp2px(prop.asNumber().toFloat());
+                }
                 break;
             case "x":
                 if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {

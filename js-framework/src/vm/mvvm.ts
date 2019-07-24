@@ -1,7 +1,5 @@
 import { View, Group } from "../ui/view";
 import { Panel } from "../ui/panel";
-import { loge } from "../util/log";
-
 
 function listen<T extends Object>(obj: T, listener: Function): T {
     return new Proxy(obj, {
@@ -26,38 +24,52 @@ function listen<T extends Object>(obj: T, listener: Function): T {
     })
 }
 
-export abstract class VMPanel<M extends Object> extends Panel {
+export abstract class ViewHolder {
+    abstract build(root: Group): void
+}
 
-    private vm: ViewModel<M> = this.createVM()
+export abstract class VMPanel<M extends Object, V extends ViewHolder> extends Panel {
 
-    abstract createVM(): ViewModel<M>
+    private vm: ViewModel<M, V> = new (this.getVMClass())(this.getModel(), this.getViewHolder())
+
+    abstract getVMClass(): new (m: M, v: V) => ViewModel<M, V>
 
 
-    getModel() {
-        return this.vm.getModel()
-    }
+    abstract getModel(): M
+
+    abstract getViewHolder(): V
 
     getVM() {
         return this.vm
     }
 
     build(root: Group): void {
-        this.vm.build(root, this.vm.getModel())
+        this.vm.build(root)
     }
 }
 
-export abstract class ViewModel<M extends Object> {
+export abstract class ViewModel<M extends Object, V extends ViewHolder> {
     private model: M
     private listeners: Function[] = []
-    constructor(obj: M) {
+    private viewHolder: V
+
+    constructor(obj: M, v: V) {
         this.model = listen(obj, () => {
             this.listeners.forEach(e => {
                 Reflect.apply(e, this.model, [this.model])
             })
         })
+        this.viewHolder = v
     }
 
-    abstract build(root: Group, model: M): void
+    build(root: Group) {
+        this.viewHolder.build(root)
+        this.bind((data: M) => {
+            this.binding(this.viewHolder, this.model)
+        })
+    }
+
+    abstract binding(v: V, model: M): void
 
     getModel() {
         return this.model

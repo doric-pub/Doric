@@ -69,7 +69,7 @@ export abstract class View implements Modeling {
             set: (target, p, v, receiver) => {
                 const oldV = Reflect.get(target, p, receiver)
                 const ret = Reflect.set(target, p, v, receiver)
-                if (Reflect.getMetadata(p, target)) {
+                if (Reflect.getMetadata(p, target) && oldV !== v) {
                     receiver.onPropertyChanged(p.toString(), oldV, v)
                 }
                 return ret
@@ -209,7 +209,7 @@ export interface LinearConfig extends Config {
 export abstract class Group extends View {
 
     @Property
-    children: View[] = new Proxy([], {
+    readonly children: View[] = new Proxy([], {
         set: (target, index, value) => {
             if (index === 'length') {
                 this.getDirtyChildrenModel().length = value as number
@@ -231,6 +231,7 @@ export abstract class Group extends View {
     addChild(view: View) {
         this.children.push(view)
     }
+
     clean() {
         this.children.forEach(e => { e.clean() })
         super.clean()

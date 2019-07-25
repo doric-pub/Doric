@@ -120,9 +120,113 @@ class Snake {
     }
 
 
+enum State {
+    idel,
+    run,
+    fail,
+}
+
+class SnakeModel {
+    state = State.idel
+    direction = Direction.left
+
+    width: number
+    height: number
+
+    constructor(w: number, h: number) {
+        this.width = w
+        this.height = h
+    }
+    food = { x: 0, y: 0 }
+
+    head: SnakeNode = {
+        x: 0,
+        y: 0,
+    }
+
+    refreshFood() {
+        this.food.x = Math.floor(Math.random() * (this.width - 1))
+        this.food.y = Math.floor(Math.random() * (this.height - 1))
+    }
+
+    get tail() {
+        let node = this.head
+        while (node.next !== undefined) {
+            node = node.next
+        }
+        return node
+    }
+    get score() {
+        let node = this.head
+        let n = 0
+        while (node.next !== undefined) {
+            n++
+            node = node.next
+        }
+        return n
+    }
+
+    forward(node: SnakeNode) {
+        switch (this.direction) {
+            case Direction.left:
+                node.x -= 10
+                break;
+            case Direction.right:
+                node.x += 10
+                break;
+            case Direction.up:
+                node.y -= 10
+                break;
+            case Direction.down:
+                node.y += 10
+                break;
+        }
+    }
+
+
+    step() {
+        if (this.state !== State.run) {
+            return
+        }
+        let tail = this.tail
+        while (tail.prev != undefined) {
+            tail.x = tail.prev.x
+            tail.y = tail.prev.y
+            tail = tail.prev
+        }
+        this.forward(this.head)
+        if (this.head.x < 0 || this.head.x >= this.width
+            || this.head.y < 0 || this.head.y >= this.height) {
+            //If out of bound
+            this.state = State.fail
+        } else if (this.head.x == this.food.x && this.head.y == this.food.y) {
+            //If eat food
+            let head = { x: this.food.x, y: this.food.y, next: this.head }
+            this.head.prev = head
+            this.forward(head)
+            this.head = head
+            this.refreshFood()
+        }
+        if (this.crashAtSelf()) {
+            //If crash at self
+            this.state = State.fail
+        }
+    }
+
+    crashAtSelf() {
+        let cur = this.head.next
+        while (cur) {
+            if (cur.x == this.head.x && cur.y == this.head.y) {
+                return true
+            }
+            cur = cur.next
+        }
+        return false
+    }
 }
 
 class SnakeView extends ViewHolder {
+    panel: Stack = new Stack
 
     build(root: Group): void {
         root.bgColor = Color.parse('#000000')
@@ -136,23 +240,66 @@ class SnakeView extends ViewHolder {
                 top: 20
             }
         } as StackConfig
+        root.addChild(this.panel)
         root.addChild(title)
     }
 }
 
-class SnakeVM extends ViewModel<Snake, SnakeView>{
-    binding(v: SnakeView, model: Snake) {
+class SnakeVM extends ViewModel<SnakeModel, SnakeView>{
+    timerId?: any
 
+    start() {
+        if (this.timerId !== undefined) {
+            clearInterval(this.timerId)
+        }
+        this.timerId = setInterval(() => {
+            this.getModel().step()
+        }, 1000)
+    }
+
+    stop() {
+        if (this.timerId !== undefined) {
+            clearInterval(this.timerId)
+            this.timerId = undefined
+        }
+    }
+
+    binding(v: SnakeView, model: SnakeModel) {
+        v.panel.width = model.width * 10
+        v.panel.height = model.height * 10
+        let node: SnakeNode | undefined = model.head
+        let nodes: SnakeNode[] = []
+        while (node != undefined) {
+            nodes.push(node)
+            node = node.next
+        }
+        nodes.forEach((e, index) => {
+            let item = v.panel.children[index]
+            if (item) {
+                item.x = e.x * 10
+                item.height = e.y * 10
+            } else {
+                item = new Stack
+                item.bgColor = Color.parse('#0000ff')
+                item.width = item.height = 10
+                v.panel.addChild(item)
+            }
+        })
+        if (nodes.length < v.panel.children.length) {
+            v.panel.children.length = nodes.length
+        }
     }
 }
 
 @Entry
-class SnakePanel extends VMPanel<Snake, SnakeView>{
+class SnakePanel extends VMPanel<SnakeModel, SnakeView>{
+
     getVMClass() {
         return SnakeVM
     }
+
     getModel() {
-        return new Snake
+        return new SnakeModel(this.getRootView().width / 10, this.getRootView().width / 10)
     }
 
     getViewHolder() {

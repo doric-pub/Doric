@@ -30,7 +30,7 @@ export abstract class ViewHolder {
 
 export abstract class VMPanel<M extends Object, V extends ViewHolder> extends Panel {
 
-    private vm: ViewModel<M, V> = new (this.getVMClass())(this.getModel(), this.getViewHolder())
+    private vm?: ViewModel<M, V>
 
     abstract getVMClass(): new (m: M, v: V) => ViewModel<M, V>
 
@@ -44,6 +44,7 @@ export abstract class VMPanel<M extends Object, V extends ViewHolder> extends Pa
     }
 
     build(root: Group): void {
+        this.vm = new (this.getVMClass())(this.getModel(), this.getViewHolder())
         this.vm.build(root)
     }
 }

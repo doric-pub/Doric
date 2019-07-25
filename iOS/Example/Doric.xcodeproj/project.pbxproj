@@ -15,6 +15,7 @@
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 		AA31225E33516EB3CE20EC93 /* Pods_Doric_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 972B1C7B71414DF9AC151EE0 /* Pods_Doric_Example.framework */; };
 		C4DF03C9CBA66A27ED587DD4 /* Pods_Doric_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78ED34DAE38B7E34C7C5ED62 /* Pods_Doric_Tests.framework */; };
+		E2334AA322E9CA9E0098A085 /* UIView+Doric.m in Sources */ = {isa = PBXBuildFile; fileRef = E2334AA222E9CA9E0098A085 /* UIView+Doric.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +47,8 @@
 		78ED34DAE38B7E34C7C5ED62 /* Pods_Doric_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Doric_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		972B1C7B71414DF9AC151EE0 /* Pods_Doric_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Doric_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC67379F30C9E12F7919374D /* Doric.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Doric.podspec; path = ../Doric.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		E2334AA122E9CA9E0098A085 /* UIView+Doric.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UIView+Doric.h"; path = "../Doric/Classes/UIView+Doric.h"; sourceTree = "<group>"; };
+		E2334AA222E9CA9E0098A085 /* UIView+Doric.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "UIView+Doric.m"; path = "../Doric/Classes/UIView+Doric.m"; sourceTree = "<group>"; };
 		ECED1D64B2512FAA4DBC32D8 /* Pods-Doric_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Doric_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Doric_Example/Pods-Doric_Example.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -92,6 +95,8 @@
 		607FACC71AFB9204008FA782 = {
 			isa = PBXGroup;
 			children = (
+				E2334AA122E9CA9E0098A085 /* UIView+Doric.h */,
+				E2334AA222E9CA9E0098A085 /* UIView+Doric.m */,
 				607FACF51AFB993E008FA782 /* Podspec Metadata */,
 				607FACD21AFB9204008FA782 /* Example for Doric */,
 				607FACE81AFB9204008FA782 /* Tests */,
@@ -216,7 +221,7 @@
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
 						DevelopmentTeam = 7EE2RX3L3P;
-						LastSwiftMigration = 0900;
+						LastSwiftMigration = 1030;
 					};
 					607FACE41AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
@@ -407,6 +412,7 @@
 			files = (
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				E2334AA322E9CA9E0098A085 /* UIView+Doric.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -552,12 +558,15 @@
 			baseConfigurationReference = ECED1D64B2512FAA4DBC32D8 /* Pods-Doric_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = 7EE2RX3L3P;
 				INFOPLIST_FILE = Doric/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Doric_Example-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
 			};
@@ -568,12 +577,14 @@
 			baseConfigurationReference = 3657907C57FF8512CF3B0A5D /* Pods-Doric_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = 7EE2RX3L3P;
 				INFOPLIST_FILE = Doric/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Doric_Example-Bridging-Header.h";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
 			};

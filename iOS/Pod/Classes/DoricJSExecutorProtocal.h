@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef JSValue*(^DoricOCFunction)();
 
-@protocol DoricJSEngineProtocal <NSObject>
+@protocol DoricJSExecutorProtocal <NSObject>
 
 -(NSString *) loadJSScript:(NSString *)script source:(NSString *)source;
 

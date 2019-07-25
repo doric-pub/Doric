@@ -6,9 +6,7 @@ function listen<T extends Object>(obj: T, listener: Function): T {
         get: (target, prop, receiver) => {
             const ret = Reflect.get(target, prop, receiver)
             if (ret instanceof Function) {
-                return () => {
-                    return Reflect.apply(ret, receiver, arguments)
-                }
+                return Reflect.get(target, prop, receiver)
             } else if (ret instanceof Object) {
                 return listen(ret, listener)
             } else {

@@ -1,4 +1,5 @@
-import { StackConfig, ViewHolder, VMPanel, View, ViewModel, WRAP_CONTENT, Gravity, Mutable, NativeCall, Text, Color, VLayout, Panel, log, logw, loge, Group, Stack, } from "./index"
+import { HLayout, StackConfig, ViewHolder, VMPanel, View, ViewModel, WRAP_CONTENT, Gravity, Mutable, NativeCall, Text, Color, VLayout, Panel, log, logw, loge, Group, Stack, } from "./index"
+
 
 interface CountModel {
     count: number
@@ -73,52 +74,20 @@ class MyPage extends VMPanel<CountModel, CounterView>{
         loge("Hello.HEGO")
     }
 }
-
-
-type Postion = { x: number, y: number }
-
-enum Location {
-    left = 0,
-    right = 1,
-    top = 2,
-    bottom = 3,
+type SnakeNode = {
+    x: number
+    y: number
+    prev?: SnakeNode
+    next?: SnakeNode
 }
 
-class Snake {
-    direction: "left" | "right" | "top" | "bottom" = "right"
-    length: number = 1
-    width: number = 1
-    height: number = 1
 
-    head: Postion = { x: 1, y: 0 }
-    body: Location[] = []
-
-    crash() {
-
-    }
-
-    step() {
-        switch (this.direction) {
-            case "left":
-                const head = this.body[0]
-                if (head.x - 1 < 0) {
-                    this.crash()
-                }
-                head.x -= 1
-                this.body.reduce((pre, cur) => {
-
-                    return cur
-                })
-                break
-            case "right":
-                break
-            case "top":
-                break
-            case "bottom":
-                break
-        }
-    }
-
+enum Direction {
+    left = 0,
+    right = 1,
+    up = 2,
+    down = 3,
+}
 
 enum State {
     idel,
@@ -128,7 +97,7 @@ enum State {
 
 class SnakeModel {
     state = State.idel
-    direction = Direction.left
+    direction = Direction.right
 
     width: number
     height: number
@@ -137,7 +106,7 @@ class SnakeModel {
         this.width = w
         this.height = h
     }
-    food = { x: 0, y: 0 }
+    food = { x: -1, y: -1 }
 
     head: SnakeNode = {
         x: 0,
@@ -167,20 +136,22 @@ class SnakeModel {
     }
 
     forward(node: SnakeNode) {
+        loge('forward', node)
         switch (this.direction) {
             case Direction.left:
-                node.x -= 10
+                node.x -= 1
                 break;
             case Direction.right:
-                node.x += 10
+                node.x += 1
                 break;
             case Direction.up:
-                node.y -= 10
+                node.y -= 1
                 break;
             case Direction.down:
-                node.y += 10
+                node.y += 1
                 break;
         }
+        loge('forward', node)
     }
 
 
@@ -227,37 +198,57 @@ class SnakeModel {
 
 class SnakeView extends ViewHolder {
     panel: Stack = new Stack
-
+    start: Text = new Text
     build(root: Group): void {
         root.bgColor = Color.parse('#000000')
+        const vlayout = new VLayout
         const title = new Text
         title.text = "Snake"
         title.textSize = 20
         title.textColor = Color.parse("#ffffff")
         title.layoutConfig = {
-            alignment: new Gravity().centerX().top(),
+            alignment: new Gravity().centerX(),
             margin: {
                 top: 20
-            }
-        } as StackConfig
-        root.addChild(this.panel)
-        root.addChild(title)
+            },
+        }
+        vlayout.layoutConfig = {
+            alignment: new Gravity().centerX().top()
+        }
+        this.panel.bgColor = Color.parse('#00ff00')
+        vlayout.addChild(title)
+        vlayout.addChild(this.panel)
+        root.addChild(vlayout)
+
+        const hlayout = new HLayout
+        this.start.text = "Start"
+        this.start.textSize = 30
+        this.start.textColor = Color.parse("#ffffff")
+
+        hlayout.addChild(this.start)
+        vlayout.addChild(hlayout)
     }
 }
 
 class SnakeVM extends ViewModel<SnakeModel, SnakeView>{
+
     timerId?: any
 
-    start() {
+    start = () => {
         if (this.timerId !== undefined) {
             clearInterval(this.timerId)
         }
+        this.getModel().state = State.run
+        this.getModel().head.x = 0
+        this.getModel().head.y = 0
+        this.getModel().head.next = undefined
+        this.getModel().refreshFood()
         this.timerId = setInterval(() => {
             this.getModel().step()
         }, 1000)
     }
 
-    stop() {
+    stop = () => {
         if (this.timerId !== undefined) {
             clearInterval(this.timerId)
             this.timerId = undefined
@@ -265,6 +256,10 @@ class SnakeVM extends ViewModel<SnakeModel, SnakeView>{
     }
 
     binding(v: SnakeView, model: SnakeModel) {
+        if (model.state === State.fail) {
+            this.stop()
+        }
+        v.start.onClick = this.start
         v.panel.width = model.width * 10
         v.panel.height = model.height * 10
         let node: SnakeNode | undefined = model.head
@@ -273,18 +268,25 @@ class SnakeVM extends ViewModel<SnakeModel, SnakeView>{
             nodes.push(node)
             node = node.next
         }
+        nodes.push(model.food)
         nodes.forEach((e, index) => {
+
             let item = v.panel.children[index]
-            if (item) {
-                item.x = e.x * 10
-                item.height = e.y * 10
-            } else {
+            if (item === undefined) {
                 item = new Stack
-                item.bgColor = Color.parse('#0000ff')
                 item.width = item.height = 10
                 v.panel.addChild(item)
             }
+            if (index === nodes.length - 1) {
+                item.bgColor = Color.parse('#ffff00')
+            } else {
+                item.bgColor = Color.parse('#ff0000')
+            }
+            item.x = e.x * 10
+            item.y = e.y * 10
+            loge('render', v.panel.toModel())
         })
+
         if (nodes.length < v.panel.children.length) {
             v.panel.children.length = nodes.length
         }
@@ -299,7 +301,7 @@ class SnakePanel extends VMPanel<SnakeModel, SnakeView>{
     }
 
     getModel() {
-        return new SnakeModel(this.getRootView().width / 10, this.getRootView().width / 10)
+        return new SnakeModel(35, 35)
     }
 
     getViewHolder() {

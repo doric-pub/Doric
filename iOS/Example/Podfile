@@ -1,14 +1,17 @@
-use_frameworks!
+# Uncomment the next line to define a global platform for your project
+# platform :ios, '9.0'
 
-target 'Doric_Example' do
+target 'Example' do
+
   pod 'Doric', :path => '../'
-
-  target 'Doric_Tests' do
+  target 'ExampleTests' do
     inherit! :search_paths
-
-    pod 'Quick', '~> 1.2.0'
-    pod 'Nimble', '~> 7.0'
-    pod 'FBSnapshotTestCase' , '~> 2.1.4'
-    pod 'Nimble-Snapshots' , '~> 6.3.0'
+    # Pods for testing
   end
+
+  target 'ExampleUITests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+
 end

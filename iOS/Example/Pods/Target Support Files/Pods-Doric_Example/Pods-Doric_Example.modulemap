@@ -1,6 +1,0 @@
-framework module Pods_Doric_Example {
-  umbrella header "Pods-Doric_Example-umbrella.h"
-
-  export *
-  module * { export * }
-}

@@ -3,20 +3,21 @@
   "version": "0.1.0",
   "summary": "A short description of Doric.",
   "description": "TODO: Add long description of the pod here.",
-  "homepage": "https://github.com/周鹏飞/Doric",
+  "homepage": "https://github.com/penfeizhou/doric",
   "license": {
     "type": "MIT",
     "file": "LICENSE"
   },
   "authors": {
-    "周鹏飞": "zhoupengfei@yupaopao.cn"
+    "pengfei.zhou": "penfei.zhou@gmail.com"
   },
   "source": {
-    "git": "https://github.com/周鹏飞/Doric.git",
+    "git": "git@github.com:penfeizhou/doric.git",
     "tag": "0.1.0"
   },
   "platforms": {
     "ios": "8.0"
   },
-  "source_files": "Doric/Classes/**/*"
+  "source_files": "Pod/Classes/**/*",
+  "resources": "Pod/Assets/*.js"
 }

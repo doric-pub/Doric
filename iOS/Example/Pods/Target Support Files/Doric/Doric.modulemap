@@ -1,6 +1,0 @@
-framework module Doric {
-  umbrella header "Doric-umbrella.h"
-
-  export *
-  module * { export * }
-}

@@ -109,5 +109,5 @@
     frame.origin.y = centerY - self.frame.size.height/2;
     [self setFrame:frame];
 }
-    
+
 @end

@@ -1,4 +1,5 @@
 import { HLayout, StackConfig, ViewHolder, VMPanel, View, ViewModel, WRAP_CONTENT, Gravity, Mutable, NativeCall, Text, Color, VLayout, Panel, log, logw, loge, Group, Stack, } from "./index"
+import { RIGHT } from "./src/util/gravity";
 
 
 interface CountModel {
@@ -136,7 +137,6 @@ class SnakeModel {
     }
 
     forward(node: SnakeNode) {
-        loge('forward', node)
         switch (this.direction) {
             case Direction.left:
                 node.x -= 1
@@ -151,7 +151,6 @@ class SnakeModel {
                 node.y += 1
                 break;
         }
-        loge('forward', node)
     }
 
 
@@ -169,24 +168,29 @@ class SnakeModel {
         if (this.head.x < 0 || this.head.x >= this.width
             || this.head.y < 0 || this.head.y >= this.height) {
             //If out of bound
+            loge('out of bound', this.head)
             this.state = State.fail
         } else if (this.head.x == this.food.x && this.head.y == this.food.y) {
             //If eat food
-            let head = { x: this.food.x, y: this.food.y, next: this.head }
-            this.head.prev = head
+
+            let head: SnakeNode = { x: this.food.x, y: this.food.y }
+            log('eat food', head)
             this.forward(head)
+            this.head.prev = head
+            head.next = this.head
             this.head = head
             this.refreshFood()
         }
         if (this.crashAtSelf()) {
             //If crash at self
+            loge('crash at self')
             this.state = State.fail
         }
     }
 
     crashAtSelf() {
         let cur = this.head.next
-        while (cur) {
+        while (cur !== undefined) {
             if (cur.x == this.head.x && cur.y == this.head.y) {
                 return true
             }
@@ -194,11 +198,25 @@ class SnakeModel {
         }
         return false
     }
+
+    reset() {
+        this.direction = Direction.right
+        this.state = State.run
+        this.head.x = 0
+        this.head.y = 0
+        this.head.next = undefined
+        this.refreshFood()
+    }
 }
 
 class SnakeView extends ViewHolder {
     panel: Stack = new Stack
     start: Text = new Text
+    up?: Text
+    down?: Text
+    left?: Text
+    right?: Text
+
     build(root: Group): void {
         root.bgColor = Color.parse('#000000')
         const vlayout = new VLayout
@@ -212,6 +230,7 @@ class SnakeView extends ViewHolder {
                 top: 20
             },
         }
+        vlayout.space = 20
         vlayout.layoutConfig = {
             alignment: new Gravity().centerX().top()
         }
@@ -227,6 +246,39 @@ class SnakeView extends ViewHolder {
 
         hlayout.addChild(this.start)
         vlayout.addChild(hlayout)
+
+
+        this.up = this.buildController("↑")
+        this.down = this.buildController("↓")
+        this.left = this.buildController("←")
+        this.right = this.buildController("→")
+
+        const controlArea = new VLayout
+        controlArea.gravity = new Gravity().centerX()
+        controlArea.space = 10
+        controlArea.layoutConfig = {
+            alignment: new Gravity().centerX()
+        }
+        const line1 = new HLayout
+        const line2 = new HLayout
+        line2.space = 10
+        line1.addChild(this.up)
+        line2.addChild(this.left)
+        line2.addChild(this.down)
+        line2.addChild(this.right)
+        controlArea.addChild(line1)
+        controlArea.addChild(line2)
+        vlayout.addChild(controlArea)
+    }
+
+    buildController(text: string) {
+        const ret = new Text
+        ret.width = ret.height = 50
+        ret.bgColor = Color.parse('#ffff00')
+        ret.text = text
+        ret.textSize = 30
+        ret.textAlignment = new Gravity().center()
+        return ret
     }
 }
 
@@ -238,14 +290,10 @@ class SnakeVM extends ViewModel<SnakeModel, SnakeView>{
         if (this.timerId !== undefined) {
             clearInterval(this.timerId)
         }
-        this.getModel().state = State.run
-        this.getModel().head.x = 0
-        this.getModel().head.y = 0
-        this.getModel().head.next = undefined
-        this.getModel().refreshFood()
+        this.getModel().reset()
         this.timerId = setInterval(() => {
             this.getModel().step()
-        }, 1000)
+        }, 500)
     }
 
     stop = () => {
@@ -255,8 +303,25 @@ class SnakeVM extends ViewModel<SnakeModel, SnakeView>{
         }
     }
 
+    left = () => {
+        this.getModel().direction = Direction.left
+    }
+
+    right = () => {
+        this.getModel().direction = Direction.right
+    }
+
+    up = () => {
+        this.getModel().direction = Direction.up
+    }
+
+    down = () => {
+        this.getModel().direction = Direction.down
+    }
+
     binding(v: SnakeView, model: SnakeModel) {
         if (model.state === State.fail) {
+            loge('Game Over')
             this.stop()
         }
         v.start.onClick = this.start
@@ -284,11 +349,22 @@ class SnakeVM extends ViewModel<SnakeModel, SnakeView>{
             }
             item.x = e.x * 10
             item.y = e.y * 10
-            loge('render', v.panel.toModel())
         })
 
         if (nodes.length < v.panel.children.length) {
             v.panel.children.length = nodes.length
+        }
+        if (v.left) {
+            v.left.onClick = this.left
+        }
+        if (v.right) {
+            v.right.onClick = this.right
+        }
+        if (v.up) {
+            v.up.onClick = this.up
+        }
+        if (v.down) {
+            v.down.onClick = this.down
         }
     }
 }

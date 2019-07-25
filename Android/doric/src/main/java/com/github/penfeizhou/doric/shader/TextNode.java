@@ -37,6 +37,9 @@ public class TextNode extends ViewNode<TextView> {
             case "textColor":
                 view.setTextColor(prop.asNumber().toInt());
                 break;
+            case "textAlignment":
+                view.setGravity(prop.asNumber().toInt());
+                break;
             default:
                 super.blend(view, params, name, prop);
                 break;

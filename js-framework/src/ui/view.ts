@@ -297,6 +297,9 @@ export class Text extends View {
 
     @Property
     maxLines?: number
+
+    @Property
+    textAlignment?: Gravity
 }
 
 export class Image extends View {

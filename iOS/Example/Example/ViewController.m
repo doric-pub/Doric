@@ -26,15 +26,15 @@
     label.centerX = self.view.width/2;
     label.centerY = self.view.height/2;
     [self.view addSubview:label];
-    DoricJSCoreExecutor *jse = [[DoricJSCoreExecutor alloc] init];
-    @try{
-        NSString *ret = [jse loadJSScript:@"typef Reflect" source:@"test"];
-        NSLog(@"js result %@", ret);
-    }@catch(NSException *e){
-        NSLog(@"catch Exception: %@,reason is %@",e.name,e.reason);
-    }
-    DoricLog(@"%@",@"testxxxxx");
-    DoricLog(@"test2rwr");
+//    DoricJSCoreExecutor *jse = [[DoricJSCoreExecutor alloc] init];
+//    @try{
+//        NSString *ret = [jse loadJSScript:@"typef Reflect" source:@"test"];
+//        NSLog(@"js result %@", ret);
+//    }@catch(NSException *e){
+//        NSLog(@"catch Exception: %@,reason is %@",e.name,e.reason);
+//    }
+//    DoricLog(@"%@",@"testxxxxx");
+//    DoricLog(@"test2rwr");
     DoricJSEngine *jsengine = [[DoricJSEngine alloc] init];
 }
 

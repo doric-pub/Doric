@@ -31,7 +31,8 @@ TODO: Add long description of the pod here.
   s.ios.deployment_target = '8.0'
 
   s.source_files = 'Pod/Classes/**/*'
-  s.resource = "Pod/Assets/*.js"
+  #s.resource = "../js-framework/bundle/*.js"
+  s.resource = "Pod/Assets/**/*"
   # s.resource_bundles = {
   #   'Doric' => ['Doric/Assets/*.png']
   # }

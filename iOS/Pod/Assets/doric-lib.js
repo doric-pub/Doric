@@ -1,0 +1,1 @@
+../../../js-framework/bundle/doric-lib.js

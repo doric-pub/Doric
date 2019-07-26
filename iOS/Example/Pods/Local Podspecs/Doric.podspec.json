@@ -19,6 +19,6 @@
     "ios": "8.0"
   },
   "source_files": "Pod/Classes/**/*",
-  "resources": "Pod/Assets/*.js",
+  "resources": "Pod/Assets/**/*",
   "public_header_files": "Pod/Classes/**/*.h"
 }

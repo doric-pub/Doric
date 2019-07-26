@@ -37,6 +37,9 @@
     [self.jsExecutor injectGlobalJSObject:INJECT_REQUIRE obj:^(NSString *name){
         
     }];
+    NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"doric-sandbox" ofType:@"js"];
+    NSString *mainjs = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+    NSLog(@"read:%@",mainjs);
     [self.jsExecutor loadJSScript:@"nativeLog('w','log from js')" source:@""];
 }
 

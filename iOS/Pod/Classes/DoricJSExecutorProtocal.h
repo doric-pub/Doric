@@ -10,15 +10,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef JSValue*(^DoricOCFunction)();
-
 @protocol DoricJSExecutorProtocal <NSObject>
 
 -(NSString *) loadJSScript:(NSString *)script source:(NSString *)source;
 
--(void) injectGlobalJSFunction:(NSString *)name func:(DoricOCFunction)func;
-
--(void) injectGlobalJSObject:(NSString *)name obj:(NSDictionary *)obj;
+-(void) injectGlobalJSObject:(NSString *)name obj:(id)obj;
 
 -(JSValue *) invokeObject: (NSString *)objName method:(NSString *)funcName args:(NSArray *)args;
 

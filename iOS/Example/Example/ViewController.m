@@ -9,6 +9,8 @@
 #import "ViewController.h"
 #import "UIView+Doric.h"
 #import "DoricJSCoreExecutor.h"
+#import "DoricUtil.h"
+#import "DoricJSEngine.h"
 
 @interface ViewController ()
 
@@ -31,6 +33,9 @@
     }@catch(NSException *e){
         NSLog(@"catch Exception: %@,reason is %@",e.name,e.reason);
     }
+    DoricLog(@"%@",@"testxxxxx");
+    DoricLog(@"test2rwr");
+    DoricJSEngine *jsengine = [[DoricJSEngine alloc] init];
 }
 
 

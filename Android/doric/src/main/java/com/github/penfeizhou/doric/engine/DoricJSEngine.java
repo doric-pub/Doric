@@ -39,7 +39,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
             @Override
             public void run() {
                 initJSExecutor();
-                initHugoRuntime();
+                initDoricRuntime();
             }
         });
         mTimerExtension = new DoricTimerExtension(looper, this);
@@ -136,7 +136,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
         });
     }
 
-    private void initHugoRuntime() {
+    private void initDoricRuntime() {
         loadBuiltinJS(DoricConstant.DORIC_BUNDLE_SANDBOX);
         String libName = DoricConstant.DORIC_MODULE_LIB;
         String libJS = DoricUtils.readAssetFile(DoricConstant.DORIC_BUNDLE_LIB);

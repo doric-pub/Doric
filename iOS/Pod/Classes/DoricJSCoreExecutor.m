@@ -39,11 +39,6 @@
     [self checkJSException];
 }
 
--(void)injectGlobalJSFunction:(NSString *)name func:(DoricOCFunction)func {
-     self.jsContext[name] = func;
-     [self checkJSException];
-}
-
 -(JSValue *)invokeObject:(NSString *)objName method:(NSString *)funcName args:(NSArray *)args {
     JSValue *obj = [self.jsContext objectForKeyedSubscript:objName];
     JSValue *ret = [obj invokeMethod:funcName withArguments:args];

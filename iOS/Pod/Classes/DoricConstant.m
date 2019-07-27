@@ -7,8 +7,8 @@
 
 #import "DoricConstant.h"
 
-NSString * const DORIC_BUNDLE_SANBOX = @"";
-NSString * const DORIC_BUNDLE_LIB = @"doric-lib.js";
+NSString * const DORIC_BUNDLE_SANDBOX = @"doric-sandbox";
+NSString * const DORIC_BUNDLE_LIB = @"doric-lib";
 NSString * const DORIC_MODULE_LIB = @"./index";
 
 
@@ -20,26 +20,26 @@ NSString * const INJECT_BRIDGE = @"nativeBridge";
 
 NSString * const TEMPLATE_CONTEXT_CREATE = @"Reflect.apply("
 "function(doric,context,Entry,require,exports){" "\n"
-"%s"   "\n"
-"},doric.jsObtainContext(\"%s\"),["
+"%@"   "\n"
+"},doric.jsObtainContext(\"%@\"),["
 "undefined,"
-"doric.jsObtainContext(\"%s\"),"
-"doric.jsObtainEntry(\"%s\"),"
+"doric.jsObtainContext(\"%@\"),"
+"doric.jsObtainEntry(\"%@\"),"
 "doric.__require__"
 ",{}"
 "])";
 
 NSString * const TEMPLATE_MODULE = @"Reflect.apply(doric.jsRegisterModule,this,["
-"\"%s\","
+"\"%@\","
 "Reflect.apply(function(__module){"
 "(function(module,exports,require){" "\n"
-"%s" "\n"
+"%@" "\n"
 "})(__module,__module.exports,doric.__require__);"
 "\nreturn __module.exports;"
 "},this,[{exports:{}}])"
 "])";
 
-NSString * const TEMPLATE_CONTEXT_DESTROY = @"doric.jsRelease(%s)";
+NSString * const TEMPLATE_CONTEXT_DESTROY = @"doric.jsRelease(\"%@\"";
 
 NSString * const GLOBAL_DORIC = @"doric";
 

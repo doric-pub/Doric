@@ -37,6 +37,15 @@
 //    DoricLog(@"test2rwr");
     DoricJSEngine *jsengine = [[DoricJSEngine alloc] init];
     [self test:@"method",@"1",@"2",nil];
+    
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [btn setTitle:@"sss" forState:UIControlStateNormal];
+    btn.tag = 111;
+    [btn addTarget:self action:@selector(testBtn:) forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)testBtn:(UIButton *)btn {
+    btn.tag;
 }
 
 -(void)test:(NSString *)method,... {

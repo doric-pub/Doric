@@ -13,6 +13,7 @@
 
 @interface DoricJSEngine()
 @property(nonatomic,strong) id<DoricJSExecutorProtocal> jsExecutor;
+@property(nonatomic,strong) NSMutableDictionary *timers;
 @end
 
 @implementation DoricJSEngine
@@ -21,6 +22,7 @@
     if(self = [super init]){
         _jsQueue = dispatch_queue_create("doric.jsengine", DISPATCH_QUEUE_SERIAL);
         dispatch_async(_jsQueue, ^(){
+            self.timers = [[NSMutableDictionary alloc] init];
             self.jsExecutor = [[DoricJSCoreExecutor alloc] init];
             self.registry = [[DoricRegistry alloc] init];
             [self initDoricEnvironment];
@@ -32,7 +34,7 @@
 -(void)initJSExecutor {
     __weak typeof(self) _self = self;
     
-    [self.jsExecutor injectGlobalJSObject:INJECT_LOG obj:^(NSString * type, NSString * message){
+    [self.jsExecutor injectGlobalJSObject:INJECT_LOG obj:^(NSString * type, NSString * message) {
         DoricLog(@"JS:%@",message);
     }];
     
@@ -52,8 +54,34 @@
         }
         return YES;
     }];
+    [self.jsExecutor injectGlobalJSObject:INJECT_TIMER_SET
+                                      obj:^(NSNumber *timerId,NSNumber *interval,NSNumber *isInterval) {
+                                           __strong typeof(_self) self = _self;
+                                          NSMethodSignature *sig = [[self class] instanceMethodSignatureForSelector:@selector(doTimer:repeat:)];
+                                          NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:sig];
+                                          invocation.target = self;
+                                          invocation.selector = @selector(doTimer:repeat:);
+                                          NSString *timerId_str = [timerId stringValue];
+                                          BOOL repeat = [isInterval boolValue];
+                                          [invocation setArgument:&timerId_str atIndex:2];
+                                          [invocation setArgument:&repeat atIndex:3];
+                                          NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:[interval doubleValue]/1000 invocation:invocation repeats:repeat];
+                                          [self.timers setValue:timer forKey:timerId_str];
+                                          dispatch_async(dispatch_get_main_queue(), ^(){
+                                              [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
+                                          });
+                                      }];
     
-    
+    [self.jsExecutor injectGlobalJSObject:INJECT_TIMER_CLEAR
+                                      obj:^(NSString *timerId) {
+                                           __strong typeof(_self) self = _self;
+                                          NSTimer *timer = [self.timers valueForKey:timerId];
+                                          if(timer){
+                                              [timer invalidate];
+                                              [self.timers removeObjectForKey:timerId];
+                                          }
+                                      }];
+
 }
 
 -(void)initDoricEnvironment {
@@ -112,4 +140,21 @@
                            source:[@"_Context://" stringByAppendingString:contextId]];
 }
 
+-(void)doTimer:(NSString *)timerId repeat:(BOOL) repeat {
+    NSTimer *timer = [self.timers valueForKey:timerId];
+    if(timer){
+        __weak typeof(self) _self = self;
+        dispatch_async(self.jsQueue, ^(){
+            __strong typeof(_self) self = _self;
+            @try {
+                [self invokeDoricMethod:DORIC_TIMER_CALLBACK, timerId, nil];
+            } @catch (NSException *exception) {
+                DoricLog(@"Timer Callback error:%@", exception.reason);
+            }
+            if(!repeat){
+                [self.timers removeObjectForKey:timerId];
+            }
+        });
+    }
+}
 @end

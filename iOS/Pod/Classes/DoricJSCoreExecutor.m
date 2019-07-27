@@ -34,7 +34,7 @@
     return ret;
 }
 
--(void)injectGlobalJSObject:(NSString *)name obj:(NSDictionary *)obj {
+-(void)injectGlobalJSObject:(NSString *)name obj:(id)obj {
     self.jsContext[name] = obj;
     [self checkJSException];
 }

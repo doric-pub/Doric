@@ -12,9 +12,7 @@
 #import "DoricUtil.h"
 
 @interface DoricJSEngine()
-
 @property(nonatomic,strong) id<DoricJSExecutorProtocal> jsExecutor;
-@property(nonatomic,strong) dispatch_queue_t jsQueue;
 @end
 
 @implementation DoricJSEngine
@@ -24,6 +22,7 @@
         _jsQueue = dispatch_queue_create("doric.jsengine", DISPATCH_QUEUE_SERIAL);
         dispatch_async(_jsQueue, ^(){
             self.jsExecutor = [[DoricJSCoreExecutor alloc] init];
+            self.registry = [[DoricRegistry alloc] init];
             [self initDoricEnvironment];
         });
     }
@@ -31,12 +30,30 @@
 }
 
 -(void)initJSExecutor {
+    __weak typeof(self) _self = self;
+    
     [self.jsExecutor injectGlobalJSObject:INJECT_LOG obj:^(NSString * type, NSString * message){
         DoricLog(@"JS:%@",message);
     }];
+    
     [self.jsExecutor injectGlobalJSObject:INJECT_REQUIRE obj:^(NSString *name){
-        
+        __strong typeof(_self) self = _self;
+        if(!self) return NO;
+        NSString *content = [self.registry acquireJSBundle:name];
+        if(!content){
+            DoricLog(@"require js bundle:%@ is empty", name);
+            return NO;
+        }
+        @try{
+            [self.jsExecutor loadJSScript:[self packageModuleScript:name content:content]
+                                   source:[@"Module://" stringByAppendingString:name]];
+        }@catch(NSException *e){
+            DoricLog(@"require js bundle:%@ error,for %@", name, e.reason);
+        }
+        return YES;
     }];
+    
+    
 }
 
 -(void)initDoricEnvironment {
@@ -53,17 +70,26 @@
     [self.jsExecutor loadJSScript:jsContent source:[@"Assets://" stringByAppendingString:fileName]];
 }
     
--(void)invokeDoricMethod:(NSString *)method,... {
-    NSMutableArray *array = [[NSMutableArray alloc] init];
+-(JSValue *)invokeDoricMethod:(NSString *)method,... {
     va_list args;
     va_start(args, method);
+    JSValue *ret = [self invokeDoricMethod:method arguments:args];
+    va_end(args);
+    return ret;
+}
+
+-(JSValue *)invokeDoricMethod:(NSString *)method arguments:(va_list)args {
+    NSMutableArray *array = [[NSMutableArray alloc] init];
     id arg = va_arg(args, id);
-    while(arg!=nil){
+    while(arg != nil){
         [array addObject:arg];
         arg = va_arg(args, JSValue *);
     }
-    va_end(args);
-    [self.jsExecutor invokeObject:GLOBAL_DORIC method:method args:array];
+    return [self.jsExecutor invokeObject:GLOBAL_DORIC method:method args:array];
+}
+
+-(JSValue *)invokeDoricMethod:(NSString *)method argumentsArray:(NSArray *)args {
+    return [self.jsExecutor invokeObject:GLOBAL_DORIC method:method args:args];
 }
 
 -(NSString *)packageContextScript:(NSString *)contextId content:(NSString *)content {

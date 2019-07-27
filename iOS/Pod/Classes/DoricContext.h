@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface DoricContext : NSObject
 
+@property (nonatomic,strong) NSString *contextId;
+
 @end
 
 NS_ASSUME_NONNULL_END

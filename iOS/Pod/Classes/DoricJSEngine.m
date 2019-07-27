@@ -57,15 +57,9 @@
     [self.jsExecutor injectGlobalJSObject:INJECT_TIMER_SET
                                       obj:^(NSNumber *timerId,NSNumber *interval,NSNumber *isInterval) {
                                            __strong typeof(_self) self = _self;
-                                          NSMethodSignature *sig = [[self class] instanceMethodSignatureForSelector:@selector(doTimer:repeat:)];
-                                          NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:sig];
-                                          invocation.target = self;
-                                          invocation.selector = @selector(doTimer:repeat:);
                                           NSString *timerId_str = [timerId stringValue];
                                           BOOL repeat = [isInterval boolValue];
-                                          [invocation setArgument:&timerId_str atIndex:2];
-                                          [invocation setArgument:&repeat atIndex:3];
-                                          NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:[interval doubleValue]/1000 invocation:invocation repeats:repeat];
+                                          NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:[interval doubleValue]/1000 target:self selector:@selector(callbackTimer:) userInfo:@{@"timerId":timerId,@"repeat":isInterval} repeats:repeat];
                                           [self.timers setValue:timer forKey:timerId_str];
                                           dispatch_async(dispatch_get_main_queue(), ^(){
                                               [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
@@ -140,21 +134,21 @@
                            source:[@"_Context://" stringByAppendingString:contextId]];
 }
 
--(void)doTimer:(NSString *)timerId repeat:(BOOL) repeat {
-    NSTimer *timer = [self.timers valueForKey:timerId];
-    if(timer){
-        __weak typeof(self) _self = self;
-        dispatch_async(self.jsQueue, ^(){
-            __strong typeof(_self) self = _self;
-            @try {
-                [self invokeDoricMethod:DORIC_TIMER_CALLBACK, timerId, nil];
-            } @catch (NSException *exception) {
-                DoricLog(@"Timer Callback error:%@", exception.reason);
-            }
-            if(!repeat){
-                [self.timers removeObjectForKey:timerId];
-            }
-        });
-    }
+-(void)callbackTimer:(NSTimer *)timer {
+    NSDictionary *userInfo = timer.userInfo;
+    NSNumber *timerId = [userInfo valueForKey:@"timerId"];
+    NSNumber *repeat = [userInfo valueForKey:@"repeat"];
+    __weak typeof(self) _self = self;
+    dispatch_async(self.jsQueue, ^(){
+        __strong typeof(_self) self = _self;
+        @try {
+            [self invokeDoricMethod:DORIC_TIMER_CALLBACK, [timerId longValue], nil];
+        } @catch (NSException *exception) {
+            DoricLog(@"Timer Callback error:%@", exception.reason);
+        }
+        if(![repeat boolValue]){
+            [self.timers removeObjectForKey:[timerId stringValue]];
+        }
+    });
 }
 @end

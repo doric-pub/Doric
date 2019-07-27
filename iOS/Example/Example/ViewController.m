@@ -38,14 +38,9 @@
     DoricJSEngine *jsengine = [[DoricJSEngine alloc] init];
     [self test:@"method",@"1",@"2",nil];
     
-    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [btn setTitle:@"sss" forState:UIControlStateNormal];
-    btn.tag = 111;
-    [btn addTarget:self action:@selector(testBtn:) forControlEvents:UIControlEventTouchUpInside];
-}
-
-- (void)testBtn:(UIButton *)btn {
-    btn.tag;
+    NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"demo" ofType:@"js"];
+    NSString *jsContent = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+    NSLog(@"%@",jsContent);
 }
 
 -(void)test:(NSString *)method,... {

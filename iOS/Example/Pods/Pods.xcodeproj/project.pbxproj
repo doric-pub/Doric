@@ -60,21 +60,21 @@
 		1AD3A731BCB183E444C5710694419A75 /* DoricRegistry.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DoricRegistry.m; path = Pod/Classes/DoricRegistry.m; sourceTree = "<group>"; };
 		1D0C45B87805AA291515C819444A022F /* DoricContext.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DoricContext.m; path = Pod/Classes/DoricContext.m; sourceTree = "<group>"; };
 		1DC97F881F42239F4D5EE57FE5266B1F /* Pods-ExampleUITests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-ExampleUITests-acknowledgements.plist"; sourceTree = "<group>"; };
-		1F667CC0E19EAF34E5A4119E2121F585 /* libPods-Example.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-Example.a"; path = "libPods-Example.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F667CC0E19EAF34E5A4119E2121F585 /* libPods-Example.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Example.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2AD3C584B801377E22CF6C09359C5F94 /* Doric-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Doric-prefix.pch"; sourceTree = "<group>"; };
 		30F8B45AFB193140F75493E6535E54DA /* DoricAsyncResult.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DoricAsyncResult.m; path = Pod/Classes/DoricAsyncResult.m; sourceTree = "<group>"; };
-		334BC3934F6F1DF26D3D1A31DF8BF474 /* doric-lib.js */ = {isa = PBXFileReference; includeInIndex = 1; name = "doric-lib.js"; path = "../js-framework/bundle/doric-lib.js"; sourceTree = "<group>"; };
+		334BC3934F6F1DF26D3D1A31DF8BF474 /* doric-lib.js */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.javascript; name = "doric-lib.js"; path = "../js-framework/bundle/doric-lib.js"; sourceTree = "<group>"; };
 		35D3ADD1FF0C9A33D86DB110C181048B /* Pods-ExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		38CD0045E96433BDA8CA2BF33326BB31 /* Doric.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Doric.xcconfig; sourceTree = "<group>"; };
 		3EDB5B465F36A7D3D9A8D422377E0ACB /* DoricConstant.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DoricConstant.h; path = Pod/Classes/DoricConstant.h; sourceTree = "<group>"; };
 		4426D67B66065EF97BCB0FBC9E35BEE6 /* Pods-Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Example-acknowledgements.markdown"; sourceTree = "<group>"; };
-		4FDCBD4B6A98E4CD993DC5FD1CC7A0DF /* doric-sandbox.js */ = {isa = PBXFileReference; includeInIndex = 1; name = "doric-sandbox.js"; path = "../js-framework/bundle/doric-sandbox.js"; sourceTree = "<group>"; };
+		4FDCBD4B6A98E4CD993DC5FD1CC7A0DF /* doric-sandbox.js */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.javascript; name = "doric-sandbox.js"; path = "../js-framework/bundle/doric-sandbox.js"; sourceTree = "<group>"; };
 		509BD741A32AD98FBCB777F92006A4D3 /* UIView+Doric.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIView+Doric.m"; path = "Pod/Classes/UIView+Doric.m"; sourceTree = "<group>"; };
 		50CE420621B9D9ED01E06A8EDBD3E990 /* Pods-ExampleUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ExampleUITests.release.xcconfig"; sourceTree = "<group>"; };
 		57728CFE03A4D88821681C3D55A1FA85 /* Pods-Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Example.release.xcconfig"; sourceTree = "<group>"; };
 		59A0EF08B92B94EA54769E3E1FF457F1 /* DoricRegistry.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DoricRegistry.h; path = Pod/Classes/DoricRegistry.h; sourceTree = "<group>"; };
 		62660F1C7619EBD08D60183EBCA25264 /* DoricDriver.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DoricDriver.m; path = Pod/Classes/DoricDriver.m; sourceTree = "<group>"; };
-		630CABE8F692FCDBFD1B122A2D0CE388 /* libPods-ExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-ExampleTests.a"; path = "libPods-ExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		630CABE8F692FCDBFD1B122A2D0CE388 /* libPods-ExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		674AA61D65F8AA0A85296F972EB84840 /* Pods-Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Example-dummy.m"; sourceTree = "<group>"; };
 		786AB58F4C2451575BBF7722ACDE9BEB /* Pods-ExampleUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ExampleUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		7C4D4F6C5D396C6AC8B79F61F38AAFEF /* Doric-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Doric-dummy.m"; sourceTree = "<group>"; };
@@ -87,18 +87,18 @@
 		8DA2B8FDA17D610A6296A9CB155D2689 /* DoricJSExecutorProtocal.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DoricJSExecutorProtocal.h; path = Pod/Classes/DoricJSExecutorProtocal.h; sourceTree = "<group>"; };
 		8F4D6D38881BB9FAF4450841BD1BF9CD /* Pods-ExampleUITests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-ExampleUITests-acknowledgements.markdown"; sourceTree = "<group>"; };
 		90BA27E3131D8AD1F16CAAB652BC8A6F /* DoricConstant.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DoricConstant.m; path = Pod/Classes/DoricConstant.m; sourceTree = "<group>"; };
-		9B3A7DB02662BE1737396042B6483B57 /* Doric.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = Doric.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9B3A7DB02662BE1737396042B6483B57 /* Doric.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = Doric.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		9CF6301AAD07F98FE89F30E7B5A07161 /* Pods-ExampleTests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-ExampleTests-acknowledgements.plist"; sourceTree = "<group>"; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		A12EA2D6D6F629978F16C0E458152B6E /* Pods-ExampleTests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-ExampleTests-acknowledgements.markdown"; sourceTree = "<group>"; };
 		A1D88EECF42DDFC54E8896961BF50008 /* DoricUtil.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DoricUtil.m; path = Pod/Classes/DoricUtil.m; sourceTree = "<group>"; };
-		A852BCDB1430CF921DAE7795C6926C05 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
+		A852BCDB1430CF921DAE7795C6926C05 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		AC09947FA02C665B9EAA2FD9EEADC5C2 /* UIView+Doric.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIView+Doric.h"; path = "Pod/Classes/UIView+Doric.h"; sourceTree = "<group>"; };
 		B6B1C951A2B7B0BBB0C5F2F6EC79C4F7 /* DoricUtil.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DoricUtil.h; path = Pod/Classes/DoricUtil.h; sourceTree = "<group>"; };
 		B6BD43A750E7B2B43F2DE62E35223A91 /* DoricContext.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DoricContext.h; path = Pod/Classes/DoricContext.h; sourceTree = "<group>"; };
 		C15B34E4FFB9B99AB3F6D59A598F790A /* DoricJSEngine.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DoricJSEngine.h; path = Pod/Classes/DoricJSEngine.h; sourceTree = "<group>"; };
-		C232398D4E3A40F2337F8A40D7F8D751 /* libPods-ExampleUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-ExampleUITests.a"; path = "libPods-ExampleUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		CB6504BD07E3990E6F058E4073421ADA /* libDoric.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libDoric.a; path = libDoric.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		C232398D4E3A40F2337F8A40D7F8D751 /* libPods-ExampleUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ExampleUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CB6504BD07E3990E6F058E4073421ADA /* libDoric.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libDoric.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA28ABFF81EEE93AEFD6DEE2A3C006DD /* DoricJSCoreExecutor.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DoricJSCoreExecutor.m; path = Pod/Classes/DoricJSCoreExecutor.m; sourceTree = "<group>"; };
 		DFFAD17E7567EE856A59F246D50A9B0B /* Pods-Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Example-acknowledgements.plist"; sourceTree = "<group>"; };
 		E340F908A05867E06E975FDCDD32315C /* Pods-Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Example.debug.xcconfig"; sourceTree = "<group>"; };
@@ -351,6 +351,7 @@
 			buildConfigurationList = 5A80C5E31FF0415AF545DD70C8101A57 /* Build configuration list for PBXNativeTarget "Doric" */;
 			buildPhases = (
 				F45434CEC6AC5B85087A7A0770032BBE /* Headers */,
+				E2D4F73D22EE968400F3505C /* Package JS Bundle */,
 				75A1CE1E53AFF0C35F46EAAEC6051354 /* Sources */,
 				3B3C990162A63F79C94039FFBE04D580 /* Frameworks */,
 			);
@@ -427,6 +428,27 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		E2D4F73D22EE968400F3505C /* Package JS Bundle */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Package JS Bundle";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nexport NVM_DIR=\"$HOME/.nvm\"\n[ -s \"$NVM_DIR/nvm.sh\" ] && \\. \"$NVM_DIR/nvm.sh\"  # This loads nvm\n[ -s \"$NVM_DIR/bash_completion\" ] && \\. \"$NVM_DIR/bash_completion\"  # This loads nvm bash_completion\n\ncd ../../../js-framework/ && npm run build\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		0A6945A94C114AD03543703E96A0F3E1 /* Sources */ = {

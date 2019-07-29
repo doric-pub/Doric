@@ -16,7 +16,7 @@
 
 @implementation DoricAsyncResult
 
--(void)setupResult:(id)result {
+- (void)setupResult:(id)result {
     self.result = result;
     if(self.resultCallback){
         self.resultCallback(result);
@@ -26,7 +26,7 @@
     }
 }
 
--(void)setupError:(NSException *)exception {
+- (void)setupError:(NSException *)exception {
     self.result = exception;
     if(self.exceptionCallback){
         self.exceptionCallback(exception);
@@ -35,15 +35,15 @@
         self.finishCallback();
     }
 }
--(BOOL)hasResult {
+- (BOOL)hasResult {
     return self.result;
 }
 
--(id)getResult {
+- (id)getResult {
     return self.result;
 }
 
--(void)setResultCallback:(DoricResultCallback)callback exceptionCallback:(DoricExceptionCallback)exceptionCallback {
+- (void)setResultCallback:(DoricResultCallback)callback exceptionCallback:(DoricExceptionCallback)exceptionCallback {
     self.resultCallback = callback;
     self.exceptionCallback = exceptionCallback;
     if([self.result isKindOfClass: [NSException class]]){
@@ -53,7 +53,7 @@
     }
 }
 
--(void)setFinishCallback:(DoricFinishCallback)callback {
+- (void)setFinishCallback:(DoricFinishCallback)callback {
     self.finishCallback = callback;
     if(self.result){
         callback();

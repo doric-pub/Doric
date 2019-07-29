@@ -17,7 +17,14 @@
 
 @dynamic registry;
 
--(DoricRegistry *)registry {
+- (instancetype)init {
+    if(self = [super init]){
+        _jsExecutor = [[DoricJSEngine alloc] init];
+    }
+    return self;
+}
+
+- (DoricRegistry *)registry {
     return self.jsExecutor.registry;
 }
 
@@ -30,7 +37,7 @@
     return _instance;
 }
 
--(DoricAsyncResult<JSValue *>  *)invokeDoricMethod:(NSString *)method, ... {
+- (DoricAsyncResult<JSValue *>  *)invokeDoricMethod:(NSString *)method, ... {
     va_list args;
     va_start(args, method);
     DoricAsyncResult *ret = [self invokeDoricMethod:method arguments:args];
@@ -38,7 +45,7 @@
     return ret;
 }
 
--(DoricAsyncResult<JSValue *>  *)invokeDoricMethod:(NSString *)method arguments:(va_list)args {
+- (DoricAsyncResult<JSValue *>  *)invokeDoricMethod:(NSString *)method arguments:(va_list)args {
     DoricAsyncResult *ret = [[DoricAsyncResult alloc] init];
     __weak typeof(self) _self = self;
     dispatch_async(self.jsExecutor.jsQueue, ^(){
@@ -54,20 +61,24 @@
     return ret;
 }
 
--(DoricAsyncResult<JSValue *> *)invokeContextEntity:(NSString *)contextId method:(NSString *)method,... {
-    DoricAsyncResult *ret = [[DoricAsyncResult alloc] init];
-    NSMutableArray *array = [[NSMutableArray alloc] init];
-    [array addObject:DORIC_CONTEXT_INVOKE];
-    [array addObject:contextId];
-    [array addObject:method];
+- (DoricAsyncResult<JSValue *> *)invokeContextEntity:(NSString *)contextId method:(NSString *)method,... {
     va_list args;
     va_start(args, method);
+    DoricAsyncResult *ret = [self invokeContextEntity:contextId method:method arguments:args];
+    va_end(args);
+    return ret;
+}
+
+- (DoricAsyncResult *)invokeContextEntity:(NSString *)contextId method:(NSString *)method arguments:(va_list)args {
+    DoricAsyncResult *ret = [[DoricAsyncResult alloc] init];
+    NSMutableArray *array = [[NSMutableArray alloc] init];
+    [array addObject:contextId];
+    [array addObject:method];
     id arg = va_arg(args, id);
     while(arg != nil){
         [array addObject:arg];
         arg = va_arg(args, JSValue *);
     }
-    va_end(args);
     __weak typeof(self) _self = self;
     dispatch_async(self.jsExecutor.jsQueue, ^(){
         __strong typeof(_self) self = _self;
@@ -76,13 +87,13 @@
             JSValue *jsValue = [self.jsExecutor invokeDoricMethod:DORIC_CONTEXT_INVOKE argumentsArray:array];
             [ret setupResult:jsValue];
         } @catch (NSException *exception) {
-             [ret setupError:exception];
+            [ret setupError:exception];
         }
     });
     return ret;
 }
 
--(DoricAsyncResult *)createContext:(NSString *)contextId script:(NSString *)script source:(NSString *)source {
+- (DoricAsyncResult *)createContext:(NSString *)contextId script:(NSString *)script source:(NSString *)source {
     DoricAsyncResult *ret = [[DoricAsyncResult alloc] init];
     __weak typeof(self) _self = self;
     dispatch_async(self.jsExecutor.jsQueue, ^(){
@@ -98,7 +109,7 @@
     return ret;
 }
 
--(DoricAsyncResult *)destroyContext:(NSString *)contextId {
+- (DoricAsyncResult *)destroyContext:(NSString *)contextId {
     DoricAsyncResult *ret = [[DoricAsyncResult alloc] init];
     __weak typeof(self) _self = self;
     dispatch_async(self.jsExecutor.jsQueue, ^(){

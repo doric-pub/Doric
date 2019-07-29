@@ -10,47 +10,47 @@
 
 @implementation UIView(Doric)
     
--(CGFloat)x {
+- (CGFloat)x {
     return self.frame.origin.x;
 }
     
--(void)setX:(CGFloat)x {
+- (void)setX:(CGFloat)x {
     CGRect frame = self.frame;
     frame.origin.x = x;
     [self setFrame:frame];
 }
 
--(CGFloat)y {
+- (CGFloat)y {
     return self.frame.origin.y;
 }
 
--(void)setY:(CGFloat)y {
+- (void)setY:(CGFloat)y {
     CGRect frame = self.frame;
     frame.origin.y = y;
     [self setFrame:frame];
 }
     
--(CGFloat)left {
+- (CGFloat)left {
     return self.frame.origin.x;
 }
 
--(void)setLeft:(CGFloat)left {
+- (void)setLeft:(CGFloat)left {
     CGRect frame = self.frame;
     frame.origin.x = left;
     [self setFrame:frame];
 }
     
--(CGFloat)right {
+- (CGFloat)right {
     return self.frame.origin.x + self.frame.size.width;
 }
     
--(void)setRight:(CGFloat)right {
+- (void)setRight:(CGFloat)right {
     CGRect frame = self.frame;
     frame.origin.x = right - self.frame.size.width;
     [self setFrame:frame];
 }
     
--(CGFloat)top {
+- (CGFloat)top {
     return self.frame.origin.y;
 }
     
@@ -60,11 +60,11 @@
     [self setFrame:frame];
 }
     
--(CGFloat)bottom {
+- (CGFloat)bottom {
     return self.frame.origin.y + self.frame.size.height;
 }
     
--(void)setBottom:(CGFloat)bottom {
+- (void)setBottom:(CGFloat)bottom {
     CGRect frame = self.frame;
     frame.origin.y = bottom - self.frame.size.height;
     [self setFrame:frame];
@@ -74,17 +74,17 @@
     return self.frame.size.width;
 }
     
--(void)setWidth:(CGFloat)width {
+- (void)setWidth:(CGFloat)width {
     CGRect frame = self.frame;
     frame.size.width = width;
     self.frame = frame;
 }
 
--(CGFloat)height {
+- (CGFloat)height {
     return self.frame.size.height;
 }
     
--(void)setHeight:(CGFloat)height {
+- (void)setHeight:(CGFloat)height {
     CGRect frame = self.frame;
     frame.size.height = height;
     self.frame = frame;

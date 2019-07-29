@@ -48,6 +48,7 @@ class CounterVM extends ViewModel<CountModel, CounterView> {
     }
 }
 
+@Entry
 class MyPage extends VMPanel<CountModel, CounterView>{
 
     getVMClass() {
@@ -369,7 +370,6 @@ class SnakeVM extends ViewModel<SnakeModel, SnakeView>{
     }
 }
 
-@Entry
 class SnakePanel extends VMPanel<SnakeModel, SnakeView>{
 
     getVMClass() {

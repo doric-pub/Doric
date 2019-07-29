@@ -18,20 +18,21 @@
 
 @implementation DoricJSEngine
 
--(instancetype)init {
+- (instancetype)init {
     if(self = [super init]){
         _jsQueue = dispatch_queue_create("doric.jsengine", DISPATCH_QUEUE_SERIAL);
         dispatch_async(_jsQueue, ^(){
             self.timers = [[NSMutableDictionary alloc] init];
             self.jsExecutor = [[DoricJSCoreExecutor alloc] init];
             self.registry = [[DoricRegistry alloc] init];
+            [self initJSExecutor];
             [self initDoricEnvironment];
         });
     }
     return self;
 }
 
--(void)initJSExecutor {
+- (void)initJSExecutor {
     __weak typeof(self) _self = self;
     
     [self.jsExecutor injectGlobalJSObject:INJECT_LOG obj:^(NSString * type, NSString * message) {
@@ -78,7 +79,7 @@
 
 }
 
--(void)initDoricEnvironment {
+- (void)initDoricEnvironment {
     [self loadBuiltinJS:DORIC_BUNDLE_SANDBOX];
     NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:DORIC_BUNDLE_LIB ofType:@"js"];
     NSString *jsContent = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
@@ -86,13 +87,13 @@
                            source: [@"Module://" stringByAppendingString:DORIC_MODULE_LIB]];
 }
 
--(void)loadBuiltinJS:(NSString *)fileName {
+- (void)loadBuiltinJS:(NSString *)fileName {
     NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:DORIC_BUNDLE_SANDBOX ofType:@"js"];
     NSString *jsContent = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
     [self.jsExecutor loadJSScript:jsContent source:[@"Assets://" stringByAppendingString:fileName]];
 }
     
--(JSValue *)invokeDoricMethod:(NSString *)method,... {
+- (JSValue *)invokeDoricMethod:(NSString *)method,... {
     va_list args;
     va_start(args, method);
     JSValue *ret = [self invokeDoricMethod:method arguments:args];
@@ -100,7 +101,7 @@
     return ret;
 }
 
--(JSValue *)invokeDoricMethod:(NSString *)method arguments:(va_list)args {
+- (JSValue *)invokeDoricMethod:(NSString *)method arguments:(va_list)args {
     NSMutableArray *array = [[NSMutableArray alloc] init];
     id arg = va_arg(args, id);
     while(arg != nil){
@@ -110,31 +111,31 @@
     return [self.jsExecutor invokeObject:GLOBAL_DORIC method:method args:array];
 }
 
--(JSValue *)invokeDoricMethod:(NSString *)method argumentsArray:(NSArray *)args {
+- (JSValue *)invokeDoricMethod:(NSString *)method argumentsArray:(NSArray *)args {
     return [self.jsExecutor invokeObject:GLOBAL_DORIC method:method args:args];
 }
 
--(NSString *)packageContextScript:(NSString *)contextId content:(NSString *)content {
+- (NSString *)packageContextScript:(NSString *)contextId content:(NSString *)content {
     NSString *ret = [NSString stringWithFormat:TEMPLATE_CONTEXT_CREATE, content, contextId, contextId, contextId];
     return ret;
 }
 
--(NSString *)packageModuleScript:(NSString *)moduleName content:(NSString *)content {
+- (NSString *)packageModuleScript:(NSString *)moduleName content:(NSString *)content {
     NSString *ret = [NSString stringWithFormat:TEMPLATE_MODULE, moduleName, content];
     return ret;
 }
 
--(void)prepareContext:(NSString *)contextId script:(NSString *)script source:(NSString *)source {
+- (void)prepareContext:(NSString *)contextId script:(NSString *)script source:(NSString *)source {
     [self.jsExecutor loadJSScript:[self packageContextScript:contextId content:script]
                            source:[@"Context://" stringByAppendingString:source]];
 }
 
--(void)destroyContext:(NSString *)contextId {
+- (void)destroyContext:(NSString *)contextId {
     [self.jsExecutor loadJSScript:[NSString stringWithFormat:TEMPLATE_CONTEXT_DESTROY, contextId]
                            source:[@"_Context://" stringByAppendingString:contextId]];
 }
 
--(void)callbackTimer:(NSTimer *)timer {
+- (void)callbackTimer:(NSTimer *)timer {
     NSDictionary *userInfo = timer.userInfo;
     NSNumber *timerId = [userInfo valueForKey:@"timerId"];
     NSNumber *repeat = [userInfo valueForKey:@"repeat"];

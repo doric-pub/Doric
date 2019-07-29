@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface DoricRegistry : NSObject
 
--(NSString *)acquireJSBundle:(NSString *)bundleName;
+- (NSString *)acquireJSBundle:(NSString *)bundleName;
 
 @end
 

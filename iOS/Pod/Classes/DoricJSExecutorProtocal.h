@@ -12,11 +12,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol DoricJSExecutorProtocal <NSObject>
 
--(NSString *) loadJSScript:(NSString *)script source:(NSString *)source;
+- (NSString *) loadJSScript:(NSString *)script source:(NSString *)source;
 
--(void) injectGlobalJSObject:(NSString *)name obj:(id)obj;
+- (void) injectGlobalJSObject:(NSString *)name obj:(id)obj;
 
--(JSValue *) invokeObject: (NSString *)objName method:(NSString *)funcName args:(NSArray *)args;
+- (JSValue *) invokeObject: (NSString *)objName method:(NSString *)funcName args:(NSArray *)args;
 
 @end
 

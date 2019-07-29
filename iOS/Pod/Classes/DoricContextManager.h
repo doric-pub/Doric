@@ -1,0 +1,21 @@
+//
+//  DoricContextManager.h
+//  Doric
+//
+//  Created by pengfei.zhou on 2019/7/29.
+//
+
+#import <Foundation/Foundation.h>
+#import "DoricContext.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
+@interface DoricContextManager : NSObject
++ (instancetype) instance;
+
+- (DoricContext *)createContext:(NSString *)script source:(NSString *)source;
+
+- (void) destroyContext:(DoricContext *)context;
+@end
+
+NS_ASSUME_NONNULL_END

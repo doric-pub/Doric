@@ -17,15 +17,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic,strong) DoricRegistry *registry;
 
--(void)prepareContext:(NSString *)contextId script:(NSString *)script source:(NSString *)source;
+- (void)prepareContext:(NSString *)contextId script:(NSString *)script source:(NSString *)source;
 
--(void)destroyContext:(NSString *)contextId;
+- (void)destroyContext:(NSString *)contextId;
 
--(JSValue *)invokeDoricMethod:(NSString *)method, ...;
+- (JSValue *)invokeDoricMethod:(NSString *)method, ...;
 
--(JSValue *)invokeDoricMethod:(NSString *)method arguments:(va_list)args;
+- (JSValue *)invokeDoricMethod:(NSString *)method arguments:(va_list)args;
 
--(JSValue *)invokeDoricMethod:(NSString *)method argumentsArray:(NSArray *)args;
+- (JSValue *)invokeDoricMethod:(NSString *)method argumentsArray:(NSArray *)args;
 @end
 
 NS_ASSUME_NONNULL_END

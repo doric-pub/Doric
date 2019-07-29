@@ -10,10 +10,12 @@
 #import "DoricJSCoreExecutor.h"
 #import "DoricConstant.h"
 #import "DoricUtil.h"
+#import "DoricBridgeExtension.h"
 
 @interface DoricJSEngine()
 @property(nonatomic,strong) id<DoricJSExecutorProtocal> jsExecutor;
 @property(nonatomic,strong) NSMutableDictionary *timers;
+@property(nonatomic,strong) DoricBridgeExtension *bridgeExtension;
 @end
 
 @implementation DoricJSEngine
@@ -21,6 +23,7 @@
 - (instancetype)init {
     if(self = [super init]){
         _jsQueue = dispatch_queue_create("doric.jsengine", DISPATCH_QUEUE_SERIAL);
+        _bridgeExtension = [[DoricBridgeExtension alloc] init];
         dispatch_async(_jsQueue, ^(){
             self.timers = [[NSMutableDictionary alloc] init];
             self.jsExecutor = [[DoricJSCoreExecutor alloc] init];
@@ -76,7 +79,10 @@
                                               [self.timers removeObjectForKey:timerId];
                                           }
                                       }];
-
+    
+    [self.jsExecutor injectGlobalJSObject:INJECT_BRIDGE obj:^(NSString *contextId, NSString *module, NSString *method, NSString *callbackId, id argument){
+        return [self.bridgeExtension callNativeWithContextId:contextId module:module method:method callbackId:callbackId argument:argument];
+    }];
 }
 
 - (void)initDoricEnvironment {

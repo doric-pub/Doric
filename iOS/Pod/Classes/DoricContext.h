@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic,strong) NSString *contextId;
 @property (nonatomic,strong) DoricDriver *driver;
+@property (nonatomic,strong) NSMutableDictionary *pluginInstanceMap;
 
 - (instancetype)initWithScript:(NSString *)script source:(NSString *)source;
 

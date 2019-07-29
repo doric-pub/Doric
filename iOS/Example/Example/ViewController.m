@@ -13,7 +13,7 @@
 #import "DoricNativePlugin.h"
 
 @interface ViewController ()
-
+@property (nonatomic,strong) DoricContext *doricContext;
 @end
 
 @implementation ViewController
@@ -30,15 +30,13 @@
     UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(test:)];
     [label addGestureRecognizer:recognizer];
     label.userInteractionEnabled = YES;
+    NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"demo" ofType:@"js"];
+    NSString *jsContent = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+    self.doricContext = [[DoricContext alloc] initWithScript:jsContent source:@"demo"];
 }
 
 - (void)test:(UIView *)view {
     NSLog(@"test");
-    NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"demo" ofType:@"js"];
-    NSString *jsContent = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
-    DoricContext *context = [[DoricContext alloc] initWithScript:jsContent source:@"demo"];
-    [context callEntity:@"log",nil];
-    DoricNativePlugin *doricNativePlugin = [[DoricNativePlugin alloc] initWithContext:context];
-    NSLog(@"%@",doricNativePlugin.doricContext);
+    [self.doricContext callEntity:@"log",nil];
 }
 @end

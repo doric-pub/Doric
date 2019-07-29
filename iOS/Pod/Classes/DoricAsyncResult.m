@@ -43,18 +43,22 @@
     return self.result;
 }
 
-- (void)setResultCallback:(DoricResultCallback)callback exceptionCallback:(DoricExceptionCallback)exceptionCallback {
-    self.resultCallback = callback;
-    self.exceptionCallback = exceptionCallback;
+- (void)setResultCallback:(DoricResultCallback)callback {
+    _resultCallback = callback;
+    if(self.result && ![self.result isKindOfClass: [NSException class]]){
+        callback(self.result);
+    }
+}
+
+- (void)setExceptionCallback:(DoricExceptionCallback)exceptionCallback {
+    _exceptionCallback = exceptionCallback;
     if([self.result isKindOfClass: [NSException class]]){
-        self.exceptionCallback(self.result);
-    }else if(self.result){
-        self.resultCallback(self.result);
+        exceptionCallback(self.result);
     }
 }
 
 - (void)setFinishCallback:(DoricFinishCallback)callback {
-    self.finishCallback = callback;
+    _finishCallback = callback;
     if(self.result){
         callback();
     }

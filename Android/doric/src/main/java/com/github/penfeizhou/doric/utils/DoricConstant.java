@@ -37,7 +37,7 @@ public class DoricConstant {
             "\nreturn __module.exports;" +
             "},this,[{exports:{}}])" +
             "])";
-    public static final String TEMPLATE_CONTEXT_DESTROY = "doric.jsRelease(\"%s\")";
+    public static final String TEMPLATE_CONTEXT_DESTROY = "doric.jsReleaseContext(\"%s\")";
     public static final String GLOBAL_DORIC = "doric";
     public static final String DORIC_CONTEXT_RELEASE = "jsReleaseContext";
     public static final String DORIC_CONTEXT_INVOKE = "jsCallEntityMethod";

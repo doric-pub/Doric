@@ -9,4 +9,11 @@
 
 @implementation DoricComponent
 
+- (instancetype)initWithContext:(DoricContext *)doricContext {
+    if(self = [super init]){
+        _doricContext = doricContext;
+    }
+    return self;
+}
+
 @end

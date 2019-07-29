@@ -8,9 +8,9 @@
 
 #import "ViewController.h"
 #import "UIView+Doric.h"
-#import "DoricJSCoreExecutor.h"
 #import "DoricUtil.h"
 #import "DoricContext.h"
+#import "DoricNativePlugin.h"
 
 @interface ViewController ()
 

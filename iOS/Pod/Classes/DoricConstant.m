@@ -39,7 +39,7 @@ NSString * const TEMPLATE_MODULE = @"Reflect.apply(doric.jsRegisterModule,this,[
 "},this,[{exports:{}}])"
 "])";
 
-NSString * const TEMPLATE_CONTEXT_DESTROY = @"doric.jsRelease(\"%@\"";
+NSString * const TEMPLATE_CONTEXT_DESTROY = @"doric.jsReleaseContext(\"%@\")";
 
 NSString * const GLOBAL_DORIC = @"doric";
 

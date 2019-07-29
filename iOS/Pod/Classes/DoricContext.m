@@ -10,15 +10,12 @@
 
 @implementation DoricContext
 
-- (instancetype)init {
+- (instancetype)initWithScript:(NSString *)script source:(NSString *)source {
     if(self = [super init]){
         _driver = [DoricDriver instance];
+        [[DoricContextManager instance] createContext:self script:script source:source];
     }
     return self;
-}
-    
-- (instancetype)initWithScript:(NSString *)script source:(NSString *)source {
-    return [[DoricContextManager instance] createContext:script source:source];
 }
 
 - (void)dealloc {

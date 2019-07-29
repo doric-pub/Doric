@@ -35,17 +35,17 @@
     return _instance;
 }
 
-- (DoricContext *)createContext:(NSString *)script source:(NSString *)source {
-    DoricContext *doricContext = [[DoricContext alloc] init];
-    doricContext.contextId = [NSString stringWithFormat:@"%ld", (long)self.counter++];
-    [doricContext.driver createContext:doricContext.contextId script:script source:source];
+- (void)createContext:(DoricContext *)context script:(NSString *)script source:(NSString *)source {
+    context.contextId = [NSString stringWithFormat:@"%ld", (long)self.counter++];
+    [context.driver createContext:context.contextId script:script source:source];
     dispatch_sync(self.mapQueue, ^(){
-        [self.doricContextMap setValue:doricContext forKey:doricContext.contextId];
+        NSValue *value = [NSValue valueWithNonretainedObject:context];
+        [self.doricContextMap setValue:value forKey:context.contextId];
     });
-    return doricContext;
 }
 
-- (void) destroyContext:(DoricContext *)context {
+
+- (void)destroyContext:(DoricContext *)context {
     NSString *contextId = context.contextId;
     [[context.driver destroyContext:contextId] setFinishCallback:^(){
         dispatch_sync(self.mapQueue, ^(){

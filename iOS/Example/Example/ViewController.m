@@ -38,5 +38,7 @@
     NSString *jsContent = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
     DoricContext *context = [[DoricContext alloc] initWithScript:jsContent source:@"demo"];
     [context callEntity:@"log",nil];
+    DoricNativePlugin *doricNativePlugin = [[DoricNativePlugin alloc] initWithContext:context];
+    NSLog(@"%@",doricNativePlugin.doricContext);
 }
 @end

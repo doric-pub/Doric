@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)createContext:(DoricContext *)context script:(NSString *)script source:(NSString *)source;
 
 - (void)destroyContext:(DoricContext *)context;
+
+- (DoricContext *)getContext:(NSString *)contextId;
 @end
 
 NS_ASSUME_NONNULL_END

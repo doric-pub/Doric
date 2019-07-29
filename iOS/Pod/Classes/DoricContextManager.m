@@ -44,6 +44,14 @@
     });
 }
 
+- (DoricContext *)getContext:(NSString *)contextId {
+    __block DoricContext *context;
+    dispatch_sync(self.mapQueue, ^{
+        NSValue *value = [self.doricContextMap valueForKey:contextId];
+        context = value.nonretainedObjectValue;
+    });
+    return context;
+}
 
 - (void)destroyContext:(DoricContext *)context {
     NSString *contextId = context.contextId;

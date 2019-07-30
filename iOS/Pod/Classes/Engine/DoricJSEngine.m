@@ -63,7 +63,7 @@
                                            __strong typeof(_self) self = _self;
                                           NSString *timerId_str = [timerId stringValue];
                                           BOOL repeat = [isInterval boolValue];
-                                          NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:[interval doubleValue]/1000 target:self selector:@selector(callbackTimer:) userInfo:@{@"timerId":timerId,@"repeat":isInterval} repeats:repeat];
+                                          NSTimer *timer = [NSTimer timerWithTimeInterval:[interval doubleValue]/1000 target:self selector:@selector(callbackTimer:) userInfo:@{@"timerId":timerId,@"repeat":isInterval} repeats:repeat];
                                           [self.timers setValue:timer forKey:timerId_str];
                                           dispatch_async(dispatch_get_main_queue(), ^(){
                                               [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
@@ -149,7 +149,7 @@
     dispatch_async(self.jsQueue, ^(){
         __strong typeof(_self) self = _self;
         @try {
-            [self invokeDoricMethod:DORIC_TIMER_CALLBACK, [timerId longValue], nil];
+            [self invokeDoricMethod:DORIC_TIMER_CALLBACK, timerId, nil];
         } @catch (NSException *exception) {
             DoricLog(@"Timer Callback error:%@", exception.reason);
         }

@@ -6,13 +6,13 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "DoricComponent.h"
+#import "DoricContextHolder.h"
 #import "DoricPromise.h"
 #import "DoricRegistry.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DoricNativePlugin : DoricComponent
+@interface DoricNativePlugin : DoricContextHolder
 
 @end
 

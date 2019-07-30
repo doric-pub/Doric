@@ -7,10 +7,10 @@ import com.github.penfeizhou.doric.DoricContext;
  * @Author: pengfei.zhou
  * @CreateDate: 2019-07-20
  */
-public abstract class DoricComponent {
+public abstract class DoricContextHolder {
     private final DoricContext doricContext;
 
-    public DoricComponent(DoricContext doricContext) {
+    public DoricContextHolder(DoricContext doricContext) {
         this.doricContext = doricContext;
     }
 

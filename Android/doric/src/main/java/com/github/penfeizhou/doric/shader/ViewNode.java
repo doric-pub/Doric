@@ -3,12 +3,10 @@ package com.github.penfeizhou.doric.shader;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import com.github.penfeizhou.doric.DoricContext;
 import com.github.penfeizhou.doric.DoricRegistry;
-import com.github.penfeizhou.doric.utils.DoricComponent;
+import com.github.penfeizhou.doric.utils.DoricContextHolder;
 import com.github.penfeizhou.doric.utils.DoricConstant;
 import com.github.penfeizhou.doric.utils.DoricMetaInfo;
 import com.github.penfeizhou.doric.utils.DoricUtils;
@@ -22,7 +20,7 @@ import java.util.LinkedList;
  * @Author: pengfei.zhou
  * @CreateDate: 2019-07-20
  */
-public abstract class ViewNode<T extends View> extends DoricComponent {
+public abstract class ViewNode<T extends View> extends DoricContextHolder {
     protected T mView;
     int index;
     GroupNode mParent;

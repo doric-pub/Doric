@@ -15,12 +15,14 @@ typedef void(^DoricResultCallback)(R);
 typedef void(^DoricExceptionCallback)(NSException *);
 typedef void(^DoricFinishCallback)(void);
 
+@property(nonatomic,strong) DoricResultCallback resultCallback;
+@property(nonatomic,strong) DoricExceptionCallback exceptionCallback;
+@property(nonatomic,strong) DoricFinishCallback finishCallback;
+
 - (void)setupResult:(R)result;
 - (void)setupError:(NSException*)exception;
 - (BOOL)hasResult;
 - (R)getResult;
-- (void)setResultCallback:(DoricResultCallback) callback exceptionCallback:(DoricExceptionCallback) exceptionCallback;
-- (void)setFinishCallback:(DoricFinishCallback) callback;
 @end
 
 NS_ASSUME_NONNULL_END

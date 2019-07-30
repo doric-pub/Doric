@@ -9,7 +9,7 @@
 #import "DoricContext.h"
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DoricComponent : NSObject
+@interface DoricContextHolder : NSObject
 @property (nonatomic,strong) DoricContext *doricContext;
 
 - (instancetype)initWithContext:(DoricContext *)doricContext;

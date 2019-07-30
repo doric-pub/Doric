@@ -5,9 +5,9 @@
 //  Created by pengfei.zhou on 2019/7/29.
 //
 
-#import "DoricComponent.h"
+#import "DoricContextHolder.h"
 
-@implementation DoricComponent
+@implementation DoricContextHolder
 
 - (instancetype)initWithContext:(DoricContext *)doricContext {
     if(self = [super init]){

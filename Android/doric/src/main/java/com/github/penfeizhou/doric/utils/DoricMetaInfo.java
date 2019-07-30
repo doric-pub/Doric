@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Author: pengfei.zhou
  * @CreateDate: 2019-07-18
  */
-public class DoricMetaInfo<T extends DoricComponent> {
+public class DoricMetaInfo<T extends DoricContextHolder> {
 
     private Constructor<? extends T> pluginConstructor;
 

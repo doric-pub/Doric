@@ -1,1 +1,1 @@
-../../../../../Pod/Classes/DoricModalPlugin.h
+../../../../../Pod/Classes/Plugin/DoricModalPlugin.h

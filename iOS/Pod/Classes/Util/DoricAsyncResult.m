@@ -9,9 +9,6 @@
 
 @interface DoricAsyncResult()
 @property(nonatomic,strong) id result;
-@property(nonatomic,strong) DoricResultCallback resultCallback;
-@property(nonatomic,strong) DoricExceptionCallback exceptionCallback;
-@property(nonatomic,strong) DoricFinishCallback finishCallback;
 @end
 
 @implementation DoricAsyncResult

@@ -11,9 +11,10 @@
 
 @implementation DoricModalPlugin
 
-- (void)toast:(NSString *)message promise:(DoricPromise *)promise {
+- (void)toast:(NSString *)message withPromise:(DoricPromise *)promise {
     dispatch_async(dispatch_get_main_queue(), ^{
         NSLog(@"toast:%@",message);
+        [promise resolve:@"Resolved"];
     });
 }
 

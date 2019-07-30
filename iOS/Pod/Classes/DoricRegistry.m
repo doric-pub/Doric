@@ -7,7 +7,7 @@
 
 #import "DoricRegistry.h"
 #import "DoricModalPlugin.h"
-#import <objc/runtime.h>
+#import "DoricShaderPlugin.h"
 
 @interface DoricRegistry ()
 
@@ -29,6 +29,7 @@
 
 - (void)innerRegister {
     [self registerNativePlugin:DoricModalPlugin.class withName:@"modal"];
+    [self registerNativePlugin:DoricShaderPlugin.class withName:@"shader"];
 }
 
 - (void)registerJSBundle:(NSString *)bundle withName:(NSString *)name {

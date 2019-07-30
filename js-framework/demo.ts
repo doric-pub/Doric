@@ -74,6 +74,9 @@ class MyPage extends VMPanel<CountModel, CounterView>{
         log("Hello.HEGO")
         logw("Hello.HEGO")
         loge("Hello.HEGO")
+        context.modal.toast('This is a toast.').then((r) => {
+            loge(r)
+        })
     }
 }
 type SnakeNode = {

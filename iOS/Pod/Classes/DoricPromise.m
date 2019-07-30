@@ -17,7 +17,7 @@
 @implementation DoricPromise
 
 - (instancetype)initWithContext:(DoricContext *)context callbackId:(NSString *)callbackId {
-    if(self = [super init]){
+    if(self = [super init]) {
         _context = context;
         _callbackId = callbackId;
     }
@@ -25,10 +25,10 @@
 }
 
 - (void)resolve:(id)result {
-    [self.context.driver invokeDoricMethod:DORIC_BRIDGE_RESOLVE,self.context.contextId,self.callbackId,result,nil];
+    [self.context.driver invokeDoricMethod:DORIC_BRIDGE_RESOLVE, self.context.contextId, self.callbackId, result,nil];
 }
 
 - (void)reject:(id)result {
-    [self.context.driver invokeDoricMethod:DORIC_BRIDGE_REJECT,self.context.contextId,self.callbackId,result,nil];
+    [self.context.driver invokeDoricMethod:DORIC_BRIDGE_REJECT, self.context.contextId, self.callbackId, result,nil];
 }
 @end

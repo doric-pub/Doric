@@ -9,4 +9,8 @@
 
 @implementation DoricShaderPlugin
 
+- (void)render:(NSDictionary *)argument withPromise:(DoricPromise *)promise {
+    NSLog(@"%@",argument);
+}
+
 @end

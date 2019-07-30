@@ -20,6 +20,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (Class)acquireNativePlugin:(NSString *)name;
 
+- (void)registerViewNode:(Class)nodeClass withName:(NSString *)name;
+
+- (Class)acquireViewNode:(NSString *)name;
 @end
 
 NS_ASSUME_NONNULL_END

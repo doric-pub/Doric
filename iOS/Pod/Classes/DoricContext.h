@@ -20,6 +20,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (DoricAsyncResult *)callEntity:(NSString *)method, ...;
 
+- (DoricAsyncResult *)callEntity:(NSString *)method withArguments:(va_list)args;
+
+- (DoricAsyncResult *)callEntity:(NSString *)method withArgumentsArray:(NSArray *)args;
+
 @end
 
 NS_ASSUME_NONNULL_END

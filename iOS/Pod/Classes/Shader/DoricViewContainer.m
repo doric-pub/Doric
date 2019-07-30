@@ -12,6 +12,12 @@
 @end
 
 @implementation LayoutParams
+- (instancetype)init {
+    if (self  = [super init]) {
+        _margin = [[DoricRect alloc] init];
+    }
+    return self;
+}
 @end
 
 
@@ -37,13 +43,13 @@
 @end
 
 @implementation Stack
+@end
 
+@implementation LinearLayout
 @end
 
 @implementation VLayout
-
 @end
 
 @implementation HLayout
-
 @end

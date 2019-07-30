@@ -31,4 +31,10 @@
     return ret;
 }
 
+- (DoricAsyncResult *)callEntity:(NSString *)method withArguments:(va_list)args {
+    return [self.driver invokeContextEntity:self.contextId method:method arguments:args];
+}
+- (DoricAsyncResult *)callEntity:(NSString *)method withArgumentsArray:(NSArray *)args {
+    return [self.driver invokeContextEntity:self.contextId method:method argumentsArray:args];
+}
 @end

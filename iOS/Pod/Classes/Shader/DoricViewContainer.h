@@ -54,14 +54,16 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) DoricGravity gravity;
 @end
 
-@interface VLayout : UIView
+@interface LinearLayout : UIView
 @property (nonatomic) DoricGravity gravity;
 @property (nonatomic) CGFloat space;
 @end
 
-@interface HLayout : UIView
-@property (nonatomic) DoricGravity gravity;
-@property (nonatomic) CGFloat space;
+
+@interface VLayout : LinearLayout
+@end
+
+@interface HLayout : LinearLayout
 @end
 
 NS_ASSUME_NONNULL_END

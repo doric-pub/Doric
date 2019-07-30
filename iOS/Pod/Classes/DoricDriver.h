@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (DoricAsyncResult *)invokeDoricMethod:(NSString *)method, ...;
 - (DoricAsyncResult *)invokeContextEntity:(NSString *)contextId method:(NSString *)method, ...;
 - (DoricAsyncResult *)invokeContextEntity:(NSString *)contextId method:(NSString *)method arguments:(va_list) args;
-
+- (DoricAsyncResult *)invokeContextEntity:(NSString *)contextId method:(NSString *)method argumentsArray:(NSArray *)args;
 @end
 
 NS_ASSUME_NONNULL_END

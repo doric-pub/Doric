@@ -8,11 +8,15 @@
 #import "DoricRegistry.h"
 #import "DoricModalPlugin.h"
 #import "DoricShaderPlugin.h"
+#import "DoricStackNode.h"
+#import "DoricVLayoutNode.h"
+#import "DoricHLayoutNode.h"
 
 @interface DoricRegistry ()
 
 @property (nonatomic,strong) NSMutableDictionary *bundles;
 @property (nonatomic,strong) NSMutableDictionary *plugins;
+@property (nonatomic,strong) NSMutableDictionary *nodes;
 
 @end
 
@@ -22,6 +26,7 @@
     if(self = [super init]){
         _bundles = [[NSMutableDictionary alloc] init];
         _plugins = [[NSMutableDictionary alloc] init];
+        _nodes = [[NSMutableDictionary alloc] init];
         [self innerRegister];
     }
     return self;
@@ -30,6 +35,10 @@
 - (void)innerRegister {
     [self registerNativePlugin:DoricModalPlugin.class withName:@"modal"];
     [self registerNativePlugin:DoricShaderPlugin.class withName:@"shader"];
+    
+    [self registerViewNode:DoricStackNode.class withName:@"Stack"];
+    [self registerViewNode:DoricVLayoutNode.class withName:@"VLayout"];
+    [self registerViewNode:DoricHLayoutNode.class withName:@"HLayout"];
 }
 
 - (void)registerJSBundle:(NSString *)bundle withName:(NSString *)name {
@@ -46,6 +55,14 @@
 
 - (Class)acquireNativePlugin:(NSString *)name {
     return [self.plugins objectForKey:name];
+}
+
+- (void)registerViewNode:(Class)nodeClass withName:(NSString *)name {
+    [self.nodes setObject:nodeClass forKey:name];
+}
+
+- (Class)acquireViewNode:(NSString *)name {
+    return [self.nodes objectForKey:name];
 }
 
 @end

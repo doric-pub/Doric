@@ -97,6 +97,27 @@
     });
     return ret;
 }
+- (DoricAsyncResult *)invokeContextEntity:(NSString *)contextId method:(NSString *)method argumentsArray:(NSArray *)args {
+    DoricAsyncResult *ret = [[DoricAsyncResult alloc] init];
+    NSMutableArray *array = [[NSMutableArray alloc] init];
+    [array addObject:contextId];
+    [array addObject:method];
+    for (id arg in args){
+        [array addObject: arg];
+    }
+    __weak typeof(self) _self = self;
+    dispatch_async(self.jsExecutor.jsQueue, ^(){
+        __strong typeof(_self) self = _self;
+        if (!self) return;
+        @try {
+            JSValue *jsValue = [self.jsExecutor invokeDoricMethod:DORIC_CONTEXT_INVOKE argumentsArray:array];
+            [ret setupResult:jsValue];
+        } @catch (NSException *exception) {
+            [ret setupError:exception];
+        }
+    });
+    return ret;
+}
 
 - (DoricAsyncResult *)createContext:(NSString *)contextId script:(NSString *)script source:(NSString *)source {
     DoricAsyncResult *ret = [[DoricAsyncResult alloc] init];

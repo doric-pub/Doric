@@ -10,7 +10,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface DoricHLayoutNode : DoricGroupNode
-
+@property (nonatomic) CGFloat space;
+@property (nonatomic) DoricGravity gravity;
 @end
 
 NS_ASSUME_NONNULL_END

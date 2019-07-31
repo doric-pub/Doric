@@ -26,6 +26,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic,strong,readonly) NSArray<NSString *> *idList;
 
+
+@property (nonatomic) CGFloat x;
+@property (nonatomic) CGFloat y;
+@property (nonatomic) CGFloat width;
+@property (nonatomic) CGFloat height;
+@property (nonatomic) CGFloat centerX;
+@property (nonatomic) CGFloat centerY;
+@property (nonatomic) CGFloat top;
+@property (nonatomic) CGFloat left;
+@property (nonatomic) CGFloat right;
+@property (nonatomic) CGFloat bottom;
+
 - (V)build:(NSDictionary *)props;
 
 - (void)blend:(NSDictionary *)props;
@@ -33,6 +45,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)blendView:(V)view forPropName:(NSString *)name propValue:(id)prop;
 
 - (void)callJSResponse:(NSString *)funcId,...;
+
+- (void)measureByParent:(DoricGroupNode *)parent;
+
+- (void)layoutByParent:(DoricGroupNode *)parent;
 
 + (DoricViewNode *)create:(DoricContext *)context withType:(NSString *)type;
 

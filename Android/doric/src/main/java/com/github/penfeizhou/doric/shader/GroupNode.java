@@ -68,6 +68,7 @@ public abstract class GroupNode<F extends ViewGroup> extends ViewNode<F> {
                         mChildrenNode.remove(mIndexInfo.get(i).getId());
                         mIndexInfo.remove(i);
                     }
+                    i++;
                 }
                 break;
             default:

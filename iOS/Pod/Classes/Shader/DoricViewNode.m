@@ -29,9 +29,19 @@
 
 - (void)blendView:(UIView *)view forPropName:(NSString *)name propValue:(id)prop {
     if([name isEqualToString:@"width"]) {
-        view.width = [(NSNumber *)prop floatValue];
+        NSNumber *width = (NSNumber *)prop;
+        if ([width integerValue] < 0) {
+            self.layoutParams.width = [width integerValue];
+        } else {
+            view.width = [width floatValue];
+        }
     } else if([name isEqualToString:@"height"]) {
-        view.height = [(NSNumber *)prop floatValue];
+        NSNumber *height = (NSNumber *)prop;
+        if ([height integerValue] < 0) {
+            self.layoutParams.height = [height integerValue];
+        } else {
+            view.height = [height floatValue];
+        }
     } else if([name isEqualToString:@"x"]) {
         view.x = [(NSNumber *)prop floatValue];
     } else if([name isEqualToString:@"y"]) {
@@ -45,6 +55,14 @@
     } else {
         DoricLog(@"Blend View error for View Type :%@, prop is %@", self.class, name);
     }
+}
+
+- (void)measureByParent:(DoricGroupNode *)parent {
+    
+}
+
+- (void)layoutByParent:(DoricGroupNode *)parent {
+    
 }
 
 - (NSArray<NSString *> *)idList {
@@ -76,6 +94,86 @@
     DoricRegistry *registry = context.driver.registry;
     Class  clz = [registry acquireViewNode:type];
     return [[clz alloc] initWithContext:context];
+}
+
+- (CGFloat)x {
+    return ((UIView *)self.view).x;
+}
+
+- (CGFloat)y {
+    return ((UIView *)self.view).y;
+}
+
+- (CGFloat)width {
+    return ((UIView *)self.view).width;
+}
+
+- (CGFloat)height {
+    return ((UIView *)self.view).height;
+}
+
+- (CGFloat)top {
+    return ((UIView *)self.view).top;
+}
+
+- (CGFloat)bottom {
+    return ((UIView *)self.view).bottom;
+}
+
+- (CGFloat)left {
+    return ((UIView *)self.view).left;
+}
+
+- (CGFloat)right {
+    return ((UIView *)self.view).right;
+}
+
+- (CGFloat)centerX {
+    return ((UIView *)self.view).centerX;
+}
+
+- (CGFloat)centerY {
+    return ((UIView *)self.view).centerX;
+}
+
+- (void)setX:(CGFloat)x {
+    ((UIView *)self.view).x = x;
+}
+
+- (void)setY:(CGFloat)y {
+    ((UIView *)self.view).y = y;
+}
+
+- (void)setWidth:(CGFloat)width {
+    ((UIView *)self.view).width = width;
+}
+
+- (void)setHeight:(CGFloat)height {
+    ((UIView *)self.view).height = height;
+}
+
+- (void)setLeft:(CGFloat)left {
+    ((UIView *)self.view).left = left;
+}
+
+- (void)setRight:(CGFloat)right {
+    ((UIView *)self.view).right = right;
+}
+
+- (void)setTop:(CGFloat)top {
+    ((UIView *)self.view).top = top;
+}
+
+- (void)setBottom:(CGFloat)bottom {
+    ((UIView *)self.view).bottom = bottom;
+}
+
+- (void)setCenterX:(CGFloat)centerX {
+    ((UIView *)self.view).centerX = centerX;
+}
+
+- (void)setCenterY:(CGFloat)centerY {
+    ((UIView *)self.view).centerY = centerY;
 }
 
 @end

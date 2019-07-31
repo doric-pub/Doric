@@ -55,6 +55,8 @@
 		DAEFBC72D2314E794132D06E15025AC3 /* DoricStackNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 12E65E9A959F203D44594250808719D0 /* DoricStackNode.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		DBC2D2D72A7B27EECC1FEA4218B74028 /* DoricShaderPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34CB220633FAF5FB582354227A7889CC /* DoricShaderPlugin.m */; };
 		DFB2B8E114B1081B0B285F7EF712C3FC /* UIView+Doric.h in Headers */ = {isa = PBXBuildFile; fileRef = A5FB6A497277059BC11DABD9A4F56AB5 /* UIView+Doric.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		E2FC3FE622F13018007A4E57 /* DoricTextNode.h in Headers */ = {isa = PBXBuildFile; fileRef = E2FC3FE422F13018007A4E57 /* DoricTextNode.h */; };
+		E2FC3FE722F13018007A4E57 /* DoricTextNode.m in Sources */ = {isa = PBXBuildFile; fileRef = E2FC3FE522F13018007A4E57 /* DoricTextNode.m */; };
 		F2F6D32AD0E092DD80D34AEADAC1606E /* DoricGroupNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 40217AFE8466A394D1004596D7804FCE /* DoricGroupNode.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		F598DDE0FA1FE0CC6F09499064B01761 /* DoricHLayoutNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 9145FEC14942C0A3829F08841A321931 /* DoricHLayoutNode.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		F939A4A137B61D2362519D8F5381DC4E /* DoricJSEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B71CB0B4480EA08DD35197F06DBF38 /* DoricJSEngine.m */; };
@@ -88,16 +90,16 @@
 		0A5A03FDB5D69AFA8105CD95F537E7B4 /* DoricVLayoutNode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricVLayoutNode.h; sourceTree = "<group>"; };
 		11F84157E3FED749ED2F53440014CF74 /* DoricContext.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DoricContext.m; path = Pod/Classes/DoricContext.m; sourceTree = "<group>"; };
 		12E65E9A959F203D44594250808719D0 /* DoricStackNode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricStackNode.h; sourceTree = "<group>"; };
-		165E0A231E9DDF8E3C3B339C5F991D2B /* Doric.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = Doric.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		165E0A231E9DDF8E3C3B339C5F991D2B /* Doric.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = Doric.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		1DC97F881F42239F4D5EE57FE5266B1F /* Pods-ExampleUITests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-ExampleUITests-acknowledgements.plist"; sourceTree = "<group>"; };
 		1E9FEEA40A1420C03A9FA2DF019E8394 /* DoricAsyncResult.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricAsyncResult.h; sourceTree = "<group>"; };
 		1EA815FA2776C872BADBFAE526312474 /* DoricGroupNode.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricGroupNode.m; sourceTree = "<group>"; };
-		1F667CC0E19EAF34E5A4119E2121F585 /* libPods-Example.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-Example.a"; path = "libPods-Example.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		1FE791173F73E0ABC7A884D6D34A851A /* doric-sandbox.js */ = {isa = PBXFileReference; includeInIndex = 1; name = "doric-sandbox.js"; path = "../js-framework/bundle/doric-sandbox.js"; sourceTree = "<group>"; };
+		1F667CC0E19EAF34E5A4119E2121F585 /* libPods-Example.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Example.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1FE791173F73E0ABC7A884D6D34A851A /* doric-sandbox.js */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.javascript; name = "doric-sandbox.js"; path = "../js-framework/bundle/doric-sandbox.js"; sourceTree = "<group>"; };
 		21C8D570F3695E2C55CF1650F47FDB8E /* DoricPromise.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricPromise.h; sourceTree = "<group>"; };
 		28C3F6DCBC4FB144EEE0564B6299B0CB /* DoricJSExecutorProtocal.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricJSExecutorProtocal.h; sourceTree = "<group>"; };
 		2A58BA4FA12990F611D58B20153AF80B /* DoricRootNode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricRootNode.h; sourceTree = "<group>"; };
-		2EC07F016FD484CA2F44DB97705AAFE7 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
+		2EC07F016FD484CA2F44DB97705AAFE7 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		34B71CB0B4480EA08DD35197F06DBF38 /* DoricJSEngine.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricJSEngine.m; sourceTree = "<group>"; };
 		34CB220633FAF5FB582354227A7889CC /* DoricShaderPlugin.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricShaderPlugin.m; sourceTree = "<group>"; };
 		35D3ADD1FF0C9A33D86DB110C181048B /* Pods-ExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -115,7 +117,7 @@
 		4F4F7A3F234E0CFD4CD49EFC295447B7 /* DoricNativePlugin.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricNativePlugin.h; sourceTree = "<group>"; };
 		50CE420621B9D9ED01E06A8EDBD3E990 /* Pods-ExampleUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ExampleUITests.release.xcconfig"; sourceTree = "<group>"; };
 		57728CFE03A4D88821681C3D55A1FA85 /* Pods-Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Example.release.xcconfig"; sourceTree = "<group>"; };
-		630CABE8F692FCDBFD1B122A2D0CE388 /* libPods-ExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-ExampleTests.a"; path = "libPods-ExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		630CABE8F692FCDBFD1B122A2D0CE388 /* libPods-ExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		643CD220E77EB474B7A3E56677D5423E /* Doric.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Doric.xcconfig; sourceTree = "<group>"; };
 		672ED840695CA6755DECF6030784FB37 /* DoricBridgeExtension.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricBridgeExtension.m; sourceTree = "<group>"; };
 		673C99F302C0D91311C4BEAB6C3F5DD2 /* DoricJSCoreExecutor.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricJSCoreExecutor.m; sourceTree = "<group>"; };
@@ -133,7 +135,7 @@
 		912DD5AC9B73450AB46CAC837632066E /* DoricDriver.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DoricDriver.h; path = Pod/Classes/DoricDriver.h; sourceTree = "<group>"; };
 		9145FEC14942C0A3829F08841A321931 /* DoricHLayoutNode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricHLayoutNode.h; sourceTree = "<group>"; };
 		9CF6301AAD07F98FE89F30E7B5A07161 /* Pods-ExampleTests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-ExampleTests-acknowledgements.plist"; sourceTree = "<group>"; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		9E3E205626DEE3A3A286F86069A99224 /* DoricContext.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DoricContext.h; path = Pod/Classes/DoricContext.h; sourceTree = "<group>"; };
 		A12EA2D6D6F629978F16C0E458152B6E /* Pods-ExampleTests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-ExampleTests-acknowledgements.markdown"; sourceTree = "<group>"; };
 		A5C03B5A2EF5BC47137E15CB4EBFE525 /* DoricContextHolder.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DoricContextHolder.h; path = Pod/Classes/DoricContextHolder.h; sourceTree = "<group>"; };
@@ -141,15 +143,17 @@
 		A7BBF360102FA3B4372193E445788A75 /* DoricConstant.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricConstant.m; sourceTree = "<group>"; };
 		AAC90DCBF1BFE57FD63FA71236CD9617 /* DoricUtil.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricUtil.h; sourceTree = "<group>"; };
 		AEAB7D461045D326881C99D36EB09F06 /* DoricContextManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DoricContextManager.m; path = Pod/Classes/DoricContextManager.m; sourceTree = "<group>"; };
-		C232398D4E3A40F2337F8A40D7F8D751 /* libPods-ExampleUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-ExampleUITests.a"; path = "libPods-ExampleUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C232398D4E3A40F2337F8A40D7F8D751 /* libPods-ExampleUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ExampleUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C40472CC88C197C1D9E0FAEF8AEEA012 /* DoricUtil.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricUtil.m; sourceTree = "<group>"; };
 		C6D6AA5E2B4BA8E824A10E9272A0C408 /* DoricNativePlugin.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricNativePlugin.m; sourceTree = "<group>"; };
 		C78507DD6E36D475B8675ACBB6CB29BB /* DoricRegistry.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DoricRegistry.m; path = Pod/Classes/DoricRegistry.m; sourceTree = "<group>"; };
-		CB6504BD07E3990E6F058E4073421ADA /* libDoric.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libDoric.a; path = libDoric.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		D1CC34B6D8FB8039D88C3D24DD3AFA6F /* doric-lib.js */ = {isa = PBXFileReference; includeInIndex = 1; name = "doric-lib.js"; path = "../js-framework/bundle/doric-lib.js"; sourceTree = "<group>"; };
+		CB6504BD07E3990E6F058E4073421ADA /* libDoric.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libDoric.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D1CC34B6D8FB8039D88C3D24DD3AFA6F /* doric-lib.js */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.javascript; name = "doric-lib.js"; path = "../js-framework/bundle/doric-lib.js"; sourceTree = "<group>"; };
 		D94AF2C3306CFE8E84FE37B99B27675B /* DoricModalPlugin.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricModalPlugin.h; sourceTree = "<group>"; };
 		DC9CA9CA257999E08AC1FF1683E7A4D0 /* DoricViewNode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricViewNode.h; sourceTree = "<group>"; };
 		DFFAD17E7567EE856A59F246D50A9B0B /* Pods-Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Example-acknowledgements.plist"; sourceTree = "<group>"; };
+		E2FC3FE422F13018007A4E57 /* DoricTextNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DoricTextNode.h; sourceTree = "<group>"; };
+		E2FC3FE522F13018007A4E57 /* DoricTextNode.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DoricTextNode.m; sourceTree = "<group>"; };
 		E340F908A05867E06E975FDCDD32315C /* Pods-Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Example.debug.xcconfig"; sourceTree = "<group>"; };
 		E6260EBC3191F783549F257021CB739F /* DoricBridgeExtension.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricBridgeExtension.h; sourceTree = "<group>"; };
 		E7932F4E2884A330FF1506551365C865 /* DoricShaderPlugin.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricShaderPlugin.h; sourceTree = "<group>"; };
@@ -280,6 +284,8 @@
 				460F14FF387A5DD08430DA1FD75E10EE /* DoricViewNode.m */,
 				0A5A03FDB5D69AFA8105CD95F537E7B4 /* DoricVLayoutNode.h */,
 				49D245CB8651BC5097588071D90D8EA5 /* DoricVLayoutNode.m */,
+				E2FC3FE422F13018007A4E57 /* DoricTextNode.h */,
+				E2FC3FE522F13018007A4E57 /* DoricTextNode.m */,
 			);
 			name = Shader;
 			path = Pod/Classes/Shader;
@@ -448,6 +454,7 @@
 				DAEFBC72D2314E794132D06E15025AC3 /* DoricStackNode.h in Headers */,
 				13A302CDD2B011A4DF5CF1112E09E937 /* DoricUtil.h in Headers */,
 				0A85A5F9A3EE11F072A89DE84A6FA0B8 /* DoricViewContainer.h in Headers */,
+				E2FC3FE622F13018007A4E57 /* DoricTextNode.h in Headers */,
 				CDB42B526F58B185A238F2F725094FA3 /* DoricViewNode.h in Headers */,
 				A2A8E68788BDBA92162E3958CC947636 /* DoricVLayoutNode.h in Headers */,
 				DFB2B8E114B1081B0B285F7EF712C3FC /* UIView+Doric.h in Headers */,
@@ -616,6 +623,7 @@
 				81D52405D6E15FB19C6ADE196CEBFED4 /* DoricNativePlugin.m in Sources */,
 				9819AF9920746EF21542E98566455571 /* DoricPromise.m in Sources */,
 				159F44077D988BE31CFAA0FABB4B97F5 /* DoricRegistry.m in Sources */,
+				E2FC3FE722F13018007A4E57 /* DoricTextNode.m in Sources */,
 				1E3AEF0D767322EEB63622B26806ACEE /* DoricRootNode.m in Sources */,
 				DBC2D2D72A7B27EECC1FEA4218B74028 /* DoricShaderPlugin.m in Sources */,
 				0F15CD85BB2DB16EAADAD04B6FCE5A86 /* DoricStackNode.m in Sources */,

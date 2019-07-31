@@ -11,6 +11,7 @@
 #import "DoricUtil.h"
 #import "DoricContext.h"
 #import "DoricNativePlugin.h"
+#import "DoricRootNode.h"
 
 @interface ViewController ()
 @property (nonatomic,strong) DoricContext *doricContext;
@@ -33,6 +34,7 @@
     NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"demo" ofType:@"js"];
     NSString *jsContent = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
     self.doricContext = [[DoricContext alloc] initWithScript:jsContent source:@"demo"];
+    self.doricContext.rootNode.view = self.view;
     [self.doricContext callEntity:@"__init__",@{@"width": [NSNumber numberWithFloat:self.view.width],
                                                 @"height":[NSNumber numberWithFloat:self.view.height]},nil];
 }

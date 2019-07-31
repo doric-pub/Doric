@@ -10,11 +10,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class DoricRootNode;
+
 @interface DoricContext : NSObject
 
 @property (nonatomic,strong) NSString *contextId;
 @property (nonatomic,strong) DoricDriver *driver;
 @property (nonatomic,strong) NSMutableDictionary *pluginInstanceMap;
+@property (nonatomic,strong) DoricRootNode *rootNode;
 
 - (instancetype)initWithScript:(NSString *)script source:(NSString *)source;
 

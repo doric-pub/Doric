@@ -7,9 +7,6 @@
 
 #import "UIView+Doric.h"
 
-#define LAYOUT_MATCH_PARENT -1
-#define LAYOUT_WRAP_CONTENT -2
-
 typedef NS_ENUM(NSInteger,DoricGravity) {
     SPECIFIED = 1,
     START = 1 << 1,
@@ -25,6 +22,12 @@ typedef NS_ENUM(NSInteger,DoricGravity) {
     CENTER = CENTER_X | CENTER_Y,
 };
 
+typedef NS_ENUM(NSInteger,DoricLayoutDesc) {
+    LAYOUT_DEFAULT = 0,
+    LAYOUT_MATCH_PARENT = -1,
+    LAYOUT_WRAP_CONTENT = -2,
+};
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface DoricRect :NSObject
@@ -35,7 +38,10 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
+
 @interface LayoutParams : NSObject
+@property (nonatomic) DoricLayoutDesc width;
+@property (nonatomic) DoricLayoutDesc height;
 @property (nonatomic) DoricGravity alignment;
 @property (nonatomic,strong) DoricRect *margin;
 @end

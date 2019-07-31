@@ -11,6 +11,7 @@
 #import "DoricStackNode.h"
 #import "DoricVLayoutNode.h"
 #import "DoricHLayoutNode.h"
+#import "DoricTextNode.h"
 
 @interface DoricRegistry ()
 
@@ -39,6 +40,8 @@
     [self registerViewNode:DoricStackNode.class withName:@"Stack"];
     [self registerViewNode:DoricVLayoutNode.class withName:@"VLayout"];
     [self registerViewNode:DoricHLayoutNode.class withName:@"HLayout"];
+    [self registerViewNode:DoricTextNode.class withName:@"Text"];
+
 }
 
 - (void)registerJSBundle:(NSString *)bundle withName:(NSString *)name {

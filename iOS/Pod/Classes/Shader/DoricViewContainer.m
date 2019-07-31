@@ -9,12 +9,24 @@
 #import <objc/runtime.h>
 
 @implementation DoricRect
+- (instancetype)init {
+    if (self  = [super init]) {
+        _left = 0;
+        _right = 0;
+        _top = 0;
+        _bottom = 0;
+    }
+    return self;
+}
 @end
 
 @implementation LayoutParams
 - (instancetype)init {
     if (self  = [super init]) {
         _margin = [[DoricRect alloc] init];
+        _width = LAYOUT_DEFAULT;
+        _height = LAYOUT_DEFAULT;
+        _alignment = 0;
     }
     return self;
 }

@@ -6,11 +6,16 @@
 //
 
 #import "DoricShaderPlugin.h"
+#import "DoricRootNode.h"
 
 @implementation DoricShaderPlugin
 
 - (void)render:(NSDictionary *)argument withPromise:(DoricPromise *)promise {
-    NSLog(@"%@",argument);
+    __weak typeof(self) _self = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(_self) self = _self;
+        [self.doricContext.rootNode render:[argument objectForKey:@"props"]];
+    });
 }
 
 @end

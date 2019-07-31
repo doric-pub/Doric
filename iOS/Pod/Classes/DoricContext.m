@@ -7,6 +7,7 @@
 
 #import "DoricContext.h"
 #import "DoricContextManager.h"
+#import "DoricRootNode.h"
 
 @implementation DoricContext
 
@@ -15,6 +16,7 @@
         _driver = [DoricDriver instance];
         _pluginInstanceMap = [[NSMutableDictionary alloc] init];
         [[DoricContextManager instance] createContext:self script:script source:source];
+        _rootNode = [[DoricRootNode alloc] initWithContext:self];
     }
     return self;
 }

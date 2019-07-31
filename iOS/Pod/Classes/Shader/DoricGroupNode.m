@@ -28,7 +28,7 @@
         NSInteger i;
         for (i = 0; i< array.count; i++) {
             NSDictionary *val = array[i];
-            if (!val) {
+            if (!val || (NSNull *)val == [NSNull null]) {
                 continue;
             }
             NSString *type = [val objectForKey:@"type"];

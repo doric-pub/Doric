@@ -13,6 +13,7 @@ class CounterView extends ViewHolder {
         const vlayout = new VLayout
         vlayout.width = 200
         vlayout.height = 200
+        vlayout.gravity = new Gravity().center()
         this.number.textSize = 40
         this.number.layoutConfig = {
             alignment: new Gravity().center()
@@ -50,7 +51,6 @@ class CounterVM extends ViewModel<CountModel, CounterView> {
         })
     }
 }
-@Entry
 class MyPage extends VMPanel<CountModel, CounterView>{
 
     getVMClass() {
@@ -374,6 +374,7 @@ class SnakeVM extends ViewModel<SnakeModel, SnakeView>{
         }
     }
 }
+@Entry
 class SnakePanel extends VMPanel<SnakeModel, SnakeView>{
 
     getVMClass() {

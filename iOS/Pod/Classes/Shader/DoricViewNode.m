@@ -11,8 +11,18 @@
 #import "DoricRootNode.h"
 #import "DoricConstant.h"
 
+@interface DoricViewNode()
+@property (nonatomic,strong) NSMutableDictionary *callbackIds;
+@end
+
 @implementation DoricViewNode
 
+- (instancetype)initWithContext:(DoricContext *)doricContext {
+    if(self = [super initWithContext:doricContext]) {
+        _callbackIds = [[NSMutableDictionary alloc] init];
+    }
+    return self;
+}
 - (UIView *)build:(NSDictionary *)props {
     return [[UIView alloc] init];
 }
@@ -54,9 +64,18 @@
         if(self.parent && [prop isKindOfClass:[NSDictionary class]]){
             [self.parent blendChild:self layoutConfig:prop];
         }
-    } else {
+    } else if([name isEqualToString:@"onClick"]) {
+        [self.callbackIds setObject:prop forKey:@"onClick"];
+        view.userInteractionEnabled = YES;
+        UITapGestureRecognizer *tapGesturRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onClick:)];
+        [view addGestureRecognizer:tapGesturRecognizer];
+    }else {
         DoricLog(@"Blend View error for View Type :%@, prop is %@", self.class, name);
     }
+}
+
+- (void)onClick:(UIView *)view {
+    [self callJSResponse:[self.callbackIds objectForKey:@"onClick"],nil];
 }
 
 - (CGFloat)measuredWidth {
@@ -91,7 +110,7 @@
         node = node.parent;
     } while (node && ![node isKindOfClass:[DoricRootNode class]]);
     
-    return ret;
+    return [[ret reverseObjectEnumerator] allObjects];
 }
 
 - (void)callJSResponse:(NSString *)funcId,... {

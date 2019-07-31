@@ -23,7 +23,7 @@ typedef NS_ENUM(NSInteger,DoricGravity) {
 };
 
 typedef NS_ENUM(NSInteger,DoricLayoutDesc) {
-    LAYOUT_DEFAULT = 0,
+    LAYOUT_ABSOLUTE = 0,
     LAYOUT_MATCH_PARENT = -1,
     LAYOUT_WRAP_CONTENT = -2,
 };
@@ -42,9 +42,21 @@ NS_ASSUME_NONNULL_BEGIN
 @interface LayoutParams : NSObject
 @property (nonatomic) DoricLayoutDesc width;
 @property (nonatomic) DoricLayoutDesc height;
-@property (nonatomic) DoricGravity alignment;
+@end
+
+@interface MarginLayoutParams : LayoutParams
 @property (nonatomic,strong) DoricRect *margin;
 @end
+
+@interface StackLayoutParams : LayoutParams
+@property (nonatomic) DoricGravity alignment;
+@end
+
+@interface VHLayoutParams : MarginLayoutParams
+@property (nonatomic) DoricGravity alignment;
+@property (nonatomic) NSInteger weight;
+@end
+
 
 @interface UIView(DoricContainer)
 

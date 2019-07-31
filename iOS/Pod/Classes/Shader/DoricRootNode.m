@@ -14,12 +14,14 @@
 
 - (void)measureByParent:(DoricGroupNode *)parent {
     // Do noting for root
+    [super measureByParent:self];
 }
 
 
 - (void)render:(NSDictionary *)props {
     [self blend:props];
     [self measureByParent:self];
+    [self layoutByParent:self];
 }
 
 @end

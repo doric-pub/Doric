@@ -33,6 +33,7 @@
         if ([width integerValue] < 0) {
             self.layoutParams.width = [width integerValue];
         } else {
+            self.layoutParams.width = LAYOUT_ABSOLUTE;
             view.width = [width floatValue];
         }
     } else if([name isEqualToString:@"height"]) {
@@ -40,6 +41,7 @@
         if ([height integerValue] < 0) {
             self.layoutParams.height = [height integerValue];
         } else {
+            self.layoutParams.height = LAYOUT_ABSOLUTE;
             view.height = [height floatValue];
         }
     } else if([name isEqualToString:@"x"]) {
@@ -55,6 +57,22 @@
     } else {
         DoricLog(@"Blend View error for View Type :%@, prop is %@", self.class, name);
     }
+}
+
+- (CGFloat)measuredWidth {
+    if ([self.layoutParams isKindOfClass: MarginLayoutParams.class]) {
+        MarginLayoutParams *marginParams = (MarginLayoutParams *)self.layoutParams;
+        return self.width + marginParams.margin.left + marginParams.margin.right;
+    }
+    return self.width;
+}
+
+- (CGFloat)measuredHeight {
+    if ([self.layoutParams isKindOfClass: MarginLayoutParams.class]) {
+        MarginLayoutParams *marginParams = (MarginLayoutParams *)self.layoutParams;
+        return self.height + marginParams.margin.top + marginParams.margin.bottom;
+    }
+    return self.height;
 }
 
 - (void)measureByParent:(DoricGroupNode *)parent {

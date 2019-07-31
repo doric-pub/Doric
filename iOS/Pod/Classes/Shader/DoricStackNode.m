@@ -22,9 +22,8 @@
     CGFloat maxWidth = 0,maxHeight = 0;
     for (DoricViewNode *child in self.indexedChildren) {
         [child measureByParent:self];
-        UIView *childView = child.view;
-        CGFloat placeWidth = childView.width + child.layoutParams.margin.left + child.layoutParams.margin.right;
-        CGFloat placeHeight = childView.height + child.layoutParams.margin.top + child.layoutParams.margin.bottom;
+        CGFloat placeWidth = child.measuredWidth;
+        CGFloat placeHeight = child.measuredHeight;
         maxWidth = MAX(maxWidth, placeWidth);
         maxHeight = MAX(maxHeight, placeHeight);
     }
@@ -32,43 +31,49 @@
     self.desiredHeight = maxHeight;
     
     if (widthSpec == LAYOUT_WRAP_CONTENT) {
-        self.view.width = maxWidth;
+        self.width = maxWidth;
     }
     
     if (heightSpec == LAYOUT_WRAP_CONTENT) {
-        self.view.height = maxHeight;
+        self.height = maxHeight;
     }
-    
+}
+- (LayoutParams *)generateDefaultLayoutParams {
+    return [[StackLayoutParams alloc] init];
 }
 
 - (void)layoutByParent:(DoricGroupNode *)parent {
     for (DoricViewNode *child in self.indexedChildren) {
         [child measureByParent:self];
-        UIView *childView = child.view;
         if (child.layoutParams.width == LAYOUT_MATCH_PARENT) {
-            childView.width = self.view.width;
+            child.width = self.width;
         }
         if (child.layoutParams.height == LAYOUT_MATCH_PARENT) {
-            childView.height = self.view.height;
+            child.height = self.height;
         }
-        DoricGravity gravity = self.layoutParams.alignment;
+        DoricGravity gravity = self.gravity;
+        if ([child.layoutParams isKindOfClass:StackLayoutParams.class]) {
+            StackLayoutParams *layoutParams = (StackLayoutParams *)self.layoutParams;
+            gravity |= layoutParams.alignment;
+        }
+        
         if ((gravity & LEFT) == LEFT) {
-            childView.left = self.view.left;
+            child.left = self.left;
         }
         if ((gravity & RIGHT) == RIGHT) {
-            childView.right = self.view.right;
+            child.right = self.right;
         }
         if ((gravity & TOP) == TOP) {
-            childView.top = self.view.top;
+            child.top = self.top;
         }
         if ((gravity & BOTTOM) == BOTTOM) {
-            childView.bottom = self.view.bottom;
+            child.bottom = self.bottom;
         }
         if ((gravity & CENTER_X) == CENTER_X) {
-            childView.centerX = self.view.centerX;
+            child.centerX = self.centerX;
         }
         if ((gravity & CENTER_Y) == CENTER_Y) {
-            childView.centerY = self.view.centerY;
+            child.centerY = self.centerY;
         }
     }
 }

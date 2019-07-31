@@ -17,9 +17,9 @@ void DoricLog(NSString * _Nonnull format, ...) {
 UIColor *DoricColor(NSNumber *number) {
     CGFloat r, g, b, a;
     long colorValue = [number longValue];
-    a = ((colorValue >> 6) & 0xff)/225.0f;
-    r = ((colorValue >> 4) & 0xff)/225.0f;
-    g = ((colorValue >> 2) & 0xff)/225.0f;
-    b = ((colorValue >> 0) & 0xff)/225.0f;
+    a = ((colorValue >> 24) & 0xff)/255.0f;
+    r = ((colorValue >> 16) & 0xff)/255.0f;
+    g = ((colorValue >> 8) & 0xff)/255.0f;
+    b = ((colorValue >> 0) & 0xff)/255.0f;
     return [UIColor colorWithRed:r green:g blue:b alpha:a];
 }

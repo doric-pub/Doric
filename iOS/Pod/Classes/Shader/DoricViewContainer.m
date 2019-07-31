@@ -23,10 +23,33 @@
 @implementation LayoutParams
 - (instancetype)init {
     if (self  = [super init]) {
+        _width = LAYOUT_WRAP_CONTENT;
+        _height = LAYOUT_WRAP_CONTENT;
+    }
+    return self;
+}
+@end
+@implementation MarginLayoutParams
+- (instancetype)init {
+    if (self  = [super init]) {
         _margin = [[DoricRect alloc] init];
-        _width = LAYOUT_DEFAULT;
-        _height = LAYOUT_DEFAULT;
+    }
+    return self;
+}@end
+
+@implementation StackLayoutParams
+- (instancetype)init {
+    if (self  = [super init]) {
         _alignment = 0;
+    }
+    return self;
+}@end
+
+@implementation VHLayoutParams
+- (instancetype)init {
+    if (self  = [super init]) {
+        _alignment = 0;
+        _weight = 0;
     }
     return self;
 }

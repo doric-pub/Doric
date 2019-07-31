@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DoricGroupNode : DoricViewNode<UIView *>
+@interface DoricGroupNode <V:UIView *,P:LayoutParams *>: DoricViewNode<V>
 
 @property (nonatomic,strong) NSMutableDictionary *children;
 @property (nonatomic,strong) NSMutableArray *indexedChildren;
@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)blendChild:(DoricViewNode *)child layoutConfig:(NSDictionary *)layoutconfig;
 
-- (LayoutParams *)generateDefaultLayoutParams;
+- (P)generateDefaultLayoutParams;
 @end
 
 NS_ASSUME_NONNULL_END

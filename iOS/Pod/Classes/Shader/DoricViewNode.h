@@ -13,7 +13,7 @@
 NS_ASSUME_NONNULL_BEGIN
 @class DoricGroupNode;
 
-@interface DoricViewNode <V>: DoricContextHolder
+@interface DoricViewNode <V:UIView *>: DoricContextHolder
 
 @property (nonatomic,strong) V view;
 
@@ -37,6 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) CGFloat left;
 @property (nonatomic) CGFloat right;
 @property (nonatomic) CGFloat bottom;
+@property (nonatomic,readonly) CGFloat measuredWidth;
+@property (nonatomic,readonly) CGFloat measuredHeight;
 
 - (V)build:(NSDictionary *)props;
 
@@ -51,7 +53,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)layoutByParent:(DoricGroupNode *)parent;
 
 + (DoricViewNode *)create:(DoricContext *)context withType:(NSString *)type;
-
 @end
 
 NS_ASSUME_NONNULL_END

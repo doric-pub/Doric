@@ -50,7 +50,6 @@ class CounterVM extends ViewModel<CountModel, CounterView> {
         })
     }
 }
-
 @Entry
 class MyPage extends VMPanel<CountModel, CounterView>{
 

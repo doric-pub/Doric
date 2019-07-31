@@ -151,7 +151,7 @@
 }
 
 - (CGFloat)centerY {
-    return ((UIView *)self.view).centerX;
+    return ((UIView *)self.view).centerY;
 }
 
 - (void)setX:(CGFloat)x {

@@ -6,6 +6,7 @@
 //
 
 #import "DoricStackNode.h"
+#import "DoricUtil.h"
 
 @implementation DoricStackNode
 
@@ -42,9 +43,28 @@
     return [[StackLayoutParams alloc] init];
 }
 
+- (void)blendChild:(DoricViewNode *)child layoutConfig:(NSDictionary *)layoutconfig {
+    [super blendChild:child layoutConfig:layoutconfig];
+    if (![child.layoutParams isKindOfClass:StackLayoutParams.class]) {
+        DoricLog(@"blend Stack child error,layout params not match");
+        return;
+    }
+    StackLayoutParams *params = (StackLayoutParams *)child.layoutParams;
+//    NSDictionary *margin = [layoutconfig objectForKey:@"margin"];
+//    if (margin) {
+//        params.margin.top = [(NSNumber *)[margin objectForKey:@"top"] floatValue];
+//        params.margin.left = [(NSNumber *)[margin objectForKey:@"left"] floatValue];
+//        params.margin.right = [(NSNumber *)[margin objectForKey:@"right"] floatValue];
+//        params.margin.bottom = [(NSNumber *)[margin objectForKey:@"bottom"] floatValue];
+//    }
+    NSNumber *alignment = [layoutconfig objectForKey:@"alignment"];
+    if (alignment) {
+        params.alignment = [alignment integerValue];
+    }
+}
+
 - (void)layoutByParent:(DoricGroupNode *)parent {
     for (DoricViewNode *child in self.indexedChildren) {
-        [child measureByParent:self];
         if (child.layoutParams.width == LAYOUT_MATCH_PARENT) {
             child.width = self.width;
         }
@@ -53,7 +73,7 @@
         }
         DoricGravity gravity = self.gravity;
         if ([child.layoutParams isKindOfClass:StackLayoutParams.class]) {
-            StackLayoutParams *layoutParams = (StackLayoutParams *)self.layoutParams;
+            StackLayoutParams *layoutParams = (StackLayoutParams *)child.layoutParams;
             gravity |= layoutParams.alignment;
         }
         
@@ -75,6 +95,7 @@
         if ((gravity & CENTER_Y) == CENTER_Y) {
             child.centerY = self.centerY;
         }
+        [child layoutByParent:self];
     }
 }
 @end

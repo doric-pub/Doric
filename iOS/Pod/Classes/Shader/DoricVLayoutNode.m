@@ -83,16 +83,8 @@
     if (self.layoutParams.height == LAYOUT_MATCH_PARENT) {
         self.height = parent.height;
     }
-    // layotu child
-    CGFloat xStart = 0, yStart = 0;
-    if ((self.gravity & LEFT) == LEFT) {
-        xStart = 0;
-    } else if ((self.gravity & RIGHT) == RIGHT) {
-        xStart = self.width - self.desiredWidth;
-    } else if ((self.gravity & CENTER_X) == CENTER_X) {
-        xStart = (self.width -self.desiredWidth)/2;
-    }
-    
+    // layout child
+    CGFloat yStart = 0;
     if ((self.gravity & TOP) == TOP) {
         yStart = 0;
     } else if ((self.gravity & BOTTOM) == BOTTOM) {
@@ -111,13 +103,13 @@
         }
         if ([child.layoutParams isKindOfClass:VHLayoutParams.class]) {
             VHLayoutParams *layoutParams = (VHLayoutParams *)child.layoutParams;
-            DoricGravity gravity = layoutParams.alignment;
+            DoricGravity gravity = layoutParams.alignment | self.gravity;
             if ((gravity & LEFT) == LEFT) {
-                child.left = xStart;
+                child.left = 0;
             } else if ((gravity & RIGHT) == RIGHT) {
-                child.right = xStart + self.desiredWidth;
+                child.right = self.width;
             } else if ((gravity & CENTER_X) == CENTER_X) {
-                child.centerX = xStart + self.desiredWidth/2;
+                child.centerX = self.width/2;
             }
         }        
         child.top = yStart;

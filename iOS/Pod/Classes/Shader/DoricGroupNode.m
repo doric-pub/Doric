@@ -17,7 +17,9 @@
     return self;
 }
 - (UIView *)build:(NSDictionary *)props {
-    return [[UIView alloc] init];
+    UIView *ret = [[UIView alloc] init];
+    ret.clipsToBounds = YES;
+    return ret;
 }
 
 - (void)blendView:(UIView *)view forPropName:(NSString *)name propValue:(id)prop {

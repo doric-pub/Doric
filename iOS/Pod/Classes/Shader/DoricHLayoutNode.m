@@ -30,7 +30,7 @@
 - (void)blendChild:(DoricViewNode *)child layoutConfig:(NSDictionary *)layoutconfig {
     [super blendChild:child layoutConfig:layoutconfig];
     if (![child.layoutParams isKindOfClass:VHLayoutParams.class]) {
-        DoricLog(@"blend VLayout child error,layout params not match");
+        DoricLog(@"blend HLayout child error,layout params not match");
         return;
     }
     VHLayoutParams *params = (VHLayoutParams *)child.layoutParams;
@@ -84,22 +84,14 @@
     if (self.layoutParams.height == LAYOUT_MATCH_PARENT) {
         self.height = parent.height;
     }
-    // layotu child
-    CGFloat xStart = 0, yStart = 0;
+    // layout child
+    CGFloat xStart = 0;
     if ((self.gravity & LEFT) == LEFT) {
         xStart = 0;
     } else if ((self.gravity & RIGHT) == RIGHT) {
         xStart = self.width - self.desiredWidth;
     } else if ((self.gravity & CENTER_X) == CENTER_X) {
         xStart = (self.width -self.desiredWidth)/2;
-    }
-    
-    if ((self.gravity & TOP) == TOP) {
-        yStart = 0;
-    } else if ((self.gravity & BOTTOM) == BOTTOM) {
-        yStart = self.height - self.desiredHeight;
-    } else if ((self.gravity & CENTER_Y) == CENTER_Y) {
-        yStart = (self.height -self.desiredHeight)/2;
     }
     
     for (DoricViewNode *child in self.indexedChildren) {
@@ -112,13 +104,13 @@
         
         if ([child.layoutParams isKindOfClass:VHLayoutParams.class]) {
             VHLayoutParams *layoutParams = (VHLayoutParams *)child.layoutParams;
-            DoricGravity gravity = layoutParams.alignment;
+            DoricGravity gravity = layoutParams.alignment | self.gravity;
             if ((gravity & TOP) == TOP) {
-                child.top = yStart;
+                child.top = 0;
             } else if ((gravity & BOTTOM) == BOTTOM) {
-                child.bottom = yStart + self.desiredHeight;
+                child.bottom = self.height;
             } else if ((gravity & CENTER_Y) == CENTER_Y) {
-                child.centerY = yStart + self.desiredHeight/2;
+                child.centerY = self.height/2;
             }
         }
         child.left = xStart;

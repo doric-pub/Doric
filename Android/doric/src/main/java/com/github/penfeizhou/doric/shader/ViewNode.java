@@ -49,19 +49,22 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         if (mView == null) {
             mView = build(jsObject);
         }
-        for (String prop : jsObject.propertySet()) {
-            blend(mView, layoutParams, prop, jsObject.getProperty(prop));
-        }
         if (getView() == null) {
             doricLayer = new DoricLayer(getContext());
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(layoutParams.width, layoutParams.height);
             doricLayer.addView(mView, params);
-        } else {
-            ViewGroup.LayoutParams params = mView.getLayoutParams();
+        }
+        for (String prop : jsObject.propertySet()) {
+            blend(mView, layoutParams, prop, jsObject.getProperty(prop));
+        }
+        ViewGroup.LayoutParams params = mView.getLayoutParams();
+        if (params != null) {
             params.width = layoutParams.width;
             params.height = layoutParams.height;
-            mView.setLayoutParams(params);
+        } else {
+            params = layoutParams;
         }
+        mView.setLayoutParams(params);
     }
 
     protected void blend(T view, ViewGroup.LayoutParams layoutParams, String name, JSValue prop) {
@@ -107,6 +110,12 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
             case "layoutConfig":
                 if (prop.isObject() && mParent != null) {
                     mParent.blendChild(this, prop.asObject());
+                }
+                break;
+            case "border":
+                if (prop.isObject() && doricLayer != null) {
+                    doricLayer.setBorder(DoricUtils.dp2px(prop.asObject().getProperty("width").asNumber().toFloat()),
+                            prop.asObject().getProperty("color").asNumber().toInt());
                 }
                 break;
             default:

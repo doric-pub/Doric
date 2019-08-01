@@ -20,6 +20,10 @@ class CounterView extends ViewHolder {
         }
         this.counter = new Text
         this.counter.text = "点击计数"
+        this.counter.border = {
+            width: 1,
+            color: Color.parse('#000000'),
+        }
         this.counter.textSize = 20
 
         vlayout.space = 20
@@ -28,7 +32,7 @@ class CounterView extends ViewHolder {
         }
         vlayout.addChild(this.number)
         vlayout.addChild(this.counter)
-        root.bgColor = Color.parse('#00ff00')
+        // root.bgColor = Color.parse('#00ff00')
         vlayout.bgColor = Color.parse('#ff00ff')
         root.addChild(vlayout)
     }
@@ -51,6 +55,7 @@ class CounterVM extends ViewModel<CountModel, CounterView> {
         })
     }
 }
+@Entry
 class MyPage extends VMPanel<CountModel, CounterView>{
 
     getVMClass() {
@@ -374,7 +379,7 @@ class SnakeVM extends ViewModel<SnakeModel, SnakeView>{
         }
     }
 }
-@Entry
+
 class SnakePanel extends VMPanel<SnakeModel, SnakeView>{
 
     getVMClass() {

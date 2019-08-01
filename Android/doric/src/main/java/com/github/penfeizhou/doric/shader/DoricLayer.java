@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.Region;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,13 +19,11 @@ import android.widget.FrameLayout;
  * @CreateDate: 2019-07-31
  */
 public class DoricLayer extends FrameLayout {
-    private int mBorderWidth;
-    private int mBorderColor = Color.BLACK;
     private int mCornerRadius;
 
     private Path mCornerPath = new Path();
     private Paint shadowPaint = new Paint();
-
+    private Paint mBorderPaint;
 
     public DoricLayer(@NonNull Context context) {
         super(context);
@@ -48,9 +45,11 @@ public class DoricLayer extends FrameLayout {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        // draw shadow
-        canvas.save();
-        canvas.restore();
+    }
+
+    @Override
+    public void draw(Canvas canvas) {
+        super.draw(canvas);
     }
 
     @Override
@@ -58,12 +57,26 @@ public class DoricLayer extends FrameLayout {
         return super.drawChild(canvas, child, drawingTime);
     }
 
-    public void setBorderWidth(int borderWidth) {
-        this.mBorderWidth = borderWidth;
+    @Override
+    protected void dispatchDraw(Canvas canvas) {
+        super.dispatchDraw(canvas);
+        // draw border
+        if (mBorderPaint != null) {
+            canvas.drawRect(0, 0, getWidth(), getHeight(), mBorderPaint);
+        }
     }
 
-    public void setBorderColor(int borderColor) {
-        this.mBorderColor = borderColor;
+    public void setBorder(int borderWidth, int borderColor) {
+        if (borderWidth == 0) {
+            mBorderPaint = null;
+        }
+        if (mBorderPaint == null) {
+            mBorderPaint = new Paint();
+            mBorderPaint.setAntiAlias(true);
+            mBorderPaint.setStyle(Paint.Style.STROKE);
+        }
+        mBorderPaint.setStrokeWidth(borderWidth);
+        mBorderPaint.setColor(borderColor);
     }
 
     public void setCornerRadius(int corner) {

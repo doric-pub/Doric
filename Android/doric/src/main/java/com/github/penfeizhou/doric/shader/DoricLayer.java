@@ -2,9 +2,9 @@ package com.github.penfeizhou.doric.shader;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.RectF;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,11 +19,11 @@ import android.widget.FrameLayout;
  * @CreateDate: 2019-07-31
  */
 public class DoricLayer extends FrameLayout {
-    private int mCornerRadius;
-
     private Path mCornerPath = new Path();
     private Paint shadowPaint = new Paint();
     private Paint mBorderPaint;
+    private RectF mRect = new RectF();
+    private float[] mCornerRadii;
 
     public DoricLayer(@NonNull Context context) {
         super(context);
@@ -59,10 +59,25 @@ public class DoricLayer extends FrameLayout {
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
+        mRect.left = 0;
+        mRect.right = getWidth();
+        mRect.top = 0;
+        mRect.bottom = getHeight();
+        if (mCornerRadii != null) {
+            mCornerPath.reset();
+            mCornerPath.addRoundRect(mRect, mCornerRadii, Path.Direction.CW);
+            canvas.clipPath(mCornerPath);
+        }
+
+
         super.dispatchDraw(canvas);
         // draw border
         if (mBorderPaint != null) {
-            canvas.drawRect(0, 0, getWidth(), getHeight(), mBorderPaint);
+            if (mCornerRadii != null) {
+                canvas.drawRoundRect(mRect, mCornerRadii[0], mCornerRadii[1], mBorderPaint);
+            } else {
+                canvas.drawRect(mRect, mBorderPaint);
+            }
         }
     }
 
@@ -80,10 +95,16 @@ public class DoricLayer extends FrameLayout {
     }
 
     public void setCornerRadius(int corner) {
-        if (mCornerRadius != corner) {
-            this.mCornerRadius = corner;
-            mCornerPath.reset();
-        }
+        setCornerRadius(corner, corner, corner, corner);
+    }
+
+    public void setCornerRadius(int leftTop, int rightTop, int rightBottom, int leftBottom) {
+        mCornerRadii = new float[]{
+                leftTop, leftTop,
+                rightTop, rightTop,
+                rightBottom, rightBottom,
+                leftBottom, leftBottom,
+        };
     }
 
 }

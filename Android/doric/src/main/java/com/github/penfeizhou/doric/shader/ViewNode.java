@@ -118,6 +118,25 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                             prop.asObject().getProperty("color").asNumber().toInt());
                 }
                 break;
+            case "corners":
+                if (doricLayer != null) {
+                    if (prop.isNumber()) {
+                        doricLayer.setCornerRadius(DoricUtils.dp2px(prop.asNumber().toFloat()));
+                    } else if (prop.isObject()) {
+                        JSValue lt = prop.asObject().getProperty("leftTop");
+                        JSValue rt = prop.asObject().getProperty("rightTop");
+                        JSValue rb = prop.asObject().getProperty("rightBottom");
+                        JSValue lb = prop.asObject().getProperty("leftBottom");
+                        doricLayer.setCornerRadius(
+                                DoricUtils.dp2px(lt.isNumber() ? lt.asNumber().toFloat() : 0),
+                                DoricUtils.dp2px(rt.isNumber() ? rt.asNumber().toFloat() : 0),
+                                DoricUtils.dp2px(rb.isNumber() ? rb.asNumber().toFloat() : 0),
+                                DoricUtils.dp2px(lb.isNumber() ? lb.asNumber().toFloat() : 0)
+                        );
+                    }
+                }
+
+                break;
             default:
                 break;
         }

@@ -21,15 +21,20 @@ class CounterView extends ViewHolder {
         this.counter = new Text
         this.counter.text = "点击计数"
         this.counter.border = {
-            width: 1,
+            width: 10,
             color: Color.parse('#000000'),
         }
         this.counter.textSize = 20
-
+        this.counter.corners = 5
         vlayout.space = 20
         vlayout.layoutConfig = {
             alignment: new Gravity().center()
         }
+        vlayout.border = {
+            width: 1,
+            color: Color.parse("#000000"),
+        }
+        vlayout.corners = 10
         vlayout.addChild(this.number)
         vlayout.addChild(this.counter)
         // root.bgColor = Color.parse('#00ff00')

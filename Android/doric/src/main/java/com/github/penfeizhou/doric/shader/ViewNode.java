@@ -3,6 +3,7 @@ package com.github.penfeizhou.doric.shader;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.github.penfeizhou.doric.DoricContext;
 import com.github.penfeizhou.doric.DoricRegistry;
@@ -31,8 +32,10 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         super(doricContext);
     }
 
-    public T getView() {
-        return mView;
+    private DoricLayer doricLayer;
+
+    public View getView() {
+        return doricLayer;
     }
 
     public Context getContext() {
@@ -49,7 +52,16 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         for (String prop : jsObject.propertySet()) {
             blend(mView, layoutParams, prop, jsObject.getProperty(prop));
         }
-        mView.setLayoutParams(layoutParams);
+        if (getView() == null) {
+            doricLayer = new DoricLayer(getContext());
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(layoutParams.width, layoutParams.height);
+            doricLayer.addView(mView, params);
+        } else {
+            ViewGroup.LayoutParams params = mView.getLayoutParams();
+            params.width = layoutParams.width;
+            params.height = layoutParams.height;
+            mView.setLayoutParams(params);
+        }
     }
 
     protected void blend(T view, ViewGroup.LayoutParams layoutParams, String name, JSValue prop) {

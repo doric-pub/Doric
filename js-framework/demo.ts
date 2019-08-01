@@ -174,7 +174,7 @@ class SnakeModel {
         if (this.head.x < 0 || this.head.x >= this.width
             || this.head.y < 0 || this.head.y >= this.height) {
             //If out of bound
-            loge('out of bound', this.head)
+            loge('out of bound')
             this.state = State.fail
         } else if (this.head.x == this.food.x && this.head.y == this.food.y) {
             //If eat food

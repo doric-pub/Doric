@@ -1,5 +1,7 @@
 package com.github.penfeizhou.doric.shader;
 
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.github.penfeizhou.doric.DoricContext;
@@ -17,11 +19,21 @@ public class RootNode extends StackNode {
         super(doricContext);
     }
 
+    @Override
+    public View getView() {
+        return mView;
+    }
+
     public void setRootView(FrameLayout rootView) {
         this.mView = rootView;
     }
 
+    @Override
+    public ViewGroup.LayoutParams getLayoutParams() {
+        return mView.getLayoutParams();
+    }
+
     public void render(JSObject props) {
-        blend(props, mView.getLayoutParams());
+        blend(props, getLayoutParams());
     }
 }

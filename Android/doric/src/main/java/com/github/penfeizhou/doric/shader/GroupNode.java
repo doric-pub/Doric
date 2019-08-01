@@ -50,7 +50,7 @@ public abstract class GroupNode<F extends ViewGroup> extends ViewNode<F> {
                     } else if (i != child.index) {
                         mIndexInfo.remove(i);
                         child.index = i;
-                        mView.removeView(child.mView);
+                        mView.removeView(child.getView());
                     }
                     ViewGroup.LayoutParams params = child.getLayoutParams();
                     if (params == null) {
@@ -58,7 +58,7 @@ public abstract class GroupNode<F extends ViewGroup> extends ViewNode<F> {
                     }
                     child.blend(childObj.getProperty("props").asObject(), params);
                     if (mIndexInfo.get(i) == null) {
-                        mView.addView(child.mView, i);
+                        mView.addView(child.getView(), i, child.getLayoutParams());
                         mIndexInfo.put(i, child);
                     }
                 }

@@ -137,6 +137,19 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 }
 
                 break;
+            case "shadow":
+                if (doricLayer != null) {
+                    if (prop.isObject()) {
+                        doricLayer.setShadow(
+                                prop.asObject().getProperty("color").asNumber().toInt(),
+                                (int) (prop.asObject().getProperty("opacity").asNumber().toFloat() * 255),
+                                DoricUtils.dp2px(prop.asObject().getProperty("radius").asNumber().toFloat()),
+                                DoricUtils.dp2px(prop.asObject().getProperty("offsetX").asNumber().toFloat()),
+                                DoricUtils.dp2px(prop.asObject().getProperty("offsetY").asNumber().toFloat())
+                        );
+                    }
+                }
+                break;
             default:
                 break;
         }

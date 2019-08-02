@@ -2,15 +2,18 @@ package com.github.penfeizhou.doric.shader;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.graphics.Region;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 /**
@@ -20,7 +23,7 @@ import android.widget.FrameLayout;
  */
 public class DoricLayer extends FrameLayout {
     private Path mCornerPath = new Path();
-    private Paint shadowPaint = new Paint();
+    private Paint mShadowPaint;
     private Paint mBorderPaint;
     private RectF mRect = new RectF();
     private float[] mCornerRadii;
@@ -63,22 +66,47 @@ public class DoricLayer extends FrameLayout {
         mRect.right = getWidth();
         mRect.top = 0;
         mRect.bottom = getHeight();
+        canvas.save();
         if (mCornerRadii != null) {
             mCornerPath.reset();
             mCornerPath.addRoundRect(mRect, mCornerRadii, Path.Direction.CW);
             canvas.clipPath(mCornerPath);
         }
 
-
         super.dispatchDraw(canvas);
+        canvas.restore();
         // draw border
         if (mBorderPaint != null) {
+            ((ViewGroup) getParent()).setClipChildren(false);
             if (mCornerRadii != null) {
                 canvas.drawRoundRect(mRect, mCornerRadii[0], mCornerRadii[1], mBorderPaint);
             } else {
                 canvas.drawRect(mRect, mBorderPaint);
             }
         }
+        if (mShadowPaint != null) {
+            ((ViewGroup) getParent()).setClipChildren(false);
+            canvas.save();
+            if (mCornerRadii != null) {
+                canvas.clipPath(mCornerPath, Region.Op.DIFFERENCE);
+                canvas.drawRoundRect(mRect, mCornerRadii[0], mCornerRadii[1], mShadowPaint);
+            } else {
+                canvas.clipRect(mRect, Region.Op.DIFFERENCE);
+                canvas.drawRect(mRect, mShadowPaint);
+            }
+            canvas.restore();
+        }
+    }
+
+    public void setShadow(int sdColor, int sdOpacity, int sdRadius, int offsetX, int offsetY) {
+        if (mShadowPaint == null) {
+            mShadowPaint = new Paint();
+            mShadowPaint.setAntiAlias(true);
+            mShadowPaint.setStyle(Paint.Style.FILL);
+        }
+        mShadowPaint.setColor(sdColor);
+        mShadowPaint.setAlpha(sdOpacity);
+        mShadowPaint.setShadowLayer(sdRadius, offsetX, offsetY, sdColor);
     }
 
     public void setBorder(int borderWidth, int borderColor) {

@@ -35,7 +35,7 @@ export abstract class View implements Modeling {
     border?: { width: number; color: Color; }
 
     @Property
-    shadow?: { color: Color; opacity: number; radius: number; offset: { width: number; height: number; }; }
+    shadow?: { color: Color; opacity: number; radius: number; offsetX: number; offsetY: number }
 
     @Property
     alpha?: number

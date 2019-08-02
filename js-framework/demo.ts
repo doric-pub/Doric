@@ -25,7 +25,7 @@ class CounterView extends ViewHolder {
             color: Color.parse('#000000'),
         }
         this.counter.textSize = 20
-        //this.counter.corners = 5
+        this.counter.corners = 5
         vlayout.space = 20
         vlayout.layoutConfig = {
             alignment: new Gravity().center()

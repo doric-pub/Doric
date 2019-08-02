@@ -69,7 +69,33 @@
         view.userInteractionEnabled = YES;
         UITapGestureRecognizer *tapGesturRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onClick:)];
         [view addGestureRecognizer:tapGesturRecognizer];
-    }else {
+    } else if([name isEqualToString:@"border"]) {
+        NSDictionary *dic = prop;
+        CGFloat width = [(NSNumber *)[dic objectForKey:@"width"] floatValue];
+        UIColor *color = DoricColor((NSNumber *)[dic objectForKey:@"color"]);
+        view.layer.borderWidth = width;
+        view.layer.borderColor = color.CGColor;
+    } else if([name isEqualToString:@"corners"]) {
+        if([prop isKindOfClass:NSNumber.class]) {
+            view.layer.cornerRadius = [(NSNumber *)prop floatValue];
+        } else if([prop isKindOfClass:NSDictionary.class]) {
+            
+        }
+    } else if([name isEqualToString:@"shadow"]) {
+        NSDictionary *dic = prop;
+        CGFloat opacity = [(NSNumber *)[dic objectForKey:@"opacity"] floatValue];
+        if (opacity > CGFLOAT_MIN) {
+            view.clipsToBounds = NO;
+            UIColor *color = DoricColor((NSNumber *)[dic objectForKey:@"color"]);
+            view.layer.shadowColor = color.CGColor;
+            view.layer.shadowRadius = [(NSNumber *)[dic objectForKey:@"radius"] floatValue];
+            view.layer.shadowOffset = CGSizeMake([(NSNumber *)[dic objectForKey:@"offsetX"] floatValue],[(NSNumber *)[dic objectForKey:@"offsetY"] floatValue]);
+            view.layer.shadowOpacity = opacity;
+        } else {
+            view.clipsToBounds = YES;
+        }
+
+    } else {
         DoricLog(@"Blend View error for View Type :%@, prop is %@", self.class, name);
     }
 }

@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsc -p .&& rollup -c && node ./bundle/bundle.js",
-    "build": "tsc -p . && rollup -c ",
+    "build": "tsc -p .&& rollup -c",
+    "dev": "tsc -w -p . & rollup -c -w",
     "clean": "rm -rf build && rm -rf demo && rm -rf bundle"
   },
   "repository": {
@@ -24,6 +24,8 @@
     "rollup": "^1.17.0",
     "rollup-plugin-commonjs": "^10.0.1",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "tslib": "^1.10.0"
+    "rollup-watch": "^4.3.1",
+    "tslib": "^1.10.0",
+    "typescript": "^3.5.3"
   }
 }

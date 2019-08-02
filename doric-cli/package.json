@@ -1,0 +1,30 @@
+{
+  "name": "doric-cli",
+  "version": "1.0.0",
+  "description": "Doric tools",
+  "main": "index.js",
+  "bin": {
+    "doric": "index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/penfeizhou/doric.git"
+  },
+  "author": "pengfei.zhou",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/penfeizhou/doric/issues"
+  },
+  "homepage": "https://github.com/penfeizhou/doric#readme",
+  "dependencies": {
+    "child_process": "^1.0.2",
+    "chokidar": "^3.0.2",
+    "commander": "^2.20.0",
+    "rollup": "^1.18.0",
+    "shelljs": "^0.8.3",
+    "typescript": "^3.5.3"
+  }
+}

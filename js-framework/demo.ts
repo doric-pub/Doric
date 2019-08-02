@@ -48,10 +48,7 @@ class CounterView extends ViewHolder {
             offsetX: -10,
             offsetY: 10,
         }
-        vlayout.corners = {
-            leftBottom: 10,
-            rightBottom: 20,
-        }
+        vlayout.corners = 20
         vlayout.addChild(this.number)
         vlayout.addChild(this.counter)
         // root.bgColor = Color.parse('#00ff00')

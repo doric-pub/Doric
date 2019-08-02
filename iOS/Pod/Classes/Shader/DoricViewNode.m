@@ -11,6 +11,45 @@
 #import "DoricRootNode.h"
 #import "DoricConstant.h"
 
+void DoricAddEllipticArcPath(CGMutablePathRef path,
+                                  CGPoint origin,
+                                  CGFloat radius,
+                                  CGFloat startAngle,
+                                  CGFloat endAngle) {
+    CGAffineTransform t = CGAffineTransformMakeTranslation(origin.x, origin.y);
+    CGPathAddArc(path, &t, 0, 0, radius, startAngle, endAngle, NO);
+}
+
+
+CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
+                                     CGFloat leftTop,
+                                     CGFloat rightTop,
+                                     CGFloat rightBottom,
+                                     CGFloat leftBottom) {
+    const CGFloat minX = CGRectGetMinX(bounds);
+    const CGFloat minY = CGRectGetMinY(bounds);
+    const CGFloat maxX = CGRectGetMaxX(bounds);
+    const CGFloat maxY = CGRectGetMaxY(bounds);
+    
+    CGMutablePathRef path = CGPathCreateMutable();
+    DoricAddEllipticArcPath(path, (CGPoint){
+        minX + leftTop, minY + leftTop
+    }, leftTop, M_PI, 3 * M_PI_2);
+    DoricAddEllipticArcPath(path, (CGPoint){
+        maxX - rightTop, minY + rightTop
+    }, rightTop, 3 * M_PI_2, 0);
+    DoricAddEllipticArcPath(path, (CGPoint){
+        maxX - rightBottom, maxY -rightBottom
+    }, rightBottom, 0, M_PI_2);
+    DoricAddEllipticArcPath(path, (CGPoint){
+        minX + leftBottom, maxY - leftBottom
+    }, leftBottom, M_PI_2, M_PI);
+    CGPathCloseSubpath(path);
+    return path;
+}
+
+
+
 @interface DoricViewNode()
 @property (nonatomic,strong) NSMutableDictionary *callbackIds;
 @end
@@ -79,7 +118,25 @@
         if([prop isKindOfClass:NSNumber.class]) {
             view.layer.cornerRadius = [(NSNumber *)prop floatValue];
         } else if([prop isKindOfClass:NSDictionary.class]) {
-            
+            NSDictionary *dic = prop;
+            CGFloat leftTop = [(NSNumber *)[dic objectForKey:@"leftTop"] floatValue];
+            CGFloat rightTop = [(NSNumber *)[dic objectForKey:@"rightTop"] floatValue];
+            CGFloat rightBottom = [(NSNumber *)[dic objectForKey:@"rightBottom"] floatValue];
+            CGFloat leftBottom = [(NSNumber *)[dic objectForKey:@"leftBottom"] floatValue];
+            CALayer *mask = nil;
+            if(ABS(leftTop - rightTop) > CGFLOAT_MIN
+               ||ABS(leftTop - rightBottom) > CGFLOAT_MIN
+               ||ABS(leftTop - leftBottom) > CGFLOAT_MIN) {
+                view.layer.cornerRadius = 0;
+                CAShapeLayer *shapeLayer = [CAShapeLayer layer];
+                CGPathRef path = DoricCreateRoundedRectPath(self.view.bounds, leftTop, rightTop, rightBottom, leftBottom);
+                shapeLayer.path = path;
+                CGPathRelease(path);
+                mask = shapeLayer;
+            } else {
+                view.layer.cornerRadius = leftTop;
+            }
+            view.layer.mask = mask;
         }
     } else if([name isEqualToString:@"shadow"]) {
         NSDictionary *dic = prop;

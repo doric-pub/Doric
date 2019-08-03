@@ -5,6 +5,7 @@ import android.os.Looper;
 
 import com.github.penfeizhou.doric.async.AsyncCall;
 import com.github.penfeizhou.doric.async.AsyncResult;
+import com.github.penfeizhou.doric.dev.WSClient;
 import com.github.penfeizhou.doric.engine.DoricJSEngine;
 import com.github.penfeizhou.doric.utils.DoricConstant;
 import com.github.penfeizhou.doric.utils.DoricLog;
@@ -25,6 +26,7 @@ public class DoricDriver implements IDoricDriver {
     private final ExecutorService mBridgeExecutor;
     private final Handler mUIHandler;
     private final Handler mJSHandler;
+    private WSClient wsClient;
 
     @Override
     public AsyncResult<JSDecoder> invokeContextEntityMethod(final String contextId, final String method, final Object... args) {
@@ -117,5 +119,16 @@ public class DoricDriver implements IDoricDriver {
     @Override
     public DoricRegistry getRegistry() {
         return doricJSEngine.getRegistry();
+    }
+
+    @Override
+    public void connectDevKit(String url) {
+        wsClient = new WSClient(url);
+    }
+
+    @Override
+    public void disconnectDevKit() {
+        wsClient.close();
+        wsClient = null;
     }
 }

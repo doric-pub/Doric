@@ -21,14 +21,20 @@ public class DoricContext {
     private final Map<String, DoricJavaPlugin> mPluginMap = new HashMap<>();
     private final Context mContext;
     private RootNode mRootNode = new RootNode(this);
+    private final String source;
 
-    DoricContext(Context context, String contextId) {
+    DoricContext(Context context, String contextId, String source) {
         this.mContext = context;
         this.mContextId = contextId;
+        this.source = source;
     }
 
-    public static DoricContext create(Context context, String script, String alias) {
-        return DoricContextManager.getInstance().createContext(context, script, alias);
+    public String getSource() {
+        return source;
+    }
+
+    public static DoricContext create(Context context, String script, String source) {
+        return DoricContextManager.getInstance().createContext(context, script, source);
     }
 
     public AsyncResult<JSDecoder> callEntity(String methodName, Object... args) {
@@ -77,5 +83,9 @@ public class DoricContext {
             mPluginMap.put(doricMetaInfo.getName(), plugin);
         }
         return plugin;
+    }
+
+    public void reload(String script) {
+        getDriver().createContext(mContextId, script, source);
     }
 }

@@ -18,4 +18,12 @@ public class Doric {
         return sApplication;
     }
 
+    public static void connectDevKit(String url) {
+        DoricDriver.getInstance().connectDevKit(url);
+    }
+
+    public static void disconnectDevKit() {
+        DoricDriver.getInstance().disconnectDevKit();
+    }
+
 }

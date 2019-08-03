@@ -4,7 +4,9 @@ import android.content.Context;
 
 import com.github.penfeizhou.doric.async.AsyncResult;
 
+import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -33,7 +35,7 @@ public class DoricContextManager {
 
     DoricContext createContext(Context context, final String script, final String source) {
         final String contextId = String.valueOf(counter.incrementAndGet());
-        final DoricContext doricContext = new DoricContext(context, contextId);
+        final DoricContext doricContext = new DoricContext(context, contextId, source);
         doricContextMap.put(contextId, doricContext);
         doricContext.getDriver().createContext(contextId, script, source);
         return doricContext;
@@ -62,5 +64,13 @@ public class DoricContextManager {
 
     public static DoricContext getContext(String contextId) {
         return getInstance().doricContextMap.get(contextId);
+    }
+
+    public static Set<String> getKeySet() {
+        return getInstance().doricContextMap.keySet();
+    }
+
+    public static Collection<DoricContext> aliveContexts() {
+        return getInstance().doricContextMap.values();
     }
 }

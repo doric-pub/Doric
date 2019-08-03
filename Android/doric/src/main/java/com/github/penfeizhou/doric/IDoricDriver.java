@@ -24,4 +24,8 @@ public interface IDoricDriver {
     AsyncResult<Boolean> destroyContext(final String contextId);
 
     DoricRegistry getRegistry();
+
+    void connectDevKit(String url);
+
+    void disconnectDevKit();
 }

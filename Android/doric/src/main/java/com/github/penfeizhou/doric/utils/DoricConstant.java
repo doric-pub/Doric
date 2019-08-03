@@ -47,4 +47,9 @@ public class DoricConstant {
 
 
     public static final String DORIC_ENTITY_RESPONSE = "__response__";
+    public static final String DORIC_ENTITY_INIT = "__init__";
+    public static final String DORIC_ENTITY_CREATE = "__onCreate__";
+    public static final String DORIC_ENTITY_DESTROY = "__onDestroy__";
+    public static final String DORIC_ENTITY_SHOW = "__onShow__";
+    public static final String DORIC_ENTITY_HIDDEN = "__onHidden__";
 }

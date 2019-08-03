@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.github.penfeizhou.doric.async.AsyncResult;
 import com.github.penfeizhou.doric.plugin.DoricJavaPlugin;
+import com.github.penfeizhou.doric.utils.DoricConstant;
 import com.github.penfeizhou.doric.utils.DoricMetaInfo;
 import com.github.penfeizhou.doric.shader.RootNode;
 import com.github.pengfeizhou.jscore.JSDecoder;
@@ -34,7 +35,9 @@ public class DoricContext {
     }
 
     public static DoricContext create(Context context, String script, String source) {
-        return DoricContextManager.getInstance().createContext(context, script, source);
+        DoricContext doricContext = DoricContextManager.getInstance().createContext(context, script, source);
+        doricContext.callEntity(DoricConstant.DORIC_ENTITY_CREATE);
+        return doricContext;
     }
 
     public AsyncResult<JSDecoder> callEntity(String methodName, Object... args) {
@@ -58,6 +61,7 @@ public class DoricContext {
     }
 
     public void teardown() {
+        callEntity(DoricConstant.DORIC_ENTITY_DESTROY);
         DoricContextManager.getInstance().destroyContext(this).setCallback(new AsyncResult.Callback<Boolean>() {
             @Override
             public void onResult(Boolean result) {
@@ -87,5 +91,13 @@ public class DoricContext {
 
     public void reload(String script) {
         getDriver().createContext(mContextId, script, source);
+    }
+
+    public void onShow() {
+        callEntity(DoricConstant.DORIC_ENTITY_SHOW);
+    }
+
+    public void onHidden() {
+        callEntity(DoricConstant.DORIC_ENTITY_HIDDEN);
     }
 }

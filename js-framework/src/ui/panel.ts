@@ -18,7 +18,7 @@ type Frame = { width: number, height: number }
 export abstract class Panel {
     context?: any
     onCreate() { }
-    onDestory() { }
+    onDestroy() { }
     onShow() { }
     onHidden() { }
 
@@ -30,6 +30,7 @@ export abstract class Panel {
     getRootView() {
         return this.__root__
     }
+
     getInitData() {
         return this.__data__
     }
@@ -48,8 +49,8 @@ export abstract class Panel {
     }
 
     @NativeCall
-    private __onDestory__() {
-        this.onDestory()
+    private __onDestroy__() {
+        this.onDestroy()
     }
 
     @NativeCall

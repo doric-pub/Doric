@@ -41,10 +41,10 @@ class CounterView extends ViewHolder {
             offsetY: 10,
         }
         vlayout.shadow = {
-            color: Color.parse("#00ff00"),
+            color: Color.parse("#ffff00"),
             opacity: 0.5,
             radius: 20,
-            offsetX: -10,
+            offsetX: 10,
             offsetY: 10,
         }
         vlayout.corners = 20

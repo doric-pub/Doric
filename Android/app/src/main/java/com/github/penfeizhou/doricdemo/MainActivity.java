@@ -5,9 +5,12 @@ import android.os.Bundle;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import com.github.penfeizhou.doric.Doric;
 import com.github.penfeizhou.doric.DoricContext;
 import com.github.penfeizhou.doric.utils.DoricUtils;
 import com.github.pengfeizhou.jscore.JSONBuilder;
+
+import java.io.IOException;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -22,6 +25,13 @@ public class MainActivity extends AppCompatActivity {
                 .put("height", ViewGroup.LayoutParams.MATCH_PARENT));
         doricContext.callEntity("log");
         doricContext.getRootNode().setRootView((FrameLayout) findViewById(R.id.root));
+        Doric.connectDevKit("wss://192.168.11.38:7777");
+        LocalServer localServer = new LocalServer(getApplicationContext(), 8910);
+        try {
+            localServer.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

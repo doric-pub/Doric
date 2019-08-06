@@ -53,6 +53,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)layoutByParent:(DoricGroupNode *)parent;
 
 + (DoricViewNode *)create:(DoricContext *)context withType:(NSString *)type;
+
+- (void)requestLayout;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -1,15 +1,24 @@
 PODS:
-  - Doric (0.1.0)
+  - Doric (0.1.0):
+    - SDWebImage (~> 5.0)
+  - SDWebImage (5.0.6):
+    - SDWebImage/Core (= 5.0.6)
+  - SDWebImage/Core (5.0.6)
 
 DEPENDENCIES:
   - Doric (from `../`)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - SDWebImage
 
 EXTERNAL SOURCES:
   Doric:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Doric: 302e4bcf98fb021ca88a5cd986afde45c7cf6320
+  Doric: 3b2bd0260ddecb3a7ec6ed95a88ace58c2a75685
+  SDWebImage: 920f1a2ff1ca8296ad34f6e0510a1ef1d70ac965
 
 PODFILE CHECKSUM: 012563d71439e7e33e976dca3b59664ed56cee39
 

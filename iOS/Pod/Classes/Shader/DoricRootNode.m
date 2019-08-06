@@ -14,8 +14,11 @@
 
 - (void)render:(NSDictionary *)props {
     [self blend:props];
+    [self requestLayout];
+}
+
+- (void)requestLayout {
     [self measureByParent:self];
     [self layoutByParent:self];
 }
-
 @end

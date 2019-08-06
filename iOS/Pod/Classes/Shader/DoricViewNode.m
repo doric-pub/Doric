@@ -178,7 +178,11 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
 }
 
 - (void)measureByParent:(DoricGroupNode *)parent {
-    
+    DoricLayoutDesc widthSpec = self.layoutParams.width;
+    DoricLayoutDesc heightSpec = self.layoutParams.height;
+    if (widthSpec == LAYOUT_WRAP_CONTENT || heightSpec == LAYOUT_WRAP_CONTENT) {
+        [self.view sizeToFit];
+    }
 }
 
 - (void)layoutByParent:(DoricGroupNode *)parent {
@@ -294,6 +298,10 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
 
 - (void)setCenterY:(CGFloat)centerY {
     ((UIView *)self.view).centerY = centerY;
+}
+
+- (void)requestLayout {
+    [self.parent requestLayout];
 }
 
 @end

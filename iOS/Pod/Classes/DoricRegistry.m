@@ -12,6 +12,7 @@
 #import "DoricVLayoutNode.h"
 #import "DoricHLayoutNode.h"
 #import "DoricTextNode.h"
+#import "DoricImageNode.h"
 
 @interface DoricRegistry ()
 
@@ -41,7 +42,7 @@
     [self registerViewNode:DoricVLayoutNode.class withName:@"VLayout"];
     [self registerViewNode:DoricHLayoutNode.class withName:@"HLayout"];
     [self registerViewNode:DoricTextNode.class withName:@"Text"];
-
+    [self registerViewNode:DoricImageNode.class withName:@"Image"];
 }
 
 - (void)registerJSBundle:(NSString *)bundle withName:(NSString *)name {

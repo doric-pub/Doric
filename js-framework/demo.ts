@@ -1,4 +1,4 @@
-import { HLayout, StackConfig, ViewHolder, VMPanel, View, ViewModel, WRAP_CONTENT, Gravity, Mutable, NativeCall, Text, Color, VLayout, Panel, log, logw, loge, Group, Stack, } from "./index"
+import { HLayout, Image, ViewHolder, VMPanel, View, ViewModel, WRAP_CONTENT, Gravity, Mutable, NativeCall, Text, Color, VLayout, Panel, log, logw, loge, Group, Stack, } from "./index"
 
 
 interface CountModel {
@@ -53,6 +53,11 @@ class CounterView extends ViewHolder {
         // root.bgColor = Color.parse('#00ff00')
         vlayout.bgColor = Color.parse('#ff00ff')
         root.addChild(vlayout)
+        const iv = new Image
+        // iv.width = iv.height = 100
+        iv.imageUrl = "https://misc.aotu.io/ONE-SUNDAY/SteamEngine.png"
+        //iv.bgColor = Color.parse('#00ff00')
+        root.addChild(iv)
     }
 
     setNumber(n: number) {

@@ -45,5 +45,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     api 'com.github.pengfeizhou:jsc4a:0.1.0'
-    implementation("com.squareup.okhttp3:okhttp:3.11.0")
+    implementation "com.squareup.okhttp3:okhttp:3.11.0"
+    implementation 'com.github.penfeizhou.android.animation:glide-plugin:1.0.1'
 }

@@ -42,4 +42,5 @@ dependencies {
     api 'com.github.pengfeizhou:jsc4a:0.1.0'
     implementation "com.squareup.okhttp3:okhttp:3.11.0"
     implementation 'com.github.penfeizhou.android.animation:glide-plugin:1.0.1'
+    api 'org.nanohttpd:nanohttpd:2.3.1'
 }

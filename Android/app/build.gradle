@@ -16,11 +16,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    sourceSets {
-        main {
-            assets.srcDirs = [project.rootDir.getParent() + "/js-framework/demo"]
-        }
-    }
 }
 
 dependencies {

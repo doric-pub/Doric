@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        DoricContext doricContext = DoricContext.create(this, DoricUtils.readAssetFile("demo.js"), "demo");
+        DoricContext doricContext = DoricContext.create(this, DoricUtils.readAssetFile("demo/demo.js"), "demo");
         doricContext.callEntity("__init__", new JSONBuilder()
                 .put("width", ViewGroup.LayoutParams.MATCH_PARENT)
                 .put("height", ViewGroup.LayoutParams.MATCH_PARENT));

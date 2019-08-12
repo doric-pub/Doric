@@ -1,5 +1,6 @@
 <template>
   <div class="hello">
+    <img alt="Vue logo" width="200px" src="../assets/doric.svg" />
     <h1>{{ title }}</h1>
     <p>
       Dev tools for doric.
@@ -9,7 +10,8 @@
     <h3>Running Contexts</h3>
     <ul>
       <li v-for="item in runningContexts" :key="item.id">
-        <a>source: {{item.source}} id: {{item.id}}</a>
+        <!-- <a v-bind:href="'#context/'+item.source">source: {{item.source}} id: {{item.id}}</a> -->
+        <router-link v-bind:to="'/context/' + item.id">{{item.source}}</router-link>
       </li>
     </ul>
   </div>
@@ -25,7 +27,7 @@ export default {
   },
   data: () => {
     return {
-      runningContexts: [{ source: "xxxx", id: "xxx" }]
+      runningContexts: [{ source: "contextSource", id: "contexId" }]
     };
   },
   methods: {

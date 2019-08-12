@@ -1,13 +1,12 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
+    <img alt="Vue logo" width="200px" src="./assets/doric.svg" />
     <!-- <HelloWorld msg="Welcome to Your Vue.js App" /> -->
-    <Debug msg="Debugger" />
+    <Debug title="Doric Debug Pannel" />
   </div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
 import Debug from "./components/Debug.vue";
 import axios from "axios";
 
@@ -15,7 +14,6 @@ console.log(typeof vm);
 export default {
   name: "app",
   components: {
-    // HelloWorld,
     Debug
   }
 };

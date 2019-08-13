@@ -15,4 +15,3 @@ program
         require('./scripts/watcher')
     })
 program.parse(process.argv)
-console.log(process.cwd())

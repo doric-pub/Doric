@@ -1,6 +1,7 @@
 package com.github.penfeizhou.doric;
 
 import android.content.Context;
+import android.view.ViewGroup;
 
 import com.github.penfeizhou.doric.async.AsyncResult;
 import com.github.penfeizhou.doric.plugin.DoricJavaPlugin;
@@ -8,6 +9,9 @@ import com.github.penfeizhou.doric.utils.DoricConstant;
 import com.github.penfeizhou.doric.utils.DoricMetaInfo;
 import com.github.penfeizhou.doric.shader.RootNode;
 import com.github.pengfeizhou.jscore.JSDecoder;
+import com.github.pengfeizhou.jscore.JSONBuilder;
+
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +28,7 @@ public class DoricContext {
     private RootNode mRootNode = new RootNode(this);
     private final String source;
     private String script;
+    private JSONObject initParams;
 
     DoricContext(Context context, String contextId, String source) {
         this.mContext = context;
@@ -44,6 +49,13 @@ public class DoricContext {
         doricContext.script = script;
         doricContext.callEntity(DoricConstant.DORIC_ENTITY_CREATE);
         return doricContext;
+    }
+
+    public void init(int width, int height) {
+        this.initParams = new JSONBuilder()
+                .put("width", width)
+                .put("height", height).toJSONObject();
+        callEntity(DoricConstant.DORIC_ENTITY_INIT, this.initParams);
     }
 
     public AsyncResult<JSDecoder> callEntity(String methodName, Object... args) {
@@ -97,6 +109,7 @@ public class DoricContext {
 
     public void reload(String script) {
         getDriver().createContext(mContextId, script, source);
+        callEntity(DoricConstant.DORIC_ENTITY_INIT, this.initParams);
     }
 
     public void onShow() {

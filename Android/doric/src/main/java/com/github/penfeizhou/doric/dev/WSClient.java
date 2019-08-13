@@ -51,7 +51,7 @@ public class WSClient extends WebSocketListener {
             String source = jsonObject.optString("source");
             String script = jsonObject.optString("script");
             for (DoricContext context : DoricContextManager.aliveContexts()) {
-                if (source.equals(context.getSource())) {
+                if (source.contains(context.getSource())) {
                     context.reload(script);
                 }
             }

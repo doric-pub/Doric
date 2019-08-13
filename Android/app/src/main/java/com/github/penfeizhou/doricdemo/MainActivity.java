@@ -20,13 +20,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        DoricContext doricContext = DoricContext.create(this, DoricUtils.readAssetFile("demo/Snake.js"), "demo for test");
-        doricContext.callEntity("__init__", new JSONBuilder()
-                .put("width", ViewGroup.LayoutParams.MATCH_PARENT)
-                .put("height", ViewGroup.LayoutParams.MATCH_PARENT));
+        DoricContext doricContext = DoricContext.create(this, DoricUtils.readAssetFile("demo/Snake.js"), "test");
+        doricContext.init(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         doricContext.callEntity("log");
         doricContext.getRootNode().setRootView((FrameLayout) findViewById(R.id.root));
-        Doric.connectDevKit("wss://192.168.11.38:7777");
+        Doric.connectDevKit("ws://192.168.11.38:7777");
         LocalServer localServer = new LocalServer(getApplicationContext(), 8910);
         try {
             localServer.start();

@@ -24,6 +24,7 @@
     "chokidar": "^3.0.2",
     "commander": "^2.20.0",
     "nodejs-websocket": "^1.7.2",
+    "qrcode-terminal": "^0.12.0",
     "rollup": "^1.18.0",
     "shelljs": "^0.8.3",
     "typescript": "^3.5.3"

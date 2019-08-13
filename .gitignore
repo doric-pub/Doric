@@ -12,7 +12,7 @@
 bin/
 gen/
 out/
-
+test/
 # Gradle files
 .gradle/
 build/

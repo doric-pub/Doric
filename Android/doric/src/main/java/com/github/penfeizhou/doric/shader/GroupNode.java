@@ -9,7 +9,9 @@ import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,6 +34,7 @@ public abstract class GroupNode<F extends ViewGroup> extends ViewNode<F> {
             case "children":
                 JSArray jsArray = prop.asArray();
                 int i;
+                List<ViewNode> tobeRemoved = new ArrayList<>();
                 for (i = 0; i < jsArray.size(); i++) {
                     JSValue jsValue = jsArray.get(i);
                     if (!jsValue.isObject()) {
@@ -47,11 +50,23 @@ public abstract class GroupNode<F extends ViewGroup> extends ViewNode<F> {
                         child.mParent = this;
                         child.mId = id;
                         mChildrenNode.put(id, child);
-                    } else if (i != child.index) {
-                        mIndexInfo.remove(i);
-                        child.index = i;
-                        mView.removeView(child.getView());
+                    } else {
+                        if (i != child.index) {
+                            mIndexInfo.remove(i);
+                            child.index = i;
+                            mView.removeView(child.getView());
+                        }
+                        tobeRemoved.remove(child);
                     }
+
+                    ViewNode node = mIndexInfo.get(i);
+
+                    if (node != null && node != child) {
+                        mView.removeViewAt(i);
+                        mIndexInfo.remove(i);
+                        tobeRemoved.add(node);
+                    }
+
                     ViewGroup.LayoutParams params = child.getLayoutParams();
                     if (params == null) {
                         params = generateDefaultLayoutParams();
@@ -62,13 +77,19 @@ public abstract class GroupNode<F extends ViewGroup> extends ViewNode<F> {
                         mIndexInfo.put(i, child);
                     }
                 }
-                while (i < mView.getChildCount()) {
-                    mView.removeViewAt(mView.getChildCount() - 1);
-                    if (mIndexInfo.get(i) != null) {
-                        mChildrenNode.remove(mIndexInfo.get(i).getId());
+
+                while (i < mIndexInfo.size()) {
+                    ViewNode node = mIndexInfo.get(i);
+                    if (node != null) {
+                        mChildrenNode.remove(node.getId());
                         mIndexInfo.remove(i);
+                        tobeRemoved.remove(node);
                     }
                     i++;
+                }
+
+                for (ViewNode node : tobeRemoved) {
+                    mChildrenNode.remove(node.getId());
                 }
                 break;
             default:

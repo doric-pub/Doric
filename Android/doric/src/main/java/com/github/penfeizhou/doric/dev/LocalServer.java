@@ -58,6 +58,26 @@ public class LocalServer extends NanoHTTPD {
                 return jsonArray;
             }
         });
+        commandMap.put("context", new APICommand() {
+            @Override
+            public String name() {
+                return "context";
+            }
+
+            @Override
+            public Object exec(IHTTPSession session) {
+                String id = session.getParms().get("id");
+                DoricContext doricContext = DoricContextManager.getContext(id);
+                if (doricContext != null) {
+                    return new JSONBuilder()
+                            .put("id", doricContext.getContextId())
+                            .put("source", doricContext.getSource())
+                            .put("script", doricContext.getScript())
+                            .toJSONObject();
+                }
+                return "{}";
+            }
+        });
     }
 
     private static String getIpAddressString() {

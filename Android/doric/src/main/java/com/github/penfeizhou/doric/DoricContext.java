@@ -23,6 +23,7 @@ public class DoricContext {
     private final Context mContext;
     private RootNode mRootNode = new RootNode(this);
     private final String source;
+    private String script;
 
     DoricContext(Context context, String contextId, String source) {
         this.mContext = context;
@@ -34,8 +35,13 @@ public class DoricContext {
         return source;
     }
 
+    public String getScript() {
+        return script;
+    }
+
     public static DoricContext create(Context context, String script, String source) {
         DoricContext doricContext = DoricContextManager.getInstance().createContext(context, script, source);
+        doricContext.script = script;
         doricContext.callEntity(DoricConstant.DORIC_ENTITY_CREATE);
         return doricContext;
     }

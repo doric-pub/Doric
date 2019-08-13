@@ -33,7 +33,6 @@
 </template>
 
 <script>
-console.log(`ws://${window.location.host}`);
 import axios from "axios";
 export default {
   name: "Context",
@@ -46,7 +45,7 @@ export default {
   },
   methods: {
     goBack() {
-      this.$router.go(-1);
+      this.$router.push({ path: "/" });
     },
     debug() {
       console.log("debug");
@@ -57,7 +56,6 @@ export default {
     axios.get(`/api/context?id=${this.$route.params.id}`).then(res => {
       this.source = res.data.source;
       this.script = res.data.script;
-      console.log(this.script);
     });
   },
   updated: function() {
@@ -75,18 +73,22 @@ div {
 p span {
   color: #409eff;
 }
+
 .context {
   font-size: 100%;
 }
+
 .container {
   margin-top: 30px;
 
   margin-left: 30px;
 }
+
 .aside {
   text-align: left;
   padding-left: 10px;
 }
+
 .script {
   text-align: left;
   font-size: 50%;

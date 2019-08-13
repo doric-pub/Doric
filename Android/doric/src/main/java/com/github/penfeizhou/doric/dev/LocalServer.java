@@ -78,6 +78,7 @@ public class LocalServer extends NanoHTTPD {
                 return "{}";
             }
         });
+
     }
 
     private static String getIpAddressString() {

@@ -2,14 +2,12 @@
 
 var program = require('commander');
 
-
-var program = require('commander');
-
 program
     .command('create <name>')
     .option('-n, --native', 'Native')
     .action(function (name, cmd) {
         console.log('create ' + name + (cmd.native ? ' native' : 'js'))
+        require('./scripts/init')(name)
     })
 program
     .command('dev')

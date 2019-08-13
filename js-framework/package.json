@@ -1,13 +1,13 @@
 {
-  "name": "doric-js-framework",
+  "name": "doric",
   "version": "0.1.0",
   "description": "The JS Framework of Doric",
-  "main": "index.js",
+  "main": "build/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc -p .&& rollup -c",
     "dev": "tsc -w -p . & rollup -c -w",
-    "clean": "rm -rf build && rm -rf demo && rm -rf bundle"
+    "clean": "rm -rf build &&  rm -rf bundle"
   },
   "repository": {
     "type": "https",
@@ -22,7 +22,6 @@
   "dependencies": {
     "reflect-metadata": "^0.1.13",
     "rollup": "^1.17.0",
-    "rollup-plugin-commonjs": "^10.0.1",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-watch": "^4.3.1",
     "tslib": "^1.10.0",

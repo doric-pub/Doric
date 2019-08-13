@@ -12,9 +12,8 @@ setTimeout(() => {
     chokidar.watch(process.cwd() + "/bundle", {
         ignored: /(^|[\/\\])\../,
     }).on('change', (path) => {
-        console.log('path is ', path)
         fs.readFile(path, 'utf-8', (error, data) => {
-            console.log('send data ', data)
+            console.log('File change:', path)
             ws.connections.forEach(e => {
                 e.sendText(JSON.stringify({
                     script: data,
@@ -44,8 +43,25 @@ function getIPAdress() {
 
 const qrcode = require('qrcode-terminal');
 const ips = getIPAdress()
-console.log(`本机IP是${ips}`)
 ips.forEach(e => {
     console.log(`IP:${e}`)
     qrcode.generate(e, { small: true });
 })
+
+const keypress = require('keypress');
+
+keypress(process.stdin);
+process.stdin.on('keypress', function (ch, key) {
+    if (key && key.ctrl && key.name == 'r') {
+        ips.forEach(e => {
+            console.log(`IP:${e}`)
+            qrcode.generate(e, { small: true });
+        })
+    }
+    if (key && key.ctrl && key.name == 'c') {
+        process.stdin.pause();
+        process.exit(0);
+    }
+});
+process.stdin.setRawMode(true);
+process.stdin.resume();

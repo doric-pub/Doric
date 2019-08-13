@@ -31,9 +31,9 @@
     UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(test:)];
     [label addGestureRecognizer:recognizer];
     label.userInteractionEnabled = YES;
-    NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"demo" ofType:@"js"];
+    NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"Snake" ofType:@"js"];
     NSString *jsContent = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
-    self.doricContext = [[DoricContext alloc] initWithScript:jsContent source:@"demo"];
+    self.doricContext = [[DoricContext alloc] initWithScript:jsContent source:@"Snake"];
     self.doricContext.rootNode.view = self.view;
     [self.doricContext callEntity:@"__init__",@{@"width": [NSNumber numberWithFloat:self.view.width],
                                                 @"height":[NSNumber numberWithFloat:self.view.height]},nil];

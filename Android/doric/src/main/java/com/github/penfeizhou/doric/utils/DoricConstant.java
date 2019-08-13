@@ -8,7 +8,7 @@ package com.github.penfeizhou.doric.utils;
 public class DoricConstant {
     public static final String DORIC_BUNDLE_SANDBOX = "bundle/doric-sandbox.js";
     public static final String DORIC_BUNDLE_LIB = "bundle/doric-lib.js";
-    public static final String DORIC_MODULE_LIB = "./index";
+    public static final String DORIC_MODULE_LIB = "doric";
 
 
     public static final String INJECT_LOG = "nativeLog";

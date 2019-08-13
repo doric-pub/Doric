@@ -9,7 +9,7 @@
 
 NSString * const DORIC_BUNDLE_SANDBOX = @"doric-sandbox";
 NSString * const DORIC_BUNDLE_LIB = @"doric-lib";
-NSString * const DORIC_MODULE_LIB = @"./index";
+NSString * const DORIC_MODULE_LIB = @"doric";
 
 
 NSString * const INJECT_LOG = @"nativeLog";

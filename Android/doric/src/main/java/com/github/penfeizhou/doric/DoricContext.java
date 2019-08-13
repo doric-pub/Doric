@@ -108,6 +108,7 @@ public class DoricContext {
     }
 
     public void reload(String script) {
+        this.script = script;
         getDriver().createContext(mContextId, script, source);
         callEntity(DoricConstant.DORIC_ENTITY_INIT, this.initParams);
     }

@@ -18,6 +18,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) DoricDriver *driver;
 @property (nonatomic,strong) NSMutableDictionary *pluginInstanceMap;
 @property (nonatomic,strong) DoricRootNode *rootNode;
+@property (nonatomic,strong) NSString *source;
+@property (nonatomic,strong) NSString *script;;
+@property (nonatomic,strong) NSDictionary *initialParams;
 
 - (instancetype)initWithScript:(NSString *)script source:(NSString *)source;
 
@@ -26,6 +29,14 @@ NS_ASSUME_NONNULL_BEGIN
 - (DoricAsyncResult *)callEntity:(NSString *)method withArguments:(va_list)args;
 
 - (DoricAsyncResult *)callEntity:(NSString *)method withArgumentsArray:(NSArray *)args;
+
+- (void)initContextWithWidth:(CGFloat)width height:(CGFloat)height;
+
+- (void)reload:(NSString *)script;
+
+- (void)onShow;
+
+- (void)onHidden;
 
 @end
 

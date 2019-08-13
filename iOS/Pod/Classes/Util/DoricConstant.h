@@ -37,3 +37,13 @@ extern NSString * const DORIC_BRIDGE_RESOLVE;
 extern NSString * const DORIC_BRIDGE_REJECT;
 
 extern NSString * const DORIC_ENTITY_RESPONSE;
+
+extern NSString * const DORIC_ENTITY_INIT;
+
+extern NSString * const DORIC_ENTITY_CREATE;
+
+extern NSString * const DORIC_ENTITY_DESTROY;
+
+extern NSString * const DORIC_ENTITY_SHOW;
+
+extern NSString * const DORIC_ENTITY_HIDDEN;

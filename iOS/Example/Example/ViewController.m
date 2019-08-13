@@ -26,8 +26,7 @@
     NSString *jsContent = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
     self.doricContext = [[DoricContext alloc] initWithScript:jsContent source:@"Snake"];
     self.doricContext.rootNode.view = self.view;
-    [self.doricContext callEntity:@"__init__",@{@"width": [NSNumber numberWithFloat:self.view.width],
-                                                @"height":[NSNumber numberWithFloat:self.view.height]},nil];
+    [self.doricContext initContextWithWidth:self.view.width height:self.view.height];
 }
 
 

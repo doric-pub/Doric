@@ -54,3 +54,13 @@ NSString * const DORIC_BRIDGE_RESOLVE = @"jsCallResolve";
 NSString * const DORIC_BRIDGE_REJECT = @"jsCallReject";
 
 NSString * const DORIC_ENTITY_RESPONSE = @"__response__";
+
+NSString * const DORIC_ENTITY_INIT = @"__init__";
+
+NSString * const DORIC_ENTITY_CREATE = @"__onCreate__";
+
+NSString * const DORIC_ENTITY_DESTROY = @"__onDestroy__";
+
+NSString * const DORIC_ENTITY_SHOW = @"__onShow__";
+
+NSString * const DORIC_ENTITY_HIDDEN = @"__onHidden__";

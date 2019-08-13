@@ -25,11 +25,17 @@ android {
 
 afterEvaluate {
     buildJSBundle.exec()
+    buildDemo.exec()
     buildDebugger.exec()
 }
 
 task buildJSBundle(type: Exec) {
     workingDir project.rootDir.getParent() + "/js-framework"
+    commandLine 'npm', 'run', 'build'
+}
+
+task buildDemo(type: Exec) {
+    workingDir project.rootDir.getParent() + "/demo"
     commandLine 'npm', 'run', 'build'
 }
 

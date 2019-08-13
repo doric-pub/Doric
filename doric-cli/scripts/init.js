@@ -1,4 +1,5 @@
 var fs = require('fs');
+require('shelljs/global')
 
 module.exports = function (name) {
     if (fs.existsSync(name)) {
@@ -10,26 +11,15 @@ module.exports = function (name) {
             return console.error(err);
         }
         console.log(`create dir ${name} success`);
-        fs.writeFileSync(`${name}/package.json`, `{
-    "name": "${name}",
-    "version": "0.1.0",
-    "main": "index.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "build": "tsc -p .&& rollup -c",
-        "dev": "tsc -w -p . & rollup -c -w",
-        "clean": "rm -rf build && rm -rf demo && rm -rf bundle"
-    },
-    "license": "Apache-2.0",
-    "dependencies": {
-        "reflect-metadata": "^0.1.13",
-        "rollup": "^1.17.0",
-        "rollup-plugin-commonjs": "^10.0.1",
-        "rollup-plugin-node-resolve": "^5.2.0",
-        "rollup-watch": "^4.3.1",
-        "tslib": "^1.10.0",
-        "typescript": "^3.5.3"
-    }
-}`)
+        fs.writeFileSync(`${name}/package.json`, fs.readFileSync(`${__dirname}/../contents/_package.json`).toString().replace(/__\$__/g, name))
+        fs.writeFileSync(`${name}/tsconfig.json`, fs.readFileSync(`${__dirname}/../contents/_tsconfig.json`))
+        fs.writeFileSync(`${name}/rollup.config.js`, fs.readFileSync(`${__dirname}/../contents/_rollup.config.js`))
+        fs.writeFileSync(`${name}/.gitignore`, fs.readFileSync(`${__dirname}/../contents/_gitignore`))
+        fs.mkdirSync(`${name}/src`)
+        fs.writeFileSync(`${name}/src/${name}.ts`, fs.readFileSync(`${__dirname}/../contents/$.ts`).toString().replace(/__\$__/g, name))
+        fs.writeFileSync(`${name}/index.ts`, `export default ['src/${name}']`)
+        exec(`cd ${name} && npm install && npm run build`, () => {
+            console.log(`Create Doric Project ${name} Success`)
+        })
     })
 }

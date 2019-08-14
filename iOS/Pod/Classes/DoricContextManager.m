@@ -62,4 +62,8 @@
     };
 }
 
+- (NSArray *)aliveContexts {
+    return [self.doricContextMap allValues];
+}
+
 @end

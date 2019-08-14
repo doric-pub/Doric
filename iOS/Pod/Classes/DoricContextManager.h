@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)destroyContext:(DoricContext *)context;
 
 - (DoricContext *)getContext:(NSString *)contextId;
+
+- (NSArray *)aliveContexts;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -1,9 +1,11 @@
 PODS:
   - Doric (0.1.0):
     - SDWebImage (~> 5.0)
+    - SocketRocket (~> 0.5.1)
   - SDWebImage (5.0.6):
     - SDWebImage/Core (= 5.0.6)
   - SDWebImage/Core (5.0.6)
+  - SocketRocket (0.5.1)
 
 DEPENDENCIES:
   - Doric (from `../`)
@@ -11,14 +13,16 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - SDWebImage
+    - SocketRocket
 
 EXTERNAL SOURCES:
   Doric:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Doric: 3b2bd0260ddecb3a7ec6ed95a88ace58c2a75685
+  Doric: 79268ea6e03e7dee56b072e532d9a29f50ccd72d
   SDWebImage: 920f1a2ff1ca8296ad34f6e0510a1ef1d70ac965
+  SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
 
 PODFILE CHECKSUM: 012563d71439e7e33e976dca3b59664ed56cee39
 

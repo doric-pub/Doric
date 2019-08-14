@@ -12,6 +12,7 @@ import com.github.penfeizhou.doric.DoricDriver;
 import com.github.pengfeizhou.jscore.JSONBuilder;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -76,6 +77,34 @@ public class LocalServer extends NanoHTTPD {
                             .toJSONObject();
                 }
                 return "{}";
+            }
+        });
+        commandMap.put("reload", new APICommand() {
+            @Override
+            public String name() {
+                return "reload";
+            }
+
+            @Override
+            public Object exec(IHTTPSession session) {
+                Map<String, String> files = new HashMap<>();
+                try {
+                    session.parseBody(files);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                String id = session.getParms().get("id");
+                DoricContext doricContext = DoricContextManager.getContext(id);
+                if (doricContext != null) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(files.get("postData"));
+                        doricContext.reload(jsonObject.optString("script"));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return "success";
+                }
+                return "fail";
             }
         });
 

@@ -12,6 +12,7 @@
     "babel-plugin-prismjs": "^1.1.1",
     "core-js": "^2.6.5",
     "element-ui": "^2.11.1",
+    "monaco-editor": "^0.17.1",
     "prismjs": "^1.17.1",
     "vue": "^2.6.10",
     "vue-prism": "^1.0.5",

@@ -1,7 +1,11 @@
 PODS:
   - Doric (0.1.0):
+    - GCDWebServer (~> 3.0)
     - SDWebImage (~> 5.0)
     - SocketRocket (~> 0.5.1)
+  - GCDWebServer (3.5.2):
+    - GCDWebServer/Core (= 3.5.2)
+  - GCDWebServer/Core (3.5.2)
   - SDWebImage (5.0.6):
     - SDWebImage/Core (= 5.0.6)
   - SDWebImage/Core (5.0.6)
@@ -12,6 +16,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - GCDWebServer
     - SDWebImage
     - SocketRocket
 
@@ -20,7 +25,8 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Doric: fffcb912bda6820db1165fc7919dce47f9aa0463
+  Doric: 1dae6e8a19a32a27af975f787509cc0658dde095
+  GCDWebServer: ead88cd14596dd4eae4f5830b8877c87c8728990
   SDWebImage: 920f1a2ff1ca8296ad34f6e0510a1ef1d70ac965
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
 

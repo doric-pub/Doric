@@ -12,9 +12,11 @@
 #import "DoricContext.h"
 #import "DoricNativePlugin.h"
 #import "DoricRootNode.h"
+#import "DoricLocalServer.h"
 
 @interface ViewController ()
 @property (nonatomic,strong) DoricContext *doricContext;
+@property (nonatomic,strong) DoricLocalServer *localServer;
 @end
 
 @implementation ViewController
@@ -28,6 +30,9 @@
     self.doricContext.rootNode.view = self.view;
     [self.doricContext initContextWithWidth:self.view.width height:self.view.height];
     [self.doricContext.driver connectDevKit:@"ws://192.168.11.38:7777"];
+    self.localServer = [[DoricLocalServer alloc] init];
+    [self.localServer startWithPort:8910];
+    NSLog(@"00112233");
 }
 
 

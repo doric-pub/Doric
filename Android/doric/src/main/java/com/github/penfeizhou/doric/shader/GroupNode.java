@@ -77,13 +77,14 @@ public abstract class GroupNode<F extends ViewGroup> extends ViewNode<F> {
                         mIndexInfo.put(i, child);
                     }
                 }
-
-                while (i < mIndexInfo.size()) {
+                int count = mView.getChildCount();
+                while (i < count) {
                     ViewNode node = mIndexInfo.get(i);
                     if (node != null) {
                         mChildrenNode.remove(node.getId());
                         mIndexInfo.remove(i);
                         tobeRemoved.remove(node);
+                        mView.removeView(node.getView());
                     }
                     i++;
                 }

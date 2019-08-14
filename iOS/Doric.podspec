@@ -31,11 +31,10 @@ TODO: Add long description of the pod here.
   s.ios.deployment_target = '8.0'
 
   s.source_files = 'Pod/Classes/**/*'
-  #s.resource = "../js-framework/bundle/*.js"
-  s.resource = "Pod/Assets/**/*"
-  # s.resource_bundles = {
-  #   'Doric' => ['Doric/Assets/*.png']
-  # }
+  s.resource = "Pod/Assets/*.js"
+  s.resource_bundles = {
+    'Doric' => ['Pod/Assets/**/*']
+  }
 
   s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'

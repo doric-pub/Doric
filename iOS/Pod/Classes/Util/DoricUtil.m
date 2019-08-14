@@ -6,6 +6,7 @@
 //
 
 #import "DoricUtil.h"
+#import "DoricContext.h"
 
 void DoricLog(NSString * _Nonnull format, ...) {
     va_list args;
@@ -22,4 +23,10 @@ UIColor *DoricColor(NSNumber *number) {
     g = ((colorValue >> 8) & 0xff)/255.0f;
     b = ((colorValue >> 0) & 0xff)/255.0f;
     return [UIColor colorWithRed:r green:g blue:b alpha:a];
+}
+
+NSBundle *DoricBundle() {
+    NSBundle *bundle = [NSBundle bundleForClass:[DoricContext class]];
+    NSURL *url = [bundle URLForResource:@"Doric" withExtension:@"bundle"];
+    return [NSBundle bundleWithURL:url];
 }

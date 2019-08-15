@@ -1,6 +1,7 @@
 const chokidar = require('chokidar')
 const ws = require('./server')
 const fs = require("fs")
+const doMerge = require("./command").doMerge
 
 require('shelljs/global')
 
@@ -13,13 +14,17 @@ setTimeout(() => {
         ignored: /(^|[\/\\])\../,
     }).on('change', (path) => {
         fs.readFile(path, 'utf-8', (error, data) => {
-            console.log('File change:', path)
-            ws.connections.forEach(e => {
-                e.sendText(JSON.stringify({
-                    script: data,
-                    source: path.match(/[^/\\]*$/)[0],
-                }))
-            })
+            if (!path.endsWith('.map')) {
+                console.log('File change:', path)
+                const sourceMap = doMerge(path + ".map")
+                ws.connections.forEach(e => {
+                    e.sendText(JSON.stringify({
+                        script: fs.readFileSync(path),
+                        source: path.match(/[^/\\]*$/)[0],
+                        sourceMap,
+                    }))
+                })
+            }
         })
     });
 }, 3000);

@@ -14,4 +14,14 @@ program
     .action(function () {
         require('./scripts/watcher')
     })
+program
+    .command('build')
+    .action(function () {
+        require('./scripts/command').build()
+    })
+program
+    .command('clean')
+    .action(function () {
+        require('./scripts/command').clean()
+    })
 program.parse(process.argv)

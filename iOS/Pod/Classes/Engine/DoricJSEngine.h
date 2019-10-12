@@ -13,9 +13,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface DoricJSEngine : NSObject
 
-@property(nonatomic,strong) dispatch_queue_t jsQueue;
+@property(nonatomic, strong) dispatch_queue_t jsQueue;
 
-@property(nonatomic,strong) DoricRegistry *registry;
+@property(nonatomic, strong) DoricRegistry *registry;
 
 - (void)prepareContext:(NSString *)contextId script:(NSString *)script source:(NSString *)source;
 

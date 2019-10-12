@@ -15,11 +15,11 @@
 #include <net/if.h>
 #include <ifaddrs.h>
 
-typedef id (^ServerHandler)(GCDWebServerRequest * request);
+typedef id (^ServerHandler)(GCDWebServerRequest *request);
 
-@interface DoricLocalServer()
-@property (nonatomic, strong) GCDWebServer *server;
-@property (nonatomic, strong) NSMutableDictionary *handlers;
+@interface DoricLocalServer ()
+@property(nonatomic, strong) GCDWebServer *server;
+@property(nonatomic, strong) NSMutableDictionary *handlers;
 @end
 
 @implementation DoricLocalServer
@@ -36,14 +36,14 @@ typedef id (^ServerHandler)(GCDWebServerRequest * request);
 - (NSString *)localIPAddress {
     NSString *localIP = nil;
     struct ifaddrs *addrs;
-    if (getifaddrs(&addrs)==0) {
+    if (getifaddrs(&addrs) == 0) {
         const struct ifaddrs *cursor = addrs;
         while (cursor != NULL) {
             if (cursor->ifa_addr->sa_family == AF_INET && (cursor->ifa_flags & IFF_LOOPBACK) == 0) {
                 //NSString *name = [NSString stringWithUTF8String:cursor->ifa_name];
                 //if ([name isEqualToString:@"en0"]) // Wi-Fi adapter
                 {
-                    localIP = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)cursor->ifa_addr)->sin_addr)];
+                    localIP = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *) cursor->ifa_addr)->sin_addr)];
                     break;
                 }
             }
@@ -65,7 +65,7 @@ typedef id (^ServerHandler)(GCDWebServerRequest * request);
         return [GCDWebServerDataResponse responseWithHTML:@"<html><body><p>It's a API request.</p></body></html>"];
     }
     NSBundle *bundle = DoricBundle();
-    NSString *filePath = [NSString stringWithFormat:@"%@/dist%@",bundle.bundlePath,request.path];
+    NSString *filePath = [NSString stringWithFormat:@"%@/dist%@", bundle.bundlePath, request.path];
     NSData *data = [NSData dataWithContentsOfFile:filePath];
     NSURL *url = [NSURL fileURLWithPath:filePath];
     NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
@@ -78,38 +78,38 @@ typedef id (^ServerHandler)(GCDWebServerRequest * request);
     __weak typeof(self) _self = self;
     [self.server addDefaultHandlerForMethod:@"GET"
                                requestClass:[GCDWebServerRequest class]
-                               processBlock:^GCDWebServerResponse * (GCDWebServerRequest * request) {
+                               processBlock:^GCDWebServerResponse *(GCDWebServerRequest *request) {
                                    __strong typeof(_self) self = _self;
                                    return [self handleRequest:request];
-    }];
-    [self.handlers setObject:^id(GCDWebServerRequest *request) {
-        NSMutableArray *array = [[NSMutableArray alloc] init];
-        
-        for(NSValue *value in [[DoricContextManager instance] aliveContexts]) {
-            DoricContext *context = value.nonretainedObjectValue;
-            [array addObject:@{
-                               @"source":context.source,
-                               @"id":context.contextId,
                                }];
-        }
-        return array;
-    }
-                      forKey:@"allContexts"];
-    
     [self.handlers setObject:^id(GCDWebServerRequest *request) {
-        NSString *contextId = [request.query objectForKey:@"id"];
-        DoricContext *context = [[DoricContextManager instance] getContext:contextId];
-        return @{
-                 @"id":context.contextId,
-                 @"source":context.source,
-                 @"script":context.script
-                 };
-    }
+                NSMutableArray *array = [[NSMutableArray alloc] init];
+
+                for (NSValue *value in [[DoricContextManager instance] aliveContexts]) {
+                    DoricContext *context = value.nonretainedObjectValue;
+                    [array addObject:@{
+                            @"source": context.source,
+                            @"id": context.contextId,
+                    }];
+                }
+                return array;
+            }
+                      forKey:@"allContexts"];
+
+    [self.handlers setObject:^id(GCDWebServerRequest *request) {
+                NSString *contextId = [request.query objectForKey:@"id"];
+                DoricContext *context = [[DoricContextManager instance] getContext:contextId];
+                return @{
+                        @"id": context.contextId,
+                        @"source": context.source,
+                        @"script": context.script
+                };
+            }
                       forKey:@"context"];
 }
 
 - (void)startWithPort:(NSUInteger)port {
     [self.server startWithPort:port bonjourName:nil];
-    DoricLog(@"Start Server At %@:%d",[self localIPAddress],port);
+    DoricLog(@"Start Server At %@:%d", [self localIPAddress], port);
 }
 @end

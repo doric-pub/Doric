@@ -18,19 +18,24 @@ typedef NS_ENUM(NSInteger, QueueMode) {
 NS_ASSUME_NONNULL_BEGIN
 
 @interface DoricDriver : NSObject
-+ (instancetype) instance;
++ (instancetype)instance;
 
-@property (nonatomic,strong) DoricRegistry *registry;
+@property(nonatomic, strong) DoricRegistry *registry;
 
 - (DoricAsyncResult *)createContext:(NSString *)contextId script:(NSString *)script source:(NSString *)source;
+
 - (DoricAsyncResult *)destroyContext:(NSString *)contextId;
 
 - (DoricAsyncResult *)invokeDoricMethod:(NSString *)method, ...;
+
 - (DoricAsyncResult *)invokeContextEntity:(NSString *)contextId method:(NSString *)method, ...;
-- (DoricAsyncResult *)invokeContextEntity:(NSString *)contextId method:(NSString *)method arguments:(va_list) args;
+
+- (DoricAsyncResult *)invokeContextEntity:(NSString *)contextId method:(NSString *)method arguments:(va_list)args;
+
 - (DoricAsyncResult *)invokeContextEntity:(NSString *)contextId method:(NSString *)method argumentsArray:(NSArray *)args;
 
 - (void)connectDevKit:(NSString *)url;
+
 - (void)disconnectDevKit;
 @end
 

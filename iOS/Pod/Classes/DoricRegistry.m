@@ -16,16 +16,16 @@
 
 @interface DoricRegistry ()
 
-@property (nonatomic,strong) NSMutableDictionary *bundles;
-@property (nonatomic,strong) NSMutableDictionary *plugins;
-@property (nonatomic,strong) NSMutableDictionary *nodes;
+@property(nonatomic, strong) NSMutableDictionary *bundles;
+@property(nonatomic, strong) NSMutableDictionary *plugins;
+@property(nonatomic, strong) NSMutableDictionary *nodes;
 
 @end
 
 @implementation DoricRegistry
 
 - (instancetype)init {
-    if(self = [super init]){
+    if (self = [super init]) {
         _bundles = [[NSMutableDictionary alloc] init];
         _plugins = [[NSMutableDictionary alloc] init];
         _nodes = [[NSMutableDictionary alloc] init];
@@ -37,7 +37,7 @@
 - (void)innerRegister {
     [self registerNativePlugin:DoricModalPlugin.class withName:@"modal"];
     [self registerNativePlugin:DoricShaderPlugin.class withName:@"shader"];
-    
+
     [self registerViewNode:DoricStackNode.class withName:@"Stack"];
     [self registerViewNode:DoricVLayoutNode.class withName:@"VLayout"];
     [self registerViewNode:DoricHLayoutNode.class withName:@"HLayout"];

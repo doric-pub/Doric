@@ -19,9 +19,9 @@
 
 - (void)blendView:(id)view forPropName:(NSString *)name propValue:(id)prop {
     if ([name isEqualToString:@"gravity"]) {
-        self.gravity = [(NSNumber *)prop integerValue];
+        self.gravity = [(NSNumber *) prop integerValue];
     } else if ([name isEqualToString:@"space"]) {
-        self.space = [(NSNumber *)prop floatValue];
+        self.space = [(NSNumber *) prop floatValue];
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }
@@ -33,15 +33,15 @@
         DoricLog(@"blend VLayout child error,layout params not match");
         return;
     }
-    VHLayoutParams *params = (VHLayoutParams *)child.layoutParams;
-    NSDictionary *margin = [layoutconfig objectForKey:@"margin"];
+    VHLayoutParams *params = (VHLayoutParams *) child.layoutParams;
+    NSDictionary *margin = layoutconfig[@"margin"];
     if (margin) {
-        params.margin.top = [(NSNumber *)[margin objectForKey:@"top"] floatValue];
-        params.margin.left = [(NSNumber *)[margin objectForKey:@"left"] floatValue];
-        params.margin.right = [(NSNumber *)[margin objectForKey:@"right"] floatValue];
-        params.margin.bottom = [(NSNumber *)[margin objectForKey:@"bottom"] floatValue];
+        params.margin.top = [(NSNumber *) margin[@"top"] floatValue];
+        params.margin.left = [(NSNumber *) margin[@"left"] floatValue];
+        params.margin.right = [(NSNumber *) margin[@"right"] floatValue];
+        params.margin.bottom = [(NSNumber *) margin[@"bottom"] floatValue];
     }
-    NSNumber *alignment = [layoutconfig objectForKey:@"alignment"];
+    NSNumber *alignment = layoutconfig[@"alignment"];
     if (alignment) {
         params.alignment = [alignment integerValue];
     }
@@ -54,7 +54,7 @@
 - (void)measureByParent:(DoricGroupNode *)parent {
     DoricLayoutDesc widthSpec = self.layoutParams.width;
     DoricLayoutDesc heightSpec = self.layoutParams.height;
-    CGFloat maxWidth = 0,maxHeight = 0;
+    CGFloat maxWidth = 0, maxHeight = 0;
     for (DoricViewNode *child in self.indexedChildren) {
         [child measureByParent:self];
         CGFloat placeWidth = child.measuredWidth;
@@ -63,14 +63,14 @@
         maxHeight += placeHeight + self.space;
     }
     maxHeight -= self.space;
-    
+
     self.desiredWidth = maxWidth;
     self.desiredHeight = maxHeight;
-    
+
     if (widthSpec == LAYOUT_WRAP_CONTENT) {
         self.width = maxWidth;
     }
-    
+
     if (heightSpec == LAYOUT_WRAP_CONTENT) {
         self.height = maxHeight;
     }
@@ -90,10 +90,10 @@
     } else if ((self.gravity & BOTTOM) == BOTTOM) {
         yStart = self.height - self.desiredHeight;
     } else if ((self.gravity & CENTER_Y) == CENTER_Y) {
-        yStart = (self.height -self.desiredHeight)/2;
+        yStart = (self.height - self.desiredHeight) / 2;
     }
-    
-    
+
+
     for (DoricViewNode *child in self.indexedChildren) {
         if (child.layoutParams.width == LAYOUT_MATCH_PARENT) {
             child.width = self.width;
@@ -102,16 +102,16 @@
             child.height = self.height;
         }
         if ([child.layoutParams isKindOfClass:VHLayoutParams.class]) {
-            VHLayoutParams *layoutParams = (VHLayoutParams *)child.layoutParams;
+            VHLayoutParams *layoutParams = (VHLayoutParams *) child.layoutParams;
             DoricGravity gravity = layoutParams.alignment | self.gravity;
             if ((gravity & LEFT) == LEFT) {
                 child.left = 0;
             } else if ((gravity & RIGHT) == RIGHT) {
                 child.right = self.width;
             } else if ((gravity & CENTER_X) == CENTER_X) {
-                child.centerX = self.width/2;
+                child.centerX = self.width / 2;
             }
-        }        
+        }
         child.top = yStart;
         yStart = child.bottom + self.space;
         [child layoutByParent:self];

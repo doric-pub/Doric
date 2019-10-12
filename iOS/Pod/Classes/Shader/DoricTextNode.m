@@ -18,11 +18,11 @@
     if ([name isEqualToString:@"text"]) {
         view.text = prop;
     } else if ([name isEqualToString:@"textSize"]) {
-        view.font = [UIFont systemFontOfSize:[(NSNumber *)prop floatValue]];
+        view.font = [UIFont systemFontOfSize:[(NSNumber *) prop floatValue]];
     } else if ([name isEqualToString:@"textColor"]) {
         view.textColor = DoricColor(prop);
     } else if ([name isEqualToString:@"textAlignment"]) {
-        DoricGravity gravity = [(NSNumber *)prop integerValue];
+        DoricGravity gravity = [(NSNumber *) prop integerValue];
         NSTextAlignment alignment = NSTextAlignmentCenter;
         switch (gravity) {
             case LEFT:

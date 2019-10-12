@@ -7,10 +7,11 @@
 
 #import <Foundation/Foundation.h>
 #import "DoricContext.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface DoricContextHolder : NSObject
-@property (nonatomic,strong) DoricContext *doricContext;
+@property(nonatomic, strong) DoricContext *doricContext;
 
 - (instancetype)initWithContext:(DoricContext *)doricContext;
 

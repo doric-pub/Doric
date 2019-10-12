@@ -10,7 +10,7 @@
 
 @implementation DoricRect
 - (instancetype)init {
-    if (self  = [super init]) {
+    if (self = [super init]) {
         _left = 0;
         _right = 0;
         _top = 0;
@@ -22,32 +22,35 @@
 
 @implementation LayoutParams
 - (instancetype)init {
-    if (self  = [super init]) {
+    if (self = [super init]) {
         _width = LAYOUT_WRAP_CONTENT;
         _height = LAYOUT_WRAP_CONTENT;
     }
     return self;
 }
 @end
+
 @implementation MarginLayoutParams
 - (instancetype)init {
-    if (self  = [super init]) {
+    if (self = [super init]) {
         _margin = [[DoricRect alloc] init];
     }
     return self;
-}@end
+}
+@end
 
 @implementation StackLayoutParams
 - (instancetype)init {
-    if (self  = [super init]) {
+    if (self = [super init]) {
         _alignment = 0;
     }
     return self;
-}@end
+}
+@end
 
 @implementation VHLayoutParams
 - (instancetype)init {
-    if (self  = [super init]) {
+    if (self = [super init]) {
         _alignment = 0;
         _weight = 0;
     }
@@ -56,7 +59,7 @@
 @end
 
 
-@implementation UIView(DoricContainer)
+@implementation UIView (DoricContainer)
 
 - (LayoutParams *)layoutParams {
     return objc_getAssociatedObject(self, _cmd);
@@ -67,12 +70,12 @@
 }
 
 - (void)layout {
-    
+
 }
 
 - (void)measure {
-    if(self.layoutParams) {
-        
+    if (self.layoutParams) {
+
     }
 }
 @end

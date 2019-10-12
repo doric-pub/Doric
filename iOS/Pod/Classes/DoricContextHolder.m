@@ -10,7 +10,7 @@
 @implementation DoricContextHolder
 
 - (instancetype)initWithContext:(DoricContext *)doricContext {
-    if(self = [super init]){
+    if (self = [super init]) {
         _doricContext = doricContext;
     }
     return self;

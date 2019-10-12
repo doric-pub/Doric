@@ -11,7 +11,7 @@
 @implementation DoricStackNode
 
 - (instancetype)init {
-    if (self = [super init]){
+    if (self = [super init]) {
         _gravity = 0;
     }
     return self;
@@ -20,7 +20,7 @@
 - (void)measureByParent:(DoricGroupNode *)parent {
     DoricLayoutDesc widthSpec = self.layoutParams.width;
     DoricLayoutDesc heightSpec = self.layoutParams.height;
-    CGFloat maxWidth = 0,maxHeight = 0;
+    CGFloat maxWidth = 0, maxHeight = 0;
     for (DoricViewNode *child in self.indexedChildren) {
         [child measureByParent:self];
         CGFloat placeWidth = child.measuredWidth;
@@ -30,15 +30,16 @@
     }
     self.desiredWidth = maxWidth;
     self.desiredHeight = maxHeight;
-    
+
     if (widthSpec == LAYOUT_WRAP_CONTENT) {
         self.width = maxWidth;
     }
-    
+
     if (heightSpec == LAYOUT_WRAP_CONTENT) {
         self.height = maxHeight;
     }
 }
+
 - (LayoutParams *)generateDefaultLayoutParams {
     return [[StackLayoutParams alloc] init];
 }
@@ -49,7 +50,7 @@
         DoricLog(@"blend Stack child error,layout params not match");
         return;
     }
-    StackLayoutParams *params = (StackLayoutParams *)child.layoutParams;
+    StackLayoutParams *params = (StackLayoutParams *) child.layoutParams;
 //    NSDictionary *margin = [layoutconfig objectForKey:@"margin"];
 //    if (margin) {
 //        params.margin.top = [(NSNumber *)[margin objectForKey:@"top"] floatValue];
@@ -57,7 +58,7 @@
 //        params.margin.right = [(NSNumber *)[margin objectForKey:@"right"] floatValue];
 //        params.margin.bottom = [(NSNumber *)[margin objectForKey:@"bottom"] floatValue];
 //    }
-    NSNumber *alignment = [layoutconfig objectForKey:@"alignment"];
+    NSNumber *alignment = layoutconfig[@"alignment"];
     if (alignment) {
         params.alignment = [alignment integerValue];
     }
@@ -73,10 +74,10 @@
         }
         DoricGravity gravity = self.gravity;
         if ([child.layoutParams isKindOfClass:StackLayoutParams.class]) {
-            StackLayoutParams *layoutParams = (StackLayoutParams *)child.layoutParams;
+            StackLayoutParams *layoutParams = (StackLayoutParams *) child.layoutParams;
             gravity |= layoutParams.alignment;
         }
-        
+
         if ((gravity & LEFT) == LEFT) {
             child.left = self.left;
         }

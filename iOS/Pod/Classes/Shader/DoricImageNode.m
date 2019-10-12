@@ -17,7 +17,7 @@
 - (void)blendView:(UIImageView *)view forPropName:(NSString *)name propValue:(id)prop {
     if ([name isEqualToString:@"imageUrl"]) {
         __weak typeof(self) _self = self;
-        [view sd_setImageWithURL:[NSURL URLWithString:prop] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+        [view sd_setImageWithURL:[NSURL URLWithString:prop] completed:^(UIImage *_Nullable image, NSError *_Nullable error, SDImageCacheType cacheType, NSURL *_Nullable imageURL) {
             __strong typeof(_self) self = _self;
             [self requestLayout];
         }];

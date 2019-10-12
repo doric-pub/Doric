@@ -12,19 +12,19 @@
 #import "DoricUtil.h"
 #import "DoricBridgeExtension.h"
 
-@interface DoricJSEngine()
-@property(nonatomic,strong) id<DoricJSExecutorProtocal> jsExecutor;
-@property(nonatomic,strong) NSMutableDictionary *timers;
-@property(nonatomic,strong) DoricBridgeExtension *bridgeExtension;
+@interface DoricJSEngine ()
+@property(nonatomic, strong) id <DoricJSExecutorProtocal> jsExecutor;
+@property(nonatomic, strong) NSMutableDictionary *timers;
+@property(nonatomic, strong) DoricBridgeExtension *bridgeExtension;
 @end
 
 @implementation DoricJSEngine
 
 - (instancetype)init {
-    if(self = [super init]){
+    if (self = [super init]) {
         _jsQueue = dispatch_queue_create("doric.jsengine", DISPATCH_QUEUE_SERIAL);
         _bridgeExtension = [[DoricBridgeExtension alloc] init];
-        dispatch_async(_jsQueue, ^(){
+        dispatch_async(_jsQueue, ^() {
             self.timers = [[NSMutableDictionary alloc] init];
             self.jsExecutor = [[DoricJSCoreExecutor alloc] init];
             self.registry = [[DoricRegistry alloc] init];
@@ -37,50 +37,50 @@
 
 - (void)initJSExecutor {
     __weak typeof(self) _self = self;
-    
-    [self.jsExecutor injectGlobalJSObject:INJECT_LOG obj:^(NSString * type, NSString * message) {
-        DoricLog(@"JS:%@",message);
+
+    [self.jsExecutor injectGlobalJSObject:INJECT_LOG obj:^(NSString *type, NSString *message) {
+        DoricLog(@"JS:%@", message);
     }];
-    
-    [self.jsExecutor injectGlobalJSObject:INJECT_REQUIRE obj:^(NSString *name){
+
+    [self.jsExecutor injectGlobalJSObject:INJECT_REQUIRE obj:^(NSString *name) {
         __strong typeof(_self) self = _self;
-        if(!self) return NO;
+        if (!self) return NO;
         NSString *content = [self.registry acquireJSBundle:name];
-        if(!content){
+        if (!content) {
             DoricLog(@"require js bundle:%@ is empty", name);
             return NO;
         }
-        @try{
+        @try {
             [self.jsExecutor loadJSScript:[self packageModuleScript:name content:content]
                                    source:[@"Module://" stringByAppendingString:name]];
-        }@catch(NSException *e){
+        } @catch (NSException *e) {
             DoricLog(@"require js bundle:%@ error,for %@", name, e.reason);
         }
         return YES;
     }];
     [self.jsExecutor injectGlobalJSObject:INJECT_TIMER_SET
-                                      obj:^(NSNumber *timerId,NSNumber *interval,NSNumber *isInterval) {
-                                           __strong typeof(_self) self = _self;
+                                      obj:^(NSNumber *timerId, NSNumber *interval, NSNumber *isInterval) {
+                                          __strong typeof(_self) self = _self;
                                           NSString *timerId_str = [timerId stringValue];
                                           BOOL repeat = [isInterval boolValue];
-                                          NSTimer *timer = [NSTimer timerWithTimeInterval:[interval doubleValue]/1000 target:self selector:@selector(callbackTimer:) userInfo:@{@"timerId":timerId,@"repeat":isInterval} repeats:repeat];
+                                          NSTimer *timer = [NSTimer timerWithTimeInterval:[interval doubleValue] / 1000 target:self selector:@selector(callbackTimer:) userInfo:@{@"timerId": timerId, @"repeat": isInterval} repeats:repeat];
                                           [self.timers setValue:timer forKey:timerId_str];
-                                          dispatch_async(dispatch_get_main_queue(), ^(){
+                                          dispatch_async(dispatch_get_main_queue(), ^() {
                                               [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
                                           });
                                       }];
-    
+
     [self.jsExecutor injectGlobalJSObject:INJECT_TIMER_CLEAR
                                       obj:^(NSString *timerId) {
-                                           __strong typeof(_self) self = _self;
+                                          __strong typeof(_self) self = _self;
                                           NSTimer *timer = [self.timers valueForKey:timerId];
-                                          if(timer){
+                                          if (timer) {
                                               [timer invalidate];
                                               [self.timers removeObjectForKey:timerId];
                                           }
                                       }];
-    
-    [self.jsExecutor injectGlobalJSObject:INJECT_BRIDGE obj:^(NSString *contextId, NSString *module, NSString *method, NSString *callbackId, id argument){
+
+    [self.jsExecutor injectGlobalJSObject:INJECT_BRIDGE obj:^(NSString *contextId, NSString *module, NSString *method, NSString *callbackId, id argument) {
         return [self.bridgeExtension callNativeWithContextId:contextId module:module method:method callbackId:callbackId argument:argument];
     }];
 }
@@ -89,8 +89,8 @@
     [self loadBuiltinJS:DORIC_BUNDLE_SANDBOX];
     NSString *path = [DoricBundle() pathForResource:DORIC_BUNDLE_LIB ofType:@"js" inDirectory:@"bundle"];
     NSString *jsContent = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
-    [self.jsExecutor loadJSScript:[self packageModuleScript: DORIC_MODULE_LIB content:jsContent]
-                           source: [@"Module://" stringByAppendingString:DORIC_MODULE_LIB]];
+    [self.jsExecutor loadJSScript:[self packageModuleScript:DORIC_MODULE_LIB content:jsContent]
+                           source:[@"Module://" stringByAppendingString:DORIC_MODULE_LIB]];
 }
 
 - (void)loadBuiltinJS:(NSString *)fileName {
@@ -98,8 +98,8 @@
     NSString *jsContent = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
     [self.jsExecutor loadJSScript:jsContent source:[@"Assets://" stringByAppendingString:fileName]];
 }
-    
-- (JSValue *)invokeDoricMethod:(NSString *)method,... {
+
+- (JSValue *)invokeDoricMethod:(NSString *)method, ... {
     va_list args;
     va_start(args, method);
     JSValue *ret = [self invokeDoricMethod:method arguments:args];
@@ -110,7 +110,7 @@
 - (JSValue *)invokeDoricMethod:(NSString *)method arguments:(va_list)args {
     NSMutableArray *array = [[NSMutableArray alloc] init];
     id arg = va_arg(args, id);
-    while(arg != nil){
+    while (arg != nil) {
         [array addObject:arg];
         arg = va_arg(args, JSValue *);
     }
@@ -146,14 +146,14 @@
     NSNumber *timerId = [userInfo valueForKey:@"timerId"];
     NSNumber *repeat = [userInfo valueForKey:@"repeat"];
     __weak typeof(self) _self = self;
-    dispatch_async(self.jsQueue, ^(){
+    dispatch_async(self.jsQueue, ^() {
         __strong typeof(_self) self = _self;
         @try {
             [self invokeDoricMethod:DORIC_TIMER_CALLBACK, timerId, nil];
         } @catch (NSException *exception) {
             DoricLog(@"Timer Callback error:%@", exception.reason);
         }
-        if(![repeat boolValue]){
+        if (![repeat boolValue]) {
             [self.timers removeObjectForKey:[timerId stringValue]];
         }
     });

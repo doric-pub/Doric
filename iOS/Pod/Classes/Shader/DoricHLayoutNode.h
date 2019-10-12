@@ -9,9 +9,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DoricHLayoutNode : DoricGroupNode<UIView *,VHLayoutParams *>
-@property (nonatomic) CGFloat space;
-@property (nonatomic) DoricGravity gravity;
+@interface DoricHLayoutNode : DoricGroupNode<UIView *, VHLayoutParams *>
+@property(nonatomic) CGFloat space;
+@property(nonatomic) DoricGravity gravity;
 @end
 
 NS_ASSUME_NONNULL_END

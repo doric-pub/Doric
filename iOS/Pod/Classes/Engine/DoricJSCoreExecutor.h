@@ -7,9 +7,10 @@
 
 #import <Foundation/Foundation.h>
 #import "DoricJSExecutorProtocal.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DoricJSCoreExecutor : NSObject<DoricJSExecutorProtocal>
+@interface DoricJSCoreExecutor : NSObject <DoricJSExecutorProtocal>
 
 @end
 

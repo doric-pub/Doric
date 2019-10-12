@@ -7,23 +7,23 @@
 
 #import "DoricJSCoreExecutor.h"
 
-@interface DoricJSCoreExecutor()
+@interface DoricJSCoreExecutor ()
 
-@property(nonatomic,strong) JSContext *jsContext;
+@property(nonatomic, strong) JSContext *jsContext;
 
 @end
 
 @implementation DoricJSCoreExecutor
 - (instancetype)init {
-    if(self = [super init]){
+    if (self = [super init]) {
         _jsContext = [[JSContext alloc] init];
     }
     return self;
 }
 
 - (void)checkJSException {
-    if(self.jsContext.exception){
-        NSString *errMsg = [NSString stringWithFormat:@"%@ (line %@ in the generated bundle)\n/***StackTrace***/\n%@/***StackTrace***/", self.jsContext.exception, self.jsContext.exception[@"line"],self.jsContext.exception[@"stack"]];
+    if (self.jsContext.exception) {
+        NSString *errMsg = [NSString stringWithFormat:@"%@ (line %@ in the generated bundle)\n/***StackTrace***/\n%@/***StackTrace***/", self.jsContext.exception, self.jsContext.exception[@"line"], self.jsContext.exception[@"stack"]];
         @throw [[NSException alloc] initWithName:@"DoricJS" reason:errMsg userInfo:nil];
     }
 }

@@ -10,19 +10,20 @@
 #import "DoricUtil.h"
 #import "DoricContextManager.h"
 
-@interface DoricWSClient()<SRWebSocketDelegate>
-@property (nonatomic,strong) SRWebSocket *websocket;
+@interface DoricWSClient () <SRWebSocketDelegate>
+@property(nonatomic, strong) SRWebSocket *websocket;
 @end
 
 @implementation DoricWSClient
 - (instancetype)initWithUrl:(NSString *)url {
-    if(self = [super init]) {
+    if (self = [super init]) {
         _websocket = [[SRWebSocket alloc] initWithURL:[NSURL URLWithString:url]];
         _websocket.delegate = self;
         [_websocket open];
     }
     return self;
 }
+
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket {
     DoricLog(@"webSocketDidOpen");
 }
@@ -37,15 +38,15 @@
     NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
                                                         options:NSJSONReadingMutableContainers
                                                           error:&err];
-    if(err) {
-        DoricLog(@"webSocketdidReceiveMessage parse error：%@",err);
+    if (err) {
+        DoricLog(@"webSocketdidReceiveMessage parse error：%@", err);
         return;
     }
     NSString *source = [[dic valueForKey:@"source"] mutableCopy];
     NSString *script = [dic valueForKey:@"script"];
-    for(NSValue *value in  [[DoricContextManager instance] aliveContexts]) {
+    for (NSValue *value in  [[DoricContextManager instance] aliveContexts]) {
         DoricContext *context = value.nonretainedObjectValue;
-        if([source containsString:context.source]) {
+        if ([source containsString:context.source]) {
             [context reload:script];
         }
     }

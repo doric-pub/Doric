@@ -13,21 +13,21 @@
 @implementation DoricContext
 
 - (instancetype)initWithScript:(NSString *)script source:(NSString *)source {
-    if(self = [super init]){
+    if (self = [super init]) {
         _driver = [DoricDriver instance];
         _pluginInstanceMap = [[NSMutableDictionary alloc] init];
         [[DoricContextManager instance] createContext:self script:script source:source];
         _rootNode = [[DoricRootNode alloc] initWithContext:self];
         _script = script;
         _source = source;
-        _initialParams =[@{@"width":@(LAYOUT_MATCH_PARENT) ,@"height":@(LAYOUT_MATCH_PARENT)} mutableCopy];
-        [self callEntity:DORIC_ENTITY_CREATE,nil];
+        _initialParams = [@{@"width": @(LAYOUT_MATCH_PARENT), @"height": @(LAYOUT_MATCH_PARENT)} mutableCopy];
+        [self callEntity:DORIC_ENTITY_CREATE, nil];
     }
     return self;
 }
 
 - (void)dealloc {
-    [self callEntity:DORIC_ENTITY_DESTROY,nil];
+    [self callEntity:DORIC_ENTITY_DESTROY, nil];
     [[DoricContextManager instance] destroyContext:self];
 }
 
@@ -50,21 +50,21 @@
 - (void)initContextWithWidth:(CGFloat)width height:(CGFloat)height {
     [self.initialParams setValue:@(width) forKey:@"width"];
     [self.initialParams setValue:@(height) forKey:@"height"];
-    [self callEntity:DORIC_ENTITY_INIT,self.initialParams,nil];
+    [self callEntity:DORIC_ENTITY_INIT, self.initialParams, nil];
 }
 
 - (void)reload:(NSString *)script {
     self.script = script;
     [self.driver createContext:self.contextId script:script source:self.source];
-    [self callEntity:DORIC_ENTITY_INIT,self.initialParams,nil];
+    [self callEntity:DORIC_ENTITY_INIT, self.initialParams, nil];
 }
 
 - (void)onShow {
-    [self callEntity:DORIC_ENTITY_SHOW,nil];
+    [self callEntity:DORIC_ENTITY_SHOW, nil];
 }
 
 - (void)onHidden {
-    [self callEntity:DORIC_ENTITY_HIDDEN,nil];
+    [self callEntity:DORIC_ENTITY_HIDDEN, nil];
 }
 
 @end

@@ -1,7 +1,7 @@
 package com.github.penfeizhou.doric.shader;
 
 import android.graphics.drawable.Drawable;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 

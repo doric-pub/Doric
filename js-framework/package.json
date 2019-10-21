@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "https",
-    "url": "https://github.com/penfeizhou/doric.git"
+    "url": "https://github.com/doric-pub/doric"
   },
   "author": "pengfeizhou",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/penfeizhou/doric/issues"
+    "url": "https://github.com/doric-pub/doric/issues"
   },
-  "homepage": "https://github.com/penfeizhou/doric#readme",
+  "homepage": "https://github.com/doric-pub/doric#readme",
   "dependencies": {
     "reflect-metadata": "^0.1.13",
     "rollup": "^1.17.0",

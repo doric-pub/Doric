@@ -21,10 +21,10 @@ Pod::Spec.new do |s|
 TODO: Add long description of the pod here.
                        DESC
 
-  s.homepage         = 'https://github.com/penfeizhou/doric'
+  s.homepage         = 'https://github.com/doric-pub/doric'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
-  s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'pengfei.zhou' => 'penfei.zhou@gmail.com' }
+  s.license          = { :type => 'Apache-2.0', :file => 'LICENSE' }
+  s.author           = { 'pengfei.zhou' => 'pengfeizhou@foxmail.com' }
   s.source           = { :git => 'git@github.com:penfeizhou/doric.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 

@@ -20,35 +20,43 @@ import com.github.pengfeizhou.jscore.JSRuntimeException;
 import com.github.pengfeizhou.jscore.JavaFunction;
 import com.github.pengfeizhou.jscore.JavaValue;
 
+import pub.doric.engine.remote.RemoteJSExecutor;
+
 public class DoricRemoteJSExecutor implements IDoricJSE {
+
+    private final RemoteJSExecutor mRemoteJSExecutor;
+
+    public DoricRemoteJSExecutor() {
+        this.mRemoteJSExecutor = new RemoteJSExecutor();
+    }
 
     @Override
     public String loadJS(String script, String source) throws JSRuntimeException {
-        return null;
+        return mRemoteJSExecutor.loadJS(script, source);
     }
 
     @Override
     public JSDecoder evaluateJS(String script, String source, boolean hashKey) throws JSRuntimeException {
-        return null;
+        return mRemoteJSExecutor.evaluateJS(script, source, hashKey);
     }
 
     @Override
     public void injectGlobalJSFunction(String name, JavaFunction javaFunction) {
-
+        mRemoteJSExecutor.injectGlobalJSFunction(name, javaFunction);
     }
 
     @Override
     public void injectGlobalJSObject(String name, JavaValue javaValue) {
-
+        mRemoteJSExecutor.injectGlobalJSObject(name, javaValue);
     }
 
     @Override
     public JSDecoder invokeMethod(String objectName, String functionName, JavaValue[] javaValues, boolean hashKey) throws JSRuntimeException {
-        return null;
+        return mRemoteJSExecutor.invokeMethod(objectName, functionName, javaValues, hashKey);
     }
 
     @Override
     public void teardown() {
-
+        mRemoteJSExecutor.destroy();
     }
 }

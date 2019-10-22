@@ -20,11 +20,13 @@
   },
   "homepage": "https://github.com/doric-pub/doric#readme",
   "dependencies": {
+    "@types/ws": "^6.0.3",
     "reflect-metadata": "^0.1.13",
     "rollup": "^1.17.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-watch": "^4.3.1",
     "tslib": "^1.10.0",
-    "typescript": "^3.5.3"
+    "typescript": "^3.5.3",
+    "ws": "^7.2.0"
   }
 }

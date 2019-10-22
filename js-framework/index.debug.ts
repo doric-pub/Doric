@@ -28,7 +28,7 @@ global.injectGlobal = (objName: string, obj: string) => {
 global.sendToNative = () => {
 
 }
-global.receiveFromNative = (funcName, ) => {
+global.receiveFromNative = () => {
 
 }
 export * from './index'

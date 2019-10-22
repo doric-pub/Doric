@@ -346,7 +346,17 @@ class SnakeVM extends ViewModel<SnakeModel, SnakeView>{
 }
 @Entry
 class SnakePanel extends VMPanel<SnakeModel, SnakeView>{
+<<<<<<< HEAD
     getViewModelClass() {
+=======
+
+    constructor() {
+        super()
+        console.log("SnakePanel")
+    }
+
+    getVMClass() {
+>>>>>>> fix debug
         return SnakeVM
     }
     getState(): SnakeModel {

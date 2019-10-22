@@ -21,17 +21,17 @@ import "reflect-metadata"
  * ``` TypeScript
  * // load script in global scope
  * Reflect.apply(
- * function(hego,context,Entry,require){
+ * function(doric,context,Entry,require){
  *  //Script content
  *  REG()
- * },hego.jsObtainContext(id),[
+ * },doric.jsObtainContext(id),[
  * undefined,
- * hego.jsObtainContext(id),
- * hego.jsObtainEntry(id),
- * hego.__require__,
+ * doric.jsObtainContext(id),
+ * doric.jsObtainEntry(id),
+ * doric.__require__,
  * ])
  * // load module in global scope
- * Reflect.apply(hego.jsRegisterModule,this,[
+ * Reflect.apply(doric.jsRegisterModule,this,[
  *  moduleName,
  *  Reflect.apply(function(__module){
  *           (function(module,exports,require){

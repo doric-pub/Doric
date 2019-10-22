@@ -1,6 +1,5 @@
 import { vlayout, Image, ViewHolder, VMPanel, ViewModel, Gravity, NativeCall, Text, Color, log, logw, loge, Group, LayoutSpec, } from "doric"
 
-
 interface CountModel {
     count: number
 }
@@ -97,6 +96,7 @@ class CounterVM extends ViewModel<CountModel, CounterView> {
 
 @Entry
 class MyPage extends VMPanel<CountModel, CounterView>{
+<<<<<<< HEAD
 
 
     getViewHolderClass() {
@@ -104,6 +104,9 @@ class MyPage extends VMPanel<CountModel, CounterView>{
     }
 
     getViewModelClass() {
+=======
+    getVMClass() {
+>>>>>>> debug ts code
         return CounterVM
     }
 

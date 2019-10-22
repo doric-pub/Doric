@@ -8,13 +8,14 @@ var context = vm.createContext(sandbox)
 wss.on('connection', function connection(ws) {
   ws.on('message', function incoming(message) {
     let messageObject = JSON.parse(message)
-    switch(messageObject.cmd) {
+    switch (messageObject.cmd) {
       case "loadJS":
         let result = vm.runInContext(messageObject.script, sandbox)
-        ws.send(JSON.stringify({cmd: 'loadJS', result: String(result)}))
+        ws.send(JSON.stringify({ cmd: 'loadJS', result: String(result) }))
         break
       case "evaluateJS":
         break
     }
   })
 })
+

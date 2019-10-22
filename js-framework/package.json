@@ -2,7 +2,7 @@
   "name": "doric",
   "version": "0.1.0",
   "description": "The JS Framework of Doric",
-  "main": "build/index.js",
+  "main": "bundle/doric-vm.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc -p .&& rollup -c",

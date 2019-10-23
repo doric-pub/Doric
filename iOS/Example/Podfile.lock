@@ -25,7 +25,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Doric: 1dae6e8a19a32a27af975f787509cc0658dde095
+  Doric: f96b77d435e836e88cf02319e3c9ebc08cab65f6
   GCDWebServer: ead88cd14596dd4eae4f5830b8877c87c8728990
   SDWebImage: 920f1a2ff1ca8296ad34f6e0510a1ef1d70ac965
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531

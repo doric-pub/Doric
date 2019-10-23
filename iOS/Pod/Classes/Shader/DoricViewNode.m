@@ -85,6 +85,7 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     if (self.view == nil) {
         self.view = [self build:props];
     }
+    self.view.layoutConfig = self.layoutConfig;
     for (NSString *key in props) {
         id value = props[key];
         [self blendView:self.view forPropName:key propValue:value];
@@ -94,18 +95,12 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
 - (void)blendView:(UIView *)view forPropName:(NSString *)name propValue:(id)prop {
     if ([name isEqualToString:@"width"]) {
         NSNumber *width = (NSNumber *) prop;
-        if ([width integerValue] < 0) {
-            self.layoutParams.width = [width integerValue];
-        } else {
-            self.layoutParams.width = LAYOUT_ABSOLUTE;
+        if ([width floatValue] >= 0) {
             view.width = [width floatValue];
         }
     } else if ([name isEqualToString:@"height"]) {
         NSNumber *height = (NSNumber *) prop;
-        if ([height integerValue] < 0) {
-            self.layoutParams.height = [height integerValue];
-        } else {
-            self.layoutParams.height = LAYOUT_ABSOLUTE;
+        if ([height floatValue] >= 0) {
             view.height = [height floatValue];
         }
     } else if ([name isEqualToString:@"x"]) {
@@ -119,14 +114,14 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
             [self.parent blendChild:self layoutConfig:prop];
         }
     } else if ([name isEqualToString:@"onClick"]) {
-        [self.callbackIds setObject:prop forKey:@"onClick"];
+        self.callbackIds[@"onClick"] = prop;
         view.userInteractionEnabled = YES;
-        UITapGestureRecognizer *tapGesturRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onClick:)];
-        [view addGestureRecognizer:tapGesturRecognizer];
+        UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onClick:)];
+        [view addGestureRecognizer:tapGestureRecognizer];
     } else if ([name isEqualToString:@"border"]) {
         NSDictionary *dic = prop;
-        CGFloat width = [(NSNumber *) [dic objectForKey:@"width"] floatValue];
-        UIColor *color = DoricColor((NSNumber *) [dic objectForKey:@"color"]);
+        CGFloat width = [(NSNumber *) dic[@"width"] floatValue];
+        UIColor *color = DoricColor((NSNumber *) dic[@"color"]);
         view.layer.borderWidth = width;
         view.layer.borderColor = color.CGColor;
     } else if ([name isEqualToString:@"corners"]) {
@@ -134,10 +129,10 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
             view.layer.cornerRadius = [(NSNumber *) prop floatValue];
         } else if ([prop isKindOfClass:NSDictionary.class]) {
             NSDictionary *dic = prop;
-            CGFloat leftTop = [(NSNumber *) [dic objectForKey:@"leftTop"] floatValue];
-            CGFloat rightTop = [(NSNumber *) [dic objectForKey:@"rightTop"] floatValue];
-            CGFloat rightBottom = [(NSNumber *) [dic objectForKey:@"rightBottom"] floatValue];
-            CGFloat leftBottom = [(NSNumber *) [dic objectForKey:@"leftBottom"] floatValue];
+            CGFloat leftTop = [(NSNumber *) dic[@"leftTop"] floatValue];
+            CGFloat rightTop = [(NSNumber *) dic[@"rightTop"] floatValue];
+            CGFloat rightBottom = [(NSNumber *) dic[@"rightBottom"] floatValue];
+            CGFloat leftBottom = [(NSNumber *) dic[@"leftBottom"] floatValue];
             CALayer *mask = nil;
             if (ABS(leftTop - rightTop) > CGFLOAT_MIN
                     || ABS(leftTop - rightBottom) > CGFLOAT_MIN
@@ -155,14 +150,14 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
         }
     } else if ([name isEqualToString:@"shadow"]) {
         NSDictionary *dic = prop;
-        CGFloat opacity = [(NSNumber *) [dic objectForKey:@"opacity"] floatValue];
+        CGFloat opacity = [(NSNumber *) dic[@"opacity"] floatValue];
         if (opacity > CGFLOAT_MIN) {
             view.clipsToBounds = NO;
-            UIColor *color = DoricColor((NSNumber *) [dic objectForKey:@"color"]);
+            UIColor *color = DoricColor((NSNumber *) dic[@"color"]);
             view.layer.shadowColor = color.CGColor;
-            view.layer.shadowRadius = [(NSNumber *) [dic objectForKey:@"radius"] floatValue];
-            view.layer.shadowOffset = CGSizeMake([(NSNumber *) [dic objectForKey:@"offsetX"] floatValue], [(NSNumber *) [dic objectForKey:@"offsetY"] floatValue]);
-            view.layer.shadowOpacity = opacity;
+            view.layer.shadowRadius = [(NSNumber *) dic[@"radius"] floatValue];
+            view.layer.shadowOffset = CGSizeMake([(NSNumber *) dic[@"offsetX"] floatValue], [(NSNumber *) dic[@"offsetY"] floatValue]);
+            view.layer.shadowOpacity = (float) opacity;
         } else {
             view.clipsToBounds = YES;
         }
@@ -173,35 +168,7 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
 }
 
 - (void)onClick:(UIView *)view {
-    [self callJSResponse:[self.callbackIds objectForKey:@"onClick"], nil];
-}
-
-- (CGFloat)measuredWidth {
-    if ([self.layoutParams isKindOfClass:MarginLayoutParams.class]) {
-        MarginLayoutParams *marginParams = (MarginLayoutParams *) self.layoutParams;
-        return self.width + marginParams.margin.left + marginParams.margin.right;
-    }
-    return self.width;
-}
-
-- (CGFloat)measuredHeight {
-    if ([self.layoutParams isKindOfClass:MarginLayoutParams.class]) {
-        MarginLayoutParams *marginParams = (MarginLayoutParams *) self.layoutParams;
-        return self.height + marginParams.margin.top + marginParams.margin.bottom;
-    }
-    return self.height;
-}
-
-- (void)measureByParent:(DoricGroupNode *)parent {
-    DoricLayoutDesc widthSpec = self.layoutParams.width;
-    DoricLayoutDesc heightSpec = self.layoutParams.height;
-    if (widthSpec == LAYOUT_WRAP_CONTENT || heightSpec == LAYOUT_WRAP_CONTENT) {
-        [self.view sizeToFit];
-    }
-}
-
-- (void)layoutByParent:(DoricGroupNode *)parent {
-
+    [self callJSResponse:self.callbackIds[@"onClick"], nil];
 }
 
 - (NSArray<NSString *> *)idList {
@@ -232,87 +199,7 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
 + (DoricViewNode *)create:(DoricContext *)context withType:(NSString *)type {
     DoricRegistry *registry = context.driver.registry;
     Class clz = [registry acquireViewNode:type];
-    return [[clz alloc] initWithContext:context];
-}
-
-- (CGFloat)x {
-    return ((UIView *) self.view).x;
-}
-
-- (CGFloat)y {
-    return ((UIView *) self.view).y;
-}
-
-- (CGFloat)width {
-    return ((UIView *) self.view).width;
-}
-
-- (CGFloat)height {
-    return ((UIView *) self.view).height;
-}
-
-- (CGFloat)top {
-    return ((UIView *) self.view).top;
-}
-
-- (CGFloat)bottom {
-    return ((UIView *) self.view).bottom;
-}
-
-- (CGFloat)left {
-    return ((UIView *) self.view).left;
-}
-
-- (CGFloat)right {
-    return ((UIView *) self.view).right;
-}
-
-- (CGFloat)centerX {
-    return ((UIView *) self.view).centerX;
-}
-
-- (CGFloat)centerY {
-    return ((UIView *) self.view).centerY;
-}
-
-- (void)setX:(CGFloat)x {
-    ((UIView *) self.view).x = x;
-}
-
-- (void)setY:(CGFloat)y {
-    ((UIView *) self.view).y = y;
-}
-
-- (void)setWidth:(CGFloat)width {
-    ((UIView *) self.view).width = width;
-}
-
-- (void)setHeight:(CGFloat)height {
-    ((UIView *) self.view).height = height;
-}
-
-- (void)setLeft:(CGFloat)left {
-    ((UIView *) self.view).left = left;
-}
-
-- (void)setRight:(CGFloat)right {
-    ((UIView *) self.view).right = right;
-}
-
-- (void)setTop:(CGFloat)top {
-    ((UIView *) self.view).top = top;
-}
-
-- (void)setBottom:(CGFloat)bottom {
-    ((UIView *) self.view).bottom = bottom;
-}
-
-- (void)setCenterX:(CGFloat)centerX {
-    ((UIView *) self.view).centerX = centerX;
-}
-
-- (void)setCenterY:(CGFloat)centerY {
-    ((UIView *) self.view).centerY = centerY;
+    return [(DoricViewNode *) [clz alloc] initWithContext:context];
 }
 
 - (void)requestLayout {

@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 //
-//  DoricVLayoutNode.h
-//  Doric
-//
-//  Created by pengfei.zhou on 2019/7/30.
+// Created by pengfei.zhou on 2019/10/23.
 //
 
-#import "DoricGroupNode.h"
+#import <Foundation/Foundation.h>
 
-@interface DoricVLayoutNode : DoricGroupNode<VLayout *, LinearLayoutConfig *>
+
+@interface NSObject (Doric)
+- (id)apply:(id (^)(id it))block;
+
+- (instancetype)also:(void (^)(id it))block;
+
+- (void)let:(void (^)(id it))block;
 @end

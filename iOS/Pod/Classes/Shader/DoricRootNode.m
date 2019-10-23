@@ -23,17 +23,15 @@
 #import "DoricRootNode.h"
 
 @implementation DoricRootNode
-- (void)setupRootView:(UIView *)view {
+- (void)setupRootView:(Stack *)view {
     self.view = view;
+    self.layoutConfig = view.layoutConfig;
 }
 
 - (void)render:(NSDictionary *)props {
     [self blend:props];
-    [self requestLayout];
 }
-
 - (void)requestLayout {
-    [self measureByParent:self];
-    [self layoutByParent:self];
+    [self.view requestLayout];
 }
 @end

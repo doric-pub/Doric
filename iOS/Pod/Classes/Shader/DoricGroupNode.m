@@ -20,6 +20,7 @@
 //  Created by pengfei.zhou on 2019/7/30.
 //
 
+#import <Doric/DoricExtensions.h>
 #import "DoricGroupNode.h"
 
 @implementation DoricGroupNode
@@ -72,10 +73,10 @@
                 [tobeRemoved addObject:old];
             }
 
-            LayoutParams *params = node.layoutParams;
+            LayoutConfig *params = node.layoutConfig;
             if (params == nil) {
                 params = [self generateDefaultLayoutParams];
-                node.layoutParams = params;
+                node.layoutConfig = params;
             }
             [node blend:val[@"props"]];
             if (self.indexedChildren.count <= i) {
@@ -108,21 +109,35 @@
     }
 }
 
-- (LayoutParams *)generateDefaultLayoutParams {
-    LayoutParams *params = [[LayoutParams alloc] init];
+- (LayoutConfig *)generateDefaultLayoutParams {
+    LayoutConfig *params = [[LayoutConfig alloc] init];
     return params;
 }
 
-- (void)blendChild:(DoricViewNode *)child layoutConfig:(NSDictionary *)layoutconfig {
-    LayoutParams *params = child.layoutParams;
-    if ([params isKindOfClass:MarginLayoutParams.class]) {
-        MarginLayoutParams *marginParams = (MarginLayoutParams *) params;
-        NSDictionary *margin = layoutconfig[@"margin"];
+- (void)blendChild:(DoricViewNode *)child layoutConfig:(NSDictionary *)layoutConfig {
+    LayoutConfig *params = child.layoutConfig;
+
+    [layoutConfig[@"widthSpec"] also:^(NSNumber *it) {
+        if (it) {
+            params.widthSpec = (LayoutParam) [it integerValue];
+        }
+    }];
+
+    [layoutConfig[@"heightSpec"] also:^(NSNumber *it) {
+        if (it) {
+            params.heightSpec = (LayoutParam) [it integerValue];
+        }
+    }];
+
+    if ([params isKindOfClass:MarginLayoutConfig.class]) {
+        MarginLayoutConfig *marginParams = (MarginLayoutConfig *) params;
+        NSDictionary *margin = layoutConfig[@"margin"];
         if (margin) {
-            marginParams.margin.top = [(NSNumber *) margin[@"top"] floatValue];
-            marginParams.margin.left = [(NSNumber *) margin[@"left"] floatValue];
-            marginParams.margin.right = [(NSNumber *) margin[@"right"] floatValue];
-            marginParams.margin.bottom = [(NSNumber *) margin[@"bottom"] floatValue];
+            marginParams.margin = MarginMake(
+                    [(NSNumber *) margin[@"left"] floatValue],
+                    [(NSNumber *) margin[@"top"] floatValue],
+                    [(NSNumber *) margin[@"right"] floatValue],
+                    [(NSNumber *) margin[@"bottom"] floatValue]);
         }
     }
 

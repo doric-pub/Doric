@@ -35,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) DoricRootNode *rootNode;
 @property(nonatomic, strong) NSString *source;
 @property(nonatomic, strong) NSString *script;;
-@property(nonatomic, strong) NSDictionary *initialParams;
+@property(nonatomic, strong) NSMutableDictionary *initialParams;
 
 - (instancetype)initWithScript:(NSString *)script source:(NSString *)source;
 

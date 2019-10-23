@@ -22,11 +22,5 @@
 
 #import "DoricGroupNode.h"
 
-NS_ASSUME_NONNULL_BEGIN
-
-@interface DoricHLayoutNode : DoricGroupNode<UIView *, VHLayoutParams *>
-@property(nonatomic) CGFloat space;
-@property(nonatomic) DoricGravity gravity;
+@interface DoricHLayoutNode : DoricGroupNode<HLayout *, LinearLayoutConfig *>
 @end
-
-NS_ASSUME_NONNULL_END

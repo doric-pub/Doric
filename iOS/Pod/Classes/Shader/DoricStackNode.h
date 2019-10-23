@@ -22,10 +22,5 @@
 
 #import "DoricGroupNode.h"
 
-NS_ASSUME_NONNULL_BEGIN
-
-@interface DoricStackNode : DoricGroupNode<UIView *, StackLayoutParams *>
-@property(nonatomic) DoricGravity gravity;
+@interface DoricStackNode : DoricGroupNode<Stack *, StackLayoutConfig *>
 @end
-
-NS_ASSUME_NONNULL_END

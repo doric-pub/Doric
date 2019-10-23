@@ -21,8 +21,7 @@
 //
 
 #import "DoricContextHolder.h"
-#import "DoricViewContainer.h"
-
+#import "DoricLinearLayout.h"
 #import "UIView+Doric.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -37,23 +36,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, strong) NSString *viewId;
 
-@property(nonatomic, strong) LayoutParams *layoutParams;
+@property(nonatomic, strong) LayoutConfig *layoutConfig;
 
 @property(nonatomic, strong, readonly) NSArray<NSString *> *idList;
-
-
-@property(nonatomic) CGFloat x;
-@property(nonatomic) CGFloat y;
-@property(nonatomic) CGFloat width;
-@property(nonatomic) CGFloat height;
-@property(nonatomic) CGFloat centerX;
-@property(nonatomic) CGFloat centerY;
-@property(nonatomic) CGFloat top;
-@property(nonatomic) CGFloat left;
-@property(nonatomic) CGFloat right;
-@property(nonatomic) CGFloat bottom;
-@property(nonatomic, readonly) CGFloat measuredWidth;
-@property(nonatomic, readonly) CGFloat measuredHeight;
 
 - (V)build:(NSDictionary *)props;
 
@@ -62,10 +47,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)blendView:(V)view forPropName:(NSString *)name propValue:(id)prop;
 
 - (void)callJSResponse:(NSString *)funcId, ...;
-
-- (void)measureByParent:(DoricGroupNode *)parent;
-
-- (void)layoutByParent:(DoricGroupNode *)parent;
 
 + (DoricViewNode *)create:(DoricContext *)context withType:(NSString *)type;
 

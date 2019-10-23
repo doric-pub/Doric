@@ -67,8 +67,8 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
 
 
     private void initJSExecutor() {
-//        mDoricJSE = new DoricNativeJSExecutor();
-        mDoricJSE = new DoricRemoteJSExecutor();
+        mDoricJSE = new DoricNativeJSExecutor();
+//        mDoricJSE = new DoricRemoteJSExecutor();
         mDoricJSE.injectGlobalJSFunction(DoricConstant.INJECT_LOG, new JavaFunction() {
             @Override
             public JavaValue exec(JSDecoder[] args) {

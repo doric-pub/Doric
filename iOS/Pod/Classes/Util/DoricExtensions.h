@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 //
-//  DoricStackNode.h
-//  Doric
-//
-//  Created by pengfei.zhou on 2019/7/30.
+// Created by pengfei.zhou on 2019/10/23.
 //
 
-#import "DoricGroupNode.h"
+#import <Foundation/Foundation.h>
 
-@interface DoricStackNode : DoricGroupNode<DoricStackView *, DoricStackConfig *>
+
+@interface NSObject (Doric)
+- (id)apply:(id (^)(id it))block;
+
+- (instancetype)also:(void (^)(id it))block;
+
+- (void)let:(void (^)(id it))block;
 @end

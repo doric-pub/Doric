@@ -8,6 +8,7 @@ export default bundles.map(bundle => {
         output: {
             format: "cjs",
             file: `bundle/${bundle}.js`,
+            sourcemap: true,
         },
         plugins: [
             resolve({ jsnext: true, main: true }),

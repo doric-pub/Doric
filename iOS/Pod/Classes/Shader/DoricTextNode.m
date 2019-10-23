@@ -37,7 +37,7 @@
     } else if ([name isEqualToString:@"textColor"]) {
         view.textColor = DoricColor(prop);
     } else if ([name isEqualToString:@"textAlignment"]) {
-        DoricGravity gravity = [(NSNumber *) prop integerValue];
+        DoricGravity gravity = (DoricGravity) [(NSNumber *) prop integerValue];
         NSTextAlignment alignment = NSTextAlignmentCenter;
         switch (gravity) {
             case LEFT:
@@ -52,14 +52,6 @@
         view.textAlignment = alignment;
     } else {
         [super blendView:view forPropName:name propValue:prop];
-    }
-}
-
-- (void)measureByParent:(DoricGroupNode *)parent {
-    DoricLayoutDesc widthSpec = self.layoutParams.width;
-    DoricLayoutDesc heightSpec = self.layoutParams.height;
-    if (widthSpec == LAYOUT_WRAP_CONTENT || heightSpec == LAYOUT_WRAP_CONTENT) {
-        [self.view sizeToFit];
     }
 }
 @end

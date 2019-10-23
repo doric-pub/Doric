@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface DoricRootNode : DoricStackNode
 
-- (void)setupRootView:(UIView *)view;
+- (void)setupRootView:(DoricStackView *)view;
 
 - (void)render:(NSDictionary *)props;
 @end

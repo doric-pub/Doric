@@ -24,6 +24,7 @@
 #import "DoricContextManager.h"
 #import "DoricRootNode.h"
 #import "DoricConstant.h"
+#import "DoricExtensions.h"
 
 @implementation DoricContext
 
@@ -35,7 +36,7 @@
         _rootNode = [[DoricRootNode alloc] initWithContext:self];
         _script = script;
         _source = source;
-        _initialParams = [@{@"width": @(LAYOUT_MATCH_PARENT), @"height": @(LAYOUT_MATCH_PARENT)} mutableCopy];
+        _initialParams = [@{@"width": @(0), @"height": @(0)} mutableCopy];
         [self callEntity:DORIC_ENTITY_CREATE, nil];
     }
     return self;
@@ -63,8 +64,10 @@
 }
 
 - (void)initContextWithWidth:(CGFloat)width height:(CGFloat)height {
-    [self.initialParams setValue:@(width) forKey:@"width"];
-    [self.initialParams setValue:@(height) forKey:@"height"];
+    [self.initialParams also:^(NSMutableDictionary *it) {
+        it[@"width"] = @(width);
+        it[@"height"] = @(height);
+    }];
     [self callEntity:DORIC_ENTITY_INIT, self.initialParams, nil];
 }
 

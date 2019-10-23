@@ -107,8 +107,8 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
 }
 
 - (void)requestLayout {
-    if ([self.superview isKindOfClass:[LinearLayout class]]) {
-        [(LinearLayout *) self.superview requestLayout];
+    if ([self.superview isKindOfClass:[DoricLinearView class]]) {
+        [(DoricLinearView *) self.superview requestLayout];
         return;
     }
     if (self.waitingLayout) {
@@ -218,13 +218,13 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
 }
 @end
 
-@interface LinearLayout ()
+@interface DoricLinearView ()
 @property(nonatomic, assign) CGFloat contentWidth;
 @property(nonatomic, assign) CGFloat contentHeight;
 @property(nonatomic, assign) NSUInteger contentWeight;
 @end
 
-@implementation LinearLayout
+@implementation DoricLinearView
 - (DoricLinearConfig *)configForChild:(UIView *)child {
     DoricLinearConfig *config = (DoricLinearConfig *) child.layoutConfig;
     if (!config) {
@@ -234,7 +234,7 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
 }
 @end
 
-@implementation VLayout
+@implementation DoricVLayoutView
 
 - (void)sizeToFit {
     DoricLayoutConfig *config = self.layoutConfig;
@@ -330,11 +330,11 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
 }
 @end
 
-@implementation HLayout
+@implementation DoricHLayoutView
 - (void)sizeToFit {
     DoricLinearConfig *config;
-    if ([self.superview isKindOfClass:[LinearLayout class]]) {
-        config = [(LinearLayout *) self.superview configForChild:self];
+    if ([self.superview isKindOfClass:[DoricLinearView class]]) {
+        config = [(DoricLinearView *) self.superview configForChild:self];
     } else {
         config = (DoricLinearConfig *) self.layoutConfig;
         if (!config) {
@@ -438,7 +438,7 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
 static const void *kLayoutConfig = &kLayoutConfig;
 static const void *kTagString = &kTagString;
 
-@implementation UIView (LayoutConfig)
+@implementation UIView (DoricLayoutConfig)
 @dynamic layoutConfig;
 
 - (void)setLayoutConfig:(DoricLayoutConfig *)layoutConfig {
@@ -466,8 +466,8 @@ static const void *kTagString = &kTagString;
 
 @end
 
-VLayout *vLayout(NSArray <__kindof UIView *> *views) {
-    VLayout *layout = [[VLayout alloc] initWithFrame:CGRectZero];
+DoricVLayoutView *vLayout(NSArray <__kindof UIView *> *views) {
+    DoricVLayoutView *layout = [[DoricVLayoutView alloc] initWithFrame:CGRectZero];
     for (__kindof UIView *uiView in views) {
         [layout addSubview:uiView];
     }
@@ -475,8 +475,8 @@ VLayout *vLayout(NSArray <__kindof UIView *> *views) {
     return layout;
 }
 
-HLayout *hLayout(NSArray <__kindof UIView *> *views) {
-    HLayout *layout = [[HLayout alloc] initWithFrame:CGRectZero];
+DoricHLayoutView *hLayout(NSArray <__kindof UIView *> *views) {
+    DoricHLayoutView *layout = [[DoricHLayoutView alloc] initWithFrame:CGRectZero];
     for (__kindof UIView *uiView in views) {
         [layout addSubview:uiView];
     }
@@ -484,8 +484,8 @@ HLayout *hLayout(NSArray <__kindof UIView *> *views) {
     return layout;
 }
 
-VLayout *vLayoutWithBlock(NSArray <UIView *(^)()> *blocks) {
-    VLayout *layout = [[VLayout alloc] initWithFrame:CGRectZero];
+DoricVLayoutView *vLayoutWithBlock(NSArray <UIView *(^)()> *blocks) {
+    DoricVLayoutView *layout = [[DoricVLayoutView alloc] initWithFrame:CGRectZero];
     UIView *(^block)();
     for (block in blocks) {
         [layout addSubview:block()];
@@ -494,8 +494,8 @@ VLayout *vLayoutWithBlock(NSArray <UIView *(^)()> *blocks) {
     return layout;
 }
 
-HLayout *hLayoutWithBlock(NSArray <UIView *(^)()> *blocks) {
-    HLayout *layout = [[HLayout alloc] initWithFrame:CGRectZero];
+DoricHLayoutView *hLayoutWithBlock(NSArray <UIView *(^)()> *blocks) {
+    DoricHLayoutView *layout = [[DoricHLayoutView alloc] initWithFrame:CGRectZero];
     UIView *(^block)();
     for (block in blocks) {
         [layout addSubview:block()];

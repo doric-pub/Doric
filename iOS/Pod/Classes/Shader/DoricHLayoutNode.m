@@ -24,11 +24,11 @@
 #import "DoricUtil.h"
 
 @implementation DoricHLayoutNode
-- (HLayout *)build:(NSDictionary *)props {
-    return [HLayout new];
+- (DoricHLayoutView *)build:(NSDictionary *)props {
+    return [DoricHLayoutView new];
 }
 
-- (void)blendView:(HLayout *)view forPropName:(NSString *)name propValue:(id)prop {
+- (void)blendView:(DoricHLayoutView *)view forPropName:(NSString *)name propValue:(id)prop {
     if ([name isEqualToString:@"gravity"]) {
         view.gravity = (DoricGravity) [(NSNumber *) prop integerValue];
     } else if ([name isEqualToString:@"space"]) {
@@ -41,7 +41,7 @@
 - (void)blendChild:(DoricViewNode *)child layoutConfig:(NSDictionary *)layoutConfig {
     [super blendChild:child layoutConfig:layoutConfig];
     if (![child.layoutConfig isKindOfClass:DoricLinearConfig.class]) {
-        DoricLog(@"blend HLayout child error,layout params not match");
+        DoricLog(@"blend DoricHLayoutView child error,layout params not match");
         return;
     }
     DoricLinearConfig *params = (DoricLinearConfig *) child.layoutConfig;

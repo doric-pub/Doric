@@ -44,7 +44,7 @@
 - (void)blendChild:(DoricViewNode *)child layoutConfig:(NSDictionary *)layoutConfig {
     [super blendChild:child layoutConfig:layoutConfig];
     if (![child.layoutConfig isKindOfClass:DoricStackConfig.class]) {
-        DoricLog(@"blend HLayout child error,layout params not match");
+        DoricLog(@"blend DoricHLayoutView child error,layout params not match");
         return;
     }
     DoricStackConfig *params = (DoricStackConfig *) child.layoutConfig;

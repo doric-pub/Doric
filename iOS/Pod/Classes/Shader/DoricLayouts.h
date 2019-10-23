@@ -89,29 +89,21 @@ typedef NS_ENUM(NSInteger, DoricGravity) {
 @property(nonatomic, assign) DoricGravity gravity;
 @end
 
-@interface LinearLayout : DoricLayoutContainer<DoricLinearConfig *>
+@interface DoricLinearView : DoricLayoutContainer<DoricLinearConfig *>
 @property(nonatomic, assign) DoricGravity gravity;
 @property(nonatomic, assign) CGFloat space;
 @end
 
 
-@interface VLayout : LinearLayout
+@interface DoricVLayoutView : DoricLinearView
 @end
 
-@interface HLayout : LinearLayout
+@interface DoricHLayoutView : DoricLinearView
 @end
 
-@interface UIView (LayoutConfig)
+@interface UIView (DoricLayoutConfig)
 @property(nonatomic, strong) DoricLayoutConfig *layoutConfig;
 @property(nonatomic, copy) NSString *tagString;
 
 - (UIView *)viewWithTagString:(NSString *)tagString;
 @end
-
-VLayout *vLayout(NSArray <__kindof UIView *> *views);
-
-HLayout *hLayout(NSArray <__kindof UIView *> *views);
-
-VLayout *vLayoutWithBlock(NSArray <UIView *(^)()> *blocks);
-
-HLayout *hLayoutWithBlock(NSArray <UIView *(^)()> *blocks);

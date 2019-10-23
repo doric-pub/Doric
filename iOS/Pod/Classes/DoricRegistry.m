@@ -61,27 +61,27 @@
 }
 
 - (void)registerJSBundle:(NSString *)bundle withName:(NSString *)name {
-    [self.bundles setObject:bundle forKey:name];
+    self.bundles[name] = bundle;
 }
 
 - (NSString *)acquireJSBundle:(NSString *)name {
-    return [self.bundles objectForKey:name];
+    return self.bundles[name];
 }
 
 - (void)registerNativePlugin:(Class)pluginClass withName:(NSString *)name {
-    [self.plugins setObject:pluginClass forKey:name];
+    self.plugins[name] = pluginClass;
 }
 
 - (Class)acquireNativePlugin:(NSString *)name {
-    return [self.plugins objectForKey:name];
+    return self.plugins[name];
 }
 
 - (void)registerViewNode:(Class)nodeClass withName:(NSString *)name {
-    [self.nodes setObject:nodeClass forKey:name];
+    self.nodes[name] = nodeClass;
 }
 
 - (Class)acquireViewNode:(NSString *)name {
-    return [self.nodes objectForKey:name];
+    return self.nodes[name];
 }
 
 @end

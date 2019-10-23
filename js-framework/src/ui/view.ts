@@ -228,7 +228,20 @@ export interface LinearConfig extends Config {
     weight?: number
 }
 
-export abstract class Group extends View {
+export interface SuperView {
+    subViewById(id: string): View | undefined
+}
+
+export abstract class Group extends View implements SuperView {
+
+    subViewById(id: string): View | undefined {
+        for (let view of this.children) {
+            if (view.viewId === id) {
+                return view
+            }
+        }
+        return undefined
+    }
 
     @Property
     readonly children: View[] = new Proxy([], {
@@ -330,25 +343,74 @@ export class Image extends View {
 }
 
 export class List extends View {
+    private cachedViews: Map<string, View> = new Map
     @Property
     itemCount = 0
 
     @Property
-    renderItem?: (index: number) => View
+    renderItem!: (index: number) => View
+
+
+    private getItem(itemIdx: number) {
+        let view = this.cachedViews.get(`${itemIdx}`)
+        if (view === undefined) {
+            view = this.renderItem(itemIdx)
+            this.cachedViews.set(`${itemIdx}`, view)
+        }
+        return view
+    }
+
+    @Property
+    private renderBunchedItems(items: number[]): View[] {
+        return items.map(e => this.getItem(e))
+    }
 }
 
 export class SectionList extends View {
+    private cachedViews: Map<string, View> = new Map
+
     @Property
     sectionRowsCount: number[] = []
 
     @Property
-    renderSectionHeader?: (section: number) => View
+    renderSectionHeader!: (sectionIdx: number) => View
 
     @Property
-    renderItem?: (item: number, section: number) => View
+    renderItem!: (sectionIdx: number, itemIdx: number) => View
 
     @Property
     sectionHeaderSticky = true
+
+    setupSectionRows(sectionCount: number, numberOfSection: (section: number) => number) {
+        this.sectionRowsCount = [...Array(sectionCount).keys()].map(e => numberOfSection(e))
+    }
+
+    private getItem(sectionIdx: number, itemIdx: number) {
+        let view = this.cachedViews.get(`${sectionIdx}:${itemIdx}`)
+        if (view === undefined) {
+            view = this.renderItem(sectionIdx, itemIdx)
+            this.cachedViews.set(`${sectionIdx}:${itemIdx}`, view)
+        }
+        return view
+    }
+
+    private getSectionHeader(sectionIdx: number) {
+        let view = this.cachedViews.get(`${sectionIdx}:`)
+        if (view === undefined) {
+            view = this.renderSectionHeader(sectionIdx)
+            this.cachedViews.set(`${sectionIdx}:`, view)
+        }
+        return view
+    }
+
+    @Property
+    private renderBunchedItems(items: Array<{ itemIdx: number, sectionIdx: number }>,
+        headers: number[]): { items: View[], headers: View[] } {
+        return {
+            items: items.map(e => this.getItem(e.sectionIdx, e.itemIdx)),
+            headers: headers.map(e => this.getSectionHeader(e))
+        }
+    }
 }
 
 export class Slide extends View {

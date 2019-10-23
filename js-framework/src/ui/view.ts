@@ -207,7 +207,13 @@ export abstract class View implements Modeling {
     toModel() {
         return this.nativeViewModel
     }
-
+    let(block: (it: this) => void) {
+        block(this)
+    }
+    also(block: (it: this) => void) {
+        block(this)
+        return this
+    }
 }
 
 export interface Config {
@@ -342,8 +348,13 @@ export class Image extends View {
     imageUrl?: string
 }
 
-export class List extends View {
+export class List extends View implements SuperView {
     private cachedViews: Map<string, View> = new Map
+
+    subViewById(id: string): View | undefined {
+        return this.cachedViews.get(id)
+    }
+
     @Property
     itemCount = 0
 
@@ -366,9 +377,12 @@ export class List extends View {
     }
 }
 
-export class SectionList extends View {
+export class SectionList extends View implements SuperView {
     private cachedViews: Map<string, View> = new Map
 
+    subViewById(id: string): View | undefined {
+        return this.cachedViews.get(id)
+    }
     @Property
     sectionRowsCount: number[] = []
 
@@ -413,8 +427,30 @@ export class SectionList extends View {
     }
 }
 
-export class Slide extends View {
+export class Slide extends View implements SuperView {
+    @Property
+    pageCount = 0
 
+    @Property
+    renderPage!: (pageIdx: number) => View
+
+    private cachedViews: Map<string, View> = new Map
+    subViewById(id: string): View | undefined {
+        return this.cachedViews.get(id)
+    }
+    private getPage(pageIdx: number) {
+        let view = this.cachedViews.get(`${pageIdx}`)
+        if (view === undefined) {
+            view = this.renderPage(pageIdx)
+            this.cachedViews.set(`${pageIdx}`, view)
+        }
+        return view
+    }
+
+    @Property
+    private renderBunchedPages(pages: number[]): View[] {
+        return pages.map(e => this.getPage(e))
+    }
 }
 
 export function stack() {

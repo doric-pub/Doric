@@ -309,6 +309,16 @@ export class Stack extends Group {
     @Property
     gravity?: Gravity
 }
+
+export class Scroller extends View implements SuperView {
+    @Property
+    contentView?: View
+
+    subViewById(id: string): View | undefined {
+        return this.contentView
+    }
+}
+
 export class Root extends Stack {
 
 }
@@ -452,6 +462,8 @@ export class Slide extends View implements SuperView {
         return pages.map(e => this.getPage(e))
     }
 }
+
+
 
 export function stack() {
 

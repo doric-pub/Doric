@@ -61,6 +61,26 @@ export abstract class View implements Modeling {
     @Property
     viewId = uniqueId('ViewId')
 
+    @Property
+    padding?: {
+        left?: number,
+        right?: number,
+        top?: number,
+        bottom?: number,
+    }
+
+    @Property
+    layoutConfig?: Config
+
+    @Property
+    onClick?: Function
+
+    /**
+     * Set to reuse native view
+     */
+    @Property
+    identifier?: string
+
     parent?: Group
 
     callbacks: Map<String, Function> = new Map
@@ -188,19 +208,6 @@ export abstract class View implements Modeling {
         return this.nativeViewModel
     }
 
-    @Property
-    padding?: {
-        left?: number,
-        right?: number,
-        top?: number,
-        bottom?: number,
-    }
-
-    @Property
-    layoutConfig?: Config
-
-    @Property
-    onClick?: Function
 }
 
 export interface Config {
@@ -323,7 +330,25 @@ export class Image extends View {
 }
 
 export class List extends View {
+    @Property
+    itemCount = 0
 
+    @Property
+    renderItem?: (index: number) => View
+}
+
+export class SectionList extends View {
+    @Property
+    sectionRowsCount: number[] = []
+
+    @Property
+    renderSectionHeader?: (section: number) => View
+
+    @Property
+    renderItem?: (item: number, section: number) => View
+
+    @Property
+    sectionHeaderSticky = true
 }
 
 export class Slide extends View {

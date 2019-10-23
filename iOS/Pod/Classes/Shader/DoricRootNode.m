@@ -23,7 +23,7 @@
 #import "DoricRootNode.h"
 
 @implementation DoricRootNode
-- (void)setupRootView:(Stack *)view {
+- (void)setupRootView:(DoricStackView *)view {
     self.view = view;
     self.layoutConfig = view.layoutConfig;
 }

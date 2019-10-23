@@ -73,7 +73,7 @@
                 [tobeRemoved addObject:old];
             }
 
-            LayoutConfig *params = node.layoutConfig;
+            DoricLayoutConfig *params = node.layoutConfig;
             if (params == nil) {
                 params = [self generateDefaultLayoutParams];
                 node.layoutConfig = params;
@@ -109,31 +109,31 @@
     }
 }
 
-- (LayoutConfig *)generateDefaultLayoutParams {
-    LayoutConfig *params = [[LayoutConfig alloc] init];
+- (DoricLayoutConfig *)generateDefaultLayoutParams {
+    DoricLayoutConfig *params = [[DoricLayoutConfig alloc] init];
     return params;
 }
 
 - (void)blendChild:(DoricViewNode *)child layoutConfig:(NSDictionary *)layoutConfig {
-    LayoutConfig *params = child.layoutConfig;
+    DoricLayoutConfig *params = child.layoutConfig;
 
     [layoutConfig[@"widthSpec"] also:^(NSNumber *it) {
         if (it) {
-            params.widthSpec = (LayoutParam) [it integerValue];
+            params.widthSpec = (DoricLayoutSpec) [it integerValue];
         }
     }];
 
     [layoutConfig[@"heightSpec"] also:^(NSNumber *it) {
         if (it) {
-            params.heightSpec = (LayoutParam) [it integerValue];
+            params.heightSpec = (DoricLayoutSpec) [it integerValue];
         }
     }];
 
-    if ([params isKindOfClass:MarginLayoutConfig.class]) {
-        MarginLayoutConfig *marginParams = (MarginLayoutConfig *) params;
+    if ([params isKindOfClass:DoricMarginConfig.class]) {
+        DoricMarginConfig *marginParams = (DoricMarginConfig *) params;
         NSDictionary *margin = layoutConfig[@"margin"];
         if (margin) {
-            marginParams.margin = MarginMake(
+            marginParams.margin = DoricMarginMake(
                     [(NSNumber *) margin[@"left"] floatValue],
                     [(NSNumber *) margin[@"top"] floatValue],
                     [(NSNumber *) margin[@"right"] floatValue],

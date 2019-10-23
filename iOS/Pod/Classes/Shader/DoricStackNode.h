@@ -22,5 +22,5 @@
 
 #import "DoricGroupNode.h"
 
-@interface DoricStackNode : DoricGroupNode<Stack *, StackLayoutConfig *>
+@interface DoricStackNode : DoricGroupNode<DoricStackView *, DoricStackConfig *>
 @end

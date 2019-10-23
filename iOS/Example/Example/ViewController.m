@@ -13,7 +13,7 @@
 #import "DoricNativePlugin.h"
 #import "DoricRootNode.h"
 #import "DoricLocalServer.h"
-#import "DoricLinearLayout.h"
+#import "DoricLayouts.h"
 #import "DoricExtensions.h"
 
 @interface ViewController ()
@@ -29,8 +29,8 @@
     NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"Snake" ofType:@"js"];
     NSString *jsContent = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
     self.doricContext = [[DoricContext alloc] initWithScript:jsContent source:@"test.js"];
-    [self.doricContext.rootNode setupRootView:[[Stack new] also:^(Stack *it) {
-        it.layoutConfig = [[StackLayoutConfig alloc] initWithWidth:LayoutParamAtMost height:LayoutParamAtMost];
+    [self.doricContext.rootNode setupRootView:[[DoricStackView new] also:^(DoricStackView *it) {
+        it.layoutConfig = [[DoricStackConfig alloc] initWithWidth:DoricLayoutAtMost height:DoricLayoutAtMost];
         [self.view addSubview:it];
     }]];
     [self.doricContext initContextWithWidth:self.view.width height:self.view.height];

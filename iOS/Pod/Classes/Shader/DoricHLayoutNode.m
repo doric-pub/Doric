@@ -40,14 +40,14 @@
 
 - (void)blendChild:(DoricViewNode *)child layoutConfig:(NSDictionary *)layoutConfig {
     [super blendChild:child layoutConfig:layoutConfig];
-    if (![child.layoutConfig isKindOfClass:LinearLayoutConfig.class]) {
+    if (![child.layoutConfig isKindOfClass:DoricLinearConfig.class]) {
         DoricLog(@"blend HLayout child error,layout params not match");
         return;
     }
-    LinearLayoutConfig *params = (LinearLayoutConfig *) child.layoutConfig;
+    DoricLinearConfig *params = (DoricLinearConfig *) child.layoutConfig;
     NSDictionary *margin = layoutConfig[@"margin"];
     if (margin) {
-        params.margin = MarginMake(
+        params.margin = DoricMarginMake(
                 [(NSNumber *) margin[@"left"] floatValue],
                 [(NSNumber *) margin[@"top"] floatValue],
                 [(NSNumber *) margin[@"right"] floatValue],
@@ -59,7 +59,7 @@
     }
 }
 
-- (LinearLayoutConfig *)generateDefaultLayoutParams {
-    return [[LinearLayoutConfig alloc] init];
+- (DoricLinearConfig *)generateDefaultLayoutParams {
+    return [[DoricLinearConfig alloc] init];
 }
 @end

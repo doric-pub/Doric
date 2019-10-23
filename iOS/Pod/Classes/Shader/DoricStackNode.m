@@ -25,11 +25,11 @@
 
 @implementation DoricStackNode
 
-- (Stack *)build:(NSDictionary *)props {
-    return [Stack new];
+- (DoricStackView *)build:(NSDictionary *)props {
+    return [DoricStackView new];
 }
 
-- (void)blendView:(Stack *)view forPropName:(NSString *)name propValue:(id)prop {
+- (void)blendView:(DoricStackView *)view forPropName:(NSString *)name propValue:(id)prop {
     if ([name isEqualToString:@"gravity"]) {
         view.gravity = (DoricGravity) [(NSNumber *) prop integerValue];
     } else {
@@ -37,17 +37,17 @@
     }
 }
 
-- (StackLayoutConfig *)generateDefaultLayoutParams {
-    return [[StackLayoutConfig alloc] init];
+- (DoricStackConfig *)generateDefaultLayoutParams {
+    return [[DoricStackConfig alloc] init];
 }
 
 - (void)blendChild:(DoricViewNode *)child layoutConfig:(NSDictionary *)layoutConfig {
     [super blendChild:child layoutConfig:layoutConfig];
-    if (![child.layoutConfig isKindOfClass:StackLayoutConfig.class]) {
+    if (![child.layoutConfig isKindOfClass:DoricStackConfig.class]) {
         DoricLog(@"blend HLayout child error,layout params not match");
         return;
     }
-    StackLayoutConfig *params = (StackLayoutConfig *) child.layoutConfig;
+    DoricStackConfig *params = (DoricStackConfig *) child.layoutConfig;
     NSNumber *alignment = layoutConfig[@"alignment"];
     if (alignment) {
         params.alignment = (DoricGravity) [alignment integerValue];

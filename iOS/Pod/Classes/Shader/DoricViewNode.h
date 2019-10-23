@@ -21,7 +21,7 @@
 //
 
 #import "DoricContextHolder.h"
-#import "DoricLinearLayout.h"
+#import "DoricLayouts.h"
 #import "UIView+Doric.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -36,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, strong) NSString *viewId;
 
-@property(nonatomic, strong) LayoutConfig *layoutConfig;
+@property(nonatomic, strong) DoricLayoutConfig *layoutConfig;
 
 @property(nonatomic, strong, readonly) NSArray<NSString *> *idList;
 

@@ -24,7 +24,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DoricGroupNode <V:UIView *, P:LayoutConfig *> : DoricViewNode<V>
+@interface DoricGroupNode <V:UIView *, P:DoricLayoutConfig *> : DoricViewNode<V>
 
 @property(nonatomic, strong) NSMutableDictionary *children;
 @property(nonatomic, strong) NSMutableArray *indexedChildren;

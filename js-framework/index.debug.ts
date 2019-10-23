@@ -14,32 +14,36 @@
  * limitations under the License.
  */
 import * as doric from './src/runtime/sandbox'
-import * as WebSocket from "ws"
+import * as WebSocket from 'ws'
 
 let global = new Function('return this')()
 global.doric = doric
 const contextId = "DoricDebug"
 global.context = doric.jsObtainContext(contextId)
 global.Entry = doric.jsObtainEntry(contextId)
-console.log('Start Server')
 
 const wss = new WebSocket.Server({ port: 2080 })
-var sandbox = {}
-
 wss.on('connection', function connection(ws) {
   ws.on('message', function incoming(message: string) {
     let messageObject = JSON.parse(message)
     switch (messageObject.cmd) {
-      case "loadJS":
-        break
-      case "evaluateJS":
+      case "injectGlobalJSFunction":
+        console.log(messageObject.name)
+        Reflect.set(global, messageObject.name, function() {
+          ws.send(JSON.stringify({
+            cmd: 'injectGlobalJSFunction',
+            name: messageObject.name,
+            arguments: arguments
+          }))
+        })
         break
     }
   })
 })
+console.log('Start Server')
 
 global.injectGlobal = (objName: string, obj: string) => {
-    Reflect.set(global, objName, JSON.parse(obj))
+  Reflect.set(global, objName, JSON.parse(obj))
 }
 
 global.sendToNative = () => {
@@ -48,4 +52,5 @@ global.sendToNative = () => {
 global.receiveFromNative = () => {
 
 }
+
 export * from './index'

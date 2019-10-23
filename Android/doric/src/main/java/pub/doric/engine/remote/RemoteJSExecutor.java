@@ -11,6 +11,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.EOFException;
 import java.net.ConnectException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
 
@@ -24,6 +26,8 @@ public class RemoteJSExecutor {
 
     private final WebSocket webSocket;
     private final Gson gson = new Gson();
+
+    private final Map<String, JavaFunction> globalFunctions = new HashMap<>();
 
     public RemoteJSExecutor() {
         OkHttpClient okHttpClient = new OkHttpClient
@@ -55,36 +59,40 @@ public class RemoteJSExecutor {
             @Override
             public void onMessage(@NotNull WebSocket webSocket, @NotNull String text) {
                 JsonElement je = gson.fromJson(text, JsonElement.class);
-                System.out.println(je);
 
-                LockSupport.unpark(current);
+                if (je instanceof JsonObject) {
+                    JsonObject jo = ((JsonObject) je);
+                    String cmd = jo.get("cmd").getAsString();
+                    switch (cmd) {
+                        case "injectGlobalJSFunction":
+                            String name = jo.get("name").getAsString();
+                            JsonObject arguments = jo.getAsJsonObject("arguments");
+                            for (String key : arguments.keySet()) {
+                                System.out.println(key + " " + arguments.get(key));
+                            }
+                            break;
+                    }
+                }
             }
         });
         LockSupport.park(current);
     }
 
     public String loadJS(String script, String source) {
-        JsonObject jo = new JsonObject();
-        jo.addProperty("cmd", "loadJS");
-        jo.addProperty("script", script);
-        jo.addProperty("source", source);
-        webSocket.send(gson.toJson(jo));
-
-        LockSupport.park(Thread.currentThread());
         return null;
     }
 
     public JSDecoder evaluateJS(String script, String source, boolean hashKey) {
-        JsonObject jo = new JsonObject();
-        jo.addProperty("cmd", "evaluateJS");
-        jo.addProperty("script", script);
-        jo.addProperty("source", source);
-        jo.addProperty("hashKey", hashKey);
-        webSocket.send(gson.toJson(jo));
         return null;
     }
 
     public void injectGlobalJSFunction(String name, JavaFunction javaFunction) {
+        globalFunctions.put(name, javaFunction);
+
+        JsonObject jo = new JsonObject();
+        jo.addProperty("cmd", "injectGlobalJSFunction");
+        jo.addProperty("name", name);
+        webSocket.send(gson.toJson(jo));
     }
 
     public void injectGlobalJSObject(String name, JavaValue javaValue) {

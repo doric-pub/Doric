@@ -33,6 +33,7 @@ export default [
         },
         plugins: [
             resolve({ jsnext: true, main: true }),
-        ]
+        ],
+        external: ['ws']
     },
 ]

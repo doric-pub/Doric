@@ -1,4 +1,4 @@
-import { Image, ViewHolder, VMPanel, ViewModel, Gravity, NativeCall, Text, Color, VLayout, log, logw, loge, Group, } from "doric"
+import { Image, ViewHolder, VMPanel, ViewModel, Gravity, NativeCall, Text, Color, VLayout, log, logw, loge, Group, LayoutSpec, } from "doric"
 
 
 interface CountModel {
@@ -57,6 +57,10 @@ class CounterView extends ViewHolder {
         // iv.width = iv.height = 100
         iv.imageUrl = "https://misc.aotu.io/ONE-SUNDAY/SteamEngine.png"
         //iv.bgColor = Color.parse('#00ff00')
+        iv.layoutConfig = {
+            widthSpec: LayoutSpec.WRAP_CONTENT,
+            heightSpec: LayoutSpec.WRAP_CONTENT,
+        }
         root.addChild(iv)
     }
 

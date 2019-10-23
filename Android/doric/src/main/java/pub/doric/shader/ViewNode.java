@@ -86,16 +86,12 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     protected void blend(T view, ViewGroup.LayoutParams layoutParams, String name, JSValue prop) {
         switch (name) {
             case "width":
-                if (prop.asNumber().toInt() < 0) {
-                    layoutParams.width = prop.asNumber().toInt();
-                } else {
+                if (layoutParams.width >= 0) {
                     layoutParams.width = DoricUtils.dp2px(prop.asNumber().toFloat());
                 }
                 break;
             case "height":
-                if (prop.asNumber().toInt() < 0) {
-                    layoutParams.height = prop.asNumber().toInt();
-                } else {
+                if (layoutParams.height >= 0) {
                     layoutParams.height = DoricUtils.dp2px(prop.asNumber().toFloat());
                 }
                 break;

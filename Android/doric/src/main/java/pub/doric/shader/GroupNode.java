@@ -116,12 +116,42 @@ public abstract class GroupNode<F extends ViewGroup> extends ViewNode<F> {
     }
 
     protected ViewGroup.LayoutParams generateDefaultLayoutParams() {
-        return new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        return new ViewGroup.LayoutParams(0, 0);
     }
 
     protected void blendChild(ViewNode viewNode, JSObject jsObject) {
+
+
         JSValue jsValue = jsObject.getProperty("margin");
+        JSValue widthSpec = jsObject.getProperty("widthSpec");
+        JSValue heightSpec = jsObject.getProperty("widthSpec");
+
         ViewGroup.LayoutParams layoutParams = viewNode.getLayoutParams();
+        if (widthSpec.isNumber()) {
+            switch (widthSpec.asNumber().toInt()) {
+                case 1:
+                    layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    break;
+                case 2:
+                    layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                    break;
+                default:
+                    break;
+
+            }
+        }
+        if (heightSpec.isNumber()) {
+            switch (heightSpec.asNumber().toInt()) {
+                case 1:
+                    layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    break;
+                case 2:
+                    layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                    break;
+                default:
+                    break;
+            }
+        }
         if (jsValue.isObject() && layoutParams instanceof ViewGroup.MarginLayoutParams) {
             JSValue topVal = jsValue.asObject().getProperty("top");
             if (topVal.isNumber()) {

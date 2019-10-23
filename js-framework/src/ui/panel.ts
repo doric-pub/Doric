@@ -99,7 +99,7 @@ export abstract class Panel {
     private retrospectView(ids: string[]): View {
         return ids.reduce((acc: View, cur) => {
             if (Reflect.has(acc, "subViewById")) {
-                return Reflect.get(acc, "subViewById")(cur)
+                return Reflect.apply(Reflect.get(acc, "subViewById"), acc, [cur])
             }
             return acc
         }, this.__root__)

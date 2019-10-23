@@ -1,4 +1,4 @@
-import { loge, log, ViewHolder, Stack, ViewModel, Gravity, Text, Color, HLayout, VLayout, Group, VMPanel } from "doric";
+import { loge, log, ViewHolder, Stack, ViewModel, Gravity, Text, Color, HLayout, VLayout, Group, VMPanel, LayoutSpec } from "doric";
 
 type SnakeNode = {
     x: number
@@ -154,10 +154,14 @@ class SnakeView extends ViewHolder {
             margin: {
                 top: 20
             },
+            widthSpec: LayoutSpec.WRAP_CONTENT,
+            heightSpec: LayoutSpec.WRAP_CONTENT,
         }
         vlayout.space = 20
         vlayout.layoutConfig = {
-            alignment: new Gravity().centerX().top()
+            alignment: new Gravity().centerX().top(),
+            widthSpec: LayoutSpec.WRAP_CONTENT,
+            heightSpec: LayoutSpec.WRAP_CONTENT,
         }
         this.panel.bgColor = Color.parse('#00ff00')
         vlayout.addChild(title)
@@ -165,11 +169,20 @@ class SnakeView extends ViewHolder {
         root.addChild(vlayout)
 
         const hlayout = new HLayout
-        this.start.text = "Start"
-        this.start.textSize = 30
-        this.start.textColor = Color.parse("#ffffff")
-
-        hlayout.addChild(this.start)
+        hlayout.layoutConfig = {
+            widthSpec: LayoutSpec.WRAP_CONTENT,
+            heightSpec: LayoutSpec.WRAP_CONTENT,
+        }
+        hlayout.addChild(this.start.also(
+            it => {
+                it.text = "Start"
+                it.textSize = 30
+                it.textColor = Color.parse("#ffffff")
+                it.layoutConfig = {
+                    widthSpec: LayoutSpec.WRAP_CONTENT,
+                    heightSpec: LayoutSpec.WRAP_CONTENT,
+                }
+            }))
         vlayout.addChild(hlayout)
 
 
@@ -182,7 +195,9 @@ class SnakeView extends ViewHolder {
         controlArea.gravity = new Gravity().centerX()
         controlArea.space = 10
         controlArea.layoutConfig = {
-            alignment: new Gravity().centerX()
+            alignment: new Gravity().centerX(),
+            widthSpec: LayoutSpec.WRAP_CONTENT,
+            heightSpec: LayoutSpec.WRAP_CONTENT,
         }
         const line1 = new HLayout
         const line2 = new HLayout
@@ -191,6 +206,14 @@ class SnakeView extends ViewHolder {
         line2.addChild(this.left)
         line2.addChild(this.down)
         line2.addChild(this.right)
+        line1.layoutConfig = {
+            widthSpec: LayoutSpec.WRAP_CONTENT,
+            heightSpec: LayoutSpec.WRAP_CONTENT,
+        }
+        line2.layoutConfig = {
+            widthSpec: LayoutSpec.WRAP_CONTENT,
+            heightSpec: LayoutSpec.WRAP_CONTENT,
+        }
         controlArea.addChild(line1)
         controlArea.addChild(line2)
         vlayout.addChild(controlArea)

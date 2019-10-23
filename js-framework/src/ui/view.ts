@@ -19,9 +19,25 @@ import { uniqueId } from "../util/uniqueId";
 import { Gravity } from "../util/gravity";
 import { loge } from "../util/log";
 
-export const MATCH_PARENT = -1
+export enum LayoutSpec {
+    EXACTLY = 0,
+    WRAP_CONTENT = 1,
+    AT_MOST = 2,
+}
 
-export const WRAP_CONTENT = -2
+export interface LayoutConfig {
+    widthSpec?: LayoutSpec
+    heightSpec?: LayoutSpec
+    margin?: {
+        left?: number,
+        right?: number,
+        top?: number,
+        bottom?: number,
+    }
+    alignment?: Gravity
+}
+
+
 
 export function Property(target: Object, propKey: string) {
     Reflect.defineMetadata(propKey, true, target)
@@ -29,10 +45,10 @@ export function Property(target: Object, propKey: string) {
 
 export abstract class View implements Modeling {
     @Property
-    width: number = WRAP_CONTENT
+    width: number = 0
 
     @Property
-    height: number = WRAP_CONTENT
+    height: number = 0
 
     @Property
     x: number = 0
@@ -70,7 +86,7 @@ export abstract class View implements Modeling {
     }
 
     @Property
-    layoutConfig?: Config
+    layoutConfig?: LayoutConfig
 
     @Property
     onClick?: Function
@@ -216,21 +232,11 @@ export abstract class View implements Modeling {
     }
 }
 
-export interface Config {
-    margin?: {
-        left?: number,
-        right?: number,
-        top?: number,
-        bottom?: number,
-    }
-    alignment?: Gravity
-}
-
-export interface StackConfig extends Config {
+export interface StackConfig extends LayoutConfig {
 
 }
 
-export interface LinearConfig extends Config {
+export interface LinearConfig extends LayoutConfig {
     weight?: number
 }
 
@@ -239,16 +245,6 @@ export interface SuperView {
 }
 
 export abstract class Group extends View implements SuperView {
-
-    subViewById(id: string): View | undefined {
-        for (let view of this.children) {
-            if (view.viewId === id) {
-                return view
-            }
-        }
-        return undefined
-    }
-
     @Property
     readonly children: View[] = new Proxy([], {
         set: (target, index, value) => {
@@ -269,6 +265,14 @@ export abstract class Group extends View implements SuperView {
         }
     })
 
+    subViewById(id: string): View | undefined {
+        for (let view of this.children) {
+            if (view.viewId === id) {
+                return view
+            }
+        }
+        return undefined
+    }
     addChild(view: View) {
         this.children.push(view)
     }
@@ -461,27 +465,4 @@ export class Slide extends View implements SuperView {
     private renderBunchedPages(pages: number[]): View[] {
         return pages.map(e => this.getPage(e))
     }
-}
-
-
-
-export function stack() {
-
-}
-
-export function vlayout(providers: Array<() => View>, config: {
-    width: number
-    height: number
-    space?: number
-}) {
-    const vlayout = new VLayout
-    vlayout.width = config.width
-    vlayout.height = config.height
-    if (config.space !== undefined) {
-        vlayout.space = config.space
-    }
-    providers.forEach(e => {
-        vlayout.addChild(e())
-    })
-    return vlayout
 }

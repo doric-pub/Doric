@@ -62,6 +62,6 @@ public class StackNode extends GroupNode<FrameLayout> {
 
     @Override
     protected ViewGroup.LayoutParams generateDefaultLayoutParams() {
-        return new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        return new FrameLayout.LayoutParams(0, 0);
     }
 }

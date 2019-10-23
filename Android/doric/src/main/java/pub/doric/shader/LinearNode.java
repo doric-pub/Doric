@@ -50,7 +50,7 @@ public class LinearNode extends GroupNode<LinearLayout> {
 
     @Override
     protected ViewGroup.LayoutParams generateDefaultLayoutParams() {
-        return new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        return new LinearLayout.LayoutParams(0, 0);
     }
 
     @Override

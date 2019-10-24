@@ -30,10 +30,11 @@ wss.on('connection', function connection(ws) {
       case "injectGlobalJSFunction":
         console.log(messageObject.name)
         Reflect.set(global, messageObject.name, function() {
+          let args = [].slice.call(arguments)
           ws.send(JSON.stringify({
             cmd: 'injectGlobalJSFunction',
             name: messageObject.name,
-            arguments: arguments
+            arguments: args
           }))
         })
         break

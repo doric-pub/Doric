@@ -4,8 +4,10 @@ import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JavaFunction;
 import com.github.pengfeizhou.jscore.JavaValue;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -66,10 +68,31 @@ public class RemoteJSExecutor {
                     switch (cmd) {
                         case "injectGlobalJSFunction":
                             String name = jo.get("name").getAsString();
-                            JsonObject arguments = jo.getAsJsonObject("arguments");
-                            for (String key : arguments.keySet()) {
-                                System.out.println(key + " " + arguments.get(key));
+                            JsonArray arguments = jo.getAsJsonArray("arguments");
+                            JSDecoder[] decoders = new JSDecoder[arguments.size()];
+                            for (int i = 0; i < arguments.size(); i++) {
+                                if (arguments.get(i).isJsonPrimitive()) {
+                                    JsonPrimitive jp = ((JsonPrimitive) arguments.get(i));
+                                    if (jp.isNumber()) {
+                                        ValueBuilder vb = new ValueBuilder(jp.getAsNumber());
+                                        JSDecoder decoder = new JSDecoder(vb.build());
+                                        decoders[i] = decoder;
+                                    } else if (jp.isBoolean()) {
+                                        ValueBuilder vb = new ValueBuilder(jp.getAsBoolean());
+                                        JSDecoder decoder = new JSDecoder(vb.build());
+                                        decoders[i] = decoder;
+                                    } else if (jp.isString()) {
+                                        ValueBuilder vb = new ValueBuilder(jp.getAsString());
+                                        JSDecoder decoder = new JSDecoder(vb.build());
+                                        decoders[i] = decoder;
+                                    }
+                                } else {
+                                    ValueBuilder vb = new ValueBuilder(arguments.get(i));
+                                    JSDecoder decoder = new JSDecoder(vb.build());
+                                    decoders[i] = decoder;
+                                }
                             }
+                            globalFunctions.get(name).exec(decoders);
                             break;
                     }
                 }

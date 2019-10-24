@@ -19,5 +19,6 @@ export * from "./src/util/color"
 export * from './src/util/log'
 export * from './src/util/types'
 export * from './src/util/gravity'
+export * from './src/util/candies'
 export * from './src/vm/mvvm'
 export * from './src/runtime/global'

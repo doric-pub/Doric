@@ -13,84 +13,61 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { View, Group } from "../ui/view";
+import { Group } from "../ui/view";
 import { Panel } from "../ui/panel";
 
-function listen<T extends Object>(obj: T, listener: Function): T {
-    return new Proxy(obj, {
-        get: (target, prop, receiver) => {
-            const ret = Reflect.get(target, prop, receiver)
-            if (ret instanceof Function) {
-                return Reflect.get(target, prop, receiver)
-            } else if (ret instanceof Object) {
-                return listen(ret, listener)
-            } else {
-                return ret
-            }
-        },
-
-        set: (target, prop, value, receiver) => {
-            const ret = Reflect.set(target, prop, value, receiver)
-            Reflect.apply(listener, undefined, [])
-            return ret
-        },
-    })
-}
-
-export abstract class ViewHolder {
+export abstract class ViewHolder<M>{
     abstract build(root: Group): void
+    abstract bind(state: M): void
 }
 
-export abstract class VMPanel<M extends Object, V extends ViewHolder> extends Panel {
+export type Setter<M> = (state: M) => void
 
-    private vm?: ViewModel<M, V>
+export abstract class ViewModel<M extends Object, V extends ViewHolder<M>> {
+    private state: M
+    private viewHolder: V
 
-    abstract getVMClass(): new (m: M, v: V) => ViewModel<M, V>
+    constructor(obj: M, v: V) {
+        this.state = obj
+        this.viewHolder = v
+    }
 
+    getState() {
+        return this.state
+    }
 
-    abstract getModel(): M
+    updateState(setter: Setter<M>) {
+        setter(this.state)
+        this.viewHolder.bind(this.state)
+    }
 
-    abstract getViewHolder(): V
+    attach(view: Group) {
+        this.viewHolder.build(view)
+    }
+}
+export type ViewModelClass<M> = new (m: M, v: ViewHolder<M>) => ViewModel<M, ViewHolder<M>>
 
-    getVM() {
+export type ViewHolderClass<M> = new () => ViewHolder<M>
+
+export abstract class VMPanel<M extends Object> extends Panel {
+
+    private vm?: ViewModel<M, ViewHolder<M>>
+    private vh?: ViewHolder<M>
+
+    abstract getViewModelClass(): ViewModelClass<M>
+
+    abstract getState(): M
+
+    abstract getViewHolderClass(): ViewHolderClass<M>
+
+    getViewModel() {
         return this.vm
     }
 
     build(root: Group): void {
-        this.vm = new (this.getVMClass())(this.getModel(), this.getViewHolder())
-        this.vm.build(root)
+        this.vh = new (this.getViewHolderClass())
+        this.vm = new (this.getViewModelClass())(this.getState(), this.vh)
+        this.vm.attach(root)
     }
 }
 
-export abstract class ViewModel<M extends Object, V extends ViewHolder> {
-    private model: M
-    private listeners: Function[] = []
-    private viewHolder: V
-
-    constructor(obj: M, v: V) {
-        this.model = listen(obj, () => {
-            this.listeners.forEach(e => {
-                Reflect.apply(e, this.model, [this.model])
-            })
-        })
-        this.viewHolder = v
-    }
-
-    build(root: Group) {
-        this.viewHolder.build(root)
-        this.bind((data: M) => {
-            this.binding(this.viewHolder, data)
-        })
-    }
-
-    abstract binding(v: V, model: M): void
-
-    getModel() {
-        return this.model
-    }
-
-    bind(f: (data: M) => void) {
-        Reflect.apply(f, this.model, [this.model])
-        this.listeners.push(f)
-    }
-}

@@ -1,4 +1,4 @@
-import { loge, log, ViewHolder, Stack, ViewModel, Gravity, Text, Color, HLayout, VLayout, Group, VMPanel, LayoutSpec } from "doric";
+import { loge, log, ViewHolder, Stack, ViewModel, Gravity, Text, Color, HLayout, VLayout, Group, VMPanel, LayoutSpec, vlayout, hlayout } from "doric";
 
 type SnakeNode = {
     x: number
@@ -134,7 +134,8 @@ class SnakeModel {
     }
 }
 
-class SnakeView extends ViewHolder {
+class SnakeView extends ViewHolder<SnakeModel> {
+
     panel: Stack = new Stack
     start: Text = new Text
     up?: Text
@@ -144,79 +145,109 @@ class SnakeView extends ViewHolder {
 
     build(root: Group): void {
         root.bgColor = Color.parse('#000000')
-        const vlayout = new VLayout
-        const title = new Text
-        title.text = "Snake"
-        title.textSize = 20
-        title.textColor = Color.parse("#ffffff")
-        title.layoutConfig = {
-            alignment: new Gravity().centerX(),
-            margin: {
-                top: 20
+        vlayout([
+            () => {
+                return (new Text).also(title => {
+                    title.text = "Snake"
+                    title.textSize = 20
+                    title.textColor = Color.parse("#ffffff")
+                    title.layoutConfig = {
+                        alignment: new Gravity().centerX(),
+                        margin: {
+                            top: 20
+                        },
+                        widthSpec: LayoutSpec.WRAP_CONTENT,
+                        heightSpec: LayoutSpec.WRAP_CONTENT,
+                    }
+                })
             },
-            widthSpec: LayoutSpec.WRAP_CONTENT,
-            heightSpec: LayoutSpec.WRAP_CONTENT,
-        }
-        vlayout.space = 20
-        vlayout.layoutConfig = {
-            alignment: new Gravity().centerX().top(),
-            widthSpec: LayoutSpec.WRAP_CONTENT,
-            heightSpec: LayoutSpec.WRAP_CONTENT,
-        }
-        this.panel.bgColor = Color.parse('#00ff00')
-        vlayout.addChild(title)
-        vlayout.addChild(this.panel)
-        root.addChild(vlayout)
+            () => {
+                return (new Stack).also(panel => {
+                    panel.bgColor = Color.parse('#00ff00')
 
-        const hlayout = new HLayout
-        hlayout.layoutConfig = {
-            widthSpec: LayoutSpec.WRAP_CONTENT,
-            heightSpec: LayoutSpec.WRAP_CONTENT,
-        }
-        hlayout.addChild(this.start.also(
-            it => {
-                it.text = "Start"
-                it.textSize = 30
-                it.textColor = Color.parse("#ffffff")
-                it.layoutConfig = {
-                    widthSpec: LayoutSpec.WRAP_CONTENT,
-                    heightSpec: LayoutSpec.WRAP_CONTENT,
-                }
-            }))
-        vlayout.addChild(hlayout)
-
-
-        this.up = this.buildController("↑")
-        this.down = this.buildController("↓")
-        this.left = this.buildController("←")
-        this.right = this.buildController("→")
-
-        const controlArea = new VLayout
-        controlArea.gravity = new Gravity().centerX()
-        controlArea.space = 10
-        controlArea.layoutConfig = {
-            alignment: new Gravity().centerX(),
-            widthSpec: LayoutSpec.WRAP_CONTENT,
-            heightSpec: LayoutSpec.WRAP_CONTENT,
-        }
-        const line1 = new HLayout
-        const line2 = new HLayout
-        line2.space = 10
-        line1.addChild(this.up)
-        line2.addChild(this.left)
-        line2.addChild(this.down)
-        line2.addChild(this.right)
-        line1.layoutConfig = {
-            widthSpec: LayoutSpec.WRAP_CONTENT,
-            heightSpec: LayoutSpec.WRAP_CONTENT,
-        }
-        line2.layoutConfig = {
-            widthSpec: LayoutSpec.WRAP_CONTENT,
-            heightSpec: LayoutSpec.WRAP_CONTENT,
-        }
-        controlArea.addChild(line1)
-        controlArea.addChild(line2)
-        vlayout.addChild(controlArea)
+                })
+            },
+            () => {
+                return hlayout([
+                    () => {
+                        return (new Text).also(it => {
+                            it.text = "Start"
+                            it.textSize = 30
+                            it.textColor = Color.parse("#ffffff")
+                            it.layoutConfig = {
+                                widthSpec: LayoutSpec.WRAP_CONTENT,
+                                heightSpec: LayoutSpec.WRAP_CONTENT,
+                            }
+                            this.start = it
+                        })
+                    },
+                ]).also(it => {
+                    it.layoutConfig = {
+                        widthSpec: LayoutSpec.WRAP_CONTENT,
+                        heightSpec: LayoutSpec.WRAP_CONTENT,
+                    }
+                })
+            },
+            () => {
+                return vlayout([
+                    () => {
+                        return hlayout([
+                            () => {
+                                return this.buildController("↑").also(it => {
+                                    this.up = it
+                                })
+                            }
+                        ]).also(it => {
+                            it.layoutConfig = {
+                                widthSpec: LayoutSpec.WRAP_CONTENT,
+                                heightSpec: LayoutSpec.WRAP_CONTENT,
+                            }
+                        })
+                    },
+                    () => {
+                        return hlayout([
+                            () => {
+                                return this.buildController("←").also(it => {
+                                    this.left = it
+                                })
+                            },
+                            () => {
+                                return this.buildController("↓").also(it => {
+                                    this.down = it
+                                })
+                            },
+                            () => {
+                                return this.buildController("→").also(it => {
+                                    this.right = it
+                                })
+                            },
+                        ]).also(it => {
+                            it.layoutConfig = {
+                                widthSpec: LayoutSpec.WRAP_CONTENT,
+                                heightSpec: LayoutSpec.WRAP_CONTENT,
+                            }
+                            it.space = 10
+                        })
+                    },
+                ])
+                    .also(controlArea => {
+                        controlArea.gravity = new Gravity().centerX()
+                        controlArea.space = 10
+                        controlArea.layoutConfig = {
+                            alignment: new Gravity().centerX(),
+                            widthSpec: LayoutSpec.WRAP_CONTENT,
+                            heightSpec: LayoutSpec.WRAP_CONTENT,
+                        }
+                    })
+            }
+        ]).also(it => {
+            it.space = 20
+            it.layoutConfig = {
+                alignment: new Gravity().centerX().top(),
+                widthSpec: LayoutSpec.WRAP_CONTENT,
+                heightSpec: LayoutSpec.WRAP_CONTENT,
+            }
+        })
     }
 
     buildController(text: string) {
@@ -228,19 +259,54 @@ class SnakeView extends ViewHolder {
         ret.textAlignment = new Gravity().center()
         return ret
     }
+
+    bind(state: SnakeModel): void {
+        this.panel.width = state.width * 10
+        this.panel.height = state.height * 10
+        let node: SnakeNode | undefined = state.head
+        let nodes: SnakeNode[] = []
+        while (node != undefined) {
+            nodes.push(node)
+            node = node.next
+        }
+        nodes.push(state.food)
+        nodes.forEach((e, index) => {
+
+            let item = this.panel.children[index]
+            if (item === undefined) {
+                item = new Stack
+                item.width = item.height = 10
+                this.panel.addChild(item)
+            }
+            if (index === nodes.length - 1) {
+                item.bgColor = Color.parse('#ffff00')
+            } else {
+                item.bgColor = Color.parse('#ff0000')
+            }
+            item.x = e.x * 10
+            item.y = e.y * 10
+        })
+
+        if (nodes.length < this.panel.children.length) {
+            this.panel.children.length = nodes.length
+        }
+    }
 }
 
 class SnakeVM extends ViewModel<SnakeModel, SnakeView>{
-
     timerId?: any
 
     start = () => {
         if (this.timerId !== undefined) {
             clearInterval(this.timerId)
         }
-        this.getModel().reset()
+        this.updateState(it => it.reset())
         this.timerId = setInterval(() => {
-            this.getModel().step()
+            this.updateState(it => it.step())
+            if (this.getState().state === State.fail) {
+                loge('Game Over')
+                this.stop()
+            }
         }, 500)
     }
 
@@ -252,56 +318,23 @@ class SnakeVM extends ViewModel<SnakeModel, SnakeView>{
     }
 
     left = () => {
-        this.getModel().direction = Direction.left
+        this.updateState(it => it.direction = Direction.left)
     }
 
     right = () => {
-        this.getModel().direction = Direction.right
+        this.updateState(it => it.direction = Direction.right)
     }
 
     up = () => {
-        this.getModel().direction = Direction.up
+        this.updateState(it => it.direction = Direction.up)
     }
 
     down = () => {
-        this.getModel().direction = Direction.down
+        this.updateState(it => it.direction = Direction.down)
     }
 
-    binding(v: SnakeView, model: SnakeModel) {
-        if (model.state === State.fail) {
-            loge('Game Over')
-            this.stop()
-        }
+    onAttached(state: SnakeModel, v: SnakeView): void {
         v.start.onClick = this.start
-        v.panel.width = model.width * 10
-        v.panel.height = model.height * 10
-        let node: SnakeNode | undefined = model.head
-        let nodes: SnakeNode[] = []
-        while (node != undefined) {
-            nodes.push(node)
-            node = node.next
-        }
-        nodes.push(model.food)
-        nodes.forEach((e, index) => {
-
-            let item = v.panel.children[index]
-            if (item === undefined) {
-                item = new Stack
-                item.width = item.height = 10
-                v.panel.addChild(item)
-            }
-            if (index === nodes.length - 1) {
-                item.bgColor = Color.parse('#ffff00')
-            } else {
-                item.bgColor = Color.parse('#ff0000')
-            }
-            item.x = e.x * 10
-            item.y = e.y * 10
-        })
-
-        if (nodes.length < v.panel.children.length) {
-            v.panel.children.length = nodes.length
-        }
         if (v.left) {
             v.left.onClick = this.left
         }
@@ -315,19 +348,17 @@ class SnakeVM extends ViewModel<SnakeModel, SnakeView>{
             v.down.onClick = this.down
         }
     }
+
 }
 @Entry
 class SnakePanel extends VMPanel<SnakeModel, SnakeView>{
-
-    getVMClass() {
+    getViewModelClass() {
         return SnakeVM
     }
-
-    getModel() {
+    getState(): SnakeModel {
         return new SnakeModel(35, 35)
     }
-
-    getViewHolder() {
-        return new SnakeView
+    getViewHolderClass() {
+        return SnakeView
     }
 }

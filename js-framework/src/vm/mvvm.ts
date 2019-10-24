@@ -43,22 +43,25 @@ export abstract class ViewModel<M extends Object, V extends ViewHolder<M>> {
 
     attach(view: Group) {
         this.viewHolder.build(view)
+        this.viewHolder.bind(this.state)
     }
+
+    abstract onAttached(state: M, vh: V): void
 }
-export type ViewModelClass<M> = new (m: M, v: ViewHolder<M>) => ViewModel<M, ViewHolder<M>>
+export type ViewModelClass<M, V extends ViewHolder<M>> = new (m: M, v: V) => ViewModel<M, V>
 
-export type ViewHolderClass<M> = new () => ViewHolder<M>
+export type ViewHolderClass<V> = new () => V
 
-export abstract class VMPanel<M extends Object> extends Panel {
+export abstract class VMPanel<M extends Object, V extends ViewHolder<M>> extends Panel {
 
-    private vm?: ViewModel<M, ViewHolder<M>>
-    private vh?: ViewHolder<M>
+    private vm?: ViewModel<M, V>
+    private vh?: V
 
-    abstract getViewModelClass(): ViewModelClass<M>
+    abstract getViewModelClass(): ViewModelClass<M, V>
 
     abstract getState(): M
 
-    abstract getViewHolderClass(): ViewHolderClass<M>
+    abstract getViewHolderClass(): ViewHolderClass<V>
 
     getViewModel() {
         return this.vm

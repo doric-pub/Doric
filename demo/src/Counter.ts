@@ -1,71 +1,83 @@
-import { Image, ViewHolder, VMPanel, ViewModel, Gravity, NativeCall, Text, Color, VLayout, log, logw, loge, Group, LayoutSpec, } from "doric"
+import { vlayout, Image, ViewHolder, VMPanel, ViewModel, Gravity, NativeCall, Text, Color, log, logw, loge, Group, LayoutSpec, } from "doric"
 
 
 interface CountModel {
     count: number
 }
 
-class CounterView extends ViewHolder {
-    number = new Text
-    counter = new Text
+class CounterView extends ViewHolder<CountModel> {
+
+    number!: Text
+    counter!: Text
     build(root: Group) {
-        const vlayout = new VLayout
-        vlayout.width = 200
-        vlayout.height = 200
-        vlayout.gravity = new Gravity().center()
-        this.number.textSize = 40
-        this.number.layoutConfig = {
-            alignment: new Gravity().center()
-        }
-        this.counter = new Text
-        this.counter.text = "点击计数"
-        this.counter.border = {
-            width: 1,
-            color: Color.parse('#000000'),
-        }
-        this.counter.textSize = 20
-        this.counter.corners = 5
-        vlayout.space = 20
-        vlayout.layoutConfig = {
-            alignment: new Gravity().center()
-        }
-        vlayout.border = {
-            width: 1,
-            color: Color.parse("#000000"),
-        }
-        this.counter.shadow = {
-            color: Color.parse("#00ff00"),
-            opacity: 0.5,
-            radius: 20,
-            offsetX: 10,
-            offsetY: 10,
-        }
-        vlayout.shadow = {
-            color: Color.parse("#ffff00"),
-            opacity: 0.5,
-            radius: 20,
-            offsetX: 10,
-            offsetY: 10,
-        }
-        vlayout.corners = 20
-        vlayout.addChild(this.number)
-        vlayout.addChild(this.counter)
-        // root.bgColor = Color.parse('#00ff00')
-        vlayout.bgColor = Color.parse('#ff00ff')
-        root.addChild(vlayout)
-        const iv = new Image
-        // iv.width = iv.height = 100
-        iv.imageUrl = "https://misc.aotu.io/ONE-SUNDAY/SteamEngine.png"
-        //iv.bgColor = Color.parse('#00ff00')
-        iv.layoutConfig = {
-            widthSpec: LayoutSpec.WRAP_CONTENT,
-            heightSpec: LayoutSpec.WRAP_CONTENT,
-        }
-        root.addChild(iv)
+        root.addChild(vlayout([
+            () => {
+                return (new Text).also(it => {
+                    it.textSize = 40
+                    it.layoutConfig = {
+                        alignment: new Gravity().center()
+                    }
+                    this.number = it
+                })
+            },
+            () => {
+                return (new Text).also(it => {
+                    it.text = "点击计数"
+                    it.textSize = 20
+
+                    it.border = {
+                        width: 1,
+                        color: Color.parse('#000000'),
+                    }
+                    it.corners = 5
+
+                    it.layoutConfig = {
+                        alignment: new Gravity().center()
+                    }
+                    it.shadow = {
+                        color: Color.parse("#00ff00"),
+                        opacity: 0.5,
+                        radius: 20,
+                        offsetX: 10,
+                        offsetY: 10,
+                    }
+                    this.counter = it
+                })
+            },
+        ]).also(it => {
+            it.width = 200
+            it.height = 200
+            it.space = 20
+            it.gravity = new Gravity().center()
+            it.layoutConfig = {
+                alignment: new Gravity().center()
+            }
+            it.border = {
+                width: 1,
+                color: Color.parse("#000000"),
+            }
+            it.shadow = {
+                color: Color.parse("#ffff00"),
+                opacity: 0.5,
+                radius: 20,
+                offsetX: 10,
+                offsetY: 10,
+            }
+            it.corners = 20
+            it.bgColor = Color.parse('#ff00ff')
+        }))
+
+        root.addChild((new Image).also(iv => {
+            iv.imageUrl = "https://misc.aotu.io/ONE-SUNDAY/SteamEngine.png"
+            iv.layoutConfig = {
+                widthSpec: LayoutSpec.WRAP_CONTENT,
+                heightSpec: LayoutSpec.WRAP_CONTENT,
+            }
+        }))
     }
 
-    setNumber(n: number) {
-        this.number.text = n.toString()
+    bind(state: CountModel) {
+        this.number.text = `${state.count}`
     }
 
     setCounter(v: Function) {
@@ -74,33 +86,31 @@ class CounterView extends ViewHolder {
 }
 
 class CounterVM extends ViewModel<CountModel, CounterView> {
-
-    binding(v: CounterView, model: CountModel): void {
-        v.setNumber(model.count)
-        v.setCounter(() => {
-            this.getModel().count++
-        })
+    onAttached(s: CountModel, vh: CounterView): void {
+        vh.counter.onClick = () => {
+            this.updateState(state => {
+                state.count++
+            })
+        }
     }
 }
 
 @Entry
-class MyPage extends VMPanel<CountModel, CounterView>{
+class MyPage extends VMPanel<CountModel>{
 
-    getVMClass() {
+
+    getViewHolderClass() {
+        return CounterView
+    }
+
+    getViewModelClass() {
         return CounterVM
     }
 
-    getModel() {
+    getState(): CountModel {
         return {
-            count: 0,
-            add: function () {
-                this.count++
-            },
+            count: 0
         }
-    }
-
-    getViewHolder() {
-        return new CounterView
     }
 
 

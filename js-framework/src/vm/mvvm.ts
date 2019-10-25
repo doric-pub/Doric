@@ -44,6 +44,7 @@ export abstract class ViewModel<M extends Object, V extends ViewHolder<M>> {
     attach(view: Group) {
         this.viewHolder.build(view)
         this.viewHolder.bind(this.state)
+        this.onAttached(this.state, this.viewHolder)
     }
 
     abstract onAttached(state: M, vh: V): void

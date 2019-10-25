@@ -96,7 +96,7 @@ class CounterVM extends ViewModel<CountModel, CounterView> {
 }
 
 @Entry
-class MyPage extends VMPanel<CountModel>{
+class MyPage extends VMPanel<CountModel, CounterView>{
 
 
     getViewHolderClass() {

@@ -1,4 +1,4 @@
-import { loge, log, ViewHolder, Stack, ViewModel, Gravity, Text, Color, HLayout, VLayout, Group, VMPanel, LayoutSpec, vlayout, hlayout } from "doric";
+import { loge, log, ViewHolder, Stack, ViewModel, Gravity, Text, Color, HLayout, VLayout, Group, VMPanel, LayoutSpec, vlayout, hlayout, takeNonNull } from "doric";
 
 type SnakeNode = {
     x: number
@@ -136,8 +136,8 @@ class SnakeModel {
 
 class SnakeView extends ViewHolder<SnakeModel> {
 
-    panel: Stack = new Stack
-    start: Text = new Text
+    panel!: Stack
+    start?: Text
     up?: Text
     down?: Text
     left?: Text
@@ -164,7 +164,7 @@ class SnakeView extends ViewHolder<SnakeModel> {
             () => {
                 return (new Stack).also(panel => {
                     panel.bgColor = Color.parse('#00ff00')
-
+                    this.panel = panel
                 })
             },
             () => {
@@ -244,10 +244,11 @@ class SnakeView extends ViewHolder<SnakeModel> {
             it.space = 20
             it.layoutConfig = {
                 alignment: new Gravity().centerX().top(),
-                widthSpec: LayoutSpec.WRAP_CONTENT,
-                heightSpec: LayoutSpec.WRAP_CONTENT,
+                widthSpec: LayoutSpec.AT_MOST,
+                heightSpec: LayoutSpec.AT_MOST,
             }
-        })
+            it.gravity = new Gravity().centerX()
+        }).in(root)
     }
 
     buildController(text: string) {
@@ -261,6 +262,7 @@ class SnakeView extends ViewHolder<SnakeModel> {
     }
 
     bind(state: SnakeModel): void {
+        log('build', state)
         this.panel.width = state.width * 10
         this.panel.height = state.height * 10
         let node: SnakeNode | undefined = state.head
@@ -334,19 +336,11 @@ class SnakeVM extends ViewModel<SnakeModel, SnakeView>{
     }
 
     onAttached(state: SnakeModel, v: SnakeView): void {
-        v.start.onClick = this.start
-        if (v.left) {
-            v.left.onClick = this.left
-        }
-        if (v.right) {
-            v.right.onClick = this.right
-        }
-        if (v.up) {
-            v.up.onClick = this.up
-        }
-        if (v.down) {
-            v.down.onClick = this.down
-        }
+        takeNonNull(v.start)(it => it.onClick = this.start)
+        takeNonNull(v.left)(it => it.onClick = this.left)
+        takeNonNull(v.right)(it => it.onClick = this.right)
+        takeNonNull(v.up)(it => it.onClick = this.up)
+        takeNonNull(v.down)(it => it.onClick = this.down)
     }
 
 }

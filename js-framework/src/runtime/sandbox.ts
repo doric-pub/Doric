@@ -255,8 +255,18 @@ let __timerId__ = 0
 
 const timerInfos: Map<number, { callback: () => void, context?: Context }> = new Map
 
+const _setTimeout = global.setTimeout
 
-global.setTimeout = (handler: Function, timeout?: number | undefined, ...args: any[]) => {
+const _setInterval = global.setInterval
+
+const _clearTimeout = global.clearTimeout
+
+const _clearInterval = global.clearInterval
+
+global.setTimeout = function (handler: Function, timeout?: number | undefined, ...args: any[]) {
+    if (global.nativeSetTimer === undefined) {
+        return Reflect.apply(_setTimeout, undefined, arguments)
+    }
     const id = __timerId__++
     timerInfos.set(id, {
         callback: () => {
@@ -268,7 +278,10 @@ global.setTimeout = (handler: Function, timeout?: number | undefined, ...args: a
     nativeSetTimer(id, timeout || 0, false)
     return id
 }
-global.setInterval = (handler: Function, timeout?: number | undefined, ...args: any[]) => {
+global.setInterval = function (handler: Function, timeout?: number | undefined, ...args: any[]) {
+    if (global.nativeSetTimer === undefined) {
+        return Reflect.apply(_setInterval, undefined, arguments)
+    }
     const id = __timerId__++
     timerInfos.set(id, {
         callback: () => {
@@ -280,12 +293,18 @@ global.setInterval = (handler: Function, timeout?: number | undefined, ...args: 
     return id
 }
 
-global.clearTimeout = (timerId: number) => {
+global.clearTimeout = function (timerId: number) {
+    if (global.nativeClearTimer === undefined) {
+        return Reflect.apply(_clearTimeout, undefined, arguments)
+    }
     timerInfos.delete(timerId)
     nativeClearTimer(timerId)
 }
 
-global.clearInterval = (timerId: number) => {
+global.clearInterval = function (timerId: number) {
+    if (global.nativeClearTimer === undefined) {
+        return Reflect.apply(_clearInterval, undefined, arguments)
+    }
     timerInfos.delete(timerId)
     nativeClearTimer(timerId)
 }

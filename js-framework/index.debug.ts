@@ -18,7 +18,7 @@ import * as WebSocket from 'ws'
 
 let global = new Function('return this')()
 global.doric = doric
-const contextId = "DoricDebug"
+const contextId = "1"
 global.context = doric.jsObtainContext(contextId)
 global.Entry = doric.jsObtainEntry(contextId)
 
@@ -31,12 +31,49 @@ wss.on('connection', function connection(ws) {
         console.log(messageObject.name)
         Reflect.set(global, messageObject.name, function() {
           let args = [].slice.call(arguments)
+          console.log("===============================")
+          console.log(args)
+          console.log("===============================")
           ws.send(JSON.stringify({
             cmd: 'injectGlobalJSFunction',
             name: messageObject.name,
             arguments: args
           }))
         })
+        break
+      case "invokeMethod":
+        console.log(messageObject.objectName)
+        console.log(messageObject.functionName)
+
+        let args = []
+        for (let i = 0;i < messageObject.javaValues.length;i++) {
+          let javaValue = messageObject.javaValues[i]
+          if (javaValue.type === 0) {
+            args.push(null)
+          } else if (javaValue.type === 1) {
+            args.push(parseFloat(javaValue.value))
+          } else if (javaValue.type === 2) {
+            args.push((javaValue.value == 'true'))
+          } else if (javaValue.type === 3) {
+            args.push(javaValue.value.toString())
+          } else if (javaValue.type === 4) {
+            args.push(JSON.parse(javaValue.value))
+          } else if (javaValue.type === 5) {
+            args.push(JSON.parse(javaValue.value))
+          }
+        }
+        console.log(args)
+        console.log(messageObject.hashKey)
+
+        let object = Reflect.get(global, messageObject.objectName)
+        let method = Reflect.get(object, messageObject.functionName)
+        let result = Reflect.apply(method, undefined, args)
+
+        console.log(result)
+        ws.send(JSON.stringify({
+          cmd: 'invokeMethod',
+          result: result
+        }))
         break
     }
   })

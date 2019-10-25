@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
 
 import java.io.EOFException;
 import java.net.ConnectException;
@@ -31,13 +32,15 @@ public class RemoteJSExecutor {
 
     private final Map<String, JavaFunction> globalFunctions = new HashMap<>();
 
+    private JSDecoder temp;
+
     public RemoteJSExecutor() {
         OkHttpClient okHttpClient = new OkHttpClient
                 .Builder()
                 .readTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(10, TimeUnit.SECONDS)
                 .build();
-        Request request = new Request.Builder().url("ws://192.168.24.166:2080").build();
+        final Request request = new Request.Builder().url("ws://192.168.24.166:2080").build();
 
         final Thread current = Thread.currentThread();
         webSocket = okHttpClient.newWebSocket(request, new WebSocketListener() {
@@ -66,7 +69,7 @@ public class RemoteJSExecutor {
                     JsonObject jo = ((JsonObject) je);
                     String cmd = jo.get("cmd").getAsString();
                     switch (cmd) {
-                        case "injectGlobalJSFunction":
+                        case "injectGlobalJSFunction": {
                             String name = jo.get("name").getAsString();
                             JsonArray arguments = jo.getAsJsonArray("arguments");
                             JSDecoder[] decoders = new JSDecoder[arguments.size()];
@@ -87,13 +90,36 @@ public class RemoteJSExecutor {
                                         decoders[i] = decoder;
                                     }
                                 } else {
-                                    ValueBuilder vb = new ValueBuilder(arguments.get(i));
-                                    JSDecoder decoder = new JSDecoder(vb.build());
-                                    decoders[i] = decoder;
+                                    try {
+                                        ValueBuilder vb = new ValueBuilder(new JSONObject(gson.toJson(arguments.get(i))));
+                                        JSDecoder decoder = new JSDecoder(vb.build());
+                                        decoders[i] = decoder;
+                                    } catch (Exception ex) {
+                                        ex.printStackTrace();
+                                    }
+
                                 }
                             }
+
+
                             globalFunctions.get(name).exec(decoders);
-                            break;
+                        }
+
+                        break;
+                        case "invokeMethod": {
+                            try {
+                                Object result = jo.get("result");
+                                ValueBuilder vb = new ValueBuilder(result);
+                                JSDecoder decoder = new JSDecoder(vb.build());
+                                temp = decoder;
+                                System.out.println(result);
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                            } finally {
+                                //LockSupport.unpark(current);
+                            }
+                        }
+                        break;
                     }
                 }
             }
@@ -122,6 +148,24 @@ public class RemoteJSExecutor {
     }
 
     public JSDecoder invokeMethod(String objectName, String functionName, JavaValue[] javaValues, boolean hashKey) {
+        JsonObject jo = new JsonObject();
+        jo.addProperty("cmd", "invokeMethod");
+        jo.addProperty("objectName", objectName);
+        jo.addProperty("functionName", functionName);
+
+        JsonArray ja = new JsonArray();
+        for (JavaValue javaValue : javaValues) {
+            JsonObject argument = new JsonObject();
+            argument.addProperty("type", javaValue.getType());
+            argument.addProperty("value", javaValue.getValue());
+            ja.add(argument);
+        }
+        jo.add("javaValues", ja);
+
+        jo.addProperty("hashKey", hashKey);
+        webSocket.send(gson.toJson(jo));
+
+        // LockSupport.park(Thread.currentThread());
         return null;
     }
 

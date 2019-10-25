@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         DoricContext doricContext = DoricContext.create(this, DoricUtils.readAssetFile("demo/Snake.js"), "test");
         doricContext.init(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        doricContext.callEntity("log");
+//        doricContext.callEntity("log");
         doricContext.getRootNode().setRootView((FrameLayout) findViewById(R.id.root));
         Doric.connectDevKit("ws://192.168.11.38:7777");
         LocalServer localServer = new LocalServer(getApplicationContext(), 8910);

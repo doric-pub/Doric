@@ -64,7 +64,7 @@ public class ValueBuilder {
             Iterator<String> iterator = ((JSONObject) O).keys();
             while (iterator.hasNext()) {
                 String key = iterator.next();
-                writeInt(output, key.hashCode());
+                write(output, key);
                 write(output, ((JSONObject) O).opt(key));
             }
             writeInt(output, 0);

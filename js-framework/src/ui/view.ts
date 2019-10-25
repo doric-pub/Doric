@@ -230,6 +230,9 @@ export abstract class View implements Modeling {
         block(this)
         return this
     }
+    in(group: Group) {
+        group.addChild(this)
+    }
 }
 
 export interface StackConfig extends LayoutConfig {

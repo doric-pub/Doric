@@ -67,7 +67,7 @@ public class ValueBuilder {
                 write(output, key);
                 write(output, ((JSONObject) O).opt(key));
             }
-            writeInt(output, 0);
+            output.write((byte) 'N');
         } else if (O instanceof JSONArray) {
             output.write((byte) 'A');
             writeInt(output, ((JSONArray) O).length());

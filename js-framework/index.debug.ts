@@ -24,12 +24,13 @@ global.Entry = doric.jsObtainEntry(contextId)
 
 const wss = new WebSocket.Server({ port: 2080 })
 wss.on('connection', function connection(ws) {
+  console.log('Connected')
   ws.on('message', function incoming(message: string) {
     let messageObject = JSON.parse(message)
     switch (messageObject.cmd) {
       case "injectGlobalJSFunction":
         console.log(messageObject.name)
-        Reflect.set(global, messageObject.name, function() {
+        Reflect.set(global, messageObject.name, function () {
           let args = [].slice.call(arguments)
           console.log("===============================")
           console.log(args)
@@ -46,7 +47,7 @@ wss.on('connection', function connection(ws) {
         console.log(messageObject.functionName)
 
         let args = []
-        for (let i = 0;i < messageObject.javaValues.length;i++) {
+        for (let i = 0; i < messageObject.javaValues.length; i++) {
           let javaValue = messageObject.javaValues[i]
           if (javaValue.type === 0) {
             args.push(null)

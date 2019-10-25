@@ -40,7 +40,7 @@ public class RemoteJSExecutor {
                 .readTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(10, TimeUnit.SECONDS)
                 .build();
-        final Request request = new Request.Builder().url("ws://192.168.24.166:2080").build();
+        final Request request = new Request.Builder().url("ws://192.168.24.221:2080").build();
 
         final Thread current = Thread.currentThread();
         webSocket = okHttpClient.newWebSocket(request, new WebSocketListener() {
@@ -116,7 +116,7 @@ public class RemoteJSExecutor {
                             } catch (Exception ex) {
                                 ex.printStackTrace();
                             } finally {
-                                //LockSupport.unpark(current);
+                                LockSupport.unpark(current);
                             }
                         }
                         break;
@@ -165,7 +165,7 @@ public class RemoteJSExecutor {
         jo.addProperty("hashKey", hashKey);
         webSocket.send(gson.toJson(jo));
 
-        // LockSupport.park(Thread.currentThread());
+        LockSupport.park(Thread.currentThread());
         return null;
     }
 

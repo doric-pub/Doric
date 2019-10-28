@@ -13,36 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { View, Stack, VLayout, HLayout } from "../ui/view"
+// import { View, Stack, VLayout, HLayout } from "../ui/view"
 
-export type ViewBlock = () => View
+// export type ViewBlock = () => View
 
-export function stack(blocks: ViewBlock[]) {
-    return takeAlso(new Stack)(
-        it => {
-            for (let block of blocks) {
-                it.addChild(block())
-            }
-        })
-}
+// export function stack(blocks: ViewBlock[]) {
+//     return takeAlso(new Stack)(
+//         it => {
+//             for (let block of blocks) {
+//                 it.addChild(block())
+//             }
+//         })
+// }
 
-export function vlayout(blocks: ViewBlock[]) {
-    return takeAlso(new VLayout)(
-        it => {
-            for (let block of blocks) {
-                it.addChild(block())
-            }
-        })
-}
+// export function vlayout(blocks: ViewBlock[]) {
+//     return takeAlso(new VLayout)(
+//         it => {
+//             for (let block of blocks) {
+//                 it.addChild(block())
+//             }
+//         })
+// }
 
-export function hlayout(blocks: ViewBlock[]) {
-    return takeAlso(new HLayout)(
-        it => {
-            for (let block of blocks) {
-                it.addChild(block())
-            }
-        })
-}
+// export function hlayout(blocks: ViewBlock[]) {
+//     return takeAlso(new HLayout)(
+//         it => {
+//             for (let block of blocks) {
+//                 it.addChild(block())
+//             }
+//         })
+// }
 
 export function take<T>(target: T) {
     return (block: (p: T) => void) => {

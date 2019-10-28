@@ -1,4 +1,4 @@
-import { loge, log, ViewHolder, Stack, ViewModel, Gravity, Text, Color, HLayout, VLayout, Group, VMPanel, LayoutSpec, vlayout, hlayout, takeNonNull } from "doric";
+import { text, loge, log, ViewHolder, Stack, ViewModel, Gravity, Text, Color, HLayout, VLayout, Group, VMPanel, LayoutSpec, vlayout, hlayout, takeNonNull, stack } from "doric";
 
 type SnakeNode = {
     x: number
@@ -146,100 +146,97 @@ class SnakeView extends ViewHolder<SnakeModel> {
     build(root: Group): void {
         root.bgColor = Color.parse('#000000')
         vlayout([
-            () => {
-                return (new Text).also(title => {
-                    title.text = "Snake"
-                    title.textSize = 20
-                    title.textColor = Color.parse("#ffffff")
-                    title.layoutConfig = {
-                        alignment: new Gravity().centerX(),
-                        margin: {
-                            top: 20
-                        },
+            text({
+                text: "Snake",
+                textSize: 20,
+                textColor: Color.parse("#ffffff"),
+                layoutConfig: {
+                    alignment: new Gravity().centerX(),
+                    margin: {
+                        top: 20
+                    },
+                    widthSpec: LayoutSpec.WRAP_CONTENT,
+                    heightSpec: LayoutSpec.WRAP_CONTENT,
+                },
+            }),
+            (new Stack).also(panel => {
+                panel.bgColor = Color.parse('#00ff00')
+                this.panel = panel
+            }),
+            hlayout([
+                text({
+                    text: "Start",
+                    textSize: 30,
+                    textColor: Color.parse("#ffffff"),
+                    layoutConfig: {
                         widthSpec: LayoutSpec.WRAP_CONTENT,
                         heightSpec: LayoutSpec.WRAP_CONTENT,
-                    }
-                })
-            },
-            () => {
-                return (new Stack).also(panel => {
-                    panel.bgColor = Color.parse('#00ff00')
-                    this.panel = panel
-                })
-            },
-            () => {
-                return hlayout([
-                    () => {
-                        return (new Text).also(it => {
-                            it.text = "Start"
-                            it.textSize = 30
-                            it.textColor = Color.parse("#ffffff")
-                            it.layoutConfig = {
-                                widthSpec: LayoutSpec.WRAP_CONTENT,
-                                heightSpec: LayoutSpec.WRAP_CONTENT,
-                            }
-                            this.start = it
-                        })
                     },
+                }).also(it => this.start = it),
+            ]).also(it => {
+                it.layoutConfig = {
+                    widthSpec: LayoutSpec.WRAP_CONTENT,
+                    heightSpec: LayoutSpec.WRAP_CONTENT,
+                }
+            }),
+
+            vlayout([
+                hlayout([
+                    text({
+                        width: 50,
+                        height: 50,
+                        text: "↑",
+                        textSize: 30,
+                        textAlignment: new Gravity().center(),
+                        bgColor: Color.parse('#ffff00'),
+                    }).also(it => this.up = it)
                 ]).also(it => {
                     it.layoutConfig = {
                         widthSpec: LayoutSpec.WRAP_CONTENT,
                         heightSpec: LayoutSpec.WRAP_CONTENT,
                     }
-                })
-            },
-            () => {
-                return vlayout([
-                    () => {
-                        return hlayout([
-                            () => {
-                                return this.buildController("↑").also(it => {
-                                    this.up = it
-                                })
-                            }
-                        ]).also(it => {
-                            it.layoutConfig = {
-                                widthSpec: LayoutSpec.WRAP_CONTENT,
-                                heightSpec: LayoutSpec.WRAP_CONTENT,
-                            }
-                        })
-                    },
-                    () => {
-                        return hlayout([
-                            () => {
-                                return this.buildController("←").also(it => {
-                                    this.left = it
-                                })
-                            },
-                            () => {
-                                return this.buildController("↓").also(it => {
-                                    this.down = it
-                                })
-                            },
-                            () => {
-                                return this.buildController("→").also(it => {
-                                    this.right = it
-                                })
-                            },
-                        ]).also(it => {
-                            it.layoutConfig = {
-                                widthSpec: LayoutSpec.WRAP_CONTENT,
-                                heightSpec: LayoutSpec.WRAP_CONTENT,
-                            }
-                            it.space = 10
-                        })
-                    },
-                ])
-                    .also(controlArea => {
-                        controlArea.gravity = new Gravity().centerX()
-                        controlArea.space = 10
-                        controlArea.layoutConfig = {
-                            alignment: new Gravity().centerX(),
-                            widthSpec: LayoutSpec.WRAP_CONTENT,
-                            heightSpec: LayoutSpec.WRAP_CONTENT,
-                        }
-                    })
-            }
+                }),
+                hlayout([
+                    text({
+                        width: 50,
+                        height: 50,
+                        text: "←",
+                        textSize: 30,
+                        textAlignment: new Gravity().center(),
+                        bgColor: Color.parse('#ffff00'),
+                    }).also(it => this.left = it),
+                    text({
+                        width: 50,
+                        height: 50,
+                        text: "↓",
+                        textSize: 30,
+                        textAlignment: new Gravity().center(),
+                        bgColor: Color.parse('#ffff00'),
+                    }).also(it => this.down = it),
+                    text({
+                        width: 50,
+                        height: 50,
+                        text: "→",
+                        textSize: 30,
+                        textAlignment: new Gravity().center(),
+                        bgColor: Color.parse('#ffff00'),
+                    }).also(it => this.right = it),
+                ]).also(it => {
+                    it.layoutConfig = {
+                        widthSpec: LayoutSpec.WRAP_CONTENT,
+                        heightSpec: LayoutSpec.WRAP_CONTENT,
+                    }
+                    it.space = 10
+                }),
+            ]).also(controlArea => {
+                controlArea.gravity = new Gravity().centerX()
+                controlArea.space = 10
+                controlArea.layoutConfig = {
+                    alignment: new Gravity().centerX(),
+                    widthSpec: LayoutSpec.WRAP_CONTENT,
+                    heightSpec: LayoutSpec.WRAP_CONTENT,
+                }
+            }),
         ]).also(it => {
             it.space = 20
             it.layoutConfig = {

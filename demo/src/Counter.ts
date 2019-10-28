@@ -1,4 +1,4 @@
-import { vlayout, Image, ViewHolder, VMPanel, ViewModel, Gravity, NativeCall, Text, Color, log, logw, loge, Group, LayoutSpec, } from "doric"
+import { text, vlayout, Image, ViewHolder, VMPanel, ViewModel, Gravity, NativeCall, Text, Color, log, logw, loge, Group, LayoutSpec, } from "doric"
 
 interface CountModel {
     count: number
@@ -10,39 +10,31 @@ class CounterView extends ViewHolder<CountModel> {
     counter!: Text
     build(root: Group) {
         root.addChild(vlayout([
-            () => {
-                return (new Text).also(it => {
-                    it.textSize = 40
-                    it.layoutConfig = {
-                        alignment: new Gravity().center()
-                    }
-                    this.number = it
-                })
-            },
-            () => {
-                return (new Text).also(it => {
-                    it.text = "点击计数"
-                    it.textSize = 20
-
-                    it.border = {
-                        width: 1,
-                        color: Color.parse('#000000'),
-                    }
-                    it.corners = 5
-
-                    it.layoutConfig = {
-                        alignment: new Gravity().center()
-                    }
-                    it.shadow = {
-                        color: Color.parse("#00ff00"),
-                        opacity: 0.5,
-                        radius: 20,
-                        offsetX: 10,
-                        offsetY: 10,
-                    }
-                    this.counter = it
-                })
-            },
+            text({
+                textSize: 40,
+                layoutConfig: {
+                    alignment: new Gravity().center()
+                },
+            }).also(it => { this.number = it }),
+            text({
+                text: "点击计数",
+                textSize: 20,
+                border: {
+                    width: 1,
+                    color: Color.parse('#000000'),
+                },
+                corners: 5,
+                layoutConfig: {
+                    alignment: new Gravity().center()
+                },
+                shadow: {
+                    color: Color.parse("#00ff00"),
+                    opacity: 0.5,
+                    radius: 20,
+                    offsetX: 10,
+                    offsetY: 10,
+                }
+            }).also(it => { this.counter = it }),
         ]).also(it => {
             it.width = 200
             it.height = 200

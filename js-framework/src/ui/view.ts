@@ -37,8 +37,6 @@ export interface LayoutConfig {
     alignment?: Gravity
 }
 
-
-
 export function Property(target: Object, propKey: string) {
     Reflect.defineMetadata(propKey, true, target)
 }

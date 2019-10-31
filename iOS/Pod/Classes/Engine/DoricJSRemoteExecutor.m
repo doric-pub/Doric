@@ -28,7 +28,6 @@ static NSString * const kUrlStr = @"ws://192.168.24.240:2080";
 @interface DoricJSRemoteExecutor () <SRWebSocketDelegate>
 @property(nonatomic, strong) NSMapTable *mapTable;
 @property(nonatomic, strong) SRWebSocket *websocket;
-
 @end
 
 @implementation DoricJSRemoteExecutor
@@ -83,11 +82,35 @@ static NSString * const kUrlStr = @"ws://192.168.24.240:2080";
 
 - (JSValue *)invokeObject:(NSString *)objName method:(NSString *)funcName args:(NSArray *)args {
     
+    NSMutableArray *argsMArr = [NSMutableArray new];
+    for (id arg in args) {
+        NSDictionary *dic = @{
+            @"type": [arg class],
+            @"value": arg
+        };
+        [argsMArr addObject:dic];
+    }
+    
+    NSDictionary *jsonDic = @{
+        @"cmd": @"invokeMethod",
+        @"obj": objName,
+        @"functionName": funcName,
+        @"javaValues": argsMArr
+    };
+    
+    NSError * err;
+    NSData * jsonData = [NSJSONSerialization dataWithJSONObject:jsonDic options:0 error:&err];
+    if (err) {
+        DoricLog(@"debugger ", NSStringFromSelector(_cmd), @" failed");
+    }
+    
+    [self.websocket send:jsonData];
+    dispatch_semaphore_wait(_semaphore, DISPATCH_TIME_FOREVER);
+    
     return nil;
 }
 
 #pragma mark - Properties
-
 - (SRWebSocket *)websocket {
     if (!_websocket) {
         NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:kUrlStr] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10];

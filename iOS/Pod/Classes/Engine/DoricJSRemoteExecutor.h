@@ -27,6 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface DoricJSRemoteExecutor : NSObject <DoricJSExecutorProtocal>
 
+@property(nonatomic, strong) dispatch_semaphore_t semaphore;
+
 @end
 
 NS_ASSUME_NONNULL_END

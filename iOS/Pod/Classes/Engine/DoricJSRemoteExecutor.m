@@ -20,44 +20,67 @@
 //  Created by 王劲鹏 on 2019/10/31.
 //
 #import "DoricJSRemoteExecutor.h"
+#import <SocketRocket/SRWebSocket.h>
+#import "DoricUtil.h"
 
-@interface DoricJSRemoteExecutor ()
+@interface DoricJSRemoteExecutor () <SRWebSocketDelegate>
 
-@property(nonatomic, strong) JSContext *jsContext;
+@property(nonatomic, strong) SRWebSocket *websocket;
 
 @end
 
 @implementation DoricJSRemoteExecutor
 - (instancetype)init {
     if (self = [super init]) {
-        _jsContext = [[JSContext alloc] init];
+        _websocket = [[SRWebSocket alloc] initWithURL:[NSURL URLWithString:@"ws://192.168.24.166:2080"]];
+        _websocket.delegate = self;
+        [_websocket open];
+        _semaphore = dispatch_semaphore_create(0);
+        dispatch_semaphore_wait(_semaphore, DISPATCH_TIME_FOREVER);
     }
     return self;
 }
 
-- (void)checkJSException {
-    if (self.jsContext.exception) {
-        NSString *errMsg = [NSString stringWithFormat:@"%@ (line %@ in the generated bundle)\n/***StackTrace***/\n%@/***StackTrace***/", self.jsContext.exception, self.jsContext.exception[@"line"], self.jsContext.exception[@"stack"]];
-        @throw [[NSException alloc] initWithName:@"DoricJS" reason:errMsg userInfo:nil];
+- (void)webSocketDidOpen:(SRWebSocket *)webSocket {
+    DoricLog(@"debugger webSocketDidOpen");
+    dispatch_semaphore_signal(_semaphore);
+}
+
+- (void)webSocket:(SRWebSocket *)webSocket didReceivePong:(NSData *)pongPayload {
+    DoricLog(@"debugger webSocketdidReceivePong");
+}
+
+- (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message {
+    NSData *jsonData = [message dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *err;
+    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                        options:NSJSONReadingMutableContainers
+                                                          error:&err];
+    if (err) {
+        DoricLog(@"webSocketdidReceiveMessage parse error：%@", err);
+        return;
     }
+    NSString *source = [[dic valueForKey:@"source"] mutableCopy];
+}
+
+- (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {
+    DoricLog(@"debugger webSocketdidFailWithError");
+    dispatch_semaphore_signal(_semaphore);
+}
+
+- (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
+    DoricLog(@"debugger webSocketdidCloseWithCode");
 }
 
 - (NSString *)loadJSScript:(NSString *)script source:(NSString *)source {
-    NSString *ret = [[self.jsContext evaluateScript:script withSourceURL:[NSURL URLWithString:source]] toString];
-    [self checkJSException];
-    return ret;
+    return nil;
 }
 
 - (void)injectGlobalJSObject:(NSString *)name obj:(id)obj {
-    self.jsContext[name] = obj;
-    [self checkJSException];
 }
 
 - (JSValue *)invokeObject:(NSString *)objName method:(NSString *)funcName args:(NSArray *)args {
-    JSValue *obj = [self.jsContext objectForKeyedSubscript:objName];
-    JSValue *ret = [obj invokeMethod:funcName withArguments:args];
-    [self checkJSException];
-    return ret;
+    return nil;
 }
 
 @end

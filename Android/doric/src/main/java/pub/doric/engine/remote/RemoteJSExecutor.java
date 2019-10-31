@@ -166,7 +166,7 @@ public class RemoteJSExecutor {
         webSocket.send(gson.toJson(jo));
 
         LockSupport.park(Thread.currentThread());
-        return null;
+        return temp;
     }
 
     public void destroy() {

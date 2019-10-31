@@ -23,8 +23,10 @@
 #import <SocketRocket/SRWebSocket.h>
 #import "DoricUtil.h"
 
-@interface DoricJSRemoteExecutor () <SRWebSocketDelegate>
+static NSString * const kUrlStr = @"ws://192.168.24.240:2080";
 
+@interface DoricJSRemoteExecutor () <SRWebSocketDelegate>
+@property(nonatomic, strong) NSMapTable *mapTable;
 @property(nonatomic, strong) SRWebSocket *websocket;
 
 @end
@@ -32,9 +34,7 @@
 @implementation DoricJSRemoteExecutor
 - (instancetype)init {
     if (self = [super init]) {
-        _websocket = [[SRWebSocket alloc] initWithURL:[NSURL URLWithString:@"ws://192.168.24.166:2080"]];
-        _websocket.delegate = self;
-        [_websocket open];
+        [self websocket];
         _semaphore = dispatch_semaphore_create(0);
         dispatch_semaphore_wait(_semaphore, DISPATCH_TIME_FOREVER);
     }
@@ -73,14 +73,36 @@
 }
 
 - (NSString *)loadJSScript:(NSString *)script source:(NSString *)source {
+    
     return nil;
 }
 
 - (void)injectGlobalJSObject:(NSString *)name obj:(id)obj {
+    
 }
 
 - (JSValue *)invokeObject:(NSString *)objName method:(NSString *)funcName args:(NSArray *)args {
+    
     return nil;
+}
+
+#pragma mark - Properties
+
+- (SRWebSocket *)websocket {
+    if (!_websocket) {
+        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:kUrlStr] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10];
+        _websocket = [[SRWebSocket alloc] initWithURLRequest:request];
+        _websocket.delegate = self;
+        [_websocket open];
+    }
+    return _websocket;
+}
+
+- (NSMapTable *)mapTable {
+    if (!_mapTable) {
+        _mapTable = [NSMapTable new];
+    }
+    return _mapTable;
 }
 
 @end

@@ -15,21 +15,25 @@
  */
 package pub.doric.demo;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import java.io.IOException;
+
+import pub.doric.DevPanel;
 import pub.doric.Doric;
 import pub.doric.DoricContext;
 import pub.doric.dev.LocalServer;
 import pub.doric.utils.DoricUtils;
 
-import java.io.IOException;
-
 
 public class MainActivity extends AppCompatActivity {
+
+    private DevPanel mDevPanel = new DevPanel();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,5 +50,13 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (KeyEvent.KEYCODE_MENU == event.getKeyCode()) {
+            mDevPanel.show(getSupportFragmentManager(), "DevPanel");
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

@@ -29,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, strong) dispatch_semaphore_t semaphore;
 
+- (void)close;
 @end
 
 NS_ASSUME_NONNULL_END

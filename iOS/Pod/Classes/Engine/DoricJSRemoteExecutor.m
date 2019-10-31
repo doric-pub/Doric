@@ -26,8 +26,9 @@
 static NSString * const kUrlStr = @"ws://192.168.24.240:2080";
 
 @interface DoricJSRemoteExecutor () <SRWebSocketDelegate>
-@property(nonatomic, strong) NSMapTable *mapTable;
 @property(nonatomic, strong) SRWebSocket *websocket;
+@property(nonatomic, strong) NSMapTable *mapTable;
+@property(nonatomic, strong) dispatch_semaphore_t mapTableLock;
 @end
 
 @implementation DoricJSRemoteExecutor
@@ -35,14 +36,15 @@ static NSString * const kUrlStr = @"ws://192.168.24.240:2080";
     if (self = [super init]) {
         [self websocket];
         _semaphore = dispatch_semaphore_create(0);
-        dispatch_semaphore_wait(_semaphore, DISPATCH_TIME_FOREVER);
+        _mapTableLock = dispatch_semaphore_create(1);
+        DC_LOCK(self.semaphore);
     }
     return self;
 }
 
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket {
     DoricLog(@"debugger webSocketDidOpen");
-    dispatch_semaphore_signal(_semaphore);
+    DC_UNLOCK(self.semaphore);
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceivePong:(NSData *)pongPayload {
@@ -64,7 +66,7 @@ static NSString * const kUrlStr = @"ws://192.168.24.240:2080";
 
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {
     DoricLog(@"debugger webSocketdidFailWithError");
-    dispatch_semaphore_signal(_semaphore);
+    DC_UNLOCK(self.semaphore);
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
@@ -77,7 +79,20 @@ static NSString * const kUrlStr = @"ws://192.168.24.240:2080";
 }
 
 - (void)injectGlobalJSObject:(NSString *)name obj:(id)obj {
+    DC_LOCK(self.mapTableLock);
+    [self.mapTable setObject:obj forKey:name];
+    DC_UNLOCK(self.mapTableLock);
     
+    NSDictionary *jsonDic =@{
+        @"cmd": @"injectGlobalJSFunction",
+        @"name": name
+    };
+    NSError * err;
+    NSData * jsonData = [NSJSONSerialization dataWithJSONObject:jsonDic options:0 error:&err];
+    if (err) {
+        DoricLog(@"debugger ", NSStringFromSelector(_cmd), @" failed");
+    }
+    [self.websocket send:jsonData];
 }
 
 - (JSValue *)invokeObject:(NSString *)objName method:(NSString *)funcName args:(NSArray *)args {
@@ -105,9 +120,13 @@ static NSString * const kUrlStr = @"ws://192.168.24.240:2080";
     }
     
     [self.websocket send:jsonData];
-    dispatch_semaphore_wait(_semaphore, DISPATCH_TIME_FOREVER);
+    DC_LOCK(self.semaphore);
     
     return nil;
+}
+
+- (void)close {
+    [self.websocket close];
 }
 
 #pragma mark - Properties
@@ -123,7 +142,7 @@ static NSString * const kUrlStr = @"ws://192.168.24.240:2080";
 
 - (NSMapTable *)mapTable {
     if (!_mapTable) {
-        _mapTable = [NSMapTable new];
+        _mapTable = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsStrongMemory valueOptions:NSPointerFunctionsWeakMemory capacity:0];
     }
     return _mapTable;
 }

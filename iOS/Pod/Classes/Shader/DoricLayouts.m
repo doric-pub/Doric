@@ -124,16 +124,19 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
     });
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    [self requestLayout];
-}
-
 - (void)setNeedsLayout {
+    [super setNeedsLayout];
     if (self.waitingLayout) {
         return;
     }
-    [super setNeedsLayout];
+    [self requestLayout];
+}
+
+- (BOOL)waitingLayout {
+    if ([self.superview isKindOfClass:[DoricLayoutContainer class]]) {
+        return [(DoricLayoutContainer *) self.superview waitingLayout];
+    }
+    return _waitingLayout;
 }
 
 - (void)layout {

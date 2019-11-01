@@ -115,16 +115,25 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
         return;
     }
     self.waitingLayout = YES;
+    __weak typeof(self) _self = self;
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.waitingLayout = NO;
+        __strong typeof(_self) self = _self;
         [self sizeToFit];
         [self layout];
+        self.waitingLayout = NO;
     });
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
     [self requestLayout];
+}
+
+- (void)setNeedsLayout {
+    if (self.waitingLayout) {
+        return;
+    }
+    [super setNeedsLayout];
 }
 
 - (void)layout {

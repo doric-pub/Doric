@@ -25,18 +25,24 @@
 
 static NSString * const kUrlStr = @"ws://192.168.24.240:2080";
 
+typedef id (^Block0)(void);
+typedef id (^Block1)(id arg0);
+typedef id (^Block2)(id arg0, id arg1);
+typedef id (^Block3)(id arg0, id arg1, id arg2);
+typedef id (^Block4)(id arg0, id arg1, id arg2, id arg3);
+typedef id (^Block5)(id arg0, id arg1, id arg2, id arg3, id arg4);
+
 @interface DoricJSRemoteExecutor () <SRWebSocketDelegate>
-@property(nonatomic, strong) SRWebSocket *websocket;
-@property(nonatomic, strong) NSMapTable *mapTable;
-@property(nonatomic, strong) dispatch_semaphore_t mapTableLock;
+@property(nonatomic, strong) SRWebSocket *srWebSocket;
+@property(nonatomic, strong) NSMutableDictionary <NSString *, id>  *blockMDic;
+@property(nonatomic, strong) JSValue *temp;
 @end
 
 @implementation DoricJSRemoteExecutor
 - (instancetype)init {
     if (self = [super init]) {
-        [self websocket];
+        [self srWebSocket];
         _semaphore = dispatch_semaphore_create(0);
-        _mapTableLock = dispatch_semaphore_create(1);
         DC_LOCK(self.semaphore);
     }
     return self;
@@ -58,10 +64,44 @@ static NSString * const kUrlStr = @"ws://192.168.24.240:2080";
                                                         options:NSJSONReadingMutableContainers
                                                           error:&err];
     if (err) {
-        DoricLog(@"webSocketdidReceiveMessage parse error：%@", err);
+        DoricLog(@"debugger webSocketdidReceiveMessage parse error：%@", err);
         return;
     }
-    NSString *source = [[dic valueForKey:@"source"] mutableCopy];
+    NSString *cmd = [[dic valueForKey:@"cmd"] copy];
+    
+    if ([cmd isEqualToString:@"injectGlobalJSFunction"]) {
+        NSString *name = [dic valueForKey:@"name"];
+        NSArray *argsArr = [dic valueForKey:@"arguments"];
+        NSMutableArray *argsMarr = [NSMutableArray new];
+        for (NSUInteger i = 0; i < argsArr.count; i++) {
+            [argsMarr addObject:argsArr[i]];
+        }
+        
+        id result;
+        id tmpBlk = self.blockMDic[name];
+        if (argsArr.count == 0) {
+            result = ((Block0) tmpBlk)();
+        } else if (argsArr.count == 1) {
+            result = ((Block1) tmpBlk)(argsArr[0]);
+        } else if (argsArr.count == 2) {
+            result = ((Block2)tmpBlk)(argsArr[0], argsArr[1]);
+        } else if (argsArr.count == 3) {
+            result = ((Block3)tmpBlk)(argsArr[0], argsArr[1], argsArr[2]);
+        } else if (argsArr.count == 4) {
+            result = ((Block4)tmpBlk)(argsArr[0], argsArr[1], argsArr[2], argsArr[3]);
+        } else if (argsArr.count == 5) {
+            result = ((Block5)tmpBlk)(argsArr[0], argsArr[1], argsArr[2], argsArr[3], argsArr[4]);
+        }
+        
+    } else if ([cmd isEqualToString:@"invokeMethod"]) {
+        @try {
+            self.temp = [JSValue valueWithObject:[dic valueForKey:@"result"] inContext:nil];
+        } @catch (NSException *exception) {
+            DoricLog(@"debugger ", NSStringFromSelector(_cmd), exception.reason);
+        } @finally {
+            DC_UNLOCK(self.semaphore);
+        }
+    }
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {
@@ -79,20 +119,21 @@ static NSString * const kUrlStr = @"ws://192.168.24.240:2080";
 }
 
 - (void)injectGlobalJSObject:(NSString *)name obj:(id)obj {
-    DC_LOCK(self.mapTableLock);
-    [self.mapTable setObject:obj forKey:name];
-    DC_UNLOCK(self.mapTableLock);
-    
-    NSDictionary *jsonDic =@{
-        @"cmd": @"injectGlobalJSFunction",
-        @"name": name
-    };
-    NSError * err;
-    NSData * jsonData = [NSJSONSerialization dataWithJSONObject:jsonDic options:0 error:&err];
-    if (err) {
-        DoricLog(@"debugger ", NSStringFromSelector(_cmd), @" failed");
+    if ([obj isKindOfClass:NSClassFromString(@"NSBlock")]) {
+        self.blockMDic[name] = obj;
+    } else {
+        NSDictionary *jsonDic = @{
+                @"cmd": @"injectGlobalJSFunction",
+                @"name": name
+        };
+        NSError *err;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDic options:0 error:&err];
+        if (err) {
+            DoricLog(@"debugger ", NSStringFromSelector(_cmd), @" failed");
+            return;
+        }
+        [self.srWebSocket send:jsonData];
     }
-    [self.websocket send:jsonData];
 }
 
 - (JSValue *)invokeObject:(NSString *)objName method:(NSString *)funcName args:(NSArray *)args {
@@ -117,34 +158,35 @@ static NSString * const kUrlStr = @"ws://192.168.24.240:2080";
     NSData * jsonData = [NSJSONSerialization dataWithJSONObject:jsonDic options:0 error:&err];
     if (err) {
         DoricLog(@"debugger ", NSStringFromSelector(_cmd), @" failed");
+        return nil;
     }
     
-    [self.websocket send:jsonData];
+    [self.srWebSocket send:jsonData];
     DC_LOCK(self.semaphore);
     
-    return nil;
+    return self.temp;
 }
 
 - (void)close {
-    [self.websocket close];
+    [self.srWebSocket close];
 }
 
 #pragma mark - Properties
-- (SRWebSocket *)websocket {
-    if (!_websocket) {
+- (SRWebSocket *)srWebSocket {
+    if (!_srWebSocket) {
         NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:kUrlStr] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10];
-        _websocket = [[SRWebSocket alloc] initWithURLRequest:request];
-        _websocket.delegate = self;
-        [_websocket open];
+        _srWebSocket = [[SRWebSocket alloc] initWithURLRequest:request];
+        _srWebSocket.delegate = self;
+        [_srWebSocket open];
     }
-    return _websocket;
+    return _srWebSocket;
 }
 
-- (NSMapTable *)mapTable {
-    if (!_mapTable) {
-        _mapTable = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsStrongMemory valueOptions:NSPointerFunctionsWeakMemory capacity:0];
+- (NSMutableDictionary *)blockMDic {
+    if (!_blockMDic) {
+        _blockMDic = [NSMutableDictionary new];
     }
-    return _mapTable;
+    return _blockMDic;
 }
 
 @end

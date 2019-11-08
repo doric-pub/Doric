@@ -25,4 +25,15 @@ export default [
         ],
         external: ['reflect-metadata']
     },
+    {
+        input: "build/index.debug.js",
+        output: {
+            format: "cjs",
+            file: "bundle/doric-vm.js",
+        },
+        plugins: [
+            resolve({ jsnext: true, main: true }),
+        ],
+        external: ['ws']
+    },
 ]

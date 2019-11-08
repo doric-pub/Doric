@@ -8,4 +8,4 @@
 cd js-framework && npm install && npm run build && cd ..
 cd debugger && npm install && npm run build && cd ..
 cd demo && npm install && npm run build && cd ..
-cd doric-cli && npm install && cd ..
+cd doric-cli && npm install && npm link && cd ..

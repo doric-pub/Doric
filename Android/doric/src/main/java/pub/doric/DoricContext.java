@@ -62,7 +62,6 @@ public class DoricContext {
     public static DoricContext create(Context context, String script, String source) {
         DoricContext doricContext = DoricContextManager.getInstance().createContext(context, script, source);
         doricContext.script = script;
-        doricContext.callEntity(DoricConstant.DORIC_ENTITY_CREATE);
         return doricContext;
     }
 
@@ -71,6 +70,8 @@ public class DoricContext {
                 .put("width", width)
                 .put("height", height).toJSONObject();
         callEntity(DoricConstant.DORIC_ENTITY_INIT, this.initParams);
+        
+        callEntity(DoricConstant.DORIC_ENTITY_CREATE);
     }
 
     public AsyncResult<JSDecoder> callEntity(String methodName, Object... args) {

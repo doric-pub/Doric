@@ -23,6 +23,7 @@
 #import "DoricJSEngine.h"
 #import "DoricJSExecutorProtocal.h"
 #import "DoricJSCoreExecutor.h"
+#import "DoricJSRemoteExecutor.h"
 #import "DoricConstant.h"
 #import "DoricUtil.h"
 #import "DoricBridgeExtension.h"
@@ -41,7 +42,9 @@
         _bridgeExtension = [[DoricBridgeExtension alloc] init];
         dispatch_async(_jsQueue, ^() {
             self.timers = [[NSMutableDictionary alloc] init];
-            self.jsExecutor = [[DoricJSCoreExecutor alloc] init];
+            // Debug: 切换
+            // self.jsExecutor = [[DoricJSRemoteExecutor alloc] init];
+            self.jsExecutor = [DoricJSCoreExecutor new];
             self.registry = [[DoricRegistry alloc] init];
             [self initJSExecutor];
             [self initDoricEnvironment];

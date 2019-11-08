@@ -1,6 +1,5 @@
 import { vlayout, Image, ViewHolder, VMPanel, ViewModel, Gravity, NativeCall, Text, Color, log, logw, loge, Group, LayoutSpec, } from "doric"
 
-
 interface CountModel {
     count: number
 }

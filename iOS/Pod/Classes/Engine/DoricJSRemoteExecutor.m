@@ -22,6 +22,8 @@
 #import "DoricJSRemoteExecutor.h"
 #import <SocketRocket/SRWebSocket.h>
 #import "DoricUtil.h"
+#import "DoricJSRemoteArgType.h"
+#import "NSString+JsonString.h"
 
 static NSString * const kUrlStr = @"ws://192.168.24.240:2080";
 
@@ -121,19 +123,18 @@ typedef id (^Block5)(id arg0, id arg1, id arg2, id arg3, id arg4);
 - (void)injectGlobalJSObject:(NSString *)name obj:(id)obj {
     if ([obj isKindOfClass:NSClassFromString(@"NSBlock")]) {
         self.blockMDic[name] = obj;
-    } else {
-        NSDictionary *jsonDic = @{
-                @"cmd": @"injectGlobalJSFunction",
-                @"name": name
-        };
-        NSError *err;
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDic options:0 error:&err];
-        if (err) {
-            DoricLog(@"debugger ", NSStringFromSelector(_cmd), @" failed");
-            return;
-        }
-        [self.srWebSocket send:jsonData];
     }
+    NSDictionary *jsonDic = @{
+        @"cmd": @"injectGlobalJSFunction",
+        @"name": name
+    };
+
+    NSString *jsonStr = [NSString dc_convertToJsonWithDic:jsonDic];
+    if (!jsonStr) {
+        return;
+    }
+   
+    [self.srWebSocket send:jsonStr];
 }
 
 - (JSValue *)invokeObject:(NSString *)objName method:(NSString *)funcName args:(NSArray *)args {
@@ -141,27 +142,27 @@ typedef id (^Block5)(id arg0, id arg1, id arg2, id arg3, id arg4);
     NSMutableArray *argsMArr = [NSMutableArray new];
     for (id arg in args) {
         NSDictionary *dic = @{
-            @"type": [arg class],
+            @"type": @(DoricargTypeWithArg(arg)),
             @"value": arg
         };
         [argsMArr addObject:dic];
     }
     
+    NSArray *argsArr = [argsMArr copy];
+    
     NSDictionary *jsonDic = @{
         @"cmd": @"invokeMethod",
-        @"obj": objName,
+        @"objectName": objName,
         @"functionName": funcName,
-        @"javaValues": argsMArr
+        @"javaValues": argsArr
     };
     
-    NSError * err;
-    NSData * jsonData = [NSJSONSerialization dataWithJSONObject:jsonDic options:0 error:&err];
-    if (err) {
-        DoricLog(@"debugger ", NSStringFromSelector(_cmd), @" failed");
+    NSString *jsonStr = [NSString dc_convertToJsonWithDic:jsonDic];
+    if (!jsonStr) {
         return nil;
     }
     
-    [self.srWebSocket send:jsonData];
+    [self.srWebSocket send:jsonStr];
     DC_LOCK(self.semaphore);
     
     return self.temp;

@@ -51,7 +51,7 @@
 }
 
 - (void)createContext:(DoricContext *)context script:(NSString *)script source:(NSString *)source {
-    context.contextId = [NSString stringWithFormat:@"%ld", (long) self.counter++];
+    context.contextId = [NSString stringWithFormat:@"%ld", (long) ++self.counter];
     [context.driver createContext:context.contextId script:script source:source];
     dispatch_sync(self.mapQueue, ^() {
         NSValue *value = [NSValue valueWithNonretainedObject:context];

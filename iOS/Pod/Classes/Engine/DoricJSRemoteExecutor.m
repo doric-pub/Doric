@@ -22,28 +22,37 @@
 #import "DoricJSRemoteExecutor.h"
 #import <SocketRocket/SRWebSocket.h>
 #import "DoricUtil.h"
+#import "DoricJSRemoteArgType.h"
+#import "NSString+JsonString.h"
+
+static NSString * const kUrlStr = @"ws://192.168.24.240:2080";
+
+typedef id (^Block0)(void);
+typedef id (^Block1)(id arg0);
+typedef id (^Block2)(id arg0, id arg1);
+typedef id (^Block3)(id arg0, id arg1, id arg2);
+typedef id (^Block4)(id arg0, id arg1, id arg2, id arg3);
+typedef id (^Block5)(id arg0, id arg1, id arg2, id arg3, id arg4);
 
 @interface DoricJSRemoteExecutor () <SRWebSocketDelegate>
-
-@property(nonatomic, strong) SRWebSocket *websocket;
-
+@property(nonatomic, strong) SRWebSocket *srWebSocket;
+@property(nonatomic, strong) NSMutableDictionary <NSString *, id>  *blockMDic;
+@property(nonatomic, strong) JSValue *temp;
 @end
 
 @implementation DoricJSRemoteExecutor
 - (instancetype)init {
     if (self = [super init]) {
-        _websocket = [[SRWebSocket alloc] initWithURL:[NSURL URLWithString:@"ws://192.168.24.166:2080"]];
-        _websocket.delegate = self;
-        [_websocket open];
+        [self srWebSocket];
         _semaphore = dispatch_semaphore_create(0);
-        dispatch_semaphore_wait(_semaphore, DISPATCH_TIME_FOREVER);
+        DC_LOCK(self.semaphore);
     }
     return self;
 }
 
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket {
     DoricLog(@"debugger webSocketDidOpen");
-    dispatch_semaphore_signal(_semaphore);
+    DC_UNLOCK(self.semaphore);
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceivePong:(NSData *)pongPayload {
@@ -57,15 +66,49 @@
                                                         options:NSJSONReadingMutableContainers
                                                           error:&err];
     if (err) {
-        DoricLog(@"webSocketdidReceiveMessage parse error：%@", err);
+        DoricLog(@"debugger webSocketdidReceiveMessage parse error：%@", err);
         return;
     }
-    NSString *source = [[dic valueForKey:@"source"] mutableCopy];
+    NSString *cmd = [[dic valueForKey:@"cmd"] copy];
+    
+    if ([cmd isEqualToString:@"injectGlobalJSFunction"]) {
+        NSString *name = [dic valueForKey:@"name"];
+        NSArray *argsArr = [dic valueForKey:@"arguments"];
+        NSMutableArray *argsMarr = [NSMutableArray new];
+        for (NSUInteger i = 0; i < argsArr.count; i++) {
+            [argsMarr addObject:argsArr[i]];
+        }
+        
+        id result;
+        id tmpBlk = self.blockMDic[name];
+        if (argsArr.count == 0) {
+            result = ((Block0) tmpBlk)();
+        } else if (argsArr.count == 1) {
+            result = ((Block1) tmpBlk)(argsArr[0]);
+        } else if (argsArr.count == 2) {
+            result = ((Block2)tmpBlk)(argsArr[0], argsArr[1]);
+        } else if (argsArr.count == 3) {
+            result = ((Block3)tmpBlk)(argsArr[0], argsArr[1], argsArr[2]);
+        } else if (argsArr.count == 4) {
+            result = ((Block4)tmpBlk)(argsArr[0], argsArr[1], argsArr[2], argsArr[3]);
+        } else if (argsArr.count == 5) {
+            result = ((Block5)tmpBlk)(argsArr[0], argsArr[1], argsArr[2], argsArr[3], argsArr[4]);
+        }
+        
+    } else if ([cmd isEqualToString:@"invokeMethod"]) {
+        @try {
+            self.temp = [JSValue valueWithObject:[dic valueForKey:@"result"] inContext:nil];
+        } @catch (NSException *exception) {
+            DoricLog(@"debugger ", NSStringFromSelector(_cmd), exception.reason);
+        } @finally {
+            DC_UNLOCK(self.semaphore);
+        }
+    }
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {
     DoricLog(@"debugger webSocketdidFailWithError");
-    dispatch_semaphore_signal(_semaphore);
+    DC_UNLOCK(self.semaphore);
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
@@ -73,14 +116,78 @@
 }
 
 - (NSString *)loadJSScript:(NSString *)script source:(NSString *)source {
+    
     return nil;
 }
 
 - (void)injectGlobalJSObject:(NSString *)name obj:(id)obj {
+    if ([obj isKindOfClass:NSClassFromString(@"NSBlock")]) {
+        self.blockMDic[name] = obj;
+    }
+    NSDictionary *jsonDic = @{
+        @"cmd": @"injectGlobalJSFunction",
+        @"name": name
+    };
+
+    NSString *jsonStr = [NSString dc_convertToJsonWithDic:jsonDic];
+    if (!jsonStr) {
+        return;
+    }
+   
+    [self.srWebSocket send:jsonStr];
 }
 
 - (JSValue *)invokeObject:(NSString *)objName method:(NSString *)funcName args:(NSArray *)args {
-    return nil;
+    
+    NSMutableArray *argsMArr = [NSMutableArray new];
+    for (id arg in args) {
+        NSDictionary *dic = @{
+            @"type": @(DoricargTypeWithArg(arg)),
+            @"value": arg
+        };
+        [argsMArr addObject:dic];
+    }
+    
+    NSArray *argsArr = [argsMArr copy];
+    
+    NSDictionary *jsonDic = @{
+        @"cmd": @"invokeMethod",
+        @"objectName": objName,
+        @"functionName": funcName,
+        @"javaValues": argsArr
+    };
+    
+    NSString *jsonStr = [NSString dc_convertToJsonWithDic:jsonDic];
+    if (!jsonStr) {
+        return nil;
+    }
+    
+    [self.srWebSocket send:jsonStr];
+    DC_LOCK(self.semaphore);
+    
+    return self.temp;
+}
+
+- (void)close {
+    [self.srWebSocket close];
+}
+
+#pragma mark - Properties
+- (SRWebSocket *)srWebSocket {
+    if (!_srWebSocket) {
+        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:kUrlStr] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10];
+        _srWebSocket = [[SRWebSocket alloc] initWithURLRequest:request];
+        _srWebSocket.delegate = self;
+        [_srWebSocket open];
+    }
+    return _srWebSocket;
+}
+
+- (NSMutableDictionary *)blockMDic {
+    if (!_blockMDic) {
+        _blockMDic = [NSMutableDictionary new];
+    }
+    return _blockMDic;
 }
 
 @end

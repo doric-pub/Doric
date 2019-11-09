@@ -1,2 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="pub.doric" />
+    package="pub.doric">
+
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <application>
+        <activity android:name=".dev.ScanQRCodeActivity" />
+    </application>
+</manifest>

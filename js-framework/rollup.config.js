@@ -12,7 +12,11 @@ export default [
         },
         plugins: [
             resolve({ mainFields: ["jsnext"] }),
-        ]
+        ],
+        onwarn: function(warning) {
+            if ( warning.code === 'THIS_IS_UNDEFINED' ) { return; }
+            console.warn( warning.message );
+        }
     },
     {
         input: "build/index.js",
@@ -23,7 +27,11 @@ export default [
         plugins: [
             resolve({ mainFields: ["jsnext"] }),
         ],
-        external: ['reflect-metadata']
+        external: ['reflect-metadata'],
+        onwarn: function(warning) {
+            if ( warning.code === 'THIS_IS_UNDEFINED' ) { return; }
+            console.warn( warning.message );
+        }
     },
     {
         input: "build/index.debug.js",
@@ -34,6 +42,10 @@ export default [
         plugins: [
             resolve({ mainFields: ["jsnext"] }),
         ],
-        external: ['ws']
+        external: ['ws'],
+        onwarn: function(warning) {
+            if ( warning.code === 'THIS_IS_UNDEFINED' ) { return; }
+            console.warn( warning.message );
+        }
     },
 ]

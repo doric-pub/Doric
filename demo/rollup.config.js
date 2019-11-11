@@ -15,5 +15,9 @@ export default bundles.map(bundle => {
             commonjs()
         ],
         external: ['reflect-metadata', 'doric'],
+        onwarn: function(warning) {
+            if ( warning.code === 'THIS_IS_UNDEFINED' ) { return; }
+            console.warn( warning.message );
+        }
     }
 })

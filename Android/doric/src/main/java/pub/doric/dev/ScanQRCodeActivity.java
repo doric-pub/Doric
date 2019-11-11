@@ -1,12 +1,16 @@
 package pub.doric.dev;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.greenrobot.eventbus.EventBus;
+
 import cn.bingoogolapple.qrcode.core.QRCodeView;
 import cn.bingoogolapple.qrcode.zxing.ZXingView;
+import pub.doric.Doric;
 import pub.doric.R;
 
 public class ScanQRCodeActivity extends AppCompatActivity implements QRCodeView.Delegate {
@@ -47,6 +51,19 @@ public class ScanQRCodeActivity extends AppCompatActivity implements QRCodeView.
     @Override
     public void onScanQRCodeSuccess(String result) {
         setTitle("扫描结果为：" + result);
+        Toast.makeText(this, "dev kit connecting to " + result, Toast.LENGTH_LONG).show();
+        Doric.connectDevKit("ws://" + result + ":7777", new ConnectCallback() {
+            @Override
+            public void connected() {
+                EventBus.getDefault().post(new ConnectEvent());
+                finish();
+            }
+
+            @Override
+            public void exception(Exception exception) {
+
+            }
+        });
     }
 
     @Override

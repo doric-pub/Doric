@@ -2,39 +2,33 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:divider="@drawable/divider"
+    android:orientation="vertical"
+    android:showDividers="middle">
 
     <TextView
-        android:id="@+id/menu1_text_view"
+        android:id="@+id/connect_dev_kit_text_view"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:gravity="center"
         android:text="Dev Kit"
         android:textSize="20sp" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#cccccc" />
-
     <TextView
-        android:id="@+id/menu2_text_view"
+        android:id="@+id/debug_text_view"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:gravity="center"
         android:text="Debug via Visual Studio Code"
-        android:textSize="20sp" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#cccccc" />
+        android:textSize="20sp"
+        android:visibility="gone" />
 
     <TextView
-        android:id="@+id/menu3_text_view"
+        android:id="@+id/hot_reload_text_view"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:gravity="center"
         android:text="Enable Hot Reload"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:visibility="gone" />
 </LinearLayout>

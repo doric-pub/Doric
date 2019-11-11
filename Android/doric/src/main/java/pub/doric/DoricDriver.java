@@ -20,6 +20,7 @@ import android.os.Looper;
 
 import pub.doric.async.AsyncCall;
 import pub.doric.async.AsyncResult;
+import pub.doric.dev.ConnectCallback;
 import pub.doric.dev.WSClient;
 import pub.doric.engine.DoricJSEngine;
 import pub.doric.utils.DoricConstant;
@@ -138,8 +139,8 @@ public class DoricDriver implements IDoricDriver {
     }
 
     @Override
-    public void connectDevKit(String url) {
-        wsClient = new WSClient(url);
+    public void connectDevKit(String url, ConnectCallback connectCallback) {
+        wsClient = new WSClient(url, connectCallback);
     }
 
     @Override

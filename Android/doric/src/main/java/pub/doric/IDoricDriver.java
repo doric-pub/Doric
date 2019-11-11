@@ -17,6 +17,7 @@ package pub.doric;
 
 
 import pub.doric.async.AsyncResult;
+import pub.doric.dev.ConnectCallback;
 import pub.doric.utils.ThreadMode;
 
 import com.github.pengfeizhou.jscore.JSDecoder;
@@ -41,7 +42,7 @@ public interface IDoricDriver {
 
     DoricRegistry getRegistry();
 
-    void connectDevKit(String url);
+    void connectDevKit(String url, ConnectCallback connectCallback);
 
     void disconnectDevKit();
 }

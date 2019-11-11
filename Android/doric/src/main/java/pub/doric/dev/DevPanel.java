@@ -1,6 +1,7 @@
 package pub.doric.dev;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,11 +14,17 @@ import androidx.annotation.Nullable;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import pub.doric.R;
 
 public class DevPanel extends BottomSheetDialogFragment {
+
+    private boolean isDevConnected = false;
 
     public DevPanel() {
 
@@ -37,7 +44,7 @@ public class DevPanel extends BottomSheetDialogFragment {
     public void onStart() {
         super.onStart();
 
-        getView().findViewById(R.id.menu1_text_view).setOnClickListener(new View.OnClickListener() {
+        getView().findViewById(R.id.connect_dev_kit_text_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final RxPermissions rxPermissions = new RxPermissions(DevPanel.this);
@@ -46,7 +53,7 @@ public class DevPanel extends BottomSheetDialogFragment {
                         .subscribe(new Consumer<Boolean>() {
                             @Override
                             public void accept(Boolean grant) throws Exception {
-                                if (grant){
+                                if (grant) {
                                     Intent intent = new Intent(getContext(), ScanQRCodeActivity.class);
                                     getContext().startActivity(intent);
                                 }
@@ -55,5 +62,32 @@ public class DevPanel extends BottomSheetDialogFragment {
 
             }
         });
+
+        if (isDevConnected) {
+            getView().findViewById(R.id.connect_dev_kit_text_view).setVisibility(View.GONE);
+            getView().findViewById(R.id.debug_text_view).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.hot_reload_text_view).setVisibility(View.VISIBLE);
+        } else {
+            getView().findViewById(R.id.connect_dev_kit_text_view).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.debug_text_view).setVisibility(View.GONE);
+            getView().findViewById(R.id.hot_reload_text_view).setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(ConnectEvent connectEvent) {
+        isDevConnected = true;
     }
 }

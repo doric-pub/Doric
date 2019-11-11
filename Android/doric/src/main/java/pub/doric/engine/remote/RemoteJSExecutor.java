@@ -40,7 +40,7 @@ public class RemoteJSExecutor {
                 .readTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(10, TimeUnit.SECONDS)
                 .build();
-        final Request request = new Request.Builder().url("ws://192.168.24.221:2080").build();
+        final Request request = new Request.Builder().url("ws://192.168.25.175:2080").build();
 
         final Thread current = Thread.currentThread();
         webSocket = okHttpClient.newWebSocket(request, new WebSocketListener() {

@@ -37,7 +37,10 @@ import okhttp3.WebSocketListener;
 public class WSClient extends WebSocketListener {
     private final WebSocket webSocket;
 
-    public WSClient(String url) {
+    private ConnectCallback connectCallback;
+
+    public WSClient(String url, ConnectCallback connectCallback) {
+        this.connectCallback = connectCallback;
         OkHttpClient okHttpClient = new OkHttpClient
                 .Builder()
                 .readTimeout(10, TimeUnit.SECONDS)
@@ -54,6 +57,7 @@ public class WSClient extends WebSocketListener {
     @Override
     public void onOpen(WebSocket webSocket, Response response) {
         super.onOpen(webSocket, response);
+        connectCallback.connected();
     }
 
     @Override

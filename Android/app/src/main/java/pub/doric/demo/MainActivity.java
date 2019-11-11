@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         doricContext.init(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 //        doricContext.callEntity("log");
         doricContext.getRootNode().setRootView((FrameLayout) findViewById(R.id.root));
-        Doric.connectDevKit("ws://192.168.11.38:7777");
+
         LocalServer localServer = new LocalServer(getApplicationContext(), 8910);
         try {
             localServer.start();

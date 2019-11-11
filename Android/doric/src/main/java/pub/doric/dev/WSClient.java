@@ -15,12 +15,11 @@
  */
 package pub.doric.dev;
 
-import pub.doric.DoricContext;
-import pub.doric.DoricContextManager;
-
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.EOFException;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -28,6 +27,10 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
+import pub.doric.DoricContext;
+import pub.doric.DoricContextManager;
+import pub.doric.dev.event.EOFEvent;
+import pub.doric.dev.event.OpenEvent;
 
 /**
  * @Description: com.github.penfeizhou.doric.dev
@@ -37,10 +40,7 @@ import okhttp3.WebSocketListener;
 public class WSClient extends WebSocketListener {
     private final WebSocket webSocket;
 
-    private ConnectCallback connectCallback;
-
-    public WSClient(String url, ConnectCallback connectCallback) {
-        this.connectCallback = connectCallback;
+    public WSClient(String url) {
         OkHttpClient okHttpClient = new OkHttpClient
                 .Builder()
                 .readTimeout(10, TimeUnit.SECONDS)
@@ -57,7 +57,7 @@ public class WSClient extends WebSocketListener {
     @Override
     public void onOpen(WebSocket webSocket, Response response) {
         super.onOpen(webSocket, response);
-        connectCallback.connected();
+        EventBus.getDefault().post(new OpenEvent());
     }
 
     @Override
@@ -91,5 +91,9 @@ public class WSClient extends WebSocketListener {
     @Override
     public void onFailure(WebSocket webSocket, Throwable t, Response response) {
         super.onFailure(webSocket, t, response);
+
+        if (t instanceof EOFException) {
+            EventBus.getDefault().post(new EOFEvent());
+        }
     }
 }

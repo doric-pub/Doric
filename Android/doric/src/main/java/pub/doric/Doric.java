@@ -17,8 +17,6 @@ package pub.doric;
 
 import android.app.Application;
 
-import pub.doric.dev.ConnectCallback;
-
 /**
  * @Description: Doric
  * @Author: pengfei.zhou
@@ -35,8 +33,8 @@ public class Doric {
         return sApplication;
     }
 
-    public static void connectDevKit(String url, ConnectCallback connectCallback) {
-        DoricDriver.getInstance().connectDevKit(url, connectCallback);
+    public static void connectDevKit(String url) {
+        DoricDriver.getInstance().connectDevKit(url);
     }
 
     public static void disconnectDevKit() {

@@ -21,6 +21,8 @@ import org.greenrobot.eventbus.ThreadMode;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import pub.doric.R;
+import pub.doric.dev.event.EOFEvent;
+import pub.doric.dev.event.OpenEvent;
 
 public class DevPanel extends BottomSheetDialogFragment {
 
@@ -62,16 +64,6 @@ public class DevPanel extends BottomSheetDialogFragment {
 
             }
         });
-
-        if (isDevConnected) {
-            getView().findViewById(R.id.connect_dev_kit_text_view).setVisibility(View.GONE);
-            getView().findViewById(R.id.debug_text_view).setVisibility(View.VISIBLE);
-            getView().findViewById(R.id.hot_reload_text_view).setVisibility(View.VISIBLE);
-        } else {
-            getView().findViewById(R.id.connect_dev_kit_text_view).setVisibility(View.VISIBLE);
-            getView().findViewById(R.id.debug_text_view).setVisibility(View.GONE);
-            getView().findViewById(R.id.hot_reload_text_view).setVisibility(View.GONE);
-        }
     }
 
     @Override
@@ -87,7 +79,20 @@ public class DevPanel extends BottomSheetDialogFragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(ConnectEvent connectEvent) {
+    public void onOpenEvent(OpenEvent openEvent) {
         isDevConnected = true;
+
+        getView().findViewById(R.id.connect_dev_kit_text_view).setVisibility(View.GONE);
+        getView().findViewById(R.id.debug_text_view).setVisibility(View.VISIBLE);
+        getView().findViewById(R.id.hot_reload_text_view).setVisibility(View.VISIBLE);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEOFEvent(EOFEvent eofEvent) {
+        isDevConnected = false;
+
+        getView().findViewById(R.id.connect_dev_kit_text_view).setVisibility(View.VISIBLE);
+        getView().findViewById(R.id.debug_text_view).setVisibility(View.GONE);
+        getView().findViewById(R.id.hot_reload_text_view).setVisibility(View.GONE);
     }
 }

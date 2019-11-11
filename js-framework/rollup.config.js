@@ -11,7 +11,7 @@ export default [
             file: "bundle/doric-sandbox.js",
         },
         plugins: [
-            resolve({ jsnext: true, main: true }),
+            resolve({ mainFields: ["jsnext"] }),
         ]
     },
     {
@@ -21,7 +21,7 @@ export default [
             file: "bundle/doric-lib.js",
         },
         plugins: [
-            resolve({ jsnext: true, main: true }),
+            resolve({ mainFields: ["jsnext"] }),
         ],
         external: ['reflect-metadata']
     },
@@ -32,7 +32,7 @@ export default [
             file: "bundle/doric-vm.js",
         },
         plugins: [
-            resolve({ jsnext: true, main: true }),
+            resolve({ mainFields: ["jsnext"] }),
         ],
         external: ['ws']
     },

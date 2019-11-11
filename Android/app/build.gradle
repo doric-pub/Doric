@@ -26,6 +26,6 @@ dependencies {
     implementation project(':doric')
     implementation 'com.github.bumptech.glide:glide:4.10.0'
     implementation 'com.github.bumptech.glide:annotations:4.10.0'
-    implementation 'com.github.penfeizhou.android.animation:glide-plugin:1.0.1'
+    implementation 'com.github.penfeizhou.android.animation:glide-plugin:1.2.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
 }

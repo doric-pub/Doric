@@ -11,7 +11,7 @@ export default bundles.map(bundle => {
             sourcemap: true,
         },
         plugins: [
-            resolve({ jsnext: true, main: true }),
+            resolve({ mainFields: ["jsnext"] }),
             commonjs()
         ],
         external: ['reflect-metadata', 'doric'],

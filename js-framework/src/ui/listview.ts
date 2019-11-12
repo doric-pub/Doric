@@ -1,8 +1,3 @@
-import { View, Property, SuperView, Group, LayoutSpec } from "./view";
-import { Model } from "../util/types";
-import { O_TRUNC } from "constants";
-import { Stack } from "./layout";
-
 /*
  * Copyright [2019] [Doric.Pub]
  *
@@ -19,6 +14,10 @@ import { Stack } from "./layout";
  * limitations under the License.
  */
 
+import { View, Property, SuperView, Group, LayoutSpec } from "./view";
+import { Model } from "../util/types";
+import { O_TRUNC } from "constants";
+import { Stack } from "./layout";
 export function listItem(item: View) {
     return (new ListItem).also((it) => {
         it.layoutConfig = {

@@ -17,6 +17,8 @@ package pub.doric;
 
 import android.app.Application;
 
+import com.google.gson.JsonObject;
+
 /**
  * @Description: Doric
  * @Author: pengfei.zhou
@@ -35,6 +37,10 @@ public class Doric {
 
     public static void connectDevKit(String url) {
         DoricDriver.getInstance().connectDevKit(url);
+    }
+
+    public static void sendDevCommand(IDoricDriver.Command command, JsonObject jsonObject) {
+        DoricDriver.getInstance().sendDevCommand(command, jsonObject);
     }
 
     public static void disconnectDevKit() {

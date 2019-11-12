@@ -5,6 +5,13 @@ const createServer = () => {
         console.log('connected', connection.key)
         connection.on('text', function (result) {
             console.log('text', result)
+            let resultObject = JSON.parse(result)
+            switch(resultObject.cmd) {
+                case 'debug':
+                    let contextId = resultObject.contextId
+                    
+                    break
+            }
         })
         connection.on('connect', function (code) {
             console.log('connect', code)

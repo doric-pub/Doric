@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.gson.JsonObject;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import org.greenrobot.eventbus.EventBus;
@@ -20,6 +21,10 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import pub.doric.Doric;
+import pub.doric.DoricContext;
+import pub.doric.DoricContextManager;
+import pub.doric.IDoricDriver;
 import pub.doric.R;
 import pub.doric.dev.event.EOFEvent;
 import pub.doric.dev.event.OpenEvent;
@@ -62,6 +67,17 @@ public class DevPanel extends BottomSheetDialogFragment {
                             }
                         });
 
+            }
+        });
+
+        getView().findViewById(R.id.debug_text_view).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (DoricContext doricContext : DoricContextManager.aliveContexts()) {
+                    JsonObject jsonObject = new JsonObject();
+                    jsonObject.addProperty("contextId", doricContext.getContextId());
+                    Doric.sendDevCommand(IDoricDriver.Command.DEBUG, jsonObject);
+                }
             }
         });
     }

@@ -18,19 +18,21 @@ package pub.doric;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.github.pengfeizhou.jscore.JSDecoder;
+import com.google.gson.JsonObject;
+
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import pub.doric.async.AsyncCall;
 import pub.doric.async.AsyncResult;
 import pub.doric.dev.WSClient;
 import pub.doric.engine.DoricJSEngine;
 import pub.doric.utils.DoricConstant;
 import pub.doric.utils.DoricLog;
+import pub.doric.utils.DoricUtils;
 import pub.doric.utils.ThreadMode;
-
-import com.github.pengfeizhou.jscore.JSDecoder;
-
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * @Description: Doric
@@ -140,6 +142,14 @@ public class DoricDriver implements IDoricDriver {
     @Override
     public void connectDevKit(String url) {
         wsClient = new WSClient(url);
+    }
+
+    @Override
+    public void sendDevCommand(Command command, JsonObject jsonObject) {
+        JsonObject result = new JsonObject();
+        result.addProperty("cmd", command.toString());
+        result.add("data", jsonObject);
+        wsClient.send(DoricUtils.gson.toJson(result));
     }
 
     @Override

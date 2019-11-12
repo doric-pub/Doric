@@ -3,7 +3,6 @@ package pub.doric.engine.remote;
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JavaFunction;
 import com.github.pengfeizhou.jscore.JavaValue;
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -24,11 +23,11 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
+import pub.doric.utils.DoricUtils;
 
 public class RemoteJSExecutor {
 
     private final WebSocket webSocket;
-    private final Gson gson = new Gson();
 
     private final Map<String, JavaFunction> globalFunctions = new HashMap<>();
 
@@ -63,7 +62,7 @@ public class RemoteJSExecutor {
 
             @Override
             public void onMessage(@NotNull WebSocket webSocket, @NotNull String text) {
-                JsonElement je = gson.fromJson(text, JsonElement.class);
+                JsonElement je = DoricUtils.gson.fromJson(text, JsonElement.class);
 
                 if (je instanceof JsonObject) {
                     JsonObject jo = ((JsonObject) je);
@@ -91,7 +90,7 @@ public class RemoteJSExecutor {
                                     }
                                 } else {
                                     try {
-                                        ValueBuilder vb = new ValueBuilder(new JSONObject(gson.toJson(arguments.get(i))));
+                                        ValueBuilder vb = new ValueBuilder(new JSONObject(DoricUtils.gson.toJson(arguments.get(i))));
                                         JSDecoder decoder = new JSDecoder(vb.build());
                                         decoders[i] = decoder;
                                     } catch (Exception ex) {
@@ -141,7 +140,7 @@ public class RemoteJSExecutor {
         JsonObject jo = new JsonObject();
         jo.addProperty("cmd", "injectGlobalJSFunction");
         jo.addProperty("name", name);
-        webSocket.send(gson.toJson(jo));
+        webSocket.send(DoricUtils.gson.toJson(jo));
     }
 
     public void injectGlobalJSObject(String name, JavaValue javaValue) {
@@ -163,7 +162,7 @@ public class RemoteJSExecutor {
         jo.add("javaValues", ja);
 
         jo.addProperty("hashKey", hashKey);
-        webSocket.send(gson.toJson(jo));
+        webSocket.send(DoricUtils.gson.toJson(jo));
 
         LockSupport.park(Thread.currentThread());
         return temp;

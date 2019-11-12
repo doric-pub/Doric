@@ -96,4 +96,8 @@ public class WSClient extends WebSocketListener {
             EventBus.getDefault().post(new EOFEvent());
         }
     }
+
+    public void send(String command) {
+        webSocket.send(command);
+    }
 }

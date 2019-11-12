@@ -31,6 +31,7 @@ import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSValue;
 import com.github.pengfeizhou.jscore.JavaValue;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -46,6 +47,8 @@ import java.lang.reflect.Field;
  * @CreateDate: 2019-07-18
  */
 public class DoricUtils {
+    public static Gson gson = new Gson();
+
     public static String readAssetFile(String assetFile) {
         InputStream inputStream = null;
         try {

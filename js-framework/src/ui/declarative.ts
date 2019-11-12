@@ -1,4 +1,5 @@
-import { Text, Image, HLayout, VLayout, Stack, LayoutConfig, View, IText, IImage } from './view'
+import { Text, Image, LayoutConfig, View, IText, IImage } from './view'
+import { Stack, HLayout, VLayout } from './layout'
 
 export function text(config: IText) {
     const ret = new Text

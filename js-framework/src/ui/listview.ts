@@ -1,6 +1,7 @@
-import { View, Stack, Property, SuperView, Group, LayoutSpec } from "./view";
+import { View, Property, SuperView, Group, LayoutSpec } from "./view";
 import { Model } from "../util/types";
 import { O_TRUNC } from "constants";
+import { Stack } from "./layout";
 
 /*
  * Copyright [2019] [Doric.Pub]

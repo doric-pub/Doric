@@ -254,6 +254,20 @@ export abstract class View implements Modeling, IView {
 
 export abstract class Superview extends View {
     abstract subviewById(id: string): View | undefined
+    abstract allSubviews(): Iterable<View>
+
+    isDirty() {
+        if (super.isDirty()) {
+            return true
+        } else {
+            for (const v of this.allSubviews()) {
+                if (v.isDirty()) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
 }
 
 export abstract class Group extends Superview {
@@ -274,6 +288,10 @@ export abstract class Group extends Superview {
             }
         }
         return undefined
+    }
+
+    allSubviews() {
+        return this.children
     }
 
     addChild(view: View) {

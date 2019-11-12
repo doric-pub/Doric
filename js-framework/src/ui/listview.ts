@@ -44,6 +44,10 @@ export class List extends Superview {
         return this.cachedViews.get(id)
     }
 
+    allSubviews() {
+        return this.cachedViews.values()
+    }
+
     @Property
     itemCount = 0
 

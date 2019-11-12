@@ -13,7 +13,9 @@ class CounterView extends ViewHolder<CountModel> {
             text({
                 textSize: 40,
                 layoutConfig: {
-                    alignment: new Gravity().center()
+                    alignment: new Gravity().center(),
+                    widthSpec: LayoutSpec.WRAP_CONTENT,
+                    heightSpec: LayoutSpec.WRAP_CONTENT,
                 },
             }).also(it => { this.number = it }),
             text({
@@ -25,7 +27,9 @@ class CounterView extends ViewHolder<CountModel> {
                 },
                 corners: 5,
                 layoutConfig: {
-                    alignment: new Gravity().center()
+                    alignment: new Gravity().center(),
+                    widthSpec: LayoutSpec.WRAP_CONTENT,
+                    heightSpec: LayoutSpec.WRAP_CONTENT,
                 },
                 shadow: {
                     color: Color.parse("#00ff00"),

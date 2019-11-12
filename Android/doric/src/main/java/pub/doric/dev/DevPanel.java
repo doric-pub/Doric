@@ -23,6 +23,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import pub.doric.BuildConfig;
 import pub.doric.Doric;
 import pub.doric.DoricContext;
 import pub.doric.DoricContextManager;
@@ -30,7 +31,6 @@ import pub.doric.IDoricDriver;
 import pub.doric.R;
 import pub.doric.dev.event.EOFEvent;
 import pub.doric.dev.event.OpenEvent;
-import pub.doric.utils.DoricUtils;
 
 public class DevPanel extends BottomSheetDialogFragment {
 
@@ -85,6 +85,7 @@ public class DevPanel extends BottomSheetDialogFragment {
                 for (DoricContext doricContext : DoricContextManager.aliveContexts()) {
                     JsonObject jsonObject = new JsonObject();
                     jsonObject.addProperty("contextId", doricContext.getContextId());
+                    jsonObject.addProperty("projectHome", BuildConfig.PROJECT_HOME);
                     Doric.sendDevCommand(IDoricDriver.Command.DEBUG, jsonObject);
                 }
             }

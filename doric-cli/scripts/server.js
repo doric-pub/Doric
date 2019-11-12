@@ -7,9 +7,10 @@ const createServer = () => {
             console.log('text', result)
             let resultObject = JSON.parse(result)
             switch(resultObject.cmd) {
-                case 'debug':
-                    let contextId = resultObject.contextId
-                    
+                case 'DEBUG':
+                    let contextId = resultObject.data.contextId
+                    let projectHome = resultObject.data.projectHome
+                    console.log(projectHome)
                     break
             }
         })

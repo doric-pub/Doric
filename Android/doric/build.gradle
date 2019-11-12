@@ -1,5 +1,7 @@
 apply plugin: 'com.android.library'
 
+def projectHome = project.rootDir.getParent() + "/demo"
+
 android {
     compileSdkVersion 29
     buildToolsVersion '29.0.2'
@@ -19,6 +21,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             consumerProguardFiles 'proguard-rules.pro'
+        }
+
+        debug {
+            buildConfigField "String", "PROJECT_HOME", "\"${projectHome}\""
         }
     }
 }

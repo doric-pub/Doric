@@ -1,5 +1,5 @@
 const ws = require('nodejs-websocket')
-const { spawn } = require('child_process')
+const { exec, spawn } = require('child_process')
 
 const createServer = () => {
     let server = ws.createServer(connection => {
@@ -12,7 +12,6 @@ const createServer = () => {
                     let contextId = resultObject.data.contextId
                     let projectHome = resultObject.data.projectHome
                     console.log(projectHome)
-
                     {
                         const code = spawn('code', [projectHome, projectHome + "/src/Snake.ts"])
                         code.stdout.on('data', (data) => {
@@ -26,6 +25,21 @@ const createServer = () => {
                         code.on('close', (code) => {
                             console.log(`child process exited with code ${code}`)
                         })
+                    }
+                    {
+                        setTimeout(() => {
+                            exec('osascript -e \'tell application "System Events"\ntell application "Visual Studio Code" to activate\nkey code 96\nend tell\'', (err, stdout, stderr) => {
+                                if (err) {
+                                  // node couldn't execute the command
+                                  console.log(`stdout: ${err}`)
+                                  return;
+                                }
+                              
+                                // the *entire* stdout and stderr (buffered)
+                                console.log(`stdout: ${stdout}`);
+                                console.log(`stderr: ${stderr}`);
+                            })
+                        }, 4000)
                     }
                     
                     break

@@ -58,6 +58,7 @@ dependencies {
     implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
     implementation "io.reactivex.rxjava2:rxjava:2.2.14"
     implementation 'org.greenrobot:eventbus:3.1.1'
+    implementation 'com.lahm.library:easy-protector-release:1.1.0'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'

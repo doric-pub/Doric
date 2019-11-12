@@ -57,6 +57,8 @@ public class WSClient extends WebSocketListener {
     @Override
     public void onOpen(WebSocket webSocket, Response response) {
         super.onOpen(webSocket, response);
+
+        DevPanel.isDevConnected = true;
         EventBus.getDefault().post(new OpenEvent());
     }
 
@@ -93,6 +95,7 @@ public class WSClient extends WebSocketListener {
         super.onFailure(webSocket, t, response);
 
         if (t instanceof EOFException) {
+            DevPanel.isDevConnected = false;
             EventBus.getDefault().post(new EOFEvent());
         }
     }

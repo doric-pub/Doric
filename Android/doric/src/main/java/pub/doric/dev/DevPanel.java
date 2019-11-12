@@ -13,6 +13,8 @@ import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.gson.JsonObject;
+import com.lahm.library.EasyProtectorLib;
+import com.lahm.library.EmulatorCheckCallback;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import org.greenrobot.eventbus.EventBus;
@@ -28,10 +30,12 @@ import pub.doric.IDoricDriver;
 import pub.doric.R;
 import pub.doric.dev.event.EOFEvent;
 import pub.doric.dev.event.OpenEvent;
+import pub.doric.utils.DoricUtils;
 
 public class DevPanel extends BottomSheetDialogFragment {
 
-    private boolean isDevConnected = false;
+    private boolean isRunningInEmulator = false;
+    static boolean isDevConnected = false;
 
     public DevPanel() {
 
@@ -51,22 +55,27 @@ public class DevPanel extends BottomSheetDialogFragment {
     public void onStart() {
         super.onStart();
 
+        updateUI();
+
         getView().findViewById(R.id.connect_dev_kit_text_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final RxPermissions rxPermissions = new RxPermissions(DevPanel.this);
-                Disposable disposable = rxPermissions
-                        .request(Manifest.permission.CAMERA)
-                        .subscribe(new Consumer<Boolean>() {
-                            @Override
-                            public void accept(Boolean grant) throws Exception {
-                                if (grant) {
-                                    Intent intent = new Intent(getContext(), ScanQRCodeActivity.class);
-                                    getContext().startActivity(intent);
+                if (isRunningInEmulator) {
+                    Doric.connectDevKit("ws://" + "10.0.2.2" + ":7777");
+                } else {
+                    final RxPermissions rxPermissions = new RxPermissions(DevPanel.this);
+                    Disposable disposable = rxPermissions
+                            .request(Manifest.permission.CAMERA)
+                            .subscribe(new Consumer<Boolean>() {
+                                @Override
+                                public void accept(Boolean grant) throws Exception {
+                                    if (grant) {
+                                        Intent intent = new Intent(getContext(), ScanQRCodeActivity.class);
+                                        getContext().startActivity(intent);
+                                    }
                                 }
-                            }
-                        });
-
+                            });
+                }
             }
         });
 
@@ -86,6 +95,12 @@ public class DevPanel extends BottomSheetDialogFragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         EventBus.getDefault().register(this);
+        isRunningInEmulator = EasyProtectorLib.checkIsRunningInEmulator(context, new EmulatorCheckCallback() {
+            @Override
+            public void findEmulator(String emulatorInfo) {
+                System.out.println(emulatorInfo);
+            }
+        });
     }
 
     @Override
@@ -96,19 +111,23 @@ public class DevPanel extends BottomSheetDialogFragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onOpenEvent(OpenEvent openEvent) {
-        isDevConnected = true;
-
-        getView().findViewById(R.id.connect_dev_kit_text_view).setVisibility(View.GONE);
-        getView().findViewById(R.id.debug_text_view).setVisibility(View.VISIBLE);
-        getView().findViewById(R.id.hot_reload_text_view).setVisibility(View.VISIBLE);
+        updateUI();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEOFEvent(EOFEvent eofEvent) {
-        isDevConnected = false;
+        updateUI();
+    }
 
-        getView().findViewById(R.id.connect_dev_kit_text_view).setVisibility(View.VISIBLE);
-        getView().findViewById(R.id.debug_text_view).setVisibility(View.GONE);
-        getView().findViewById(R.id.hot_reload_text_view).setVisibility(View.GONE);
+    private void updateUI() {
+        if (isDevConnected) {
+            getView().findViewById(R.id.connect_dev_kit_text_view).setVisibility(View.GONE);
+            getView().findViewById(R.id.debug_text_view).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.hot_reload_text_view).setVisibility(View.VISIBLE);
+        } else {
+            getView().findViewById(R.id.connect_dev_kit_text_view).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.debug_text_view).setVisibility(View.GONE);
+            getView().findViewById(R.id.hot_reload_text_view).setVisibility(View.GONE);
+        }
     }
 }

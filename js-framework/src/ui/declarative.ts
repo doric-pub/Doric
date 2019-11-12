@@ -1,51 +1,5 @@
-import { Text, Image, HLayout, VLayout, Stack, LayoutConfig, View } from './view'
-import { Color, GradientColor } from '../util/color'
-import { Gravity } from '../util/gravity'
+import { Text, Image, HLayout, VLayout, Stack, LayoutConfig, View, IText, IImage } from './view'
 
-export interface IView {
-    width?: number
-    height?: number
-    bgColor?: Color | GradientColor
-    corners?: number | { leftTop?: number; rightTop?: number; leftBottom?: number; rightBottom?: number }
-    border?: { width: number; color: Color; }
-    shadow?: { color: Color; opacity: number; radius: number; offsetX: number; offsetY: number }
-    alpha?: number
-    hidden?: boolean
-    padding?: {
-        left?: number,
-        right?: number,
-        top?: number,
-        bottom?: number,
-    }
-    layoutConfig?: LayoutConfig
-    onClick?: Function
-    identifier?: string
-}
-export interface IText extends IView {
-    text?: string
-    textColor?: Color
-    textSize?: number
-    maxLines?: number
-    textAlignment?: Gravity
-}
-
-export interface IImage extends IView {
-    imageUrl?: string
-}
-
-export interface IStack extends IView {
-    gravity?: Gravity
-}
-
-export interface IVLayout extends IView {
-    space?: number
-    gravity?: Gravity
-}
-
-export interface IHLayout extends IView {
-    space?: number
-    gravity?: Gravity
-}
 export function text(config: IText) {
     const ret = new Text
     for (let key in config) {

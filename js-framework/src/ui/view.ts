@@ -41,7 +41,28 @@ export function Property(target: Object, propKey: string) {
     Reflect.defineMetadata(propKey, true, target)
 }
 
-export abstract class View implements Modeling {
+export interface IView {
+    width?: number
+    height?: number
+    bgColor?: Color | GradientColor
+    corners?: number | { leftTop?: number; rightTop?: number; leftBottom?: number; rightBottom?: number }
+    border?: { width: number; color: Color; }
+    shadow?: { color: Color; opacity: number; radius: number; offsetX: number; offsetY: number }
+    alpha?: number
+    hidden?: boolean
+    padding?: {
+        left?: number,
+        right?: number,
+        top?: number,
+        bottom?: number,
+    }
+    layoutConfig?: LayoutConfig
+    onClick?: Function
+    identifier?: string
+}
+
+
+export abstract class View implements Modeling, IView {
     @Property
     width: number = 0
 
@@ -88,12 +109,6 @@ export abstract class View implements Modeling {
 
     @Property
     onClick?: Function
-
-    /**
-     * Set to reuse native view
-     */
-    @Property
-    identifier?: string
 
     parent?: Group
 
@@ -242,7 +257,7 @@ export interface LinearConfig extends LayoutConfig {
 }
 
 export interface SuperView {
-    subViewById(id: string): View | undefined
+    subviewById(id: string): View | undefined
 }
 
 export abstract class Group extends View implements SuperView {
@@ -266,7 +281,7 @@ export abstract class Group extends View implements SuperView {
         }
     })
 
-    subViewById(id: string): View | undefined {
+    subviewById(id: string): View | undefined {
         for (let view of this.children) {
             if (view.viewId === id) {
                 return view
@@ -309,8 +324,11 @@ export abstract class Group extends View implements SuperView {
         return super.isDirty()
     }
 }
+export interface IStack extends IView {
+    gravity?: Gravity
+}
 
-export class Stack extends Group {
+export class Stack extends Group implements IStack {
     @Property
     gravity?: Gravity
 }
@@ -319,7 +337,7 @@ export class Scroller extends View implements SuperView {
     @Property
     contentView?: View
 
-    subViewById(id: string): View | undefined {
+    subviewById(id: string): View | undefined {
         return this.contentView
     }
 }
@@ -335,13 +353,32 @@ class LinearLayout extends Group {
     gravity?: Gravity
 }
 
-export class VLayout extends LinearLayout {
+export interface IVLayout extends IView {
+    space?: number
+    gravity?: Gravity
 }
 
-export class HLayout extends LinearLayout {
+export class VLayout extends LinearLayout implements VLayout {
 }
 
-export class Text extends View {
+
+export interface IHLayout extends IView {
+    space?: number
+    gravity?: Gravity
+}
+
+export class HLayout extends LinearLayout implements IHLayout {
+}
+
+export interface IText extends IView {
+    text?: string
+    textColor?: Color
+    textSize?: number
+    maxLines?: number
+    textAlignment?: Gravity
+}
+
+export class Text extends View implements IText {
     @Property
     text?: string
 
@@ -358,44 +395,20 @@ export class Text extends View {
     textAlignment?: Gravity
 }
 
-export class Image extends View {
+export interface IImage extends IView {
+    imageUrl?: string
+}
+
+export class Image extends View implements IImage {
     @Property
     imageUrl?: string
 }
 
-export class List extends View implements SuperView {
-    private cachedViews: Map<string, View> = new Map
-
-    subViewById(id: string): View | undefined {
-        return this.cachedViews.get(id)
-    }
-
-    @Property
-    itemCount = 0
-
-    @Property
-    renderItem!: (index: number) => View
-
-
-    private getItem(itemIdx: number) {
-        let view = this.cachedViews.get(`${itemIdx}`)
-        if (view === undefined) {
-            view = this.renderItem(itemIdx)
-            this.cachedViews.set(`${itemIdx}`, view)
-        }
-        return view
-    }
-
-    @Property
-    private renderBunchedItems(items: number[]): View[] {
-        return items.map(e => this.getItem(e))
-    }
-}
 
 export class SectionList extends View implements SuperView {
     private cachedViews: Map<string, View> = new Map
 
-    subViewById(id: string): View | undefined {
+    subviewById(id: string): View | undefined {
         return this.cachedViews.get(id)
     }
     @Property
@@ -450,7 +463,8 @@ export class Slide extends View implements SuperView {
     renderPage!: (pageIdx: number) => View
 
     private cachedViews: Map<string, View> = new Map
-    subViewById(id: string): View | undefined {
+
+    subviewById(id: string): View | undefined {
         return this.cachedViews.get(id)
     }
     private getPage(pageIdx: number) {

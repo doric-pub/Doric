@@ -22,9 +22,6 @@ import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
 
@@ -36,6 +33,7 @@ import pub.doric.dev.event.EnterDebugEvent;
 import pub.doric.dev.event.QuitDebugEvent;
 import pub.doric.engine.ChangeEngineCallback;
 import pub.doric.utils.DoricUtils;
+import pub.doric.utils.ThreadMode;
 
 
 public class MainActivity extends AppCompatActivity {

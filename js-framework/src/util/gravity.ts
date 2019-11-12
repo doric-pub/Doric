@@ -77,3 +77,6 @@ export class Gravity implements Modeling {
     }
 
 }
+export function gravity() {
+    return new Gravity
+}

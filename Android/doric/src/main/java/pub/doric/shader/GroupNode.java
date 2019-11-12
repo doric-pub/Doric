@@ -45,73 +45,69 @@ public abstract class GroupNode<F extends ViewGroup> extends ViewNode<F> {
 
     @Override
     protected void blend(F view, ViewGroup.LayoutParams layoutParams, String name, JSValue prop) {
-        super.blend(view, layoutParams, name, prop);
-        switch (name) {
-            case "children":
-                JSArray jsArray = prop.asArray();
-                int i;
-                List<ViewNode> tobeRemoved = new ArrayList<>();
-                for (i = 0; i < jsArray.size(); i++) {
-                    JSValue jsValue = jsArray.get(i);
-                    if (!jsValue.isObject()) {
-                        continue;
-                    }
-                    JSObject childObj = jsValue.asObject();
-                    String type = childObj.getProperty("type").asString().value();
-                    String id = childObj.getProperty("id").asString().value();
-                    ViewNode child = mChildrenNode.get(id);
-                    if (child == null) {
-                        child = ViewNode.create(getDoricContext(), type);
+        if ("children".equals(name)) {
+            JSArray jsArray = prop.asArray();
+            int i;
+            List<ViewNode> tobeRemoved = new ArrayList<>();
+            for (i = 0; i < jsArray.size(); i++) {
+                JSValue jsValue = jsArray.get(i);
+                if (!jsValue.isObject()) {
+                    continue;
+                }
+                JSObject childObj = jsValue.asObject();
+                String type = childObj.getProperty("type").asString().value();
+                String id = childObj.getProperty("id").asString().value();
+                ViewNode child = mChildrenNode.get(id);
+                if (child == null) {
+                    child = ViewNode.create(getDoricContext(), type);
+                    child.index = i;
+                    child.mParent = this;
+                    child.mId = id;
+                    mChildrenNode.put(id, child);
+                } else {
+                    if (i != child.index) {
+                        mIndexInfo.remove(i);
                         child.index = i;
-                        child.mParent = this;
-                        child.mId = id;
-                        mChildrenNode.put(id, child);
-                    } else {
-                        if (i != child.index) {
-                            mIndexInfo.remove(i);
-                            child.index = i;
-                            mView.removeView(child.getView());
-                        }
-                        tobeRemoved.remove(child);
+                        mView.removeView(child.getView());
                     }
-
-                    ViewNode node = mIndexInfo.get(i);
-
-                    if (node != null && node != child) {
-                        mView.removeViewAt(i);
-                        mIndexInfo.remove(i);
-                        tobeRemoved.add(node);
-                    }
-
-                    ViewGroup.LayoutParams params = child.getLayoutParams();
-                    if (params == null) {
-                        params = generateDefaultLayoutParams();
-                    }
-                    child.blend(childObj.getProperty("props").asObject(), params);
-                    if (mIndexInfo.get(i) == null) {
-                        mView.addView(child.getView(), i, child.getLayoutParams());
-                        mIndexInfo.put(i, child);
-                    }
-                }
-                int count = mView.getChildCount();
-                while (i < count) {
-                    ViewNode node = mIndexInfo.get(i);
-                    if (node != null) {
-                        mChildrenNode.remove(node.getId());
-                        mIndexInfo.remove(i);
-                        tobeRemoved.remove(node);
-                        mView.removeView(node.getView());
-                    }
-                    i++;
+                    tobeRemoved.remove(child);
                 }
 
-                for (ViewNode node : tobeRemoved) {
+                ViewNode node = mIndexInfo.get(i);
+
+                if (node != null && node != child) {
+                    mView.removeViewAt(i);
+                    mIndexInfo.remove(i);
+                    tobeRemoved.add(node);
+                }
+
+                ViewGroup.LayoutParams params = child.getLayoutParams();
+                if (params == null) {
+                    params = generateDefaultLayoutParams();
+                }
+                child.blend(childObj.getProperty("props").asObject(), params);
+                if (mIndexInfo.get(i) == null) {
+                    mView.addView(child.getView(), i, child.getLayoutParams());
+                    mIndexInfo.put(i, child);
+                }
+            }
+            int count = mView.getChildCount();
+            while (i < count) {
+                ViewNode node = mIndexInfo.get(i);
+                if (node != null) {
                     mChildrenNode.remove(node.getId());
+                    mIndexInfo.remove(i);
+                    tobeRemoved.remove(node);
+                    mView.removeView(node.getView());
                 }
-                break;
-            default:
-                super.blend(view, layoutParams, name, prop);
-                break;
+                i++;
+            }
+
+            for (ViewNode node : tobeRemoved) {
+                mChildrenNode.remove(node.getId());
+            }
+        } else {
+            super.blend(view, layoutParams, name, prop);
         }
     }
 

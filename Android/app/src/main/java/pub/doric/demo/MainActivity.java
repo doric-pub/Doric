@@ -25,9 +25,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.IOException;
 
+import pub.doric.dev.DevPanel;
 import pub.doric.DoricContext;
 import pub.doric.DoricDriver;
-import pub.doric.dev.DevPanel;
 import pub.doric.dev.LocalServer;
 import pub.doric.dev.event.EnterDebugEvent;
 import pub.doric.dev.event.QuitDebugEvent;

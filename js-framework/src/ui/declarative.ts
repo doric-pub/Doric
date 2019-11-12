@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Text, Image, LayoutConfig, View, IText, IImage } from './view'
+import { View, } from './view'
 import { Stack, HLayout, VLayout } from './layout'
+import { IText, IImage, Text, Image } from './widgets'
 
 export function text(config: IText) {
     const ret = new Text

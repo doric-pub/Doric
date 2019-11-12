@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { View, Property, SuperView, Group, LayoutSpec } from "./view";
+import { View, Property, LayoutSpec, Superview } from "./view";
 import { Model } from "../util/types";
 import { O_TRUNC } from "constants";
 import { Stack } from "./layout";
@@ -35,12 +35,9 @@ export class ListItem extends Stack {
     @Property
     identifier?: string
     list!: List
-    onChildPropertyChanged(child: View) {
-        super.onChildPropertyChanged(child)
-    }
 }
 
-export class List extends View implements SuperView {
+export class List extends Superview {
     private cachedViews: Map<string, ListItem> = new Map
 
     subviewById(id: string): ListItem | undefined {

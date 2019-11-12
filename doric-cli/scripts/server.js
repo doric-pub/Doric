@@ -13,18 +13,21 @@ const createServer = () => {
                     let projectHome = resultObject.data.projectHome
                     console.log(projectHome)
 
-                    const code = spawn('code', [projectHome])
-                    code.stdout.on('data', (data) => {
-                        console.log(`stdout: ${data}`)
-                    })
+                    {
+                        const code = spawn('code', [projectHome, projectHome + "/src/Snake.ts"])
+                        code.stdout.on('data', (data) => {
+                            console.log(`stdout: ${data}`)
+                        })
+                        
+                        code.stderr.on('data', (data) => {
+                            console.error(`stderr: ${data}`)
+                        })
+                          
+                        code.on('close', (code) => {
+                            console.log(`child process exited with code ${code}`)
+                        })
+                    }
                     
-                    code.stderr.on('data', (data) => {
-                        console.error(`stderr: ${data}`)
-                    })
-                      
-                    code.on('close', (code) => {
-                        console.log(`child process exited with code ${code}`)
-                    });
                     break
             }
         })

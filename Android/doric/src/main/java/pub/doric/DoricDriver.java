@@ -26,6 +26,7 @@ import java.util.concurrent.Executors;
 
 import pub.doric.async.AsyncCall;
 import pub.doric.async.AsyncResult;
+import pub.doric.engine.ChangeEngineCallback;
 import pub.doric.engine.DoricJSEngine;
 import pub.doric.utils.DoricConstant;
 import pub.doric.utils.DoricLog;
@@ -135,7 +136,7 @@ public class DoricDriver implements IDoricDriver {
         return doricJSEngine.getRegistry();
     }
 
-    public void changeJSEngine(boolean isNative) {
-        doricJSEngine.changeJSEngine(isNative);
+    public void changeJSEngine(boolean isNative, ChangeEngineCallback changeEngineCallback) {
+        doricJSEngine.changeJSEngine(isNative, changeEngineCallback);
     }
 }

@@ -43,6 +43,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
     private final Handler mJSHandler;
     private final DoricBridgeExtension mDoricBridgeExtension = new DoricBridgeExtension();
     private IDoricJSE mDoricJSE;
+    private DoricNativeJSExecutor doricNativeJSExecutor;
     private final DoricTimerExtension mTimerExtension;
     private final DoricRegistry mDoricRegistry = new DoricRegistry();
 
@@ -54,7 +55,9 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
         mJSHandler.post(new Runnable() {
             @Override
             public void run() {
-                mDoricJSE = new DoricNativeJSExecutor();
+                doricNativeJSExecutor = new DoricNativeJSExecutor();
+
+                mDoricJSE = doricNativeJSExecutor;
                 injectGlobal();
                 initDoricRuntime();
             }
@@ -211,17 +214,18 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
         return mDoricRegistry;
     }
 
-    public void changeJSEngine(final boolean isNative) {
+    public void changeJSEngine(final boolean isNative, final ChangeEngineCallback changeEngineCallback) {
         mJSHandler.post(new Runnable() {
             @Override
             public void run() {
-                mDoricJSE.teardown();
                 if (isNative) {
-                    mDoricJSE = new DoricNativeJSExecutor();
+                    mDoricJSE.teardown();
+                    mDoricJSE = doricNativeJSExecutor;
                 } else {
                     mDoricJSE = new DoricRemoteJSExecutor();
+                    injectGlobal();
                 }
-                injectGlobal();
+                changeEngineCallback.changed();
             }
         });
     }

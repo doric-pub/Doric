@@ -8,6 +8,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import org.greenrobot.eventbus.EventBus;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
@@ -23,6 +24,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
+import pub.doric.dev.event.QuitDebugEvent;
 import pub.doric.utils.DoricUtils;
 
 public class RemoteJSExecutor {
@@ -56,7 +58,10 @@ public class RemoteJSExecutor {
                     throw new RuntimeException("remote js executor cannot connect");
                 } else if (t instanceof EOFException) {
                     // 被远端强制断开
-                    throw new RuntimeException("remote js executor eof");
+                    System.out.println("remote js executor eof");
+
+                    LockSupport.park(current);
+                    EventBus.getDefault().post(new QuitDebugEvent());
                 }
             }
 
@@ -169,6 +174,6 @@ public class RemoteJSExecutor {
     }
 
     public void destroy() {
-        webSocket.close(0, "destroy");
+        webSocket.close(1000, "destroy");
     }
 }

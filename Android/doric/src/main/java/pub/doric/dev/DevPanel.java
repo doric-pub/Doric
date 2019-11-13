@@ -87,6 +87,7 @@ public class DevPanel extends BottomSheetDialogFragment {
                     jsonObject.addProperty("projectHome", BuildConfig.PROJECT_HOME);
                     Doric.sendDevCommand(IDevKit.Command.DEBUG, jsonObject);
                 }
+                dismissAllowingStateLoss();
             }
         });
     }

@@ -157,4 +157,8 @@ public class DoricDriver implements IDoricDriver {
         wsClient.close();
         wsClient = null;
     }
+
+    public void changeJSEngine(boolean isNative) {
+        doricJSEngine.changeJSEngine(isNative);
+    }
 }

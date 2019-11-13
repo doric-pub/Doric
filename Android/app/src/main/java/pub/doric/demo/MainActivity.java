@@ -22,24 +22,31 @@ import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.IOException;
 
-import pub.doric.dev.DevPanel;
-import pub.doric.Doric;
 import pub.doric.DoricContext;
+import pub.doric.DoricDriver;
+import pub.doric.dev.DevPanel;
 import pub.doric.dev.LocalServer;
+import pub.doric.dev.event.EnterDebugEvent;
 import pub.doric.utils.DoricUtils;
 
 
 public class MainActivity extends AppCompatActivity {
 
     private DevPanel mDevPanel = new DevPanel();
+    private DoricContext doricContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
-        DoricContext doricContext = DoricContext.create(this, DoricUtils.readAssetFile("demo/Snake.js"), "test");
+        doricContext = DoricContext.create(this, DoricUtils.readAssetFile("demo/Snake.js"), "test");
         doricContext.init(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 //        doricContext.callEntity("log");
         doricContext.getRootNode().setRootView((FrameLayout) findViewById(R.id.root));
@@ -50,6 +57,28 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEnterDebugEvent(EnterDebugEvent enterDebugEvent) {
+        ((FrameLayout) findViewById(R.id.root)).removeAllViews();
+        DoricDriver.getInstance().changeJSEngine(false);
+        doricContext.init(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        doricContext.getRootNode().setRootView((FrameLayout) findViewById(R.id.root));
     }
 
     @Override

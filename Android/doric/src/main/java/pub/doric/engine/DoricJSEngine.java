@@ -21,18 +21,18 @@ import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 
+import com.github.pengfeizhou.jscore.JSDecoder;
+import com.github.pengfeizhou.jscore.JavaFunction;
+import com.github.pengfeizhou.jscore.JavaValue;
+
+import java.util.ArrayList;
+
 import pub.doric.DoricRegistry;
 import pub.doric.extension.bridge.DoricBridgeExtension;
 import pub.doric.extension.timer.DoricTimerExtension;
 import pub.doric.utils.DoricConstant;
 import pub.doric.utils.DoricLog;
 import pub.doric.utils.DoricUtils;
-
-import com.github.pengfeizhou.jscore.JSDecoder;
-import com.github.pengfeizhou.jscore.JavaFunction;
-import com.github.pengfeizhou.jscore.JavaValue;
-
-import java.util.ArrayList;
 
 /**
  * @Description: Doric
@@ -54,7 +54,8 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
         mJSHandler.post(new Runnable() {
             @Override
             public void run() {
-                initJSExecutor();
+                mDoricJSE = new DoricNativeJSExecutor();
+                injectGlobal();
                 initDoricRuntime();
             }
         });
@@ -65,10 +66,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
         return mJSHandler;
     }
 
-
-    private void initJSExecutor() {
-        mDoricJSE = new DoricNativeJSExecutor();
-//        mDoricJSE = new DoricRemoteJSExecutor();
+    private void injectGlobal() {
         mDoricJSE.injectGlobalJSFunction(DoricConstant.INJECT_LOG, new JavaFunction() {
             @Override
             public JavaValue exec(JSDecoder[] args) {
@@ -211,5 +209,15 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
 
     public DoricRegistry getRegistry() {
         return mDoricRegistry;
+    }
+
+    public void changeJSEngine(boolean isNative) {
+        mDoricJSE.teardown();
+        if (isNative) {
+            mDoricJSE = new DoricNativeJSExecutor();
+        } else {
+            mDoricJSE = new DoricRemoteJSExecutor();
+        }
+        injectGlobal();
     }
 }

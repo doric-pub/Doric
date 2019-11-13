@@ -30,6 +30,7 @@ import okhttp3.WebSocketListener;
 import pub.doric.DoricContext;
 import pub.doric.DoricContextManager;
 import pub.doric.dev.event.EOFEvent;
+import pub.doric.dev.event.EnterDebugEvent;
 import pub.doric.dev.event.OpenEvent;
 
 /**
@@ -67,13 +68,24 @@ public class WSClient extends WebSocketListener {
         super.onMessage(webSocket, text);
         try {
             JSONObject jsonObject = new JSONObject(text);
-            String source = jsonObject.optString("source");
-            String script = jsonObject.optString("script");
-            for (DoricContext context : DoricContextManager.aliveContexts()) {
-                if (source.contains(context.getSource())) {
-                    context.reload(script);
+            String cmd = jsonObject.optString("cmd");
+            switch (cmd) {
+                case "RELOAD": {
+                    String source = jsonObject.optString("source");
+                    String script = jsonObject.optString("script");
+                    for (DoricContext context : DoricContextManager.aliveContexts()) {
+                        if (source.contains(context.getSource())) {
+                            context.reload(script);
+                        }
+                    }
                 }
+                break;
+                case "SWITCH_TO_DEBUG": {
+                    EventBus.getDefault().post(new EnterDebugEvent());
+                }
+                break;
             }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

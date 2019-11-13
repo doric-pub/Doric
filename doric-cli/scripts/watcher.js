@@ -19,6 +19,7 @@ setTimeout(() => {
                 const sourceMap = doMerge(path + ".map")
                 ws.connections.forEach(e => {
                     e.sendText(JSON.stringify({
+                        cmd: 'RELOAD',
                         script: data,
                         source: path.match(/[^/\\]*$/)[0],
                         sourceMap,

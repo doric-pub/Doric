@@ -15,6 +15,7 @@
  */
 import * as doric from './src/runtime/sandbox'
 import * as WebSocket from 'ws'
+const WebSocketClient = require('ws')
 
 let global = new Function('return this')()
 global.doric = doric
@@ -22,9 +23,22 @@ const contextId = "1"
 global.context = doric.jsObtainContext(contextId)
 global.Entry = doric.jsObtainEntry(contextId)
 
-const wss = new WebSocket.Server({ port: 2080 })
-wss.on('connection', function connection(ws) {
-  console.log('Connected')
+// dev kit client
+const devClient = new WebSocketClient('ws://localhost:7777')
+devClient.on('open', function open() {
+  console.log('dev kit connected on 7777')
+})
+devClient.on('message', function incoming(data: any) {
+  console.log(data)
+})
+devClient.on('error', function incoming(error: any) {
+  console.log(error)
+})
+
+// debug server
+const debugServer = new WebSocket.Server({ port: 2080 })
+debugServer.on('connection', function connection(ws) {
+  console.log('connected')
   ws.on('message', function incoming(message: string) {
     let messageObject = JSON.parse(message)
     switch (messageObject.cmd) {
@@ -79,7 +93,9 @@ wss.on('connection', function connection(ws) {
     }
   })
 })
-console.log('Start Server')
+debugServer.on('listening', function connection(ws: WebSocket) {
+  console.log('debugger server started on 2080')
+})
 
 global.injectGlobal = (objName: string, obj: string) => {
   Reflect.set(global, objName, JSON.parse(obj))

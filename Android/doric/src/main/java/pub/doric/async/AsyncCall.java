@@ -51,7 +51,7 @@ public class AsyncCall {
         return asyncResult;
     }
 
-    public static <T> AsyncResult<T> ensureRunIExecutor(ExecutorService executorService, final Callable<T> callable) {
+    public static <T> AsyncResult<T> ensureRunInExecutor(ExecutorService executorService, final Callable<T> callable) {
         final AsyncResult<T> asyncResult = new AsyncResult<>();
         executorService.execute(new Runnable() {
             @Override

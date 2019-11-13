@@ -1,46 +1,45 @@
 const ws = require('nodejs-websocket')
 const { exec, spawn } = require('child_process')
 
+var clientConnection = null
+var debuggerConnection = null
+
 const createServer = () => {
     let server = ws.createServer(connection => {
-        console.log('connected', connection.key)
+        console.log('connected', connection.headers.host)
+
+        if (connection.headers.host.startsWith("localhost")) {
+            console.log("debugger " + connection.key + " attached to dev kit")
+            debuggerConnection = connection
+
+            clientConnection.sendText(JSON.stringify({
+                cmd: 'SWITCH_TO_DEBUG'
+            }), function() {
+
+            })
+        } else {
+            console.log("client " + connection.key + " attached to dev kit")
+        }
+
         connection.on('text', function (result) {
             console.log('text', result)
             let resultObject = JSON.parse(result)
             switch(resultObject.cmd) {
                 case 'DEBUG':
+                    clientConnection = connection
+
                     let contextId = resultObject.data.contextId
                     let projectHome = resultObject.data.projectHome
-                    console.log(projectHome)
-                    {
-                        const code = spawn('code', [projectHome, projectHome + "/src/Snake.ts"])
-                        code.stdout.on('data', (data) => {
-                            console.log(`stdout: ${data}`)
+                    console.log(connection.key + " request debug, project home: " + projectHome)
+
+                    spawn('code', [projectHome, projectHome + "/src/Snake.ts"])
+                    setTimeout(() => {
+                        exec('osascript -e \'tell application "System Events"\ntell application "Visual Studio Code" to activate\nkey code 96\nend tell\'', (err, stdout, stderr) => {
+                            if (err) {
+                              console.log(`stdout: ${err}`)
+                            }
                         })
-                        
-                        code.stderr.on('data', (data) => {
-                            console.error(`stderr: ${data}`)
-                        })
-                          
-                        code.on('close', (code) => {
-                            console.log(`child process exited with code ${code}`)
-                        })
-                    }
-                    {
-                        setTimeout(() => {
-                            exec('osascript -e \'tell application "System Events"\ntell application "Visual Studio Code" to activate\nkey code 96\nend tell\'', (err, stdout, stderr) => {
-                                if (err) {
-                                  // node couldn't execute the command
-                                  console.log(`stdout: ${err}`)
-                                  return;
-                                }
-                              
-                                // the *entire* stdout and stderr (buffered)
-                                console.log(`stdout: ${stdout}`);
-                                console.log(`stderr: ${stderr}`);
-                            })
-                        }, 4000)
-                    }
+                    }, 3000)
                     
                     break
             }
@@ -49,7 +48,7 @@ const createServer = () => {
             console.log('connect', code)
         })
         connection.on('close', function (code) {
-            console.log('close', code)
+            console.log('close: code = ' + code, connection.key)
         })
         connection.on('error', function (code) {
             console.log('error', code)

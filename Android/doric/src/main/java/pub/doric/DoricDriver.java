@@ -81,7 +81,7 @@ public class DoricDriver implements IDoricDriver {
                 return AsyncCall.ensureRunInHandler(mUIHandler, callable);
             case INDEPENDENT:
             default:
-                return AsyncCall.ensureRunIExecutor(mBridgeExecutor, callable);
+                return AsyncCall.ensureRunInExecutor(mBridgeExecutor, callable);
         }
     }
 

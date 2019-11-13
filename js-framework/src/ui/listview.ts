@@ -18,6 +18,7 @@ import { View, Property, LayoutSpec, Superview } from "./view";
 import { Model } from "../util/types";
 import { O_TRUNC } from "constants";
 import { Stack } from "./layout";
+import { loge } from "../util/log";
 export function listItem(item: View) {
     return (new ListItem).also((it) => {
         it.layoutConfig = {

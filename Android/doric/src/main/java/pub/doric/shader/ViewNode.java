@@ -56,6 +56,10 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         mSuperNode = parentNode;
     }
 
+    public void setId(String id) {
+        this.mId = id;
+    }
+
     public View getDoricLayer() {
         return doricLayer;
     }

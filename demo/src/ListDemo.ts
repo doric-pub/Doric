@@ -1,5 +1,12 @@
-import { Group, Panel, List, text, gravity, Color, Stack, LayoutSpec, ListItem, NativeCall, listItem } from "doric";
-
+import { Group, Panel, List, text, gravity, Color, Stack, LayoutSpec, ListItem, NativeCall, listItem, log } from "doric";
+const colors = [
+    "#f0932b",
+    "#eb4d4b",
+    "#6ab04c",
+    "#e056fd",
+    "#686de0",
+    "#30336b",
+]
 @Entry
 class ListPanel extends Panel {
     build(rootView: Group): void {
@@ -22,14 +29,20 @@ class ListPanel extends Panel {
                         bottom: 10,
                     },
                 },
-                text: `第${idx}行内容`,
+                text: `Cell At Line ${idx}`,
                 textAlignment: gravity().center(),
+                textColor: Color.parse("#ffffff"),
+                textSize: 20,
             })).also(it => {
                 it.gravity = gravity().center()
-                it.bgColor = Color.parse("#fff00f")
+                it.bgColor = Color.parse(colors[idx % colors.length])
                 it.layoutConfig = {
                     widthSpec: LayoutSpec.AT_MOST,
-                    heightSpec: LayoutSpec.WRAP_CONTENT,
+                    heightSpec: LayoutSpec.EXACTLY,
+                }
+                it.height = 50
+                it.onClick = () => {
+                    log(`Click item at ${idx}`)
                 }
             })
         }

@@ -25,6 +25,7 @@ import com.github.pengfeizhou.jscore.JSValue;
 
 import pub.doric.DoricContext;
 import pub.doric.extension.bridge.DoricPlugin;
+import pub.doric.shader.SuperNode;
 import pub.doric.shader.ViewNode;
 
 /**
@@ -33,7 +34,7 @@ import pub.doric.shader.ViewNode;
  * @CreateDate: 2019-11-12
  */
 @DoricPlugin(name = "List")
-public class ListNode extends ViewNode<RecyclerView> {
+public class ListNode extends SuperNode<RecyclerView> {
     private final ListAdapter listAdapter;
 
     public ListNode(DoricContext doricContext) {
@@ -78,5 +79,10 @@ public class ListNode extends ViewNode<RecyclerView> {
                 super.blend(view, layoutParams, name, prop);
                 break;
         }
+    }
+
+    @Override
+    protected void blendChildLayoutConfig(ViewNode viewNode, JSObject jsObject) {
+        super.blendChildLayoutConfig(viewNode, jsObject);
     }
 }

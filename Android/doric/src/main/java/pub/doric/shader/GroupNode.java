@@ -19,7 +19,6 @@ import android.util.SparseArray;
 import android.view.ViewGroup;
 
 import pub.doric.DoricContext;
-import pub.doric.utils.DoricUtils;
 
 import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSObject;
@@ -35,7 +34,7 @@ import java.util.Map;
  * @Author: pengfei.zhou
  * @CreateDate: 2019-07-20
  */
-public abstract class GroupNode<F extends ViewGroup> extends ViewNode<F> {
+public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
     private Map<String, ViewNode> mChildrenNode = new HashMap<>();
     private SparseArray<ViewNode> mIndexInfo = new SparseArray<>();
 
@@ -61,7 +60,7 @@ public abstract class GroupNode<F extends ViewGroup> extends ViewNode<F> {
                 if (child == null) {
                     child = ViewNode.create(getDoricContext(), type);
                     child.index = i;
-                    child.mParent = this;
+                    child.mSuperNode = this;
                     child.mId = id;
                     mChildrenNode.put(id, child);
                 } else {
@@ -108,63 +107,6 @@ public abstract class GroupNode<F extends ViewGroup> extends ViewNode<F> {
             }
         } else {
             super.blend(view, layoutParams, name, prop);
-        }
-    }
-
-    protected ViewGroup.LayoutParams generateDefaultLayoutParams() {
-        return new ViewGroup.LayoutParams(0, 0);
-    }
-
-    protected void blendChild(ViewNode viewNode, JSObject jsObject) {
-
-
-        JSValue jsValue = jsObject.getProperty("margin");
-        JSValue widthSpec = jsObject.getProperty("widthSpec");
-        JSValue heightSpec = jsObject.getProperty("widthSpec");
-
-        ViewGroup.LayoutParams layoutParams = viewNode.getLayoutParams();
-        if (widthSpec.isNumber()) {
-            switch (widthSpec.asNumber().toInt()) {
-                case 1:
-                    layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-                    break;
-                case 2:
-                    layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
-                    break;
-                default:
-                    break;
-
-            }
-        }
-        if (heightSpec.isNumber()) {
-            switch (heightSpec.asNumber().toInt()) {
-                case 1:
-                    layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                    break;
-                case 2:
-                    layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
-                    break;
-                default:
-                    break;
-            }
-        }
-        if (jsValue.isObject() && layoutParams instanceof ViewGroup.MarginLayoutParams) {
-            JSValue topVal = jsValue.asObject().getProperty("top");
-            if (topVal.isNumber()) {
-                ((ViewGroup.MarginLayoutParams) layoutParams).topMargin = DoricUtils.dp2px(topVal.asNumber().toFloat());
-            }
-            JSValue leftVal = jsValue.asObject().getProperty("left");
-            if (leftVal.isNumber()) {
-                ((ViewGroup.MarginLayoutParams) layoutParams).leftMargin = DoricUtils.dp2px(leftVal.asNumber().toFloat());
-            }
-            JSValue rightVal = jsValue.asObject().getProperty("right");
-            if (rightVal.isNumber()) {
-                ((ViewGroup.MarginLayoutParams) layoutParams).rightMargin = DoricUtils.dp2px(rightVal.asNumber().toFloat());
-            }
-            JSValue bottomVal = jsValue.asObject().getProperty("bottom");
-            if (bottomVal.isNumber()) {
-                ((ViewGroup.MarginLayoutParams) layoutParams).bottomMargin = DoricUtils.dp2px(bottomVal.asNumber().toFloat());
-            }
         }
     }
 }

@@ -42,7 +42,7 @@ import java.util.LinkedList;
 public abstract class ViewNode<T extends View> extends DoricContextHolder {
     protected T mView;
     int index;
-    ViewNode mParent;
+    SuperNode mSuperNode;
     String mId;
     private ViewGroup.LayoutParams mLayoutParams;
 
@@ -52,8 +52,8 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
 
     private DoricLayer doricLayer;
 
-    public void setParentNode(ViewNode parentNode) {
-        mParent = parentNode;
+    public void setSuperNode(SuperNode parentNode) {
+        mSuperNode = parentNode;
     }
 
     public View getDoricLayer() {
@@ -128,8 +128,8 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 });
                 break;
             case "layoutConfig":
-                if (prop.isObject() && mParent instanceof GroupNode) {
-                    ((GroupNode) mParent).blendChild(this, prop.asObject());
+                if (prop.isObject() && mSuperNode != null) {
+                    mSuperNode.blendChildLayoutConfig(this, prop.asObject());
                 }
                 break;
             case "border":
@@ -180,7 +180,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         ViewNode viewNode = this;
         do {
             ids.push(viewNode.mId);
-            viewNode = viewNode.mParent;
+            viewNode = viewNode.mSuperNode;
         } while (viewNode != null && !(viewNode instanceof RootNode));
 
         return ids.toArray(new String[0]);

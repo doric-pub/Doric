@@ -60,7 +60,7 @@ public class RemoteJSExecutor {
                     // 被远端强制断开
                     System.out.println("remote js executor eof");
 
-                    LockSupport.park(current);
+                    LockSupport.unpark(current);
                     EventBus.getDefault().post(new QuitDebugEvent());
                 }
             }

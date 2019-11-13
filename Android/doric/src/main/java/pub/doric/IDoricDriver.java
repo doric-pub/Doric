@@ -17,7 +17,6 @@ package pub.doric;
 
 
 import com.github.pengfeizhou.jscore.JSDecoder;
-import com.google.gson.JsonObject;
 
 import java.util.concurrent.Callable;
 
@@ -31,10 +30,6 @@ import pub.doric.utils.ThreadMode;
  */
 public interface IDoricDriver {
 
-    enum Command {
-        DEBUG, HOT_RELOAD
-    }
-
     AsyncResult<JSDecoder> invokeContextEntityMethod(final String contextId, final String method, final Object... args);
 
     AsyncResult<JSDecoder> invokeDoricMethod(final String method, final Object... args);
@@ -46,10 +41,4 @@ public interface IDoricDriver {
     AsyncResult<Boolean> destroyContext(final String contextId);
 
     DoricRegistry getRegistry();
-
-    void connectDevKit(String url);
-
-    void sendDevCommand(Command command, JsonObject jsonObject);
-
-    void disconnectDevKit();
 }

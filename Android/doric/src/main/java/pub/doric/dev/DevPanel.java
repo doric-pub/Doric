@@ -27,7 +27,6 @@ import pub.doric.BuildConfig;
 import pub.doric.Doric;
 import pub.doric.DoricContext;
 import pub.doric.DoricContextManager;
-import pub.doric.IDoricDriver;
 import pub.doric.R;
 import pub.doric.dev.event.EOFEvent;
 import pub.doric.dev.event.OpenEvent;
@@ -86,7 +85,7 @@ public class DevPanel extends BottomSheetDialogFragment {
                     JsonObject jsonObject = new JsonObject();
                     jsonObject.addProperty("contextId", doricContext.getContextId());
                     jsonObject.addProperty("projectHome", BuildConfig.PROJECT_HOME);
-                    Doric.sendDevCommand(IDoricDriver.Command.DEBUG, jsonObject);
+                    Doric.sendDevCommand(IDevKit.Command.DEBUG, jsonObject);
                 }
             }
         });

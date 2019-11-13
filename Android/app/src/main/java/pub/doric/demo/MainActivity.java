@@ -38,7 +38,8 @@ import pub.doric.utils.DoricUtils;
 
 public class MainActivity extends AppCompatActivity {
 
-    private DevPanel mDevPanel = new DevPanel();
+    private DevPanel devPanel = new DevPanel();
+
     private DoricContext doricContext;
 
     @Override
@@ -82,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (KeyEvent.KEYCODE_MENU == event.getKeyCode()) {
-            mDevPanel.show(getSupportFragmentManager(), "DevPanel");
+            devPanel.show(getSupportFragmentManager(), "DevPanel");
         }
         return super.onKeyDown(keyCode, event);
     }

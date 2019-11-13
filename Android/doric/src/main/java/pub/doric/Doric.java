@@ -19,6 +19,9 @@ import android.app.Application;
 
 import com.google.gson.JsonObject;
 
+import pub.doric.dev.DevKit;
+import pub.doric.dev.IDevKit;
+
 /**
  * @Description: Doric
  * @Author: pengfei.zhou
@@ -36,15 +39,15 @@ public class Doric {
     }
 
     public static void connectDevKit(String url) {
-        DoricDriver.getInstance().connectDevKit(url);
+        DevKit.getInstance().connectDevKit(url);
     }
 
-    public static void sendDevCommand(IDoricDriver.Command command, JsonObject jsonObject) {
-        DoricDriver.getInstance().sendDevCommand(command, jsonObject);
+    public static void sendDevCommand(IDevKit.Command command, JsonObject jsonObject) {
+        DevKit.getInstance().sendDevCommand(command, jsonObject);
     }
 
     public static void disconnectDevKit() {
-        DoricDriver.getInstance().disconnectDevKit();
+        DevKit.getInstance().disconnectDevKit();
     }
 
 }

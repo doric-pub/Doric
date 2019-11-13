@@ -19,7 +19,6 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.github.pengfeizhou.jscore.JSDecoder;
-import com.google.gson.JsonObject;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -27,11 +26,9 @@ import java.util.concurrent.Executors;
 
 import pub.doric.async.AsyncCall;
 import pub.doric.async.AsyncResult;
-import pub.doric.dev.WSClient;
 import pub.doric.engine.DoricJSEngine;
 import pub.doric.utils.DoricConstant;
 import pub.doric.utils.DoricLog;
-import pub.doric.utils.DoricUtils;
 import pub.doric.utils.ThreadMode;
 
 /**
@@ -44,7 +41,6 @@ public class DoricDriver implements IDoricDriver {
     private final ExecutorService mBridgeExecutor;
     private final Handler mUIHandler;
     private final Handler mJSHandler;
-    private WSClient wsClient;
 
     @Override
     public AsyncResult<JSDecoder> invokeContextEntityMethod(final String contextId, final String method, final Object... args) {
@@ -137,25 +133,6 @@ public class DoricDriver implements IDoricDriver {
     @Override
     public DoricRegistry getRegistry() {
         return doricJSEngine.getRegistry();
-    }
-
-    @Override
-    public void connectDevKit(String url) {
-        wsClient = new WSClient(url);
-    }
-
-    @Override
-    public void sendDevCommand(Command command, JsonObject jsonObject) {
-        JsonObject result = new JsonObject();
-        result.addProperty("cmd", command.toString());
-        result.add("data", jsonObject);
-        wsClient.send(DoricUtils.gson.toJson(result));
-    }
-
-    @Override
-    public void disconnectDevKit() {
-        wsClient.close();
-        wsClient = null;
     }
 
     public void changeJSEngine(boolean isNative) {

@@ -82,7 +82,7 @@ public class ListNode extends SuperNode<RecyclerView> {
     }
 
     @Override
-    protected void blendChildLayoutConfig(ViewNode viewNode, JSObject jsObject) {
-        super.blendChildLayoutConfig(viewNode, jsObject);
+    protected void blendSubLayoutConfig(ViewNode viewNode, JSObject jsObject) {
+        super.blendSubLayoutConfig(viewNode, jsObject);
     }
 }

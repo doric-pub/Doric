@@ -38,7 +38,7 @@ public abstract class SuperNode<V extends View> extends ViewNode<V> {
         return new ViewGroup.LayoutParams(0, 0);
     }
 
-    protected void blendChildLayoutConfig(ViewNode viewNode, JSObject jsObject) {
+    protected void blendSubLayoutConfig(ViewNode viewNode, JSObject jsObject) {
         JSValue jsValue = jsObject.getProperty("margin");
         JSValue widthSpec = jsObject.getProperty("widthSpec");
         JSValue heightSpec = jsObject.getProperty("heightSpec");

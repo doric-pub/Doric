@@ -129,7 +129,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 break;
             case "layoutConfig":
                 if (prop.isObject() && mSuperNode != null) {
-                    mSuperNode.blendChildLayoutConfig(this, prop.asObject());
+                    mSuperNode.blendSubLayoutConfig(this, prop.asObject());
                 }
                 break;
             case "border":

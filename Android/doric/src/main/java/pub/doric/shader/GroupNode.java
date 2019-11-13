@@ -105,8 +105,21 @@ public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
             for (ViewNode node : tobeRemoved) {
                 mChildrenNode.remove(node.getId());
             }
+        } else if ("subviews".equals(name)) {
+            // Currently do nothing,because its subview always contained in props.children
+            // super.blend(view, layoutParams, name, prop);
         } else {
             super.blend(view, layoutParams, name, prop);
+        }
+    }
+
+    @Override
+    protected void blendSubNode(JSObject subProp) {
+        String subNodeId = subProp.getProperty("id").asString().value();
+        for (ViewNode node : mChildrenNode.values()) {
+            if (subNodeId.equals(node.getId())) {
+                node.blend(subProp, node.getLayoutParams());
+            }
         }
     }
 }

@@ -40,10 +40,6 @@ export class ListItem extends Stack {
 export class List extends Superview {
     private cachedViews: Map<string, ListItem> = new Map
 
-    subviewById(id: string): ListItem | undefined {
-        return this.cachedViews.get(id)
-    }
-
     allSubviews() {
         return this.cachedViews.values()
     }

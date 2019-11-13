@@ -26,6 +26,9 @@ import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import pub.doric.async.AsyncResult;
 import pub.doric.shader.ViewNode;
 
@@ -58,7 +61,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolde
     @Override
     public void onBindViewHolder(@NonNull DoricViewHolder holder, int position) {
         JSObject jsObject = getItemModel(position);
-        holder.listItemNode.setId(String.valueOf(position));
+        holder.listItemNode.setId(jsObject.getProperty("id").asString().value());
         holder.listItemNode.blend(jsObject.getProperty("props").asObject(), holder.itemView.getLayoutParams());
     }
 
@@ -98,6 +101,22 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolde
             }
         }
         return itemModel;
+    }
+
+
+    public void blendSubNode(JSObject subProperties) {
+        String subNodeId = subProperties.getProperty("id").asString().value();
+        for (int i = 0; i < itemObjects.size(); i++) {
+            JSObject jsObject = itemObjects.valueAt(i);
+            if (subNodeId.equals(jsObject.getProperty("id").asString().value())) {
+                for (String key : subProperties.propertySet()) {
+                    jsObject.setProperty(key, subProperties.getProperty(key));
+                }
+                int position = itemObjects.keyAt(i);
+                notifyItemChanged(position);
+                break;
+            }
+        }
     }
 
 

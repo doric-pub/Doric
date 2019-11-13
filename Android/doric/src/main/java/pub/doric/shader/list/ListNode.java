@@ -43,6 +43,11 @@ public class ListNode extends SuperNode<RecyclerView> {
     }
 
     @Override
+    protected void blendSubNode(JSObject subProperties) {
+        listAdapter.blendSubNode(subProperties);
+    }
+
+    @Override
     protected RecyclerView build(JSObject jsObject) {
         RecyclerView recyclerView = new RecyclerView(getContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

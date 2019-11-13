@@ -256,7 +256,13 @@ export abstract class View implements Modeling, IView {
 }
 
 export abstract class Superview extends View {
-    abstract subviewById(id: string): View | undefined
+    subviewById(id: string): View | undefined {
+        for (let v of this.allSubviews()) {
+            if (v.viewId === id) {
+                return v
+            }
+        }
+    }
     abstract allSubviews(): Iterable<View>
 
     isDirty() {
@@ -271,6 +277,17 @@ export abstract class Superview extends View {
         }
         return false
     }
+
+    toModel() {
+        const subviews = []
+        for (let v of this.allSubviews()) {
+            if (v.isDirty()) {
+                subviews.push(v.toModel())
+            }
+        }
+        this.dirtyProps.subviews = subviews
+        return super.toModel()
+    }
 }
 
 export abstract class Group extends Superview {
@@ -283,15 +300,6 @@ export abstract class Group extends Superview {
             return ret
         }
     })
-
-    subviewById(id: string): View | undefined {
-        for (let view of this.children) {
-            if (view.viewId === id) {
-                return view
-            }
-        }
-        return undefined
-    }
 
     allSubviews() {
         return this.children
@@ -310,7 +318,7 @@ export abstract class Group extends Superview {
                 return {}
             }
         })
-        return super.toModel()
+        return this.nativeViewModel
     }
 }
 

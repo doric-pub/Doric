@@ -18,6 +18,7 @@ package pub.doric.shader;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
@@ -37,6 +38,21 @@ public abstract class SuperNode<V extends View> extends ViewNode<V> {
     protected ViewGroup.LayoutParams generateDefaultLayoutParams() {
         return new ViewGroup.LayoutParams(0, 0);
     }
+
+    @Override
+    protected void blend(V view, ViewGroup.LayoutParams layoutParams, String name, JSValue prop) {
+        if (name.equals("subviews")) {
+            JSArray subviews = prop.asArray();
+            for (int i = 0; i < subviews.size(); i++) {
+                JSObject subProp = subviews.get(i).asObject();
+                blendSubNode(subProp);
+            }
+        } else {
+            super.blend(view, layoutParams, name, prop);
+        }
+    }
+
+    protected abstract void blendSubNode(JSObject subProperties);
 
     protected void blendSubLayoutConfig(ViewNode viewNode, JSObject jsObject) {
         JSValue jsValue = jsObject.getProperty("margin");

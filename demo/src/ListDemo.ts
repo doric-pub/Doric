@@ -43,6 +43,8 @@ class ListPanel extends Panel {
                 it.height = 50
                 it.onClick = () => {
                     log(`Click item at ${idx}`)
+                    it.bgColor = Color.parse('#000000')
+                    log(`changed,listview is dirty:${list.isDirty()}`)
                 }
             })
         }

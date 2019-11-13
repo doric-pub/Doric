@@ -121,7 +121,10 @@ export abstract class View implements Modeling, IView {
     }
 
     private id2Callback(id: string) {
-        const f = this.callbacks.get(id)
+        let f = this.callbacks.get(id)
+        if (f === undefined) {
+            f = Reflect.get(this, id) as Function
+        }
         return f
     }
 
@@ -228,7 +231,7 @@ export abstract class View implements Modeling, IView {
             for (let i = 1; i < arguments.length; i++) {
                 argumentsList.push(arguments[i])
             }
-            Reflect.apply(f, this, argumentsList)
+            return Reflect.apply(f, this, argumentsList)
         } else {
             loge(`Cannot find callback:${id} for ${JSON.stringify(this.toModel())}`)
         }

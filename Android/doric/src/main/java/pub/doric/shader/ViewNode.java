@@ -22,11 +22,13 @@ import android.widget.FrameLayout;
 
 import pub.doric.DoricContext;
 import pub.doric.DoricRegistry;
+import pub.doric.async.AsyncResult;
 import pub.doric.utils.DoricContextHolder;
 import pub.doric.utils.DoricConstant;
 import pub.doric.utils.DoricMetaInfo;
 import pub.doric.utils.DoricUtils;
 
+import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
@@ -40,7 +42,7 @@ import java.util.LinkedList;
 public abstract class ViewNode<T extends View> extends DoricContextHolder {
     protected T mView;
     int index;
-    GroupNode mParent;
+    ViewNode mParent;
     String mId;
     private ViewGroup.LayoutParams mLayoutParams;
 
@@ -50,7 +52,11 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
 
     private DoricLayer doricLayer;
 
-    public View getView() {
+    public void setParentNode(ViewNode parentNode) {
+        mParent = parentNode;
+    }
+
+    public View getDoricLayer() {
         return doricLayer;
     }
 
@@ -60,18 +66,20 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
 
     protected abstract T build(JSObject jsObject);
 
-    void blend(JSObject jsObject, ViewGroup.LayoutParams layoutParams) {
+    public void blend(JSObject jsObject, ViewGroup.LayoutParams layoutParams) {
         mLayoutParams = layoutParams;
         if (mView == null) {
             mView = build(jsObject);
         }
-        if (getView() == null) {
+        if (getDoricLayer() == null) {
             doricLayer = new DoricLayer(getContext());
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(layoutParams.width, layoutParams.height);
             doricLayer.addView(mView, params);
         }
-        for (String prop : jsObject.propertySet()) {
-            blend(mView, layoutParams, prop, jsObject.getProperty(prop));
+        if (jsObject != null) {
+            for (String prop : jsObject.propertySet()) {
+                blend(mView, layoutParams, prop, jsObject.getProperty(prop));
+            }
         }
         ViewGroup.LayoutParams params = mView.getLayoutParams();
         if (params != null) {
@@ -120,8 +128,8 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 });
                 break;
             case "layoutConfig":
-                if (prop.isObject() && mParent != null) {
-                    mParent.blendChild(this, prop.asObject());
+                if (prop.isObject() && mParent instanceof GroupNode) {
+                    ((GroupNode) mParent).blendChild(this, prop.asObject());
                 }
                 break;
             case "border":
@@ -178,14 +186,14 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         return ids.toArray(new String[0]);
     }
 
-    public void callJSResponse(String funcId, Object... args) {
+    public AsyncResult<JSDecoder> callJSResponse(String funcId, Object... args) {
         final Object[] nArgs = new Object[args.length + 2];
         nArgs[0] = getIdList();
         nArgs[1] = funcId;
         if (args.length > 0) {
             System.arraycopy(args, 0, nArgs, 2, args.length);
         }
-        getDoricContext().callEntity(DoricConstant.DORIC_ENTITY_RESPONSE, nArgs);
+        return getDoricContext().callEntity(DoricConstant.DORIC_ENTITY_RESPONSE, nArgs);
     }
 
     public static ViewNode create(DoricContext doricContext, String type) {

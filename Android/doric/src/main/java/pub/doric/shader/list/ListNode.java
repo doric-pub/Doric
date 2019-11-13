@@ -17,6 +17,7 @@ package pub.doric.shader.list;
 
 import android.view.ViewGroup;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.pengfeizhou.jscore.JSObject;
@@ -42,7 +43,23 @@ public class ListNode extends ViewNode<RecyclerView> {
 
     @Override
     protected RecyclerView build(JSObject jsObject) {
-        return new RecyclerView(getContext());
+        RecyclerView recyclerView = new RecyclerView(getContext());
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(this.listAdapter);
+        return recyclerView;
+    }
+
+    @Override
+    public void blend(JSObject jsObject, ViewGroup.LayoutParams layoutParams) {
+        super.blend(jsObject, layoutParams);
+        if (mView != null) {
+            mView.post(new Runnable() {
+                @Override
+                public void run() {
+                    listAdapter.notifyDataSetChanged();
+                }
+            });
+        }
     }
 
     @Override
@@ -53,9 +70,6 @@ public class ListNode extends ViewNode<RecyclerView> {
                 break;
             case "renderItem":
                 this.listAdapter.renderItemFuncId = prop.asString().value();
-                break;
-            case "renderBunchedItemsFuncId":
-                this.listAdapter.renderBunchedItemsFuncId = prop.asString().value();
                 break;
             case "batchCount":
                 this.listAdapter.batchCount = 15;

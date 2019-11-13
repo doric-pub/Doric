@@ -1,4 +1,4 @@
-import { Group, Panel, List, text, gravity, Color, Stack, LayoutSpec, ListItem } from "doric";
+import { Group, Panel, List, text, gravity, Color, Stack, LayoutSpec, ListItem, NativeCall } from "doric";
 
 @Entry
 class ListPanel extends Panel {
@@ -22,5 +22,4 @@ class ListPanel extends Panel {
             return item
         }
     }
-
 }

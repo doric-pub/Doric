@@ -68,7 +68,7 @@ public abstract class GroupNode<F extends ViewGroup> extends ViewNode<F> {
                     if (i != child.index) {
                         mIndexInfo.remove(i);
                         child.index = i;
-                        mView.removeView(child.getView());
+                        mView.removeView(child.getDoricLayer());
                     }
                     tobeRemoved.remove(child);
                 }
@@ -87,7 +87,7 @@ public abstract class GroupNode<F extends ViewGroup> extends ViewNode<F> {
                 }
                 child.blend(childObj.getProperty("props").asObject(), params);
                 if (mIndexInfo.get(i) == null) {
-                    mView.addView(child.getView(), i, child.getLayoutParams());
+                    mView.addView(child.getDoricLayer(), i, child.getLayoutParams());
                     mIndexInfo.put(i, child);
                 }
             }
@@ -98,7 +98,7 @@ public abstract class GroupNode<F extends ViewGroup> extends ViewNode<F> {
                     mChildrenNode.remove(node.getId());
                     mIndexInfo.remove(i);
                     tobeRemoved.remove(node);
-                    mView.removeView(node.getView());
+                    mView.removeView(node.getDoricLayer());
                 }
                 i++;
             }

@@ -13,43 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pub.doric.shader;
+package pub.doric.shader.list;
 
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import com.github.pengfeizhou.jscore.JSValue;
+
 import pub.doric.DoricContext;
 import pub.doric.extension.bridge.DoricPlugin;
-
-import com.github.pengfeizhou.jscore.JSObject;
+import pub.doric.shader.StackNode;
 
 /**
  * @Description: com.github.penfeizhou.doric.widget
  * @Author: pengfei.zhou
- * @CreateDate: 2019-07-20
+ * @CreateDate: 2019-11-12
  */
-@DoricPlugin(name = "Root")
-public class RootNode extends StackNode {
-    public RootNode(DoricContext doricContext) {
+@DoricPlugin(name = "ListItem")
+public class ListItemNode extends StackNode {
+    public String identifier = "";
+
+    public ListItemNode(DoricContext doricContext) {
         super(doricContext);
+        this.mView = this.build(null);
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        this.blend(null, params);
+        getDoricLayer().setLayoutParams(params);
     }
 
     @Override
-    public View getDoricLayer() {
-        return mView;
-    }
-
-    public void setRootView(FrameLayout rootView) {
-        this.mView = rootView;
-    }
-
-    @Override
-    public ViewGroup.LayoutParams getLayoutParams() {
-        return mView.getLayoutParams();
-    }
-
-    public void render(JSObject props) {
-        blend(props, getLayoutParams());
+    protected void blend(FrameLayout view, ViewGroup.LayoutParams layoutParams, String name, JSValue prop) {
+        if ("identifier".equals(name)) {
+            this.identifier = prop.asString().value();
+        } else {
+            super.blend(view, layoutParams, name, prop);
+        }
     }
 }

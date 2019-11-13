@@ -20,6 +20,7 @@ import android.text.TextUtils;
 import pub.doric.plugin.ShaderPlugin;
 import pub.doric.shader.HLayoutNode;
 import pub.doric.shader.ImageNode;
+import pub.doric.shader.list.ListItemNode;
 import pub.doric.shader.list.ListNode;
 import pub.doric.shader.RootNode;
 import pub.doric.shader.StackNode;
@@ -68,6 +69,7 @@ public class DoricRegistry {
         this.registerViewNode(VLayoutNode.class);
         this.registerViewNode(HLayoutNode.class);
         this.registerViewNode(ListNode.class);
+        this.registerViewNode(ListItemNode.class);
         initRegistry(this);
     }
 

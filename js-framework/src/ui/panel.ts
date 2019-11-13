@@ -94,7 +94,7 @@ export abstract class Panel {
         for (let i = 2; i < arguments.length; i++) {
             argumentsList.push(arguments[i])
         }
-        Reflect.apply(v.responseCallback, v, argumentsList)
+        return Reflect.apply(v.responseCallback, v, argumentsList)
     }
 
     private retrospectView(ids: string[]): View {

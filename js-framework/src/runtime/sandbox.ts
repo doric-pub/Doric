@@ -230,6 +230,7 @@ export function jsCallEntityMethod(contextId: string, methodName: string, args?:
         hookBeforeNativeCall(context)
         const ret = Reflect.apply(Reflect.get(context.entity, methodName), context.entity, argumentsList)
         hookAfterNativeCall(context)
+        loge(methodName, ret)
         return ret
     } else {
         loge(`Cannot find method for context id:${contextId},method name is:${methodName}`)

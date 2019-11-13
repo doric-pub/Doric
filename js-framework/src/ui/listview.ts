@@ -34,7 +34,6 @@ export class ListItem extends Stack {
      */
     @Property
     identifier?: string
-    list!: List
 }
 
 export class List extends Superview {
@@ -61,14 +60,16 @@ export class List extends Superview {
         let view = this.cachedViews.get(`${itemIdx}`)
         if (view === undefined) {
             view = this.renderItem(itemIdx)
-            view.list = this
+            view.superview = this
             this.cachedViews.set(`${itemIdx}`, view)
         }
         return view
     }
 
-    @Property
-    private renderBunchedItems(items: number[]): ListItem[] {
-        return items.map(e => this.getItem(e))
+    private renderBunchedItems(start: number, length: number) {
+        return new Array(Math.min(length, this.itemCount - start)).fill(0).map((_, idx) => {
+            const listItem = this.getItem(start + idx)
+            return listItem.toModel()
+        })
     }
 }

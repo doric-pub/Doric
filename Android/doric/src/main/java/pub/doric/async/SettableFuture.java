@@ -64,6 +64,15 @@ public class SettableFuture<T> {
         return mResult;
     }
 
+    public T get() {
+        try {
+            mReadyLatch.await();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        return mResult;
+    }
+
     public static class TimeoutException extends RuntimeException {
 
         public TimeoutException() {

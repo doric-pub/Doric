@@ -75,10 +75,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEnterDebugEvent(EnterDebugEvent enterDebugEvent) {
-        ((FrameLayout) findViewById(R.id.root)).removeAllViews();
         DoricDriver.getInstance().changeJSEngine(false);
         doricContext.init(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        doricContext.getRootNode().setRootView((FrameLayout) findViewById(R.id.root));
     }
 
     @Override

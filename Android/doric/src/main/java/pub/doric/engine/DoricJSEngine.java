@@ -211,13 +211,18 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
         return mDoricRegistry;
     }
 
-    public void changeJSEngine(boolean isNative) {
-        mDoricJSE.teardown();
-        if (isNative) {
-            mDoricJSE = new DoricNativeJSExecutor();
-        } else {
-            mDoricJSE = new DoricRemoteJSExecutor();
-        }
-        injectGlobal();
+    public void changeJSEngine(final boolean isNative) {
+        mJSHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mDoricJSE.teardown();
+                if (isNative) {
+                    mDoricJSE = new DoricNativeJSExecutor();
+                } else {
+                    mDoricJSE = new DoricRemoteJSExecutor();
+                }
+                injectGlobal();
+            }
+        });
     }
 }

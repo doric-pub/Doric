@@ -278,6 +278,13 @@ export abstract class Superview extends View {
         return false
     }
 
+    clean() {
+        for (let v of this.allSubviews()) {
+            v.clean()
+        }
+        super.clean()
+    }
+
     toModel() {
         const subviews = []
         for (let v of this.allSubviews()) {
@@ -315,7 +322,7 @@ export abstract class Group extends Superview {
                 return e.toModel()
             } else {
                 //Dont need return model
-                return {}
+                return undefined
             }
         })
         return this.nativeViewModel

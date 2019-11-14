@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { View, } from './view'
+import { View, LayoutSpec } from './view'
 import { Stack, HLayout, VLayout } from './layout'
 import { IText, IImage, Text, Image } from './widgets'
+import { IList, List } from './listview'
 
 export function text(config: IText) {
     const ret = new Text
@@ -35,6 +36,10 @@ export function image(config: IImage) {
 
 export function stack(views: View[]) {
     const ret = new Stack
+    ret.layoutConfig = {
+        widthSpec: LayoutSpec.WRAP_CONTENT,
+        heightSpec: LayoutSpec.WRAP_CONTENT,
+    }
     for (let v of views) {
         ret.addChild(v)
     }
@@ -43,6 +48,10 @@ export function stack(views: View[]) {
 
 export function hlayout(views: View[]) {
     const ret = new HLayout
+    ret.layoutConfig = {
+        widthSpec: LayoutSpec.WRAP_CONTENT,
+        heightSpec: LayoutSpec.WRAP_CONTENT,
+    }
     for (let v of views) {
         ret.addChild(v)
     }
@@ -51,8 +60,20 @@ export function hlayout(views: View[]) {
 
 export function vlayout(views: View[]) {
     const ret = new VLayout
+    ret.layoutConfig = {
+        widthSpec: LayoutSpec.WRAP_CONTENT,
+        heightSpec: LayoutSpec.WRAP_CONTENT,
+    }
     for (let v of views) {
         ret.addChild(v)
+    }
+    return ret
+}
+
+export function list(config: IList) {
+    const ret = new List
+    for (let key in config) {
+        Reflect.set(ret, key, Reflect.get(config, key, config), ret)
     }
     return ret
 }

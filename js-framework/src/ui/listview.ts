@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-import { View, Property, LayoutSpec, Superview } from "./view";
-import { Model } from "../util/types";
-import { O_TRUNC } from "constants";
+import { View, Property, LayoutSpec, Superview, IView } from "./view";
 import { Stack } from "./layout";
-import { loge } from "../util/log";
+
 export function listItem(item: View) {
     return (new ListItem).also((it) => {
         it.layoutConfig = {
@@ -37,7 +35,13 @@ export class ListItem extends Stack {
     identifier?: string
 }
 
-export class List extends Superview {
+export interface IList extends IView {
+    renderItem: (index: number) => ListItem
+    itemCount: number
+    batchCount?: number
+}
+
+export class List extends Superview implements IList {
     private cachedViews: Map<string, ListItem> = new Map
 
     allSubviews() {

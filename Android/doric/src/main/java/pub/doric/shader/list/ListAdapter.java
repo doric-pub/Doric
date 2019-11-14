@@ -22,12 +22,13 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
-import java.util.HashMap;
-import java.util.Map;
+
+import org.json.JSONObject;
 
 import pub.doric.async.AsyncResult;
 import pub.doric.shader.ViewNode;
@@ -39,12 +40,12 @@ import pub.doric.shader.ViewNode;
  */
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
 
-    private final ListNode listNode;
+    final ListNode listNode;
     String renderItemFuncId;
-    private final String renderBunchedItemsFuncId = "renderBunchedItems";
+    final String renderBunchedItemsFuncId = "renderBunchedItems";
     int itemCount = 0;
     int batchCount = 15;
-    private SparseArray<JSObject> itemObjects = new SparseArray<>();
+    SparseArray<JSValue> itemValues = new SparseArray<>();
 
     public ListAdapter(ListNode listNode) {
         this.listNode = listNode;
@@ -60,9 +61,12 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolde
 
     @Override
     public void onBindViewHolder(@NonNull DoricViewHolder holder, int position) {
-        JSObject jsObject = getItemModel(position);
-        holder.listItemNode.setId(jsObject.getProperty("id").asString().value());
-        holder.listItemNode.blend(jsObject.getProperty("props").asObject(), holder.itemView.getLayoutParams());
+        JSValue jsValue = getItemModel(position);
+        if (jsValue.isObject()) {
+            JSObject jsObject = jsValue.asObject();
+            holder.listItemNode.setId(jsObject.getProperty("id").asString().value());
+            holder.listItemNode.blend(jsObject.getProperty("props").asObject(), holder.itemView.getLayoutParams());
+        }
     }
 
     @Override
@@ -72,16 +76,18 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolde
 
     @Override
     public int getItemViewType(int position) {
-        JSValue value = getItemModel(position).getProperty("identifier");
-        if (value.isString()) {
-            return value.asString().hashCode();
+        JSValue value = getItemModel(position);
+        if (value.isObject()) {
+            if (value.asObject().getProperty("identifier").isString()) {
+                return value.asObject().getProperty("identifier").asString().value().hashCode();
+            }
         }
         return super.getItemViewType(position);
     }
 
-    private JSObject getItemModel(int position) {
-        JSObject itemModel = itemObjects.get(position);
-        if (itemModel == null) {
+    private JSValue getItemModel(int position) {
+        JSValue itemModel = itemValues.get(position);
+        if (itemModel == null || !itemModel.isObject()) {
             AsyncResult<JSDecoder> asyncResult = listNode.callJSResponse(
                     renderBunchedItemsFuncId,
                     position,
@@ -90,11 +96,11 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolde
                 JSDecoder jsDecoder = asyncResult.synchronous().get();
                 JSValue result = jsDecoder.decode();
                 if (result.isArray()) {
-                    JSValue[] values = result.asArray().toArray();
-                    for (int i = 0; i < values.length; i++) {
-                        itemObjects.put(i + position, values[i].asObject());
+                    JSArray jsArray = result.asArray();
+                    for (int i = 0; i < jsArray.size(); i++) {
+                        itemValues.put(i + position, jsArray.get(i));
                     }
-                    return values[0].asObject();
+                    return itemValues.get(position);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -104,17 +110,50 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolde
     }
 
 
-    public void blendSubNode(JSObject subProperties) {
+    void blendSubNode(JSObject subProperties) {
         String subNodeId = subProperties.getProperty("id").asString().value();
-        for (int i = 0; i < itemObjects.size(); i++) {
-            JSObject jsObject = itemObjects.valueAt(i);
-            if (subNodeId.equals(jsObject.getProperty("id").asString().value())) {
-                for (String key : subProperties.propertySet()) {
-                    jsObject.setProperty(key, subProperties.getProperty(key));
+        for (int i = 0; i < itemValues.size(); i++) {
+            JSValue jsValue = itemValues.valueAt(i);
+            if (jsValue.isObject()) {
+                JSObject jsObject = jsValue.asObject();
+                if (subNodeId.equals(jsObject.getProperty("id").asString().value())) {
+                    mixin(subProperties, jsObject);
+                    int position = itemValues.keyAt(i);
+                    notifyItemChanged(position);
+                    break;
                 }
-                int position = itemObjects.keyAt(i);
-                notifyItemChanged(position);
-                break;
+            }
+        }
+    }
+
+    private void mixin(JSObject src, JSObject target) {
+        JSValue srcProps = src.getProperty("props");
+        JSValue targetProps = target.getProperty("props");
+        if (srcProps.isObject()) {
+            if (targetProps.isObject()) {
+                for (String key : srcProps.asObject().propertySet()) {
+                    JSValue jsValue = srcProps.asObject().getProperty(key);
+                    if ("children".equals(key) && jsValue.isArray()) {
+                        JSValue targetChildren = targetProps.asObject().getProperty("children");
+                        if (targetChildren.isArray() && targetChildren.asArray().size() == jsValue.asArray().size()) {
+                            for (int i = 0; i < jsValue.asArray().size(); i++) {
+                                JSValue childSrc = jsValue.asArray().get(i);
+                                JSValue childTarget = targetChildren.asArray().get(i);
+                                if (childSrc.isObject()) {
+                                    if (childTarget.isObject()) {
+                                        mixin(childSrc.asObject(), childTarget.asObject());
+                                    } else {
+                                        targetChildren.asArray().put(i, childSrc);
+                                    }
+                                }
+                            }
+                        }
+                        continue;
+                    }
+                    targetProps.asObject().setProperty(key, jsValue);
+                }
+            } else {
+                target.setProperty("props", srcProps);
             }
         }
     }

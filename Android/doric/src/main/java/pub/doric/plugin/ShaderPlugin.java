@@ -16,6 +16,7 @@
 package pub.doric.plugin;
 
 import pub.doric.DoricContext;
+import pub.doric.async.AsyncResult;
 import pub.doric.extension.bridge.DoricMethod;
 import pub.doric.extension.bridge.DoricPlugin;
 import pub.doric.utils.DoricLog;
@@ -49,7 +50,23 @@ public class ShaderPlugin extends DoricJavaPlugin {
                     rootNode.render(jsObject.getProperty("props").asObject());
                     return null;
                 }
-            }, ThreadMode.UI);
+            }, ThreadMode.UI).setCallback(new AsyncResult.Callback<Object>() {
+                @Override
+                public void onResult(Object result) {
+
+                }
+
+                @Override
+                public void onError(Throwable t) {
+                    t.printStackTrace();
+                    DoricLog.e("Shader.render:error%s", t.getLocalizedMessage());
+                }
+
+                @Override
+                public void onFinish() {
+
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
             DoricLog.e("Shader.render:error%s", e.getLocalizedMessage());

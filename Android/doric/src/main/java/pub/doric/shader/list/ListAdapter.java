@@ -27,9 +27,6 @@ import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
-
-import org.json.JSONObject;
-
 import pub.doric.async.AsyncResult;
 import pub.doric.shader.ViewNode;
 
@@ -111,53 +108,8 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolde
 
 
     void blendSubNode(JSObject subProperties) {
-        String subNodeId = subProperties.getProperty("id").asString().value();
-        for (int i = 0; i < itemValues.size(); i++) {
-            JSValue jsValue = itemValues.valueAt(i);
-            if (jsValue.isObject()) {
-                JSObject jsObject = jsValue.asObject();
-                if (subNodeId.equals(jsObject.getProperty("id").asString().value())) {
-                    mixin(subProperties, jsObject);
-                    int position = itemValues.keyAt(i);
-                    notifyItemChanged(position);
-                    break;
-                }
-            }
-        }
-    }
 
-    private void mixin(JSObject src, JSObject target) {
-        JSValue srcProps = src.getProperty("props");
-        JSValue targetProps = target.getProperty("props");
-        if (srcProps.isObject()) {
-            if (targetProps.isObject()) {
-                for (String key : srcProps.asObject().propertySet()) {
-                    JSValue jsValue = srcProps.asObject().getProperty(key);
-                    if ("children".equals(key) && jsValue.isArray()) {
-                        JSValue targetChildren = targetProps.asObject().getProperty("children");
-                        if (targetChildren.isArray() && targetChildren.asArray().size() == jsValue.asArray().size()) {
-                            for (int i = 0; i < jsValue.asArray().size(); i++) {
-                                JSValue childSrc = jsValue.asArray().get(i);
-                                JSValue childTarget = targetChildren.asArray().get(i);
-                                if (childSrc.isObject()) {
-                                    if (childTarget.isObject()) {
-                                        mixin(childSrc.asObject(), childTarget.asObject());
-                                    } else {
-                                        targetChildren.asArray().put(i, childSrc);
-                                    }
-                                }
-                            }
-                        }
-                        continue;
-                    }
-                    targetProps.asObject().setProperty(key, jsValue);
-                }
-            } else {
-                target.setProperty("props", srcProps);
-            }
-        }
     }
-
 
     static class DoricViewHolder extends RecyclerView.ViewHolder {
         ListItemNode listItemNode;

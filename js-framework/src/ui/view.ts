@@ -303,7 +303,7 @@ export abstract class Group extends Superview {
         set: (target, index, value) => {
             const ret = Reflect.set(target, index, value)
             // Let getDirty return true
-            this.dirtyProps.children = []
+            this.dirtyProps.children = this.children.map(e => e.viewId)
             return ret
         }
     })
@@ -314,18 +314,6 @@ export abstract class Group extends Superview {
 
     addChild(view: View) {
         this.children.push(view)
-    }
-
-    toModel() {
-        this.dirtyProps.children = this.children.map(e => {
-            if (e.isDirty()) {
-                return e.toModel()
-            } else {
-                //Dont need return model
-                return undefined
-            }
-        })
-        return this.nativeViewModel
     }
 }
 

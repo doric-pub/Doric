@@ -15,7 +15,6 @@
  */
 package pub.doric.shader;
 
-import android.util.SparseArray;
 import android.view.ViewGroup;
 
 import pub.doric.DoricContext;
@@ -25,9 +24,6 @@ import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @Description: com.github.penfeizhou.doric.widget
@@ -35,8 +31,8 @@ import java.util.Map;
  * @CreateDate: 2019-07-20
  */
 public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
-    private Map<String, ViewNode> mChildrenNode = new HashMap<>();
-    private SparseArray<ViewNode> mIndexInfo = new SparseArray<>();
+    private ArrayList<ViewNode> mChildNodes = new ArrayList<>();
+    private ArrayList<String> mChildViewIds = new ArrayList<>();
 
     public GroupNode(DoricContext doricContext) {
         super(doricContext);
@@ -45,80 +41,90 @@ public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
     @Override
     protected void blend(F view, ViewGroup.LayoutParams layoutParams, String name, JSValue prop) {
         if ("children".equals(name)) {
-            JSArray jsArray = prop.asArray();
-            int i;
-            List<ViewNode> tobeRemoved = new ArrayList<>();
-            for (i = 0; i < jsArray.size(); i++) {
-                JSValue jsValue = jsArray.get(i);
-                if (!jsValue.isObject()) {
-                    continue;
-                }
-                JSObject childObj = jsValue.asObject();
-                String type = childObj.getProperty("type").asString().value();
-                String id = childObj.getProperty("id").asString().value();
-                ViewNode child = mChildrenNode.get(id);
-                if (child == null) {
-                    child = ViewNode.create(getDoricContext(), type);
-                    child.index = i;
-                    child.mSuperNode = this;
-                    child.mId = id;
-                    mChildrenNode.put(id, child);
-                } else {
-                    if (i != child.index) {
-                        mIndexInfo.remove(i);
-                        child.index = i;
-                        mView.removeView(child.getDoricLayer());
-                    }
-                    tobeRemoved.remove(child);
-                }
-
-                ViewNode node = mIndexInfo.get(i);
-
-                if (node != null && node != child) {
-                    mView.removeViewAt(i);
-                    mIndexInfo.remove(i);
-                    tobeRemoved.add(node);
-                }
-
-                ViewGroup.LayoutParams params = child.getLayoutParams();
-                if (params == null) {
-                    params = generateDefaultLayoutParams();
-                }
-                child.blend(childObj.getProperty("props").asObject(), params);
-                if (mIndexInfo.get(i) == null) {
-                    mView.addView(child.getDoricLayer(), i, child.getLayoutParams());
-                    mIndexInfo.put(i, child);
-                }
+            JSArray ids = prop.asArray();
+            mChildViewIds.clear();
+            for (int i = 0; i < ids.size(); i++) {
+                mChildViewIds.add(ids.get(i).asString().value());
             }
-            int count = mView.getChildCount();
-            while (i < count) {
-                ViewNode node = mIndexInfo.get(i);
-                if (node != null) {
-                    mChildrenNode.remove(node.getId());
-                    mIndexInfo.remove(i);
-                    tobeRemoved.remove(node);
-                    mView.removeView(node.getDoricLayer());
-                }
-                i++;
-            }
-
-            for (ViewNode node : tobeRemoved) {
-                mChildrenNode.remove(node.getId());
-            }
-        } else if ("subviews".equals(name)) {
-            // Currently do nothing,because its subview always contained in props.children
-            // super.blend(view, layoutParams, name, prop);
         } else {
             super.blend(view, layoutParams, name, prop);
         }
     }
 
     @Override
+    public void blend(JSObject jsObject, ViewGroup.LayoutParams layoutParams) {
+        super.blend(jsObject, layoutParams);
+        configChildNode();
+    }
+
+    private void configChildNode() {
+        for (int idx = 0; idx < mChildViewIds.size(); idx++) {
+            String id = mChildViewIds.get(idx);
+            JSObject model = getSubModel(id);
+            String type = model.getProperty("type").asString().value();
+            if (idx < mChildNodes.size()) {
+                ViewNode oldNode = mChildNodes.get(idx);
+                if (id.equals(oldNode.getId())) {
+                    //The same,skip
+                } else {
+                    //Find in remaining nodes
+                    int position = -1;
+                    for (int start = idx + 1; start < mChildNodes.size(); start++) {
+                        ViewNode node = mChildNodes.get(start);
+                        if (id.equals(node.getId())) {
+                            //Found
+                            position = start;
+                            break;
+                        }
+                    }
+                    if (position >= 0) {
+                        //Found swap idx,position
+                        ViewNode reused = mChildNodes.remove(position);
+                        ViewNode abandoned = mChildNodes.remove(idx);
+                        mChildNodes.set(idx, reused);
+                        mChildNodes.set(position, abandoned);
+                        //View swap index
+                        mView.removeView(reused.getDoricLayer());
+                        mView.addView(reused.getDoricLayer(), idx);
+                        mView.removeView(abandoned.getDoricLayer());
+                        mView.addView(abandoned.getDoricLayer(), position);
+                    } else {
+                        //Not found,insert
+                        ViewNode newNode = ViewNode.create(getDoricContext(), type);
+                        newNode.setSuperNode(this);
+                        newNode.setId(id);
+                        ViewGroup.LayoutParams params = generateDefaultLayoutParams();
+                        newNode.blend(model.getProperty("props").asObject(), params);
+
+                        mChildNodes.set(idx, newNode);
+                        mView.addView(newNode.getDoricLayer(), idx, newNode.getLayoutParams());
+                    }
+                }
+            } else {
+                //Insert
+                ViewNode newNode = ViewNode.create(getDoricContext(), type);
+                newNode.setSuperNode(this);
+                newNode.setId(id);
+                ViewGroup.LayoutParams params = generateDefaultLayoutParams();
+                newNode.blend(model.getProperty("props").asObject(), params);
+                mChildNodes.add(newNode);
+                mView.addView(newNode.getDoricLayer(), idx, newNode.getLayoutParams());
+            }
+        }
+        int size = mChildNodes.size();
+        for (int idx = mChildViewIds.size(); idx < size; idx++) {
+            ViewNode viewNode = mChildNodes.remove(mChildViewIds.size());
+            mView.removeView(viewNode.getDoricLayer());
+        }
+    }
+
+    @Override
     protected void blendSubNode(JSObject subProp) {
         String subNodeId = subProp.getProperty("id").asString().value();
-        for (ViewNode node : mChildrenNode.values()) {
+        for (ViewNode node : mChildNodes) {
             if (subNodeId.equals(node.getId())) {
-                node.blend(subProp, node.getLayoutParams());
+                node.blend(subProp.getProperty("props").asObject(), node.getLayoutParams());
+                break;
             }
         }
     }

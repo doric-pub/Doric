@@ -1,15 +1,14 @@
 package pub.doric.engine.remote;
 
 import com.github.pengfeizhou.jscore.JSDecoder;
+import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JavaFunction;
 import com.github.pengfeizhou.jscore.JavaValue;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
 import org.greenrobot.eventbus.EventBus;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.EOFException;
@@ -25,14 +24,10 @@ import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import pub.doric.dev.event.QuitDebugEvent;
-import pub.doric.utils.DoricUtils;
 
 public class RemoteJSExecutor {
-
     private final WebSocket webSocket;
-
     private final Map<String, JavaFunction> globalFunctions = new HashMap<>();
-
     private JSDecoder temp;
 
     public RemoteJSExecutor() {
@@ -67,55 +62,28 @@ public class RemoteJSExecutor {
 
             @Override
             public void onMessage(@NotNull WebSocket webSocket, @NotNull String text) {
-                JsonElement je = DoricUtils.gson.fromJson(text, JsonElement.class);
-
-                if (je instanceof JsonObject) {
-                    JsonObject jo = ((JsonObject) je);
-                    String cmd = jo.get("cmd").getAsString();
+                try {
+                    JSONObject jsonObject = new JSONObject(text);
+                    String cmd = jsonObject.optString("cmd");
                     switch (cmd) {
                         case "injectGlobalJSFunction": {
-                            String name = jo.get("name").getAsString();
-                            JsonArray arguments = jo.getAsJsonArray("arguments");
-                            JSDecoder[] decoders = new JSDecoder[arguments.size()];
-                            for (int i = 0; i < arguments.size(); i++) {
-                                if (arguments.get(i).isJsonPrimitive()) {
-                                    JsonPrimitive jp = ((JsonPrimitive) arguments.get(i));
-                                    if (jp.isNumber()) {
-                                        ValueBuilder vb = new ValueBuilder(jp.getAsNumber());
-                                        JSDecoder decoder = new JSDecoder(vb.build());
-                                        decoders[i] = decoder;
-                                    } else if (jp.isBoolean()) {
-                                        ValueBuilder vb = new ValueBuilder(jp.getAsBoolean());
-                                        JSDecoder decoder = new JSDecoder(vb.build());
-                                        decoders[i] = decoder;
-                                    } else if (jp.isString()) {
-                                        ValueBuilder vb = new ValueBuilder(jp.getAsString());
-                                        JSDecoder decoder = new JSDecoder(vb.build());
-                                        decoders[i] = decoder;
-                                    }
-                                } else {
-                                    try {
-                                        ValueBuilder vb = new ValueBuilder(new JSONObject(DoricUtils.gson.toJson(arguments.get(i))));
-                                        JSDecoder decoder = new JSDecoder(vb.build());
-                                        decoders[i] = decoder;
-                                    } catch (Exception ex) {
-                                        ex.printStackTrace();
-                                    }
-
-                                }
+                            String name = jsonObject.optString("name");
+                            JSONArray arguments = jsonObject.optJSONArray("arguments");
+                            assert arguments != null;
+                            JSDecoder[] decoders = new JSDecoder[arguments.length()];
+                            for (int i = 0; i < arguments.length(); i++) {
+                                Object o = arguments.get(i);
+                                decoders[i] = new JSDecoder(new ValueBuilder(o).build());
                             }
-
-
                             globalFunctions.get(name).exec(decoders);
                         }
 
                         break;
                         case "invokeMethod": {
                             try {
-                                Object result = jo.get("result");
+                                Object result = jsonObject.opt("result");
                                 ValueBuilder vb = new ValueBuilder(result);
-                                JSDecoder decoder = new JSDecoder(vb.build());
-                                temp = decoder;
+                                temp = new JSDecoder(vb.build());
                                 System.out.println(result);
                             } catch (Exception ex) {
                                 ex.printStackTrace();
@@ -125,6 +93,8 @@ public class RemoteJSExecutor {
                         }
                         break;
                     }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -141,33 +111,29 @@ public class RemoteJSExecutor {
 
     public void injectGlobalJSFunction(String name, JavaFunction javaFunction) {
         globalFunctions.put(name, javaFunction);
-
-        JsonObject jo = new JsonObject();
-        jo.addProperty("cmd", "injectGlobalJSFunction");
-        jo.addProperty("name", name);
-        webSocket.send(DoricUtils.gson.toJson(jo));
+        webSocket.send(new JSONBuilder().put("cmd", "injectGlobalJSFunction")
+                .put("name", name).toString()
+        );
     }
 
     public void injectGlobalJSObject(String name, JavaValue javaValue) {
     }
 
     public JSDecoder invokeMethod(String objectName, String functionName, JavaValue[] javaValues, boolean hashKey) {
-        JsonObject jo = new JsonObject();
-        jo.addProperty("cmd", "invokeMethod");
-        jo.addProperty("objectName", objectName);
-        jo.addProperty("functionName", functionName);
-
-        JsonArray ja = new JsonArray();
+        JSONArray jsonArray = new JSONArray();
         for (JavaValue javaValue : javaValues) {
-            JsonObject argument = new JsonObject();
-            argument.addProperty("type", javaValue.getType());
-            argument.addProperty("value", javaValue.getValue());
-            ja.add(argument);
+            jsonArray.put(new JSONBuilder()
+                    .put("type", javaValue.getType())
+                    .put("value", javaValue.getValue())
+                    .toJSONObject());
         }
-        jo.add("javaValues", ja);
-
-        jo.addProperty("hashKey", hashKey);
-        webSocket.send(DoricUtils.gson.toJson(jo));
+        webSocket.send(new JSONBuilder()
+                .put("cmd", "invokeMethod")
+                .put("objectName", objectName)
+                .put("functionName", functionName)
+                .put("javaValues", jsonArray)
+                .put("hashKey", hashKey)
+                .toString());
 
         LockSupport.park(Thread.currentThread());
         return temp;

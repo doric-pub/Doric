@@ -37,7 +37,7 @@ public class TextNode extends ViewNode<TextView> {
     }
 
     @Override
-    protected TextView build(JSObject jsObject) {
+    protected TextView build() {
         return new TextView(getContext());
     }
 

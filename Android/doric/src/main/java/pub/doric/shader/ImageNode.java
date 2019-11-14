@@ -46,7 +46,7 @@ public class ImageNode extends ViewNode<ImageView> {
     }
 
     @Override
-    protected ImageView build(JSObject jsObject) {
+    protected ImageView build() {
         return new ImageView(getContext());
     }
 

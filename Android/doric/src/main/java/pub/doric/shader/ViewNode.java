@@ -41,7 +41,6 @@ import java.util.LinkedList;
  */
 public abstract class ViewNode<T extends View> extends DoricContextHolder {
     protected T mView;
-    int index;
     SuperNode mSuperNode;
     String mId;
     private ViewGroup.LayoutParams mLayoutParams;
@@ -51,6 +50,16 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     }
 
     private DoricLayer doricLayer;
+
+    public void init(SuperNode superNode) {
+        this.mSuperNode = superNode;
+        this.mLayoutParams = superNode.generateDefaultLayoutParams();
+        this.doricLayer = new DoricLayer(getContext());
+        this.mView = build();
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(mLayoutParams.width, mLayoutParams.height);
+        doricLayer.addView(mView, params);
+    }
+
 
     public void setSuperNode(SuperNode parentNode) {
         mSuperNode = parentNode;
@@ -68,12 +77,12 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         return getDoricContext().getContext();
     }
 
-    protected abstract T build(JSObject jsObject);
+    protected abstract T build();
 
     public void blend(JSObject jsObject, ViewGroup.LayoutParams layoutParams) {
         mLayoutParams = layoutParams;
         if (mView == null) {
-            mView = build(jsObject);
+            mView = build();
         }
         if (getDoricLayer() == null) {
             doricLayer = new DoricLayer(getContext());

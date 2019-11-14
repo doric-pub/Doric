@@ -54,7 +54,7 @@ public class LinearNode extends GroupNode<LinearLayout> {
     }
 
     @Override
-    protected LinearLayout build(JSObject jsObject) {
+    protected LinearLayout build() {
         return new LinearLayout(getContext());
     }
 

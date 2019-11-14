@@ -45,7 +45,7 @@ public class StackNode extends GroupNode<FrameLayout> {
     }
 
     @Override
-    protected FrameLayout build(JSObject jsObject) {
+    protected FrameLayout build() {
         return new FrameLayout(getContext());
     }
 

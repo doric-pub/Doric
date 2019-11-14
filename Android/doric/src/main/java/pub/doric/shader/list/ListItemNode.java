@@ -35,7 +35,7 @@ public class ListItemNode extends StackNode {
 
     public ListItemNode(DoricContext doricContext) {
         super(doricContext);
-        this.mView = this.build(null);
+        this.mView = this.build();
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         this.blend(null, params);

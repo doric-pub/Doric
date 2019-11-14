@@ -34,8 +34,8 @@ public class HLayoutNode extends LinearNode {
     }
 
     @Override
-    protected LinearLayout build(JSObject jsObject) {
-        LinearLayout linearLayout = super.build(jsObject);
+    protected LinearLayout build() {
+        LinearLayout linearLayout = super.build();
         linearLayout.setOrientation(LinearLayout.HORIZONTAL);
         return linearLayout;
     }

@@ -48,7 +48,7 @@ public class ListNode extends SuperNode<RecyclerView> {
     }
 
     @Override
-    protected RecyclerView build(JSObject jsObject) {
+    protected RecyclerView build() {
         RecyclerView recyclerView = new RecyclerView(getContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(this.listAdapter);

@@ -80,6 +80,8 @@ public class ListNode extends SuperNode<RecyclerView> {
             case "batchCount":
                 this.listAdapter.batchCount = 15;
                 break;
+            case "subviews":
+                break;
             default:
                 super.blend(view, name, prop);
                 break;

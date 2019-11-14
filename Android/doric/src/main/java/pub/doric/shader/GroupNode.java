@@ -95,7 +95,7 @@ public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
                         newNode.init(this);
                         newNode.blend(model.getProperty("props").asObject());
 
-                        mChildNodes.set(idx, newNode);
+                        mChildNodes.add(idx, newNode);
                         mView.addView(newNode.getDoricLayer(), idx, newNode.getLayoutParams());
                     }
                 }

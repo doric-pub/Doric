@@ -74,6 +74,10 @@ public abstract class SuperNode<V extends View> extends ViewNode<V> {
         return subNodes.get(id);
     }
 
+    public void setSubModel(String id, JSObject model) {
+        subNodes.put(id, model);
+    }
+
     protected abstract void blendSubNode(JSObject subProperties);
 
     protected void blendSubLayoutConfig(ViewNode viewNode, JSObject jsObject) {
@@ -127,34 +131,14 @@ public abstract class SuperNode<V extends View> extends ViewNode<V> {
     }
 
     private void mixin(JSObject src, JSObject target) {
-        JSValue srcProps = src.getProperty("props");
-        JSValue targetProps = target.getProperty("props");
-        if (srcProps.isObject()) {
-            if (targetProps.isObject()) {
-                for (String key : srcProps.asObject().propertySet()) {
-                    JSValue jsValue = srcProps.asObject().getProperty(key);
-                    if ("children".equals(key) && jsValue.isArray()) {
-                        JSValue targetChildren = targetProps.asObject().getProperty("children");
-                        if (targetChildren.isArray() && targetChildren.asArray().size() == jsValue.asArray().size()) {
-                            for (int i = 0; i < jsValue.asArray().size(); i++) {
-                                JSValue childSrc = jsValue.asArray().get(i);
-                                JSValue childTarget = targetChildren.asArray().get(i);
-                                if (childSrc.isObject()) {
-                                    if (childTarget.isObject()) {
-                                        mixin(childSrc.asObject(), childTarget.asObject());
-                                    } else {
-                                        targetChildren.asArray().put(i, childSrc);
-                                    }
-                                }
-                            }
-                        }
-                        continue;
-                    }
-                    targetProps.asObject().setProperty(key, jsValue);
-                }
-            } else {
-                target.setProperty("props", srcProps);
+        JSObject srcProps = src.getProperty("props").asObject();
+        JSObject targetProps = target.getProperty("props").asObject();
+        for (String key : srcProps.propertySet()) {
+            JSValue jsValue = srcProps.getProperty(key);
+            if ("subviews".equals(key) && jsValue.isArray()) {
+                continue;
             }
+            targetProps.asObject().setProperty(key, jsValue);
         }
     }
 

@@ -55,6 +55,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         this.mSuperNode = superNode;
         this.mLayoutParams = superNode.generateDefaultLayoutParams();
         this.doricLayer = new DoricLayer(getContext());
+        this.doricLayer.setLayoutParams(mLayoutParams);
         this.mView = build();
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(mLayoutParams.width, mLayoutParams.height);
         doricLayer.addView(mView, params);

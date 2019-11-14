@@ -70,7 +70,7 @@ export class List extends Superview implements IList {
     private renderBunchedItems(start: number, length: number) {
         return new Array(Math.min(length, this.itemCount - start)).fill(0).map((_, idx) => {
             const listItem = this.getItem(start + idx)
-            return listItem.viewId
+            return listItem.toModel()
         })
     }
 }

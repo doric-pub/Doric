@@ -45,7 +45,7 @@ public abstract class SuperNode<V extends View> extends ViewNode<V> {
     }
 
     @Override
-    protected void blend(V view, ViewGroup.LayoutParams layoutParams, String name, JSValue prop) {
+    protected void blend(V view, String name, JSValue prop) {
         if (name.equals("subviews")) {
             if (prop.isArray()) {
                 JSArray subviews = prop.asArray();
@@ -56,7 +56,7 @@ public abstract class SuperNode<V extends View> extends ViewNode<V> {
                 }
             }
         } else {
-            super.blend(view, layoutParams, name, prop);
+            super.blend(view, name, prop);
         }
     }
 

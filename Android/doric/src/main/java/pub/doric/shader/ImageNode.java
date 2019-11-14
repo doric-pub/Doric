@@ -51,7 +51,7 @@ public class ImageNode extends ViewNode<ImageView> {
     }
 
     @Override
-    protected void blend(ImageView view, ViewGroup.LayoutParams layoutParams, String name, JSValue prop) {
+    protected void blend(ImageView view, String name, JSValue prop) {
         if ("imageUrl".equals(name)) {
             Glide.with(getContext()).load(prop.asString().value())
                     .listener(new RequestListener<Drawable>() {
@@ -67,7 +67,7 @@ public class ImageNode extends ViewNode<ImageView> {
                     })
                     .into(view);
         } else {
-            super.blend(view, layoutParams, name, prop);
+            super.blend(view, name, prop);
         }
     }
 }

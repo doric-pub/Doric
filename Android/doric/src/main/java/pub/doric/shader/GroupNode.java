@@ -39,7 +39,7 @@ public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
     }
 
     @Override
-    protected void blend(F view, ViewGroup.LayoutParams layoutParams, String name, JSValue prop) {
+    protected void blend(F view, String name, JSValue prop) {
         if ("children".equals(name)) {
             JSArray ids = prop.asArray();
             mChildViewIds.clear();
@@ -47,13 +47,13 @@ public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
                 mChildViewIds.add(ids.get(i).asString().value());
             }
         } else {
-            super.blend(view, layoutParams, name, prop);
+            super.blend(view, name, prop);
         }
     }
 
     @Override
-    public void blend(JSObject jsObject, ViewGroup.LayoutParams layoutParams) {
-        super.blend(jsObject, layoutParams);
+    public void blend(JSObject jsObject) {
+        super.blend(jsObject);
         configChildNode();
     }
 
@@ -91,10 +91,9 @@ public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
                     } else {
                         //Not found,insert
                         ViewNode newNode = ViewNode.create(getDoricContext(), type);
-                        newNode.setSuperNode(this);
                         newNode.setId(id);
-                        ViewGroup.LayoutParams params = generateDefaultLayoutParams();
-                        newNode.blend(model.getProperty("props").asObject(), params);
+                        newNode.init(this);
+                        newNode.blend(model.getProperty("props").asObject());
 
                         mChildNodes.set(idx, newNode);
                         mView.addView(newNode.getDoricLayer(), idx, newNode.getLayoutParams());
@@ -103,10 +102,9 @@ public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
             } else {
                 //Insert
                 ViewNode newNode = ViewNode.create(getDoricContext(), type);
-                newNode.setSuperNode(this);
                 newNode.setId(id);
-                ViewGroup.LayoutParams params = generateDefaultLayoutParams();
-                newNode.blend(model.getProperty("props").asObject(), params);
+                newNode.init(this);
+                newNode.blend(model.getProperty("props").asObject());
                 mChildNodes.add(newNode);
                 mView.addView(newNode.getDoricLayer(), idx, newNode.getLayoutParams());
             }
@@ -123,7 +121,7 @@ public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
         String subNodeId = subProp.getProperty("id").asString().value();
         for (ViewNode node : mChildNodes) {
             if (subNodeId.equals(node.getId())) {
-                node.blend(subProp.getProperty("props").asObject(), node.getLayoutParams());
+                node.blend(subProp.getProperty("props").asObject());
                 break;
             }
         }

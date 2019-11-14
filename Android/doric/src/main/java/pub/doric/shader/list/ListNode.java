@@ -15,8 +15,6 @@
  */
 package pub.doric.shader.list;
 
-import android.view.ViewGroup;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -56,8 +54,8 @@ public class ListNode extends SuperNode<RecyclerView> {
     }
 
     @Override
-    public void blend(JSObject jsObject, ViewGroup.LayoutParams layoutParams) {
-        super.blend(jsObject, layoutParams);
+    public void blend(JSObject jsObject) {
+        super.blend(jsObject);
         if (mView != null) {
             mView.post(new Runnable() {
                 @Override
@@ -69,7 +67,7 @@ public class ListNode extends SuperNode<RecyclerView> {
     }
 
     @Override
-    protected void blend(RecyclerView view, ViewGroup.LayoutParams layoutParams, String name, JSValue prop) {
+    protected void blend(RecyclerView view, String name, JSValue prop) {
         switch (name) {
             case "itemCount":
                 this.listAdapter.itemCount = prop.asNumber().toInt();
@@ -83,7 +81,7 @@ public class ListNode extends SuperNode<RecyclerView> {
                 this.listAdapter.batchCount = 15;
                 break;
             default:
-                super.blend(view, layoutParams, name, prop);
+                super.blend(view, name, prop);
                 break;
         }
     }

@@ -15,7 +15,6 @@
  */
 package pub.doric.shader.list;
 
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.github.pengfeizhou.jscore.JSValue;
@@ -35,19 +34,14 @@ public class ListItemNode extends StackNode {
 
     public ListItemNode(DoricContext doricContext) {
         super(doricContext);
-        this.mView = this.build();
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        this.blend(null, params);
-        getDoricLayer().setLayoutParams(params);
     }
 
     @Override
-    protected void blend(FrameLayout view, ViewGroup.LayoutParams layoutParams, String name, JSValue prop) {
+    protected void blend(FrameLayout view, String name, JSValue prop) {
         if ("identifier".equals(name)) {
             this.identifier = prop.asString().value();
         } else {
-            super.blend(view, layoutParams, name, prop);
+            super.blend(view, name, prop);
         }
     }
 }

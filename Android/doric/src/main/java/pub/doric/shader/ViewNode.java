@@ -43,7 +43,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     protected T mView;
     SuperNode mSuperNode;
     String mId;
-    private ViewGroup.LayoutParams mLayoutParams;
+    protected ViewGroup.LayoutParams mLayoutParams;
 
     public ViewNode(DoricContext doricContext) {
         super(doricContext);
@@ -60,11 +60,6 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         doricLayer.addView(mView, params);
     }
 
-
-    public void setSuperNode(SuperNode parentNode) {
-        mSuperNode = parentNode;
-    }
-
     public void setId(String id) {
         this.mId = id;
     }
@@ -79,53 +74,44 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
 
     protected abstract T build();
 
-    public void blend(JSObject jsObject, ViewGroup.LayoutParams layoutParams) {
-        mLayoutParams = layoutParams;
-        if (mView == null) {
-            mView = build();
-        }
-        if (getDoricLayer() == null) {
-            doricLayer = new DoricLayer(getContext());
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(layoutParams.width, layoutParams.height);
-            doricLayer.addView(mView, params);
-        }
+    public void blend(JSObject jsObject) {
         if (jsObject != null) {
             for (String prop : jsObject.propertySet()) {
-                blend(mView, layoutParams, prop, jsObject.getProperty(prop));
+                blend(mView, prop, jsObject.getProperty(prop));
             }
         }
         ViewGroup.LayoutParams params = mView.getLayoutParams();
         if (params != null) {
-            params.width = layoutParams.width;
-            params.height = layoutParams.height;
+            params.width = mLayoutParams.width;
+            params.height = mLayoutParams.height;
         } else {
-            params = layoutParams;
+            params = mLayoutParams;
         }
         mView.setLayoutParams(params);
     }
 
-    protected void blend(T view, ViewGroup.LayoutParams layoutParams, String name, JSValue prop) {
+    protected void blend(T view, String name, JSValue prop) {
         switch (name) {
             case "width":
-                if (layoutParams.width >= 0) {
-                    layoutParams.width = DoricUtils.dp2px(prop.asNumber().toFloat());
+                if (mLayoutParams.width >= 0) {
+                    mLayoutParams.width = DoricUtils.dp2px(prop.asNumber().toFloat());
                 }
                 break;
             case "height":
-                if (layoutParams.height >= 0) {
-                    layoutParams.height = DoricUtils.dp2px(prop.asNumber().toFloat());
+                if (mLayoutParams.height >= 0) {
+                    mLayoutParams.height = DoricUtils.dp2px(prop.asNumber().toFloat());
                 }
                 break;
             case "x":
-                if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
+                if (mLayoutParams instanceof ViewGroup.MarginLayoutParams) {
                     float x = prop.asNumber().toFloat();
-                    ((ViewGroup.MarginLayoutParams) layoutParams).leftMargin = DoricUtils.dp2px(x);
+                    ((ViewGroup.MarginLayoutParams) mLayoutParams).leftMargin = DoricUtils.dp2px(x);
                 }
                 break;
             case "y":
-                if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
+                if (mLayoutParams instanceof ViewGroup.MarginLayoutParams) {
                     float y = prop.asNumber().toFloat();
-                    ((ViewGroup.MarginLayoutParams) layoutParams).topMargin = DoricUtils.dp2px(y);
+                    ((ViewGroup.MarginLayoutParams) mLayoutParams).topMargin = DoricUtils.dp2px(y);
                 }
                 break;
             case "bgColor":

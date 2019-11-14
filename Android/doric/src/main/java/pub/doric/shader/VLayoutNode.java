@@ -20,8 +20,6 @@ import android.widget.LinearLayout;
 import pub.doric.DoricContext;
 import pub.doric.extension.bridge.DoricPlugin;
 
-import com.github.pengfeizhou.jscore.JSObject;
-
 /**
  * @Description: com.github.penfeizhou.doric.shader
  * @Author: pengfei.zhou

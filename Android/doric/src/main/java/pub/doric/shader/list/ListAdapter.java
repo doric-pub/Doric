@@ -52,7 +52,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolde
     @Override
     public DoricViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ListItemNode node = (ListItemNode) ViewNode.create(listNode.getDoricContext(), "ListItem");
-        node.setSuperNode(listNode);
+        node.init(listNode);
         return new DoricViewHolder(node, node.getDoricLayer());
     }
 
@@ -62,7 +62,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolde
         if (jsValue.isObject()) {
             JSObject jsObject = jsValue.asObject();
             holder.listItemNode.setId(jsObject.getProperty("id").asString().value());
-            holder.listItemNode.blend(jsObject.getProperty("props").asObject(), holder.itemView.getLayoutParams());
+            holder.listItemNode.blend(jsObject.getProperty("props").asObject());
         }
     }
 

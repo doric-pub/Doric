@@ -26,7 +26,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"Snake" ofType:@"js"];
+    NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"ListDemo" ofType:@"js"];
     NSString *jsContent = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
     self.doricContext = [[DoricContext alloc] initWithScript:jsContent source:@"test.js"];
     [self.doricContext.rootNode setupRootView:[[DoricStackView new] also:^(DoricStackView *it) {

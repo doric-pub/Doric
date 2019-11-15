@@ -48,9 +48,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)blendView:(V)view forPropName:(NSString *)name propValue:(id)prop;
 
-- (void)callJSResponse:(NSString *)funcId, ...;
+- (DoricAsyncResult *)callJSResponse:(NSString *)funcId, ...;
 
-+ (DoricViewNode *)create:(DoricContext *)context withType:(NSString *)type;
++ (__kindof DoricViewNode *)create:(DoricContext *)context withType:(NSString *)type;
 
 - (void)requestLayout;
 @end

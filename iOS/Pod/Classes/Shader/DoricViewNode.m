@@ -193,7 +193,7 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     return [[ret reverseObjectEnumerator] allObjects];
 }
 
-- (void)callJSResponse:(NSString *)funcId, ... {
+- (DoricAsyncResult *)callJSResponse:(NSString *)funcId, ... {
     NSMutableArray *array = [[NSMutableArray alloc] init];
     [array addObject:self.idList];
     [array addObject:funcId];
@@ -203,11 +203,12 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     while ((arg = va_arg(args, id)) != nil) {
         [array addObject:arg];
     }
-    [self.doricContext callEntity:DORIC_ENTITY_RESPONSE withArgumentsArray:array];
+    DoricAsyncResult *ret = [self.doricContext callEntity:DORIC_ENTITY_RESPONSE withArgumentsArray:array];
     va_end(args);
+    return ret;
 }
 
-+ (DoricViewNode *)create:(DoricContext *)context withType:(NSString *)type {
++ (__kindof DoricViewNode *)create:(DoricContext *)context withType:(NSString *)type {
     DoricRegistry *registry = context.driver.registry;
     Class clz = [registry acquireViewNode:type];
     return [(DoricViewNode *) [clz alloc] initWithContext:context];

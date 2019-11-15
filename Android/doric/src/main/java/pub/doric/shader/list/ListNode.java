@@ -76,6 +76,7 @@ public class ListNode extends SuperNode<RecyclerView> {
                 this.listAdapter.renderItemFuncId = prop.asString().value();
                 // If reset renderItem,should reset native cache.
                 this.listAdapter.itemValues.clear();
+                clearSubModel();
                 break;
             case "batchCount":
                 this.listAdapter.batchCount = 15;

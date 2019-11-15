@@ -78,6 +78,10 @@ public abstract class SuperNode<V extends View> extends ViewNode<V> {
         subNodes.put(id, model);
     }
 
+    public void clearSubModel() {
+        subNodes.clear();
+    }
+
     protected abstract void blendSubNode(JSObject subProperties);
 
     protected void blendSubLayoutConfig(ViewNode viewNode, JSObject jsObject) {

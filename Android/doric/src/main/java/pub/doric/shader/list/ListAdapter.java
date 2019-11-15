@@ -45,7 +45,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolde
     int batchCount = 15;
     SparseArray<String> itemValues = new SparseArray<>();
 
-    public ListAdapter(ListNode listNode) {
+    ListAdapter(ListNode listNode) {
         this.listNode = listNode;
     }
 

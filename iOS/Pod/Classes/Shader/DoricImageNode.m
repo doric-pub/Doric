@@ -25,7 +25,7 @@
 
 @implementation DoricImageNode
 
-- (UIImageView *)build:(NSDictionary *)props {
+- (UIImageView *)build {
     return [[UIImageView alloc] init];
 }
 

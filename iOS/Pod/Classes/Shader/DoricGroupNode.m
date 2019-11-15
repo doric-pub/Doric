@@ -23,90 +23,38 @@
 #import <Doric/DoricExtensions.h>
 #import "DoricGroupNode.h"
 
+@interface DoricGroupNode ()
+@property(nonatomic, copy) NSArray<DoricViewNode *> *childNodes;
+@property(nonatomic, copy) NSArray <NSString *> *childViewIds;
+@end
+
 @implementation DoricGroupNode
 
 - (instancetype)initWithContext:(DoricContext *)doricContext {
     if (self = [super initWithContext:doricContext]) {
-        _children = [[NSMutableDictionary alloc] init];
-        _indexedChildren = [[NSMutableArray alloc] init];
+        _childNodes = @[];
+        _childViewIds = @[];
     }
     return self;
 }
 
-- (UIView *)build:(NSDictionary *)props {
+- (UIView *)build {
     UIView *ret = [[UIView alloc] init];
     ret.clipsToBounds = YES;
     return ret;
 }
 
 - (void)blendView:(UIView *)view forPropName:(NSString *)name propValue:(id)prop {
-    if ([name isEqualToString:@"children"]) {
-        NSArray *array = prop;
-        NSInteger i;
-        NSMutableArray *tobeRemoved = [[NSMutableArray alloc] init];
-        for (i = 0; i < array.count; i++) {
-            NSDictionary *val = array[i];
-            if (!val || (NSNull *) val == [NSNull null]) {
-                continue;
-            }
-            NSString *type = val[@"type"];
-            NSString *viewId = val[@"id"];
-            DoricViewNode *node = self.children[viewId];
-            if (node == nil) {
-                node = [DoricViewNode create:self.doricContext withType:type];
-                node.index = i;
-                node.parent = self;
-                node.viewId = viewId;
-                self.children[viewId] = node;
-            } else {
-                if (i != node.index) {
-                    [self.indexedChildren removeObjectAtIndex:i];
-                    node.index = i;
-                    [node.view removeFromSuperview];
-                }
-                [tobeRemoved removeObject:node];
-            }
-            DoricViewNode *old = i >= self.indexedChildren.count ? nil : self.indexedChildren[i];
-            if (old && old != node) {
-                [old.view removeFromSuperview];
-                self.indexedChildren[i] = [NSNull null];
-                [tobeRemoved addObject:old];
-            }
-
-            DoricLayoutConfig *params = node.layoutConfig;
-            if (params == nil) {
-                params = [self generateDefaultLayoutParams];
-                node.layoutConfig = params;
-            }
-            [node blend:val[@"props"]];
-            if (self.indexedChildren.count <= i) {
-                [self.view addSubview:node.view];
-                [self.indexedChildren addObject:node];
-            } else if (self.indexedChildren[i] == [NSNull null]) {
-                self.indexedChildren[i] = node;
-                [self.view insertSubview:node.view atIndex:i];
-            }
-        }
-        NSInteger start = i;
-        while (start < self.indexedChildren.count) {
-            DoricViewNode *node = self.indexedChildren[(NSUInteger) start];
-            if (node) {
-                [self.children removeObjectForKey:node.viewId];
-                [node.view removeFromSuperview];
-                [tobeRemoved removeObject:node];
-            }
-            start++;
-        }
-        if (i < self.indexedChildren.count) {
-            [self.indexedChildren removeObjectsInRange:NSMakeRange((NSUInteger) i, self.indexedChildren.count - i)];
-        }
-
-        for (DoricViewNode *node in tobeRemoved) {
-            [self.children removeObjectForKey:node.viewId];
-        }
+    if ([@"children" isEqualToString:name]) {
+        self.childViewIds = prop;
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }
+}
+
+- (void)blend:(NSDictionary *)props {
+    [super blend:props];
+    [self configChildNodes];
 }
 
 - (DoricLayoutConfig *)generateDefaultLayoutParams {
@@ -114,33 +62,78 @@
     return params;
 }
 
-- (void)blendChild:(DoricViewNode *)child layoutConfig:(NSDictionary *)layoutConfig {
-    DoricLayoutConfig *params = child.layoutConfig;
+- (void)configChildNodes {
+    NSMutableArray *childNodes = [self.childNodes mutableCopy];
+    for (NSUInteger idx = 0; idx < self.childViewIds.count; idx++) {
+        NSString *viewId = self.childViewIds[idx];
+        NSDictionary *model = [self subModelOf:viewId];
+        NSString *type = model[@"type"];
+        if (idx < self.childNodes.count) {
+            DoricViewNode *oldNode = childNodes[idx];
+            if ([viewId isEqualToString:oldNode.viewId]) {
+                ///Same,skip
+            } else {
+                ///Find in remain nodes
+                NSInteger position = -1;
+                for (NSUInteger start = idx + 1; start < childNodes.count; start++) {
+                    DoricViewNode *node = childNodes[start];
+                    if ([viewId isEqualToString:node.viewId]) {
+                        position = start;
+                        break;
+                    }
+                }
+                if (position >= 0) {
+                    ///Found ,swap idx,position
+                    DoricViewNode *reused = childNodes[(NSUInteger) position];
+                    [childNodes removeObjectAtIndex:(NSUInteger) position];
+                    [childNodes removeObjectAtIndex:idx];
+                    [childNodes insertObject:reused atIndex:idx];
+                    [childNodes insertObject:oldNode atIndex:(NSUInteger) position];
 
-    [layoutConfig[@"widthSpec"] also:^(NSNumber *it) {
-        if (it) {
-            params.widthSpec = (DoricLayoutSpec) [it integerValue];
-        }
-    }];
+                    ///View swap index
+                    [reused.view removeFromSuperview];
+                    [oldNode.view removeFromSuperview];
+                    [self.view insertSubview:reused.view atIndex:idx];
+                    [self.view insertSubview:oldNode.view atIndex:position];
+                } else {
+                    ///Not found,insert
+                    DoricViewNode *viewNode = [DoricViewNode create:self.doricContext withType:type];
+                    viewNode.viewId = viewId;
+                    [viewNode initWithSuperNode:self];
+                    [viewNode blend:model[@"props"]];
+                    [childNodes insertObject:viewNode atIndex:idx];
+                    [self.view insertSubview:viewNode.view atIndex:idx];
+                }
+            }
 
-    [layoutConfig[@"heightSpec"] also:^(NSNumber *it) {
-        if (it) {
-            params.heightSpec = (DoricLayoutSpec) [it integerValue];
-        }
-    }];
 
-    if ([params isKindOfClass:DoricMarginConfig.class]) {
-        DoricMarginConfig *marginParams = (DoricMarginConfig *) params;
-        NSDictionary *margin = layoutConfig[@"margin"];
-        if (margin) {
-            marginParams.margin = DoricMarginMake(
-                    [(NSNumber *) margin[@"left"] floatValue],
-                    [(NSNumber *) margin[@"top"] floatValue],
-                    [(NSNumber *) margin[@"right"] floatValue],
-                    [(NSNumber *) margin[@"bottom"] floatValue]);
+        } else {
+            /// Insert
+            DoricViewNode *viewNode = [DoricViewNode create:self.doricContext withType:type];
+            viewNode.viewId = viewId;
+            [viewNode initWithSuperNode:self];
+            [viewNode blend:model[@"props"]];
+            [childNodes addObject:viewNode];
+            [self.view addSubview:viewNode.view];
         }
     }
 
+    NSUInteger count = childNodes.count;
+    for (NSUInteger idx = self.childViewIds.count; idx < count; idx++) {
+        DoricViewNode *viewNode = childNodes.lastObject;
+        [childNodes removeLastObject];
+        [viewNode.view removeFromSuperview];
+    }
+    self.childNodes = [childNodes copy];
 }
 
+- (void)blendSubNode:(NSDictionary *)subModel {
+    NSString *viewId = subModel[@"id"];
+    [self.childNodes enumerateObjectsUsingBlock:^(DoricViewNode *obj, NSUInteger idx, BOOL *stop) {
+        if ([viewId isEqualToString:obj.viewId]) {
+            [obj blend:subModel[@"props"]];
+            *stop = YES;
+        }
+    }];
+}
 @end

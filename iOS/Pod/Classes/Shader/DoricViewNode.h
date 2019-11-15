@@ -25,22 +25,24 @@
 #import "UIView+Doric.h"
 
 NS_ASSUME_NONNULL_BEGIN
-@class DoricGroupNode;
+@class DoricSuperNode;
 
 @interface DoricViewNode <V:UIView *> : DoricContextHolder
 
 @property(nonatomic, strong) V view;
 
-@property(nonatomic, weak) DoricGroupNode *parent;
+@property(nonatomic, weak) DoricSuperNode *superNode;
 @property(nonatomic) NSInteger index;
 
-@property(nonatomic, strong) NSString *viewId;
+@property(nonatomic, copy) NSString *viewId;
 
-@property(nonatomic, strong) DoricLayoutConfig *layoutConfig;
+@property(nonatomic, readonly) DoricLayoutConfig *layoutConfig;
 
-@property(nonatomic, strong, readonly) NSArray<NSString *> *idList;
+@property(nonatomic, readonly) NSArray<NSString *> *idList;
 
-- (V)build:(NSDictionary *)props;
+- (void)initWithSuperNode:(DoricSuperNode *)superNode;
+
+- (V)build;
 
 - (void)blend:(NSDictionary *)props;
 

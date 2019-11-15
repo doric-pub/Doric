@@ -25,7 +25,7 @@
 
 @implementation DoricStackNode
 
-- (DoricStackView *)build:(NSDictionary *)props {
+- (DoricStackView *)build {
     return [DoricStackView new];
 }
 
@@ -41,13 +41,13 @@
     return [[DoricStackConfig alloc] init];
 }
 
-- (void)blendChild:(DoricViewNode *)child layoutConfig:(NSDictionary *)layoutConfig {
-    [super blendChild:child layoutConfig:layoutConfig];
-    if (![child.layoutConfig isKindOfClass:DoricStackConfig.class]) {
+- (void)blendSubNode:(DoricViewNode *)subNode layoutConfig:(NSDictionary *)layoutConfig {
+    [super blendSubNode:subNode layoutConfig:layoutConfig];
+    if (![subNode.layoutConfig isKindOfClass:DoricStackConfig.class]) {
         DoricLog(@"blend DoricHLayoutView child error,layout params not match");
         return;
     }
-    DoricStackConfig *params = (DoricStackConfig *) child.layoutConfig;
+    DoricStackConfig *params = (DoricStackConfig *) subNode.layoutConfig;
     NSNumber *alignment = layoutConfig[@"alignment"];
     if (alignment) {
         params.alignment = (DoricGravity) [alignment integerValue];

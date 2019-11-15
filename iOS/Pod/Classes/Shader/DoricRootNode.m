@@ -25,7 +25,6 @@
 @implementation DoricRootNode
 - (void)setupRootView:(DoricStackView *)view {
     self.view = view;
-    self.layoutConfig = view.layoutConfig;
 }
 
 - (void)render:(NSDictionary *)props {

@@ -25,6 +25,8 @@
 #import "DoricGroupNode.h"
 #import "DoricRootNode.h"
 #import "DoricConstant.h"
+#import "DoricSuperNode.h"
+#import "DoricExtensions.h"
 
 void DoricAddEllipticArcPath(CGMutablePathRef path,
         CGPoint origin,
@@ -77,14 +79,23 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     return self;
 }
 
-- (UIView *)build:(NSDictionary *)props {
+
+- (void)initWithSuperNode:(DoricSuperNode *)superNode {
+    self.superNode = superNode;
+    self.view = [[self build] also:^(UIView *it) {
+        it.layoutConfig = [superNode generateDefaultLayoutParams];
+    }];
+}
+
+- (DoricLayoutConfig *)layoutConfig {
+    return self.view.layoutConfig;
+}
+
+- (UIView *)build {
     return [[UIView alloc] init];
 }
 
 - (void)blend:(NSDictionary *)props {
-    if (self.view == nil) {
-        self.view = [self build:props];
-    }
     self.view.layoutConfig = self.layoutConfig;
     for (NSString *key in props) {
         id value = props[key];
@@ -110,8 +121,8 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     } else if ([name isEqualToString:@"bgColor"]) {
         view.backgroundColor = DoricColor(prop);
     } else if ([name isEqualToString:@"layoutConfig"]) {
-        if (self.parent && [prop isKindOfClass:[NSDictionary class]]) {
-            [self.parent blendChild:self layoutConfig:prop];
+        if (self.superNode && [prop isKindOfClass:[NSDictionary class]]) {
+            [self.superNode blendSubNode:self layoutConfig:prop];
         }
     } else if ([name isEqualToString:@"onClick"]) {
         self.callbackIds[@"onClick"] = prop;
@@ -176,7 +187,7 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     DoricViewNode *node = self;
     do {
         [ret addObject:node.viewId];
-        node = node.parent;
+        node = node.superNode;
     } while (node && ![node isKindOfClass:[DoricRootNode class]]);
 
     return [[ret reverseObjectEnumerator] allObjects];
@@ -203,7 +214,7 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
 }
 
 - (void)requestLayout {
-    [self.parent requestLayout];
+    [self.superNode requestLayout];
 }
 
 @end

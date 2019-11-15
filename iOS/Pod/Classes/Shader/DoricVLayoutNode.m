@@ -25,7 +25,7 @@
 
 @implementation DoricVLayoutNode
 
-- (DoricVLayoutView *)build:(NSDictionary *)props {
+- (DoricVLayoutView *)build {
     return [DoricVLayoutView new];
 }
 
@@ -39,13 +39,13 @@
     }
 }
 
-- (void)blendChild:(DoricViewNode *)child layoutConfig:(NSDictionary *)layoutconfig {
-    [super blendChild:child layoutConfig:layoutconfig];
-    if (![child.layoutConfig isKindOfClass:DoricLinearConfig.class]) {
+- (void)blendSubNode:(DoricViewNode *)subNode layoutConfig:(NSDictionary *)layoutconfig {
+    [super blendSubNode:subNode layoutConfig:layoutconfig];
+    if (![subNode.layoutConfig isKindOfClass:DoricLinearConfig.class]) {
         DoricLog(@"blend DoricVLayoutView child error,layout params not match");
         return;
     }
-    DoricLinearConfig *params = (DoricLinearConfig *) child.layoutConfig;
+    DoricLinearConfig *params = (DoricLinearConfig *) subNode.layoutConfig;
     NSDictionary *margin = layoutconfig[@"margin"];
     if (margin) {
         params.margin = DoricMarginMake(

@@ -67,7 +67,7 @@ public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
                 if (id.equals(oldNode.getId())) {
                     //The same,skip
                 } else {
-                    //Find in remaining nodes
+                    //Find in remain nodes
                     int position = -1;
                     for (int start = idx + 1; start < mChildNodes.size(); start++) {
                         ViewNode node = mChildNodes.get(start);

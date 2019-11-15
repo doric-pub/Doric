@@ -31,9 +31,9 @@ typedef struct DoricMargin DoricMargin;
 DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bottom);
 
 typedef NS_ENUM(NSInteger, DoricLayoutSpec) {
-    DoricLayoutExact,
-    DoricLayoutWrapContent,
-    DoricLayoutAtMost,
+    DoricLayoutExact = 0,
+    DoricLayoutWrapContent = 1,
+    DoricLayoutAtMost = 2,
 };
 
 typedef NS_ENUM(NSInteger, DoricGravity) {

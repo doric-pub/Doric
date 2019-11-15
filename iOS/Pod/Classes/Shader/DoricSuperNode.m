@@ -39,6 +39,8 @@
             [self mixinSubNode:subModel];
             [self blendSubNode:subModel];
         }
+    } else {
+        [super blendView:view forPropName:name propValue:prop];
     }
 }
 

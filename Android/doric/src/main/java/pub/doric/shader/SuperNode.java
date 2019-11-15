@@ -85,10 +85,9 @@ public abstract class SuperNode<V extends View> extends ViewNode<V> {
     protected abstract void blendSubNode(JSObject subProperties);
 
     protected void blendSubLayoutConfig(ViewNode viewNode, JSObject jsObject) {
-        JSValue jsValue = jsObject.getProperty("margin");
+        JSValue margin = jsObject.getProperty("margin");
         JSValue widthSpec = jsObject.getProperty("widthSpec");
         JSValue heightSpec = jsObject.getProperty("heightSpec");
-
         ViewGroup.LayoutParams layoutParams = viewNode.getLayoutParams();
         if (widthSpec.isNumber()) {
             switch (widthSpec.asNumber().toInt()) {
@@ -114,20 +113,20 @@ public abstract class SuperNode<V extends View> extends ViewNode<V> {
                     break;
             }
         }
-        if (jsValue.isObject() && layoutParams instanceof ViewGroup.MarginLayoutParams) {
-            JSValue topVal = jsValue.asObject().getProperty("top");
+        if (margin.isObject() && layoutParams instanceof ViewGroup.MarginLayoutParams) {
+            JSValue topVal = margin.asObject().getProperty("top");
             if (topVal.isNumber()) {
                 ((ViewGroup.MarginLayoutParams) layoutParams).topMargin = DoricUtils.dp2px(topVal.asNumber().toFloat());
             }
-            JSValue leftVal = jsValue.asObject().getProperty("left");
+            JSValue leftVal = margin.asObject().getProperty("left");
             if (leftVal.isNumber()) {
                 ((ViewGroup.MarginLayoutParams) layoutParams).leftMargin = DoricUtils.dp2px(leftVal.asNumber().toFloat());
             }
-            JSValue rightVal = jsValue.asObject().getProperty("right");
+            JSValue rightVal = margin.asObject().getProperty("right");
             if (rightVal.isNumber()) {
                 ((ViewGroup.MarginLayoutParams) layoutParams).rightMargin = DoricUtils.dp2px(rightVal.asNumber().toFloat());
             }
-            JSValue bottomVal = jsValue.asObject().getProperty("bottom");
+            JSValue bottomVal = margin.asObject().getProperty("bottom");
             if (bottomVal.isNumber()) {
                 ((ViewGroup.MarginLayoutParams) layoutParams).bottomMargin = DoricUtils.dp2px(bottomVal.asNumber().toFloat());
             }

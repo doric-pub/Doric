@@ -21,7 +21,6 @@
 //
 
 #import "DoricVLayoutNode.h"
-#import "DoricUtil.h"
 
 @implementation DoricVLayoutNode
 
@@ -39,28 +38,4 @@
     }
 }
 
-- (void)blendSubNode:(DoricViewNode *)subNode layoutConfig:(NSDictionary *)layoutconfig {
-    [super blendSubNode:subNode layoutConfig:layoutconfig];
-    if (![subNode.layoutConfig isKindOfClass:DoricLinearConfig.class]) {
-        DoricLog(@"blend DoricVLayoutView child error,layout params not match");
-        return;
-    }
-    DoricLinearConfig *params = (DoricLinearConfig *) subNode.layoutConfig;
-    NSDictionary *margin = layoutconfig[@"margin"];
-    if (margin) {
-        params.margin = DoricMarginMake(
-                [(NSNumber *) margin[@"left"] floatValue],
-                [(NSNumber *) margin[@"top"] floatValue],
-                [(NSNumber *) margin[@"right"] floatValue],
-                [(NSNumber *) margin[@"bottom"] floatValue]);
-    }
-    NSNumber *alignment = layoutconfig[@"alignment"];
-    if (alignment) {
-        params.alignment = (DoricGravity) [alignment integerValue];
-    }
-}
-
-- (DoricLinearConfig *)generateDefaultLayoutParams {
-    return [[DoricLinearConfig alloc] init];
-}
 @end

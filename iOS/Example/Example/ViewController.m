@@ -30,7 +30,7 @@
     NSString *jsContent = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
     self.doricContext = [[DoricContext alloc] initWithScript:jsContent source:@"test.js"];
     [self.doricContext.rootNode setupRootView:[[DoricStackView new] also:^(DoricStackView *it) {
-        it.layoutConfig = [[DoricStackConfig alloc] initWithWidth:DoricLayoutAtMost height:DoricLayoutAtMost];
+        it.layoutConfig = [[DoricLayoutConfig alloc] initWithWidth:DoricLayoutAtMost height:DoricLayoutAtMost];
         [self.view addSubview:it];
     }]];
     [self.doricContext initContextWithWidth:self.view.width height:self.view.height];

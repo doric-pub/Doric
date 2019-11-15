@@ -20,8 +20,8 @@
 #import <Foundation/Foundation.h>
 #import "DoricViewNode.h"
 
-@interface DoricSuperNode<V:UIView *, P:DoricLayoutConfig *> : DoricViewNode<V>
-- (P)generateDefaultLayoutParams;
+@interface DoricSuperNode<V:UIView *> : DoricViewNode<V>
+- (DoricLayoutConfig *)generateDefaultLayoutParams;
 
 - (void)blendSubNode:(DoricViewNode *)subNode layoutConfig:(NSDictionary *)layoutConfig;
 

@@ -16,14 +16,6 @@
 import { LayoutConfig, Group, Property, IView } from "./view";
 import { Gravity } from "../util/gravity";
 
-export interface StackConfig extends LayoutConfig {
-
-}
-
-export interface LinearConfig extends LayoutConfig {
-    weight?: number
-}
-
 export interface IStack extends IView {
     gravity?: Gravity
 }

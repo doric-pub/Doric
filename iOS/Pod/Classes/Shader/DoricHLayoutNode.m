@@ -37,29 +37,4 @@
         [super blendView:view forPropName:name propValue:prop];
     }
 }
-
-- (void)blendSubNode:(DoricViewNode *)subNode layoutConfig:(NSDictionary *)layoutConfig {
-    [super blendSubNode:subNode layoutConfig:layoutConfig];
-    if (![subNode.layoutConfig isKindOfClass:DoricLinearConfig.class]) {
-        DoricLog(@"blend DoricHLayoutView child error,layout params not match");
-        return;
-    }
-    DoricLinearConfig *params = (DoricLinearConfig *) subNode.layoutConfig;
-    NSDictionary *margin = layoutConfig[@"margin"];
-    if (margin) {
-        params.margin = DoricMarginMake(
-                [(NSNumber *) margin[@"left"] floatValue],
-                [(NSNumber *) margin[@"top"] floatValue],
-                [(NSNumber *) margin[@"right"] floatValue],
-                [(NSNumber *) margin[@"bottom"] floatValue]);
-    }
-    NSNumber *alignment = layoutConfig[@"alignment"];
-    if (alignment) {
-        params.alignment = (DoricGravity) [alignment integerValue];
-    }
-}
-
-- (DoricLinearConfig *)generateDefaultLayoutParams {
-    return [[DoricLinearConfig alloc] init];
-}
 @end

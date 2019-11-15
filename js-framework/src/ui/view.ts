@@ -35,6 +35,8 @@ export interface LayoutConfig {
         bottom?: number,
     }
     alignment?: Gravity
+    //Only affective in VLayout or HLayout
+    weight?: number
 }
 
 export function Property(target: Object, propKey: string) {

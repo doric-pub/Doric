@@ -80,17 +80,20 @@
         }
     }];
 
-    if ([params isKindOfClass:DoricMarginConfig.class]) {
-        DoricMarginConfig *marginParams = (DoricMarginConfig *) params;
-        NSDictionary *margin = layoutConfig[@"margin"];
-        if (margin) {
-            marginParams.margin = DoricMarginMake(
-                    [(NSNumber *) margin[@"left"] floatValue],
-                    [(NSNumber *) margin[@"top"] floatValue],
-                    [(NSNumber *) margin[@"right"] floatValue],
-                    [(NSNumber *) margin[@"bottom"] floatValue]);
-        }
+    NSDictionary *margin = layoutConfig[@"margin"];
+    if (margin) {
+        params.margin = DoricMarginMake(
+                [(NSNumber *) margin[@"left"] floatValue],
+                [(NSNumber *) margin[@"top"] floatValue],
+                [(NSNumber *) margin[@"right"] floatValue],
+                [(NSNumber *) margin[@"bottom"] floatValue]);
     }
+
+    NSNumber *alignment = layoutConfig[@"alignment"];
+    if (alignment) {
+        params.alignment = (DoricGravity) [alignment integerValue];
+    }
+
 }
 
 - (void)blendSubNode:(NSDictionary *)subModel {

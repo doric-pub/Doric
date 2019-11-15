@@ -24,7 +24,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DoricGroupNode <V:UIView *, P:DoricLayoutConfig *> : DoricSuperNode<V, P>
+@interface DoricGroupNode <V:UIView *> : DoricSuperNode<V>
 @end
 
 NS_ASSUME_NONNULL_END

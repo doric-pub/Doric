@@ -31,6 +31,6 @@
     [self blend:props];
 }
 - (void)requestLayout {
-    [self.view requestLayout];
+    [self.view setNeedsLayout];
 }
 @end

@@ -43,7 +43,7 @@ export interface IList extends IView {
 
 export class List extends Superview implements IList {
     private cachedViews: Map<string, ListItem> = new Map
-
+    private ignoreDirtyCallOnce = false
     allSubviews() {
         return this.cachedViews.values()
     }
@@ -67,7 +67,17 @@ export class List extends Superview implements IList {
         return view
     }
 
+    isDirty() {
+        if (this.ignoreDirtyCallOnce) {
+            this.ignoreDirtyCallOnce = false
+            //Ignore the dirty call once.
+            return false
+        }
+        return super.isDirty()
+    }
+
     private renderBunchedItems(start: number, length: number) {
+        this.ignoreDirtyCallOnce = true;
         return new Array(Math.min(length, this.itemCount - start)).fill(0).map((_, idx) => {
             const listItem = this.getItem(start + idx)
             return listItem.toModel()

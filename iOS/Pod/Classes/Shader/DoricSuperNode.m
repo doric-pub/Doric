@@ -93,7 +93,10 @@
     if (alignment) {
         params.alignment = (DoricGravity) [alignment integerValue];
     }
-
+    NSNumber *weight = layoutConfig[@"weight"];
+    if (weight) {
+        params.weight = (DoricGravity) [weight integerValue];
+    }
 }
 
 - (void)blendSubNode:(NSDictionary *)subModel {

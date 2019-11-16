@@ -530,23 +530,3 @@ DoricHLayoutView *hLayout(NSArray <__kindof UIView *> *views) {
     layout.layoutConfig = [[DoricLayoutConfig alloc] initWithWidth:DoricLayoutWrapContent height:DoricLayoutWrapContent];
     return layout;
 }
-
-DoricVLayoutView *vLayoutWithBlock(NSArray <UIView *(^)()> *blocks) {
-    DoricVLayoutView *layout = [[DoricVLayoutView alloc] initWithFrame:CGRectZero];
-    UIView *(^block)();
-    for (block in blocks) {
-        [layout addSubview:block()];
-    }
-    layout.layoutConfig = [[DoricLayoutConfig alloc] initWithWidth:DoricLayoutWrapContent height:DoricLayoutWrapContent];
-    return layout;
-}
-
-DoricHLayoutView *hLayoutWithBlock(NSArray <UIView *(^)()> *blocks) {
-    DoricHLayoutView *layout = [[DoricHLayoutView alloc] initWithFrame:CGRectZero];
-    UIView *(^block)();
-    for (block in blocks) {
-        [layout addSubview:block()];
-    }
-    layout.layoutConfig = [[DoricLayoutConfig alloc] initWithWidth:DoricLayoutWrapContent height:DoricLayoutWrapContent];
-    return layout;
-}

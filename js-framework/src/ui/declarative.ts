@@ -20,6 +20,10 @@ import { IList, List } from './listview'
 
 export function text(config: IText) {
     const ret = new Text
+    ret.layoutConfig = {
+        widthSpec: LayoutSpec.WRAP_CONTENT,
+        heightSpec: LayoutSpec.WRAP_CONTENT,
+    }
     for (let key in config) {
         Reflect.set(ret, key, Reflect.get(config, key, config), ret)
     }
@@ -28,6 +32,10 @@ export function text(config: IText) {
 
 export function image(config: IImage) {
     const ret = new Image
+    ret.layoutConfig = {
+        widthSpec: LayoutSpec.WRAP_CONTENT,
+        heightSpec: LayoutSpec.WRAP_CONTENT,
+    }
     for (let key in config) {
         Reflect.set(ret, key, Reflect.get(config, key, config), ret)
     }

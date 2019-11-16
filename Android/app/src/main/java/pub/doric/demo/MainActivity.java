@@ -22,15 +22,16 @@ import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
 
+import pub.doric.dev.DevPanel;
 import pub.doric.DoricContext;
 import pub.doric.DoricDriver;
-import pub.doric.dev.DevPanel;
 import pub.doric.dev.LocalServer;
 import pub.doric.dev.event.EnterDebugEvent;
 import pub.doric.dev.event.QuitDebugEvent;
@@ -49,9 +50,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-        doricContext = DoricContext.create(this, DoricUtils.readAssetFile("demo/Snake.js"), "test");
+        doricContext = DoricContext.create(this, DoricUtils.readAssetFile("demo/ListDemo.js"), "test");
         doricContext.init(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//        doricContext.callEntity("log");
         doricContext.getRootNode().setRootView((FrameLayout) findViewById(R.id.root));
 
         LocalServer localServer = new LocalServer(getApplicationContext(), 8910);

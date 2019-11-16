@@ -36,8 +36,8 @@ public class LinearNode extends GroupNode<LinearLayout> {
     }
 
     @Override
-    protected void blendChild(ViewNode viewNode, JSObject layoutConfig) {
-        super.blendChild(viewNode, layoutConfig);
+    protected void blendSubLayoutConfig(ViewNode viewNode, JSObject layoutConfig) {
+        super.blendSubLayoutConfig(viewNode, layoutConfig);
         JSValue jsValue = layoutConfig.getProperty("alignment");
         if (jsValue.isNumber()) {
             ((LinearLayout.LayoutParams) viewNode.getLayoutParams()).gravity = jsValue.asNumber().toInt();
@@ -54,12 +54,12 @@ public class LinearNode extends GroupNode<LinearLayout> {
     }
 
     @Override
-    protected LinearLayout build(JSObject jsObject) {
+    protected LinearLayout build() {
         return new LinearLayout(getContext());
     }
 
     @Override
-    protected void blend(LinearLayout view, ViewGroup.LayoutParams params, String name, JSValue prop) {
+    protected void blend(LinearLayout view, String name, JSValue prop) {
         switch (name) {
             case "space":
                 ShapeDrawable shapeDrawable;
@@ -82,7 +82,7 @@ public class LinearNode extends GroupNode<LinearLayout> {
                 view.setGravity(prop.asNumber().toInt());
                 break;
             default:
-                super.blend(view, params, name, prop);
+                super.blend(view, name, prop);
                 break;
         }
     }

@@ -197,7 +197,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
             values.add(DoricUtils.toJavaValue(arg));
         }
         return mDoricJSE.invokeMethod(DoricConstant.GLOBAL_DORIC, method,
-                values.toArray(new JavaValue[values.size()]), true);
+                values.toArray(new JavaValue[values.size()]), false);
     }
 
     @Override

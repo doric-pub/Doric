@@ -36,8 +36,8 @@ public class StackNode extends GroupNode<FrameLayout> {
     }
 
     @Override
-    protected void blendChild(ViewNode viewNode, JSObject jsObject) {
-        super.blendChild(viewNode, jsObject);
+    protected void blendSubLayoutConfig(ViewNode viewNode, JSObject jsObject) {
+        super.blendSubLayoutConfig(viewNode, jsObject);
         JSValue jsValue = jsObject.getProperty("alignment");
         if (jsValue.isNumber()) {
             ((FrameLayout.LayoutParams) viewNode.getLayoutParams()).gravity = jsValue.asNumber().toInt();
@@ -45,18 +45,18 @@ public class StackNode extends GroupNode<FrameLayout> {
     }
 
     @Override
-    protected FrameLayout build(JSObject jsObject) {
+    protected FrameLayout build() {
         return new FrameLayout(getContext());
     }
 
     @Override
-    protected void blend(FrameLayout view, ViewGroup.LayoutParams layoutParams, String name, JSValue prop) {
+    protected void blend(FrameLayout view, String name, JSValue prop) {
         switch (name) {
             case "gravity":
                 view.setForegroundGravity(prop.asNumber().toInt());
                 break;
             default:
-                super.blend(view, layoutParams, name, prop);
+                super.blend(view, name, prop);
         }
     }
 

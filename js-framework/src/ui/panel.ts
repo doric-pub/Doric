@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 import './../runtime/global'
-import { View, Group, Root } from "./view";
-import { loge, log } from '../util/log';
+import { View, Group } from "./view";
+import { loge } from '../util/log';
 import { Model } from '../util/types';
+import { Root } from './layout';
 
 
 export function NativeCall(target: Panel, propertyKey: string, descriptor: PropertyDescriptor) {
@@ -93,13 +94,13 @@ export abstract class Panel {
         for (let i = 2; i < arguments.length; i++) {
             argumentsList.push(arguments[i])
         }
-        Reflect.apply(v.responseCallback, v, argumentsList)
+        return Reflect.apply(v.responseCallback, v, argumentsList)
     }
 
     private retrospectView(ids: string[]): View {
         return ids.reduce((acc: View, cur) => {
-            if (Reflect.has(acc, "subViewById")) {
-                return Reflect.apply(Reflect.get(acc, "subViewById"), acc, [cur])
+            if (Reflect.has(acc, "subviewById")) {
+                return Reflect.apply(Reflect.get(acc, "subviewById"), acc, [cur])
             }
             return acc
         }, this.__root__)
@@ -112,13 +113,13 @@ export abstract class Panel {
     }
 
     private hookBeforeNativeCall() {
+        this.__root__.clean()
     }
 
     private hookAfterNativeCall() {
         if (this.__root__.isDirty()) {
             const model = this.__root__.toModel()
             this.nativeRender(model)
-            this.__root__.clean()
         }
     }
 

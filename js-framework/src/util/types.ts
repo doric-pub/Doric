@@ -35,7 +35,7 @@ export function obj2Model(obj: Model): Model {
     }
 }
 
-type _M = string | number | boolean | Modeling | { [index: string]: Model | undefined }
+type _M = string | number | boolean | Modeling | { [index: string]: Model } | undefined
 export type Model = _M | Array<_M>
 
 export type Binder<T> = (v: T) => void

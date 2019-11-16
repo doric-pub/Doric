@@ -14,24 +14,31 @@
  * limitations under the License.
  */
 //
-//  DoricUtil.h
-//  Doric
-//
-//  Created by pengfei.zhou on 2019/7/26.
+// Created by pengfei.zhou on 2019/11/15.
 //
 
-#import <Foundation/Foundation.h>
+#import "DoricListItemNode.h"
+#import "DoricExtensions.h"
 
-void DoricLog(NSString *_Nonnull format, ...);
+@interface DoricListItemNode ()
+@end
 
-UIColor *_Nonnull DoricColor(NSNumber *_Nonnull number);
+@interface DoricListItemView : DoricStackView
+@end
 
-NSBundle *_Nonnull DoricBundle(void);
+@implementation DoricListItemView
+@end
 
-#ifndef DC_LOCK
-#define DC_LOCK(lock) dispatch_semaphore_wait(lock, DISPATCH_TIME_FOREVER);
-#endif
 
-#ifndef DC_UNLOCK
-#define DC_UNLOCK(lock) dispatch_semaphore_signal(lock);
-#endif
+@implementation DoricListItemNode
+- (instancetype)initWithContext:(DoricContext *)doricContext {
+    if (self = [super initWithContext:doricContext]) {
+        self.reusable = YES;
+    }
+    return self;
+}
+
+- (DoricStackView *)build {
+    return [DoricListItemView new];
+}
+@end

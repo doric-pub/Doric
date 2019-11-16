@@ -13,30 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pub.doric.shader;
+package pub.doric.shader.list;
 
-import android.widget.LinearLayout;
+import android.widget.FrameLayout;
+
+import com.github.pengfeizhou.jscore.JSValue;
 
 import pub.doric.DoricContext;
 import pub.doric.extension.bridge.DoricPlugin;
-
-import com.github.pengfeizhou.jscore.JSObject;
+import pub.doric.shader.StackNode;
 
 /**
- * @Description: com.github.penfeizhou.doric.shader
+ * @Description: com.github.penfeizhou.doric.widget
  * @Author: pengfei.zhou
- * @CreateDate: 2019-07-23
+ * @CreateDate: 2019-11-12
  */
-@DoricPlugin(name = "HLayout")
-public class HLayoutNode extends LinearNode {
-    public HLayoutNode(DoricContext doricContext) {
+@DoricPlugin(name = "ListItem")
+public class ListItemNode extends StackNode {
+    public String identifier = "";
+
+    public ListItemNode(DoricContext doricContext) {
         super(doricContext);
+        this.mReusable = true;
     }
 
     @Override
-    protected LinearLayout build() {
-        LinearLayout linearLayout = super.build();
-        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-        return linearLayout;
+    protected void blend(FrameLayout view, String name, JSValue prop) {
+        if ("identifier".equals(name)) {
+            this.identifier = prop.asString().value();
+        } else {
+            super.blend(view, name, prop);
+        }
     }
 }

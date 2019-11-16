@@ -25,7 +25,7 @@
 #import "DoricGroupNode.h"
 
 @implementation DoricTextNode
-- (id)build:(NSDictionary *)props {
+- (UILabel *)build {
     return [[UILabel alloc] init];
 }
 

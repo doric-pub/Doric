@@ -25,30 +25,33 @@
 #import "UIView+Doric.h"
 
 NS_ASSUME_NONNULL_BEGIN
-@class DoricGroupNode;
+@class DoricSuperNode;
 
 @interface DoricViewNode <V:UIView *> : DoricContextHolder
 
 @property(nonatomic, strong) V view;
-
-@property(nonatomic, weak) DoricGroupNode *parent;
+@property(nonatomic, weak) DoricSuperNode *superNode;
 @property(nonatomic) NSInteger index;
 
-@property(nonatomic, strong) NSString *viewId;
+@property(nonatomic, copy) NSString *viewId;
 
-@property(nonatomic, strong) DoricLayoutConfig *layoutConfig;
+@property(nonatomic, copy) NSString *type;
 
-@property(nonatomic, strong, readonly) NSArray<NSString *> *idList;
+@property(nonatomic, readonly) DoricLayoutConfig *layoutConfig;
 
-- (V)build:(NSDictionary *)props;
+@property(nonatomic, readonly) NSArray<NSString *> *idList;
+
+- (void)initWithSuperNode:(DoricSuperNode *)superNode;
+
+- (V)build;
 
 - (void)blend:(NSDictionary *)props;
 
 - (void)blendView:(V)view forPropName:(NSString *)name propValue:(id)prop;
 
-- (void)callJSResponse:(NSString *)funcId, ...;
+- (DoricAsyncResult *)callJSResponse:(NSString *)funcId, ...;
 
-+ (DoricViewNode *)create:(DoricContext *)context withType:(NSString *)type;
++ (__kindof DoricViewNode *)create:(DoricContext *)context withType:(NSString *)type;
 
 - (void)requestLayout;
 @end

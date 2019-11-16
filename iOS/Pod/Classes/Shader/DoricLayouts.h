@@ -31,9 +31,9 @@ typedef struct DoricMargin DoricMargin;
 DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bottom);
 
 typedef NS_ENUM(NSInteger, DoricLayoutSpec) {
-    DoricLayoutExact,
-    DoricLayoutWrapContent,
-    DoricLayoutAtMost,
+    DoricLayoutExact = 0,
+    DoricLayoutWrapContent = 1,
+    DoricLayoutAtMost = 2,
 };
 
 typedef NS_ENUM(NSInteger, DoricGravity) {
@@ -54,43 +54,31 @@ typedef NS_ENUM(NSInteger, DoricGravity) {
 @interface DoricLayoutConfig : NSObject
 @property(nonatomic, assign) DoricLayoutSpec widthSpec;
 @property(nonatomic, assign) DoricLayoutSpec heightSpec;
+@property(nonatomic) DoricMargin margin;
 @property(nonatomic, assign) DoricGravity alignment;
+@property(nonatomic, assign) NSUInteger weight;
 
 - (instancetype)init;
 
 - (instancetype)initWithWidth:(DoricLayoutSpec)width height:(DoricLayoutSpec)height;
 
-@end
-
-@interface DoricStackConfig : DoricLayoutConfig
-@end
-
-@interface DoricMarginConfig : DoricLayoutConfig
-@property(nonatomic) DoricMargin margin;
-
 - (instancetype)initWithWidth:(DoricLayoutSpec)width height:(DoricLayoutSpec)height margin:(DoricMargin)margin;
-@end
 
-@interface DoricLinearConfig : DoricMarginConfig
-@property(nonatomic, assign) NSUInteger weight;
 @end
 
 
-@interface DoricLayoutContainer <T :DoricLayoutConfig *> : UIView
-
-- (T)configForChild:(__kindof UIView *)child;
-
-- (void)layout;
-
-- (void)requestLayout;
-@end
-
-@interface DoricStackView : DoricLayoutContainer<DoricStackConfig *>
+@interface DoricLayoutContainer : UIView
 @property(nonatomic, assign) DoricGravity gravity;
+
+- (void)layout:(CGSize)targetSize;
+
+- (CGSize)sizeContent:(CGSize)size;
 @end
 
-@interface DoricLinearView : DoricLayoutContainer<DoricLinearConfig *>
-@property(nonatomic, assign) DoricGravity gravity;
+@interface DoricStackView : DoricLayoutContainer
+@end
+
+@interface DoricLinearView : DoricLayoutContainer
 @property(nonatomic, assign) CGFloat space;
 @end
 

@@ -35,13 +35,36 @@ export interface LayoutConfig {
         bottom?: number,
     }
     alignment?: Gravity
+    //Only affective in VLayout or HLayout
+    weight?: number
 }
 
 export function Property(target: Object, propKey: string) {
     Reflect.defineMetadata(propKey, true, target)
 }
 
-export abstract class View implements Modeling {
+export interface IView {
+    width?: number
+    height?: number
+    bgColor?: Color | GradientColor
+    corners?: number | { leftTop?: number; rightTop?: number; leftBottom?: number; rightBottom?: number }
+    border?: { width: number; color: Color; }
+    shadow?: { color: Color; opacity: number; radius: number; offsetX: number; offsetY: number }
+    alpha?: number
+    hidden?: boolean
+    padding?: {
+        left?: number,
+        right?: number,
+        top?: number,
+        bottom?: number,
+    }
+    layoutConfig?: LayoutConfig
+    onClick?: Function
+    identifier?: string
+}
+
+
+export abstract class View implements Modeling, IView {
     @Property
     width: number = 0
 
@@ -89,13 +112,7 @@ export abstract class View implements Modeling {
     @Property
     onClick?: Function
 
-    /**
-     * Set to reuse native view
-     */
-    @Property
-    identifier?: string
-
-    parent?: Group
+    superview?: Superview
 
     callbacks: Map<String, Function> = new Map
 
@@ -106,7 +123,10 @@ export abstract class View implements Modeling {
     }
 
     private id2Callback(id: string) {
-        const f = this.callbacks.get(id)
+        let f = this.callbacks.get(id)
+        if (f === undefined) {
+            f = Reflect.get(this, id) as Function
+        }
         return f
     }
 
@@ -173,7 +193,11 @@ export abstract class View implements Modeling {
     }
     /** Anchor end*/
 
-    __dirty_props__: { [index: string]: Model | undefined } = {}
+    private __dirty_props__: { [index: string]: Model | undefined } = {}
+
+    get dirtyProps() {
+        return this.__dirty_props__
+    }
 
     nativeViewModel = {
         id: this.viewId,
@@ -188,9 +212,6 @@ export abstract class View implements Modeling {
             newV = obj2Model(newV)
         }
         this.__dirty_props__[propKey] = newV
-        if (this.parent instanceof Group) {
-            this.parent.onChildPropertyChanged(this)
-        }
     }
 
     clean() {
@@ -212,7 +233,7 @@ export abstract class View implements Modeling {
             for (let i = 1; i < arguments.length; i++) {
                 argumentsList.push(arguments[i])
             }
-            Reflect.apply(f, this, argumentsList)
+            return Reflect.apply(f, this, argumentsList)
         } else {
             loge(`Cannot find callback:${id} for ${JSON.stringify(this.toModel())}`)
         }
@@ -221,249 +242,80 @@ export abstract class View implements Modeling {
     toModel() {
         return this.nativeViewModel
     }
+
     let(block: (it: this) => void) {
         block(this)
     }
+
     also(block: (it: this) => void) {
         block(this)
         return this
     }
+
     in(group: Group) {
         group.addChild(this)
     }
 }
 
-export interface StackConfig extends LayoutConfig {
-
-}
-
-export interface LinearConfig extends LayoutConfig {
-    weight?: number
-}
-
-export interface SuperView {
-    subViewById(id: string): View | undefined
-}
-
-export abstract class Group extends View implements SuperView {
-    @Property
-    readonly children: View[] = new Proxy([], {
-        set: (target, index, value) => {
-            if (index === 'length') {
-                this.getDirtyChildrenModel().length = value as number
-            } else if (typeof index === 'string'
-                && parseInt(index) >= 0
-                && value instanceof View) {
-                value.parent = this
-                const childrenModel = this.getDirtyChildrenModel()
-                childrenModel[parseInt(index)] = value.nativeViewModel
-            }
-            if (this.parent) {
-                this.parent.onChildPropertyChanged(this)
-            }
-
-            return Reflect.set(target, index, value)
-        }
-    })
-
-    subViewById(id: string): View | undefined {
-        for (let view of this.children) {
-            if (view.viewId === id) {
-                return view
+export abstract class Superview extends View {
+    subviewById(id: string): View | undefined {
+        for (let v of this.allSubviews()) {
+            if (v.viewId === id) {
+                return v
             }
         }
-        return undefined
     }
-    addChild(view: View) {
-        this.children.push(view)
+    abstract allSubviews(): Iterable<View>
+
+    isDirty() {
+        if (super.isDirty()) {
+            return true
+        } else {
+            for (const v of this.allSubviews()) {
+                if (v.isDirty()) {
+                    return true
+                }
+            }
+        }
+        return false
     }
 
     clean() {
-        this.children.forEach(e => { e.clean() })
+        for (let v of this.allSubviews()) {
+            v.clean()
+        }
         super.clean()
     }
 
-    getDirtyChildrenModel(): Model[] {
-        if (this.__dirty_props__.children === undefined) {
-            this.__dirty_props__.children = []
-        }
-        return this.__dirty_props__.children as Model[]
-    }
-
     toModel() {
-        if (this.__dirty_props__.children != undefined) {
-            (this.__dirty_props__.children as Model[]).length = this.children.length
+        const subviews = []
+        for (let v of this.allSubviews()) {
+            if (v.isDirty()) {
+                subviews.push(v.toModel())
+            }
         }
+        this.dirtyProps.subviews = subviews
         return super.toModel()
     }
+}
 
-    onChildPropertyChanged(child: View) {
-        this.getDirtyChildrenModel()[this.children.indexOf(child)] = child.nativeViewModel
-        this.getDirtyChildrenModel().length = this.children.length
-        if (this.parent) {
-            this.parent.onChildPropertyChanged(this)
+export abstract class Group extends Superview {
+
+    readonly children: View[] = new Proxy([], {
+        set: (target, index, value) => {
+            const ret = Reflect.set(target, index, value)
+            // Let getDirty return true
+            this.dirtyProps.children = this.children.map(e => e.viewId)
+            return ret
         }
+    })
+
+    allSubviews() {
+        return this.children
     }
 
-    isDirty() {
-        return super.isDirty()
-    }
-}
-
-export class Stack extends Group {
-    @Property
-    gravity?: Gravity
-}
-
-export class Scroller extends View implements SuperView {
-    @Property
-    contentView?: View
-
-    subViewById(id: string): View | undefined {
-        return this.contentView
+    addChild(view: View) {
+        this.children.push(view)
     }
 }
 
-export class Root extends Stack {
-
-}
-class LinearLayout extends Group {
-    @Property
-    space?: number
-
-    @Property
-    gravity?: Gravity
-}
-
-export class VLayout extends LinearLayout {
-}
-
-export class HLayout extends LinearLayout {
-}
-
-export class Text extends View {
-    @Property
-    text?: string
-
-    @Property
-    textColor?: Color
-
-    @Property
-    textSize?: number
-
-    @Property
-    maxLines?: number
-
-    @Property
-    textAlignment?: Gravity
-}
-
-export class Image extends View {
-    @Property
-    imageUrl?: string
-}
-
-export class List extends View implements SuperView {
-    private cachedViews: Map<string, View> = new Map
-
-    subViewById(id: string): View | undefined {
-        return this.cachedViews.get(id)
-    }
-
-    @Property
-    itemCount = 0
-
-    @Property
-    renderItem!: (index: number) => View
-
-
-    private getItem(itemIdx: number) {
-        let view = this.cachedViews.get(`${itemIdx}`)
-        if (view === undefined) {
-            view = this.renderItem(itemIdx)
-            this.cachedViews.set(`${itemIdx}`, view)
-        }
-        return view
-    }
-
-    @Property
-    private renderBunchedItems(items: number[]): View[] {
-        return items.map(e => this.getItem(e))
-    }
-}
-
-export class SectionList extends View implements SuperView {
-    private cachedViews: Map<string, View> = new Map
-
-    subViewById(id: string): View | undefined {
-        return this.cachedViews.get(id)
-    }
-    @Property
-    sectionRowsCount: number[] = []
-
-    @Property
-    renderSectionHeader!: (sectionIdx: number) => View
-
-    @Property
-    renderItem!: (sectionIdx: number, itemIdx: number) => View
-
-    @Property
-    sectionHeaderSticky = true
-
-    setupSectionRows(sectionCount: number, numberOfSection: (section: number) => number) {
-        this.sectionRowsCount = [...Array(sectionCount).keys()].map(e => numberOfSection(e))
-    }
-
-    private getItem(sectionIdx: number, itemIdx: number) {
-        let view = this.cachedViews.get(`${sectionIdx}:${itemIdx}`)
-        if (view === undefined) {
-            view = this.renderItem(sectionIdx, itemIdx)
-            this.cachedViews.set(`${sectionIdx}:${itemIdx}`, view)
-        }
-        return view
-    }
-
-    private getSectionHeader(sectionIdx: number) {
-        let view = this.cachedViews.get(`${sectionIdx}:`)
-        if (view === undefined) {
-            view = this.renderSectionHeader(sectionIdx)
-            this.cachedViews.set(`${sectionIdx}:`, view)
-        }
-        return view
-    }
-
-    @Property
-    private renderBunchedItems(items: Array<{ itemIdx: number, sectionIdx: number }>,
-        headers: number[]): { items: View[], headers: View[] } {
-        return {
-            items: items.map(e => this.getItem(e.sectionIdx, e.itemIdx)),
-            headers: headers.map(e => this.getSectionHeader(e))
-        }
-    }
-}
-
-export class Slide extends View implements SuperView {
-    @Property
-    pageCount = 0
-
-    @Property
-    renderPage!: (pageIdx: number) => View
-
-    private cachedViews: Map<string, View> = new Map
-    subViewById(id: string): View | undefined {
-        return this.cachedViews.get(id)
-    }
-    private getPage(pageIdx: number) {
-        let view = this.cachedViews.get(`${pageIdx}`)
-        if (view === undefined) {
-            view = this.renderPage(pageIdx)
-            this.cachedViews.set(`${pageIdx}`, view)
-        }
-        return view
-    }
-
-    @Property
-    private renderBunchedPages(pages: number[]): View[] {
-        return pages.map(e => this.getPage(e))
-    }
-}

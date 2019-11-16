@@ -25,7 +25,7 @@
 @implementation DoricContextHolder
 
 - (instancetype)initWithContext:(DoricContext *)doricContext {
-    if (self = [super init]) {
+    if (self = [self init]) {
         _doricContext = doricContext;
     }
     return self;

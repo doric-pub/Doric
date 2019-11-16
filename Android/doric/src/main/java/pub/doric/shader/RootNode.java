@@ -36,12 +36,17 @@ public class RootNode extends StackNode {
     }
 
     @Override
-    public View getView() {
+    public View getDoricLayer() {
         return mView;
     }
 
     public void setRootView(FrameLayout rootView) {
         this.mView = rootView;
+        mLayoutParams = rootView.getLayoutParams();
+        if (mLayoutParams == null) {
+            mLayoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            rootView.setLayoutParams(mLayoutParams);
+        }
     }
 
     @Override
@@ -50,6 +55,6 @@ public class RootNode extends StackNode {
     }
 
     public void render(JSObject props) {
-        blend(props, getLayoutParams());
+        blend(props);
     }
 }

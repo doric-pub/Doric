@@ -20,8 +20,6 @@ import android.widget.LinearLayout;
 import pub.doric.DoricContext;
 import pub.doric.extension.bridge.DoricPlugin;
 
-import com.github.pengfeizhou.jscore.JSObject;
-
 /**
  * @Description: com.github.penfeizhou.doric.shader
  * @Author: pengfei.zhou
@@ -34,8 +32,8 @@ public class VLayoutNode extends LinearNode {
     }
 
     @Override
-    protected LinearLayout build(JSObject jsObject) {
-        LinearLayout linearLayout = super.build(jsObject);
+    protected LinearLayout build() {
+        LinearLayout linearLayout = super.build();
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         return linearLayout;
     }

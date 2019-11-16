@@ -16,13 +16,11 @@
 package pub.doric.shader;
 
 import android.util.TypedValue;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import pub.doric.DoricContext;
 import pub.doric.extension.bridge.DoricPlugin;
 
-import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
 /**
@@ -37,12 +35,12 @@ public class TextNode extends ViewNode<TextView> {
     }
 
     @Override
-    protected TextView build(JSObject jsObject) {
+    protected TextView build() {
         return new TextView(getContext());
     }
 
     @Override
-    protected void blend(TextView view, ViewGroup.LayoutParams params, String name, JSValue prop) {
+    protected void blend(TextView view, String name, JSValue prop) {
         switch (name) {
             case "text":
                 view.setText(prop.asString().toString());
@@ -57,7 +55,7 @@ public class TextNode extends ViewNode<TextView> {
                 view.setGravity(prop.asNumber().toInt());
                 break;
             default:
-                super.blend(view, params, name, prop);
+                super.blend(view, name, prop);
                 break;
         }
     }

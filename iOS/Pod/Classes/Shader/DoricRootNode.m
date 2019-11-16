@@ -25,13 +25,12 @@
 @implementation DoricRootNode
 - (void)setupRootView:(DoricStackView *)view {
     self.view = view;
-    self.layoutConfig = view.layoutConfig;
 }
 
 - (void)render:(NSDictionary *)props {
     [self blend:props];
 }
 - (void)requestLayout {
-    [self.view requestLayout];
+    [self.view setNeedsLayout];
 }
 @end

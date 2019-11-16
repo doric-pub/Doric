@@ -43,6 +43,8 @@ typedef void(^DoricFinishCallback)(void);
 - (BOOL)hasResult;
 
 - (R)getResult;
+
+- (R)waitUntilResult;
 @end
 
 NS_ASSUME_NONNULL_END

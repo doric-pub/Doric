@@ -39,15 +39,10 @@
     } else if ([name isEqualToString:@"textAlignment"]) {
         DoricGravity gravity = (DoricGravity) [(NSNumber *) prop integerValue];
         NSTextAlignment alignment = NSTextAlignmentCenter;
-        switch (gravity) {
-            case LEFT:
-                alignment = NSTextAlignmentLeft;
-                break;
-            case RIGHT:
-                alignment = NSTextAlignmentRight;
-                break;
-            default:
-                break;
+        if ((gravity & LEFT) == LEFT) {
+            alignment = NSTextAlignmentLeft;
+        } else if ((gravity & RIGHT) == RIGHT) {
+            alignment = NSTextAlignmentRight;
         }
         view.textAlignment = alignment;
     } else {

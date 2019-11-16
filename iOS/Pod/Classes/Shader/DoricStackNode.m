@@ -29,10 +29,6 @@
 }
 
 - (void)blendView:(DoricStackView *)view forPropName:(NSString *)name propValue:(id)prop {
-    if ([name isEqualToString:@"gravity"]) {
-        view.gravity = (DoricGravity) [(NSNumber *) prop integerValue];
-    } else {
-        [super blendView:view forPropName:name propValue:prop];
-    }
+    [super blendView:view forPropName:name propValue:prop];
 }
 @end

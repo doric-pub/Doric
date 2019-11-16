@@ -51,13 +51,7 @@ public class StackNode extends GroupNode<FrameLayout> {
 
     @Override
     protected void blend(FrameLayout view, String name, JSValue prop) {
-        switch (name) {
-            case "gravity":
-                view.setForegroundGravity(prop.asNumber().toInt());
-                break;
-            default:
-                super.blend(view, name, prop);
-        }
+        super.blend(view, name, prop);
     }
 
     @Override

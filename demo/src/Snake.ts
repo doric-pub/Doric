@@ -189,6 +189,10 @@ class SnakeView extends ViewHolder<SnakeModel> {
                         textSize: 30,
                         textAlignment: new Gravity().center(),
                         bgColor: Color.parse('#ffff00'),
+                        layoutConfig: {
+                            widthSpec: LayoutSpec.EXACTLY,
+                            heightSpec: LayoutSpec.EXACTLY,
+                        },
                     }).also(it => this.up = it)
                 ]).also(it => {
                     it.layoutConfig = {
@@ -204,6 +208,10 @@ class SnakeView extends ViewHolder<SnakeModel> {
                         textSize: 30,
                         textAlignment: new Gravity().center(),
                         bgColor: Color.parse('#ffff00'),
+                        layoutConfig: {
+                            widthSpec: LayoutSpec.EXACTLY,
+                            heightSpec: LayoutSpec.EXACTLY,
+                        },
                     }).also(it => this.left = it),
                     text({
                         width: 50,
@@ -212,6 +220,10 @@ class SnakeView extends ViewHolder<SnakeModel> {
                         textSize: 30,
                         textAlignment: new Gravity().center(),
                         bgColor: Color.parse('#ffff00'),
+                        layoutConfig: {
+                            widthSpec: LayoutSpec.EXACTLY,
+                            heightSpec: LayoutSpec.EXACTLY,
+                        },
                     }).also(it => this.down = it),
                     text({
                         width: 50,
@@ -220,6 +232,10 @@ class SnakeView extends ViewHolder<SnakeModel> {
                         textSize: 30,
                         textAlignment: new Gravity().center(),
                         bgColor: Color.parse('#ffff00'),
+                        layoutConfig: {
+                            widthSpec: LayoutSpec.EXACTLY,
+                            heightSpec: LayoutSpec.EXACTLY,
+                        },
                     }).also(it => this.right = it),
                 ]).also(it => {
                     it.layoutConfig = {
@@ -246,16 +262,6 @@ class SnakeView extends ViewHolder<SnakeModel> {
             }
             it.gravity = new Gravity().centerX()
         }).in(root)
-    }
-
-    buildController(text: string) {
-        const ret = new Text
-        ret.width = ret.height = 50
-        ret.bgColor = Color.parse('#ffff00')
-        ret.text = text
-        ret.textSize = 30
-        ret.textAlignment = new Gravity().center()
-        return ret
     }
 
     bind(state: SnakeModel): void {

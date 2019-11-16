@@ -17,12 +17,9 @@ import { LayoutConfig, Group, Property, IView } from "./view";
 import { Gravity } from "../util/gravity";
 
 export interface IStack extends IView {
-    gravity?: Gravity
 }
 
 export class Stack extends Group implements IStack {
-    @Property
-    gravity?: Gravity
 }
 
 

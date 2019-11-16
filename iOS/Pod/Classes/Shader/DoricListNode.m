@@ -83,7 +83,7 @@
 
     DoricTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseId ?: @"doriccell"];
     if (!cell) {
-        cell = [[DoricTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseId];
+        cell = [[DoricTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseId ?: @"doriccell"];
         DoricListItemNode *listItemNode = [[DoricListItemNode alloc] initWithContext:self.doricContext];
         [listItemNode initWithSuperNode:self];
         cell.doricListItemNode = listItemNode;

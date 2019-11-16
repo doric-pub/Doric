@@ -81,7 +81,7 @@
     NSDictionary *props = model[@"props"];
     NSString *reuseId = props[@"identifier"];
 
-    DoricTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseId];
+    DoricTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseId ?: @"doriccell"];
     if (!cell) {
         cell = [[DoricTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseId];
         DoricListItemNode *listItemNode = [[DoricListItemNode alloc] initWithContext:self.doricContext];
@@ -132,7 +132,9 @@
         if ([viewId isEqualToString:obj]) {
             *stop = YES;
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[key integerValue] inSection:0];
-            [self.view reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+            [UIView performWithoutAnimation:^{
+                [self.view reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+            }];
         }
     }];
 }
@@ -144,6 +146,8 @@
     }
     self.itemHeights[@(position)] = @(height);
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:position inSection:0];
-    [self.view reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+    [UIView performWithoutAnimation:^{
+        [self.view reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+    }];
 }
 @end

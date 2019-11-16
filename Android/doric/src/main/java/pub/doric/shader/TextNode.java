@@ -16,6 +16,7 @@
 package pub.doric.shader;
 
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.widget.TextView;
 
 import pub.doric.DoricContext;
@@ -52,7 +53,7 @@ public class TextNode extends ViewNode<TextView> {
                 view.setTextColor(prop.asNumber().toInt());
                 break;
             case "textAlignment":
-                view.setGravity(prop.asNumber().toInt());
+                view.setGravity(prop.asNumber().toInt() | Gravity.CENTER_VERTICAL);
                 break;
             default:
                 super.blend(view, name, prop);

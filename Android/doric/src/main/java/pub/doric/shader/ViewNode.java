@@ -19,6 +19,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import pub.doric.DoricContext;
 import pub.doric.DoricRegistry;
@@ -66,7 +67,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         this.mId = id;
     }
 
-    public String getType(){
+    public String getType() {
         return mType;
     }
 
@@ -93,6 +94,14 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         } else {
             params = mLayoutParams;
         }
+        if (mLayoutParams instanceof LinearLayout.LayoutParams && ((LinearLayout.LayoutParams) mLayoutParams).weight > 0) {
+            if (mSuperNode instanceof VLayoutNode) {
+                params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+            } else if (mSuperNode instanceof HLayoutNode) {
+                params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            }
+        }
+
         mView.setLayoutParams(params);
     }
 

@@ -108,26 +108,16 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     protected void blend(T view, String name, JSValue prop) {
         switch (name) {
             case "width":
-                if (mLayoutParams.width >= 0) {
-                    mLayoutParams.width = DoricUtils.dp2px(prop.asNumber().toFloat());
-                }
+                setWidth(prop.asNumber().toFloat());
                 break;
             case "height":
-                if (mLayoutParams.height >= 0) {
-                    mLayoutParams.height = DoricUtils.dp2px(prop.asNumber().toFloat());
-                }
+                setHeight(prop.asNumber().toFloat());
                 break;
             case "x":
-                if (mLayoutParams instanceof ViewGroup.MarginLayoutParams) {
-                    float x = prop.asNumber().toFloat();
-                    ((ViewGroup.MarginLayoutParams) mLayoutParams).leftMargin = DoricUtils.dp2px(x);
-                }
+                setX(prop.asNumber().toFloat());
                 break;
             case "y":
-                if (mLayoutParams instanceof ViewGroup.MarginLayoutParams) {
-                    float y = prop.asNumber().toFloat();
-                    ((ViewGroup.MarginLayoutParams) mLayoutParams).topMargin = DoricUtils.dp2px(y);
-                }
+                setY(prop.asNumber().toFloat());
                 break;
             case "bgColor":
                 view.setBackgroundColor(prop.asNumber().toInt());
@@ -142,9 +132,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 });
                 break;
             case "layoutConfig":
-                if (prop.isObject() && mSuperNode != null) {
-                    mSuperNode.blendSubLayoutConfig(this, prop.asObject());
-                }
+                setLayoutConfig(prop.asObject());
                 break;
             case "border":
                 if (prop.isObject() && doricLayer != null) {
@@ -224,5 +212,35 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
 
     public String getId() {
         return mId;
+    }
+
+    protected void setWidth(float width) {
+        if (mLayoutParams.width >= 0) {
+            mLayoutParams.width = DoricUtils.dp2px(width);
+        }
+    }
+
+    protected void setHeight(float height) {
+        if (mLayoutParams.height >= 0) {
+            mLayoutParams.height = DoricUtils.dp2px(height);
+        }
+    }
+
+    protected void setX(float x) {
+        if (mLayoutParams instanceof ViewGroup.MarginLayoutParams) {
+            ((ViewGroup.MarginLayoutParams) mLayoutParams).leftMargin = DoricUtils.dp2px(x);
+        }
+    }
+
+    protected void setY(float y) {
+        if (mLayoutParams instanceof ViewGroup.MarginLayoutParams) {
+            ((ViewGroup.MarginLayoutParams) mLayoutParams).topMargin = DoricUtils.dp2px(y);
+        }
+    }
+
+    protected void setLayoutConfig(JSObject layoutConfig) {
+        if (mSuperNode != null) {
+            mSuperNode.blendSubLayoutConfig(this, layoutConfig);
+        }
     }
 }

@@ -44,6 +44,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     SuperNode mSuperNode;
     String mId;
     protected ViewGroup.LayoutParams mLayoutParams;
+    private String mType;
 
     public ViewNode(DoricContext doricContext) {
         super(doricContext);
@@ -63,6 +64,10 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
 
     public void setId(String id) {
         this.mId = id;
+    }
+
+    public String getType(){
+        return mType;
     }
 
     public View getDoricLayer() {
@@ -199,7 +204,9 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     public static ViewNode create(DoricContext doricContext, String type) {
         DoricRegistry registry = doricContext.getDriver().getRegistry();
         DoricMetaInfo<ViewNode> clz = registry.acquireViewNodeInfo(type);
-        return clz.createInstance(doricContext);
+        ViewNode ret = clz.createInstance(doricContext);
+        ret.mType = type;
+        return ret;
     }
 
     public ViewGroup.LayoutParams getLayoutParams() {

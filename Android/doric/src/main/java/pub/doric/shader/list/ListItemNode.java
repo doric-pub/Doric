@@ -34,6 +34,7 @@ public class ListItemNode extends StackNode {
 
     public ListItemNode(DoricContext doricContext) {
         super(doricContext);
+        this.mReusable = true;
     }
 
     @Override

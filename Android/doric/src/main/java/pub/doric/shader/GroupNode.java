@@ -34,6 +34,8 @@ public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
     private ArrayList<ViewNode> mChildNodes = new ArrayList<>();
     private ArrayList<String> mChildViewIds = new ArrayList<>();
 
+    protected boolean mReusable = false;
+
     public GroupNode(DoricContext doricContext) {
         super(doricContext);
     }
@@ -67,42 +69,66 @@ public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
                 if (id.equals(oldNode.getId())) {
                     //The same,skip
                 } else {
-                    //Find in remain nodes
-                    int position = -1;
-                    for (int start = idx + 1; start < mChildNodes.size(); start++) {
-                        ViewNode node = mChildNodes.get(start);
-                        if (id.equals(node.getId())) {
-                            //Found
-                            position = start;
-                            break;
+                    if (mReusable) {
+                        if (oldNode.getType().equals(type)) {
+                            //Same type,can be reused
+                            oldNode.setId(id);
+                            oldNode.blend(model.getProperty("props").asObject());
+                        } else {
+                            //Replace this view
+                            mChildNodes.remove(idx);
+                            mView.removeView(oldNode.getDoricLayer());
+                            ViewNode newNode = ViewNode.create(getDoricContext(), type);
+                            newNode.setId(id);
+                            if (newNode instanceof GroupNode) {
+                                ((GroupNode) newNode).mReusable = this.mReusable;
+                            }
+                            newNode.init(this);
+                            newNode.blend(model.getProperty("props").asObject());
+                            mChildNodes.add(idx, newNode);
+                            mView.addView(newNode.getDoricLayer(), idx, newNode.getLayoutParams());
                         }
-                    }
-                    if (position >= 0) {
-                        //Found swap idx,position
-                        ViewNode reused = mChildNodes.remove(position);
-                        ViewNode abandoned = mChildNodes.remove(idx);
-                        mChildNodes.set(idx, reused);
-                        mChildNodes.set(position, abandoned);
-                        //View swap index
-                        mView.removeView(reused.getDoricLayer());
-                        mView.addView(reused.getDoricLayer(), idx);
-                        mView.removeView(abandoned.getDoricLayer());
-                        mView.addView(abandoned.getDoricLayer(), position);
                     } else {
-                        //Not found,insert
-                        ViewNode newNode = ViewNode.create(getDoricContext(), type);
-                        newNode.setId(id);
-                        newNode.init(this);
-                        newNode.blend(model.getProperty("props").asObject());
+                        //Find in remain nodes
+                        int position = -1;
+                        for (int start = idx + 1; start < mChildNodes.size(); start++) {
+                            ViewNode node = mChildNodes.get(start);
+                            if (id.equals(node.getId())) {
+                                //Found
+                                position = start;
+                                break;
+                            }
+                        }
+                        if (position >= 0) {
+                            //Found swap idx,position
+                            ViewNode reused = mChildNodes.remove(position);
+                            ViewNode abandoned = mChildNodes.remove(idx);
+                            mChildNodes.set(idx, reused);
+                            mChildNodes.set(position, abandoned);
+                            //View swap index
+                            mView.removeView(reused.getDoricLayer());
+                            mView.addView(reused.getDoricLayer(), idx);
+                            mView.removeView(abandoned.getDoricLayer());
+                            mView.addView(abandoned.getDoricLayer(), position);
+                        } else {
+                            //Not found,insert
+                            ViewNode newNode = ViewNode.create(getDoricContext(), type);
+                            newNode.setId(id);
+                            newNode.init(this);
+                            newNode.blend(model.getProperty("props").asObject());
 
-                        mChildNodes.add(idx, newNode);
-                        mView.addView(newNode.getDoricLayer(), idx, newNode.getLayoutParams());
+                            mChildNodes.add(idx, newNode);
+                            mView.addView(newNode.getDoricLayer(), idx, newNode.getLayoutParams());
+                        }
                     }
                 }
             } else {
                 //Insert
                 ViewNode newNode = ViewNode.create(getDoricContext(), type);
                 newNode.setId(id);
+                if (newNode instanceof GroupNode) {
+                    ((GroupNode) newNode).mReusable = this.mReusable;
+                }
                 newNode.init(this);
                 newNode.blend(model.getProperty("props").asObject());
                 mChildNodes.add(newNode);

@@ -17,6 +17,7 @@ package pub.doric.shader.list;
 
 import android.widget.FrameLayout;
 
+import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
 import pub.doric.DoricContext;
@@ -44,5 +45,12 @@ public class ListItemNode extends StackNode {
         } else {
             super.blend(view, name, prop);
         }
+    }
+
+    @Override
+    public void blend(JSObject jsObject) {
+        super.blend(jsObject);
+        getDoricLayer().getLayoutParams().width = getLayoutParams().width;
+        getDoricLayer().getLayoutParams().height = getLayoutParams().height;
     }
 }

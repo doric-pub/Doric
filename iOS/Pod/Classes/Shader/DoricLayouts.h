@@ -69,6 +69,10 @@ typedef NS_ENUM(NSInteger, DoricGravity) {
 
 @interface DoricLayoutContainer : UIView
 @property(nonatomic, assign) DoricGravity gravity;
+
+- (void)layout:(CGSize)targetSize;
+
+- (CGSize)sizeContent:(CGSize)size;
 @end
 
 @interface DoricStackView : DoricLayoutContainer

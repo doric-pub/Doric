@@ -32,8 +32,8 @@ class ListPanel extends Panel {
                             heightSpec: LayoutSpec.WRAP_CONTENT,
                             margin: {
                                 left: 10,
-                                right: 10,
-                                top: 10,
+                                right: 50,
+                                top: 50,
                                 bottom: 10,
                             },
                         },
@@ -48,7 +48,7 @@ class ListPanel extends Panel {
                             widthSpec: LayoutSpec.AT_MOST,
                             heightSpec: LayoutSpec.EXACTLY,
                         }
-                        it.height = 50
+                        it.height = 100
                         it.onClick = () => {
                             log(`Click item at ${idx}`)
                             it.bgColor = Color.parse('#000000')

@@ -62,10 +62,6 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
 @property(nonatomic, assign) CGFloat contentWidth;
 @property(nonatomic, assign) CGFloat contentHeight;
 @property(nonatomic, assign) NSUInteger contentWeight;
-
-- (void)layout:(CGSize)targetSize;
-
-- (CGSize)sizeContent:(CGSize)size;
 @end
 
 @implementation DoricLayoutContainer

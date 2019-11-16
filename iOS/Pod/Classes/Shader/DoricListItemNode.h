@@ -21,6 +21,5 @@
 
 #import "DoricStackNode.h"
 
-@interface DoricListItemNode : DoricGroupNode<UITableViewCell *>
-
+@interface DoricListItemNode : DoricStackNode
 @end

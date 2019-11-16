@@ -18,10 +18,27 @@
 //
 
 #import "DoricListItemNode.h"
+#import "DoricExtensions.h"
+
+@interface DoricListItemNode ()
+@end
+
+@interface DoricListItemView : DoricStackView
+@end
+
+@implementation DoricListItemView
+@end
 
 
 @implementation DoricListItemNode
-- (UITableViewCell *)build {
-    return nil;
+- (instancetype)initWithContext:(DoricContext *)doricContext {
+    if (self = [super initWithContext:doricContext]) {
+        self.reusable = YES;
+    }
+    return self;
+}
+
+- (DoricStackView *)build {
+    return [DoricListItemView new];
 }
 @end

@@ -22,8 +22,16 @@
 #import "DoricExtensions.h"
 #import "DoricListItemNode.h"
 
+@interface DoricTableViewCell : UITableViewCell
+@property(nonatomic, strong) DoricListItemNode *doricListItemNode;
+@end
+
+@implementation DoricTableViewCell
+@end
+
 @interface DoricListNode () <UITableViewDataSource, UITableViewDelegate>
-@property(nonatomic, strong) NSMutableDictionary <NSNumber *, DoricListItemNode *> *tempNodes;
+@property(nonatomic, strong) NSMutableDictionary <NSNumber *, NSString *> *itemViewIds;
+@property(nonatomic, strong) NSMutableDictionary <NSNumber *, NSNumber *> *itemHeights;
 @property(nonatomic, assign) NSUInteger itemCount;
 @property(nonatomic, assign) NSUInteger batchCount;
 @end
@@ -31,7 +39,8 @@
 @implementation DoricListNode
 - (instancetype)initWithContext:(DoricContext *)doricContext {
     if (self = [super initWithContext:doricContext]) {
-        _tempNodes = [NSMutableDictionary new];
+        _itemViewIds = [NSMutableDictionary new];
+        _itemHeights = [NSMutableDictionary new];
         _batchCount = 15;
     }
     return self;
@@ -41,6 +50,7 @@
     return [[UITableView new] also:^(UITableView *it) {
         it.dataSource = self;
         it.delegate = self;
+        it.separatorStyle = UITableViewCellSeparatorStyleNone;
     }];
 }
 
@@ -48,7 +58,7 @@
     if ([@"itemCount" isEqualToString:name]) {
         self.itemCount = [prop unsignedIntegerValue];
     } else if ([@"renderItem" isEqualToString:name]) {
-        [self.tempNodes removeAllObjects];
+        [self.itemViewIds removeAllObjects];
         [self clearSubModel];
     } else if ([@"batchCount" isEqualToString:name]) {
         self.batchCount = [prop unsignedIntegerValue];
@@ -59,7 +69,6 @@
 
 - (void)blend:(NSDictionary *)props {
     [super blend:props];
-    [self.view reloadData];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -72,25 +81,35 @@
     NSDictionary *props = model[@"props"];
     NSString *reuseId = props[@"identifier"];
 
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseId];
+    DoricTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseId];
     if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseId];
+        cell = [[DoricTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseId];
+        DoricListItemNode *listItemNode = [[DoricListItemNode alloc] initWithContext:self.doricContext];
+        [listItemNode initWithSuperNode:self];
+        cell.doricListItemNode = listItemNode;
+        [cell.contentView addSubview:listItemNode.view];
     }
-    DoricListItemNode *node = self.tempNodes[@(position)];
-    node.view = cell;
+    DoricListItemNode *node = cell.doricListItemNode;
+    node.viewId = model[@"id"];
     [node blend:props];
+    CGSize size = [node.view sizeThatFits:CGSizeMake(cell.width, cell.height)];
+    [self callItem:position height:size.height];
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSUInteger position = (NSUInteger) indexPath.row;
-    NSDictionary *model = [self itemModelAt:position];
+    NSNumber *heightNumber = self.itemHeights[@(position)];
+    if (heightNumber) {
+        return [heightNumber floatValue];
+    } else {
+        return 44.f;
+    }
 
-    return 60;
 }
 
 - (NSDictionary *)itemModelAt:(NSUInteger)position {
-    NSString *viewId = self.tempNodes[@(position)].viewId;
+    NSString *viewId = self.itemViewIds[@(position)];
     if (viewId && viewId.length > 0) {
         return [self subModelOf:viewId];
     } else {
@@ -101,13 +120,30 @@
             NSString *thisViewId = obj[@"id"];
             [self setSubModel:obj in:thisViewId];
             NSUInteger pos = position + idx;
-            DoricListItemNode *node = [[DoricListItemNode alloc] initWithContext:self.doricContext];
-            node.viewId = thisViewId;
-            [node initWithSuperNode:self];
-            self.tempNodes[@(pos)] = node;
+            self.itemViewIds[@(pos)] = thisViewId;
         }];
         return array[0];
     }
 }
 
+- (void)blendSubNode:(NSDictionary *)subModel {
+    NSString *viewId = subModel[@"id"];
+    [self.itemViewIds enumerateKeysAndObjectsUsingBlock:^(NSNumber *_Nonnull key, NSString *_Nonnull obj, BOOL *_Nonnull stop) {
+        if ([viewId isEqualToString:obj]) {
+            *stop = YES;
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[key integerValue] inSection:0];
+            [self.view reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        }
+    }];
+}
+
+- (void)callItem:(NSUInteger)position height:(CGFloat)height {
+    NSNumber *old = self.itemHeights[@(position)];
+    if (old && old.floatValue == height) {
+        return;
+    }
+    self.itemHeights[@(position)] = @(height);
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:position inSection:0];
+    [self.view reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+}
 @end

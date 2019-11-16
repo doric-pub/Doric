@@ -19,6 +19,6 @@
 
 #import <Foundation/Foundation.h>
 #import "DoricSuperNode.h"
-@interface DoricListNode : DoricSuperNode<UITableView *>
 
+@interface DoricListNode : DoricSuperNode<UITableView *>
 @end

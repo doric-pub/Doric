@@ -30,11 +30,12 @@ NS_ASSUME_NONNULL_BEGIN
 @interface DoricViewNode <V:UIView *> : DoricContextHolder
 
 @property(nonatomic, strong) V view;
-
 @property(nonatomic, weak) DoricSuperNode *superNode;
 @property(nonatomic) NSInteger index;
 
 @property(nonatomic, copy) NSString *viewId;
+
+@property(nonatomic, copy) NSString *type;
 
 @property(nonatomic, readonly) DoricLayoutConfig *layoutConfig;
 

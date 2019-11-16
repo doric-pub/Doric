@@ -34,6 +34,7 @@
     if (self = [super initWithContext:doricContext]) {
         _childNodes = @[];
         _childViewIds = @[];
+        _reusable = NO;
     }
     return self;
 }
@@ -73,43 +74,65 @@
             if ([viewId isEqualToString:oldNode.viewId]) {
                 ///Same,skip
             } else {
-                ///Find in remain nodes
-                NSInteger position = -1;
-                for (NSUInteger start = idx + 1; start < childNodes.count; start++) {
-                    DoricViewNode *node = childNodes[start];
-                    if ([viewId isEqualToString:node.viewId]) {
-                        position = start;
-                        break;
+                if (self.reusable) {
+                    if ([oldNode.type isEqualToString:type]) {
+                        ///Same type,can be reused
+                        oldNode.viewId = viewId;
+                        [oldNode blend:model[@"props"]];
+                    } else {
+                        ///Replace this view
+                        [childNodes removeObjectAtIndex:idx];
+                        [oldNode.view removeFromSuperview];
+                        DoricViewNode *viewNode = [DoricViewNode create:self.doricContext withType:type];
+                        if ([viewNode isKindOfClass:[DoricGroupNode class]]) {
+                            ((DoricGroupNode *) viewNode).reusable = self.reusable;
+                        }
+                        viewNode.viewId = viewId;
+                        [viewNode initWithSuperNode:self];
+                        [viewNode blend:model[@"props"]];
+                        [childNodes insertObject:viewNode atIndex:idx];
+                        [self.view insertSubview:viewNode.view atIndex:idx];
+                    }
+                } else {
+                    ///Find in remain nodes
+                    NSInteger position = -1;
+                    for (NSUInteger start = idx + 1; start < childNodes.count; start++) {
+                        DoricViewNode *node = childNodes[start];
+                        if ([viewId isEqualToString:node.viewId]) {
+                            position = start;
+                            break;
+                        }
+                    }
+                    if (position >= 0) {
+                        ///Found ,swap idx,position
+                        DoricViewNode *reused = childNodes[(NSUInteger) position];
+                        [childNodes removeObjectAtIndex:(NSUInteger) position];
+                        [childNodes removeObjectAtIndex:idx];
+                        [childNodes insertObject:reused atIndex:idx];
+                        [childNodes insertObject:oldNode atIndex:(NSUInteger) position];
+
+                        ///View swap index
+                        [reused.view removeFromSuperview];
+                        [oldNode.view removeFromSuperview];
+                        [self.view insertSubview:reused.view atIndex:idx];
+                        [self.view insertSubview:oldNode.view atIndex:position];
+                    } else {
+                        ///Not found,insert
+                        DoricViewNode *viewNode = [DoricViewNode create:self.doricContext withType:type];
+                        viewNode.viewId = viewId;
+                        [viewNode initWithSuperNode:self];
+                        [viewNode blend:model[@"props"]];
+                        [childNodes insertObject:viewNode atIndex:idx];
+                        [self.view insertSubview:viewNode.view atIndex:idx];
                     }
                 }
-                if (position >= 0) {
-                    ///Found ,swap idx,position
-                    DoricViewNode *reused = childNodes[(NSUInteger) position];
-                    [childNodes removeObjectAtIndex:(NSUInteger) position];
-                    [childNodes removeObjectAtIndex:idx];
-                    [childNodes insertObject:reused atIndex:idx];
-                    [childNodes insertObject:oldNode atIndex:(NSUInteger) position];
-
-                    ///View swap index
-                    [reused.view removeFromSuperview];
-                    [oldNode.view removeFromSuperview];
-                    [self.view insertSubview:reused.view atIndex:idx];
-                    [self.view insertSubview:oldNode.view atIndex:position];
-                } else {
-                    ///Not found,insert
-                    DoricViewNode *viewNode = [DoricViewNode create:self.doricContext withType:type];
-                    viewNode.viewId = viewId;
-                    [viewNode initWithSuperNode:self];
-                    [viewNode blend:model[@"props"]];
-                    [childNodes insertObject:viewNode atIndex:idx];
-                    [self.view insertSubview:viewNode.view atIndex:idx];
-                }
             }
-
-
         } else {
             /// Insert
             DoricViewNode *viewNode = [DoricViewNode create:self.doricContext withType:type];
+            if ([viewNode isKindOfClass:[DoricGroupNode class]]) {
+                ((DoricGroupNode *) viewNode).reusable = self.reusable;
+            }
             viewNode.viewId = viewId;
             [viewNode initWithSuperNode:self];
             [viewNode blend:model[@"props"]];

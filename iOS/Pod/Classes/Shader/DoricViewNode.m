@@ -211,7 +211,9 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
 + (__kindof DoricViewNode *)create:(DoricContext *)context withType:(NSString *)type {
     DoricRegistry *registry = context.driver.registry;
     Class clz = [registry acquireViewNode:type];
-    return [(DoricViewNode *) [clz alloc] initWithContext:context];
+    DoricViewNode *viewNode = [(DoricViewNode *) [clz alloc] initWithContext:context];
+    viewNode.type = type;
+    return viewNode;
 }
 
 - (void)requestLayout {

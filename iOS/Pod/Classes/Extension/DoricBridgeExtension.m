@@ -60,12 +60,12 @@
                     void (^block)(void) = ^() {
                         __strong __typeof__(_self) self = _self;
                         @try {
-                            for (int i = 2; i < methodSignature.numberOfArguments; i++) {
-                                if (i - 2 > [array count]) {
+                            for (NSUInteger idx = 2; idx < methodSignature.numberOfArguments; idx++) {
+                                if (idx - 2 > [array count]) {
                                     break;
                                 }
-                                id args = [self createParamWithMethodName:array[i - 2] context:context callbackId:callbackId argument:argument];
-                                [invocation setArgument:&args atIndex:i];
+                                id args = [self createParamWithMethodName:array[idx - 2] context:context callbackId:callbackId argument:argument];
+                                [invocation setArgument:&args atIndex:idx];
                             }
                             [invocation invoke];
                         } @catch (NSException *exception) {

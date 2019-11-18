@@ -41,20 +41,34 @@
         nativePlugin = [(DoricNativePlugin *) [pluginClass alloc] initWithContext:context];
         context.pluginInstanceMap[module] = nativePlugin;
     }
+
+    return [self findClass:pluginClass target:nativePlugin context:context method:method callbackId:callbackId argument:argument];
+}
+
+- (id)createParamWithMethodName:(NSString *)method context:(DoricContext *)context callbackId:(NSString *)callbackId argument:(id)argument {
+    if ([method isEqualToString:@"withPromise"]) {
+        return [[DoricPromise alloc] initWithContext:context callbackId:callbackId];
+    }
+    return argument;
+}
+
+- (id)findClass:(Class)clz target:(id)target context:(DoricContext *)context method:(NSString *)name callbackId:(NSString *)callbackId argument:(id)argument {
     unsigned int count;
     id ret = nil;
-    Method *methods = class_copyMethodList(pluginClass, &count);
+    Method *methods = class_copyMethodList(clz, &count);
+    BOOL isFound = NO;
     for (int i = 0; i < count; i++) {
         NSString *methodName = [NSString stringWithCString:sel_getName(method_getName(methods[i])) encoding:NSUTF8StringEncoding];
         NSArray *array = [methodName componentsSeparatedByString:@":"];
         if (array && [array count] > 0) {
-            if ([array[0] isEqualToString:method]) {
+            if ([array[0] isEqualToString:name]) {
+                isFound = YES;
                 SEL selector = NSSelectorFromString(methodName);
-                NSMethodSignature *methodSignature = [nativePlugin methodSignatureForSelector:selector];
+                NSMethodSignature *methodSignature = [target methodSignatureForSelector:selector];
                 if (methodSignature) {
                     NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
                     invocation.selector = selector;
-                    invocation.target = nativePlugin;
+                    invocation.target = target;
                     __weak __typeof__(self) _self = self;
                     dispatch_block_t block = ^() {
                         __strong __typeof__(_self) self = _self;
@@ -94,14 +108,13 @@
     if (methods) {
         free(methods);
     }
-    return ret;
-}
-
-- (id)createParamWithMethodName:(NSString *)method context:(DoricContext *)context callbackId:(NSString *)callbackId argument:(id)argument {
-    if ([method isEqualToString:@"withPromise"]) {
-        return [[DoricPromise alloc] initWithContext:context callbackId:callbackId];
+    if (!isFound) {
+        Class superclass = class_getSuperclass(clz);
+        if (superclass && superclass != [NSObject class]) {
+            return [self findClass:superclass target:target context:context method:name callbackId:callbackId argument:argument];
+        }
     }
-    return argument;
-}
+    return ret;
 
+}
 @end

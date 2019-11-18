@@ -19,12 +19,17 @@ import pub.doric.DoricContext;
 import pub.doric.async.AsyncResult;
 import pub.doric.extension.bridge.DoricMethod;
 import pub.doric.extension.bridge.DoricPlugin;
+import pub.doric.extension.bridge.DoricPromise;
 import pub.doric.utils.DoricLog;
 import pub.doric.utils.ThreadMode;
 import pub.doric.shader.RootNode;
 
+import com.github.pengfeizhou.jscore.ArchiveException;
+import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSObject;
+import com.github.pengfeizhou.jscore.JSValue;
+import com.github.pengfeizhou.jscore.JavaValue;
 
 import java.util.concurrent.Callable;
 
@@ -71,6 +76,37 @@ public class ShaderPlugin extends DoricJavaPlugin {
             e.printStackTrace();
             DoricLog.e("Shader.render:error%s", e.getLocalizedMessage());
         }
+    }
 
+    @DoricMethod
+    public void command(JSDecoder jsDecoder, final DoricPromise doricPromise) {
+        try {
+            final JSObject jsObject = jsDecoder.decode().asObject();
+            final JSValue[] viewIds = jsObject.getProperty("viewIds").asArray().toArray();
+            final String name = jsObject.getProperty("name").asString().value();
+            getDoricContext().getDriver().asyncCall(new Callable<JavaValue>() {
+                @Override
+                public JavaValue call() throws Exception {
+                    return new JavaValue("called");
+                }
+            }, ThreadMode.UI).setCallback(new AsyncResult.Callback<JavaValue>() {
+                @Override
+                public void onResult(JavaValue result) {
+                    doricPromise.resolve(result);
+                }
+
+                @Override
+                public void onError(Throwable t) {
+                    doricPromise.reject(new JavaValue(t.getLocalizedMessage()));
+                }
+
+                @Override
+                public void onFinish() {
+
+                }
+            });
+        } catch (ArchiveException e) {
+            e.printStackTrace();
+        }
     }
 }

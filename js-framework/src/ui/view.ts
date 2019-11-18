@@ -255,6 +255,24 @@ export abstract class View implements Modeling, IView {
     in(group: Group) {
         group.addChild(this)
     }
+
+    nativeChannel(context: any, name: string) {
+        let thisView: View | undefined = this
+        return function (...args: any) {
+            const func = context.shader.command
+            const viewIds = []
+            while (thisView != undefined) {
+                viewIds.push(thisView.viewId)
+                thisView = thisView.superview
+            }
+            const params = {
+                viewIds: viewIds.reverse(),
+                name,
+                args,
+            }
+            return Reflect.apply(func, undefined, [params]) as Promise<any>
+        }
+    }
 }
 
 export abstract class Superview extends View {

@@ -152,15 +152,19 @@
 }
 
 - (DoricViewNode *)subNodeWithViewId:(NSString *)viewId {
-    for (UITableViewCell *tableViewCell in self.view.visibleCells) {
-        if ([tableViewCell isKindOfClass:[DoricTableViewCell class]]) {
-            DoricListItemNode *node = ((DoricTableViewCell *) tableViewCell).doricListItemNode;
-            if ([viewId isEqualToString:node.viewId]) {
-                return node;
+    __block DoricViewNode *ret = nil;
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        for (UITableViewCell *tableViewCell in self.view.visibleCells) {
+            if ([tableViewCell isKindOfClass:[DoricTableViewCell class]]) {
+                DoricListItemNode *node = ((DoricTableViewCell *) tableViewCell).doricListItemNode;
+                if ([viewId isEqualToString:node.viewId]) {
+                    ret = node;
+                    break;
+                }
             }
         }
-    }
-    return nil;
+    });
+    return ret;
 }
 
 @end

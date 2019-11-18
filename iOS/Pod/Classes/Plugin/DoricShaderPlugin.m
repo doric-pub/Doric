@@ -100,22 +100,14 @@
                             DoricLog(@"CallNative Error:%@", exception.reason);
                         }
                     };
-
-                    const char *retType = methodSignature.methodReturnType;
-                    if (!strcmp(retType, @encode(void))) {
-                        ret = nil;
-                        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), block);
-                    } else if (!strcmp(retType, @encode(id))) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
                         void *retValue;
                         block();
                         [invocation getReturnValue:&retValue];
                         id returnValue = (__bridge id) retValue;
                         [promise resolve:returnValue];
-                    } else {
-                        DoricLog(@"Command Error:%@", @"Must return object type");
-                        ret = nil;
-                        [promise reject:@"Command: Must return object type"];
-                    }
+                    });
+                    return ret;
                 }
                 break;
             }

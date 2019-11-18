@@ -114,7 +114,6 @@ public class ShaderPlugin extends DoricJavaPlugin {
                             name);
                     doricPromise.reject(new JavaValue(errMsg));
                 } else {
-                    DoricMethod doricMethod = method.getAnnotation(DoricMethod.class);
                     Callable<JavaValue> callable = new Callable<JavaValue>() {
                         @Override
                         public JavaValue call() throws Exception {
@@ -134,7 +133,7 @@ public class ShaderPlugin extends DoricJavaPlugin {
                         }
                     };
                     AsyncResult<JavaValue> asyncResult = getDoricContext().getDriver()
-                            .asyncCall(callable, doricMethod == null ? ThreadMode.INDEPENDENT : doricMethod.thread());
+                            .asyncCall(callable, ThreadMode.UI);
                     asyncResult.setCallback(new AsyncResult.Callback<JavaValue>() {
                         @Override
                         public void onResult(JavaValue result) {

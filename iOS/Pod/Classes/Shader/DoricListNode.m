@@ -150,4 +150,21 @@
         [self.view reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
     }];
 }
+
+- (DoricViewNode *)subNodeWithViewId:(NSString *)viewId {
+    __block DoricViewNode *ret = nil;
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        for (UITableViewCell *tableViewCell in self.view.visibleCells) {
+            if ([tableViewCell isKindOfClass:[DoricTableViewCell class]]) {
+                DoricListItemNode *node = ((DoricTableViewCell *) tableViewCell).doricListItemNode;
+                if ([viewId isEqualToString:node.viewId]) {
+                    ret = node;
+                    break;
+                }
+            }
+        }
+    });
+    return ret;
+}
+
 @end

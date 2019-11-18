@@ -22,15 +22,108 @@
 
 #import "DoricShaderPlugin.h"
 #import "DoricRootNode.h"
+#import "DoricUtil.h"
+
+#import <JavaScriptCore/JavaScriptCore.h>
+
+#import <objc/runtime.h>
 
 @implementation DoricShaderPlugin
 
-- (void)render:(NSDictionary *)argument withPromise:(DoricPromise *)promise {
+- (void)render:(NSDictionary *)argument {
     __weak typeof(self) _self = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         __strong typeof(_self) self = _self;
         [self.doricContext.rootNode render:argument[@"props"]];
     });
+}
+
+- (id)command:(NSDictionary *)argument withPromise:(DoricPromise *)promise {
+    NSArray *viewIds = argument[@"viewIds"];
+    id args = argument[@"args"];
+    NSString *name = argument[@"name"];
+    DoricViewNode *viewNode = nil;
+    for (NSString *viewId in viewIds) {
+        if (!viewNode) {
+            viewNode = self.doricContext.rootNode;
+        } else {
+            if ([viewNode isKindOfClass:[DoricSuperNode class]]) {
+                viewNode = [((DoricSuperNode *) viewNode) subNodeWithViewId:viewId];
+            }
+        }
+    }
+    if (!viewNode) {
+        [promise reject:@"Cannot find opposite view"];
+        return nil;
+    } else {
+        return [self findClass:[viewNode class] target:viewNode method:name promise:promise argument:args];
+    }
+}
+
+- (id)createParamWithMethodName:(NSString *)method promise:(DoricPromise *)promise argument:(id)argument {
+    if ([method isEqualToString:@"withPromise"]) {
+        return promise;
+    }
+    return argument;
+}
+
+- (id)findClass:(Class)clz target:(id)target method:(NSString *)name promise:(DoricPromise *)promise argument:(id)argument {
+    unsigned int count;
+    id ret = nil;
+    Method *methods = class_copyMethodList(clz, &count);
+    BOOL isFound = NO;
+    for (int i = 0; i < count; i++) {
+        NSString *methodName = [NSString stringWithCString:sel_getName(method_getName(methods[i])) encoding:NSUTF8StringEncoding];
+        NSArray *array = [methodName componentsSeparatedByString:@":"];
+        if (array && [array count] > 0) {
+            if ([array[0] isEqualToString:name]) {
+                isFound = YES;
+                SEL selector = NSSelectorFromString(methodName);
+                NSMethodSignature *methodSignature = [target methodSignatureForSelector:selector];
+                if (methodSignature) {
+                    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
+                    invocation.selector = selector;
+                    invocation.target = target;
+                    __weak __typeof__(self) _self = self;
+                    dispatch_block_t block = ^() {
+                        __strong __typeof__(_self) self = _self;
+                        @try {
+                            for (NSUInteger idx = 2; idx < methodSignature.numberOfArguments; idx++) {
+                                if (idx - 2 > [array count]) {
+                                    break;
+                                }
+                                id param = [self createParamWithMethodName:array[idx - 2] promise:promise argument:argument];
+                                [invocation setArgument:&param atIndex:idx];
+                            }
+                            [invocation invoke];
+                        } @catch (NSException *exception) {
+                            DoricLog(@"CallNative Error:%@", exception.reason);
+                        }
+                    };
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        void *retValue;
+                        block();
+                        [invocation getReturnValue:&retValue];
+                        id returnValue = (__bridge id) retValue;
+                        [promise resolve:returnValue];
+                    });
+                    return ret;
+                }
+                break;
+            }
+        }
+    }
+
+    if (methods) {
+        free(methods);
+    }
+    if (!isFound) {
+        Class superclass = class_getSuperclass(clz);
+        if (superclass && superclass != [NSObject class]) {
+            return [self findClass:superclass target:target method:name promise:promise argument:argument];
+        }
+    }
+    return ret;
 }
 
 @end

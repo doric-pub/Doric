@@ -40,6 +40,8 @@ public abstract class SuperNode<V extends View> extends ViewNode<V> {
         super(doricContext);
     }
 
+    public abstract ViewNode getSubNodeById(String id);
+
     protected ViewGroup.LayoutParams generateDefaultLayoutParams() {
         return new ViewGroup.LayoutParams(0, 0);
     }

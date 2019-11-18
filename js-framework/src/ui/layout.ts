@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { LayoutConfig, Group, Property, IView } from "./view";
+import { Group, Property, IView } from "./view";
 import { Gravity } from "../util/gravity";
 
 export interface IStack extends IView {
@@ -21,8 +21,6 @@ export interface IStack extends IView {
 
 export class Stack extends Group implements IStack {
 }
-
-
 
 export class Root extends Stack {
 

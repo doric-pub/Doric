@@ -220,4 +220,12 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     [self.superNode requestLayout];
 }
 
+- (NSNumber *)getWidth {
+    return @(self.view.width);
+}
+
+- (NSNumber *)getHeight {
+    return @(self.view.height);
+}
+
 @end

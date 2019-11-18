@@ -32,4 +32,6 @@
 - (void)setSubModel:(NSDictionary *)model in:(NSString *)viewId;
 
 - (void)clearSubModel;
+
+- (DoricViewNode *)subNodeWithViewId:(NSString *)viewId;
 @end

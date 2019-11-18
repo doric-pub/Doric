@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import pub.doric.DoricContext;
 import pub.doric.DoricRegistry;
 import pub.doric.async.AsyncResult;
+import pub.doric.extension.bridge.DoricMethod;
 import pub.doric.utils.DoricContextHolder;
 import pub.doric.utils.DoricConstant;
 import pub.doric.utils.DoricMetaInfo;
@@ -242,5 +243,15 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         if (mSuperNode != null) {
             mSuperNode.blendSubLayoutConfig(this, layoutConfig);
         }
+    }
+
+    @DoricMethod
+    public int getWidth() {
+        return mView.getWidth();
+    }
+
+    @DoricMethod
+    public int getHeight() {
+        return mView.getHeight();
     }
 }

@@ -73,6 +73,13 @@ class ListPanel extends Panel {
                         it.onClick = () => {
                             log(`Click item at ${idx}`)
                             it.height += 10
+                            it.nativeChannel(context, "getWidth")().then(
+                                resolve => {
+                                    log(`resolve,${resolve}`)
+                                },
+                                reject => {
+                                    log(`reject,${reject}`)
+                                })
                         }
                     })
                 },

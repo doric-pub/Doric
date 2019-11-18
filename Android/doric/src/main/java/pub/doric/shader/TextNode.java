@@ -37,7 +37,9 @@ public class TextNode extends ViewNode<TextView> {
 
     @Override
     protected TextView build() {
-        return new TextView(getContext());
+        TextView tv = new TextView(getContext());
+        tv.setGravity(Gravity.CENTER);
+        return tv;
     }
 
     @Override

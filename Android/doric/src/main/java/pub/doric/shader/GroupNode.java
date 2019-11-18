@@ -34,8 +34,6 @@ public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
     private ArrayList<ViewNode> mChildNodes = new ArrayList<>();
     private ArrayList<String> mChildViewIds = new ArrayList<>();
 
-    protected boolean mReusable = false;
-
     public GroupNode(DoricContext doricContext) {
         super(doricContext);
     }
@@ -80,8 +78,8 @@ public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
                             mView.removeView(oldNode.getDoricLayer());
                             ViewNode newNode = ViewNode.create(getDoricContext(), type);
                             newNode.setId(id);
-                            if (newNode instanceof GroupNode) {
-                                ((GroupNode) newNode).mReusable = this.mReusable;
+                            if (newNode instanceof SuperNode) {
+                                ((SuperNode) newNode).mReusable = this.mReusable;
                             }
                             newNode.init(this);
                             newNode.blend(model.getProperty("props").asObject());
@@ -126,8 +124,8 @@ public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
                 //Insert
                 ViewNode newNode = ViewNode.create(getDoricContext(), type);
                 newNode.setId(id);
-                if (newNode instanceof GroupNode) {
-                    ((GroupNode) newNode).mReusable = this.mReusable;
+                if (newNode instanceof SuperNode) {
+                    ((SuperNode) newNode).mReusable = this.mReusable;
                 }
                 newNode.init(this);
                 newNode.blend(model.getProperty("props").asObject());

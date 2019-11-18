@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-        doricContext = DoricContext.create(this, DoricUtils.readAssetFile("demo/ListDemo.js"), "test");
+        doricContext = DoricContext.create(this, DoricUtils.readAssetFile("demo/ScrollerDemo.js"), "test");
         doricContext.init(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         doricContext.getRootNode().setRootView((FrameLayout) findViewById(R.id.root));
 

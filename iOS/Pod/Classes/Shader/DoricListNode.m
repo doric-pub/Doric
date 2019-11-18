@@ -150,4 +150,17 @@
         [self.view reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
     }];
 }
+
+- (DoricViewNode *)subNodeWithViewId:(NSString *)viewId {
+    for (UITableViewCell *tableViewCell in self.view.visibleCells) {
+        if ([tableViewCell isKindOfClass:[DoricTableViewCell class]]) {
+            DoricListItemNode *node = ((DoricTableViewCell *) tableViewCell).doricListItemNode;
+            if ([viewId isEqualToString:node.viewId]) {
+                return node;
+            }
+        }
+    }
+    return nil;
+}
+
 @end

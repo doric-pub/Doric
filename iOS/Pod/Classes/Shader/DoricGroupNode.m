@@ -159,4 +159,14 @@
         }
     }];
 }
+
+- (DoricViewNode *)subNodeWithViewId:(NSString *)viewId {
+    for (DoricViewNode *viewNode in self.childNodes) {
+        if ([viewId isEqualToString:viewNode.viewId]) {
+            return viewNode;
+        }
+    }
+    return nil;
+}
+
 @end

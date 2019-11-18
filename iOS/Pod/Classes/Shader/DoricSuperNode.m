@@ -122,4 +122,7 @@
     [self.subNodes removeAllObjects];
 }
 
+- (DoricViewNode *)subNodeWithViewId:(NSString *)viewId {
+    return nil;
+}
 @end

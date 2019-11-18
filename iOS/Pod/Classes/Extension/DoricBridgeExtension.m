@@ -24,7 +24,6 @@
 #import "DoricRegistry.h"
 #import "DoricContextManager.h"
 #import "DoricNativePlugin.h"
-#import "DoricPromise.h"
 #import "DoricUtil.h"
 
 #import <JavaScriptCore/JavaScriptCore.h>
@@ -57,7 +56,7 @@
                     invocation.selector = selector;
                     invocation.target = nativePlugin;
                     __weak __typeof__(self) _self = self;
-                    void (^block)(void) = ^() {
+                    dispatch_block_t block = ^() {
                         __strong __typeof__(_self) self = _self;
                         @try {
                             for (NSUInteger idx = 2; idx < methodSignature.numberOfArguments; idx++) {

@@ -333,6 +333,7 @@ export abstract class Group extends Superview {
     }
 
     addChild(view: View) {
+        view.superview = this
         this.children.push(view)
     }
 }

@@ -15,6 +15,8 @@
  */
 package pub.doric.shader.list;
 
+import android.view.View;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -90,5 +92,24 @@ public class ListNode extends SuperNode<RecyclerView> {
     @Override
     protected void blendSubLayoutConfig(ViewNode viewNode, JSObject jsObject) {
         super.blendSubLayoutConfig(viewNode, jsObject);
+    }
+
+    @Override
+    public ViewNode getSubNodeById(String id) {
+        RecyclerView.LayoutManager manager = mView.getLayoutManager();
+        if (manager == null) {
+            return null;
+        }
+        for (int i = 0; i < manager.getChildCount(); i++) {
+            View view = manager.getChildAt(i);
+            if (view == null) {
+                continue;
+            }
+            ListAdapter.DoricViewHolder viewHolder = (ListAdapter.DoricViewHolder) mView.getChildViewHolder(view);
+            if (id.equals(viewHolder.listItemNode.getId())) {
+                return viewHolder.listItemNode;
+            }
+        }
+        return null;
     }
 }

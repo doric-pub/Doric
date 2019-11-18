@@ -152,4 +152,14 @@ public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
             }
         }
     }
+
+    @Override
+    public ViewNode getSubNodeById(String id) {
+        for (ViewNode node : mChildNodes) {
+            if (id.equals(node.getId())) {
+                return node;
+            }
+        }
+        return null;
+    }
 }

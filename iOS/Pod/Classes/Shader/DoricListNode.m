@@ -129,15 +129,23 @@
 
 - (void)blendSubNode:(NSDictionary *)subModel {
     NSString *viewId = subModel[@"id"];
-    [self.itemViewIds enumerateKeysAndObjectsUsingBlock:^(NSNumber *_Nonnull key, NSString *_Nonnull obj, BOOL *_Nonnull stop) {
-        if ([viewId isEqualToString:obj]) {
-            *stop = YES;
-            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[key integerValue] inSection:0];
-            [UIView performWithoutAnimation:^{
-                [self.view reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-            }];
-        }
-    }];
+    DoricViewNode *viewNode = [self subNodeWithViewId:viewId];
+    if (viewNode) {
+        [viewNode blend:subModel[@"props"]];
+    } else {
+        NSMutableDictionary *model = [[self subModelOf:viewId] mutableCopy];
+        [self recursiveMixin:subModel to:model];
+        [self setSubModel:model in:viewId];
+        [self.itemViewIds enumerateKeysAndObjectsUsingBlock:^(NSNumber *_Nonnull key, NSString *_Nonnull obj, BOOL *_Nonnull stop) {
+            if ([viewId isEqualToString:obj]) {
+                *stop = YES;
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[key integerValue] inSection:0];
+                [UIView performWithoutAnimation:^{
+                    [self.view reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+                }];
+            }
+        }];
+    }
 }
 
 - (void)callItem:(NSUInteger)position height:(CGFloat)height {
@@ -154,7 +162,7 @@
 
 - (DoricViewNode *)subNodeWithViewId:(NSString *)viewId {
     __block DoricViewNode *ret = nil;
-    dispatch_sync(dispatch_get_main_queue(), ^{
+    [self.doricContext.driver ensureSyncInMainQueue:^{
         for (UITableViewCell *tableViewCell in self.view.visibleCells) {
             if ([tableViewCell isKindOfClass:[DoricTableViewCell class]]) {
                 DoricListItemNode *node = ((DoricTableViewCell *) tableViewCell).doricListItemNode;
@@ -164,7 +172,7 @@
                 }
             }
         }
-    });
+    }];
     return ret;
 }
 

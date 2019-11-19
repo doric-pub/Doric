@@ -183,4 +183,11 @@
     }
 }
 
+- (void)ensureSyncInMainQueue:(dispatch_block_t)block {
+    if (strcmp(dispatch_queue_get_label(DISPATCH_CURRENT_QUEUE_LABEL), dispatch_queue_get_label(dispatch_get_main_queue())) == 0) {
+        block();
+    } else {
+        dispatch_async(dispatch_get_main_queue(), block);
+    }
+}
 @end

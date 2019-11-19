@@ -54,6 +54,12 @@ class ListPanel extends Panel {
                                 textSize: 20,
                                 height: 50,
                                 bgColor: Color.parse('#00ffff'),
+                            }).also(it => {
+                                let start = 0
+                                it.onClick = () => {
+                                    log(`clicked text:${start}`)
+                                    it.text = `${start++}`
+                                }
                             }),
                         ]).also(it => {
                             it.layoutConfig = {

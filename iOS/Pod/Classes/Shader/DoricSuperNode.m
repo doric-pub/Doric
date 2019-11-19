@@ -35,7 +35,7 @@
 - (void)blendView:(UIView *)view forPropName:(NSString *)name propValue:(id)prop {
     if ([@"subviews" isEqualToString:name]) {
         NSArray *subviews = prop;
-        for (NSDictionary *subModel in subviews) {
+        for (NSMutableDictionary *subModel in subviews) {
             [self mixinSubNode:subModel];
             [self blendSubNode:subModel];
         }
@@ -44,55 +44,52 @@
     }
 }
 
-- (void)mixinSubNode:(NSDictionary *)dictionary {
+- (void)mixinSubNode:(NSMutableDictionary *)dictionary {
     NSString *viewId = dictionary[@"id"];
     NSMutableDictionary *oldModel = self.subNodes[viewId];
     if (oldModel) {
         [self mixin:dictionary to:oldModel];
     } else {
-        self.subNodes[viewId] = [dictionary mutableCopy];
+        self.subNodes[viewId] = dictionary;
     }
 }
 
 - (void)mixin:(NSDictionary *)srcModel to:(NSMutableDictionary *)targetModel {
     NSDictionary *srcProp = srcModel[@"props"];
-    NSMutableDictionary *targetProp = [targetModel[@"props"] mutableCopy];
+    NSMutableDictionary *targetProp = targetModel[@"props"];
     [srcProp enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
         if (![@"subviews" isEqualToString:key]) {
             targetProp[key] = obj;
         }
     }];
-    targetModel[@"props"] = [targetProp copy];
+    targetModel[@"props"] = targetProp;
 }
 
 - (void)recursiveMixin:(NSDictionary *)srcModel to:(NSMutableDictionary *)targetModel {
     NSDictionary *srcProp = srcModel[@"props"];
-    NSMutableDictionary *targetProp = [targetModel[@"props"] mutableCopy];
-    NSArray *targetOri = targetProp[@"subviews"];
+    NSMutableDictionary *targetProp = targetModel[@"props"];
+    NSMutableArray *targetOri = targetProp[@"subviews"];
 
     [srcProp enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
         if ([@"subviews" isEqualToString:key]) {
             NSArray *subviews = obj;
-            NSMutableArray *targetSubviews = [targetOri mutableCopy];
             if (subviews) {
                 for (NSDictionary *subview in subviews) {
                     NSString *viewId = subview[@"id"];
-                    [targetSubviews enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
+                    [targetOri enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
                         if ([viewId isEqualToString:obj[@"id"]]) {
                             NSMutableDictionary *mutableDictionary = [obj mutableCopy];
                             [self recursiveMixin:subview to:mutableDictionary];
-                            targetSubviews[idx] = [mutableDictionary copy];
+                            targetOri[idx] = [mutableDictionary copy];
                             *stop = YES;
                         }
                     }];
                 }
-                targetProp[@"subviews"] = [targetSubviews copy];
             }
         } else {
             targetProp[key] = obj;
         }
     }];
-    targetModel[@"props"] = [targetProp copy];
 }
 
 - (void)blendSubNode:(DoricViewNode *)subNode layoutConfig:(NSDictionary *)layoutConfig {

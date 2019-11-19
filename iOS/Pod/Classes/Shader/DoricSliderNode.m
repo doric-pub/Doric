@@ -171,16 +171,16 @@
         NSMutableDictionary *model = [[self subModelOf:viewId] mutableCopy];
         [self recursiveMixin:subModel to:model];
         [self setSubModel:model in:viewId];
-        [self.itemViewIds enumerateKeysAndObjectsUsingBlock:^(NSNumber *_Nonnull key, NSString *_Nonnull obj, BOOL *_Nonnull stop) {
-            if ([viewId isEqualToString:obj]) {
-                *stop = YES;
-                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[key integerValue] inSection:0];
-                [UIView performWithoutAnimation:^{
-                    [self.view reloadItemsAtIndexPaths:@[indexPath]];
-                }];
-            }
-        }];
     }
+    [self.itemViewIds enumerateKeysAndObjectsUsingBlock:^(NSNumber *_Nonnull key, NSString *_Nonnull obj, BOOL *_Nonnull stop) {
+        if ([viewId isEqualToString:obj]) {
+            *stop = YES;
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[key integerValue] inSection:0];
+            [UIView performWithoutAnimation:^{
+                [self.view reloadItemsAtIndexPaths:@[indexPath]];
+            }];
+        }
+    }];
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {

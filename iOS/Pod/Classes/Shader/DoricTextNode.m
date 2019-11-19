@@ -49,4 +49,9 @@
         [super blendView:view forPropName:name propValue:prop];
     }
 }
+
+- (void)blend:(NSDictionary *)props {
+    [super blend:props];
+    [self.view.superview setNeedsLayout];
+}
 @end

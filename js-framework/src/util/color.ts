@@ -19,8 +19,19 @@ import { Modeling } from "./types";
  *  Store color as format AARRGGBB or RRGGBB
  */
 export class Color implements Modeling {
-
+    static BLACK = new Color(0xFF000000)
+    static DKGRAY = new Color(0xFF444444)
+    static GRAY = new Color(0xFF888888)
+    static LTGRAY = new Color(0xFFCCCCCC)
+    static WHITE = new Color(0xFFFFFFFF)
+    static RED = new Color(0xFFFF0000)
+    static GREEN = new Color(0xFF00FF00)
+    static BLUE = new Color(0xFF0000FF)
+    static YELLOW = new Color(0xFFFFFF00)
+    static CYAN = new Color(0xFF00FFFF)
+    static MAGENTA = new Color(0xFFFF00FF)
     static TRANSPARENT = new Color(0)
+
     _value: number = 0
 
     constructor(v: number) {

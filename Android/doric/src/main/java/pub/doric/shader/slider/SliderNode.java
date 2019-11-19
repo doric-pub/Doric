@@ -77,7 +77,12 @@ public class SliderNode extends SuperNode<RecyclerView> {
 
     @Override
     protected void blendSubNode(JSObject subProperties) {
-        slideAdapter.blendSubNode(subProperties);
+        ViewNode node = getSubNodeById(subProperties.getProperty("id").asString().value());
+        if (node != null) {
+            node.blend(subProperties.getProperty("props").asObject());
+        } else {
+            slideAdapter.blendSubNode(subProperties);
+        }
     }
 
     @Override

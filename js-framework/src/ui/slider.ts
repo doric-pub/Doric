@@ -4,7 +4,7 @@ import { Stack } from "./layout";
 export function slideItem(item: View) {
     return (new SlideItem).also((it) => {
         it.layoutConfig = {
-            widthSpec: LayoutSpec.WRAP_CONTENT,
+            widthSpec: LayoutSpec.AT_MOST,
             heightSpec: LayoutSpec.WRAP_CONTENT,
         }
         it.addChild(item)

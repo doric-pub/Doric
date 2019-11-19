@@ -24,25 +24,30 @@ class SliderPanel extends Panel {
                 height: 50,
             }),
             slider({
-                itemCount: 3,
+                itemCount: 100,
                 renderPage: (idx) => {
                     return slideItem(text({
                         layoutConfig: {
-                            widthSpec: LayoutSpec.WRAP_CONTENT,
+                            widthSpec: LayoutSpec.AT_MOST,
                             heightSpec: LayoutSpec.EXACTLY,
                             alignment: gravity().center(),
                         },
-                        text: `Cell At Line ${idx}`,
+                        text: `Page At Line ${idx}`,
                         textAlignment: gravity().center(),
                         textColor: Color.parse("#ffffff"),
                         textSize: 20,
-                        height: 50,
-                        bgColor: Color.parse('#00ff00'),
+                        height: 300,
+                        bgColor: Color.parse(colors[idx % colors.length]),
+                    }).also(it => {
+                        let start = idx
+                        it.onClick = () => {
+                            it.bgColor = Color.parse(colors[++start % colors.length])
+                        }
                     }))
                 },
                 layoutConfig: {
                     widthSpec: LayoutSpec.AT_MOST,
-                    heightSpec: LayoutSpec.AT_MOST,
+                    heightSpec: LayoutSpec.WRAP_CONTENT,
                 },
             }),
         ]).also(it => {

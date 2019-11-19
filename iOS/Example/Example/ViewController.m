@@ -7,38 +7,51 @@
 //
 
 #import "ViewController.h"
-#import "UIView+Doric.h"
-#import "DoricUtil.h"
-#import "DoricContext.h"
-#import "DoricNativePlugin.h"
-#import "DoricRootNode.h"
-#import "DoricLocalServer.h"
-#import "DoricLayouts.h"
-#import "DoricExtensions.h"
+#import "Doric.h"
+#import "DemoVC.h"
 
-@interface ViewController ()
-@property(nonatomic, strong) DoricContext *doricContext;
-@property(nonatomic, strong) DoricLocalServer *localServer;
+@interface ViewController () <UITableViewDelegate, UITableViewDataSource>
+@property(nonatomic, copy) NSArray <NSString *> *demoFilePaths;
 @end
 
 @implementation ViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"ScrollerDemo" ofType:@"js"];
-    NSString *jsContent = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
-    self.doricContext = [[DoricContext alloc] initWithScript:jsContent source:@"test.js"];
-    [self.doricContext.rootNode setupRootView:[[DoricStackView new] also:^(DoricStackView *it) {
-        it.layoutConfig = [[DoricLayoutConfig alloc] initWithWidth:DoricLayoutAtMost height:DoricLayoutAtMost];
-        [self.view addSubview:it];
+    self.title = @"Doric Demo";
+    NSString *path = [[NSBundle mainBundle] bundlePath];
+    NSString *demoPath = [path stringByAppendingPathComponent:@"demo"];
+    NSFileManager *mgr = [NSFileManager defaultManager];
+    self.demoFilePaths = [[mgr subpathsAtPath:demoPath] filter:^BOOL(NSString *obj) {
+        return ![obj containsString:@".map"];
+    }];
+    [self.view addSubview:[[UITableView new] also:^(UITableView *it) {
+        it.width = self.view.width;
+        it.height = self.view.height;
+        it.left = it.top = 0;
+        it.dataSource = self;
+        it.delegate = self;
     }]];
-    [self.doricContext initContextWithWidth:self.view.width height:self.view.height];
-    [self.doricContext.driver connectDevKit:@"ws://192.168.11.38:7777"];
-    self.localServer = [[DoricLocalServer alloc] init];
-    [self.localServer startWithPort:8910];
-    NSLog(@"00112233");
 }
 
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.demoFilePaths.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *path = self.demoFilePaths[(NSUInteger) indexPath.row];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID"];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    }
+    cell.textLabel.text = path;
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    DemoVC *demoVC = [[DemoVC alloc] initWithPath:self.demoFilePaths[(NSUInteger) indexPath.row]];
+    [self.navigationController pushViewController:demoVC animated:NO];
+}
 
 @end

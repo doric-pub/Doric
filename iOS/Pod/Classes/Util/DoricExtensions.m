@@ -33,3 +33,70 @@
     block(self);
 }
 @end
+
+@implementation NSArray (Doric)
+- (void)forEachIndexed:(void (NS_NOESCAPE ^)(id obj, NSUInteger idx))block {
+    [self enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        block(obj, idx);
+    }];
+}
+
+- (NSArray *)mapIndexed:(id (NS_NOESCAPE ^)(id obj, NSUInteger idx))block {
+    NSMutableArray *temp = [NSMutableArray new];
+    [self enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [temp addObject:block(obj, idx)];
+    }];
+    return [temp copy];
+}
+
+- (NSArray *)flatMapIndexed:(NSArray *(NS_NOESCAPE ^)(id obj, NSUInteger idx))block {
+    NSMutableArray *temp = [NSMutableArray new];
+    [self enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [temp addObjectsFromArray:block(obj, idx)];
+    }];
+    return [temp copy];
+}
+
+- (NSArray *)filterIndexed:(BOOL (NS_NOESCAPE ^)(id obj, NSUInteger idx))block {
+    NSMutableArray *temp = [NSMutableArray new];
+    [self enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        if (block(obj, idx)) {
+            [temp addObject:obj];
+        }
+    }];
+    return [temp copy];
+}
+
+- (void)forEach:(void (NS_NOESCAPE ^)(id obj))block {
+    for (id obj in self) {
+        block(obj);
+    }
+}
+
+- (NSArray *)map:(id (NS_NOESCAPE ^)(id obj))block {
+    NSMutableArray *temp = [NSMutableArray new];
+    for (id obj in self) {
+        [temp addObject:block(obj)];
+    }
+    return [temp copy];
+}
+
+- (NSArray *)flatMap:(NSArray *(NS_NOESCAPE ^)(id obj))block {
+    NSMutableArray *temp = [NSMutableArray new];
+    for (id obj in self) {
+        [temp addObjectsFromArray:block(obj)];
+    }
+    return [temp copy];
+}
+
+- (NSArray *)filter:(BOOL (NS_NOESCAPE ^)(id obj))block {
+    NSMutableArray *temp = [NSMutableArray new];
+    for (id obj in self) {
+        if (block(obj)) {
+            [temp addObject:obj];
+        }
+    }
+    return [temp copy];
+}
+
+@end

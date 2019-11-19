@@ -27,3 +27,21 @@
 
 - (void)let:(void (^)(id it))block;
 @end
+
+@interface NSArray <ObjectType> (Doric)
+- (void)forEachIndexed:(void (NS_NOESCAPE ^)(ObjectType obj, NSUInteger idx))block;
+
+- (NSArray *)mapIndexed:(id (NS_NOESCAPE ^)(ObjectType obj, NSUInteger idx))block;
+
+- (NSArray *)flatMapIndexed:(NSArray *(NS_NOESCAPE ^)(ObjectType obj, NSUInteger idx))block;
+
+- (NSArray *)filterIndexed:(BOOL (NS_NOESCAPE ^)(ObjectType obj, NSUInteger idx))block;
+
+- (void)forEach:(void (NS_NOESCAPE ^)(ObjectType obj))block;
+
+- (NSArray *)map:(id (NS_NOESCAPE ^)(ObjectType obj))block;
+
+- (NSArray *)flatMap:(NSArray *(NS_NOESCAPE ^)(ObjectType obj))block;
+
+- (NSArray <ObjectType> *)filter:(BOOL (NS_NOESCAPE ^)(ObjectType obj))block;
+@end

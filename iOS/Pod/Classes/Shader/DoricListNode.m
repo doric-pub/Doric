@@ -29,6 +29,23 @@
 @implementation DoricTableViewCell
 @end
 
+@interface DoricTableView : UITableView
+@end
+
+@implementation DoricTableView
+- (CGSize)sizeThatFits:(CGSize)size {
+    if (self.subviews.count > 0) {
+        CGFloat width = size.width;
+        for (UIView *child in self.subviews) {
+            width = MAX(child.width, width);
+        }
+        return CGSizeMake(width, size.width);
+    }
+    return size;
+}
+@end
+
+
 @interface DoricListNode () <UITableViewDataSource, UITableViewDelegate>
 @property(nonatomic, strong) NSMutableDictionary <NSNumber *, NSString *> *itemViewIds;
 @property(nonatomic, strong) NSMutableDictionary <NSNumber *, NSNumber *> *itemHeights;
@@ -47,7 +64,7 @@
 }
 
 - (UITableView *)build {
-    return [[UITableView new] also:^(UITableView *it) {
+    return [[DoricTableView new] also:^(UITableView *it) {
         it.dataSource = self;
         it.delegate = self;
         it.separatorStyle = UITableViewCellSeparatorStyleNone;

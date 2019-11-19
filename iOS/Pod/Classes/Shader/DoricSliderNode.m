@@ -37,6 +37,22 @@
 @property(nonatomic, assign) NSUInteger batchCount;
 @end
 
+@interface DoricCollectionView : UICollectionView
+@end
+
+@implementation DoricCollectionView
+- (CGSize)sizeThatFits:(CGSize)size {
+    if (self.subviews.count > 0) {
+        CGFloat height = size.height;
+        for (UIView *child in self.subviews) {
+            height = MAX(child.height, height);
+        }
+        return CGSizeMake(height, size.height);
+    }
+    return size;
+}
+@end
+
 @implementation DoricSliderNode
 - (instancetype)initWithContext:(DoricContext *)doricContext {
     if (self = [super initWithContext:doricContext]) {
@@ -50,8 +66,8 @@
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
     [flowLayout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
 
-    return [[[UICollectionView alloc] initWithFrame:CGRectZero
-                               collectionViewLayout:flowLayout]
+    return [[[DoricCollectionView alloc] initWithFrame:CGRectZero
+                                  collectionViewLayout:flowLayout]
             also:^(UICollectionView *it) {
                 it.backgroundColor = [UIColor whiteColor];
                 it.delegate = self;

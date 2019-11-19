@@ -18,6 +18,7 @@ package pub.doric.demo;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.FrameLayout;
 
 import androidx.annotation.Nullable;

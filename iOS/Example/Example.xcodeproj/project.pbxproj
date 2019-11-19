@@ -9,9 +9,8 @@
 /* Begin PBXBuildFile section */
 		AAAF5D5802FC6E7E4F481F5D /* libPods-ExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 942158E9B500A4C975FD37F3 /* libPods-ExampleTests.a */; };
 		B1AF6AE00A9B4675290F5947 /* libPods-ExampleUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 64B9242B26FEC4AEC20FF43D /* libPods-ExampleUITests.a */; };
+		D751D4B065D8D4FA6594B5EE /* DemoVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D751D19E97EF4EDD7588FEBE /* DemoVC.m */; };
 		D9E087DE6FF1DB083B30D9E7 /* libPods-Example.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C043B7BA79339ABA1CF46881 /* libPods-Example.a */; };
-		E21DC9D42302870000660C5C /* Snake.js in Resources */ = {isa = PBXBuildFile; fileRef = E21DC9D22302865E00660C5C /* Snake.js */; };
-		E21DC9D52302870000660C5C /* Counter.js in Resources */ = {isa = PBXBuildFile; fileRef = E21DC9D32302865E00660C5C /* Counter.js */; };
 		E2334AF022E9D2060098A085 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E2334AEF22E9D2060098A085 /* AppDelegate.m */; };
 		E2334AF322E9D2060098A085 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2334AF222E9D2060098A085 /* ViewController.m */; };
 		E2334AF622E9D2060098A085 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E2334AF422E9D2060098A085 /* Main.storyboard */; };
@@ -20,8 +19,7 @@
 		E2334AFE22E9D2070098A085 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E2334AFD22E9D2070098A085 /* main.m */; };
 		E2334B0822E9D2070098A085 /* ExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E2334B0722E9D2070098A085 /* ExampleTests.m */; };
 		E2334B1322E9D2070098A085 /* ExampleUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = E2334B1222E9D2070098A085 /* ExampleUITests.m */; };
-		E2BF7BF7237E8E9F001B0EDC /* ListDemo.js in Resources */ = {isa = PBXBuildFile; fileRef = E2BF7BF6237E8E9F001B0EDC /* ListDemo.js */; };
-		E2F447F42383924B00073C7F /* ScrollerDemo.js in Resources */ = {isa = PBXBuildFile; fileRef = E2F447F32383924B00073C7F /* ScrollerDemo.js */; };
+		E2F4481723839AC500073C7F /* demo in Resources */ = {isa = PBXBuildFile; fileRef = E2F4481623839AC500073C7F /* demo */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,8 +49,8 @@
 		942158E9B500A4C975FD37F3 /* libPods-ExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A5AE090AE3815360EC768C8D /* Pods-Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-Example/Pods-Example.release.xcconfig"; sourceTree = "<group>"; };
 		C043B7BA79339ABA1CF46881 /* libPods-Example.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Example.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E21DC9D22302865E00660C5C /* Snake.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = Snake.js; sourceTree = "<group>"; };
-		E21DC9D32302865E00660C5C /* Counter.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = Counter.js; sourceTree = "<group>"; };
+		D751D19E97EF4EDD7588FEBE /* DemoVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoVC.m; sourceTree = "<group>"; };
+		D751DDEC114E037231257E64 /* DemoVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoVC.h; sourceTree = "<group>"; };
 		E2334AEB22E9D2060098A085 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2334AEE22E9D2060098A085 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		E2334AEF22E9D2060098A085 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -69,8 +67,7 @@
 		E2334B0E22E9D2070098A085 /* ExampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ExampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2334B1222E9D2070098A085 /* ExampleUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExampleUITests.m; sourceTree = "<group>"; };
 		E2334B1422E9D2070098A085 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E2BF7BF6237E8E9F001B0EDC /* ListDemo.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = ListDemo.js; sourceTree = "<group>"; };
-		E2F447F32383924B00073C7F /* ScrollerDemo.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = ScrollerDemo.js; sourceTree = "<group>"; };
+		E2F4481623839AC500073C7F /* demo */ = {isa = PBXFileReference; lastKnownFileType = folder; path = demo; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,22 +121,9 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		E21DC9D12302865E00660C5C /* src */ = {
-			isa = PBXGroup;
-			children = (
-				E2F447F32383924B00073C7F /* ScrollerDemo.js */,
-				E2BF7BF6237E8E9F001B0EDC /* ListDemo.js */,
-				E21DC9D22302865E00660C5C /* Snake.js */,
-				E21DC9D32302865E00660C5C /* Counter.js */,
-			);
-			name = src;
-			path = ../../demo/bundle/src;
-			sourceTree = "<group>";
-		};
 		E2334AE222E9D2060098A085 = {
 			isa = PBXGroup;
 			children = (
-				E21DC9D12302865E00660C5C /* src */,
 				E2334AED22E9D2060098A085 /* Example */,
 				E2334B0622E9D2070098A085 /* ExampleTests */,
 				E2334B1122E9D2070098A085 /* ExampleUITests */,
@@ -162,6 +146,7 @@
 		E2334AED22E9D2060098A085 /* Example */ = {
 			isa = PBXGroup;
 			children = (
+				E2F4481623839AC500073C7F /* demo */,
 				E2334AEE22E9D2060098A085 /* AppDelegate.h */,
 				E2334AEF22E9D2060098A085 /* AppDelegate.m */,
 				E2334AF122E9D2060098A085 /* ViewController.h */,
@@ -171,6 +156,8 @@
 				E2334AF922E9D2070098A085 /* LaunchScreen.storyboard */,
 				E2334AFC22E9D2070098A085 /* Info.plist */,
 				E2334AFD22E9D2070098A085 /* main.m */,
+				D751D19E97EF4EDD7588FEBE /* DemoVC.m */,
+				D751DDEC114E037231257E64 /* DemoVC.h */,
 			);
 			path = Example;
 			sourceTree = "<group>";
@@ -301,11 +288,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E2F447F42383924B00073C7F /* ScrollerDemo.js in Resources */,
-				E2BF7BF7237E8E9F001B0EDC /* ListDemo.js in Resources */,
-				E21DC9D42302870000660C5C /* Snake.js in Resources */,
-				E21DC9D52302870000660C5C /* Counter.js in Resources */,
 				E2334AFB22E9D2070098A085 /* LaunchScreen.storyboard in Resources */,
+				E2F4481723839AC500073C7F /* demo in Resources */,
 				E2334AF822E9D2070098A085 /* Assets.xcassets in Resources */,
 				E2334AF622E9D2060098A085 /* Main.storyboard in Resources */,
 			);
@@ -439,6 +423,7 @@
 				E2334AF322E9D2060098A085 /* ViewController.m in Sources */,
 				E2334AFE22E9D2070098A085 /* main.m in Sources */,
 				E2334AF022E9D2060098A085 /* AppDelegate.m in Sources */,
+				D751D4B065D8D4FA6594B5EE /* DemoVC.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

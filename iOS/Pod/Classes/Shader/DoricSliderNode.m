@@ -70,6 +70,7 @@
                                   collectionViewLayout:flowLayout]
             also:^(UICollectionView *it) {
                 it.backgroundColor = [UIColor whiteColor];
+                it.pagingEnabled = YES;
                 it.delegate = self;
                 it.dataSource = self;
                 [it registerClass:[DoricCollectionViewCell class] forCellWithReuseIdentifier:@"doricCell"];
@@ -180,5 +181,10 @@
             }
         }];
     }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    NSUInteger pageIndex = (NSUInteger) (scrollView.contentOffset.x / scrollView.width);
+    scrollView.contentOffset = CGPointMake(pageIndex * scrollView.width, scrollView.contentOffset.y);
 }
 @end

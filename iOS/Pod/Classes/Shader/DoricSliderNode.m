@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 //
-//  DoricScrollerNode.h
+//  DoricSliderNode.m
 //  Doric
 //
 //  Created by pengfei.zhou on 2019/11/19.
 //
-#import <Foundation/Foundation.h>
-#import "DoricSuperNode.h"
+#import "DoricSliderNode.h"
 
-@interface DoricScrollerNode : DoricSuperNode<UIScrollView *>
+
+@implementation DoricSliderNode {
+
+}
 @end

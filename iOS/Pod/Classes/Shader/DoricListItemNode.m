@@ -38,6 +38,11 @@
     return self;
 }
 
+- (void)initWithSuperNode:(DoricSuperNode *)superNode {
+    [super initWithSuperNode:superNode];
+    self.reusable = YES;
+}
+
 - (DoricStackView *)build {
     return [DoricListItemView new];
 }

@@ -55,6 +55,9 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     private DoricLayer doricLayer;
 
     public void init(SuperNode superNode) {
+        if (this instanceof SuperNode) {
+            ((SuperNode<T>) this).mReusable = superNode.mReusable;
+        }
         this.mSuperNode = superNode;
         this.mLayoutParams = superNode.generateDefaultLayoutParams();
         this.doricLayer = new DoricLayer(getContext());

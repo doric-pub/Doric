@@ -21,6 +21,8 @@
 #import "DoricViewNode.h"
 
 @interface DoricSuperNode<V:UIView *> : DoricViewNode<V>
+@property(nonatomic, assign) BOOL reusable;
+
 - (DoricLayoutConfig *)generateDefaultLayoutParams;
 
 - (void)blendSubNode:(DoricViewNode *)subNode layoutConfig:(NSDictionary *)layoutConfig;

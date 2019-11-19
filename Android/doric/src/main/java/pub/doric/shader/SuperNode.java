@@ -35,6 +35,7 @@ import pub.doric.utils.DoricUtils;
  */
 public abstract class SuperNode<V extends View> extends ViewNode<V> {
     private Map<String, JSObject> subNodes = new HashMap<>();
+    protected boolean mReusable = false;
 
     public SuperNode(DoricContext doricContext) {
         super(doricContext);

@@ -28,6 +28,8 @@ import pub.doric.shader.StackNode;
 import pub.doric.shader.TextNode;
 import pub.doric.shader.VLayoutNode;
 import pub.doric.shader.ViewNode;
+import pub.doric.shader.slider.SlideItemNode;
+import pub.doric.shader.slider.SliderNode;
 import pub.doric.utils.DoricMetaInfo;
 import pub.doric.plugin.DoricJavaPlugin;
 import pub.doric.plugin.ModalPlugin;
@@ -72,6 +74,8 @@ public class DoricRegistry {
         this.registerViewNode(ListNode.class);
         this.registerViewNode(ListItemNode.class);
         this.registerViewNode(ScrollerNode.class);
+        this.registerViewNode(SliderNode.class);
+        this.registerViewNode(SlideItemNode.class);
         initRegistry(this);
     }
 

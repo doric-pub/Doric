@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pub.doric.shader.list;
+package pub.doric.shader.slider;
 
 import android.view.View;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.pengfeizhou.jscore.JSObject;
@@ -29,69 +30,30 @@ import pub.doric.shader.SuperNode;
 import pub.doric.shader.ViewNode;
 
 /**
- * @Description: com.github.penfeizhou.doric.widget
+ * @Description: pub.doric.shader
  * @Author: pengfei.zhou
- * @CreateDate: 2019-11-12
+ * @CreateDate: 2019-11-19
  */
-@DoricPlugin(name = "List")
-public class ListNode extends SuperNode<RecyclerView> {
-    private final ListAdapter listAdapter;
+@DoricPlugin(name = "Slider")
+public class SliderNode extends SuperNode<RecyclerView> {
+    private final SlideAdapter slideAdapter;
 
-    public ListNode(DoricContext doricContext) {
+    public SliderNode(DoricContext doricContext) {
         super(doricContext);
-        this.listAdapter = new ListAdapter(this);
-    }
-
-    @Override
-    protected void blendSubNode(JSObject subProperties) {
-        listAdapter.blendSubNode(subProperties);
+        this.slideAdapter = new SlideAdapter(this);
     }
 
     @Override
     protected RecyclerView build() {
         RecyclerView recyclerView = new RecyclerView(getContext());
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(this.listAdapter);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerView.setLayoutManager(layoutManager);
+        PagerSnapHelper mPagerSnapHelper = new PagerSnapHelper();
+        mPagerSnapHelper.attachToRecyclerView(recyclerView);
+        recyclerView.setAdapter(this.slideAdapter);
         return recyclerView;
-    }
-
-    @Override
-    public void blend(JSObject jsObject) {
-        super.blend(jsObject);
-        if (mView != null) {
-            mView.post(new Runnable() {
-                @Override
-                public void run() {
-                    listAdapter.notifyDataSetChanged();
-                }
-            });
-        }
-    }
-
-    @Override
-    protected void blend(RecyclerView view, String name, JSValue prop) {
-        switch (name) {
-            case "itemCount":
-                this.listAdapter.itemCount = prop.asNumber().toInt();
-                break;
-            case "renderItem":
-                this.listAdapter.renderItemFuncId = prop.asString().value();
-                // If reset renderItem,should reset native cache.
-                this.listAdapter.itemValues.clear();
-                clearSubModel();
-                break;
-            case "batchCount":
-                this.listAdapter.batchCount = prop.asNumber().toInt();
-                break;
-            default:
-                super.blend(view, name, prop);
-                break;
-        }
-    }
-
-    @Override
-    protected void blendSubLayoutConfig(ViewNode viewNode, JSObject jsObject) {
-        super.blendSubLayoutConfig(viewNode, jsObject);
     }
 
     @Override
@@ -105,11 +67,49 @@ public class ListNode extends SuperNode<RecyclerView> {
             if (view == null) {
                 continue;
             }
-            ListAdapter.DoricViewHolder viewHolder = (ListAdapter.DoricViewHolder) mView.getChildViewHolder(view);
-            if (id.equals(viewHolder.listItemNode.getId())) {
-                return viewHolder.listItemNode;
+            SlideAdapter.DoricViewHolder viewHolder = (SlideAdapter.DoricViewHolder) mView.getChildViewHolder(view);
+            if (id.equals(viewHolder.slideItemNode.getId())) {
+                return viewHolder.slideItemNode;
             }
         }
         return null;
+    }
+
+    @Override
+    protected void blendSubNode(JSObject subProperties) {
+        slideAdapter.blendSubNode(subProperties);
+    }
+
+    @Override
+    public void blend(JSObject jsObject) {
+        super.blend(jsObject);
+        if (mView != null) {
+            mView.post(new Runnable() {
+                @Override
+                public void run() {
+                    slideAdapter.notifyDataSetChanged();
+                }
+            });
+        }
+    }
+
+    @Override
+    protected void blend(RecyclerView view, String name, JSValue prop) {
+        switch (name) {
+            case "itemCount":
+                this.slideAdapter.itemCount = prop.asNumber().toInt();
+                break;
+            case "renderItem":
+                // If reset renderItem,should reset native cache.
+                this.slideAdapter.itemValues.clear();
+                clearSubModel();
+                break;
+            case "batchCount":
+                this.slideAdapter.batchCount = prop.asNumber().toInt();
+                break;
+            default:
+                super.blend(view, name, prop);
+                break;
+        }
     }
 }

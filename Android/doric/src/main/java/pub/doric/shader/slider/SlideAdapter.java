@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pub.doric.shader.list;
+package pub.doric.shader.slider;
 
 import android.text.TextUtils;
 import android.util.SparseArray;
@@ -37,23 +37,22 @@ import pub.doric.shader.ViewNode;
  * @Author: pengfei.zhou
  * @CreateDate: 2019-11-12
  */
-class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
+class SlideAdapter extends RecyclerView.Adapter<SlideAdapter.DoricViewHolder> {
 
-    private final ListNode listNode;
-    String renderItemFuncId;
+    private final SliderNode sliderNode;
     int itemCount = 0;
-    int batchCount = 15;
+    int batchCount = 3;
     SparseArray<String> itemValues = new SparseArray<>();
 
-    ListAdapter(ListNode listNode) {
-        this.listNode = listNode;
+    SlideAdapter(SliderNode sliderNode) {
+        this.sliderNode = sliderNode;
     }
 
     @NonNull
     @Override
     public DoricViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ListItemNode node = (ListItemNode) ViewNode.create(listNode.getDoricContext(), "ListItem");
-        node.init(listNode);
+        SlideItemNode node = (SlideItemNode) ViewNode.create(sliderNode.getDoricContext(), "SlideItem");
+        node.init(sliderNode);
         return new DoricViewHolder(node, node.getDoricLayer());
     }
 
@@ -62,8 +61,8 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
         JSValue jsValue = getItemModel(position);
         if (jsValue.isObject()) {
             JSObject jsObject = jsValue.asObject();
-            holder.listItemNode.setId(jsObject.getProperty("id").asString().value());
-            holder.listItemNode.blend(jsObject.getProperty("props").asObject());
+            holder.slideItemNode.setId(jsObject.getProperty("id").asString().value());
+            holder.slideItemNode.blend(jsObject.getProperty("props").asObject());
         }
     }
 
@@ -86,7 +85,7 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
     private JSValue getItemModel(final int position) {
         String id = itemValues.get(position);
         if (TextUtils.isEmpty(id)) {
-            AsyncResult<JSDecoder> asyncResult = listNode.callJSResponse(
+            AsyncResult<JSDecoder> asyncResult = sliderNode.callJSResponse(
                     "renderBunchedItems",
                     position,
                     batchCount);
@@ -99,16 +98,16 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
                         JSObject itemModel = jsArray.get(i).asObject();
                         String itemId = itemModel.getProperty("id").asString().value();
                         itemValues.put(i + position, itemId);
-                        listNode.setSubModel(itemId, itemModel);
+                        sliderNode.setSubModel(itemId, itemModel);
                     }
-                    return listNode.getSubModel(itemValues.get(position));
+                    return sliderNode.getSubModel(itemValues.get(position));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
             return new JSNull();
         } else {
-            JSObject childModel = listNode.getSubModel(id);
+            JSObject childModel = sliderNode.getSubModel(id);
             if (childModel == null) {
                 return new JSNull();
             } else {
@@ -127,11 +126,11 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
     }
 
     static class DoricViewHolder extends RecyclerView.ViewHolder {
-        ListItemNode listItemNode;
+        SlideItemNode slideItemNode;
 
-        DoricViewHolder(ListItemNode node, @NonNull View itemView) {
+        DoricViewHolder(SlideItemNode node, @NonNull View itemView) {
             super(itemView);
-            listItemNode = node;
+            slideItemNode = node;
         }
     }
 }

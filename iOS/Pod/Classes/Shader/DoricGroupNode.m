@@ -34,7 +34,6 @@
     if (self = [super initWithContext:doricContext]) {
         _childNodes = @[];
         _childViewIds = @[];
-        _reusable = NO;
     }
     return self;
 }

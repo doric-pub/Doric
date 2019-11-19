@@ -37,8 +37,7 @@ class ScrollerPanel extends Panel {
                         width: 80,
                         height: 50,
                     })),
-                ]
-                )),
+                ]).also(it => it.space = 20)),
                 hlayout([
                     ...[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5].map(e => text({
                         text: colors[e % colors.length],
@@ -55,6 +54,6 @@ class ScrollerPanel extends Panel {
                 ]
                 ),
             ]
-        )))
+        ).also(it => it.space = 20)))
     }
 }

@@ -21,6 +21,7 @@
 		E2334B0822E9D2070098A085 /* ExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E2334B0722E9D2070098A085 /* ExampleTests.m */; };
 		E2334B1322E9D2070098A085 /* ExampleUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = E2334B1222E9D2070098A085 /* ExampleUITests.m */; };
 		E2BF7BF7237E8E9F001B0EDC /* ListDemo.js in Resources */ = {isa = PBXBuildFile; fileRef = E2BF7BF6237E8E9F001B0EDC /* ListDemo.js */; };
+		E2F447F42383924B00073C7F /* ScrollerDemo.js in Resources */ = {isa = PBXBuildFile; fileRef = E2F447F32383924B00073C7F /* ScrollerDemo.js */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +70,7 @@
 		E2334B1222E9D2070098A085 /* ExampleUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExampleUITests.m; sourceTree = "<group>"; };
 		E2334B1422E9D2070098A085 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E2BF7BF6237E8E9F001B0EDC /* ListDemo.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = ListDemo.js; sourceTree = "<group>"; };
+		E2F447F32383924B00073C7F /* ScrollerDemo.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = ScrollerDemo.js; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +127,7 @@
 		E21DC9D12302865E00660C5C /* src */ = {
 			isa = PBXGroup;
 			children = (
+				E2F447F32383924B00073C7F /* ScrollerDemo.js */,
 				E2BF7BF6237E8E9F001B0EDC /* ListDemo.js */,
 				E21DC9D22302865E00660C5C /* Snake.js */,
 				E21DC9D32302865E00660C5C /* Counter.js */,
@@ -298,6 +301,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E2F447F42383924B00073C7F /* ScrollerDemo.js in Resources */,
 				E2BF7BF7237E8E9F001B0EDC /* ListDemo.js in Resources */,
 				E21DC9D42302870000660C5C /* Snake.js in Resources */,
 				E21DC9D52302870000660C5C /* Counter.js in Resources */,

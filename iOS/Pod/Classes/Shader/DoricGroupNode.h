@@ -25,7 +25,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface DoricGroupNode <V:UIView *> : DoricSuperNode<V>
-@property(nonatomic, assign) BOOL reusable;
 @end
 
 NS_ASSUME_NONNULL_END

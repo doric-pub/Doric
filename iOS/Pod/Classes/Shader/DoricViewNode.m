@@ -81,6 +81,9 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
 
 
 - (void)initWithSuperNode:(DoricSuperNode *)superNode {
+    if ([self isKindOfClass:[DoricSuperNode class]]) {
+        ((DoricSuperNode *) self).reusable = superNode.reusable;
+    }
     self.superNode = superNode;
     self.view = [[self build] also:^(UIView *it) {
         it.layoutConfig = [superNode generateDefaultLayoutParams];

@@ -15,102 +15,92 @@
  */
 package pub.doric.demo;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.KeyEvent;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
 
-import pub.doric.dev.DevPanel;
-import pub.doric.DoricContext;
-import pub.doric.DoricDriver;
-import pub.doric.dev.LocalServer;
-import pub.doric.dev.event.EnterDebugEvent;
-import pub.doric.dev.event.QuitDebugEvent;
-import pub.doric.engine.ChangeEngineCallback;
 import pub.doric.utils.DoricUtils;
-
 
 public class MainActivity extends AppCompatActivity {
 
-    private DevPanel devPanel = new DevPanel();
-
-    private DoricContext doricContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-        doricContext = DoricContext.create(this, DoricUtils.readAssetFile("demo/ScrollerDemo.js"), "test");
-        doricContext.init(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        doricContext.getRootNode().setRootView((FrameLayout) findViewById(R.id.root));
-
-        LocalServer localServer = new LocalServer(getApplicationContext(), 8910);
+        RecyclerView recyclerView = findViewById(R.id.root);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         try {
-            localServer.start();
+            String[] demos = getAssets().list("demo");
+            List<String> ret = new ArrayList<>();
+            for (String str : demos) {
+                if (str.endsWith("js")) {
+                    ret.add(str);
+                }
+            }
+            recyclerView.setAdapter(new MyAdapter(ret.toArray(new String[0])));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    @Override
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
+    public static class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-        EventBus.getDefault().register(this);
-    }
+        private final String[] data;
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEnterDebugEvent(EnterDebugEvent enterDebugEvent) {
-        DoricDriver.getInstance().changeJSEngine(false, new ChangeEngineCallback() {
-            @Override
-            public void changed() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        doricContext.init(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                    }
-                });
-            }
-        });
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onQuitDebugEvent(QuitDebugEvent quitDebugEvent) {
-        DoricDriver.getInstance().changeJSEngine(true, new ChangeEngineCallback() {
-            @Override
-            public void changed() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        doricContext.init(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                    }
-                });
-            }
-        });
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (KeyEvent.KEYCODE_MENU == event.getKeyCode()) {
-            devPanel.show(getSupportFragmentManager(), "DevPanel");
+        public MyAdapter(String[] demos) {
+            this.data = demos;
         }
-        return super.onKeyDown(keyCode, event);
+
+        @NonNull
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            TextView textView = new TextView(parent.getContext());
+            textView.setGravity(Gravity.CENTER);
+            textView.setLayoutParams(new ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    DoricUtils.dp2px(50)));
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
+            return new RecyclerView.ViewHolder(textView) {
+                @Override
+                public String toString() {
+                    return super.toString();
+                }
+            };
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
+            final TextView tv = (TextView) holder.itemView;
+            tv.setText(data[position]);
+            tv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(tv.getContext(), DemoActivity.class);
+                    intent.putExtra("source", data[position]);
+                    tv.getContext().startActivity(intent);
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return data.length;
+        }
     }
 }

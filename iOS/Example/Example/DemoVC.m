@@ -25,7 +25,11 @@
 }
 
 - (void)viewDidLoad {
-    NSString *jsContent = [NSString stringWithContentsOfFile:self.filePath encoding:NSUTF8StringEncoding error:nil];
+    self.title = self.filePath;
+    NSString *path = [[NSBundle mainBundle] bundlePath];
+    NSString *demoPath = [path stringByAppendingPathComponent:@"demo"];
+    NSString *fullPath = [demoPath stringByAppendingPathComponent:self.filePath];
+    NSString *jsContent = [NSString stringWithContentsOfFile:fullPath encoding:NSUTF8StringEncoding error:nil];
     self.doricContext = [[DoricContext alloc] initWithScript:jsContent source:self.filePath];
     [self.doricContext.rootNode setupRootView:[[DoricStackView new] also:^(DoricStackView *it) {
         it.backgroundColor = [UIColor whiteColor];
@@ -34,6 +38,7 @@
                        height:DoricLayoutAtMost
                        margin:DoricMarginMake(0, 88, 0, 0)
         ];
+        it.top = 88;
         [self.view addSubview:it];
     }]];
     [self.doricContext initContextWithWidth:self.view.width height:self.view.height];

@@ -18,6 +18,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.title = @"Doric Demo";
     NSString *path = [[NSBundle mainBundle] bundlePath];
     NSString *demoPath = [path stringByAppendingPathComponent:@"demo"];
     NSFileManager *mgr = [NSFileManager defaultManager];
@@ -49,10 +50,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *path = [[NSBundle mainBundle] bundlePath];
-    NSString *demoPath = [path stringByAppendingPathComponent:@"demo"];
-    NSString *fullPath = [demoPath stringByAppendingPathComponent:self.demoFilePaths[(NSUInteger) indexPath.row]];
-    DemoVC *demoVC = [[DemoVC alloc] initWithPath:fullPath];
+    DemoVC *demoVC = [[DemoVC alloc] initWithPath:self.demoFilePaths[(NSUInteger) indexPath.row]];
     [self.navigationController pushViewController:demoVC animated:NO];
 }
 

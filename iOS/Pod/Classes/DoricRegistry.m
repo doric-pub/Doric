@@ -31,6 +31,8 @@
 #import "DoricListNode.h"
 #import "DoricListItemNode.h"
 #import "DoricScrollerNode.h"
+#import "DoricSliderNode.h"
+#import "DoricSlideItemNode.h"
 
 @interface DoricRegistry ()
 
@@ -64,6 +66,8 @@
     [self registerViewNode:DoricListNode.class withName:@"List"];
     [self registerViewNode:DoricListItemNode.class withName:@"ListItem"];
     [self registerViewNode:DoricScrollerNode.class withName:@"Scroller"];
+    [self registerViewNode:DoricSliderNode.class withName:@"Slider"];
+    [self registerViewNode:DoricSlideItemNode.class withName:@"SlideItem"];
 }
 
 - (void)registerJSBundle:(NSString *)bundle withName:(NSString *)name {

@@ -29,6 +29,23 @@
 @implementation DoricTableViewCell
 @end
 
+@interface DoricTableView : UITableView
+@end
+
+@implementation DoricTableView
+- (CGSize)sizeThatFits:(CGSize)size {
+    if (self.subviews.count > 0) {
+        CGFloat width = size.width;
+        for (UIView *child in self.subviews) {
+            width = MAX(child.width, width);
+        }
+        return CGSizeMake(width, size.width);
+    }
+    return size;
+}
+@end
+
+
 @interface DoricListNode () <UITableViewDataSource, UITableViewDelegate>
 @property(nonatomic, strong) NSMutableDictionary <NSNumber *, NSString *> *itemViewIds;
 @property(nonatomic, strong) NSMutableDictionary <NSNumber *, NSNumber *> *itemHeights;
@@ -47,7 +64,7 @@
 }
 
 - (UITableView *)build {
-    return [[UITableView new] also:^(UITableView *it) {
+    return [[DoricTableView new] also:^(UITableView *it) {
         it.dataSource = self;
         it.delegate = self;
         it.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -129,15 +146,23 @@
 
 - (void)blendSubNode:(NSDictionary *)subModel {
     NSString *viewId = subModel[@"id"];
-    [self.itemViewIds enumerateKeysAndObjectsUsingBlock:^(NSNumber *_Nonnull key, NSString *_Nonnull obj, BOOL *_Nonnull stop) {
-        if ([viewId isEqualToString:obj]) {
-            *stop = YES;
-            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[key integerValue] inSection:0];
-            [UIView performWithoutAnimation:^{
-                [self.view reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-            }];
-        }
-    }];
+    DoricViewNode *viewNode = [self subNodeWithViewId:viewId];
+    if (viewNode) {
+        [viewNode blend:subModel[@"props"]];
+    } else {
+        NSMutableDictionary *model = [[self subModelOf:viewId] mutableCopy];
+        [self recursiveMixin:subModel to:model];
+        [self setSubModel:model in:viewId];
+        [self.itemViewIds enumerateKeysAndObjectsUsingBlock:^(NSNumber *_Nonnull key, NSString *_Nonnull obj, BOOL *_Nonnull stop) {
+            if ([viewId isEqualToString:obj]) {
+                *stop = YES;
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[key integerValue] inSection:0];
+                [UIView performWithoutAnimation:^{
+                    [self.view reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+                }];
+            }
+        }];
+    }
 }
 
 - (void)callItem:(NSUInteger)position height:(CGFloat)height {
@@ -154,7 +179,7 @@
 
 - (DoricViewNode *)subNodeWithViewId:(NSString *)viewId {
     __block DoricViewNode *ret = nil;
-    dispatch_sync(dispatch_get_main_queue(), ^{
+    [self.doricContext.driver ensureSyncInMainQueue:^{
         for (UITableViewCell *tableViewCell in self.view.visibleCells) {
             if ([tableViewCell isKindOfClass:[DoricTableViewCell class]]) {
                 DoricListItemNode *node = ((DoricTableViewCell *) tableViewCell).doricListItemNode;
@@ -164,7 +189,7 @@
                 }
             }
         }
-    });
+    }];
     return ret;
 }
 

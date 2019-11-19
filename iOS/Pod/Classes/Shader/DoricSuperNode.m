@@ -65,6 +65,36 @@
     targetModel[@"props"] = [targetProp copy];
 }
 
+- (void)recursiveMixin:(NSDictionary *)srcModel to:(NSMutableDictionary *)targetModel {
+    NSDictionary *srcProp = srcModel[@"props"];
+    NSMutableDictionary *targetProp = [targetModel[@"props"] mutableCopy];
+    NSArray *targetOri = targetProp[@"subviews"];
+
+    [srcProp enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
+        if ([@"subviews" isEqualToString:key]) {
+            NSArray *subviews = obj;
+            NSMutableArray *targetSubviews = [targetOri mutableCopy];
+            if (subviews) {
+                for (NSDictionary *subview in subviews) {
+                    NSString *viewId = subview[@"id"];
+                    [targetSubviews enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
+                        if ([viewId isEqualToString:obj[@"id"]]) {
+                            NSMutableDictionary *mutableDictionary = [obj mutableCopy];
+                            [self recursiveMixin:subview to:mutableDictionary];
+                            targetSubviews[idx] = [mutableDictionary copy];
+                            *stop = YES;
+                        }
+                    }];
+                }
+                targetProp[@"subviews"] = [targetSubviews copy];
+            }
+        } else {
+            targetProp[key] = obj;
+        }
+    }];
+    targetModel[@"props"] = [targetProp copy];
+}
+
 - (void)blendSubNode:(DoricViewNode *)subNode layoutConfig:(NSDictionary *)layoutConfig {
     DoricLayoutConfig *params = subNode.layoutConfig;
 

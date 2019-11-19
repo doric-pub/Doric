@@ -52,6 +52,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)connectDevKit:(NSString *)url;
 
 - (void)disconnectDevKit;
+
+- (void)ensureSyncInMainQueue:(dispatch_block_t)block;
 @end
 
 NS_ASSUME_NONNULL_END

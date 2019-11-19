@@ -14,13 +14,34 @@
  * limitations under the License.
  */
 //
-//  DoricScrollerNode.h
+//  DoricSlideItemNode.m
 //  Doric
 //
 //  Created by pengfei.zhou on 2019/11/19.
 //
-#import <Foundation/Foundation.h>
-#import "DoricSuperNode.h"
+#import "DoricSlideItemNode.h"
 
-@interface DoricScrollerNode : DoricSuperNode<UIScrollView *>
+@interface DoricSlideItemView : DoricStackView
+@end
+
+@implementation DoricSlideItemView
+@end
+
+@implementation DoricSlideItemNode
+
+- (instancetype)initWithContext:(DoricContext *)doricContext {
+    if (self = [super initWithContext:doricContext]) {
+        self.reusable = YES;
+    }
+    return self;
+}
+
+- (void)initWithSuperNode:(DoricSuperNode *)superNode {
+    [super initWithSuperNode:superNode];
+    self.reusable = YES;
+}
+
+- (DoricStackView *)build {
+    return [DoricSlideItemView new];
+}
 @end

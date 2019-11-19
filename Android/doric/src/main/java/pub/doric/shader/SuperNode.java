@@ -148,4 +148,33 @@ public abstract class SuperNode<V extends View> extends ViewNode<V> {
         }
     }
 
+    private boolean viewIdIsEqual(JSObject src, JSObject target) {
+        String srcId = src.asObject().getProperty("id").asString().value();
+        String targetId = target.asObject().getProperty("id").asString().value();
+        return srcId.equals(targetId);
+    }
+
+    protected void recursiveMixin(JSObject src, JSObject target) {
+        JSObject srcProps = src.getProperty("props").asObject();
+        JSObject targetProps = target.getProperty("props").asObject();
+        JSValue oriSubviews = targetProps.getProperty("subviews");
+        for (String key : srcProps.propertySet()) {
+            JSValue jsValue = srcProps.getProperty(key);
+            if ("subviews".equals(key) && jsValue.isArray()) {
+                JSValue[] subviews = jsValue.asArray().toArray();
+                for (JSValue subview : subviews) {
+                    if (oriSubviews.isArray()) {
+                        for (JSValue targetSubview : oriSubviews.asArray().toArray()) {
+                            if (viewIdIsEqual(subview.asObject(), targetSubview.asObject())) {
+                                recursiveMixin(subview.asObject(), targetSubview.asObject());
+                                break;
+                            }
+                        }
+                    }
+                }
+                continue;
+            }
+            targetProps.asObject().setProperty(key, jsValue);
+        }
+    }
 }

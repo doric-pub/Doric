@@ -16,7 +16,8 @@
 import { View, LayoutSpec } from './view'
 import { Stack, HLayout, VLayout } from './layout'
 import { IText, IImage, Text, Image } from './widgets'
-import { IList, List } from './listview'
+import { IList, List } from './list'
+import { ISlider, Slider } from './slider'
 
 export function text(config: IText) {
     const ret = new Text
@@ -80,6 +81,14 @@ export function vlayout(views: View[]) {
 
 export function list(config: IList) {
     const ret = new List
+    for (let key in config) {
+        Reflect.set(ret, key, Reflect.get(config, key, config), ret)
+    }
+    return ret
+}
+
+export function slider(config: ISlider) {
+    const ret = new Slider
     for (let key in config) {
         Reflect.set(ret, key, Reflect.get(config, key, config), ret)
     }

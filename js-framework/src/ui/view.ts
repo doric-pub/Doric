@@ -252,8 +252,16 @@ export abstract class View implements Modeling, IView {
         return this
     }
 
+    apply(config: IView) {
+        for (let key in config) {
+            Reflect.set(this, key, Reflect.get(config, key, config), this)
+        }
+        return this
+    }
+
     in(group: Group) {
         group.addChild(this)
+        return this
     }
 
     nativeChannel(context: any, name: string) {

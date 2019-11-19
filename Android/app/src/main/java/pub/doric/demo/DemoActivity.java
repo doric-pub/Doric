@@ -53,7 +53,7 @@ public class DemoActivity extends AppCompatActivity {
         FrameLayout frameLayout = new FrameLayout(this);
         addContentView(frameLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
-        doricContext = DoricContext.create(this, DoricUtils.readAssetFile("demo/" + source), "test");
+        doricContext = DoricContext.create(this, DoricUtils.readAssetFile("demo/" + source), source);
         doricContext.init(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         doricContext.getRootNode().setRootView(frameLayout);
     }

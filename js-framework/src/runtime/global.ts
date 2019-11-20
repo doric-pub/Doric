@@ -15,8 +15,10 @@
  */
 export * from 'reflect-metadata'
 
+export type BridgeContext = { [index: string]: { [index: string]: (args?: any) => Promise<any> } }
+
 declare global {
-    const context: { [index: string]: { [index: string]: (args?: any) => Promise<any> } };
+    const context: BridgeContext
     function Entry(constructor: { new(...args: any[]): {} }): any
 }
 export { }

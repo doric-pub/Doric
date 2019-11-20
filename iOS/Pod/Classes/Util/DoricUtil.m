@@ -22,6 +22,7 @@
 
 #import "DoricUtil.h"
 #import "DoricContext.h"
+#import "UIView+Doric.h"
 
 void DoricLog(NSString *_Nonnull format, ...) {
     va_list args;
@@ -44,4 +45,33 @@ NSBundle *DoricBundle() {
     NSBundle *bundle = [NSBundle bundleForClass:[DoricContext class]];
     NSURL *url = [bundle URLForResource:@"Doric" withExtension:@"bundle"];
     return [NSBundle bundleWithURL:url];
+}
+
+
+void showToast(NSString *text, DoricGravity gravity) {
+    UIView *superView = [UIApplication sharedApplication].windows.lastObject;
+    UILabel *label = [[UILabel alloc] init];
+    label.font = [UIFont systemFontOfSize:20.f];
+    label.text = text;
+    label.textAlignment = NSTextAlignmentCenter;
+    label.layer.masksToBounds = YES;
+    label.backgroundColor = [UIColor grayColor];
+    label.textColor = [UIColor whiteColor];
+    [label sizeToFit];
+    label.width += 30;
+    label.height += 10;
+    label.layer.cornerRadius = label.height / 2;
+    label.centerX = superView.width / 2;
+    if ((gravity & BOTTOM) == BOTTOM) {
+        label.bottom = superView.height - 20;
+    } else if ((gravity & TOP) == TOP) {
+        label.top = 108;
+    } else {
+        label.centerY = (superView.height - 88) / 2;
+    }
+
+    [superView addSubview:label];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t) (2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [label removeFromSuperview];
+    });
 }

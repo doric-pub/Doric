@@ -21,6 +21,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "DoricLayouts.h"
 
 void DoricLog(NSString *_Nonnull format, ...);
 
@@ -35,3 +36,5 @@ NSBundle *_Nonnull DoricBundle(void);
 #ifndef DC_UNLOCK
 #define DC_UNLOCK(lock) dispatch_semaphore_signal(lock);
 #endif
+
+void showToast(NSString *_Nonnull text, DoricGravity gravity);

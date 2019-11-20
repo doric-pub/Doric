@@ -20,16 +20,19 @@
 //  Created by pengfei.zhou on 2019/7/29.
 //
 
+#import <Doric/Doric.h>
 #import "DoricModalPlugin.h"
-#import "DoricRegistry.h"
-
+#import "DoricUtil.h"
 
 @implementation DoricModalPlugin
 
-- (void)toast:(NSString *)message withPromise:(DoricPromise *)promise {
+- (void)toast:(NSDictionary *)dic withPromise:(DoricPromise *)promise {
     dispatch_async(dispatch_get_main_queue(), ^{
-        NSLog(@"toast:%@", message);
-        [promise resolve:@"Resolved"];
+        __block DoricGravity gravity = BOTTOM;
+        [dic[@"gravity"] also:^(NSNumber *it) {
+            gravity = (DoricGravity) [it integerValue];
+        }];
+        showToast(dic[@"msg"], gravity);
     });
 }
 

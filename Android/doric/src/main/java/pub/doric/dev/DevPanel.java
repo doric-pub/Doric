@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.gson.JsonObject;
 import com.lahm.library.EasyProtectorLib;
 import com.lahm.library.EmulatorCheckCallback;
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -24,10 +23,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import pub.doric.BuildConfig;
 import pub.doric.Doric;
-import pub.doric.DoricContext;
-import pub.doric.DoricContextManager;
 import pub.doric.R;
 import pub.doric.dev.event.ConnectExceptionEvent;
 import pub.doric.dev.event.EOFExceptionEvent;
@@ -35,7 +31,6 @@ import pub.doric.dev.event.OpenEvent;
 
 public class DevPanel extends BottomSheetDialogFragment {
 
-    private boolean isRunningInEmulator = false;
     static boolean isDevConnected = false;
 
     public DevPanel() {
@@ -61,7 +56,7 @@ public class DevPanel extends BottomSheetDialogFragment {
         getView().findViewById(R.id.connect_dev_kit_text_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isRunningInEmulator) {
+                if (DevKit.isRunningInEmulator) {
                     Doric.connectDevKit("ws://" + "10.0.2.2" + ":7777");
                 } else {
                     final RxPermissions rxPermissions = new RxPermissions(DevPanel.this);
@@ -83,12 +78,8 @@ public class DevPanel extends BottomSheetDialogFragment {
         getView().findViewById(R.id.debug_text_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (DoricContext doricContext : DoricContextManager.aliveContexts()) {
-                    JsonObject jsonObject = new JsonObject();
-                    jsonObject.addProperty("contextId", doricContext.getContextId());
-                    jsonObject.addProperty("projectHome", BuildConfig.PROJECT_HOME);
-                    Doric.sendDevCommand(IDevKit.Command.DEBUG, jsonObject);
-                }
+                DebugContextPanel debugContextPanel = new DebugContextPanel();
+                debugContextPanel.show(getActivity().getSupportFragmentManager(), "DebugContextPanel");
                 dismissAllowingStateLoss();
             }
         });
@@ -98,7 +89,7 @@ public class DevPanel extends BottomSheetDialogFragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         EventBus.getDefault().register(this);
-        isRunningInEmulator = EasyProtectorLib.checkIsRunningInEmulator(context, new EmulatorCheckCallback() {
+        DevKit.isRunningInEmulator = EasyProtectorLib.checkIsRunningInEmulator(context, new EmulatorCheckCallback() {
             @Override
             public void findEmulator(String emulatorInfo) {
                 System.out.println(emulatorInfo);

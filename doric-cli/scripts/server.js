@@ -30,9 +30,10 @@ const createServer = () => {
 
                     let contextId = resultObject.data.contextId
                     let projectHome = resultObject.data.projectHome
+                    let source = resultObject.data.source
                     console.log(connection.key + " request debug, project home: " + projectHome)
 
-                    spawn('code', [projectHome, projectHome + "/src/Snake.ts"])
+                    spawn('code', [projectHome, projectHome + "/src/" + source])
                     setTimeout(() => {
                         exec('osascript -e \'tell application "System Events"\ntell application "Visual Studio Code" to activate\nkey code 96\nend tell\'', (err, stdout, stderr) => {
                             if (err) {

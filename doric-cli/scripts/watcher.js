@@ -48,10 +48,11 @@ function getIPAdress() {
 
 
 const qrcode = require('qrcode-terminal');
+
 const ips = getIPAdress()
 ips.forEach(e => {
     console.log(`IP:${e}`)
-    qrcode.generate(e, { small: true });
+    qrcode.generate(e, { small: false });
 })
 
 const keypress = require('keypress');
@@ -61,7 +62,7 @@ process.stdin.on('keypress', function (ch, key) {
     if (key && key.ctrl && key.name == 'r') {
         ips.forEach(e => {
             console.log(`IP:${e}`)
-            qrcode.generate(e, { small: true });
+            qrcode.generate(e, { small: false });
         })
     }
     if (key && key.ctrl && key.name == 'c') {

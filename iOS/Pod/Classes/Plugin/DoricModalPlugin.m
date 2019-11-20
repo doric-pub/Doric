@@ -36,4 +36,19 @@
     });
 }
 
+- (void)alert:(NSDictionary *)dic withPromise:(DoricPromise *)promise {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:dic[@"title"]
+                                                                       message:dic[@"msg"]
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *action = [UIAlertAction actionWithTitle:dic[@"okLabel"]
+                                                         style:UIAlertActionStyleDefault
+                                                       handler:^(UIAlertAction *action) {
+                                                           [promise resolve:nil];
+                                                       }];
+        [alert addAction:action];
+        UIViewController *vc = [UIApplication sharedApplication].keyWindow.rootViewController;
+        [vc presentViewController:alert animated:YES completion:nil];
+    });
+}
 @end

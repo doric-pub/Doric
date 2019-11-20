@@ -1,4 +1,5 @@
-import { Group, Panel, List, text, gravity, Color, Stack, LayoutSpec, list, NativeCall, listItem, log, vlayout, Gravity, hlayout } from "doric";
+import { Group, Panel, List, text, gravity, Color, Stack, LayoutSpec, list, NativeCall, listItem, log, vlayout, Gravity, hlayout, Text } from "doric";
+import { O_TRUNC } from "constants";
 const colors = [
     "#f0932b",
     "#eb4d4b",
@@ -10,7 +11,7 @@ const colors = [
 @Entry
 class ListPanel extends Panel {
     build(rootView: Group): void {
-        rootView.addChild(vlayout([
+        vlayout([
             text({
                 text: "ListDemo",
                 layoutConfig: {
@@ -26,6 +27,7 @@ class ListPanel extends Panel {
             list({
                 itemCount: 1000,
                 renderItem: (idx: number) => {
+                    let counter!: Text
                     return listItem(
                         hlayout([
                             text({
@@ -39,43 +41,40 @@ class ListPanel extends Panel {
                                 textColor: Color.parse("#ffffff"),
                                 textSize: 20,
                                 height: 50,
-                                bgColor: Color.parse('#00ff00'),
                             }),
                             text({
-                                layoutConfig: {
-                                    widthSpec: LayoutSpec.EXACTLY,
-                                    heightSpec: LayoutSpec.EXACTLY,
-                                    alignment: gravity().center(),
-                                    weight: 1,
-                                },
-                                text: `Right`,
-                                textAlignment: gravity().right(),
                                 textColor: Color.parse("#ffffff"),
                                 textSize: 20,
-                                height: 50,
-                                bgColor: Color.parse('#00ffff'),
                             }).also(it => {
-                                let start = 0
-                                it.onClick = () => {
-                                    log(`clicked text:${start}`)
-                                    it.text = `${start++}`
+                                counter = it
+                                it.layoutConfig = {
+                                    widthSpec: LayoutSpec.WRAP_CONTENT,
+                                    heightSpec: LayoutSpec.WRAP_CONTENT,
+                                    margin: {
+                                        left: 10,
+                                    }
                                 }
-                            }),
+                            })
                         ]).also(it => {
                             it.layoutConfig = {
                                 widthSpec: LayoutSpec.AT_MOST,
                                 heightSpec: LayoutSpec.WRAP_CONTENT,
-                                alignment: gravity().center(),
+                                margin: {
+                                    bottom: 2,
+                                }
                             }
-                            it.bgColor = Color.parse('#ffffff')
+                            it.gravity = gravity().center()
+                            it.bgColor = Color.parse(colors[idx % colors.length])
+                            let clicked = 0
+                            it.onClick = () => {
+                                counter.text = `Item Clicked ${++clicked}`
+                            }
                         })
                     ).also(it => {
-                        it.bgColor = Color.parse(colors[idx % colors.length])
                         it.layoutConfig = {
                             widthSpec: LayoutSpec.AT_MOST,
-                            heightSpec: LayoutSpec.EXACTLY,
+                            heightSpec: LayoutSpec.WRAP_CONTENT,
                         }
-                        it.height = 100
                         it.onClick = () => {
                             log(`Click item at ${idx}`)
                             it.height += 10
@@ -99,6 +98,7 @@ class ListPanel extends Panel {
                 widthSpec: LayoutSpec.AT_MOST,
                 heightSpec: LayoutSpec.AT_MOST,
             }
-        }))
+            it.bgColor = Color.WHITE
+        }).in(rootView)
     }
 }

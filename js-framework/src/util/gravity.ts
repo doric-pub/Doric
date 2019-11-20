@@ -37,45 +37,65 @@ export class Gravity implements Modeling {
     val = 0
 
     left() {
-        this.val |= LEFT
-        return this
+        const val = this.val | LEFT
+        const ret = new Gravity
+        ret.val = val
+        return ret
     }
 
     right() {
-        this.val |= RIGHT
-        return this
+        const val = this.val | RIGHT
+        const ret = new Gravity
+        ret.val = val
+        return ret
     }
 
     top() {
-        this.val |= TOP
-        return this
+        const val = this.val | TOP
+        const ret = new Gravity
+        ret.val = val
+        return ret
     }
 
     bottom() {
-        this.val |= BOTTOM
-        return this
+        const val = this.val | BOTTOM
+        const ret = new Gravity
+        ret.val = val
+        return ret
     }
 
     center() {
-        this.val |= CENTER
-        return this
+        const val = this.val | CENTER
+        const ret = new Gravity
+        ret.val = val
+        return ret
     }
 
     centerX() {
-        this.val |= CENTER_X
-        return this
+        const val = this.val | CENTER_X
+        const ret = new Gravity
+        ret.val = val
+        return ret
     }
 
     centerY() {
-        this.val |= CENTER_Y
-        return this
+        const val = this.val | CENTER_Y
+        const ret = new Gravity
+        ret.val = val
+        return ret
     }
 
 
     toModel() {
         return this.val
     }
+    private static origin = new Gravity
 
+    static Center = Gravity.origin.center()
+    static Left = Gravity.origin.left()
+    static Right = Gravity.origin.right()
+    static Top = Gravity.origin.top()
+    static Bottom = Gravity.origin.bottom()
 }
 export function gravity() {
     return new Gravity

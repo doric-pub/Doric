@@ -13,7 +13,7 @@ class CounterView extends ViewHolder<CountModel> {
             text({
                 textSize: 40,
                 layoutConfig: {
-                    alignment: new Gravity().center(),
+                    alignment: Gravity.Center,
                     widthSpec: LayoutSpec.WRAP_CONTENT,
                     heightSpec: LayoutSpec.WRAP_CONTENT,
                 },
@@ -27,7 +27,7 @@ class CounterView extends ViewHolder<CountModel> {
                 },
                 corners: 5,
                 layoutConfig: {
-                    alignment: new Gravity().center(),
+                    alignment: Gravity.Center,
                     widthSpec: LayoutSpec.WRAP_CONTENT,
                     heightSpec: LayoutSpec.WRAP_CONTENT,
                 },
@@ -43,9 +43,9 @@ class CounterView extends ViewHolder<CountModel> {
             it.width = 200
             it.height = 200
             it.space = 20
-            it.gravity = new Gravity().center()
+            it.gravity = Gravity.Center
             it.layoutConfig = {
-                alignment: new Gravity().center()
+                alignment: Gravity.Center
             }
             it.border = {
                 width: 1,

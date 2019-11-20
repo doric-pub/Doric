@@ -1,5 +1,5 @@
 
-import { Group, Panel, Text, text, gravity, Color, Stack, LayoutSpec, vlayout, hlayout, scroller, IVLayout, IHLayout, layoutConfig } from "doric";
+import { Group, Panel, Text, text, gravity, Color, Stack, LayoutSpec, vlayout, hlayout, scroller, IVLayout, IHLayout, layoutConfig, Gravity } from "doric";
 import { colors } from "./utils";
 
 
@@ -14,7 +14,7 @@ function boxStr(str: string, idx = 0) {
     return (new Text).also(it => {
         it.width = it.height = 20
         it.text = str
-        it.textColor = Color.parse('#ffffff')
+        it.textColor = Color.WHITE
         it.bgColor = colors[idx || 0]
     })
 }
@@ -38,7 +38,7 @@ class EffectsDemo extends Panel {
                             width: 100,
                             height: 100
                         }),]).apply({
-                            gravity: gravity().center(),
+                            gravity: Gravity.Center,
                             space: 10,
                         } as IVLayout),
                     vlayout([
@@ -56,7 +56,7 @@ class EffectsDemo extends Panel {
                                 bottom: 5,
                             })
                         }),]).apply({
-                            gravity: gravity().center(),
+                            gravity: Gravity.Center,
                             space: 10,
                         } as IVLayout),
                     vlayout([
@@ -69,7 +69,7 @@ class EffectsDemo extends Panel {
                                 bottom: 10
                             })
                         }),]).apply({
-                            gravity: gravity().center(),
+                            gravity: Gravity.Center,
                             space: 10,
                         } as IVLayout),
                     vlayout([
@@ -88,7 +88,7 @@ class EffectsDemo extends Panel {
                                 bottom: 10
                             })
                         }),]).apply({
-                            gravity: gravity().center(),
+                            gravity: Gravity.Center,
                             space: 10,
                         } as IVLayout),
                 ]).apply({ space: 20 } as IHLayout),
@@ -109,7 +109,7 @@ class EffectsDemo extends Panel {
                                 bottom: 5,
                             })
                         }),]).apply({
-                            gravity: gravity().center(),
+                            gravity: Gravity.Center,
                             space: 10,
                         } as IVLayout),
                     vlayout([
@@ -132,7 +132,7 @@ class EffectsDemo extends Panel {
                                 bottom: 10
                             })
                         }),]).apply({
-                            gravity: gravity().center(),
+                            gravity: Gravity.Center,
                             space: 10,
                         } as IVLayout),
                     vlayout([
@@ -152,7 +152,7 @@ class EffectsDemo extends Panel {
                                 bottom: 10
                             })
                         }),]).apply({
-                            gravity: gravity().center(),
+                            gravity: Gravity.Center,
                             space: 10,
                         } as IVLayout),
                     vlayout([
@@ -178,7 +178,7 @@ class EffectsDemo extends Panel {
                                 bottom: 5,
                             })
                         }),]).apply({
-                            gravity: gravity().center(),
+                            gravity: Gravity.Center,
                             space: 10,
                         } as IVLayout),
                 ]).apply({ space: 20 } as IHLayout),
@@ -202,7 +202,7 @@ class EffectsDemo extends Panel {
                                 bottom: 10,
                             })
                         }),]).apply({
-                            gravity: gravity().center(),
+                            gravity: Gravity.Center,
                             space: 10,
                         } as IVLayout),
                     vlayout([
@@ -224,7 +224,7 @@ class EffectsDemo extends Panel {
                                 bottom: 10,
                             })
                         }),]).apply({
-                            gravity: gravity().center(),
+                            gravity: Gravity.Center,
                             space: 10,
                         } as IVLayout),
                     vlayout([
@@ -246,7 +246,7 @@ class EffectsDemo extends Panel {
                                 bottom: 10,
                             })
                         }),]).apply({
-                            gravity: gravity().center(),
+                            gravity: Gravity.Center,
                             space: 10,
                         } as IVLayout),
                     vlayout([
@@ -268,7 +268,7 @@ class EffectsDemo extends Panel {
                                 bottom: 10,
                             })
                         }),]).apply({
-                            gravity: gravity().center(),
+                            gravity: Gravity.Center,
                             space: 10,
                         } as IVLayout),
                 ]).apply({ space: 20 } as IHLayout),
@@ -285,7 +285,7 @@ class EffectsDemo extends Panel {
                                 bottom: 5,
                             })
                         }),]).apply({
-                            gravity: gravity().center(),
+                            gravity: Gravity.Center,
                             space: 10,
                         } as IVLayout),
                     vlayout([
@@ -302,7 +302,7 @@ class EffectsDemo extends Panel {
                                 bottom: 5,
                             })
                         }),]).apply({
-                            gravity: gravity().center(),
+                            gravity: Gravity.Center,
                             space: 10,
                         } as IVLayout),
                     vlayout([
@@ -319,7 +319,7 @@ class EffectsDemo extends Panel {
                                 bottom: 5,
                             })
                         }),]).apply({
-                            gravity: gravity().center(),
+                            gravity: Gravity.Center,
                             space: 10,
                         } as IVLayout),
                     vlayout([
@@ -336,7 +336,7 @@ class EffectsDemo extends Panel {
                                 bottom: 5,
                             })
                         }),]).apply({
-                            gravity: gravity().center(),
+                            gravity: Gravity.Center,
                             space: 10,
                         } as IVLayout),
                     vlayout([
@@ -353,7 +353,7 @@ class EffectsDemo extends Panel {
                                 bottom: 5,
                             })
                         }),]).apply({
-                            gravity: gravity().center(),
+                            gravity: Gravity.Center,
                             space: 10,
                         } as IVLayout),
                 ]).apply({ space: 20 } as IHLayout),

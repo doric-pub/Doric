@@ -11,7 +11,7 @@ class ModalDemo extends Panel {
                 textSize: 30,
                 textColor: Color.WHITE,
                 bgColor: colors[1],
-                textAlignment: gravity().center(),
+                textAlignment: Gravity.Center,
                 height: 50,
             }),
             label('toast'),
@@ -28,7 +28,7 @@ class ModalDemo extends Panel {
             } as IText),
         ]).apply({
             layoutConfig: layoutConfig().atmost().h(LayoutSpec.WRAP_CONTENT),
-            gravity: gravity().center(),
+            gravity: Gravity.Center,
             space: 10,
         } as IVLayout)).apply({
             layoutConfig: layoutConfig().atmost(),

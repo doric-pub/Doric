@@ -35,5 +35,17 @@ export function modal(context: BridgeContext) {
                 return context.modal.alert(arg)
             }
         },
+        confirm: (arg: string | {
+            title: string,
+            msg: string,
+            okLabel?: string,
+            cancelLabel?: string,
+        }) => {
+            if (typeof arg === 'string') {
+                return context.modal.confirm({ msg: arg })
+            } else {
+                return context.modal.confirm(arg)
+            }
+        },
     }
 }

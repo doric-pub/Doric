@@ -77,6 +77,37 @@ class ModalDemo extends Panel {
                     })
                 }
             } as IText),
+            text({
+                text: "Confirm",
+                layoutConfig: layoutConfig().w(LayoutSpec.AT_MOST),
+                textSize: 30,
+                textColor: Color.WHITE,
+                bgColor: colors[3],
+                textAlignment: Gravity.Center,
+                height: 50,
+            }),
+            label('Click me').apply({
+                width: 200,
+                height: 50,
+                bgColor: colors[0],
+                textSize: 30,
+                textColor: Color.WHITE,
+                layoutConfig: layoutConfig().exactly(),
+                onClick: () => {
+                    modal(context).confirm({
+                        msg: 'This is Confirm.',
+                        title: 'Confirm title',
+                        okLabel: "OkLabel",
+                        cancelLabel: 'CancelLabel',
+                    }).then(
+                        e => {
+                            modal(context).toast('Clicked OK.')
+                        },
+                        e => {
+                            modal(context).toast('Clicked Cancel.')
+                        })
+                }
+            } as IText),
         ]).apply({
             layoutConfig: layoutConfig().atmost().h(LayoutSpec.WRAP_CONTENT),
             gravity: Gravity.Center,

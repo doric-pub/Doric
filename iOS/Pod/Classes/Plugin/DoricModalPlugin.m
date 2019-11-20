@@ -41,12 +41,35 @@
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:dic[@"title"]
                                                                        message:dic[@"msg"]
                                                                 preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *action = [UIAlertAction actionWithTitle:dic[@"okLabel"]
+        UIAlertAction *action = [UIAlertAction actionWithTitle:dic[@"okLabel"] ?: NSLocalizedString(@"OK", nil)
                                                          style:UIAlertActionStyleDefault
                                                        handler:^(UIAlertAction *action) {
                                                            [promise resolve:nil];
                                                        }];
         [alert addAction:action];
+        UIViewController *vc = [UIApplication sharedApplication].keyWindow.rootViewController;
+        [vc presentViewController:alert animated:YES completion:nil];
+    });
+}
+
+- (void)confirm:(NSDictionary *)dic withPromise:(DoricPromise *)promise {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:dic[@"title"]
+                                                                       message:dic[@"msg"]
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:dic[@"okLabel"] ?: NSLocalizedString(@"Ok", nil)
+                                                           style:UIAlertActionStyleDefault
+                                                         handler:^(UIAlertAction *action) {
+                                                             [promise resolve:nil];
+                                                         }];
+        [alert addAction:okAction];
+
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:dic[@"cancelLabel"] ?: NSLocalizedString(@"Cancel", nil)
+                                                               style:UIAlertActionStyleDefault
+                                                             handler:^(UIAlertAction *action) {
+                                                                 [promise reject:nil];
+                                                             }];
+        [alert addAction:cancelAction];
         UIViewController *vc = [UIApplication sharedApplication].keyWindow.rootViewController;
         [vc presentViewController:alert animated:YES completion:nil];
     });

@@ -19,6 +19,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import pub.doric.DoricContext;
@@ -119,7 +123,7 @@ public class ModalPlugin extends DoricJavaPlugin {
             JSValue okBtn = jsObject.getProperty("okLabel");
             JSValue cancelBtn = jsObject.getProperty("cancelLabel");
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(getDoricContext().getContext(), R.style.Theme_Doric_Modal_Alert);
+            AlertDialog.Builder builder = new AlertDialog.Builder(getDoricContext().getContext(), R.style.Theme_Doric_Modal_Confirm);
             if (titleVal.isString()) {
                 builder.setTitle(titleVal.asString().value());
             }
@@ -154,5 +158,70 @@ public class ModalPlugin extends DoricJavaPlugin {
             e.printStackTrace();
             promise.reject(new JavaValue(e.getLocalizedMessage()));
         }
+    }
+
+
+    @DoricMethod(name = "prompt", thread = ThreadMode.UI)
+    public void prompt(JSDecoder decoder, final DoricPromise promise) {
+        try {
+            JSObject jsObject = decoder.decode().asObject();
+            JSValue titleVal = jsObject.getProperty("title");
+            JSValue msgVal = jsObject.getProperty("msg");
+            JSValue okBtn = jsObject.getProperty("okLabel");
+            JSValue cancelBtn = jsObject.getProperty("cancelLabel");
+            JSValue defaultVal = jsObject.getProperty("defaultText");
+            JSValue text = jsObject.getProperty("text");
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getDoricContext().getContext(), R.style.Theme_Doric_Modal_Prompt);
+            if (titleVal.isString()) {
+                builder.setTitle(titleVal.asString().value());
+            }
+            String okLabel = getDoricContext().getContext().getString(android.R.string.ok);
+            if (okBtn.isString()) {
+                okLabel = okBtn.asString().value();
+            }
+            String cancelLabel = getDoricContext().getContext().getString(android.R.string.cancel);
+            if (cancelBtn.isString()) {
+                cancelLabel = cancelBtn.asString().value();
+            }
+
+
+            View v = LayoutInflater.from(getDoricContext().getContext()).inflate(R.layout.doric_modal_prompt, null);
+            TextView tvMsg = v.findViewById(R.id.tv_msg);
+            tvMsg.setText(msgVal.asString().value());
+            final EditText editText = v.findViewById(R.id.edit_input);
+            if (defaultVal.isString()) {
+                editText.setHint(defaultVal.asString().value());
+            }
+            if (text.isString()) {
+                editText.setText(text.asString().value());
+                editText.setSelection(text.asString().value().length());
+            }
+            builder.setView(v);
+            builder
+                    .setPositiveButton(okLabel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            promise.resolve(new JavaValue(editText.getText().toString()));
+                        }
+                    })
+                    .setNegativeButton(cancelLabel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            promise.reject(new JavaValue(editText.getText().toString()));
+                        }
+                    });
+            builder.setCancelable(false);
+            try {
+                builder.show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (ArchiveException e) {
+            e.printStackTrace();
+            promise.reject(new JavaValue(e.getLocalizedMessage()));
+        }
+
+
     }
 }

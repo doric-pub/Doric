@@ -47,5 +47,15 @@ export function modal(context: BridgeContext) {
                 return context.modal.confirm(arg)
             }
         },
+        prompt: (arg: {
+            title?: string,
+            msg?: string,
+            okLabel?: string,
+            cancelLabel?: string,
+            text?: string,
+            defaultText?: string,
+        }) => {
+            return context.modal.prompt(arg)
+        },
     }
 }

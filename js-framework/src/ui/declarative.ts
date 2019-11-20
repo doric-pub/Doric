@@ -13,18 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { View, LayoutSpec } from './view'
+import { View, LayoutSpec, LayoutConfig } from './view'
 import { Stack, HLayout, VLayout } from './layout'
 import { IText, IImage, Text, Image } from './widgets'
 import { IList, List } from './list'
 import { ISlider, Slider } from './slider'
+import { Gravity } from '../util/gravity'
+import { Modeling } from '../util/types'
 
 export function text(config: IText) {
     const ret = new Text
-    ret.layoutConfig = {
-        widthSpec: LayoutSpec.WRAP_CONTENT,
-        heightSpec: LayoutSpec.WRAP_CONTENT,
-    }
+    ret.layoutConfig = layoutConfig().wrap()
     for (let key in config) {
         Reflect.set(ret, key, Reflect.get(config, key, config), ret)
     }
@@ -33,10 +32,7 @@ export function text(config: IText) {
 
 export function image(config: IImage) {
     const ret = new Image
-    ret.layoutConfig = {
-        widthSpec: LayoutSpec.WRAP_CONTENT,
-        heightSpec: LayoutSpec.WRAP_CONTENT,
-    }
+    ret.layoutConfig = layoutConfig().wrap()
     for (let key in config) {
         Reflect.set(ret, key, Reflect.get(config, key, config), ret)
     }
@@ -45,10 +41,7 @@ export function image(config: IImage) {
 
 export function stack(views: View[]) {
     const ret = new Stack
-    ret.layoutConfig = {
-        widthSpec: LayoutSpec.WRAP_CONTENT,
-        heightSpec: LayoutSpec.WRAP_CONTENT,
-    }
+    ret.layoutConfig = layoutConfig().wrap()
     for (let v of views) {
         ret.addChild(v)
     }
@@ -57,10 +50,7 @@ export function stack(views: View[]) {
 
 export function hlayout(views: View[]) {
     const ret = new HLayout
-    ret.layoutConfig = {
-        widthSpec: LayoutSpec.WRAP_CONTENT,
-        heightSpec: LayoutSpec.WRAP_CONTENT,
-    }
+    ret.layoutConfig = layoutConfig().wrap()
     for (let v of views) {
         ret.addChild(v)
     }
@@ -69,10 +59,7 @@ export function hlayout(views: View[]) {
 
 export function vlayout(views: View[]) {
     const ret = new VLayout
-    ret.layoutConfig = {
-        widthSpec: LayoutSpec.WRAP_CONTENT,
-        heightSpec: LayoutSpec.WRAP_CONTENT,
-    }
+    ret.layoutConfig = layoutConfig().wrap()
     for (let v of views) {
         ret.addChild(v)
     }
@@ -93,4 +80,80 @@ export function slider(config: ISlider) {
         Reflect.set(ret, key, Reflect.get(config, key, config), ret)
     }
     return ret
+}
+
+export class LayoutConfigImpl implements LayoutConfig, Modeling {
+    widthSpec?: LayoutSpec
+    heightSpec?: LayoutSpec
+    margin?: {
+        left?: number,
+        right?: number,
+        top?: number,
+        bottom?: number,
+    }
+    alignment?: Gravity
+    //Only affective in VLayout or HLayout
+    weight?: number
+
+    wrap() {
+        this.widthSpec = LayoutSpec.WRAP_CONTENT
+        this.heightSpec = LayoutSpec.WRAP_CONTENT
+        return this
+    }
+
+    atmost() {
+        this.widthSpec = LayoutSpec.AT_MOST
+        this.heightSpec = LayoutSpec.AT_MOST
+        return this
+    }
+
+    exactly() {
+        this.widthSpec = LayoutSpec.EXACTLY
+        this.heightSpec = LayoutSpec.EXACTLY
+        return this
+    }
+
+    w(w: LayoutSpec) {
+        this.widthSpec = w
+        return this
+    }
+
+    h(h: LayoutSpec) {
+        this.heightSpec = h
+        return this
+    }
+
+    m(m: {
+        left?: number,
+        right?: number,
+        top?: number,
+        bottom?: number,
+    }) {
+        this.margin = m
+        return this
+    }
+
+    a(a: Gravity) {
+        this.alignment = a
+        return this
+    }
+
+    wg(w: number) {
+        this.weight = w
+        return this
+    }
+
+    toModel() {
+        return {
+            widthSpec: this.widthSpec,
+            heightSpec: this.heightSpec,
+            margin: this.margin,
+            alignment: this.alignment,
+            weight: this.weight,
+        }
+    }
+}
+
+export function layoutConfig() {
+    return new LayoutConfigImpl
 }

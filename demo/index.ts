@@ -4,4 +4,5 @@ export default [
     'src/ListDemo',
     'src/ScrollerDemo',
     'src/SliderDemo',
+    'src/LayoutDemo',
 ]

@@ -35,7 +35,7 @@ export class Color implements Modeling {
     _value: number = 0
 
     constructor(v: number) {
-        this._value = v
+        this._value = v | 0x0
     }
 
     static parse(str: string) {

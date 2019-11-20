@@ -51,7 +51,7 @@
 		C043B7BA79339ABA1CF46881 /* libPods-Example.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Example.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D751D19E97EF4EDD7588FEBE /* DemoVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoVC.m; sourceTree = "<group>"; };
 		D751DDEC114E037231257E64 /* DemoVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoVC.h; sourceTree = "<group>"; };
-		E2334AEB22E9D2060098A085 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E2334AEB22E9D2060098A085 /* Doric Playground.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Doric Playground.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2334AEE22E9D2060098A085 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		E2334AEF22E9D2060098A085 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		E2334AF122E9D2060098A085 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
@@ -136,7 +136,7 @@
 		E2334AEC22E9D2060098A085 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E2334AEB22E9D2060098A085 /* Example.app */,
+				E2334AEB22E9D2060098A085 /* Doric Playground.app */,
 				E2334B0322E9D2070098A085 /* ExampleTests.xctest */,
 				E2334B0E22E9D2070098A085 /* ExampleUITests.xctest */,
 			);
@@ -200,7 +200,7 @@
 			);
 			name = Example;
 			productName = Example;
-			productReference = E2334AEB22E9D2060098A085 /* Example.app */;
+			productReference = E2334AEB22E9D2060098A085 /* Doric Playground.app */;
 			productType = "com.apple.product-type.application";
 		};
 		E2334B0222E9D2070098A085 /* ExampleTests */ = {
@@ -603,7 +603,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = pub.doric.Example;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Doric Playground";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -621,7 +621,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = pub.doric.Example;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Doric Playground";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

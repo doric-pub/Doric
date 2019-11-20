@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,7 +29,8 @@ import pub.doric.Doric;
 import pub.doric.DoricContext;
 import pub.doric.DoricContextManager;
 import pub.doric.R;
-import pub.doric.dev.event.EOFEvent;
+import pub.doric.dev.event.ConnectExceptionEvent;
+import pub.doric.dev.event.EOFExceptionEvent;
 import pub.doric.dev.event.OpenEvent;
 
 public class DevPanel extends BottomSheetDialogFragment {
@@ -113,11 +115,19 @@ public class DevPanel extends BottomSheetDialogFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onOpenEvent(OpenEvent openEvent) {
         updateUI();
+        Toast.makeText(getContext(), "dev kit connected", Toast.LENGTH_LONG).show();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEOFEvent(EOFEvent eofEvent) {
+    public void onEOFEvent(EOFExceptionEvent eofExceptionEvent) {
         updateUI();
+        Toast.makeText(getContext(), "dev kit eof exception", Toast.LENGTH_LONG).show();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onConnectExceptionEvent(ConnectExceptionEvent connectExceptionEvent) {
+        updateUI();
+        Toast.makeText(getContext(), "dev kit connection exception", Toast.LENGTH_LONG).show();
     }
 
     private void updateUI() {

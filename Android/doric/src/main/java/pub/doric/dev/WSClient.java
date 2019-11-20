@@ -20,6 +20,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.EOFException;
+import java.net.ConnectException;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -29,7 +30,8 @@ import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import pub.doric.DoricContext;
 import pub.doric.DoricContextManager;
-import pub.doric.dev.event.EOFEvent;
+import pub.doric.dev.event.ConnectExceptionEvent;
+import pub.doric.dev.event.EOFExceptionEvent;
 import pub.doric.dev.event.EnterDebugEvent;
 import pub.doric.dev.event.OpenEvent;
 
@@ -108,7 +110,10 @@ public class WSClient extends WebSocketListener {
 
         if (t instanceof EOFException) {
             DevPanel.isDevConnected = false;
-            EventBus.getDefault().post(new EOFEvent());
+            EventBus.getDefault().post(new EOFExceptionEvent());
+        } else if (t instanceof ConnectException) {
+            DevPanel.isDevConnected = false;
+            EventBus.getDefault().post(new ConnectExceptionEvent());
         }
     }
 

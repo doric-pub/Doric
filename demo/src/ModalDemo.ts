@@ -51,6 +51,94 @@ class ModalDemo extends Panel {
                     modal(context).toast('This is a toast.', Gravity.Center)
                 }
             } as IText),
+            text({
+                text: "Alert",
+                layoutConfig: layoutConfig().w(LayoutSpec.AT_MOST),
+                textSize: 30,
+                textColor: Color.WHITE,
+                bgColor: colors[2],
+                textAlignment: Gravity.Center,
+                height: 50,
+            }),
+            label('Click me').apply({
+                width: 200,
+                height: 50,
+                bgColor: colors[0],
+                textSize: 30,
+                textColor: Color.WHITE,
+                layoutConfig: layoutConfig().exactly(),
+                onClick: () => {
+                    modal(context).alert({
+                        msg: 'This is alert.',
+                        title: 'Alert title',
+                        okLabel: "OkLabel"
+                    }).then(e => {
+                        modal(context).toast('Clicked OK.')
+                    })
+                }
+            } as IText),
+            text({
+                text: "Confirm",
+                layoutConfig: layoutConfig().w(LayoutSpec.AT_MOST),
+                textSize: 30,
+                textColor: Color.WHITE,
+                bgColor: colors[3],
+                textAlignment: Gravity.Center,
+                height: 50,
+            }),
+            label('Click me').apply({
+                width: 200,
+                height: 50,
+                bgColor: colors[0],
+                textSize: 30,
+                textColor: Color.WHITE,
+                layoutConfig: layoutConfig().exactly(),
+                onClick: () => {
+                    modal(context).confirm({
+                        msg: 'This is Confirm.',
+                        title: 'Confirm title',
+                        okLabel: "OkLabel",
+                        cancelLabel: 'CancelLabel',
+                    }).then(
+                        () => {
+                            modal(context).toast('Clicked OK.')
+                        },
+                        () => {
+                            modal(context).toast('Clicked Cancel.')
+                        })
+                }
+            } as IText),
+            text({
+                text: "Prompt",
+                layoutConfig: layoutConfig().w(LayoutSpec.AT_MOST),
+                textSize: 30,
+                textColor: Color.WHITE,
+                bgColor: colors[4],
+                textAlignment: Gravity.Center,
+                height: 50,
+            }),
+            label('Click me').apply({
+                width: 200,
+                height: 50,
+                bgColor: colors[0],
+                textSize: 30,
+                textColor: Color.WHITE,
+                layoutConfig: layoutConfig().exactly(),
+                onClick: () => {
+                    modal(context).prompt({
+                        msg: 'This is Prompt.',
+                        title: 'Prompt title',
+                        okLabel: "OkLabel",
+                        cancelLabel: 'CancelLabel',
+                    }).then(
+                        e => {
+                            modal(context).toast(`Clicked OK.Input:${e}`)
+                        },
+                        e => {
+                            modal(context).toast(`Clicked Cancel.Input:${e}`)
+                        })
+                }
+            } as IText),
         ]).apply({
             layoutConfig: layoutConfig().atmost().h(LayoutSpec.WRAP_CONTENT),
             gravity: Gravity.Center,

@@ -1,0 +1,15 @@
+<resources>
+
+    <style name="Theme.Doric.Modal" parent="android:style/Theme.Holo.Light.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="Theme.Doric.Modal.Alert" parent="Theme.Doric.Modal" />
+
+    <style name="Theme.Doric.Modal.Confirm" parent="Theme.Doric.Modal" />
+
+    <style name="Theme.Doric.Modal.Prompt" parent="Theme.Doric.Modal" />
+
+    <style name="Theme.Doric.Modal.Prompt.EditText" parent="Theme.AppCompat.Light" />
+</resources>
+

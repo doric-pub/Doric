@@ -36,4 +36,80 @@
     });
 }
 
+- (void)alert:(NSDictionary *)dic withPromise:(DoricPromise *)promise {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:dic[@"title"]
+                                                                       message:dic[@"msg"]
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *action = [UIAlertAction actionWithTitle:dic[@"okLabel"] ?: NSLocalizedString(@"OK", nil)
+                                                         style:UIAlertActionStyleDefault
+                                                       handler:^(UIAlertAction *action) {
+                                                           [promise resolve:nil];
+                                                       }];
+        [alert addAction:action];
+        UIViewController *vc = [UIApplication sharedApplication].keyWindow.rootViewController;
+        [vc presentViewController:alert animated:YES completion:nil];
+    });
+}
+
+- (void)confirm:(NSDictionary *)dic withPromise:(DoricPromise *)promise {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:dic[@"title"]
+                                                                       message:dic[@"msg"]
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:dic[@"okLabel"] ?: NSLocalizedString(@"Ok", nil)
+                                                           style:UIAlertActionStyleDefault
+                                                         handler:^(UIAlertAction *action) {
+                                                             [promise resolve:nil];
+                                                         }];
+        [alert addAction:okAction];
+
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:dic[@"cancelLabel"] ?: NSLocalizedString(@"Cancel", nil)
+                                                               style:UIAlertActionStyleDefault
+                                                             handler:^(UIAlertAction *action) {
+                                                                 [promise reject:nil];
+                                                             }];
+        [alert addAction:cancelAction];
+        UIViewController *vc = [UIApplication sharedApplication].keyWindow.rootViewController;
+        [vc presentViewController:alert animated:YES completion:nil];
+    });
+}
+
+- (void)prompt:(NSDictionary *)dic withPromise:(DoricPromise *)promise {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:dic[@"title"]
+                                                                       message:dic[@"msg"]
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        NSString *placeholder = dic[@"defaultText"];
+        NSString *preText = dic[@"text"];
+        [alert addTextFieldWithConfigurationHandler:^(UITextField *_Nonnull textField) {
+            if (placeholder.length > 0) {
+                textField.placeholder = placeholder;
+            }
+            if (preText.length > 0) {
+                textField.text = preText;
+            }
+        }];
+        __weak typeof(alert) _alert = alert;
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:dic[@"okLabel"] ?: NSLocalizedString(@"Ok", nil)
+                                                           style:UIAlertActionStyleDefault
+                                                         handler:^(UIAlertAction *action) {
+                                                             __strong typeof(_alert) alert = _alert;
+                                                             [promise resolve:alert.textFields.lastObject.text];
+                                                         }];
+        [alert addAction:okAction];
+
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:dic[@"cancelLabel"] ?: NSLocalizedString(@"Cancel", nil)
+                                                               style:UIAlertActionStyleDefault
+                                                             handler:^(UIAlertAction *action) {
+                                                                 __strong typeof(_alert) alert = _alert;
+                                                                 [promise reject:alert.textFields.lastObject.text];
+                                                             }];
+        [alert addAction:cancelAction];
+
+
+        UIViewController *vc = [UIApplication sharedApplication].keyWindow.rootViewController;
+        [vc presentViewController:alert animated:YES completion:nil];
+    });
+}
 @end

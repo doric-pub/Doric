@@ -20,6 +20,7 @@
 //  Created by pengfei.zhou on 2019/7/29.
 //
 
+#import <Doric/Doric.h>
 #import "DoricModalPlugin.h"
 #import "DoricUtil.h"
 
@@ -27,7 +28,11 @@
 
 - (void)toast:(NSDictionary *)dic withPromise:(DoricPromise *)promise {
     dispatch_async(dispatch_get_main_queue(), ^{
-        showToast(dic[@"msg"]);
+        __block DoricGravity gravity = BOTTOM;
+        [dic[@"gravity"] also:^(NSNumber *it) {
+            gravity = (DoricGravity) [it integerValue];
+        }];
+        showToast(dic[@"msg"], gravity);
     });
 }
 

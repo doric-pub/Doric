@@ -48,10 +48,8 @@ NSBundle *DoricBundle() {
 }
 
 
-void showToastInView(NSString *text, UIView *superView) {
-    if (!superView) {
-        return;
-    }
+void showToast(NSString *text, DoricGravity gravity) {
+    UIView *superView = [UIApplication sharedApplication].windows.lastObject;
     UILabel *label = [[UILabel alloc] init];
     label.font = [UIFont systemFontOfSize:20.f];
     label.text = text;
@@ -63,15 +61,17 @@ void showToastInView(NSString *text, UIView *superView) {
     label.width += 30;
     label.height += 10;
     label.layer.cornerRadius = label.height / 2;
-    label.bottom = superView.height - 20;
     label.centerX = superView.width / 2;
+    if ((gravity & BOTTOM) == BOTTOM) {
+        label.bottom = superView.height - 20;
+    } else if ((gravity & TOP) == TOP) {
+        label.top = 108;
+    } else {
+        label.centerY = (superView.height - 88) / 2;
+    }
+
     [superView addSubview:label];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t) (2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [label removeFromSuperview];
     });
-}
-
-
-void showToast(NSString *text) {
-    showToastInView(text, [UIApplication sharedApplication].windows.lastObject);
 }

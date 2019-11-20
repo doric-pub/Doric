@@ -14,7 +14,7 @@ class ModalDemo extends Panel {
                 textAlignment: Gravity.Center,
                 height: 50,
             }),
-            label('toast'),
+            label('toast on bottom'),
             label('Click me').apply({
                 width: 200,
                 height: 50,
@@ -24,6 +24,31 @@ class ModalDemo extends Panel {
                 layoutConfig: layoutConfig().exactly(),
                 onClick: () => {
                     modal(context).toast('This is a toast.')
+                }
+            } as IText),
+            label('toast on top'),
+            label('Click me').apply({
+                width: 200,
+                height: 50,
+                bgColor: colors[0],
+                textSize: 30,
+                textColor: Color.WHITE,
+                layoutConfig: layoutConfig().exactly(),
+                onClick: () => {
+                    modal(context).toast('This is a toast.', Gravity.Top)
+                }
+            } as IText),
+
+            label('toast on center'),
+            label('Click me').apply({
+                width: 200,
+                height: 50,
+                bgColor: colors[0],
+                textSize: 30,
+                textColor: Color.WHITE,
+                layoutConfig: layoutConfig().exactly(),
+                onClick: () => {
+                    modal(context).toast('This is a toast.', Gravity.Center)
                 }
             } as IText),
         ]).apply({

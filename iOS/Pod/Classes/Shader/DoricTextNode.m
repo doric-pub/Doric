@@ -23,10 +23,13 @@
 #import "DoricTextNode.h"
 #import "DoricUtil.h"
 #import "DoricGroupNode.h"
+#import "Doric.h"
 
 @implementation DoricTextNode
 - (UILabel *)build {
-    return [[UILabel alloc] init];
+    return [[[UILabel alloc] init] also:^(UILabel *it) {
+        it.textAlignment = NSTextAlignmentCenter;
+    }];
 }
 
 - (void)blendView:(UILabel *)view forPropName:(NSString *)name propValue:(id)prop {

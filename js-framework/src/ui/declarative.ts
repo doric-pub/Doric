@@ -148,7 +148,7 @@ export class LayoutConfigImpl implements LayoutConfig, Modeling {
             widthSpec: this.widthSpec,
             heightSpec: this.heightSpec,
             margin: this.margin,
-            alignment: this.alignment,
+            alignment: this.alignment ? this.alignment.toModel() : undefined,
             weight: this.weight,
         }
     }

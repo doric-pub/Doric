@@ -136,12 +136,6 @@ public class HVScrollView extends FrameLayout implements NestedScrollingParent,
     private VelocityTracker mVelocityTracker;
 
     /**
-     * When set to true, the scroll view measure its child to make it fill the currently
-     * visible area.
-     */
-    private boolean mFillViewport;
-
-    /**
      * Whether arrow scrolling is animated.
      */
     private boolean mSmoothScrollingEnabled = true;
@@ -203,9 +197,6 @@ public class HVScrollView extends FrameLayout implements NestedScrollingParent,
 
         final TypedArray a = context.obtainStyledAttributes(
                 attrs, SCROLLVIEW_STYLEABLE, defStyleAttr, 0);
-
-        setFillViewport(a.getBoolean(0, false));
-
         a.recycle();
 
         mParentHelper = new NestedScrollingParentHelper(this);
@@ -514,30 +505,6 @@ public class HVScrollView extends FrameLayout implements NestedScrollingParent,
     }
 
     /**
-     * Indicates whether this ScrollView's content is stretched to fill the viewport.
-     *
-     * @return True if the content fills the viewport, false otherwise.
-     * @attr name android:fillViewport
-     */
-    public boolean isFillViewport() {
-        return mFillViewport;
-    }
-
-    /**
-     * Set whether this ScrollView should stretch its content height to fill the viewport or not.
-     *
-     * @param fillViewport True to stretch the content's height to the viewport's
-     *                     boundaries, false otherwise.
-     * @attr name android:fillViewport
-     */
-    public void setFillViewport(boolean fillViewport) {
-        if (fillViewport != mFillViewport) {
-            mFillViewport = fillViewport;
-            requestLayout();
-        }
-    }
-
-    /**
      * @return Whether arrow scrolling will animate its transition.
      */
     public boolean isSmoothScrollingEnabled() {
@@ -566,10 +533,6 @@ public class HVScrollView extends FrameLayout implements NestedScrollingParent,
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        if (!mFillViewport) {
-            return;
-        }
-
         final int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         final int heightMode = MeasureSpec.getMode(heightMeasureSpec);
         if (heightMode == MeasureSpec.UNSPECIFIED && widthMode == MeasureSpec.UNSPECIFIED) {
@@ -587,14 +550,17 @@ public class HVScrollView extends FrameLayout implements NestedScrollingParent,
             int childWidthMeasureSpec;
             int childHeightMeasureSpec;
             final FrameLayout.LayoutParams lp = (LayoutParams) child.getLayoutParams();
-            if (child.getMeasuredWidth() < width) {
+            if (lp.width != ViewGroup.LayoutParams.MATCH_PARENT && lp.height != ViewGroup.LayoutParams.MATCH_PARENT) {
+                return;
+            }
+            if (child.getMeasuredWidth() < width && lp.width == ViewGroup.LayoutParams.MATCH_PARENT) {
                 childWidthMeasureSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
             } else {
                 widthMeasureSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
                 childWidthMeasureSpec = getChildMeasureSpec(widthMeasureSpec,
                         getPaddingLeft() + getPaddingRight(), lp.width);
             }
-            if (child.getMeasuredHeight() < height) {
+            if (child.getMeasuredHeight() < height && lp.height == ViewGroup.LayoutParams.MATCH_PARENT) {
                 childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
             } else {
                 heightMeasureSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);

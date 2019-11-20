@@ -152,4 +152,7 @@
 - (DoricViewNode *)subNodeWithViewId:(NSString *)viewId {
     return nil;
 }
+- (void)requestLayout {
+    [self.view setNeedsLayout];
+}
 @end

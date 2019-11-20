@@ -6,4 +6,5 @@ export default [
     'src/SliderDemo',
     'src/LayoutDemo',
     'src/EffectsDemo',
+    'src/ImageDemo',
 ]

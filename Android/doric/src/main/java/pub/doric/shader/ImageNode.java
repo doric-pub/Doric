@@ -19,7 +19,7 @@ import android.graphics.drawable.Drawable;
 
 import androidx.annotation.Nullable;
 
-import android.view.ViewGroup;
+import android.text.TextUtils;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -31,7 +31,7 @@ import com.bumptech.glide.request.target.Target;
 import pub.doric.DoricContext;
 import pub.doric.extension.bridge.DoricPlugin;
 
-import com.github.pengfeizhou.jscore.JSObject;
+import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSValue;
 
 /**
@@ -41,6 +41,8 @@ import com.github.pengfeizhou.jscore.JSValue;
  */
 @DoricPlugin(name = "Image")
 public class ImageNode extends ViewNode<ImageView> {
+    private String loadCallbackId = "";
+
     public ImageNode(DoricContext doricContext) {
         super(doricContext);
     }
@@ -52,22 +54,51 @@ public class ImageNode extends ViewNode<ImageView> {
 
     @Override
     protected void blend(ImageView view, String name, JSValue prop) {
-        if ("imageUrl".equals(name)) {
-            Glide.with(getContext()).load(prop.asString().value())
-                    .listener(new RequestListener<Drawable>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            return false;
-                        }
+        switch (name) {
+            case "imageUrl":
+                Glide.with(getContext()).load(prop.asString().value())
+                        .listener(new RequestListener<Drawable>() {
+                            @Override
+                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                if (!TextUtils.isEmpty(loadCallbackId)) {
+                                    callJSResponse(loadCallbackId);
+                                }
+                                return false;
+                            }
 
-                        @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                            return false;
-                        }
-                    })
-                    .into(view);
-        } else {
-            super.blend(view, name, prop);
+                            @Override
+                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                if (!TextUtils.isEmpty(loadCallbackId)) {
+                                    callJSResponse(loadCallbackId, new JSONBuilder()
+                                            .put("width", resource.getIntrinsicWidth())
+                                            .put("height", resource.getIntrinsicHeight())
+                                            .toJSONObject());
+                                }
+                                return false;
+                            }
+                        })
+                        .into(view);
+                break;
+            case "scaleType":
+                int scaleType = prop.asNumber().toInt();
+                switch (scaleType) {
+                    case 1:
+                        view.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                        break;
+                    case 2:
+                        view.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        break;
+                    default:
+                        view.setScaleType(ImageView.ScaleType.FIT_XY);
+                        break;
+                }
+                break;
+            case "loadCallback":
+                this.loadCallbackId = prop.asString().value();
+                break;
+            default:
+                super.blend(view, name, prop);
+                break;
         }
     }
 }

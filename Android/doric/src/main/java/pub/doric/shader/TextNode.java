@@ -57,6 +57,8 @@ public class TextNode extends ViewNode<TextView> {
             case "textAlignment":
                 view.setGravity(prop.asNumber().toInt() | Gravity.CENTER_VERTICAL);
                 break;
+            case "numberOfLines":
+                break;
             default:
                 super.blend(view, name, prop);
                 break;

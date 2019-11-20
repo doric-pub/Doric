@@ -21,21 +21,57 @@
 //
 
 #import "DoricImageNode.h"
+#import "Doric.h"
 #import <SDWebImage/SDWebImage.h>
+
+@interface DoricImageNode ()
+@property(nonatomic, copy) NSString *loadCallbackId;
+@end
 
 @implementation DoricImageNode
 
 - (UIImageView *)build {
-    return [[UIImageView alloc] init];
+    return [[UIImageView new] also:^(UIImageView *it) {
+        it.clipsToBounds = YES;
+    }];
 }
 
 - (void)blendView:(UIImageView *)view forPropName:(NSString *)name propValue:(id)prop {
-    if ([name isEqualToString:@"imageUrl"]) {
+    if ([@"imageUrl" isEqualToString:name]) {
         __weak typeof(self) _self = self;
         [view sd_setImageWithURL:[NSURL URLWithString:prop] completed:^(UIImage *_Nullable image, NSError *_Nullable error, SDImageCacheType cacheType, NSURL *_Nullable imageURL) {
             __strong typeof(_self) self = _self;
-            [self requestLayout];
+            if (error) {
+                if (self.loadCallbackId.length > 0) {
+                    [self callJSResponse:self.loadCallbackId, nil];
+                }
+            } else {
+                if (self.loadCallbackId.length > 0) {
+                    [self callJSResponse:self.loadCallbackId,
+                                         @{@"width": @(image.size.width), @"height": @(image.size.height)},
+                                    nil];
+                }
+                [self requestLayout];
+            }
+
         }];
+    } else if ([@"scaleType" isEqualToString:name]) {
+        switch ([prop integerValue]) {
+            case 1: {
+                self.view.contentMode = UIViewContentModeScaleAspectFit;
+                break;
+            }
+            case 2: {
+                self.view.contentMode = UIViewContentModeScaleAspectFill;
+                break;
+            }
+            default: {
+                self.view.contentMode = UIViewContentModeScaleToFill;
+                break;
+            }
+        }
+    } else if ([@"loadCallback" isEqualToString:name]) {
+        self.loadCallbackId = prop;
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }

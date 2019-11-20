@@ -39,6 +39,7 @@
 - (void)initWithSuperNode:(DoricSuperNode *)superNode {
     [super initWithSuperNode:superNode];
     self.reusable = YES;
+    self.view.clipsToBounds = YES;
 }
 
 - (DoricStackView *)build {

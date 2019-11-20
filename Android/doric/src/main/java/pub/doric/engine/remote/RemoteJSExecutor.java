@@ -37,13 +37,7 @@ public class RemoteJSExecutor {
                 .readTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(10, TimeUnit.SECONDS)
                 .build();
-        String ip;
-        if (DevKit.isRunningInEmulator) {
-            ip = "10.0.2.2";
-        } else {
-            ip = "192.168.24.79";
-        }
-        final Request request = new Request.Builder().url("ws://" + ip + ":2080").build();
+        final Request request = new Request.Builder().url("ws://" + DevKit.ip + ":2080").build();
 
         final Thread current = Thread.currentThread();
         webSocket = okHttpClient.newWebSocket(request, new WebSocketListener() {

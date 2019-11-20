@@ -18,12 +18,10 @@ package pub.doric.demo;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.FrameLayout;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -32,6 +30,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import pub.doric.DoricContext;
 import pub.doric.DoricDriver;
 import pub.doric.dev.DevPanel;
+import pub.doric.dev.SensorManagerHelper;
 import pub.doric.dev.event.EnterDebugEvent;
 import pub.doric.dev.event.QuitDebugEvent;
 import pub.doric.engine.ChangeEngineCallback;
@@ -45,6 +44,7 @@ import pub.doric.utils.DoricUtils;
 public class DemoActivity extends AppCompatActivity {
     private DoricContext doricContext;
     private DevPanel devPanel = new DevPanel();
+    private SensorManagerHelper sensorHelper;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,6 +56,17 @@ public class DemoActivity extends AppCompatActivity {
         doricContext = DoricContext.create(this, DoricUtils.readAssetFile("demo/" + source), source);
         doricContext.init(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         doricContext.getRootNode().setRootView(frameLayout);
+
+        sensorHelper = new SensorManagerHelper(this);
+        sensorHelper.setOnShakeListener(new SensorManagerHelper.OnShakeListener() {
+            @Override
+            public void onShake() {
+                if (devPanel.isAdded()) {
+                    return;
+                }
+                devPanel.show(getSupportFragmentManager(), "DevPanel");
+            }
+        });
     }
 
     @Override
@@ -82,6 +93,7 @@ public class DemoActivity extends AppCompatActivity {
         super.onDestroy();
         doricContext.teardown();
         EventBus.getDefault().unregister(this);
+        sensorHelper.stop();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

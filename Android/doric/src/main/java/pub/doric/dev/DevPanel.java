@@ -57,7 +57,8 @@ public class DevPanel extends BottomSheetDialogFragment {
             @Override
             public void onClick(View v) {
                 if (DevKit.isRunningInEmulator) {
-                    Doric.connectDevKit("ws://" + "10.0.2.2" + ":7777");
+                    DevKit.ip = "10.0.2.2";
+                    Doric.connectDevKit("ws://" + DevKit.ip + ":7777");
                 } else {
                     final RxPermissions rxPermissions = new RxPermissions(DevPanel.this);
                     Disposable disposable = rxPermissions

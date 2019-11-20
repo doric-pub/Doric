@@ -6,7 +6,8 @@ import pub.doric.utils.DoricUtils;
 
 public class DevKit implements IDevKit {
 
-    public static boolean isRunningInEmulator = false;
+    static boolean isRunningInEmulator = false;
+    public static String ip = "";
 
     private static class Inner {
         private static final DevKit sInstance = new DevKit();

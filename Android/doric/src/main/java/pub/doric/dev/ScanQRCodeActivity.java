@@ -49,6 +49,7 @@ public class ScanQRCodeActivity extends AppCompatActivity implements QRCodeView.
     @Override
     public void onScanQRCodeSuccess(String result) {
         setTitle("扫描结果为：" + result);
+        DevKit.ip = result;
         Toast.makeText(this, "dev kit connecting to " + result, Toast.LENGTH_LONG).show();
         Doric.connectDevKit("ws://" + result + ":7777");
         finish();

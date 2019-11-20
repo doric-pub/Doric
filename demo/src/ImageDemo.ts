@@ -25,6 +25,9 @@ class ImageDemo extends Panel {
                 },
                 scaleType: ScaleType.ScaleToFill,
                 layoutConfig: layoutConfig().exactly(),
+                loadCallback: (ret) => {
+                    log('loadCallback', ret)
+                }
             }),
             label('ScaleAspectFit'),
             image({

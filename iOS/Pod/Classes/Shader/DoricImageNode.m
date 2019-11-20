@@ -21,21 +21,39 @@
 //
 
 #import "DoricImageNode.h"
+#import "Doric.h"
 #import <SDWebImage/SDWebImage.h>
 
 @implementation DoricImageNode
 
 - (UIImageView *)build {
-    return [[UIImageView alloc] init];
+    return [[UIImageView new] also:^(UIImageView *it) {
+        it.clipsToBounds = YES;
+    }];
 }
 
 - (void)blendView:(UIImageView *)view forPropName:(NSString *)name propValue:(id)prop {
-    if ([name isEqualToString:@"imageUrl"]) {
+    if ([@"imageUrl" isEqualToString:name]) {
         __weak typeof(self) _self = self;
         [view sd_setImageWithURL:[NSURL URLWithString:prop] completed:^(UIImage *_Nullable image, NSError *_Nullable error, SDImageCacheType cacheType, NSURL *_Nullable imageURL) {
             __strong typeof(_self) self = _self;
             [self requestLayout];
         }];
+    } else if ([@"scaleType" isEqualToString:name]) {
+        switch ([prop integerValue]) {
+            case 1: {
+                self.view.contentMode = UIViewContentModeScaleAspectFit;
+                break;
+            }
+            case 2: {
+                self.view.contentMode = UIViewContentModeScaleAspectFill;
+                break;
+            }
+            default: {
+                self.view.contentMode = UIViewContentModeScaleToFill;
+                break;
+            }
+        }
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }

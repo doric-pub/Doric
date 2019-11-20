@@ -42,11 +42,21 @@ export class Text extends View implements IText {
     textAlignment?: Gravity
 }
 
+export enum ScaleType {
+    ScaleToFill = 0,
+    ScaleAspectFit,
+    ScaleAspectFill,
+}
+
 export interface IImage extends IView {
     imageUrl?: string
+    scaleType?: ScaleType
 }
 
 export class Image extends View implements IImage {
     @Property
     imageUrl?: string
+
+    @Property
+    scaleType?: ScaleType
 }

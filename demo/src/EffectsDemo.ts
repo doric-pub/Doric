@@ -1,6 +1,6 @@
 
 import { Group, Panel, Text, text, gravity, Color, Stack, LayoutSpec, vlayout, hlayout, scroller, IVLayout, IHLayout, layoutConfig } from "doric";
-import { colors } from "./colorutils";
+import { colors } from "./utils";
 
 
 function box(idx = 0) {
@@ -361,7 +361,7 @@ class EffectsDemo extends Panel {
                 it.space = 20
             }),
         ).also(it => {
-            it.layoutConfig = layoutConfig().wrap()
+            it.layoutConfig = layoutConfig().atmost()
         }).in(rootView)
     }
 }

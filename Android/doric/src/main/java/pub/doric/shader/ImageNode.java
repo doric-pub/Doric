@@ -19,7 +19,6 @@ import android.graphics.drawable.Drawable;
 
 import androidx.annotation.Nullable;
 
-import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -31,7 +30,6 @@ import com.bumptech.glide.request.target.Target;
 import pub.doric.DoricContext;
 import pub.doric.extension.bridge.DoricPlugin;
 
-import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
 /**
@@ -66,6 +64,19 @@ public class ImageNode extends ViewNode<ImageView> {
                         }
                     })
                     .into(view);
+        } else if ("scaleType".equals(name)) {
+            int scaleType = prop.asNumber().toInt();
+            switch (scaleType) {
+                case 1:
+                    view.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                    break;
+                case 2:
+                    view.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    break;
+                default:
+                    view.setScaleType(ImageView.ScaleType.FIT_XY);
+                    break;
+            }
         } else {
             super.blend(view, name, prop);
         }

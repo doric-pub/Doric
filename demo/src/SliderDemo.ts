@@ -1,5 +1,5 @@
 import { Group, Panel, List, text, gravity, Color, Stack, LayoutSpec, list, NativeCall, listItem, log, vlayout, Gravity, hlayout, slider, slideItem, image, layoutConfig } from "doric";
-import { colors } from "./colorutils";
+import { colors } from "./utils";
 
 const imageUrls = [
     'http://b.hiphotos.baidu.com/image/pic/item/908fa0ec08fa513db777cf78376d55fbb3fbd9b3.jpg',

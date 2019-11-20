@@ -15,10 +15,14 @@
  */
 package pub.doric.plugin;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.widget.Toast;
 
 import pub.doric.DoricContext;
+import pub.doric.R;
 import pub.doric.extension.bridge.DoricPlugin;
 import pub.doric.extension.bridge.DoricMethod;
 import pub.doric.extension.bridge.DoricPromise;
@@ -29,6 +33,7 @@ import com.github.pengfeizhou.jscore.ArchiveException;
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
+import com.github.pengfeizhou.jscore.JavaValue;
 
 /**
  * @Description: Doric
@@ -66,6 +71,41 @@ public class ModalPlugin extends DoricJavaPlugin {
             toast.show();
         } catch (ArchiveException e) {
             e.printStackTrace();
+        }
+    }
+
+    @DoricMethod(name = "alert", thread = ThreadMode.UI)
+    public void alert(JSDecoder decoder, final DoricPromise promise) {
+        try {
+            JSObject jsObject = decoder.decode().asObject();
+            JSValue titleVal = jsObject.getProperty("title");
+            JSValue msgVal = jsObject.getProperty("msg");
+            JSValue okBtn = jsObject.getProperty("okLabel");
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getDoricContext().getContext(), R.style.Theme_Doric_Modal_Alert);
+            if (titleVal.isString()) {
+                builder.setTitle(titleVal.asString().value());
+            }
+            String btnTitle = getDoricContext().getContext().getString(android.R.string.ok);
+            if (okBtn.isString()) {
+                btnTitle = okBtn.asString().value();
+            }
+            builder.setMessage(msgVal.asString().value())
+                    .setPositiveButton(btnTitle, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            promise.resolve();
+                        }
+                    });
+            builder.setCancelable(false);
+            try {
+                builder.show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (ArchiveException e) {
+            e.printStackTrace();
+            promise.reject(new JavaValue(e.getLocalizedMessage()));
         }
     }
 }

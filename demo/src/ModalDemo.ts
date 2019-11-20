@@ -51,6 +51,32 @@ class ModalDemo extends Panel {
                     modal(context).toast('This is a toast.', Gravity.Center)
                 }
             } as IText),
+            text({
+                text: "Alert",
+                layoutConfig: layoutConfig().w(LayoutSpec.AT_MOST),
+                textSize: 30,
+                textColor: Color.WHITE,
+                bgColor: colors[2],
+                textAlignment: Gravity.Center,
+                height: 50,
+            }),
+            label('Click me').apply({
+                width: 200,
+                height: 50,
+                bgColor: colors[0],
+                textSize: 30,
+                textColor: Color.WHITE,
+                layoutConfig: layoutConfig().exactly(),
+                onClick: () => {
+                    modal(context).alert({
+                        msg: 'This is alert.',
+                        title: 'Alert title',
+                        okLabel: "OkLabel"
+                    }).then(e => {
+                        modal(context).toast('Clicked OK.')
+                    })
+                }
+            } as IText),
         ]).apply({
             layoutConfig: layoutConfig().atmost().h(LayoutSpec.WRAP_CONTENT),
             gravity: Gravity.Center,

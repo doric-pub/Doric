@@ -7,4 +7,5 @@ export default [
     'src/LayoutDemo',
     'src/EffectsDemo',
     'src/ImageDemo',
+    'src/ModalDemo',
 ]

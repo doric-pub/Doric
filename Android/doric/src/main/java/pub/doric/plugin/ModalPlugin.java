@@ -25,6 +25,7 @@ import pub.doric.utils.ThreadMode;
 
 import com.github.pengfeizhou.jscore.ArchiveException;
 import com.github.pengfeizhou.jscore.JSDecoder;
+import com.github.pengfeizhou.jscore.JSObject;
 
 /**
  * @Description: Doric
@@ -41,7 +42,10 @@ public class ModalPlugin extends DoricJavaPlugin {
     @DoricMethod(name = "toast", thread = ThreadMode.UI)
     public void toast(JSDecoder decoder, DoricPromise promise) {
         try {
-            Toast.makeText(getDoricContext().getContext(), decoder.string(), Toast.LENGTH_SHORT).show();
+            JSObject jsObject = decoder.decode().asObject();
+            Toast.makeText(getDoricContext().getContext(),
+                    jsObject.getProperty("msg").asString().value(),
+                    Toast.LENGTH_SHORT).show();
         } catch (ArchiveException e) {
             e.printStackTrace();
         }

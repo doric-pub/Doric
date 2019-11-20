@@ -35,3 +35,8 @@ NSBundle *_Nonnull DoricBundle(void);
 #ifndef DC_UNLOCK
 #define DC_UNLOCK(lock) dispatch_semaphore_signal(lock);
 #endif
+
+void showToastInView(NSString *_Nonnull text, UIView *_Nonnull superView);
+
+
+void showToast(NSString *_Nonnull text);

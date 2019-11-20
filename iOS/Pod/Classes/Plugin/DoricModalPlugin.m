@@ -21,15 +21,13 @@
 //
 
 #import "DoricModalPlugin.h"
-#import "DoricRegistry.h"
-
+#import "DoricUtil.h"
 
 @implementation DoricModalPlugin
 
-- (void)toast:(NSString *)message withPromise:(DoricPromise *)promise {
+- (void)toast:(NSDictionary *)dic withPromise:(DoricPromise *)promise {
     dispatch_async(dispatch_get_main_queue(), ^{
-        NSLog(@"toast:%@", message);
-        [promise resolve:@"Resolved"];
+        showToast(dic[@"msg"]);
     });
 }
 

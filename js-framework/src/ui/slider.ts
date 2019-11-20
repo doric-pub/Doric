@@ -5,7 +5,7 @@ export function slideItem(item: View) {
     return (new SlideItem).also((it) => {
         it.layoutConfig = {
             widthSpec: LayoutSpec.AT_MOST,
-            heightSpec: LayoutSpec.WRAP_CONTENT,
+            heightSpec: LayoutSpec.AT_MOST,
         }
         it.addChild(item)
     })

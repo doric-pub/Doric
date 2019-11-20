@@ -147,20 +147,21 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
             CGFloat rightTop = [(NSNumber *) dic[@"rightTop"] floatValue];
             CGFloat rightBottom = [(NSNumber *) dic[@"rightBottom"] floatValue];
             CGFloat leftBottom = [(NSNumber *) dic[@"leftBottom"] floatValue];
-            CALayer *mask = nil;
             if (ABS(leftTop - rightTop) > CGFLOAT_MIN
                     || ABS(leftTop - rightBottom) > CGFLOAT_MIN
                     || ABS(leftTop - leftBottom) > CGFLOAT_MIN) {
                 view.layer.cornerRadius = 0;
-                CAShapeLayer *shapeLayer = [CAShapeLayer layer];
-                CGPathRef path = DoricCreateRoundedRectPath(self.view.bounds, leftTop, rightTop, rightBottom, leftBottom);
-                shapeLayer.path = path;
-                CGPathRelease(path);
-                mask = shapeLayer;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    CAShapeLayer *shapeLayer = [CAShapeLayer layer];
+                    CGPathRef path = DoricCreateRoundedRectPath(self.view.bounds, leftTop, rightTop, rightBottom, leftBottom);
+                    shapeLayer.path = path;
+                    CGPathRelease(path);
+                    view.layer.mask = shapeLayer;
+                });
             } else {
                 view.layer.cornerRadius = leftTop;
+                view.layer.mask = nil;
             }
-            view.layer.mask = mask;
         }
     } else if ([name isEqualToString:@"shadow"]) {
         NSDictionary *dic = prop;

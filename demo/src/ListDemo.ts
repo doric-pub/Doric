@@ -44,6 +44,7 @@ class ListPanel extends Panel {
                             text({
                                 textColor: Color.parse("#ffffff"),
                                 textSize: 20,
+                                text: "",
                             }).also(it => {
                                 counter = it
                                 it.layoutConfig = {

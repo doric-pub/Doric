@@ -281,6 +281,14 @@ class SnakeView extends ViewHolder<SnakeModel> {
             if (item === undefined) {
                 item = new Stack
                 item.width = item.height = 10
+                item.corners = 5
+                item.shadow = {
+                    color: Color.GRAY,
+                    opacity: 1,
+                    radius: 3,
+                    offsetX: 3,
+                    offsetY: 3,
+                }
                 this.panel.addChild(item)
             }
             if (index === nodes.length - 1) {

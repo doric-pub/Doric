@@ -14,9 +14,9 @@ class NetworkDemo extends Panel {
                 textColor: Color.WHITE,
                 layoutConfig: layoutConfig().exactly(),
                 onClick: () => {
-                    network(context).get('https://doric.pub').then(
+                    network(context).get('https://m.baidu.com').then(
                         e => {
-                            modal(context).toast(JSON.stringify(e))
+                            modal(context).alert(JSON.stringify(e))
                         }
                     ).catch(e => {
                         modal(context).toast('Catched:' + JSON.stringify(e))

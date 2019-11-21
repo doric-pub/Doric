@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "Doric.h"
 #import "DemoVC.h"
+#import "QRScanViewController.h"
 
 @interface ViewController () <UITableViewDelegate, UITableViewDataSource>
 @property(nonatomic, copy) NSArray <NSString *> *demoFilePaths;
@@ -25,6 +26,9 @@
     self.demoFilePaths = [[mgr subpathsAtPath:demoPath] filter:^BOOL(NSString *obj) {
         return ![obj containsString:@".map"];
     }];
+    NSMutableArray <NSString *> *tmp = [self.demoFilePaths mutableCopy];
+    [tmp insertObject:@"Dev Kit" atIndex:0];
+    self.demoFilePaths = tmp;
     [self.view addSubview:[[UITableView new] also:^(UITableView *it) {
         it.width = self.view.width;
         it.height = self.view.height;
@@ -50,6 +54,10 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row == 0) {
+        [self.navigationController pushViewController:[QRScanViewController new] animated:NO];
+        return;
+    }
     DemoVC *demoVC = [[DemoVC alloc] initWithPath:self.demoFilePaths[(NSUInteger) indexPath.row]];
     [self.navigationController pushViewController:demoVC animated:NO];
 }

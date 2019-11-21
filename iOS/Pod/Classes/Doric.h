@@ -19,3 +19,4 @@
 #import "DoricViewNode.h"
 #import "DoricRootNode.h"
 #import "UIView+Doric.h"
+#import "DoricUtil.h"

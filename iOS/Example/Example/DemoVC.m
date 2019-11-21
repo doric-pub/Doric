@@ -26,6 +26,7 @@
 
 - (void)viewDidLoad {
     self.title = self.filePath;
+    self.view.backgroundColor = [UIColor whiteColor];
     NSString *path = [[NSBundle mainBundle] bundlePath];
     NSString *demoPath = [path stringByAppendingPathComponent:@"demo"];
     NSString *fullPath = [demoPath stringByAppendingPathComponent:self.filePath];

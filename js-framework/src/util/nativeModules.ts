@@ -55,7 +55,7 @@ export function modal(context: BridgeContext) {
             text?: string,
             defaultText?: string,
         }) => {
-            return context.modal.prompt(arg)
+            return context.modal.prompt(arg) as Promise<string>
         },
     }
 }

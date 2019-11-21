@@ -22,6 +22,7 @@
 
 #import "DoricRegistry.h"
 #import "DoricModalPlugin.h"
+#import "DoricNetworkPlugin.h"
 #import "DoricShaderPlugin.h"
 #import "DoricStackNode.h"
 #import "DoricVLayoutNode.h"
@@ -56,6 +57,7 @@
 
 - (void)innerRegister {
     [self registerNativePlugin:DoricModalPlugin.class withName:@"modal"];
+    [self registerNativePlugin:DoricNetworkPlugin.class withName:@"network"];
     [self registerNativePlugin:DoricShaderPlugin.class withName:@"shader"];
 
     [self registerViewNode:DoricStackNode.class withName:@"Stack"];

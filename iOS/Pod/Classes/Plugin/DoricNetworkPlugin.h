@@ -13,19 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from "./src/ui/view"
-export * from "./src/ui/layout"
-export * from "./src/ui/list"
-export * from "./src/ui/slider"
-export * from "./src/ui/scroller"
-export * from "./src/ui/widgets"
-export * from "./src/ui/panel"
-export * from "./src/ui/declarative"
-export * from "./src/util/color"
-export * from './src/util/log'
-export * from './src/util/types'
-export * from './src/util/gravity'
-export * from './src/util/candies'
-export * from './src/vm/mvvm'
-export * from './src/runtime/global'
-export * from './src/util/nativeModules'
+//
+// Created by pengfei.zhou on 2019/11/21.
+//
+
+#import <Foundation/Foundation.h>
+#import "DoricNativePlugin.h"
+
+@interface DoricNetworkPlugin : DoricNativePlugin
+@end

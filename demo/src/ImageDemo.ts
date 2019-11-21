@@ -10,7 +10,7 @@ class ImageDemo extends Panel {
                 layoutConfig: layoutConfig().w(LayoutSpec.AT_MOST),
                 textSize: 30,
                 textColor: Color.WHITE,
-                bgColor: colors[1],
+                bgColor: colors[5],
                 textAlignment: gravity().center(),
                 height: 50,
             }),
@@ -26,18 +26,6 @@ class ImageDemo extends Panel {
             label('APNG'),
             image({
                 imageUrl: "https://misc.aotu.io/ONE-SUNDAY/world_cup_2014_42.png",
-                loadCallback: (ret) => {
-                }
-            }),
-            label('WebP'),
-            image({
-                imageUrl: "https://misc.aotu.io/ONE-SUNDAY/world_cup_2014_42.webp",
-                loadCallback: (ret) => {
-                }
-            }),
-            label('Lossy WebP'),
-            image({
-                imageUrl: "https://misc.aotu.io/ONE-SUNDAY/world_cup_2014_42_lossy.webp",
                 loadCallback: (ret) => {
                 }
             }),

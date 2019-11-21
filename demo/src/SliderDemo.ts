@@ -1,4 +1,4 @@
-import { Group, Panel, List, text, gravity, Color, Stack, LayoutSpec, list, NativeCall, listItem, log, vlayout, Gravity, hlayout, slider, slideItem, image, layoutConfig } from "doric";
+import { Group, Panel, List, text, gravity, Color, Stack, LayoutSpec, list, NativeCall, listItem, log, vlayout, Gravity, hlayout, slider, slideItem, image, layoutConfig, ScaleType } from "doric";
 import { colors } from "./utils";
 
 const imageUrls = [
@@ -33,7 +33,8 @@ class SliderPanel extends Panel {
                 renderPage: (idx) => {
                     return slideItem(image({
                         imageUrl: imageUrls[idx % imageUrls.length],
-                        layoutConfig: layoutConfig().w(LayoutSpec.WRAP_CONTENT).h(LayoutSpec.WRAP_CONTENT).a(gravity().center()),
+                        scaleType: ScaleType.ScaleAspectFit,
+                        layoutConfig: layoutConfig().w(LayoutSpec.AT_MOST).h(LayoutSpec.AT_MOST).a(gravity().center()),
                     })).also(it => {
                         let start = idx
                         it.onClick = () => {

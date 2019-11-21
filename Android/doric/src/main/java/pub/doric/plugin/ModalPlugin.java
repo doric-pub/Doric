@@ -17,7 +17,6 @@ package pub.doric.plugin;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;

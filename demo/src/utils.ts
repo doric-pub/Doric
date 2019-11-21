@@ -1,4 +1,4 @@
-import { Color, text, Stack, Text } from "doric";
+import { Color, text, Stack, Text, layoutConfig, LayoutSpec, gravity } from "doric";
 
 export const colors = [
     "#70a1ff",
@@ -32,5 +32,17 @@ export function boxStr(str: string, idx = 0) {
         it.text = str
         it.textColor = Color.WHITE
         it.bgColor = colors[idx || 0]
+    })
+}
+
+export function title(str: string) {
+    return text({
+        text: "Network Demo",
+        layoutConfig: layoutConfig().w(LayoutSpec.AT_MOST),
+        textSize: 30,
+        textColor: Color.WHITE,
+        bgColor: colors[1],
+        textAlignment: gravity().center(),
+        height: 50,
     })
 }

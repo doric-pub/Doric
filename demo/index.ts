@@ -8,4 +8,5 @@ export default [
     'src/EffectsDemo',
     'src/ImageDemo',
     'src/ModalDemo',
+    'src/NetworkDemo',
 ]

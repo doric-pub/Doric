@@ -96,6 +96,9 @@ function transformRequest(request: IRequest) {
         }
         request.url = `${request.url}${url.indexOf('?') >= 0 ? '&' : '?'}${queryStrings.join('&')}`
     }
+    if (typeof request.data === 'object') {
+        request.data = JSON.stringify(request.data)
+    }
     return request
 }
 export function network(context: BridgeContext) {

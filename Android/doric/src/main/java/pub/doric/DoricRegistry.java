@@ -17,6 +17,7 @@ package pub.doric;
 
 import android.text.TextUtils;
 
+import pub.doric.plugin.NetworkPlugin;
 import pub.doric.plugin.ShaderPlugin;
 import pub.doric.shader.HLayoutNode;
 import pub.doric.shader.ImageNode;
@@ -65,6 +66,7 @@ public class DoricRegistry {
     public DoricRegistry() {
         this.registerNativePlugin(ShaderPlugin.class);
         this.registerNativePlugin(ModalPlugin.class);
+        this.registerNativePlugin(NetworkPlugin.class);
         this.registerViewNode(RootNode.class);
         this.registerViewNode(TextNode.class);
         this.registerViewNode(ImageNode.class);

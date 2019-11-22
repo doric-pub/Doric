@@ -20,17 +20,26 @@
 #import "DoricStoragePlugin.h"
 #import "YYDiskCache.h"
 
-static NSString *doric_prefix = @"pref_doric";
+static NSString *doric_prefix = @"pref";
 
 @interface DoricStoragePlugin ()
 @property(atomic, strong) NSMutableDictionary <NSString *, YYDiskCache *> *cachedMap;
 @property(nonatomic, strong) YYDiskCache *defaultCache;
+@property(nonatomic, copy) NSString *basePath;
 @end
 
 @implementation DoricStoragePlugin
+- (instancetype)initWithContext:(DoricContext *)doricContext {
+    if (self = [super initWithContext:doricContext]) {
+        _basePath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]
+                stringByAppendingPathComponent:@"doric"];
+    }
+    return self;
+}
+
 - (YYDiskCache *)defaultCache {
     if (!_defaultCache) {
-        _defaultCache = [[YYDiskCache alloc] initWithPath:doric_prefix];
+        _defaultCache = [[YYDiskCache alloc] initWithPath:[self.basePath stringByAppendingPathComponent:doric_prefix]];
     }
     return _defaultCache;
 }
@@ -40,7 +49,8 @@ static NSString *doric_prefix = @"pref_doric";
     if (zone) {
         diskCache = self.cachedMap[zone];
         if (!diskCache) {
-            diskCache = [[YYDiskCache alloc] initWithPath:[NSString stringWithFormat:@"%@_%@", doric_prefix, zone]];
+            diskCache = [[YYDiskCache alloc] initWithPath:[self.basePath
+                    stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@", doric_prefix, zone]]];
             self.cachedMap[zone] = diskCache;
         }
     } else {

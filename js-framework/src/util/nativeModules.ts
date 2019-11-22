@@ -154,10 +154,10 @@ export function network(context: BridgeContext) {
 export function storage(context: BridgeContext) {
     return {
         setItem: (key: string, value: string, zone?: string) => {
-            return context.storage.store({ key, value, zone })
+            return context.storage.setItem({ key, value, zone })
         },
         getItem: (key: string, zone?: string) => {
-            return context.storage.retreive({ key, zone }) as Promise<string>
+            return context.storage.getItem({ key, zone }) as Promise<string>
         },
         remove: (key: string, zone?: string) => {
             return context.storage.remove({ key, zone })

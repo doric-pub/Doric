@@ -9,4 +9,5 @@ export default [
     'src/ImageDemo',
     'src/ModalDemo',
     'src/NetworkDemo',
+    'src/StorageDemo',
 ]

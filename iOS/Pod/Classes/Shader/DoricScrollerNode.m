@@ -102,6 +102,6 @@
 }
 
 - (void)blendSubNode:(NSDictionary *)subModel {
-    [self.childNode blend:subModel];
+    [self.childNode blend:subModel[@"props"]];
 }
 @end

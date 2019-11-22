@@ -72,7 +72,7 @@ public class ModalPlugin extends DoricJavaPlugin {
 
             }
             toast.show();
-        } catch (ArchiveException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -101,12 +101,8 @@ public class ModalPlugin extends DoricJavaPlugin {
                         }
                     });
             builder.setCancelable(false);
-            try {
-                builder.show();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } catch (ArchiveException e) {
+            builder.show();
+        } catch (Exception e) {
             e.printStackTrace();
             promise.reject(new JavaValue(e.getLocalizedMessage()));
         }
@@ -148,12 +144,8 @@ public class ModalPlugin extends DoricJavaPlugin {
                         }
                     });
             builder.setCancelable(false);
-            try {
-                builder.show();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } catch (ArchiveException e) {
+            builder.show();
+        } catch (Exception e) {
             e.printStackTrace();
             promise.reject(new JavaValue(e.getLocalizedMessage()));
         }
@@ -187,7 +179,9 @@ public class ModalPlugin extends DoricJavaPlugin {
 
             View v = LayoutInflater.from(getDoricContext().getContext()).inflate(R.layout.doric_modal_prompt, null);
             TextView tvMsg = v.findViewById(R.id.tv_msg);
-            tvMsg.setText(msgVal.asString().value());
+            if (msgVal.isString()) {
+                tvMsg.setText(msgVal.asString().value());
+            }
             final EditText editText = v.findViewById(R.id.edit_input);
             if (defaultVal.isString()) {
                 editText.setHint(defaultVal.asString().value());
@@ -211,12 +205,8 @@ public class ModalPlugin extends DoricJavaPlugin {
                         }
                     });
             builder.setCancelable(false);
-            try {
-                builder.show();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } catch (ArchiveException e) {
+            builder.show();
+        } catch (Exception e) {
             e.printStackTrace();
             promise.reject(new JavaValue(e.getLocalizedMessage()));
         }

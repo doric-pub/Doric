@@ -148,7 +148,7 @@ public class DoricContext {
         doricDebugDriver = new DoricDebugDriver(new IStatusCallback() {
             @Override
             public void start() {
-                isDebugging=true;
+                isDebugging = true;
                 callEntity(DoricConstant.DORIC_ENTITY_INIT, initParams);
                 callEntity(DoricConstant.DORIC_ENTITY_CREATE);
             }
@@ -156,6 +156,7 @@ public class DoricContext {
     }
 
     public void stopDebug() {
+        doricDebugDriver.destroy();
         isDebugging = false;
         callEntity(DoricConstant.DORIC_ENTITY_INIT, initParams);
         callEntity(DoricConstant.DORIC_ENTITY_CREATE);

@@ -69,6 +69,7 @@ public class DebugContextPanel extends DialogFragment {
                     jsonObject.addProperty("projectHome", BuildConfig.PROJECT_HOME);
                     jsonObject.addProperty("source", doricContext.getSource().replace(".js", ".ts"));
                     Doric.sendDevCommand(IDevKit.Command.DEBUG, jsonObject);
+                    dismissAllowingStateLoss();
                 }
             });
 

@@ -126,4 +126,9 @@ public class DoricDebugDriver implements IDoricDriver {
     public DoricRegistry getRegistry() {
         return doricJSEngine.getRegistry();
     }
+
+    public void destroy() {
+        doricJSEngine.teardown();
+        mBridgeExecutor.shutdown();
+    }
 }

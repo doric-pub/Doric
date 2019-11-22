@@ -69,6 +69,10 @@ public class DoricTimerExtension implements Handler.Callback {
         return true;
     }
 
+    public void teardown() {
+        mTimerHandler.removeCallbacksAndMessages(null);
+    }
+
     private class TimerInfo {
         long timerId;
         long time;

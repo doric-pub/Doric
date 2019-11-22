@@ -170,6 +170,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
 
     public void teardown() {
         mDoricJSE.teardown();
+        mTimerExtension.teardown();
     }
 
     private void loadBuiltinJS(String assetName) {

@@ -40,6 +40,8 @@ import pub.doric.utils.DoricUtils;
  * @CreateDate: 2019-07-18
  */
 public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.TimerCallback {
+
+    private HandlerThread handlerThread;
     private final Handler mJSHandler;
     private final DoricBridgeExtension mDoricBridgeExtension = new DoricBridgeExtension();
     private IDoricJSE mDoricJSE;
@@ -47,7 +49,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
     private final DoricRegistry mDoricRegistry = new DoricRegistry();
 
     public DoricJSEngine(final boolean isNative, final IStatusCallback statusCallback) {
-        HandlerThread handlerThread = new HandlerThread(this.getClass().getSimpleName());
+        handlerThread = new HandlerThread(this.getClass().getSimpleName());
         handlerThread.start();
         Looper looper = handlerThread.getLooper();
         mJSHandler = new Handler(looper, this);
@@ -171,6 +173,8 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
     public void teardown() {
         mDoricJSE.teardown();
         mTimerExtension.teardown();
+        handlerThread.quit();
+        mJSHandler.removeCallbacksAndMessages(null);
     }
 
     private void loadBuiltinJS(String assetName) {

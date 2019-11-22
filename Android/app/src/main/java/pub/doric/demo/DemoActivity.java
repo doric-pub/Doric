@@ -22,6 +22,7 @@ import android.widget.FrameLayout;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -41,7 +42,6 @@ import pub.doric.utils.DoricUtils;
  */
 public class DemoActivity extends AppCompatActivity {
     private DoricContext doricContext;
-    private DevPanel devPanel = new DevPanel();
     private SensorManagerHelper sensorHelper;
 
     @Override
@@ -59,10 +59,11 @@ public class DemoActivity extends AppCompatActivity {
         sensorHelper.setOnShakeListener(new SensorManagerHelper.OnShakeListener() {
             @Override
             public void onShake() {
-                if (devPanel.isAdded()) {
+                Fragment devPanel = getSupportFragmentManager().findFragmentByTag("DevPanel");
+                if (devPanel != null && devPanel.isAdded()) {
                     return;
                 }
-                devPanel.show(getSupportFragmentManager(), "DevPanel");
+                new DevPanel().show(getSupportFragmentManager(), "DevPanel");
             }
         });
     }
@@ -107,7 +108,7 @@ public class DemoActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (KeyEvent.KEYCODE_MENU == event.getKeyCode()) {
-            devPanel.show(getSupportFragmentManager(), "DevPanel");
+            new DevPanel().show(getSupportFragmentManager(), "DevPanel");
         }
         return super.onKeyDown(keyCode, event);
     }

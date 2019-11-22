@@ -32,11 +32,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import pub.doric.dev.DevPanel;
 import pub.doric.utils.DoricUtils;
 
 public class MainActivity extends AppCompatActivity {
-    private DevPanel devPanel = new DevPanel();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,10 +89,6 @@ public class MainActivity extends AppCompatActivity {
             tv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (position == 0) {
-                        devPanel.show(getSupportFragmentManager(), "DevPanel");
-                        return;
-                    }
                     Intent intent = new Intent(tv.getContext(), DemoActivity.class);
                     intent.putExtra("source", data[position]);
                     tv.getContext().startActivity(intent);

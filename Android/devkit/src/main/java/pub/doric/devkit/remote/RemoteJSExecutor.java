@@ -25,7 +25,7 @@ import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import pub.doric.devkit.DevKit;
 import pub.doric.devkit.event.QuitDebugEvent;
-import pub.doric.engine.IStatusCallback;
+import pub.doric.devkit.IStatusCallback;
 
 public class RemoteJSExecutor {
     private final WebSocket webSocket;

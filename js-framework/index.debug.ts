@@ -16,10 +16,12 @@
 import * as doric from './src/runtime/sandbox'
 import * as WebSocket from 'ws'
 const WebSocketClient = require('ws')
-
+const fs = require('fs')
+let context = process.cwd()  + '/build/context'
+const contextId = fs.readFileSync(context, { encoding: 'utf8' })
+console.log(contextId)
 let global = new Function('return this')()
 global.doric = doric
-const contextId = "1"
 global.context = doric.jsObtainContext(contextId)
 global.Entry = doric.jsObtainEntry(contextId)
 

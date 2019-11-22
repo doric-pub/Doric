@@ -34,6 +34,7 @@
 #import "DoricScrollerNode.h"
 #import "DoricSliderNode.h"
 #import "DoricSlideItemNode.h"
+#import "DoricStoragePlugin.h"
 
 @interface DoricRegistry ()
 
@@ -56,9 +57,10 @@
 }
 
 - (void)innerRegister {
+    [self registerNativePlugin:DoricShaderPlugin.class withName:@"shader"];
     [self registerNativePlugin:DoricModalPlugin.class withName:@"modal"];
     [self registerNativePlugin:DoricNetworkPlugin.class withName:@"network"];
-    [self registerNativePlugin:DoricShaderPlugin.class withName:@"shader"];
+    [self registerNativePlugin:DoricStoragePlugin.class withName:@"storage"];
 
     [self registerViewNode:DoricStackNode.class withName:@"Stack"];
     [self registerViewNode:DoricVLayoutNode.class withName:@"VLayout"];

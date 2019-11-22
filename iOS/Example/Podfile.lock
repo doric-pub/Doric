@@ -4,6 +4,7 @@ PODS:
     - SDWebImage (~> 4.4.7)
     - SDWebImage/WebP
     - SocketRocket (~> 0.5.1)
+    - YYCache (~> 1.0.4)
   - GCDWebServer (3.5.3):
     - GCDWebServer/Core (= 3.5.3)
   - GCDWebServer/Core (3.5.3)
@@ -23,6 +24,7 @@ PODS:
     - libwebp (< 2.0, >= 0.5)
     - SDWebImage/Core
   - SocketRocket (0.5.1)
+  - YYCache (1.0.4)
 
 DEPENDENCIES:
   - Doric (from `../`)
@@ -33,17 +35,19 @@ SPEC REPOS:
     - libwebp
     - SDWebImage
     - SocketRocket
+    - YYCache
 
 EXTERNAL SOURCES:
   Doric:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Doric: 4632b549eb47400496b4aa3307234b883092a77d
+  Doric: c71287d68afeeb79bfd3c680ed2dd3b90d515c12
   GCDWebServer: c0ab22c73e1b84f358d1e2f74bf6afd1c60829f2
   libwebp: 057912d6d0abfb6357d8bb05c0ea470301f5d61e
   SDWebImage: c10d14a8883ebd89664f02a422006f66a85c0c5d
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
+  YYCache: 8105b6638f5e849296c71f331ff83891a4942952
 
 PODFILE CHECKSUM: 012563d71439e7e33e976dca3b59664ed56cee39
 

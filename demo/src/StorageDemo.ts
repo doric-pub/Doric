@@ -7,10 +7,9 @@ class StorageDemo extends Panel {
     stored!: Text
 
     update() {
-        storage(context).getItem(storedKey).then(e => {
-            this.stored.text = '12345'
-            loge('set Text')
-            modal(context).toast('current in then:' + this.stored.isDirty())
+        storage(context).getItem(storedKey, zone).then(e => {
+            this.stored.text = e || ""
+            log('Called in then')
         })
     }
 
@@ -42,8 +41,41 @@ class StorageDemo extends Panel {
                 textColor: Color.WHITE,
                 layoutConfig: layoutConfig().exactly(),
                 onClick: () => {
-                    storage(context).setItem(storedKey, 'This is my stored value').then(e => {
-                        log('Stored')
+                    storage(context).getItem(storedKey, zone).then(e => {
+                        modal(context).prompt({
+                            text: e,
+                            title: "Please input text to store",
+                            defaultText: "Default Value",
+                        }).then(text => {
+                            storage(context).setItem(storedKey, text, zone).then(() => {
+                                this.update()
+                            })
+                        })
+                    })
+                },
+            } as IText),
+            label('remove value').apply({
+                width: 200,
+                height: 50,
+                bgColor: colors[0],
+                textSize: 30,
+                textColor: Color.WHITE,
+                layoutConfig: layoutConfig().exactly(),
+                onClick: () => {
+                    storage(context).remove(storedKey, zone).then(e => {
+                        this.update()
+                    })
+                },
+            } as IText),
+            label('clear values').apply({
+                width: 200,
+                height: 50,
+                bgColor: colors[0],
+                textSize: 30,
+                textColor: Color.WHITE,
+                layoutConfig: layoutConfig().exactly(),
+                onClick: () => {
+                    storage(context).clear(zone).then(e => {
                         this.update()
                     })
                 },
@@ -55,6 +87,7 @@ class StorageDemo extends Panel {
         } as IVLayout)).apply({
             layoutConfig: layoutConfig().atmost(),
         }).in(root)
+        this.update()
     }
 
 }

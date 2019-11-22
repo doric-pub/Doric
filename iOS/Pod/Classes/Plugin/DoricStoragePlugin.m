@@ -33,6 +33,7 @@ static NSString *doric_prefix = @"pref";
     if (self = [super initWithContext:doricContext]) {
         _basePath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]
                 stringByAppendingPathComponent:@"doric"];
+        _cachedMap = [NSMutableDictionary new];
     }
     return self;
 }

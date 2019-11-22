@@ -163,7 +163,7 @@ export function storage(context: BridgeContext) {
             return context.storage.remove({ key, zone })
         },
         clear: (zone: string) => {
-            return context.storage.clear(zone)
+            return context.storage.clear({ zone })
         },
     }
 }

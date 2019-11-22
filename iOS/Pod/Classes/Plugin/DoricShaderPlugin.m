@@ -31,6 +31,9 @@
 @implementation DoricShaderPlugin
 
 - (void)render:(NSDictionary *)argument {
+    if(!argument) {
+        return;
+    }
     __weak typeof(self) _self = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         __strong typeof(_self) self = _self;

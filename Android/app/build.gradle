@@ -28,4 +28,5 @@ dependencies {
     implementation 'com.github.bumptech.glide:annotations:4.10.0'
     implementation 'com.github.penfeizhou.android.animation:glide-plugin:1.2.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-beta-4'
 }

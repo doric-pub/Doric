@@ -50,7 +50,7 @@ public class ModalPlugin extends DoricJavaPlugin {
         super(doricContext);
     }
 
-    @DoricMethod(name = "toast", thread = ThreadMode.UI)
+    @DoricMethod(thread = ThreadMode.UI)
     public void toast(JSDecoder decoder, DoricPromise promise) {
         try {
             JSObject jsObject = decoder.decode().asObject();
@@ -77,7 +77,7 @@ public class ModalPlugin extends DoricJavaPlugin {
         }
     }
 
-    @DoricMethod(name = "alert", thread = ThreadMode.UI)
+    @DoricMethod(thread = ThreadMode.UI)
     public void alert(JSDecoder decoder, final DoricPromise promise) {
         try {
             JSObject jsObject = decoder.decode().asObject();
@@ -113,7 +113,7 @@ public class ModalPlugin extends DoricJavaPlugin {
     }
 
 
-    @DoricMethod(name = "confirm", thread = ThreadMode.UI)
+    @DoricMethod(thread = ThreadMode.UI)
     public void confirm(JSDecoder decoder, final DoricPromise promise) {
         try {
             JSObject jsObject = decoder.decode().asObject();
@@ -160,7 +160,7 @@ public class ModalPlugin extends DoricJavaPlugin {
     }
 
 
-    @DoricMethod(name = "prompt", thread = ThreadMode.UI)
+    @DoricMethod(thread = ThreadMode.UI)
     public void prompt(JSDecoder decoder, final DoricPromise promise) {
         try {
             JSObject jsObject = decoder.decode().asObject();

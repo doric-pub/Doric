@@ -28,20 +28,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 
-import pub.doric.DoricDriver;
 import pub.doric.dev.DevPanel;
-import pub.doric.dev.event.EnterDebugEvent;
-import pub.doric.dev.event.QuitDebugEvent;
-import pub.doric.engine.ChangeEngineCallback;
 import pub.doric.utils.DoricUtils;
 
 public class MainActivity extends AppCompatActivity {
@@ -57,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
         try {
             String[] demos = getAssets().list("demo");
             List<String> ret = new ArrayList<>();
-            ret.add("Debug Kit");
             for (String str : demos) {
                 if (str.endsWith("js")) {
                     ret.add(str);
@@ -67,37 +57,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
-
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEnterDebugEvent(EnterDebugEvent enterDebugEvent) {
-        DoricDriver.getInstance().changeJSEngine(false, new ChangeEngineCallback() {
-            @Override
-            public void changed() {
-            }
-        });
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onQuitDebugEvent(QuitDebugEvent quitDebugEvent) {
-        DoricDriver.getInstance().changeJSEngine(true, new ChangeEngineCallback() {
-            @Override
-            public void changed() {
-            }
-        });
     }
 
     public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

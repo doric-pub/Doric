@@ -43,11 +43,10 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
     private final Handler mJSHandler;
     private final DoricBridgeExtension mDoricBridgeExtension = new DoricBridgeExtension();
     private IDoricJSE mDoricJSE;
-    private DoricNativeJSExecutor doricNativeJSExecutor;
     private final DoricTimerExtension mTimerExtension;
     private final DoricRegistry mDoricRegistry = new DoricRegistry();
 
-    public DoricJSEngine() {
+    public DoricJSEngine(final boolean isNative, final IStatusCallback statusCallback) {
         HandlerThread handlerThread = new HandlerThread(this.getClass().getSimpleName());
         handlerThread.start();
         Looper looper = handlerThread.getLooper();
@@ -55,9 +54,12 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
         mJSHandler.post(new Runnable() {
             @Override
             public void run() {
-                doricNativeJSExecutor = new DoricNativeJSExecutor();
+                if (isNative) {
+                    mDoricJSE = new DoricNativeJSExecutor();
+                } else {
+                    mDoricJSE = new DoricRemoteJSExecutor(statusCallback);
+                }
 
-                mDoricJSE = doricNativeJSExecutor;
                 injectGlobal();
                 initDoricRuntime();
             }
@@ -212,21 +214,5 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
 
     public DoricRegistry getRegistry() {
         return mDoricRegistry;
-    }
-
-    public void changeJSEngine(final boolean isNative, final ChangeEngineCallback changeEngineCallback) {
-        mJSHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (isNative) {
-                    mDoricJSE.teardown();
-                    mDoricJSE = doricNativeJSExecutor;
-                } else {
-                    mDoricJSE = new DoricRemoteJSExecutor();
-                    injectGlobal();
-                }
-                changeEngineCallback.changed();
-            }
-        });
     }
 }

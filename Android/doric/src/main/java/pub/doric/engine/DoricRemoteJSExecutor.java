@@ -26,8 +26,8 @@ public class DoricRemoteJSExecutor implements IDoricJSE {
 
     private final RemoteJSExecutor mRemoteJSExecutor;
 
-    public DoricRemoteJSExecutor() {
-        this.mRemoteJSExecutor = new RemoteJSExecutor();
+    public DoricRemoteJSExecutor(IStatusCallback statusCallback) {
+        this.mRemoteJSExecutor = new RemoteJSExecutor(statusCallback);
     }
 
     @Override

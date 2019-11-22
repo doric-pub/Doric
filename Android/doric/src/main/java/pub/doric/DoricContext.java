@@ -17,12 +17,6 @@ package pub.doric;
 
 import android.content.Context;
 
-import pub.doric.async.AsyncResult;
-import pub.doric.plugin.DoricJavaPlugin;
-import pub.doric.utils.DoricConstant;
-import pub.doric.utils.DoricMetaInfo;
-import pub.doric.shader.RootNode;
-
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSONBuilder;
 
@@ -30,6 +24,13 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import pub.doric.async.AsyncResult;
+import pub.doric.engine.IStatusCallback;
+import pub.doric.plugin.DoricJavaPlugin;
+import pub.doric.shader.RootNode;
+import pub.doric.utils.DoricConstant;
+import pub.doric.utils.DoricMetaInfo;
 
 /**
  * @Description: Doric
@@ -44,6 +45,8 @@ public class DoricContext {
     private final String source;
     private String script;
     private JSONObject initParams;
+    public boolean isDebugging = false;
+    private DoricDebugDriver doricDebugDriver;
 
     DoricContext(Context context, String contextId, String source) {
         this.mContext = context;
@@ -70,7 +73,7 @@ public class DoricContext {
                 .put("width", width)
                 .put("height", height).toJSONObject();
         callEntity(DoricConstant.DORIC_ENTITY_INIT, this.initParams);
-        
+
         callEntity(DoricConstant.DORIC_ENTITY_CREATE);
     }
 
@@ -79,7 +82,11 @@ public class DoricContext {
     }
 
     public IDoricDriver getDriver() {
-        return DoricDriver.getInstance();
+        if (isDebugging) {
+            return doricDebugDriver;
+        } else {
+            return DoricNativeDriver.getInstance();
+        }
     }
 
     public RootNode getRootNode() {
@@ -135,5 +142,22 @@ public class DoricContext {
 
     public void onHidden() {
         callEntity(DoricConstant.DORIC_ENTITY_HIDDEN);
+    }
+
+    public void startDebug() {
+        doricDebugDriver = new DoricDebugDriver(new IStatusCallback() {
+            @Override
+            public void start() {
+                isDebugging=true;
+                callEntity(DoricConstant.DORIC_ENTITY_INIT, initParams);
+                callEntity(DoricConstant.DORIC_ENTITY_CREATE);
+            }
+        });
+    }
+
+    public void stopDebug() {
+        isDebugging = false;
+        callEntity(DoricConstant.DORIC_ENTITY_INIT, initParams);
+        callEntity(DoricConstant.DORIC_ENTITY_CREATE);
     }
 }

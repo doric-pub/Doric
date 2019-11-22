@@ -28,12 +28,10 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import pub.doric.DoricContext;
-import pub.doric.DoricDriver;
 import pub.doric.dev.DevPanel;
 import pub.doric.dev.SensorManagerHelper;
 import pub.doric.dev.event.EnterDebugEvent;
 import pub.doric.dev.event.QuitDebugEvent;
-import pub.doric.engine.ChangeEngineCallback;
 import pub.doric.utils.DoricUtils;
 
 /**
@@ -98,32 +96,12 @@ public class DemoActivity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEnterDebugEvent(EnterDebugEvent enterDebugEvent) {
-        DoricDriver.getInstance().changeJSEngine(false, new ChangeEngineCallback() {
-            @Override
-            public void changed() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        doricContext.init(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                    }
-                });
-            }
-        });
+        doricContext.startDebug();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onQuitDebugEvent(QuitDebugEvent quitDebugEvent) {
-        DoricDriver.getInstance().changeJSEngine(true, new ChangeEngineCallback() {
-            @Override
-            public void changed() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        doricContext.init(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                    }
-                });
-            }
-        });
+        doricContext.stopDebug();
     }
 
     @Override

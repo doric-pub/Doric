@@ -25,13 +25,14 @@ import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import pub.doric.dev.DevKit;
 import pub.doric.dev.event.QuitDebugEvent;
+import pub.doric.engine.IStatusCallback;
 
 public class RemoteJSExecutor {
     private final WebSocket webSocket;
     private final Map<String, JavaFunction> globalFunctions = new HashMap<>();
     private JSDecoder temp;
 
-    public RemoteJSExecutor() {
+    public RemoteJSExecutor(final IStatusCallback statusCallback) {
         OkHttpClient okHttpClient = new OkHttpClient
                 .Builder()
                 .readTimeout(10, TimeUnit.SECONDS)
@@ -44,6 +45,7 @@ public class RemoteJSExecutor {
             @Override
             public void onOpen(WebSocket webSocket, Response response) {
                 LockSupport.unpark(current);
+                statusCallback.start();
             }
 
             @Override

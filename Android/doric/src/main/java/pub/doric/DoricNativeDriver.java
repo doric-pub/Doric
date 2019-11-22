@@ -26,7 +26,6 @@ import java.util.concurrent.Executors;
 
 import pub.doric.async.AsyncCall;
 import pub.doric.async.AsyncResult;
-import pub.doric.engine.ChangeEngineCallback;
 import pub.doric.engine.DoricJSEngine;
 import pub.doric.utils.DoricConstant;
 import pub.doric.utils.DoricLog;
@@ -37,11 +36,26 @@ import pub.doric.utils.ThreadMode;
  * @Author: pengfei.zhou
  * @CreateDate: 2019-07-18
  */
-public class DoricDriver implements IDoricDriver {
+public class DoricNativeDriver implements IDoricDriver {
     private final DoricJSEngine doricJSEngine;
     private final ExecutorService mBridgeExecutor;
     private final Handler mUIHandler;
     private final Handler mJSHandler;
+
+    private static class Inner {
+        private static final DoricNativeDriver sInstance = new DoricNativeDriver();
+    }
+
+    private DoricNativeDriver() {
+        doricJSEngine = new DoricJSEngine(true, null);
+        mBridgeExecutor = Executors.newCachedThreadPool();
+        mUIHandler = new Handler(Looper.getMainLooper());
+        mJSHandler = doricJSEngine.getJSHandler();
+    }
+
+    public static DoricNativeDriver getInstance() {
+        return Inner.sInstance;
+    }
 
     @Override
     public AsyncResult<JSDecoder> invokeContextEntityMethod(final String contextId, final String method, final Object... args) {
@@ -82,23 +96,6 @@ public class DoricDriver implements IDoricDriver {
         }
     }
 
-
-    private static class Inner {
-        private static final DoricDriver sInstance = new DoricDriver();
-    }
-
-    private DoricDriver() {
-        doricJSEngine = new DoricJSEngine();
-        mBridgeExecutor = Executors.newCachedThreadPool();
-        mUIHandler = new Handler(Looper.getMainLooper());
-        mJSHandler = doricJSEngine.getJSHandler();
-    }
-
-
-    public static DoricDriver getInstance() {
-        return Inner.sInstance;
-    }
-
     @Override
     public AsyncResult<Boolean> createContext(final String contextId, final String script, final String source) {
         return AsyncCall.ensureRunInHandler(mJSHandler, new Callable<Boolean>() {
@@ -134,9 +131,5 @@ public class DoricDriver implements IDoricDriver {
     @Override
     public DoricRegistry getRegistry() {
         return doricJSEngine.getRegistry();
-    }
-
-    public void changeJSEngine(boolean isNative, ChangeEngineCallback changeEngineCallback) {
-        doricJSEngine.changeJSEngine(isNative, changeEngineCallback);
     }
 }

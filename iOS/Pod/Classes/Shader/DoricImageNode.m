@@ -22,7 +22,7 @@
 
 #import "DoricImageNode.h"
 #import "Doric.h"
-#import <SDWebImage/SDWebImage.h>
+#import <SDWebImage/UIImageView+WebCache.h>
 
 @interface DoricImageNode ()
 @property(nonatomic, copy) NSString *loadCallbackId;

@@ -57,7 +57,7 @@ public class NetworkPlugin extends DoricJavaPlugin {
         super(doricContext);
     }
 
-    @DoricMethod(name = "request")
+    @DoricMethod
     public void request(JSDecoder decoder, final DoricPromise promise) {
         try {
             JSObject requestVal = decoder.decode().asObject();

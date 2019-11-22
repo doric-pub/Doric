@@ -45,7 +45,7 @@ public class ScrollerNode extends SuperNode<HVScrollView> {
     @Override
     protected void blendSubNode(JSObject subProperties) {
         if (mChildNode != null) {
-            mChildNode.blend(subProperties);
+            mChildNode.blend(subProperties.getProperty("props").asObject());
         }
     }
 

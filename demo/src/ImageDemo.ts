@@ -29,6 +29,18 @@ class ImageDemo extends Panel {
                 loadCallback: (ret) => {
                 }
             }),
+            label('Animated WebP'),
+            image({
+                imageUrl: "https://p.upyun.com/demo/webp/webp/animated-gif-0.webp",
+                loadCallback: (ret) => {
+                }
+            }),
+            label('WebP'),
+            image({
+                imageUrl: "https://p.upyun.com/demo/webp/webp/jpg-0.webp",
+                loadCallback: (ret) => {
+                }
+            }),
             label('ScaleToFill'),
             image({
                 imageUrl,

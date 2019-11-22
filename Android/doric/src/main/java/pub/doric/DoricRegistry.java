@@ -19,6 +19,7 @@ import android.text.TextUtils;
 
 import pub.doric.plugin.NetworkPlugin;
 import pub.doric.plugin.ShaderPlugin;
+import pub.doric.plugin.StoragePlugin;
 import pub.doric.shader.HLayoutNode;
 import pub.doric.shader.ImageNode;
 import pub.doric.shader.ScrollerNode;
@@ -67,6 +68,7 @@ public class DoricRegistry {
         this.registerNativePlugin(ShaderPlugin.class);
         this.registerNativePlugin(ModalPlugin.class);
         this.registerNativePlugin(NetworkPlugin.class);
+        this.registerNativePlugin(StoragePlugin.class);
         this.registerViewNode(RootNode.class);
         this.registerViewNode(TextNode.class);
         this.registerViewNode(ImageNode.class);

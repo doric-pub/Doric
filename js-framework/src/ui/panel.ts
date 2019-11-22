@@ -15,7 +15,7 @@
  */
 import './../runtime/global'
 import { View, Group } from "./view";
-import { loge } from '../util/log';
+import { loge, log } from '../util/log';
 import { Model } from '../util/types';
 import { Root } from './layout';
 
@@ -117,6 +117,8 @@ export abstract class Panel {
     }
 
     private hookAfterNativeCall() {
+        //Here insert a native call to ensure the promise is resolved done.
+        log('Check Dirty')
         if (this.__root__.isDirty()) {
             const model = this.__root__.toModel()
             this.nativeRender(model)

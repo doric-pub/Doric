@@ -1,5 +1,6 @@
 const ws = require('nodejs-websocket')
 const { exec, spawn } = require('child_process')
+const fs = require('fs')
 
 var clientConnection = null
 var debuggerConnection = null
@@ -30,6 +31,9 @@ const createServer = () => {
 
                     let contextId = resultObject.data.contextId
                     let projectHome = resultObject.data.projectHome
+
+                    fs.writeFileSync(projectHome + '/build/context', contextId, 'utf8')
+
                     let source = resultObject.data.source
                     console.log(connection.key + " request debug, project home: " + projectHome)
 

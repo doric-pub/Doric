@@ -1,8 +1,6 @@
-package pub.doric.dev;
+package pub.doric.devkit;
 
 import com.google.gson.JsonObject;
-
-import pub.doric.IDoricDriver;
 
 public interface IDevKit {
 

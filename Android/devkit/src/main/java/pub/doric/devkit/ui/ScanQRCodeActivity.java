@@ -1,4 +1,4 @@
-package pub.doric.dev;
+package pub.doric.devkit.ui;
 
 import android.os.Bundle;
 import android.widget.Toast;
@@ -8,8 +8,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import cn.bingoogolapple.qrcode.core.QRCodeView;
 import cn.bingoogolapple.qrcode.zxing.ZXingView;
-import pub.doric.Doric;
-import pub.doric.R;
+import pub.doric.devkit.DevKit;
+import pub.doric.devkit.DoricDev;
+import pub.doric.devkit.R;
 
 public class ScanQRCodeActivity extends AppCompatActivity implements QRCodeView.Delegate {
 
@@ -51,7 +52,7 @@ public class ScanQRCodeActivity extends AppCompatActivity implements QRCodeView.
         setTitle("扫描结果为：" + result);
         DevKit.ip = result;
         Toast.makeText(this, "dev kit connecting to " + result, Toast.LENGTH_LONG).show();
-        Doric.connectDevKit("ws://" + result + ":7777");
+        DoricDev.connectDevKit("ws://" + result + ":7777");
         finish();
     }
 

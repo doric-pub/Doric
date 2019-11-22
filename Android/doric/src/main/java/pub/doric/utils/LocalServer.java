@@ -13,16 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pub.doric.dev;
+package pub.doric.utils;
 
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.net.Uri;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
-
-import pub.doric.DoricContext;
-import pub.doric.DoricContextManager;
 
 import com.github.pengfeizhou.jscore.JSONBuilder;
 
@@ -42,6 +39,8 @@ import java.util.List;
 import java.util.Map;
 
 import fi.iki.elonen.NanoHTTPD;
+import pub.doric.DoricContext;
+import pub.doric.DoricContextManager;
 
 /**
  * @Description: com.github.penfeizhou.doricdemo
@@ -171,7 +170,7 @@ public class LocalServer extends NanoHTTPD {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "text/html", "HelloWorld");
+        return NanoHTTPD.newFixedLengthResponse(Response.Status.OK, "text/html", "HelloWorld");
     }
 
     public interface APICommand {

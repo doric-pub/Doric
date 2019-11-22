@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import pub.doric.async.AsyncResult;
-import pub.doric.engine.IStatusCallback;
+import pub.doric.devkit.IStatusCallback;
 import pub.doric.plugin.DoricJavaPlugin;
 import pub.doric.shader.RootNode;
 import pub.doric.utils.DoricConstant;

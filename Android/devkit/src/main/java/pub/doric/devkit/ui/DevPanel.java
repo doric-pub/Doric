@@ -1,4 +1,4 @@
-package pub.doric.dev;
+package pub.doric.devkit.ui;
 
 import android.Manifest;
 import android.content.Context;
@@ -23,15 +23,16 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import pub.doric.Doric;
-import pub.doric.R;
-import pub.doric.dev.event.ConnectExceptionEvent;
-import pub.doric.dev.event.EOFExceptionEvent;
-import pub.doric.dev.event.OpenEvent;
+import pub.doric.devkit.DevKit;
+import pub.doric.devkit.DoricDev;
+import pub.doric.devkit.R;
+import pub.doric.devkit.event.ConnectExceptionEvent;
+import pub.doric.devkit.event.EOFExceptionEvent;
+import pub.doric.devkit.event.OpenEvent;
 
 public class DevPanel extends BottomSheetDialogFragment {
 
-    static boolean isDevConnected = false;
+    public static boolean isDevConnected = false;
 
     public DevPanel() {
 
@@ -58,7 +59,7 @@ public class DevPanel extends BottomSheetDialogFragment {
             public void onClick(View v) {
                 if (DevKit.isRunningInEmulator) {
                     DevKit.ip = "10.0.2.2";
-                    Doric.connectDevKit("ws://" + DevKit.ip + ":7777");
+                    DoricDev.connectDevKit("ws://" + DevKit.ip + ":7777");
                 } else {
                     final RxPermissions rxPermissions = new RxPermissions(DevPanel.this);
                     Disposable disposable = rxPermissions

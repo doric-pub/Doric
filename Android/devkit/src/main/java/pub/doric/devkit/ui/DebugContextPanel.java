@@ -1,4 +1,4 @@
-package pub.doric.dev;
+package pub.doric.devkit.ui;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -15,11 +15,12 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.gson.JsonObject;
 
-import pub.doric.BuildConfig;
-import pub.doric.Doric;
 import pub.doric.DoricContext;
 import pub.doric.DoricContextManager;
-import pub.doric.R;
+import pub.doric.devkit.BuildConfig;
+import pub.doric.devkit.DoricDev;
+import pub.doric.devkit.IDevKit;
+import pub.doric.devkit.R;
 
 public class DebugContextPanel extends DialogFragment {
     @Nullable
@@ -68,7 +69,7 @@ public class DebugContextPanel extends DialogFragment {
                     jsonObject.addProperty("contextId", doricContext.getContextId());
                     jsonObject.addProperty("projectHome", BuildConfig.PROJECT_HOME);
                     jsonObject.addProperty("source", doricContext.getSource().replace(".js", ".ts"));
-                    Doric.sendDevCommand(IDevKit.Command.DEBUG, jsonObject);
+                    DoricDev.sendDevCommand(IDevKit.Command.DEBUG, jsonObject);
                     dismissAllowingStateLoss();
                 }
             });

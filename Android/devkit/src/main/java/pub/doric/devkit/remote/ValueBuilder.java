@@ -1,4 +1,4 @@
-package pub.doric.engine.remote;
+package pub.doric.devkit.remote;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

@@ -1,1 +1,1 @@
-include ':app', ':doric'
+include ':app', ':doric', ':devkit'

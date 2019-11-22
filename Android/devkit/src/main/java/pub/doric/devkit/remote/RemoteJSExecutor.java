@@ -1,4 +1,4 @@
-package pub.doric.engine.remote;
+package pub.doric.devkit.remote;
 
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSONBuilder;
@@ -23,8 +23,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
-import pub.doric.dev.DevKit;
-import pub.doric.dev.event.QuitDebugEvent;
+import pub.doric.devkit.DevKit;
+import pub.doric.devkit.event.QuitDebugEvent;
 import pub.doric.engine.IStatusCallback;
 
 public class RemoteJSExecutor {

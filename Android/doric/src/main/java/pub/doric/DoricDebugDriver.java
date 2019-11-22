@@ -26,8 +26,8 @@ import java.util.concurrent.Executors;
 
 import pub.doric.async.AsyncCall;
 import pub.doric.async.AsyncResult;
+import pub.doric.devkit.IStatusCallback;
 import pub.doric.engine.DoricJSEngine;
-import pub.doric.engine.IStatusCallback;
 import pub.doric.utils.DoricConstant;
 import pub.doric.utils.DoricLog;
 import pub.doric.utils.ThreadMode;

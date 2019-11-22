@@ -28,11 +28,16 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
+
 import pub.doric.DoricContext;
-import pub.doric.dev.DevPanel;
-import pub.doric.dev.SensorManagerHelper;
-import pub.doric.dev.event.EnterDebugEvent;
-import pub.doric.dev.event.QuitDebugEvent;
+import pub.doric.DoricContextManager;
+import pub.doric.devkit.DataModel;
+import pub.doric.devkit.event.EnterDebugEvent;
+import pub.doric.devkit.event.QuitDebugEvent;
+import pub.doric.devkit.event.ReloadEvent;
+import pub.doric.devkit.ui.DevPanel;
+import pub.doric.devkit.util.SensorManagerHelper;
 import pub.doric.utils.DoricUtils;
 
 /**
@@ -63,7 +68,12 @@ public class DemoActivity extends AppCompatActivity {
                 if (devPanel != null && devPanel.isAdded()) {
                     return;
                 }
-                new DevPanel().show(getSupportFragmentManager(), "DevPanel");
+
+                ArrayList<DataModel> dataModels = new ArrayList<>();
+                for (DoricContext doricContext : DoricContextManager.aliveContexts()) {
+                    dataModels.add(new DataModel(doricContext.getContextId(), doricContext.getSource()));
+                }
+                new DevPanel(dataModels).show(getSupportFragmentManager(), "DevPanel");
             }
         });
     }
@@ -101,6 +111,15 @@ public class DemoActivity extends AppCompatActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReloadEvent(ReloadEvent reloadEvent) {
+        for (DoricContext context : DoricContextManager.aliveContexts()) {
+            if (reloadEvent.source.contains(context.getSource())) {
+                context.reload(reloadEvent.script);
+            }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onQuitDebugEvent(QuitDebugEvent quitDebugEvent) {
         doricContext.stopDebug();
     }
@@ -108,7 +127,11 @@ public class DemoActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (KeyEvent.KEYCODE_MENU == event.getKeyCode()) {
-            new DevPanel().show(getSupportFragmentManager(), "DevPanel");
+            ArrayList<DataModel> dataModels = new ArrayList<>();
+            for (DoricContext doricContext : DoricContextManager.aliveContexts()) {
+                dataModels.add(new DataModel(doricContext.getContextId(), doricContext.getSource()));
+            }
+            new DevPanel(dataModels).show(getSupportFragmentManager(), "DevPanel");
         }
         return super.onKeyDown(keyCode, event);
     }

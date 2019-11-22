@@ -1,4 +1,4 @@
-package pub.doric.dev;
+package pub.doric.devkit.util;
 
 import android.content.Context;
 import android.hardware.Sensor;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pub.doric.dev;
+package pub.doric.devkit;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
@@ -28,12 +28,12 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
-import pub.doric.DoricContext;
-import pub.doric.DoricContextManager;
-import pub.doric.dev.event.ConnectExceptionEvent;
-import pub.doric.dev.event.EOFExceptionEvent;
-import pub.doric.dev.event.EnterDebugEvent;
-import pub.doric.dev.event.OpenEvent;
+import pub.doric.devkit.event.ConnectExceptionEvent;
+import pub.doric.devkit.event.EOFExceptionEvent;
+import pub.doric.devkit.event.EnterDebugEvent;
+import pub.doric.devkit.event.OpenEvent;
+import pub.doric.devkit.event.ReloadEvent;
+import pub.doric.devkit.ui.DevPanel;
 
 /**
  * @Description: com.github.penfeizhou.doric.dev
@@ -75,11 +75,7 @@ public class WSClient extends WebSocketListener {
                 case "RELOAD": {
                     String source = jsonObject.optString("source");
                     String script = jsonObject.optString("script");
-                    for (DoricContext context : DoricContextManager.aliveContexts()) {
-                        if (source.contains(context.getSource())) {
-                            context.reload(script);
-                        }
-                    }
+                    EventBus.getDefault().post(new ReloadEvent(source, script));
                 }
                 break;
                 case "SWITCH_TO_DEBUG": {

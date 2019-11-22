@@ -1,13 +1,13 @@
-package pub.doric.dev;
+package pub.doric.devkit;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-
-import pub.doric.utils.DoricUtils;
 
 public class DevKit implements IDevKit {
 
-    static boolean isRunningInEmulator = false;
+    public static boolean isRunningInEmulator = false;
     public static String ip = "";
+    private static Gson gson = new Gson();
 
     private static class Inner {
         private static final DevKit sInstance = new DevKit();
@@ -33,7 +33,7 @@ public class DevKit implements IDevKit {
         JsonObject result = new JsonObject();
         result.addProperty("cmd", command.toString());
         result.add("data", jsonObject);
-        wsClient.send(DoricUtils.gson.toJson(result));
+        wsClient.send(gson.toJson(result));
     }
 
     @Override

@@ -13,11 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//
+// Created by pengfei.zhou on 2019/11/23.
+//
+
+#import <Foundation/Foundation.h>
+
 #import "DoricContext.h"
-#import "DoricLayouts.h"
-#import "DoricExtensions.h"
-#import "DoricViewNode.h"
-#import "DoricRootNode.h"
-#import "UIView+Doric.h"
-#import "DoricUtil.h"
-#import "DoricPanel.h"
+
+@interface DoricPanel : UIViewController
+@property(nonatomic, strong) DoricContext *doricContext;
+
+- (void)config:(NSString *)script alias:(NSString *)alias;
+@end

@@ -4,16 +4,10 @@
 //
 
 #import "DemoVC.h"
-#import "DoricContext.h"
-#import "DoricLayouts.h"
-#import "DoricExtensions.h"
-#import "DoricRootNode.h"
-#import "DoricLocalServer.h"
+#import "Doric.h"
 
 @interface DemoVC ()
 @property(nonatomic, copy) NSString *filePath;
-@property(nonatomic, strong) DoricContext *doricContext;
-//@property(nonatomic, strong) DoricLocalServer *localServer;
 @end
 
 @implementation DemoVC
@@ -31,21 +25,15 @@
     NSString *demoPath = [path stringByAppendingPathComponent:@"demo"];
     NSString *fullPath = [demoPath stringByAppendingPathComponent:self.filePath];
     NSString *jsContent = [NSString stringWithContentsOfFile:fullPath encoding:NSUTF8StringEncoding error:nil];
-    self.doricContext = [[DoricContext alloc] initWithScript:jsContent source:self.filePath];
-    [self.doricContext.rootNode setupRootView:[[DoricStackView new] also:^(DoricStackView *it) {
-        it.backgroundColor = [UIColor whiteColor];
-        it.layoutConfig = [[DoricLayoutConfig alloc]
-                initWithWidth:DoricLayoutAtMost
-                       height:DoricLayoutAtMost
-                       margin:DoricMarginMake(0, 88, 0, 0)
-        ];
+    DoricPanel *panel = [DoricPanel new];
+    [panel.view also:^(UIView *it) {
+        it.width = self.view.width;
+        it.height = self.view.height - 88;
         it.top = 88;
         [self.view addSubview:it];
-    }]];
-    [self.doricContext initContextWithWidth:self.view.width height:self.view.height];
-//    [self.doricContext.driver connectDevKit:@"ws://192.168.11.38:7777"];
-//    self.localServer = [[DoricLocalServer alloc] init];
-//    [self.localServer startWithPort:8910];
+    }];
+    [self addChildViewController:panel];
+    [panel config:jsContent alias:self.filePath];
 }
 
 @end

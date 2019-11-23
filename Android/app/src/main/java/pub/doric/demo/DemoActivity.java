@@ -70,7 +70,6 @@ public class DemoActivity extends AppCompatActivity {
         });
     }
 
-
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();

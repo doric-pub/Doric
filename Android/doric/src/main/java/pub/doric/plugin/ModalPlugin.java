@@ -50,7 +50,7 @@ public class ModalPlugin extends DoricJavaPlugin {
     }
 
     @DoricMethod(thread = ThreadMode.UI)
-    public void toast(JSDecoder decoder, DoricPromise promise) {
+    public void toast(JSDecoder decoder) {
         try {
             JSObject jsObject = decoder.decode().asObject();
             String msg = jsObject.getProperty("msg").asString().value();

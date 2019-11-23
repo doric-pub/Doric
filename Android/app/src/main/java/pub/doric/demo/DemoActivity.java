@@ -30,6 +30,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import pub.doric.DoricContext;
 import pub.doric.DoricContextManager;
 import pub.doric.DoricPanel;
+import pub.doric.devkit.DoricContextDebuggable;
 import pub.doric.devkit.event.EnterDebugEvent;
 import pub.doric.devkit.event.QuitDebugEvent;
 import pub.doric.devkit.event.ReloadEvent;

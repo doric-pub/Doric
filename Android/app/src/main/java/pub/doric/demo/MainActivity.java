@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
         try {
             String[] demos = getAssets().list("demo");
             List<String> ret = new ArrayList<>();
-            ret.add("Navigator");
             for (String str : demos) {
                 if (str.endsWith("js")) {
                     ret.add(str);
@@ -91,8 +90,10 @@ public class MainActivity extends AppCompatActivity {
             tv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (position == 0) {
+                    if (data[position].contains("NavigatorDemo")) {
                         Intent intent = new Intent(tv.getContext(), DoricActivity.class);
+                        intent.putExtra("scheme", "assets://demo/" + data[position]);
+                        intent.putExtra("alias", data[position]);
                         tv.getContext().startActivity(intent);
                         return;
                     }

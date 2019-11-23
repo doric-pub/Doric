@@ -167,3 +167,16 @@ export function storage(context: BridgeContext) {
         },
     }
 }
+
+export function navigator(context: BridgeContext) {
+    return {
+        push: (scheme: string, alias: string) => {
+            return context.navigator.push({
+                scheme, alias
+            })
+        },
+        pop: () => {
+            return context.navigator.pop()
+        },
+    }
+}

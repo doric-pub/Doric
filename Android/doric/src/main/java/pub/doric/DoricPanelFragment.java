@@ -16,7 +16,6 @@
 package pub.doric;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +26,7 @@ import androidx.fragment.app.Fragment;
 
 import pub.doric.async.AsyncResult;
 import pub.doric.loader.DoricJSLoaderManager;
+import pub.doric.navigator.IDoricNavigator;
 import pub.doric.utils.DoricLog;
 
 /**
@@ -67,6 +67,11 @@ public class DoricPanelFragment extends Fragment {
             @Override
             public void onResult(String result) {
                 doricPanel.config(result, alias);
+                DoricContext context = doricPanel.getDoricContext();
+                Fragment fragment = getParentFragment();
+                if (fragment instanceof IDoricNavigator) {
+                    context.setDoricNavigator((IDoricNavigator) fragment);
+                }
             }
 
             @Override

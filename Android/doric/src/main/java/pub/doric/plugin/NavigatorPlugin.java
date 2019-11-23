@@ -15,8 +15,15 @@
  */
 package pub.doric.plugin;
 
+import com.github.pengfeizhou.jscore.ArchiveException;
+import com.github.pengfeizhou.jscore.JSDecoder;
+import com.github.pengfeizhou.jscore.JSObject;
+
 import pub.doric.DoricContext;
+import pub.doric.extension.bridge.DoricMethod;
 import pub.doric.extension.bridge.DoricPlugin;
+import pub.doric.navigator.IDoricNavigator;
+import pub.doric.utils.ThreadMode;
 
 /**
  * @Description: pub.doric.plugin
@@ -27,5 +34,28 @@ import pub.doric.extension.bridge.DoricPlugin;
 public class NavigatorPlugin extends DoricJavaPlugin {
     public NavigatorPlugin(DoricContext doricContext) {
         super(doricContext);
+    }
+
+    @DoricMethod(thread = ThreadMode.UI)
+    public void push(JSDecoder jsDecoder) {
+        IDoricNavigator navigator = getDoricContext().getDoricNavigator();
+        if (navigator != null) {
+            try {
+                JSObject jsObject = jsDecoder.decode().asObject();
+                navigator.push(jsObject.getProperty("scheme").asString().value(),
+                        jsObject.getProperty("alias").asString().value()
+                );
+            } catch (ArchiveException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @DoricMethod(thread = ThreadMode.UI)
+    public void pop() {
+        IDoricNavigator navigator = getDoricContext().getDoricNavigator();
+        if (navigator != null) {
+            navigator.pop();
+        }
     }
 }

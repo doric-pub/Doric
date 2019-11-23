@@ -19,32 +19,66 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import pub.doric.navigator.IDoricNavigator;
 
 /**
  * @Description: pub.doric
  * @Author: pengfei.zhou
  * @CreateDate: 2019-11-23
  */
-public class DoricFragment extends Fragment {
-    private FrameLayout root;
+public class DoricFragment extends Fragment implements IDoricNavigator {
+
+    public static DoricFragment newInstance(String scheme, String alias) {
+        Bundle args = new Bundle();
+        args.putString("scheme", scheme);
+        args.putString("alias", alias);
+        DoricFragment fragment = new DoricFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        root = (FrameLayout) inflater.inflate(R.layout.doric_fragment, container, false);
-        return root;
+        return inflater.inflate(R.layout.doric_fragment, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        requireFragmentManager().beginTransaction()
-                .add(R.id.root, DoricPanelFragment.newInstance("assets://demo/Counter.js", "Counter.js"))
+        Bundle argument = getArguments();
+        if (argument != null) {
+            String alias = argument.getString("alias");
+            String scheme = argument.getString("scheme");
+            push(scheme, alias);
+        }
+    }
+
+    @Override
+    public void push(String scheme, String alias) {
+        getChildFragmentManager().beginTransaction()
+                .add(R.id.root, DoricPanelFragment.newInstance(scheme, alias))
+                .addToBackStack(scheme)
                 .commit();
+    }
+
+    @Override
+    public void pop() {
+        if (canPop()) {
+            getChildFragmentManager().popBackStack();
+        } else {
+            if (getActivity() != null) {
+                getActivity().finish();
+            }
+        }
+    }
+
+    public boolean canPop() {
+        return getChildFragmentManager().getBackStackEntryCount() > 1;
     }
 }

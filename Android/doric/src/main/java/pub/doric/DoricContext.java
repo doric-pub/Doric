@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import pub.doric.async.AsyncResult;
+import pub.doric.navigator.IDoricNavigator;
 import pub.doric.plugin.DoricJavaPlugin;
 import pub.doric.shader.RootNode;
 import pub.doric.utils.DoricConstant;
@@ -147,5 +148,15 @@ public class DoricContext {
 
     public void onHidden() {
         callEntity(DoricConstant.DORIC_ENTITY_HIDDEN);
+    }
+
+    private IDoricNavigator doricNavigator;
+
+    public void setDoricNavigator(IDoricNavigator doricNavigator) {
+        this.doricNavigator = doricNavigator;
+    }
+
+    public IDoricNavigator getDoricNavigator() {
+        return this.doricNavigator;
     }
 }

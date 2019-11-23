@@ -19,7 +19,6 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 
 /**
  * @Description: pub.doric.demo
@@ -27,19 +26,28 @@ import androidx.fragment.app.Fragment;
  * @CreateDate: 2019-11-19
  */
 public class DoricActivity extends AppCompatActivity {
+    private DoricFragment doricFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.doric_activity);
         if (savedInstanceState == null) {
-            Fragment doricFragment = getSupportFragmentManager().getFragmentFactory().instantiate(
-                    getClassLoader(),
-                    DoricFragment.class.getName()
-            );
+            String scheme = getIntent().getStringExtra("scheme");
+            String alias = getIntent().getStringExtra("alias");
+            doricFragment = DoricFragment.newInstance(scheme, alias);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, doricFragment)
                     .commit();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (doricFragment.canPop()) {
+            doricFragment.pop();
+        } else {
+            super.onBackPressed();
         }
     }
 }

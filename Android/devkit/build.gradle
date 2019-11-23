@@ -44,6 +44,7 @@ dependencies {
     api 'org.greenrobot:eventbus:3.1.1'
     implementation 'com.lahm.library:easy-protector-release:1.1.0'
     api 'org.nanohttpd:nanohttpd:2.3.1'
+    api project(':doric')
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'

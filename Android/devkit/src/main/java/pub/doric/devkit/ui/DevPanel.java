@@ -21,11 +21,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
-
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import pub.doric.devkit.DataModel;
 import pub.doric.devkit.DevKit;
 import pub.doric.devkit.DoricDev;
 import pub.doric.devkit.R;
@@ -37,10 +34,7 @@ public class DevPanel extends BottomSheetDialogFragment {
 
     public static boolean isDevConnected = false;
 
-    ArrayList<DataModel> dataModels;
-
-    public DevPanel(ArrayList<DataModel> dataModels) {
-        this.dataModels = dataModels;
+    public DevPanel() {
     }
 
     @Nullable
@@ -85,7 +79,7 @@ public class DevPanel extends BottomSheetDialogFragment {
         getView().findViewById(R.id.debug_text_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DebugContextPanel debugContextPanel = new DebugContextPanel(dataModels);
+                DebugContextPanel debugContextPanel = new DebugContextPanel();
                 debugContextPanel.show(getActivity().getSupportFragmentManager(), "DebugContextPanel");
                 dismissAllowingStateLoss();
             }

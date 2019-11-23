@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pub.doric.utils;
+package pub.doric.devkit;
 
 import android.content.Context;
 import android.content.res.AssetManager;

@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pub.doric.engine;
+package pub.doric.devkit.remote;
 
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSRuntimeException;
 import com.github.pengfeizhou.jscore.JavaFunction;
 import com.github.pengfeizhou.jscore.JavaValue;
 
-import pub.doric.devkit.IStatusCallback;
-import pub.doric.devkit.remote.RemoteJSExecutor;
+import pub.doric.engine.IDoricJSE;
+import pub.doric.engine.IStatusCallback;
 
 public class DoricRemoteJSExecutor implements IDoricJSE {
 

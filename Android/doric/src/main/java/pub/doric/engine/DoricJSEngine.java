@@ -28,7 +28,6 @@ import com.github.pengfeizhou.jscore.JavaValue;
 import java.util.ArrayList;
 
 import pub.doric.DoricRegistry;
-import pub.doric.devkit.IStatusCallback;
 import pub.doric.extension.bridge.DoricBridgeExtension;
 import pub.doric.extension.timer.DoricTimerExtension;
 import pub.doric.utils.DoricConstant;
@@ -45,11 +44,11 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
     private HandlerThread handlerThread;
     private final Handler mJSHandler;
     private final DoricBridgeExtension mDoricBridgeExtension = new DoricBridgeExtension();
-    private IDoricJSE mDoricJSE;
+    protected IDoricJSE mDoricJSE;
     private final DoricTimerExtension mTimerExtension;
     private final DoricRegistry mDoricRegistry = new DoricRegistry();
 
-    public DoricJSEngine(final boolean isNative, final IStatusCallback statusCallback) {
+    public DoricJSEngine() {
         handlerThread = new HandlerThread(this.getClass().getSimpleName());
         handlerThread.start();
         Looper looper = handlerThread.getLooper();
@@ -57,12 +56,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
         mJSHandler.post(new Runnable() {
             @Override
             public void run() {
-                if (isNative) {
-                    mDoricJSE = new DoricNativeJSExecutor();
-                } else {
-                    mDoricJSE = new DoricRemoteJSExecutor(statusCallback);
-                }
-
+                initJSEngine();
                 injectGlobal();
                 initDoricRuntime();
             }
@@ -72,6 +66,10 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
 
     public Handler getJSHandler() {
         return mJSHandler;
+    }
+
+    protected void initJSEngine() {
+        mDoricJSE = new DoricNativeJSExecutor();
     }
 
     private void injectGlobal() {

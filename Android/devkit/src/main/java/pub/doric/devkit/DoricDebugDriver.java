@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pub.doric;
+package pub.doric.devkit;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -24,10 +24,12 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import pub.doric.DoricRegistry;
+import pub.doric.IDoricDriver;
 import pub.doric.async.AsyncCall;
 import pub.doric.async.AsyncResult;
-import pub.doric.devkit.IStatusCallback;
 import pub.doric.engine.DoricJSEngine;
+import pub.doric.engine.IStatusCallback;
 import pub.doric.utils.DoricConstant;
 import pub.doric.utils.DoricLog;
 import pub.doric.utils.ThreadMode;
@@ -45,7 +47,7 @@ public class DoricDebugDriver implements IDoricDriver {
 
 
     public DoricDebugDriver(IStatusCallback statusCallback) {
-        doricJSEngine = new DoricJSEngine(false, statusCallback);
+        doricJSEngine = new DoricDebugJSEngine(statusCallback);
         mBridgeExecutor = Executors.newCachedThreadPool();
         mUIHandler = new Handler(Looper.getMainLooper());
         mJSHandler = doricJSEngine.getJSHandler();

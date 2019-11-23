@@ -17,14 +17,14 @@ package pub.doric.demo;
 
 import android.widget.Toast;
 
+import com.github.pengfeizhou.jscore.JavaValue;
+
 import pub.doric.DoricContext;
 import pub.doric.extension.bridge.DoricMethod;
 import pub.doric.extension.bridge.DoricPlugin;
 import pub.doric.extension.bridge.DoricPromise;
 import pub.doric.plugin.DoricJavaPlugin;
 import pub.doric.utils.ThreadMode;
-
-import com.github.pengfeizhou.jscore.JavaValue;
 
 @DoricPlugin(name = "demo")
 public class DemoPlugin extends DoricJavaPlugin {

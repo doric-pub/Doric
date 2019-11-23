@@ -28,11 +28,9 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
-
 import pub.doric.DoricContext;
 import pub.doric.DoricContextManager;
-import pub.doric.devkit.DataModel;
+import pub.doric.devkit.DoricContextDebuggable;
 import pub.doric.devkit.event.EnterDebugEvent;
 import pub.doric.devkit.event.QuitDebugEvent;
 import pub.doric.devkit.event.ReloadEvent;
@@ -48,6 +46,7 @@ import pub.doric.utils.DoricUtils;
 public class DemoActivity extends AppCompatActivity {
     private DoricContext doricContext;
     private SensorManagerHelper sensorHelper;
+    private DoricContextDebuggable doricContextDebuggable;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,6 +56,7 @@ public class DemoActivity extends AppCompatActivity {
         addContentView(frameLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
         doricContext = DoricContext.create(this, DoricUtils.readAssetFile("demo/" + source), source);
+        doricContextDebuggable = new DoricContextDebuggable(doricContext);
         doricContext.init(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         doricContext.getRootNode().setRootView(frameLayout);
 
@@ -68,12 +68,7 @@ public class DemoActivity extends AppCompatActivity {
                 if (devPanel != null && devPanel.isAdded()) {
                     return;
                 }
-
-                ArrayList<DataModel> dataModels = new ArrayList<>();
-                for (DoricContext doricContext : DoricContextManager.aliveContexts()) {
-                    dataModels.add(new DataModel(doricContext.getContextId(), doricContext.getSource()));
-                }
-                new DevPanel(dataModels).show(getSupportFragmentManager(), "DevPanel");
+                new DevPanel().show(getSupportFragmentManager(), "DevPanel");
             }
         });
     }
@@ -107,7 +102,7 @@ public class DemoActivity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEnterDebugEvent(EnterDebugEvent enterDebugEvent) {
-        doricContext.startDebug();
+        doricContextDebuggable.startDebug();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -121,17 +116,13 @@ public class DemoActivity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onQuitDebugEvent(QuitDebugEvent quitDebugEvent) {
-        doricContext.stopDebug();
+        doricContextDebuggable.stopDebug();
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (KeyEvent.KEYCODE_MENU == event.getKeyCode()) {
-            ArrayList<DataModel> dataModels = new ArrayList<>();
-            for (DoricContext doricContext : DoricContextManager.aliveContexts()) {
-                dataModels.add(new DataModel(doricContext.getContextId(), doricContext.getSource()));
-            }
-            new DevPanel(dataModels).show(getSupportFragmentManager(), "DevPanel");
+            new DevPanel().show(getSupportFragmentManager(), "DevPanel");
         }
         return super.onKeyDown(keyCode, event);
     }

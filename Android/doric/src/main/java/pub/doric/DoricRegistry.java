@@ -17,6 +17,9 @@ package pub.doric;
 
 import android.text.TextUtils;
 
+import pub.doric.loader.DoricAssetJSLoader;
+import pub.doric.loader.DoricHttpJSLoader;
+import pub.doric.loader.IDoricJSLoader;
 import pub.doric.plugin.NavigatorPlugin;
 import pub.doric.plugin.NetworkPlugin;
 import pub.doric.plugin.ShaderPlugin;
@@ -37,6 +40,7 @@ import pub.doric.utils.DoricMetaInfo;
 import pub.doric.plugin.DoricJavaPlugin;
 import pub.doric.plugin.ModalPlugin;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -50,9 +54,16 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DoricRegistry {
     private static Map<String, String> bundles = new ConcurrentHashMap<>();
+    private static Set<DoricLibrary> doricLibraries = new HashSet<>();
+    private static Set<IDoricJSLoader> jsLoaders = new HashSet<>();
+
+    static {
+        addJSLoader(new DoricAssetJSLoader());
+        addJSLoader(new DoricHttpJSLoader());
+    }
+
     private Map<String, DoricMetaInfo<DoricJavaPlugin>> pluginInfoMap = new HashMap<>();
     private Map<String, DoricMetaInfo<ViewNode>> nodeInfoMap = new HashMap<>();
-    private static Set<DoricLibrary> doricLibraries = new HashSet<>();
 
     private static void initRegistry(DoricRegistry doricRegistry) {
         for (DoricLibrary library : doricLibraries) {
@@ -113,5 +124,13 @@ public class DoricRegistry {
 
     public String acquireJSBundle(String name) {
         return bundles.get(name);
+    }
+
+    public static void addJSLoader(IDoricJSLoader jsLoader) {
+        jsLoaders.add(jsLoader);
+    }
+
+    public static Collection<IDoricJSLoader> getJSLoaders() {
+        return jsLoaders;
     }
 }

@@ -21,3 +21,6 @@
 #import "UIView+Doric.h"
 #import "DoricUtil.h"
 #import "DoricPanel.h"
+#import "DoricJSLoaderManager.h"
+#import "DoricNavigatorProtocol.h"
+#import "DoricViewController.h"

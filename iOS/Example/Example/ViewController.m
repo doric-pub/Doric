@@ -58,8 +58,16 @@
         [self.navigationController pushViewController:[QRScanViewController new] animated:NO];
         return;
     }
-    DemoVC *demoVC = [[DemoVC alloc] initWithPath:self.demoFilePaths[(NSUInteger) indexPath.row]];
-    [self.navigationController pushViewController:demoVC animated:NO];
+    NSString *file = self.demoFilePaths[(NSUInteger) indexPath.row];
+    if ([file containsString:@"NavigatorDemo"]) {
+        DoricViewController *doricViewController = [[DoricViewController alloc]
+                initWithScheme:[NSString stringWithFormat:@"assets://demo/%@", file]
+                         alias:self.demoFilePaths[(NSUInteger) indexPath.row]];
+        [self.navigationController pushViewController:doricViewController animated:NO];
+    } else {
+        DemoVC *demoVC = [[DemoVC alloc] initWithPath:file];
+        [self.navigationController pushViewController:demoVC animated:NO];
+    }
 }
 
 @end

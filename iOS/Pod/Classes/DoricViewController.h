@@ -18,12 +18,8 @@
 //
 
 #import <Foundation/Foundation.h>
-
-#import "DoricContext.h"
 #import "DoricNavigatorProtocol.h"
 
-@interface DoricPanel : UIViewController
-@property(nonatomic, strong) DoricContext *doricContext;
-
-- (void)config:(NSString *)script alias:(NSString *)alias;
+@interface DoricViewController : UIViewController <DoricNavigatorProtocol>
+- (instancetype)initWithScheme:(NSString *)scheme alias:(NSString *)alias;
 @end

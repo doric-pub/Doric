@@ -26,15 +26,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 @interface DoricAsyncResult <R> : NSObject
-typedef void(^DoricResultCallback)(R);
-
-typedef void(^DoricExceptionCallback)(NSException *);
-
-typedef void(^DoricFinishCallback)(void);
-
-@property(nonatomic, strong) DoricResultCallback resultCallback;
-@property(nonatomic, strong) DoricExceptionCallback exceptionCallback;
-@property(nonatomic, strong) DoricFinishCallback finishCallback;
+@property(nonatomic, strong) void (^resultCallback)(R result);
+@property(nonatomic, strong) void (^exceptionCallback)(NSException *e);
+@property(nonatomic, strong) void (^finishCallback)(void);
 
 - (void)setupResult:(R)result;
 

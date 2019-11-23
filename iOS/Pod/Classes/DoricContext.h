@@ -22,13 +22,14 @@
 
 #import <Foundation/Foundation.h>
 #import "DoricDriver.h"
+#import "DoricNavigatorProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class DoricRootNode;
 
 @interface DoricContext : NSObject
-
+@property(nonatomic, weak) id <DoricNavigatorProtocol> navigator;
 @property(nonatomic, strong) NSString *contextId;
 @property(nonatomic, strong) DoricDriver *driver;
 @property(nonatomic, strong) NSMutableDictionary *pluginInstanceMap;

@@ -25,6 +25,8 @@ import androidx.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
+import pub.doric.utils.DoricUtils;
+
 /**
  * @Description: Doric
  * @Author: pengfei.zhou
@@ -58,6 +60,10 @@ public class DoricPanel extends FrameLayout {
 
     public void config(DoricContext doricContext) {
         mDoricContext = doricContext;
+        mDoricContext.getRootNode().setRootView(this);
+        if (getMeasuredState() != 0) {
+            mDoricContext.init(DoricUtils.px2dp(getMeasuredWidth()), DoricUtils.px2dp(getMeasuredHeight()));
+        }
     }
 
     @Override
@@ -67,5 +73,15 @@ public class DoricPanel extends FrameLayout {
 
     public DoricContext getDoricContext() {
         return mDoricContext;
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        if (oldw != w || oldh != h) {
+            if (mDoricContext != null) {
+                mDoricContext.init(DoricUtils.px2dp(w), DoricUtils.px2dp(h));
+            }
+        }
     }
 }

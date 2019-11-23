@@ -56,6 +56,7 @@ export abstract class Panel {
         this.__data__ = data
         this.__root__.width = frame.width
         this.__root__.height = frame.height
+        this.__root__.children.length = 0
         this.build(this.__root__)
     }
 

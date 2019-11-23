@@ -17,6 +17,7 @@ package pub.doric;
 
 import android.text.TextUtils;
 
+import pub.doric.plugin.NavigatorPlugin;
 import pub.doric.plugin.NetworkPlugin;
 import pub.doric.plugin.ShaderPlugin;
 import pub.doric.plugin.StoragePlugin;
@@ -69,6 +70,7 @@ public class DoricRegistry {
         this.registerNativePlugin(ModalPlugin.class);
         this.registerNativePlugin(NetworkPlugin.class);
         this.registerNativePlugin(StoragePlugin.class);
+        this.registerNativePlugin(NavigatorPlugin.class);
         this.registerViewNode(RootNode.class);
         this.registerViewNode(TextNode.class);
         this.registerViewNode(ImageNode.class);

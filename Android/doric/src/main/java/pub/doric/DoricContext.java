@@ -66,7 +66,7 @@ public class DoricContext {
         return doricContext;
     }
 
-    public void init(int width, int height) {
+    public void init(float width, float height) {
         this.initParams = new JSONBuilder()
                 .put("width", width)
                 .put("height", height).toJSONObject();

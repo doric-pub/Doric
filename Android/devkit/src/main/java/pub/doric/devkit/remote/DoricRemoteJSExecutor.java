@@ -20,8 +20,8 @@ import com.github.pengfeizhou.jscore.JSRuntimeException;
 import com.github.pengfeizhou.jscore.JavaFunction;
 import com.github.pengfeizhou.jscore.JavaValue;
 
+import pub.doric.devkit.IStatusCallback;
 import pub.doric.engine.IDoricJSE;
-import pub.doric.engine.IStatusCallback;
 
 public class DoricRemoteJSExecutor implements IDoricJSE {
 

@@ -2,7 +2,6 @@ package pub.doric.devkit;
 
 import pub.doric.DoricContext;
 import pub.doric.DoricNativeDriver;
-import pub.doric.engine.IStatusCallback;
 
 public class DoricContextDebuggable {
     private DoricContext doricContext;

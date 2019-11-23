@@ -48,7 +48,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * @Description: com.github.penfeizhou.doric
+ * @Description: pub.doric
  * @Author: pengfei.zhou
  * @CreateDate: 2019-07-20
  */

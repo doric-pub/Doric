@@ -16,6 +16,7 @@
 package pub.doric;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,15 +25,59 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import pub.doric.async.AsyncResult;
+import pub.doric.loader.DoricJSLoaderManager;
+import pub.doric.utils.DoricLog;
+
 /**
  * @Description: pub.doric
  * @Author: pengfei.zhou
  * @CreateDate: 2019-11-23
  */
 public class DoricPanelFragment extends Fragment {
-    @Nullable
+    private DoricPanel doricPanel;
+
+    public static DoricPanelFragment newInstance(String scheme, String alias) {
+        Bundle args = new Bundle();
+        args.putString("scheme", scheme);
+        args.putString("alias", alias);
+        DoricPanelFragment fragment = new DoricPanelFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
+        doricPanel = (DoricPanel) inflater.inflate(R.layout.doric_framgent_panel, container, false);
+        return doricPanel;
+    }
+
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Bundle argument = getArguments();
+        if (argument == null) {
+            DoricLog.e("DoricPanelFragment argument is null");
+            return;
+        }
+        final String alias = argument.getString("alias");
+        String scheme = argument.getString("scheme");
+        DoricJSLoaderManager.getInstance().loadJSBundle(scheme).setCallback(new AsyncResult.Callback<String>() {
+            @Override
+            public void onResult(String result) {
+                doricPanel.config(result, alias);
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                DoricLog.e("DoricPanelFragment load JS error:" + t.getLocalizedMessage());
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        });
     }
 }

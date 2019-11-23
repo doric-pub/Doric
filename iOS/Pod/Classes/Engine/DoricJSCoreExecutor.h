@@ -21,11 +21,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "DoricJSExecutorProtocal.h"
+#import "DoricJSExecutorProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DoricJSCoreExecutor : NSObject <DoricJSExecutorProtocal>
+@interface DoricJSCoreExecutor : NSObject <DoricJSExecutorProtocol>
 
 @end
 

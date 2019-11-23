@@ -21,11 +21,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "DoricJSExecutorProtocal.h"
+#import "DoricJSExecutorProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DoricJSRemoteExecutor : NSObject <DoricJSExecutorProtocal>
+@interface DoricJSRemoteExecutor : NSObject <DoricJSExecutorProtocol>
 
 @property(nonatomic, strong) dispatch_semaphore_t semaphore;
 

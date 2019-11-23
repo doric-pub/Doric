@@ -25,7 +25,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol DoricJSExecutorProtocal <NSObject>
+@protocol DoricJSExecutorProtocol <NSObject>
 
 - (NSString *)loadJSScript:(NSString *)script source:(NSString *)source;
 

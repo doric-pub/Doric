@@ -14,19 +14,16 @@
  * limitations under the License.
  */
 //
-//  DoricJSCoreExecutor.h
-//  Doric
-//
-//  Created by pengfei.zhou on 2019/7/25.
+// Created by pengfei.zhou on 2019/11/23.
 //
 
 #import <Foundation/Foundation.h>
-#import "DoricJSExecutorProtocol.h"
 
-NS_ASSUME_NONNULL_BEGIN
+#import "DoricContext.h"
+#import "DoricNavigatorProtocol.h"
 
-@interface DoricJSCoreExecutor : NSObject <DoricJSExecutorProtocol>
+@interface DoricPanel : UIViewController
+@property(nonatomic, strong) DoricContext *doricContext;
 
+- (void)config:(NSString *)script alias:(NSString *)alias;
 @end
-
-NS_ASSUME_NONNULL_END

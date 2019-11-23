@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import pub.doric.DoricActivity;
 import pub.doric.utils.DoricUtils;
 
 public class MainActivity extends AppCompatActivity {
@@ -89,6 +90,13 @@ public class MainActivity extends AppCompatActivity {
             tv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (data[position].contains("NavigatorDemo")) {
+                        Intent intent = new Intent(tv.getContext(), DoricActivity.class);
+                        intent.putExtra("scheme", "assets://demo/" + data[position]);
+                        intent.putExtra("alias", data[position]);
+                        tv.getContext().startActivity(intent);
+                        return;
+                    }
                     Intent intent = new Intent(tv.getContext(), DemoActivity.class);
                     intent.putExtra("source", data[position]);
                     tv.getContext().startActivity(intent);

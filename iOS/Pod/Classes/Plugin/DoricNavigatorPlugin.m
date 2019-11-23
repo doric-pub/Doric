@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 //
-//  DoricJSCoreExecutor.h
-//  Doric
-//
-//  Created by pengfei.zhou on 2019/7/25.
+// Created by pengfei.zhou on 2019/11/23.
 //
 
-#import <Foundation/Foundation.h>
-#import "DoricJSExecutorProtocol.h"
+#import "DoricNavigatorPlugin.h"
 
-NS_ASSUME_NONNULL_BEGIN
 
-@interface DoricJSCoreExecutor : NSObject <DoricJSExecutorProtocol>
+@implementation DoricNavigatorPlugin
+- (void)push:(NSDictionary *)params {
+    [self.doricContext.navigator push:params[@"scheme"] alias:params[@"alias"]];
+}
 
+- (void)pop {
+    [self.doricContext.navigator pop];
+}
 @end
-
-NS_ASSUME_NONNULL_END

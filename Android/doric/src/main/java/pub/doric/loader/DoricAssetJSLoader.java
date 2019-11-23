@@ -13,26 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-//
-//  DoricJSEngineProtocal.h
-//  Doric
-//
-//  Created by pengfei.zhou on 2019/7/25.
-//
+package pub.doric.loader;
 
-#import <Foundation/Foundation.h>
-#import <JavaScriptCore/JavaScriptCore.h>
+import pub.doric.async.AsyncResult;
+import pub.doric.utils.DoricUtils;
 
-NS_ASSUME_NONNULL_BEGIN
+/**
+ * @Description: handle "assets://asset-file-path"
+ * @Author: pengfei.zhou
+ * @CreateDate: 2019-11-23
+ */
+public class DoricAssetJSLoader implements IDoricJSLoader {
+    @Override
+    public boolean filter(String scheme) {
+        return scheme.startsWith("assets");
+    }
 
-@protocol DoricJSExecutorProtocal <NSObject>
-
-- (NSString *)loadJSScript:(NSString *)script source:(NSString *)source;
-
-- (void)injectGlobalJSObject:(NSString *)name obj:(id)obj;
-
-- (JSValue *)invokeObject:(NSString *)objName method:(NSString *)funcName args:(NSArray *)args;
-
-@end
-
-NS_ASSUME_NONNULL_END
+    @Override
+    public AsyncResult<String> request(String scheme) {
+        return new AsyncResult<>(DoricUtils.readAssetFile(scheme.substring("assets://".length())));
+    }
+}

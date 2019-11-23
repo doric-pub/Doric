@@ -13,20 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-//
-//  DoricJSCoreExecutor.h
-//  Doric
-//
-//  Created by pengfei.zhou on 2019/7/25.
-//
+package pub.doric.navigator;
 
-#import <Foundation/Foundation.h>
-#import "DoricJSExecutorProtocol.h"
+/**
+ * @Description: pub.doric.navigator
+ * @Author: pengfei.zhou
+ * @CreateDate: 2019-11-23
+ */
+public interface IDoricNavigator {
+    void push(String scheme, String alias);
 
-NS_ASSUME_NONNULL_BEGIN
-
-@interface DoricJSCoreExecutor : NSObject <DoricJSExecutorProtocol>
-
-@end
-
-NS_ASSUME_NONNULL_END
+    void pop();
+}

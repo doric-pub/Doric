@@ -10,4 +10,5 @@ export default [
     'src/ModalDemo',
     'src/NetworkDemo',
     'src/StorageDemo',
+    'src/NavigatorDemo',
 ]

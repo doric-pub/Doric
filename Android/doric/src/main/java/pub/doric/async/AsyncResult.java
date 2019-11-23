@@ -26,6 +26,13 @@ public class AsyncResult<R> {
 
     private Callback<R> callback = null;
 
+    public AsyncResult() {
+    }
+
+    public AsyncResult(R r) {
+        this.result = r;
+    }
+
     public void setResult(R result) {
         this.result = result;
         if (this.callback != null) {

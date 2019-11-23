@@ -14,19 +14,11 @@
  * limitations under the License.
  */
 //
-//  DoricJSCoreExecutor.h
-//  Doric
-//
-//  Created by pengfei.zhou on 2019/7/25.
+// Created by pengfei.zhou on 2019/11/23.
 //
 
 #import <Foundation/Foundation.h>
-#import "DoricJSExecutorProtocol.h"
+#import "DoricNativePlugin.h"
 
-NS_ASSUME_NONNULL_BEGIN
-
-@interface DoricJSCoreExecutor : NSObject <DoricJSExecutorProtocol>
-
+@interface DoricNavigatorPlugin : DoricNativePlugin
 @end
-
-NS_ASSUME_NONNULL_END

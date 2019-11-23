@@ -18,7 +18,6 @@ package pub.doric.demo;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,6 +29,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import pub.doric.DoricContext;
 import pub.doric.DoricContextManager;
+import pub.doric.DoricPanel;
 import pub.doric.devkit.DoricContextDebuggable;
 import pub.doric.devkit.event.EnterDebugEvent;
 import pub.doric.devkit.event.QuitDebugEvent;
@@ -52,14 +52,12 @@ public class DemoActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         String source = getIntent().getStringExtra("source");
-        FrameLayout frameLayout = new FrameLayout(this);
-        addContentView(frameLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+        DoricPanel doricPanel = new DoricPanel(this);
+        addContentView(doricPanel, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
-        doricContext = DoricContext.create(this, DoricUtils.readAssetFile("demo/" + source), source);
+        doricPanel.config(DoricUtils.readAssetFile("demo/" + source), source);
+        doricContext = doricPanel.getDoricContext();
         doricContextDebuggable = new DoricContextDebuggable(doricContext);
-        doricContext.init(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        doricContext.getRootNode().setRootView(frameLayout);
-
         sensorHelper = new SensorManagerHelper(this);
         sensorHelper.setOnShakeListener(new SensorManagerHelper.OnShakeListener() {
             @Override
@@ -74,18 +72,6 @@ public class DemoActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        doricContext.onShow();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        doricContext.onHidden();
-    }
-
-    @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
 
@@ -95,7 +81,6 @@ public class DemoActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        doricContext.teardown();
         EventBus.getDefault().unregister(this);
         sensorHelper.stop();
     }

@@ -14,19 +14,14 @@
  * limitations under the License.
  */
 //
-//  DoricJSCoreExecutor.h
-//  Doric
-//
-//  Created by pengfei.zhou on 2019/7/25.
+// Created by pengfei.zhou on 2019/11/23.
 //
 
 #import <Foundation/Foundation.h>
-#import "DoricJSExecutorProtocol.h"
+#import "DoricAsyncResult.h"
 
-NS_ASSUME_NONNULL_BEGIN
+@protocol DoricLoaderProtocol <NSObject>
+- (BOOL)filter:(NSString *)scheme;
 
-@interface DoricJSCoreExecutor : NSObject <DoricJSExecutorProtocol>
-
+- (DoricAsyncResult <NSString *> *)request:(NSString *)scheme;
 @end
-
-NS_ASSUME_NONNULL_END

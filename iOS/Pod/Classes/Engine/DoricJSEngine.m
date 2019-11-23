@@ -21,7 +21,7 @@
 //
 
 #import "DoricJSEngine.h"
-#import "DoricJSExecutorProtocal.h"
+#import "DoricJSExecutorProtocol.h"
 #import "DoricJSCoreExecutor.h"
 #import "DoricJSRemoteExecutor.h"
 #import "DoricConstant.h"
@@ -29,7 +29,7 @@
 #import "DoricBridgeExtension.h"
 
 @interface DoricJSEngine ()
-@property(nonatomic, strong) id <DoricJSExecutorProtocal> jsExecutor;
+@property(nonatomic, strong) id <DoricJSExecutorProtocol> jsExecutor;
 @property(nonatomic, strong) NSMutableDictionary *timers;
 @property(nonatomic, strong) DoricBridgeExtension *bridgeExtension;
 @end

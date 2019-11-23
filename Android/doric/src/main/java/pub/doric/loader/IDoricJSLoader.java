@@ -13,20 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-//
-//  DoricJSCoreExecutor.h
-//  Doric
-//
-//  Created by pengfei.zhou on 2019/7/25.
-//
+package pub.doric.loader;
 
-#import <Foundation/Foundation.h>
-#import "DoricJSExecutorProtocol.h"
+import pub.doric.async.AsyncResult;
 
-NS_ASSUME_NONNULL_BEGIN
+/**
+ * @Description: pub.doric
+ * @Author: pengfei.zhou
+ * @CreateDate: 2019-11-23
+ */
+public interface IDoricJSLoader {
+    boolean filter(String scheme);
 
-@interface DoricJSCoreExecutor : NSObject <DoricJSExecutorProtocol>
-
-@end
-
-NS_ASSUME_NONNULL_END
+    AsyncResult<String> request(String scheme);
+}

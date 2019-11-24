@@ -16,26 +16,13 @@
 package pub.doric.demo;
 
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import pub.doric.DoricContext;
-import pub.doric.DoricContextManager;
 import pub.doric.DoricPanel;
-import pub.doric.devkit.DoricContextDebuggable;
-import pub.doric.devkit.event.EnterDebugEvent;
-import pub.doric.devkit.event.QuitDebugEvent;
-import pub.doric.devkit.event.ReloadEvent;
-import pub.doric.devkit.ui.DevPanel;
-import pub.doric.devkit.util.SensorManagerHelper;
 import pub.doric.utils.DoricUtils;
 
 /**
@@ -45,8 +32,6 @@ import pub.doric.utils.DoricUtils;
  */
 public class DemoActivity extends AppCompatActivity {
     private DoricContext doricContext;
-    private SensorManagerHelper sensorHelper;
-    private DoricContextDebuggable doricContextDebuggable;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,58 +42,5 @@ public class DemoActivity extends AppCompatActivity {
                 ViewGroup.LayoutParams.MATCH_PARENT));
         doricPanel.config(DoricUtils.readAssetFile("demo/" + source), source);
         doricContext = doricPanel.getDoricContext();
-        doricContextDebuggable = new DoricContextDebuggable(doricContext);
-        sensorHelper = new SensorManagerHelper(this);
-        sensorHelper.setOnShakeListener(new SensorManagerHelper.OnShakeListener() {
-            @Override
-            public void onShake() {
-                Fragment devPanel = getSupportFragmentManager().findFragmentByTag("DevPanel");
-                if (devPanel != null && devPanel.isAdded()) {
-                    return;
-                }
-                new DevPanel().show(getSupportFragmentManager(), "DevPanel");
-            }
-        });
-    }
-
-    @Override
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
-
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
-        sensorHelper.stop();
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEnterDebugEvent(EnterDebugEvent enterDebugEvent) {
-        doricContextDebuggable.startDebug();
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReloadEvent(ReloadEvent reloadEvent) {
-        for (DoricContext context : DoricContextManager.aliveContexts()) {
-            if (reloadEvent.source.contains(context.getSource())) {
-                context.reload(reloadEvent.script);
-            }
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onQuitDebugEvent(QuitDebugEvent quitDebugEvent) {
-        doricContextDebuggable.stopDebug();
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (KeyEvent.KEYCODE_MENU == event.getKeyCode()) {
-            new DevPanel().show(getSupportFragmentManager(), "DevPanel");
-        }
-        return super.onKeyDown(keyCode, event);
     }
 }

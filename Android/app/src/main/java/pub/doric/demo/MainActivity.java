@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pub.doric.DoricActivity;
+import pub.doric.devkit.ui.DemoDebugActivity;
 import pub.doric.utils.DoricUtils;
 
 public class MainActivity extends AppCompatActivity {
@@ -97,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                         tv.getContext().startActivity(intent);
                         return;
                     }
-                    Intent intent = new Intent(tv.getContext(), DemoActivity.class);
+                    Intent intent = new Intent(tv.getContext(), DemoDebugActivity.class);
                     intent.putExtra("source", data[position]);
                     tv.getContext().startActivity(intent);
                 }

@@ -27,6 +27,8 @@
 
 @interface DoricViewController ()
 @property(nonatomic, strong) DoricPanel *doricPanel;
+@property(nonatomic) BOOL navBarHidden;
+@property(nonatomic, strong) UIImage *navBarImage;
 @end
 
 @implementation DoricViewController
@@ -52,6 +54,22 @@
         };
     }
     return self;
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.navBarHidden = self.navigationController.navigationBarHidden;
+    self.navBarImage = [self.navigationController.navigationBar backgroundImageForBarMetrics:UIBarMetricsDefault];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    if (self.navigationController.navigationBarHidden != self.navBarHidden) {
+        [self.navigationController setNavigationBarHidden:self.navBarHidden];
+    }
+    if (self.navBarImage != [self.navigationController.navigationBar backgroundImageForBarMetrics:UIBarMetricsDefault]) {
+        [self.navigationController.navigationBar setBackgroundImage:self.navBarImage forBarMetrics:UIBarMetricsDefault];
+    }
 }
 
 - (void)viewWillLayoutSubviews {

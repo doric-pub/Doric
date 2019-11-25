@@ -96,8 +96,6 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
     private float mInitialDownY;
     private boolean mIsBeingDragged;
     private int mActivePointerId = INVALID_POINTER;
-    // Whether this item is scaled up rather than clipped
-    boolean mScale;
 
     // Target is returning to its start offset because it was cancelled or a
     // refresh was triggered.
@@ -185,11 +183,7 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
                 mRefreshView.setVisibility(View.GONE);
                 // Return the circle to its start position
 
-                if (mScale) {
-                    setAnimationProgress(0 /* animation complete and view is hidden */);
-                } else {
-                    setTargetOffsetTopAndBottom(mOriginalOffsetTop - mCurrentTargetOffsetTop);
-                }
+                setTargetOffsetTopAndBottom(mOriginalOffsetTop - mCurrentTargetOffsetTop);
                 mCurrentTargetOffsetTop = mRefreshView.getTop();
             }
 
@@ -355,7 +349,7 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
      * @param progress
      */
     void setAnimationProgress(float progress) {
-        mRefreshView.setProgressRotation(progress);
+
     }
 
     private void setRefreshing(boolean refreshing, final boolean notify) {
@@ -731,14 +725,9 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
         if (mRefreshView.getVisibility() != View.VISIBLE) {
             mRefreshView.setVisibility(View.VISIBLE);
         }
-        if (!mScale) {
-            mRefreshView.setScaleX(1f);
-            mRefreshView.setScaleY(1f);
-        }
+        mRefreshView.setScaleX(1f);
+        mRefreshView.setScaleY(1f);
 
-        if (mScale) {
-            setAnimationProgress(Math.min(1f, overscrollTop / mTotalDragDistance));
-        }
         setTargetOffsetTopAndBottom(targetY - mCurrentTargetOffsetTop);
     }
 
@@ -749,26 +738,22 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
             // cancel refresh
             mRefreshing = false;
             Animation.AnimationListener listener = null;
-            if (!mScale) {
-                listener = new Animation.AnimationListener() {
+            listener = new Animation.AnimationListener() {
 
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-                    }
+                @Override
+                public void onAnimationStart(Animation animation) {
+                }
 
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        if (!mScale) {
-                            startScaleDownAnimation(null);
-                        }
-                    }
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    startScaleDownAnimation(null);
+                }
 
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-                    }
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                }
 
-                };
-            }
+            };
             animateOffsetToStartPosition(mCurrentTargetOffsetTop, listener);
         }
     }
@@ -873,20 +858,15 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
     }
 
     private void animateOffsetToStartPosition(int from, AnimationListener listener) {
-        if (mScale) {
-            // Scale the item back down
-            startScaleDownReturnToStartAnimation(from, listener);
-        } else {
-            mFrom = from;
-            mAnimateToStartPosition.reset();
-            mAnimateToStartPosition.setDuration(ANIMATE_TO_START_DURATION);
-            mAnimateToStartPosition.setInterpolator(mDecelerateInterpolator);
-            if (listener != null) {
-                mRefreshView.setAnimationListener(listener);
-            }
-            mRefreshView.clearAnimation();
-            mRefreshView.startAnimation(mAnimateToStartPosition);
+        mFrom = from;
+        mAnimateToStartPosition.reset();
+        mAnimateToStartPosition.setDuration(ANIMATE_TO_START_DURATION);
+        mAnimateToStartPosition.setInterpolator(mDecelerateInterpolator);
+        if (listener != null) {
+            mRefreshView.setAnimationListener(listener);
         }
+        mRefreshView.clearAnimation();
+        mRefreshView.startAnimation(mAnimateToStartPosition);
     }
 
     private final Animation mAnimateToCorrectPosition = new Animation() {
@@ -919,30 +899,14 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
         }
     };
 
-    private void startScaleDownReturnToStartAnimation(int from,
-                                                      Animation.AnimationListener listener) {
-        mFrom = from;
-        mStartingScale = mRefreshView.getScaleX();
-        mScaleDownToStartAnimation = new Animation() {
-            @Override
-            public void applyTransformation(float interpolatedTime, Transformation t) {
-                float targetScale = (mStartingScale + (-mStartingScale * interpolatedTime));
-                setAnimationProgress(targetScale);
-                moveToStart(interpolatedTime);
-            }
-        };
-        mScaleDownToStartAnimation.setDuration(SCALE_DOWN_DURATION);
-        if (listener != null) {
-            mRefreshView.setAnimationListener(listener);
-        }
-        mRefreshView.clearAnimation();
-        mRefreshView.startAnimation(mScaleDownToStartAnimation);
-    }
 
     void setTargetOffsetTopAndBottom(int offset) {
         mRefreshView.bringToFront();
         ViewCompat.offsetTopAndBottom(mRefreshView, offset);
         mCurrentTargetOffsetTop = mRefreshView.getTop();
+        if (mRefreshView.getMeasuredHeight() > 0) {
+            mRefreshView.setProgressRotation((float) mRefreshView.getBottom() / (float) mRefreshView.getMeasuredHeight());
+        }
     }
 
     private void onSecondaryPointerUp(MotionEvent ev) {

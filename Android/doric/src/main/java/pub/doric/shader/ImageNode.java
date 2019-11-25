@@ -15,11 +15,15 @@
  */
 package pub.doric.shader;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
 import androidx.annotation.Nullable;
 
 import android.text.TextUtils;
+import android.util.Base64;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -33,6 +37,9 @@ import pub.doric.extension.bridge.DoricPlugin;
 
 import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSValue;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @Description: com.github.penfeizhou.doric.widget
@@ -95,6 +102,23 @@ public class ImageNode extends ViewNode<ImageView> {
                 break;
             case "loadCallback":
                 this.loadCallbackId = prop.asString().value();
+                break;
+            case "imageBase64":
+                Pattern r = Pattern.compile("data:image/(\\S+?);base64,(\\S+)");
+                Matcher m = r.matcher(prop.asString().value());
+                if (m.find()) {
+                    String imageType = m.group(1);
+                    String base64 = m.group(2);
+                    if (!TextUtils.isEmpty(imageType) && !TextUtils.isEmpty(base64)) {
+                        try {
+                            byte[] data = Base64.decode(base64, Base64.DEFAULT);
+                            Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                            view.setImageBitmap(bitmap);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
                 break;
             default:
                 super.blend(view, name, prop);

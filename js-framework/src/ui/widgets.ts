@@ -50,6 +50,7 @@ export enum ScaleType {
 
 export interface IImage extends IView {
     imageUrl?: string
+    imageBase64?: string
     scaleType?: ScaleType
     loadCallback?: (image: { width: number; height: number } | undefined) => void
 }
@@ -57,7 +58,8 @@ export interface IImage extends IView {
 export class Image extends View implements IImage {
     @Property
     imageUrl?: string
-
+    @Property
+    imageBase64?: string
     @Property
     scaleType?: ScaleType
 

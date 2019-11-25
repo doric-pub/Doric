@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         });
         swipeLayout.setBackgroundColor(Color.YELLOW);
         swipeLayout.getRefreshView().setBackgroundColor(Color.RED);
-        swipeLayout.setPullDownHeight(100);
+        swipeLayout.setPullDownHeight(300);
         RecyclerView recyclerView = findViewById(R.id.root);
         recyclerView.setBackgroundColor(Color.WHITE);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

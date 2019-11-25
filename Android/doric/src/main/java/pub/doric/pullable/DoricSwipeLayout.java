@@ -1,5 +1,7 @@
 package pub.doric.pullable;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
@@ -17,7 +19,6 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.Px;
 import androidx.annotation.VisibleForTesting;
 import androidx.core.view.NestedScrollingChild;
 import androidx.core.view.NestedScrollingChildHelper;
@@ -69,8 +70,6 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
 
     private static final int ANIMATE_TO_START_DURATION = 200;
 
-    // Default background for the progress spinner
-    private static final int CIRCLE_BG_LIGHT = 0xFFFAFAFA;
     // Default offset in dips from the top of the view to where the progress spinner should stop
     private static final int DEFAULT_CIRCLE_TARGET = 64;
 
@@ -159,17 +158,55 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
         }
     };
     private int mPullDownHeight = 0;
+    private ValueAnimator headerViewAnimator;
 
     void reset() {
-        mRefreshView.stopAnimation();
-        mRefreshView.setVisibility(View.GONE);
-        // Return the circle to its start position
-        if (mScale) {
-            setAnimationProgress(0 /* animation complete and view is hidden */);
-        } else {
-            setTargetOffsetTopAndBottom(mOriginalOffsetTop - mCurrentTargetOffsetTop);
+        if (headerViewAnimator != null && headerViewAnimator.isRunning()) {
+            headerViewAnimator.cancel();
         }
-        mCurrentTargetOffsetTop = mRefreshView.getTop();
+        headerViewAnimator = ValueAnimator.ofInt(mRefreshView.getBottom(), 0);
+        headerViewAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                mCurrentTargetOffsetTop = (int) animation.getAnimatedValue()
+                        - mRefreshView.getMeasuredHeight();
+                mRefreshView.requestLayout();
+            }
+        });
+        headerViewAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mRefreshView.stopAnimation();
+                mRefreshView.setVisibility(View.GONE);
+                // Return the circle to its start position
+
+                if (mScale) {
+                    setAnimationProgress(0 /* animation complete and view is hidden */);
+                } else {
+                    setTargetOffsetTopAndBottom(mOriginalOffsetTop - mCurrentTargetOffsetTop);
+                }
+                mCurrentTargetOffsetTop = mRefreshView.getTop();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        headerViewAnimator.setDuration(SCALE_DOWN_DURATION);
+        headerViewAnimator.start();
+
+
     }
 
     @Override
@@ -184,80 +221,6 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         reset();
-    }
-
-    /**
-     * The refresh indicator starting and resting position is always positioned
-     * near the top of the refreshing content. This position is a consistent
-     * location, but can be adjusted in either direction based on whether or not
-     * there is a toolbar or actionbar present.
-     * <p>
-     * <strong>Note:</strong> Calling this will reset the position of the refresh indicator to
-     * <code>start</code>.
-     * </p>
-     *
-     * @param scale Set to true if there is no view at a higher z-order than where the progress
-     *              spinner is set to appear. Setting it to true will cause indicator to be scaled
-     *              up rather than clipped.
-     * @param start The offset in pixels from the top of this view at which the
-     *              progress spinner should appear.
-     * @param end   The offset in pixels from the top of this view at which the
-     *              progress spinner should come to rest after a successful swipe
-     *              gesture.
-     */
-    public void setProgressViewOffset(boolean scale, int start, int end) {
-        mScale = scale;
-        mOriginalOffsetTop = start;
-        mSpinnerOffsetEnd = end;
-        mUsingCustomStart = true;
-        reset();
-        mRefreshing = false;
-    }
-
-    /**
-     * @return The offset in pixels from the top of this view at which the progress spinner should
-     * appear.
-     */
-    public int getProgressViewStartOffset() {
-        return mOriginalOffsetTop;
-    }
-
-    /**
-     * @return The offset in pixels from the top of this view at which the progress spinner should
-     * come to rest after a successful swipe gesture.
-     */
-    public int getProgressViewEndOffset() {
-        return mSpinnerOffsetEnd;
-    }
-
-    /**
-     * The refresh indicator resting position is always positioned near the top
-     * of the refreshing content. This position is a consistent location, but
-     * can be adjusted in either direction based on whether or not there is a
-     * toolbar or actionbar present.
-     *
-     * @param scale Set to true if there is no view at a higher z-order than where the progress
-     *              spinner is set to appear. Setting it to true will cause indicator to be scaled
-     *              up rather than clipped.
-     * @param end   The offset in pixels from the top of this view at which the
-     *              progress spinner should come to rest after a successful swipe
-     *              gesture.
-     */
-    public void setProgressViewEndTarget(boolean scale, int end) {
-        mSpinnerOffsetEnd = end;
-        mScale = scale;
-        mRefreshView.invalidate();
-    }
-
-    /**
-     * Sets a custom slingshot distance.
-     *
-     * @param slingshotDistance The distance in pixels that the refresh indicator can be pulled
-     *                          beyond its resting position. Use
-     *                          {@link #DEFAULT_SLINGSHOT_DISTANCE} to reset to the default value.
-     */
-    public void setSlingshotDistance(@Px int slingshotDistance) {
-        mCustomSlingshotDistance = slingshotDistance;
     }
 
     /**
@@ -308,6 +271,8 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
     public void setPullDownHeight(int height) {
         mPullDownHeight = height;
         mOriginalOffsetTop = mCurrentTargetOffsetTop = -height;
+        mSpinnerOffsetEnd = height;
+        mTotalDragDistance = height;
     }
 
     @Override
@@ -439,15 +404,6 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
                 }
             }
         }
-    }
-
-    /**
-     * Set the distance to trigger a sync in dips
-     *
-     * @param distance
-     */
-    public void setDistanceToTriggerSync(int distance) {
-        mTotalDragDistance = distance;
     }
 
     @Override

@@ -22,10 +22,22 @@
 
 @implementation DoricNavigatorPlugin
 - (void)push:(NSDictionary *)params {
-    [self.doricContext.navigator push:params[@"scheme"] alias:params[@"alias"]];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        BOOL animated = YES;
+        if (params[@"animated"]) {
+            animated = [params[@"animated"] boolValue];
+        }
+        [self.doricContext.navigator push:params[@"scheme"] alias:params[@"alias"] animated:animated];
+    });
 }
 
-- (void)pop {
-    [self.doricContext.navigator pop];
+- (void)pop:(NSDictionary *)params {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        BOOL animated = YES;
+        if (params[@"animated"]) {
+            animated = [params[@"animated"] boolValue];
+        }
+        [self.doricContext.navigator pop:animated];
+    });
 }
 @end

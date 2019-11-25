@@ -42,6 +42,11 @@ export abstract class Panel {
 
     private __data__: any
     private __root__ = new Root
+    private headviews: Map<string, View> = new Map
+
+    addHeadView(v: View) {
+        this.headviews.set(v.viewId, v)
+    }
 
     getRootView() {
         return this.__root__
@@ -49,6 +54,9 @@ export abstract class Panel {
 
     getInitData() {
         return this.__data__
+    }
+    constructor() {
+        this.addHeadView(this.__root__)
     }
 
     @NativeCall
@@ -90,21 +98,26 @@ export abstract class Panel {
         const v = this.retrospectView(viewIds)
         if (v === undefined) {
             loge(`Cannot find view for ${viewIds}`)
+        } else {
+            const argumentsList: any = [callbackId]
+            for (let i = 2; i < arguments.length; i++) {
+                argumentsList.push(arguments[i])
+            }
+            return Reflect.apply(v.responseCallback, v, argumentsList)
         }
-        const argumentsList: any = [callbackId]
-        for (let i = 2; i < arguments.length; i++) {
-            argumentsList.push(arguments[i])
-        }
-        return Reflect.apply(v.responseCallback, v, argumentsList)
     }
 
-    private retrospectView(ids: string[]): View {
-        return ids.reduce((acc: View, cur) => {
-            if (Reflect.has(acc, "subviewById")) {
-                return Reflect.apply(Reflect.get(acc, "subviewById"), acc, [cur])
+    private retrospectView(ids: string[]): View | undefined {
+        return ids.reduce((acc: View | undefined, cur) => {
+            if (acc === undefined) {
+                return this.headviews.get(cur)
+            } else {
+                if (Reflect.has(acc, "subviewById")) {
+                    return Reflect.apply(Reflect.get(acc, "subviewById"), acc, [cur])
+                }
+                return acc
             }
-            return acc
-        }, this.__root__)
+        }, undefined)
     }
 
     private nativeRender(model: Model) {

@@ -180,3 +180,18 @@ export function navigator(context: BridgeContext) {
         },
     }
 }
+
+export function navbar(context: BridgeContext) {
+    return {
+        setHidden: (hidden: boolean) => {
+            return context.navbar.push({
+                hidden,
+            })
+        },
+        setTitle: (title: string) => {
+            return context.navbar.push({
+                title,
+            })
+        },
+    }
+}

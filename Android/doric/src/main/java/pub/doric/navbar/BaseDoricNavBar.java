@@ -51,7 +51,7 @@ public class BaseDoricNavBar extends FrameLayout implements IDoricNavBar {
             @Override
             public void onClick(View v) {
                 if (getContext() instanceof Activity) {
-                    ((Activity) getContext()).finish();
+                    ((Activity) getContext()).onBackPressed();
                 }
             }
         });

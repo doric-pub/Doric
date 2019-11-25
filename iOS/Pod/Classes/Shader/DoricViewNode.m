@@ -192,7 +192,7 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     do {
         [ret addObject:node.viewId];
         node = node.superNode;
-    } while (node && ![node isKindOfClass:[DoricRootNode class]]);
+    } while (node);
 
     return [[ret reverseObjectEnumerator] allObjects];
 }

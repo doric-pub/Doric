@@ -4,7 +4,9 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application>
-        <activity android:name="pub.doric.DoricActivity">
+        <activity
+            android:name="pub.doric.DoricActivity"
+            android:theme="@style/Theme.Design.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

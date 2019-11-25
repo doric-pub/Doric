@@ -187,7 +187,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         do {
             ids.push(viewNode.mId);
             viewNode = viewNode.mSuperNode;
-        } while (viewNode != null && !(viewNode instanceof RootNode));
+        } while (viewNode != null);
 
         return ids.toArray(new String[0]);
     }

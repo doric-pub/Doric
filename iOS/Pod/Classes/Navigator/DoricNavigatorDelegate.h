@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#import "DoricContext.h"
-#import "DoricLayouts.h"
-#import "DoricExtensions.h"
-#import "DoricViewNode.h"
-#import "DoricRootNode.h"
-#import "UIView+Doric.h"
-#import "DoricUtil.h"
-#import "DoricPanel.h"
-#import "DoricJSLoaderManager.h"
-#import "DoricNavigatorDelegate.h"
-#import "DoricNavBarDelegate.h"
-#import "DoricViewController.h"
+//
+// Created by pengfei.zhou on 2019/11/23.
+//
+
+#import <Foundation/Foundation.h>
+
+@protocol DoricNavigatorDelegate <NSObject>
+- (void)doric_navigator_push:(NSString *)scheme alias:(NSString *)alias animated:(BOOL)animated;
+
+- (void)doric_navigator_pop:(BOOL)animated;
+@end

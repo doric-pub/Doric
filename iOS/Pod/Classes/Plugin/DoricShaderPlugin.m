@@ -23,6 +23,7 @@
 #import "DoricShaderPlugin.h"
 #import "DoricRootNode.h"
 #import "DoricUtil.h"
+#import "Doric.h"
 
 #import <JavaScriptCore/JavaScriptCore.h>
 
@@ -31,13 +32,16 @@
 @implementation DoricShaderPlugin
 
 - (void)render:(NSDictionary *)argument {
-    if(!argument) {
+    if (!argument) {
         return;
     }
     __weak typeof(self) _self = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         __strong typeof(_self) self = _self;
-        [self.doricContext.rootNode render:argument[@"props"]];
+        [self.doricContext.rootNode also:^(DoricRootNode *it) {
+            it.viewId = argument[@"id"];
+            [it render:argument[@"props"]];
+        }];
     });
 }
 

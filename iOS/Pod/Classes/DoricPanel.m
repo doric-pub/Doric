@@ -24,13 +24,20 @@
 
 - (void)config:(NSString *)script alias:(NSString *)alias {
     self.doricContext = [[[DoricContext alloc] initWithScript:script source:alias] also:^(DoricContext *it) {
-        it.navigator = [[DoricDefaultNavigator alloc] initWithNavigationController:self.navigationController];
         [it.rootNode setupRootView:[[DoricStackView new] also:^(DoricStackView *it) {
-            it.width = self.view.width;
-            it.height = self.view.height;
             [self.view addSubview:it];
         }]];
-        [it initContextWithWidth:self.view.width height:self.view.height];
+    }];
+}
+
+- (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    [self.doricContext.rootNode.view also:^(DoricStackView *it) {
+        if (it.width != self.view.width || it.height != self.view.height) {
+            it.width = self.view.width;
+            it.height = self.view.height;
+            [self.doricContext initContextWithWidth:it.width height:it.height];
+        }
     }];
 }
 

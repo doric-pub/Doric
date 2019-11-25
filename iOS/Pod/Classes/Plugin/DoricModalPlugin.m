@@ -32,7 +32,7 @@
         [dic[@"gravity"] also:^(NSNumber *it) {
             gravity = (DoricGravity) [it integerValue];
         }];
-        showToast(dic[@"msg"], gravity);
+        ShowToast(dic[@"msg"], gravity);
     });
 }
 

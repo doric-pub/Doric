@@ -13,15 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#import "DoricContext.h"
-#import "DoricLayouts.h"
-#import "DoricExtensions.h"
-#import "DoricViewNode.h"
-#import "DoricRootNode.h"
-#import "UIView+Doric.h"
-#import "DoricUtil.h"
-#import "DoricPanel.h"
-#import "DoricJSLoaderManager.h"
-#import "DoricNavigatorDelegate.h"
-#import "DoricNavBarDelegate.h"
-#import "DoricViewController.h"
+package pub.doric.navbar;
+
+/**
+ * @Description: pub.doric.navbar
+ * @Author: pengfei.zhou
+ * @CreateDate: 2019-11-25
+ */
+public interface IDoricNavBar {
+    boolean isHidden();
+
+    void setHidden(boolean hidden);
+
+    void setTitle(String title);
+
+    void setBackgroundColor(int color);
+}

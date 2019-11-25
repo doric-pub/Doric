@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import pub.doric.async.AsyncResult;
+import pub.doric.navbar.IDoricNavBar;
 import pub.doric.navigator.IDoricNavigator;
 import pub.doric.plugin.DoricJavaPlugin;
 import pub.doric.shader.RootNode;
@@ -158,5 +159,15 @@ public class DoricContext {
 
     public IDoricNavigator getDoricNavigator() {
         return this.doricNavigator;
+    }
+
+    private IDoricNavBar doricNavBar;
+
+    public void setDoricNavBar(IDoricNavBar navBar) {
+        this.doricNavBar = navBar;
+    }
+
+    public IDoricNavBar getDoricNavBar() {
+        return this.doricNavBar;
     }
 }

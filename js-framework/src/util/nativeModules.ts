@@ -15,6 +15,8 @@
  */
 import { BridgeContext } from "../runtime/global";
 import { Gravity } from "./gravity";
+import { Panel } from "../ui/panel";
+import { Color } from "./color";
 
 export function modal(context: BridgeContext) {
     return {
@@ -177,6 +179,35 @@ export function navigator(context: BridgeContext) {
         },
         pop: (animated = true) => {
             return context.navigator.pop({ animated })
+        },
+    }
+}
+
+export function navbar(context: BridgeContext) {
+    const entity = context.entity
+    let panel: Panel | undefined = undefined
+    if (entity instanceof Panel) {
+        panel = entity
+    }
+
+    return {
+        isHidden: () => {
+            return context.navbar.isHidden() as Promise<boolean>
+        },
+        setHidden: (hidden: boolean) => {
+            return context.navbar.setHidden({
+                hidden,
+            })
+        },
+        setTitle: (title: string) => {
+            return context.navbar.setTitle({
+                title,
+            })
+        },
+        setBgColor: (color: Color) => {
+            return context.navbar.setBgColor({
+                color: color.toModel(),
+            })
         },
     }
 }

@@ -13,7 +13,9 @@ class NaivgatorDemo extends Panel {
                 textAlignment: gravity().center(),
                 height: 50,
             }),
-            ...['Counter', 'EffectsDemo', 'ImageDemo', 'LayoutDemo',
+            ...[
+                'NavbarDemo',
+                'Counter', 'EffectsDemo', 'ImageDemo', 'LayoutDemo',
                 'ListDemo', 'ModalDemo', 'NavigatorDemo',
                 'NetworkDemo', 'ScrollerDemo', 'SliderDemo', 'Snake', 'StorageDemo'].map(e =>
                     label(e).apply({

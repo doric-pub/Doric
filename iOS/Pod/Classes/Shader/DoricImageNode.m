@@ -72,6 +72,15 @@
         }
     } else if ([@"loadCallback" isEqualToString:name]) {
         self.loadCallbackId = prop;
+    } else if ([@"imageBase64" isEqualToString:name]) {
+        NSString *base64 = prop;
+        if (YES == [base64 hasPrefix:@"data:image"]) {
+            base64 = [base64 componentsSeparatedByString:@","].lastObject;
+        }
+        NSData *imageData = [[NSData alloc] initWithBase64EncodedString:base64
+                                                                options:NSDataBase64DecodingIgnoreUnknownCharacters];
+        UIImage *image = [UIImage imageWithData:imageData];
+        self.view.image = image;
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }

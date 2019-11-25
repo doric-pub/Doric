@@ -27,45 +27,23 @@
 @implementation DoricViewController
 - (instancetype)initWithScheme:(NSString *)scheme alias:(NSString *)alias {
     if (self = [super init]) {
-        [self push:scheme alias:alias];
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"返回"
-                                                                                  style:UIBarButtonItemStylePlain
-                                                                                 target:self
-                                                                                 action:@selector(pop)];
+        DoricAsyncResult <NSString *> *result = [DoricJSLoaderManager.instance request:scheme];
+        result.resultCallback = ^(NSString *result) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                DoricPanel *panel = [DoricPanel new];
+                [panel.view also:^(UIView *it) {
+                    it.backgroundColor = [UIColor whiteColor];
+                    it.width = self.view.width;
+                    it.height = self.view.height - 88;
+                    it.top = 88;
+                }];
+                [self.view addSubview:panel.view];
+                [self addChildViewController:panel];
+                [panel config:result alias:alias];
+
+            });
+        };
     }
     return self;
 }
-
-- (void)push:(NSString *)scheme alias:(NSString *)alias {
-    DoricAsyncResult <NSString *> *result = [DoricJSLoaderManager.instance request:scheme];
-    result.resultCallback = ^(NSString *result) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            DoricPanel *panel = [DoricPanel new];
-            [panel.view also:^(UIView *it) {
-                it.backgroundColor = [UIColor whiteColor];
-                it.width = self.view.width;
-                it.height = self.view.height - 88;
-                it.top = 88;
-            }];
-            [self.view addSubview:panel.view];
-            [self addChildViewController:panel];
-            [panel config:result alias:alias];
-        });
-    };
-}
-
-- (void)pop {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if (self.childViewControllers.count > 1) {
-            [self.childViewControllers.lastObject also:^(UIViewController *it) {
-                [it removeFromParentViewController];
-                [it.view removeFromSuperview];
-            }];
-        } else {
-            [self.navigationController popViewControllerAnimated:NO];
-        }
-
-    });
-}
-
 @end

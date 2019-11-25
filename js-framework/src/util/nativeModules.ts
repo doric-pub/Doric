@@ -170,13 +170,13 @@ export function storage(context: BridgeContext) {
 
 export function navigator(context: BridgeContext) {
     return {
-        push: (scheme: string, alias: string) => {
+        push: (scheme: string, alias: string, animated = true) => {
             return context.navigator.push({
-                scheme, alias
+                scheme, alias, animated
             })
         },
-        pop: () => {
-            return context.navigator.pop()
+        pop: (animated = true) => {
+            return context.navigator.pop({ animated })
         },
     }
 }

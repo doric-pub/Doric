@@ -20,6 +20,6 @@
 #import <Foundation/Foundation.h>
 #import "DoricNavigatorProtocol.h"
 
-@interface DoricViewController : UIViewController <DoricNavigatorProtocol>
+@interface DoricViewController : UIViewController
 - (instancetype)initWithScheme:(NSString *)scheme alias:(NSString *)alias;
 @end

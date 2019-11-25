@@ -86,7 +86,7 @@
         NSString *result = qrObject.stringValue;
         NSLog(@"Scan result is %@", result);
         [[DoricDriver instance] connectDevKit:[NSString stringWithFormat:@"ws://%@:7777", result]];
-        showToast([NSString stringWithFormat:@"Connected to %@", result], BOTTOM);
+        ShowToast([NSString stringWithFormat:@"Connected to %@", result], BOTTOM);
         [self.navigationController popViewControllerAnimated:NO];
     }
 }

@@ -48,7 +48,7 @@ NSBundle *DoricBundle() {
 }
 
 
-void showToast(NSString *text, DoricGravity gravity) {
+void ShowToast(NSString *text, DoricGravity gravity) {
     UIView *superView = [UIApplication sharedApplication].windows.lastObject;
     UILabel *label = [[UILabel alloc] init];
     label.font = [UIFont systemFontOfSize:20.f];
@@ -74,4 +74,15 @@ void showToast(NSString *text, DoricGravity gravity) {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t) (2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [label removeFromSuperview];
     });
+}
+
+UIImage *UIImageWithColor(UIColor *color) {
+    CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, rect);
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
 }

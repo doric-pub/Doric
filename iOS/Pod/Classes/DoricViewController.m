@@ -23,10 +23,16 @@
 #import "DoricPanel.h"
 #import "UIView+Doric.h"
 #import "DoricExtensions.h"
+#import "DoricUtil.h"
+
+@interface DoricViewController ()
+@property(nonatomic, strong) DoricPanel *doricPanel;
+@end
 
 @implementation DoricViewController
 - (instancetype)initWithScheme:(NSString *)scheme alias:(NSString *)alias {
     if (self = [super init]) {
+        self.edgesForExtendedLayout = UIRectEdgeNone;
         DoricAsyncResult <NSString *> *result = [DoricJSLoaderManager.instance request:scheme];
         result.resultCallback = ^(NSString *result) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -34,18 +40,24 @@
                 [panel.view also:^(UIView *it) {
                     it.backgroundColor = [UIColor whiteColor];
                     it.width = self.view.width;
-                    it.height = self.view.height - 88;
-                    it.top = 88;
+                    it.height = self.view.height;
                 }];
                 [self.view addSubview:panel.view];
                 [self addChildViewController:panel];
                 [panel config:result alias:alias];
                 panel.doricContext.navigator = self;
                 panel.doricContext.navBar = self;
+                self.doricPanel = panel;
             });
         };
     }
     return self;
+}
+
+- (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    self.doricPanel.view.width = self.view.width;
+    self.doricPanel.view.height = self.view.height;
 }
 
 - (void)doric_navigator_push:(NSString *)scheme alias:(NSString *)alias animated:(BOOL)animated {
@@ -70,7 +82,7 @@
 }
 
 - (void)doric_navBar_setBackgroundColor:(UIColor *)color {
-    [self.navigationController.navigationBar setBackgroundColor:color];
+    [self.navigationController.navigationBar setBackgroundImage:UIImageWithColor(color) forBarMetrics:UIBarMetricsDefault];
 }
 
 

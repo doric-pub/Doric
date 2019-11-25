@@ -37,4 +37,6 @@ NSBundle *_Nonnull DoricBundle(void);
 #define DC_UNLOCK(lock) dispatch_semaphore_signal(lock);
 #endif
 
-void showToast(NSString *_Nonnull text, DoricGravity gravity);
+void ShowToast(NSString *_Nonnull text, DoricGravity gravity);
+
+UIImage *_Nonnull UIImageWithColor(UIColor *color);

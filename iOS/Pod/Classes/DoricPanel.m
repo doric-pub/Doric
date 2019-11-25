@@ -24,7 +24,6 @@
 
 - (void)config:(NSString *)script alias:(NSString *)alias {
     self.doricContext = [[[DoricContext alloc] initWithScript:script source:alias] also:^(DoricContext *it) {
-        it.navigator = [[DoricDefaultNavigator alloc] initWithNavigationController:self.navigationController];
         [it.rootNode setupRootView:[[DoricStackView new] also:^(DoricStackView *it) {
             it.width = self.view.width;
             it.height = self.view.height;

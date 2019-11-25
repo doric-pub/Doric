@@ -36,6 +36,7 @@
 #import "DoricSlideItemNode.h"
 #import "DoricStoragePlugin.h"
 #import "DoricNavigatorPlugin.h"
+#import "DoricNavBarPlugin.h"
 
 @interface DoricRegistry ()
 
@@ -63,6 +64,7 @@
     [self registerNativePlugin:DoricNetworkPlugin.class withName:@"network"];
     [self registerNativePlugin:DoricStoragePlugin.class withName:@"storage"];
     [self registerNativePlugin:DoricNavigatorPlugin.class withName:@"navigator"];
+    [self registerNativePlugin:DoricNavBarPlugin.class withName:@"navbar"];
 
     [self registerViewNode:DoricStackNode.class withName:@"Stack"];
     [self registerViewNode:DoricVLayoutNode.class withName:@"VLayout"];

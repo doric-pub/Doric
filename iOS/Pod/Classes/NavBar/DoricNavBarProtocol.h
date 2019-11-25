@@ -14,13 +14,18 @@
  * limitations under the License.
  */
 //
-// Created by pengfei.zhou on 2019/11/23.
+// Created by pengfei.zhou on 2019/11/25.
 //
 
 #import <Foundation/Foundation.h>
 
-@protocol DoricNavigatorProtocol <NSObject>
-- (void)push:(NSString *)scheme alias:(NSString *)alias animated:(BOOL)animated;
 
-- (void)pop:(BOOL)animated;
+@protocol DoricNavBarProtocol <NSObject>
+- (BOOL)isHidden;
+
+- (void)setHidden:(BOOL)hidden;
+
+- (void)setTitle:(NSString *)title;
+
+- (void)setBackgroundColor:(UIColor *)color;
 @end

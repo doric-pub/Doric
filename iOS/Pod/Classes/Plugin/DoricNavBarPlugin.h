@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 //
-// Created by pengfei.zhou on 2019/11/23.
+// Created by pengfei.zhou on 2019/11/25.
 //
 
 #import <Foundation/Foundation.h>
 
-@protocol DoricNavigatorProtocol <NSObject>
-- (void)push:(NSString *)scheme alias:(NSString *)alias animated:(BOOL)animated;
+#import "DoricNativePlugin.h"
 
-- (void)pop:(BOOL)animated;
+@interface DoricNavBarPlugin : DoricNativePlugin
+
 @end

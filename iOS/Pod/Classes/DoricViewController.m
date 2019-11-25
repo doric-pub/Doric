@@ -40,10 +40,34 @@
                 [self.view addSubview:panel.view];
                 [self addChildViewController:panel];
                 [panel config:result alias:alias];
-
+                panel.doricContext.navigator = self;
+                panel.doricContext.navBar = self;
             });
         };
     }
     return self;
 }
+
+- (void)push:(NSString *)scheme alias:(NSString *)alias animated:(BOOL)animated {
+    DoricViewController *viewController = [[DoricViewController alloc] initWithScheme:scheme alias:alias];
+    [self.navigationController pushViewController:viewController animated:animated];
+}
+
+- (void)pop:(BOOL)animated {
+    [self.navigationController popViewControllerAnimated:animated];
+}
+
+- (BOOL)isHidden {
+    return self.navigationController.navigationBarHidden;
+}
+
+- (void)setHidden:(BOOL)hidden {
+    [self.navigationController setNavigationBarHidden:hidden];
+}
+
+- (void)setBackgroundColor:(UIColor *)color {
+    [self.navigationController.navigationBar setBackgroundColor:color];
+}
+
+
 @end

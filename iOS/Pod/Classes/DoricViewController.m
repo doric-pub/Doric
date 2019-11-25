@@ -48,24 +48,28 @@
     return self;
 }
 
-- (void)push:(NSString *)scheme alias:(NSString *)alias animated:(BOOL)animated {
+- (void)doric_navigator_push:(NSString *)scheme alias:(NSString *)alias animated:(BOOL)animated {
     DoricViewController *viewController = [[DoricViewController alloc] initWithScheme:scheme alias:alias];
     [self.navigationController pushViewController:viewController animated:animated];
 }
 
-- (void)pop:(BOOL)animated {
+- (void)doric_navigator_pop:(BOOL)animated {
     [self.navigationController popViewControllerAnimated:animated];
 }
 
-- (BOOL)isHidden {
+- (BOOL)doric_navBar_isHidden {
     return self.navigationController.navigationBarHidden;
 }
 
-- (void)setHidden:(BOOL)hidden {
+- (void)doric_navBar_setHidden:(BOOL)hidden {
     [self.navigationController setNavigationBarHidden:hidden];
 }
 
-- (void)setBackgroundColor:(UIColor *)color {
+- (void)doric_navBar_setTitle:(NSString *)title {
+    self.title = title;
+}
+
+- (void)doric_navBar_setBackgroundColor:(UIColor *)color {
     [self.navigationController.navigationBar setBackgroundColor:color];
 }
 

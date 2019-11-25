@@ -24,7 +24,7 @@
 - (void)isHidden:(NSDictionary *)param withPromise:(DoricPromise *)promise {
     if (self.doricContext.navBar) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [promise resolve:@([self.doricContext.navBar isHidden])];
+            [promise resolve:@([self.doricContext.navBar doric_navBar_isHidden])];
         });
     } else {
         [promise reject:@"Not implement NavBar"];
@@ -34,7 +34,7 @@
 - (void)setHidden:(NSDictionary *)param withPromise:(DoricPromise *)promise {
     if (self.doricContext.navBar) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.doricContext.navBar setHidden:[param[@"hidden"] boolValue]];
+            [self.doricContext.navBar doric_navBar_setHidden:[param[@"hidden"] boolValue]];
             [promise resolve:nil];
         });
     } else {
@@ -45,7 +45,7 @@
 - (void)setTitle:(NSDictionary *)param withPromise:(DoricPromise *)promise {
     if (self.doricContext.navBar) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.doricContext.navBar setTitle:param[@"title"]];
+            [self.doricContext.navBar doric_navBar_setTitle:param[@"title"]];
             [promise resolve:nil];
         });
     } else {
@@ -57,7 +57,7 @@
     if (self.doricContext.navBar) {
         dispatch_async(dispatch_get_main_queue(), ^{
             UIColor *color = DoricColor(param[@"color"]);
-            [self.doricContext.navBar setBackgroundColor:color];
+            [self.doricContext.navBar doric_navBar_setBackgroundColor:color];
             [promise resolve:nil];
         });
     } else {

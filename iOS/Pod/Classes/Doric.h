@@ -22,5 +22,6 @@
 #import "DoricUtil.h"
 #import "DoricPanel.h"
 #import "DoricJSLoaderManager.h"
-#import "DoricNavigatorProtocol.h"
+#import "DoricNavigatorDelegate.h"
+#import "DoricNavBarDelegate.h"
 #import "DoricViewController.h"

@@ -20,12 +20,12 @@
 #import <Foundation/Foundation.h>
 
 
-@protocol DoricNavBarProtocol <NSObject>
-- (BOOL)isHidden;
+@protocol DoricNavBarDelegate <NSObject>
+- (BOOL)doric_navBar_isHidden;
 
-- (void)setHidden:(BOOL)hidden;
+- (void)doric_navBar_setHidden:(BOOL)hidden;
 
-- (void)setTitle:(NSString *)title;
+- (void)doric_navBar_setTitle:(NSString *)title;
 
-- (void)setBackgroundColor:(UIColor *)color;
+- (void)doric_navBar_setBackgroundColor:(UIColor *)color;
 @end

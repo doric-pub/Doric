@@ -27,7 +27,7 @@
         if (params[@"animated"]) {
             animated = [params[@"animated"] boolValue];
         }
-        [self.doricContext.navigator push:params[@"scheme"] alias:params[@"alias"] animated:animated];
+        [self.doricContext.navigator doric_navigator_push:params[@"scheme"] alias:params[@"alias"] animated:animated];
     });
 }
 
@@ -37,7 +37,7 @@
         if (params[@"animated"]) {
             animated = [params[@"animated"] boolValue];
         }
-        [self.doricContext.navigator pop:animated];
+        [self.doricContext.navigator doric_navigator_pop:animated];
     });
 }
 @end

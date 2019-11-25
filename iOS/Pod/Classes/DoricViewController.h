@@ -18,9 +18,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "DoricNavigatorProtocol.h"
-#import "DoricNavBarProtocol.h"
+#import "DoricNavigatorDelegate.h"
+#import "DoricNavBarDelegate.h"
 
-@interface DoricViewController : UIViewController <DoricNavigatorProtocol, DoricNavBarProtocol>
+@interface DoricViewController : UIViewController <DoricNavigatorDelegate, DoricNavBarDelegate>
 - (instancetype)initWithScheme:(NSString *)scheme alias:(NSString *)alias;
 @end

@@ -19,8 +19,8 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol DoricNavigatorProtocol <NSObject>
-- (void)push:(NSString *)scheme alias:(NSString *)alias animated:(BOOL)animated;
+@protocol DoricNavigatorDelegate <NSObject>
+- (void)doric_navigator_push:(NSString *)scheme alias:(NSString *)alias animated:(BOOL)animated;
 
-- (void)pop:(BOOL)animated;
+- (void)doric_navigator_pop:(BOOL)animated;
 @end

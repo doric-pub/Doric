@@ -20,7 +20,7 @@
 #import <Foundation/Foundation.h>
 
 #import "DoricContext.h"
-#import "DoricNavigatorProtocol.h"
+#import "DoricNavigatorDelegate.h"
 
 @interface DoricPanel : UIViewController
 @property(nonatomic, strong) DoricContext *doricContext;

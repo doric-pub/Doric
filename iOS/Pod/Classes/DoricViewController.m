@@ -46,14 +46,4 @@
     }
     return self;
 }
-
-- (void)push:(NSString *)scheme alias:(NSString *)alias animated:(BOOL)animated {
-    DoricViewController *viewController = [[DoricViewController alloc] initWithScheme:scheme alias:alias];
-    [self.navigationController pushViewController:viewController animated:animated];
-}
-
-- (void)pop:(BOOL)animated {
-    [self.navigationController popViewControllerAnimated:animated];
-}
-
 @end

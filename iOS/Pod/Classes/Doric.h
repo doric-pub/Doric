@@ -24,3 +24,4 @@
 #import "DoricJSLoaderManager.h"
 #import "DoricNavigatorProtocol.h"
 #import "DoricViewController.h"
+#import "DoricDefaultNavigator.h"

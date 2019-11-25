@@ -34,6 +34,7 @@ import java.util.List;
 
 import pub.doric.DoricActivity;
 import pub.doric.devkit.ui.DemoDebugActivity;
+import pub.doric.pullable.DoricSwipeLayout;
 import pub.doric.utils.DoricUtils;
 
 public class MainActivity extends AppCompatActivity {
@@ -43,6 +44,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+        final DoricSwipeLayout swipeLayout = findViewById(R.id.swipe_layout);
+        swipeLayout.setOnRefreshListener(new DoricSwipeLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeLayout.setRefreshing(false);
+            }
+        });
         RecyclerView recyclerView = findViewById(R.id.root);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         try {

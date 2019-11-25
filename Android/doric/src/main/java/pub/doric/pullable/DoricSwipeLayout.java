@@ -51,7 +51,7 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
     @VisibleForTesting
     static final int CIRCLE_DIAMETER_LARGE = 56;
 
-    private static final String LOG_TAG = androidx.swiperefreshlayout.widget.SwipeRefreshLayout.class.getSimpleName();
+    private static final String LOG_TAG = DoricSwipeLayout.class.getSimpleName();
 
     private static final int MAX_ALPHA = 255;
     private static final int STARTING_PROGRESS_ALPHA = (int) (.3f * MAX_ALPHA);
@@ -587,16 +587,19 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
         if (mTarget == null) {
             return;
         }
+
+        int circleWidth = mCircleView.getMeasuredWidth();
+        int circleHeight = mCircleView.getMeasuredHeight();
+
+        mCircleView.layout((width / 2 - circleWidth / 2), mCurrentTargetOffsetTop,
+                (width / 2 + circleWidth / 2), mCurrentTargetOffsetTop + circleHeight);
+
         final View child = mTarget;
         final int childLeft = getPaddingLeft();
-        final int childTop = getPaddingTop();
+        final int childTop = getPaddingTop() + mCircleView.getBottom();
         final int childWidth = width - getPaddingLeft() - getPaddingRight();
         final int childHeight = height - getPaddingTop() - getPaddingBottom();
         child.layout(childLeft, childTop, childLeft + childWidth, childTop + childHeight);
-        int circleWidth = mCircleView.getMeasuredWidth();
-        int circleHeight = mCircleView.getMeasuredHeight();
-        mCircleView.layout((width / 2 - circleWidth / 2), mCurrentTargetOffsetTop,
-                (width / 2 + circleWidth / 2), mCurrentTargetOffsetTop + circleHeight);
     }
 
     @Override
@@ -756,8 +759,10 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
                 consumed[1] = dy - (int) mTotalUnconsumed;
                 mTotalUnconsumed = 0;
             } else {
-                mTotalUnconsumed -= dy;
-                consumed[1] = dy;
+                if (dy > 3) {
+                    mTotalUnconsumed -= dy;
+                    consumed[1] = dy;
+                }
             }
             moveSpinner(mTotalUnconsumed);
         }
@@ -1179,4 +1184,6 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
          */
         boolean canChildScrollUp(@NonNull DoricSwipeLayout parent, @Nullable View child);
     }
+
+
 }

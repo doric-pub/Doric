@@ -26,6 +26,7 @@ import androidx.fragment.app.Fragment;
 
 import pub.doric.async.AsyncResult;
 import pub.doric.loader.DoricJSLoaderManager;
+import pub.doric.navbar.BaseDoricNavBar;
 import pub.doric.navigator.IDoricNavigator;
 import pub.doric.utils.DoricLog;
 
@@ -36,6 +37,7 @@ import pub.doric.utils.DoricLog;
  */
 public class DoricPanelFragment extends Fragment {
     private DoricPanel doricPanel;
+    private BaseDoricNavBar navBar;
 
     public static DoricPanelFragment newInstance(String scheme, String alias) {
         Bundle args = new Bundle();
@@ -48,14 +50,15 @@ public class DoricPanelFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        doricPanel = (DoricPanel) inflater.inflate(R.layout.doric_framgent_panel, container, false);
-        return doricPanel;
+        return inflater.inflate(R.layout.doric_framgent_panel, container, false);
     }
 
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        doricPanel = view.findViewById(R.id.doric_panel);
+        navBar = view.findViewById(R.id.doric_nav_bar);
         Bundle argument = getArguments();
         if (argument == null) {
             DoricLog.e("DoricPanelFragment argument is null");
@@ -72,6 +75,7 @@ public class DoricPanelFragment extends Fragment {
                 if (fragment instanceof IDoricNavigator) {
                     context.setDoricNavigator((IDoricNavigator) fragment);
                 }
+                context.setDoricNavBar(navBar);
             }
 
             @Override

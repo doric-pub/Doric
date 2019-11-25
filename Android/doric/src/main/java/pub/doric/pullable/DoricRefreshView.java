@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.FrameLayout;
 
 import androidx.annotation.AttrRes;
@@ -18,6 +19,7 @@ import androidx.annotation.Nullable;
  */
 public class DoricRefreshView extends FrameLayout implements IPullable {
     private View content;
+    private Animation.AnimationListener mListener;
 
     public DoricRefreshView(@NonNull Context context) {
         super(context);
@@ -75,6 +77,26 @@ public class DoricRefreshView extends FrameLayout implements IPullable {
     public void setProgressRotation(float rotation) {
         if (content != null && content instanceof IPullable) {
             ((IPullable) content).setProgressRotation(rotation);
+        }
+    }
+
+    public void setAnimationListener(Animation.AnimationListener listener) {
+        mListener = listener;
+    }
+
+    @Override
+    protected void onAnimationStart() {
+        super.onAnimationStart();
+        if (mListener != null) {
+            mListener.onAnimationStart(getAnimation());
+        }
+    }
+
+    @Override
+    protected void onAnimationEnd() {
+        super.onAnimationEnd();
+        if (mListener != null) {
+            mListener.onAnimationEnd(getAnimation());
         }
     }
 }

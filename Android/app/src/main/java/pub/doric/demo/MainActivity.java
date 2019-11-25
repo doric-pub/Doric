@@ -16,6 +16,7 @@
 package pub.doric.demo;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -51,7 +52,11 @@ public class MainActivity extends AppCompatActivity {
                 swipeLayout.setRefreshing(false);
             }
         });
+        swipeLayout.setBackgroundColor(Color.YELLOW);
+        swipeLayout.getRefreshView().setBackgroundColor(Color.RED);
+        swipeLayout.setPullDownHeight(100);
         RecyclerView recyclerView = findViewById(R.id.root);
+        recyclerView.setBackgroundColor(Color.WHITE);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         try {
             String[] demos = getAssets().list("demo");

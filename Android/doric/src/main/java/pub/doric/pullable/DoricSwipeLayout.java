@@ -15,13 +15,10 @@ import android.view.animation.Transformation;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
-import androidx.annotation.ColorInt;
-import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.Px;
 import androidx.annotation.VisibleForTesting;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.NestedScrollingChild;
 import androidx.core.view.NestedScrollingChildHelper;
 import androidx.core.view.NestedScrollingParent;
@@ -111,7 +108,6 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
             android.R.attr.enabled
     };
 
-    CircleImageView mCircleView;
     private int mCircleViewIndex = -1;
 
     protected int mFrom;
@@ -124,27 +120,20 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
 
     int mCustomSlingshotDistance;
 
-    CircularProgressDrawable mProgress;
-
     private Animation mScaleAnimation;
 
     private Animation mScaleDownAnimation;
 
-    private Animation mAlphaStartAnimation;
-
-    private Animation mAlphaMaxAnimation;
-
     private Animation mScaleDownToStartAnimation;
 
     boolean mNotify;
-
-    private int mCircleDiameter;
 
     // Whether the client has set a custom starting position;
     boolean mUsingCustomStart;
 
     private OnChildScrollUpCallback mChildScrollUpCallback;
 
+    private DoricRefreshView mRefreshView;
     private AnimationListener mRefreshListener = new AnimationListener() {
         @Override
         public void onAnimationStart(Animation animation) {
@@ -157,33 +146,30 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
         @Override
         public void onAnimationEnd(Animation animation) {
             if (mRefreshing) {
-                // Make sure the progress view is fully visible
-                mProgress.setAlpha(MAX_ALPHA);
-                mProgress.start();
+                mRefreshView.startAnimation();
                 if (mNotify) {
                     if (mListener != null) {
                         mListener.onRefresh();
                     }
                 }
-                mCurrentTargetOffsetTop = mCircleView.getTop();
+                mCurrentTargetOffsetTop = mRefreshView.getTop();
             } else {
                 reset();
             }
         }
     };
+    private int mPullDownHeight = 0;
 
     void reset() {
-        mCircleView.clearAnimation();
-        mProgress.stop();
-        mCircleView.setVisibility(View.GONE);
-        setColorViewAlpha(MAX_ALPHA);
+        mRefreshView.stopAnimation();
+        mRefreshView.setVisibility(View.GONE);
         // Return the circle to its start position
         if (mScale) {
             setAnimationProgress(0 /* animation complete and view is hidden */);
         } else {
             setTargetOffsetTopAndBottom(mOriginalOffsetTop - mCurrentTargetOffsetTop);
         }
-        mCurrentTargetOffsetTop = mCircleView.getTop();
+        mCurrentTargetOffsetTop = mRefreshView.getTop();
     }
 
     @Override
@@ -198,11 +184,6 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         reset();
-    }
-
-    private void setColorViewAlpha(int targetAlpha) {
-        mCircleView.getBackground().setAlpha(targetAlpha);
-        mProgress.setAlpha(targetAlpha);
     }
 
     /**
@@ -265,7 +246,7 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
     public void setProgressViewEndTarget(boolean scale, int end) {
         mSpinnerOffsetEnd = end;
         mScale = scale;
-        mCircleView.invalidate();
+        mRefreshView.invalidate();
     }
 
     /**
@@ -277,27 +258,6 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
      */
     public void setSlingshotDistance(@Px int slingshotDistance) {
         mCustomSlingshotDistance = slingshotDistance;
-    }
-
-    /**
-     * One of DEFAULT, or LARGE.
-     */
-    public void setSize(int size) {
-        if (size != CircularProgressDrawable.LARGE && size != CircularProgressDrawable.DEFAULT) {
-            return;
-        }
-        final DisplayMetrics metrics = getResources().getDisplayMetrics();
-        if (size == CircularProgressDrawable.LARGE) {
-            mCircleDiameter = (int) (CIRCLE_DIAMETER_LARGE * metrics.density);
-        } else {
-            mCircleDiameter = (int) (CIRCLE_DIAMETER * metrics.density);
-        }
-        // force the bounds of the progress circle inside the circle view to
-        // update by setting it to null before updating its size and then
-        // re-setting it
-        mCircleView.setImageDrawable(null);
-        mProgress.setStyle(size);
-        mCircleView.setImageDrawable(mProgress);
     }
 
     /**
@@ -327,7 +287,6 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
         mDecelerateInterpolator = new DecelerateInterpolator(DECELERATE_INTERPOLATION_FACTOR);
 
         final DisplayMetrics metrics = getResources().getDisplayMetrics();
-        mCircleDiameter = (int) (CIRCLE_DIAMETER * metrics.density);
 
         createProgressView();
         setChildrenDrawingOrderEnabled(true);
@@ -339,12 +298,16 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
         mNestedScrollingChildHelper = new NestedScrollingChildHelper(this);
         setNestedScrollingEnabled(true);
 
-        mOriginalOffsetTop = mCurrentTargetOffsetTop = -mCircleDiameter;
         moveToStart(1.0f);
 
         final TypedArray a = context.obtainStyledAttributes(attrs, LAYOUT_ATTRS);
         setEnabled(a.getBoolean(0, true));
         a.recycle();
+    }
+
+    public void setPullDownHeight(int height) {
+        mPullDownHeight = height;
+        mOriginalOffsetTop = mCurrentTargetOffsetTop = -height;
     }
 
     @Override
@@ -364,12 +327,13 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
     }
 
     private void createProgressView() {
-        mCircleView = new CircleImageView(getContext(), CIRCLE_BG_LIGHT);
-        mProgress = new CircularProgressDrawable(getContext());
-        mProgress.setStyle(CircularProgressDrawable.DEFAULT);
-        mCircleView.setImageDrawable(mProgress);
-        mCircleView.setVisibility(View.GONE);
-        addView(mCircleView);
+        mRefreshView = new DoricRefreshView(getContext());
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, 0);
+        addView(mRefreshView, layoutParams);
+    }
+
+    public DoricRefreshView getRefreshView() {
+        return mRefreshView;
     }
 
     /**
@@ -405,8 +369,7 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
     }
 
     private void startScaleUpAnimation(AnimationListener listener) {
-        mCircleView.setVisibility(View.VISIBLE);
-        mProgress.setAlpha(MAX_ALPHA);
+        mRefreshView.setVisibility(View.VISIBLE);
         mScaleAnimation = new Animation() {
             @Override
             public void applyTransformation(float interpolatedTime, Transformation t) {
@@ -415,10 +378,10 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
         };
         mScaleAnimation.setDuration(mMediumAnimationDuration);
         if (listener != null) {
-            mCircleView.setAnimationListener(listener);
+            mRefreshView.setAnimationListener(listener);
         }
-        mCircleView.clearAnimation();
-        mCircleView.startAnimation(mScaleAnimation);
+        mRefreshView.clearAnimation();
+        mRefreshView.startAnimation(mScaleAnimation);
     }
 
     /**
@@ -427,8 +390,7 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
      * @param progress
      */
     void setAnimationProgress(float progress) {
-        mCircleView.setScaleX(progress);
-        mCircleView.setScaleY(progress);
+        mRefreshView.setProgressRotation(progress);
     }
 
     private void setRefreshing(boolean refreshing, final boolean notify) {
@@ -452,95 +414,9 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
             }
         };
         mScaleDownAnimation.setDuration(SCALE_DOWN_DURATION);
-        mCircleView.setAnimationListener(listener);
-        mCircleView.clearAnimation();
-        mCircleView.startAnimation(mScaleDownAnimation);
-    }
-
-    private void startProgressAlphaStartAnimation() {
-        mAlphaStartAnimation = startAlphaAnimation(mProgress.getAlpha(), STARTING_PROGRESS_ALPHA);
-    }
-
-    private void startProgressAlphaMaxAnimation() {
-        mAlphaMaxAnimation = startAlphaAnimation(mProgress.getAlpha(), MAX_ALPHA);
-    }
-
-    private Animation startAlphaAnimation(final int startingAlpha, final int endingAlpha) {
-        Animation alpha = new Animation() {
-            @Override
-            public void applyTransformation(float interpolatedTime, Transformation t) {
-                mProgress.setAlpha(
-                        (int) (startingAlpha + ((endingAlpha - startingAlpha) * interpolatedTime)));
-            }
-        };
-        alpha.setDuration(ALPHA_ANIMATION_DURATION);
-        // Clear out the previous animation listeners.
-        mCircleView.setAnimationListener(null);
-        mCircleView.clearAnimation();
-        mCircleView.startAnimation(alpha);
-        return alpha;
-    }
-
-    /**
-     * @deprecated Use {@link #setProgressBackgroundColorSchemeResource(int)}
-     */
-    @Deprecated
-    public void setProgressBackgroundColor(int colorRes) {
-        setProgressBackgroundColorSchemeResource(colorRes);
-    }
-
-    /**
-     * Set the background color of the progress spinner disc.
-     *
-     * @param colorRes Resource id of the color.
-     */
-    public void setProgressBackgroundColorSchemeResource(@ColorRes int colorRes) {
-        setProgressBackgroundColorSchemeColor(ContextCompat.getColor(getContext(), colorRes));
-    }
-
-    /**
-     * Set the background color of the progress spinner disc.
-     *
-     * @param color
-     */
-    public void setProgressBackgroundColorSchemeColor(@ColorInt int color) {
-        mCircleView.setBackgroundColor(color);
-    }
-
-    /**
-     * @deprecated Use {@link #setColorSchemeResources(int...)}
-     */
-    @Deprecated
-    public void setColorScheme(@ColorRes int... colors) {
-        setColorSchemeResources(colors);
-    }
-
-    /**
-     * Set the color resources used in the progress animation from color resources.
-     * The first color will also be the color of the bar that grows in response
-     * to a user swipe gesture.
-     *
-     * @param colorResIds
-     */
-    public void setColorSchemeResources(@ColorRes int... colorResIds) {
-        final Context context = getContext();
-        int[] colorRes = new int[colorResIds.length];
-        for (int i = 0; i < colorResIds.length; i++) {
-            colorRes[i] = ContextCompat.getColor(context, colorResIds[i]);
-        }
-        setColorSchemeColors(colorRes);
-    }
-
-    /**
-     * Set the colors used in the progress animation. The first
-     * color will also be the color of the bar that grows in response to a user
-     * swipe gesture.
-     *
-     * @param colors
-     */
-    public void setColorSchemeColors(@ColorInt int... colors) {
-        ensureTarget();
-        mProgress.setColorSchemeColors(colors);
+        mRefreshView.setAnimationListener(listener);
+        mRefreshView.clearAnimation();
+        mRefreshView.startAnimation(mScaleDownAnimation);
     }
 
     /**
@@ -557,7 +433,7 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
         if (mTarget == null) {
             for (int i = 0; i < getChildCount(); i++) {
                 View child = getChildAt(i);
-                if (!child.equals(mCircleView)) {
+                if (!child.equals(mRefreshView)) {
                     mTarget = child;
                     break;
                 }
@@ -588,15 +464,15 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
             return;
         }
 
-        int circleWidth = mCircleView.getMeasuredWidth();
-        int circleHeight = mCircleView.getMeasuredHeight();
+        int circleWidth = mRefreshView.getMeasuredWidth();
+        int circleHeight = mRefreshView.getMeasuredHeight();
 
-        mCircleView.layout((width / 2 - circleWidth / 2), mCurrentTargetOffsetTop,
+        mRefreshView.layout((width / 2 - circleWidth / 2), mCurrentTargetOffsetTop,
                 (width / 2 + circleWidth / 2), mCurrentTargetOffsetTop + circleHeight);
 
         final View child = mTarget;
         final int childLeft = getPaddingLeft();
-        final int childTop = getPaddingTop() + mCircleView.getBottom();
+        final int childTop = getPaddingTop() + mRefreshView.getBottom();
         final int childWidth = width - getPaddingLeft() - getPaddingRight();
         final int childHeight = height - getPaddingTop() - getPaddingBottom();
         child.layout(childLeft, childTop, childLeft + childWidth, childTop + childHeight);
@@ -615,26 +491,16 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
                 getMeasuredWidth() - getPaddingLeft() - getPaddingRight(),
                 MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(
                 getMeasuredHeight() - getPaddingTop() - getPaddingBottom(), MeasureSpec.EXACTLY));
-        mCircleView.measure(MeasureSpec.makeMeasureSpec(mCircleDiameter, MeasureSpec.EXACTLY),
-                MeasureSpec.makeMeasureSpec(mCircleDiameter, MeasureSpec.EXACTLY));
+        mRefreshView.measure(MeasureSpec.makeMeasureSpec(getMeasuredWidth() - getPaddingLeft() - getPaddingRight(), MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(mPullDownHeight, MeasureSpec.EXACTLY));
         mCircleViewIndex = -1;
         // Get the index of the circleview.
         for (int index = 0; index < getChildCount(); index++) {
-            if (getChildAt(index) == mCircleView) {
+            if (getChildAt(index) == mRefreshView) {
                 mCircleViewIndex = index;
                 break;
             }
         }
-    }
-
-    /**
-     * Get the diameter of the progress circle that is displayed as part of the
-     * swipe to refresh layout.
-     *
-     * @return Diameter in pixels of the progress circle view.
-     */
-    public int getProgressCircleDiameter() {
-        return mCircleDiameter;
     }
 
     /**
@@ -680,7 +546,7 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
 
         switch (action) {
             case MotionEvent.ACTION_DOWN:
-                setTargetOffsetTopAndBottom(mOriginalOffsetTop - mCircleView.getTop());
+                setTargetOffsetTopAndBottom(mOriginalOffsetTop - mRefreshView.getTop());
                 mActivePointerId = ev.getPointerId(0);
                 mIsBeingDragged = false;
 
@@ -773,7 +639,7 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
         // the circle so it isn't exposed if its blocking content is moved
         if (mUsingCustomStart && dy > 0 && mTotalUnconsumed == 0
                 && Math.abs(dy - consumed[1]) > 0) {
-            mCircleView.setVisibility(View.GONE);
+            mRefreshView.setVisibility(View.GONE);
         }
 
         // Now let our nested parent consume the leftovers
@@ -889,11 +755,9 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
     }
 
     private void moveSpinner(float overscrollTop) {
-        mProgress.setArrowEnabled(true);
         float originalDragPercent = overscrollTop / mTotalDragDistance;
 
         float dragPercent = Math.min(1f, Math.abs(originalDragPercent));
-        float adjustedPercent = (float) Math.max(dragPercent - .4, 0) * 5 / 3;
         float extraOS = Math.abs(overscrollTop) - mTotalDragDistance;
         float slingshotDist = mCustomSlingshotDistance > 0
                 ? mCustomSlingshotDistance
@@ -908,35 +772,17 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
 
         int targetY = mOriginalOffsetTop + (int) ((slingshotDist * dragPercent) + extraMove);
         // where 1.0f is a full circle
-        if (mCircleView.getVisibility() != View.VISIBLE) {
-            mCircleView.setVisibility(View.VISIBLE);
+        if (mRefreshView.getVisibility() != View.VISIBLE) {
+            mRefreshView.setVisibility(View.VISIBLE);
         }
         if (!mScale) {
-            mCircleView.setScaleX(1f);
-            mCircleView.setScaleY(1f);
+            mRefreshView.setScaleX(1f);
+            mRefreshView.setScaleY(1f);
         }
 
         if (mScale) {
             setAnimationProgress(Math.min(1f, overscrollTop / mTotalDragDistance));
         }
-        if (overscrollTop < mTotalDragDistance) {
-            if (mProgress.getAlpha() > STARTING_PROGRESS_ALPHA
-                    && !isAnimationRunning(mAlphaStartAnimation)) {
-                // Animate the alpha
-                startProgressAlphaStartAnimation();
-            }
-        } else {
-            if (mProgress.getAlpha() < MAX_ALPHA && !isAnimationRunning(mAlphaMaxAnimation)) {
-                // Animate the alpha
-                startProgressAlphaMaxAnimation();
-            }
-        }
-        float strokeStart = adjustedPercent * .8f;
-        mProgress.setStartEndTrim(0f, Math.min(MAX_PROGRESS_ANGLE, strokeStart));
-        mProgress.setArrowScale(Math.min(1f, adjustedPercent));
-
-        float rotation = (-0.25f + .4f * adjustedPercent + tensionPercent * 2) * .5f;
-        mProgress.setProgressRotation(rotation);
         setTargetOffsetTopAndBottom(targetY - mCurrentTargetOffsetTop);
     }
 
@@ -946,7 +792,6 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
         } else {
             // cancel refresh
             mRefreshing = false;
-            mProgress.setStartEndTrim(0f, 0f);
             Animation.AnimationListener listener = null;
             if (!mScale) {
                 listener = new Animation.AnimationListener() {
@@ -969,7 +814,6 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
                 };
             }
             animateOffsetToStartPosition(mCurrentTargetOffsetTop, listener);
-            mProgress.setArrowEnabled(false);
         }
     }
 
@@ -1057,7 +901,6 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
         if (yDiff > mTouchSlop && !mIsBeingDragged) {
             mInitialMotionY = mInitialDownY + mTouchSlop;
             mIsBeingDragged = true;
-            mProgress.setAlpha(STARTING_PROGRESS_ALPHA);
         }
     }
 
@@ -1067,10 +910,10 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
         mAnimateToCorrectPosition.setDuration(ANIMATE_TO_TRIGGER_DURATION);
         mAnimateToCorrectPosition.setInterpolator(mDecelerateInterpolator);
         if (listener != null) {
-            mCircleView.setAnimationListener(listener);
+            mRefreshView.setAnimationListener(listener);
         }
-        mCircleView.clearAnimation();
-        mCircleView.startAnimation(mAnimateToCorrectPosition);
+        mRefreshView.clearAnimation();
+        mRefreshView.startAnimation(mAnimateToCorrectPosition);
     }
 
     private void animateOffsetToStartPosition(int from, AnimationListener listener) {
@@ -1083,10 +926,10 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
             mAnimateToStartPosition.setDuration(ANIMATE_TO_START_DURATION);
             mAnimateToStartPosition.setInterpolator(mDecelerateInterpolator);
             if (listener != null) {
-                mCircleView.setAnimationListener(listener);
+                mRefreshView.setAnimationListener(listener);
             }
-            mCircleView.clearAnimation();
-            mCircleView.startAnimation(mAnimateToStartPosition);
+            mRefreshView.clearAnimation();
+            mRefreshView.startAnimation(mAnimateToStartPosition);
         }
     }
 
@@ -1101,16 +944,15 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
                 endTarget = mSpinnerOffsetEnd;
             }
             targetTop = (mFrom + (int) ((endTarget - mFrom) * interpolatedTime));
-            int offset = targetTop - mCircleView.getTop();
+            int offset = targetTop - mRefreshView.getTop();
             setTargetOffsetTopAndBottom(offset);
-            mProgress.setArrowScale(1 - interpolatedTime);
         }
     };
 
     void moveToStart(float interpolatedTime) {
         int targetTop = 0;
         targetTop = (mFrom + (int) ((mOriginalOffsetTop - mFrom) * interpolatedTime));
-        int offset = targetTop - mCircleView.getTop();
+        int offset = targetTop - mRefreshView.getTop();
         setTargetOffsetTopAndBottom(offset);
     }
 
@@ -1124,7 +966,7 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
     private void startScaleDownReturnToStartAnimation(int from,
                                                       Animation.AnimationListener listener) {
         mFrom = from;
-        mStartingScale = mCircleView.getScaleX();
+        mStartingScale = mRefreshView.getScaleX();
         mScaleDownToStartAnimation = new Animation() {
             @Override
             public void applyTransformation(float interpolatedTime, Transformation t) {
@@ -1135,16 +977,16 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
         };
         mScaleDownToStartAnimation.setDuration(SCALE_DOWN_DURATION);
         if (listener != null) {
-            mCircleView.setAnimationListener(listener);
+            mRefreshView.setAnimationListener(listener);
         }
-        mCircleView.clearAnimation();
-        mCircleView.startAnimation(mScaleDownToStartAnimation);
+        mRefreshView.clearAnimation();
+        mRefreshView.startAnimation(mScaleDownToStartAnimation);
     }
 
     void setTargetOffsetTopAndBottom(int offset) {
-        mCircleView.bringToFront();
-        ViewCompat.offsetTopAndBottom(mCircleView, offset);
-        mCurrentTargetOffsetTop = mCircleView.getTop();
+        mRefreshView.bringToFront();
+        ViewCompat.offsetTopAndBottom(mRefreshView, offset);
+        mCurrentTargetOffsetTop = mRefreshView.getTop();
     }
 
     private void onSecondaryPointerUp(MotionEvent ev) {

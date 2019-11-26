@@ -29,10 +29,6 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    if (self.subviews.count > 0) {
-        UIView *child = self.subviews[0];
-        [self setContentSize:child.frame.size];
-    }
 }
 
 - (CGSize)sizeThatFits:(CGSize)size {
@@ -91,6 +87,13 @@
             [self.view addSubview:it.view];
         }];
     }
+    [self.view also:^(UIScrollView *it) {
+        if (it.subviews.count > 0) {
+            UIView *child = it.subviews[0];
+            CGSize size = [child sizeThatFits:it.frame.size];
+            [it setContentSize:size];
+        }
+    }];
 }
 
 - (void)blendView:(UIScrollView *)view forPropName:(NSString *)name propValue:(id)prop {

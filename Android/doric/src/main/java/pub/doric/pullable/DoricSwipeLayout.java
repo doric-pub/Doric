@@ -159,6 +159,7 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
     private ValueAnimator headerViewAnimator;
 
     void reset() {
+        mRefreshing = false;
         if (headerViewAnimator != null && headerViewAnimator.isRunning()) {
             headerViewAnimator.cancel();
         }
@@ -199,8 +200,6 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
         });
         headerViewAnimator.setDuration(SCALE_DOWN_DURATION);
         headerViewAnimator.start();
-
-
     }
 
     @Override

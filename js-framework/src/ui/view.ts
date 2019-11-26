@@ -266,7 +266,7 @@ export abstract class View implements Modeling, IView {
 
     nativeChannel(context: any, name: string) {
         let thisView: View | undefined = this
-        return function (...args: any) {
+        return function (args: any = undefined) {
             const func = context.shader.command
             const viewIds = []
             while (thisView != undefined) {

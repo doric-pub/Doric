@@ -287,7 +287,7 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
 
     private void createProgressView() {
         mRefreshView = new DoricRefreshView(getContext());
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, 0);
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         addView(mRefreshView, layoutParams);
     }
 
@@ -441,8 +441,16 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
                 getMeasuredWidth() - getPaddingLeft() - getPaddingRight(),
                 MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(
                 getMeasuredHeight() - getPaddingTop() - getPaddingBottom(), MeasureSpec.EXACTLY));
-        mRefreshView.measure(MeasureSpec.makeMeasureSpec(getMeasuredWidth() - getPaddingLeft() - getPaddingRight(), MeasureSpec.EXACTLY),
-                MeasureSpec.makeMeasureSpec(mPullDownHeight, MeasureSpec.EXACTLY));
+        mRefreshView.measure(
+                MeasureSpec.makeMeasureSpec(
+                        getMeasuredWidth() - getPaddingLeft() - getPaddingRight(),
+                        MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(
+                        (getMeasuredHeight() - getPaddingTop() - getPaddingBottom()) / 3,
+                        MeasureSpec.UNSPECIFIED));
+        if (mPullDownHeight != mRefreshView.getMeasuredHeight()) {
+            setPullDownHeight(mRefreshView.getMeasuredHeight());
+        }
         mCircleViewIndex = -1;
         // Get the index of the circleview.
         for (int index = 0; index < getChildCount(); index++) {

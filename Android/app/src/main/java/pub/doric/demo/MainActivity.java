@@ -29,6 +29,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +56,9 @@ public class MainActivity extends AppCompatActivity {
         });
         swipeLayout.setBackgroundColor(Color.YELLOW);
         swipeLayout.getRefreshView().setBackgroundColor(Color.RED);
-        swipeLayout.setPullDownHeight(300);
+        TextView textView = new TextView(this);
+        textView.setText("This is header");
+        swipeLayout.getRefreshView().setContent(textView);
         RecyclerView recyclerView = findViewById(R.id.root);
         recyclerView.setBackgroundColor(Color.WHITE);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

@@ -5,7 +5,7 @@ package pub.doric.pullable;
  * @Author: pengfei.zhou
  * @CreateDate: 2019-11-25
  */
-public interface IPullable {
+public interface PullingListener {
 
     void startAnimation();
 

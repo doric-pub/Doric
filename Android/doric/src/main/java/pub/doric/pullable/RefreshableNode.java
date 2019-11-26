@@ -1,5 +1,7 @@
 package pub.doric.pullable;
 
+import android.view.animation.Animation;
+
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 import com.github.pengfeizhou.jscore.JavaValue;
@@ -17,7 +19,7 @@ import pub.doric.shader.ViewNode;
  * @CreateDate: 2019-11-26
  */
 @DoricPlugin(name = "Refreshable")
-public class RefreshableNode extends SuperNode<DoricSwipeLayout> {
+public class RefreshableNode extends SuperNode<DoricSwipeLayout> implements PullingListener {
 
     private String mContentViewId;
     private ViewNode mContentNode;
@@ -32,7 +34,9 @@ public class RefreshableNode extends SuperNode<DoricSwipeLayout> {
 
     @Override
     protected DoricSwipeLayout build() {
-        return new DoricSwipeLayout(getContext());
+        DoricSwipeLayout doricSwipeLayout = new DoricSwipeLayout(getContext());
+        doricSwipeLayout.getRefreshView().setPullingListenr(this);
+        return doricSwipeLayout;
     }
 
     @Override
@@ -161,5 +165,26 @@ public class RefreshableNode extends SuperNode<DoricSwipeLayout> {
     @DoricMethod
     public void isRefreshing(DoricPromise doricPromise) {
         doricPromise.resolve(new JavaValue(this.mView.isRefreshing()));
+    }
+
+    @Override
+    public void startAnimation() {
+        if (mHeaderNode != null) {
+            mHeaderNode.callJSResponse("startAnimation");
+        }
+    }
+
+    @Override
+    public void stopAnimation() {
+        if (mHeaderNode != null) {
+            mHeaderNode.callJSResponse("stopAnimation");
+        }
+    }
+
+    @Override
+    public void setProgressRotation(float rotation) {
+        if (mHeaderNode != null) {
+            mHeaderNode.callJSResponse("setProgressRotation", rotation);
+        }
     }
 }

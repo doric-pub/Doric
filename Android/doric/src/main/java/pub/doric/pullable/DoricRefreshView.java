@@ -2,6 +2,7 @@ package pub.doric.pullable;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +18,11 @@ import androidx.annotation.Nullable;
  * @Author: pengfei.zhou
  * @CreateDate: 2019-11-25
  */
-public class DoricRefreshView extends FrameLayout implements IPullable {
+public class DoricRefreshView extends FrameLayout implements PullingListener {
     private View content;
     private Animation.AnimationListener mListener;
+
+    private PullingListener mPullingListenr;
 
     public DoricRefreshView(@NonNull Context context) {
         super(context);
@@ -50,33 +53,29 @@ public class DoricRefreshView extends FrameLayout implements IPullable {
         return content;
     }
 
+
+    public void setPullingListenr(PullingListener listenr) {
+        this.mPullingListenr = listenr;
+    }
+
     @Override
     public void startAnimation() {
-        if (content != null && content instanceof IPullable) {
-            ((IPullable) content).startAnimation();
+        if (mPullingListenr != null) {
+            mPullingListenr.startAnimation();
         }
     }
 
     @Override
     public void stopAnimation() {
-        if (content != null && content instanceof IPullable) {
-            ((IPullable) content).stopAnimation();
-        }
-    }
-
-    @Override
-    public int successAnimation() {
-        if (content != null && content instanceof IPullable) {
-            return ((IPullable) content).successAnimation();
-        } else {
-            return 0;
+        if (mPullingListenr != null) {
+            mPullingListenr.stopAnimation();
         }
     }
 
     @Override
     public void setProgressRotation(float rotation) {
-        if (content != null && content instanceof IPullable) {
-            ((IPullable) content).setProgressRotation(rotation);
+        if (mPullingListenr != null) {
+            mPullingListenr.setProgressRotation(rotation);
         }
     }
 

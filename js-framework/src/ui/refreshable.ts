@@ -3,6 +3,7 @@ import { List } from "./list";
 import { Scroller } from "./scroller";
 import { BridgeContext } from "../runtime/global";
 import { layoutConfig } from "./declarative";
+import { Image } from "./widgets";
 
 export interface IRefreshable extends IView {
     content: List | Scroller
@@ -57,4 +58,14 @@ export function refreshable(config: IRefreshable) {
         Reflect.set(ret, key, Reflect.get(config, key, config), ret)
     }
     return ret
+}
+
+export interface IPullable {
+    startAnimation(): void
+    stopAnimation(): void
+    setProgressRotation(rotation: number): void
+}
+
+export class PullableView extends Image {
+
 }

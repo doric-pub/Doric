@@ -60,6 +60,18 @@ class RefreshableDemo extends Panel {
                         refreshView.setRefreshable(context, false)
                     }
                 } as IText),
+                label('Rotate self').apply({
+                    width: 300,
+                    height: 50,
+                    bgColor: colors[0],
+                    textSize: 30,
+                    textColor: Color.WHITE,
+                    layoutConfig: layoutConfig().exactly(),
+                } as IText).also(v => {
+                    v.onClick = () => {
+                        v.nativeChannel(context, "setRotation")(0.25)
+                    }
+                }),
             ]).apply({
                 layoutConfig: layoutConfig().atmost().h(LayoutSpec.WRAP_CONTENT),
                 gravity: gravity().center(),

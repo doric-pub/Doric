@@ -32,12 +32,6 @@
     [self addSubview:contentView];
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    [self layoutSelf];
-    [self.contentView layoutSubviews];
-}
-
 - (CGSize)sizeThatFits:(CGSize)size {
     if (self.contentView) {
         CGSize childSize = [self.contentView sizeThatFits:size];
@@ -92,15 +86,19 @@
             self.view.contentView = it.view;
         }];
     }
-    [self.view also:^(DoricScrollView *it) {
-        if (it.contentView) {
-            CGSize size = [it.contentView sizeThatFits:it.frame.size];
-            [it setContentSize:size];
-        }
-    }];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.view also:^(DoricScrollView *it) {
+            [it layoutSelf];
+            if (it.contentView) {
+                CGSize size = [it.contentView sizeThatFits:it.frame.size];
+                [it setContentSize:size];
+            }
+            [it layoutSelf];
+        }];
+    });
 }
 
-- (void)blendView:(UIScrollView *)view forPropName:(NSString *)name propValue:(id)prop {
+- (void)blendView:(DoricScrollView *)view forPropName:(NSString *)name propValue:(id)prop {
     if ([@"content" isEqualToString:name]) {
         self.childViewId = prop;
     } else {

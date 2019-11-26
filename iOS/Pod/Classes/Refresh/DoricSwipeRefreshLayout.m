@@ -17,6 +17,7 @@
     if (self = [super initWithFrame:frame]) {
         self.showsHorizontalScrollIndicator = NO;
         self.showsVerticalScrollIndicator = NO;
+        self.alwaysBounceVertical = YES;
         self.delegate = self;
     }
     return self;
@@ -26,6 +27,7 @@
     if (self = [super init]) {
         self.showsHorizontalScrollIndicator = NO;
         self.showsVerticalScrollIndicator = NO;
+        self.alwaysBounceVertical = YES;
         self.delegate = self;
     }
     return self;
@@ -58,16 +60,6 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    [self layoutSelf];
-    [self.contentView also:^(UIView *it) {
-        [it layoutSubviews];
-        it.x = it.y = 0;
-    }];
-    [self.headerView also:^(UIView *it) {
-        [it layoutSubviews];
-        it.bottom = it.centerX = 0;
-    }];
-    self.contentSize = self.frame.size;
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
@@ -114,5 +106,9 @@
 
 - (BOOL)refreshable {
     return self.scrollEnabled;
+}
+
+- (void)setContentSize:(CGSize)contentSize {
+    [super setContentSize:contentSize];
 }
 @end

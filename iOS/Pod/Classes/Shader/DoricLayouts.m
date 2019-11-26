@@ -20,6 +20,7 @@
 #import "DoricLayouts.h"
 #import <objc/runtime.h>
 #import "UIView+Doric.h"
+#import "Doric.h"
 
 DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bottom) {
     DoricMargin margin;
@@ -537,6 +538,13 @@ static const void *kTagString = &kTagString;
     } else if (self.layoutConfig.heightSpec == DoricLayoutWrapContent) {
         self.height = contentSize.height;
     }
+    [self.subviews forEach:^(__kindof UIView *obj) {
+        if ([obj isKindOfClass:[DoricLayoutContainer class]]) {
+            [obj layoutSubviews];
+        } else {
+            [obj layoutSelf];
+        }
+    }];
 }
 @end
 

@@ -1,59 +1,34 @@
-import { Group, Panel, List, text, gravity, Color, Stack, LayoutSpec, list, NativeCall, listItem, log, vlayout, Gravity, hlayout, scroller } from "doric";
-const colors = [
-    "#f0932b",
-    "#eb4d4b",
-    "#6ab04c",
-    "#e056fd",
-    "#686de0",
-    "#30336b",
-]
+import { Group, Panel, List, text, gravity, Color, Stack, LayoutSpec, list, NativeCall, listItem, log, vlayout, Gravity, hlayout, scroller, layoutConfig } from "doric";
+import { label } from "./utils";
+
 @Entry
 class ScrollerPanel extends Panel {
     build(rootView: Group): void {
-        rootView.addChild(scroller(vlayout(
-            [
-                // ...[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5].map(e => text({
-                //     text: colors[e % colors.length],
-                //     textColor: Color.parse('#ffffff'),
-                //     textSize: 20,
-                //     bgColor: Color.parse(colors[e % colors.length]),
-                //     layoutConfig: {
-                //         widthSpec: LayoutSpec.EXACTLY,
-                //         heightSpec: LayoutSpec.EXACTLY,
-                //     },
-                //     width: 200,
-                //     height: 50,
-                // })),
-                ...[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5].map(i => hlayout([
-                    ...[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5].map(j => text({
-                        text: colors[(i + j) % colors.length],
-                        textColor: Color.parse('#ffffff'),
-                        textSize: 20,
-                        bgColor: Color.parse(colors[(i + j) % colors.length]),
-                        layoutConfig: {
-                            widthSpec: LayoutSpec.EXACTLY,
-                            heightSpec: LayoutSpec.EXACTLY,
-                        },
-                        width: 80,
-                        height: 50,
-                    })),
-                ]).also(it => it.space = 20)),
-                hlayout([
-                    ...[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5].map(e => text({
-                        text: colors[e % colors.length],
-                        textColor: Color.parse('#ffffff'),
-                        textSize: 20,
-                        bgColor: Color.parse(colors[e % colors.length]),
-                        layoutConfig: {
-                            widthSpec: LayoutSpec.EXACTLY,
-                            heightSpec: LayoutSpec.EXACTLY,
-                        },
-                        width: 200,
-                        height: 50,
-                    })),
-                ]
-                ),
-            ]
-        ).also(it => it.space = 20)))
+        scroller(
+            vlayout([
+                scroller(
+                    vlayout(new Array(100).fill(1).map(e => label('Scroll Content')))
+                ).apply({
+                    layoutConfig: layoutConfig().exactly(),
+                    width: 300,
+                    height: 500,
+                    bgColor: Color.RED,
+                }),
+                scroller(
+                    vlayout(new Array(100).fill(1).map(e => label('Scroll Content')))
+                ).apply({
+                    layoutConfig: layoutConfig().exactly(),
+                    width: 300,
+                    height: 500,
+                    bgColor: Color.BLUE,
+                })
+            ])
+        )
+            .apply({
+                layoutConfig: layoutConfig().atmost().h(LayoutSpec.EXACTLY),
+                height: 500,
+                bgColor: Color.YELLOW,
+            })
+            .in(rootView)
     }
 }

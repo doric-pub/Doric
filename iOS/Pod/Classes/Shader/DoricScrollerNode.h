@@ -22,5 +22,9 @@
 #import <Foundation/Foundation.h>
 #import "DoricSuperNode.h"
 
-@interface DoricScrollerNode : DoricSuperNode<UIScrollView *>
+@interface DoricScrollView : UIScrollView
+@property(nonatomic, strong) UIView *contentView;
+@end
+
+@interface DoricScrollerNode : DoricSuperNode<DoricScrollView *>
 @end

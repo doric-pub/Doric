@@ -22,19 +22,25 @@
 #import "DoricScrollerNode.h"
 #import "DoricExtensions.h"
 
-@interface DoricScrollView : UIScrollView
-@end
-
 @implementation DoricScrollView
+
+- (void)setContentView:(UIView *)contentView {
+    if (_contentView) {
+        [_contentView removeFromSuperview];
+    }
+    _contentView = contentView;
+    [self addSubview:contentView];
+}
 
 - (void)layoutSubviews {
     [super layoutSubviews];
+    [self layoutSelf];
+    [self.contentView layoutSubviews];
 }
 
 - (CGSize)sizeThatFits:(CGSize)size {
-    if (self.subviews.count > 0) {
-        UIView *child = self.subviews[0];
-        CGSize childSize = [child sizeThatFits:size];
+    if (self.contentView) {
+        CGSize childSize = [self.contentView sizeThatFits:size];
         return CGSizeMake(MIN(size.width, childSize.width), MIN(size.height, childSize.height));
     }
     return CGSizeZero;
@@ -47,7 +53,7 @@
 @end
 
 @implementation DoricScrollerNode
-- (UIScrollView *)build {
+- (DoricScrollView *)build {
     return [DoricScrollView new];
 }
 
@@ -70,12 +76,11 @@
                     [it blend:childProps];
                 }];
             } else {
-                [self.childNode.view removeFromSuperview];
                 self.childNode = [[DoricViewNode create:self.doricContext withType:type] also:^(DoricViewNode *it) {
                     it.viewId = viewId;
                     [it initWithSuperNode:self];
                     [it blend:childProps];
-                    [self.view addSubview:it.view];
+                    self.view.contentView = it.view;
                 }];
             }
         }
@@ -84,13 +89,12 @@
             it.viewId = viewId;
             [it initWithSuperNode:self];
             [it blend:childProps];
-            [self.view addSubview:it.view];
+            self.view.contentView = it.view;
         }];
     }
-    [self.view also:^(UIScrollView *it) {
-        if (it.subviews.count > 0) {
-            UIView *child = it.subviews[0];
-            CGSize size = [child sizeThatFits:it.frame.size];
+    [self.view also:^(DoricScrollView *it) {
+        if (it.contentView) {
+            CGSize size = [it.contentView sizeThatFits:it.frame.size];
             [it setContentSize:size];
         }
     }];

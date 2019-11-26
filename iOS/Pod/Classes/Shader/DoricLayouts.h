@@ -94,4 +94,8 @@ typedef NS_ENUM(NSInteger, DoricGravity) {
 @property(nonatomic, copy) NSString *tagString;
 
 - (UIView *)viewWithTagString:(NSString *)tagString;
+
+- (CGSize)targetLayoutSize;
+
+- (void)layoutSelf;
 @end

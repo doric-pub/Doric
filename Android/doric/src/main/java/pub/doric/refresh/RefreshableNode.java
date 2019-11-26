@@ -1,4 +1,4 @@
-package pub.doric.pullable;
+package pub.doric.refresh;
 
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;

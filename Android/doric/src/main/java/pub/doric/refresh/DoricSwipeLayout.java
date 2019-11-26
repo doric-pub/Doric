@@ -1,4 +1,4 @@
-package pub.doric.pullable;
+package pub.doric.refresh;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;

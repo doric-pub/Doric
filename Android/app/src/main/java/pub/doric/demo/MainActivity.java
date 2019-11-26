@@ -29,15 +29,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.w3c.dom.Text;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import pub.doric.DoricActivity;
 import pub.doric.devkit.ui.DemoDebugActivity;
-import pub.doric.pullable.DoricSwipeLayout;
+import pub.doric.refresh.DoricSwipeLayout;
 import pub.doric.utils.DoricUtils;
 
 public class MainActivity extends AppCompatActivity {

@@ -6,7 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.FrameLayout;
 
-import pub.doric.pullable.DoricSwipeLayout;
+import pub.doric.refresh.DoricSwipeLayout;
 
 public class PullableActivity extends AppCompatActivity {
 

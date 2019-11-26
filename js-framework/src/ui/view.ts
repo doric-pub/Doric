@@ -316,6 +316,7 @@ export abstract class Superview extends View {
     toModel() {
         const subviews = []
         for (let v of this.allSubviews()) {
+            v.superview = this
             if (v.isDirty()) {
                 subviews.push(v.toModel())
             }
@@ -341,7 +342,6 @@ export abstract class Group extends Superview {
     }
 
     addChild(view: View) {
-        view.superview = this
         this.children.push(view)
     }
 }

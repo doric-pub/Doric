@@ -18,6 +18,7 @@ import { Modeling, Model, obj2Model } from "../util/types";
 import { uniqueId } from "../util/uniqueId";
 import { Gravity } from "../util/gravity";
 import { loge } from "../util/log";
+import { BridgeContext } from "../runtime/global";
 
 export enum LayoutSpec {
     EXACTLY = 0,
@@ -280,6 +281,29 @@ export abstract class View implements Modeling, IView {
             }
             return Reflect.apply(func, undefined, [params]) as Promise<any>
         }
+    }
+
+    getWidth(context: BridgeContext) {
+        return this.nativeChannel(context, 'getWidth')() as Promise<number>
+    }
+
+    getHeight(context: BridgeContext) {
+        return this.nativeChannel(context, 'getHeight')() as Promise<number>
+    }
+
+    /**
+     * 
+     * @param rotation [0..1]
+     */
+    setRotation(context: BridgeContext, rotation: number) {
+        return this.nativeChannel(context, 'setRotation')(rotation)
+    }
+    /**
+     * 
+     * @return rotation [0..1]
+     */
+    getRotation(context: BridgeContext) {
+        return this.nativeChannel(context, 'getRotation')() as Promise<number>
     }
 }
 

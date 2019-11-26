@@ -66,6 +66,10 @@ export interface IPullable {
     setProgressRotation(rotation: number): void
 }
 
-export class PullableView extends Image {
 
+export function pullable(context: BridgeContext, v: View, config: IPullable) {
+    Reflect.set(v, 'startAnimation', config.startAnimation)
+    Reflect.set(v, 'stopAnimation', config.stopAnimation)
+    Reflect.set(v, 'setProgressRotation', config.setProgressRotation)
+    return v
 }

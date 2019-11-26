@@ -1,16 +1,30 @@
-import { refreshable, Group, Panel, navbar, text, gravity, Color, Stack, LayoutSpec, list, NativeCall, listItem, log, vlayout, Gravity, hlayout, Text, scroller, layoutConfig, image, IView, IVLayout, ScaleType, modal, IText, network, navigator } from "doric";
-import { title, label, colors } from "./utils";
+import { refreshable, Group, Panel, pullable, text, gravity, Color, Stack, LayoutSpec, list, NativeCall, listItem, log, vlayout, Gravity, hlayout, Text, scroller, layoutConfig, image, IView, IVLayout, ScaleType, modal, IText, network, navigator, stack, Image } from "doric";
+import { title, label, colors, icon_refresh } from "./utils";
 
 @Entry
 class RefreshableDemo extends Panel {
     build(rootView: Group): void {
+        let refreshImage: Image
         let refreshView = refreshable({
             layoutConfig: layoutConfig().atmost(),
-            header: text({
-                text: "This is Header",
-                width: 100,
-                height: 100,
-                layoutConfig: layoutConfig().exactly(),
+            header: pullable(context,
+                stack([
+                    image({
+                        layoutConfig: layoutConfig().exactly().m({ top: 50, bottom: 10, }),
+                        width: 30,
+                        height: 30,
+                        imageBase64: icon_refresh,
+                    }).also(v => refreshImage = v),
+                ]), {
+                startAnimation: () => {
+                    log('startAnimation')
+                },
+                stopAnimation: () => {
+                    log('stopAnimation')
+                },
+                setProgressRotation: (rotation: number) => {
+                    refreshImage.setRotation(context, rotation)
+                },
             }),
             content: scroller(vlayout([
                 title("Refreshable Demo"),

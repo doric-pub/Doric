@@ -31,6 +31,8 @@ export function NativeCall(target: Panel, propertyKey: string, descriptor: Prope
 
 type Frame = { width: number, height: number }
 
+declare function nativeEmpty(): void
+
 export abstract class Panel {
     context?: any
     onCreate() { }
@@ -132,7 +134,7 @@ export abstract class Panel {
 
     private hookAfterNativeCall() {
         //Here insert a native call to ensure the promise is resolved done.
-        log('Check Dirty')
+        nativeEmpty()
         if (this.__root__.isDirty()) {
             const model = this.__root__.toModel()
             this.nativeRender(model)

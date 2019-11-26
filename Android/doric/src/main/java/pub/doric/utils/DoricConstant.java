@@ -31,6 +31,7 @@ public class DoricConstant {
     public static final String INJECT_TIMER_SET = "nativeSetTimer";
     public static final String INJECT_TIMER_CLEAR = "nativeClearTimer";
     public static final String INJECT_BRIDGE = "nativeBridge";
+    public static final String INJECT_EMPTY = "nativeEmpty";
 
     public static final String TEMPLATE_CONTEXT_CREATE = "Reflect.apply(" +
             "function(doric,context,Entry,require,exports){" + "\n" +

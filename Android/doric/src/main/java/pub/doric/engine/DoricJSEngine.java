@@ -96,6 +96,12 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
                 return null;
             }
         });
+        mDoricJSE.injectGlobalJSFunction(DoricConstant.INJECT_EMPTY, new JavaFunction() {
+            @Override
+            public JavaValue exec(JSDecoder[] args) {
+                return null;
+            }
+        });
         mDoricJSE.injectGlobalJSFunction(DoricConstant.INJECT_REQUIRE, new JavaFunction() {
             @Override
             public JavaValue exec(JSDecoder[] args) {

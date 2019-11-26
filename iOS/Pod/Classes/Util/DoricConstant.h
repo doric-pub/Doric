@@ -32,6 +32,7 @@ extern NSString *const INJECT_REQUIRE;
 extern NSString *const INJECT_TIMER_SET;
 extern NSString *const INJECT_TIMER_CLEAR;
 extern NSString *const INJECT_BRIDGE;
+extern NSString *const INJECT_EMPTY;
 
 extern NSString *const TEMPLATE_CONTEXT_CREATE;
 

@@ -1,7 +1,5 @@
 package pub.doric.pullable;
 
-import android.view.animation.Animation;
-
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 import com.github.pengfeizhou.jscore.JavaValue;
@@ -45,6 +43,14 @@ public class RefreshableNode extends SuperNode<DoricSwipeLayout> implements Pull
             mContentViewId = prop.asString().value();
         } else if ("header".equals(name)) {
             mHeaderViewId = prop.asString().value();
+        } else if ("onRefresh".equals(name)) {
+            final String funcId = prop.asString().value();
+            mView.setOnRefreshListener(new DoricSwipeLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    callJSResponse(funcId);
+                }
+            });
         } else {
             super.blend(view, name, prop);
         }

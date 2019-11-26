@@ -7,6 +7,12 @@ class RefreshableDemo extends Panel {
         let refreshImage: Image
         let refreshView = refreshable({
             layoutConfig: layoutConfig().atmost(),
+            onRefresh: () => {
+                log('onRefresh')
+                setTimeout(() => {
+                    refreshView.setRefreshing(context, false)
+                }, 5000)
+            },
             header: pullable(context,
                 stack([
                     image({

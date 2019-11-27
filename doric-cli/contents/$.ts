@@ -1,67 +1,40 @@
-import { ViewHolder, VMPanel, ViewModel, Gravity, Text, VLayout, Group } from "doric"
-
-
-interface CountModel {
-    count: number
-}
-
-class CounterView extends ViewHolder {
-    number = new Text
-    counter = new Text
-    build(root: Group) {
-        const vlayout = new VLayout
-        vlayout.width = 200
-        vlayout.height = 200
-        vlayout.gravity = new Gravity().center()
-        this.number.textSize = 40
-        this.number.layoutConfig = {
-            alignment: new Gravity().center()
-        }
-        this.counter = new Text
-        this.counter.text = "Click to count"
-        this.counter.textSize = 20
-        vlayout.space = 20
-        vlayout.layoutConfig = {
-            alignment: new Gravity().center()
-        }
-        vlayout.addChild(this.number)
-        vlayout.addChild(this.counter)
-        root.addChild(vlayout)
-    }
-
-    setNumber(n: number) {
-        this.number.text = n.toString()
-    }
-
-    setCounter(v: Function) {
-        this.counter.onClick = v
-    }
-}
-
-class CounterVM extends ViewModel<CountModel, CounterView> {
-
-    binding(v: CounterView, model: CountModel): void {
-        v.setNumber(model.count)
-        v.setCounter(() => {
-            this.getModel().count++
-        })
-    }
-}
+import { Panel, Group, vlayout, layoutConfig, Gravity, IVLayout, text, Text, Color } from "doric";
 
 @Entry
-class __$__ extends VMPanel<CountModel, CounterView>{
-
-    getVMClass() {
-        return CounterVM
+class __$__ extends Panel {
+    build(rootView: Group): void {
+        let number: Text
+        let count = 0
+        vlayout([
+            number = text({
+                textSize: 40,
+                text: '0',
+            }),
+            text({
+                text: "Click to count",
+                textSize: 20,
+                bgColor: Color.parse('#70a1ff'),
+                textColor: Color.WHITE,
+                onClick: () => {
+                    number.text = `${++count}`
+                },
+                layoutConfig: layoutConfig().exactly(),
+                width: 100,
+                height: 50,
+            }),
+        ])
+            .apply({
+                layoutConfig: layoutConfig().exactly().a(Gravity.Center),
+                width: 200,
+                height: 200,
+                space: 20,
+                border: {
+                    color: Color.BLUE,
+                    width: 1,
+                },
+                gravity: Gravity.Center,
+            } as IVLayout)
+            .in(rootView)
     }
 
-    getModel() {
-        return {
-            count: 0
-        }
-    }
-
-    getViewHolder() {
-        return new CounterView
-    }
 }

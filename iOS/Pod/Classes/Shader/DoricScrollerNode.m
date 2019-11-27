@@ -109,4 +109,11 @@
 - (void)blendSubNode:(NSDictionary *)subModel {
     [self.childNode blend:subModel[@"props"]];
 }
+
+- (DoricViewNode *)subNodeWithViewId:(NSString *)viewId {
+    if ([viewId isEqualToString:self.childViewId]) {
+        return self.childNode;
+    }
+    return nil;
+}
 @end

@@ -25,8 +25,6 @@
 #import "DoricUtil.h"
 #import "Doric.h"
 
-#import <JavaScriptCore/JavaScriptCore.h>
-
 #import <objc/runtime.h>
 
 @implementation DoricShaderPlugin
@@ -110,9 +108,13 @@
                     dispatch_async(dispatch_get_main_queue(), ^{
                         void *retValue;
                         block();
-                        [invocation getReturnValue:&retValue];
-                        id returnValue = (__bridge id) retValue;
-                        [promise resolve:returnValue];
+                        const char *retType = methodSignature.methodReturnType;
+                        if (!strcmp(retType, @encode(void))) {
+                        } else {
+                            [invocation getReturnValue:&retValue];
+                            id returnValue = (__bridge id) retValue;
+                            [promise resolve:returnValue];
+                        }
                     });
                     return ret;
                 }

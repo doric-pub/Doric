@@ -150,6 +150,8 @@
 }
 
 - (DoricViewNode *)subNodeWithViewId:(NSString *)viewId {
+    NSAssert(NO, @"Should override class:%@ ,method:%@.", NSStringFromClass([self class]),
+               NSStringFromSelector(_cmd));
     return nil;
 }
 - (void)requestLayout {

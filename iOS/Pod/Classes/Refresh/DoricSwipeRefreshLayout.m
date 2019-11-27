@@ -79,6 +79,9 @@
         return;
     }
     if (refreshing) {
+        if (self.onRefreshBlock) {
+            self.onRefreshBlock();
+        }
         [UIView animateWithDuration:0.3f
                          animations:^{
                              self.contentInset = UIEdgeInsetsMake(self.headerView.height, 0, 0, 0);

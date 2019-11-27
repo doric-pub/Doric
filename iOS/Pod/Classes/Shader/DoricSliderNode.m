@@ -80,9 +80,11 @@
 - (void)blendView:(UICollectionView *)view forPropName:(NSString *)name propValue:(id)prop {
     if ([@"itemCount" isEqualToString:name]) {
         self.itemCount = [prop unsignedIntegerValue];
+        [self.view reloadData];
     } else if ([@"renderPage" isEqualToString:name]) {
         [self.itemViewIds removeAllObjects];
         [self clearSubModel];
+        [self.view reloadData];
     } else if ([@"batchCount" isEqualToString:name]) {
         self.batchCount = [prop unsignedIntegerValue];
     } else {

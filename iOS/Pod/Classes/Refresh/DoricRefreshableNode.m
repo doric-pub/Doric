@@ -154,4 +154,21 @@
     [self.headerNode callJSResponse:@"setProgressRotation", @(rotation), nil];
 }
 
+- (void)setRefreshing:(NSNumber *)refreshable withPromise:(DoricPromise *)promise {
+    self.view.refreshing = [refreshable boolValue];
+    [promise resolve:nil];
+}
+
+- (void)setRefreshable:(NSNumber *)refreshing withPromise:(DoricPromise *)promise {
+    self.view.refreshable = [refreshing boolValue];
+    [promise resolve:nil];
+}
+
+- (NSNumber *)isRefreshing {
+    return @(self.view.refreshing);
+}
+
+- (NSNumber *)isRefreshable {
+    return @(self.view.refreshable);
+}
 @end

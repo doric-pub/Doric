@@ -36,10 +36,13 @@
 - (CGSize)sizeThatFits:(CGSize)size {
     if (self.subviews.count > 0) {
         CGFloat width = size.width;
+        CGFloat height = 0;
+
         for (UIView *child in self.subviews) {
             width = MAX(child.width, width);
+            height += child.height;
         }
-        return CGSizeMake(width, size.width);
+        return CGSizeMake(width, height);
     }
     return size;
 }
@@ -74,9 +77,11 @@
 - (void)blendView:(UITableView *)view forPropName:(NSString *)name propValue:(id)prop {
     if ([@"itemCount" isEqualToString:name]) {
         self.itemCount = [prop unsignedIntegerValue];
+        [self.view reloadData];
     } else if ([@"renderItem" isEqualToString:name]) {
         [self.itemViewIds removeAllObjects];
         [self clearSubModel];
+        [self.view reloadData];
     } else if ([@"batchCount" isEqualToString:name]) {
         self.batchCount = [prop unsignedIntegerValue];
     } else {

@@ -25,3 +25,4 @@
 #import "DoricNavigatorDelegate.h"
 #import "DoricNavBarDelegate.h"
 #import "DoricViewController.h"
+#import "DoricPromise.h"

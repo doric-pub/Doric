@@ -543,7 +543,7 @@ static const void *kTagString = &kTagString;
         width = self.superview.width;
     }
     if (self.layoutConfig.heightSpec == DoricLayoutAtMost
-            || self.layoutConfig.widthSpec == DoricLayoutWrapContent) {
+            || self.layoutConfig.heightSpec == DoricLayoutWrapContent) {
         height = self.superview.height;
     }
     return CGSizeMake(width, height);

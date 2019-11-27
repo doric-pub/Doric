@@ -1,30 +1,23 @@
 PODS:
   - Doric (0.1.0):
     - GCDWebServer (~> 3.0)
-    - SDWebImage (~> 4.4.7)
-    - SDWebImage/WebP
     - SocketRocket (~> 0.5.1)
     - YYCache (~> 1.0.4)
+    - YYImage/WebP
+    - YYWebImage
   - GCDWebServer (3.5.3):
     - GCDWebServer/Core (= 3.5.3)
   - GCDWebServer/Core (3.5.3)
-  - libwebp (1.0.3):
-    - libwebp/demux (= 1.0.3)
-    - libwebp/mux (= 1.0.3)
-    - libwebp/webp (= 1.0.3)
-  - libwebp/demux (1.0.3):
-    - libwebp/webp
-  - libwebp/mux (1.0.3):
-    - libwebp/demux
-  - libwebp/webp (1.0.3)
-  - SDWebImage (4.4.7):
-    - SDWebImage/Core (= 4.4.7)
-  - SDWebImage/Core (4.4.7)
-  - SDWebImage/WebP (4.4.7):
-    - libwebp (< 2.0, >= 0.5)
-    - SDWebImage/Core
   - SocketRocket (0.5.1)
   - YYCache (1.0.4)
+  - YYImage (1.0.4):
+    - YYImage/Core (= 1.0.4)
+  - YYImage/Core (1.0.4)
+  - YYImage/WebP (1.0.4):
+    - YYImage/Core
+  - YYWebImage (1.0.5):
+    - YYCache
+    - YYImage
 
 DEPENDENCIES:
   - Doric (from `../`)
@@ -32,22 +25,22 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - GCDWebServer
-    - libwebp
-    - SDWebImage
     - SocketRocket
     - YYCache
+    - YYImage
+    - YYWebImage
 
 EXTERNAL SOURCES:
   Doric:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Doric: c71287d68afeeb79bfd3c680ed2dd3b90d515c12
+  Doric: e73b17b0e46198994f5c3d8af49f26fd9f49df09
   GCDWebServer: c0ab22c73e1b84f358d1e2f74bf6afd1c60829f2
-  libwebp: 057912d6d0abfb6357d8bb05c0ea470301f5d61e
-  SDWebImage: c10d14a8883ebd89664f02a422006f66a85c0c5d
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952
+  YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
+  YYWebImage: 5f7f36aee2ae293f016d418c7d6ba05c4863e928
 
 PODFILE CHECKSUM: 012563d71439e7e33e976dca3b59664ed56cee39
 

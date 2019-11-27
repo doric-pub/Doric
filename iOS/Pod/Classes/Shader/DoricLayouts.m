@@ -176,8 +176,6 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
 
 
 @interface DoricStackView ()
-@property(nonatomic, assign) CGFloat contentWidth;
-@property(nonatomic, assign) CGFloat contentHeight;
 @end
 
 @implementation DoricStackView

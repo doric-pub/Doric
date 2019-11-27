@@ -101,20 +101,23 @@ static const void *kTagString = &kTagString;
     }
 }
 
-- (BOOL)requestSuperview {
-    return self.layoutConfig
-            && self.layoutConfig.widthSpec != DoricLayoutExact
-            && self.layoutConfig.heightSpec != DoricLayoutExact;
-}
 
 - (void)doricLayoutSubviews {
-    if ([self requestSuperview]) {
+    if ([self.superview requestFromSubview:self]) {
         [self.superview doricLayoutSubviews];
     } else {
         [self layoutSelf:CGSizeMake(self.width, self.height)];
     }
 }
 
+- (BOOL)requestFromSubview:(UIView *)subview {
+    if (self.layoutConfig
+            && self.layoutConfig.widthSpec != DoricLayoutExact
+            && self.layoutConfig.heightSpec != DoricLayoutExact) {
+        return YES;
+    }
+    return NO;
+}
 @end
 
 DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bottom) {

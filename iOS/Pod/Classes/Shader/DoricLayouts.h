@@ -94,4 +94,6 @@ typedef NS_ENUM(NSInteger, DoricGravity) {
 - (CGSize)measureSize:(CGSize)targetSize;
 
 - (void)doricLayoutSubviews;
+
+- (BOOL)requestFromSubview:(UIView *)subview;
 @end

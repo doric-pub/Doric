@@ -19,14 +19,7 @@
 
 #import <Foundation/Foundation.h>
 
-
-struct DoricMargin {
-    CGFloat left;
-    CGFloat right;
-    CGFloat top;
-    CGFloat bottom;
-};
-typedef struct DoricMargin DoricMargin;
+typedef UIEdgeInsets DoricMargin;
 
 DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bottom);
 
@@ -91,12 +84,15 @@ typedef NS_ENUM(NSInteger, DoricGravity) {
 
 @interface UIView (DoricLayoutConfig)
 @property(nonatomic, strong) DoricLayoutConfig *layoutConfig;
+@end
+
+@interface UIView (DoricTag)
 @property(nonatomic, copy) NSString *tagString;
 
 - (UIView *)viewWithTagString:(NSString *)tagString;
+@end
 
-- (CGSize)targetLayoutSize;
-
+@interface UIView (DoricLayouts)
 - (void)layoutSelf;
 
 - (CGSize)measureSize:(CGSize)targetSize;

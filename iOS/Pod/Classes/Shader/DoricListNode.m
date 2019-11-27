@@ -21,6 +21,7 @@
 #import "DoricListNode.h"
 #import "DoricExtensions.h"
 #import "DoricListItemNode.h"
+#import "DoricLayouts.h"
 
 @interface DoricTableViewCell : UITableViewCell
 @property(nonatomic, strong) DoricListItemNode *doricListItemNode;
@@ -39,10 +40,11 @@
         CGFloat height = 0;
 
         for (UIView *child in self.subviews) {
-            width = MAX(child.width, width);
-            height += child.height;
+            CGSize childSize = [child measureSize:size];
+            width = MAX(childSize.width, width);
+            height += childSize.height;
         }
-        return CGSizeMake(width, height);
+        return CGSizeMake(width, MAX(height, size.height));
     }
     return size;
 }

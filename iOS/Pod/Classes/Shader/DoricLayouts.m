@@ -540,17 +540,44 @@ static const void *kTagString = &kTagString;
     CGFloat height = self.height;
     if (self.layoutConfig.widthSpec == DoricLayoutAtMost
             || self.layoutConfig.widthSpec == DoricLayoutWrapContent) {
-        width = self.superview.width;
+        width = self.superview.targetLayoutSize.width;
     }
     if (self.layoutConfig.heightSpec == DoricLayoutAtMost
             || self.layoutConfig.heightSpec == DoricLayoutWrapContent) {
-        height = self.superview.height;
+        height = self.superview.targetLayoutSize.height;
+    }
+    return CGSizeMake(width, height);
+}
+
+- (CGSize)measureSize:(CGSize)targetSize {
+    CGFloat width = self.width;
+    CGFloat height = self.height;
+
+    DoricLayoutConfig *config = self.layoutConfig;
+    if (!config) {
+        config = [DoricLayoutConfig new];
+    }
+    if (config.widthSpec == DoricLayoutAtMost
+            || config.widthSpec == DoricLayoutWrapContent) {
+        width = targetSize.width - config.margin.left - config.margin.right;
+    }
+    if (config.heightSpec == DoricLayoutAtMost
+            || config.heightSpec == DoricLayoutWrapContent) {
+        height = targetSize.height - config.margin.top - config.margin.bottom;
+    }
+
+    CGSize contentSize = [self sizeThatFits:CGSizeMake(width, height)];
+    if (config.widthSpec == DoricLayoutWrapContent) {
+        width = contentSize.width;
+    }
+    if (config.heightSpec == DoricLayoutWrapContent) {
+        height = contentSize.height;
     }
     return CGSizeMake(width, height);
 }
 
 - (void)layoutSelf {
-    CGSize contentSize = [self sizeThatFits:self.targetLayoutSize];
+    CGSize contentSize = [self measureSize:self.targetLayoutSize];
     if (self.layoutConfig.widthSpec == DoricLayoutAtMost) {
         self.width = self.superview.width;
     } else if (self.layoutConfig.widthSpec == DoricLayoutWrapContent) {

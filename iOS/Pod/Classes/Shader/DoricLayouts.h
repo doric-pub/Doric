@@ -98,4 +98,6 @@ typedef NS_ENUM(NSInteger, DoricGravity) {
 - (CGSize)targetLayoutSize;
 
 - (void)layoutSelf;
+
+- (CGSize)measureSize:(CGSize)targetSize;
 @end

@@ -109,5 +109,6 @@ class ListPanel extends Panel {
             }
             it.bgColor = Color.WHITE
         }).in(rootView)
+        refreshView.bgColor = Color.YELLOW
     }
 }

@@ -102,6 +102,8 @@ class RefreshableDemo extends Panel {
             } as IVLayout)).apply({
                 layoutConfig: layoutConfig().atmost(),
             })
+        }).apply({
+            bgColor: Color.YELLOW
         }).in(rootView)
     }
 }

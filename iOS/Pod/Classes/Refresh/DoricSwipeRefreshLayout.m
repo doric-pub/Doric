@@ -18,6 +18,9 @@
         self.showsVerticalScrollIndicator = NO;
         self.alwaysBounceVertical = YES;
         self.delegate = self;
+        if (@available(iOS 11, *)) {
+            self.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
     }
     return self;
 }
@@ -28,6 +31,9 @@
         self.showsVerticalScrollIndicator = NO;
         self.alwaysBounceVertical = YES;
         self.delegate = self;
+        if (@available(iOS 11, *)) {
+            self.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
     }
     return self;
 }
@@ -80,9 +86,10 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (scrollView.contentOffset.y <= 0) {
         [self.swipePullingDelegate setProgressRotation:-scrollView.contentOffset.y / self.headerView.height];
-        self.bounces = YES;
+        //self.bounces = YES;
     } else {
-        self.bounces = NO;
+        //self.bounces = NO;
+        //scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x, 0);
     }
 }
 

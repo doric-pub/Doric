@@ -94,17 +94,8 @@ static const void *kTagString = &kTagString;
  * layout self and subviews
  * */
 - (void)layoutSelf:(CGSize)targetSize {
-    CGSize contentSize = [self sizeThatFits:targetSize];
-    if (self.layoutConfig.widthSpec == DoricLayoutAtMost) {
-        self.width = targetSize.width;
-    } else if (self.layoutConfig.widthSpec == DoricLayoutWrapContent) {
-        self.width = contentSize.width;
-    }
-    if (self.layoutConfig.heightSpec == DoricLayoutAtMost) {
-        self.height = targetSize.height;
-    } else if (self.layoutConfig.heightSpec == DoricLayoutWrapContent) {
-        self.height = contentSize.height;
-    }
+    self.width = targetSize.width;
+    self.height = targetSize.height;
 }
 
 - (BOOL)requestSuperview {
@@ -167,6 +158,10 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
 @end
 
 @implementation DoricLayoutContainer
+- (void)setNeedsLayout {
+    [super setNeedsLayout];
+}
+
 - (void)layoutSubviews {
     [super layoutSubviews];
     [self doricLayoutSubviews];
@@ -294,8 +289,6 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
 
 - (void)layoutSelf:(CGSize)targetSize {
     [super layoutSelf:targetSize];
-    self.width = targetSize.width;
-    self.height = targetSize.height;
     CGFloat yStart = 0;
     if ((self.gravity & TOP) == TOP) {
         yStart = 0;

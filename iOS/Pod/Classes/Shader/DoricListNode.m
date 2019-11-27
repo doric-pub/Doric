@@ -121,8 +121,8 @@
     DoricListItemNode *node = cell.doricListItemNode;
     node.viewId = model[@"id"];
     [node blend:props];
-    [node.view setNeedsLayout];
-    CGSize size = [node.view sizeThatFits:CGSizeMake(cell.width, cell.height)];
+    CGSize size = [node.view measureSize:CGSizeMake(tableView.width, tableView.height)];
+    [node.view layoutSelf:size];
     [self callItem:position height:size.height];
     return cell;
 }

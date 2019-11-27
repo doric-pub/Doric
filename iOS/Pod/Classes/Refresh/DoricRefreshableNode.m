@@ -143,7 +143,7 @@
 
 - (void)setRefreshing:(NSNumber *)refreshable withPromise:(DoricPromise *)promise {
     self.view.refreshing = [refreshable boolValue];
-    [promise resolve:nil];
+    [promise resolve:nil]; 
 }
 
 - (void)setRefreshable:(NSNumber *)refreshing withPromise:(DoricPromise *)promise {

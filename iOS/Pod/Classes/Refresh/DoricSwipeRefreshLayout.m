@@ -76,21 +76,22 @@
     self.refreshable = YES;
 }
 
-
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
     if (-scrollView.contentOffset.y >= self.headerView.height) {
-        self.refreshing = YES;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.refreshing = YES;
+        });
     }
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (scrollView.contentOffset.y <= 0) {
         [self.swipePullingDelegate setProgressRotation:-scrollView.contentOffset.y / self.headerView.height];
-        //self.bounces = YES;
-    } else {
-        //self.bounces = NO;
-        //scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x, 0);
     }
+}
+
+- (void)setContentOffset:(CGPoint)contentOffset {
+    [super setContentOffset:contentOffset];
 }
 
 - (void)setRefreshing:(BOOL)refreshing {
@@ -101,21 +102,26 @@
         if (self.onRefreshBlock) {
             self.onRefreshBlock();
         }
-        [UIView animateWithDuration:0.3f
+        [UIView animateWithDuration:.3f
                          animations:^{
+                             self.contentOffset = (CGPoint) {0, -self.headerView.height};
                              self.contentInset = UIEdgeInsetsMake(self.headerView.height, 0, 0, 0);
                          }
                          completion:^(BOOL finished) {
                              [self.swipePullingDelegate startAnimation];
+                             self.scrollEnabled = NO;
                          }
         ];
     } else {
-        [UIView animateWithDuration:0.3f
+        self.bounces = YES;
+        [UIView animateWithDuration:.3f
                          animations:^{
+                             self.contentOffset = (CGPoint) {0, 0};
                              self.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
                          }
                          completion:^(BOOL finished) {
                              [self.swipePullingDelegate stopAnimation];
+                             self.scrollEnabled = YES;
                          }
         ];
     }
@@ -124,6 +130,10 @@
 
 - (void)setRefreshable:(BOOL)refreshable {
     self.scrollEnabled = refreshable;
+    if (refreshable) {
+        self.contentOffset = (CGPoint) {0, 0};
+        self.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    }
 }
 
 - (BOOL)refreshable {

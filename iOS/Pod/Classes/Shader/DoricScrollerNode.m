@@ -41,7 +41,6 @@
 
 - (void)layoutSelf:(CGSize)targetSize {
     [super layoutSelf:targetSize];
-    [self.contentView layoutSelf:[self.contentView sizeThatFits:targetSize]];
     [self setContentSize:self.contentView.frame.size];
 }
 

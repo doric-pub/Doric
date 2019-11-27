@@ -96,6 +96,9 @@ static const void *kTagString = &kTagString;
 - (void)layoutSelf:(CGSize)targetSize {
     self.width = targetSize.width;
     self.height = targetSize.height;
+    for (UIView *view in self.subviews) {
+        [view layoutSelf:[view measureSize:targetSize]];
+    }
 }
 
 - (BOOL)requestSuperview {
@@ -202,7 +205,8 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
 }
 
 - (void)layoutSelf:(CGSize)targetSize {
-    [super layoutSelf:targetSize];
+    self.width = targetSize.width;
+    self.height = targetSize.height;
     for (UIView *child in self.subviews) {
         if (child.isHidden) {
             continue;
@@ -288,7 +292,8 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
 }
 
 - (void)layoutSelf:(CGSize)targetSize {
-    [super layoutSelf:targetSize];
+    self.width = targetSize.width;
+    self.height = targetSize.height;
     CGFloat yStart = 0;
     if ((self.gravity & TOP) == TOP) {
         yStart = 0;
@@ -378,7 +383,8 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
 }
 
 - (void)layoutSelf:(CGSize)targetSize {
-    [super layoutSelf:targetSize];
+    self.width = targetSize.width;
+    self.height = targetSize.height;
     CGFloat xStart = 0;
     if (self.contentWeight) {
         xStart = 0;

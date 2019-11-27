@@ -45,11 +45,17 @@
     if (self.subviews.count > 0) {
         CGFloat height = size.height;
         for (UIView *child in self.subviews) {
-            height = MAX(child.height, height);
+            CGSize childSize = [child measureSize:size];
+            height = MAX(childSize.height, height);
         }
-        return CGSizeMake(height, size.height);
+        return CGSizeMake(size.width, size.height);
     }
     return size;
+}
+
+- (void)layoutSelf:(CGSize)targetSize {
+    [super layoutSelf:targetSize];
+    [self reloadData];
 }
 @end
 

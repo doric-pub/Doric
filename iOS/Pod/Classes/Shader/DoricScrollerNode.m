@@ -86,16 +86,6 @@
             self.view.contentView = it.view;
         }];
     }
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.view also:^(DoricScrollView *it) {
-            [it layoutSelf];
-            if (it.contentView) {
-                CGSize size = [it.contentView sizeThatFits:it.frame.size];
-                [it setContentSize:size];
-            }
-            [it layoutSelf];
-        }];
-    });
 }
 
 - (void)blendView:(DoricScrollView *)view forPropName:(NSString *)name propValue:(id)prop {

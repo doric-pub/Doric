@@ -51,19 +51,6 @@
     [super blend:props];
     [self blendHeader];
     [self blendContent];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.view also:^(DoricSwipeRefreshLayout *layout) {
-            [layout layoutSelf];
-            [layout.contentView also:^(UIView *it) {
-                it.x = it.y = 0;
-            }];
-            [layout.headerView also:^(UIView *it) {
-                it.bottom = 0;
-                it.centerX = layout.width / 2;
-            }];
-            layout.contentSize = layout.frame.size;
-        }];
-    });
 }
 
 - (void)blendContent {

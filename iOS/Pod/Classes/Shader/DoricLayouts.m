@@ -94,7 +94,7 @@ static const void *kTagString = &kTagString;
  * layout self and subviews
  * */
 - (void)layoutSelf:(CGSize)targetSize {
-    CGSize contentSize = [self measureSize:targetSize];
+    CGSize contentSize = [self sizeThatFits:targetSize];
     if (self.layoutConfig.widthSpec == DoricLayoutAtMost) {
         self.width = targetSize.width;
     } else if (self.layoutConfig.widthSpec == DoricLayoutWrapContent) {
@@ -108,8 +108,7 @@ static const void *kTagString = &kTagString;
 }
 
 - (BOOL)requestSuperview {
-    return self.superview
-            && self.layoutConfig
+    return self.layoutConfig
             && self.layoutConfig.widthSpec != DoricLayoutExact
             && self.layoutConfig.heightSpec != DoricLayoutExact;
 }

@@ -35,10 +35,14 @@
 
 - (CGSize)sizeThatFits:(CGSize)size {
     if (self.contentView) {
-        CGSize childSize = [self.contentView sizeThatFits:size];
-        return CGSizeMake(MIN(size.width, childSize.width), MIN(size.height, childSize.height));
+        return [self.contentView measureSize:size];
     }
     return CGSizeZero;
+}
+
+- (void)layoutSelf:(CGSize)targetSize {
+    [super layoutSelf:targetSize];
+    [self.contentView layoutSelf:targetSize];
 }
 
 - (void)setContentView:(UIView *)contentView {
@@ -58,9 +62,6 @@
     self.refreshable = YES;
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
-}
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
     if (-scrollView.contentOffset.y >= self.headerView.height) {

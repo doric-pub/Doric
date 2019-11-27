@@ -34,10 +34,15 @@
 
 - (CGSize)sizeThatFits:(CGSize)size {
     if (self.contentView) {
-        CGSize childSize = [self.contentView sizeThatFits:size];
-        return CGSizeMake(MIN(size.width, childSize.width), MIN(size.height, childSize.height));
+        return [self.contentView sizeThatFits:size];
     }
     return CGSizeZero;
+}
+
+- (void)layoutSelf:(CGSize)targetSize {
+    [super layoutSelf:targetSize];
+    [self.contentView layoutSelf: [self.contentView sizeThatFits:targetSize]];
+    [self setContentSize:self.contentView.frame.size];
 }
 @end
 

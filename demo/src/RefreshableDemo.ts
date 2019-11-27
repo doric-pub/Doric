@@ -35,7 +35,7 @@ class RefreshableDemo extends Panel {
                         refreshImage.setRotation(context, rotation)
                     },
                 }),
-            content: scroller(vlayout([
+            content: (vlayout([
                 title("Refreshable Demo"),
                 label('start Refresh').apply({
                     width: 300,
@@ -99,9 +99,7 @@ class RefreshableDemo extends Panel {
                 layoutConfig: layoutConfig().atmost().h(LayoutSpec.WRAP_CONTENT),
                 gravity: gravity().center(),
                 space: 10,
-            } as IVLayout)).apply({
-                layoutConfig: layoutConfig().atmost(),
-            })
+            } as IVLayout))
         }).apply({
             bgColor: Color.YELLOW
         }).in(rootView)

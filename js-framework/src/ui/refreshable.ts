@@ -5,7 +5,7 @@ import { BridgeContext } from "../runtime/global";
 import { layoutConfig } from "./declarative";
 
 export interface IRefreshable extends IView {
-    content: List | Scroller
+    content: View
     header?: View
     onRefresh?: () => void
 }

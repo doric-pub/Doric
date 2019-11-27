@@ -5,7 +5,7 @@
 #import "DoricRefreshableNode.h"
 #import "Doric.h"
 
-@interface DoricRefreshableNode ()
+@interface DoricRefreshableNode () <DoricSwipePullingDelegate>
 @property(nonatomic, strong) DoricViewNode *contentNode;
 @property(nonatomic, copy) NSString *contentViewId;
 @property(nonatomic, strong) DoricViewNode *headerNode;
@@ -14,7 +14,10 @@
 
 @implementation DoricRefreshableNode
 - (DoricSwipeRefreshLayout *)build {
-    return [DoricSwipeRefreshLayout new];
+    return [[DoricSwipeRefreshLayout new] also:^(DoricSwipeRefreshLayout *it) {
+        it.swipePullingDelegate = self;
+
+    }];
 }
 
 - (void)blendView:(DoricSwipeRefreshLayout *)view forPropName:(NSString *)name propValue:(id)prop {
@@ -138,4 +141,17 @@
 - (void)blendSubNode:(NSDictionary *)subModel {
     [[self subNodeWithViewId:subModel[@"id"]] blend:subModel[@"props"]];
 }
+
+- (void)startAnimation {
+    [self.headerNode callJSResponse:@"startAnimation", nil];
+}
+
+- (void)stopAnimation {
+    [self.headerNode callJSResponse:@"stopAnimation", nil];
+}
+
+- (void)setProgressRotation:(CGFloat)rotation {
+    [self.headerNode callJSResponse:@"setProgressRotation", @(rotation), nil];
+}
+
 @end

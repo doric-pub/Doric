@@ -20,18 +20,21 @@ class RefreshableDemo extends Panel {
                         width: 30,
                         height: 30,
                         imageBase64: icon_refresh,
-                    }).also(v => refreshImage = v),
-                ]), {
-                startAnimation: () => {
-                    log('startAnimation')
-                },
-                stopAnimation: () => {
-                    log('stopAnimation')
-                },
-                setProgressRotation: (rotation: number) => {
-                    refreshImage.setRotation(context, rotation)
-                },
-            }),
+                    }).also(v => {
+                        refreshImage = v
+                    }),
+                ]),
+                {
+                    startAnimation: () => {
+                        log('startAnimation')
+                    },
+                    stopAnimation: () => {
+                        log('stopAnimation')
+                    },
+                    setProgressRotation: (rotation: number) => {
+                        refreshImage.setRotation(context, rotation)
+                    },
+                }),
             content: scroller(vlayout([
                 title("Refreshable Demo"),
                 label('start Refresh').apply({

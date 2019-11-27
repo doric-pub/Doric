@@ -233,7 +233,11 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
 }
 
 - (void)setRotation:(NSNumber *)rotation {
-    self.view.transform = CGAffineTransformRotate(self.view.transform, M_PI * rotation.floatValue * 2);
+    if (rotation.floatValue == 0) {
+        self.view.transform = CGAffineTransformIdentity;
+    } else {
+        self.view.transform = CGAffineTransformMakeRotation(M_PI * rotation.floatValue * 2);
+    }
 }
 
 - (NSNumber *)getRotation {

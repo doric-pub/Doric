@@ -1,6 +1,5 @@
 import { Group, Panel, List, text, gravity, Color, Stack, LayoutSpec, list, NativeCall, listItem, log, vlayout, Gravity, hlayout, Text, refreshable, Refreshable, ListItem } from "doric";
 import { rotatedArrow, colors } from "./utils";
-import { isObject } from "util";
 @Entry
 class ListPanel extends Panel {
     build(rootView: Group): void {

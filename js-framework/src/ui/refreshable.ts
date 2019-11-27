@@ -3,7 +3,6 @@ import { List } from "./list";
 import { Scroller } from "./scroller";
 import { BridgeContext } from "../runtime/global";
 import { layoutConfig } from "./declarative";
-import { Image } from "./widgets";
 
 export interface IRefreshable extends IView {
     content: List | Scroller

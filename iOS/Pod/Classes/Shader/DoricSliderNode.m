@@ -128,7 +128,8 @@
     DoricSlideItemNode *node = cell.doricSlideItemNode;
     node.viewId = model[@"id"];
     [node blend:props];
-    [node.view setNeedsLayout];
+    CGSize size = [node.view measureSize:CGSizeMake(collectionView.width, collectionView.height)];
+    [node.view layoutSelf:size];
     return cell;
 }
 

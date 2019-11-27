@@ -274,9 +274,6 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
         CGSize childSize;
         if (CGAffineTransformEqualToTransform(child.transform, CGAffineTransformIdentity)) {
             childSize = [child measureSize:CGSizeMake(size.width, size.height - contentHeight)];
-            if (childConfig.weight) {
-                childSize.height = child.height;
-            }
         } else {
             childSize = child.bounds.size;
         }
@@ -320,7 +317,7 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
 
         CGSize size = [child measureSize:CGSizeMake(targetSize.width, targetSize.height - yStart)];
         if (childConfig.weight) {
-            size.height = child.height + remain / self.contentWeight * childConfig.weight;
+            size.height += remain / self.contentWeight * childConfig.weight;
         }
         [child layoutSelf:size];
         DoricGravity gravity = childConfig.alignment | self.gravity;
@@ -365,9 +362,6 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
         CGSize childSize;
         if (CGAffineTransformEqualToTransform(child.transform, CGAffineTransformIdentity)) {
             childSize = [child measureSize:CGSizeMake(size.width - contentWidth, size.height)];
-            if (childConfig.weight) {
-                childSize.width = child.width;
-            }
         } else {
             childSize = child.bounds.size;
         }
@@ -413,7 +407,7 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
 
         CGSize size = [child measureSize:CGSizeMake(targetSize.width - xStart, targetSize.height)];
         if (childConfig.weight) {
-            size.width = child.width + remain / self.contentWeight * childConfig.weight;
+            size.width += remain / self.contentWeight * childConfig.weight;
         }
 
         [child layoutSelf:size];

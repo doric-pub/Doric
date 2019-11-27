@@ -45,10 +45,6 @@
     [self setContentSize:self.contentView.frame.size];
 }
 
-- (CGSize)measureSize:(CGSize)targetSize {
-    CGSize size = [super measureSize:targetSize];
-    return CGSizeMake(MIN(targetSize.width, size.width), MIN(targetSize.height, size.height));
-}
 @end
 
 @interface DoricScrollerNode ()

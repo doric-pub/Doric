@@ -1,5 +1,5 @@
 
-import { Group, Panel, Text, text, gravity, Color, Stack, LayoutSpec, list, NativeCall, listItem, log, vlayout, Gravity, hlayout, slider, slideItem, scroller, IVLayout, IHLayout } from "doric";
+import { Group, Panel, Text, text, gravity, Color, Stack, LayoutSpec, list, NativeCall, listItem, log, vlayout, Gravity, hlayout, slider, slideItem, scroller, IVLayout, IHLayout, layoutConfig } from "doric";
 import { O_TRUNC } from "constants";
 
 const colors = [
@@ -453,11 +453,7 @@ class LayoutDemo extends Panel {
                 it.space = 20
             }),
         ).also(it => {
-            it.layoutConfig = {
-                widthSpec: LayoutSpec.WRAP_CONTENT,
-                heightSpec: LayoutSpec.WRAP_CONTENT,
-                alignment: gravity().centerX(),
-            }
+            it.layoutConfig = layoutConfig().atmost()
         })
             .in(rootView)
     }

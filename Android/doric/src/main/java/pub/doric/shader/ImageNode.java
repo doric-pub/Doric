@@ -34,6 +34,7 @@ import com.bumptech.glide.request.target.Target;
 
 import pub.doric.DoricContext;
 import pub.doric.extension.bridge.DoricPlugin;
+import pub.doric.utils.DoricUtils;
 
 import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSValue;
@@ -77,8 +78,8 @@ public class ImageNode extends ViewNode<ImageView> {
                             public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                                 if (!TextUtils.isEmpty(loadCallbackId)) {
                                     callJSResponse(loadCallbackId, new JSONBuilder()
-                                            .put("width", resource.getIntrinsicWidth())
-                                            .put("height", resource.getIntrinsicHeight())
+                                            .put("width", DoricUtils.px2dp(resource.getIntrinsicWidth()))
+                                            .put("height", DoricUtils.px2dp(resource.getIntrinsicHeight()))
                                             .toJSONObject());
                                 }
                                 return false;

@@ -45,11 +45,17 @@
     if (self.subviews.count > 0) {
         CGFloat height = size.height;
         for (UIView *child in self.subviews) {
-            height = MAX(child.height, height);
+            CGSize childSize = [child measureSize:size];
+            height = MAX(childSize.height, height);
         }
-        return CGSizeMake(height, size.height);
+        return CGSizeMake(size.width, size.height);
     }
     return size;
+}
+
+- (void)layoutSelf:(CGSize)targetSize {
+    [super layoutSelf:targetSize];
+    [self reloadData];
 }
 @end
 
@@ -80,9 +86,11 @@
 - (void)blendView:(UICollectionView *)view forPropName:(NSString *)name propValue:(id)prop {
     if ([@"itemCount" isEqualToString:name]) {
         self.itemCount = [prop unsignedIntegerValue];
+        [self.view reloadData];
     } else if ([@"renderPage" isEqualToString:name]) {
         [self.itemViewIds removeAllObjects];
         [self clearSubModel];
+        [self.view reloadData];
     } else if ([@"batchCount" isEqualToString:name]) {
         self.batchCount = [prop unsignedIntegerValue];
     } else {
@@ -120,7 +128,8 @@
     DoricSlideItemNode *node = cell.doricSlideItemNode;
     node.viewId = model[@"id"];
     [node blend:props];
-    [node.view setNeedsLayout];
+    CGSize size = [node.view measureSize:CGSizeMake(collectionView.width, collectionView.height)];
+    [node.view layoutSelf:size];
     return cell;
 }
 

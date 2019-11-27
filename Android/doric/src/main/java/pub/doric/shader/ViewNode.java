@@ -257,4 +257,21 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     public int getHeight() {
         return mView.getHeight();
     }
+
+    @DoricMethod
+    public void setRotation(JSValue jsValue) {
+        float rotation = jsValue.asNumber().toFloat();
+        while (rotation > 1) {
+            rotation = rotation - 1;
+        }
+        while (rotation < -1) {
+            rotation = rotation + 1;
+        }
+        doricLayer.setRotation(rotation * 360);
+    }
+
+    @DoricMethod
+    public float getRotation() {
+        return doricLayer.getRotation() / 360;
+    }
 }

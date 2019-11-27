@@ -19,14 +19,7 @@
 
 #import <Foundation/Foundation.h>
 
-
-struct DoricMargin {
-    CGFloat left;
-    CGFloat right;
-    CGFloat top;
-    CGFloat bottom;
-};
-typedef struct DoricMargin DoricMargin;
+typedef UIEdgeInsets DoricMargin;
 
 DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bottom);
 
@@ -68,17 +61,13 @@ typedef NS_ENUM(NSInteger, DoricGravity) {
 
 
 @interface DoricLayoutContainer : UIView
-@property(nonatomic, assign) DoricGravity gravity;
-
-- (void)layout:(CGSize)targetSize;
-
-- (CGSize)sizeContent:(CGSize)size;
 @end
 
 @interface DoricStackView : DoricLayoutContainer
 @end
 
 @interface DoricLinearView : DoricLayoutContainer
+@property(nonatomic, assign) DoricGravity gravity;
 @property(nonatomic, assign) CGFloat space;
 @end
 
@@ -91,7 +80,20 @@ typedef NS_ENUM(NSInteger, DoricGravity) {
 
 @interface UIView (DoricLayoutConfig)
 @property(nonatomic, strong) DoricLayoutConfig *layoutConfig;
+@end
+
+@interface UIView (DoricTag)
 @property(nonatomic, copy) NSString *tagString;
 
 - (UIView *)viewWithTagString:(NSString *)tagString;
+@end
+
+@interface UIView (DoricLayouts)
+- (void)layoutSelf:(CGSize)targetSize;
+
+- (CGSize)measureSize:(CGSize)targetSize;
+
+- (void)doricLayoutSubviews;
+
+- (BOOL)requestFromSubview:(UIView *)subview;
 @end

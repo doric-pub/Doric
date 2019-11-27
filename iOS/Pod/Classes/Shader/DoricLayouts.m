@@ -19,7 +19,106 @@
 
 #import "DoricLayouts.h"
 #import <objc/runtime.h>
+#import <Doric/DoricLayouts.h>
 #import "UIView+Doric.h"
+
+static const void *kLayoutConfig = &kLayoutConfig;
+
+@implementation UIView (DoricLayoutConfig)
+@dynamic layoutConfig;
+
+- (void)setLayoutConfig:(DoricLayoutConfig *)layoutConfig {
+    objc_setAssociatedObject(self, kLayoutConfig, layoutConfig, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (DoricLayoutConfig *)layoutConfig {
+    return objc_getAssociatedObject(self, kLayoutConfig);
+}
+
+@end
+
+static const void *kTagString = &kTagString;
+
+@implementation UIView (DoricTag)
+
+- (void)setTagString:(NSString *)tagString {
+    objc_setAssociatedObject(self, kTagString, tagString, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    self.tag = [tagString hash];
+}
+
+- (NSString *)tagString {
+    return objc_getAssociatedObject(self, kTagString);
+}
+
+
+- (UIView *)viewWithTagString:(NSString *)tagString {
+    // notice the potential hash collision
+    return [self viewWithTag:[tagString hash]];
+}
+
+@end
+
+
+@implementation UIView (DoricLayouts)
+/**
+ * Measure self's size
+ * */
+- (CGSize)measureSize:(CGSize)targetSize {
+    CGFloat width = self.width;
+    CGFloat height = self.height;
+
+    DoricLayoutConfig *config = self.layoutConfig;
+    if (!config) {
+        config = [DoricLayoutConfig new];
+    }
+    if (config.widthSpec == DoricLayoutAtMost
+            || config.widthSpec == DoricLayoutWrapContent) {
+        width = targetSize.width - config.margin.left - config.margin.right;
+    }
+    if (config.heightSpec == DoricLayoutAtMost
+            || config.heightSpec == DoricLayoutWrapContent) {
+        height = targetSize.height - config.margin.top - config.margin.bottom;
+    }
+
+    CGSize contentSize = [self sizeThatFits:CGSizeMake(width, height)];
+    if (config.widthSpec == DoricLayoutWrapContent) {
+        width = contentSize.width;
+    }
+    if (config.heightSpec == DoricLayoutWrapContent) {
+        height = contentSize.height;
+    }
+    return CGSizeMake(width, height);
+}
+
+/**
+ * layout self and subviews
+ * */
+- (void)layoutSelf:(CGSize)targetSize {
+    self.width = targetSize.width;
+    self.height = targetSize.height;
+    for (UIView *view in self.subviews) {
+        [view layoutSelf:[view measureSize:targetSize]];
+    }
+}
+
+
+- (void)doricLayoutSubviews {
+    if ([self.superview requestFromSubview:self]) {
+        [self.superview doricLayoutSubviews];
+    } else {
+        [self layoutSelf:CGSizeMake(self.width, self.height)];
+    }
+}
+
+- (BOOL)requestFromSubview:(UIView *)subview {
+    if (self.layoutConfig
+            && self.layoutConfig.widthSpec != DoricLayoutExact
+            && self.layoutConfig.heightSpec != DoricLayoutExact) {
+        return YES;
+    }
+    return NO;
+}
+@end
 
 DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bottom) {
     DoricMargin margin;
@@ -65,63 +164,23 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
 @end
 
 @implementation DoricLayoutContainer
+- (void)setNeedsLayout {
+    [super setNeedsLayout];
+}
 
 - (void)layoutSubviews {
-    if ([self.superview isKindOfClass:[DoricLayoutContainer class]]) {
-        [self.superview layoutSubviews];
-    } else {
-        CGSize size = [self sizeThatFits:CGSizeMake(self.superview.width, self.superview.height)];
-        [self layout:size];
-    }
-}
-
-- (CGSize)sizeThatFits:(CGSize)size {
-    CGFloat width = self.width;
-    CGFloat height = self.height;
-
-    DoricLayoutConfig *config = self.layoutConfig;
-    if (!config) {
-        config = [DoricLayoutConfig new];
-    }
-    if (config.widthSpec == DoricLayoutAtMost
-            || config.widthSpec == DoricLayoutWrapContent) {
-        width = size.width - config.margin.left - config.margin.right;
-    }
-    if (config.heightSpec == DoricLayoutAtMost
-            || config.heightSpec == DoricLayoutWrapContent) {
-        height = size.height - config.margin.top - config.margin.bottom;
-    }
-
-    CGSize contentSize = [self sizeContent:CGSizeMake(width, height)];
-    if (config.widthSpec == DoricLayoutWrapContent) {
-        width = contentSize.width;
-    }
-    if (config.heightSpec == DoricLayoutWrapContent) {
-        height = contentSize.height;
-    }
-    return CGSizeMake(width, height);
-}
-
-- (CGSize)sizeContent:(CGSize)size {
-    return size;
-}
-
-- (void)layout:(CGSize)targetSize {
-    self.width = targetSize.width;
-    self.height = targetSize.height;
+    [super layoutSubviews];
+    [self doricLayoutSubviews];
 }
 @end
 
 
 @interface DoricStackView ()
-
-@property(nonatomic, assign) CGFloat contentWidth;
-@property(nonatomic, assign) CGFloat contentHeight;
 @end
 
 @implementation DoricStackView
 
-- (CGSize)sizeContent:(CGSize)size {
+- (CGSize)sizeThatFits:(CGSize)size {
     CGFloat contentWidth = 0;
     CGFloat contentHeight = 0;
     for (UIView *child in self.subviews) {
@@ -132,24 +191,11 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
         if (!childConfig) {
             childConfig = [DoricLayoutConfig new];
         }
-        CGSize childSize = CGSizeMake(child.width, child.height);
-        if ([child isKindOfClass:[DoricLayoutContainer class]]
-                || childConfig.widthSpec == DoricLayoutWrapContent
-                || childConfig.heightSpec == DoricLayoutWrapContent) {
-            childSize = [child sizeThatFits:CGSizeMake(size.width, size.height - contentHeight)];
-        }
-        if (childConfig.widthSpec == DoricLayoutExact) {
-            childSize.width = child.width;
-        } else if (childConfig.widthSpec == DoricLayoutAtMost) {
-            childSize.width = size.width;
-        }
-        if (childConfig.heightSpec == DoricLayoutExact) {
-            childSize.height = child.height;
-        } else if (childConfig.heightSpec == DoricLayoutAtMost) {
-            childSize.height = size.height - contentHeight;
-        }
-        if (childConfig.weight) {
-            childSize.height = child.height;
+        CGSize childSize;
+        if (CGAffineTransformEqualToTransform(child.transform, CGAffineTransformIdentity)) {
+            childSize = [child measureSize:CGSizeMake(size.width, size.height)];
+        } else {
+            childSize = child.bounds.size;
         }
         contentWidth = MAX(contentWidth, childSize.width + childConfig.margin.left + childConfig.margin.right);
         contentHeight = MAX(contentHeight, childSize.height + childConfig.margin.top + childConfig.margin.bottom);
@@ -159,38 +205,23 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
     return CGSizeMake(contentWidth, contentHeight);
 }
 
-- (void)layout:(CGSize)targetSize {
+- (void)layoutSelf:(CGSize)targetSize {
+    self.width = targetSize.width;
+    self.height = targetSize.height;
     for (UIView *child in self.subviews) {
         if (child.isHidden) {
+            continue;
+        }
+        if (!CGAffineTransformEqualToTransform(child.transform, CGAffineTransformIdentity)) {
             continue;
         }
         DoricLayoutConfig *childConfig = child.layoutConfig;
         if (!childConfig) {
             childConfig = [DoricLayoutConfig new];
         }
-
-        CGSize size = [child sizeThatFits:CGSizeMake(targetSize.width, targetSize.height)];
-        if (childConfig.widthSpec == DoricLayoutExact) {
-            size.width = child.width;
-        }
-        if (childConfig.heightSpec == DoricLayoutExact) {
-            size.height = child.height;
-        }
-        if (childConfig.widthSpec == DoricLayoutExact) {
-            size.width = child.width;
-        } else if (childConfig.widthSpec == DoricLayoutAtMost) {
-            size.width = targetSize.width;
-        }
-        if (childConfig.heightSpec == DoricLayoutExact) {
-            size.height = child.height;
-        } else if (childConfig.heightSpec == DoricLayoutAtMost) {
-            size.height = targetSize.height;
-        }
-        child.width = size.width;
-        child.height = size.height;
-
-        DoricGravity gravity = childConfig.alignment | self.gravity;
-
+        CGSize size = [child measureSize:CGSizeMake(targetSize.width, targetSize.height)];
+        [child layoutSelf:size];
+        DoricGravity gravity = childConfig.alignment;
         if ((gravity & LEFT) == LEFT) {
             child.left = 0;
         } else if ((gravity & RIGHT) == RIGHT) {
@@ -204,7 +235,6 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
                 child.right = targetSize.width - childConfig.margin.right;
             }
         }
-
         if ((gravity & TOP) == TOP) {
             child.top = 0;
         } else if ((gravity & BOTTOM) == BOTTOM) {
@@ -218,13 +248,7 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
                 child.bottom = targetSize.height - childConfig.margin.bottom;
             }
         }
-
-        if ([child isKindOfClass:[DoricLayoutContainer class]]) {
-            [(DoricLayoutContainer *) child layout:size];
-        }
     }
-    self.width = targetSize.width;
-    self.height = targetSize.height;
 }
 @end
 
@@ -232,7 +256,8 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
 @end
 
 @implementation DoricVLayoutView
-- (CGSize)sizeContent:(CGSize)size {
+
+- (CGSize)sizeThatFits:(CGSize)size {
     CGFloat contentWidth = 0;
     CGFloat contentHeight = 0;
     NSUInteger contentWeight = 0;
@@ -244,24 +269,11 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
         if (!childConfig) {
             childConfig = [DoricLayoutConfig new];
         }
-        CGSize childSize = CGSizeMake(child.width, child.height);
-        if ([child isKindOfClass:[DoricLayoutContainer class]]
-                || childConfig.widthSpec == DoricLayoutWrapContent
-                || childConfig.heightSpec == DoricLayoutWrapContent) {
-            childSize = [child sizeThatFits:CGSizeMake(size.width, size.height - contentHeight)];
-        }
-        if (childConfig.widthSpec == DoricLayoutExact) {
-            childSize.width = child.width;
-        } else if (childConfig.widthSpec == DoricLayoutAtMost) {
-            childSize.width = size.width;
-        }
-        if (childConfig.heightSpec == DoricLayoutExact) {
-            childSize.height = child.height;
-        } else if (childConfig.heightSpec == DoricLayoutAtMost) {
-            childSize.height = size.height - contentHeight;
-        }
-        if (childConfig.weight) {
-            childSize.height = child.height;
+        CGSize childSize;
+        if (CGAffineTransformEqualToTransform(child.transform, CGAffineTransformIdentity)) {
+            childSize = [child measureSize:CGSizeMake(size.width, size.height - contentHeight)];
+        } else {
+            childSize = child.bounds.size;
         }
         contentWidth = MAX(contentWidth, childSize.width + childConfig.margin.left + childConfig.margin.right);
         contentHeight += childSize.height + self.space + childConfig.margin.top + childConfig.margin.bottom;
@@ -277,7 +289,9 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
     return CGSizeMake(contentWidth, contentHeight);
 }
 
-- (void)layout:(CGSize)targetSize {
+- (void)layoutSelf:(CGSize)targetSize {
+    self.width = targetSize.width;
+    self.height = targetSize.height;
     CGFloat yStart = 0;
     if ((self.gravity & TOP) == TOP) {
         yStart = 0;
@@ -291,40 +305,20 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
         if (child.isHidden) {
             continue;
         }
+        if (!CGAffineTransformEqualToTransform(child.transform, CGAffineTransformIdentity)) {
+            continue;
+        }
         DoricLayoutConfig *childConfig = child.layoutConfig;
         if (!childConfig) {
             childConfig = [DoricLayoutConfig new];
         }
 
-        CGSize size = [child sizeThatFits:CGSizeMake(targetSize.width, targetSize.height - yStart)];
-        if (childConfig.widthSpec == DoricLayoutExact) {
-            size.width = child.width;
-        }
-        if (childConfig.heightSpec == DoricLayoutExact) {
-            size.height = child.height;
-        }
-        if (childConfig.widthSpec == DoricLayoutExact) {
-            size.width = child.width;
-        } else if (childConfig.widthSpec == DoricLayoutAtMost) {
-            size.width = targetSize.width;
-        }
-        if (childConfig.heightSpec == DoricLayoutExact) {
-            size.height = child.height;
-        } else if (childConfig.heightSpec == DoricLayoutAtMost) {
-            size.height = targetSize.height - yStart;
-        }
-        if (childConfig.weight) {
-            size.height = child.height;
-        }
-
+        CGSize size = [child measureSize:CGSizeMake(targetSize.width, targetSize.height - yStart)];
         if (childConfig.weight) {
             size.height += remain / self.contentWeight * childConfig.weight;
         }
-        child.width = size.width;
-        child.height = size.height;
-
+        [child layoutSelf:size];
         DoricGravity gravity = childConfig.alignment | self.gravity;
-
         if ((gravity & LEFT) == LEFT) {
             child.left = 0;
         } else if ((gravity & RIGHT) == RIGHT) {
@@ -346,18 +340,12 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
         if (childConfig.margin.bottom) {
             yStart += childConfig.margin.bottom;
         }
-        if ([child isKindOfClass:[DoricLayoutContainer class]]) {
-            [(DoricLayoutContainer *) child layout:size];
-        }
     }
-    self.width = targetSize.width;
-    self.height = targetSize.height;
 }
 @end
 
 @implementation DoricHLayoutView
-
-- (CGSize)sizeContent:(CGSize)size {
+- (CGSize)sizeThatFits:(CGSize)size {
     CGFloat contentWidth = 0;
     CGFloat contentHeight = 0;
     NSUInteger contentWeight = 0;
@@ -369,24 +357,11 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
         if (!childConfig) {
             childConfig = [DoricLayoutConfig new];
         }
-        CGSize childSize = CGSizeMake(child.width, child.height);
-        if ([child isKindOfClass:[DoricLayoutContainer class]]
-                || childConfig.widthSpec == DoricLayoutWrapContent
-                || childConfig.heightSpec == DoricLayoutWrapContent) {
-            childSize = [child sizeThatFits:CGSizeMake(size.width - contentWidth, size.height)];
-        }
-        if (childConfig.widthSpec == DoricLayoutExact) {
-            childSize.width = child.width;
-        } else if (childConfig.widthSpec == DoricLayoutAtMost) {
-            childSize.width = size.width - contentWidth;
-        }
-        if (childConfig.heightSpec == DoricLayoutExact) {
-            childSize.height = child.height;
-        } else if (childConfig.heightSpec == DoricLayoutAtMost) {
-            childSize.height = size.height;
-        }
-        if (childConfig.weight) {
-            childSize.width = child.width;
+        CGSize childSize;
+        if (CGAffineTransformEqualToTransform(child.transform, CGAffineTransformIdentity)) {
+            childSize = [child measureSize:CGSizeMake(size.width - contentWidth, size.height)];
+        } else {
+            childSize = child.bounds.size;
         }
         contentWidth += childSize.width + self.space + childConfig.margin.left + childConfig.margin.right;
         contentHeight = MAX(contentHeight, childSize.height + childConfig.margin.top + childConfig.margin.bottom);
@@ -402,7 +377,9 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
     return CGSizeMake(contentWidth, contentHeight);
 }
 
-- (void)layout:(CGSize)targetSize {
+- (void)layoutSelf:(CGSize)targetSize {
+    self.width = targetSize.width;
+    self.height = targetSize.height;
     CGFloat xStart = 0;
     if (self.contentWeight) {
         xStart = 0;
@@ -418,37 +395,20 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
         if (child.isHidden) {
             continue;
         }
+        if (!CGAffineTransformEqualToTransform(child.transform, CGAffineTransformIdentity)) {
+            continue;
+        }
         DoricLayoutConfig *childConfig = child.layoutConfig;
         if (!childConfig) {
             childConfig = [DoricLayoutConfig new];
         }
 
-        CGSize size = [child sizeThatFits:CGSizeMake(targetSize.width - xStart, targetSize.height)];
-        if (childConfig.widthSpec == DoricLayoutExact) {
-            size.width = child.width;
-        }
-        if (childConfig.heightSpec == DoricLayoutExact) {
-            size.height = child.height;
-        }
-        if (childConfig.widthSpec == DoricLayoutExact) {
-            size.width = child.width;
-        } else if (childConfig.widthSpec == DoricLayoutAtMost) {
-            size.width = targetSize.width - xStart;
-        }
-        if (childConfig.heightSpec == DoricLayoutExact) {
-            size.height = child.height;
-        } else if (childConfig.heightSpec == DoricLayoutAtMost) {
-            size.height = targetSize.height;
-        }
-        if (childConfig.weight) {
-            size.width = child.width;
-        }
-
+        CGSize size = [child measureSize:CGSizeMake(targetSize.width - xStart, targetSize.height)];
         if (childConfig.weight) {
             size.width += remain / self.contentWeight * childConfig.weight;
         }
-        child.width = size.width;
-        child.height = size.height;
+
+        [child layoutSelf:size];
 
         DoricGravity gravity = childConfig.alignment | self.gravity;
         if ((gravity & TOP) == TOP) {
@@ -473,45 +433,10 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
         if (childConfig.margin.right) {
             xStart += childConfig.margin.right;
         }
-        if ([child isKindOfClass:[DoricLayoutContainer class]]) {
-            [(DoricLayoutContainer *) child layout:size];
-        }
     }
-    self.width = targetSize.width;
-    self.height = targetSize.height;
 }
 @end
 
-static const void *kLayoutConfig = &kLayoutConfig;
-static const void *kTagString = &kTagString;
-
-@implementation UIView (DoricLayoutConfig)
-@dynamic layoutConfig;
-
-- (void)setLayoutConfig:(DoricLayoutConfig *)layoutConfig {
-    objc_setAssociatedObject(self, kLayoutConfig, layoutConfig, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (DoricLayoutConfig *)layoutConfig {
-    return objc_getAssociatedObject(self, kLayoutConfig);
-}
-
-- (void)setTagString:(NSString *)tagString {
-    objc_setAssociatedObject(self, kTagString, tagString, OBJC_ASSOCIATION_COPY_NONATOMIC);
-    self.tag = [tagString hash];
-}
-
-- (NSString *)tagString {
-    return objc_getAssociatedObject(self, kTagString);
-}
-
-
-- (UIView *)viewWithTagString:(NSString *)tagString {
-    // notice the potential hash collision
-    return [self viewWithTag:[tagString hash]];
-}
-
-@end
 
 DoricVLayoutView *vLayout(NSArray <__kindof UIView *> *views) {
     DoricVLayoutView *layout = [[DoricVLayoutView alloc] initWithFrame:CGRectZero];

@@ -25,6 +25,9 @@
 @end
 
 @implementation DoricSlideItemView
+- (void)layoutSubviews {
+    [super layoutSubviews];
+}
 @end
 
 @implementation DoricSlideItemNode

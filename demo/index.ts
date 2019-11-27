@@ -12,4 +12,5 @@ export default [
     'src/StorageDemo',
     'src/NavigatorDemo',
     'src/NavbarDemo',
+    'src/RefreshableDemo',
 ]

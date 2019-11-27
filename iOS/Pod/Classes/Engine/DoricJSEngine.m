@@ -59,7 +59,9 @@
     [self.jsExecutor injectGlobalJSObject:INJECT_LOG obj:^(NSString *type, NSString *message) {
         DoricLog(@"JS:%@", message);
     }];
-
+    [self.jsExecutor injectGlobalJSObject:INJECT_EMPTY obj:^() {
+        
+    }];
     [self.jsExecutor injectGlobalJSObject:INJECT_REQUIRE obj:^(NSString *name) {
         __strong typeof(_self) self = _self;
         if (!self) return NO;

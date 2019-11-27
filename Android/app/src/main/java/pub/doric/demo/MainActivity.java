@@ -16,6 +16,7 @@
 package pub.doric.demo;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -34,6 +35,7 @@ import java.util.List;
 
 import pub.doric.DoricActivity;
 import pub.doric.devkit.ui.DemoDebugActivity;
+import pub.doric.refresh.DoricSwipeLayout;
 import pub.doric.utils.DoricUtils;
 
 public class MainActivity extends AppCompatActivity {
@@ -43,11 +45,25 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+        final DoricSwipeLayout swipeLayout = findViewById(R.id.swipe_layout);
+        swipeLayout.setOnRefreshListener(new DoricSwipeLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeLayout.setRefreshing(false);
+            }
+        });
+        swipeLayout.setBackgroundColor(Color.YELLOW);
+        swipeLayout.getRefreshView().setBackgroundColor(Color.RED);
+        TextView textView = new TextView(this);
+        textView.setText("This is header");
+        swipeLayout.getRefreshView().setContent(textView);
         RecyclerView recyclerView = findViewById(R.id.root);
+        recyclerView.setBackgroundColor(Color.WHITE);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         try {
             String[] demos = getAssets().list("demo");
             List<String> ret = new ArrayList<>();
+            ret.add("Test");
             for (String str : demos) {
                 if (str.endsWith("js")) {
                     ret.add(str);
@@ -91,6 +107,11 @@ public class MainActivity extends AppCompatActivity {
             tv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (data[position].contains("Test")) {
+                        Intent intent = new Intent(tv.getContext(), PullableActivity.class);
+                        tv.getContext().startActivity(intent);
+                        return;
+                    }
                     if (data[position].contains("NavigatorDemo")) {
                         Intent intent = new Intent(tv.getContext(), DoricActivity.class);
                         intent.putExtra("scheme", "assets://demo/" + data[position]);

@@ -57,6 +57,10 @@ export class List extends Superview implements IList {
     @Property
     batchCount = 15
 
+    reset() {
+        this.cachedViews.clear()
+        this.itemCount = 0
+    }
     private getItem(itemIdx: number) {
         let view = this.cachedViews.get(`${itemIdx}`)
         if (view === undefined) {

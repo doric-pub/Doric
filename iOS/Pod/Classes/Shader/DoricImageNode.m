@@ -22,7 +22,7 @@
 
 #import "DoricImageNode.h"
 #import "Doric.h"
-#import <SDWebImage/UIImageView+WebCache.h>
+#import "YYWebImage.h"
 
 @interface DoricImageNode ()
 @property(nonatomic, copy) NSString *loadCallbackId;
@@ -31,7 +31,7 @@
 @implementation DoricImageNode
 
 - (UIImageView *)build {
-    return [[UIImageView new] also:^(UIImageView *it) {
+    return [[YYAnimatedImageView new] also:^(UIImageView *it) {
         it.clipsToBounds = YES;
     }];
 }
@@ -39,7 +39,7 @@
 - (void)blendView:(UIImageView *)view forPropName:(NSString *)name propValue:(id)prop {
     if ([@"imageUrl" isEqualToString:name]) {
         __weak typeof(self) _self = self;
-        [view sd_setImageWithURL:[NSURL URLWithString:prop] completed:^(UIImage *_Nullable image, NSError *_Nullable error, SDImageCacheType cacheType, NSURL *_Nullable imageURL) {
+        [view yy_setImageWithURL:[NSURL URLWithString:prop] placeholder:nil options:0 completion:^(UIImage *image, NSURL *url, YYWebImageFromType from, YYWebImageStage stage, NSError *error) {
             __strong typeof(_self) self = _self;
             if (error) {
                 if (self.loadCallbackId.length > 0) {
@@ -53,7 +53,6 @@
                 }
                 [self requestLayout];
             }
-
         }];
     } else if ([@"scaleType" isEqualToString:name]) {
         switch ([prop integerValue]) {

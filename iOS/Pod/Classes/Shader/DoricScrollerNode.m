@@ -22,27 +22,28 @@
 #import "DoricScrollerNode.h"
 #import "DoricExtensions.h"
 
-@interface DoricScrollView : UIScrollView
-@end
-
 @implementation DoricScrollView
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    if (self.subviews.count > 0) {
-        UIView *child = self.subviews[0];
-        [self setContentSize:child.frame.size];
+- (void)setContentView:(UIView *)contentView {
+    if (_contentView) {
+        [_contentView removeFromSuperview];
     }
+    _contentView = contentView;
+    [self addSubview:contentView];
 }
 
 - (CGSize)sizeThatFits:(CGSize)size {
-    if (self.subviews.count > 0) {
-        UIView *child = self.subviews[0];
-        CGSize childSize = [child sizeThatFits:size];
-        return CGSizeMake(MIN(size.width, childSize.width), MIN(size.height, childSize.height));
+    if (self.contentView) {
+        return [self.contentView sizeThatFits:size];
     }
     return CGSizeZero;
 }
+
+- (void)layoutSelf:(CGSize)targetSize {
+    [super layoutSelf:targetSize];
+    [self setContentSize:self.contentView.frame.size];
+}
+
 @end
 
 @interface DoricScrollerNode ()
@@ -51,7 +52,7 @@
 @end
 
 @implementation DoricScrollerNode
-- (UIScrollView *)build {
+- (DoricScrollView *)build {
     return [DoricScrollView new];
 }
 
@@ -74,12 +75,11 @@
                     [it blend:childProps];
                 }];
             } else {
-                [self.childNode.view removeFromSuperview];
                 self.childNode = [[DoricViewNode create:self.doricContext withType:type] also:^(DoricViewNode *it) {
                     it.viewId = viewId;
                     [it initWithSuperNode:self];
                     [it blend:childProps];
-                    [self.view addSubview:it.view];
+                    self.view.contentView = it.view;
                 }];
             }
         }
@@ -88,12 +88,12 @@
             it.viewId = viewId;
             [it initWithSuperNode:self];
             [it blend:childProps];
-            [self.view addSubview:it.view];
+            self.view.contentView = it.view;
         }];
     }
 }
 
-- (void)blendView:(UIScrollView *)view forPropName:(NSString *)name propValue:(id)prop {
+- (void)blendView:(DoricScrollView *)view forPropName:(NSString *)name propValue:(id)prop {
     if ([@"content" isEqualToString:name]) {
         self.childViewId = prop;
     } else {
@@ -103,5 +103,12 @@
 
 - (void)blendSubNode:(NSDictionary *)subModel {
     [self.childNode blend:subModel[@"props"]];
+}
+
+- (DoricViewNode *)subNodeWithViewId:(NSString *)viewId {
+    if ([viewId isEqualToString:self.childViewId]) {
+        return self.childNode;
+    }
+    return nil;
 }
 @end

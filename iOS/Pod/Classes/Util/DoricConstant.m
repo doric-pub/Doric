@@ -32,6 +32,7 @@ NSString *const INJECT_REQUIRE = @"nativeRequire";
 NSString *const INJECT_TIMER_SET = @"nativeSetTimer";
 NSString *const INJECT_TIMER_CLEAR = @"nativeClearTimer";
 NSString *const INJECT_BRIDGE = @"nativeBridge";
+NSString *const INJECT_EMPTY = @"nativeEmpty";
 
 NSString *const TEMPLATE_CONTEXT_CREATE = @"Reflect.apply("
                                           "function(doric,context,Entry,require,exports){" "\n"

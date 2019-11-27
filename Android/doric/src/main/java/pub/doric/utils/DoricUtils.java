@@ -81,6 +81,8 @@ public class DoricUtils {
             return new JavaValue((Integer) arg);
         } else if (arg instanceof Long) {
             return new JavaValue((Long) arg);
+        } else if (arg instanceof Float) {
+            return new JavaValue((Float) arg);
         } else if (arg instanceof Double) {
             return new JavaValue((Double) arg);
         } else if (arg instanceof Boolean) {

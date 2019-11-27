@@ -18,6 +18,7 @@ import { Modeling, Model, obj2Model } from "../util/types";
 import { uniqueId } from "../util/uniqueId";
 import { Gravity } from "../util/gravity";
 import { loge } from "../util/log";
+import { BridgeContext } from "../runtime/global";
 
 export enum LayoutSpec {
     EXACTLY = 0,
@@ -266,7 +267,7 @@ export abstract class View implements Modeling, IView {
 
     nativeChannel(context: any, name: string) {
         let thisView: View | undefined = this
-        return function (...args: any) {
+        return function (args: any = undefined) {
             const func = context.shader.command
             const viewIds = []
             while (thisView != undefined) {
@@ -280,6 +281,29 @@ export abstract class View implements Modeling, IView {
             }
             return Reflect.apply(func, undefined, [params]) as Promise<any>
         }
+    }
+
+    getWidth(context: BridgeContext) {
+        return this.nativeChannel(context, 'getWidth')() as Promise<number>
+    }
+
+    getHeight(context: BridgeContext) {
+        return this.nativeChannel(context, 'getHeight')() as Promise<number>
+    }
+
+    /**
+     * 
+     * @param rotation [0..1]
+     */
+    setRotation(context: BridgeContext, rotation: number) {
+        return this.nativeChannel(context, 'setRotation')(rotation)
+    }
+    /**
+     * 
+     * @return rotation [0..1]
+     */
+    getRotation(context: BridgeContext) {
+        return this.nativeChannel(context, 'getRotation')() as Promise<number>
     }
 }
 
@@ -316,6 +340,7 @@ export abstract class Superview extends View {
     toModel() {
         const subviews = []
         for (let v of this.allSubviews()) {
+            v.superview = this
             if (v.isDirty()) {
                 subviews.push(v.toModel())
             }
@@ -341,7 +366,6 @@ export abstract class Group extends Superview {
     }
 
     addChild(view: View) {
-        view.superview = this
         this.children.push(view)
     }
 }

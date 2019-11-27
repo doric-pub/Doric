@@ -232,4 +232,18 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     return @(self.view.height);
 }
 
+- (void)setRotation:(NSNumber *)rotation {
+    if (rotation.floatValue == 0) {
+        self.view.transform = CGAffineTransformIdentity;
+    } else {
+        self.view.transform = CGAffineTransformMakeRotation(M_PI * rotation.floatValue * 2);
+    }
+}
+
+- (NSNumber *)getRotation {
+    float radius = atan2f((float) self.view.transform.b, (float) self.view.transform.a);
+    float degree = (float) (radius / M_PI / 2);
+    return @(degree);
+}
+
 @end

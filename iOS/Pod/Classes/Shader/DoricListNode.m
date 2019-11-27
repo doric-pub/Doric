@@ -21,6 +21,7 @@
 #import "DoricListNode.h"
 #import "DoricExtensions.h"
 #import "DoricListItemNode.h"
+#import "DoricLayouts.h"
 
 @interface DoricTableViewCell : UITableViewCell
 @property(nonatomic, strong) DoricListItemNode *doricListItemNode;
@@ -36,12 +37,21 @@
 - (CGSize)sizeThatFits:(CGSize)size {
     if (self.subviews.count > 0) {
         CGFloat width = size.width;
+        CGFloat height = 0;
+
         for (UIView *child in self.subviews) {
-            width = MAX(child.width, width);
+            CGSize childSize = [child measureSize:size];
+            width = MAX(childSize.width, width);
+            height += childSize.height;
         }
-        return CGSizeMake(width, size.width);
+        return CGSizeMake(width, MAX(height, size.height));
     }
     return size;
+}
+
+- (void)layoutSelf:(CGSize)targetSize {
+    [super layoutSelf:targetSize];
+    [self reloadData];
 }
 @end
 
@@ -74,9 +84,11 @@
 - (void)blendView:(UITableView *)view forPropName:(NSString *)name propValue:(id)prop {
     if ([@"itemCount" isEqualToString:name]) {
         self.itemCount = [prop unsignedIntegerValue];
+        [self.view reloadData];
     } else if ([@"renderItem" isEqualToString:name]) {
         [self.itemViewIds removeAllObjects];
         [self clearSubModel];
+        [self.view reloadData];
     } else if ([@"batchCount" isEqualToString:name]) {
         self.batchCount = [prop unsignedIntegerValue];
     } else {
@@ -109,8 +121,8 @@
     DoricListItemNode *node = cell.doricListItemNode;
     node.viewId = model[@"id"];
     [node blend:props];
-    [node.view setNeedsLayout];
-    CGSize size = [node.view sizeThatFits:CGSizeMake(cell.width, cell.height)];
+    CGSize size = [node.view measureSize:CGSizeMake(tableView.width, tableView.height)];
+    [node.view layoutSelf:size];
     [self callItem:position height:size.height];
     return cell;
 }

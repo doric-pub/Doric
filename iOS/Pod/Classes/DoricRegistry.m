@@ -37,6 +37,7 @@
 #import "DoricStoragePlugin.h"
 #import "DoricNavigatorPlugin.h"
 #import "DoricNavBarPlugin.h"
+#import "DoricRefreshableNode.h"
 
 @interface DoricRegistry ()
 
@@ -76,6 +77,7 @@
     [self registerViewNode:DoricScrollerNode.class withName:@"Scroller"];
     [self registerViewNode:DoricSliderNode.class withName:@"Slider"];
     [self registerViewNode:DoricSlideItemNode.class withName:@"SlideItem"];
+    [self registerViewNode:DoricRefreshableNode.class withName:@"Refreshable"];
 }
 
 - (void)registerJSBundle:(NSString *)bundle withName:(NSString *)name {

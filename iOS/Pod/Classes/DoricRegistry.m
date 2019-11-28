@@ -40,6 +40,7 @@
 #import "DoricRefreshableNode.h"
 #import "DoricFlowLayoutItemNode.h"
 #import "DoricFlowLayoutNode.h"
+#import "DoricPopoverPlugin.h"
 
 @interface DoricRegistry ()
 
@@ -68,6 +69,7 @@
     [self registerNativePlugin:DoricStoragePlugin.class withName:@"storage"];
     [self registerNativePlugin:DoricNavigatorPlugin.class withName:@"navigator"];
     [self registerNativePlugin:DoricNavBarPlugin.class withName:@"navbar"];
+    [self registerNativePlugin:DoricPopoverPlugin.class withName:@"popover"];
 
     [self registerViewNode:DoricStackNode.class withName:@"Stack"];
     [self registerViewNode:DoricVLayoutNode.class withName:@"VLayout"];

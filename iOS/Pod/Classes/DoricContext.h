@@ -27,6 +27,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class DoricViewNode;
 @class DoricRootNode;
 
 @interface DoricContext : NSObject
@@ -35,10 +36,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) NSString *contextId;
 @property(nonatomic, strong) DoricDriver *driver;
 @property(nonatomic, strong) NSMutableDictionary *pluginInstanceMap;
-@property(nonatomic, strong) DoricRootNode *rootNode;
 @property(nonatomic, strong) NSString *source;
 @property(nonatomic, strong) NSString *script;;
 @property(nonatomic, strong) NSMutableDictionary *initialParams;
+@property(nonatomic, strong) DoricRootNode *rootNode;
+@property(nonatomic, strong) NSMutableSet <DoricViewNode *> *headNodes;
 
 - (instancetype)initWithScript:(NSString *)script source:(NSString *)source;
 

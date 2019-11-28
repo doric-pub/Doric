@@ -31,9 +31,12 @@
 - (instancetype)initWithScript:(NSString *)script source:(NSString *)source {
     if (self = [super init]) {
         _driver = [DoricDriver instance];
-        _pluginInstanceMap = [[NSMutableDictionary alloc] init];
+        _pluginInstanceMap = [NSMutableDictionary new];
         [[DoricContextManager instance] createContext:self script:script source:source];
-        _rootNode = [[DoricRootNode alloc] initWithContext:self];
+        _headNodes = [NSMutableSet new];
+        DoricRootNode *rootNode = [[DoricRootNode alloc] initWithContext:self];
+        _rootNode = rootNode;
+        [self.headNodes addObject:rootNode];
         _script = script;
         _source = source;
         _initialParams = [@{@"width": @(0), @"height": @(0)} mutableCopy];

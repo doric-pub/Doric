@@ -43,6 +43,15 @@
     });
 }
 
+- (DoricViewNode *)headViewNodeByViewId:(NSString *)viewId {
+    for (DoricViewNode *node in self.doricContext.headNodes) {
+        if ([viewId isEqualToString:node.viewId]) {
+            return node;
+        }
+    }
+    return self.doricContext.rootNode;
+}
+
 - (id)command:(NSDictionary *)argument withPromise:(DoricPromise *)promise {
     NSArray *viewIds = argument[@"viewIds"];
     id args = argument[@"args"];
@@ -50,7 +59,7 @@
     DoricViewNode *viewNode = nil;
     for (NSString *viewId in viewIds) {
         if (!viewNode) {
-            viewNode = self.doricContext.rootNode;
+            viewNode = [self headViewNodeByViewId:viewId];
         } else {
             if ([viewNode isKindOfClass:[DoricSuperNode class]]) {
                 viewNode = [((DoricSuperNode *) viewNode) subNodeWithViewId:viewId];

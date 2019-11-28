@@ -40,6 +40,7 @@
 
 @interface DoricCollectionNode () <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property(nonatomic, strong) NSMutableDictionary <NSNumber *, NSString *> *itemViewIds;
+@property(nonatomic, strong) NSMutableDictionary <NSNumber *, NSValue *> *itemSizeInfo;
 @property(nonatomic, assign) NSUInteger itemCount;
 @property(nonatomic, assign) NSUInteger batchCount;
 @end
@@ -55,7 +56,7 @@
 
 - (UICollectionView *)build {
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
-    [flowLayout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
+    [flowLayout setScrollDirection:UICollectionViewScrollDirectionVertical];
 
     return [[[DoricCollectionView alloc] initWithFrame:CGRectZero
                                   collectionViewLayout:flowLayout]
@@ -72,7 +73,7 @@
     if ([@"itemCount" isEqualToString:name]) {
         self.itemCount = [prop unsignedIntegerValue];
         [self.view reloadData];
-    } else if ([@"renderPage" isEqualToString:name]) {
+    } else if ([@"renderItem" isEqualToString:name]) {
         [self.itemViewIds removeAllObjects];
         [self clearSubModel];
         [self.view reloadData];
@@ -138,5 +139,50 @@
     }];
 }
 
+- (void)callItem:(NSUInteger)position size:(CGSize)size {
+    NSValue *old = self.itemSizeInfo[@(position)];
+    if (old && CGSizeEqualToSize([old CGSizeValue], size)) {
+        return;
+    }
+    self.itemSizeInfo[@(position)] = [NSValue valueWithCGSize:size];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:position inSection:0];
+    [UIView performWithoutAnimation:^{
+        [self.view reloadItemsAtIndexPaths:@[indexPath]];
+    }];
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    return self.itemCount;
+}
+
+- (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    NSUInteger position = (NSUInteger) indexPath.row;
+    NSDictionary *model = [self itemModelAt:position];
+    NSDictionary *props = model[@"props"];
+    DoricCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"doricCell" forIndexPath:indexPath];
+    if (!cell.viewNode) {
+        DoricCollectionItemNode *itemNode = [[DoricCollectionItemNode alloc] initWithContext:self.doricContext];
+        [itemNode initWithSuperNode:self];
+        cell.viewNode = itemNode;
+        [cell.contentView addSubview:itemNode.view];
+    }
+    DoricCollectionItemNode *node = cell.viewNode;
+    node.viewId = model[@"id"];
+    [node blend:props];
+    CGSize size = [node.view measureSize:CGSizeMake(collectionView.width, collectionView.height)];
+    [node.view layoutSelf:size];
+    [self callItem:position size:size];
+    return cell;
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+    NSUInteger position = (NSUInteger) indexPath.row;
+    NSValue *value = self.itemSizeInfo[@(position)];
+    if (value) {
+        return [value CGSizeValue];
+    } else {
+        return CGSizeMake(100, 100);
+    }
+}
 
 @end

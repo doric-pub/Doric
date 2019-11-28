@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 import { Stack } from './layouts'
-import { Property, IView, Superview } from '../ui/view'
+import { Property, IView, Superview, View } from '../ui/view'
+import { layoutConfig } from '../util/index.util'
 
 export class CollectionItem extends Stack {
     /**
@@ -77,3 +78,17 @@ export class Collection extends Superview implements ICollection {
     }
 }
 
+export function collection(config: ICollection) {
+    const ret = new Collection
+    for (let key in config) {
+        Reflect.set(ret, key, Reflect.get(config, key, config), ret)
+    }
+    return ret
+}
+
+export function collectionItem(item: View) {
+    return (new CollectionItem).also((it) => {
+        it.layoutConfig = layoutConfig().wrap()
+        it.addChild(item)
+    })
+}

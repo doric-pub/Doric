@@ -5,6 +5,7 @@
 #import "DoricCollectionNode.h"
 #import "DoricCollectionItemNode.h"
 #import "DoricExtensions.h"
+#import <JavaScriptCore/JavaScriptCore.h>
 
 @interface DoricCollectionViewCell : UICollectionViewCell
 @property(nonatomic, strong) DoricCollectionItemNode *viewNode;
@@ -65,6 +66,76 @@
                 it.dataSource = self;
                 [it registerClass:[DoricCollectionViewCell class] forCellWithReuseIdentifier:@"doricCell"];
             }];
+}
+
+- (void)blendView:(UICollectionView *)view forPropName:(NSString *)name propValue:(id)prop {
+    if ([@"itemCount" isEqualToString:name]) {
+        self.itemCount = [prop unsignedIntegerValue];
+        [self.view reloadData];
+    } else if ([@"renderPage" isEqualToString:name]) {
+        [self.itemViewIds removeAllObjects];
+        [self clearSubModel];
+        [self.view reloadData];
+    } else if ([@"batchCount" isEqualToString:name]) {
+        self.batchCount = [prop unsignedIntegerValue];
+    } else {
+        [super blendView:view forPropName:name propValue:prop];
+    }
+}
+
+- (NSDictionary *)itemModelAt:(NSUInteger)position {
+    NSString *viewId = self.itemViewIds[@(position)];
+    if (viewId && viewId.length > 0) {
+        return [self subModelOf:viewId];
+    } else {
+        DoricAsyncResult *result = [self callJSResponse:@"renderBunchedItems", @(position), @(self.batchCount), nil];
+        JSValue *models = [result waitUntilResult];
+        NSArray *array = [models toArray];
+        [array enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
+            NSString *thisViewId = obj[@"id"];
+            [self setSubModel:obj in:thisViewId];
+            NSUInteger pos = position + idx;
+            self.itemViewIds[@(pos)] = thisViewId;
+        }];
+        return array[0];
+    }
+}
+
+- (DoricViewNode *)subNodeWithViewId:(NSString *)viewId {
+    __block DoricViewNode *ret = nil;
+    [self.doricContext.driver ensureSyncInMainQueue:^{
+        for (UICollectionViewCell *collectionViewCell in self.view.visibleCells) {
+            if ([collectionViewCell isKindOfClass:[DoricCollectionViewCell class]]) {
+                DoricCollectionItemNode *node = ((DoricCollectionViewCell *) collectionViewCell).viewNode;
+                if ([viewId isEqualToString:node.viewId]) {
+                    ret = node;
+                    break;
+                }
+            }
+        }
+    }];
+    return ret;
+}
+
+- (void)blendSubNode:(NSDictionary *)subModel {
+    NSString *viewId = subModel[@"id"];
+    DoricViewNode *viewNode = [self subNodeWithViewId:viewId];
+    if (viewNode) {
+        [viewNode blend:subModel[@"props"]];
+    } else {
+        NSMutableDictionary *model = [[self subModelOf:viewId] mutableCopy];
+        [self recursiveMixin:subModel to:model];
+        [self setSubModel:model in:viewId];
+    }
+    [self.itemViewIds enumerateKeysAndObjectsUsingBlock:^(NSNumber *_Nonnull key, NSString *_Nonnull obj, BOOL *_Nonnull stop) {
+        if ([viewId isEqualToString:obj]) {
+            *stop = YES;
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[key integerValue] inSection:0];
+            [UIView performWithoutAnimation:^{
+                [self.view reloadItemsAtIndexPaths:@[indexPath]];
+            }];
+        }
+    }];
 }
 
 

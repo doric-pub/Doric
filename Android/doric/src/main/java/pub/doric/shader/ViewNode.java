@@ -270,12 +270,12 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
 
     @DoricMethod
     public int getWidth() {
-        return mView.getWidth();
+        return getNodeView().getWidth();
     }
 
     @DoricMethod
     public int getHeight() {
-        return mView.getHeight();
+        return getNodeView().getHeight();
     }
 
     @DoricMethod
@@ -287,11 +287,11 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         while (rotation < -1) {
             rotation = rotation + 1;
         }
-        doricLayer.setRotation(rotation * 360);
+        getNodeView().setRotation(rotation * 360);
     }
 
     @DoricMethod
     public float getRotation() {
-        return doricLayer.getRotation() / 360;
+        return getNodeView().getRotation() / 360;
     }
 }

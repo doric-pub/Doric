@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { IView, View, Property } from "./view"
+import { IView, View, Property } from "../ui/view"
 import { layoutConfig } from "../util/layoutconfig"
 
 export enum ScaleType {

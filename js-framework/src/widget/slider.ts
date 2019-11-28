@@ -1,4 +1,4 @@
-import { Superview, View, Property, IView } from "./view";
+import { Superview, View, Property, IView } from "../ui/view";
 import { Stack } from "./layouts";
 import { layoutConfig } from "../util/layoutconfig";
 

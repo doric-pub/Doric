@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Group, Property, IView, View } from "./view";
+import { Group, Property, IView, View } from "../ui/view";
 import { Gravity } from "../util/gravity";
 import { layoutConfig } from "../util/layoutconfig";
 

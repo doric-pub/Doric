@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 import '../runtime/global'
-import { View, Group } from "../widget/view";
-import { loge, log } from '../util/log';
-import { Model } from '../util/types';
-import { Root } from '../widget/layouts';
+import { View, Group } from "./view"
+import { loge } from '../util/log'
+import { Model } from '../util/types'
+import { Root } from '../widget/layouts'
 
 
 export function NativeCall(target: Panel, propertyKey: string, descriptor: PropertyDescriptor) {

@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Panel } from '../panel/panel'
-import { View } from '../widget/view'
+import { Panel } from '../ui/panel'
+import { View } from '../ui/view'
 
 export interface Driver {
     /**

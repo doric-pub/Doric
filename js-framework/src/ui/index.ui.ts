@@ -13,10 +13,5 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from './layouts'
-export * from './text'
-export * from './image'
-export * from './list'
-export * from './slider'
-export * from './scroller'
-export * from './refreshable'
+export * from './view'
+export * from './panel'

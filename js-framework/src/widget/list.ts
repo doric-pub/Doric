@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { View, Property, Superview, IView } from "./view";
+import { View, Property, Superview, IView } from "../ui/view";
 import { Stack } from "./layouts";
 import { layoutConfig } from "../util/layoutconfig";
 

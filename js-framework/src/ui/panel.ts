@@ -137,15 +137,19 @@ export abstract class Panel {
     }
 
     private hookBeforeNativeCall() {
-        this.__root__.clean()
+        for (let v of this.headviews.values()) {
+            v.clean()
+        }
     }
 
     private hookAfterNativeCall() {
         //Here insert a native call to ensure the promise is resolved done.
         nativeEmpty()
-        if (this.__root__.isDirty()) {
-            const model = this.__root__.toModel()
-            this.nativeRender(model)
+        for (let v of this.headviews.values()) {
+            if (v.isDirty()) {
+                const model = v.toModel()
+                this.nativeRender(model)
+            }
         }
     }
 

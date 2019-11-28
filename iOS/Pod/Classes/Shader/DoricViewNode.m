@@ -126,6 +126,8 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     } else if ([name isEqualToString:@"layoutConfig"]) {
         if (self.superNode && [prop isKindOfClass:[NSDictionary class]]) {
             [self.superNode blendSubNode:self layoutConfig:prop];
+        } else {
+            [self blendLayoutConfig:prop];
         }
     } else if ([name isEqualToString:@"onClick"]) {
         self.callbackIds[@"onClick"] = prop;
@@ -244,6 +246,38 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     float radius = atan2f((float) self.view.transform.b, (float) self.view.transform.a);
     float degree = (float) (radius / M_PI / 2);
     return @(degree);
+}
+
+- (void)blendLayoutConfig:(NSDictionary *)params {
+    [params[@"widthSpec"] also:^(NSNumber *it) {
+        if (it) {
+            self.layoutConfig.widthSpec = (DoricLayoutSpec) [it integerValue];
+        }
+    }];
+
+    [params[@"heightSpec"] also:^(NSNumber *it) {
+        if (it) {
+            self.layoutConfig.heightSpec = (DoricLayoutSpec) [it integerValue];
+        }
+    }];
+
+    NSDictionary *margin = params[@"margin"];
+    if (margin) {
+        self.layoutConfig.margin = DoricMarginMake(
+                [(NSNumber *) margin[@"left"] floatValue],
+                [(NSNumber *) margin[@"top"] floatValue],
+                [(NSNumber *) margin[@"right"] floatValue],
+                [(NSNumber *) margin[@"bottom"] floatValue]);
+    }
+
+    NSNumber *alignment = params[@"alignment"];
+    if (alignment) {
+        self.layoutConfig.alignment = (DoricGravity) [alignment integerValue];
+    }
+    NSNumber *weight = params[@"weight"];
+    if (weight) {
+        self.layoutConfig.weight = (DoricGravity) [weight integerValue];
+    }
 }
 
 @end

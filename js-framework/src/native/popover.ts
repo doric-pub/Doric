@@ -15,13 +15,25 @@
  */
 import { BridgeContext } from "../runtime/global"
 import { View } from "../ui/view"
+import { Panel } from "../ui/panel"
 
 export function popover(context: BridgeContext) {
+    const entity = context.entity
+    let panel: Panel | undefined = undefined
+    if (entity instanceof Panel) {
+        panel = entity
+    }
     return {
         show: (view: View) => {
-            return context.popover.show(view)
+            if (panel) {
+                panel.addHeadView(view)
+            }
+            return context.popover.show(view.toModel())
         },
-        dismiss: () => {
+        dismiss: (view: View | undefined = undefined) => {
+            if (panel && view) {
+                panel.removeHeadView(view)
+            }
             return context.popover.dismiss()
         },
     }

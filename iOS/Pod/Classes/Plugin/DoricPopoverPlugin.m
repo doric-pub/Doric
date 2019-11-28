@@ -7,7 +7,7 @@
 #import "Doric.h"
 
 @interface DoricPopoverPlugin ()
-@property(nonatomic, strong) DoricRootNode *popoverNode;
+@property(nonatomic, strong) DoricViewNode *popoverNode;
 @property(nonatomic, strong) UIView *fullScreenView;
 @end
 
@@ -20,19 +20,26 @@
                 it.width = superView.width;
                 it.height = superView.height;
                 it.top = it.left = 0;
-                [superView addSubview:self.fullScreenView];
+                [superView addSubview:it];
                 UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissPopover)];
                 [it addGestureRecognizer:gestureRecognizer];
             }];
         }
         [superView bringSubviewToFront:self.fullScreenView];
-        self.fullScreenView.hidden = NO;
-        if (!self.popoverNode) {
-            self.popoverNode = [[DoricRootNode alloc] initWithContext:self.doricContext];
-            DoricStackView *view = [[DoricStackView alloc] initWithFrame:self.fullScreenView.frame];
-            [self.popoverNode setupRootView:view];
+        if (self.popoverNode) {
+            [self dismissPopover];
         }
-        [self.popoverNode render:params[@"props"]];
+        self.fullScreenView.hidden = NO;
+        NSString *viewId = params[@"id"];
+        NSString *type = params[@"type"];
+        self.popoverNode = [[DoricViewNode create:self.doricContext withType:type] also:^(DoricViewNode *it) {
+            it.viewId = viewId;
+            [it initWithSuperNode:nil];
+            it.view.layoutConfig = [DoricLayoutConfig new];
+            [it blend:params[@"props"]];
+            [self.fullScreenView addSubview:it.view];
+            [self.doricContext.headNodes addObject:it];
+        }];
         [promise resolve:nil];
     });
 }
@@ -45,10 +52,12 @@
 }
 
 - (void)dismissPopover {
+    [self.doricContext.headNodes removeObject:self.popoverNode];
     self.popoverNode.view.hidden = YES;
     self.fullScreenView.hidden = YES;
     [self.popoverNode.view.subviews forEach:^(__kindof UIView *obj) {
         [obj removeFromSuperview];
     }];
+    self.popoverNode = nil;
 }
 @end

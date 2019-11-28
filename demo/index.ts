@@ -14,4 +14,5 @@ export default [
     'src/NavbarDemo',
     'src/RefreshableDemo',
     'src/FlowLayoutDemo',
+    'src/PopoverDemo'
 ]

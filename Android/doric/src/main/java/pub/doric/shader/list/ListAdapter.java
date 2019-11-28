@@ -54,7 +54,7 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
     public DoricViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ListItemNode node = (ListItemNode) ViewNode.create(listNode.getDoricContext(), "ListItem");
         node.init(listNode);
-        return new DoricViewHolder(node, node.getDoricLayer());
+        return new DoricViewHolder(node, node.getNodeView());
     }
 
     @Override

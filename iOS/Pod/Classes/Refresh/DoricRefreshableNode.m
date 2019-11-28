@@ -49,8 +49,8 @@
 
 - (void)blend:(NSDictionary *)props {
     [super blend:props];
-    [self blendHeader];
     [self blendContent];
+    [self blendHeader];
 }
 
 - (void)blendContent {

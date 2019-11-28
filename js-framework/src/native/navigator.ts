@@ -13,9 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from './src/runtime/global'
-export * from './src/ui/index.ui'
-export * from "./src/widget/index.widget"
-export * from './src/native/index.native'
-export * from "./src/util/index.util"
-export * from "./src/pattern/index.pattern"
+import { BridgeContext } from "../runtime/global"
+
+export function navigator(context: BridgeContext) {
+    return {
+        push: (scheme: string, alias: string, animated = true) => {
+            return context.navigator.push({
+                scheme, alias, animated
+            })
+        },
+        pop: (animated = true) => {
+            return context.navigator.pop({ animated })
+        },
+    }
+}

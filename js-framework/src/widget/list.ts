@@ -14,18 +14,9 @@
  * limitations under the License.
  */
 
-import { View, Property, LayoutSpec, Superview, IView } from "./view";
-import { Stack } from "./layout";
-
-export function listItem(item: View) {
-    return (new ListItem).also((it) => {
-        it.layoutConfig = {
-            widthSpec: LayoutSpec.WRAP_CONTENT,
-            heightSpec: LayoutSpec.WRAP_CONTENT,
-        }
-        it.addChild(item)
-    })
-}
+import { View, Property, Superview, IView } from "../ui/view";
+import { Stack } from "./layouts";
+import { layoutConfig } from "../util/layoutconfig";
 
 export class ListItem extends Stack {
     /**
@@ -87,4 +78,19 @@ export class List extends Superview implements IList {
             return listItem.toModel()
         })
     }
+}
+
+export function list(config: IList) {
+    const ret = new List
+    for (let key in config) {
+        Reflect.set(ret, key, Reflect.get(config, key, config), ret)
+    }
+    return ret
+}
+
+export function listItem(item: View) {
+    return (new ListItem).also((it) => {
+        it.layoutConfig = layoutConfig().wrap()
+        it.addChild(item)
+    })
 }

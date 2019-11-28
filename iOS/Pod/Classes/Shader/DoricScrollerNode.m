@@ -21,6 +21,7 @@
 //
 #import "DoricScrollerNode.h"
 #import "DoricExtensions.h"
+#import "DoricRefreshableNode.h"
 
 @implementation DoricScrollView
 
@@ -54,6 +55,13 @@
 @implementation DoricScrollerNode
 - (DoricScrollView *)build {
     return [DoricScrollView new];
+}
+
+- (void)initWithSuperNode:(DoricSuperNode *)superNode {
+    [super initWithSuperNode:superNode];
+    if ([superNode isKindOfClass:[DoricRefreshableNode class]]) {
+        self.view.bounces = NO;
+    }
 }
 
 - (void)blend:(NSDictionary *)props {

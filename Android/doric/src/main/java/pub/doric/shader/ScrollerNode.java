@@ -86,7 +86,7 @@ public class ScrollerNode extends SuperNode<HVScrollView> {
                     mChildNode.setId(viewId);
                     mChildNode.init(this);
                     mChildNode.blend(props);
-                    mView.addView(mChildNode.getDoricLayer());
+                    mView.addView(mChildNode.getNodeView());
                 }
             }
         } else {
@@ -94,7 +94,7 @@ public class ScrollerNode extends SuperNode<HVScrollView> {
             mChildNode.setId(viewId);
             mChildNode.init(this);
             mChildNode.blend(props);
-            mView.addView(mChildNode.getDoricLayer());
+            mView.addView(mChildNode.getNodeView());
         }
     }
 

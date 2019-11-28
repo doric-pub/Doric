@@ -36,7 +36,7 @@ public class RootNode extends StackNode {
     }
 
     @Override
-    public View getDoricLayer() {
+    public View getNodeView() {
         return mView;
     }
 

@@ -50,7 +50,7 @@ public class ListItemNode extends StackNode {
     @Override
     public void blend(JSObject jsObject) {
         super.blend(jsObject);
-        getDoricLayer().getLayoutParams().width = getLayoutParams().width;
-        getDoricLayer().getLayoutParams().height = getLayoutParams().height;
+        getNodeView().getLayoutParams().width = getLayoutParams().width;
+        getNodeView().getLayoutParams().height = getLayoutParams().height;
     }
 }

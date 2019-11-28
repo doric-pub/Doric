@@ -28,7 +28,6 @@ import pub.doric.extension.bridge.DoricMethod;
 import pub.doric.extension.bridge.DoricPlugin;
 import pub.doric.extension.bridge.DoricPromise;
 import pub.doric.navbar.IDoricNavBar;
-import pub.doric.utils.DoricUtils;
 import pub.doric.utils.ThreadMode;
 
 /**
@@ -62,7 +61,7 @@ public class NavBarPlugin extends DoricJavaPlugin {
                 JSObject jsObject = jsDecoder.decode().asObject();
                 boolean hidden = jsObject.getProperty("hidden").asBoolean().value();
                 navBar.setHidden(hidden);
-                View v = getDoricContext().getRootNode().getDoricLayer();
+                View v = getDoricContext().getRootNode().getNodeView();
                 ViewGroup.LayoutParams params = v.getLayoutParams();
                 if (params instanceof ViewGroup.MarginLayoutParams) {
                     ((ViewGroup.MarginLayoutParams) params).topMargin =

@@ -22,6 +22,7 @@
 #import "DoricExtensions.h"
 #import "DoricListItemNode.h"
 #import "DoricLayouts.h"
+#import "DoricRefreshableNode.h"
 
 @interface DoricTableViewCell : UITableViewCell
 @property(nonatomic, strong) DoricListItemNode *doricListItemNode;
@@ -71,6 +72,13 @@
         _batchCount = 15;
     }
     return self;
+}
+
+- (void)initWithSuperNode:(DoricSuperNode *)superNode {
+    [super initWithSuperNode:superNode];
+    if ([superNode isKindOfClass:[DoricRefreshableNode class]]) {
+        self.view.bounces = NO;
+    }
 }
 
 - (UITableView *)build {

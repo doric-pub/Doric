@@ -16,29 +16,9 @@
 import { Color, GradientColor } from "../util/color"
 import { Modeling, Model, obj2Model } from "../util/types";
 import { uniqueId } from "../util/uniqueId";
-import { Gravity } from "../util/gravity";
 import { loge } from "../util/log";
 import { BridgeContext } from "../runtime/global";
-
-export enum LayoutSpec {
-    EXACTLY = 0,
-    WRAP_CONTENT = 1,
-    AT_MOST = 2,
-}
-
-export interface LayoutConfig {
-    widthSpec?: LayoutSpec
-    heightSpec?: LayoutSpec
-    margin?: {
-        left?: number,
-        right?: number,
-        top?: number,
-        bottom?: number,
-    }
-    alignment?: Gravity
-    //Only affective in VLayout or HLayout
-    weight?: number
-}
+import { LayoutConfig } from '../util/layoutconfig'
 
 export function Property(target: Object, propKey: string) {
     Reflect.defineMetadata(propKey, true, target)

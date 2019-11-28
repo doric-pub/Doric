@@ -13,34 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { IView, View, Property } from "./view"
-import { Color } from "../util/color"
-import { Gravity } from "../util/gravity"
-
-export interface IText extends IView {
-    text?: string
-    textColor?: Color
-    textSize?: number
-    maxLines?: number
-    textAlignment?: Gravity
-}
-
-export class Text extends View implements IText {
-    @Property
-    text?: string
-
-    @Property
-    textColor?: Color
-
-    @Property
-    textSize?: number
-
-    @Property
-    maxLines?: number
-
-    @Property
-    textAlignment?: Gravity
-}
+import { IView, View, Property } from "../ui/view"
+import { layoutConfig } from "../util/layoutconfig"
 
 export enum ScaleType {
     ScaleToFill = 0,
@@ -65,4 +39,13 @@ export class Image extends View implements IImage {
 
     @Property
     loadCallback?: (image: { width: number; height: number } | undefined) => void
+}
+
+export function image(config: IImage) {
+    const ret = new Image
+    ret.layoutConfig = layoutConfig().wrap()
+    for (let key in config) {
+        Reflect.set(ret, key, Reflect.get(config, key, config), ret)
+    }
+    return ret
 }

@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import './../runtime/global'
-import { View, Group } from "./view";
-import { loge, log } from '../util/log';
-import { Model } from '../util/types';
-import { Root } from './layout';
+import '../runtime/global'
+import { View, Group } from "./view"
+import { loge } from '../util/log'
+import { Model } from '../util/types'
+import { Root } from '../widget/layouts'
 
 
 export function NativeCall(target: Panel, propertyKey: string, descriptor: PropertyDescriptor) {
@@ -48,6 +48,14 @@ export abstract class Panel {
 
     addHeadView(v: View) {
         this.headviews.set(v.viewId, v)
+    }
+
+    removeHeadView(v: View | string) {
+        if (v instanceof View) {
+            this.headviews.delete(v.viewId)
+        } else {
+            this.headviews.delete(v)
+        }
     }
 
     getRootView() {

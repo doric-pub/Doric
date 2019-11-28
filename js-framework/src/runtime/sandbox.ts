@@ -36,7 +36,7 @@ import "reflect-metadata"
  *  Reflect.apply(function(__module){
  *           (function(module,exports,require){
  *                      //module content
- *                  })(__module,__module.exports,hego.__require__);
+ *                  })(__module,__module.exports,doric.__require__);
  *           return __module.exports
  *      },this,[{exports:{}}])
  * ])

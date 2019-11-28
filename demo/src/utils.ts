@@ -38,7 +38,7 @@ export function boxStr(str: string, idx = 0) {
 
 export function title(str: string) {
     return text({
-        text: "Network Demo",
+        text: str,
         layoutConfig: layoutConfig().w(LayoutSpec.AT_MOST),
         textSize: 30,
         textColor: Color.WHITE,

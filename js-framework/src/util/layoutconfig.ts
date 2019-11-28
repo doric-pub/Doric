@@ -13,73 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { View, LayoutSpec, LayoutConfig } from './view'
-import { Stack, HLayout, VLayout } from './layout'
-import { IText, IImage, Text, Image } from './widgets'
-import { IList, List } from './list'
-import { ISlider, Slider } from './slider'
-import { Gravity } from '../util/gravity'
-import { Modeling } from '../util/types'
+import { Gravity } from "./gravity";
+import { Modeling } from "./types";
 
-export function text(config: IText) {
-    const ret = new Text
-    ret.layoutConfig = layoutConfig().wrap()
-    for (let key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret)
-    }
-    return ret
+export enum LayoutSpec {
+    EXACTLY = 0,
+    WRAP_CONTENT = 1,
+    AT_MOST = 2,
 }
 
-export function image(config: IImage) {
-    const ret = new Image
-    ret.layoutConfig = layoutConfig().wrap()
-    for (let key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret)
+export interface LayoutConfig {
+    widthSpec?: LayoutSpec
+    heightSpec?: LayoutSpec
+    margin?: {
+        left?: number,
+        right?: number,
+        top?: number,
+        bottom?: number,
     }
-    return ret
-}
-
-export function stack(views: View[]) {
-    const ret = new Stack
-    ret.layoutConfig = layoutConfig().wrap()
-    for (let v of views) {
-        ret.addChild(v)
-    }
-    return ret
-}
-
-export function hlayout(views: View[]) {
-    const ret = new HLayout
-    ret.layoutConfig = layoutConfig().wrap()
-    for (let v of views) {
-        ret.addChild(v)
-    }
-    return ret
-}
-
-export function vlayout(views: View[]) {
-    const ret = new VLayout
-    ret.layoutConfig = layoutConfig().wrap()
-    for (let v of views) {
-        ret.addChild(v)
-    }
-    return ret
-}
-
-export function list(config: IList) {
-    const ret = new List
-    for (let key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret)
-    }
-    return ret
-}
-
-export function slider(config: ISlider) {
-    const ret = new Slider
-    for (let key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret)
-    }
-    return ret
+    alignment?: Gravity
+    //Only affective in VLayout or HLayout
+    weight?: number
 }
 
 export class LayoutConfigImpl implements LayoutConfig, Modeling {

@@ -34,6 +34,7 @@ public class AsyncCall {
             try {
                 asyncResult.setResult(callable.call());
             } catch (Exception e) {
+                e.printStackTrace();
                 asyncResult.setError(e);
             }
         } else {
@@ -43,6 +44,7 @@ public class AsyncCall {
                     try {
                         asyncResult.setResult(callable.call());
                     } catch (Exception e) {
+                        e.printStackTrace();
                         asyncResult.setError(e);
                     }
                 }

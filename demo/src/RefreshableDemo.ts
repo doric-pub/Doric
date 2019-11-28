@@ -97,7 +97,7 @@ class RefreshableDemo extends Panel {
                 }),
             ]).apply({
                 layoutConfig: layoutConfig().atmost().h(LayoutSpec.WRAP_CONTENT),
-                gravity: gravity().center(),
+                gravity: gravity().centerX(),
                 space: 10,
             } as IVLayout))
         }).apply({

@@ -38,6 +38,8 @@
 #import "DoricNavigatorPlugin.h"
 #import "DoricNavBarPlugin.h"
 #import "DoricRefreshableNode.h"
+#import "DoricCollectionItemNode.h"
+#import "DoricCollectionNode.h"
 
 @interface DoricRegistry ()
 
@@ -78,6 +80,8 @@
     [self registerViewNode:DoricSliderNode.class withName:@"Slider"];
     [self registerViewNode:DoricSlideItemNode.class withName:@"SlideItem"];
     [self registerViewNode:DoricRefreshableNode.class withName:@"Refreshable"];
+    [self registerViewNode:DoricCollectionItemNode.class withName:@"CollectionItem"];
+    [self registerViewNode:DoricCollectionNode.class withName:@"Collection"];
 }
 
 - (void)registerJSBundle:(NSString *)bundle withName:(NSString *)name {

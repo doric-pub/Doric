@@ -24,11 +24,11 @@
 #import "Doric.h"
 #import "DoricSlideItemNode.h"
 
-@interface DoricCollectionViewCell : UICollectionViewCell
+@interface DoricSliderViewCell : UICollectionViewCell
 @property(nonatomic, strong) DoricSlideItemNode *doricSlideItemNode;
 @end
 
-@implementation DoricCollectionViewCell
+@implementation DoricSliderViewCell
 @end
 
 @interface DoricSliderNode () <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
@@ -37,18 +37,20 @@
 @property(nonatomic, assign) NSUInteger batchCount;
 @end
 
-@interface DoricCollectionView : UICollectionView
+@interface DoricSliderView : UICollectionView
 @end
 
-@implementation DoricCollectionView
+@implementation DoricSliderView
 - (CGSize)sizeThatFits:(CGSize)size {
     if (self.subviews.count > 0) {
+        CGFloat width = size.width;
         CGFloat height = size.height;
         for (UIView *child in self.subviews) {
             CGSize childSize = [child measureSize:size];
+            width = MAX(childSize.width, width);
             height = MAX(childSize.height, height);
         }
-        return CGSizeMake(size.width, size.height);
+        return CGSizeMake(width, height);
     }
     return size;
 }
@@ -72,14 +74,14 @@
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
     [flowLayout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
 
-    return [[[DoricCollectionView alloc] initWithFrame:CGRectZero
-                                  collectionViewLayout:flowLayout]
+    return [[[DoricSliderView alloc] initWithFrame:CGRectZero
+                              collectionViewLayout:flowLayout]
             also:^(UICollectionView *it) {
                 it.backgroundColor = [UIColor whiteColor];
                 it.pagingEnabled = YES;
                 it.delegate = self;
                 it.dataSource = self;
-                [it registerClass:[DoricCollectionViewCell class] forCellWithReuseIdentifier:@"doricCell"];
+                [it registerClass:[DoricSliderViewCell class] forCellWithReuseIdentifier:@"doricCell"];
             }];
 }
 
@@ -118,7 +120,7 @@
     NSUInteger position = (NSUInteger) indexPath.row;
     NSDictionary *model = [self itemModelAt:position];
     NSDictionary *props = model[@"props"];
-    DoricCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"doricCell" forIndexPath:indexPath];
+    DoricSliderViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"doricCell" forIndexPath:indexPath];
     if (!cell.doricSlideItemNode) {
         DoricSlideItemNode *slideItemNode = [[DoricSlideItemNode alloc] initWithContext:self.doricContext];
         [slideItemNode initWithSuperNode:self];
@@ -159,8 +161,8 @@
     __block DoricViewNode *ret = nil;
     [self.doricContext.driver ensureSyncInMainQueue:^{
         for (UICollectionViewCell *collectionViewCell in self.view.visibleCells) {
-            if ([collectionViewCell isKindOfClass:[DoricCollectionViewCell class]]) {
-                DoricSlideItemNode *node = ((DoricCollectionViewCell *) collectionViewCell).doricSlideItemNode;
+            if ([collectionViewCell isKindOfClass:[DoricSliderViewCell class]]) {
+                DoricSlideItemNode *node = ((DoricSliderViewCell *) collectionViewCell).doricSlideItemNode;
                 if ([viewId isEqualToString:node.viewId]) {
                     ret = node;
                     break;

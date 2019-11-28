@@ -96,8 +96,10 @@
     CGFloat width = (self.collectionView.width - self.columnSpace * (self.columnCount - 1)) / self.columnCount;
     CGFloat height = [self.delegate doricFlowLayoutItemHeightAtIndexPath:indexPath];
     CGFloat x = (width + self.columnSpace) * [minYOfColumn integerValue];
-    CGFloat y = self.rowSpace + [self.columnHeightInfo[minYOfColumn] floatValue];
-
+    CGFloat y = [self.columnHeightInfo[minYOfColumn] floatValue];
+    if (y > 0) {
+        y += self.rowSpace;
+    }
     self.columnHeightInfo[minYOfColumn] = @(y + height);
 
     UICollectionViewLayoutAttributes *attrs = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];

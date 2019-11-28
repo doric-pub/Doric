@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Superview, View, Property, IView, LayoutSpec } from './view'
+import { Superview, View, IView } from './view'
+import { layoutConfig } from '../util/layoutconfig'
 
 export function scroller(content: View) {
     return (new Scroller).also(v => {
-        v.layoutConfig = {
-            widthSpec: LayoutSpec.WRAP_CONTENT,
-            heightSpec: LayoutSpec.WRAP_CONTENT,
-        }
+        v.layoutConfig = layoutConfig().wrap()
         v.content = content
     })
 }

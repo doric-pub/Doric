@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Group } from "../ui/view";
-import { Panel } from "../ui/panel";
+import { Group } from "../widget/view";
+import { Panel } from "./panel";
 
 export abstract class ViewHolder<M>{
     abstract build(root: Group): void

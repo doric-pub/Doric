@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import './../runtime/global'
-import { View, Group } from "./view";
+import '../runtime/global'
+import { View, Group } from "../widget/view";
 import { loge, log } from '../util/log';
 import { Model } from '../util/types';
-import { Root } from './layout';
+import { Root } from '../widget/layouts';
 
 
 export function NativeCall(target: Panel, propertyKey: string, descriptor: PropertyDescriptor) {

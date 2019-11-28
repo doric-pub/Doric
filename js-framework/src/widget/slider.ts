@@ -1,15 +1,6 @@
-import { Superview, View, LayoutSpec, Property, IView } from "./view";
-import { Stack } from "./layout";
-
-export function slideItem(item: View) {
-    return (new SlideItem).also((it) => {
-        it.layoutConfig = {
-            widthSpec: LayoutSpec.AT_MOST,
-            heightSpec: LayoutSpec.AT_MOST,
-        }
-        it.addChild(item)
-    })
-}
+import { Superview, View, Property, IView } from "./view";
+import { Stack } from "./layouts";
+import { layoutConfig } from "../util/layoutconfig";
 
 export class SlideItem extends Stack {
     /**
@@ -69,4 +60,19 @@ export class Slider extends Superview implements ISlider {
             return slideItem.toModel()
         })
     }
+}
+
+export function slideItem(item: View) {
+    return (new SlideItem).also((it) => {
+        it.layoutConfig = layoutConfig().wrap()
+        it.addChild(item)
+    })
+}
+
+export function slider(config: ISlider) {
+    const ret = new Slider
+    for (let key in config) {
+        Reflect.set(ret, key, Reflect.get(config, key, config), ret)
+    }
+    return ret
 }

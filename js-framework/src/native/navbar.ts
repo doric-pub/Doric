@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { BridgeContext } from "../runtime/global"
-import { Panel } from "../ui/panel"
+import { Panel } from "../panel/panel"
 import { Color } from "../util/color"
 
 export function navbar(context: BridgeContext) {

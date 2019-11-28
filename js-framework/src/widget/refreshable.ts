@@ -2,7 +2,7 @@ import { View, Property, Superview, IView } from "./view";
 import { List } from "./list";
 import { Scroller } from "./scroller";
 import { BridgeContext } from "../runtime/global";
-import { layoutConfig } from "./declarative";
+import { layoutConfig } from "../util/layoutconfig";
 
 export interface IRefreshable extends IView {
     content: View

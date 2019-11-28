@@ -13,14 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from './src/runtime/global'
-export * from './src/native/index.native'
-export * from "./src/widget/index.widget"
-export * from "./src/panel/panel"
-export * from "./src/util/color"
-export * from './src/util/log'
-export * from './src/util/types'
-export * from './src/util/gravity'
-export * from './src/util/candies'
-export * from './src/util/layoutconfig'
-export * from './src/panel/mvvm'
+export * from './view'
+export * from './layouts'
+export * from './text'
+export * from './image'
+export * from './list'
+export * from './slider'
+export * from './scroller'
+export * from './refreshable'

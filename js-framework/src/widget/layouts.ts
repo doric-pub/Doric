@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Group, Property, IView } from "./view";
+import { Group, Property, IView, View } from "./view";
 import { Gravity } from "../util/gravity";
+import { layoutConfig } from "../util/layoutconfig";
 
 export interface IStack extends IView {
 }
@@ -48,4 +49,31 @@ export interface IHLayout extends IView {
 }
 
 export class HLayout extends LinearLayout implements IHLayout {
+}
+
+export function stack(views: View[]) {
+    const ret = new Stack
+    ret.layoutConfig = layoutConfig().wrap()
+    for (let v of views) {
+        ret.addChild(v)
+    }
+    return ret
+}
+
+export function hlayout(views: View[]) {
+    const ret = new HLayout
+    ret.layoutConfig = layoutConfig().wrap()
+    for (let v of views) {
+        ret.addChild(v)
+    }
+    return ret
+}
+
+export function vlayout(views: View[]) {
+    const ret = new VLayout
+    ret.layoutConfig = layoutConfig().wrap()
+    for (let v of views) {
+        ret.addChild(v)
+    }
+    return ret
 }

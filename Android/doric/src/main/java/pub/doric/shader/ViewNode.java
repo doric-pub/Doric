@@ -21,6 +21,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
+
 import pub.doric.DoricContext;
 import pub.doric.DoricRegistry;
 import pub.doric.async.AsyncResult;
@@ -60,11 +62,8 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         }
         this.mSuperNode = superNode;
         this.mLayoutParams = superNode.generateDefaultLayoutParams();
-        this.doricLayer = new DoricLayer(getContext());
-        this.doricLayer.setLayoutParams(mLayoutParams);
         this.mView = build();
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(mLayoutParams.width, mLayoutParams.height);
-        doricLayer.addView(mView, params);
+        this.mView.setLayoutParams(mLayoutParams);
     }
 
     public void setId(String id) {
@@ -75,8 +74,12 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         return mType;
     }
 
-    public View getDoricLayer() {
-        return doricLayer;
+    public View getNodeView() {
+        if (doricLayer != null) {
+            return doricLayer;
+        } else {
+            return mView;
+        }
     }
 
     public Context getContext() {
@@ -91,22 +94,24 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 blend(mView, prop, jsObject.getProperty(prop));
             }
         }
-        ViewGroup.LayoutParams params = mView.getLayoutParams();
-        if (params != null) {
-            params.width = mLayoutParams.width;
-            params.height = mLayoutParams.height;
-        } else {
-            params = mLayoutParams;
-        }
-        if (mLayoutParams instanceof LinearLayout.LayoutParams && ((LinearLayout.LayoutParams) mLayoutParams).weight > 0) {
-            if (mSuperNode instanceof VLayoutNode) {
-                params.height = ViewGroup.LayoutParams.MATCH_PARENT;
-            } else if (mSuperNode instanceof HLayoutNode) {
-                params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        if (doricLayer != null) {
+            ViewGroup.LayoutParams params = mView.getLayoutParams();
+            if (params != null) {
+                params.width = mLayoutParams.width;
+                params.height = mLayoutParams.height;
+            } else {
+                params = mLayoutParams;
             }
-        }
+            if (mLayoutParams instanceof LinearLayout.LayoutParams && ((LinearLayout.LayoutParams) mLayoutParams).weight > 0) {
+                if (mSuperNode instanceof VLayoutNode) {
+                    params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                } else if (mSuperNode instanceof HLayoutNode) {
+                    params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                }
+            }
 
-        mView.setLayoutParams(params);
+            mView.setLayoutParams(params);
+        }
     }
 
     protected void blend(T view, String name, JSValue prop) {
@@ -139,46 +144,61 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 setLayoutConfig(prop.asObject());
                 break;
             case "border":
-                if (prop.isObject() && doricLayer != null) {
-                    doricLayer.setBorder(DoricUtils.dp2px(prop.asObject().getProperty("width").asNumber().toFloat()),
+                if (prop.isObject()) {
+                    requireDoricLayer().setBorder(DoricUtils.dp2px(prop.asObject().getProperty("width").asNumber().toFloat()),
                             prop.asObject().getProperty("color").asNumber().toInt());
                 }
                 break;
             case "corners":
-                if (doricLayer != null) {
-                    if (prop.isNumber()) {
-                        doricLayer.setCornerRadius(DoricUtils.dp2px(prop.asNumber().toFloat()));
-                    } else if (prop.isObject()) {
-                        JSValue lt = prop.asObject().getProperty("leftTop");
-                        JSValue rt = prop.asObject().getProperty("rightTop");
-                        JSValue rb = prop.asObject().getProperty("rightBottom");
-                        JSValue lb = prop.asObject().getProperty("leftBottom");
-                        doricLayer.setCornerRadius(
-                                DoricUtils.dp2px(lt.isNumber() ? lt.asNumber().toFloat() : 0),
-                                DoricUtils.dp2px(rt.isNumber() ? rt.asNumber().toFloat() : 0),
-                                DoricUtils.dp2px(rb.isNumber() ? rb.asNumber().toFloat() : 0),
-                                DoricUtils.dp2px(lb.isNumber() ? lb.asNumber().toFloat() : 0)
-                        );
-                    }
+                if (prop.isNumber()) {
+                    requireDoricLayer().setCornerRadius(DoricUtils.dp2px(prop.asNumber().toFloat()));
+                } else if (prop.isObject()) {
+                    JSValue lt = prop.asObject().getProperty("leftTop");
+                    JSValue rt = prop.asObject().getProperty("rightTop");
+                    JSValue rb = prop.asObject().getProperty("rightBottom");
+                    JSValue lb = prop.asObject().getProperty("leftBottom");
+                    requireDoricLayer().setCornerRadius(
+                            DoricUtils.dp2px(lt.isNumber() ? lt.asNumber().toFloat() : 0),
+                            DoricUtils.dp2px(rt.isNumber() ? rt.asNumber().toFloat() : 0),
+                            DoricUtils.dp2px(rb.isNumber() ? rb.asNumber().toFloat() : 0),
+                            DoricUtils.dp2px(lb.isNumber() ? lb.asNumber().toFloat() : 0)
+                    );
                 }
-
                 break;
             case "shadow":
-                if (doricLayer != null) {
-                    if (prop.isObject()) {
-                        doricLayer.setShadow(
-                                prop.asObject().getProperty("color").asNumber().toInt(),
-                                (int) (prop.asObject().getProperty("opacity").asNumber().toFloat() * 255),
-                                DoricUtils.dp2px(prop.asObject().getProperty("radius").asNumber().toFloat()),
-                                DoricUtils.dp2px(prop.asObject().getProperty("offsetX").asNumber().toFloat()),
-                                DoricUtils.dp2px(prop.asObject().getProperty("offsetY").asNumber().toFloat())
-                        );
-                    }
+                if (prop.isObject()) {
+                    requireDoricLayer().setShadow(
+                            prop.asObject().getProperty("color").asNumber().toInt(),
+                            (int) (prop.asObject().getProperty("opacity").asNumber().toFloat() * 255),
+                            DoricUtils.dp2px(prop.asObject().getProperty("radius").asNumber().toFloat()),
+                            DoricUtils.dp2px(prop.asObject().getProperty("offsetX").asNumber().toFloat()),
+                            DoricUtils.dp2px(prop.asObject().getProperty("offsetY").asNumber().toFloat())
+                    );
                 }
                 break;
             default:
                 break;
         }
+    }
+
+    @NonNull
+    private DoricLayer requireDoricLayer() {
+        if (doricLayer == null) {
+            doricLayer = new DoricLayer(getContext());
+            doricLayer.setLayoutParams(mLayoutParams);
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(mLayoutParams.width, mLayoutParams.height);
+            if (mView.getParent() instanceof ViewGroup) {
+                //Already added in
+                ViewGroup superview = (ViewGroup) mView.getParent();
+                int index = superview.indexOfChild(mView);
+                superview.removeView(mView);
+                doricLayer.addView(mView, params);
+                superview.addView(doricLayer, index);
+            } else {
+                doricLayer.addView(mView, params);
+            }
+        }
+        return doricLayer;
     }
 
     String[] getIdList() {

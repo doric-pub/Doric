@@ -85,7 +85,7 @@ public class RefreshableNode extends SuperNode<DoricSwipeLayout> implements Pull
                     mContentNode.setId(viewId);
                     mContentNode.init(this);
                     mContentNode.blend(props);
-                    mView.addView(mContentNode.getDoricLayer());
+                    mView.addView(mContentNode.getNodeView());
                 }
             }
         } else {
@@ -93,7 +93,7 @@ public class RefreshableNode extends SuperNode<DoricSwipeLayout> implements Pull
             mContentNode.setId(viewId);
             mContentNode.init(this);
             mContentNode.blend(props);
-            mView.addView(mContentNode.getDoricLayer());
+            mView.addView(mContentNode.getNodeView());
         }
     }
 
@@ -117,7 +117,7 @@ public class RefreshableNode extends SuperNode<DoricSwipeLayout> implements Pull
                     mHeaderNode.setId(viewId);
                     mHeaderNode.init(this);
                     mHeaderNode.blend(props);
-                    mView.getRefreshView().setContent(mHeaderNode.getDoricLayer());
+                    mView.getRefreshView().setContent(mHeaderNode.getNodeView());
                 }
             }
         } else {
@@ -125,7 +125,7 @@ public class RefreshableNode extends SuperNode<DoricSwipeLayout> implements Pull
             mHeaderNode.setId(viewId);
             mHeaderNode.init(this);
             mHeaderNode.blend(props);
-            mView.getRefreshView().setContent(mHeaderNode.getDoricLayer());
+            mView.getRefreshView().setContent(mHeaderNode.getNodeView());
         }
     }
 

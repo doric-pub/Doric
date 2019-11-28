@@ -5,6 +5,7 @@
 #import "DoricSwipeRefreshLayout.h"
 #import "UIView+Doric.h"
 #import "DoricLayouts.h"
+#import "Doric.h"
 
 @interface DoricSwipeRefreshLayout () <UIScrollViewDelegate>
 
@@ -53,9 +54,16 @@
 }
 
 - (void)layoutSelf:(CGSize)targetSize {
-    [super layoutSelf:targetSize];
-    self.headerView.bottom = 0;
-    self.headerView.centerX = self.centerX;
+    self.width = targetSize.width;
+    self.height = targetSize.height;
+    [self.headerView also:^(UIView *it) {
+        [it layoutSelf:[it measureSize:targetSize]];
+        it.bottom = 0;
+        it.centerX = self.centerX;
+    }];
+    [self.contentView also:^(UIView *it) {
+        [it layoutSelf:targetSize];
+    }];
     self.contentSize = self.frame.size;
 }
 

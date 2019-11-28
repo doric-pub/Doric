@@ -53,7 +53,7 @@ class SlideAdapter extends RecyclerView.Adapter<SlideAdapter.DoricViewHolder> {
     public DoricViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         SlideItemNode node = (SlideItemNode) ViewNode.create(sliderNode.getDoricContext(), "SlideItem");
         node.init(sliderNode);
-        return new DoricViewHolder(node, node.getDoricLayer());
+        return new DoricViewHolder(node, node.getNodeView());
     }
 
     @Override

@@ -13,4 +13,5 @@ export default [
     'src/NavigatorDemo',
     'src/NavbarDemo',
     'src/RefreshableDemo',
+    'src/FlowLayoutDemo',
 ]

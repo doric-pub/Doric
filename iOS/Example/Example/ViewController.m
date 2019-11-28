@@ -53,9 +53,19 @@
     return cell;
 }
 
+- (BOOL)isSimulator {
+    return TARGET_OS_SIMULATOR == 1;
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row == 0) {
-        [self.navigationController pushViewController:[QRScanViewController new] animated:NO];
+        if (self.isSimulator) {
+            NSString *result = @"127.0.0.1";
+            [[DoricDriver instance] connectDevKit:[NSString stringWithFormat:@"ws://%@:7777", result]];
+            ShowToast([NSString stringWithFormat:@"Connected to %@", result], BOTTOM);
+        } else {
+            [self.navigationController pushViewController:[QRScanViewController new] animated:NO];
+        }
         return;
     }
     NSString *file = self.demoFilePaths[(NSUInteger) indexPath.row];

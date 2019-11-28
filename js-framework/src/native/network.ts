@@ -13,54 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { BridgeContext } from "../runtime/global";
-import { Gravity } from "./gravity";
-import { Panel } from "../ui/panel";
-import { Color } from "./color";
+import { BridgeContext } from "../runtime/global"
 
-export function modal(context: BridgeContext) {
-    return {
-        toast: (msg: string, gravity: Gravity = Gravity.Bottom) => {
-            context.modal.toast({
-                msg,
-                gravity: gravity.toModel(),
-            })
-        },
-        alert: (arg: string | {
-            title: string,
-            msg: string,
-            okLabel?: string,
-        }) => {
-            if (typeof arg === 'string') {
-                return context.modal.alert({ msg: arg })
-            } else {
-                return context.modal.alert(arg)
-            }
-        },
-        confirm: (arg: string | {
-            title: string,
-            msg: string,
-            okLabel?: string,
-            cancelLabel?: string,
-        }) => {
-            if (typeof arg === 'string') {
-                return context.modal.confirm({ msg: arg })
-            } else {
-                return context.modal.confirm(arg)
-            }
-        },
-        prompt: (arg: {
-            title?: string,
-            msg?: string,
-            okLabel?: string,
-            cancelLabel?: string,
-            text?: string,
-            defaultText?: string,
-        }) => {
-            return context.modal.prompt(arg) as Promise<string>
-        },
-    }
-}
 export interface IRequest {
     // `url` is the server URL that will be used for the request
     url?: string,
@@ -103,6 +57,7 @@ function transformRequest(request: IRequest) {
     }
     return request
 }
+
 export function network(context: BridgeContext) {
     return {
         request: (config: IRequest) => {
@@ -149,65 +104,6 @@ export function network(context: BridgeContext) {
             finalConfig.url = url
             finalConfig.method = "delete"
             return context.network.request(transformRequest(finalConfig)) as Promise<IResponse>
-        },
-    }
-}
-
-export function storage(context: BridgeContext) {
-    return {
-        setItem: (key: string, value: string, zone?: string) => {
-            return context.storage.setItem({ key, value, zone })
-        },
-        getItem: (key: string, zone?: string) => {
-            return context.storage.getItem({ key, zone }) as Promise<string>
-        },
-        remove: (key: string, zone?: string) => {
-            return context.storage.remove({ key, zone })
-        },
-        clear: (zone: string) => {
-            return context.storage.clear({ zone })
-        },
-    }
-}
-
-export function navigator(context: BridgeContext) {
-    return {
-        push: (scheme: string, alias: string, animated = true) => {
-            return context.navigator.push({
-                scheme, alias, animated
-            })
-        },
-        pop: (animated = true) => {
-            return context.navigator.pop({ animated })
-        },
-    }
-}
-
-export function navbar(context: BridgeContext) {
-    const entity = context.entity
-    let panel: Panel | undefined = undefined
-    if (entity instanceof Panel) {
-        panel = entity
-    }
-
-    return {
-        isHidden: () => {
-            return context.navbar.isHidden() as Promise<boolean>
-        },
-        setHidden: (hidden: boolean) => {
-            return context.navbar.setHidden({
-                hidden,
-            })
-        },
-        setTitle: (title: string) => {
-            return context.navbar.setTitle({
-                title,
-            })
-        },
-        setBgColor: (color: Color) => {
-            return context.navbar.setBgColor({
-                color: color.toModel(),
-            })
         },
     }
 }

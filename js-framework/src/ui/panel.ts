@@ -50,6 +50,14 @@ export abstract class Panel {
         this.headviews.set(v.viewId, v)
     }
 
+    removeHeadView(v: View | string) {
+        if (v instanceof View) {
+            this.headviews.delete(v.viewId)
+        } else {
+            this.headviews.delete(v)
+        }
+    }
+
     getRootView() {
         return this.__root__
     }

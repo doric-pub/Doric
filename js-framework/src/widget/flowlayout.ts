@@ -26,9 +26,16 @@ export class FlowLayoutItem extends Stack {
 }
 export interface IFlowLayout extends IView {
     renderItem: (index: number) => FlowLayoutItem
+
     itemCount: number
+
     batchCount?: number
-    column?: number
+
+    columnCount?: number
+
+    columnSpace?: number
+
+    rowSpace?: number
 }
 
 export class FlowLayout extends Superview implements IFlowLayout {
@@ -40,7 +47,13 @@ export class FlowLayout extends Superview implements IFlowLayout {
     }
 
     @Property
-    column = 1
+    columnCount = 2
+
+    @Property
+    columnSpace?: number
+
+    @Property
+    rowSpace?: number
 
     @Property
     itemCount = 0

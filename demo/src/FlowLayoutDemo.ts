@@ -1,4 +1,4 @@
-import { Group, Panel, flowlayout, layoutConfig, FlowLayoutItem } from "doric";
+import { Group, Panel, flowlayout, layoutConfig, FlowLayoutItem, text, Color, IFlowLayout, LayoutSpec, Gravity } from "doric";
 import { colors, label } from "./utils";
 
 const imageUrls = [
@@ -18,11 +18,21 @@ class FlowDemo extends Panel {
         flowlayout({
             layoutConfig: layoutConfig().atmost(),
             itemCount: 500,
+            columnCount: 3,
+            columnSpace: 10,
+            rowSpace: 10,
             renderItem: (idx) => {
                 return new FlowLayoutItem().apply({
                     bgColor: colors[idx % colors.length],
-                    width: 200,
-                    height: 50 + idx * 10,
+                    height: 50 + (idx % 3) * 20,
+                    layoutConfig: layoutConfig().w(LayoutSpec.AT_MOST),
+                }).also(it => {
+                    it.addChild(text({
+                        text: `${idx}`,
+                        textColor: Color.WHITE,
+                        textSize: 20,
+                        layoutConfig: layoutConfig().wrap().a(Gravity.Center)
+                    }))
                 })
             },
         })

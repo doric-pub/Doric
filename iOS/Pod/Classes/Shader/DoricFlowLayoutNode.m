@@ -1,3 +1,18 @@
+/*
+ * Copyright [2019] [Doric.Pub]
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 //
 // Created by pengfei.zhou on 2019/11/28.
 //
@@ -6,6 +21,99 @@
 #import "DoricFlowLayoutItemNode.h"
 #import "DoricExtensions.h"
 #import <JavaScriptCore/JavaScriptCore.h>
+
+@protocol DoricFlowLayoutDelegate
+- (CGFloat)doricFlowLayoutItemHeightAtIndexPath:(NSIndexPath *)indexPath;
+
+- (CGFloat)doricFlowLayoutColumnSpace;
+
+- (CGFloat)doricFlowLayoutRowSpace;
+
+- (NSInteger)doricFlowLayoutColumnCount;
+
+@end
+
+@interface DoricFlowLayout : UICollectionViewLayout
+@property(nonatomic, readonly) NSInteger columnCount;
+@property(nonatomic, readonly) CGFloat columnSpace;
+@property(nonatomic, readonly) CGFloat rowSpace;
+@property(nonatomic, strong) NSMutableDictionary <NSNumber *, NSNumber *> *columnHeightInfo;
+@property(nonatomic, weak) id <DoricFlowLayoutDelegate> delegate;
+@end
+
+@implementation DoricFlowLayout
+- (instancetype)init {
+    if (self = [super init]) {
+        _columnHeightInfo = [NSMutableDictionary new];
+    }
+    return self;
+}
+
+- (NSInteger)columnCount {
+    return self.delegate.doricFlowLayoutColumnCount ?: 2;
+}
+
+- (CGFloat)columnSpace {
+    return self.delegate.doricFlowLayoutColumnSpace ?: 0;
+}
+
+- (CGFloat)rowSpace {
+    return self.delegate.doricFlowLayoutRowSpace ?: 0;
+}
+
+- (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds {
+    return YES;
+}
+
+- (void)prepareLayout {
+    [super prepareLayout];
+    for (int i = 0; i < self.columnCount; i++) {
+        self.columnHeightInfo[@(i)] = @(0);
+    }
+}
+
+- (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect {
+    for (int i = 0; i < self.columnCount; i++) {
+        self.columnHeightInfo[@(i)] = @(0);
+    }
+    NSMutableArray *array = [NSMutableArray array];
+    NSInteger count = [self.collectionView numberOfItemsInSection:0];
+    for (int i = 0; i < count; i++) {
+        UICollectionViewLayoutAttributes *attrs = [self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:i inSection:0]];
+        [array addObject:attrs];
+    }
+    return array;
+}
+
+- (UICollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath {
+    NSNumber *minYOfColumn = @(0);
+    for (NSNumber *key in self.columnHeightInfo.allKeys) {
+        if ([self.columnHeightInfo[key] floatValue] < [self.columnHeightInfo[minYOfColumn] floatValue]) {
+            minYOfColumn = key;
+        }
+    }
+
+    CGFloat width = (self.collectionView.width - self.columnSpace * (self.columnCount - 1)) / self.columnCount;
+    CGFloat height = [self.delegate doricFlowLayoutItemHeightAtIndexPath:indexPath];
+    CGFloat x = (width + self.columnSpace) * [minYOfColumn integerValue];
+    CGFloat y = self.rowSpace + [self.columnHeightInfo[minYOfColumn] floatValue];
+
+    self.columnHeightInfo[minYOfColumn] = @(y + height);
+
+    UICollectionViewLayoutAttributes *attrs = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
+    attrs.frame = CGRectMake(x, y, width, height);
+    return attrs;
+}
+
+- (CGSize)collectionViewContentSize {
+    CGFloat width = self.collectionView.width;
+    CGFloat height = 0;
+    for (NSNumber *column in self.columnHeightInfo.allValues) {
+        height = MAX(height, [column floatValue]);
+    }
+    return CGSizeMake(width, height);
+}
+@end
 
 @interface DoricFlowLayoutViewCell : UICollectionViewCell
 @property(nonatomic, strong) DoricFlowLayoutItemNode *viewNode;
@@ -38,11 +146,14 @@
 }
 @end
 
-@interface DoricFlowLayoutNode () <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface DoricFlowLayoutNode () <UICollectionViewDataSource, UICollectionViewDelegate, DoricFlowLayoutDelegate>
 @property(nonatomic, strong) NSMutableDictionary <NSNumber *, NSString *> *itemViewIds;
 @property(nonatomic, strong) NSMutableDictionary <NSNumber *, NSValue *> *itemSizeInfo;
 @property(nonatomic, assign) NSUInteger itemCount;
 @property(nonatomic, assign) NSUInteger batchCount;
+@property(nonatomic, assign) NSUInteger columnCount;
+@property(nonatomic, assign) CGFloat columnSpace;
+@property(nonatomic, assign) CGFloat rowSpace;
 @end
 
 @implementation DoricFlowLayoutNode
@@ -51,14 +162,14 @@
         _itemViewIds = [NSMutableDictionary new];
         _itemSizeInfo = [NSMutableDictionary new];
         _batchCount = 15;
+        _columnCount = 2;
     }
     return self;
 }
 
 - (UICollectionView *)build {
-    UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
-    [flowLayout setScrollDirection:UICollectionViewScrollDirectionVertical];
-
+    DoricFlowLayout *flowLayout = [[DoricFlowLayout alloc] init];
+    flowLayout.delegate = self;
     return [[[DoricFlowLayoutView alloc] initWithFrame:CGRectZero
                                   collectionViewLayout:flowLayout]
             also:^(UICollectionView *it) {
@@ -71,7 +182,17 @@
 }
 
 - (void)blendView:(UICollectionView *)view forPropName:(NSString *)name propValue:(id)prop {
-    if ([@"itemCount" isEqualToString:name]) {
+    if ([@"columnSpace" isEqualToString:name]) {
+        self.columnSpace = [prop floatValue];
+        [self.view.collectionViewLayout invalidateLayout];
+    } else if ([@"rowSpace" isEqualToString:name]) {
+        self.rowSpace = [prop floatValue];
+        [self.view.collectionViewLayout invalidateLayout];
+    } else if ([@"columnCount" isEqualToString:name]) {
+        self.columnCount = [prop unsignedIntegerValue];
+        [self.view reloadData];
+        [self.view.collectionViewLayout invalidateLayout];
+    } else if ([@"itemCount" isEqualToString:name]) {
         self.itemCount = [prop unsignedIntegerValue];
         [self.view reloadData];
     } else if ([@"renderItem" isEqualToString:name]) {
@@ -146,10 +267,7 @@
         return;
     }
     self.itemSizeInfo[@(position)] = [NSValue valueWithCGSize:size];
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:position inSection:0];
-    [UIView performWithoutAnimation:^{
-        [self.view reloadItemsAtIndexPaths:@[indexPath]];
-    }];
+    [self.view.collectionViewLayout invalidateLayout];
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
@@ -170,27 +288,33 @@
     DoricFlowLayoutItemNode *node = cell.viewNode;
     node.viewId = model[@"id"];
     [node blend:props];
-    CGSize size = [node.view measureSize:CGSizeMake(collectionView.width, collectionView.height)];
+    CGFloat width = (collectionView.width - (self.columnCount - 1) * self.columnSpace) / self.columnCount;
+    CGSize size = [node.view measureSize:CGSizeMake(width, collectionView.height)];
     [node.view layoutSelf:size];
     [self callItem:position size:size];
     return cell;
 }
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+- (CGFloat)doricFlowLayoutItemHeightAtIndexPath:(NSIndexPath *)indexPath {
     NSUInteger position = (NSUInteger) indexPath.row;
     NSValue *value = self.itemSizeInfo[@(position)];
     if (value) {
-        return [value CGSizeValue];
+        return [value CGSizeValue].height;
     } else {
-        return CGSizeMake(100, 100);
+        return 100;
     }
 }
 
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
-    return 0;
+- (CGFloat)doricFlowLayoutColumnSpace {
+    return self.columnSpace;
 }
 
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
-    return 0;
+- (CGFloat)doricFlowLayoutRowSpace {
+    return self.rowSpace;
 }
+
+- (NSInteger)doricFlowLayoutColumnCount {
+    return self.columnCount;
+}
+
 @end

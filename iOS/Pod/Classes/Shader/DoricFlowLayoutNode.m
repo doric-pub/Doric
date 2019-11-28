@@ -2,22 +2,22 @@
 // Created by pengfei.zhou on 2019/11/28.
 //
 
-#import "DoricCollectionNode.h"
-#import "DoricCollectionItemNode.h"
+#import "DoricFlowLayoutNode.h"
+#import "DoricFlowLayoutItemNode.h"
 #import "DoricExtensions.h"
 #import <JavaScriptCore/JavaScriptCore.h>
 
-@interface DoricCollectionViewCell : UICollectionViewCell
-@property(nonatomic, strong) DoricCollectionItemNode *viewNode;
+@interface DoricFlowLayoutViewCell : UICollectionViewCell
+@property(nonatomic, strong) DoricFlowLayoutItemNode *viewNode;
 @end
 
-@implementation DoricCollectionViewCell
+@implementation DoricFlowLayoutViewCell
 @end
 
-@interface DoricCollectionView : UICollectionView
+@interface DoricFlowLayoutView : UICollectionView
 @end
 
-@implementation DoricCollectionView
+@implementation DoricFlowLayoutView
 - (CGSize)sizeThatFits:(CGSize)size {
     if (self.subviews.count > 0) {
         CGFloat width = size.width;
@@ -38,17 +38,18 @@
 }
 @end
 
-@interface DoricCollectionNode () <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface DoricFlowLayoutNode () <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property(nonatomic, strong) NSMutableDictionary <NSNumber *, NSString *> *itemViewIds;
 @property(nonatomic, strong) NSMutableDictionary <NSNumber *, NSValue *> *itemSizeInfo;
 @property(nonatomic, assign) NSUInteger itemCount;
 @property(nonatomic, assign) NSUInteger batchCount;
 @end
 
-@implementation DoricCollectionNode
+@implementation DoricFlowLayoutNode
 - (instancetype)initWithContext:(DoricContext *)doricContext {
     if (self = [super initWithContext:doricContext]) {
         _itemViewIds = [NSMutableDictionary new];
+        _itemSizeInfo = [NSMutableDictionary new];
         _batchCount = 15;
     }
     return self;
@@ -58,14 +59,14 @@
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
     [flowLayout setScrollDirection:UICollectionViewScrollDirectionVertical];
 
-    return [[[DoricCollectionView alloc] initWithFrame:CGRectZero
+    return [[[DoricFlowLayoutView alloc] initWithFrame:CGRectZero
                                   collectionViewLayout:flowLayout]
             also:^(UICollectionView *it) {
                 it.backgroundColor = [UIColor whiteColor];
                 it.pagingEnabled = YES;
                 it.delegate = self;
                 it.dataSource = self;
-                [it registerClass:[DoricCollectionViewCell class] forCellWithReuseIdentifier:@"doricCell"];
+                [it registerClass:[DoricFlowLayoutViewCell class] forCellWithReuseIdentifier:@"doricCell"];
             }];
 }
 
@@ -106,8 +107,8 @@
     __block DoricViewNode *ret = nil;
     [self.doricContext.driver ensureSyncInMainQueue:^{
         for (UICollectionViewCell *collectionViewCell in self.view.visibleCells) {
-            if ([collectionViewCell isKindOfClass:[DoricCollectionViewCell class]]) {
-                DoricCollectionItemNode *node = ((DoricCollectionViewCell *) collectionViewCell).viewNode;
+            if ([collectionViewCell isKindOfClass:[DoricFlowLayoutViewCell class]]) {
+                DoricFlowLayoutItemNode *node = ((DoricFlowLayoutViewCell *) collectionViewCell).viewNode;
                 if ([viewId isEqualToString:node.viewId]) {
                     ret = node;
                     break;
@@ -159,14 +160,14 @@
     NSUInteger position = (NSUInteger) indexPath.row;
     NSDictionary *model = [self itemModelAt:position];
     NSDictionary *props = model[@"props"];
-    DoricCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"doricCell" forIndexPath:indexPath];
+    DoricFlowLayoutViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"doricCell" forIndexPath:indexPath];
     if (!cell.viewNode) {
-        DoricCollectionItemNode *itemNode = [[DoricCollectionItemNode alloc] initWithContext:self.doricContext];
+        DoricFlowLayoutItemNode *itemNode = [[DoricFlowLayoutItemNode alloc] initWithContext:self.doricContext];
         [itemNode initWithSuperNode:self];
         cell.viewNode = itemNode;
         [cell.contentView addSubview:itemNode.view];
     }
-    DoricCollectionItemNode *node = cell.viewNode;
+    DoricFlowLayoutItemNode *node = cell.viewNode;
     node.viewId = model[@"id"];
     [node blend:props];
     CGSize size = [node.view measureSize:CGSizeMake(collectionView.width, collectionView.height)];
@@ -185,4 +186,11 @@
     }
 }
 
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
+    return 0;
+}
+
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
+    return 0;
+}
 @end

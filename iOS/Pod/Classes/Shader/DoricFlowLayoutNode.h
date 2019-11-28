@@ -5,5 +5,5 @@
 #import <Foundation/Foundation.h>
 #import "DoricSuperNode.h"
 
-@interface DoricCollectionNode : DoricSuperNode<UICollectionView *>
+@interface DoricFlowLayoutNode : DoricSuperNode<UICollectionView *>
 @end

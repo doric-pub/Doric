@@ -2,19 +2,19 @@
 // Created by pengfei.zhou on 2019/11/28.
 //
 
-#import "DoricCollectionItemNode.h"
+#import "DoricFlowLayoutItemNode.h"
 
-@interface DoricCollectionItemView : DoricStackView
+@interface DoricFlowLayoutItemView : DoricStackView
 @end
 
-@implementation DoricCollectionItemView
+@implementation DoricFlowLayoutItemView
 @end
 
-@interface DoricCollectionItemNode ()
+@interface DoricFlowLayoutItemNode ()
 @end
 
 
-@implementation DoricCollectionItemNode
+@implementation DoricFlowLayoutItemNode
 - (instancetype)initWithContext:(DoricContext *)doricContext {
     if (self = [super initWithContext:doricContext]) {
         self.reusable = YES;
@@ -28,6 +28,6 @@
 }
 
 - (DoricStackView *)build {
-    return [DoricCollectionItemView new];
+    return [DoricFlowLayoutItemView new];
 }
 @end

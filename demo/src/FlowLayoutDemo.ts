@@ -1,4 +1,4 @@
-import { Group, Panel, collection, layoutConfig, CollectionItem, } from "doric";
+import { Group, Panel, flowlayout, layoutConfig, FlowLayoutItem } from "doric";
 import { colors, label } from "./utils";
 
 const imageUrls = [
@@ -13,16 +13,16 @@ const imageUrls = [
     'https://misc.aotu.io/ONE-SUNDAY/SteamEngine.png',
 ]
 @Entry
-class CollectionDemo extends Panel {
+class FlowDemo extends Panel {
     build(rootView: Group): void {
-        collection({
+        flowlayout({
             layoutConfig: layoutConfig().atmost(),
-            itemCount: 50,
+            itemCount: 500,
             renderItem: (idx) => {
-                return new CollectionItem().apply({
+                return new FlowLayoutItem().apply({
                     bgColor: colors[idx % colors.length],
-                    width: 70 + idx,
-                    height: 70 + idx,
+                    width: 200,
+                    height: 50 + idx * 10,
                 })
             },
         })

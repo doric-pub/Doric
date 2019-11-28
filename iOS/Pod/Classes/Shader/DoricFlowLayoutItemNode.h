@@ -6,5 +6,5 @@
 #import "DoricStackNode.h"
 
 
-@interface DoricCollectionItemNode : DoricStackNode
+@interface DoricFlowLayoutItemNode : DoricStackNode
 @end

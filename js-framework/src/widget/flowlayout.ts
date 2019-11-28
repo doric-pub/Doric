@@ -17,31 +17,36 @@ import { Stack } from './layouts'
 import { Property, IView, Superview, View } from '../ui/view'
 import { layoutConfig } from '../util/index.util'
 
-export class CollectionItem extends Stack {
+export class FlowLayoutItem extends Stack {
     /**
     * Set to reuse native view
     */
     @Property
     identifier?: string
 }
-export interface ICollection extends IView {
-    renderItem: (index: number) => CollectionItem
+export interface IFlowLayout extends IView {
+    renderItem: (index: number) => FlowLayoutItem
     itemCount: number
     batchCount?: number
+    column?: number
 }
 
-export class Collection extends Superview implements ICollection {
-    private cachedViews: Map<string, CollectionItem> = new Map
+export class FlowLayout extends Superview implements IFlowLayout {
+    private cachedViews: Map<string, FlowLayoutItem> = new Map
     private ignoreDirtyCallOnce = false
+
     allSubviews() {
         return this.cachedViews.values()
     }
 
     @Property
+    column = 1
+
+    @Property
     itemCount = 0
 
     @Property
-    renderItem!: (index: number) => CollectionItem
+    renderItem!: (index: number) => FlowLayoutItem
 
     @Property
     batchCount = 15
@@ -78,16 +83,16 @@ export class Collection extends Superview implements ICollection {
     }
 }
 
-export function collection(config: ICollection) {
-    const ret = new Collection
+export function flowlayout(config: IFlowLayout) {
+    const ret = new FlowLayout
     for (let key in config) {
         Reflect.set(ret, key, Reflect.get(config, key, config), ret)
     }
     return ret
 }
 
-export function collectionItem(item: View) {
-    return (new CollectionItem).also((it) => {
+export function flowItem(item: View) {
+    return (new FlowLayoutItem).also((it) => {
         it.layoutConfig = layoutConfig().wrap()
         it.addChild(item)
     })

@@ -22,6 +22,7 @@ import com.github.pengfeizhou.jscore.JSONBuilder;
 
 import org.json.JSONObject;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +31,7 @@ import pub.doric.navbar.IDoricNavBar;
 import pub.doric.navigator.IDoricNavigator;
 import pub.doric.plugin.DoricJavaPlugin;
 import pub.doric.shader.RootNode;
+import pub.doric.shader.ViewNode;
 import pub.doric.utils.DoricConstant;
 import pub.doric.utils.DoricMetaInfo;
 
@@ -47,6 +49,23 @@ public class DoricContext {
     private String script;
     private JSONObject initParams;
     private IDoricDriver doricDriver;
+    private final Map<String, ViewNode> mHeadNodes = new HashMap<>();
+
+    public Collection<ViewNode> allHeadNodes() {
+        return mHeadNodes.values();
+    }
+
+    public void addHeadNode(ViewNode viewNode) {
+        mHeadNodes.put(viewNode.getId(), viewNode);
+    }
+
+    public void removeHeadNode(ViewNode viewNode) {
+        mHeadNodes.remove(viewNode.getId());
+    }
+
+    public ViewNode targetViewNode(String id) {
+        return mHeadNodes.get(id);
+    }
 
     protected DoricContext(Context context, String contextId, String source) {
         this.mContext = context;

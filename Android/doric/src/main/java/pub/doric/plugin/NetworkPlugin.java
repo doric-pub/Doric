@@ -58,9 +58,8 @@ public class NetworkPlugin extends DoricJavaPlugin {
     }
 
     @DoricMethod
-    public void request(JSDecoder decoder, final DoricPromise promise) {
+    public void request(JSObject requestVal, final DoricPromise promise) {
         try {
-            JSObject requestVal = decoder.decode().asObject();
             String url = requestVal.getProperty("url").asString().value();
             String method = requestVal.getProperty("method").asString().value();
             JSValue headerVal = requestVal.getProperty("headers");

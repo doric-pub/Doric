@@ -121,6 +121,9 @@ export abstract class Panel {
     private retrospectView(ids: string[]): View | undefined {
         return ids.reduce((acc: View | undefined, cur) => {
             if (acc === undefined) {
+                if (cur === this.__root__.viewId) {
+                    return this.__root__
+                }
                 return this.headviews.get(cur)
             } else {
                 if (Reflect.has(acc, "subviewById")) {

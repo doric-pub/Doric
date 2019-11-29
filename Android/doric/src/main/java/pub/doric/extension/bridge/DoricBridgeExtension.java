@@ -58,6 +58,10 @@ public class DoricBridgeExtension {
             return new JavaValue(false);
         }
         DoricMethod doricMethod = method.getAnnotation(DoricMethod.class);
+        if (doricMethod == null) {
+            DoricLog.e("Cannot find DoricMethod annotation in class:%s,method:%s", module, methodName);
+            return new JavaValue(false);
+        }
         Callable<JavaValue> callable = new Callable<JavaValue>() {
             @Override
             public JavaValue call() throws Exception {

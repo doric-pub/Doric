@@ -49,7 +49,9 @@ export abstract class Panel {
     addHeadView(v: View) {
         this.headviews.set(v.viewId, v)
     }
-
+    allHeadViews() {
+        return this.headviews.values()
+    }
     removeHeadView(v: View | string) {
         if (v instanceof View) {
             this.headviews.delete(v.viewId)

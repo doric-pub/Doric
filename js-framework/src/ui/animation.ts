@@ -1,3 +1,8 @@
+import { Panel } from "./panel"
+import { takeLet } from "../pattern/candies"
+import { O_TRUNC } from "constants"
+import { modal } from "../native/modal"
+
 /*
  * Copyright [2019] [Doric.Pub]
  *
@@ -148,6 +153,41 @@ export class AnimationSet {
                     s.addParent(p)
                 })
                 s.built = true
+            })
+        })
+    }
+}
+
+export function animator(panel: Panel) {
+    return (args: {
+        animations: () => void,
+        duration: number,
+        complete?: () => void
+    }) => {
+        takeLet(panel.context.shader)(it => {
+            it.animator().then(() => {
+                args.animations()
+                return takeLet(panel.getRootView())(root => {
+                    if (root.isDirty()) {
+                        const model = root.toModel();
+                        (model as any).duration = args.duration
+                        const ret = it.animateRender(model)
+                        root.clean()
+                        return ret
+                    }
+                    for (let v of panel.allHeadViews()) {
+                        if (v.isDirty()) {
+                            const model = v.toModel()
+                            const ret = it.animateRender(model)
+                            it.clean()
+                            return ret
+                        }
+                    }
+                })
+            }).then(() => {
+                if (args.complete) {
+                    args.complete()
+                }
             })
         })
     }

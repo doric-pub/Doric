@@ -7,43 +7,43 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import cn.bingoogolapple.qrcode.core.QRCodeView;
-import cn.bingoogolapple.qrcode.zxing.ZXingView;
+import cn.bingoogolapple.qrcode.zbar.ZBarView;
 import pub.doric.devkit.DevKit;
 import pub.doric.devkit.DoricDev;
 import pub.doric.devkit.R;
 
 public class ScanQRCodeActivity extends AppCompatActivity implements QRCodeView.Delegate {
 
-    private ZXingView mZXingView;
+    private ZBarView mZbarView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.layout_scan_qrcode);
-        mZXingView = findViewById(R.id.zxingview);
-        mZXingView.setDelegate(this);
+        mZbarView = findViewById(R.id.zbar_view);
+        mZbarView.setDelegate(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        mZXingView.startCamera();
-        mZXingView.startSpotAndShowRect();
+        mZbarView.startCamera();
+        mZbarView.startSpotAndShowRect();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
 
-        mZXingView.stopCamera();
+        mZbarView.stopCamera();
         super.onStop();
     }
 
     @Override
     protected void onDestroy() {
-        mZXingView.onDestroy();
+        mZbarView.onDestroy();
         super.onDestroy();
     }
 
@@ -58,16 +58,16 @@ public class ScanQRCodeActivity extends AppCompatActivity implements QRCodeView.
 
     @Override
     public void onCameraAmbientBrightnessChanged(boolean isDark) {
-        String tipText = mZXingView.getScanBoxView().getTipText();
+        String tipText = mZbarView.getScanBoxView().getTipText();
         String ambientBrightnessTip = "\n环境过暗，请打开闪光灯";
         if (isDark) {
             if (!tipText.contains(ambientBrightnessTip)) {
-                mZXingView.getScanBoxView().setTipText(tipText + ambientBrightnessTip);
+                mZbarView.getScanBoxView().setTipText(tipText + ambientBrightnessTip);
             }
         } else {
             if (tipText.contains(ambientBrightnessTip)) {
                 tipText = tipText.substring(0, tipText.indexOf(ambientBrightnessTip));
-                mZXingView.getScanBoxView().setTipText(tipText);
+                mZbarView.getScanBoxView().setTipText(tipText);
             }
         }
     }

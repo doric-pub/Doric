@@ -15,7 +15,10 @@
  */
 import { Panel } from "../ui/panel"
 import { takeLet } from "../pattern/candies"
-
+/**
+ * Only supports x,y,width,height,corner(just for four corners),rotation,bgColor,
+ * @param panel @see Panel
+ */
 export function animate(panel: Panel) {
     return (args: {
         animations: () => void,

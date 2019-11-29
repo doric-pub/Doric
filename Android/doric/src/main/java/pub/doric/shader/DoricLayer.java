@@ -151,4 +151,11 @@ public class DoricLayer extends FrameLayout {
         };
     }
 
+    public float getCornerRadius() {
+        if (mCornerRadii != null) {
+            return mCornerRadii[0];
+        }
+        return 0;
+    }
+
 }

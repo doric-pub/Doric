@@ -42,6 +42,30 @@ export interface IView {
     layoutConfig?: LayoutConfig
     onClick?: Function
     identifier?: string
+
+    /**++++++++++transform++++++++++*/
+    translationX?: number
+
+    translationY?: number
+
+    scaleX?: number
+
+    scaleY?: number
+    /**
+     * float [0,..1]
+     */
+    pivotX?: number
+    /**
+     * float [0,..1]
+     */
+    pivotY?: number
+
+    rotation?: number
+
+    rotationX?: number
+
+    rotationY?: number
+    /**----------transform----------*/
 }
 
 
@@ -60,9 +84,6 @@ export abstract class View implements Modeling, IView {
 
     @Property
     bgColor?: Color | GradientColor
-
-    @Property
-    rotation?: number
 
     @Property
     corners?: number | { leftTop?: number; rightTop?: number; leftBottom?: number; rightBottom?: number }
@@ -288,6 +309,35 @@ export abstract class View implements Modeling, IView {
     getRotation(context: BridgeContext) {
         return this.nativeChannel(context, 'getRotation')() as Promise<number>
     }
+
+    /**++++++++++transform++++++++++*/
+    @Property
+    translationX?: number
+
+    @Property
+    translationY?: number
+
+    @Property
+    scaleX?: number
+
+    @Property
+    scaleY?: number
+
+    @Property
+    pivotX?: number
+
+    @Property
+    pivotY?: number
+
+    @Property
+    rotation?: number
+
+    @Property
+    rotationX?: number
+
+    @Property
+    rotationY?: number
+    /**----------transform----------*/
 }
 
 export abstract class Superview extends View {

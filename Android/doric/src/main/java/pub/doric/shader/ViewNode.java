@@ -66,6 +66,12 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         this.mView.setLayoutParams(mLayoutParams);
     }
 
+    public void init(ViewGroup.LayoutParams layoutParams) {
+        this.mLayoutParams = layoutParams;
+        this.mView = build();
+        this.mView.setLayoutParams(layoutParams);
+    }
+
     public void setId(String id) {
         this.mId = id;
     }
@@ -265,6 +271,61 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     protected void setLayoutConfig(JSObject layoutConfig) {
         if (mSuperNode != null) {
             mSuperNode.blendSubLayoutConfig(this, layoutConfig);
+        } else {
+            blendLayoutConfig(layoutConfig);
+        }
+    }
+
+    private void blendLayoutConfig(JSObject jsObject) {
+        JSValue margin = jsObject.getProperty("margin");
+        JSValue widthSpec = jsObject.getProperty("widthSpec");
+        JSValue heightSpec = jsObject.getProperty("heightSpec");
+        ViewGroup.LayoutParams layoutParams = getLayoutParams();
+        if (widthSpec.isNumber()) {
+            switch (widthSpec.asNumber().toInt()) {
+                case 1:
+                    layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    break;
+                case 2:
+                    layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                    break;
+                default:
+                    break;
+            }
+        }
+        if (heightSpec.isNumber()) {
+            switch (heightSpec.asNumber().toInt()) {
+                case 1:
+                    layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    break;
+                case 2:
+                    layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                    break;
+                default:
+                    break;
+            }
+        }
+        if (margin.isObject() && layoutParams instanceof ViewGroup.MarginLayoutParams) {
+            JSValue topVal = margin.asObject().getProperty("top");
+            if (topVal.isNumber()) {
+                ((ViewGroup.MarginLayoutParams) layoutParams).topMargin = DoricUtils.dp2px(topVal.asNumber().toFloat());
+            }
+            JSValue leftVal = margin.asObject().getProperty("left");
+            if (leftVal.isNumber()) {
+                ((ViewGroup.MarginLayoutParams) layoutParams).leftMargin = DoricUtils.dp2px(leftVal.asNumber().toFloat());
+            }
+            JSValue rightVal = margin.asObject().getProperty("right");
+            if (rightVal.isNumber()) {
+                ((ViewGroup.MarginLayoutParams) layoutParams).rightMargin = DoricUtils.dp2px(rightVal.asNumber().toFloat());
+            }
+            JSValue bottomVal = margin.asObject().getProperty("bottom");
+            if (bottomVal.isNumber()) {
+                ((ViewGroup.MarginLayoutParams) layoutParams).bottomMargin = DoricUtils.dp2px(bottomVal.asNumber().toFloat());
+            }
+        }
+        JSValue jsValue = jsObject.getProperty("alignment");
+        if (jsValue.isNumber() && layoutParams instanceof FrameLayout.LayoutParams) {
+            ((FrameLayout.LayoutParams) layoutParams).gravity = jsValue.asNumber().toInt();
         }
     }
 

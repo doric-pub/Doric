@@ -21,17 +21,15 @@ class PopoverDemo extends Panel {
                         textColor: Color.WHITE,
                         layoutConfig: layoutConfig().exactly().a(Gravity.Center),
                         text: "This is PopOver Window",
-                        onClick: () => {
-                            modal(context).toast('Dismissed after 3 seconds')
-                            setTimeout(() => {
-                                popover(context).dismiss()
-                            }, 3000)
-                        },
                     }).also(v => {
                         let idx = 0
                         v.onClick = () => {
                             v.bgColor = colors[(++idx) % colors.length]
                         }
+                        modal(context).toast('Dismissed after 3 seconds')
+                        setTimeout(() => {
+                            popover(context).dismiss()
+                        }, 3000)
                     }))
                 }
             } as IText),

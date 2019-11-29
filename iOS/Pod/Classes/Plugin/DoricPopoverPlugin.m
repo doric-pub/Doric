@@ -33,7 +33,7 @@
                 [it initWithSuperNode:nil];
                 it.view.layoutConfig = [DoricLayoutConfig new];
                 [self.fullScreenView addSubview:it.view];
-                [self.doricContext.headNodes addObject:it];
+                self.doricContext.headNodes[viewId] = it;
             }];
         }
         [viewNode blend:params[@"props"]];
@@ -55,7 +55,7 @@
 }
 
 - (void)dismissViewNode:(DoricViewNode *)node {
-    [self.doricContext.headNodes removeObject:node];
+    [self.doricContext.headNodes removeObjectForKey:node.viewId];
     [node.view removeFromSuperview];
     if (self.doricContext.headNodes.count == 0) {
         self.fullScreenView.hidden = YES;
@@ -63,7 +63,7 @@
 }
 
 - (void)dismissPopover {
-    for (DoricViewNode *node in self.doricContext.headNodes) {
+    for (DoricViewNode *node in self.doricContext.headNodes.allValues) {
         [self dismissViewNode:node];
     }
 }

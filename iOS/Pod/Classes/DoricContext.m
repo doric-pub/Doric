@@ -33,7 +33,7 @@
         _driver = [DoricDriver instance];
         _pluginInstanceMap = [NSMutableDictionary new];
         [[DoricContextManager instance] createContext:self script:script source:source];
-        _headNodes = [NSMutableSet new];
+        _headNodes = [NSMutableDictionary new];
         DoricRootNode *rootNode = [[DoricRootNode alloc] initWithContext:self];
         _rootNode = rootNode;
         _script = script;
@@ -48,12 +48,7 @@
     if ([self.rootNode.viewId isEqualToString:viewId]) {
         return self.rootNode;
     } else {
-        for (DoricViewNode *node in self.headNodes) {
-            if ([viewId isEqualToString:node.viewId]) {
-                return node;
-            }
-        }
-        return nil;
+        return self.headNodes[viewId];
     }
 }
 

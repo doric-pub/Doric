@@ -16,8 +16,11 @@
 package pub.doric.shader;
 
 import android.animation.Animator;
+import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -169,7 +172,17 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 }
                 break;
             case "bgColor":
-                view.setBackgroundColor(prop.asNumber().toInt());
+                if (isAnimating()) {
+                    ObjectAnimator animator = ObjectAnimator.ofInt(
+                            this,
+                            name,
+                            getBgColor(),
+                            prop.asNumber().toInt());
+                    animator.setEvaluator(new ArgbEvaluator());
+                    addAnimator(animator);
+                } else {
+                    setBgColor(prop.asNumber().toInt());
+                }
                 break;
             case "onClick":
                 final String functionId = prop.asString().value();
@@ -425,4 +438,16 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         return 0;
     }
 
+    @DoricMethod
+    public int getBgColor() {
+        if (mView.getBackground() instanceof ColorDrawable) {
+            return ((ColorDrawable) mView.getBackground()).getColor();
+        }
+        return Color.TRANSPARENT;
+    }
+
+    @DoricMethod
+    public void setBgColor(int color) {
+        mView.setBackgroundColor(color);
+    }
 }

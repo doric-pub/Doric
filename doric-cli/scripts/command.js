@@ -17,7 +17,11 @@ function fromDir(startPath, filter) {
             fromDir(filename, filter);
         }
         else if (filename.indexOf(filter) >= 0) {
-            doMerge(startPath, files[i])
+            try {
+                doMerge(startPath, files[i])
+            } catch (e) {
+                console.log(e)
+            }
         };
     };
 };

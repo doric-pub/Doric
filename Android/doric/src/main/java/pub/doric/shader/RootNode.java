@@ -53,8 +53,4 @@ public class RootNode extends StackNode {
     public ViewGroup.LayoutParams getLayoutParams() {
         return mView.getLayoutParams();
     }
-
-    public void render(JSObject props) {
-        blend(props);
-    }
 }

@@ -23,6 +23,7 @@ import pub.doric.loader.IDoricJSLoader;
 import pub.doric.plugin.NavBarPlugin;
 import pub.doric.plugin.NavigatorPlugin;
 import pub.doric.plugin.NetworkPlugin;
+import pub.doric.plugin.PopoverPlugin;
 import pub.doric.plugin.ShaderPlugin;
 import pub.doric.plugin.StoragePlugin;
 import pub.doric.refresh.RefreshableNode;
@@ -87,6 +88,7 @@ public class DoricRegistry {
         this.registerNativePlugin(StoragePlugin.class);
         this.registerNativePlugin(NavigatorPlugin.class);
         this.registerNativePlugin(NavBarPlugin.class);
+        this.registerNativePlugin(PopoverPlugin.class);
 
         this.registerViewNode(RootNode.class);
         this.registerViewNode(TextNode.class);

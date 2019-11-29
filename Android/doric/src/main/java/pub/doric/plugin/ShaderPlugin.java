@@ -15,6 +15,8 @@
  */
 package pub.doric.plugin;
 
+import android.text.TextUtils;
+
 import pub.doric.DoricContext;
 import pub.doric.async.AsyncResult;
 import pub.doric.extension.bridge.DoricMethod;
@@ -55,9 +57,17 @@ public class ShaderPlugin extends DoricJavaPlugin {
             getDoricContext().getDriver().asyncCall(new Callable<Object>() {
                 @Override
                 public Object call() throws Exception {
+                    String viewId = jsObject.getProperty("id").asString().value();
                     RootNode rootNode = getDoricContext().getRootNode();
-                    rootNode.setId(jsObject.getProperty("id").asString().value());
-                    rootNode.render(jsObject.getProperty("props").asObject());
+                    if (TextUtils.isEmpty(rootNode.getId())) {
+                        rootNode.setId(viewId);
+                        rootNode.blend(jsObject.getProperty("props").asObject());
+                    } else {
+                        ViewNode viewNode = getDoricContext().targetViewNode(viewId);
+                        if (viewNode != null) {
+                            viewNode.blend(jsObject.getProperty("props").asObject());
+                        }
+                    }
                     return null;
                 }
             }, ThreadMode.UI).setCallback(new AsyncResult.Callback<Object>() {
@@ -93,7 +103,7 @@ public class ShaderPlugin extends DoricJavaPlugin {
             ViewNode viewNode = null;
             for (JSValue value : viewIds) {
                 if (viewNode == null) {
-                    viewNode = getDoricContext().getRootNode();
+                    viewNode = getDoricContext().targetViewNode(value.asString().value());
                 } else {
                     if (value.isString() && viewNode instanceof SuperNode) {
                         String viewId = value.asString().value();

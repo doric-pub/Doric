@@ -64,6 +64,9 @@ public class DoricContext {
     }
 
     public ViewNode targetViewNode(String id) {
+        if (id.equals(mRootNode.getId())) {
+            return mRootNode;
+        }
         return mHeadNodes.get(id);
     }
 

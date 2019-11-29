@@ -7,7 +7,6 @@
 #import "Doric.h"
 
 @interface DoricPopoverPlugin ()
-@property(nonatomic, strong) DoricViewNode *popoverNode;
 @property(nonatomic, strong) UIView *fullScreenView;
 @end
 
@@ -21,43 +20,51 @@
                 it.height = superView.height;
                 it.top = it.left = 0;
                 [superView addSubview:it];
-                UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissPopover)];
-                [it addGestureRecognizer:gestureRecognizer];
             }];
         }
         [superView bringSubviewToFront:self.fullScreenView];
-        if (self.popoverNode) {
-            [self dismissPopover];
-        }
         self.fullScreenView.hidden = NO;
         NSString *viewId = params[@"id"];
         NSString *type = params[@"type"];
-        self.popoverNode = [[DoricViewNode create:self.doricContext withType:type] also:^(DoricViewNode *it) {
-            it.viewId = viewId;
-            [it initWithSuperNode:nil];
-            it.view.layoutConfig = [DoricLayoutConfig new];
-            [it blend:params[@"props"]];
-            [self.fullScreenView addSubview:it.view];
-            [self.doricContext.headNodes addObject:it];
-        }];
+        DoricViewNode *viewNode = [self.doricContext targetViewNode:viewId];
+        if (!viewNode) {
+            viewNode = [[DoricViewNode create:self.doricContext withType:type] also:^(DoricViewNode *it) {
+                it.viewId = viewId;
+                [it initWithSuperNode:nil];
+                it.view.layoutConfig = [DoricLayoutConfig new];
+                [self.fullScreenView addSubview:it.view];
+                [self.doricContext.headNodes addObject:it];
+            }];
+        }
+        [viewNode blend:params[@"props"]];
         [promise resolve:nil];
     });
 }
 
 - (void)dismiss:(NSDictionary *)params withPromise:(DoricPromise *)promise {
+    NSString *viewId = params[@"id"];
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self dismissPopover];
+        if (viewId) {
+            DoricViewNode *viewNode = [self.doricContext targetViewNode:viewId];
+            [self dismissViewNode:viewNode];
+        } else {
+            [self dismissPopover];
+        }
         [promise resolve:nil];
     });
 }
 
+- (void)dismissViewNode:(DoricViewNode *)node {
+    [self.doricContext.headNodes removeObject:node];
+    [node.view removeFromSuperview];
+    if (self.doricContext.headNodes.count == 0) {
+        self.fullScreenView.hidden = YES;
+    }
+}
+
 - (void)dismissPopover {
-    [self.doricContext.headNodes removeObject:self.popoverNode];
-    self.popoverNode.view.hidden = YES;
-    self.fullScreenView.hidden = YES;
-    [self.popoverNode.view.subviews forEach:^(__kindof UIView *obj) {
-        [obj removeFromSuperview];
-    }];
-    self.popoverNode = nil;
+    for (DoricViewNode *node in self.doricContext.headNodes) {
+        [self dismissViewNode:node];
+    }
 }
 @end

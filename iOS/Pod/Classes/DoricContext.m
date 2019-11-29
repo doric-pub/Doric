@@ -36,13 +36,25 @@
         _headNodes = [NSMutableSet new];
         DoricRootNode *rootNode = [[DoricRootNode alloc] initWithContext:self];
         _rootNode = rootNode;
-        [self.headNodes addObject:rootNode];
         _script = script;
         _source = source;
         _initialParams = [@{@"width": @(0), @"height": @(0)} mutableCopy];
         [self callEntity:DORIC_ENTITY_CREATE, nil];
     }
     return self;
+}
+
+- (DoricViewNode *)targetViewNode:(NSString *)viewId {
+    if ([self.rootNode.viewId isEqualToString:viewId]) {
+        return self.rootNode;
+    } else {
+        for (DoricViewNode *node in self.headNodes) {
+            if ([viewId isEqualToString:node.viewId]) {
+                return node;
+            }
+        }
+        return nil;
+    }
 }
 
 - (void)dealloc {

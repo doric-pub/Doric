@@ -58,15 +58,16 @@ export abstract class Panel {
         }
     }
 
+    clearHeadViews() {
+        this.headviews.clear()
+    }
+
     getRootView() {
         return this.__root__
     }
 
     getInitData() {
         return this.__data__
-    }
-    constructor() {
-        this.addHeadView(this.__root__)
     }
 
     @NativeCall
@@ -137,6 +138,7 @@ export abstract class Panel {
     }
 
     private hookBeforeNativeCall() {
+        this.__root__.clean()
         for (let v of this.headviews.values()) {
             v.clean()
         }
@@ -145,6 +147,10 @@ export abstract class Panel {
     private hookAfterNativeCall() {
         //Here insert a native call to ensure the promise is resolved done.
         nativeEmpty()
+        if (this.__root__.isDirty()) {
+            const model = this.__root__.toModel()
+            this.nativeRender(model)
+        }
         for (let v of this.headviews.values()) {
             if (v.isDirty()) {
                 const model = v.toModel()

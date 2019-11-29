@@ -38,24 +38,15 @@
         __strong typeof(_self) self = _self;
 
         NSString *viewId = argument[@"id"];
-        if ([self.doricContext.rootNode.viewId isEqualToString:viewId]) {
-            [self.doricContext.rootNode render:argument[@"props"]];
+
+        if (self.doricContext.rootNode.viewId == nil) {
+            self.doricContext.rootNode.viewId = viewId;
+            [self.doricContext.rootNode blend:argument[@"props"]];
         } else {
-            DoricViewNode *viewNode = [self headViewNodeByViewId:viewId];
+            DoricViewNode *viewNode = [self.doricContext targetViewNode:viewId];
             [viewNode blend:argument[@"props"]];
         }
-
     });
-}
-
-- (DoricViewNode *)headViewNodeByViewId:(NSString *)viewId {
-    for (DoricViewNode *node in self.doricContext.headNodes) {
-        if ([viewId isEqualToString:node.viewId]) {
-            return node;
-        }
-    }
-    self.doricContext.rootNode.viewId = viewId;
-    return self.doricContext.rootNode;
 }
 
 - (id)command:(NSDictionary *)argument withPromise:(DoricPromise *)promise {
@@ -65,7 +56,7 @@
     DoricViewNode *viewNode = nil;
     for (NSString *viewId in viewIds) {
         if (!viewNode) {
-            viewNode = [self headViewNodeByViewId:viewId];
+            viewNode = [self.doricContext targetViewNode:viewId];
         } else {
             if ([viewNode isKindOfClass:[DoricSuperNode class]]) {
                 viewNode = [((DoricSuperNode *) viewNode) subNodeWithViewId:viewId];

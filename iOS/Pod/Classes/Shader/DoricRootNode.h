@@ -28,7 +28,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setupRootView:(DoricStackView *)view;
 
-- (void)render:(NSDictionary *)props;
 @end
 
 NS_ASSUME_NONNULL_END

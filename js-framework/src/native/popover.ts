@@ -31,10 +31,14 @@ export function popover(context: BridgeContext) {
             return context.popover.show(view.toModel())
         },
         dismiss: (view: View | undefined = undefined) => {
-            if (panel && view) {
-                panel.removeHeadView(view)
+            if (panel) {
+                if (view) {
+                    panel.removeHeadView(view)
+                } else {
+                    panel.clearHeadViews()
+                }
             }
-            return context.popover.dismiss()
+            return context.popover.dismiss(view ? { id: view.viewId } : undefined)
         },
     }
 }

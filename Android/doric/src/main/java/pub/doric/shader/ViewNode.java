@@ -281,6 +281,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 } else {
                     setScaleX(prop.asNumber().toFloat());
                 }
+                break;
             case "scaleY":
                 if (isAnimating()) {
                     addAnimator(ObjectAnimator.ofFloat(
@@ -291,6 +292,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 } else {
                     setScaleY(prop.asNumber().toFloat());
                 }
+                break;
             case "pivotX":
                 if (isAnimating()) {
                     addAnimator(ObjectAnimator.ofFloat(

@@ -62,6 +62,9 @@ export abstract class View implements Modeling, IView {
     bgColor?: Color | GradientColor
 
     @Property
+    rotation?: number
+
+    @Property
     corners?: number | { leftTop?: number; rightTop?: number; leftBottom?: number; rightBottom?: number }
 
     @Property

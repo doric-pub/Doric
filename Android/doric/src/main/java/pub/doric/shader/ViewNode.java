@@ -184,6 +184,17 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                     setBgColor(prop.asNumber().toInt());
                 }
                 break;
+            case "rotation":
+                if (isAnimating()) {
+                    addAnimator(ObjectAnimator.ofFloat(
+                            this,
+                            name,
+                            getRotation(),
+                            prop.asNumber().toFloat()));
+                } else {
+                    setRotation(prop.asNumber().toFloat());
+                }
+                break;
             case "onClick":
                 final String functionId = prop.asString().value();
                 view.setOnClickListener(new View.OnClickListener() {
@@ -374,20 +385,19 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     }
 
     @DoricMethod
-    public void setRotation(JSValue jsValue) {
-        float rotation = jsValue.asNumber().toFloat();
-        while (rotation > 1) {
-            rotation = rotation - 1;
+    public void setRotation(float rotation) {
+        while (rotation > 2) {
+            rotation = rotation - 2;
         }
-        while (rotation < -1) {
-            rotation = rotation + 1;
+        while (rotation < -2) {
+            rotation = rotation + 2;
         }
-        getNodeView().setRotation(rotation * 360);
+        getNodeView().setRotation(rotation * 180);
     }
 
     @DoricMethod
     public float getRotation() {
-        return getNodeView().getRotation() / 360;
+        return getNodeView().getRotation() / 180;
     }
 
     @DoricMethod

@@ -71,6 +71,16 @@ class AnimatorDemo extends Panel {
                                 });
                             }
                         }),
+                        thisLabel('Rotation').apply({
+                            onClick: () => {
+                                animate(this)({
+                                    animations: () => {
+                                        view.rotation = view.rotation || 0 + 0.5
+                                    },
+                                    duration: 3000,
+                                });
+                            }
+                        }),
                     ]).apply({ space: 10 } as IHLayout),
                 ]
             ).apply({ space: 10 } as IVLayout),

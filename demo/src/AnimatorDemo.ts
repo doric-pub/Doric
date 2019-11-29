@@ -19,7 +19,7 @@ class AnimatorDemo extends Panel {
         const view = box(2)
         let idx = 0
         vlayout([
-            title("Animator Demo"),
+            title("Animator zDemo"),
             vlayout(
                 [
                     hlayout([
@@ -28,8 +28,11 @@ class AnimatorDemo extends Panel {
                                 animate(this)({
                                     animations: () => {
                                         view.width = view.height = 20
+                                        view.x = view.y = 0
+                                        view.rotation = 0
+                                        view.bgColor = colors[2]
                                     },
-                                    duration: 3000,
+                                    duration: 1500,
                                 }).then(() => {
                                     modal(context).toast('Fininshed')
                                 }).catch(e => {
@@ -37,15 +40,37 @@ class AnimatorDemo extends Panel {
                                 })
                             }
                         }),
-                    ]),
+                        thisLabel('Move X').apply({
+                            onClick: () => {
+                                animate(this)({
+                                    animations: () => {
+                                        view.x = view.x || 0
+                                        view.x += 100
+                                    },
+                                    duration: 1000,
+                                })
+                            }
+                        }),
+                        thisLabel('Move Y').apply({
+                            onClick: () => {
+                                animate(this)({
+                                    animations: () => {
+                                        view.y = view.y || 0
+                                        view.y += 100
+                                    },
+                                    duration: 1000,
+                                })
+                            }
+                        }),
+                    ]).apply({ space: 10 } as IHLayout),
                     hlayout([
                         thisLabel('Width').apply({
                             onClick: () => {
                                 animate(this)({
                                     animations: () => {
-                                        view.width = 200
+                                        view.width += 100
                                     },
-                                    duration: 3000,
+                                    duration: 1000,
                                 })
                             }
                         }),
@@ -53,9 +78,9 @@ class AnimatorDemo extends Panel {
                             onClick: () => {
                                 animate(this)({
                                     animations: () => {
-                                        view.height = 200
+                                        view.height += 100
                                     },
-                                    duration: 3000,
+                                    duration: 1000,
                                 })
                             }
                         }),
@@ -67,7 +92,7 @@ class AnimatorDemo extends Panel {
                                     animations: () => {
                                         view.bgColor = colors[(idx++) % colors.length]
                                     },
-                                    duration: 3000,
+                                    duration: 1000,
                                 });
                             }
                         }),
@@ -75,9 +100,13 @@ class AnimatorDemo extends Panel {
                             onClick: () => {
                                 animate(this)({
                                     animations: () => {
-                                        view.rotation = view.rotation || 0 + 0.5
+                                        if (view.rotation) {
+                                            view.rotation += 0.5
+                                        } else {
+                                            view.rotation = 0.5
+                                        }
                                     },
-                                    duration: 3000,
+                                    duration: 1000,
                                 });
                             }
                         }),
@@ -85,9 +114,7 @@ class AnimatorDemo extends Panel {
                 ]
             ).apply({ space: 10 } as IVLayout),
             stack([
-                view.also(v => {
-                    v.left = 20
-                })
+                view
             ]).apply({
                 layoutConfig: layoutConfig().atmost(),
                 bgColor: colors[1].alpha(0.3 * 255),

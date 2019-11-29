@@ -386,12 +386,6 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
 
     @DoricMethod
     public void setRotation(float rotation) {
-        while (rotation > 2) {
-            rotation = rotation - 2;
-        }
-        while (rotation < -2) {
-            rotation = rotation + 2;
-        }
         getNodeView().setRotation(rotation * 180);
     }
 

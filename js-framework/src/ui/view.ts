@@ -31,6 +31,9 @@ export interface IView {
     corners?: number | { leftTop?: number; rightTop?: number; leftBottom?: number; rightBottom?: number }
     border?: { width: number; color: Color; }
     shadow?: { color: Color; opacity: number; radius: number; offsetX: number; offsetY: number }
+    /**
+     * float [0,..1]
+     */
     alpha?: number
     hidden?: boolean
     padding?: {

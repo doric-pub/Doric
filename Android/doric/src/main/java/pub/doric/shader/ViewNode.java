@@ -203,6 +203,17 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                             prop.asObject().getProperty("color").asNumber().toInt());
                 }
                 break;
+            case "alpha":
+                if (isAnimating()) {
+                    addAnimator(ObjectAnimator.ofFloat(
+                            this,
+                            name,
+                            getAlpha(),
+                            prop.asNumber().toFloat()));
+                } else {
+                    setAlpha(prop.asNumber().toFloat());
+                }
+                break;
             case "corners":
                 if (prop.isNumber()) {
                     if (isAnimating()) {
@@ -516,6 +527,16 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     @DoricMethod
     public void setBgColor(int color) {
         mView.setBackgroundColor(color);
+    }
+
+    @DoricMethod
+    public void setAlpha(float alpha) {
+        getNodeView().setAlpha(alpha);
+    }
+
+    @DoricMethod
+    public float getAlpha() {
+        return getNodeView().getAlpha();
     }
 
     @DoricMethod

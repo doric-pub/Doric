@@ -58,15 +58,16 @@ export abstract class Panel {
         }
     }
 
+    clearHeadViews() {
+        this.headviews.clear()
+    }
+
     getRootView() {
         return this.__root__
     }
 
     getInitData() {
         return this.__data__
-    }
-    constructor() {
-        this.addHeadView(this.__root__)
     }
 
     @NativeCall
@@ -120,6 +121,9 @@ export abstract class Panel {
     private retrospectView(ids: string[]): View | undefined {
         return ids.reduce((acc: View | undefined, cur) => {
             if (acc === undefined) {
+                if (cur === this.__root__.viewId) {
+                    return this.__root__
+                }
                 return this.headviews.get(cur)
             } else {
                 if (Reflect.has(acc, "subviewById")) {
@@ -138,6 +142,9 @@ export abstract class Panel {
 
     private hookBeforeNativeCall() {
         this.__root__.clean()
+        for (let v of this.headviews.values()) {
+            v.clean()
+        }
     }
 
     private hookAfterNativeCall() {
@@ -146,6 +153,12 @@ export abstract class Panel {
         if (this.__root__.isDirty()) {
             const model = this.__root__.toModel()
             this.nativeRender(model)
+        }
+        for (let v of this.headviews.values()) {
+            if (v.isDirty()) {
+                const model = v.toModel()
+                this.nativeRender(model)
+            }
         }
     }
 

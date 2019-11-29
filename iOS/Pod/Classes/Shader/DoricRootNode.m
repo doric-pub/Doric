@@ -27,9 +27,6 @@
     self.view = view;
 }
 
-- (void)render:(NSDictionary *)props {
-    [self blend:props];
-}
 - (void)requestLayout {
     [self.view setNeedsLayout];
 }

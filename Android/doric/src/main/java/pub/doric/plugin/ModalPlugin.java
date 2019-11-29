@@ -50,9 +50,8 @@ public class ModalPlugin extends DoricJavaPlugin {
     }
 
     @DoricMethod(thread = ThreadMode.UI)
-    public void toast(JSDecoder decoder) {
+    public void toast(JSObject jsObject) {
         try {
-            JSObject jsObject = decoder.decode().asObject();
             String msg = jsObject.getProperty("msg").asString().value();
             JSValue gravityVal = jsObject.getProperty("gravity");
             int gravity = Gravity.BOTTOM;
@@ -77,9 +76,8 @@ public class ModalPlugin extends DoricJavaPlugin {
     }
 
     @DoricMethod(thread = ThreadMode.UI)
-    public void alert(JSDecoder decoder, final DoricPromise promise) {
+    public void alert(JSObject jsObject, final DoricPromise promise) {
         try {
-            JSObject jsObject = decoder.decode().asObject();
             JSValue titleVal = jsObject.getProperty("title");
             JSValue msgVal = jsObject.getProperty("msg");
             JSValue okBtn = jsObject.getProperty("okLabel");
@@ -109,9 +107,8 @@ public class ModalPlugin extends DoricJavaPlugin {
 
 
     @DoricMethod(thread = ThreadMode.UI)
-    public void confirm(JSDecoder decoder, final DoricPromise promise) {
+    public void confirm(JSObject jsObject, final DoricPromise promise) {
         try {
-            JSObject jsObject = decoder.decode().asObject();
             JSValue titleVal = jsObject.getProperty("title");
             JSValue msgVal = jsObject.getProperty("msg");
             JSValue okBtn = jsObject.getProperty("okLabel");
@@ -152,9 +149,8 @@ public class ModalPlugin extends DoricJavaPlugin {
 
 
     @DoricMethod(thread = ThreadMode.UI)
-    public void prompt(JSDecoder decoder, final DoricPromise promise) {
+    public void prompt(JSObject jsObject, final DoricPromise promise) {
         try {
-            JSObject jsObject = decoder.decode().asObject();
             JSValue titleVal = jsObject.getProperty("title");
             JSValue msgVal = jsObject.getProperty("msg");
             JSValue okBtn = jsObject.getProperty("okLabel");

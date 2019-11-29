@@ -24,7 +24,6 @@
 #import "DoricLayouts.h"
 #import "UIView+Doric.h"
 
-NS_ASSUME_NONNULL_BEGIN
 @class DoricSuperNode;
 
 @interface DoricViewNode <V:UIView *> : DoricContextHolder
@@ -55,5 +54,3 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)requestLayout;
 @end
-
-NS_ASSUME_NONNULL_END

@@ -41,9 +41,8 @@ public class StoragePlugin extends DoricJavaPlugin {
     }
 
     @DoricMethod
-    public void setItem(JSDecoder decoder, final DoricPromise promise) {
+    public void setItem(JSObject jsObject, final DoricPromise promise) {
         try {
-            JSObject jsObject = decoder.decode().asObject();
             JSValue zone = jsObject.getProperty("zone");
             String key = jsObject.getProperty("key").asString().value();
             String value = jsObject.getProperty("value").asString().value();
@@ -59,9 +58,8 @@ public class StoragePlugin extends DoricJavaPlugin {
     }
 
     @DoricMethod
-    public void getItem(JSDecoder decoder, final DoricPromise promise) {
+    public void getItem(JSObject jsObject, final DoricPromise promise) {
         try {
-            JSObject jsObject = decoder.decode().asObject();
             JSValue zone = jsObject.getProperty("zone");
             String key = jsObject.getProperty("key").asString().value();
             String prefName = zone.isString() ? PREF_NAME + "_" + zone.asString() : PREF_NAME;
@@ -76,9 +74,8 @@ public class StoragePlugin extends DoricJavaPlugin {
     }
 
     @DoricMethod
-    public void remove(JSDecoder decoder, final DoricPromise promise) {
+    public void remove(JSObject jsObject, final DoricPromise promise) {
         try {
-            JSObject jsObject = decoder.decode().asObject();
             JSValue zone = jsObject.getProperty("zone");
             String key = jsObject.getProperty("key").asString().value();
             String prefName = zone.isString() ? PREF_NAME + "_" + zone.asString() : PREF_NAME;
@@ -93,9 +90,8 @@ public class StoragePlugin extends DoricJavaPlugin {
     }
 
     @DoricMethod
-    public void clear(JSDecoder decoder, final DoricPromise promise) {
+    public void clear(JSObject jsObject, final DoricPromise promise) {
         try {
-            JSObject jsObject = decoder.decode().asObject();
             JSValue zone = jsObject.getProperty("zone");
             if (zone.isString()) {
                 String prefName = PREF_NAME + "_" + zone.asString();

@@ -36,10 +36,16 @@
     __weak typeof(self) _self = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         __strong typeof(_self) self = _self;
-        [self.doricContext.rootNode also:^(DoricRootNode *it) {
-            it.viewId = argument[@"id"];
-            [it render:argument[@"props"]];
-        }];
+
+        NSString *viewId = argument[@"id"];
+
+        if (self.doricContext.rootNode.viewId == nil) {
+            self.doricContext.rootNode.viewId = viewId;
+            [self.doricContext.rootNode blend:argument[@"props"]];
+        } else {
+            DoricViewNode *viewNode = [self.doricContext targetViewNode:viewId];
+            [viewNode blend:argument[@"props"]];
+        }
     });
 }
 
@@ -50,7 +56,7 @@
     DoricViewNode *viewNode = nil;
     for (NSString *viewId in viewIds) {
         if (!viewNode) {
-            viewNode = self.doricContext.rootNode;
+            viewNode = [self.doricContext targetViewNode:viewId];
         } else {
             if ([viewNode isKindOfClass:[DoricSuperNode class]]) {
                 viewNode = [((DoricSuperNode *) viewNode) subNodeWithViewId:viewId];

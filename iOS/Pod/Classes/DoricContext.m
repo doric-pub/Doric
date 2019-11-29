@@ -31,15 +31,25 @@
 - (instancetype)initWithScript:(NSString *)script source:(NSString *)source {
     if (self = [super init]) {
         _driver = [DoricDriver instance];
-        _pluginInstanceMap = [[NSMutableDictionary alloc] init];
+        _pluginInstanceMap = [NSMutableDictionary new];
         [[DoricContextManager instance] createContext:self script:script source:source];
-        _rootNode = [[DoricRootNode alloc] initWithContext:self];
+        _headNodes = [NSMutableDictionary new];
+        DoricRootNode *rootNode = [[DoricRootNode alloc] initWithContext:self];
+        _rootNode = rootNode;
         _script = script;
         _source = source;
         _initialParams = [@{@"width": @(0), @"height": @(0)} mutableCopy];
         [self callEntity:DORIC_ENTITY_CREATE, nil];
     }
     return self;
+}
+
+- (DoricViewNode *)targetViewNode:(NSString *)viewId {
+    if ([self.rootNode.viewId isEqualToString:viewId]) {
+        return self.rootNode;
+    } else {
+        return self.headNodes[viewId];
+    }
 }
 
 - (void)dealloc {

@@ -28,6 +28,7 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 
+import pub.doric.Doric;
 import pub.doric.DoricContext;
 import pub.doric.DoricRegistry;
 import pub.doric.async.AsyncResult;
@@ -184,17 +185,6 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                     setBgColor(prop.asNumber().toInt());
                 }
                 break;
-            case "rotation":
-                if (isAnimating()) {
-                    addAnimator(ObjectAnimator.ofFloat(
-                            this,
-                            name,
-                            getRotation(),
-                            prop.asNumber().toFloat()));
-                } else {
-                    setRotation(prop.asNumber().toFloat());
-                }
-                break;
             case "onClick":
                 final String functionId = prop.asString().value();
                 view.setOnClickListener(new View.OnClickListener() {
@@ -246,6 +236,103 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                             DoricUtils.dp2px(prop.asObject().getProperty("offsetX").asNumber().toFloat()),
                             DoricUtils.dp2px(prop.asObject().getProperty("offsetY").asNumber().toFloat())
                     );
+                }
+                break;
+            case "translationX":
+                if (isAnimating()) {
+                    addAnimator(ObjectAnimator.ofFloat(
+                            this,
+                            name,
+                            getTranslationX(),
+                            prop.asNumber().toFloat()));
+                } else {
+                    setTranslationX(prop.asNumber().toFloat());
+                }
+                break;
+            case "translationY":
+                if (isAnimating()) {
+                    addAnimator(ObjectAnimator.ofFloat(
+                            this,
+                            name,
+                            getTranslationY(),
+                            prop.asNumber().toFloat()));
+                } else {
+                    setTranslationY(prop.asNumber().toFloat());
+                }
+                break;
+            case "scaleX":
+                if (isAnimating()) {
+                    addAnimator(ObjectAnimator.ofFloat(
+                            this,
+                            name,
+                            getScaleX(),
+                            prop.asNumber().toFloat()));
+                } else {
+                    setScaleX(prop.asNumber().toFloat());
+                }
+            case "scaleY":
+                if (isAnimating()) {
+                    addAnimator(ObjectAnimator.ofFloat(
+                            this,
+                            name,
+                            getScaleY(),
+                            prop.asNumber().toFloat()));
+                } else {
+                    setScaleY(prop.asNumber().toFloat());
+                }
+            case "pivotX":
+                if (isAnimating()) {
+                    addAnimator(ObjectAnimator.ofFloat(
+                            this,
+                            name,
+                            getPivotX(),
+                            prop.asNumber().toFloat()));
+                } else {
+                    setPivotX(prop.asNumber().toFloat());
+                }
+                break;
+            case "pivotY":
+                if (isAnimating()) {
+                    addAnimator(ObjectAnimator.ofFloat(
+                            this,
+                            name,
+                            getPivotY(),
+                            prop.asNumber().toFloat()));
+                } else {
+                    setPivotY(prop.asNumber().toFloat());
+                }
+                break;
+            case "rotation":
+                if (isAnimating()) {
+                    addAnimator(ObjectAnimator.ofFloat(
+                            this,
+                            name,
+                            getRotation(),
+                            prop.asNumber().toFloat()));
+                } else {
+                    setRotation(prop.asNumber().toFloat());
+                }
+                break;
+            case "rotationX":
+                if (isAnimating()) {
+                    addAnimator(ObjectAnimator.ofFloat(
+                            this,
+                            name,
+                            getRotationX(),
+                            prop.asNumber().toFloat()));
+                } else {
+                    setRotationX(prop.asNumber().toFloat());
+                }
+                break;
+            case "rotationY":
+                if (isAnimating()) {
+                    addAnimator(ObjectAnimator.ofFloat(
+                            this,
+                            name,
+                            getRotationY(),
+                            prop.asNumber().toFloat()));
+                } else {
+                    setRotationY(prop.asNumber().toFloat());
                 }
                 break;
             default:
@@ -393,16 +480,6 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     }
 
     @DoricMethod
-    public void setRotation(float rotation) {
-        getNodeView().setRotation(rotation * 180);
-    }
-
-    @DoricMethod
-    public float getRotation() {
-        return getNodeView().getRotation() / 180;
-    }
-
-    @DoricMethod
     protected void setWidth(float width) {
         if (mLayoutParams.width >= 0) {
             mLayoutParams.width = DoricUtils.dp2px(width);
@@ -472,5 +549,95 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     @DoricMethod
     public float getCorners() {
         return DoricUtils.px2dp((int) requireDoricLayer().getCornerRadius());
+    }
+
+    @DoricMethod
+    public void setTranslationX(float v) {
+        getNodeView().setTranslationX(DoricUtils.dp2px(v));
+    }
+
+    @DoricMethod
+    public float getTranslationX() {
+        return DoricUtils.px2dp((int) getNodeView().getTranslationX());
+    }
+
+    @DoricMethod
+    public void setTranslationY(float v) {
+        getNodeView().setTranslationY(DoricUtils.dp2px(v));
+    }
+
+    @DoricMethod
+    public float getTranslationY() {
+        return DoricUtils.px2dp((int) getNodeView().getTranslationY());
+    }
+
+    @DoricMethod
+    public void setScaleX(float v) {
+        getNodeView().setScaleX(v);
+    }
+
+    @DoricMethod
+    public float getScaleX() {
+        return getNodeView().getScaleX();
+    }
+
+    @DoricMethod
+    public void setScaleY(float v) {
+        getNodeView().setScaleY(v);
+    }
+
+    @DoricMethod
+    public float getScaleY() {
+        return getNodeView().getScaleY();
+    }
+
+    @DoricMethod
+    public void setRotation(float rotation) {
+        getNodeView().setRotation(rotation * 180);
+    }
+
+    @DoricMethod
+    public float getRotation() {
+        return getNodeView().getRotation() / 180;
+    }
+
+    @DoricMethod
+    public void setRotationX(float rotation) {
+        getNodeView().setRotationX(rotation * 180);
+    }
+
+    @DoricMethod
+    public float getRotationX() {
+        return getNodeView().getRotationX() / 180;
+    }
+
+    @DoricMethod
+    public void setRotationY(float rotation) {
+        getNodeView().setRotationY(rotation * 180);
+    }
+
+    @DoricMethod
+    public float getRotationY() {
+        return getNodeView().getRotationY() / 180;
+    }
+
+    @DoricMethod
+    public void setPivotX(float v) {
+        getNodeView().setPivotX(v * getNodeView().getWidth());
+    }
+
+    @DoricMethod
+    public float getPivotX() {
+        return getNodeView().getPivotX() / getNodeView().getWidth();
+    }
+
+    @DoricMethod
+    public void setPivotY(float v) {
+        getNodeView().setPivotY(v * getNodeView().getHeight());
+    }
+
+    @DoricMethod
+    public float getPivotY() {
+        return getNodeView().getPivotY() / getNodeView().getHeight();
     }
 }

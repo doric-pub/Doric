@@ -68,6 +68,15 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
 
 @interface DoricViewNode ()
 @property(nonatomic, strong) NSMutableDictionary *callbackIds;
+@property(nonatomic, copy) NSNumber *translationX;
+@property(nonatomic, copy) NSNumber *translationY;
+@property(nonatomic, copy) NSNumber *scaleX;
+@property(nonatomic, copy) NSNumber *scaleY;
+@property(nonatomic, copy) NSNumber *rotation;
+@property(nonatomic, copy) NSNumber *rotationX;
+@property(nonatomic, copy) NSNumber *rotationY;
+@property(nonatomic, copy) NSNumber *pivotX;
+@property(nonatomic, copy) NSNumber *pivotY;
 @end
 
 @implementation DoricViewNode
@@ -78,7 +87,6 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     }
     return self;
 }
-
 
 - (void)initWithSuperNode:(DoricSuperNode *)superNode {
     if ([self isKindOfClass:[DoricSuperNode class]]) {
@@ -104,6 +112,27 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
         id value = props[key];
         [self blendView:self.view forPropName:key propValue:value];
     }
+    [self transformProperties];
+}
+
+- (void)transformProperties {
+    CGAffineTransform transform = CGAffineTransformIdentity;
+    if (self.translationX || self.translationY) {
+        transform = CGAffineTransformTranslate(transform, [self.translationX floatValue] ?: 0, [self.translationY floatValue] ?: 0);
+    }
+    if (self.scaleX || self.scaleY) {
+        transform = CGAffineTransformScale(transform, [self.scaleX floatValue] ?: 1, [self.scaleY floatValue] ?: 1);
+    }
+    if (self.rotation) {
+        transform = CGAffineTransformRotate(transform, (self.rotation.floatValue ?: 0) * M_PI);
+    }
+    if (!CGAffineTransformEqualToTransform(transform, self.view.transform)) {
+        self.view.transform = transform;
+    }
+    if (self.pivotX || self.pivotY) {
+        self.view.layer.anchorPoint = CGPointMake(self.pivotX.floatValue
+                ?: 0.5f, self.pivotY.floatValue ?: 0.5f);
+    }
 }
 
 - (void)blendView:(UIView *)view forPropName:(NSString *)name propValue:(id)prop {
@@ -123,8 +152,6 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
         view.y = [(NSNumber *) prop floatValue];
     } else if ([name isEqualToString:@"bgColor"]) {
         view.backgroundColor = DoricColor(prop);
-    } else if ([name isEqualToString:@"rotation"]) {
-        [self setRotation:prop];
     } else if ([name isEqualToString:@"layoutConfig"]) {
         if (self.superNode && [prop isKindOfClass:[NSDictionary class]]) {
             [self.superNode blendSubNode:self layoutConfig:prop];
@@ -181,6 +208,24 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
             view.clipsToBounds = YES;
         }
 
+    } else if ([name isEqualToString:@"translationX"]) {
+        self.translationX = prop;
+    } else if ([name isEqualToString:@"translationY"]) {
+        self.translationY = prop;
+    } else if ([name isEqualToString:@"scaleX"]) {
+        self.scaleX = prop;
+    } else if ([name isEqualToString:@"scaleY"]) {
+        self.scaleY = prop;
+    } else if ([name isEqualToString:@"pivotX"]) {
+        self.pivotX = prop;
+    } else if ([name isEqualToString:@"pivotY"]) {
+        self.pivotY = prop;
+    } else if ([name isEqualToString:@"rotation"]) {
+        self.rotation = prop;
+    } else if ([name isEqualToString:@"rotationX"]) {
+        self.rotationX = prop;
+    } else if ([name isEqualToString:@"rotationY"]) {
+        self.rotationY = prop;
     } else {
         DoricLog(@"Blend View error for View Type :%@, prop is %@", self.class, name);
     }
@@ -234,20 +279,6 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
 
 - (NSNumber *)getHeight {
     return @(self.view.height);
-}
-
-- (void)setRotation:(NSNumber *)rotation {
-    if (rotation.floatValue == 0) {
-        self.view.transform = CGAffineTransformIdentity;
-    } else {
-        self.view.transform = CGAffineTransformMakeRotation(M_PI * rotation.floatValue);
-    }
-}
-
-- (NSNumber *)getRotation {
-    float radius = atan2f((float) self.view.transform.b, (float) self.view.transform.a);
-    float degree = (float) (radius / M_PI);
-    return @(degree);
 }
 
 - (void)blendLayoutConfig:(NSDictionary *)params {

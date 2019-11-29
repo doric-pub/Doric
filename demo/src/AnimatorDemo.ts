@@ -32,6 +32,11 @@ class AnimatorDemo extends Panel {
                                         view.rotation = 0
                                         view.bgColor = colors[2]
                                         view.corners = 0
+                                        view.scaleX = 1
+                                        view.scaleY = 1
+                                        view.translationX = 0
+                                        view.translationY = 0
+                                        view.rotation = 0
                                     },
                                     duration: 1500,
                                 }).then(() => {
@@ -119,6 +124,37 @@ class AnimatorDemo extends Panel {
                                             view.corners += 10
                                         } else {
                                             view.corners = 10
+                                        }
+                                    },
+                                    duration: 1000,
+                                });
+                            }
+                        }),
+                    ]).apply({ space: 10 } as IHLayout),
+
+                    hlayout([
+                        thisLabel('scaleX').apply({
+                            onClick: () => {
+                                animate(this)({
+                                    animations: () => {
+                                        if (view.scaleX) {
+                                            view.scaleX += 0.1
+                                        } else {
+                                            view.scaleX = 1.1
+                                        }
+                                    },
+                                    duration: 1000,
+                                });
+                            }
+                        }),
+                        thisLabel('scaleY').apply({
+                            onClick: () => {
+                                animate(this)({
+                                    animations: () => {
+                                        if (view.scaleY) {
+                                            view.scaleY += 0.1
+                                        } else {
+                                            view.scaleY = 1.1
                                         }
                                     },
                                     duration: 1000,

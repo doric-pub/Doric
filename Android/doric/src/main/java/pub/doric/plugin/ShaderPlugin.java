@@ -174,7 +174,11 @@ public class ShaderPlugin extends DoricJavaPlugin {
         if (clz == DoricPromise.class) {
             return doricPromise;
         } else {
-            return jsValue;
+            try {
+                return DoricUtils.toJavaObject(clz, jsValue);
+            } catch (Exception e) {
+                return jsValue;
+            }
         }
     }
 }

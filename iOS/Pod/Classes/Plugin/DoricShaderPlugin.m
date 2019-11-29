@@ -23,7 +23,6 @@
 #import "DoricShaderPlugin.h"
 #import "DoricRootNode.h"
 #import "DoricUtil.h"
-#import "Doric.h"
 
 #import <objc/runtime.h>
 

@@ -123,6 +123,8 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
         view.y = [(NSNumber *) prop floatValue];
     } else if ([name isEqualToString:@"bgColor"]) {
         view.backgroundColor = DoricColor(prop);
+    } else if ([name isEqualToString:@"rotation"]) {
+        [self setRotation:prop];
     } else if ([name isEqualToString:@"layoutConfig"]) {
         if (self.superNode && [prop isKindOfClass:[NSDictionary class]]) {
             [self.superNode blendSubNode:self layoutConfig:prop];
@@ -238,13 +240,13 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     if (rotation.floatValue == 0) {
         self.view.transform = CGAffineTransformIdentity;
     } else {
-        self.view.transform = CGAffineTransformMakeRotation(M_PI * rotation.floatValue * 2);
+        self.view.transform = CGAffineTransformMakeRotation(M_PI * rotation.floatValue);
     }
 }
 
 - (NSNumber *)getRotation {
     float radius = atan2f((float) self.view.transform.b, (float) self.view.transform.a);
-    float degree = (float) (radius / M_PI / 2);
+    float degree = (float) (radius / M_PI);
     return @(degree);
 }
 

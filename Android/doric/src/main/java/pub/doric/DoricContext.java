@@ -15,6 +15,8 @@
  */
 package pub.doric;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
 import android.content.Context;
 
 import com.github.pengfeizhou.jscore.JSDecoder;
@@ -161,6 +163,7 @@ public class DoricContext {
 
     public void reload(String script) {
         this.script = script;
+        this.mRootNode.setId("");
         getDriver().createContext(mContextId, script, source);
         callEntity(DoricConstant.DORIC_ENTITY_INIT, this.initParams);
     }
@@ -192,4 +195,15 @@ public class DoricContext {
     public IDoricNavBar getDoricNavBar() {
         return this.doricNavBar;
     }
+
+    private AnimatorSet animatorSet;
+
+    public void setAnimatorSet(AnimatorSet animatorSet) {
+        this.animatorSet = animatorSet;
+    }
+
+    public AnimatorSet getAnimatorSet() {
+        return this.animatorSet;
+    }
+
 }

@@ -109,7 +109,7 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (scrollView.contentOffset.y <= 0) {
-        [self.swipePullingDelegate setProgressRotation:-scrollView.contentOffset.y / self.headerView.height];
+        [self.swipePullingDelegate setProgressRotation:-scrollView.contentOffset.y / self.headerView.height * 2];
     }
 }
 

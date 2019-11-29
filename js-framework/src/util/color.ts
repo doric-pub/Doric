@@ -62,6 +62,10 @@ export class Color implements Modeling {
         }
     }
 
+    alpha(v: number) {
+        return new Color((this._value & 0xffffff) | ((v & 0xff) << 24))
+    }
+
     toModel() {
         return this._value
     }

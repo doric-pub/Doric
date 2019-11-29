@@ -21,6 +21,9 @@ class AnimatorDemo extends Panel {
                             view.width = view.height = 20
                         },
                         duration: 3000,
+                        complete: () => {
+                            modal(context).toast('Fininshed')
+                        },
                     })
                 }
             }),
@@ -35,9 +38,12 @@ class AnimatorDemo extends Panel {
                 v.onClick = () => {
                     animator(this)({
                         animations: () => {
-                            view.width = 500
+                            view.width = 300
                         },
                         duration: 3000,
+                        complete: () => {
+                            modal(context).toast('Fininshed')
+                        },
                     })
                 }
             }),
@@ -67,7 +73,7 @@ class AnimatorDemo extends Panel {
                 })
             ]).apply({
                 layoutConfig: layoutConfig().atmost(),
-                bgColor: colors[3],
+                bgColor: colors[1].alpha(0.3 * 255),
             }),
         ]).apply({
             layoutConfig: layoutConfig().atmost().h(LayoutSpec.WRAP_CONTENT),

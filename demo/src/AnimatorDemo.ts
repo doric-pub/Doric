@@ -1,4 +1,4 @@
-import { Group, Panel, popover, text, gravity, Color, Stack, LayoutSpec, list, NativeCall, listItem, log, vlayout, Gravity, hlayout, Text, scroller, layoutConfig, image, IView, IVLayout, ScaleType, modal, IText, network, animator, View, stack } from "doric";
+import { animate, Group, Panel, gravity, Color, LayoutSpec, vlayout, scroller, layoutConfig, IVLayout, modal, IText, network, View, stack } from "doric";
 import { title, label, colors, box } from "./utils";
 
 @Entry
@@ -16,14 +16,15 @@ class AnimatorDemo extends Panel {
                 layoutConfig: layoutConfig().exactly(),
             } as IText).also(v => {
                 v.onClick = () => {
-                    animator(this)({
+                    animate(this)({
                         animations: () => {
                             view.width = view.height = 20
                         },
                         duration: 3000,
-                        complete: () => {
-                            modal(context).toast('Fininshed')
-                        },
+                    }).then(() => {
+                        modal(context).toast('Fininshed')
+                    }, (e: any) => {
+                        modal(context).toast(`${e}`)
                     })
                 }
             }),
@@ -36,14 +37,15 @@ class AnimatorDemo extends Panel {
                 layoutConfig: layoutConfig().exactly(),
             } as IText).also(v => {
                 v.onClick = () => {
-                    animator(this)({
+                    animate(this)({
                         animations: () => {
                             view.width = 300
                         },
                         duration: 3000,
-                        complete: () => {
-                            modal(context).toast('Fininshed')
-                        },
+                    }).then(() => {
+                        modal(context).toast('Fininshed')
+                    }, (e: any) => {
+                        modal(context).toast(`${e}`)
                     })
                 }
             }),
@@ -56,14 +58,15 @@ class AnimatorDemo extends Panel {
                 layoutConfig: layoutConfig().exactly(),
             } as IText).also(v => {
                 v.onClick = () => {
-                    animator(this)({
+                    animate(this)({
                         animations: () => {
-                            view.height = 500
+                            view.height = 300
                         },
                         duration: 3000,
-                        complete: () => {
-                            modal(context).toast('Fininshed')
-                        }
+                    }).then(() => {
+                        modal(context).toast('Fininshed')
+                    }, (e: any) => {
+                        modal(context).toast(`${e}`)
                     })
                 }
             }),

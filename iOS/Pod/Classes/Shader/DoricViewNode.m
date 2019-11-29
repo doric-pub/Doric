@@ -73,8 +73,6 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
 @property(nonatomic, copy) NSNumber *scaleX;
 @property(nonatomic, copy) NSNumber *scaleY;
 @property(nonatomic, copy) NSNumber *rotation;
-@property(nonatomic, copy) NSNumber *rotationX;
-@property(nonatomic, copy) NSNumber *rotationY;
 @property(nonatomic, copy) NSNumber *pivotX;
 @property(nonatomic, copy) NSNumber *pivotY;
 @end

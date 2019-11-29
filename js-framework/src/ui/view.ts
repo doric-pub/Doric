@@ -59,12 +59,10 @@ export interface IView {
      * float [0,..1]
      */
     pivotY?: number
-
+    /**
+     * rotation*PI
+     */
     rotation?: number
-
-    rotationX?: number
-
-    rotationY?: number
     /**----------transform----------*/
 }
 
@@ -331,12 +329,6 @@ export abstract class View implements Modeling, IView {
 
     @Property
     rotation?: number
-
-    @Property
-    rotationX?: number
-
-    @Property
-    rotationY?: number
     /**----------transform----------*/
 }
 

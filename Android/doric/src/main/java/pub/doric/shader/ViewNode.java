@@ -313,28 +313,6 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                     setRotation(prop.asNumber().toFloat());
                 }
                 break;
-            case "rotationX":
-                if (isAnimating()) {
-                    addAnimator(ObjectAnimator.ofFloat(
-                            this,
-                            name,
-                            getRotationX(),
-                            prop.asNumber().toFloat()));
-                } else {
-                    setRotationX(prop.asNumber().toFloat());
-                }
-                break;
-            case "rotationY":
-                if (isAnimating()) {
-                    addAnimator(ObjectAnimator.ofFloat(
-                            this,
-                            name,
-                            getRotationY(),
-                            prop.asNumber().toFloat()));
-                } else {
-                    setRotationY(prop.asNumber().toFloat());
-                }
-                break;
             default:
                 break;
         }
@@ -599,26 +577,6 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     @DoricMethod
     public float getRotation() {
         return getNodeView().getRotation() / 180;
-    }
-
-    @DoricMethod
-    public void setRotationX(float rotation) {
-        getNodeView().setRotationX(rotation * 180);
-    }
-
-    @DoricMethod
-    public float getRotationX() {
-        return getNodeView().getRotationX() / 180;
-    }
-
-    @DoricMethod
-    public void setRotationY(float rotation) {
-        getNodeView().setRotationY(rotation * 180);
-    }
-
-    @DoricMethod
-    public float getRotationY() {
-        return getNodeView().getRotationY() / 180;
     }
 
     @DoricMethod

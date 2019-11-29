@@ -4,10 +4,10 @@ import { title, colors, box } from "./utils";
 function thisLabel(str: string) {
     return text({
         text: str,
-        width: 100,
+        width: 60,
         height: 50,
-        bgColor: colors[4],
-        textSize: 20,
+        bgColor: colors[0],
+        textSize: 15,
         textColor: Color.WHITE,
         layoutConfig: layoutConfig().exactly(),
     })
@@ -31,6 +31,7 @@ class AnimatorDemo extends Panel {
                                         view.x = view.y = 0
                                         view.rotation = 0
                                         view.bgColor = colors[2]
+                                        view.corners = 0
                                     },
                                     duration: 1500,
                                 }).then(() => {
@@ -40,7 +41,9 @@ class AnimatorDemo extends Panel {
                                 })
                             }
                         }),
-                        thisLabel('Move X').apply({
+                    ]).apply({ space: 10 } as IHLayout),
+                    hlayout([
+                        thisLabel('X').apply({
                             onClick: () => {
                                 animate(this)({
                                     animations: () => {
@@ -51,7 +54,7 @@ class AnimatorDemo extends Panel {
                                 })
                             }
                         }),
-                        thisLabel('Move Y').apply({
+                        thisLabel('Y').apply({
                             onClick: () => {
                                 animate(this)({
                                     animations: () => {
@@ -62,8 +65,6 @@ class AnimatorDemo extends Panel {
                                 })
                             }
                         }),
-                    ]).apply({ space: 10 } as IHLayout),
-                    hlayout([
                         thisLabel('Width').apply({
                             onClick: () => {
                                 animate(this)({
@@ -104,6 +105,20 @@ class AnimatorDemo extends Panel {
                                             view.rotation += 0.5
                                         } else {
                                             view.rotation = 0.5
+                                        }
+                                    },
+                                    duration: 1000,
+                                });
+                            }
+                        }),
+                        thisLabel('Corner').apply({
+                            onClick: () => {
+                                animate(this)({
+                                    animations: () => {
+                                        if (typeof view.corners === 'number') {
+                                            view.corners += 10
+                                        } else {
+                                            view.corners = 10
                                         }
                                     },
                                     duration: 1000,

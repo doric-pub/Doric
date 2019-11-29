@@ -215,7 +215,15 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 break;
             case "corners":
                 if (prop.isNumber()) {
-                    requireDoricLayer().setCornerRadius(DoricUtils.dp2px(prop.asNumber().toFloat()));
+                    if (isAnimating()) {
+                        addAnimator(ObjectAnimator.ofFloat(
+                                this,
+                                name,
+                                getCorners(),
+                                prop.asNumber().toFloat()));
+                    } else {
+                        setCorners(prop.asNumber().toFloat());
+                    }
                 } else if (prop.isObject()) {
                     JSValue lt = prop.asObject().getProperty("leftTop");
                     JSValue rt = prop.asObject().getProperty("rightTop");
@@ -453,5 +461,16 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     @DoricMethod
     public void setBgColor(int color) {
         mView.setBackgroundColor(color);
+    }
+
+    @DoricMethod
+    public void setCorners(float corner) {
+        requireDoricLayer().setCornerRadius(DoricUtils.dp2px(corner));
+        getNodeView().invalidate();
+    }
+
+    @DoricMethod
+    public float getCorners() {
+        return DoricUtils.px2dp((int) requireDoricLayer().getCornerRadius());
     }
 }

@@ -5,7 +5,7 @@ import { title, label, colors, box } from "./utils";
 class AnimatorDemo extends Panel {
     build(rootView: Group): void {
         const view = box(2)
-        scroller(vlayout([
+        vlayout([
             title("Animator Demo"),
             label('Reset').apply({
                 width: 100,
@@ -79,11 +79,9 @@ class AnimatorDemo extends Panel {
                 bgColor: colors[1].alpha(0.3 * 255),
             }),
         ]).apply({
-            layoutConfig: layoutConfig().atmost().h(LayoutSpec.WRAP_CONTENT),
+            layoutConfig: layoutConfig().atmost(),
             gravity: gravity().center(),
             space: 10,
-        } as IVLayout)).apply({
-            layoutConfig: layoutConfig().atmost(),
-        }).in(rootView)
+        } as IVLayout).in(rootView)
     }
 }

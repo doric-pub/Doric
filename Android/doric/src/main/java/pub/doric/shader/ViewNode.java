@@ -15,6 +15,8 @@
  */
 package pub.doric.shader;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -123,16 +125,48 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     protected void blend(T view, String name, JSValue prop) {
         switch (name) {
             case "width":
-                setWidth(prop.asNumber().toFloat());
+                if (isAnimating()) {
+                    addAnimator(ObjectAnimator.ofFloat(
+                            this,
+                            name,
+                            getWidth(),
+                            prop.asNumber().toFloat()));
+                } else {
+                    setWidth(prop.asNumber().toFloat());
+                }
                 break;
             case "height":
-                setHeight(prop.asNumber().toFloat());
+                if (isAnimating()) {
+                    addAnimator(ObjectAnimator.ofFloat(
+                            this,
+                            name,
+                            getHeight(),
+                            prop.asNumber().toFloat()));
+                } else {
+                    setHeight(prop.asNumber().toFloat());
+                }
                 break;
             case "x":
-                setX(prop.asNumber().toFloat());
+                if (isAnimating()) {
+                    addAnimator(ObjectAnimator.ofFloat(
+                            this,
+                            name,
+                            getX(),
+                            prop.asNumber().toFloat()));
+                } else {
+                    setX(prop.asNumber().toFloat());
+                }
                 break;
             case "y":
-                setY(prop.asNumber().toFloat());
+                if (isAnimating()) {
+                    addAnimator(ObjectAnimator.ofFloat(
+                            this,
+                            name,
+                            getY(),
+                            prop.asNumber().toFloat()));
+                } else {
+                    setY(prop.asNumber().toFloat());
+                }
                 break;
             case "bgColor":
                 view.setBackgroundColor(prop.asNumber().toInt());
@@ -244,30 +278,6 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         return mId;
     }
 
-    protected void setWidth(float width) {
-        if (mLayoutParams.width >= 0) {
-            mLayoutParams.width = DoricUtils.dp2px(width);
-        }
-    }
-
-    protected void setHeight(float height) {
-        if (mLayoutParams.height >= 0) {
-            mLayoutParams.height = DoricUtils.dp2px(height);
-        }
-    }
-
-    protected void setX(float x) {
-        if (mLayoutParams instanceof ViewGroup.MarginLayoutParams) {
-            ((ViewGroup.MarginLayoutParams) mLayoutParams).leftMargin = DoricUtils.dp2px(x);
-        }
-    }
-
-    protected void setY(float y) {
-        if (mLayoutParams instanceof ViewGroup.MarginLayoutParams) {
-            ((ViewGroup.MarginLayoutParams) mLayoutParams).topMargin = DoricUtils.dp2px(y);
-        }
-    }
-
     protected void setLayoutConfig(JSObject layoutConfig) {
         if (mSuperNode != null) {
             mSuperNode.blendSubLayoutConfig(this, layoutConfig);
@@ -329,14 +339,25 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         }
     }
 
-    @DoricMethod
-    public int getWidth() {
-        return getNodeView().getWidth();
+    protected boolean isAnimating() {
+        return getDoricContext().getAnimatorSet() != null;
+    }
+
+    protected void addAnimator(Animator animator) {
+        if (getDoricContext().getAnimatorSet() == null) {
+            return;
+        }
+        getDoricContext().getAnimatorSet().play(animator);
     }
 
     @DoricMethod
-    public int getHeight() {
-        return getNodeView().getHeight();
+    public float getWidth() {
+        return DoricUtils.px2dp(getNodeView().getWidth());
+    }
+
+    @DoricMethod
+    public float getHeight() {
+        return DoricUtils.px2dp(getNodeView().getHeight());
     }
 
     @DoricMethod
@@ -355,4 +376,53 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     public float getRotation() {
         return getNodeView().getRotation() / 360;
     }
+
+    @DoricMethod
+    protected void setWidth(float width) {
+        if (mLayoutParams.width >= 0) {
+            mLayoutParams.width = DoricUtils.dp2px(width);
+            mView.requestLayout();
+        }
+    }
+
+    @DoricMethod
+    protected void setHeight(float height) {
+        if (mLayoutParams.height >= 0) {
+            mLayoutParams.height = DoricUtils.dp2px(height);
+            mView.requestLayout();
+        }
+    }
+
+    @DoricMethod
+    protected void setX(float x) {
+        if (mLayoutParams instanceof ViewGroup.MarginLayoutParams) {
+            ((ViewGroup.MarginLayoutParams) mLayoutParams).leftMargin = DoricUtils.dp2px(x);
+            mView.requestLayout();
+        }
+    }
+
+    @DoricMethod
+    protected void setY(float y) {
+        if (mLayoutParams instanceof ViewGroup.MarginLayoutParams) {
+            ((ViewGroup.MarginLayoutParams) mLayoutParams).topMargin = DoricUtils.dp2px(y);
+            mView.requestLayout();
+        }
+    }
+
+    @DoricMethod
+    public float getX() {
+        if (mLayoutParams instanceof ViewGroup.MarginLayoutParams) {
+            return DoricUtils.px2dp(((ViewGroup.MarginLayoutParams) mLayoutParams).leftMargin);
+        }
+        return 0;
+    }
+
+    @DoricMethod
+    public float getY() {
+        if (mLayoutParams instanceof ViewGroup.MarginLayoutParams) {
+            return DoricUtils.px2dp(((ViewGroup.MarginLayoutParams) mLayoutParams).topMargin);
+        }
+        return 0;
+    }
+
 }

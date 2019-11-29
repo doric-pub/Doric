@@ -20,6 +20,7 @@ import android.text.TextUtils;
 import pub.doric.loader.DoricAssetJSLoader;
 import pub.doric.loader.DoricHttpJSLoader;
 import pub.doric.loader.IDoricJSLoader;
+import pub.doric.plugin.AnimatePlugin;
 import pub.doric.plugin.NavBarPlugin;
 import pub.doric.plugin.NavigatorPlugin;
 import pub.doric.plugin.NetworkPlugin;
@@ -89,6 +90,7 @@ public class DoricRegistry {
         this.registerNativePlugin(NavigatorPlugin.class);
         this.registerNativePlugin(NavBarPlugin.class);
         this.registerNativePlugin(PopoverPlugin.class);
+        this.registerNativePlugin(AnimatePlugin.class);
 
         this.registerViewNode(RootNode.class);
         this.registerViewNode(TextNode.class);

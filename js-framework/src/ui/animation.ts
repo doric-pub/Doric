@@ -20,9 +20,27 @@ export enum RepeatMode {
 }
 
 export class Animation {
+
+    translationX?: number
+
+    translationY?: number
+
+    scaleX?: number
+
+    scaleY?: number
+
+    pivotX?: number
+
+    pivotY?: number
+
+    rotation?: number
+
     duration = 100
+
     startDelay = 0
+
     repeatCount = 1
+
     repeatMode = RepeatMode.RESTART
 }
 

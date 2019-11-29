@@ -73,8 +73,6 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
 @property(nonatomic, copy) NSNumber *scaleX;
 @property(nonatomic, copy) NSNumber *scaleY;
 @property(nonatomic, copy) NSNumber *rotation;
-@property(nonatomic, copy) NSNumber *rotationX;
-@property(nonatomic, copy) NSNumber *rotationY;
 @property(nonatomic, copy) NSNumber *pivotX;
 @property(nonatomic, copy) NSNumber *pivotY;
 @end
@@ -152,6 +150,8 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
         view.y = [(NSNumber *) prop floatValue];
     } else if ([name isEqualToString:@"bgColor"]) {
         view.backgroundColor = DoricColor(prop);
+    } else if ([name isEqualToString:@"alpha"]) {
+        view.alpha = [prop floatValue];
     } else if ([name isEqualToString:@"layoutConfig"]) {
         if (self.superNode && [prop isKindOfClass:[NSDictionary class]]) {
             [self.superNode blendSubNode:self layoutConfig:prop];
@@ -222,10 +222,6 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
         self.pivotY = prop;
     } else if ([name isEqualToString:@"rotation"]) {
         self.rotation = prop;
-    } else if ([name isEqualToString:@"rotationX"]) {
-        self.rotationX = prop;
-    } else if ([name isEqualToString:@"rotationY"]) {
-        self.rotationY = prop;
     } else {
         DoricLog(@"Blend View error for View Type :%@, prop is %@", self.class, name);
     }

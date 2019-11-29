@@ -17,6 +17,7 @@ function thisLabel(str: string) {
 class AnimatorDemo extends Panel {
     build(rootView: Group): void {
         const view = box(2)
+        const view2 = box(3)
         let idx = 0
         vlayout([
             title("Animator zDemo"),
@@ -54,6 +55,7 @@ class AnimatorDemo extends Panel {
                                     animations: () => {
                                         view.x = view.x || 0
                                         view.x += 100
+                                        view2.x += 50
                                     },
                                     duration: 1000,
                                 })
@@ -65,6 +67,7 @@ class AnimatorDemo extends Panel {
                                     animations: () => {
                                         view.y = view.y || 0
                                         view.y += 100
+                                        view2.y += 50
                                     },
                                     duration: 1000,
                                 })
@@ -165,7 +168,7 @@ class AnimatorDemo extends Panel {
                 ]
             ).apply({ space: 10 } as IVLayout),
             stack([
-                view
+                view,
             ]).apply({
                 layoutConfig: layoutConfig().atmost(),
                 bgColor: colors[1].alpha(0.3 * 255),

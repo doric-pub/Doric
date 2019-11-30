@@ -173,19 +173,19 @@ class AnimatorDemo extends Panel {
                                 translate.toTranslationX = 200
                                 translate.fromTranslationY = 10
                                 translate.toTranslationY = 200
-                                translate.duration = 1000
+                                translate.duration = 3000
 
                                 const scale = new ScaleAnimation
                                 scale.fromScaleX = 1
                                 scale.toScaleX = 5
                                 scale.fromScaleY = 1
                                 scale.toScaleY = 5
-                                scale.duration = 1000
+                                scale.duration = 3000
 
                                 const rotation = new RotationAnimation
                                 rotation.fromRotation = 0
                                 rotation.toRotation = 6
-                                rotation.duration = 1000
+                                rotation.duration = 3000
 
                                 animationSet.addAnimation(translate)
                                 animationSet.addAnimation(scale)

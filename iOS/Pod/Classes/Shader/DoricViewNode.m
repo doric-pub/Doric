@@ -27,6 +27,7 @@
 #import "DoricConstant.h"
 #import "DoricSuperNode.h"
 #import "DoricExtensions.h"
+#import "DoricPromise.h"
 
 void DoricAddEllipticArcPath(CGMutablePathRef path,
         CGPoint origin,
@@ -307,6 +308,97 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     if (weight) {
         self.layoutConfig.weight = (DoricGravity) [weight integerValue];
     }
+}
+
+- (void)doAnimation:(id)params withPromise:(DoricPromise *)promise {
+    CAAnimation *animation = [self parseAnimation:params];
+    animation.removedOnCompletion = NO;
+    animation.fillMode = kCAFillModeForwards;
+    [self.view.layer addAnimation:animation forKey:nil];
+}
+
+- (CAAnimation *)parseAnimation:(id)params {
+    if ([params isKindOfClass:[NSArray class]]) {
+        NSArray *anims = params;
+        CAAnimationGroup *animationGroup = [CAAnimationGroup animation];
+        NSMutableArray *animations = [NSMutableArray new];
+        [anims forEach:^(id obj) {
+            [animations addObject:[self parseAnimation:obj]];
+        }];
+        animationGroup.animations = animations;
+        return animationGroup;
+    } else if ([params isKindOfClass:[NSDictionary class]]) {
+        NSArray<NSDictionary *> *changeables = params[@"changeables"];
+        NSString *type = params[@"type"];
+        if ([@"TranslationAnimation" isEqualToString:type]) {
+            __block CGPoint from = self.view.layer.position;
+            __block CGPoint to = self.view.layer.position;
+            CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"position"];
+            [changeables forEach:^(NSDictionary *obj) {
+                NSString *key = obj[@"key"];
+                if ([@"translationX" isEqualToString:key]) {
+                    from.x += [obj[@"fromValue"] floatValue];
+                    to.x += [obj[@"toValue"] floatValue];
+                } else if ([@"translationY" isEqualToString:key]) {
+                    from.y += [obj[@"fromValue"] floatValue];
+                    to.y += [obj[@"toValue"] floatValue];
+                }
+            }];
+            animation.fromValue = [NSValue valueWithCGPoint:from];
+            animation.toValue = [NSValue valueWithCGPoint:to];
+            return animation;
+        } else {
+            CAAnimationGroup *animationGroup = [CAAnimationGroup animation];
+            NSMutableArray *animations = [NSMutableArray new];
+            [changeables forEach:^(NSDictionary *obj) {
+                [animations addObject:[self parseChangeable:obj]];
+            }];
+            animationGroup.animations = animations;
+            animationGroup.duration = [params[@"duration"] floatValue] / 1000;
+            if (params[@"delay"]) {
+                animationGroup.beginTime = CACurrentMediaTime() + [params[@"delay"] floatValue] / 1000;
+            }
+
+            return animationGroup;
+        }
+
+
+    }
+    return nil;
+}
+
+- (CAAnimation *)parseChangeable:(NSDictionary *)params {
+    NSString *key = params[@"key"];
+    CABasicAnimation *animation = [CABasicAnimation animation];
+    if ([@"scaleX" isEqualToString:key]) {
+        animation.keyPath = @"transform.scale.x";
+        animation.fromValue = params[@"fromValue"];
+        animation.toValue = params[@"toValue"];
+    } else if ([@"scaleY" isEqualToString:key]) {
+        animation.keyPath = @"transform.scale.y";
+        animation.fromValue = params[@"fromValue"];
+        animation.toValue = params[@"toValue"];
+    } else if ([@"rotation" isEqualToString:key]) {
+        animation.keyPath = @"transform.rotation.z";
+        animation.fromValue = @([params[@"fromValue"] floatValue] * M_PI);
+        animation.toValue = @([params[@"toValue"] floatValue] * M_PI);
+    } else if ([@"bgColor" isEqualToString:key]) {
+        animation.keyPath = @"backgroundColor";
+        animation.fromValue = params[@"fromValue"];
+        animation.toValue = params[@"toValue"];
+    }
+    if (params[@"repeatCount"]) {
+        NSInteger repeatCount = [params[@"repeatCount"] integerValue];
+        if (repeatCount < 0) {
+            repeatCount = NSNotFound;
+        }
+        animation.repeatCount = repeatCount;
+    }
+    if (params[@"repeatMode"]) {
+        NSInteger repeatMode = [params[@"repeatMode"] integerValue];
+        animation.autoreverses = repeatMode == 2;
+    }
+    return animation;
 }
 
 @end

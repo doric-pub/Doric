@@ -1,4 +1,4 @@
-import { animate, Group, Panel, gravity, Color, LayoutSpec, vlayout, scroller, layoutConfig, IVLayout, modal, IText, network, View, stack, IHLayout, hlayout, IView, text } from "doric";
+import { animate, Group, Panel, gravity, Color, AnimationSet, vlayout, scroller, layoutConfig, IVLayout, modal, IText, network, View, stack, IHLayout, hlayout, IView, text, TranslationAnimation, ScaleAnimation, RotationAnimation } from "doric";
 import { title, colors, box } from "./utils";
 
 function thisLabel(str: string) {
@@ -162,6 +162,36 @@ class AnimatorDemo extends Panel {
                                     },
                                     duration: 1000,
                                 });
+                            }
+                        }),
+                        thisLabel('animationSet').apply({
+                            onClick: () => {
+                                const animationSet = new AnimationSet
+
+                                const translate = new TranslationAnimation
+                                translate.fromTranslationX = 10
+                                translate.toTranslationX = 200
+                                translate.fromTranslationY = 10
+                                translate.toTranslationY = 200
+                                translate.duration = 1000
+
+                                const scale = new ScaleAnimation
+                                scale.fromScaleX = 1
+                                scale.toScaleX = 5
+                                scale.fromScaleY = 1
+                                scale.toScaleY = 5
+                                scale.duration = 1000
+
+                                const rotation = new RotationAnimation
+                                rotation.fromRotation = 0
+                                rotation.toRotation = 6
+                                rotation.duration = 1000
+
+                                animationSet.addAnimation(translate)
+                                animationSet.addAnimation(scale)
+                                animationSet.addAnimation(rotation)
+
+                                view.doAnimation(context, animationSet)
                             }
                         }),
                     ]).apply({ space: 10 } as IHLayout),

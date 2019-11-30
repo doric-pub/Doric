@@ -19,12 +19,10 @@ import { Modeling, Model } from "../util/types"
 
 export type AnimatedKey = "translationX" | "translationY" | "scaleX" | "scaleY" | "rotation" | "pivotX" | "pivotY"
 export enum RepeatMode {
-    RESTART,
-    REVERSE,
+    RESTART = 1,
+    REVERSE = 2,
 }
 export interface IAnimation extends Modeling {
-    repeatCount?: number
-    repeatMode?: RepeatMode
     duration: number
     delay?: number
 }
@@ -33,6 +31,8 @@ export interface Changeable {
     fromValue: number
     toValue: number
     key: AnimatedKey
+    repeatCount?: number
+    repeatMode?: RepeatMode
 }
 
 abstract class Animation implements IAnimation {
@@ -43,24 +43,27 @@ abstract class Animation implements IAnimation {
     delay?: number
 
     toModel() {
-        const ret = []
+        const changeables = []
         for (let e of this.changeables.values()) {
-            ret.push({
-                repeatCount: this.repeatCount,
-                repeatMode: this.repeatMode,
-                delay: this.delay,
-                duration: this.duration,
+            changeables.push({
                 key: e.key,
                 fromValue: e.fromValue,
                 toValue: e.toValue,
+                repeatCount: this.repeatCount,
+                repeatMode: this.repeatMode,
             })
         }
-        return ret
+        return {
+            type: this.constructor.name,
+            delay: this.delay,
+            duration: this.duration,
+            changeables,
+        }
     }
 }
 
 export class ScaleAnimation extends Animation {
-    private scaleXChaneable: Changeable = {
+    private scaleXChangeable: Changeable = {
         key: "scaleX",
         fromValue: 1,
         toValue: 1,
@@ -72,25 +75,25 @@ export class ScaleAnimation extends Animation {
     }
     constructor() {
         super()
-        this.changeables.set("scaleX", this.scaleXChaneable)
-        this.changeables.set("scaleY", this.scaleXChaneable)
+        this.changeables.set("scaleX", this.scaleXChangeable)
+        this.changeables.set("scaleY", this.scaleYChangeable)
     }
 
 
     set fromScaleX(v: number) {
-        this.scaleXChaneable.fromValue = v
+        this.scaleXChangeable.fromValue = v
     }
 
     get fromScaleX() {
-        return this.scaleXChaneable.fromValue
+        return this.scaleXChangeable.fromValue
     }
 
     set toScaleX(v: number) {
-        this.scaleXChaneable.toValue = v
+        this.scaleXChangeable.toValue = v
     }
 
     get toScaleX() {
-        return this.scaleXChaneable.toValue
+        return this.scaleXChangeable.toValue
     }
     set fromScaleY(v: number) {
         this.scaleYChangeable.fromValue = v
@@ -186,13 +189,14 @@ export class RotationAnimation extends Animation {
     }
 }
 
-export class AnimaionSet implements IAnimation {
-    animations: IAnimation[] = []
+export class AnimationSet implements IAnimation {
+    private animations: IAnimation[] = []
     _duration = 0
-
-    repeatCount?: number
-    repeatMode?: RepeatMode
     delay?: number
+
+    addAnimation(anim: IAnimation) {
+        this.animations.push(anim)
+    }
 
     get duration() {
         return this._duration

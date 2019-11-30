@@ -336,7 +336,7 @@ export abstract class View implements Modeling, IView {
     /**----------transform----------*/
 
     doAnimation(context: BridgeContext, animation: IAnimation) {
-        return this.nativeChannel(context, "doAnimation")(animation)
+        return this.nativeChannel(context, "doAnimation")(animation.toModel())
     }
 }
 

@@ -16,12 +16,13 @@
 package pub.doric.shader;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -29,16 +30,18 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 
-import pub.doric.Doric;
 import pub.doric.DoricContext;
 import pub.doric.DoricRegistry;
 import pub.doric.async.AsyncResult;
 import pub.doric.extension.bridge.DoricMethod;
+import pub.doric.extension.bridge.DoricPromise;
 import pub.doric.utils.DoricContextHolder;
 import pub.doric.utils.DoricConstant;
+import pub.doric.utils.DoricLog;
 import pub.doric.utils.DoricMetaInfo;
 import pub.doric.utils.DoricUtils;
 
+import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
@@ -635,5 +638,63 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     @DoricMethod
     public float getPivotY() {
         return getNodeView().getPivotY() / getNodeView().getHeight();
+    }
+
+    @DoricMethod
+    public void doAnimation(JSValue value, final DoricPromise promise) {
+        Animator animator = parseAnimator(value);
+        if (animator != null) {
+            animator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    promise.resolve();
+                }
+            });
+            animator.start();
+        }
+    }
+
+    private Animator parseAnimator(JSValue value) {
+        if (value.isArray()) {
+            AnimatorSet animatorSet = new AnimatorSet();
+            for (int i = 0; i < value.asArray().size(); i++) {
+                animatorSet.play(parseAnimator(value.asArray().get(i)));
+            }
+            return animatorSet;
+        } else if (value.isObject()) {
+            JSArray changeables = value.asObject().getProperty("changeables").asArray();
+            AnimatorSet animatorSet = new AnimatorSet();
+            for (int j = 0; j < changeables.size(); j++) {
+                animatorSet.play(parseChangeable(changeables.get(j).asObject()));
+            }
+            long duration = value.asObject().getProperty("duration").asNumber().toLong();
+            animatorSet.setDuration(duration);
+            JSValue delayJS = value.asObject().getProperty("delay");
+            if (delayJS.isNumber()) {
+                animatorSet.setStartDelay(delayJS.asNumber().toLong());
+            }
+            return animatorSet;
+        } else {
+            return null;
+        }
+    }
+
+    private Animator parseChangeable(JSObject jsObject) {
+        String key = jsObject.getProperty("key").asString().value();
+        ObjectAnimator animator = ObjectAnimator.ofFloat(this,
+                key,
+                jsObject.getProperty("fromValue").asNumber().toFloat(),
+                jsObject.getProperty("toValue").asNumber().toFloat()
+        );
+        JSValue repeatCount = jsObject.getProperty("repeatCount");
+        if (repeatCount.isNumber()) {
+            animator.setRepeatCount(repeatCount.asNumber().toInt() + 1);
+        }
+        JSValue repeatMode = jsObject.getProperty("repeatMode");
+        if (repeatMode.isNumber()) {
+            animator.setRepeatMode(repeatMode.asNumber().toInt());
+        }
+        return animator;
     }
 }

@@ -19,6 +19,7 @@ import { uniqueId } from "../util/uniqueId";
 import { loge } from "../util/log";
 import { BridgeContext } from "../runtime/global";
 import { LayoutConfig } from '../util/layoutconfig'
+import { IAnimation } from "./animation";
 
 export function Property(target: Object, propKey: string) {
     Reflect.defineMetadata(propKey, true, target)
@@ -333,6 +334,10 @@ export abstract class View implements Modeling, IView {
     @Property
     rotation?: number
     /**----------transform----------*/
+
+    doAnimation(context: BridgeContext, animation: IAnimation) {
+        return this.nativeChannel(context, "doAnimation")(animation)
+    }
 }
 
 export abstract class Superview extends View {

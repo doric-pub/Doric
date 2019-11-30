@@ -21,6 +21,7 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -462,19 +463,30 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
 
     @DoricMethod
     public float getWidth() {
-        return DoricUtils.px2dp(getNodeView().getWidth());
+        if (mLayoutParams.width >= 0) {
+            return DoricUtils.px2dp(mLayoutParams.width);
+        } else {
+            return mView.getMeasuredWidth();
+        }
     }
 
     @DoricMethod
     public float getHeight() {
-        return DoricUtils.px2dp(getNodeView().getHeight());
+        if (mLayoutParams.width >= 0) {
+            return DoricUtils.px2dp(mLayoutParams.height);
+        } else {
+            return mView.getMeasuredHeight();
+        }
     }
 
     @DoricMethod
     protected void setWidth(float width) {
         if (mLayoutParams.width >= 0) {
             mLayoutParams.width = DoricUtils.dp2px(width);
-            mView.requestLayout();
+            if (mView.getLayoutParams() != mLayoutParams) {
+                mView.getLayoutParams().width = mLayoutParams.width;
+            }
+            getNodeView().requestLayout();
         }
     }
 
@@ -482,7 +494,10 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     protected void setHeight(float height) {
         if (mLayoutParams.height >= 0) {
             mLayoutParams.height = DoricUtils.dp2px(height);
-            mView.requestLayout();
+            if (mView.getLayoutParams() != mLayoutParams) {
+                mView.getLayoutParams().height = mLayoutParams.height;
+            }
+            getNodeView().requestLayout();
         }
     }
 
@@ -490,7 +505,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     protected void setX(float x) {
         if (mLayoutParams instanceof ViewGroup.MarginLayoutParams) {
             ((ViewGroup.MarginLayoutParams) mLayoutParams).leftMargin = DoricUtils.dp2px(x);
-            mView.requestLayout();
+            getNodeView().requestLayout();
         }
     }
 
@@ -498,7 +513,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     protected void setY(float y) {
         if (mLayoutParams instanceof ViewGroup.MarginLayoutParams) {
             ((ViewGroup.MarginLayoutParams) mLayoutParams).topMargin = DoricUtils.dp2px(y);
-            mView.requestLayout();
+            getNodeView().requestLayout();
         }
     }
 

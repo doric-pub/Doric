@@ -145,22 +145,24 @@ public class ShaderPlugin extends DoricJavaPlugin {
                     };
                     AsyncResult<JavaValue> asyncResult = getDoricContext().getDriver()
                             .asyncCall(callable, ThreadMode.UI);
-                    asyncResult.setCallback(new AsyncResult.Callback<JavaValue>() {
-                        @Override
-                        public void onResult(JavaValue result) {
-                            doricPromise.resolve(result);
-                        }
+                    if (!method.getReturnType().equals(Void.TYPE)) {
+                        asyncResult.setCallback(new AsyncResult.Callback<JavaValue>() {
+                            @Override
+                            public void onResult(JavaValue result) {
+                                doricPromise.resolve(result);
+                            }
 
-                        @Override
-                        public void onError(Throwable t) {
-                            doricPromise.resolve(new JavaValue(t.getLocalizedMessage()));
-                        }
+                            @Override
+                            public void onError(Throwable t) {
+                                doricPromise.resolve(new JavaValue(t.getLocalizedMessage()));
+                            }
 
-                        @Override
-                        public void onFinish() {
+                            @Override
+                            public void onFinish() {
 
-                        }
-                    });
+                            }
+                        });
+                    }
                 }
             }
         } catch (ArchiveException e) {

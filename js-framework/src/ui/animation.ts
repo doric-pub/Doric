@@ -1,3 +1,5 @@
+import { Modeling, Model } from "../util/types"
+
 /*
  * Copyright [2019] [Doric.Pub]
  *
@@ -14,159 +16,223 @@
  * limitations under the License.
  */
 
+
+export type AnimatedKey = "translationX" | "translationY" | "scaleX" | "scaleY" | "rotation" | "pivotX" | "pivotY"
+
 export enum RepeatMode {
-    RESTART,
-    REVERSE,
+    RESTART = 1,
+    REVERSE = 2,
 }
 
-export class Animation {
-
-    translationX?: number
-
-    translationY?: number
-
-    scaleX?: number
-
-    scaleY?: number
-
-    pivotX?: number
-
-    pivotY?: number
-
-    rotation?: number
-
-    duration = 100
-
-    startDelay = 0
-
-    repeatCount = 1
-
-    repeatMode = RepeatMode.RESTART
+export interface IAnimation extends Modeling {
+    duration: number
+    delay?: number
 }
 
-export class AnimationSetBuilder {
-    currentNode: Node
-    group: AnimationSet
-
-    constructor(group: AnimationSet, anim: Animation) {
-        this.currentNode = group.getNodeForAnimation(anim)
-        this.group = group
-    }
-
-    with(animation: Animation) {
-        const node = this.group.getNodeForAnimation(animation)
-        this.currentNode.addSibling(node)
-        return this
-    }
-
-    after(animation: Animation) {
-        const node = this.group.getNodeForAnimation(animation)
-        this.currentNode.addParent(node)
-        return this
-    }
-
-    before(animation: Animation) {
-        const node = this.group.getNodeForAnimation(animation)
-        this.currentNode.addChild(node)
-        return this
-    }
+export interface Changeable {
+    fromValue: number
+    toValue: number
+    key: AnimatedKey
+    repeatCount?: number
+    repeatMode?: RepeatMode
 }
-class Node {
-    children: Set<Node> = new Set
-    siblings: Set<Node> = new Set
-    parents: Set<Node> = new Set
-    animation: Animation
-    built = false
-
-    constructor(anim: Animation) {
-        this.animation = anim
-    }
-
-    addParent(node: Node) {
-        if (!this.parents.has(node)) {
-            this.parents.add(node);
-            node.addChild(this);
-        }
-    }
-
-    addSibling(node: Node) {
-        if (!this.siblings.has(node)) {
-            this.siblings.add(node);
-            node.addSibling(this);
-        }
-    }
-
-    addChild(node: Node) {
-        if (!this.children.has(node)) {
-            this.children.add(node)
-            node.addParent(this)
-        }
-    }
+export enum FillMode {
+    /**
+     * The receiver is removed from the presentation when the animation is completed.
+     */
+    Removed = 0,
+    /**
+     * The receiver remains visible in its final state when the animation is completed.
+     */
+    Forward = 0x1,
+    /**
+     * The receiver clamps values before zero to zero when the animation is completed.
+     */
+    Backward = 0x2,
+    /**
+     * The receiver clamps values at both ends of the object’s time space
+     */
+    Both = 0x3,
 }
-export class AnimationSet {
-    nodeMap: Map<Animation, Node> = new Map
-    nodes: Node[] = []
 
-    getNodeForAnimation(anim: Animation) {
-        let node = this.nodeMap.get(anim)
-        if (node === undefined) {
-            node = new Node(anim)
-            this.nodeMap.set(anim, node)
-            this.nodes.push(node)
-        }
-        return node;
-    }
-    play(animation: Animation) {
-        return new AnimationSetBuilder(this, animation)
-    }
-
-    playTogether(animations: Animation[]) {
-        if (animations.length == 1) {
-            this.play(animations[0]);
-        } else {
-            for (let i = 0; i < animations.length - 1; i++) {
-                this.play(animations[i]).with(animations[i + 1])
-            }
-        }
-    }
-
-    playSequentially(animations: Animation[]) {
-        if (animations.length == 1) {
-            this.play(animations[0]);
-        } else {
-            for (let i = 0; i < animations.length - 1; i++) {
-                this.play(animations[i]).before(animations[i + 1])
-            }
-        }
-    }
-    findSiblings(node: Node, siblings: Set<Node>) {
-        if (!siblings.has(node)) {
-            siblings.add(node)
-            node.siblings.forEach(e => {
-                this.findSiblings(e, siblings)
+abstract class Animation implements IAnimation {
+    changeables: Map<AnimatedKey, Changeable> = new Map
+    duration = 0
+    repeatCount?: number
+    repeatMode?: RepeatMode
+    delay?: number
+    fillMode = FillMode.Forward
+    toModel() {
+        const changeables = []
+        for (let e of this.changeables.values()) {
+            changeables.push({
+                key: e.key,
+                fromValue: e.fromValue,
+                toValue: e.toValue,
             })
         }
+        return {
+            type: this.constructor.name,
+            delay: this.delay,
+            duration: this.duration,
+            changeables,
+            repeatCount: this.repeatCount,
+            repeatMode: this.repeatMode,
+            fillMode: this.fillMode,
+        }
     }
-    createDependencyGraph() {
-        this.nodes.forEach(node => {
-            if (node.built) {
-                return
-            }
-            this.findSiblings(node, node.siblings)
-            node.siblings.delete(node)
-            node.siblings.forEach(e => {
-                e.parents.forEach(p => {
-                    node.addParent(p)
-                })
-            })
-            node.built = true
+}
 
-            node.siblings.forEach(s => {
-                node.parents.forEach(p => {
-                    s.addParent(p)
-                })
-                s.built = true
-            })
-        })
+export class ScaleAnimation extends Animation {
+    private scaleXChangeable: Changeable = {
+        key: "scaleX",
+        fromValue: 1,
+        toValue: 1,
+    }
+    private scaleYChangeable: Changeable = {
+        key: "scaleY",
+        fromValue: 1,
+        toValue: 1,
+    }
+    constructor() {
+        super()
+        this.changeables.set("scaleX", this.scaleXChangeable)
+        this.changeables.set("scaleY", this.scaleYChangeable)
+    }
+
+
+    set fromScaleX(v: number) {
+        this.scaleXChangeable.fromValue = v
+    }
+
+    get fromScaleX() {
+        return this.scaleXChangeable.fromValue
+    }
+
+    set toScaleX(v: number) {
+        this.scaleXChangeable.toValue = v
+    }
+
+    get toScaleX() {
+        return this.scaleXChangeable.toValue
+    }
+    set fromScaleY(v: number) {
+        this.scaleYChangeable.fromValue = v
+    }
+
+    get fromScaleY() {
+        return this.scaleYChangeable.fromValue
+    }
+
+    set toScaleY(v: number) {
+        this.scaleYChangeable.toValue = v
+    }
+
+    get toScaleY() {
+        return this.scaleYChangeable.toValue
+    }
+}
+
+export class TranslationAnimation extends Animation {
+    private translationXChangeable: Changeable = {
+        key: "translationX",
+        fromValue: 1,
+        toValue: 1,
+    }
+    private translationYChangeable: Changeable = {
+        key: "translationY",
+        fromValue: 1,
+        toValue: 1,
+    }
+    constructor() {
+        super()
+        this.changeables.set("translationX", this.translationXChangeable)
+        this.changeables.set("translationY", this.translationYChangeable)
+    }
+
+    set fromTranslationX(v: number) {
+        this.translationXChangeable.fromValue = v
+    }
+
+    get fromTranslationX() {
+        return this.translationXChangeable.fromValue
+    }
+
+    set toTranslationX(v: number) {
+        this.translationXChangeable.toValue = v
+    }
+
+    get toTranslationX() {
+        return this.translationXChangeable.toValue
+    }
+    set fromTranslationY(v: number) {
+        this.translationYChangeable.fromValue = v
+    }
+
+    get fromTranslationY() {
+        return this.translationYChangeable.fromValue
+    }
+
+    set toTranslationY(v: number) {
+        this.translationYChangeable.toValue = v
+    }
+
+    get toTranslationY() {
+        return this.translationYChangeable.toValue
+    }
+}
+
+export class RotationAnimation extends Animation {
+    private rotationChaneable: Changeable = {
+        key: "rotation",
+        fromValue: 1,
+        toValue: 1,
+    }
+    constructor() {
+        super()
+        this.changeables.set("rotation", this.rotationChaneable)
+    }
+
+    set fromRotation(v: number) {
+        this.rotationChaneable.fromValue = v
+    }
+
+    get fromRotation() {
+        return this.rotationChaneable.fromValue
+    }
+
+    set toRotation(v: number) {
+        this.rotationChaneable.toValue = v
+    }
+
+    get toRotation() {
+        return this.rotationChaneable.toValue
+    }
+}
+
+export class AnimationSet implements IAnimation {
+    private animations: IAnimation[] = []
+    _duration = 0
+    delay?: number
+    addAnimation(anim: IAnimation) {
+        this.animations.push(anim)
+    }
+
+    get duration() {
+        return this._duration
+    }
+
+    set duration(v: number) {
+        this._duration = v
+        this.animations.forEach(e => e.duration = v)
+    }
+
+    toModel() {
+        return {
+            animations: this.animations.map(e => {
+                return e.toModel()
+            }) as Model,
+            delay: this.delay,
+        }
     }
 }

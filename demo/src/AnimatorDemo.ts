@@ -1,4 +1,4 @@
-import { animate, Group, Panel, gravity, Color, LayoutSpec, vlayout, scroller, layoutConfig, IVLayout, modal, IText, network, View, stack, IHLayout, hlayout, IView, text } from "doric";
+import { animate, Group, Panel, gravity, Color, AnimationSet, vlayout, scroller, layoutConfig, IVLayout, modal, IText, network, View, stack, IHLayout, hlayout, IView, text, TranslationAnimation, ScaleAnimation, RotationAnimation, FillMode } from "doric";
 import { title, colors, box } from "./utils";
 
 function thisLabel(str: string) {
@@ -6,7 +6,7 @@ function thisLabel(str: string) {
         text: str,
         width: 60,
         height: 50,
-        bgColor: colors[0],
+        backgroundColor: colors[0],
         textSize: 15,
         textColor: Color.WHITE,
         layoutConfig: layoutConfig().exactly(),
@@ -17,10 +17,13 @@ function thisLabel(str: string) {
 class AnimatorDemo extends Panel {
     build(rootView: Group): void {
         const view = box(2)
+        view.onClick = () => {
+            modal(context).toast('Clicked')
+        }
         const view2 = box(3)
         let idx = 0
         vlayout([
-            title("Animator zDemo"),
+            title("Animator Demo"),
             vlayout(
                 [
                     hlayout([
@@ -31,7 +34,7 @@ class AnimatorDemo extends Panel {
                                         view.width = view.height = 20
                                         view.x = view.y = 0
                                         view.rotation = 0
-                                        view.bgColor = colors[2]
+                                        view.backgroundColor = colors[2]
                                         view.corners = 0
                                         view.scaleX = 1
                                         view.scaleY = 1
@@ -99,7 +102,7 @@ class AnimatorDemo extends Panel {
                             onClick: () => {
                                 animate(this)({
                                     animations: () => {
-                                        view.bgColor = colors[(idx++) % colors.length]
+                                        view.backgroundColor = colors[(idx++) % colors.length]
                                     },
                                     duration: 1000,
                                 });
@@ -171,7 +174,7 @@ class AnimatorDemo extends Panel {
                 view,
             ]).apply({
                 layoutConfig: layoutConfig().atmost(),
-                bgColor: colors[1].alpha(0.3 * 255),
+                backgroundColor: colors[1].alpha(0.3 * 255),
             }),
         ]).apply({
             layoutConfig: layoutConfig().atmost(),

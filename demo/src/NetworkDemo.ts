@@ -9,7 +9,7 @@ class NetworkDemo extends Panel {
             label('Click me').apply({
                 width: 200,
                 height: 50,
-                bgColor: colors[0],
+                backgroundColor: colors[0],
                 textSize: 30,
                 textColor: Color.WHITE,
                 layoutConfig: layoutConfig().exactly(),

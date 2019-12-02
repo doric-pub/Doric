@@ -27,6 +27,7 @@
 #import "DoricConstant.h"
 #import "DoricSuperNode.h"
 #import "DoricExtensions.h"
+#import "DoricPromise.h"
 
 void DoricAddEllipticArcPath(CGMutablePathRef path,
         CGPoint origin,
@@ -65,6 +66,33 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     return path;
 }
 
+@interface AnimationCallback : NSObject <CAAnimationDelegate>
+@property(nonatomic, strong) NSMutableDictionary *dictionary;
+@property(nonatomic, strong) void (^startBlock)(AnimationCallback *callback);
+
+@property(nonatomic, strong) void (^endBlock)(AnimationCallback *callback);
+@end
+
+@implementation AnimationCallback
+- (instancetype)init {
+    if (self = [super init]) {
+        _dictionary = [NSMutableDictionary new];
+    }
+    return self;
+}
+
+- (void)animationDidStart:(CAAnimation *)anim {
+    if (self.startBlock) {
+        self.startBlock(self);
+    }
+}
+
+- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
+    if (self.endBlock) {
+        self.endBlock(self);
+    }
+}
+@end
 
 @interface DoricViewNode ()
 @property(nonatomic, strong) NSMutableDictionary *callbackIds;
@@ -148,7 +176,7 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
         view.x = [(NSNumber *) prop floatValue];
     } else if ([name isEqualToString:@"y"]) {
         view.y = [(NSNumber *) prop floatValue];
-    } else if ([name isEqualToString:@"bgColor"]) {
+    } else if ([name isEqualToString:@"backgroundColor"]) {
         view.backgroundColor = DoricColor(prop);
     } else if ([name isEqualToString:@"alpha"]) {
         view.alpha = [prop floatValue];
@@ -306,6 +334,285 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     NSNumber *weight = params[@"weight"];
     if (weight) {
         self.layoutConfig.weight = (DoricGravity) [weight integerValue];
+    }
+}
+
+- (NSDictionary *)transformation {
+    NSMutableDictionary *dictionary = [NSMutableDictionary new];
+    if (self.translationX) {
+        dictionary[@"translationX"] = self.translationX;
+    }
+    if (self.translationY) {
+        dictionary[@"translationY"] = self.translationY;
+    }
+    if (self.scaleX) {
+        dictionary[@"scaleX"] = self.scaleX;
+    }
+    if (self.scaleY) {
+        dictionary[@"scaleY"] = self.scaleY;
+    }
+    if (self.rotation) {
+        dictionary[@"rotation"] = self.rotation;
+    }
+    return dictionary;
+}
+
+- (void)doAnimation:(id)params withPromise:(DoricPromise *)promise {
+    CAAnimation *animation = [self parseAnimation:params];
+    AnimationCallback *originDelegate = animation.delegate;
+    AnimationCallback *animationCallback = [[AnimationCallback new] also:^(AnimationCallback *it) {
+        it.startBlock = ^(AnimationCallback *callback) {
+            if (originDelegate) {
+                originDelegate.startBlock(callback);
+            }
+            [self transformProperties];
+        };
+        it.endBlock = ^(AnimationCallback *callback) {
+            if (originDelegate) {
+                originDelegate.endBlock(callback);
+            }
+            [self transformProperties];
+            [promise resolve:self.transformation];
+        };
+    }];
+    animation.delegate = animationCallback;
+    if (params[@"delay"]) {
+        animation.beginTime = CACurrentMediaTime() + [params[@"delay"] floatValue] / 1000;
+    }
+    [self.view.layer addAnimation:animation forKey:nil];
+}
+
+- (CFTimeInterval)computeDurationOfAnimations:(NSArray<CAAnimation *> *)animations {
+    __block CFTimeInterval interval = 0;
+    [animations forEach:^(CAAnimation *obj) {
+        interval = MAX(interval, obj.beginTime + obj.duration * (1 + obj.repeatCount));
+    }];
+    return interval;
+}
+
+- (CAAnimation *)parseAnimation:(id)params {
+    if (params[@"animations"]) {
+        NSArray *anims = params[@"animations"];
+        CAAnimationGroup *animationGroup = [CAAnimationGroup animation];
+        NSMutableArray *animations = [NSMutableArray new];
+        [anims forEach:^(id obj) {
+            [animations addObject:[self parseAnimation:obj]];
+        }];
+        animationGroup.duration = [self computeDurationOfAnimations:animations];
+        animationGroup.animations = animations;
+        animationGroup.delegate = [[AnimationCallback new] also:^(AnimationCallback *it) {
+            it.startBlock = ^(AnimationCallback *callback) {
+                [[animations map:^id(CABasicAnimation *obj) {
+                    return obj.delegate;
+                }] forEach:^(AnimationCallback *obj) {
+                    if (obj.startBlock) {
+                        obj.startBlock(obj);
+                    }
+                }];
+            };
+            it.endBlock = ^(AnimationCallback *callback) {
+                [[animations map:^id(CABasicAnimation *obj) {
+                    return obj.delegate;
+                }] forEach:^(AnimationCallback *obj) {
+                    if (obj.endBlock) {
+                        obj.endBlock(obj);
+                    }
+                }];
+            };
+        }];
+        if (params[@"delay"]) {
+            animationGroup.beginTime = [params[@"delay"] floatValue] / 1000;
+        }
+        return animationGroup;
+    } else if ([params isKindOfClass:[NSDictionary class]]) {
+        NSArray<NSDictionary *> *changeables = params[@"changeables"];
+        NSString *type = params[@"type"];
+        if ([@"TranslationAnimation" isEqualToString:type]) {
+            __block CGPoint from = self.view.layer.position;
+            __block CGPoint to = self.view.layer.position;
+            CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"position"];
+            [changeables forEach:^(NSDictionary *obj) {
+                NSString *key = obj[@"key"];
+                if ([@"translationX" isEqualToString:key]) {
+                    from.x += [obj[@"fromValue"] floatValue] - self.translationX.floatValue;
+                    to.x += [obj[@"toValue"] floatValue] - self.translationX.floatValue;
+                    [self setFillMode:animation
+                                  key:key
+                           startValue:obj[@"fromValue"]
+                             endValue:obj[@"toValue"]
+                             fillMode:params[@"fillMode"]];
+                } else if ([@"translationY" isEqualToString:key]) {
+                    from.y += [obj[@"fromValue"] floatValue] - self.translationY.floatValue;
+                    to.y += [obj[@"toValue"] floatValue] - self.translationY.floatValue;
+                    [self setFillMode:animation
+                                  key:key
+                           startValue:obj[@"fromValue"]
+                             endValue:obj[@"toValue"]
+                             fillMode:params[@"fillMode"]];
+                }
+
+            }];
+            animation.fromValue = [NSValue valueWithCGPoint:from];
+            animation.toValue = [NSValue valueWithCGPoint:to];
+            [self setAnimation:animation params:params];
+            return animation;
+        } else {
+            CAAnimationGroup *animationGroup = [CAAnimationGroup animation];
+            NSMutableArray <CABasicAnimation *> *animations = [NSMutableArray new];
+
+            [changeables forEach:^(NSDictionary *obj) {
+                CABasicAnimation *animation = [self parseChangeable:obj fillMode:params[@"fillMode"]];
+                [animations addObject:animation];
+            }];
+            animationGroup.animations = animations;
+            animationGroup.delegate = [[AnimationCallback new] also:^(AnimationCallback *it) {
+                it.startBlock = ^(AnimationCallback *callback) {
+                    [[animations map:^id(CABasicAnimation *obj) {
+                        return obj.delegate;
+                    }] forEach:^(AnimationCallback *obj) {
+                        if (obj.startBlock) {
+                            obj.startBlock(obj);
+                        }
+                    }];
+                };
+                it.endBlock = ^(AnimationCallback *callback) {
+                    [[animations map:^id(CABasicAnimation *obj) {
+                        return obj.delegate;
+                    }] forEach:^(AnimationCallback *obj) {
+                        if (obj.endBlock) {
+                            obj.endBlock(obj);
+                        }
+                    }];
+                };
+            }];
+            [self setAnimation:animationGroup params:params];
+            return animationGroup;
+        }
+    }
+    return nil;
+}
+
+- (void)setAnimation:(CAAnimation *)animation params:(NSDictionary *)params {
+    if (params[@"repeatCount"]) {
+        NSInteger repeatCount = [params[@"repeatCount"] integerValue];
+        if (repeatCount < 0) {
+            repeatCount = NSNotFound;
+        }
+        animation.repeatCount = repeatCount;
+    }
+    if (params[@"repeatMode"]) {
+        NSInteger repeatMode = [params[@"repeatMode"] integerValue];
+        animation.autoreverses = repeatMode == 2;
+    }
+
+    if (params[@"delay"]) {
+        animation.beginTime = [params[@"delay"] floatValue] / 1000;
+    }
+    animation.duration = [params[@"duration"] floatValue] / 1000;
+}
+
+- (void)setFillMode:(CAAnimation *)animation
+                key:(NSString *)key
+         startValue:(NSNumber *)startValue
+           endValue:(NSNumber *)endValue
+           fillMode:(NSNumber *)fillMode {
+    NSUInteger fillModeInt = fillMode.unsignedIntegerValue;
+    if ((fillModeInt & 2) == 2) {
+        [self setAnimatedValue:key value:startValue];
+    }
+    AnimationCallback *callback = [AnimationCallback new];
+    AnimationCallback *originCallback = animation.delegate;
+    __weak typeof(self) _self = self;
+    callback.startBlock = ^(AnimationCallback *callback) {
+        __strong typeof(_self) self = _self;
+        callback.dictionary[key] = [self getAnimatedValue:key];
+        if (originCallback) {
+            originCallback.startBlock(callback);
+        }
+    };
+    callback.endBlock = ^(AnimationCallback *callback) {
+        __strong typeof(_self) self = _self;
+        if ((fillModeInt & 1) == 1) {
+            [self setAnimatedValue:key value:endValue];
+        }
+        if (originCallback) {
+            originCallback.endBlock(callback);
+        }
+    };
+    animation.delegate = callback;
+}
+
+- (NSNumber *)getAnimatedValue:(NSString *)key {
+    if ([@"translationX" isEqualToString:key]) {
+        return self.translationX;
+    }
+    if ([@"translationY" isEqualToString:key]) {
+        return self.translationY;
+    }
+    if ([@"scaleX" isEqualToString:key]) {
+        return self.scaleX;
+    }
+    if ([@"scaleY" isEqualToString:key]) {
+        return self.scaleY;
+    }
+    if ([@"rotation" isEqualToString:key]) {
+        return self.rotation;
+    }
+    return nil;
+}
+
+- (void)setAnimatedValue:(NSString *)key value:(NSNumber *)value {
+    if ([@"translationX" isEqualToString:key]) {
+        self.translationX = value;
+    } else if ([@"translationY" isEqualToString:key]) {
+        self.translationY = value;
+    } else if ([@"scaleX" isEqualToString:key]) {
+        self.scaleX = value;
+    } else if ([@"scaleY" isEqualToString:key]) {
+        self.scaleY = value;
+    } else if ([@"rotation" isEqualToString:key]) {
+        self.rotation = value;
+    }
+}
+
+- (CABasicAnimation *)parseChangeable:(NSDictionary *)params fillMode:(NSNumber *)fillMode {
+    NSString *key = params[@"key"];
+    CABasicAnimation *animation = [CABasicAnimation animation];
+    if ([@"scaleX" isEqualToString:key]) {
+        animation.keyPath = @"transform.scale.x";
+        animation.fromValue = params[@"fromValue"];
+        animation.toValue = params[@"toValue"];
+    } else if ([@"scaleY" isEqualToString:key]) {
+        animation.keyPath = @"transform.scale.y";
+        animation.fromValue = params[@"fromValue"];
+        animation.toValue = params[@"toValue"];
+    } else if ([@"rotation" isEqualToString:key]) {
+        animation.keyPath = @"transform.rotation.z";
+        animation.fromValue = @([params[@"fromValue"] floatValue] * M_PI);
+        animation.toValue = @([params[@"toValue"] floatValue] * M_PI);
+    } else if ([@"backgroundColor" isEqualToString:key]) {
+        animation.keyPath = @"backgroundColor";
+        animation.fromValue = params[@"fromValue"];
+        animation.toValue = params[@"toValue"];
+    }
+    [self setFillMode:animation
+                  key:key
+           startValue:params[@"fromValue"]
+             endValue:params[@"toValue"]
+             fillMode:fillMode];
+    return animation;
+}
+
+- (CAMediaTimingFillMode)translateToFillMode:(NSNumber *)fillMode {
+    switch ([fillMode integerValue]) {
+        case 1:
+            return kCAFillModeForwards;
+        case 2:
+            return kCAFillModeBackwards;
+        case 3:
+            return kCAFillModeBoth;
+        default:
+            return kCAFillModeRemoved;
     }
 }
 

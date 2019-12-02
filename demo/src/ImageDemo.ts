@@ -13,7 +13,7 @@ class ImageDemo extends Panel {
                 layoutConfig: layoutConfig().w(LayoutSpec.AT_MOST),
                 textSize: 30,
                 textColor: Color.WHITE,
-                bgColor: colors[5],
+                backgroundColor: colors[5],
                 textAlignment: gravity().center(),
                 height: 50,
             }),

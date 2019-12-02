@@ -9,7 +9,7 @@ class NavbarDemo extends Panel {
             label('isHidden').apply({
                 width: 200,
                 height: 50,
-                bgColor: colors[0],
+                backgroundColor: colors[0],
                 textSize: 30,
                 textColor: Color.WHITE,
                 layoutConfig: layoutConfig().exactly(),
@@ -22,7 +22,7 @@ class NavbarDemo extends Panel {
             label('setHidden').apply({
                 width: 200,
                 height: 50,
-                bgColor: colors[0],
+                backgroundColor: colors[0],
                 textSize: 30,
                 textColor: Color.WHITE,
                 layoutConfig: layoutConfig().exactly(),
@@ -37,7 +37,7 @@ class NavbarDemo extends Panel {
             label('setTitle').apply({
                 width: 200,
                 height: 50,
-                bgColor: colors[0],
+                backgroundColor: colors[0],
                 textSize: 30,
                 textColor: Color.WHITE,
                 layoutConfig: layoutConfig().exactly(),
@@ -51,7 +51,7 @@ class NavbarDemo extends Panel {
             label('setBgColor').apply({
                 width: 200,
                 height: 50,
-                bgColor: colors[0],
+                backgroundColor: colors[0],
                 textSize: 30,
                 textColor: Color.WHITE,
                 layoutConfig: layoutConfig().exactly(),
@@ -65,7 +65,7 @@ class NavbarDemo extends Panel {
             label('Pop').apply({
                 width: 200,
                 height: 50,
-                bgColor: colors[0],
+                backgroundColor: colors[0],
                 textSize: 30,
                 textColor: Color.WHITE,
                 layoutConfig: layoutConfig().exactly(),

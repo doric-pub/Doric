@@ -9,7 +9,7 @@ class NaivgatorDemo extends Panel {
                 layoutConfig: layoutConfig().w(LayoutSpec.AT_MOST),
                 textSize: 30,
                 textColor: Color.WHITE,
-                bgColor: colors[1],
+                backgroundColor: colors[1],
                 textAlignment: gravity().center(),
                 height: 50,
             }),
@@ -20,7 +20,7 @@ class NaivgatorDemo extends Panel {
                 'NetworkDemo', 'ScrollerDemo', 'SliderDemo', 'Snake', 'StorageDemo'].map(e =>
                     label(e).apply({
                         height: 50,
-                        bgColor: colors[0],
+                        backgroundColor: colors[0],
                         textSize: 30,
                         textColor: Color.WHITE,
                         layoutConfig: layoutConfig().exactly().w(LayoutSpec.AT_MOST),
@@ -32,7 +32,7 @@ class NaivgatorDemo extends Panel {
             label('POP').apply({
                 width: 200,
                 height: 50,
-                bgColor: colors[0],
+                backgroundColor: colors[0],
                 textSize: 30,
                 textColor: Color.WHITE,
                 layoutConfig: layoutConfig().exactly(),

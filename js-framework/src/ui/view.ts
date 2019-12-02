@@ -19,6 +19,7 @@ import { uniqueId } from "../util/uniqueId";
 import { loge } from "../util/log";
 import { BridgeContext } from "../runtime/global";
 import { LayoutConfig } from '../util/layoutconfig'
+import { IAnimation } from "./animation";
 
 export function Property(target: Object, propKey: string) {
     Reflect.defineMetadata(propKey, true, target)
@@ -27,7 +28,7 @@ export function Property(target: Object, propKey: string) {
 export interface IView {
     width?: number
     height?: number
-    bgColor?: Color | GradientColor
+    backgroundColor?: Color | GradientColor
     corners?: number | { leftTop?: number; rightTop?: number; leftBottom?: number; rightBottom?: number }
     border?: { width: number; color: Color; }
     shadow?: { color: Color; opacity: number; radius: number; offsetX: number; offsetY: number }
@@ -84,7 +85,7 @@ export abstract class View implements Modeling, IView {
     y: number = 0
 
     @Property
-    bgColor?: Color | GradientColor
+    backgroundColor?: Color | GradientColor
 
     @Property
     corners?: number | { leftTop?: number; rightTop?: number; leftBottom?: number; rightBottom?: number }
@@ -333,6 +334,15 @@ export abstract class View implements Modeling, IView {
     @Property
     rotation?: number
     /**----------transform----------*/
+
+    doAnimation(context: BridgeContext, animation: IAnimation) {
+        return this.nativeChannel(context, "doAnimation")(animation.toModel()).then((args) => {
+            for (let key in args) {
+                Reflect.set(this, key, Reflect.get(args, key, args), this)
+                Reflect.deleteProperty(this.__dirty_props__, key)
+            }
+        })
+    }
 }
 
 export abstract class Superview extends View {

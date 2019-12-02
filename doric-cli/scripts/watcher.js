@@ -16,15 +16,19 @@ setTimeout(() => {
         fs.readFile(path, 'utf-8', (error, data) => {
             if (!path.endsWith('.map')) {
                 console.log('File change:', path)
-                const sourceMap = doMerge(path + ".map")
-                ws.connections.forEach(e => {
-                    e.sendText(JSON.stringify({
-                        cmd: 'RELOAD',
-                        script: data,
-                        source: path.match(/[^/\\]*$/)[0],
-                        sourceMap,
-                    }))
-                })
+                try {
+                    const sourceMap = doMerge(path + ".map")
+                    ws.connections.forEach(e => {
+                        e.sendText(JSON.stringify({
+                            cmd: 'RELOAD',
+                            script: data,
+                            source: path.match(/[^/\\]*$/)[0],
+                            sourceMap,
+                        }))
+                    })
+                } catch (e) {
+                    console.error(e)
+                }
             }
         })
     });

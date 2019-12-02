@@ -16,6 +16,8 @@
 package pub.doric.shader;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
@@ -28,19 +30,23 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 
-import pub.doric.Doric;
 import pub.doric.DoricContext;
 import pub.doric.DoricRegistry;
 import pub.doric.async.AsyncResult;
 import pub.doric.extension.bridge.DoricMethod;
+import pub.doric.extension.bridge.DoricPromise;
 import pub.doric.utils.DoricContextHolder;
 import pub.doric.utils.DoricConstant;
+import pub.doric.utils.DoricLog;
 import pub.doric.utils.DoricMetaInfo;
 import pub.doric.utils.DoricUtils;
 
+import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSDecoder;
+import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
+import com.github.pengfeizhou.jscore.JavaValue;
 
 import java.util.LinkedList;
 
@@ -172,17 +178,17 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                     setY(prop.asNumber().toFloat());
                 }
                 break;
-            case "bgColor":
+            case "backgroundColor":
                 if (isAnimating()) {
                     ObjectAnimator animator = ObjectAnimator.ofInt(
                             this,
                             name,
-                            getBgColor(),
+                            getBackgroundColor(),
                             prop.asNumber().toInt());
                     animator.setEvaluator(new ArgbEvaluator());
                     addAnimator(animator);
                 } else {
-                    setBgColor(prop.asNumber().toInt());
+                    setBackgroundColor(prop.asNumber().toInt());
                 }
                 break;
             case "onClick":
@@ -462,19 +468,30 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
 
     @DoricMethod
     public float getWidth() {
-        return DoricUtils.px2dp(getNodeView().getWidth());
+        if (mLayoutParams.width >= 0) {
+            return DoricUtils.px2dp(mLayoutParams.width);
+        } else {
+            return mView.getMeasuredWidth();
+        }
     }
 
     @DoricMethod
     public float getHeight() {
-        return DoricUtils.px2dp(getNodeView().getHeight());
+        if (mLayoutParams.width >= 0) {
+            return DoricUtils.px2dp(mLayoutParams.height);
+        } else {
+            return mView.getMeasuredHeight();
+        }
     }
 
     @DoricMethod
     protected void setWidth(float width) {
         if (mLayoutParams.width >= 0) {
             mLayoutParams.width = DoricUtils.dp2px(width);
-            mView.requestLayout();
+            if (mView.getLayoutParams() != mLayoutParams) {
+                mView.getLayoutParams().width = mLayoutParams.width;
+            }
+            getNodeView().requestLayout();
         }
     }
 
@@ -482,7 +499,10 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     protected void setHeight(float height) {
         if (mLayoutParams.height >= 0) {
             mLayoutParams.height = DoricUtils.dp2px(height);
-            mView.requestLayout();
+            if (mView.getLayoutParams() != mLayoutParams) {
+                mView.getLayoutParams().height = mLayoutParams.height;
+            }
+            getNodeView().requestLayout();
         }
     }
 
@@ -490,7 +510,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     protected void setX(float x) {
         if (mLayoutParams instanceof ViewGroup.MarginLayoutParams) {
             ((ViewGroup.MarginLayoutParams) mLayoutParams).leftMargin = DoricUtils.dp2px(x);
-            mView.requestLayout();
+            getNodeView().requestLayout();
         }
     }
 
@@ -498,7 +518,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     protected void setY(float y) {
         if (mLayoutParams instanceof ViewGroup.MarginLayoutParams) {
             ((ViewGroup.MarginLayoutParams) mLayoutParams).topMargin = DoricUtils.dp2px(y);
-            mView.requestLayout();
+            getNodeView().requestLayout();
         }
     }
 
@@ -519,7 +539,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     }
 
     @DoricMethod
-    public int getBgColor() {
+    public int getBackgroundColor() {
         if (mView.getBackground() instanceof ColorDrawable) {
             return ((ColorDrawable) mView.getBackground()).getColor();
         }
@@ -527,7 +547,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     }
 
     @DoricMethod
-    public void setBgColor(int color) {
+    public void setBackgroundColor(int color) {
         mView.setBackgroundColor(color);
     }
 
@@ -620,5 +640,165 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     @DoricMethod
     public float getPivotY() {
         return getNodeView().getPivotY() / getNodeView().getHeight();
+    }
+
+    private String[] animatedKeys = {
+            "translationX",
+            "translationY",
+            "scaleX",
+            "scaleY",
+            "rotation",
+    };
+
+    @DoricMethod
+    public void doAnimation(JSValue value, final DoricPromise promise) {
+        Animator animator = parseAnimator(value);
+        if (animator != null) {
+            animator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    JSONBuilder jsonBuilder = new JSONBuilder();
+                    for (String key : animatedKeys) {
+                        jsonBuilder.put(key, getAnimatedValue(key));
+                    }
+                    promise.resolve(new JavaValue(jsonBuilder.toJSONObject()));
+                }
+            });
+            animator.start();
+        }
+    }
+
+    private Animator parseAnimator(JSValue value) {
+        if (!value.isObject()) {
+            DoricLog.e("parseAnimator error");
+            return null;
+        }
+        JSValue animations = value.asObject().getProperty("animations");
+        if (animations.isArray()) {
+            AnimatorSet animatorSet = new AnimatorSet();
+
+            for (int i = 0; i < animations.asArray().size(); i++) {
+                animatorSet.play(parseAnimator(animations.asArray().get(i)));
+            }
+
+            JSValue delayJS = value.asObject().getProperty("delay");
+            if (delayJS.isNumber()) {
+                animatorSet.setStartDelay(delayJS.asNumber().toLong());
+            }
+            return animatorSet;
+        } else if (value.isObject()) {
+            JSArray changeables = value.asObject().getProperty("changeables").asArray();
+            AnimatorSet animatorSet = new AnimatorSet();
+
+            JSValue repeatCount = value.asObject().getProperty("repeatCount");
+
+            JSValue repeatMode = value.asObject().getProperty("repeatMode");
+            JSValue fillMode = value.asObject().getProperty("fillMode");
+            for (int j = 0; j < changeables.size(); j++) {
+                ObjectAnimator animator = parseChangeable(changeables.get(j).asObject(), fillMode);
+                if (repeatCount.isNumber()) {
+                    animator.setRepeatCount(repeatCount.asNumber().toInt());
+                }
+                if (repeatMode.isNumber()) {
+                    animator.setRepeatMode(repeatMode.asNumber().toInt());
+                }
+                animatorSet.play(animator);
+            }
+            long duration = value.asObject().getProperty("duration").asNumber().toLong();
+            animatorSet.setDuration(duration);
+            JSValue delayJS = value.asObject().getProperty("delay");
+            if (delayJS.isNumber()) {
+                animatorSet.setStartDelay(delayJS.asNumber().toLong());
+            }
+
+            return animatorSet;
+        } else {
+            return null;
+        }
+    }
+
+    private ObjectAnimator parseChangeable(JSObject jsObject, JSValue fillMode) {
+        String key = jsObject.getProperty("key").asString().value();
+        float startVal = jsObject.getProperty("fromValue").asNumber().toFloat();
+        float endVal = jsObject.getProperty("toValue").asNumber().toFloat();
+        ObjectAnimator animator = ObjectAnimator.ofFloat(this,
+                key,
+                startVal,
+                endVal
+        );
+        setFillMode(animator, key, startVal, endVal, fillMode);
+        return animator;
+    }
+
+    private void setFillMode(ObjectAnimator animator,
+                             final String key,
+                             float startVal,
+                             float endVal,
+                             JSValue jsValue) {
+        int fillMode = 0;
+        if (jsValue.isNumber()) {
+            fillMode = jsValue.asNumber().toInt();
+        }
+        if ((fillMode & 2) == 2) {
+            setAnimatedValue(key, startVal);
+        }
+        final int finalFillMode = fillMode;
+        animator.addListener(new AnimatorListenerAdapter() {
+            private float originVal;
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                originVal = getAnimatedValue(key);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                if ((finalFillMode & 1) != 1) {
+                    setAnimatedValue(key, originVal);
+                }
+            }
+        });
+    }
+
+    private void setAnimatedValue(String key, float value) {
+        switch (key) {
+            case "translationX":
+                setTranslationX(value);
+                break;
+            case "translationY":
+                setTranslationY(value);
+                break;
+            case "scaleX":
+                setScaleX(value);
+                break;
+            case "scaleY":
+                setScaleY(value);
+                break;
+            case "rotation":
+                setRotation(value);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private float getAnimatedValue(String key) {
+        switch (key) {
+            case "translationX":
+                return getTranslationX();
+            case "translationY":
+                return getTranslationY();
+            case "scaleX":
+                return getScaleX();
+            case "scaleY":
+                return getScaleY();
+            case "rotation":
+                return getRotation();
+            default:
+                return 0;
+        }
     }
 }

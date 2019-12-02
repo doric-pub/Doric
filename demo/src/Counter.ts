@@ -59,7 +59,7 @@ class CounterView extends ViewHolder<CountModel> {
                 offsetY: 10,
             }
             it.corners = 20
-            it.bgColor = Color.parse('#ff00ff')
+            it.backgroundColor = Color.parse('#ff00ff')
         }))
 
         root.addChild((new Image).also(iv => {

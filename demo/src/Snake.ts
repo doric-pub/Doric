@@ -144,7 +144,7 @@ class SnakeView extends ViewHolder<SnakeModel> {
     right?: Text
 
     build(root: Group): void {
-        root.bgColor = Color.parse('#000000')
+        root.backgroundColor = Color.parse('#000000')
         vlayout([
             text({
                 text: "Snake",
@@ -160,7 +160,7 @@ class SnakeView extends ViewHolder<SnakeModel> {
                 },
             }),
             (new Stack).also(panel => {
-                panel.bgColor = Color.parse('#00ff00')
+                panel.backgroundColor = Color.parse('#00ff00')
                 this.panel = panel
             }),
             hlayout([
@@ -188,7 +188,7 @@ class SnakeView extends ViewHolder<SnakeModel> {
                         text: "↑",
                         textSize: 30,
                         textAlignment: new Gravity().center(),
-                        bgColor: Color.parse('#ffff00'),
+                        backgroundColor: Color.parse('#ffff00'),
                         layoutConfig: {
                             widthSpec: LayoutSpec.EXACTLY,
                             heightSpec: LayoutSpec.EXACTLY,
@@ -207,7 +207,7 @@ class SnakeView extends ViewHolder<SnakeModel> {
                         text: "←",
                         textSize: 30,
                         textAlignment: new Gravity().center(),
-                        bgColor: Color.parse('#ffff00'),
+                        backgroundColor: Color.parse('#ffff00'),
                         layoutConfig: {
                             widthSpec: LayoutSpec.EXACTLY,
                             heightSpec: LayoutSpec.EXACTLY,
@@ -219,7 +219,7 @@ class SnakeView extends ViewHolder<SnakeModel> {
                         text: "↓",
                         textSize: 30,
                         textAlignment: new Gravity().center(),
-                        bgColor: Color.parse('#ffff00'),
+                        backgroundColor: Color.parse('#ffff00'),
                         layoutConfig: {
                             widthSpec: LayoutSpec.EXACTLY,
                             heightSpec: LayoutSpec.EXACTLY,
@@ -231,7 +231,7 @@ class SnakeView extends ViewHolder<SnakeModel> {
                         text: "→",
                         textSize: 30,
                         textAlignment: new Gravity().center(),
-                        bgColor: Color.parse('#ffff00'),
+                        backgroundColor: Color.parse('#ffff00'),
                         layoutConfig: {
                             widthSpec: LayoutSpec.EXACTLY,
                             heightSpec: LayoutSpec.EXACTLY,
@@ -292,9 +292,9 @@ class SnakeView extends ViewHolder<SnakeModel> {
                 this.panel.addChild(item)
             }
             if (index === nodes.length - 1) {
-                item.bgColor = Color.parse('#ffff00')
+                item.backgroundColor = Color.parse('#ffff00')
             } else {
-                item.bgColor = Color.parse('#ff0000')
+                item.backgroundColor = Color.parse('#ff0000')
             }
             item.x = e.x * 10
             item.y = e.y * 10

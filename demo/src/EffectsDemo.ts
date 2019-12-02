@@ -6,7 +6,7 @@ import { colors } from "./utils";
 function box(idx = 0) {
     return (new Stack).also(it => {
         it.width = it.height = 20
-        it.bgColor = colors[idx || 0]
+        it.backgroundColor = colors[idx || 0]
     })
 }
 
@@ -15,7 +15,7 @@ function boxStr(str: string, idx = 0) {
         it.width = it.height = 20
         it.text = str
         it.textColor = Color.WHITE
-        it.bgColor = colors[idx || 0]
+        it.backgroundColor = colors[idx || 0]
     })
 }
 

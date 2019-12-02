@@ -40,7 +40,7 @@ class RefreshableDemo extends Panel {
                 label('start Refresh').apply({
                     width: 300,
                     height: 50,
-                    bgColor: colors[0],
+                    backgroundColor: colors[0],
                     textSize: 30,
                     textColor: Color.WHITE,
                     layoutConfig: layoutConfig().exactly(),
@@ -51,7 +51,7 @@ class RefreshableDemo extends Panel {
                 label('stop Refresh').apply({
                     width: 300,
                     height: 50,
-                    bgColor: colors[0],
+                    backgroundColor: colors[0],
                     textSize: 30,
                     textColor: Color.WHITE,
                     layoutConfig: layoutConfig().exactly(),
@@ -63,7 +63,7 @@ class RefreshableDemo extends Panel {
                 label('Enable Refresh').apply({
                     width: 300,
                     height: 50,
-                    bgColor: colors[0],
+                    backgroundColor: colors[0],
                     textSize: 30,
                     textColor: Color.WHITE,
                     layoutConfig: layoutConfig().exactly(),
@@ -75,7 +75,7 @@ class RefreshableDemo extends Panel {
                 label('Disable Refresh').apply({
                     width: 300,
                     height: 50,
-                    bgColor: colors[0],
+                    backgroundColor: colors[0],
                     textSize: 30,
                     textColor: Color.WHITE,
                     layoutConfig: layoutConfig().exactly(),
@@ -86,7 +86,7 @@ class RefreshableDemo extends Panel {
                 label('Rotate self').apply({
                     width: 300,
                     height: 50,
-                    bgColor: colors[0],
+                    backgroundColor: colors[0],
                     textSize: 30,
                     textColor: Color.WHITE,
                     layoutConfig: layoutConfig().exactly(),
@@ -101,7 +101,7 @@ class RefreshableDemo extends Panel {
                 space: 10,
             } as IVLayout))
         }).apply({
-            bgColor: Color.YELLOW
+            backgroundColor: Color.YELLOW
         }).in(rootView)
     }
 }

@@ -9,7 +9,7 @@ class PopoverDemo extends Panel {
             label('Popover').apply({
                 width: 200,
                 height: 50,
-                bgColor: colors[0],
+                backgroundColor: colors[0],
                 textSize: 30,
                 textColor: Color.WHITE,
                 layoutConfig: layoutConfig().exactly(),
@@ -17,14 +17,14 @@ class PopoverDemo extends Panel {
                     popover(context).show(text({
                         width: 200,
                         height: 50,
-                        bgColor: colors[0],
+                        backgroundColor: colors[0],
                         textColor: Color.WHITE,
                         layoutConfig: layoutConfig().exactly().a(Gravity.Center),
                         text: "This is PopOver Window",
                     }).also(v => {
                         let idx = 0
                         v.onClick = () => {
-                            v.bgColor = colors[(++idx) % colors.length]
+                            v.backgroundColor = colors[(++idx) % colors.length]
                         }
                         modal(context).toast('Dismissed after 3 seconds')
                         setTimeout(() => {

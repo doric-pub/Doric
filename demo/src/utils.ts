@@ -24,7 +24,7 @@ export function label(str: string) {
 export function box(idx = 0) {
     return (new Stack).also(it => {
         it.width = it.height = 20
-        it.bgColor = colors[idx || 0]
+        it.backgroundColor = colors[idx || 0]
     })
 }
 export function boxStr(str: string, idx = 0) {
@@ -32,7 +32,7 @@ export function boxStr(str: string, idx = 0) {
         it.width = it.height = 20
         it.text = str
         it.textColor = Color.WHITE
-        it.bgColor = colors[idx || 0]
+        it.backgroundColor = colors[idx || 0]
     })
 }
 
@@ -42,7 +42,7 @@ export function title(str: string) {
         layoutConfig: layoutConfig().w(LayoutSpec.AT_MOST),
         textSize: 30,
         textColor: Color.WHITE,
-        bgColor: colors[1],
+        backgroundColor: colors[1],
         textAlignment: gravity().center(),
         height: 50,
     })

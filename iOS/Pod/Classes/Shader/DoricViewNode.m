@@ -176,7 +176,7 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
         view.x = [(NSNumber *) prop floatValue];
     } else if ([name isEqualToString:@"y"]) {
         view.y = [(NSNumber *) prop floatValue];
-    } else if ([name isEqualToString:@"bgColor"]) {
+    } else if ([name isEqualToString:@"backgroundColor"]) {
         view.backgroundColor = DoricColor(prop);
     } else if ([name isEqualToString:@"alpha"]) {
         view.alpha = [prop floatValue];
@@ -590,7 +590,7 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
         animation.keyPath = @"transform.rotation.z";
         animation.fromValue = @([params[@"fromValue"] floatValue] * M_PI);
         animation.toValue = @([params[@"toValue"] floatValue] * M_PI);
-    } else if ([@"bgColor" isEqualToString:key]) {
+    } else if ([@"backgroundColor" isEqualToString:key]) {
         animation.keyPath = @"backgroundColor";
         animation.fromValue = params[@"fromValue"];
         animation.toValue = params[@"toValue"];

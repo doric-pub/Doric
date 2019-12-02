@@ -48,7 +48,6 @@ import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 import com.github.pengfeizhou.jscore.JavaValue;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
@@ -179,17 +178,17 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                     setY(prop.asNumber().toFloat());
                 }
                 break;
-            case "bgColor":
+            case "backgroundColor":
                 if (isAnimating()) {
                     ObjectAnimator animator = ObjectAnimator.ofInt(
                             this,
                             name,
-                            getBgColor(),
+                            getBackgroundColor(),
                             prop.asNumber().toInt());
                     animator.setEvaluator(new ArgbEvaluator());
                     addAnimator(animator);
                 } else {
-                    setBgColor(prop.asNumber().toInt());
+                    setBackgroundColor(prop.asNumber().toInt());
                 }
                 break;
             case "onClick":
@@ -540,7 +539,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     }
 
     @DoricMethod
-    public int getBgColor() {
+    public int getBackgroundColor() {
         if (mView.getBackground() instanceof ColorDrawable) {
             return ((ColorDrawable) mView.getBackground()).getColor();
         }
@@ -548,7 +547,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     }
 
     @DoricMethod
-    public void setBgColor(int color) {
+    public void setBackgroundColor(int color) {
         mView.setBackgroundColor(color);
     }
 

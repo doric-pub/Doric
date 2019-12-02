@@ -14,7 +14,7 @@ const colors = [
 function box(idx = 0) {
     return (new Stack).also(it => {
         it.width = it.height = 20
-        it.bgColor = Color.parse(colors[idx || 0])
+        it.backgroundColor = Color.parse(colors[idx || 0])
     })
 }
 function boxStr(str: string, idx = 0) {
@@ -22,7 +22,7 @@ function boxStr(str: string, idx = 0) {
         it.width = it.height = 20
         it.text = str
         it.textColor = Color.parse('#ffffff')
-        it.bgColor = Color.parse(colors[idx || 0])
+        it.backgroundColor = Color.parse(colors[idx || 0])
     })
 }
 function label(str: string) {
@@ -117,7 +117,7 @@ class LayoutDemo extends Panel {
                             widthSpec: LayoutSpec.EXACTLY,
                             heightSpec: LayoutSpec.EXACTLY,
                         },
-                        bgColor: Color.parse('#eeeeee'),
+                        backgroundColor: Color.parse('#eeeeee'),
                         gravity: gravity().center(),
                     } as IHLayout),
                     hlayout([
@@ -137,7 +137,7 @@ class LayoutDemo extends Panel {
                             widthSpec: LayoutSpec.EXACTLY,
                             heightSpec: LayoutSpec.EXACTLY,
                         },
-                        bgColor: Color.parse('#eeeeee'),
+                        backgroundColor: Color.parse('#eeeeee'),
                         gravity: gravity().center(),
                     } as IHLayout),
                     hlayout([
@@ -157,7 +157,7 @@ class LayoutDemo extends Panel {
                             widthSpec: LayoutSpec.EXACTLY,
                             heightSpec: LayoutSpec.EXACTLY,
                         },
-                        bgColor: Color.parse('#eeeeee'),
+                        backgroundColor: Color.parse('#eeeeee'),
                         gravity: gravity().center(),
                     } as IHLayout),
                     hlayout([
@@ -183,7 +183,7 @@ class LayoutDemo extends Panel {
                             widthSpec: LayoutSpec.EXACTLY,
                             heightSpec: LayoutSpec.EXACTLY,
                         },
-                        bgColor: Color.parse('#eeeeee'),
+                        backgroundColor: Color.parse('#eeeeee'),
                         gravity: gravity().center(),
                     } as IHLayout),
                     hlayout([
@@ -215,7 +215,7 @@ class LayoutDemo extends Panel {
                             widthSpec: LayoutSpec.EXACTLY,
                             heightSpec: LayoutSpec.EXACTLY,
                         },
-                        bgColor: Color.parse('#eeeeee'),
+                        backgroundColor: Color.parse('#eeeeee'),
                         gravity: gravity().center(),
                     } as IHLayout),
                 ]).also(it => {
@@ -315,7 +315,7 @@ class LayoutDemo extends Panel {
                                 widthSpec: LayoutSpec.EXACTLY,
                                 heightSpec: LayoutSpec.EXACTLY,
                             },
-                            bgColor: Color.parse('#eeeeee'),
+                            backgroundColor: Color.parse('#eeeeee'),
                             gravity: gravity().center(),
                         } as IVLayout),
                         vlayout([
@@ -345,7 +345,7 @@ class LayoutDemo extends Panel {
                                 widthSpec: LayoutSpec.EXACTLY,
                                 heightSpec: LayoutSpec.EXACTLY,
                             },
-                            bgColor: Color.parse('#eeeeee'),
+                            backgroundColor: Color.parse('#eeeeee'),
                             gravity: gravity().center(),
                         } as IVLayout),
                         vlayout([
@@ -375,7 +375,7 @@ class LayoutDemo extends Panel {
                                 widthSpec: LayoutSpec.EXACTLY,
                                 heightSpec: LayoutSpec.EXACTLY,
                             },
-                            bgColor: Color.parse('#eeeeee'),
+                            backgroundColor: Color.parse('#eeeeee'),
                             gravity: gravity().center(),
                         } as IVLayout),
                         vlayout([
@@ -406,7 +406,7 @@ class LayoutDemo extends Panel {
                                 widthSpec: LayoutSpec.EXACTLY,
                                 heightSpec: LayoutSpec.EXACTLY,
                             },
-                            bgColor: Color.parse('#eeeeee'),
+                            backgroundColor: Color.parse('#eeeeee'),
                             gravity: gravity().center(),
                         } as IVLayout),
                         vlayout([
@@ -438,7 +438,7 @@ class LayoutDemo extends Panel {
                                 widthSpec: LayoutSpec.EXACTLY,
                                 heightSpec: LayoutSpec.EXACTLY,
                             },
-                            bgColor: Color.parse('#eeeeee'),
+                            backgroundColor: Color.parse('#eeeeee'),
                             gravity: gravity().center(),
                         } as IVLayout),
                     ]).also(it => {

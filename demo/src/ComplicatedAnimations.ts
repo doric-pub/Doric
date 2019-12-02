@@ -6,7 +6,7 @@ function thisLabel(str: string) {
         text: str,
         width: 80,
         height: 30,
-        bgColor: colors[0],
+        backgroundColor: colors[0],
         textSize: 10,
         textColor: Color.WHITE,
         layoutConfig: layoutConfig().exactly(),
@@ -128,7 +128,7 @@ class AnimationDemo extends Panel {
                 view,
             ]).apply({
                 layoutConfig: layoutConfig().atmost(),
-                bgColor: colors[1].alpha(0.3 * 255),
+                backgroundColor: colors[1].alpha(0.3 * 255),
             }),
         ]).apply({
             layoutConfig: layoutConfig().atmost(),

@@ -14,7 +14,7 @@ class ListPanel extends Panel {
                 },
                 textSize: 30,
                 textColor: Color.parse("#535c68"),
-                bgColor: Color.parse("#dff9fb"),
+                backgroundColor: Color.parse("#dff9fb"),
                 textAlignment: gravity().center(),
                 height: 50,
             }),
@@ -64,7 +64,7 @@ class ListPanel extends Panel {
                                             }
                                         }
                                         it.gravity = gravity().center()
-                                        it.bgColor = colors[(idx + offset) % colors.length]
+                                        it.backgroundColor = colors[(idx + offset) % colors.length]
                                         let clicked = 0
                                         it.onClick = () => {
                                             counter.text = `Item Clicked ${++clicked}`
@@ -107,8 +107,8 @@ class ListPanel extends Panel {
                 widthSpec: LayoutSpec.AT_MOST,
                 heightSpec: LayoutSpec.AT_MOST,
             }
-            it.bgColor = Color.WHITE
+            it.backgroundColor = Color.WHITE
         }).in(rootView)
-        refreshView.bgColor = Color.YELLOW
+        refreshView.backgroundColor = Color.YELLOW
     }
 }

@@ -24,7 +24,7 @@ class SliderPanel extends Panel {
                 },
                 textSize: 30,
                 textColor: Color.WHITE,
-                bgColor: colors[1],
+                backgroundColor: colors[1],
                 textAlignment: gravity().center(),
                 height: 50,
             }),
@@ -38,7 +38,7 @@ class SliderPanel extends Panel {
                     })).also(it => {
                         let start = idx
                         it.onClick = () => {
-                            it.bgColor = (colors[++start % colors.length])
+                            it.backgroundColor = (colors[++start % colors.length])
                         }
                     })
                 },

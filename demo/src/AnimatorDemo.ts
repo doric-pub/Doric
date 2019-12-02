@@ -6,7 +6,7 @@ function thisLabel(str: string) {
         text: str,
         width: 60,
         height: 50,
-        bgColor: colors[0],
+        backgroundColor: colors[0],
         textSize: 15,
         textColor: Color.WHITE,
         layoutConfig: layoutConfig().exactly(),
@@ -34,7 +34,7 @@ class AnimatorDemo extends Panel {
                                         view.width = view.height = 20
                                         view.x = view.y = 0
                                         view.rotation = 0
-                                        view.bgColor = colors[2]
+                                        view.backgroundColor = colors[2]
                                         view.corners = 0
                                         view.scaleX = 1
                                         view.scaleY = 1
@@ -102,7 +102,7 @@ class AnimatorDemo extends Panel {
                             onClick: () => {
                                 animate(this)({
                                     animations: () => {
-                                        view.bgColor = colors[(idx++) % colors.length]
+                                        view.backgroundColor = colors[(idx++) % colors.length]
                                     },
                                     duration: 1000,
                                 });
@@ -174,7 +174,7 @@ class AnimatorDemo extends Panel {
                 view,
             ]).apply({
                 layoutConfig: layoutConfig().atmost(),
-                bgColor: colors[1].alpha(0.3 * 255),
+                backgroundColor: colors[1].alpha(0.3 * 255),
             }),
         ]).apply({
             layoutConfig: layoutConfig().atmost(),

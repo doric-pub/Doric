@@ -23,7 +23,7 @@ class FlowDemo extends Panel {
             rowSpace: 10,
             renderItem: (idx) => {
                 return new FlowLayoutItem().apply({
-                    bgColor: colors[idx % colors.length],
+                    backgroundColor: colors[idx % colors.length],
                     height: 50 + (idx % 3) * 20,
                     layoutConfig: layoutConfig().w(LayoutSpec.AT_MOST),
                 }).also(it => {

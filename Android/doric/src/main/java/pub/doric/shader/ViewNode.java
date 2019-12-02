@@ -43,8 +43,10 @@ import pub.doric.utils.DoricUtils;
 
 import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSDecoder;
+import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
+import com.github.pengfeizhou.jscore.JavaValue;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -641,6 +643,14 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         return getNodeView().getPivotY() / getNodeView().getHeight();
     }
 
+    private String[] animatedKeys = {
+            "translationX",
+            "translationY",
+            "scaleX",
+            "scaleY",
+            "rotation",
+    };
+
     @DoricMethod
     public void doAnimation(JSValue value, final DoricPromise promise) {
         Animator animator = parseAnimator(value);
@@ -649,7 +659,11 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     super.onAnimationEnd(animation);
-                    promise.resolve();
+                    JSONBuilder jsonBuilder = new JSONBuilder();
+                    for (String key : animatedKeys) {
+                        jsonBuilder.put(key, getAnimatedValue(key));
+                    }
+                    promise.resolve(new JavaValue(jsonBuilder.toJSONObject()));
                 }
             });
             animator.start();
@@ -673,37 +687,6 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
             if (delayJS.isNumber()) {
                 animatorSet.setStartDelay(delayJS.asNumber().toLong());
             }
-            JSValue fillModeJSVal = value.asObject().getProperty("fillMode");
-            final int fillMode = fillModeJSVal.asNumber().toInt();
-
-            animatorSet.addListener(new AnimatorListenerAdapter() {
-                private HashMap<String, Float> originVals = new HashMap<>();
-                private String[] keys = {
-                        "translationX",
-                        "translationY",
-                        "scaleX",
-                        "scaleY",
-                        "rotation",
-                };
-
-                @Override
-                public void onAnimationStart(Animator animation) {
-                    super.onAnimationStart(animation);
-                    for (String key : keys) {
-                        originVals.put(key, getAnimatedValue(key));
-                    }
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    super.onAnimationEnd(animation);
-                    if ((fillMode & 1) != 1) {
-                        for (String key : keys) {
-                            setAnimatedValue(key, originVals.get(key));
-                        }
-                    }
-                }
-            });
             return animatorSet;
         } else if (value.isObject()) {
             JSArray changeables = value.asObject().getProperty("changeables").asArray();

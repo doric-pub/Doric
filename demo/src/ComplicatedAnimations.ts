@@ -25,6 +25,35 @@ class AnimationDemo extends Panel {
             vlayout(
                 [
                     hlayout([
+                        thisLabel('reset').apply({
+                            onClick: () => {
+                                const rotation = new RotationAnimation
+                                rotation.duration = 1000
+                                rotation.fromRotation = view.rotation || 0
+                                rotation.toRotation = 0
+                                const translation = new TranslationAnimation
+                                translation.duration = 1000
+                                translation.fromTranslationX = view.translationX || 0
+                                translation.toTranslationX = 0
+                                translation.fromTranslationY = view.translationY || 0
+                                translation.toTranslationY = 0
+                                const scale = new ScaleAnimation
+                                scale.duration = 1000
+                                scale.fromScaleX = view.scaleX || 1
+                                scale.toScaleX = 1
+                                scale.fromScaleY = view.scaleY || 1
+                                scale.toScaleY = 1
+                                const animationSet = new AnimationSet
+                                animationSet.addAnimation(rotation)
+                                animationSet.addAnimation(translation)
+                                animationSet.addAnimation(scale)
+                                view.doAnimation(context, animationSet).then(() => {
+                                    modal(context).toast('Resetd')
+                                })
+                            }
+                        }),
+                    ]).apply({ space: 10 } as IHLayout),
+                    hlayout([
                         thisLabel('TranslationX').apply({
                             onClick: () => {
                                 const animation = new TranslationAnimation
@@ -51,8 +80,8 @@ class AnimationDemo extends Panel {
                             onClick: () => {
                                 const animation = new ScaleAnimation
                                 animation.duration = 1000
-                                animation.fromScaleX = 0
-                                animation.toScaleX = 5
+                                animation.fromScaleX = view.scaleX || 1
+                                animation.toScaleX = animation.fromScaleX + 1
                                 view.doAnimation(context, animation)
                             }
                         }),
@@ -60,8 +89,8 @@ class AnimationDemo extends Panel {
                             onClick: () => {
                                 const animation = new ScaleAnimation
                                 animation.duration = 1000
-                                animation.fromScaleY = 0
-                                animation.toScaleY = 5
+                                animation.fromScaleY = view.scaleY || 1
+                                animation.toScaleY = animation.fromScaleY + 1
                                 view.doAnimation(context, animation)
                             }
                         }),
@@ -69,8 +98,8 @@ class AnimationDemo extends Panel {
                             onClick: () => {
                                 const animation = new RotationAnimation
                                 animation.duration = 1000
-                                animation.fromRotation = 0
-                                animation.toRotation = 4
+                                animation.fromRotation = view.rotation || 0
+                                animation.toRotation = animation.fromRotation + 0.25
                                 view.doAnimation(context, animation)
                             }
                         }),

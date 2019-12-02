@@ -67,13 +67,29 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
 }
 
 @interface AnimationCallback : NSObject <CAAnimationDelegate>
-@property(nonatomic, strong) void (^endBlock)();
+@property(nonatomic, strong) NSMutableDictionary *dictionary;
+@property(nonatomic, strong) void (^startBlock)(AnimationCallback *callback);
+
+@property(nonatomic, strong) void (^endBlock)(AnimationCallback *callback);
 @end
 
 @implementation AnimationCallback
+- (instancetype)init {
+    if (self = [super init]) {
+        _dictionary = [NSMutableDictionary new];
+    }
+    return self;
+}
+
+- (void)animationDidStart:(CAAnimation *)anim {
+    if (self.startBlock) {
+        self.startBlock(self);
+    }
+}
+
 - (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
     if (self.endBlock) {
-        self.endBlock();
+        self.endBlock(self);
     }
 }
 @end
@@ -321,11 +337,42 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     }
 }
 
+- (NSDictionary *)transformation {
+    NSMutableDictionary *dictionary = [NSMutableDictionary new];
+    if (self.translationX) {
+        dictionary[@"translationX"] = self.translationX;
+    }
+    if (self.translationY) {
+        dictionary[@"translationY"] = self.translationY;
+    }
+    if (self.scaleX) {
+        dictionary[@"scaleX"] = self.scaleX;
+    }
+    if (self.scaleY) {
+        dictionary[@"scaleY"] = self.scaleY;
+    }
+    if (self.rotation) {
+        dictionary[@"rotation"] = self.rotation;
+    }
+    return dictionary;
+}
+
 - (void)doAnimation:(id)params withPromise:(DoricPromise *)promise {
     CAAnimation *animation = [self parseAnimation:params];
+    AnimationCallback *originDelegate = animation.delegate;
     AnimationCallback *animationCallback = [[AnimationCallback new] also:^(AnimationCallback *it) {
-        it.endBlock = ^{
-            [promise resolve:nil];
+        it.startBlock = ^(AnimationCallback *callback) {
+            if (originDelegate) {
+                originDelegate.startBlock(callback);
+            }
+            [self transformProperties];
+        };
+        it.endBlock = ^(AnimationCallback *callback) {
+            if (originDelegate) {
+                originDelegate.endBlock(callback);
+            }
+            [self transformProperties];
+            [promise resolve:self.transformation];
         };
     }];
     animation.delegate = animationCallback;
@@ -340,9 +387,7 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     [animations forEach:^(CAAnimation *obj) {
         interval = MAX(interval, obj.beginTime + obj.duration * (1 + obj.repeatCount));
     }];
-    /// Here add 0.00001 to force animationGroup's last child animation affects fill mode.
-    /// Otherwise the child's fill mode will be overwritten by parent.
-    return interval + 0.00001;
+    return interval;
 }
 
 - (CAAnimation *)parseAnimation:(id)params {
@@ -354,9 +399,27 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
             [animations addObject:[self parseAnimation:obj]];
         }];
         animationGroup.duration = [self computeDurationOfAnimations:animations];
-        animationGroup.fillMode = [self translateToFillMode:params[@"fillMode"]];
-        animationGroup.removedOnCompletion = [animationGroup.fillMode isEqualToString:kCAFillModeRemoved];
         animationGroup.animations = animations;
+        animationGroup.delegate = [[AnimationCallback new] also:^(AnimationCallback *it) {
+            it.startBlock = ^(AnimationCallback *callback) {
+                [[animations map:^id(CABasicAnimation *obj) {
+                    return obj.delegate;
+                }] forEach:^(AnimationCallback *obj) {
+                    if (obj.startBlock) {
+                        obj.startBlock(obj);
+                    }
+                }];
+            };
+            it.endBlock = ^(AnimationCallback *callback) {
+                [[animations map:^id(CABasicAnimation *obj) {
+                    return obj.delegate;
+                }] forEach:^(AnimationCallback *obj) {
+                    if (obj.endBlock) {
+                        obj.endBlock(obj);
+                    }
+                }];
+            };
+        }];
         if (params[@"delay"]) {
             animationGroup.beginTime = [params[@"delay"] floatValue] / 1000;
         }
@@ -371,12 +434,23 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
             [changeables forEach:^(NSDictionary *obj) {
                 NSString *key = obj[@"key"];
                 if ([@"translationX" isEqualToString:key]) {
-                    from.x += [obj[@"fromValue"] floatValue];
-                    to.x += [obj[@"toValue"] floatValue];
+                    from.x += [obj[@"fromValue"] floatValue] - self.translationX.floatValue;
+                    to.x += [obj[@"toValue"] floatValue] - self.translationX.floatValue;
+                    [self setFillMode:animation
+                                  key:key
+                           startValue:obj[@"fromValue"]
+                             endValue:obj[@"toValue"]
+                             fillMode:params[@"fillMode"]];
                 } else if ([@"translationY" isEqualToString:key]) {
-                    from.y += [obj[@"fromValue"] floatValue];
-                    to.y += [obj[@"toValue"] floatValue];
+                    from.y += [obj[@"fromValue"] floatValue] - self.translationY.floatValue;
+                    to.y += [obj[@"toValue"] floatValue] - self.translationY.floatValue;
+                    [self setFillMode:animation
+                                  key:key
+                           startValue:obj[@"fromValue"]
+                             endValue:obj[@"toValue"]
+                             fillMode:params[@"fillMode"]];
                 }
+
             }];
             animation.fromValue = [NSValue valueWithCGPoint:from];
             animation.toValue = [NSValue valueWithCGPoint:to];
@@ -384,11 +458,33 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
             return animation;
         } else {
             CAAnimationGroup *animationGroup = [CAAnimationGroup animation];
-            NSMutableArray *animations = [NSMutableArray new];
+            NSMutableArray <CABasicAnimation *> *animations = [NSMutableArray new];
+
             [changeables forEach:^(NSDictionary *obj) {
-                [animations addObject:[self parseChangeable:obj]];
+                CABasicAnimation *animation = [self parseChangeable:obj fillMode:params[@"fillMode"]];
+                [animations addObject:animation];
             }];
             animationGroup.animations = animations;
+            animationGroup.delegate = [[AnimationCallback new] also:^(AnimationCallback *it) {
+                it.startBlock = ^(AnimationCallback *callback) {
+                    [[animations map:^id(CABasicAnimation *obj) {
+                        return obj.delegate;
+                    }] forEach:^(AnimationCallback *obj) {
+                        if (obj.startBlock) {
+                            obj.startBlock(obj);
+                        }
+                    }];
+                };
+                it.endBlock = ^(AnimationCallback *callback) {
+                    [[animations map:^id(CABasicAnimation *obj) {
+                        return obj.delegate;
+                    }] forEach:^(AnimationCallback *obj) {
+                        if (obj.endBlock) {
+                            obj.endBlock(obj);
+                        }
+                    }];
+                };
+            }];
             [self setAnimation:animationGroup params:params];
             return animationGroup;
         }
@@ -413,11 +509,73 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
         animation.beginTime = [params[@"delay"] floatValue] / 1000;
     }
     animation.duration = [params[@"duration"] floatValue] / 1000;
-    animation.fillMode = [self translateToFillMode:params[@"fillMode"]];
-    animation.removedOnCompletion = [animation.fillMode isEqualToString:kCAFillModeRemoved];
 }
 
-- (CAAnimation *)parseChangeable:(NSDictionary *)params {
+- (void)setFillMode:(CAAnimation *)animation
+                key:(NSString *)key
+         startValue:(NSNumber *)startValue
+           endValue:(NSNumber *)endValue
+           fillMode:(NSNumber *)fillMode {
+    NSUInteger fillModeInt = fillMode.unsignedIntegerValue;
+    if ((fillModeInt & 2) == 2) {
+        [self setAnimatedValue:key value:startValue];
+    }
+    AnimationCallback *callback = [AnimationCallback new];
+    AnimationCallback *originCallback = animation.delegate;
+    __weak typeof(self) _self = self;
+    callback.startBlock = ^(AnimationCallback *callback) {
+        __strong typeof(_self) self = _self;
+        callback.dictionary[key] = [self getAnimatedValue:key];
+        if (originCallback) {
+            originCallback.startBlock(callback);
+        }
+    };
+    callback.endBlock = ^(AnimationCallback *callback) {
+        __strong typeof(_self) self = _self;
+        if ((fillModeInt & 1) == 1) {
+            [self setAnimatedValue:key value:endValue];
+        }
+        if (originCallback) {
+            originCallback.endBlock(callback);
+        }
+    };
+    animation.delegate = callback;
+}
+
+- (NSNumber *)getAnimatedValue:(NSString *)key {
+    if ([@"translationX" isEqualToString:key]) {
+        return self.translationX;
+    }
+    if ([@"translationY" isEqualToString:key]) {
+        return self.translationY;
+    }
+    if ([@"scaleX" isEqualToString:key]) {
+        return self.scaleX;
+    }
+    if ([@"scaleY" isEqualToString:key]) {
+        return self.scaleY;
+    }
+    if ([@"rotation" isEqualToString:key]) {
+        return self.rotation;
+    }
+    return nil;
+}
+
+- (void)setAnimatedValue:(NSString *)key value:(NSNumber *)value {
+    if ([@"translationX" isEqualToString:key]) {
+        self.translationX = value;
+    } else if ([@"translationY" isEqualToString:key]) {
+        self.translationY = value;
+    } else if ([@"scaleX" isEqualToString:key]) {
+        self.scaleX = value;
+    } else if ([@"scaleY" isEqualToString:key]) {
+        self.scaleY = value;
+    } else if ([@"rotation" isEqualToString:key]) {
+        self.rotation = value;
+    }
+}
+
+- (CABasicAnimation *)parseChangeable:(NSDictionary *)params fillMode:(NSNumber *)fillMode {
     NSString *key = params[@"key"];
     CABasicAnimation *animation = [CABasicAnimation animation];
     if ([@"scaleX" isEqualToString:key]) {
@@ -437,6 +595,11 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
         animation.fromValue = params[@"fromValue"];
         animation.toValue = params[@"toValue"];
     }
+    [self setFillMode:animation
+                  key:key
+           startValue:params[@"fromValue"]
+             endValue:params[@"toValue"]
+             fillMode:fillMode];
     return animation;
 }
 

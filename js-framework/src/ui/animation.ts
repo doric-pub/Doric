@@ -27,7 +27,6 @@ export enum RepeatMode {
 export interface IAnimation extends Modeling {
     duration: number
     delay?: number
-    fillMode: FillMode
 }
 
 export interface Changeable {
@@ -215,7 +214,6 @@ export class AnimationSet implements IAnimation {
     private animations: IAnimation[] = []
     _duration = 0
     delay?: number
-    fillMode = FillMode.Removed
     addAnimation(anim: IAnimation) {
         this.animations.push(anim)
     }
@@ -234,7 +232,6 @@ export class AnimationSet implements IAnimation {
             animations: this.animations.map(e => {
                 return e.toModel()
             }) as Model,
-            fillMode: this.fillMode,
             delay: this.delay,
         }
     }

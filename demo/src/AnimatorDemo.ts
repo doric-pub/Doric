@@ -167,40 +167,6 @@ class AnimatorDemo extends Panel {
                                 });
                             }
                         }),
-                        thisLabel('animationSet').apply({
-                            onClick: () => {
-                                const animationSet = new AnimationSet
-                                //animationSet.fillMode = FillMode.Removed
-                                const translate = new TranslationAnimation
-                                translate.fromTranslationX = 100
-                                translate.toTranslationX = 200
-                                translate.fromTranslationY = 10
-                                translate.toTranslationY = 200
-                                translate.duration = 2000
-                                translate.delay = 1000
-                                translate.fillMode = FillMode.Forward
-                                const scale = new ScaleAnimation
-                                scale.fromScaleX = 1
-                                scale.toScaleX = 5
-                                scale.fromScaleY = 1
-                                scale.toScaleY = 5
-                                //scale.delay = 1000
-                                scale.duration = 2000
-                                scale.fillMode = FillMode.Backward
-                                const rotation = new RotationAnimation
-                                rotation.fromRotation = 0
-                                rotation.toRotation = 6.3
-                                rotation.duration = 2000
-                                rotation.fillMode = FillMode.Removed
-                                animationSet.addAnimation(translate)
-                                animationSet.addAnimation(scale)
-                                animationSet.addAnimation(rotation)
-
-                                view.doAnimation(context, animationSet).then(() => {
-                                    modal(context).toast('Animation finished')
-                                })
-                            }
-                        }),
                     ]).apply({ space: 10 } as IHLayout),
                 ]
             ).apply({ space: 10 } as IVLayout),

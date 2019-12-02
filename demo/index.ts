@@ -16,4 +16,5 @@ export default [
     'src/FlowLayoutDemo',
     'src/PopoverDemo',
     'src/AnimatorDemo',
+    'src/ComplicatedAnimations',
 ]

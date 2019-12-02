@@ -336,7 +336,12 @@ export abstract class View implements Modeling, IView {
     /**----------transform----------*/
 
     doAnimation(context: BridgeContext, animation: IAnimation) {
-        return this.nativeChannel(context, "doAnimation")(animation.toModel())
+        return this.nativeChannel(context, "doAnimation")(animation.toModel()).then((args) => {
+            for (let key in args) {
+                Reflect.set(this, key, Reflect.get(args, key, args), this)
+                Reflect.deleteProperty(this.__dirty_props__, key)
+            }
+        })
     }
 }
 

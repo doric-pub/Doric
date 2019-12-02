@@ -32,7 +32,7 @@ class RefreshableDemo extends Panel {
                         log('stopAnimation')
                     },
                     setProgressRotation: (rotation: number) => {
-                        refreshImage.setRotation(context, rotation)
+                        refreshImage.rotation = rotation
                     },
                 }),
             content: (vlayout([

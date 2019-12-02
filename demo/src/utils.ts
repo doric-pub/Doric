@@ -66,7 +66,7 @@ export function rotatedArrow(context: BridgeContext) {
             log('stopAnimation')
         },
         setProgressRotation: (rotation: number) => {
-            refreshImage.setRotation(context, rotation)
+            refreshImage.rotation = rotation
         },
     })
 }

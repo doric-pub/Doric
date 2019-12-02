@@ -62,13 +62,13 @@ export function refreshable(config: IRefreshable) {
 export interface IPullable {
     startAnimation(): void
     stopAnimation(): void
-    setProgressRotation(rotation: number): void
+    setPullingDistance(distance: number): void
 }
 
 
 export function pullable(context: BridgeContext, v: View, config: IPullable) {
     Reflect.set(v, 'startAnimation', config.startAnimation)
     Reflect.set(v, 'stopAnimation', config.stopAnimation)
-    Reflect.set(v, 'setProgressRotation', config.setProgressRotation)
+    Reflect.set(v, 'setPullingDistance', config.setPullingDistance)
     return v
 }

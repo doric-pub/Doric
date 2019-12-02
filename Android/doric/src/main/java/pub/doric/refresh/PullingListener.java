@@ -16,5 +16,5 @@ public interface PullingListener {
      *
      * @param rotation Rotation is from [0..2]
      */
-    void setProgressRotation(float rotation);
+    void setPullingDistance(float rotation);
 }

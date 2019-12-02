@@ -912,7 +912,7 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
         ViewCompat.offsetTopAndBottom(mRefreshView, offset);
         mCurrentTargetOffsetTop = mRefreshView.getTop();
         if (mRefreshView.getMeasuredHeight() > 0) {
-            mRefreshView.setProgressRotation((float) mRefreshView.getBottom() / (float) mRefreshView.getMeasuredHeight() * 2);
+            mRefreshView.setPullingDistance((float) mRefreshView.getBottom());
         }
     }
 

@@ -17,4 +17,5 @@ export default [
     'src/PopoverDemo',
     'src/AnimatorDemo',
     'src/ComplicatedAnimations',
+    'src/ComplicatedDemo',
 ]

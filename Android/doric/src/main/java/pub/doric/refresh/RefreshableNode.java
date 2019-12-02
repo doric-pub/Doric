@@ -33,7 +33,7 @@ public class RefreshableNode extends SuperNode<DoricSwipeLayout> implements Pull
     @Override
     protected DoricSwipeLayout build() {
         DoricSwipeLayout doricSwipeLayout = new DoricSwipeLayout(getContext());
-        doricSwipeLayout.getRefreshView().setPullingListenr(this);
+        doricSwipeLayout.getRefreshView().setPullingListener(this);
         return doricSwipeLayout;
     }
 
@@ -188,9 +188,9 @@ public class RefreshableNode extends SuperNode<DoricSwipeLayout> implements Pull
     }
 
     @Override
-    public void setProgressRotation(float rotation) {
+    public void setPullingDistance(float rotation) {
         if (mHeaderNode != null) {
-            mHeaderNode.callJSResponse("setProgressRotation", rotation);
+            mHeaderNode.callJSResponse("setPullingDistance", rotation);
         }
     }
 }

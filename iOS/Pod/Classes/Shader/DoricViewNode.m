@@ -66,6 +66,17 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     return path;
 }
 
+@interface AnimationCallback : NSObject <CAAnimationDelegate>
+@property(nonatomic, strong) void (^endBlock)();
+@end
+
+@implementation AnimationCallback
+- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
+    if (self.endBlock) {
+        self.endBlock();
+    }
+}
+@end
 
 @interface DoricViewNode ()
 @property(nonatomic, strong) NSMutableDictionary *callbackIds;
@@ -314,6 +325,12 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     CAAnimation *animation = [self parseAnimation:params];
     animation.removedOnCompletion = NO;
     animation.fillMode = kCAFillModeForwards;
+    AnimationCallback *animationCallback = [[AnimationCallback new] also:^(AnimationCallback *it) {
+        it.endBlock = ^{
+            [promise resolve:nil];
+        };
+    }];
+    animation.delegate = animationCallback;
     [self.view.layer addAnimation:animation forKey:nil];
 }
 

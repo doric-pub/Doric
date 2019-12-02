@@ -55,6 +55,29 @@ export enum FillMode {
     Both = 0x3,
 }
 
+export enum TimingFunction {
+    /**
+     * The system default timing function. Use this function to ensure that the timing of your animations matches that of most system animations.
+     */
+    Default = 0,
+    /**
+     * Linear pacing, which causes an animation to occur evenly over its duration.
+     */
+    Linear,
+    /**
+     * Ease-in pacing, which causes an animation to begin slowly and then speed up as it progresses.
+     */
+    EaseIn,
+    /**
+     * Ease-out pacing, which causes an animation to begin quickly and then slow as it progresses.
+     */
+    EaseOut,
+    /**
+     * Ease-in-ease-out pacing, which causes an animation to begin slowly, accelerate through the middle of its duration, and then slow again before completing.
+     */
+    EaseInEaseOut,
+}
+
 abstract class Animation implements IAnimation {
     changeables: Map<AnimatedKey, Changeable> = new Map
     duration = 0
@@ -62,6 +85,7 @@ abstract class Animation implements IAnimation {
     repeatMode?: RepeatMode
     delay?: number
     fillMode = FillMode.Forward
+    timingFunction?: TimingFunction
     toModel() {
         const changeables = []
         for (let e of this.changeables.values()) {
@@ -79,6 +103,7 @@ abstract class Animation implements IAnimation {
             repeatCount: this.repeatCount,
             repeatMode: this.repeatMode,
             fillMode: this.fillMode,
+            timingFunction: this.timingFunction
         }
     }
 }

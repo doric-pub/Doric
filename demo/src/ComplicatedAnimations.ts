@@ -1,4 +1,4 @@
-import { animate, Group, Panel, gravity, Color, AnimationSet, vlayout, scroller, layoutConfig, IVLayout, modal, IText, network, View, stack, IHLayout, hlayout, IView, text, TranslationAnimation, ScaleAnimation, RotationAnimation, FillMode } from "doric";
+import { animate, Group, Panel, gravity, Color, AnimationSet, vlayout, scroller, layoutConfig, IVLayout, modal, IText, network, View, stack, IHLayout, hlayout, IView, text, TranslationAnimation, ScaleAnimation, RotationAnimation, FillMode, TimingFunction } from "doric";
 import { title, colors, box } from "./utils";
 
 function thisLabel(str: string) {
@@ -119,6 +119,58 @@ class AnimationDemo extends Panel {
                                 animationSet.addAnimation(rotation)
                                 animationSet.addAnimation(translation)
                                 view.doAnimation(context, animationSet)
+                            }
+                        }),
+                    ]).apply({ space: 10 } as IHLayout),
+                    hlayout([
+                        thisLabel('Default').apply({
+                            onClick: () => {
+                                const translation = new TranslationAnimation
+                                translation.duration = 3000
+                                translation.fromTranslationX = 0
+                                translation.toTranslationX = 300
+                                translation.timingFunction = TimingFunction.Default
+                                view.doAnimation(context, translation)
+                            }
+                        }),
+                        thisLabel('Linear').apply({
+                            onClick: () => {
+                                const translation = new TranslationAnimation
+                                translation.duration = 3000
+                                translation.fromTranslationX = 0
+                                translation.toTranslationX = 300
+                                translation.timingFunction = TimingFunction.Linear
+                                view.doAnimation(context, translation)
+                            }
+                        }),
+                        thisLabel('EaseIn').apply({
+                            onClick: () => {
+                                const translation = new TranslationAnimation
+                                translation.duration = 3000
+                                translation.fromTranslationX = 0
+                                translation.toTranslationX = 300
+                                translation.timingFunction = TimingFunction.EaseIn
+                                view.doAnimation(context, translation)
+                            }
+                        }),
+                        thisLabel('EaseOut').apply({
+                            onClick: () => {
+                                const translation = new TranslationAnimation
+                                translation.duration = 3000
+                                translation.fromTranslationX = 0
+                                translation.toTranslationX = 300
+                                translation.timingFunction = TimingFunction.EaseOut
+                                view.doAnimation(context, translation)
+                            }
+                        }),
+                        thisLabel('EaseInEaseOut').apply({
+                            onClick: () => {
+                                const translation = new TranslationAnimation
+                                translation.duration = 3000
+                                translation.fromTranslationX = 0
+                                translation.toTranslationX = 300
+                                translation.timingFunction = TimingFunction.EaseInEaseOut
+                                view.doAnimation(context, translation)
                             }
                         }),
                     ]).apply({ space: 10 } as IHLayout),

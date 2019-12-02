@@ -25,10 +25,17 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
+import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
 
 import pub.doric.DoricContext;
 import pub.doric.DoricRegistry;
@@ -695,6 +702,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
 
             JSValue repeatMode = value.asObject().getProperty("repeatMode");
             JSValue fillMode = value.asObject().getProperty("fillMode");
+            JSValue timingFunction = value.asObject().getProperty("timingFunction");
             for (int j = 0; j < changeables.size(); j++) {
                 ObjectAnimator animator = parseChangeable(changeables.get(j).asObject(), fillMode);
                 if (repeatCount.isNumber()) {
@@ -702,6 +710,9 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 }
                 if (repeatMode.isNumber()) {
                     animator.setRepeatMode(repeatMode.asNumber().toInt());
+                }
+                if (timingFunction.isNumber()) {
+                    animator.setInterpolator(getTimingInterpolator(timingFunction.asNumber().toInt()));
                 }
                 animatorSet.play(animator);
             }
@@ -711,10 +722,24 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
             if (delayJS.isNumber()) {
                 animatorSet.setStartDelay(delayJS.asNumber().toLong());
             }
-
             return animatorSet;
         } else {
             return null;
+        }
+    }
+
+    private Interpolator getTimingInterpolator(int timingFunction) {
+        switch (timingFunction) {
+            case 1:
+                return new LinearInterpolator();
+            case 2:
+                return new AccelerateInterpolator();
+            case 3:
+                return new DecelerateInterpolator();
+            case 4:
+                return new FastOutSlowInInterpolator();
+            default:
+                return new AccelerateDecelerateInterpolator();
         }
     }
 

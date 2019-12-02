@@ -297,21 +297,6 @@ export abstract class View implements Modeling, IView {
         return this.nativeChannel(context, 'getHeight')() as Promise<number>
     }
 
-    /**
-     * 
-     * @param rotation [0..1]
-     */
-    setRotation(context: BridgeContext, rotation: number) {
-        return this.nativeChannel(context, 'setRotation')(rotation)
-    }
-    /**
-     * 
-     * @return rotation [0..1]
-     */
-    getRotation(context: BridgeContext) {
-        return this.nativeChannel(context, 'getRotation')() as Promise<number>
-    }
-
     /**++++++++++transform++++++++++*/
     @Property
     translationX?: number

@@ -454,6 +454,9 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
             }];
             animation.fromValue = [NSValue valueWithCGPoint:from];
             animation.toValue = [NSValue valueWithCGPoint:to];
+            if (params[@"timingFunction"]) {
+                animation.timingFunction = [self translateToTimingFunction:params[@"timingFunction"]];
+            }
             [self setAnimation:animation params:params];
             return animation;
         } else {
@@ -462,6 +465,9 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
 
             [changeables forEach:^(NSDictionary *obj) {
                 CABasicAnimation *animation = [self parseChangeable:obj fillMode:params[@"fillMode"]];
+                if (params[@"timingFunction"]) {
+                    animation.timingFunction = [self translateToTimingFunction:params[@"timingFunction"]];
+                }
                 [animations addObject:animation];
             }];
             animationGroup.animations = animations;
@@ -603,16 +609,18 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     return animation;
 }
 
-- (CAMediaTimingFillMode)translateToFillMode:(NSNumber *)fillMode {
-    switch ([fillMode integerValue]) {
+- (CAMediaTimingFunction *)translateToTimingFunction:(NSNumber *)timingFunction {
+    switch (timingFunction.integerValue) {
         case 1:
-            return kCAFillModeForwards;
+            return [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
         case 2:
-            return kCAFillModeBackwards;
+            return [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
         case 3:
-            return kCAFillModeBoth;
+            return [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+        case 4:
+            return [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
         default:
-            return kCAFillModeRemoved;
+            return [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault];
     }
 }
 

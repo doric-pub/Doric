@@ -323,14 +323,15 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
 
 - (void)doAnimation:(id)params withPromise:(DoricPromise *)promise {
     CAAnimation *animation = [self parseAnimation:params];
-    animation.removedOnCompletion = NO;
-    animation.fillMode = kCAFillModeForwards;
     AnimationCallback *animationCallback = [[AnimationCallback new] also:^(AnimationCallback *it) {
         it.endBlock = ^{
             [promise resolve:nil];
         };
     }];
     animation.delegate = animationCallback;
+    if (params[@"delay"]) {
+        animation.beginTime = CACurrentMediaTime() + [params[@"delay"] floatValue] / 1000;
+    }
     [self.view.layer addAnimation:animation forKey:nil];
 }
 
@@ -343,15 +344,20 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
 }
 
 - (CAAnimation *)parseAnimation:(id)params {
-    if ([params isKindOfClass:[NSArray class]]) {
-        NSArray *anims = params;
+    if (params[@"animations"]) {
+        NSArray *anims = params[@"animations"];
         CAAnimationGroup *animationGroup = [CAAnimationGroup animation];
         NSMutableArray *animations = [NSMutableArray new];
         [anims forEach:^(id obj) {
             [animations addObject:[self parseAnimation:obj]];
         }];
         animationGroup.duration = [self computeDurationOfAnimations:animations];
+        animationGroup.fillMode = [self translateToFillMode:params[@"fillMode"]];
+        animationGroup.removedOnCompletion = [animationGroup.fillMode isEqualToString:kCAFillModeRemoved];
         animationGroup.animations = animations;
+        if (params[@"delay"]) {
+            animationGroup.beginTime = [params[@"delay"] floatValue] / 1000;
+        }
         return animationGroup;
     } else if ([params isKindOfClass:[NSDictionary class]]) {
         NSArray<NSDictionary *> *changeables = params[@"changeables"];
@@ -405,8 +411,8 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
         animation.beginTime = [params[@"delay"] floatValue] / 1000;
     }
     animation.duration = [params[@"duration"] floatValue] / 1000;
-    animation.removedOnCompletion = NO;
-    animation.fillMode = kCAFillModeForwards;
+    animation.fillMode = [self translateToFillMode:params[@"fillMode"]];
+    animation.removedOnCompletion = [animation.fillMode isEqualToString:kCAFillModeRemoved];
 }
 
 - (CAAnimation *)parseChangeable:(NSDictionary *)params {
@@ -430,6 +436,19 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
         animation.toValue = params[@"toValue"];
     }
     return animation;
+}
+
+- (CAMediaTimingFillMode)translateToFillMode:(NSNumber *)fillMode {
+    switch ([fillMode integerValue]) {
+        case 1:
+            return kCAFillModeForwards;
+        case 2:
+            return kCAFillModeBackwards;
+        case 3:
+            return kCAFillModeBoth;
+        default:
+            return kCAFillModeRemoved;
+    }
 }
 
 @end

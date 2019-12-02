@@ -1,4 +1,4 @@
-import { animate, Group, Panel, gravity, Color, AnimationSet, vlayout, scroller, layoutConfig, IVLayout, modal, IText, network, View, stack, IHLayout, hlayout, IView, text, TranslationAnimation, ScaleAnimation, RotationAnimation } from "doric";
+import { animate, Group, Panel, gravity, Color, AnimationSet, vlayout, scroller, layoutConfig, IVLayout, modal, IText, network, View, stack, IHLayout, hlayout, IView, text, TranslationAnimation, ScaleAnimation, RotationAnimation, FillMode } from "doric";
 import { title, colors, box } from "./utils";
 
 function thisLabel(str: string) {
@@ -17,10 +17,13 @@ function thisLabel(str: string) {
 class AnimatorDemo extends Panel {
     build(rootView: Group): void {
         const view = box(2)
+        view.onClick = () => {
+            modal(context).toast('Clicked')
+        }
         const view2 = box(3)
         let idx = 0
         vlayout([
-            title("Animator zDemo"),
+            title("Animator Demo"),
             vlayout(
                 [
                     hlayout([
@@ -167,27 +170,26 @@ class AnimatorDemo extends Panel {
                         thisLabel('animationSet').apply({
                             onClick: () => {
                                 const animationSet = new AnimationSet
-
+                                animationSet.fillMode = FillMode.Forward
+                                animationSet.delay = 2000
                                 const translate = new TranslationAnimation
-                                translate.fromTranslationX = 10
+                                translate.fromTranslationX = 100
                                 translate.toTranslationX = 200
                                 translate.fromTranslationY = 10
                                 translate.toTranslationY = 200
-                                translate.duration = 3000
+                                translate.duration = 2000
                                 translate.delay = 1000
                                 const scale = new ScaleAnimation
                                 scale.fromScaleX = 1
                                 scale.toScaleX = 5
                                 scale.fromScaleY = 1
                                 scale.toScaleY = 5
-                                scale.duration = 3000
-
+                                //scale.delay = 1000
+                                scale.duration = 2000
                                 const rotation = new RotationAnimation
                                 rotation.fromRotation = 0
-                                rotation.toRotation = 6
-                                rotation.delay = 1000
+                                rotation.toRotation = 6.2
                                 rotation.duration = 3000
-
                                 animationSet.addAnimation(translate)
                                 animationSet.addAnimation(scale)
                                 animationSet.addAnimation(rotation)

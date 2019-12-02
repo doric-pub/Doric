@@ -656,10 +656,15 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     }
 
     private Animator parseAnimator(JSValue value) {
-        if (value.isArray()) {
+        if (!value.isObject()) {
+            DoricLog.e("parseAnimator error");
+            return null;
+        }
+        JSValue animations = value.asObject().getProperty("animations");
+        if (animations.isArray()) {
             AnimatorSet animatorSet = new AnimatorSet();
-            for (int i = 0; i < value.asArray().size(); i++) {
-                animatorSet.play(parseAnimator(value.asArray().get(i)));
+            for (int i = 0; i < animations.asArray().size(); i++) {
+                animatorSet.play(parseAnimator(animations.asArray().get(i)));
             }
             return animatorSet;
         } else if (value.isObject()) {

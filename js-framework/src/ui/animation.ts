@@ -18,13 +18,16 @@ import { Modeling, Model } from "../util/types"
 
 
 export type AnimatedKey = "translationX" | "translationY" | "scaleX" | "scaleY" | "rotation" | "pivotX" | "pivotY"
+
 export enum RepeatMode {
     RESTART = 1,
     REVERSE = 2,
 }
+
 export interface IAnimation extends Modeling {
     duration: number
     delay?: number
+    fillMode: FillMode
 }
 
 export interface Changeable {
@@ -34,6 +37,24 @@ export interface Changeable {
     repeatCount?: number
     repeatMode?: RepeatMode
 }
+export enum FillMode {
+    /**
+     * The receiver is removed from the presentation when the animation is completed.
+     */
+    Removed = 0,
+    /**
+     * The receiver remains visible in its final state when the animation is completed.
+     */
+    Forward = 1,
+    /**
+     * The receiver clamps values before zero to zero when the animation is completed.
+     */
+    Backward = 2,
+    /**
+     * The receiver clamps values at both ends of the object’s time space
+     */
+    Both = 3,
+}
 
 abstract class Animation implements IAnimation {
     changeables: Map<AnimatedKey, Changeable> = new Map
@@ -41,7 +62,7 @@ abstract class Animation implements IAnimation {
     repeatCount?: number
     repeatMode?: RepeatMode
     delay?: number
-
+    fillMode = FillMode.Forward
     toModel() {
         const changeables = []
         for (let e of this.changeables.values()) {
@@ -58,6 +79,7 @@ abstract class Animation implements IAnimation {
             changeables,
             repeatCount: this.repeatCount,
             repeatMode: this.repeatMode,
+            fillMode: this.fillMode,
         }
     }
 }
@@ -193,7 +215,7 @@ export class AnimationSet implements IAnimation {
     private animations: IAnimation[] = []
     _duration = 0
     delay?: number
-
+    fillMode = FillMode.Removed
     addAnimation(anim: IAnimation) {
         this.animations.push(anim)
     }
@@ -208,8 +230,12 @@ export class AnimationSet implements IAnimation {
     }
 
     toModel() {
-        return this.animations.map(e => {
-            return e.toModel()
-        }) as Model
+        return {
+            animations: this.animations.map(e => {
+                return e.toModel()
+            }) as Model,
+            fillMode: this.fillMode,
+            delay: this.delay,
+        }
     }
 }

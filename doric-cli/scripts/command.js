@@ -26,9 +26,7 @@ function fromDir(startPath, filter) {
     };
 };
 function doMerge(startPath, fileName) {
-    // console.log('-- found: ', startPath, fileName);
     const filePath = fileName ? path.join(startPath, fileName) : startPath
-    // console.log('-- merge: ', filePath.replace(/bundle\//, 'build/'), filePath)
     const mergedMap = SourceMapMerger.createMergedSourceMapFromFiles([
         filePath.replace(/bundle\//, 'build/'),
         filePath,

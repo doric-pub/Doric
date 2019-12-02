@@ -317,6 +317,14 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     [self.view.layer addAnimation:animation forKey:nil];
 }
 
+- (CFTimeInterval)computeDurationOfAnimations:(NSArray<CAAnimation *> *)animations {
+    __block CFTimeInterval interval = 0;
+    [animations forEach:^(CAAnimation *obj) {
+        interval = MAX(interval, obj.beginTime + obj.duration * (1 + obj.repeatCount));
+    }];
+    return interval;
+}
+
 - (CAAnimation *)parseAnimation:(id)params {
     if ([params isKindOfClass:[NSArray class]]) {
         NSArray *anims = params;
@@ -325,6 +333,7 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
         [anims forEach:^(id obj) {
             [animations addObject:[self parseAnimation:obj]];
         }];
+        animationGroup.duration = [self computeDurationOfAnimations:animations];
         animationGroup.animations = animations;
         return animationGroup;
     } else if ([params isKindOfClass:[NSDictionary class]]) {
@@ -346,6 +355,7 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
             }];
             animation.fromValue = [NSValue valueWithCGPoint:from];
             animation.toValue = [NSValue valueWithCGPoint:to];
+            [self setAnimation:animation params:params];
             return animation;
         } else {
             CAAnimationGroup *animationGroup = [CAAnimationGroup animation];
@@ -354,17 +364,32 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
                 [animations addObject:[self parseChangeable:obj]];
             }];
             animationGroup.animations = animations;
-            animationGroup.duration = [params[@"duration"] floatValue] / 1000;
-            if (params[@"delay"]) {
-                animationGroup.beginTime = CACurrentMediaTime() + [params[@"delay"] floatValue] / 1000;
-            }
-
+            [self setAnimation:animationGroup params:params];
             return animationGroup;
         }
-
-
     }
     return nil;
+}
+
+- (void)setAnimation:(CAAnimation *)animation params:(NSDictionary *)params {
+    if (params[@"repeatCount"]) {
+        NSInteger repeatCount = [params[@"repeatCount"] integerValue];
+        if (repeatCount < 0) {
+            repeatCount = NSNotFound;
+        }
+        animation.repeatCount = repeatCount;
+    }
+    if (params[@"repeatMode"]) {
+        NSInteger repeatMode = [params[@"repeatMode"] integerValue];
+        animation.autoreverses = repeatMode == 2;
+    }
+
+    if (params[@"delay"]) {
+        animation.beginTime = [params[@"delay"] floatValue] / 1000;
+    }
+    animation.duration = [params[@"duration"] floatValue] / 1000;
+    animation.removedOnCompletion = NO;
+    animation.fillMode = kCAFillModeForwards;
 }
 
 - (CAAnimation *)parseChangeable:(NSDictionary *)params {
@@ -386,17 +411,6 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
         animation.keyPath = @"backgroundColor";
         animation.fromValue = params[@"fromValue"];
         animation.toValue = params[@"toValue"];
-    }
-    if (params[@"repeatCount"]) {
-        NSInteger repeatCount = [params[@"repeatCount"] integerValue];
-        if (repeatCount < 0) {
-            repeatCount = NSNotFound;
-        }
-        animation.repeatCount = repeatCount;
-    }
-    if (params[@"repeatMode"]) {
-        NSInteger repeatMode = [params[@"repeatMode"] integerValue];
-        animation.autoreverses = repeatMode == 2;
     }
     return animation;
 }

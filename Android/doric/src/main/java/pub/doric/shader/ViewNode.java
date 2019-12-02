@@ -665,8 +665,20 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         } else if (value.isObject()) {
             JSArray changeables = value.asObject().getProperty("changeables").asArray();
             AnimatorSet animatorSet = new AnimatorSet();
+
+            JSValue repeatCount = value.asObject().getProperty("repeatCount");
+
+            JSValue repeatMode = value.asObject().getProperty("repeatMode");
+
             for (int j = 0; j < changeables.size(); j++) {
-                animatorSet.play(parseChangeable(changeables.get(j).asObject()));
+                ObjectAnimator animator = parseChangeable(changeables.get(j).asObject());
+                if (repeatCount.isNumber()) {
+                    animator.setRepeatCount(repeatCount.asNumber().toInt());
+                }
+                if (repeatMode.isNumber()) {
+                    animator.setRepeatMode(repeatMode.asNumber().toInt());
+                }
+                animatorSet.play(animator);
             }
             long duration = value.asObject().getProperty("duration").asNumber().toLong();
             animatorSet.setDuration(duration);
@@ -674,27 +686,19 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
             if (delayJS.isNumber()) {
                 animatorSet.setStartDelay(delayJS.asNumber().toLong());
             }
+
             return animatorSet;
         } else {
             return null;
         }
     }
 
-    private Animator parseChangeable(JSObject jsObject) {
+    private ObjectAnimator parseChangeable(JSObject jsObject) {
         String key = jsObject.getProperty("key").asString().value();
-        ObjectAnimator animator = ObjectAnimator.ofFloat(this,
+        return ObjectAnimator.ofFloat(this,
                 key,
                 jsObject.getProperty("fromValue").asNumber().toFloat(),
                 jsObject.getProperty("toValue").asNumber().toFloat()
         );
-        JSValue repeatCount = jsObject.getProperty("repeatCount");
-        if (repeatCount.isNumber()) {
-            animator.setRepeatCount(repeatCount.asNumber().toInt() + 1);
-        }
-        JSValue repeatMode = jsObject.getProperty("repeatMode");
-        if (repeatMode.isNumber()) {
-            animator.setRepeatMode(repeatMode.asNumber().toInt());
-        }
-        return animator;
     }
 }

@@ -49,8 +49,6 @@ abstract class Animation implements IAnimation {
                 key: e.key,
                 fromValue: e.fromValue,
                 toValue: e.toValue,
-                repeatCount: this.repeatCount,
-                repeatMode: this.repeatMode,
             })
         }
         return {
@@ -58,6 +56,8 @@ abstract class Animation implements IAnimation {
             delay: this.delay,
             duration: this.duration,
             changeables,
+            repeatCount: this.repeatCount,
+            repeatMode: this.repeatMode,
         }
     }
 }

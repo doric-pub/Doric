@@ -174,7 +174,7 @@ class AnimatorDemo extends Panel {
                                 translate.fromTranslationY = 10
                                 translate.toTranslationY = 200
                                 translate.duration = 3000
-
+                                translate.delay = 1000
                                 const scale = new ScaleAnimation
                                 scale.fromScaleX = 1
                                 scale.toScaleX = 5
@@ -185,13 +185,16 @@ class AnimatorDemo extends Panel {
                                 const rotation = new RotationAnimation
                                 rotation.fromRotation = 0
                                 rotation.toRotation = 6
+                                rotation.delay = 1000
                                 rotation.duration = 3000
 
                                 animationSet.addAnimation(translate)
                                 animationSet.addAnimation(scale)
                                 animationSet.addAnimation(rotation)
 
-                                view.doAnimation(context, animationSet)
+                                view.doAnimation(context, animationSet).then(() => {
+                                    modal(context).toast('Animation finished')
+                                })
                             }
                         }),
                     ]).apply({ space: 10 } as IHLayout),

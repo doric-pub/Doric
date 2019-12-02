@@ -45,15 +45,15 @@ export enum FillMode {
     /**
      * The receiver remains visible in its final state when the animation is completed.
      */
-    Forward = 1,
+    Forward = 0x1,
     /**
      * The receiver clamps values before zero to zero when the animation is completed.
      */
-    Backward = 2,
+    Backward = 0x2,
     /**
      * The receiver clamps values at both ends of the object’s time space
      */
-    Both = 3,
+    Both = 0x3,
 }
 
 abstract class Animation implements IAnimation {

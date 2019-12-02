@@ -46,6 +46,7 @@ import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
@@ -663,9 +664,46 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         JSValue animations = value.asObject().getProperty("animations");
         if (animations.isArray()) {
             AnimatorSet animatorSet = new AnimatorSet();
+
             for (int i = 0; i < animations.asArray().size(); i++) {
                 animatorSet.play(parseAnimator(animations.asArray().get(i)));
             }
+
+            JSValue delayJS = value.asObject().getProperty("delay");
+            if (delayJS.isNumber()) {
+                animatorSet.setStartDelay(delayJS.asNumber().toLong());
+            }
+            JSValue fillModeJSVal = value.asObject().getProperty("fillMode");
+            final int fillMode = fillModeJSVal.asNumber().toInt();
+
+            animatorSet.addListener(new AnimatorListenerAdapter() {
+                private HashMap<String, Float> originVals = new HashMap<>();
+                private String[] keys = {
+                        "translationX",
+                        "translationY",
+                        "scaleX",
+                        "scaleY",
+                        "rotation",
+                };
+
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    super.onAnimationStart(animation);
+                    for (String key : keys) {
+                        originVals.put(key, getAnimatedValue(key));
+                    }
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    if ((fillMode & 1) != 1) {
+                        for (String key : keys) {
+                            setAnimatedValue(key, originVals.get(key));
+                        }
+                    }
+                }
+            });
             return animatorSet;
         } else if (value.isObject()) {
             JSArray changeables = value.asObject().getProperty("changeables").asArray();
@@ -674,9 +712,9 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
             JSValue repeatCount = value.asObject().getProperty("repeatCount");
 
             JSValue repeatMode = value.asObject().getProperty("repeatMode");
-
+            JSValue fillMode = value.asObject().getProperty("fillMode");
             for (int j = 0; j < changeables.size(); j++) {
-                ObjectAnimator animator = parseChangeable(changeables.get(j).asObject());
+                ObjectAnimator animator = parseChangeable(changeables.get(j).asObject(), fillMode);
                 if (repeatCount.isNumber()) {
                     animator.setRepeatCount(repeatCount.asNumber().toInt());
                 }
@@ -698,12 +736,87 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         }
     }
 
-    private ObjectAnimator parseChangeable(JSObject jsObject) {
+    private ObjectAnimator parseChangeable(JSObject jsObject, JSValue fillMode) {
         String key = jsObject.getProperty("key").asString().value();
-        return ObjectAnimator.ofFloat(this,
+        float startVal = jsObject.getProperty("fromValue").asNumber().toFloat();
+        float endVal = jsObject.getProperty("toValue").asNumber().toFloat();
+        ObjectAnimator animator = ObjectAnimator.ofFloat(this,
                 key,
-                jsObject.getProperty("fromValue").asNumber().toFloat(),
-                jsObject.getProperty("toValue").asNumber().toFloat()
+                startVal,
+                endVal
         );
+        setFillMode(animator, key, startVal, endVal, fillMode);
+        return animator;
+    }
+
+    private void setFillMode(ObjectAnimator animator,
+                             final String key,
+                             float startVal,
+                             float endVal,
+                             JSValue jsValue) {
+        int fillMode = 0;
+        if (jsValue.isNumber()) {
+            fillMode = jsValue.asNumber().toInt();
+        }
+        if ((fillMode & 2) == 2) {
+            setAnimatedValue(key, startVal);
+        }
+        final int finalFillMode = fillMode;
+        animator.addListener(new AnimatorListenerAdapter() {
+            private float originVal;
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                originVal = getAnimatedValue(key);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                if ((finalFillMode & 1) != 1) {
+                    setAnimatedValue(key, originVal);
+                }
+            }
+        });
+    }
+
+    private void setAnimatedValue(String key, float value) {
+        switch (key) {
+            case "translationX":
+                setTranslationX(value);
+                break;
+            case "translationY":
+                setTranslationY(value);
+                break;
+            case "scaleX":
+                setScaleX(value);
+                break;
+            case "scaleY":
+                setScaleY(value);
+                break;
+            case "rotation":
+                setRotation(value);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private float getAnimatedValue(String key) {
+        switch (key) {
+            case "translationX":
+                return getTranslationX();
+            case "translationY":
+                return getTranslationY();
+            case "scaleX":
+                return getScaleX();
+            case "scaleY":
+                return getScaleY();
+            case "rotation":
+                return getRotation();
+            default:
+                return 0;
+        }
     }
 }

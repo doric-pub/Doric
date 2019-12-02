@@ -170,8 +170,7 @@ class AnimatorDemo extends Panel {
                         thisLabel('animationSet').apply({
                             onClick: () => {
                                 const animationSet = new AnimationSet
-                                animationSet.fillMode = FillMode.Forward
-                                animationSet.delay = 2000
+                                //animationSet.fillMode = FillMode.Removed
                                 const translate = new TranslationAnimation
                                 translate.fromTranslationX = 100
                                 translate.toTranslationX = 200
@@ -179,6 +178,7 @@ class AnimatorDemo extends Panel {
                                 translate.toTranslationY = 200
                                 translate.duration = 2000
                                 translate.delay = 1000
+                                translate.fillMode = FillMode.Forward
                                 const scale = new ScaleAnimation
                                 scale.fromScaleX = 1
                                 scale.toScaleX = 5
@@ -186,10 +186,12 @@ class AnimatorDemo extends Panel {
                                 scale.toScaleY = 5
                                 //scale.delay = 1000
                                 scale.duration = 2000
+                                scale.fillMode = FillMode.Backward
                                 const rotation = new RotationAnimation
                                 rotation.fromRotation = 0
-                                rotation.toRotation = 6.2
-                                rotation.duration = 3000
+                                rotation.toRotation = 6.3
+                                rotation.duration = 2000
+                                rotation.fillMode = FillMode.Removed
                                 animationSet.addAnimation(translate)
                                 animationSet.addAnimation(scale)
                                 animationSet.addAnimation(rotation)

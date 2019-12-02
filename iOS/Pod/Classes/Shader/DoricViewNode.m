@@ -340,7 +340,9 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     [animations forEach:^(CAAnimation *obj) {
         interval = MAX(interval, obj.beginTime + obj.duration * (1 + obj.repeatCount));
     }];
-    return interval;
+    /// Here add 0.00001 to force animationGroup's last child animation affects fill mode.
+    /// Otherwise the child's fill mode will be overwritten by parent.
+    return interval + 0.00001;
 }
 
 - (CAAnimation *)parseAnimation:(id)params {

@@ -30,6 +30,8 @@ import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import android.view.animation.Animation.AnimationListener;
 
+import pub.doric.utils.DoricUtils;
+
 /**
  * @Description: pub.doric.pullable
  * @Author: pengfei.zhou
@@ -912,7 +914,7 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
         ViewCompat.offsetTopAndBottom(mRefreshView, offset);
         mCurrentTargetOffsetTop = mRefreshView.getTop();
         if (mRefreshView.getMeasuredHeight() > 0) {
-            mRefreshView.setPullingDistance((float) mRefreshView.getBottom());
+            mRefreshView.setPullingDistance(DoricUtils.px2dp(mRefreshView.getBottom()));
         }
     }
 

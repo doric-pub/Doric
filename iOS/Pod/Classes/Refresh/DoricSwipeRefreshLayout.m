@@ -69,6 +69,9 @@
 }
 
 - (void)layoutSelf:(CGSize)targetSize {
+    if (self.contentOffset.y != 0) {
+        return;
+    }
     self.width = targetSize.width;
     self.height = targetSize.height;
     [self.headerView also:^(UIView *it) {

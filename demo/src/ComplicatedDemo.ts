@@ -1,4 +1,4 @@
-import { Panel, Group, vlayout, image, layoutConfig, ScaleType, refreshable, Color, pullable, stack, Image, Refreshable, TranslationAnimation } from "doric";
+import { Panel, Group, vlayout, image, layoutConfig, ScaleType, refreshable, Color, pullable, stack, Image, Refreshable, TranslationAnimation, loge, log } from "doric";
 import { title, icon_refresh } from "./utils";
 
 @Entry
@@ -23,8 +23,9 @@ class MyDemo extends Panel {
                         },
                         stopAnimation: () => {
                         },
-                        setPullingDistance: (rotation: number) => {
-                            headerImage.scaleX = headerImage.scaleY = (headerImage.height + rotation) / headerImage.height
+                        setPullingDistance: (distance: number) => {
+                            headerImage.scaleX = headerImage.scaleY = (headerImage.height + distance * 2) / headerImage.height
+                            log(`Header Image scaleY:${headerImage.scaleY},height:${headerImage.height},distance:${distance}`)
                         },
                     }),
                 content: vlayout([]).apply({

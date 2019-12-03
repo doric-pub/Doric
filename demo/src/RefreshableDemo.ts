@@ -31,8 +31,8 @@ class RefreshableDemo extends Panel {
                     stopAnimation: () => {
                         log('stopAnimation')
                     },
-                    setProgressRotation: (rotation: number) => {
-                        refreshImage.rotation = rotation
+                    setPullingDistance: (distance: number) => {
+                        refreshImage.rotation = distance / 30
                     },
                 }),
             content: (vlayout([
@@ -83,18 +83,6 @@ class RefreshableDemo extends Panel {
                         refreshView.setRefreshable(context, false)
                     }
                 } as IText),
-                label('Rotate self').apply({
-                    width: 300,
-                    height: 50,
-                    backgroundColor: colors[0],
-                    textSize: 30,
-                    textColor: Color.WHITE,
-                    layoutConfig: layoutConfig().exactly(),
-                } as IText).also(v => {
-                    v.onClick = () => {
-                        v.nativeChannel(context, "setRotation")(0.25)
-                    }
-                }),
             ]).apply({
                 layoutConfig: layoutConfig().atmost().h(LayoutSpec.WRAP_CONTENT),
                 gravity: gravity().centerX(),

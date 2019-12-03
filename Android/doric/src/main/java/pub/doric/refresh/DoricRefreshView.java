@@ -21,7 +21,7 @@ public class DoricRefreshView extends FrameLayout implements PullingListener {
     private View content;
     private Animation.AnimationListener mListener;
 
-    private PullingListener mPullingListenr;
+    private PullingListener mPullingListener;
 
     public DoricRefreshView(@NonNull Context context) {
         super(context);
@@ -38,12 +38,15 @@ public class DoricRefreshView extends FrameLayout implements PullingListener {
     public void setContent(View v) {
         removeAllViews();
         content = v;
-        if (v.getLayoutParams() instanceof FrameLayout.LayoutParams) {
-            ((LayoutParams) v.getLayoutParams()).gravity = Gravity.BOTTOM;
+        ViewGroup.LayoutParams params = v.getLayoutParams();
+        if (params instanceof LayoutParams) {
+            ((LayoutParams) params).gravity = Gravity.BOTTOM;
         } else {
-            LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.gravity = Gravity.CENTER;
-            v.setLayoutParams(params);
+            LayoutParams layoutParams = new LayoutParams(
+                    params == null ? ViewGroup.LayoutParams.WRAP_CONTENT : params.width,
+                    params == null ? ViewGroup.LayoutParams.WRAP_CONTENT : params.height);
+            layoutParams.gravity = Gravity.CENTER;
+            v.setLayoutParams(layoutParams);
         }
         addView(v);
     }
@@ -53,28 +56,28 @@ public class DoricRefreshView extends FrameLayout implements PullingListener {
     }
 
 
-    public void setPullingListenr(PullingListener listenr) {
-        this.mPullingListenr = listenr;
+    public void setPullingListener(PullingListener listener) {
+        this.mPullingListener = listener;
     }
 
     @Override
     public void startAnimation() {
-        if (mPullingListenr != null) {
-            mPullingListenr.startAnimation();
+        if (mPullingListener != null) {
+            mPullingListener.startAnimation();
         }
     }
 
     @Override
     public void stopAnimation() {
-        if (mPullingListenr != null) {
-            mPullingListenr.stopAnimation();
+        if (mPullingListener != null) {
+            mPullingListener.stopAnimation();
         }
     }
 
     @Override
-    public void setProgressRotation(float rotation) {
-        if (mPullingListenr != null) {
-            mPullingListenr.setProgressRotation(rotation);
+    public void setPullingDistance(float distance) {
+        if (mPullingListener != null) {
+            mPullingListener.setPullingDistance(distance);
         }
     }
 

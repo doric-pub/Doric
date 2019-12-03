@@ -17,11 +17,12 @@ function thisLabel(str: string) {
 class AnimationDemo extends Panel {
     build(rootView: Group): void {
         const view = box(2)
+        const view2 = box(3)
         view.onClick = () => {
             modal(context).toast('Clicked')
         }
         vlayout([
-            title("Complicated Animation"),
+            title("Complicated  Animation"),
             vlayout(
                 [
                     hlayout([
@@ -177,7 +178,17 @@ class AnimationDemo extends Panel {
                 ]
             ).apply({ space: 10 } as IVLayout),
             stack([
-                view,
+                view.also(v => {
+                    v.x = 20
+                    v.y = 0
+                    v.width = 30
+                    v.left = 15
+                }),
+                view2.also(v => {
+                    v.x = v.y = 20
+                    v.y = 40
+                    v.scaleX = 1.5
+                })
             ]).apply({
                 layoutConfig: layoutConfig().atmost(),
                 backgroundColor: colors[1].alpha(0.3 * 255),

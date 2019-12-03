@@ -68,6 +68,10 @@
     return [super requestFromSubview:subview];
 }
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+}
+
 - (void)layoutSelf:(CGSize)targetSize {
     if (self.contentOffset.y != 0) {
         return;
@@ -125,31 +129,14 @@
         return;
     }
     if (refreshing) {
+        [self setContentOffset:CGPointMake(0, -self.headerView.height) animated:YES];
+        self.scrollEnabled = NO;
         if (self.onRefreshBlock) {
             self.onRefreshBlock();
         }
-        [UIView animateWithDuration:.3f
-                         animations:^{
-                             self.contentOffset = (CGPoint) {0, -self.headerView.height};
-                             self.contentInset = UIEdgeInsetsMake(self.headerView.height, 0, 0, 0);
-                         }
-                         completion:^(BOOL finished) {
-                             [self.swipePullingDelegate startAnimation];
-                             self.scrollEnabled = NO;
-                         }
-        ];
     } else {
-        self.bounces = YES;
-        [UIView animateWithDuration:.3f
-                         animations:^{
-                             self.contentOffset = (CGPoint) {0, 0};
-                             self.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
-                         }
-                         completion:^(BOOL finished) {
-                             [self.swipePullingDelegate stopAnimation];
-                             self.scrollEnabled = YES;
-                         }
-        ];
+        [self setContentOffset:(CGPoint) {0, 0} animated:YES];
+        self.scrollEnabled = YES;
     }
     _refreshing = refreshing;
 }

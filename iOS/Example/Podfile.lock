@@ -4,7 +4,7 @@ PODS:
     - SocketRocket (~> 0.5.1)
     - YYCache (~> 1.0.4)
     - YYImage/WebP
-    - YYWebImage
+    - YYWebImage (~> 1.0.5)
   - GCDWebServer (3.5.3):
     - GCDWebServer/Core (= 3.5.3)
   - GCDWebServer/Core (3.5.3)
@@ -22,20 +22,12 @@ PODS:
 DEPENDENCIES:
   - Doric (from `../`)
 
-SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
-    - GCDWebServer
-    - SocketRocket
-    - YYCache
-    - YYImage
-    - YYWebImage
-
 EXTERNAL SOURCES:
   Doric:
-    :path: "../"
+    :path: ../
 
 SPEC CHECKSUMS:
-  Doric: e73b17b0e46198994f5c3d8af49f26fd9f49df09
+  Doric: aedd8cc2ea1e47eb8cd8b90f7a0bfa2417c534d0
   GCDWebServer: c0ab22c73e1b84f358d1e2f74bf6afd1c60829f2
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952
@@ -44,4 +36,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 012563d71439e7e33e976dca3b59664ed56cee39
 
-COCOAPODS: 1.7.5
+COCOAPODS: 1.4.0

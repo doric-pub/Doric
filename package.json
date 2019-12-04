@@ -10,7 +10,7 @@
     },
     "license": "Apache-2.0",
     "dependencies": {
-        "doric": "file:../js-framework",
+        "doric": "file:../doric-js",
         "reflect-metadata": "^0.1.13",
         "rollup": "^1.27.2",
         "rollup-plugin-commonjs": "^10.1.0",

@@ -1,0 +1,21 @@
+{
+    "name": "demo",
+    "version": "0.1.0",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "tsc -p .&& rollup -c",
+        "dev": "tsc -w -p . & rollup -c -w",
+        "clean": "rm -rf build && rm -rf bundle"
+    },
+    "license": "Apache-2.0",
+    "dependencies": {
+        "doric": "file:../js-framework",
+        "reflect-metadata": "^0.1.13",
+        "rollup": "^1.27.2",
+        "rollup-plugin-commonjs": "^10.1.0",
+        "rollup-plugin-node-resolve": "^5.2.0",
+        "tslib": "^1.10.0",
+        "typescript": "^3.7.2"
+    }
+}

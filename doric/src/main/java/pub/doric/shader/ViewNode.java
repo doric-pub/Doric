@@ -339,6 +339,11 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                     setRotation(prop.asNumber().toFloat());
                 }
                 break;
+            case "padding":
+                if (prop.isObject()) {
+                    setPadding(prop.asObject());
+                }
+                break;
             default:
                 break;
         }
@@ -407,6 +412,19 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         } else {
             blendLayoutConfig(layoutConfig);
         }
+    }
+
+    protected void setPadding(JSObject paddings) {
+        JSValue left = paddings.getProperty("left");
+        JSValue right = paddings.getProperty("right");
+        JSValue top = paddings.getProperty("top");
+        JSValue bottom = paddings.getProperty("bottom");
+        mView.setPadding(
+                left.isNumber() ? DoricUtils.dp2px(left.asNumber().toFloat()) : 0,
+                top.isNumber() ? DoricUtils.dp2px(top.asNumber().toFloat()) : 0,
+                right.isNumber() ? DoricUtils.dp2px(right.asNumber().toFloat()) : 0,
+                bottom.isNumber() ? DoricUtils.dp2px(bottom.asNumber().toFloat()) : 0
+        );
     }
 
     private void blendLayoutConfig(JSObject jsObject) {

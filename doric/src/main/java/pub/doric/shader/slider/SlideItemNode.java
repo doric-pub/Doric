@@ -15,6 +15,7 @@
  */
 package pub.doric.shader.slider;
 
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.github.pengfeizhou.jscore.JSObject;
@@ -50,7 +51,7 @@ public class SlideItemNode extends StackNode {
     @Override
     public void blend(JSObject jsObject) {
         super.blend(jsObject);
-        getNodeView().getLayoutParams().width = getLayoutParams().width;
-        getNodeView().getLayoutParams().height = getLayoutParams().height;
+        getNodeView().getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+        getNodeView().getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
     }
 }

@@ -23,8 +23,41 @@ allprojects {
         }
         maven { url 'https://jitpack.io' }
     }
+    def needReplaceLocal = true
+    gradle.startParameter.taskNames.each {
+        if (it.contains('uploadArchives')) {
+            needReplaceLocal = false
+        }
+    }
+    if (needReplaceLocal) {
+        configurations.all {
+            resolutionStrategy {
+                dependencySubstitution {
+                    substitute module('pub.doric:core') with project(":doric")
+                    substitute module('pub.doric:devkit') with project(":devkit")
+                }
+            }
+        }
+    }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+Properties properties = new Properties()
+properties.load(project.rootProject.file('version.properties').newDataInputStream())
+ext {
+    Version = properties.version
+}
+
+task publisCore dependsOn(":doric:uploadArchives") {
+    println "doric published"
+}
+
+task publishDevKit dependsOn(publisCore, ":devkit:uploadArchives") {
+    println "devkit published"
+}
+
+task PublishAll dependsOn(publisCore, publishDevKit) {
+    println "All published"
 }

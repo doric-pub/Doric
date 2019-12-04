@@ -33,7 +33,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'com.github.pengfeizhou:jsc4a:0.1.0'
+    implementation "pub.doric:core:${rootProject.ext.Version}"
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation "com.google.android.material:material:1.0.0"
     implementation 'com.squareup.okhttp3:okhttp:4.2.2'
@@ -43,9 +43,6 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:2.2.15"
     api 'org.greenrobot:eventbus:3.1.1'
     implementation 'com.lahm.library:easy-protector-release:1.1.0'
-    api 'org.nanohttpd:nanohttpd:2.3.1'
-    api project(':doric')
-
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

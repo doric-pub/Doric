@@ -1,0 +1,2497 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 51;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		00612BA0FDFFF760AA31897B256552D3 /* DoricSwipeRefreshLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A08665774EAAEF8A1660FA1D111197E /* DoricSwipeRefreshLayout.m */; };
+		01225045F0F04131A2DCCB419C5A43AF /* MKAnnotationView+YYWebImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 42D503ACEA2717C15EB4DF8CF7A201FE /* MKAnnotationView+YYWebImage.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		02F04EB7E8D481AF83AF79996BD87792 /* GCDWebServer-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E45811603BF8F9506F73F073CF69DED /* GCDWebServer-dummy.m */; };
+		03082882CBBA1667A93B7D61BC55B4B4 /* DoricBridgeExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 393ABDC63D186E9C4B3FE6BF2702A7F0 /* DoricBridgeExtension.m */; };
+		046D4C719884BEE359F3E4056B3ADC91 /* YYWebImageOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = F4CDB6C6F9D82E80CAAB690123B906B1 /* YYWebImageOperation.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		071B7DACEB0E33381A899175AD7719CA /* UIButton+YYWebImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 0D1FEE803DDD7EDF75D50BC2463E64D7 /* UIButton+YYWebImage.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		07EB9BB703FC850650DC41BEA946EA62 /* NSString+JsonString.m in Sources */ = {isa = PBXBuildFile; fileRef = 926E73E6AFC56158E380B54AB31357C8 /* NSString+JsonString.m */; };
+		08AF19B42AB684E88852CD6CB8A3AA75 /* DoricNativePlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = D9F3BD70EDB58FADFA2469045295B9F0 /* DoricNativePlugin.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		08C8A6242B5F8A6D3A5817FF9416A518 /* YYFrameImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F0D56623E9801EA024276066A9F82DF /* YYFrameImage.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		08EF09EB19754EE509818C5790D31DA9 /* DoricFlowLayoutNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 5160B449E0CB6266AA04E0124E1C9177 /* DoricFlowLayoutNode.m */; };
+		0B59A1F5BD1F123DB97060971DCF1D99 /* CALayer+YYWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BD06F78C15864BFD45D5B8A25C3998C /* CALayer+YYWebImage.m */; };
+		0CC1B3B497098C4159B8A348C85EC4B3 /* YYDiskCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 297A5C040632A2268999EFE516D8BDA8 /* YYDiskCache.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		0D2A7AA3E2BA05FEB6CC5463F9BEFF15 /* DoricSlideItemNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0D31EB38392CD7A552D20173BFE8F8 /* DoricSlideItemNode.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		11B5C2686382CB0A191CBB1065B398B1 /* YYFrameImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 23D1B9EB936178579F8FE3397E1E520B /* YYFrameImage.m */; };
+		11C9CB703C2C92A588EA39CCFE5BCBC2 /* DoricRootNode.m in Sources */ = {isa = PBXBuildFile; fileRef = CB646B53BBE623587150E6AC6766F116 /* DoricRootNode.m */; };
+		1253265B1B37678C169BF6A10A260F9E /* DoricModalPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 4299E4F7E5CCB5540DF92919DFFEDF04 /* DoricModalPlugin.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		144143A659E0FEC033EB44B5C1707BCA /* DoricUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 74F34A3EFBF17EEBFC54EF2F762160E9 /* DoricUtil.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		148E041F6FE689C65ECC968D22391F6B /* DoricExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = BE821F4AD3FE9FD0AE2CDE4A0CB0046C /* DoricExtensions.m */; };
+		15A100A4553D6DAA81BBF7C892BADCA4 /* Doric-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E8B1A44958B7CD262D3DBC144361926 /* Doric-dummy.m */; };
+		191E9735AC97FC3CEE416088EC325F62 /* DoricConstant.h in Headers */ = {isa = PBXBuildFile; fileRef = 194FF25327094949F8678C52FEF82DB0 /* DoricConstant.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		1BA55E660DBDCCE258A0E2136464ABD7 /* YYCache-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BE10DD8B0A5B83FCC0B288E5B0A18E3 /* YYCache-dummy.m */; };
+		1D68CC8FCA5AD66ACB98AC5A90B8D6BC /* DoricRegistry.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B9E73D207FF6B336BA1D24BB2F45D7A /* DoricRegistry.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		1D72D6B46AD74A46178DB3DA00B792E3 /* DoricViewNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 010065ADFC9A1AAAE9671B3153E1721C /* DoricViewNode.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		1DA05AE266C79E2CC17F3F527E34F7CC /* DoricShaderPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D189235FEF49CB09F61BBF1E61F027C /* DoricShaderPlugin.m */; };
+		1DC222879921DD8E01BDCA6348F0FAEF /* UIImage+YYWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 897E4027B05E43D194A2F5003AD48C9F /* UIImage+YYWebImage.m */; };
+		2285FC52EAE17821471935D517C7DACB /* DoricViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = D6D5146022097BDD38DF3E944B756D91 /* DoricViewController.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		22B9F8152B9E980E1FEB00B0CA6B27BB /* YYImageCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = F15350531BD5482A0A2999F0125F07C0 /* YYImageCoder.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		235867C4157F363474F02CFECB820F45 /* DoricScrollerNode.m in Sources */ = {isa = PBXBuildFile; fileRef = CC27308520C53C314813857696C87F5A /* DoricScrollerNode.m */; };
+		246C99114EE2CC85724B2F425B51D787 /* DoricShaderPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 52E7BB0575F9CA51BC44B597B2E61004 /* DoricShaderPlugin.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		27CAB568DB504CAB9E87A5949ACBF92A /* UIButton+YYWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EA8656B3E5CB824E7FFE065291CE2A2 /* UIButton+YYWebImage.m */; };
+		289FEAACBCE2F0DF88ABB6978CFA4AC9 /* YYCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E91879C3619D14D5D1DDA6497E1BA4D /* YYCache.m */; };
+		29F425B1A1A60C85C87E2EA6A84CCBF1 /* DoricTextNode.h in Headers */ = {isa = PBXBuildFile; fileRef = CE2C4FAB25A4BE2CDB1080B7F5E022BA /* DoricTextNode.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		2ADB39CC8762C3F34068C0AE84DDCFF4 /* YYSpriteSheetImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 59C5E7984250BADCE0464A5A7AE3A4AC /* YYSpriteSheetImage.m */; };
+		2BF2F43EB0EDA27FBF764B004723F8F9 /* DoricStoragePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 71EE75F7A7546F0B0B4CAAABC3A1A221 /* DoricStoragePlugin.m */; };
+		2D97BA46A9241177D41D943032EB6386 /* GCDWebServerDataResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ED20AF454A53D1112EA705702F141B8 /* GCDWebServerDataResponse.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		2F5FF6C6FBEE2F4E3BF522CBA1D5ABDC /* YYMemoryCache.m in Sources */ = {isa = PBXBuildFile; fileRef = ACBEDCADBB031E9C2FD75BB370970B85 /* YYMemoryCache.m */; };
+		325A01C30B880AEE4052C5FFABC08513 /* DoricHLayoutNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CDE30A80DC94398F86F48D99C4F77B0 /* DoricHLayoutNode.m */; };
+		33FA845C063B814C8EEEF56B48CD41F8 /* DoricLayouts.h in Headers */ = {isa = PBXBuildFile; fileRef = 91DA09580FAA07E0536E1A1A2629D357 /* DoricLayouts.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		34ADBE5772A6192B7B304B0004D12A75 /* DoricLayouts.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E3E64E2684AC22559A4B60F71F9D093 /* DoricLayouts.m */; };
+		35AA6FEA17185BA5249C86BF97CBBAB5 /* GCDWebServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7112332F6BD7610F1B869696C2154AC5 /* GCDWebServer.m */; };
+		35E55CC007A4866A1F5E3ADE81679130 /* CALayer+YYWebImage.h in Headers */ = {isa = PBXBuildFile; fileRef = B99A3A34AEE3672CEEDE0A236C330C5B /* CALayer+YYWebImage.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		3683FDAA91B21FEF6656962C0B18E61B /* YYImage-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 184188E0BB292926A6800D9F590C1F9E /* YYImage-dummy.m */; };
+		3721F80C3FDE8A2B101A119D78201031 /* YYSpriteSheetImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 3B7668033E6256C31E99870A20817F18 /* YYSpriteSheetImage.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		38B0845A4B83CE0959531E40A36AADC4 /* YYWebImageManager.h in Headers */ = {isa = PBXBuildFile; fileRef = D9C1B314EECDF555386CE99356E5E8CA /* YYWebImageManager.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		3925A9BD5798E09BE65375ED85D5A080 /* DoricGroupNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ADD883025D3EFB87B7F07F9193AD2C5 /* DoricGroupNode.m */; };
+		39B36A38566CBE323E76AE77CF7F14C8 /* GCDWebServerStreamedResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = E22AAD1FD657A163541F19331362EB37 /* GCDWebServerStreamedResponse.m */; };
+		3F95372A5D8DB12F879C15F58389A702 /* DoricAsyncResult.m in Sources */ = {isa = PBXBuildFile; fileRef = A335B4D91BE640B6C3D4AD680B89F387 /* DoricAsyncResult.m */; };
+		3F9991E0D126667F253AFD5ADE153D75 /* GCDWebServerResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = FAA54994F6C4CB7A1FB7BE3D563728F1 /* GCDWebServerResponse.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		414869E5655141E747BB94588B59075B /* DoricMainBundleJSLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 5BA6819C98E9CC361D6FA297291BA04C /* DoricMainBundleJSLoader.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		415078A044EA3AF3C8099845471A1FC9 /* DoricLoaderProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = B732C93FEF68A791A00E07F7A99C1918 /* DoricLoaderProtocol.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		4152104C6EDDADD63E2A0FD4346C704A /* DoricMainBundleJSLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E9713FBFF7F5E5044E6D47719303B01 /* DoricMainBundleJSLoader.m */; };
+		41E53FC8F7F5F7443EA81735B185621F /* GCDWebServerDataResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = F8C78BC8A578353725FDC61B593A1215 /* GCDWebServerDataResponse.m */; };
+		431B1130829E710EA3C4334BB232430A /* DoricJSCoreExecutor.h in Headers */ = {isa = PBXBuildFile; fileRef = E86208B42727852B3E99D5974D3C200D /* DoricJSCoreExecutor.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		43E035EA4D7778C3A5750C4AA067D517 /* DoricFlowLayoutItemNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 2090560BF70593C57CA6023743148E11 /* DoricFlowLayoutItemNode.m */; };
+		450A3D0C5E5889C279AC63532D0409AD /* DoricImageNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 74873EAB3FB9D4C0483B89BAF77BA343 /* DoricImageNode.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		454BDBC91B37775CE9FEAED5EB98A318 /* DoricContextHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 60848AB93046FA9180CA87F3E762625D /* DoricContextHolder.m */; };
+		456B4EDB3C253A44406F77BC05A674DF /* GCDWebServerRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 957FAE9188CA957E24FA4ED47EA9622F /* GCDWebServerRequest.m */; };
+		45B6A13373ABB67043AC103DC249C1B3 /* DoricContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E2F0A74FC8C6533C7F11B5FB037D850 /* DoricContext.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		46869F78B152AA301623F3FE82F6C0E3 /* DoricAsyncResult.h in Headers */ = {isa = PBXBuildFile; fileRef = DF75BDF041CCE69AB4472C081D5BB413 /* DoricAsyncResult.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		469A1604CBB39942455BBDCC31C15BA3 /* bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0C6AA7C8B725DA881A77BA01E3C34442 /* bundle */; };
+		46C1F76C0AD5370A5F5C10425F0F2BAE /* DoricStoragePlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BBDF9C8B9FB6CF5A8749EB21092432B /* DoricStoragePlugin.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		46C7437D30623CA97CA6E34487731AB9 /* DoricRefreshableNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 26D78EFF40478832FD5657A597DE1AF7 /* DoricRefreshableNode.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		49CFE195ADFA55E91789E15D0C87C01D /* Pods-ExampleTests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A44D4CFEB27EB7F87F52864C6B32A80 /* Pods-ExampleTests-dummy.m */; };
+		4D1906A236B1E3163D1F273CA7504B1B /* DoricImageNode.m in Sources */ = {isa = PBXBuildFile; fileRef = DE98B1DF2576CD010FCE9BEDE09839B3 /* DoricImageNode.m */; };
+		4D1F2333AFCA191C99238E2F7555D6C0 /* DoricRootNode.h in Headers */ = {isa = PBXBuildFile; fileRef = D67FDB6FFB2698EC2F221337BFD02417 /* DoricRootNode.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		4E6CF5CCD8D1EC5E9A646749383DEC66 /* DoricNavigatorPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = E81407FCC09BBCDBEE1EC5A7CEC70FB8 /* DoricNavigatorPlugin.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		4EA7628A9D84272317EB18D602CB6101 /* DoricJSRemoteExecutor.h in Headers */ = {isa = PBXBuildFile; fileRef = 62B1BB46C6104B4699E35A59FBDCE1B3 /* DoricJSRemoteExecutor.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		5117ED4BE4507C48781C5C3DDF810D31 /* DoricNavBarPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 5AAD7381E4B6574C4526FBC79BA20CDE /* DoricNavBarPlugin.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		517E021259A0510131206568BD7128CC /* DoricScrollerNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 5C30CC1ECCC7B3952D3947A068E1C965 /* DoricScrollerNode.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		525B0D4969B3DC70F910745701B6FFDE /* YYKVStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 27C5EC2FB50F0055581B04397C8FCE53 /* YYKVStorage.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		528525C1C62D4C0D269D0ADEC868C28F /* DoricFlowLayoutNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C15572E97B2FF255C7711CA6F2CAF5D /* DoricFlowLayoutNode.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		5374F9AB9AA0600E3CCA16E92C8896DF /* GCDWebServerMultiPartFormRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 74D5C5C6BF3910CB033C8FF9A117A6BF /* GCDWebServerMultiPartFormRequest.m */; };
+		53D32F9170417C4D434CE02C29D28D6D /* DoricJSRemoteExecutor.m in Sources */ = {isa = PBXBuildFile; fileRef = D69ACC0B5B7679176EAE83C369DE3C68 /* DoricJSRemoteExecutor.m */; };
+		54EF62B95670DDDF59F337561BA72092 /* GCDWebServerURLEncodedFormRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F249CF0C4C6FE10EDDE26089800C1DA /* GCDWebServerURLEncodedFormRequest.m */; };
+		56E0DDB21CAA1DB9B2209F2F10C5CDFC /* DoricPopoverPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5F2AD14C3EB39CB7A069965B83AF84 /* DoricPopoverPlugin.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		58EAEE34AF06823DB5089E796271876E /* DoricJSLoaderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A7F3FF1FB691A3120E58F78CD10E6144 /* DoricJSLoaderManager.m */; };
+		59186150B3A10FED46BB81E923BC3803 /* GCDWebServerPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 06403BCF3EAD8E815A6E853490C3AD68 /* GCDWebServerPrivate.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		5A6F8B4FA356338E0C4F7E7BF66DF665 /* DoricJSRemoteArgType.m in Sources */ = {isa = PBXBuildFile; fileRef = 796A5DCDCA570E615FD646C000E98BB7 /* DoricJSRemoteArgType.m */; };
+		5BECF1ACCAAAEBA8D91A27C0A8202E95 /* Pods-ExampleUITests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = FE99AB24E829DD35491764E2DED6ED75 /* Pods-ExampleUITests-dummy.m */; };
+		5C6582CABB0B8973C08D1654AA69B835 /* YYImage.m in Sources */ = {isa = PBXBuildFile; fileRef = EEE4F0A156BA817D331B8F2B08D52C94 /* YYImage.m */; };
+		5CD6C1E489C8975D293C7C8EBE642359 /* SocketRocket.h in Headers */ = {isa = PBXBuildFile; fileRef = A2A8B0BD64E3EE6FD74E776143CEABBD /* SocketRocket.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		5DDE21F723A5F11642AE78829F3E48E2 /* DoricJSEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 47A38F2A154C0A098F399ACF6A6BEB0A /* DoricJSEngine.m */; };
+		5EB1DD47EC3AC8BA4BF3D04B510FCDC5 /* DoricNavigatorDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 728D29C57333CFD144D9FEBA48C43D24 /* DoricNavigatorDelegate.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		601AA4A9A51A6295EA0C587E314B4878 /* DoricContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F3007DD50A74B00DA2B7C46EC8884AE /* DoricContext.m */; };
+		628C00DE711BDAF2D01F87D4E3F507C9 /* DoricDriver.m in Sources */ = {isa = PBXBuildFile; fileRef = 37FC112ED3BAB91DC102CE3A608F44D8 /* DoricDriver.m */; };
+		642A88A3A60378104204D90AF865DCE7 /* Pods-Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 674AA61D65F8AA0A85296F972EB84840 /* Pods-Example-dummy.m */; };
+		64A7E44B95ADC998CAC69B4173F28F5D /* DoricPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 30D26C72C541C3C71C71985CFFAA9FBB /* DoricPanel.m */; };
+		660C17830ED9DAF3CD14FEFEC16572D1 /* GCDWebServerHTTPStatusCodes.h in Headers */ = {isa = PBXBuildFile; fileRef = 4D2AD00F375FC11C8A1A006F89F22DA9 /* GCDWebServerHTTPStatusCodes.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		690D114CE33D424D91E65BCC5AEB0666 /* DoricJSLoaderManager.h in Headers */ = {isa = PBXBuildFile; fileRef = E954660781F9D33A67ED91C8301AEF7D /* DoricJSLoaderManager.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		695907AB3DC305929A1E5CB534DD6788 /* DoricListItemNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D3C44C69746FC60AE1C36AAC8CA1214 /* DoricListItemNode.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		6C945AC43FC9252239BD4EFA591834C4 /* GCDWebServerFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 99A078A2150409AF2197032DC49D9154 /* GCDWebServerFunctions.m */; };
+		6CB9C3842889740D1A1FED2D7A4E839D /* DoricListNode.h in Headers */ = {isa = PBXBuildFile; fileRef = A0267CAB68267A442DFACDDC267F8889 /* DoricListNode.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		6DEB097B36E0E54C1AB014D6F03C022D /* GCDWebServerDataRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = E5BAB81F1BAD8C5801EF364BA119C61E /* GCDWebServerDataRequest.m */; };
+		6E3B68A0E99E0B47F320EF2331E19B7A /* GCDWebServerConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E538FAF2C02B15BB10C7FD3F0F7A1E7 /* GCDWebServerConnection.m */; };
+		6E5E67F3816F41DDADE88F7461B1DC68 /* DoricGroupNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EF7D823AD5D2ECD06C2F348E4C6A5EA /* DoricGroupNode.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		7134381ADFB49E13A492C8842DD9136E /* YYWebImage-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 6358ABB187AFEBA11B8651FCEAA62B65 /* YYWebImage-dummy.m */; };
+		715F955E5C63DB36EB84F6A043C89F51 /* GCDWebServerFileResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F0CB0F446B24D888852B2364F36277F /* GCDWebServerFileResponse.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		742D298906BD7E18FDE81D0690CE6707 /* SRWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 4180A5D36AD0F103338812693D8B57A6 /* SRWebSocket.m */; };
+		74DD6E1DC8F5E8EAD77AB903DB2CF145 /* DoricSwipeRefreshLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 43EDD5936F96DC2FA156A398FD5B439A /* DoricSwipeRefreshLayout.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		785D30ACE0CA96360935E2B84255B603 /* SocketRocket-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = FDCFEBA818269E535D32E1DD7BB8346B /* SocketRocket-dummy.m */; };
+		7913064CD98682308E4DB915BF9035C2 /* DoricPromise.m in Sources */ = {isa = PBXBuildFile; fileRef = 0743ED4C66205A494631BAF9B34017CB /* DoricPromise.m */; };
+		7A24C07A15E0F108E4737F07A7027B15 /* DoricPanel.h in Headers */ = {isa = PBXBuildFile; fileRef = DB1B8FA21DCFCF77D0E911125BB4D6C4 /* DoricPanel.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		7C89E8BE51394D7BAEA8EC62422F805D /* DoricContextManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 345221108007185F555BBEFC3B40A397 /* DoricContextManager.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		7DAB96BECDDC0A6A989C3B33D4F0E08F /* DoricExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 831A1D9F56EC0EBE6FF18C4182F5A398 /* DoricExtensions.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		8189756A6783D7BE61E08FE409BFD871 /* GCDWebServerDataRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B3784257BDE2761D43DC51427849586 /* GCDWebServerDataRequest.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		8203F1FE8748893B7FB0F9330E74E40E /* GCDWebServerRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 156A26BD50C08C5F6154CCD8E2EF92BC /* GCDWebServerRequest.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		8304203ACC6B6C1F74F891D156D76CFC /* NSString+JsonString.h in Headers */ = {isa = PBXBuildFile; fileRef = 4048EC8080915DFB5BB7BDBA40D63859 /* NSString+JsonString.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		83FE02E47F9826D81EA6A3848189C301 /* DoricSuperNode.h in Headers */ = {isa = PBXBuildFile; fileRef = E06ED02D51FF564980F5EE60C2D0BF3C /* DoricSuperNode.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		85FCA81F31A3D7F20A3B8573E4EC0CCD /* DoricNativePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 16C752E94DC71B16E717B961DFA88C27 /* DoricNativePlugin.m */; };
+		8890A8A88FA2ED811319B234B388321C /* GCDWebServerErrorResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 02EAAD3467FB5D76D3EBDC713104BA9C /* GCDWebServerErrorResponse.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		89F0597FC8000460FB5CC2E7FC6319F9 /* DoricViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8471854325653CC0587DFBA14F0E5881 /* DoricViewController.m */; };
+		8BF99A86864A6A5A96D92FDB6E0D4FDB /* GCDWebServerConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = D10710C759F21524183FD049995772B9 /* GCDWebServerConnection.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		8D1B144A742F49683BE2828D810E4F3E /* DoricJSCoreExecutor.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CA54A1EB9EB8E6A1B4706A0833E6005 /* DoricJSCoreExecutor.m */; };
+		90CA1D7B5E55DD73D1E54DF69ABAF037 /* YYKVStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = EB0D8BB22CA3C0215357241370EAEAC6 /* YYKVStorage.m */; };
+		9456535481F6736CF42CC6C0CA0F05CC /* DoricConstant.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DCCA68E1E5ABBC70D3D07B2CC8F256F /* DoricConstant.m */; };
+		96A0EDF8241D65DBEB01DDEA2551B6AB /* YYAnimatedImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 50ED2806A9B5F444A52A22655766AF40 /* YYAnimatedImageView.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		9BB07ECB1EFF8E745E9185C4E2C27366 /* DoricNavBarDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = EA15D96F597B03524D56ACE6456BA273 /* DoricNavBarDelegate.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		9BDB5E4397AAD710F4446BA3952A2060 /* Doric.h in Headers */ = {isa = PBXBuildFile; fileRef = CF0E2A75C9ED58C64D9679A0FD5B5736 /* Doric.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		9E438C93DCD92B560E17734920ECA41E /* DoricNavigatorPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = B07CF2A8DE9FFCA72BFC4892C4B07622 /* DoricNavigatorPlugin.m */; };
+		A44016F8566693840BB920EA21DB7500 /* DoricWSClient.m in Sources */ = {isa = PBXBuildFile; fileRef = F510C5557CFB6D0554B63EC63DD93696 /* DoricWSClient.m */; };
+		A57D92BA915B59A21168F7BBF9D965A6 /* UIImage+YYWebImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 242BBB3556D614E9BAC17FD3A6A6165B /* UIImage+YYWebImage.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		A595FE2D135AA39316E3E3BC29297BA1 /* DoricListNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DF3AB02E400F4E40C79084448D1A559 /* DoricListNode.m */; };
+		A5F7BC027290310D20EDBA4AA2217461 /* YYImageCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B11F16372DCBEBC7EB6991994CAD36D /* YYImageCoder.m */; };
+		A603D2CA37138F4E0D2DB37C781A06BF /* DoricRefreshableNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 001CAE6E5551B7443D52904059305768 /* DoricRefreshableNode.m */; };
+		A8FC102FD1822315CE435B5E7E0E9D14 /* DoricHttpJSLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EE15792329EC630A175A3896C245D90 /* DoricHttpJSLoader.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		AAA8E5B65C1E2F2FF885712766554A58 /* DoricHLayoutNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 0933426FA6EC94016EDA5FED7229FA53 /* DoricHLayoutNode.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		AB84AE28B27CF582EF19D36BDC43F98B /* GCDWebServerErrorResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 19A3AC359451033E9EE30FF4A5524918 /* GCDWebServerErrorResponse.m */; };
+		AC49DC5F6394CD3B4222E74C0FCC6A27 /* DoricSliderNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B8591B854D2597F78D60308854D9926 /* DoricSliderNode.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		AE50A6FC10341E2B72B7DAF028954805 /* YYAnimatedImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = A03175B6FDC3D438CB6057D11FC1174B /* YYAnimatedImageView.m */; };
+		B303B392A2EB6D99E98BE556D969CE6C /* GCDWebServerMultiPartFormRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 188F9C29A193D759B8D1D8F7329F12D3 /* GCDWebServerMultiPartFormRequest.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		B325F28821AA9ED7BB4684C3E6952965 /* UIImageView+YYWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E8A03456D6FC2891C95938036545262 /* UIImageView+YYWebImage.m */; };
+		B6B56C166B186B33A5A87C791A284F36 /* DoricVLayoutNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 00BABCE2F6DD5317484E2B251ABB7D47 /* DoricVLayoutNode.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		B6DBD08C47B1B79A1BFB12885900AD59 /* DoricAnimatePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = F1833FF9D06D7E34248B2169098D6C2B /* DoricAnimatePlugin.m */; };
+		B73DE88797B200F90C3123B9582631EB /* GCDWebServerStreamedResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 12BD78ED93E0CF7366A357A05AE3631F /* GCDWebServerStreamedResponse.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		B87B726F4418B01AF502A9E9C6119098 /* _YYWebImageSetter.m in Sources */ = {isa = PBXBuildFile; fileRef = FCAB9544BCE7D9EA4E5C5DAF6765F84A /* _YYWebImageSetter.m */; };
+		B99C4ED46C0396496F882C7254E186C5 /* YYWebImageOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 37E4D0D28BB5E740A02CFA1CC47F2944 /* YYWebImageOperation.m */; };
+		BB23FABE2628260AFFF63CD70FBFD25F /* UIImageView+YYWebImage.h in Headers */ = {isa = PBXBuildFile; fileRef = D1D1F23C13AA8F4A60395689C2A2972F /* UIImageView+YYWebImage.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		BC8DFE1DD3D2B39277EEFA6D70CCF302 /* DoricFlowLayoutItemNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 9F7AD6923D5CCBFE31219597055CDCD1 /* DoricFlowLayoutItemNode.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		BCCA8B4ECCE73780AF092C376700FFAA /* DoricNetworkPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 744CAADE898A5F9DBB0C6C22012B3D6D /* DoricNetworkPlugin.m */; };
+		BE2A19E5C02AD94897CCDA7324827BCA /* DoricBridgeExtension.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EE7CA83B5FDFD3AB422E44AC3D0BA54 /* DoricBridgeExtension.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		BE80E6672A724B9C99DFDB16291E7920 /* YYWebImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C13120C8E5BD1D524867899DCDD16443 /* YYWebImageManager.m */; };
+		BEFD64DBD549FDA265DA763D50F83662 /* YYWebImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 97A29E9FC4A082D04395F34455FE48DC /* YYWebImage.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		BFF89C93F769127B541C6B48460ED91D /* DoricPromise.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D58E98F171A9E38028D0DF093EB0330 /* DoricPromise.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		C02DE514B2104B7F5BF56CA865D60E1D /* DoricModalPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = FC17BE12FE8C2FFCCB253BF7E707FA2B /* DoricModalPlugin.m */; };
+		C11CBD0FC0CBA29F1F2DAC1AC37AF364 /* _YYWebImageSetter.h in Headers */ = {isa = PBXBuildFile; fileRef = 80C87054F1E43F5CF294CF98FD364DCB /* _YYWebImageSetter.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		C3BC5A74FD1503DFA41D5A4E5EC3B672 /* DoricViewNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C739B7C9969E47087480B3F81EA1E14 /* DoricViewNode.m */; };
+		C830AF2D550187C31E5AC8A46AA4E76F /* UIView+Doric.h in Headers */ = {isa = PBXBuildFile; fileRef = D61A91E711568804C04D530ECA84B347 /* UIView+Doric.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		C83B012BD9B3B5F541AB506122EF966C /* SRWebSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 0FA454CFC822DF97658EA00D249150DB /* SRWebSocket.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		C907F8799CB0E289D53A5D7BE38EE6FF /* MKAnnotationView+YYWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A7242990DCCE6D3F50B2C608F8C7DAA /* MKAnnotationView+YYWebImage.m */; };
+		CA21DC6FA6E5CB45B41924611ADC6C9A /* DoricNetworkPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = DF8E338C24524A360CD70AE8C5C4BD9B /* DoricNetworkPlugin.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		CC7DF4168FA66F94C7FAC4722D625DE7 /* YYDiskCache.m in Sources */ = {isa = PBXBuildFile; fileRef = F0A42D3B9F17159C2E8EF209BF368966 /* YYDiskCache.m */; };
+		CCB8E3339DFB68E7605BE381F977AEF9 /* GCDWebServerURLEncodedFormRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AE526EFF2B40DF374482ED45DBF4112 /* GCDWebServerURLEncodedFormRequest.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		CE2B11F33301B8F7CEAB17059F0DF2EA /* DoricContextHolder.h in Headers */ = {isa = PBXBuildFile; fileRef = 2545576A3AA348E9CF7FC785DF90BCDE /* DoricContextHolder.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		CEBDF3FD9ABF5D2B3C326B21F58D4640 /* DoricJSExecutorProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = CC658E0105F8AB9C2152B76052BC481C /* DoricJSExecutorProtocol.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		D1014DBF2654D76D637022D52CC87885 /* GCDWebServerFileRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AC63A48456BCE52364F8F75F11114A6 /* GCDWebServerFileRequest.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		D23D009449BDA013320B83E96FD34F0C /* DoricListItemNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 9727EA66A9F093D8FA1308F11FDB18A9 /* DoricListItemNode.m */; };
+		D4A9AB151E41873EBA01F779AC2DADF4 /* DoricAnimatePlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = F431AB7C271DD9A3026FB8E02A680F7F /* DoricAnimatePlugin.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		D67AD5E402E954CDE1C16B744E39BDB1 /* DoricJSEngine.h in Headers */ = {isa = PBXBuildFile; fileRef = B9F783173337956660EADDB6852F3988 /* DoricJSEngine.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		D69495C5934065FB2F245BA3A332DE86 /* DoricSliderNode.m in Sources */ = {isa = PBXBuildFile; fileRef = EB2E14EF40F3D133983D89FB98A23289 /* DoricSliderNode.m */; };
+		D840F5A06B9893F618D61BB4983DF373 /* YYCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 0EBC58D82F141C654BB539D797418A5B /* YYCache.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		D8F9C2440532E05025C22711C00FEDF4 /* GCDWebServerResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 250467AAE5F772A373866D1B28EC4209 /* GCDWebServerResponse.m */; };
+		D9B4599A181CC306A7435AD154685666 /* GCDWebServerFileRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = CA9CDEF595948D04DA1741FF71C81D9D /* GCDWebServerFileRequest.m */; };
+		DA5C200F877DDC6B376E80FC59DB5810 /* DoricPopoverPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = A6E6D86C860C651FF21E3259F3848538 /* DoricPopoverPlugin.m */; };
+		DD862728E67ABA06851177E86348C67D /* DoricStackNode.m in Sources */ = {isa = PBXBuildFile; fileRef = C7DFC32B543A9AC293FA82E57A2EEF45 /* DoricStackNode.m */; };
+		DDD55545A6FA8C0944DA1A34B564F876 /* DoricWSClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 74700F4F68E283F40E2DE79D53B9523A /* DoricWSClient.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		DE1EEF389F8CB34534EAF7F8E4E6A7B7 /* GCDWebServerFileResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 75453DA51095496D971EC3387AAA68AB /* GCDWebServerFileResponse.m */; };
+		DECC4D2D1BE5BC5F10509E4C42C1A898 /* DoricHttpJSLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = F1CDF99B5A1018AEF83D898999D07779 /* DoricHttpJSLoader.m */; };
+		E5C994E9D29FEFF8CFA6A824D99EAB05 /* YYImage.h in Headers */ = {isa = PBXBuildFile; fileRef = B02FB78D23DCB6E556DB28E6788FBC32 /* YYImage.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		E661D35C67269E4A6F71760F5E2A2432 /* DoricSlideItemNode.m in Sources */ = {isa = PBXBuildFile; fileRef = FE05C6D16D438BF63DA4C5FBD51D65BD /* DoricSlideItemNode.m */; };
+		E6F8BC0728AC2154EF471B332F30ECB2 /* YYImageCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 24541E60AC8A9C984313EC52106ADB35 /* YYImageCache.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		E95755F0A09A57B158365C41F25AE7A7 /* YYMemoryCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A3E3FB0D781D456B0A7EAA3E2F963F5 /* YYMemoryCache.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		EAC6F94876E051A213D3D556453486CC /* DoricVLayoutNode.m in Sources */ = {isa = PBXBuildFile; fileRef = B103E58B040A9B8A692C37CDA18D30DB /* DoricVLayoutNode.m */; };
+		ECE9EB5004C807E82D576D1E4AFA13D2 /* DoricRegistry.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C5F8B8A7C7449D22667D8BE1ECCF225 /* DoricRegistry.m */; };
+		ECF57F8EB1CD164D28E1FA2D172F2A1A /* DoricJSRemoteArgType.h in Headers */ = {isa = PBXBuildFile; fileRef = 23763066D1E210BB7DA34D895A030912 /* DoricJSRemoteArgType.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		ED616E6493400CB7638DE29CCCD7ABF6 /* DoricDriver.h in Headers */ = {isa = PBXBuildFile; fileRef = E633C6EE0A00DFDEC7C940219332CB2B /* DoricDriver.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		F0DD942BF93F6B6E560D77691E37FD4B /* GCDWebServer.h in Headers */ = {isa = PBXBuildFile; fileRef = EC1EF6312171A3F3BBC065A16A025DCD /* GCDWebServer.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		F29D4EC239C9F0D6705C9E1CC22576F9 /* DoricTextNode.m in Sources */ = {isa = PBXBuildFile; fileRef = EBD7F2437166A99BA4B48F7B4A0D0A3D /* DoricTextNode.m */; };
+		F966178401EEC590EF0A26C79481E4D1 /* DoricSuperNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 2AFA360A449171381B173D42448150B3 /* DoricSuperNode.m */; };
+		FA22D26FA65988469855488530673176 /* DoricContextManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B222B94B13B3C219D4E51EDF297508AE /* DoricContextManager.m */; };
+		FABB9B51C2FFDED22D686E59516612D0 /* DoricUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = EFC7A426556D925CB8F88FFEF8A86603 /* DoricUtil.m */; };
+		FBBC942DFE11B502C5C608D9BABBE130 /* UIView+Doric.m in Sources */ = {isa = PBXBuildFile; fileRef = 480534A816C4B0024FA369A3C407F59A /* UIView+Doric.m */; };
+		FD1DCE441D6702175FC35DE58D019CAA /* DoricStackNode.h in Headers */ = {isa = PBXBuildFile; fileRef = DA02943572CEA445F2F8653C90453DB7 /* DoricStackNode.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		FD404E60462D931E6041A96D39DC024A /* GCDWebServerFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 1D40E088948B09DDDA870482BF145738 /* GCDWebServerFunctions.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		FE345403F7CCECEE9CBF80C4C2969636 /* YYImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = BCF14F6215D2D31E2C3EE1590B48EA6B /* YYImageCache.m */; };
+		FF61AAFF955979FB5139A45AAA356476 /* DoricNavBarPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 49A782176196E9E7E6302765A505C4DF /* DoricNavBarPlugin.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2313449E8824345CBDB9ED4D3E3BCF32 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1948D0B63D2CF6A48E18B0B292BC6091;
+			remoteInfo = SocketRocket;
+		};
+		253670C8605F5FFDE1D6606BA634381B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0AEE99A309977BD12A049FF48AF9BA4B;
+			remoteInfo = "Pods-Example";
+		};
+		5D80C63145B83493E429D6C7B05394BB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 488E8C830C5A5694EE916251B9ADAADA;
+			remoteInfo = YYWebImage;
+		};
+		5EF22E1C74B909EA29E090C50719BBD9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 488E8C830C5A5694EE916251B9ADAADA;
+			remoteInfo = YYWebImage;
+		};
+		5F800553AF429EC9C1F3C6E5C826D04E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1948D0B63D2CF6A48E18B0B292BC6091;
+			remoteInfo = SocketRocket;
+		};
+		751D1FF2822550D322644F951A7BDA9F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0AEE99A309977BD12A049FF48AF9BA4B;
+			remoteInfo = "Pods-Example";
+		};
+		77CF2158783C6995303A85B86AFD0AB9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CFDAE6EB02F58B9A37CADCF439AE6082;
+			remoteInfo = YYCache;
+		};
+		8479FE8F8C2EC600F1603EF1BFD6CC05 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 822E44240F2922DAB12018A6B649BD19;
+			remoteInfo = YYImage;
+		};
+		856CD558A6A4C84FD434D6D2A50A352C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CFDAE6EB02F58B9A37CADCF439AE6082;
+			remoteInfo = YYCache;
+		};
+		8BCCEE3CE39180DCABAD08A2A88ABED2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5305059FAA2A7B3246F1874D047D8000;
+			remoteInfo = "Doric-Doric";
+		};
+		A79DF282FD90B4C36A64A1AF9B145EDB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AD904F32069787EFB2DFFE05EB82F5BD;
+			remoteInfo = GCDWebServer;
+		};
+		BE67A29C8EE3211F6E4264C92C4C5784 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 822E44240F2922DAB12018A6B649BD19;
+			remoteInfo = YYImage;
+		};
+		CBBE8CF6CC81DB32DA2DDF836FC41947 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AD904F32069787EFB2DFFE05EB82F5BD;
+			remoteInfo = GCDWebServer;
+		};
+		D478AD36DA51D0362FE11615C051F15B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3467588C9AC1920A96217C14EB70DA40;
+			remoteInfo = Doric;
+		};
+		DD8E4C66891B230FFF1D4817E48DAB1A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 822E44240F2922DAB12018A6B649BD19;
+			remoteInfo = YYImage;
+		};
+		F5D4CA413DB8AE6664EA56196D8C0C4A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CFDAE6EB02F58B9A37CADCF439AE6082;
+			remoteInfo = YYCache;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		001CAE6E5551B7443D52904059305768 /* DoricRefreshableNode.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricRefreshableNode.m; sourceTree = "<group>"; };
+		00BABCE2F6DD5317484E2B251ABB7D47 /* DoricVLayoutNode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricVLayoutNode.h; sourceTree = "<group>"; };
+		010065ADFC9A1AAAE9671B3153E1721C /* DoricViewNode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricViewNode.h; sourceTree = "<group>"; };
+		02EAAD3467FB5D76D3EBDC713104BA9C /* GCDWebServerErrorResponse.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GCDWebServerErrorResponse.h; path = GCDWebServer/Responses/GCDWebServerErrorResponse.h; sourceTree = "<group>"; };
+		06403BCF3EAD8E815A6E853490C3AD68 /* GCDWebServerPrivate.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GCDWebServerPrivate.h; path = GCDWebServer/Core/GCDWebServerPrivate.h; sourceTree = "<group>"; };
+		0743ED4C66205A494631BAF9B34017CB /* DoricPromise.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricPromise.m; sourceTree = "<group>"; };
+		0933426FA6EC94016EDA5FED7229FA53 /* DoricHLayoutNode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricHLayoutNode.h; sourceTree = "<group>"; };
+		0A0D31EB38392CD7A552D20173BFE8F8 /* DoricSlideItemNode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricSlideItemNode.h; sourceTree = "<group>"; };
+		0AC63A48456BCE52364F8F75F11114A6 /* GCDWebServerFileRequest.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GCDWebServerFileRequest.h; path = GCDWebServer/Requests/GCDWebServerFileRequest.h; sourceTree = "<group>"; };
+		0C6AA7C8B725DA881A77BA01E3C34442 /* bundle */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder; name = bundle; path = "../js-framework/bundle"; sourceTree = "<group>"; };
+		0C6F4829D47D1826F47CDC4264F9F6A8 /* libYYImage.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libYYImage.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		0D1FEE803DDD7EDF75D50BC2463E64D7 /* UIButton+YYWebImage.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIButton+YYWebImage.h"; path = "YYWebImage/Categories/UIButton+YYWebImage.h"; sourceTree = "<group>"; };
+		0EBC58D82F141C654BB539D797418A5B /* YYCache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = YYCache.h; path = YYCache/YYCache.h; sourceTree = "<group>"; };
+		0F249CF0C4C6FE10EDDE26089800C1DA /* GCDWebServerURLEncodedFormRequest.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = GCDWebServerURLEncodedFormRequest.m; path = GCDWebServer/Requests/GCDWebServerURLEncodedFormRequest.m; sourceTree = "<group>"; };
+		0FA454CFC822DF97658EA00D249150DB /* SRWebSocket.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SRWebSocket.h; path = SocketRocket/SRWebSocket.h; sourceTree = "<group>"; };
+		12BD78ED93E0CF7366A357A05AE3631F /* GCDWebServerStreamedResponse.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GCDWebServerStreamedResponse.h; path = GCDWebServer/Responses/GCDWebServerStreamedResponse.h; sourceTree = "<group>"; };
+		156A26BD50C08C5F6154CCD8E2EF92BC /* GCDWebServerRequest.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GCDWebServerRequest.h; path = GCDWebServer/Core/GCDWebServerRequest.h; sourceTree = "<group>"; };
+		16C752E94DC71B16E717B961DFA88C27 /* DoricNativePlugin.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricNativePlugin.m; sourceTree = "<group>"; };
+		184188E0BB292926A6800D9F590C1F9E /* YYImage-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "YYImage-dummy.m"; sourceTree = "<group>"; };
+		188F9C29A193D759B8D1D8F7329F12D3 /* GCDWebServerMultiPartFormRequest.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GCDWebServerMultiPartFormRequest.h; path = GCDWebServer/Requests/GCDWebServerMultiPartFormRequest.h; sourceTree = "<group>"; };
+		194FF25327094949F8678C52FEF82DB0 /* DoricConstant.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricConstant.h; sourceTree = "<group>"; };
+		19A3AC359451033E9EE30FF4A5524918 /* GCDWebServerErrorResponse.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = GCDWebServerErrorResponse.m; path = GCDWebServer/Responses/GCDWebServerErrorResponse.m; sourceTree = "<group>"; };
+		1ADD883025D3EFB87B7F07F9193AD2C5 /* DoricGroupNode.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricGroupNode.m; sourceTree = "<group>"; };
+		1C5F8B8A7C7449D22667D8BE1ECCF225 /* DoricRegistry.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DoricRegistry.m; path = Pod/Classes/DoricRegistry.m; sourceTree = "<group>"; };
+		1D40E088948B09DDDA870482BF145738 /* GCDWebServerFunctions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GCDWebServerFunctions.h; path = GCDWebServer/Core/GCDWebServerFunctions.h; sourceTree = "<group>"; };
+		1DC97F881F42239F4D5EE57FE5266B1F /* Pods-ExampleUITests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-ExampleUITests-acknowledgements.plist"; sourceTree = "<group>"; };
+		1E19479558E0A9431B2B5F5A39136939 /* Doric.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Doric.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		1E2F0A74FC8C6533C7F11B5FB037D850 /* DoricContext.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DoricContext.h; path = Pod/Classes/DoricContext.h; sourceTree = "<group>"; };
+		1E538FAF2C02B15BB10C7FD3F0F7A1E7 /* GCDWebServerConnection.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = GCDWebServerConnection.m; path = GCDWebServer/Core/GCDWebServerConnection.m; sourceTree = "<group>"; };
+		1ED20AF454A53D1112EA705702F141B8 /* GCDWebServerDataResponse.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GCDWebServerDataResponse.h; path = GCDWebServer/Responses/GCDWebServerDataResponse.h; sourceTree = "<group>"; };
+		1F667CC0E19EAF34E5A4119E2121F585 /* libPods-Example.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Example.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2090560BF70593C57CA6023743148E11 /* DoricFlowLayoutItemNode.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricFlowLayoutItemNode.m; sourceTree = "<group>"; };
+		23426BADD33356B8F68F1DA4CA9D59F2 /* ResourceBundle-Doric-Doric-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "ResourceBundle-Doric-Doric-Info.plist"; sourceTree = "<group>"; };
+		23763066D1E210BB7DA34D895A030912 /* DoricJSRemoteArgType.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricJSRemoteArgType.h; sourceTree = "<group>"; };
+		23D1B9EB936178579F8FE3397E1E520B /* YYFrameImage.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = YYFrameImage.m; path = YYImage/YYFrameImage.m; sourceTree = "<group>"; };
+		242BBB3556D614E9BAC17FD3A6A6165B /* UIImage+YYWebImage.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImage+YYWebImage.h"; path = "YYWebImage/Categories/UIImage+YYWebImage.h"; sourceTree = "<group>"; };
+		24541E60AC8A9C984313EC52106ADB35 /* YYImageCache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = YYImageCache.h; path = YYWebImage/YYImageCache.h; sourceTree = "<group>"; };
+		250467AAE5F772A373866D1B28EC4209 /* GCDWebServerResponse.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = GCDWebServerResponse.m; path = GCDWebServer/Core/GCDWebServerResponse.m; sourceTree = "<group>"; };
+		2545576A3AA348E9CF7FC785DF90BCDE /* DoricContextHolder.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DoricContextHolder.h; path = Pod/Classes/DoricContextHolder.h; sourceTree = "<group>"; };
+		26D78EFF40478832FD5657A597DE1AF7 /* DoricRefreshableNode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricRefreshableNode.h; sourceTree = "<group>"; };
+		27C5EC2FB50F0055581B04397C8FCE53 /* YYKVStorage.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = YYKVStorage.h; path = YYCache/YYKVStorage.h; sourceTree = "<group>"; };
+		297A5C040632A2268999EFE516D8BDA8 /* YYDiskCache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = YYDiskCache.h; path = YYCache/YYDiskCache.h; sourceTree = "<group>"; };
+		2AFA360A449171381B173D42448150B3 /* DoricSuperNode.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricSuperNode.m; sourceTree = "<group>"; };
+		2BD06F78C15864BFD45D5B8A25C3998C /* CALayer+YYWebImage.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "CALayer+YYWebImage.m"; path = "YYWebImage/Categories/CALayer+YYWebImage.m"; sourceTree = "<group>"; };
+		2C739B7C9969E47087480B3F81EA1E14 /* DoricViewNode.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricViewNode.m; sourceTree = "<group>"; };
+		2DF3AB02E400F4E40C79084448D1A559 /* DoricListNode.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricListNode.m; sourceTree = "<group>"; };
+		2E45811603BF8F9506F73F073CF69DED /* GCDWebServer-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "GCDWebServer-dummy.m"; sourceTree = "<group>"; };
+		2EE15792329EC630A175A3896C245D90 /* DoricHttpJSLoader.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricHttpJSLoader.h; sourceTree = "<group>"; };
+		2EE7CA83B5FDFD3AB422E44AC3D0BA54 /* DoricBridgeExtension.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricBridgeExtension.h; sourceTree = "<group>"; };
+		30D26C72C541C3C71C71985CFFAA9FBB /* DoricPanel.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DoricPanel.m; path = Pod/Classes/DoricPanel.m; sourceTree = "<group>"; };
+		345221108007185F555BBEFC3B40A397 /* DoricContextManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DoricContextManager.h; path = Pod/Classes/DoricContextManager.h; sourceTree = "<group>"; };
+		35D3ADD1FF0C9A33D86DB110C181048B /* Pods-ExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
+		37E4D0D28BB5E740A02CFA1CC47F2944 /* YYWebImageOperation.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = YYWebImageOperation.m; path = YYWebImage/YYWebImageOperation.m; sourceTree = "<group>"; };
+		37FC112ED3BAB91DC102CE3A608F44D8 /* DoricDriver.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DoricDriver.m; path = Pod/Classes/DoricDriver.m; sourceTree = "<group>"; };
+		393ABDC63D186E9C4B3FE6BF2702A7F0 /* DoricBridgeExtension.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricBridgeExtension.m; sourceTree = "<group>"; };
+		3B11F16372DCBEBC7EB6991994CAD36D /* YYImageCoder.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = YYImageCoder.m; path = YYImage/YYImageCoder.m; sourceTree = "<group>"; };
+		3B7668033E6256C31E99870A20817F18 /* YYSpriteSheetImage.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = YYSpriteSheetImage.h; path = YYImage/YYSpriteSheetImage.h; sourceTree = "<group>"; };
+		3D189235FEF49CB09F61BBF1E61F027C /* DoricShaderPlugin.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricShaderPlugin.m; sourceTree = "<group>"; };
+		3E3E64E2684AC22559A4B60F71F9D093 /* DoricLayouts.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricLayouts.m; sourceTree = "<group>"; };
+		3F3007DD50A74B00DA2B7C46EC8884AE /* DoricContext.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DoricContext.m; path = Pod/Classes/DoricContext.m; sourceTree = "<group>"; };
+		4048EC8080915DFB5BB7BDBA40D63859 /* NSString+JsonString.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "NSString+JsonString.h"; sourceTree = "<group>"; };
+		4180A5D36AD0F103338812693D8B57A6 /* SRWebSocket.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SRWebSocket.m; path = SocketRocket/SRWebSocket.m; sourceTree = "<group>"; };
+		4299E4F7E5CCB5540DF92919DFFEDF04 /* DoricModalPlugin.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricModalPlugin.h; sourceTree = "<group>"; };
+		42D503ACEA2717C15EB4DF8CF7A201FE /* MKAnnotationView+YYWebImage.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "MKAnnotationView+YYWebImage.h"; path = "YYWebImage/Categories/MKAnnotationView+YYWebImage.h"; sourceTree = "<group>"; };
+		43EDD5936F96DC2FA156A398FD5B439A /* DoricSwipeRefreshLayout.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricSwipeRefreshLayout.h; sourceTree = "<group>"; };
+		4426D67B66065EF97BCB0FBC9E35BEE6 /* Pods-Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Example-acknowledgements.markdown"; sourceTree = "<group>"; };
+		47A38F2A154C0A098F399ACF6A6BEB0A /* DoricJSEngine.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricJSEngine.m; sourceTree = "<group>"; };
+		480534A816C4B0024FA369A3C407F59A /* UIView+Doric.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "UIView+Doric.m"; sourceTree = "<group>"; };
+		48ACF38225AF5129416A1F090F6D3286 /* libYYCache.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libYYCache.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		49A782176196E9E7E6302765A505C4DF /* DoricNavBarPlugin.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricNavBarPlugin.m; sourceTree = "<group>"; };
+		4A6BBD5D599973673610A24AF01EF5D7 /* YYWebImage.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = YYWebImage.xcconfig; sourceTree = "<group>"; };
+		4B8591B854D2597F78D60308854D9926 /* DoricSliderNode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricSliderNode.h; sourceTree = "<group>"; };
+		4C15572E97B2FF255C7711CA6F2CAF5D /* DoricFlowLayoutNode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricFlowLayoutNode.h; sourceTree = "<group>"; };
+		4D2AD00F375FC11C8A1A006F89F22DA9 /* GCDWebServerHTTPStatusCodes.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GCDWebServerHTTPStatusCodes.h; path = GCDWebServer/Core/GCDWebServerHTTPStatusCodes.h; sourceTree = "<group>"; };
+		4E8A03456D6FC2891C95938036545262 /* UIImageView+YYWebImage.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImageView+YYWebImage.m"; path = "YYWebImage/Categories/UIImageView+YYWebImage.m"; sourceTree = "<group>"; };
+		4FC1978206616CE319648B302B05AA8A /* libYYWebImage.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libYYWebImage.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		50CE420621B9D9ED01E06A8EDBD3E990 /* Pods-ExampleUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ExampleUITests.release.xcconfig"; sourceTree = "<group>"; };
+		50ED2806A9B5F444A52A22655766AF40 /* YYAnimatedImageView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = YYAnimatedImageView.h; path = YYImage/YYAnimatedImageView.h; sourceTree = "<group>"; };
+		5160B449E0CB6266AA04E0124E1C9177 /* DoricFlowLayoutNode.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricFlowLayoutNode.m; sourceTree = "<group>"; };
+		52E7BB0575F9CA51BC44B597B2E61004 /* DoricShaderPlugin.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricShaderPlugin.h; sourceTree = "<group>"; };
+		57728CFE03A4D88821681C3D55A1FA85 /* Pods-Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Example.release.xcconfig"; sourceTree = "<group>"; };
+		59C5E7984250BADCE0464A5A7AE3A4AC /* YYSpriteSheetImage.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = YYSpriteSheetImage.m; path = YYImage/YYSpriteSheetImage.m; sourceTree = "<group>"; };
+		5AAD7381E4B6574C4526FBC79BA20CDE /* DoricNavBarPlugin.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricNavBarPlugin.h; sourceTree = "<group>"; };
+		5BA6819C98E9CC361D6FA297291BA04C /* DoricMainBundleJSLoader.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricMainBundleJSLoader.h; sourceTree = "<group>"; };
+		5BD2FB5A84E2481DF889A8718306023F /* YYImage.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = YYImage.xcconfig; sourceTree = "<group>"; };
+		5C30CC1ECCC7B3952D3947A068E1C965 /* DoricScrollerNode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricScrollerNode.h; sourceTree = "<group>"; };
+		60848AB93046FA9180CA87F3E762625D /* DoricContextHolder.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DoricContextHolder.m; path = Pod/Classes/DoricContextHolder.m; sourceTree = "<group>"; };
+		62B1BB46C6104B4699E35A59FBDCE1B3 /* DoricJSRemoteExecutor.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricJSRemoteExecutor.h; sourceTree = "<group>"; };
+		630CABE8F692FCDBFD1B122A2D0CE388 /* libPods-ExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6358ABB187AFEBA11B8651FCEAA62B65 /* YYWebImage-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "YYWebImage-dummy.m"; sourceTree = "<group>"; };
+		674AA61D65F8AA0A85296F972EB84840 /* Pods-Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Example-dummy.m"; sourceTree = "<group>"; };
+		677BC4F0CCD6EB2C9FBCB3B375E7349F /* Doric.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Doric.xcconfig; sourceTree = "<group>"; };
+		67CCE9A47A1F1E452AF6E94DFA6F93F7 /* YYWebImage-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "YYWebImage-prefix.pch"; sourceTree = "<group>"; };
+		6B3784257BDE2761D43DC51427849586 /* GCDWebServerDataRequest.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GCDWebServerDataRequest.h; path = GCDWebServer/Requests/GCDWebServerDataRequest.h; sourceTree = "<group>"; };
+		6B5F2AD14C3EB39CB7A069965B83AF84 /* DoricPopoverPlugin.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricPopoverPlugin.h; sourceTree = "<group>"; };
+		6B9E73D207FF6B336BA1D24BB2F45D7A /* DoricRegistry.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DoricRegistry.h; path = Pod/Classes/DoricRegistry.h; sourceTree = "<group>"; };
+		6DCCA68E1E5ABBC70D3D07B2CC8F256F /* DoricConstant.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricConstant.m; sourceTree = "<group>"; };
+		6E2E83CCA4E2E6955BC3C11025F963AA /* WebP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebP.framework; path = Vendor/WebP.framework; sourceTree = "<group>"; };
+		6EF7D823AD5D2ECD06C2F348E4C6A5EA /* DoricGroupNode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricGroupNode.h; sourceTree = "<group>"; };
+		6F0D56623E9801EA024276066A9F82DF /* YYFrameImage.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = YYFrameImage.h; path = YYImage/YYFrameImage.h; sourceTree = "<group>"; };
+		7112332F6BD7610F1B869696C2154AC5 /* GCDWebServer.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = GCDWebServer.m; path = GCDWebServer/Core/GCDWebServer.m; sourceTree = "<group>"; };
+		71EE75F7A7546F0B0B4CAAABC3A1A221 /* DoricStoragePlugin.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricStoragePlugin.m; sourceTree = "<group>"; };
+		728D29C57333CFD144D9FEBA48C43D24 /* DoricNavigatorDelegate.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricNavigatorDelegate.h; sourceTree = "<group>"; };
+		744CAADE898A5F9DBB0C6C22012B3D6D /* DoricNetworkPlugin.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricNetworkPlugin.m; sourceTree = "<group>"; };
+		74700F4F68E283F40E2DE79D53B9523A /* DoricWSClient.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricWSClient.h; sourceTree = "<group>"; };
+		74873EAB3FB9D4C0483B89BAF77BA343 /* DoricImageNode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricImageNode.h; sourceTree = "<group>"; };
+		74D5C5C6BF3910CB033C8FF9A117A6BF /* GCDWebServerMultiPartFormRequest.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = GCDWebServerMultiPartFormRequest.m; path = GCDWebServer/Requests/GCDWebServerMultiPartFormRequest.m; sourceTree = "<group>"; };
+		74F34A3EFBF17EEBFC54EF2F762160E9 /* DoricUtil.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricUtil.h; sourceTree = "<group>"; };
+		75453DA51095496D971EC3387AAA68AB /* GCDWebServerFileResponse.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = GCDWebServerFileResponse.m; path = GCDWebServer/Responses/GCDWebServerFileResponse.m; sourceTree = "<group>"; };
+		786AB58F4C2451575BBF7722ACDE9BEB /* Pods-ExampleUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ExampleUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		796A5DCDCA570E615FD646C000E98BB7 /* DoricJSRemoteArgType.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricJSRemoteArgType.m; sourceTree = "<group>"; };
+		7A3E3FB0D781D456B0A7EAA3E2F963F5 /* YYMemoryCache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = YYMemoryCache.h; path = YYCache/YYMemoryCache.h; sourceTree = "<group>"; };
+		7BE10DD8B0A5B83FCC0B288E5B0A18E3 /* YYCache-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "YYCache-dummy.m"; sourceTree = "<group>"; };
+		7CDE30A80DC94398F86F48D99C4F77B0 /* DoricHLayoutNode.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricHLayoutNode.m; sourceTree = "<group>"; };
+		7EA8656B3E5CB824E7FFE065291CE2A2 /* UIButton+YYWebImage.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIButton+YYWebImage.m"; path = "YYWebImage/Categories/UIButton+YYWebImage.m"; sourceTree = "<group>"; };
+		7F0CB0F446B24D888852B2364F36277F /* GCDWebServerFileResponse.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GCDWebServerFileResponse.h; path = GCDWebServer/Responses/GCDWebServerFileResponse.h; sourceTree = "<group>"; };
+		8052FAE778A6A09F2260E4E85B371F57 /* Pods-ExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ExampleTests.release.xcconfig"; sourceTree = "<group>"; };
+		80C87054F1E43F5CF294CF98FD364DCB /* _YYWebImageSetter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = _YYWebImageSetter.h; path = YYWebImage/Categories/_YYWebImageSetter.h; sourceTree = "<group>"; };
+		831A1D9F56EC0EBE6FF18C4182F5A398 /* DoricExtensions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricExtensions.h; sourceTree = "<group>"; };
+		8471854325653CC0587DFBA14F0E5881 /* DoricViewController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DoricViewController.m; path = Pod/Classes/DoricViewController.m; sourceTree = "<group>"; };
+		85A01882ED06DFEA2E0CE78BCDB204A7 /* libSocketRocket.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSocketRocket.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		87E7F5288DD80B4FDE8896A6D2782093 /* Pods-Example-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Example-resources.sh"; sourceTree = "<group>"; };
+		897E4027B05E43D194A2F5003AD48C9F /* UIImage+YYWebImage.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImage+YYWebImage.m"; path = "YYWebImage/Categories/UIImage+YYWebImage.m"; sourceTree = "<group>"; };
+		8A44D4CFEB27EB7F87F52864C6B32A80 /* Pods-ExampleTests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-ExampleTests-dummy.m"; sourceTree = "<group>"; };
+		8A7242990DCCE6D3F50B2C608F8C7DAA /* MKAnnotationView+YYWebImage.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "MKAnnotationView+YYWebImage.m"; path = "YYWebImage/Categories/MKAnnotationView+YYWebImage.m"; sourceTree = "<group>"; };
+		8AE526EFF2B40DF374482ED45DBF4112 /* GCDWebServerURLEncodedFormRequest.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GCDWebServerURLEncodedFormRequest.h; path = GCDWebServer/Requests/GCDWebServerURLEncodedFormRequest.h; sourceTree = "<group>"; };
+		8BBDF9C8B9FB6CF5A8749EB21092432B /* DoricStoragePlugin.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricStoragePlugin.h; sourceTree = "<group>"; };
+		8CA54A1EB9EB8E6A1B4706A0833E6005 /* DoricJSCoreExecutor.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricJSCoreExecutor.m; sourceTree = "<group>"; };
+		8D3C44C69746FC60AE1C36AAC8CA1214 /* DoricListItemNode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricListItemNode.h; sourceTree = "<group>"; };
+		8DBE82481F986094549AFA32F59088B6 /* YYCache-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "YYCache-prefix.pch"; sourceTree = "<group>"; };
+		8F4D6D38881BB9FAF4450841BD1BF9CD /* Pods-ExampleUITests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-ExampleUITests-acknowledgements.markdown"; sourceTree = "<group>"; };
+		91DA09580FAA07E0536E1A1A2629D357 /* DoricLayouts.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricLayouts.h; sourceTree = "<group>"; };
+		926E73E6AFC56158E380B54AB31357C8 /* NSString+JsonString.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "NSString+JsonString.m"; sourceTree = "<group>"; };
+		957FAE9188CA957E24FA4ED47EA9622F /* GCDWebServerRequest.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = GCDWebServerRequest.m; path = GCDWebServer/Core/GCDWebServerRequest.m; sourceTree = "<group>"; };
+		9727EA66A9F093D8FA1308F11FDB18A9 /* DoricListItemNode.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricListItemNode.m; sourceTree = "<group>"; };
+		97A29E9FC4A082D04395F34455FE48DC /* YYWebImage.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = YYWebImage.h; path = YYWebImage/YYWebImage.h; sourceTree = "<group>"; };
+		98512CF1DCD76DF334D0FDB005736214 /* GCDWebServer.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = GCDWebServer.xcconfig; sourceTree = "<group>"; };
+		99A078A2150409AF2197032DC49D9154 /* GCDWebServerFunctions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = GCDWebServerFunctions.m; path = GCDWebServer/Core/GCDWebServerFunctions.m; sourceTree = "<group>"; };
+		9A08665774EAAEF8A1660FA1D111197E /* DoricSwipeRefreshLayout.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricSwipeRefreshLayout.m; sourceTree = "<group>"; };
+		9CF6301AAD07F98FE89F30E7B5A07161 /* Pods-ExampleTests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-ExampleTests-acknowledgements.plist"; sourceTree = "<group>"; };
+		9D58E98F171A9E38028D0DF093EB0330 /* DoricPromise.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricPromise.h; sourceTree = "<group>"; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9E8B1A44958B7CD262D3DBC144361926 /* Doric-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Doric-dummy.m"; sourceTree = "<group>"; };
+		9E91879C3619D14D5D1DDA6497E1BA4D /* YYCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = YYCache.m; path = YYCache/YYCache.m; sourceTree = "<group>"; };
+		9E9713FBFF7F5E5044E6D47719303B01 /* DoricMainBundleJSLoader.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricMainBundleJSLoader.m; sourceTree = "<group>"; };
+		9F7AD6923D5CCBFE31219597055CDCD1 /* DoricFlowLayoutItemNode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricFlowLayoutItemNode.h; sourceTree = "<group>"; };
+		A0267CAB68267A442DFACDDC267F8889 /* DoricListNode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricListNode.h; sourceTree = "<group>"; };
+		A03175B6FDC3D438CB6057D11FC1174B /* YYAnimatedImageView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = YYAnimatedImageView.m; path = YYImage/YYAnimatedImageView.m; sourceTree = "<group>"; };
+		A12EA2D6D6F629978F16C0E458152B6E /* Pods-ExampleTests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-ExampleTests-acknowledgements.markdown"; sourceTree = "<group>"; };
+		A2A8B0BD64E3EE6FD74E776143CEABBD /* SocketRocket.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SocketRocket.h; path = SocketRocket/SocketRocket.h; sourceTree = "<group>"; };
+		A335B4D91BE640B6C3D4AD680B89F387 /* DoricAsyncResult.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricAsyncResult.m; sourceTree = "<group>"; };
+		A461D3539C89936737BC3759F6AA0407 /* YYCache.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = YYCache.xcconfig; sourceTree = "<group>"; };
+		A6E6D86C860C651FF21E3259F3848538 /* DoricPopoverPlugin.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricPopoverPlugin.m; sourceTree = "<group>"; };
+		A7F3FF1FB691A3120E58F78CD10E6144 /* DoricJSLoaderManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricJSLoaderManager.m; sourceTree = "<group>"; };
+		ACBEDCADBB031E9C2FD75BB370970B85 /* YYMemoryCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = YYMemoryCache.m; path = YYCache/YYMemoryCache.m; sourceTree = "<group>"; };
+		B02FB78D23DCB6E556DB28E6788FBC32 /* YYImage.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = YYImage.h; path = YYImage/YYImage.h; sourceTree = "<group>"; };
+		B07CF2A8DE9FFCA72BFC4892C4B07622 /* DoricNavigatorPlugin.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricNavigatorPlugin.m; sourceTree = "<group>"; };
+		B103E58B040A9B8A692C37CDA18D30DB /* DoricVLayoutNode.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricVLayoutNode.m; sourceTree = "<group>"; };
+		B222B94B13B3C219D4E51EDF297508AE /* DoricContextManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DoricContextManager.m; path = Pod/Classes/DoricContextManager.m; sourceTree = "<group>"; };
+		B379C9E71A25B03E5E18907D983826E8 /* GCDWebServer-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "GCDWebServer-prefix.pch"; sourceTree = "<group>"; };
+		B54C4523BBF2D713FE5A0DC2448FFFB1 /* SocketRocket.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SocketRocket.xcconfig; sourceTree = "<group>"; };
+		B68C1052A3B51DBCF7D960F898AAFA95 /* libGCDWebServer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libGCDWebServer.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		B732C93FEF68A791A00E07F7A99C1918 /* DoricLoaderProtocol.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricLoaderProtocol.h; sourceTree = "<group>"; };
+		B99A3A34AEE3672CEEDE0A236C330C5B /* CALayer+YYWebImage.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "CALayer+YYWebImage.h"; path = "YYWebImage/Categories/CALayer+YYWebImage.h"; sourceTree = "<group>"; };
+		B9F783173337956660EADDB6852F3988 /* DoricJSEngine.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricJSEngine.h; sourceTree = "<group>"; };
+		BCF14F6215D2D31E2C3EE1590B48EA6B /* YYImageCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = YYImageCache.m; path = YYWebImage/YYImageCache.m; sourceTree = "<group>"; };
+		BE821F4AD3FE9FD0AE2CDE4A0CB0046C /* DoricExtensions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricExtensions.m; sourceTree = "<group>"; };
+		C13120C8E5BD1D524867899DCDD16443 /* YYWebImageManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = YYWebImageManager.m; path = YYWebImage/YYWebImageManager.m; sourceTree = "<group>"; };
+		C232398D4E3A40F2337F8A40D7F8D751 /* libPods-ExampleUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ExampleUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C2EA63FA904BF51E753C7AF5830F1939 /* Doric.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = Doric.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		C7DFC32B543A9AC293FA82E57A2EEF45 /* DoricStackNode.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricStackNode.m; sourceTree = "<group>"; };
+		C942D362AA56A8F277A85F2072CBF7CC /* SocketRocket-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SocketRocket-prefix.pch"; sourceTree = "<group>"; };
+		CA9CDEF595948D04DA1741FF71C81D9D /* GCDWebServerFileRequest.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = GCDWebServerFileRequest.m; path = GCDWebServer/Requests/GCDWebServerFileRequest.m; sourceTree = "<group>"; };
+		CB646B53BBE623587150E6AC6766F116 /* DoricRootNode.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricRootNode.m; sourceTree = "<group>"; };
+		CB6504BD07E3990E6F058E4073421ADA /* libDoric.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libDoric.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC27308520C53C314813857696C87F5A /* DoricScrollerNode.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricScrollerNode.m; sourceTree = "<group>"; };
+		CC658E0105F8AB9C2152B76052BC481C /* DoricJSExecutorProtocol.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricJSExecutorProtocol.h; sourceTree = "<group>"; };
+		CE2C4FAB25A4BE2CDB1080B7F5E022BA /* DoricTextNode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricTextNode.h; sourceTree = "<group>"; };
+		CF0E2A75C9ED58C64D9679A0FD5B5736 /* Doric.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = Doric.h; path = Pod/Classes/Doric.h; sourceTree = "<group>"; };
+		D10710C759F21524183FD049995772B9 /* GCDWebServerConnection.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GCDWebServerConnection.h; path = GCDWebServer/Core/GCDWebServerConnection.h; sourceTree = "<group>"; };
+		D1D1F23C13AA8F4A60395689C2A2972F /* UIImageView+YYWebImage.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImageView+YYWebImage.h"; path = "YYWebImage/Categories/UIImageView+YYWebImage.h"; sourceTree = "<group>"; };
+		D61A91E711568804C04D530ECA84B347 /* UIView+Doric.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "UIView+Doric.h"; sourceTree = "<group>"; };
+		D67FDB6FFB2698EC2F221337BFD02417 /* DoricRootNode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricRootNode.h; sourceTree = "<group>"; };
+		D69ACC0B5B7679176EAE83C369DE3C68 /* DoricJSRemoteExecutor.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricJSRemoteExecutor.m; sourceTree = "<group>"; };
+		D6D5146022097BDD38DF3E944B756D91 /* DoricViewController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DoricViewController.h; path = Pod/Classes/DoricViewController.h; sourceTree = "<group>"; };
+		D6FB06D861EC9C7B3A5806FD0936D4EE /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		D9C1B314EECDF555386CE99356E5E8CA /* YYWebImageManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = YYWebImageManager.h; path = YYWebImage/YYWebImageManager.h; sourceTree = "<group>"; };
+		D9F3BD70EDB58FADFA2469045295B9F0 /* DoricNativePlugin.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricNativePlugin.h; sourceTree = "<group>"; };
+		DA02943572CEA445F2F8653C90453DB7 /* DoricStackNode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricStackNode.h; sourceTree = "<group>"; };
+		DB1B8FA21DCFCF77D0E911125BB4D6C4 /* DoricPanel.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DoricPanel.h; path = Pod/Classes/DoricPanel.h; sourceTree = "<group>"; };
+		DE98B1DF2576CD010FCE9BEDE09839B3 /* DoricImageNode.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricImageNode.m; sourceTree = "<group>"; };
+		DF75BDF041CCE69AB4472C081D5BB413 /* DoricAsyncResult.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricAsyncResult.h; sourceTree = "<group>"; };
+		DF8E338C24524A360CD70AE8C5C4BD9B /* DoricNetworkPlugin.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricNetworkPlugin.h; sourceTree = "<group>"; };
+		DFFAD17E7567EE856A59F246D50A9B0B /* Pods-Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Example-acknowledgements.plist"; sourceTree = "<group>"; };
+		E06ED02D51FF564980F5EE60C2D0BF3C /* DoricSuperNode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricSuperNode.h; sourceTree = "<group>"; };
+		E210810B4D8E485B38EED5F4E4F37D5D /* YYImage-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "YYImage-prefix.pch"; sourceTree = "<group>"; };
+		E22AAD1FD657A163541F19331362EB37 /* GCDWebServerStreamedResponse.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = GCDWebServerStreamedResponse.m; path = GCDWebServer/Responses/GCDWebServerStreamedResponse.m; sourceTree = "<group>"; };
+		E340F908A05867E06E975FDCDD32315C /* Pods-Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Example.debug.xcconfig"; sourceTree = "<group>"; };
+		E5B68A2C8EC1D3C756ACAC5C6885BFB7 /* Doric-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Doric-prefix.pch"; sourceTree = "<group>"; };
+		E5BAB81F1BAD8C5801EF364BA119C61E /* GCDWebServerDataRequest.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = GCDWebServerDataRequest.m; path = GCDWebServer/Requests/GCDWebServerDataRequest.m; sourceTree = "<group>"; };
+		E633C6EE0A00DFDEC7C940219332CB2B /* DoricDriver.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = DoricDriver.h; path = Pod/Classes/DoricDriver.h; sourceTree = "<group>"; };
+		E81407FCC09BBCDBEE1EC5A7CEC70FB8 /* DoricNavigatorPlugin.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricNavigatorPlugin.h; sourceTree = "<group>"; };
+		E86208B42727852B3E99D5974D3C200D /* DoricJSCoreExecutor.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricJSCoreExecutor.h; sourceTree = "<group>"; };
+		E954660781F9D33A67ED91C8301AEF7D /* DoricJSLoaderManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricJSLoaderManager.h; sourceTree = "<group>"; };
+		EA15D96F597B03524D56ACE6456BA273 /* DoricNavBarDelegate.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricNavBarDelegate.h; sourceTree = "<group>"; };
+		EB0D8BB22CA3C0215357241370EAEAC6 /* YYKVStorage.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = YYKVStorage.m; path = YYCache/YYKVStorage.m; sourceTree = "<group>"; };
+		EB2E14EF40F3D133983D89FB98A23289 /* DoricSliderNode.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricSliderNode.m; sourceTree = "<group>"; };
+		EBD7F2437166A99BA4B48F7B4A0D0A3D /* DoricTextNode.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricTextNode.m; sourceTree = "<group>"; };
+		EC1EF6312171A3F3BBC065A16A025DCD /* GCDWebServer.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GCDWebServer.h; path = GCDWebServer/Core/GCDWebServer.h; sourceTree = "<group>"; };
+		EEE4F0A156BA817D331B8F2B08D52C94 /* YYImage.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = YYImage.m; path = YYImage/YYImage.m; sourceTree = "<group>"; };
+		EFC7A426556D925CB8F88FFEF8A86603 /* DoricUtil.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricUtil.m; sourceTree = "<group>"; };
+		F0A42D3B9F17159C2E8EF209BF368966 /* YYDiskCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = YYDiskCache.m; path = YYCache/YYDiskCache.m; sourceTree = "<group>"; };
+		F15350531BD5482A0A2999F0125F07C0 /* YYImageCoder.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = YYImageCoder.h; path = YYImage/YYImageCoder.h; sourceTree = "<group>"; };
+		F1833FF9D06D7E34248B2169098D6C2B /* DoricAnimatePlugin.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricAnimatePlugin.m; sourceTree = "<group>"; };
+		F1CDF99B5A1018AEF83D898999D07779 /* DoricHttpJSLoader.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricHttpJSLoader.m; sourceTree = "<group>"; };
+		F431AB7C271DD9A3026FB8E02A680F7F /* DoricAnimatePlugin.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = DoricAnimatePlugin.h; sourceTree = "<group>"; };
+		F4CDB6C6F9D82E80CAAB690123B906B1 /* YYWebImageOperation.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = YYWebImageOperation.h; path = YYWebImage/YYWebImageOperation.h; sourceTree = "<group>"; };
+		F510C5557CFB6D0554B63EC63DD93696 /* DoricWSClient.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricWSClient.m; sourceTree = "<group>"; };
+		F8C78BC8A578353725FDC61B593A1215 /* GCDWebServerDataResponse.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = GCDWebServerDataResponse.m; path = GCDWebServer/Responses/GCDWebServerDataResponse.m; sourceTree = "<group>"; };
+		FAA54994F6C4CB7A1FB7BE3D563728F1 /* GCDWebServerResponse.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GCDWebServerResponse.h; path = GCDWebServer/Core/GCDWebServerResponse.h; sourceTree = "<group>"; };
+		FC17BE12FE8C2FFCCB253BF7E707FA2B /* DoricModalPlugin.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricModalPlugin.m; sourceTree = "<group>"; };
+		FCAB9544BCE7D9EA4E5C5DAF6765F84A /* _YYWebImageSetter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = _YYWebImageSetter.m; path = YYWebImage/Categories/_YYWebImageSetter.m; sourceTree = "<group>"; };
+		FDCFEBA818269E535D32E1DD7BB8346B /* SocketRocket-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SocketRocket-dummy.m"; sourceTree = "<group>"; };
+		FE05C6D16D438BF63DA4C5FBD51D65BD /* DoricSlideItemNode.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DoricSlideItemNode.m; sourceTree = "<group>"; };
+		FE99AB24E829DD35491764E2DED6ED75 /* Pods-ExampleUITests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-ExampleUITests-dummy.m"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0A7300EEDB760E5BBD8CDCDA0E756D9F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0BAD36B7F232A56FB4EDD23DD8325A04 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D0C362902E19DD7E17835D63591AF07 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6921CB3F3F90A4D3854D879F38B0D619 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7C1CF9A03EB6116AF3ED3831DDA4F75E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9FD779CC3664055065BDD25DBF915088 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C5F5F9AE8591441292295FD9101B9D1C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D2ACF8B68A7F91BDA7A718418ABC1827 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EAFB18F53A88C2BC75B17D6832DE0248 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F60109FF999AE00268C7F05690539DAC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0386913182A397CC85877DE4A1878241 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				5BD2FB5A84E2481DF889A8718306023F /* YYImage.xcconfig */,
+				184188E0BB292926A6800D9F590C1F9E /* YYImage-dummy.m */,
+				E210810B4D8E485B38EED5F4E4F37D5D /* YYImage-prefix.pch */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/YYImage";
+			sourceTree = "<group>";
+		};
+		09F33CEB8B7A742B7A434F08266D84ED /* Development Pods */ = {
+			isa = PBXGroup;
+			children = (
+				226218E9A30501452870107458681AC4 /* Doric */,
+			);
+			name = "Development Pods";
+			sourceTree = "<group>";
+		};
+		0A14775E9B55EA90BE6735786B7FFAF2 /* Dev */ = {
+			isa = PBXGroup;
+			children = (
+				74700F4F68E283F40E2DE79D53B9523A /* DoricWSClient.h */,
+				F510C5557CFB6D0554B63EC63DD93696 /* DoricWSClient.m */,
+			);
+			name = Dev;
+			path = Pod/Classes/Dev;
+			sourceTree = "<group>";
+		};
+		0B488D7903D5D1E34D3CE3728AF78695 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				50ED2806A9B5F444A52A22655766AF40 /* YYAnimatedImageView.h */,
+				A03175B6FDC3D438CB6057D11FC1174B /* YYAnimatedImageView.m */,
+				6F0D56623E9801EA024276066A9F82DF /* YYFrameImage.h */,
+				23D1B9EB936178579F8FE3397E1E520B /* YYFrameImage.m */,
+				B02FB78D23DCB6E556DB28E6788FBC32 /* YYImage.h */,
+				EEE4F0A156BA817D331B8F2B08D52C94 /* YYImage.m */,
+				F15350531BD5482A0A2999F0125F07C0 /* YYImageCoder.h */,
+				3B11F16372DCBEBC7EB6991994CAD36D /* YYImageCoder.m */,
+				3B7668033E6256C31E99870A20817F18 /* YYSpriteSheetImage.h */,
+				59C5E7984250BADCE0464A5A7AE3A4AC /* YYSpriteSheetImage.m */,
+			);
+			name = Core;
+			sourceTree = "<group>";
+		};
+		1C55F02B8E232DDC975A0E3CD7268CE8 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				2EE7CA83B5FDFD3AB422E44AC3D0BA54 /* DoricBridgeExtension.h */,
+				393ABDC63D186E9C4B3FE6BF2702A7F0 /* DoricBridgeExtension.m */,
+			);
+			name = Extension;
+			path = Pod/Classes/Extension;
+			sourceTree = "<group>";
+		};
+		226218E9A30501452870107458681AC4 /* Doric */ = {
+			isa = PBXGroup;
+			children = (
+				CF0E2A75C9ED58C64D9679A0FD5B5736 /* Doric.h */,
+				1E2F0A74FC8C6533C7F11B5FB037D850 /* DoricContext.h */,
+				3F3007DD50A74B00DA2B7C46EC8884AE /* DoricContext.m */,
+				2545576A3AA348E9CF7FC785DF90BCDE /* DoricContextHolder.h */,
+				60848AB93046FA9180CA87F3E762625D /* DoricContextHolder.m */,
+				345221108007185F555BBEFC3B40A397 /* DoricContextManager.h */,
+				B222B94B13B3C219D4E51EDF297508AE /* DoricContextManager.m */,
+				E633C6EE0A00DFDEC7C940219332CB2B /* DoricDriver.h */,
+				37FC112ED3BAB91DC102CE3A608F44D8 /* DoricDriver.m */,
+				DB1B8FA21DCFCF77D0E911125BB4D6C4 /* DoricPanel.h */,
+				30D26C72C541C3C71C71985CFFAA9FBB /* DoricPanel.m */,
+				6B9E73D207FF6B336BA1D24BB2F45D7A /* DoricRegistry.h */,
+				1C5F8B8A7C7449D22667D8BE1ECCF225 /* DoricRegistry.m */,
+				D6D5146022097BDD38DF3E944B756D91 /* DoricViewController.h */,
+				8471854325653CC0587DFBA14F0E5881 /* DoricViewController.m */,
+				0A14775E9B55EA90BE6735786B7FFAF2 /* Dev */,
+				CEB63A3DB606D32E81FE0BF32E22B691 /* Engine */,
+				1C55F02B8E232DDC975A0E3CD7268CE8 /* Extension */,
+				FBBA8662101AD2449CFD6D1B2909D93B /* Loader */,
+				6DAA03EB441845E7844C7ED3562638E7 /* NavBar */,
+				A174DEC53558BFC58735FBEA8B1E67D9 /* Navigator */,
+				AE8C97521FE70C203BFC519DADBCE470 /* Plugin */,
+				3A4239C711A8862FB15F804092CAEAFA /* Pod */,
+				88E32938FD9A92756470F86FC898A97D /* Refresh */,
+				54FFF520BCDD899850E6914B4EA794AE /* Resources */,
+				651D7D9E623C960D185643DB16D68855 /* Shader */,
+				EE3A181D5BC943077162DE2E2CE96413 /* Support Files */,
+				4D0DEF2EB17B2D289E09324CAF48C685 /* Util */,
+			);
+			name = Doric;
+			path = ../..;
+			sourceTree = "<group>";
+		};
+		30A8DE6E1E0EBAA1604E04E7381435B0 /* GCDWebServer */ = {
+			isa = PBXGroup;
+			children = (
+				A4640F0A0B089BFA16FDDE1F844F91B5 /* Core */,
+				5BFDA60E04E3DC81BF2B82A41345F11E /* Support Files */,
+			);
+			path = GCDWebServer;
+			sourceTree = "<group>";
+		};
+		3A4239C711A8862FB15F804092CAEAFA /* Pod */ = {
+			isa = PBXGroup;
+			children = (
+				C2EA63FA904BF51E753C7AF5830F1939 /* Doric.podspec */,
+				D6FB06D861EC9C7B3A5806FD0936D4EE /* LICENSE */,
+			);
+			name = Pod;
+			sourceTree = "<group>";
+		};
+		4D0DEF2EB17B2D289E09324CAF48C685 /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				DF75BDF041CCE69AB4472C081D5BB413 /* DoricAsyncResult.h */,
+				A335B4D91BE640B6C3D4AD680B89F387 /* DoricAsyncResult.m */,
+				194FF25327094949F8678C52FEF82DB0 /* DoricConstant.h */,
+				6DCCA68E1E5ABBC70D3D07B2CC8F256F /* DoricConstant.m */,
+				831A1D9F56EC0EBE6FF18C4182F5A398 /* DoricExtensions.h */,
+				BE821F4AD3FE9FD0AE2CDE4A0CB0046C /* DoricExtensions.m */,
+				23763066D1E210BB7DA34D895A030912 /* DoricJSRemoteArgType.h */,
+				796A5DCDCA570E615FD646C000E98BB7 /* DoricJSRemoteArgType.m */,
+				74F34A3EFBF17EEBFC54EF2F762160E9 /* DoricUtil.h */,
+				EFC7A426556D925CB8F88FFEF8A86603 /* DoricUtil.m */,
+				C2A35DA02CDF3FAC82D9C0EF02892D33 /* Category */,
+			);
+			name = Util;
+			path = Pod/Classes/Util;
+			sourceTree = "<group>";
+		};
+		54FFF520BCDD899850E6914B4EA794AE /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				0C6AA7C8B725DA881A77BA01E3C34442 /* bundle */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		5B0041E43FEDB21EA4FBC49D23C4CC27 /* WebP */ = {
+			isa = PBXGroup;
+			children = (
+				9CC9E6178AAA9C3954F30FD6C2E4B391 /* Frameworks */,
+			);
+			name = WebP;
+			sourceTree = "<group>";
+		};
+		5BFDA60E04E3DC81BF2B82A41345F11E /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				98512CF1DCD76DF334D0FDB005736214 /* GCDWebServer.xcconfig */,
+				2E45811603BF8F9506F73F073CF69DED /* GCDWebServer-dummy.m */,
+				B379C9E71A25B03E5E18907D983826E8 /* GCDWebServer-prefix.pch */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/GCDWebServer";
+			sourceTree = "<group>";
+		};
+		6379C9731FB12BD21F5DBD5FAFB59689 /* YYCache */ = {
+			isa = PBXGroup;
+			children = (
+				0EBC58D82F141C654BB539D797418A5B /* YYCache.h */,
+				9E91879C3619D14D5D1DDA6497E1BA4D /* YYCache.m */,
+				297A5C040632A2268999EFE516D8BDA8 /* YYDiskCache.h */,
+				F0A42D3B9F17159C2E8EF209BF368966 /* YYDiskCache.m */,
+				27C5EC2FB50F0055581B04397C8FCE53 /* YYKVStorage.h */,
+				EB0D8BB22CA3C0215357241370EAEAC6 /* YYKVStorage.m */,
+				7A3E3FB0D781D456B0A7EAA3E2F963F5 /* YYMemoryCache.h */,
+				ACBEDCADBB031E9C2FD75BB370970B85 /* YYMemoryCache.m */,
+				8E519A0CE076D0FEC65EACEDE46DA682 /* Support Files */,
+			);
+			path = YYCache;
+			sourceTree = "<group>";
+		};
+		651D7D9E623C960D185643DB16D68855 /* Shader */ = {
+			isa = PBXGroup;
+			children = (
+				9F7AD6923D5CCBFE31219597055CDCD1 /* DoricFlowLayoutItemNode.h */,
+				2090560BF70593C57CA6023743148E11 /* DoricFlowLayoutItemNode.m */,
+				4C15572E97B2FF255C7711CA6F2CAF5D /* DoricFlowLayoutNode.h */,
+				5160B449E0CB6266AA04E0124E1C9177 /* DoricFlowLayoutNode.m */,
+				6EF7D823AD5D2ECD06C2F348E4C6A5EA /* DoricGroupNode.h */,
+				1ADD883025D3EFB87B7F07F9193AD2C5 /* DoricGroupNode.m */,
+				0933426FA6EC94016EDA5FED7229FA53 /* DoricHLayoutNode.h */,
+				7CDE30A80DC94398F86F48D99C4F77B0 /* DoricHLayoutNode.m */,
+				74873EAB3FB9D4C0483B89BAF77BA343 /* DoricImageNode.h */,
+				DE98B1DF2576CD010FCE9BEDE09839B3 /* DoricImageNode.m */,
+				91DA09580FAA07E0536E1A1A2629D357 /* DoricLayouts.h */,
+				3E3E64E2684AC22559A4B60F71F9D093 /* DoricLayouts.m */,
+				8D3C44C69746FC60AE1C36AAC8CA1214 /* DoricListItemNode.h */,
+				9727EA66A9F093D8FA1308F11FDB18A9 /* DoricListItemNode.m */,
+				A0267CAB68267A442DFACDDC267F8889 /* DoricListNode.h */,
+				2DF3AB02E400F4E40C79084448D1A559 /* DoricListNode.m */,
+				D67FDB6FFB2698EC2F221337BFD02417 /* DoricRootNode.h */,
+				CB646B53BBE623587150E6AC6766F116 /* DoricRootNode.m */,
+				5C30CC1ECCC7B3952D3947A068E1C965 /* DoricScrollerNode.h */,
+				CC27308520C53C314813857696C87F5A /* DoricScrollerNode.m */,
+				0A0D31EB38392CD7A552D20173BFE8F8 /* DoricSlideItemNode.h */,
+				FE05C6D16D438BF63DA4C5FBD51D65BD /* DoricSlideItemNode.m */,
+				4B8591B854D2597F78D60308854D9926 /* DoricSliderNode.h */,
+				EB2E14EF40F3D133983D89FB98A23289 /* DoricSliderNode.m */,
+				DA02943572CEA445F2F8653C90453DB7 /* DoricStackNode.h */,
+				C7DFC32B543A9AC293FA82E57A2EEF45 /* DoricStackNode.m */,
+				E06ED02D51FF564980F5EE60C2D0BF3C /* DoricSuperNode.h */,
+				2AFA360A449171381B173D42448150B3 /* DoricSuperNode.m */,
+				CE2C4FAB25A4BE2CDB1080B7F5E022BA /* DoricTextNode.h */,
+				EBD7F2437166A99BA4B48F7B4A0D0A3D /* DoricTextNode.m */,
+				010065ADFC9A1AAAE9671B3153E1721C /* DoricViewNode.h */,
+				2C739B7C9969E47087480B3F81EA1E14 /* DoricViewNode.m */,
+				00BABCE2F6DD5317484E2B251ABB7D47 /* DoricVLayoutNode.h */,
+				B103E58B040A9B8A692C37CDA18D30DB /* DoricVLayoutNode.m */,
+				D61A91E711568804C04D530ECA84B347 /* UIView+Doric.h */,
+				480534A816C4B0024FA369A3C407F59A /* UIView+Doric.m */,
+			);
+			name = Shader;
+			path = Pod/Classes/Shader;
+			sourceTree = "<group>";
+		};
+		6DAA03EB441845E7844C7ED3562638E7 /* NavBar */ = {
+			isa = PBXGroup;
+			children = (
+				EA15D96F597B03524D56ACE6456BA273 /* DoricNavBarDelegate.h */,
+			);
+			name = NavBar;
+			path = Pod/Classes/NavBar;
+			sourceTree = "<group>";
+		};
+		71AEF72537B62D028A21E00FBEC2111B /* Pods-Example */ = {
+			isa = PBXGroup;
+			children = (
+				4426D67B66065EF97BCB0FBC9E35BEE6 /* Pods-Example-acknowledgements.markdown */,
+				DFFAD17E7567EE856A59F246D50A9B0B /* Pods-Example-acknowledgements.plist */,
+				674AA61D65F8AA0A85296F972EB84840 /* Pods-Example-dummy.m */,
+				87E7F5288DD80B4FDE8896A6D2782093 /* Pods-Example-resources.sh */,
+				E340F908A05867E06E975FDCDD32315C /* Pods-Example.debug.xcconfig */,
+				57728CFE03A4D88821681C3D55A1FA85 /* Pods-Example.release.xcconfig */,
+			);
+			name = "Pods-Example";
+			path = "Target Support Files/Pods-Example";
+			sourceTree = "<group>";
+		};
+		71D7AAC4D13F3A060E368F44B7510778 /* Targets Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				71AEF72537B62D028A21E00FBEC2111B /* Pods-Example */,
+				F4EB4F3E7D139A61CACFFAFCA3EF3B30 /* Pods-ExampleTests */,
+				87BF90E86730F73BF5CB57472930C8FD /* Pods-ExampleUITests */,
+			);
+			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+		832BEB4FEBC3730E23FC8795E1CA6AA6 /* YYImage */ = {
+			isa = PBXGroup;
+			children = (
+				0B488D7903D5D1E34D3CE3728AF78695 /* Core */,
+				0386913182A397CC85877DE4A1878241 /* Support Files */,
+				5B0041E43FEDB21EA4FBC49D23C4CC27 /* WebP */,
+			);
+			path = YYImage;
+			sourceTree = "<group>";
+		};
+		87BF90E86730F73BF5CB57472930C8FD /* Pods-ExampleUITests */ = {
+			isa = PBXGroup;
+			children = (
+				8F4D6D38881BB9FAF4450841BD1BF9CD /* Pods-ExampleUITests-acknowledgements.markdown */,
+				1DC97F881F42239F4D5EE57FE5266B1F /* Pods-ExampleUITests-acknowledgements.plist */,
+				FE99AB24E829DD35491764E2DED6ED75 /* Pods-ExampleUITests-dummy.m */,
+				786AB58F4C2451575BBF7722ACDE9BEB /* Pods-ExampleUITests.debug.xcconfig */,
+				50CE420621B9D9ED01E06A8EDBD3E990 /* Pods-ExampleUITests.release.xcconfig */,
+			);
+			name = "Pods-ExampleUITests";
+			path = "Target Support Files/Pods-ExampleUITests";
+			sourceTree = "<group>";
+		};
+		88E32938FD9A92756470F86FC898A97D /* Refresh */ = {
+			isa = PBXGroup;
+			children = (
+				26D78EFF40478832FD5657A597DE1AF7 /* DoricRefreshableNode.h */,
+				001CAE6E5551B7443D52904059305768 /* DoricRefreshableNode.m */,
+				43EDD5936F96DC2FA156A398FD5B439A /* DoricSwipeRefreshLayout.h */,
+				9A08665774EAAEF8A1660FA1D111197E /* DoricSwipeRefreshLayout.m */,
+			);
+			name = Refresh;
+			path = Pod/Classes/Refresh;
+			sourceTree = "<group>";
+		};
+		8E519A0CE076D0FEC65EACEDE46DA682 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				A461D3539C89936737BC3759F6AA0407 /* YYCache.xcconfig */,
+				7BE10DD8B0A5B83FCC0B288E5B0A18E3 /* YYCache-dummy.m */,
+				8DBE82481F986094549AFA32F59088B6 /* YYCache-prefix.pch */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/YYCache";
+			sourceTree = "<group>";
+		};
+		90C0B47BBD1F2F5B6A4EA44F309FD09B /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				4A6BBD5D599973673610A24AF01EF5D7 /* YYWebImage.xcconfig */,
+				6358ABB187AFEBA11B8651FCEAA62B65 /* YYWebImage-dummy.m */,
+				67CCE9A47A1F1E452AF6E94DFA6F93F7 /* YYWebImage-prefix.pch */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/YYWebImage";
+			sourceTree = "<group>";
+		};
+		9CC9E6178AAA9C3954F30FD6C2E4B391 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6E2E83CCA4E2E6955BC3C11025F963AA /* WebP.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9ED971B78F2FD589A1C4064717FB44A4 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				B54C4523BBF2D713FE5A0DC2448FFFB1 /* SocketRocket.xcconfig */,
+				FDCFEBA818269E535D32E1DD7BB8346B /* SocketRocket-dummy.m */,
+				C942D362AA56A8F277A85F2072CBF7CC /* SocketRocket-prefix.pch */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/SocketRocket";
+			sourceTree = "<group>";
+		};
+		A174DEC53558BFC58735FBEA8B1E67D9 /* Navigator */ = {
+			isa = PBXGroup;
+			children = (
+				728D29C57333CFD144D9FEBA48C43D24 /* DoricNavigatorDelegate.h */,
+			);
+			name = Navigator;
+			path = Pod/Classes/Navigator;
+			sourceTree = "<group>";
+		};
+		A4640F0A0B089BFA16FDDE1F844F91B5 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				EC1EF6312171A3F3BBC065A16A025DCD /* GCDWebServer.h */,
+				7112332F6BD7610F1B869696C2154AC5 /* GCDWebServer.m */,
+				D10710C759F21524183FD049995772B9 /* GCDWebServerConnection.h */,
+				1E538FAF2C02B15BB10C7FD3F0F7A1E7 /* GCDWebServerConnection.m */,
+				6B3784257BDE2761D43DC51427849586 /* GCDWebServerDataRequest.h */,
+				E5BAB81F1BAD8C5801EF364BA119C61E /* GCDWebServerDataRequest.m */,
+				1ED20AF454A53D1112EA705702F141B8 /* GCDWebServerDataResponse.h */,
+				F8C78BC8A578353725FDC61B593A1215 /* GCDWebServerDataResponse.m */,
+				02EAAD3467FB5D76D3EBDC713104BA9C /* GCDWebServerErrorResponse.h */,
+				19A3AC359451033E9EE30FF4A5524918 /* GCDWebServerErrorResponse.m */,
+				0AC63A48456BCE52364F8F75F11114A6 /* GCDWebServerFileRequest.h */,
+				CA9CDEF595948D04DA1741FF71C81D9D /* GCDWebServerFileRequest.m */,
+				7F0CB0F446B24D888852B2364F36277F /* GCDWebServerFileResponse.h */,
+				75453DA51095496D971EC3387AAA68AB /* GCDWebServerFileResponse.m */,
+				1D40E088948B09DDDA870482BF145738 /* GCDWebServerFunctions.h */,
+				99A078A2150409AF2197032DC49D9154 /* GCDWebServerFunctions.m */,
+				4D2AD00F375FC11C8A1A006F89F22DA9 /* GCDWebServerHTTPStatusCodes.h */,
+				188F9C29A193D759B8D1D8F7329F12D3 /* GCDWebServerMultiPartFormRequest.h */,
+				74D5C5C6BF3910CB033C8FF9A117A6BF /* GCDWebServerMultiPartFormRequest.m */,
+				06403BCF3EAD8E815A6E853490C3AD68 /* GCDWebServerPrivate.h */,
+				156A26BD50C08C5F6154CCD8E2EF92BC /* GCDWebServerRequest.h */,
+				957FAE9188CA957E24FA4ED47EA9622F /* GCDWebServerRequest.m */,
+				FAA54994F6C4CB7A1FB7BE3D563728F1 /* GCDWebServerResponse.h */,
+				250467AAE5F772A373866D1B28EC4209 /* GCDWebServerResponse.m */,
+				12BD78ED93E0CF7366A357A05AE3631F /* GCDWebServerStreamedResponse.h */,
+				E22AAD1FD657A163541F19331362EB37 /* GCDWebServerStreamedResponse.m */,
+				8AE526EFF2B40DF374482ED45DBF4112 /* GCDWebServerURLEncodedFormRequest.h */,
+				0F249CF0C4C6FE10EDDE26089800C1DA /* GCDWebServerURLEncodedFormRequest.m */,
+			);
+			name = Core;
+			sourceTree = "<group>";
+		};
+		AE8C97521FE70C203BFC519DADBCE470 /* Plugin */ = {
+			isa = PBXGroup;
+			children = (
+				F431AB7C271DD9A3026FB8E02A680F7F /* DoricAnimatePlugin.h */,
+				F1833FF9D06D7E34248B2169098D6C2B /* DoricAnimatePlugin.m */,
+				4299E4F7E5CCB5540DF92919DFFEDF04 /* DoricModalPlugin.h */,
+				FC17BE12FE8C2FFCCB253BF7E707FA2B /* DoricModalPlugin.m */,
+				D9F3BD70EDB58FADFA2469045295B9F0 /* DoricNativePlugin.h */,
+				16C752E94DC71B16E717B961DFA88C27 /* DoricNativePlugin.m */,
+				5AAD7381E4B6574C4526FBC79BA20CDE /* DoricNavBarPlugin.h */,
+				49A782176196E9E7E6302765A505C4DF /* DoricNavBarPlugin.m */,
+				E81407FCC09BBCDBEE1EC5A7CEC70FB8 /* DoricNavigatorPlugin.h */,
+				B07CF2A8DE9FFCA72BFC4892C4B07622 /* DoricNavigatorPlugin.m */,
+				DF8E338C24524A360CD70AE8C5C4BD9B /* DoricNetworkPlugin.h */,
+				744CAADE898A5F9DBB0C6C22012B3D6D /* DoricNetworkPlugin.m */,
+				6B5F2AD14C3EB39CB7A069965B83AF84 /* DoricPopoverPlugin.h */,
+				A6E6D86C860C651FF21E3259F3848538 /* DoricPopoverPlugin.m */,
+				9D58E98F171A9E38028D0DF093EB0330 /* DoricPromise.h */,
+				0743ED4C66205A494631BAF9B34017CB /* DoricPromise.m */,
+				52E7BB0575F9CA51BC44B597B2E61004 /* DoricShaderPlugin.h */,
+				3D189235FEF49CB09F61BBF1E61F027C /* DoricShaderPlugin.m */,
+				8BBDF9C8B9FB6CF5A8749EB21092432B /* DoricStoragePlugin.h */,
+				71EE75F7A7546F0B0B4CAAABC3A1A221 /* DoricStoragePlugin.m */,
+			);
+			name = Plugin;
+			path = Pod/Classes/Plugin;
+			sourceTree = "<group>";
+		};
+		C2A35DA02CDF3FAC82D9C0EF02892D33 /* Category */ = {
+			isa = PBXGroup;
+			children = (
+				4048EC8080915DFB5BB7BDBA40D63859 /* NSString+JsonString.h */,
+				926E73E6AFC56158E380B54AB31357C8 /* NSString+JsonString.m */,
+			);
+			path = Category;
+			sourceTree = "<group>";
+		};
+		C5DD576F1F37833FBDF2EBC49CA8A2FA /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				30A8DE6E1E0EBAA1604E04E7381435B0 /* GCDWebServer */,
+				FCB7AC0056F85EBE133A94D945422814 /* SocketRocket */,
+				6379C9731FB12BD21F5DBD5FAFB59689 /* YYCache */,
+				832BEB4FEBC3730E23FC8795E1CA6AA6 /* YYImage */,
+				E2482C626B72B053A909FF1D41D9B49C /* YYWebImage */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		CEB63A3DB606D32E81FE0BF32E22B691 /* Engine */ = {
+			isa = PBXGroup;
+			children = (
+				E86208B42727852B3E99D5974D3C200D /* DoricJSCoreExecutor.h */,
+				8CA54A1EB9EB8E6A1B4706A0833E6005 /* DoricJSCoreExecutor.m */,
+				B9F783173337956660EADDB6852F3988 /* DoricJSEngine.h */,
+				47A38F2A154C0A098F399ACF6A6BEB0A /* DoricJSEngine.m */,
+				CC658E0105F8AB9C2152B76052BC481C /* DoricJSExecutorProtocol.h */,
+				62B1BB46C6104B4699E35A59FBDCE1B3 /* DoricJSRemoteExecutor.h */,
+				D69ACC0B5B7679176EAE83C369DE3C68 /* DoricJSRemoteExecutor.m */,
+			);
+			name = Engine;
+			path = Pod/Classes/Engine;
+			sourceTree = "<group>";
+		};
+		CF1408CF629C7361332E53B88F7BD30C = {
+			isa = PBXGroup;
+			children = (
+				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
+				09F33CEB8B7A742B7A434F08266D84ED /* Development Pods */,
+				D89477F20FB1DE18A04690586D7808C4 /* Frameworks */,
+				C5DD576F1F37833FBDF2EBC49CA8A2FA /* Pods */,
+				F84D7922A6B05CDCB57606E11D08173B /* Products */,
+				71D7AAC4D13F3A060E368F44B7510778 /* Targets Support Files */,
+			);
+			sourceTree = "<group>";
+		};
+		D89477F20FB1DE18A04690586D7808C4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E2482C626B72B053A909FF1D41D9B49C /* YYWebImage */ = {
+			isa = PBXGroup;
+			children = (
+				80C87054F1E43F5CF294CF98FD364DCB /* _YYWebImageSetter.h */,
+				FCAB9544BCE7D9EA4E5C5DAF6765F84A /* _YYWebImageSetter.m */,
+				B99A3A34AEE3672CEEDE0A236C330C5B /* CALayer+YYWebImage.h */,
+				2BD06F78C15864BFD45D5B8A25C3998C /* CALayer+YYWebImage.m */,
+				42D503ACEA2717C15EB4DF8CF7A201FE /* MKAnnotationView+YYWebImage.h */,
+				8A7242990DCCE6D3F50B2C608F8C7DAA /* MKAnnotationView+YYWebImage.m */,
+				0D1FEE803DDD7EDF75D50BC2463E64D7 /* UIButton+YYWebImage.h */,
+				7EA8656B3E5CB824E7FFE065291CE2A2 /* UIButton+YYWebImage.m */,
+				242BBB3556D614E9BAC17FD3A6A6165B /* UIImage+YYWebImage.h */,
+				897E4027B05E43D194A2F5003AD48C9F /* UIImage+YYWebImage.m */,
+				D1D1F23C13AA8F4A60395689C2A2972F /* UIImageView+YYWebImage.h */,
+				4E8A03456D6FC2891C95938036545262 /* UIImageView+YYWebImage.m */,
+				24541E60AC8A9C984313EC52106ADB35 /* YYImageCache.h */,
+				BCF14F6215D2D31E2C3EE1590B48EA6B /* YYImageCache.m */,
+				97A29E9FC4A082D04395F34455FE48DC /* YYWebImage.h */,
+				D9C1B314EECDF555386CE99356E5E8CA /* YYWebImageManager.h */,
+				C13120C8E5BD1D524867899DCDD16443 /* YYWebImageManager.m */,
+				F4CDB6C6F9D82E80CAAB690123B906B1 /* YYWebImageOperation.h */,
+				37E4D0D28BB5E740A02CFA1CC47F2944 /* YYWebImageOperation.m */,
+				90C0B47BBD1F2F5B6A4EA44F309FD09B /* Support Files */,
+			);
+			path = YYWebImage;
+			sourceTree = "<group>";
+		};
+		EE3A181D5BC943077162DE2E2CE96413 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				677BC4F0CCD6EB2C9FBCB3B375E7349F /* Doric.xcconfig */,
+				9E8B1A44958B7CD262D3DBC144361926 /* Doric-dummy.m */,
+				E5B68A2C8EC1D3C756ACAC5C6885BFB7 /* Doric-prefix.pch */,
+				23426BADD33356B8F68F1DA4CA9D59F2 /* ResourceBundle-Doric-Doric-Info.plist */,
+			);
+			name = "Support Files";
+			path = "Example/Pods/Target Support Files/Doric";
+			sourceTree = "<group>";
+		};
+		F4EB4F3E7D139A61CACFFAFCA3EF3B30 /* Pods-ExampleTests */ = {
+			isa = PBXGroup;
+			children = (
+				A12EA2D6D6F629978F16C0E458152B6E /* Pods-ExampleTests-acknowledgements.markdown */,
+				9CF6301AAD07F98FE89F30E7B5A07161 /* Pods-ExampleTests-acknowledgements.plist */,
+				8A44D4CFEB27EB7F87F52864C6B32A80 /* Pods-ExampleTests-dummy.m */,
+				35D3ADD1FF0C9A33D86DB110C181048B /* Pods-ExampleTests.debug.xcconfig */,
+				8052FAE778A6A09F2260E4E85B371F57 /* Pods-ExampleTests.release.xcconfig */,
+			);
+			name = "Pods-ExampleTests";
+			path = "Target Support Files/Pods-ExampleTests";
+			sourceTree = "<group>";
+		};
+		F84D7922A6B05CDCB57606E11D08173B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1E19479558E0A9431B2B5F5A39136939 /* Doric.bundle */,
+				CB6504BD07E3990E6F058E4073421ADA /* libDoric.a */,
+				B68C1052A3B51DBCF7D960F898AAFA95 /* libGCDWebServer.a */,
+				1F667CC0E19EAF34E5A4119E2121F585 /* libPods-Example.a */,
+				630CABE8F692FCDBFD1B122A2D0CE388 /* libPods-ExampleTests.a */,
+				C232398D4E3A40F2337F8A40D7F8D751 /* libPods-ExampleUITests.a */,
+				85A01882ED06DFEA2E0CE78BCDB204A7 /* libSocketRocket.a */,
+				48ACF38225AF5129416A1F090F6D3286 /* libYYCache.a */,
+				0C6F4829D47D1826F47CDC4264F9F6A8 /* libYYImage.a */,
+				4FC1978206616CE319648B302B05AA8A /* libYYWebImage.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FBBA8662101AD2449CFD6D1B2909D93B /* Loader */ = {
+			isa = PBXGroup;
+			children = (
+				2EE15792329EC630A175A3896C245D90 /* DoricHttpJSLoader.h */,
+				F1CDF99B5A1018AEF83D898999D07779 /* DoricHttpJSLoader.m */,
+				E954660781F9D33A67ED91C8301AEF7D /* DoricJSLoaderManager.h */,
+				A7F3FF1FB691A3120E58F78CD10E6144 /* DoricJSLoaderManager.m */,
+				B732C93FEF68A791A00E07F7A99C1918 /* DoricLoaderProtocol.h */,
+				5BA6819C98E9CC361D6FA297291BA04C /* DoricMainBundleJSLoader.h */,
+				9E9713FBFF7F5E5044E6D47719303B01 /* DoricMainBundleJSLoader.m */,
+			);
+			name = Loader;
+			path = Pod/Classes/Loader;
+			sourceTree = "<group>";
+		};
+		FCB7AC0056F85EBE133A94D945422814 /* SocketRocket */ = {
+			isa = PBXGroup;
+			children = (
+				A2A8B0BD64E3EE6FD74E776143CEABBD /* SocketRocket.h */,
+				0FA454CFC822DF97658EA00D249150DB /* SRWebSocket.h */,
+				4180A5D36AD0F103338812693D8B57A6 /* SRWebSocket.m */,
+				9ED971B78F2FD589A1C4064717FB44A4 /* Support Files */,
+			);
+			path = SocketRocket;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		19324E32064972C0D8A1FA2DD7D41A2A /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D840F5A06B9893F618D61BB4983DF373 /* YYCache.h in Headers */,
+				0CC1B3B497098C4159B8A348C85EC4B3 /* YYDiskCache.h in Headers */,
+				525B0D4969B3DC70F910745701B6FFDE /* YYKVStorage.h in Headers */,
+				E95755F0A09A57B158365C41F25AE7A7 /* YYMemoryCache.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F9F42084FA5328A65D06A10A3195627 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		25862B2DD200FF89C0B7099FBBFF9647 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		290062944EC0FB69A647836CB1FDE3A0 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C11CBD0FC0CBA29F1F2DAC1AC37AF364 /* _YYWebImageSetter.h in Headers */,
+				35E55CC007A4866A1F5E3ADE81679130 /* CALayer+YYWebImage.h in Headers */,
+				01225045F0F04131A2DCCB419C5A43AF /* MKAnnotationView+YYWebImage.h in Headers */,
+				071B7DACEB0E33381A899175AD7719CA /* UIButton+YYWebImage.h in Headers */,
+				A57D92BA915B59A21168F7BBF9D965A6 /* UIImage+YYWebImage.h in Headers */,
+				BB23FABE2628260AFFF63CD70FBFD25F /* UIImageView+YYWebImage.h in Headers */,
+				E6F8BC0728AC2154EF471B332F30ECB2 /* YYImageCache.h in Headers */,
+				BEFD64DBD549FDA265DA763D50F83662 /* YYWebImage.h in Headers */,
+				38B0845A4B83CE0959531E40A36AADC4 /* YYWebImageManager.h in Headers */,
+				046D4C719884BEE359F3E4056B3ADC91 /* YYWebImageOperation.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		847F9972480A4EB0E406EB0318D243C5 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9BDB5E4397AAD710F4446BA3952A2060 /* Doric.h in Headers */,
+				D4A9AB151E41873EBA01F779AC2DADF4 /* DoricAnimatePlugin.h in Headers */,
+				46869F78B152AA301623F3FE82F6C0E3 /* DoricAsyncResult.h in Headers */,
+				BE2A19E5C02AD94897CCDA7324827BCA /* DoricBridgeExtension.h in Headers */,
+				191E9735AC97FC3CEE416088EC325F62 /* DoricConstant.h in Headers */,
+				45B6A13373ABB67043AC103DC249C1B3 /* DoricContext.h in Headers */,
+				CE2B11F33301B8F7CEAB17059F0DF2EA /* DoricContextHolder.h in Headers */,
+				7C89E8BE51394D7BAEA8EC62422F805D /* DoricContextManager.h in Headers */,
+				ED616E6493400CB7638DE29CCCD7ABF6 /* DoricDriver.h in Headers */,
+				7DAB96BECDDC0A6A989C3B33D4F0E08F /* DoricExtensions.h in Headers */,
+				BC8DFE1DD3D2B39277EEFA6D70CCF302 /* DoricFlowLayoutItemNode.h in Headers */,
+				528525C1C62D4C0D269D0ADEC868C28F /* DoricFlowLayoutNode.h in Headers */,
+				6E5E67F3816F41DDADE88F7461B1DC68 /* DoricGroupNode.h in Headers */,
+				AAA8E5B65C1E2F2FF885712766554A58 /* DoricHLayoutNode.h in Headers */,
+				A8FC102FD1822315CE435B5E7E0E9D14 /* DoricHttpJSLoader.h in Headers */,
+				450A3D0C5E5889C279AC63532D0409AD /* DoricImageNode.h in Headers */,
+				431B1130829E710EA3C4334BB232430A /* DoricJSCoreExecutor.h in Headers */,
+				D67AD5E402E954CDE1C16B744E39BDB1 /* DoricJSEngine.h in Headers */,
+				CEBDF3FD9ABF5D2B3C326B21F58D4640 /* DoricJSExecutorProtocol.h in Headers */,
+				690D114CE33D424D91E65BCC5AEB0666 /* DoricJSLoaderManager.h in Headers */,
+				ECF57F8EB1CD164D28E1FA2D172F2A1A /* DoricJSRemoteArgType.h in Headers */,
+				4EA7628A9D84272317EB18D602CB6101 /* DoricJSRemoteExecutor.h in Headers */,
+				33FA845C063B814C8EEEF56B48CD41F8 /* DoricLayouts.h in Headers */,
+				695907AB3DC305929A1E5CB534DD6788 /* DoricListItemNode.h in Headers */,
+				6CB9C3842889740D1A1FED2D7A4E839D /* DoricListNode.h in Headers */,
+				415078A044EA3AF3C8099845471A1FC9 /* DoricLoaderProtocol.h in Headers */,
+				414869E5655141E747BB94588B59075B /* DoricMainBundleJSLoader.h in Headers */,
+				1253265B1B37678C169BF6A10A260F9E /* DoricModalPlugin.h in Headers */,
+				08AF19B42AB684E88852CD6CB8A3AA75 /* DoricNativePlugin.h in Headers */,
+				9BB07ECB1EFF8E745E9185C4E2C27366 /* DoricNavBarDelegate.h in Headers */,
+				5117ED4BE4507C48781C5C3DDF810D31 /* DoricNavBarPlugin.h in Headers */,
+				5EB1DD47EC3AC8BA4BF3D04B510FCDC5 /* DoricNavigatorDelegate.h in Headers */,
+				4E6CF5CCD8D1EC5E9A646749383DEC66 /* DoricNavigatorPlugin.h in Headers */,
+				CA21DC6FA6E5CB45B41924611ADC6C9A /* DoricNetworkPlugin.h in Headers */,
+				7A24C07A15E0F108E4737F07A7027B15 /* DoricPanel.h in Headers */,
+				56E0DDB21CAA1DB9B2209F2F10C5CDFC /* DoricPopoverPlugin.h in Headers */,
+				BFF89C93F769127B541C6B48460ED91D /* DoricPromise.h in Headers */,
+				46C7437D30623CA97CA6E34487731AB9 /* DoricRefreshableNode.h in Headers */,
+				1D68CC8FCA5AD66ACB98AC5A90B8D6BC /* DoricRegistry.h in Headers */,
+				4D1F2333AFCA191C99238E2F7555D6C0 /* DoricRootNode.h in Headers */,
+				517E021259A0510131206568BD7128CC /* DoricScrollerNode.h in Headers */,
+				246C99114EE2CC85724B2F425B51D787 /* DoricShaderPlugin.h in Headers */,
+				0D2A7AA3E2BA05FEB6CC5463F9BEFF15 /* DoricSlideItemNode.h in Headers */,
+				AC49DC5F6394CD3B4222E74C0FCC6A27 /* DoricSliderNode.h in Headers */,
+				FD1DCE441D6702175FC35DE58D019CAA /* DoricStackNode.h in Headers */,
+				46C1F76C0AD5370A5F5C10425F0F2BAE /* DoricStoragePlugin.h in Headers */,
+				83FE02E47F9826D81EA6A3848189C301 /* DoricSuperNode.h in Headers */,
+				74DD6E1DC8F5E8EAD77AB903DB2CF145 /* DoricSwipeRefreshLayout.h in Headers */,
+				29F425B1A1A60C85C87E2EA6A84CCBF1 /* DoricTextNode.h in Headers */,
+				144143A659E0FEC033EB44B5C1707BCA /* DoricUtil.h in Headers */,
+				2285FC52EAE17821471935D517C7DACB /* DoricViewController.h in Headers */,
+				1D72D6B46AD74A46178DB3DA00B792E3 /* DoricViewNode.h in Headers */,
+				B6B56C166B186B33A5A87C791A284F36 /* DoricVLayoutNode.h in Headers */,
+				DDD55545A6FA8C0944DA1A34B564F876 /* DoricWSClient.h in Headers */,
+				8304203ACC6B6C1F74F891D156D76CFC /* NSString+JsonString.h in Headers */,
+				C830AF2D550187C31E5AC8A46AA4E76F /* UIView+Doric.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		88C7134D809509122DF5C2AF0D66DED5 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				96A0EDF8241D65DBEB01DDEA2551B6AB /* YYAnimatedImageView.h in Headers */,
+				08C8A6242B5F8A6D3A5817FF9416A518 /* YYFrameImage.h in Headers */,
+				E5C994E9D29FEFF8CFA6A824D99EAB05 /* YYImage.h in Headers */,
+				22B9F8152B9E980E1FEB00B0CA6B27BB /* YYImageCoder.h in Headers */,
+				3721F80C3FDE8A2B101A119D78201031 /* YYSpriteSheetImage.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		93E92C78C7F3DDC0BA185907CCD45FD0 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5CD6C1E489C8975D293C7C8EBE642359 /* SocketRocket.h in Headers */,
+				C83B012BD9B3B5F541AB506122EF966C /* SRWebSocket.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E516289B0110056A2A7A1CE2E2F230C0 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F0DD942BF93F6B6E560D77691E37FD4B /* GCDWebServer.h in Headers */,
+				8BF99A86864A6A5A96D92FDB6E0D4FDB /* GCDWebServerConnection.h in Headers */,
+				8189756A6783D7BE61E08FE409BFD871 /* GCDWebServerDataRequest.h in Headers */,
+				2D97BA46A9241177D41D943032EB6386 /* GCDWebServerDataResponse.h in Headers */,
+				8890A8A88FA2ED811319B234B388321C /* GCDWebServerErrorResponse.h in Headers */,
+				D1014DBF2654D76D637022D52CC87885 /* GCDWebServerFileRequest.h in Headers */,
+				715F955E5C63DB36EB84F6A043C89F51 /* GCDWebServerFileResponse.h in Headers */,
+				FD404E60462D931E6041A96D39DC024A /* GCDWebServerFunctions.h in Headers */,
+				660C17830ED9DAF3CD14FEFEC16572D1 /* GCDWebServerHTTPStatusCodes.h in Headers */,
+				B303B392A2EB6D99E98BE556D969CE6C /* GCDWebServerMultiPartFormRequest.h in Headers */,
+				59186150B3A10FED46BB81E923BC3803 /* GCDWebServerPrivate.h in Headers */,
+				8203F1FE8748893B7FB0F9330E74E40E /* GCDWebServerRequest.h in Headers */,
+				3F9991E0D126667F253AFD5ADE153D75 /* GCDWebServerResponse.h in Headers */,
+				B73DE88797B200F90C3123B9582631EB /* GCDWebServerStreamedResponse.h in Headers */,
+				CCB8E3339DFB68E7605BE381F977AEF9 /* GCDWebServerURLEncodedFormRequest.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FC44F694DF43568E1C9D46D4F8AA2AC7 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		0AEE99A309977BD12A049FF48AF9BA4B /* Pods-Example */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 254DEE34BA0C554E2254F342226EF50C /* Build configuration list for PBXNativeTarget "Pods-Example" */;
+			buildPhases = (
+				25862B2DD200FF89C0B7099FBBFF9647 /* Headers */,
+				EAB8A5B3F6754F82F8E07B6AD8B240CA /* Sources */,
+				D2ACF8B68A7F91BDA7A718418ABC1827 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DE060ACD35D08B8BCE8C6907E1C205D2 /* PBXTargetDependency */,
+				4D79DA13C03170CE9C21D80EF46AF849 /* PBXTargetDependency */,
+				DF228FFC5206B8E9FD01E9397FEE2A49 /* PBXTargetDependency */,
+				35A5957DD49EAD482E1E36143F1DCDFE /* PBXTargetDependency */,
+				36F2559A041FD20B19A9EEDDB7D016A3 /* PBXTargetDependency */,
+				9D85CAFF928F7B198848A244D5964248 /* PBXTargetDependency */,
+			);
+			name = "Pods-Example";
+			productName = "Pods-Example";
+			productReference = 1F667CC0E19EAF34E5A4119E2121F585 /* libPods-Example.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		1948D0B63D2CF6A48E18B0B292BC6091 /* SocketRocket */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 019A61CAE0868AC0BE60D448F7684ECF /* Build configuration list for PBXNativeTarget "SocketRocket" */;
+			buildPhases = (
+				93E92C78C7F3DDC0BA185907CCD45FD0 /* Headers */,
+				0B989C5F5B94740CEDB10A7E2E4F8728 /* Sources */,
+				9FD779CC3664055065BDD25DBF915088 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SocketRocket;
+			productName = SocketRocket;
+			productReference = 85A01882ED06DFEA2E0CE78BCDB204A7 /* libSocketRocket.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		3467588C9AC1920A96217C14EB70DA40 /* Doric */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 491A184E17170C12C18549F5C1D24A74 /* Build configuration list for PBXNativeTarget "Doric" */;
+			buildPhases = (
+				847F9972480A4EB0E406EB0318D243C5 /* Headers */,
+				FFC3F703D00FC68E571251C277A9D946 /* Sources */,
+				F60109FF999AE00268C7F05690539DAC /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				125839921EFB069382195EB61B591B65 /* PBXTargetDependency */,
+				9BB0DA7DF4375D94FAF7099B4E18F8F6 /* PBXTargetDependency */,
+				A3D49195A496AA0826AB0216CB28D68E /* PBXTargetDependency */,
+				A73ADCD9DC1236D61BA4D6F0EB9068EC /* PBXTargetDependency */,
+				10B5260627C632981E228E766CDB9218 /* PBXTargetDependency */,
+				45A4C317249E4EFC8B146BAC54205744 /* PBXTargetDependency */,
+			);
+			name = Doric;
+			productName = Doric;
+			productReference = CB6504BD07E3990E6F058E4073421ADA /* libDoric.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		4432A314DF5F14FFF8809E319054F4AF /* Pods-ExampleTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B2548596E2544D6246F7A1567F0FED35 /* Build configuration list for PBXNativeTarget "Pods-ExampleTests" */;
+			buildPhases = (
+				FC44F694DF43568E1C9D46D4F8AA2AC7 /* Headers */,
+				0A6945A94C114AD03543703E96A0F3E1 /* Sources */,
+				0BAD36B7F232A56FB4EDD23DD8325A04 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7C13BF224FA9F8FB97D246BD39E099C3 /* PBXTargetDependency */,
+			);
+			name = "Pods-ExampleTests";
+			productName = "Pods-ExampleTests";
+			productReference = 630CABE8F692FCDBFD1B122A2D0CE388 /* libPods-ExampleTests.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		488E8C830C5A5694EE916251B9ADAADA /* YYWebImage */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FA9151EF6282C13D4B730B3273163572 /* Build configuration list for PBXNativeTarget "YYWebImage" */;
+			buildPhases = (
+				290062944EC0FB69A647836CB1FDE3A0 /* Headers */,
+				4ABD9C04B104B92E7521A6BE88BF41B3 /* Sources */,
+				5D0C362902E19DD7E17835D63591AF07 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7CD09EAB9716E55B66A35A67313C16CE /* PBXTargetDependency */,
+				0065ADB05F8959B485170F431CAD76AF /* PBXTargetDependency */,
+			);
+			name = YYWebImage;
+			productName = YYWebImage;
+			productReference = 4FC1978206616CE319648B302B05AA8A /* libYYWebImage.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5305059FAA2A7B3246F1874D047D8000 /* Doric-Doric */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CF28C89A17B973DCEF0CC17EC429C924 /* Build configuration list for PBXNativeTarget "Doric-Doric" */;
+			buildPhases = (
+				9B8AF771B107648B420DF8828CCAD48D /* Sources */,
+				EAFB18F53A88C2BC75B17D6832DE0248 /* Frameworks */,
+				2BFAA43ADD2BB8B0D98C009C813767F0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Doric-Doric";
+			productName = "Doric-Doric";
+			productReference = 1E19479558E0A9431B2B5F5A39136939 /* Doric.bundle */;
+			productType = "com.apple.product-type.bundle";
+		};
+		822E44240F2922DAB12018A6B649BD19 /* YYImage */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F0862E6186C771182316C9FF20CC569A /* Build configuration list for PBXNativeTarget "YYImage" */;
+			buildPhases = (
+				88C7134D809509122DF5C2AF0D66DED5 /* Headers */,
+				40AD5C10BEA0D14F1E71A34E9E6A8C45 /* Sources */,
+				0A7300EEDB760E5BBD8CDCDA0E756D9F /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = YYImage;
+			productName = YYImage;
+			productReference = 0C6F4829D47D1826F47CDC4264F9F6A8 /* libYYImage.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		8844A49AE64365ECBB6F0B228922E3D4 /* Pods-ExampleUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FF1E8FCEC0A05CD6042539B49FE84977 /* Build configuration list for PBXNativeTarget "Pods-ExampleUITests" */;
+			buildPhases = (
+				1F9F42084FA5328A65D06A10A3195627 /* Headers */,
+				9A3583B42723658D87E4868694121B3A /* Sources */,
+				C5F5F9AE8591441292295FD9101B9D1C /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				747006C456DDDC210FA7F2BA6E3DA5A7 /* PBXTargetDependency */,
+			);
+			name = "Pods-ExampleUITests";
+			productName = "Pods-ExampleUITests";
+			productReference = C232398D4E3A40F2337F8A40D7F8D751 /* libPods-ExampleUITests.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		AD904F32069787EFB2DFFE05EB82F5BD /* GCDWebServer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D55AAFCDDBA2946ECB4E7DBA650E8B60 /* Build configuration list for PBXNativeTarget "GCDWebServer" */;
+			buildPhases = (
+				E516289B0110056A2A7A1CE2E2F230C0 /* Headers */,
+				0EE7488E17DB09046CB68A662F259E9A /* Sources */,
+				7C1CF9A03EB6116AF3ED3831DDA4F75E /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GCDWebServer;
+			productName = GCDWebServer;
+			productReference = B68C1052A3B51DBCF7D960F898AAFA95 /* libGCDWebServer.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		CFDAE6EB02F58B9A37CADCF439AE6082 /* YYCache */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9D52FD8B42EC011F0CE3772AA41A7531 /* Build configuration list for PBXNativeTarget "YYCache" */;
+			buildPhases = (
+				19324E32064972C0D8A1FA2DD7D41A2A /* Headers */,
+				5B0FD70E7DCF189E26B11864D6AB44FB /* Sources */,
+				6921CB3F3F90A4D3854D879F38B0D619 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = YYCache;
+			productName = YYCache;
+			productReference = 48ACF38225AF5129416A1F090F6D3286 /* libYYCache.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BFDFE7DC352907FC980B868725387E98 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1100;
+				LastUpgradeCheck = 1100;
+			};
+			buildConfigurationList = 4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */;
+			compatibilityVersion = "Xcode 10.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
+			productRefGroup = F84D7922A6B05CDCB57606E11D08173B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3467588C9AC1920A96217C14EB70DA40 /* Doric */,
+				5305059FAA2A7B3246F1874D047D8000 /* Doric-Doric */,
+				AD904F32069787EFB2DFFE05EB82F5BD /* GCDWebServer */,
+				0AEE99A309977BD12A049FF48AF9BA4B /* Pods-Example */,
+				4432A314DF5F14FFF8809E319054F4AF /* Pods-ExampleTests */,
+				8844A49AE64365ECBB6F0B228922E3D4 /* Pods-ExampleUITests */,
+				1948D0B63D2CF6A48E18B0B292BC6091 /* SocketRocket */,
+				CFDAE6EB02F58B9A37CADCF439AE6082 /* YYCache */,
+				822E44240F2922DAB12018A6B649BD19 /* YYImage */,
+				488E8C830C5A5694EE916251B9ADAADA /* YYWebImage */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2BFAA43ADD2BB8B0D98C009C813767F0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				469A1604CBB39942455BBDCC31C15BA3 /* bundle in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0A6945A94C114AD03543703E96A0F3E1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				49CFE195ADFA55E91789E15D0C87C01D /* Pods-ExampleTests-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0B989C5F5B94740CEDB10A7E2E4F8728 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				785D30ACE0CA96360935E2B84255B603 /* SocketRocket-dummy.m in Sources */,
+				742D298906BD7E18FDE81D0690CE6707 /* SRWebSocket.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0EE7488E17DB09046CB68A662F259E9A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				02F04EB7E8D481AF83AF79996BD87792 /* GCDWebServer-dummy.m in Sources */,
+				35AA6FEA17185BA5249C86BF97CBBAB5 /* GCDWebServer.m in Sources */,
+				6E3B68A0E99E0B47F320EF2331E19B7A /* GCDWebServerConnection.m in Sources */,
+				6DEB097B36E0E54C1AB014D6F03C022D /* GCDWebServerDataRequest.m in Sources */,
+				41E53FC8F7F5F7443EA81735B185621F /* GCDWebServerDataResponse.m in Sources */,
+				AB84AE28B27CF582EF19D36BDC43F98B /* GCDWebServerErrorResponse.m in Sources */,
+				D9B4599A181CC306A7435AD154685666 /* GCDWebServerFileRequest.m in Sources */,
+				DE1EEF389F8CB34534EAF7F8E4E6A7B7 /* GCDWebServerFileResponse.m in Sources */,
+				6C945AC43FC9252239BD4EFA591834C4 /* GCDWebServerFunctions.m in Sources */,
+				5374F9AB9AA0600E3CCA16E92C8896DF /* GCDWebServerMultiPartFormRequest.m in Sources */,
+				456B4EDB3C253A44406F77BC05A674DF /* GCDWebServerRequest.m in Sources */,
+				D8F9C2440532E05025C22711C00FEDF4 /* GCDWebServerResponse.m in Sources */,
+				39B36A38566CBE323E76AE77CF7F14C8 /* GCDWebServerStreamedResponse.m in Sources */,
+				54EF62B95670DDDF59F337561BA72092 /* GCDWebServerURLEncodedFormRequest.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		40AD5C10BEA0D14F1E71A34E9E6A8C45 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AE50A6FC10341E2B72B7DAF028954805 /* YYAnimatedImageView.m in Sources */,
+				11B5C2686382CB0A191CBB1065B398B1 /* YYFrameImage.m in Sources */,
+				3683FDAA91B21FEF6656962C0B18E61B /* YYImage-dummy.m in Sources */,
+				5C6582CABB0B8973C08D1654AA69B835 /* YYImage.m in Sources */,
+				A5F7BC027290310D20EDBA4AA2217461 /* YYImageCoder.m in Sources */,
+				2ADB39CC8762C3F34068C0AE84DDCFF4 /* YYSpriteSheetImage.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4ABD9C04B104B92E7521A6BE88BF41B3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B87B726F4418B01AF502A9E9C6119098 /* _YYWebImageSetter.m in Sources */,
+				0B59A1F5BD1F123DB97060971DCF1D99 /* CALayer+YYWebImage.m in Sources */,
+				C907F8799CB0E289D53A5D7BE38EE6FF /* MKAnnotationView+YYWebImage.m in Sources */,
+				27CAB568DB504CAB9E87A5949ACBF92A /* UIButton+YYWebImage.m in Sources */,
+				1DC222879921DD8E01BDCA6348F0FAEF /* UIImage+YYWebImage.m in Sources */,
+				B325F28821AA9ED7BB4684C3E6952965 /* UIImageView+YYWebImage.m in Sources */,
+				FE345403F7CCECEE9CBF80C4C2969636 /* YYImageCache.m in Sources */,
+				7134381ADFB49E13A492C8842DD9136E /* YYWebImage-dummy.m in Sources */,
+				BE80E6672A724B9C99DFDB16291E7920 /* YYWebImageManager.m in Sources */,
+				B99C4ED46C0396496F882C7254E186C5 /* YYWebImageOperation.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5B0FD70E7DCF189E26B11864D6AB44FB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1BA55E660DBDCCE258A0E2136464ABD7 /* YYCache-dummy.m in Sources */,
+				289FEAACBCE2F0DF88ABB6978CFA4AC9 /* YYCache.m in Sources */,
+				CC7DF4168FA66F94C7FAC4722D625DE7 /* YYDiskCache.m in Sources */,
+				90CA1D7B5E55DD73D1E54DF69ABAF037 /* YYKVStorage.m in Sources */,
+				2F5FF6C6FBEE2F4E3BF522CBA1D5ABDC /* YYMemoryCache.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9A3583B42723658D87E4868694121B3A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5BECF1ACCAAAEBA8D91A27C0A8202E95 /* Pods-ExampleUITests-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9B8AF771B107648B420DF8828CCAD48D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EAB8A5B3F6754F82F8E07B6AD8B240CA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				642A88A3A60378104204D90AF865DCE7 /* Pods-Example-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FFC3F703D00FC68E571251C277A9D946 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				15A100A4553D6DAA81BBF7C892BADCA4 /* Doric-dummy.m in Sources */,
+				B6DBD08C47B1B79A1BFB12885900AD59 /* DoricAnimatePlugin.m in Sources */,
+				3F95372A5D8DB12F879C15F58389A702 /* DoricAsyncResult.m in Sources */,
+				03082882CBBA1667A93B7D61BC55B4B4 /* DoricBridgeExtension.m in Sources */,
+				9456535481F6736CF42CC6C0CA0F05CC /* DoricConstant.m in Sources */,
+				601AA4A9A51A6295EA0C587E314B4878 /* DoricContext.m in Sources */,
+				454BDBC91B37775CE9FEAED5EB98A318 /* DoricContextHolder.m in Sources */,
+				FA22D26FA65988469855488530673176 /* DoricContextManager.m in Sources */,
+				628C00DE711BDAF2D01F87D4E3F507C9 /* DoricDriver.m in Sources */,
+				148E041F6FE689C65ECC968D22391F6B /* DoricExtensions.m in Sources */,
+				43E035EA4D7778C3A5750C4AA067D517 /* DoricFlowLayoutItemNode.m in Sources */,
+				08EF09EB19754EE509818C5790D31DA9 /* DoricFlowLayoutNode.m in Sources */,
+				3925A9BD5798E09BE65375ED85D5A080 /* DoricGroupNode.m in Sources */,
+				325A01C30B880AEE4052C5FFABC08513 /* DoricHLayoutNode.m in Sources */,
+				DECC4D2D1BE5BC5F10509E4C42C1A898 /* DoricHttpJSLoader.m in Sources */,
+				4D1906A236B1E3163D1F273CA7504B1B /* DoricImageNode.m in Sources */,
+				8D1B144A742F49683BE2828D810E4F3E /* DoricJSCoreExecutor.m in Sources */,
+				5DDE21F723A5F11642AE78829F3E48E2 /* DoricJSEngine.m in Sources */,
+				58EAEE34AF06823DB5089E796271876E /* DoricJSLoaderManager.m in Sources */,
+				5A6F8B4FA356338E0C4F7E7BF66DF665 /* DoricJSRemoteArgType.m in Sources */,
+				53D32F9170417C4D434CE02C29D28D6D /* DoricJSRemoteExecutor.m in Sources */,
+				34ADBE5772A6192B7B304B0004D12A75 /* DoricLayouts.m in Sources */,
+				D23D009449BDA013320B83E96FD34F0C /* DoricListItemNode.m in Sources */,
+				A595FE2D135AA39316E3E3BC29297BA1 /* DoricListNode.m in Sources */,
+				4152104C6EDDADD63E2A0FD4346C704A /* DoricMainBundleJSLoader.m in Sources */,
+				C02DE514B2104B7F5BF56CA865D60E1D /* DoricModalPlugin.m in Sources */,
+				85FCA81F31A3D7F20A3B8573E4EC0CCD /* DoricNativePlugin.m in Sources */,
+				FF61AAFF955979FB5139A45AAA356476 /* DoricNavBarPlugin.m in Sources */,
+				9E438C93DCD92B560E17734920ECA41E /* DoricNavigatorPlugin.m in Sources */,
+				BCCA8B4ECCE73780AF092C376700FFAA /* DoricNetworkPlugin.m in Sources */,
+				64A7E44B95ADC998CAC69B4173F28F5D /* DoricPanel.m in Sources */,
+				DA5C200F877DDC6B376E80FC59DB5810 /* DoricPopoverPlugin.m in Sources */,
+				7913064CD98682308E4DB915BF9035C2 /* DoricPromise.m in Sources */,
+				A603D2CA37138F4E0D2DB37C781A06BF /* DoricRefreshableNode.m in Sources */,
+				ECE9EB5004C807E82D576D1E4AFA13D2 /* DoricRegistry.m in Sources */,
+				11C9CB703C2C92A588EA39CCFE5BCBC2 /* DoricRootNode.m in Sources */,
+				235867C4157F363474F02CFECB820F45 /* DoricScrollerNode.m in Sources */,
+				1DA05AE266C79E2CC17F3F527E34F7CC /* DoricShaderPlugin.m in Sources */,
+				E661D35C67269E4A6F71760F5E2A2432 /* DoricSlideItemNode.m in Sources */,
+				D69495C5934065FB2F245BA3A332DE86 /* DoricSliderNode.m in Sources */,
+				DD862728E67ABA06851177E86348C67D /* DoricStackNode.m in Sources */,
+				2BF2F43EB0EDA27FBF764B004723F8F9 /* DoricStoragePlugin.m in Sources */,
+				F966178401EEC590EF0A26C79481E4D1 /* DoricSuperNode.m in Sources */,
+				00612BA0FDFFF760AA31897B256552D3 /* DoricSwipeRefreshLayout.m in Sources */,
+				F29D4EC239C9F0D6705C9E1CC22576F9 /* DoricTextNode.m in Sources */,
+				FABB9B51C2FFDED22D686E59516612D0 /* DoricUtil.m in Sources */,
+				89F0597FC8000460FB5CC2E7FC6319F9 /* DoricViewController.m in Sources */,
+				C3BC5A74FD1503DFA41D5A4E5EC3B672 /* DoricViewNode.m in Sources */,
+				EAC6F94876E051A213D3D556453486CC /* DoricVLayoutNode.m in Sources */,
+				A44016F8566693840BB920EA21DB7500 /* DoricWSClient.m in Sources */,
+				07EB9BB703FC850650DC41BEA946EA62 /* NSString+JsonString.m in Sources */,
+				FBBC942DFE11B502C5C608D9BABBE130 /* UIView+Doric.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0065ADB05F8959B485170F431CAD76AF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = YYImage;
+			target = 822E44240F2922DAB12018A6B649BD19 /* YYImage */;
+			targetProxy = DD8E4C66891B230FFF1D4817E48DAB1A /* PBXContainerItemProxy */;
+		};
+		10B5260627C632981E228E766CDB9218 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = YYImage;
+			target = 822E44240F2922DAB12018A6B649BD19 /* YYImage */;
+			targetProxy = BE67A29C8EE3211F6E4264C92C4C5784 /* PBXContainerItemProxy */;
+		};
+		125839921EFB069382195EB61B591B65 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Doric-Doric";
+			target = 5305059FAA2A7B3246F1874D047D8000 /* Doric-Doric */;
+			targetProxy = 8BCCEE3CE39180DCABAD08A2A88ABED2 /* PBXContainerItemProxy */;
+		};
+		35A5957DD49EAD482E1E36143F1DCDFE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = YYCache;
+			target = CFDAE6EB02F58B9A37CADCF439AE6082 /* YYCache */;
+			targetProxy = 77CF2158783C6995303A85B86AFD0AB9 /* PBXContainerItemProxy */;
+		};
+		36F2559A041FD20B19A9EEDDB7D016A3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = YYImage;
+			target = 822E44240F2922DAB12018A6B649BD19 /* YYImage */;
+			targetProxy = 8479FE8F8C2EC600F1603EF1BFD6CC05 /* PBXContainerItemProxy */;
+		};
+		45A4C317249E4EFC8B146BAC54205744 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = YYWebImage;
+			target = 488E8C830C5A5694EE916251B9ADAADA /* YYWebImage */;
+			targetProxy = 5EF22E1C74B909EA29E090C50719BBD9 /* PBXContainerItemProxy */;
+		};
+		4D79DA13C03170CE9C21D80EF46AF849 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = GCDWebServer;
+			target = AD904F32069787EFB2DFFE05EB82F5BD /* GCDWebServer */;
+			targetProxy = A79DF282FD90B4C36A64A1AF9B145EDB /* PBXContainerItemProxy */;
+		};
+		747006C456DDDC210FA7F2BA6E3DA5A7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Pods-Example";
+			target = 0AEE99A309977BD12A049FF48AF9BA4B /* Pods-Example */;
+			targetProxy = 253670C8605F5FFDE1D6606BA634381B /* PBXContainerItemProxy */;
+		};
+		7C13BF224FA9F8FB97D246BD39E099C3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Pods-Example";
+			target = 0AEE99A309977BD12A049FF48AF9BA4B /* Pods-Example */;
+			targetProxy = 751D1FF2822550D322644F951A7BDA9F /* PBXContainerItemProxy */;
+		};
+		7CD09EAB9716E55B66A35A67313C16CE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = YYCache;
+			target = CFDAE6EB02F58B9A37CADCF439AE6082 /* YYCache */;
+			targetProxy = 856CD558A6A4C84FD434D6D2A50A352C /* PBXContainerItemProxy */;
+		};
+		9BB0DA7DF4375D94FAF7099B4E18F8F6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = GCDWebServer;
+			target = AD904F32069787EFB2DFFE05EB82F5BD /* GCDWebServer */;
+			targetProxy = CBBE8CF6CC81DB32DA2DDF836FC41947 /* PBXContainerItemProxy */;
+		};
+		9D85CAFF928F7B198848A244D5964248 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = YYWebImage;
+			target = 488E8C830C5A5694EE916251B9ADAADA /* YYWebImage */;
+			targetProxy = 5D80C63145B83493E429D6C7B05394BB /* PBXContainerItemProxy */;
+		};
+		A3D49195A496AA0826AB0216CB28D68E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = SocketRocket;
+			target = 1948D0B63D2CF6A48E18B0B292BC6091 /* SocketRocket */;
+			targetProxy = 5F800553AF429EC9C1F3C6E5C826D04E /* PBXContainerItemProxy */;
+		};
+		A73ADCD9DC1236D61BA4D6F0EB9068EC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = YYCache;
+			target = CFDAE6EB02F58B9A37CADCF439AE6082 /* YYCache */;
+			targetProxy = F5D4CA413DB8AE6664EA56196D8C0C4A /* PBXContainerItemProxy */;
+		};
+		DE060ACD35D08B8BCE8C6907E1C205D2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Doric;
+			target = 3467588C9AC1920A96217C14EB70DA40 /* Doric */;
+			targetProxy = D478AD36DA51D0362FE11615C051F15B /* PBXContainerItemProxy */;
+		};
+		DF228FFC5206B8E9FD01E9397FEE2A49 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = SocketRocket;
+			target = 1948D0B63D2CF6A48E18B0B292BC6091 /* SocketRocket */;
+			targetProxy = 2313449E8824345CBDB9ED4D3E3BCF32 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		00994F306AF3B768484D4D5A96FF3E9A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 35D3ADD1FF0C9A33D86DB110C181048B /* Pods-ExampleTests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				MACH_O_TYPE = staticlib;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		1867EE0ECC0D95F72F3C21F56270C932 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 98512CF1DCD76DF334D0FDB005736214 /* GCDWebServer.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				GCC_PREFIX_HEADER = "Target Support Files/GCDWebServer/GCDWebServer-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = GCDWebServer;
+				PRODUCT_NAME = GCDWebServer;
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		1BEEA832EFCEC6C7D6306AE959E5F736 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5BD2FB5A84E2481DF889A8718306023F /* YYImage.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				GCC_PREFIX_HEADER = "Target Support Files/YYImage/YYImage-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = YYImage;
+				PRODUCT_NAME = YYImage;
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		1F74D9D2F08B3F941DB2B37B659E834B /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 677BC4F0CCD6EB2C9FBCB3B375E7349F /* Doric.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/Doric";
+				INFOPLIST_FILE = "Target Support Files/Doric/ResourceBundle-Doric-Doric-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				PRODUCT_NAME = Doric;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Release;
+		};
+		2DF4EFAC0C2BD7ECA51C3801727A9E30 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 677BC4F0CCD6EB2C9FBCB3B375E7349F /* Doric.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				GCC_PREFIX_HEADER = "Target Support Files/Doric/Doric-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = Doric;
+				PRODUCT_NAME = Doric;
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		4F49B03DE53237020A9A6B697CBB8CCB /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 57728CFE03A4D88821681C3D55A1FA85 /* Pods-Example.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				MACH_O_TYPE = staticlib;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		6410F571BA8C1AEC6A19403F1B61B0B5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_DEBUG=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Debug;
+		};
+		6643C31EFA970B7EAFC68BCADA3E7242 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4A6BBD5D599973673610A24AF01EF5D7 /* YYWebImage.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				GCC_PREFIX_HEADER = "Target Support Files/YYWebImage/YYWebImage-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = YYWebImage;
+				PRODUCT_NAME = YYWebImage;
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		747661AF61F4387FF6885B69B54F271E /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8052FAE778A6A09F2260E4E85B371F57 /* Pods-ExampleTests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				MACH_O_TYPE = staticlib;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		76441C7336CE1037FF46D29DF3FC2228 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A461D3539C89936737BC3759F6AA0407 /* YYCache.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				GCC_PREFIX_HEADER = "Target Support Files/YYCache/YYCache-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = YYCache;
+				PRODUCT_NAME = YYCache;
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		770D93103C8F5744BE0B815D6D8A9F6F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4A6BBD5D599973673610A24AF01EF5D7 /* YYWebImage.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				GCC_PREFIX_HEADER = "Target Support Files/YYWebImage/YYWebImage-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = YYWebImage;
+				PRODUCT_NAME = YYWebImage;
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		9AD4A9FAB7BCA211A8C0FC98A7683348 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E340F908A05867E06E975FDCDD32315C /* Pods-Example.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				MACH_O_TYPE = staticlib;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A27713CB74E99AF202AADC23200A32F4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_RELEASE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Release;
+		};
+		A4DB471E05BD01419CF7CE60F6404243 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A461D3539C89936737BC3759F6AA0407 /* YYCache.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				GCC_PREFIX_HEADER = "Target Support Files/YYCache/YYCache-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = YYCache;
+				PRODUCT_NAME = YYCache;
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A7D7E74228D53C61289938CCEC18058C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B54C4523BBF2D713FE5A0DC2448FFFB1 /* SocketRocket.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				GCC_PREFIX_HEADER = "Target Support Files/SocketRocket/SocketRocket-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = SocketRocket;
+				PRODUCT_NAME = SocketRocket;
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B2E6C9F349C68F27DFF73ACF12F14761 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 677BC4F0CCD6EB2C9FBCB3B375E7349F /* Doric.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/Doric";
+				INFOPLIST_FILE = "Target Support Files/Doric/ResourceBundle-Doric-Doric-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				PRODUCT_NAME = Doric;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Debug;
+		};
+		BAA29EEE9BBE1E8D82BFADC3AD1BBEF9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 786AB58F4C2451575BBF7722ACDE9BEB /* Pods-ExampleUITests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				MACH_O_TYPE = staticlib;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C7051B457F5811ED7939D90711AB1C77 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 677BC4F0CCD6EB2C9FBCB3B375E7349F /* Doric.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				GCC_PREFIX_HEADER = "Target Support Files/Doric/Doric-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = Doric;
+				PRODUCT_NAME = Doric;
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D5CF2A2E3D8139B7310231DB736E4364 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 50CE420621B9D9ED01E06A8EDBD3E990 /* Pods-ExampleUITests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				MACH_O_TYPE = staticlib;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		E07894811891A3E671C1D3F25C73EA31 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 98512CF1DCD76DF334D0FDB005736214 /* GCDWebServer.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				GCC_PREFIX_HEADER = "Target Support Files/GCDWebServer/GCDWebServer-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = GCDWebServer;
+				PRODUCT_NAME = GCDWebServer;
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		E55F3035644B5631EE29D961E11FC0AC /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5BD2FB5A84E2481DF889A8718306023F /* YYImage.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				GCC_PREFIX_HEADER = "Target Support Files/YYImage/YYImage-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = YYImage;
+				PRODUCT_NAME = YYImage;
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		F005A2CA09B6A27BEC0220D81C4724F7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B54C4523BBF2D713FE5A0DC2448FFFB1 /* SocketRocket.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				GCC_PREFIX_HEADER = "Target Support Files/SocketRocket/SocketRocket-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_MODULE_NAME = SocketRocket;
+				PRODUCT_NAME = SocketRocket;
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		019A61CAE0868AC0BE60D448F7684ECF /* Build configuration list for PBXNativeTarget "SocketRocket" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A7D7E74228D53C61289938CCEC18058C /* Debug */,
+				F005A2CA09B6A27BEC0220D81C4724F7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		254DEE34BA0C554E2254F342226EF50C /* Build configuration list for PBXNativeTarget "Pods-Example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9AD4A9FAB7BCA211A8C0FC98A7683348 /* Debug */,
+				4F49B03DE53237020A9A6B697CBB8CCB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6410F571BA8C1AEC6A19403F1B61B0B5 /* Debug */,
+				A27713CB74E99AF202AADC23200A32F4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		491A184E17170C12C18549F5C1D24A74 /* Build configuration list for PBXNativeTarget "Doric" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C7051B457F5811ED7939D90711AB1C77 /* Debug */,
+				2DF4EFAC0C2BD7ECA51C3801727A9E30 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9D52FD8B42EC011F0CE3772AA41A7531 /* Build configuration list for PBXNativeTarget "YYCache" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A4DB471E05BD01419CF7CE60F6404243 /* Debug */,
+				76441C7336CE1037FF46D29DF3FC2228 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B2548596E2544D6246F7A1567F0FED35 /* Build configuration list for PBXNativeTarget "Pods-ExampleTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				00994F306AF3B768484D4D5A96FF3E9A /* Debug */,
+				747661AF61F4387FF6885B69B54F271E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CF28C89A17B973DCEF0CC17EC429C924 /* Build configuration list for PBXNativeTarget "Doric-Doric" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B2E6C9F349C68F27DFF73ACF12F14761 /* Debug */,
+				1F74D9D2F08B3F941DB2B37B659E834B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D55AAFCDDBA2946ECB4E7DBA650E8B60 /* Build configuration list for PBXNativeTarget "GCDWebServer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1867EE0ECC0D95F72F3C21F56270C932 /* Debug */,
+				E07894811891A3E671C1D3F25C73EA31 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F0862E6186C771182316C9FF20CC569A /* Build configuration list for PBXNativeTarget "YYImage" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1BEEA832EFCEC6C7D6306AE959E5F736 /* Debug */,
+				E55F3035644B5631EE29D961E11FC0AC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FA9151EF6282C13D4B730B3273163572 /* Build configuration list for PBXNativeTarget "YYWebImage" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				770D93103C8F5744BE0B815D6D8A9F6F /* Debug */,
+				6643C31EFA970B7EAFC68BCADA3E7242 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FF1E8FCEC0A05CD6042539B49FE84977 /* Build configuration list for PBXNativeTarget "Pods-ExampleUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BAA29EEE9BBE1E8D82BFADC3AD1BBEF9 /* Debug */,
+				D5CF2A2E3D8139B7310231DB736E4364 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+}

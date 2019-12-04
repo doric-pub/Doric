@@ -66,7 +66,7 @@ export interface IPullable {
 }
 
 
-export function pullable(context: BridgeContext, v: View, config: IPullable) {
+export function pullable(v: View, config: IPullable) {
     Reflect.set(v, 'startAnimation', config.startAnimation)
     Reflect.set(v, 'stopAnimation', config.stopAnimation)
     Reflect.set(v, 'setPullingDistance', config.setPullingDistance)

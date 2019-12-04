@@ -1,1 +1,1 @@
-# Doric QT SDK
+# Doric Qt SDK

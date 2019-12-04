@@ -37,6 +37,24 @@ static const void *kLayoutConfig = &kLayoutConfig;
 
 @end
 
+static const void *kLayoutPadding = &kLayoutPadding;
+
+@implementation UIView (DoricPadding)
+@dynamic padding;
+
+- (void)setPadding:(DoricPadding)padding {
+    objc_setAssociatedObject(self, kLayoutPadding, [NSValue value:&padding withObjCType:@encode(DoricPadding)], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (DoricPadding)padding {
+    DoricPadding value;
+    value.left = value.right = value.top = value.bottom = 0;
+    [objc_getAssociatedObject(self, kLayoutPadding) getValue:&value];
+    return value;
+}
+
+@end
+
 static const void *kTagString = &kTagString;
 
 @implementation UIView (DoricTag)
@@ -79,13 +97,15 @@ static const void *kTagString = &kTagString;
             || config.heightSpec == DoricLayoutWrapContent) {
         height = targetSize.height - config.margin.top - config.margin.bottom;
     }
-
-    CGSize contentSize = [self sizeThatFits:CGSizeMake(width, height)];
+    DoricPadding padding = self.padding;
+    CGSize contentSize = [self sizeThatFits:CGSizeMake(
+            width - padding.left - padding.right,
+            height - padding.top - padding.bottom)];
     if (config.widthSpec == DoricLayoutWrapContent) {
-        width = contentSize.width;
+        width = contentSize.width + padding.left + padding.right;
     }
     if (config.heightSpec == DoricLayoutWrapContent) {
-        height = contentSize.height;
+        height = contentSize.height + padding.left + padding.top + padding.bottom;
     }
     return CGSizeMake(width, height);
 }
@@ -208,6 +228,8 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
 - (void)layoutSelf:(CGSize)targetSize {
     self.width = targetSize.width;
     self.height = targetSize.height;
+    DoricPadding padding = self.padding;
+
     for (UIView *child in self.subviews) {
         if (child.isHidden) {
             continue;
@@ -219,33 +241,35 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
         if (!childConfig) {
             childConfig = [DoricLayoutConfig new];
         }
-        CGSize size = [child measureSize:CGSizeMake(targetSize.width, targetSize.height)];
+        CGSize size = [child measureSize:CGSizeMake(
+                targetSize.width - padding.left - padding.right,
+                targetSize.height - padding.top - padding.bottom)];
         [child layoutSelf:size];
         DoricGravity gravity = childConfig.alignment;
         if ((gravity & LEFT) == LEFT) {
-            child.left = 0;
+            child.left = padding.left;
         } else if ((gravity & RIGHT) == RIGHT) {
-            child.right = targetSize.width;
+            child.right = targetSize.width - padding.right;
         } else if ((gravity & CENTER_X) == CENTER_X) {
-            child.centerX = targetSize.width / 2;
+            child.centerX = (targetSize.width - padding.left - padding.right) / 2;
         } else {
             if (childConfig.margin.left) {
-                child.left = childConfig.margin.left;
+                child.left = childConfig.margin.left + padding.left;
             } else if (childConfig.margin.right) {
-                child.right = targetSize.width - childConfig.margin.right;
+                child.right = targetSize.width - childConfig.margin.right - padding.right;
             }
         }
         if ((gravity & TOP) == TOP) {
-            child.top = 0;
+            child.top = padding.top;
         } else if ((gravity & BOTTOM) == BOTTOM) {
-            child.bottom = targetSize.height;
+            child.bottom = targetSize.height - padding.bottom;
         } else if ((gravity & CENTER_Y) == CENTER_Y) {
-            child.centerY = targetSize.height / 2;
+            child.centerY = (targetSize.height - padding.top - padding.bottom) / 2;
         } else {
             if (childConfig.margin.top) {
-                child.top = childConfig.margin.top;
+                child.top = childConfig.margin.top + padding.top;
             } else if (childConfig.margin.bottom) {
-                child.bottom = targetSize.height - childConfig.margin.bottom;
+                child.bottom = targetSize.height - childConfig.margin.bottom - padding.bottom;
             }
         }
     }
@@ -292,15 +316,16 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
 - (void)layoutSelf:(CGSize)targetSize {
     self.width = targetSize.width;
     self.height = targetSize.height;
-    CGFloat yStart = 0;
+    DoricPadding padding = self.padding;
+    CGFloat yStart = padding.top;
     if ((self.gravity & TOP) == TOP) {
-        yStart = 0;
+        yStart = padding.top;
     } else if ((self.gravity & BOTTOM) == BOTTOM) {
-        yStart = targetSize.height - self.contentHeight;
+        yStart = targetSize.height - self.contentHeight - padding.bottom;
     } else if ((self.gravity & CENTER_Y) == CENTER_Y) {
-        yStart = (targetSize.height - self.contentHeight) / 2;
+        yStart = (targetSize.height - self.contentHeight - padding.top - padding.bottom) / 2;
     }
-    CGFloat remain = targetSize.height - self.contentHeight;
+    CGFloat remain = targetSize.height - self.contentHeight - padding.top - padding.bottom;
     for (UIView *child in self.subviews) {
         if (child.isHidden) {
             continue;
@@ -313,24 +338,26 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
             childConfig = [DoricLayoutConfig new];
         }
 
-        CGSize size = [child measureSize:CGSizeMake(targetSize.width, targetSize.height - yStart)];
+        CGSize size = [child measureSize:CGSizeMake(
+                targetSize.width - padding.left - padding.right,
+                targetSize.height - yStart - padding.bottom)];
         if (childConfig.weight) {
             size.height += remain / self.contentWeight * childConfig.weight;
         }
         [child layoutSelf:size];
         DoricGravity gravity = childConfig.alignment | self.gravity;
         if ((gravity & LEFT) == LEFT) {
-            child.left = 0;
+            child.left = padding.left;
         } else if ((gravity & RIGHT) == RIGHT) {
-            child.right = self.width;
+            child.right = self.width - padding.right;
         } else if ((gravity & CENTER_X) == CENTER_X) {
-            child.centerX = targetSize.width / 2;
+            child.centerX = (targetSize.width - padding.left - padding.right) / 2;
+        } else if (childConfig.margin.left) {
+            child.left = childConfig.margin.left + padding.left;
+        } else if (childConfig.margin.right) {
+            child.right = targetSize.width - childConfig.margin.right - padding.right;
         } else {
-            if (childConfig.margin.left) {
-                child.left = childConfig.margin.left;
-            } else if (childConfig.margin.right) {
-                child.right = targetSize.width - childConfig.margin.right;
-            }
+            child.left = padding.left;
         }
         if (childConfig.margin.top) {
             yStart += childConfig.margin.top;
@@ -380,17 +407,16 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
 - (void)layoutSelf:(CGSize)targetSize {
     self.width = targetSize.width;
     self.height = targetSize.height;
-    CGFloat xStart = 0;
-    if (self.contentWeight) {
-        xStart = 0;
-    } else if ((self.gravity & LEFT) == LEFT) {
-        xStart = 0;
+    DoricPadding padding = self.padding;
+    CGFloat xStart = padding.left;
+    if ((self.gravity & LEFT) == LEFT) {
+        xStart = padding.left;
     } else if ((self.gravity & RIGHT) == RIGHT) {
-        xStart = targetSize.width - self.contentWidth;
+        xStart = targetSize.width - self.contentWidth - padding.right;
     } else if ((self.gravity & CENTER_X) == CENTER_X) {
-        xStart = (targetSize.width - self.contentWidth) / 2;
+        xStart = (targetSize.width - self.contentWidth - padding.left - padding.right) / 2;
     }
-    CGFloat remain = targetSize.width - self.contentWidth;
+    CGFloat remain = targetSize.width - self.contentWidth - padding.left - padding.right;
     for (UIView *child in self.subviews) {
         if (child.isHidden) {
             continue;
@@ -403,7 +429,9 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
             childConfig = [DoricLayoutConfig new];
         }
 
-        CGSize size = [child measureSize:CGSizeMake(targetSize.width - xStart, targetSize.height)];
+        CGSize size = [child measureSize:CGSizeMake(
+                targetSize.width - xStart - padding.right,
+                targetSize.height - padding.top - padding.bottom)];
         if (childConfig.weight) {
             size.width += remain / self.contentWeight * childConfig.weight;
         }
@@ -412,17 +440,17 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
 
         DoricGravity gravity = childConfig.alignment | self.gravity;
         if ((gravity & TOP) == TOP) {
-            child.top = 0;
+            child.top = padding.top;
         } else if ((gravity & BOTTOM) == BOTTOM) {
-            child.bottom = targetSize.height;
+            child.bottom = targetSize.height - padding.bottom;
         } else if ((gravity & CENTER_Y) == CENTER_Y) {
-            child.centerY = targetSize.height / 2;
+            child.centerY = (targetSize.height - padding.top - padding.bottom) / 2;
+        } else if (childConfig.margin.top) {
+            child.top = childConfig.margin.top + padding.top;
+        } else if (childConfig.margin.bottom) {
+            child.bottom = targetSize.height - childConfig.margin.bottom - padding.bottom;
         } else {
-            if (childConfig.margin.top) {
-                child.top = childConfig.margin.top;
-            } else if (childConfig.margin.bottom) {
-                child.bottom = targetSize.height - childConfig.margin.bottom;
-            }
+            child.top = padding.top;
         }
 
         if (childConfig.margin.left) {

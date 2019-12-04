@@ -20,6 +20,7 @@
 #import <Foundation/Foundation.h>
 
 typedef UIEdgeInsets DoricMargin;
+typedef UIEdgeInsets DoricPadding;
 
 DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bottom);
 
@@ -80,6 +81,10 @@ typedef NS_ENUM(NSInteger, DoricGravity) {
 
 @interface UIView (DoricLayoutConfig)
 @property(nonatomic, strong) DoricLayoutConfig *layoutConfig;
+@end
+
+@interface UIView (DoricPadding)
+@property(nonatomic, assign) DoricPadding padding;
 @end
 
 @interface UIView (DoricTag)

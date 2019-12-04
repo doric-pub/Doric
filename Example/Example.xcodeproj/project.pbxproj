@@ -20,7 +20,7 @@
 		E2334AFE22E9D2070098A085 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E2334AFD22E9D2070098A085 /* main.m */; };
 		E2334B0822E9D2070098A085 /* ExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E2334B0722E9D2070098A085 /* ExampleTests.m */; };
 		E2334B1322E9D2070098A085 /* ExampleUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = E2334B1222E9D2070098A085 /* ExampleUITests.m */; };
-		E247204923979232002D9E6E /* demo in Resources */ = {isa = PBXBuildFile; fileRef = E2F4481623839AC500073C7F /* demo */; };
+		E2F4481723839AC500073C7F /* demo in Resources */ = {isa = PBXBuildFile; fileRef = E2F4481623839AC500073C7F /* demo */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -293,8 +293,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E247204923979232002D9E6E /* demo in Resources */,
 				E2334AFB22E9D2070098A085 /* LaunchScreen.storyboard in Resources */,
+				E2F4481723839AC500073C7F /* demo in Resources */,
 				E2334AF822E9D2070098A085 /* Assets.xcassets in Resources */,
 				E2334AF622E9D2060098A085 /* Main.storyboard in Resources */,
 			);

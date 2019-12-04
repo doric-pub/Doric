@@ -27,6 +27,11 @@
         return ![obj containsString:@".map"];
     }];
     NSMutableArray <NSString *> *tmp = [self.demoFilePaths mutableCopy];
+    NSStringCompareOptions comparisonOptions = NSCaseInsensitiveSearch | NSNumericSearch | NSWidthInsensitiveSearch | NSForcedOrderingSearch;
+    [tmp sortUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
+        NSRange range = NSMakeRange(0, obj1.length);
+        return [obj1 compare:obj2 options:comparisonOptions range:range];
+    }];
     [tmp insertObject:@"Dev Kit" atIndex:0];
     self.demoFilePaths = tmp;
     [self.view addSubview:[[UITableView new] also:^(UITableView *it) {

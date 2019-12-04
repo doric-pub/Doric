@@ -25,24 +25,12 @@ android {
 
 afterEvaluate {
     buildJSBundle.exec()
-    buildDemo.exec()
-    //buildDebugger.exec()
 }
 
 task buildJSBundle(type: Exec) {
-    workingDir project.rootDir.getParent() + "/js-framework"
-    commandLine 'npm', 'run', 'build'
+    commandLine 'sh', project.rootDir.getParent() + "/bundle.sh"
 }
 
-task buildDemo(type: Exec) {
-    workingDir project.rootDir.getParent() + "/demo"
-    commandLine 'npm', 'run', 'build'
-}
-
-task buildDebugger(type: Exec) {
-    workingDir project.rootDir.getParent() + "/debugger"
-    commandLine 'npm', 'run', 'build'
-}
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 

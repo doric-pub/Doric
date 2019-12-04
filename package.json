@@ -26,9 +26,9 @@
     "keypress": "^0.2.1",
     "nodejs-websocket": "^1.7.2",
     "qrcode-terminal": "^0.12.0",
-    "rollup": "^1.27.2",
+    "rollup": "^1.27.8",
     "shelljs": "^0.8.3",
     "source-map-merger": "^0.2.0",
-    "typescript": "^3.7.2"
+    "typescript": "^3.7.3"
   }
 }

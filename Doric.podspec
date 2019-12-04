@@ -23,6 +23,5 @@ Doric SDK for iOS
   s.dependency 'YYWebImage', '~>1.0.5'
   s.dependency 'YYImage/WebP'
   s.dependency 'SocketRocket', '~> 0.5.1'
-  s.dependency 'GCDWebServer', '~> 3.0'
   s.dependency 'YYCache', '~> 1.0.4'
 end

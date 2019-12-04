@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
-    const QUrl url(QStringLiteral("qrc:/main.qml"));
+    const QUrl url(QStringLiteral("qrc:/doric/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {
         if (!obj && url == objUrl)
@@ -21,7 +21,8 @@ int main(int argc, char *argv[])
     engine.load(url);
 
     {
-        QFile* file = new QFile("/Users/maverick/Workspace/doric/demo/bundle/src/Snake.js");
+        QResource resource(":/doric/Snake.js");
+        QFile *file = new QFile(resource.fileName());
         file->open(QFile::ReadOnly | QFile::Text);
         QTextStream in(file);
         QString script = in.readAll();

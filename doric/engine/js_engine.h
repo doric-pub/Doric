@@ -4,6 +4,7 @@
 #include <QFile>
 #include <QObject>
 #include <QJSEngine>
+#include <QResource>
 
 #include "constant.h"
 #include "native/native_bridge.h"
@@ -69,7 +70,8 @@ private:
 
     void initDoricRuntime() {
         {
-            QFile *file = new QFile("/Users/maverick/Workspace/doric/js-framework/bundle/doric-sandbox.js");
+            QResource resource(":/doric/doric-sandbox.js");
+            QFile *file = new QFile(resource.fileName());
             file->open(QFile::ReadOnly | QFile::Text);
             QTextStream in(file);
             QString script = in.readAll();
@@ -81,7 +83,8 @@ private:
         }
 
         {
-            QFile *file = new QFile("/Users/maverick/Workspace/doric/js-framework/bundle/doric-lib.js");
+            QResource resource(":/doric/doric-lib.js");
+            QFile *file = new QFile(resource.fileName());
             file->open(QFile::ReadOnly | QFile::Text);
             QTextStream in(file);
             QString script = in.readAll();

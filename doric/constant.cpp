@@ -30,3 +30,5 @@ const QString Constant::TEMPLATE_CONTEXT_DESTROY = QString("doric.jsReleaseConte
 
 const QString Constant::GLOBAL_DORIC = QString("doric");
 const QString Constant::DORIC_TIMER_CALLBACK = QString("jsCallbackTimer");
+
+const QString Constant::DORIC_ENTITY_INIT = QString("__init__");

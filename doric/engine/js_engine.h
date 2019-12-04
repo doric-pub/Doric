@@ -6,6 +6,7 @@
 #include <QJSEngine>
 
 #include "constant.h"
+#include "native/native_bridge.h"
 #include "native/native_empty.h"
 #include "native/native_log.h"
 #include "native/native_timer.h"
@@ -14,7 +15,8 @@ class JSEngine : public QObject {
     Q_OBJECT
 
 public:
-    QJSEngine *engine;
+    QJSEngine *engine = new QJSEngine();
+
     JSEngine(QObject *parent = nullptr) : QObject(parent) {
         initJSEngine();
         injectGlobal();
@@ -41,21 +43,28 @@ public:
     }
 
 private:
+    NativeLog* nativeLog = new NativeLog();
+    NativeTimer* nativeTimer = new NativeTimer(engine);
+    NativeEmpty* nativeEmpty = new NativeEmpty();
+    NativeBridge* nativeBridge = new NativeBridge();
+
     void initJSEngine() {
-        engine = new QJSEngine();
         engine->installExtensions(QJSEngine::AllExtensions);
     }
 
     void injectGlobal() {
-        QJSValue nativeLog = engine->newQObject(new NativeLog());
-        engine->globalObject().setProperty(Constant::INJECT_LOG, nativeLog.property("function"));
+        QJSValue log = engine->newQObject(nativeLog);
+        engine->globalObject().setProperty(Constant::INJECT_LOG, log.property("function"));
 
-        QJSValue nativeTimer = engine->newQObject(new NativeTimer(engine));
-        engine->globalObject().setProperty(Constant::INJECT_TIMER_SET, nativeTimer.property("setTimer"));
-        engine->globalObject().setProperty(Constant::INJECT_TIMER_CLEAR, nativeTimer.property("clearTimer"));
+        QJSValue timer = engine->newQObject(nativeTimer);
+        engine->globalObject().setProperty(Constant::INJECT_TIMER_SET, timer.property("setTimer"));
+        engine->globalObject().setProperty(Constant::INJECT_TIMER_CLEAR, timer.property("clearTimer"));
 
-        QJSValue nativeEmpty = engine->newQObject(new NativeEmpty());
-        engine->globalObject().setProperty(Constant::INJECT_EMPTY, nativeEmpty.property("function"));
+        QJSValue empty = engine->newQObject(nativeEmpty);
+        engine->globalObject().setProperty(Constant::INJECT_EMPTY, empty.property("function"));
+
+        QJSValue bridge = engine->newQObject(nativeBridge);
+        engine->globalObject().setProperty(Constant::INJECT_BRIDGE, bridge.property("function"));
     }
 
     void initDoricRuntime() {

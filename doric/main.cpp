@@ -20,14 +20,19 @@ int main(int argc, char *argv[])
     }, Qt::QueuedConnection);
     engine.load(url);
 
-    QFile* file = new QFile("/Users/maverick/Workspace/doric/demo/bundle/src/Snake.js");
-    file->open(QFile::ReadOnly | QFile::Text);
-    QTextStream in(file);
-    QString script = in.readAll();
-    file->close();
-    delete file;
+    {
+        QFile* file = new QFile("/Users/maverick/Workspace/doric/demo/bundle/src/Snake.js");
+        file->open(QFile::ReadOnly | QFile::Text);
+        QTextStream in(file);
+        QString script = in.readAll();
+        file->close();
+        delete file;
 
-    QString* source = new QString("Snake.js");
-    ContextManager::getInstance()->createContext(&script, source);
+        QString* source = new QString("Snake.js");
+        Context *context = ContextManager::getInstance()->createContext(&script, source);
+        context->init(180, 320);
+        delete source;
+    }
+
     return app.exec();
 }

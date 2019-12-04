@@ -19,6 +19,8 @@ public:
 
     static const QString GLOBAL_DORIC;
     static const QString DORIC_TIMER_CALLBACK;
+
+    static const QString DORIC_ENTITY_INIT;
 };
 
 #endif // CONSTANT_H

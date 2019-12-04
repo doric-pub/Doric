@@ -10,8 +10,8 @@ class NativeBridge : public QObject {
 public:
     NativeBridge(QObject *parent = nullptr) : QObject(parent) {}
 
-    Q_INVOKABLE void function() {
-
+    Q_INVOKABLE void function(int contextId) {
+        qDebug() << contextId;
     }
 };
 

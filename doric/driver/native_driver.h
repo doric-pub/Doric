@@ -28,6 +28,8 @@ public:
     void createContext(int contextId, QString *script) override;
 
     void destroyContext(int contextId) override;
+
+    void invokeContextEntityMethod(int contextId, QString* method, QVector<QObject>* arguments) override;
 };
 
 #endif // NATIVE_DRIVER_H

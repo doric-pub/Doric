@@ -11,3 +11,7 @@ void NativeDriver::createContext(int contextId, QString *script)  {
 void NativeDriver::destroyContext(int contextId)  {
     jsEngine->destroyContext(contextId);
 }
+
+void NativeDriver::invokeContextEntityMethod(int contextId, QString* method, QVector<QObject>* arguments) {
+
+}

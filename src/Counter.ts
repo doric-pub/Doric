@@ -31,6 +31,12 @@ class CounterView extends ViewHolder<CountModel> {
                     widthSpec: LayoutSpec.WRAP_CONTENT,
                     heightSpec: LayoutSpec.WRAP_CONTENT,
                 },
+                padding: {
+                    left: 10,
+                    right: 10,
+                    top: 10,
+                    bottom: 10,
+                },
                 shadow: {
                     color: Color.parse("#00ff00"),
                     opacity: 0.5,

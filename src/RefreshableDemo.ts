@@ -13,7 +13,7 @@ class RefreshableDemo extends Panel {
                     refreshView.setRefreshing(context, false)
                 }, 5000)
             },
-            header: pullable(context,
+            header: pullable(
                 stack([
                     image({
                         layoutConfig: layoutConfig().exactly().m({ top: 50, bottom: 10, }),

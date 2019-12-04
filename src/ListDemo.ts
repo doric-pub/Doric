@@ -91,7 +91,7 @@ class ListPanel extends Panel {
                         })
                     })
                 },
-                header: rotatedArrow(context),
+                header: rotatedArrow(),
                 content: list({
                     itemCount: 0,
                     renderItem: () => new ListItem,

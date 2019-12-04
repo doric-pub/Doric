@@ -48,9 +48,9 @@ export function title(str: string) {
     })
 }
 
-export function rotatedArrow(context: BridgeContext) {
+export function rotatedArrow() {
     let refreshImage: Image
-    return pullable(context,
+    return pullable(
         stack([
             image({
                 layoutConfig: layoutConfig().exactly().m({ top: 50, bottom: 10, }),

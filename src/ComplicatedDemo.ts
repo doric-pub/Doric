@@ -1,5 +1,5 @@
-import { Panel, Group, vlayout, image, layoutConfig, ScaleType, refreshable, Color, pullable, stack, Image, Refreshable, TranslationAnimation, loge, log } from "doric";
-import { title, icon_refresh } from "./utils";
+import { Panel, Group, vlayout, image, layoutConfig, ScaleType, refreshable, Color, pullable, stack, Image, Refreshable, TranslationAnimation, loge, log, list, listItem, text } from "doric";
+import { title, icon_refresh, colors } from "./utils";
 
 @Entry
 class MyDemo extends Panel {
@@ -11,7 +11,7 @@ class MyDemo extends Panel {
                 onRefresh: () => {
                     refreshed.setRefreshing(context, false)
                 },
-                header: pullable(context,
+                header: pullable(
                     stack([]).apply({
                         backgroundColor: Color.RED,
                         layoutConfig: layoutConfig().exactly(),
@@ -25,11 +25,21 @@ class MyDemo extends Panel {
                         },
                         setPullingDistance: (distance: number) => {
                             headerImage.scaleX = headerImage.scaleY = (headerImage.height + distance * 2) / headerImage.height
-                            log(`Header Image scaleY:${headerImage.scaleY},height:${headerImage.height},distance:${distance}`)
                         },
                     }),
-                content: vlayout([]).apply({
-                    backgroundColor: Color.YELLOW,
+                content: list({
+                    itemCount: 20,
+                    renderItem: (idx) => {
+                        return listItem(text({
+                            text: `Item :${idx}`,
+                            layoutConfig: layoutConfig().exactly(),
+                            width: root.width,
+                            height: 50,
+                            textColor: Color.WHITE,
+                            backgroundColor: colors[idx % colors.length],
+                        }))
+                    }
+                }).apply({
                 }),
             }).apply({
                 layoutConfig: layoutConfig().atmost(),

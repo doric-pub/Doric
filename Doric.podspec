@@ -11,7 +11,7 @@ Doric iOS SDK
   s.homepage         = 'https://github.com/doric-pub/doric'
   s.license          = { :type => 'Apache-2.0', :file => 'LICENSE' }
   s.author           = { 'pengfei.zhou' => 'pengfeizhou@foxmail.com' }
-  s.source           = { :git => 'git@github.com:penfeizhou/doric.git', :tag => s.version.to_s }
+  s.source           = { :git => 'git@code.aliyun.com:Doric/doric-iOS.git', :tag => s.version.to_s }
 
   s.ios.deployment_target = '8.0'
 

@@ -16,7 +16,6 @@ Doric iOS SDK
   s.ios.deployment_target = '8.0'
 
   s.source_files = 'Pod/Classes/**/*'
-  s.resource = "Pod/Assets/*.js"
   s.resource_bundles = {
     'Doric' => ['Pod/Assets/**/*']
   }

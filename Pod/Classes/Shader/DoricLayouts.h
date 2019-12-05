@@ -18,6 +18,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreGraphics/CoreGraphics.h>
+#import <UIKit/UIKit.h>
 
 typedef UIEdgeInsets DoricMargin;
 typedef UIEdgeInsets DoricPadding;

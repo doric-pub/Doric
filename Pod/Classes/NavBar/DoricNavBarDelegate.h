@@ -18,7 +18,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import <UIKit/UIKit.h>
 
 @protocol DoricNavBarDelegate <NSObject>
 - (BOOL)doric_navBar_isHidden;

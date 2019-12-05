@@ -13,7 +13,7 @@ class __$__ extends Panel {
             text({
                 text: "Click to count",
                 textSize: 20,
-                bgColor: Color.parse('#70a1ff'),
+                backgroundColor: Color.parse('#70a1ff'),
                 textColor: Color.WHITE,
                 onClick: () => {
                     number.text = `${++count}`

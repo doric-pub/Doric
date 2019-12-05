@@ -26,7 +26,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface DoricContextHolder : NSObject
-@property(nonatomic, strong) DoricContext *doricContext;
+@property(nonatomic, weak) DoricContext *doricContext;
 
 - (instancetype)initWithContext:(DoricContext *)doricContext;
 

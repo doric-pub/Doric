@@ -73,11 +73,15 @@
                     dispatch_block_t block = ^() {
                         __strong __typeof__(_self) self = _self;
                         @try {
+                            NSMutableArray *tempArray = [NSMutableArray new];
                             for (NSUInteger idx = 2; idx < methodSignature.numberOfArguments; idx++) {
                                 if (idx - 2 > [array count]) {
                                     break;
                                 }
                                 id args = [self createParamWithMethodName:array[idx - 2] context:context callbackId:callbackId argument:argument];
+                                if (args) {
+                                    [tempArray addObject:args];
+                                }
                                 [invocation setArgument:&args atIndex:idx];
                             }
                             [invocation invoke];

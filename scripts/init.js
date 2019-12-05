@@ -5,6 +5,7 @@ require('shelljs/global')
 
 const targetJSPath = `${__dirname}/../target/js`
 const targetAndroidPath = `${__dirname}/../target/android`
+const targetiOSPath = `${__dirname}/../target/iOS`
 
 function copyFile(srcPath, tarPath, cb) {
     var rs = fs.createReadStream(srcPath)
@@ -105,7 +106,23 @@ function initAndroid(path, name) {
         })
     })
 }
-
+function initiOS(path, name) {
+    if (fs.existsSync(path)) {
+        console.warn(`Dir:${process.cwd()}/${path} already exists`)
+        return;
+    }
+    console.log(`create dir ${path} success`);
+    fs.mkdir(path, function (err) {
+        if (err) {
+            return console.error(err);
+        }
+        copyFolder(`${targetiOSPath}`, `${path}`, () => {
+            const mainFiles = `Example/ViewController.m`
+            fs.writeFileSync(`${path}/${mainFiles}`, fs.readFileSync(`${targetiOSPath}/${mainFiles}`).toString().replace(/__\$__/g, name))
+            console.log(`Create Doric Android Project Success`)
+        })
+    })
+}
 module.exports = function (name) {
     if (fs.existsSync(name)) {
         console.warn(`Dir:${process.cwd()}/${name} already exists`)
@@ -117,5 +134,6 @@ module.exports = function (name) {
         }
         initJS(`${process.cwd()}/${name}/js`, name)
         initAndroid(`${process.cwd()}/${name}/android`, name)
+        initiOS(`${process.cwd()}/${name}/iOS`, name)
     })
 }

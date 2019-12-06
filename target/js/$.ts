@@ -22,7 +22,7 @@ class __$__ extends Panel {
                     number.text = `${++count}`
                 },
                 layoutConfig: layoutConfig().exactly(),
-                width: 100,
+                width: 200,
                 height: 50,
             }),
         ])

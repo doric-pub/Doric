@@ -15,8 +15,10 @@
  */
 package pub.doric.shader.slider;
 
+import android.text.TextUtils;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,7 +27,9 @@ import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
 import pub.doric.DoricContext;
+import pub.doric.extension.bridge.DoricMethod;
 import pub.doric.extension.bridge.DoricPlugin;
+import pub.doric.extension.bridge.DoricPromise;
 import pub.doric.shader.SuperNode;
 import pub.doric.shader.ViewNode;
 
@@ -37,6 +41,7 @@ import pub.doric.shader.ViewNode;
 @DoricPlugin(name = "Slider")
 public class SliderNode extends SuperNode<RecyclerView> {
     private final SlideAdapter slideAdapter;
+    private String onPageSlidedFuncId;
 
     public SliderNode(DoricContext doricContext) {
         super(doricContext);
@@ -47,12 +52,28 @@ public class SliderNode extends SuperNode<RecyclerView> {
     protected RecyclerView build() {
         RecyclerView recyclerView = new RecyclerView(getContext());
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(layoutManager);
-        PagerSnapHelper mPagerSnapHelper = new PagerSnapHelper();
-        mPagerSnapHelper.attachToRecyclerView(recyclerView);
+        final PagerSnapHelper snapHelper = new PagerSnapHelper();
+        snapHelper.attachToRecyclerView(recyclerView);
         recyclerView.setAdapter(this.slideAdapter);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    View view = snapHelper.findSnapView(layoutManager);
+                    if (view != null && !TextUtils.isEmpty(onPageSlidedFuncId)) {
+                        callJSResponse(onPageSlidedFuncId, layoutManager.getPosition(view));
+                    }
+                }
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
         return recyclerView;
     }
 
@@ -109,7 +130,7 @@ public class SliderNode extends SuperNode<RecyclerView> {
             case "itemCount":
                 this.slideAdapter.itemCount = prop.asNumber().toInt();
                 break;
-            case "renderItem":
+            case "renderPage":
                 // If reset renderItem,should reset native cache.
                 this.slideAdapter.itemValues.clear();
                 clearSubModel();
@@ -117,9 +138,30 @@ public class SliderNode extends SuperNode<RecyclerView> {
             case "batchCount":
                 this.slideAdapter.batchCount = prop.asNumber().toInt();
                 break;
+            case "onPageSlided":
+                this.onPageSlidedFuncId = prop.asString().toString();
+                break;
             default:
                 super.blend(view, name, prop);
                 break;
         }
+    }
+
+    @DoricMethod
+    public void slidePage(JSObject params, DoricPromise promise) {
+        int page = params.getProperty("page").asNumber().toInt();
+        boolean smooth = params.getProperty("smooth").asBoolean().value();
+        if (smooth) {
+            mView.smoothScrollToPosition(page);
+        } else {
+            mView.scrollToPosition(page);
+        }
+        promise.resolve();
+    }
+
+    @DoricMethod
+    public int getSlidedPage() {
+        LinearLayoutManager linearLayoutManager = (LinearLayoutManager) mView.getLayoutManager();
+        return linearLayoutManager != null ? linearLayoutManager.findFirstVisibleItemPosition() : 0;
     }
 }

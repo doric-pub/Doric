@@ -42,6 +42,7 @@ import pub.doric.shader.ViewNode;
 public class SliderNode extends SuperNode<RecyclerView> {
     private final SlideAdapter slideAdapter;
     private String onPageSlidedFuncId;
+    private int lastPosition = 0;
 
     public SliderNode(DoricContext doricContext) {
         super(doricContext);
@@ -64,7 +65,11 @@ public class SliderNode extends SuperNode<RecyclerView> {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     View view = snapHelper.findSnapView(layoutManager);
                     if (view != null && !TextUtils.isEmpty(onPageSlidedFuncId)) {
-                        callJSResponse(onPageSlidedFuncId, layoutManager.getPosition(view));
+                        int position = layoutManager.getPosition(view);
+                        if (position != lastPosition) {
+                            callJSResponse(onPageSlidedFuncId, position);
+                        }
+                        lastPosition = position;
                     }
                 }
             }
@@ -155,6 +160,10 @@ public class SliderNode extends SuperNode<RecyclerView> {
             mView.smoothScrollToPosition(page);
         } else {
             mView.scrollToPosition(page);
+        }
+        if (!TextUtils.isEmpty(onPageSlidedFuncId)) {
+            callJSResponse(onPageSlidedFuncId, page);
+            lastPosition = page;
         }
         promise.resolve();
     }

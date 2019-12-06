@@ -3,9 +3,7 @@ import { text, vlayout, Image, ViewHolder, VMPanel, ViewModel, Gravity, NativeCa
 interface CountModel {
     count: number
 }
-
-class CounterView extends ViewHolder<CountModel> {
-
+class CounterView extends ViewHolder {
     number!: Text
     counter!: Text
     build(root: Group) {
@@ -76,23 +74,18 @@ class CounterView extends ViewHolder<CountModel> {
             }
         }))
     }
-
-    bind(state: CountModel) {
-        this.number.text = `${state.count}`
-    }
-
-    setCounter(v: Function) {
-        this.counter.onClick = v
-    }
 }
 
 class CounterVM extends ViewModel<CountModel, CounterView> {
-    onAttached(s: CountModel, vh: CounterView): void {
+    onAttached(s: CountModel, vh: CounterView) {
         vh.counter.onClick = () => {
             this.updateState(state => {
                 state.count++
             })
         }
+    }
+    onBind(s: CountModel, vh: CounterView) {
+        vh.number.text = `${s.count}`
     }
 }
 

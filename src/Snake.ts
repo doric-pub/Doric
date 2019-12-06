@@ -134,7 +134,7 @@ class SnakeModel {
     }
 }
 
-class SnakeView extends ViewHolder<SnakeModel> {
+class SnakeView extends ViewHolder {
 
     panel!: Stack
     start?: Text
@@ -346,14 +346,16 @@ class SnakeVM extends ViewModel<SnakeModel, SnakeView>{
         this.updateState(it => it.direction = Direction.down)
     }
 
-    onAttached(state: SnakeModel, v: SnakeView): void {
+    onAttached(state: SnakeModel, v: SnakeView) {
         takeNonNull(v.start)(it => it.onClick = this.start)
         takeNonNull(v.left)(it => it.onClick = this.left)
         takeNonNull(v.right)(it => it.onClick = this.right)
         takeNonNull(v.up)(it => it.onClick = this.up)
         takeNonNull(v.down)(it => it.onClick = this.down)
     }
-
+    onBind(state: SnakeModel, v: SnakeView) {
+        v.bind(state)
+    }
 }
 @Entry
 class SnakePanel extends VMPanel<SnakeModel, SnakeView>{

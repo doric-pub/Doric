@@ -32,3 +32,12 @@ android {
         debugImplementation "pub.doric:core:0.1.0"
     }
 }
+
+afterEvaluate {
+    buildJSBundle.exec()
+}
+
+task buildJSBundle(type: Exec) {
+    workingDir project.rootDir.getParent() + "/js"
+    commandLine 'doric', 'build'
+}

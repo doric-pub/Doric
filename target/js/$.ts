@@ -1,7 +1,10 @@
-import { Panel, Group, vlayout, layoutConfig, Gravity, IVLayout, text, Text, Color } from "doric";
+import { Panel, Group, vlayout, layoutConfig, Gravity, IVLayout, text, Text, Color, navbar } from "doric";
 
 @Entry
 class __$__ extends Panel {
+    onShow() {
+        navbar(context).setTitle("__$__")
+    }
     build(rootView: Group): void {
         let number: Text
         let count = 0

@@ -35,6 +35,7 @@
 @property(nonatomic, strong) NSMutableDictionary <NSNumber *, NSString *> *itemViewIds;
 @property(nonatomic, assign) NSUInteger itemCount;
 @property(nonatomic, assign) NSUInteger batchCount;
+@property(nonatomic, copy) NSString *onPageSelectedFuncId;
 @end
 
 @interface DoricSliderView : UICollectionView
@@ -95,6 +96,8 @@
         [self.view reloadData];
     } else if ([@"batchCount" isEqualToString:name]) {
         self.batchCount = [prop unsignedIntegerValue];
+    } else if ([@"onPageSlided" isEqualToString:name]) {
+        self.onPageSelectedFuncId = prop;
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }
@@ -197,5 +200,29 @@
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     NSUInteger pageIndex = (NSUInteger) (scrollView.contentOffset.x / scrollView.width);
     scrollView.contentOffset = CGPointMake(pageIndex * scrollView.width, scrollView.contentOffset.y);
+    if (self.onPageSelectedFuncId && self.onPageSelectedFuncId.length > 0) {
+        [self callJSResponse:self.onPageSelectedFuncId, @(pageIndex), nil];
+    }
 }
+
+- (void)slidePage:(NSDictionary *)params withPromise:(DoricPromise *)promise {
+    NSUInteger pageIndex = [params[@"page"] unsignedIntegerValue];
+    BOOL smooth = [params[@"smooth"] boolValue];
+    if (smooth) {
+        [UIView animateWithDuration:.3f animations:^{
+                    self.view.contentOffset = CGPointMake(pageIndex * self.view.width, self.view.contentOffset.y);
+                }
+                         completion:^(BOOL finished) {
+                             [promise resolve:nil];
+                         }];
+    } else {
+        self.view.contentOffset = CGPointMake(pageIndex * self.view.width, self.view.contentOffset.y);
+    }
+}
+
+- (NSNumber *)getSlidedPage {
+    NSUInteger pageIndex = (NSUInteger) (self.view.contentOffset.x / self.view.width);
+    return @(pageIndex);
+}
+
 @end

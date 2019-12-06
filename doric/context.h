@@ -24,16 +24,30 @@ public:
         this->source = source;
     }
 
-    void init(double width, double height) {
-        QJsonObject* params = new QJsonObject();
-        params->insert("width", width);
-        params->insert("height", height);
-        QJsonDocument* jsonDocument = new QJsonDocument();
-        jsonDocument->setObject(*params);
-        QString strJson(jsonDocument->toJson(QJsonDocument::Compact));
+    void show() {
+        QString* method = new QString(Constant::DORIC_ENTITY_SHOW);
+        QVector<QString*>* arguments = new QVector<QString*>();
 
-        delete params;
-        delete jsonDocument;
+        driver->invokeContextEntityMethod(contextId, method, nullptr);
+
+        delete arguments;
+        delete method;
+    }
+
+    void init(double width, double height) {
+        QJsonObject* jsonObject = new QJsonObject();
+        jsonObject->insert("width", width);
+        jsonObject->insert("height", height);
+
+        QString* method = new QString(Constant::DORIC_ENTITY_INIT);
+        QVariant* variant = new QVariant();
+        variant->setValue(*jsonObject);
+
+        driver->invokeContextEntityMethod(contextId, method, variant, nullptr);
+
+        delete variant;
+        delete method;
+        delete jsonObject;
     }
 };
 

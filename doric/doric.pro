@@ -42,4 +42,5 @@ HEADERS += \
     native/native_empty.h \
     native/native_log.h \
     native/native_timer.h \
-    template/singleton.h
+    template/singleton.h \
+    utility/utility.h

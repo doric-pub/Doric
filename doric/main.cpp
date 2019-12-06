@@ -31,6 +31,7 @@ int main(int argc, char *argv[])
 
         QString* source = new QString("Snake.js");
         Context *context = ContextManager::getInstance()->createContext(&script, source);
+        context->show();
         context->init(180, 320);
         delete source;
     }

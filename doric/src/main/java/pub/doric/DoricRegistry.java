@@ -30,6 +30,7 @@ import pub.doric.plugin.StoragePlugin;
 import pub.doric.refresh.RefreshableNode;
 import pub.doric.shader.HLayoutNode;
 import pub.doric.shader.ImageNode;
+import pub.doric.shader.InputNode;
 import pub.doric.shader.ScrollerNode;
 import pub.doric.shader.flowlayout.FlowLayoutItemNode;
 import pub.doric.shader.flowlayout.FlowLayoutNode;
@@ -106,6 +107,7 @@ public class DoricRegistry {
         this.registerViewNode(RefreshableNode.class);
         this.registerViewNode(FlowLayoutNode.class);
         this.registerViewNode(FlowLayoutItemNode.class);
+        this.registerViewNode(InputNode.class);
         initRegistry(this);
     }
 

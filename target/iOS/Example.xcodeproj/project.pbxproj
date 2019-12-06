@@ -102,6 +102,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E2F64D032399359E0006BD9A /* Build configuration list for PBXNativeTarget "Example" */;
 			buildPhases = (
+				E2F64D0B2399FFB20006BD9A /* Package JS Bundle */,
 				8E2E7D30FF8381E7791EA41B /* [CP] Check Pods Manifest.lock */,
 				E2F64CE62399359C0006BD9A /* Sources */,
 				E2F64CE72399359C0006BD9A /* Frameworks */,
@@ -219,6 +220,24 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
+		};
+		E2F64D0B2399FFB20006BD9A /* Package JS Bundle */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Package JS Bundle";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n# Type a script or drag a script file from your workspace to insert its path.\n\nexport NVM_DIR=\"$HOME/.nvm\"\n[ -s \"$NVM_DIR/nvm.sh\" ] && \\. \"$NVM_DIR/nvm.sh\"  # This loads nvm\n[ -s \"$NVM_DIR/bash_completion\" ] && \\. \"$NVM_DIR/bash_completion\"  # This loads nvm bash_completion\n\ncd ../js && doric build\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

@@ -204,10 +204,9 @@
     if (self.onPageSelectedFuncId && self.onPageSelectedFuncId.length > 0) {
         if (pageIndex != self.lastPosition) {
             [self callJSResponse:self.onPageSelectedFuncId, @(pageIndex), nil];
-        } else {
-            self.lastPosition = pageIndex;
         }
     }
+    self.lastPosition = pageIndex;
 }
 
 - (void)slidePage:(NSDictionary *)params withPromise:(DoricPromise *)promise {

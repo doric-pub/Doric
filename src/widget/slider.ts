@@ -1,6 +1,7 @@
 import { Superview, View, Property, IView } from "../ui/view";
 import { Stack } from "./layouts";
 import { layoutConfig } from "../util/layoutconfig";
+import { BridgeContext } from "../runtime/global";
 
 export class SlideItem extends Stack {
     /**
@@ -14,6 +15,7 @@ export interface ISlider extends IView {
     renderPage: (index: number) => SlideItem
     itemCount: number
     batchCount?: number
+    onPageSlided?: (index: number) => void
 }
 
 export class Slider extends Superview implements ISlider {
@@ -33,6 +35,8 @@ export class Slider extends Superview implements ISlider {
     @Property
     batchCount = 3
 
+    @Property
+    onPageSlided?: (index: number) => void
 
     private getItem(itemIdx: number) {
         let view = this.cachedViews.get(`${itemIdx}`)
@@ -60,6 +64,15 @@ export class Slider extends Superview implements ISlider {
             return slideItem.toModel()
         })
     }
+
+    slidePage(context: BridgeContext, page: number, smooth = false) {
+        return this.nativeChannel(context, "selectPage")({ page, smooth })
+    }
+
+    getSlidedPage(context: BridgeContext) {
+        return this.nativeChannel(context, "getSelectedPage")() as Promise<number>
+    }
+
 }
 
 export function slideItem(item: View) {

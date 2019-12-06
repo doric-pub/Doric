@@ -119,7 +119,7 @@ function initiOS(path, name) {
         copyFolder(`${targetiOSPath}`, `${path}`, () => {
             const mainFiles = `Example/ViewController.m`
             fs.writeFileSync(`${path}/${mainFiles}`, fs.readFileSync(`${targetiOSPath}/${mainFiles}`).toString().replace(/__\$__/g, name))
-            console.log(`Create Doric Android Project Success`)
+            console.log(`Create Doric iOS Project Success`)
         })
     })
 }

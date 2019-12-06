@@ -66,11 +66,11 @@ export class Slider extends Superview implements ISlider {
     }
 
     slidePage(context: BridgeContext, page: number, smooth = false) {
-        return this.nativeChannel(context, "selectPage")({ page, smooth })
+        return this.nativeChannel(context, "slidePage")({ page, smooth })
     }
 
     getSlidedPage(context: BridgeContext) {
-        return this.nativeChannel(context, "getSelectedPage")() as Promise<number>
+        return this.nativeChannel(context, "getSlidedPage")() as Promise<number>
     }
 
 }

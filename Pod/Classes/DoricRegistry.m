@@ -42,6 +42,7 @@
 #import "DoricFlowLayoutNode.h"
 #import "DoricPopoverPlugin.h"
 #import "DoricAnimatePlugin.h"
+#import "DoricNestedSliderNode.h"
 
 @interface DoricRegistry ()
 
@@ -86,6 +87,7 @@
     [self registerViewNode:DoricRefreshableNode.class withName:@"Refreshable"];
     [self registerViewNode:DoricFlowLayoutItemNode.class withName:@"FlowLayoutItem"];
     [self registerViewNode:DoricFlowLayoutNode.class withName:@"FlowLayout"];
+    [self registerViewNode:DoricNestedSliderNode.class withName:@"NestedSlider"];
 }
 
 - (void)registerJSBundle:(NSString *)bundle withName:(NSString *)name {

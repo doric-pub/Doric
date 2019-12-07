@@ -137,8 +137,12 @@ public class SliderNode extends SuperNode<RecyclerView> {
                 break;
             case "renderPage":
                 // If reset renderItem,should reset native cache.
-                this.slideAdapter.itemValues.clear();
-                clearSubModel();
+                String funcId = prop.asString().value();
+                if (!funcId.equals(this.slideAdapter.renderPageFuncId)) {
+                    this.slideAdapter.itemValues.clear();
+                    clearSubModel();
+                    this.slideAdapter.renderPageFuncId = funcId;
+                }
                 break;
             case "batchCount":
                 this.slideAdapter.batchCount = prop.asNumber().toInt();

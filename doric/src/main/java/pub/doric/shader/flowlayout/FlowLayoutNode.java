@@ -16,6 +16,8 @@
 package pub.doric.shader.flowlayout;
 
 import android.graphics.Rect;
+import android.os.SystemClock;
+import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -41,7 +43,26 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> {
     private final FlowAdapter flowAdapter;
     private final StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(
             2,
-            StaggeredGridLayoutManager.VERTICAL);
+            StaggeredGridLayoutManager.VERTICAL) {
+        @Override
+        public int scrollVerticallyBy(int dy, RecyclerView.Recycler recycler, RecyclerView.State state) {
+            try {
+                return super.scrollVerticallyBy(dy, recycler, state);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return 0;
+            }
+        }
+
+        @Override
+        public void onScrollStateChanged(int state) {
+            try {
+                super.onScrollStateChanged(state);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
     private int columnSpace = 0;
     private int rowSpace = 0;
     private Rect padding = new Rect();
@@ -92,10 +113,13 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> {
                 this.flowAdapter.itemCount = prop.asNumber().toInt();
                 break;
             case "renderItem":
-                this.flowAdapter.renderItemFuncId = prop.asString().value();
-                // If reset renderItem,should reset native cache.
-                this.flowAdapter.itemValues.clear();
-                clearSubModel();
+                String funcId = prop.asString().value();
+                if (!funcId.equals(this.flowAdapter.renderItemFuncId)) {
+                    this.flowAdapter.renderItemFuncId = funcId;
+                    // If reset renderItem,should reset native cache.
+                    this.flowAdapter.itemValues.clear();
+                    clearSubModel();
+                }
                 break;
             case "batchCount":
                 this.flowAdapter.batchCount = prop.asNumber().toInt();

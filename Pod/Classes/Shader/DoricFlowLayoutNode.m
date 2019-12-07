@@ -156,6 +156,7 @@
 @property(nonatomic, assign) NSUInteger columnCount;
 @property(nonatomic, assign) CGFloat columnSpace;
 @property(nonatomic, assign) CGFloat rowSpace;
+@property(nonatomic, copy) NSString *renderItemFuncId;
 @end
 
 @implementation DoricFlowLayoutNode
@@ -198,9 +199,14 @@
         self.itemCount = [prop unsignedIntegerValue];
         [self.view reloadData];
     } else if ([@"renderItem" isEqualToString:name]) {
-        [self.itemViewIds removeAllObjects];
-        [self clearSubModel];
-        [self.view reloadData];
+        if ([self.renderItemFuncId isEqualToString:prop]) {
+        } else {
+            [self.itemViewIds removeAllObjects];
+            [self clearSubModel];
+            [self.view reloadData];
+            self.renderItemFuncId = prop;
+        }
+
     } else if ([@"batchCount" isEqualToString:name]) {
         self.batchCount = [prop unsignedIntegerValue];
     } else {

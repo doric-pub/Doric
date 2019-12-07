@@ -54,7 +54,11 @@
 
 @implementation DoricScrollerNode
 - (DoricScrollView *)build {
-    return [DoricScrollView new];
+    return [[DoricScrollView new] also:^(DoricScrollView *it) {
+        if (@available(iOS 11, *)) {
+            it.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
+    }];
 }
 
 - (void)initWithSuperNode:(DoricSuperNode *)superNode {

@@ -37,6 +37,7 @@
 @property(nonatomic, assign) NSUInteger batchCount;
 @property(nonatomic, copy) NSString *onPageSelectedFuncId;
 @property(nonatomic, assign) NSUInteger lastPosition;
+@property(nonatomic, copy) NSString *renderPageFuncId;
 @end
 
 @interface DoricSliderView : UICollectionView
@@ -92,9 +93,14 @@
         self.itemCount = [prop unsignedIntegerValue];
         [self.view reloadData];
     } else if ([@"renderPage" isEqualToString:name]) {
-        [self.itemViewIds removeAllObjects];
-        [self clearSubModel];
-        [self.view reloadData];
+        if ([self.renderPageFuncId isEqualToString:prop]) {
+
+        } else {
+            [self.itemViewIds removeAllObjects];
+            [self clearSubModel];
+            [self.view reloadData];
+            self.renderPageFuncId = prop;
+        }
     } else if ([@"batchCount" isEqualToString:name]) {
         self.batchCount = [prop unsignedIntegerValue];
     } else if ([@"onPageSlided" isEqualToString:name]) {

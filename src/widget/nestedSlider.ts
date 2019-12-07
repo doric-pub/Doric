@@ -13,13 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from './layouts'
-export * from './text'
-export * from './image'
-export * from './list'
-export * from './slider'
-export * from './scroller'
-export * from './refreshable'
-export * from './flowlayout'
-export * from './input'
-export * from './nestedSlider'
+import { Group, View, Property } from '../ui/view'
+import { BridgeContext } from '../runtime/global'
+
+
+export class NestedSlider extends Group {
+    @Property
+    onPageSlided?: (index: number) => void
+
+    addSlideItem(view: View) {
+        this.addChild(view)
+    }
+
+    slidePage(context: BridgeContext, page: number, smooth = false) {
+        return this.nativeChannel(context, "slidePage")({ page, smooth })
+    }
+
+    getSlidedPage(context: BridgeContext) {
+        return this.nativeChannel(context, "getSlidedPage")() as Promise<number>
+    }
+}

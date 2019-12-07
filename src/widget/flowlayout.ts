@@ -69,12 +69,9 @@ export class FlowLayout extends Superview implements IFlowLayout {
         this.itemCount = 0
     }
     private getItem(itemIdx: number) {
-        let view = this.cachedViews.get(`${itemIdx}`)
-        if (view === undefined) {
-            view = this.renderItem(itemIdx)
-            view.superview = this
-            this.cachedViews.set(`${itemIdx}`, view)
-        }
+        let view = this.renderItem(itemIdx)
+        view.superview = this
+        this.cachedViews.set(`${itemIdx}`, view)
         return view
     }
 

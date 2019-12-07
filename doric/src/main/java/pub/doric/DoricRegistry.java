@@ -41,6 +41,7 @@ import pub.doric.shader.StackNode;
 import pub.doric.shader.TextNode;
 import pub.doric.shader.VLayoutNode;
 import pub.doric.shader.ViewNode;
+import pub.doric.shader.slider.NestedSliderNode;
 import pub.doric.shader.slider.SlideItemNode;
 import pub.doric.shader.slider.SliderNode;
 import pub.doric.utils.DoricMetaInfo;
@@ -108,6 +109,7 @@ public class DoricRegistry {
         this.registerViewNode(FlowLayoutNode.class);
         this.registerViewNode(FlowLayoutItemNode.class);
         this.registerViewNode(InputNode.class);
+        this.registerViewNode(NestedSliderNode.class);
         initRegistry(this);
     }
 

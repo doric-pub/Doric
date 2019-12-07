@@ -670,6 +670,11 @@ public class HVScrollView extends FrameLayout implements NestedScrollingParent,
     }
 
     @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         /*
          * This method JUST determines whether we want to intercept the motion.
@@ -715,8 +720,12 @@ public class HVScrollView extends FrameLayout implements NestedScrollingParent,
                 final int y = (int) ev.getY(pointerIndex);
                 final int xDiff = Math.abs(x - mLastMotionX);
                 final int yDiff = Math.abs(y - mLastMotionY);
-                if ((xDiff > mTouchSlop && (getNestedScrollAxes() & ViewCompat.SCROLL_AXIS_HORIZONTAL) == 0)
-                        || (yDiff > mTouchSlop && (getNestedScrollAxes() & ViewCompat.SCROLL_AXIS_VERTICAL) == 0)) {
+                if ((xDiff > mTouchSlop
+                        && (getNestedScrollAxes() & ViewCompat.SCROLL_AXIS_HORIZONTAL) == 0
+                        && canScrollHorizontally())
+                        || (yDiff > mTouchSlop
+                        && (getNestedScrollAxes() & ViewCompat.SCROLL_AXIS_VERTICAL) == 0
+                        && canScrollVertically())) {
                     mIsBeingDragged = true;
                     mLastMotionX = x;
                     mLastMotionY = y;

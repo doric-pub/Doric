@@ -18,4 +18,6 @@ export default [
     'src/AnimatorDemo',
     'src/ComplicatedAnimations',
     'src/ComplicatedDemo',
+    'src/InputDemo',
+    'src/StickDemo'
 ]

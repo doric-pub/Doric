@@ -50,6 +50,7 @@ typedef id (^Block5)(id arg0, id arg1, id arg2, id arg3, id arg4);
     return self;
 }
 
+#pragma mark - SRWebSocketDelegate
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket {
     DoricLog(@"debugger webSocketDidOpen");
     DC_UNLOCK(self.semaphore);
@@ -93,6 +94,8 @@ typedef id (^Block5)(id arg0, id arg1, id arg2, id arg3, id arg4);
             result = ((Block4)tmpBlk)(argsArr[0], argsArr[1], argsArr[2], argsArr[3]);
         } else if (argsArr.count == 5) {
             result = ((Block5)tmpBlk)(argsArr[0], argsArr[1], argsArr[2], argsArr[3], argsArr[4]);
+        }else {
+            DoricLog(@"error:args to more than 5. args:%@",argsArr);
         }
         
     } else if ([cmd isEqualToString:@"invokeMethod"]) {
@@ -115,6 +118,7 @@ typedef id (^Block5)(id arg0, id arg1, id arg2, id arg3, id arg4);
     DoricLog(@"debugger webSocketdidCloseWithCode");
 }
 
+#pragma mark - DoricJSExecutorProtocol
 - (NSString *)loadJSScript:(NSString *)script source:(NSString *)source {
     
     return nil;
@@ -141,10 +145,7 @@ typedef id (^Block5)(id arg0, id arg1, id arg2, id arg3, id arg4);
     
     NSMutableArray *argsMArr = [NSMutableArray new];
     for (id arg in args) {
-        NSDictionary *dic = @{
-            @"type": @(DoricargTypeWithArg(arg)),
-            @"value": arg
-        };
+        NSDictionary *dic = [self dicForArg:arg];
         [argsMArr addObject:dic];
     }
     
@@ -166,6 +167,19 @@ typedef id (^Block5)(id arg0, id arg1, id arg2, id arg3, id arg4);
     DC_LOCK(self.semaphore);
     
     return self.temp;
+}
+
+- (NSDictionary *)dicForArg:(id)arg {
+    DoricJSRemoteArgType type = DoricargTypeWithArg(arg);
+    if (type == DoricJSRemoteArgTypeObject || type == DoricJSRemoteArgTypeArray) {
+        NSString *jsonStr = [NSString dc_convertToJsonWithDic:(NSDictionary *)arg];
+        arg = jsonStr;
+    }
+    NSDictionary *dic = @{
+        @"type": @(type),
+        @"value": arg
+    };
+    return dic;
 }
 
 - (void)close {

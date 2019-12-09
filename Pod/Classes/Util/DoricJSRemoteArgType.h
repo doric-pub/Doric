@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSUInteger, DoricJSRemoteArgType) {
     DoricJSRemoteArgTypeNil = 0,
-    DoricJSRemoteArgTypeInteger,
+    DoricJSRemoteArgTypeNumber,
     DoricJSRemoteArgTypeBool,
     DoricJSRemoteArgTypeString,
     DoricJSRemoteArgTypeObject,
@@ -19,5 +19,6 @@ typedef NS_ENUM(NSUInteger, DoricJSRemoteArgType) {
 };
 
 DoricJSRemoteArgType DoricargTypeWithArg(id arg);
+
 
 NS_ASSUME_NONNULL_END

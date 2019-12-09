@@ -86,6 +86,7 @@
     self.script = script;
     [self.driver createContext:self.contextId script:script source:self.source];
     [self callEntity:DORIC_ENTITY_INIT, self.initialParams, nil];
+    [self onShow];
 }
 
 - (void)onShow {

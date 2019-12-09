@@ -42,7 +42,7 @@ export abstract class Panel {
 
     abstract build(rootView: Group): void
 
-    private __data__: any
+    private __data__?: object
     private __root__ = new Root
     private headviews: Map<string, View> = new Map
 
@@ -73,8 +73,10 @@ export abstract class Panel {
     }
 
     @NativeCall
-    private __init__(frame: Frame, data: any) {
-        this.__data__ = data
+    private __init__(frame: Frame, data?: string) {
+        if (data) {
+            this.__data__ = JSON.parse(data)
+        }
         this.__root__.width = frame.width
         this.__root__.height = frame.height
         this.__root__.children.length = 0

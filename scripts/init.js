@@ -117,8 +117,9 @@ function initiOS(path, name) {
             return console.error(err);
         }
         copyFolder(`${targetiOSPath}`, `${path}`, () => {
-            const mainFiles = `Example/ViewController.m`
-            fs.writeFileSync(`${path}/${mainFiles}`, fs.readFileSync(`${targetiOSPath}/${mainFiles}`).toString().replace(/__\$__/g, name))
+            ['Example/SceneDelegate.m', 'Example/AppDelegate.m'].forEach(e => {
+                fs.writeFileSync(`${path}/${e}`, fs.readFileSync(`${targetiOSPath}/${e}`).toString().replace(/__\$__/g, name))
+            })
             console.log(`Create Doric iOS Project Success`)
         })
     })

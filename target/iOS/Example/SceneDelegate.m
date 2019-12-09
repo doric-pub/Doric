@@ -7,7 +7,7 @@
 @implementation SceneDelegate
 - (void)scene:(UIScene *)scene willConnectToSession:(UISceneSession *)session options:(UISceneConnectionOptions *)connectionOptions {
     UIWindowScene *windowScene = (UIWindowScene *) scene;
-    NSString *bundleName = @"mcd";
+    NSString *bundleName = @"__$__";
     DoricViewController *doricViewController = [[DoricViewController alloc] initWithScheme:[NSString stringWithFormat:@"assets://src/%@.js", bundleName] alias:bundleName];
     doricViewController.view.backgroundColor = [UIColor whiteColor];
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:doricViewController];

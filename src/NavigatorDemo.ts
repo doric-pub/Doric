@@ -1,8 +1,11 @@
-import { Panel, scroller, vlayout, text, layoutConfig, LayoutSpec, Color, gravity, IVLayout, Group, IText, navigator } from "doric";
+import { Panel, scroller, vlayout, text, layoutConfig, LayoutSpec, Color, gravity, IVLayout, Group, IText, navigator, modal } from "doric";
 import { colors, label } from "./utils";
 @Entry
 class NaivgatorDemo extends Panel {
     build(root: Group) {
+        if (this.getInitData()) {
+            modal(context).alert(`Init Data :${JSON.stringify(this.getInitData())}`)
+        }
         scroller(vlayout([
             text({
                 text: "Navigator Demo",
@@ -25,7 +28,12 @@ class NaivgatorDemo extends Panel {
                         textColor: Color.WHITE,
                         layoutConfig: layoutConfig().exactly().w(LayoutSpec.AT_MOST),
                         onClick: () => {
-                            navigator(context).push(`assets://demo/${e}.js`, `${e}.js`)
+                            navigator(context).push(`assets://demo/${e}.js`, {
+                                alias: `${e}.js`,
+                                extra: {
+                                    from: "navigatorDemo"
+                                },
+                            })
                         },
                     } as IText)
                 ),

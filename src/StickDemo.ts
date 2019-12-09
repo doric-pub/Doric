@@ -1,4 +1,4 @@
-import { Panel, Group, scroller, vlayout, layoutConfig, LayoutSpec, Input, Gravity, log, stack, hlayout, text, IHLayout, CENTER, slider, slideItem, modal, Slider, Text, Color, View, Stack, animate, flowlayout, FlowLayoutItem, NestedSlider } from "doric";
+import { Panel, Group, scroller, vlayout, image, layoutConfig, LayoutSpec, Input, Gravity, log, stack, hlayout, text, IHLayout, CENTER, slider, slideItem, modal, Slider, Text, Color, View, Stack, animate, flowlayout, FlowLayoutItem, NestedSlider, ScaleType } from "doric";
 import { title, colors } from "./utils";
 
 function tab(idx: number, title: string, sliderView: Slider) {
@@ -25,7 +25,14 @@ class StickDemo extends Panel {
 
         scroller(
             vlayout([
-                stack([]).apply({
+                stack([
+                    image({
+                        layoutConfig: layoutConfig().atmost(),
+                        imageUrl: "https://p.upyun.com/demo/webp/webp/jpg-0.webp",
+                        scaleType: ScaleType.ScaleAspectFill,
+                    }),
+
+                ]).apply({
                     layoutConfig: layoutConfig().atmost().h(LayoutSpec.EXACTLY),
                     height: 200,
                     backgroundColor: colors[0],

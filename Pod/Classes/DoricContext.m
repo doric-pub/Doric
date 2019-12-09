@@ -28,7 +28,7 @@
 
 @implementation DoricContext
 
-- (instancetype)initWithScript:(NSString *)script source:(NSString *)source {
+- (instancetype)initWithScript:(NSString *)script source:(NSString *)source extra:(NSString *)extra {
     if (self = [super init]) {
         _driver = [DoricDriver instance];
         _pluginInstanceMap = [NSMutableDictionary new];
@@ -39,6 +39,7 @@
         _script = script;
         _source = source;
         _initialParams = [@{@"width": @(0), @"height": @(0)} mutableCopy];
+        _extra = extra;
         [self callEntity:DORIC_ENTITY_CREATE, nil];
     }
     return self;
@@ -78,7 +79,7 @@
         it[@"width"] = @(width);
         it[@"height"] = @(height);
     }];
-    [self callEntity:DORIC_ENTITY_INIT, self.initialParams, nil];
+    [self callEntity:DORIC_ENTITY_INIT, self.initialParams, self.extra, nil];
 }
 
 - (void)reload:(NSString *)script {

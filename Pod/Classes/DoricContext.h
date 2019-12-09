@@ -41,8 +41,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) NSMutableDictionary *initialParams;
 @property(nonatomic, strong) DoricRootNode *rootNode;
 @property(nonatomic, strong) NSMutableDictionary <NSString *, DoricViewNode *> *headNodes;
+@property(nonatomic, copy) NSString *extra;
 
-- (instancetype)initWithScript:(NSString *)script source:(NSString *)source;
+- (instancetype)initWithScript:(NSString *)script source:(NSString *)source extra:(NSString *)extra;
 
 - (DoricAsyncResult *)callEntity:(NSString *)method, ...;
 

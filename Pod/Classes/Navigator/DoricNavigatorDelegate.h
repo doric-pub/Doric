@@ -20,7 +20,7 @@
 #import <Foundation/Foundation.h>
 
 @protocol DoricNavigatorDelegate <NSObject>
-- (void)doric_navigator_push:(NSString *)scheme alias:(NSString *)alias animated:(BOOL)animated;
+- (void)doric_navigator_push:(NSString *)scheme alias:(NSString *)alias animated:(BOOL)animated extra:(NSString *)extra;
 
 - (void)doric_navigator_pop:(BOOL)animated;
 @end

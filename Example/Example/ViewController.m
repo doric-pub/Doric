@@ -77,7 +77,9 @@
     if ([file containsString:@"NavigatorDemo"]) {
         DoricViewController *doricViewController = [[DoricViewController alloc]
                 initWithScheme:[NSString stringWithFormat:@"assets://demo/%@", file]
-                         alias:self.demoFilePaths[(NSUInteger) indexPath.row]];
+                         alias:self.demoFilePaths[(NSUInteger) indexPath.row]
+                         extra:nil
+        ];
         [self.navigationController pushViewController:doricViewController animated:NO];
     } else {
         DemoVC *demoVC = [[DemoVC alloc] initWithPath:file];

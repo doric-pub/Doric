@@ -33,7 +33,7 @@
         [self.view addSubview:it];
     }];
     [self addChildViewController:panel];
-    [panel config:jsContent alias:self.filePath];
+    [panel config:jsContent alias:self.filePath extra:nil];
 }
 
 @end

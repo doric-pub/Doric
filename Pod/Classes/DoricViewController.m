@@ -32,7 +32,7 @@
 @end
 
 @implementation DoricViewController
-- (instancetype)initWithScheme:(NSString *)scheme alias:(NSString *)alias {
+- (instancetype)initWithScheme:(NSString *)scheme alias:(NSString *)alias extra:(NSString *)extra {
     if (self = [super init]) {
         self.edgesForExtendedLayout = UIRectEdgeNone;
         DoricAsyncResult <NSString *> *result = [DoricJSLoaderManager.instance request:scheme];
@@ -46,7 +46,7 @@
                 }];
                 [self.view addSubview:panel.view];
                 [self addChildViewController:panel];
-                [panel config:result alias:alias];
+                [panel config:result alias:alias extra:extra];
                 panel.doricContext.navigator = self;
                 panel.doricContext.navBar = self;
                 self.doricPanel = panel;
@@ -78,8 +78,8 @@
     self.doricPanel.view.height = self.view.height;
 }
 
-- (void)doric_navigator_push:(NSString *)scheme alias:(NSString *)alias animated:(BOOL)animated {
-    DoricViewController *viewController = [[DoricViewController alloc] initWithScheme:scheme alias:alias];
+- (void)doric_navigator_push:(NSString *)scheme alias:(NSString *)alias animated:(BOOL)animated extra:(NSString *)extra {
+    DoricViewController *viewController = [[DoricViewController alloc] initWithScheme:scheme alias:alias extra:extra];
     [self.navigationController pushViewController:viewController animated:animated];
 }
 

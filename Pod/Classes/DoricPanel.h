@@ -25,5 +25,5 @@
 @interface DoricPanel : UIViewController
 @property(nonatomic, strong) DoricContext *doricContext;
 
-- (void)config:(NSString *)script alias:(NSString *)alias;
+- (void)config:(NSString *)script alias:(NSString *)alias extra:(NSString *)extra;
 @end

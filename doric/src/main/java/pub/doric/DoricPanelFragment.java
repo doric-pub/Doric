@@ -101,4 +101,22 @@ public class DoricPanelFragment extends Fragment implements IDoricNavigator {
     private NavController getNavController() {
         return Navigation.findNavController(getView());
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        doricPanel.onActivityResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        doricPanel.onActivityPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        doricPanel.onActivityDestroy();
+    }
 }

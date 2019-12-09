@@ -18,10 +18,13 @@ package pub.doric.plugin;
 import com.github.pengfeizhou.jscore.ArchiveException;
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSObject;
+import com.github.pengfeizhou.jscore.JavaValue;
 
+import pub.doric.Doric;
 import pub.doric.DoricContext;
 import pub.doric.extension.bridge.DoricMethod;
 import pub.doric.extension.bridge.DoricPlugin;
+import pub.doric.extension.bridge.DoricPromise;
 import pub.doric.navigator.IDoricNavigator;
 import pub.doric.utils.ThreadMode;
 
@@ -37,7 +40,7 @@ public class NavigatorPlugin extends DoricJavaPlugin {
     }
 
     @DoricMethod(thread = ThreadMode.UI)
-    public void push(JSDecoder jsDecoder) {
+    public void push(JSDecoder jsDecoder, DoricPromise promise) {
         IDoricNavigator navigator = getDoricContext().getDoricNavigator();
         if (navigator != null) {
             try {
@@ -45,17 +48,24 @@ public class NavigatorPlugin extends DoricJavaPlugin {
                 navigator.push(jsObject.getProperty("scheme").asString().value(),
                         jsObject.getProperty("alias").asString().value()
                 );
+                promise.resolve();
             } catch (ArchiveException e) {
                 e.printStackTrace();
+                promise.reject(new JavaValue(e.getLocalizedMessage()));
             }
+        } else {
+            promise.reject(new JavaValue("Navigator not implemented"));
         }
     }
 
     @DoricMethod(thread = ThreadMode.UI)
-    public void pop() {
+    public void pop(DoricPromise promise) {
         IDoricNavigator navigator = getDoricContext().getDoricNavigator();
         if (navigator != null) {
             navigator.pop();
+            promise.resolve();
+        } else {
+            promise.reject(new JavaValue("Navigator not implemented"));
         }
     }
 }

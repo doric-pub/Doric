@@ -1,18 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<pub.doric.DoricPanel xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/doric_panel"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <pub.doric.DoricPanel
-        android:id="@+id/doric_panel"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#ffffff"
-        android:layout_marginTop="44dp" />
-
-    <pub.doric.navbar.BaseDoricNavBar
-        android:id="@+id/doric_nav_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-</FrameLayout>
+</pub.doric.DoricPanel>

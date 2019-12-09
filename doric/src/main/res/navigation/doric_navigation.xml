@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/doric_navigation"
+    app:startDestination="@id/doricPanelFragment">
+    <fragment
+        android:id="@+id/doricPanelFragment"
+        android:name="pub.doric.DoricPanelFragment"
+        android:label="DoricPanelFragment">
+        <action
+            android:id="@+id/action_doricPanelFragment_to_doricPanelFragment"
+            app:destination="@id/doricPanelFragment" />
+    </fragment>
+</navigation>

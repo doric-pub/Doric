@@ -40,7 +40,7 @@ public class DemoActivity extends AppCompatActivity {
         DoricPanel doricPanel = new DoricPanel(this);
         addContentView(doricPanel, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
-        doricPanel.config(DoricUtils.readAssetFile("demo/" + source), source);
+        doricPanel.config(DoricUtils.readAssetFile("demo/" + source), source, "");
         doricContext = doricPanel.getDoricContext();
     }
 }

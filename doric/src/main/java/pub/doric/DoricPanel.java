@@ -54,8 +54,8 @@ public class DoricPanel extends FrameLayout implements LifecycleObserver {
     }
 
 
-    public void config(String script, String alias) {
-        DoricContext doricContext = DoricContext.create(getContext(), script, alias);
+    public void config(String script, String alias, String extra) {
+        DoricContext doricContext = DoricContext.create(getContext(), script, alias, extra);
         config(doricContext);
     }
 

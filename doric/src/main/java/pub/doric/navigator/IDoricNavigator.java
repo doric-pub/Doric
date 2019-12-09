@@ -21,7 +21,7 @@ package pub.doric.navigator;
  * @CreateDate: 2019-11-23
  */
 public interface IDoricNavigator {
-    void push(String scheme, String alias);
+    void push(String scheme, String alias, String extra);
 
     void pop();
 }

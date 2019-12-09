@@ -48,9 +48,9 @@ public class DoricContextManager {
         return Inner.sInstance;
     }
 
-    DoricContext createContext(Context context, final String script, final String source) {
+    DoricContext createContext(Context context, final String script, final String source, String extra) {
         final String contextId = String.valueOf(counter.incrementAndGet());
-        final DoricContext doricContext = new DoricContext(context, contextId, source);
+        final DoricContext doricContext = new DoricContext(context, contextId, source, extra);
         doricContextMap.put(contextId, doricContext);
         doricContext.getDriver().createContext(contextId, script, source);
         return doricContext;

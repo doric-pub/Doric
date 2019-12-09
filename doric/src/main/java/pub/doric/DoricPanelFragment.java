@@ -62,10 +62,11 @@ public class DoricPanelFragment extends Fragment implements IDoricNavigator {
         }
         final String alias = argument.getString("alias");
         String scheme = argument.getString("scheme");
+        final String extra = argument.getString("extra");
         DoricJSLoaderManager.getInstance().loadJSBundle(scheme).setCallback(new AsyncResult.Callback<String>() {
             @Override
             public void onResult(String result) {
-                doricPanel.config(result, alias);
+                doricPanel.config(result, alias, extra);
                 DoricContext context = doricPanel.getDoricContext();
                 context.setDoricNavigator(DoricPanelFragment.this);
                 BaseDoricNavBar navBar = requireActivity().getWindow().getDecorView().findViewById(R.id.doric_nav_bar);
@@ -85,10 +86,11 @@ public class DoricPanelFragment extends Fragment implements IDoricNavigator {
     }
 
     @Override
-    public void push(String scheme, String alias) {
+    public void push(String scheme, String alias, String extra) {
         Bundle argument = new Bundle();
         argument.putString("scheme", scheme);
         argument.putString("alias", alias);
+        argument.putString("extra", extra);
         getNavController()
                 .navigate(R.id.action_doricPanelFragment_to_doricPanelFragment, argument);
     }

@@ -18,6 +18,7 @@ package pub.doric.plugin;
 import com.github.pengfeizhou.jscore.ArchiveException;
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSObject;
+import com.github.pengfeizhou.jscore.JSValue;
 import com.github.pengfeizhou.jscore.JavaValue;
 
 import pub.doric.Doric;
@@ -45,8 +46,23 @@ public class NavigatorPlugin extends DoricJavaPlugin {
         if (navigator != null) {
             try {
                 JSObject jsObject = jsDecoder.decode().asObject();
+                String scheme = jsObject.getProperty("scheme").asString().value();
+                String alias = scheme;
+                String extra = "";
+                JSValue config = jsObject.getProperty("config");
+                if (config.isObject()) {
+                    JSValue aliasJS = config.asObject().getProperty("alias");
+                    if (aliasJS.isString()) {
+                        alias = aliasJS.asString().value();
+                    }
+                    JSValue extraJS = config.asObject().getProperty("extra");
+                    if (extraJS.isString()) {
+                        extra = extraJS.asString().value();
+                    }
+                }
                 navigator.push(jsObject.getProperty("scheme").asString().value(),
-                        jsObject.getProperty("alias").asString().value()
+                        alias,
+                        extra
                 );
                 promise.resolve();
             } catch (ArchiveException e) {

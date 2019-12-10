@@ -17,7 +17,6 @@ import com.google.gson.JsonObject;
 
 import pub.doric.DoricContext;
 import pub.doric.DoricContextManager;
-import pub.doric.devkit.BuildConfig;
 import pub.doric.devkit.DoricDev;
 import pub.doric.devkit.IDevKit;
 import pub.doric.devkit.R;
@@ -71,7 +70,6 @@ public class DebugContextPanel extends DialogFragment {
                 public void onClick(View v) {
                     JsonObject jsonObject = new JsonObject();
                     jsonObject.addProperty("contextId", doricContext.getContextId());
-                    jsonObject.addProperty("projectHome", BuildConfig.PROJECT_HOME);
                     jsonObject.addProperty("source", doricContext.getSource().replace(".js", ".ts"));
                     DoricDev.sendDevCommand(IDevKit.Command.DEBUG, jsonObject);
                     dismissAllowingStateLoss();

@@ -16,7 +16,6 @@
 package pub.doric.shader.list;
 
 import android.text.TextUtils;
-import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -40,10 +39,6 @@ import pub.doric.shader.ViewNode;
 class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
 
     private final ListNode listNode;
-    String renderItemFuncId;
-    int itemCount = 0;
-    int batchCount = 15;
-    SparseArray<String> itemValues = new SparseArray<>();
 
     ListAdapter(ListNode listNode) {
         this.listNode = listNode;
@@ -65,15 +60,21 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
             holder.listItemNode.setId(jsObject.getProperty("id").asString().value());
             holder.listItemNode.blend(jsObject.getProperty("props").asObject());
         }
+        if (position >= this.listNode.itemCount) {
+            this.listNode.callJSResponse(this.listNode.onLoadMoreFuncId);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return itemCount;
+        return this.listNode.itemCount + (this.listNode.loadMore ? 1 : 0);
     }
 
     @Override
     public int getItemViewType(int position) {
+        if (position >= this.listNode.itemCount) {
+            return Integer.MAX_VALUE;
+        }
         JSValue value = getItemModel(position);
         if (value != null && value.isObject()) {
             if (value.asObject().getProperty("identifier").isString()) {
@@ -84,12 +85,15 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
     }
 
     private JSValue getItemModel(final int position) {
-        String id = itemValues.get(position);
+        if (position >= this.listNode.itemCount) {
+            return this.listNode.getSubModel(this.listNode.loadMoreViewId);
+        }
+        String id = listNode.itemValues.get(position);
         if (TextUtils.isEmpty(id)) {
             AsyncResult<JSDecoder> asyncResult = listNode.callJSResponse(
                     "renderBunchedItems",
                     position,
-                    batchCount);
+                    listNode.batchCount);
             try {
                 JSDecoder jsDecoder = asyncResult.synchronous().get();
                 JSValue result = jsDecoder.decode();
@@ -98,10 +102,10 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
                     for (int i = 0; i < jsArray.size(); i++) {
                         JSObject itemModel = jsArray.get(i).asObject();
                         String itemId = itemModel.getProperty("id").asString().value();
-                        itemValues.put(i + position, itemId);
+                        listNode.itemValues.put(i + position, itemId);
                         listNode.setSubModel(itemId, itemModel);
                     }
-                    return listNode.getSubModel(itemValues.get(position));
+                    return listNode.getSubModel(listNode.itemValues.get(position));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -119,8 +123,8 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
 
 
     void blendSubNode(JSObject subProperties) {
-        for (int i = 0; i < itemValues.size(); i++) {
-            if (subProperties.getProperty("id").asString().value().equals(itemValues.valueAt(i))) {
+        for (int i = 0; i < listNode.itemValues.size(); i++) {
+            if (subProperties.getProperty("id").asString().value().equals(listNode.itemValues.valueAt(i))) {
                 notifyItemChanged(i);
             }
         }

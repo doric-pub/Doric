@@ -39,6 +39,7 @@ public class TextNode extends ViewNode<TextView> {
     protected TextView build() {
         TextView tv = new TextView(getContext());
         tv.setGravity(Gravity.CENTER);
+        tv.setMaxLines(1);
         return tv;
     }
 

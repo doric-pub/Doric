@@ -15,6 +15,7 @@
  */
 package pub.doric.shader.list;
 
+import android.util.SparseArray;
 import android.view.View;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -36,6 +37,13 @@ import pub.doric.shader.ViewNode;
 @DoricPlugin(name = "List")
 public class ListNode extends SuperNode<RecyclerView> {
     private final ListAdapter listAdapter;
+    private String renderItemFuncId;
+    String onLoadMoreFuncId;
+    int itemCount = 0;
+    int batchCount = 15;
+    SparseArray<String> itemValues = new SparseArray<>();
+    boolean loadMore = false;
+    String loadMoreViewId;
 
     public ListNode(DoricContext doricContext) {
         super(doricContext);
@@ -82,19 +90,30 @@ public class ListNode extends SuperNode<RecyclerView> {
     protected void blend(RecyclerView view, String name, JSValue prop) {
         switch (name) {
             case "itemCount":
-                this.listAdapter.itemCount = prop.asNumber().toInt();
+                this.itemCount = prop.asNumber().toInt();
                 break;
             case "renderItem":
                 String funcId = prop.asString().value();
-                if (!funcId.equals(this.listAdapter.renderItemFuncId)) {
-                    this.listAdapter.renderItemFuncId = funcId;
+                if (!funcId.equals(this.renderItemFuncId)) {
+                    this.renderItemFuncId = funcId;
                     // If reset renderItem,should reset native cache.
-                    this.listAdapter.itemValues.clear();
-                    clearSubModel();
+                    for (int index = 0; index < this.itemValues.size(); index++) {
+                        removeSubModel(this.itemValues.valueAt(index));
+                    }
+                    this.itemValues.clear();
                 }
                 break;
+            case "onLoadMore":
+                this.onLoadMoreFuncId = prop.asString().value();
+                break;
+            case "loadMoreView":
+                this.loadMoreViewId = prop.asString().value();
+                break;
             case "batchCount":
-                this.listAdapter.batchCount = prop.asNumber().toInt();
+                this.batchCount = prop.asNumber().toInt();
+                break;
+            case "loadMore":
+                this.loadMore = prop.asBoolean().value();
                 break;
             default:
                 super.blend(view, name, prop);

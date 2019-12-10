@@ -2,6 +2,7 @@ const ws = require('nodejs-websocket')
 const { exec, spawn } = require('child_process')
 const fs = require('fs')
 
+var contextId = null
 var clientConnection = null
 var debuggerConnection = null
 
@@ -14,7 +15,8 @@ const createServer = () => {
             debuggerConnection = connection
 
             clientConnection.sendText(JSON.stringify({
-                cmd: 'SWITCH_TO_DEBUG'
+                cmd: 'SWITCH_TO_DEBUG',
+                contextId: contextId
             }), function() {
 
             })
@@ -29,8 +31,8 @@ const createServer = () => {
                 case 'DEBUG':
                     clientConnection = connection
 
-                    let contextId = resultObject.data.contextId
-                    let projectHome = resultObject.data.projectHome
+                    contextId = resultObject.data.contextId
+                    let projectHome = '.'
 
                     fs.writeFileSync(projectHome + '/build/context', contextId, 'utf8')
 
@@ -44,7 +46,7 @@ const createServer = () => {
                               console.log(`stdout: ${err}`)
                             }
                         })
-                    }, 3000)
+                    }, 1500)
                     
                     break
             }

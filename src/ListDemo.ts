@@ -1,4 +1,4 @@
-import { Group, Panel, List, text, gravity, Color, Stack, LayoutSpec, list, NativeCall, listItem, log, vlayout, Gravity, hlayout, Text, refreshable, Refreshable, ListItem } from "doric";
+import { Group, Panel, List, text, gravity, Color, Stack, LayoutSpec, list, NativeCall, listItem, log, vlayout, Gravity, hlayout, Text, refreshable, Refreshable, ListItem, layoutConfig } from "doric";
 import { rotatedArrow, colors } from "./utils";
 @Entry
 class ListPanel extends Panel {
@@ -25,6 +25,17 @@ class ListPanel extends Panel {
                             it.reset()
                             offset = Math.ceil(Math.random() * colors.length)
                             it.itemCount = 40
+                            it.loadMore = true
+                            it.onLoadMore = () => {
+                                setTimeout(() => {
+                                    it.itemCount += 10
+                                }, 1000)
+                            }
+                            it.loadMoreView = listItem(text({
+                                text: "Loading",
+                                layoutConfig: layoutConfig().atmost().h(LayoutSpec.EXACTLY).a(Gravity.Center),
+                                height: 50,
+                            }))
                             it.renderItem = (idx: number) => {
                                 let counter!: Text
                                 return listItem(

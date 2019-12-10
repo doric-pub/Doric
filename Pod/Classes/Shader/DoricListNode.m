@@ -86,6 +86,7 @@
         it.dataSource = self;
         it.delegate = self;
         it.separatorStyle = UITableViewCellSeparatorStyleNone;
+        it.allowsSelection = NO;
     }];
 }
 

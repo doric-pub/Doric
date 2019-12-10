@@ -182,29 +182,37 @@
             NSUInteger pos = position + idx;
             self.itemViewIds[@(pos)] = thisViewId;
         }];
-        return array[0];
+        if (array.count > 0) {
+            return array[0];
+        } else {
+            return nil;
+        }
     }
 }
 
 - (void)blendSubNode:(NSDictionary *)subModel {
-    NSString *viewId = subModel[@"id"];
-    DoricViewNode *viewNode = [self subNodeWithViewId:viewId];
-    if (viewNode) {
-        [viewNode blend:subModel[@"props"]];
-    } else {
-        NSMutableDictionary *model = [[self subModelOf:viewId] mutableCopy];
-        [self recursiveMixin:subModel to:model];
-        [self setSubModel:model in:viewId];
-    }
-    [self.itemViewIds enumerateKeysAndObjectsUsingBlock:^(NSNumber *_Nonnull key, NSString *_Nonnull obj, BOOL *_Nonnull stop) {
-        if ([viewId isEqualToString:obj]) {
-            *stop = YES;
-            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[key integerValue] inSection:0];
-            [UIView performWithoutAnimation:^{
-                [self.view reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-            }];
+    ///Here async blend sub node because the item count need to be applied first.
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSString *viewId = subModel[@"id"];
+        DoricViewNode *viewNode = [self subNodeWithViewId:viewId];
+        if (viewNode) {
+            [viewNode blend:subModel[@"props"]];
+        } else {
+            NSMutableDictionary *model = [[self subModelOf:viewId] mutableCopy];
+            [self recursiveMixin:subModel to:model];
+            [self setSubModel:model in:viewId];
         }
-    }];
+        [self.itemViewIds enumerateKeysAndObjectsUsingBlock:^(NSNumber *_Nonnull key, NSString *_Nonnull obj, BOOL *_Nonnull stop) {
+            if ([viewId isEqualToString:obj]) {
+                *stop = YES;
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[key integerValue] inSection:0];
+                [UIView performWithoutAnimation:^{
+                    [self.view reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+                }];
+            }
+        }];
+    });
+
 }
 
 - (void)callItem:(NSUInteger)position height:(CGFloat)height {

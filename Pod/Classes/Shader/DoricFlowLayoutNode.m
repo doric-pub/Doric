@@ -249,24 +249,26 @@
 }
 
 - (void)blendSubNode:(NSDictionary *)subModel {
-    NSString *viewId = subModel[@"id"];
-    DoricViewNode *viewNode = [self subNodeWithViewId:viewId];
-    if (viewNode) {
-        [viewNode blend:subModel[@"props"]];
-    } else {
-        NSMutableDictionary *model = [[self subModelOf:viewId] mutableCopy];
-        [self recursiveMixin:subModel to:model];
-        [self setSubModel:model in:viewId];
-    }
-    [self.itemViewIds enumerateKeysAndObjectsUsingBlock:^(NSNumber *_Nonnull key, NSString *_Nonnull obj, BOOL *_Nonnull stop) {
-        if ([viewId isEqualToString:obj]) {
-            *stop = YES;
-            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[key integerValue] inSection:0];
-            [UIView performWithoutAnimation:^{
-                [self.view reloadItemsAtIndexPaths:@[indexPath]];
-            }];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSString *viewId = subModel[@"id"];
+        DoricViewNode *viewNode = [self subNodeWithViewId:viewId];
+        if (viewNode) {
+            [viewNode blend:subModel[@"props"]];
+        } else {
+            NSMutableDictionary *model = [[self subModelOf:viewId] mutableCopy];
+            [self recursiveMixin:subModel to:model];
+            [self setSubModel:model in:viewId];
         }
-    }];
+        [self.itemViewIds enumerateKeysAndObjectsUsingBlock:^(NSNumber *_Nonnull key, NSString *_Nonnull obj, BOOL *_Nonnull stop) {
+            if ([viewId isEqualToString:obj]) {
+                *stop = YES;
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[key integerValue] inSection:0];
+                [UIView performWithoutAnimation:^{
+                    [self.view reloadItemsAtIndexPaths:@[indexPath]];
+                }];
+            }
+        }];
+    });
 }
 
 - (void)callItem:(NSUInteger)position size:(CGSize)size {

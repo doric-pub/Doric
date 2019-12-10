@@ -60,7 +60,7 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull DoricViewHolder holder, int position) {
         JSValue jsValue = getItemModel(position);
-        if (jsValue.isObject()) {
+        if (jsValue != null && jsValue.isObject()) {
             JSObject jsObject = jsValue.asObject();
             holder.listItemNode.setId(jsObject.getProperty("id").asString().value());
             holder.listItemNode.blend(jsObject.getProperty("props").asObject());
@@ -75,7 +75,7 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
     @Override
     public int getItemViewType(int position) {
         JSValue value = getItemModel(position);
-        if (value.isObject()) {
+        if (value != null && value.isObject()) {
             if (value.asObject().getProperty("identifier").isString()) {
                 return value.asObject().getProperty("identifier").asString().value().hashCode();
             }

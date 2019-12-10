@@ -105,7 +105,7 @@ public class DoricContext {
     }
 
     public void reInit() {
-        callEntity(DoricConstant.DORIC_ENTITY_INIT, this.initParams);
+        callEntity(DoricConstant.DORIC_ENTITY_INIT, this.initParams, extra);
         callEntity(DoricConstant.DORIC_ENTITY_CREATE);
     }
 
@@ -169,7 +169,7 @@ public class DoricContext {
         this.script = script;
         this.mRootNode.setId("");
         getDriver().createContext(mContextId, script, source);
-        callEntity(DoricConstant.DORIC_ENTITY_INIT, this.initParams);
+        callEntity(DoricConstant.DORIC_ENTITY_INIT, this.initParams, extra);
         onShow();
     }
 

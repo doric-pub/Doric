@@ -85,9 +85,13 @@ public class DemoDebugActivity extends DoricActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReloadEvent(ReloadEvent reloadEvent) {
-        for (DoricContext context : DoricContextManager.aliveContexts()) {
-            if (reloadEvent.source.contains(context.getSource())) {
-                context.reload(reloadEvent.script);
+        if (doricContextDebuggable != null && doricContextDebuggable.isDebugging) {
+            System.out.println("is debugging");
+        } else {
+            for (DoricContext context : DoricContextManager.aliveContexts()) {
+                if (reloadEvent.source.contains(context.getSource())) {
+                    context.reload(reloadEvent.script);
+                }
             }
         }
     }

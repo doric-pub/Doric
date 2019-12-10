@@ -35,6 +35,8 @@
 
 - (void)clearSubModel;
 
+- (void)removeSubModel:(NSString *)viewId;
+
 - (DoricViewNode *)subNodeWithViewId:(NSString *)viewId;
 
 - (void)recursiveMixin:(NSDictionary *)srcModel to:(NSMutableDictionary *)targetModel;

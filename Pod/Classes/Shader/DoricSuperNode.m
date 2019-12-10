@@ -149,11 +149,16 @@
     [self.subNodes removeAllObjects];
 }
 
+- (void)removeSubModel:(NSString *)viewId {
+    [self.subNodes removeObjectForKey:viewId];
+}
+
 - (DoricViewNode *)subNodeWithViewId:(NSString *)viewId {
     NSAssert(NO, @"Should override class:%@ ,method:%@.", NSStringFromClass([self class]),
-               NSStringFromSelector(_cmd));
+            NSStringFromSelector(_cmd));
     return nil;
 }
+
 - (void)requestLayout {
     [self.view setNeedsLayout];
 }

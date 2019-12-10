@@ -62,6 +62,10 @@
 @property(nonatomic, strong) NSMutableDictionary <NSNumber *, NSNumber *> *itemHeights;
 @property(nonatomic, assign) NSUInteger itemCount;
 @property(nonatomic, assign) NSUInteger batchCount;
+@property(nonatomic, copy) NSString *onLoadMoreFuncId;
+@property(nonatomic, copy) NSString *renderItemFuncId;
+@property(nonatomic, copy) NSString *loadMoreViewId;
+@property(nonatomic, assign) BOOL loadMore;
 @end
 
 @implementation DoricListNode
@@ -95,11 +99,22 @@
         self.itemCount = [prop unsignedIntegerValue];
         [self.view reloadData];
     } else if ([@"renderItem" isEqualToString:name]) {
-        [self.itemViewIds removeAllObjects];
-        [self clearSubModel];
-        [self.view reloadData];
+        if (![self.renderItemFuncId isEqualToString:prop]) {
+            self.renderItemFuncId = prop;
+            [self.itemViewIds.allValues forEach:^(NSString *obj) {
+                [self removeSubModel:obj];
+            }];
+            [self.itemViewIds removeAllObjects];
+            [self.view reloadData];
+        }
     } else if ([@"batchCount" isEqualToString:name]) {
         self.batchCount = [prop unsignedIntegerValue];
+    } else if ([@"onLoadMore" isEqualToString:name]) {
+        self.onLoadMoreFuncId = prop;
+    } else if ([@"loadMoreView" isEqualToString:name]) {
+        self.loadMoreViewId = prop;
+    } else if ([@"loadMore" isEqualToString:name]) {
+        self.loadMore = [prop boolValue];
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }
@@ -110,7 +125,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.itemCount;
+    return self.itemCount + (self.loadMore ? 1 : 0);
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -118,7 +133,10 @@
     NSDictionary *model = [self itemModelAt:position];
     NSDictionary *props = model[@"props"];
     NSString *reuseId = props[@"identifier"];
-
+    if (position > 0 && position >= self.itemCount && self.onLoadMoreFuncId) {
+        reuseId = @"doricLoadMoreCell";
+        [self callJSResponse:self.onLoadMoreFuncId, nil];
+    }
     DoricTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseId ?: @"doriccell"];
     if (!cell) {
         cell = [[DoricTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseId ?: @"doriccell"];
@@ -148,6 +166,9 @@
 }
 
 - (NSDictionary *)itemModelAt:(NSUInteger)position {
+    if (position >= self.itemCount) {
+        return [self subModelOf:self.loadMoreViewId];
+    }
     NSString *viewId = self.itemViewIds[@(position)];
     if (viewId && viewId.length > 0) {
         return [self subModelOf:viewId];

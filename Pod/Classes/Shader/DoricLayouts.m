@@ -251,7 +251,7 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
         } else if ((gravity & RIGHT) == RIGHT) {
             child.right = targetSize.width - padding.right;
         } else if ((gravity & CENTER_X) == CENTER_X) {
-            child.centerX = (targetSize.width - padding.left - padding.right) / 2;
+            child.centerX = targetSize.width / 2;
         } else {
             if (childConfig.margin.left) {
                 child.left = childConfig.margin.left + padding.left;
@@ -264,7 +264,7 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
         } else if ((gravity & BOTTOM) == BOTTOM) {
             child.bottom = targetSize.height - padding.bottom;
         } else if ((gravity & CENTER_Y) == CENTER_Y) {
-            child.centerY = (targetSize.height - padding.top - padding.bottom) / 2;
+            child.centerY = targetSize.height / 2;
         } else {
             if (childConfig.margin.top) {
                 child.top = childConfig.margin.top + padding.top;
@@ -323,7 +323,7 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
     } else if ((self.gravity & BOTTOM) == BOTTOM) {
         yStart = targetSize.height - self.contentHeight - padding.bottom;
     } else if ((self.gravity & CENTER_Y) == CENTER_Y) {
-        yStart = (targetSize.height - self.contentHeight - padding.top - padding.bottom) / 2;
+        yStart = (targetSize.height - self.contentHeight - padding.top - padding.bottom) / 2 + padding.top;
     }
     CGFloat remain = targetSize.height - self.contentHeight - padding.top - padding.bottom;
     for (UIView *child in self.subviews) {
@@ -351,7 +351,7 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
         } else if ((gravity & RIGHT) == RIGHT) {
             child.right = self.width - padding.right;
         } else if ((gravity & CENTER_X) == CENTER_X) {
-            child.centerX = (targetSize.width - padding.left - padding.right) / 2;
+            child.centerX = targetSize.width / 2;
         } else if (childConfig.margin.left) {
             child.left = childConfig.margin.left + padding.left;
         } else if (childConfig.margin.right) {
@@ -414,7 +414,7 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
     } else if ((self.gravity & RIGHT) == RIGHT) {
         xStart = targetSize.width - self.contentWidth - padding.right;
     } else if ((self.gravity & CENTER_X) == CENTER_X) {
-        xStart = (targetSize.width - self.contentWidth - padding.left - padding.right) / 2;
+        xStart = (targetSize.width - self.contentWidth - padding.left - padding.right) / 2 + padding.left;
     }
     CGFloat remain = targetSize.width - self.contentWidth - padding.left - padding.right;
     for (UIView *child in self.subviews) {
@@ -444,7 +444,7 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
         } else if ((gravity & BOTTOM) == BOTTOM) {
             child.bottom = targetSize.height - padding.bottom;
         } else if ((gravity & CENTER_Y) == CENTER_Y) {
-            child.centerY = (targetSize.height - padding.top - padding.bottom) / 2;
+            child.centerY = targetSize.height / 2;
         } else if (childConfig.margin.top) {
             child.top = childConfig.margin.top + padding.top;
         } else if (childConfig.margin.bottom) {

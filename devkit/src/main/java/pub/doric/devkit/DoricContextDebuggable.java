@@ -1,14 +1,15 @@
 package pub.doric.devkit;
 
 import pub.doric.DoricContext;
+import pub.doric.DoricContextManager;
 import pub.doric.DoricNativeDriver;
 
 public class DoricContextDebuggable {
     private DoricContext doricContext;
     private DoricDebugDriver doricDebugDriver;
 
-    public DoricContextDebuggable(DoricContext doricContext) {
-        this.doricContext = doricContext;
+    public DoricContextDebuggable(String contextId) {
+        this.doricContext = DoricContextManager.getContext(contextId);
     }
 
     public void startDebug() {

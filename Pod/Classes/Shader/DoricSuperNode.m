@@ -62,7 +62,6 @@
             targetProp[key] = obj;
         }
     }];
-    targetModel[@"props"] = targetProp;
 }
 
 - (void)recursiveMixin:(NSDictionary *)srcModel to:(NSMutableDictionary *)targetModel {

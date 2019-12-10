@@ -344,6 +344,11 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                     setPadding(prop.asObject());
                 }
                 break;
+            case "hidden":
+                if (prop.isBoolean()) {
+                    getNodeView().setVisibility(prop.asBoolean().value() ? View.GONE : View.VISIBLE);
+                }
+                break;
             default:
                 break;
         }

@@ -19,6 +19,22 @@ export type BridgeContext = { [index: string]: { [index: string]: (args?: any) =
 
 declare global {
     const context: BridgeContext
+    const Environment: {
+        platform: "Android" | "iOS" | "Qt",
+
+        platformVersion: string,
+
+        appName: string,
+
+        appVersion: string,
+
+        libVersion: string,
+
+        screenWidth: number,
+
+        screenHeight: number,
+
+    }
     function Entry(constructor: { new(...args: any[]): {} }): any
 }
 export { }

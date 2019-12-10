@@ -26,6 +26,8 @@ public class DoricConstant {
     public static final String DORIC_MODULE_LIB = "doric";
 
 
+    public static final String INJECT_ENVIRONMENT = "Environment";
+
     public static final String INJECT_LOG = "nativeLog";
     public static final String INJECT_REQUIRE = "nativeRequire";
     public static final String INJECT_TIMER_SET = "nativeSetTimer";

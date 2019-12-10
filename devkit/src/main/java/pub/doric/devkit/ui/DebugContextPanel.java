@@ -17,6 +17,7 @@ import com.google.gson.JsonObject;
 
 import pub.doric.DoricContext;
 import pub.doric.DoricContextManager;
+import pub.doric.devkit.DoricContextDebuggable;
 import pub.doric.devkit.DoricDev;
 import pub.doric.devkit.IDevKit;
 import pub.doric.devkit.R;
@@ -68,6 +69,7 @@ public class DebugContextPanel extends DialogFragment {
             cell.findViewById(R.id.debug_text_view).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    DoricContextDebuggable.isDebugging = true;
                     JsonObject jsonObject = new JsonObject();
                     jsonObject.addProperty("contextId", doricContext.getContextId());
                     jsonObject.addProperty("source", doricContext.getSource().replace(".js", ".ts"));

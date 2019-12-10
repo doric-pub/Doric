@@ -7,18 +7,16 @@ import pub.doric.DoricNativeDriver;
 public class DoricContextDebuggable {
     private DoricContext doricContext;
     private DoricDebugDriver doricDebugDriver;
-    public boolean isDebugging = false;
+    public static boolean isDebugging = false;
 
     public DoricContextDebuggable(String contextId) {
         this.doricContext = DoricContextManager.getContext(contextId);
     }
 
     public void startDebug() {
-
         doricDebugDriver = new DoricDebugDriver(new IStatusCallback() {
             @Override
             public void start() {
-                isDebugging = true;
                 doricContext.setDriver(doricDebugDriver);
                 doricContext.reInit();
             }

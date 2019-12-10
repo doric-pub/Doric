@@ -55,12 +55,20 @@
 
 - (void)initJSExecutor {
     __weak typeof(self) _self = self;
-
+    NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+    [self.jsExecutor injectGlobalJSObject:INJECT_ENVIRONMENT obj:@{
+            @"platform": @"iOS",
+            @"platformVersion": [[UIDevice currentDevice] systemVersion],
+            @"appName": infoDictionary[@"CFBundleName"],
+            @"appVersion": infoDictionary[@"CFBundleShortVersionString"],
+            @"screenWidth": @([[UIScreen mainScreen] bounds].size.width),
+            @"screenHeight": @([[UIScreen mainScreen] bounds].size.height),
+    }];
     [self.jsExecutor injectGlobalJSObject:INJECT_LOG obj:^(NSString *type, NSString *message) {
         DoricLog(@"JS:%@", message);
     }];
     [self.jsExecutor injectGlobalJSObject:INJECT_EMPTY obj:^() {
-        
+
     }];
     [self.jsExecutor injectGlobalJSObject:INJECT_REQUIRE obj:^(NSString *name) {
         __strong typeof(_self) self = _self;

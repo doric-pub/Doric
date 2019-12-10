@@ -26,7 +26,7 @@ extern NSString *const DORIC_BUNDLE_SANDBOX;
 extern NSString *const DORIC_BUNDLE_LIB;
 extern NSString *const DORIC_MODULE_LIB;
 
-
+extern NSString *const INJECT_ENVIRONMENT;
 extern NSString *const INJECT_LOG;
 extern NSString *const INJECT_REQUIRE;
 extern NSString *const INJECT_TIMER_SET;

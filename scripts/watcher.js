@@ -13,6 +13,10 @@ setTimeout(() => {
     chokidar.watch(process.cwd() + "/bundle", {
         ignored: /(^|[\/\\])\../,
     }).on('change', (path) => {
+        if (ws.debugging) {
+            console.log("debugging, hot reload by pass")
+            return
+        }
         fs.readFile(path, 'utf-8', (error, data) => {
             if (!path.endsWith('.map')) {
                 console.log('File change:', path)

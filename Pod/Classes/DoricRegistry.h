@@ -23,6 +23,7 @@
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
+@class DoricLibrary;
 
 @interface DoricRegistry : NSObject
 
@@ -38,6 +39,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)registerViewNode:(Class)nodeClass withName:(NSString *)name;
 
 - (Class)acquireViewNode:(NSString *)name;
+
++ (void)register:(DoricLibrary *)library;
 @end
 
 NS_ASSUME_NONNULL_END

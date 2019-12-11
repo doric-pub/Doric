@@ -11,6 +11,7 @@
 		C6AF7EB0B40D76A46B2BB384 /* Pods_ExampleUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF50786B1D1793EC3228133B /* Pods_ExampleUITests.framework */; };
 		D751D4B065D8D4FA6594B5EE /* DemoVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D751D19E97EF4EDD7588FEBE /* DemoVC.m */; };
 		D751D4FCC0A2322211DE3D55 /* QRScanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D751DA399F1ADB6D34563B5D /* QRScanViewController.m */; };
+		D751DDB012BAF476A252CD93 /* DemoLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = D751D2175D09F2C10691FB81 /* DemoLibrary.m */; };
 		E2334AF022E9D2060098A085 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E2334AEF22E9D2060098A085 /* AppDelegate.m */; };
 		E2334AF322E9D2060098A085 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2334AF222E9D2060098A085 /* ViewController.m */; };
 		E2334AF622E9D2060098A085 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E2334AF422E9D2060098A085 /* Main.storyboard */; };
@@ -51,7 +52,9 @@
 		BF50786B1D1793EC3228133B /* Pods_ExampleUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ExampleUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D751D18AD6496F4A9BE1AB45 /* QRScanViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QRScanViewController.h; sourceTree = "<group>"; };
 		D751D19E97EF4EDD7588FEBE /* DemoVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoVC.m; sourceTree = "<group>"; };
+		D751D2175D09F2C10691FB81 /* DemoLibrary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoLibrary.m; sourceTree = "<group>"; };
 		D751DA399F1ADB6D34563B5D /* QRScanViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QRScanViewController.m; sourceTree = "<group>"; };
+		D751DB0CB3009E12990F661E /* DemoLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoLibrary.h; sourceTree = "<group>"; };
 		D751DDEC114E037231257E64 /* DemoVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoVC.h; sourceTree = "<group>"; };
 		D91241144B5A3356A3C60644 /* Pods-ExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExampleTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ExampleTests/Pods-ExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		E2334AEB22E9D2060098A085 /* Doric Playground.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Doric Playground.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -163,6 +166,8 @@
 				D751DDEC114E037231257E64 /* DemoVC.h */,
 				D751DA399F1ADB6D34563B5D /* QRScanViewController.m */,
 				D751D18AD6496F4A9BE1AB45 /* QRScanViewController.h */,
+				D751D2175D09F2C10691FB81 /* DemoLibrary.m */,
+				D751DB0CB3009E12990F661E /* DemoLibrary.h */,
 			);
 			path = Example;
 			sourceTree = "<group>";
@@ -430,6 +435,7 @@
 				E2334AF022E9D2060098A085 /* AppDelegate.m in Sources */,
 				D751D4B065D8D4FA6594B5EE /* DemoVC.m in Sources */,
 				D751D4FCC0A2322211DE3D55 /* QRScanViewController.m in Sources */,
+				D751DDB012BAF476A252CD93 /* DemoLibrary.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

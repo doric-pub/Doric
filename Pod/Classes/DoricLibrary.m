@@ -13,18 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#import "DoricContext.h"
-#import "DoricLayouts.h"
-#import "DoricExtensions.h"
-#import "DoricViewNode.h"
-#import "DoricRootNode.h"
-#import "UIView+Doric.h"
-#import "DoricUtil.h"
-#import "DoricPanel.h"
-#import "DoricJSLoaderManager.h"
-#import "DoricNavigatorDelegate.h"
-#import "DoricNavBarDelegate.h"
-#import "DoricViewController.h"
-#import "DoricPromise.h"
+//
+// Created by pengfei.zhou on 2019/12/11.
+//
+
 #import "DoricLibrary.h"
-#import "DoricNativePlugin.h"
+
+
+@implementation DoricLibrary
+- (void)load:(DoricRegistry *)registry {
+}
+@end

@@ -10,6 +10,7 @@
 #import <Doric/Doric.h>
 #import "DemoVC.h"
 #import "QRScanViewController.h"
+#import "DemoLibrary.h"
 
 @interface ViewController () <UITableViewDelegate, UITableViewDataSource>
 @property(nonatomic, copy) NSArray <NSString *> *demoFilePaths;
@@ -41,6 +42,7 @@
         it.dataSource = self;
         it.delegate = self;
     }]];
+    [DoricRegistry register:[DemoLibrary new]];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

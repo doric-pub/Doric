@@ -98,13 +98,13 @@ public class DoricContext {
         this.initParams = new JSONBuilder()
                 .put("width", width)
                 .put("height", height)
-                .toJSONObject()
-        ;
+                .toJSONObject();
         callEntity(DoricConstant.DORIC_ENTITY_INIT, this.initParams, extra);
         callEntity(DoricConstant.DORIC_ENTITY_CREATE);
     }
 
     public void reInit() {
+        this.mRootNode.setId("");
         callEntity(DoricConstant.DORIC_ENTITY_INIT, this.initParams, extra);
         callEntity(DoricConstant.DORIC_ENTITY_CREATE);
     }

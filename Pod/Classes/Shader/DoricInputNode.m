@@ -102,8 +102,8 @@ typedef void (^onFocusChangeBlock)(BOOL focused,DoricInputNode *node);
 }
 
 - (void)setSelection:(NSDictionary *)params withPromise:(DoricPromise *)promise {
-    NSString *start = [params objectForKey:@"start"];
-    NSString *end = [params objectForKey:@"end"];
+    NSString *start = params[@"start"];
+    NSString *end = params[@"end"];
     
     if (([start isKindOfClass:[NSString class]] || [start isKindOfClass:[NSNumber class]]) &&
         ([start isKindOfClass:[NSString class]] || [start isKindOfClass:[NSNumber class]])) {

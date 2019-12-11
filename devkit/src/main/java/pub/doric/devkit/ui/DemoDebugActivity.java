@@ -30,8 +30,9 @@ import pub.doric.DoricContext;
 import pub.doric.DoricContextManager;
 import pub.doric.devkit.DoricContextDebuggable;
 import pub.doric.devkit.event.EnterDebugEvent;
-import pub.doric.devkit.event.QuitDebugEvent;
 import pub.doric.devkit.event.ReloadEvent;
+import pub.doric.devkit.event.StartDebugEvent;
+import pub.doric.devkit.event.StopDebugEvent;
 import pub.doric.devkit.util.SensorManagerHelper;
 
 /**
@@ -78,27 +79,33 @@ public class DemoDebugActivity extends DoricActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onStartDebugEvent(StartDebugEvent startDebugEvent) {
+        doricContextDebuggable = new DoricContextDebuggable(startDebugEvent.getContextId());
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEnterDebugEvent(EnterDebugEvent enterDebugEvent) {
-        doricContextDebuggable = new DoricContextDebuggable(enterDebugEvent.getContextId());
         doricContextDebuggable.startDebug();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onQuitDebugEvent(StopDebugEvent quitDebugEvent) {
+        doricContextDebuggable.stopDebug();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReloadEvent(ReloadEvent reloadEvent) {
-        if (DoricContextDebuggable.isDebugging) {
-            System.out.println("is debugging");
-        } else {
-            for (DoricContext context : DoricContextManager.aliveContexts()) {
-                if (reloadEvent.source.contains(context.getSource())) {
+        for (DoricContext context : DoricContextManager.aliveContexts()) {
+            if (reloadEvent.source.contains(context.getSource())) {
+                if (doricContextDebuggable != null &&
+                        doricContextDebuggable.isDebugging &&
+                        doricContextDebuggable.getContext().getContextId().equals(context.getContextId())) {
+                    System.out.println("is debugging context id: " + context.getContextId());
+                } else {
                     context.reload(reloadEvent.script);
                 }
             }
         }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onQuitDebugEvent(QuitDebugEvent quitDebugEvent) {
-        doricContextDebuggable.stopDebug();
     }
 
     @Override

@@ -1,4 +1,5 @@
 package pub.doric.devkit.event;
 
-public class QuitDebugEvent {
+public class StopDebugEvent {
+
 }

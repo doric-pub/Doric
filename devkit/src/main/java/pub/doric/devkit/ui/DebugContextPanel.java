@@ -15,12 +15,14 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.gson.JsonObject;
 
+import org.greenrobot.eventbus.EventBus;
+
 import pub.doric.DoricContext;
 import pub.doric.DoricContextManager;
-import pub.doric.devkit.DoricContextDebuggable;
 import pub.doric.devkit.DoricDev;
 import pub.doric.devkit.IDevKit;
 import pub.doric.devkit.R;
+import pub.doric.devkit.event.StartDebugEvent;
 
 public class DebugContextPanel extends DialogFragment {
 
@@ -69,7 +71,7 @@ public class DebugContextPanel extends DialogFragment {
             cell.findViewById(R.id.debug_text_view).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    DoricContextDebuggable.isDebugging = true;
+                    EventBus.getDefault().post(new StartDebugEvent(doricContext.getContextId()));
                     JsonObject jsonObject = new JsonObject();
                     jsonObject.addProperty("contextId", doricContext.getContextId());
                     jsonObject.addProperty("source", doricContext.getSource().replace(".js", ".ts"));

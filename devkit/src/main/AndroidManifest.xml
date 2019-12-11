@@ -2,6 +2,7 @@
     package="pub.doric.devkit">
 
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application>
         <activity android:name=".ui.ScanQRCodeActivity" />

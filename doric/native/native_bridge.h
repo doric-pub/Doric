@@ -11,7 +11,7 @@ public:
     NativeBridge(QObject *parent = nullptr) : QObject(parent) {}
 
     Q_INVOKABLE void function(int contextId) {
-        qDebug() << contextId;
+        qDebug() << "contextId: " + QString::number(contextId);
     }
 };
 

@@ -39,7 +39,7 @@ void NativeDriver::invokeContextEntityMethod(int contextId, QString* method, ...
             .property(Constant::GLOBAL_DORIC)
             .property(Constant::DORIC_CONTEXT_INVOKE)
             .call(*arguments);
-    qDebug() << result.toString();
+    qDebug() << "invokeContextEntityMethod: " + result.toString();
     delete arguments;
 }
 

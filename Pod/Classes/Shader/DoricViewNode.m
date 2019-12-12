@@ -317,6 +317,11 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     return @(self.view.height);
 }
 
+- (NSDictionary *)getLocationOnScreen {
+    CGPoint point = [self.view convertPoint:CGPointMake(0, 0) toView:[UIApplication sharedApplication].windows.lastObject];
+    return @{@"x": @(point.x), @"y": @(point.y)};
+}
+
 - (void)blendLayoutConfig:(NSDictionary *)params {
     [params[@"widthSpec"] also:^(NSNumber *it) {
         if (it) {

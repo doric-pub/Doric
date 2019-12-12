@@ -1,8 +1,9 @@
 #ifndef NATIVE_BRIDGE_H
 #define NATIVE_BRIDGE_H
 
-#include <QObject>
 #include <QDebug>
+#include <QJSValue>
+#include <QObject>
 
 class NativeBridge : public QObject {
     Q_OBJECT
@@ -10,8 +11,12 @@ class NativeBridge : public QObject {
 public:
     NativeBridge(QObject *parent = nullptr) : QObject(parent) {}
 
-    Q_INVOKABLE void function(int contextId) {
-        qDebug() << "contextId: " + QString::number(contextId);
+    Q_INVOKABLE void function(int contextId, QString module, QString methodName, QString callbackId, QJSValue jsValue) {
+        qDebug() << "contextId: " + QString::number(contextId) + ", " +
+                    "module: " + module + ", " +
+                    "methodName: " + methodName + ", " +
+                    "callbackId: " + callbackId + ", " +
+                    "arguments: " + jsValue.toString();
     }
 };
 

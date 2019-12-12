@@ -37,6 +37,7 @@ import androidx.annotation.NonNull;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
 
+import pub.doric.Doric;
 import pub.doric.DoricContext;
 import pub.doric.DoricRegistry;
 import pub.doric.async.AsyncResult;
@@ -54,6 +55,8 @@ import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 import com.github.pengfeizhou.jscore.JavaValue;
+
+import org.json.JSONObject;
 
 import java.util.LinkedList;
 
@@ -501,7 +504,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         if (mLayoutParams.width >= 0) {
             return DoricUtils.px2dp(mLayoutParams.width);
         } else {
-            return mView.getMeasuredWidth();
+            return DoricUtils.px2dp(mView.getMeasuredWidth());
         }
     }
 
@@ -510,7 +513,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         if (mLayoutParams.width >= 0) {
             return DoricUtils.px2dp(mLayoutParams.height);
         } else {
-            return mView.getMeasuredHeight();
+            return DoricUtils.px2dp(mView.getMeasuredHeight());
         }
     }
 
@@ -848,5 +851,15 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
             default:
                 return 0;
         }
+    }
+
+    @DoricMethod
+    public JSONObject getLocationOnScreen() {
+        int[] position = new int[2];
+        getNodeView().getLocationOnScreen(position);
+        return new JSONBuilder()
+                .put("x", DoricUtils.px2dp(position[0]))
+                .put("y", DoricUtils.px2dp(position[1]))
+                .toJSONObject();
     }
 }

@@ -17,11 +17,7 @@ package pub.doric.shader;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-
-import androidx.annotation.Nullable;
-
 import android.text.TextUtils;
 import android.util.Base64;
 import android.widget.ImageView;
@@ -30,17 +26,20 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
-
-import pub.doric.DoricContext;
-import pub.doric.extension.bridge.DoricPlugin;
-import pub.doric.utils.DoricUtils;
-
 import com.github.pengfeizhou.jscore.JSONBuilder;
+import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import androidx.annotation.Nullable;
+import jp.wasabeef.glide.transformations.BlurTransformation;
+import pub.doric.DoricContext;
+import pub.doric.extension.bridge.DoricPlugin;
+import pub.doric.utils.DoricUtils;
 
 /**
  * @Description: com.github.penfeizhou.doric.widget
@@ -50,6 +49,7 @@ import java.util.regex.Pattern;
 @DoricPlugin(name = "Image")
 public class ImageNode extends ViewNode<ImageView> {
     private String loadCallbackId = "";
+    private boolean isBlur;
 
     public ImageNode(DoricContext doricContext) {
         super(doricContext);
@@ -61,10 +61,28 @@ public class ImageNode extends ViewNode<ImageView> {
     }
 
     @Override
+    public void blend(JSObject jsObject) {
+        if(jsObject != null) {
+            JSValue jsValue = jsObject.getProperty("isBlur");
+            if(jsValue.isBoolean()) {
+                isBlur = jsValue.asBoolean().value();
+            }
+        }
+        super.blend(jsObject);
+    }
+
+    @Override
     protected void blend(ImageView view, String name, JSValue prop) {
         switch (name) {
             case "imageUrl":
+                RequestOptions options;
+                if(isBlur) {
+                    options = RequestOptions.bitmapTransform(new BlurTransformation(25, 3));
+                } else {
+                    options = new RequestOptions();
+                }
                 Glide.with(getContext()).load(prop.asString().value())
+                        .apply(options)
                         .listener(new RequestListener<Drawable>() {
                             @Override
                             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {

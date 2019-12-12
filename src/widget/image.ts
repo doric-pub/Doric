@@ -26,6 +26,7 @@ export interface IImage extends IView {
     imageUrl?: string
     imageBase64?: string
     scaleType?: ScaleType
+    isBlur?: boolean
     loadCallback?: (image: { width: number; height: number } | undefined) => void
 }
 
@@ -36,6 +37,8 @@ export class Image extends View implements IImage {
     imageBase64?: string
     @Property
     scaleType?: ScaleType
+    @Property
+    isBlur?: boolean
 
     @Property
     loadCallback?: (image: { width: number; height: number } | undefined) => void

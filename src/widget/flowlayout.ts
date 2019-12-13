@@ -43,7 +43,11 @@ export class FlowLayout extends Superview implements IFlowLayout {
     private ignoreDirtyCallOnce = false
 
     allSubviews() {
-        return this.cachedViews.values()
+        if (this.loadMoreView) {
+            return [...this.cachedViews.values(), this.loadMoreView]
+        } else {
+            return this.cachedViews.values()
+        }
     }
 
     @Property
@@ -63,6 +67,15 @@ export class FlowLayout extends Superview implements IFlowLayout {
 
     @Property
     batchCount = 15
+
+    @Property
+    onLoadMore?: () => void
+
+    @Property
+    loadMore?: boolean
+
+    @Property
+    loadMoreView?: FlowLayoutItem
 
     reset() {
         this.cachedViews.clear()
@@ -90,6 +103,13 @@ export class FlowLayout extends Superview implements IFlowLayout {
             const listItem = this.getItem(start + idx)
             return listItem.toModel()
         })
+    }
+
+    toModel() {
+        if (this.loadMoreView) {
+            this.dirtyProps['loadMoreView'] = this.loadMoreView.viewId
+        }
+        return super.toModel()
     }
 }
 

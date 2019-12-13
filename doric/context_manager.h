@@ -29,12 +29,16 @@ public:
         return &locla_s;
     }
 
-    Context* createContext(QString* script, QString* source) {
+    Context *createContext(QString *script, QString *source) {
         int contextId = counter->fetchAndAddOrdered(1);
-        Context* context = new Context(contextId, source);
+        Context *context = new Context(contextId, source);
         contextMap->insert(contextId, context);
         context->driver->createContext(contextId, script);
         return context;
+    }
+
+    Context *getContext(int contextId) {
+        return contextMap->take(contextId);
     }
 };
 

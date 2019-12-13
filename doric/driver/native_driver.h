@@ -28,8 +28,8 @@ public:
     void createContext(int contextId, QString *script) override;
     void destroyContext(int contextId) override;
 
-    void invokeContextEntityMethod(int contextId, QString* method, ...) override;
-    void invokeDoricMethod(QString* method, ...) override;
+    void invokeContextEntityMethod(int contextId, QString *method, ...) override;
+    void invokeDoricMethod(QString *method, ...) override;
 };
 
 #endif // NATIVE_DRIVER_H

@@ -2,8 +2,8 @@
 #define JS_ENGINE_H
 
 #include <QFile>
-#include <QObject>
 #include <QJSEngine>
+#include <QObject>
 #include <QResource>
 
 #include "constant.h"
@@ -24,7 +24,7 @@ public:
         initDoricRuntime();
     }
 
-    void prepareContext(int contextId, QString* script) {
+    void prepareContext(int contextId, QString *script) {
         QString contextIdString = QString::number(contextId);
         QString source = QString(Constant::TEMPLATE_CONTEXT_CREATE)
                 .replace("%s1", *script)

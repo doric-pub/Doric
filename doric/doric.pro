@@ -16,7 +16,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         constant.cpp \
         driver/native_driver.cpp \
-        main.cpp
+        main.cpp \
+        native/native_bridge.cpp
 
 RESOURCES += qml.qrc
 
@@ -34,6 +35,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     constant.h \
     context.h \
+    context_holder.h \
     context_manager.h \
     driver/driver.h \
     driver/native_driver.h \
@@ -42,5 +44,7 @@ HEADERS += \
     native/native_empty.h \
     native/native_log.h \
     native/native_timer.h \
+    plugin/shader_plugin.h \
+    registry.h \
     template/singleton.h \
     utility/utility.h

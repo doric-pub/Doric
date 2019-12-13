@@ -11,13 +11,7 @@ class NativeBridge : public QObject {
 public:
     NativeBridge(QObject *parent = nullptr) : QObject(parent) {}
 
-    Q_INVOKABLE void function(int contextId, QString module, QString methodName, QString callbackId, QJSValue jsValue) {
-        qDebug() << "contextId: " + QString::number(contextId) + ", " +
-                    "module: " + module + ", " +
-                    "methodName: " + methodName + ", " +
-                    "callbackId: " + callbackId + ", " +
-                    "arguments: " + jsValue.toString();
-    }
+    Q_INVOKABLE void function(int contextId, QString module, QString methodName, QString callbackId, QJSValue jsValue);
 };
 
 #endif // NATIVE_BRIDGE_H

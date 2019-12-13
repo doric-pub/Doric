@@ -70,6 +70,9 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> {
             outRect.set(columnSpace / 2, rowSpace / 2, columnSpace / 2, rowSpace / 2);
         }
     };
+    String onLoadMoreFuncId;
+    boolean loadMore = false;
+    String loadMoreViewId;
 
     public FlowLayoutNode(DoricContext doricContext) {
         super(doricContext);
@@ -115,12 +118,23 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> {
                 if (!funcId.equals(this.flowAdapter.renderItemFuncId)) {
                     this.flowAdapter.renderItemFuncId = funcId;
                     // If reset renderItem,should reset native cache.
+                    for (int index = 0; index < this.flowAdapter.itemValues.size(); index++) {
+                        removeSubModel(this.flowAdapter.itemValues.valueAt(index));
+                    }
                     this.flowAdapter.itemValues.clear();
-                    clearSubModel();
                 }
                 break;
             case "batchCount":
                 this.flowAdapter.batchCount = prop.asNumber().toInt();
+                break;
+            case "onLoadMore":
+                this.onLoadMoreFuncId = prop.asString().value();
+                break;
+            case "loadMoreView":
+                this.loadMoreViewId = prop.asString().value();
+                break;
+            case "loadMore":
+                this.loadMore = prop.asBoolean().value();
                 break;
             default:
                 super.blend(view, name, prop);

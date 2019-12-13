@@ -6,7 +6,7 @@
 class ShaderPlugin : public ContextHolder {
 
 public:
-    ShaderPlugin(Context* context) : ContextHolder(context) {}
+    ShaderPlugin(Context *context) : ContextHolder(context) {}
 };
 
 #endif // SHADER_PLUGIN_H

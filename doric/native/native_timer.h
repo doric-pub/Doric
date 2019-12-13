@@ -13,15 +13,15 @@ class NativeTimer : public QObject {
 
 private:
     QSet<long> *deletedTimerIds = new QSet<long>();
-    QJSEngine* engine;
+    QJSEngine *engine;
 
 public:
-    NativeTimer(QJSEngine* engine, QObject *parent = nullptr) : QObject(parent) {
+    NativeTimer(QJSEngine *engine, QObject *parent = nullptr) : QObject(parent) {
         this->engine = engine;
     }
 
     Q_INVOKABLE void setTimer(long timerId, int time, bool repeat) {
-        QTimer* timer = new QTimer(this);
+        QTimer *timer = new QTimer(this);
         timer->setSingleShot(!repeat);
         connect(timer, &QTimer::timeout, this, [=] () {
             if (deletedTimerIds->contains(timerId)) {

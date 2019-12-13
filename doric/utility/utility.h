@@ -9,7 +9,7 @@
 class Utility {
 
 public:
-    static QJSValue convert(QJSEngine* jsEngine, QJsonValue jsonValue) {
+    static QJSValue convert(QJSEngine *jsEngine, QJsonValue jsonValue) {
         if (jsonValue.isBool()) {
             return QJSValue(jsonValue.toBool());
         } else if (jsonValue.isString()) {

@@ -15,8 +15,8 @@ void NativeDriver::destroyContext(int contextId)  {
     jsEngine->destroyContext(contextId);
 }
 
-void NativeDriver::invokeContextEntityMethod(int contextId, QString* method, ...) {
-    QJSValueList* arguments = new QJSValueList();
+void NativeDriver::invokeContextEntityMethod(int contextId, QString *method, ...) {
+    QJSValueList *arguments = new QJSValueList();
     arguments->append(QJSValue(QString::number(contextId)));
     arguments->append(QJSValue(*method));
 
@@ -25,8 +25,8 @@ void NativeDriver::invokeContextEntityMethod(int contextId, QString* method, ...
     auto argument = va_arg(vaList, QVariant*);
     while (argument != nullptr) {
         if (QString(typeid(QJsonObject).name()).contains(QString(argument->typeName()))) {
-            QJsonObject* jsonObject = static_cast<QJsonObject*>(argument->data());
-            QJsonValue* jsonValue = new QJsonValue(*jsonObject);
+            QJsonObject *jsonObject = static_cast<QJsonObject*>(argument->data());
+            QJsonValue *jsonValue = new QJsonValue(*jsonObject);
             QJSValue jsValue = Utility::convert(jsEngine->engine, *jsonValue);
             delete jsonValue;
             arguments->append(jsValue);

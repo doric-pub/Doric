@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
         file->close();
         delete file;
 
-        QString* source = new QString("Snake.js");
+        QString *source = new QString("Snake.js");
         Context *context = ContextManager::getInstance()->createContext(&script, source);
         context->show();
         context->init(180, 320);

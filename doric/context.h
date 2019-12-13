@@ -14,19 +14,19 @@ class Context
 
 private:
     int contextId;
-    QString* source;
+    QString *source;
 
 public:
-    Driver* driver = NativeDriver::getInstance();
+    Driver *driver = NativeDriver::getInstance();
 
-    Context(int contextId, QString* source) {
+    Context(int contextId, QString *source) {
         this->contextId = contextId;
         this->source = source;
     }
 
     void show() {
-        QString* method = new QString(Constant::DORIC_ENTITY_SHOW);
-        QVector<QString*>* arguments = new QVector<QString*>();
+        QString *method = new QString(Constant::DORIC_ENTITY_SHOW);
+        QVector<QString*> *arguments = new QVector<QString*>();
 
         driver->invokeContextEntityMethod(contextId, method, nullptr);
 
@@ -35,12 +35,12 @@ public:
     }
 
     void init(double width, double height) {
-        QJsonObject* jsonObject = new QJsonObject();
+        QJsonObject *jsonObject = new QJsonObject();
         jsonObject->insert("width", width);
         jsonObject->insert("height", height);
 
-        QString* method = new QString(Constant::DORIC_ENTITY_INIT);
-        QVariant* variant = new QVariant();
+        QString *method = new QString(Constant::DORIC_ENTITY_INIT);
+        QVariant *variant = new QVariant();
         variant->setValue(*jsonObject);
 
         driver->invokeContextEntityMethod(contextId, method, variant, nullptr);

@@ -44,10 +44,10 @@ public:
     }
 
 private:
-    NativeLog* nativeLog = new NativeLog();
-    NativeTimer* nativeTimer = new NativeTimer(engine);
-    NativeEmpty* nativeEmpty = new NativeEmpty();
-    NativeBridge* nativeBridge = new NativeBridge();
+    NativeLog *nativeLog = new NativeLog();
+    NativeTimer *nativeTimer = new NativeTimer(engine);
+    NativeEmpty *nativeEmpty = new NativeEmpty();
+    NativeBridge *nativeBridge = new NativeBridge();
 
     void initJSEngine() {
         engine->installExtensions(QJSEngine::AllExtensions);

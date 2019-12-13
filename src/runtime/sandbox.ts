@@ -194,11 +194,12 @@ export function jsObtainContext(id: string) {
 
 export function jsReleaseContext(id: string) {
     const context = gContexts.get(id)
+    const args = arguments
     if (context) {
         timerInfos.forEach((v, k) => {
             if (v.context === context) {
                 if (global.nativeClearTimer === undefined) {
-                    return Reflect.apply(_clearTimeout, undefined, arguments)
+                    return Reflect.apply(_clearTimeout, undefined, args)
                 }
                 timerInfos.delete(k)
                 nativeClearTimer(k)

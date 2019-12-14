@@ -17,8 +17,17 @@ import { Gravity } from "./gravity";
 import { Modeling } from "./types";
 
 export enum LayoutSpec {
+    /** 
+     * Depends on what's been set on width or height.
+    */
     JUST = 0,
+    /**
+     * Depends on it's content.
+     */
     FIT = 1,
+    /**
+     * Extend as much as parent let it take.
+     */
     MOST = 2,
 }
 

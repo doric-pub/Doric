@@ -1,5 +1,3 @@
-import { Modeling, Model } from "../util/types"
-
 /*
  * Copyright [2019] [Doric.Pub]
  *
@@ -16,6 +14,7 @@ import { Modeling, Model } from "../util/types"
  * limitations under the License.
  */
 
+import { Modeling, Model } from "../util/types"
 
 export type AnimatedKey = "translationX" | "translationY" | "scaleX" | "scaleY" | "rotation" | "pivotX" | "pivotY"
 

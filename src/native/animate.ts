@@ -15,37 +15,50 @@
  */
 import { Panel } from "../ui/panel"
 import { takeLet } from "../pattern/candies"
+import { BridgeContext } from "../runtime/global"
 /**
  * Only supports x,y,width,height,corner(just for four corners),rotation,bgColor,
  * @param panel @see Panel
  */
-export function animate(panel: Panel) {
-    return (args: {
-        animations: () => void,
-        duration: number,
-    }) => {
-        return takeLet(panel.context.animate)(it => {
-            return it.submit().then(() => {
-                args.animations()
-                return takeLet(panel.getRootView())(root => {
-                    if (root.isDirty()) {
-                        const model = root.toModel();
-                        (model as any).duration = args.duration
-                        const ret = it.animateRender(model)
-                        root.clean()
-                        return ret
-                    }
-                    for (let v of panel.allHeadViews()) {
-                        if (v.isDirty()) {
-                            const model = v.toModel()
+export function animate(context: BridgeContext) {
+    const entity = context.entity
+    if (entity instanceof Panel) {
+        let panel = entity
+        return (args: {
+            animations: () => void,
+            duration: number,
+        }) => {
+            return takeLet(panel.context.animate)(it => {
+                return it.submit().then(() => {
+                    args.animations()
+                    return takeLet(panel.getRootView())(root => {
+                        if (root.isDirty()) {
+                            const model = root.toModel();
+                            (model as any).duration = args.duration
                             const ret = it.animateRender(model)
-                            it.clean()
+                            root.clean()
                             return ret
                         }
-                    }
-                    throw new Error('Cannot find any animated elements')
+                        for (let v of panel.allHeadViews()) {
+                            if (v.isDirty()) {
+                                const model = v.toModel()
+                                const ret = it.animateRender(model)
+                                it.clean()
+                                return ret
+                            }
+                        }
+                        throw new Error('Cannot find any animated elements')
+                    })
                 })
-            })
-        }) as Promise<any>
+            }) as Promise<any>
+        }
+    } else {
+        return (args: {
+            animations: () => void,
+            duration: number,
+        }) => {
+            return Promise.reject(`Cannot find panel in Context:${context.id}`)
+        }
     }
+
 }

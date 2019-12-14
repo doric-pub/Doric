@@ -367,9 +367,11 @@ export abstract class Superview extends View {
     toModel() {
         const subviews = []
         for (let v of this.allSubviews()) {
-            v.superview = this
-            if (v.isDirty()) {
-                subviews.push(v.toModel())
+            if (v != undefined) {
+                v.superview = this
+                if (v.isDirty()) {
+                    subviews.push(v.toModel())
+                }
             }
         }
         this.dirtyProps.subviews = subviews

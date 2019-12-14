@@ -46,7 +46,7 @@ export class Image extends View implements IImage {
 
 export function image(config: IImage) {
     const ret = new Image
-    ret.layoutConfig = layoutConfig().wrap()
+    ret.layoutConfig = layoutConfig().fit()
     for (let key in config) {
         Reflect.set(ret, key, Reflect.get(config, key, config), ret)
     }

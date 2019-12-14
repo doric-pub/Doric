@@ -52,7 +52,7 @@ export class Refreshable extends Superview implements IRefreshable {
 
 export function refreshable(config: IRefreshable) {
     const ret = new Refreshable
-    ret.layoutConfig = layoutConfig().wrap()
+    ret.layoutConfig = layoutConfig().fit()
     for (let key in config) {
         Reflect.set(ret, key, Reflect.get(config, key, config), ret)
     }

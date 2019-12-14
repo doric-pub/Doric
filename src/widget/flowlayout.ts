@@ -123,7 +123,7 @@ export function flowlayout(config: IFlowLayout) {
 
 export function flowItem(item: View) {
     return (new FlowLayoutItem).also((it) => {
-        it.layoutConfig = layoutConfig().wrap()
+        it.layoutConfig = layoutConfig().fit()
         it.addChild(item)
     })
 }

@@ -111,7 +111,7 @@ export function list(config: IList) {
 
 export function listItem(item: View) {
     return (new ListItem).also((it) => {
-        it.layoutConfig = layoutConfig().atmost().h(LayoutSpec.WRAP_CONTENT)
+        it.layoutConfig = layoutConfig().most().configHeight(LayoutSpec.FIT)
         it.addChild(item)
     })
 }

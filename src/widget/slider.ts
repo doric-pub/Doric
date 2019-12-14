@@ -77,7 +77,7 @@ export class Slider extends Superview implements ISlider {
 
 export function slideItem(item: View) {
     return (new SlideItem).also((it) => {
-        it.layoutConfig = layoutConfig().wrap()
+        it.layoutConfig = layoutConfig().fit()
         it.addChild(item)
     })
 }

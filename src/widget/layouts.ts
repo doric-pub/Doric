@@ -53,7 +53,7 @@ export class HLayout extends LinearLayout implements IHLayout {
 
 export function stack(views: View[]) {
     const ret = new Stack
-    ret.layoutConfig = layoutConfig().wrap()
+    ret.layoutConfig = layoutConfig().fit()
     for (let v of views) {
         ret.addChild(v)
     }
@@ -62,7 +62,7 @@ export function stack(views: View[]) {
 
 export function hlayout(views: View[]) {
     const ret = new HLayout
-    ret.layoutConfig = layoutConfig().wrap()
+    ret.layoutConfig = layoutConfig().fit()
     for (let v of views) {
         ret.addChild(v)
     }
@@ -71,7 +71,7 @@ export function hlayout(views: View[]) {
 
 export function vlayout(views: View[]) {
     const ret = new VLayout
-    ret.layoutConfig = layoutConfig().wrap()
+    ret.layoutConfig = layoutConfig().fit()
     for (let v of views) {
         ret.addChild(v)
     }

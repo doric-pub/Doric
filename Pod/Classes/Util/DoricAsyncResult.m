@@ -49,7 +49,7 @@
 }
 
 - (BOOL)hasResult {
-    return self.result;
+    return self.result != nil;
 }
 
 - (id)getResult {

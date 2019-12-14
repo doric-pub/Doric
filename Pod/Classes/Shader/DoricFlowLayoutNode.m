@@ -26,7 +26,7 @@
 - (CGFloat)doricFlowLayoutItemHeightAtIndexPath:(NSIndexPath *)indexPath;
 
 - (CGFloat)doricFlowLayoutItemWidthAtIndexPath:(NSIndexPath *)indexPath;
-- (BOOL)isLoadView:(NSIndexPath *)indexPath;
+
 - (CGFloat)doricFlowLayoutColumnSpace;
 
 - (CGFloat)doricFlowLayoutRowSpace;
@@ -109,7 +109,7 @@
             maxY = MAX(maxY, [column floatValue]);
         }
         y = maxY + self.rowSpace;
-    }else {
+    } else {
         self.columnHeightInfo[minYOfColumn] = @(y + height);
     }
     UICollectionViewLayoutAttributes *attrs = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
@@ -230,7 +230,7 @@
         self.loadMoreViewId = prop;
     } else if ([@"loadMore" isEqualToString:name]) {
         self.loadMore = [prop boolValue];
-    } else{
+    } else {
         [super blendView:view forPropName:name propValue:prop];
     }
 }
@@ -312,7 +312,7 @@
     NSUInteger position = (NSUInteger) indexPath.row;
     NSDictionary *model = [self itemModelAt:position];
     NSDictionary *props = model[@"props"];
-    
+
     DoricFlowLayoutViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"doricCell" forIndexPath:indexPath];
     if (!cell.viewNode) {
         DoricFlowLayoutItemNode *itemNode = [[DoricFlowLayoutItemNode alloc] initWithContext:self.doricContext];
@@ -320,7 +320,7 @@
         cell.viewNode = itemNode;
         [cell.contentView addSubview:itemNode.view];
     }
-    
+
     DoricFlowLayoutItemNode *node = cell.viewNode;
     node.viewId = model[@"id"];
     [node blend:props];
@@ -330,7 +330,7 @@
         size = CGSizeMake(collectionView.width, size.height);
         [self callJSResponse:self.onLoadMoreFuncId, nil];
     }
-    
+
     [node.view layoutSelf:size];
     [self callItem:position size:size];
     return cell;

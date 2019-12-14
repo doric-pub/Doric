@@ -39,4 +39,4 @@ NSBundle *_Nonnull DoricBundle(void);
 
 void ShowToast(NSString *_Nonnull text, DoricGravity gravity);
 
-UIImage *_Nonnull UIImageWithColor(UIColor *color);
+UIImage *_Nonnull UIImageWithColor(UIColor * _Nonnull color);

@@ -53,6 +53,7 @@ class ImageDemo extends Panel {
                 imageUrl,
                 width: 300,
                 height: 300,
+                isBlur: true,
                 border: {
                     width: 2,
                     color: Color.GRAY,

@@ -1,5 +1,5 @@
 Pod::Spec.new do |s|
-  s.name             = 'Doric'
+  s.name             = 'DoricCore'
   s.version          = '0.1.2'
   s.summary          = 'Doric iOS SDK'
 

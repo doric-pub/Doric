@@ -19,7 +19,6 @@
 
 #import "DoricLayouts.h"
 #import <objc/runtime.h>
-#import <Doric/DoricLayouts.h>
 #import "UIView+Doric.h"
 
 static const void *kLayoutConfig = &kLayoutConfig;
@@ -428,7 +427,7 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
         if (!childConfig) {
             childConfig = [DoricLayoutConfig new];
         }
- 
+
         CGSize size = [child measureSize:CGSizeMake(
                 targetSize.width - xStart - padding.right,
                 targetSize.height - padding.top - padding.bottom)];

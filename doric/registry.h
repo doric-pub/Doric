@@ -11,7 +11,9 @@ private:
 public:
     Registry();
 
-    void registerNativePlugin(QString name);
+    void registerNativePlugin(QString key, QString value);
+
+    QString acquirePluginInfo(QString key);
 };
 
 #endif // REGISTRY_H

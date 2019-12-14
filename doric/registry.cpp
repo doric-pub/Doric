@@ -4,9 +4,14 @@
 #include "plugin/shader_plugin.h"
 
 Registry::Registry() {
-    registerNativePlugin(typeid(ShaderPlugin).name());
+    registerNativePlugin("shader", typeid(ShaderPlugin).name());
 }
 
-void Registry::registerNativePlugin(QString name) {
-    qDebug() << name;
+void Registry::registerNativePlugin(QString key, QString value) {
+    qDebug() << key + " " + value;
+    pluginInfoMap.insert(key, value);
+}
+
+QString Registry::acquirePluginInfo(QString key) {
+    return pluginInfoMap.take(key);
 }

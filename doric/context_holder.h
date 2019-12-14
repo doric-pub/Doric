@@ -3,13 +3,13 @@
 
 #include "context.h"
 
-class ContextHolder {
-
+class ContextHolder : public QObject {
+    Q_OBJECT
 public:
     Context *_context;
 
 public:
-    ContextHolder(Context *context) {
+    ContextHolder(Context *context, QObject *parent = nullptr) : QObject(parent) {
         this->_context = context;
     }
 };

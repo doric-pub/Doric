@@ -1,3 +1,5 @@
+#include <QDebug>
+
 #include "stdarg.h"
 
 #include "native_driver.h"
@@ -49,4 +51,8 @@ void NativeDriver::invokeContextEntityMethod(int contextId, QString *method, ...
 
 void NativeDriver::invokeDoricMethod(QString *method, ...) {
 
+}
+
+Registry* NativeDriver::getRegistry() {
+    return jsEngine->registry;
 }

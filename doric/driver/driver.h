@@ -3,6 +3,8 @@
 
 #include <QtPlugin>
 
+#include "registry.h"
+
 class Driver {
 
 public:
@@ -11,6 +13,8 @@ public:
 
     virtual void invokeContextEntityMethod(int contextId, QString *method, ...) = 0;
     virtual void invokeDoricMethod(QString *method, ...) = 0;
+
+    virtual Registry *getRegistry() = 0;
 
     virtual ~Driver() = default;
 };

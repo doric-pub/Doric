@@ -1,8 +1,6 @@
 #ifndef NATIVE_DRIVER_H
 #define NATIVE_DRIVER_H
 
-#include <QDebug>
-
 #include "driver.h"
 #include "engine/js_engine.h"
 
@@ -28,6 +26,8 @@ public:
 
     void invokeContextEntityMethod(int contextId, QString *method, ...) override;
     void invokeDoricMethod(QString *method, ...) override;
+
+    Registry * getRegistry() override;
 };
 
 #endif // NATIVE_DRIVER_H

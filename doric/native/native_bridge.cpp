@@ -8,4 +8,5 @@ Q_INVOKABLE void NativeBridge::function(int contextId, QString module, QString m
                 "callbackId: " + callbackId + ", " +
                 "arguments: " + jsValue.toString();
     Context *context = ContextManager::getInstance()->getContext(contextId);
+    context->driver->getRegistry();
 }

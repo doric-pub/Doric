@@ -7,11 +7,14 @@
 #include "native/native_empty.h"
 #include "native/native_log.h"
 #include "native/native_timer.h"
+#include "registry.h"
 
 class JSEngine {
 
 public:
     QJSEngine *engine = new QJSEngine();
+
+    Registry *registry = new Registry();
 
     JSEngine();
 

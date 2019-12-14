@@ -2,9 +2,6 @@
 #define REGISTRY_H
 
 #include <QMap>
-#include <QSet>
-
-#include "plugin/shader_plugin.h"
 
 class Registry {
 

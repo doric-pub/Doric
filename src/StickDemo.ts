@@ -121,7 +121,7 @@ class StickDemo extends Panel {
             }
         })
         this.indicator.layoutConfig = layoutConfig().exactly().a(Gravity.Bottom).m({ bottom: 13 })
-        animate(this)({
+        animate(context)({
             animations: () => {
                 this.indicator.centerX = this.getRootView().width / this.tabs.length * (page + 0.5)
             },

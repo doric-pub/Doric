@@ -50,7 +50,7 @@ class EffectsDemo extends Panel {
                                 width: 5,
                                 color: colors[3]
                             },
-                            layoutConfig: layoutConfig().exactly().m({
+                            layoutConfig: layoutConfig().just().configMargin({
                                 left: 5,
                                 right: 5,
                                 bottom: 5,
@@ -65,7 +65,7 @@ class EffectsDemo extends Panel {
                             width: 100,
                             height: 100,
                             corners: 10,
-                            layoutConfig: layoutConfig().exactly().m({
+                            layoutConfig: layoutConfig().just().configMargin({
                                 bottom: 10
                             })
                         }),]).apply({
@@ -84,7 +84,7 @@ class EffectsDemo extends Panel {
                                 offsetY: 3,
                                 radius: 5,
                             },
-                            layoutConfig: layoutConfig().exactly().m({
+                            layoutConfig: layoutConfig().just().configMargin({
                                 bottom: 10
                             })
                         }),]).apply({
@@ -103,7 +103,7 @@ class EffectsDemo extends Panel {
                                 color: colors[3]
                             },
                             corners: 10,
-                            layoutConfig: layoutConfig().exactly().m({
+                            layoutConfig: layoutConfig().just().configMargin({
                                 left: 5,
                                 right: 5,
                                 bottom: 5,
@@ -128,7 +128,7 @@ class EffectsDemo extends Panel {
                                 offsetY: 3,
                                 radius: 5,
                             },
-                            layoutConfig: layoutConfig().exactly().m({
+                            layoutConfig: layoutConfig().just().configMargin({
                                 bottom: 10
                             })
                         }),]).apply({
@@ -148,7 +148,7 @@ class EffectsDemo extends Panel {
                                 offsetY: 3,
                                 radius: 5,
                             },
-                            layoutConfig: layoutConfig().exactly().m({
+                            layoutConfig: layoutConfig().just().configMargin({
                                 bottom: 10
                             })
                         }),]).apply({
@@ -172,7 +172,7 @@ class EffectsDemo extends Panel {
                                 offsetY: 3,
                                 radius: 5,
                             },
-                            layoutConfig: layoutConfig().exactly().m({
+                            layoutConfig: layoutConfig().just().configMargin({
                                 left: 5,
                                 right: 5,
                                 bottom: 5,
@@ -196,7 +196,7 @@ class EffectsDemo extends Panel {
                                 offsetY: 0,
                                 radius: 10,
                             },
-                            layoutConfig: layoutConfig().exactly().m({
+                            layoutConfig: layoutConfig().just().configMargin({
                                 left: 10,
                                 right: 10,
                                 bottom: 10,
@@ -218,7 +218,7 @@ class EffectsDemo extends Panel {
                                 offsetY: 5,
                                 radius: 5,
                             },
-                            layoutConfig: layoutConfig().exactly().m({
+                            layoutConfig: layoutConfig().just().configMargin({
                                 left: 10,
                                 right: 10,
                                 bottom: 10,
@@ -240,7 +240,7 @@ class EffectsDemo extends Panel {
                                 offsetY: 5,
                                 radius: 5,
                             },
-                            layoutConfig: layoutConfig().exactly().m({
+                            layoutConfig: layoutConfig().just().configMargin({
                                 left: 10,
                                 right: 10,
                                 bottom: 10,
@@ -262,7 +262,7 @@ class EffectsDemo extends Panel {
                                 offsetY: 5,
                                 radius: 5,
                             },
-                            layoutConfig: layoutConfig().exactly().m({
+                            layoutConfig: layoutConfig().just().configMargin({
                                 left: 10,
                                 right: 10,
                                 bottom: 10,
@@ -279,7 +279,7 @@ class EffectsDemo extends Panel {
                             width: 100,
                             height: 100,
                             corners: 50,
-                            layoutConfig: layoutConfig().exactly().m({
+                            layoutConfig: layoutConfig().just().configMargin({
                                 left: 5,
                                 right: 5,
                                 bottom: 5,
@@ -296,7 +296,7 @@ class EffectsDemo extends Panel {
                             corners: {
                                 leftTop: 50,
                             },
-                            layoutConfig: layoutConfig().exactly().m({
+                            layoutConfig: layoutConfig().just().configMargin({
                                 left: 5,
                                 right: 5,
                                 bottom: 5,
@@ -313,7 +313,7 @@ class EffectsDemo extends Panel {
                             corners: {
                                 rightTop: 50,
                             },
-                            layoutConfig: layoutConfig().exactly().m({
+                            layoutConfig: layoutConfig().just().configMargin({
                                 left: 5,
                                 right: 5,
                                 bottom: 5,
@@ -330,7 +330,7 @@ class EffectsDemo extends Panel {
                             corners: {
                                 leftBottom: 50,
                             },
-                            layoutConfig: layoutConfig().exactly().m({
+                            layoutConfig: layoutConfig().just().configMargin({
                                 left: 5,
                                 right: 5,
                                 bottom: 5,
@@ -347,7 +347,7 @@ class EffectsDemo extends Panel {
                             corners: {
                                 rightBottom: 50,
                             },
-                            layoutConfig: layoutConfig().exactly().m({
+                            layoutConfig: layoutConfig().just().configMargin({
                                 left: 5,
                                 right: 5,
                                 bottom: 5,
@@ -361,7 +361,7 @@ class EffectsDemo extends Panel {
                 it.space = 20
             }),
         ).also(it => {
-            it.layoutConfig = layoutConfig().atmost()
+            it.layoutConfig = layoutConfig().most()
         }).in(rootView)
     }
 }

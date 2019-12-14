@@ -12,7 +12,7 @@ class NetworkDemo extends Panel {
                 backgroundColor: colors[0],
                 textSize: 30,
                 textColor: Color.WHITE,
-                layoutConfig: layoutConfig().exactly(),
+                layoutConfig: layoutConfig().just(),
                 onClick: () => {
                     network(context).get('https://m.baidu.com').then(
                         e => {
@@ -24,11 +24,11 @@ class NetworkDemo extends Panel {
                 }
             } as IText),
         ]).apply({
-            layoutConfig: layoutConfig().atmost().h(LayoutSpec.WRAP_CONTENT),
+            layoutConfig: layoutConfig().most().configHeight(LayoutSpec.FIT),
             gravity: gravity().center(),
             space: 10,
         } as IVLayout)).apply({
-            layoutConfig: layoutConfig().atmost(),
+            layoutConfig: layoutConfig().most(),
         }).in(rootView)
     }
 }

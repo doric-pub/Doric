@@ -9,7 +9,7 @@ function thisLabel(str: string) {
         backgroundColor: colors[0],
         textSize: 15,
         textColor: Color.WHITE,
-        layoutConfig: layoutConfig().exactly(),
+        layoutConfig: layoutConfig().just(),
     })
 }
 
@@ -173,11 +173,11 @@ class AnimatorDemo extends Panel {
             stack([
                 view,
             ]).apply({
-                layoutConfig: layoutConfig().atmost(),
+                layoutConfig: layoutConfig().most(),
                 backgroundColor: colors[1].alpha(0.3 * 255),
             }),
         ]).apply({
-            layoutConfig: layoutConfig().atmost(),
+            layoutConfig: layoutConfig().most(),
             gravity: gravity().center(),
             space: 10,
         } as IVLayout).in(rootView)

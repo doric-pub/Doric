@@ -14,7 +14,7 @@ class MyDemo extends Panel {
                 header: pullable(
                     stack([]).apply({
                         backgroundColor: Color.RED,
-                        layoutConfig: layoutConfig().exactly(),
+                        layoutConfig: layoutConfig().just(),
                         width: 100,
                         height: 30,
                     }),
@@ -32,7 +32,7 @@ class MyDemo extends Panel {
                     renderItem: (idx) => {
                         return listItem(text({
                             text: `Item :${idx}`,
-                            layoutConfig: layoutConfig().exactly(),
+                            layoutConfig: layoutConfig().just(),
                             width: root.width,
                             height: 50,
                             textColor: Color.WHITE,
@@ -42,14 +42,14 @@ class MyDemo extends Panel {
                 }).apply({
                 }),
             }).apply({
-                layoutConfig: layoutConfig().atmost(),
+                layoutConfig: layoutConfig().most(),
             }).also(v => {
                 v.top = 200
             }),
 
             headerImage = image({
                 imageUrl: "https://img.zcool.cn/community/01e75b5da933daa801209e1ffa4649.jpg@1280w_1l_2o_100sh.jpg",
-                layoutConfig: layoutConfig().exactly(),
+                layoutConfig: layoutConfig().just(),
                 width: root.width,
                 height: 200,
                 scaleType: ScaleType.ScaleAspectFill,

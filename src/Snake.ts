@@ -155,8 +155,8 @@ class SnakeView extends ViewHolder {
                     margin: {
                         top: 20
                     },
-                    widthSpec: LayoutSpec.WRAP_CONTENT,
-                    heightSpec: LayoutSpec.WRAP_CONTENT,
+                    widthSpec: LayoutSpec.FIT,
+                    heightSpec: LayoutSpec.FIT,
                 },
             }),
             (new Stack).also(panel => {
@@ -169,14 +169,14 @@ class SnakeView extends ViewHolder {
                     textSize: 30,
                     textColor: Color.parse("#ffffff"),
                     layoutConfig: {
-                        widthSpec: LayoutSpec.WRAP_CONTENT,
-                        heightSpec: LayoutSpec.WRAP_CONTENT,
+                        widthSpec: LayoutSpec.FIT,
+                        heightSpec: LayoutSpec.FIT,
                     },
                 }).also(it => this.start = it),
             ]).also(it => {
                 it.layoutConfig = {
-                    widthSpec: LayoutSpec.WRAP_CONTENT,
-                    heightSpec: LayoutSpec.WRAP_CONTENT,
+                    widthSpec: LayoutSpec.FIT,
+                    heightSpec: LayoutSpec.FIT,
                 }
             }),
 
@@ -190,14 +190,14 @@ class SnakeView extends ViewHolder {
                         textAlignment: new Gravity().center(),
                         backgroundColor: Color.parse('#ffff00'),
                         layoutConfig: {
-                            widthSpec: LayoutSpec.EXACTLY,
-                            heightSpec: LayoutSpec.EXACTLY,
+                            widthSpec: LayoutSpec.JUST,
+                            heightSpec: LayoutSpec.JUST,
                         },
                     }).also(it => this.up = it)
                 ]).also(it => {
                     it.layoutConfig = {
-                        widthSpec: LayoutSpec.WRAP_CONTENT,
-                        heightSpec: LayoutSpec.WRAP_CONTENT,
+                        widthSpec: LayoutSpec.FIT,
+                        heightSpec: LayoutSpec.FIT,
                     }
                 }),
                 hlayout([
@@ -209,8 +209,8 @@ class SnakeView extends ViewHolder {
                         textAlignment: new Gravity().center(),
                         backgroundColor: Color.parse('#ffff00'),
                         layoutConfig: {
-                            widthSpec: LayoutSpec.EXACTLY,
-                            heightSpec: LayoutSpec.EXACTLY,
+                            widthSpec: LayoutSpec.JUST,
+                            heightSpec: LayoutSpec.JUST,
                         },
                     }).also(it => this.left = it),
                     text({
@@ -221,8 +221,8 @@ class SnakeView extends ViewHolder {
                         textAlignment: new Gravity().center(),
                         backgroundColor: Color.parse('#ffff00'),
                         layoutConfig: {
-                            widthSpec: LayoutSpec.EXACTLY,
-                            heightSpec: LayoutSpec.EXACTLY,
+                            widthSpec: LayoutSpec.JUST,
+                            heightSpec: LayoutSpec.JUST,
                         },
                     }).also(it => this.down = it),
                     text({
@@ -233,14 +233,14 @@ class SnakeView extends ViewHolder {
                         textAlignment: new Gravity().center(),
                         backgroundColor: Color.parse('#ffff00'),
                         layoutConfig: {
-                            widthSpec: LayoutSpec.EXACTLY,
-                            heightSpec: LayoutSpec.EXACTLY,
+                            widthSpec: LayoutSpec.JUST,
+                            heightSpec: LayoutSpec.JUST,
                         },
                     }).also(it => this.right = it),
                 ]).also(it => {
                     it.layoutConfig = {
-                        widthSpec: LayoutSpec.WRAP_CONTENT,
-                        heightSpec: LayoutSpec.WRAP_CONTENT,
+                        widthSpec: LayoutSpec.FIT,
+                        heightSpec: LayoutSpec.FIT,
                     }
                     it.space = 10
                 }),
@@ -249,16 +249,16 @@ class SnakeView extends ViewHolder {
                 controlArea.space = 10
                 controlArea.layoutConfig = {
                     alignment: new Gravity().centerX(),
-                    widthSpec: LayoutSpec.WRAP_CONTENT,
-                    heightSpec: LayoutSpec.WRAP_CONTENT,
+                    widthSpec: LayoutSpec.FIT,
+                    heightSpec: LayoutSpec.FIT,
                 }
             }),
         ]).also(it => {
             it.space = 20
             it.layoutConfig = {
                 alignment: new Gravity().centerX().top(),
-                widthSpec: LayoutSpec.AT_MOST,
-                heightSpec: LayoutSpec.AT_MOST,
+                widthSpec: LayoutSpec.MOST,
+                heightSpec: LayoutSpec.MOST,
             }
             it.gravity = new Gravity().centerX()
         }).in(root)

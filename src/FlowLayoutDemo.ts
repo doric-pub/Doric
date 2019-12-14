@@ -16,7 +16,7 @@ const imageUrls = [
 class FlowDemo extends Panel {
     build(rootView: Group): void {
         flowlayout({
-            layoutConfig: layoutConfig().atmost(),
+            layoutConfig: layoutConfig().most(),
             itemCount: 100,
             columnCount: 3,
             columnSpace: 10,
@@ -25,13 +25,13 @@ class FlowDemo extends Panel {
                 return new FlowLayoutItem().apply({
                     backgroundColor: colors[idx % colors.length],
                     height: 50 + (idx % 3) * 20,
-                    layoutConfig: layoutConfig().w(LayoutSpec.AT_MOST),
+                    layoutConfig: layoutConfig().configWidth(LayoutSpec.MOST),
                 }).also(it => {
                     it.addChild(text({
                         text: `${idx}`,
                         textColor: Color.WHITE,
                         textSize: 20,
-                        layoutConfig: layoutConfig().wrap().a(Gravity.Center)
+                        layoutConfig: layoutConfig().fit().configAligmnet(Gravity.Center)
                     }))
                 })
             },
@@ -45,13 +45,13 @@ class FlowDemo extends Panel {
             it.loadMoreView = new FlowLayoutItem().apply({
                 backgroundColor: colors[500 % colors.length],
                 height: 50,
-                layoutConfig: layoutConfig().w(LayoutSpec.AT_MOST),
+                layoutConfig: layoutConfig().configWidth(LayoutSpec.MOST),
             }).also(it => {
                 it.addChild(text({
                     text: 'load more',
                     textColor: Color.WHITE,
                     textSize: 20,
-                    layoutConfig: layoutConfig().wrap().a(Gravity.Center)
+                    layoutConfig: layoutConfig().fit().configAligmnet(Gravity.Center)
                 }))
             })
         })

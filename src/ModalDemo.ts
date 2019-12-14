@@ -7,7 +7,7 @@ class ModalDemo extends Panel {
         scroller(vlayout([
             text({
                 text: "Modal",
-                layoutConfig: layoutConfig().w(LayoutSpec.AT_MOST),
+                layoutConfig: layoutConfig().configWidth(LayoutSpec.MOST),
                 textSize: 30,
                 textColor: Color.WHITE,
                 backgroundColor: colors[1],
@@ -21,7 +21,7 @@ class ModalDemo extends Panel {
                 backgroundColor: colors[0],
                 textSize: 30,
                 textColor: Color.WHITE,
-                layoutConfig: layoutConfig().exactly(),
+                layoutConfig: layoutConfig().just(),
                 onClick: () => {
                     modal(context).toast('This is a toast.')
                 }
@@ -33,7 +33,7 @@ class ModalDemo extends Panel {
                 backgroundColor: colors[0],
                 textSize: 30,
                 textColor: Color.WHITE,
-                layoutConfig: layoutConfig().exactly(),
+                layoutConfig: layoutConfig().just(),
                 onClick: () => {
                     modal(context).toast('This is a toast.', Gravity.Top)
                 }
@@ -46,14 +46,14 @@ class ModalDemo extends Panel {
                 backgroundColor: colors[0],
                 textSize: 30,
                 textColor: Color.WHITE,
-                layoutConfig: layoutConfig().exactly(),
+                layoutConfig: layoutConfig().just(),
                 onClick: () => {
                     modal(context).toast('This is a toast.', Gravity.Center)
                 }
             } as IText),
             text({
                 text: "Alert",
-                layoutConfig: layoutConfig().w(LayoutSpec.AT_MOST),
+                layoutConfig: layoutConfig().configWidth(LayoutSpec.MOST),
                 textSize: 30,
                 textColor: Color.WHITE,
                 backgroundColor: colors[2],
@@ -66,7 +66,7 @@ class ModalDemo extends Panel {
                 backgroundColor: colors[0],
                 textSize: 30,
                 textColor: Color.WHITE,
-                layoutConfig: layoutConfig().exactly(),
+                layoutConfig: layoutConfig().just(),
                 onClick: () => {
                     modal(context).alert({
                         msg: 'This is alert.',
@@ -79,7 +79,7 @@ class ModalDemo extends Panel {
             } as IText),
             text({
                 text: "Confirm",
-                layoutConfig: layoutConfig().w(LayoutSpec.AT_MOST),
+                layoutConfig: layoutConfig().configWidth(LayoutSpec.MOST),
                 textSize: 30,
                 textColor: Color.WHITE,
                 backgroundColor: colors[3],
@@ -92,7 +92,7 @@ class ModalDemo extends Panel {
                 backgroundColor: colors[0],
                 textSize: 30,
                 textColor: Color.WHITE,
-                layoutConfig: layoutConfig().exactly(),
+                layoutConfig: layoutConfig().just(),
                 onClick: () => {
                     modal(context).confirm({
                         msg: 'This is Confirm.',
@@ -110,7 +110,7 @@ class ModalDemo extends Panel {
             } as IText),
             text({
                 text: "Prompt",
-                layoutConfig: layoutConfig().w(LayoutSpec.AT_MOST),
+                layoutConfig: layoutConfig().configWidth(LayoutSpec.MOST),
                 textSize: 30,
                 textColor: Color.WHITE,
                 backgroundColor: colors[4],
@@ -123,7 +123,7 @@ class ModalDemo extends Panel {
                 backgroundColor: colors[0],
                 textSize: 30,
                 textColor: Color.WHITE,
-                layoutConfig: layoutConfig().exactly(),
+                layoutConfig: layoutConfig().just(),
                 onClick: () => {
                     modal(context).prompt({
                         msg: 'This is Prompt.',
@@ -140,11 +140,11 @@ class ModalDemo extends Panel {
                 }
             } as IText),
         ]).apply({
-            layoutConfig: layoutConfig().atmost().h(LayoutSpec.WRAP_CONTENT),
+            layoutConfig: layoutConfig().most().configHeight(LayoutSpec.FIT),
             gravity: Gravity.Center,
             space: 10,
         } as IVLayout)).apply({
-            layoutConfig: layoutConfig().atmost(),
+            layoutConfig: layoutConfig().most(),
         }).in(rootView)
     }
 }

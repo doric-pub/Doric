@@ -6,7 +6,7 @@ class RefreshableDemo extends Panel {
     build(rootView: Group): void {
         let refreshImage: Image
         let refreshView = refreshable({
-            layoutConfig: layoutConfig().atmost(),
+            layoutConfig: layoutConfig().most(),
             onRefresh: () => {
                 log('onRefresh')
                 setTimeout(() => {
@@ -16,7 +16,7 @@ class RefreshableDemo extends Panel {
             header: pullable(
                 stack([
                     image({
-                        layoutConfig: layoutConfig().exactly().m({ top: 50, bottom: 10, }),
+                        layoutConfig: layoutConfig().just().configMargin({ top: 50, bottom: 10, }),
                         width: 30,
                         height: 30,
                         imageBase64: icon_refresh,
@@ -43,7 +43,7 @@ class RefreshableDemo extends Panel {
                     backgroundColor: colors[0],
                     textSize: 30,
                     textColor: Color.WHITE,
-                    layoutConfig: layoutConfig().exactly(),
+                    layoutConfig: layoutConfig().just(),
                     onClick: () => {
                         refreshView.setRefreshing(context, true)
                     }
@@ -54,7 +54,7 @@ class RefreshableDemo extends Panel {
                     backgroundColor: colors[0],
                     textSize: 30,
                     textColor: Color.WHITE,
-                    layoutConfig: layoutConfig().exactly(),
+                    layoutConfig: layoutConfig().just(),
                     onClick: () => {
                         refreshView.setRefreshing(context, false)
                     }
@@ -66,7 +66,7 @@ class RefreshableDemo extends Panel {
                     backgroundColor: colors[0],
                     textSize: 30,
                     textColor: Color.WHITE,
-                    layoutConfig: layoutConfig().exactly(),
+                    layoutConfig: layoutConfig().just(),
                     onClick: () => {
                         refreshView.setRefreshable(context, true)
                     }
@@ -78,13 +78,13 @@ class RefreshableDemo extends Panel {
                     backgroundColor: colors[0],
                     textSize: 30,
                     textColor: Color.WHITE,
-                    layoutConfig: layoutConfig().exactly(),
+                    layoutConfig: layoutConfig().just(),
                     onClick: () => {
                         refreshView.setRefreshable(context, false)
                     }
                 } as IText),
             ]).apply({
-                layoutConfig: layoutConfig().atmost().h(LayoutSpec.WRAP_CONTENT),
+                layoutConfig: layoutConfig().most().configHeight(LayoutSpec.FIT),
                 gravity: gravity().centerX(),
                 space: 10,
             } as IVLayout))

@@ -12,14 +12,14 @@ class PopoverDemo extends Panel {
                 backgroundColor: colors[0],
                 textSize: 30,
                 textColor: Color.WHITE,
-                layoutConfig: layoutConfig().exactly(),
+                layoutConfig: layoutConfig().just(),
                 onClick: () => {
                     popover(context).show(text({
                         width: 200,
                         height: 50,
                         backgroundColor: colors[0],
                         textColor: Color.WHITE,
-                        layoutConfig: layoutConfig().exactly().a(Gravity.Center),
+                        layoutConfig: layoutConfig().just().configAligmnet(Gravity.Center),
                         text: "This is PopOver Window",
                     }).also(v => {
                         let idx = 0
@@ -34,11 +34,11 @@ class PopoverDemo extends Panel {
                 }
             } as IText),
         ]).apply({
-            layoutConfig: layoutConfig().atmost().h(LayoutSpec.WRAP_CONTENT),
+            layoutConfig: layoutConfig().most().configHeight(LayoutSpec.FIT),
             gravity: gravity().center(),
             space: 10,
         } as IVLayout)).apply({
-            layoutConfig: layoutConfig().atmost(),
+            layoutConfig: layoutConfig().most(),
         }).in(rootView)
     }
 }

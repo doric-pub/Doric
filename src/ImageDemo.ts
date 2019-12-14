@@ -10,7 +10,7 @@ class ImageDemo extends Panel {
         scroller(vlayout([
             text({
                 text: "Image Demo",
-                layoutConfig: layoutConfig().w(LayoutSpec.AT_MOST),
+                layoutConfig: layoutConfig().configWidth(LayoutSpec.MOST),
                 textSize: 30,
                 textColor: Color.WHITE,
                 backgroundColor: colors[5],
@@ -59,7 +59,7 @@ class ImageDemo extends Panel {
                     color: Color.GRAY,
                 },
                 scaleType: ScaleType.ScaleToFill,
-                layoutConfig: layoutConfig().exactly(),
+                layoutConfig: layoutConfig().just(),
                 loadCallback: (ret) => {
                 }
             }),
@@ -73,7 +73,7 @@ class ImageDemo extends Panel {
                     color: Color.GRAY,
                 },
                 scaleType: ScaleType.ScaleAspectFit,
-                layoutConfig: layoutConfig().exactly(),
+                layoutConfig: layoutConfig().just(),
             }),
             label('ScaleAspectFill'),
             image({
@@ -85,7 +85,7 @@ class ImageDemo extends Panel {
                     color: Color.GRAY,
                 },
                 scaleType: ScaleType.ScaleAspectFill,
-                layoutConfig: layoutConfig().exactly(),
+                layoutConfig: layoutConfig().just(),
             }),
             label('ImageBase64'),
             image({
@@ -97,14 +97,14 @@ class ImageDemo extends Panel {
                     color: Color.GRAY,
                 },
                 scaleType: ScaleType.ScaleAspectFill,
-                layoutConfig: layoutConfig().exactly(),
+                layoutConfig: layoutConfig().just(),
             }),
         ]).apply({
-            layoutConfig: layoutConfig().atmost().h(LayoutSpec.WRAP_CONTENT),
+            layoutConfig: layoutConfig().most().configHeight(LayoutSpec.FIT),
             gravity: gravity().center(),
             space: 10,
         } as IVLayout)).apply({
-            layoutConfig: layoutConfig().atmost(),
+            layoutConfig: layoutConfig().most(),
         }).in(rootView)
     }
 }

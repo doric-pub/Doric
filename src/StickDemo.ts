@@ -4,7 +4,7 @@ import { title, colors } from "./utils";
 function tab(idx: number, title: string, sliderView: Slider) {
     return text({
         text: title,
-        layoutConfig: layoutConfig().exactly().wg(1),
+        layoutConfig: layoutConfig().just().configWeight(1),
         height: 41,
         onClick: () => {
             sliderView.slidePage(context, 0, true)
@@ -27,13 +27,13 @@ class StickDemo extends Panel {
             vlayout([
                 stack([
                     image({
-                        layoutConfig: layoutConfig().atmost(),
+                        layoutConfig: layoutConfig().most(),
                         imageUrl: "https://p.upyun.com/demo/webp/webp/jpg-0.webp",
                         scaleType: ScaleType.ScaleAspectFill,
                     }),
 
                 ]).apply({
-                    layoutConfig: layoutConfig().atmost().h(LayoutSpec.EXACTLY),
+                    layoutConfig: layoutConfig().most().configHeight(LayoutSpec.JUST),
                     height: 200,
                     backgroundColor: colors[0],
                 }),
@@ -42,7 +42,7 @@ class StickDemo extends Panel {
                         ...this.tabs = [0, 1, 2].map(idx => {
                             return text({
                                 text: `Tab  ${idx}`,
-                                layoutConfig: layoutConfig().exactly().wg(1),
+                                layoutConfig: layoutConfig().just().configWeight(1),
                                 height: 41,
                                 onClick: () => {
                                     this.sliderView.slidePage(context, idx, true)
@@ -50,12 +50,12 @@ class StickDemo extends Panel {
                             })
                         })
                     ]).apply({
-                        layoutConfig: layoutConfig().atmost(),
+                        layoutConfig: layoutConfig().most(),
                         gravity: Gravity.Center,
                     } as IHLayout),
                     this.indicator,
                 ]).apply({
-                    layoutConfig: layoutConfig().atmost().h(LayoutSpec.EXACTLY),
+                    layoutConfig: layoutConfig().most().configHeight(LayoutSpec.JUST),
                     height: 57,
                 }),
 
@@ -66,7 +66,7 @@ class StickDemo extends Panel {
                     }
                     [0, 1, 2].map(idx => {
                         return flowlayout({
-                            layoutConfig: layoutConfig().exactly(),
+                            layoutConfig: layoutConfig().just(),
                             width: root.width,
                             height: root.height - 57,
                             itemCount: 100,
@@ -77,13 +77,13 @@ class StickDemo extends Panel {
                                 return new FlowLayoutItem().apply({
                                     backgroundColor: colors[itemIdx % colors.length],
                                     height: 50,
-                                    layoutConfig: layoutConfig().w(LayoutSpec.AT_MOST),
+                                    layoutConfig: layoutConfig().configWidth(LayoutSpec.JUST),
                                 }).also(it => {
                                     it.addChild(text({
                                         text: `In Page ${idx},${itemIdx}`,
                                         textColor: Color.WHITE,
                                         textSize: 20,
-                                        layoutConfig: layoutConfig().wrap().a(Gravity.Center)
+                                        layoutConfig: layoutConfig().fit().configAligmnet(Gravity.Center)
                                     }).also(v => {
                                         v.onClick = () => {
                                             v.text = "Clicked"
@@ -96,16 +96,16 @@ class StickDemo extends Panel {
                         v.addSlideItem(e)
                     })
                 }).apply({
-                    layoutConfig: layoutConfig().exactly(),
+                    layoutConfig: layoutConfig().just(),
                     width: root.width,
                     height: root.height - 57,
                 }),
             ])
                 .also(it => {
-                    it.layoutConfig = layoutConfig().atmost().h(LayoutSpec.WRAP_CONTENT)
+                    it.layoutConfig = layoutConfig().most().configHeight(LayoutSpec.FIT)
                 }))
             .apply({
-                layoutConfig: layoutConfig().atmost()
+                layoutConfig: layoutConfig().most()
             })
             .in(root)
         this.indicator.centerX = this.getRootView().width / this.tabs.length / 2
@@ -120,7 +120,7 @@ class StickDemo extends Panel {
                 e.textColor = Color.BLACK
             }
         })
-        this.indicator.layoutConfig = layoutConfig().exactly().a(Gravity.Bottom).m({ bottom: 13 })
+        this.indicator.layoutConfig = layoutConfig().just().configAligmnet(Gravity.Bottom).configMargin({ bottom: 13 })
         animate(context)({
             animations: () => {
                 this.indicator.centerX = this.getRootView().width / this.tabs.length * (page + 0.5)

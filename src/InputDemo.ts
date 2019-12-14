@@ -7,7 +7,7 @@ class InputDemo extends Panel {
             vlayout([
                 title("Input Demo"),
                 (new Input).also(it => {
-                    it.layoutConfig = layoutConfig().exactly().h(LayoutSpec.WRAP_CONTENT)
+                    it.layoutConfig = layoutConfig().just().configHeight(LayoutSpec.FIT)
                     it.width = 300
                     it.multiline = false
                     it.hintText = "HintText"
@@ -20,7 +20,7 @@ class InputDemo extends Panel {
                     }
                 }),
                 (new Input).also(it => {
-                    it.layoutConfig = layoutConfig().wrap()
+                    it.layoutConfig = layoutConfig().fit()
                     it.hintText = "HintText"
                     it.hintTextColor = colors[2]
                     it.textAlignment = Gravity.Left
@@ -36,10 +36,10 @@ class InputDemo extends Panel {
             ])
                 .also(it => {
                     it.space = 10
-                    it.layoutConfig = layoutConfig().atmost().h(LayoutSpec.WRAP_CONTENT)
+                    it.layoutConfig = layoutConfig().most().configHeight(LayoutSpec.FIT)
                 }))
             .apply({
-                layoutConfig: layoutConfig().atmost()
+                layoutConfig: layoutConfig().most()
             })
             .in(root)
     }

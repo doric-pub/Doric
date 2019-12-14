@@ -12,8 +12,8 @@ class CounterView extends ViewHolder {
                 textSize: 40,
                 layoutConfig: {
                     alignment: Gravity.Center,
-                    widthSpec: LayoutSpec.WRAP_CONTENT,
-                    heightSpec: LayoutSpec.WRAP_CONTENT,
+                    widthSpec: LayoutSpec.FIT,
+                    heightSpec: LayoutSpec.FIT,
                 },
             }).also(it => { this.number = it }),
             text({
@@ -26,8 +26,8 @@ class CounterView extends ViewHolder {
                 corners: 5,
                 layoutConfig: {
                     alignment: Gravity.Center,
-                    widthSpec: LayoutSpec.WRAP_CONTENT,
-                    heightSpec: LayoutSpec.WRAP_CONTENT,
+                    widthSpec: LayoutSpec.FIT,
+                    heightSpec: LayoutSpec.FIT,
                 },
                 padding: {
                     left: 10,
@@ -69,8 +69,8 @@ class CounterView extends ViewHolder {
         root.addChild((new Image).also(iv => {
             iv.imageUrl = "https://misc.aotu.io/ONE-SUNDAY/SteamEngine.png"
             iv.layoutConfig = {
-                widthSpec: LayoutSpec.WRAP_CONTENT,
-                heightSpec: LayoutSpec.WRAP_CONTENT,
+                widthSpec: LayoutSpec.FIT,
+                heightSpec: LayoutSpec.FIT,
             }
         }))
     }

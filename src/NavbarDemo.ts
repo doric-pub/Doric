@@ -12,7 +12,7 @@ class NavbarDemo extends Panel {
                 backgroundColor: colors[0],
                 textSize: 30,
                 textColor: Color.WHITE,
-                layoutConfig: layoutConfig().exactly(),
+                layoutConfig: layoutConfig().just(),
                 onClick: () => {
                     navbar(context).isHidden().then(e => modal(context).alert(`Navbar isHidden:${e}`)).catch(e => {
                         modal(context).alert(e)
@@ -25,7 +25,7 @@ class NavbarDemo extends Panel {
                 backgroundColor: colors[0],
                 textSize: 30,
                 textColor: Color.WHITE,
-                layoutConfig: layoutConfig().exactly(),
+                layoutConfig: layoutConfig().just(),
                 onClick: () => {
                     navbar(context).isHidden()
                         .then(e => navbar(context).setHidden(!e))
@@ -40,7 +40,7 @@ class NavbarDemo extends Panel {
                 backgroundColor: colors[0],
                 textSize: 30,
                 textColor: Color.WHITE,
-                layoutConfig: layoutConfig().exactly(),
+                layoutConfig: layoutConfig().just(),
                 onClick: () => {
                     navbar(context).setTitle('Setted Title')
                         .catch(e => {
@@ -54,7 +54,7 @@ class NavbarDemo extends Panel {
                 backgroundColor: colors[0],
                 textSize: 30,
                 textColor: Color.WHITE,
-                layoutConfig: layoutConfig().exactly(),
+                layoutConfig: layoutConfig().just(),
                 onClick: () => {
                     navbar(context).setBgColor(Color.YELLOW)
                         .catch(e => {
@@ -68,17 +68,17 @@ class NavbarDemo extends Panel {
                 backgroundColor: colors[0],
                 textSize: 30,
                 textColor: Color.WHITE,
-                layoutConfig: layoutConfig().exactly(),
+                layoutConfig: layoutConfig().just(),
                 onClick: () => {
                     navigator(context).pop()
                 }
             } as IText),
         ]).apply({
-            layoutConfig: layoutConfig().atmost().h(LayoutSpec.WRAP_CONTENT),
+            layoutConfig: layoutConfig().most().configHeight(LayoutSpec.FIT),
             gravity: gravity().center(),
             space: 10,
         } as IVLayout)).apply({
-            layoutConfig: layoutConfig().atmost(),
+            layoutConfig: layoutConfig().most(),
         }).in(rootView)
     }
 }

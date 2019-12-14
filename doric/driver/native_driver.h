@@ -11,9 +11,7 @@ class NativeDriver : public Driver {
 
 private:
     static NativeDriver *local_instance;
-    NativeDriver() {
-        qDebug() << "NativeDriver constructor";
-    }
+    NativeDriver();
 
     ~NativeDriver() override;
 

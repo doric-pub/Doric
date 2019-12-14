@@ -12,13 +12,9 @@ private:
     QMap<QString, QString> pluginInfoMap;
 
 public:
-    Registry() {
-        registerNativePlugin(typeid(ShaderPlugin).name());
-    }
+    Registry();
 
-    void registerNativePlugin(QString name) {
-        qDebug() << name;
-    }
+    void registerNativePlugin(QString name);
 };
 
 #endif // REGISTRY_H

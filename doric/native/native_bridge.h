@@ -1,7 +1,6 @@
 #ifndef NATIVE_BRIDGE_H
 #define NATIVE_BRIDGE_H
 
-#include <QDebug>
 #include <QJSValue>
 #include <QObject>
 

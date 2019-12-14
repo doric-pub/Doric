@@ -1,6 +1,7 @@
 #include <QFile>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QResource>
 #include <QTextStream>
 
 #include "context_manager.h"

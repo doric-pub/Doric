@@ -15,9 +15,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         constant.cpp \
+        context.cpp \
         driver/native_driver.cpp \
+        engine/js_engine.cpp \
         main.cpp \
-        native/native_bridge.cpp
+        native/native_bridge.cpp \
+        native/native_empty.cpp \
+        native/native_log.cpp \
+        native/native_timer.cpp \
+        registry.cpp
 
 RESOURCES += qml.qrc
 

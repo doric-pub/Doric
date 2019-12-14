@@ -2,7 +2,6 @@
 #define NATIVE_EMPTY_H
 
 #include <QObject>
-#include <QDebug>
 
 class NativeEmpty : public QObject {
     Q_OBJECT
@@ -10,9 +9,7 @@ class NativeEmpty : public QObject {
 public:
     NativeEmpty(QObject *parent = nullptr) : QObject(parent) {}
 
-    Q_INVOKABLE void function() {
-        qDebug() << "nativeEmpty";
-    }
+    Q_INVOKABLE void function();
 };
 
 #endif // NATIVE_EMPTY_H

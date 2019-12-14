@@ -2,12 +2,8 @@
 #define CONTEXT_H
 
 #include <QString>
-#include <QJsonObject>
-#include <QJsonDocument>
 
-#include "constant.h"
 #include "driver/driver.h"
-#include "driver/native_driver.h"
 
 class Context
 {
@@ -17,38 +13,13 @@ private:
     QString *source;
 
 public:
-    Driver *driver = NativeDriver::getInstance();
+    Driver *driver;
 
-    Context(int contextId, QString *source) {
-        this->contextId = contextId;
-        this->source = source;
-    }
+    Context(int contextId, QString *source);
 
-    void show() {
-        QString *method = new QString(Constant::DORIC_ENTITY_SHOW);
-        QVector<QString*> *arguments = new QVector<QString*>();
+    void show();
 
-        driver->invokeContextEntityMethod(contextId, method, nullptr);
-
-        delete arguments;
-        delete method;
-    }
-
-    void init(double width, double height) {
-        QJsonObject *jsonObject = new QJsonObject();
-        jsonObject->insert("width", width);
-        jsonObject->insert("height", height);
-
-        QString *method = new QString(Constant::DORIC_ENTITY_INIT);
-        QVariant *variant = new QVariant();
-        variant->setValue(*jsonObject);
-
-        driver->invokeContextEntityMethod(contextId, method, variant, nullptr);
-
-        delete variant;
-        delete method;
-        delete jsonObject;
-    }
+    void init(double width, double height);
 };
 
 #endif // CONTEXT_H

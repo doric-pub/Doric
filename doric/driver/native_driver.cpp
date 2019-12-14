@@ -3,6 +3,10 @@
 #include "native_driver.h"
 #include "utility/utility.h"
 
+NativeDriver::NativeDriver() {
+    qDebug() << "NativeDriver constructor";
+}
+
 NativeDriver::~NativeDriver() {
     qDebug() << "NativeDriver destructor";
 }

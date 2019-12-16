@@ -1,4 +1,4 @@
-import { Stack, hlayout, Group, Color, stack, layoutConfig, LayoutSpec, vlayout, IVLayout, Text, ViewHolder, ViewModel, VMPanel, scroller, modal, text, gravity, Gravity, IHLayout, takeNonNull, View, log } from "doric";
+import { Stack, hlayout, Group, Color, stack, layoutConfig, LayoutSpec, vlayout, IVLayout, Text, ViewHolder, ViewModel, VMPanel, scroller, modal, text, gravity, Gravity, IHLayout, takeNonNull, View, log, popover } from "doric";
 import { colors } from "./utils";
 
 
@@ -33,6 +33,11 @@ enum State {
     BLACK,
     WHITE,
 }
+enum GameMode {
+    P2P,
+    P2C,
+    C2P,
+}
 
 interface GoBangState {
     count: number
@@ -40,6 +45,8 @@ interface GoBangState {
     role: "white" | "black"
     matrix: Map<number, State>
     anchor?: number
+    gameMode: GameMode
+    reset: () => void
 }
 
 class GoBangVH extends ViewHolder {
@@ -48,7 +55,7 @@ class GoBangVH extends ViewHolder {
     currentRole!: Text
     result!: Text
     targetZone: View[] = []
-
+    gameMode!: Text
     build(root: Group): void {
         this.root = root
     }
@@ -104,6 +111,15 @@ class GoBangVH extends ViewHolder {
                     width: boardSize + 2 * borderWidth,
                     height: boardSize + 2 * borderWidth,
                     backgroundColor: Color.parse("#E6B080"),
+                }),
+
+                this.gameMode = text({
+                    text: "游戏模式",
+                    textSize: 20,
+                    textColor: Color.WHITE,
+                    layoutConfig: layoutConfig().most().configHeight(LayoutSpec.JUST),
+                    height: 50,
+                    backgroundColor: colors[3],
                 }),
                 hlayout([
                     this.currentRole = text({
@@ -164,16 +180,55 @@ class GoBangVM extends ViewModel<GoBangState, GoBangVH>{
                                 msg: `恭喜获胜方${it.role === 'white' ? "黑方" : "白方"}`,
                             }).then(() => {
                                 this.updateState(s => {
-                                    s.matrix.clear()
-                                    s.role = 'black'
+                                    s.reset()
                                 })
                             })
                         }
-
                     })
                 }
             }
         })
+        vh.gameMode.onClick = () => {
+            popover(context).show(vlayout([
+                ...[
+                    {
+                        label: "黑方:人 白方:人",
+                        mode: GameMode.P2P,
+                    },
+                    {
+                        label: "黑方:人 白方:机",
+                        mode: GameMode.P2C,
+                    },
+                    {
+                        label: "黑方:机 白方:人",
+                        mode: GameMode.C2P,
+                    },
+                ].map((e) => text({
+                    text: e.label,
+                    textSize: 20,
+                    textColor: Color.WHITE,
+                    layoutConfig: layoutConfig().just(),
+                    height: 50,
+                    width: 300,
+                    backgroundColor: (state.gameMode === e.mode) ? Color.parse('#636e72') : Color.parse('#b2bec3'),
+                    onClick: () => {
+                        this.updateState(s => {
+                            s.gameMode = e.mode
+                            s.reset()
+                        })
+                        popover(context).dismiss()
+                    },
+                }))
+            ])
+                .apply({
+                    layoutConfig: layoutConfig().most(),
+                    onClick: () => {
+                        popover(context).dismiss()
+                    },
+                    gravity: Gravity.Center,
+                } as IVLayout)
+            )
+        }
     }
 
     onBind(state: GoBangState, vh: GoBangVH) {
@@ -223,6 +278,7 @@ class GoBangVM extends ViewModel<GoBangState, GoBangVH>{
             }
         })
         vh.currentRole.text = `当前: ${(state.role === 'black') ? "黑方" : "白方"}`
+        vh.gameMode.text = `游戏模式:  黑方 ${state.gameMode === GameMode.C2P ? "机" : "人"} 白方 ${state.gameMode === GameMode.P2C ? "机" : "人"}`
     }
 
     checkResult(pos: number) {
@@ -339,7 +395,13 @@ class Gobang extends VMPanel<GoBangState, GoBangVH> {
             count,
             gap: this.getRootView().width / 14,
             role: "black",
-            matrix: new Map
+            matrix: new Map,
+            gameMode: GameMode.P2P,
+            reset: function () {
+                this.matrix.clear()
+                this.role = "black"
+                this.anchor = undefined
+            }
         }
     }
     getViewHolderClass() {

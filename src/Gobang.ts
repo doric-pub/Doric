@@ -1,4 +1,4 @@
-import { Stack, hlayout, Group, Color, stack, layoutConfig, LayoutSpec, vlayout, IVLayout, Text, ViewHolder, ViewModel, VMPanel, scroller, modal, text, gravity, Gravity, IHLayout, takeNonNull } from "doric";
+import { Stack, hlayout, Group, Color, stack, layoutConfig, LayoutSpec, vlayout, IVLayout, Text, ViewHolder, ViewModel, VMPanel, scroller, modal, text, gravity, Gravity, IHLayout, takeNonNull, View } from "doric";
 import { colors } from "./utils";
 
 
@@ -39,17 +39,16 @@ interface GoBangState {
     gap: number
     role: "white" | "black"
     matrix: Map<number, State>
-    anchor?: { x: number, y: number }
+    anchor?: number
 }
 
 class GoBangVH extends ViewHolder {
-    pieces!: Stack
     root!: Group
     gap = 0
     currentRole!: Text
     result!: Text
-    onPieceDown?: (x: number, y: number) => void
-    onAnchorDown?: (x: number, y: number) => void
+    targetZone: View[] = []
+
     build(root: Group): void {
         this.root = root
     }
@@ -75,14 +74,12 @@ class GoBangVH extends ViewHolder {
                             return columLine().also(v => {
                                 v.left = (idx + 1) * gap
                             })
-                        }
-                        ),
+                        }),
                         ...(new Array(count - 2)).fill(0).map((_, idx) => {
                             return rowLine().also(v => {
                                 v.top = (idx + 1) * gap
                             })
-                        }
-                        ),
+                        }),
                     ])
                         .apply({
                             layoutConfig: layoutConfig().just()
@@ -94,22 +91,13 @@ class GoBangVH extends ViewHolder {
                                 color: lineColor,
                             },
                         }),
-
-                    ...(new Array(count * count)).fill(0).map((_, idx) => {
+                    ...this.targetZone = (new Array(count * count)).fill(0).map((_, idx) => {
                         const row = Math.floor(idx / count)
                         const colum = idx % count
                         return pointer(gap).also(v => {
                             v.top = (row - 0.5) * gap + borderWidth
                             v.left = (colum - 0.5) * gap + borderWidth
-                            v.onClick = () => {
-                                if (this.onAnchorDown) {
-                                    this.onAnchorDown(colum, row)
-                                }
-                            }
                         })
-                    }),
-                    this.pieces = (new Stack).apply({
-                        layoutConfig: layoutConfig().most(),
                     }),
                 ]).apply({
                     layoutConfig: layoutConfig().just(),
@@ -144,91 +132,83 @@ class GoBangVH extends ViewHolder {
                 } as IVLayout)
         ).in(this.root)
     }
-
-    addPiece(pos: number, role: "black" | "white") {
-        const x = Math.floor(pos / count)
-        const y = pos % count
-        const piece = (new Stack).also(v => {
-            v.width = v.height = this.gap
-            v.corners = 15
-            v.backgroundColor = role === 'black' ? Color.BLACK : Color.WHITE
-        })
-        piece.centerX = (x + 1) * this.gap
-        piece.centerY = (y + 1) * this.gap
-        this.pieces.addChild(piece)
-    }
-
-    addAnchor(x: number, y: number) {
-        const piece = (new Stack).also(v => {
-            v.width = v.height = 30
-            v.border = {
-                color: Color.RED,
-                width: 1,
-            }
-        })
-        piece.centerX = (x + 1) * this.gap
-        piece.centerY = (y + 1) * this.gap
-        piece.onClick = () => {
-            if (this.onPieceDown) {
-                this.onPieceDown(x, y)
-            }
-        }
-        this.pieces.addChild(piece)
-    }
 }
 
 class GoBangVM extends ViewModel<GoBangState, GoBangVH>{
     onAttached(state: GoBangState, vh: GoBangVH) {
         vh.actualBuild(state)
-        vh.onAnchorDown = (x, y) => {
-            const pos = x * count + y
-            if (state.matrix.get(pos) == State.BLACK
-                || state.matrix.get(pos) == State.WHITE) {
-                modal(context).toast('This position had been token.')
-                return
-            }
-            this.updateState(it => {
-                it.anchor = { x, y }
-            })
-        }
-        vh.onPieceDown = (x, y) => {
-            const pos = x * count + y
-            if (state.matrix.get(pos) == State.BLACK
-                || state.matrix.get(pos) == State.WHITE) {
-                modal(context).toast('This position had been token.')
-                return
-            }
-            this.updateState(it => {
-                if (it.role === 'black') {
-                    it.matrix.set(pos, State.BLACK)
-                    it.role = 'white'
-                } else {
-                    it.matrix.set(pos, State.WHITE)
-                    it.role = 'black'
+        vh.targetZone.forEach((e, idx) => {
+            e.onClick = () => {
+                const zoneState = state.matrix.get(idx)
+                if (zoneState === State.BLACK || zoneState === State.WHITE) {
+                    modal(context).toast('This position had been token.')
+                    return
                 }
-                it.anchor = undefined
-            })
-        }
+                if (state.anchor === undefined || state.anchor != idx) {
+                    this.updateState(it => {
+                        it.anchor = idx
+                    })
+                } else {
+                    this.updateState(it => {
+                        if (it.role === 'black') {
+                            it.matrix.set(idx, State.BLACK)
+                            it.role = 'white'
+                        } else {
+                            it.matrix.set(idx, State.WHITE)
+                            it.role = 'black'
+                        }
+                        it.anchor = undefined
+                    })
+                }
+            }
+        })
     }
 
     onBind(state: GoBangState, vh: GoBangVH) {
-        vh.pieces.children.length = 0
-        for (let e of state.matrix.keys()) {
-            const v = state.matrix.get(e)
-            if (v === State.BLACK) {
-                vh.addPiece(e, 'black')
-            }
-            switch (v) {
+        vh.targetZone.forEach((v, idx) => {
+            const zoneState = state.matrix.get(idx)
+            switch (zoneState) {
                 case State.BLACK:
-                    vh.addPiece(e, 'black')
+                    v.also(it => {
+                        it.backgroundColor = Color.BLACK
+                        it.corners = state.gap / 2
+                        it.border = {
+                            color: Color.TRANSPARENT,
+                            width: 0,
+                        }
+                    })
                     break
                 case State.WHITE:
-                    vh.addPiece(e, 'white')
+                    v.also(it => {
+                        it.backgroundColor = Color.WHITE
+                        it.corners = state.gap / 2
+                        it.border = {
+                            color: Color.TRANSPARENT,
+                            width: 0,
+                        }
+                    })
+                    break
+                default:
+                    v.also(it => {
+                        it.backgroundColor = Color.TRANSPARENT
+                        it.corners = 0
+                        it.border = {
+                            color: Color.TRANSPARENT,
+                            width: 0,
+                        }
+                    })
                     break
             }
-        }
-        takeNonNull(state.anchor)(it => {
-            vh.addAnchor(it.x, it.y)
+            if (state.anchor === idx) {
+                v.also(it => {
+                    it.backgroundColor = Color.RED.alpha(0.1)
+                    it.corners = 0
+                    it.border = {
+                        color: Color.RED,
+                        width: 1,
+                    }
+                })
+            }
         })
         vh.currentRole.text = `当前: ${(state.role === 'black') ? "黑方" : "白方"}`
     }

@@ -1,4 +1,4 @@
-import { Stack, hlayout, Group, Color, stack, layoutConfig, LayoutSpec, vlayout, IVLayout, Text, ViewHolder, ViewModel, VMPanel, scroller, modal, text, gravity, Gravity, IHLayout, takeNonNull, View } from "doric";
+import { Stack, hlayout, Group, Color, stack, layoutConfig, LayoutSpec, vlayout, IVLayout, Text, ViewHolder, ViewModel, VMPanel, scroller, modal, text, gravity, Gravity, IHLayout, takeNonNull, View, log } from "doric";
 import { colors } from "./utils";
 
 
@@ -158,6 +158,18 @@ class GoBangVM extends ViewModel<GoBangState, GoBangVH>{
                             it.role = 'black'
                         }
                         it.anchor = undefined
+                        if (this.checkResult(idx)) {
+                            modal(context).alert({
+                                title: "游戏结束",
+                                msg: `恭喜获胜方${it.role === 'white' ? "黑方" : "白方"}`,
+                            }).then(() => {
+                                this.updateState(s => {
+                                    s.matrix.clear()
+                                    s.role = 'black'
+                                })
+                            })
+                        }
+
                     })
                 }
             }
@@ -211,6 +223,109 @@ class GoBangVM extends ViewModel<GoBangState, GoBangVH>{
             }
         })
         vh.currentRole.text = `当前: ${(state.role === 'black') ? "黑方" : "白方"}`
+    }
+
+    checkResult(pos: number) {
+        const matrix = this.getState().matrix
+        const state = matrix.get(pos)
+        const y = Math.floor(pos / count)
+        const x = pos % count
+        const getState = (x: number, y: number) => matrix.get(y * count + x)
+        ///Horitonzal
+        {
+            let left = x
+            while (left >= 1) {
+                if (getState(left - 1, y) === state) {
+                    left -= 1
+                } else {
+                    break
+                }
+            }
+            let right = x
+            while (right <= count - 2) {
+                if (getState(right + 1, y) === state) {
+                    right += 1
+                } else {
+                    break
+                }
+            }
+            if (right - left >= 4) {
+                return true
+            }
+        }
+        ///Vertical
+        {
+            let top = y
+            while (top >= 1) {
+                if (getState(x, top - 1) === state) {
+                    top -= 1
+                } else {
+                    break
+                }
+            }
+            let bottom = y
+            while (bottom <= count - 2) {
+                if (getState(x, bottom + 1) === state) {
+                    bottom += 1
+                } else {
+                    break
+                }
+            }
+            if (bottom - top >= 4) {
+                return true
+            }
+        }
+
+        ///LT-RB
+        {
+            let startX = x, startY = y
+            while (startX >= 1 && startY >= 1) {
+                if (getState(startX - 1, startY - 1) === state) {
+                    startX -= 1
+                    startY -= 1
+                } else {
+                    break
+                }
+            }
+            let endX = x, endY = y
+            while (endX <= count - 2 && endY <= count - 2) {
+                if (getState(endX + 1, endY + 1) === state) {
+                    endX += 1
+                    endY += 1
+                } else {
+                    break
+                }
+            }
+            if (endX - startX >= 4) {
+                return true
+            }
+        }
+
+        ///LB-RT
+        {
+            let startX = x, startY = y
+            while (startX >= 1 && startY <= count + 2) {
+                if (getState(startX - 1, startY + 1) === state) {
+                    startX -= 1
+                    startY += 1
+                } else {
+                    break
+                }
+            }
+            let endX = x, endY = y
+            while (endX <= count - 2 && endY >= 1) {
+                if (getState(endX + 1, endY - 1) === state) {
+                    endX += 1
+                    endY -= 1
+                } else {
+                    break
+                }
+            }
+            if (endX - startX >= 4) {
+                return true
+            }
+        }
+        return false
     }
 }
 

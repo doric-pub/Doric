@@ -46,7 +46,6 @@ interface GoBangState {
     matrix: Map<number, State>
     anchor?: number
     gameMode: GameMode
-    reset: () => void
 }
 
 class GoBangVH extends ViewHolder {
@@ -180,9 +179,15 @@ class GoBangVM extends ViewModel<GoBangState, GoBangVH>{
                                 msg: `恭喜获胜方${it.role === 'white' ? "黑方" : "白方"}`,
                             }).then(() => {
                                 this.updateState(s => {
-                                    s.reset()
+                                    this.reset(s)
                                 })
                             })
+                        } else {
+                            if (it.role === 'black' && it.gameMode === GameMode.C2P) {
+                                this.computeNextStep(it)
+                            } else if (it.role === 'white' && it.gameMode === GameMode.P2C) {
+                                this.computeNextStep(it)
+                            }
                         }
                     })
                 }
@@ -214,7 +219,7 @@ class GoBangVM extends ViewModel<GoBangState, GoBangVH>{
                     onClick: () => {
                         this.updateState(s => {
                             s.gameMode = e.mode
-                            s.reset()
+                            this.reset(s)
                         })
                         popover(context).dismiss()
                     },
@@ -231,6 +236,25 @@ class GoBangVM extends ViewModel<GoBangState, GoBangVH>{
         }
     }
 
+    computeNextStep(it: GoBangState) {
+        let x = 0, y = 0
+        do {
+            x = Math.floor(Math.random() * count)
+            y = Math.floor(Math.random() * count)
+        } while (it.matrix.get(x * count + y) === State.Unspecified)
+        this.updateState(state => {
+            state.matrix.set(x * count + y, state.role === 'black' ? State.BLACK : State.WHITE)
+            state.role = state.role === 'black' ? 'white' : 'black'
+        })
+    }
+    reset(it: GoBangState) {
+        it.matrix.clear()
+        it.role = "black"
+        it.anchor = undefined
+        if (it.gameMode === GameMode.C2P) {
+            this.computeNextStep(it)
+        }
+    }
     onBind(state: GoBangState, vh: GoBangVH) {
         vh.targetZone.forEach((v, idx) => {
             const zoneState = state.matrix.get(idx)
@@ -397,11 +421,6 @@ class Gobang extends VMPanel<GoBangState, GoBangVH> {
             role: "black",
             matrix: new Map,
             gameMode: GameMode.P2P,
-            reset: function () {
-                this.matrix.clear()
-                this.role = "black"
-                this.anchor = undefined
-            }
         }
     }
     getViewHolderClass() {

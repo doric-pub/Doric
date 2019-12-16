@@ -19,5 +19,6 @@ export default [
     'src/ComplicatedAnimations',
     'src/ComplicatedDemo',
     'src/InputDemo',
-    'src/StickDemo'
+    'src/StickDemo',
+    'src/Gobang',
 ]

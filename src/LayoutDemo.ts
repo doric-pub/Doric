@@ -1,6 +1,5 @@
 
 import { Group, Panel, Text, text, gravity, Color, Stack, LayoutSpec, list, NativeCall, listItem, log, vlayout, Gravity, hlayout, slider, slideItem, scroller, IVLayout, IHLayout, layoutConfig } from "doric";
-import { O_TRUNC } from "constants";
 
 const colors = [
     "#f0932b",

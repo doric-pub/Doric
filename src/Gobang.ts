@@ -1,5 +1,5 @@
-import { Stack, Group, Color, stack, layoutConfig, LayoutSpec, vlayout, IVLayout, Text, ViewHolder, ViewModel, VMPanel, scroller } from "doric";
-import { title } from "./utils";
+import { Stack, hlayout, Group, Color, stack, layoutConfig, LayoutSpec, vlayout, IVLayout, Text, ViewHolder, ViewModel, VMPanel, scroller, modal, text, gravity, Gravity, IHLayout, takeNonNull } from "doric";
+import { colors } from "./utils";
 
 
 const lineColor = Color.BLACK
@@ -39,13 +39,17 @@ interface GoBangState {
     gap: number
     role: "white" | "black"
     matrix: Map<number, State>
+    anchor?: { x: number, y: number }
 }
 
 class GoBangVH extends ViewHolder {
     pieces!: Stack
     root!: Group
     gap = 0
+    currentRole!: Text
+    result!: Text
     onPieceDown?: (x: number, y: number) => void
+    onAnchorDown?: (x: number, y: number) => void
     build(root: Group): void {
         this.root = root
     }
@@ -53,11 +57,18 @@ class GoBangVH extends ViewHolder {
         const boardSize = state.gap * (state.count - 1)
         const gap = state.gap
         const borderWidth = gap
-        let hintText: Text
         this.gap = state.gap
         scroller(
             vlayout([
-                title("GoBang"),
+                text({
+                    text: "五子棋",
+                    layoutConfig: layoutConfig().configWidth(LayoutSpec.MOST),
+                    textSize: 30,
+                    textColor: Color.WHITE,
+                    backgroundColor: colors[0],
+                    textAlignment: gravity().center(),
+                    height: 50,
+                }),
                 stack([
                     stack([
                         ...(new Array(count - 2)).fill(0).map((_, idx) => {
@@ -91,9 +102,8 @@ class GoBangVH extends ViewHolder {
                             v.top = (row - 0.5) * gap + borderWidth
                             v.left = (colum - 0.5) * gap + borderWidth
                             v.onClick = () => {
-                                hintText.text = `row:${row},colum:${colum}`
-                                if (this.onPieceDown) {
-                                    this.onPieceDown(colum, row)
+                                if (this.onAnchorDown) {
+                                    this.onAnchorDown(colum, row)
                                 }
                             }
                         })
@@ -107,7 +117,26 @@ class GoBangVH extends ViewHolder {
                     height: boardSize + 2 * borderWidth,
                     backgroundColor: Color.parse("#E6B080"),
                 }),
-                hintText = title('Hint'),
+                hlayout([
+                    this.currentRole = text({
+                        text: "当前:",
+                        textSize: 20,
+                        textColor: Color.WHITE,
+                        layoutConfig: layoutConfig().just().configWeight(1),
+                        height: 50,
+                        backgroundColor: colors[1],
+                    }),
+                    this.result = text({
+                        text: "获胜方:",
+                        textSize: 20,
+                        textColor: Color.WHITE,
+                        layoutConfig: layoutConfig().just().configWeight(1),
+                        height: 50,
+                        backgroundColor: colors[2],
+                    }),
+                ]).apply({
+                    layoutConfig: layoutConfig().fit().configWidth(LayoutSpec.MOST),
+                } as IHLayout),
             ])
                 .apply({
                     layoutConfig: layoutConfig().fit(),
@@ -120,7 +149,7 @@ class GoBangVH extends ViewHolder {
         const x = Math.floor(pos / count)
         const y = pos % count
         const piece = (new Stack).also(v => {
-            v.width = v.height = 30
+            v.width = v.height = this.gap
             v.corners = 15
             v.backgroundColor = role === 'black' ? Color.BLACK : Color.WHITE
         })
@@ -128,20 +157,56 @@ class GoBangVH extends ViewHolder {
         piece.centerY = (y + 1) * this.gap
         this.pieces.addChild(piece)
     }
+
+    addAnchor(x: number, y: number) {
+        const piece = (new Stack).also(v => {
+            v.width = v.height = 30
+            v.border = {
+                color: Color.RED,
+                width: 1,
+            }
+        })
+        piece.centerX = (x + 1) * this.gap
+        piece.centerY = (y + 1) * this.gap
+        piece.onClick = () => {
+            if (this.onPieceDown) {
+                this.onPieceDown(x, y)
+            }
+        }
+        this.pieces.addChild(piece)
+    }
 }
 
 class GoBangVM extends ViewModel<GoBangState, GoBangVH>{
     onAttached(state: GoBangState, vh: GoBangVH) {
         vh.actualBuild(state)
+        vh.onAnchorDown = (x, y) => {
+            const pos = x * count + y
+            if (state.matrix.get(pos) == State.BLACK
+                || state.matrix.get(pos) == State.WHITE) {
+                modal(context).toast('This position had been token.')
+                return
+            }
+            this.updateState(it => {
+                it.anchor = { x, y }
+            })
+        }
         vh.onPieceDown = (x, y) => {
+            const pos = x * count + y
+            if (state.matrix.get(pos) == State.BLACK
+                || state.matrix.get(pos) == State.WHITE) {
+                modal(context).toast('This position had been token.')
+                return
+            }
             this.updateState(it => {
                 if (it.role === 'black') {
-                    it.matrix.set(x * count + y, State.BLACK)
+                    it.matrix.set(pos, State.BLACK)
                     it.role = 'white'
                 } else {
-                    it.matrix.set(x * count + y, State.WHITE)
+                    it.matrix.set(pos, State.WHITE)
                     it.role = 'black'
                 }
+                it.anchor = undefined
             })
         }
     }
@@ -162,6 +227,10 @@ class GoBangVM extends ViewModel<GoBangState, GoBangVH>{
                     break
             }
         }
+        takeNonNull(state.anchor)(it => {
+            vh.addAnchor(it.x, it.y)
+        })
+        vh.currentRole.text = `当前: ${(state.role === 'black') ? "黑方" : "白方"}`
     }
 }
 
@@ -173,7 +242,7 @@ class Gobang extends VMPanel<GoBangState, GoBangVH> {
     getState(): GoBangState {
         return {
             count,
-            gap: 40,
+            gap: this.getRootView().width / 14,
             role: "black",
             matrix: new Map
         }

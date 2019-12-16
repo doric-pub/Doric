@@ -217,6 +217,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 if (prop.isObject()) {
                     requireDoricLayer().setBorder(DoricUtils.dp2px(prop.asObject().getProperty("width").asNumber().toFloat()),
                             prop.asObject().getProperty("color").asNumber().toInt());
+                    requireDoricLayer().invalidate();
                 }
                 break;
             case "alpha":

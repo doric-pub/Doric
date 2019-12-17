@@ -3,7 +3,7 @@
 
 target 'Example' do
   use_frameworks!
-  pod 'Doric', :path => '../../doric-iOS'
+  pod 'DoricCore', :path => '../../doric-iOS'
   target 'ExampleTests' do
     inherit! :search_paths
     # Pods for testing

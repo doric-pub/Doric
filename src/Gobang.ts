@@ -11,7 +11,7 @@ const count = 13
 
 
 class AIComputer {
-    wins: Array<Array<Array<Boolean>>> = new Array(count).fill(0).map(_ => new Array(count).fill(0).map(_ => []));
+    wins: Array<Array<Array<Boolean>>> = new Array(count).fill(0).map(_ => new Array(count).fill(0).map(_ => []))
     winCount = 0
     blackWins: number[]
     whiteWins: number[]
@@ -411,7 +411,10 @@ class GoBangVM extends ViewModel<GoBangState, GoBangVH>{
         it.anchor = undefined
         this.computer = new AIComputer
         if (it.gameMode === GameMode.C2P) {
-            this.computeNextStep(it)
+            const idx = Math.floor(Math.random() * count) * count + Math.floor(Math.random() * count)
+            this.computer.oneStep(idx, State.BLACK)
+            it.matrix.set(idx, State.BLACK)
+            it.role = 'white'
         }
     }
     onBind(state: GoBangState, vh: GoBangVH) {

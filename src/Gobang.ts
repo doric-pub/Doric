@@ -69,11 +69,6 @@ class AIComputer {
         }
     }
 
-    index2Position(idx: number) {
-        const x = idx % count
-        const y = Math.floor(idx / count)
-        return { x, y }
-    }
     get blackWins() {
         return this.wins.map((win) => {
             let idx = 0
@@ -94,11 +89,11 @@ class AIComputer {
 
     get whiteWins() {
         return this.wins.map((win) => {
-            let count = 0
+            let idx = 0
             for (let e of win) {
                 switch (this.matrix.get(e.x + e.y * count)) {
                     case State.WHITE:
-                        count++
+                        idx++
                         break
                     case State.BLACK:
                         return 0
@@ -106,7 +101,7 @@ class AIComputer {
                         break
                 }
             }
-            return count
+            return idx
         })
     }
 
@@ -323,6 +318,9 @@ class GoBangVH extends ViewHolder {
 class GoBangVM extends ViewModel<GoBangState, GoBangVH>{
     computer!: AIComputer
     onAttached(state: GoBangState, vh: GoBangVH) {
+        if (!this.computer) {
+            this.computer = new AIComputer(state.matrix)
+        }
         vh.actualBuild(state)
         vh.targetZone.forEach((e, idx) => {
             e.onClick = () => {
@@ -611,7 +609,7 @@ class Gobang extends VMPanel<GoBangState, GoBangVH> {
             gap: this.getRootView().width / 14,
             role: "black",
             matrix: new Map,
-            gameMode: GameMode.P2P,
+            gameMode: GameMode.P2C,
         }
     }
     getViewHolderClass() {

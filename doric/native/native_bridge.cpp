@@ -14,6 +14,10 @@ Q_INVOKABLE void NativeBridge::function(int contextId, QString module, QString m
     qDebug() << value;
     if (value.contains("ShaderPlugin")) {
         ShaderPlugin shaderPlugin(context);
-        QMetaObject::invokeMethod(&shaderPlugin, methodName.toStdString().c_str());
+        QMetaObject::invokeMethod(
+                    &shaderPlugin,
+                    methodName.toStdString().c_str(),
+                    Qt::AutoConnection,
+                    Q_ARG(QJSValue, jsValue));
     }
 }

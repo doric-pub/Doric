@@ -2,7 +2,7 @@
 
 #include "native_timer.h"
 
-void NativeTimer::setTimer(long timerId, int time, bool repeat) {
+Q_INVOKABLE void NativeTimer::setTimer(long timerId, int time, bool repeat) {
     QTimer *timer = new QTimer(this);
     timer->setSingleShot(!repeat);
     connect(timer, &QTimer::timeout, this, [=] () {

@@ -2,6 +2,6 @@
 
 #include "native_empty.h"
 
-void NativeEmpty::function() {
+Q_INVOKABLE void NativeEmpty::function() {
     qDebug() << "nativeEmpty";
 }

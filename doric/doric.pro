@@ -23,6 +23,7 @@ SOURCES += \
         native/native_empty.cpp \
         native/native_log.cpp \
         native/native_timer.cpp \
+        plugin/shader_plugin.cpp \
         registry.cpp
 
 RESOURCES += qml.qrc
@@ -52,5 +53,7 @@ HEADERS += \
     native/native_timer.h \
     plugin/shader_plugin.h \
     registry.h \
+    shader/super_node.h \
+    shader/view_node.h \
     template/singleton.h \
     utility/utility.h

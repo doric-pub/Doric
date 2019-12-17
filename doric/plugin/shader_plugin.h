@@ -2,6 +2,7 @@
 #define SHADER_PLUGIN_H
 
 #include <QDebug>
+#include <QJSValue>
 
 #include "context_holder.h"
 
@@ -11,9 +12,7 @@ class ShaderPlugin : public ContextHolder {
 public:
     ShaderPlugin(Context *context) : ContextHolder(context) {}
 
-    Q_INVOKABLE void render() {
-        qDebug() << "render";
-    }
+    Q_INVOKABLE void render(QJSValue jsValue);
 };
 
 #endif // SHADER_PLUGIN_H

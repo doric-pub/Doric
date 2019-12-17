@@ -212,6 +212,7 @@ interface GoBangState {
     matrix: Map<number, State>
     anchor?: number
     gameMode: GameMode
+    gameState: "blackWin" | "whiteWin" | "idle"
 }
 
 class GoBangVH extends ViewHolder {
@@ -324,6 +325,9 @@ class GoBangVM extends ViewModel<GoBangState, GoBangVH>{
         vh.actualBuild(state)
         vh.targetZone.forEach((e, idx) => {
             e.onClick = () => {
+                if (state.gameState !== 'idle') {
+                    return
+                }
                 const zoneState = state.matrix.get(idx)
                 if (zoneState === State.BLACK || zoneState === State.WHITE) {
                     modal(context).toast('This position had been token.')
@@ -344,14 +348,8 @@ class GoBangVM extends ViewModel<GoBangState, GoBangVH>{
                         }
                         it.anchor = undefined
                         if (this.checkResult(idx)) {
-                            modal(context).alert({
-                                title: "游戏结束",
-                                msg: `恭喜获胜方${it.role === 'white' ? "黑方" : "白方"}`,
-                            }).then(() => {
-                                this.updateState(s => {
-                                    this.reset(s)
-                                })
-                            })
+                            modal(context).toast(`恭喜获胜方${it.role === 'white' ? "黑方" : "白方"}`)
+                            it.gameState = it.role === 'white' ? 'blackWin' : 'whiteWin'
                         } else {
                             if (it.role === 'black' && it.gameMode === GameMode.C2P) {
                                 setTimeout(() => {
@@ -408,6 +406,30 @@ class GoBangVM extends ViewModel<GoBangState, GoBangVH>{
                 } as IVLayout)
             )
         }
+        vh.result.onClick = () => {
+            switch (state.gameState) {
+                case "idle":
+                    this.updateState(state => {
+                        this.reset(state)
+                    })
+                    break
+                case "blackWin":
+                case "whiteWin":
+                    break
+            }
+        }
+        vh.currentRole.onClick = () => {
+            switch (state.gameState) {
+                case "idle":
+                    break
+                case "blackWin":
+                case "whiteWin":
+                    this.updateState(state => {
+                        this.reset(state)
+                    })
+                    break
+            }
+        }
     }
     computeNextStep(it: GoBangState) {
         const tempMatrix: State[] = new Array(count * count).fill(0).map((_, idx) => {
@@ -420,21 +442,16 @@ class GoBangVM extends ViewModel<GoBangState, GoBangVH>{
         this.updateState(state => {
             state.matrix.set(idx, state.role === 'black' ? State.BLACK : State.WHITE)
             state.role = state.role === 'black' ? 'white' : 'black'
+            if (this.checkResult(idx)) {
+                modal(context).toast(`恭喜获胜方${it.role === 'white' ? "黑方" : "白方"}`)
+                it.gameState = it.role === 'white' ? 'blackWin' : 'whiteWin'
+            }
         })
-        if (this.checkResult(idx)) {
-            modal(context).alert({
-                title: "游戏结束",
-                msg: `恭喜获胜方${it.role === 'white' ? "黑方" : "白方"}`,
-            }).then(() => {
-                this.updateState(s => {
-                    this.reset(s)
-                })
-            })
-        }
     }
 
     reset(it: GoBangState) {
         it.matrix.clear()
+        it.gameState = 'idle'
         it.role = "black"
         it.anchor = undefined
         this.computer = new AIComputer(it.matrix)
@@ -490,8 +507,21 @@ class GoBangVM extends ViewModel<GoBangState, GoBangVH>{
                 })
             }
         })
-        vh.currentRole.text = `当前: ${(state.role === 'black') ? "黑方" : "白方"}`
         vh.gameMode.text = `游戏模式:  黑方 ${state.gameMode === GameMode.C2P ? "机" : "人"} 白方 ${state.gameMode === GameMode.P2C ? "机" : "人"}`
+        switch (state.gameState) {
+            case "idle":
+                vh.result.text = "重新开始"
+                vh.currentRole.text = `当前: ${(state.role === 'black') ? "黑方" : "白方"}`
+                break
+            case "blackWin":
+                vh.result.text = "黑方获胜"
+                vh.currentRole.text = "重新开始"
+                break
+            case "whiteWin":
+                vh.result.text = "白方获胜"
+                vh.currentRole.text = "重新开始"
+                break
+        }
     }
 
     checkResult(pos: number) {
@@ -610,6 +640,7 @@ class Gobang extends VMPanel<GoBangState, GoBangVH> {
             role: "black",
             matrix: new Map,
             gameMode: GameMode.P2C,
+            gameState: "idle"
         }
     }
     getViewHolderClass() {

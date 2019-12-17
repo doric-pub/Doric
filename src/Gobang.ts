@@ -11,15 +11,19 @@ const count = 13
 
 
 class AIComputer {
-    wins: Array<Array<Array<Boolean>>> = new Array(count).fill(0).map(_ => new Array(count).fill(0).map(_ => []))
+    wins: Array<Array<{ x: number, y: number }>> = []
     winCount = 0
-    blackWins: number[]
-    whiteWins: number[]
-    constructor() {
+    matrix: Map<number, State>
+    constructor(matrix: Map<number, State>) {
+        this.matrix = matrix
         for (let y = 0; y < count; y++) {
             for (let x = 0; x < count - 4; x++) {
+                this.wins.push([])
                 for (let k = 0; k < 5; k++) {
-                    this.wins[x + k][y][this.winCount] = true;
+                    this.wins[this.winCount].push({
+                        x: x + k,
+                        y,
+                    })
                 }
                 this.winCount++;
             }
@@ -27,8 +31,12 @@ class AIComputer {
 
         for (let x = 0; x < count; x++) {
             for (let y = 0; y < count - 4; y++) {
+                this.wins.push([])
                 for (let k = 0; k < 5; k++) {
-                    this.wins[x][y + k][this.winCount] = true;
+                    this.wins[this.winCount].push({
+                        x,
+                        y: y + k,
+                    })
                 }
                 this.winCount++;
             }
@@ -36,8 +44,12 @@ class AIComputer {
 
         for (let x = 0; x < count - 4; x++) {
             for (let y = 0; y < count - 4; y++) {
+                this.wins.push([])
                 for (let k = 0; k < 5; k++) {
-                    this.wins[x + k][y + k][this.winCount] = true;
+                    this.wins[this.winCount].push({
+                        x: x + k,
+                        y: y + k,
+                    })
                 }
                 this.winCount++;
             }
@@ -45,26 +57,14 @@ class AIComputer {
 
         for (let x = 0; x < count - 4; x++) {
             for (let y = count - 1; y > 3; y--) {
+                this.wins.push([])
                 for (let k = 0; k < 5; k++) {
-                    this.wins[x + k][y - k][this.winCount] = true;
+                    this.wins[this.winCount].push({
+                        x: x + k,
+                        y: y - k,
+                    })
                 }
                 this.winCount++;
-            }
-        }
-        this.blackWins = new Array(this.winCount).fill(0)
-        this.whiteWins = new Array(this.winCount).fill(0)
-    }
-
-
-    oneStep(idx: number, role: State.BLACK | State.WHITE) {
-        const { x, y } = this.index2Position(idx)
-        for (let loop = 0; loop < this.winCount; loop++) {
-            if (this.wins[x][y][loop]) {
-                if (role === State.BLACK) {
-                    this.blackWins[loop] += 1
-                } else {
-                    this.whiteWins[loop] += 1
-                }
             }
         }
     }
@@ -73,6 +73,41 @@ class AIComputer {
         const x = idx % count
         const y = Math.floor(idx / count)
         return { x, y }
+    }
+    get blackWins() {
+        return this.wins.map((win) => {
+            let idx = 0
+            for (let e of win) {
+                switch (this.matrix.get(e.x + e.y * count)) {
+                    case State.BLACK:
+                        idx++
+                        break
+                    case State.WHITE:
+                        return 0
+                    default:
+                        break
+                }
+            }
+            return idx
+        })
+    }
+
+    get whiteWins() {
+        return this.wins.map((win) => {
+            let count = 0
+            for (let e of win) {
+                switch (this.matrix.get(e.x + e.y * count)) {
+                    case State.WHITE:
+                        count++
+                        break
+                    case State.BLACK:
+                        return 0
+                    default:
+                        break
+                }
+            }
+            return count
+        })
     }
 
     compute(matrix: State[], role: State.BLACK | State.WHITE) {
@@ -86,44 +121,44 @@ class AIComputer {
             if (state != State.Unspecified) {
                 return
             }
-            const { x, y } = this.index2Position(idx)
-            for (let loop = 0; loop < this.winCount; loop++) {
-                if (this.wins[x][y][loop]) {
-                    switch (rivalWins[loop]) {
-                        case 1:
-                            rivalScore[idx] += 200
-                            break
-                        case 2:
-                            rivalScore[idx] += 400
-                            break
-                        case 3:
-                            rivalScore[idx] += 2000
-                            break
-                        case 4:
-                            rivalScore[idx] += 10000
-                            break
-                        default:
-                            break
-                    }
-
-                    switch (myWins[loop]) {
-                        case 1:
-                            myScore[idx] += 220
-                            break
-                        case 2:
-                            myScore[idx] += 420
-                            break
-                        case 3:
-                            myScore[idx] += 2200
-                            break
-                        case 4:
-                            myScore[idx] += 20000
-                            break
-                        default:
-                            break
-                    }
+            this.wins.forEach((e, winIdx) => {
+                if (e.filter(e => (e.x + e.y * count) === idx).length === 0) {
+                    return
                 }
-            }
+                switch (rivalWins[winIdx]) {
+                    case 1:
+                        rivalScore[idx] += 200
+                        break
+                    case 2:
+                        rivalScore[idx] += 400
+                        break
+                    case 3:
+                        rivalScore[idx] += 2000
+                        break
+                    case 4:
+                        rivalScore[idx] += 10000
+                        break
+                    default:
+                        break
+                }
+
+                switch (myWins[winIdx]) {
+                    case 1:
+                        myScore[idx] += 220
+                        break
+                    case 2:
+                        myScore[idx] += 420
+                        break
+                    case 3:
+                        myScore[idx] += 2200
+                        break
+                    case 4:
+                        myScore[idx] += 20000
+                        break
+                    default:
+                        break
+                }
+            })
             if (rivalScore[idx] > max) {
                 max = rivalScore[idx];
                 retIdx = idx
@@ -141,8 +176,6 @@ class AIComputer {
                     retIdx = idx
                 }
             }
-
-
         })
         return retIdx
     }
@@ -307,15 +340,9 @@ class GoBangVM extends ViewModel<GoBangState, GoBangVH>{
                         if (it.role === 'black') {
                             it.matrix.set(idx, State.BLACK)
                             it.role = 'white'
-                            if (this.computer) {
-                                this.computer.oneStep(idx, State.BLACK)
-                            }
                         } else {
                             it.matrix.set(idx, State.WHITE)
                             it.role = 'black'
-                            if (this.computer) {
-                                this.computer.oneStep(idx, State.WHITE)
-                            }
                         }
                         it.anchor = undefined
                         if (this.checkResult(idx)) {
@@ -329,9 +356,13 @@ class GoBangVM extends ViewModel<GoBangState, GoBangVH>{
                             })
                         } else {
                             if (it.role === 'black' && it.gameMode === GameMode.C2P) {
-                                this.computeNextStep(it)
+                                setTimeout(() => {
+                                    this.computeNextStep(it)
+                                }, 0)
                             } else if (it.role === 'white' && it.gameMode === GameMode.P2C) {
-                                this.computeNextStep(it)
+                                setTimeout(() => {
+                                    this.computeNextStep(it)
+                                }, 0)
                             }
                         }
                     })
@@ -388,7 +419,6 @@ class GoBangVM extends ViewModel<GoBangState, GoBangVH>{
         do {
             idx = this.computer.compute(tempMatrix, it.role === 'black' ? State.BLACK : State.WHITE)
         } while (it.matrix.get(idx) === State.Unspecified)
-        this.computer.oneStep(idx, it.role === 'black' ? State.BLACK : State.WHITE)
         this.updateState(state => {
             state.matrix.set(idx, state.role === 'black' ? State.BLACK : State.WHITE)
             state.role = state.role === 'black' ? 'white' : 'black'
@@ -409,10 +439,9 @@ class GoBangVM extends ViewModel<GoBangState, GoBangVH>{
         it.matrix.clear()
         it.role = "black"
         it.anchor = undefined
-        this.computer = new AIComputer
+        this.computer = new AIComputer(it.matrix)
         if (it.gameMode === GameMode.C2P) {
             const idx = Math.floor(Math.random() * count) * count + Math.floor(Math.random() * count)
-            this.computer.oneStep(idx, State.BLACK)
             it.matrix.set(idx, State.BLACK)
             it.role = 'white'
         }

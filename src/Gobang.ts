@@ -222,6 +222,7 @@ class GoBangVH extends ViewHolder {
     result!: Text
     targetZone: View[] = []
     gameMode!: Text
+    assistant!: Text
     build(root: Group): void {
         this.root = root
     }
@@ -285,7 +286,7 @@ class GoBangVH extends ViewHolder {
                     textColor: Color.WHITE,
                     layoutConfig: layoutConfig().most().configHeight(LayoutSpec.JUST),
                     height: 50,
-                    backgroundColor: colors[3],
+                    backgroundColor: colors[8],
                 }),
                 hlayout([
                     this.currentRole = text({
@@ -307,6 +308,14 @@ class GoBangVH extends ViewHolder {
                 ]).apply({
                     layoutConfig: layoutConfig().fit().configWidth(LayoutSpec.MOST),
                 } as IHLayout),
+                this.assistant = text({
+                    text: "提示",
+                    textSize: 20,
+                    textColor: Color.WHITE,
+                    layoutConfig: layoutConfig().just().configWidth(LayoutSpec.MOST),
+                    height: 50,
+                    backgroundColor: colors[3],
+                }),
             ])
                 .apply({
                     layoutConfig: layoutConfig().fit(),
@@ -428,6 +437,25 @@ class GoBangVM extends ViewModel<GoBangState, GoBangVH>{
                         this.reset(state)
                     })
                     break
+            }
+        }
+        vh.assistant.onClick = () => {
+            const it = this.getState()
+            if (it.gameState !== 'idle') {
+                return
+            }
+            this.computeNextStep(it)
+            if (it.gameState !== 'idle') {
+                return
+            }
+            if (it.role === 'black' && it.gameMode === GameMode.C2P) {
+                setTimeout(() => {
+                    this.computeNextStep(it)
+                }, 0)
+            } else if (it.role === 'white' && it.gameMode === GameMode.P2C) {
+                setTimeout(() => {
+                    this.computeNextStep(it)
+                }, 0)
             }
         }
     }

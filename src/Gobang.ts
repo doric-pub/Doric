@@ -122,13 +122,13 @@ class AIComputer {
                 }
                 switch (rivalWins[winIdx]) {
                     case 1:
-                        rivalScore[idx] += 200
+                        rivalScore[idx] += 1
                         break
                     case 2:
-                        rivalScore[idx] += 400
+                        rivalScore[idx] += 10
                         break
                     case 3:
-                        rivalScore[idx] += 2000
+                        rivalScore[idx] += 100
                         break
                     case 4:
                         rivalScore[idx] += 10000
@@ -139,13 +139,13 @@ class AIComputer {
 
                 switch (myWins[winIdx]) {
                     case 1:
-                        myScore[idx] += 220
+                        myScore[idx] += 2
                         break
                     case 2:
-                        myScore[idx] += 420
+                        myScore[idx] += 20
                         break
                     case 3:
-                        myScore[idx] += 2200
+                        myScore[idx] += 200
                         break
                     case 4:
                         myScore[idx] += 20000

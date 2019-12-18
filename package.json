@@ -1,0 +1,22 @@
+{
+  "name": "doric-h5",
+  "version": "0.1.0",
+  "description": "Doric library for html",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/doric-pub/doric-h5.git"
+  },
+  "author": "pengfeizhou",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/doric-pub/doric-h5/issues"
+  },
+  "homepage": "https://github.com/doric-pub/doric-h5#readme",
+  "dependencies": {
+    "doric": "^0.1.3"
+  }
+}

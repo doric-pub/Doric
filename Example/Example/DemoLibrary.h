@@ -4,7 +4,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <Doric/Doric.h>
+#import <DoricCore/Doric.h>
 
 @interface DemoLibrary : DoricLibrary
 @end

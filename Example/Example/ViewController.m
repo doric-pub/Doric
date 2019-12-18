@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import <Doric/Doric.h>
+#import <DoricCore/Doric.h>
 #import "DemoVC.h"
 #import "QRScanViewController.h"
 #import "DemoLibrary.h"

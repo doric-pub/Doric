@@ -4,7 +4,7 @@
 //
 
 #import "DemoVC.h"
-#import <Doric/Doric.h>
+#import <DoricCore/Doric.h>
 
 @interface DemoVC ()
 @property(nonatomic, copy) NSString *filePath;

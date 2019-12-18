@@ -5,7 +5,7 @@
 
 #import "QRScanViewController.h"
 #import <AVFoundation/AVFoundation.h>
-#import <Doric/Doric.h>
+#import <DoricCore/Doric.h>
 
 @interface QRScanViewController () <AVCaptureMetadataOutputObjectsDelegate>
 @property(strong, nonatomic) AVCaptureDevice *device;

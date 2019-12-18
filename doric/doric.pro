@@ -1,4 +1,6 @@
-QT += quick
+QT += \
+    quick \
+    widgets
 
 CONFIG += c++11
 
@@ -53,6 +55,7 @@ HEADERS += \
     native/native_timer.h \
     plugin/shader_plugin.h \
     registry.h \
+    shader/layer.h \
     shader/super_node.h \
     shader/view_node.h \
     template/singleton.h \

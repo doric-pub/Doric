@@ -1,11 +1,10 @@
 #ifndef VIEW_NODE_H
 #define VIEW_NODE_H
 
+#include <QDebug>
+
 #include "context_holder.h"
 
-using namespace std;
-
-template <typename V>
 class SuperNode;
 
 template <class T>
@@ -15,6 +14,7 @@ protected:
     T view;
 
 private:
+    SuperNode *superNode;
     QString *id;
 
 public:

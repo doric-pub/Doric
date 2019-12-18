@@ -1,26 +1,19 @@
+#include <QApplication>
+#include <QDialog>
 #include <QFile>
-#include <QGuiApplication>
-#include <QQmlApplicationEngine>
 #include <QResource>
-#include <QTextStream>
 
 #include "context_manager.h"
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-
-    QGuiApplication app(argc, argv);
-
-    QQmlApplicationEngine engine;
-    const QUrl url(QStringLiteral("qrc:/doric/main.qml"));
-    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
-                     &app, [url](QObject *obj, const QUrl &objUrl) {
-        if (!obj && url == objUrl)
-            QCoreApplication::exit(-1);
-    }, Qt::QueuedConnection);
-    engine.load(url);
-
+    QApplication app(argc, argv);
+    {
+        QWidget *widget = new QWidget(nullptr, Qt::WindowType::Window);
+        widget->setWindowTitle(QString("Hello Doric"));
+        widget->resize(360, 640);
+        widget->show();
+    }
     {
         QResource resource(":/doric/Snake.js");
         QFile *file = new QFile(resource.fileName());

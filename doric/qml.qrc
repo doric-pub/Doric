@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/doric">
-        <file alias="main.qml">main.qml</file>
         <file alias="doric-sandbox.js">../../doric-js/bundle/doric-sandbox.js</file>
         <file alias="doric-lib.js">../../doric-js/bundle/doric-lib.js</file>
         <file alias="Snake.js">../../doric-demo/bundle/src/Snake.js</file>

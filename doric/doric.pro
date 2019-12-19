@@ -42,6 +42,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    async/async_result.h \
+    async/callback.h \
     constant.h \
     context.h \
     context_holder.h \
@@ -56,7 +58,5 @@ HEADERS += \
     plugin/shader_plugin.h \
     registry.h \
     shader/layer.h \
-    shader/super_node.h \
-    shader/view_node.h \
     template/singleton.h \
     utility/utility.h

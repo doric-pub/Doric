@@ -4,6 +4,7 @@
 #include <QResource>
 
 #include "context_manager.h"
+#include "async/async_result.h"
 
 int main(int argc, char *argv[])
 {
@@ -29,6 +30,11 @@ int main(int argc, char *argv[])
         context->init(180, 320);
         delete source;
     }
+
+    QJsonValue *a = new QJsonValue();
+    AsyncResult<QJsonValue> *result = new AsyncResult<QJsonValue>(*a);
+    qDebug() << result->hasResult();
+    qDebug() << result->getResult();
 
     return app.exec();
 }

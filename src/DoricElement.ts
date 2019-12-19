@@ -1,24 +1,10 @@
 import axios from 'axios'
-import { jsCallReject } from 'doric/src/runtime/sandbox'
+import { getContextId } from './DoricDriver'
 
 
-let contexId = 0
-
-function getContextId() {
-    return `${contexId++}`
-}
-
-function initDoric() {
-    jsCallReject('', '')
-}
-
-
-
-initDoric()
 export class DoricElement extends HTMLElement {
     source: string
     alias: string
-
     constructor() {
         super()
         this.source = this.getAttribute('src') || ""

@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { jsCallReject } from 'doric/src/runtime/sandbox'
 
-declare const doricLibBundle: string
 
 let contexId = 0
 
@@ -14,7 +13,6 @@ function initDoric() {
 }
 
 
-console.log(doricLibBundle)
 
 initDoric()
 export class DoricElement extends HTMLElement {

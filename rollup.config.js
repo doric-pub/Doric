@@ -14,7 +14,7 @@ ${sandboxBundle}
 /**--------SandBox--------*/
 
 /**++++++++Lib++++++++*/
-Reflect.apply(doric.jsRegisterModule,this,[doric,Reflect.apply(function(__module){(function(module,exports,require){
+Reflect.apply(doric.jsRegisterModule,this,["doric",Reflect.apply(function(__module){(function(module,exports,require){
 ${doricLibBundle}
 })(__module,__module.exports,doric.__require__);
 return __module.exports;

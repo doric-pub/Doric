@@ -1478,7 +1478,7 @@ var doric = (function (exports) {
 /**--------SandBox--------*/
 
 /**++++++++Lib++++++++*/
-Reflect.apply(doric.jsRegisterModule,this,[doric,Reflect.apply(function(__module){(function(module,exports,require){
+Reflect.apply(doric.jsRegisterModule,this,["doric",Reflect.apply(function(__module){(function(module,exports,require){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -3537,14 +3537,134 @@ return __module.exports;
 
     axios = axios && axios.hasOwnProperty('default') ? axios['default'] : axios;
 
-    let contexId = 0;
-    function getContextId() {
-        return `${contexId++}`;
+    const bundles = new Map;
+    const plugins = new Map;
+    function acquireJSBundle(name) {
+        return bundles.get(name);
+    }
+    function acquirePlugin(name) {
+        return plugins.get(name);
+    }
+
+    let __scriptId__ = 0;
+    function getScriptId() {
+        return `script_${__scriptId__++}`;
+    }
+    function injectGlobalObject(name, value) {
+        Reflect.set(window, name, value, window);
+    }
+    function loadJS(script) {
+        const scriptElement = document.createElement('script');
+        scriptElement.text = script;
+        scriptElement.id = getScriptId();
+        document.body.appendChild(scriptElement);
+    }
+    function packageModuleScript(name, content) {
+        return `Reflect.apply(doric.jsRegisterModule,this,[${name},Reflect.apply(function(__module){(function(module,exports,require){
+${content}
+})(__module,__module.exports,doric.__require__);
+return __module.exports;},this,[{exports:{}}])])`;
+    }
+    function packageCreateContext(contextId, content) {
+        return `Reflect.apply(function(doric,context,Entry,require,exports){
+${content}
+},doric.jsObtainContext("${contextId}"),[undefined,doric.jsObtainContext("${contextId}"),doric.jsObtainEntry("${contextId}"),doric.__require__,{}])`;
     }
     function initDoric() {
-        sandbox.jsCallReject('', '');
+        injectGlobalObject('nativeLog', (type, message) => {
+            switch (type) {
+                case 'd':
+                    console.log(message);
+                    break;
+                case 'w':
+                    console.warn(message);
+                    break;
+                case 'e':
+                    console.error(message);
+                    break;
+            }
+        });
+        injectGlobalObject('nativeRequire', (moduleName) => {
+            const bundle = acquireJSBundle(moduleName);
+            if (bundle === undefined || bundle.length === 0) {
+                console.log(`Cannot require JS Bundle :${moduleName}`);
+                return false;
+            }
+            else {
+                loadJS(packageModuleScript(moduleName, packageModuleScript(name, bundle)));
+                return true;
+            }
+        });
+        injectGlobalObject('nativeBridge', (contextId, namespace, method, callbackId, args) => {
+            const pluginClass = acquirePlugin(namespace);
+            const doricContext = getDoricContext(contextId);
+            if (pluginClass === undefined) {
+                console.error(`Cannot find Plugin:${namespace}`);
+                return false;
+            }
+            if (doricContext === undefined) {
+                console.error(`Cannot find Doric Context:${contextId}`);
+                return false;
+            }
+            let plugin = doricContext.pluginInstances.get(namespace);
+            if (plugin === undefined) {
+                plugin = new pluginClass(doricContext);
+                doricContext.pluginInstances.set(namespace, plugin);
+            }
+            if (!Reflect.has(plugin, method)) {
+                console.error(`Cannot find Method:${method} in plugin ${namespace}`);
+                return false;
+            }
+            const pluginMethod = Reflect.get(plugin, method, plugin);
+            if (typeof pluginMethod !== 'function') {
+                console.error(`Plugin ${namespace}'s property ${method}'s type is ${typeof pluginMethod} not function,`);
+            }
+            const ret = Reflect.apply(pluginMethod, plugin, [args]);
+            if (ret instanceof Promise) {
+                ret.then(e => {
+                    sandbox.jsCallResolve(contextId, callbackId, e);
+                }, e => {
+                    sandbox.jsCallReject(contextId, callbackId, e);
+                });
+            }
+            else {
+                sandbox.jsCallResolve(contextId, callbackId, ret);
+            }
+            return true;
+        });
+    }
+    function createContext(contextId, content) {
+        loadJS(packageCreateContext(contextId, content));
     }
     initDoric();
+
+    const doricContexts = new Map;
+    let __contextId__ = 0;
+    function getContextId() {
+        return `context_${__contextId__++}`;
+    }
+    function getDoricContext(contextId) {
+        return doricContexts.get(contextId);
+    }
+    class DoricContext {
+        constructor(content) {
+            this.contextId = getContextId();
+            this.pluginInstances = new Map;
+            createContext(this.contextId, content);
+            doricContexts.set(this.contextId, this);
+        }
+        get context() {
+            return sandbox.jsObtainContext(this.contextId);
+        }
+        get panel() {
+            var _a;
+            return (_a = this.context) === null || _a === void 0 ? void 0 : _a.entity;
+        }
+        getEntityMethod(method) {
+            return Reflect.get(this.panel, method, this.panel);
+        }
+    }
+
     class DoricElement extends HTMLElement {
         constructor() {
             super();
@@ -3555,12 +3675,8 @@ return __module.exports;
             });
         }
         load(content) {
-            const script = document.createElement('script');
-            const contextId = getContextId();
-            script.text = `Reflect.apply(function(doric,context,Entry,require,exports){
-                ${content}
-            },doric.jsObtainContext("${contextId}"),[undefined,doric.jsObtainContext("${contextId}"),doric.jsObtainEntry("${contextId}"),doric.__require__,{}]);`;
-            this.append(script);
+            this.context = new DoricContext(content);
+            this.context.getEntityMethod('log')();
         }
     }
 

@@ -1,4 +1,4 @@
-import { jsObtainContext, jsCallResolve, jsCallReject } from 'doric/src/runtime/sandbox'
+import { jsCallResolve, jsCallReject } from 'doric/src/runtime/sandbox'
 import { acquireJSBundle, acquirePlugin } from './DoricRegistry'
 import { getDoricContext } from './DoricContext'
 import { DoricPlugin } from './DoricPlugin'
@@ -9,10 +9,6 @@ function getScriptId() {
 }
 
 
-let __contextId__ = 0
-export function getContextId() {
-    return `context_${__contextId__++}`
-}
 
 export function injectGlobalObject(name: string, value: any) {
     Reflect.set(window, name, value, window)
@@ -37,7 +33,6 @@ function packageCreateContext(contextId: string, content: string) {
 ${content}
 },doric.jsObtainContext("${contextId}"),[undefined,doric.jsObtainContext("${contextId}"),doric.jsObtainEntry("${contextId}"),doric.__require__,{}])`
 }
-
 
 function initDoric() {
     injectGlobalObject('nativeLog', (type: 'd' | 'w' | 'e', message: string) => {
@@ -103,6 +98,9 @@ function initDoric() {
         return true
     })
 
+}
+export function createContext(contextId: string, content: string) {
+    loadJS(packageCreateContext(contextId, content))
 }
 
 initDoric()

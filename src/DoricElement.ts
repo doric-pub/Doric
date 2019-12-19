@@ -1,10 +1,11 @@
 import axios from 'axios'
-import { getContextId } from './DoricDriver'
+import { DoricContext } from './DoricContext'
 
 
 export class DoricElement extends HTMLElement {
     source: string
     alias: string
+    context?: DoricContext
     constructor() {
         super()
         this.source = this.getAttribute('src') || ""
@@ -15,11 +16,7 @@ export class DoricElement extends HTMLElement {
     }
 
     load(content: string) {
-        const script = document.createElement('script');
-        const contextId = getContextId();
-        script.text = `Reflect.apply(function(doric,context,Entry,require,exports){
-                ${content}
-            },doric.jsObtainContext("${contextId}"),[undefined,doric.jsObtainContext("${contextId}"),doric.jsObtainEntry("${contextId}"),doric.__require__,{}]);`
-        this.append(script)
+        this.context = new DoricContext(content)
+        this.context.getEntityMethod('log')()
     }
 }

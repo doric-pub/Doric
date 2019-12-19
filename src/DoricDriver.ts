@@ -35,6 +35,8 @@ ${content}
 }
 
 function initDoric() {
+    injectGlobalObject("nativeEmpty", () => undefined)
+
     injectGlobalObject('nativeLog', (type: 'd' | 'w' | 'e', message: string) => {
         switch (type) {
             case 'd':
@@ -92,7 +94,7 @@ function initDoric() {
                 e => {
                     jsCallReject(contextId, callbackId, e)
                 })
-        } else {
+        } else if (ret !== undefined) {
             jsCallResolve(contextId, callbackId, ret)
         }
         return true

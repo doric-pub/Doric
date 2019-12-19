@@ -12,10 +12,6 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 class CounterView extends doric.ViewHolder {
-    test() {
-        console.log('Invoke Success')
-    }
-
     build(root) {
         root.addChild(doric.vlayout([
             doric.text({

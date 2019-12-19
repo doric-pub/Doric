@@ -17,6 +17,9 @@ export class DoricElement extends HTMLElement {
 
     load(content: string) {
         this.context = new DoricContext(content)
-        this.context.getEntityMethod('log')()
+        this.context.init({
+            width: 100,
+            height: 100
+        })
     }
 }

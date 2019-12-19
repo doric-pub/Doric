@@ -3537,14 +3537,30 @@ return __module.exports;
 
     axios = axios && axios.hasOwnProperty('default') ? axios['default'] : axios;
 
+    class DoricPlugin {
+        constructor(context) {
+            this.context = context;
+        }
+    }
+
+    class ShaderPlugin extends DoricPlugin {
+        render(ret) {
+            console.log('render', ret);
+        }
+    }
+
     const bundles = new Map;
     const plugins = new Map;
     function acquireJSBundle(name) {
         return bundles.get(name);
     }
+    function registerPlugin(name, plugin) {
+        plugins.set(name, plugin);
+    }
     function acquirePlugin(name) {
         return plugins.get(name);
     }
+    registerPlugin('shader', ShaderPlugin);
 
     let __scriptId__ = 0;
     function getScriptId() {
@@ -3571,6 +3587,7 @@ ${content}
 },doric.jsObtainContext("${contextId}"),[undefined,doric.jsObtainContext("${contextId}"),doric.jsObtainEntry("${contextId}"),doric.__require__,{}])`;
     }
     function initDoric() {
+        injectGlobalObject("nativeEmpty", () => undefined);
         injectGlobalObject('nativeLog', (type, message) => {
             switch (type) {
                 case 'd':
@@ -3627,7 +3644,7 @@ ${content}
                     sandbox.jsCallReject(contextId, callbackId, e);
                 });
             }
-            else {
+            else if (ret !== undefined) {
                 sandbox.jsCallResolve(contextId, callbackId, ret);
             }
             return true;
@@ -3653,15 +3670,19 @@ ${content}
             createContext(this.contextId, content);
             doricContexts.set(this.contextId, this);
         }
-        get context() {
-            return sandbox.jsObtainContext(this.contextId);
-        }
         get panel() {
             var _a;
-            return (_a = this.context) === null || _a === void 0 ? void 0 : _a.entity;
+            return (_a = sandbox.jsObtainContext(this.contextId)) === null || _a === void 0 ? void 0 : _a.entity;
         }
-        getEntityMethod(method) {
-            return Reflect.get(this.panel, method, this.panel);
+        invokeEntityMethod(method, ...otherArgs) {
+            const argumentsList = [this.contextId];
+            for (let i = 0; i < arguments.length; i++) {
+                argumentsList.push(arguments[i]);
+            }
+            Reflect.apply(sandbox.jsCallEntityMethod, this.panel, argumentsList);
+        }
+        init(frame, extra) {
+            this.invokeEntityMethod("__init__", frame, extra ? JSON.stringify(extra) : undefined);
         }
     }
 
@@ -3676,7 +3697,10 @@ ${content}
         }
         load(content) {
             this.context = new DoricContext(content);
-            this.context.getEntityMethod('log')();
+            this.context.init({
+                width: 100,
+                height: 100
+            });
         }
     }
 

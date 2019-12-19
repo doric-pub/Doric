@@ -1,4 +1,5 @@
 import { DoricPluginClass } from "./DoricPlugin"
+import { ShaderPlugin } from "./plugins/ShaderPlugin"
 
 
 const bundles: Map<string, string> = new Map
@@ -20,3 +21,5 @@ export function registerPlugin(name: string, plugin: DoricPluginClass) {
 export function acquirePlugin(name: string) {
     return plugins.get(name)
 }
+
+registerPlugin('shader', ShaderPlugin)

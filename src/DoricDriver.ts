@@ -1,15 +1,17 @@
-import { jsObtainContext } from 'doric/src/runtime/sandbox'
+import { jsObtainContext, jsCallResolve, jsCallReject } from 'doric/src/runtime/sandbox'
 import { acquireJSBundle, acquirePlugin } from './DoricRegistry'
+import { getDoricContext } from './DoricContext'
+import { DoricPlugin } from './DoricPlugin'
 
-let scriptId = 0
+let __scriptId__ = 0
 function getScriptId() {
-    return `script_${scriptId++}`
+    return `script_${__scriptId__++}`
 }
 
 
-let contexId = 0
+let __contextId__ = 0
 export function getContextId() {
-    return `context_${contexId++}`
+    return `context_${__contextId__++}`
 }
 
 export function injectGlobalObject(name: string, value: any) {
@@ -62,10 +64,42 @@ function initDoric() {
             return true
         }
     })
-    injectGlobalObject('nativeBridge', (contextId: string, namespace: string, method: string, callbackId?: string, args?: any) => {
-        const context = jsObtainContext(contextId)
+    injectGlobalObject('nativeBridge', (contextId: string, namespace: string, method: string, callbackId: string, args?: any) => {
         const pluginClass = acquirePlugin(namespace)
-
+        const doricContext = getDoricContext(contextId)
+        if (pluginClass === undefined) {
+            console.error(`Cannot find Plugin:${namespace}`)
+            return false
+        }
+        if (doricContext === undefined) {
+            console.error(`Cannot find Doric Context:${contextId}`)
+            return false
+        }
+        let plugin = doricContext.pluginInstances.get(namespace)
+        if (plugin === undefined) {
+            plugin = new pluginClass(doricContext) as DoricPlugin
+            doricContext.pluginInstances.set(namespace, plugin)
+        }
+        if (!Reflect.has(plugin, method)) {
+            console.error(`Cannot find Method:${method} in plugin ${namespace}`)
+            return false
+        }
+        const pluginMethod = Reflect.get(plugin, method, plugin)
+        if (typeof pluginMethod !== 'function') {
+            console.error(`Plugin ${namespace}'s property ${method}'s type is ${typeof pluginMethod} not function,`)
+        }
+        const ret = Reflect.apply(pluginMethod, plugin, [args])
+        if (ret instanceof Promise) {
+            ret.then(
+                e => {
+                    jsCallResolve(contextId, callbackId, e)
+                },
+                e => {
+                    jsCallReject(contextId, callbackId, e)
+                })
+        } else {
+            jsCallResolve(contextId, callbackId, ret)
+        }
         return true
     })
 

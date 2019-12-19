@@ -17,9 +17,14 @@ export class DoricElement extends HTMLElement {
 
     load(content: string) {
         this.context = new DoricContext(content)
+
+        const divElement = document.createElement('div')
+        divElement.style.height = '100%'
+        divElement.style.backgroundColor = 'red';
+        this.append(divElement)
         this.context.init({
-            width: 100,
-            height: 100
+            width: divElement.offsetWidth,
+            height: divElement.offsetHeight,
         })
     }
 }

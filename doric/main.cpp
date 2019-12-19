@@ -5,6 +5,7 @@
 
 #include "context_manager.h"
 #include "async/async_result.h"
+#include "template/custom_callback.h"
 
 int main(int argc, char *argv[])
 {
@@ -31,10 +32,15 @@ int main(int argc, char *argv[])
         delete source;
     }
 
-    QJsonValue *a = new QJsonValue();
-    AsyncResult<QJsonValue> *result = new AsyncResult<QJsonValue>(*a);
-    qDebug() << result->hasResult();
-    qDebug() << result->getResult();
+    {
+        // code for test
+        QJsonValue *a = new QJsonValue();
+        AsyncResult<QJsonValue> *result = new AsyncResult<QJsonValue>(*a);
+        CustomCallback<QJsonValue> *callback = new CustomCallback<QJsonValue>();
+        result->setCallback(callback);
+        qDebug() << result->hasResult();
+        qDebug() << result->getResult();
+    }
 
     return app.exec();
 }

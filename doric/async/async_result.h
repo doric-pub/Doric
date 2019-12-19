@@ -11,7 +11,7 @@ class AsyncResult {
 
 private:
     QVariant result;
-    Callback<R> *callback;
+    Callback<R> *callback = nullptr;
 
 public:
     AsyncResult() {}
@@ -28,7 +28,7 @@ public:
         }
     }
 
-    void setError(QException *exception) {
+    void setError(QException exception) {
         this->result->setValue(exception);
         if (callback != nullptr) {
             this->callback->onError(exception);
@@ -43,6 +43,17 @@ public:
 
     R *getResult() {
         return static_cast<R*>(result.data());
+    }
+
+    void setCallback(Callback<R> *callback) {
+        this->callback = callback;
+        if (QException *exception = static_cast<QException*>(result.data())) {
+            this->callback->onError(*exception);
+            this->callback->onFinish();
+        } else if (hasResult()) {
+            this->callback->onResult(*getResult());
+            this->callback->onFinish();
+        }
     }
 };
 

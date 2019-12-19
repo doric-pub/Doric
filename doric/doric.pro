@@ -58,5 +58,6 @@ HEADERS += \
     plugin/shader_plugin.h \
     registry.h \
     shader/layer.h \
+    template/custom_callback.h \
     template/singleton.h \
     utility/utility.h

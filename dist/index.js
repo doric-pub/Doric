@@ -3532,7 +3532,7 @@ return __module.exports;
 },this,[{exports:{}}])]);
 /**--------Lib--------*/
     
-(function (axios, sandbox, doric) {
+(function (axios, sandbox) {
     'use strict';
 
     axios = axios && axios.hasOwnProperty('default') ? axios['default'] : axios;
@@ -3545,18 +3545,50 @@ return __module.exports;
 
     class ShaderPlugin extends DoricPlugin {
         render(ret) {
-            console.log('render', ret);
+            this.context.rootNode.blend(ret.props);
         }
     }
 
+    var LayoutSpec;
+    (function (LayoutSpec) {
+        LayoutSpec[LayoutSpec["EXACTLY"] = 0] = "EXACTLY";
+        LayoutSpec[LayoutSpec["WRAP_CONTENT"] = 1] = "WRAP_CONTENT";
+        LayoutSpec[LayoutSpec["AT_MOST"] = 2] = "AT_MOST";
+    })(LayoutSpec || (LayoutSpec = {}));
+    function parse(str) {
+        if (!str.startsWith("#")) {
+            throw new Error(`Parse color error with ${str}`);
+        }
+        const val = parseInt(str.substr(1), 16);
+        if (str.length === 7) {
+            return (val | 0xff000000);
+        }
+        else if (str.length === 9) {
+            return (val);
+        }
+        else {
+            throw new Error(`Parse color error with ${str}`);
+        }
+    }
+    function safeParse(str, defVal = 0) {
+        let color = defVal;
+        try {
+            color = parse(str);
+        }
+        catch (e) {
+        }
+        finally {
+            return color;
+        }
+    }
     class DoricViewNode {
         constructor(context) {
             this.viewId = "";
             this.viewType = "View";
             this.layoutConfig = {
-                widthSpec: doric.LayoutSpec.EXACTLY,
-                heightSpec: doric.LayoutSpec.EXACTLY,
-                alignment: new doric.Gravity,
+                widthSpec: LayoutSpec.EXACTLY,
+                heightSpec: LayoutSpec.EXACTLY,
+                alignment: 0,
                 weight: 0,
                 margin: {
                     left: 0,
@@ -3619,19 +3651,21 @@ return __module.exports;
             return 0;
         }
         set backgroundColor(v) {
-            const strs = [];
+            let strs = [];
             for (let i = 0; i < 32; i += 8) {
                 strs.push(((v >> i) & 0xff).toString(16));
             }
-            this.view.style.backgroundColor = "#" + strs.map(e => {
+            strs = strs.map(e => {
                 if (e.length === 1) {
                     return '0' + e;
                 }
                 return e;
-            }).reverse().join('');
+            }).reverse();
+            /// RGBA
+            this.view.style.backgroundColor = `#${strs[1]}${strs[2]}${strs[3]}${strs[0]}`;
         }
         get backgroundColor() {
-            return doric.Color.safeParse(this.view.style.backgroundColor).toModel();
+            return safeParse(this.view.style.backgroundColor);
         }
         static create(context, type) {
             const viewNodeClass = acquireViewNode(type);
@@ -3811,8 +3845,6 @@ return __module.exports;
     }
 
     class DoricStackViewNode extends DoricGroupViewNode {
-        blendSubNode(model) {
-        }
         build() {
             return document.createElement('div');
         }
@@ -3946,6 +3978,7 @@ ${content}
             this.pluginInstances = new Map;
             createContext(this.contextId, content);
             doricContexts.set(this.contextId, this);
+            this.rootNode = new DoricStackViewNode(this);
         }
         get panel() {
             var _a;
@@ -3976,8 +4009,8 @@ ${content}
             this.context = new DoricContext(content);
             const divElement = document.createElement('div');
             divElement.style.height = '100%';
-            divElement.style.backgroundColor = 'red';
             this.append(divElement);
+            this.context.rootNode.view = divElement;
             this.context.init({
                 width: divElement.offsetWidth,
                 height: divElement.offsetHeight,
@@ -3987,5 +4020,5 @@ ${content}
 
     window.customElements.define('doric-div', DoricElement);
 
-}(axios, doric, doric_lib));
+}(axios, doric));
 //# sourceMappingURL=index.js.map

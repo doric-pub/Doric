@@ -13,83 +13,13 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 };
 class CounterView extends doric.ViewHolder {
     build(root) {
-        root.addChild(doric.vlayout([
-            doric.text({
-                textSize: 40,
-                layoutConfig: {
-                    alignment: doric.Gravity.Center,
-                    widthSpec: doric.LayoutSpec.FIT,
-                    heightSpec: doric.LayoutSpec.FIT,
-                },
-            }).also(it => { this.number = it; }),
-            doric.text({
-                text: "点击计数",
-                textSize: 20,
-                border: {
-                    width: 1,
-                    color: doric.Color.parse('#000000'),
-                },
-                corners: 5,
-                layoutConfig: {
-                    alignment: doric.Gravity.Center,
-                    widthSpec: doric.LayoutSpec.FIT,
-                    heightSpec: doric.LayoutSpec.FIT,
-                },
-                padding: {
-                    left: 10,
-                    right: 10,
-                    top: 10,
-                    bottom: 10,
-                },
-                shadow: {
-                    color: doric.Color.parse("#00ff00"),
-                    opacity: 0.5,
-                    radius: 20,
-                    offsetX: 10,
-                    offsetY: 10,
-                }
-            }).also(it => { this.counter = it; }),
-        ]).also(it => {
-            it.width = 200;
-            it.height = 200;
-            it.space = 20;
-            it.gravity = doric.Gravity.Center;
-            it.layoutConfig = {
-                alignment: doric.Gravity.Center
-            };
-            it.border = {
-                width: 1,
-                color: doric.Color.parse("#000000"),
-            };
-            it.shadow = {
-                color: doric.Color.parse("#ffff00"),
-                opacity: 0.5,
-                radius: 20,
-                offsetX: 10,
-                offsetY: 10,
-            };
-            it.corners = 20;
-            it.backgroundColor = doric.Color.parse('#ff00ff');
-        }));
-        root.addChild((new doric.Image).also(iv => {
-            iv.imageUrl = "https://misc.aotu.io/ONE-SUNDAY/SteamEngine.png";
-            iv.layoutConfig = {
-                widthSpec: doric.LayoutSpec.FIT,
-                heightSpec: doric.LayoutSpec.FIT,
-            };
-        }));
+        root.backgroundColor = doric.Color.BLUE;
     }
 }
 class CounterVM extends doric.ViewModel {
     onAttached(s, vh) {
-        vh.counter.onClick = () => {
-            this.updateState(state => {
-                state.count++;
-            });
-        };
     }
     onBind(s, vh) {
-        vh.number.text = `${s.count}`;
     }
 }
 let MyPage = class MyPage extends doric.VMPanel {

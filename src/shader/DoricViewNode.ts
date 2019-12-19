@@ -1,6 +1,38 @@
 import { DoricContext } from "../DoricContext";
-import { LayoutConfig, LayoutSpec, Gravity, Color } from "doric"
 import { acquireViewNode } from "../DoricRegistry";
+
+enum LayoutSpec {
+    EXACTLY = 0,
+    WRAP_CONTENT = 1,
+    AT_MOST = 2,
+}
+
+function parse(str: string) {
+    if (!str.startsWith("#")) {
+        throw new Error(`Parse color error with ${str}`);
+    }
+    const val = parseInt(str.substr(1), 16);
+    if (str.length === 7) {
+        return (val | 0xff000000);
+    }
+    else if (str.length === 9) {
+        return (val);
+    }
+    else {
+        throw new Error(`Parse color error with ${str}`);
+    }
+}
+function safeParse(str: string, defVal = 0) {
+    let color = defVal;
+    try {
+        color = parse(str);
+    }
+    catch (e) {
+    }
+    finally {
+        return color;
+    }
+}
 
 export type DoricViewNodeClass = { new(...args: any[]): {} }
 
@@ -17,10 +49,10 @@ export abstract class DoricViewNode {
     viewType = "View"
     context: DoricContext
     superNode?: DoricSuperViewNode
-    layoutConfig: LayoutConfig = {
+    layoutConfig = {
         widthSpec: LayoutSpec.EXACTLY,
         heightSpec: LayoutSpec.EXACTLY,
-        alignment: new Gravity,
+        alignment: 0,
         weight: 0,
         margin: {
             left: 0,
@@ -62,7 +94,7 @@ export abstract class DoricViewNode {
                 this.backgroundColor = prop as number
                 break
             case 'layoutConfig':
-                const layoutConfig = prop as LayoutConfig
+                const layoutConfig = prop
                 for (let key in layoutConfig) {
                     Reflect.set(this.layoutConfig, key, Reflect.get(layoutConfig, key, layoutConfig))
                 }
@@ -95,21 +127,23 @@ export abstract class DoricViewNode {
     }
 
     set backgroundColor(v: number) {
-        const strs = []
+        let strs = []
         for (let i = 0; i < 32; i += 8) {
 
             strs.push(((v >> i) & 0xff).toString(16))
         }
-        this.view.style.backgroundColor = "#" + strs.map(e => {
+        strs = strs.map(e => {
             if (e.length === 1) {
                 return '0' + e
             }
             return e
-        }).reverse().join('')
+        }).reverse()
+        /// RGBA
+        this.view.style.backgroundColor = `#${strs[1]}${strs[2]}${strs[3]}${strs[0]}`
     }
 
     get backgroundColor() {
-        return Color.safeParse(this.view.style.backgroundColor).toModel()
+        return safeParse(this.view.style.backgroundColor)
     }
 
     static create(context: DoricContext, type: string) {

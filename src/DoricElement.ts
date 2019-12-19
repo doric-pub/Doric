@@ -20,8 +20,8 @@ export class DoricElement extends HTMLElement {
 
         const divElement = document.createElement('div')
         divElement.style.height = '100%'
-        divElement.style.backgroundColor = 'red';
         this.append(divElement)
+        this.context.rootNode.view = divElement
         this.context.init({
             width: divElement.offsetWidth,
             height: divElement.offsetHeight,

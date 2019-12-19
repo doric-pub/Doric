@@ -1,8 +1,8 @@
-import { DoricGroupViewNode, DVModel } from "./DoricViewNode";
+import { DoricGroupViewNode } from "./DoricViewNode";
 
 export class DoricStackViewNode extends DoricGroupViewNode {
 
-    build(): HTMLElement {
+    build() {
         return document.createElement('div')
     }
 

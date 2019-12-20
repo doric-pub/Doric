@@ -3896,7 +3896,7 @@ return __module.exports;
         }
     }
 
-    class DoricStackViewNode extends DoricGroupViewNode {
+    class DoricStackNode extends DoricGroupViewNode {
         build() {
             return document.createElement('div');
         }
@@ -3992,6 +3992,287 @@ return __module.exports;
         }
     }
 
+    class DoricVLayoutNode extends DoricGroupViewNode {
+        constructor() {
+            super(...arguments);
+            this.space = 0;
+            this.gravity = 0;
+            this.contentSize = {
+                width: 0,
+                height: 0,
+                weight: 0,
+            };
+        }
+        build() {
+            return document.createElement('div');
+        }
+        blendProps(v, propName, prop) {
+            if (propName === 'space') {
+                this.space = prop;
+            }
+            else if (propName === 'gravity') {
+                this.gravity = prop;
+            }
+            else {
+                super.blendProps(v, propName, prop);
+            }
+        }
+        blend(props) {
+            super.blend(props);
+            this.childNodes.forEach(e => {
+                e.view.style.position = "absolute";
+            });
+        }
+        measureContentSize(targetSize) {
+            let width = this.frameWidth;
+            let height = this.frameHeight;
+            let contentSize = { width: 0, height: 0, weight: 0 };
+            let limitSize = {
+                width: targetSize.width - this.paddingLeft - this.paddingRight,
+                height: targetSize.height - this.paddingTop - this.paddingBottom,
+            };
+            contentSize = this.childNodes.reduce((prev, current) => {
+                var _a, _b, _c, _d, _e;
+                const size = current.measureContentSize(limitSize);
+                return {
+                    width: Math.max(prev.width, size.width),
+                    height: prev.height + size.height + this.space
+                        + ((_b = (_a = current.layoutConfig) === null || _a === void 0 ? void 0 : _a.margin) === null || _b === void 0 ? void 0 : _b.top) || 0
+                        + ((_d = (_c = current.layoutConfig) === null || _c === void 0 ? void 0 : _c.margin) === null || _d === void 0 ? void 0 : _d.bottom) || 0,
+                    weight: prev.weight + ((_e = current.layoutConfig) === null || _e === void 0 ? void 0 : _e.weight) || 0
+                };
+            }, contentSize);
+            contentSize.height -= this.space;
+            switch (this.layoutConfig.widthSpec) {
+                case LayoutSpec.AT_MOST:
+                    width = targetSize.width;
+                    break;
+                case LayoutSpec.WRAP_CONTENT:
+                    width = contentSize.width;
+                    break;
+            }
+            switch (this.layoutConfig.heightSpec) {
+                case LayoutSpec.AT_MOST:
+                    height = targetSize.height;
+                    break;
+                case LayoutSpec.WRAP_CONTENT:
+                    height = contentSize.height;
+                    break;
+            }
+            if (contentSize.weight > 0) {
+                contentSize.height = targetSize.height;
+            }
+            this.contentSize = contentSize;
+            return { width, height };
+        }
+        layoutSelf(targetSize) {
+            const { width, height } = this.measureContentSize(targetSize);
+            this.width = width;
+            this.height = height;
+            let yStart = this.paddingTop;
+            if ((this.gravity & TOP) == TOP) {
+                yStart = this.paddingTop;
+            }
+            else if ((this.gravity & BOTTOM) == BOTTOM) {
+                yStart = targetSize.height - this.contentSize.height - this.paddingBottom;
+            }
+            else if ((this.gravity & CENTER_Y) == CENTER_Y) {
+                yStart = (targetSize.height - this.contentSize.height - this.paddingTop - this.paddingBottom) / 2 + this.paddingTop;
+            }
+            let remain = targetSize.height - this.contentSize.height - this.paddingTop - this.paddingBottom;
+            this.childNodes.forEach(e => {
+                var _a, _b, _c, _d, _e, _f, _g, _h;
+                const childTargetSize = {
+                    width: width - this.paddingLeft - this.paddingRight,
+                    height: height - yStart - this.paddingBottom,
+                };
+                if (((_a = e.layoutConfig) === null || _a === void 0 ? void 0 : _a.weight) > 0) {
+                    childTargetSize.height += remain / this.contentSize.weight * e.layoutConfig.weight;
+                }
+                e.layoutSelf(childTargetSize);
+                let gravity = ((_b = e.layoutConfig) === null || _b === void 0 ? void 0 : _b.alignment) | this.gravity;
+                if ((gravity & LEFT) === LEFT) {
+                    e.x = 0;
+                }
+                else if ((gravity & RIGHT) === RIGHT) {
+                    e.x = width - e.width + this.paddingLeft - this.paddingRight;
+                }
+                else if ((gravity & CENTER_X) === CENTER_X) {
+                    e.x = width / 2 - e.width / 2 - this.paddingLeft;
+                }
+                else {
+                    if ((_c = e.layoutConfig.margin) === null || _c === void 0 ? void 0 : _c.left) {
+                        e.x = (_d = e.layoutConfig.margin) === null || _d === void 0 ? void 0 : _d.left;
+                    }
+                    else if ((_e = e.layoutConfig.margin) === null || _e === void 0 ? void 0 : _e.right) {
+                        e.x = width - e.width + this.paddingLeft - this.paddingRight - ((_f = e.layoutConfig.margin) === null || _f === void 0 ? void 0 : _f.right);
+                    }
+                }
+                if (((_g = e.layoutConfig.margin) === null || _g === void 0 ? void 0 : _g.top) !== undefined) {
+                    yStart += e.layoutConfig.margin.top;
+                }
+                e.y = yStart - this.paddingTop;
+                yStart += e.height + this.space;
+                if (((_h = e.layoutConfig.margin) === null || _h === void 0 ? void 0 : _h.bottom) !== undefined) {
+                    yStart += e.layoutConfig.margin.bottom;
+                }
+            });
+        }
+    }
+
+    class DoricHLayoutNode extends DoricGroupViewNode {
+        constructor() {
+            super(...arguments);
+            this.space = 0;
+            this.gravity = 0;
+            this.contentSize = {
+                width: 0,
+                height: 0,
+                weight: 0,
+            };
+        }
+        build() {
+            return document.createElement('div');
+        }
+        blendProps(v, propName, prop) {
+            if (propName === 'space') {
+                this.space = prop;
+            }
+            else if (propName === 'gravity') {
+                this.gravity = prop;
+            }
+            else {
+                super.blendProps(v, propName, prop);
+            }
+        }
+        blend(props) {
+            super.blend(props);
+            this.childNodes.forEach(e => {
+                e.view.style.position = "absolute";
+            });
+        }
+        measureContentSize(targetSize) {
+            let width = this.frameWidth;
+            let height = this.frameHeight;
+            let contentSize = { width: 0, height: 0, weight: 0 };
+            let limitSize = {
+                width: targetSize.width - this.paddingLeft - this.paddingRight,
+                height: targetSize.height - this.paddingTop - this.paddingBottom,
+            };
+            contentSize = this.childNodes.reduce((prev, current) => {
+                var _a, _b, _c, _d, _e;
+                const size = current.measureContentSize(limitSize);
+                return {
+                    width: prev.width + size.width + this.space
+                        + ((_b = (_a = current.layoutConfig) === null || _a === void 0 ? void 0 : _a.margin) === null || _b === void 0 ? void 0 : _b.left) || 0
+                        + ((_d = (_c = current.layoutConfig) === null || _c === void 0 ? void 0 : _c.margin) === null || _d === void 0 ? void 0 : _d.right) || 0,
+                    height: Math.max(prev.height, size.height),
+                    weight: prev.weight + ((_e = current.layoutConfig) === null || _e === void 0 ? void 0 : _e.weight) || 0
+                };
+            }, contentSize);
+            contentSize.width -= this.space;
+            switch (this.layoutConfig.widthSpec) {
+                case LayoutSpec.AT_MOST:
+                    width = targetSize.width;
+                    break;
+                case LayoutSpec.WRAP_CONTENT:
+                    width = contentSize.width;
+                    break;
+            }
+            switch (this.layoutConfig.heightSpec) {
+                case LayoutSpec.AT_MOST:
+                    height = targetSize.height;
+                    break;
+                case LayoutSpec.WRAP_CONTENT:
+                    height = contentSize.height;
+                    break;
+            }
+            if (contentSize.weight > 0) {
+                contentSize.width = targetSize.width;
+            }
+            this.contentSize = contentSize;
+            return { width, height };
+        }
+        layoutSelf(targetSize) {
+            const { width, height } = this.measureContentSize(targetSize);
+            this.width = width;
+            this.height = height;
+            let xStart = this.paddingLeft;
+            if ((this.gravity & LEFT) == LEFT) {
+                xStart = this.paddingLeft;
+            }
+            else if ((this.gravity & RIGHT) == RIGHT) {
+                xStart = targetSize.width - this.contentSize.width - this.paddingRight;
+            }
+            else if ((this.gravity & CENTER_X) == CENTER_X) {
+                xStart = (targetSize.width - this.contentSize.width - this.paddingLeft - this.paddingRight) / 2 + this.paddingLeft;
+            }
+            let remain = targetSize.width - this.contentSize.width - this.paddingLeft - this.paddingRight;
+            this.childNodes.forEach(e => {
+                var _a, _b, _c, _d, _e, _f, _g, _h;
+                const childTargetSize = {
+                    width: width - xStart - this.paddingRight,
+                    height: height - this.paddingTop - this.paddingBottom,
+                };
+                if (((_a = e.layoutConfig) === null || _a === void 0 ? void 0 : _a.weight) > 0) {
+                    childTargetSize.width += remain / this.contentSize.weight * e.layoutConfig.weight;
+                }
+                e.layoutSelf(childTargetSize);
+                let gravity = ((_b = e.layoutConfig) === null || _b === void 0 ? void 0 : _b.alignment) | this.gravity;
+                if ((gravity & TOP) === TOP) {
+                    e.y = 0;
+                }
+                else if ((gravity & BOTTOM) === BOTTOM) {
+                    e.y = height - e.height + this.paddingTop - this.paddingBottom;
+                }
+                else if ((gravity & CENTER_Y) === CENTER_Y) {
+                    e.x = height / 2 - e.height / 2 - this.paddingTop;
+                }
+                else {
+                    if ((_c = e.layoutConfig.margin) === null || _c === void 0 ? void 0 : _c.left) {
+                        e.x = (_d = e.layoutConfig.margin) === null || _d === void 0 ? void 0 : _d.left;
+                    }
+                    else if ((_e = e.layoutConfig.margin) === null || _e === void 0 ? void 0 : _e.right) {
+                        e.x = width - e.width + this.paddingLeft - this.paddingRight - ((_f = e.layoutConfig.margin) === null || _f === void 0 ? void 0 : _f.right);
+                    }
+                }
+                if (((_g = e.layoutConfig.margin) === null || _g === void 0 ? void 0 : _g.left) !== undefined) {
+                    xStart += e.layoutConfig.margin.left;
+                }
+                e.x = xStart - this.paddingLeft;
+                xStart += e.width + this.space;
+                if (((_h = e.layoutConfig.margin) === null || _h === void 0 ? void 0 : _h.right) !== undefined) {
+                    xStart += e.layoutConfig.margin.right;
+                }
+            });
+        }
+    }
+
+    class DoricTextNode extends DoricViewNode {
+        build() {
+            return document.createElement('p');
+        }
+        measureContentSize(targetSize) {
+            return targetSize;
+        }
+        blendProps(v, propName, prop) {
+            switch (propName) {
+                case 'text':
+                    v.innerText = prop;
+                    break;
+                case 'textSize':
+                    v.style.fontSize = toPixelString(prop);
+                    break;
+                case 'textColor':
+                    v.style.color = toRGBAString(prop);
+                    break;
+                default:
+                    super.blendProps(v, propName, prop);
+                    break;
+            }
+        }
+    }
+
     const bundles = new Map;
     const plugins = new Map;
     const nodes = new Map;
@@ -4011,7 +4292,10 @@ return __module.exports;
         return nodes.get(name);
     }
     registerPlugin('shader', ShaderPlugin);
-    registerViewNode('Stack', DoricStackViewNode);
+    registerViewNode('Stack', DoricStackNode);
+    registerViewNode('VLayout', DoricVLayoutNode);
+    registerViewNode('HLayout', DoricHLayoutNode);
+    registerViewNode('Text', DoricTextNode);
 
     let __scriptId__ = 0;
     function getScriptId() {
@@ -4120,7 +4404,7 @@ ${content}
             this.pluginInstances = new Map;
             createContext(this.contextId, content);
             doricContexts.set(this.contextId, this);
-            this.rootNode = new DoricStackViewNode(this);
+            this.rootNode = new DoricStackNode(this);
         }
         get panel() {
             var _a;

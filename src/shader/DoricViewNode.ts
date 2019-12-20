@@ -29,11 +29,11 @@ export type FrameSize = {
     width: number,
     height: number,
 }
-function toPixelString(v: number) {
+export function toPixelString(v: number) {
     return `${v}px`
 }
 
-function toRGBAString(color: number) {
+export function toRGBAString(color: number) {
     let strs = []
     for (let i = 0; i < 32; i += 8) {
 

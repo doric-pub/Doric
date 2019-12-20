@@ -113,7 +113,7 @@ export class DoricVLayoutNode extends DoricGroupViewNode {
                 yStart += e.layoutConfig.margin.top
             }
             e.y = yStart - this.paddingTop
-            yStart += e.width + this.space
+            yStart += e.height + this.space
             if (e.layoutConfig.margin?.bottom !== undefined) {
                 yStart += e.layoutConfig.margin.bottom
             }

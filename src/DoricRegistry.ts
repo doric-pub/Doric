@@ -4,6 +4,7 @@ import { DoricViewNodeClass } from "./shader/DoricViewNode"
 import { DoricStackNode } from "./shader/DoricStackNode"
 import { DoricVLayoutNode } from './shader/DoricVLayoutNode'
 import { DoricHLayoutNode } from './shader/DoricHLayoutNode'
+import { DoricTextNode } from "./shader/DoricTextNode"
 
 const bundles: Map<string, string> = new Map
 
@@ -41,3 +42,4 @@ registerPlugin('shader', ShaderPlugin)
 registerViewNode('Stack', DoricStackNode)
 registerViewNode('VLayout', DoricVLayoutNode)
 registerViewNode('HLayout', DoricHLayoutNode)
+registerViewNode('Text', DoricTextNode)

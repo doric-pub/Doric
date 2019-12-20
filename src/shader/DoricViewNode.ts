@@ -1,12 +1,34 @@
 import { DoricContext } from "../DoricContext";
 import { acquireViewNode } from "../DoricRegistry";
 
-enum LayoutSpec {
+export enum LayoutSpec {
     EXACTLY = 0,
     WRAP_CONTENT = 1,
     AT_MOST = 2,
 }
 
+const SPECIFIED = 1
+const START = 1 << 1
+const END = 1 << 2
+
+const SHIFT_X = 0
+const SHIFT_Y = 4
+
+export const LEFT = (START | SPECIFIED) << SHIFT_X
+export const RIGHT = (END | SPECIFIED) << SHIFT_X
+
+export const TOP = (START | SPECIFIED) << SHIFT_Y
+export const BOTTOM = (END | SPECIFIED) << SHIFT_Y
+
+export const CENTER_X = SPECIFIED << SHIFT_X
+export const CENTER_Y = SPECIFIED << SHIFT_Y
+
+export const CENTER = CENTER_X | CENTER_Y
+
+export type FrameSize = {
+    width: number,
+    height: number,
+}
 function toPixelString(v: number) {
     return `${v}px`
 }
@@ -116,9 +138,6 @@ export abstract class DoricViewNode {
         for (let key in props) {
             this.blendProps(this.view, key, props[key])
         }
-
-        this.width = this.frameWidth
-        this.height = this.frameHeight
         if (this.border) {
             this.view.style.borderStyle = "solid"
             this.view.style.borderWidth = toPixelString(this.border.width)
@@ -132,6 +151,15 @@ export abstract class DoricViewNode {
         }
         this.x = this.offsetX
         this.y = this.offsetY
+    }
+
+    layout() {
+        this.layoutSelf({ width: this.frameWidth, height: this.frameHeight })
+    }
+
+    layoutSelf(targetSize: FrameSize) {
+        this.width = targetSize.width
+        this.height = targetSize.height
     }
 
     blendProps(v: HTMLElement, propName: string, prop: any) {
@@ -169,19 +197,28 @@ export abstract class DoricViewNode {
     set width(v: number) {
         this.view.style.width = toPixelString(v - this.paddingLeft - this.paddingRight - this.borderWidth * 2)
     }
-
+    get width() {
+        return this.view.offsetWidth
+    }
     set height(v: number) {
         this.view.style.height = toPixelString(v - this.paddingTop - this.paddingBottom - this.borderWidth * 2)
     }
-
+    get height() {
+        return this.view.offsetHeight
+    }
     set x(v: number) {
         this.view.style.left = toPixelString(v + (this.superNode?.paddingLeft || 0))
     }
-
+    get x() {
+        return this.view.offsetLeft
+    }
     set y(v: number) {
-        this.view.style.top = toPixelString(v + (this.superNode?.paddingBottom || 0))
+        this.view.style.top = toPixelString(v + (this.superNode?.paddingTop || 0))
     }
 
+    get y() {
+        return this.view.offsetTop
+    }
     set backgroundColor(v: number) {
         this.view.style.backgroundColor = toRGBAString(v)
     }
@@ -196,6 +233,8 @@ export abstract class DoricViewNode {
         ret.viewType = type
         return ret
     }
+
+    abstract measureContentSize(targetSize: FrameSize): FrameSize
 }
 
 

@@ -3546,6 +3546,7 @@ return __module.exports;
     class ShaderPlugin extends DoricPlugin {
         render(ret) {
             this.context.rootNode.blend(ret.props);
+            this.context.rootNode.layout();
         }
     }
 
@@ -3555,6 +3556,17 @@ return __module.exports;
         LayoutSpec[LayoutSpec["WRAP_CONTENT"] = 1] = "WRAP_CONTENT";
         LayoutSpec[LayoutSpec["AT_MOST"] = 2] = "AT_MOST";
     })(LayoutSpec || (LayoutSpec = {}));
+    const SPECIFIED = 1;
+    const START = 1 << 1;
+    const END = 1 << 2;
+    const SHIFT_X = 0;
+    const SHIFT_Y = 4;
+    const LEFT = (START | SPECIFIED) << SHIFT_X;
+    const RIGHT = (END | SPECIFIED) << SHIFT_X;
+    const TOP = (START | SPECIFIED) << SHIFT_Y;
+    const BOTTOM = (END | SPECIFIED) << SHIFT_Y;
+    const CENTER_X = SPECIFIED << SHIFT_X;
+    const CENTER_Y = SPECIFIED << SHIFT_Y;
     function toPixelString(v) {
         return `${v}px`;
     }
@@ -3627,8 +3639,6 @@ return __module.exports;
             for (let key in props) {
                 this.blendProps(this.view, key, props[key]);
             }
-            this.width = this.frameWidth;
-            this.height = this.frameHeight;
             if (this.border) {
                 this.view.style.borderStyle = "solid";
                 this.view.style.borderWidth = toPixelString(this.border.width);
@@ -3642,6 +3652,13 @@ return __module.exports;
             }
             this.x = this.offsetX;
             this.y = this.offsetY;
+        }
+        layout() {
+            this.layoutSelf({ width: this.frameWidth, height: this.frameHeight });
+        }
+        layoutSelf(targetSize) {
+            this.width = targetSize.width;
+            this.height = targetSize.height;
         }
         blendProps(v, propName, prop) {
             switch (propName) {
@@ -3677,16 +3694,28 @@ return __module.exports;
         set width(v) {
             this.view.style.width = toPixelString(v - this.paddingLeft - this.paddingRight - this.borderWidth * 2);
         }
+        get width() {
+            return this.view.offsetWidth;
+        }
         set height(v) {
             this.view.style.height = toPixelString(v - this.paddingTop - this.paddingBottom - this.borderWidth * 2);
+        }
+        get height() {
+            return this.view.offsetHeight;
         }
         set x(v) {
             var _a;
             this.view.style.left = toPixelString(v + (((_a = this.superNode) === null || _a === void 0 ? void 0 : _a.paddingLeft) || 0));
         }
+        get x() {
+            return this.view.offsetLeft;
+        }
         set y(v) {
             var _a;
-            this.view.style.top = toPixelString(v + (((_a = this.superNode) === null || _a === void 0 ? void 0 : _a.paddingBottom) || 0));
+            this.view.style.top = toPixelString(v + (((_a = this.superNode) === null || _a === void 0 ? void 0 : _a.paddingTop) || 0));
+        }
+        get y() {
+            return this.view.offsetTop;
         }
         set backgroundColor(v) {
             this.view.style.backgroundColor = toRGBAString(v);
@@ -3875,6 +3904,90 @@ return __module.exports;
             super.blend(props);
             this.childNodes.forEach(e => {
                 e.view.style.position = "absolute";
+            });
+        }
+        measureContentSize(targetSize) {
+            let width = this.frameWidth;
+            let height = this.frameHeight;
+            let contentSize = { width: 0, height: 0 };
+            let limitSize = {
+                width: targetSize.width - this.paddingLeft - this.paddingRight,
+                height: targetSize.height - this.paddingTop - this.paddingBottom,
+            };
+            if (this.layoutConfig.widthSpec === LayoutSpec.WRAP_CONTENT
+                || this.layoutConfig.heightSpec === LayoutSpec.WRAP_CONTENT) {
+                contentSize = this.childNodes.reduce((prev, current) => {
+                    const size = current.measureContentSize(limitSize);
+                    return {
+                        width: Math.max(prev.width, size.width),
+                        height: Math.max(prev.height, size.height),
+                    };
+                }, contentSize);
+            }
+            switch (this.layoutConfig.widthSpec) {
+                case LayoutSpec.AT_MOST:
+                    width = targetSize.width;
+                    break;
+                case LayoutSpec.WRAP_CONTENT:
+                    width = contentSize.width;
+                    break;
+            }
+            switch (this.layoutConfig.heightSpec) {
+                case LayoutSpec.AT_MOST:
+                    height = targetSize.height;
+                    break;
+                case LayoutSpec.WRAP_CONTENT:
+                    height = contentSize.height;
+                    break;
+            }
+            return { width, height };
+        }
+        layoutSelf(targetSize) {
+            const { width, height } = this.measureContentSize(targetSize);
+            this.width = width;
+            this.height = height;
+            const limitSize = {
+                width: width - this.paddingLeft - this.paddingRight,
+                height: height - this.paddingTop - this.paddingBottom,
+            };
+            this.childNodes.forEach(e => {
+                var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+                e.layoutSelf(limitSize);
+                let gravity = ((_a = e.layoutConfig) === null || _a === void 0 ? void 0 : _a.alignment) || 0;
+                if ((gravity & LEFT) === LEFT) {
+                    e.x = 0;
+                }
+                else if ((gravity & RIGHT) === RIGHT) {
+                    e.x = width - e.width + this.paddingLeft - this.paddingRight;
+                }
+                else if ((gravity & CENTER_X) === CENTER_X) {
+                    e.x = width / 2 - e.width / 2 - this.paddingLeft;
+                }
+                else {
+                    if ((_b = e.layoutConfig.margin) === null || _b === void 0 ? void 0 : _b.left) {
+                        e.x = (_c = e.layoutConfig.margin) === null || _c === void 0 ? void 0 : _c.left;
+                    }
+                    else if ((_d = e.layoutConfig.margin) === null || _d === void 0 ? void 0 : _d.right) {
+                        e.x = width - e.width + this.paddingLeft - this.paddingRight - ((_e = e.layoutConfig.margin) === null || _e === void 0 ? void 0 : _e.right);
+                    }
+                }
+                if ((gravity & TOP) === TOP) {
+                    e.y = 0;
+                }
+                else if ((gravity & BOTTOM) === BOTTOM) {
+                    e.y = height - e.height + this.paddingTop - this.paddingBottom;
+                }
+                else if ((gravity & CENTER_Y) === CENTER_Y) {
+                    e.y = height / 2 - e.height / 2 - this.paddingTop;
+                }
+                else {
+                    if ((_f = e.layoutConfig.margin) === null || _f === void 0 ? void 0 : _f.top) {
+                        e.y = (_g = e.layoutConfig.margin) === null || _g === void 0 ? void 0 : _g.top;
+                    }
+                    else if ((_h = e.layoutConfig.margin) === null || _h === void 0 ? void 0 : _h.bottom) {
+                        e.y = height - e.height + this.paddingTop - this.paddingBottom - ((_j = e.layoutConfig.margin) === null || _j === void 0 ? void 0 : _j.bottom);
+                    }
+                }
             });
         }
     }

@@ -29,6 +29,9 @@ class CounterView extends doric.ViewHolder {
             width: 10,
             color: doric.Color.WHITE,
         }
+        grandson.layoutConfig = {
+            alignment: doric.Gravity.Center
+        }
         grandson.backgroundColor = doric.Color.BLUE.alpha(0.5);
         child1.addChild(grandson);
         const child2 = new doric.Stack;

@@ -191,6 +191,11 @@ export abstract class DoricViewNode {
             case 'y':
                 this.offsetY = prop as number
                 break
+            case 'onClick':
+                this.view.onclick = () => {
+                    this.callJSResponse(prop as string)
+                }
+                break
         }
     }
 
@@ -235,6 +240,24 @@ export abstract class DoricViewNode {
     }
 
     abstract measureContentSize(targetSize: FrameSize): FrameSize
+
+    getIdList() {
+        const ids: string[] = []
+        let viewNode: DoricViewNode | undefined = this
+        do {
+            ids.push(viewNode.viewId)
+            viewNode = viewNode.superNode
+        } while (viewNode)
+        return ids.reverse()
+    }
+
+    callJSResponse(funcId: string, ...args: any) {
+        const argumentsList: any = ['__response__', this.getIdList(), funcId]
+        for (let i = 1; i < arguments.length; i++) {
+            argumentsList.push(arguments[i])
+        }
+        Reflect.apply(this.context.invokeEntityMethod, this.context, argumentsList)
+    }
 }
 
 

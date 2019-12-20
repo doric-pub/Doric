@@ -9,22 +9,34 @@ export class DoricVLayoutNode extends DoricGroupViewNode {
         weight: 0,
     }
     build() {
-        return document.createElement('div')
+        const ret = document.createElement('div')
+        ret.style.display = "flex"
+        ret.style.flexDirection = "column"
+        ret.style.flexWrap = "nowrap"
+        return ret
     }
     blendProps(v: HTMLElement, propName: string, prop: any) {
         if (propName === 'space') {
             this.space = prop
         } else if (propName === 'gravity') {
             this.gravity = prop
+            if ((this.gravity & LEFT) === LEFT) {
+                this.view.style.justifyContent = "flex-start"
+            } else if ((this.gravity & RIGHT) === RIGHT) {
+                this.view.style.justifyContent = "flex-end"
+            } else if ((this.gravity & CENTER_X) === CENTER_X) {
+                this.view.style.justifyContent = "center"
+            }
+            if ((this.gravity & TOP) === TOP) {
+                this.view.style.alignItems = "flex-start"
+            } else if ((this.gravity & BOTTOM) === BOTTOM) {
+                this.view.style.alignItems = "flex-end"
+            } else if ((this.gravity & CENTER_Y) === CENTER_Y) {
+                this.view.style.alignItems = "center"
+            }
         } else {
             super.blendProps(v, propName, prop)
         }
-    }
-    blend(props: { [index: string]: any }) {
-        super.blend(props)
-        this.childNodes.forEach(e => {
-            e.view.style.position = "absolute"
-        })
     }
 
     measureContentSize(targetSize: { width: number, height: number }) {
@@ -77,46 +89,5 @@ export class DoricVLayoutNode extends DoricGroupViewNode {
         const { width, height } = this.measureContentSize(targetSize)
         this.width = width
         this.height = height
-        let yStart = this.paddingTop;
-        if ((this.gravity & TOP) == TOP) {
-            yStart = this.paddingTop
-        } else if ((this.gravity & BOTTOM) == BOTTOM) {
-            yStart = targetSize.height - this.contentSize.height - this.paddingBottom;
-        } else if ((this.gravity & CENTER_Y) == CENTER_Y) {
-            yStart = (targetSize.height - this.contentSize.height - this.paddingTop - this.paddingBottom) / 2 + this.paddingTop
-        }
-        let remain = targetSize.height - this.contentSize.height - this.paddingTop - this.paddingBottom
-        this.childNodes.forEach(e => {
-            const childTargetSize = {
-                width: width - this.paddingLeft - this.paddingRight,
-                height: height - yStart - this.paddingBottom,
-            }
-            if (e.layoutConfig?.weight > 0) {
-                childTargetSize.height += remain / this.contentSize.weight * e.layoutConfig.weight
-            }
-            e.layoutSelf(childTargetSize)
-            let gravity = e.layoutConfig?.alignment | this.gravity
-            if ((gravity & LEFT) === LEFT) {
-                e.x = 0
-            } else if ((gravity & RIGHT) === RIGHT) {
-                e.x = width - e.width + this.paddingLeft - this.paddingRight
-            } else if ((gravity & CENTER_X) === CENTER_X) {
-                e.x = width / 2 - e.width / 2 - this.paddingLeft
-            } else {
-                if (e.layoutConfig.margin?.left) {
-                    e.x = e.layoutConfig.margin?.left
-                } else if (e.layoutConfig.margin?.right) {
-                    e.x = width - e.width + this.paddingLeft - this.paddingRight - e.layoutConfig.margin?.right
-                }
-            }
-            if (e.layoutConfig.margin?.top !== undefined) {
-                yStart += e.layoutConfig.margin.top
-            }
-            e.y = yStart - this.paddingTop
-            yStart += e.height + this.space
-            if (e.layoutConfig.margin?.bottom !== undefined) {
-                yStart += e.layoutConfig.margin.bottom
-            }
-        })
     }
 }

@@ -3545,6 +3545,7 @@ return __module.exports;
 
     class ShaderPlugin extends DoricPlugin {
         render(ret) {
+            this.context.rootNode.viewId = ret.id;
             this.context.rootNode.blend(ret.props);
             this.context.rootNode.layout();
         }
@@ -3689,6 +3690,11 @@ return __module.exports;
                 case 'y':
                     this.offsetY = prop;
                     break;
+                case 'onClick':
+                    this.view.onclick = () => {
+                        this.callJSResponse(prop);
+                    };
+                    break;
             }
         }
         set width(v) {
@@ -3729,6 +3735,22 @@ return __module.exports;
             const ret = new viewNodeClass(context);
             ret.viewType = type;
             return ret;
+        }
+        getIdList() {
+            const ids = [];
+            let viewNode = this;
+            do {
+                ids.push(viewNode.viewId);
+                viewNode = viewNode.superNode;
+            } while (viewNode);
+            return ids.reverse();
+        }
+        callJSResponse(funcId, ...args) {
+            const argumentsList = ['__response__', this.getIdList(), funcId];
+            for (let i = 1; i < arguments.length; i++) {
+                argumentsList.push(arguments[i]);
+            }
+            Reflect.apply(this.context.invokeEntityMethod, this.context, argumentsList);
         }
     }
     class DoricSuperViewNode extends DoricViewNode {
@@ -4004,7 +4026,11 @@ return __module.exports;
             };
         }
         build() {
-            return document.createElement('div');
+            const ret = document.createElement('div');
+            ret.style.display = "flex";
+            ret.style.flexDirection = "column";
+            ret.style.flexWrap = "nowrap";
+            return ret;
         }
         blendProps(v, propName, prop) {
             if (propName === 'space') {
@@ -4012,16 +4038,28 @@ return __module.exports;
             }
             else if (propName === 'gravity') {
                 this.gravity = prop;
+                if ((this.gravity & LEFT) === LEFT) {
+                    this.view.style.justifyContent = "flex-start";
+                }
+                else if ((this.gravity & RIGHT) === RIGHT) {
+                    this.view.style.justifyContent = "flex-end";
+                }
+                else if ((this.gravity & CENTER_X) === CENTER_X) {
+                    this.view.style.justifyContent = "center";
+                }
+                if ((this.gravity & TOP) === TOP) {
+                    this.view.style.alignItems = "flex-start";
+                }
+                else if ((this.gravity & BOTTOM) === BOTTOM) {
+                    this.view.style.alignItems = "flex-end";
+                }
+                else if ((this.gravity & CENTER_Y) === CENTER_Y) {
+                    this.view.style.alignItems = "center";
+                }
             }
             else {
                 super.blendProps(v, propName, prop);
             }
-        }
-        blend(props) {
-            super.blend(props);
-            this.childNodes.forEach(e => {
-                e.view.style.position = "absolute";
-            });
         }
         measureContentSize(targetSize) {
             let width = this.frameWidth;
@@ -4069,54 +4107,6 @@ return __module.exports;
             const { width, height } = this.measureContentSize(targetSize);
             this.width = width;
             this.height = height;
-            let yStart = this.paddingTop;
-            if ((this.gravity & TOP) == TOP) {
-                yStart = this.paddingTop;
-            }
-            else if ((this.gravity & BOTTOM) == BOTTOM) {
-                yStart = targetSize.height - this.contentSize.height - this.paddingBottom;
-            }
-            else if ((this.gravity & CENTER_Y) == CENTER_Y) {
-                yStart = (targetSize.height - this.contentSize.height - this.paddingTop - this.paddingBottom) / 2 + this.paddingTop;
-            }
-            let remain = targetSize.height - this.contentSize.height - this.paddingTop - this.paddingBottom;
-            this.childNodes.forEach(e => {
-                var _a, _b, _c, _d, _e, _f, _g, _h;
-                const childTargetSize = {
-                    width: width - this.paddingLeft - this.paddingRight,
-                    height: height - yStart - this.paddingBottom,
-                };
-                if (((_a = e.layoutConfig) === null || _a === void 0 ? void 0 : _a.weight) > 0) {
-                    childTargetSize.height += remain / this.contentSize.weight * e.layoutConfig.weight;
-                }
-                e.layoutSelf(childTargetSize);
-                let gravity = ((_b = e.layoutConfig) === null || _b === void 0 ? void 0 : _b.alignment) | this.gravity;
-                if ((gravity & LEFT) === LEFT) {
-                    e.x = 0;
-                }
-                else if ((gravity & RIGHT) === RIGHT) {
-                    e.x = width - e.width + this.paddingLeft - this.paddingRight;
-                }
-                else if ((gravity & CENTER_X) === CENTER_X) {
-                    e.x = width / 2 - e.width / 2 - this.paddingLeft;
-                }
-                else {
-                    if ((_c = e.layoutConfig.margin) === null || _c === void 0 ? void 0 : _c.left) {
-                        e.x = (_d = e.layoutConfig.margin) === null || _d === void 0 ? void 0 : _d.left;
-                    }
-                    else if ((_e = e.layoutConfig.margin) === null || _e === void 0 ? void 0 : _e.right) {
-                        e.x = width - e.width + this.paddingLeft - this.paddingRight - ((_f = e.layoutConfig.margin) === null || _f === void 0 ? void 0 : _f.right);
-                    }
-                }
-                if (((_g = e.layoutConfig.margin) === null || _g === void 0 ? void 0 : _g.top) !== undefined) {
-                    yStart += e.layoutConfig.margin.top;
-                }
-                e.y = yStart - this.paddingTop;
-                yStart += e.height + this.space;
-                if (((_h = e.layoutConfig.margin) === null || _h === void 0 ? void 0 : _h.bottom) !== undefined) {
-                    yStart += e.layoutConfig.margin.bottom;
-                }
-            });
         }
     }
 

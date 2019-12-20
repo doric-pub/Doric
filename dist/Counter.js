@@ -16,14 +16,19 @@ class CounterView extends doric.ViewHolder {
         root.backgroundColor = doric.Color.YELLOW;
         const child1 = new doric.Stack;
         child1.width = 200;
-        child1.height = 100;
+        child1.height = 200;
         child1.top = 20
         child1.left = 100
         child1.backgroundColor = doric.Color.RED;
+        child1.padding = { left: 50, top: 50 }
         const grandson = new doric.Stack;
         grandson.width = 100;
         grandson.height = 100;
         grandson.left = 20;
+        grandson.border = {
+            width: 10,
+            color: doric.Color.WHITE,
+        }
         grandson.backgroundColor = doric.Color.BLUE.alpha(0.5);
         child1.addChild(grandson);
         const child2 = new doric.Stack;
@@ -33,7 +38,7 @@ class CounterView extends doric.ViewHolder {
         child2.top = 0;
         child2.backgroundColor = doric.Color.GREEN;
         root.addChild(child1);
-        root.addChild(child2);
+        //root.addChild(child2);
     }
 }
 class CounterVM extends doric.ViewModel {

@@ -7,32 +7,26 @@ enum LayoutSpec {
     AT_MOST = 2,
 }
 
-function parse(str: string) {
-    if (!str.startsWith("#")) {
-        throw new Error(`Parse color error with ${str}`);
-    }
-    const val = parseInt(str.substr(1), 16);
-    if (str.length === 7) {
-        return (val | 0xff000000);
-    }
-    else if (str.length === 9) {
-        return (val);
-    }
-    else {
-        throw new Error(`Parse color error with ${str}`);
-    }
+function toPixelString(v: number) {
+    return `${v}px`
 }
-function safeParse(str: string, defVal = 0) {
-    let color = defVal;
-    try {
-        color = parse(str);
+
+function toRGBAString(color: number) {
+    let strs = []
+    for (let i = 0; i < 32; i += 8) {
+
+        strs.push(((color >> i) & 0xff).toString(16))
     }
-    catch (e) {
-    }
-    finally {
-        return color;
-    }
+    strs = strs.map(e => {
+        if (e.length === 1) {
+            return '0' + e
+        }
+        return e
+    }).reverse()
+    /// RGBA
+    return `#${strs[1]}${strs[2]}${strs[3]}${strs[0]}`
 }
+
 
 export type DoricViewNodeClass = { new(...args: any[]): {} }
 
@@ -67,10 +61,23 @@ export abstract class DoricViewNode {
         top: 0,
         bottom: 0,
     }
+
+    border?: {
+        width: number,
+        color: number,
+    }
+
     frameWidth = 0
+
     frameHeight = 0
 
+    offsetX = 0
+
+    offsetY = 0
+
     view!: HTMLElement
+
+
     constructor(context: DoricContext) {
         this.context = context
     }
@@ -85,25 +92,62 @@ export abstract class DoricViewNode {
 
     abstract build(): HTMLElement
 
+    get paddingLeft() {
+        return this.padding.left || 0
+    }
+
+    get paddingRight() {
+        return this.padding.right || 0
+    }
+
+    get paddingTop() {
+        return this.padding.top || 0
+    }
+
+    get paddingBottom() {
+        return this.padding.bottom || 0
+    }
+
+    get borderWidth() {
+        return this.border?.width || 0
+    }
+
     blend(props: { [index: string]: any }) {
-        if (props.padding) {
-            this.padding = props.padding
-        }
-        if (props.width !== undefined) {
-            this.frameWidth = props.width
-        }
-        if (props.height !== undefined) {
-            this.frameHeight = props.height
-        }
-        this.width = this.frameWidth - (this.padding.left || 0) - (this.padding.right || 0)
-        this.height = this.frameHeight - (this.padding.top || 0) - (this.padding.bottom || 0)
         for (let key in props) {
             this.blendProps(this.view, key, props[key])
         }
+
+        this.width = this.frameWidth
+        this.height = this.frameHeight
+        if (this.border) {
+            this.view.style.borderStyle = "solid"
+            this.view.style.borderWidth = toPixelString(this.border.width)
+            this.view.style.borderColor = toRGBAString(this.border.color)
+        }
+        if (this.padding) {
+            this.view.style.paddingLeft = toPixelString(this.paddingLeft)
+            this.view.style.paddingRight = toPixelString(this.paddingRight)
+            this.view.style.paddingTop = toPixelString(this.paddingTop)
+            this.view.style.paddingBottom = toPixelString(this.paddingBottom)
+        }
+        this.x = this.offsetX
+        this.y = this.offsetY
     }
 
     blendProps(v: HTMLElement, propName: string, prop: any) {
         switch (propName) {
+            case "border":
+                this.border = prop
+                break
+            case "padding":
+                this.padding = prop
+                break
+            case 'width':
+                this.frameWidth = prop as number
+                break
+            case 'height':
+                this.frameHeight = prop as number
+                break
             case 'backgroundColor':
                 this.backgroundColor = prop as number
                 break
@@ -114,64 +158,32 @@ export abstract class DoricViewNode {
                 }
                 break
             case 'x':
-                this.x = prop as number
+                this.offsetX = prop as number
                 break
             case 'y':
-                this.y = prop as number
+                this.offsetY = prop as number
                 break
         }
     }
 
     set width(v: number) {
-        this.view.style.width = `${v}px`
-    }
-
-    get width() {
-        return this.view.offsetWidth
+        this.view.style.width = toPixelString(v - this.paddingLeft - this.paddingRight - this.borderWidth * 2)
     }
 
     set height(v: number) {
-        this.view.style.height = `${v}px`
-    }
-
-    get height() {
-        return this.view.offsetHeight
+        this.view.style.height = toPixelString(v - this.paddingTop - this.paddingBottom - this.borderWidth * 2)
     }
 
     set x(v: number) {
-        this.view.style.left = `${v}px`
-    }
-
-    get x() {
-        return this.view.offsetLeft
-    }
-
-    get y() {
-        return this.view.offsetTop
+        this.view.style.left = toPixelString(v + (this.superNode?.paddingLeft || 0))
     }
 
     set y(v: number) {
-        this.view.style.top = `${v}px`
+        this.view.style.top = toPixelString(v + (this.superNode?.paddingBottom || 0))
     }
 
     set backgroundColor(v: number) {
-        let strs = []
-        for (let i = 0; i < 32; i += 8) {
-
-            strs.push(((v >> i) & 0xff).toString(16))
-        }
-        strs = strs.map(e => {
-            if (e.length === 1) {
-                return '0' + e
-            }
-            return e
-        }).reverse()
-        /// RGBA
-        this.view.style.backgroundColor = `#${strs[1]}${strs[2]}${strs[3]}${strs[0]}`
-    }
-
-    get backgroundColor() {
-        return safeParse(this.view.style.backgroundColor)
+        this.view.style.backgroundColor = toRGBAString(v)
     }
 
     static create(context: DoricContext, type: string) {

@@ -3555,31 +3555,22 @@ return __module.exports;
         LayoutSpec[LayoutSpec["WRAP_CONTENT"] = 1] = "WRAP_CONTENT";
         LayoutSpec[LayoutSpec["AT_MOST"] = 2] = "AT_MOST";
     })(LayoutSpec || (LayoutSpec = {}));
-    function parse(str) {
-        if (!str.startsWith("#")) {
-            throw new Error(`Parse color error with ${str}`);
-        }
-        const val = parseInt(str.substr(1), 16);
-        if (str.length === 7) {
-            return (val | 0xff000000);
-        }
-        else if (str.length === 9) {
-            return (val);
-        }
-        else {
-            throw new Error(`Parse color error with ${str}`);
-        }
+    function toPixelString(v) {
+        return `${v}px`;
     }
-    function safeParse(str, defVal = 0) {
-        let color = defVal;
-        try {
-            color = parse(str);
+    function toRGBAString(color) {
+        let strs = [];
+        for (let i = 0; i < 32; i += 8) {
+            strs.push(((color >> i) & 0xff).toString(16));
         }
-        catch (e) {
-        }
-        finally {
-            return color;
-        }
+        strs = strs.map(e => {
+            if (e.length === 1) {
+                return '0' + e;
+            }
+            return e;
+        }).reverse();
+        /// RGBA
+        return `#${strs[1]}${strs[2]}${strs[3]}${strs[0]}`;
     }
     class DoricViewNode {
         constructor(context) {
@@ -3605,6 +3596,8 @@ return __module.exports;
             };
             this.frameWidth = 0;
             this.frameHeight = 0;
+            this.offsetX = 0;
+            this.offsetY = 0;
             this.context = context;
         }
         init(superNode) {
@@ -3614,24 +3607,56 @@ return __module.exports;
             }
             this.view = this.build();
         }
+        get paddingLeft() {
+            return this.padding.left || 0;
+        }
+        get paddingRight() {
+            return this.padding.right || 0;
+        }
+        get paddingTop() {
+            return this.padding.top || 0;
+        }
+        get paddingBottom() {
+            return this.padding.bottom || 0;
+        }
+        get borderWidth() {
+            var _a;
+            return ((_a = this.border) === null || _a === void 0 ? void 0 : _a.width) || 0;
+        }
         blend(props) {
-            if (props.padding) {
-                this.padding = props.padding;
-            }
-            if (props.width !== undefined) {
-                this.frameWidth = props.width;
-            }
-            if (props.height !== undefined) {
-                this.frameHeight = props.height;
-            }
-            this.width = this.frameWidth - (this.padding.left || 0) - (this.padding.right || 0);
-            this.height = this.frameHeight - (this.padding.top || 0) - (this.padding.bottom || 0);
             for (let key in props) {
                 this.blendProps(this.view, key, props[key]);
             }
+            this.width = this.frameWidth;
+            this.height = this.frameHeight;
+            if (this.border) {
+                this.view.style.borderStyle = "solid";
+                this.view.style.borderWidth = toPixelString(this.border.width);
+                this.view.style.borderColor = toRGBAString(this.border.color);
+            }
+            if (this.padding) {
+                this.view.style.paddingLeft = toPixelString(this.paddingLeft);
+                this.view.style.paddingRight = toPixelString(this.paddingRight);
+                this.view.style.paddingTop = toPixelString(this.paddingTop);
+                this.view.style.paddingBottom = toPixelString(this.paddingBottom);
+            }
+            this.x = this.offsetX;
+            this.y = this.offsetY;
         }
         blendProps(v, propName, prop) {
             switch (propName) {
+                case "border":
+                    this.border = prop;
+                    break;
+                case "padding":
+                    this.padding = prop;
+                    break;
+                case 'width':
+                    this.frameWidth = prop;
+                    break;
+                case 'height':
+                    this.frameHeight = prop;
+                    break;
                 case 'backgroundColor':
                     this.backgroundColor = prop;
                     break;
@@ -3642,53 +3667,29 @@ return __module.exports;
                     }
                     break;
                 case 'x':
-                    this.x = prop;
+                    this.offsetX = prop;
                     break;
                 case 'y':
-                    this.y = prop;
+                    this.offsetY = prop;
                     break;
             }
         }
         set width(v) {
-            this.view.style.width = `${v}px`;
-        }
-        get width() {
-            return this.view.offsetWidth;
+            this.view.style.width = toPixelString(v - this.paddingLeft - this.paddingRight - this.borderWidth * 2);
         }
         set height(v) {
-            this.view.style.height = `${v}px`;
-        }
-        get height() {
-            return this.view.offsetHeight;
+            this.view.style.height = toPixelString(v - this.paddingTop - this.paddingBottom - this.borderWidth * 2);
         }
         set x(v) {
-            this.view.style.left = `${v}px`;
-        }
-        get x() {
-            return this.view.offsetLeft;
-        }
-        get y() {
-            return this.view.offsetTop;
+            var _a;
+            this.view.style.left = toPixelString(v + (((_a = this.superNode) === null || _a === void 0 ? void 0 : _a.paddingLeft) || 0));
         }
         set y(v) {
-            this.view.style.top = `${v}px`;
+            var _a;
+            this.view.style.top = toPixelString(v + (((_a = this.superNode) === null || _a === void 0 ? void 0 : _a.paddingBottom) || 0));
         }
         set backgroundColor(v) {
-            let strs = [];
-            for (let i = 0; i < 32; i += 8) {
-                strs.push(((v >> i) & 0xff).toString(16));
-            }
-            strs = strs.map(e => {
-                if (e.length === 1) {
-                    return '0' + e;
-                }
-                return e;
-            }).reverse();
-            /// RGBA
-            this.view.style.backgroundColor = `#${strs[1]}${strs[2]}${strs[3]}${strs[0]}`;
-        }
-        get backgroundColor() {
-            return safeParse(this.view.style.backgroundColor);
+            this.view.style.backgroundColor = toRGBAString(v);
         }
         static create(context, type) {
             const viewNodeClass = acquireViewNode(type);

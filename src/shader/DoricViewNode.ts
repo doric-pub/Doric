@@ -61,6 +61,15 @@ export abstract class DoricViewNode {
             bottom: 0
         }
     }
+    padding = {
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+    }
+    frameWidth = 0
+    frameHeight = 0
+
     view!: HTMLElement
     constructor(context: DoricContext) {
         this.context = context
@@ -77,6 +86,17 @@ export abstract class DoricViewNode {
     abstract build(): HTMLElement
 
     blend(props: { [index: string]: any }) {
+        if (props.padding) {
+            this.padding = props.padding
+        }
+        if (props.width !== undefined) {
+            this.frameWidth = props.width
+        }
+        if (props.height !== undefined) {
+            this.frameHeight = props.height
+        }
+        this.width = this.frameWidth - (this.padding.left || 0) - (this.padding.right || 0)
+        this.height = this.frameHeight - (this.padding.top || 0) - (this.padding.bottom || 0)
         for (let key in props) {
             this.blendProps(this.view, key, props[key])
         }
@@ -84,12 +104,6 @@ export abstract class DoricViewNode {
 
     blendProps(v: HTMLElement, propName: string, prop: any) {
         switch (propName) {
-            case 'width':
-                this.width = prop as number
-                break
-            case 'height':
-                this.height = prop as number
-                break
             case 'backgroundColor':
                 this.backgroundColor = prop as number
                 break
@@ -99,6 +113,12 @@ export abstract class DoricViewNode {
                     Reflect.set(this.layoutConfig, key, Reflect.get(layoutConfig, key, layoutConfig))
                 }
                 break
+            case 'x':
+                this.x = prop as number
+                break
+            case 'y':
+                this.y = prop as number
+                break
         }
     }
 
@@ -107,23 +127,31 @@ export abstract class DoricViewNode {
     }
 
     get width() {
-        const ret = this.view.style.width.match(/([0-9]*)px/)
-        if (ret && ret.length > 1) {
-            return parseInt(ret[1])
-        }
-        return 0
+        return this.view.offsetWidth
     }
 
     set height(v: number) {
-        this.view.style.width = `${v}px`
+        this.view.style.height = `${v}px`
     }
 
     get height() {
-        const ret = this.view.style.height.match(/([0-9]*)px/)
-        if (ret && ret.length > 1) {
-            return parseInt(ret[1])
-        }
-        return 0
+        return this.view.offsetHeight
+    }
+
+    set x(v: number) {
+        this.view.style.left = `${v}px`
+    }
+
+    get x() {
+        return this.view.offsetLeft
+    }
+
+    get y() {
+        return this.view.offsetTop
+    }
+
+    set y(v: number) {
+        this.view.style.top = `${v}px`
     }
 
     set backgroundColor(v: number) {
@@ -318,9 +346,7 @@ export abstract class DoricGroupViewNode extends DoricSuperViewNode {
     }
 
     blendSubNode(model: DVModel) {
-        this.childNodes.filter(e => e.viewId === model.id).forEach(e => {
-            e.blend(model.props)
-        })
+        this.getSubNodeById(model.id)?.blend(model.props)
     }
 
     getSubNodeById(viewId: string) {

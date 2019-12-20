@@ -13,7 +13,27 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 };
 class CounterView extends doric.ViewHolder {
     build(root) {
-        root.backgroundColor = doric.Color.BLUE;
+        root.backgroundColor = doric.Color.YELLOW;
+        const child1 = new doric.Stack;
+        child1.width = 200;
+        child1.height = 100;
+        child1.top = 20
+        child1.left = 100
+        child1.backgroundColor = doric.Color.RED;
+        const grandson = new doric.Stack;
+        grandson.width = 100;
+        grandson.height = 100;
+        grandson.left = 20;
+        grandson.backgroundColor = doric.Color.BLUE.alpha(0.5);
+        child1.addChild(grandson);
+        const child2 = new doric.Stack;
+        child2.width = 200;
+        child2.height = 100;
+        child2.left = 0;
+        child2.top = 0;
+        child2.backgroundColor = doric.Color.GREEN;
+        root.addChild(child1);
+        root.addChild(child2);
     }
 }
 class CounterVM extends doric.ViewModel {

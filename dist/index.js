@@ -3597,6 +3597,14 @@ return __module.exports;
                     bottom: 0
                 }
             };
+            this.padding = {
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 0,
+            };
+            this.frameWidth = 0;
+            this.frameHeight = 0;
             this.context = context;
         }
         init(superNode) {
@@ -3607,18 +3615,23 @@ return __module.exports;
             this.view = this.build();
         }
         blend(props) {
+            if (props.padding) {
+                this.padding = props.padding;
+            }
+            if (props.width !== undefined) {
+                this.frameWidth = props.width;
+            }
+            if (props.height !== undefined) {
+                this.frameHeight = props.height;
+            }
+            this.width = this.frameWidth - (this.padding.left || 0) - (this.padding.right || 0);
+            this.height = this.frameHeight - (this.padding.top || 0) - (this.padding.bottom || 0);
             for (let key in props) {
                 this.blendProps(this.view, key, props[key]);
             }
         }
         blendProps(v, propName, prop) {
             switch (propName) {
-                case 'width':
-                    this.width = prop;
-                    break;
-                case 'height':
-                    this.height = prop;
-                    break;
                 case 'backgroundColor':
                     this.backgroundColor = prop;
                     break;
@@ -3628,27 +3641,37 @@ return __module.exports;
                         Reflect.set(this.layoutConfig, key, Reflect.get(layoutConfig, key, layoutConfig));
                     }
                     break;
+                case 'x':
+                    this.x = prop;
+                    break;
+                case 'y':
+                    this.y = prop;
+                    break;
             }
         }
         set width(v) {
             this.view.style.width = `${v}px`;
         }
         get width() {
-            const ret = this.view.style.width.match(/([0-9]*)px/);
-            if (ret && ret.length > 1) {
-                return parseInt(ret[1]);
-            }
-            return 0;
+            return this.view.offsetWidth;
         }
         set height(v) {
-            this.view.style.width = `${v}px`;
+            this.view.style.height = `${v}px`;
         }
         get height() {
-            const ret = this.view.style.height.match(/([0-9]*)px/);
-            if (ret && ret.length > 1) {
-                return parseInt(ret[1]);
-            }
-            return 0;
+            return this.view.offsetHeight;
+        }
+        set x(v) {
+            this.view.style.left = `${v}px`;
+        }
+        get x() {
+            return this.view.offsetLeft;
+        }
+        get y() {
+            return this.view.offsetTop;
+        }
+        set y(v) {
+            this.view.style.top = `${v}px`;
         }
         set backgroundColor(v) {
             let strs = [];
@@ -3835,9 +3858,8 @@ return __module.exports;
             this.childNodes = this.childNodes.slice(0, this.childViewIds.length);
         }
         blendSubNode(model) {
-            this.childNodes.filter(e => e.viewId === model.id).forEach(e => {
-                e.blend(model.props);
-            });
+            var _a;
+            (_a = this.getSubNodeById(model.id)) === null || _a === void 0 ? void 0 : _a.blend(model.props);
         }
         getSubNodeById(viewId) {
             return this.childNodes.filter(e => e.viewId === viewId)[0];
@@ -3847,6 +3869,12 @@ return __module.exports;
     class DoricStackViewNode extends DoricGroupViewNode {
         build() {
             return document.createElement('div');
+        }
+        blend(props) {
+            super.blend(props);
+            this.childNodes.forEach(e => {
+                e.view.style.position = "absolute";
+            });
         }
     }
 

@@ -21,6 +21,9 @@ class CounterView extends doric.ViewHolder {
         child1.left = 100
         child1.backgroundColor = doric.Color.RED;
         child1.padding = { left: 50, top: 50 }
+        child1.layoutConfig = {
+            alignment: doric.Gravity.Center
+        }
         const grandson = new doric.Stack;
         grandson.width = 100;
         grandson.height = 100;

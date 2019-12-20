@@ -2,7 +2,7 @@ import { jsObtainContext, jsCallEntityMethod } from 'doric/src/runtime/sandbox'
 import { Panel } from 'doric'
 import { DoricPlugin } from "./DoricPlugin"
 import { createContext } from "./DoricDriver"
-import { DoricStackViewNode } from './shader/DoricStackViewNode'
+import { DoricStackNode } from './shader/DoricStackNode'
 const doricContexts: Map<string, DoricContext> = new Map
 
 let __contextId__ = 0
@@ -17,11 +17,11 @@ export function getDoricContext(contextId: string) {
 export class DoricContext {
     contextId = getContextId()
     pluginInstances: Map<string, DoricPlugin> = new Map
-    rootNode: DoricStackViewNode
+    rootNode: DoricStackNode
     constructor(content: string) {
         createContext(this.contextId, content)
         doricContexts.set(this.contextId, this)
-        this.rootNode = new DoricStackViewNode(this)
+        this.rootNode = new DoricStackNode(this)
     }
 
     get panel() {

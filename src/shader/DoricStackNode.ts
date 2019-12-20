@@ -1,6 +1,6 @@
 import { DoricGroupViewNode, LayoutSpec, FrameSize, LEFT, RIGHT, CENTER_X, CENTER_Y, TOP, BOTTOM } from "./DoricViewNode";
 
-export class DoricStackViewNode extends DoricGroupViewNode {
+export class DoricStackNode extends DoricGroupViewNode {
 
     build() {
         return document.createElement('div')

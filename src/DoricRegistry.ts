@@ -1,8 +1,9 @@
 import { DoricPluginClass } from "./DoricPlugin"
 import { ShaderPlugin } from "./plugins/ShaderPlugin"
 import { DoricViewNodeClass } from "./shader/DoricViewNode"
-import { DoricStackViewNode } from "./shader/DoricStackViewNode"
-
+import { DoricStackNode } from "./shader/DoricStackNode"
+import { DoricVLayoutNode } from './shader/DoricVLayoutNode'
+import { DoricHLayoutNode } from './shader/DoricHLayoutNode'
 
 const bundles: Map<string, string> = new Map
 
@@ -37,4 +38,6 @@ export function acquireViewNode(name: string) {
 
 registerPlugin('shader', ShaderPlugin)
 
-registerViewNode('Stack', DoricStackViewNode)
+registerViewNode('Stack', DoricStackNode)
+registerViewNode('VLayout', DoricVLayoutNode)
+registerViewNode('HLayout', DoricHLayoutNode)

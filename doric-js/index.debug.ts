@@ -19,7 +19,7 @@ const WebSocketClient = require('ws')
 const fs = require('fs')
 let context = process.cwd()  + '/build/context'
 const contextId = fs.readFileSync(context, { encoding: 'utf8' })
-console.log(contextId)
+console.log("debugging context id: " + contextId)
 let global = new Function('return this')()
 global.doric = doric
 global.context = doric.jsObtainContext(contextId)

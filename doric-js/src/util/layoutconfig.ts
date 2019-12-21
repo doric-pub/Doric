@@ -17,9 +17,18 @@ import { Gravity } from "./gravity";
 import { Modeling } from "./types";
 
 export enum LayoutSpec {
-    EXACTLY = 0,
-    WRAP_CONTENT = 1,
-    AT_MOST = 2,
+    /** 
+     * Depends on what's been set on width or height.
+    */
+    JUST = 0,
+    /**
+     * Depends on it's content.
+     */
+    FIT = 1,
+    /**
+     * Extend as much as parent let it take.
+     */
+    MOST = 2,
 }
 
 export interface LayoutConfig {
@@ -49,35 +58,35 @@ export class LayoutConfigImpl implements LayoutConfig, Modeling {
     //Only affective in VLayout or HLayout
     weight?: number
 
-    wrap() {
-        this.widthSpec = LayoutSpec.WRAP_CONTENT
-        this.heightSpec = LayoutSpec.WRAP_CONTENT
+    fit() {
+        this.widthSpec = LayoutSpec.FIT
+        this.heightSpec = LayoutSpec.FIT
         return this
     }
 
-    atmost() {
-        this.widthSpec = LayoutSpec.AT_MOST
-        this.heightSpec = LayoutSpec.AT_MOST
+    most() {
+        this.widthSpec = LayoutSpec.MOST
+        this.heightSpec = LayoutSpec.MOST
         return this
     }
 
-    exactly() {
-        this.widthSpec = LayoutSpec.EXACTLY
-        this.heightSpec = LayoutSpec.EXACTLY
+    just() {
+        this.widthSpec = LayoutSpec.JUST
+        this.heightSpec = LayoutSpec.JUST
         return this
     }
 
-    w(w: LayoutSpec) {
+    configWidth(w: LayoutSpec) {
         this.widthSpec = w
         return this
     }
 
-    h(h: LayoutSpec) {
+    configHeight(h: LayoutSpec) {
         this.heightSpec = h
         return this
     }
 
-    m(m: {
+    configMargin(m: {
         left?: number,
         right?: number,
         top?: number,
@@ -87,12 +96,12 @@ export class LayoutConfigImpl implements LayoutConfig, Modeling {
         return this
     }
 
-    a(a: Gravity) {
+    configAligmnet(a: Gravity) {
         this.alignment = a
         return this
     }
 
-    wg(w: number) {
+    configWeight(w: number) {
         this.weight = w
         return this
     }

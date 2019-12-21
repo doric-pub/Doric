@@ -16,14 +16,13 @@
 import { Group } from "../ui/view"
 import { Panel } from "../ui/panel"
 
-export abstract class ViewHolder<M>{
+export abstract class ViewHolder {
     abstract build(root: Group): void
-    abstract bind(state: M): void
 }
 
 export type Setter<M> = (state: M) => void
 
-export abstract class ViewModel<M extends Object, V extends ViewHolder<M>> {
+export abstract class ViewModel<M extends Object, V extends ViewHolder> {
     private state: M
     private viewHolder: V
 
@@ -38,22 +37,24 @@ export abstract class ViewModel<M extends Object, V extends ViewHolder<M>> {
 
     updateState(setter: Setter<M>) {
         setter(this.state)
-        this.viewHolder.bind(this.state)
+        this.onBind(this.state, this.viewHolder)
     }
 
     attach(view: Group) {
         this.viewHolder.build(view)
-        this.viewHolder.bind(this.state)
         this.onAttached(this.state, this.viewHolder)
+        this.onBind(this.state, this.viewHolder)
     }
 
     abstract onAttached(state: M, vh: V): void
+
+    abstract onBind(state: M, vh: V): void
 }
-export type ViewModelClass<M, V extends ViewHolder<M>> = new (m: M, v: V) => ViewModel<M, V>
+export type ViewModelClass<M, V extends ViewHolder> = new (m: M, v: V) => ViewModel<M, V>
 
 export type ViewHolderClass<V> = new () => V
 
-export abstract class VMPanel<M extends Object, V extends ViewHolder<M>> extends Panel {
+export abstract class VMPanel<M extends Object, V extends ViewHolder> extends Panel {
 
     private vm?: ViewModel<M, V>
     private vh?: V

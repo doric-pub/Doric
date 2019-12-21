@@ -17,9 +17,16 @@ import { BridgeContext } from "../runtime/global"
 
 export function navigator(context: BridgeContext) {
     return {
-        push: (scheme: string, alias: string, animated = true) => {
+        push: (scheme: string, config?: {
+            alias?: string,
+            animated?: boolean,
+            extra?: object,
+        }) => {
+            if (config && config.extra) {
+                (config as any).extra = JSON.stringify(config.extra)
+            }
             return context.navigator.push({
-                scheme, alias, animated
+                scheme, config
             })
         },
         pop: (animated = true) => {

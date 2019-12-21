@@ -297,6 +297,10 @@ export abstract class View implements Modeling, IView {
         return this.nativeChannel(context, 'getHeight')() as Promise<number>
     }
 
+    getLocationOnScreen(context: BridgeContext) {
+        return this.nativeChannel(context, "getLocationOnScreen")() as Promise<{ x: number, y: number }>
+    }
+
     /**++++++++++transform++++++++++*/
     @Property
     translationX?: number
@@ -363,9 +367,11 @@ export abstract class Superview extends View {
     toModel() {
         const subviews = []
         for (let v of this.allSubviews()) {
-            v.superview = this
-            if (v.isDirty()) {
-                subviews.push(v.toModel())
+            if (v != undefined) {
+                v.superview = this
+                if (v.isDirty()) {
+                    subviews.push(v.toModel())
+                }
             }
         }
         this.dirtyProps.subviews = subviews

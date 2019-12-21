@@ -18,7 +18,7 @@ import { layoutConfig } from '../util/layoutconfig'
 
 export function scroller(content: View) {
     return (new Scroller).also(v => {
-        v.layoutConfig = layoutConfig().wrap()
+        v.layoutConfig = layoutConfig().fit()
         v.content = content
     })
 }

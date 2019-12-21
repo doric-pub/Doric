@@ -43,7 +43,11 @@ export class FlowLayout extends Superview implements IFlowLayout {
     private ignoreDirtyCallOnce = false
 
     allSubviews() {
-        return this.cachedViews.values()
+        if (this.loadMoreView) {
+            return [...this.cachedViews.values(), this.loadMoreView]
+        } else {
+            return this.cachedViews.values()
+        }
     }
 
     @Property
@@ -64,17 +68,23 @@ export class FlowLayout extends Superview implements IFlowLayout {
     @Property
     batchCount = 15
 
+    @Property
+    onLoadMore?: () => void
+
+    @Property
+    loadMore?: boolean
+
+    @Property
+    loadMoreView?: FlowLayoutItem
+
     reset() {
         this.cachedViews.clear()
         this.itemCount = 0
     }
     private getItem(itemIdx: number) {
-        let view = this.cachedViews.get(`${itemIdx}`)
-        if (view === undefined) {
-            view = this.renderItem(itemIdx)
-            view.superview = this
-            this.cachedViews.set(`${itemIdx}`, view)
-        }
+        let view = this.renderItem(itemIdx)
+        view.superview = this
+        this.cachedViews.set(`${itemIdx}`, view)
         return view
     }
 
@@ -94,6 +104,13 @@ export class FlowLayout extends Superview implements IFlowLayout {
             return listItem.toModel()
         })
     }
+
+    toModel() {
+        if (this.loadMoreView) {
+            this.dirtyProps['loadMoreView'] = this.loadMoreView.viewId
+        }
+        return super.toModel()
+    }
 }
 
 export function flowlayout(config: IFlowLayout) {
@@ -106,7 +123,7 @@ export function flowlayout(config: IFlowLayout) {
 
 export function flowItem(item: View) {
     return (new FlowLayoutItem).also((it) => {
-        it.layoutConfig = layoutConfig().wrap()
+        it.layoutConfig = layoutConfig().fit()
         it.addChild(item)
     })
 }

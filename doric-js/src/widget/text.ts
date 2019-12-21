@@ -45,7 +45,7 @@ export class Text extends View implements IText {
 
 export function text(config: IText) {
     const ret = new Text
-    ret.layoutConfig = layoutConfig().wrap()
+    ret.layoutConfig = layoutConfig().fit()
     for (let key in config) {
         Reflect.set(ret, key, Reflect.get(config, key, config), ret)
     }

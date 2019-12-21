@@ -63,6 +63,7 @@ export class Color implements Modeling {
     }
 
     alpha(v: number) {
+        v = v * 255
         return new Color((this._value & 0xffffff) | ((v & 0xff) << 24))
     }
 

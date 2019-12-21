@@ -52,7 +52,7 @@ export class Refreshable extends Superview implements IRefreshable {
 
 export function refreshable(config: IRefreshable) {
     const ret = new Refreshable
-    ret.layoutConfig = layoutConfig().wrap()
+    ret.layoutConfig = layoutConfig().fit()
     for (let key in config) {
         Reflect.set(ret, key, Reflect.get(config, key, config), ret)
     }
@@ -66,7 +66,7 @@ export interface IPullable {
 }
 
 
-export function pullable(context: BridgeContext, v: View, config: IPullable) {
+export function pullable(v: View, config: IPullable) {
     Reflect.set(v, 'startAnimation', config.startAnimation)
     Reflect.set(v, 'stopAnimation', config.stopAnimation)
     Reflect.set(v, 'setPullingDistance', config.setPullingDistance)

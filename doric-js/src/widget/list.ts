@@ -16,7 +16,7 @@
 
 import { View, Property, Superview, IView } from "../ui/view";
 import { Stack } from "./layouts";
-import { layoutConfig } from "../util/layoutconfig";
+import { layoutConfig, LayoutSpec } from "../util/layoutconfig";
 
 export class ListItem extends Stack {
     /**
@@ -35,8 +35,13 @@ export interface IList extends IView {
 export class List extends Superview implements IList {
     private cachedViews: Map<string, ListItem> = new Map
     private ignoreDirtyCallOnce = false
+
     allSubviews() {
-        return this.cachedViews.values()
+        if (this.loadMoreView) {
+            return [...this.cachedViews.values(), this.loadMoreView]
+        } else {
+            return this.cachedViews.values()
+        }
     }
 
     @Property
@@ -47,6 +52,15 @@ export class List extends Superview implements IList {
 
     @Property
     batchCount = 15
+
+    @Property
+    onLoadMore?: () => void
+
+    @Property
+    loadMore?: boolean
+
+    @Property
+    loadMoreView?: ListItem
 
     reset() {
         this.cachedViews.clear()
@@ -78,6 +92,13 @@ export class List extends Superview implements IList {
             return listItem.toModel()
         })
     }
+
+    toModel() {
+        if (this.loadMoreView) {
+            this.dirtyProps['loadMoreView'] = this.loadMoreView.viewId
+        }
+        return super.toModel()
+    }
 }
 
 export function list(config: IList) {
@@ -90,7 +111,7 @@ export function list(config: IList) {
 
 export function listItem(item: View) {
     return (new ListItem).also((it) => {
-        it.layoutConfig = layoutConfig().wrap()
+        it.layoutConfig = layoutConfig().most().configHeight(LayoutSpec.FIT)
         it.addChild(item)
     })
 }

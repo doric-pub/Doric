@@ -6,7 +6,16 @@
 //
 
 #import "DoricJSRemoteArgType.h"
-DoricJSRemoteArgType DoricargTypeWithArg(id arg) {
-    // TODO: 类型缺失
-    return DoricJSRemoteArgTypeString;
+DoricJSRemoteArgType DoricargTypeWithArg(id arg) {    
+    DoricJSRemoteArgType type = DoricJSRemoteArgTypeNil;
+    if ([arg isKindOfClass:[NSNumber class]]) {
+        type = DoricJSRemoteArgTypeNumber;
+    }else if ([arg isKindOfClass:[NSString class]]) {
+        type = DoricJSRemoteArgTypeString;
+    }else if ([arg isKindOfClass:[NSDictionary class]]) {
+        type = DoricJSRemoteArgTypeObject;
+    }else if ([arg isKindOfClass:[NSMutableArray class]]) {
+        type = DoricJSRemoteArgTypeArray;
+    }
+    return type;
 }

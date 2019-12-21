@@ -26,6 +26,7 @@
 
 @interface DoricImageNode ()
 @property(nonatomic, copy) NSString *loadCallbackId;
+@property(nonatomic, assign) BOOL isBlur;
 @end
 
 @implementation DoricImageNode
@@ -34,6 +35,15 @@
     return [[YYAnimatedImageView new] also:^(UIImageView *it) {
         it.clipsToBounds = YES;
     }];
+}
+
+- (void)blend:(NSDictionary *)props {
+    NSInteger value = [props[@"isBlur"] intValue];
+    if(value == 1) {
+        self.isBlur = YES;
+    }
+    
+    [super blend:props];
 }
 
 - (void)blendView:(UIImageView *)view forPropName:(NSString *)name propValue:(id)prop {
@@ -52,6 +62,13 @@
                                     nil];
                 }
                 [self requestLayout];
+            }
+            
+            if(self.isBlur) {
+                UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+                UIVisualEffectView *effectView = [[UIVisualEffectView alloc]initWithEffect:blurEffect];
+                effectView.frame = CGRectMake(0, 0, image.size.width, image.size.height);
+                [view addSubview:effectView];
             }
         }];
     } else if ([@"scaleType" isEqualToString:name]) {

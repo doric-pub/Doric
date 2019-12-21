@@ -235,7 +235,6 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
         } else {
             view.clipsToBounds = YES;
         }
-
     } else if ([name isEqualToString:@"translationX"]) {
         self.translationX = prop;
     } else if ([name isEqualToString:@"translationY"]) {
@@ -250,6 +249,19 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
         self.pivotY = prop;
     } else if ([name isEqualToString:@"rotation"]) {
         self.rotation = prop;
+    } else if ([name isEqualToString:@"padding"]) {
+        DoricPadding padding;
+        padding.left = padding.right = padding.top = padding.bottom = 0;
+        if ([prop isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *dictionary = prop;
+            padding.left = [dictionary[@"left"] floatValue];
+            padding.right = [dictionary[@"right"] floatValue];
+            padding.top = [dictionary[@"top"] floatValue];
+            padding.bottom = [dictionary[@"bottom"] floatValue];
+        }
+        self.view.padding = padding;
+    } else if ([name isEqualToString:@"hidden"]) {
+        self.view.hidden = [prop boolValue];
     } else {
         DoricLog(@"Blend View error for View Type :%@, prop is %@", self.class, name);
     }
@@ -305,6 +317,11 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     return @(self.view.height);
 }
 
+- (NSDictionary *)getLocationOnScreen {
+    CGPoint point = [self.view convertPoint:CGPointMake(0, 0) toView:[UIApplication sharedApplication].windows.lastObject];
+    return @{@"x": @(point.x), @"y": @(point.y)};
+}
+
 - (void)blendLayoutConfig:(NSDictionary *)params {
     [params[@"widthSpec"] also:^(NSNumber *it) {
         if (it) {
@@ -357,6 +374,8 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     return dictionary;
 }
 
+#pragma animations
+
 - (void)doAnimation:(id)params withPromise:(DoricPromise *)promise {
     CAAnimation *animation = [self parseAnimation:params];
     AnimationCallback *originDelegate = animation.delegate;
@@ -371,6 +390,7 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
             if (originDelegate) {
                 originDelegate.endBlock(callback);
             }
+            [self.view.layer removeAllAnimations];
             [self transformProperties];
             [promise resolve:self.transformation];
         };
@@ -379,6 +399,8 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     if (params[@"delay"]) {
         animation.beginTime = CACurrentMediaTime() + [params[@"delay"] floatValue] / 1000;
     }
+    animation.removedOnCompletion = NO;
+    animation.fillMode = kCAFillModeForwards;
     [self.view.layer addAnimation:animation forKey:nil];
 }
 

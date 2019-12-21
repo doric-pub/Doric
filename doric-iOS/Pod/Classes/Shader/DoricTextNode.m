@@ -48,6 +48,8 @@
             alignment = NSTextAlignmentRight;
         }
         view.textAlignment = alignment;
+    } else if ([name isEqualToString:@"maxLines"]) {
+        view.numberOfLines = [prop integerValue];
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }

@@ -25,6 +25,8 @@
 @protocol DoricFlowLayoutDelegate
 - (CGFloat)doricFlowLayoutItemHeightAtIndexPath:(NSIndexPath *)indexPath;
 
+- (CGFloat)doricFlowLayoutItemWidthAtIndexPath:(NSIndexPath *)indexPath;
+
 - (CGFloat)doricFlowLayoutColumnSpace;
 
 - (CGFloat)doricFlowLayoutRowSpace;
@@ -93,15 +95,23 @@
         }
     }
 
-    CGFloat width = (self.collectionView.width - self.columnSpace * (self.columnCount - 1)) / self.columnCount;
+    CGFloat width = [self.delegate doricFlowLayoutItemWidthAtIndexPath:indexPath];
     CGFloat height = [self.delegate doricFlowLayoutItemHeightAtIndexPath:indexPath];
     CGFloat x = (width + self.columnSpace) * [minYOfColumn integerValue];
     CGFloat y = [self.columnHeightInfo[minYOfColumn] floatValue];
     if (y > 0) {
         y += self.rowSpace;
     }
-    self.columnHeightInfo[minYOfColumn] = @(y + height);
 
+    if (width == self.collectionView.width) {
+        CGFloat maxY = 0;
+        for (NSNumber *column in self.columnHeightInfo.allValues) {
+            maxY = MAX(maxY, [column floatValue]);
+        }
+        y = maxY + self.rowSpace;
+    } else {
+        self.columnHeightInfo[minYOfColumn] = @(y + height);
+    }
     UICollectionViewLayoutAttributes *attrs = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
     attrs.frame = CGRectMake(x, y, width, height);
     return attrs;
@@ -156,6 +166,11 @@
 @property(nonatomic, assign) NSUInteger columnCount;
 @property(nonatomic, assign) CGFloat columnSpace;
 @property(nonatomic, assign) CGFloat rowSpace;
+@property(nonatomic, copy) NSString *renderItemFuncId;
+
+@property(nonatomic, copy) NSString *onLoadMoreFuncId;
+@property(nonatomic, copy) NSString *loadMoreViewId;
+@property(nonatomic, assign) BOOL loadMore;
 @end
 
 @implementation DoricFlowLayoutNode
@@ -180,6 +195,7 @@
                 it.delegate = self;
                 it.dataSource = self;
                 [it registerClass:[DoricFlowLayoutViewCell class] forCellWithReuseIdentifier:@"doricCell"];
+                [it registerClass:[DoricFlowLayoutViewCell class] forCellWithReuseIdentifier:@"doricLoadMoreCell"];
             }];
 }
 
@@ -198,17 +214,31 @@
         self.itemCount = [prop unsignedIntegerValue];
         [self.view reloadData];
     } else if ([@"renderItem" isEqualToString:name]) {
-        [self.itemViewIds removeAllObjects];
-        [self clearSubModel];
-        [self.view reloadData];
+        if ([self.renderItemFuncId isEqualToString:prop]) {
+        } else {
+            [self.itemViewIds removeAllObjects];
+            [self clearSubModel];
+            [self.view reloadData];
+            self.renderItemFuncId = prop;
+        }
+
     } else if ([@"batchCount" isEqualToString:name]) {
         self.batchCount = [prop unsignedIntegerValue];
+    } else if ([@"onLoadMore" isEqualToString:name]) {
+        self.onLoadMoreFuncId = prop;
+    } else if ([@"loadMoreView" isEqualToString:name]) {
+        self.loadMoreViewId = prop;
+    } else if ([@"loadMore" isEqualToString:name]) {
+        self.loadMore = [prop boolValue];
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }
 }
 
 - (NSDictionary *)itemModelAt:(NSUInteger)position {
+    if (position >= self.itemCount) {
+        return [self subModelOf:self.loadMoreViewId];
+    }
     NSString *viewId = self.itemViewIds[@(position)];
     if (viewId && viewId.length > 0) {
         return [self subModelOf:viewId];
@@ -243,24 +273,26 @@
 }
 
 - (void)blendSubNode:(NSDictionary *)subModel {
-    NSString *viewId = subModel[@"id"];
-    DoricViewNode *viewNode = [self subNodeWithViewId:viewId];
-    if (viewNode) {
-        [viewNode blend:subModel[@"props"]];
-    } else {
-        NSMutableDictionary *model = [[self subModelOf:viewId] mutableCopy];
-        [self recursiveMixin:subModel to:model];
-        [self setSubModel:model in:viewId];
-    }
-    [self.itemViewIds enumerateKeysAndObjectsUsingBlock:^(NSNumber *_Nonnull key, NSString *_Nonnull obj, BOOL *_Nonnull stop) {
-        if ([viewId isEqualToString:obj]) {
-            *stop = YES;
-            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[key integerValue] inSection:0];
-            [UIView performWithoutAnimation:^{
-                [self.view reloadItemsAtIndexPaths:@[indexPath]];
-            }];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSString *viewId = subModel[@"id"];
+        DoricViewNode *viewNode = [self subNodeWithViewId:viewId];
+        if (viewNode) {
+            [viewNode blend:subModel[@"props"]];
+        } else {
+            NSMutableDictionary *model = [[self subModelOf:viewId] mutableCopy];
+            [self recursiveMixin:subModel to:model];
+            [self setSubModel:model in:viewId];
         }
-    }];
+        [self.itemViewIds enumerateKeysAndObjectsUsingBlock:^(NSNumber *_Nonnull key, NSString *_Nonnull obj, BOOL *_Nonnull stop) {
+            if ([viewId isEqualToString:obj]) {
+                *stop = YES;
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[key integerValue] inSection:0];
+                [UIView performWithoutAnimation:^{
+                    [self.view reloadItemsAtIndexPaths:@[indexPath]];
+                }];
+            }
+        }];
+    });
 }
 
 - (void)callItem:(NSUInteger)position size:(CGSize)size {
@@ -273,13 +305,14 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return self.itemCount;
+    return self.itemCount + (self.loadMore ? 1 : 0);
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     NSUInteger position = (NSUInteger) indexPath.row;
     NSDictionary *model = [self itemModelAt:position];
     NSDictionary *props = model[@"props"];
+
     DoricFlowLayoutViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"doricCell" forIndexPath:indexPath];
     if (!cell.viewNode) {
         DoricFlowLayoutItemNode *itemNode = [[DoricFlowLayoutItemNode alloc] initWithContext:self.doricContext];
@@ -287,11 +320,17 @@
         cell.viewNode = itemNode;
         [cell.contentView addSubview:itemNode.view];
     }
+
     DoricFlowLayoutItemNode *node = cell.viewNode;
     node.viewId = model[@"id"];
     [node blend:props];
     CGFloat width = (collectionView.width - (self.columnCount - 1) * self.columnSpace) / self.columnCount;
     CGSize size = [node.view measureSize:CGSizeMake(width, collectionView.height)];
+    if (position > 0 && position >= self.itemCount && self.onLoadMoreFuncId) {
+        size = CGSizeMake(collectionView.width, size.height);
+        [self callJSResponse:self.onLoadMoreFuncId, nil];
+    }
+
     [node.view layoutSelf:size];
     [self callItem:position size:size];
     return cell;
@@ -306,6 +345,17 @@
         return 100;
     }
 }
+
+- (CGFloat)doricFlowLayoutItemWidthAtIndexPath:(NSIndexPath *)indexPath {
+    NSUInteger position = (NSUInteger) indexPath.row;
+    NSValue *value = self.itemSizeInfo[@(position)];
+    if (value) {
+        return [value CGSizeValue].width;
+    } else {
+        return 100;
+    }
+}
+
 
 - (CGFloat)doricFlowLayoutColumnSpace {
     return self.columnSpace;

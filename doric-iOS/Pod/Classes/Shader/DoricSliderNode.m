@@ -35,6 +35,9 @@
 @property(nonatomic, strong) NSMutableDictionary <NSNumber *, NSString *> *itemViewIds;
 @property(nonatomic, assign) NSUInteger itemCount;
 @property(nonatomic, assign) NSUInteger batchCount;
+@property(nonatomic, copy) NSString *onPageSelectedFuncId;
+@property(nonatomic, assign) NSUInteger lastPosition;
+@property(nonatomic, copy) NSString *renderPageFuncId;
 @end
 
 @interface DoricSliderView : UICollectionView
@@ -90,11 +93,18 @@
         self.itemCount = [prop unsignedIntegerValue];
         [self.view reloadData];
     } else if ([@"renderPage" isEqualToString:name]) {
-        [self.itemViewIds removeAllObjects];
-        [self clearSubModel];
-        [self.view reloadData];
+        if ([self.renderPageFuncId isEqualToString:prop]) {
+
+        } else {
+            [self.itemViewIds removeAllObjects];
+            [self clearSubModel];
+            [self.view reloadData];
+            self.renderPageFuncId = prop;
+        }
     } else if ([@"batchCount" isEqualToString:name]) {
         self.batchCount = [prop unsignedIntegerValue];
+    } else if ([@"onPageSlided" isEqualToString:name]) {
+        self.onPageSelectedFuncId = prop;
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }
@@ -197,5 +207,28 @@
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     NSUInteger pageIndex = (NSUInteger) (scrollView.contentOffset.x / scrollView.width);
     scrollView.contentOffset = CGPointMake(pageIndex * scrollView.width, scrollView.contentOffset.y);
+    if (self.onPageSelectedFuncId && self.onPageSelectedFuncId.length > 0) {
+        if (pageIndex != self.lastPosition) {
+            [self callJSResponse:self.onPageSelectedFuncId, @(pageIndex), nil];
+        }
+    }
+    self.lastPosition = pageIndex;
 }
+
+- (void)slidePage:(NSDictionary *)params withPromise:(DoricPromise *)promise {
+    NSUInteger pageIndex = [params[@"page"] unsignedIntegerValue];
+    BOOL smooth = [params[@"smooth"] boolValue];
+    [self.view setContentOffset:CGPointMake(pageIndex * self.view.width, self.view.contentOffset.y) animated:smooth];
+    [promise resolve:nil];
+    self.lastPosition = pageIndex;
+    if (self.onPageSelectedFuncId && self.onPageSelectedFuncId.length > 0) {
+        [self callJSResponse:self.onPageSelectedFuncId, @(pageIndex), nil];
+    }
+}
+
+- (NSNumber *)getSlidedPage {
+    NSUInteger pageIndex = (NSUInteger) (self.view.contentOffset.x / self.view.width);
+    return @(pageIndex);
+}
+
 @end

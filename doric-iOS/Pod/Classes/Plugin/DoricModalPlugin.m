@@ -20,9 +20,9 @@
 //  Created by pengfei.zhou on 2019/7/29.
 //
 
-#import <Doric/Doric.h>
 #import "DoricModalPlugin.h"
 #import "DoricUtil.h"
+#import "DoricExtensions.h"
 
 @implementation DoricModalPlugin
 

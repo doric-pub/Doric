@@ -26,3 +26,5 @@
 #import "DoricNavBarDelegate.h"
 #import "DoricViewController.h"
 #import "DoricPromise.h"
+#import "DoricLibrary.h"
+#import "DoricNativePlugin.h"

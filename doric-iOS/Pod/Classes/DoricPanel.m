@@ -22,8 +22,8 @@
 
 @implementation DoricPanel
 
-- (void)config:(NSString *)script alias:(NSString *)alias {
-    self.doricContext = [[[DoricContext alloc] initWithScript:script source:alias] also:^(DoricContext *it) {
+- (void)config:(NSString *)script alias:(NSString *)alias extra:(NSString *)extra {
+    self.doricContext = [[[DoricContext alloc] initWithScript:script source:alias extra:extra] also:^(DoricContext *it) {
         [it.rootNode setupRootView:[[DoricStackView new] also:^(DoricStackView *it) {
             [self.view addSubview:it];
         }]];

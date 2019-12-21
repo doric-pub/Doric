@@ -14,29 +14,12 @@
  * limitations under the License.
  */
 //
-//  DoricUtil.h
-//  Doric
-//
-//  Created by pengfei.zhou on 2019/7/26.
+// Created by pengfei.zhou on 2019/12/11.
 //
 
 #import <Foundation/Foundation.h>
-#import "DoricLayouts.h"
+#import "DoricRegistry.h"
 
-void DoricLog(NSString *_Nonnull format, ...);
-
-UIColor *_Nonnull DoricColor(NSNumber *_Nonnull number);
-
-NSBundle *_Nonnull DoricBundle(void);
-
-#ifndef DC_LOCK
-#define DC_LOCK(lock) dispatch_semaphore_wait(lock, DISPATCH_TIME_FOREVER);
-#endif
-
-#ifndef DC_UNLOCK
-#define DC_UNLOCK(lock) dispatch_semaphore_signal(lock);
-#endif
-
-void ShowToast(NSString *_Nonnull text, DoricGravity gravity);
-
-UIImage *_Nonnull UIImageWithColor(UIColor * _Nonnull color);
+@interface DoricLibrary : NSObject
+- (void)load:(DoricRegistry *)registry;
+@end

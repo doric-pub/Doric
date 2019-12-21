@@ -7,9 +7,10 @@
 //
 
 #import "ViewController.h"
-#import "Doric.h"
+#import <DoricCore/Doric.h>
 #import "DemoVC.h"
 #import "QRScanViewController.h"
+#import "DemoLibrary.h"
 
 @interface ViewController () <UITableViewDelegate, UITableViewDataSource>
 @property(nonatomic, copy) NSArray <NSString *> *demoFilePaths;
@@ -27,6 +28,11 @@
         return ![obj containsString:@".map"];
     }];
     NSMutableArray <NSString *> *tmp = [self.demoFilePaths mutableCopy];
+    NSStringCompareOptions comparisonOptions = NSCaseInsensitiveSearch | NSNumericSearch | NSWidthInsensitiveSearch | NSForcedOrderingSearch;
+    [tmp sortUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
+        NSRange range = NSMakeRange(0, obj1.length);
+        return [obj1 compare:obj2 options:comparisonOptions range:range];
+    }];
     [tmp insertObject:@"Dev Kit" atIndex:0];
     self.demoFilePaths = tmp;
     [self.view addSubview:[[UITableView new] also:^(UITableView *it) {
@@ -36,6 +42,7 @@
         it.dataSource = self;
         it.delegate = self;
     }]];
+    [DoricRegistry register:[DemoLibrary new]];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -72,7 +79,9 @@
     if ([file containsString:@"NavigatorDemo"]) {
         DoricViewController *doricViewController = [[DoricViewController alloc]
                 initWithScheme:[NSString stringWithFormat:@"assets://demo/%@", file]
-                         alias:self.demoFilePaths[(NSUInteger) indexPath.row]];
+                         alias:self.demoFilePaths[(NSUInteger) indexPath.row]
+                         extra:nil
+        ];
         [self.navigationController pushViewController:doricViewController animated:NO];
     } else {
         DemoVC *demoVC = [[DemoVC alloc] initWithPath:file];

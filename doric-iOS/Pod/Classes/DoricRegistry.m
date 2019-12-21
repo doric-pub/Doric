@@ -42,6 +42,35 @@
 #import "DoricFlowLayoutNode.h"
 #import "DoricPopoverPlugin.h"
 #import "DoricAnimatePlugin.h"
+#import "DoricNestedSliderNode.h"
+#import "DoricInputNode.h"
+#import "DoricLibrary.h"
+
+
+@interface DoricLibraries : NSObject
+@property(nonatomic, strong) NSMutableSet <DoricLibrary *> *libraries;
+
++ (instancetype)instance;
+@end
+
+@implementation DoricLibraries
+- (instancetype)init {
+    if (self = [super init]) {
+        _libraries = [NSMutableSet new];
+    }
+    return self;
+}
+
++ (instancetype)instance {
+    static DoricLibraries *_instance;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _instance = [[DoricLibraries alloc] init];
+    });
+    return _instance;
+}
+
+@end
 
 @interface DoricRegistry ()
 
@@ -53,12 +82,19 @@
 
 @implementation DoricRegistry
 
++ (void)register:(DoricLibrary *)library {
+    [DoricLibraries.instance.libraries addObject:library];
+}
+
 - (instancetype)init {
     if (self = [super init]) {
         _bundles = [[NSMutableDictionary alloc] init];
         _plugins = [[NSMutableDictionary alloc] init];
         _nodes = [[NSMutableDictionary alloc] init];
         [self innerRegister];
+        [DoricLibraries.instance.libraries enumerateObjectsUsingBlock:^(DoricLibrary *obj, BOOL *stop) {
+            [obj load:self];
+        }];
     }
     return self;
 }
@@ -86,6 +122,8 @@
     [self registerViewNode:DoricRefreshableNode.class withName:@"Refreshable"];
     [self registerViewNode:DoricFlowLayoutItemNode.class withName:@"FlowLayoutItem"];
     [self registerViewNode:DoricFlowLayoutNode.class withName:@"FlowLayout"];
+    [self registerViewNode:DoricNestedSliderNode.class withName:@"NestedSlider"];
+    [self registerViewNode:DoricInputNode.class withName:@"Input"];
 }
 
 - (void)registerJSBundle:(NSString *)bundle withName:(NSString *)name {

@@ -20,7 +20,6 @@
 //  Created by pengfei.zhou on 2019/7/30.
 //
 
-#import <Doric/DoricExtensions.h>
 #import "DoricGroupNode.h"
 
 @interface DoricGroupNode ()

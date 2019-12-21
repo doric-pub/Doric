@@ -4276,9 +4276,17 @@ return __module.exports;
         }
     }
 
+    var ScaleType;
+    (function (ScaleType) {
+        ScaleType[ScaleType["ScaleToFill"] = 0] = "ScaleToFill";
+        ScaleType[ScaleType["ScaleAspectFit"] = 1] = "ScaleAspectFit";
+        ScaleType[ScaleType["ScaleAspectFill"] = 2] = "ScaleAspectFill";
+    })(ScaleType || (ScaleType = {}));
     class DoricImageNode extends DoricViewNode {
         build() {
-            return document.createElement('img');
+            const ret = document.createElement('img');
+            ret.style.objectFit = "fill";
+            return ret;
         }
         blendProps(v, propName, prop) {
             switch (propName) {
@@ -4290,8 +4298,32 @@ return __module.exports;
                     break;
                 case 'loadCallback':
                     v.onload = () => {
-                        this.callJSResponse(prop);
+                        this.callJSResponse(prop, {
+                            width: v.width,
+                            height: v.height
+                        });
                     };
+                    break;
+                case 'scaleType':
+                    switch (prop) {
+                        case ScaleType.ScaleToFill:
+                            v.style.objectFit = "fill";
+                            break;
+                        case ScaleType.ScaleAspectFit:
+                            v.style.objectFit = "contain";
+                            break;
+                        case ScaleType.ScaleAspectFill:
+                            v.style.objectFit = "cover";
+                            break;
+                    }
+                    break;
+                case 'isBlur':
+                    if (prop) {
+                        v.style.filter = 'blur(10px)';
+                    }
+                    else {
+                        v.style.filter = '';
+                    }
                     break;
                 default:
                     super.blendProps(v, propName, prop);

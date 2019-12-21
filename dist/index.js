@@ -3759,7 +3759,7 @@ return __module.exports;
         configWidth() {
             switch (this.layoutConfig.widthSpec) {
                 case LayoutSpec.WRAP_CONTENT:
-                    this.view.style.width = "auto";
+                    this.view.style.width = "fit-content";
                     break;
                 case LayoutSpec.AT_MOST:
                     this.view.style.width = "100%";
@@ -3775,7 +3775,7 @@ return __module.exports;
         configHeight() {
             switch (this.layoutConfig.heightSpec) {
                 case LayoutSpec.WRAP_CONTENT:
-                    this.view.style.height = "auto";
+                    this.view.style.height = "fit-content";
                     break;
                 case LayoutSpec.AT_MOST:
                     this.view.style.height = "100%";
@@ -4060,6 +4060,25 @@ return __module.exports;
                 e.view.style.position = "absolute";
                 e.view.style.left = toPixelString(e.offsetX + this.paddingLeft);
                 e.view.style.top = toPixelString(e.offsetY + this.paddingTop);
+                const gravity = e.layoutConfig.alignment;
+                if ((gravity & LEFT) === LEFT) {
+                    e.view.style.left = toPixelString(0);
+                }
+                else if ((gravity & RIGHT) === RIGHT) {
+                    e.view.style.left = toPixelString(this.view.offsetWidth - e.view.offsetWidth);
+                }
+                else if ((gravity & CENTER_X) === CENTER_X) {
+                    e.view.style.left = toPixelString(this.view.offsetWidth / 2 - e.view.offsetWidth / 2);
+                }
+                if ((gravity & TOP) === TOP) {
+                    e.view.style.top = toPixelString(0);
+                }
+                else if ((gravity & BOTTOM) === BOTTOM) {
+                    e.view.style.top = toPixelString(this.view.offsetHeight - e.view.offsetHeight);
+                }
+                else if ((gravity & CENTER_Y) === CENTER_Y) {
+                    e.view.style.top = toPixelString(this.view.offsetHeight / 2 - e.view.offsetHeight / 2);
+                }
             });
         }
     }
@@ -4232,6 +4251,30 @@ return __module.exports;
         }
     }
 
+    class DoricImageNode extends DoricViewNode {
+        build() {
+            return document.createElement('img');
+        }
+        blendProps(v, propName, prop) {
+            switch (propName) {
+                case 'imageUrl':
+                    v.setAttribute('src', prop);
+                    break;
+                case 'imageBase64':
+                    v.setAttribute('src', prop);
+                    break;
+                case 'loadCallback':
+                    v.onload = () => {
+                        this.callJSResponse(prop);
+                    };
+                    break;
+                default:
+                    super.blendProps(v, propName, prop);
+                    break;
+            }
+        }
+    }
+
     const bundles = new Map;
     const plugins = new Map;
     const nodes = new Map;
@@ -4255,6 +4298,7 @@ return __module.exports;
     registerViewNode('VLayout', DoricVLayoutNode);
     registerViewNode('HLayout', DoricHLayoutNode);
     registerViewNode('Text', DoricTextNode);
+    registerViewNode('Image', DoricImageNode);
 
     let __scriptId__ = 0;
     function getScriptId() {

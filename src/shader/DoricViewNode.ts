@@ -155,7 +155,7 @@ export abstract class DoricViewNode {
     configWidth() {
         switch (this.layoutConfig.widthSpec) {
             case LayoutSpec.WRAP_CONTENT:
-                this.view.style.width = "auto"
+                this.view.style.width = "fit-content"
                 break
 
             case LayoutSpec.AT_MOST:
@@ -173,7 +173,7 @@ export abstract class DoricViewNode {
     configHeight() {
         switch (this.layoutConfig.heightSpec) {
             case LayoutSpec.WRAP_CONTENT:
-                this.view.style.height = "auto"
+                this.view.style.height = "fit-content"
                 break
 
             case LayoutSpec.AT_MOST:

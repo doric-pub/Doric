@@ -43,6 +43,13 @@ export class DoricImageNode extends DoricViewNode {
                         break
                 }
                 break
+            case 'isBlur':
+                if (prop) {
+                    v.style.filter = 'blur(8px)'
+                } else {
+                    v.style.filter = ''
+                }
+                break
             default:
                 super.blendProps(v, propName, prop)
                 break

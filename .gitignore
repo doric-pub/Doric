@@ -66,6 +66,9 @@ fastlane/readme.md
 
 .DS_Store 
 */.DS_Store
-iOS/Example/Podfile.lock
-iOS/Example/Example.xcworkspace/*
-iOS/Example/Pods/*
+doric-iOS/Example/Podfile.lock
+doric-iOS/Example/Example.xcworkspace/*
+doric-iOS/Example/Pods/*
+.project
+.classpath
+.settings/

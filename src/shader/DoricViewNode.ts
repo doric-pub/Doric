@@ -336,7 +336,7 @@ export abstract class DoricSuperViewNode extends DoricViewNode {
 
     abstract blendSubNode(model: DVModel): void
 
-    abstract getSubNodeById(viewId: string): DoricViewNode
+    abstract getSubNodeById(viewId: string): DoricViewNode | undefined
 }
 
 export abstract class DoricGroupViewNode extends DoricSuperViewNode {

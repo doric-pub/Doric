@@ -6,6 +6,7 @@ import { DoricVLayoutNode } from './shader/DoricVLayoutNode'
 import { DoricHLayoutNode } from './shader/DoricHLayoutNode'
 import { DoricTextNode } from "./shader/DoricTextNode"
 import { DoricImageNode } from "./shader/DoricImageNode"
+import { DoricScrollerNode } from "./shader/DoricScrollerNode"
 
 const bundles: Map<string, string> = new Map
 
@@ -45,3 +46,4 @@ registerViewNode('VLayout', DoricVLayoutNode)
 registerViewNode('HLayout', DoricHLayoutNode)
 registerViewNode('Text', DoricTextNode)
 registerViewNode('Image', DoricImageNode)
+registerViewNode('Scroller', DoricScrollerNode)

@@ -4275,6 +4275,75 @@ return __module.exports;
         }
     }
 
+    class DoricScrollerNode extends DoricSuperViewNode {
+        constructor() {
+            super(...arguments);
+            this.childViewId = "";
+        }
+        build() {
+            const ret = document.createElement('div');
+            ret.style.overflow = "scroll";
+            return ret;
+        }
+        blendProps(v, propName, prop) {
+            if (propName === 'content') {
+                this.childViewId = prop;
+            }
+            else {
+                super.blendProps(v, propName, prop);
+            }
+        }
+        blendSubNode(model) {
+            var _a;
+            (_a = this.childNode) === null || _a === void 0 ? void 0 : _a.blend(model.props);
+        }
+        getSubNodeById(viewId) {
+            return viewId === this.childViewId ? this.childNode : undefined;
+        }
+        onBlended() {
+            super.onBlended();
+            const model = this.getSubModel(this.childViewId);
+            if (model === undefined) {
+                return;
+            }
+            if (this.childNode) {
+                if (this.childNode.viewId === this.childViewId) ;
+                else {
+                    if (this.reusable && this.childNode.viewType === model.type) {
+                        this.childNode.viewId = model.id;
+                        this.childNode.blend(model.props);
+                    }
+                    else {
+                        this.view.removeChild(this.childNode.view);
+                        const childNode = DoricViewNode.create(this.context, model.type);
+                        if (childNode === undefined) {
+                            return;
+                        }
+                        childNode.viewId = model.id;
+                        childNode.init(this);
+                        childNode.blend(model.props);
+                        this.view.appendChild(childNode.view);
+                        this.childNode = childNode;
+                    }
+                }
+            }
+            else {
+                const childNode = DoricViewNode.create(this.context, model.type);
+                if (childNode === undefined) {
+                    return;
+                }
+                childNode.viewId = model.id;
+                childNode.init(this);
+                childNode.blend(model.props);
+                this.view.appendChild(childNode.view);
+                this.childNode = childNode;
+            }
+        }
+        layout() {
+            super.layout();
+        }
+    }
+
     const bundles = new Map;
     const plugins = new Map;
     const nodes = new Map;
@@ -4299,6 +4368,7 @@ return __module.exports;
     registerViewNode('HLayout', DoricHLayoutNode);
     registerViewNode('Text', DoricTextNode);
     registerViewNode('Image', DoricImageNode);
+    registerViewNode('Scroller', DoricScrollerNode);
 
     let __scriptId__ = 0;
     function getScriptId() {

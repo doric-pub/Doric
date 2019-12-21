@@ -249,6 +249,16 @@ export abstract class DoricViewNode {
                     this.callJSResponse(prop as string)
                 }
                 break
+            case 'corners':
+                if (typeof prop === 'object') {
+                    this.view.style.borderTopLeftRadius = toPixelString(prop.leftTop)
+                    this.view.style.borderTopRightRadius = toPixelString(prop.rightTop)
+                    this.view.style.borderBottomRightRadius = toPixelString(prop.rightBottom)
+                    this.view.style.borderBottomLeftRadius = toPixelString(prop.leftBottom)
+                } else {
+                    this.view.style.borderRadius = toPixelString(prop)
+                }
+                break
         }
     }
 

@@ -4185,18 +4185,45 @@ return __module.exports;
 
     class DoricTextNode extends DoricViewNode {
         build() {
-            return document.createElement('p');
+            const div = document.createElement('div');
+            div.style.display = "flex";
+            this.textElement = document.createElement('span');
+            div.appendChild(this.textElement);
+            div.style.justifyContent = "center";
+            div.style.alignItems = "center";
+            return div;
         }
         blendProps(v, propName, prop) {
             switch (propName) {
                 case 'text':
-                    v.innerText = prop;
+                    this.textElement.innerText = prop;
                     break;
                 case 'textSize':
                     v.style.fontSize = toPixelString(prop);
                     break;
                 case 'textColor':
                     v.style.color = toRGBAString(prop);
+                    break;
+                case 'textAlignment':
+                    const gravity = prop;
+                    if ((gravity & LEFT) === LEFT) {
+                        v.style.justifyContent = "flex-start";
+                    }
+                    else if ((gravity & RIGHT) === RIGHT) {
+                        v.style.justifyContent = "flex-end";
+                    }
+                    else if ((gravity & CENTER_X) === CENTER_X) {
+                        v.style.justifyContent = "center";
+                    }
+                    if ((gravity & TOP) === TOP) {
+                        v.style.alignItems = "flex-start";
+                    }
+                    else if ((gravity & BOTTOM) === BOTTOM) {
+                        v.style.alignItems = "flex-end";
+                    }
+                    else if ((gravity & CENTER_Y) === CENTER_Y) {
+                        v.style.alignItems = "center";
+                    }
                     break;
                 default:
                     super.blendProps(v, propName, prop);

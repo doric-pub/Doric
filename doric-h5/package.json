@@ -1,0 +1,29 @@
+{
+  "name": "doric-h5",
+  "version": "0.1.0",
+  "description": "Doric library for html",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc -p .&& rollup -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/doric-pub/doric-h5.git"
+  },
+  "author": "pengfeizhou",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/doric-pub/doric-h5/issues"
+  },
+  "homepage": "https://github.com/doric-pub/doric-h5#readme",
+  "dependencies": {
+    "axios": "^0.19.0",
+    "doric": "file:../doric/doric-js",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "tsc": "^1.20150623.0",
+    "typescript": "^3.7.3"
+  }
+}

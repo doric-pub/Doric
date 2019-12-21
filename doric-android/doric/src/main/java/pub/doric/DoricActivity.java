@@ -26,8 +26,6 @@ import androidx.appcompat.app.AppCompatActivity;
  * @CreateDate: 2019-11-19
  */
 public class DoricActivity extends AppCompatActivity {
-    private DoricFragment doricFragment;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,19 +33,10 @@ public class DoricActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             String scheme = getIntent().getStringExtra("scheme");
             String alias = getIntent().getStringExtra("alias");
-            doricFragment = DoricFragment.newInstance(scheme, alias);
+            DoricFragment doricFragment = DoricFragment.newInstance(scheme, alias);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, doricFragment)
                     .commit();
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (doricFragment.canPop()) {
-            doricFragment.pop();
-        } else {
-            super.onBackPressed();
         }
     }
 }

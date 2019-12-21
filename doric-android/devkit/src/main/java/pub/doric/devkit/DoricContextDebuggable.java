@@ -1,14 +1,17 @@
 package pub.doric.devkit;
 
 import pub.doric.DoricContext;
+import pub.doric.DoricContextManager;
 import pub.doric.DoricNativeDriver;
 
 public class DoricContextDebuggable {
     private DoricContext doricContext;
     private DoricDebugDriver doricDebugDriver;
+    public boolean isDebugging = false;
 
-    public DoricContextDebuggable(DoricContext doricContext) {
-        this.doricContext = doricContext;
+    public DoricContextDebuggable(String contextId) {
+        this.doricContext = DoricContextManager.getContext(contextId);
+        isDebugging = true;
     }
 
     public void startDebug() {
@@ -22,8 +25,13 @@ public class DoricContextDebuggable {
     }
 
     public void stopDebug() {
+        isDebugging = false;
         doricDebugDriver.destroy();
         doricContext.setDriver(DoricNativeDriver.getInstance());
         doricContext.reInit();
+    }
+
+    public DoricContext getContext() {
+        return doricContext;
     }
 }

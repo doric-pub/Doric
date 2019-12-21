@@ -1,7 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="pub.doric">
 
-    <uses-permission android:name="android.permission.CAMERA" />
 
     <application>
         <activity

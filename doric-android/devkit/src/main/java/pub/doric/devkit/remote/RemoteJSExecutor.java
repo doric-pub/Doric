@@ -25,7 +25,7 @@ import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import pub.doric.devkit.DevKit;
 import pub.doric.devkit.IStatusCallback;
-import pub.doric.devkit.event.QuitDebugEvent;
+import pub.doric.devkit.event.StopDebugEvent;
 
 public class RemoteJSExecutor {
     private final WebSocket webSocket;
@@ -59,7 +59,7 @@ public class RemoteJSExecutor {
                     System.out.println("remote js executor eof");
 
                     LockSupport.unpark(current);
-                    EventBus.getDefault().post(new QuitDebugEvent());
+                    EventBus.getDefault().post(new StopDebugEvent());
                 }
             }
 

@@ -15,7 +15,6 @@
  */
 package pub.doric;
 
-import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.content.Context;
 
@@ -49,6 +48,7 @@ public class DoricContext {
     private RootNode mRootNode = new RootNode(this);
     private final String source;
     private String script;
+    private String extra;
     private JSONObject initParams;
     private IDoricDriver doricDriver;
     private final Map<String, ViewNode> mHeadNodes = new HashMap<>();
@@ -72,10 +72,11 @@ public class DoricContext {
         return mHeadNodes.get(id);
     }
 
-    protected DoricContext(Context context, String contextId, String source) {
+    protected DoricContext(Context context, String contextId, String source, String extra) {
         this.mContext = context;
         this.mContextId = contextId;
         this.source = source;
+        this.extra = extra;
     }
 
     public String getSource() {
@@ -86,22 +87,25 @@ public class DoricContext {
         return script;
     }
 
-    public static DoricContext create(Context context, String script, String source) {
-        DoricContext doricContext = DoricContextManager.getInstance().createContext(context, script, source);
+    public static DoricContext create(Context context, String script, String source, String extra) {
+        DoricContext doricContext = DoricContextManager.getInstance().createContext(context, script, source, extra);
         doricContext.script = script;
+        doricContext.extra = extra;
         return doricContext;
     }
 
     public void init(float width, float height) {
         this.initParams = new JSONBuilder()
                 .put("width", width)
-                .put("height", height).toJSONObject();
-        callEntity(DoricConstant.DORIC_ENTITY_INIT, this.initParams);
+                .put("height", height)
+                .toJSONObject();
+        callEntity(DoricConstant.DORIC_ENTITY_INIT, this.initParams, extra);
         callEntity(DoricConstant.DORIC_ENTITY_CREATE);
     }
 
     public void reInit() {
-        callEntity(DoricConstant.DORIC_ENTITY_INIT, this.initParams);
+        this.mRootNode.setId("");
+        callEntity(DoricConstant.DORIC_ENTITY_INIT, this.initParams, extra);
         callEntity(DoricConstant.DORIC_ENTITY_CREATE);
     }
 
@@ -165,7 +169,8 @@ public class DoricContext {
         this.script = script;
         this.mRootNode.setId("");
         getDriver().createContext(mContextId, script, source);
-        callEntity(DoricConstant.DORIC_ENTITY_INIT, this.initParams);
+        callEntity(DoricConstant.DORIC_ENTITY_INIT, this.initParams, extra);
+        onShow();
     }
 
     public void onShow() {

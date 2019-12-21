@@ -37,6 +37,7 @@ import androidx.annotation.NonNull;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
 
+import pub.doric.Doric;
 import pub.doric.DoricContext;
 import pub.doric.DoricRegistry;
 import pub.doric.async.AsyncResult;
@@ -54,6 +55,8 @@ import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 import com.github.pengfeizhou.jscore.JavaValue;
+
+import org.json.JSONObject;
 
 import java.util.LinkedList;
 
@@ -214,6 +217,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 if (prop.isObject()) {
                     requireDoricLayer().setBorder(DoricUtils.dp2px(prop.asObject().getProperty("width").asNumber().toFloat()),
                             prop.asObject().getProperty("color").asNumber().toInt());
+                    requireDoricLayer().invalidate();
                 }
                 break;
             case "alpha":
@@ -339,6 +343,16 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                     setRotation(prop.asNumber().toFloat());
                 }
                 break;
+            case "padding":
+                if (prop.isObject()) {
+                    setPadding(prop.asObject());
+                }
+                break;
+            case "hidden":
+                if (prop.isBoolean()) {
+                    getNodeView().setVisibility(prop.asBoolean().value() ? View.GONE : View.VISIBLE);
+                }
+                break;
             default:
                 break;
         }
@@ -407,6 +421,19 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         } else {
             blendLayoutConfig(layoutConfig);
         }
+    }
+
+    protected void setPadding(JSObject paddings) {
+        JSValue left = paddings.getProperty("left");
+        JSValue right = paddings.getProperty("right");
+        JSValue top = paddings.getProperty("top");
+        JSValue bottom = paddings.getProperty("bottom");
+        mView.setPadding(
+                left.isNumber() ? DoricUtils.dp2px(left.asNumber().toFloat()) : 0,
+                top.isNumber() ? DoricUtils.dp2px(top.asNumber().toFloat()) : 0,
+                right.isNumber() ? DoricUtils.dp2px(right.asNumber().toFloat()) : 0,
+                bottom.isNumber() ? DoricUtils.dp2px(bottom.asNumber().toFloat()) : 0
+        );
     }
 
     private void blendLayoutConfig(JSObject jsObject) {
@@ -478,7 +505,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         if (mLayoutParams.width >= 0) {
             return DoricUtils.px2dp(mLayoutParams.width);
         } else {
-            return mView.getMeasuredWidth();
+            return DoricUtils.px2dp(mView.getMeasuredWidth());
         }
     }
 
@@ -487,7 +514,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         if (mLayoutParams.width >= 0) {
             return DoricUtils.px2dp(mLayoutParams.height);
         } else {
-            return mView.getMeasuredHeight();
+            return DoricUtils.px2dp(mView.getMeasuredHeight());
         }
     }
 
@@ -825,5 +852,15 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
             default:
                 return 0;
         }
+    }
+
+    @DoricMethod
+    public JSONObject getLocationOnScreen() {
+        int[] position = new int[2];
+        getNodeView().getLocationOnScreen(position);
+        return new JSONBuilder()
+                .put("x", DoricUtils.px2dp(position[0]))
+                .put("y", DoricUtils.px2dp(position[1]))
+                .toJSONObject();
     }
 }

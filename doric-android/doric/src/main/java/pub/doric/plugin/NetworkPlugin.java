@@ -17,7 +17,6 @@ package pub.doric.plugin;
 
 import android.text.TextUtils;
 
-import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
@@ -51,7 +50,8 @@ import pub.doric.extension.bridge.DoricPromise;
  */
 @DoricPlugin(name = "network")
 public class NetworkPlugin extends DoricJavaPlugin {
-    private OkHttpClient okHttpClient = new OkHttpClient();
+    private OkHttpClient okHttpClient = new OkHttpClient.Builder()
+            .build();
 
     public NetworkPlugin(DoricContext doricContext) {
         super(doricContext);
@@ -79,9 +79,10 @@ public class NetworkPlugin extends DoricJavaPlugin {
             MediaType mediaType = MediaType.parse(TextUtils.isEmpty(contentType) ? "application/json; charset=utf-8" : contentType);
             RequestBody requestBody = HttpMethod.permitsRequestBody(method) ? RequestBody.create(mediaType, dataVal.isString() ? dataVal.asString().value() : "") : null;
             Request.Builder requestBuilder = new Request.Builder();
-            requestBuilder.url(url)
-                    .headers(headers)
-                    .method(method, requestBody);
+            requestBuilder = requestBuilder.url(url).headers(headers);
+            if (HttpMethod.permitsRequestBody(method.toUpperCase())) {
+                requestBuilder = requestBuilder.method(method, requestBody);
+            }
             if (timeoutVal.isNumber() && okHttpClient.connectTimeoutMillis() != timeoutVal.asNumber().toLong()) {
                 okHttpClient = okHttpClient.newBuilder().connectTimeout(timeoutVal.asNumber().toLong(), TimeUnit.MILLISECONDS).build();
             }

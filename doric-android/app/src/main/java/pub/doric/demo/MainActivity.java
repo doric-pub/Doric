@@ -33,7 +33,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import pub.doric.DoricActivity;
 import pub.doric.devkit.ui.DemoDebugActivity;
 import pub.doric.refresh.DoricSwipeLayout;
 import pub.doric.utils.DoricUtils;
@@ -63,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
         try {
             String[] demos = getAssets().list("demo");
             List<String> ret = new ArrayList<>();
-            ret.add("Test");
             for (String str : demos) {
                 if (str.endsWith("js")) {
                     ret.add(str);
@@ -107,20 +105,9 @@ public class MainActivity extends AppCompatActivity {
             tv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (data[position].contains("Test")) {
-                        Intent intent = new Intent(tv.getContext(), PullableActivity.class);
-                        tv.getContext().startActivity(intent);
-                        return;
-                    }
-                    if (data[position].contains("NavigatorDemo")) {
-                        Intent intent = new Intent(tv.getContext(), DoricActivity.class);
-                        intent.putExtra("scheme", "assets://demo/" + data[position]);
-                        intent.putExtra("alias", data[position]);
-                        tv.getContext().startActivity(intent);
-                        return;
-                    }
                     Intent intent = new Intent(tv.getContext(), DemoDebugActivity.class);
-                    intent.putExtra("source", data[position]);
+                    intent.putExtra("scheme", "assets://demo/" + data[position]);
+                    intent.putExtra("alias", data[position]);
                     tv.getContext().startActivity(intent);
                 }
             });

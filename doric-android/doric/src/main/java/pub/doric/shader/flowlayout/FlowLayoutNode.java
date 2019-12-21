@@ -41,15 +41,38 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> {
     private final FlowAdapter flowAdapter;
     private final StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(
             2,
-            StaggeredGridLayoutManager.VERTICAL);
+            StaggeredGridLayoutManager.VERTICAL) {
+        @Override
+        public int scrollVerticallyBy(int dy, RecyclerView.Recycler recycler, RecyclerView.State state) {
+            try {
+                return super.scrollVerticallyBy(dy, recycler, state);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return 0;
+            }
+        }
+
+        @Override
+        public void onScrollStateChanged(int state) {
+            try {
+                super.onScrollStateChanged(state);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
     private int columnSpace = 0;
     private int rowSpace = 0;
+    private Rect padding = new Rect();
     private final RecyclerView.ItemDecoration spacingItemDecoration = new RecyclerView.ItemDecoration() {
         @Override
         public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
             outRect.set(columnSpace / 2, rowSpace / 2, columnSpace / 2, rowSpace / 2);
         }
     };
+    String onLoadMoreFuncId;
+    boolean loadMore = false;
+    String loadMoreViewId;
 
     public FlowLayoutNode(DoricContext doricContext) {
         super(doricContext);
@@ -80,11 +103,9 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> {
         switch (name) {
             case "columnSpace":
                 columnSpace = DoricUtils.dp2px(prop.asNumber().toFloat());
-                mView.setPadding(-columnSpace / 2, mView.getPaddingTop(), -columnSpace / 2, mView.getPaddingBottom());
                 break;
             case "rowSpace":
                 rowSpace = DoricUtils.dp2px(prop.asNumber().toFloat());
-                mView.setPadding(mView.getPaddingLeft(), -rowSpace / 2, mView.getPaddingRight(), -rowSpace / 2);
                 break;
             case "columnCount":
                 staggeredGridLayoutManager.setSpanCount(prop.asNumber().toInt());
@@ -93,13 +114,27 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> {
                 this.flowAdapter.itemCount = prop.asNumber().toInt();
                 break;
             case "renderItem":
-                this.flowAdapter.renderItemFuncId = prop.asString().value();
-                // If reset renderItem,should reset native cache.
-                this.flowAdapter.itemValues.clear();
-                clearSubModel();
+                String funcId = prop.asString().value();
+                if (!funcId.equals(this.flowAdapter.renderItemFuncId)) {
+                    this.flowAdapter.renderItemFuncId = funcId;
+                    // If reset renderItem,should reset native cache.
+                    for (int index = 0; index < this.flowAdapter.itemValues.size(); index++) {
+                        removeSubModel(this.flowAdapter.itemValues.valueAt(index));
+                    }
+                    this.flowAdapter.itemValues.clear();
+                }
                 break;
             case "batchCount":
                 this.flowAdapter.batchCount = prop.asNumber().toInt();
+                break;
+            case "onLoadMore":
+                this.onLoadMoreFuncId = prop.asString().value();
+                break;
+            case "loadMoreView":
+                this.loadMoreViewId = prop.asString().value();
+                break;
+            case "loadMore":
+                this.loadMore = prop.asBoolean().value();
                 break;
             default:
                 super.blend(view, name, prop);
@@ -108,8 +143,25 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> {
     }
 
     @Override
+    protected void setPadding(JSObject jsObject) {
+        JSValue left = jsObject.getProperty("left");
+        JSValue right = jsObject.getProperty("right");
+        JSValue top = jsObject.getProperty("top");
+        JSValue bottom = jsObject.getProperty("bottom");
+        padding.left = left.isNumber() ? DoricUtils.dp2px(left.asNumber().toFloat()) : 0;
+        padding.top = top.isNumber() ? DoricUtils.dp2px(top.asNumber().toFloat()) : 0;
+        padding.right = right.isNumber() ? DoricUtils.dp2px(right.asNumber().toFloat()) : 0;
+        padding.bottom = bottom.isNumber() ? DoricUtils.dp2px(bottom.asNumber().toFloat()) : 0;
+    }
+
+    @Override
     public void blend(JSObject jsObject) {
         super.blend(jsObject);
+        mView.setPadding(
+                padding.left - columnSpace / 2,
+                padding.top - rowSpace / 2,
+                padding.right - columnSpace / 2,
+                padding.bottom - rowSpace / 2);
         if (mView != null) {
             mView.post(new Runnable() {
                 @Override

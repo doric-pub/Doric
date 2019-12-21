@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSDecoder;
@@ -65,15 +66,28 @@ class FlowAdapter extends RecyclerView.Adapter<FlowAdapter.DoricViewHolder> {
             holder.flowLayoutItemNode.setId(jsObject.getProperty("id").asString().value());
             holder.flowLayoutItemNode.blend(jsObject.getProperty("props").asObject());
         }
+        if (position >= this.itemCount) {
+            this.flowLayoutNode.callJSResponse(this.flowLayoutNode.onLoadMoreFuncId);
+
+            StaggeredGridLayoutManager.LayoutParams layoutParams = new StaggeredGridLayoutManager.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    holder.itemView.getLayoutParams().height
+            );
+            layoutParams.setFullSpan(true);
+            holder.itemView.setLayoutParams(layoutParams);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return itemCount;
+        return this.itemCount + (this.flowLayoutNode.loadMore ? 1 : 0);
     }
 
     @Override
     public int getItemViewType(int position) {
+        if (position >= itemCount) {
+            return Integer.MAX_VALUE;
+        }
         JSValue value = getItemModel(position);
         if (value.isObject()) {
             if (value.asObject().getProperty("identifier").isString()) {
@@ -84,6 +98,9 @@ class FlowAdapter extends RecyclerView.Adapter<FlowAdapter.DoricViewHolder> {
     }
 
     private JSValue getItemModel(final int position) {
+        if (position >= this.itemCount) {
+            return this.flowLayoutNode.getSubModel(this.flowLayoutNode.loadMoreViewId);
+        }
         String id = itemValues.get(position);
         if (TextUtils.isEmpty(id)) {
             AsyncResult<JSDecoder> asyncResult = flowLayoutNode.callJSResponse(

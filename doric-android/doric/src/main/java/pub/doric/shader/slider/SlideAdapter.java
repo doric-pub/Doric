@@ -43,7 +43,7 @@ class SlideAdapter extends RecyclerView.Adapter<SlideAdapter.DoricViewHolder> {
     int itemCount = 0;
     int batchCount = 3;
     SparseArray<String> itemValues = new SparseArray<>();
-
+    String renderPageFuncId;
     SlideAdapter(SliderNode sliderNode) {
         this.sliderNode = sliderNode;
     }

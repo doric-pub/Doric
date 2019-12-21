@@ -20,18 +20,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
-import pub.doric.navigator.IDoricNavigator;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 /**
  * @Description: pub.doric
  * @Author: pengfei.zhou
  * @CreateDate: 2019-11-23
  */
-public class DoricFragment extends Fragment implements IDoricNavigator {
+public class DoricFragment extends Fragment {
 
     public static DoricFragment newInstance(String scheme, String alias) {
         Bundle args = new Bundle();
@@ -40,6 +41,23 @@ public class DoricFragment extends Fragment implements IDoricNavigator {
         DoricFragment fragment = new DoricFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host);
+                if (!navController.popBackStack()) {
+                    if (getActivity() != null) {
+                        getActivity().finish();
+                    }
+                }
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
     @Nullable
@@ -51,34 +69,6 @@ public class DoricFragment extends Fragment implements IDoricNavigator {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Bundle argument = getArguments();
-        if (argument != null) {
-            String alias = argument.getString("alias");
-            String scheme = argument.getString("scheme");
-            push(scheme, alias);
-        }
     }
 
-    @Override
-    public void push(String scheme, String alias) {
-        getChildFragmentManager().beginTransaction()
-                .add(R.id.root, DoricPanelFragment.newInstance(scheme, alias))
-                .addToBackStack(scheme)
-                .commit();
-    }
-
-    @Override
-    public void pop() {
-        if (canPop()) {
-            getChildFragmentManager().popBackStack();
-        } else {
-            if (getActivity() != null) {
-                getActivity().finish();
-            }
-        }
-    }
-
-    public boolean canPop() {
-        return getChildFragmentManager().getBackStackEntryCount() > 1;
-    }
 }

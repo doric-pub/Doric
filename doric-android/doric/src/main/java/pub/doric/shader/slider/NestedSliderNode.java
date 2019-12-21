@@ -13,50 +13,87 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pub.doric.shader;
+package pub.doric.shader.slider;
 
+import android.text.TextUtils;
+import android.view.View;
 import android.view.ViewGroup;
 
-import pub.doric.DoricContext;
+import androidx.annotation.NonNull;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
-import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
-/**
- * @Description: com.github.penfeizhou.doric.widget
- * @Author: pengfei.zhou
- * @CreateDate: 2019-07-20
- */
-public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
-    protected ArrayList<ViewNode> mChildNodes = new ArrayList<>();
-    protected ArrayList<String> mChildViewIds = new ArrayList<>();
+import pub.doric.DoricContext;
+import pub.doric.extension.bridge.DoricMethod;
+import pub.doric.extension.bridge.DoricPlugin;
+import pub.doric.extension.bridge.DoricPromise;
+import pub.doric.shader.GroupNode;
+import pub.doric.shader.ViewNode;
 
-    public GroupNode(DoricContext doricContext) {
+/**
+ * @Description: pub.doric.shader.slider
+ * @Author: pengfei.zhou
+ * @CreateDate: 2019-12-07
+ */
+@DoricPlugin(name = "NestedSlider")
+public class NestedSliderNode extends GroupNode<ViewPager> implements ViewPager.OnPageChangeListener {
+    private ArrayList<View> slideItems = new ArrayList<>();
+    private String onPageSlidedFuncId;
+
+    public NestedSliderNode(DoricContext doricContext) {
         super(doricContext);
     }
 
     @Override
-    protected void blend(F view, String name, JSValue prop) {
-        if ("children".equals(name)) {
-            JSArray ids = prop.asArray();
-            mChildViewIds.clear();
-            for (int i = 0; i < ids.size(); i++) {
-                mChildViewIds.add(ids.get(i).asString().value());
+    protected ViewPager build() {
+        ViewPager viewPager = new ViewPager(getContext());
+        viewPager.setAdapter(new PagerAdapter() {
+            @Override
+            public int getCount() {
+                return slideItems.size();
             }
-        } else {
-            super.blend(view, name, prop);
+
+            @Override
+            public boolean isViewFromObject(@NonNull View view, @NotNull Object object) {
+                return view == object;
+            }
+
+            @Override
+            public void destroyItem(@NotNull ViewGroup container, int position, @NotNull Object object) {
+                container.removeView(slideItems.get(position));
+            }
+
+            @NotNull
+            @Override
+            public Object instantiateItem(@NotNull ViewGroup container, int position) {
+                container.addView(slideItems.get(position), 0);
+                return slideItems.get(position);
+            }
+        });
+        viewPager.addOnPageChangeListener(this);
+        return viewPager;
+    }
+
+    @Override
+    protected void blend(ViewPager view, String name, JSValue prop) {
+        switch (name) {
+            case "onPageSlided":
+                this.onPageSlidedFuncId = prop.asString().toString();
+                break;
+            default:
+                super.blend(view, name, prop);
+                break;
         }
     }
 
     @Override
-    public void blend(JSObject jsObject) {
-        super.blend(jsObject);
-        configChildNode();
-    }
-
     protected void configChildNode() {
         for (int idx = 0; idx < mChildViewIds.size(); idx++) {
             String id = mChildViewIds.get(idx);
@@ -75,13 +112,13 @@ public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
                         } else {
                             //Replace this view
                             mChildNodes.remove(idx);
-                            mView.removeView(oldNode.getNodeView());
+                            slideItems.remove(oldNode.getNodeView());
                             ViewNode newNode = ViewNode.create(getDoricContext(), type);
                             newNode.setId(id);
                             newNode.init(this);
                             newNode.blend(model.getProperty("props").asObject());
                             mChildNodes.add(idx, newNode);
-                            mView.addView(newNode.getNodeView(), idx, newNode.getLayoutParams());
+                            slideItems.add(idx, newNode.getNodeView());
                         }
                     } else {
                         //Find in remain nodes
@@ -101,10 +138,10 @@ public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
                             mChildNodes.set(idx, reused);
                             mChildNodes.set(position, abandoned);
                             //View swap index
-                            mView.removeView(reused.getNodeView());
-                            mView.addView(reused.getNodeView(), idx);
-                            mView.removeView(abandoned.getNodeView());
-                            mView.addView(abandoned.getNodeView(), position);
+                            slideItems.remove(reused.getNodeView());
+                            slideItems.add(idx, reused.getNodeView());
+                            slideItems.remove(abandoned.getNodeView());
+                            slideItems.add(position, abandoned.getNodeView());
                         } else {
                             //Not found,insert
                             ViewNode newNode = ViewNode.create(getDoricContext(), type);
@@ -113,7 +150,7 @@ public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
                             newNode.blend(model.getProperty("props").asObject());
 
                             mChildNodes.add(idx, newNode);
-                            mView.addView(newNode.getNodeView(), idx, newNode.getLayoutParams());
+                            slideItems.add(idx, newNode.getNodeView());
                         }
                     }
                 }
@@ -124,34 +161,47 @@ public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
                 newNode.init(this);
                 newNode.blend(model.getProperty("props").asObject());
                 mChildNodes.add(newNode);
-                mView.addView(newNode.getNodeView(), idx, newNode.getLayoutParams());
+                slideItems.add(idx, newNode.getNodeView());
             }
         }
         int size = mChildNodes.size();
         for (int idx = mChildViewIds.size(); idx < size; idx++) {
             ViewNode viewNode = mChildNodes.remove(mChildViewIds.size());
-            mView.removeView(viewNode.getNodeView());
+            slideItems.remove(viewNode.getNodeView());
+        }
+        mView.getAdapter().notifyDataSetChanged();
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        if (!TextUtils.isEmpty(onPageSlidedFuncId)) {
+            callJSResponse(onPageSlidedFuncId, position);
         }
     }
 
     @Override
-    protected void blendSubNode(JSObject subProp) {
-        String subNodeId = subProp.getProperty("id").asString().value();
-        for (ViewNode node : mChildNodes) {
-            if (subNodeId.equals(node.getId())) {
-                node.blend(subProp.getProperty("props").asObject());
-                break;
-            }
-        }
+    public void onPageScrollStateChanged(int state) {
+
     }
 
-    @Override
-    public ViewNode getSubNodeById(String id) {
-        for (ViewNode node : mChildNodes) {
-            if (id.equals(node.getId())) {
-                return node;
-            }
+    @DoricMethod
+    public void slidePage(JSObject params, DoricPromise promise) {
+        int page = params.getProperty("page").asNumber().toInt();
+        boolean smooth = params.getProperty("smooth").asBoolean().value();
+        mView.setCurrentItem(page, smooth);
+        if (!TextUtils.isEmpty(onPageSlidedFuncId)) {
+            callJSResponse(onPageSlidedFuncId, page);
         }
-        return null;
+        promise.resolve();
+    }
+
+    @DoricMethod
+    public int getSlidedPage() {
+        return mView.getCurrentItem();
     }
 }

@@ -79,6 +79,7 @@ public class WSClient extends WebSocketListener {
                 }
                 break;
                 case "SWITCH_TO_DEBUG": {
+                    String contextId = jsonObject.optString("contextId");
                     EventBus.getDefault().post(new EnterDebugEvent());
                 }
                 break;

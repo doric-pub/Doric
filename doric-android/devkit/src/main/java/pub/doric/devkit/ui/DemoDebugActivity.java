@@ -17,46 +17,36 @@ package pub.doric.devkit.ui;
 
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import pub.doric.DoricActivity;
 import pub.doric.DoricContext;
 import pub.doric.DoricContextManager;
-import pub.doric.DoricPanel;
 import pub.doric.devkit.DoricContextDebuggable;
 import pub.doric.devkit.event.EnterDebugEvent;
-import pub.doric.devkit.event.QuitDebugEvent;
 import pub.doric.devkit.event.ReloadEvent;
+import pub.doric.devkit.event.StartDebugEvent;
+import pub.doric.devkit.event.StopDebugEvent;
 import pub.doric.devkit.util.SensorManagerHelper;
-import pub.doric.utils.DoricUtils;
 
 /**
  * @Description: pub.doric.demo
  * @Author: pengfei.zhou
  * @CreateDate: 2019-11-19
  */
-public class DemoDebugActivity extends AppCompatActivity {
-    private DoricContext doricContext;
+public class DemoDebugActivity extends DoricActivity {
     private SensorManagerHelper sensorHelper;
     private DoricContextDebuggable doricContextDebuggable;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String source = getIntent().getStringExtra("source");
-        DoricPanel doricPanel = new DoricPanel(this);
-        addContentView(doricPanel, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
-        doricPanel.config(DoricUtils.readAssetFile("demo/" + source), source);
-        doricContext = doricPanel.getDoricContext();
-        doricContextDebuggable = new DoricContextDebuggable(doricContext);
         sensorHelper = new SensorManagerHelper(this);
         sensorHelper.setOnShakeListener(new SensorManagerHelper.OnShakeListener() {
             @Override
@@ -73,15 +63,24 @@ public class DemoDebugActivity extends AppCompatActivity {
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
         sensorHelper.stop();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onStartDebugEvent(StartDebugEvent startDebugEvent) {
+        doricContextDebuggable = new DoricContextDebuggable(startDebugEvent.getContextId());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -90,17 +89,23 @@ public class DemoDebugActivity extends AppCompatActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReloadEvent(ReloadEvent reloadEvent) {
-        for (DoricContext context : DoricContextManager.aliveContexts()) {
-            if (reloadEvent.source.contains(context.getSource())) {
-                context.reload(reloadEvent.script);
-            }
-        }
+    public void onQuitDebugEvent(StopDebugEvent quitDebugEvent) {
+        doricContextDebuggable.stopDebug();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onQuitDebugEvent(QuitDebugEvent quitDebugEvent) {
-        doricContextDebuggable.stopDebug();
+    public void onReloadEvent(ReloadEvent reloadEvent) {
+        for (DoricContext context : DoricContextManager.aliveContexts()) {
+            if (reloadEvent.source.contains(context.getSource())) {
+                if (doricContextDebuggable != null &&
+                        doricContextDebuggable.isDebugging &&
+                        doricContextDebuggable.getContext().getContextId().equals(context.getContextId())) {
+                    System.out.println("is debugging context id: " + context.getContextId());
+                } else {
+                    context.reload(reloadEvent.script);
+                }
+            }
+        }
     }
 
     @Override

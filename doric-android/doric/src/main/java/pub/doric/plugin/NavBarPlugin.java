@@ -61,13 +61,6 @@ public class NavBarPlugin extends DoricJavaPlugin {
                 JSObject jsObject = jsDecoder.decode().asObject();
                 boolean hidden = jsObject.getProperty("hidden").asBoolean().value();
                 navBar.setHidden(hidden);
-                View v = getDoricContext().getRootNode().getNodeView();
-                ViewGroup.LayoutParams params = v.getLayoutParams();
-                if (params instanceof ViewGroup.MarginLayoutParams) {
-                    ((ViewGroup.MarginLayoutParams) params).topMargin =
-                            hidden ? 0
-                                    : ((View) navBar).getMeasuredHeight();
-                }
                 promise.resolve();
             } catch (ArchiveException e) {
                 e.printStackTrace();

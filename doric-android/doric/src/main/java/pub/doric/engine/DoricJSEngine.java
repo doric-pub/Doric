@@ -15,6 +15,9 @@
  */
 package pub.doric.engine;
 
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -22,11 +25,13 @@ import android.os.Message;
 import android.text.TextUtils;
 
 import com.github.pengfeizhou.jscore.JSDecoder;
+import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JavaFunction;
 import com.github.pengfeizhou.jscore.JavaValue;
 
 import java.util.ArrayList;
 
+import pub.doric.Doric;
 import pub.doric.DoricRegistry;
 import pub.doric.extension.bridge.DoricBridgeExtension;
 import pub.doric.extension.timer.DoricTimerExtension;
@@ -73,6 +78,27 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
     }
 
     private void injectGlobal() {
+        String appName = "";
+        String appVersion = "";
+        Context context = Doric.application();
+        try {
+            PackageManager packageManager = context.getPackageManager();
+            PackageInfo packageInfo = packageManager.getPackageInfo(
+                    context.getPackageName(), 0);
+            int labelRes = packageInfo.applicationInfo.labelRes;
+            appName = context.getResources().getString(labelRes);
+            appVersion = packageInfo.versionName;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        mDoricJSE.injectGlobalJSObject(DoricConstant.INJECT_ENVIRONMENT, new JavaValue(new JSONBuilder()
+                .put("platform", "Android")
+                .put("platformVersion", String.valueOf(android.os.Build.VERSION.SDK_INT))
+                .put("appName", appName)
+                .put("appVersion", appVersion)
+                .put("screenWidth", DoricUtils.px2dp(DoricUtils.getScreenWidth()))
+                .put("screenHeight", DoricUtils.px2dp(DoricUtils.getScreenHeight()))
+                .toJSONObject()));
         mDoricJSE.injectGlobalJSFunction(DoricConstant.INJECT_LOG, new JavaFunction() {
             @Override
             public JavaValue exec(JSDecoder[] args) {

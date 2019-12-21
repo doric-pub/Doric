@@ -39,6 +39,7 @@ public class TextNode extends ViewNode<TextView> {
     protected TextView build() {
         TextView tv = new TextView(getContext());
         tv.setGravity(Gravity.CENTER);
+        tv.setMaxLines(1);
         return tv;
     }
 
@@ -57,7 +58,8 @@ public class TextNode extends ViewNode<TextView> {
             case "textAlignment":
                 view.setGravity(prop.asNumber().toInt() | Gravity.CENTER_VERTICAL);
                 break;
-            case "numberOfLines":
+            case "maxLines":
+                view.setMaxLines(prop.asNumber().toInt());
                 break;
             default:
                 super.blend(view, name, prop);

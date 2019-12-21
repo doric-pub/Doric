@@ -1,4 +1,4 @@
-import { jsCallResolve, jsCallReject } from 'doric/src/runtime/sandbox'
+import { jsCallResolve, jsCallReject, jsCallbackTimer } from 'doric/src/runtime/sandbox'
 import { acquireJSBundle, acquirePlugin } from './DoricRegistry'
 import { getDoricContext } from './DoricContext'
 import { DoricPlugin } from './DoricPlugin'
@@ -8,7 +8,12 @@ function getScriptId() {
     return `script_${__scriptId__++}`
 }
 
+const originSetTimeout = window.setTimeout
+const originClearTimeout = window.clearTimeout
+const originSetInterval = window.setInterval
+const originClearInterval = window.clearInterval
 
+const timers: Map<number, { handleId: number, repeat: boolean }> = new Map
 
 export function injectGlobalObject(name: string, value: any) {
     Reflect.set(window, name, value, window)
@@ -22,16 +27,16 @@ export function loadJS(script: string) {
 }
 
 function packageModuleScript(name: string, content: string) {
-    return `Reflect.apply(doric.jsRegisterModule,this,[${name},Reflect.apply(function(__module){(function(module,exports,require){
+    return `Reflect.apply(doric.jsRegisterModule,this,[${name},Reflect.apply(function(__module){(function(module,exports,require,setTimeout,setInterval,clearTimeout,clearInterval){
 ${content}
-})(__module,__module.exports,doric.__require__);
+})(__module,__module.exports,doric.__require__,doricSetTimeout,doricSetInterval,doricClearTimeout,doricClearInterval);
 return __module.exports;},this,[{exports:{}}])])`
 }
 
 function packageCreateContext(contextId: string, content: string) {
-    return `Reflect.apply(function(doric,context,Entry,require,exports){
+    return `Reflect.apply(function(doric,context,Entry,require,exports,setTimeout,setInterval,clearTimeout,clearInterval){
 ${content}
-},doric.jsObtainContext("${contextId}"),[undefined,doric.jsObtainContext("${contextId}"),doric.jsObtainEntry("${contextId}"),doric.__require__,{}])`
+},doric.jsObtainContext("${contextId}"),[undefined,doric.jsObtainContext("${contextId}"),doric.jsObtainEntry("${contextId}"),doric.__require__,{},doricSetTimeout,doricSetInterval,doricClearTimeout,doricClearInterval])`
 }
 
 function initDoric() {
@@ -100,7 +105,31 @@ function initDoric() {
         return true
     })
 
+    injectGlobalObject('nativeSetTimer', (timerId: number, time: number, repeat: boolean) => {
+        if (repeat) {
+            const handleId = originSetInterval(() => {
+                jsCallbackTimer(timerId)
+            }, time)
+            timers.set(timerId, { handleId, repeat })
+        } else {
+            const handleId = originSetTimeout(() => {
+                jsCallbackTimer(timerId)
+            }, time)
+            timers.set(timerId, { handleId, repeat })
+        }
+    })
+    injectGlobalObject('nativeClearTimer', (timerId: number) => {
+        const timerInfo = timers.get(timerId)
+        if (timerInfo) {
+            if (timerInfo.repeat) {
+                originClearInterval(timerInfo.handleId)
+            } else {
+                originClearTimeout(timerInfo.handleId)
+            }
+        }
+    })
 }
+
 export function createContext(contextId: string, content: string) {
     loadJS(packageCreateContext(contextId, content))
 }

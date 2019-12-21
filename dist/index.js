@@ -1406,7 +1406,7 @@ var doric = (function (exports) {
     const _setInterval = global$1.setInterval;
     const _clearTimeout = global$1.clearTimeout;
     const _clearInterval = global$1.clearInterval;
-    global$1.setTimeout = function (handler, timeout, ...args) {
+    const doricSetTimeout = function (handler, timeout, ...args) {
         if (global$1.nativeSetTimer === undefined) {
             return Reflect.apply(_setTimeout, undefined, arguments);
         }
@@ -1421,7 +1421,7 @@ var doric = (function (exports) {
         nativeSetTimer(id, timeout || 0, false);
         return id;
     };
-    global$1.setInterval = function (handler, timeout, ...args) {
+    const doricSetInterval = function (handler, timeout, ...args) {
         if (global$1.nativeSetTimer === undefined) {
             return Reflect.apply(_setInterval, undefined, arguments);
         }
@@ -1435,20 +1435,44 @@ var doric = (function (exports) {
         nativeSetTimer(id, timeout || 0, true);
         return id;
     };
-    global$1.clearTimeout = function (timerId) {
+    const doricClearTimeout = function (timerId) {
         if (global$1.nativeClearTimer === undefined) {
             return Reflect.apply(_clearTimeout, undefined, arguments);
         }
         timerInfos.delete(timerId);
         nativeClearTimer(timerId);
     };
-    global$1.clearInterval = function (timerId) {
+    const doricClearInterval = function (timerId) {
         if (global$1.nativeClearTimer === undefined) {
             return Reflect.apply(_clearInterval, undefined, arguments);
         }
         timerInfos.delete(timerId);
         nativeClearTimer(timerId);
     };
+    if (!global$1.setTimeout) {
+        global$1.setTimeout = doricSetTimeout;
+    }
+    else {
+        global$1.doricSetTimeout = doricSetTimeout;
+    }
+    if (!global$1.setInterval) {
+        global$1.setInterval = doricSetInterval;
+    }
+    else {
+        global$1.doricSetInterval = doricSetInterval;
+    }
+    if (!global$1.clearTimeout) {
+        global$1.clearTimeout = doricClearTimeout;
+    }
+    else {
+        global$1.doricClearTimeout = doricClearTimeout;
+    }
+    if (!global$1.clearInterval) {
+        global$1.clearInterval = doricClearInterval;
+    }
+    else {
+        global$1.doricClearInterval = doricClearInterval;
+    }
     function jsCallbackTimer(timerId) {
         const timerInfo = timerInfos.get(timerId);
         if (timerInfo === undefined) {
@@ -4209,6 +4233,11 @@ return __module.exports;
     function getScriptId() {
         return `script_${__scriptId__++}`;
     }
+    const originSetTimeout = window.setTimeout;
+    const originClearTimeout = window.clearTimeout;
+    const originSetInterval = window.setInterval;
+    const originClearInterval = window.clearInterval;
+    const timers = new Map;
     function injectGlobalObject(name, value) {
         Reflect.set(window, name, value, window);
     }
@@ -4219,15 +4248,15 @@ return __module.exports;
         document.body.appendChild(scriptElement);
     }
     function packageModuleScript(name, content) {
-        return `Reflect.apply(doric.jsRegisterModule,this,[${name},Reflect.apply(function(__module){(function(module,exports,require){
+        return `Reflect.apply(doric.jsRegisterModule,this,[${name},Reflect.apply(function(__module){(function(module,exports,require,setTimeout,setInterval,clearTimeout,clearInterval){
 ${content}
-})(__module,__module.exports,doric.__require__);
+})(__module,__module.exports,doric.__require__,doricSetTimeout,doricSetInterval,doricClearTimeout,doricClearInterval);
 return __module.exports;},this,[{exports:{}}])])`;
     }
     function packageCreateContext(contextId, content) {
-        return `Reflect.apply(function(doric,context,Entry,require,exports){
+        return `Reflect.apply(function(doric,context,Entry,require,exports,setTimeout,setInterval,clearTimeout,clearInterval){
 ${content}
-},doric.jsObtainContext("${contextId}"),[undefined,doric.jsObtainContext("${contextId}"),doric.jsObtainEntry("${contextId}"),doric.__require__,{}])`;
+},doric.jsObtainContext("${contextId}"),[undefined,doric.jsObtainContext("${contextId}"),doric.jsObtainEntry("${contextId}"),doric.__require__,{},doricSetTimeout,doricSetInterval,doricClearTimeout,doricClearInterval])`;
     }
     function initDoric() {
         injectGlobalObject("nativeEmpty", () => undefined);
@@ -4291,6 +4320,31 @@ ${content}
                 sandbox.jsCallResolve(contextId, callbackId, ret);
             }
             return true;
+        });
+        injectGlobalObject('nativeSetTimer', (timerId, time, repeat) => {
+            if (repeat) {
+                const handleId = originSetInterval(() => {
+                    sandbox.jsCallbackTimer(timerId);
+                }, time);
+                timers.set(timerId, { handleId, repeat });
+            }
+            else {
+                const handleId = originSetTimeout(() => {
+                    sandbox.jsCallbackTimer(timerId);
+                }, time);
+                timers.set(timerId, { handleId, repeat });
+            }
+        });
+        injectGlobalObject('nativeClearTimer', (timerId) => {
+            const timerInfo = timers.get(timerId);
+            if (timerInfo) {
+                if (timerInfo.repeat) {
+                    originClearInterval(timerInfo.handleId);
+                }
+                else {
+                    originClearTimeout(timerInfo.handleId);
+                }
+            }
         });
     }
     function createContext(contextId, content) {

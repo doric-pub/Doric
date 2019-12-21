@@ -4319,7 +4319,7 @@ return __module.exports;
                     break;
                 case 'isBlur':
                     if (prop) {
-                        v.style.filter = 'blur(10px)';
+                        v.style.filter = 'blur(8px)';
                     }
                     else {
                         v.style.filter = '';

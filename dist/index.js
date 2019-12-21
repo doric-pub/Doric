@@ -4023,7 +4023,9 @@ return __module.exports;
 
     class DoricStackNode extends DoricGroupViewNode {
         build() {
-            return document.createElement('div');
+            const ret = document.createElement('div');
+            ret.style.position = "relative";
+            return ret;
         }
         layout() {
             super.layout();

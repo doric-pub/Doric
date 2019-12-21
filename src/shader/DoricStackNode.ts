@@ -3,7 +3,9 @@ import { DoricGroupViewNode, LayoutSpec, FrameSize, LEFT, RIGHT, CENTER_X, CENTE
 export class DoricStackNode extends DoricGroupViewNode {
 
     build() {
-        return document.createElement('div')
+        const ret = document.createElement('div')
+        ret.style.position = "relative"
+        return ret
     }
 
     layout() {

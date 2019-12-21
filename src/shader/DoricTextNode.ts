@@ -6,9 +6,6 @@ export class DoricTextNode extends DoricViewNode {
         return document.createElement('p')
     }
 
-    measureContentSize(targetSize: FrameSize) {
-        return targetSize
-    }
     blendProps(v: HTMLParagraphElement, propName: string, prop: any) {
         switch (propName) {
             case 'text':

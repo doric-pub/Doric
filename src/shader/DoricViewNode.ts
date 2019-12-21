@@ -138,28 +138,81 @@ export abstract class DoricViewNode {
         for (let key in props) {
             this.blendProps(this.view, key, props[key])
         }
+        this.onBlended()
+        this.layout()
+    }
+    onBlended() {
+
+    }
+    configBorder() {
         if (this.border) {
             this.view.style.borderStyle = "solid"
             this.view.style.borderWidth = toPixelString(this.border.width)
             this.view.style.borderColor = toRGBAString(this.border.color)
         }
+    }
+
+    configWidth() {
+        switch (this.layoutConfig.widthSpec) {
+            case LayoutSpec.WRAP_CONTENT:
+                this.view.style.width = "auto"
+                break
+
+            case LayoutSpec.AT_MOST:
+                this.view.style.width = "100%"
+                break
+
+            case LayoutSpec.EXACTLY:
+            default:
+                this.view.style.width = toPixelString(this.frameWidth
+                    - this.paddingLeft - this.paddingRight
+                    - this.borderWidth * 2)
+                break
+        }
+    }
+    configHeight() {
+        switch (this.layoutConfig.heightSpec) {
+            case LayoutSpec.WRAP_CONTENT:
+                this.view.style.height = "auto"
+                break
+
+            case LayoutSpec.AT_MOST:
+                this.view.style.height = "100%"
+                break
+
+            case LayoutSpec.EXACTLY:
+            default:
+                this.view.style.height = toPixelString(this.frameHeight
+                    - this.paddingTop - this.paddingBottom
+                    - this.borderWidth * 2)
+                break
+        }
+    }
+
+    configMargin() {
+        if (this.layoutConfig.margin) {
+            this.view.style.marginLeft = toPixelString(this.layoutConfig.margin.left || 0)
+            this.view.style.marginRight = toPixelString(this.layoutConfig.margin.right || 0)
+            this.view.style.marginTop = toPixelString(this.layoutConfig.margin.top || 0)
+            this.view.style.marginBottom = toPixelString(this.layoutConfig.margin.bottom || 0)
+        }
+    }
+
+    configPadding() {
         if (this.padding) {
             this.view.style.paddingLeft = toPixelString(this.paddingLeft)
             this.view.style.paddingRight = toPixelString(this.paddingRight)
             this.view.style.paddingTop = toPixelString(this.paddingTop)
             this.view.style.paddingBottom = toPixelString(this.paddingBottom)
         }
-        this.x = this.offsetX
-        this.y = this.offsetY
     }
 
     layout() {
-        this.layoutSelf({ width: this.frameWidth, height: this.frameHeight })
-    }
-
-    layoutSelf(targetSize: FrameSize) {
-        this.width = targetSize.width
-        this.height = targetSize.height
+        this.configMargin()
+        this.configBorder()
+        this.configPadding()
+        this.configWidth()
+        this.configHeight()
     }
 
     blendProps(v: HTMLElement, propName: string, prop: any) {
@@ -199,31 +252,6 @@ export abstract class DoricViewNode {
         }
     }
 
-    set width(v: number) {
-        this.view.style.width = toPixelString(v - this.paddingLeft - this.paddingRight - this.borderWidth * 2)
-    }
-    get width() {
-        return this.view.offsetWidth
-    }
-    set height(v: number) {
-        this.view.style.height = toPixelString(v - this.paddingTop - this.paddingBottom - this.borderWidth * 2)
-    }
-    get height() {
-        return this.view.offsetHeight
-    }
-    set x(v: number) {
-        this.view.style.left = toPixelString(v + (this.superNode?.paddingLeft || 0))
-    }
-    get x() {
-        return this.view.offsetLeft
-    }
-    set y(v: number) {
-        this.view.style.top = toPixelString(v + (this.superNode?.paddingTop || 0))
-    }
-
-    get y() {
-        return this.view.offsetTop
-    }
     set backgroundColor(v: number) {
         this.view.style.backgroundColor = toRGBAString(v)
     }
@@ -238,8 +266,6 @@ export abstract class DoricViewNode {
         ret.viewType = type
         return ret
     }
-
-    abstract measureContentSize(targetSize: FrameSize): FrameSize
 
     getIdList() {
         const ids: string[] = []
@@ -329,9 +355,11 @@ export abstract class DoricGroupViewNode extends DoricSuperViewNode {
 
     blend(props: { [index: string]: any }) {
         super.blend(props)
+    }
+    onBlended() {
+        super.onBlended()
         this.configChildNode()
     }
-
     configChildNode() {
         this.childViewIds.forEach((childViewId, index) => {
             const model = this.getSubModel(childViewId)

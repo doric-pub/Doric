@@ -19,9 +19,11 @@
   "homepage": "https://github.com/doric-pub/doric-h5#readme",
   "dependencies": {
     "axios": "^0.19.0",
-    "doric": "^0.1.3",
+    "doric": "file:../doric/doric-js",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-json": "^4.0.0",
-    "rollup-plugin-node-resolve": "^5.2.0"
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "tsc": "^1.20150623.0",
+    "typescript": "^3.7.3"
   }
 }

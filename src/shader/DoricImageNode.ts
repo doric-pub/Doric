@@ -5,7 +5,7 @@ export class DoricImageNode extends DoricViewNode {
         return document.createElement('img')
     }
 
-    blendProps(v: HTMLParagraphElement, propName: string, prop: any) {
+    blendProps(v: HTMLImageElement, propName: string, prop: any) {
         switch (propName) {
             case 'imageUrl':
                 v.setAttribute('src', prop)
@@ -15,7 +15,10 @@ export class DoricImageNode extends DoricViewNode {
                 break
             case 'loadCallback':
                 v.onload = () => {
-                    this.callJSResponse(prop)
+                    this.callJSResponse(prop, {
+                        width: v.width,
+                        height: v.height
+                    })
                 }
                 break
             default:

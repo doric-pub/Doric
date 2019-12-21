@@ -3,7 +3,7 @@
 
 target 'Example' do
 
-  pod 'Doric', :path => '../'
+  pod 'DoricCore', :path => '../'
   target 'ExampleTests' do
     inherit! :search_paths
     # Pods for testing

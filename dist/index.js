@@ -3856,6 +3856,20 @@ return __module.exports;
                         this.view.style.borderRadius = toPixelString(prop);
                     }
                     break;
+                case 'shadow':
+                    const opacity = prop.opacity || 0;
+                    if (opacity > 0) {
+                        const offsetX = prop.offsetX || 0;
+                        const offsetY = prop.offsetY || 0;
+                        const shadowColor = prop.color || 0xff000000;
+                        const shadowRadius = prop.radius;
+                        const alpha = opacity * 255;
+                        this.view.style.boxShadow = `${toPixelString(offsetX)} ${toPixelString(offsetY)} ${toPixelString(shadowRadius)} ${toRGBAString((shadowColor & 0xffffff) | ((alpha & 0xff) << 24))} `;
+                    }
+                    else {
+                        this.view.style.boxShadow = "";
+                    }
+                    break;
             }
         }
         set backgroundColor(v) {

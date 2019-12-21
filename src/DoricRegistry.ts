@@ -7,6 +7,7 @@ import { DoricHLayoutNode } from './shader/DoricHLayoutNode'
 import { DoricTextNode } from "./shader/DoricTextNode"
 import { DoricImageNode } from "./shader/DoricImageNode"
 import { DoricScrollerNode } from "./shader/DoricScrollerNode"
+import { ModalPlugin } from './plugins/ModalPlugin'
 
 const bundles: Map<string, string> = new Map
 
@@ -40,6 +41,7 @@ export function acquireViewNode(name: string) {
 }
 
 registerPlugin('shader', ShaderPlugin)
+registerPlugin('modal', ModalPlugin)
 
 registerViewNode('Stack', DoricStackNode)
 registerViewNode('VLayout', DoricVLayoutNode)

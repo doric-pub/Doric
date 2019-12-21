@@ -4344,6 +4344,60 @@ return __module.exports;
         }
     }
 
+    class ModalPlugin extends DoricPlugin {
+        toast(args) {
+            const toastElement = document.createElement('div');
+            toastElement.style.position = "absolute";
+            toastElement.style.textAlign = "center";
+            toastElement.style.width = "100%";
+            const textElement = document.createElement('span');
+            textElement.innerText = args.msg || "";
+            textElement.style.backgroundColor = "#777777";
+            textElement.style.color = "white";
+            textElement.style.paddingLeft = '20px';
+            textElement.style.paddingRight = '20px';
+            textElement.style.paddingTop = '10px';
+            textElement.style.paddingBottom = '10px';
+            toastElement.appendChild(textElement);
+            document.body.appendChild(toastElement);
+            const gravity = args.gravity || BOTTOM;
+            if ((gravity & TOP) == TOP) {
+                toastElement.style.top = toPixelString(30);
+            }
+            else if ((gravity & BOTTOM) == BOTTOM) {
+                toastElement.style.bottom = toPixelString(30);
+            }
+            else if ((gravity & CENTER_Y) == CENTER_Y) {
+                toastElement.style.top = toPixelString(document.body.offsetHeight / 2 - toastElement.offsetHeight / 2);
+            }
+            setTimeout(() => {
+                document.body.removeChild(toastElement);
+            }, 2000);
+            return Promise.resolve();
+        }
+        alert(args) {
+            window.alert(args.msg || "");
+            return Promise.resolve();
+        }
+        confirm(args) {
+            if (window.confirm(args.msg || "")) {
+                return Promise.resolve();
+            }
+            else {
+                return Promise.reject();
+            }
+        }
+        prompt(args) {
+            const result = window.prompt(args.msg || "", args.defaultText);
+            if (result) {
+                return Promise.resolve(result);
+            }
+            else {
+                return Promise.reject(result);
+            }
+        }
+    }
+
     const bundles = new Map;
     const plugins = new Map;
     const nodes = new Map;
@@ -4363,6 +4417,7 @@ return __module.exports;
         return nodes.get(name);
     }
     registerPlugin('shader', ShaderPlugin);
+    registerPlugin('modal', ModalPlugin);
     registerViewNode('Stack', DoricStackNode);
     registerViewNode('VLayout', DoricVLayoutNode);
     registerViewNode('HLayout', DoricHLayoutNode);

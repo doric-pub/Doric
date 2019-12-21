@@ -276,7 +276,7 @@ const _clearTimeout = global.clearTimeout
 
 const _clearInterval = global.clearInterval
 
-global.setTimeout = function (handler: Function, timeout?: number | undefined, ...args: any[]) {
+const doricSetTimeout = function (handler: Function, timeout?: number | undefined, ...args: any[]) {
     if (global.nativeSetTimer === undefined) {
         return Reflect.apply(_setTimeout, undefined, arguments)
     }
@@ -291,7 +291,7 @@ global.setTimeout = function (handler: Function, timeout?: number | undefined, .
     nativeSetTimer(id, timeout || 0, false)
     return id
 }
-global.setInterval = function (handler: Function, timeout?: number | undefined, ...args: any[]) {
+const doricSetInterval = function (handler: Function, timeout?: number | undefined, ...args: any[]) {
     if (global.nativeSetTimer === undefined) {
         return Reflect.apply(_setInterval, undefined, arguments)
     }
@@ -306,7 +306,7 @@ global.setInterval = function (handler: Function, timeout?: number | undefined, 
     return id
 }
 
-global.clearTimeout = function (timerId: number) {
+const doricClearTimeout = function (timerId: number) {
     if (global.nativeClearTimer === undefined) {
         return Reflect.apply(_clearTimeout, undefined, arguments)
     }
@@ -314,12 +314,36 @@ global.clearTimeout = function (timerId: number) {
     nativeClearTimer(timerId)
 }
 
-global.clearInterval = function (timerId: number) {
+const doricClearInterval = function (timerId: number) {
     if (global.nativeClearTimer === undefined) {
         return Reflect.apply(_clearInterval, undefined, arguments)
     }
     timerInfos.delete(timerId)
     nativeClearTimer(timerId)
+}
+
+if (!global.setTimeout) {
+    global.setTimeout = doricSetTimeout
+} else {
+    global.doricSetTimeout = doricSetTimeout
+}
+
+if (!global.setInterval) {
+    global.setInterval = doricSetInterval
+} else {
+    global.doricSetInterval = doricSetInterval
+}
+
+if (!global.clearTimeout) {
+    global.clearTimeout = doricClearTimeout
+} else {
+    global.doricClearTimeout = doricClearTimeout
+}
+
+if (!global.clearInterval) {
+    global.clearInterval = doricClearInterval
+} else {
+    global.doricClearInterval = doricClearInterval
 }
 
 export function jsCallbackTimer(timerId: number) {

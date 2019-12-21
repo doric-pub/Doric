@@ -1,8 +1,17 @@
 import { DoricViewNode, LEFT, RIGHT, CENTER_X, CENTER_Y, TOP, BOTTOM, toPixelString, toRGBAString } from "./DoricViewNode";
 
+enum ScaleType {
+    ScaleToFill = 0,
+    ScaleAspectFit,
+    ScaleAspectFill,
+}
+
 export class DoricImageNode extends DoricViewNode {
+
     build(): HTMLElement {
-        return document.createElement('img')
+        const ret = document.createElement('img')
+        ret.style.objectFit = "fill"
+        return ret
     }
 
     blendProps(v: HTMLImageElement, propName: string, prop: any) {
@@ -19,6 +28,19 @@ export class DoricImageNode extends DoricViewNode {
                         width: v.width,
                         height: v.height
                     })
+                }
+                break
+            case 'scaleType':
+                switch (prop) {
+                    case ScaleType.ScaleToFill:
+                        v.style.objectFit = "fill"
+                        break
+                    case ScaleType.ScaleAspectFit:
+                        v.style.objectFit = "contain"
+                        break
+                    case ScaleType.ScaleAspectFill:
+                        v.style.objectFit = "cover"
+                        break
                 }
                 break
             default:

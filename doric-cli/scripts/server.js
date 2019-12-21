@@ -2,19 +2,21 @@ const ws = require('nodejs-websocket')
 const { exec, spawn } = require('child_process')
 const fs = require('fs')
 
+var server
+var contextId = null
 var clientConnection = null
 var debuggerConnection = null
 
 const createServer = () => {
-    let server = ws.createServer(connection => {
+    server = ws.createServer(connection => {
         console.log('connected', connection.headers.host)
 
         if (connection.headers.host.startsWith("localhost")) {
             console.log("debugger " + connection.key + " attached to dev kit")
             debuggerConnection = connection
-
             clientConnection.sendText(JSON.stringify({
-                cmd: 'SWITCH_TO_DEBUG'
+                cmd: 'SWITCH_TO_DEBUG',
+                contextId: contextId
             }), function() {
 
             })
@@ -28,9 +30,10 @@ const createServer = () => {
             switch(resultObject.cmd) {
                 case 'DEBUG':
                     clientConnection = connection
-
-                    let contextId = resultObject.data.contextId
-                    let projectHome = resultObject.data.projectHome
+                    server.debugging = true
+                    console.log("enter debugging")
+                    contextId = resultObject.data.contextId
+                    let projectHome = '.'
 
                     fs.writeFileSync(projectHome + '/build/context', contextId, 'utf8')
 
@@ -44,7 +47,7 @@ const createServer = () => {
                               console.log(`stdout: ${err}`)
                             }
                         })
-                    }, 3000)
+                    }, 1500)
                     
                     break
             }
@@ -54,6 +57,8 @@ const createServer = () => {
         })
         connection.on('close', function (code) {
             console.log('close: code = ' + code, connection.key)
+            console.log("quit debugging")
+            server.debugging = false
         })
         connection.on('error', function (code) {
             console.log('error', code)

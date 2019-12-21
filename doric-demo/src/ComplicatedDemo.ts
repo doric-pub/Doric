@@ -1,5 +1,5 @@
-import { Panel, Group, vlayout, image, layoutConfig, ScaleType, refreshable, Color, pullable, stack, Image, Refreshable, TranslationAnimation, loge, log } from "doric";
-import { title, icon_refresh } from "./utils";
+import { Panel, Group, vlayout, image, layoutConfig, ScaleType, refreshable, Color, pullable, stack, Image, Refreshable, TranslationAnimation, loge, log, list, listItem, text } from "doric";
+import { title, icon_refresh, colors } from "./utils";
 
 @Entry
 class MyDemo extends Panel {
@@ -11,10 +11,10 @@ class MyDemo extends Panel {
                 onRefresh: () => {
                     refreshed.setRefreshing(context, false)
                 },
-                header: pullable(context,
+                header: pullable(
                     stack([]).apply({
                         backgroundColor: Color.RED,
-                        layoutConfig: layoutConfig().exactly(),
+                        layoutConfig: layoutConfig().just(),
                         width: 100,
                         height: 30,
                     }),
@@ -25,21 +25,31 @@ class MyDemo extends Panel {
                         },
                         setPullingDistance: (distance: number) => {
                             headerImage.scaleX = headerImage.scaleY = (headerImage.height + distance * 2) / headerImage.height
-                            log(`Header Image scaleY:${headerImage.scaleY},height:${headerImage.height},distance:${distance}`)
                         },
                     }),
-                content: vlayout([]).apply({
-                    backgroundColor: Color.YELLOW,
+                content: list({
+                    itemCount: 20,
+                    renderItem: (idx) => {
+                        return listItem(text({
+                            text: `Item :${idx}`,
+                            layoutConfig: layoutConfig().just(),
+                            width: root.width,
+                            height: 50,
+                            textColor: Color.WHITE,
+                            backgroundColor: colors[idx % colors.length],
+                        }))
+                    }
+                }).apply({
                 }),
             }).apply({
-                layoutConfig: layoutConfig().atmost(),
+                layoutConfig: layoutConfig().most(),
             }).also(v => {
                 v.top = 200
             }),
 
             headerImage = image({
                 imageUrl: "https://img.zcool.cn/community/01e75b5da933daa801209e1ffa4649.jpg@1280w_1l_2o_100sh.jpg",
-                layoutConfig: layoutConfig().exactly(),
+                layoutConfig: layoutConfig().just(),
                 width: root.width,
                 height: 200,
                 scaleType: ScaleType.ScaleAspectFill,

@@ -1,4 +1,4 @@
-import { Group, Panel, List, text, gravity, Color, Stack, LayoutSpec, list, NativeCall, listItem, log, vlayout, Gravity, hlayout, Text, refreshable, Refreshable, ListItem } from "doric";
+import { Group, Panel, List, text, gravity, Color, Stack, LayoutSpec, list, NativeCall, listItem, log, vlayout, Gravity, hlayout, Text, refreshable, Refreshable, ListItem, layoutConfig } from "doric";
 import { rotatedArrow, colors } from "./utils";
 @Entry
 class ListPanel extends Panel {
@@ -9,8 +9,8 @@ class ListPanel extends Panel {
             text({
                 text: "ListDemo",
                 layoutConfig: {
-                    widthSpec: LayoutSpec.AT_MOST,
-                    heightSpec: LayoutSpec.EXACTLY,
+                    widthSpec: LayoutSpec.MOST,
+                    heightSpec: LayoutSpec.JUST,
                 },
                 textSize: 30,
                 textColor: Color.parse("#535c68"),
@@ -25,14 +25,25 @@ class ListPanel extends Panel {
                             it.reset()
                             offset = Math.ceil(Math.random() * colors.length)
                             it.itemCount = 40
+                            it.loadMore = true
+                            it.onLoadMore = () => {
+                                setTimeout(() => {
+                                    it.itemCount += 10
+                                }, 1000)
+                            }
+                            it.loadMoreView = listItem(text({
+                                text: "Loading",
+                                layoutConfig: layoutConfig().most().configHeight(LayoutSpec.JUST).configAligmnet(Gravity.Center),
+                                height: 50,
+                            }))
                             it.renderItem = (idx: number) => {
                                 let counter!: Text
                                 return listItem(
                                     hlayout([
                                         text({
                                             layoutConfig: {
-                                                widthSpec: LayoutSpec.WRAP_CONTENT,
-                                                heightSpec: LayoutSpec.EXACTLY,
+                                                widthSpec: LayoutSpec.FIT,
+                                                heightSpec: LayoutSpec.JUST,
                                                 alignment: gravity().center(),
                                             },
                                             text: `Cell At Line ${idx}`,
@@ -48,8 +59,8 @@ class ListPanel extends Panel {
                                         }).also(it => {
                                             counter = it
                                             it.layoutConfig = {
-                                                widthSpec: LayoutSpec.WRAP_CONTENT,
-                                                heightSpec: LayoutSpec.WRAP_CONTENT,
+                                                widthSpec: LayoutSpec.FIT,
+                                                heightSpec: LayoutSpec.FIT,
                                                 margin: {
                                                     left: 10,
                                                 }
@@ -57,8 +68,8 @@ class ListPanel extends Panel {
                                         })
                                     ]).also(it => {
                                         it.layoutConfig = {
-                                            widthSpec: LayoutSpec.AT_MOST,
-                                            heightSpec: LayoutSpec.WRAP_CONTENT,
+                                            widthSpec: LayoutSpec.MOST,
+                                            heightSpec: LayoutSpec.FIT,
                                             margin: {
                                                 bottom: 2,
                                             }
@@ -72,8 +83,8 @@ class ListPanel extends Panel {
                                     })
                                 ).also(it => {
                                     it.layoutConfig = {
-                                        widthSpec: LayoutSpec.AT_MOST,
-                                        heightSpec: LayoutSpec.WRAP_CONTENT,
+                                        widthSpec: LayoutSpec.MOST,
+                                        heightSpec: LayoutSpec.FIT,
                                     }
                                     it.onClick = () => {
                                         log(`Click item at ${idx}`)
@@ -91,21 +102,21 @@ class ListPanel extends Panel {
                         })
                     })
                 },
-                header: rotatedArrow(context),
+                header: rotatedArrow(),
                 content: list({
                     itemCount: 0,
                     renderItem: () => new ListItem,
                     layoutConfig: {
-                        widthSpec: LayoutSpec.AT_MOST,
-                        heightSpec: LayoutSpec.AT_MOST,
+                        widthSpec: LayoutSpec.MOST,
+                        heightSpec: LayoutSpec.MOST,
                     },
                 }),
             }),
 
         ]).also(it => {
             it.layoutConfig = {
-                widthSpec: LayoutSpec.AT_MOST,
-                heightSpec: LayoutSpec.AT_MOST,
+                widthSpec: LayoutSpec.MOST,
+                heightSpec: LayoutSpec.MOST,
             }
             it.backgroundColor = Color.WHITE
         }).in(rootView)

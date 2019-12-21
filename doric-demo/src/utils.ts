@@ -39,7 +39,7 @@ export function boxStr(str: string, idx = 0) {
 export function title(str: string) {
     return text({
         text: str,
-        layoutConfig: layoutConfig().w(LayoutSpec.AT_MOST),
+        layoutConfig: layoutConfig().configWidth(LayoutSpec.MOST),
         textSize: 30,
         textColor: Color.WHITE,
         backgroundColor: colors[1],
@@ -48,12 +48,12 @@ export function title(str: string) {
     })
 }
 
-export function rotatedArrow(context: BridgeContext) {
+export function rotatedArrow() {
     let refreshImage: Image
-    return pullable(context,
+    return pullable(
         stack([
             image({
-                layoutConfig: layoutConfig().exactly().m({ top: 50, bottom: 10, }),
+                layoutConfig: layoutConfig().just().configMargin({ top: 50, bottom: 10, }),
                 width: 30,
                 height: 30,
                 imageBase64: icon_refresh,

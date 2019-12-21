@@ -3,9 +3,7 @@ import { text, vlayout, Image, ViewHolder, VMPanel, ViewModel, Gravity, NativeCa
 interface CountModel {
     count: number
 }
-
-class CounterView extends ViewHolder<CountModel> {
-
+class CounterView extends ViewHolder {
     number!: Text
     counter!: Text
     build(root: Group) {
@@ -14,8 +12,8 @@ class CounterView extends ViewHolder<CountModel> {
                 textSize: 40,
                 layoutConfig: {
                     alignment: Gravity.Center,
-                    widthSpec: LayoutSpec.WRAP_CONTENT,
-                    heightSpec: LayoutSpec.WRAP_CONTENT,
+                    widthSpec: LayoutSpec.FIT,
+                    heightSpec: LayoutSpec.FIT,
                 },
             }).also(it => { this.number = it }),
             text({
@@ -28,8 +26,14 @@ class CounterView extends ViewHolder<CountModel> {
                 corners: 5,
                 layoutConfig: {
                     alignment: Gravity.Center,
-                    widthSpec: LayoutSpec.WRAP_CONTENT,
-                    heightSpec: LayoutSpec.WRAP_CONTENT,
+                    widthSpec: LayoutSpec.FIT,
+                    heightSpec: LayoutSpec.FIT,
+                },
+                padding: {
+                    left: 10,
+                    right: 10,
+                    top: 10,
+                    bottom: 10,
                 },
                 shadow: {
                     color: Color.parse("#00ff00"),
@@ -65,28 +69,23 @@ class CounterView extends ViewHolder<CountModel> {
         root.addChild((new Image).also(iv => {
             iv.imageUrl = "https://misc.aotu.io/ONE-SUNDAY/SteamEngine.png"
             iv.layoutConfig = {
-                widthSpec: LayoutSpec.WRAP_CONTENT,
-                heightSpec: LayoutSpec.WRAP_CONTENT,
+                widthSpec: LayoutSpec.FIT,
+                heightSpec: LayoutSpec.FIT,
             }
         }))
-    }
-
-    bind(state: CountModel) {
-        this.number.text = `${state.count}`
-    }
-
-    setCounter(v: Function) {
-        this.counter.onClick = v
     }
 }
 
 class CounterVM extends ViewModel<CountModel, CounterView> {
-    onAttached(s: CountModel, vh: CounterView): void {
+    onAttached(s: CountModel, vh: CounterView) {
         vh.counter.onClick = () => {
             this.updateState(state => {
                 state.count++
             })
         }
+    }
+    onBind(s: CountModel, vh: CounterView) {
+        vh.number.text = `${s.count}`
     }
 }
 

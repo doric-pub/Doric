@@ -9,7 +9,7 @@ function thisLabel(str: string) {
         backgroundColor: colors[0],
         textSize: 15,
         textColor: Color.WHITE,
-        layoutConfig: layoutConfig().exactly(),
+        layoutConfig: layoutConfig().just(),
     })
 }
 
@@ -29,7 +29,7 @@ class AnimatorDemo extends Panel {
                     hlayout([
                         thisLabel('Reset').apply({
                             onClick: () => {
-                                animate(this)({
+                                animate(context)({
                                     animations: () => {
                                         view.width = view.height = 20
                                         view.x = view.y = 0
@@ -54,7 +54,7 @@ class AnimatorDemo extends Panel {
                     hlayout([
                         thisLabel('X').apply({
                             onClick: () => {
-                                animate(this)({
+                                animate(context)({
                                     animations: () => {
                                         view.x = view.x || 0
                                         view.x += 100
@@ -66,7 +66,7 @@ class AnimatorDemo extends Panel {
                         }),
                         thisLabel('Y').apply({
                             onClick: () => {
-                                animate(this)({
+                                animate(context)({
                                     animations: () => {
                                         view.y = view.y || 0
                                         view.y += 100
@@ -78,7 +78,7 @@ class AnimatorDemo extends Panel {
                         }),
                         thisLabel('Width').apply({
                             onClick: () => {
-                                animate(this)({
+                                animate(context)({
                                     animations: () => {
                                         view.width += 100
                                     },
@@ -88,7 +88,7 @@ class AnimatorDemo extends Panel {
                         }),
                         thisLabel('Height').apply({
                             onClick: () => {
-                                animate(this)({
+                                animate(context)({
                                     animations: () => {
                                         view.height += 100
                                     },
@@ -100,7 +100,7 @@ class AnimatorDemo extends Panel {
                     hlayout([
                         thisLabel('BgColor').apply({
                             onClick: () => {
-                                animate(this)({
+                                animate(context)({
                                     animations: () => {
                                         view.backgroundColor = colors[(idx++) % colors.length]
                                     },
@@ -110,7 +110,7 @@ class AnimatorDemo extends Panel {
                         }),
                         thisLabel('Rotation').apply({
                             onClick: () => {
-                                animate(this)({
+                                animate(context)({
                                     animations: () => {
                                         if (view.rotation) {
                                             view.rotation += 0.5
@@ -124,7 +124,7 @@ class AnimatorDemo extends Panel {
                         }),
                         thisLabel('Corner').apply({
                             onClick: () => {
-                                animate(this)({
+                                animate(context)({
                                     animations: () => {
                                         if (typeof view.corners === 'number') {
                                             view.corners += 10
@@ -141,7 +141,7 @@ class AnimatorDemo extends Panel {
                     hlayout([
                         thisLabel('scaleX').apply({
                             onClick: () => {
-                                animate(this)({
+                                animate(context)({
                                     animations: () => {
                                         if (view.scaleX) {
                                             view.scaleX += 0.1
@@ -155,7 +155,7 @@ class AnimatorDemo extends Panel {
                         }),
                         thisLabel('scaleY').apply({
                             onClick: () => {
-                                animate(this)({
+                                animate(context)({
                                     animations: () => {
                                         if (view.scaleY) {
                                             view.scaleY += 0.1
@@ -173,11 +173,11 @@ class AnimatorDemo extends Panel {
             stack([
                 view,
             ]).apply({
-                layoutConfig: layoutConfig().atmost(),
+                layoutConfig: layoutConfig().most(),
                 backgroundColor: colors[1].alpha(0.3 * 255),
             }),
         ]).apply({
-            layoutConfig: layoutConfig().atmost(),
+            layoutConfig: layoutConfig().most(),
             gravity: gravity().center(),
             space: 10,
         } as IVLayout).in(rootView)

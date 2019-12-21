@@ -17,7 +17,7 @@ class StorageDemo extends Panel {
         scroller(vlayout([
             text({
                 text: "Storage Demo",
-                layoutConfig: layoutConfig().w(LayoutSpec.AT_MOST),
+                layoutConfig: layoutConfig().configWidth(LayoutSpec.MOST),
                 textSize: 30,
                 textColor: Color.WHITE,
                 backgroundColor: colors[1],
@@ -26,7 +26,7 @@ class StorageDemo extends Panel {
             }),
             label('Stored'),
             text({
-                layoutConfig: layoutConfig().w(LayoutSpec.AT_MOST),
+                layoutConfig: layoutConfig().configWidth(LayoutSpec.MOST),
                 textSize: 20,
                 textColor: Color.WHITE,
                 backgroundColor: colors[3],
@@ -39,7 +39,7 @@ class StorageDemo extends Panel {
                 backgroundColor: colors[0],
                 textSize: 30,
                 textColor: Color.WHITE,
-                layoutConfig: layoutConfig().exactly(),
+                layoutConfig: layoutConfig().just(),
                 onClick: () => {
                     storage(context).getItem(storedKey, zone).then(e => {
                         modal(context).prompt({
@@ -60,7 +60,7 @@ class StorageDemo extends Panel {
                 backgroundColor: colors[0],
                 textSize: 30,
                 textColor: Color.WHITE,
-                layoutConfig: layoutConfig().exactly(),
+                layoutConfig: layoutConfig().just(),
                 onClick: () => {
                     storage(context).remove(storedKey, zone).then(e => {
                         this.update()
@@ -73,7 +73,7 @@ class StorageDemo extends Panel {
                 backgroundColor: colors[0],
                 textSize: 30,
                 textColor: Color.WHITE,
-                layoutConfig: layoutConfig().exactly(),
+                layoutConfig: layoutConfig().just(),
                 onClick: () => {
                     storage(context).clear(zone).then(e => {
                         this.update()
@@ -81,11 +81,11 @@ class StorageDemo extends Panel {
                 },
             } as IText),
         ]).apply({
-            layoutConfig: layoutConfig().atmost().h(LayoutSpec.WRAP_CONTENT),
+            layoutConfig: layoutConfig().most().configHeight(LayoutSpec.FIT),
             gravity: gravity().center(),
             space: 10,
         } as IVLayout)).apply({
-            layoutConfig: layoutConfig().atmost(),
+            layoutConfig: layoutConfig().most(),
         }).in(root)
         this.update()
     }

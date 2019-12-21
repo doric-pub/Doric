@@ -1,6 +1,5 @@
 
 import { Group, Panel, Text, text, gravity, Color, Stack, LayoutSpec, list, NativeCall, listItem, log, vlayout, Gravity, hlayout, slider, slideItem, scroller, IVLayout, IHLayout, layoutConfig } from "doric";
-import { O_TRUNC } from "constants";
 
 const colors = [
     "#f0932b",
@@ -103,8 +102,8 @@ class LayoutDemo extends Panel {
                     hlayout([
                         boxStr('weight=1', 3).apply({
                             layoutConfig: {
-                                widthSpec: LayoutSpec.EXACTLY,
-                                heightSpec: LayoutSpec.EXACTLY,
+                                widthSpec: LayoutSpec.JUST,
+                                heightSpec: LayoutSpec.JUST,
                                 weight: 1,
                             }
                         }),
@@ -114,8 +113,8 @@ class LayoutDemo extends Panel {
                         width: 200,
                         height: 30,
                         layoutConfig: {
-                            widthSpec: LayoutSpec.EXACTLY,
-                            heightSpec: LayoutSpec.EXACTLY,
+                            widthSpec: LayoutSpec.JUST,
+                            heightSpec: LayoutSpec.JUST,
                         },
                         backgroundColor: Color.parse('#eeeeee'),
                         gravity: gravity().center(),
@@ -124,8 +123,8 @@ class LayoutDemo extends Panel {
                         box(3),
                         boxStr('weight=1', 2).apply({
                             layoutConfig: {
-                                widthSpec: LayoutSpec.EXACTLY,
-                                heightSpec: LayoutSpec.EXACTLY,
+                                widthSpec: LayoutSpec.JUST,
+                                heightSpec: LayoutSpec.JUST,
                                 weight: 1,
                             }
                         }),
@@ -134,8 +133,8 @@ class LayoutDemo extends Panel {
                         width: 200,
                         height: 30,
                         layoutConfig: {
-                            widthSpec: LayoutSpec.EXACTLY,
-                            heightSpec: LayoutSpec.EXACTLY,
+                            widthSpec: LayoutSpec.JUST,
+                            heightSpec: LayoutSpec.JUST,
                         },
                         backgroundColor: Color.parse('#eeeeee'),
                         gravity: gravity().center(),
@@ -145,8 +144,8 @@ class LayoutDemo extends Panel {
                         box(2),
                         boxStr('weight=1', 4).apply({
                             layoutConfig: {
-                                widthSpec: LayoutSpec.EXACTLY,
-                                heightSpec: LayoutSpec.EXACTLY,
+                                widthSpec: LayoutSpec.JUST,
+                                heightSpec: LayoutSpec.JUST,
                                 weight: 1,
                             }
                         }),
@@ -154,8 +153,8 @@ class LayoutDemo extends Panel {
                         width: 200,
                         height: 30,
                         layoutConfig: {
-                            widthSpec: LayoutSpec.EXACTLY,
-                            heightSpec: LayoutSpec.EXACTLY,
+                            widthSpec: LayoutSpec.JUST,
+                            heightSpec: LayoutSpec.JUST,
                         },
                         backgroundColor: Color.parse('#eeeeee'),
                         gravity: gravity().center(),
@@ -163,15 +162,15 @@ class LayoutDemo extends Panel {
                     hlayout([
                         boxStr('weight=1', 3).apply({
                             layoutConfig: {
-                                widthSpec: LayoutSpec.EXACTLY,
-                                heightSpec: LayoutSpec.EXACTLY,
+                                widthSpec: LayoutSpec.JUST,
+                                heightSpec: LayoutSpec.JUST,
                                 weight: 1,
                             }
                         }),
                         boxStr('weight=1', 2).apply({
                             layoutConfig: {
-                                widthSpec: LayoutSpec.EXACTLY,
-                                heightSpec: LayoutSpec.EXACTLY,
+                                widthSpec: LayoutSpec.JUST,
+                                heightSpec: LayoutSpec.JUST,
                                 weight: 1,
                             }
                         }),
@@ -180,8 +179,8 @@ class LayoutDemo extends Panel {
                         width: 200,
                         height: 30,
                         layoutConfig: {
-                            widthSpec: LayoutSpec.EXACTLY,
-                            heightSpec: LayoutSpec.EXACTLY,
+                            widthSpec: LayoutSpec.JUST,
+                            heightSpec: LayoutSpec.JUST,
                         },
                         backgroundColor: Color.parse('#eeeeee'),
                         gravity: gravity().center(),
@@ -189,22 +188,22 @@ class LayoutDemo extends Panel {
                     hlayout([
                         boxStr('weight=1', 3).apply({
                             layoutConfig: {
-                                widthSpec: LayoutSpec.EXACTLY,
-                                heightSpec: LayoutSpec.EXACTLY,
+                                widthSpec: LayoutSpec.JUST,
+                                heightSpec: LayoutSpec.JUST,
                                 weight: 1,
                             }
                         }),
                         boxStr('weight=1', 2).apply({
                             layoutConfig: {
-                                widthSpec: LayoutSpec.EXACTLY,
-                                heightSpec: LayoutSpec.EXACTLY,
+                                widthSpec: LayoutSpec.JUST,
+                                heightSpec: LayoutSpec.JUST,
                                 weight: 1,
                             }
                         }),
                         boxStr('weight=1', 4).apply({
                             layoutConfig: {
-                                widthSpec: LayoutSpec.EXACTLY,
-                                heightSpec: LayoutSpec.EXACTLY,
+                                widthSpec: LayoutSpec.JUST,
+                                heightSpec: LayoutSpec.JUST,
                                 weight: 1,
                             }
                         }),
@@ -212,8 +211,8 @@ class LayoutDemo extends Panel {
                         width: 200,
                         height: 30,
                         layoutConfig: {
-                            widthSpec: LayoutSpec.EXACTLY,
-                            heightSpec: LayoutSpec.EXACTLY,
+                            widthSpec: LayoutSpec.JUST,
+                            heightSpec: LayoutSpec.JUST,
                         },
                         backgroundColor: Color.parse('#eeeeee'),
                         gravity: gravity().center(),
@@ -291,29 +290,29 @@ class LayoutDemo extends Panel {
                         vlayout([
                             boxStr('weight=1', 3).apply({
                                 layoutConfig: {
-                                    widthSpec: LayoutSpec.AT_MOST,
-                                    heightSpec: LayoutSpec.EXACTLY,
+                                    widthSpec: LayoutSpec.MOST,
+                                    heightSpec: LayoutSpec.JUST,
                                     weight: 1,
                                 },
                             }),
                             box(2).apply({
                                 layoutConfig: {
-                                    widthSpec: LayoutSpec.AT_MOST,
-                                    heightSpec: LayoutSpec.EXACTLY,
+                                    widthSpec: LayoutSpec.MOST,
+                                    heightSpec: LayoutSpec.JUST,
                                 }
                             }),
                             box(4).apply({
                                 layoutConfig: {
-                                    widthSpec: LayoutSpec.AT_MOST,
-                                    heightSpec: LayoutSpec.EXACTLY,
+                                    widthSpec: LayoutSpec.MOST,
+                                    heightSpec: LayoutSpec.JUST,
                                 }
                             }),
                         ]).apply({
                             width: 100,
                             height: 200,
                             layoutConfig: {
-                                widthSpec: LayoutSpec.EXACTLY,
-                                heightSpec: LayoutSpec.EXACTLY,
+                                widthSpec: LayoutSpec.JUST,
+                                heightSpec: LayoutSpec.JUST,
                             },
                             backgroundColor: Color.parse('#eeeeee'),
                             gravity: gravity().center(),
@@ -321,29 +320,29 @@ class LayoutDemo extends Panel {
                         vlayout([
                             box(3).apply({
                                 layoutConfig: {
-                                    widthSpec: LayoutSpec.AT_MOST,
-                                    heightSpec: LayoutSpec.EXACTLY,
+                                    widthSpec: LayoutSpec.MOST,
+                                    heightSpec: LayoutSpec.JUST,
                                 },
                             }),
                             boxStr('weight=1', 2).apply({
                                 layoutConfig: {
-                                    widthSpec: LayoutSpec.AT_MOST,
-                                    heightSpec: LayoutSpec.EXACTLY,
+                                    widthSpec: LayoutSpec.MOST,
+                                    heightSpec: LayoutSpec.JUST,
                                     weight: 1,
                                 }
                             }),
                             box(4).apply({
                                 layoutConfig: {
-                                    widthSpec: LayoutSpec.AT_MOST,
-                                    heightSpec: LayoutSpec.EXACTLY,
+                                    widthSpec: LayoutSpec.MOST,
+                                    heightSpec: LayoutSpec.JUST,
                                 }
                             }),
                         ]).apply({
                             width: 100,
                             height: 200,
                             layoutConfig: {
-                                widthSpec: LayoutSpec.EXACTLY,
-                                heightSpec: LayoutSpec.EXACTLY,
+                                widthSpec: LayoutSpec.JUST,
+                                heightSpec: LayoutSpec.JUST,
                             },
                             backgroundColor: Color.parse('#eeeeee'),
                             gravity: gravity().center(),
@@ -351,20 +350,20 @@ class LayoutDemo extends Panel {
                         vlayout([
                             box(3).apply({
                                 layoutConfig: {
-                                    widthSpec: LayoutSpec.AT_MOST,
-                                    heightSpec: LayoutSpec.EXACTLY,
+                                    widthSpec: LayoutSpec.MOST,
+                                    heightSpec: LayoutSpec.JUST,
                                 },
                             }),
                             box(2).apply({
                                 layoutConfig: {
-                                    widthSpec: LayoutSpec.AT_MOST,
-                                    heightSpec: LayoutSpec.EXACTLY,
+                                    widthSpec: LayoutSpec.MOST,
+                                    heightSpec: LayoutSpec.JUST,
                                 },
                             }),
                             boxStr('weight=1', 4).apply({
                                 layoutConfig: {
-                                    widthSpec: LayoutSpec.AT_MOST,
-                                    heightSpec: LayoutSpec.EXACTLY,
+                                    widthSpec: LayoutSpec.MOST,
+                                    heightSpec: LayoutSpec.JUST,
                                     weight: 1,
                                 }
                             }),
@@ -372,8 +371,8 @@ class LayoutDemo extends Panel {
                             width: 100,
                             height: 200,
                             layoutConfig: {
-                                widthSpec: LayoutSpec.EXACTLY,
-                                heightSpec: LayoutSpec.EXACTLY,
+                                widthSpec: LayoutSpec.JUST,
+                                heightSpec: LayoutSpec.JUST,
                             },
                             backgroundColor: Color.parse('#eeeeee'),
                             gravity: gravity().center(),
@@ -381,30 +380,30 @@ class LayoutDemo extends Panel {
                         vlayout([
                             boxStr('weight=1', 3).apply({
                                 layoutConfig: {
-                                    widthSpec: LayoutSpec.AT_MOST,
-                                    heightSpec: LayoutSpec.EXACTLY,
+                                    widthSpec: LayoutSpec.MOST,
+                                    heightSpec: LayoutSpec.JUST,
                                     weight: 1,
                                 },
                             }),
                             boxStr('weight=1', 2).apply({
                                 layoutConfig: {
-                                    widthSpec: LayoutSpec.AT_MOST,
-                                    heightSpec: LayoutSpec.EXACTLY,
+                                    widthSpec: LayoutSpec.MOST,
+                                    heightSpec: LayoutSpec.JUST,
                                     weight: 1,
                                 }
                             }),
                             box(4).apply({
                                 layoutConfig: {
-                                    widthSpec: LayoutSpec.AT_MOST,
-                                    heightSpec: LayoutSpec.EXACTLY,
+                                    widthSpec: LayoutSpec.MOST,
+                                    heightSpec: LayoutSpec.JUST,
                                 }
                             }),
                         ]).apply({
                             width: 100,
                             height: 200,
                             layoutConfig: {
-                                widthSpec: LayoutSpec.EXACTLY,
-                                heightSpec: LayoutSpec.EXACTLY,
+                                widthSpec: LayoutSpec.JUST,
+                                heightSpec: LayoutSpec.JUST,
                             },
                             backgroundColor: Color.parse('#eeeeee'),
                             gravity: gravity().center(),
@@ -412,22 +411,22 @@ class LayoutDemo extends Panel {
                         vlayout([
                             boxStr('weight=1', 3).apply({
                                 layoutConfig: {
-                                    widthSpec: LayoutSpec.AT_MOST,
-                                    heightSpec: LayoutSpec.EXACTLY,
+                                    widthSpec: LayoutSpec.MOST,
+                                    heightSpec: LayoutSpec.JUST,
                                     weight: 1,
                                 },
                             }),
                             boxStr('weight=1', 2).apply({
                                 layoutConfig: {
-                                    widthSpec: LayoutSpec.AT_MOST,
-                                    heightSpec: LayoutSpec.EXACTLY,
+                                    widthSpec: LayoutSpec.MOST,
+                                    heightSpec: LayoutSpec.JUST,
                                     weight: 1,
                                 }
                             }),
                             boxStr('weight=1', 4).apply({
                                 layoutConfig: {
-                                    widthSpec: LayoutSpec.AT_MOST,
-                                    heightSpec: LayoutSpec.EXACTLY,
+                                    widthSpec: LayoutSpec.MOST,
+                                    heightSpec: LayoutSpec.JUST,
                                     weight: 1,
                                 }
                             }),
@@ -435,8 +434,8 @@ class LayoutDemo extends Panel {
                             width: 100,
                             height: 200,
                             layoutConfig: {
-                                widthSpec: LayoutSpec.EXACTLY,
-                                heightSpec: LayoutSpec.EXACTLY,
+                                widthSpec: LayoutSpec.JUST,
+                                heightSpec: LayoutSpec.JUST,
                             },
                             backgroundColor: Color.parse('#eeeeee'),
                             gravity: gravity().center(),
@@ -453,7 +452,7 @@ class LayoutDemo extends Panel {
                 it.space = 20
             }),
         ).also(it => {
-            it.layoutConfig = layoutConfig().atmost()
+            it.layoutConfig = layoutConfig().most()
         })
             .in(rootView)
     }

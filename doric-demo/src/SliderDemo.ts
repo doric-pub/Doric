@@ -19,8 +19,8 @@ class SliderPanel extends Panel {
             text({
                 text: "Gallery",
                 layoutConfig: {
-                    widthSpec: LayoutSpec.AT_MOST,
-                    heightSpec: LayoutSpec.EXACTLY,
+                    widthSpec: LayoutSpec.MOST,
+                    heightSpec: LayoutSpec.JUST,
                 },
                 textSize: 30,
                 textColor: Color.WHITE,
@@ -34,7 +34,7 @@ class SliderPanel extends Panel {
                     return slideItem(image({
                         imageUrl: imageUrls[idx % imageUrls.length],
                         scaleType: ScaleType.ScaleAspectFit,
-                        layoutConfig: layoutConfig().w(LayoutSpec.AT_MOST).h(LayoutSpec.AT_MOST).a(gravity().center()),
+                        layoutConfig: layoutConfig().configWidth(LayoutSpec.MOST).configHeight(LayoutSpec.MOST).configAligmnet(gravity().center()),
                     })).also(it => {
                         let start = idx
                         it.onClick = () => {
@@ -43,15 +43,15 @@ class SliderPanel extends Panel {
                     })
                 },
                 layoutConfig: {
-                    widthSpec: LayoutSpec.AT_MOST,
-                    heightSpec: LayoutSpec.WRAP_CONTENT,
+                    widthSpec: LayoutSpec.MOST,
+                    heightSpec: LayoutSpec.FIT,
                     weight: 1,
                 },
             }),
         ]).also(it => {
             it.layoutConfig = {
-                widthSpec: LayoutSpec.AT_MOST,
-                heightSpec: LayoutSpec.AT_MOST,
+                widthSpec: LayoutSpec.MOST,
+                heightSpec: LayoutSpec.MOST,
             }
         }))
     }

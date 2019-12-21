@@ -9,7 +9,7 @@ class ScrollerPanel extends Panel {
                 scroller(
                     vlayout(new Array(100).fill(1).map(e => label('Scroll Content')))
                 ).apply({
-                    layoutConfig: layoutConfig().exactly(),
+                    layoutConfig: layoutConfig().just(),
                     width: 300,
                     height: 500,
                     backgroundColor: Color.RED,
@@ -17,7 +17,7 @@ class ScrollerPanel extends Panel {
                 scroller(
                     vlayout(new Array(100).fill(1).map(e => label('Scroll Content')))
                 ).apply({
-                    layoutConfig: layoutConfig().exactly(),
+                    layoutConfig: layoutConfig().just(),
                     width: 300,
                     height: 500,
                     backgroundColor: Color.BLUE,
@@ -25,7 +25,7 @@ class ScrollerPanel extends Panel {
             ])
         )
             .apply({
-                layoutConfig: layoutConfig().atmost().h(LayoutSpec.EXACTLY),
+                layoutConfig: layoutConfig().most().configHeight(LayoutSpec.JUST),
                 height: 500,
                 backgroundColor: Color.YELLOW,
             })

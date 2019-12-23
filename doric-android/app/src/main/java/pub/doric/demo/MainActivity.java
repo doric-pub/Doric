@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setBackgroundColor(Color.WHITE);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         try {
-            String[] demos = getAssets().list("demo");
+            String[] demos = getAssets().list("src");
             List<String> ret = new ArrayList<>();
             for (String str : demos) {
                 if (str.endsWith("js")) {
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(tv.getContext(), DemoDebugActivity.class);
-                    intent.putExtra("scheme", "assets://demo/" + data[position]);
+                    intent.putExtra("scheme", "assets://src/" + data[position]);
                     intent.putExtra("alias", data[position]);
                     tv.getContext().startActivity(intent);
                 }

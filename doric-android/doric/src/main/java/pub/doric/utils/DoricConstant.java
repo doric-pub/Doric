@@ -21,8 +21,8 @@ package pub.doric.utils;
  * @CreateDate: 2019-07-18
  */
 public class DoricConstant {
-    public static final String DORIC_BUNDLE_SANDBOX = "bundle/doric-sandbox.js";
-    public static final String DORIC_BUNDLE_LIB = "bundle/doric-lib.js";
+    public static final String DORIC_BUNDLE_SANDBOX = "doric-sandbox.js";
+    public static final String DORIC_BUNDLE_LIB = "doric-lib.js";
     public static final String DORIC_MODULE_LIB = "doric";
 
 

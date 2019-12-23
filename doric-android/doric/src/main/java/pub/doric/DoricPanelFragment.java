@@ -49,40 +49,48 @@ public class DoricPanelFragment extends Fragment implements IDoricNavigator {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        doricPanel = view.findViewById(R.id.doric_panel);
-        Bundle argument = getArguments();
-        if (argument == null) {
-            if (getActivity() != null && getActivity().getIntent() != null) {
-                argument = getActivity().getIntent().getExtras();
+        if (doricPanel == null) {
+            doricPanel = view.findViewById(R.id.doric_panel);
+            Bundle argument = getArguments();
+            if (argument == null) {
+                if (getActivity() != null && getActivity().getIntent() != null) {
+                    argument = getActivity().getIntent().getExtras();
+                }
             }
-        }
-        if (argument == null) {
-            DoricLog.e("DoricPanelFragment argument is null");
-            return;
-        }
-        final String alias = argument.getString("alias");
-        String scheme = argument.getString("scheme");
-        final String extra = argument.getString("extra");
-        DoricJSLoaderManager.getInstance().loadJSBundle(scheme).setCallback(new AsyncResult.Callback<String>() {
-            @Override
-            public void onResult(String result) {
-                doricPanel.config(result, alias, extra);
+            if (argument == null) {
+                DoricLog.e("DoricPanelFragment argument is null");
+                return;
+            }
+            final String alias = argument.getString("alias");
+            String scheme = argument.getString("scheme");
+            final String extra = argument.getString("extra");
+            DoricJSLoaderManager.getInstance().loadJSBundle(scheme).setCallback(new AsyncResult.Callback<String>() {
+                @Override
+                public void onResult(String result) {
+                    doricPanel.config(result, alias, extra);
+                    DoricContext context = doricPanel.getDoricContext();
+                    context.setDoricNavigator(DoricPanelFragment.this);
+                    BaseDoricNavBar navBar = requireActivity().getWindow().getDecorView().findViewById(R.id.doric_nav_bar);
+                    context.setDoricNavBar(navBar);
+                }
+
+                @Override
+                public void onError(Throwable t) {
+                    DoricLog.e("DoricPanelFragment load JS error:" + t.getLocalizedMessage());
+                }
+
+                @Override
+                public void onFinish() {
+
+                }
+            });
+        } else {
+            DoricPanel panel = view.findViewById(R.id.doric_panel);
+            if (doricPanel != view.findViewById(R.id.doric_panel)) {
                 DoricContext context = doricPanel.getDoricContext();
-                context.setDoricNavigator(DoricPanelFragment.this);
-                BaseDoricNavBar navBar = requireActivity().getWindow().getDecorView().findViewById(R.id.doric_nav_bar);
-                context.setDoricNavBar(navBar);
+                panel.config(context);
             }
-
-            @Override
-            public void onError(Throwable t) {
-                DoricLog.e("DoricPanelFragment load JS error:" + t.getLocalizedMessage());
-            }
-
-            @Override
-            public void onFinish() {
-
-            }
-        });
+        }
     }
 
     @Override

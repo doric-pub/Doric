@@ -22,7 +22,7 @@
     [super viewDidLoad];
     self.title = @"Doric Demo";
     NSString *path = [[NSBundle mainBundle] bundlePath];
-    NSString *demoPath = [path stringByAppendingPathComponent:@"demo"];
+    NSString *demoPath = [path stringByAppendingPathComponent:@"src"];
     NSFileManager *mgr = [NSFileManager defaultManager];
     self.demoFilePaths = [[mgr subpathsAtPath:demoPath] filter:^BOOL(NSString *obj) {
         return ![obj containsString:@".map"];
@@ -78,7 +78,7 @@
     NSString *file = self.demoFilePaths[(NSUInteger) indexPath.row];
     if ([file containsString:@"NavigatorDemo"]) {
         DoricViewController *doricViewController = [[DoricViewController alloc]
-                initWithScheme:[NSString stringWithFormat:@"assets://demo/%@", file]
+                initWithScheme:[NSString stringWithFormat:@"assets://src/%@", file]
                          alias:self.demoFilePaths[(NSUInteger) indexPath.row]
                          extra:nil
         ];

@@ -115,14 +115,14 @@
 
 - (void)initDoricEnvironment {
     [self loadBuiltinJS:DORIC_BUNDLE_SANDBOX];
-    NSString *path = [DoricBundle() pathForResource:DORIC_BUNDLE_LIB ofType:@"js" inDirectory:@"bundle"];
+    NSString *path = [DoricBundle() pathForResource:DORIC_BUNDLE_LIB ofType:@"js"];
     NSString *jsContent = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
     [self.jsExecutor loadJSScript:[self packageModuleScript:DORIC_MODULE_LIB content:jsContent]
                            source:[@"Module://" stringByAppendingString:DORIC_MODULE_LIB]];
 }
 
 - (void)loadBuiltinJS:(NSString *)fileName {
-    NSString *path = [DoricBundle() pathForResource:DORIC_BUNDLE_SANDBOX ofType:@"js" inDirectory:@"bundle"];
+    NSString *path = [DoricBundle() pathForResource:DORIC_BUNDLE_SANDBOX ofType:@"js"];
     NSString *jsContent = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
     [self.jsExecutor loadJSScript:jsContent source:[@"Assets://" stringByAppendingString:fileName]];
 }

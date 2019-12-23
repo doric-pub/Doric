@@ -76,17 +76,12 @@
         return;
     }
     NSString *file = self.demoFilePaths[(NSUInteger) indexPath.row];
-    if ([file containsString:@"NavigatorDemo"]) {
-        DoricViewController *doricViewController = [[DoricViewController alloc]
-                initWithScheme:[NSString stringWithFormat:@"assets://src/%@", file]
-                         alias:self.demoFilePaths[(NSUInteger) indexPath.row]
-                         extra:nil
-        ];
-        [self.navigationController pushViewController:doricViewController animated:NO];
-    } else {
-        DemoVC *demoVC = [[DemoVC alloc] initWithPath:file];
-        [self.navigationController pushViewController:demoVC animated:NO];
-    }
+    DoricViewController *doricViewController = [[DoricViewController alloc]
+            initWithScheme:[NSString stringWithFormat:@"assets://src/%@", file]
+                     alias:self.demoFilePaths[(NSUInteger) indexPath.row]
+                     extra:nil
+    ];
+    [self.navigationController pushViewController:doricViewController animated:NO];
 }
 
 @end

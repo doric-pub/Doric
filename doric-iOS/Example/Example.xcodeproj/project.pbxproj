@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -20,7 +20,7 @@
 		E2334AFE22E9D2070098A085 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E2334AFD22E9D2070098A085 /* main.m */; };
 		E2334B0822E9D2070098A085 /* ExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E2334B0722E9D2070098A085 /* ExampleTests.m */; };
 		E2334B1322E9D2070098A085 /* ExampleUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = E2334B1222E9D2070098A085 /* ExampleUITests.m */; };
-		E2F4481723839AC500073C7F /* demo in Resources */ = {isa = PBXBuildFile; fileRef = E2F4481623839AC500073C7F /* demo */; };
+		E2C9315923B0A263007933D9 /* src in Resources */ = {isa = PBXBuildFile; fileRef = E2C9315823B0A263007933D9 /* src */; };
 		ED1C348399AB9D786E6D0FD4 /* libPods-ExampleUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E7A7F41AFE5065A452873298 /* libPods-ExampleUITests.a */; };
 /* End PBXBuildFile section */
 
@@ -72,7 +72,7 @@
 		E2334B0E22E9D2070098A085 /* ExampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ExampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2334B1222E9D2070098A085 /* ExampleUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExampleUITests.m; sourceTree = "<group>"; };
 		E2334B1422E9D2070098A085 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E2F4481623839AC500073C7F /* demo */ = {isa = PBXFileReference; lastKnownFileType = folder; path = demo; sourceTree = "<group>"; };
+		E2C9315823B0A263007933D9 /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; name = src; path = "../../../doric-demo/bundle/src"; sourceTree = "<group>"; };
 		E7A7F41AFE5065A452873298 /* libPods-ExampleUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ExampleUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -152,7 +152,7 @@
 		E2334AED22E9D2060098A085 /* Example */ = {
 			isa = PBXGroup;
 			children = (
-				E2F4481623839AC500073C7F /* demo */,
+				E2C9315823B0A263007933D9 /* src */,
 				E2334AEE22E9D2060098A085 /* AppDelegate.h */,
 				E2334AEF22E9D2060098A085 /* AppDelegate.m */,
 				E2334AF122E9D2060098A085 /* ViewController.h */,
@@ -299,9 +299,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				E2334AFB22E9D2070098A085 /* LaunchScreen.storyboard in Resources */,
-				E2F4481723839AC500073C7F /* demo in Resources */,
 				E2334AF822E9D2070098A085 /* Assets.xcassets in Resources */,
 				E2334AF622E9D2060098A085 /* Main.storyboard in Resources */,
+				E2C9315923B0A263007933D9 /* src in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

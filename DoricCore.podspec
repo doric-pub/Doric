@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'DoricCore'
-  s.version          = '0.1.2'
+  s.version          = '0.2.0'
   s.summary          = 'Doric iOS SDK'
 
 
@@ -17,7 +17,7 @@ Doric iOS SDK for cross platform develpment
 
   s.source_files = 'doric-iOS/Pod/Classes/**/*'
   s.resource_bundles = {
-    'Doric' => ['doric-iOS/Pod/Assets/**/*']
+    'Doric' => ['doric-js/bundle/**/*']
   }
 
   s.public_header_files = 'doric-iOS/Pod/Classes/**/*.h'

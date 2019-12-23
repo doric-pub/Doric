@@ -22,7 +22,7 @@
     self.title = self.filePath;
     self.view.backgroundColor = [UIColor whiteColor];
     NSString *path = [[NSBundle mainBundle] bundlePath];
-    NSString *demoPath = [path stringByAppendingPathComponent:@"demo"];
+    NSString *demoPath = [path stringByAppendingPathComponent:@"src"];
     NSString *fullPath = [demoPath stringByAppendingPathComponent:self.filePath];
     NSString *jsContent = [NSString stringWithContentsOfFile:fullPath encoding:NSUTF8StringEncoding error:nil];
     DoricPanel *panel = [DoricPanel new];

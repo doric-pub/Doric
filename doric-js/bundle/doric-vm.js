@@ -2004,7 +2004,7 @@ class LayoutConfigImpl {
         this.margin = m;
         return this;
     }
-    configAligmnet(a) {
+    configAlignmnet(a) {
         this.alignment = a;
         return this;
     }

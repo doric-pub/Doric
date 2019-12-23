@@ -33,7 +33,7 @@ class ListPanel extends Panel {
                             }
                             it.loadMoreView = listItem(text({
                                 text: "Loading",
-                                layoutConfig: layoutConfig().most().configHeight(LayoutSpec.JUST).configAligmnet(Gravity.Center),
+                                layoutConfig: layoutConfig().most().configHeight(LayoutSpec.JUST).configAlignmnet(Gravity.Center),
                                 height: 50,
                             }))
                             it.renderItem = (idx: number) => {

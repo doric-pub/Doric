@@ -34,7 +34,7 @@ class SliderPanel extends Panel {
                     return slideItem(image({
                         imageUrl: imageUrls[idx % imageUrls.length],
                         scaleType: ScaleType.ScaleAspectFit,
-                        layoutConfig: layoutConfig().configWidth(LayoutSpec.MOST).configHeight(LayoutSpec.MOST).configAligmnet(gravity().center()),
+                        layoutConfig: layoutConfig().configWidth(LayoutSpec.MOST).configHeight(LayoutSpec.MOST).configAlignmnet(gravity().center()),
                     })).also(it => {
                         let start = idx
                         it.onClick = () => {

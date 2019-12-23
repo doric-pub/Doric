@@ -20,10 +20,10 @@
   "dependencies": {
     "axios": "^0.19.0",
     "doric": "file:../doric-js",
-    "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-json": "^4.0.0",
-    "rollup-plugin-node-resolve": "^5.2.0",
-    "tsc": "^1.20150623.0",
-    "typescript": "^3.7.3"
+    "rollup": "^1.27.14",
+    "@rollup/plugin-commonjs": "^11.0.0",
+    "@rollup/plugin-json": "^4.0.1",
+    "@rollup/plugin-node-resolve": "^6.0.0",
+    "typescript": "^3.7.4"
   }
 }

@@ -1,6 +1,6 @@
-import resolve from 'rollup-plugin-node-resolve'
-import commonjs from 'rollup-plugin-commonjs'
-import jsonPlugin from 'rollup-plugin-json'
+import resolve from '@rollup/plugin-node-resolve'
+import commonjs from '@rollup/plugin-commonjs'
+import jsonPlugin from '@rollup/plugin-json'
 import fs from 'fs'
 import path from 'path'
 

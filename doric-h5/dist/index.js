@@ -4507,7 +4507,8 @@ ${content}
 return __module.exports;},this,[{exports:{}}])])`;
     }
     function packageCreateContext(contextId, content) {
-        return `Reflect.apply(function(doric,context,Entry,require,exports,setTimeout,setInterval,clearTimeout,clearInterval){
+        return `//@ sourceURL=contextId_${contextId}.js
+Reflect.apply(function(doric,context,Entry,require,exports,setTimeout,setInterval,clearTimeout,clearInterval){
 ${content}
 },doric.jsObtainContext("${contextId}"),[undefined,doric.jsObtainContext("${contextId}"),doric.jsObtainEntry("${contextId}"),doric.__require__,{},doricSetTimeout,doricSetInterval,doricClearTimeout,doricClearInterval])`;
     }

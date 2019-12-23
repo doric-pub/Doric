@@ -22,10 +22,10 @@
   "dependencies": {
     "@types/ws": "^6.0.4",
     "reflect-metadata": "^0.1.13",
-    "rollup": "^1.27.13",
+    "rollup": "^1.27.14",
     "@rollup/plugin-node-resolve": "^6.0.0",
     "tslib": "^1.10.0",
-    "typescript": "^3.7.3",
+    "typescript": "^3.7.4",
     "ws": "^7.2.1"
   }
 }

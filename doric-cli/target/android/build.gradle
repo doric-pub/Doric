@@ -21,6 +21,7 @@ allprojects {
         maven {
             url "https://dl.bintray.com/osborn/Android"
         }
+        maven { url 'https://jitpack.io' }
     }
 }
 

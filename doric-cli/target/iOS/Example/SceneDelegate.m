@@ -1,5 +1,5 @@
 #import "SceneDelegate.h"
-#import <Doric/Doric.h>
+#import <DoricCore/Doric.h>
 
 @interface SceneDelegate ()
 @end
@@ -8,7 +8,9 @@
 - (void)scene:(UIScene *)scene willConnectToSession:(UISceneSession *)session options:(UISceneConnectionOptions *)connectionOptions {
     UIWindowScene *windowScene = (UIWindowScene *) scene;
     NSString *bundleName = @"__$__";
-    DoricViewController *doricViewController = [[DoricViewController alloc] initWithScheme:[NSString stringWithFormat:@"assets://src/%@.js", bundleName] alias:bundleName];
+    DoricViewController *doricViewController = [[DoricViewController alloc] initWithScheme:[NSString stringWithFormat:@"assets://src/%@.js", bundleName]
+                                                                                     alias:bundleName
+                                                                                     extra:@""];
     doricViewController.view.backgroundColor = [UIColor whiteColor];
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:doricViewController];
     self.window = [[UIWindow alloc] initWithWindowScene:windowScene];

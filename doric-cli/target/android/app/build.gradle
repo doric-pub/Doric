@@ -20,7 +20,7 @@ android {
 
     sourceSets {
         main {
-            assets.srcDirs = [project.getRootDir().getParent() + "/js/bundle/src"]
+            assets.srcDirs = [project.getRootDir().getParent() + "/js/bundle"]
         }
     }
 

@@ -31,7 +31,7 @@ class FlowDemo extends Panel {
                         text: `${idx}`,
                         textColor: Color.WHITE,
                         textSize: 20,
-                        layoutConfig: layoutConfig().fit().configAligmnet(Gravity.Center)
+                        layoutConfig: layoutConfig().fit().configAlignmnet(Gravity.Center)
                     }))
                 })
             },
@@ -51,7 +51,7 @@ class FlowDemo extends Panel {
                     text: 'load more',
                     textColor: Color.WHITE,
                     textSize: 20,
-                    layoutConfig: layoutConfig().fit().configAligmnet(Gravity.Center)
+                    layoutConfig: layoutConfig().fit().configAlignmnet(Gravity.Center)
                 }))
             })
         })

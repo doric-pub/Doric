@@ -20,7 +20,7 @@ class NaivgatorDemo extends Panel {
                 'NavbarDemo',
                 'Counter', 'EffectsDemo', 'ImageDemo', 'LayoutDemo',
                 'ListDemo', 'ModalDemo', 'NavigatorDemo',
-                'NetworkDemo', 'ScrollerDemo', 'SliderDemo', 'Snake', 'StorageDemo'].map(e =>
+                'NetworkDemo', 'ScrollerDemo', 'SliderDemo', 'Snake', 'StorageDemo', 'PopoverDemo'].map(e =>
                     label(e).apply({
                         height: 50,
                         backgroundColor: colors[0],
@@ -28,7 +28,7 @@ class NaivgatorDemo extends Panel {
                         textColor: Color.WHITE,
                         layoutConfig: layoutConfig().just().configWidth(LayoutSpec.MOST),
                         onClick: () => {
-                            navigator(context).push(`assets://demo/${e}.js`, {
+                            navigator(context).push(`assets://src/${e}.js`, {
                                 alias: `${e}.js`,
                                 extra: {
                                     from: "navigatorDemo"

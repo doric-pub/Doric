@@ -1,7 +1,5 @@
 package pub.doric.plugin;
 
-import android.app.Activity;
-import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -14,7 +12,6 @@ import com.github.pengfeizhou.jscore.JavaValue;
 import java.util.concurrent.Callable;
 
 import pub.doric.DoricContext;
-import pub.doric.async.AsyncCall;
 import pub.doric.async.AsyncResult;
 import pub.doric.extension.bridge.DoricMethod;
 import pub.doric.extension.bridge.DoricPlugin;
@@ -48,7 +45,6 @@ public class PopoverPlugin extends DoricJavaPlugin {
                         decorView.addView(mFullScreenView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                                 ViewGroup.LayoutParams.MATCH_PARENT));
                     }
-                    mFullScreenView.setVisibility(View.VISIBLE);
                     mFullScreenView.bringToFront();
                     String viewId = jsObject.getProperty("id").asString().value();
                     String type = jsObject.getProperty("type").asString().value();
@@ -127,7 +123,9 @@ public class PopoverPlugin extends DoricJavaPlugin {
         getDoricContext().removeHeadNode(node);
         mFullScreenView.removeView(node.getNodeView());
         if (getDoricContext().allHeadNodes().isEmpty()) {
-            mFullScreenView.setVisibility(View.GONE);
+            ViewGroup decorView = (ViewGroup) getDoricContext().getRootNode().getNodeView().getRootView();
+            decorView.removeView(mFullScreenView);
+            mFullScreenView = null;
         }
     }
 
@@ -135,5 +133,11 @@ public class PopoverPlugin extends DoricJavaPlugin {
         for (ViewNode node : getDoricContext().allHeadNodes()) {
             dismissViewNode(node);
         }
+    }
+
+    @Override
+    public void onTearDown() {
+        super.onTearDown();
+        this.dismissPopover();
     }
 }

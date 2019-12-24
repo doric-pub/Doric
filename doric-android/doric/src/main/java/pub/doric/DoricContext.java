@@ -26,6 +26,7 @@ import org.json.JSONObject;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 import pub.doric.async.AsyncResult;
 import pub.doric.navbar.IDoricNavBar;
@@ -35,6 +36,7 @@ import pub.doric.shader.RootNode;
 import pub.doric.shader.ViewNode;
 import pub.doric.utils.DoricConstant;
 import pub.doric.utils.DoricMetaInfo;
+import pub.doric.utils.ThreadMode;
 
 /**
  * @Description: Doric
@@ -151,7 +153,16 @@ public class DoricContext {
 
             @Override
             public void onFinish() {
-                mPluginMap.clear();
+                getDriver().asyncCall(new Callable<Object>() {
+                    @Override
+                    public Object call() {
+                        for (DoricJavaPlugin javaPlugin : mPluginMap.values()) {
+                            javaPlugin.onTearDown();
+                        }
+                        mPluginMap.clear();
+                        return null;
+                    }
+                }, ThreadMode.UI);
             }
         });
     }
@@ -166,6 +177,10 @@ public class DoricContext {
     }
 
     public void reload(String script) {
+        for (DoricJavaPlugin javaPlugin : mPluginMap.values()) {
+            javaPlugin.onTearDown();
+        }
+        mPluginMap.clear();
         this.script = script;
         this.mRootNode.setId("");
         getDriver().createContext(mContextId, script, source);

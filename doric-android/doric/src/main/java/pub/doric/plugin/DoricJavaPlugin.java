@@ -27,4 +27,8 @@ public abstract class DoricJavaPlugin extends DoricContextHolder {
     public DoricJavaPlugin(DoricContext doricContext) {
         super(doricContext);
     }
+
+    public void onTearDown() {
+
+    }
 }

@@ -18,6 +18,7 @@ import { View, Group } from "./view"
 import { loge } from '../util/log'
 import { Model } from '../util/types'
 import { Root } from '../widget/layouts'
+import { BridgeContext } from '../runtime/global'
 
 
 export function NativeCall(target: Panel, propertyKey: string, descriptor: PropertyDescriptor) {
@@ -34,7 +35,7 @@ type Frame = { width: number, height: number }
 declare function nativeEmpty(): void
 
 export abstract class Panel {
-    context?: any
+    context!: BridgeContext
     onCreate() { }
     onDestroy() { }
     onShow() { }
@@ -139,9 +140,7 @@ export abstract class Panel {
     }
 
     private nativeRender(model: Model) {
-        if (this.context) {
-            this.context.shader.render(model)
-        }
+        this.context.shader.render(model)
     }
 
     private hookBeforeNativeCall() {
@@ -153,15 +152,30 @@ export abstract class Panel {
 
     private hookAfterNativeCall() {
         //Here insert a native call to ensure the promise is resolved done.
-        nativeEmpty()
-        if (this.__root__.isDirty()) {
-            const model = this.__root__.toModel()
-            this.nativeRender(model)
-        }
-        for (let v of this.headviews.values()) {
-            if (v.isDirty()) {
-                const model = v.toModel()
+        if (Environment.platform === 'h5') {
+            setTimeout(() => {
+                if (this.__root__.isDirty()) {
+                    const model = this.__root__.toModel()
+                    this.nativeRender(model)
+                }
+                for (let v of this.headviews.values()) {
+                    if (v.isDirty()) {
+                        const model = v.toModel()
+                        this.nativeRender(model)
+                    }
+                }
+            }, 0)
+        } else {
+            nativeEmpty()
+            if (this.__root__.isDirty()) {
+                const model = this.__root__.toModel()
                 this.nativeRender(model)
+            }
+            for (let v of this.headviews.values()) {
+                if (v.isDirty()) {
+                    const model = v.toModel()
+                    this.nativeRender(model)
+                }
             }
         }
     }

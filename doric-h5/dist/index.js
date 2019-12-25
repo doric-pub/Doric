@@ -2062,7 +2062,7 @@ class LayoutConfigImpl {
         this.margin = m;
         return this;
     }
-    configAligmnet(a) {
+    configAlignmnet(a) {
         this.alignment = a;
         return this;
     }
@@ -2239,29 +2239,26 @@ class Panel {
         }, undefined);
     }
     nativeRender(model) {
-        if (this.context) {
-            this.context.shader.render(model);
-        }
+        this.context.shader.render(model);
     }
     hookBeforeNativeCall() {
-        this.__root__.clean();
-        for (let v of this.headviews.values()) {
-            v.clean();
-        }
     }
     hookAfterNativeCall() {
         //Here insert a native call to ensure the promise is resolved done.
-        nativeEmpty();
-        if (this.__root__.isDirty()) {
-            const model = this.__root__.toModel();
-            this.nativeRender(model);
-        }
-        for (let v of this.headviews.values()) {
-            if (v.isDirty()) {
-                const model = v.toModel();
+        Promise.resolve().then(() => {
+            if (this.__root__.isDirty()) {
+                const model = this.__root__.toModel();
                 this.nativeRender(model);
+                this.__root__.clean();
             }
-        }
+            for (let v of this.headviews.values()) {
+                if (v.isDirty()) {
+                    const model = v.toModel();
+                    this.nativeRender(model);
+                    v.clean();
+                }
+            }
+        });
     }
 }
 __decorate$2([
@@ -4455,6 +4452,33 @@ return __module.exports;
         }
     }
 
+    class StoragePlugin extends DoricPlugin {
+        setItem(args) {
+            localStorage.setItem(`${args.zone}_${args.key}`, args.value);
+            return Promise.resolve();
+        }
+        getItem(args) {
+            return Promise.resolve(localStorage.getItem(`${args.zone}_${args.key}`));
+        }
+        remove(args) {
+            localStorage.removeItem(`${args.zone}_${args.key}`);
+            return Promise.resolve();
+        }
+        clear(args) {
+            let removingKeys = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith(`${args.zone}_`)) {
+                    removingKeys.push(key);
+                }
+            }
+            removingKeys.forEach(e => {
+                localStorage.removeItem(e);
+            });
+            return Promise.resolve();
+        }
+    }
+
     const bundles = new Map;
     const plugins = new Map;
     const nodes = new Map;
@@ -4475,6 +4499,7 @@ return __module.exports;
     }
     registerPlugin('shader', ShaderPlugin);
     registerPlugin('modal', ModalPlugin);
+    registerPlugin('storage', StoragePlugin);
     registerViewNode('Stack', DoricStackNode);
     registerViewNode('VLayout', DoricVLayoutNode);
     registerViewNode('HLayout', DoricHLayoutNode);
@@ -4513,6 +4538,9 @@ ${content}
 },doric.jsObtainContext("${contextId}"),[undefined,doric.jsObtainContext("${contextId}"),doric.jsObtainEntry("${contextId}"),doric.__require__,{},doricSetTimeout,doricSetInterval,doricClearTimeout,doricClearInterval])`;
     }
     function initDoric() {
+        injectGlobalObject("Environment", {
+            platform: "h5"
+        });
         injectGlobalObject("nativeEmpty", () => undefined);
         injectGlobalObject('nativeLog', (type, message) => {
             switch (type) {

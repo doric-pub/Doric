@@ -1,4 +1,4 @@
-import { jsCallResolve, jsCallReject, jsCallbackTimer } from 'doric/src/runtime/sandbox'
+import { jsCallResolve, jsCallReject, jsCallbackTimer, jsCallEntityMethod } from 'doric/src/runtime/sandbox'
 import { acquireJSBundle, acquirePlugin } from './DoricRegistry'
 import { getDoricContext } from './DoricContext'
 import { DoricPlugin } from './DoricPlugin'
@@ -41,6 +41,10 @@ ${content}
 }
 
 function initDoric() {
+    injectGlobalObject("Environment", {
+        platform: "h5"
+    })
+
     injectGlobalObject("nativeEmpty", () => undefined)
 
     injectGlobalObject('nativeLog', (type: 'd' | 'w' | 'e', message: string) => {

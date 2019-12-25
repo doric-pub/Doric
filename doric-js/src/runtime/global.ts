@@ -20,7 +20,7 @@ export type BridgeContext = { [index: string]: { [index: string]: (args?: any) =
 declare global {
     const context: BridgeContext
     const Environment: {
-        platform: "Android" | "iOS" | "Qt",
+        platform: "Android" | "iOS" | "Qt" | "h5",
 
         platformVersion: string,
 

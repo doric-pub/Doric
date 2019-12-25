@@ -2181,9 +2181,7 @@ class Panel {
         }, undefined);
     }
     nativeRender(model) {
-        if (this.context) {
-            this.context.shader.render(model);
-        }
+        this.context.shader.render(model);
     }
     hookBeforeNativeCall() {
         this.__root__.clean();
@@ -2193,15 +2191,31 @@ class Panel {
     }
     hookAfterNativeCall() {
         //Here insert a native call to ensure the promise is resolved done.
-        nativeEmpty();
-        if (this.__root__.isDirty()) {
-            const model = this.__root__.toModel();
-            this.nativeRender(model);
+        if (Environment.platform === 'h5') {
+            setTimeout(() => {
+                if (this.__root__.isDirty()) {
+                    const model = this.__root__.toModel();
+                    this.nativeRender(model);
+                }
+                for (let v of this.headviews.values()) {
+                    if (v.isDirty()) {
+                        const model = v.toModel();
+                        this.nativeRender(model);
+                    }
+                }
+            }, 0);
         }
-        for (let v of this.headviews.values()) {
-            if (v.isDirty()) {
-                const model = v.toModel();
+        else {
+            nativeEmpty();
+            if (this.__root__.isDirty()) {
+                const model = this.__root__.toModel();
                 this.nativeRender(model);
+            }
+            for (let v of this.headviews.values()) {
+                if (v.isDirty()) {
+                    const model = v.toModel();
+                    this.nativeRender(model);
+                }
             }
         }
     }

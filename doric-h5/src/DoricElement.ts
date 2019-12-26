@@ -3,22 +3,48 @@ import { DoricContext } from './DoricContext'
 
 
 export class DoricElement extends HTMLElement {
-    source: string
-    alias: string
     context?: DoricContext
     constructor() {
         super()
-        this.source = this.getAttribute('src') || ""
-        this.alias = this.getAttribute('alias') || this.source
-        axios.get<string>(this.source).then(result => {
-            this.load(result.data)
-        })
+    }
+    get src() {
+        return this.getAttribute('src') as string
+    }
+
+    get alias() {
+        return this.getAttribute('alias') as string
+    }
+    set src(v: string) {
+        this.setAttribute('src', v)
+    }
+    set alias(v: string) {
+        this.setAttribute('alias', v)
+    }
+
+    connectedCallback() {
+        if (this.src && this.context === undefined) {
+            axios.get<string>(this.src).then(result => {
+                this.load(result.data)
+            })
+        }
+    }
+
+    disconnectedCallback() {
+
+    }
+
+    adoptedCallback() {
+
+    }
+
+    attributeChangedCallback() {
+
     }
 
     load(content: string) {
         this.context = new DoricContext(content)
-
         const divElement = document.createElement('div')
+        divElement.style.position = 'relative'
         divElement.style.height = '100%'
         this.append(divElement)
         this.context.rootNode.view = divElement

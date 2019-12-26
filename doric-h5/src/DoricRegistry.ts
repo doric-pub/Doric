@@ -9,7 +9,7 @@ import { DoricImageNode } from "./shader/DoricImageNode"
 import { DoricScrollerNode } from "./shader/DoricScrollerNode"
 import { ModalPlugin } from './plugins/ModalPlugin'
 import { StoragePlugin } from "./plugins/StoragePlugin"
-import { NavigatorPlugin } from "./plugins/NavigatorPlugin"
+import { NavigatorPlugin } from "./navigate/NavigatorPlugin"
 
 const bundles: Map<string, string> = new Map
 

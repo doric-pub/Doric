@@ -1,6 +1,6 @@
 import { DoricPlugin } from "../DoricPlugin";
 import { DoricElement } from "../DoricElement";
-import { NavigationElement } from "./navigation";
+import { NavigationElement } from "./NavigationElement";
 
 export class NavigatorPlugin extends DoricPlugin {
     navigation: NavigationElement | undefined = document.getElementsByTagName('doric-navigation')[0] as (NavigationElement | undefined)

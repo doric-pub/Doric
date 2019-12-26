@@ -3664,12 +3664,28 @@ return __module.exports;
         constructor(context) {
             this.context = context;
         }
+        onTearDown() {
+        }
     }
 
     class ShaderPlugin extends DoricPlugin {
         render(ret) {
-            this.context.rootNode.viewId = ret.id;
-            this.context.rootNode.blend(ret.props);
+            var _a;
+            if (((_a = this.context.rootNode.viewId) === null || _a === void 0 ? void 0 : _a.length) > 0) {
+                if (this.context.rootNode.viewId === ret.id) {
+                    this.context.rootNode.blend(ret.props);
+                }
+                else {
+                    const viewNode = this.context.headNodes.get(ret.id);
+                    if (viewNode) {
+                        viewNode.blend(ret.props);
+                    }
+                }
+            }
+            else {
+                this.context.rootNode.viewId = ret.id;
+                this.context.rootNode.blend(ret.props);
+            }
         }
     }
 
@@ -3736,9 +3752,11 @@ return __module.exports;
             this.context = context;
         }
         init(superNode) {
-            this.superNode = superNode;
-            if (this instanceof DoricSuperViewNode) {
-                this.reusable = superNode.reusable;
+            if (superNode) {
+                this.superNode = superNode;
+                if (this instanceof DoricSuperViewNode) {
+                    this.reusable = superNode.reusable;
+                }
             }
             this.view = this.build();
             this.view.style.overflow = "hidden";
@@ -3861,8 +3879,9 @@ return __module.exports;
                     this.offsetY = prop;
                     break;
                 case 'onClick':
-                    this.view.onclick = () => {
+                    this.view.onclick = (event) => {
                         this.callJSResponse(prop);
+                        event.stopPropagation();
                     };
                     break;
                 case 'corners':
@@ -4566,6 +4585,61 @@ return __module.exports;
         }
     }
 
+    class PopoverPlugin extends DoricPlugin {
+        constructor(context) {
+            super(context);
+            this.fullScreen = document.createElement('div');
+            this.fullScreen.id = `PopOver__${context.contextId}`;
+            this.fullScreen.style.position = 'fixed';
+            this.fullScreen.style.top = '0px';
+            this.fullScreen.style.width = "100%";
+            this.fullScreen.style.height = "100%";
+        }
+        show(model) {
+            const viewNode = DoricViewNode.create(this.context, model.type);
+            if (viewNode === undefined) {
+                return Promise.reject(`Cannot create ViewNode for ${model.type}`);
+            }
+            viewNode.viewId = model.id;
+            viewNode.init();
+            viewNode.blend(model.props);
+            this.fullScreen.appendChild(viewNode.view);
+            this.context.headNodes.set(model.id, viewNode);
+            if (!document.body.contains(this.fullScreen)) {
+                document.body.appendChild(this.fullScreen);
+            }
+            return Promise.resolve();
+        }
+        dismiss(args) {
+            if (args) {
+                const viewNode = this.context.headNodes.get(args.id);
+                if (viewNode) {
+                    this.fullScreen.removeChild(viewNode.view);
+                }
+                if (this.context.headNodes.size === 0) {
+                    document.body.removeChild(this.fullScreen);
+                }
+            }
+            else {
+                this.dismissAll();
+            }
+            return Promise.resolve();
+        }
+        dismissAll() {
+            for (let node of this.context.headNodes.values()) {
+                this.context.headNodes.delete(node.viewId);
+                this.fullScreen.removeChild(node.view);
+            }
+            if (document.body.contains(this.fullScreen)) {
+                document.body.removeChild(this.fullScreen);
+            }
+        }
+        onTearDown() {
+            super.onTearDown();
+            this.dismissAll();
+        }
+    }
+
     const bundles = new Map;
     const plugins = new Map;
     const nodes = new Map;
@@ -4588,6 +4662,7 @@ return __module.exports;
     registerPlugin('modal', ModalPlugin);
     registerPlugin('storage', StoragePlugin);
     registerPlugin('navigator', NavigatorPlugin);
+    registerPlugin('popover', PopoverPlugin);
     registerViewNode('Stack', DoricStackNode);
     registerViewNode('VLayout', DoricVLayoutNode);
     registerViewNode('HLayout', DoricHLayoutNode);
@@ -4740,6 +4815,7 @@ ${content}
         constructor(content) {
             this.contextId = getContextId();
             this.pluginInstances = new Map;
+            this.headNodes = new Map;
             createContext(this.contextId, content);
             doricContexts.set(this.contextId, this);
             this.rootNode = new DoricStackNode(this);
@@ -4759,6 +4835,9 @@ ${content}
             this.invokeEntityMethod("__init__", frame, extra ? JSON.stringify(extra) : undefined);
         }
         teardown() {
+            for (let plugin of this.pluginInstances.values()) {
+                plugin.onTearDown();
+            }
             destroyContext(this.contextId);
         }
     }

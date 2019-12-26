@@ -10,6 +10,7 @@ import { DoricScrollerNode } from "./shader/DoricScrollerNode"
 import { ModalPlugin } from './plugins/ModalPlugin'
 import { StoragePlugin } from "./plugins/StoragePlugin"
 import { NavigatorPlugin } from "./navigate/NavigatorPlugin"
+import { PopoverPlugin } from './plugins/PopoverPlugin'
 
 const bundles: Map<string, string> = new Map
 
@@ -48,6 +49,7 @@ registerPlugin('shader', ShaderPlugin)
 registerPlugin('modal', ModalPlugin)
 registerPlugin('storage', StoragePlugin)
 registerPlugin('navigator', NavigatorPlugin)
+registerPlugin('popover', PopoverPlugin)
 
 registerViewNode('Stack', DoricStackNode)
 registerViewNode('VLayout', DoricVLayoutNode)

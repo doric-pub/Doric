@@ -6,4 +6,7 @@ export class DoricPlugin {
     constructor(context: DoricContext) {
         this.context = context
     }
+    onTearDown() {
+
+    }
 }

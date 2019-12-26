@@ -161,6 +161,9 @@ class SnakeView extends doric.ViewHolder {
                 doric.text({
                     text: "SCORE",
                     textSize: 20,
+                    padding: {
+                        left: 40
+                    },
                 }),
                 this.score = doric.text({
                     text: "000",
@@ -176,11 +179,14 @@ class SnakeView extends doric.ViewHolder {
                 this.high = doric.text({
                     text: "000",
                     textSize: 20,
+                    padding: {
+                        right: 40
+                    },
                 }),
             ]).apply({
                 layoutConfig: doric.layoutConfig().fit()
                     .configWidth(doric.LayoutSpec.MOST)
-                    .configAlignmnet(doric.Gravity.Left).configMargin({ left: 40, right: 40 }),
+                    .configAlignmnet(doric.Gravity.Left),
                 space: 10,
             }),
         ]).apply({

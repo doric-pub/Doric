@@ -10,7 +10,25 @@ export class DoricStackNode extends DoricGroupViewNode {
 
     layout() {
         super.layout()
-        this.configOffset()
+        Promise.resolve().then(_ => {
+            this.configSize()
+            this.configOffset()
+        })
+    }
+
+    configSize() {
+        if (this.layoutConfig.widthSpec === LayoutSpec.WRAP_CONTENT) {
+            const width = this.childNodes.reduce((prev, current) => {
+                return Math.max(prev, current.view.offsetWidth)
+            }, 0)
+            this.view.style.width = toPixelString(width)
+        }
+        if (this.layoutConfig.heightSpec === LayoutSpec.WRAP_CONTENT) {
+            const height = this.childNodes.reduce((prev, current) => {
+                return Math.max(prev, current.view.offsetHeight)
+            }, 0)
+            this.view.style.height = toPixelString(height)
+        }
     }
 
     configOffset() {

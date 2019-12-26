@@ -2242,23 +2242,44 @@ class Panel {
         this.context.shader.render(model);
     }
     hookBeforeNativeCall() {
+        if (Environment.platform !== 'h5') {
+            this.__root__.clean();
+            for (let v of this.headviews.values()) {
+                v.clean();
+            }
+        }
     }
     hookAfterNativeCall() {
-        //Here insert a native call to ensure the promise is resolved done.
-        Promise.resolve().then(() => {
+        if (Environment.platform !== 'h5') {
+            //Here insert a native call to ensure the promise is resolved done.
+            nativeEmpty();
             if (this.__root__.isDirty()) {
                 const model = this.__root__.toModel();
                 this.nativeRender(model);
-                this.__root__.clean();
             }
             for (let v of this.headviews.values()) {
                 if (v.isDirty()) {
                     const model = v.toModel();
                     this.nativeRender(model);
-                    v.clean();
                 }
             }
-        });
+        }
+        else {
+            Promise.resolve().then(() => {
+                if (this.__root__.isDirty()) {
+                    const model = this.__root__.toModel();
+                    this.nativeRender(model);
+                    this.__root__.clean();
+                }
+                for (let v of this.headviews.values()) {
+                    if (v.isDirty()) {
+                        const model = v.toModel();
+                        this.nativeRender(model);
+                        v.clean();
+                    }
+                }
+            });
+        }
     }
 }
 __decorate$2([
@@ -3720,6 +3741,7 @@ return __module.exports;
                 this.reusable = superNode.reusable;
             }
             this.view = this.build();
+            this.view.style.overflow = "hidden";
         }
         get paddingLeft() {
             return this.padding.left || 0;
@@ -4075,7 +4097,24 @@ return __module.exports;
         }
         layout() {
             super.layout();
-            this.configOffset();
+            Promise.resolve().then(_ => {
+                this.configSize();
+                this.configOffset();
+            });
+        }
+        configSize() {
+            if (this.layoutConfig.widthSpec === LayoutSpec.WRAP_CONTENT) {
+                const width = this.childNodes.reduce((prev, current) => {
+                    return Math.max(prev, current.view.offsetWidth);
+                }, 0);
+                this.view.style.width = toPixelString(width);
+            }
+            if (this.layoutConfig.heightSpec === LayoutSpec.WRAP_CONTENT) {
+                const height = this.childNodes.reduce((prev, current) => {
+                    return Math.max(prev, current.view.offsetHeight);
+                }, 0);
+                this.view.style.height = toPixelString(height);
+            }
         }
         configOffset() {
             this.childNodes.forEach(e => {
@@ -4160,6 +4199,15 @@ return __module.exports;
                     + (((_f = (_e = e.layoutConfig) === null || _e === void 0 ? void 0 : _e.margin) === null || _f === void 0 ? void 0 : _f.bottom) || 0));
                 e.view.style.marginLeft = toPixelString(((_h = (_g = e.layoutConfig) === null || _g === void 0 ? void 0 : _g.margin) === null || _h === void 0 ? void 0 : _h.left) || 0);
                 e.view.style.marginRight = toPixelString(((_k = (_j = e.layoutConfig) === null || _j === void 0 ? void 0 : _j.margin) === null || _k === void 0 ? void 0 : _k.right) || 0);
+                if ((e.layoutConfig.alignment & LEFT) === LEFT) {
+                    e.view.style.alignSelf = "flex-start";
+                }
+                else if ((e.layoutConfig.alignment & RIGHT) === RIGHT) {
+                    e.view.style.alignSelf = "flex-end";
+                }
+                else if ((e.layoutConfig.alignment & CENTER_X) === CENTER_X) {
+                    e.view.style.alignSelf = "center";
+                }
             });
         }
     }
@@ -4220,6 +4268,15 @@ return __module.exports;
                     + (((_f = (_e = e.layoutConfig) === null || _e === void 0 ? void 0 : _e.margin) === null || _f === void 0 ? void 0 : _f.right) || 0));
                 e.view.style.marginTop = toPixelString(((_h = (_g = e.layoutConfig) === null || _g === void 0 ? void 0 : _g.margin) === null || _h === void 0 ? void 0 : _h.top) || 0);
                 e.view.style.marginBottom = toPixelString(((_k = (_j = e.layoutConfig) === null || _j === void 0 ? void 0 : _j.margin) === null || _k === void 0 ? void 0 : _k.bottom) || 0);
+                if ((e.layoutConfig.alignment & TOP) === TOP) {
+                    e.view.style.alignSelf = "flex-start";
+                }
+                else if ((e.layoutConfig.alignment & BOTTOM) === BOTTOM) {
+                    e.view.style.alignSelf = "flex-end";
+                }
+                else if ((e.layoutConfig.alignment & CENTER_Y) === CENTER_Y) {
+                    e.view.style.alignSelf = "center";
+                }
             });
         }
     }
@@ -4479,6 +4536,13 @@ return __module.exports;
         }
     }
 
+    class NavigatorPlugin extends DoricPlugin {
+        push(args) {
+        }
+        pop() {
+        }
+    }
+
     const bundles = new Map;
     const plugins = new Map;
     const nodes = new Map;
@@ -4500,6 +4564,7 @@ return __module.exports;
     registerPlugin('shader', ShaderPlugin);
     registerPlugin('modal', ModalPlugin);
     registerPlugin('storage', StoragePlugin);
+    registerPlugin('navigator', NavigatorPlugin);
     registerViewNode('Stack', DoricStackNode);
     registerViewNode('VLayout', DoricVLayoutNode);
     registerViewNode('HLayout', DoricHLayoutNode);

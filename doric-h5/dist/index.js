@@ -3754,12 +3754,11 @@ return __module.exports;
         init(superNode) {
             if (superNode) {
                 this.superNode = superNode;
-                if (this instanceof DoricSuperViewNode) {
+                if (this instanceof DoricSuperNode) {
                     this.reusable = superNode.reusable;
                 }
             }
             this.view = this.build();
-            this.view.style.overflow = "hidden";
         }
         get paddingLeft() {
             return this.padding.left || 0;
@@ -3941,7 +3940,7 @@ return __module.exports;
             Reflect.apply(this.context.invokeEntityMethod, this.context, argumentsList);
         }
     }
-    class DoricSuperViewNode extends DoricViewNode {
+    class DoricSuperNode extends DoricViewNode {
         constructor() {
             super(...arguments);
             this.reusable = false;
@@ -3987,11 +3986,15 @@ return __module.exports;
             this.subModels.delete(id);
         }
     }
-    class DoricGroupViewNode extends DoricSuperViewNode {
+    class DoricGroupViewNode extends DoricSuperNode {
         constructor() {
             super(...arguments);
             this.childNodes = [];
             this.childViewIds = [];
+        }
+        init(superNode) {
+            super.init(superNode);
+            this.view.style.overflow = "hidden";
         }
         blendProps(v, propName, prop) {
             if (propName === 'children') {
@@ -4406,7 +4409,7 @@ return __module.exports;
         }
     }
 
-    class DoricScrollerNode extends DoricSuperViewNode {
+    class DoricScrollerNode extends DoricSuperNode {
         constructor() {
             super(...arguments);
             this.childViewId = "";

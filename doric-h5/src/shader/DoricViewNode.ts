@@ -64,7 +64,7 @@ export abstract class DoricViewNode {
     viewId = ""
     viewType = "View"
     context: DoricContext
-    superNode?: DoricSuperViewNode
+    superNode?: DoricSuperNode
     layoutConfig = {
         widthSpec: LayoutSpec.EXACTLY,
         heightSpec: LayoutSpec.EXACTLY,
@@ -104,15 +104,14 @@ export abstract class DoricViewNode {
         this.context = context
     }
 
-    init(superNode?: DoricSuperViewNode) {
+    init(superNode?: DoricSuperNode) {
         if (superNode) {
             this.superNode = superNode
-            if (this instanceof DoricSuperViewNode) {
+            if (this instanceof DoricSuperNode) {
                 this.reusable = superNode.reusable
             }
         }
         this.view = this.build()
-        this.view.style.overflow = "hidden"
     }
 
     abstract build(): HTMLElement
@@ -315,7 +314,7 @@ export abstract class DoricViewNode {
 }
 
 
-export abstract class DoricSuperViewNode extends DoricViewNode {
+export abstract class DoricSuperNode extends DoricViewNode {
     reusable = false
 
     subModels: Map<String, DVModel> = new Map
@@ -367,9 +366,15 @@ export abstract class DoricSuperViewNode extends DoricViewNode {
     abstract getSubNodeById(viewId: string): DoricViewNode | undefined
 }
 
-export abstract class DoricGroupViewNode extends DoricSuperViewNode {
+export abstract class DoricGroupViewNode extends DoricSuperNode {
     childNodes: DoricViewNode[] = []
     childViewIds: string[] = []
+
+    init(superNode?: DoricSuperNode) {
+        super.init(superNode)
+        this.view.style.overflow = "hidden"
+    }
+
 
     blendProps(v: HTMLElement, propName: string, prop: any) {
         if (propName === 'children') {

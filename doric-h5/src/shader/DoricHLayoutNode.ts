@@ -48,6 +48,13 @@ export class DoricHLayoutNode extends DoricGroupViewNode {
                     + (e.layoutConfig?.margin?.right || 0))
             e.view.style.marginTop = toPixelString(e.layoutConfig?.margin?.top || 0)
             e.view.style.marginBottom = toPixelString(e.layoutConfig?.margin?.bottom || 0)
+            if ((e.layoutConfig.alignment & TOP) === TOP) {
+                e.view.style.alignSelf = "flex-start"
+            } else if ((e.layoutConfig.alignment & BOTTOM) === BOTTOM) {
+                e.view.style.alignSelf = "flex-end"
+            } else if ((e.layoutConfig.alignment & CENTER_Y) === CENTER_Y) {
+                e.view.style.alignSelf = "center"
+            }
         })
     }
 }

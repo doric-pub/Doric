@@ -110,6 +110,7 @@ export abstract class DoricViewNode {
             this.reusable = superNode.reusable
         }
         this.view = this.build()
+        this.view.style.overflow = "hidden"
     }
 
     abstract build(): HTMLElement

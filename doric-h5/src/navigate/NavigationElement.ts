@@ -28,6 +28,7 @@ export class NavigationElement extends HTMLElement {
         const currentNode = this.currentNode
         if (lastElement && currentNode) {
             this.replaceChild(lastElement, currentNode)
+            currentNode.onDestroy()
         } else {
             window.history.back()
         }

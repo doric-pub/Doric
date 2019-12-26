@@ -73,7 +73,7 @@ public class NestedSliderNode extends GroupNode<ViewPager> implements ViewPager.
             @NotNull
             @Override
             public Object instantiateItem(@NotNull ViewGroup container, int position) {
-                container.addView(slideItems.get(position), 0);
+                container.addView(slideItems.get(position));
                 return slideItems.get(position);
             }
         });

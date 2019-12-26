@@ -3760,6 +3760,7 @@ return __module.exports;
             return ((_a = this.border) === null || _a === void 0 ? void 0 : _a.width) || 0;
         }
         blend(props) {
+            this.view.id = `${this.viewId}`;
             for (let key in props) {
                 this.blendProps(this.view, key, props[key]);
             }
@@ -4537,9 +4538,31 @@ return __module.exports;
     }
 
     class NavigatorPlugin extends DoricPlugin {
+        constructor() {
+            super(...arguments);
+            this.navigation = document.getElementsByTagName('doric-navigation')[0];
+        }
         push(args) {
+            var _a;
+            if (this.navigation) {
+                const div = new DoricElement;
+                div.src = args.scheme;
+                div.alias = ((_a = args.config) === null || _a === void 0 ? void 0 : _a.alias) || args.scheme;
+                this.navigation.push(div);
+                return Promise.resolve();
+            }
+            else {
+                return Promise.reject('Not implemented');
+            }
         }
         pop() {
+            if (this.navigation) {
+                this.navigation.pop();
+                return Promise.resolve();
+            }
+            else {
+                return Promise.reject('Not implemented');
+            }
         }
     }
 
@@ -4734,15 +4757,36 @@ ${content}
     class DoricElement extends HTMLElement {
         constructor() {
             super();
-            this.source = this.getAttribute('src') || "";
-            this.alias = this.getAttribute('alias') || this.source;
-            axios.get(this.source).then(result => {
-                this.load(result.data);
-            });
+        }
+        get src() {
+            return this.getAttribute('src');
+        }
+        get alias() {
+            return this.getAttribute('alias');
+        }
+        set src(v) {
+            this.setAttribute('src', v);
+        }
+        set alias(v) {
+            this.setAttribute('alias', v);
+        }
+        connectedCallback() {
+            if (this.src && this.context === undefined) {
+                axios.get(this.src).then(result => {
+                    this.load(result.data);
+                });
+            }
+        }
+        disconnectedCallback() {
+        }
+        adoptedCallback() {
+        }
+        attributeChangedCallback() {
         }
         load(content) {
             this.context = new DoricContext(content);
             const divElement = document.createElement('div');
+            divElement.style.position = 'relative';
             divElement.style.height = '100%';
             this.append(divElement);
             this.context.rootNode.view = divElement;
@@ -4753,7 +4797,43 @@ ${content}
         }
     }
 
+    class NavigationElement extends HTMLElement {
+        constructor() {
+            super(...arguments);
+            this.elementStack = [];
+        }
+        get currentNode() {
+            for (let i = 0; i < this.childNodes.length; i++) {
+                if (this.childNodes[i] instanceof DoricElement) {
+                    return this.childNodes[i];
+                }
+            }
+            return undefined;
+        }
+        push(element) {
+            const currentNode = this.currentNode;
+            if (currentNode) {
+                this.elementStack.push(currentNode);
+                this.replaceChild(element, currentNode);
+            }
+            else {
+                this.appendChild(element);
+            }
+        }
+        pop() {
+            const lastElement = this.elementStack.pop();
+            const currentNode = this.currentNode;
+            if (lastElement && currentNode) {
+                this.replaceChild(lastElement, currentNode);
+            }
+            else {
+                window.history.back();
+            }
+        }
+    }
+
     window.customElements.define('doric-div', DoricElement);
+    window.customElements.define('doric-navigation', NavigationElement);
 
 }(axios, doric));
 //# sourceMappingURL=index.js.map

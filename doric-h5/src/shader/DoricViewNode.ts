@@ -136,6 +136,7 @@ export abstract class DoricViewNode {
     }
 
     blend(props: { [index: string]: any }) {
+        this.view.id = `${this.viewId}`
         for (let key in props) {
             this.blendProps(this.view, key, props[key])
         }

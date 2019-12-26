@@ -9,6 +9,7 @@ import { DoricImageNode } from "./shader/DoricImageNode"
 import { DoricScrollerNode } from "./shader/DoricScrollerNode"
 import { ModalPlugin } from './plugins/ModalPlugin'
 import { StoragePlugin } from "./plugins/StoragePlugin"
+import { NavigatorPlugin } from "./plugins/NavigatorPlugin"
 
 const bundles: Map<string, string> = new Map
 
@@ -41,9 +42,12 @@ export function acquireViewNode(name: string) {
     return nodes.get(name)
 }
 
+
+
 registerPlugin('shader', ShaderPlugin)
 registerPlugin('modal', ModalPlugin)
 registerPlugin('storage', StoragePlugin)
+registerPlugin('navigator', NavigatorPlugin)
 
 registerViewNode('Stack', DoricStackNode)
 registerViewNode('VLayout', DoricVLayoutNode)

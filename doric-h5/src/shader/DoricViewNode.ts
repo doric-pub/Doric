@@ -104,10 +104,12 @@ export abstract class DoricViewNode {
         this.context = context
     }
 
-    init(superNode: DoricSuperViewNode) {
-        this.superNode = superNode
-        if (this instanceof DoricSuperViewNode) {
-            this.reusable = superNode.reusable
+    init(superNode?: DoricSuperViewNode) {
+        if (superNode) {
+            this.superNode = superNode
+            if (this instanceof DoricSuperViewNode) {
+                this.reusable = superNode.reusable
+            }
         }
         this.view = this.build()
         this.view.style.overflow = "hidden"
@@ -247,8 +249,9 @@ export abstract class DoricViewNode {
                 this.offsetY = prop as number
                 break
             case 'onClick':
-                this.view.onclick = () => {
+                this.view.onclick = (event: Event) => {
                     this.callJSResponse(prop as string)
+                    event.stopPropagation()
                 }
                 break
             case 'corners':

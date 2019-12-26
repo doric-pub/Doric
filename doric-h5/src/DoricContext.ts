@@ -3,6 +3,7 @@ import { Panel } from 'doric'
 import { DoricPlugin } from "./DoricPlugin"
 import { createContext, destroyContext } from "./DoricDriver"
 import { DoricStackNode } from './shader/DoricStackNode'
+import { DoricViewNode } from './shader/DoricViewNode'
 const doricContexts: Map<string, DoricContext> = new Map
 
 let __contextId__ = 0
@@ -18,6 +19,8 @@ export class DoricContext {
     contextId = getContextId()
     pluginInstances: Map<string, DoricPlugin> = new Map
     rootNode: DoricStackNode
+    headNodes: Map<string, DoricViewNode> = new Map
+
     constructor(content: string) {
         createContext(this.contextId, content)
         doricContexts.set(this.contextId, this)
@@ -44,6 +47,9 @@ export class DoricContext {
     }
 
     teardown() {
+        for (let plugin of this.pluginInstances.values()) {
+            plugin.onTearDown()
+        }
         destroyContext(this.contextId)
     }
 }

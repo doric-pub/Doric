@@ -736,23 +736,44 @@ class Panel {
         this.context.shader.render(model);
     }
     hookBeforeNativeCall() {
+        if (Environment.platform !== 'h5') {
+            this.__root__.clean();
+            for (let v of this.headviews.values()) {
+                v.clean();
+            }
+        }
     }
     hookAfterNativeCall() {
-        //Here insert a native call to ensure the promise is resolved done.
-        Promise.resolve().then(() => {
+        if (Environment.platform !== 'h5') {
+            //Here insert a native call to ensure the promise is resolved done.
+            nativeEmpty();
             if (this.__root__.isDirty()) {
                 const model = this.__root__.toModel();
                 this.nativeRender(model);
-                this.__root__.clean();
             }
             for (let v of this.headviews.values()) {
                 if (v.isDirty()) {
                     const model = v.toModel();
                     this.nativeRender(model);
-                    v.clean();
                 }
             }
-        });
+        }
+        else {
+            Promise.resolve().then(() => {
+                if (this.__root__.isDirty()) {
+                    const model = this.__root__.toModel();
+                    this.nativeRender(model);
+                    this.__root__.clean();
+                }
+                for (let v of this.headviews.values()) {
+                    if (v.isDirty()) {
+                        const model = v.toModel();
+                        this.nativeRender(model);
+                        v.clean();
+                    }
+                }
+            });
+        }
     }
 }
 __decorate$2([

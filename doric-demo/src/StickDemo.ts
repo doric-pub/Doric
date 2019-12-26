@@ -77,7 +77,7 @@ class StickDemo extends Panel {
                                 return new FlowLayoutItem().apply({
                                     backgroundColor: colors[itemIdx % colors.length],
                                     height: 50,
-                                    layoutConfig: layoutConfig().configWidth(LayoutSpec.JUST),
+                                    layoutConfig: layoutConfig().configWidth(LayoutSpec.MOST),
                                 }).also(it => {
                                     it.addChild(text({
                                         text: `In Page ${idx},${itemIdx}`,

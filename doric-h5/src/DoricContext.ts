@@ -1,7 +1,7 @@
 import { jsObtainContext, jsCallEntityMethod } from 'doric/src/runtime/sandbox'
 import { Panel } from 'doric'
 import { DoricPlugin } from "./DoricPlugin"
-import { createContext } from "./DoricDriver"
+import { createContext, destroyContext } from "./DoricDriver"
 import { DoricStackNode } from './shader/DoricStackNode'
 const doricContexts: Map<string, DoricContext> = new Map
 
@@ -43,4 +43,7 @@ export class DoricContext {
         this.invokeEntityMethod("__init__", frame, extra ? JSON.stringify(extra) : undefined)
     }
 
+    teardown() {
+        destroyContext(this.contextId)
+    }
 }

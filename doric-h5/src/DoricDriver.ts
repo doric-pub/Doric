@@ -1,11 +1,10 @@
-import { jsCallResolve, jsCallReject, jsCallbackTimer, jsCallEntityMethod } from 'doric/src/runtime/sandbox'
+import { jsCallResolve, jsCallReject, jsCallbackTimer, jsCallEntityMethod, jsReleaseContext } from 'doric/src/runtime/sandbox'
 import { acquireJSBundle, acquirePlugin } from './DoricRegistry'
 import { getDoricContext } from './DoricContext'
 import { DoricPlugin } from './DoricPlugin'
 
-let __scriptId__ = 0
-function getScriptId() {
-    return `script_${__scriptId__++}`
+function getScriptId(contextId: string) {
+    return `__doric_script_${contextId}`
 }
 
 const originSetTimeout = window.setTimeout
@@ -19,10 +18,10 @@ export function injectGlobalObject(name: string, value: any) {
     Reflect.set(window, name, value, window)
 }
 
-export function loadJS(script: string) {
+export function loadJS(contextId: string, script: string) {
     const scriptElement = document.createElement('script')
     scriptElement.text = script
-    scriptElement.id = getScriptId()
+    scriptElement.id = getScriptId(contextId)
     document.body.appendChild(scriptElement)
 }
 
@@ -67,7 +66,7 @@ function initDoric() {
             console.log(`Cannot require JS Bundle :${moduleName}`)
             return false
         } else {
-            loadJS(packageModuleScript(moduleName, packageModuleScript(name, bundle)))
+            loadJS(moduleName, packageModuleScript(moduleName, packageModuleScript(name, bundle)))
             return true
         }
     })
@@ -136,7 +135,13 @@ function initDoric() {
 }
 
 export function createContext(contextId: string, content: string) {
-    loadJS(packageCreateContext(contextId, content))
+    loadJS(contextId, packageCreateContext(contextId, content))
 }
-
+export function destroyContext(contextId: string) {
+    jsReleaseContext(contextId)
+    const scriptElement = document.getElementById(getScriptId(contextId))
+    if (scriptElement) {
+        document.body.removeChild(scriptElement)
+    }
+}
 initDoric()

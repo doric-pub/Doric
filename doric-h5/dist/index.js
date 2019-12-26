@@ -4595,9 +4595,8 @@ return __module.exports;
     registerViewNode('Image', DoricImageNode);
     registerViewNode('Scroller', DoricScrollerNode);
 
-    let __scriptId__ = 0;
-    function getScriptId() {
-        return `script_${__scriptId__++}`;
+    function getScriptId(contextId) {
+        return `__doric_script_${contextId}`;
     }
     const originSetTimeout = window.setTimeout;
     const originClearTimeout = window.clearTimeout;
@@ -4607,10 +4606,10 @@ return __module.exports;
     function injectGlobalObject(name, value) {
         Reflect.set(window, name, value, window);
     }
-    function loadJS(script) {
+    function loadJS(contextId, script) {
         const scriptElement = document.createElement('script');
         scriptElement.text = script;
-        scriptElement.id = getScriptId();
+        scriptElement.id = getScriptId(contextId);
         document.body.appendChild(scriptElement);
     }
     function packageModuleScript(name, content) {
@@ -4650,7 +4649,7 @@ ${content}
                 return false;
             }
             else {
-                loadJS(packageModuleScript(moduleName, packageModuleScript(name, bundle)));
+                loadJS(moduleName, packageModuleScript(moduleName, packageModuleScript(name, bundle)));
                 return true;
             }
         });
@@ -4718,7 +4717,14 @@ ${content}
         });
     }
     function createContext(contextId, content) {
-        loadJS(packageCreateContext(contextId, content));
+        loadJS(contextId, packageCreateContext(contextId, content));
+    }
+    function destroyContext(contextId) {
+        sandbox.jsReleaseContext(contextId);
+        const scriptElement = document.getElementById(getScriptId(contextId));
+        if (scriptElement) {
+            document.body.removeChild(scriptElement);
+        }
     }
     initDoric();
 
@@ -4752,6 +4758,9 @@ ${content}
         init(frame, extra) {
             this.invokeEntityMethod("__init__", frame, extra ? JSON.stringify(extra) : undefined);
         }
+        teardown() {
+            destroyContext(this.contextId);
+        }
     }
 
     class DoricElement extends HTMLElement {
@@ -4782,6 +4791,10 @@ ${content}
         adoptedCallback() {
         }
         attributeChangedCallback() {
+        }
+        onDestroy() {
+            var _a;
+            (_a = this.context) === null || _a === void 0 ? void 0 : _a.teardown();
         }
         load(content) {
             this.context = new DoricContext(content);
@@ -4825,6 +4838,7 @@ ${content}
             const currentNode = this.currentNode;
             if (lastElement && currentNode) {
                 this.replaceChild(lastElement, currentNode);
+                currentNode.onDestroy();
             }
             else {
                 window.history.back();

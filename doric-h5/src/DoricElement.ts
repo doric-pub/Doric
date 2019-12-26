@@ -30,7 +30,6 @@ export class DoricElement extends HTMLElement {
     }
 
     disconnectedCallback() {
-
     }
 
     adoptedCallback() {
@@ -39,6 +38,10 @@ export class DoricElement extends HTMLElement {
 
     attributeChangedCallback() {
 
+    }
+
+    onDestroy() {
+        this.context?.teardown()
     }
 
     load(content: string) {

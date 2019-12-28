@@ -9,6 +9,7 @@ export class DoricListNode extends DoricSuperNode {
     batchCount = 15
     loadMore = false
     childNodes: DoricListItemNode[] = []
+    loadMoreViewNode?: DoricListItemNode
     blendProps(v: HTMLParagraphElement, propName: string, prop: any) {
         switch (propName) {
             case "itemCount":
@@ -45,15 +46,32 @@ export class DoricListNode extends DoricSuperNode {
     onBlended() {
         super.onBlended()
         if (this.childNodes.length !== this.itemCount) {
-            const ret = this.callJSResponse("renderBunchedItems", 0, this.itemCount) as DVModel[]
-            this.childNodes = ret.map(e => {
+            const ret = this.callJSResponse("renderBunchedItems", this.childNodes.length, this.itemCount) as DVModel[]
+            this.childNodes = this.childNodes.concat(ret.map(e => {
                 const viewNode = DoricViewNode.create(this.context, e.type) as DoricListItemNode
                 viewNode.viewId = e.id
                 viewNode.init(this)
                 viewNode.blend(e.props)
                 this.view.appendChild(viewNode.view)
                 return viewNode
-            })
+            }))
+        }
+        if (this.loadMoreViewNode && this.view.contains(this.loadMoreViewNode.view)) {
+            this.view.removeChild(this.loadMoreViewNode.view)
+        }
+        if (this.loadMore) {
+            if (!this.loadMoreViewNode) {
+                const loadMoreViewModel = this.getSubModel(this.loadMoreViewId || "")
+                if (loadMoreViewModel) {
+                    this.loadMoreViewNode = DoricViewNode.create(this.context, loadMoreViewModel.type) as DoricListItemNode
+                    this.loadMoreViewNode.viewId = loadMoreViewModel.id
+                    this.loadMoreViewNode.init(this)
+                    this.loadMoreViewNode.blend(loadMoreViewModel.props)
+                }
+            }
+            if (this.loadMoreViewNode) {
+                this.view.appendChild(this.loadMoreViewNode.view)
+            }
         }
     }
     blendSubNode(model: DVModel) {
@@ -64,12 +82,28 @@ export class DoricListNode extends DoricSuperNode {
     }
 
     getSubNodeById(viewId: string) {
+        if (viewId === this.loadMoreViewId) {
+            return this.loadMoreViewNode
+        }
         return this.childNodes.filter(e => e.viewId === viewId)[0]
+    }
+
+    onScrollToEnd() {
+        if (this.loadMore && this.onLoadMoreFuncId) {
+            this.callJSResponse(this.onLoadMoreFuncId)
+        }
     }
 
     build() {
         const ret = document.createElement('div')
         ret.style.overflow = "scroll"
+        ret.addEventListener("scroll", () => {
+            if (this.loadMore) {
+                if (ret.scrollTop + ret.offsetHeight === ret.scrollHeight) {
+                    this.onScrollToEnd()
+                }
+            }
+        })
         return ret
     }
 }

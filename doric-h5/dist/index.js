@@ -3937,7 +3937,7 @@ return __module.exports;
             for (let i = 1; i < arguments.length; i++) {
                 argumentsList.push(arguments[i]);
             }
-            Reflect.apply(this.context.invokeEntityMethod, this.context, argumentsList);
+            return Reflect.apply(this.context.invokeEntityMethod, this.context, argumentsList);
         }
     }
     class DoricSuperNode extends DoricViewNode {
@@ -4643,6 +4643,110 @@ return __module.exports;
         }
     }
 
+    class DoricListItemNode extends DoricStackNode {
+    }
+
+    class DoricListNode extends DoricSuperNode {
+        constructor() {
+            super(...arguments);
+            this.itemCount = 0;
+            this.batchCount = 15;
+            this.loadMore = false;
+            this.childNodes = [];
+        }
+        blendProps(v, propName, prop) {
+            switch (propName) {
+                case "itemCount":
+                    this.itemCount = prop;
+                    break;
+                case "renderItem":
+                    this.reset();
+                    this.renderItemFuncId = prop;
+                    break;
+                case "onLoadMore":
+                    this.onLoadMoreFuncId = prop;
+                    break;
+                case "loadMoreView":
+                    this.loadMoreViewId = prop;
+                    break;
+                case "batchCount":
+                    this.batchCount = prop;
+                    break;
+                case "loadMore":
+                    this.loadMore = prop;
+                    break;
+                default:
+                    super.blendProps(v, propName, prop);
+                    break;
+            }
+        }
+        reset() {
+            while (this.view.lastElementChild) {
+                this.view.removeChild(this.view.lastElementChild);
+            }
+        }
+        onBlended() {
+            super.onBlended();
+            if (this.childNodes.length !== this.itemCount) {
+                const ret = this.callJSResponse("renderBunchedItems", this.childNodes.length, this.itemCount);
+                this.childNodes = this.childNodes.concat(ret.map(e => {
+                    const viewNode = DoricViewNode.create(this.context, e.type);
+                    viewNode.viewId = e.id;
+                    viewNode.init(this);
+                    viewNode.blend(e.props);
+                    this.view.appendChild(viewNode.view);
+                    return viewNode;
+                }));
+            }
+            if (this.loadMoreViewNode && this.view.contains(this.loadMoreViewNode.view)) {
+                this.view.removeChild(this.loadMoreViewNode.view);
+            }
+            if (this.loadMore) {
+                if (!this.loadMoreViewNode) {
+                    const loadMoreViewModel = this.getSubModel(this.loadMoreViewId || "");
+                    if (loadMoreViewModel) {
+                        this.loadMoreViewNode = DoricViewNode.create(this.context, loadMoreViewModel.type);
+                        this.loadMoreViewNode.viewId = loadMoreViewModel.id;
+                        this.loadMoreViewNode.init(this);
+                        this.loadMoreViewNode.blend(loadMoreViewModel.props);
+                    }
+                }
+                if (this.loadMoreViewNode) {
+                    this.view.appendChild(this.loadMoreViewNode.view);
+                }
+            }
+        }
+        blendSubNode(model) {
+            const viewNode = this.getSubNodeById(model.id);
+            if (viewNode) {
+                viewNode.blend(model.props);
+            }
+        }
+        getSubNodeById(viewId) {
+            if (viewId === this.loadMoreViewId) {
+                return this.loadMoreViewNode;
+            }
+            return this.childNodes.filter(e => e.viewId === viewId)[0];
+        }
+        onScrollToEnd() {
+            if (this.loadMore && this.onLoadMoreFuncId) {
+                this.callJSResponse(this.onLoadMoreFuncId);
+            }
+        }
+        build() {
+            const ret = document.createElement('div');
+            ret.style.overflow = "scroll";
+            ret.addEventListener("scroll", () => {
+                if (this.loadMore) {
+                    if (ret.scrollTop + ret.offsetHeight === ret.scrollHeight) {
+                        this.onScrollToEnd();
+                    }
+                }
+            });
+            return ret;
+        }
+    }
+
     const bundles = new Map;
     const plugins = new Map;
     const nodes = new Map;
@@ -4672,6 +4776,8 @@ return __module.exports;
     registerViewNode('Text', DoricTextNode);
     registerViewNode('Image', DoricImageNode);
     registerViewNode('Scroller', DoricScrollerNode);
+    registerViewNode('ListItem', DoricListItemNode);
+    registerViewNode('List', DoricListNode);
 
     function getScriptId(contextId) {
         return `__doric_script_${contextId}`;
@@ -4832,7 +4938,7 @@ ${content}
             for (let i = 0; i < arguments.length; i++) {
                 argumentsList.push(arguments[i]);
             }
-            Reflect.apply(sandbox.jsCallEntityMethod, this.panel, argumentsList);
+            return Reflect.apply(sandbox.jsCallEntityMethod, this.panel, argumentsList);
         }
         init(frame, extra) {
             this.invokeEntityMethod("__init__", frame, extra ? JSON.stringify(extra) : undefined);

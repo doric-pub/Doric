@@ -309,7 +309,7 @@ export abstract class DoricViewNode {
         for (let i = 1; i < arguments.length; i++) {
             argumentsList.push(arguments[i])
         }
-        Reflect.apply(this.context.invokeEntityMethod, this.context, argumentsList)
+        return Reflect.apply(this.context.invokeEntityMethod, this.context, argumentsList)
     }
 }
 

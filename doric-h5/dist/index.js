@@ -3796,7 +3796,7 @@ return __module.exports;
         configWidth() {
             switch (this.layoutConfig.widthSpec) {
                 case LayoutSpec.WRAP_CONTENT:
-                    this.view.style.width = "fit-content";
+                    this.view.style.width = "max-content";
                     break;
                 case LayoutSpec.AT_MOST:
                     this.view.style.width = "100%";
@@ -3812,7 +3812,7 @@ return __module.exports;
         configHeight() {
             switch (this.layoutConfig.heightSpec) {
                 case LayoutSpec.WRAP_CONTENT:
-                    this.view.style.height = "fit-content";
+                    this.view.style.height = "max-content";
                     break;
                 case LayoutSpec.AT_MOST:
                     this.view.style.height = "100%";

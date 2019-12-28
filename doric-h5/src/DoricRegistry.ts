@@ -11,6 +11,8 @@ import { ModalPlugin } from './plugins/ModalPlugin'
 import { StoragePlugin } from "./plugins/StoragePlugin"
 import { NavigatorPlugin } from "./navigate/NavigatorPlugin"
 import { PopoverPlugin } from './plugins/PopoverPlugin'
+import { DoricListItemNode } from "./shader/DoricListItemNode"
+import { DoricListNode } from "./shader/DoricListNode"
 
 const bundles: Map<string, string> = new Map
 
@@ -57,3 +59,5 @@ registerViewNode('HLayout', DoricHLayoutNode)
 registerViewNode('Text', DoricTextNode)
 registerViewNode('Image', DoricImageNode)
 registerViewNode('Scroller', DoricScrollerNode)
+registerViewNode('ListItem', DoricListItemNode)
+registerViewNode('List', DoricListNode)

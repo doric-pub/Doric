@@ -36,7 +36,7 @@ export class DoricContext {
         for (let i = 0; i < arguments.length; i++) {
             argumentsList.push(arguments[i])
         }
-        Reflect.apply(jsCallEntityMethod, this.panel, argumentsList)
+        return Reflect.apply(jsCallEntityMethod, this.panel, argumentsList)
     }
 
     init(frame: {

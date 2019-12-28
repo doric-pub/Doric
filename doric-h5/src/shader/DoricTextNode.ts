@@ -12,7 +12,7 @@ export class DoricTextNode extends DoricViewNode {
         return div
     }
 
-    blendProps(v: HTMLParagraphElement, propName: string, prop: any) {
+    blendProps(v: HTMLElement, propName: string, prop: any) {
         switch (propName) {
             case 'text':
                 this.textElement.innerText = prop

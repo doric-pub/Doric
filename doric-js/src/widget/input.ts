@@ -17,6 +17,7 @@ import { View, IView, Property } from "../ui/view";
 import { Color } from "../util/color";
 import { Gravity } from "../util/gravity";
 import { BridgeContext } from "../runtime/global";
+import { layoutConfig } from "../util/index.util";
 
 export interface IInput extends IView {
     text?: string
@@ -77,4 +78,13 @@ export class Input extends View implements IInput {
     releaseFocus(context: BridgeContext) {
         return this.nativeChannel(context, 'releaseFocus')()
     }
+}
+
+export function input(config: IInput) {
+    const ret = new Input
+    ret.layoutConfig = layoutConfig().just()
+    for (let key in config) {
+        Reflect.set(ret, key, Reflect.get(config, key, config), ret)
+    }
+    return ret
 }

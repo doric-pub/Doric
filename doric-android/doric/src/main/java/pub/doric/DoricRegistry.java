@@ -28,6 +28,7 @@ import pub.doric.plugin.PopoverPlugin;
 import pub.doric.plugin.ShaderPlugin;
 import pub.doric.plugin.StoragePlugin;
 import pub.doric.refresh.RefreshableNode;
+import pub.doric.shader.DraggableNode;
 import pub.doric.shader.HLayoutNode;
 import pub.doric.shader.ImageNode;
 import pub.doric.shader.InputNode;
@@ -110,6 +111,7 @@ public class DoricRegistry {
         this.registerViewNode(FlowLayoutItemNode.class);
         this.registerViewNode(InputNode.class);
         this.registerViewNode(NestedSliderNode.class);
+        this.registerViewNode(DraggableNode.class);
         initRegistry(this);
     }
 

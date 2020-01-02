@@ -3142,6 +3142,33 @@ __decorate$a([
     __metadata$a("design:type", Function)
 ], NestedSlider.prototype, "onPageSlided", void 0);
 
+var __decorate$b = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata$b = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+class Draggable extends Stack {
+}
+__decorate$b([
+    Property,
+    __metadata$b("design:type", Function)
+], Draggable.prototype, "onDrag", void 0);
+function draggable(config, views) {
+    const ret = new Draggable;
+    ret.layoutConfig = layoutConfig().fit();
+    for (let key in config) {
+        Reflect.set(ret, key, Reflect.get(config, key, config), ret);
+    }
+    for (let v of views) {
+        ret.addChild(v);
+    }
+    return ret;
+}
+
 function modal(context) {
     return {
         toast: (msg, gravity = Gravity.Bottom) => {
@@ -3633,6 +3660,7 @@ exports.CENTER = CENTER;
 exports.CENTER_X = CENTER_X;
 exports.CENTER_Y = CENTER_Y;
 exports.Color = Color;
+exports.Draggable = Draggable;
 exports.FlowLayout = FlowLayout;
 exports.FlowLayoutItem = FlowLayoutItem;
 exports.Gravity = Gravity;
@@ -3670,6 +3698,7 @@ exports.View = View;
 exports.ViewHolder = ViewHolder;
 exports.ViewModel = ViewModel;
 exports.animate = animate;
+exports.draggable = draggable;
 exports.flowItem = flowItem;
 exports.flowlayout = flowlayout;
 exports.gravity = gravity;

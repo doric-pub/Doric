@@ -44,6 +44,7 @@
 #import "DoricAnimatePlugin.h"
 #import "DoricNestedSliderNode.h"
 #import "DoricInputNode.h"
+#import "DoricDraggableNode.h"
 #import "DoricLibrary.h"
 
 
@@ -124,6 +125,7 @@
     [self registerViewNode:DoricFlowLayoutNode.class withName:@"FlowLayout"];
     [self registerViewNode:DoricNestedSliderNode.class withName:@"NestedSlider"];
     [self registerViewNode:DoricInputNode.class withName:@"Input"];
+    [self registerViewNode:DoricDraggableNode.class withName:@"Draggable"];
 }
 
 - (void)registerJSBundle:(NSString *)bundle withName:(NSString *)name {

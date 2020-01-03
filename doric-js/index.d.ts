@@ -53,6 +53,7 @@ declare module 'doric/lib/src/widget/index.widget' {
     export * from 'doric/lib/src/widget/flowlayout';
     export * from 'doric/lib/src/widget/input';
     export * from 'doric/lib/src/widget/nestedSlider';
+    export * from 'doric/lib/src/widget/draggable';
 }
 
 declare module 'doric/lib/src/native/index.native' {
@@ -651,6 +652,18 @@ declare module 'doric/lib/src/widget/nestedSlider' {
         slidePage(context: BridgeContext, page: number, smooth?: boolean): Promise<any>;
         getSlidedPage(context: BridgeContext): Promise<number>;
     }
+}
+
+declare module 'doric/lib/src/widget/draggable' {
+    import { View } from "doric/lib/src/ui/view";
+    import { IStack, Stack } from "doric/lib/src/widget/layouts";
+    export interface IDraggable extends IStack {
+        onDrag?: (x: number, y: number) => void;
+    }
+    export class Draggable extends Stack implements IDraggable {
+        onDrag?: (x: number, y: number) => void;
+    }
+    export function draggable(config: IDraggable, views: View[]): Draggable;
 }
 
 declare module 'doric/lib/src/native/modal' {

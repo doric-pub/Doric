@@ -140,6 +140,13 @@ declare module 'doric/lib/src/ui/view' {
                 */
             rotation?: number;
     }
+    export type NativeViewModel = {
+            id: string;
+            type: string;
+            props: {
+                    [index: string]: Model;
+            };
+    };
     export abstract class View implements Modeling, IView {
             width: number;
             height: number;
@@ -193,24 +200,12 @@ declare module 'doric/lib/src/ui/view' {
             get dirtyProps(): {
                     [index: string]: Model;
             };
-            nativeViewModel: {
-                    id: string;
-                    type: string;
-                    props: {
-                            [index: string]: Model;
-                    };
-            };
+            nativeViewModel: NativeViewModel;
             onPropertyChanged(propKey: string, oldV: Model, newV: Model): void;
             clean(): void;
             isDirty(): boolean;
             responseCallback(id: string, ...args: any): any;
-            toModel(): {
-                    id: string;
-                    type: string;
-                    props: {
-                            [index: string]: Model;
-                    };
-            };
+            toModel(): NativeViewModel;
             let(block: (it: this) => void): void;
             also(block: (it: this) => void): this;
             apply(config: IView): this;
@@ -238,13 +233,7 @@ declare module 'doric/lib/src/ui/view' {
             abstract allSubviews(): Iterable<View>;
             isDirty(): boolean;
             clean(): void;
-            toModel(): {
-                    id: string;
-                    type: string;
-                    props: {
-                            [index: string]: Model;
-                    };
-            };
+            toModel(): NativeViewModel;
     }
     export abstract class Group extends Superview {
             readonly children: View[];
@@ -481,7 +470,7 @@ declare module 'doric/lib/src/widget/image' {
 }
 
 declare module 'doric/lib/src/widget/list' {
-    import { View, Superview, IView } from "doric/lib/src/ui/view";
+    import { View, Superview, IView, NativeViewModel } from "doric/lib/src/ui/view";
     import { Stack } from "doric/lib/src/widget/layouts";
     export class ListItem extends Stack {
         /**
@@ -504,13 +493,7 @@ declare module 'doric/lib/src/widget/list' {
         loadMoreView?: ListItem;
         reset(): void;
         isDirty(): boolean;
-        toModel(): {
-            id: string;
-            type: string;
-            props: {
-                [index: string]: import("../..").Model;
-            };
-        };
+        toModel(): NativeViewModel;
     }
     export function list(config: IList): List;
     export function listItem(item: View): ListItem;
@@ -547,7 +530,7 @@ declare module 'doric/lib/src/widget/slider' {
 }
 
 declare module 'doric/lib/src/widget/scroller' {
-    import { Superview, View, IView } from 'doric/lib/src/ui/view';
+    import { Superview, View, IView, NativeViewModel } from 'doric/lib/src/ui/view';
     export function scroller(content: View): Scroller;
     export interface IScroller extends IView {
         content: View;
@@ -555,18 +538,12 @@ declare module 'doric/lib/src/widget/scroller' {
     export class Scroller extends Superview implements IScroller {
         content: View;
         allSubviews(): View[];
-        toModel(): {
-            id: string;
-            type: string;
-            props: {
-                [index: string]: import("../..").Model;
-            };
-        };
+        toModel(): NativeViewModel;
     }
 }
 
 declare module 'doric/lib/src/widget/refreshable' {
-    import { View, Superview, IView } from "doric/lib/src/ui/view";
+    import { View, Superview, IView, NativeViewModel } from "doric/lib/src/ui/view";
     import { List } from "doric/lib/src/widget/list";
     import { Scroller } from "doric/lib/src/widget/scroller";
     import { BridgeContext } from "doric/lib/src/runtime/global";
@@ -584,13 +561,7 @@ declare module 'doric/lib/src/widget/refreshable' {
         setRefreshing(context: BridgeContext, refreshing: boolean): Promise<any>;
         isRefreshable(context: BridgeContext): Promise<boolean>;
         isRefreshing(context: BridgeContext): Promise<boolean>;
-        toModel(): {
-            id: string;
-            type: string;
-            props: {
-                [index: string]: import("../..").Model;
-            };
-        };
+        toModel(): NativeViewModel;
     }
     export function refreshable(config: IRefreshable): Refreshable;
     export interface IPullable {
@@ -603,7 +574,7 @@ declare module 'doric/lib/src/widget/refreshable' {
 
 declare module 'doric/lib/src/widget/flowlayout' {
     import { Stack } from 'doric/lib/src/widget/layouts';
-    import { IView, Superview, View } from 'doric/lib/src/ui/view';
+    import { IView, Superview, View, NativeViewModel } from 'doric/lib/src/ui/view';
     export class FlowLayoutItem extends Stack {
         /**
          * Set to reuse native view
@@ -631,13 +602,7 @@ declare module 'doric/lib/src/widget/flowlayout' {
         loadMoreView?: FlowLayoutItem;
         reset(): void;
         isDirty(): boolean;
-        toModel(): {
-            id: string;
-            type: string;
-            props: {
-                [index: string]: import("../util/types").Model;
-            };
-        };
+        toModel(): NativeViewModel;
     }
     export function flowlayout(config: IFlowLayout): FlowLayout;
     export function flowItem(item: View): FlowLayoutItem;

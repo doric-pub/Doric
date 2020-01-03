@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { Stack } from './layouts'
-import { Property, IView, Superview, View } from '../ui/view'
+import { Property, IView, Superview, View, NativeViewModel } from '../ui/view'
 import { layoutConfig } from '../util/index.util'
 
 export class FlowLayoutItem extends Stack {
@@ -105,7 +105,7 @@ export class FlowLayout extends Superview implements IFlowLayout {
         })
     }
 
-    toModel() {
+    toModel(): NativeViewModel {
         if (this.loadMoreView) {
             this.dirtyProps['loadMoreView'] = this.loadMoreView.viewId
         }

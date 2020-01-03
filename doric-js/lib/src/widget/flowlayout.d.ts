@@ -1,5 +1,5 @@
 import { Stack } from './layouts';
-import { IView, Superview, View } from '../ui/view';
+import { IView, Superview, View, NativeViewModel } from '../ui/view';
 export declare class FlowLayoutItem extends Stack {
     /**
     * Set to reuse native view
@@ -31,13 +31,7 @@ export declare class FlowLayout extends Superview implements IFlowLayout {
     private getItem;
     isDirty(): boolean;
     private renderBunchedItems;
-    toModel(): {
-        id: string;
-        type: string;
-        props: {
-            [index: string]: import("../util/types").Model;
-        };
-    };
+    toModel(): NativeViewModel;
 }
 export declare function flowlayout(config: IFlowLayout): FlowLayout;
 export declare function flowItem(item: View): FlowLayoutItem;

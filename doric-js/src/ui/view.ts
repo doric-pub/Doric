@@ -70,6 +70,13 @@ export interface IView {
     /**----------transform----------*/
 }
 
+export type NativeViewModel = {
+    id: string;
+    type: string;
+    props: {
+        [index: string]: Model;
+    };
+}
 
 export abstract class View implements Modeling, IView {
     @Property
@@ -206,7 +213,7 @@ export abstract class View implements Modeling, IView {
         return this.__dirty_props__
     }
 
-    nativeViewModel = {
+    nativeViewModel: NativeViewModel = {
         id: this.viewId,
         type: this.constructor.name,
         props: this.__dirty_props__,

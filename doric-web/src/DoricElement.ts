@@ -23,9 +23,13 @@ export class DoricElement extends HTMLElement {
 
     connectedCallback() {
         if (this.src && this.context === undefined) {
-            axios.get<string>(this.src).then(result => {
-                this.load(result.data)
-            })
+            if (this.src.startsWith("http")) {
+                axios.get<string>(this.src).then(result => {
+                    this.load(result.data)
+                })
+            } else {
+                this.load(this.src)
+            }
         }
     }
 

@@ -1,4 +1,4 @@
-import { View, Property, Superview, IView } from "../ui/view";
+import { View, Property, Superview, IView, NativeViewModel } from "../ui/view";
 import { List } from "./list";
 import { Scroller } from "./scroller";
 import { BridgeContext } from "../runtime/global";
@@ -43,7 +43,7 @@ export class Refreshable extends Superview implements IRefreshable {
         return this.nativeChannel(context, 'isRefreshing')() as Promise<boolean>
     }
 
-    toModel() {
+    toModel(): NativeViewModel {
         this.dirtyProps.content = this.content.viewId
         this.dirtyProps.header = ((this.header || {}) as any).viewId
         return super.toModel()

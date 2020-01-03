@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Superview, View, IView } from '../ui/view'
+import { Superview, View, IView, NativeViewModel } from '../ui/view'
 import { layoutConfig } from '../util/layoutconfig'
 
 export function scroller(content: View) {
@@ -34,7 +34,7 @@ export class Scroller extends Superview implements IScroller {
         return [this.content]
     }
 
-    toModel() {
+    toModel(): NativeViewModel {
         this.dirtyProps.content = this.content.viewId
         return super.toModel()
     }

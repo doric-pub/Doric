@@ -191,11 +191,11 @@ public class DoricUtils {
         return getScreenHeight(null);
     }
 
-    public static float px2dp(int pxValue) {
+    public static float px2dp(float pxValue) {
         return px2dp(null, pxValue);
     }
 
-    public static float px2dp(Context context, int pxValue) {
+    public static float px2dp(Context context, float pxValue) {
         if (context == null) {
             context = Doric.application();
         }

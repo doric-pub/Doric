@@ -9,6 +9,7 @@ import com.github.pengfeizhou.jscore.JSValue;
 
 import pub.doric.DoricContext;
 import pub.doric.extension.bridge.DoricPlugin;
+import pub.doric.utils.DoricUtils;
 
 @DoricPlugin(name = "Draggable")
 public class DraggableNode extends StackNode {
@@ -52,9 +53,6 @@ public class DraggableNode extends StackNode {
             int x = (int) event.getX();
             int y = (int) event.getY();
 
-            int rawX = (int) event.getRawX();
-            int rawY = (int) event.getRawY();
-
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     lastX = x;
@@ -63,13 +61,11 @@ public class DraggableNode extends StackNode {
                 case MotionEvent.ACTION_MOVE:
                     int offsetX = x - lastX;
                     int offsetY = y - lastY;
-                    layout(getLeft() + offsetX, getTop() + offsetY, getRight() + offsetX, getBottom() + offsetY);
+                    callJSResponse(onDrag, DoricUtils.px2dp(offsetX), DoricUtils.px2dp(offsetY));
                     break;
                 case MotionEvent.ACTION_UP:
                     break;
             }
-
-            callJSResponse(onDrag, rawX - x, rawY - y);
             return true;
         }
     }

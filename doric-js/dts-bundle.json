@@ -1,0 +1,6 @@
+{
+    "name": "doric",
+    "baseDir": "./",
+    "main": "lib/index.d.ts",
+    "out": "./index.d.ts"
+}

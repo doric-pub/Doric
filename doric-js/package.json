@@ -1,9 +1,9 @@
 {
   "name": "doric",
-  "version": "0.2.2-alpha.1",
+  "version": "0.2.2-alpha.2",
   "description": "The JS Framework of Doric",
   "main": "bundle/doric-vm.js",
-  "types": "./lib/index.d.ts",
+  "types": "index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc -d -p .&& rollup -c",

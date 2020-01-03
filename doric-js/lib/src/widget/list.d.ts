@@ -1,4 +1,4 @@
-import { View, Superview, IView } from "../ui/view";
+import { View, Superview, IView, NativeViewModel } from "../ui/view";
 import { Stack } from "./layouts";
 export declare class ListItem extends Stack {
     /**
@@ -25,13 +25,7 @@ export declare class List extends Superview implements IList {
     private getItem;
     isDirty(): boolean;
     private renderBunchedItems;
-    toModel(): {
-        id: string;
-        type: string;
-        props: {
-            [index: string]: import("../..").Model;
-        };
-    };
+    toModel(): NativeViewModel;
 }
 export declare function list(config: IList): List;
 export declare function listItem(item: View): ListItem;

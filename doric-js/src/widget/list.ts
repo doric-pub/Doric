@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { View, Property, Superview, IView } from "../ui/view";
+import { View, Property, Superview, IView, NativeViewModel } from "../ui/view";
 import { Stack } from "./layouts";
 import { layoutConfig, LayoutSpec } from "../util/layoutconfig";
 
@@ -93,7 +93,7 @@ export class List extends Superview implements IList {
         })
     }
 
-    toModel() {
+    toModel(): NativeViewModel {
         if (this.loadMoreView) {
             this.dirtyProps['loadMoreView'] = this.loadMoreView.viewId
         }

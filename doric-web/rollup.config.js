@@ -26,7 +26,7 @@ export default {
     input: `build/index.js`,
     output: {
         format: "iife",
-        name: "index",
+        name: "doric_web",
         file: `dist/index.js`,
         sourcemap: true,
         banner: builtinScript,

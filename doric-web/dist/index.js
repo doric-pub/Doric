@@ -3664,7 +3664,7 @@ return __module.exports;
 },this,[{exports:{}}])]);
 /**--------Lib--------*/
     
-(function (axios, sandbox) {
+var doric_web = (function (exports, axios, sandbox) {
     'use strict';
 
     axios = axios && axios.hasOwnProperty('default') ? axios['default'] : axios;
@@ -3698,12 +3698,11 @@ return __module.exports;
         }
     }
 
-    var LayoutSpec;
     (function (LayoutSpec) {
         LayoutSpec[LayoutSpec["EXACTLY"] = 0] = "EXACTLY";
         LayoutSpec[LayoutSpec["WRAP_CONTENT"] = 1] = "WRAP_CONTENT";
         LayoutSpec[LayoutSpec["AT_MOST"] = 2] = "AT_MOST";
-    })(LayoutSpec || (LayoutSpec = {}));
+    })(exports.LayoutSpec || (exports.LayoutSpec = {}));
     const SPECIFIED = 1;
     const START = 1 << 1;
     const END = 1 << 2;
@@ -3715,6 +3714,7 @@ return __module.exports;
     const BOTTOM = (END | SPECIFIED) << SHIFT_Y;
     const CENTER_X = SPECIFIED << SHIFT_X;
     const CENTER_Y = SPECIFIED << SHIFT_Y;
+    const CENTER = CENTER_X | CENTER_Y;
     function toPixelString(v) {
         return `${v}px`;
     }
@@ -3737,8 +3737,8 @@ return __module.exports;
             this.viewId = "";
             this.viewType = "View";
             this.layoutConfig = {
-                widthSpec: LayoutSpec.EXACTLY,
-                heightSpec: LayoutSpec.EXACTLY,
+                widthSpec: exports.LayoutSpec.EXACTLY,
+                heightSpec: exports.LayoutSpec.EXACTLY,
                 alignment: 0,
                 weight: 0,
                 margin: {
@@ -3804,13 +3804,13 @@ return __module.exports;
         }
         configWidth() {
             switch (this.layoutConfig.widthSpec) {
-                case LayoutSpec.WRAP_CONTENT:
+                case exports.LayoutSpec.WRAP_CONTENT:
                     this.view.style.width = "max-content";
                     break;
-                case LayoutSpec.AT_MOST:
+                case exports.LayoutSpec.AT_MOST:
                     this.view.style.width = "100%";
                     break;
-                case LayoutSpec.EXACTLY:
+                case exports.LayoutSpec.EXACTLY:
                 default:
                     this.view.style.width = toPixelString(this.frameWidth
                         - this.paddingLeft - this.paddingRight
@@ -3820,13 +3820,13 @@ return __module.exports;
         }
         configHeight() {
             switch (this.layoutConfig.heightSpec) {
-                case LayoutSpec.WRAP_CONTENT:
+                case exports.LayoutSpec.WRAP_CONTENT:
                     this.view.style.height = "max-content";
                     break;
-                case LayoutSpec.AT_MOST:
+                case exports.LayoutSpec.AT_MOST:
                     this.view.style.height = "100%";
                     break;
-                case LayoutSpec.EXACTLY:
+                case exports.LayoutSpec.EXACTLY:
                 default:
                     this.view.style.height = toPixelString(this.frameHeight
                         - this.paddingTop - this.paddingBottom
@@ -4135,13 +4135,13 @@ return __module.exports;
             });
         }
         configSize() {
-            if (this.layoutConfig.widthSpec === LayoutSpec.WRAP_CONTENT) {
+            if (this.layoutConfig.widthSpec === exports.LayoutSpec.WRAP_CONTENT) {
                 const width = this.childNodes.reduce((prev, current) => {
                     return Math.max(prev, current.view.offsetWidth);
                 }, 0);
                 this.view.style.width = toPixelString(width);
             }
-            if (this.layoutConfig.heightSpec === LayoutSpec.WRAP_CONTENT) {
+            if (this.layoutConfig.heightSpec === exports.LayoutSpec.WRAP_CONTENT) {
                 const height = this.childNodes.reduce((prev, current) => {
                     return Math.max(prev, current.view.offsetHeight);
                 }, 0);
@@ -4762,6 +4762,9 @@ return __module.exports;
     function acquireJSBundle(name) {
         return bundles.get(name);
     }
+    function registerJSBundle(name, bundle) {
+        bundles.set(name, bundle);
+    }
     function registerPlugin(name, plugin) {
         plugins.set(name, plugin);
     }
@@ -4978,9 +4981,14 @@ ${content}
         }
         connectedCallback() {
             if (this.src && this.context === undefined) {
-                axios.get(this.src).then(result => {
-                    this.load(result.data);
-                });
+                if (this.src.startsWith("http")) {
+                    axios.get(this.src).then(result => {
+                        this.load(result.data);
+                    });
+                }
+                else {
+                    this.load(this.src);
+                }
             }
         }
         disconnectedCallback() {
@@ -5046,5 +5054,33 @@ ${content}
     window.customElements.define('doric-div', DoricElement);
     window.customElements.define('doric-navigation', NavigationElement);
 
-}(axios, doric));
+    exports.BOTTOM = BOTTOM;
+    exports.CENTER = CENTER;
+    exports.CENTER_X = CENTER_X;
+    exports.CENTER_Y = CENTER_Y;
+    exports.DoricElement = DoricElement;
+    exports.DoricGroupViewNode = DoricGroupViewNode;
+    exports.DoricPlugin = DoricPlugin;
+    exports.DoricSuperNode = DoricSuperNode;
+    exports.DoricViewNode = DoricViewNode;
+    exports.LEFT = LEFT;
+    exports.NavigationElement = NavigationElement;
+    exports.RIGHT = RIGHT;
+    exports.TOP = TOP;
+    exports.acquireJSBundle = acquireJSBundle;
+    exports.acquirePlugin = acquirePlugin;
+    exports.acquireViewNode = acquireViewNode;
+    exports.createContext = createContext;
+    exports.destroyContext = destroyContext;
+    exports.injectGlobalObject = injectGlobalObject;
+    exports.loadJS = loadJS;
+    exports.registerJSBundle = registerJSBundle;
+    exports.registerPlugin = registerPlugin;
+    exports.registerViewNode = registerViewNode;
+    exports.toPixelString = toPixelString;
+    exports.toRGBAString = toRGBAString;
+
+    return exports;
+
+}({}, axios, doric));
 //# sourceMappingURL=index.js.map

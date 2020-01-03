@@ -57,6 +57,13 @@ export interface IView {
      */
     rotation?: number;
 }
+export declare type NativeViewModel = {
+    id: string;
+    type: string;
+    props: {
+        [index: string]: Model;
+    };
+};
 export declare abstract class View implements Modeling, IView {
     width: number;
     height: number;
@@ -114,24 +121,12 @@ export declare abstract class View implements Modeling, IView {
     get dirtyProps(): {
         [index: string]: Model;
     };
-    nativeViewModel: {
-        id: string;
-        type: string;
-        props: {
-            [index: string]: Model;
-        };
-    };
+    nativeViewModel: NativeViewModel;
     onPropertyChanged(propKey: string, oldV: Model, newV: Model): void;
     clean(): void;
     isDirty(): boolean;
     responseCallback(id: string, ...args: any): any;
-    toModel(): {
-        id: string;
-        type: string;
-        props: {
-            [index: string]: Model;
-        };
-    };
+    toModel(): NativeViewModel;
     let(block: (it: this) => void): void;
     also(block: (it: this) => void): this;
     apply(config: IView): this;
@@ -159,13 +154,7 @@ export declare abstract class Superview extends View {
     abstract allSubviews(): Iterable<View>;
     isDirty(): boolean;
     clean(): void;
-    toModel(): {
-        id: string;
-        type: string;
-        props: {
-            [index: string]: Model;
-        };
-    };
+    toModel(): NativeViewModel;
 }
 export declare abstract class Group extends Superview {
     readonly children: View[];

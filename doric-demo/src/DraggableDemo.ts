@@ -4,7 +4,7 @@ import { title } from "./utils";
 class DraggableDemo extends Panel {
     build(root: Group) {
         let text = (new Text).also(it => {
-            it.layoutConfig = layoutConfig().just().configAlignmnet(Gravity.Center)
+            it.layoutConfig = layoutConfig().just().configAlignment(Gravity.Center)
             it.width = 100
             it.height = 30
             it.textColor = Color.parse('#ff0000')

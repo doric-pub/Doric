@@ -556,7 +556,7 @@ class LayoutConfigImpl {
         this.margin = m;
         return this;
     }
-    configAlignmnet(a) {
+    configAlignment(a) {
         this.alignment = a;
         return this;
     }
@@ -1660,6 +1660,14 @@ __decorate$9([
     Property,
     __metadata$9("design:type", Function)
 ], Input.prototype, "onFocusChange", void 0);
+function input(config) {
+    const ret = new Input;
+    ret.layoutConfig = layoutConfig().just();
+    for (let key in config) {
+        Reflect.set(ret, key, Reflect.get(config, key, config), ret);
+    }
+    return ret;
+}
 
 var __decorate$a = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -2113,6 +2121,7 @@ exports.flowlayout = flowlayout;
 exports.gravity = gravity;
 exports.hlayout = hlayout;
 exports.image = image;
+exports.input = input;
 exports.layoutConfig = layoutConfig;
 exports.list = list;
 exports.listItem = listItem;

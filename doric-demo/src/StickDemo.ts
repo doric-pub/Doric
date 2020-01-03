@@ -83,7 +83,7 @@ class StickDemo extends Panel {
                                         text: `In Page ${idx},${itemIdx}`,
                                         textColor: Color.WHITE,
                                         textSize: 20,
-                                        layoutConfig: layoutConfig().fit().configAlignmnet(Gravity.Center)
+                                        layoutConfig: layoutConfig().fit().configAlignment(Gravity.Center)
                                     }).also(v => {
                                         v.onClick = () => {
                                             v.text = "Clicked"
@@ -120,7 +120,7 @@ class StickDemo extends Panel {
                 e.textColor = Color.BLACK
             }
         })
-        this.indicator.layoutConfig = layoutConfig().just().configAlignmnet(Gravity.Bottom).configMargin({ bottom: 13 })
+        this.indicator.layoutConfig = layoutConfig().just().configAlignment(Gravity.Bottom).configMargin({ bottom: 13 })
         animate(context)({
             animations: () => {
                 this.indicator.centerX = this.getRootView().width / this.tabs.length * (page + 0.5)

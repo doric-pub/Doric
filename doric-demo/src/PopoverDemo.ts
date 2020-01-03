@@ -19,7 +19,7 @@ class PopoverDemo extends Panel {
                         height: 50,
                         backgroundColor: colors[0],
                         textColor: Color.WHITE,
-                        layoutConfig: layoutConfig().just().configAlignmnet(Gravity.Center),
+                        layoutConfig: layoutConfig().just().configAlignment(Gravity.Center),
                         text: "This is PopOver Window",
                     }).also(v => {
                         let idx = 0

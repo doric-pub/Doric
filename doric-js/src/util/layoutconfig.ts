@@ -96,7 +96,7 @@ export class LayoutConfigImpl implements LayoutConfig, Modeling {
         return this
     }
 
-    configAlignmnet(a: Gravity) {
+    configAlignment(a: Gravity) {
         this.alignment = a
         return this
     }

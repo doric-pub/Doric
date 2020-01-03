@@ -186,7 +186,7 @@ class SnakeView extends doric.ViewHolder {
             ]).apply({
                 layoutConfig: doric.layoutConfig().fit()
                     .configWidth(doric.LayoutSpec.MOST)
-                    .configAlignmnet(doric.Gravity.Left),
+                    .configAlignment(doric.Gravity.Left),
                 space: 10,
             }),
         ]).apply({

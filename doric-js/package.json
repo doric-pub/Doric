@@ -1,13 +1,15 @@
 {
   "name": "doric",
-  "version": "0.2.1",
+  "version": "0.2.2-alpha.0",
   "description": "The JS Framework of Doric",
   "main": "bundle/doric-vm.js",
+  "types": "./lib/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc -p .&& rollup -c",
+    "build": "tsc -d -p .&& rollup -c",
     "dev": "tsc -w -p . & rollup -c -w",
-    "clean": "rm -rf build &&  rm -rf bundle"
+    "clean": "rm -rf build &&  rm -rf bundle",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "https",

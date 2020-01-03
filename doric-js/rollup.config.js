@@ -4,7 +4,7 @@ import resolve from '@rollup/plugin-node-resolve'
 
 export default [
     {
-        input: "build/index.runtime.js",
+        input: "lib/index.runtime.js",
         output: {
             name: "doric",
             format: "iife",
@@ -13,13 +13,13 @@ export default [
         plugins: [
             resolve({ mainFields: ["jsnext"] }),
         ],
-        onwarn: function(warning) {
-            if ( warning.code === 'THIS_IS_UNDEFINED' ) { return; }
-            console.warn( warning.message );
+        onwarn: function (warning) {
+            if (warning.code === 'THIS_IS_UNDEFINED') { return; }
+            console.warn(warning.message);
         }
     },
     {
-        input: "build/index.js",
+        input: "lib/index.js",
         output: {
             format: "cjs",
             file: "bundle/doric-lib.js",
@@ -28,13 +28,13 @@ export default [
             resolve({ mainFields: ["jsnext"] }),
         ],
         external: ['reflect-metadata'],
-        onwarn: function(warning) {
-            if ( warning.code === 'THIS_IS_UNDEFINED' ) { return; }
-            console.warn( warning.message );
+        onwarn: function (warning) {
+            if (warning.code === 'THIS_IS_UNDEFINED') { return; }
+            console.warn(warning.message);
         }
     },
     {
-        input: "build/index.debug.js",
+        input: "lib/index.debug.js",
         output: {
             format: "cjs",
             file: "bundle/doric-vm.js",
@@ -43,9 +43,9 @@ export default [
             resolve({ mainFields: ["jsnext"] }),
         ],
         external: ['ws'],
-        onwarn: function(warning) {
-            if ( warning.code === 'THIS_IS_UNDEFINED' ) { return; }
-            console.warn( warning.message );
+        onwarn: function (warning) {
+            if (warning.code === 'THIS_IS_UNDEFINED') { return; }
+            console.warn(warning.message);
         }
     },
 ]

@@ -1,5 +1,3 @@
 node_modules/
-build/
-demo/
 .DS_Store
 package-lock.json

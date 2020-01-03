@@ -45,7 +45,7 @@ export class Refreshable extends Superview implements IRefreshable {
 
     toModel() {
         this.dirtyProps.content = this.content.viewId
-        this.dirtyProps.header = (this.header || {}).viewId
+        this.dirtyProps.header = ((this.header || {}) as any).viewId
         return super.toModel()
     }
 }

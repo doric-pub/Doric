@@ -95,7 +95,7 @@ let ListPanel = class ListPanel extends doric.Panel {
                 };
                 it.loadMoreView = doric.listItem(doric.text({
                     text: "Loading",
-                    layoutConfig: doric.layoutConfig().most().configHeight(doric.LayoutSpec.JUST).configAlignmnet(doric.Gravity.Center),
+                    layoutConfig: doric.layoutConfig().most().configHeight(doric.LayoutSpec.JUST).configAlignment(doric.Gravity.Center),
                     height: 50,
                 }));
             }),

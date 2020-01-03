@@ -76,7 +76,7 @@ let DoricPlayground = class DoricPlayground extends doric.Panel {
                     text: "Demo列表",
                     textSize: 20,
                 }).apply({
-                    layoutConfig: doric.layoutConfig().fit().configAlignmnet(doric.gravity().centerY()).configMargin({
+                    layoutConfig: doric.layoutConfig().fit().configAlignment(doric.gravity().centerY()).configMargin({
                         left: 15,
                     })
                 })
@@ -101,7 +101,7 @@ let DoricPlayground = class DoricPlayground extends doric.Panel {
                         textSize: 30,
                         textColor: doric.Color.BLACK,
                     }).apply({
-                        layoutConfig: doric.layoutConfig().fit().configAlignmnet(doric.gravity().centerY()).configMargin({
+                        layoutConfig: doric.layoutConfig().fit().configAlignment(doric.gravity().centerY()).configMargin({
                             left: 15,
                         })
                     }),
@@ -130,7 +130,7 @@ let DoricPlayground = class DoricPlayground extends doric.Panel {
                     text: "待上线",
                     textSize: 20,
                 }).apply({
-                    layoutConfig: doric.layoutConfig().fit().configAlignmnet(doric.gravity().centerY()).configMargin({
+                    layoutConfig: doric.layoutConfig().fit().configAlignment(doric.gravity().centerY()).configMargin({
                         left: 15,
                     })
                 })

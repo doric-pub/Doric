@@ -32,8 +32,12 @@
 
 - (void)onDrag:(UIPanGestureRecognizer *)gesture {
     CGPoint point = [gesture translationInView:self.view];
+    CGRect originalFrame = self.view.frame;
+    originalFrame.origin.x += point.x;
+    originalFrame.origin.y += point.y;
+    self.view.frame = originalFrame;
     [gesture setTranslation:CGPointZero inView:self.view];
-    [self callJSResponse:_onDragFunction, @(point.x), @(point.y), nil];
+    [self callJSResponse:_onDragFunction, @(originalFrame.origin.x), @(originalFrame.origin.y), nil];
 }
 
 - (void)blendView:(DoricStackView *)view forPropName:(NSString *)name propValue:(id)prop {

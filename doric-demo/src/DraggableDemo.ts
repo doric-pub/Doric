@@ -1,4 +1,4 @@
-import { Panel, Group, vlayout, layoutConfig, draggable, Color, Text, Draggable, modal, Gravity, loge} from "doric";
+import { Panel, Group, vlayout, layoutConfig, draggable, Color, Text, Draggable, modal, Gravity, stack} from "doric";
 import { title } from "./utils";
 @Entry
 class DraggableDemo extends Panel {
@@ -13,16 +13,9 @@ class DraggableDemo extends Panel {
             }
         })
         let drag: Draggable
-        let lastX: number = 0
-        let lastY: number = 0
         drag = draggable({
             onDrag: (x: number, y: number) => {
-                lastX += x
-                lastY += y
-                drag.translationX = lastX
-                drag.translationY = lastY
-                loge(lastX)
-                text.text = "x: " + lastX.toFixed(0) + " y: " + lastY.toFixed(0)
+                text.text = "x: " + x.toFixed(0) + " y: " + y.toFixed(0)
             }
         }, [ text ]).apply({
             layoutConfig: layoutConfig().just(),
@@ -32,7 +25,11 @@ class DraggableDemo extends Panel {
         })
         vlayout([
             title("Draggable Demo"),
-            drag
+            stack([
+                drag,
+            ]).apply({
+                layoutConfig: layoutConfig().most()
+            })
         ])
             .apply({
                 layoutConfig: layoutConfig().most(),

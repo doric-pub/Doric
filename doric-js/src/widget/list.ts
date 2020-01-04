@@ -15,10 +15,14 @@
  */
 
 import { View, Property, Superview, IView, NativeViewModel } from "../ui/view";
-import { Stack } from "./layouts";
+import { Stack, IStack } from "./layouts";
 import { layoutConfig, LayoutSpec } from "../util/layoutconfig";
 
-export class ListItem extends Stack {
+export interface IListItem extends IStack {
+    identifier?: string
+}
+
+export class ListItem extends Stack implements IListItem {
     /**
      * Set to reuse native view
      */
@@ -109,9 +113,21 @@ export function list(config: IList) {
     return ret
 }
 
-export function listItem(item: View) {
+export function listItem(item: View | View[], config?: IListItem) {
     return (new ListItem).also((it) => {
-        it.layoutConfig = layoutConfig().most().configHeight(LayoutSpec.FIT)
-        it.addChild(item)
+        it.layoutConfig = layoutConfig().fit()
+        if (item instanceof View) {
+            it.addChild(item)
+        } else {
+            item.forEach(e => {
+                it.addChild(e)
+            })
+        }
+        if (config) {
+            for (let key in config) {
+                Reflect.set(it, key, Reflect.get(config, key, config), it)
+            }
+        }
     })
 }
+

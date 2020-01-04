@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Superview, Property } from "../ui/view";
+import { Superview, View, Property } from "../ui/view";
 import { Stack } from "./layouts";
 import { layoutConfig } from "../util/layoutconfig";
 export class SlideItem extends Stack {
@@ -74,16 +74,28 @@ __decorate([
     Property,
     __metadata("design:type", Function)
 ], Slider.prototype, "onPageSlided", void 0);
-export function slideItem(item) {
-    return (new SlideItem).also((it) => {
-        it.layoutConfig = layoutConfig().fit();
-        it.addChild(item);
-    });
-}
 export function slider(config) {
     const ret = new Slider;
     for (let key in config) {
         Reflect.set(ret, key, Reflect.get(config, key, config), ret);
     }
     return ret;
+}
+export function slideItem(item, config) {
+    return (new SlideItem).also((it) => {
+        it.layoutConfig = layoutConfig().fit();
+        if (item instanceof View) {
+            it.addChild(item);
+        }
+        else {
+            item.forEach(e => {
+                it.addChild(e);
+            });
+        }
+        if (config) {
+            for (let key in config) {
+                Reflect.set(it, key, Reflect.get(config, key, config), it);
+            }
+        }
+    });
 }

@@ -1,37 +1,40 @@
-import { Panel, Group, vlayout, layoutConfig, draggable, Color, Text, Draggable, modal, Gravity, stack} from "doric";
+import { Panel, Group, vlayout, layoutConfig, draggable, Color, Text, Draggable, modal, Gravity, stack, text } from "doric";
 import { title } from "./utils";
 @Entry
 class DraggableDemo extends Panel {
     build(root: Group) {
-        let text = (new Text).also(it => {
-            it.layoutConfig = layoutConfig().just().configAlignment(Gravity.Center)
-            it.width = 100
-            it.height = 30
-            it.textColor = Color.parse('#ff0000')
-            it.onClick = () => {
-                modal(context).toast('Clicked')
-            }
-        })
-        let drag: Draggable
-        drag = draggable({
-            onDrag: (x: number, y: number) => {
-                text.text = "x: " + x.toFixed(0) + " y: " + y.toFixed(0)
-            }
-        }, [ text ]).apply({
-            layoutConfig: layoutConfig().just(),
-            width: 100,
-            height: 100,
-            backgroundColor: Color.WHITE
-        })
-        vlayout([
-            title("Draggable Demo"),
-            stack([
-                drag,
-            ]).apply({
-                layoutConfig: layoutConfig().most()
+        let textView: Text
+        let drag = draggable(
+            textView = text({
+                layoutConfig: layoutConfig().just().configAlignment(Gravity.Center),
+                width: 100,
+                height: 30,
+                textColor: Color.RED,
+                onClick: () => {
+                    modal(context).toast('Clicked')
+                }
+            }),
+            {
+                onDrag: (x: number, y: number) => {
+                    textView.text = "x: " + x.toFixed(0) + " y: " + y.toFixed(0)
+                },
+                layoutConfig: layoutConfig().just(),
+                width: 100,
+                height: 100,
+                backgroundColor: Color.WHITE
             })
-        ])
-            .apply({
+        vlayout(
+            [
+                title("Draggable Demo"),
+                stack(
+                    [
+                        drag,
+                    ],
+                    {
+                        layoutConfig: layoutConfig().most()
+                    })
+            ],
+            {
                 layoutConfig: layoutConfig().most(),
                 backgroundColor: Color.BLACK
             })

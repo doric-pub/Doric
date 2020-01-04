@@ -51,29 +51,44 @@ export interface IHLayout extends IView {
 export class HLayout extends LinearLayout implements IHLayout {
 }
 
-export function stack(views: View[]) {
+export function stack(views: View[], config?: IStack) {
     const ret = new Stack
     ret.layoutConfig = layoutConfig().fit()
     for (let v of views) {
         ret.addChild(v)
     }
+    if (config) {
+        for (let key in config) {
+            Reflect.set(ret, key, Reflect.get(config, key, config), ret)
+        }
+    }
     return ret
 }
 
-export function hlayout(views: View[]) {
+export function hlayout(views: View[], config?: IHLayout) {
     const ret = new HLayout
     ret.layoutConfig = layoutConfig().fit()
     for (let v of views) {
         ret.addChild(v)
     }
+    if (config) {
+        for (let key in config) {
+            Reflect.set(ret, key, Reflect.get(config, key, config), ret)
+        }
+    }
     return ret
 }
 
-export function vlayout(views: View[]) {
+export function vlayout(views: View[], config?: IVLayout) {
     const ret = new VLayout
     ret.layoutConfig = layoutConfig().fit()
     for (let v of views) {
         ret.addChild(v)
+    }
+    if (config) {
+        for (let key in config) {
+            Reflect.set(ret, key, Reflect.get(config, key, config), ret)
+        }
     }
     return ret
 }

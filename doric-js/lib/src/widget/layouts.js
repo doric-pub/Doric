@@ -43,27 +43,42 @@ export class VLayout extends LinearLayout {
 }
 export class HLayout extends LinearLayout {
 }
-export function stack(views) {
+export function stack(views, config) {
     const ret = new Stack;
     ret.layoutConfig = layoutConfig().fit();
     for (let v of views) {
         ret.addChild(v);
     }
+    if (config) {
+        for (let key in config) {
+            Reflect.set(ret, key, Reflect.get(config, key, config), ret);
+        }
+    }
     return ret;
 }
-export function hlayout(views) {
+export function hlayout(views, config) {
     const ret = new HLayout;
     ret.layoutConfig = layoutConfig().fit();
     for (let v of views) {
         ret.addChild(v);
     }
+    if (config) {
+        for (let key in config) {
+            Reflect.set(ret, key, Reflect.get(config, key, config), ret);
+        }
+    }
     return ret;
 }
-export function vlayout(views) {
+export function vlayout(views, config) {
     const ret = new VLayout;
     ret.layoutConfig = layoutConfig().fit();
     for (let v of views) {
         ret.addChild(v);
+    }
+    if (config) {
+        for (let key in config) {
+            Reflect.set(ret, key, Reflect.get(config, key, config), ret);
+        }
     }
     return ret;
 }

@@ -6,4 +6,4 @@ export interface IDraggable extends IStack {
 export declare class Draggable extends Stack implements IDraggable {
     onDrag?: (x: number, y: number) => void;
 }
-export declare function draggable(config: IDraggable, views: View[]): Draggable;
+export declare function draggable(views: View | View[], config?: IDraggable): Draggable;

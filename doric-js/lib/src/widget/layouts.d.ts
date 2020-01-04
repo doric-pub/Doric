@@ -22,7 +22,7 @@ export interface IHLayout extends IView {
 }
 export declare class HLayout extends LinearLayout implements IHLayout {
 }
-export declare function stack(views: View[]): Stack;
-export declare function hlayout(views: View[]): HLayout;
-export declare function vlayout(views: View[]): VLayout;
+export declare function stack(views: View[], config?: IStack): Stack;
+export declare function hlayout(views: View[], config?: IHLayout): HLayout;
+export declare function vlayout(views: View[], config?: IVLayout): VLayout;
 export {};

@@ -1,6 +1,9 @@
 import { View, Superview, IView, NativeViewModel } from "../ui/view";
-import { Stack } from "./layouts";
-export declare class ListItem extends Stack {
+import { Stack, IStack } from "./layouts";
+export interface IListItem extends IStack {
+    identifier?: string;
+}
+export declare class ListItem extends Stack implements IListItem {
     /**
      * Set to reuse native view
      */
@@ -28,4 +31,4 @@ export declare class List extends Superview implements IList {
     toModel(): NativeViewModel;
 }
 export declare function list(config: IList): List;
-export declare function listItem(item: View): ListItem;
+export declare function listItem(item: View | View[], config?: IListItem): ListItem;

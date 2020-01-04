@@ -1,9 +1,14 @@
 import { Superview, View, Property, IView } from "../ui/view";
-import { Stack } from "./layouts";
+import { Stack, IStack } from "./layouts";
 import { layoutConfig } from "../util/layoutconfig";
 import { BridgeContext } from "../runtime/global";
 
-export class SlideItem extends Stack {
+
+export interface ISlideItem extends IStack {
+    identifier?: string
+}
+
+export class SlideItem extends Stack implements ISlideItem {
     /**
      * Set to reuse native view
      */
@@ -75,17 +80,28 @@ export class Slider extends Superview implements ISlider {
 
 }
 
-export function slideItem(item: View) {
-    return (new SlideItem).also((it) => {
-        it.layoutConfig = layoutConfig().fit()
-        it.addChild(item)
-    })
-}
-
 export function slider(config: ISlider) {
     const ret = new Slider
     for (let key in config) {
         Reflect.set(ret, key, Reflect.get(config, key, config), ret)
     }
     return ret
+}
+
+export function slideItem(item: View | View[], config?: ISlideItem) {
+    return (new SlideItem).also((it) => {
+        it.layoutConfig = layoutConfig().fit()
+        if (item instanceof View) {
+            it.addChild(item)
+        } else {
+            item.forEach(e => {
+                it.addChild(e)
+            })
+        }
+        if (config) {
+            for (let key in config) {
+                Reflect.set(it, key, Reflect.get(config, key, config), it)
+            }
+        }
+    })
 }

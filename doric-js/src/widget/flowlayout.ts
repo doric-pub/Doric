@@ -13,17 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Stack } from './layouts'
+import { Stack, IStack } from './layouts'
 import { Property, IView, Superview, View, NativeViewModel } from '../ui/view'
 import { layoutConfig } from '../util/index.util'
 
-export class FlowLayoutItem extends Stack {
+export interface IFlowLayoutItem extends IStack {
+    identifier?: string
+}
+
+export class FlowLayoutItem extends Stack implements IFlowLayoutItem {
     /**
     * Set to reuse native view
     */
     @Property
     identifier?: string
 }
+
+
 export interface IFlowLayout extends IView {
     renderItem: (index: number) => FlowLayoutItem
 
@@ -121,9 +127,20 @@ export function flowlayout(config: IFlowLayout) {
     return ret
 }
 
-export function flowItem(item: View) {
+export function flowItem(item: View | View[], config?: IFlowLayoutItem) {
     return (new FlowLayoutItem).also((it) => {
         it.layoutConfig = layoutConfig().fit()
-        it.addChild(item)
+        if (item instanceof View) {
+            it.addChild(item)
+        } else {
+            item.forEach(e => {
+                it.addChild(e)
+            })
+        }
+        if (config) {
+            for (let key in config) {
+                Reflect.set(it, key, Reflect.get(config, key, config), it)
+            }
+        }
     })
 }

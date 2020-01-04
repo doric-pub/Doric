@@ -1,6 +1,9 @@
-import { Stack } from './layouts';
+import { Stack, IStack } from './layouts';
 import { IView, Superview, View, NativeViewModel } from '../ui/view';
-export declare class FlowLayoutItem extends Stack {
+export interface IFlowLayoutItem extends IStack {
+    identifier?: string;
+}
+export declare class FlowLayoutItem extends Stack implements IFlowLayoutItem {
     /**
     * Set to reuse native view
     */
@@ -34,4 +37,4 @@ export declare class FlowLayout extends Superview implements IFlowLayout {
     toModel(): NativeViewModel;
 }
 export declare function flowlayout(config: IFlowLayout): FlowLayout;
-export declare function flowItem(item: View): FlowLayoutItem;
+export declare function flowItem(item: View | View[], config?: IFlowLayoutItem): FlowLayoutItem;

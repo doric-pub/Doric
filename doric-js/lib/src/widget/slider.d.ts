@@ -1,7 +1,10 @@
 import { Superview, View, IView } from "../ui/view";
-import { Stack } from "./layouts";
+import { Stack, IStack } from "./layouts";
 import { BridgeContext } from "../runtime/global";
-export declare class SlideItem extends Stack {
+export interface ISlideItem extends IStack {
+    identifier?: string;
+}
+export declare class SlideItem extends Stack implements ISlideItem {
     /**
      * Set to reuse native view
      */
@@ -27,5 +30,5 @@ export declare class Slider extends Superview implements ISlider {
     slidePage(context: BridgeContext, page: number, smooth?: boolean): Promise<any>;
     getSlidedPage(context: BridgeContext): Promise<number>;
 }
-export declare function slideItem(item: View): SlideItem;
 export declare function slider(config: ISlider): Slider;
+export declare function slideItem(item: View | View[], config?: ISlideItem): SlideItem;

@@ -99,6 +99,74 @@ class LayoutDemo extends Panel {
                         it.gravity = gravity().center()
                     }),
                     label("Horizontal Layout(Weight)"),
+                    hlayout(
+                        [
+                            boxStr('weight=1', 3).apply({
+                                layoutConfig: {
+                                    widthSpec: LayoutSpec.JUST,
+                                    heightSpec: LayoutSpec.JUST,
+                                    weight: 1,
+                                }
+                            }),
+                            box(2),
+                            box(4),
+                        ],
+                        {
+                            width: 200,
+                            height: 30,
+                            layoutConfig: {
+                                widthSpec: LayoutSpec.JUST,
+                                heightSpec: LayoutSpec.JUST,
+                            },
+                            backgroundColor: Color.parse('#eeeeee'),
+                            gravity: gravity().center(),
+                        }),
+                    hlayout(
+                        [
+                            box(3),
+                            boxStr('weight=1', 2).apply({
+                                layoutConfig: {
+                                    widthSpec: LayoutSpec.JUST,
+                                    heightSpec: LayoutSpec.JUST,
+                                    weight: 1,
+                                }
+                            }),
+                            box(4),
+                        ],
+                        {
+                            width: 200,
+                            height: 30,
+                            layoutConfig: {
+                                widthSpec: LayoutSpec.JUST,
+                                heightSpec: LayoutSpec.JUST,
+                            },
+                            backgroundColor: Color.parse('#eeeeee'),
+                            gravity: gravity().center(),
+                        }
+                    ),
+                    hlayout(
+                        [
+                            box(3),
+                            box(2),
+                            boxStr('weight=1', 4).apply({
+                                layoutConfig: {
+                                    widthSpec: LayoutSpec.JUST,
+                                    heightSpec: LayoutSpec.JUST,
+                                    weight: 1,
+                                }
+                            }),
+                        ],
+                        {
+                            width: 200,
+                            height: 30,
+                            layoutConfig: {
+                                widthSpec: LayoutSpec.JUST,
+                                heightSpec: LayoutSpec.JUST,
+                            },
+                            backgroundColor: Color.parse('#eeeeee'),
+                            gravity: gravity().center(),
+                        }
+                    ),
                     hlayout([
                         boxStr('weight=1', 3).apply({
                             layoutConfig: {
@@ -107,20 +175,6 @@ class LayoutDemo extends Panel {
                                 weight: 1,
                             }
                         }),
-                        box(2),
-                        box(4),
-                    ]).apply({
-                        width: 200,
-                        height: 30,
-                        layoutConfig: {
-                            widthSpec: LayoutSpec.JUST,
-                            heightSpec: LayoutSpec.JUST,
-                        },
-                        backgroundColor: Color.parse('#eeeeee'),
-                        gravity: gravity().center(),
-                    } as IHLayout),
-                    hlayout([
-                        box(3),
                         boxStr('weight=1', 2).apply({
                             layoutConfig: {
                                 widthSpec: LayoutSpec.JUST,
@@ -129,62 +183,18 @@ class LayoutDemo extends Panel {
                             }
                         }),
                         box(4),
-                    ]).apply({
-                        width: 200,
-                        height: 30,
-                        layoutConfig: {
-                            widthSpec: LayoutSpec.JUST,
-                            heightSpec: LayoutSpec.JUST,
-                        },
-                        backgroundColor: Color.parse('#eeeeee'),
-                        gravity: gravity().center(),
-                    } as IHLayout),
-                    hlayout([
-                        box(3),
-                        box(2),
-                        boxStr('weight=1', 4).apply({
+                    ],
+                        {
+                            width: 200,
+                            height: 30,
                             layoutConfig: {
                                 widthSpec: LayoutSpec.JUST,
                                 heightSpec: LayoutSpec.JUST,
-                                weight: 1,
-                            }
-                        }),
-                    ]).apply({
-                        width: 200,
-                        height: 30,
-                        layoutConfig: {
-                            widthSpec: LayoutSpec.JUST,
-                            heightSpec: LayoutSpec.JUST,
-                        },
-                        backgroundColor: Color.parse('#eeeeee'),
-                        gravity: gravity().center(),
-                    } as IHLayout),
-                    hlayout([
-                        boxStr('weight=1', 3).apply({
-                            layoutConfig: {
-                                widthSpec: LayoutSpec.JUST,
-                                heightSpec: LayoutSpec.JUST,
-                                weight: 1,
-                            }
-                        }),
-                        boxStr('weight=1', 2).apply({
-                            layoutConfig: {
-                                widthSpec: LayoutSpec.JUST,
-                                heightSpec: LayoutSpec.JUST,
-                                weight: 1,
-                            }
-                        }),
-                        box(4),
-                    ]).apply({
-                        width: 200,
-                        height: 30,
-                        layoutConfig: {
-                            widthSpec: LayoutSpec.JUST,
-                            heightSpec: LayoutSpec.JUST,
-                        },
-                        backgroundColor: Color.parse('#eeeeee'),
-                        gravity: gravity().center(),
-                    } as IHLayout),
+                            },
+                            backgroundColor: Color.parse('#eeeeee'),
+                            gravity: gravity().center(),
+                        }
+                    ),
                     hlayout([
                         boxStr('weight=1', 3).apply({
                             layoutConfig: {

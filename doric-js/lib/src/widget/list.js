@@ -22,9 +22,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Property, Superview } from "../ui/view";
+import { View, Property, Superview } from "../ui/view";
 import { Stack } from "./layouts";
-import { layoutConfig, LayoutSpec } from "../util/layoutconfig";
+import { layoutConfig } from "../util/layoutconfig";
 export class ListItem extends Stack {
 }
 __decorate([
@@ -113,9 +113,21 @@ export function list(config) {
     }
     return ret;
 }
-export function listItem(item) {
+export function listItem(item, config) {
     return (new ListItem).also((it) => {
-        it.layoutConfig = layoutConfig().most().configHeight(LayoutSpec.FIT);
-        it.addChild(item);
+        it.layoutConfig = layoutConfig().fit();
+        if (item instanceof View) {
+            it.addChild(item);
+        }
+        else {
+            item.forEach(e => {
+                it.addChild(e);
+            });
+        }
+        if (config) {
+            for (let key in config) {
+                Reflect.set(it, key, Reflect.get(config, key, config), it);
+            }
+        }
     });
 }

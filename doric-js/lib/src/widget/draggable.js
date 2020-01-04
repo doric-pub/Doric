@@ -22,7 +22,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Property } from "../ui/view";
+import { Property, View } from "../ui/view";
 import { Stack } from "../widget/layouts";
 import { layoutConfig } from "../util/layoutconfig";
 export class Draggable extends Stack {
@@ -31,14 +31,21 @@ __decorate([
     Property,
     __metadata("design:type", Function)
 ], Draggable.prototype, "onDrag", void 0);
-export function draggable(config, views) {
+export function draggable(views, config) {
     const ret = new Draggable;
     ret.layoutConfig = layoutConfig().fit();
-    for (let key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret);
+    if (views instanceof View) {
+        ret.addChild(views);
     }
-    for (let v of views) {
-        ret.addChild(v);
+    else {
+        views.forEach(e => {
+            ret.addChild(e);
+        });
+    }
+    if (config) {
+        for (let key in config) {
+            Reflect.set(ret, key, Reflect.get(config, key, config), ret);
+        }
     }
     return ret;
 }

@@ -26,14 +26,20 @@ export class Draggable extends Stack implements IDraggable {
     onDrag?: (x: number, y: number) => void
 }
 
-export function draggable(config: IDraggable, views: View[]) {
+export function draggable(views: View | View[], config?: IDraggable) {
     const ret = new Draggable
     ret.layoutConfig = layoutConfig().fit()
-    for (let key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret)
+    if (views instanceof View) {
+        ret.addChild(views)
+    } else {
+        views.forEach(e => {
+            ret.addChild(e)
+        })
     }
-    for (let v of views) {
-        ret.addChild(v)
+    if (config) {
+        for (let key in config) {
+            Reflect.set(ret, key, Reflect.get(config, key, config), ret)
+        }
     }
     return ret
 }

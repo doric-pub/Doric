@@ -23,7 +23,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
  * limitations under the License.
  */
 import { Stack } from './layouts';
-import { Property, Superview } from '../ui/view';
+import { Property, Superview, View } from '../ui/view';
 import { layoutConfig } from '../util/index.util';
 export class FlowLayoutItem extends Stack {
 }
@@ -123,9 +123,21 @@ export function flowlayout(config) {
     }
     return ret;
 }
-export function flowItem(item) {
+export function flowItem(item, config) {
     return (new FlowLayoutItem).also((it) => {
         it.layoutConfig = layoutConfig().fit();
-        it.addChild(item);
+        if (item instanceof View) {
+            it.addChild(item);
+        }
+        else {
+            item.forEach(e => {
+                it.addChild(e);
+            });
+        }
+        if (config) {
+            for (let key in config) {
+                Reflect.set(it, key, Reflect.get(config, key, config), it);
+            }
+        }
     });
 }

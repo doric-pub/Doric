@@ -413,9 +413,9 @@ declare module 'doric/lib/src/widget/layouts' {
     }
     export class HLayout extends LinearLayout implements IHLayout {
     }
-    export function stack(views: View[]): Stack;
-    export function hlayout(views: View[]): HLayout;
-    export function vlayout(views: View[]): VLayout;
+    export function stack(views: View[], config?: IStack): Stack;
+    export function hlayout(views: View[], config?: IHLayout): HLayout;
+    export function vlayout(views: View[], config?: IVLayout): VLayout;
     export {};
 }
 
@@ -472,8 +472,11 @@ declare module 'doric/lib/src/widget/image' {
 
 declare module 'doric/lib/src/widget/list' {
     import { View, Superview, IView, NativeViewModel } from "doric/lib/src/ui/view";
-    import { Stack } from "doric/lib/src/widget/layouts";
-    export class ListItem extends Stack {
+    import { Stack, IStack } from "doric/lib/src/widget/layouts";
+    export interface IListItem extends IStack {
+        identifier?: string;
+    }
+    export class ListItem extends Stack implements IListItem {
         /**
           * Set to reuse native view
           */
@@ -497,14 +500,17 @@ declare module 'doric/lib/src/widget/list' {
         toModel(): NativeViewModel;
     }
     export function list(config: IList): List;
-    export function listItem(item: View): ListItem;
+    export function listItem(item: View | View[], config?: IListItem): ListItem;
 }
 
 declare module 'doric/lib/src/widget/slider' {
     import { Superview, View, IView } from "doric/lib/src/ui/view";
-    import { Stack } from "doric/lib/src/widget/layouts";
+    import { Stack, IStack } from "doric/lib/src/widget/layouts";
     import { BridgeContext } from "doric/lib/src/runtime/global";
-    export class SlideItem extends Stack {
+    export interface ISlideItem extends IStack {
+        identifier?: string;
+    }
+    export class SlideItem extends Stack implements ISlideItem {
         /**
           * Set to reuse native view
           */
@@ -526,8 +532,8 @@ declare module 'doric/lib/src/widget/slider' {
         slidePage(context: BridgeContext, page: number, smooth?: boolean): Promise<any>;
         getSlidedPage(context: BridgeContext): Promise<number>;
     }
-    export function slideItem(item: View): SlideItem;
     export function slider(config: ISlider): Slider;
+    export function slideItem(item: View | View[], config?: ISlideItem): SlideItem;
 }
 
 declare module 'doric/lib/src/widget/scroller' {
@@ -574,9 +580,12 @@ declare module 'doric/lib/src/widget/refreshable' {
 }
 
 declare module 'doric/lib/src/widget/flowlayout' {
-    import { Stack } from 'doric/lib/src/widget/layouts';
+    import { Stack, IStack } from 'doric/lib/src/widget/layouts';
     import { IView, Superview, View, NativeViewModel } from 'doric/lib/src/ui/view';
-    export class FlowLayoutItem extends Stack {
+    export interface IFlowLayoutItem extends IStack {
+        identifier?: string;
+    }
+    export class FlowLayoutItem extends Stack implements IFlowLayoutItem {
         /**
          * Set to reuse native view
          */
@@ -606,7 +615,7 @@ declare module 'doric/lib/src/widget/flowlayout' {
         toModel(): NativeViewModel;
     }
     export function flowlayout(config: IFlowLayout): FlowLayout;
-    export function flowItem(item: View): FlowLayoutItem;
+    export function flowItem(item: View | View[], config?: IFlowLayoutItem): FlowLayoutItem;
 }
 
 declare module 'doric/lib/src/widget/input' {
@@ -663,7 +672,7 @@ declare module 'doric/lib/src/widget/draggable' {
     export class Draggable extends Stack implements IDraggable {
         onDrag?: (x: number, y: number) => void;
     }
-    export function draggable(config: IDraggable, views: View[]): Draggable;
+    export function draggable(views: View | View[], config?: IDraggable): Draggable;
 }
 
 declare module 'doric/lib/src/native/modal' {

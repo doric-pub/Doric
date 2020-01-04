@@ -9,8 +9,27 @@ export class DoricDraggableNode extends DoricStackNode {
     build() {
         const ret = document.createElement('div')
         ret.ontouchstart = (event) => {
-            console.log("ontouchstart: " + event)
+            this.dragging = true
+            this.lastX = event.targetTouches[0].clientX
+            this.lastY = event.targetTouches[0].clientY
         }
+        ret.ontouchend = (event) => {
+            this.dragging = false
+        }
+        ret.ontouchcancel = (event) => {
+            this.dragging = false
+        }
+        ret.ontouchmove = (event) => {
+            if (this.dragging) {
+                this.offsetX += (event.targetTouches[0].clientX - this.lastX)
+                this.offsetY += (event.targetTouches[0].clientY - this.lastY)
+                this.callJSResponse(this.onDrag, this.offsetX, this.offsetY)
+
+                this.lastX = event.targetTouches[0].clientX
+                this.lastY = event.targetTouches[0].clientY
+            }
+        }
+
         ret.onmousedown = (event) => {
             this.dragging = true
             this.lastX = event.x
@@ -28,9 +47,6 @@ export class DoricDraggableNode extends DoricStackNode {
         }
         ret.onmouseup = (event) => {
             this.dragging = false
-
-            this.lastX = event.x
-            this.lastY = event.y
         }
         ret.onmouseout = (event) => {
             this.dragging = false

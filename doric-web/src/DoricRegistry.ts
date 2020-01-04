@@ -13,6 +13,7 @@ import { NavigatorPlugin } from "./navigate/NavigatorPlugin"
 import { PopoverPlugin } from './plugins/PopoverPlugin'
 import { DoricListItemNode } from "./shader/DoricListItemNode"
 import { DoricListNode } from "./shader/DoricListNode"
+import { DoricDraggableNode } from "./shader/DoricDraggableNode"
 
 const bundles: Map<string, string> = new Map
 
@@ -61,3 +62,4 @@ registerViewNode('Image', DoricImageNode)
 registerViewNode('Scroller', DoricScrollerNode)
 registerViewNode('ListItem', DoricListItemNode)
 registerViewNode('List', DoricListNode)
+registerViewNode('Draggable', DoricDraggableNode)

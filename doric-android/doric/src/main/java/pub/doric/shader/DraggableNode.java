@@ -61,11 +61,12 @@ public class DraggableNode extends StackNode {
                 case MotionEvent.ACTION_MOVE:
                     int offsetX = x - lastX;
                     int offsetY = y - lastY;
-                    callJSResponse(onDrag, DoricUtils.px2dp(offsetX), DoricUtils.px2dp(offsetY));
+                    layout(getLeft() + offsetX, getTop() + offsetY, getRight() + offsetX, getBottom() + offsetY);
                     break;
                 case MotionEvent.ACTION_UP:
                     break;
             }
+            callJSResponse(onDrag, DoricUtils.px2dp(event.getRawX() - x), DoricUtils.px2dp(event.getRawY() - y));
             return true;
         }
     }

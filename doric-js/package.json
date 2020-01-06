@@ -22,11 +22,11 @@
   },
   "homepage": "https://github.com/doric-pub/doric#readme",
   "dependencies": {
-    "@rollup/plugin-node-resolve": "^6.0.0",
+    "@rollup/plugin-node-resolve": "^6.1.0",
     "@types/ws": "^6.0.4",
     "dts-bundle": "^0.7.3",
     "reflect-metadata": "^0.1.13",
-    "rollup": "^1.27.14",
+    "rollup": "^1.28.0",
     "tslib": "^1.10.0",
     "typescript": "^3.7.4",
     "ws": "^7.2.1"

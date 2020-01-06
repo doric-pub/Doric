@@ -4,6 +4,8 @@
 ##  Init Develop Environment
 ##
 ##############################################################################
-cd doric-js && npm install && npm run build && cd ..
-cd doric-demo && npm install && npm run build && cd ..
-cd doric-cli && npm install && npm link && cd ..
+CURRENT_DIR=$(cd $(dirname $0); pwd)
+
+cd $CURRENT_DIR/doric-js && npm install && npm run build
+cd $CURRENT_DIR/doric-demo && npm install && npm run build
+cd $CURRENT_DIR/doric-cli && npm install && npm link

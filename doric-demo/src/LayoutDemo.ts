@@ -1,5 +1,5 @@
 
-import { Group, Panel, Text, text, gravity, Color, Stack, LayoutSpec, list, NativeCall, listItem, log, vlayout, Gravity, hlayout, slider, slideItem, scroller, IVLayout, IHLayout, layoutConfig } from "doric";
+import { Group, Panel, text, gravity, Color, LayoutSpec, vlayout, hlayout, scroller, IVLayout, IHLayout, layoutConfig, stack, Gravity } from "doric";
 
 const colors = [
     "#f0932b",
@@ -11,459 +11,500 @@ const colors = [
 ]
 
 function box(idx = 0) {
-    return (new Stack).also(it => {
-        it.width = it.height = 20
-        it.backgroundColor = Color.parse(colors[idx || 0])
+    return stack([], {
+        width: 20,
+        height: 20,
+        layoutConfig: layoutConfig().just(),
+        backgroundColor: Color.parse(colors[idx || 0])
     })
 }
+
 function boxStr(str: string, idx = 0) {
-    return (new Text).also(it => {
-        it.width = it.height = 20
-        it.text = str
-        it.textColor = Color.parse('#ffffff')
-        it.backgroundColor = Color.parse(colors[idx || 0])
+    return text({
+        width: 20,
+        height: 20,
+        text: str,
+        textColor: Color.WHITE,
+        layoutConfig: layoutConfig().just(),
+        backgroundColor: Color.parse(colors[idx || 0])
     })
 }
+
 function label(str: string) {
     return text({
         text: str,
         textSize: 16,
     })
 }
+
 @Entry
 class LayoutDemo extends Panel {
     build(rootView: Group) {
         scroller(
-            hlayout([
-                vlayout([
-                    label("Horizontal Layout(Align to Top)"),
-                    hlayout([
-                        box().apply({
-                            height: 20
-                        }),
-                        box().apply({
-                            height: 40
-                        }),
-                        box().apply({
-                            height: 60
-                        }),
-                        box().apply({
-                            height: 40
-                        }),
-                        box().apply({
-                            height: 20
-                        }),
-                    ]).also(it => {
-                        it.space = 20
-                    }),
-                    label("Horizontal Layout(Align to Bottom)"),
-                    hlayout([
-                        box().apply({
-                            height: 20
-                        }),
-                        box().apply({
-                            height: 40
-                        }),
-                        box().apply({
-                            height: 60
-                        }),
-                        box().apply({
-                            height: 40
-                        }),
-                        box().apply({
-                            height: 20
-                        }),
-                    ]).also(it => {
-                        it.space = 20
-                        it.gravity = gravity().bottom()
-                    }),
-                    label("Horizontal Layout(Align to Center)"),
-                    hlayout([
-                        box().apply({
-                            height: 20
-                        }),
-                        box().apply({
-                            height: 40
-                        }),
-                        box().apply({
-                            height: 60
-                        }),
-                        box().apply({
-                            height: 40
-                        }),
-                        box().apply({
-                            height: 20
-                        }),
-                    ]).also(it => {
-                        it.space = 20
-                        it.gravity = gravity().center()
-                    }),
-                    label("Horizontal Layout(Weight)"),
-                    hlayout(
+            hlayout(
+                [
+                    vlayout(
                         [
-                            boxStr('weight=1', 3).apply({
-                                layoutConfig: {
-                                    widthSpec: LayoutSpec.JUST,
-                                    heightSpec: LayoutSpec.JUST,
-                                    weight: 1,
+                            label("Horizontal Layout(Align to Top)"),
+                            hlayout(
+                                [
+                                    box().apply({
+                                        height: 20
+                                    }),
+                                    box().apply({
+                                        height: 40
+                                    }),
+                                    box().apply({
+                                        height: 60
+                                    }),
+                                    box().apply({
+                                        height: 40
+                                    }),
+                                    box().apply({
+                                        height: 20
+                                    }),
+                                ],
+                                {
+                                    space: 20
                                 }
-                            }),
-                            box(2),
-                            box(4),
+                            ),
+                            label("Horizontal Layout(Align to Bottom)"),
+                            hlayout(
+                                [
+                                    box().apply({
+                                        height: 20
+                                    }),
+                                    box().apply({
+                                        height: 40
+                                    }),
+                                    box().apply({
+                                        height: 60
+                                    }),
+                                    box().apply({
+                                        height: 40
+                                    }),
+                                    box().apply({
+                                        height: 20
+                                    }),
+                                ],
+                                {
+                                    space: 20,
+                                    gravity: Gravity.Bottom
+                                }),
+                            label("Horizontal Layout(Align to Center)"),
+                            hlayout(
+                                [
+                                    box().apply({
+                                        height: 20
+                                    }),
+                                    box().apply({
+                                        height: 40
+                                    }),
+                                    box().apply({
+                                        height: 60
+                                    }),
+                                    box().apply({
+                                        height: 40
+                                    }),
+                                    box().apply({
+                                        height: 20
+                                    }),
+                                ],
+                                {
+                                    space: 20,
+                                    gravity: Gravity.Center
+                                }
+                            ),
+                            label("Horizontal Layout(Weight)"),
+                            hlayout(
+                                [
+                                    boxStr('weight=1', 3).apply({
+                                        layoutConfig: {
+                                            widthSpec: LayoutSpec.JUST,
+                                            heightSpec: LayoutSpec.JUST,
+                                            weight: 1,
+                                        }
+                                    }),
+                                    box(2),
+                                    box(4),
+                                ],
+                                {
+                                    width: 200,
+                                    height: 30,
+                                    layoutConfig: {
+                                        widthSpec: LayoutSpec.JUST,
+                                        heightSpec: LayoutSpec.JUST,
+                                    },
+                                    backgroundColor: Color.parse('#eeeeee'),
+                                    gravity: gravity().center(),
+                                }),
+                            hlayout(
+                                [
+                                    box(3),
+                                    boxStr('weight=1', 2).apply({
+                                        layoutConfig: {
+                                            widthSpec: LayoutSpec.JUST,
+                                            heightSpec: LayoutSpec.JUST,
+                                            weight: 1,
+                                        }
+                                    }),
+                                    box(4),
+                                ],
+                                {
+                                    width: 200,
+                                    height: 30,
+                                    layoutConfig: {
+                                        widthSpec: LayoutSpec.JUST,
+                                        heightSpec: LayoutSpec.JUST,
+                                    },
+                                    backgroundColor: Color.parse('#eeeeee'),
+                                    gravity: gravity().center(),
+                                }
+                            ),
+                            hlayout(
+                                [
+                                    box(3),
+                                    box(2),
+                                    boxStr('weight=1', 4).apply({
+                                        layoutConfig: {
+                                            widthSpec: LayoutSpec.JUST,
+                                            heightSpec: LayoutSpec.JUST,
+                                            weight: 1,
+                                        }
+                                    }),
+                                ],
+                                {
+                                    width: 200,
+                                    height: 30,
+                                    layoutConfig: {
+                                        widthSpec: LayoutSpec.JUST,
+                                        heightSpec: LayoutSpec.JUST,
+                                    },
+                                    backgroundColor: Color.parse('#eeeeee'),
+                                    gravity: gravity().center(),
+                                }
+                            ),
+                            hlayout(
+                                [
+                                    boxStr('weight=1', 3).apply({
+                                        layoutConfig: {
+                                            widthSpec: LayoutSpec.JUST,
+                                            heightSpec: LayoutSpec.JUST,
+                                            weight: 1,
+                                        }
+                                    }),
+                                    boxStr('weight=1', 2).apply({
+                                        layoutConfig: {
+                                            widthSpec: LayoutSpec.JUST,
+                                            heightSpec: LayoutSpec.JUST,
+                                            weight: 1,
+                                        }
+                                    }),
+                                    box(4),
+                                ],
+                                {
+                                    width: 200,
+                                    height: 30,
+                                    layoutConfig: {
+                                        widthSpec: LayoutSpec.JUST,
+                                        heightSpec: LayoutSpec.JUST,
+                                    },
+                                    backgroundColor: Color.parse('#eeeeee'),
+                                    gravity: gravity().center(),
+                                }
+                            ),
+                            hlayout(
+                                [
+                                    boxStr('weight=1', 3).apply({
+                                        layoutConfig: {
+                                            widthSpec: LayoutSpec.JUST,
+                                            heightSpec: LayoutSpec.JUST,
+                                            weight: 1,
+                                        }
+                                    }),
+                                    boxStr('weight=1', 2).apply({
+                                        layoutConfig: {
+                                            widthSpec: LayoutSpec.JUST,
+                                            heightSpec: LayoutSpec.JUST,
+                                            weight: 1,
+                                        }
+                                    }),
+                                    boxStr('weight=1', 4).apply({
+                                        layoutConfig: {
+                                            widthSpec: LayoutSpec.JUST,
+                                            heightSpec: LayoutSpec.JUST,
+                                            weight: 1,
+                                        }
+                                    }),
+                                ],
+                                {
+                                    width: 200,
+                                    height: 30,
+                                    layoutConfig: {
+                                        widthSpec: LayoutSpec.JUST,
+                                        heightSpec: LayoutSpec.JUST,
+                                    },
+                                    backgroundColor: Color.parse('#eeeeee'),
+                                    gravity: gravity().center(),
+                                }),
                         ],
                         {
-                            width: 200,
-                            height: 30,
-                            layoutConfig: {
-                                widthSpec: LayoutSpec.JUST,
-                                heightSpec: LayoutSpec.JUST,
-                            },
-                            backgroundColor: Color.parse('#eeeeee'),
-                            gravity: gravity().center(),
-                        }),
-                    hlayout(
+                            space: 20,
+                            gravity: Gravity.Center
+                        }
+                    ),
+                    vlayout(
                         [
-                            box(3),
-                            boxStr('weight=1', 2).apply({
-                                layoutConfig: {
-                                    widthSpec: LayoutSpec.JUST,
-                                    heightSpec: LayoutSpec.JUST,
-                                    weight: 1,
-                                }
-                            }),
-                            box(4),
+                            label("Vertical Layout(Algin to Left)"),
+                            vlayout(
+                                [
+                                    box(1).apply({
+                                        width: 20
+                                    }),
+                                    box(1).apply({
+                                        width: 40
+                                    }),
+                                    box(1).apply({
+                                        width: 60
+                                    }),
+                                    box(1).apply({
+                                        width: 40
+                                    }),
+                                    box(1).apply({
+                                        width: 20
+                                    }),
+                                ],
+                                {
+                                    space: 20
+                                }),
+                            label("Vertical Layout(Algin to Right)"),
+                            vlayout(
+                                [
+                                    box(1).apply({
+                                        width: 20
+                                    }),
+                                    box(1).apply({
+                                        width: 40
+                                    }),
+                                    box(1).apply({
+                                        width: 60
+                                    }),
+                                    box(1).apply({
+                                        width: 40
+                                    }),
+                                    box(1).apply({
+                                        width: 20
+                                    }),
+                                ],
+                                {
+                                    space: 20,
+                                    gravity: gravity().right(),
+                                }),
+                            label("Vertical Layout(Algin to Center)"),
+                            vlayout(
+                                [
+                                    box(1).apply({
+                                        width: 20
+                                    }),
+                                    box(1).apply({
+                                        width: 40
+                                    }),
+                                    box(1).apply({
+                                        width: 60
+                                    }),
+                                    box(1).apply({
+                                        width: 40
+                                    }),
+                                    box(1).apply({
+                                        width: 20
+                                    }),
+                                ],
+                                {
+                                    space: 20,
+                                    gravity: gravity().center(),
+                                }),
+                            label("Vertical Layout(Weight)"),
+                            hlayout(
+                                [
+                                    vlayout(
+                                        [
+                                            boxStr('weight=1', 3).apply({
+                                                layoutConfig: {
+                                                    widthSpec: LayoutSpec.MOST,
+                                                    heightSpec: LayoutSpec.JUST,
+                                                    weight: 1,
+                                                },
+                                            }),
+                                            box(2).apply({
+                                                layoutConfig: {
+                                                    widthSpec: LayoutSpec.MOST,
+                                                    heightSpec: LayoutSpec.JUST,
+                                                }
+                                            }),
+                                            box(4).apply({
+                                                layoutConfig: {
+                                                    widthSpec: LayoutSpec.MOST,
+                                                    heightSpec: LayoutSpec.JUST,
+                                                }
+                                            }),
+                                        ],
+                                        {
+                                            width: 100,
+                                            height: 200,
+                                            layoutConfig: {
+                                                widthSpec: LayoutSpec.JUST,
+                                                heightSpec: LayoutSpec.JUST,
+                                            },
+                                            backgroundColor: Color.parse('#eeeeee'),
+                                            gravity: gravity().center(),
+                                        }),
+                                    vlayout(
+                                        [
+                                            box(3).apply({
+                                                layoutConfig: {
+                                                    widthSpec: LayoutSpec.MOST,
+                                                    heightSpec: LayoutSpec.JUST,
+                                                },
+                                            }),
+                                            boxStr('weight=1', 2).apply({
+                                                layoutConfig: {
+                                                    widthSpec: LayoutSpec.MOST,
+                                                    heightSpec: LayoutSpec.JUST,
+                                                    weight: 1,
+                                                }
+                                            }),
+                                            box(4).apply({
+                                                layoutConfig: {
+                                                    widthSpec: LayoutSpec.MOST,
+                                                    heightSpec: LayoutSpec.JUST,
+                                                }
+                                            }),
+                                        ],
+                                        {
+                                            width: 100,
+                                            height: 200,
+                                            layoutConfig: {
+                                                widthSpec: LayoutSpec.JUST,
+                                                heightSpec: LayoutSpec.JUST,
+                                            },
+                                            backgroundColor: Color.parse('#eeeeee'),
+                                            gravity: gravity().center(),
+                                        }),
+                                    vlayout(
+                                        [
+                                            box(3).apply({
+                                                layoutConfig: {
+                                                    widthSpec: LayoutSpec.MOST,
+                                                    heightSpec: LayoutSpec.JUST,
+                                                },
+                                            }),
+                                            box(2).apply({
+                                                layoutConfig: {
+                                                    widthSpec: LayoutSpec.MOST,
+                                                    heightSpec: LayoutSpec.JUST,
+                                                },
+                                            }),
+                                            boxStr('weight=1', 4).apply({
+                                                layoutConfig: {
+                                                    widthSpec: LayoutSpec.MOST,
+                                                    heightSpec: LayoutSpec.JUST,
+                                                    weight: 1,
+                                                }
+                                            }),
+                                        ],
+                                        {
+                                            width: 100,
+                                            height: 200,
+                                            layoutConfig: {
+                                                widthSpec: LayoutSpec.JUST,
+                                                heightSpec: LayoutSpec.JUST,
+                                            },
+                                            backgroundColor: Color.parse('#eeeeee'),
+                                            gravity: gravity().center(),
+                                        }),
+                                    vlayout(
+                                        [
+                                            boxStr('weight=1', 3).apply({
+                                                layoutConfig: {
+                                                    widthSpec: LayoutSpec.MOST,
+                                                    heightSpec: LayoutSpec.JUST,
+                                                    weight: 1,
+                                                },
+                                            }),
+                                            boxStr('weight=1', 2).apply({
+                                                layoutConfig: {
+                                                    widthSpec: LayoutSpec.MOST,
+                                                    heightSpec: LayoutSpec.JUST,
+                                                    weight: 1,
+                                                }
+                                            }),
+                                            box(4).apply({
+                                                layoutConfig: {
+                                                    widthSpec: LayoutSpec.MOST,
+                                                    heightSpec: LayoutSpec.JUST,
+                                                }
+                                            }),
+                                        ],
+                                        {
+                                            width: 100,
+                                            height: 200,
+                                            layoutConfig: {
+                                                widthSpec: LayoutSpec.JUST,
+                                                heightSpec: LayoutSpec.JUST,
+                                            },
+                                            backgroundColor: Color.parse('#eeeeee'),
+                                            gravity: gravity().center(),
+                                        }),
+                                    vlayout(
+                                        [
+                                            boxStr('weight=1', 3).apply({
+                                                layoutConfig: {
+                                                    widthSpec: LayoutSpec.MOST,
+                                                    heightSpec: LayoutSpec.JUST,
+                                                    weight: 1,
+                                                },
+                                            }),
+                                            boxStr('weight=1', 2).apply({
+                                                layoutConfig: {
+                                                    widthSpec: LayoutSpec.MOST,
+                                                    heightSpec: LayoutSpec.JUST,
+                                                    weight: 1,
+                                                }
+                                            }),
+                                            boxStr('weight=1', 4).apply({
+                                                layoutConfig: {
+                                                    widthSpec: LayoutSpec.MOST,
+                                                    heightSpec: LayoutSpec.JUST,
+                                                    weight: 1,
+                                                }
+                                            }),
+                                        ],
+                                        {
+                                            width: 100,
+                                            height: 200,
+                                            layoutConfig: {
+                                                widthSpec: LayoutSpec.JUST,
+                                                heightSpec: LayoutSpec.JUST,
+                                            },
+                                            backgroundColor: Color.parse('#eeeeee'),
+                                            gravity: gravity().center(),
+                                        }),
+                                ],
+                                {
+                                    space: 20
+                                }),
                         ],
                         {
-                            width: 200,
-                            height: 30,
-                            layoutConfig: {
-                                widthSpec: LayoutSpec.JUST,
-                                heightSpec: LayoutSpec.JUST,
-                            },
-                            backgroundColor: Color.parse('#eeeeee'),
-                            gravity: gravity().center(),
-                        }
-                    ),
-                    hlayout(
-                        [
-                            box(3),
-                            box(2),
-                            boxStr('weight=1', 4).apply({
-                                layoutConfig: {
-                                    widthSpec: LayoutSpec.JUST,
-                                    heightSpec: LayoutSpec.JUST,
-                                    weight: 1,
-                                }
-                            }),
-                        ],
-                        {
-                            width: 200,
-                            height: 30,
-                            layoutConfig: {
-                                widthSpec: LayoutSpec.JUST,
-                                heightSpec: LayoutSpec.JUST,
-                            },
-                            backgroundColor: Color.parse('#eeeeee'),
-                            gravity: gravity().center(),
-                        }
-                    ),
-                    hlayout([
-                        boxStr('weight=1', 3).apply({
-                            layoutConfig: {
-                                widthSpec: LayoutSpec.JUST,
-                                heightSpec: LayoutSpec.JUST,
-                                weight: 1,
-                            }
-                        }),
-                        boxStr('weight=1', 2).apply({
-                            layoutConfig: {
-                                widthSpec: LayoutSpec.JUST,
-                                heightSpec: LayoutSpec.JUST,
-                                weight: 1,
-                            }
-                        }),
-                        box(4),
-                    ],
-                        {
-                            width: 200,
-                            height: 30,
-                            layoutConfig: {
-                                widthSpec: LayoutSpec.JUST,
-                                heightSpec: LayoutSpec.JUST,
-                            },
-                            backgroundColor: Color.parse('#eeeeee'),
-                            gravity: gravity().center(),
-                        }
-                    ),
-                    hlayout([
-                        boxStr('weight=1', 3).apply({
-                            layoutConfig: {
-                                widthSpec: LayoutSpec.JUST,
-                                heightSpec: LayoutSpec.JUST,
-                                weight: 1,
-                            }
-                        }),
-                        boxStr('weight=1', 2).apply({
-                            layoutConfig: {
-                                widthSpec: LayoutSpec.JUST,
-                                heightSpec: LayoutSpec.JUST,
-                                weight: 1,
-                            }
-                        }),
-                        boxStr('weight=1', 4).apply({
-                            layoutConfig: {
-                                widthSpec: LayoutSpec.JUST,
-                                heightSpec: LayoutSpec.JUST,
-                                weight: 1,
-                            }
-                        }),
-                    ]).apply({
-                        width: 200,
-                        height: 30,
-                        layoutConfig: {
-                            widthSpec: LayoutSpec.JUST,
-                            heightSpec: LayoutSpec.JUST,
-                        },
-                        backgroundColor: Color.parse('#eeeeee'),
-                        gravity: gravity().center(),
-                    } as IHLayout),
-                ]).also(it => {
-                    it.space = 20
-                    it.gravity = gravity().center()
+                            space: 20,
+                            gravity: Gravity.Left
+                        })
+                ],
+                {
+                    space: 20
                 }),
-                vlayout([
-                    label("Vertical Layout(Algin to Left)"),
-                    vlayout([
-                        box(1).apply({
-                            width: 20
-                        }),
-                        box(1).apply({
-                            width: 40
-                        }),
-                        box(1).apply({
-                            width: 60
-                        }),
-                        box(1).apply({
-                            width: 40
-                        }),
-                        box(1).apply({
-                            width: 20
-                        }),
-                    ]).apply({
-                        space: 20
-                    } as IVLayout),
-                    label("Vertical Layout(Algin to Right)"),
-                    vlayout([
-                        box(1).apply({
-                            width: 20
-                        }),
-                        box(1).apply({
-                            width: 40
-                        }),
-                        box(1).apply({
-                            width: 60
-                        }),
-                        box(1).apply({
-                            width: 40
-                        }),
-                        box(1).apply({
-                            width: 20
-                        }),
-                    ]).apply({
-                        space: 20,
-                        gravity: gravity().right(),
-                    } as IVLayout),
-                    label("Vertical Layout(Algin to Center)"),
-                    vlayout([
-                        box(1).apply({
-                            width: 20
-                        }),
-                        box(1).apply({
-                            width: 40
-                        }),
-                        box(1).apply({
-                            width: 60
-                        }),
-                        box(1).apply({
-                            width: 40
-                        }),
-                        box(1).apply({
-                            width: 20
-                        }),
-                    ]).apply({
-                        space: 20,
-                        gravity: gravity().center(),
-                    } as IVLayout),
-                    label("Vertical Layout(Weight)"),
-                    hlayout([
-
-                        vlayout([
-                            boxStr('weight=1', 3).apply({
-                                layoutConfig: {
-                                    widthSpec: LayoutSpec.MOST,
-                                    heightSpec: LayoutSpec.JUST,
-                                    weight: 1,
-                                },
-                            }),
-                            box(2).apply({
-                                layoutConfig: {
-                                    widthSpec: LayoutSpec.MOST,
-                                    heightSpec: LayoutSpec.JUST,
-                                }
-                            }),
-                            box(4).apply({
-                                layoutConfig: {
-                                    widthSpec: LayoutSpec.MOST,
-                                    heightSpec: LayoutSpec.JUST,
-                                }
-                            }),
-                        ]).apply({
-                            width: 100,
-                            height: 200,
-                            layoutConfig: {
-                                widthSpec: LayoutSpec.JUST,
-                                heightSpec: LayoutSpec.JUST,
-                            },
-                            backgroundColor: Color.parse('#eeeeee'),
-                            gravity: gravity().center(),
-                        } as IVLayout),
-                        vlayout([
-                            box(3).apply({
-                                layoutConfig: {
-                                    widthSpec: LayoutSpec.MOST,
-                                    heightSpec: LayoutSpec.JUST,
-                                },
-                            }),
-                            boxStr('weight=1', 2).apply({
-                                layoutConfig: {
-                                    widthSpec: LayoutSpec.MOST,
-                                    heightSpec: LayoutSpec.JUST,
-                                    weight: 1,
-                                }
-                            }),
-                            box(4).apply({
-                                layoutConfig: {
-                                    widthSpec: LayoutSpec.MOST,
-                                    heightSpec: LayoutSpec.JUST,
-                                }
-                            }),
-                        ]).apply({
-                            width: 100,
-                            height: 200,
-                            layoutConfig: {
-                                widthSpec: LayoutSpec.JUST,
-                                heightSpec: LayoutSpec.JUST,
-                            },
-                            backgroundColor: Color.parse('#eeeeee'),
-                            gravity: gravity().center(),
-                        } as IVLayout),
-                        vlayout([
-                            box(3).apply({
-                                layoutConfig: {
-                                    widthSpec: LayoutSpec.MOST,
-                                    heightSpec: LayoutSpec.JUST,
-                                },
-                            }),
-                            box(2).apply({
-                                layoutConfig: {
-                                    widthSpec: LayoutSpec.MOST,
-                                    heightSpec: LayoutSpec.JUST,
-                                },
-                            }),
-                            boxStr('weight=1', 4).apply({
-                                layoutConfig: {
-                                    widthSpec: LayoutSpec.MOST,
-                                    heightSpec: LayoutSpec.JUST,
-                                    weight: 1,
-                                }
-                            }),
-                        ]).apply({
-                            width: 100,
-                            height: 200,
-                            layoutConfig: {
-                                widthSpec: LayoutSpec.JUST,
-                                heightSpec: LayoutSpec.JUST,
-                            },
-                            backgroundColor: Color.parse('#eeeeee'),
-                            gravity: gravity().center(),
-                        } as IVLayout),
-                        vlayout([
-                            boxStr('weight=1', 3).apply({
-                                layoutConfig: {
-                                    widthSpec: LayoutSpec.MOST,
-                                    heightSpec: LayoutSpec.JUST,
-                                    weight: 1,
-                                },
-                            }),
-                            boxStr('weight=1', 2).apply({
-                                layoutConfig: {
-                                    widthSpec: LayoutSpec.MOST,
-                                    heightSpec: LayoutSpec.JUST,
-                                    weight: 1,
-                                }
-                            }),
-                            box(4).apply({
-                                layoutConfig: {
-                                    widthSpec: LayoutSpec.MOST,
-                                    heightSpec: LayoutSpec.JUST,
-                                }
-                            }),
-                        ]).apply({
-                            width: 100,
-                            height: 200,
-                            layoutConfig: {
-                                widthSpec: LayoutSpec.JUST,
-                                heightSpec: LayoutSpec.JUST,
-                            },
-                            backgroundColor: Color.parse('#eeeeee'),
-                            gravity: gravity().center(),
-                        } as IVLayout),
-                        vlayout([
-                            boxStr('weight=1', 3).apply({
-                                layoutConfig: {
-                                    widthSpec: LayoutSpec.MOST,
-                                    heightSpec: LayoutSpec.JUST,
-                                    weight: 1,
-                                },
-                            }),
-                            boxStr('weight=1', 2).apply({
-                                layoutConfig: {
-                                    widthSpec: LayoutSpec.MOST,
-                                    heightSpec: LayoutSpec.JUST,
-                                    weight: 1,
-                                }
-                            }),
-                            boxStr('weight=1', 4).apply({
-                                layoutConfig: {
-                                    widthSpec: LayoutSpec.MOST,
-                                    heightSpec: LayoutSpec.JUST,
-                                    weight: 1,
-                                }
-                            }),
-                        ]).apply({
-                            width: 100,
-                            height: 200,
-                            layoutConfig: {
-                                widthSpec: LayoutSpec.JUST,
-                                heightSpec: LayoutSpec.JUST,
-                            },
-                            backgroundColor: Color.parse('#eeeeee'),
-                            gravity: gravity().center(),
-                        } as IVLayout),
-                    ]).also(it => {
-                        it.space = 20
-                    }),
-
-                ]).also(it => {
-                    it.space = 20
-                    it.gravity = gravity().left()
-                })
-            ]).also(it => {
-                it.space = 20
-            }),
-        ).also(it => {
-            it.layoutConfig = layoutConfig().most()
-        })
-            .in(rootView)
+            {
+                layoutConfig: layoutConfig().most()
+            }
+        ).in(rootView)
     }
 }

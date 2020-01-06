@@ -486,6 +486,9 @@ declare module 'doric/lib/src/widget/list' {
         renderItem: (index: number) => ListItem;
         itemCount: number;
         batchCount?: number;
+        onLoadMore?: () => void;
+        loadMore?: boolean;
+        loadMoreView?: ListItem;
     }
     export class List extends Superview implements IList {
         allSubviews(): IterableIterator<ListItem> | ListItem[];
@@ -538,9 +541,9 @@ declare module 'doric/lib/src/widget/slider' {
 
 declare module 'doric/lib/src/widget/scroller' {
     import { Superview, View, IView, NativeViewModel } from 'doric/lib/src/ui/view';
-    export function scroller(content: View): Scroller;
+    export function scroller(content: View, config?: IScroller): Scroller;
     export interface IScroller extends IView {
-        content: View;
+        content?: View;
     }
     export class Scroller extends Superview implements IScroller {
         content: View;
@@ -598,6 +601,9 @@ declare module 'doric/lib/src/widget/flowlayout' {
         columnCount?: number;
         columnSpace?: number;
         rowSpace?: number;
+        loadMore?: boolean;
+        onLoadMore?: () => void;
+        loadMoreView?: FlowLayoutItem;
     }
     export class FlowLayout extends Superview implements IFlowLayout {
         allSubviews(): IterableIterator<FlowLayoutItem> | FlowLayoutItem[];

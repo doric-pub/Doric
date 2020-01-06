@@ -39,9 +39,7 @@ class MyDemo extends Panel {
                             backgroundColor: colors[idx % colors.length],
                         }))
                     }
-                }).apply({
                 }),
-            }).apply({
                 layoutConfig: layoutConfig().most(),
             }).also(v => {
                 v.top = 200

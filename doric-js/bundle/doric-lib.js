@@ -1453,9 +1453,14 @@ function slideItem(item, config) {
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-function scroller(content) {
+function scroller(content, config) {
     return (new Scroller).also(v => {
         v.layoutConfig = layoutConfig().fit();
+        if (config) {
+            for (let key in config) {
+                Reflect.set(v, key, Reflect.get(config, key, config), v);
+            }
+        }
         v.content = content;
     });
 }

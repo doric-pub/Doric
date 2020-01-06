@@ -7,28 +7,29 @@ class ScrollerPanel extends Panel {
         scroller(
             vlayout([
                 scroller(
-                    vlayout(new Array(100).fill(1).map(e => label('Scroll Content')))
-                ).apply({
-                    layoutConfig: layoutConfig().just(),
-                    width: 300,
-                    height: 500,
-                    backgroundColor: Color.RED,
-                }),
+                    vlayout(new Array(100).fill(1).map(e => label('Scroll Content'))),
+                    {
+                        layoutConfig: layoutConfig().just(),
+                        width: 300,
+                        height: 500,
+                        backgroundColor: Color.RED,
+                    }
+                ),
                 scroller(
-                    vlayout(new Array(100).fill(1).map(e => label('Scroll Content')))
-                ).apply({
-                    layoutConfig: layoutConfig().just(),
-                    width: 300,
-                    height: 500,
-                    backgroundColor: Color.BLUE,
-                })
-            ])
-        )
-            .apply({
+                    vlayout(new Array(100).fill(1).map(e => label('Scroll Content'))),
+                    {
+                        layoutConfig: layoutConfig().just(),
+                        width: 300,
+                        height: 500,
+                        backgroundColor: Color.BLUE,
+                    }
+                )
+            ]),
+            {
                 layoutConfig: layoutConfig().most().configHeight(LayoutSpec.JUST),
                 height: 500,
                 backgroundColor: Color.YELLOW,
-            })
-            .in(rootView)
+            }
+        ).in(rootView)
     }
 }

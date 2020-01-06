@@ -16,6 +16,9 @@ export interface IFlowLayout extends IView {
     columnCount?: number;
     columnSpace?: number;
     rowSpace?: number;
+    loadMore?: boolean;
+    onLoadMore?: () => void;
+    loadMoreView?: FlowLayoutItem;
 }
 export declare class FlowLayout extends Superview implements IFlowLayout {
     private cachedViews;

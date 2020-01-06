@@ -15,9 +15,14 @@
  */
 import { Superview } from '../ui/view';
 import { layoutConfig } from '../util/layoutconfig';
-export function scroller(content) {
+export function scroller(content, config) {
     return (new Scroller).also(v => {
         v.layoutConfig = layoutConfig().fit();
+        if (config) {
+            for (let key in config) {
+                Reflect.set(v, key, Reflect.get(config, key, config), v);
+            }
+        }
         v.content = content;
     });
 }

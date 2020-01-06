@@ -1,4 +1,4 @@
-import { text, loge, log, ViewHolder, Stack, ViewModel, Gravity, Text, Color, HLayout, VLayout, Group, VMPanel, LayoutSpec, vlayout, hlayout, takeNonNull, stack } from "doric";
+import { text, loge, log, ViewHolder, Stack, ViewModel, Gravity, Text, Color, Group, VMPanel, LayoutSpec, vlayout, hlayout, takeNonNull } from "doric";
 
 type SnakeNode = {
     x: number

@@ -4,3 +4,4 @@ bundle/
 .project
 .classpath
 .settings/
+package-lock.json

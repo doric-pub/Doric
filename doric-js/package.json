@@ -1,6 +1,6 @@
 {
   "name": "doric",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "The JS Framework of Doric",
   "main": "bundle/doric-vm.js",
   "types": "index.d.ts",

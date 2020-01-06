@@ -1,11 +1,12 @@
 {
   "name": "doric-web",
-  "version": "0.2.2",
+  "version": "0.2.3-rc1",
   "description": "Doric library for Web",
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc -p .&& rollup -c"
+    "build": "tsc -p .&& rollup -c",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",

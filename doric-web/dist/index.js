@@ -2111,27 +2111,42 @@ class VLayout extends LinearLayout {
 }
 class HLayout extends LinearLayout {
 }
-function stack(views) {
+function stack(views, config) {
     const ret = new Stack;
     ret.layoutConfig = layoutConfig().fit();
     for (let v of views) {
         ret.addChild(v);
     }
+    if (config) {
+        for (let key in config) {
+            Reflect.set(ret, key, Reflect.get(config, key, config), ret);
+        }
+    }
     return ret;
 }
-function hlayout(views) {
+function hlayout(views, config) {
     const ret = new HLayout;
     ret.layoutConfig = layoutConfig().fit();
     for (let v of views) {
         ret.addChild(v);
     }
+    if (config) {
+        for (let key in config) {
+            Reflect.set(ret, key, Reflect.get(config, key, config), ret);
+        }
+    }
     return ret;
 }
-function vlayout(views) {
+function vlayout(views, config) {
     const ret = new VLayout;
     ret.layoutConfig = layoutConfig().fit();
     for (let v of views) {
         ret.addChild(v);
+    }
+    if (config) {
+        for (let key in config) {
+            Reflect.set(ret, key, Reflect.get(config, key, config), ret);
+        }
     }
     return ret;
 }
@@ -2811,10 +2826,22 @@ function list(config) {
     }
     return ret;
 }
-function listItem(item) {
+function listItem(item, config) {
     return (new ListItem).also((it) => {
-        it.layoutConfig = layoutConfig().most().configHeight(exports.LayoutSpec.FIT);
-        it.addChild(item);
+        it.layoutConfig = layoutConfig().fit();
+        if (item instanceof View) {
+            it.addChild(item);
+        }
+        else {
+            item.forEach(e => {
+                it.addChild(e);
+            });
+        }
+        if (config) {
+            for (let key in config) {
+                Reflect.set(it, key, Reflect.get(config, key, config), it);
+            }
+        }
     });
 }
 
@@ -2891,18 +2918,30 @@ __decorate$6([
     Property,
     __metadata$6("design:type", Function)
 ], Slider.prototype, "onPageSlided", void 0);
-function slideItem(item) {
-    return (new SlideItem).also((it) => {
-        it.layoutConfig = layoutConfig().fit();
-        it.addChild(item);
-    });
-}
 function slider(config) {
     const ret = new Slider;
     for (let key in config) {
         Reflect.set(ret, key, Reflect.get(config, key, config), ret);
     }
     return ret;
+}
+function slideItem(item, config) {
+    return (new SlideItem).also((it) => {
+        it.layoutConfig = layoutConfig().fit();
+        if (item instanceof View) {
+            it.addChild(item);
+        }
+        else {
+            item.forEach(e => {
+                it.addChild(e);
+            });
+        }
+        if (config) {
+            for (let key in config) {
+                Reflect.set(it, key, Reflect.get(config, key, config), it);
+            }
+        }
+    });
 }
 
 /*
@@ -2920,9 +2959,14 @@ function slider(config) {
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-function scroller(content) {
+function scroller(content, config) {
     return (new Scroller).also(v => {
         v.layoutConfig = layoutConfig().fit();
+        if (config) {
+            for (let key in config) {
+                Reflect.set(v, key, Reflect.get(config, key, config), v);
+            }
+        }
         v.content = content;
     });
 }
@@ -3097,10 +3141,22 @@ function flowlayout(config) {
     }
     return ret;
 }
-function flowItem(item) {
+function flowItem(item, config) {
     return (new FlowLayoutItem).also((it) => {
         it.layoutConfig = layoutConfig().fit();
-        it.addChild(item);
+        if (item instanceof View) {
+            it.addChild(item);
+        }
+        else {
+            item.forEach(e => {
+                it.addChild(e);
+            });
+        }
+        if (config) {
+            for (let key in config) {
+                Reflect.set(it, key, Reflect.get(config, key, config), it);
+            }
+        }
     });
 }
 
@@ -3215,14 +3271,21 @@ __decorate$b([
     Property,
     __metadata$b("design:type", Function)
 ], Draggable.prototype, "onDrag", void 0);
-function draggable(config, views) {
+function draggable(views, config) {
     const ret = new Draggable;
     ret.layoutConfig = layoutConfig().fit();
-    for (let key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret);
+    if (views instanceof View) {
+        ret.addChild(views);
     }
-    for (let v of views) {
-        ret.addChild(v);
+    else {
+        views.forEach(e => {
+            ret.addChild(e);
+        });
+    }
+    if (config) {
+        for (let key in config) {
+            Reflect.set(ret, key, Reflect.get(config, key, config), ret);
+        }
     }
     return ret;
 }

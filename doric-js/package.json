@@ -6,10 +6,10 @@
   "types": "index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc -d -p .&& rollup -c",
+    "build": "tsc -d -p .&& rollup -c && dts-bundle --configJson dts-bundle.json",
     "dev": "tsc -w -p . & rollup -c -w",
     "clean": "rm -rf build &&  rm -rf bundle",
-    "prepublish": "npm run build && dts-bundle --configJson dts-bundle.json"
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "https",

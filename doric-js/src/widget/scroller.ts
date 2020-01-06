@@ -16,15 +16,20 @@
 import { Superview, View, IView, NativeViewModel } from '../ui/view'
 import { layoutConfig } from '../util/layoutconfig'
 
-export function scroller(content: View) {
+export function scroller(content: View, config?: IScroller) {
     return (new Scroller).also(v => {
         v.layoutConfig = layoutConfig().fit()
+        if (config) {
+            for (let key in config) {
+                Reflect.set(v, key, Reflect.get(config, key, config), v)
+            }
+        }
         v.content = content
     })
 }
 
 export interface IScroller extends IView {
-    content: View
+    content?: View
 }
 
 export class Scroller extends Superview implements IScroller {

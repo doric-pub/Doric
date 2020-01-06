@@ -13,6 +13,9 @@ export interface IList extends IView {
     renderItem: (index: number) => ListItem;
     itemCount: number;
     batchCount?: number;
+    onLoadMore?: () => void;
+    loadMore?: boolean;
+    loadMoreView?: ListItem;
 }
 export declare class List extends Superview implements IList {
     private cachedViews;

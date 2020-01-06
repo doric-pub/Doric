@@ -14,45 +14,46 @@ const imageUrls = [
 ]
 @Entry
 class FlowDemo extends Panel {
-    build(rootView: Group): void {
-        flowlayout({
+    build(rootView: Group) {
+        const flowView = flowlayout({
             layoutConfig: layoutConfig().most(),
             itemCount: 100,
             columnCount: 3,
             columnSpace: 10,
             rowSpace: 10,
             renderItem: (idx) => {
-                return flowItem(text({
-                    text: `${idx}`,
-                    textColor: Color.WHITE,
-                    textSize: 20,
-                    layoutConfig: layoutConfig().fit().configAlignment(Gravity.Center)
-                })).apply({
-                    backgroundColor: colors[idx % colors.length],
-                    height: 50 + (idx % 3) * 20,
-                    layoutConfig: layoutConfig().configWidth(LayoutSpec.MOST),
-                })
+                return flowItem(
+                    text({
+                        text: `${idx}`,
+                        textColor: Color.WHITE,
+                        textSize: 20,
+                        layoutConfig: layoutConfig().fit().configAlignment(Gravity.Center)
+                    }),
+                    {
+                        backgroundColor: colors[idx % colors.length],
+                        height: 50 + (idx % 3) * 20,
+                        layoutConfig: layoutConfig().configWidth(LayoutSpec.MOST),
+                    })
             },
-        }).also(it => {
-            it.loadMore = true
-            it.onLoadMore = () => {
+            loadMore: true,
+            onLoadMore: () => {
                 setTimeout(() => {
-                    it.itemCount += 20
+                    flowView.itemCount += 20
                 }, 1000)
-            }
-            it.loadMoreView = new FlowLayoutItem().apply({
-                backgroundColor: colors[500 % colors.length],
-                height: 50,
-                layoutConfig: layoutConfig().configWidth(LayoutSpec.MOST),
-            }).also(it => {
-                it.addChild(text({
+            },
+            loadMoreView: flowItem(
+                text({
                     text: 'load more',
                     textColor: Color.WHITE,
                     textSize: 20,
                     layoutConfig: layoutConfig().fit().configAlignment(Gravity.Center)
-                }))
-            })
-        })
-            .in(rootView)
+                }),
+                {
+                    backgroundColor: colors[500 % colors.length],
+                    height: 50,
+                    layoutConfig: layoutConfig().configWidth(LayoutSpec.MOST),
+                })
+        }).in(rootView)
+
     }
 }

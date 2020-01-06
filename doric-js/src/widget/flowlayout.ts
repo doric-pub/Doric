@@ -42,6 +42,12 @@ export interface IFlowLayout extends IView {
     columnSpace?: number
 
     rowSpace?: number
+
+    loadMore?: boolean
+
+    onLoadMore?: () => void
+
+    loadMoreView?: FlowLayoutItem
 }
 
 export class FlowLayout extends Superview implements IFlowLayout {

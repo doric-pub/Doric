@@ -7,20 +7,23 @@ class CounterView extends ViewHolder {
     number!: Text
     counter!: Text
     build(root: Group) {
-        vlayout([
-            this.number = text({
-                textSize: 40,
-            }),
+        vlayout(
+            [
+                this.number = text({
+                    textSize: 40,
+                }),
 
-            this.counter = text({
-                text: "Click To Count",
-                textSize: 20,
-            }),
-        ]).apply({
-            layoutConfig: layoutConfig().most(),
-            gravity: Gravity.Center,
-            space: 20,
-        } as IVLayout).in(root)
+                this.counter = text({
+                    text: "Click To Count",
+                    textSize: 20,
+                }),
+            ],
+            {
+                layoutConfig: layoutConfig().most(),
+                gravity: Gravity.Center,
+                space: 20,
+            }
+        ).in(root)
     }
 }
 

@@ -232,95 +232,102 @@ class GoBangVH extends ViewHolder {
         const borderWidth = gap
         this.gap = state.gap
         scroller(
-            vlayout([
-                text({
-                    text: "五子棋",
-                    layoutConfig: layoutConfig().configWidth(LayoutSpec.MOST),
-                    textSize: 30,
-                    textColor: Color.WHITE,
-                    backgroundColor: colors[0],
-                    textAlignment: gravity().center(),
-                    height: 50,
-                }),
-                stack([
-                    stack([
-                        ...(new Array(count - 2)).fill(0).map((_, idx) => {
-                            return columLine().also(v => {
-                                v.left = (idx + 1) * gap
-                            })
-                        }),
-                        ...(new Array(count - 2)).fill(0).map((_, idx) => {
-                            return rowLine().also(v => {
-                                v.top = (idx + 1) * gap
-                            })
-                        }),
-                    ])
-                        .apply({
-                            layoutConfig: layoutConfig().just()
-                                .configMargin({ top: borderWidth, left: borderWidth }),
-                            width: boardSize,
-                            height: boardSize,
-                            border: {
-                                width: 1,
-                                color: lineColor,
-                            },
-                        }),
-                    ...this.targetZone = (new Array(count * count)).fill(0).map((_, idx) => {
-                        const row = Math.floor(idx / count)
-                        const colum = idx % count
-                        return pointer(gap).also(v => {
-                            v.top = (row - 0.5) * gap + borderWidth
-                            v.left = (colum - 0.5) * gap + borderWidth
-                        })
+            vlayout(
+                [
+                    text({
+                        text: "五子棋",
+                        layoutConfig: layoutConfig().configWidth(LayoutSpec.MOST),
+                        textSize: 30,
+                        textColor: Color.WHITE,
+                        backgroundColor: colors[0],
+                        textAlignment: gravity().center(),
+                        height: 50,
                     }),
-                ]).apply({
-                    layoutConfig: layoutConfig().just(),
-                    width: boardSize + 2 * borderWidth,
-                    height: boardSize + 2 * borderWidth,
-                    backgroundColor: Color.parse("#E6B080"),
-                }),
-
-                this.gameMode = text({
-                    text: "游戏模式",
-                    textSize: 20,
-                    textColor: Color.WHITE,
-                    layoutConfig: layoutConfig().most().configHeight(LayoutSpec.JUST),
-                    height: 50,
-                    backgroundColor: colors[8],
-                }),
-                hlayout([
-                    this.currentRole = text({
-                        text: "当前:",
+                    stack(
+                        [
+                            stack(
+                                [
+                                    ...(new Array(count - 2)).fill(0).map((_, idx) => {
+                                        return columLine().also(v => {
+                                            v.left = (idx + 1) * gap
+                                        })
+                                    }),
+                                    ...(new Array(count - 2)).fill(0).map((_, idx) => {
+                                        return rowLine().also(v => {
+                                            v.top = (idx + 1) * gap
+                                        })
+                                    }),
+                                ],
+                                {
+                                    layoutConfig: layoutConfig().just()
+                                        .configMargin({ top: borderWidth, left: borderWidth }),
+                                    width: boardSize,
+                                    height: boardSize,
+                                    border: {
+                                        width: 1,
+                                        color: lineColor,
+                                    },
+                                }),
+                            ...this.targetZone = (new Array(count * count)).fill(0).map((_, idx) => {
+                                const row = Math.floor(idx / count)
+                                const colum = idx % count
+                                return pointer(gap).also(v => {
+                                    v.top = (row - 0.5) * gap + borderWidth
+                                    v.left = (colum - 0.5) * gap + borderWidth
+                                })
+                            }),
+                        ],
+                        {
+                            layoutConfig: layoutConfig().just(),
+                            width: boardSize + 2 * borderWidth,
+                            height: boardSize + 2 * borderWidth,
+                            backgroundColor: Color.parse("#E6B080"),
+                        }
+                    ),
+                    this.gameMode = text({
+                        text: "游戏模式",
                         textSize: 20,
                         textColor: Color.WHITE,
-                        layoutConfig: layoutConfig().just().configWeight(1),
+                        layoutConfig: layoutConfig().most().configHeight(LayoutSpec.JUST),
                         height: 50,
-                        backgroundColor: colors[1],
+                        backgroundColor: colors[8],
                     }),
-                    this.result = text({
-                        text: "获胜方:",
+                    hlayout(
+                        [
+                            this.currentRole = text({
+                                text: "当前:",
+                                textSize: 20,
+                                textColor: Color.WHITE,
+                                layoutConfig: layoutConfig().just().configWeight(1),
+                                height: 50,
+                                backgroundColor: colors[1],
+                            }),
+                            this.result = text({
+                                text: "获胜方:",
+                                textSize: 20,
+                                textColor: Color.WHITE,
+                                layoutConfig: layoutConfig().just().configWeight(1),
+                                height: 50,
+                                backgroundColor: colors[2],
+                            }),
+                        ],
+                        {
+                            layoutConfig: layoutConfig().fit().configWidth(LayoutSpec.MOST),
+                        }),
+                    this.assistant = text({
+                        text: "提示",
                         textSize: 20,
                         textColor: Color.WHITE,
-                        layoutConfig: layoutConfig().just().configWeight(1),
+                        layoutConfig: layoutConfig().just().configWidth(LayoutSpec.MOST),
                         height: 50,
-                        backgroundColor: colors[2],
+                        backgroundColor: colors[3],
                     }),
-                ]).apply({
-                    layoutConfig: layoutConfig().fit().configWidth(LayoutSpec.MOST),
-                } as IHLayout),
-                this.assistant = text({
-                    text: "提示",
-                    textSize: 20,
-                    textColor: Color.WHITE,
-                    layoutConfig: layoutConfig().just().configWidth(LayoutSpec.MOST),
-                    height: 50,
-                    backgroundColor: colors[3],
-                }),
-            ])
-                .apply({
+                ],
+                {
                     layoutConfig: layoutConfig().fit(),
                     backgroundColor: Color.parse('#ecf0f1'),
-                } as IVLayout)
+                }
+            )
         ).in(this.root)
     }
 }
@@ -375,44 +382,45 @@ class GoBangVM extends ViewModel<GoBangState, GoBangVH>{
             }
         })
         vh.gameMode.onClick = () => {
-            popover(context).show(vlayout([
-                ...[
-                    {
-                        label: "黑方:人 白方:人",
-                        mode: GameMode.P2P,
-                    },
-                    {
-                        label: "黑方:人 白方:机",
-                        mode: GameMode.P2C,
-                    },
-                    {
-                        label: "黑方:机 白方:人",
-                        mode: GameMode.C2P,
-                    },
-                ].map((e) => text({
-                    text: e.label,
-                    textSize: 20,
-                    textColor: Color.WHITE,
-                    layoutConfig: layoutConfig().just(),
-                    height: 50,
-                    width: 300,
-                    backgroundColor: (state.gameMode === e.mode) ? Color.parse('#636e72') : Color.parse('#b2bec3'),
-                    onClick: () => {
-                        this.updateState(s => {
-                            s.gameMode = e.mode
-                            this.reset(s)
-                        })
-                        popover(context).dismiss()
-                    },
-                }))
-            ])
-                .apply({
+            popover(context).show(vlayout(
+                [
+                    ...[
+                        {
+                            label: "黑方:人 白方:人",
+                            mode: GameMode.P2P,
+                        },
+                        {
+                            label: "黑方:人 白方:机",
+                            mode: GameMode.P2C,
+                        },
+                        {
+                            label: "黑方:机 白方:人",
+                            mode: GameMode.C2P,
+                        },
+                    ].map((e) => text({
+                        text: e.label,
+                        textSize: 20,
+                        textColor: Color.WHITE,
+                        layoutConfig: layoutConfig().just(),
+                        height: 50,
+                        width: 300,
+                        backgroundColor: (state.gameMode === e.mode) ? Color.parse('#636e72') : Color.parse('#b2bec3'),
+                        onClick: () => {
+                            this.updateState(s => {
+                                s.gameMode = e.mode
+                                this.reset(s)
+                            })
+                            popover(context).dismiss()
+                        },
+                    }))
+                ],
+                {
                     layoutConfig: layoutConfig().most(),
                     onClick: () => {
                         popover(context).dismiss()
                     },
                     gravity: Gravity.Center,
-                } as IVLayout)
+                })
             )
         }
         vh.result.onClick = () => {

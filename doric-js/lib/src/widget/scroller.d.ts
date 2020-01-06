@@ -1,7 +1,7 @@
 import { Superview, View, IView, NativeViewModel } from '../ui/view';
-export declare function scroller(content: View): Scroller;
+export declare function scroller(content: View, config?: IScroller): Scroller;
 export interface IScroller extends IView {
-    content: View;
+    content?: View;
 }
 export declare class Scroller extends Superview implements IScroller {
     content: View;

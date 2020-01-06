@@ -1,8 +1,8 @@
 {
   "name": "doric-web",
-  "version": "0.1.2",
+  "version": "0.2.2",
   "description": "Doric library for Web",
-  "main": "build/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc -p .&& rollup -c"

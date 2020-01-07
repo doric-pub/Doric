@@ -20,7 +20,7 @@ android {
 
     sourceSets {
         main {
-            assets.srcDirs = [project.getRootDir().getParent() + "/js/bundle"]
+            assets.srcDirs = [project.getRootDir().getParent() + "/bundle"]
         }
     }
 
@@ -28,8 +28,8 @@ android {
         implementation fileTree(dir: 'libs', include: ['*.jar'])
         implementation 'androidx.appcompat:appcompat:1.1.0'
         implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-        implementation "pub.doric:core:0.2.1"
-        debugImplementation "pub.doric:core:0.2.1"
+        implementation "pub.doric:core:0.2.3"
+        debugImplementation "pub.doric:core:0.2.3"
     }
 }
 
@@ -38,6 +38,6 @@ afterEvaluate {
 }
 
 task buildJSBundle(type: Exec) {
-    workingDir project.rootDir.getParent() + "/js"
+    workingDir project.rootDir.getParent()
     commandLine 'doric', 'build'
 }

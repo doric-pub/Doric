@@ -3,7 +3,7 @@ var path = require('path')
 
 require('shelljs/global')
 
-const targetJSPath = `${__dirname}/../target/js`
+const targetJSPath = `${__dirname}/../target/`
 const targetAndroidPath = `${__dirname}/../target/android`
 const targetiOSPath = `${__dirname}/../target/iOS`
 
@@ -65,28 +65,19 @@ function copyFolder(srcDir, tarDir, cb) {
 }
 
 function initJS(path, name) {
-    if (fs.existsSync(path)) {
-        console.warn(`Dir:${process.cwd()}/${path} already exists`)
-        return;
-    }
-    fs.mkdir(path, function (err) {
-        if (err) {
-            return console.error(err);
-        }
-        console.log(`create dir ${path} success`);
-        fs.writeFileSync(`${path}/package.json`, fs.readFileSync(`${targetJSPath}/_package.json`).toString().replace(/__\$__/g, name))
-        fs.writeFileSync(`${path}/tsconfig.json`, fs.readFileSync(`${targetJSPath}/_tsconfig.json`))
-        fs.writeFileSync(`${path}/rollup.config.js`, fs.readFileSync(`${targetJSPath}/_rollup.config.js`))
-        fs.writeFileSync(`${path}/.gitignore`, fs.readFileSync(`${targetJSPath}/_gitignore`))
-        fs.mkdirSync(`${path}/.vscode`)
-        fs.writeFileSync(`${path}/.vscode/launch.json`, fs.readFileSync(`${targetJSPath}/_launch.json`).toString().replace(/__\$__/g, name))
-        fs.writeFileSync(`${path}/.vscode/tasks.json`, fs.readFileSync(`${targetJSPath}/_tasks.json`).toString().replace(/__\$__/g, name))
-        fs.mkdirSync(`${path}/src`)
-        fs.writeFileSync(`${path}/src/${name}.ts`, fs.readFileSync(`${targetJSPath}/$.ts`).toString().replace(/__\$__/g, name))
-        fs.writeFileSync(`${path}/index.ts`, `export default ['src/${name}']`)
-        exec(`cd ${path} && npm install && npm run build`, () => {
-            console.log(`Create Doric JS Project Success`)
-        })
+    console.log(`create dir ${path} success`);
+    fs.writeFileSync(`${path}/package.json`, fs.readFileSync(`${targetJSPath}/_package.json`).toString().replace(/__\$__/g, name))
+    fs.writeFileSync(`${path}/tsconfig.json`, fs.readFileSync(`${targetJSPath}/_tsconfig.json`))
+    fs.writeFileSync(`${path}/rollup.config.js`, fs.readFileSync(`${targetJSPath}/_rollup.config.js`))
+    fs.writeFileSync(`${path}/.gitignore`, fs.readFileSync(`${targetJSPath}/_gitignore`))
+    fs.mkdirSync(`${path}/.vscode`)
+    fs.writeFileSync(`${path}/.vscode/launch.json`, fs.readFileSync(`${targetJSPath}/_launch.json`).toString().replace(/__\$__/g, name))
+    fs.writeFileSync(`${path}/.vscode/tasks.json`, fs.readFileSync(`${targetJSPath}/_tasks.json`).toString().replace(/__\$__/g, name))
+    fs.mkdirSync(`${path}/src`)
+    fs.writeFileSync(`${path}/src/${name}.ts`, fs.readFileSync(`${targetJSPath}/$.ts`).toString().replace(/__\$__/g, name))
+    fs.writeFileSync(`${path}/index.ts`, `export default ['src/${name}']`)
+    exec(`cd ${path} && npm install && npm run build`, () => {
+        console.log(`Create Doric JS Project Success`)
     })
 }
 function initAndroid(path, name) {
@@ -133,7 +124,7 @@ module.exports = function (name) {
         if (err) {
             return console.error(err);
         }
-        initJS(`${process.cwd()}/${name}/js`, name)
+        initJS(`${process.cwd()}/${name}`, name)
         initAndroid(`${process.cwd()}/${name}/android`, name)
         initiOS(`${process.cwd()}/${name}/iOS`, name)
     })

@@ -22,7 +22,7 @@ export function notification(context: BridgeContext) {
             }
             return context.notification.publish(args)
         },
-        subscribe: (args: { biz: string, name: string, callback: (data?: object) => void, androidSystem?: boolean }) => {
+        subscribe: (args: { biz: string, name: string, callback: (data?: any) => void, androidSystem?: boolean }) => {
             (args as any).callback = (context as any).function2Id(args.callback)
             return context.notification.subscribe(args) as Promise<string>
         },

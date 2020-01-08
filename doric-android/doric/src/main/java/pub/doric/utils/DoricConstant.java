@@ -38,7 +38,7 @@ public class DoricConstant {
     public static final String TEMPLATE_CONTEXT_CREATE = "Reflect.apply(" +
             "function(doric,context,Entry,require,exports){" + "\n" +
             "%s" + "\n" +
-            "},doric.jsObtainContext(\"%s\"),[" +
+            "},undefined,[" +
             "undefined," +
             "doric.jsObtainContext(\"%s\")," +
             "doric.jsObtainEntry(\"%s\")," +

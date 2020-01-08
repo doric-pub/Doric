@@ -150,7 +150,7 @@
 }
 
 - (NSString *)packageContextScript:(NSString *)contextId content:(NSString *)content {
-    NSString *ret = [NSString stringWithFormat:TEMPLATE_CONTEXT_CREATE, content, contextId, contextId, contextId];
+    NSString *ret = [NSString stringWithFormat:TEMPLATE_CONTEXT_CREATE, content, contextId, contextId];
     return ret;
 }
 

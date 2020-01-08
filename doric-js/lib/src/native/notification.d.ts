@@ -9,7 +9,7 @@ export declare function notification(context: BridgeContext): {
     subscribe: (args: {
         biz: string;
         name: string;
-        callback: (data?: object | undefined) => void;
+        callback: (data?: any) => void;
         androidSystem?: boolean | undefined;
     }) => Promise<string>;
     unsubscribe: (subscribeId: string) => Promise<any>;

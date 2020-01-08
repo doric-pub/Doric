@@ -3540,6 +3540,25 @@ function animate(context) {
     }
 }
 
+function notification(context) {
+    return {
+        publish: (args) => {
+            if (args.data !== undefined) {
+                args.data = JSON.stringify(args.data);
+            }
+            return context.notification.publish(args);
+        },
+        subscribe: (args) => {
+            args.callback = context.function2Id(args.callback);
+            return context.notification.subscribe(args);
+        },
+        unsubscribe: (subscribeId) => {
+            context.removeFuncById(subscribeId);
+            return context.notification.unsubscribe({ subscribeId });
+        }
+    };
+}
+
 class Observable {
     constructor(provider, clz) {
         this.observers = new Set;
@@ -3789,6 +3808,7 @@ exports.modal = modal;
 exports.navbar = navbar;
 exports.navigator = navigator;
 exports.network = network;
+exports.notification = notification;
 exports.obj2Model = obj2Model;
 exports.popover = popover;
 exports.pullable = pullable;

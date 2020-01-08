@@ -128,6 +128,17 @@ export class Context {
     register(instance) {
         this.entity = instance;
     }
+    function2Id(func) {
+        const functionId = uniqueId('function');
+        this.callbacks.set(functionId, {
+            resolve: func,
+            reject: () => { loge("This should not be called"); }
+        });
+        return functionId;
+    }
+    removeFuncById(funcId) {
+        this.callbacks.delete(funcId);
+    }
 }
 const gContexts = new Map;
 const gModules = new Map;

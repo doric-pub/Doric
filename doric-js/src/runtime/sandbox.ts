@@ -173,6 +173,18 @@ export class Context {
     register(instance: Object) {
         this.entity = instance
     }
+
+    function2Id(func: Function) {
+        const functionId = uniqueId('function')
+        this.callbacks.set(functionId, {
+            resolve: func,
+            reject: () => { loge("This should not be called") }
+        })
+        return functionId
+    }
+    removeFuncById(funcId: string) {
+        this.callbacks.delete(funcId)
+    }
 }
 
 

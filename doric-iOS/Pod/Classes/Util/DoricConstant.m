@@ -38,7 +38,7 @@ NSString *const INJECT_EMPTY = @"nativeEmpty";
 NSString *const TEMPLATE_CONTEXT_CREATE = @"Reflect.apply("
                                           "function(doric,context,Entry,require,exports){" "\n"
                                           "%@"   "\n"
-                                          "},doric.jsObtainContext(\"%@\"),["
+                                          "},undefined,["
                                           "undefined,"
                                           "doric.jsObtainContext(\"%@\"),"
                                           "doric.jsObtainEntry(\"%@\"),"

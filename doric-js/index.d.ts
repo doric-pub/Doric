@@ -64,6 +64,7 @@ declare module 'doric/lib/src/native/index.native' {
     export * from 'doric/lib/src/native/storage';
     export * from 'doric/lib/src/native/popover';
     export * from 'doric/lib/src/native/animate';
+    export * from 'doric/lib/src/native/notification';
 }
 
 declare module 'doric/lib/src/util/index.util' {
@@ -790,6 +791,25 @@ declare module 'doric/lib/src/native/animate' {
         animations: () => void;
         duration: number;
     }) => Promise<any>;
+}
+
+declare module 'doric/lib/src/native/notification' {
+    import { BridgeContext } from "doric/lib/src/runtime/global";
+    export function notification(context: BridgeContext): {
+        publish: (args: {
+            biz: string;
+            name: string;
+            data?: object | undefined;
+            androidSystem?: boolean | undefined;
+        }) => Promise<any>;
+        subscribe: (args: {
+            biz: string;
+            name: string;
+            callback: (data?: any) => void;
+            androidSystem?: boolean | undefined;
+        }) => Promise<string>;
+        unsubscribe: (subscribeId: string) => Promise<any>;
+    };
 }
 
 declare module 'doric/lib/src/util/color' {

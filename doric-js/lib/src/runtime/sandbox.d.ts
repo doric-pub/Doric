@@ -13,6 +13,8 @@ export declare class Context {
     constructor(id: string);
     callNative(namespace: string, method: string, args?: any): Promise<any>;
     register(instance: Object): void;
+    function2Id(func: Function): string;
+    removeFuncById(funcId: string): void;
 }
 export declare function jsObtainContext(id: string): Context | undefined;
 export declare function jsReleaseContext(id: string): void;

@@ -19,7 +19,7 @@ export class DoricContext {
     contextId = getContextId()
     pluginInstances: Map<string, DoricPlugin> = new Map
     rootNode: DoricStackNode
-    headNodes: Map<string, DoricViewNode> = new Map
+    headNodes: Map<string, Map<string, DoricViewNode>> = new Map
 
     constructor(content: string) {
         createContext(this.contextId, content)

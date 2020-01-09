@@ -28,7 +28,7 @@ export function notification(context: BridgeContext) {
         },
         unsubscribe: (subscribeId: string) => {
             (context as any).removeFuncById(subscribeId)
-            return context.notification.unsubscribe({ subscribeId })
+            return context.notification.unsubscribe(subscribeId)
         }
     }
 }

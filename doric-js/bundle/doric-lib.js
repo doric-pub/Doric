@@ -2095,7 +2095,7 @@ function notification(context) {
         },
         unsubscribe: (subscribeId) => {
             context.removeFuncById(subscribeId);
-            return context.notification.unsubscribe({ subscribeId });
+            return context.notification.unsubscribe(subscribeId);
         }
     };
 }

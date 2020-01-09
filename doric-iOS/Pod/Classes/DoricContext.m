@@ -49,8 +49,13 @@
     if ([self.rootNode.viewId isEqualToString:viewId]) {
         return self.rootNode;
     } else {
-        return self.headNodes[viewId];
+        for (NSMutableDictionary <NSString *, DoricViewNode *> *map in self.headNodes.allValues) {
+            if ([[map allKeys] containsObject:viewId]) {
+                return map[viewId];
+            }
+        }
     }
+    return nil;
 }
 
 - (void)dealloc {

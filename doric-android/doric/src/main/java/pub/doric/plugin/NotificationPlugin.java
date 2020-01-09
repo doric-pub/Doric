@@ -146,11 +146,8 @@ public class NotificationPlugin extends DoricJavaPlugin {
             receiver = systemReceivers.get(subscribeId);
             if (receiver != null) {
                 getDoricContext().getContext().unregisterReceiver(receiver);
-                promise.resolve();
-            } else {
-                promise.reject(new JavaValue("Cannot find registered receiver:" + subscribeId));
             }
-
+            promise.resolve();
         }
     }
 

@@ -19,11 +19,26 @@
 
 #import "DoricNotificationPlugin.h"
 
+@interface DoricNotificationPlugin ()
+
+@property(nonatomic, strong) NSMutableDictionary<NSString *, id> *observers;
+@end
 
 @implementation DoricNotificationPlugin
 
+- (NSMutableDictionary *)observers {
+    if (!_observers) {
+        _observers = [NSMutableDictionary new];
+    }
+    return _observers;
+}
+
 - (void)publish:(NSDictionary *)dic withPromise:(DoricPromise *)promise {
-    NSString *notificationName = [NSString stringWithFormat:@"__doric__%@#%@", dic, promise];
+    NSString *biz = dic[@"biz"];
+    NSString *name = dic[@"name"];
+    if (biz) {
+        name = [NSString stringWithFormat:@"__doric__%@#%@", biz, name];
+    }
     NSString *data = dic[@"data"];
     NSDictionary *dataDic = nil;
     if (data) {
@@ -33,20 +48,45 @@
                                                   options:NSJSONReadingMutableContainers
                                                     error:&err];
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:notificationName object:nil userInfo:dataDic];
+    [[NSNotificationCenter defaultCenter] postNotificationName:name object:nil userInfo:dataDic];
+    [promise resolve:nil];
 }
-
 
 - (void)subscribe:(NSDictionary *)dic withPromise:(DoricPromise *)promise {
-    NSString *notificationName = [NSString stringWithFormat:@"__doric__%@#%@", dic, promise];
+    NSString *biz = dic[@"biz"];
+    NSString *name = dic[@"name"];
+    if (biz) {
+        name = [NSString stringWithFormat:@"__doric__%@#%@", biz, name];
+    }
     NSString *callbackId = dic[@"callback"];
-    [[NSNotificationCenter defaultCenter] addObserverForName:notificationName
-                                                      object:nil
-                                                       queue:[NSOperationQueue mainQueue]
-                                                  usingBlock:^(NSNotification *note) {
-
-                                                  }];
+    __weak typeof(self) _self = self;
+    id observer = [[NSNotificationCenter defaultCenter]
+            addObserverForName:name
+                        object:nil
+                         queue:[NSOperationQueue mainQueue]
+                    usingBlock:^(NSNotification *note) {
+                        __strong typeof(_self) self = _self;
+                        DoricPromise *currentPromise = [[DoricPromise alloc] initWithContext:self.doricContext callbackId:callbackId];
+                        [currentPromise resolve:note.userInfo];
+                    }];
+    self.observers[callbackId] = observer;
+    [promise resolve:callbackId];
 }
 
+- (void)unsubscribe:(NSString *)subscribeId withPromise:(DoricPromise *)promise {
+    id observer = self.observers[subscribeId];
+    if (observer) {
+        [[NSNotificationCenter defaultCenter] removeObserver:observer];
+        [self.observers removeObjectForKey:subscribeId];
+    }
+    [promise resolve:nil];
+}
+
+- (void)dealloc {
+    [self.observers enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
+        [[NSNotificationCenter defaultCenter] removeObserver:obj];
+    }];
+    [self.observers removeAllObjects];
+}
 
 @end

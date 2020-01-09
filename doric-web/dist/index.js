@@ -2177,22 +2177,37 @@ class Panel {
     onDestroy() { }
     onShow() { }
     onHidden() { }
-    addHeadView(v) {
-        this.headviews.set(v.viewId, v);
+    addHeadView(type, v) {
+        let map = this.headviews.get(type);
+        if (map) {
+            map.set(v.viewId, v);
+        }
+        else {
+            map = new Map;
+            map.set(v.viewId, v);
+            this.headviews.set(type, map);
+        }
     }
     allHeadViews() {
         return this.headviews.values();
     }
-    removeHeadView(v) {
-        if (v instanceof View) {
-            this.headviews.delete(v.viewId);
-        }
-        else {
-            this.headviews.delete(v);
+    removeHeadView(type, v) {
+        if (this.headviews.has(type)) {
+            let map = this.headviews.get(type);
+            if (map) {
+                if (v instanceof View) {
+                    map.delete(v.viewId);
+                }
+                else {
+                    map.delete(v);
+                }
+            }
         }
     }
-    clearHeadViews() {
-        this.headviews.clear();
+    clearHeadViews(type) {
+        if (this.headviews.has(type)) {
+            this.headviews.delete(type);
+        }
     }
     getRootView() {
         return this.__root__;
@@ -2259,8 +2274,10 @@ class Panel {
     hookBeforeNativeCall() {
         if (Environment.platform !== 'h5') {
             this.__root__.clean();
-            for (let v of this.headviews.values()) {
-                v.clean();
+            for (let map of this.headviews.values()) {
+                for (let v of map.values()) {
+                    v.clean();
+                }
             }
         }
     }
@@ -2272,10 +2289,12 @@ class Panel {
                 const model = this.__root__.toModel();
                 this.nativeRender(model);
             }
-            for (let v of this.headviews.values()) {
-                if (v.isDirty()) {
-                    const model = v.toModel();
-                    this.nativeRender(model);
+            for (let map of this.headviews.values()) {
+                for (let v of map.values()) {
+                    if (v.isDirty()) {
+                        const model = v.toModel();
+                        this.nativeRender(model);
+                    }
                 }
             }
         }
@@ -2286,11 +2305,13 @@ class Panel {
                     this.nativeRender(model);
                     this.__root__.clean();
                 }
-                for (let v of this.headviews.values()) {
-                    if (v.isDirty()) {
-                        const model = v.toModel();
-                        this.nativeRender(model);
-                        v.clean();
+                for (let map of this.headviews.values()) {
+                    for (let v of map.values()) {
+                        if (v.isDirty()) {
+                            const model = v.toModel();
+                            this.nativeRender(model);
+                            v.clean();
+                        }
                     }
                 }
             });
@@ -3450,17 +3471,17 @@ function popover(context) {
     return {
         show: (view) => {
             if (panel) {
-                panel.addHeadView(view);
+                panel.addHeadView("popover", view);
             }
             return context.popover.show(view.toModel());
         },
         dismiss: (view = undefined) => {
             if (panel) {
                 if (view) {
-                    panel.removeHeadView(view);
+                    panel.removeHeadView("popover", view);
                 }
                 else {
-                    panel.clearHeadViews();
+                    panel.clearHeadViews("popover");
                 }
             }
             return context.popover.dismiss(view ? { id: view.viewId } : undefined);
@@ -3566,12 +3587,14 @@ function animate(context) {
                             root.clean();
                             return ret;
                         }
-                        for (let v of panel.allHeadViews()) {
-                            if (v.isDirty()) {
-                                const model = v.toModel();
-                                const ret = it.animateRender(model);
-                                it.clean();
-                                return ret;
+                        for (let map of panel.allHeadViews()) {
+                            for (let v of map.values()) {
+                                if (v.isDirty()) {
+                                    const model = v.toModel();
+                                    const ret = it.animateRender(model);
+                                    it.clean();
+                                    return ret;
+                                }
                             }
                         }
                         throw new Error('Cannot find any animated elements');
@@ -3777,9 +3800,11 @@ var doric_web = (function (exports, axios, sandbox) {
                     this.context.rootNode.blend(ret.props);
                 }
                 else {
-                    const viewNode = this.context.headNodes.get(ret.id);
-                    if (viewNode) {
-                        viewNode.blend(ret.props);
+                    for (let map of this.context.headNodes.values()) {
+                        const viewNode = map.get(ret.id);
+                        if (viewNode) {
+                            viewNode.blend(ret.props);
+                        }
                     }
                 }
             }
@@ -4708,7 +4733,15 @@ var doric_web = (function (exports, axios, sandbox) {
             viewNode.init();
             viewNode.blend(model.props);
             this.fullScreen.appendChild(viewNode.view);
-            this.context.headNodes.set(model.id, viewNode);
+            let map = this.context.headNodes.get(PopoverPlugin.TYPE);
+            if (map) {
+                map.set(model.id, viewNode);
+            }
+            else {
+                map = new Map;
+                map.set(model.id, viewNode);
+                this.context.headNodes.set(PopoverPlugin.TYPE, map);
+            }
             if (!document.body.contains(this.fullScreen)) {
                 document.body.appendChild(this.fullScreen);
             }
@@ -4716,12 +4749,15 @@ var doric_web = (function (exports, axios, sandbox) {
         }
         dismiss(args) {
             if (args) {
-                const viewNode = this.context.headNodes.get(args.id);
-                if (viewNode) {
-                    this.fullScreen.removeChild(viewNode.view);
-                }
-                if (this.context.headNodes.size === 0) {
-                    document.body.removeChild(this.fullScreen);
+                let map = this.context.headNodes.get(PopoverPlugin.TYPE);
+                if (map) {
+                    const viewNode = map.get(args.id);
+                    if (viewNode) {
+                        this.fullScreen.removeChild(viewNode.view);
+                    }
+                    if (map.size === 0) {
+                        document.body.removeChild(this.fullScreen);
+                    }
                 }
             }
             else {
@@ -4730,9 +4766,12 @@ var doric_web = (function (exports, axios, sandbox) {
             return Promise.resolve();
         }
         dismissAll() {
-            for (let node of this.context.headNodes.values()) {
-                this.context.headNodes.delete(node.viewId);
-                this.fullScreen.removeChild(node.view);
+            let map = this.context.headNodes.get(PopoverPlugin.TYPE);
+            if (map) {
+                for (let node of map.values()) {
+                    map.delete(node.viewId);
+                    this.fullScreen.removeChild(node.view);
+                }
             }
             if (document.body.contains(this.fullScreen)) {
                 document.body.removeChild(this.fullScreen);
@@ -4743,6 +4782,7 @@ var doric_web = (function (exports, axios, sandbox) {
             this.dismissAll();
         }
     }
+    PopoverPlugin.TYPE = "popover";
 
     class DoricListItemNode extends DoricStackNode {
     }

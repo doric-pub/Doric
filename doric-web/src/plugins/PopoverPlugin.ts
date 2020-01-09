@@ -3,6 +3,8 @@ import { DVModel, DoricViewNode } from '../shader/DoricViewNode';
 import { DoricContext } from '../DoricContext';
 
 export class PopoverPlugin extends DoricPlugin {
+    static TYPE = "popover"
+
     fullScreen = document.createElement('div')
     constructor(context: DoricContext) {
         super(context)
@@ -22,7 +24,16 @@ export class PopoverPlugin extends DoricPlugin {
         viewNode.init()
         viewNode.blend(model.props)
         this.fullScreen.appendChild(viewNode.view)
-        this.context.headNodes.set(model.id, viewNode)
+
+        let map = this.context.headNodes.get(PopoverPlugin.TYPE)
+        if (map) {
+            map.set(model.id, viewNode)
+        } else {
+            map = new Map
+            map.set(model.id, viewNode)
+            this.context.headNodes.set(PopoverPlugin.TYPE, map)
+        }
+
         if (!document.body.contains(this.fullScreen)) {
             document.body.appendChild(this.fullScreen)
         }
@@ -31,12 +42,16 @@ export class PopoverPlugin extends DoricPlugin {
 
     dismiss(args?: { id: string }) {
         if (args) {
-            const viewNode = this.context.headNodes.get(args.id)
-            if (viewNode) {
-                this.fullScreen.removeChild(viewNode.view)
-            }
-            if (this.context.headNodes.size === 0) {
-                document.body.removeChild(this.fullScreen)
+            let map = this.context.headNodes.get(PopoverPlugin.TYPE)
+            if (map) {
+                const viewNode = map.get(args.id)
+                if (viewNode) {
+                    this.fullScreen.removeChild(viewNode.view)
+                }
+
+                if (map.size === 0) {
+                    document.body.removeChild(this.fullScreen)
+                }
             }
         } else {
             this.dismissAll()
@@ -44,10 +59,14 @@ export class PopoverPlugin extends DoricPlugin {
         return Promise.resolve()
     }
     dismissAll() {
-        for (let node of this.context.headNodes.values()) {
-            this.context.headNodes.delete(node.viewId)
-            this.fullScreen.removeChild(node.view)
+        let map = this.context.headNodes.get(PopoverPlugin.TYPE)
+        if (map) {
+            for (let node of map.values()) {
+                map.delete(node.viewId)
+                this.fullScreen.removeChild(node.view)
+            }
         }
+        
         if (document.body.contains(this.fullScreen)) {
             document.body.removeChild(this.fullScreen)
         }

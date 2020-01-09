@@ -2130,22 +2130,37 @@ class Panel {
     onDestroy() { }
     onShow() { }
     onHidden() { }
-    addHeadView(v) {
-        this.headviews.set(v.viewId, v);
+    addHeadView(type, v) {
+        let map = this.headviews.get(type);
+        if (map) {
+            map.set(v.viewId, v);
+        }
+        else {
+            map = new Map;
+            map.set(v.viewId, v);
+            this.headviews.set(type, map);
+        }
     }
     allHeadViews() {
         return this.headviews.values();
     }
-    removeHeadView(v) {
-        if (v instanceof View) {
-            this.headviews.delete(v.viewId);
-        }
-        else {
-            this.headviews.delete(v);
+    removeHeadView(type, v) {
+        if (this.headviews.has(type)) {
+            let map = this.headviews.get(type);
+            if (map) {
+                if (v instanceof View) {
+                    map.delete(v.viewId);
+                }
+                else {
+                    map.delete(v);
+                }
+            }
         }
     }
-    clearHeadViews() {
-        this.headviews.clear();
+    clearHeadViews(type) {
+        if (this.headviews.has(type)) {
+            this.headviews.delete(type);
+        }
     }
     getRootView() {
         return this.__root__;
@@ -2212,8 +2227,10 @@ class Panel {
     hookBeforeNativeCall() {
         if (Environment.platform !== 'h5') {
             this.__root__.clean();
-            for (let v of this.headviews.values()) {
-                v.clean();
+            for (let map of this.headviews.values()) {
+                for (let v of map.values()) {
+                    v.clean();
+                }
             }
         }
     }
@@ -2225,10 +2242,12 @@ class Panel {
                 const model = this.__root__.toModel();
                 this.nativeRender(model);
             }
-            for (let v of this.headviews.values()) {
-                if (v.isDirty()) {
-                    const model = v.toModel();
-                    this.nativeRender(model);
+            for (let map of this.headviews.values()) {
+                for (let v of map.values()) {
+                    if (v.isDirty()) {
+                        const model = v.toModel();
+                        this.nativeRender(model);
+                    }
                 }
             }
         }
@@ -2239,11 +2258,13 @@ class Panel {
                     this.nativeRender(model);
                     this.__root__.clean();
                 }
-                for (let v of this.headviews.values()) {
-                    if (v.isDirty()) {
-                        const model = v.toModel();
-                        this.nativeRender(model);
-                        v.clean();
+                for (let map of this.headviews.values()) {
+                    for (let v of map.values()) {
+                        if (v.isDirty()) {
+                            const model = v.toModel();
+                            this.nativeRender(model);
+                            v.clean();
+                        }
                     }
                 }
             });
@@ -3403,17 +3424,17 @@ function popover(context) {
     return {
         show: (view) => {
             if (panel) {
-                panel.addHeadView(view);
+                panel.addHeadView("popover", view);
             }
             return context.popover.show(view.toModel());
         },
         dismiss: (view = undefined) => {
             if (panel) {
                 if (view) {
-                    panel.removeHeadView(view);
+                    panel.removeHeadView("popover", view);
                 }
                 else {
-                    panel.clearHeadViews();
+                    panel.clearHeadViews("popover");
                 }
             }
             return context.popover.dismiss(view ? { id: view.viewId } : undefined);
@@ -3519,12 +3540,14 @@ function animate(context) {
                             root.clean();
                             return ret;
                         }
-                        for (let v of panel.allHeadViews()) {
-                            if (v.isDirty()) {
-                                const model = v.toModel();
-                                const ret = it.animateRender(model);
-                                it.clean();
-                                return ret;
+                        for (let map of panel.allHeadViews()) {
+                            for (let v of map.values()) {
+                                if (v.isDirty()) {
+                                    const model = v.toModel();
+                                    const ret = it.animateRender(model);
+                                    it.clean();
+                                    return ret;
+                                }
                             }
                         }
                         throw new Error('Cannot find any animated elements');

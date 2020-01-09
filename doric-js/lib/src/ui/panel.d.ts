@@ -12,10 +12,10 @@ export declare abstract class Panel {
     private __data__?;
     private __root__;
     private headviews;
-    addHeadView(v: View): void;
-    allHeadViews(): IterableIterator<View>;
-    removeHeadView(v: View | string): void;
-    clearHeadViews(): void;
+    addHeadView(type: string, v: View): void;
+    allHeadViews(): IterableIterator<Map<string, View>>;
+    removeHeadView(type: string, v: View | string): void;
+    clearHeadViews(type: string): void;
     getRootView(): Root;
     getInitData(): object | undefined;
     private __init__;

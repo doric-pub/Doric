@@ -11,6 +11,8 @@
 @end
 
 @implementation DoricPopoverPlugin
+static NSString *TYPE = @"popover";
+
 - (void)show:(NSDictionary *)params withPromise:(DoricPromise *)promise {
     dispatch_async(dispatch_get_main_queue(), ^{
         UIView *superView = [UIApplication sharedApplication].windows.lastObject;
@@ -33,7 +35,15 @@
                 [it initWithSuperNode:nil];
                 it.view.layoutConfig = [DoricLayoutConfig new];
                 [self.fullScreenView addSubview:it.view];
-                self.doricContext.headNodes[viewId] = it;
+                
+                NSMutableDictionary <NSString *, DoricViewNode *> *map = self.doricContext.headNodes[TYPE];
+                if (map != nil) {
+                     self.doricContext.headNodes[TYPE][viewId] = it;
+                } else {
+                    map = [[NSMutableDictionary alloc] init];
+                    map[viewId] = it;
+                    self.doricContext.headNodes[TYPE] = map;
+                }
             }];
         }
         [viewNode blend:params[@"props"]];
@@ -55,15 +65,15 @@
 }
 
 - (void)dismissViewNode:(DoricViewNode *)node {
-    [self.doricContext.headNodes removeObjectForKey:node.viewId];
+    [self.doricContext.headNodes[TYPE] removeObjectForKey:node.viewId];
     [node.view removeFromSuperview];
-    if (self.doricContext.headNodes.count == 0) {
+    if (self.doricContext.headNodes[TYPE].count == 0) {
         self.fullScreenView.hidden = YES;
     }
 }
 
 - (void)dismissPopover {
-    for (DoricViewNode *node in self.doricContext.headNodes.allValues) {
+    for (DoricViewNode *node in self.doricContext.headNodes[TYPE].allValues) {
         [self dismissViewNode:node];
     }
 }

@@ -256,10 +256,10 @@ declare module 'doric/lib/src/ui/panel' {
         onShow(): void;
         onHidden(): void;
         abstract build(rootView: Group): void;
-        addHeadView(v: View): void;
-        allHeadViews(): IterableIterator<View>;
-        removeHeadView(v: View | string): void;
-        clearHeadViews(): void;
+        addHeadView(type: string, v: View): void;
+        allHeadViews(): IterableIterator<Map<string, View>>;
+        removeHeadView(type: string, v: View | string): void;
+        clearHeadViews(type: string): void;
         getRootView(): Root;
         getInitData(): object | undefined;
     }

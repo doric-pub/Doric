@@ -26,16 +26,16 @@ export function popover(context: BridgeContext) {
     return {
         show: (view: View) => {
             if (panel) {
-                panel.addHeadView(view)
+                panel.addHeadView("popover", view)
             }
             return context.popover.show(view.toModel())
         },
         dismiss: (view: View | undefined = undefined) => {
             if (panel) {
                 if (view) {
-                    panel.removeHeadView(view)
+                    panel.removeHeadView("popover", view)
                 } else {
-                    panel.clearHeadViews()
+                    panel.clearHeadViews("popover")
                 }
             }
             return context.popover.dismiss(view ? { id: view.viewId } : undefined)

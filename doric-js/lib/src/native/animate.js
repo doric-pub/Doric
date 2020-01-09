@@ -35,12 +35,14 @@ export function animate(context) {
                             root.clean();
                             return ret;
                         }
-                        for (let v of panel.allHeadViews()) {
-                            if (v.isDirty()) {
-                                const model = v.toModel();
-                                const ret = it.animateRender(model);
-                                it.clean();
-                                return ret;
+                        for (let map of panel.allHeadViews()) {
+                            for (let v of map.values()) {
+                                if (v.isDirty()) {
+                                    const model = v.toModel();
+                                    const ret = it.animateRender(model);
+                                    it.clean();
+                                    return ret;
+                                }
                             }
                         }
                         throw new Error('Cannot find any animated elements');

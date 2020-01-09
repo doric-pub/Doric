@@ -53,25 +53,40 @@ public class DoricContext {
     private String extra;
     private JSONObject initParams;
     private IDoricDriver doricDriver;
-    private final Map<String, ViewNode> mHeadNodes = new HashMap<>();
+    private final Map<String, Map<String, ViewNode>> mHeadNodes = new HashMap<>();
 
-    public Collection<ViewNode> allHeadNodes() {
-        return mHeadNodes.values();
+    public Collection<ViewNode> allHeadNodes(String type) {
+        return mHeadNodes.get(type).values();
     }
 
-    public void addHeadNode(ViewNode viewNode) {
-        mHeadNodes.put(viewNode.getId(), viewNode);
+    public void addHeadNode(String type, ViewNode viewNode) {
+        Map<String, ViewNode> map = mHeadNodes.get(type);
+        if (map != null) {
+            map.put(viewNode.getId(), viewNode);
+        } else {
+            map = new HashMap<>();
+            map.put(viewNode.getId(), viewNode);
+            mHeadNodes.put(type, map);
+        }
     }
 
-    public void removeHeadNode(ViewNode viewNode) {
-        mHeadNodes.remove(viewNode.getId());
+    public void removeHeadNode(String type, ViewNode viewNode) {
+        Map<String, ViewNode> map = mHeadNodes.get(type);
+        if (map != null) {
+            map.remove(viewNode.getId());
+        }
     }
 
     public ViewNode targetViewNode(String id) {
         if (id.equals(mRootNode.getId())) {
             return mRootNode;
         }
-        return mHeadNodes.get(id);
+        for (Map<String, ViewNode> map : mHeadNodes.values()) {
+            if (map.containsKey(id)) {
+                return map.get(id);
+            }
+        }
+        return null;
     }
 
     protected DoricContext(Context context, String contextId, String source, String extra) {

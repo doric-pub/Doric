@@ -797,13 +797,13 @@ declare module 'doric/lib/src/native/notification' {
     import { BridgeContext } from "doric/lib/src/runtime/global";
     export function notification(context: BridgeContext): {
         publish: (args: {
-            biz: string;
+            biz?: string | undefined;
             name: string;
             data?: object | undefined;
             androidSystem?: boolean | undefined;
         }) => Promise<any>;
         subscribe: (args: {
-            biz: string;
+            biz?: string | undefined;
             name: string;
             callback: (data?: any) => void;
             androidSystem?: boolean | undefined;

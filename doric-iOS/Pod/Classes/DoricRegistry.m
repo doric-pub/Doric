@@ -46,7 +46,7 @@
 #import "DoricInputNode.h"
 #import "DoricDraggableNode.h"
 #import "DoricLibrary.h"
-
+#import "DoricNotificationPlugin.h"
 
 @interface DoricLibraries : NSObject
 @property(nonatomic, strong) NSMutableSet <DoricLibrary *> *libraries;
@@ -109,6 +109,7 @@
     [self registerNativePlugin:DoricNavBarPlugin.class withName:@"navbar"];
     [self registerNativePlugin:DoricPopoverPlugin.class withName:@"popover"];
     [self registerNativePlugin:DoricAnimatePlugin.class withName:@"animate"];
+    [self registerNativePlugin:DoricNotificationPlugin.class withName:@"notification"];
 
     [self registerViewNode:DoricStackNode.class withName:@"Stack"];
     [self registerViewNode:DoricVLayoutNode.class withName:@"VLayout"];

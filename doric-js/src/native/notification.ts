@@ -16,13 +16,13 @@
 import { BridgeContext } from "../runtime/global"
 export function notification(context: BridgeContext) {
     return {
-        publish: (args: { biz: string, name: string, data?: object, androidSystem?: boolean }) => {
+        publish: (args: { biz?: string, name: string, data?: object, androidSystem?: boolean }) => {
             if (args.data !== undefined) {
                 (args as any).data = JSON.stringify(args.data)
             }
             return context.notification.publish(args)
         },
-        subscribe: (args: { biz: string, name: string, callback: (data?: any) => void, androidSystem?: boolean }) => {
+        subscribe: (args: { biz?: string, name: string, callback: (data?: any) => void, androidSystem?: boolean }) => {
             (args as any).callback = (context as any).function2Id(args.callback)
             return context.notification.subscribe(args) as Promise<string>
         },

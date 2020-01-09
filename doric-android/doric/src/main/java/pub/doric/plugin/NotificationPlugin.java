@@ -55,8 +55,12 @@ public class NotificationPlugin extends DoricJavaPlugin {
 
     @DoricMethod
     public void publish(JSObject args, DoricPromise promise) {
-        String biz = args.getProperty("biz").asString().value();
         String name = args.getProperty("name").asString().value();
+        JSValue bizValue = args.getProperty("biz");
+        if (bizValue.isString()) {
+            String biz = bizValue.asString().value();
+            name = "__doric__" + biz + "#" + name;
+        }
         String data = null;
         JSValue value = args.getProperty("data");
         if (value.isString()) {
@@ -67,7 +71,7 @@ public class NotificationPlugin extends DoricJavaPlugin {
         if (value.isBoolean()) {
             androidSystem = value.asBoolean().value();
         }
-        Intent intent = new Intent("__doric__" + biz + "#" + name);
+        Intent intent = new Intent(name);
         intent.putExtra("__doric_data__", data);
         if (androidSystem) {
             getDoricContext().getContext().sendBroadcast(intent);
@@ -80,8 +84,12 @@ public class NotificationPlugin extends DoricJavaPlugin {
 
     @DoricMethod
     public void subscribe(JSObject args, DoricPromise promise) {
-        String biz = args.getProperty("biz").asString().value();
         String name = args.getProperty("name").asString().value();
+        JSValue bizValue = args.getProperty("biz");
+        if (bizValue.isString()) {
+            String biz = bizValue.asString().value();
+            name = "__doric__" + biz + "#" + name;
+        }
         final String callbackId = args.getProperty("callback").asString().value();
         JSValue value = args.getProperty("androidSystem");
         boolean androidSystem = false;
@@ -115,7 +123,7 @@ public class NotificationPlugin extends DoricJavaPlugin {
             }
         };
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("__doric__" + biz + "#" + name);
+        intentFilter.addAction(name);
         if (androidSystem) {
             getDoricContext().getContext().registerReceiver(receiver, intentFilter);
             systemReceivers.put(callbackId, receiver);

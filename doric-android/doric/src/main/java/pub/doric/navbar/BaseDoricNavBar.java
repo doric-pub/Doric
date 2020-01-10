@@ -72,6 +72,18 @@ public class BaseDoricNavBar extends FrameLayout implements IDoricNavBar {
         mTvTitle.setText(title);
     }
 
+    @Override
+    public void setLeft(View view) {
+        mLeftContainer.removeAllViews();
+        mLeftContainer.addView(view);
+    }
+
+    @Override
+    public void setRight(View view) {
+        mRightContainer.removeAllViews();
+        mRightContainer.addView(view);
+    }
+
     private void updateTitleMargins() {
         try {
             int width = mRightContainer.getRight() - mLeftContainer.getLeft();
@@ -102,4 +114,5 @@ public class BaseDoricNavBar extends FrameLayout implements IDoricNavBar {
         super.onLayout(changed, left, top, right, bottom);
         updateTitleMargins();
     }
+
 }

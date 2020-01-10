@@ -15,19 +15,22 @@
  */
 package pub.doric.plugin;
 
-import android.view.View;
-import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.github.pengfeizhou.jscore.ArchiveException;
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JavaValue;
 
+import java.util.concurrent.Callable;
+
 import pub.doric.DoricContext;
+import pub.doric.async.AsyncResult;
 import pub.doric.extension.bridge.DoricMethod;
 import pub.doric.extension.bridge.DoricPlugin;
 import pub.doric.extension.bridge.DoricPromise;
 import pub.doric.navbar.IDoricNavBar;
+import pub.doric.shader.ViewNode;
 import pub.doric.utils.ThreadMode;
 
 /**
@@ -37,6 +40,10 @@ import pub.doric.utils.ThreadMode;
  */
 @DoricPlugin(name = "navbar")
 public class NavBarPlugin extends DoricJavaPlugin {
+
+    private static final String TYPE_LEFT = "navbar_left";
+    private static final String TYPE_RIGHT = "navbar_right";
+
     public NavBarPlugin(DoricContext doricContext) {
         super(doricContext);
     }
@@ -102,6 +109,92 @@ public class NavBarPlugin extends DoricJavaPlugin {
                 e.printStackTrace();
                 promise.reject(new JavaValue(e.getLocalizedMessage()));
             }
+        }
+    }
+
+    @DoricMethod(thread = ThreadMode.UI)
+    public void setLeft(JSDecoder decoder, final DoricPromise promise) {
+        try {
+            final JSObject jsObject = decoder.decode().asObject();
+            getDoricContext().getDriver().asyncCall(new Callable<Object>() {
+                @Override
+                public Object call() throws Exception {
+                    String viewId = jsObject.getProperty("id").asString().value();
+                    String type = jsObject.getProperty("type").asString().value();
+                    ViewNode node = ViewNode.create(getDoricContext(), type);
+                    node.setId(viewId);
+                    node.init(new FrameLayout.LayoutParams(0, 0));
+                    node.blend(jsObject.getProperty("props").asObject());
+
+                    getDoricContext().getDoricNavBar().setLeft(node.getNodeView());
+
+                    getDoricContext().clearHeadNodes(TYPE_LEFT);
+                    getDoricContext().addHeadNode(TYPE_LEFT, node);
+                    return null;
+                }
+            }, ThreadMode.UI).setCallback(new AsyncResult.Callback<Object>() {
+                @Override
+                public void onResult(Object result) {
+                    promise.resolve();
+                }
+
+                @Override
+                public void onError(Throwable t) {
+                    t.printStackTrace();
+                    promise.reject(new JavaValue(t.getLocalizedMessage()));
+                }
+
+                @Override
+                public void onFinish() {
+
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            promise.reject(new JavaValue(e.getLocalizedMessage()));
+        }
+    }
+
+    @DoricMethod(thread = ThreadMode.UI)
+    public void setRight(JSDecoder decoder, final DoricPromise promise) {
+        try {
+            final JSObject jsObject = decoder.decode().asObject();
+            getDoricContext().getDriver().asyncCall(new Callable<Object>() {
+                @Override
+                public Object call() throws Exception {
+                    String viewId = jsObject.getProperty("id").asString().value();
+                    String type = jsObject.getProperty("type").asString().value();
+                    ViewNode node = ViewNode.create(getDoricContext(), type);
+                    node.setId(viewId);
+                    node.init(new FrameLayout.LayoutParams(0, 0));
+                    node.blend(jsObject.getProperty("props").asObject());
+
+                    getDoricContext().getDoricNavBar().setRight(node.getNodeView());
+
+                    getDoricContext().clearHeadNodes(TYPE_RIGHT);
+                    getDoricContext().addHeadNode(TYPE_RIGHT, node);
+                    return null;
+                }
+            }, ThreadMode.UI).setCallback(new AsyncResult.Callback<Object>() {
+                @Override
+                public void onResult(Object result) {
+                    promise.resolve();
+                }
+
+                @Override
+                public void onError(Throwable t) {
+                    t.printStackTrace();
+                    promise.reject(new JavaValue(t.getLocalizedMessage()));
+                }
+
+                @Override
+                public void onFinish() {
+
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            promise.reject(new JavaValue(e.getLocalizedMessage()));
         }
     }
 }

@@ -103,5 +103,15 @@
     [self.navigationController.navigationBar setBackgroundImage:UIImageWithColor(color) forBarMetrics:UIBarMetricsDefault];
 }
 
+- (void)doric_navBar_setLeft:(UIView *)view {
+    UIBarButtonItem *custom = [[UIBarButtonItem alloc] initWithCustomView:view];
+    self.navigationItem.leftBarButtonItem = custom;
+}
+
+- (void)doric_navBar_setRight:(UIView *)view {
+    UIBarButtonItem *custom = [[UIBarButtonItem alloc] initWithCustomView:view];
+    self.navigationItem.rightBarButtonItem = custom;
+}
+
 
 @end

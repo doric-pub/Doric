@@ -28,4 +28,8 @@
 - (void)doric_navBar_setTitle:(NSString *)title;
 
 - (void)doric_navBar_setBackgroundColor:(UIColor *)color;
+
+- (void)doric_navBar_setLeft:(UIView *)view;
+
+- (void)doric_navBar_setRight:(UIView *)view;
 @end

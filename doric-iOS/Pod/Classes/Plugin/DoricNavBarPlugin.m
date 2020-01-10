@@ -19,8 +19,14 @@
 
 #import "DoricNavBarPlugin.h"
 #import "DoricUtil.h"
+#import "DoricViewNode.h"
+#import "DoricExtensions.h"
 
 @implementation DoricNavBarPlugin
+
+static NSString *TYPE_LEFT = @"navbar_left";
+static NSString *TYPE_RIGHT = @"navbar_right";
+
 - (void)isHidden:(NSDictionary *)param withPromise:(DoricPromise *)promise {
     if (self.doricContext.navBar) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -58,6 +64,68 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             UIColor *color = DoricColor(param[@"color"]);
             [self.doricContext.navBar doric_navBar_setBackgroundColor:color];
+            [promise resolve:nil];
+        });
+    } else {
+        [promise reject:@"Not implement NavBar"];
+    }
+}
+
+- (void)setLeft:(NSDictionary *)params withPromise:(DoricPromise *)promise {
+    if (self.doricContext.navBar) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSString *viewId = params[@"id"];
+            NSString *type = params[@"type"];
+            DoricViewNode *viewNode = [self.doricContext targetViewNode:viewId];
+            if (!viewNode) {
+                viewNode = [[DoricViewNode create:self.doricContext withType:type] also:^(DoricViewNode *it) {
+                    it.viewId = viewId;
+                    [it initWithSuperNode:nil];
+                    it.view.layoutConfig = [DoricLayoutConfig new];
+                    [self.doricContext.navBar doric_navBar_setLeft:it.view];
+                    
+                    NSMutableDictionary <NSString *, DoricViewNode *> *map = self.doricContext.headNodes[TYPE_LEFT];
+                    if (map != nil) {
+                        self.doricContext.headNodes[TYPE_LEFT][viewId] = it;
+                    } else {
+                        map = [[NSMutableDictionary alloc] init];
+                        map[viewId] = it;
+                        self.doricContext.headNodes[TYPE_LEFT] = map;
+                    }
+                }];
+            }
+            [viewNode blend:params[@"props"]];
+            [promise resolve:nil];
+        });
+    } else {
+        [promise reject:@"Not implement NavBar"];
+    }
+}
+
+- (void)setRight:(NSDictionary *)params withPromise:(DoricPromise *)promise {
+    if (self.doricContext.navBar) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSString *viewId = params[@"id"];
+            NSString *type = params[@"type"];
+            DoricViewNode *viewNode = [self.doricContext targetViewNode:viewId];
+            if (!viewNode) {
+                viewNode = [[DoricViewNode create:self.doricContext withType:type] also:^(DoricViewNode *it) {
+                    it.viewId = viewId;
+                    [it initWithSuperNode:nil];
+                    it.view.layoutConfig = [DoricLayoutConfig new];
+                    [self.doricContext.navBar doric_navBar_setRight:it.view];
+                    
+                    NSMutableDictionary <NSString *, DoricViewNode *> *map = self.doricContext.headNodes[TYPE_RIGHT];
+                    if (map != nil) {
+                        self.doricContext.headNodes[TYPE_RIGHT][viewId] = it;
+                    } else {
+                        map = [[NSMutableDictionary alloc] init];
+                        map[viewId] = it;
+                        self.doricContext.headNodes[TYPE_RIGHT] = map;
+                    }
+                }];
+            }
+            [viewNode blend:params[@"props"]];
             [promise resolve:nil];
         });
     } else {

@@ -2225,7 +2225,7 @@ class Panel {
         this.context.shader.render(model);
     }
     hookBeforeNativeCall() {
-        if (Environment.platform !== 'h5') {
+        if (Environment.platform !== 'web') {
             this.__root__.clean();
             for (let map of this.headviews.values()) {
                 for (let v of map.values()) {
@@ -2235,7 +2235,7 @@ class Panel {
         }
     }
     hookAfterNativeCall() {
-        if (Environment.platform !== 'h5') {
+        if (Environment.platform !== 'web') {
             //Here insert a native call to ensure the promise is resolved done.
             nativeEmpty();
             if (this.__root__.isDirty()) {

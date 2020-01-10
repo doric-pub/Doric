@@ -40,6 +40,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (Class)acquireViewNode:(NSString *)name;
 
+- (void)setEnvironment:(NSString *)key variable:(id)value;
+
+- (NSDictionary *)environmentVariables;
+
 + (void)register:(DoricLibrary *)library;
 @end
 

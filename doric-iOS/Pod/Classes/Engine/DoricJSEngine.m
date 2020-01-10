@@ -23,7 +23,6 @@
 #import "DoricJSEngine.h"
 #import "DoricJSExecutorProtocol.h"
 #import "DoricJSCoreExecutor.h"
-#import "DoricJSRemoteExecutor.h"
 #import "DoricConstant.h"
 #import "DoricUtil.h"
 #import "DoricBridgeExtension.h"
@@ -56,14 +55,20 @@
 - (void)initJSExecutor {
     __weak typeof(self) _self = self;
     NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
-    [self.jsExecutor injectGlobalJSObject:INJECT_ENVIRONMENT obj:@{
+    NSMutableDictionary *envDic = [@{
             @"platform": @"iOS",
             @"platformVersion": [[UIDevice currentDevice] systemVersion],
             @"appName": infoDictionary[@"CFBundleName"],
             @"appVersion": infoDictionary[@"CFBundleShortVersionString"],
             @"screenWidth": @([[UIScreen mainScreen] bounds].size.width),
             @"screenHeight": @([[UIScreen mainScreen] bounds].size.height),
+    } mutableCopy];
+
+    [self.registry.environmentVariables enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
+        envDic[key] = obj;
     }];
+
+    [self.jsExecutor injectGlobalJSObject:INJECT_ENVIRONMENT obj:[envDic copy]];
     [self.jsExecutor injectGlobalJSObject:INJECT_LOG obj:^(NSString *type, NSString *message) {
         DoricLog(@"JS:%@", message);
     }];

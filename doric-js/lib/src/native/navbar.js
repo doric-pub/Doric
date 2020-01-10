@@ -24,5 +24,19 @@ export function navbar(context) {
                 color: color.toModel(),
             });
         },
+        setLeft: (view) => {
+            if (panel) {
+                panel.clearHeadViews("navbar_left");
+                panel.addHeadView("navbar_left", view);
+            }
+            return context.navbar.setLeft(view.toModel());
+        },
+        setRight: (view) => {
+            if (panel) {
+                panel.clearHeadViews("navbar_right");
+                panel.addHeadView("navbar_right", view);
+            }
+            return context.navbar.setRight(view.toModel());
+        }
     };
 }

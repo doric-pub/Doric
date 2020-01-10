@@ -713,11 +713,14 @@ declare module 'doric/lib/src/native/modal' {
 declare module 'doric/lib/src/native/navbar' {
     import { BridgeContext } from "doric/lib/src/runtime/global";
     import { Color } from "doric/lib/src/util/color";
+    import { View } from "doric/lib/src/ui/view";
     export function navbar(context: BridgeContext): {
         isHidden: () => Promise<boolean>;
         setHidden: (hidden: boolean) => Promise<any>;
         setTitle: (title: string) => Promise<any>;
         setBgColor: (color: Color) => Promise<any>;
+        setLeft: (view: View) => Promise<any>;
+        setRight: (view: View) => Promise<any>;
     };
 }
 

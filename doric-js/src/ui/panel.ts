@@ -141,7 +141,12 @@ export abstract class Panel {
                 if (cur === this.__root__.viewId) {
                     return this.__root__
                 }
-                return this.headviews.get(cur)
+                for (let map of this.headviews.values()) {
+                    if (map.has(cur)) {
+                        return map.get(cur)
+                    }
+                }
+                return undefined
             } else {
                 if (Reflect.has(acc, "subviewById")) {
                     return Reflect.apply(Reflect.get(acc, "subviewById"), acc, [cur])

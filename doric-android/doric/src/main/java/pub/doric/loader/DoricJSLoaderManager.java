@@ -17,8 +17,9 @@ package pub.doric.loader;
 
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
-import pub.doric.DoricRegistry;
 import pub.doric.async.AsyncResult;
 
 /**
@@ -27,11 +28,24 @@ import pub.doric.async.AsyncResult;
  * @CreateDate: 2019-11-23
  */
 public class DoricJSLoaderManager {
+
+    private Set<IDoricJSLoader> jsLoaders = new HashSet<>();
+
     private DoricJSLoaderManager() {
+        addJSLoader(new DoricAssetJSLoader());
+        addJSLoader(new DoricHttpJSLoader());
     }
 
     private static class Inner {
         private static final DoricJSLoaderManager sInstance = new DoricJSLoaderManager();
+    }
+
+    public void addJSLoader(IDoricJSLoader jsLoader) {
+        jsLoaders.add(jsLoader);
+    }
+
+    private Collection<IDoricJSLoader> getJSLoaders() {
+        return jsLoaders;
     }
 
     public static DoricJSLoaderManager getInstance() {
@@ -39,7 +53,7 @@ public class DoricJSLoaderManager {
     }
 
     public AsyncResult<String> loadJSBundle(String scheme) {
-        Collection<IDoricJSLoader> jsLoaders = DoricRegistry.getJSLoaders();
+        Collection<IDoricJSLoader> jsLoaders = getJSLoaders();
         for (IDoricJSLoader jsLoader : jsLoaders) {
             if (jsLoader.filter(scheme)) {
                 return jsLoader.request(scheme);

@@ -2211,7 +2211,12 @@ class Panel {
                 if (cur === this.__root__.viewId) {
                     return this.__root__;
                 }
-                return this.headviews.get(cur);
+                for (let map of this.headviews.values()) {
+                    if (map.has(cur)) {
+                        return map.get(cur);
+                    }
+                }
+                return undefined;
             }
             else {
                 if (Reflect.has(acc, "subviewById")) {
@@ -3296,6 +3301,10 @@ function modal(context) {
 
 function navbar(context) {
     const entity = context.entity;
+    let panel = undefined;
+    if (entity instanceof Panel) {
+        panel = entity;
+    }
     return {
         isHidden: () => {
             return context.navbar.isHidden();
@@ -3315,6 +3324,20 @@ function navbar(context) {
                 color: color.toModel(),
             });
         },
+        setLeft: (view) => {
+            if (panel) {
+                panel.clearHeadViews("navbar_left");
+                panel.addHeadView("navbar_left", view);
+            }
+            return context.navbar.setLeft(view.toModel());
+        },
+        setRight: (view) => {
+            if (panel) {
+                panel.clearHeadViews("navbar_right");
+                panel.addHeadView("navbar_right", view);
+            }
+            return context.navbar.setRight(view.toModel());
+        }
     };
 }
 

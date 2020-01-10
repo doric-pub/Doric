@@ -16,6 +16,7 @@
 import { BridgeContext } from "../runtime/global"
 import { Panel } from "../ui/panel"
 import { Color } from "../util/color"
+import { View } from "../ui/view"
 
 export function navbar(context: BridgeContext) {
     const entity = context.entity
@@ -43,5 +44,19 @@ export function navbar(context: BridgeContext) {
                 color: color.toModel(),
             })
         },
+        setLeft: (view: View) => {
+            if (panel) {
+                panel.clearHeadViews("navbar_left")
+                panel.addHeadView("navbar_left", view)
+            }
+            return context.navbar.setLeft(view.toModel())
+        },
+        setRight: (view: View) => {
+            if (panel) {
+                panel.clearHeadViews("navbar_right")
+                panel.addHeadView("navbar_right", view)
+            }
+            return context.navbar.setRight(view.toModel())
+        }
     }
 }

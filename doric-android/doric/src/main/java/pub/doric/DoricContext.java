@@ -77,6 +77,13 @@ public class DoricContext {
         }
     }
 
+    public void clearHeadNodes(String type) {
+        Map<String, ViewNode> map = mHeadNodes.get(type);
+        if (map != null) {
+            map.clear();
+        }
+    }
+
     public ViewNode targetViewNode(String id) {
         if (id.equals(mRootNode.getId())) {
             return mRootNode;

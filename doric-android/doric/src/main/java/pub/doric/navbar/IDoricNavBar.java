@@ -15,6 +15,8 @@
  */
 package pub.doric.navbar;
 
+import android.view.View;
+
 /**
  * @Description: pub.doric.navbar
  * @Author: pengfei.zhou
@@ -28,4 +30,8 @@ public interface IDoricNavBar {
     void setTitle(String title);
 
     void setBackgroundColor(int color);
+
+    void setLeft(View view);
+
+    void setRight(View view);
 }

@@ -22,7 +22,7 @@ export type BridgeContext = {
 declare global {
     const context: BridgeContext
     const Environment: {
-        platform: "Android" | "iOS" | "Qt" | "h5",
+        platform: "Android" | "iOS" | "Qt" | "web",
 
         platformVersion: string,
 
@@ -36,6 +36,7 @@ declare global {
 
         screenHeight: number,
 
+        [index: string]: number | string | boolean | object | undefined
     }
     function Entry(constructor: { new(...args: any[]): {} }): any
 }

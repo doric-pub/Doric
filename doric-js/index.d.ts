@@ -28,12 +28,13 @@ declare module 'doric/lib/src/runtime/global' {
             libVersion: string;
             screenWidth: number;
             screenHeight: number;
+            [index: string]: number | string | boolean | object | undefined;
         };
         function Entry(constructor: {
-            new (...args: any[]): {};
+            new(...args: any[]): {};
         }): any;
     }
-    export {};
+    export { };
 }
 
 declare module 'doric/lib/src/ui/index.ui' {
@@ -90,157 +91,157 @@ declare module 'doric/lib/src/ui/view' {
     import { IAnimation } from "doric/lib/src/ui/animation";
     export function Property(target: Object, propKey: string): void;
     export interface IView {
-            width?: number;
-            height?: number;
-            backgroundColor?: Color | GradientColor;
-            corners?: number | {
-                    leftTop?: number;
-                    rightTop?: number;
-                    leftBottom?: number;
-                    rightBottom?: number;
-            };
-            border?: {
-                    width: number;
-                    color: Color;
-            };
-            shadow?: {
-                    color: Color;
-                    opacity: number;
-                    radius: number;
-                    offsetX: number;
-                    offsetY: number;
-            };
-            /**
-                * float [0,..1]
-                */
-            alpha?: number;
-            hidden?: boolean;
-            padding?: {
-                    left?: number;
-                    right?: number;
-                    top?: number;
-                    bottom?: number;
-            };
-            layoutConfig?: LayoutConfig;
-            onClick?: Function;
-            identifier?: string;
-            /**++++++++++transform++++++++++*/
-            translationX?: number;
-            translationY?: number;
-            scaleX?: number;
-            scaleY?: number;
-            /**
-                * float [0,..1]
-                */
-            pivotX?: number;
-            /**
-                * float [0,..1]
-                */
-            pivotY?: number;
-            /**
-                * rotation*PI
-                */
-            rotation?: number;
+        width?: number;
+        height?: number;
+        backgroundColor?: Color | GradientColor;
+        corners?: number | {
+            leftTop?: number;
+            rightTop?: number;
+            leftBottom?: number;
+            rightBottom?: number;
+        };
+        border?: {
+            width: number;
+            color: Color;
+        };
+        shadow?: {
+            color: Color;
+            opacity: number;
+            radius: number;
+            offsetX: number;
+            offsetY: number;
+        };
+        /**
+            * float [0,..1]
+            */
+        alpha?: number;
+        hidden?: boolean;
+        padding?: {
+            left?: number;
+            right?: number;
+            top?: number;
+            bottom?: number;
+        };
+        layoutConfig?: LayoutConfig;
+        onClick?: Function;
+        identifier?: string;
+        /**++++++++++transform++++++++++*/
+        translationX?: number;
+        translationY?: number;
+        scaleX?: number;
+        scaleY?: number;
+        /**
+            * float [0,..1]
+            */
+        pivotX?: number;
+        /**
+            * float [0,..1]
+            */
+        pivotY?: number;
+        /**
+            * rotation*PI
+            */
+        rotation?: number;
     }
     export type NativeViewModel = {
-            id: string;
-            type: string;
-            props: {
-                    [index: string]: Model;
-            };
+        id: string;
+        type: string;
+        props: {
+            [index: string]: Model;
+        };
     };
     export abstract class View implements Modeling, IView {
+        width: number;
+        height: number;
+        x: number;
+        y: number;
+        backgroundColor?: Color | GradientColor;
+        corners?: number | {
+            leftTop?: number;
+            rightTop?: number;
+            leftBottom?: number;
+            rightBottom?: number;
+        };
+        border?: {
             width: number;
-            height: number;
+            color: Color;
+        };
+        shadow?: {
+            color: Color;
+            opacity: number;
+            radius: number;
+            offsetX: number;
+            offsetY: number;
+        };
+        alpha?: number;
+        hidden?: boolean;
+        viewId: string;
+        padding?: {
+            left?: number;
+            right?: number;
+            top?: number;
+            bottom?: number;
+        };
+        layoutConfig?: LayoutConfig;
+        onClick?: Function;
+        superview?: Superview;
+        callbacks: Map<String, Function>;
+        constructor();
+        /** Anchor start*/
+        get left(): number;
+        set left(v: number);
+        get right(): number;
+        set right(v: number);
+        get top(): number;
+        set top(v: number);
+        get bottom(): number;
+        set bottom(v: number);
+        get centerX(): number;
+        get centerY(): number;
+        set centerX(v: number);
+        set centerY(v: number);
+        get dirtyProps(): {
+            [index: string]: Model;
+        };
+        nativeViewModel: NativeViewModel;
+        onPropertyChanged(propKey: string, oldV: Model, newV: Model): void;
+        clean(): void;
+        isDirty(): boolean;
+        responseCallback(id: string, ...args: any): any;
+        toModel(): NativeViewModel;
+        let(block: (it: this) => void): void;
+        also(block: (it: this) => void): this;
+        apply(config: IView): this;
+        in(group: Group): this;
+        nativeChannel(context: any, name: string): (args?: any) => Promise<any>;
+        getWidth(context: BridgeContext): Promise<number>;
+        getHeight(context: BridgeContext): Promise<number>;
+        getLocationOnScreen(context: BridgeContext): Promise<{
             x: number;
             y: number;
-            backgroundColor?: Color | GradientColor;
-            corners?: number | {
-                    leftTop?: number;
-                    rightTop?: number;
-                    leftBottom?: number;
-                    rightBottom?: number;
-            };
-            border?: {
-                    width: number;
-                    color: Color;
-            };
-            shadow?: {
-                    color: Color;
-                    opacity: number;
-                    radius: number;
-                    offsetX: number;
-                    offsetY: number;
-            };
-            alpha?: number;
-            hidden?: boolean;
-            viewId: string;
-            padding?: {
-                    left?: number;
-                    right?: number;
-                    top?: number;
-                    bottom?: number;
-            };
-            layoutConfig?: LayoutConfig;
-            onClick?: Function;
-            superview?: Superview;
-            callbacks: Map<String, Function>;
-            constructor();
-            /** Anchor start*/
-            get left(): number;
-            set left(v: number);
-            get right(): number;
-            set right(v: number);
-            get top(): number;
-            set top(v: number);
-            get bottom(): number;
-            set bottom(v: number);
-            get centerX(): number;
-            get centerY(): number;
-            set centerX(v: number);
-            set centerY(v: number);
-            get dirtyProps(): {
-                    [index: string]: Model;
-            };
-            nativeViewModel: NativeViewModel;
-            onPropertyChanged(propKey: string, oldV: Model, newV: Model): void;
-            clean(): void;
-            isDirty(): boolean;
-            responseCallback(id: string, ...args: any): any;
-            toModel(): NativeViewModel;
-            let(block: (it: this) => void): void;
-            also(block: (it: this) => void): this;
-            apply(config: IView): this;
-            in(group: Group): this;
-            nativeChannel(context: any, name: string): (args?: any) => Promise<any>;
-            getWidth(context: BridgeContext): Promise<number>;
-            getHeight(context: BridgeContext): Promise<number>;
-            getLocationOnScreen(context: BridgeContext): Promise<{
-                    x: number;
-                    y: number;
-            }>;
-            /**++++++++++transform++++++++++*/
-            translationX?: number;
-            translationY?: number;
-            scaleX?: number;
-            scaleY?: number;
-            pivotX?: number;
-            pivotY?: number;
-            rotation?: number;
-            /**----------transform----------*/
-            doAnimation(context: BridgeContext, animation: IAnimation): Promise<void>;
+        }>;
+        /**++++++++++transform++++++++++*/
+        translationX?: number;
+        translationY?: number;
+        scaleX?: number;
+        scaleY?: number;
+        pivotX?: number;
+        pivotY?: number;
+        rotation?: number;
+        /**----------transform----------*/
+        doAnimation(context: BridgeContext, animation: IAnimation): Promise<void>;
     }
     export abstract class Superview extends View {
-            subviewById(id: string): View | undefined;
-            abstract allSubviews(): Iterable<View>;
-            isDirty(): boolean;
-            clean(): void;
-            toModel(): NativeViewModel;
+        subviewById(id: string): View | undefined;
+        abstract allSubviews(): Iterable<View>;
+        isDirty(): boolean;
+        clean(): void;
+        toModel(): NativeViewModel;
     }
     export abstract class Group extends Superview {
-            readonly children: View[];
-            allSubviews(): View[];
-            addChild(view: View): void;
+        readonly children: View[];
+        allSubviews(): View[];
+        addChild(view: View): void;
     }
 }
 
@@ -269,124 +270,124 @@ declare module 'doric/lib/src/ui/animation' {
     import { Modeling, Model } from "doric/lib/src/util/types";
     export type AnimatedKey = "translationX" | "translationY" | "scaleX" | "scaleY" | "rotation" | "pivotX" | "pivotY";
     export enum RepeatMode {
-            RESTART = 1,
-            REVERSE = 2
+        RESTART = 1,
+        REVERSE = 2
     }
     export interface IAnimation extends Modeling {
-            duration: number;
-            delay?: number;
+        duration: number;
+        delay?: number;
     }
     export interface Changeable {
-            fromValue: number;
-            toValue: number;
-            key: AnimatedKey;
-            repeatCount?: number;
-            repeatMode?: RepeatMode;
+        fromValue: number;
+        toValue: number;
+        key: AnimatedKey;
+        repeatCount?: number;
+        repeatMode?: RepeatMode;
     }
     export enum FillMode {
-            /**
-                * The receiver is removed from the presentation when the animation is completed.
-                */
-            Removed = 0,
-            /**
-                * The receiver remains visible in its final state when the animation is completed.
-                */
-            Forward = 1,
-            /**
-                * The receiver clamps values before zero to zero when the animation is completed.
-                */
-            Backward = 2,
-            /**
-                * The receiver clamps values at both ends of the object’s time space
-                */
-            Both = 3
+        /**
+            * The receiver is removed from the presentation when the animation is completed.
+            */
+        Removed = 0,
+        /**
+            * The receiver remains visible in its final state when the animation is completed.
+            */
+        Forward = 1,
+        /**
+            * The receiver clamps values before zero to zero when the animation is completed.
+            */
+        Backward = 2,
+        /**
+            * The receiver clamps values at both ends of the object’s time space
+            */
+        Both = 3
     }
     export enum TimingFunction {
-            /**
-                * The system default timing function. Use this function to ensure that the timing of your animations matches that of most system animations.
-                */
-            Default = 0,
-            /**
-                * Linear pacing, which causes an animation to occur evenly over its duration.
-                */
-            Linear = 1,
-            /**
-                * Ease-in pacing, which causes an animation to begin slowly and then speed up as it progresses.
-                */
-            EaseIn = 2,
-            /**
-                * Ease-out pacing, which causes an animation to begin quickly and then slow as it progresses.
-                */
-            EaseOut = 3,
-            /**
-                * Ease-in-ease-out pacing, which causes an animation to begin slowly, accelerate through the middle of its duration, and then slow again before completing.
-                */
-            EaseInEaseOut = 4
+        /**
+            * The system default timing function. Use this function to ensure that the timing of your animations matches that of most system animations.
+            */
+        Default = 0,
+        /**
+            * Linear pacing, which causes an animation to occur evenly over its duration.
+            */
+        Linear = 1,
+        /**
+            * Ease-in pacing, which causes an animation to begin slowly and then speed up as it progresses.
+            */
+        EaseIn = 2,
+        /**
+            * Ease-out pacing, which causes an animation to begin quickly and then slow as it progresses.
+            */
+        EaseOut = 3,
+        /**
+            * Ease-in-ease-out pacing, which causes an animation to begin slowly, accelerate through the middle of its duration, and then slow again before completing.
+            */
+        EaseInEaseOut = 4
     }
     abstract class Animation implements IAnimation {
-            changeables: Map<AnimatedKey, Changeable>;
+        changeables: Map<AnimatedKey, Changeable>;
+        duration: number;
+        repeatCount?: number;
+        repeatMode?: RepeatMode;
+        delay?: number;
+        fillMode: FillMode;
+        timingFunction?: TimingFunction;
+        toModel(): {
+            type: string;
+            delay: number | undefined;
             duration: number;
-            repeatCount?: number;
-            repeatMode?: RepeatMode;
-            delay?: number;
+            changeables: {
+                key: AnimatedKey;
+                fromValue: number;
+                toValue: number;
+            }[];
+            repeatCount: number | undefined;
+            repeatMode: RepeatMode | undefined;
             fillMode: FillMode;
-            timingFunction?: TimingFunction;
-            toModel(): {
-                    type: string;
-                    delay: number | undefined;
-                    duration: number;
-                    changeables: {
-                            key: AnimatedKey;
-                            fromValue: number;
-                            toValue: number;
-                    }[];
-                    repeatCount: number | undefined;
-                    repeatMode: RepeatMode | undefined;
-                    fillMode: FillMode;
-                    timingFunction: TimingFunction | undefined;
-            };
+            timingFunction: TimingFunction | undefined;
+        };
     }
     export class ScaleAnimation extends Animation {
-            constructor();
-            set fromScaleX(v: number);
-            get fromScaleX(): number;
-            set toScaleX(v: number);
-            get toScaleX(): number;
-            set fromScaleY(v: number);
-            get fromScaleY(): number;
-            set toScaleY(v: number);
-            get toScaleY(): number;
+        constructor();
+        set fromScaleX(v: number);
+        get fromScaleX(): number;
+        set toScaleX(v: number);
+        get toScaleX(): number;
+        set fromScaleY(v: number);
+        get fromScaleY(): number;
+        set toScaleY(v: number);
+        get toScaleY(): number;
     }
     export class TranslationAnimation extends Animation {
-            constructor();
-            set fromTranslationX(v: number);
-            get fromTranslationX(): number;
-            set toTranslationX(v: number);
-            get toTranslationX(): number;
-            set fromTranslationY(v: number);
-            get fromTranslationY(): number;
-            set toTranslationY(v: number);
-            get toTranslationY(): number;
+        constructor();
+        set fromTranslationX(v: number);
+        get fromTranslationX(): number;
+        set toTranslationX(v: number);
+        get toTranslationX(): number;
+        set fromTranslationY(v: number);
+        get fromTranslationY(): number;
+        set toTranslationY(v: number);
+        get toTranslationY(): number;
     }
     export class RotationAnimation extends Animation {
-            constructor();
-            set fromRotation(v: number);
-            get fromRotation(): number;
-            set toRotation(v: number);
-            get toRotation(): number;
+        constructor();
+        set fromRotation(v: number);
+        get fromRotation(): number;
+        set toRotation(v: number);
+        get toRotation(): number;
     }
     export class AnimationSet implements IAnimation {
-            _duration: number;
-            delay?: number;
-            addAnimation(anim: IAnimation): void;
-            get duration(): number;
-            set duration(v: number);
-            toModel(): {
-                    animations: Model;
-                    delay: number | undefined;
-            };
+        _duration: number;
+        delay?: number;
+        addAnimation(anim: IAnimation): void;
+        get duration(): number;
+        set duration(v: number);
+        toModel(): {
+            animations: Model;
+            delay: number | undefined;
+        };
     }
-    export {};
+    export { };
 }
 
 declare module 'doric/lib/src/widget/layouts' {
@@ -417,7 +418,7 @@ declare module 'doric/lib/src/widget/layouts' {
     export function stack(views: View[], config?: IStack): Stack;
     export function hlayout(views: View[], config?: IHLayout): HLayout;
     export function vlayout(views: View[], config?: IVLayout): VLayout;
-    export {};
+    export { };
 }
 
 declare module 'doric/lib/src/widget/text' {
@@ -894,67 +895,67 @@ declare module 'doric/lib/src/util/layoutconfig' {
     import { Gravity } from "doric/lib/src/util/gravity";
     import { Modeling } from "doric/lib/src/util/types";
     export enum LayoutSpec {
-            /**
-                * Depends on what's been set on width or height.
-             */
-            JUST = 0,
-            /**
-                * Depends on it's content.
-                */
-            FIT = 1,
-            /**
-                * Extend as much as parent let it take.
-                */
-            MOST = 2
+        /**
+            * Depends on what's been set on width or height.
+         */
+        JUST = 0,
+        /**
+            * Depends on it's content.
+            */
+        FIT = 1,
+        /**
+            * Extend as much as parent let it take.
+            */
+        MOST = 2
     }
     export interface LayoutConfig {
-            widthSpec?: LayoutSpec;
-            heightSpec?: LayoutSpec;
-            margin?: {
-                    left?: number;
-                    right?: number;
-                    top?: number;
-                    bottom?: number;
-            };
-            alignment?: Gravity;
-            weight?: number;
+        widthSpec?: LayoutSpec;
+        heightSpec?: LayoutSpec;
+        margin?: {
+            left?: number;
+            right?: number;
+            top?: number;
+            bottom?: number;
+        };
+        alignment?: Gravity;
+        weight?: number;
     }
     export class LayoutConfigImpl implements LayoutConfig, Modeling {
-            widthSpec?: LayoutSpec;
-            heightSpec?: LayoutSpec;
-            margin?: {
-                    left?: number;
-                    right?: number;
-                    top?: number;
-                    bottom?: number;
-            };
-            alignment?: Gravity;
-            weight?: number;
-            fit(): this;
-            most(): this;
-            just(): this;
-            configWidth(w: LayoutSpec): this;
-            configHeight(h: LayoutSpec): this;
-            configMargin(m: {
-                    left?: number;
-                    right?: number;
-                    top?: number;
-                    bottom?: number;
-            }): this;
-            configAlignment(a: Gravity): this;
-            configWeight(w: number): this;
-            toModel(): {
-                    widthSpec: LayoutSpec | undefined;
-                    heightSpec: LayoutSpec | undefined;
-                    margin: {
-                            left?: number | undefined;
-                            right?: number | undefined;
-                            top?: number | undefined;
-                            bottom?: number | undefined;
-                    } | undefined;
-                    alignment: number | undefined;
-                    weight: number | undefined;
-            };
+        widthSpec?: LayoutSpec;
+        heightSpec?: LayoutSpec;
+        margin?: {
+            left?: number;
+            right?: number;
+            top?: number;
+            bottom?: number;
+        };
+        alignment?: Gravity;
+        weight?: number;
+        fit(): this;
+        most(): this;
+        just(): this;
+        configWidth(w: LayoutSpec): this;
+        configHeight(h: LayoutSpec): this;
+        configMargin(m: {
+            left?: number;
+            right?: number;
+            top?: number;
+            bottom?: number;
+        }): this;
+        configAlignment(a: Gravity): this;
+        configWeight(w: number): this;
+        toModel(): {
+            widthSpec: LayoutSpec | undefined;
+            heightSpec: LayoutSpec | undefined;
+            margin: {
+                left?: number | undefined;
+                right?: number | undefined;
+                top?: number | undefined;
+                bottom?: number | undefined;
+            } | undefined;
+            alignment: number | undefined;
+            weight: number | undefined;
+        };
     }
     export function layoutConfig(): LayoutConfigImpl;
 }
@@ -981,7 +982,7 @@ declare module 'doric/lib/src/util/types' {
         bind(binder: Binder<T>): void;
         static of<E>(v: E): Mutable<E>;
     }
-    export {};
+    export { };
 }
 
 declare module 'doric/lib/src/util/uniqueId' {
@@ -1009,7 +1010,7 @@ declare module 'doric/lib/src/pattern/provider' {
     }
     export class Observable<M> implements IObservable<M> {
         constructor(provider: IProvider, clz: {
-            new (...args: any[]): M;
+            new(...args: any[]): M;
         });
         addObserver(observer: Observer<M | undefined>): void;
         removeObserver(observer: Observer<M | undefined>): void;
@@ -1018,20 +1019,20 @@ declare module 'doric/lib/src/pattern/provider' {
     export interface IProvider {
         provide(obj: Object): void;
         acquire<T>(clz: {
-            new (...args: any[]): T;
+            new(...args: any[]): T;
         }): T | undefined;
         remove<T>(clz: {
-            new (...args: any[]): T;
+            new(...args: any[]): T;
         }): void;
         clear(): void;
         observe<T>(clz: {
-            new (...args: any[]): T;
+            new(...args: any[]): T;
         }): Observable<T>;
     }
     export class Provider implements IProvider {
         provide(obj: Object): void;
         acquire<T>(clz: {
-            new (...args: any[]): T;
+            new(...args: any[]): T;
         }): T | undefined;
         remove<T>(clz: new (...args: any[]) => T): void;
         clear(): void;

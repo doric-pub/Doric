@@ -15,6 +15,8 @@
  */
 package pub.doric.extension.bridge;
 
+import android.util.Log;
+
 import pub.doric.DoricContext;
 
 import pub.doric.async.AsyncResult;
@@ -44,22 +46,30 @@ public class DoricBridgeExtension {
         final DoricContext context = DoricContextManager.getContext(contextId);
         DoricMetaInfo<DoricJavaPlugin> pluginInfo = context.getDriver().getRegistry().acquirePluginInfo(module);
         if (pluginInfo == null) {
-            DoricLog.e("Cannot find plugin class:%s", module);
+            context.getDriver().getRegistry().onLogout(
+                    Log.ERROR,
+                    String.format("Cannot find plugin class:%s", module));
             return new JavaValue(false);
         }
         final DoricJavaPlugin doricJavaPlugin = context.obtainPlugin(pluginInfo);
         if (doricJavaPlugin == null) {
-            DoricLog.e("Cannot obtain plugin instance:%s,method:%", module);
+            context.getDriver().getRegistry().onLogout(
+                    Log.ERROR,
+                    String.format("Cannot obtain plugin instance:%s,method:%s", module, methodName));
             return new JavaValue(false);
         }
         final Method method = pluginInfo.getMethod(methodName);
         if (method == null) {
-            DoricLog.e("Cannot find plugin method in class:%s,method:%s", module, methodName);
+            context.getDriver().getRegistry().onLogout(
+                    Log.ERROR,
+                    String.format("Cannot find plugin method in class:%s,method:%s", module, methodName));
             return new JavaValue(false);
         }
         DoricMethod doricMethod = method.getAnnotation(DoricMethod.class);
         if (doricMethod == null) {
-            DoricLog.e("Cannot find DoricMethod annotation in class:%s,method:%s", module, methodName);
+            context.getDriver().getRegistry().onLogout(
+                    Log.ERROR,
+                    String.format("Cannot find DoricMethod annotation in class:%s,method:%s", module, methodName));
             return new JavaValue(false);
         }
         Callable<JavaValue> callable = new Callable<JavaValue>() {
@@ -93,7 +103,10 @@ public class DoricBridgeExtension {
             try {
                 return DoricUtils.toJavaObject(clz, jsDecoder);
             } catch (Exception e) {
-                DoricLog.e("createParam error:%s", e.getLocalizedMessage());
+                context.getDriver().getRegistry().onException(e);
+                context.getDriver().getRegistry().onLogout(
+                        Log.ERROR,
+                        String.format("createParam error:%s", e.getLocalizedMessage()));
             }
             return null;
         }

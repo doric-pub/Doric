@@ -23,6 +23,7 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSONBuilder;
@@ -34,6 +35,7 @@ import java.util.Map;
 
 import pub.doric.Doric;
 import pub.doric.DoricRegistry;
+import pub.doric.IDoricMonitor;
 import pub.doric.extension.bridge.DoricBridgeExtension;
 import pub.doric.extension.timer.DoricTimerExtension;
 import pub.doric.utils.DoricConstant;
@@ -45,7 +47,7 @@ import pub.doric.utils.DoricUtils;
  * @Author: pengfei.zhou
  * @CreateDate: 2019-07-18
  */
-public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.TimerCallback {
+public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.TimerCallback, IDoricMonitor {
 
     private HandlerThread handlerThread;
     private final Handler mJSHandler;
@@ -68,6 +70,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
             }
         });
         mTimerExtension = new DoricTimerExtension(looper, this);
+        mDoricRegistry.registerMonitor(this);
     }
 
     public Handler getJSHandler() {
@@ -116,17 +119,17 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
                     String message = args[1].string();
                     switch (type) {
                         case "w":
-                            DoricLog.suffix_w("_js", message);
+                            mDoricRegistry.onLogout(Log.WARN, message);
                             break;
                         case "e":
-                            DoricLog.suffix_e("_js", message);
+                            mDoricRegistry.onLogout(Log.ERROR, message);
                             break;
                         default:
-                            DoricLog.suffix_d("_js", message);
+                            mDoricRegistry.onLogout(Log.INFO, message);
                             break;
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    mDoricRegistry.onException(e);
                 }
                 return null;
             }
@@ -144,13 +147,13 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
                     String name = args[0].string();
                     String content = mDoricRegistry.acquireJSBundle(name);
                     if (TextUtils.isEmpty(content)) {
-                        DoricLog.e("require js bundle:%s is empty", name);
+                        mDoricRegistry.onLogout(Log.ERROR, String.format("require js bundle:%s is empty", name));
                         return new JavaValue(false);
                     }
                     mDoricJSE.loadJS(packageModuleScript(name, content), "Module://" + name);
                     return new JavaValue(true);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    mDoricRegistry.onException(e);
                     return new JavaValue(false);
                 }
             }
@@ -164,7 +167,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
                             args[1].number().longValue(),
                             args[2].bool());
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    mDoricRegistry.onException(e);
                 }
                 return null;
             }
@@ -175,7 +178,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
                 try {
                     mTimerExtension.clearTimer(args[0].number().longValue());
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    mDoricRegistry.onException(e);
                 }
                 return null;
             }
@@ -191,7 +194,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
                     JSDecoder jsDecoder = args[4];
                     return mDoricBridgeExtension.callNative(contextId, module, method, callbackId, jsDecoder);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    mDoricRegistry.onException(e);
                 }
                 return null;
             }
@@ -199,10 +202,14 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
     }
 
     private void initDoricRuntime() {
-        loadBuiltinJS(DoricConstant.DORIC_BUNDLE_SANDBOX);
-        String libName = DoricConstant.DORIC_MODULE_LIB;
-        String libJS = DoricUtils.readAssetFile(DoricConstant.DORIC_BUNDLE_LIB);
-        mDoricJSE.loadJS(packageModuleScript(libName, libJS), "Module://" + libName);
+        try {
+            loadBuiltinJS(DoricConstant.DORIC_BUNDLE_SANDBOX);
+            String libName = DoricConstant.DORIC_MODULE_LIB;
+            String libJS = DoricUtils.readAssetFile(DoricConstant.DORIC_BUNDLE_LIB);
+            mDoricJSE.loadJS(packageModuleScript(libName, libJS), "Module://" + libName);
+        } catch (Exception e) {
+            mDoricRegistry.onException(e);
+        }
     }
 
     @Override
@@ -252,12 +259,34 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
         try {
             invokeDoricMethod(DoricConstant.DORIC_TIMER_CALLBACK, timerId);
         } catch (Exception e) {
-            e.printStackTrace();
-            DoricLog.e("Timer Callback error:%s", e.getLocalizedMessage());
+            mDoricRegistry.onException(e);
+            mDoricRegistry.onLogout(
+                    Log.ERROR,
+                    String.format("Timer Callback error:%s", e.getLocalizedMessage()));
         }
     }
 
     public DoricRegistry getRegistry() {
         return mDoricRegistry;
+    }
+
+    @Override
+    public void onException(Exception e) {
+        e.printStackTrace();
+    }
+
+    @Override
+    public void onLogout(int type, String message) {
+        switch (type) {
+            case Log.ERROR:
+                DoricLog.suffix_e("_js", message);
+                break;
+            case Log.WARN:
+                DoricLog.suffix_w("_js", message);
+                break;
+            default:
+                DoricLog.suffix_d("_js", message);
+                break;
+        }
     }
 }

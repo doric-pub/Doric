@@ -156,7 +156,7 @@ export abstract class Panel {
     }
 
     private hookBeforeNativeCall() {
-        if (Environment.platform !== 'h5') {
+        if (Environment.platform !== 'web') {
             this.__root__.clean()
             for (let map of this.headviews.values()) {
                 for (let v of map.values()) {
@@ -167,7 +167,7 @@ export abstract class Panel {
     }
 
     private hookAfterNativeCall() {
-        if (Environment.platform !== 'h5') {
+        if (Environment.platform !== 'web') {
             //Here insert a native call to ensure the promise is resolved done.
             nativeEmpty()
             if (this.__root__.isDirty()) {

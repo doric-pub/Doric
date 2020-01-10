@@ -26,5 +26,8 @@
     "doric": "file:../doric-js",
     "rollup": "^1.28.0",
     "typescript": "^3.7.4"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
   }
 }

@@ -30,6 +30,7 @@ import com.github.pengfeizhou.jscore.JavaFunction;
 import com.github.pengfeizhou.jscore.JavaValue;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import pub.doric.Doric;
 import pub.doric.DoricRegistry;
@@ -91,14 +92,22 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
         } catch (Exception e) {
             e.printStackTrace();
         }
-        mDoricJSE.injectGlobalJSObject(DoricConstant.INJECT_ENVIRONMENT, new JavaValue(new JSONBuilder()
+        JSONBuilder envObject = new JSONBuilder()
                 .put("platform", "Android")
                 .put("platformVersion", String.valueOf(android.os.Build.VERSION.SDK_INT))
                 .put("appName", appName)
                 .put("appVersion", appVersion)
                 .put("screenWidth", DoricUtils.px2dp(DoricUtils.getScreenWidth()))
-                .put("screenHeight", DoricUtils.px2dp(DoricUtils.getScreenHeight()))
-                .toJSONObject()));
+                .put("screenHeight", DoricUtils.px2dp(DoricUtils.getScreenHeight()));
+
+        Map<String, Object> extend = mDoricRegistry.getEnvironmentVariables();
+        for (String key : extend.keySet()) {
+            envObject.put(key, extend.get(key));
+        }
+
+        mDoricJSE.injectGlobalJSObject(DoricConstant.INJECT_ENVIRONMENT,
+                new JavaValue(envObject.toJSONObject()));
+
         mDoricJSE.injectGlobalJSFunction(DoricConstant.INJECT_LOG, new JavaFunction() {
             @Override
             public JavaValue exec(JSDecoder[] args) {

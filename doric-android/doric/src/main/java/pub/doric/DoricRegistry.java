@@ -66,6 +66,7 @@ public class DoricRegistry {
     private static Map<String, String> bundles = new ConcurrentHashMap<>();
     private static Set<DoricLibrary> doricLibraries = new HashSet<>();
     private static Set<IDoricJSLoader> jsLoaders = new HashSet<>();
+    private Map<String, Object> extendedEnvValues = new HashMap<>();
 
     static {
         addJSLoader(new DoricAssetJSLoader());
@@ -153,5 +154,13 @@ public class DoricRegistry {
 
     public static Collection<IDoricJSLoader> getJSLoaders() {
         return jsLoaders;
+    }
+
+    public void setEnvironmentVariabel(String key, Object val) {
+        extendedEnvValues.put(key, val);
+    }
+
+    public Map<String, Object> getEnvironmentVariables() {
+        return extendedEnvValues;
     }
 }

@@ -78,7 +78,7 @@
 @property(nonatomic, strong) NSMutableDictionary *bundles;
 @property(nonatomic, strong) NSMutableDictionary *plugins;
 @property(nonatomic, strong) NSMutableDictionary *nodes;
-
+@property(nonatomic, strong) NSMutableDictionary <NSString *, id> *envVariables;
 @end
 
 @implementation DoricRegistry
@@ -89,9 +89,10 @@
 
 - (instancetype)init {
     if (self = [super init]) {
-        _bundles = [[NSMutableDictionary alloc] init];
-        _plugins = [[NSMutableDictionary alloc] init];
-        _nodes = [[NSMutableDictionary alloc] init];
+        _bundles = [NSMutableDictionary new];
+        _plugins = [NSMutableDictionary new];
+        _nodes = [NSMutableDictionary new];
+        _envVariables = [NSMutableDictionary new];
         [self innerRegister];
         [DoricLibraries.instance.libraries enumerateObjectsUsingBlock:^(DoricLibrary *obj, BOOL *stop) {
             [obj load:self];
@@ -153,4 +154,11 @@
     return self.nodes[name];
 }
 
+- (void)setEnvironment:(NSString *)key variable:(id)value {
+    self.envVariables[key] = value;
+}
+
+- (NSDictionary *)environmentVariables {
+    return self.envVariables;
+}
 @end

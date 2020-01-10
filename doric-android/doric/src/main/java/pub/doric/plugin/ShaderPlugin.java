@@ -16,6 +16,7 @@
 package pub.doric.plugin;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import pub.doric.DoricContext;
 import pub.doric.async.AsyncResult;
@@ -78,8 +79,12 @@ public class ShaderPlugin extends DoricJavaPlugin {
 
                 @Override
                 public void onError(Throwable t) {
-                    t.printStackTrace();
-                    DoricLog.e("Shader.render:error%s", t.getLocalizedMessage());
+                    if (t instanceof Exception) {
+                        getDoricContext().getDriver().getRegistry().onException((Exception) t);
+                    }
+                    getDoricContext().getDriver().getRegistry().onLogout(
+                            Log.ERROR,
+                            String.format("Shader.render:error%s", t.getLocalizedMessage()));
                 }
 
                 @Override
@@ -88,8 +93,11 @@ public class ShaderPlugin extends DoricJavaPlugin {
                 }
             });
         } catch (Exception e) {
-            e.printStackTrace();
-            DoricLog.e("Shader.render:error%s", e.getLocalizedMessage());
+            getDoricContext().getDriver().getRegistry().onException(e);
+            getDoricContext().getDriver().getRegistry().onLogout(
+                    Log.ERROR,
+                    String.format("Shader.render:error%s", e.getLocalizedMessage())
+            );
         }
     }
 
@@ -166,7 +174,7 @@ public class ShaderPlugin extends DoricJavaPlugin {
                 }
             }
         } catch (ArchiveException e) {
-            e.printStackTrace();
+            getDoricContext().getDriver().getRegistry().onException(e);
         }
         return new JavaValue(true);
     }

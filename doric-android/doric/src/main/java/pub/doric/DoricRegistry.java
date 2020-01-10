@@ -66,6 +66,8 @@ public class DoricRegistry {
     private Map<String, DoricMetaInfo<DoricJavaPlugin>> pluginInfoMap = new HashMap<>();
     private Map<String, DoricMetaInfo<ViewNode>> nodeInfoMap = new HashMap<>();
 
+    private Set<IDoricMonitor> monitors = new HashSet<>();
+
     private static void initRegistry(DoricRegistry doricRegistry) {
         for (DoricLibrary library : doricLibraries) {
             library.load(doricRegistry);
@@ -145,5 +147,21 @@ public class DoricRegistry {
 
     public Map<String, Object> getEnvironmentVariables() {
         return extendedEnvValues;
+    }
+
+    public void registerMonitor(IDoricMonitor monitor) {
+        this.monitors.add(monitor);
+    }
+
+    public void onException(Exception e) {
+        for (IDoricMonitor monitor : this.monitors) {
+            monitor.onException(e);
+        }
+    }
+
+    public void onLogout(int type, String message) {
+        for (IDoricMonitor monitor : this.monitors) {
+            monitor.onLogout(type, message);
+        }
     }
 }

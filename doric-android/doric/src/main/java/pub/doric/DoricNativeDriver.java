@@ -17,6 +17,7 @@ package pub.doric;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import com.github.pengfeizhou.jscore.JSDecoder;
 
@@ -76,7 +77,8 @@ public class DoricNativeDriver implements IDoricDriver {
                 try {
                     return doricJSEngine.invokeDoricMethod(method, args);
                 } catch (Exception e) {
-                    DoricLog.e("invokeDoricMethod(%s,...),error is %s", method, e.getLocalizedMessage());
+                    doricJSEngine.onException(e);
+                    doricJSEngine.onLogout(Log.ERROR, String.format("invokeDoricMethod(%s,...),error is %s", method, e.getLocalizedMessage()));
                     return new JSDecoder(null);
                 }
             }
@@ -105,7 +107,8 @@ public class DoricNativeDriver implements IDoricDriver {
                     doricJSEngine.prepareContext(contextId, script, source);
                     return true;
                 } catch (Exception e) {
-                    DoricLog.e("createContext %s error is %s", source, e.getLocalizedMessage());
+                    doricJSEngine.onException(e);
+                    doricJSEngine.onLogout(Log.ERROR, String.format("createContext %s error is %s", source, e.getLocalizedMessage()));
                     return false;
                 }
             }
@@ -121,7 +124,8 @@ public class DoricNativeDriver implements IDoricDriver {
                     doricJSEngine.destroyContext(contextId);
                     return true;
                 } catch (Exception e) {
-                    DoricLog.e("destroyContext %s error is %s", contextId, e.getLocalizedMessage());
+                    doricJSEngine.onException(e);
+                    doricJSEngine.onLogout(Log.ERROR, String.format("destroyContext %s error is %s", contextId, e.getLocalizedMessage()));
                     return false;
                 }
             }

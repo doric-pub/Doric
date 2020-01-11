@@ -36,5 +36,5 @@ public interface IDoricMonitor {
      * @see android.util.Log#WARN
      * @see android.util.Log#DEBUG
      */
-    void onLogout(int type, String message);
+    void onLog(int type, String message);
 }

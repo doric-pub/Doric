@@ -119,13 +119,13 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
                     String message = args[1].string();
                     switch (type) {
                         case "w":
-                            mDoricRegistry.onLogout(Log.WARN, message);
+                            mDoricRegistry.onLog(Log.WARN, message);
                             break;
                         case "e":
-                            mDoricRegistry.onLogout(Log.ERROR, message);
+                            mDoricRegistry.onLog(Log.ERROR, message);
                             break;
                         default:
-                            mDoricRegistry.onLogout(Log.INFO, message);
+                            mDoricRegistry.onLog(Log.INFO, message);
                             break;
                     }
                 } catch (Exception e) {
@@ -147,7 +147,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
                     String name = args[0].string();
                     String content = mDoricRegistry.acquireJSBundle(name);
                     if (TextUtils.isEmpty(content)) {
-                        mDoricRegistry.onLogout(Log.ERROR, String.format("require js bundle:%s is empty", name));
+                        mDoricRegistry.onLog(Log.ERROR, String.format("require js bundle:%s is empty", name));
                         return new JavaValue(false);
                     }
                     mDoricJSE.loadJS(packageModuleScript(name, content), "Module://" + name);
@@ -260,7 +260,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
             invokeDoricMethod(DoricConstant.DORIC_TIMER_CALLBACK, timerId);
         } catch (Exception e) {
             mDoricRegistry.onException(e);
-            mDoricRegistry.onLogout(
+            mDoricRegistry.onLog(
                     Log.ERROR,
                     String.format("Timer Callback error:%s", e.getLocalizedMessage()));
         }
@@ -276,7 +276,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
     }
 
     @Override
-    public void onLogout(int type, String message) {
+    public void onLog(int type, String message) {
         switch (type) {
             case Log.ERROR:
                 DoricLog.suffix_e("_js", message);

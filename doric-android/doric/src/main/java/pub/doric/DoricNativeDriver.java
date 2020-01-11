@@ -29,7 +29,6 @@ import pub.doric.async.AsyncCall;
 import pub.doric.async.AsyncResult;
 import pub.doric.engine.DoricJSEngine;
 import pub.doric.utils.DoricConstant;
-import pub.doric.utils.DoricLog;
 import pub.doric.utils.ThreadMode;
 
 /**
@@ -78,7 +77,7 @@ public class DoricNativeDriver implements IDoricDriver {
                     return doricJSEngine.invokeDoricMethod(method, args);
                 } catch (Exception e) {
                     doricJSEngine.onException(e);
-                    doricJSEngine.onLogout(Log.ERROR, String.format("invokeDoricMethod(%s,...),error is %s", method, e.getLocalizedMessage()));
+                    doricJSEngine.onLog(Log.ERROR, String.format("invokeDoricMethod(%s,...),error is %s", method, e.getLocalizedMessage()));
                     return new JSDecoder(null);
                 }
             }
@@ -108,7 +107,7 @@ public class DoricNativeDriver implements IDoricDriver {
                     return true;
                 } catch (Exception e) {
                     doricJSEngine.onException(e);
-                    doricJSEngine.onLogout(Log.ERROR, String.format("createContext %s error is %s", source, e.getLocalizedMessage()));
+                    doricJSEngine.onLog(Log.ERROR, String.format("createContext %s error is %s", source, e.getLocalizedMessage()));
                     return false;
                 }
             }
@@ -125,7 +124,7 @@ public class DoricNativeDriver implements IDoricDriver {
                     return true;
                 } catch (Exception e) {
                     doricJSEngine.onException(e);
-                    doricJSEngine.onLogout(Log.ERROR, String.format("destroyContext %s error is %s", contextId, e.getLocalizedMessage()));
+                    doricJSEngine.onLog(Log.ERROR, String.format("destroyContext %s error is %s", contextId, e.getLocalizedMessage()));
                     return false;
                 }
             }

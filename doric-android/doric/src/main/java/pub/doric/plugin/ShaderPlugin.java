@@ -25,7 +25,6 @@ import pub.doric.extension.bridge.DoricPlugin;
 import pub.doric.extension.bridge.DoricPromise;
 import pub.doric.shader.SuperNode;
 import pub.doric.shader.ViewNode;
-import pub.doric.utils.DoricLog;
 import pub.doric.utils.DoricMetaInfo;
 import pub.doric.utils.DoricUtils;
 import pub.doric.utils.ThreadMode;
@@ -82,7 +81,7 @@ public class ShaderPlugin extends DoricJavaPlugin {
                     if (t instanceof Exception) {
                         getDoricContext().getDriver().getRegistry().onException((Exception) t);
                     }
-                    getDoricContext().getDriver().getRegistry().onLogout(
+                    getDoricContext().getDriver().getRegistry().onLog(
                             Log.ERROR,
                             String.format("Shader.render:error%s", t.getLocalizedMessage()));
                 }
@@ -94,7 +93,7 @@ public class ShaderPlugin extends DoricJavaPlugin {
             });
         } catch (Exception e) {
             getDoricContext().getDriver().getRegistry().onException(e);
-            getDoricContext().getDriver().getRegistry().onLogout(
+            getDoricContext().getDriver().getRegistry().onLog(
                     Log.ERROR,
                     String.format("Shader.render:error%s", e.getLocalizedMessage())
             );

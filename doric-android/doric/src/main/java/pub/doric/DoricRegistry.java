@@ -159,9 +159,9 @@ public class DoricRegistry {
         }
     }
 
-    public void onLogout(int type, String message) {
+    public void onLog(int type, String message) {
         for (IDoricMonitor monitor : this.monitors) {
-            monitor.onLogout(type, message);
+            monitor.onLog(type, message);
         }
     }
 }

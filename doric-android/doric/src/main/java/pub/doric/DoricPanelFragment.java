@@ -127,6 +127,8 @@ public class DoricPanelFragment extends Fragment implements IDoricNavigator {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        doricPanel.onActivityDestroy();
+        if (getActivity() == null || !getActivity().isFinishing()) {
+            doricPanel.onActivityDestroy();
+        }
     }
 }

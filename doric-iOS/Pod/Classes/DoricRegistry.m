@@ -47,6 +47,7 @@
 #import "DoricDraggableNode.h"
 #import "DoricLibrary.h"
 #import "DoricNotificationPlugin.h"
+#import "DoricUtil.h"
 
 @interface DoricLibraries : NSObject
 @property(nonatomic, strong) NSMutableSet <DoricLibrary *> *libraries;
@@ -73,12 +74,26 @@
 
 @end
 
+@interface DoricDefaultMonitor : NSObject <DoricMonitorProtocol>
+@end
+
+@implementation DoricDefaultMonitor
+- (void)onException:(NSException *)exception {
+    DoricLog(@"DefaultMonitor - onException - %@", exception.reason);
+}
+
+- (void)onLog:(DoricLogType)type message:(NSString *)message {
+    DoricLog(message);
+}
+@end
+
 @interface DoricRegistry ()
 
 @property(nonatomic, strong) NSMutableDictionary *bundles;
 @property(nonatomic, strong) NSMutableDictionary *plugins;
 @property(nonatomic, strong) NSMutableDictionary *nodes;
 @property(nonatomic, strong) NSMutableDictionary <NSString *, id> *envVariables;
+@property(nonatomic, strong) NSMutableSet <id <DoricMonitorProtocol>> *monitors;
 @end
 
 @implementation DoricRegistry
@@ -97,6 +112,8 @@
         [DoricLibraries.instance.libraries enumerateObjectsUsingBlock:^(DoricLibrary *obj, BOOL *stop) {
             [obj load:self];
         }];
+        _monitors = [NSMutableSet new];
+        [self registerMonitor:[DoricDefaultMonitor new]];
     }
     return self;
 }
@@ -160,5 +177,21 @@
 
 - (NSDictionary *)environmentVariables {
     return self.envVariables;
+}
+
+- (void)registerMonitor:(id <DoricMonitorProtocol>)monitor {
+    [self.monitors addObject:monitor];
+}
+
+- (void)onException:(NSException *)exception {
+    for (id <DoricMonitorProtocol> monitor in self.monitors) {
+        [monitor onException:exception];
+    }
+}
+
+- (void)onLog:(DoricLogType)type message:(NSString *)message {
+    for (id <DoricMonitorProtocol> monitor in self.monitors) {
+        [monitor onLog:type message:message];
+    }
 }
 @end

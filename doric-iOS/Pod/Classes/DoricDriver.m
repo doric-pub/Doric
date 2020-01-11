@@ -78,6 +78,7 @@
             [ret setupResult:jsValue];
         } @catch (NSException *exception) {
             [ret setupError:exception];
+            [self.jsExecutor.registry onException:exception];
         }
     });
     return ret;
@@ -110,6 +111,7 @@
             [ret setupResult:jsValue];
         } @catch (NSException *exception) {
             [ret setupError:exception];
+            [self.jsExecutor.registry onException:exception];
         }
     });
     return ret;
@@ -132,6 +134,7 @@
             [ret setupResult:jsValue];
         } @catch (NSException *exception) {
             [ret setupError:exception];
+            [self.jsExecutor.registry onException:exception];
         }
     });
     return ret;
@@ -145,9 +148,10 @@
         if (!self) return;
         @try {
             [self.jsExecutor prepareContext:contextId script:script source:source];
-            [ret setupResult:[NSNumber numberWithBool:YES]];
+            [ret setupResult:@YES];
         } @catch (NSException *exception) {
             [ret setupError:exception];
+            [self.jsExecutor.registry onException:exception];
         }
     });
     return ret;
@@ -161,9 +165,10 @@
         if (!self) return;
         @try {
             [self.jsExecutor destroyContext:contextId];
-            [ret setupResult:[NSNumber numberWithBool:YES]];
+            [ret setupResult:@YES];
         } @catch (NSException *exception) {
             [ret setupError:exception];
+            [self.jsExecutor.registry onException:exception];
         }
     });
     return ret;

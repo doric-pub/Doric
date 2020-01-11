@@ -70,7 +70,13 @@
 
     [self.jsExecutor injectGlobalJSObject:INJECT_ENVIRONMENT obj:[envDic copy]];
     [self.jsExecutor injectGlobalJSObject:INJECT_LOG obj:^(NSString *type, NSString *message) {
-        DoricLog(@"JS:%@", message);
+        if ([type isEqualToString:@"e"]) {
+            [self.registry onLog:DoricLogTypeError message:message];
+        } else if ([type isEqualToString:@"w"]) {
+            [self.registry onLog:DoricLogTypeWarning message:message];
+        } else {
+            [self.registry onLog:DoricLogTypeDebug message:message];
+        }
     }];
     [self.jsExecutor injectGlobalJSObject:INJECT_EMPTY obj:^() {
 
@@ -80,14 +86,15 @@
         if (!self) return NO;
         NSString *content = [self.registry acquireJSBundle:name];
         if (!content) {
-            DoricLog(@"require js bundle:%@ is empty", name);
+            [self.registry onLog:DoricLogTypeError message:[NSString stringWithFormat:@"require js bundle:%@ is empty", name]];
             return NO;
         }
         @try {
             [self.jsExecutor loadJSScript:[self packageModuleScript:name content:content]
                                    source:[@"Module://" stringByAppendingString:name]];
         } @catch (NSException *e) {
-            DoricLog(@"require js bundle:%@ error,for %@", name, e.reason);
+            [self.registry onLog:DoricLogTypeError
+                         message:[NSString stringWithFormat:@"require js bundle:%@ error,for %@", name, e.reason]];
         }
         return YES;
     }];
@@ -119,11 +126,16 @@
 }
 
 - (void)initDoricEnvironment {
-    [self loadBuiltinJS:DORIC_BUNDLE_SANDBOX];
-    NSString *path = [DoricBundle() pathForResource:DORIC_BUNDLE_LIB ofType:@"js"];
-    NSString *jsContent = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
-    [self.jsExecutor loadJSScript:[self packageModuleScript:DORIC_MODULE_LIB content:jsContent]
-                           source:[@"Module://" stringByAppendingString:DORIC_MODULE_LIB]];
+    @try {
+
+        [self loadBuiltinJS:DORIC_BUNDLE_SANDBOX];
+        NSString *path = [DoricBundle() pathForResource:DORIC_BUNDLE_LIB ofType:@"js"];
+        NSString *jsContent = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+        [self.jsExecutor loadJSScript:[self packageModuleScript:DORIC_MODULE_LIB content:jsContent]
+                               source:[@"Module://" stringByAppendingString:DORIC_MODULE_LIB]];
+    } @catch (NSException *exception) {
+        [self.registry onException:exception];
+    }
 }
 
 - (void)loadBuiltinJS:(NSString *)fileName {
@@ -184,7 +196,9 @@
         @try {
             [self invokeDoricMethod:DORIC_TIMER_CALLBACK, timerId, nil];
         } @catch (NSException *exception) {
-            DoricLog(@"Timer Callback error:%@", exception.reason);
+            [self.registry onException:exception];
+            [self.registry onLog:DoricLogTypeError
+                         message:[NSString stringWithFormat:@"Timer Callback error:%@", exception.reason]];
         }
         if (![repeat boolValue]) {
             [self.timers removeObjectForKey:[timerId stringValue]];

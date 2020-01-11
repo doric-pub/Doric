@@ -87,6 +87,7 @@
                             [invocation invoke];
                         } @catch (NSException *exception) {
                             DoricLog(@"CallNative Error:%@", exception.reason);
+                            [context.driver.registry onException:exception];
                         }
                     };
 
@@ -102,6 +103,8 @@
                         ret = [JSValue valueWithObject:[returnValue copy] inContext:[JSContext currentContext]];
                     } else {
                         DoricLog(@"CallNative Error:%@", @"Must return object type");
+                        [context.driver.registry onLog:DoricLogTypeError
+                                               message:[NSString stringWithFormat:@"CallNative Error:%@", @"Must return object type"]];
                         ret = nil;
                     }
                 }

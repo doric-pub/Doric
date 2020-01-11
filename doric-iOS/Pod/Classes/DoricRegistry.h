@@ -21,11 +21,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "DoricMonitorProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 @class DoricLibrary;
 
-@interface DoricRegistry : NSObject
+@interface DoricRegistry : NSObject <DoricMonitorProtocol>
 
 - (NSString *)acquireJSBundle:(NSString *)name;
 
@@ -43,6 +44,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setEnvironment:(NSString *)key variable:(id)value;
 
 - (NSDictionary *)environmentVariables;
+
+- (void)registerMonitor:(id <DoricMonitorProtocol>)monitor;
 
 + (void)register:(DoricLibrary *)library;
 @end

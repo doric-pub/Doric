@@ -76,8 +76,8 @@ public class DoricNativeDriver implements IDoricDriver {
                 try {
                     return doricJSEngine.invokeDoricMethod(method, args);
                 } catch (Exception e) {
-                    doricJSEngine.onException(e);
-                    doricJSEngine.onLog(Log.ERROR, String.format("invokeDoricMethod(%s,...),error is %s", method, e.getLocalizedMessage()));
+                    doricJSEngine.getRegistry().onException(e);
+                    doricJSEngine.getRegistry().onLog(Log.ERROR, String.format("invokeDoricMethod(%s,...),error is %s", method, e.getLocalizedMessage()));
                     return new JSDecoder(null);
                 }
             }
@@ -106,8 +106,8 @@ public class DoricNativeDriver implements IDoricDriver {
                     doricJSEngine.prepareContext(contextId, script, source);
                     return true;
                 } catch (Exception e) {
-                    doricJSEngine.onException(e);
-                    doricJSEngine.onLog(Log.ERROR, String.format("createContext %s error is %s", source, e.getLocalizedMessage()));
+                    doricJSEngine.getRegistry().onException(e);
+                    doricJSEngine.getRegistry().onLog(Log.ERROR, String.format("createContext %s error is %s", source, e.getLocalizedMessage()));
                     return false;
                 }
             }
@@ -123,8 +123,8 @@ public class DoricNativeDriver implements IDoricDriver {
                     doricJSEngine.destroyContext(contextId);
                     return true;
                 } catch (Exception e) {
-                    doricJSEngine.onException(e);
-                    doricJSEngine.onLog(Log.ERROR, String.format("destroyContext %s error is %s", contextId, e.getLocalizedMessage()));
+                    doricJSEngine.getRegistry().onException(e);
+                    doricJSEngine.getRegistry().onLog(Log.ERROR, String.format("destroyContext %s error is %s", contextId, e.getLocalizedMessage()));
                     return false;
                 }
             }

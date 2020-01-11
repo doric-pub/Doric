@@ -28,3 +28,4 @@
 #import "DoricPromise.h"
 #import "DoricLibrary.h"
 #import "DoricNativePlugin.h"
+#import "DoricMonitorProtocol.h"

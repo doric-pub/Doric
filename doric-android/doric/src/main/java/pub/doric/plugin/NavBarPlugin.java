@@ -15,7 +15,11 @@
  */
 package pub.doric.plugin;
 
+import android.os.Build;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.pengfeizhou.jscore.ArchiveException;
 import com.github.pengfeizhou.jscore.JSDecoder;
@@ -68,6 +72,16 @@ public class NavBarPlugin extends DoricJavaPlugin {
                 JSObject jsObject = jsDecoder.decode().asObject();
                 boolean hidden = jsObject.getProperty("hidden").asBoolean().value();
                 navBar.setHidden(hidden);
+
+                AppCompatActivity activity = ((AppCompatActivity) getDoricContext().getContext());
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    if (hidden) {
+                        activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+                    } else {
+                        activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+                    }
+                }
+
                 promise.resolve();
             } catch (ArchiveException e) {
                 e.printStackTrace();

@@ -16,6 +16,7 @@ import pub.doric.async.AsyncResult;
 import pub.doric.extension.bridge.DoricMethod;
 import pub.doric.extension.bridge.DoricPlugin;
 import pub.doric.extension.bridge.DoricPromise;
+import pub.doric.utils.DoricUtils;
 import pub.doric.utils.ThreadMode;
 
 @DoricPlugin(name = "statusbar")
@@ -38,8 +39,10 @@ public class StatusBarPlugin extends DoricJavaPlugin {
                     AppCompatActivity activity = ((AppCompatActivity) getDoricContext().getContext());
                     View decorView = activity.getWindow().getDecorView();
                     if (hidden) {
+                        decorView.setPadding(0, DoricUtils.getStatusBarHeight(activity), 0, 0);
                         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
                     } else {
+                        decorView.setPadding(0, 0, 0, 0);
                         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
                     }
                     currentMode = 0;

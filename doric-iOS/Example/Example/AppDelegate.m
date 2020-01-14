@@ -7,11 +7,12 @@
 //
 
 #import "AppDelegate.h"
+#import "NavigationController.h"
 #import "ViewController.h"
 
 @interface AppDelegate ()
 @property(nonatomic, strong) UIViewController *rootVC;
-@property(nonatomic, strong) UINavigationController *navigationController;
+@property(nonatomic, strong) NavigationController *navigationController;
 @end
 
 @implementation AppDelegate
@@ -22,9 +23,9 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.rootVC = [[ViewController alloc] init];
 
-    self.window.rootViewController = self.rootVC;
-    self.navigationController = [[UINavigationController
+    self.navigationController = [[NavigationController
             alloc] initWithRootViewController:self.rootVC];
+    self.window.rootViewController = self.navigationController;
     [self.window addSubview:self.navigationController.view];
     [self.window makeKeyAndVisible];
     return YES;

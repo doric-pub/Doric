@@ -47,6 +47,7 @@
 #import "DoricDraggableNode.h"
 #import "DoricLibrary.h"
 #import "DoricNotificationPlugin.h"
+#import "DoricStatusBarPlugin.h"
 #import "DoricUtil.h"
 
 @interface DoricLibraries : NSObject
@@ -128,6 +129,7 @@
     [self registerNativePlugin:DoricPopoverPlugin.class withName:@"popover"];
     [self registerNativePlugin:DoricAnimatePlugin.class withName:@"animate"];
     [self registerNativePlugin:DoricNotificationPlugin.class withName:@"notification"];
+    [self registerNativePlugin:DoricStatusBarPlugin.class withName:@"statusbar"];
 
     [self registerViewNode:DoricStackNode.class withName:@"Stack"];
     [self registerViewNode:DoricVLayoutNode.class withName:@"VLayout"];

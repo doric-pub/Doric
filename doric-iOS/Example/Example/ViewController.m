@@ -6,9 +6,9 @@
 //  Copyright © 2019 pengfei.zhou. All rights reserved.
 //
 
-#import "ViewController.h"
 #import <DoricCore/Doric.h>
-#import "DemoVC.h"
+
+#import "ViewController.h"
 #import "QRScanViewController.h"
 #import "DemoLibrary.h"
 

@@ -92,6 +92,8 @@ export class Gravity implements Modeling {
     private static origin = new Gravity
 
     static Center = Gravity.origin.center()
+    static CenterX = Gravity.origin.centerX()
+    static CenterY = Gravity.origin.centerY()
     static Left = Gravity.origin.left()
     static Right = Gravity.origin.right()
     static Top = Gravity.origin.top()

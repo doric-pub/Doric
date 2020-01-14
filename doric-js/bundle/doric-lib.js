@@ -2146,6 +2146,24 @@ function notification(context) {
     };
 }
 
+(function (StatusBarMode) {
+    StatusBarMode[StatusBarMode["LIGHT"] = 0] = "LIGHT";
+    StatusBarMode[StatusBarMode["DARK"] = 1] = "DARK";
+})(exports.StatusBarMode || (exports.StatusBarMode = {}));
+function statusbar(context) {
+    return {
+        setHidden: (hidden) => {
+            return context.statusbar.setHidden({ hidden });
+        },
+        setMode: (mode) => {
+            return context.statusbar.setMode({ mode });
+        },
+        setColor: (color) => {
+            return context.statusbar.setColor({ color: color.toModel() });
+        },
+    };
+}
+
 class Observable {
     constructor(provider, clz) {
         this.observers = new Set;
@@ -2299,6 +2317,7 @@ exports.scroller = scroller;
 exports.slideItem = slideItem;
 exports.slider = slider;
 exports.stack = stack;
+exports.statusbar = statusbar;
 exports.storage = storage;
 exports.take = take;
 exports.takeAlso = takeAlso;

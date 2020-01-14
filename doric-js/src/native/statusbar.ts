@@ -13,12 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from './modal';
-export * from './navbar';
-export * from './navigator';
-export * from './network';
-export * from './storage';
-export * from './popover';
-export * from './animate';
-export * from './notification';
-export * from './statusbar';
+import { BridgeContext } from "../runtime/global"
+import { Color } from "../util/color"
+
+export enum StatusBarMode { LIGHT, DARK }
+
+export function statusbar(context: BridgeContext) {
+    return {
+        setHidden: (hidden: boolean) => {
+            return context.statusbar.setHidden({hidden})
+        },
+        setMode: (mode: StatusBarMode) => {
+            return context.statusbar.setMode({mode})
+        },
+        setColor: (color: Color) => {
+            return context.statusbar.setColor({color: color.toModel()})
+        },
+    }
+}

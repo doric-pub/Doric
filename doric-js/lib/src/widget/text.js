@@ -48,6 +48,10 @@ __decorate([
     Property,
     __metadata("design:type", Gravity)
 ], Text.prototype, "textAlignment", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", String)
+], Text.prototype, "fontStyle", void 0);
 export function text(config) {
     const ret = new Text;
     ret.layoutConfig = layoutConfig().fit();

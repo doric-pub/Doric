@@ -18,6 +18,8 @@ export declare class Gravity implements Modeling {
     toModel(): number;
     private static origin;
     static Center: Gravity;
+    static CenterX: Gravity;
+    static CenterY: Gravity;
     static Left: Gravity;
     static Right: Gravity;
     static Top: Gravity;

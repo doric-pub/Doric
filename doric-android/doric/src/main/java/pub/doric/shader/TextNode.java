@@ -15,6 +15,7 @@
  */
 package pub.doric.shader;
 
+import android.graphics.Typeface;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.widget.TextView;
@@ -60,6 +61,21 @@ public class TextNode extends ViewNode<TextView> {
                 break;
             case "maxLines":
                 view.setMaxLines(prop.asNumber().toInt());
+                break;
+            case "fontStyle":
+                if (prop.isString()) {
+                    if ("bold".equals(prop.asString().value())) {
+                        view.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+                    } else if ("italic".equals(prop.asString().value())) {
+                        view.setTypeface(Typeface.defaultFromStyle(Typeface.ITALIC));
+                    } else if ("bold_italic".equals(prop.asString().value())) {
+                        view.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD_ITALIC));
+                    } else {
+                        view.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+                    }
+                } else {
+                    view.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+                }
                 break;
             default:
                 super.blend(view, name, prop);

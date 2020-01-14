@@ -36,7 +36,12 @@
     if ([name isEqualToString:@"text"]) {
         view.text = prop;
     } else if ([name isEqualToString:@"textSize"]) {
-        view.font = [UIFont systemFontOfSize:[(NSNumber *) prop floatValue]];
+        UIFont *font = view.font;
+        if (font) {
+            view.font = [view.font fontWithSize:[(NSNumber *) prop floatValue]];
+        } else {
+            view.font = [UIFont systemFontOfSize:[(NSNumber *) prop floatValue]];
+        }
     } else if ([name isEqualToString:@"textColor"]) {
         view.textColor = DoricColor(prop);
     } else if ([name isEqualToString:@"textAlignment"]) {
@@ -50,6 +55,23 @@
         view.textAlignment = alignment;
     } else if ([name isEqualToString:@"maxLines"]) {
         view.numberOfLines = [prop integerValue];
+    } else if ([name isEqualToString:@"fontStyle"]) {
+        UIFont *font = view.font;
+        if (!font) {
+            font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
+        }
+        UIFontDescriptor *fontDescriptor = nil;
+        if ([@"bold" isEqualToString:prop]) {
+            fontDescriptor = [font.fontDescriptor fontDescriptorWithSymbolicTraits:UIFontDescriptorTraitBold];
+        } else if ([@"italic" isEqualToString:prop]) {
+            fontDescriptor = [font.fontDescriptor fontDescriptorWithSymbolicTraits:UIFontDescriptorTraitItalic];
+        } else if ([@"bold_italic" isEqualToString:prop]) {
+            fontDescriptor = [font.fontDescriptor fontDescriptorWithSymbolicTraits:UIFontDescriptorTraitBold | UIFontDescriptorTraitItalic];
+        }
+        if (fontDescriptor) {
+            font = [UIFont fontWithDescriptor:fontDescriptor size:0];
+        }
+        view.font = font;
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }

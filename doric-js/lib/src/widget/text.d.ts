@@ -7,6 +7,7 @@ export interface IText extends IView {
     textSize?: number;
     maxLines?: number;
     textAlignment?: Gravity;
+    fontStyle?: "normal" | "bold" | "italic" | "bold_italic";
 }
 export declare class Text extends View implements IText {
     text?: string;
@@ -14,5 +15,6 @@ export declare class Text extends View implements IText {
     textSize?: number;
     maxLines?: number;
     textAlignment?: Gravity;
+    fontStyle?: "normal" | "bold" | "italic" | "bold_italic";
 }
 export declare function text(config: IText): Text;

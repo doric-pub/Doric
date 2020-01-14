@@ -40,6 +40,9 @@ export class DoricTextNode extends DoricViewNode {
                     v.style.alignItems = "center"
                 }
                 break
+            case "fontStyle":
+                v.style.fontWeight = ""
+                break
             default:
                 super.blendProps(v, propName, prop)
                 break

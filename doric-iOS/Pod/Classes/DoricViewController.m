@@ -20,13 +20,11 @@
 #import "DoricViewController.h"
 #import "DoricAsyncResult.h"
 #import "DoricJSLoaderManager.h"
-#import "DoricPanel.h"
 #import "UIView+Doric.h"
 #import "DoricExtensions.h"
 #import "DoricUtil.h"
 
 @interface DoricViewController ()
-@property(nonatomic, strong) DoricPanel *doricPanel;
 @property(nonatomic) BOOL navBarHidden;
 @property(nonatomic, strong) UIImage *navBarImage;
 @end
@@ -113,5 +111,20 @@
     self.navigationItem.rightBarButtonItem = custom;
 }
 
+- (BOOL)statusBarHidden {
+    return _statusBarHidden;
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    if (self.statusBarMode == 0) {
+        return UIStatusBarStyleLightContent;
+    } else {
+        return UIStatusBarStyleDefault;
+    }
+}
+
+- (BOOL)prefersStatusBarHidden {
+    return self.statusBarHidden;
+}
 
 @end

@@ -42,6 +42,7 @@ public class StatusBarPlugin extends DoricJavaPlugin {
                     } else {
                         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
                     }
+                    currentMode = 0;
                     return null;
                 }
             }, ThreadMode.UI).setCallback(new AsyncResult.Callback<Object>() {

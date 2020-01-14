@@ -2,6 +2,7 @@ package pub.doric.plugin;
 
 import android.os.Build;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,6 +17,7 @@ import pub.doric.async.AsyncResult;
 import pub.doric.extension.bridge.DoricMethod;
 import pub.doric.extension.bridge.DoricPlugin;
 import pub.doric.extension.bridge.DoricPromise;
+import pub.doric.navbar.BaseDoricNavBar;
 import pub.doric.utils.DoricUtils;
 import pub.doric.utils.ThreadMode;
 
@@ -38,13 +40,16 @@ public class StatusBarPlugin extends DoricJavaPlugin {
                 public Object call() {
                     AppCompatActivity activity = ((AppCompatActivity) getDoricContext().getContext());
                     View decorView = activity.getWindow().getDecorView();
+                    LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) ((BaseDoricNavBar) getDoricContext().getDoricNavBar()).getLayoutParams();
                     if (hidden) {
-                        decorView.setPadding(0, DoricUtils.getStatusBarHeight(activity), 0, 0);
                         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+                        lp.topMargin = DoricUtils.getStatusBarHeight(activity);
                     } else {
-                        decorView.setPadding(0, 0, 0, 0);
                         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+                        lp.topMargin = 0;
                     }
+                    ((BaseDoricNavBar) getDoricContext().getDoricNavBar()).setLayoutParams(lp);
+
                     currentMode = 0;
                     return null;
                 }

@@ -62,6 +62,8 @@ export class Gravity {
 }
 Gravity.origin = new Gravity;
 Gravity.Center = Gravity.origin.center();
+Gravity.CenterX = Gravity.origin.centerX();
+Gravity.CenterY = Gravity.origin.centerY();
 Gravity.Left = Gravity.origin.left();
 Gravity.Right = Gravity.origin.right();
 Gravity.Top = Gravity.origin.top();

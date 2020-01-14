@@ -24,6 +24,7 @@ export interface IText extends IView {
     textSize?: number
     maxLines?: number
     textAlignment?: Gravity
+    fontStyle?: "normal" | "bold" | "italic" | "bold_italic"
 }
 
 export class Text extends View implements IText {
@@ -41,6 +42,9 @@ export class Text extends View implements IText {
 
     @Property
     textAlignment?: Gravity
+
+    @Property
+    fontStyle?: "normal" | "bold" | "italic" | "bold_italic"
 }
 
 export function text(config: IText) {

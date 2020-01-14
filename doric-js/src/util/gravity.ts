@@ -99,6 +99,7 @@ export class Gravity implements Modeling {
     static Top = Gravity.origin.top()
     static Bottom = Gravity.origin.bottom()
 }
+
 export function gravity() {
     return new Gravity
 }

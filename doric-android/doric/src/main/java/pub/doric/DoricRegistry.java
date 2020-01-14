@@ -17,41 +17,42 @@ package pub.doric;
 
 import android.text.TextUtils;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
 import pub.doric.plugin.AnimatePlugin;
+import pub.doric.plugin.DoricJavaPlugin;
+import pub.doric.plugin.ModalPlugin;
 import pub.doric.plugin.NavBarPlugin;
 import pub.doric.plugin.NavigatorPlugin;
 import pub.doric.plugin.NetworkPlugin;
 import pub.doric.plugin.NotificationPlugin;
 import pub.doric.plugin.PopoverPlugin;
 import pub.doric.plugin.ShaderPlugin;
+import pub.doric.plugin.StatusBarPlugin;
 import pub.doric.plugin.StoragePlugin;
 import pub.doric.refresh.RefreshableNode;
 import pub.doric.shader.DraggableNode;
 import pub.doric.shader.HLayoutNode;
 import pub.doric.shader.ImageNode;
 import pub.doric.shader.InputNode;
-import pub.doric.shader.ScrollerNode;
-import pub.doric.shader.flowlayout.FlowLayoutItemNode;
-import pub.doric.shader.flowlayout.FlowLayoutNode;
-import pub.doric.shader.list.ListItemNode;
-import pub.doric.shader.list.ListNode;
 import pub.doric.shader.RootNode;
+import pub.doric.shader.ScrollerNode;
 import pub.doric.shader.StackNode;
 import pub.doric.shader.TextNode;
 import pub.doric.shader.VLayoutNode;
 import pub.doric.shader.ViewNode;
+import pub.doric.shader.flowlayout.FlowLayoutItemNode;
+import pub.doric.shader.flowlayout.FlowLayoutNode;
+import pub.doric.shader.list.ListItemNode;
+import pub.doric.shader.list.ListNode;
 import pub.doric.shader.slider.NestedSliderNode;
 import pub.doric.shader.slider.SlideItemNode;
 import pub.doric.shader.slider.SliderNode;
 import pub.doric.utils.DoricMetaInfo;
-import pub.doric.plugin.DoricJavaPlugin;
-import pub.doric.plugin.ModalPlugin;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @Description: pub.doric
@@ -89,6 +90,7 @@ public class DoricRegistry {
         this.registerNativePlugin(PopoverPlugin.class);
         this.registerNativePlugin(AnimatePlugin.class);
         this.registerNativePlugin(NotificationPlugin.class);
+        this.registerNativePlugin(StatusBarPlugin.class);
 
         this.registerViewNode(RootNode.class);
         this.registerViewNode(TextNode.class);

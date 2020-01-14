@@ -66,6 +66,7 @@ declare module 'doric/lib/src/native/index.native' {
     export * from 'doric/lib/src/native/popover';
     export * from 'doric/lib/src/native/animate';
     export * from 'doric/lib/src/native/notification';
+    export * from 'doric/lib/src/native/statusbar';
 }
 
 declare module 'doric/lib/src/util/index.util' {
@@ -813,6 +814,20 @@ declare module 'doric/lib/src/native/notification' {
             androidSystem?: boolean | undefined;
         }) => Promise<string>;
         unsubscribe: (subscribeId: string) => Promise<any>;
+    };
+}
+
+declare module 'doric/lib/src/native/statusbar' {
+    import { BridgeContext } from "doric/lib/src/runtime/global";
+    import { Color } from "doric/lib/src/util/color";
+    export enum StatusBarMode {
+        LIGHT = 0,
+        DARK = 1
+    }
+    export function statusbar(context: BridgeContext): {
+        setHidden: (hidden: boolean) => Promise<any>;
+        setMode: (mode: StatusBarMode) => Promise<any>;
+        setColor: (color: Color) => Promise<any>;
     };
 }
 

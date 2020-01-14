@@ -79,7 +79,7 @@ public class HVScrollView extends FrameLayout {
      * When set to true, the scroll view measure its child to make it fill the currently
      * visible area.
      */
-    private boolean mFillViewport;
+    private boolean mFillViewport = true;
 
     /**
      * Whether arrow scrolling is animated.
@@ -311,17 +311,31 @@ public class HVScrollView extends FrameLayout {
             final View child = getChildAt(0);
             int height = getMeasuredHeight();
             int width = getMeasuredWidth();
-            if (child.getMeasuredHeight() < height || child.getMeasuredWidth() < width) {
-                width -= getPaddingLeft();
-                width -= getPaddingRight();
-                int childWidthMeasureSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
-
-                height -= getPaddingTop();
-                height -= getPaddingBottom();
-                int childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
-
-                child.measure(childWidthMeasureSpec, childHeightMeasureSpec);
+            width -= getPaddingLeft();
+            width -= getPaddingRight();
+            height -= getPaddingTop();
+            height -= getPaddingBottom();
+            int childWidthMeasureSpec;
+            int childHeightMeasureSpec;
+            final FrameLayout.LayoutParams lp = (LayoutParams) child.getLayoutParams();
+            if (lp.width != ViewGroup.LayoutParams.MATCH_PARENT && lp.height != ViewGroup.LayoutParams.MATCH_PARENT) {
+                return;
             }
+            if (child.getMeasuredWidth() < width && lp.width == ViewGroup.LayoutParams.MATCH_PARENT) {
+                childWidthMeasureSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
+            } else {
+                widthMeasureSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
+                childWidthMeasureSpec = getChildMeasureSpec(widthMeasureSpec,
+                        getPaddingLeft() + getPaddingRight(), lp.width);
+            }
+            if (child.getMeasuredHeight() < height && lp.height == ViewGroup.LayoutParams.MATCH_PARENT) {
+                childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
+            } else {
+                heightMeasureSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
+                childHeightMeasureSpec = getChildMeasureSpec(heightMeasureSpec,
+                        getPaddingTop() + getPaddingBottom(), lp.height);
+            }
+            child.measure(childWidthMeasureSpec, childHeightMeasureSpec);
         }
     }
 

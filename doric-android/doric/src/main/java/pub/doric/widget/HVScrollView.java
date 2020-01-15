@@ -1960,11 +1960,12 @@ public class HVScrollView extends FrameLayout implements NestedScrollingParent,
         if (getChildCount() > 0) {
             int axes = getAxes();
             startNestedScroll(axes, ViewCompat.TYPE_NON_TOUCH);
-            mScroller.fling(getScrollX(), getScrollY(), // start
-                    velocityX, velocityY, // velocities
-                    Integer.MIN_VALUE, Integer.MAX_VALUE, // x
-                    Integer.MIN_VALUE, Integer.MAX_VALUE, // y
-                    0, 0); // overscroll
+            int height = getHeight() - getPaddingBottom() - getPaddingTop();
+            int width = getWidth() - getPaddingRight() - getPaddingLeft();
+            int bottom = getChildAt(0).getHeight();
+            int right = getChildAt(0).getWidth();
+            mScroller.fling(getScrollX(), getScrollY(), velocityX, velocityY, 0, Math.max(0, right - width), 0,
+                    Math.max(0, bottom - height), width * 2 / 3, height * 2 / 3);
             mLastScrollerX = getScrollX();
             mLastScrollerY = getScrollY();
             ViewCompat.postInvalidateOnAnimation(this);

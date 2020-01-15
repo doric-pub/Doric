@@ -41,7 +41,24 @@ export class DoricTextNode extends DoricViewNode {
                 }
                 break
             case "fontStyle":
-                v.style.fontWeight = ""
+                switch (prop) {
+                    case "bold":
+                        v.style.fontWeight = "bold"
+                        v.style.fontStyle = "normal"
+                        break
+                    case "italic":
+                        v.style.fontWeight = "normal"
+                        v.style.fontStyle = "italic"
+                        break
+                    case "bold_italic":
+                        v.style.fontWeight = "bold"
+                        v.style.fontStyle = "italic"
+                        break
+                    default:
+                        v.style.fontWeight = "normal"
+                        v.style.fontStyle = "normal"
+                        break
+                }
                 break
             default:
                 super.blendProps(v, propName, prop)

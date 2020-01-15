@@ -21,7 +21,7 @@ import com.github.pengfeizhou.jscore.JSValue;
 
 import pub.doric.DoricContext;
 import pub.doric.extension.bridge.DoricPlugin;
-import pub.doric.widget.HVScrollView;
+import pub.doric.widget.NewHVScrollView;
 
 /**
  * @Description: pub.doric.shader
@@ -29,7 +29,7 @@ import pub.doric.widget.HVScrollView;
  * @CreateDate: 2019-11-18
  */
 @DoricPlugin(name = "Scroller")
-public class ScrollerNode extends SuperNode<HVScrollView> {
+public class ScrollerNode extends SuperNode<NewHVScrollView> {
     private String mChildViewId;
     private ViewNode mChildNode;
 
@@ -50,12 +50,12 @@ public class ScrollerNode extends SuperNode<HVScrollView> {
     }
 
     @Override
-    protected HVScrollView build() {
-        return new HVScrollView(getContext());
+    protected NewHVScrollView build() {
+        return new NewHVScrollView(getContext());
     }
 
     @Override
-    protected void blend(HVScrollView view, String name, JSValue prop) {
+    protected void blend(NewHVScrollView view, String name, JSValue prop) {
         if ("content".equals(name)) {
             mChildViewId = prop.asString().value();
         } else {

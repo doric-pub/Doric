@@ -6,9 +6,9 @@
   "types": "index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc -d -p .&& rollup -c && dts-bundle --configJson dts-bundle.json",
+    "build": "tsc -p tsconfig.es5.json && tsc -d -p . && rollup -c && dts-bundle --configJson dts-bundle.json",
     "dev": "tsc -w -p . & rollup -c -w",
-    "clean": "rm -rf build &&  rm -rf bundle",
+    "clean": "rm -rf lib && rm -rf lib-es5 &&  rm -rf bundle",
     "prepublish": "npm run build"
   },
   "repository": {
@@ -22,8 +22,8 @@
   },
   "homepage": "https://github.com/doric-pub/doric#readme",
   "dependencies": {
-    "@rollup/plugin-node-resolve": "^7.0.0",
     "@types/ws": "^6.0.4",
+    "core-js": "^3.6.4",
     "dts-bundle": "^0.7.3",
     "reflect-metadata": "^0.1.13",
     "rollup": "^1.29.0",
@@ -33,5 +33,10 @@
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^7.0.0",
+    "@rollup/plugin-buble": "^0.21.0",
+    "@rollup/plugin-commonjs": "^11.0.1"
   }
 }

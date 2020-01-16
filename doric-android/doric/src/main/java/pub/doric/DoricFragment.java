@@ -16,17 +16,13 @@
 package pub.doric;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-
-import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 /**
  * @Description: pub.doric
@@ -46,23 +42,6 @@ public class DoricFragment extends Fragment {
 
     private View loadingView = null;
     private View errorView = null;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host);
-                if (!navController.popBackStack()) {
-                    if (getActivity() != null) {
-                        getActivity().finish();
-                    }
-                }
-            }
-        };
-        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
-    }
 
     @Nullable
     @Override

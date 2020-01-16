@@ -25,6 +25,7 @@
     "@types/ws": "^6.0.4",
     "core-js": "^3.6.4",
     "dts-bundle": "^0.7.3",
+    "proxy-polyfill": "^0.3.0",
     "reflect-metadata": "^0.1.13",
     "rollup": "^1.29.0",
     "tslib": "^1.10.0",

@@ -6,4 +6,4 @@ import { BridgeContext } from "../runtime/global";
 export declare function animate(context: BridgeContext): (args: {
     animations: () => void;
     duration: number;
-}) => Promise<any>;
+}) => Promise<unknown>;

@@ -157,7 +157,7 @@ export abstract class Panel {
     }
 
     private nativeRender(model: Model) {
-        (this.context as any).callNative("shader", "render", model)
+        this.context.callNative("shader", "render", model)
     }
 
     private hookBeforeNativeCall() {

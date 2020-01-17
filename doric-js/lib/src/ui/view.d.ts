@@ -131,7 +131,7 @@ export declare abstract class View implements Modeling, IView {
     also(block: (it: this) => void): this;
     apply(config: IView): this;
     in(group: Group): this;
-    nativeChannel(context: any, name: string): (args?: any) => Promise<any>;
+    nativeChannel(context: BridgeContext, name: string): (args?: any) => Promise<any>;
     getWidth(context: BridgeContext): Promise<number>;
     getHeight(context: BridgeContext): Promise<number>;
     getLocationOnScreen(context: BridgeContext): Promise<{

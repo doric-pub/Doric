@@ -149,7 +149,6 @@ export class View {
     nativeChannel(context, name) {
         let thisView = this;
         return function (args = undefined) {
-            const func = context.shader.command;
             const viewIds = [];
             while (thisView != undefined) {
                 viewIds.push(thisView.viewId);
@@ -160,7 +159,7 @@ export class View {
                 name,
                 args,
             };
-            return Reflect.apply(func, undefined, [params]);
+            return context.callNative('shader', 'command', params);
         };
     }
     getWidth(context) {
@@ -222,10 +221,6 @@ __decorate([
     Property,
     __metadata("design:type", Boolean)
 ], View.prototype, "hidden", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Object)
-], View.prototype, "viewId", void 0);
 __decorate([
     Property,
     __metadata("design:type", Object)

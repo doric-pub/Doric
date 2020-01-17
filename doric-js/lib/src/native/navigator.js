@@ -4,12 +4,12 @@ export function navigator(context) {
             if (config && config.extra) {
                 config.extra = JSON.stringify(config.extra);
             }
-            return context.navigator.push({
+            return context.callNative('navigator', 'push', {
                 scheme, config
             });
         },
         pop: (animated = true) => {
-            return context.navigator.pop({ animated });
+            return context.callNative('navigator', 'pop', { animated });
         },
     };
 }

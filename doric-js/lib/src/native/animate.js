@@ -1,3 +1,12 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 /*
  * Copyright [2019] [Doric.Pub]
  *
@@ -23,33 +32,30 @@ export function animate(context) {
     const entity = context.entity;
     if (entity instanceof Panel) {
         let panel = entity;
-        return (args) => {
-            return takeLet(panel.context.animate)(it => {
-                return it.submit().then(() => {
-                    args.animations();
-                    return takeLet(panel.getRootView())(root => {
-                        if (root.isDirty()) {
-                            const model = root.toModel();
-                            model.duration = args.duration;
-                            const ret = it.animateRender(model);
-                            root.clean();
-                            return ret;
+        return (args) => __awaiter(this, void 0, void 0, function* () {
+            yield context.callNative('animate', 'submit');
+            args.animations();
+            return takeLet(panel.getRootView())(root => {
+                if (root.isDirty()) {
+                    const model = root.toModel();
+                    model.duration = args.duration;
+                    const ret = context.callNative('animate', 'animateRender', model);
+                    root.clean();
+                    return ret;
+                }
+                for (let map of panel.allHeadViews()) {
+                    for (let v of map.values()) {
+                        if (v.isDirty()) {
+                            const model_1 = v.toModel();
+                            const ret_1 = context.callNative('animate', 'animateRender', model_1);
+                            v.clean();
+                            return ret_1;
                         }
-                        for (let map of panel.allHeadViews()) {
-                            for (let v of map.values()) {
-                                if (v.isDirty()) {
-                                    const model = v.toModel();
-                                    const ret = it.animateRender(model);
-                                    it.clean();
-                                    return ret;
-                                }
-                            }
-                        }
-                        throw new Error('Cannot find any animated elements');
-                    });
-                });
+                    }
+                }
+                throw new Error('Cannot find any animated elements');
             });
-        };
+        });
     }
     else {
         return (args) => {

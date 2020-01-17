@@ -20,15 +20,15 @@ export function notification(context: BridgeContext) {
             if (args.data !== undefined) {
                 (args as any).data = JSON.stringify(args.data)
             }
-            return context.notification.publish(args)
+            return context.callNative('notification', 'publish', args)
         },
         subscribe: (args: { biz?: string, name: string, callback: (data?: any) => void, androidSystem?: boolean }) => {
-            (args as any).callback = (context as any).function2Id(args.callback)
-            return context.notification.subscribe(args) as Promise<string>
+            (args as any).callback = context.function2Id(args.callback)
+            return context.callNative('notification', 'subscribe', args) as Promise<string>
         },
         unsubscribe: (subscribeId: string) => {
-            (context as any).removeFuncById(subscribeId)
-            return context.notification.unsubscribe(subscribeId)
+            context.removeFuncById(subscribeId)
+            return context.callNative('notification', 'unsubscribe', subscribeId)
         }
     }
 }

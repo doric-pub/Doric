@@ -109,7 +109,6 @@ export abstract class View implements Modeling, IView {
     @Property
     hidden?: boolean
 
-    @Property
     viewId = uniqueId('ViewId')
 
     @Property
@@ -278,10 +277,9 @@ export abstract class View implements Modeling, IView {
         return this
     }
 
-    nativeChannel(context: any, name: string) {
+    nativeChannel(context: BridgeContext, name: string) {
         let thisView: View | undefined = this
         return function (args: any = undefined) {
-            const func = context.shader.command
             const viewIds = []
             while (thisView != undefined) {
                 viewIds.push(thisView.viewId)
@@ -292,7 +290,8 @@ export abstract class View implements Modeling, IView {
                 name,
                 args,
             }
-            return Reflect.apply(func, undefined, [params]) as Promise<any>
+
+            return context.callNative('shader', 'command', params) as Promise<any>
         }
     }
 

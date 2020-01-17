@@ -18,16 +18,16 @@ import { BridgeContext } from "../runtime/global"
 export function storage(context: BridgeContext) {
     return {
         setItem: (key: string, value: string, zone?: string) => {
-            return context.storage.setItem({ key, value, zone })
+            return context.callNative('storage', 'setItem', { key, value, zone })
         },
         getItem: (key: string, zone?: string) => {
-            return context.storage.getItem({ key, zone }) as Promise<string>
+            return context.callNative('storage', 'getItem', { key, zone }) as Promise<string>
         },
         remove: (key: string, zone?: string) => {
-            return context.storage.remove({ key, zone })
+            return context.callNative('storage', 'remove', { key, zone })
         },
         clear: (zone: string) => {
-            return context.storage.clear({ zone })
+            return context.callNative('storage', 'clear', { zone })
         },
     }
 }

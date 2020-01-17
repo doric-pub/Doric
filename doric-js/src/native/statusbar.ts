@@ -21,13 +21,13 @@ export enum StatusBarMode { LIGHT, DARK }
 export function statusbar(context: BridgeContext) {
     return {
         setHidden: (hidden: boolean) => {
-            return context.statusbar.setHidden({hidden})
+            return context.callNative('statusbar', 'setHidden', { hidden })
         },
         setMode: (mode: StatusBarMode) => {
-            return context.statusbar.setMode({mode})
+            return context.callNative('statusbar', 'setMode', { mode })
         },
         setColor: (color: Color) => {
-            return context.statusbar.setColor({color: color.toModel()})
+            return context.callNative('statusbar', 'setColor', { color: color.toModel() })
         },
     }
 }

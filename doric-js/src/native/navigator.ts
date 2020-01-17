@@ -25,12 +25,12 @@ export function navigator(context: BridgeContext) {
             if (config && config.extra) {
                 (config as any).extra = JSON.stringify(config.extra)
             }
-            return context.navigator.push({
+            return context.callNative('navigator', 'push', {
                 scheme, config
             })
         },
         pop: (animated = true) => {
-            return context.navigator.pop({ animated })
+            return context.callNative('navigator', 'pop', { animated })
         },
     }
 }

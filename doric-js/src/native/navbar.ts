@@ -27,36 +27,30 @@ export function navbar(context: BridgeContext) {
 
     return {
         isHidden: () => {
-            return context.navbar.isHidden() as Promise<boolean>
+            return context.callNative('navbar', 'isHidden') as Promise<boolean>
         },
         setHidden: (hidden: boolean) => {
-            return context.navbar.setHidden({
-                hidden,
-            })
+            return context.callNative('navbar', 'setHidden', { hidden, })
         },
         setTitle: (title: string) => {
-            return context.navbar.setTitle({
-                title,
-            })
+            return context.callNative('navbar', 'setTitle', { title, })
         },
         setBgColor: (color: Color) => {
-            return context.navbar.setBgColor({
-                color: color.toModel(),
-            })
+            return context.callNative('navbar', 'setBgColor', { color: color.toModel(), })
         },
         setLeft: (view: View) => {
             if (panel) {
                 panel.clearHeadViews("navbar_left")
                 panel.addHeadView("navbar_left", view)
             }
-            return context.navbar.setLeft(view.toModel())
+            return context.callNative('navbar', 'setLeft', view.toModel())
         },
         setRight: (view: View) => {
             if (panel) {
                 panel.clearHeadViews("navbar_right")
                 panel.addHeadView("navbar_right", view)
             }
-            return context.navbar.setRight(view.toModel())
+            return context.callNative('navbar', 'setRight', view.toModel())
         }
     }
 }

@@ -10,7 +10,7 @@ export function popover(context) {
             if (panel) {
                 panel.addHeadView("popover", view);
             }
-            return context.popover.show(view.toModel());
+            return context.callNative('popover', 'show', view.toModel());
         },
         dismiss: (view = undefined) => {
             if (panel) {
@@ -21,7 +21,7 @@ export function popover(context) {
                     panel.clearHeadViews("popover");
                 }
             }
-            return context.popover.dismiss(view ? { id: view.viewId } : undefined);
+            return context.callNative('popover', 'dismiss', view ? { id: view.viewId } : undefined);
         },
     };
 }

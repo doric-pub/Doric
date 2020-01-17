@@ -28,7 +28,7 @@ export function popover(context: BridgeContext) {
             if (panel) {
                 panel.addHeadView("popover", view)
             }
-            return context.popover.show(view.toModel())
+            return context.callNative('popover', 'show', view.toModel())
         },
         dismiss: (view: View | undefined = undefined) => {
             if (panel) {
@@ -38,7 +38,7 @@ export function popover(context: BridgeContext) {
                     panel.clearHeadViews("popover")
                 }
             }
-            return context.popover.dismiss(view ? { id: view.viewId } : undefined)
+            return context.callNative('popover', 'dismiss', view ? { id: view.viewId } : undefined)
         },
     }
 }

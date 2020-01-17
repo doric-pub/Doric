@@ -61,7 +61,7 @@ function transformRequest(request: IRequest) {
 export function network(context: BridgeContext) {
     return {
         request: (config: IRequest) => {
-            return context.network.request(transformRequest(config)) as Promise<IResponse>
+            return context.callNative('network', 'request', transformRequest(config)) as Promise<IResponse>
         },
         get: (url: string, config?: IRequest) => {
             let finalConfig = config
@@ -70,7 +70,7 @@ export function network(context: BridgeContext) {
             }
             finalConfig.url = url
             finalConfig.method = "get"
-            return context.network.request(transformRequest(finalConfig)) as Promise<IResponse>
+            return context.callNative('network', 'request', transformRequest(finalConfig)) as Promise<IResponse>
         },
         post: (url: string, data?: object | string, config?: IRequest) => {
             let finalConfig = config
@@ -82,7 +82,7 @@ export function network(context: BridgeContext) {
             if (data !== undefined) {
                 finalConfig.data = data
             }
-            return context.network.request(transformRequest(finalConfig)) as Promise<IResponse>
+            return context.callNative('network', 'request', transformRequest(finalConfig)) as Promise<IResponse>
         },
         put: (url: string, data?: object | string, config?: IRequest) => {
             let finalConfig = config
@@ -94,7 +94,7 @@ export function network(context: BridgeContext) {
             if (data !== undefined) {
                 finalConfig.data = data
             }
-            return context.network.request(transformRequest(finalConfig)) as Promise<IResponse>
+            return context.callNative('network', 'request', transformRequest(finalConfig)) as Promise<IResponse>
         },
         delete: (url: string, data?: object | string, config?: IRequest) => {
             let finalConfig = config
@@ -103,7 +103,7 @@ export function network(context: BridgeContext) {
             }
             finalConfig.url = url
             finalConfig.method = "delete"
-            return context.network.request(transformRequest(finalConfig)) as Promise<IResponse>
+            return context.callNative('network', 'request', transformRequest(finalConfig)) as Promise<IResponse>
         },
     }
 }

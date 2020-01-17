@@ -14,25 +14,47 @@ declare module 'doric' {
 declare module 'doric/lib/src/runtime/global' {
     export * from 'reflect-metadata';
     export type BridgeContext = {
-        [index: string]: {
-            [index: string]: (args?: any) => Promise<any>;
-        };
+            /**
+                * The identify of current context
+                */
+            id: string;
+            /**
+                * In this case,It's current panel
+                */
+            entity: any;
+            /**
+                * call native plugin
+                * @param namespace
+                * @param method
+                * @param args
+                */
+            callNative(namespace: string, method: string, args?: any): Promise<any>;
+            /**
+                * Transform function to functionId as string
+                * @param func
+                */
+            function2Id(func: Function): string;
+            /**
+                * Remove transformed functions
+                * @param funcId
+                */
+            removeFuncById(funcId: string): void;
     };
     global {
-        const context: BridgeContext;
-        const Environment: {
-            platform: "Android" | "iOS" | "Qt" | "web";
-            platformVersion: string;
-            appName: string;
-            appVersion: string;
-            libVersion: string;
-            screenWidth: number;
-            screenHeight: number;
-            [index: string]: number | string | boolean | object | undefined;
-        };
-        function Entry(constructor: {
-            new (...args: any[]): {};
-        }): any;
+            const context: BridgeContext;
+            const Environment: {
+                    platform: "Android" | "iOS" | "Qt" | "web";
+                    platformVersion: string;
+                    appName: string;
+                    appVersion: string;
+                    libVersion: string;
+                    screenWidth: number;
+                    screenHeight: number;
+                    [index: string]: number | string | boolean | object | undefined;
+            };
+            function Entry(constructor: {
+                    new (...args: any[]): {};
+            }): any;
     }
     export {};
 }
@@ -214,7 +236,7 @@ declare module 'doric/lib/src/ui/view' {
             also(block: (it: this) => void): this;
             apply(config: IView): this;
             in(group: Group): this;
-            nativeChannel(context: any, name: string): (args?: any) => Promise<any>;
+            nativeChannel(context: BridgeContext, name: string): (args?: any) => Promise<any>;
             getWidth(context: BridgeContext): Promise<number>;
             getHeight(context: BridgeContext): Promise<number>;
             getLocationOnScreen(context: BridgeContext): Promise<{
@@ -797,7 +819,7 @@ declare module 'doric/lib/src/native/animate' {
     export function animate(context: BridgeContext): (args: {
         animations: () => void;
         duration: number;
-    }) => Promise<any>;
+    }) => Promise<unknown>;
 }
 
 declare module 'doric/lib/src/native/notification' {

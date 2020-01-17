@@ -15,7 +15,7 @@ function transformRequest(request) {
 export function network(context) {
     return {
         request: (config) => {
-            return context.network.request(transformRequest(config));
+            return context.callNative('network', 'request', transformRequest(config));
         },
         get: (url, config) => {
             let finalConfig = config;
@@ -24,7 +24,7 @@ export function network(context) {
             }
             finalConfig.url = url;
             finalConfig.method = "get";
-            return context.network.request(transformRequest(finalConfig));
+            return context.callNative('network', 'request', transformRequest(finalConfig));
         },
         post: (url, data, config) => {
             let finalConfig = config;
@@ -36,7 +36,7 @@ export function network(context) {
             if (data !== undefined) {
                 finalConfig.data = data;
             }
-            return context.network.request(transformRequest(finalConfig));
+            return context.callNative('network', 'request', transformRequest(finalConfig));
         },
         put: (url, data, config) => {
             let finalConfig = config;
@@ -48,7 +48,7 @@ export function network(context) {
             if (data !== undefined) {
                 finalConfig.data = data;
             }
-            return context.network.request(transformRequest(finalConfig));
+            return context.callNative('network', 'request', transformRequest(finalConfig));
         },
         delete: (url, data, config) => {
             let finalConfig = config;
@@ -57,7 +57,7 @@ export function network(context) {
             }
             finalConfig.url = url;
             finalConfig.method = "delete";
-            return context.network.request(transformRequest(finalConfig));
+            return context.callNative('network', 'request', transformRequest(finalConfig));
         },
     };
 }

@@ -6,13 +6,13 @@ export var StatusBarMode;
 export function statusbar(context) {
     return {
         setHidden: (hidden) => {
-            return context.statusbar.setHidden({ hidden });
+            return context.callNative('statusbar', 'setHidden', { hidden });
         },
         setMode: (mode) => {
-            return context.statusbar.setMode({ mode });
+            return context.callNative('statusbar', 'setMode', { mode });
         },
         setColor: (color) => {
-            return context.statusbar.setColor({ color: color.toModel() });
+            return context.callNative('statusbar', 'setColor', { color: color.toModel() });
         },
     };
 }

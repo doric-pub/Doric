@@ -7,36 +7,30 @@ export function navbar(context) {
     }
     return {
         isHidden: () => {
-            return context.navbar.isHidden();
+            return context.callNative('navbar', 'isHidden');
         },
         setHidden: (hidden) => {
-            return context.navbar.setHidden({
-                hidden,
-            });
+            return context.callNative('navbar', 'setHidden', { hidden, });
         },
         setTitle: (title) => {
-            return context.navbar.setTitle({
-                title,
-            });
+            return context.callNative('navbar', 'setTitle', { title, });
         },
         setBgColor: (color) => {
-            return context.navbar.setBgColor({
-                color: color.toModel(),
-            });
+            return context.callNative('navbar', 'setBgColor', { color: color.toModel(), });
         },
         setLeft: (view) => {
             if (panel) {
                 panel.clearHeadViews("navbar_left");
                 panel.addHeadView("navbar_left", view);
             }
-            return context.navbar.setLeft(view.toModel());
+            return context.callNative('navbar', 'setLeft', view.toModel());
         },
         setRight: (view) => {
             if (panel) {
                 panel.clearHeadViews("navbar_right");
                 panel.addHeadView("navbar_right", view);
             }
-            return context.navbar.setRight(view.toModel());
+            return context.callNative('navbar', 'setRight', view.toModel());
         }
     };
 }

@@ -24,35 +24,32 @@ export function animate(context: BridgeContext) {
     const entity = context.entity
     if (entity instanceof Panel) {
         let panel = entity
-        return (args: {
+        return async (args: {
             animations: () => void,
             duration: number,
         }) => {
-            return takeLet(panel.context.animate)(it => {
-                return it.submit().then(() => {
-                    args.animations()
-                    return takeLet(panel.getRootView())(root => {
-                        if (root.isDirty()) {
-                            const model = root.toModel();
-                            (model as any).duration = args.duration
-                            const ret = it.animateRender(model)
-                            root.clean()
-                            return ret
+            await context.callNative('animate', 'submit')
+            args.animations()
+            return takeLet(panel.getRootView())(root => {
+                if (root.isDirty()) {
+                    const model = root.toModel();
+                    (model as any).duration = args.duration
+                    const ret = context.callNative('animate', 'animateRender', model)
+                    root.clean()
+                    return ret
+                }
+                for (let map of panel.allHeadViews()) {
+                    for (let v of map.values()) {
+                        if (v.isDirty()) {
+                            const model_1 = v.toModel()
+                            const ret_1 = context.callNative('animate', 'animateRender', model_1)
+                            v.clean()
+                            return ret_1
                         }
-                        for (let map of panel.allHeadViews()) {
-                            for (let v of map.values()) {
-                                if (v.isDirty()) {
-                                    const model = v.toModel()
-                                    const ret = it.animateRender(model)
-                                    it.clean()
-                                    return ret
-                                }
-                            }
-                        }
-                        throw new Error('Cannot find any animated elements')
-                    })
-                })
-            }) as Promise<any>
+                    }
+                }
+                throw new Error('Cannot find any animated elements')
+            })
         }
     } else {
         return (args: {

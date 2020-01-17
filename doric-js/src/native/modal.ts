@@ -19,7 +19,7 @@ import { Gravity } from "../util/gravity"
 export function modal(context: BridgeContext) {
     return {
         toast: (msg: string, gravity: Gravity = Gravity.Bottom) => {
-            context.modal.toast({
+            context.callNative('modal', 'toast', {
                 msg,
                 gravity: gravity.toModel(),
             })
@@ -30,9 +30,9 @@ export function modal(context: BridgeContext) {
             okLabel?: string,
         }) => {
             if (typeof arg === 'string') {
-                return context.modal.alert({ msg: arg })
+                return context.callNative('modal', 'alert', { msg: arg })
             } else {
-                return context.modal.alert(arg)
+                return context.callNative('modal', 'alert', arg)
             }
         },
         confirm: (arg: string | {
@@ -42,9 +42,9 @@ export function modal(context: BridgeContext) {
             cancelLabel?: string,
         }) => {
             if (typeof arg === 'string') {
-                return context.modal.confirm({ msg: arg })
+                return context.callNative('modal', 'confirm', { msg: arg })
             } else {
-                return context.modal.confirm(arg)
+                return context.callNative('modal', 'confirm', arg)
             }
         },
         prompt: (arg: {
@@ -55,7 +55,7 @@ export function modal(context: BridgeContext) {
             text?: string,
             defaultText?: string,
         }) => {
-            return context.modal.prompt(arg) as Promise<string>
+            return context.callNative('modal', 'prompt', arg) as Promise<string>
         },
     }
 }

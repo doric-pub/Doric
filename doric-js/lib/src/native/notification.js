@@ -4,15 +4,15 @@ export function notification(context) {
             if (args.data !== undefined) {
                 args.data = JSON.stringify(args.data);
             }
-            return context.notification.publish(args);
+            return context.callNative('notification', 'publish', args);
         },
         subscribe: (args) => {
             args.callback = context.function2Id(args.callback);
-            return context.notification.subscribe(args);
+            return context.callNative('notification', 'subscribe', args);
         },
         unsubscribe: (subscribeId) => {
             context.removeFuncById(subscribeId);
-            return context.notification.unsubscribe(subscribeId);
+            return context.callNative('notification', 'unsubscribe', subscribeId);
         }
     };
 }

@@ -82,43 +82,32 @@ export declare class ScaleAnimation extends Animation {
     private scaleXChangeable;
     private scaleYChangeable;
     constructor();
-    set fromScaleX(v: number);
-    get fromScaleX(): number;
-    set toScaleX(v: number);
-    get toScaleX(): number;
-    set fromScaleY(v: number);
-    get fromScaleY(): number;
-    set toScaleY(v: number);
-    get toScaleY(): number;
+    fromScaleX: number;
+    toScaleX: number;
+    fromScaleY: number;
+    toScaleY: number;
 }
 export declare class TranslationAnimation extends Animation {
     private translationXChangeable;
     private translationYChangeable;
     constructor();
-    set fromTranslationX(v: number);
-    get fromTranslationX(): number;
-    set toTranslationX(v: number);
-    get toTranslationX(): number;
-    set fromTranslationY(v: number);
-    get fromTranslationY(): number;
-    set toTranslationY(v: number);
-    get toTranslationY(): number;
+    fromTranslationX: number;
+    toTranslationX: number;
+    fromTranslationY: number;
+    toTranslationY: number;
 }
 export declare class RotationAnimation extends Animation {
     private rotationChaneable;
     constructor();
-    set fromRotation(v: number);
-    get fromRotation(): number;
-    set toRotation(v: number);
-    get toRotation(): number;
+    fromRotation: number;
+    toRotation: number;
 }
 export declare class AnimationSet implements IAnimation {
     private animations;
     _duration: number;
     delay?: number;
     addAnimation(anim: IAnimation): void;
-    get duration(): number;
-    set duration(v: number);
+    duration: number;
     toModel(): {
         animations: Model;
         delay: number | undefined;

@@ -104,21 +104,15 @@ export declare abstract class View implements Modeling, IView {
     private id2Callback;
     constructor();
     /** Anchor start*/
-    get left(): number;
-    set left(v: number);
-    get right(): number;
-    set right(v: number);
-    get top(): number;
-    set top(v: number);
-    get bottom(): number;
-    set bottom(v: number);
-    get centerX(): number;
-    get centerY(): number;
-    set centerX(v: number);
-    set centerY(v: number);
+    left: number;
+    right: number;
+    top: number;
+    bottom: number;
+    centerX: number;
+    centerY: number;
     /** Anchor end*/
     private __dirty_props__;
-    get dirtyProps(): {
+    readonly dirtyProps: {
         [index: string]: Model;
     };
     nativeViewModel: NativeViewModel;

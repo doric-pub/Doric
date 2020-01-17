@@ -54,5 +54,5 @@ class ProxyPolyfill {
 const global = Function('return this')()
 global.Proxy = ProxyPolyfill
 
-export * from './src/runtime/sandbox'
+export * from './src/runtime/sandbox.es5'
 export * from 'core-js'

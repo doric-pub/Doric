@@ -43,7 +43,7 @@ export abstract class Panel {
 
     private __data__?: object
     private __root__ = new Root
-    private headviews: Map<string,  Map<string, View>> = new Map
+    private headviews: Map<string, Map<string, View>> = new Map
 
     addHeadView(type: string, v: View) {
         let map = this.headviews.get(type)
@@ -157,7 +157,7 @@ export abstract class Panel {
     }
 
     private nativeRender(model: Model) {
-        this.context.shader.render(model)
+        (this.context as any).callNative("shader", "render", model)
     }
 
     private hookBeforeNativeCall() {

@@ -132,33 +132,6 @@ export class Context {
 
     constructor(id: string) {
         this.id = id
-        return new Proxy(this, {
-            get: (target, p: any) => {
-                if (Reflect.has(target, p)) {
-                    return Reflect.get(target, p)
-                } else {
-                    const namespace = p
-                    return new Proxy({}, {
-                        get: (target, p: any) => {
-                            if (Reflect.has(target, p)) {
-                                return Reflect.get(target, p)
-                            } else {
-                                const context = this
-                                return function () {
-                                    const args = []
-                                    args.push(namespace)
-                                    args.push(p)
-                                    for (let arg of arguments) {
-                                        args.push(arg)
-                                    }
-                                    return Reflect.apply(context.callNative, context, args)
-                                }
-                            }
-                        }
-                    })
-                }
-            }
-        })
     }
     callNative(namespace: string, method: string, args?: any): Promise<any> {
         const callbackId = uniqueId('callback')

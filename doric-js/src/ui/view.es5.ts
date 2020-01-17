@@ -21,8 +21,19 @@ import { BridgeContext } from "../runtime/global";
 import { LayoutConfig } from '../util/layoutconfig'
 import { IAnimation } from "./animation";
 
-export function Property(target: Object, propKey: string) {
-    Reflect.defineMetadata(propKey, true, target)
+export function Property(target: View, propKey: string) {
+    Object.defineProperty(target, propKey, {
+        get: function () {
+            return Reflect.get(this, `__prop__${propKey}`, this)
+        },
+        set: function (v) {
+            const oldV = Reflect.get(this, `__prop__${propKey}`, this)
+            Reflect.set(this, `__prop__${propKey}`, v, this)
+            if (oldV !== v) {
+                Reflect.apply(this.onPropertyChanged, this, [propKey, oldV, v])
+            }
+        },
+    })
 }
 
 export interface IView {
@@ -79,6 +90,8 @@ export type NativeViewModel = {
 }
 
 export abstract class View implements Modeling, IView {
+    private __dirty_props__!: { [index: string]: Model | undefined }
+
     @Property
     width: number = 0
 
@@ -128,9 +141,11 @@ export abstract class View implements Modeling, IView {
 
     superview?: Superview
 
-    callbacks: Map<String, Function> = new Map
-
+    callbacks!: Map<String, Function>
     private callback2Id(f: Function) {
+        if (this.callbacks === undefined) {
+            this.callbacks = new Map
+        }
         const id = uniqueId('Function')
         this.callbacks.set(id, f)
         return id
@@ -144,21 +159,6 @@ export abstract class View implements Modeling, IView {
         return f
     }
 
-    constructor() {
-        return new Proxy(this, {
-            get: (target, p, receiver) => {
-                return Reflect.get(target, p, receiver)
-            },
-            set: (target, p, v, receiver) => {
-                const oldV = Reflect.get(target, p, receiver)
-                const ret = Reflect.set(target, p, v, receiver)
-                if (Reflect.getMetadata(p, target) && oldV !== v) {
-                    receiver.onPropertyChanged(p.toString(), oldV, v)
-                }
-                return ret
-            }
-        })
-    }
     /** Anchor start*/
     get left() {
         return this.x
@@ -207,7 +207,6 @@ export abstract class View implements Modeling, IView {
     }
     /** Anchor end*/
 
-    private __dirty_props__: { [index: string]: Model | undefined } = {}
 
     get dirtyProps() {
         return this.__dirty_props__
@@ -224,6 +223,9 @@ export abstract class View implements Modeling, IView {
             newV = this.callback2Id(newV)
         } else {
             newV = obj2Model(newV)
+        }
+        if (this.__dirty_props__ === undefined) {
+            this.__dirty_props__ = {}
         }
         this.__dirty_props__[propKey] = newV
     }
@@ -388,14 +390,7 @@ export abstract class Superview extends View {
 
 export abstract class Group extends Superview {
 
-    readonly children: View[] = new Proxy([], {
-        set: (target, index, value) => {
-            const ret = Reflect.set(target, index, value)
-            // Let getDirty return true
-            this.dirtyProps.children = this.children.map(e => e.viewId)
-            return ret
-        }
-    })
+    readonly children: View[] = []
 
     allSubviews() {
         return this.children
@@ -403,6 +398,7 @@ export abstract class Group extends Superview {
 
     addChild(view: View) {
         this.children.push(view)
+        this.dirtyProps.children = this.children.map(e => e.viewId)
     }
 }
 

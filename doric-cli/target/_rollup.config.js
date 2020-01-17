@@ -3,6 +3,7 @@ import commonjs from '@rollup/plugin-commonjs'
 import bundles from './build/index'
 import fs from 'fs'
 import path from 'path'
+import buble from '@rollup/plugin-buble';
 
 function readDirs(dirPath, files) {
     if (fs.statSync(dirPath).isDirectory()) {
@@ -34,25 +35,49 @@ const allFiles = []
 dirs.forEach(e => {
     readDirs(e, allFiles)
 })
-
-export default allFiles
-    .map(e => e.replace('.ts', ''))
-    .map(bundle => {
-        return {
-            input: `build/${bundle}.js`,
-            output: {
-                format: "cjs",
-                file: `bundle/${bundle}.js`,
-                sourcemap: true,
-            },
-            plugins: [
-                resolve({ mainFields: ["jsnext"] }),
-                commonjs()
-            ],
-            external: ['reflect-metadata', 'doric'],
-            onwarn: function (warning) {
-                if (warning.code === 'THIS_IS_UNDEFINED') { return; }
-                console.warn(warning.message);
+export default
+    allFiles
+        .map(e => e.replace('.ts', ''))
+        .map(bundle => {
+            return {
+                input: `build/${bundle}.js`,
+                output: {
+                    format: "cjs",
+                    file: `bundle/${bundle}.js`,
+                    sourcemap: true,
+                },
+                plugins: [
+                    resolve({ mainFields: ["jsnext"] }),
+                    commonjs(),
+                ],
+                external: ['reflect-metadata', 'doric'],
+                onwarn: function (warning) {
+                    if (warning.code === 'THIS_IS_UNDEFINED') { return; }
+                    console.warn(warning.message);
+                }
             }
-        }
-    })
+        }).concat(
+            allFiles
+                .map(e => e.replace('.ts', ''))
+                .map(bundle => {
+                    return {
+                        input: `build/${bundle}.js`,
+                        output: {
+                            format: "cjs",
+                            file: `bundle/${bundle}.es5.js`,
+                            sourcemap: true,
+                        },
+                        plugins: [
+                            resolve({ mainFields: ["jsnext"] }),
+                            commonjs(),
+                            buble({
+                                transforms: { dangerousForOf: true }
+                            }),
+                        ],
+                        external: ['reflect-metadata', 'doric'],
+                        onwarn: function (warning) {
+                            if (warning.code === 'THIS_IS_UNDEFINED') { return; }
+                            console.warn(warning.message);
+                        }
+                    }
+                }))

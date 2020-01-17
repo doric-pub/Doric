@@ -35,28 +35,6 @@ const allFiles = []
 dirs.forEach(e => {
     readDirs(e, allFiles)
 })
-const outFile = allFiles
-    .map(e => e.replace('.ts', ''))
-    .map(bundle => {
-        return {
-            input: `build/${bundle}.js`,
-            output: {
-                format: "cjs",
-                file: `bundle/${bundle}.js`,
-                sourcemap: true,
-            },
-            plugins: [
-                resolve({ mainFields: ["jsnext"] }),
-                commonjs(),
-            ],
-            external: ['reflect-metadata', 'doric'],
-            onwarn: function (warning) {
-                if (warning.code === 'THIS_IS_UNDEFINED') { return; }
-                console.warn(warning.message);
-            }
-        }
-    })
-
 export default
     allFiles
         .map(e => e.replace('.ts', ''))

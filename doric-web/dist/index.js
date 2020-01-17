@@ -1781,7 +1781,6 @@ class View {
     nativeChannel(context, name) {
         let thisView = this;
         return function (args = undefined) {
-            const func = context.shader.command;
             const viewIds = [];
             while (thisView != undefined) {
                 viewIds.push(thisView.viewId);
@@ -1792,7 +1791,7 @@ class View {
                 name,
                 args,
             };
-            return Reflect.apply(func, undefined, [params]);
+            return context.callNative('shader', 'command', params);
         };
     }
     getWidth(context) {
@@ -1854,10 +1853,6 @@ __decorate([
     Property,
     __metadata("design:type", Boolean)
 ], View.prototype, "hidden", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Object)
-], View.prototype, "viewId", void 0);
 __decorate([
     Property,
     __metadata("design:type", Object)
@@ -2023,6 +2018,8 @@ class Gravity {
 }
 Gravity.origin = new Gravity;
 Gravity.Center = Gravity.origin.center();
+Gravity.CenterX = Gravity.origin.centerX();
+Gravity.CenterY = Gravity.origin.centerY();
 Gravity.Left = Gravity.origin.left();
 Gravity.Right = Gravity.origin.right();
 Gravity.Top = Gravity.origin.top();
@@ -2285,7 +2282,7 @@ class Panel {
         }, undefined);
     }
     nativeRender(model) {
-        this.context.shader.render(model);
+        this.context.callNative("shader", "render", model);
     }
     hookBeforeNativeCall() {
         if (Environment.platform !== 'web') {
@@ -2697,6 +2694,10 @@ __decorate$3([
     Property,
     __metadata$3("design:type", Gravity)
 ], Text.prototype, "textAlignment", void 0);
+__decorate$3([
+    Property,
+    __metadata$3("design:type", String)
+], Text.prototype, "fontStyle", void 0);
 function text(config) {
     const ret = new Text;
     ret.layoutConfig = layoutConfig().fit();
@@ -3330,29 +3331,29 @@ function draggable(views, config) {
 function modal(context) {
     return {
         toast: (msg, gravity = Gravity.Bottom) => {
-            context.modal.toast({
+            context.callNative('modal', 'toast', {
                 msg,
                 gravity: gravity.toModel(),
             });
         },
         alert: (arg) => {
             if (typeof arg === 'string') {
-                return context.modal.alert({ msg: arg });
+                return context.callNative('modal', 'alert', { msg: arg });
             }
             else {
-                return context.modal.alert(arg);
+                return context.callNative('modal', 'alert', arg);
             }
         },
         confirm: (arg) => {
             if (typeof arg === 'string') {
-                return context.modal.confirm({ msg: arg });
+                return context.callNative('modal', 'confirm', { msg: arg });
             }
             else {
-                return context.modal.confirm(arg);
+                return context.callNative('modal', 'confirm', arg);
             }
         },
         prompt: (arg) => {
-            return context.modal.prompt(arg);
+            return context.callNative('modal', 'prompt', arg);
         },
     };
 }
@@ -3365,36 +3366,30 @@ function navbar(context) {
     }
     return {
         isHidden: () => {
-            return context.navbar.isHidden();
+            return context.callNative('navbar', 'isHidden');
         },
         setHidden: (hidden) => {
-            return context.navbar.setHidden({
-                hidden,
-            });
+            return context.callNative('navbar', 'setHidden', { hidden, });
         },
         setTitle: (title) => {
-            return context.navbar.setTitle({
-                title,
-            });
+            return context.callNative('navbar', 'setTitle', { title, });
         },
         setBgColor: (color) => {
-            return context.navbar.setBgColor({
-                color: color.toModel(),
-            });
+            return context.callNative('navbar', 'setBgColor', { color: color.toModel(), });
         },
         setLeft: (view) => {
             if (panel) {
                 panel.clearHeadViews("navbar_left");
                 panel.addHeadView("navbar_left", view);
             }
-            return context.navbar.setLeft(view.toModel());
+            return context.callNative('navbar', 'setLeft', view.toModel());
         },
         setRight: (view) => {
             if (panel) {
                 panel.clearHeadViews("navbar_right");
                 panel.addHeadView("navbar_right", view);
             }
-            return context.navbar.setRight(view.toModel());
+            return context.callNative('navbar', 'setRight', view.toModel());
         }
     };
 }
@@ -3405,12 +3400,12 @@ function navigator(context) {
             if (config && config.extra) {
                 config.extra = JSON.stringify(config.extra);
             }
-            return context.navigator.push({
+            return context.callNative('navigator', 'push', {
                 scheme, config
             });
         },
         pop: (animated = true) => {
-            return context.navigator.pop({ animated });
+            return context.callNative('navigator', 'pop', { animated });
         },
     };
 }
@@ -3432,7 +3427,7 @@ function transformRequest(request) {
 function network(context) {
     return {
         request: (config) => {
-            return context.network.request(transformRequest(config));
+            return context.callNative('network', 'request', transformRequest(config));
         },
         get: (url, config) => {
             let finalConfig = config;
@@ -3441,7 +3436,7 @@ function network(context) {
             }
             finalConfig.url = url;
             finalConfig.method = "get";
-            return context.network.request(transformRequest(finalConfig));
+            return context.callNative('network', 'request', transformRequest(finalConfig));
         },
         post: (url, data, config) => {
             let finalConfig = config;
@@ -3453,7 +3448,7 @@ function network(context) {
             if (data !== undefined) {
                 finalConfig.data = data;
             }
-            return context.network.request(transformRequest(finalConfig));
+            return context.callNative('network', 'request', transformRequest(finalConfig));
         },
         put: (url, data, config) => {
             let finalConfig = config;
@@ -3465,7 +3460,7 @@ function network(context) {
             if (data !== undefined) {
                 finalConfig.data = data;
             }
-            return context.network.request(transformRequest(finalConfig));
+            return context.callNative('network', 'request', transformRequest(finalConfig));
         },
         delete: (url, data, config) => {
             let finalConfig = config;
@@ -3474,7 +3469,7 @@ function network(context) {
             }
             finalConfig.url = url;
             finalConfig.method = "delete";
-            return context.network.request(transformRequest(finalConfig));
+            return context.callNative('network', 'request', transformRequest(finalConfig));
         },
     };
 }
@@ -3482,16 +3477,16 @@ function network(context) {
 function storage(context) {
     return {
         setItem: (key, value, zone) => {
-            return context.storage.setItem({ key, value, zone });
+            return context.callNative('storage', 'setItem', { key, value, zone });
         },
         getItem: (key, zone) => {
-            return context.storage.getItem({ key, zone });
+            return context.callNative('storage', 'getItem', { key, zone });
         },
         remove: (key, zone) => {
-            return context.storage.remove({ key, zone });
+            return context.callNative('storage', 'remove', { key, zone });
         },
         clear: (zone) => {
-            return context.storage.clear({ zone });
+            return context.callNative('storage', 'clear', { zone });
         },
     };
 }
@@ -3507,7 +3502,7 @@ function popover(context) {
             if (panel) {
                 panel.addHeadView("popover", view);
             }
-            return context.popover.show(view.toModel());
+            return context.callNative('popover', 'show', view.toModel());
         },
         dismiss: (view = undefined) => {
             if (panel) {
@@ -3518,7 +3513,7 @@ function popover(context) {
                     panel.clearHeadViews("popover");
                 }
             }
-            return context.popover.dismiss(view ? { id: view.viewId } : undefined);
+            return context.callNative('popover', 'dismiss', view ? { id: view.viewId } : undefined);
         },
     };
 }
@@ -3586,21 +3581,15 @@ function repeat(action) {
     };
 }
 
-/*
- * Copyright [2019] [Doric.Pub]
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 /**
  * Only supports x,y,width,height,corner(just for four corners),rotation,bgColor,
  * @param panel @see Panel
@@ -3609,33 +3598,30 @@ function animate(context) {
     const entity = context.entity;
     if (entity instanceof Panel) {
         let panel = entity;
-        return (args) => {
-            return takeLet(panel.context.animate)(it => {
-                return it.submit().then(() => {
-                    args.animations();
-                    return takeLet(panel.getRootView())(root => {
-                        if (root.isDirty()) {
-                            const model = root.toModel();
-                            model.duration = args.duration;
-                            const ret = it.animateRender(model);
-                            root.clean();
-                            return ret;
+        return (args) => __awaiter(this, void 0, void 0, function* () {
+            yield context.callNative('animate', 'submit');
+            args.animations();
+            return takeLet(panel.getRootView())(root => {
+                if (root.isDirty()) {
+                    const model = root.toModel();
+                    model.duration = args.duration;
+                    const ret = context.callNative('animate', 'animateRender', model);
+                    root.clean();
+                    return ret;
+                }
+                for (let map of panel.allHeadViews()) {
+                    for (let v of map.values()) {
+                        if (v.isDirty()) {
+                            const model_1 = v.toModel();
+                            const ret_1 = context.callNative('animate', 'animateRender', model_1);
+                            v.clean();
+                            return ret_1;
                         }
-                        for (let map of panel.allHeadViews()) {
-                            for (let v of map.values()) {
-                                if (v.isDirty()) {
-                                    const model = v.toModel();
-                                    const ret = it.animateRender(model);
-                                    it.clean();
-                                    return ret;
-                                }
-                            }
-                        }
-                        throw new Error('Cannot find any animated elements');
-                    });
-                });
+                    }
+                }
+                throw new Error('Cannot find any animated elements');
             });
-        };
+        });
     }
     else {
         return (args) => {
@@ -3650,16 +3636,34 @@ function notification(context) {
             if (args.data !== undefined) {
                 args.data = JSON.stringify(args.data);
             }
-            return context.notification.publish(args);
+            return context.callNative('notification', 'publish', args);
         },
         subscribe: (args) => {
             args.callback = context.function2Id(args.callback);
-            return context.notification.subscribe(args);
+            return context.callNative('notification', 'subscribe', args);
         },
         unsubscribe: (subscribeId) => {
             context.removeFuncById(subscribeId);
-            return context.notification.unsubscribe(subscribeId);
+            return context.callNative('notification', 'unsubscribe', subscribeId);
         }
+    };
+}
+
+(function (StatusBarMode) {
+    StatusBarMode[StatusBarMode["LIGHT"] = 0] = "LIGHT";
+    StatusBarMode[StatusBarMode["DARK"] = 1] = "DARK";
+})(exports.StatusBarMode || (exports.StatusBarMode = {}));
+function statusbar(context) {
+    return {
+        setHidden: (hidden) => {
+            return context.callNative('statusbar', 'setHidden', { hidden });
+        },
+        setMode: (mode) => {
+            return context.callNative('statusbar', 'setMode', { mode });
+        },
+        setColor: (color) => {
+            return context.callNative('statusbar', 'setColor', { color: color.toModel() });
+        },
     };
 }
 
@@ -3816,6 +3820,7 @@ exports.scroller = scroller;
 exports.slideItem = slideItem;
 exports.slider = slider;
 exports.stack = stack;
+exports.statusbar = statusbar;
 exports.storage = storage;
 exports.take = take;
 exports.takeAlso = takeAlso;
@@ -4524,6 +4529,26 @@ var doric_web = (function (exports, axios, sandbox) {
                     }
                     else if ((gravity & CENTER_Y) === CENTER_Y) {
                         v.style.alignItems = "center";
+                    }
+                    break;
+                case "fontStyle":
+                    switch (prop) {
+                        case "bold":
+                            v.style.fontWeight = "bold";
+                            v.style.fontStyle = "normal";
+                            break;
+                        case "italic":
+                            v.style.fontWeight = "normal";
+                            v.style.fontStyle = "italic";
+                            break;
+                        case "bold_italic":
+                            v.style.fontWeight = "bold";
+                            v.style.fontStyle = "italic";
+                            break;
+                        default:
+                            v.style.fontWeight = "normal";
+                            v.style.fontStyle = "normal";
+                            break;
                     }
                     break;
                 default:

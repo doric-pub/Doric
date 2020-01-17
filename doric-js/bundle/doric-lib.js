@@ -770,7 +770,7 @@ class Panel {
         }, undefined);
     }
     nativeRender(model) {
-        this.context.shader.render(model);
+        this.context.callNative("shader", "render", model);
     }
     hookBeforeNativeCall() {
         if (Environment.platform !== 'web') {

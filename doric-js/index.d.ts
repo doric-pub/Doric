@@ -9,7 +9,6 @@ declare module 'doric' {
     export * from 'doric/lib/src/native/index.native';
     export * from "doric/lib/src/util/index.util";
     export * from "doric/lib/src/pattern/index.pattern";
-    export * from 'doric/lib/src/ui/view';
 }
 
 declare module 'doric/lib/src/runtime/global' {

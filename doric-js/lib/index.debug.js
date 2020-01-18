@@ -24,6 +24,14 @@ let global = new Function('return this')();
 global.doric = doric;
 global.context = doric.jsObtainContext(contextId);
 global.Entry = doric.jsObtainEntry(contextId);
+global.Environment = {
+    'platform': 'debugger',
+    'platformVersion': '1.0',
+    'appName': '',
+    'appVersion': '',
+    'screenWidth': 0,
+    'screenHeight': 0
+};
 // dev kit client
 const devClient = new WebSocketClient('ws://localhost:7777');
 devClient.on('open', function open() {

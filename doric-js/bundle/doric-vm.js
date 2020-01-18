@@ -3752,6 +3752,14 @@ let global$2 = new Function('return this')();
 global$2.doric = doric;
 global$2.context = jsObtainContext(contextId);
 global$2.Entry = jsObtainEntry(contextId);
+global$2.Environment = {
+    'platform': 'debugger',
+    'platformVersion': '1.0',
+    'appName': '',
+    'appVersion': '',
+    'screenWidth': 0,
+    'screenHeight': 0
+};
 // dev kit client
 const devClient = new WebSocketClient('ws://localhost:7777');
 devClient.on('open', function open() {

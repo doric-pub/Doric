@@ -3817,25 +3817,25 @@ debugServer.on('connection', function connection(ws) {
                 console.log(messageObject.objectName);
                 console.log(messageObject.functionName);
                 let args = [];
-                for (let i = 0; i < messageObject.javaValues.length; i++) {
-                    let javaValue = messageObject.javaValues[i];
-                    if (javaValue.type === 0) {
+                for (let i = 0; i < messageObject.values.length; i++) {
+                    let value = messageObject.values[i];
+                    if (value.type === 0) {
                         args.push(null);
                     }
-                    else if (javaValue.type === 1) {
-                        args.push(parseFloat(javaValue.value));
+                    else if (value.type === 1) {
+                        args.push(parseFloat(value.value));
                     }
-                    else if (javaValue.type === 2) {
-                        args.push((javaValue.value == 'true'));
+                    else if (value.type === 2) {
+                        args.push((value.value == 'true'));
                     }
-                    else if (javaValue.type === 3) {
-                        args.push(javaValue.value.toString());
+                    else if (value.type === 3) {
+                        args.push(value.value.toString());
                     }
-                    else if (javaValue.type === 4) {
-                        args.push(JSON.parse(javaValue.value));
+                    else if (value.type === 4) {
+                        args.push(JSON.parse(value.value));
                     }
-                    else if (javaValue.type === 5) {
-                        args.push(JSON.parse(javaValue.value));
+                    else if (value.type === 5) {
+                        args.push(JSON.parse(value.value));
                     }
                 }
                 console.log(args);

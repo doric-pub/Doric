@@ -139,7 +139,7 @@ public class RemoteJSExecutor {
                 .put("cmd", "invokeMethod")
                 .put("objectName", objectName)
                 .put("functionName", functionName)
-                .put("javaValues", jsonArray)
+                .put("values", jsonArray)
                 .put("hashKey", hashKey)
                 .toString());
 

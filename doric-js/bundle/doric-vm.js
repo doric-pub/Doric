@@ -3752,14 +3752,6 @@ let global$2 = new Function('return this')();
 global$2.doric = doric;
 global$2.context = jsObtainContext(contextId);
 global$2.Entry = jsObtainEntry(contextId);
-global$2.Environment = {
-    'platform': 'debugger',
-    'platformVersion': '1.0',
-    'appName': '',
-    'appVersion': '',
-    'screenWidth': 0,
-    'screenHeight': 0
-};
 // dev kit client
 const devClient = new WebSocketClient('ws://localhost:7777');
 devClient.on('open', function open() {
@@ -3778,6 +3770,31 @@ debugServer.on('connection', function connection(ws) {
     ws.on('message', function incoming(message) {
         let messageObject = JSON.parse(message);
         switch (messageObject.cmd) {
+            case "injectGlobalJSObject":
+                console.log(messageObject.name);
+                let type = messageObject.type;
+                let value = messageObject.value;
+                let arg;
+                if (type.type === 0) {
+                    arg = null;
+                }
+                else if (type === 1) {
+                    arg = parseFloat(value);
+                }
+                else if (type === 2) {
+                    arg = (value == 'true');
+                }
+                else if (type === 3) {
+                    arg = value.toString();
+                }
+                else if (type === 4) {
+                    arg = JSON.parse(value);
+                }
+                else if (type === 5) {
+                    arg = JSON.parse(value);
+                }
+                Reflect.set(global$2, messageObject.name, arg);
+                break;
             case "injectGlobalJSFunction":
                 console.log(messageObject.name);
                 Reflect.set(global$2, messageObject.name, function () {

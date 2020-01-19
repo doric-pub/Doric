@@ -155,7 +155,7 @@ typedef id (^Block5)(id arg0, id arg1, id arg2, id arg3, id arg4);
         @"cmd": @"invokeMethod",
         @"objectName": objName,
         @"functionName": funcName,
-        @"javaValues": argsArr
+        @"values": argsArr
     };
     
     NSString *jsonStr = [NSString dc_convertToJsonWithDic:jsonDic];

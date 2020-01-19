@@ -157,7 +157,7 @@ public class DoricPanelFragment extends Fragment implements IDoricNavigator {
         });
     }
 
-    public void loadJSBundle() {
+    private void loadJSBundle() {
         Bundle argument = getArguments();
         if (argument == null) {
             if (getActivity() != null && getActivity().getIntent() != null) {

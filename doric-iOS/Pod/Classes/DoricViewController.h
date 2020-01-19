@@ -22,10 +22,15 @@
 #import "DoricNavBarDelegate.h"
 #import "DoricPanel.h"
 
+extern NSString *const DORIC_MASK_RETRY;
+
+
 @interface DoricViewController : UIViewController <DoricNavigatorDelegate, DoricNavBarDelegate>
 @property(nonatomic, strong) DoricPanel *doricPanel;
 @property(nonatomic) BOOL statusBarHidden;
 @property(nonatomic) int statusBarMode;
+@property(nonatomic, strong) UIView *loadingView;
+@property(nonatomic, strong) UIView *errorView;
 
 - (instancetype)initWithScheme:(NSString *)scheme alias:(NSString *)alias extra:(NSString *)extra;
 @end

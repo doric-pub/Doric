@@ -15,12 +15,19 @@
  */
 import * as doric from './src/runtime/sandbox'
 import * as WebSocket from 'ws'
+
 const WebSocketClient = require('ws')
 const fs = require('fs')
 let context = process.cwd()  + '/build/context'
 const contextId = fs.readFileSync(context, { encoding: 'utf8' })
 console.log("debugging context id: " + contextId)
+
 let global = new Function('return this')()
+global.setTimeout = global.doricSetTimeout
+global.setInterval = global.doricSetInterval
+global.clearTimeout = global.doricClearTimeout
+global.clearInterval = global.doricClearInterval
+
 global.doric = doric
 global.context = doric.jsObtainContext(contextId)
 global.Entry = doric.jsObtainEntry(contextId)

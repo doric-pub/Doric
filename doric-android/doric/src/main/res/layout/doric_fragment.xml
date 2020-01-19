@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <pub.doric.navbar.BaseDoricNavBar
-        android:id="@+id/doric_nav_bar"
-        android:layout_width="match_parent"
-        android:layout_height="44dp" />
+    android:layout_height="match_parent">
 
     <fragment
         android:id="@+id/nav_host"
@@ -18,4 +12,9 @@
         app:defaultNavHost="true"
         app:navGraph="@navigation/doric_navigation" />
 
-</LinearLayout>
+    <FrameLayout
+        android:id="@+id/doric_mask"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible" />
+</FrameLayout>

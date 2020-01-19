@@ -120,6 +120,11 @@ public class RemoteJSExecutor {
     }
 
     public void injectGlobalJSObject(String name, JavaValue javaValue) {
+        webSocket.send(new JSONBuilder().put("cmd", "injectGlobalJSObject")
+                .put("name", name)
+                .put("type", javaValue.getType())
+                .put("value", javaValue.getValue()).toString()
+        );
     }
 
     public JSDecoder invokeMethod(String objectName, String functionName, JavaValue[] javaValues, boolean hashKey) {

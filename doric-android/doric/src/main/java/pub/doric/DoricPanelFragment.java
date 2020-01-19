@@ -16,6 +16,8 @@
 package pub.doric;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +28,9 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import java.util.concurrent.Callable;
+
+import pub.doric.async.AsyncCall;
 import pub.doric.async.AsyncResult;
 import pub.doric.loader.DoricJSLoaderManager;
 import pub.doric.navbar.BaseDoricNavBar;
@@ -39,6 +44,7 @@ import pub.doric.utils.DoricLog;
  */
 public class DoricPanelFragment extends Fragment implements IDoricNavigator {
     private DoricPanel doricPanel;
+    private Handler uiHandler = new Handler(Looper.getMainLooper());
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -50,6 +56,7 @@ public class DoricPanelFragment extends Fragment implements IDoricNavigator {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (doricPanel == null) {
+            showLoadingMask();
             doricPanel = view.findViewById(R.id.doric_panel);
             Bundle argument = getArguments();
             if (argument == null) {
@@ -72,6 +79,7 @@ public class DoricPanelFragment extends Fragment implements IDoricNavigator {
                     context.setDoricNavigator(DoricPanelFragment.this);
                     BaseDoricNavBar navBar = requireActivity().getWindow().getDecorView().findViewById(R.id.doric_nav_bar);
                     context.setDoricNavBar(navBar);
+                    hideLoadingMask();
                 }
 
                 @Override
@@ -134,5 +142,25 @@ public class DoricPanelFragment extends Fragment implements IDoricNavigator {
         if (getActivity() == null || !getActivity().isFinishing()) {
             doricPanel.onActivityDestroy();
         }
+    }
+
+    private void hideLoadingMask() {
+        AsyncCall.ensureRunInHandler(uiHandler, new Callable<Object>() {
+            @Override
+            public Object call() {
+                requireActivity().getWindow().getDecorView().findViewById(R.id.doric_mask).setVisibility(View.GONE);
+                return null;
+            }
+        });
+    }
+
+    private void showLoadingMask() {
+        AsyncCall.ensureRunInHandler(uiHandler, new Callable<Object>() {
+            @Override
+            public Object call() {
+                requireActivity().getWindow().getDecorView().findViewById(R.id.doric_mask).setVisibility(View.VISIBLE);
+                return null;
+            }
+        });
     }
 }

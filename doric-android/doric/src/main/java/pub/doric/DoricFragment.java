@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -42,6 +43,8 @@ public class DoricFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
+    private View maskView = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,6 +72,13 @@ public class DoricFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if (this.maskView != null) {
+            FrameLayout maskView = view.findViewById(R.id.doric_mask);
+            maskView.addView(this.maskView);
+        }
     }
 
+    public void setMaskView(View view) {
+        this.maskView = view;
+    }
 }

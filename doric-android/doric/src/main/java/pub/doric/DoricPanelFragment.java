@@ -21,6 +21,7 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,6 +46,7 @@ import pub.doric.utils.DoricLog;
 public class DoricPanelFragment extends Fragment implements IDoricNavigator {
     private DoricPanel doricPanel;
     private Handler uiHandler = new Handler(Looper.getMainLooper());
+    private FrameLayout maskView;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -55,48 +57,16 @@ public class DoricPanelFragment extends Fragment implements IDoricNavigator {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        maskView = requireActivity().getWindow().getDecorView().findViewById(R.id.doric_mask);
         if (doricPanel == null) {
-            showLoadingMask();
             doricPanel = view.findViewById(R.id.doric_panel);
-            Bundle argument = getArguments();
-            if (argument == null) {
-                if (getActivity() != null && getActivity().getIntent() != null) {
-                    argument = getActivity().getIntent().getExtras();
-                }
-            }
-            if (argument == null) {
-                DoricLog.e("DoricPanelFragment argument is null");
-                return;
-            }
-            final String alias = argument.getString("alias");
-            String scheme = argument.getString("scheme");
-            final String extra = argument.getString("extra");
-            DoricJSLoaderManager.getInstance().loadJSBundle(scheme).setCallback(new AsyncResult.Callback<String>() {
-                @Override
-                public void onResult(String result) {
-                    doricPanel.config(result, alias, extra);
-                    DoricContext context = doricPanel.getDoricContext();
-                    context.setDoricNavigator(DoricPanelFragment.this);
-                    BaseDoricNavBar navBar = requireActivity().getWindow().getDecorView().findViewById(R.id.doric_nav_bar);
-                    context.setDoricNavBar(navBar);
-                    hideLoadingMask();
-                }
-
-                @Override
-                public void onError(Throwable t) {
-                    DoricLog.e("DoricPanelFragment load JS error:" + t.getLocalizedMessage());
-                }
-
-                @Override
-                public void onFinish() {
-
-                }
-            });
+            loadJSBundle();
         } else {
             DoricPanel panel = view.findViewById(R.id.doric_panel);
             if (doricPanel != view.findViewById(R.id.doric_panel)) {
                 DoricContext context = doricPanel.getDoricContext();
                 panel.config(context);
+                doricPanel = panel;
             }
         }
     }
@@ -144,23 +114,86 @@ public class DoricPanelFragment extends Fragment implements IDoricNavigator {
         }
     }
 
-    private void hideLoadingMask() {
+    private void hideMask() {
         AsyncCall.ensureRunInHandler(uiHandler, new Callable<Object>() {
             @Override
             public Object call() {
-                requireActivity().getWindow().getDecorView().findViewById(R.id.doric_mask).setVisibility(View.GONE);
+                maskView.setVisibility(View.GONE);
                 return null;
             }
         });
     }
 
-    private void showLoadingMask() {
+    private void showLoading() {
         AsyncCall.ensureRunInHandler(uiHandler, new Callable<Object>() {
             @Override
             public Object call() {
-                requireActivity().getWindow().getDecorView().findViewById(R.id.doric_mask).setVisibility(View.VISIBLE);
+                maskView.setVisibility(View.VISIBLE);
+                maskView.findViewById(R.id.doric_mask_loading).setVisibility(View.VISIBLE);
+                maskView.findViewById(R.id.doric_mask_error).setVisibility(View.GONE);
                 return null;
             }
         });
     }
+
+    private void showError() {
+        AsyncCall.ensureRunInHandler(uiHandler, new Callable<Object>() {
+            @Override
+            public Object call() {
+                maskView.setVisibility(View.VISIBLE);
+                maskView.findViewById(R.id.doric_mask_loading).setVisibility(View.GONE);
+                maskView.findViewById(R.id.doric_mask_error).setVisibility(View.VISIBLE);
+                View retryView = maskView.findViewById(R.id.doric_mask_error_retry);
+                if (retryView != null) {
+                    retryView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            loadJSBundle();
+                        }
+                    });
+                }
+                return null;
+            }
+        });
+    }
+
+    public void loadJSBundle() {
+        Bundle argument = getArguments();
+        if (argument == null) {
+            if (getActivity() != null && getActivity().getIntent() != null) {
+                argument = getActivity().getIntent().getExtras();
+            }
+        }
+        if (argument == null) {
+            DoricLog.e("DoricPanelFragment argument is null");
+            return;
+        }
+        showLoading();
+        final String alias = argument.getString("alias");
+        String scheme = argument.getString("scheme");
+        final String extra = argument.getString("extra");
+        DoricJSLoaderManager.getInstance().loadJSBundle(scheme).setCallback(new AsyncResult.Callback<String>() {
+            @Override
+            public void onResult(String result) {
+                doricPanel.config(result, alias, extra);
+                DoricContext context = doricPanel.getDoricContext();
+                context.setDoricNavigator(DoricPanelFragment.this);
+                BaseDoricNavBar navBar = requireActivity().getWindow().getDecorView().findViewById(R.id.doric_nav_bar);
+                context.setDoricNavBar(navBar);
+                hideMask();
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                DoricLog.e("DoricPanelFragment load JS error:" + t.getLocalizedMessage());
+                showError();
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        });
+    }
+
 }

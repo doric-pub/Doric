@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="doric_mask_loading" type="id" />
+    <item name="doric_mask_error" type="id" />
+    <item name="doric_mask_error_retry" type="id" />
+</resources>

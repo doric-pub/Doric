@@ -44,7 +44,8 @@ public class DoricFragment extends Fragment {
         return fragment;
     }
 
-    private View maskView = null;
+    private View loadingView = null;
+    private View errorView = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,13 +73,22 @@ public class DoricFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (this.maskView != null) {
-            FrameLayout maskView = view.findViewById(R.id.doric_mask);
-            maskView.addView(this.maskView);
+        FrameLayout maskView = view.findViewById(R.id.doric_mask);
+        if (this.loadingView != null) {
+            maskView.addView(this.loadingView);
+        }
+        if (this.errorView != null) {
+            maskView.addView(this.errorView);
         }
     }
 
-    public void setMaskView(View view) {
-        this.maskView = view;
+    public void setLoadingView(View view) {
+        view.setId(R.id.doric_mask_loading);
+        this.loadingView = view;
+    }
+
+    public void setErrorView(View view) {
+        view.setId(R.id.doric_mask_error);
+        this.errorView = view;
     }
 }

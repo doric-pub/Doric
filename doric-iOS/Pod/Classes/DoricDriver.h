@@ -24,7 +24,7 @@
 #import "DoricAsyncResult.h"
 #import "DoricRegistry.h"
 
-typedef NS_ENUM(NSInteger, QueueMode) {
+typedef NS_ENUM(NSInteger, DoricQueueMode) {
     JS = 0,
     UI,
     INDEPENDENT

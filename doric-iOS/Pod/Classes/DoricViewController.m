@@ -18,40 +18,69 @@
 //
 
 #import "DoricViewController.h"
-#import "DoricAsyncResult.h"
 #import "DoricJSLoaderManager.h"
 #import "UIView+Doric.h"
 #import "DoricExtensions.h"
 #import "DoricUtil.h"
 
+NSString *const DORIC_MASK_RETRY = @"doric_mask_retry";
+
 @interface DoricViewController ()
 @property(nonatomic) BOOL navBarHidden;
 @property(nonatomic, strong) UIImage *navBarImage;
+@property(nonatomic, strong) UIView *maskView;
+@property(nonatomic, copy) NSString *scheme;
+@property(nonatomic, copy) NSString *alias;
+@property(nonatomic, copy) NSString *extra;
 @end
 
 @implementation DoricViewController
 - (instancetype)initWithScheme:(NSString *)scheme alias:(NSString *)alias extra:(NSString *)extra {
     if (self = [super init]) {
         self.edgesForExtendedLayout = UIRectEdgeNone;
-        DoricAsyncResult <NSString *> *result = [DoricJSLoaderManager.instance request:scheme];
-        result.resultCallback = ^(NSString *result) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                DoricPanel *panel = [DoricPanel new];
-                [panel.view also:^(UIView *it) {
-                    it.backgroundColor = [UIColor whiteColor];
-                    it.width = self.view.width;
-                    it.height = self.view.height;
-                }];
-                [self.view addSubview:panel.view];
-                [self addChildViewController:panel];
-                [panel config:result alias:alias extra:extra];
-                panel.doricContext.navigator = self;
-                panel.doricContext.navBar = self;
-                self.doricPanel = panel;
-            });
-        };
+        _scheme = scheme;
+        _alias = alias;
+        _extra = extra;
+        _doricPanel = [DoricPanel new];
     }
     return self;
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.doricPanel = [[DoricPanel new] also:^(DoricPanel *it) {
+        [it.view also:^(UIView *it) {
+            it.backgroundColor = [UIColor whiteColor];
+            it.width = self.view.width;
+            it.height = self.view.height;
+        }];
+        [self.view addSubview:it.view];
+        [self addChildViewController:it];
+    }];
+    self.maskView = [[UIView new] also:^(UIView *it) {
+        it.backgroundColor = [UIColor whiteColor];
+        it.width = self.view.width;
+        it.height = self.view.height;
+        [self.view addSubview:it];
+        if (self.loadingView) {
+            [it addSubview:self.loadingView];
+        }
+        if (self.errorView) {
+            [it addSubview:self.errorView];
+        }
+        UIView *retryView = [it viewWithTagString:DORIC_MASK_RETRY];
+        if (retryView) {
+            UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc]
+                    initWithTarget:self
+                            action:@selector(retry:)];
+            [retryView addGestureRecognizer:recognizer];
+        }
+    }];
+    [self loadJSBundle];
+}
+
+- (void)retry:(UIView *)view {
+    [self loadJSBundle];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -127,4 +156,43 @@
     return self.statusBarHidden;
 }
 
+- (void)showLoading {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.maskView.hidden = NO;
+        self.loadingView.hidden = NO;
+        self.errorView.hidden = YES;
+    });
+}
+
+- (void)showError {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.maskView.hidden = NO;
+        self.loadingView.hidden = YES;
+        self.errorView.hidden = NO;
+    });
+}
+
+- (void)hideMask {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.maskView.hidden = YES;
+    });
+}
+
+- (void)loadJSBundle {
+    [self showLoading];
+    DoricAsyncResult <NSString *> *result = [DoricJSLoaderManager.instance request:self.scheme];
+    result.resultCallback = ^(NSString *result) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self hideMask];
+            [self.doricPanel config:result alias:self.alias extra:self.extra];
+            self.doricPanel.doricContext.navigator = self;
+            self.doricPanel.doricContext.navBar = self;
+        });
+    };
+    result.exceptionCallback = ^(NSException *e) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self showError];
+        });
+    };
+}
 @end

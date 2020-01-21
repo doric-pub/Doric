@@ -62,6 +62,7 @@
             @"appVersion": infoDictionary[@"CFBundleShortVersionString"],
             @"screenWidth": @([[UIScreen mainScreen] bounds].size.width),
             @"screenHeight": @([[UIScreen mainScreen] bounds].size.height),
+            @"statusBarHeight": @([[UIApplication sharedApplication] statusBarFrame].size.height),
     } mutableCopy];
 
     [self.registry.environmentVariables enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {

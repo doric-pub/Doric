@@ -36,6 +36,7 @@ declare global {
         libVersion: string;
         screenWidth: number;
         screenHeight: number;
+        statusBarHeight: number;
         [index: string]: number | string | boolean | object | undefined;
     };
     function Entry(constructor: {

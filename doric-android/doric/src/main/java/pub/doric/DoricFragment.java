@@ -35,10 +35,11 @@ import androidx.navigation.Navigation;
  */
 public class DoricFragment extends Fragment {
 
-    public static DoricFragment newInstance(String scheme, String alias) {
+    public static DoricFragment newInstance(String scheme, String alias, String extra) {
         Bundle args = new Bundle();
         args.putString("scheme", scheme);
         args.putString("alias", alias);
+        args.putString("extra", extra);
         DoricFragment fragment = new DoricFragment();
         fragment.setArguments(args);
         return fragment;
@@ -73,6 +74,8 @@ public class DoricFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host);
+        navController.setGraph(R.navigation.doric_navigation, getArguments());
         FrameLayout maskView = view.findViewById(R.id.doric_mask);
         if (this.loadingView != null) {
             maskView.addView(this.loadingView);

@@ -101,7 +101,8 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
                 .put("appName", appName)
                 .put("appVersion", appVersion)
                 .put("screenWidth", DoricUtils.px2dp(DoricUtils.getScreenWidth()))
-                .put("screenHeight", DoricUtils.px2dp(DoricUtils.getScreenHeight()));
+                .put("screenHeight", DoricUtils.px2dp(DoricUtils.getScreenHeight()))
+                .put("statusBarHeight", DoricUtils.px2dp(DoricUtils.getStatusBarHeight(Doric.application())));
 
         Map<String, Object> extend = mDoricRegistry.getEnvironmentVariables();
         for (String key : extend.keySet()) {

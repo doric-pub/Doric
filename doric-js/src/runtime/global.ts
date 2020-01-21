@@ -60,6 +60,8 @@ declare global {
 
         screenHeight: number,
 
+        statusBarHeight: number,
+
         [index: string]: number | string | boolean | object | undefined
     }
     function Entry(constructor: { new(...args: any[]): {} }): any

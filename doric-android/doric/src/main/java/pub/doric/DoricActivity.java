@@ -26,17 +26,38 @@ import androidx.appcompat.app.AppCompatActivity;
  * @CreateDate: 2019-11-19
  */
 public class DoricActivity extends AppCompatActivity {
+    protected DoricFragment mDoricFragment;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.doric_activity);
         if (savedInstanceState == null) {
-            String scheme = getIntent().getStringExtra("scheme");
-            String alias = getIntent().getStringExtra("alias");
-            DoricFragment doricFragment = DoricFragment.newInstance(scheme, alias);
+            mDoricFragment = DoricFragment.newInstance(getScheme(), getAlias(), getExtra());
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, doricFragment)
+                    .add(R.id.container, mDoricFragment)
                     .commit();
         }
+    }
+
+    /**
+     * @return Scheme for DoricFragment to load.
+     */
+    protected String getScheme() {
+        return getIntent().getStringExtra("scheme");
+    }
+
+    /**
+     * @return Alias used for JS error message.
+     */
+    protected String getAlias() {
+        return getIntent().getStringExtra("alias");
+    }
+
+    /**
+     * @return Extra data used for JS Panel in JSON format.
+     */
+    protected String getExtra() {
+        return getIntent().getStringExtra("extra");
     }
 }

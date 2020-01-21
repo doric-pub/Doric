@@ -4,6 +4,16 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.v4.view.NestedScrollingChild;
+import android.support.v4.view.NestedScrollingChildHelper;
+import android.support.v4.view.NestedScrollingParent;
+import android.support.v4.view.NestedScrollingParentHelper;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.CircularProgressDrawable;
+import android.support.v4.widget.ListViewCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -12,23 +22,11 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Transformation;
 import android.widget.AbsListView;
 import android.widget.ListView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
-import androidx.core.view.NestedScrollingChild;
-import androidx.core.view.NestedScrollingChildHelper;
-import androidx.core.view.NestedScrollingParent;
-import androidx.core.view.NestedScrollingParentHelper;
-import androidx.core.view.ViewCompat;
-import androidx.core.widget.ListViewCompat;
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
-
-import android.view.animation.Animation.AnimationListener;
 
 import pub.doric.utils.DoricUtils;
 
@@ -454,7 +452,7 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
     }
 
     /**
-     * Set a callback to override {@link androidx.swiperefreshlayout.widget.SwipeRefreshLayout#canChildScrollUp()} method. Non-null
+     * Set a callback to override {@link android.support.v4.widget.SwipeRefreshLayout#canChildScrollUp()} method. Non-null
      * callback will return the value provided by the callback and ignore all internal logic.
      *
      * @param callback Callback that should be called when canChildScrollUp() is called.
@@ -901,12 +899,12 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
     }
 
     /**
-     * Classes that wish to override {@link androidx.swiperefreshlayout.widget.SwipeRefreshLayout#canChildScrollUp()} method
+     * Classes that wish to override {@link android.support.v4.widget.SwipeRefreshLayout#canChildScrollUp()} method
      * behavior should implement this interface.
      */
     public interface OnChildScrollUpCallback {
         /**
-         * Callback that will be called when {@link androidx.swiperefreshlayout.widget.SwipeRefreshLayout#canChildScrollUp()} method
+         * Callback that will be called when {@link android.support.v4.widget.SwipeRefreshLayout#canChildScrollUp()} method
          * is called to allow the implementer to override its behavior.
          *
          * @param parent SwipeRefreshLayout that this callback is overriding.

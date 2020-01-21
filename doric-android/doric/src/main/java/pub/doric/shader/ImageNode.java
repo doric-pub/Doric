@@ -18,6 +18,7 @@ package pub.doric.shader;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.widget.ImageView;
@@ -35,7 +36,6 @@ import com.github.pengfeizhou.jscore.JSValue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import androidx.annotation.Nullable;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import pub.doric.DoricContext;
 import pub.doric.extension.bridge.DoricPlugin;
@@ -62,9 +62,9 @@ public class ImageNode extends ViewNode<ImageView> {
 
     @Override
     public void blend(JSObject jsObject) {
-        if(jsObject != null) {
+        if (jsObject != null) {
             JSValue jsValue = jsObject.getProperty("isBlur");
-            if(jsValue.isBoolean()) {
+            if (jsValue.isBoolean()) {
                 isBlur = jsValue.asBoolean().value();
             }
         }
@@ -76,7 +76,7 @@ public class ImageNode extends ViewNode<ImageView> {
         switch (name) {
             case "imageUrl":
                 RequestOptions options;
-                if(isBlur) {
+                if (isBlur) {
                     options = RequestOptions.bitmapTransform(new BlurTransformation(25, 3));
                 } else {
                     options = new RequestOptions();

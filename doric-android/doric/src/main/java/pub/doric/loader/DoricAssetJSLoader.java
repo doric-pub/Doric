@@ -15,8 +15,13 @@
  */
 package pub.doric.loader;
 
+import android.content.res.AssetManager;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import pub.doric.Doric;
 import pub.doric.async.AsyncResult;
-import pub.doric.utils.DoricUtils;
 
 /**
  * @Description: handle "assets://asset-file-path"
@@ -31,6 +36,28 @@ public class DoricAssetJSLoader implements IDoricJSLoader {
 
     @Override
     public AsyncResult<String> request(String scheme) {
-        return new AsyncResult<>(DoricUtils.readAssetFile(scheme.substring("assets://".length())));
+        AsyncResult<String> result = new AsyncResult<>();
+        String assetPath = scheme.substring("assets://".length());
+        InputStream inputStream = null;
+        try {
+            AssetManager assetManager = Doric.application().getAssets();
+            inputStream = assetManager.open(assetPath);
+            int length = inputStream.available();
+            byte[] buffer = new byte[length];
+            inputStream.read(buffer);
+            result.setResult(new String(buffer));
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.setError(e);
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return result;
+        }
     }
 }

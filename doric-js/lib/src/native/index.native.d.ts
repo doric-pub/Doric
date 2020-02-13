@@ -7,3 +7,4 @@ export * from './popover';
 export * from './animate';
 export * from './notification';
 export * from './statusbar';
+export * from './coordinator';

@@ -90,6 +90,7 @@ declare module 'doric/lib/src/native/index.native' {
     export * from 'doric/lib/src/native/animate';
     export * from 'doric/lib/src/native/notification';
     export * from 'doric/lib/src/native/statusbar';
+    export * from 'doric/lib/src/native/coordinator';
 }
 
 declare module 'doric/lib/src/util/index.util' {
@@ -853,6 +854,30 @@ declare module 'doric/lib/src/native/statusbar' {
         setHidden: (hidden: boolean) => Promise<any>;
         setMode: (mode: StatusBarMode) => Promise<any>;
         setColor: (color: Color) => Promise<any>;
+    };
+}
+
+declare module 'doric/lib/src/native/coordinator' {
+    import { BridgeContext } from "doric/lib/src/runtime/global";
+    import { Scroller } from "doric/lib/src/widget/scroller";
+    import { List } from "doric/lib/src/widget/list";
+    import { FlowLayout } from "doric/lib/src/widget/flowlayout";
+    import { View } from "doric/lib/src/ui/view";
+    import { Color } from "doric/lib/src/util/color";
+    export function coordinator(context: BridgeContext): {
+        verticalScrolling: (argument: {
+            scrollable: List | Scroller | FlowLayout;
+            scrollRange: {
+                start: number;
+                end: number;
+            };
+            target: View | "NavBar";
+            changing: {
+                name: "width" | "height" | "x" | "y" | "backgroundColor";
+                start: number | Color;
+                end: number | Color;
+            };
+        }) => Promise<any>;
     };
 }
 

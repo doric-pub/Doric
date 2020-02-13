@@ -124,7 +124,10 @@
     }
     return nil;
 }
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    [self.delegate scrollViewDidScroll:scrollView];
+    if (self.didScrollListener) {
+        self.didScrollListener(scrollView);
+    }
 }
 @end

@@ -180,6 +180,10 @@ public class CoordinatorPlugin extends DoricJavaPlugin {
             viewNode.setWidth(value);
         } else if ("height".equals(name)) {
             viewNode.setHeight(value);
+        } else if ("x".equals(name)) {
+            viewNode.setX(value);
+        } else if ("y".equals(name)) {
+            viewNode.setY(value);
         }
 
     }

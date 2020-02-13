@@ -21,12 +21,12 @@
 //
 #import <Foundation/Foundation.h>
 #import "DoricSuperNode.h"
-#import "DoricScrollViewDelegate.h"
+#import "DoricScrollableProtocol.h"
 
 @interface DoricScrollView : UIScrollView
 @property(nonatomic, strong) UIView *contentView;
 @end
 
-@interface DoricScrollerNode : DoricSuperNode<DoricScrollView *>
-@property(nonatomic, weak, nullable) id <DoricScrollViewDelegate> delegate;
+@interface DoricScrollerNode : DoricSuperNode<DoricScrollView *> <DoricScrollableProtocol>
+@property(nonatomic, strong, nullable) void (^didScrollListener)(UIScrollView *__nonnull scrollView);
 @end

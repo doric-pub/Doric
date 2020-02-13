@@ -29,4 +29,3 @@
 #import "DoricLibrary.h"
 #import "DoricNativePlugin.h"
 #import "DoricMonitorProtocol.h"
-#import "DoricScrollViewDelegate.h"

@@ -18,7 +18,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "DoricNativePlugin.h"
 
-@protocol DoricScrollViewDelegate <NSObject>
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView;
+@interface DoricCoordinatorPlugin : DoricNativePlugin
 @end

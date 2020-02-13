@@ -249,4 +249,7 @@
     return ret;
 }
 
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [self.delegate scrollViewDidScroll:scrollView];
+}
 @end

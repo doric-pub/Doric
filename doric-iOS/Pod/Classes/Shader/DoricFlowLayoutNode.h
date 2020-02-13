@@ -19,6 +19,8 @@
 
 #import <Foundation/Foundation.h>
 #import "DoricSuperNode.h"
+#import "DoricScrollViewDelegate.h"
 
 @interface DoricFlowLayoutNode : DoricSuperNode<UICollectionView *>
+@property(nonatomic, weak, nullable) id <DoricScrollViewDelegate> delegate;
 @end

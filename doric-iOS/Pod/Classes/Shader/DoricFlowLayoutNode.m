@@ -369,4 +369,7 @@
     return self.columnCount;
 }
 
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [self.delegate scrollViewDidScroll:scrollView];
+}
 @end

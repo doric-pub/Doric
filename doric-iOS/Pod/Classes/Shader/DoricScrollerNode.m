@@ -47,7 +47,7 @@
 
 @end
 
-@interface DoricScrollerNode ()
+@interface DoricScrollerNode () <UIScrollViewDelegate>
 @property(nonatomic, strong) DoricViewNode *childNode;
 @property(nonatomic, copy) NSString *childViewId;
 @end
@@ -55,6 +55,7 @@
 @implementation DoricScrollerNode
 - (DoricScrollView *)build {
     return [[DoricScrollView new] also:^(DoricScrollView *it) {
+        it.delegate = self;
         if (@available(iOS 11, *)) {
             it.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }
@@ -122,5 +123,8 @@
         return self.childNode;
     }
     return nil;
+}
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [self.delegate scrollViewDidScroll:scrollView];
 }
 @end

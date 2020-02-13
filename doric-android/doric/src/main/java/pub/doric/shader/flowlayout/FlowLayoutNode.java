@@ -16,6 +16,7 @@
 package pub.doric.shader.flowlayout;
 
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -26,6 +27,8 @@ import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
 import pub.doric.DoricContext;
+import pub.doric.DoricScrollChangeListener;
+import pub.doric.IDoricScrollable;
 import pub.doric.extension.bridge.DoricPlugin;
 import pub.doric.shader.SuperNode;
 import pub.doric.shader.ViewNode;
@@ -37,7 +40,7 @@ import pub.doric.utils.DoricUtils;
  * @CreateDate: 2019-11-28
  */
 @DoricPlugin(name = "FlowLayout")
-public class FlowLayoutNode extends SuperNode<RecyclerView> {
+public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScrollable {
     private final FlowAdapter flowAdapter;
     private final StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(
             2,
@@ -73,6 +76,7 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> {
     String onLoadMoreFuncId;
     boolean loadMore = false;
     String loadMoreViewId;
+    private DoricScrollChangeListener doricScrollChangeListener;
 
     public FlowLayoutNode(DoricContext doricContext) {
         super(doricContext);
@@ -193,6 +197,22 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> {
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
         recyclerView.setAdapter(flowAdapter);
         recyclerView.addItemDecoration(spacingItemDecoration);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (doricScrollChangeListener != null) {
+                    int offsetX = recyclerView.computeHorizontalScrollOffset();
+                    int offsetY = recyclerView.computeVerticalScrollOffset();
+                    doricScrollChangeListener.onScrollChange(recyclerView, offsetX, offsetY, offsetX - dx, offsetY - dy);
+                }
+            }
+        });
         return recyclerView;
+    }
+
+    @Override
+    public void setScrollChangeListener(DoricScrollChangeListener listener) {
+        this.doricScrollChangeListener = listener;
     }
 }

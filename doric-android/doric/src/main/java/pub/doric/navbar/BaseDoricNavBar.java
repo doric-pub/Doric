@@ -57,6 +57,10 @@ public class BaseDoricNavBar extends FrameLayout implements IDoricNavBar {
         });
     }
 
+    public void setBackIconVisible(boolean visible) {
+        findViewById(R.id.tv_back).setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
     @Override
     public boolean isHidden() {
         return getVisibility() != VISIBLE;

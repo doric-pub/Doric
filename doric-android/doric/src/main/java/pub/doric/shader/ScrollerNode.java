@@ -15,11 +15,12 @@
  */
 package pub.doric.shader;
 
-
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
 import pub.doric.DoricContext;
+import pub.doric.DoricScrollChangeListener;
+import pub.doric.IDoricScrollable;
 import pub.doric.extension.bridge.DoricPlugin;
 import pub.doric.widget.HVScrollView;
 
@@ -29,9 +30,10 @@ import pub.doric.widget.HVScrollView;
  * @CreateDate: 2019-11-18
  */
 @DoricPlugin(name = "Scroller")
-public class ScrollerNode extends SuperNode<HVScrollView> {
+public class ScrollerNode extends SuperNode<HVScrollView> implements IDoricScrollable {
     private String mChildViewId;
     private ViewNode mChildNode;
+    private DoricScrollChangeListener doricScrollChangeListener;
 
     public ScrollerNode(DoricContext doricContext) {
         super(doricContext);
@@ -51,7 +53,16 @@ public class ScrollerNode extends SuperNode<HVScrollView> {
 
     @Override
     protected HVScrollView build() {
-        return new HVScrollView(getContext());
+        HVScrollView hvScrollView = new HVScrollView(getContext());
+        hvScrollView.setOnScrollChangeListener(new HVScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(HVScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (doricScrollChangeListener != null) {
+                    doricScrollChangeListener.onScrollChange(v, scrollX, scrollY, oldScrollX, oldScrollY);
+                }
+            }
+        });
+        return hvScrollView;
     }
 
     @Override
@@ -98,4 +109,8 @@ public class ScrollerNode extends SuperNode<HVScrollView> {
         }
     }
 
+    @Override
+    public void setScrollChangeListener(DoricScrollChangeListener listener) {
+        this.doricScrollChangeListener = listener;
+    }
 }

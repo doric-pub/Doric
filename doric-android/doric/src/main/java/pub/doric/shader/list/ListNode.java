@@ -15,9 +15,11 @@
  */
 package pub.doric.shader.list;
 
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,6 +27,8 @@ import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
 import pub.doric.DoricContext;
+import pub.doric.DoricScrollChangeListener;
+import pub.doric.IDoricScrollable;
 import pub.doric.extension.bridge.DoricPlugin;
 import pub.doric.shader.SuperNode;
 import pub.doric.shader.ViewNode;
@@ -35,7 +39,7 @@ import pub.doric.shader.ViewNode;
  * @CreateDate: 2019-11-12
  */
 @DoricPlugin(name = "List")
-public class ListNode extends SuperNode<RecyclerView> {
+public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollable {
     private final ListAdapter listAdapter;
     private String renderItemFuncId;
     String onLoadMoreFuncId;
@@ -44,6 +48,7 @@ public class ListNode extends SuperNode<RecyclerView> {
     SparseArray<String> itemValues = new SparseArray<>();
     boolean loadMore = false;
     String loadMoreViewId;
+    private DoricScrollChangeListener doricScrollChangeListener;
 
     public ListNode(DoricContext doricContext) {
         super(doricContext);
@@ -70,6 +75,17 @@ public class ListNode extends SuperNode<RecyclerView> {
         RecyclerView recyclerView = new RecyclerView(getContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(this.listAdapter);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (doricScrollChangeListener != null) {
+                    int offsetX = recyclerView.computeHorizontalScrollOffset();
+                    int offsetY = recyclerView.computeVerticalScrollOffset();
+                    doricScrollChangeListener.onScrollChange(recyclerView, offsetX, offsetY, offsetX - dx, offsetY - dy);
+                }
+            }
+        });
         return recyclerView;
     }
 
@@ -143,5 +159,10 @@ public class ListNode extends SuperNode<RecyclerView> {
             }
         }
         return null;
+    }
+
+    @Override
+    public void setScrollChangeListener(DoricScrollChangeListener listener) {
+        this.doricScrollChangeListener = listener;
     }
 }

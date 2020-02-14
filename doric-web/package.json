@@ -1,6 +1,6 @@
 {
   "name": "doric-web",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Doric library for Web",
   "main": "dist/index.js",
   "scripts": {

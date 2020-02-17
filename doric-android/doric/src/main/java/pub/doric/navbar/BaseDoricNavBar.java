@@ -17,18 +17,22 @@ package pub.doric.navbar;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.os.Build;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.AttrRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import pub.doric.R;
 
@@ -84,6 +88,17 @@ public class BaseDoricNavBar extends FrameLayout implements IDoricNavBar {
     @Override
     public void setHidden(boolean b) {
         setVisibility(b ? GONE : VISIBLE);
+        AppCompatActivity activity = (AppCompatActivity) getContext();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (b) {
+                activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    activity.getWindow().setStatusBarColor(Color.TRANSPARENT);
+                }
+            } else {
+                activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            }
+        }
     }
 
     @Override

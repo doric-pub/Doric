@@ -17,12 +17,13 @@ package pub.doric.plugin;
 
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
 import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 import com.github.pengfeizhou.jscore.JavaValue;
 
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -88,12 +89,12 @@ public class NetworkPlugin extends DoricJavaPlugin {
             }
             okHttpClient.newCall(requestBuilder.build()).enqueue(new Callback() {
                 @Override
-                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
                     promise.reject(new JavaValue(e.getLocalizedMessage()));
                 }
 
                 @Override
-                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                     JSONBuilder header = new JSONBuilder();
                     for (String key : response.headers().names()) {
                         header.put(key, response.headers().get(key));

@@ -26,7 +26,6 @@ import androidx.viewpager.widget.ViewPager;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -61,18 +60,18 @@ public class NestedSliderNode extends GroupNode<ViewPager> implements ViewPager.
             }
 
             @Override
-            public boolean isViewFromObject(@NonNull View view, @NotNull Object object) {
+            public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
                 return view == object;
             }
 
             @Override
-            public void destroyItem(@NotNull ViewGroup container, int position, @NotNull Object object) {
+            public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
                 container.removeView(slideItems.get(position));
             }
 
-            @NotNull
+            @NonNull
             @Override
-            public Object instantiateItem(@NotNull ViewGroup container, int position) {
+            public Object instantiateItem(@NonNull ViewGroup container, int position) {
                 container.addView(slideItems.get(position));
                 return slideItems.get(position);
             }

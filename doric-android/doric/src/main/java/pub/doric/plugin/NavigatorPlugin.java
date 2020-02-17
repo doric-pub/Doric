@@ -46,8 +46,8 @@ public class NavigatorPlugin extends DoricJavaPlugin {
         if (navigator != null) {
             try {
                 JSObject jsObject = jsDecoder.decode().asObject();
-                String scheme = jsObject.getProperty("scheme").asString().value();
-                String alias = scheme;
+                String source = jsObject.getProperty("source").asString().value();
+                String alias = source;
                 String extra = "";
                 JSValue config = jsObject.getProperty("config");
                 if (config.isObject()) {
@@ -60,7 +60,7 @@ public class NavigatorPlugin extends DoricJavaPlugin {
                         extra = extraJS.asString().value();
                     }
                 }
-                navigator.push(jsObject.getProperty("scheme").asString().value(),
+                navigator.push(jsObject.getProperty("source").asString().value(),
                         alias,
                         extra
                 );

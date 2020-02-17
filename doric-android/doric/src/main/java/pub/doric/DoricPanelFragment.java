@@ -72,9 +72,9 @@ public class DoricPanelFragment extends Fragment implements IDoricNavigator {
     }
 
     @Override
-    public void push(String scheme, String alias, String extra) {
+    public void push(String source, String alias, String extra) {
         Bundle argument = new Bundle();
-        argument.putString("scheme", scheme);
+        argument.putString("source", source);
         argument.putString("alias", alias);
         argument.putString("extra", extra);
         getNavController()
@@ -170,9 +170,9 @@ public class DoricPanelFragment extends Fragment implements IDoricNavigator {
         }
         showLoading();
         final String alias = argument.getString("alias");
-        String scheme = argument.getString("scheme");
+        String source = argument.getString("source");
         final String extra = argument.getString("extra");
-        DoricJSLoaderManager.getInstance().loadJSBundle(scheme).setCallback(new AsyncResult.Callback<String>() {
+        DoricJSLoaderManager.getInstance().loadJSBundle(source).setCallback(new AsyncResult.Callback<String>() {
             @Override
             public void onResult(String result) {
                 doricPanel.config(result, alias, extra);

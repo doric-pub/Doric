@@ -55,11 +55,11 @@
     }];
 }
 
-- (DoricAsyncResult <NSString *> *)request:(NSString *)scheme {
+- (DoricAsyncResult <NSString *> *)request:(NSString *)source {
     __block DoricAsyncResult *ret;
     [self.loaders enumerateObjectsUsingBlock:^(id <DoricLoaderProtocol> obj, BOOL *stop) {
-        if ([obj filter:scheme]) {
-            ret = [obj request:scheme];
+        if ([obj filter:source]) {
+            ret = [obj request:source];
             *stop = YES;
         }
     }];

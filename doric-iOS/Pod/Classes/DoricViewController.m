@@ -29,16 +29,16 @@ NSString *const DORIC_MASK_RETRY = @"doric_mask_retry";
 @property(nonatomic) BOOL navBarHidden;
 @property(nonatomic, strong) UIImage *navBarImage;
 @property(nonatomic, strong) UIView *maskView;
-@property(nonatomic, copy) NSString *scheme;
+@property(nonatomic, copy) NSString *source;
 @property(nonatomic, copy) NSString *alias;
 @property(nonatomic, copy) NSString *extra;
 @end
 
 @implementation DoricViewController
-- (instancetype)initWithScheme:(NSString *)scheme alias:(NSString *)alias extra:(NSString *)extra {
+- (instancetype)initWithSource:(NSString *)source alias:(NSString *)alias extra:(NSString *)extra {
     if (self = [super init]) {
         self.edgesForExtendedLayout = UIRectEdgeNone;
-        _scheme = scheme;
+        _source = source;
         _alias = alias;
         _extra = extra;
         _doricPanel = [DoricPanel new];
@@ -105,8 +105,8 @@ NSString *const DORIC_MASK_RETRY = @"doric_mask_retry";
     self.doricPanel.view.height = self.view.height;
 }
 
-- (void)doric_navigator_push:(NSString *)scheme alias:(NSString *)alias animated:(BOOL)animated extra:(NSString *)extra {
-    DoricViewController *viewController = [[DoricViewController alloc] initWithScheme:scheme alias:alias extra:extra];
+- (void)doric_navigator_push:(NSString *)source alias:(NSString *)alias animated:(BOOL)animated extra:(NSString *)extra {
+    DoricViewController *viewController = [[DoricViewController alloc] initWithSource:source alias:alias extra:extra];
     [self.navigationController pushViewController:viewController animated:animated];
 }
 
@@ -180,7 +180,7 @@ NSString *const DORIC_MASK_RETRY = @"doric_mask_retry";
 
 - (void)loadJSBundle {
     [self showLoading];
-    DoricAsyncResult <NSString *> *result = [DoricJSLoaderManager.instance request:self.scheme];
+    DoricAsyncResult <NSString *> *result = [DoricJSLoaderManager.instance request:self.source];
     result.resultCallback = ^(NSString *result) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self hideMask];

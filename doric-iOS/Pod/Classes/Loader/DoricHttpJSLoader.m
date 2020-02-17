@@ -22,13 +22,13 @@
 
 @implementation DoricHttpJSLoader
 
-- (BOOL)filter:(NSString *)scheme {
-    return [scheme hasPrefix:@"http"];
+- (BOOL)filter:(NSString *)source {
+    return [source hasPrefix:@"http"];
 }
 
-- (DoricAsyncResult <NSString *> *)request:(NSString *)scheme {
+- (DoricAsyncResult <NSString *> *)request:(NSString *)source {
     DoricAsyncResult *ret = [DoricAsyncResult new];
-    NSURL *URL = [NSURL URLWithString:scheme];
+    NSURL *URL = [NSURL URLWithString:source];
     NSURLRequest *request = [NSURLRequest requestWithURL:URL];
     [[[NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]]
             dataTaskWithRequest:request

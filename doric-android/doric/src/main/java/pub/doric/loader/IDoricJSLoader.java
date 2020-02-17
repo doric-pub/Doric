@@ -23,7 +23,7 @@ import pub.doric.async.AsyncResult;
  * @CreateDate: 2019-11-23
  */
 public interface IDoricJSLoader {
-    boolean filter(String scheme);
+    boolean filter(String source);
 
-    AsyncResult<String> request(String scheme);
+    AsyncResult<String> request(String source);
 }

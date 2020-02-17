@@ -1,11 +1,11 @@
 export function navigator(context) {
     return {
-        push: (scheme, config) => {
+        push: (source, config) => {
             if (config && config.extra) {
                 config.extra = JSON.stringify(config.extra);
             }
             return context.callNative('navigator', 'push', {
-                scheme, config
+                source, config
             });
         },
         pop: (animated = true) => {

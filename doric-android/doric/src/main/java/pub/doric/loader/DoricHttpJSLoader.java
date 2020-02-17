@@ -35,14 +35,14 @@ public class DoricHttpJSLoader implements IDoricJSLoader {
     private OkHttpClient okHttpClient = new OkHttpClient();
 
     @Override
-    public boolean filter(String scheme) {
-        return scheme.startsWith("http");
+    public boolean filter(String source) {
+        return source.startsWith("http");
     }
 
     @Override
-    public AsyncResult<String> request(String scheme) {
+    public AsyncResult<String> request(String source) {
         final AsyncResult<String> ret = new AsyncResult<>();
-        okHttpClient.newCall(new Request.Builder().url(scheme).build()).enqueue(new Callback() {
+        okHttpClient.newCall(new Request.Builder().url(source).build()).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 ret.setError(e);

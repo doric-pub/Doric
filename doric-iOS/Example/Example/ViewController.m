@@ -77,7 +77,7 @@
     }
     NSString *file = self.demoFilePaths[(NSUInteger) indexPath.row];
     DoricViewController *doricViewController = [[DoricViewController alloc]
-            initWithScheme:[NSString stringWithFormat:@"assets://src/%@", file]
+            initWithSource:[NSString stringWithFormat:@"assets://src/%@", file]
                      alias:self.demoFilePaths[(NSUInteger) indexPath.row]
                      extra:nil
     ];

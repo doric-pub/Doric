@@ -21,7 +21,7 @@
 #import "DoricAsyncResult.h"
 
 @protocol DoricLoaderProtocol <NSObject>
-- (BOOL)filter:(NSString *)scheme;
+- (BOOL)filter:(NSString *)source;
 
-- (DoricAsyncResult <NSString *> *)request:(NSString *)scheme;
+- (DoricAsyncResult <NSString *> *)request:(NSString *)source;
 @end

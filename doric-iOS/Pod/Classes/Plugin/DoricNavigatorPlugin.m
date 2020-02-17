@@ -24,8 +24,8 @@
 - (void)push:(NSDictionary *)params {
     dispatch_async(dispatch_get_main_queue(), ^{
         BOOL animated = YES;
-        NSString *scheme = params[@"scheme"];
-        NSString *alias = scheme;
+        NSString *source = params[@"source"];
+        NSString *alias = source;
         NSDictionary *config = params[@"config"];
         if (config) {
             if (config[@"animated"]) {
@@ -36,7 +36,7 @@
                 alias = config[@"alias"];
             }
         }
-        [self.doricContext.navigator doric_navigator_push:scheme alias:alias animated:animated extra:config[@"extra"]];
+        [self.doricContext.navigator doric_navigator_push:source alias:alias animated:animated extra:config[@"extra"]];
     });
 }
 

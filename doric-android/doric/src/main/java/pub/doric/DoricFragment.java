@@ -35,9 +35,9 @@ import androidx.navigation.Navigation;
  */
 public class DoricFragment extends Fragment {
 
-    public static DoricFragment newInstance(String scheme, String alias, String extra) {
+    public static DoricFragment newInstance(String source, String alias, String extra) {
         Bundle args = new Bundle();
-        args.putString("scheme", scheme);
+        args.putString("source", source);
         args.putString("alias", alias);
         args.putString("extra", extra);
         DoricFragment fragment = new DoricFragment();

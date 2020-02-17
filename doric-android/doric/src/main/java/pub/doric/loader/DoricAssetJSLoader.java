@@ -30,14 +30,14 @@ import pub.doric.async.AsyncResult;
  */
 public class DoricAssetJSLoader implements IDoricJSLoader {
     @Override
-    public boolean filter(String scheme) {
-        return scheme.startsWith("assets");
+    public boolean filter(String source) {
+        return source.startsWith("assets");
     }
 
     @Override
-    public AsyncResult<String> request(String scheme) {
+    public AsyncResult<String> request(String source) {
         AsyncResult<String> result = new AsyncResult<>();
-        String assetPath = scheme.substring("assets://".length());
+        String assetPath = source.substring("assets://".length());
         InputStream inputStream = null;
         try {
             AssetManager assetManager = Doric.application().getAssets();

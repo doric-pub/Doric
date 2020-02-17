@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(tv.getContext(), DemoDebugActivity.class);
-                    intent.putExtra("scheme", "assets://src/" + data[position]);
+                    intent.putExtra("source", "assets://src/" + data[position]);
                     intent.putExtra("alias", data[position]);
                     tv.getContext().startActivity(intent);
                 }

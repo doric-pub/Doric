@@ -1,6 +1,6 @@
 import { BridgeContext } from "../runtime/global";
 export declare function navigator(context: BridgeContext): {
-    push: (scheme: string, config?: {
+    push: (source: string, config?: {
         alias?: string | undefined;
         animated?: boolean | undefined;
         extra?: object | undefined;

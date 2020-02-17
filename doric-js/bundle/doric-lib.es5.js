@@ -2504,12 +2504,12 @@ function navbar(context) {
 
 function navigator(context) {
     return {
-        push: function (scheme, config) {
+        push: function (source, config) {
             if (config && config.extra) {
                 config.extra = JSON.stringify(config.extra);
             }
             return context.callNative('navigator', 'push', {
-                scheme: scheme, config: config
+                source: source, config: config
             });
         },
         pop: function (animated) {

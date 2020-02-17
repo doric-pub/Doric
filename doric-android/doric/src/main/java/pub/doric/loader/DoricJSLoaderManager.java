@@ -52,11 +52,11 @@ public class DoricJSLoaderManager {
         return Inner.sInstance;
     }
 
-    public AsyncResult<String> loadJSBundle(String scheme) {
+    public AsyncResult<String> loadJSBundle(String source) {
         Collection<IDoricJSLoader> jsLoaders = getJSLoaders();
         for (IDoricJSLoader jsLoader : jsLoaders) {
-            if (jsLoader.filter(scheme)) {
-                return jsLoader.request(scheme);
+            if (jsLoader.filter(source)) {
+                return jsLoader.request(source);
             }
         }
         return new AsyncResult<>("");

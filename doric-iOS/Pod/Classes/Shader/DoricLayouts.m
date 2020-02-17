@@ -463,22 +463,3 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
     }
 }
 @end
-
-
-DoricVLayoutView *vLayout(NSArray <__kindof UIView *> *views) {
-    DoricVLayoutView *layout = [[DoricVLayoutView alloc] initWithFrame:CGRectZero];
-    for (__kindof UIView *uiView in views) {
-        [layout addSubview:uiView];
-    }
-    layout.layoutConfig = [[DoricLayoutConfig alloc] initWithWidth:DoricLayoutWrapContent height:DoricLayoutWrapContent];
-    return layout;
-}
-
-DoricHLayoutView *hLayout(NSArray <__kindof UIView *> *views) {
-    DoricHLayoutView *layout = [[DoricHLayoutView alloc] initWithFrame:CGRectZero];
-    for (__kindof UIView *uiView in views) {
-        [layout addSubview:uiView];
-    }
-    layout.layoutConfig = [[DoricLayoutConfig alloc] initWithWidth:DoricLayoutWrapContent height:DoricLayoutWrapContent];
-    return layout;
-}

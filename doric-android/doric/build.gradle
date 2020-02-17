@@ -23,13 +23,13 @@ android {
     }
     sourceSets {
         main {
-            assets.srcDirs = [project.getRootDir().getParent() + "/doric-js/bundle"]
+            assets.srcDirs = [project.getProjectDir().getParentFile().getParent() + "/doric-js/bundle"]
         }
     }
 }
 
 afterEvaluate {
-    buildJSBundle.exec()
+    //buildJSBundle.exec()
 }
 
 task buildJSBundle(type: Exec) {

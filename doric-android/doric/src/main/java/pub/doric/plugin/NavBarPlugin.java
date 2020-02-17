@@ -72,16 +72,6 @@ public class NavBarPlugin extends DoricJavaPlugin {
                 JSObject jsObject = jsDecoder.decode().asObject();
                 boolean hidden = jsObject.getProperty("hidden").asBoolean().value();
                 navBar.setHidden(hidden);
-
-                AppCompatActivity activity = ((AppCompatActivity) getDoricContext().getContext());
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    if (hidden) {
-                        activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-                    } else {
-                        activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-                    }
-                }
-
                 promise.resolve();
             } catch (ArchiveException e) {
                 e.printStackTrace();

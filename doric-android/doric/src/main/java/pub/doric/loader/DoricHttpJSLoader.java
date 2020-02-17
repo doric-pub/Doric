@@ -15,9 +15,7 @@
  */
 package pub.doric.loader;
 
-import com.bumptech.glide.RequestBuilder;
-
-import org.jetbrains.annotations.NotNull;
+import androidx.annotation.NonNull;
 
 import java.io.IOException;
 
@@ -46,12 +44,12 @@ public class DoricHttpJSLoader implements IDoricJSLoader {
         final AsyncResult<String> ret = new AsyncResult<>();
         okHttpClient.newCall(new Request.Builder().url(scheme).build()).enqueue(new Callback() {
             @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 ret.setError(e);
             }
 
             @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) {
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
                 try {
                     ret.setResult(response.body().string());
                 } catch (Exception e) {

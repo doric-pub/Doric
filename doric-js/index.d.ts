@@ -754,7 +754,7 @@ declare module 'doric/lib/src/native/navbar' {
 declare module 'doric/lib/src/native/navigator' {
     import { BridgeContext } from "doric/lib/src/runtime/global";
     export function navigator(context: BridgeContext): {
-        push: (scheme: string, config?: {
+        push: (source: string, config?: {
             alias?: string | undefined;
             animated?: boolean | undefined;
             extra?: object | undefined;

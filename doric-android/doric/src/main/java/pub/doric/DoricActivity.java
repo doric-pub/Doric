@@ -33,7 +33,7 @@ public class DoricActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.doric_activity);
         if (savedInstanceState == null) {
-            mDoricFragment = DoricFragment.newInstance(getScheme(), getAlias(), getExtra());
+            mDoricFragment = DoricFragment.newInstance(getSource(), getAlias(), getExtra());
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, mDoricFragment)
                     .commit();
@@ -43,8 +43,8 @@ public class DoricActivity extends AppCompatActivity {
     /**
      * @return Scheme for DoricFragment to load.
      */
-    protected String getScheme() {
-        return getIntent().getStringExtra("scheme");
+    protected String getSource() {
+        return getIntent().getStringExtra("source");
     }
 
     /**

@@ -21,14 +21,14 @@
 
 
 @implementation DoricMainBundleJSLoader
-- (BOOL)filter:(NSString *)scheme {
-    return [scheme hasPrefix:@"assets"];
+- (BOOL)filter:(NSString *)source {
+    return [source hasPrefix:@"assets"];
 }
 
-- (DoricAsyncResult <NSString *> *)request:(NSString *)scheme {
+- (DoricAsyncResult <NSString *> *)request:(NSString *)source {
     DoricAsyncResult <NSString *> *ret = [DoricAsyncResult new];
     NSString *path = [[NSBundle mainBundle] bundlePath];
-    NSString *fullPath = [path stringByAppendingPathComponent:[scheme substringFromIndex:@"assets://".length]];
+    NSString *fullPath = [path stringByAppendingPathComponent:[source substringFromIndex:@"assets://".length]];
     NSError *error;
     NSString *jsContent = [NSString stringWithContentsOfFile:fullPath encoding:NSUTF8StringEncoding error:&error];
     if (error) {

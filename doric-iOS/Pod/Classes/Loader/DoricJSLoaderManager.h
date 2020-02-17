@@ -29,5 +29,5 @@
 
 - (void)addJSLoader:(id <DoricLoaderProtocol>)loader;
 
-- (DoricAsyncResult <NSString *> *)request:(NSString *)scheme;
+- (DoricAsyncResult <NSString *> *)request:(NSString *)source;
 @end

@@ -32,5 +32,5 @@ extern NSString *const DORIC_MASK_RETRY;
 @property(nonatomic, strong) UIView *loadingView;
 @property(nonatomic, strong) UIView *errorView;
 
-- (instancetype)initWithScheme:(NSString *)scheme alias:(NSString *)alias extra:(NSString *)extra;
+- (instancetype)initWithSource:(NSString *)source alias:(NSString *)alias extra:(NSString *)extra;
 @end

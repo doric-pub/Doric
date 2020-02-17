@@ -6,7 +6,7 @@ export class NavigatorPlugin extends DoricPlugin {
     navigation: NavigationElement | undefined = document.getElementsByTagName('doric-navigation')[0] as (NavigationElement | undefined)
 
     push(args: {
-        scheme: string,
+        source: string,
         config?: {
             alias?: string,
             extra?: string,
@@ -14,8 +14,8 @@ export class NavigatorPlugin extends DoricPlugin {
     }) {
         if (this.navigation) {
             const div = new DoricElement
-            div.src = args.scheme
-            div.alias = args.config?.alias || args.scheme
+            div.src = args.source
+            div.alias = args.config?.alias || args.source
             this.navigation.push(div)
             return Promise.resolve()
         } else {

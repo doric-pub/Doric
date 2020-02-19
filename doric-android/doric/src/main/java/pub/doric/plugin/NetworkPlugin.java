@@ -62,7 +62,7 @@ public class NetworkPlugin extends DoricJavaPlugin {
     public void request(JSObject requestVal, final DoricPromise promise) {
         try {
             String url = requestVal.getProperty("url").asString().value();
-            String method = requestVal.getProperty("method").asString().value();
+            String method = requestVal.getProperty("method").asString().value().toUpperCase();
             JSValue headerVal = requestVal.getProperty("headers");
             JSValue dataVal = requestVal.getProperty("data");
             JSValue timeoutVal = requestVal.getProperty("timeout");
@@ -81,7 +81,7 @@ public class NetworkPlugin extends DoricJavaPlugin {
             RequestBody requestBody = HttpMethod.permitsRequestBody(method) ? RequestBody.create(mediaType, dataVal.isString() ? dataVal.asString().value() : "") : null;
             Request.Builder requestBuilder = new Request.Builder();
             requestBuilder = requestBuilder.url(url).headers(headers);
-            if (HttpMethod.permitsRequestBody(method.toUpperCase())) {
+            if (HttpMethod.permitsRequestBody(method)) {
                 requestBuilder = requestBuilder.method(method, requestBody);
             }
             if (timeoutVal.isNumber() && okHttpClient.connectTimeoutMillis() != timeoutVal.asNumber().toLong()) {

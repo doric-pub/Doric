@@ -111,11 +111,11 @@
         _nodes = [NSMutableDictionary new];
         _envVariables = [NSMutableDictionary new];
         [self innerRegister];
+        _monitors = [NSMutableSet new];
+        [self registerMonitor:[DoricDefaultMonitor new]];
         [DoricLibraries.instance.libraries enumerateObjectsUsingBlock:^(DoricLibrary *obj, BOOL *stop) {
             [obj load:self];
         }];
-        _monitors = [NSMutableSet new];
-        [self registerMonitor:[DoricDefaultMonitor new]];
     }
     return self;
 }

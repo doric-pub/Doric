@@ -3396,12 +3396,12 @@ function navbar(context) {
 
 function navigator(context) {
     return {
-        push: (scheme, config) => {
+        push: (source, config) => {
             if (config && config.extra) {
                 config.extra = JSON.stringify(config.extra);
             }
             return context.callNative('navigator', 'push', {
-                scheme, config
+                source, config
             });
         },
         pop: (animated = true) => {
@@ -4811,8 +4811,8 @@ var doric_web = (function (exports, axios, sandbox) {
             var _a;
             if (this.navigation) {
                 const div = new DoricElement;
-                div.src = args.scheme;
-                div.alias = ((_a = args.config) === null || _a === void 0 ? void 0 : _a.alias) || args.scheme;
+                div.src = args.source;
+                div.alias = ((_a = args.config) === null || _a === void 0 ? void 0 : _a.alias) || args.source;
                 this.navigation.push(div);
                 return Promise.resolve();
             }

@@ -10,6 +10,8 @@ CURRENT_VERSION=$(cat $CURRENT_DIR/version)
 
 echo "Current version is "$CURRENT_VERSION
 
+cd $CURRENT_DIR && sh bundle.sh
+
 # Modify
 
 ## JS

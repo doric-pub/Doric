@@ -262,6 +262,7 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
         self.view.padding = padding;
     } else if ([name isEqualToString:@"hidden"]) {
         self.view.hidden = [prop boolValue];
+        [self.view.superview setNeedsLayout];
     } else {
         DoricLog(@"Blend View error for View Type :%@, prop is %@", self.class, name);
     }

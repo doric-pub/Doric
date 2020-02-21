@@ -198,6 +198,7 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
         view.layer.borderWidth = width;
         view.layer.borderColor = color.CGColor;
     } else if ([name isEqualToString:@"corners"]) {
+        self.view.clipsToBounds = YES;
         if ([prop isKindOfClass:NSNumber.class]) {
             view.layer.cornerRadius = [(NSNumber *) prop floatValue];
         } else if ([prop isKindOfClass:NSDictionary.class]) {

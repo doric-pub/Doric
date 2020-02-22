@@ -34,6 +34,8 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import pub.doric.Doric;
+import pub.doric.DoricContext;
+import pub.doric.DoricContextManager;
 import pub.doric.DoricRegistry;
 import pub.doric.IDoricMonitor;
 import pub.doric.extension.bridge.DoricBridgeExtension;
@@ -130,7 +132,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
                             break;
                     }
                 } catch (Exception e) {
-                    mDoricRegistry.onException(e);
+                    mDoricRegistry.onException("Log", e);
                 }
                 return null;
             }
@@ -154,7 +156,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
                     mDoricJSE.loadJS(packageModuleScript(name, content), "Module://" + name);
                     return new JavaValue(true);
                 } catch (Exception e) {
-                    mDoricRegistry.onException(e);
+                    mDoricRegistry.onException("Require", e);
                     return new JavaValue(false);
                 }
             }
@@ -168,7 +170,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
                             args[1].number().longValue(),
                             args[2].bool());
                 } catch (Exception e) {
-                    mDoricRegistry.onException(e);
+                    mDoricRegistry.onException("Timer", e);
                 }
                 return null;
             }
@@ -179,7 +181,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
                 try {
                     mTimerExtension.clearTimer(args[0].number().longValue());
                 } catch (Exception e) {
-                    mDoricRegistry.onException(e);
+                    mDoricRegistry.onException("Timer", e);
                 }
                 return null;
             }
@@ -187,6 +189,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
         mDoricJSE.injectGlobalJSFunction(DoricConstant.INJECT_BRIDGE, new JavaFunction() {
             @Override
             public JavaValue exec(JSDecoder[] args) {
+                String source = "Unknown";
                 try {
                     String contextId = args[0].string();
                     String module = args[1].string();
@@ -195,7 +198,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
                     JSDecoder jsDecoder = args[4];
                     return mDoricBridgeExtension.callNative(contextId, module, method, callbackId, jsDecoder);
                 } catch (Exception e) {
-                    mDoricRegistry.onException(e);
+                    mDoricRegistry.onException("Bridge", e);
                 }
                 return null;
             }
@@ -209,7 +212,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
             String libJS = DoricUtils.readAssetFile(DoricConstant.DORIC_BUNDLE_LIB);
             mDoricJSE.loadJS(packageModuleScript(libName, libJS), "Module://" + libName);
         } catch (Exception e) {
-            mDoricRegistry.onException(e);
+            mDoricRegistry.onException("Init Environment", e);
         }
     }
 
@@ -260,7 +263,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
         try {
             invokeDoricMethod(DoricConstant.DORIC_TIMER_CALLBACK, timerId);
         } catch (Exception e) {
-            mDoricRegistry.onException(e);
+            mDoricRegistry.onException("Timer", e);
             mDoricRegistry.onLog(
                     Log.ERROR,
                     String.format("Timer Callback error:%s", e.getLocalizedMessage()));
@@ -272,7 +275,8 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
     }
 
     @Override
-    public void onException(Exception e) {
+    public void onException(String source, Exception e) {
+        Log.e(DoricJSEngine.class.getSimpleName(), "In source file: " + source);
         e.printStackTrace();
     }
 

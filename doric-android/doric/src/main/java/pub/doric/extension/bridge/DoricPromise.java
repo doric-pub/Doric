@@ -15,9 +15,13 @@
  */
 package pub.doric.extension.bridge;
 
+import android.util.Log;
+
 import pub.doric.DoricContext;
+import pub.doric.async.AsyncResult;
 import pub.doric.utils.DoricConstant;
 
+import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JavaValue;
 
 /**
@@ -39,9 +43,26 @@ public class DoricPromise {
         params[0] = context.getContextId();
         params[1] = callbackId;
         System.arraycopy(javaValue, 0, params, 2, javaValue.length);
-        context.getDriver().invokeDoricMethod(
-                DoricConstant.DORIC_BRIDGE_RESOLVE,
-                params);
+        context.getDriver()
+                .invokeDoricMethod(
+                        DoricConstant.DORIC_BRIDGE_RESOLVE,
+                        params)
+                .setCallback(new AsyncResult.Callback<JSDecoder>() {
+                    @Override
+                    public void onResult(JSDecoder result) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        context.getDriver().getRegistry().onException(context.getSource(), t instanceof Exception ? (Exception) t : new RuntimeException(t));
+                    }
+
+                    @Override
+                    public void onFinish() {
+
+                    }
+                });
     }
 
     public void reject(JavaValue... javaValue) {
@@ -49,8 +70,25 @@ public class DoricPromise {
         params[0] = context.getContextId();
         params[1] = callbackId;
         System.arraycopy(javaValue, 0, params, 2, javaValue.length);
-        context.getDriver().invokeDoricMethod(
-                DoricConstant.DORIC_BRIDGE_REJECT,
-                params);
+        context.getDriver()
+                .invokeDoricMethod(
+                        DoricConstant.DORIC_BRIDGE_REJECT,
+                        params)
+                .setCallback(new AsyncResult.Callback<JSDecoder>() {
+                    @Override
+                    public void onResult(JSDecoder result) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        context.getDriver().getRegistry().onException(context.getSource(), t instanceof Exception ? (Exception) t : new RuntimeException(t));
+                    }
+
+                    @Override
+                    public void onFinish() {
+
+                    }
+                });
     }
 }

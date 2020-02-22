@@ -145,7 +145,7 @@ public class DoricRegistry {
     }
 
 
-    public void setEnvironmentVariabel(String key, Object val) {
+    public void setEnvironmentVariable(String key, Object val) {
         extendedEnvValues.put(key, val);
     }
 
@@ -157,9 +157,9 @@ public class DoricRegistry {
         this.monitors.add(monitor);
     }
 
-    public void onException(Exception e) {
+    public void onException(String source, Exception e) {
         for (IDoricMonitor monitor : this.monitors) {
-            monitor.onException(e);
+            monitor.onException(source, e);
         }
     }
 

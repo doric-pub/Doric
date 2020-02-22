@@ -73,13 +73,7 @@ public class DoricNativeDriver implements IDoricDriver {
         return AsyncCall.ensureRunInHandler(mJSHandler, new Callable<JSDecoder>() {
             @Override
             public JSDecoder call() {
-                try {
-                    return doricJSEngine.invokeDoricMethod(method, args);
-                } catch (Exception e) {
-                    doricJSEngine.getRegistry().onException(e);
-                    doricJSEngine.getRegistry().onLog(Log.ERROR, String.format("invokeDoricMethod(%s,...),error is %s", method, e.getLocalizedMessage()));
-                    return new JSDecoder(null);
-                }
+                return doricJSEngine.invokeDoricMethod(method, args);
             }
         });
     }
@@ -97,6 +91,14 @@ public class DoricNativeDriver implements IDoricDriver {
         }
     }
 
+    private String sourceWithContextId(String contextId) {
+        DoricContext context = DoricContextManager.getContext(contextId);
+        if (context == null) {
+            return "Unknown:" + contextId;
+        }
+        return context.getSource();
+    }
+
     @Override
     public AsyncResult<Boolean> createContext(final String contextId, final String script, final String source) {
         return AsyncCall.ensureRunInHandler(mJSHandler, new Callable<Boolean>() {
@@ -106,7 +108,7 @@ public class DoricNativeDriver implements IDoricDriver {
                     doricJSEngine.prepareContext(contextId, script, source);
                     return true;
                 } catch (Exception e) {
-                    doricJSEngine.getRegistry().onException(e);
+                    doricJSEngine.getRegistry().onException(sourceWithContextId(contextId), e);
                     doricJSEngine.getRegistry().onLog(Log.ERROR, String.format("createContext %s error is %s", source, e.getLocalizedMessage()));
                     return false;
                 }
@@ -123,7 +125,7 @@ public class DoricNativeDriver implements IDoricDriver {
                     doricJSEngine.destroyContext(contextId);
                     return true;
                 } catch (Exception e) {
-                    doricJSEngine.getRegistry().onException(e);
+                    doricJSEngine.getRegistry().onException(sourceWithContextId(contextId), e);
                     doricJSEngine.getRegistry().onLog(Log.ERROR, String.format("destroyContext %s error is %s", contextId, e.getLocalizedMessage()));
                     return false;
                 }

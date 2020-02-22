@@ -89,6 +89,24 @@ public class DoricBridgeExtension {
             }
         };
         AsyncResult<JavaValue> asyncResult = context.getDriver().asyncCall(callable, doricMethod.thread());
+        asyncResult.setCallback(new AsyncResult.Callback<JavaValue>() {
+            @Override
+            public void onResult(JavaValue result) {
+
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                context.getDriver().getRegistry().onException(
+                        context.getSource(),
+                        t instanceof Exception ? (Exception) t : new RuntimeException(t));
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        });
         if (asyncResult.hasResult()) {
             return asyncResult.getResult();
         }
@@ -102,7 +120,7 @@ public class DoricBridgeExtension {
             try {
                 return DoricUtils.toJavaObject(clz, jsDecoder);
             } catch (Exception e) {
-                context.getDriver().getRegistry().onException(e);
+                context.getDriver().getRegistry().onException(context.getSource(), e);
                 context.getDriver().getRegistry().onLog(
                         Log.ERROR,
                         String.format("createParam error:%s", e.getLocalizedMessage()));

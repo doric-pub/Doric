@@ -78,9 +78,9 @@ public class ShaderPlugin extends DoricJavaPlugin {
 
                 @Override
                 public void onError(Throwable t) {
-                    if (t instanceof Exception) {
-                        getDoricContext().getDriver().getRegistry().onException((Exception) t);
-                    }
+                    getDoricContext().getDriver().getRegistry().onException(
+                            getDoricContext().getSource(),
+                            t instanceof Exception ? (Exception) t : new RuntimeException(t));
                     getDoricContext().getDriver().getRegistry().onLog(
                             Log.ERROR,
                             String.format("Shader.render:error%s", t.getLocalizedMessage()));
@@ -92,7 +92,7 @@ public class ShaderPlugin extends DoricJavaPlugin {
                 }
             });
         } catch (Exception e) {
-            getDoricContext().getDriver().getRegistry().onException(e);
+            getDoricContext().getDriver().getRegistry().onException(getDoricContext().getSource(), e);
             getDoricContext().getDriver().getRegistry().onLog(
                     Log.ERROR,
                     String.format("Shader.render:error%s", e.getLocalizedMessage())
@@ -173,7 +173,7 @@ public class ShaderPlugin extends DoricJavaPlugin {
                 }
             }
         } catch (ArchiveException e) {
-            getDoricContext().getDriver().getRegistry().onException(e);
+            getDoricContext().getDriver().getRegistry().onException(getDoricContext().getSource(), e);
         }
         return new JavaValue(true);
     }

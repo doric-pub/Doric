@@ -24,6 +24,7 @@
 #import "DoricJSEngine.h"
 #import "DoricConstant.h"
 #import "DoricWSClient.h"
+#import "DoricContextManager.h"
 
 @interface DoricDriver ()
 @property(nonatomic, strong) DoricJSEngine *jsExecutor;
@@ -62,6 +63,10 @@
     return ret;
 }
 
+- (NSString *)aliasWithContextId:(NSString *)contextId {
+    return [[DoricContextManager instance] getContext:contextId].source;
+}
+
 - (DoricAsyncResult<JSValue *> *)invokeDoricMethod:(NSString *)method arguments:(va_list)args {
     DoricAsyncResult *ret = [[DoricAsyncResult alloc] init];
     NSMutableArray *array = [[NSMutableArray alloc] init];
@@ -78,7 +83,6 @@
             [ret setupResult:jsValue];
         } @catch (NSException *exception) {
             [ret setupError:exception];
-            [self.jsExecutor.registry onException:exception];
         }
     });
     return ret;
@@ -111,7 +115,7 @@
             [ret setupResult:jsValue];
         } @catch (NSException *exception) {
             [ret setupError:exception];
-            [self.jsExecutor.registry onException:exception];
+            [self.jsExecutor.registry onException:exception source:[self aliasWithContextId:contextId]];
         }
     });
     return ret;
@@ -134,7 +138,7 @@
             [ret setupResult:jsValue];
         } @catch (NSException *exception) {
             [ret setupError:exception];
-            [self.jsExecutor.registry onException:exception];
+            [self.jsExecutor.registry onException:exception source:[self aliasWithContextId:contextId]];
         }
     });
     return ret;
@@ -151,7 +155,7 @@
             [ret setupResult:@YES];
         } @catch (NSException *exception) {
             [ret setupError:exception];
-            [self.jsExecutor.registry onException:exception];
+            [self.jsExecutor.registry onException:exception source:source];
         }
     });
     return ret;
@@ -168,7 +172,7 @@
             [ret setupResult:@YES];
         } @catch (NSException *exception) {
             [ret setupError:exception];
-            [self.jsExecutor.registry onException:exception];
+            [self.jsExecutor.registry onException:exception source:[self aliasWithContextId:contextId]];
         }
     });
     return ret;

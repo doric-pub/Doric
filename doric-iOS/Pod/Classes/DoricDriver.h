@@ -54,6 +54,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)disconnectDevKit;
 
 - (void)ensureSyncInMainQueue:(dispatch_block_t)block;
+
+- (NSString *)aliasWithContextId:(NSString *)contextId;
 @end
 
 NS_ASSUME_NONNULL_END

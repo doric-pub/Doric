@@ -40,10 +40,20 @@
 }
 
 - (void)resolve:(id)result {
-    [self.context.driver invokeDoricMethod:DORIC_BRIDGE_RESOLVE, self.context.contextId, self.callbackId, result, nil];
+    [[self.context.driver invokeDoricMethod:DORIC_BRIDGE_RESOLVE, self.context.contextId, self.callbackId, result, nil]
+            setExceptionCallback:^(NSException *e) {
+                [self.context.driver.registry
+                        onException:e
+                             source:self.context.source];
+            }];
 }
 
 - (void)reject:(id)result {
-    [self.context.driver invokeDoricMethod:DORIC_BRIDGE_REJECT, self.context.contextId, self.callbackId, result, nil];
+    [[self.context.driver invokeDoricMethod:DORIC_BRIDGE_REJECT, self.context.contextId, self.callbackId, result, nil]
+            setExceptionCallback:^(NSException *e) {
+                [self.context.driver.registry
+                        onException:e
+                             source:self.context.source];
+            }];
 }
 @end

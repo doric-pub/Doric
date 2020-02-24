@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import cn.bingoogolapple.qrcode.core.QRCodeView;
 import cn.bingoogolapple.qrcode.zbar.ZBarView;
 import pub.doric.devkit.DevKit;
-import pub.doric.devkit.DoricDev;
 import pub.doric.devkit.R;
 
 public class ScanQRCodeActivity extends AppCompatActivity implements QRCodeView.Delegate {
@@ -52,7 +51,7 @@ public class ScanQRCodeActivity extends AppCompatActivity implements QRCodeView.
         setTitle("扫描结果为：" + result);
         DevKit.ip = result;
         Toast.makeText(this, "dev kit connecting to " + result, Toast.LENGTH_LONG).show();
-        DoricDev.connectDevKit("ws://" + result + ":7777");
+        DevKit.getInstance().connectDevKit("ws://" + result + ":7777");
         finish();
     }
 

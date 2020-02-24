@@ -100,22 +100,33 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
-            final TextView tv = (TextView) holder.itemView;
-            tv.setText(data[position]);
-            tv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(tv.getContext(), DemoDebugActivity.class);
-                    intent.putExtra("source", "assets://src/" + data[position]);
-                    intent.putExtra("alias", data[position]);
-                    tv.getContext().startActivity(intent);
-                }
-            });
+            if (position == 0) {
+                final TextView tv = (TextView) holder.itemView;
+                tv.setText("Dev Kit");
+                tv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+            } else {
+                final TextView tv = (TextView) holder.itemView;
+                tv.setText(data[position - 1]);
+                tv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(tv.getContext(), DemoDebugActivity.class);
+                        intent.putExtra("source", "assets://src/" + data[position - 1]);
+                        intent.putExtra("alias", data[position - 1]);
+                        tv.getContext().startActivity(intent);
+                    }
+                });
+            }
         }
 
         @Override
         public int getItemCount() {
-            return data.length;
+            return data.length + 1;
         }
     }
 }

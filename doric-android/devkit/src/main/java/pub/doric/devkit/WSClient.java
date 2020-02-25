@@ -33,7 +33,6 @@ import pub.doric.devkit.event.EOFExceptionEvent;
 import pub.doric.devkit.event.EnterDebugEvent;
 import pub.doric.devkit.event.OpenEvent;
 import pub.doric.devkit.event.ReloadEvent;
-import pub.doric.devkit.ui.DevPanel;
 
 /**
  * @Description: com.github.penfeizhou.doric.dev
@@ -61,7 +60,6 @@ public class WSClient extends WebSocketListener {
     public void onOpen(WebSocket webSocket, Response response) {
         super.onOpen(webSocket, response);
 
-        DevPanel.isDevConnected = true;
         EventBus.getDefault().post(new OpenEvent());
     }
 
@@ -106,10 +104,8 @@ public class WSClient extends WebSocketListener {
         super.onFailure(webSocket, t, response);
 
         if (t instanceof EOFException) {
-            DevPanel.isDevConnected = false;
             EventBus.getDefault().post(new EOFExceptionEvent());
         } else if (t instanceof ConnectException) {
-            DevPanel.isDevConnected = false;
             EventBus.getDefault().post(new ConnectExceptionEvent());
         }
     }

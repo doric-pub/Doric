@@ -19,6 +19,7 @@ import android.app.Application;
 
 import pub.doric.Doric;
 import pub.doric.DoricRegistry;
+import pub.doric.devkit.DoricDev;
 
 public class MyApplication extends Application {
     @Override
@@ -26,5 +27,6 @@ public class MyApplication extends Application {
         super.onCreate();
         Doric.init(this);
         DoricRegistry.register(new DemoLibrary());
+        DoricDev.getInstance().init(this);
     }
 }

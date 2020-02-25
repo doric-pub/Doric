@@ -23,12 +23,10 @@
 #import "DoricDriver.h"
 #import "DoricJSEngine.h"
 #import "DoricConstant.h"
-#import "DoricWSClient.h"
 #import "DoricContextManager.h"
 
 @interface DoricDriver ()
 @property(nonatomic, strong) DoricJSEngine *jsExecutor;
-@property(nonatomic, strong) DoricWSClient *wsclient;
 @end
 
 @implementation DoricDriver
@@ -176,20 +174,6 @@
         }
     });
     return ret;
-}
-
-- (void)connectDevKit:(NSString *)url {
-    if (self.wsclient) {
-        [self.wsclient close];
-    }
-    self.wsclient = [[DoricWSClient alloc] initWithUrl:url];
-}
-
-- (void)disconnectDevKit {
-    if (self.wsclient) {
-        [self.wsclient close];
-        self.wsclient = nil;
-    }
 }
 
 - (void)ensureSyncInMainQueue:(dispatch_block_t)block {

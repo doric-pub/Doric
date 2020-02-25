@@ -7,9 +7,11 @@
 //
 
 #import <DoricCore/Doric.h>
+#import <DoricDevkit/QRScanViewController.h>
+#import <DoricDevkit/DoricDev.h>
 
 #import "ViewController.h"
-#import "QRScanViewController.h"
+
 #import "DemoLibrary.h"
 
 @interface ViewController () <UITableViewDelegate, UITableViewDataSource>
@@ -68,7 +70,7 @@
     if (indexPath.row == 0) {
         if (self.isSimulator) {
             NSString *result = @"127.0.0.1";
-            [[DoricDriver instance] connectDevKit:[NSString stringWithFormat:@"ws://%@:7777", result]];
+            [[DoricDev instance] connectDevKit:[NSString stringWithFormat:@"ws://%@:7777", result]];
             ShowToast([NSString stringWithFormat:@"Connected to %@", result], BOTTOM);
         } else {
             [self.navigationController pushViewController:[QRScanViewController new] animated:NO];

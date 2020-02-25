@@ -49,10 +49,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (DoricAsyncResult *)invokeContextEntity:(NSString *)contextId method:(NSString *)method argumentsArray:(NSArray *)args;
 
-- (void)connectDevKit:(NSString *)url;
-
-- (void)disconnectDevKit;
-
 - (void)ensureSyncInMainQueue:(dispatch_block_t)block;
 
 - (NSString *)aliasWithContextId:(NSString *)contextId;

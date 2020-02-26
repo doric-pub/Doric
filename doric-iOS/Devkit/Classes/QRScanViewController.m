@@ -24,6 +24,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <DoricCore/Doric.h>
 #import <DoricDevkit/DoricDev.h>
+#import "DoricJSRemoteExecutor.h"
 
 @interface QRScanViewController () <AVCaptureMetadataOutputObjectsDelegate>
 @property(strong, nonatomic) AVCaptureDevice *device;
@@ -104,6 +105,7 @@
         NSString *result = qrObject.stringValue;
         NSLog(@"Scan result is %@", result);
         [[DoricDev instance] connectDevKit:[NSString stringWithFormat:@"ws://%@:7777", result]];
+        [DoricJSRemoteExecutor configIp:result];
         ShowToast([NSString stringWithFormat:@"Connected to %@", result], BOTTOM);
         [self.navigationController popViewControllerAnimated:NO];
     }

@@ -7,8 +7,8 @@
 //
 
 #import <DoricCore/Doric.h>
-#import <DoricDevkit/QRScanViewController.h>
-#import <DoricDevkit/DoricDev.h>
+
+#import <DoricDevkit/DoricDevViewController.h>
 
 #import "ViewController.h"
 
@@ -68,13 +68,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row == 0) {
-        if (self.isSimulator) {
-            NSString *result = @"127.0.0.1";
-            [[DoricDev instance] connectDevKit:[NSString stringWithFormat:@"ws://%@:7777", result]];
-            ShowToast([NSString stringWithFormat:@"Connected to %@", result], BOTTOM);
-        } else {
-            [self.navigationController pushViewController:[QRScanViewController new] animated:NO];
-        }
+        [self.navigationController pushViewController:[DoricDevViewController new] animated:NO];
         return;
     }
     NSString *file = self.demoFilePaths[(NSUInteger) indexPath.row];

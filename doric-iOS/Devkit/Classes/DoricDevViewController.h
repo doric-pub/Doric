@@ -14,22 +14,16 @@
  * limitations under the License.
  */
 //
-//  WSClient.h
+//  DoricDevViewController.h
 //  Doric
 //
-//  Created by pengfei.zhou on 2019/8/14.
+//  Created by jingpeng.wang on 2020/2/26.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
-NS_ASSUME_NONNULL_BEGIN
+@interface DoricDevViewController : UIViewController
 
-@interface DoricWSClient : NSObject
-- (instancetype)initWithUrl:(NSString *)url;
 
-- (void)send:(NSString *)command;
-
-- (void)close;
 @end
 
-NS_ASSUME_NONNULL_END

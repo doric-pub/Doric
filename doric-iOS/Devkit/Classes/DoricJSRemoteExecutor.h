@@ -29,6 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, strong) dispatch_semaphore_t semaphore;
 
++ (void)configIp:(NSString *)ip;
+
 - (void)close;
 @end
 

@@ -75,6 +75,10 @@
     DoricLog(@"webSocketdidCloseWithCode");
 }
 
+- (void)send:(NSString *)command {
+    [_websocket send:command];
+}
+
 - (void)close {
     [self.websocket close];
 }

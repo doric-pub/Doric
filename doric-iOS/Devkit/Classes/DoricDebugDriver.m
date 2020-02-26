@@ -14,28 +14,28 @@
  * limitations under the License.
  */
 //
-//  DoricDriver.m
+//  DoricDebugDriver.m
 //  Doric
 //
-//  Created by pengfei.zhou on 2019/7/26.
+//  Created by jingpeng.wang on 2020/2/25.
 //
 
-#import "DoricDriver.h"
-#import "DoricJSEngine.h"
+#import "DoricDebugDriver.h"
+#import "DoricDebugJSEngine.h"
 #import "DoricConstant.h"
 #import "DoricContextManager.h"
 
-@interface DoricDriver ()
+@interface DoricDebugDriver ()
 @property(nonatomic, strong) DoricJSEngine *jsExecutor;
 @end
 
-@implementation DoricDriver
+@implementation DoricDebugDriver
 
 @dynamic registry;
 
 - (instancetype)init {
     if (self = [super init]) {
-        _jsExecutor = [[DoricJSEngine alloc] init];
+        _jsExecutor = [[DoricDebugJSEngine alloc] init];
     }
     return self;
 }
@@ -45,10 +45,10 @@
 }
 
 + (instancetype)instance {
-    static DoricDriver *_instance;
+    static DoricDebugDriver *_instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _instance = [[DoricDriver alloc] init];
+        _instance = [[DoricDebugDriver alloc] init];
     });
     return _instance;
 }

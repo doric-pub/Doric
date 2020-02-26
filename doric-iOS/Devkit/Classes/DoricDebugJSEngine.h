@@ -14,37 +14,21 @@
  * limitations under the License.
  */
 //
-//  DoricJSEngine.h
+//  DoricDebugJSEngine.h
 //  Doric
 //
-//  Created by pengfei.zhou on 2019/7/26.
+//  Created by jingpeng.wang on 2020/2/25.
 //
 
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>
 
-#import "DoricRegistry.h"
-#import "DoricJSExecutorProtocol.h"
+#import "DoricJSEngine.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DoricJSEngine : NSObject
+@interface DoricDebugJSEngine : DoricJSEngine
 
-@property(nonatomic, strong) id <DoricJSExecutorProtocol> jsExecutor;
-
-@property(nonatomic, strong) dispatch_queue_t jsQueue;
-
-@property(nonatomic, strong) DoricRegistry *registry;
-
-- (void)prepareContext:(NSString *)contextId script:(NSString *)script source:(NSString *)source;
-
-- (void)destroyContext:(NSString *)contextId;
-
-- (JSValue *)invokeDoricMethod:(NSString *)method, ...;
-
-- (JSValue *)invokeDoricMethod:(NSString *)method arguments:(va_list)args;
-
-- (JSValue *)invokeDoricMethod:(NSString *)method argumentsArray:(NSArray *)args;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -21,7 +21,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "DoricDriver.h"
+#import "DoricDriverProtocol.h"
 #import "DoricNavigatorDelegate.h"
 #import "DoricNavBarDelegate.h"
 
@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, weak) id <DoricNavigatorDelegate> navigator;
 @property(nonatomic, weak) id <DoricNavBarDelegate> navBar;
 @property(nonatomic, strong) NSString *contextId;
-@property(nonatomic, strong) DoricDriver *driver;
+@property(nonatomic, strong) id <DoricDriverProtocol> driver;
 @property(nonatomic, strong) NSMutableDictionary *pluginInstanceMap;
 @property(nonatomic, strong) NSString *source;
 @property(nonatomic, strong) NSString *script;;

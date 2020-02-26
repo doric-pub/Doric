@@ -25,7 +25,7 @@
 #import "DoricJSRemoteArgType.h"
 #import "NSString+JsonString.h"
 
-static NSString * const kUrlStr = @"ws://192.168.24.240:2080";
+static NSString *debuggerAddress = @"";
 
 typedef id (^Block0)(void);
 typedef id (^Block1)(id arg0);
@@ -182,6 +182,10 @@ typedef id (^Block5)(id arg0, id arg1, id arg2, id arg3, id arg4);
     return dic;
 }
 
++ (void)configIp:(NSString *)ip {
+    debuggerAddress = [[@"ws://" stringByAppendingString:ip] stringByAppendingString:@":2080"];
+}
+
 - (void)close {
     [self.srWebSocket close];
 }
@@ -189,7 +193,7 @@ typedef id (^Block5)(id arg0, id arg1, id arg2, id arg3, id arg4);
 #pragma mark - Properties
 - (SRWebSocket *)srWebSocket {
     if (!_srWebSocket) {
-        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:kUrlStr] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10];
+        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:debuggerAddress] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10];
         _srWebSocket = [[SRWebSocket alloc] initWithURLRequest:request];
         _srWebSocket.delegate = self;
         [_srWebSocket open];

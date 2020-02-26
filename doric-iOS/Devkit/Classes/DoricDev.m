@@ -51,6 +51,10 @@
     self.wsclient = [[DoricWSClient alloc] initWithUrl:url];
 }
 
+- (void)sendDevCommand:(NSString *)command {
+    [self.wsclient send:command];
+}
+
 - (void)disconnectDevKit {
     if (self.wsclient) {
         [self.wsclient close];

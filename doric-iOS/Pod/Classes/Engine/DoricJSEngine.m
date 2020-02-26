@@ -188,7 +188,7 @@
 
 - (void)prepareContext:(NSString *)contextId script:(NSString *)script source:(NSString *)source {
     [self.jsExecutor loadJSScript:[self packageContextScript:contextId content:script]
-                           source:[@"Context://" stringByAppendingString:source]];
+                           source:[@"Context://" stringByAppendingString:source ?: contextId]];
 }
 
 - (void)destroyContext:(NSString *)contextId {

@@ -14,26 +14,17 @@
  * limitations under the License.
  */
 //
-//  DoricDriver.h
+//  DoricDriverProtocol.h
 //  Doric
 //
-//  Created by pengfei.zhou on 2019/7/26.
+//  Created by jingpeng.wang on 2020/2/25.
 //
 
 #import <Foundation/Foundation.h>
 #import "DoricAsyncResult.h"
 #import "DoricRegistry.h"
 
-typedef NS_ENUM(NSInteger, DoricQueueMode) {
-    JS = 0,
-    UI,
-    INDEPENDENT
-};
-
-NS_ASSUME_NONNULL_BEGIN
-
-@interface DoricDriver : NSObject
-+ (instancetype)instance;
+@protocol DoricDriverProtocol <NSObject>
 
 @property(nonatomic, strong) DoricRegistry *registry;
 
@@ -52,6 +43,5 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)ensureSyncInMainQueue:(dispatch_block_t)block;
 
 - (NSString *)aliasWithContextId:(NSString *)contextId;
-@end
 
-NS_ASSUME_NONNULL_END
+@end

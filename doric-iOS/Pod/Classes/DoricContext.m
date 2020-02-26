@@ -25,12 +25,13 @@
 #import "DoricRootNode.h"
 #import "DoricConstant.h"
 #import "DoricExtensions.h"
+#import "DoricNativeDriver.h"
 
 @implementation DoricContext
 
 - (instancetype)initWithScript:(NSString *)script source:(NSString *)source extra:(NSString *)extra {
     if (self = [super init]) {
-        _driver = [DoricDriver instance];
+        _driver = [DoricNativeDriver instance];
         _pluginInstanceMap = [NSMutableDictionary new];
         [[DoricContextManager instance] createContext:self script:script source:source];
         _headNodes = [NSMutableDictionary new];

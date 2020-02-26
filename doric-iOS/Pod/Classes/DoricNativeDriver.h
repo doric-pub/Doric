@@ -14,37 +14,25 @@
  * limitations under the License.
  */
 //
-//  DoricJSEngine.h
+//  DoricNativeDriver.h
 //  Doric
 //
 //  Created by pengfei.zhou on 2019/7/26.
 //
 
 #import <Foundation/Foundation.h>
-#import <JavaScriptCore/JavaScriptCore.h>
+#import "DoricDriverProtocol.h"
 
-#import "DoricRegistry.h"
-#import "DoricJSExecutorProtocol.h"
+typedef NS_ENUM(NSInteger, DoricQueueMode) {
+    JS = 0,
+    UI,
+    INDEPENDENT
+};
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DoricJSEngine : NSObject
-
-@property(nonatomic, strong) id <DoricJSExecutorProtocol> jsExecutor;
-
-@property(nonatomic, strong) dispatch_queue_t jsQueue;
-
-@property(nonatomic, strong) DoricRegistry *registry;
-
-- (void)prepareContext:(NSString *)contextId script:(NSString *)script source:(NSString *)source;
-
-- (void)destroyContext:(NSString *)contextId;
-
-- (JSValue *)invokeDoricMethod:(NSString *)method, ...;
-
-- (JSValue *)invokeDoricMethod:(NSString *)method arguments:(va_list)args;
-
-- (JSValue *)invokeDoricMethod:(NSString *)method argumentsArray:(NSArray *)args;
+@interface DoricNativeDriver : NSObject <DoricDriverProtocol>
++ (instancetype)instance;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -44,15 +44,6 @@
     return self.jsExecutor.registry;
 }
 
-+ (instancetype)instance {
-    static DoricDebugDriver *_instance;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _instance = [[DoricDebugDriver alloc] init];
-    });
-    return _instance;
-}
-
 - (DoricAsyncResult<JSValue *> *)invokeDoricMethod:(NSString *)method, ... {
     va_list args;
     va_start(args, method);

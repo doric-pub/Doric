@@ -21,7 +21,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "DoricJSExecutorProtocol.h"
+#import <DoricCore/DoricJSExecutorProtocol.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

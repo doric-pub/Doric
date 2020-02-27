@@ -21,7 +21,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "DoricDriverProtocol.h"
+#import <DoricCore/Doric.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

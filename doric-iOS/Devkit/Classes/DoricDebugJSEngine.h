@@ -23,7 +23,7 @@
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>
 
-#import "DoricJSEngine.h"
+#import <DoricCore/DoricJSEngine.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

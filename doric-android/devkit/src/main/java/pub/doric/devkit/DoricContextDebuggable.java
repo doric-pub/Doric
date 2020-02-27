@@ -3,6 +3,7 @@ package pub.doric.devkit;
 import pub.doric.DoricContext;
 import pub.doric.DoricContextManager;
 import pub.doric.DoricNativeDriver;
+import pub.doric.utils.DoricConstant;
 
 public class DoricContextDebuggable {
     private DoricContext doricContext;
@@ -19,7 +20,10 @@ public class DoricContextDebuggable {
             @Override
             public void start() {
                 doricContext.setDriver(doricDebugDriver);
-                doricContext.reInit();
+
+                doricContext.getRootNode().setId("");
+                doricContext.callEntity(DoricConstant.DORIC_ENTITY_INIT, doricContext.getInitParams(), doricContext.getExtra());
+                doricContext.callEntity(DoricConstant.DORIC_ENTITY_CREATE);
             }
         });
     }
@@ -28,7 +32,10 @@ public class DoricContextDebuggable {
         isDebugging = false;
         doricDebugDriver.destroy();
         doricContext.setDriver(DoricNativeDriver.getInstance());
-        doricContext.reInit();
+
+        doricContext.getRootNode().setId("");
+        doricContext.callEntity(DoricConstant.DORIC_ENTITY_INIT, doricContext.getInitParams(), doricContext.getExtra());
+        doricContext.callEntity(DoricConstant.DORIC_ENTITY_CREATE);
     }
 
     public DoricContext getContext() {

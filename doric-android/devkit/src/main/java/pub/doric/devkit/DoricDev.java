@@ -1,6 +1,5 @@
 package pub.doric.devkit;
 
-import android.app.Application;
 import android.widget.Toast;
 
 import com.lahm.library.EasyProtectorLib;
@@ -28,20 +27,7 @@ public class DoricDev {
 
     private DoricDev() {
         EventBus.getDefault().register(this);
-    }
-
-    public static DoricDev getInstance() {
-        return Inner.sInstance;
-    }
-
-    private Application application;
-    public boolean devKitConnected = false;
-    private DoricContextDebuggable doricContextDebuggable;
-
-    public void init() {
-        this.application = Doric.application();
-
-        DevKit.isRunningInEmulator = EasyProtectorLib.checkIsRunningInEmulator(application, new EmulatorCheckCallback() {
+        DevKit.isRunningInEmulator = EasyProtectorLib.checkIsRunningInEmulator(Doric.application(), new EmulatorCheckCallback() {
             @Override
             public void findEmulator(String emulatorInfo) {
                 System.out.println(emulatorInfo);
@@ -49,22 +35,29 @@ public class DoricDev {
         });
     }
 
+    public static DoricDev getInstance() {
+        return Inner.sInstance;
+    }
+
+    public boolean devKitConnected = false;
+    private DoricContextDebuggable doricContextDebuggable;
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onOpenEvent(OpenEvent openEvent) {
         devKitConnected = true;
-        Toast.makeText(application, "dev kit connected", Toast.LENGTH_LONG).show();
+        Toast.makeText(Doric.application(), "dev kit connected", Toast.LENGTH_LONG).show();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEOFEvent(EOFExceptionEvent eofExceptionEvent) {
         devKitConnected = false;
-        Toast.makeText(application, "dev kit eof exception", Toast.LENGTH_LONG).show();
+        Toast.makeText(Doric.application(), "dev kit eof exception", Toast.LENGTH_LONG).show();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onConnectExceptionEvent(ConnectExceptionEvent connectExceptionEvent) {
         devKitConnected = false;
-        Toast.makeText(application, "dev kit connection exception", Toast.LENGTH_LONG).show();
+        Toast.makeText(Doric.application(), "dev kit connection exception", Toast.LENGTH_LONG).show();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

@@ -23,6 +23,8 @@ echo "version="$CURRENT_VERSION > $CURRENT_DIR/doric-android/version.properties
 ## iOS
 sed -i "" "s/\(version[ ]*= \)'[0-9 \.]*'/\1'$CURRENT_VERSION'/g" $CURRENT_DIR/DoricCore.podspec
 
+sed -i "" "s/\(version[ ]*= \)'[0-9 \.]*'/\1'$CURRENT_VERSION'/g" $CURRENT_DIR/DoricDevkit.podspec
+
 ## Web
 cd $CURRENT_DIR/doric-web && npm version $CURRENT_VERSION --allow-same-version
 

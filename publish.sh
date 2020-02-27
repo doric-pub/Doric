@@ -49,4 +49,4 @@ cd $CURRENT_DIR/doric-web && npm publish
 echo "Publish Android"
 cd $CURRENT_DIR/doric-android && ./gradlew clean publishAll 
 echo "Publish iOS"
-cd $CURRENT_DIR && pod trunk push --allow-warnings
+cd $CURRENT_DIR && pod trunk push DoricCore.podspec --allow-warnings && pod trunk push DoricDevkit.podspec --allow-warnings

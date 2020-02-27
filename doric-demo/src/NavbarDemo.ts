@@ -6,133 +6,139 @@ const shareIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAMAAAD
 @Entry
 class NavbarDemo extends Panel {
     build(rootView: Group): void {
-        scroller(vlayout([
-            title("Navbar Demo"),
-            label('isHidden').apply({
-                width: 200,
-                height: 50,
-                backgroundColor: colors[0],
-                textSize: 30,
-                textColor: Color.WHITE,
-                layoutConfig: layoutConfig().just(),
-                onClick: () => {
-                    navbar(context).isHidden().then(e => modal(context).alert(`Navbar isHidden:${e}`)).catch(e => {
-                        modal(context).alert(e)
-                    })
-                }
-            } as IText),
-            label('setHidden').apply({
-                width: 200,
-                height: 50,
-                backgroundColor: colors[0],
-                textSize: 30,
-                textColor: Color.WHITE,
-                layoutConfig: layoutConfig().just(),
-                onClick: () => {
-                    navbar(context).isHidden()
-                        .then(e => navbar(context).setHidden(!e))
-                        .catch(e => {
-                            modal(context).alert(e)
-                        })
-                }
-            } as IText),
-            label('setTitle').apply({
-                width: 200,
-                height: 50,
-                backgroundColor: colors[0],
-                textSize: 30,
-                textColor: Color.WHITE,
-                layoutConfig: layoutConfig().just(),
-                onClick: () => {
-                    navbar(context).setTitle('Setted Title')
-                        .catch(e => {
-                            modal(context).alert(e)
-                        })
-                }
-            } as IText),
-            label('setBgColor').apply({
-                width: 200,
-                height: 50,
-                backgroundColor: colors[0],
-                textSize: 30,
-                textColor: Color.WHITE,
-                layoutConfig: layoutConfig().just(),
-                onClick: () => {
-                    navbar(context).setBgColor(Color.YELLOW)
-                        .catch(e => {
-                            modal(context).alert(e)
-                        })
-                }
-            } as IText),
-            label('setLeft').apply({
-                width: 200,
-                height: 50,
-                backgroundColor: colors[0],
-                textSize: 30,
-                textColor: Color.WHITE,
-                layoutConfig: layoutConfig().just(),
-                onClick: () => {
-                    navbar(context).setLeft(text({
-                        width: 70,
-                        height: 44,
-                        textColor: Color.BLACK,
-                        layoutConfig: layoutConfig().just().configAlignment(Gravity.Center),
-                        text: "Left",
-                    }))
-                        .catch(e => {
-                            modal(context).alert(e)
-                        })
-                }
-            } as IText),
-            label('setRight').apply({
-                width: 200,
-                height: 50,
-                backgroundColor: colors[0],
-                textSize: 30,
-                textColor: Color.WHITE,
-                layoutConfig: layoutConfig().just(),
-                onClick: () => {
-                    navbar(context).setRight(hlayout([
-                        text({
-                            width: 70,
-                            height: 44,
-                            textColor: Color.BLACK,
-                            layoutConfig: layoutConfig().just().configAlignment(Gravity.Center),
-                            text: "Right",
-                        }),
-                        image({
-                            imageBase64: shareIcon
-                        }).apply({
-                            layoutConfig: layoutConfig().just().configAlignment(gravity().centerY()),
-                            width: 33,
-                            height: 33,
-                            onClick: () => {
-                                modal(context).toast('Right Clicked', Gravity.Bottom)
-                            }
-                        })
-                    ]))
-                        .catch(e => {
-                            modal(context).alert(e)
-                        })
-                }
-            } as IText),
-            label('Pop').apply({
-                width: 200,
-                height: 50,
-                backgroundColor: colors[0],
-                textSize: 30,
-                textColor: Color.WHITE,
-                layoutConfig: layoutConfig().just(),
-                onClick: () => {
-                    navigator(context).pop()
-                }
-            } as IText),
-        ]).apply({
-            layoutConfig: layoutConfig().most().configHeight(LayoutSpec.FIT),
-            gravity: gravity().center(),
-            space: 10,
-        } as IVLayout)).apply({
-            layoutConfig: layoutConfig().most(),
-        }).in(rootView)
+        scroller(
+            vlayout(
+                [
+                    title("Navbar Demo"),
+                    label('isHidden').apply({
+                        width: 200,
+                        height: 50,
+                        backgroundColor: colors[0],
+                        textSize: 30,
+                        textColor: Color.WHITE,
+                        layoutConfig: layoutConfig().just(),
+                        onClick: () => {
+                            navbar(context).isHidden().then(e => modal(context).alert(`Navbar isHidden:${e}`)).catch(e => {
+                                modal(context).alert(e)
+                            })
+                        }
+                    } as IText),
+                    label('setHidden').apply({
+                        width: 200,
+                        height: 50,
+                        backgroundColor: colors[0],
+                        textSize: 30,
+                        textColor: Color.WHITE,
+                        layoutConfig: layoutConfig().just(),
+                        onClick: () => {
+                            navbar(context).isHidden()
+                                .then(e => navbar(context).setHidden(!e))
+                                .catch(e => {
+                                    modal(context).alert(e)
+                                })
+                        }
+                    } as IText),
+                    label('setTitle').apply({
+                        width: 200,
+                        height: 50,
+                        backgroundColor: colors[0],
+                        textSize: 30,
+                        textColor: Color.WHITE,
+                        layoutConfig: layoutConfig().just(),
+                        onClick: () => {
+                            navbar(context).setTitle('Setted Title')
+                                .catch(e => {
+                                    modal(context).alert(e)
+                                })
+                        }
+                    } as IText),
+                    label('setBgColor').apply({
+                        width: 200,
+                        height: 50,
+                        backgroundColor: colors[0],
+                        textSize: 30,
+                        textColor: Color.WHITE,
+                        layoutConfig: layoutConfig().just(),
+                        onClick: () => {
+                            navbar(context).setBgColor(Color.YELLOW)
+                                .catch(e => {
+                                    modal(context).alert(e)
+                                })
+                        }
+                    } as IText),
+                    label('setLeft').apply({
+                        width: 200,
+                        height: 50,
+                        backgroundColor: colors[0],
+                        textSize: 30,
+                        textColor: Color.WHITE,
+                        layoutConfig: layoutConfig().just(),
+                        onClick: () => {
+                            navbar(context).setLeft(text({
+                                width: 70,
+                                height: 44,
+                                textColor: Color.BLACK,
+                                layoutConfig: layoutConfig().just().configAlignment(Gravity.Center),
+                                text: "Left",
+                            }))
+                                .catch(e => {
+                                    modal(context).alert(e)
+                                })
+                        }
+                    } as IText),
+                    label('setRight').apply({
+                        width: 200,
+                        height: 50,
+                        backgroundColor: colors[0],
+                        textSize: 30,
+                        textColor: Color.WHITE,
+                        layoutConfig: layoutConfig().just(),
+                        onClick: () => {
+                            navbar(context).setRight(hlayout([
+                                text({
+                                    width: 70,
+                                    height: 44,
+                                    textColor: Color.BLACK,
+                                    layoutConfig: layoutConfig().just().configAlignment(Gravity.Center),
+                                    text: "Right",
+                                }),
+                                image({
+                                    imageBase64: shareIcon
+                                }).apply({
+                                    layoutConfig: layoutConfig().just().configAlignment(gravity().centerY()),
+                                    width: 33,
+                                    height: 33,
+                                    onClick: () => {
+                                        modal(context).toast('Right Clicked', Gravity.Bottom)
+                                    }
+                                })
+                            ]))
+                                .catch(e => {
+                                    modal(context).alert(e)
+                                })
+                        }
+                    } as IText),
+                    label('Pop').apply({
+                        width: 200,
+                        height: 50,
+                        backgroundColor: colors[0],
+                        textSize: 30,
+                        textColor: Color.WHITE,
+                        layoutConfig: layoutConfig().just(),
+                        onClick: () => {
+                            navigator(context).pop()
+                        }
+                    } as IText),
+                ],
+                {
+                    layoutConfig: layoutConfig().most().configHeight(LayoutSpec.FIT),
+                    gravity: gravity().center(),
+                    space: 10,
+                }),
+            {
+                layoutConfig: layoutConfig().most(),
+                backgroundColor: Color.BLUE,
+            }
+        ).in(rootView)
     }
 }

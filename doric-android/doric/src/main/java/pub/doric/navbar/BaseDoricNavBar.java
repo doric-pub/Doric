@@ -25,6 +25,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -32,7 +33,6 @@ import android.widget.TextView;
 import androidx.annotation.AttrRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import pub.doric.R;
 
@@ -88,15 +88,27 @@ public class BaseDoricNavBar extends FrameLayout implements IDoricNavBar {
     @Override
     public void setHidden(boolean b) {
         setVisibility(b ? GONE : VISIBLE);
-        AppCompatActivity activity = (AppCompatActivity) getContext();
+        Activity activity = (Activity) getContext();
+        Window window = activity.getWindow();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if (b) {
-                activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+                window.getDecorView().setSystemUiVisibility(SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | SYSTEM_UI_FLAG_LAYOUT_STABLE);
+
+                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    activity.getWindow().setStatusBarColor(Color.TRANSPARENT);
+                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                    window.setStatusBarColor(Color.TRANSPARENT);
                 }
             } else {
-                activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+                int visibility = window.getDecorView().getSystemUiVisibility();
+                visibility = visibility ^ (SYSTEM_UI_FLAG_LAYOUT_STABLE | SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+                window.getDecorView().setSystemUiVisibility(visibility);
+                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                }
             }
         }
     }

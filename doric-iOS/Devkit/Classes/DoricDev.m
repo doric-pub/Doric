@@ -22,6 +22,7 @@
 #import <DoricCore/Doric.h>
 #import <DoricCore/DoricContextManager.h>
 #import <DoricCore/DoricNativeDriver.h>
+#import <DoricCore/DoricConstant.h>
 
 #import "DoricDev.h"
 #import "DoricWSClient.h"
@@ -105,11 +106,15 @@
 
 - (void)onStopDebugEvent {
     _context.driver = [DoricNativeDriver instance];
-    [_context reInit];
+    _context.rootNode.viewId = nil;
+    [_context callEntity:DORIC_ENTITY_INIT, _context.initialParams, nil];
+    [_context callEntity:DORIC_ENTITY_CREATE, nil];
 }
 
 - (void)onDebuggerReadyEvent {
     _context.driver = _driver;
-    [_context reInit];
+    _context.rootNode.viewId = nil;
+    [_context callEntity:DORIC_ENTITY_INIT, _context.initialParams, nil];
+    [_context callEntity:DORIC_ENTITY_CREATE, nil];
 }
 @end

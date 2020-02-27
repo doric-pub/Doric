@@ -70,11 +70,10 @@
 
 - (void)destroyContext:(DoricContext *)context {
     NSString *contextId = context.contextId;
-    [context.driver destroyContext:contextId].finishCallback = ^{
-        dispatch_sync(self.mapQueue, ^() {
-            [self.doricContextMap removeObjectForKey:contextId];
-        });
-    };
+    dispatch_sync(self.mapQueue, ^() {
+        [self.doricContextMap removeObjectForKey:contextId];
+    });
+    [context.driver destroyContext:contextId];
 }
 
 - (NSArray *)aliveContexts {

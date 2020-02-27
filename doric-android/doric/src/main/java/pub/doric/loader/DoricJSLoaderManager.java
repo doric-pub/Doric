@@ -59,7 +59,9 @@ public class DoricJSLoaderManager {
                 return jsLoader.request(source);
             }
         }
-        return new AsyncResult<>("");
+        AsyncResult<String> ret = new AsyncResult<>();
+        ret.setError(new RuntimeException("Cannot find JS Loader for " + source));
+        return ret;
     }
 
 }

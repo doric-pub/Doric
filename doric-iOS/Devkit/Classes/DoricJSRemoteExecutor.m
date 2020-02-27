@@ -54,6 +54,7 @@ typedef id (^Block5)(id arg0, id arg1, id arg2, id arg3, id arg4);
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket {
     DoricLog(@"debugger webSocketDidOpen");
     DC_UNLOCK(self.semaphore);
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"DebuggerReadyEvent" object:nil];
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceivePong:(NSData *)pongPayload {
@@ -116,6 +117,7 @@ typedef id (^Block5)(id arg0, id arg1, id arg2, id arg3, id arg4);
 
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
     DoricLog(@"debugger webSocketdidCloseWithCode");
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"StopDebugEvent" object:nil];
 }
 
 #pragma mark - DoricJSExecutorProtocol

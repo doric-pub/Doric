@@ -41,6 +41,7 @@
 
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket {
     DoricLog(@"webSocketDidOpen");
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"OpenEvent" object:nil];
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceivePong:(NSData *)pongPayload {
@@ -57,22 +58,29 @@
         DoricLog(@"webSocketdidReceiveMessage parse error：%@", err);
         return;
     }
-    NSString *source = [[dic valueForKey:@"source"] mutableCopy];
-    NSString *script = [dic valueForKey:@"script"];
-    for (NSValue *value in  [[DoricContextManager instance] aliveContexts]) {
-        DoricContext *context = value.nonretainedObjectValue;
-        if ([source containsString:context.source]) {
-            [context reload:script];
-        }
+    NSString *cmd = [[dic valueForKey:@"cmd"] mutableCopy];
+    if ([cmd compare:@"SWITCH_TO_DEBUG"] == NSOrderedSame) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"EnterDebugEvent" object:nil];
+    } else if ([cmd compare:@"RELOAD"] == NSOrderedSame) {
+//        NSString *source = [[dic valueForKey:@"source"] mutableCopy];
+//        NSString *script = [dic valueForKey:@"script"];
+//        for (NSValue *value in  [[DoricContextManager instance] aliveContexts]) {
+//            DoricContext *context = value.nonretainedObjectValue;
+//            if ([source containsString:context.source]) {
+//                [context reload:script];
+//            }
+//        }
     }
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {
     DoricLog(@"webSocketdidFailWithError");
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ConnectExceptionEvent" object:nil];
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
     DoricLog(@"webSocketdidCloseWithCode");
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"EOFEvent" object:nil];
 }
 
 - (void)send:(NSString *)command {

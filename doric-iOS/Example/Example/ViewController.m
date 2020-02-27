@@ -68,7 +68,17 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row == 0) {
-        [self.navigationController pushViewController:[DoricDevViewController new] animated:NO];
+        NSString *file = self.demoFilePaths[44];
+        DoricViewController *doricViewController = [[DoricViewController alloc]
+                initWithSource:[NSString stringWithFormat:@"assets://src/%@", file]
+                         alias:self.demoFilePaths[44]
+                         extra:nil
+        ];
+        [self.navigationController pushViewController:doricViewController animated:NO];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self.navigationController pushViewController:[DoricDevViewController new] animated:NO];
+            }
+        );
         return;
     }
     NSString *file = self.demoFilePaths[(NSUInteger) indexPath.row];

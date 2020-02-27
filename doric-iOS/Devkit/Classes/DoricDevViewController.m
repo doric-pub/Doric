@@ -21,6 +21,7 @@
 //
 #import <DoricCore/Doric.h>
 #import <DoricCore/DoricContextManager.h>
+#import "NSString+JsonString.h"
 
 #import "DoricDev.h"
 #import "DoricDevViewController.h"
@@ -67,7 +68,7 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID"];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
-    cell.textLabel.text = path;
+    cell.textLabel.text = [path stringByAppendingString:@" Debug"];
     return cell;
 }
 
@@ -76,6 +77,19 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSValue *value = [DoricContextManager.instance aliveContexts][(NSUInteger) indexPath.row];
+    DoricContext *context = value.nonretainedObjectValue;
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"StartDebugEvent" object:context.contextId];
+    NSDictionary *jsonDic = @{
+        @"cmd": @"DEBUG",
+        @"data": @{
+                @"contextId": context.contextId,
+                @"source": [context.source stringByReplacingOccurrencesOfString:@".js" withString:@".ts"]
+        }
+    };
+    
+    NSString *jsonStr = [NSString dc_convertToJsonWithDic:jsonDic];
+    [[DoricDev instance] sendDevCommand:jsonStr];
 }
 
 @end

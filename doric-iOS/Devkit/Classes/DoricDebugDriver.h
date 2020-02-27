@@ -23,12 +23,6 @@
 #import <Foundation/Foundation.h>
 #import "DoricDriverProtocol.h"
 
-typedef NS_ENUM(NSInteger, DoricQueueMode) {
-    JS = 0,
-    UI,
-    INDEPENDENT
-};
-
 NS_ASSUME_NONNULL_BEGIN
 
 @interface DoricDebugDriver : NSObject <DoricDriverProtocol>

@@ -19,18 +19,31 @@
 //
 //  Created by jingpeng.wang on 2020/2/25.
 //
+#import <DoricCore/Doric.h>
+#import <DoricCore/DoricContextManager.h>
+#import <DoricCore/DoricNativeDriver.h>
 
 #import "DoricDev.h"
 #import "DoricWSClient.h"
+#import "DoricDebugDriver.h"
 
 @interface DoricDev ()
 @property(nonatomic, strong) DoricWSClient *wsclient;
+@property(nonatomic, strong) DoricContext *context;
+@property(nonatomic, strong) DoricDebugDriver *driver;
 @end
 
 @implementation DoricDev
 
 - (instancetype)init {
     if (self = [super init]) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onOpenEvent) name:@"OpenEvent" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onEOFEvent) name:@"EOFEvent" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onConnectExceptionEvent) name:@"ConnectExceptionEvent" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onStartDebugEvent:) name:@"StartDebugEvent" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onEnterDebugEvent) name:@"EnterDebugEvent" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onStopDebugEvent) name:@"StopDebugEvent" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onDebuggerReadyEvent) name:@"DebuggerReadyEvent" object:nil];
     }
     return self;
 }
@@ -62,4 +75,41 @@
     }
 }
 
+- (void)onOpenEvent {
+    ShowToast(@"dev kit connected", BOTTOM);
+}
+
+- (void)onEOFEvent {
+    ShowToast(@"dev kit eof exception", BOTTOM);
+}
+
+- (void)onConnectExceptionEvent {
+    ShowToast(@"dev kit connection exception", BOTTOM);
+}
+
+- (void)onStartDebugEvent:(NSNotification *)notification {
+    NSString *contextId = notification.object;
+    ShowToast(contextId, BOTTOM);
+    for (NSValue *value in  [[DoricContextManager instance] aliveContexts]) {
+        DoricContext *context = value.nonretainedObjectValue;
+        BOOL result = [context.contextId compare:contextId] == NSOrderedSame;
+        if (result) {
+            _context = context;
+        }
+    }
+}
+
+- (void)onEnterDebugEvent {
+    _driver = [DoricDebugDriver new];
+}
+
+- (void)onStopDebugEvent {
+    _context.driver = [DoricNativeDriver instance];
+    [_context reInit];
+}
+
+- (void)onDebuggerReadyEvent {
+    _context.driver = _driver;
+    [_context reInit];
+}
 @end

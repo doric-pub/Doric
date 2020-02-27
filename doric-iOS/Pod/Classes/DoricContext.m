@@ -96,6 +96,12 @@
     [self onShow];
 }
 
+- (void)reInit {
+    self.rootNode.viewId = nil;
+    [self callEntity:DORIC_ENTITY_INIT, self.initialParams, nil];
+    [self callEntity:DORIC_ENTITY_CREATE, nil];
+}
+
 - (void)onShow {
     [self callEntity:DORIC_ENTITY_SHOW, nil];
 }

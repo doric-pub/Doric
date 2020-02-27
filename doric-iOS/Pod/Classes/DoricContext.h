@@ -55,6 +55,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)reload:(NSString *)script;
 
+- (void)reInit;
+
 - (void)onShow;
 
 - (void)onHidden;

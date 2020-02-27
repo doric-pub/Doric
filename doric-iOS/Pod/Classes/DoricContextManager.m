@@ -26,7 +26,7 @@
 @interface DoricContextManager ()
 
 @property(nonatomic) NSInteger counter;
-@property(nonatomic, strong) NSMutableDictionary *doricContextMap;
+@property(nonatomic, strong) NSMutableDictionary <NSString *, NSValue *> *doricContextMap;
 @property(nonatomic, strong) dispatch_queue_t mapQueue;
 @end
 
@@ -55,14 +55,14 @@
     [context.driver createContext:context.contextId script:script source:source];
     dispatch_sync(self.mapQueue, ^() {
         NSValue *value = [NSValue valueWithNonretainedObject:context];
-        [self.doricContextMap setValue:value forKey:context.contextId];
+        self.doricContextMap[context.contextId] = value;
     });
 }
 
 - (DoricContext *)getContext:(NSString *)contextId {
     __block DoricContext *context;
     dispatch_sync(self.mapQueue, ^{
-        NSValue *value = [self.doricContextMap valueForKey:contextId];
+        NSValue *value = self.doricContextMap[contextId];
         context = value.nonretainedObjectValue;
     });
     return context;

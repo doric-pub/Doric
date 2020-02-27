@@ -63,6 +63,12 @@
             *stop = YES;
         }
     }];
+    if (!ret) {
+        ret = [DoricAsyncResult new];
+        [ret setupError:[NSException exceptionWithName:@"LoadingError"
+                                                reason:[NSString stringWithFormat:@"Cannot find JS Loader for %@", source]
+                                              userInfo:nil]];
+    }
     return ret;
 }
 @end

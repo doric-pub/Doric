@@ -27,6 +27,6 @@ public class MyApplication extends Application {
         super.onCreate();
         Doric.init(this);
         DoricRegistry.register(new DemoLibrary());
-        DoricDev.getInstance().init(this);
+        DoricDev.getInstance().init();
     }
 }

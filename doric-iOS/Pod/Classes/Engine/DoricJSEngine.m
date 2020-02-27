@@ -38,18 +38,16 @@
     if (self = [super init]) {
         _jsQueue = dispatch_queue_create("doric.jsengine", DISPATCH_QUEUE_SERIAL);
         _bridgeExtension = [[DoricBridgeExtension alloc] init];
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
-            _innerEnvironmentDictionary = @{
-                    @"platform": @"iOS",
-                    @"platformVersion": [[UIDevice currentDevice] systemVersion],
-                    @"appName": infoDictionary[@"CFBundleName"],
-                    @"appVersion": infoDictionary[@"CFBundleShortVersionString"],
-                    @"screenWidth": @([[UIScreen mainScreen] bounds].size.width),
-                    @"screenHeight": @([[UIScreen mainScreen] bounds].size.height),
-                    @"statusBarHeight": @([[UIApplication sharedApplication] statusBarFrame].size.height),
-            };
-        });
+        NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+        _innerEnvironmentDictionary = @{
+                @"platform": @"iOS",
+                @"platformVersion": [[UIDevice currentDevice] systemVersion],
+                @"appName": infoDictionary[@"CFBundleName"],
+                @"appVersion": infoDictionary[@"CFBundleShortVersionString"],
+                @"screenWidth": @([[UIScreen mainScreen] bounds].size.width),
+                @"screenHeight": @([[UIScreen mainScreen] bounds].size.height),
+                @"statusBarHeight": @([[UIApplication sharedApplication] statusBarFrame].size.height),
+        };
         dispatch_async(_jsQueue, ^() {
             self.timers = [[NSMutableDictionary alloc] init];
             [self initJSEngine];

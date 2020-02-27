@@ -127,12 +127,6 @@ public class DoricContext {
         callEntity(DoricConstant.DORIC_ENTITY_CREATE);
     }
 
-    public void reInit() {
-        this.mRootNode.setId("");
-        callEntity(DoricConstant.DORIC_ENTITY_INIT, this.initParams, extra);
-        callEntity(DoricConstant.DORIC_ENTITY_CREATE);
-    }
-
     public AsyncResult<JSDecoder> callEntity(String methodName, Object... args) {
         return getDriver().invokeContextEntityMethod(mContextId, methodName, args);
     }
@@ -234,4 +228,11 @@ public class DoricContext {
         return this.animatorSet;
     }
 
+    public JSONObject getInitParams() {
+        return initParams;
+    }
+
+    public String getExtra() {
+        return extra;
+    }
 }

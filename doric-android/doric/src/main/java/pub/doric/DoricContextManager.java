@@ -57,6 +57,7 @@ public class DoricContextManager {
     }
 
     AsyncResult<Boolean> destroyContext(final DoricContext context) {
+        doricContextMap.remove(context.getContextId());
         final AsyncResult<Boolean> result = new AsyncResult<>();
         context.getDriver().destroyContext(context.getContextId()).setCallback(new AsyncResult.Callback<Boolean>() {
             @Override
@@ -71,7 +72,6 @@ public class DoricContextManager {
 
             @Override
             public void onFinish() {
-                doricContextMap.remove(context.getContextId());
             }
         });
         return result;

@@ -162,31 +162,17 @@ public class DoricContext {
 
     public void teardown() {
         callEntity(DoricConstant.DORIC_ENTITY_DESTROY);
-        DoricContextManager.getInstance().destroyContext(this).setCallback(new AsyncResult.Callback<Boolean>() {
+        getDriver().asyncCall(new Callable<Object>() {
             @Override
-            public void onResult(Boolean result) {
-
+            public Object call() {
+                for (DoricJavaPlugin javaPlugin : mPluginMap.values()) {
+                    javaPlugin.onTearDown();
+                }
+                mPluginMap.clear();
+                return null;
             }
-
-            @Override
-            public void onError(Throwable t) {
-
-            }
-
-            @Override
-            public void onFinish() {
-                getDriver().asyncCall(new Callable<Object>() {
-                    @Override
-                    public Object call() {
-                        for (DoricJavaPlugin javaPlugin : mPluginMap.values()) {
-                            javaPlugin.onTearDown();
-                        }
-                        mPluginMap.clear();
-                        return null;
-                    }
-                }, ThreadMode.UI);
-            }
-        });
+        }, ThreadMode.UI);
+        DoricContextManager.getInstance().destroyContext(this);
     }
 
     public DoricJavaPlugin obtainPlugin(DoricMetaInfo<DoricJavaPlugin> doricMetaInfo) {

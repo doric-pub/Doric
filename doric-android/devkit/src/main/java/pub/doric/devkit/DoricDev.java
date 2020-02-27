@@ -10,6 +10,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import pub.doric.Doric;
 import pub.doric.DoricContext;
 import pub.doric.DoricContextManager;
 import pub.doric.devkit.event.ConnectExceptionEvent;
@@ -37,8 +38,8 @@ public class DoricDev {
     public boolean devKitConnected = false;
     private DoricContextDebuggable doricContextDebuggable;
 
-    public void init(Application application) {
-        this.application = application;
+    public void init() {
+        this.application = Doric.application();
 
         DevKit.isRunningInEmulator = EasyProtectorLib.checkIsRunningInEmulator(application, new EmulatorCheckCallback() {
             @Override

@@ -62,14 +62,14 @@
     if ([cmd compare:@"SWITCH_TO_DEBUG"] == NSOrderedSame) {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"EnterDebugEvent" object:nil];
     } else if ([cmd compare:@"RELOAD"] == NSOrderedSame) {
-//        NSString *source = [[dic valueForKey:@"source"] mutableCopy];
-//        NSString *script = [dic valueForKey:@"script"];
-//        for (NSValue *value in  [[DoricContextManager instance] aliveContexts]) {
-//            DoricContext *context = value.nonretainedObjectValue;
-//            if ([source containsString:context.source]) {
-//                [context reload:script];
-//            }
-//        }
+        NSString *source = [[dic valueForKey:@"source"] mutableCopy];
+        NSString *script = [dic valueForKey:@"script"];
+        for (NSValue *value in  [[DoricContextManager instance] aliveContexts]) {
+            DoricContext *context = value.nonretainedObjectValue;
+            if ([source containsString:context.source]) {
+                [context reload:script];
+            }
+        }
     }
 }
 

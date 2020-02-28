@@ -13,6 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//
+//  Doric.m
+//  Doric
+//
+//  Created by pengfei.zhou on 2020/2/28.
+//
+
 #import "DoricContext.h"
 #import "DoricLayouts.h"
 #import "DoricExtensions.h"
@@ -29,3 +36,17 @@
 #import "DoricLibrary.h"
 #import "DoricNativePlugin.h"
 #import "DoricMonitorProtocol.h"
+
+@interface Doric : NSObject
+
+/**
+ * Register DoricLibrary For Extended ViewNode And Native Plugins
+ * */
++ (void)registerLibrary:(DoricLibrary *)library;
+
+/**
+ * Add DoricJSLoader For Loading JS Bundles
+ * */
++ (void)addJSLoader:(id <DoricLoaderProtocol>)loader;
+
+@end

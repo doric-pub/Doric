@@ -27,6 +27,7 @@
 #import "DoricDev.h"
 #import "DoricWSClient.h"
 #import "DoricDebugDriver.h"
+#import "DoricDevViewController.h"
 
 @interface DoricDev ()
 @property(nonatomic, strong) DoricWSClient *wsclient;
@@ -58,6 +59,30 @@
     return _instance;
 }
 
+- (void)openDevMode {
+    DoricDevViewController *devViewController = [DoricDevViewController new];
+
+    UIViewController *viewController = [UIApplication sharedApplication].delegate.window.rootViewController;
+    UINavigationController *navigationController;
+    if ([viewController isKindOfClass:[UINavigationController class]]) {
+        navigationController = (UINavigationController *) viewController;
+    } else {
+        navigationController = viewController.navigationController;
+    }
+    [navigationController pushViewController:devViewController animated:NO];
+}
+
+- (void)closeDevMode {
+    if (self.wsclient) {
+        [self.wsclient close];
+        self.wsclient = nil;
+    }
+}
+
+- (BOOL)isInDevMode {
+    return self.wsclient != nil;
+}
+
 - (void)connectDevKit:(NSString *)url {
     if (self.wsclient) {
         [self.wsclient close];
@@ -67,13 +92,6 @@
 
 - (void)sendDevCommand:(NSString *)command {
     [self.wsclient send:command];
-}
-
-- (void)disconnectDevKit {
-    if (self.wsclient) {
-        [self.wsclient close];
-        self.wsclient = nil;
-    }
 }
 
 - (void)onOpenEvent {

@@ -14,27 +14,20 @@
  * limitations under the License.
  */
 //
-//  DoricDev.h
+//  Doric.m
 //  Doric
 //
-//  Created by jingpeng.wang on 2020/2/25.
+//  Created by pengfei.zhou on 2020/2/28.
 //
+#import "Doric.h"
 
-NS_ASSUME_NONNULL_BEGIN
+@implementation Doric
 
-@interface DoricDev : NSObject
-+ (instancetype)instance;
++ (void)registerLibrary:(DoricLibrary *)library {
+    [DoricRegistry register:library];
+}
 
-- (void)openDevMode;
-
-- (void)closeDevMode;
-
-- (BOOL)isInDevMode;
-
-- (void)connectDevKit:(NSString *)url;
-
-- (void)sendDevCommand:(NSString *)command;
-
++ (void)addJSLoader:(id <DoricLoaderProtocol>)loader {
+    [[DoricJSLoaderManager instance] addJSLoader:loader];
+}
 @end
-
-NS_ASSUME_NONNULL_END

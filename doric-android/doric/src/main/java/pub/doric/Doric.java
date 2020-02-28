@@ -17,6 +17,9 @@ package pub.doric;
 
 import android.app.Application;
 
+import pub.doric.loader.DoricJSLoaderManager;
+import pub.doric.loader.IDoricJSLoader;
+
 /**
  * @Description: Doric
  * @Author: pengfei.zhou
@@ -25,11 +28,34 @@ import android.app.Application;
 public class Doric {
     private static Application sApplication;
 
+    /**
+     * Init Function,must be called before doric run
+     *
+     * @param application Application instance
+     */
     public static void init(Application application) {
         sApplication = application;
     }
 
     public static Application application() {
         return sApplication;
+    }
+
+    /**
+     * Register DoricLibrary For Extended ViewNode and Native Plugins
+     *
+     * @param doricLibrary Which registered in global
+     */
+    public static void registerLibrary(DoricLibrary doricLibrary) {
+        DoricRegistry.register(doricLibrary);
+    }
+
+    /**
+     * Add DoricJSLoader For Loading JS bundles
+     *
+     * @param jsLoader Which added in global
+     */
+    public static void addJSLoader(IDoricJSLoader jsLoader) {
+        DoricJSLoaderManager.getInstance().addJSLoader(jsLoader);
     }
 }

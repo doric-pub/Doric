@@ -39,7 +39,7 @@ public class DoricDevActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
 
-        if (DoricDev.getInstance().devKitConnected) {
+        if (DoricDev.getInstance().isInDevMode()) {
             setContentView(R.layout.layout_debug_context);
             initViews();
         } else {

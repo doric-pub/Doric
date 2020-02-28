@@ -43,7 +43,7 @@ public class DoricDevActivity extends AppCompatActivity {
             setContentView(R.layout.layout_debug_context);
             initViews();
         } else {
-            if (!DevKit.isRunningInEmulator) {
+            if (DevKit.isRunningInEmulator) {
                 DevKit.ip = "10.0.2.2";
                 DevKit.getInstance().connectDevKit("ws://" + DevKit.ip + ":7777");
             } else {

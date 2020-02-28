@@ -15,6 +15,7 @@
  */
 package pub.doric.navbar;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -33,6 +34,11 @@ import android.widget.TextView;
 import androidx.annotation.AttrRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.ViewCompat;
+
+import com.qmuiteam.qmui.util.QMUIDeviceHelper;
+import com.qmuiteam.qmui.util.QMUINotchHelper;
+import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 
 import pub.doric.R;
 
@@ -85,27 +91,22 @@ public class BaseDoricNavBar extends FrameLayout implements IDoricNavBar {
         return getVisibility() != VISIBLE;
     }
 
+
     @Override
     public void setHidden(boolean b) {
+        if (getVisibility() == (b ? GONE : VISIBLE)) {
+            return;
+        }
         setVisibility(b ? GONE : VISIBLE);
         Activity activity = (Activity) getContext();
         Window window = activity.getWindow();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if (b) {
-                window.getDecorView().setSystemUiVisibility(SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | SYSTEM_UI_FLAG_LAYOUT_STABLE);
-
-                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                    window.setStatusBarColor(Color.TRANSPARENT);
-                }
+                QMUIStatusBarHelper.translucent(activity);
             } else {
                 int visibility = window.getDecorView().getSystemUiVisibility();
                 visibility = visibility ^ (SYSTEM_UI_FLAG_LAYOUT_STABLE | SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
                 window.getDecorView().setSystemUiVisibility(visibility);
-                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     window.clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
                 }

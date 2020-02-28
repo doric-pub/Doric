@@ -1,5 +1,6 @@
 package pub.doric.plugin;
 
+import android.app.Activity;
 import android.os.Build;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -9,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JavaValue;
+import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 
 import java.util.concurrent.Callable;
 
@@ -23,8 +25,6 @@ import pub.doric.utils.ThreadMode;
 
 @DoricPlugin(name = "statusbar")
 public class StatusBarPlugin extends DoricJavaPlugin {
-
-    private int currentMode = 0;
 
     public StatusBarPlugin(DoricContext doricContext) {
         super(doricContext);
@@ -50,7 +50,6 @@ public class StatusBarPlugin extends DoricJavaPlugin {
                     }
                     ((BaseDoricNavBar) getDoricContext().getDoricNavBar()).setLayoutParams(lp);
 
-                    currentMode = 0;
                     return null;
                 }
             }, ThreadMode.UI).setCallback(new AsyncResult.Callback<Object>() {
@@ -84,20 +83,11 @@ public class StatusBarPlugin extends DoricJavaPlugin {
             getDoricContext().getDriver().asyncCall(new Callable<Object>() {
                 @Override
                 public Object call() {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        AppCompatActivity activity = ((AppCompatActivity) getDoricContext().getContext());
-                        View decorView = activity.getWindow().getDecorView();
-
-                        int flags = decorView.getSystemUiVisibility();
-                        if (mode == currentMode) {
-                            return null;
-                        } else {
-                            currentMode = mode;
-                        }
-                        flags ^= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-                        decorView.setSystemUiVisibility(flags);
+                    if (mode == 0) {
+                        QMUIStatusBarHelper.setStatusBarLightMode((Activity) getDoricContext().getContext());
+                    } else {
+                        QMUIStatusBarHelper.setStatusBarDarkMode((Activity) getDoricContext().getContext());
                     }
-
                     return null;
                 }
             }, ThreadMode.UI).setCallback(new AsyncResult.Callback<Object>() {

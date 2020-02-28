@@ -2,24 +2,25 @@ package pub.doric.devkit.ui;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.gson.JsonObject;
-import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import pub.doric.DoricContext;
 import pub.doric.DoricContextManager;
 import pub.doric.devkit.DevKit;
@@ -42,22 +43,33 @@ public class DoricDevActivity extends AppCompatActivity {
             setContentView(R.layout.layout_debug_context);
             initViews();
         } else {
-            if (DevKit.isRunningInEmulator) {
+            if (!DevKit.isRunningInEmulator) {
                 DevKit.ip = "10.0.2.2";
                 DevKit.getInstance().connectDevKit("ws://" + DevKit.ip + ":7777");
             } else {
-                final RxPermissions rxPermissions = new RxPermissions(this);
-                Disposable disposable = rxPermissions
-                        .request(Manifest.permission.CAMERA)
-                        .subscribe(new Consumer<Boolean>() {
-                            @Override
-                            public void accept(Boolean grant) throws Exception {
-                                if (grant) {
-                                    Intent intent = new Intent(DoricDevActivity.this, ScanQRCodeActivity.class);
-                                    startActivity(intent);
-                                }
-                            }
-                        });
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                            Manifest.permission.CAMERA)) {
+                    } else {
+                        ActivityCompat.requestPermissions(this,
+                                new String[]{Manifest.permission.CAMERA,}, 1);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == 1) {
+            for (int i = 0; i < permissions.length; i++) {
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    Intent intent = new Intent(DoricDevActivity.this, ScanQRCodeActivity.class);
+                    startActivity(intent);
+                }
             }
         }
     }

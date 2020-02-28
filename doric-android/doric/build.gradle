@@ -58,4 +58,4 @@ dependencies {
     implementation "com.qmuiteam:qmui:1.4.0"
 }
 
-//apply from: rootProject.file('scripts/upload.gradle')
+apply from: rootProject.file('scripts/upload.gradle')

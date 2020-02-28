@@ -6,7 +6,6 @@ import com.github.pengfeizhou.jscore.JavaFunction;
 import com.github.pengfeizhou.jscore.JavaValue;
 
 import org.greenrobot.eventbus.EventBus;
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -64,7 +63,7 @@ public class RemoteJSExecutor {
             }
 
             @Override
-            public void onMessage(@NotNull WebSocket webSocket, @NotNull String text) {
+            public void onMessage(WebSocket webSocket, String text) {
                 try {
                     JSONObject jsonObject = new JSONObject(text);
                     String cmd = jsonObject.optString("cmd");

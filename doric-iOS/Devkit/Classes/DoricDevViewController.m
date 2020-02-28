@@ -35,7 +35,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     self.title = @"Doric Devkit";
     [self.view addSubview:[[UITableView new] also:^(UITableView *it) {
         it.width = self.view.width;
@@ -44,7 +44,9 @@
         it.dataSource = self;
         it.delegate = self;
     }]];
-    
+    if ([[DoricDev instance] isInDevMode]) {
+        return;
+    }
     if (self.isSimulator) {
         NSString *result = @"127.0.0.1";
         [DoricJSRemoteExecutor configIp:result];
@@ -81,13 +83,13 @@
     DoricContext *context = value.nonretainedObjectValue;
     [[NSNotificationCenter defaultCenter] postNotificationName:@"StartDebugEvent" object:context.contextId];
     NSDictionary *jsonDic = @{
-        @"cmd": @"DEBUG",
-        @"data": @{
-                @"contextId": context.contextId,
-                @"source": [context.source stringByReplacingOccurrencesOfString:@".js" withString:@".ts"]
-        }
+            @"cmd": @"DEBUG",
+            @"data": @{
+                    @"contextId": context.contextId,
+                    @"source": [context.source stringByReplacingOccurrencesOfString:@".js" withString:@".ts"]
+            }
     };
-    
+
     NSString *jsonStr = [NSString dc_convertToJsonWithDic:jsonDic];
     [[DoricDev instance] sendDevCommand:jsonStr];
 }

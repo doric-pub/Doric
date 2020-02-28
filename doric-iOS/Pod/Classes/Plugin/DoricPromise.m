@@ -24,7 +24,7 @@
 #import "DoricConstant.h"
 
 @interface DoricPromise ()
-@property(nonatomic, strong) DoricContext *context;
+@property(nonatomic, weak) DoricContext *context;
 @property(nonatomic, strong) NSString *callbackId;
 
 @end

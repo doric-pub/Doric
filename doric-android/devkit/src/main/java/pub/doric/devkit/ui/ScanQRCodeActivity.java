@@ -35,9 +35,7 @@ public class ScanQRCodeActivity extends AppCompatActivity implements QRCodeView.
     @Override
     protected void onStop() {
         super.onStop();
-
         mZbarView.stopCamera();
-        super.onStop();
     }
 
     @Override

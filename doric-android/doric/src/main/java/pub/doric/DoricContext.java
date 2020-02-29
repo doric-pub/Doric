@@ -101,6 +101,7 @@ public class DoricContext {
         this.mContextId = contextId;
         this.source = source;
         this.extra = extra;
+        callEntity(DoricConstant.DORIC_ENTITY_CREATE);
     }
 
     public String getSource() {
@@ -124,7 +125,6 @@ public class DoricContext {
                 .put("height", height)
                 .toJSONObject();
         callEntity(DoricConstant.DORIC_ENTITY_INIT, this.initParams, extra);
-        callEntity(DoricConstant.DORIC_ENTITY_CREATE);
     }
 
     public AsyncResult<JSDecoder> callEntity(String methodName, Object... args) {

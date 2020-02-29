@@ -56,6 +56,7 @@ public class DoricPanel extends FrameLayout implements LifecycleObserver {
 
     public void config(String script, String alias, String extra) {
         DoricContext doricContext = DoricContext.create(getContext(), script, alias, extra);
+        doricContext.onShow();
         config(doricContext);
     }
 
@@ -64,10 +65,6 @@ public class DoricPanel extends FrameLayout implements LifecycleObserver {
         mDoricContext.getRootNode().setRootView(this);
         if (getMeasuredWidth() != 0 && getMeasuredHeight() != 0) {
             mDoricContext.init(DoricUtils.px2dp(getMeasuredWidth()), DoricUtils.px2dp(getMeasuredHeight()));
-        }
-        if (getContext() instanceof LifecycleOwner
-                && ((LifecycleOwner) getContext()).getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
-            mDoricContext.onShow();
         }
     }
 

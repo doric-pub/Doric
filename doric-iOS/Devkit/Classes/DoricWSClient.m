@@ -66,7 +66,7 @@
         NSString *script = [dic valueForKey:@"script"];
         for (NSValue *value in  [[DoricContextManager instance] aliveContexts]) {
             DoricContext *context = value.nonretainedObjectValue;
-            if ([source containsString:context.source]) {
+            if ([source containsString:context.source] || [context.source isEqualToString:@"__dev__"]) {
                 [context reload:script];
             }
         }

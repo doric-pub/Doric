@@ -100,12 +100,12 @@ public class DevKit implements IDevKit {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReloadEvent(ReloadEvent reloadEvent) {
         for (DoricContext context : DoricContextManager.aliveContexts()) {
-            if (reloadEvent.source.contains(context.getSource())) {
-                if (doricContextDebuggable != null &&
-                        doricContextDebuggable.isDebugging &&
-                        doricContextDebuggable.getContext().getContextId().equals(context.getContextId())) {
-                    System.out.println("is debugging context id: " + context.getContextId());
-                } else {
+            if (doricContextDebuggable != null &&
+                    doricContextDebuggable.isDebugging &&
+                    doricContextDebuggable.getContext().getContextId().equals(context.getContextId())) {
+                System.out.println("is debugging context id: " + context.getContextId());
+            } else {
+                if (reloadEvent.source.contains(context.getSource()) || context.getSource().equals("__dev__")) {
                     context.reload(reloadEvent.script);
                 }
             }

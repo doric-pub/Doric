@@ -27,7 +27,7 @@
     NSString *demoPath = [path stringByAppendingPathComponent:@"src"];
     NSFileManager *mgr = [NSFileManager defaultManager];
     self.demoFilePaths = [[mgr subpathsAtPath:demoPath] filter:^BOOL(NSString *obj) {
-        return ![obj containsString:@".map"];
+        return ![obj containsString:@".map"] && ![obj containsString:@"es5."];
     }];
     NSMutableArray <NSString *> *tmp = [self.demoFilePaths mutableCopy];
     NSStringCompareOptions comparisonOptions = NSCaseInsensitiveSearch | NSNumericSearch | NSWidthInsensitiveSearch | NSForcedOrderingSearch;

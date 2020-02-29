@@ -33,8 +33,8 @@ allprojects {
         configurations.all {
             resolutionStrategy {
                 dependencySubstitution {
-                    substitute module('pub.doric:core') with project(":doric")
-                    substitute module('pub.doric:devkit') with project(":devkit")
+                    substitute module('pub.doric.legacy:core') with project(":doric")
+                    substitute module('pub.doric.legacy:devkit') with project(":devkit")
                 }
             }
         }

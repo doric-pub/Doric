@@ -5,6 +5,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -30,6 +31,7 @@ public class DevKit implements IDevKit {
     }
 
     private DevKit() {
+        EventBus.getDefault().register(this);
     }
 
     public static DevKit getInstance() {

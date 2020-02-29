@@ -17,7 +17,6 @@ public class DoricDev {
     }
 
     private DoricDev() {
-        EventBus.getDefault().register(this);
         DevKit.isRunningInEmulator = EasyProtectorLib.checkIsRunningInEmulator(Doric.application(), new EmulatorCheckCallback() {
             @Override
             public void findEmulator(String emulatorInfo) {

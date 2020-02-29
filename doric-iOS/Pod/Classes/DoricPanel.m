@@ -28,6 +28,7 @@
             [self.view addSubview:it];
         }]];
     }];
+    [self.doricContext onShow];
 }
 
 - (void)viewWillLayoutSubviews {

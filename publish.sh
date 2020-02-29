@@ -50,3 +50,8 @@ echo "Publish Android"
 cd $CURRENT_DIR/doric-android && ./gradlew clean publishAll 
 echo "Publish iOS"
 cd $CURRENT_DIR && pod trunk push DoricCore.podspec --allow-warnings && pod trunk push DoricDevkit.podspec --allow-warnings
+
+echo "Publish Android Legacy"
+
+cd $CURRENT_DIR && git checkout -b legacy/$CURRENT_VERSION && sh publish-android-legacy.sh
+

@@ -36,4 +36,5 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0'
+    implementation "com.qmuiteam:qmui:1.4.0"
 }

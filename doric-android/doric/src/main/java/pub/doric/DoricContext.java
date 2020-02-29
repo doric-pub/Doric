@@ -186,6 +186,7 @@ public class DoricContext {
         this.script = script;
         this.mRootNode.setId("");
         getDriver().createContext(mContextId, script, source);
+        callEntity(DoricConstant.DORIC_ENTITY_CREATE);
         callEntity(DoricConstant.DORIC_ENTITY_INIT, this.initParams, extra);
         onShow();
     }

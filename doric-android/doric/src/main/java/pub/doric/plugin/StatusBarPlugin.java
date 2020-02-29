@@ -84,9 +84,9 @@ public class StatusBarPlugin extends DoricJavaPlugin {
                 @Override
                 public Object call() {
                     if (mode == 0) {
-                        QMUIStatusBarHelper.setStatusBarLightMode((Activity) getDoricContext().getContext());
-                    } else {
                         QMUIStatusBarHelper.setStatusBarDarkMode((Activity) getDoricContext().getContext());
+                    } else {
+                        QMUIStatusBarHelper.setStatusBarLightMode((Activity) getDoricContext().getContext());
                     }
                     return null;
                 }

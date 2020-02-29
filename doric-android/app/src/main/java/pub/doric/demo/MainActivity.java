@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
         final DoricSwipeLayout swipeLayout = findViewById(R.id.swipe_layout);
         swipeLayout.setOnRefreshListener(new DoricSwipeLayout.OnRefreshListener() {
@@ -64,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
             String[] demos = getAssets().list("src");
             List<String> ret = new ArrayList<>();
             for (String str : demos) {
+                if (str.endsWith(".es5.js")) {
+                    continue;
+                }
                 if (str.endsWith("js")) {
                     ret.add(str);
                 }

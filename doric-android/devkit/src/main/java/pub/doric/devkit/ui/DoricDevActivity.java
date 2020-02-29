@@ -55,6 +55,9 @@ public class DoricDevActivity extends AppCompatActivity {
                         ActivityCompat.requestPermissions(this,
                                 new String[]{Manifest.permission.CAMERA,}, 1);
                     }
+                } else {
+                    Intent intent = new Intent(DoricDevActivity.this, ScanQRCodeActivity.class);
+                    startActivity(intent);
                 }
             }
         }

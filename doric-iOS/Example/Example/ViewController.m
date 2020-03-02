@@ -68,10 +68,10 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row == 0) {
-        NSString *file = self.demoFilePaths[44];
+        NSString *file = @"Snake.js";
         DoricViewController *doricViewController = [[DoricViewController alloc]
                 initWithSource:[NSString stringWithFormat:@"assets://src/%@", file]
-                         alias:self.demoFilePaths[44]
+                         alias:file
                          extra:nil
         ];
         [self.navigationController pushViewController:doricViewController animated:NO];

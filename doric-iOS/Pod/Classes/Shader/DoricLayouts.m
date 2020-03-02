@@ -104,7 +104,7 @@ static const void *kTagString = &kTagString;
         width = contentSize.width + padding.left + padding.right;
     }
     if (config.heightSpec == DoricLayoutWrapContent) {
-        height = contentSize.height + padding.left + padding.top + padding.bottom;
+        height = contentSize.height + padding.top + padding.bottom;
     }
     return CGSizeMake(width, height);
 }

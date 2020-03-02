@@ -393,7 +393,9 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
         contentHeight = MAX(contentHeight, childSize.height + childConfig.margin.top + childConfig.margin.bottom);
         contentWeight += childConfig.weight;
     }
-    contentWidth -= self.space;
+    if (self.subviews.count > 0) {
+        contentWidth -= self.space;
+    }
     self.contentWidth = contentWidth;
     self.contentHeight = contentHeight;
     self.contentWeight = contentWeight;

@@ -144,4 +144,14 @@
     CGPoint offset = CGPointMake([offsetDic[@"x"] floatValue], [offsetDic[@"y"] floatValue]);
     [self.view setContentOffset:offset animated:animated];
 }
+
+- (void)scrollBy:(NSDictionary *)params {
+    BOOL animated = [params[@"animated"] boolValue];
+    NSDictionary *offsetDic = params[@"offset"];
+    CGPoint offset = CGPointMake([offsetDic[@"x"] floatValue], [offsetDic[@"y"] floatValue]);
+    [self.view setContentOffset:CGPointMake(
+                    MIN(self.view.contentSize.width - self.view.width, MAX(0, offset.x + self.view.contentOffset.x)),
+                    MIN(self.view.contentSize.height - self.view.height, MAX(0, offset.y + self.view.contentOffset.y)))
+                       animated:animated];
+}
 @end

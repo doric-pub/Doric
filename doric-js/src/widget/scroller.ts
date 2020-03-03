@@ -52,4 +52,8 @@ export class Scroller extends Superview implements IScroller {
     scrollTo(context: BridgeContext, offset: { x: number, y: number }, animated?: boolean) {
         return this.nativeChannel(context, "scrollTo")({ offset, animated })
     }
+
+    scrollBy(context: BridgeContext, offset: { x: number, y: number }, animated?: boolean) {
+        return this.nativeChannel(context, "scrollBy")({ offset, animated })
+    }
 }

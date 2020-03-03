@@ -1,4 +1,4 @@
-import { Group, text, gravity, Color, LayoutSpec, vlayout, hlayout, layoutConfig, scroller, Text, ViewHolder, VMPanel, ViewModel, network, loge, HLayout, stack, image, Gravity, takeNonNull, Scroller } from "doric";
+import { Group, text, gravity, Color, LayoutSpec, vlayout, hlayout, layoutConfig, scroller, Text, ViewHolder, VMPanel, ViewModel, network, loge, HLayout, stack, image, Gravity, takeNonNull, Scroller, Image } from "doric";
 import { colors } from "./utils";
 
 interface DoubanModel {
@@ -109,6 +109,9 @@ class MovieVH extends ViewHolder {
                     }),
                 vlayout(
                     [
+                        text({
+                            text: "↑",
+                        }),
                         this.movieTitle = text({
                             textSize: 20,
                         }),
@@ -123,7 +126,7 @@ class MovieVH extends ViewHolder {
             ],
             {
                 layoutConfig: layoutConfig().most(),
-                space: 50,
+                space: 0,
             }).in(root)
     }
 
@@ -140,17 +143,26 @@ class MovieVM extends ViewModel<MovieModel, MovieVH>{
         if (state.doubanModel) {
             vh.title.text = state.doubanModel.title
             vh.gallery.children.length = 0
+            const vm = this
             state.doubanModel.subjects.slice(0, 5).forEach((e, idx) => {
                 vh.gallery.addChild(stack(
                     [
                         image({
                             layoutConfig: layoutConfig().just(),
-                            width: 270 / 2 * (idx == state.selectedIdx ? 1.2 : 1),
-                            height: 400 / 2 * (idx == state.selectedIdx ? 1.2 : 1),
+                            width: 270 / 2,
+                            height: 400 / 2,
                             imageUrl: e.images.large,
-                            onClick: () => {
-                                this.updateState(state => state.selectedIdx = idx)
-                                vh.scrolled.contentOffset = { x: idx * 200, y: 0 }
+                            scaleX: 1,
+                            scaleY: 1,
+                            onClick: function () {
+                                vm.updateState(state => state.selectedIdx = idx)
+                                const v = this as Image
+                                v.getLocationOnScreen(context).then(ret => {
+                                    const centerX = ret.x + v.width / 2;
+                                    vh.scrolled.scrollBy(context, { x: centerX - Environment.screenWidth / 2, y: 0 })
+                                    v.scaleX = 1.2
+                                    v.scaleY = 1.2
+                                })
                             },
                         })
                     ],

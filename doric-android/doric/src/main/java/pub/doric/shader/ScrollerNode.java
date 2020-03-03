@@ -136,4 +136,20 @@ public class ScrollerNode extends SuperNode<HVScrollView> implements IDoricScrol
                     DoricUtils.dp2px(offset.getProperty("y").asNumber().toFloat()));
         }
     }
+
+    @DoricMethod
+    public void scrollBy(JSObject params) {
+        boolean animated = false;
+        if (params.getProperty("animated").isBoolean()) {
+            animated = params.getProperty("animated").asBoolean().value();
+        }
+        JSObject offset = params.getProperty("offset").asObject();
+        if (animated) {
+            this.mView.smoothScrollBy(DoricUtils.dp2px(offset.getProperty("x").asNumber().toFloat()),
+                    DoricUtils.dp2px(offset.getProperty("y").asNumber().toFloat()));
+        } else {
+            this.mView.scrollBy(DoricUtils.dp2px(offset.getProperty("x").asNumber().toFloat()),
+                    DoricUtils.dp2px(offset.getProperty("y").asNumber().toFloat()));
+        }
+    }
 }

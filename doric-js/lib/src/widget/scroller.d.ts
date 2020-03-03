@@ -20,4 +20,8 @@ export declare class Scroller extends Superview implements IScroller {
         x: number;
         y: number;
     }, animated?: boolean): Promise<any>;
+    scrollBy(context: BridgeContext, offset: {
+        x: number;
+        y: number;
+    }, animated?: boolean): Promise<any>;
 }

@@ -591,6 +591,10 @@ declare module 'doric/lib/src/widget/scroller' {
             x: number;
             y: number;
         }, animated?: boolean): Promise<any>;
+        scrollBy(context: BridgeContext, offset: {
+            x: number;
+            y: number;
+        }, animated?: boolean): Promise<any>;
     }
 }
 

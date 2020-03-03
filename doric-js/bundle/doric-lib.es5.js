@@ -2016,6 +2016,9 @@ var Scroller = /** @class */ (function (_super) {
     Scroller.prototype.scrollTo = function (context, offset, animated) {
         return this.nativeChannel(context, "scrollTo")({ offset: offset, animated: animated });
     };
+    Scroller.prototype.scrollBy = function (context, offset, animated) {
+        return this.nativeChannel(context, "scrollBy")({ offset: offset, animated: animated });
+    };
     __decorate$7([
         Property,
         __metadata$7("design:type", Object)

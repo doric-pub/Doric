@@ -89,12 +89,17 @@ class MovieVH extends ViewHolder {
                     this.gallery = hlayout(
                         [],
                         {
-                            layoutConfig: layoutConfig().most().configWidth(LayoutSpec.FIT),
-                            space: 100,
+                            layoutConfig: layoutConfig().fit(),
+                            space: 20,
+                            padding: {
+                                top: 20,
+                                left: 20,
+                                right: 20,
+                                bottom: 20,
+                            }
                         }),
                     {
-                        layoutConfig: layoutConfig().most().configHeight(LayoutSpec.JUST),
-                        height: 200,
+                        layoutConfig: layoutConfig().most().configHeight(LayoutSpec.FIT),
                         backgroundColor: Color.parse("#eeeeee"),
                     })
             ],
@@ -122,8 +127,8 @@ class MovieVM extends ViewModel<MovieModel, MovieVH>{
                     [
                         image({
                             layoutConfig: layoutConfig().just(),
-                            width: 100,
-                            height: 100,
+                            width: 270 / 2,
+                            height: 400 / 2,
                             imageUrl: e.images.large
                         })
                     ],

@@ -2982,21 +2982,15 @@ function slideItem(item, config) {
     });
 }
 
-/*
- * Copyright [2019] [Doric.Pub]
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+var __decorate$7 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata$7 = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 function scroller(content, config) {
     return (new Scroller).also(v => {
         v.layoutConfig = layoutConfig().fit();
@@ -3020,14 +3014,18 @@ class Scroller extends Superview {
         return this.nativeChannel(context, "scrollTo")({ offset, animated });
     }
 }
+__decorate$7([
+    Property,
+    __metadata$7("design:type", Object)
+], Scroller.prototype, "contentOffset", void 0);
 
-var __decorate$7 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$8 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$7 = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$8 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 class Refreshable extends Superview {
@@ -3056,9 +3054,9 @@ class Refreshable extends Superview {
         return super.toModel();
     }
 }
-__decorate$7([
+__decorate$8([
     Property,
-    __metadata$7("design:type", Function)
+    __metadata$8("design:type", Function)
 ], Refreshable.prototype, "onRefresh", void 0);
 function refreshable(config) {
     const ret = new Refreshable;
@@ -3075,20 +3073,20 @@ function pullable(v, config) {
     return v;
 }
 
-var __decorate$8 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$9 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$8 = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$9 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 class FlowLayoutItem extends Stack {
 }
-__decorate$8([
+__decorate$9([
     Property,
-    __metadata$8("design:type", String)
+    __metadata$9("design:type", String)
 ], FlowLayoutItem.prototype, "identifier", void 0);
 class FlowLayout extends Superview {
     constructor() {
@@ -3139,41 +3137,41 @@ class FlowLayout extends Superview {
         return super.toModel();
     }
 }
-__decorate$8([
+__decorate$9([
     Property,
-    __metadata$8("design:type", Object)
+    __metadata$9("design:type", Object)
 ], FlowLayout.prototype, "columnCount", void 0);
-__decorate$8([
+__decorate$9([
     Property,
-    __metadata$8("design:type", Number)
+    __metadata$9("design:type", Number)
 ], FlowLayout.prototype, "columnSpace", void 0);
-__decorate$8([
+__decorate$9([
     Property,
-    __metadata$8("design:type", Number)
+    __metadata$9("design:type", Number)
 ], FlowLayout.prototype, "rowSpace", void 0);
-__decorate$8([
+__decorate$9([
     Property,
-    __metadata$8("design:type", Object)
+    __metadata$9("design:type", Object)
 ], FlowLayout.prototype, "itemCount", void 0);
-__decorate$8([
+__decorate$9([
     Property,
-    __metadata$8("design:type", Function)
+    __metadata$9("design:type", Function)
 ], FlowLayout.prototype, "renderItem", void 0);
-__decorate$8([
+__decorate$9([
     Property,
-    __metadata$8("design:type", Object)
+    __metadata$9("design:type", Object)
 ], FlowLayout.prototype, "batchCount", void 0);
-__decorate$8([
+__decorate$9([
     Property,
-    __metadata$8("design:type", Function)
+    __metadata$9("design:type", Function)
 ], FlowLayout.prototype, "onLoadMore", void 0);
-__decorate$8([
+__decorate$9([
     Property,
-    __metadata$8("design:type", Boolean)
+    __metadata$9("design:type", Boolean)
 ], FlowLayout.prototype, "loadMore", void 0);
-__decorate$8([
+__decorate$9([
     Property,
-    __metadata$8("design:type", FlowLayoutItem)
+    __metadata$9("design:type", FlowLayoutItem)
 ], FlowLayout.prototype, "loadMoreView", void 0);
 function flowlayout(config) {
     const ret = new FlowLayout;
@@ -3201,13 +3199,13 @@ function flowItem(item, config) {
     });
 }
 
-var __decorate$9 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$a = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$9 = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$a = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 class Input extends View {
@@ -3227,41 +3225,41 @@ class Input extends View {
         return this.nativeChannel(context, 'releaseFocus')();
     }
 }
-__decorate$9([
+__decorate$a([
     Property,
-    __metadata$9("design:type", String)
+    __metadata$a("design:type", String)
 ], Input.prototype, "text", void 0);
-__decorate$9([
+__decorate$a([
     Property,
-    __metadata$9("design:type", Color)
+    __metadata$a("design:type", Color)
 ], Input.prototype, "textColor", void 0);
-__decorate$9([
+__decorate$a([
     Property,
-    __metadata$9("design:type", Number)
+    __metadata$a("design:type", Number)
 ], Input.prototype, "textSize", void 0);
-__decorate$9([
+__decorate$a([
     Property,
-    __metadata$9("design:type", String)
+    __metadata$a("design:type", String)
 ], Input.prototype, "hintText", void 0);
-__decorate$9([
+__decorate$a([
     Property,
-    __metadata$9("design:type", Color)
+    __metadata$a("design:type", Color)
 ], Input.prototype, "hintTextColor", void 0);
-__decorate$9([
+__decorate$a([
     Property,
-    __metadata$9("design:type", Boolean)
+    __metadata$a("design:type", Boolean)
 ], Input.prototype, "multiline", void 0);
-__decorate$9([
+__decorate$a([
     Property,
-    __metadata$9("design:type", Gravity)
+    __metadata$a("design:type", Gravity)
 ], Input.prototype, "textAlignment", void 0);
-__decorate$9([
+__decorate$a([
     Property,
-    __metadata$9("design:type", Function)
+    __metadata$a("design:type", Function)
 ], Input.prototype, "onTextChange", void 0);
-__decorate$9([
+__decorate$a([
     Property,
-    __metadata$9("design:type", Function)
+    __metadata$a("design:type", Function)
 ], Input.prototype, "onFocusChange", void 0);
 function input(config) {
     const ret = new Input;
@@ -3272,13 +3270,13 @@ function input(config) {
     return ret;
 }
 
-var __decorate$a = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$b = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$a = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$b = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 class NestedSlider extends Group {
@@ -3292,25 +3290,25 @@ class NestedSlider extends Group {
         return this.nativeChannel(context, "getSlidedPage")();
     }
 }
-__decorate$a([
+__decorate$b([
     Property,
-    __metadata$a("design:type", Function)
+    __metadata$b("design:type", Function)
 ], NestedSlider.prototype, "onPageSlided", void 0);
 
-var __decorate$b = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$c = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$b = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$c = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 class Draggable extends Stack {
 }
-__decorate$b([
+__decorate$c([
     Property,
-    __metadata$b("design:type", Function)
+    __metadata$c("design:type", Function)
 ], Draggable.prototype, "onDrag", void 0);
 function draggable(views, config) {
     const ret = new Draggable;

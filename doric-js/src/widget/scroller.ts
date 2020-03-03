@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Superview, View, IView, NativeViewModel } from '../ui/view'
+import { Superview, View, IView, NativeViewModel, Property } from '../ui/view'
 import { layoutConfig } from '../util/layoutconfig'
 import { BridgeContext } from '../runtime/global'
 
@@ -31,10 +31,14 @@ export function scroller(content: View, config?: IScroller) {
 
 export interface IScroller extends IView {
     content?: View
+    contentOffset?: { x: number, y: number }
 }
 
 export class Scroller extends Superview implements IScroller {
     content!: View
+
+    @Property
+    contentOffset?: { x: number, y: number }
 
     allSubviews() {
         return [this.content]

@@ -107,6 +107,10 @@
             self.view.contentView = it.view;
         }];
     }
+    if (props[@"contentOffset"]) {
+        NSDictionary *prop = props[@"contentOffset"];
+        self.view.contentOffset = CGPointMake([prop[@"x"] floatValue], [prop[@"y"] floatValue]);
+    }
 }
 
 - (void)blendView:(DoricScrollView *)view forPropName:(NSString *)name propValue:(id)prop {

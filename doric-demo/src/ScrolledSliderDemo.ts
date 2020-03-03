@@ -150,7 +150,7 @@ class MovieVM extends ViewModel<MovieModel, MovieVH>{
                             imageUrl: e.images.large,
                             onClick: () => {
                                 this.updateState(state => state.selectedIdx = idx)
-                                vh.scrolled.scrollTo(context, { x: idx * 200, y: 0 })
+                                vh.scrolled.contentOffset = { x: idx * 200, y: 0 }
                             },
                         })
                     ],

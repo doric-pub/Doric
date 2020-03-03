@@ -574,9 +574,17 @@ declare module 'doric/lib/src/widget/scroller' {
     export function scroller(content: View, config?: IScroller): Scroller;
     export interface IScroller extends IView {
         content?: View;
+        contentOffset?: {
+            x: number;
+            y: number;
+        };
     }
     export class Scroller extends Superview implements IScroller {
         content: View;
+        contentOffset?: {
+            x: number;
+            y: number;
+        };
         allSubviews(): View[];
         toModel(): NativeViewModel;
         scrollTo(context: BridgeContext, offset: {

@@ -109,6 +109,11 @@ public class ScrollerNode extends SuperNode<HVScrollView> implements IDoricScrol
             mChildNode.blend(props);
             mView.addView(mChildNode.getNodeView());
         }
+        if (jsObject.getProperty("contentOffset").isObject()) {
+            JSObject offset = jsObject.getProperty("contentOffset").asObject();
+            mView.scrollTo(DoricUtils.dp2px(offset.getProperty("x").asNumber().toFloat()),
+                    DoricUtils.dp2px(offset.getProperty("y").asNumber().toFloat()));
+        }
     }
 
     @Override

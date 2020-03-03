@@ -51,6 +51,8 @@
 @interface DoricScrollerNode () <UIScrollViewDelegate>
 @property(nonatomic, strong) DoricViewNode *childNode;
 @property(nonatomic, copy) NSString *childViewId;
+@property(nonatomic, copy) NSString *onScrollFuncId;
+@property(nonatomic, copy) NSString *onScrollEndFuncId;
 @end
 
 @implementation DoricScrollerNode
@@ -116,6 +118,10 @@
 - (void)blendView:(DoricScrollView *)view forPropName:(NSString *)name propValue:(id)prop {
     if ([@"content" isEqualToString:name]) {
         self.childViewId = prop;
+    } else if ([@"onScroll" isEqualToString:name]) {
+        self.onScrollFuncId = prop;
+    } else if ([@"onScrollEnd" isEqualToString:name]) {
+        self.onScrollEndFuncId = prop;
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }
@@ -135,6 +141,14 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (self.didScrollListener) {
         self.didScrollListener(scrollView);
+    }
+    if (self.onScrollFuncId) {
+        [self callJSResponse:self.onScrollFuncId,
+                             @{
+                                     @"x": @(self.view.contentOffset.x),
+                                     @"y": @(self.view.contentOffset.y),
+                             },
+                        nil];
     }
 }
 

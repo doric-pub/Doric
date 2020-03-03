@@ -40,6 +40,12 @@ export class Scroller extends Superview implements IScroller {
     @Property
     contentOffset?: { x: number, y: number }
 
+    @Property
+    onScroll?: (offset: { x: number, y: number }) => void
+
+    @Property
+    onScrollEnd?: (offset: { x: number, y: number }) => void
+
     allSubviews() {
         return [this.content]
     }

@@ -35,6 +35,10 @@ export abstract class ViewModel<M extends Object, V extends ViewHolder> {
         return this.state
     }
 
+    getViewHolder() {
+        return this.viewHolder;
+    }
+
     updateState(setter: Setter<M>) {
         setter(this.state)
         this.onBind(this.state, this.viewHolder)

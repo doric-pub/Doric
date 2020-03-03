@@ -9,6 +9,7 @@ export declare abstract class ViewModel<M extends Object, V extends ViewHolder> 
     private viewHolder;
     constructor(obj: M, v: V);
     getState(): M;
+    getViewHolder(): V;
     updateState(setter: Setter<M>): void;
     attach(view: Group): void;
     abstract onAttached(state: M, vh: V): void;

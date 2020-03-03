@@ -9,6 +9,9 @@ export class ViewModel {
     getState() {
         return this.state;
     }
+    getViewHolder() {
+        return this.viewHolder;
+    }
     updateState(setter) {
         setter(this.state);
         this.onBind(this.state, this.viewHolder);

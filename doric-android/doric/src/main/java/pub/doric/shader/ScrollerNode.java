@@ -15,6 +15,10 @@
  */
 package pub.doric.shader;
 
+import android.text.TextUtils;
+import android.util.Log;
+
+import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
@@ -36,6 +40,9 @@ public class ScrollerNode extends SuperNode<HVScrollView> implements IDoricScrol
     private String mChildViewId;
     private ViewNode mChildNode;
     private DoricScrollChangeListener doricScrollChangeListener;
+    private String onScrollFuncId;
+    private String onScrollEndFuncId;
+
 
     public ScrollerNode(DoricContext doricContext) {
         super(doricContext);
@@ -57,10 +64,29 @@ public class ScrollerNode extends SuperNode<HVScrollView> implements IDoricScrol
     protected HVScrollView build() {
         HVScrollView hvScrollView = new HVScrollView(getContext());
         hvScrollView.setOnScrollChangeListener(new HVScrollView.OnScrollChangeListener() {
+
             @Override
             public void onScrollChange(HVScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                 if (doricScrollChangeListener != null) {
                     doricScrollChangeListener.onScrollChange(v, scrollX, scrollY, oldScrollX, oldScrollY);
+                }
+                if (!TextUtils.isEmpty(onScrollFuncId)) {
+                    callJSResponse(onScrollFuncId, new JSONBuilder()
+                            .put("x", DoricUtils.px2dp(scrollX))
+                            .put("y", DoricUtils.px2dp(scrollY))
+                            .toJSONObject());
+                }
+            }
+
+            @Override
+            public void onScrollEnd(HVScrollView v, int scrollX, int scrollY) {
+                if (!TextUtils.isEmpty(onScrollEndFuncId)) {
+                    callJSResponse(
+                            onScrollEndFuncId,
+                            new JSONBuilder()
+                                    .put("x", DoricUtils.px2dp(scrollX))
+                                    .put("y", DoricUtils.px2dp(scrollY))
+                                    .toJSONObject());
                 }
             }
         });
@@ -71,6 +97,10 @@ public class ScrollerNode extends SuperNode<HVScrollView> implements IDoricScrol
     protected void blend(HVScrollView view, String name, JSValue prop) {
         if ("content".equals(name)) {
             mChildViewId = prop.asString().value();
+        } else if ("onScroll".equals(name)) {
+            onScrollFuncId = prop.asString().value();
+        } else if ("onScrollEnd".equals(name)) {
+            onScrollEndFuncId = prop.asString().value();
         } else {
             super.blend(view, name, prop);
         }

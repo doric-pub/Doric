@@ -2969,6 +2969,14 @@ __decorate$7([
     Property,
     __metadata$7("design:type", Object)
 ], Scroller.prototype, "contentOffset", void 0);
+__decorate$7([
+    Property,
+    __metadata$7("design:type", Function)
+], Scroller.prototype, "onScroll", void 0);
+__decorate$7([
+    Property,
+    __metadata$7("design:type", Function)
+], Scroller.prototype, "onScrollEnd", void 0);
 
 var __decorate$8 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -3716,6 +3724,9 @@ class ViewModel {
     }
     getState() {
         return this.state;
+    }
+    getViewHolder() {
+        return this.viewHolder;
     }
     updateState(setter) {
         setter(this.state);

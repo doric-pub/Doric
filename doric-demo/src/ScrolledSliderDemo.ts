@@ -139,6 +139,7 @@ class MovieVM extends ViewModel<MovieModel, MovieVH>{
             this.updateState(state => state.doubanModel = JSON.parse(ret.data) as DoubanModel)
         })
     }
+
     onBind(state: MovieModel, vh: MovieVH) {
         if (state.doubanModel) {
             vh.title.text = state.doubanModel.title
@@ -162,7 +163,7 @@ class MovieVM extends ViewModel<MovieModel, MovieVH>{
                                 }
                                 v.getLocationOnScreen(context).then(ret => {
                                     const centerX = ret.x + v.width / 2;
-                                    vh.scrolled.scrollBy(context, { x: centerX - Environment.screenWidth / 2, y: 0 })
+                                    vh.scrolled.scrollBy(context, { x: centerX - Environment.screenWidth / 2, y: 0 }, true)
                                 })
                             },
                         })

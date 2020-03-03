@@ -152,12 +152,14 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     if (self.rotation) {
         transform = CGAffineTransformRotate(transform, (self.rotation.floatValue ?: 0) * M_PI);
     }
-    if (!CGAffineTransformEqualToTransform(transform, self.view.transform)) {
-        self.view.transform = transform;
-    }
     if (self.pivotX || self.pivotY) {
         self.view.layer.anchorPoint = CGPointMake(self.pivotX.floatValue
                 ?: 0.5f, self.pivotY.floatValue ?: 0.5f);
+    }
+    if (!CGAffineTransformEqualToTransform(transform, self.view.transform)) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.view.transform = transform;
+        });
     }
 }
 

@@ -367,6 +367,12 @@ var View = /** @class */ (function () {
     View.prototype.getHeight = function (context) {
         return this.nativeChannel(context, 'getHeight')();
     };
+    View.prototype.getX = function (context) {
+        return this.nativeChannel(context, 'getX')();
+    };
+    View.prototype.getY = function (context) {
+        return this.nativeChannel(context, 'getY')();
+    };
     View.prototype.getLocationOnScreen = function (context) {
         return this.nativeChannel(context, "getLocationOnScreen")();
     };

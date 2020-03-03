@@ -319,6 +319,14 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     return @(self.view.height);
 }
 
+- (NSNumber *)getX {
+    return @(self.view.x);
+}
+
+- (NSNumber *)getY {
+    return @(self.view.y);
+}
+
 - (NSDictionary *)getLocationOnScreen {
     CGPoint point = [self.view convertPoint:CGPointMake(0, 0) toView:[UIApplication sharedApplication].windows.lastObject];
     return @{@"x": @(point.x), @"y": @(point.y)};

@@ -561,7 +561,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         if (mLayoutParams instanceof ViewGroup.MarginLayoutParams) {
             return DoricUtils.px2dp(((ViewGroup.MarginLayoutParams) mLayoutParams).leftMargin);
         }
-        return 0;
+        return DoricUtils.px2dp(mView.getLeft());
     }
 
     @DoricMethod
@@ -569,7 +569,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         if (mLayoutParams instanceof ViewGroup.MarginLayoutParams) {
             return DoricUtils.px2dp(((ViewGroup.MarginLayoutParams) mLayoutParams).topMargin);
         }
-        return 0;
+        return DoricUtils.px2dp(mView.getTop());
     }
 
     @DoricMethod

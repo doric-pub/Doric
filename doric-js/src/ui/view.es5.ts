@@ -308,6 +308,14 @@ export abstract class View implements Modeling, IView {
         return this.nativeChannel(context, 'getHeight')() as Promise<number>
     }
 
+    getX(context: BridgeContext) {
+        return this.nativeChannel(context, 'getX')() as Promise<number>
+    }
+
+    getY(context: BridgeContext) {
+        return this.nativeChannel(context, 'getY')() as Promise<number>
+    }
+
     getLocationOnScreen(context: BridgeContext) {
         return this.nativeChannel(context, "getLocationOnScreen")() as Promise<{ x: number, y: number }>
     }

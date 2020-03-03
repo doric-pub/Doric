@@ -4,6 +4,7 @@ import bundles from './build/index'
 import fs from 'fs'
 import path from 'path'
 import buble from '@rollup/plugin-buble';
+import json from "@rollup/plugin-json"
 
 function readDirs(dirPath, files) {
     if (fs.statSync(dirPath).isDirectory()) {
@@ -49,6 +50,7 @@ export default
                 plugins: [
                     resolve({ mainFields: ["jsnext"] }),
                     commonjs(),
+                    json(),
                 ],
                 external: ['reflect-metadata', 'doric'],
                 onwarn: function (warning) {
@@ -70,6 +72,7 @@ export default
                         plugins: [
                             resolve({ mainFields: ["jsnext"] }),
                             commonjs(),
+                            json(),
                             buble({
                                 transforms: { dangerousForOf: true }
                             }),

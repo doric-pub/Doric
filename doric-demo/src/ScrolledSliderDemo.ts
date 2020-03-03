@@ -94,7 +94,7 @@ class MovieVH extends ViewHolder {
                         [],
                         {
                             layoutConfig: layoutConfig().fit(),
-                            space: 20,
+                            space: 0,
                             padding: {
                                 top: 20,
                                 left: 20,
@@ -144,29 +144,33 @@ class MovieVM extends ViewModel<MovieModel, MovieVH>{
             vh.title.text = state.doubanModel.title
             vh.gallery.children.length = 0
             const vm = this
-            state.doubanModel.subjects.slice(0, 5).forEach((e, idx) => {
+            state.doubanModel.subjects.forEach((e, idx) => {
                 vh.gallery.addChild(stack(
                     [
                         image({
-                            layoutConfig: layoutConfig().just(),
+                            layoutConfig: layoutConfig().just().configAlignment(Gravity.Center),
                             width: 270 / 2,
                             height: 400 / 2,
                             imageUrl: e.images.large,
-                            scaleX: 1,
-                            scaleY: 1,
+                            scaleX: state.selectedIdx == idx ? 1.5 : 1,
+                            scaleY: state.selectedIdx == idx ? 1.5 : 1,
                             onClick: function () {
                                 vm.updateState(state => state.selectedIdx = idx)
-                                const v = this as Image
+                                const v = (this as Image).superview
+                                if (v == undefined) {
+                                    return
+                                }
                                 v.getLocationOnScreen(context).then(ret => {
                                     const centerX = ret.x + v.width / 2;
                                     vh.scrolled.scrollBy(context, { x: centerX - Environment.screenWidth / 2, y: 0 })
-                                    v.scaleX = 1.2
-                                    v.scaleY = 1.2
                                 })
                             },
                         })
                     ],
                     {
+                        layoutConfig: layoutConfig().just(),
+                        width: 270 / 2 * 1.5,
+                        height: 400 / 2 * 1.5,
                     }))
             })
             takeNonNull(state.doubanModel.subjects[state.selectedIdx])(it => {

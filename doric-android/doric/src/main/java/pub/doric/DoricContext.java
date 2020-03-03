@@ -101,7 +101,6 @@ public class DoricContext {
         this.mContextId = contextId;
         this.source = source;
         this.extra = extra;
-        callEntity(DoricConstant.DORIC_ENTITY_CREATE);
     }
 
     public String getSource() {
@@ -116,6 +115,7 @@ public class DoricContext {
         DoricContext doricContext = DoricContextManager.getInstance().createContext(context, script, source, extra);
         doricContext.script = script;
         doricContext.extra = extra;
+        doricContext.callEntity(DoricConstant.DORIC_ENTITY_CREATE);
         return doricContext;
     }
 

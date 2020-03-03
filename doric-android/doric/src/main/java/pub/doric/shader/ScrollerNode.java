@@ -21,7 +21,9 @@ import com.github.pengfeizhou.jscore.JSValue;
 import pub.doric.DoricContext;
 import pub.doric.DoricScrollChangeListener;
 import pub.doric.IDoricScrollable;
+import pub.doric.extension.bridge.DoricMethod;
 import pub.doric.extension.bridge.DoricPlugin;
+import pub.doric.utils.DoricUtils;
 import pub.doric.widget.HVScrollView;
 
 /**
@@ -112,5 +114,21 @@ public class ScrollerNode extends SuperNode<HVScrollView> implements IDoricScrol
     @Override
     public void setScrollChangeListener(DoricScrollChangeListener listener) {
         this.doricScrollChangeListener = listener;
+    }
+
+    @DoricMethod
+    public void scrollTo(JSObject params) {
+        boolean animated = false;
+        if (params.getProperty("animated").isBoolean()) {
+            animated = params.getProperty("animated").asBoolean().value();
+        }
+        JSObject offset = params.getProperty("offset").asObject();
+        if (animated) {
+            this.mView.smoothScrollTo(DoricUtils.dp2px(offset.getProperty("x").asNumber().toFloat()),
+                    DoricUtils.dp2px(offset.getProperty("y").asNumber().toFloat()));
+        } else {
+            this.mView.scrollTo(DoricUtils.dp2px(offset.getProperty("x").asNumber().toFloat()),
+                    DoricUtils.dp2px(offset.getProperty("y").asNumber().toFloat()));
+        }
     }
 }

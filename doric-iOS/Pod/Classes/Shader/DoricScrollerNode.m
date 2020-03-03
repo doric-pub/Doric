@@ -35,7 +35,7 @@
 
 - (CGSize)sizeThatFits:(CGSize)size {
     if (self.contentView) {
-        return [self.contentView sizeThatFits:size];
+        return [self.contentView measureSize:size];
     }
     return CGSizeZero;
 }

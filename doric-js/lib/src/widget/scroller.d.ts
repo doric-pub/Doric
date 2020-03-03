@@ -14,6 +14,14 @@ export declare class Scroller extends Superview implements IScroller {
         x: number;
         y: number;
     };
+    onScroll?: (offset: {
+        x: number;
+        y: number;
+    }) => void;
+    onScrollEnd?: (offset: {
+        x: number;
+        y: number;
+    }) => void;
     allSubviews(): View[];
     toModel(): NativeViewModel;
     scrollTo(context: BridgeContext, offset: {

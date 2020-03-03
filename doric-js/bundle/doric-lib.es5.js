@@ -2029,6 +2029,14 @@ var Scroller = /** @class */ (function (_super) {
         Property,
         __metadata$7("design:type", Object)
     ], Scroller.prototype, "contentOffset", void 0);
+    __decorate$7([
+        Property,
+        __metadata$7("design:type", Function)
+    ], Scroller.prototype, "onScroll", void 0);
+    __decorate$7([
+        Property,
+        __metadata$7("design:type", Function)
+    ], Scroller.prototype, "onScrollEnd", void 0);
     return Scroller;
 }(Superview));
 
@@ -3039,6 +3047,9 @@ var ViewModel = /** @class */ (function () {
     }
     ViewModel.prototype.getState = function () {
         return this.state;
+    };
+    ViewModel.prototype.getViewHolder = function () {
+        return this.viewHolder;
     };
     ViewModel.prototype.updateState = function (setter) {
         setter(this.state);

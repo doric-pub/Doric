@@ -134,10 +134,17 @@ class MovieVH extends ViewHolder {
 
 class MovieVM extends ViewModel<MovieModel, MovieVH>{
 
-    onAttached() {
+    onAttached(state: MovieModel, vh: MovieVH) {
         network(context).get("https://douban.uieee.com/v2/movie/top250").then(ret => {
             this.updateState(state => state.doubanModel = JSON.parse(ret.data) as DoubanModel)
         })
+        vh.scrolled.onScroll = (offset) => {
+            const centerX = offset.x + Environment.screenWidth / 2
+            const idx = Math.floor(centerX / (270 / 2 * 1.5))
+            if (state.selectedIdx != idx) {
+                this.updateState(state => state.selectedIdx = idx)
+            }
+        }
     }
 
     onBind(state: MovieModel, vh: MovieVH) {
@@ -156,7 +163,6 @@ class MovieVM extends ViewModel<MovieModel, MovieVH>{
                             scaleX: state.selectedIdx == idx ? 1.5 : 1,
                             scaleY: state.selectedIdx == idx ? 1.5 : 1,
                             onClick: function () {
-                                vm.updateState(state => state.selectedIdx = idx)
                                 const v = (this as Image).superview
                                 if (v == undefined) {
                                     return

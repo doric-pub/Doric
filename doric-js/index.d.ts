@@ -587,6 +587,14 @@ declare module 'doric/lib/src/widget/scroller' {
             x: number;
             y: number;
         };
+        onScroll?: (offset: {
+            x: number;
+            y: number;
+        }) => void;
+        onScrollEnd?: (offset: {
+            x: number;
+            y: number;
+        }) => void;
         allSubviews(): View[];
         toModel(): NativeViewModel;
         scrollTo(context: BridgeContext, offset: {
@@ -1139,6 +1147,7 @@ declare module 'doric/lib/src/pattern/mvvm' {
     export abstract class ViewModel<M extends Object, V extends ViewHolder> {
         constructor(obj: M, v: V);
         getState(): M;
+        getViewHolder(): V;
         updateState(setter: Setter<M>): void;
         attach(view: Group): void;
         abstract onAttached(state: M, vh: V): void;

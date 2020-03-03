@@ -89,6 +89,8 @@ public class HVScrollView extends FrameLayout implements NestedScrollingParent,
          */
         void onScrollChange(HVScrollView v, int scrollX, int scrollY,
                             int oldScrollX, int oldScrollY);
+
+        void onScrollEnd(HVScrollView v, int scrollX, int scrollY);
     }
 
     private long mLastScroll;
@@ -690,6 +692,9 @@ public class HVScrollView extends FrameLayout implements NestedScrollingParent,
             return;
         }
         mScrollState = state;
+        if (state == SCROLL_STATE_IDLE && mOnScrollChangeListener != null) {
+            mOnScrollChangeListener.onScrollEnd(this, getScrollX(), getScrollY());
+        }
     }
 
     private void cancelTouch() {

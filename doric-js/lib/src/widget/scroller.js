@@ -54,3 +54,11 @@ __decorate([
     Property,
     __metadata("design:type", Object)
 ], Scroller.prototype, "contentOffset", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Function)
+], Scroller.prototype, "onScroll", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Function)
+], Scroller.prototype, "onScrollEnd", void 0);

@@ -1,5 +1,6 @@
 import { Group, text, gravity, Color, LayoutSpec, vlayout, hlayout, layoutConfig, scroller, Text, ViewHolder, VMPanel, ViewModel, network, loge, HLayout, stack, image, Gravity, takeNonNull, Scroller, Image } from "doric";
 import { colors } from "./utils";
+import MovieData from './movie.json'
 
 interface DoubanModel {
     count: number
@@ -16,7 +17,7 @@ interface DoubanModel {
                 "4": number,
                 "5": number,
             },
-            stars: number
+            stars: string
             min: number,
         }
         genres: string[],
@@ -204,7 +205,7 @@ class SliderPanel extends VMPanel<MovieModel, MovieVH>{
     }
 
     getState() {
-        return { selectedIdx: 0 }
+        return { selectedIdx: 0, doubanModel: MovieData }
     }
 
 }

@@ -133,17 +133,24 @@ class MovieVH extends ViewHolder {
 }
 
 class MovieVM extends ViewModel<MovieModel, MovieVH>{
+    images: Map<number, Image> = new Map
 
     onAttached(state: MovieModel, vh: MovieVH) {
         network(context).get("https://douban.uieee.com/v2/movie/top250").then(ret => {
             this.updateState(state => state.doubanModel = JSON.parse(ret.data) as DoubanModel)
         })
         vh.scrolled.onScroll = (offset) => {
+            const frameWidth = 270 / 2 * 1.5
             const centerX = offset.x + Environment.screenWidth / 2
-            const idx = Math.floor(centerX / (270 / 2 * 1.5))
+            const idx = Math.floor(centerX / frameWidth)
             if (state.selectedIdx != idx) {
                 this.updateState(state => state.selectedIdx = idx)
             }
+            const overOff = Math.abs(centerX - frameWidth * (idx + 0.5))
+            const scale = overOff / (frameWidth / 2)
+            takeNonNull(this.images.get(idx))(v => {
+                v.scaleX = v.scaleY = 1.5 - 0.5 * scale
+            })
         }
     }
 
@@ -151,7 +158,6 @@ class MovieVM extends ViewModel<MovieModel, MovieVH>{
         if (state.doubanModel) {
             vh.title.text = state.doubanModel.title
             vh.gallery.children.length = 0
-            const vm = this
             state.doubanModel.subjects.forEach((e, idx) => {
                 vh.gallery.addChild(stack(
                     [
@@ -160,8 +166,6 @@ class MovieVM extends ViewModel<MovieModel, MovieVH>{
                             width: 270 / 2,
                             height: 400 / 2,
                             imageUrl: e.images.large,
-                            scaleX: state.selectedIdx == idx ? 1.5 : 1,
-                            scaleY: state.selectedIdx == idx ? 1.5 : 1,
                             onClick: function () {
                                 const v = (this as Image).superview
                                 if (v == undefined) {
@@ -172,6 +176,8 @@ class MovieVM extends ViewModel<MovieModel, MovieVH>{
                                     vh.scrolled.scrollBy(context, { x: centerX - Environment.screenWidth / 2, y: 0 }, true)
                                 })
                             },
+                        }).also(it => {
+                            this.images.set(idx, it)
                         })
                     ],
                     {

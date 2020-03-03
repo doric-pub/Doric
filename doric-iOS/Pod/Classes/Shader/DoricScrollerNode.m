@@ -56,6 +56,8 @@
 - (DoricScrollView *)build {
     return [[DoricScrollView new] also:^(DoricScrollView *it) {
         it.delegate = self;
+        it.showsHorizontalScrollIndicator = NO;
+        it.showsVerticalScrollIndicator = NO;
         if (@available(iOS 11, *)) {
             it.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }

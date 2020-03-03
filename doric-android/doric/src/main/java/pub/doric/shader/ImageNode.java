@@ -23,6 +23,7 @@ import android.util.Base64;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
@@ -36,6 +37,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import androidx.annotation.Nullable;
+
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import pub.doric.DoricContext;
 import pub.doric.extension.bridge.DoricPlugin;
@@ -62,9 +64,9 @@ public class ImageNode extends ViewNode<ImageView> {
 
     @Override
     public void blend(JSObject jsObject) {
-        if(jsObject != null) {
+        if (jsObject != null) {
             JSValue jsValue = jsObject.getProperty("isBlur");
-            if(jsValue.isBoolean()) {
+            if (jsValue.isBoolean()) {
                 isBlur = jsValue.asBoolean().value();
             }
         }
@@ -75,14 +77,14 @@ public class ImageNode extends ViewNode<ImageView> {
     protected void blend(ImageView view, String name, JSValue prop) {
         switch (name) {
             case "imageUrl":
-                RequestOptions options;
-                if(isBlur) {
-                    options = RequestOptions.bitmapTransform(new BlurTransformation(25, 3));
-                } else {
-                    options = new RequestOptions();
+
+                RequestBuilder<Drawable> requestBuilder = Glide.with(getContext()).load(prop.asString().value());
+                if (isBlur) {
+                    requestBuilder = requestBuilder
+                            .apply(RequestOptions
+                                    .bitmapTransform(new BlurTransformation(25, 3)));
                 }
-                Glide.with(getContext()).load(prop.asString().value())
-                        .apply(options)
+                requestBuilder
                         .listener(new RequestListener<Drawable>() {
                             @Override
                             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {

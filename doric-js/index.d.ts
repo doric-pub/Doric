@@ -570,6 +570,7 @@ declare module 'doric/lib/src/widget/slider' {
 
 declare module 'doric/lib/src/widget/scroller' {
     import { Superview, View, IView, NativeViewModel } from 'doric/lib/src/ui/view';
+    import { BridgeContext } from 'doric/lib/src/runtime/global';
     export function scroller(content: View, config?: IScroller): Scroller;
     export interface IScroller extends IView {
         content?: View;
@@ -578,6 +579,10 @@ declare module 'doric/lib/src/widget/scroller' {
         content: View;
         allSubviews(): View[];
         toModel(): NativeViewModel;
+        scrollTo(context: BridgeContext, offset: {
+            x: number;
+            y: number;
+        }, animated?: boolean): Promise<any>;
     }
 }
 

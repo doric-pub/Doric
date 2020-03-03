@@ -15,6 +15,7 @@
  */
 import { Superview, View, IView, NativeViewModel } from '../ui/view'
 import { layoutConfig } from '../util/layoutconfig'
+import { BridgeContext } from '../runtime/global'
 
 export function scroller(content: View, config?: IScroller) {
     return (new Scroller).also(v => {
@@ -42,5 +43,9 @@ export class Scroller extends Superview implements IScroller {
     toModel(): NativeViewModel {
         this.dirtyProps.content = this.content.viewId
         return super.toModel()
+    }
+
+    scrollTo(context: BridgeContext, offset: { x: number, y: number }, animated?: boolean) {
+        return this.nativeChannel(context, "scrollTo")({ offset, animated })
     }
 }

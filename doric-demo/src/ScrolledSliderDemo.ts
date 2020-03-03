@@ -1,4 +1,4 @@
-import { Group, text, gravity, Color, LayoutSpec, vlayout, hlayout, layoutConfig, scroller, Text, ViewHolder, VMPanel, ViewModel, network, loge, HLayout, stack, image } from "doric";
+import { Group, text, gravity, Color, LayoutSpec, vlayout, hlayout, layoutConfig, scroller, Text, ViewHolder, VMPanel, ViewModel, network, loge, HLayout, stack, image, Gravity, takeNonNull, Scroller } from "doric";
 import { colors } from "./utils";
 
 interface DoubanModel {
@@ -65,11 +65,15 @@ interface DoubanModel {
 
 interface MovieModel {
     doubanModel?: DoubanModel
+    selectedIdx: number
 }
 
 class MovieVH extends ViewHolder {
     title!: Text
     gallery!: HLayout
+    scrolled!: Scroller
+    movieTitle!: Text
+    movieYear!: Text
 
     build(root: Group) {
         vlayout(
@@ -85,7 +89,7 @@ class MovieVH extends ViewHolder {
                     textAlignment: gravity().center(),
                     height: 50,
                 }),
-                scroller(
+                this.scrolled = scroller(
                     this.gallery = hlayout(
                         [],
                         {
@@ -96,12 +100,26 @@ class MovieVH extends ViewHolder {
                                 left: 20,
                                 right: 20,
                                 bottom: 20,
-                            }
+                            },
+                            gravity: Gravity.Center,
                         }),
                     {
                         layoutConfig: layoutConfig().most().configHeight(LayoutSpec.FIT),
                         backgroundColor: Color.parse("#eeeeee"),
-                    })
+                    }),
+                vlayout(
+                    [
+                        this.movieTitle = text({
+                            textSize: 20,
+                        }),
+                        this.movieYear = text({
+                            textSize: 20,
+                        }),
+                    ],
+                    {
+                        layoutConfig: layoutConfig().fit().configWidth(LayoutSpec.MOST),
+                        gravity: Gravity.Center
+                    }),
             ],
             {
                 layoutConfig: layoutConfig().most(),
@@ -122,19 +140,26 @@ class MovieVM extends ViewModel<MovieModel, MovieVH>{
         if (state.doubanModel) {
             vh.title.text = state.doubanModel.title
             vh.gallery.children.length = 0
-            state.doubanModel.subjects.slice(0, 5).forEach(e => {
+            state.doubanModel.subjects.slice(0, 5).forEach((e, idx) => {
                 vh.gallery.addChild(stack(
                     [
                         image({
                             layoutConfig: layoutConfig().just(),
-                            width: 270 / 2,
-                            height: 400 / 2,
-                            imageUrl: e.images.large
+                            width: 270 / 2 * (idx == state.selectedIdx ? 1.2 : 1),
+                            height: 400 / 2 * (idx == state.selectedIdx ? 1.2 : 1),
+                            imageUrl: e.images.large,
+                            onClick: () => {
+                                this.updateState(state => state.selectedIdx = idx)
+                                vh.scrolled.scrollTo(context, { x: idx * 200, y: 0 })
+                            },
                         })
                     ],
                     {
-                        backgroundColor: Color.YELLOW,
                     }))
+            })
+            takeNonNull(state.doubanModel.subjects[state.selectedIdx])(it => {
+                vh.movieTitle.text = it.title
+                vh.movieYear.text = it.year
             })
         }
     }
@@ -150,7 +175,7 @@ class SliderPanel extends VMPanel<MovieModel, MovieVH>{
     }
 
     getState() {
-        return {}
+        return { selectedIdx: 0 }
     }
 
 }

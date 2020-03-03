@@ -2004,6 +2004,9 @@ var Scroller = /** @class */ (function (_super) {
         this.dirtyProps.content = this.content.viewId;
         return _super.prototype.toModel.call(this);
     };
+    Scroller.prototype.scrollTo = function (context, offset, animated) {
+        return this.nativeChannel(context, "scrollTo")({ offset: offset, animated: animated });
+    };
     return Scroller;
 }(Superview));
 

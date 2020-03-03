@@ -22,6 +22,7 @@
 #import "DoricScrollerNode.h"
 #import "DoricExtensions.h"
 #import "DoricRefreshableNode.h"
+#import "DoricPromise.h"
 
 @implementation DoricScrollView
 
@@ -131,5 +132,12 @@
     if (self.didScrollListener) {
         self.didScrollListener(scrollView);
     }
+}
+
+- (void)scrollTo:(NSDictionary *)params {
+    BOOL animated = [params[@"animated"] boolValue];
+    NSDictionary *offsetDic = params[@"offset"];
+    CGPoint offset = CGPointMake([offsetDic[@"x"] floatValue], [offsetDic[@"y"] floatValue]);
+    [self.view setContentOffset:offset animated:animated];
 }
 @end

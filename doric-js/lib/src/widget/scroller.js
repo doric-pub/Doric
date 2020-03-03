@@ -34,4 +34,7 @@ export class Scroller extends Superview {
         this.dirtyProps.content = this.content.viewId;
         return super.toModel();
     }
+    scrollTo(context, offset, animated) {
+        return this.nativeChannel(context, "scrollTo")({ offset, animated });
+    }
 }

@@ -283,6 +283,12 @@ class View {
     getHeight(context) {
         return this.nativeChannel(context, 'getHeight')();
     }
+    getX(context) {
+        return this.nativeChannel(context, 'getX')();
+    }
+    getY(context) {
+        return this.nativeChannel(context, 'getY')();
+    }
     getLocationOnScreen(context) {
         return this.nativeChannel(context, "getLocationOnScreen")();
     }

@@ -152,6 +152,30 @@
     }
 }
 
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    if (self.onScrollEndFuncId) {
+        [self callJSResponse:self.onScrollEndFuncId,
+                             @{
+                                     @"x": @(self.view.contentOffset.x),
+                                     @"y": @(self.view.contentOffset.y),
+                             },
+                        nil];
+    }
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    if (!decelerate) {
+        if (self.onScrollEndFuncId) {
+            [self callJSResponse:self.onScrollEndFuncId,
+                                 @{
+                                         @"x": @(self.view.contentOffset.x),
+                                         @"y": @(self.view.contentOffset.y),
+                                 },
+                            nil];
+        }
+    }
+}
+
 - (void)scrollTo:(NSDictionary *)params {
     BOOL animated = [params[@"animated"] boolValue];
     NSDictionary *offsetDic = params[@"offset"];

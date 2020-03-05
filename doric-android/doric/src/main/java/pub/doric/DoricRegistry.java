@@ -15,6 +15,7 @@
  */
 package pub.doric;
 
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 
 import java.util.HashMap;
@@ -69,6 +70,10 @@ public class DoricRegistry {
     private Map<String, DoricMetaInfo<ViewNode>> nodeInfoMap = new HashMap<>();
 
     private Set<IDoricMonitor> monitors = new HashSet<>();
+
+    private Drawable defaultPlaceHolderDrawable = null;
+
+    private Drawable defaultErrorDrawable = null;
 
     private static void initRegistry(DoricRegistry doricRegistry) {
         for (DoricLibrary library : doricLibraries) {
@@ -167,5 +172,27 @@ public class DoricRegistry {
         for (IDoricMonitor monitor : this.monitors) {
             monitor.onLog(type, message);
         }
+    }
+
+    public Drawable getDefaultPlaceHolderDrawable() {
+        return defaultPlaceHolderDrawable;
+    }
+
+    /**
+     * @param defaultPlaceHolderDrawable Default display when image is loading and not set by JS API
+     */
+    public void setDefaultPlaceHolderDrawable(Drawable defaultPlaceHolderDrawable) {
+        this.defaultPlaceHolderDrawable = defaultPlaceHolderDrawable;
+    }
+
+    public Drawable getDefaultErrorDrawable() {
+        return defaultErrorDrawable;
+    }
+
+    /**
+     * @param defaultErrorDrawable Default display when image load error and not set by JS API
+     */
+    public void setDefaultErrorDrawable(Drawable defaultErrorDrawable) {
+        this.defaultErrorDrawable = defaultErrorDrawable;
     }
 }

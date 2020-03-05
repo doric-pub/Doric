@@ -15,6 +15,7 @@
  */
 import { IView, View, Property } from "../ui/view"
 import { layoutConfig } from "../util/layoutconfig"
+import { Color } from "../util/color"
 
 export enum ScaleType {
     ScaleToFill = 0,
@@ -27,18 +28,55 @@ export interface IImage extends IView {
     imageBase64?: string
     scaleType?: ScaleType
     isBlur?: boolean
+    placeHolderImage?: string
+    placeHolderColor?: Color
+    errorImage?: string
+    errorColor?: Color
     loadCallback?: (image: { width: number; height: number } | undefined) => void
 }
 
 export class Image extends View implements IImage {
     @Property
     imageUrl?: string
+
     @Property
     imageBase64?: string
+
     @Property
     scaleType?: ScaleType
+
     @Property
     isBlur?: boolean
+
+    /**
+     * Display while image is loading 
+     * Local file name
+     */
+    @Property
+    placeHolderImage?: string
+
+    /**
+     * Display while image is loading 
+     * Color
+     * This priority is lower than placeHolderImage
+     */
+    @Property
+    placeHolderColor?: Color
+
+    /**
+     * Display while image is failed to load 
+     * It can be file name in local path
+     */
+    @Property
+    errorImage?: string
+
+    /**
+     * Display while image is failed to load  
+     * Color
+     * This priority is lower than errorImage
+     */
+    @Property
+    errorColor?: Color
 
     @Property
     loadCallback?: (image: { width: number; height: number } | undefined) => void

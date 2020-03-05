@@ -1230,6 +1230,27 @@ __decorate$4([
 ], Image.prototype, "isBlur", void 0);
 __decorate$4([
     Property,
+    __metadata$4("design:type", String)
+], Image.prototype, "placeHolderImage", void 0);
+__decorate$4([
+    Property,
+    __metadata$4("design:type", Color
+    /**
+     * Display while image is failed to load
+     * It can be file name in local path
+     */
+    )
+], Image.prototype, "placeHolderColor", void 0);
+__decorate$4([
+    Property,
+    __metadata$4("design:type", String)
+], Image.prototype, "errorImage", void 0);
+__decorate$4([
+    Property,
+    __metadata$4("design:type", Color)
+], Image.prototype, "errorColor", void 0);
+__decorate$4([
+    Property,
     __metadata$4("design:type", Function)
 ], Image.prototype, "loadCallback", void 0);
 function image(config) {

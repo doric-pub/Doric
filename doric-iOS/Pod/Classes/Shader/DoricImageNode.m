@@ -27,6 +27,11 @@
 @interface DoricImageNode ()
 @property(nonatomic, copy) NSString *loadCallbackId;
 @property(nonatomic, assign) BOOL isBlur;
+@property(nonatomic, assign) UIViewContentMode contentMode;
+@property(nonatomic, strong) NSNumber *placeHolderColor;
+@property(nonatomic, strong) NSString *placeHolderImage;
+@property(nonatomic, strong) NSNumber *errorColor;
+@property(nonatomic, strong) NSString *errorImage;
 @end
 
 @implementation DoricImageNode
@@ -39,19 +44,78 @@
 
 - (void)blend:(NSDictionary *)props {
     NSInteger value = [props[@"isBlur"] intValue];
-    if(value == 1) {
+    if (value == 1) {
         self.isBlur = YES;
     }
-    
+    [props[@"placeHolderColor"] also:^(id it) {
+        self.placeHolderColor = it;
+    }];
+    [props[@"placeHolderImage"] also:^(id it) {
+        self.placeHolderImage = it;
+    }];
+    [props[@"errorColor"] also:^(id it) {
+        self.errorColor = it;
+    }];
+    [props[@"errorImage"] also:^(id it) {
+        self.errorImage = it;
+    }];
     [super blend:props];
+}
+
+- (UIImage *)currentPlaceHolderImage {
+    if (self.placeHolderImage) {
+        return [UIImage imageNamed:self.placeHolderImage];
+    }
+    if (self.placeHolderColor) {
+        UIColor *color = DoricColor(self.placeHolderColor);
+        CGRect rect = CGRectMake(0, 0, 1, 1);
+        self.view.contentMode = UIViewContentModeScaleToFill;
+        UIGraphicsBeginImageContextWithOptions(rect.size, NO, [UIScreen mainScreen].scale);
+
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        CGContextSetFillColorWithColor(context, color.CGColor);
+        CGContextFillRect(context, rect);
+
+        UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        return image;
+    }
+    return self.doricContext.driver.registry.defaultPlaceHolderImage;
+}
+
+- (UIImage *)currentErrorImage {
+    if (self.errorImage) {
+        return [UIImage imageNamed:self.errorImage];
+    }
+    if (self.errorColor) {
+        UIColor *color = DoricColor(self.errorColor);
+        CGRect rect = CGRectMake(0, 0, 1, 1);
+        self.view.contentMode = UIViewContentModeScaleToFill;
+        UIGraphicsBeginImageContextWithOptions(rect.size, NO, [UIScreen mainScreen].scale);
+
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        CGContextSetFillColorWithColor(context, color.CGColor);
+        CGContextFillRect(context, rect);
+
+        UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        return image;
+    }
+    return self.doricContext.driver.registry.defaultErrorImage;
 }
 
 - (void)blendView:(UIImageView *)view forPropName:(NSString *)name propValue:(id)prop {
     if ([@"imageUrl" isEqualToString:name]) {
         __weak typeof(self) _self = self;
-        [view yy_setImageWithURL:[NSURL URLWithString:prop] placeholder:nil options:0 completion:^(UIImage *image, NSURL *url, YYWebImageFromType from, YYWebImageStage stage, NSError *error) {
+        [view yy_setImageWithURL:[NSURL URLWithString:prop] placeholder:[self currentPlaceHolderImage] options:0 completion:^(UIImage *image, NSURL *url, YYWebImageFromType from, YYWebImageStage stage, NSError *error) {
             __strong typeof(_self) self = _self;
+            if (self.placeHolderColor || self.errorColor) {
+                self.view.contentMode = self.contentMode;
+            }
             if (error) {
+                [[self currentErrorImage] also:^(UIImage *it) {
+                    view.image = it;
+                }];
                 if (self.loadCallbackId.length > 0) {
                     [self callJSResponse:self.loadCallbackId, nil];
                 }
@@ -63,10 +127,10 @@
                 }
                 [self requestLayout];
             }
-            
-            if(self.isBlur) {
+
+            if (self.isBlur) {
                 UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-                UIVisualEffectView *effectView = [[UIVisualEffectView alloc]initWithEffect:blurEffect];
+                UIVisualEffectView *effectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
                 effectView.frame = CGRectMake(0, 0, image.size.width, image.size.height);
                 [view addSubview:effectView];
             }
@@ -86,6 +150,7 @@
                 break;
             }
         }
+        self.contentMode = self.view.contentMode;
     } else if ([@"loadCallback" isEqualToString:name]) {
         self.loadCallbackId = prop;
     } else if ([@"imageBase64" isEqualToString:name]) {

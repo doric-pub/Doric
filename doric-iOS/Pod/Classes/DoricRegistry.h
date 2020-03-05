@@ -22,11 +22,14 @@
 
 #import <Foundation/Foundation.h>
 #import "DoricMonitorProtocol.h"
+#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 @class DoricLibrary;
 
 @interface DoricRegistry : NSObject <DoricMonitorProtocol>
+@property(nonatomic, strong) UIImage *defaultPlaceHolderImage;
+@property(nonatomic, strong) UIImage *defaultErrorImage;
 
 - (NSString *)acquireJSBundle:(NSString *)name;
 

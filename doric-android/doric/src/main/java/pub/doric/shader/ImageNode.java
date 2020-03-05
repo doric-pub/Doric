@@ -140,20 +140,25 @@ public class ImageNode extends ViewNode<ImageView> {
             case "imageUrl":
                 RequestBuilder<Drawable> requestBuilder = Glide.with(getContext())
                         .load(prop.asString().value());
-                if (isBlur) {
-                    requestBuilder = requestBuilder
-                            .apply(RequestOptions
-                                    .bitmapTransform(new BlurTransformation(25, 3)));
-                }
-                Drawable placeHolderDrawable = getPlaceHolderDrawable();
+                try {
+                    if (isBlur) {
+                        requestBuilder = requestBuilder
+                                .apply(RequestOptions
+                                        .bitmapTransform(new BlurTransformation(25, 3)));
+                    }
+                    Drawable placeHolderDrawable = getPlaceHolderDrawable();
 
-                if (placeHolderDrawable != null) {
-                    requestBuilder = requestBuilder.apply(new RequestOptions().placeholder(placeHolderDrawable));
-                }
+                    if (placeHolderDrawable != null) {
+                        requestBuilder = requestBuilder.apply(RequestOptions.placeholderOf(placeHolderDrawable));
+                    }
 
-                Drawable errorDrawable = getErrorDrawable();
-                if (errorDrawable != null) {
-                    requestBuilder = requestBuilder.apply(new RequestOptions().error(errorDrawable));
+                    Drawable errorDrawable = getErrorDrawable();
+                    if (errorDrawable != null) {
+                        requestBuilder = requestBuilder.apply(RequestOptions.errorOf(errorDrawable));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    DoricLog.e("ImageNode blend error, please check the glide version");
                 }
 
                 requestBuilder

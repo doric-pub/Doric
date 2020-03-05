@@ -24,6 +24,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
  */
 import { View, Property } from "../ui/view";
 import { layoutConfig } from "../util/layoutconfig";
+import { Color } from "../util/color";
 export var ScaleType;
 (function (ScaleType) {
     ScaleType[ScaleType["ScaleToFill"] = 0] = "ScaleToFill";
@@ -48,6 +49,27 @@ __decorate([
     Property,
     __metadata("design:type", Boolean)
 ], Image.prototype, "isBlur", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", String)
+], Image.prototype, "placeHolderImage", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Color
+    /**
+     * Display while image is failed to load
+     * It can be file name in local path
+     */
+    )
+], Image.prototype, "placeHolderColor", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", String)
+], Image.prototype, "errorImage", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Color)
+], Image.prototype, "errorColor", void 0);
 __decorate([
     Property,
     __metadata("design:type", Function)

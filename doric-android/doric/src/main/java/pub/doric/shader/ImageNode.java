@@ -17,6 +17,8 @@ package pub.doric.shader;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -41,6 +43,7 @@ import androidx.annotation.Nullable;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import pub.doric.DoricContext;
 import pub.doric.extension.bridge.DoricPlugin;
+import pub.doric.utils.DoricLog;
 import pub.doric.utils.DoricUtils;
 
 /**
@@ -52,6 +55,10 @@ import pub.doric.utils.DoricUtils;
 public class ImageNode extends ViewNode<ImageView> {
     private String loadCallbackId = "";
     private boolean isBlur;
+    private String placeHolderImage;
+    private String errorImage;
+    private int placeHolderColor = Color.TRANSPARENT;
+    private int errorColor = Color.TRANSPARENT;
 
     public ImageNode(DoricContext doricContext) {
         super(doricContext);
@@ -69,21 +76,86 @@ public class ImageNode extends ViewNode<ImageView> {
             if (jsValue.isBoolean()) {
                 isBlur = jsValue.asBoolean().value();
             }
+            JSValue placeHolder = jsObject.getProperty("placeHolderImage");
+            if (placeHolder.isString()) {
+                this.placeHolderImage = placeHolder.asString().value();
+            }
+            JSValue error = jsObject.getProperty("errorImage");
+            if (error.isString()) {
+                this.errorImage = error.asString().value();
+            }
+            JSValue placeHolderColor = jsObject.getProperty("placeHolderColor");
+            if (placeHolderColor.isNumber()) {
+                this.placeHolderColor = placeHolderColor.asNumber().toInt();
+            }
+            JSValue errorColor = jsObject.getProperty("errorColor");
+            if (errorColor.isNumber()) {
+                this.errorColor = errorColor.asNumber().toInt();
+            }
         }
         super.blend(jsObject);
+    }
+
+    private Drawable getPlaceHolderDrawable() {
+        if (!TextUtils.isEmpty(placeHolderImage)) {
+            int resId = getDoricContext().getContext().getResources().getIdentifier(
+                    placeHolderImage.toLowerCase(),
+                    "drawable",
+                    getDoricContext().getContext().getPackageName());
+            if (resId > 0) {
+                return getDoricContext().getContext().getResources().getDrawable(resId);
+            } else {
+                DoricLog.e("Cannot find PlaceHolder Drawable for " + placeHolderImage);
+                return new ColorDrawable(Color.GRAY);
+            }
+        } else if (placeHolderColor != Color.TRANSPARENT) {
+            return new ColorDrawable(placeHolderColor);
+        } else {
+            return getDoricContext().getDriver().getRegistry().getDefaultPlaceHolderDrawable();
+        }
+    }
+
+    private Drawable getErrorDrawable() {
+        if (!TextUtils.isEmpty(errorImage)) {
+            int resId = getDoricContext().getContext().getResources().getIdentifier(
+                    errorImage.toLowerCase(),
+                    "drawable",
+                    getDoricContext().getContext().getPackageName());
+            if (resId > 0) {
+                return getDoricContext().getContext().getResources().getDrawable(resId);
+            } else {
+                DoricLog.e("Cannot find Error Drawable for " + errorImage);
+                return new ColorDrawable(Color.GRAY);
+            }
+        } else if (errorColor != Color.TRANSPARENT) {
+            return new ColorDrawable(errorColor);
+        } else {
+            return getDoricContext().getDriver().getRegistry().getDefaultErrorDrawable();
+        }
     }
 
     @Override
     protected void blend(ImageView view, String name, JSValue prop) {
         switch (name) {
             case "imageUrl":
-
-                RequestBuilder<Drawable> requestBuilder = Glide.with(getContext()).load(prop.asString().value());
+                RequestBuilder<Drawable> requestBuilder = Glide.with(getContext())
+                        .load(prop.asString().value());
                 if (isBlur) {
                     requestBuilder = requestBuilder
                             .apply(RequestOptions
                                     .bitmapTransform(new BlurTransformation(25, 3)));
                 }
+                Drawable placeHolderDrawable = getPlaceHolderDrawable();
+
+                if (placeHolderDrawable != null) {
+                    requestBuilder = requestBuilder.apply(new RequestOptions().placeholder(placeHolderDrawable));
+                }
+
+                Drawable errorDrawable = getErrorDrawable();
+                if (errorDrawable != null) {
+                    requestBuilder = requestBuilder.apply(new RequestOptions().error(errorDrawable));
+                }
+
                 requestBuilder
                         .listener(new RequestListener<Drawable>() {
                             @Override

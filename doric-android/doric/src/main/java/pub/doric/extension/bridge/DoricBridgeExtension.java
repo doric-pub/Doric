@@ -98,7 +98,7 @@ public class DoricBridgeExtension {
             @Override
             public void onError(Throwable t) {
                 context.getDriver().getRegistry().onException(
-                        context.getSource(),
+                        context,
                         t instanceof Exception ? (Exception) t : new RuntimeException(t));
             }
 
@@ -120,7 +120,7 @@ public class DoricBridgeExtension {
             try {
                 return DoricUtils.toJavaObject(clz, jsDecoder);
             } catch (Exception e) {
-                context.getDriver().getRegistry().onException(context.getSource(), e);
+                context.getDriver().getRegistry().onException(context, e);
                 context.getDriver().getRegistry().onLog(
                         Log.ERROR,
                         String.format("createParam error:%s", e.getLocalizedMessage()));

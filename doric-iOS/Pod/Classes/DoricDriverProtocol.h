@@ -42,6 +42,4 @@
 
 - (void)ensureSyncInMainQueue:(dispatch_block_t)block;
 
-- (NSString *)aliasWithContextId:(NSString *)contextId;
-
 @end

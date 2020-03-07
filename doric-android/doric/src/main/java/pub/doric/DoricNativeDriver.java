@@ -59,13 +59,33 @@ public class DoricNativeDriver implements IDoricDriver {
 
     @Override
     public AsyncResult<JSDecoder> invokeContextEntityMethod(final String contextId, final String method, final Object... args) {
+        final AsyncResult<JSDecoder> asyncResult = new AsyncResult<>();
         final Object[] nArgs = new Object[args.length + 2];
         nArgs[0] = contextId;
         nArgs[1] = method;
         if (args.length > 0) {
             System.arraycopy(args, 0, nArgs, 2, args.length);
         }
-        return invokeDoricMethod(DoricConstant.DORIC_CONTEXT_INVOKE, nArgs);
+        invokeDoricMethod(DoricConstant.DORIC_CONTEXT_INVOKE, nArgs).setCallback(new AsyncResult.Callback<JSDecoder>() {
+            @Override
+            public void onResult(JSDecoder result) {
+                asyncResult.setResult(result);
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                asyncResult.setError(t);
+                getRegistry().onException(
+                        DoricContextManager.getContext(contextId),
+                        t instanceof Exception ? (Exception) t : new RuntimeException(t));
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        });
+        return asyncResult;
     }
 
     @Override
@@ -91,14 +111,6 @@ public class DoricNativeDriver implements IDoricDriver {
         }
     }
 
-    private String sourceWithContextId(String contextId) {
-        DoricContext context = DoricContextManager.getContext(contextId);
-        if (context == null) {
-            return "Unknown:" + contextId;
-        }
-        return context.getSource();
-    }
-
     @Override
     public AsyncResult<Boolean> createContext(final String contextId, final String script, final String source) {
         return AsyncCall.ensureRunInHandler(mJSHandler, new Callable<Boolean>() {
@@ -108,7 +120,7 @@ public class DoricNativeDriver implements IDoricDriver {
                     doricJSEngine.prepareContext(contextId, script, source);
                     return true;
                 } catch (Exception e) {
-                    doricJSEngine.getRegistry().onException(sourceWithContextId(contextId), e);
+                    doricJSEngine.getRegistry().onException(DoricContextManager.getContext(contextId), e);
                     doricJSEngine.getRegistry().onLog(Log.ERROR, String.format("createContext %s error is %s", source, e.getLocalizedMessage()));
                     return false;
                 }
@@ -125,7 +137,7 @@ public class DoricNativeDriver implements IDoricDriver {
                     doricJSEngine.destroyContext(contextId);
                     return true;
                 } catch (Exception e) {
-                    doricJSEngine.getRegistry().onException(sourceWithContextId(contextId), e);
+                    doricJSEngine.getRegistry().onException(DoricContextManager.getContext(contextId), e);
                     doricJSEngine.getRegistry().onLog(Log.ERROR, String.format("destroyContext %s error is %s", contextId, e.getLocalizedMessage()));
                     return false;
                 }

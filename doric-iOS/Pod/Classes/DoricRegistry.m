@@ -80,8 +80,8 @@
 @end
 
 @implementation DoricDefaultMonitor
-- (void)onException:(NSException *)exception source:(NSString *)source {
-    DoricLog(@"DefaultMonitor - source: %@-  onException - %@", source, exception.reason);
+- (void)onException:(NSException *)exception inContext:(DoricContext *)context {
+    DoricLog(@"DefaultMonitor - source: %@-  onException - %@", context.source, exception.reason);
 }
 
 - (void)onLog:(DoricLogType)type message:(NSString *)message {
@@ -187,9 +187,9 @@
     [self.monitors addObject:monitor];
 }
 
-- (void)onException:(NSException *)exception source:(NSString *)source {
+- (void)onException:(NSException *)exception inContext:(DoricContext *)context {
     for (id <DoricMonitorProtocol> monitor in self.monitors) {
-        [monitor onException:exception source:source];
+        [monitor onException:exception inContext:context];
     }
 }
 

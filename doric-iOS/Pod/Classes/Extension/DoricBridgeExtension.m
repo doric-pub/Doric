@@ -87,7 +87,7 @@
                             [invocation invoke];
                         } @catch (NSException *exception) {
                             DoricLog(@"CallNative Error:%@", exception.reason);
-                            [context.driver.registry onException:exception source:context.source];
+                            [context.driver.registry onException:exception inContext:context];
                         }
                     };
 

@@ -25,6 +25,8 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JavaFunction;
@@ -132,7 +134,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
                             break;
                     }
                 } catch (Exception e) {
-                    mDoricRegistry.onException("Log", e);
+                    mDoricRegistry.onException(null, e);
                 }
                 return null;
             }
@@ -156,7 +158,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
                     mDoricJSE.loadJS(packageModuleScript(name, content), "Module://" + name);
                     return new JavaValue(true);
                 } catch (Exception e) {
-                    mDoricRegistry.onException("Require", e);
+                    mDoricRegistry.onException(null, e);
                     return new JavaValue(false);
                 }
             }
@@ -170,7 +172,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
                             args[1].number().longValue(),
                             args[2].bool());
                 } catch (Exception e) {
-                    mDoricRegistry.onException("Timer", e);
+                    mDoricRegistry.onException(null, e);
                 }
                 return null;
             }
@@ -181,7 +183,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
                 try {
                     mTimerExtension.clearTimer(args[0].number().longValue());
                 } catch (Exception e) {
-                    mDoricRegistry.onException("Timer", e);
+                    mDoricRegistry.onException(null, e);
                 }
                 return null;
             }
@@ -198,7 +200,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
                     JSDecoder jsDecoder = args[4];
                     return mDoricBridgeExtension.callNative(contextId, module, method, callbackId, jsDecoder);
                 } catch (Exception e) {
-                    mDoricRegistry.onException("Bridge", e);
+                    mDoricRegistry.onException(null, e);
                 }
                 return null;
             }
@@ -212,7 +214,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
             String libJS = DoricUtils.readAssetFile(DoricConstant.DORIC_BUNDLE_LIB);
             mDoricJSE.loadJS(packageModuleScript(libName, libJS), "Module://" + libName);
         } catch (Exception e) {
-            mDoricRegistry.onException("Init Environment", e);
+            mDoricRegistry.onException(null, e);
         }
     }
 
@@ -263,7 +265,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
         try {
             invokeDoricMethod(DoricConstant.DORIC_TIMER_CALLBACK, timerId);
         } catch (Exception e) {
-            mDoricRegistry.onException("Timer", e);
+            mDoricRegistry.onException(null, e);
             mDoricRegistry.onLog(
                     Log.ERROR,
                     String.format("Timer Callback error:%s", e.getLocalizedMessage()));
@@ -275,8 +277,8 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
     }
 
     @Override
-    public void onException(String source, Exception e) {
-        Log.e(DoricJSEngine.class.getSimpleName(), "In source file: " + source);
+    public void onException(@Nullable DoricContext context, Exception e) {
+        Log.e(DoricJSEngine.class.getSimpleName(), "In source file: " + (context != null ? context.getSource() : "Unknown"));
         e.printStackTrace();
     }
 

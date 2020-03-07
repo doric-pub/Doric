@@ -162,9 +162,9 @@ public class DoricRegistry {
         this.monitors.add(monitor);
     }
 
-    public void onException(String source, Exception e) {
+    public void onException(DoricContext context, Exception e) {
         for (IDoricMonitor monitor : this.monitors) {
-            monitor.onException(source, e);
+            monitor.onException(context, e);
         }
     }
 

@@ -61,10 +61,6 @@
     return ret;
 }
 
-- (NSString *)aliasWithContextId:(NSString *)contextId {
-    return [[DoricContextManager instance] getContext:contextId].source;
-}
-
 - (DoricAsyncResult<JSValue *> *)invokeDoricMethod:(NSString *)method arguments:(va_list)args {
     DoricAsyncResult *ret = [[DoricAsyncResult alloc] init];
     NSMutableArray *array = [[NSMutableArray alloc] init];
@@ -113,7 +109,7 @@
             [ret setupResult:jsValue];
         } @catch (NSException *exception) {
             [ret setupError:exception];
-            [self.jsExecutor.registry onException:exception source:[self aliasWithContextId:contextId]];
+            [self.jsExecutor.registry onException:exception inContext:[[DoricContextManager instance] getContext:contextId]];
         }
     });
     return ret;
@@ -136,7 +132,7 @@
             [ret setupResult:jsValue];
         } @catch (NSException *exception) {
             [ret setupError:exception];
-            [self.jsExecutor.registry onException:exception source:[self aliasWithContextId:contextId]];
+            [self.jsExecutor.registry onException:exception inContext:[[DoricContextManager instance] getContext:contextId]];
         }
     });
     return ret;
@@ -153,7 +149,7 @@
             [ret setupResult:@YES];
         } @catch (NSException *exception) {
             [ret setupError:exception];
-            [self.jsExecutor.registry onException:exception source:source];
+            [self.registry onException:exception inContext:[[DoricContextManager instance] getContext:contextId]];
         }
     });
     return ret;
@@ -170,7 +166,7 @@
             [ret setupResult:@YES];
         } @catch (NSException *exception) {
             [ret setupError:exception];
-            [self.jsExecutor.registry onException:exception source:[self aliasWithContextId:contextId]];
+            [self.jsExecutor.registry onException:exception inContext:[[DoricContextManager instance] getContext:contextId]];
         }
     });
     return ret;

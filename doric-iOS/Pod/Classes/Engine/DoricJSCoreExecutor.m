@@ -38,7 +38,7 @@
 
 - (void)checkJSException {
     if (self.jsContext.exception) {
-        NSString *errMsg = [NSString stringWithFormat:@"%@ (line %@ in the generated bundle)\n/***StackTrace***/\n%@/***StackTrace***/", self.jsContext.exception, self.jsContext.exception[@"line"], self.jsContext.exception[@"stack"]];
+        NSString *errMsg = [NSString stringWithFormat:@"%@ (line %@ in the generated bundle)\n/***StackTrace***/\n%@\n/***StackTrace***/", self.jsContext.exception, self.jsContext.exception[@"line"], self.jsContext.exception[@"stack"]];
         @throw [[NSException alloc] initWithName:@"DoricJS" reason:errMsg userInfo:nil];
     }
 }

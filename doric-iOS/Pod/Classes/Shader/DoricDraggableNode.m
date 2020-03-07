@@ -43,7 +43,8 @@
 - (void)blendView:(DoricStackView *)view forPropName:(NSString *)name propValue:(id)prop {
     if ([name isEqualToString:@"onDrag"]) {
         _onDragFunction = prop;
+    } else {
+        [super blendView:view forPropName:name propValue:prop];
     }
-    [super blendView:view forPropName:name propValue:prop];
 }
 @end

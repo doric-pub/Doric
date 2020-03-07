@@ -55,7 +55,7 @@ public class DoricPromise {
 
                     @Override
                     public void onError(Throwable t) {
-                        context.getDriver().getRegistry().onException(context.getSource(), t instanceof Exception ? (Exception) t : new RuntimeException(t));
+                        context.getDriver().getRegistry().onException(context, t instanceof Exception ? (Exception) t : new RuntimeException(t));
                     }
 
                     @Override
@@ -82,7 +82,7 @@ public class DoricPromise {
 
                     @Override
                     public void onError(Throwable t) {
-                        context.getDriver().getRegistry().onException(context.getSource(), t instanceof Exception ? (Exception) t : new RuntimeException(t));
+                        context.getDriver().getRegistry().onException(context, t instanceof Exception ? (Exception) t : new RuntimeException(t));
                     }
 
                     @Override

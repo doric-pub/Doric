@@ -9,6 +9,7 @@ typedef NS_ENUM(NSInteger, DoricLogType) {
     DoricLogTypeWarning = 1,
     DoricLogTypeError = 2,
 };
+@class DoricContext;
 
 @protocol DoricMonitorProtocol <NSObject>
 /**
@@ -17,7 +18,7 @@ typedef NS_ENUM(NSInteger, DoricLogType) {
  * @param source Which source file
  * @param e      exception which is thrown within doric sdk
  */
-- (void)onException:(NSException *)exception source:(NSString *)source;
+- (void)onException:(NSException *)exception inContext:(DoricContext *)context;
 
 /**
  * @param type    The priority/type of this log message.

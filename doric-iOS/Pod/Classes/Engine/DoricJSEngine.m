@@ -62,7 +62,7 @@
 - (void)initJSEngine {
     self.jsExecutor = [DoricJSCoreExecutor new];
 }
- 
+
 - (void)initJSExecutor {
     __weak typeof(self) _self = self;
     NSMutableDictionary *envDic = [self.innerEnvironmentDictionary mutableCopy];
@@ -140,7 +140,7 @@
         [self.jsExecutor loadJSScript:[self packageModuleScript:DORIC_MODULE_LIB content:jsContent]
                                source:[@"Module://" stringByAppendingString:DORIC_MODULE_LIB]];
     } @catch (NSException *exception) {
-        [self.registry onException:exception source:@"InitEnvironment"];
+        [self.registry onException:exception inContext:nil];
     }
 }
 
@@ -207,7 +207,7 @@
         @try {
             [self invokeDoricMethod:DORIC_TIMER_CALLBACK, timerId, nil];
         } @catch (NSException *exception) {
-            [self.registry onException:exception source:@"Timer"];
+            [self.registry onException:exception inContext:nil];
             [self.registry onLog:DoricLogTypeError
                          message:[NSString stringWithFormat:@"Timer Callback error:%@", exception.reason]];
         }

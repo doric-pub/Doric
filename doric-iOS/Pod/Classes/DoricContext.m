@@ -33,14 +33,14 @@
     if (self = [super init]) {
         _driver = [DoricNativeDriver instance];
         _pluginInstanceMap = [NSMutableDictionary new];
-        [[DoricContextManager instance] createContext:self script:script source:source];
-        _headNodes = [NSMutableDictionary new];
-        DoricRootNode *rootNode = [[DoricRootNode alloc] initWithContext:self];
-        _rootNode = rootNode;
         _script = script;
         _source = source;
         _initialParams = [@{@"width": @(0), @"height": @(0)} mutableCopy];
         _extra = extra;
+        [[DoricContextManager instance] createContext:self script:script source:source];
+        _headNodes = [NSMutableDictionary new];
+        DoricRootNode *rootNode = [[DoricRootNode alloc] initWithContext:self];
+        _rootNode = rootNode;
         [self callEntity:DORIC_ENTITY_CREATE, nil];
     }
     return self;

@@ -24,11 +24,11 @@ public interface IDoricMonitor {
     /**
      * Called when native or js exception occurred in doric
      *
-     * @param source Which source file
-     * @param e      exception which is thrown within doric sdk
+     * @param context Which context
+     * @param e       exception which is thrown within doric sdk
      * @see com.github.pengfeizhou.jscore.JSRuntimeException
      */
-    void onException(String source, Exception e);
+    void onException(DoricContext context, Exception e);
 
     /**
      * @param type    The priority/type of this log message.

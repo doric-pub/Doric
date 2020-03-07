@@ -156,7 +156,7 @@ public class ImageNode extends ViewNode<ImageView> {
                     if (errorDrawable != null) {
                         requestBuilder = requestBuilder.apply(RequestOptions.errorOf(errorDrawable));
                     }
-                } catch (Exception e) {
+                } catch (Throwable e) {
                     e.printStackTrace();
                     DoricLog.e("ImageNode blend error, please check the glide version");
                 }

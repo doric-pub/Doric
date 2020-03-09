@@ -100,7 +100,6 @@
             [ret setupResult:jsValue];
         } @catch (NSException *exception) {
             [ret setupError:exception];
-            [self.jsExecutor.registry onException:exception inContext:[[DoricContextManager instance] getContext:contextId]];
         }
     });
     return ret;
@@ -123,7 +122,6 @@
             [ret setupResult:jsValue];
         } @catch (NSException *exception) {
             [ret setupError:exception];
-            [self.jsExecutor.registry onException:exception inContext:[[DoricContextManager instance] getContext:contextId]];
         }
     });
     return ret;
@@ -140,7 +138,6 @@
             [ret setupResult:@YES];
         } @catch (NSException *exception) {
             [ret setupError:exception];
-            [self.jsExecutor.registry onException:exception inContext:[[DoricContextManager instance] getContext:contextId]];
         }
     });
     return ret;
@@ -157,7 +154,6 @@
             [ret setupResult:@YES];
         } @catch (NSException *exception) {
             [ret setupError:exception];
-            [self.jsExecutor.registry onException:exception inContext:[[DoricContextManager instance] getContext:contextId]];
         }
     });
     return ret;

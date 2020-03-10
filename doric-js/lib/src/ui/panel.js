@@ -37,6 +37,7 @@ export class Panel {
     constructor() {
         this.__root__ = new Root;
         this.headviews = new Map;
+        this.onRenderFinishedCallback = [];
     }
     onCreate() { }
     onDestroy() { }
@@ -188,10 +189,17 @@ export class Panel {
             });
         }
         Promise.all(promises).then(_ => {
-            if (this.onRenderFinished) {
-                this.onRenderFinished();
-            }
+            this.onRenderFinished();
         });
+    }
+    onRenderFinished() {
+        this.onRenderFinishedCallback.forEach(e => {
+            e();
+        });
+        this.onRenderFinishedCallback.length = 0;
+    }
+    addOnRenderFinishedCallback(cb) {
+        this.onRenderFinishedCallback.push(cb);
     }
 }
 __decorate([

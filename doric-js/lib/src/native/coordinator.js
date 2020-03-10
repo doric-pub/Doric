@@ -15,7 +15,7 @@ export function coordinator(context) {
         verticalScrolling: (argument) => {
             if (context.entity instanceof Panel) {
                 const panel = context.entity;
-                panel.onRenderFinished = () => {
+                panel.addOnRenderFinishedCallback(() => {
                     argument.scrollable = viewIdChains(argument.scrollable);
                     if (argument.target instanceof View) {
                         argument.target = viewIdChains(argument.target);
@@ -26,8 +26,8 @@ export function coordinator(context) {
                     if (argument.changing.end instanceof Color) {
                         argument.changing.end = argument.changing.end.toModel();
                     }
-                    return context.callNative("coordinator", "verticalScrolling", argument);
-                };
+                    context.callNative("coordinator", "verticalScrolling", argument);
+                });
             }
         }
     };

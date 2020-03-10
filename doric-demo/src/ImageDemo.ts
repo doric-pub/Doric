@@ -127,6 +127,19 @@ class ImageDemo extends Panel {
                     end: Color.RED,
                 }
             })
+            coordinator(context).verticalScrolling({
+                scrollable: it,
+                scrollRange: {
+                    start: 0,
+                    end: 100,
+                },
+                target: imageView,
+                changing: {
+                    name: "width",
+                    start: 10,
+                    end: 200,
+                }
+            })
         }).in(rootView)
     }
 }

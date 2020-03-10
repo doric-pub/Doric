@@ -898,6 +898,7 @@ var Panel = /** @class */ (function () {
     function Panel() {
         this.__root__ = new Root;
         this.headviews = new Map;
+        this.onRenderFinishedCallback = [];
     }
     Panel.prototype.onCreate = function () { };
     Panel.prototype.onDestroy = function () { };
@@ -1127,10 +1128,17 @@ var Panel = /** @class */ (function () {
             });
         }
         Promise.all(promises).then(function (_) {
-            if (_this.onRenderFinished) {
-                _this.onRenderFinished();
-            }
+            _this.onRenderFinished();
         });
+    };
+    Panel.prototype.onRenderFinished = function () {
+        this.onRenderFinishedCallback.forEach(function (e) {
+            e();
+        });
+        this.onRenderFinishedCallback.length = 0;
+    };
+    Panel.prototype.addOnRenderFinishedCallback = function (cb) {
+        this.onRenderFinishedCallback.push(cb);
     };
     __decorate$2([
         NativeCall,
@@ -2917,7 +2925,7 @@ function coordinator(context) {
         verticalScrolling: function (argument) {
             if (context.entity instanceof Panel) {
                 var panel = context.entity;
-                panel.onRenderFinished = function () {
+                panel.addOnRenderFinishedCallback(function () {
                     argument.scrollable = viewIdChains(argument.scrollable);
                     if (argument.target instanceof View) {
                         argument.target = viewIdChains(argument.target);
@@ -2928,8 +2936,8 @@ function coordinator(context) {
                     if (argument.changing.end instanceof Color) {
                         argument.changing.end = argument.changing.end.toModel();
                     }
-                    return context.callNative("coordinator", "verticalScrolling", argument);
-                };
+                    context.callNative("coordinator", "verticalScrolling", argument);
+                });
             }
         }
     };

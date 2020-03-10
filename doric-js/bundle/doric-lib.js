@@ -669,6 +669,7 @@ class Panel {
     constructor() {
         this.__root__ = new Root;
         this.headviews = new Map;
+        this.onRenderFinishedCallback = [];
     }
     onCreate() { }
     onDestroy() { }
@@ -820,10 +821,17 @@ class Panel {
             });
         }
         Promise.all(promises).then(_ => {
-            if (this.onRenderFinished) {
-                this.onRenderFinished();
-            }
+            this.onRenderFinished();
         });
+    }
+    onRenderFinished() {
+        this.onRenderFinishedCallback.forEach(e => {
+            e();
+        });
+        this.onRenderFinishedCallback.length = 0;
+    }
+    addOnRenderFinishedCallback(cb) {
+        this.onRenderFinishedCallback.push(cb);
     }
 }
 __decorate$2([
@@ -2209,7 +2217,7 @@ function coordinator(context) {
         verticalScrolling: (argument) => {
             if (context.entity instanceof Panel) {
                 const panel = context.entity;
-                panel.onRenderFinished = () => {
+                panel.addOnRenderFinishedCallback(() => {
                     argument.scrollable = viewIdChains(argument.scrollable);
                     if (argument.target instanceof View) {
                         argument.target = viewIdChains(argument.target);
@@ -2220,8 +2228,8 @@ function coordinator(context) {
                     if (argument.changing.end instanceof Color) {
                         argument.changing.end = argument.changing.end.toModel();
                     }
-                    return context.callNative("coordinator", "verticalScrolling", argument);
-                };
+                    context.callNative("coordinator", "verticalScrolling", argument);
+                });
             }
         }
     };

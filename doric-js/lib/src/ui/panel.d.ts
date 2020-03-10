@@ -12,7 +12,7 @@ export declare abstract class Panel {
     private __data__?;
     private __root__;
     private headviews;
-    onRenderFinished?: () => void;
+    private onRenderFinishedCallback;
     addHeadView(type: string, v: View): void;
     allHeadViews(): IterableIterator<Map<string, View>>;
     removeHeadView(type: string, v: View | string): void;
@@ -30,4 +30,6 @@ export declare abstract class Panel {
     private nativeRender;
     private hookBeforeNativeCall;
     private hookAfterNativeCall;
+    onRenderFinished(): void;
+    addOnRenderFinishedCallback(cb: () => void): void;
 }

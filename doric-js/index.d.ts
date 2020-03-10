@@ -284,13 +284,14 @@ declare module 'doric/lib/src/ui/panel' {
         onShow(): void;
         onHidden(): void;
         abstract build(rootView: Group): void;
-        onRenderFinished?: () => void;
         addHeadView(type: string, v: View): void;
         allHeadViews(): IterableIterator<Map<string, View>>;
         removeHeadView(type: string, v: View | string): void;
         clearHeadViews(type: string): void;
         getRootView(): Root;
         getInitData(): object | undefined;
+        onRenderFinished(): void;
+        addOnRenderFinishedCallback(cb: () => void): void;
     }
 }
 

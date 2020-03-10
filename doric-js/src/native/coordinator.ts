@@ -49,7 +49,7 @@ export function coordinator(context: BridgeContext) {
             }) => {
             if (context.entity instanceof Panel) {
                 const panel = context.entity
-                panel.onRenderFinished = () => {
+                panel.addOnRenderFinishedCallback(() => {
                     (argument as any).scrollable = viewIdChains(argument.scrollable)
                     if (argument.target instanceof View) {
                         (argument as any).target = viewIdChains(argument.target)
@@ -60,8 +60,8 @@ export function coordinator(context: BridgeContext) {
                     if (argument.changing.end instanceof Color) {
                         argument.changing.end = argument.changing.end.toModel()
                     }
-                    return context.callNative("coordinator", "verticalScrolling", argument)
-                }
+                    context.callNative("coordinator", "verticalScrolling", argument)
+                })
             }
         }
     }

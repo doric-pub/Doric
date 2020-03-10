@@ -21,5 +21,7 @@ package pub.doric;
  * @CreateDate: 2020-02-13
  */
 public interface IDoricScrollable {
-    void setScrollChangeListener(DoricScrollChangeListener listener);
+    void addScrollChangeListener(DoricScrollChangeListener listener);
+
+    void removeScrollChangeListener(DoricScrollChangeListener listener);
 }

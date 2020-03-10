@@ -22,5 +22,4 @@
 #import "DoricScrollableProtocol.h"
 
 @interface DoricFlowLayoutNode : DoricSuperNode<UICollectionView *> <DoricScrollableProtocol>
-@property(nonatomic, strong, nullable) void (^didScrollListener)(UIScrollView *__nonnull scrollView);
 @end

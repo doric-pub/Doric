@@ -26,6 +26,9 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import pub.doric.DoricContext;
 import pub.doric.DoricScrollChangeListener;
 import pub.doric.IDoricScrollable;
@@ -76,7 +79,7 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
     String onLoadMoreFuncId;
     boolean loadMore = false;
     String loadMoreViewId;
-    private DoricScrollChangeListener doricScrollChangeListener;
+    private Set<DoricScrollChangeListener> listeners = new HashSet<>();
 
     public FlowLayoutNode(DoricContext doricContext) {
         super(doricContext);
@@ -201,18 +204,24 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if (doricScrollChangeListener != null) {
+                for (DoricScrollChangeListener listener : listeners) {
                     int offsetX = recyclerView.computeHorizontalScrollOffset();
                     int offsetY = recyclerView.computeVerticalScrollOffset();
-                    doricScrollChangeListener.onScrollChange(recyclerView, offsetX, offsetY, offsetX - dx, offsetY - dy);
+                    listener.onScrollChange(recyclerView, offsetX, offsetY, offsetX - dx, offsetY - dy);
                 }
             }
         });
         return recyclerView;
     }
 
+
     @Override
-    public void setScrollChangeListener(DoricScrollChangeListener listener) {
-        this.doricScrollChangeListener = listener;
+    public void addScrollChangeListener(DoricScrollChangeListener listener) {
+        listeners.add(listener);
+    }
+
+    @Override
+    public void removeScrollChangeListener(DoricScrollChangeListener listener) {
+        listeners.remove(listener);
     }
 }

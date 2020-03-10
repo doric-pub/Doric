@@ -119,8 +119,7 @@ public class CoordinatorPlugin extends DoricJavaPlugin {
                 final boolean finalIsNavBar = isNavBar;
 
                 if (finalScrollNode instanceof IDoricScrollable) {
-
-                    ((IDoricScrollable) finalScrollNode).setScrollChangeListener(new DoricScrollChangeListener() {
+                    ((IDoricScrollable) finalScrollNode).addScrollChangeListener(new DoricScrollChangeListener() {
                         @Override
                         public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                             if (scrollY <= startAnchor) {

@@ -19,6 +19,7 @@ import { List } from "../widget/list"
 import { FlowLayout } from "../widget/flowlayout"
 import { View } from "../ui/view"
 import { Color } from "../util/color"
+import { Panel } from "../ui/panel"
 
 function viewIdChains(view: View) {
     const viewIds = []
@@ -32,7 +33,7 @@ function viewIdChains(view: View) {
 
 export function coordinator(context: BridgeContext) {
     return {
-        verticalScrolling: async (
+        verticalScrolling: (
             argument: {
                 scrollable: Scroller | List | FlowLayout,
                 scrollRange: {
@@ -46,18 +47,22 @@ export function coordinator(context: BridgeContext) {
                     end: number | Color
                 },
             }) => {
-            await context.callNative("coordinator", "ready");
-            (argument as any).scrollable = viewIdChains(argument.scrollable)
-            if (argument.target instanceof View) {
-                (argument as any).target = viewIdChains(argument.target)
+            if (context.entity instanceof Panel) {
+                const panel = context.entity
+                panel.onRenderFinished = () => {
+                    (argument as any).scrollable = viewIdChains(argument.scrollable)
+                    if (argument.target instanceof View) {
+                        (argument as any).target = viewIdChains(argument.target)
+                    }
+                    if (argument.changing.start instanceof Color) {
+                        argument.changing.start = argument.changing.start.toModel()
+                    }
+                    if (argument.changing.end instanceof Color) {
+                        argument.changing.end = argument.changing.end.toModel()
+                    }
+                    return context.callNative("coordinator", "verticalScrolling", argument)
+                }
             }
-            if (argument.changing.start instanceof Color) {
-                argument.changing.start = argument.changing.start.toModel()
-            }
-            if (argument.changing.end instanceof Color) {
-                argument.changing.end = argument.changing.end.toModel()
-            }
-            return context.callNative("coordinator", "verticalScrolling", argument)
         }
     }
 }

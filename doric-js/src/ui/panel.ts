@@ -45,6 +45,8 @@ export abstract class Panel {
     private __root__ = new Root
     private headviews: Map<string, Map<string, View>> = new Map
 
+    onRenderFinished?: () => void
+
     addHeadView(type: string, v: View) {
         let map = this.headviews.get(type)
         if (map) {
@@ -157,7 +159,7 @@ export abstract class Panel {
     }
 
     private nativeRender(model: Model) {
-        this.context.callNative("shader", "render", model)
+        return this.context.callNative("shader", "render", model)
     }
 
     private hookBeforeNativeCall() {
@@ -172,18 +174,19 @@ export abstract class Panel {
     }
 
     private hookAfterNativeCall() {
+        const promises: Promise<any>[] = []
         if (Environment.platform !== 'web') {
             //Here insert a native call to ensure the promise is resolved done.
             nativeEmpty()
             if (this.__root__.isDirty()) {
                 const model = this.__root__.toModel()
-                this.nativeRender(model)
+                promises.push(this.nativeRender(model))
             }
             for (let map of this.headviews.values()) {
                 for (let v of map.values()) {
                     if (v.isDirty()) {
                         const model = v.toModel()
-                        this.nativeRender(model)
+                        promises.push(this.nativeRender(model))
                     }
                 }
             }
@@ -191,19 +194,24 @@ export abstract class Panel {
             Promise.resolve().then(() => {
                 if (this.__root__.isDirty()) {
                     const model = this.__root__.toModel()
-                    this.nativeRender(model)
+                    promises.push(this.nativeRender(model))
                     this.__root__.clean()
                 }
                 for (let map of this.headviews.values()) {
                     for (let v of map.values()) {
                         if (v.isDirty()) {
                             const model = v.toModel()
-                            this.nativeRender(model)
+                            promises.push(this.nativeRender(model))
                             v.clean()
                         }
                     }
                 }
             })
         }
+        Promise.all(promises).then(_ => {
+            if (this.onRenderFinished) {
+                this.onRenderFinished()
+            }
+        })
     }
 }

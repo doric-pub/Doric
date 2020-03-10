@@ -284,6 +284,7 @@ declare module 'doric/lib/src/ui/panel' {
         onShow(): void;
         onHidden(): void;
         abstract build(rootView: Group): void;
+        onRenderFinished?: () => void;
         addHeadView(type: string, v: View): void;
         allHeadViews(): IterableIterator<Map<string, View>>;
         removeHeadView(type: string, v: View | string): void;
@@ -931,7 +932,7 @@ declare module 'doric/lib/src/native/coordinator' {
                 start: number | Color;
                 end: number | Color;
             };
-        }) => Promise<any>;
+        }) => void;
     };
 }
 

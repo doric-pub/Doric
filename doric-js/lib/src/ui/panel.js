@@ -139,7 +139,7 @@ export class Panel {
         }, undefined);
     }
     nativeRender(model) {
-        this.context.callNative("shader", "render", model);
+        return this.context.callNative("shader", "render", model);
     }
     hookBeforeNativeCall() {
         if (Environment.platform !== 'web') {
@@ -152,18 +152,19 @@ export class Panel {
         }
     }
     hookAfterNativeCall() {
+        const promises = [];
         if (Environment.platform !== 'web') {
             //Here insert a native call to ensure the promise is resolved done.
             nativeEmpty();
             if (this.__root__.isDirty()) {
                 const model = this.__root__.toModel();
-                this.nativeRender(model);
+                promises.push(this.nativeRender(model));
             }
             for (let map of this.headviews.values()) {
                 for (let v of map.values()) {
                     if (v.isDirty()) {
                         const model = v.toModel();
-                        this.nativeRender(model);
+                        promises.push(this.nativeRender(model));
                     }
                 }
             }
@@ -172,20 +173,25 @@ export class Panel {
             Promise.resolve().then(() => {
                 if (this.__root__.isDirty()) {
                     const model = this.__root__.toModel();
-                    this.nativeRender(model);
+                    promises.push(this.nativeRender(model));
                     this.__root__.clean();
                 }
                 for (let map of this.headviews.values()) {
                     for (let v of map.values()) {
                         if (v.isDirty()) {
                             const model = v.toModel();
-                            this.nativeRender(model);
+                            promises.push(this.nativeRender(model));
                             v.clean();
                         }
                     }
                 }
             });
         }
+        Promise.all(promises).then(_ => {
+            if (this.onRenderFinished) {
+                this.onRenderFinished();
+            }
+        });
     }
 }
 __decorate([

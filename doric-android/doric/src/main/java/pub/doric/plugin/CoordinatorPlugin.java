@@ -51,20 +51,14 @@ public class CoordinatorPlugin extends DoricJavaPlugin {
         getDoricContext().getDriver().asyncCall(new Callable<Object>() {
             @Override
             public Object call() {
-                getDoricContext().getDriver().asyncCall(new Callable<Object>() {
-                    @Override
-                    public Object call() {
-                        doricPromise.resolve();
-                        return null;
-                    }
-                }, ThreadMode.UI);
+                doricPromise.resolve();
                 return null;
             }
         }, ThreadMode.UI);
     }
 
 
-    @DoricMethod
+    @DoricMethod(thread = ThreadMode.UI)
     public void verticalScrolling(final JSObject argument, final DoricPromise doricPromise) {
         getDoricContext().getDriver().asyncCall(new Callable<Object>() {
             @Override

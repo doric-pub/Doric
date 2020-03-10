@@ -26,6 +26,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import pub.doric.DoricContext;
 import pub.doric.DoricScrollChangeListener;
 import pub.doric.IDoricScrollable;
@@ -48,7 +51,7 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
     SparseArray<String> itemValues = new SparseArray<>();
     boolean loadMore = false;
     String loadMoreViewId;
-    private DoricScrollChangeListener doricScrollChangeListener;
+    private Set<DoricScrollChangeListener> listeners = new HashSet<>();
 
     public ListNode(DoricContext doricContext) {
         super(doricContext);
@@ -79,10 +82,10 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if (doricScrollChangeListener != null) {
+                for (DoricScrollChangeListener listener : listeners) {
                     int offsetX = recyclerView.computeHorizontalScrollOffset();
                     int offsetY = recyclerView.computeVerticalScrollOffset();
-                    doricScrollChangeListener.onScrollChange(recyclerView, offsetX, offsetY, offsetX - dx, offsetY - dy);
+                    listener.onScrollChange(recyclerView, offsetX, offsetY, offsetX - dx, offsetY - dy);
                 }
             }
         });
@@ -162,7 +165,12 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
     }
 
     @Override
-    public void setScrollChangeListener(DoricScrollChangeListener listener) {
-        this.doricScrollChangeListener = listener;
+    public void addScrollChangeListener(DoricScrollChangeListener listener) {
+        listeners.add(listener);
+    }
+
+    @Override
+    public void removeScrollChangeListener(DoricScrollChangeListener listener) {
+        listeners.remove(listener);
     }
 }

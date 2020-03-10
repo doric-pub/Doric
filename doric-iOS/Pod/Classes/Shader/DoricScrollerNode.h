@@ -28,5 +28,4 @@
 @end
 
 @interface DoricScrollerNode : DoricSuperNode<DoricScrollView *> <DoricScrollableProtocol>
-@property(nonatomic, strong, nullable) void (^didScrollListener)(UIScrollView *__nonnull scrollView);
 @end

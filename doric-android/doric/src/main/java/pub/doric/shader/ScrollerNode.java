@@ -22,6 +22,9 @@ import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import pub.doric.DoricContext;
 import pub.doric.DoricScrollChangeListener;
 import pub.doric.IDoricScrollable;
@@ -39,7 +42,7 @@ import pub.doric.widget.HVScrollView;
 public class ScrollerNode extends SuperNode<HVScrollView> implements IDoricScrollable {
     private String mChildViewId;
     private ViewNode mChildNode;
-    private DoricScrollChangeListener doricScrollChangeListener;
+    private Set<DoricScrollChangeListener> listeners = new HashSet<>();
     private String onScrollFuncId;
     private String onScrollEndFuncId;
 
@@ -67,8 +70,8 @@ public class ScrollerNode extends SuperNode<HVScrollView> implements IDoricScrol
 
             @Override
             public void onScrollChange(HVScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (doricScrollChangeListener != null) {
-                    doricScrollChangeListener.onScrollChange(v, scrollX, scrollY, oldScrollX, oldScrollY);
+                for (DoricScrollChangeListener listener : listeners) {
+                    listener.onScrollChange(v, scrollX, scrollY, oldScrollX, oldScrollY);
                 }
                 if (!TextUtils.isEmpty(onScrollFuncId)) {
                     callJSResponse(onScrollFuncId, new JSONBuilder()
@@ -147,8 +150,13 @@ public class ScrollerNode extends SuperNode<HVScrollView> implements IDoricScrol
     }
 
     @Override
-    public void setScrollChangeListener(DoricScrollChangeListener listener) {
-        this.doricScrollChangeListener = listener;
+    public void addScrollChangeListener(DoricScrollChangeListener listener) {
+        listeners.add(listener);
+    }
+
+    @Override
+    public void removeScrollChangeListener(DoricScrollChangeListener listener) {
+        listeners.remove(listener);
     }
 
     @DoricMethod

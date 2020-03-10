@@ -66,6 +66,7 @@
 @property(nonatomic, copy) NSString *renderItemFuncId;
 @property(nonatomic, copy) NSString *loadMoreViewId;
 @property(nonatomic, assign) BOOL loadMore;
+@property(nonatomic, strong) NSMutableSet <DoricDidScrollBlock> *didScrollBlocks;
 @end
 
 @implementation DoricListNode
@@ -250,8 +251,24 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if (self.didScrollListener) {
-        self.didScrollListener(scrollView);
+    for (DoricDidScrollBlock block in self.didScrollBlocks) {
+        block(scrollView);
     }
 }
+
+- (NSMutableSet<DoricDidScrollBlock> *)didScrollBlocks {
+    if (!_didScrollBlocks) {
+        _didScrollBlocks = [NSMutableSet new];
+    }
+    return _didScrollBlocks;
+}
+
+- (void)addDidScrollBlock:(__nonnull DoricDidScrollBlock)didScrollListener {
+    [self.didScrollBlocks addObject:didScrollListener];
+}
+
+- (void)removeDidScrollBlock:(__nonnull DoricDidScrollBlock)didScrollListener {
+    [self.didScrollBlocks removeObject:didScrollListener];
+}
+
 @end

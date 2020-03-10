@@ -53,6 +53,7 @@
 @property(nonatomic, copy) NSString *childViewId;
 @property(nonatomic, copy) NSString *onScrollFuncId;
 @property(nonatomic, copy) NSString *onScrollEndFuncId;
+@property(nonatomic, strong) NSMutableSet <DoricDidScrollBlock> *didScrollBlocks;
 @end
 
 @implementation DoricScrollerNode
@@ -139,8 +140,8 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if (self.didScrollListener) {
-        self.didScrollListener(scrollView);
+    for (DoricDidScrollBlock block in self.didScrollBlocks) {
+        block(scrollView);
     }
     if (self.onScrollFuncId) {
         [self callJSResponse:self.onScrollFuncId,
@@ -192,4 +193,20 @@
                     MIN(self.view.contentSize.height - self.view.height, MAX(0, offset.y + self.view.contentOffset.y)))
                        animated:animated];
 }
+
+- (NSMutableSet<DoricDidScrollBlock> *)didScrollBlocks {
+    if (!_didScrollBlocks) {
+        _didScrollBlocks = [NSMutableSet new];
+    }
+    return _didScrollBlocks;
+}
+
+- (void)addDidScrollBlock:(__nonnull DoricDidScrollBlock)didScrollListener {
+    [self.didScrollBlocks addObject:didScrollListener];
+}
+
+- (void)removeDidScrollBlock:(__nonnull DoricDidScrollBlock)didScrollListener {
+    [self.didScrollBlocks removeObject:didScrollListener];
+}
+
 @end

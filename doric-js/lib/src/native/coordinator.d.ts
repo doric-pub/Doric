@@ -17,5 +17,5 @@ export declare function coordinator(context: BridgeContext): {
             start: number | Color;
             end: number | Color;
         };
-    }) => Promise<any>;
+    }) => void;
 };

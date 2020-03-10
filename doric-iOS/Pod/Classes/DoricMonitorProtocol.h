@@ -15,8 +15,8 @@ typedef NS_ENUM(NSInteger, DoricLogType) {
 /**
  * Called when native or js exception occurred in doric
  *
- * @param source Which source file
- * @param e      exception which is thrown within doric sdk
+ * @param exception      exception which is thrown within doric sdk
+ * @param context        Which Context
  */
 - (void)onException:(NSException *)exception inContext:(DoricContext *)context;
 

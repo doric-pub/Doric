@@ -2230,7 +2230,7 @@ class Panel {
         }, undefined);
     }
     nativeRender(model) {
-        this.context.callNative("shader", "render", model);
+        return this.context.callNative("shader", "render", model);
     }
     hookBeforeNativeCall() {
         if (Environment.platform !== 'web') {
@@ -2243,18 +2243,19 @@ class Panel {
         }
     }
     hookAfterNativeCall() {
+        const promises = [];
         if (Environment.platform !== 'web') {
             //Here insert a native call to ensure the promise is resolved done.
             nativeEmpty();
             if (this.__root__.isDirty()) {
                 const model = this.__root__.toModel();
-                this.nativeRender(model);
+                promises.push(this.nativeRender(model));
             }
             for (let map of this.headviews.values()) {
                 for (let v of map.values()) {
                     if (v.isDirty()) {
                         const model = v.toModel();
-                        this.nativeRender(model);
+                        promises.push(this.nativeRender(model));
                     }
                 }
             }
@@ -2263,20 +2264,25 @@ class Panel {
             Promise.resolve().then(() => {
                 if (this.__root__.isDirty()) {
                     const model = this.__root__.toModel();
-                    this.nativeRender(model);
+                    promises.push(this.nativeRender(model));
                     this.__root__.clean();
                 }
                 for (let map of this.headviews.values()) {
                     for (let v of map.values()) {
                         if (v.isDirty()) {
                             const model = v.toModel();
-                            this.nativeRender(model);
+                            promises.push(this.nativeRender(model));
                             v.clean();
                         }
                     }
                 }
             });
         }
+        Promise.all(promises).then(_ => {
+            if (this.onRenderFinished) {
+                this.onRenderFinished();
+            }
+        });
     }
 }
 __decorate$2([
@@ -3648,15 +3654,6 @@ function statusbar(context) {
     };
 }
 
-var __awaiter$1 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 function viewIdChains(view) {
     const viewIds = [];
     let thisView = view;
@@ -3668,20 +3665,24 @@ function viewIdChains(view) {
 }
 function coordinator(context) {
     return {
-        verticalScrolling: (argument) => __awaiter$1(this, void 0, void 0, function* () {
-            yield context.callNative("coordinator", "ready");
-            argument.scrollable = viewIdChains(argument.scrollable);
-            if (argument.target instanceof View) {
-                argument.target = viewIdChains(argument.target);
+        verticalScrolling: (argument) => {
+            if (context.entity instanceof Panel) {
+                const panel = context.entity;
+                panel.onRenderFinished = () => {
+                    argument.scrollable = viewIdChains(argument.scrollable);
+                    if (argument.target instanceof View) {
+                        argument.target = viewIdChains(argument.target);
+                    }
+                    if (argument.changing.start instanceof Color) {
+                        argument.changing.start = argument.changing.start.toModel();
+                    }
+                    if (argument.changing.end instanceof Color) {
+                        argument.changing.end = argument.changing.end.toModel();
+                    }
+                    return context.callNative("coordinator", "verticalScrolling", argument);
+                };
             }
-            if (argument.changing.start instanceof Color) {
-                argument.changing.start = argument.changing.start.toModel();
-            }
-            if (argument.changing.end instanceof Color) {
-                argument.changing.end = argument.changing.end.toModel();
-            }
-            return context.callNative("coordinator", "verticalScrolling", argument);
-        })
+        }
     };
 }
 

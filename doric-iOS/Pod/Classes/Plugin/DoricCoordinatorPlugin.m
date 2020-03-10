@@ -23,13 +23,6 @@
 #import "DoricUtil.h"
 
 @implementation DoricCoordinatorPlugin
-- (void)ready:(id)param withPromise:(DoricPromise *)promise {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [promise resolve:nil];
-        });
-    });
-}
 
 - (void)verticalScrolling:(NSDictionary *)params withPromise:(DoricPromise *)promise {
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -75,7 +68,9 @@
         NSNumber *changingStart = changing[@"start"];
         NSNumber *changingEnd = changing[@"end"];
         if ([scrollNode conformsToProtocol:@protocol(DoricScrollableProtocol)]) {
-            ((id <DoricScrollableProtocol>) scrollNode).didScrollListener = ^(UIScrollView *scrollView) {
+            __weak typeof(self) __self = self;
+            [(id <DoricScrollableProtocol>) scrollNode addDidScrollBlock:^(UIScrollView *scrollView) {
+                __strong typeof(__self) self = __self;
                 CGFloat scrollY = scrollView.contentOffset.y;
                 if (scrollY <= startAnchor) {
                     [self setValue:targetNode isNavBar:isNavBar name:name value:changingStart];
@@ -102,7 +97,7 @@
                     }
                     [self setValue:targetNode isNavBar:isNavBar name:name value:value];
                 }
-            };
+            }];
         } else {
             [promise reject:@"Scroller type error"];
         }

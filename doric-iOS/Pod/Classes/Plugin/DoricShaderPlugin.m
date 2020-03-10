@@ -28,7 +28,7 @@
 
 @implementation DoricShaderPlugin
 
-- (void)render:(NSDictionary *)argument {
+- (void)render:(NSDictionary *)argument withPromise:(DoricPromise *)promise {
     if (!argument) {
         return;
     }
@@ -45,10 +45,11 @@
             DoricViewNode *viewNode = [self.doricContext targetViewNode:viewId];
             [viewNode blend:argument[@"props"]];
         }
+        [promise resolve:nil];
     });
 }
 
-- (id)command:(NSDictionary *)argument withPromise:(DoricPromise *)promise {
+- (void)command:(NSDictionary *)argument withPromise:(DoricPromise *)promise {
     NSArray *viewIds = argument[@"viewIds"];
     id args = argument[@"args"];
     NSString *name = argument[@"name"];
@@ -64,9 +65,8 @@
     }
     if (!viewNode) {
         [promise reject:@"Cannot find opposite view"];
-        return nil;
     } else {
-        return [self findClass:[viewNode class] target:viewNode method:name promise:promise argument:args];
+        [self findClass:[viewNode class] target:viewNode method:name promise:promise argument:args];
     }
 }
 
@@ -77,9 +77,8 @@
     return argument;
 }
 
-- (id)findClass:(Class)clz target:(id)target method:(NSString *)name promise:(DoricPromise *)promise argument:(id)argument {
+- (void)findClass:(Class)clz target:(id)target method:(NSString *)name promise:(DoricPromise *)promise argument:(id)argument {
     unsigned int count;
-    id ret = nil;
     Method *methods = class_copyMethodList(clz, &count);
     BOOL isFound = NO;
     for (int i = 0; i < count; i++) {
@@ -122,7 +121,6 @@
                             [promise resolve:returnValue];
                         }
                     });
-                    return ret;
                 }
                 break;
             }
@@ -135,10 +133,9 @@
     if (!isFound) {
         Class superclass = class_getSuperclass(clz);
         if (superclass && superclass != [NSObject class]) {
-            return [self findClass:superclass target:target method:name promise:promise argument:argument];
+            [self findClass:superclass target:target method:name promise:promise argument:argument];
         }
     }
-    return ret;
 }
 
 @end

@@ -48,6 +48,10 @@ export interface IFlowLayout extends IView {
     onLoadMore?: () => void
 
     loadMoreView?: FlowLayoutItem
+
+    onScroll?: (offset: { x: number, y: number }) => void
+
+    onScrollEnd?: (offset: { x: number, y: number }) => void
 }
 
 export class FlowLayout extends Superview implements IFlowLayout {
@@ -88,6 +92,12 @@ export class FlowLayout extends Superview implements IFlowLayout {
 
     @Property
     loadMoreView?: FlowLayoutItem
+
+    @Property
+    onScroll?: (offset: { x: number, y: number }) => void
+
+    @Property
+    onScrollEnd?: (offset: { x: number, y: number }) => void
 
     reset() {
         this.cachedViews.clear()

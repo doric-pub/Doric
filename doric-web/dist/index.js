@@ -2898,6 +2898,14 @@ __decorate$5([
     Property,
     __metadata$5("design:type", ListItem)
 ], List.prototype, "loadMoreView", void 0);
+__decorate$5([
+    Property,
+    __metadata$5("design:type", Function)
+], List.prototype, "onScroll", void 0);
+__decorate$5([
+    Property,
+    __metadata$5("design:type", Function)
+], List.prototype, "onScrollEnd", void 0);
 function list(config) {
     const ret = new List;
     for (let key in config) {
@@ -3225,6 +3233,14 @@ __decorate$9([
     Property,
     __metadata$9("design:type", FlowLayoutItem)
 ], FlowLayout.prototype, "loadMoreView", void 0);
+__decorate$9([
+    Property,
+    __metadata$9("design:type", Function)
+], FlowLayout.prototype, "onScroll", void 0);
+__decorate$9([
+    Property,
+    __metadata$9("design:type", Function)
+], FlowLayout.prototype, "onScrollEnd", void 0);
 function flowlayout(config) {
     const ret = new FlowLayout;
     for (let key in config) {

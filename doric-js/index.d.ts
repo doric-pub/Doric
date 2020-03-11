@@ -549,6 +549,14 @@ declare module 'doric/lib/src/widget/list' {
         onLoadMore?: () => void;
         loadMore?: boolean;
         loadMoreView?: ListItem;
+        onScroll?: (offset: {
+            x: number;
+            y: number;
+        }) => void;
+        onScrollEnd?: (offset: {
+            x: number;
+            y: number;
+        }) => void;
     }
     export class List extends Superview implements IList {
         allSubviews(): IterableIterator<ListItem> | ListItem[];
@@ -558,6 +566,14 @@ declare module 'doric/lib/src/widget/list' {
         onLoadMore?: () => void;
         loadMore?: boolean;
         loadMoreView?: ListItem;
+        onScroll?: (offset: {
+            x: number;
+            y: number;
+        }) => void;
+        onScrollEnd?: (offset: {
+            x: number;
+            y: number;
+        }) => void;
         reset(): void;
         isDirty(): boolean;
         toModel(): NativeViewModel;
@@ -689,6 +705,14 @@ declare module 'doric/lib/src/widget/flowlayout' {
         loadMore?: boolean;
         onLoadMore?: () => void;
         loadMoreView?: FlowLayoutItem;
+        onScroll?: (offset: {
+            x: number;
+            y: number;
+        }) => void;
+        onScrollEnd?: (offset: {
+            x: number;
+            y: number;
+        }) => void;
     }
     export class FlowLayout extends Superview implements IFlowLayout {
         allSubviews(): IterableIterator<FlowLayoutItem> | FlowLayoutItem[];
@@ -701,6 +725,14 @@ declare module 'doric/lib/src/widget/flowlayout' {
         onLoadMore?: () => void;
         loadMore?: boolean;
         loadMoreView?: FlowLayoutItem;
+        onScroll?: (offset: {
+            x: number;
+            y: number;
+        }) => void;
+        onScrollEnd?: (offset: {
+            x: number;
+            y: number;
+        }) => void;
         reset(): void;
         isDirty(): boolean;
         toModel(): NativeViewModel;

@@ -1859,6 +1859,14 @@ var List = /** @class */ (function (_super) {
         Property,
         __metadata$5("design:type", ListItem)
     ], List.prototype, "loadMoreView", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", Function)
+    ], List.prototype, "onScroll", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", Function)
+    ], List.prototype, "onScrollEnd", void 0);
     return List;
 }(Superview));
 function list(config) {
@@ -2289,6 +2297,14 @@ var FlowLayout = /** @class */ (function (_super) {
         Property,
         __metadata$9("design:type", FlowLayoutItem)
     ], FlowLayout.prototype, "loadMoreView", void 0);
+    __decorate$9([
+        Property,
+        __metadata$9("design:type", Function)
+    ], FlowLayout.prototype, "onScroll", void 0);
+    __decorate$9([
+        Property,
+        __metadata$9("design:type", Function)
+    ], FlowLayout.prototype, "onScrollEnd", void 0);
     return FlowLayout;
 }(Superview));
 function flowlayout(config) {

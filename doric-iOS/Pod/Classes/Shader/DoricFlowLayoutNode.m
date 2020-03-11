@@ -172,6 +172,8 @@
 @property(nonatomic, copy) NSString *loadMoreViewId;
 @property(nonatomic, assign) BOOL loadMore;
 @property(nonatomic, strong) NSMutableSet <DoricDidScrollBlock> *didScrollBlocks;
+@property(nonatomic, copy) NSString *onScrollFuncId;
+@property(nonatomic, copy) NSString *onScrollEndFuncId;
 @end
 
 @implementation DoricFlowLayoutNode
@@ -231,6 +233,10 @@
         self.loadMoreViewId = prop;
     } else if ([@"loadMore" isEqualToString:name]) {
         self.loadMore = [prop boolValue];
+    } else if ([@"onScroll" isEqualToString:name]) {
+        self.onScrollFuncId = prop;
+    } else if ([@"onScrollEnd" isEqualToString:name]) {
+        self.onScrollEndFuncId = prop;
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }
@@ -373,6 +379,38 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     for (DoricDidScrollBlock block in self.didScrollBlocks) {
         block(scrollView);
+    }
+    if (self.onScrollFuncId) {
+        [self callJSResponse:self.onScrollFuncId,
+                             @{
+                                     @"x": @(self.view.contentOffset.x),
+                                     @"y": @(self.view.contentOffset.y),
+                             },
+                        nil];
+    }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    if (self.onScrollEndFuncId) {
+        [self callJSResponse:self.onScrollEndFuncId,
+                             @{
+                                     @"x": @(self.view.contentOffset.x),
+                                     @"y": @(self.view.contentOffset.y),
+                             },
+                        nil];
+    }
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    if (!decelerate) {
+        if (self.onScrollEndFuncId) {
+            [self callJSResponse:self.onScrollEndFuncId,
+                                 @{
+                                         @"x": @(self.view.contentOffset.x),
+                                         @"y": @(self.view.contentOffset.y),
+                                 },
+                            nil];
+        }
     }
 }
 

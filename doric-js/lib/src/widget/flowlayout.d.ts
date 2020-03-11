@@ -19,6 +19,14 @@ export interface IFlowLayout extends IView {
     loadMore?: boolean;
     onLoadMore?: () => void;
     loadMoreView?: FlowLayoutItem;
+    onScroll?: (offset: {
+        x: number;
+        y: number;
+    }) => void;
+    onScrollEnd?: (offset: {
+        x: number;
+        y: number;
+    }) => void;
 }
 export declare class FlowLayout extends Superview implements IFlowLayout {
     private cachedViews;
@@ -33,6 +41,14 @@ export declare class FlowLayout extends Superview implements IFlowLayout {
     onLoadMore?: () => void;
     loadMore?: boolean;
     loadMoreView?: FlowLayoutItem;
+    onScroll?: (offset: {
+        x: number;
+        y: number;
+    }) => void;
+    onScrollEnd?: (offset: {
+        x: number;
+        y: number;
+    }) => void;
     reset(): void;
     private getItem;
     isDirty(): boolean;

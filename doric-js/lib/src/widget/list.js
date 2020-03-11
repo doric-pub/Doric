@@ -106,6 +106,14 @@ __decorate([
     Property,
     __metadata("design:type", ListItem)
 ], List.prototype, "loadMoreView", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Function)
+], List.prototype, "onScroll", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Function)
+], List.prototype, "onScrollEnd", void 0);
 export function list(config) {
     const ret = new List;
     for (let key in config) {

@@ -16,6 +16,14 @@ export interface IList extends IView {
     onLoadMore?: () => void;
     loadMore?: boolean;
     loadMoreView?: ListItem;
+    onScroll?: (offset: {
+        x: number;
+        y: number;
+    }) => void;
+    onScrollEnd?: (offset: {
+        x: number;
+        y: number;
+    }) => void;
 }
 export declare class List extends Superview implements IList {
     private cachedViews;
@@ -27,6 +35,14 @@ export declare class List extends Superview implements IList {
     onLoadMore?: () => void;
     loadMore?: boolean;
     loadMoreView?: ListItem;
+    onScroll?: (offset: {
+        x: number;
+        y: number;
+    }) => void;
+    onScrollEnd?: (offset: {
+        x: number;
+        y: number;
+    }) => void;
     reset(): void;
     private getItem;
     isDirty(): boolean;

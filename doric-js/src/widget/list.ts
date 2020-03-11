@@ -32,11 +32,20 @@ export class ListItem extends Stack implements IListItem {
 
 export interface IList extends IView {
     renderItem: (index: number) => ListItem
+
     itemCount: number
+
     batchCount?: number
+
     onLoadMore?: () => void
+
     loadMore?: boolean
+
     loadMoreView?: ListItem
+
+    onScroll?: (offset: { x: number, y: number }) => void
+
+    onScrollEnd?: (offset: { x: number, y: number }) => void
 }
 
 export class List extends Superview implements IList {
@@ -68,6 +77,12 @@ export class List extends Superview implements IList {
 
     @Property
     loadMoreView?: ListItem
+
+    @Property
+    onScroll?: (offset: { x: number, y: number }) => void
+
+    @Property
+    onScrollEnd?: (offset: { x: number, y: number }) => void
 
     reset() {
         this.cachedViews.clear()

@@ -15,6 +15,7 @@
  */
 package pub.doric.shader.list;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
@@ -23,6 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
@@ -35,6 +37,7 @@ import pub.doric.IDoricScrollable;
 import pub.doric.extension.bridge.DoricPlugin;
 import pub.doric.shader.SuperNode;
 import pub.doric.shader.ViewNode;
+import pub.doric.utils.DoricUtils;
 
 /**
  * @Description: com.github.penfeizhou.doric.widget
@@ -52,6 +55,8 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
     boolean loadMore = false;
     String loadMoreViewId;
     private Set<DoricScrollChangeListener> listeners = new HashSet<>();
+    private String onScrollFuncId;
+    private String onScrollEndFuncId;
 
     public ListNode(DoricContext doricContext) {
         super(doricContext);
@@ -82,10 +87,32 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                int offsetX = recyclerView.computeHorizontalScrollOffset();
+                int offsetY = recyclerView.computeVerticalScrollOffset();
                 for (DoricScrollChangeListener listener : listeners) {
-                    int offsetX = recyclerView.computeHorizontalScrollOffset();
-                    int offsetY = recyclerView.computeVerticalScrollOffset();
                     listener.onScrollChange(recyclerView, offsetX, offsetY, offsetX - dx, offsetY - dy);
+                }
+                if (!TextUtils.isEmpty(onScrollFuncId)) {
+                    callJSResponse(onScrollFuncId, new JSONBuilder()
+                            .put("x", DoricUtils.px2dp(offsetX))
+                            .put("y", DoricUtils.px2dp(offsetY))
+                            .toJSONObject());
+                }
+            }
+
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    if (!TextUtils.isEmpty(onScrollEndFuncId)) {
+                        int offsetX = recyclerView.computeHorizontalScrollOffset();
+                        int offsetY = recyclerView.computeVerticalScrollOffset();
+                        callJSResponse(
+                                onScrollEndFuncId,
+                                new JSONBuilder()
+                                        .put("x", DoricUtils.px2dp(offsetX))
+                                        .put("y", DoricUtils.px2dp(offsetY))
+                                        .toJSONObject());
+                    }
                 }
             }
         });
@@ -133,6 +160,12 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
                 break;
             case "loadMore":
                 this.loadMore = prop.asBoolean().value();
+                break;
+            case "onScroll":
+                this.onScrollFuncId = prop.asString().value();
+                break;
+            case "onScrollEnd":
+                this.onScrollEndFuncId = prop.asString().value();
                 break;
             default:
                 super.blend(view, name, prop);

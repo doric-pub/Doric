@@ -13,7 +13,7 @@ export declare function coordinator(context: BridgeContext): {
         };
         target: View | "NavBar";
         changing: {
-            name: "width" | "height" | "x" | "y" | "backgroundColor";
+            name: "width" | "height" | "x" | "y" | "backgroundColor" | "alpha";
             start: number | Color;
             end: number | Color;
         };

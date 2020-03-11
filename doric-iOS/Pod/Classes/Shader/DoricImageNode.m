@@ -26,12 +26,12 @@
 
 @interface DoricImageNode ()
 @property(nonatomic, copy) NSString *loadCallbackId;
-@property(nonatomic, assign) BOOL isBlur;
 @property(nonatomic, assign) UIViewContentMode contentMode;
 @property(nonatomic, strong) NSNumber *placeHolderColor;
 @property(nonatomic, strong) NSString *placeHolderImage;
 @property(nonatomic, strong) NSNumber *errorColor;
 @property(nonatomic, strong) NSString *errorImage;
+@property(nonatomic, strong) UIVisualEffectView *blurEffectView;
 @end
 
 @implementation DoricImageNode
@@ -43,10 +43,6 @@
 }
 
 - (void)blend:(NSDictionary *)props {
-    NSInteger value = [props[@"isBlur"] intValue];
-    if (value == 1) {
-        self.isBlur = YES;
-    }
     [props[@"placeHolderColor"] also:^(id it) {
         self.placeHolderColor = it;
     }];
@@ -127,13 +123,6 @@
                 }
                 [self requestLayout];
             }
-
-            if (self.isBlur) {
-                UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-                UIVisualEffectView *effectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-                effectView.frame = CGRectMake(0, 0, image.size.width, image.size.height);
-                [view addSubview:effectView];
-            }
         }];
     } else if ([@"scaleType" isEqualToString:name]) {
         switch ([prop integerValue]) {
@@ -161,7 +150,37 @@
         NSData *imageData = [[NSData alloc] initWithBase64EncodedString:base64
                                                                 options:NSDataBase64DecodingIgnoreUnknownCharacters];
         UIImage *image = [UIImage imageWithData:imageData];
-        self.view.image = image;
+        view.image = image;
+    } else if ([@"isBlur" isEqualToString:name]) {
+        NSInteger value = [prop intValue];
+        if (value == 1) {
+            if (!self.blurEffectView) {
+                UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+                self.blurEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+                [view addSubview:self.blurEffectView];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.blurEffectView.translatesAutoresizingMaskIntoConstraints = NO;
+                    NSLayoutConstraint *widthConstraint = [NSLayoutConstraint
+                            constraintWithItem:self.blurEffectView
+                                     attribute:(NSLayoutAttributeWidth)
+                                     relatedBy:(NSLayoutRelationEqual)
+                                        toItem:view
+                                     attribute:(NSLayoutAttributeWidth)
+                                    multiplier:1
+                                      constant:0];
+                    NSLayoutConstraint *heightConstraint = [NSLayoutConstraint
+                            constraintWithItem:self.blurEffectView
+                                     attribute:(NSLayoutAttributeHeight)
+                                     relatedBy:(NSLayoutRelationEqual)
+                                        toItem:view
+                                     attribute:(NSLayoutAttributeHeight)
+                                    multiplier:1
+                                      constant:0];
+                    [NSLayoutConstraint activateConstraints:@[widthConstraint, heightConstraint,]];
+                });
+            }
+
+        }
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }

@@ -42,7 +42,7 @@ export function coordinator(context: BridgeContext) {
                 },
                 target: View | "NavBar",
                 changing: {
-                    name: "backgroundColor" | "width" | "height" | "x" | "y",
+                    name: "backgroundColor" | "width" | "height" | "x" | "y" | "alpha",
                     start: number | Color
                     end: number | Color
                 },

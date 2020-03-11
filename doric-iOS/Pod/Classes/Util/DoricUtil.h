@@ -27,6 +27,8 @@ void DoricLog(NSString *_Nonnull format, ...);
 
 UIColor *_Nonnull DoricColor(NSNumber *_Nonnull number);
 
+NSNumber *_Nonnull DoricColorToNumber(UIColor *_Nonnull color);
+
 NSBundle *_Nonnull DoricBundle(void);
 
 #ifndef DC_LOCK
@@ -39,4 +41,4 @@ NSBundle *_Nonnull DoricBundle(void);
 
 void ShowToast(NSString *_Nonnull text, DoricGravity gravity);
 
-UIImage *_Nonnull UIImageWithColor(UIColor * _Nonnull color);
+UIImage *_Nonnull UIImageWithColor(UIColor *_Nonnull color);

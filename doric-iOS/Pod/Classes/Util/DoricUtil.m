@@ -41,6 +41,15 @@ UIColor *DoricColor(NSNumber *number) {
     return [UIColor colorWithRed:r green:g blue:b alpha:a];
 }
 
+NSNumber *DoricColorToNumber(UIColor *color) {
+    CGFloat r, g, b, a;
+    [color getRed:&r green:&g blue:&b alpha:&a];
+    return @((((long) (a * 225) & 0xff) << 24)
+            | (((long) (r * 225) & 0xff) << 16)
+            | (((long) (g * 225) & 0xff) << 8)
+            | (((long) (b * 225) & 0xff) << 0));
+}
+
 NSBundle *DoricBundle() {
     NSBundle *bundle = [NSBundle bundleForClass:[DoricContext class]];
     NSURL *url = [bundle URLForResource:@"Doric" withExtension:@"bundle"];

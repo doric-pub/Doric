@@ -18,6 +18,7 @@ package pub.doric.plugin;
 import android.graphics.Color;
 import android.view.View;
 
+import com.github.pengfeizhou.jscore.JSNumber;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
@@ -163,21 +164,13 @@ public class CoordinatorPlugin extends DoricJavaPlugin {
     }
 
     private void setValue(ViewNode viewNode, boolean isNavBar, String name, float value) {
-        if ("backgroundColor".equals(name)) {
-            if (isNavBar) {
-                getDoricContext().getDoricNavBar().setBackgroundColor((int) value);
-            } else {
-                viewNode.setBackgroundColor((int) value);
-            }
-        } else if ("width".equals(name)) {
-            viewNode.setWidth(value);
-        } else if ("height".equals(name)) {
-            viewNode.setHeight(value);
-        } else if ("x".equals(name)) {
-            viewNode.setX(value);
-        } else if ("y".equals(name)) {
-            viewNode.setY(value);
+        if ("backgroundColor".equals(name) && isNavBar) {
+            getDoricContext().getDoricNavBar().setBackgroundColor((int) value);
+        } else {
+            JSNumber jsNumber = new JSNumber(value);
+            JSObject jsObject = new JSObject();
+            jsObject.setProperty(name, jsNumber);
+            viewNode.blend(jsObject);
         }
-
     }
 }

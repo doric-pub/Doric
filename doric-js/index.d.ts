@@ -929,7 +929,7 @@ declare module 'doric/lib/src/native/coordinator' {
             };
             target: View | "NavBar";
             changing: {
-                name: "width" | "height" | "x" | "y" | "backgroundColor";
+                name: "width" | "height" | "x" | "y" | "backgroundColor" | "alpha";
                 start: number | Color;
                 end: number | Color;
             };

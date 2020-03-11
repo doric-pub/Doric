@@ -92,6 +92,7 @@
                                                 green:startG + (endG - startG) * rate
                                                  blue:startB + (endB - startB) * rate
                                                 alpha:startA + (endA - startA) * rate];
+                        value = DoricColorToNumber(value);
                     } else {
                         value = @([changingStart floatValue] + ([changingEnd floatValue] - [changingStart floatValue]) * rate);
                     }
@@ -105,23 +106,10 @@
 }
 
 - (void)setValue:(DoricViewNode *)viewNode isNavBar:(BOOL)isNavBar name:(NSString *)name value:(id)value {
-    if ([@"backgroundColor" isEqualToString:name]) {
-        if ([value isKindOfClass:[NSNumber class]]) {
-            value = DoricColor(value);
-        }
-        if (isNavBar) {
-            [self.doricContext.navBar doric_navBar_setBackgroundColor:value];
-        } else {
-            viewNode.view.backgroundColor = value;
-        }
-    } else if ([@"width" isEqualToString:name]) {
-        viewNode.view.width = [value floatValue];
-    } else if ([@"height" isEqualToString:name]) {
-        viewNode.view.height = [value floatValue];
-    } else if ([@"x" isEqualToString:name]) {
-        viewNode.view.left = [value floatValue];
-    } else if ([@"y" isEqualToString:name]) {
-        viewNode.view.top = [value floatValue];
+    if ([@"backgroundColor" isEqualToString:name] && isNavBar) {
+        [self.doricContext.navBar doric_navBar_setBackgroundColor:DoricColor(value)];
+    } else {
+        [viewNode blend:@{name: value}];
     }
 }
 

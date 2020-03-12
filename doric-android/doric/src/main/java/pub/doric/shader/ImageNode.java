@@ -98,12 +98,12 @@ public class ImageNode extends ViewNode<ImageView> {
 
     private Drawable getPlaceHolderDrawable() {
         if (!TextUtils.isEmpty(placeHolderImage)) {
-            int resId = getDoricContext().getContext().getResources().getIdentifier(
+            int resId = getContext().getResources().getIdentifier(
                     placeHolderImage.toLowerCase(),
                     "drawable",
-                    getDoricContext().getContext().getPackageName());
+                    getContext().getPackageName());
             if (resId > 0) {
-                return getDoricContext().getContext().getResources().getDrawable(resId);
+                return getContext().getResources().getDrawable(resId);
             } else {
                 DoricLog.e("Cannot find PlaceHolder Drawable for " + placeHolderImage);
                 return new ColorDrawable(Color.GRAY);
@@ -117,12 +117,12 @@ public class ImageNode extends ViewNode<ImageView> {
 
     private Drawable getErrorDrawable() {
         if (!TextUtils.isEmpty(errorImage)) {
-            int resId = getDoricContext().getContext().getResources().getIdentifier(
+            int resId = getContext().getResources().getIdentifier(
                     errorImage.toLowerCase(),
                     "drawable",
-                    getDoricContext().getContext().getPackageName());
+                    getContext().getPackageName());
             if (resId > 0) {
-                return getDoricContext().getContext().getResources().getDrawable(resId);
+                return getContext().getResources().getDrawable(resId);
             } else {
                 DoricLog.e("Cannot find Error Drawable for " + errorImage);
                 return new ColorDrawable(Color.GRAY);
@@ -134,55 +134,59 @@ public class ImageNode extends ViewNode<ImageView> {
         }
     }
 
+    private void loadImageUrl(String url) {
+        RequestBuilder<Drawable> requestBuilder = Glide.with(getContext())
+                .load(url);
+        try {
+            if (isBlur) {
+                requestBuilder = requestBuilder
+                        .apply(RequestOptions
+                                .bitmapTransform(new BlurTransformation(25, 3)));
+            }
+            Drawable placeHolderDrawable = getPlaceHolderDrawable();
+
+            if (placeHolderDrawable != null) {
+                requestBuilder = requestBuilder.apply(RequestOptions.placeholderOf(placeHolderDrawable));
+            }
+
+            Drawable errorDrawable = getErrorDrawable();
+            if (errorDrawable != null) {
+                requestBuilder = requestBuilder.apply(RequestOptions.errorOf(errorDrawable));
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
+            DoricLog.e("ImageNode blend error, please check the glide version");
+        }
+
+        requestBuilder
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        if (!TextUtils.isEmpty(loadCallbackId)) {
+                            callJSResponse(loadCallbackId);
+                        }
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        if (!TextUtils.isEmpty(loadCallbackId)) {
+                            callJSResponse(loadCallbackId, new JSONBuilder()
+                                    .put("width", DoricUtils.px2dp(resource.getIntrinsicWidth()))
+                                    .put("height", DoricUtils.px2dp(resource.getIntrinsicHeight()))
+                                    .toJSONObject());
+                        }
+                        return false;
+                    }
+                })
+                .into(mView);
+    }
+
     @Override
     protected void blend(ImageView view, String name, JSValue prop) {
         switch (name) {
             case "imageUrl":
-                RequestBuilder<Drawable> requestBuilder = Glide.with(getContext())
-                        .load(prop.asString().value());
-                try {
-                    if (isBlur) {
-                        requestBuilder = requestBuilder
-                                .apply(RequestOptions
-                                        .bitmapTransform(new BlurTransformation(25, 3)));
-                    }
-                    Drawable placeHolderDrawable = getPlaceHolderDrawable();
-
-                    if (placeHolderDrawable != null) {
-                        requestBuilder = requestBuilder.apply(RequestOptions.placeholderOf(placeHolderDrawable));
-                    }
-
-                    Drawable errorDrawable = getErrorDrawable();
-                    if (errorDrawable != null) {
-                        requestBuilder = requestBuilder.apply(RequestOptions.errorOf(errorDrawable));
-                    }
-                } catch (Throwable e) {
-                    e.printStackTrace();
-                    DoricLog.e("ImageNode blend error, please check the glide version");
-                }
-
-                requestBuilder
-                        .listener(new RequestListener<Drawable>() {
-                            @Override
-                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                if (!TextUtils.isEmpty(loadCallbackId)) {
-                                    callJSResponse(loadCallbackId);
-                                }
-                                return false;
-                            }
-
-                            @Override
-                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                if (!TextUtils.isEmpty(loadCallbackId)) {
-                                    callJSResponse(loadCallbackId, new JSONBuilder()
-                                            .put("width", DoricUtils.px2dp(resource.getIntrinsicWidth()))
-                                            .put("height", DoricUtils.px2dp(resource.getIntrinsicHeight()))
-                                            .toJSONObject());
-                                }
-                                return false;
-                            }
-                        })
-                        .into(view);
+                loadImageUrl(prop.asString().value());
                 break;
             case "scaleType":
                 int scaleType = prop.asNumber().toInt();
@@ -215,6 +219,30 @@ public class ImageNode extends ViewNode<ImageView> {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                    }
+                }
+                break;
+            case "imagePath":
+                String localName = prop.asString().value();
+                loadImageUrl("file:///android_asset/" + localName);
+                break;
+            case "imageRes":
+                int resId = getContext().getResources().getIdentifier(
+                        prop.asString().value().toLowerCase(),
+                        "drawable",
+                        getDoricContext().getContext().getPackageName());
+                if (resId > 0) {
+                    Drawable drawable = getContext().getResources().getDrawable(resId);
+                    view.setImageResource(resId);
+                    if (!TextUtils.isEmpty(loadCallbackId)) {
+                        callJSResponse(loadCallbackId, new JSONBuilder()
+                                .put("width", DoricUtils.px2dp(drawable.getIntrinsicWidth()))
+                                .put("height", DoricUtils.px2dp(drawable.getIntrinsicHeight()))
+                                .toJSONObject());
+                    }
+                } else {
+                    if (!TextUtils.isEmpty(loadCallbackId)) {
+                        callJSResponse(loadCallbackId);
                     }
                 }
                 break;

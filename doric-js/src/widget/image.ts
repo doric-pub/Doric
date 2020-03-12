@@ -25,6 +25,20 @@ export enum ScaleType {
 
 export interface IImage extends IView {
     imageUrl?: string
+    /** 
+     * Read image from local path
+     * For android,it based on assets dir.
+     * For iOS,it based on main bundle dir.
+    */
+    imagePath?: string
+
+    /** 
+     * Read image from resource 
+     * For android,it will try to read from drawable.
+     * For iOS,it will try to read from Image.Assets.
+     */
+    imageRes?: string
+
     imageBase64?: string
     scaleType?: ScaleType
     isBlur?: boolean
@@ -40,7 +54,10 @@ export class Image extends View implements IImage {
     imageUrl?: string
 
     @Property
-    imageBase64?: string
+    imagePath?: string
+
+    @Property
+    imageRes?: string
 
     @Property
     scaleType?: ScaleType

@@ -181,6 +181,33 @@
             }
 
         }
+    } else if ([@"imageRes" isEqualToString:name]) {
+        UIImage *image = [UIImage imageNamed:prop];
+        view.image = image;
+        if (self.loadCallbackId.length > 0) {
+            if (image) {
+                [self callJSResponse:self.loadCallbackId,
+                                     @{@"width": @(image.size.width), @"height": @(image.size.height)},
+                                nil];
+            } else {
+                [self callJSResponse:self.loadCallbackId, nil];
+            }
+        }
+
+    } else if ([@"imagePath" isEqualToString:name]) {
+        NSString *path = [[NSBundle mainBundle] bundlePath];
+        NSString *fullPath = [path stringByAppendingPathComponent:prop];
+        UIImage *image = [UIImage imageWithContentsOfFile:fullPath];
+        view.image = image;
+        if (self.loadCallbackId.length > 0) {
+            if (image) {
+                [self callJSResponse:self.loadCallbackId,
+                                     @{@"width": @(image.size.width), @"height": @(image.size.height)},
+                                nil];
+            } else {
+                [self callJSResponse:self.loadCallbackId, nil];
+            }
+        }
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }

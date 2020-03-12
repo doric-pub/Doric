@@ -1667,7 +1667,11 @@ var Image = /** @class */ (function (_super) {
     __decorate$4([
         Property,
         __metadata$4("design:type", String)
-    ], Image.prototype, "imageBase64", void 0);
+    ], Image.prototype, "imagePath", void 0);
+    __decorate$4([
+        Property,
+        __metadata$4("design:type", String)
+    ], Image.prototype, "imageRes", void 0);
     __decorate$4([
         Property,
         __metadata$4("design:type", Number)

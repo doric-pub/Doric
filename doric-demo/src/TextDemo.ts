@@ -47,12 +47,12 @@ class TextDemo extends Panel {
                     }),
                     text({
                         text: "This is Icon Font text \ue631",
-                        font: 'iconfont/iconfont.ttf'
+                        font: 'iconfont'
                     }),
                     text({
                         text: "This is Icon Font text \ue631",
                         textSize: 30,
-                        font: 'iconfont/iconfont.ttf'
+                        font: 'iconfont'
                     }),
                 ],
                 {

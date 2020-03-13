@@ -103,6 +103,8 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
 @property(nonatomic, copy) NSNumber *rotation;
 @property(nonatomic, copy) NSNumber *pivotX;
 @property(nonatomic, copy) NSNumber *pivotY;
+
+@property(nonatomic, strong) CAGradientLayer *gradientLayer;
 @end
 
 @implementation DoricViewNode
@@ -168,18 +170,59 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
         NSNumber *width = (NSNumber *) prop;
         if ([width floatValue] >= 0) {
             view.width = [width floatValue];
+            self.gradientLayer.frame = view.bounds;
         }
     } else if ([name isEqualToString:@"height"]) {
         NSNumber *height = (NSNumber *) prop;
         if ([height floatValue] >= 0) {
             view.height = [height floatValue];
+            self.gradientLayer.frame = view.bounds;
         }
     } else if ([name isEqualToString:@"x"]) {
         view.x = [(NSNumber *) prop floatValue];
     } else if ([name isEqualToString:@"y"]) {
         view.y = [(NSNumber *) prop floatValue];
     } else if ([name isEqualToString:@"backgroundColor"]) {
-        view.backgroundColor = DoricColor(prop);
+        if ([prop isKindOfClass:[NSNumber class]]) {
+            view.backgroundColor = DoricColor(prop);
+        } else if ([prop isKindOfClass:[NSDictionary class]]) {
+            if (_gradientLayer == nil) {
+                _gradientLayer = [[CAGradientLayer alloc] init];
+                [view.layer addSublayer:self.gradientLayer];
+            }
+            
+            NSDictionary *dict = prop;
+            UIColor *start = DoricColor(dict[@"start"]);
+            UIColor *end = DoricColor(dict[@"end"]);
+            int orientation = [dict[@"orientation"] intValue];
+            
+            if (orientation == 0) {
+                self.gradientLayer.startPoint = CGPointMake(0, 0);
+                self.gradientLayer.endPoint = CGPointMake(0, 1);
+            } else if (orientation == 1) {
+                self.gradientLayer.startPoint = CGPointMake(1, 0);
+                self.gradientLayer.endPoint = CGPointMake(0, 1);
+            } else if (orientation == 2) {
+                self.gradientLayer.startPoint = CGPointMake(1, 0);
+                self.gradientLayer.endPoint = CGPointMake(0, 0);
+            } else if (orientation == 3) {
+                self.gradientLayer.startPoint = CGPointMake(1, 1);
+                self.gradientLayer.endPoint = CGPointMake(0, 0);
+            } else if (orientation == 4) {
+                self.gradientLayer.startPoint = CGPointMake(0, 1);
+                self.gradientLayer.endPoint = CGPointMake(0, 0);
+            } else if (orientation == 5) {
+                self.gradientLayer.startPoint = CGPointMake(0, 1);
+                self.gradientLayer.endPoint = CGPointMake(1, 0);
+            } else if (orientation == 6) {
+                self.gradientLayer.startPoint = CGPointMake(0, 0);
+                self.gradientLayer.endPoint = CGPointMake(1, 0);
+            } else if (orientation == 7) {
+                self.gradientLayer.startPoint = CGPointMake(0, 0);
+                self.gradientLayer.endPoint = CGPointMake(1, 1);
+            }
+            self.gradientLayer.colors = @[(__bridge id)start.CGColor, (__bridge id)end.CGColor];
+        }
     } else if ([name isEqualToString:@"alpha"]) {
         view.alpha = [prop floatValue];
     } else if ([name isEqualToString:@"layoutConfig"]) {

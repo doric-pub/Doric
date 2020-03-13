@@ -60,6 +60,9 @@
         it.pagingEnabled = YES;
         [it setShowsVerticalScrollIndicator:NO];
         [it setShowsHorizontalScrollIndicator:NO];
+        if (@available(iOS 11, *)) {
+            it.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
     }];
 }
 

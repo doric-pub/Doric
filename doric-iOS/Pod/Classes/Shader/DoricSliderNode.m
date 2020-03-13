@@ -85,6 +85,9 @@
                 it.delegate = self;
                 it.dataSource = self;
                 [it registerClass:[DoricSliderViewCell class] forCellWithReuseIdentifier:@"doricCell"];
+                if (@available(iOS 11, *)) {
+                    it.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+                }
             }];
 }
 

@@ -125,7 +125,8 @@ static const void *kTagString = &kTagString;
     if ([self.superview requestFromSubview:self]) {
         [self.superview doricLayoutSubviews];
     } else {
-        [self layoutSelf:CGSizeMake(self.width, self.height)];
+        CGSize size = [self measureSize:CGSizeMake(self.superview.width, self.superview.height)];
+        [self layoutSelf:size];
     }
 }
 

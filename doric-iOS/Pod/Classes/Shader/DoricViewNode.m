@@ -378,6 +378,9 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
 }
 
 - (void)blendLayoutConfig:(NSDictionary *)params {
+    if (!self.layoutConfig) {
+        self.view.layoutConfig = [DoricLayoutConfig new];
+    }
     [params[@"widthSpec"] also:^(NSNumber *it) {
         if (it) {
             self.layoutConfig.widthSpec = (DoricLayoutSpec) [it integerValue];

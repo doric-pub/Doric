@@ -19,7 +19,6 @@ setTimeout(() => {
         }
         fs.readFile(path, 'utf-8', (error, data) => {
             if (!path.endsWith('.map')) {
-                console.log('File change:', path)
                 try {
                     const sourceMap = doMerge(path + ".map")
                     ws.connections.forEach(e => {

@@ -27,6 +27,10 @@ function fromDir(startPath, filter) {
 };
 function doMerge(startPath, fileName) {
     const filePath = fileName ? path.join(startPath, fileName) : startPath
+    if (filePath.indexOf('.es5.') >= 0){
+        return
+    }
+    console.log('File change:', filePath)
     const mergedMap = SourceMapMerger.createMergedSourceMapFromFiles([
         filePath.replace(/bundle\//, 'build/'),
         filePath,

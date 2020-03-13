@@ -20,10 +20,10 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.widget.TextView;
 
+import com.github.pengfeizhou.jscore.JSValue;
+
 import pub.doric.DoricContext;
 import pub.doric.extension.bridge.DoricPlugin;
-
-import com.github.pengfeizhou.jscore.JSValue;
 
 /**
  * @Description: widget
@@ -76,6 +76,17 @@ public class TextNode extends ViewNode<TextView> {
                 } else {
                     view.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
                 }
+                break;
+            case "font":
+                String font = prop.asString().toString();
+                if (font.endsWith(".ttf")) {
+                    Typeface iconFont = Typeface.createFromAsset(getContext().getAssets(), font);
+                    view.setTypeface(iconFont);
+                } else {
+                    Typeface iconFont = Typeface.createFromAsset(getContext().getAssets(), font + ".ttf");
+                    view.setTypeface(iconFont);
+                }
+
                 break;
             default:
                 super.blend(view, name, prop);

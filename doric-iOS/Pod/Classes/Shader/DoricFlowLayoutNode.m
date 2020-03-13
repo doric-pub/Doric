@@ -199,6 +199,9 @@
                 it.dataSource = self;
                 [it registerClass:[DoricFlowLayoutViewCell class] forCellWithReuseIdentifier:@"doricCell"];
                 [it registerClass:[DoricFlowLayoutViewCell class] forCellWithReuseIdentifier:@"doricLoadMoreCell"];
+                if (@available(iOS 11, *)) {
+                    it.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+                }
             }];
 }
 

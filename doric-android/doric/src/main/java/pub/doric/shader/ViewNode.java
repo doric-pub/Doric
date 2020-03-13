@@ -492,6 +492,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                     layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
                     break;
                 default:
+                    layoutParams.width = Math.max(0, layoutParams.width);
                     break;
             }
         }
@@ -504,6 +505,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                     layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
                     break;
                 default:
+                    layoutParams.height = Math.max(0, layoutParams.height);
                     break;
             }
         }

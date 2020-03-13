@@ -24,6 +24,7 @@
 
 @interface DoricPanel : UIViewController
 @property(nonatomic, strong) DoricContext *doricContext;
+@property(nonatomic, strong) void (^frameChangedBlock)(CGSize frameSize);
 
 - (void)config:(NSString *)script alias:(NSString *)alias extra:(NSString *)extra;
 @end

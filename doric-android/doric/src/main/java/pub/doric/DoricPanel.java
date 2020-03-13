@@ -27,6 +27,8 @@ import androidx.lifecycle.OnLifecycleEvent;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
+import com.github.penfeizhou.animation.decode.Frame;
+
 import pub.doric.utils.DoricUtils;
 
 /**
@@ -37,6 +39,9 @@ import pub.doric.utils.DoricUtils;
 public class DoricPanel extends FrameLayout implements LifecycleObserver {
 
     private DoricContext mDoricContext;
+    private FrameChangedListener frameChangedListener;
+    private int renderedWidth = -1;
+    private int renderedHeight = -1;
 
     public DoricPanel(@NonNull Context context) {
         this(context, null);
@@ -80,9 +85,20 @@ public class DoricPanel extends FrameLayout implements LifecycleObserver {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        if (oldw != w || oldh != h) {
-            if (mDoricContext != null) {
-                mDoricContext.init(DoricUtils.px2dp(w), DoricUtils.px2dp(h));
+        if (mDoricContext != null) {
+            if (w != renderedWidth || h != renderedHeight) {
+                if (renderedWidth == oldw && renderedHeight == oldh) {
+                    //Changed by doric
+                    if (frameChangedListener != null) {
+                        frameChangedListener.onFrameChanged(w, h);
+                    }
+                    renderedWidth = w;
+                    renderedHeight = h;
+                } else {
+                    mDoricContext.init(DoricUtils.px2dp(w), DoricUtils.px2dp(h));
+                    renderedWidth = w;
+                    renderedHeight = h;
+                }
             }
         }
     }
@@ -106,5 +122,13 @@ public class DoricPanel extends FrameLayout implements LifecycleObserver {
         if (mDoricContext != null) {
             mDoricContext.teardown();
         }
+    }
+
+    public interface FrameChangedListener {
+        void onFrameChanged(int width, int height);
+    }
+
+    public void setFrameChangedListener(FrameChangedListener listener) {
+        this.frameChangedListener = listener;
     }
 }

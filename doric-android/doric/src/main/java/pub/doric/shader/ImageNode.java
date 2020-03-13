@@ -20,6 +20,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.widget.ImageView;
@@ -37,8 +38,6 @@ import com.github.pengfeizhou.jscore.JSValue;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import androidx.annotation.Nullable;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import pub.doric.DoricContext;

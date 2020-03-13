@@ -22,10 +22,9 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
-
-import androidx.annotation.Nullable;
 
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSONBuilder;
@@ -37,7 +36,6 @@ import java.util.Map;
 
 import pub.doric.Doric;
 import pub.doric.DoricContext;
-import pub.doric.DoricContextManager;
 import pub.doric.DoricRegistry;
 import pub.doric.IDoricMonitor;
 import pub.doric.extension.bridge.DoricBridgeExtension;

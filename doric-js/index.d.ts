@@ -78,6 +78,7 @@ declare module 'doric/lib/src/widget/index.widget' {
     export * from 'doric/lib/src/widget/input';
     export * from 'doric/lib/src/widget/nestedSlider';
     export * from 'doric/lib/src/widget/draggable';
+    export * from 'doric/lib/src/widget/switch';
 }
 
 declare module 'doric/lib/src/native/index.native' {
@@ -498,21 +499,6 @@ declare module 'doric/lib/src/widget/image' {
             imageBase64?: string;
             scaleType?: ScaleType;
             isBlur?: boolean;
-            placeHolderImage?: string;
-            placeHolderColor?: Color;
-            errorImage?: string;
-            errorColor?: Color;
-            loadCallback?: (image: {
-                    width: number;
-                    height: number;
-            } | undefined) => void;
-    }
-    export class Image extends View implements IImage {
-            imageUrl?: string;
-            imagePath?: string;
-            imageRes?: string;
-            scaleType?: ScaleType;
-            isBlur?: boolean;
             /**
                 * Display while image is loading
                 * Local file name
@@ -534,6 +520,21 @@ declare module 'doric/lib/src/widget/image' {
                 * Color
                 * This priority is lower than errorImage
                 */
+            errorColor?: Color;
+            loadCallback?: (image: {
+                    width: number;
+                    height: number;
+            } | undefined) => void;
+    }
+    export class Image extends View implements IImage {
+            imageUrl?: string;
+            imagePath?: string;
+            imageRes?: string;
+            scaleType?: ScaleType;
+            isBlur?: boolean;
+            placeHolderImage?: string;
+            placeHolderColor?: Color;
+            errorImage?: string;
             errorColor?: Color;
             loadCallback?: (image: {
                     width: number;
@@ -809,6 +810,35 @@ declare module 'doric/lib/src/widget/draggable' {
         onDrag?: (x: number, y: number) => void;
     }
     export function draggable(views: View | View[], config?: IDraggable): Draggable;
+}
+
+declare module 'doric/lib/src/widget/switch' {
+    import { View, IView } from "doric/lib/src/ui/view";
+    import { Color } from "doric/lib/src/util/color";
+    export interface ISwitch extends IView {
+            /**
+                * True is on ,false is off,defalut is off.
+                */
+            state?: boolean;
+            /**
+                * Switch change callback
+                */
+            onSwitch?: (state: boolean) => void;
+            onTintColor?: Color;
+            offTintColor?: Color;
+            thumbTintColor?: Color;
+    }
+    export class Switch extends View {
+            /**
+                * True is on ,false is off,defalut is off.
+                */
+            state?: boolean;
+            onSwitch?: (state: boolean) => void;
+            offTintColor?: Color;
+            onTintColor?: Color;
+            thumbTintColor?: Color;
+    }
+    export function switchView(config: ISwitch): Switch;
 }
 
 declare module 'doric/lib/src/native/modal' {

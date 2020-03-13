@@ -13,15 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from './layouts';
-export * from './text';
-export * from './image';
-export * from './list';
-export * from './slider';
-export * from './scroller';
-export * from './refreshable';
-export * from './flowlayout';
-export * from './input';
-export * from './nestedSlider';
-export * from './draggable';
-export * from './switch';
+//
+// Created by pengfei.zhou on 2020/3/12.
+//
+
+#import <Foundation/Foundation.h>
+#import "DoricViewNode.h"
+
+@interface DoricSwitchNode : DoricViewNode <UISwitch *>
+@end

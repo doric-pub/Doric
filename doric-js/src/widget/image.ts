@@ -42,9 +42,30 @@ export interface IImage extends IView {
     imageBase64?: string
     scaleType?: ScaleType
     isBlur?: boolean
+    /**
+     * Display while image is loading 
+     * Local file name
+     */
     placeHolderImage?: string
+
+    /**
+     * Display while image is loading 
+     * Color
+     * This priority is lower than placeHolderImage
+     */
     placeHolderColor?: Color
+
+    /**
+     * Display while image is failed to load 
+     * It can be file name in local path
+     */
     errorImage?: string
+
+    /**
+     * Display while image is failed to load  
+     * Color
+     * This priority is lower than errorImage
+     */
     errorColor?: Color
     loadCallback?: (image: { width: number; height: number } | undefined) => void
 }
@@ -65,33 +86,15 @@ export class Image extends View implements IImage {
     @Property
     isBlur?: boolean
 
-    /**
-     * Display while image is loading 
-     * Local file name
-     */
     @Property
     placeHolderImage?: string
 
-    /**
-     * Display while image is loading 
-     * Color
-     * This priority is lower than placeHolderImage
-     */
     @Property
     placeHolderColor?: Color
 
-    /**
-     * Display while image is failed to load 
-     * It can be file name in local path
-     */
     @Property
     errorImage?: string
 
-    /**
-     * Display while image is failed to load  
-     * Color
-     * This priority is lower than errorImage
-     */
     @Property
     errorColor?: Color
 

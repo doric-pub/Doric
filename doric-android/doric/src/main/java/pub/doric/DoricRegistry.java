@@ -44,6 +44,7 @@ import pub.doric.shader.InputNode;
 import pub.doric.shader.RootNode;
 import pub.doric.shader.ScrollerNode;
 import pub.doric.shader.StackNode;
+import pub.doric.shader.SwitchNode;
 import pub.doric.shader.TextNode;
 import pub.doric.shader.VLayoutNode;
 import pub.doric.shader.ViewNode;
@@ -116,6 +117,7 @@ public class DoricRegistry {
         this.registerViewNode(InputNode.class);
         this.registerViewNode(NestedSliderNode.class);
         this.registerViewNode(DraggableNode.class);
+        this.registerViewNode(SwitchNode.class);
         initRegistry(this);
     }
 

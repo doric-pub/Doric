@@ -50,6 +50,7 @@
 #import "DoricStatusBarPlugin.h"
 #import "DoricUtil.h"
 #import "DoricCoordinatorPlugin.h"
+#import "DoricSwitchNode.h"
 
 @interface DoricLibraries : NSObject
 @property(nonatomic, strong) NSMutableSet <DoricLibrary *> *libraries;
@@ -149,6 +150,7 @@
     [self registerViewNode:DoricNestedSliderNode.class withName:@"NestedSlider"];
     [self registerViewNode:DoricInputNode.class withName:@"Input"];
     [self registerViewNode:DoricDraggableNode.class withName:@"Draggable"];
+    [self registerViewNode:DoricSwitchNode.class withName:@"Switch"];
 }
 
 - (void)registerJSBundle:(NSString *)bundle withName:(NSString *)name {

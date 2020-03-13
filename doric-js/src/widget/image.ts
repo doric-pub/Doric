@@ -81,6 +81,9 @@ export class Image extends View implements IImage {
     imageRes?: string
 
     @Property
+    imageBase64?: string
+
+    @Property
     scaleType?: ScaleType
 
     @Property

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8B429D94241B66A300572570 /* iconfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8B429D93241B66A200572570 /* iconfont.ttf */; };
 		8BCADA7C23CD5B65005EEF96 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BCADA7B23CD5B64005EEF96 /* NavigationController.m */; };
 		A1E221FB2DCA40D85C4D9520 /* libPods-ExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F233ACD236542275AED3DE0 /* libPods-ExampleTests.a */; };
 		CC537F4B9F59400BA5B4FF8F /* libPods-Example.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DEE8411A69609CC9C86063CC /* libPods-Example.a */; };
@@ -46,6 +47,7 @@
 		3D75F592D76A665674B31A66 /* Pods-Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-Example/Pods-Example.release.xcconfig"; sourceTree = "<group>"; };
 		4F233ACD236542275AED3DE0 /* libPods-ExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8231E841CCAF382F85C9F576 /* Pods-Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Example/Pods-Example.debug.xcconfig"; sourceTree = "<group>"; };
+		8B429D93241B66A200572570 /* iconfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = iconfont.ttf; path = "../../../doric-demo/bundle/iconfont.ttf"; sourceTree = "<group>"; };
 		8BCADA7A23CD5B5F005EEF96 /* NavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NavigationController.h; sourceTree = "<group>"; };
 		8BCADA7B23CD5B64005EEF96 /* NavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
 		B93423722F2E06DC238CDD18 /* Pods-ExampleUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExampleUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ExampleUITests/Pods-ExampleUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -152,6 +154,7 @@
 		E2334AED22E9D2060098A085 /* Example */ = {
 			isa = PBXGroup;
 			children = (
+				8B429D93241B66A200572570 /* iconfont.ttf */,
 				E2C9315823B0A263007933D9 /* src */,
 				E2334AEE22E9D2060098A085 /* AppDelegate.h */,
 				E2334AEF22E9D2060098A085 /* AppDelegate.m */,
@@ -301,6 +304,7 @@
 				E2334AFB22E9D2070098A085 /* LaunchScreen.storyboard in Resources */,
 				E2334AF822E9D2070098A085 /* Assets.xcassets in Resources */,
 				E2334AF622E9D2060098A085 /* Main.storyboard in Resources */,
+				8B429D94241B66A300572570 /* iconfont.ttf in Resources */,
 				E2C9315923B0A263007933D9 /* src in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

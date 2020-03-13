@@ -72,6 +72,10 @@
             font = [UIFont fontWithDescriptor:fontDescriptor size:0];
         }
         view.font = font;
+    } else if ([name isEqualToString:@"font"]) {
+        NSString *iconfont = prop;
+        UIFont *font = [UIFont fontWithName:iconfont size:view.font.pointSize];
+        view.font = font;
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }

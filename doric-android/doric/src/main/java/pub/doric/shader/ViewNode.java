@@ -23,6 +23,7 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.GradientDrawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -35,19 +36,6 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
-import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
-
-import pub.doric.Doric;
-import pub.doric.DoricContext;
-import pub.doric.DoricRegistry;
-import pub.doric.async.AsyncResult;
-import pub.doric.extension.bridge.DoricMethod;
-import pub.doric.extension.bridge.DoricPromise;
-import pub.doric.utils.DoricContextHolder;
-import pub.doric.utils.DoricConstant;
-import pub.doric.utils.DoricLog;
-import pub.doric.utils.DoricMetaInfo;
-import pub.doric.utils.DoricUtils;
 
 import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSDecoder;
@@ -59,6 +47,17 @@ import com.github.pengfeizhou.jscore.JavaValue;
 import org.json.JSONObject;
 
 import java.util.LinkedList;
+
+import pub.doric.DoricContext;
+import pub.doric.DoricRegistry;
+import pub.doric.async.AsyncResult;
+import pub.doric.extension.bridge.DoricMethod;
+import pub.doric.extension.bridge.DoricPromise;
+import pub.doric.utils.DoricConstant;
+import pub.doric.utils.DoricContextHolder;
+import pub.doric.utils.DoricLog;
+import pub.doric.utils.DoricMetaInfo;
+import pub.doric.utils.DoricUtils;
 
 /**
  * @Description: Render
@@ -190,15 +189,58 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 break;
             case "backgroundColor":
                 if (isAnimating()) {
-                    ObjectAnimator animator = ObjectAnimator.ofInt(
-                            this,
-                            name,
-                            getBackgroundColor(),
-                            prop.asNumber().toInt());
-                    animator.setEvaluator(new ArgbEvaluator());
-                    addAnimator(animator);
+                    if (prop.isNumber()) {
+                        ObjectAnimator animator = ObjectAnimator.ofInt(
+                                this,
+                                name,
+                                getBackgroundColor(),
+                                prop.asNumber().toInt());
+                        animator.setEvaluator(new ArgbEvaluator());
+                        addAnimator(animator);
+                    }
                 } else {
-                    setBackgroundColor(prop.asNumber().toInt());
+                    if (prop.isNumber()) {
+                        setBackgroundColor(prop.asNumber().toInt());
+                    } else if (prop.isObject()) {
+                        JSValue start = prop.asObject().getProperty("start");
+                        JSValue end = prop.asObject().getProperty("end");
+                        JSValue orientation = prop.asObject().getProperty("orientation");
+
+                        GradientDrawable gradientDrawable = new GradientDrawable();
+                        gradientDrawable.setShape(GradientDrawable.RECTANGLE);
+                        gradientDrawable.setColors(new int[]{start.asNumber().toInt(), end.asNumber().toInt()});
+                        gradientDrawable.setGradientType(GradientDrawable.LINEAR_GRADIENT);
+
+                        switch (orientation.asNumber().toInt()) {
+                            case 0:
+                                gradientDrawable.setOrientation(GradientDrawable.Orientation.TOP_BOTTOM);
+                                break;
+                            case 1:
+                                gradientDrawable.setOrientation(GradientDrawable.Orientation.TR_BL);
+                                break;
+                            case 2:
+                                gradientDrawable.setOrientation(GradientDrawable.Orientation.RIGHT_LEFT);
+                                break;
+                            case 3:
+                                gradientDrawable.setOrientation(GradientDrawable.Orientation.BR_TL);
+                                break;
+                            case 4:
+                                gradientDrawable.setOrientation(GradientDrawable.Orientation.BOTTOM_TOP);
+                                break;
+                            case 5:
+                                gradientDrawable.setOrientation(GradientDrawable.Orientation.BL_TR);
+                                break;
+                            case 6:
+                                gradientDrawable.setOrientation(GradientDrawable.Orientation.LEFT_RIGHT);
+                                break;
+                            case 7:
+                                gradientDrawable.setOrientation(GradientDrawable.Orientation.TL_BR);
+                                break;
+                        }
+
+                        gradientDrawable.setSize(view.getMeasuredWidth(), view.getMeasuredHeight());
+                        view.setBackground(gradientDrawable);
+                    }
                 }
                 break;
             case "onClick":

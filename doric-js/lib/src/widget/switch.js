@@ -23,59 +23,35 @@ var __metadata = (this && this.__metadata) || function (k, v) {
  * limitations under the License.
  */
 import { View, Property } from "../ui/view";
-import { layoutConfig } from "../util/layoutconfig";
 import { Color } from "../util/color";
-export var ScaleType;
-(function (ScaleType) {
-    ScaleType[ScaleType["ScaleToFill"] = 0] = "ScaleToFill";
-    ScaleType[ScaleType["ScaleAspectFit"] = 1] = "ScaleAspectFit";
-    ScaleType[ScaleType["ScaleAspectFill"] = 2] = "ScaleAspectFill";
-})(ScaleType || (ScaleType = {}));
-export class Image extends View {
+import { layoutConfig } from "../util/index.util";
+export class Switch extends View {
 }
 __decorate([
     Property,
-    __metadata("design:type", String)
-], Image.prototype, "imageUrl", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", String)
-], Image.prototype, "imagePath", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", String)
-], Image.prototype, "imageRes", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Number)
-], Image.prototype, "scaleType", void 0);
-__decorate([
-    Property,
     __metadata("design:type", Boolean)
-], Image.prototype, "isBlur", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", String)
-], Image.prototype, "placeHolderImage", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Color)
-], Image.prototype, "placeHolderColor", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", String)
-], Image.prototype, "errorImage", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Color)
-], Image.prototype, "errorColor", void 0);
+], Switch.prototype, "state", void 0);
 __decorate([
     Property,
     __metadata("design:type", Function)
-], Image.prototype, "loadCallback", void 0);
-export function image(config) {
-    const ret = new Image;
-    ret.layoutConfig = layoutConfig().fit();
+], Switch.prototype, "onSwitch", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Color)
+], Switch.prototype, "offTintColor", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Color)
+], Switch.prototype, "onTintColor", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Color)
+], Switch.prototype, "thumbTintColor", void 0);
+export function switchView(config) {
+    const ret = new Switch;
+    ret.layoutConfig = layoutConfig().just();
+    ret.width = 50;
+    ret.height = 30;
     for (let key in config) {
         Reflect.set(ret, key, Reflect.get(config, key, config), ret);
     }

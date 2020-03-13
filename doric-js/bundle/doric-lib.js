@@ -1252,12 +1252,7 @@ __decorate$4([
 ], Image.prototype, "placeHolderImage", void 0);
 __decorate$4([
     Property,
-    __metadata$4("design:type", Color
-    /**
-     * Display while image is failed to load
-     * It can be file name in local path
-     */
-    )
+    __metadata$4("design:type", Color)
 ], Image.prototype, "placeHolderColor", void 0);
 __decorate$4([
     Property,
@@ -1884,6 +1879,48 @@ function draggable(views, config) {
     return ret;
 }
 
+var __decorate$d = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata$d = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+class Switch extends View {
+}
+__decorate$d([
+    Property,
+    __metadata$d("design:type", Boolean)
+], Switch.prototype, "state", void 0);
+__decorate$d([
+    Property,
+    __metadata$d("design:type", Function)
+], Switch.prototype, "onSwitch", void 0);
+__decorate$d([
+    Property,
+    __metadata$d("design:type", Color)
+], Switch.prototype, "offTintColor", void 0);
+__decorate$d([
+    Property,
+    __metadata$d("design:type", Color)
+], Switch.prototype, "onTintColor", void 0);
+__decorate$d([
+    Property,
+    __metadata$d("design:type", Color)
+], Switch.prototype, "thumbTintColor", void 0);
+function switchView(config) {
+    const ret = new Switch;
+    ret.layoutConfig = layoutConfig().just();
+    ret.width = 50;
+    ret.height = 30;
+    for (let key in config) {
+        Reflect.set(ret, key, Reflect.get(config, key, config), ret);
+    }
+    return ret;
+}
+
 function modal(context) {
     return {
         toast: (msg, gravity = Gravity.Bottom) => {
@@ -2375,6 +2412,7 @@ exports.SlideItem = SlideItem;
 exports.Slider = Slider;
 exports.Stack = Stack;
 exports.Superview = Superview;
+exports.Switch = Switch;
 exports.TOP = TOP;
 exports.Text = Text;
 exports.TranslationAnimation = TranslationAnimation;
@@ -2414,6 +2452,7 @@ exports.slider = slider;
 exports.stack = stack;
 exports.statusbar = statusbar;
 exports.storage = storage;
+exports.switchView = switchView;
 exports.take = take;
 exports.takeAlso = takeAlso;
 exports.takeIf = takeIf;

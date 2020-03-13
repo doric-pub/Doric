@@ -22,21 +22,6 @@ export interface IImage extends IView {
     imageBase64?: string;
     scaleType?: ScaleType;
     isBlur?: boolean;
-    placeHolderImage?: string;
-    placeHolderColor?: Color;
-    errorImage?: string;
-    errorColor?: Color;
-    loadCallback?: (image: {
-        width: number;
-        height: number;
-    } | undefined) => void;
-}
-export declare class Image extends View implements IImage {
-    imageUrl?: string;
-    imagePath?: string;
-    imageRes?: string;
-    scaleType?: ScaleType;
-    isBlur?: boolean;
     /**
      * Display while image is loading
      * Local file name
@@ -58,6 +43,21 @@ export declare class Image extends View implements IImage {
      * Color
      * This priority is lower than errorImage
      */
+    errorColor?: Color;
+    loadCallback?: (image: {
+        width: number;
+        height: number;
+    } | undefined) => void;
+}
+export declare class Image extends View implements IImage {
+    imageUrl?: string;
+    imagePath?: string;
+    imageRes?: string;
+    scaleType?: ScaleType;
+    isBlur?: boolean;
+    placeHolderImage?: string;
+    placeHolderColor?: Color;
+    errorImage?: string;
     errorColor?: Color;
     loadCallback?: (image: {
         width: number;

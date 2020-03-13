@@ -20,9 +20,9 @@
 #import "DoricPanel.h"
 #import "Doric.h"
 
-@interface DoricPanel()
-@property(nonatomic,assign) CGFloat renderedWidth;
-@property(nonatomic,assign) CGFloat renderedHeight;
+@interface DoricPanel ()
+@property(nonatomic, assign) CGFloat renderedWidth;
+@property(nonatomic, assign) CGFloat renderedHeight;
 @end
 
 @implementation DoricPanel
@@ -41,13 +41,22 @@
 
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
-    [self.doricContext.rootNode.view also:^(DoricStackView *it) {
-        if (it.width != self.renderedWidth || it.height != self.renderedHeight) {
-            [self.doricContext initContextWithWidth:it.width height:it.height];
-            self.renderedWidth = it.width;
-            self.renderedHeight = it.height;
-        }
-    }];
+    if (self.doricContext && self.renderedWidth != self.view.width && self.renderedHeight != self.view.height) {
+        self.renderedWidth = self.view.width;
+        self.renderedHeight = self.view.height;
+        [self.doricContext initContextWithWidth:self.renderedWidth height:self.renderedHeight];
+    } else {
+        [self.doricContext.rootNode.view also:^(DoricStackView *it) {
+            if (it.width != self.renderedWidth || it.height != self.renderedHeight) {
+                // Frame changed
+                self.renderedWidth = self.view.width = it.width;
+                self.renderedHeight = self.view.height = it.height;
+                if (self.frameChangedBlock) {
+                    self.frameChangedBlock(CGSizeMake(it.width, it.height));
+                }
+            }
+        }];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {

@@ -25,9 +25,19 @@
 #import "DoricGroupNode.h"
 #import "Doric.h"
 
+@interface DoricTextView : UILabel
+
+@end
+
+@implementation DoricTextView
+- (void)drawTextInRect:(CGRect)rect {
+    [super drawTextInRect:UIEdgeInsetsInsetRect(rect, self.padding)];
+}
+@end
+
 @implementation DoricTextNode
 - (UILabel *)build {
-    return [[[UILabel alloc] init] also:^(UILabel *it) {
+    return [[[DoricTextView alloc] init] also:^(UILabel *it) {
         it.textAlignment = NSTextAlignmentCenter;
     }];
 }

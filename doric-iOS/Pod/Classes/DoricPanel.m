@@ -20,11 +20,19 @@
 #import "DoricPanel.h"
 #import "Doric.h"
 
+@interface DoricPanel()
+@property(nonatomic,assign) CGFloat renderedWidth;
+@property(nonatomic,assign) CGFloat renderedHeight;
+@end
+
 @implementation DoricPanel
 
 - (void)config:(NSString *)script alias:(NSString *)alias extra:(NSString *)extra {
     self.doricContext = [[[DoricContext alloc] initWithScript:script source:alias extra:extra] also:^(DoricContext *it) {
         [it.rootNode setupRootView:[[DoricStackView new] also:^(DoricStackView *it) {
+            it.width = self.view.width;
+            it.height = self.view.height;
+            it.clipsToBounds = YES;
             [self.view addSubview:it];
         }]];
     }];
@@ -34,10 +42,10 @@
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
     [self.doricContext.rootNode.view also:^(DoricStackView *it) {
-        if (it.width != self.view.width || it.height != self.view.height) {
-            it.width = self.view.width;
-            it.height = self.view.height;
+        if (it.width != self.renderedWidth || it.height != self.renderedHeight) {
             [self.doricContext initContextWithWidth:it.width height:it.height];
+            self.renderedWidth = it.width;
+            self.renderedHeight = it.height;
         }
     }];
 }

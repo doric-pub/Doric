@@ -45,6 +45,15 @@ class TextDemo extends Panel {
                         textSize: 30,
                         fontStyle: "bold_italic"
                     }),
+                    text({
+                        text: "This is Icon Font text \ue631",
+                        font: 'iconfont/iconfont.ttf'
+                    }),
+                    text({
+                        text: "This is Icon Font text \ue631",
+                        textSize: 30,
+                        font: 'iconfont/iconfont.ttf'
+                    }),
                 ],
                 {
                     space: 10,

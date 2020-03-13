@@ -1,5 +1,5 @@
 
-import { Group, Panel, Text, text, gravity, Color, Stack, LayoutSpec, vlayout, hlayout, scroller, IVLayout, IHLayout, layoutConfig, Gravity } from "doric";
+import { Group, Panel, Text, text, Color, Stack, vlayout, hlayout, scroller, layoutConfig, Gravity, GradientColor, GradientOrientation } from "doric";
 import { colors } from "./utils";
 
 
@@ -28,6 +28,7 @@ function label(str: string) {
 
 @Entry
 class EffectsDemo extends Panel {
+    
     build(rootView: Group) {
         scroller(
             vlayout(
@@ -407,6 +408,187 @@ class EffectsDemo extends Panel {
                                         height: 100,
                                         corners: {
                                             rightBottom: 50,
+                                        },
+                                        layoutConfig: layoutConfig().just().configMargin({
+                                            left: 5,
+                                            right: 5,
+                                            bottom: 5,
+                                        })
+                                    }),
+                                ],
+                                {
+                                    gravity: Gravity.Center,
+                                    space: 10,
+                                }),
+                        ],
+                        { space: 20 }
+                    ),
+                    hlayout(
+                        [
+                            vlayout(
+                                [
+                                    label("Gradient TOP_BOTTOM"),
+                                    box().apply({
+                                        width: 100,
+                                        height: 100,
+                                        backgroundColor: { 
+                                            start: colors[0],
+                                            end: Color.WHITE,
+                                            orientation: GradientOrientation.TOP_BOTTOM
+                                        },
+                                        layoutConfig: layoutConfig().just().configMargin({
+                                            left: 5,
+                                            right: 5,
+                                            bottom: 5,
+                                        })
+                                    }),
+                                ],
+                                {
+                                    gravity: Gravity.Center,
+                                    space: 10,
+                                }),
+                            vlayout(
+                                [
+                                    label("Gradient TR_BL"),
+                                    box().apply({
+                                        width: 100,
+                                        height: 100,
+                                        backgroundColor: { 
+                                            start: colors[0],
+                                            end: Color.WHITE,
+                                            orientation: GradientOrientation.TR_BL
+                                        },
+                                        layoutConfig: layoutConfig().just().configMargin({
+                                            left: 5,
+                                            right: 5,
+                                            bottom: 5,
+                                        })
+                                    }),
+                                ],
+                                {
+                                    gravity: Gravity.Center,
+                                    space: 10,
+                                }),
+                            vlayout(
+                                [
+                                    label("Gradient RIGHT_LEFT"),
+                                    box().apply({
+                                        width: 100,
+                                        height: 100,
+                                        backgroundColor: { 
+                                            start: colors[0],
+                                            end: Color.WHITE,
+                                            orientation: GradientOrientation.RIGHT_LEFT
+                                        },
+                                        layoutConfig: layoutConfig().just().configMargin({
+                                            left: 5,
+                                            right: 5,
+                                            bottom: 5,
+                                        })
+                                    }),
+                                ],
+                                {
+                                    gravity: Gravity.Center,
+                                    space: 10,
+                                }),
+                            vlayout(
+                                [
+                                    label("Gradient BR_TL"),
+                                    box().apply({
+                                        width: 100,
+                                        height: 100,
+                                        backgroundColor: { 
+                                            start: colors[0],
+                                            end: Color.WHITE,
+                                            orientation: GradientOrientation.BR_TL
+                                        },
+                                        layoutConfig: layoutConfig().just().configMargin({
+                                            left: 5,
+                                            right: 5,
+                                            bottom: 5,
+                                        })
+                                    }),
+                                ],
+                                {
+                                    gravity: Gravity.Center,
+                                    space: 10,
+                                }),
+                            vlayout(
+                                [
+                                    label("Gradient BOTTOM_TOP"),
+                                    box().apply({
+                                        width: 100,
+                                        height: 100,
+                                        backgroundColor: { 
+                                            start: colors[0],
+                                            end: Color.WHITE,
+                                            orientation: GradientOrientation.BOTTOM_TOP
+                                        },
+                                        layoutConfig: layoutConfig().just().configMargin({
+                                            left: 5,
+                                            right: 5,
+                                            bottom: 5,
+                                        })
+                                    }),
+                                ],
+                                {
+                                    gravity: Gravity.Center,
+                                    space: 10,
+                                }),
+                            vlayout(
+                                [
+                                    label("Gradient BL_TR"),
+                                    box().apply({
+                                        width: 100,
+                                        height: 100,
+                                        backgroundColor: { 
+                                            start: colors[0],
+                                            end: Color.WHITE,
+                                            orientation: GradientOrientation.BL_TR
+                                        },
+                                        layoutConfig: layoutConfig().just().configMargin({
+                                            left: 5,
+                                            right: 5,
+                                            bottom: 5,
+                                        })
+                                    }),
+                                ],
+                                {
+                                    gravity: Gravity.Center,
+                                    space: 10,
+                                }),
+                            vlayout(
+                                [
+                                    label("Gradient LEFT_RIGHT"),
+                                    box().apply({
+                                        width: 100,
+                                        height: 100,
+                                        backgroundColor: { 
+                                            start: colors[0],
+                                            end: Color.WHITE,
+                                            orientation: GradientOrientation.LEFT_RIGHT
+                                        },
+                                        layoutConfig: layoutConfig().just().configMargin({
+                                            left: 5,
+                                            right: 5,
+                                            bottom: 5,
+                                        })
+                                    }),
+                                ],
+                                {
+                                    gravity: Gravity.Center,
+                                    space: 10,
+                                }),
+                            vlayout(
+                                [
+                                    label("Gradient TL_BR"),
+                                    box().apply({
+                                        width: 100,
+                                        height: 100,
+                                        backgroundColor: { 
+                                            start: colors[0],
+                                            end: Color.WHITE,
+                                            orientation: GradientOrientation.TL_BR
                                         },
                                         layoutConfig: layoutConfig().just().configMargin({
                                             left: 5,

@@ -532,6 +532,7 @@ declare module 'doric/lib/src/widget/image' {
             imageUrl?: string;
             imagePath?: string;
             imageRes?: string;
+            imageBase64?: string;
             scaleType?: ScaleType;
             isBlur?: boolean;
             placeHolderImage?: string;

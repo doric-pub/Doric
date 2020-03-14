@@ -13,5 +13,7 @@ public class MainActivity extends AppCompatActivity {
         getIntent().putExtra("source", source);
         getIntent().putExtra("alias", BUNDLE_NAME);
         super.onCreate(savedInstanceState);
+        BaseDoricNavBar doricNavBar = findViewById(R.id.doric_nav_bar);
+        doricNavBar.setBackIconVisible(false);
     }
 }

@@ -30,6 +30,6 @@ export declare abstract class Panel {
     private nativeRender;
     private hookBeforeNativeCall;
     private hookAfterNativeCall;
-    onRenderFinished(): void;
+    private onRenderFinished;
     addOnRenderFinishedCallback(cb: () => void): void;
 }

@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
             String source = "assets://src/" + BUNDLE_NAME + ".js";
-            getIntent().putExtra("source", scheme);
+            getIntent().putExtra("source", source);
             getIntent().putExtra("alias", BUNDLE_NAME);
             this.getSupportFragmentManager().beginTransaction().add(R.id.root, new DoricFragment()).commit();
         }

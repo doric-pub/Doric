@@ -25,6 +25,7 @@
 #import "DoricConstant.h"
 #import "DoricUtil.h"
 #import "DoricBridgeExtension.h"
+#import <sys/utsname.h>
 
 @interface DoricJSEngine ()
 @property(nonatomic, strong) NSMutableDictionary *timers;
@@ -39,6 +40,12 @@
         _jsQueue = dispatch_queue_create("doric.jsengine", DISPATCH_QUEUE_SERIAL);
         _bridgeExtension = [[DoricBridgeExtension alloc] init];
         NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+        struct utsname systemInfo;
+        uname(&systemInfo);
+        NSString *platform = [NSString stringWithCString:systemInfo.machine encoding:NSASCIIStringEncoding];
+        if (TARGET_OS_SIMULATOR == 1) {
+            platform = [NSProcessInfo new].environment[@"SIMULATOR_MODEL_IDENTIFIER"];
+        }
         _innerEnvironmentDictionary = @{
                 @"platform": @"iOS",
                 @"platformVersion": [[UIDevice currentDevice] systemVersion],
@@ -47,6 +54,8 @@
                 @"screenWidth": @([[UIScreen mainScreen] bounds].size.width),
                 @"screenHeight": @([[UIScreen mainScreen] bounds].size.height),
                 @"statusBarHeight": @([[UIApplication sharedApplication] statusBarFrame].size.height),
+                @"deviceBrand": @"Apple",
+                @"deviceModel": platform,
         };
         dispatch_async(_jsQueue, ^() {
             self.timers = [[NSMutableDictionary alloc] init];

@@ -62,6 +62,15 @@ declare global {
 
         statusBarHeight: number,
 
+        /**
+         * ex:Apple or Google 
+         */
+        deviceBrand: string,
+        /**
+         * ex: iPhone12,5 or pixel 3
+         */
+        deviceModel: string,
+
         [index: string]: number | string | boolean | object | undefined
     }
     function Entry(constructor: { new(...args: any[]): {} }): any

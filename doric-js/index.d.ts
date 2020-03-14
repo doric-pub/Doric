@@ -51,6 +51,8 @@ declare module 'doric/lib/src/runtime/global' {
                     screenWidth: number;
                     screenHeight: number;
                     statusBarHeight: number;
+                    deviceBrand: string;
+                    deviceModel: string;
                     [index: string]: number | string | boolean | object | undefined;
             };
             function Entry(constructor: {

@@ -18,6 +18,7 @@ package pub.doric.engine;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -106,7 +107,8 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
                 .put("appVersion", appVersion)
                 .put("screenWidth", DoricUtils.px2dp(DoricUtils.getScreenWidth()))
                 .put("screenHeight", DoricUtils.px2dp(DoricUtils.getScreenHeight()))
-                .put("statusBarHeight", DoricUtils.px2dp(DoricUtils.getStatusBarHeight(Doric.application())));
+                .put("deviceBrand", Build.BRAND)
+                .put("deviceModel", Build.MODEL);
 
         Map<String, Object> extend = mDoricRegistry.getEnvironmentVariables();
         for (String key : extend.keySet()) {

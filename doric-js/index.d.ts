@@ -299,7 +299,6 @@ declare module 'doric/lib/src/ui/panel' {
         clearHeadViews(type: string): void;
         getRootView(): Root;
         getInitData(): object | undefined;
-        onRenderFinished(): void;
         addOnRenderFinishedCallback(cb: () => void): void;
     }
 }

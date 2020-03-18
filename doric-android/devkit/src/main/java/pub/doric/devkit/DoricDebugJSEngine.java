@@ -1,8 +1,7 @@
 package pub.doric.devkit;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
-
-import androidx.annotation.Nullable;
 
 import com.google.gson.JsonObject;
 

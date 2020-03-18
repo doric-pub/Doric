@@ -16,9 +16,11 @@
 package pub.doric;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 /**
  * @Description: pub.doric.demo
@@ -59,5 +61,13 @@ public class DoricActivity extends AppCompatActivity {
      */
     protected String getExtra() {
         return getIntent().getStringExtra("extra");
+    }
+
+    @Override
+    public void onBackPressed() {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host);
+        if (!navController.popBackStack()) {
+            finish();
+        }
     }
 }

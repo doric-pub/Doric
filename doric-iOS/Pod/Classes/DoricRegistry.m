@@ -77,19 +77,6 @@
 
 @end
 
-@interface DoricDefaultMonitor : NSObject <DoricMonitorProtocol>
-@end
-
-@implementation DoricDefaultMonitor
-- (void)onException:(NSException *)exception inContext:(DoricContext *)context {
-    DoricLog(@"DefaultMonitor - source: %@-  onException - %@", context.source, exception.reason);
-}
-
-- (void)onLog:(DoricLogType)type message:(NSString *)message {
-    DoricLog(message);
-}
-@end
-
 @interface DoricRegistry ()
 
 @property(nonatomic, strong) NSMutableDictionary *bundles;
@@ -113,7 +100,6 @@
         _envVariables = [NSMutableDictionary new];
         [self innerRegister];
         _monitors = [NSMutableSet new];
-        [self registerMonitor:[DoricDefaultMonitor new]];
         [DoricLibraries.instance.libraries enumerateObjectsUsingBlock:^(DoricLibrary *obj, BOOL *stop) {
             [obj load:self];
         }];

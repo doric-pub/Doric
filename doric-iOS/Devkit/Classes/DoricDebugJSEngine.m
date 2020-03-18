@@ -20,8 +20,55 @@
 //  Created by jingpeng.wang on 2020/2/25.
 //
 
+#import "DoricContext.h"
 #import "DoricDebugJSEngine.h"
 #import "DoricJSRemoteExecutor.h"
+#import "DoricUtil.h"
+#import "NSString+JsonString.h"
+#import "DoricDev.h"
+
+@interface DoricDebugMonitor : NSObject <DoricMonitorProtocol>
+@end
+
+@implementation DoricDebugMonitor
+- (void)onException:(NSException *)exception inContext:(DoricContext *)context {
+    DoricLog(@"DefaultMonitor - source: %@-  onException - %@", context.source, exception.reason);
+    NSDictionary *jsonDic = @{
+            @"cmd": @"EXCEPTION",
+            @"data": @{
+                    @"source": [context.source stringByReplacingOccurrencesOfString:@".js" withString:@".ts"],
+                    @"exception": exception.reason
+            }
+    };
+
+    NSString *jsonStr = [NSString dc_convertToJsonWithDic:jsonDic];
+    [[DoricDev instance] sendDevCommand:jsonStr];
+}
+
+- (void)onLog:(DoricLogType)type message:(NSString *)message {
+    DoricLog(message);
+    
+    NSString *typeString = @"DEFAULT";
+    if (type == DoricLogTypeDebug) {
+        typeString = @"DEFAULT";
+    } else if (type == DoricLogTypeWarning) {
+        typeString = @"WARN";
+    } else if (type == DoricLogTypeError) {
+        typeString = @"ERROR";
+    }
+    
+    NSDictionary *jsonDic = @{
+            @"cmd": @"LOG",
+            @"data": @{
+                    @"type": typeString,
+                    @"message": message
+            }
+    };
+
+    NSString *jsonStr = [NSString dc_convertToJsonWithDic:jsonDic];
+    [[DoricDev instance] sendDevCommand:jsonStr];
+}
+@end
 
 @interface DoricDebugJSEngine ()
 @end
@@ -35,6 +82,7 @@
 }
 
 - (void)initJSEngine {
+    [self.registry registerMonitor:[DoricDebugMonitor new]];
     self.jsExecutor = [[DoricJSRemoteExecutor alloc] init];
 }
 

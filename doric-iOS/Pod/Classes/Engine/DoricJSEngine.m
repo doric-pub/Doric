@@ -26,6 +26,20 @@
 #import "DoricUtil.h"
 #import "DoricBridgeExtension.h"
 #import <sys/utsname.h>
+#import "DoricContext.h"
+
+@interface DoricDefaultMonitor : NSObject <DoricMonitorProtocol>
+@end
+
+@implementation DoricDefaultMonitor
+- (void)onException:(NSException *)exception inContext:(DoricContext *)context {
+    DoricLog(@"DefaultMonitor - source: %@-  onException - %@", context.source, exception.reason);
+}
+
+- (void)onLog:(DoricLogType)type message:(NSString *)message {
+    DoricLog(message);
+}
+@end
 
 @interface DoricJSEngine ()
 @property(nonatomic, strong) NSMutableDictionary *timers;
@@ -59,8 +73,8 @@
         };
         dispatch_async(_jsQueue, ^() {
             self.timers = [[NSMutableDictionary alloc] init];
-            [self initJSEngine];
             self.registry = [[DoricRegistry alloc] init];
+            [self initJSEngine];
             [self initJSExecutor];
             [self initDoricEnvironment];
         });
@@ -69,6 +83,7 @@
 }
 
 - (void)initJSEngine {
+    [self.registry registerMonitor:[DoricDefaultMonitor new]];
     self.jsExecutor = [DoricJSCoreExecutor new];
 }
 

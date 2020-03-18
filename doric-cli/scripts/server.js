@@ -2,6 +2,7 @@ const ws = require('nodejs-websocket')
 const { exec, spawn } = require('child_process')
 const fs = require('fs')
 
+const log = require('./console')
 var server
 var contextId = null
 var clientConnection = null
@@ -25,7 +26,6 @@ const createServer = () => {
         }
 
         connection.on('text', function (result) {
-            console.log('text', result)
             let resultObject = JSON.parse(result)
             switch(resultObject.cmd) {
                 case 'DEBUG':
@@ -49,6 +49,19 @@ const createServer = () => {
                         })
                     }, 1500)
                     
+                    break
+                case 'EXCEPTION':
+                    log('redBG', resultObject.data.source)
+                    log('redBG', resultObject.data.exception)
+                    break
+                case 'LOG':
+                    if (resultObject.data.type == 'DEFAULT') {
+                        log('black', resultObject.data.message)
+                    } else if (resultObject.data.type == 'ERROR') {
+                        log('red', resultObject.data.message)
+                    } else if (resultObject.data.type == 'WARN') {
+                        log('blue', resultObject.data.message)
+                    }
                     break
             }
         })

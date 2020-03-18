@@ -17,9 +17,8 @@ package pub.doric.shader;
 
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.support.v7.widget.SwitchCompat;
 import android.widget.CompoundButton;
-
-import androidx.appcompat.widget.SwitchCompat;
 
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;

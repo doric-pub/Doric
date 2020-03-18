@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 public interface IDevKit {
 
     enum Command {
-        DEBUG, HOT_RELOAD
+        DEBUG, HOT_RELOAD, EXCEPTION, LOG
     }
 
     void connectDevKit(String url);

@@ -15,7 +15,8 @@
  */
 package pub.doric.loader;
 
-import androidx.annotation.NonNull;
+
+import android.support.annotation.NonNull;
 
 import java.io.IOException;
 

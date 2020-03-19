@@ -68,6 +68,7 @@
                 @"screenWidth": @([[UIScreen mainScreen] bounds].size.width),
                 @"screenHeight": @([[UIScreen mainScreen] bounds].size.height),
                 @"statusBarHeight": @([[UIApplication sharedApplication] statusBarFrame].size.height),
+                @"hasNotch": @(hasNotch()),
                 @"deviceBrand": @"Apple",
                 @"deviceModel": platform,
         };

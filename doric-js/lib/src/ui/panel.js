@@ -81,14 +81,10 @@ export class Panel {
     getInitData() {
         return this.__data__;
     }
-    __init__(frame, data) {
+    __init__(data) {
         if (data) {
             this.__data__ = JSON.parse(data);
         }
-        this.__root__.width = frame.width;
-        this.__root__.height = frame.height;
-        this.__root__.children.length = 0;
-        this.build(this.__root__);
     }
     __onCreate__() {
         this.onCreate();
@@ -102,7 +98,10 @@ export class Panel {
     __onHidden__() {
         this.onHidden();
     }
-    __build__() {
+    __build__(frame) {
+        this.__root__.width = frame.width;
+        this.__root__.height = frame.height;
+        this.__root__.children.length = 0;
         this.build(this.__root__);
     }
     __response__(viewIds, callbackId) {
@@ -205,7 +204,7 @@ export class Panel {
 __decorate([
     NativeCall,
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], Panel.prototype, "__init__", null);
 __decorate([
@@ -235,7 +234,7 @@ __decorate([
 __decorate([
     NativeCall,
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], Panel.prototype, "__build__", null);
 __decorate([

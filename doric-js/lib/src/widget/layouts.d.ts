@@ -14,7 +14,7 @@ export interface IVLayout extends IView {
     space?: number;
     gravity?: Gravity;
 }
-export declare class VLayout extends LinearLayout implements VLayout {
+export declare class VLayout extends LinearLayout implements IVLayout {
 }
 export interface IHLayout extends IView {
     space?: number;

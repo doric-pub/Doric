@@ -51,7 +51,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (DoricAsyncResult *)callEntity:(NSString *)method withArgumentsArray:(NSArray *)args;
 
-- (void)initContextWithWidth:(CGFloat)width height:(CGFloat)height;
+- (void)build:(CGSize)size;
+
+- (void)init:(NSString *)initData;
 
 - (void)reload:(NSString *)script;
 

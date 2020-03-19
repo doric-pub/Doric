@@ -713,14 +713,10 @@ class Panel {
     getInitData() {
         return this.__data__;
     }
-    __init__(frame, data) {
+    __init__(data) {
         if (data) {
             this.__data__ = JSON.parse(data);
         }
-        this.__root__.width = frame.width;
-        this.__root__.height = frame.height;
-        this.__root__.children.length = 0;
-        this.build(this.__root__);
     }
     __onCreate__() {
         this.onCreate();
@@ -734,7 +730,10 @@ class Panel {
     __onHidden__() {
         this.onHidden();
     }
-    __build__() {
+    __build__(frame) {
+        this.__root__.width = frame.width;
+        this.__root__.height = frame.height;
+        this.__root__.children.length = 0;
         this.build(this.__root__);
     }
     __response__(viewIds, callbackId) {
@@ -837,7 +836,7 @@ class Panel {
 __decorate$2([
     NativeCall,
     __metadata$2("design:type", Function),
-    __metadata$2("design:paramtypes", [Object, String]),
+    __metadata$2("design:paramtypes", [String]),
     __metadata$2("design:returntype", void 0)
 ], Panel.prototype, "__init__", null);
 __decorate$2([
@@ -867,7 +866,7 @@ __decorate$2([
 __decorate$2([
     NativeCall,
     __metadata$2("design:type", Function),
-    __metadata$2("design:paramtypes", []),
+    __metadata$2("design:paramtypes", [Object]),
     __metadata$2("design:returntype", void 0)
 ], Panel.prototype, "__build__", null);
 __decorate$2([

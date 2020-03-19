@@ -44,7 +44,7 @@
     if (self.doricContext && self.renderedWidth != self.view.width && self.renderedHeight != self.view.height) {
         self.renderedWidth = self.view.width;
         self.renderedHeight = self.view.height;
-        [self.doricContext initContextWithWidth:self.renderedWidth height:self.renderedHeight];
+        [self.doricContext build:CGSizeMake(self.renderedWidth, self.renderedHeight)];
     } else {
         [self.doricContext.rootNode.view also:^(DoricStackView *it) {
             if (it.width != self.renderedWidth || it.height != self.renderedHeight) {

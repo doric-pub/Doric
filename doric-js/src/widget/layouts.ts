@@ -39,7 +39,7 @@ export interface IVLayout extends IView {
     gravity?: Gravity
 }
 
-export class VLayout extends LinearLayout implements VLayout {
+export class VLayout extends LinearLayout implements IVLayout {
 }
 
 

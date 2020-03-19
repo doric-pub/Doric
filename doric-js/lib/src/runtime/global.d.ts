@@ -37,6 +37,7 @@ declare global {
         screenWidth: number;
         screenHeight: number;
         statusBarHeight: number;
+        hasNotch: boolean;
         /**
          * ex:Apple or Google
          */

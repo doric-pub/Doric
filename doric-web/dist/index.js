@@ -3817,6 +3817,14 @@ function coordinator(context) {
     };
 }
 
+function notch(context) {
+    return {
+        inset: () => {
+            return context.callNative('notch', 'inset', {});
+        }
+    };
+}
+
 class Observable {
     constructor(provider, clz) {
         this.observers = new Set;
@@ -3965,6 +3973,7 @@ exports.modal = modal;
 exports.navbar = navbar;
 exports.navigator = navigator;
 exports.network = network;
+exports.notch = notch;
 exports.notification = notification;
 exports.obj2Model = obj2Model;
 exports.popover = popover;

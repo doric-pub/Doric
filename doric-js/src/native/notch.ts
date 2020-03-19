@@ -13,14 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from './modal';
-export * from './navbar';
-export * from './navigator';
-export * from './network';
-export * from './storage';
-export * from './popover';
-export * from './animate';
-export * from './notification';
-export * from './statusbar';
-export * from './coordinator';
-export * from './notch';
+import { BridgeContext } from "../runtime/global"
+
+export function notch(context: BridgeContext) {
+    return {
+        inset: () => {
+            return context.callNative('notch', 'inset', {}) as Promise<{
+                top: number,
+                left: number,
+                bottom: number,
+                right: number,
+            }>
+        }
+    }
+}

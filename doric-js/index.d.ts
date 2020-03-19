@@ -51,6 +51,7 @@ declare module 'doric/lib/src/runtime/global' {
                     screenWidth: number;
                     screenHeight: number;
                     statusBarHeight: number;
+                    hasNotch: boolean;
                     /**
                         * ex:Apple or Google
                         */

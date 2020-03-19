@@ -62,6 +62,8 @@ declare global {
 
         statusBarHeight: number,
 
+        hasNotch: boolean,
+
         /**
          * ex:Apple or Google 
          */

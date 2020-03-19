@@ -27,8 +27,6 @@ import androidx.lifecycle.OnLifecycleEvent;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
-import com.github.penfeizhou.animation.decode.Frame;
-
 import pub.doric.utils.DoricUtils;
 
 /**

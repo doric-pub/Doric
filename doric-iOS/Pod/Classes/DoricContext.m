@@ -36,11 +36,11 @@
         _script = script;
         _source = source;
         _initialParams = [@{@"width": @(0), @"height": @(0)} mutableCopy];
-        _extra = extra;
         [[DoricContextManager instance] createContext:self script:script source:source];
         _headNodes = [NSMutableDictionary new];
         DoricRootNode *rootNode = [[DoricRootNode alloc] initWithContext:self];
         _rootNode = rootNode;
+        [self init:extra];
         [self callEntity:DORIC_ENTITY_CREATE, nil];
     }
     return self;
@@ -80,20 +80,28 @@
     return [self.driver invokeContextEntity:self.contextId method:method argumentsArray:args];
 }
 
-- (void)initContextWithWidth:(CGFloat)width height:(CGFloat)height {
+- (void)init:(NSString *)initData {
+    self.extra = initData;
+    if (initData) {
+        [self callEntity:DORIC_ENTITY_INIT, initData, nil];
+    }
+}
+
+- (void)build:(CGSize)size {
     [self.initialParams also:^(NSMutableDictionary *it) {
-        it[@"width"] = @(width);
-        it[@"height"] = @(height);
+        it[@"width"] = @(size.width);
+        it[@"height"] = @(size.height);
     }];
-    [self callEntity:DORIC_ENTITY_INIT, self.initialParams, self.extra, nil];
+    [self callEntity:DORIC_ENTITY_BUILD, self.initialParams, nil];
 }
 
 - (void)reload:(NSString *)script {
     self.rootNode.viewId = nil;
     self.script = script;
     [self.driver createContext:self.contextId script:script source:self.source];
+    [self init:self.extra];
     [self callEntity:DORIC_ENTITY_CREATE, nil];
-    [self callEntity:DORIC_ENTITY_INIT, self.initialParams, self.extra, nil];
+    [self callEntity:DORIC_ENTITY_BUILD, self.initialParams, nil];
     [self onShow];
 }
 

@@ -17,6 +17,7 @@ package pub.doric;
 
 import android.animation.AnimatorSet;
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSONBuilder;
@@ -114,17 +115,24 @@ public class DoricContext {
     public static DoricContext create(Context context, String script, String source, String extra) {
         DoricContext doricContext = DoricContextManager.getInstance().createContext(context, script, source, extra);
         doricContext.script = script;
-        doricContext.extra = extra;
+        doricContext.init(extra);
         doricContext.callEntity(DoricConstant.DORIC_ENTITY_CREATE);
         return doricContext;
     }
 
-    public void init(float width, float height) {
+    public void init(String initData) {
+        this.extra = initData;
+        if (!TextUtils.isEmpty(initData)) {
+            callEntity(DoricConstant.DORIC_ENTITY_INIT, initData);
+        }
+    }
+
+    public void build(float width, float height) {
         this.initParams = new JSONBuilder()
                 .put("width", width)
                 .put("height", height)
                 .toJSONObject();
-        callEntity(DoricConstant.DORIC_ENTITY_INIT, this.initParams, extra);
+        callEntity(DoricConstant.DORIC_ENTITY_BUILD, this.initParams);
     }
 
     public AsyncResult<JSDecoder> callEntity(String methodName, Object... args) {
@@ -186,8 +194,9 @@ public class DoricContext {
         this.script = script;
         this.mRootNode.setId("");
         getDriver().createContext(mContextId, script, source);
+        init(this.extra);
         callEntity(DoricConstant.DORIC_ENTITY_CREATE);
-        callEntity(DoricConstant.DORIC_ENTITY_INIT, this.initParams, extra);
+        callEntity(DoricConstant.DORIC_ENTITY_BUILD, this.initParams);
         onShow();
     }
 

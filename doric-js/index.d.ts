@@ -446,7 +446,7 @@ declare module 'doric/lib/src/widget/layouts' {
         space?: number;
         gravity?: Gravity;
     }
-    export class VLayout extends LinearLayout implements VLayout {
+    export class VLayout extends LinearLayout implements IVLayout {
     }
     export interface IHLayout extends IView {
         space?: number;

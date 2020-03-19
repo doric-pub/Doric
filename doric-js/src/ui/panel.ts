@@ -88,14 +88,10 @@ export abstract class Panel {
     }
 
     @NativeCall
-    private __init__(frame: Frame, data?: string) {
+    private __init__(data?: string) {
         if (data) {
             this.__data__ = JSON.parse(data)
         }
-        this.__root__.width = frame.width
-        this.__root__.height = frame.height
-        this.__root__.children.length = 0
-        this.build(this.__root__)
     }
 
     @NativeCall
@@ -119,7 +115,10 @@ export abstract class Panel {
     }
 
     @NativeCall
-    private __build__() {
+    private __build__(frame: Frame) {
+        this.__root__.width = frame.width
+        this.__root__.height = frame.height
+        this.__root__.children.length = 0
         this.build(this.__root__)
     }
 

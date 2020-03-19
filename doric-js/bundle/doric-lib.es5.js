@@ -942,14 +942,10 @@ var Panel = /** @class */ (function () {
     Panel.prototype.getInitData = function () {
         return this.__data__;
     };
-    Panel.prototype.__init__ = function (frame, data) {
+    Panel.prototype.__init__ = function (data) {
         if (data) {
             this.__data__ = JSON.parse(data);
         }
-        this.__root__.width = frame.width;
-        this.__root__.height = frame.height;
-        this.__root__.children.length = 0;
-        this.build(this.__root__);
     };
     Panel.prototype.__onCreate__ = function () {
         this.onCreate();
@@ -963,7 +959,10 @@ var Panel = /** @class */ (function () {
     Panel.prototype.__onHidden__ = function () {
         this.onHidden();
     };
-    Panel.prototype.__build__ = function () {
+    Panel.prototype.__build__ = function (frame) {
+        this.__root__.width = frame.width;
+        this.__root__.height = frame.height;
+        this.__root__.children.length = 0;
         this.build(this.__root__);
     };
     Panel.prototype.__response__ = function (viewIds, callbackId) {
@@ -1143,7 +1142,7 @@ var Panel = /** @class */ (function () {
     __decorate$2([
         NativeCall,
         __metadata$2("design:type", Function),
-        __metadata$2("design:paramtypes", [Object, String]),
+        __metadata$2("design:paramtypes", [String]),
         __metadata$2("design:returntype", void 0)
     ], Panel.prototype, "__init__", null);
     __decorate$2([
@@ -1173,7 +1172,7 @@ var Panel = /** @class */ (function () {
     __decorate$2([
         NativeCall,
         __metadata$2("design:type", Function),
-        __metadata$2("design:paramtypes", []),
+        __metadata$2("design:paramtypes", [Object]),
         __metadata$2("design:returntype", void 0)
     ], Panel.prototype, "__build__", null);
     __decorate$2([

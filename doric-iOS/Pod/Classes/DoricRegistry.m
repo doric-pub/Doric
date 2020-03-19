@@ -51,6 +51,7 @@
 #import "DoricUtil.h"
 #import "DoricCoordinatorPlugin.h"
 #import "DoricSwitchNode.h"
+#import "DoricNotchPlugin.h"
 
 @interface DoricLibraries : NSObject
 @property(nonatomic, strong) NSMutableSet <DoricLibrary *> *libraries;
@@ -119,6 +120,7 @@
     [self registerNativePlugin:DoricNotificationPlugin.class withName:@"notification"];
     [self registerNativePlugin:DoricStatusBarPlugin.class withName:@"statusbar"];
     [self registerNativePlugin:DoricCoordinatorPlugin.class withName:@"coordinator"];
+    [self registerNativePlugin:DoricNotchPlugin.class withName:@"notch"];
 
     [self registerViewNode:DoricStackNode.class withName:@"Stack"];
     [self registerViewNode:DoricVLayoutNode.class withName:@"VLayout"];

@@ -1,4 +1,4 @@
-import { Group, Panel, gravity, Color, LayoutSpec, vlayout, scroller, layoutConfig, IVLayout, IText, notch, modal, Gravity } from "doric";
+import { Group, Panel, gravity, Color, LayoutSpec, vlayout, scroller, layoutConfig, IVLayout, IText, notch, modal, Gravity, log } from "doric";
 import { title, label, colors } from "./utils";
 
 @Entry
@@ -6,7 +6,7 @@ class NotchDemo extends Panel {
     build(rootView: Group): void {
         scroller(vlayout([
             title("Notch Demo"),
-            label('area').apply({
+            label('inset').apply({
                 width: 200,
                 height: 50,
                 backgroundColor: colors[0],
@@ -16,7 +16,9 @@ class NotchDemo extends Panel {
                 onClick: () => {
                     notch(context).inset()
                     .then((inset) => {
-                        modal(context).toast("top: " + inset.top + "\n" + "left: " + inset.left + "\n" + "bottom: " + inset.bottom + "\n" + "right: " + inset.right, Gravity.Bottom)
+                        let result = "top: " + inset.top + "\n" + "left: " + inset.left + "\n" + "bottom: " + inset.bottom + "\n" + "right: " + inset.right
+                        modal(context).toast(result, Gravity.Bottom)
+                        log(result)
                     })
                     .catch(() => {
 

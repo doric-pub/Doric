@@ -38,7 +38,6 @@ import java.util.Map;
 
 import pub.doric.Doric;
 import pub.doric.DoricContext;
-import pub.doric.DoricContextManager;
 import pub.doric.DoricRegistry;
 import pub.doric.IDoricMonitor;
 import pub.doric.extension.bridge.DoricBridgeExtension;
@@ -100,6 +99,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         JSONBuilder envObject = new JSONBuilder()
                 .put("platform", "Android")
                 .put("platformVersion", String.valueOf(android.os.Build.VERSION.SDK_INT))
@@ -107,6 +107,8 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
                 .put("appVersion", appVersion)
                 .put("screenWidth", DoricUtils.px2dp(DoricUtils.getScreenWidth()))
                 .put("screenHeight", DoricUtils.px2dp(DoricUtils.getScreenHeight()))
+                .put("statusBarHeight", DoricUtils.px2dp(DoricUtils.getStatusBarHeight(context)))
+                .put("hasNotch", false)
                 .put("deviceBrand", Build.BRAND)
                 .put("deviceModel", Build.MODEL);
 

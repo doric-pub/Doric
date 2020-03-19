@@ -101,6 +101,7 @@ declare module 'doric/lib/src/native/index.native' {
     export * from 'doric/lib/src/native/notification';
     export * from 'doric/lib/src/native/statusbar';
     export * from 'doric/lib/src/native/coordinator';
+    export * from 'doric/lib/src/native/notch';
 }
 
 declare module 'doric/lib/src/util/index.util' {
@@ -1020,6 +1021,18 @@ declare module 'doric/lib/src/native/coordinator' {
                 end: number | Color;
             };
         }) => void;
+    };
+}
+
+declare module 'doric/lib/src/native/notch' {
+    import { BridgeContext } from "doric/lib/src/runtime/global";
+    export function notch(context: BridgeContext): {
+        inset: () => Promise<{
+            top: number;
+            left: number;
+            bottom: number;
+            right: number;
+        }>;
     };
 }
 

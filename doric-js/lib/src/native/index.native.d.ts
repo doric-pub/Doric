@@ -8,3 +8,4 @@ export * from './animate';
 export * from './notification';
 export * from './statusbar';
 export * from './coordinator';
+export * from './notch';

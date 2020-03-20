@@ -106,6 +106,13 @@ static const void *kTagString = &kTagString;
     if (config.heightSpec == DoricLayoutWrapContent) {
         height = contentSize.height + padding.top + padding.bottom;
     }
+    if (config.weight) {
+        if ([self.superview isKindOfClass:[DoricVLayoutView class]]) {
+            height = self.height;
+        } else if ([self.superview isKindOfClass:[DoricHLayoutView class]]) {
+            width = self.width;
+        }
+    }
     return CGSizeMake(width, height);
 }
 

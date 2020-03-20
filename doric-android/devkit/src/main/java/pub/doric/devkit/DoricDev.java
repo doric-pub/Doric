@@ -36,7 +36,7 @@ public class DoricDev {
     }
 
     public void closeDevMode() {
-        EventBus.getDefault().post(new EOFExceptionEvent());
+        DevKit.getInstance().disconnectDevKit();
     }
 
     public boolean isInDevMode() {

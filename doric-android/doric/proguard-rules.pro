@@ -19,13 +19,13 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
--keep class com.github.penfeizhou.doric.extension.bridge.DoricPlugin
--keep class com.github.penfeizhou.doric.extension.bridge.DoricMethod
+-keep class pub.doric.extension.bridge.DoricPlugin
+-keep class pub.doric.extension.bridge.DoricMethod
 
--keep @com.github.penfeizhou.doric.extension.bridge.DoricPlugin class * {*;}
+-keep @pub.doric.extension.bridge.DoricPlugin class * {*;}
 
--keepclasseswithmembers @com.github.penfeizhou.doric.extension.bridge.DoricPlugin class * {*;}
+-keepclasseswithmembers @pub.doric.extension.bridge.DoricPlugin class * {*;}
 
 -keep class * {
-@com.github.penfeizhou.doric.extension.bridge.DoricMethod <fields>;
+@pub.doric.extension.bridge.DoricMethod <fields>;
 }

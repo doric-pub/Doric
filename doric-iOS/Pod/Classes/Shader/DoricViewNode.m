@@ -138,6 +138,9 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     self.view.layoutConfig = self.layoutConfig;
     for (NSString *key in props) {
         id value = props[key];
+        if (!value || [value isKindOfClass:[NSNull class]]) {
+            continue;
+        }
         [self blendView:self.view forPropName:key propValue:value];
     }
     [self transformProperties];
@@ -190,12 +193,12 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
                 _gradientLayer = [[CAGradientLayer alloc] init];
                 [view.layer addSublayer:self.gradientLayer];
             }
-            
+
             NSDictionary *dict = prop;
             UIColor *start = DoricColor(dict[@"start"]);
             UIColor *end = DoricColor(dict[@"end"]);
             int orientation = [dict[@"orientation"] intValue];
-            
+
             if (orientation == 0) {
                 self.gradientLayer.startPoint = CGPointMake(0, 0);
                 self.gradientLayer.endPoint = CGPointMake(0, 1);
@@ -221,7 +224,7 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
                 self.gradientLayer.startPoint = CGPointMake(0, 0);
                 self.gradientLayer.endPoint = CGPointMake(1, 1);
             }
-            self.gradientLayer.colors = @[(__bridge id)start.CGColor, (__bridge id)end.CGColor];
+            self.gradientLayer.colors = @[(__bridge id) start.CGColor, (__bridge id) end.CGColor];
         }
     } else if ([name isEqualToString:@"alpha"]) {
         view.alpha = [prop floatValue];

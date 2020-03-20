@@ -44,6 +44,8 @@
         it.dataSource = self;
         it.delegate = self;
     }]];
+    UIBarButtonItem *rightBarItem = [[UIBarButtonItem alloc] initWithTitle:@"Disconnect" style:UIBarButtonItemStylePlain target:self action:@selector(onClose)];
+    self.navigationItem.rightBarButtonItem = rightBarItem;
     if ([[DoricDev instance] isInDevMode]) {
         return;
     }
@@ -56,7 +58,10 @@
         [self.navigationController pushViewController:[QRScanViewController new] animated:NO];
     }
 }
-
+- (void)onClose {
+    [[DoricDev instance] closeDevMode];
+    [self.navigationController popViewControllerAnimated:YES];
+}
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [DoricContextManager.instance aliveContexts].count;
 }

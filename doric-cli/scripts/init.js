@@ -6,7 +6,7 @@ require('shelljs/global')
 const targetJSPath = `${__dirname}/../target/`
 const targetAndroidPath = `${__dirname}/../target/android`
 const targetiOSPath = `${__dirname}/../target/iOS`
-
+const currentVersion = fs.readFileSync(`${__dirname}/../version`).toString()
 function copyFile(srcPath, tarPath, cb) {
     var rs = fs.createReadStream(srcPath)
     rs.on('error', function (err) {
@@ -66,7 +66,8 @@ function copyFolder(srcDir, tarDir, cb) {
 
 function initJS(path, name) {
     console.log(`create dir ${path} success`);
-    fs.writeFileSync(`${path}/package.json`, fs.readFileSync(`${targetJSPath}/_package.json`).toString().replace(/__\$__/g, name))
+    fs.writeFileSync(`${path}/package.json`, fs.readFileSync(`${targetJSPath}/_package.json`).toString()
+        .replace(/__\$__/g, name).replace(/__\$Version__/g, currentVersion))
     fs.writeFileSync(`${path}/tsconfig.json`, fs.readFileSync(`${targetJSPath}/_tsconfig.json`))
     fs.writeFileSync(`${path}/rollup.config.js`, fs.readFileSync(`${targetJSPath}/_rollup.config.js`))
     fs.writeFileSync(`${path}/.gitignore`, fs.readFileSync(`${targetJSPath}/_gitignore`))
@@ -91,8 +92,13 @@ function initAndroid(path, name) {
             return console.error(err);
         }
         copyFolder(`${targetAndroidPath}`, `${path}`, () => {
-            const mainFiles = `app/src/main/java/pub/doric/example/MainActivity.java`
-            fs.writeFileSync(`${path}/${mainFiles}`, fs.readFileSync(`${targetAndroidPath}/${mainFiles}`).toString().replace(/__\$__/g, name))
+            ['app/src/main/java/pub/doric/example/MainActivity.java', 'app/build.gradle'].forEach(e => {
+                fs.writeFileSync(`${path}/${e}`,
+                    fs.readFileSync(`${targetiOSPath}/${e}`).toString()
+                        .replace(/__\$__/g, name)
+                        .replace(/__\$Version__/g, currentVersion))
+            })
+
             console.log(`Create Doric Android Project Success`)
         })
     })
@@ -108,8 +114,11 @@ function initiOS(path, name) {
             return console.error(err);
         }
         copyFolder(`${targetiOSPath}`, `${path}`, () => {
-            ['Example/SceneDelegate.m', 'Example/AppDelegate.m'].forEach(e => {
-                fs.writeFileSync(`${path}/${e}`, fs.readFileSync(`${targetiOSPath}/${e}`).toString().replace(/__\$__/g, name))
+            ['Example/SceneDelegate.m', 'Example/AppDelegate.m', 'Podfile'].forEach(e => {
+                fs.writeFileSync(`${path}/${e}`,
+                    fs.readFileSync(`${targetiOSPath}/${e}`).toString()
+                        .replace(/__\$__/g, name)
+                        .replace(/__\$Version__/g, currentVersion))
             })
             console.log(`Create Doric iOS Project Success`)
         })

@@ -253,26 +253,28 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
                 targetSize.height - padding.top - padding.bottom)];
         [child layoutSelf:size];
         DoricGravity gravity = childConfig.alignment;
+
+        CGPoint point = child.frame.origin;
         if ((gravity & LEFT) == LEFT) {
-            child.left = padding.left;
+            point.x = padding.left;
         } else if ((gravity & RIGHT) == RIGHT) {
-            child.right = targetSize.width - padding.right;
+            point.x = targetSize.width - padding.right - child.width;
         } else if ((gravity & CENTER_X) == CENTER_X) {
-            child.centerX = targetSize.width / 2;
+            point.x = targetSize.width / 2 - child.width / 2;
         } else {
             if (childConfig.margin.left || childConfig.margin.right) {
-                child.left = padding.left;
+                point.x = padding.left;
             }
         }
         if ((gravity & TOP) == TOP) {
-            child.top = padding.top;
+            point.y = padding.top;
         } else if ((gravity & BOTTOM) == BOTTOM) {
-            child.bottom = targetSize.height - padding.bottom;
+            point.y = targetSize.height - padding.bottom - child.height;
         } else if ((gravity & CENTER_Y) == CENTER_Y) {
-            child.centerY = targetSize.height / 2;
+            point.y = targetSize.height / 2 - child.height / 2;
         } else {
             if (childConfig.margin.top || childConfig.margin.bottom) {
-                child.top = padding.top;
+                point.y = padding.top;
             }
         }
 
@@ -280,16 +282,22 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
             gravity = LEFT | TOP;
         }
         if (childConfig.margin.left && !((gravity & RIGHT) == RIGHT)) {
-            child.left += childConfig.margin.left;
+            point.x += childConfig.margin.left;
         }
         if (childConfig.margin.right && !((gravity & LEFT) == LEFT)) {
-            child.right -= childConfig.margin.right;
+            point.x -= childConfig.margin.right;
         }
         if (childConfig.margin.top && !((gravity & BOTTOM) == BOTTOM)) {
-            child.top += childConfig.margin.top;
+            point.y += childConfig.margin.top;
         }
         if (childConfig.margin.bottom && !((gravity & TOP) == TOP)) {
-            child.bottom -= childConfig.margin.bottom;
+            point.y -= childConfig.margin.bottom;
+        }
+        if (point.x != child.x) {
+            child.x = point.x;
+        }
+        if (point.y != child.y) {
+            child.y = point.y;
         }
     }
 }
@@ -365,23 +373,27 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
         }
         [child layoutSelf:size];
         DoricGravity gravity = childConfig.alignment | self.gravity;
+        CGPoint point = child.frame.origin;
         if ((gravity & LEFT) == LEFT) {
-            child.left = padding.left;
+            point.x = padding.left;
         } else if ((gravity & RIGHT) == RIGHT) {
-            child.right = self.width - padding.right;
+            point.x = targetSize.width - padding.right - child.width;
         } else if ((gravity & CENTER_X) == CENTER_X) {
-            child.centerX = targetSize.width / 2;
+            point.x = targetSize.width / 2 - child.width / 2;
         } else {
-            child.left = padding.left;
+            point.x = padding.left;
         }
         if (!gravity) {
             gravity = LEFT;
         }
         if (childConfig.margin.left && !((gravity & RIGHT) == RIGHT)) {
-            child.left += childConfig.margin.left;
+            point.x += childConfig.margin.left;
         }
         if (childConfig.margin.right && !((gravity & LEFT) == LEFT)) {
-            child.right -= childConfig.margin.right;
+            point.x -= childConfig.margin.right;
+        }
+        if (point.x != child.x) {
+            child.x = point.x;
         }
         if (childConfig.margin.top) {
             yStart += childConfig.margin.top;
@@ -465,25 +477,29 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
         [child layoutSelf:size];
 
         DoricGravity gravity = childConfig.alignment | self.gravity;
+
+        CGPoint point = child.frame.origin;
         if ((gravity & TOP) == TOP) {
-            child.top = padding.top;
+            point.y = padding.top;
         } else if ((gravity & BOTTOM) == BOTTOM) {
-            child.bottom = targetSize.height - padding.bottom;
+            point.y = targetSize.height - padding.bottom - child.height;
         } else if ((gravity & CENTER_Y) == CENTER_Y) {
-            child.centerY = targetSize.height / 2;
+            point.y = targetSize.height / 2 - child.height / 2;
         } else {
-            child.top = padding.top;
+            point.y = padding.top;
         }
         if (!gravity) {
             gravity = TOP;
         }
         if (childConfig.margin.top && !((gravity & BOTTOM) == BOTTOM)) {
-            child.top += childConfig.margin.top;
+            point.y += childConfig.margin.top;
         }
         if (childConfig.margin.bottom && !((gravity & TOP) == TOP)) {
-            child.bottom -= childConfig.margin.bottom;
+            point.y -= childConfig.margin.bottom;
         }
-
+        if (point.y != child.y) {
+            child.y = point.y;
+        }
         if (childConfig.margin.left) {
             xStart += childConfig.margin.left;
         }

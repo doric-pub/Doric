@@ -10,7 +10,7 @@
     },
     "license": "Apache-2.0",
     "dependencies": {
-        "doric": "0.3.8",
+        "doric": "__$Version__",
         "reflect-metadata": "^0.1.13",
         "rollup": "^1.27.14",
         "tslib": "^1.10.0",

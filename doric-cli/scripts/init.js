@@ -6,7 +6,7 @@ require('shelljs/global')
 const targetJSPath = `${__dirname}/../target/`
 const targetAndroidPath = `${__dirname}/../target/android`
 const targetiOSPath = `${__dirname}/../target/iOS`
-const currentVersion = fs.readFileSync(`${__dirname}/../version`).toString()
+const currentVersion = fs.readFileSync(`${targetJSPath}/version`).toString()
 function copyFile(srcPath, tarPath, cb) {
     var rs = fs.createReadStream(srcPath)
     rs.on('error', function (err) {
@@ -94,7 +94,7 @@ function initAndroid(path, name) {
         copyFolder(`${targetAndroidPath}`, `${path}`, () => {
             ['app/src/main/java/pub/doric/example/MainActivity.java', 'app/build.gradle'].forEach(e => {
                 fs.writeFileSync(`${path}/${e}`,
-                    fs.readFileSync(`${targetiOSPath}/${e}`).toString()
+                    fs.readFileSync(`${targetAndroidPath}/${e}`).toString()
                         .replace(/__\$__/g, name)
                         .replace(/__\$Version__/g, currentVersion))
             })

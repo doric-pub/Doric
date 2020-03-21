@@ -110,7 +110,7 @@
             }
             if (error) {
                 [[self currentErrorImage] also:^(UIImage *it) {
-                    view.image = it;
+                    self.view.image = it;
                 }];
                 if (self.loadCallbackId.length > 0) {
                     [self callJSResponse:self.loadCallbackId, nil];

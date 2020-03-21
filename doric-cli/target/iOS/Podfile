@@ -7,4 +7,5 @@ target 'Example' do
 
   # Pods for Example
   pod 'DoricCore', '~>__$Version__'
+  pod 'DoricDevkit', '~>__$Version__'
 end

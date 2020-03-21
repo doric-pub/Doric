@@ -14,17 +14,7 @@
 
 @implementation AppDelegate
 
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    NSString *bundleName = @"__$__";
-    DoricViewController *doricViewController = [[DoricViewController alloc] initWithSource:[NSString stringWithFormat:@"assets://src/%@.js", bundleName]
-                                                                                     alias:bundleName
-                                                                                     extra:@""];
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    UINavigationController *navVC = [[UINavigationController
-            alloc] initWithRootViewController:doricViewController];
-    self.window.rootViewController = navVC;
-    [self.window makeKeyAndVisible];
     return YES;
 }
 

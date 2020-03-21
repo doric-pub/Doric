@@ -182,9 +182,9 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
             self.gradientLayer.frame = view.bounds;
         }
     } else if ([name isEqualToString:@"x"]) {
-        view.x = [(NSNumber *) prop floatValue];
+        view.x = [prop floatValue];
     } else if ([name isEqualToString:@"y"]) {
-        view.y = [(NSNumber *) prop floatValue];
+        view.y = [prop floatValue];
     } else if ([name isEqualToString:@"backgroundColor"]) {
         if ([prop isKindOfClass:[NSNumber class]]) {
             view.backgroundColor = DoricColor(prop);

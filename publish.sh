@@ -28,6 +28,9 @@ sed -i "" "s/\(version[ ]*= \)'[0-9 \.]*'/\1'$CURRENT_VERSION'/g" $CURRENT_DIR/D
 ## Web
 cd $CURRENT_DIR/doric-web && npm version $CURRENT_VERSION --allow-same-version
 
+## CLI
+echo $CURRENT_VERSION > $CURRENT_DIR/doric-cli/target/version
+
 # git save
 cd $CURRENT_DIR/
 

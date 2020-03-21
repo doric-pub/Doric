@@ -260,10 +260,8 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
         } else if ((gravity & CENTER_X) == CENTER_X) {
             child.centerX = targetSize.width / 2;
         } else {
-            if (childConfig.margin.left) {
-                child.left = childConfig.margin.left + padding.left;
-            } else if (childConfig.margin.right) {
-                child.right = targetSize.width - childConfig.margin.right - padding.right;
+            if (childConfig.margin.left || childConfig.margin.right) {
+                child.left = padding.left;
             }
         }
         if ((gravity & TOP) == TOP) {
@@ -273,11 +271,25 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
         } else if ((gravity & CENTER_Y) == CENTER_Y) {
             child.centerY = targetSize.height / 2;
         } else {
-            if (childConfig.margin.top) {
-                child.top = childConfig.margin.top + padding.top;
-            } else if (childConfig.margin.bottom) {
-                child.bottom = targetSize.height - childConfig.margin.bottom - padding.bottom;
+            if (childConfig.margin.top || childConfig.margin.bottom) {
+                child.top = padding.top;
             }
+        }
+
+        if (!gravity) {
+            gravity = LEFT | TOP;
+        }
+        if (childConfig.margin.left && !((gravity & RIGHT) == RIGHT)) {
+            child.left += childConfig.margin.left;
+        }
+        if (childConfig.margin.right && !((gravity & LEFT) == LEFT)) {
+            child.right -= childConfig.margin.right;
+        }
+        if (childConfig.margin.top && !((gravity & BOTTOM) == BOTTOM)) {
+            child.top += childConfig.margin.top;
+        }
+        if (childConfig.margin.bottom && !((gravity & TOP) == TOP)) {
+            child.bottom -= childConfig.margin.bottom;
         }
     }
 }
@@ -359,12 +371,17 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
             child.right = self.width - padding.right;
         } else if ((gravity & CENTER_X) == CENTER_X) {
             child.centerX = targetSize.width / 2;
-        } else if (childConfig.margin.left) {
-            child.left = childConfig.margin.left + padding.left;
-        } else if (childConfig.margin.right) {
-            child.right = targetSize.width - childConfig.margin.right - padding.right;
         } else {
             child.left = padding.left;
+        }
+        if (!gravity) {
+            gravity = LEFT;
+        }
+        if (childConfig.margin.left && !((gravity & RIGHT) == RIGHT)) {
+            child.left += childConfig.margin.left;
+        }
+        if (childConfig.margin.right && !((gravity & LEFT) == LEFT)) {
+            child.right -= childConfig.margin.right;
         }
         if (childConfig.margin.top) {
             yStart += childConfig.margin.top;
@@ -454,12 +471,17 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
             child.bottom = targetSize.height - padding.bottom;
         } else if ((gravity & CENTER_Y) == CENTER_Y) {
             child.centerY = targetSize.height / 2;
-        } else if (childConfig.margin.top) {
-            child.top = childConfig.margin.top + padding.top;
-        } else if (childConfig.margin.bottom) {
-            child.bottom = targetSize.height - childConfig.margin.bottom - padding.bottom;
         } else {
             child.top = padding.top;
+        }
+        if (!gravity) {
+            gravity = TOP;
+        }
+        if (childConfig.margin.top && !((gravity & BOTTOM) == BOTTOM)) {
+            child.top += childConfig.margin.top;
+        }
+        if (childConfig.margin.bottom && !((gravity & TOP) == TOP)) {
+            child.bottom -= childConfig.margin.bottom;
         }
 
         if (childConfig.margin.left) {

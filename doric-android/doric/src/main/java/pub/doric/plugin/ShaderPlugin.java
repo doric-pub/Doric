@@ -90,77 +90,84 @@ public class ShaderPlugin extends DoricJavaPlugin {
     }
 
     @DoricMethod
-    public void command(JSObject jsObject, final DoricPromise doricPromise) {
-        final JSValue[] viewIds = jsObject.getProperty("viewIds").asArray().toArray();
-        final String name = jsObject.getProperty("name").asString().value();
-        final JSValue args = jsObject.getProperty("args");
-        ViewNode viewNode = null;
-        for (JSValue value : viewIds) {
-            if (viewNode == null) {
-                viewNode = getDoricContext().targetViewNode(value.asString().value());
-            } else {
-                if (value.isString() && viewNode instanceof SuperNode) {
-                    String viewId = value.asString().value();
-                    viewNode = ((SuperNode) viewNode).getSubNodeById(viewId);
-                }
-            }
-        }
-        if (viewNode == null) {
-            doricPromise.reject(new JavaValue("Cannot find opposite view"));
-        } else {
-            final ViewNode targetViewNode = viewNode;
-            DoricMetaInfo<ViewNode> pluginInfo = getDoricContext().getDriver().getRegistry()
-                    .acquireViewNodeInfo(viewNode.getType());
-            final Method method = pluginInfo.getMethod(name);
-            if (method == null) {
-                String errMsg = String.format(
-                        "Cannot find plugin method in class:%s,method:%s",
-                        viewNode.getClass(),
-                        name);
-                doricPromise.reject(new JavaValue(errMsg));
-            } else {
-                Callable<JavaValue> callable = new Callable<JavaValue>() {
-                    @Override
-                    public JavaValue call() throws Exception {
-                        Class[] classes = method.getParameterTypes();
-                        Object ret;
-                        if (classes.length == 0) {
-                            ret = method.invoke(targetViewNode);
-                        } else if (classes.length == 1) {
-                            ret = method.invoke(targetViewNode,
-                                    createParam(classes[0], doricPromise, args));
-                        } else {
-                            ret = method.invoke(targetViewNode,
-                                    createParam(classes[0], doricPromise, args),
-                                    createParam(classes[1], doricPromise, args));
+    public void command(final JSObject jsObject, final DoricPromise doricPromise) {
+        getDoricContext().getDriver().asyncCall(new Callable<Object>() {
+            @Override
+            public Object call() throws Exception {
+                final JSValue[] viewIds = jsObject.getProperty("viewIds").asArray().toArray();
+                final String name = jsObject.getProperty("name").asString().value();
+                final JSValue args = jsObject.getProperty("args");
+                ViewNode viewNode = null;
+                for (JSValue value : viewIds) {
+                    if (viewNode == null) {
+                        viewNode = getDoricContext().targetViewNode(value.asString().value());
+                    } else {
+                        if (value.isString() && viewNode instanceof SuperNode) {
+                            String viewId = value.asString().value();
+                            viewNode = ((SuperNode) viewNode).getSubNodeById(viewId);
                         }
-                        return DoricUtils.toJavaValue(ret);
                     }
-                };
-                AsyncResult<JavaValue> asyncResult = getDoricContext().getDriver()
-                        .asyncCall(callable, ThreadMode.UI);
-                if (!method.getReturnType().equals(Void.TYPE)) {
-                    asyncResult.setCallback(new AsyncResult.Callback<JavaValue>() {
-                        @Override
-                        public void onResult(JavaValue result) {
-                            doricPromise.resolve(result);
-                        }
-
-                        @Override
-                        public void onError(Throwable t) {
-                            doricPromise.resolve(new JavaValue(t.getLocalizedMessage()));
-                            getDoricContext().getDriver().getRegistry().onException(getDoricContext(),
-                                    t instanceof Exception ? (Exception) t : new RuntimeException(t));
-                        }
-
-                        @Override
-                        public void onFinish() {
-
-                        }
-                    });
                 }
+                if (viewNode == null) {
+                    doricPromise.reject(new JavaValue("Cannot find opposite view"));
+                } else {
+                    final ViewNode targetViewNode = viewNode;
+                    DoricMetaInfo<ViewNode> pluginInfo = getDoricContext().getDriver().getRegistry()
+                            .acquireViewNodeInfo(viewNode.getType());
+                    final Method method = pluginInfo.getMethod(name);
+                    if (method == null) {
+                        String errMsg = String.format(
+                                "Cannot find plugin method in class:%s,method:%s",
+                                viewNode.getClass(),
+                                name);
+                        doricPromise.reject(new JavaValue(errMsg));
+                    } else {
+                        Callable<JavaValue> callable = new Callable<JavaValue>() {
+                            @Override
+                            public JavaValue call() throws Exception {
+                                Class[] classes = method.getParameterTypes();
+                                Object ret;
+                                if (classes.length == 0) {
+                                    ret = method.invoke(targetViewNode);
+                                } else if (classes.length == 1) {
+                                    ret = method.invoke(targetViewNode,
+                                            createParam(classes[0], doricPromise, args));
+                                } else {
+                                    ret = method.invoke(targetViewNode,
+                                            createParam(classes[0], doricPromise, args),
+                                            createParam(classes[1], doricPromise, args));
+                                }
+                                return DoricUtils.toJavaValue(ret);
+                            }
+                        };
+                        AsyncResult<JavaValue> asyncResult = getDoricContext().getDriver()
+                                .asyncCall(callable, ThreadMode.UI);
+                        if (!method.getReturnType().equals(Void.TYPE)) {
+                            asyncResult.setCallback(new AsyncResult.Callback<JavaValue>() {
+                                @Override
+                                public void onResult(JavaValue result) {
+                                    doricPromise.resolve(result);
+                                }
+
+                                @Override
+                                public void onError(Throwable t) {
+                                    doricPromise.resolve(new JavaValue(t.getLocalizedMessage()));
+                                    getDoricContext().getDriver().getRegistry().onException(getDoricContext(),
+                                            t instanceof Exception ? (Exception) t : new RuntimeException(t));
+                                }
+
+                                @Override
+                                public void onFinish() {
+
+                                }
+                            });
+                        }
+                    }
+                }
+                return null;
             }
-        }
+        }, ThreadMode.UI);
+
     }
 
 

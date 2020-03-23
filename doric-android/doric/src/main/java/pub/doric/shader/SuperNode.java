@@ -105,6 +105,7 @@ public abstract class SuperNode<V extends View> extends ViewNode<V> {
                     layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
                     break;
                 default:
+                    layoutParams.width = Math.max(0, layoutParams.width);
                     break;
             }
         }
@@ -117,6 +118,7 @@ public abstract class SuperNode<V extends View> extends ViewNode<V> {
                     layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
                     break;
                 default:
+                    layoutParams.height = Math.max(0, layoutParams.height);
                     break;
             }
         }

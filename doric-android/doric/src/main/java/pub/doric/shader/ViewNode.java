@@ -117,6 +117,10 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
 
     public void blend(JSObject jsObject) {
         if (jsObject != null) {
+            JSValue value = jsObject.getProperty("layoutConfig");
+            if (value.isObject()) {
+                setLayoutConfig(value.asObject());
+            }
             for (String prop : jsObject.propertySet()) {
                 blend(mView, prop, jsObject.getProperty(prop));
             }
@@ -251,9 +255,6 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                         callJSResponse(functionId);
                     }
                 });
-                break;
-            case "layoutConfig":
-                setLayoutConfig(prop.asObject());
                 break;
             case "border":
                 if (prop.isObject()) {

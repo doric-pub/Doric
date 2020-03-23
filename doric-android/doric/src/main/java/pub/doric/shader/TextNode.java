@@ -16,6 +16,7 @@
 package pub.doric.shader;
 
 import android.graphics.Typeface;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ import com.github.pengfeizhou.jscore.JSValue;
 
 import pub.doric.DoricContext;
 import pub.doric.extension.bridge.DoricPlugin;
+import pub.doric.utils.DoricUtils;
 
 /**
  * @Description: widget
@@ -41,6 +43,7 @@ public class TextNode extends ViewNode<TextView> {
         TextView tv = new TextView(getContext());
         tv.setGravity(Gravity.CENTER);
         tv.setMaxLines(1);
+        tv.setEllipsize(TextUtils.TruncateAt.END);
         return tv;
     }
 
@@ -87,6 +90,12 @@ public class TextNode extends ViewNode<TextView> {
                     view.setTypeface(iconFont);
                 }
 
+                break;
+            case "maxWidth":
+                view.setMaxWidth(DoricUtils.dp2px(prop.asNumber().toFloat()));
+                break;
+            case "maxHeight":
+                view.setMaxHeight(DoricUtils.dp2px(prop.asNumber().toFloat()));
                 break;
             default:
                 super.blend(view, name, prop);

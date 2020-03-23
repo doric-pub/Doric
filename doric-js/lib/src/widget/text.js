@@ -56,6 +56,14 @@ __decorate([
     Property,
     __metadata("design:type", String)
 ], Text.prototype, "font", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Number)
+], Text.prototype, "maxWidth", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Number)
+], Text.prototype, "maxHeight", void 0);
 export function text(config) {
     const ret = new Text;
     ret.layoutConfig = layoutConfig().fit();

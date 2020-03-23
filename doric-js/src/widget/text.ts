@@ -26,6 +26,8 @@ export interface IText extends IView {
     textAlignment?: Gravity
     fontStyle?: "normal" | "bold" | "italic" | "bold_italic"
     font?: string
+    maxWidth?: number
+    maxHeight?: number
 }
 
 export class Text extends View implements IText {
@@ -49,6 +51,12 @@ export class Text extends View implements IText {
 
     @Property
     font?: string
+
+    @Property
+    maxWidth?: number
+
+    @Property
+    maxHeight?: number
 }
 
 export function text(config: IText) {

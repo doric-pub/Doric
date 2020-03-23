@@ -50,24 +50,26 @@
 }
 
 - (void)command:(NSDictionary *)argument withPromise:(DoricPromise *)promise {
-    NSArray *viewIds = argument[@"viewIds"];
-    id args = argument[@"args"];
-    NSString *name = argument[@"name"];
-    DoricViewNode *viewNode = nil;
-    for (NSString *viewId in viewIds) {
-        if (!viewNode) {
-            viewNode = [self.doricContext targetViewNode:viewId];
-        } else {
-            if ([viewNode isKindOfClass:[DoricSuperNode class]]) {
-                viewNode = [((DoricSuperNode *) viewNode) subNodeWithViewId:viewId];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSArray *viewIds = argument[@"viewIds"];
+        id args = argument[@"args"];
+        NSString *name = argument[@"name"];
+        DoricViewNode *viewNode = nil;
+        for (NSString *viewId in viewIds) {
+            if (!viewNode) {
+                viewNode = [self.doricContext targetViewNode:viewId];
+            } else {
+                if ([viewNode isKindOfClass:[DoricSuperNode class]]) {
+                    viewNode = [((DoricSuperNode *) viewNode) subNodeWithViewId:viewId];
+                }
             }
         }
-    }
-    if (!viewNode) {
-        [promise reject:@"Cannot find opposite view"];
-    } else {
-        [self findClass:[viewNode class] target:viewNode method:name promise:promise argument:args];
-    }
+        if (!viewNode) {
+            [promise reject:@"Cannot find opposite view"];
+        } else {
+            [self findClass:[viewNode class] target:viewNode method:name promise:promise argument:args];
+        }
+    });
 }
 
 - (id)createParamWithMethodName:(NSString *)method promise:(DoricPromise *)promise argument:(id)argument {

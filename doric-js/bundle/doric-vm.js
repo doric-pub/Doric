@@ -2663,6 +2663,14 @@ __decorate$3([
     Property,
     __metadata$3("design:type", String)
 ], Text.prototype, "font", void 0);
+__decorate$3([
+    Property,
+    __metadata$3("design:type", Number)
+], Text.prototype, "maxWidth", void 0);
+__decorate$3([
+    Property,
+    __metadata$3("design:type", Number)
+], Text.prototype, "maxHeight", void 0);
 function text(config) {
     const ret = new Text;
     ret.layoutConfig = layoutConfig().fit();

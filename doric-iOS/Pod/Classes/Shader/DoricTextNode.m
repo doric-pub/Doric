@@ -26,12 +26,26 @@
 #import "Doric.h"
 
 @interface DoricTextView : UILabel
-
+@property(nonatomic, assign) CGFloat maxWidth;
+@property(nonatomic, assign) CGFloat maxHeight;
 @end
 
 @implementation DoricTextView
 - (void)drawTextInRect:(CGRect)rect {
     [super drawTextInRect:UIEdgeInsetsInsetRect(rect, self.padding)];
+}
+
+- (CGSize)measureSize:(CGSize)targetSize {
+    CGSize measuredSize = [super measureSize:targetSize];
+    CGFloat measuredWidth = measuredSize.width;
+    CGFloat measuredHeight = measuredSize.height;
+    if (self.maxWidth > 0) {
+        measuredWidth = MIN(self.maxWidth, measuredSize.width);
+    }
+    if (self.maxHeight > 0) {
+        measuredHeight = MIN(self.maxHeight, measuredSize.height);
+    }
+    return CGSizeMake(measuredWidth, measuredHeight);
 }
 @end
 
@@ -82,6 +96,14 @@
             font = [UIFont fontWithDescriptor:fontDescriptor size:0];
         }
         view.font = font;
+    } else if ([name isEqualToString:@"maxWidth"]) {
+        if ([view isKindOfClass:DoricTextView.class]) {
+            ((DoricTextView *) view).maxWidth = [prop floatValue];
+        }
+    } else if ([name isEqualToString:@"maxHeight"]) {
+        if ([view isKindOfClass:DoricTextView.class]) {
+            ((DoricTextView *) view).maxHeight = [prop floatValue];
+        }
     } else if ([name isEqualToString:@"font"]) {
         NSString *iconfont = prop;
         UIFont *font = [UIFont fontWithName:iconfont size:view.font.pointSize];

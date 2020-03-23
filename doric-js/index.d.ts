@@ -472,6 +472,8 @@ declare module 'doric/lib/src/widget/text' {
         textAlignment?: Gravity;
         fontStyle?: "normal" | "bold" | "italic" | "bold_italic";
         font?: string;
+        maxWidth?: number;
+        maxHeight?: number;
     }
     export class Text extends View implements IText {
         text?: string;
@@ -481,6 +483,8 @@ declare module 'doric/lib/src/widget/text' {
         textAlignment?: Gravity;
         fontStyle?: "normal" | "bold" | "italic" | "bold_italic";
         font?: string;
+        maxWidth?: number;
+        maxHeight?: number;
     }
     export function text(config: IText): Text;
 }

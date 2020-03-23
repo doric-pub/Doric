@@ -9,6 +9,8 @@ export interface IText extends IView {
     textAlignment?: Gravity;
     fontStyle?: "normal" | "bold" | "italic" | "bold_italic";
     font?: string;
+    maxWidth?: number;
+    maxHeight?: number;
 }
 export declare class Text extends View implements IText {
     text?: string;
@@ -18,5 +20,7 @@ export declare class Text extends View implements IText {
     textAlignment?: Gravity;
     fontStyle?: "normal" | "bold" | "italic" | "bold_italic";
     font?: string;
+    maxWidth?: number;
+    maxHeight?: number;
 }
 export declare function text(config: IText): Text;

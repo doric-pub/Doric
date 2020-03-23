@@ -6,7 +6,7 @@ require('shelljs/global')
 const targetJSPath = `${__dirname}/../target/`
 const targetAndroidPath = `${__dirname}/../target/android`
 const targetiOSPath = `${__dirname}/../target/iOS`
-const currentVersion = fs.readFileSync(`${targetJSPath}/version`).toString()
+const currentVersion = fs.readFileSync(`${targetJSPath}/version`).toString().trim()
 function copyFile(srcPath, tarPath, cb) {
     var rs = fs.createReadStream(srcPath)
     rs.on('error', function (err) {

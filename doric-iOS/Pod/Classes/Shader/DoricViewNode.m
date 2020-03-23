@@ -144,6 +144,7 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
         [self blendView:self.view forPropName:key propValue:value];
     }
     [self transformProperties];
+    self.gradientLayer.frame = CGRectMake(0, 0, self.view.width, self.view.height);
 }
 
 - (void)transformProperties {
@@ -173,13 +174,11 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
         NSNumber *width = (NSNumber *) prop;
         if ([width floatValue] >= 0) {
             view.width = [width floatValue];
-            self.gradientLayer.frame = view.bounds;
         }
     } else if ([name isEqualToString:@"height"]) {
         NSNumber *height = (NSNumber *) prop;
         if ([height floatValue] >= 0) {
             view.height = [height floatValue];
-            self.gradientLayer.frame = view.bounds;
         }
     } else if ([name isEqualToString:@"x"]) {
         view.x = [prop floatValue];

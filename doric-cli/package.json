@@ -1,6 +1,6 @@
 {
   "name": "doric-cli",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Doric command line tools",
   "main": "index.js",
   "bin": {

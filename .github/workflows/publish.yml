@@ -1,0 +1,24 @@
+name: Publish SDK
+on: 
+  push: 
+    tags: 
+      - '*'
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-node@v1
+      with:
+          node-version: 10
+    - name: Setup
+      run: sh setup.sh
+    - name: Install Cocoapods
+      run: |
+        gem install cocoapods
+    - name: Publish
+      run: |
+        sh publish.sh
+      env:
+        COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

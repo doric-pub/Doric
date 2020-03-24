@@ -175,6 +175,9 @@ public class DoricPanelFragment extends Fragment implements IDoricNavigator {
         DoricJSLoaderManager.getInstance().loadJSBundle(source).setCallback(new AsyncResult.Callback<String>() {
             @Override
             public void onResult(String result) {
+                if (getActivity() == null) {
+                    return;
+                }
                 doricPanel.config(result, alias, extra);
                 DoricContext context = doricPanel.getDoricContext();
                 context.setDoricNavigator(DoricPanelFragment.this);
@@ -185,6 +188,9 @@ public class DoricPanelFragment extends Fragment implements IDoricNavigator {
 
             @Override
             public void onError(Throwable t) {
+                if (getActivity() == null) {
+                    return;
+                }
                 DoricLog.e("DoricPanelFragment load JS error:" + t.getLocalizedMessage());
                 showError();
             }

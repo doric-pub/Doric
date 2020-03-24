@@ -1345,12 +1345,9 @@ class List extends Superview {
         this.itemCount = 0;
     }
     getItem(itemIdx) {
-        let view = this.cachedViews.get(`${itemIdx}`);
-        if (view === undefined) {
-            view = this.renderItem(itemIdx);
-            view.superview = this;
-            this.cachedViews.set(`${itemIdx}`, view);
-        }
+        let view = this.renderItem(itemIdx);
+        view.superview = this;
+        this.cachedViews.set(`${itemIdx}`, view);
         return view;
     }
     isDirty() {

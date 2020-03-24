@@ -1,4 +1,4 @@
-import { Panel, Group, scroller, vlayout, layoutConfig, LayoutSpec, Input, Gravity, log, input, text, Color } from "doric";
+import { Panel, Group, scroller, vlayout, layoutConfig, LayoutSpec, Input, Gravity, log, input, text, Color, Text } from "doric";
 import { title } from "./utils";
 @Entry
 class TextDemo extends Panel {
@@ -64,6 +64,10 @@ class TextDemo extends Panel {
                         lineSpacing: 40,
                         textColor: Color.RED,
                         textAlignment: Gravity.Right,
+                        onClick: function () {
+                            (this as Text).textAlignment = Gravity.Left;
+                            (this as Text).textColor = Color.BLACK;
+                        }
                     }),
                 ],
                 {

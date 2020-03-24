@@ -1823,12 +1823,9 @@ var List = /** @class */ (function (_super) {
         this.itemCount = 0;
     };
     List.prototype.getItem = function (itemIdx) {
-        var view = this.cachedViews.get("" + itemIdx);
-        if (view === undefined) {
-            view = this.renderItem(itemIdx);
-            view.superview = this;
-            this.cachedViews.set("" + itemIdx, view);
-        }
+        var view = this.renderItem(itemIdx);
+        view.superview = this;
+        this.cachedViews.set("" + itemIdx, view);
         return view;
     };
     List.prototype.isDirty = function () {

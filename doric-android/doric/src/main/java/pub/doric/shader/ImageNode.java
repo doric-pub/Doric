@@ -66,7 +66,9 @@ public class ImageNode extends ViewNode<ImageView> {
 
     @Override
     protected ImageView build() {
-        return new ImageView(getContext());
+        ImageView imageView =  new ImageView(getContext());
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        return imageView;
     }
 
     @Override

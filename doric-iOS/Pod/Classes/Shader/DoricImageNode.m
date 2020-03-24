@@ -39,6 +39,7 @@
 - (UIImageView *)build {
     return [[YYAnimatedImageView new] also:^(UIImageView *it) {
         it.clipsToBounds = YES;
+        it.contentMode = UIViewContentModeScaleAspectFill;
     }];
 }
 

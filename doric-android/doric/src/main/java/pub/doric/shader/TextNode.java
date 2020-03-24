@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.github.pengfeizhou.jscore.JSValue;
 
+import pub.doric.Doric;
 import pub.doric.DoricContext;
 import pub.doric.extension.bridge.DoricPlugin;
 import pub.doric.utils.DoricUtils;
@@ -51,6 +52,7 @@ public class TextNode extends ViewNode<TextView> {
     protected void blend(TextView view, String name, JSValue prop) {
         switch (name) {
             case "text":
+                view.setLineSpacing(0, 1);
                 view.setText(prop.asString().toString());
                 break;
             case "textSize":
@@ -63,7 +65,11 @@ public class TextNode extends ViewNode<TextView> {
                 view.setGravity(prop.asNumber().toInt() | Gravity.CENTER_VERTICAL);
                 break;
             case "maxLines":
-                view.setMaxLines(prop.asNumber().toInt());
+                int line = prop.asNumber().toInt();
+                if (line <= 0) {
+                    line = Integer.MAX_VALUE;
+                }
+                view.setMaxLines(line);
                 break;
             case "fontStyle":
                 if (prop.isString()) {
@@ -96,6 +102,9 @@ public class TextNode extends ViewNode<TextView> {
                 break;
             case "maxHeight":
                 view.setMaxHeight(DoricUtils.dp2px(prop.asNumber().toFloat()));
+                break;
+            case "lineSpacing":
+                view.setLineSpacing(DoricUtils.dp2px(prop.asNumber().toFloat()), 1);
                 break;
             default:
                 super.blend(view, name, prop);

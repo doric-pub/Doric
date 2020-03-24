@@ -49,6 +49,10 @@
 }
 @end
 
+@interface DoricTextNode ()
+@property(nonatomic, strong) NSMutableParagraphStyle *paragraphStyle;
+@end
+
 @implementation DoricTextNode
 - (UILabel *)build {
     return [[[DoricTextView alloc] init] also:^(UILabel *it) {
@@ -58,7 +62,13 @@
 
 - (void)blendView:(UILabel *)view forPropName:(NSString *)name propValue:(id)prop {
     if ([name isEqualToString:@"text"]) {
-        view.text = prop;
+        if (self.paragraphStyle) {
+            NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:prop];
+            [attributedString addAttribute:NSParagraphStyleAttributeName value:self.paragraphStyle range:NSMakeRange(0, [attributedString length])];
+            view.attributedText = attributedString;
+        } else {
+            view.text = prop;
+        }
     } else if ([name isEqualToString:@"textSize"]) {
         UIFont *font = view.font;
         if (font) {
@@ -76,7 +86,11 @@
         } else if ((gravity & RIGHT) == RIGHT) {
             alignment = NSTextAlignmentRight;
         }
-        view.textAlignment = alignment;
+        if (self.paragraphStyle) {
+            self.paragraphStyle.alignment = alignment;
+        } else {
+            view.textAlignment = alignment;
+        }
     } else if ([name isEqualToString:@"maxLines"]) {
         view.numberOfLines = [prop integerValue];
     } else if ([name isEqualToString:@"fontStyle"]) {
@@ -108,6 +122,14 @@
         NSString *iconfont = prop;
         UIFont *font = [UIFont fontWithName:iconfont size:view.font.pointSize];
         view.font = font;
+    } else if ([name isEqualToString:@"lineSpacing"]) {
+        self.paragraphStyle = [NSMutableParagraphStyle new];
+        [self.paragraphStyle setLineSpacing:[prop floatValue]];
+        [self.paragraphStyle setAlignment:view.textAlignment];
+        NSString *labelText = view.text ?: @"";
+        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:labelText];
+        [attributedString addAttribute:NSParagraphStyleAttributeName value:self.paragraphStyle range:NSMakeRange(0, [labelText length])];
+        view.attributedText = attributedString;
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }

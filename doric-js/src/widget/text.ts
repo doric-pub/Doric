@@ -28,6 +28,7 @@ export interface IText extends IView {
     font?: string
     maxWidth?: number
     maxHeight?: number
+    lineSpacing?: number
 }
 
 export class Text extends View implements IText {
@@ -57,6 +58,9 @@ export class Text extends View implements IText {
 
     @Property
     maxHeight?: number
+
+    @Property
+    lineSpacing?: number
 }
 
 export function text(config: IText) {

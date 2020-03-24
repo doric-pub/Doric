@@ -15,6 +15,7 @@ jobs:
     - uses: actions/setup-node@v1
       with:
           node-version: 10
+          registry-url: 'https://registry.npmjs.org'
     - name: Setup
       run: sh setup.sh
     - name: Install Cocoapods

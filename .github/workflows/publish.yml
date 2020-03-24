@@ -2,7 +2,7 @@ name: Publish SDK
 on: 
   push: 
     tags: 
-      - '*.*.*''
+      - '*.*.*'
 jobs:
   build:
     runs-on: macos-latest
@@ -20,6 +20,10 @@ jobs:
     - name: Install Cocoapods
       run: |
         gem install cocoapods
+    - name: Echo current Version
+      run: |
+        echo ${GITHUB_REF:10}>version
+        echo "Current Version is "${GITHUB_REF:10}
     - name: Publish
       run: |
         sh publish.sh
@@ -29,3 +33,11 @@ jobs:
         BINTARY_USER: ${{ secrets.BINTARY_USER }} 
         BINTARY_REPO: ${{ secrets.BINTARY_REPO }} 
         BINTARY_APIKEY: ${{ secrets.BINTARY_APIKEY }}
+    - name: Publish legacy
+      run: |
+        sh publish-android-legacy.sh
+      env:
+        BINTARY_USER: ${{ secrets.BINTARY_USER }} 
+        BINTARY_REPO: ${{ secrets.BINTARY_REPO }} 
+        BINTARY_APIKEY: ${{ secrets.BINTARY_APIKEY }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -32,7 +32,7 @@ curl -s -X POST https://api.github.com/repos/doric-pub/$repo/git/refs \
 -H "Authorization: token $GITHUB_TOKEN" \
 -d @- << EOF
 {
-  "ref": "refs/tags/'$CURRENT_VERSION'_legacy",
+  "ref": "refs/tags/${CURRENT_VERSION}_legacy",
   "sha": "$commit"
 }
 EOF

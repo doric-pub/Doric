@@ -1,4 +1,4 @@
-import { Panel, Group, scroller, vlayout, layoutConfig, LayoutSpec, Input, Gravity, log, input, text } from "doric";
+import { Panel, Group, scroller, vlayout, layoutConfig, LayoutSpec, Input, Gravity, log, input, text, Color } from "doric";
 import { title } from "./utils";
 @Entry
 class TextDemo extends Panel {
@@ -53,6 +53,17 @@ class TextDemo extends Panel {
                         text: "This is Icon Font text \ue631",
                         textSize: 30,
                         font: 'iconfont'
+                    }),
+                    text({
+                        text: "This is line Spaceing 0,\nSecond line",
+                        maxLines: 0,
+                    }),
+                    text({
+                        text: "This is line Spaceing 40,\nSecond line",
+                        maxLines: 0,
+                        lineSpacing: 40,
+                        textColor: Color.RED,
+                        textAlignment: Gravity.Right,
                     }),
                 ],
                 {

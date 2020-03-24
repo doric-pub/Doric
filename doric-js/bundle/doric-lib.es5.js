@@ -1628,6 +1628,10 @@ var Text = /** @class */ (function (_super) {
         Property,
         __metadata$3("design:type", Number)
     ], Text.prototype, "maxHeight", void 0);
+    __decorate$3([
+        Property,
+        __metadata$3("design:type", Number)
+    ], Text.prototype, "lineSpacing", void 0);
     return Text;
 }(View));
 function text(config) {

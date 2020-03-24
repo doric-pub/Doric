@@ -8,6 +8,7 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v1
+    - uses: kineticengines/setup-android-actions@v0.1 
     - uses: actions/setup-node@v1
       with:
           node-version: 10
@@ -22,3 +23,6 @@ jobs:
       env:
         COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        BINTARY_USER: ${{ BINTARY_USER }} 
+        BINTARY_REPO: ${{ BINTARY_REPO }} 
+        BINTARY_APIKEY: ${{ BINTARY_APIKEY }}

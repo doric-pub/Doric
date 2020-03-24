@@ -35,15 +35,6 @@ echo $CURRENT_VERSION > $CURRENT_DIR/doric-cli/target/version
 cd $CURRENT_DIR/
 
 echo "Commit changes"
-git add .
-
-git commit -m "Publish version $CURRENT_VERSION"
-
-git tag $CURRENT_VERSION
-
-echo "Push Changes"
-
-git push --tags
 
 echo "Publish JS"
 cd $CURRENT_DIR/doric-js && npm publish 
@@ -53,8 +44,3 @@ echo "Publish Android"
 cd $CURRENT_DIR/doric-android && ./gradlew clean publishAll 
 echo "Publish iOS"
 cd $CURRENT_DIR && pod trunk push DoricCore.podspec --allow-warnings && pod trunk push DoricDevkit.podspec --allow-warnings
-
-echo "Publish Android Legacy"
-
-cd $CURRENT_DIR && git checkout -b legacy/$CURRENT_VERSION && sh publish-android-legacy.sh
-

@@ -20,4 +20,4 @@ git tag "$CURRENT_VERSION"_legacy
 git push origin "$CURRENT_VERSION"_legacy
 
 echo "Publish Android"
-cd $CURRENT_DIR/doric-android && ./gradlew clean publishAll 
+cd $CURRENT_DIR/doric-android && ./gradlew clean publishAll

@@ -29,7 +29,7 @@ jobs:
         sh publish.sh
       env:
         COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
-        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         BINTARY_USER: ${{ secrets.BINTARY_USER }} 
         BINTARY_REPO: ${{ secrets.BINTARY_REPO }} 
         BINTARY_APIKEY: ${{ secrets.BINTARY_APIKEY }}

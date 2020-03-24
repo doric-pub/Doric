@@ -2,7 +2,7 @@ name: Publish SDK
 on: 
   push: 
     tags: 
-      - '*'
+      - '*.*.*''
 jobs:
   build:
     runs-on: macos-latest

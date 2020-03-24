@@ -88,6 +88,9 @@
         }
         if (self.paragraphStyle) {
             self.paragraphStyle.alignment = alignment;
+            NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:view.text];
+            [attributedString addAttribute:NSParagraphStyleAttributeName value:self.paragraphStyle range:NSMakeRange(0, [attributedString length])];
+            view.attributedText = attributedString;
         } else {
             view.textAlignment = alignment;
         }

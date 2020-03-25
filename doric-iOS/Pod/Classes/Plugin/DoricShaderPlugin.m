@@ -95,34 +95,32 @@
                     NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
                     invocation.selector = selector;
                     invocation.target = target;
-                    __weak __typeof__(self) _self = self;
-                    dispatch_block_t block = ^() {
-                        __strong __typeof__(_self) self = _self;
-                        @try {
-                            for (NSUInteger idx = 2; idx < methodSignature.numberOfArguments; idx++) {
-                                if (idx - 2 > [array count]) {
-                                    break;
-                                }
-                                id param = [self createParamWithMethodName:array[idx - 2] promise:promise argument:argument];
-                                [invocation setArgument:&param atIndex:idx];
+                    void *retValue;
+                    @try {
+                        NSMutableArray *tempArray = [NSMutableArray new];
+
+                        for (NSUInteger idx = 2; idx < methodSignature.numberOfArguments; idx++) {
+                            if (idx - 2 > [array count]) {
+                                break;
                             }
-                            [invocation invoke];
-                        } @catch (NSException *exception) {
-                            DoricLog(@"CallNative Error:%@", exception.reason);
-                            [self.doricContext.driver.registry onException:exception inContext:self.doricContext];
+                            id param = [self createParamWithMethodName:array[idx - 2] promise:promise argument:argument];
+                            if (param) {
+                                [tempArray addObject:param];
+                            }
+                            [invocation setArgument:&param atIndex:idx];
                         }
-                    };
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        void *retValue;
-                        block();
-                        const char *retType = methodSignature.methodReturnType;
-                        if (!strcmp(retType, @encode(void))) {
-                        } else {
-                            [invocation getReturnValue:&retValue];
-                            id returnValue = (__bridge id) retValue;
-                            [promise resolve:returnValue];
-                        }
-                    });
+                        [invocation invoke];
+                    } @catch (NSException *exception) {
+                        DoricLog(@"CallNative Error:%@", exception.reason);
+                        [self.doricContext.driver.registry onException:exception inContext:self.doricContext];
+                    }
+                    const char *retType = methodSignature.methodReturnType;
+                    if (!strcmp(retType, @encode(void))) {
+                    } else {
+                        [invocation getReturnValue:&retValue];
+                        id returnValue = (__bridge id) retValue;
+                        [promise resolve:returnValue];
+                    }
                 }
                 break;
             }

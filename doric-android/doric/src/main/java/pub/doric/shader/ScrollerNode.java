@@ -24,12 +24,15 @@ import com.github.pengfeizhou.jscore.JSValue;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.Callable;
 
 import pub.doric.DoricContext;
 import pub.doric.DoricScrollChangeListener;
 import pub.doric.IDoricScrollable;
+import pub.doric.async.AsyncResult;
 import pub.doric.extension.bridge.DoricMethod;
 import pub.doric.extension.bridge.DoricPlugin;
+import pub.doric.utils.DoricJSDispatcher;
 import pub.doric.utils.DoricUtils;
 import pub.doric.widget.HVScrollView;
 
@@ -45,6 +48,7 @@ public class ScrollerNode extends SuperNode<HVScrollView> implements IDoricScrol
     private Set<DoricScrollChangeListener> listeners = new HashSet<>();
     private String onScrollFuncId;
     private String onScrollEndFuncId;
+    private DoricJSDispatcher jsDispatcher = new DoricJSDispatcher();
 
 
     public ScrollerNode(DoricContext doricContext) {
@@ -69,15 +73,22 @@ public class ScrollerNode extends SuperNode<HVScrollView> implements IDoricScrol
         hvScrollView.setOnScrollChangeListener(new HVScrollView.OnScrollChangeListener() {
 
             @Override
-            public void onScrollChange(HVScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+            public void onScrollChange(HVScrollView v, final int scrollX, final int scrollY, int oldScrollX, int oldScrollY) {
                 for (DoricScrollChangeListener listener : listeners) {
                     listener.onScrollChange(v, scrollX, scrollY, oldScrollX, oldScrollY);
                 }
                 if (!TextUtils.isEmpty(onScrollFuncId)) {
-                    callJSResponse(onScrollFuncId, new JSONBuilder()
-                            .put("x", DoricUtils.px2dp(scrollX))
-                            .put("y", DoricUtils.px2dp(scrollY))
-                            .toJSONObject());
+                    if (!TextUtils.isEmpty(onScrollFuncId)) {
+                        jsDispatcher.dispatch(new Callable<AsyncResult>() {
+                            @Override
+                            public AsyncResult call() throws Exception {
+                                return callJSResponse(onScrollFuncId, new JSONBuilder()
+                                        .put("x", DoricUtils.px2dp(scrollX))
+                                        .put("y", DoricUtils.px2dp(scrollY))
+                                        .toJSONObject());
+                            }
+                        });
+                    }
                 }
             }
 

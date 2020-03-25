@@ -50,3 +50,10 @@ jobs:
         BINTARY_REPO: ${{ secrets.BINTARY_REPO }} 
         BINTARY_APIKEY: ${{ secrets.BINTARY_APIKEY }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: dingtalk
+      uses: JantHsueh/webrequest-action@master
+      with:
+        url: ${{ secrets.dingtalk_webhook }}
+        method: POST
+        payload: '{"msgtype": "text", "text": {"content": "Doric Release ${GITHUB_REF:10}"}}'
+        headers: '{"Content-Type": "application/json"}'

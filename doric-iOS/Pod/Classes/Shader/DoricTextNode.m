@@ -39,10 +39,10 @@
     CGSize measuredSize = [super measureSize:targetSize];
     CGFloat measuredWidth = measuredSize.width;
     CGFloat measuredHeight = measuredSize.height;
-    if (self.maxWidth > 0) {
+    if (self.maxWidth >= 0) {
         measuredWidth = MIN(self.maxWidth, measuredSize.width);
     }
-    if (self.maxHeight > 0) {
+    if (self.maxHeight >= 0) {
         measuredHeight = MIN(self.maxHeight, measuredSize.height);
     }
     return CGSizeMake(measuredWidth, measuredHeight);
@@ -55,8 +55,10 @@
 
 @implementation DoricTextNode
 - (UILabel *)build {
-    return [[[DoricTextView alloc] init] also:^(UILabel *it) {
+    return [[[DoricTextView alloc] init] also:^(DoricTextView *it) {
         it.textAlignment = NSTextAlignmentCenter;
+        it.maxWidth = -1;
+        it.maxHeight = -1;
     }];
 }
 

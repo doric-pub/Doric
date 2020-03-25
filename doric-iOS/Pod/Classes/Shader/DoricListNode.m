@@ -21,7 +21,6 @@
 #import "DoricListNode.h"
 #import "DoricExtensions.h"
 #import "DoricListItemNode.h"
-#import "DoricLayouts.h"
 #import "DoricRefreshableNode.h"
 #import "DoricJSDispatcher.h"
 
@@ -53,7 +52,6 @@
 
 - (void)layoutSelf:(CGSize)targetSize {
     [super layoutSelf:targetSize];
-    [self reloadData];
 }
 @end
 

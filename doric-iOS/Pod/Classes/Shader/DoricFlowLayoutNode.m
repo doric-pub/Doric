@@ -155,7 +155,6 @@
 
 - (void)layoutSelf:(CGSize)targetSize {
     [super layoutSelf:targetSize];
-    [self reloadData];
 }
 @end
 

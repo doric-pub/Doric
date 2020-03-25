@@ -23,6 +23,7 @@
 #import "DoricListItemNode.h"
 #import "DoricLayouts.h"
 #import "DoricRefreshableNode.h"
+#import "DoricJSDispatcher.h"
 
 @interface DoricTableViewCell : UITableViewCell
 @property(nonatomic, strong) DoricListItemNode *doricListItemNode;
@@ -69,6 +70,7 @@
 @property(nonatomic, strong) NSMutableSet <DoricDidScrollBlock> *didScrollBlocks;
 @property(nonatomic, copy) NSString *onScrollFuncId;
 @property(nonatomic, copy) NSString *onScrollEndFuncId;
+@property(nonatomic, strong) DoricJSDispatcher *jsDispatcher;
 @end
 
 @implementation DoricListNode
@@ -264,12 +266,19 @@
         block(scrollView);
     }
     if (self.onScrollFuncId) {
-        [self callJSResponse:self.onScrollFuncId,
-                             @{
-                                     @"x": @(self.view.contentOffset.x),
-                                     @"y": @(self.view.contentOffset.y),
-                             },
-                        nil];
+        if (!self.jsDispatcher) {
+            self.jsDispatcher = [DoricJSDispatcher new];
+        }
+        __weak typeof(self) __self = self;
+        [self.jsDispatcher dispatch:^DoricAsyncResult * {
+            __strong typeof(__self) self = __self;
+            return [self callJSResponse:self.onScrollFuncId,
+                                        @{
+                                                @"x": @(self.view.contentOffset.x),
+                                                @"y": @(self.view.contentOffset.y),
+                                        },
+                            nil];
+        }];
     }
 }
 

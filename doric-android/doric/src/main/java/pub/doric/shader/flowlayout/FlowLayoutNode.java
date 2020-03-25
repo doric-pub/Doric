@@ -113,18 +113,33 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
     protected void blend(RecyclerView view, String name, JSValue prop) {
         switch (name) {
             case "columnSpace":
+                if (!prop.isNumber()) {
+                    return;
+                }
                 columnSpace = DoricUtils.dp2px(prop.asNumber().toFloat());
                 break;
             case "rowSpace":
+                if (!prop.isNumber()) {
+                    return;
+                }
                 rowSpace = DoricUtils.dp2px(prop.asNumber().toFloat());
                 break;
             case "columnCount":
+                if (!prop.isNumber()) {
+                    return;
+                }
                 staggeredGridLayoutManager.setSpanCount(prop.asNumber().toInt());
                 break;
             case "itemCount":
+                if (!prop.isNumber()) {
+                    return;
+                }
                 this.flowAdapter.itemCount = prop.asNumber().toInt();
                 break;
             case "renderItem":
+                if (!prop.isString()) {
+                    return;
+                }
                 String funcId = prop.asString().value();
                 if (!funcId.equals(this.flowAdapter.renderItemFuncId)) {
                     this.flowAdapter.renderItemFuncId = funcId;
@@ -136,21 +151,39 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
                 }
                 break;
             case "batchCount":
+                if (!prop.isNumber()) {
+                    return;
+                }
                 this.flowAdapter.batchCount = prop.asNumber().toInt();
                 break;
             case "onLoadMore":
+                if (!prop.isString()) {
+                    return;
+                }
                 this.onLoadMoreFuncId = prop.asString().value();
                 break;
             case "loadMoreView":
+                if (!prop.isString()) {
+                    return;
+                }
                 this.loadMoreViewId = prop.asString().value();
                 break;
             case "loadMore":
+                if (!prop.isBoolean()) {
+                    return;
+                }
                 this.loadMore = prop.asBoolean().value();
                 break;
             case "onScroll":
+                if (!prop.isString()) {
+                    return;
+                }
                 this.onScrollFuncId = prop.asString().value();
                 break;
             case "onScrollEnd":
+                if (!prop.isString()) {
+                    return;
+                }
                 this.onScrollEndFuncId = prop.asString().value();
                 break;
             default:

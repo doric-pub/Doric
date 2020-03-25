@@ -52,9 +52,15 @@ public class SwitchNode extends ViewNode<SwitchCompat> {
     protected void blend(SwitchCompat view, String name, JSValue prop) {
         switch (name) {
             case "state":
+                if (!prop.isBoolean()) {
+                    return;
+                }
                 view.setChecked(prop.asBoolean().value());
                 break;
             case "onSwitch":
+                if (!prop.isString()) {
+                    return;
+                }
                 final String callbackId = prop.asString().value();
                 view.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
@@ -64,12 +70,21 @@ public class SwitchNode extends ViewNode<SwitchCompat> {
                 });
                 break;
             case "offTintColor":
+                if (!prop.isNumber()) {
+                    return;
+                }
                 this.offTintColor = prop.asNumber().toInt();
                 break;
             case "onTintColor":
+                if (!prop.isNumber()) {
+                    return;
+                }
                 this.onTintColor = prop.asNumber().toInt();
                 break;
             case "thumbTintColor":
+                if (!prop.isNumber()) {
+                    return;
+                }
                 this.thumbTintColor = prop.asNumber().toInt();
                 break;
             default:

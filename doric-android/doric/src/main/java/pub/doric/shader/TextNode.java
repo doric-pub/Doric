@@ -23,7 +23,6 @@ import android.widget.TextView;
 
 import com.github.pengfeizhou.jscore.JSValue;
 
-import pub.doric.Doric;
 import pub.doric.DoricContext;
 import pub.doric.extension.bridge.DoricPlugin;
 import pub.doric.utils.DoricUtils;
@@ -52,16 +51,27 @@ public class TextNode extends ViewNode<TextView> {
     protected void blend(TextView view, String name, JSValue prop) {
         switch (name) {
             case "text":
-                view.setLineSpacing(0, 1);
+                if (!prop.isString()) {
+                    return;
+                }
                 view.setText(prop.asString().toString());
                 break;
             case "textSize":
+                if (!prop.isNumber()) {
+                    return;
+                }
                 view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, prop.asNumber().toFloat());
                 break;
             case "textColor":
+                if (!prop.isNumber()) {
+                    return;
+                }
                 view.setTextColor(prop.asNumber().toInt());
                 break;
             case "textAlignment":
+                if (!prop.isNumber()) {
+                    return;
+                }
                 view.setGravity(prop.asNumber().toInt() | Gravity.CENTER_VERTICAL);
                 break;
             case "maxLines":
@@ -87,6 +97,9 @@ public class TextNode extends ViewNode<TextView> {
                 }
                 break;
             case "font":
+                if (!prop.isString()) {
+                    return;
+                }
                 String font = prop.asString().toString();
                 if (font.endsWith(".ttf")) {
                     Typeface iconFont = Typeface.createFromAsset(getContext().getAssets(), font);
@@ -98,12 +111,21 @@ public class TextNode extends ViewNode<TextView> {
 
                 break;
             case "maxWidth":
+                if (!prop.isNumber()) {
+                    return;
+                }
                 view.setMaxWidth(DoricUtils.dp2px(prop.asNumber().toFloat()));
                 break;
             case "maxHeight":
+                if (!prop.isNumber()) {
+                    return;
+                }
                 view.setMaxHeight(DoricUtils.dp2px(prop.asNumber().toFloat()));
                 break;
             case "lineSpacing":
+                if (!prop.isNumber()) {
+                    return;
+                }
                 view.setLineSpacing(DoricUtils.dp2px(prop.asNumber().toFloat()), 1);
                 break;
             default:

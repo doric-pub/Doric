@@ -66,7 +66,7 @@ public class ImageNode extends ViewNode<ImageView> {
 
     @Override
     protected ImageView build() {
-        ImageView imageView =  new ImageView(getContext());
+        ImageView imageView = new ImageView(getContext());
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         return imageView;
     }
@@ -188,6 +188,9 @@ public class ImageNode extends ViewNode<ImageView> {
     protected void blend(ImageView view, String name, JSValue prop) {
         switch (name) {
             case "imageUrl":
+                if (!prop.isString()) {
+                    return;
+                }
                 loadImageUrl(prop.asString().value());
                 break;
             case "scaleType":
@@ -208,6 +211,9 @@ public class ImageNode extends ViewNode<ImageView> {
                 this.loadCallbackId = prop.asString().value();
                 break;
             case "imageBase64":
+                if (!prop.isString()) {
+                    return;
+                }
                 Pattern r = Pattern.compile("data:image/(\\S+?);base64,(\\S+)");
                 Matcher m = r.matcher(prop.asString().value());
                 if (m.find()) {
@@ -225,10 +231,16 @@ public class ImageNode extends ViewNode<ImageView> {
                 }
                 break;
             case "imagePath":
+                if (!prop.isString()) {
+                    return;
+                }
                 String localName = prop.asString().value();
                 loadImageUrl("file:///android_asset/" + localName);
                 break;
             case "imageRes":
+                if (!prop.isString()) {
+                    return;
+                }
                 int resId = getContext().getResources().getIdentifier(
                         prop.asString().value().toLowerCase(),
                         "drawable",

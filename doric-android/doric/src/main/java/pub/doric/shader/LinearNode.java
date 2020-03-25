@@ -62,6 +62,9 @@ public class LinearNode extends GroupNode<LinearLayout> {
     protected void blend(LinearLayout view, String name, JSValue prop) {
         switch (name) {
             case "space":
+                if (!prop.isNumber()) {
+                    return;
+                }
                 ShapeDrawable shapeDrawable;
                 if (view.getDividerDrawable() == null) {
                     shapeDrawable = new ShapeDrawable();
@@ -79,6 +82,9 @@ public class LinearNode extends GroupNode<LinearLayout> {
                 view.setDividerDrawable(shapeDrawable);
                 break;
             case "gravity":
+                if (!prop.isNumber()) {
+                    return;
+                }
                 view.setGravity(prop.asNumber().toInt());
                 break;
             default:

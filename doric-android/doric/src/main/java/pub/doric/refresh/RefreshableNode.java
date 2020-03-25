@@ -40,10 +40,19 @@ public class RefreshableNode extends SuperNode<DoricSwipeLayout> implements Pull
     @Override
     protected void blend(DoricSwipeLayout view, String name, JSValue prop) {
         if ("content".equals(name)) {
+            if (!prop.isString()) {
+                return;
+            }
             mContentViewId = prop.asString().value();
         } else if ("header".equals(name)) {
+            if (!prop.isString()) {
+                return;
+            }
             mHeaderViewId = prop.asString().value();
         } else if ("onRefresh".equals(name)) {
+            if (!prop.isString()) {
+                return;
+            }
             final String funcId = prop.asString().value();
             mView.setOnRefreshListener(new DoricSwipeLayout.OnRefreshListener() {
                 @Override

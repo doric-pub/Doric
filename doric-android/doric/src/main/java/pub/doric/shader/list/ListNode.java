@@ -136,9 +136,15 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
     protected void blend(RecyclerView view, String name, JSValue prop) {
         switch (name) {
             case "itemCount":
+                if (!prop.isNumber()) {
+                    return;
+                }
                 this.itemCount = prop.asNumber().toInt();
                 break;
             case "renderItem":
+                if (!prop.isString()) {
+                    return;
+                }
                 String funcId = prop.asString().value();
                 if (!funcId.equals(this.renderItemFuncId)) {
                     this.renderItemFuncId = funcId;
@@ -162,9 +168,15 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
                 this.loadMore = prop.asBoolean().value();
                 break;
             case "onScroll":
+                if (!prop.isString()) {
+                    return;
+                }
                 this.onScrollFuncId = prop.asString().value();
                 break;
             case "onScrollEnd":
+                if (!prop.isString()) {
+                    return;
+                }
                 this.onScrollEndFuncId = prop.asString().value();
                 break;
             default:

@@ -99,10 +99,19 @@ public class ScrollerNode extends SuperNode<HVScrollView> implements IDoricScrol
     @Override
     protected void blend(HVScrollView view, String name, JSValue prop) {
         if ("content".equals(name)) {
+            if (!prop.isString()) {
+                return;
+            }
             mChildViewId = prop.asString().value();
         } else if ("onScroll".equals(name)) {
+            if (!prop.isString()) {
+                return;
+            }
             onScrollFuncId = prop.asString().value();
         } else if ("onScrollEnd".equals(name)) {
+            if (!prop.isString()) {
+                return;
+            }
             onScrollEndFuncId = prop.asString().value();
         } else {
             super.blend(view, name, prop);

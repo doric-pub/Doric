@@ -148,6 +148,9 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     protected void blend(T view, String name, JSValue prop) {
         switch (name) {
             case "width":
+                if (!prop.isNumber()) {
+                    return;
+                }
                 if (isAnimating()) {
                     addAnimator(ObjectAnimator.ofFloat(
                             this,
@@ -159,6 +162,9 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 }
                 break;
             case "height":
+                if (!prop.isNumber()) {
+                    return;
+                }
                 if (isAnimating()) {
                     addAnimator(ObjectAnimator.ofFloat(
                             this,
@@ -170,6 +176,9 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 }
                 break;
             case "x":
+                if (!prop.isNumber()) {
+                    return;
+                }
                 if (isAnimating()) {
                     addAnimator(ObjectAnimator.ofFloat(
                             this,
@@ -181,6 +190,9 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 }
                 break;
             case "y":
+                if (!prop.isNumber()) {
+                    return;
+                }
                 if (isAnimating()) {
                     addAnimator(ObjectAnimator.ofFloat(
                             this,
@@ -248,6 +260,9 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 }
                 break;
             case "onClick":
+                if (!prop.isString()) {
+                    return;
+                }
                 final String functionId = prop.asString().value();
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -264,6 +279,9 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 }
                 break;
             case "alpha":
+                if (!prop.isNumber()) {
+                    return;
+                }
                 if (isAnimating()) {
                     addAnimator(ObjectAnimator.ofFloat(
                             this,
@@ -310,6 +328,9 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 }
                 break;
             case "translationX":
+                if (!prop.isNumber()) {
+                    return;
+                }
                 if (isAnimating()) {
                     addAnimator(ObjectAnimator.ofFloat(
                             this,
@@ -321,6 +342,9 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 }
                 break;
             case "translationY":
+                if (!prop.isNumber()) {
+                    return;
+                }
                 if (isAnimating()) {
                     addAnimator(ObjectAnimator.ofFloat(
                             this,
@@ -332,6 +356,9 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 }
                 break;
             case "scaleX":
+                if (!prop.isNumber()) {
+                    return;
+                }
                 if (isAnimating()) {
                     addAnimator(ObjectAnimator.ofFloat(
                             this,
@@ -343,6 +370,9 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 }
                 break;
             case "scaleY":
+                if (!prop.isNumber()) {
+                    return;
+                }
                 if (isAnimating()) {
                     addAnimator(ObjectAnimator.ofFloat(
                             this,
@@ -354,6 +384,9 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 }
                 break;
             case "pivotX":
+                if (!prop.isNumber()) {
+                    return;
+                }
                 if (isAnimating()) {
                     addAnimator(ObjectAnimator.ofFloat(
                             this,
@@ -365,6 +398,9 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 }
                 break;
             case "pivotY":
+                if (!prop.isNumber()) {
+                    return;
+                }
                 if (isAnimating()) {
                     addAnimator(ObjectAnimator.ofFloat(
                             this,
@@ -376,6 +412,9 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 }
                 break;
             case "rotation":
+                if (!prop.isNumber()) {
+                    return;
+                }
                 if (isAnimating()) {
                     addAnimator(ObjectAnimator.ofFloat(
                             this,

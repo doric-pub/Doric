@@ -24,6 +24,53 @@
 #import "Doric.h"
 #import "YYWebImage.h"
 
+@interface DoricImageView : YYAnimatedImageView
+@end
+
+@implementation DoricImageView
+- (CGSize)measureSize:(CGSize)targetSize {
+    CGFloat width = self.width;
+    CGFloat height = self.height;
+
+    DoricLayoutConfig *config = self.layoutConfig;
+    if (!config) {
+        config = [DoricLayoutConfig new];
+    }
+    if (config.widthSpec == DoricLayoutAtMost
+            || config.widthSpec == DoricLayoutWrapContent) {
+        width = targetSize.width - config.margin.left - config.margin.right;
+    }
+    if (config.heightSpec == DoricLayoutAtMost
+            || config.heightSpec == DoricLayoutWrapContent) {
+        height = targetSize.height - config.margin.top - config.margin.bottom;
+    }
+    DoricPadding padding = self.padding;
+    CGSize contentSize = [self sizeThatFits:CGSizeMake(
+            width - padding.left - padding.right,
+            height - padding.top - padding.bottom)];
+    if (config.widthSpec == DoricLayoutWrapContent) {
+        width = contentSize.width + padding.left + padding.right;
+        if (config.heightSpec != DoricLayoutWrapContent && contentSize.width != 0 && contentSize.height != 0) {
+            width = contentSize.width / contentSize.height * height + padding.left + padding.right;
+        }
+    }
+    if (config.heightSpec == DoricLayoutWrapContent) {
+        height = contentSize.height + padding.top + padding.bottom;
+        if (config.widthSpec != DoricLayoutWrapContent && contentSize.width != 0 && contentSize.height != 0) {
+            height = contentSize.height / contentSize.width * width + padding.top + padding.bottom;
+        }
+    }
+    if (config.weight) {
+        if ([self.superview isKindOfClass:[DoricVLayoutView class]]) {
+            height = self.height;
+        } else if ([self.superview isKindOfClass:[DoricHLayoutView class]]) {
+            width = self.width;
+        }
+    }
+    return CGSizeMake(width, height);
+}
+@end
+
 @interface DoricImageNode ()
 @property(nonatomic, copy) NSString *loadCallbackId;
 @property(nonatomic, assign) UIViewContentMode contentMode;
@@ -37,7 +84,7 @@
 @implementation DoricImageNode
 
 - (UIImageView *)build {
-    return [[YYAnimatedImageView new] also:^(UIImageView *it) {
+    return [[DoricImageView new] also:^(UIImageView *it) {
         it.clipsToBounds = YES;
         it.contentMode = UIViewContentModeScaleAspectFill;
     }];

@@ -18,6 +18,7 @@ package pub.doric.shader;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
@@ -30,7 +31,11 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.DrawableImageViewTarget;
+import com.bumptech.glide.request.target.ImageViewTarget;
+import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
@@ -38,6 +43,7 @@ import com.github.pengfeizhou.jscore.JSValue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
@@ -68,6 +74,7 @@ public class ImageNode extends ViewNode<ImageView> {
     protected ImageView build() {
         ImageView imageView = new ImageView(getContext());
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imageView.setAdjustViewBounds(true);
         return imageView;
     }
 
@@ -140,6 +147,7 @@ public class ImageNode extends ViewNode<ImageView> {
         RequestBuilder<Drawable> requestBuilder = Glide.with(getContext())
                 .load(url);
         try {
+            requestBuilder = requestBuilder.apply(new RequestOptions().override(Target.SIZE_ORIGINAL));
             if (isBlur) {
                 requestBuilder = requestBuilder
                         .apply(RequestOptions
@@ -173,15 +181,32 @@ public class ImageNode extends ViewNode<ImageView> {
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                         if (!TextUtils.isEmpty(loadCallbackId)) {
-                            callJSResponse(loadCallbackId, new JSONBuilder()
-                                    .put("width", DoricUtils.px2dp(resource.getIntrinsicWidth()))
-                                    .put("height", DoricUtils.px2dp(resource.getIntrinsicHeight()))
-                                    .toJSONObject());
+                            if (resource instanceof BitmapDrawable) {
+                                Bitmap bitmap = ((BitmapDrawable) resource).getBitmap();
+                                callJSResponse(loadCallbackId, new JSONBuilder()
+                                        .put("width", DoricUtils.px2dp(bitmap.getWidth()))
+                                        .put("height", DoricUtils.px2dp(bitmap.getHeight()))
+                                        .toJSONObject());
+                            } else {
+                                callJSResponse(loadCallbackId, new JSONBuilder()
+                                        .put("width", DoricUtils.px2dp(resource.getIntrinsicWidth()))
+                                        .put("height", DoricUtils.px2dp(resource.getIntrinsicHeight()))
+                                        .toJSONObject());
+                            }
                         }
                         return false;
                     }
-                })
-                .into(mView);
+                }).into(new DrawableImageViewTarget(mView) {
+            @Override
+            public void getSize(@NonNull SizeReadyCallback cb) {
+                cb.onSizeReady(SIZE_ORIGINAL, SIZE_ORIGINAL);
+            }
+
+            @Override
+            protected void setResource(@Nullable Drawable resource) {
+                super.setResource(resource);
+            }
+        });
     }
 
     @Override
@@ -249,10 +274,18 @@ public class ImageNode extends ViewNode<ImageView> {
                     Drawable drawable = getContext().getResources().getDrawable(resId);
                     view.setImageResource(resId);
                     if (!TextUtils.isEmpty(loadCallbackId)) {
-                        callJSResponse(loadCallbackId, new JSONBuilder()
-                                .put("width", DoricUtils.px2dp(drawable.getIntrinsicWidth()))
-                                .put("height", DoricUtils.px2dp(drawable.getIntrinsicHeight()))
-                                .toJSONObject());
+                        if (drawable instanceof BitmapDrawable) {
+                            Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+                            callJSResponse(loadCallbackId, new JSONBuilder()
+                                    .put("width", DoricUtils.px2dp(bitmap.getWidth()))
+                                    .put("height", DoricUtils.px2dp(bitmap.getHeight()))
+                                    .toJSONObject());
+                        } else {
+                            callJSResponse(loadCallbackId, new JSONBuilder()
+                                    .put("width", DoricUtils.px2dp(drawable.getIntrinsicWidth()))
+                                    .put("height", DoricUtils.px2dp(drawable.getIntrinsicHeight()))
+                                    .toJSONObject());
+                        }
                     }
                 } else {
                     if (!TextUtils.isEmpty(loadCallbackId)) {

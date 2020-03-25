@@ -35,6 +35,14 @@ echo $CURRENT_VERSION > $CURRENT_DIR/doric-cli/target/version
 cd $CURRENT_DIR/
 
 echo "Commit changes"
+git add .
+git commit -m "Release v${CURRENT_VERSION}"
+
+git tag ${CURRENT_VERSION}
+
+git push 
+
+git push --tags
 
 echo "Publish JS"
 cd $CURRENT_DIR/doric-js && npm publish 

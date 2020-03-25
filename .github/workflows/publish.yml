@@ -58,5 +58,5 @@ jobs:
       with:
         url: ${{ secrets.dingtalk_webhook }}
         method: POST
-        payload: "{\"msgtype\": \"text\", \"text\": {\"content\": \"Doric version ${{GITHUB_REF:11}} released.\"}}"
+        payload: '{"msgtype": "text", "text": {"content": "Doric version ${{GITHUB_REF:11}} released."}}'
         headers: '{"Content-Type": "application/json"}'

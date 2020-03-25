@@ -29,8 +29,8 @@
     if (!self.blocks) {
         self.blocks = [@[block] mutableCopy];
     } else {
-        while (self.blocks.count > 0) {
-            [self.blocks removeLastObject];
+        if (self.blocks.count > 0) {
+            [self.blocks removeAllObjects];
         }
         [self.blocks insertObject:block atIndex:0];
     }

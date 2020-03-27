@@ -230,8 +230,9 @@
 
         }
     } else if ([@"imageRes" isEqualToString:name]) {
-        UIImage *image = [UIImage imageNamed:prop];
+        YYImage *image = [YYImage imageNamed:prop];
         view.image = image;
+
         if (self.loadCallbackId.length > 0) {
             if (image) {
                 [self callJSResponse:self.loadCallbackId,
@@ -245,7 +246,7 @@
     } else if ([@"imagePath" isEqualToString:name]) {
         NSString *path = [[NSBundle mainBundle] bundlePath];
         NSString *fullPath = [path stringByAppendingPathComponent:prop];
-        UIImage *image = [UIImage imageWithContentsOfFile:fullPath];
+        YYImage *image = [YYImage imageWithContentsOfFile:fullPath];
         view.image = image;
         if (self.loadCallbackId.length > 0) {
             if (image) {

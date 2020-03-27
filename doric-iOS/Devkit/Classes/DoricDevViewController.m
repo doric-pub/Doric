@@ -53,7 +53,7 @@
         NSString *result = @"127.0.0.1";
         [DoricJSRemoteExecutor configIp:result];
         [[DoricDev instance] connectDevKit:[NSString stringWithFormat:@"ws://%@:7777", result]];
-        ShowToast([NSString stringWithFormat:@"Connected to %@", result], BOTTOM);
+        ShowToast([NSString stringWithFormat:@"Connected to %@", result], DoricBottom);
     } else {
         [self.navigationController pushViewController:[QRScanViewController new] animated:NO];
     }

@@ -83,9 +83,9 @@
     } else if ([name isEqualToString:@"textAlignment"]) {
         DoricGravity gravity = (DoricGravity) [(NSNumber *) prop integerValue];
         NSTextAlignment alignment = NSTextAlignmentCenter;
-        if ((gravity & LEFT) == LEFT) {
+        if ((gravity & DoricGravityLeft) == DoricGravityLeft) {
             alignment = NSTextAlignmentLeft;
-        } else if ((gravity & RIGHT) == RIGHT) {
+        } else if ((gravity & DoricGravityRight) == DoricGravityRight) {
             alignment = NSTextAlignmentRight;
         }
         if (self.paragraphStyle) {

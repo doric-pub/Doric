@@ -33,18 +33,18 @@ typedef NS_ENUM(NSInteger, DoricLayoutSpec) {
 };
 
 typedef NS_ENUM(NSInteger, DoricGravity) {
-    SPECIFIED = 1,
-    START = 1 << 1,
-    END = 1 << 2,
-    SHIFT_X = 0,
-    SHIFT_Y = 4,
-    LEFT = (START | SPECIFIED) << SHIFT_X,
-    RIGHT = (END | SPECIFIED) << SHIFT_X,
-    TOP = (START | SPECIFIED) << SHIFT_Y,
-    BOTTOM = (END | SPECIFIED) << SHIFT_Y,
-    CENTER_X = SPECIFIED << SHIFT_X,
-    CENTER_Y = SPECIFIED << SHIFT_Y,
-    CENTER = CENTER_X | CENTER_Y,
+    DoricGravitySpecified = 1,
+    DoricGravityStart = 1 << 1,
+    DoricGravityEnd = 1 << 2,
+    DoricGravityShiftX = 0,
+    DoricGravityShiftY = 4,
+    DoricGravityLeft = (DoricGravityStart | DoricGravitySpecified) << DoricGravityShiftX,
+    DoricGravityRight = (DoricGravityEnd | DoricGravitySpecified) << DoricGravityShiftX,
+    DoricTOP = (DoricGravityStart | DoricGravitySpecified) << DoricGravityShiftY,
+    DoricBottom = (DoricGravityEnd | DoricGravitySpecified) << DoricGravityShiftY,
+    DoricCenterX = DoricGravitySpecified << DoricGravityShiftX,
+    DoricCenterY = DoricGravitySpecified << DoricGravityShiftY,
+    DoricCenter = DoricCenterX | DoricCenterY,
 };
 
 @interface DoricLayoutConfig : NSObject

@@ -48,9 +48,9 @@ NSString *const DORIC_MASK_RETRY = @"doric_mask_retry";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.view.backgroundColor = [UIColor whiteColor];
     self.doricPanel = [[DoricPanel new] also:^(DoricPanel *it) {
         [it.view also:^(UIView *it) {
-            it.backgroundColor = [UIColor whiteColor];
             it.width = self.view.width;
             it.height = self.view.height;
         }];
@@ -97,12 +97,6 @@ NSString *const DORIC_MASK_RETRY = @"doric_mask_retry";
     if (self.navBarImage != [self.navigationController.navigationBar backgroundImageForBarMetrics:UIBarMetricsDefault]) {
         [self.navigationController.navigationBar setBackgroundImage:self.navBarImage forBarMetrics:UIBarMetricsDefault];
     }
-}
-
-- (void)viewWillLayoutSubviews {
-    [super viewWillLayoutSubviews];
-    self.doricPanel.view.width = self.view.width;
-    self.doricPanel.view.height = self.view.height;
 }
 
 - (void)doric_navigator_push:(NSString *)source alias:(NSString *)alias animated:(BOOL)animated extra:(NSString *)extra {

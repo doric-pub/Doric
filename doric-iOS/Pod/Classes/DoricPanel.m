@@ -29,10 +29,21 @@
 
 - (void)config:(NSString *)script alias:(NSString *)alias extra:(NSString *)extra {
     self.doricContext = [[[DoricContext alloc] initWithScript:script source:alias extra:extra] also:^(DoricContext *it) {
-        [it.rootNode setupRootView:[[DoricStackView new] also:^(DoricStackView *it) {
+        [it.rootNode setupRootView:[[DoricRootView new] also:^(DoricRootView *it) {
             it.width = self.view.width;
             it.height = self.view.height;
             it.clipsToBounds = YES;
+            __weak typeof(self) __self = self;
+            it.frameChangedBlock = ^(CGSize oldSize, CGSize newSize) {
+                __strong typeof(__self) self = __self;
+                self.renderedWidth = newSize.width;
+                self.renderedHeight = newSize.height;
+                self.view.width = newSize.width;
+                self.view.height = newSize.height;
+                if (self.frameChangedBlock) {
+                    self.frameChangedBlock(newSize);
+                }
+            };
             [self.view addSubview:it];
         }]];
     }];
@@ -41,21 +52,10 @@
 
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
-    if (self.doricContext && self.renderedWidth != self.view.width && self.renderedHeight != self.view.height) {
+    if (self.doricContext && (self.renderedWidth != self.view.width || self.renderedHeight != self.view.height)) {
         self.renderedWidth = self.view.width;
         self.renderedHeight = self.view.height;
         [self.doricContext build:CGSizeMake(self.renderedWidth, self.renderedHeight)];
-    } else {
-        [self.doricContext.rootNode.view also:^(DoricStackView *it) {
-            if (it.width != self.renderedWidth || it.height != self.renderedHeight) {
-                // Frame changed
-                self.renderedWidth = self.view.width = it.width;
-                self.renderedHeight = self.view.height = it.height;
-                if (self.frameChangedBlock) {
-                    self.frameChangedBlock(CGSizeMake(it.width, it.height));
-                }
-            }
-        }];
     }
 }
 

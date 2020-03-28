@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pub.doric.DoricActivity;
-import pub.doric.devkit.ui.DoricDevActivity;
+import pub.doric.devkit.DoricDev;
 import pub.doric.refresh.DoricSwipeLayout;
 import pub.doric.utils.DoricUtils;
 
@@ -109,25 +109,7 @@ public class MainActivity extends AppCompatActivity {
                 tv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        {
-                            for (int i = 0; i != data.length; i++) {
-                                if (data[i].equals("Snake.js")) {
-                                    Intent intent = new Intent(tv.getContext(), DoricActivity.class);
-                                    intent.putExtra("source", "assets://src/" + data[i]);
-                                    intent.putExtra("alias", data[i]);
-                                    tv.getContext().startActivity(intent);
-                                }
-                            }
-                        }
-                        {
-                            tv.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Intent intent = new Intent(tv.getContext(), DoricDevActivity.class);
-                                    tv.getContext().startActivity(intent);
-                                }
-                            }, 4000);
-                        }
+                        DoricDev.getInstance().openDevMode();
                     }
                 });
             } else {

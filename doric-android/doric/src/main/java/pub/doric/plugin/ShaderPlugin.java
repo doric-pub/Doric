@@ -15,6 +15,8 @@
  */
 package pub.doric.plugin;
 
+import android.app.Activity;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -53,6 +55,12 @@ public class ShaderPlugin extends DoricJavaPlugin {
         getDoricContext().getDriver().asyncCall(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
+                if (getDoricContext().getContext() instanceof Activity) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1
+                            && ((Activity) getDoricContext().getContext()).isDestroyed()) {
+                        return null;
+                    }
+                }
                 String viewId = jsObject.getProperty("id").asString().value();
                 RootNode rootNode = getDoricContext().getRootNode();
                 if (TextUtils.isEmpty(rootNode.getId())) {

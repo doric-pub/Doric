@@ -18,6 +18,7 @@ package pub.doric.shader;
 import android.view.ViewGroup;
 
 import pub.doric.DoricContext;
+import pub.doric.utils.DoricLog;
 
 import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSObject;
@@ -61,6 +62,10 @@ public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
         for (int idx = 0; idx < mChildViewIds.size(); idx++) {
             String id = mChildViewIds.get(idx);
             JSObject model = getSubModel(id);
+            if (model == null) {
+                DoricLog.e("configChildNode error when Group is %s and  child is %s", this.getId(), id);
+                continue;
+            }
             String type = model.getProperty("type").asString().value();
             if (idx < mChildNodes.size()) {
                 ViewNode oldNode = mChildNodes.get(idx);

@@ -22,6 +22,37 @@
 
 #import "DoricRootNode.h"
 
+@interface DoricRootView ()
+@property(nonatomic, assign) CGSize currentSize;
+@end
+
+@implementation DoricRootView
+
+- (instancetype)init {
+    if (self = [super init]) {
+        _currentSize = self.frame.size;
+    }
+    return self;
+}
+
+- (void)layoutSelf:(CGSize)targetSize {
+    [super layoutSelf:targetSize];
+    if (!CGSizeEqualToSize(self.currentSize, targetSize) && self.frameChangedBlock) {
+        self.frameChangedBlock(self.currentSize, targetSize);
+    }
+    self.currentSize = targetSize;
+}
+
+- (void)setX:(CGFloat)x {
+    self.superview.x = x;
+}
+
+- (void)setY:(CGFloat)y {
+    self.superview.y = y;
+}
+
+@end
+
 @implementation DoricRootNode
 - (void)setupRootView:(DoricStackView *)view {
     self.view = view;

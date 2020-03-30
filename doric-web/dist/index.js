@@ -4014,7 +4014,7 @@ return __module.exports;
 var doric_web = (function (exports, axios, sandbox) {
     'use strict';
 
-    axios = axios && axios.hasOwnProperty('default') ? axios['default'] : axios;
+    axios = axios && Object.prototype.hasOwnProperty.call(axios, 'default') ? axios['default'] : axios;
 
     class DoricPlugin {
         constructor(context) {

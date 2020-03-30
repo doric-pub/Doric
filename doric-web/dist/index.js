@@ -5402,8 +5402,11 @@ ${content}
             }
             return Reflect.apply(sandbox.jsCallEntityMethod, this.panel, argumentsList);
         }
-        init(frame, extra) {
-            this.invokeEntityMethod("__init__", frame, extra ? JSON.stringify(extra) : undefined);
+        init(extra) {
+            this.invokeEntityMethod("__init__", extra ? JSON.stringify(extra) : undefined);
+        }
+        build(frame) {
+            this.invokeEntityMethod("__build__", frame);
         }
         teardown() {
             for (let plugin of this.pluginInstances.values()) {
@@ -5453,7 +5456,7 @@ ${content}
             divElement.style.height = '100%';
             this.append(divElement);
             this.context.rootNode.view = divElement;
-            this.context.init({
+            this.context.build({
                 width: divElement.offsetWidth,
                 height: divElement.offsetHeight,
             });

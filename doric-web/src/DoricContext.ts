@@ -39,13 +39,15 @@ export class DoricContext {
         return Reflect.apply(jsCallEntityMethod, this.panel, argumentsList)
     }
 
-    init(frame: {
+    init(extra?: object) {
+        this.invokeEntityMethod("__init__", extra ? JSON.stringify(extra) : undefined)
+    }
+    build(frame: {
         width: number,
         height: number,
-    }, extra?: object) {
-        this.invokeEntityMethod("__init__", frame, extra ? JSON.stringify(extra) : undefined)
+    }) {
+        this.invokeEntityMethod("__build__", frame)
     }
-
     teardown() {
         for (let plugin of this.pluginInstances.values()) {
             plugin.onTearDown()

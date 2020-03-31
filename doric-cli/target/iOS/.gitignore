@@ -1,5 +1,5 @@
 Podfile.lock
-Example.xcworkspace/
+*.xcworkspace/
 Pods/
 .idea/
-Example.xcodeproj/xcuserdata/
+*.xcodeproj/xcuserdata/

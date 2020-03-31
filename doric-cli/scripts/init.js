@@ -92,7 +92,12 @@ function initAndroid(path, name) {
             return console.error(err);
         }
         copyFolder(`${targetAndroidPath}`, `${path}`, () => {
-            ['app/src/main/java/pub/doric/example/MainActivity.java', 'app/build.gradle'].forEach(e => {
+            [
+                'app/src/main/java/pub/doric/example/MainActivity.java',
+                'app/build.gradle',
+                'app/src/main/res/values/strings.xml',
+                'settings.gradle',
+            ].forEach(e => {
                 fs.writeFileSync(`${path}/${e}`,
                     fs.readFileSync(`${targetAndroidPath}/${e}`).toString()
                         .replace(/__\$__/g, name)
@@ -114,8 +119,12 @@ function initiOS(path, name) {
             return console.error(err);
         }
         copyFolder(`${targetiOSPath}`, `${path}`, () => {
-            ['Example/SceneDelegate.m', 'Example/AppDelegate.m', 'Podfile'].forEach(e => {
-                fs.writeFileSync(`${path}/${e}`,
+            [
+                'Example/SceneDelegate.m',
+                'Example/AppDelegate.m',
+                'Podfile',
+            ].forEach(e => {
+                fs.writeFileSync(`${pathq}/${e}`,
                     fs.readFileSync(`${targetiOSPath}/${e}`).toString()
                         .replace(/__\$__/g, name)
                         .replace(/__\$Version__/g, currentVersion))

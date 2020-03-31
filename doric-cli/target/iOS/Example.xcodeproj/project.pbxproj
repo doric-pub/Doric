@@ -57,7 +57,7 @@
 			isa = PBXGroup;
 			children = (
 				E2B059BE23C452BB007555C7 /* src */,
-				E2F64CEC2399359C0006BD9A /* Example */,
+				E2F64CEC2399359C0006BD9A /* App */,
 				E2F64CEB2399359C0006BD9A /* Products */,
 				875E7B19E6A1ABA3F802B6B5 /* Pods */,
 				F654B22175F1FDDC9AE817FA /* Frameworks */,
@@ -72,7 +72,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		E2F64CEC2399359C0006BD9A /* Example */ = {
+		E2F64CEC2399359C0006BD9A /* App */ = {
 			isa = PBXGroup;
 			children = (
 				E2F64CED2399359C0006BD9A /* AppDelegate.h */,
@@ -84,7 +84,7 @@
 				E2F64CFE2399359E0006BD9A /* Info.plist */,
 				E2F64CFF2399359E0006BD9A /* main.m */,
 			);
-			path = Example;
+			path = App;
 			sourceTree = "<group>";
 		};
 		F654B22175F1FDDC9AE817FA /* Frameworks */ = {

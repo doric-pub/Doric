@@ -120,8 +120,9 @@ function initiOS(path, name) {
         }
         copyFolder(`${targetiOSPath}`, `${path}`, () => {
             [
-                'Example/SceneDelegate.m',
-                'Example/AppDelegate.m',
+                'App/SceneDelegate.m',
+                'App/AppDelegate.m',
+                'Example.xcodeproj/project.pbxproj',
                 'Podfile',
             ].forEach(e => {
                 fs.writeFileSync(`${pathq}/${e}`,

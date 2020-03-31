@@ -1839,7 +1839,7 @@ var List = /** @class */ (function (_super) {
     List.prototype.renderBunchedItems = function (start, length) {
         var _this = this;
         this.ignoreDirtyCallOnce = true;
-        return new Array(Math.min(length, this.itemCount - start)).fill(0).map(function (_, idx) {
+        return new Array(Math.max(0, Math.min(length, this.itemCount - start))).fill(0).map(function (_, idx) {
             var listItem = _this.getItem(start + idx);
             return listItem.toModel();
         });

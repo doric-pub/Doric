@@ -21,7 +21,7 @@
 		5D47A9D4EA2836D57373FDF6 /* Pods-Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.release.xcconfig"; path = "Target Support Files/Pods-Example/Pods-Example.release.xcconfig"; sourceTree = "<group>"; };
 		AB59FE64F1D814FD13C71BB2 /* Pods_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2B059BE23C452BB007555C7 /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; name = src; path = ../bundle/src; sourceTree = "<group>"; };
-		E2F64CEA2399359C0006BD9A /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E2F64CEA2399359C0006BD9A /* __$__.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = __$__.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2F64CED2399359C0006BD9A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		E2F64CEE2399359C0006BD9A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		E2F64CF02399359C0006BD9A /* SceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
@@ -67,7 +67,7 @@
 		E2F64CEB2399359C0006BD9A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E2F64CEA2399359C0006BD9A /* Example.app */,
+				E2F64CEA2399359C0006BD9A /* __$__.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -98,9 +98,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		E2F64CE92399359C0006BD9A /* Example */ = {
+		E2F64CE92399359C0006BD9A /* __$__ */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E2F64D032399359E0006BD9A /* Build configuration list for PBXNativeTarget "Example" */;
+			buildConfigurationList = E2F64D032399359E0006BD9A /* Build configuration list for PBXNativeTarget "__$__" */;
 			buildPhases = (
 				8E2E7D30FF8381E7791EA41B /* [CP] Check Pods Manifest.lock */,
 				E2F64D0B2399FFB20006BD9A /* Package JS Bundle */,
@@ -113,9 +113,9 @@
 			);
 			dependencies = (
 			);
-			name = Example;
+			name = __$__;
 			productName = Example;
-			productReference = E2F64CEA2399359C0006BD9A /* Example.app */;
+			productReference = E2F64CEA2399359C0006BD9A /* __$__.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -145,7 +145,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				E2F64CE92399359C0006BD9A /* Example */,
+				E2F64CE92399359C0006BD9A /* __$__ */,
 			);
 		};
 /* End PBXProject section */
@@ -406,7 +406,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E2F64D032399359E0006BD9A /* Build configuration list for PBXNativeTarget "Example" */ = {
+		E2F64D032399359E0006BD9A /* Build configuration list for PBXNativeTarget "__$__" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E2F64D042399359E0006BD9A /* Debug */,

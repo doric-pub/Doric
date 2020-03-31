@@ -125,11 +125,12 @@ function initiOS(path, name) {
                 'Example.xcodeproj/project.pbxproj',
                 'Podfile',
             ].forEach(e => {
-                fs.writeFileSync(`${pathq}/${e}`,
+                fs.writeFileSync(`${path}/${e}`,
                     fs.readFileSync(`${targetiOSPath}/${e}`).toString()
                         .replace(/__\$__/g, name)
                         .replace(/__\$Version__/g, currentVersion))
             })
+            fs.renameSync(`${path}/Example.xcodeproj`, `${path}/${name}.xcodeproj`)
             console.log(`Create Doric iOS Project Success`)
         })
     })

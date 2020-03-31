@@ -1360,7 +1360,7 @@ class List extends Superview {
     }
     renderBunchedItems(start, length) {
         this.ignoreDirtyCallOnce = true;
-        return new Array(Math.min(length, this.itemCount - start)).fill(0).map((_, idx) => {
+        return new Array(Math.max(0, Math.min(length, this.itemCount - start))).fill(0).map((_, idx) => {
             const listItem = this.getItem(start + idx);
             return listItem.toModel();
         });

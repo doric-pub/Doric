@@ -134,8 +134,8 @@
             viewNode.viewId = viewId;
             [viewNode initWithSuperNode:self];
             [viewNode blend:model[@"props"]];
-            [childNodes addObject:viewNode];
-            [self.view addSubview:viewNode.view];
+            [childNodes insertObject:viewNode atIndex:idx];
+            [self.view insertSubview:viewNode.view atIndex:idx];
         }
     }
 

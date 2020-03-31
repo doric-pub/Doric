@@ -3,7 +3,7 @@ import commonjs from '@rollup/plugin-commonjs'
 import bundles from './build/index'
 import fs from 'fs'
 import path from 'path'
-import babel from 'rollup-plugin-babel';
+//import babel from 'rollup-plugin-babel';
 import json from '@rollup/plugin-json'
 
 function readDirs(dirPath, files) {

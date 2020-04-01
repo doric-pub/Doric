@@ -15,8 +15,8 @@
  */
 package pub.doric.shader;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
@@ -32,10 +32,8 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.DrawableImageViewTarget;
-import com.bumptech.glide.request.target.ImageViewTarget;
 import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.bumptech.glide.request.target.Target;
-import com.bumptech.glide.request.transition.Transition;
 import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
@@ -146,6 +144,11 @@ public class ImageNode extends ViewNode<ImageView> {
     private void loadImageUrl(String url) {
         RequestBuilder<Drawable> requestBuilder = Glide.with(getContext())
                 .load(url);
+        loadIntoTarget(requestBuilder);
+    }
+
+
+    private void loadIntoTarget(RequestBuilder<Drawable> requestBuilder) {
         try {
             requestBuilder = requestBuilder.apply(new RequestOptions().override(Target.SIZE_ORIGINAL));
             if (isBlur) {
@@ -197,6 +200,8 @@ public class ImageNode extends ViewNode<ImageView> {
                         return false;
                     }
                 }).into(new DrawableImageViewTarget(mView) {
+
+            @SuppressLint("MissingSuperCall")
             @Override
             public void getSize(@NonNull SizeReadyCallback cb) {
                 cb.onSizeReady(SIZE_ORIGINAL, SIZE_ORIGINAL);
@@ -247,8 +252,7 @@ public class ImageNode extends ViewNode<ImageView> {
                     if (!TextUtils.isEmpty(imageType) && !TextUtils.isEmpty(base64)) {
                         try {
                             byte[] data = Base64.decode(base64, Base64.DEFAULT);
-                            Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                            view.setImageBitmap(bitmap);
+                            loadIntoTarget(Glide.with(getContext()).load(data));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -271,22 +275,7 @@ public class ImageNode extends ViewNode<ImageView> {
                         "drawable",
                         getDoricContext().getContext().getPackageName());
                 if (resId > 0) {
-                    Drawable drawable = getContext().getResources().getDrawable(resId);
-                    view.setImageResource(resId);
-                    if (!TextUtils.isEmpty(loadCallbackId)) {
-                        if (drawable instanceof BitmapDrawable) {
-                            Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-                            callJSResponse(loadCallbackId, new JSONBuilder()
-                                    .put("width", DoricUtils.px2dp(bitmap.getWidth()))
-                                    .put("height", DoricUtils.px2dp(bitmap.getHeight()))
-                                    .toJSONObject());
-                        } else {
-                            callJSResponse(loadCallbackId, new JSONBuilder()
-                                    .put("width", DoricUtils.px2dp(drawable.getIntrinsicWidth()))
-                                    .put("height", DoricUtils.px2dp(drawable.getIntrinsicHeight()))
-                                    .toJSONObject());
-                        }
-                    }
+                    loadIntoTarget(Glide.with(getContext()).load(resId));
                 } else {
                     if (!TextUtils.isEmpty(loadCallbackId)) {
                         callJSResponse(loadCallbackId);

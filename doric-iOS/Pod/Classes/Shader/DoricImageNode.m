@@ -197,7 +197,7 @@
         }
         NSData *imageData = [[NSData alloc] initWithBase64EncodedString:base64
                                                                 options:NSDataBase64DecodingIgnoreUnknownCharacters];
-        UIImage *image = [UIImage imageWithData:imageData];
+        YYImage *image = [YYImage imageWithData:imageData];
         view.image = image;
     } else if ([@"isBlur" isEqualToString:name]) {
         NSInteger value = [prop intValue];

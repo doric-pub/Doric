@@ -48,6 +48,17 @@ class NaivgatorDemo extends Panel {
                     navigator(context).pop()
                 },
             } as IText),
+            label('OpenURL').apply({
+                width: 200,
+                height: 50,
+                backgroundColor: colors[0],
+                textSize: 30,
+                textColor: Color.WHITE,
+                layoutConfig: layoutConfig().just(),
+                onClick: () => {
+                    navigator(context).openUrl("https://doric.pub")
+                },
+            } as IText),
         ]).apply({
             layoutConfig: layoutConfig().most().configHeight(LayoutSpec.FIT),
             gravity: gravity().center(),

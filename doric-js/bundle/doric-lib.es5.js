@@ -2662,18 +2662,22 @@ function navbar(context) {
 }
 
 function navigator(context) {
+    var moduleName = "navigator";
     return {
         push: function (source, config) {
             if (config && config.extra) {
                 config.extra = JSON.stringify(config.extra);
             }
-            return context.callNative('navigator', 'push', {
+            return context.callNative(moduleName, 'push', {
                 source: source, config: config
             });
         },
         pop: function (animated) {
             if (animated === void 0) { animated = true; }
-            return context.callNative('navigator', 'pop', { animated: animated });
+            return context.callNative(moduleName, 'pop', { animated: animated });
+        },
+        openUrl: function (url) {
+            return context.callNative(moduleName, "openUrl", url);
         },
     };
 }

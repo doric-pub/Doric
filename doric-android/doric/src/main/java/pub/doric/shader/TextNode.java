@@ -44,6 +44,7 @@ public class TextNode extends ViewNode<TextView> {
         tv.setGravity(Gravity.CENTER);
         tv.setMaxLines(1);
         tv.setEllipsize(TextUtils.TruncateAt.END);
+        tv.setIncludeFontPadding(false);
         return tv;
     }
 

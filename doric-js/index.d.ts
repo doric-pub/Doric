@@ -909,6 +909,7 @@ declare module 'doric/lib/src/native/navigator' {
             extra?: object | undefined;
         } | undefined) => Promise<any>;
         pop: (animated?: boolean) => Promise<any>;
+        openUrl: (url: string) => Promise<any>;
     };
 }
 

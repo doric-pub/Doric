@@ -16,6 +16,7 @@
 import { BridgeContext } from "../runtime/global"
 
 export function navigator(context: BridgeContext) {
+    const moduleName = "navigator"
     return {
         push: (source: string, config?: {
             alias?: string,
@@ -25,12 +26,15 @@ export function navigator(context: BridgeContext) {
             if (config && config.extra) {
                 (config as any).extra = JSON.stringify(config.extra)
             }
-            return context.callNative('navigator', 'push', {
+            return context.callNative(moduleName, 'push', {
                 source, config
             })
         },
         pop: (animated = true) => {
-            return context.callNative('navigator', 'pop', { animated })
+            return context.callNative(moduleName, 'pop', { animated })
+        },
+        openUrl: (url: string) => {
+            return context.callNative(moduleName, "openUrl", url)
         },
     }
 }

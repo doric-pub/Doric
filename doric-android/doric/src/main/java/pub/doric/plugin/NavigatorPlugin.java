@@ -15,6 +15,9 @@
  */
 package pub.doric.plugin;
 
+import android.content.Intent;
+import android.net.Uri;
+
 import com.github.pengfeizhou.jscore.ArchiveException;
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSObject;
@@ -82,6 +85,19 @@ public class NavigatorPlugin extends DoricJavaPlugin {
             promise.resolve();
         } else {
             promise.reject(new JavaValue("Navigator not implemented"));
+        }
+    }
+
+    @DoricMethod(thread = ThreadMode.UI)
+    public void openUrl(String url, DoricPromise promise) {
+        try {
+            Uri uri = Uri.parse(url);
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(uri);
+            getDoricContext().getContext().startActivity(intent);
+            promise.resolve();
+        } catch (Exception e) {
+            promise.reject(new JavaValue(e.getLocalizedMessage()));
         }
     }
 }

@@ -6,4 +6,5 @@ export declare function navigator(context: BridgeContext): {
         extra?: object | undefined;
     } | undefined) => Promise<any>;
     pop: (animated?: boolean) => Promise<any>;
+    openUrl: (url: string) => Promise<any>;
 };

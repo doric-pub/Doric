@@ -49,4 +49,16 @@
         [self.doricContext.navigator doric_navigator_pop:animated];
     });
 }
+
+- (void)openUrl:(NSString *)urlString withPromise:(DoricPromise *)promise {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSURL *url = [NSURL URLWithString:urlString];
+        if ([[UIApplication sharedApplication] canOpenURL:url]) {
+            [[UIApplication sharedApplication] openURL:url];
+            [promise resolve:nil];
+        } else {
+            [promise reject:@"Cannot open"];
+        }
+    });
+}
 @end

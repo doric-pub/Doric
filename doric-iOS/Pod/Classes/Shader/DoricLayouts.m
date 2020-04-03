@@ -63,6 +63,8 @@ static const void *kLayoutConfig = &kLayoutConfig;
     if (self = [super init]) {
         _widthSpec = DoricLayoutJust;
         _heightSpec = DoricLayoutJust;
+        _maxWidth = -1;
+        _maxHeight = -1;
     }
     return self;
 }
@@ -91,6 +93,25 @@ static const void *kLayoutConfig = &kLayoutConfig;
     [self measureContent:CGSizeMake(
             self.measuredWidth - self.paddingLeft - self.paddingRight,
             self.measuredHeight - self.paddingTop - self.paddingBottom)];
+
+    BOOL needRemeasure = NO;
+    if (self.maxWidth >= 0) {
+        if (self.measuredWidth > self.maxWidth) {
+            self.measuredWidth = self.maxWidth;
+            needRemeasure = YES;
+        }
+    }
+    if (self.maxHeight > 0) {
+        if (self.measuredHeight > self.maxHeight) {
+            self.measuredHeight = self.maxHeight;
+            needRemeasure = YES;
+        }
+    }
+    if (needRemeasure) {
+        [self measureContent:CGSizeMake(
+                self.measuredWidth - self.paddingLeft - self.paddingRight,
+                self.measuredHeight - self.paddingTop - self.paddingBottom)];
+    }
     self.resolved = YES;
 }
 

@@ -26,8 +26,6 @@
 #import "Doric.h"
 
 @interface DoricTextView : UILabel
-@property(nonatomic, assign) CGFloat maxWidth;
-@property(nonatomic, assign) CGFloat maxHeight;
 @end
 
 @implementation DoricTextView
@@ -50,8 +48,6 @@
 - (UILabel *)build {
     return [[[DoricTextView alloc] init] also:^(DoricTextView *it) {
         it.textAlignment = NSTextAlignmentCenter;
-        it.maxWidth = -1;
-        it.maxHeight = -1;
     }];
 }
 
@@ -109,13 +105,9 @@
         }
         view.font = font;
     } else if ([name isEqualToString:@"maxWidth"]) {
-        if ([view isKindOfClass:DoricTextView.class]) {
-            ((DoricTextView *) view).maxWidth = [prop floatValue];
-        }
+        view.doricLayout.maxWidth = [prop floatValue];
     } else if ([name isEqualToString:@"maxHeight"]) {
-        if ([view isKindOfClass:DoricTextView.class]) {
-            ((DoricTextView *) view).maxHeight = [prop floatValue];
-        }
+        view.doricLayout.maxHeight = [prop floatValue];
     } else if ([name isEqualToString:@"font"]) {
         NSString *iconfont = prop;
         UIFont *font = [UIFont fontWithName:iconfont size:view.font.pointSize];

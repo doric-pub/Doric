@@ -88,6 +88,10 @@ typedef NS_ENUM(NSInteger, DoricGravity) {
 
 @property(nonatomic, assign) BOOL disabled;
 
+@property(nonatomic, assign) CGFloat maxWidth;
+
+@property(nonatomic, assign) CGFloat maxHeight;
+
 - (instancetype)init;
 
 - (void)apply;

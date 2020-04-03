@@ -2,14 +2,9 @@ package pub.doric.devkit;
 
 import android.content.Intent;
 
-import com.lahm.library.EasyProtectorLib;
-import com.lahm.library.EmulatorCheckCallback;
-
-import org.greenrobot.eventbus.EventBus;
-
 import pub.doric.Doric;
-import pub.doric.devkit.event.EOFExceptionEvent;
 import pub.doric.devkit.ui.DoricDevActivity;
+import pub.doric.devkit.util.SimulatorUtil;
 
 public class DoricDev {
     private static class Inner {
@@ -17,12 +12,7 @@ public class DoricDev {
     }
 
     private DoricDev() {
-        DevKit.isRunningInEmulator = EasyProtectorLib.checkIsRunningInEmulator(Doric.application(), new EmulatorCheckCallback() {
-            @Override
-            public void findEmulator(String emulatorInfo) {
-                System.out.println(emulatorInfo);
-            }
-        });
+        DevKit.isRunningInEmulator = SimulatorUtil.isSimulator(Doric.application());
     }
 
     public static DoricDev getInstance() {

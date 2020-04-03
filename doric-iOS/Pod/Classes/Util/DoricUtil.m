@@ -71,9 +71,9 @@ void ShowToast(NSString *text, DoricGravity gravity) {
     label.height += 10;
     label.layer.cornerRadius = label.height / 2;
     label.centerX = superView.width / 2;
-    if ((gravity & DoricBottom) == DoricBottom) {
+    if ((gravity & DoricGravityBottom) == DoricGravityBottom) {
         label.bottom = superView.height - 20;
-    } else if ((gravity & DoricTOP) == DoricTOP) {
+    } else if ((gravity & DoricGravityTOP) == DoricGravityTOP) {
         label.top = 108;
     } else {
         label.centerY = (superView.height - 88) / 2;

@@ -95,20 +95,20 @@
 }
 
 - (void)onOpenEvent {
-    ShowToast(@"dev kit connected", DoricBottom);
+    ShowToast(@"dev kit connected", DoricGravityBottom);
 }
 
 - (void)onEOFEvent {
-    ShowToast(@"dev kit eof exception", DoricBottom);
+    ShowToast(@"dev kit eof exception", DoricGravityBottom);
 }
 
 - (void)onConnectExceptionEvent {
-    ShowToast(@"dev kit connection exception", DoricBottom);
+    ShowToast(@"dev kit connection exception", DoricGravityBottom);
 }
 
 - (void)onStartDebugEvent:(NSNotification *)notification {
     NSString *contextId = notification.object;
-    ShowToast(contextId, DoricBottom);
+    ShowToast(contextId, DoricGravityBottom);
     for (NSValue *value in  [[DoricContextManager instance] aliveContexts]) {
         DoricContext *context = value.nonretainedObjectValue;
         BOOL result = [context.contextId compare:contextId] == NSOrderedSame;

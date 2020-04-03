@@ -36,27 +36,27 @@
     if (!config) {
         config = [DoricLayoutConfig new];
     }
-    if (config.widthSpec == DoricLayoutAtMost
-            || config.widthSpec == DoricLayoutWrapContent) {
+    if (config.widthSpec == DoricLayoutMost
+            || config.widthSpec == DoricLayoutFit) {
         width = targetSize.width - config.margin.left - config.margin.right;
     }
-    if (config.heightSpec == DoricLayoutAtMost
-            || config.heightSpec == DoricLayoutWrapContent) {
+    if (config.heightSpec == DoricLayoutMost
+            || config.heightSpec == DoricLayoutFit) {
         height = targetSize.height - config.margin.top - config.margin.bottom;
     }
     DoricPadding padding = self.padding;
     CGSize contentSize = [self sizeThatFits:CGSizeMake(
             width - padding.left - padding.right,
             height - padding.top - padding.bottom)];
-    if (config.widthSpec == DoricLayoutWrapContent) {
+    if (config.widthSpec == DoricLayoutFit) {
         width = contentSize.width + padding.left + padding.right;
-        if (config.heightSpec != DoricLayoutWrapContent && contentSize.width != 0 && contentSize.height != 0) {
+        if (config.heightSpec != DoricLayoutFit && contentSize.width != 0 && contentSize.height != 0) {
             width = contentSize.width / contentSize.height * height + padding.left + padding.right;
         }
     }
-    if (config.heightSpec == DoricLayoutWrapContent) {
+    if (config.heightSpec == DoricLayoutFit) {
         height = contentSize.height + padding.top + padding.bottom;
-        if (config.widthSpec != DoricLayoutWrapContent && contentSize.width != 0 && contentSize.height != 0) {
+        if (config.widthSpec != DoricLayoutFit && contentSize.width != 0 && contentSize.height != 0) {
             height = contentSize.height / contentSize.width * width + padding.top + padding.bottom;
         }
     }

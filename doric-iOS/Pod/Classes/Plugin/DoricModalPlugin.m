@@ -28,7 +28,7 @@
 
 - (void)toast:(NSDictionary *)dic withPromise:(DoricPromise *)promise {
     dispatch_async(dispatch_get_main_queue(), ^{
-        __block DoricGravity gravity = DoricBottom;
+        __block DoricGravity gravity = DoricGravityBottom;
         [dic[@"gravity"] also:^(NSNumber *it) {
             gravity = (DoricGravity) [it integerValue];
         }];

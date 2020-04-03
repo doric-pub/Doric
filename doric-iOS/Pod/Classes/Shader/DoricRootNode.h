@@ -22,12 +22,12 @@
 
 #import "DoricStackNode.h"
 
-@interface DoricRootView : DoricStackView
+@interface DoricRootView : UIView
 @property(nonatomic, strong) void (^frameChangedBlock)(CGSize oldSize, CGSize newSize);
 @end
 
 @interface DoricRootNode : DoricStackNode
 
-- (void)setupRootView:(DoricStackView *)view;
+- (void)setupRootView:(UIView *)view;
 
 @end

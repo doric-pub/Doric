@@ -37,6 +37,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic) CGFloat left;
 @property(nonatomic) CGFloat right;
 @property(nonatomic) CGFloat bottom;
+@property(nonatomic, copy) NSString *tagString;
+
+- (UIView *)viewWithTagString:(NSString *)tagString;
 @end
 
 NS_ASSUME_NONNULL_END

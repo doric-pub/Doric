@@ -81,7 +81,7 @@ static NSString *TYPE_RIGHT = @"navbar_right";
                 viewNode = [[DoricViewNode create:self.doricContext withType:type] also:^(DoricViewNode *it) {
                     it.viewId = viewId;
                     [it initWithSuperNode:nil];
-                    it.view.layoutConfig = [DoricLayoutConfig new];
+                    it.view.doricLayout = [DoricLayout new];
                     [self.doricContext.navBar doric_navBar_setLeft:it.view];
                     
                     NSMutableDictionary <NSString *, DoricViewNode *> *map = self.doricContext.headNodes[TYPE_LEFT];
@@ -112,7 +112,7 @@ static NSString *TYPE_RIGHT = @"navbar_right";
                 viewNode = [[DoricViewNode create:self.doricContext withType:type] also:^(DoricViewNode *it) {
                     it.viewId = viewId;
                     [it initWithSuperNode:nil];
-                    it.view.layoutConfig = [DoricLayoutConfig new];
+                    it.view.doricLayout = [DoricLayout new];
                     [self.doricContext.navBar doric_navBar_setRight:it.view];
                     
                     NSMutableDictionary <NSString *, DoricViewNode *> *map = self.doricContext.headNodes[TYPE_RIGHT];

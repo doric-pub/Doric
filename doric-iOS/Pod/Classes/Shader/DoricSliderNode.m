@@ -44,24 +44,24 @@
 @end
 
 @implementation DoricSliderView
-- (CGSize)sizeThatFits:(CGSize)size {
-    if (self.subviews.count > 0) {
-        CGFloat width = size.width;
-        CGFloat height = size.height;
-        for (UIView *child in self.subviews) {
-            CGSize childSize = [child measureSize:size];
-            width = MAX(childSize.width, width);
-            height = MAX(childSize.height, height);
-        }
-        return CGSizeMake(width, height);
-    }
-    return size;
-}
-
-- (void)layoutSelf:(CGSize)targetSize {
-    [super layoutSelf:targetSize];
-    [self reloadData];
-}
+//- (CGSize)sizeThatFits:(CGSize)size {
+//    if (self.subviews.count > 0) {
+//        CGFloat width = size.width;
+//        CGFloat height = size.height;
+//        for (UIView *child in self.subviews) {
+//            CGSize childSize = [child measureSize:size];
+//            width = MAX(childSize.width, width);
+//            height = MAX(childSize.height, height);
+//        }
+//        return CGSizeMake(width, height);
+//    }
+//    return size;
+//}
+//
+//- (void)layoutSelf:(CGSize)targetSize {
+//    [super layoutSelf:targetSize];
+//    [self reloadData];
+//}
 @end
 
 @implementation DoricSliderNode
@@ -143,8 +143,8 @@
     DoricSlideItemNode *node = cell.doricSlideItemNode;
     node.viewId = model[@"id"];
     [node blend:props];
-    CGSize size = [node.view measureSize:CGSizeMake(collectionView.width, collectionView.height)];
-    [node.view layoutSelf:size];
+//    CGSize size = [node.view measureSize:CGSizeMake(collectionView.width, collectionView.height)];
+//    [node.view layoutSelf:size];
     return cell;
 }
 

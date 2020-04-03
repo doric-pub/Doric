@@ -28,46 +28,9 @@
 @end
 
 @implementation DoricImageView
-- (CGSize)measureSize:(CGSize)targetSize {
-    CGFloat width = self.width;
-    CGFloat height = self.height;
 
-    DoricLayoutConfig *config = self.layoutConfig;
-    if (!config) {
-        config = [DoricLayoutConfig new];
-    }
-    if (config.widthSpec == DoricLayoutMost
-            || config.widthSpec == DoricLayoutFit) {
-        width = targetSize.width - config.margin.left - config.margin.right;
-    }
-    if (config.heightSpec == DoricLayoutMost
-            || config.heightSpec == DoricLayoutFit) {
-        height = targetSize.height - config.margin.top - config.margin.bottom;
-    }
-    DoricPadding padding = self.padding;
-    CGSize contentSize = [self sizeThatFits:CGSizeMake(
-            width - padding.left - padding.right,
-            height - padding.top - padding.bottom)];
-    if (config.widthSpec == DoricLayoutFit) {
-        width = contentSize.width + padding.left + padding.right;
-        if (config.heightSpec != DoricLayoutFit && contentSize.width != 0 && contentSize.height != 0) {
-            width = contentSize.width / contentSize.height * height + padding.left + padding.right;
-        }
-    }
-    if (config.heightSpec == DoricLayoutFit) {
-        height = contentSize.height + padding.top + padding.bottom;
-        if (config.widthSpec != DoricLayoutFit && contentSize.width != 0 && contentSize.height != 0) {
-            height = contentSize.height / contentSize.width * width + padding.top + padding.bottom;
-        }
-    }
-    if (config.weight) {
-        if ([self.superview isKindOfClass:[DoricVLayoutView class]]) {
-            height = self.height;
-        } else if ([self.superview isKindOfClass:[DoricHLayoutView class]]) {
-            width = self.width;
-        }
-    }
-    return CGSizeMake(width, height);
+- (CGSize)sizeThatFits:(CGSize)size {
+    return [self sizeThatFits:size];
 }
 @end
 

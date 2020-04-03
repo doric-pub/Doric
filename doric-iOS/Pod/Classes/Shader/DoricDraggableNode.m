@@ -23,8 +23,8 @@
 #import "DoricDraggableNode.h"
 
 @implementation DoricDraggableNode
-- (DoricStackView *)build {
-    DoricStackView *stackView = [DoricStackView new];
+- (UIView *)build {
+    UIView *stackView = [UIView new];
     UIPanGestureRecognizer *gesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onDrag:)];
     [stackView addGestureRecognizer:gesture];
     return stackView;
@@ -40,7 +40,7 @@
     [self callJSResponse:_onDragFunction, @(originalFrame.origin.x), @(originalFrame.origin.y), nil];
 }
 
-- (void)blendView:(DoricStackView *)view forPropName:(NSString *)name propValue:(id)prop {
+- (void)blendView:(UIView *)view forPropName:(NSString *)name propValue:(id)prop {
     if ([name isEqualToString:@"onDrag"]) {
         _onDragFunction = prop;
     } else {

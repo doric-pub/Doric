@@ -20,138 +20,45 @@
 #import "DoricLayouts.h"
 #import <objc/runtime.h>
 #import "UIView+Doric.h"
+#import "DoricExtensions.h"
 
 static const void *kLayoutConfig = &kLayoutConfig;
 
-@implementation UIView (DoricLayoutConfig)
-@dynamic layoutConfig;
+@implementation UIView (DoricLayout)
+@dynamic doricLayout;
 
-- (void)setLayoutConfig:(DoricLayoutConfig *)layoutConfig {
-    objc_setAssociatedObject(self, kLayoutConfig, layoutConfig, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setDoricLayout:(DoricLayout *)doricLayout {
+    objc_setAssociatedObject(self, kLayoutConfig, doricLayout, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (DoricLayoutConfig *)layoutConfig {
-    return objc_getAssociatedObject(self, kLayoutConfig);
+- (DoricLayout *)doricLayout {
+    DoricLayout *layout = objc_getAssociatedObject(self, kLayoutConfig);
+    if (!layout) {
+        layout = [DoricLayout new];
+        layout.width = self.width;
+        layout.height = self.height;
+        layout.x = self.x;
+        layout.y = self.y;
+        layout.view = self;
+        self.doricLayout = layout;
+    }
+    return layout;
 }
 
 @end
 
-static const void *kLayoutPadding = &kLayoutPadding;
+@interface DoricLayout ()
+@property(nonatomic, assign) CGFloat contentWidth;
+@property(nonatomic, assign) CGFloat contentHeight;
+@property(nonatomic, assign) CGFloat measuredWidth;
 
-@implementation UIView (DoricPadding)
-@dynamic padding;
-
-- (void)setPadding:(DoricPadding)padding {
-    objc_setAssociatedObject(self, kLayoutPadding, [NSValue value:&padding withObjCType:@encode(DoricPadding)], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (DoricPadding)padding {
-    DoricPadding value;
-    value.left = value.right = value.top = value.bottom = 0;
-    [objc_getAssociatedObject(self, kLayoutPadding) getValue:&value];
-    return value;
-}
-
+@property(nonatomic, assign) CGFloat measuredHeight;
+@property(nonatomic, assign) CGFloat measuredX;
+@property(nonatomic, assign) CGFloat measuredY;
+@property(nonatomic, assign) BOOL resolved;
 @end
 
-static const void *kTagString = &kTagString;
-
-@implementation UIView (DoricTag)
-
-- (void)setTagString:(NSString *)tagString {
-    objc_setAssociatedObject(self, kTagString, tagString, OBJC_ASSOCIATION_COPY_NONATOMIC);
-    self.tag = [tagString hash];
-}
-
-- (NSString *)tagString {
-    return objc_getAssociatedObject(self, kTagString);
-}
-
-
-- (UIView *)viewWithTagString:(NSString *)tagString {
-    // notice the potential hash collision
-    return [self viewWithTag:[tagString hash]];
-}
-
-@end
-
-
-@implementation UIView (DoricLayouts)
-/**
- * Measure self's size
- * */
-- (CGSize)measureSize:(CGSize)targetSize {
-    CGFloat width = self.width;
-    CGFloat height = self.height;
-
-    DoricLayoutConfig *config = self.layoutConfig;
-    if (!config) {
-        config = [DoricLayoutConfig new];
-    }
-    if (config.widthSpec == DoricLayoutMost
-            || config.widthSpec == DoricLayoutFit) {
-        width = targetSize.width - config.margin.left - config.margin.right;
-    }
-    if (config.heightSpec == DoricLayoutMost
-            || config.heightSpec == DoricLayoutFit) {
-        height = targetSize.height - config.margin.top - config.margin.bottom;
-    }
-    DoricPadding padding = self.padding;
-    CGSize contentSize = [self sizeThatFits:CGSizeMake(
-            width - padding.left - padding.right,
-            height - padding.top - padding.bottom)];
-    if (config.widthSpec == DoricLayoutFit) {
-        width = contentSize.width + padding.left + padding.right;
-    }
-    if (config.heightSpec == DoricLayoutFit) {
-        height = contentSize.height + padding.top + padding.bottom;
-    }
-    if (config.weight) {
-        if ([self.superview isKindOfClass:[DoricVLayoutView class]]) {
-            height = self.height;
-        } else if ([self.superview isKindOfClass:[DoricHLayoutView class]]) {
-            width = self.width;
-        }
-    }
-    return CGSizeMake(width, height);
-}
-
-/**
- * layout self and subviews
- * */
-- (void)layoutSelf:(CGSize)targetSize {
-    self.width = targetSize.width;
-    self.height = targetSize.height;
-    for (UIView *view in self.subviews) {
-        [view layoutSelf:[view measureSize:targetSize]];
-    }
-}
-
-
-- (void)doricLayoutSubviews {
-    if ([self.superview requestFromSubview:self]) {
-        [self.superview doricLayoutSubviews];
-    } else {
-        CGSize size = [self measureSize:CGSizeMake(self.superview.width, self.superview.height)];
-        [self layoutSelf:size];
-    }
-}
-
-- (BOOL)requestFromSubview:(UIView *)subview {
-    if (self.layoutConfig
-            && self.layoutConfig.widthSpec != DoricLayoutJust
-            && self.layoutConfig.heightSpec != DoricLayoutJust) {
-        return YES;
-    }
-    return NO;
-}
-@end
-
-DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bottom) {
-    return UIEdgeInsetsMake(top, left, bottom, right);
-}
-
-@implementation DoricLayoutConfig
+@implementation DoricLayout
 - (instancetype)init {
     if (self = [super init]) {
         _widthSpec = DoricLayoutJust;
@@ -160,349 +67,317 @@ DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bo
     return self;
 }
 
-- (instancetype)initWithWidth:(DoricLayoutSpec)width height:(DoricLayoutSpec)height {
-    if (self = [super init]) {
-        _widthSpec = width;
-        _heightSpec = height;
+- (void)apply {
+    if (!CGAffineTransformEqualToTransform(self.view.transform, CGAffineTransformIdentity)) {
+        return;
     }
-    return self;
+    self.resolved = NO;
+    [self measure:self.view.frame.size];
+    [self layout];
+    [self setFrame];
 }
 
-- (instancetype)initWithWidth:(DoricLayoutSpec)width height:(DoricLayoutSpec)height margin:(DoricMargin)margin {
-    if (self = [super init]) {
-        _widthSpec = width;
-        _heightSpec = height;
-        _margin = margin;
+- (void)measure:(CGSize)targetSize {
+    if (self.widthSpec == DoricLayoutMost) {
+        self.measuredWidth = targetSize.width;
+    } else {
+        self.measuredWidth = self.width;
     }
-    return self;
-}
-@end
-
-
-@interface DoricLayoutContainer ()
-@property(nonatomic, assign) CGFloat contentWidth;
-@property(nonatomic, assign) CGFloat contentHeight;
-@property(nonatomic, assign) NSUInteger contentWeight;
-@end
-
-@implementation DoricLayoutContainer
-- (void)setNeedsLayout {
-    [super setNeedsLayout];
+    if (self.heightSpec == DoricLayoutMost) {
+        self.measuredHeight = targetSize.height;
+    } else{
+        self.measuredHeight = self.height;
+    }
+    [self measureContent:CGSizeMake(
+            self.measuredWidth - self.paddingLeft - self.paddingRight,
+            self.measuredHeight - self.paddingTop - self.paddingBottom)];
+    self.resolved = YES;
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    [self doricLayoutSubviews];
+- (void)measureContent:(CGSize)targetSize {
+    switch (self.layoutType) {
+        case DoricStack: {
+            [self measureStackContent:targetSize];
+            break;
+        }
+        case DoricVLayout: {
+            [self measureVLayoutContent:targetSize];
+            break;
+        }
+        case DoricHLayout: {
+            [self measureHLayoutContent:targetSize];
+            break;
+        }
+        default: {
+            [self measureUndefinedContent:targetSize];
+            break;
+        }
+    }
 }
-@end
 
+- (void)layout {
+    switch (self.layoutType) {
+        case DoricStack: {
+            [self layoutStack];
+            break;
+        }
+        case DoricVLayout: {
+            [self layoutVLayout];
+            break;
+        }
+        case DoricHLayout: {
+            [self layoutHLayout];
+            break;
+        }
+        default: {
+            break;
+        }
+    }
+}
 
-@interface DoricStackView ()
-@end
+- (void)setFrame {
+    [self.view.subviews forEach:^(__kindof UIView *obj) {
+        [obj.doricLayout setFrame];
+    }];
+    self.view.width = self.measuredWidth;
+    self.view.height = self.measuredHeight;
+    self.view.x = self.measuredX;
+    self.view.y = self.measuredY;
+}
 
-@implementation DoricStackView
+- (void)measureUndefinedContent:(CGSize)targetSize {
+    CGSize measuredSize = [self.view sizeThatFits:targetSize];
+    if (self.widthSpec == DoricLayoutFit) {
+        self.measuredWidth = measuredSize.width + self.paddingLeft + self.paddingRight;
+    }
+    if (self.heightSpec == DoricLayoutFit) {
+        self.measuredHeight = measuredSize.height + self.paddingTop + self.paddingBottom;
+    }
+}
 
-- (CGSize)sizeThatFits:(CGSize)size {
-    CGFloat contentWidth = 0;
-    CGFloat contentHeight = 0;
-    for (UIView *child in self.subviews) {
-        if (child.isHidden) {
+- (CGFloat)takenWidth {
+    return self.measuredWidth + self.marginLeft + self.marginRight;
+}
+
+- (CGFloat)takenHeight {
+    return self.measuredHeight + self.marginTop + self.marginBottom;
+}
+
+- (void)measureStackContent:(CGSize)targetSize {
+    CGFloat contentWidth = 0, contentHeight = 0;
+    for (__kindof UIView *subview in self.view.subviews) {
+        DoricLayout *layout = subview.doricLayout;
+        if (layout.disabled) {
             continue;
         }
-        DoricLayoutConfig *childConfig = child.layoutConfig;
-        if (!childConfig) {
-            childConfig = [DoricLayoutConfig new];
-        }
-        CGSize childSize;
-        if (CGAffineTransformEqualToTransform(child.transform, CGAffineTransformIdentity)) {
-            childSize = [child measureSize:CGSizeMake(size.width, size.height)];
-        } else {
-            childSize = child.bounds.size;
-        }
-        contentWidth = MAX(contentWidth, childSize.width + childConfig.margin.left + childConfig.margin.right);
-        contentHeight = MAX(contentHeight, childSize.height + childConfig.margin.top + childConfig.margin.bottom);
+        [layout measure:targetSize];
+        contentWidth = MAX(contentWidth, layout.takenWidth);
+        contentHeight = MAX(contentHeight, layout.takenHeight);
     }
+    if (self.widthSpec == DoricLayoutFit) {
+        self.measuredWidth = contentWidth + self.paddingLeft + self.paddingRight;
+    }
+
+    if (self.heightSpec == DoricLayoutFit) {
+        self.measuredHeight = contentHeight + self.paddingTop + self.paddingBottom;
+    }
+
     self.contentWidth = contentWidth;
+
     self.contentHeight = contentHeight;
-    return CGSizeMake(contentWidth, contentHeight);
 }
 
-- (void)layoutSelf:(CGSize)targetSize {
-    self.width = targetSize.width;
-    self.height = targetSize.height;
-    DoricPadding padding = self.padding;
-
-    for (UIView *child in self.subviews) {
-        if (child.isHidden) {
+- (void)measureVLayoutContent:(CGSize)targetSize {
+    CGFloat contentWidth = 0, contentHeight = 0;
+    BOOL had = NO;
+    for (__kindof UIView *subview in self.view.subviews) {
+        DoricLayout *layout = subview.doricLayout;
+        if (layout.disabled) {
             continue;
         }
-        if (!CGAffineTransformEqualToTransform(child.transform, CGAffineTransformIdentity)) {
+        had = YES;
+        [layout measure:CGSizeMake(targetSize.width, targetSize.height - contentHeight)];
+        contentWidth = MAX(contentWidth, layout.takenWidth);
+        contentHeight += layout.takenHeight + self.spacing;
+    }
+
+    if (had) {
+        contentHeight -= self.spacing;
+    }
+
+    if (self.widthSpec == DoricLayoutFit) {
+        self.measuredWidth = contentWidth + self.paddingLeft + self.paddingRight;
+    }
+
+    if (self.heightSpec == DoricLayoutFit) {
+        self.measuredHeight = contentHeight + self.paddingTop + self.paddingBottom;
+    }
+
+    self.contentWidth = contentWidth;
+
+    self.contentHeight = contentHeight;
+}
+
+- (void)measureHLayoutContent:(CGSize)targetSize {
+    CGFloat contentWidth = 0, contentHeight = 0;
+    BOOL had = NO;
+    for (__kindof UIView *subview in self.view.subviews) {
+        DoricLayout *layout = subview.doricLayout;
+        if (layout.disabled) {
             continue;
         }
-        DoricLayoutConfig *childConfig = child.layoutConfig;
-        if (!childConfig) {
-            childConfig = [DoricLayoutConfig new];
-        }
-        CGSize size = [child measureSize:CGSizeMake(
-                targetSize.width - padding.left - padding.right,
-                targetSize.height - padding.top - padding.bottom)];
-        [child layoutSelf:size];
-        DoricGravity gravity = childConfig.alignment;
+        had = YES;
+        [layout measure:CGSizeMake(targetSize.width - contentWidth, targetSize.height)];
+        contentWidth += layout.takenWidth + self.spacing;
+        contentHeight = MAX(contentHeight, layout.takenHeight);
+    }
 
-        CGPoint point = child.frame.origin;
+    if (had) {
+        contentWidth -= self.spacing;
+    }
+    if (self.widthSpec == DoricLayoutFit) {
+        self.measuredWidth = contentWidth + self.paddingLeft + self.paddingRight;
+    }
+
+    if (self.heightSpec == DoricLayoutFit) {
+        self.measuredHeight = contentHeight + self.paddingTop + self.paddingBottom;
+    }
+
+    self.contentWidth = contentWidth;
+
+    self.contentHeight = contentHeight;
+}
+
+- (void)layoutStack {
+    for (__kindof UIView *subview in self.view.subviews) {
+        DoricLayout *layout = subview.doricLayout;
+        if (layout.disabled) {
+            continue;
+        }
+        [layout layout];
+        DoricGravity gravity = layout.alignment;
         if ((gravity & DoricGravityLeft) == DoricGravityLeft) {
-            point.x = padding.left;
+            layout.measuredX = self.paddingLeft;
         } else if ((gravity & DoricGravityRight) == DoricGravityRight) {
-            point.x = targetSize.width - padding.right - child.width;
+            layout.measuredX = self.measuredWidth - self.paddingRight - layout.measuredWidth;
         } else if ((gravity & DoricGravityCenterX) == DoricGravityCenterX) {
-            point.x = targetSize.width / 2 - child.width / 2;
+            layout.measuredX = self.measuredWidth / 2 - layout.measuredWidth / 2;
         } else {
-            if (childConfig.margin.left || childConfig.margin.right) {
-                point.x = padding.left;
+            if (layout.marginLeft || layout.marginRight) {
+                layout.measuredX = self.paddingLeft;
+            } else {
+                layout.measuredX = layout.x;
             }
         }
-        if ((gravity & DoricGravityTOP) == DoricGravityTOP) {
-            point.y = padding.top;
+        if ((gravity & DoricGravityTop) == DoricGravityTop) {
+            layout.measuredY = self.paddingTop;
         } else if ((gravity & DoricGravityBottom) == DoricGravityBottom) {
-            point.y = targetSize.height - padding.bottom - child.height;
+            layout.measuredY = self.measuredHeight - self.paddingBottom - layout.measuredHeight;
         } else if ((gravity & DoricGravityCenterY) == DoricGravityCenterY) {
-            point.y = targetSize.height / 2 - child.height / 2;
+            layout.measuredY = self.measuredHeight / 2 - layout.measuredHeight / 2;
         } else {
-            if (childConfig.margin.top || childConfig.margin.bottom) {
-                point.y = padding.top;
+            if (layout.marginTop || layout.marginBottom) {
+                layout.measuredY = self.paddingTop;
+            } else {
+                layout.measuredY = layout.y;
             }
         }
 
         if (!gravity) {
-            gravity = DoricGravityLeft | DoricGravityTOP;
+            gravity = DoricGravityLeft | DoricGravityTop;
         }
-        if (childConfig.margin.left && !((gravity & DoricGravityRight) == DoricGravityRight)) {
-            point.x += childConfig.margin.left;
+        if (layout.marginLeft && !((gravity & DoricGravityRight) == DoricGravityRight)) {
+            layout.measuredX += layout.marginLeft;
         }
-        if (childConfig.margin.right && !((gravity & DoricGravityLeft) == DoricGravityLeft)) {
-            point.x -= childConfig.margin.right;
+        if (layout.marginRight && !((gravity & DoricGravityLeft) == DoricGravityLeft)) {
+            layout.measuredX -= layout.marginRight;
         }
-        if (childConfig.margin.top && !((gravity & DoricGravityBottom) == DoricGravityBottom)) {
-            point.y += childConfig.margin.top;
+        if (layout.marginTop && !((gravity & DoricGravityBottom) == DoricGravityBottom)) {
+            layout.measuredY += layout.marginTop;
         }
-        if (childConfig.margin.bottom && !((gravity & DoricGravityTOP) == DoricGravityTOP)) {
-            point.y -= childConfig.margin.bottom;
-        }
-        if (point.x != child.x) {
-            child.x = point.x;
-        }
-        if (point.y != child.y) {
-            child.y = point.y;
+        if (layout.marginBottom && !((gravity & DoricGravityTop) == DoricGravityTop)) {
+            layout.measuredY -= layout.marginBottom;
         }
     }
 }
-@end
 
-@implementation DoricLinearView
-@end
-
-@implementation DoricVLayoutView
-
-- (CGSize)sizeThatFits:(CGSize)size {
-    CGFloat contentWidth = 0;
-    CGFloat contentHeight = 0;
-    NSUInteger contentWeight = 0;
-    for (UIView *child in self.subviews) {
-        if (child.isHidden) {
-            continue;
-        }
-        DoricLayoutConfig *childConfig = child.layoutConfig;
-        if (!childConfig) {
-            childConfig = [DoricLayoutConfig new];
-        }
-        CGSize childSize;
-        if (CGAffineTransformEqualToTransform(child.transform, CGAffineTransformIdentity)) {
-            childSize = [child measureSize:CGSizeMake(size.width, size.height - contentHeight)];
-        } else {
-            childSize = child.bounds.size;
-        }
-        contentWidth = MAX(contentWidth, childSize.width + childConfig.margin.left + childConfig.margin.right);
-        contentHeight += childSize.height + self.space + childConfig.margin.top + childConfig.margin.bottom;
-        contentWeight += childConfig.weight;
-    }
-    contentHeight -= self.space;
-    self.contentWidth = contentWidth;
-    self.contentHeight = contentHeight;
-    self.contentWeight = contentWeight;
-    if (contentWeight) {
-        contentHeight = size.height;
-    }
-    return CGSizeMake(contentWidth, contentHeight);
-}
-
-- (void)layoutSelf:(CGSize)targetSize {
-    self.width = targetSize.width;
-    self.height = targetSize.height;
-    DoricPadding padding = self.padding;
-    CGFloat yStart = padding.top;
-    if ((self.gravity & DoricGravityTOP) == DoricGravityTOP) {
-        yStart = padding.top;
+- (void)layoutVLayout {
+    CGFloat yStart = self.paddingTop;
+    if ((self.gravity & DoricGravityTop) == DoricGravityTop) {
+        yStart = self.paddingTop;
     } else if ((self.gravity & DoricGravityBottom) == DoricGravityBottom) {
-        yStart = targetSize.height - self.contentHeight - padding.bottom;
+        yStart = self.measuredHeight - self.contentHeight - self.paddingBottom;
     } else if ((self.gravity & DoricGravityCenterY) == DoricGravityCenterY) {
-        yStart = (targetSize.height - self.contentHeight - padding.top - padding.bottom) / 2 + padding.top;
+        yStart = (self.measuredHeight - self.contentHeight - self.paddingTop - self.paddingBottom) / 2 + self.paddingTop;
     }
-    CGFloat remain = targetSize.height - self.contentHeight - padding.top - padding.bottom;
-    for (UIView *child in self.subviews) {
-        if (child.isHidden) {
+    for (UIView *child in self.view.subviews) {
+        DoricLayout *layout = child.doricLayout;
+        if (layout.disabled) {
             continue;
         }
-        if (!CGAffineTransformEqualToTransform(child.transform, CGAffineTransformIdentity)) {
-            continue;
-        }
-        DoricLayoutConfig *childConfig = child.layoutConfig;
-        if (!childConfig) {
-            childConfig = [DoricLayoutConfig new];
-        }
-
-        CGSize size = [child measureSize:CGSizeMake(
-                targetSize.width - padding.left - padding.right,
-                targetSize.height - yStart - padding.bottom)];
-        if (childConfig.weight) {
-            size.height += remain / self.contentWeight * childConfig.weight;
-        }
-        [child layoutSelf:size];
-        DoricGravity gravity = childConfig.alignment | self.gravity;
-        CGPoint point = child.frame.origin;
+        [layout layout];
+        DoricGravity gravity = layout.alignment | self.gravity;
         if ((gravity & DoricGravityLeft) == DoricGravityLeft) {
-            point.x = padding.left;
+            layout.measuredX = self.paddingLeft;
         } else if ((gravity & DoricGravityRight) == DoricGravityRight) {
-            point.x = targetSize.width - padding.right - child.width;
+            layout.measuredX = self.measuredWidth - self.paddingRight - layout.measuredWidth;
         } else if ((gravity & DoricGravityCenterX) == DoricGravityCenterX) {
-            point.x = targetSize.width / 2 - child.width / 2;
+            layout.measuredX = self.measuredWidth / 2 - layout.measuredWidth / 2;
         } else {
-            point.x = padding.left;
+            layout.measuredX = self.paddingLeft;
         }
         if (!gravity) {
             gravity = DoricGravityLeft;
         }
-        if (childConfig.margin.left && !((gravity & DoricGravityRight) == DoricGravityRight)) {
-            point.x += childConfig.margin.left;
+        if (layout.marginLeft && !((gravity & DoricGravityRight) == DoricGravityRight)) {
+            layout.measuredX += layout.marginLeft;
         }
-        if (childConfig.margin.right && !((gravity & DoricGravityLeft) == DoricGravityLeft)) {
-            point.x -= childConfig.margin.right;
+        if (layout.marginRight && !((gravity & DoricGravityLeft) == DoricGravityLeft)) {
+            layout.measuredX -= layout.marginRight;
         }
-        if (point.x != child.x) {
-            child.x = point.x;
-        }
-        if (childConfig.margin.top) {
-            yStart += childConfig.margin.top;
-        }
-        child.top = yStart;
-        yStart = child.bottom + self.space;
-        if (childConfig.margin.bottom) {
-            yStart += childConfig.margin.bottom;
-        }
+        layout.measuredY = yStart + layout.marginTop;
+        yStart += self.spacing + layout.takenHeight;
     }
 }
-@end
 
-@implementation DoricHLayoutView
-- (CGSize)sizeThatFits:(CGSize)size {
-    CGFloat contentWidth = 0;
-    CGFloat contentHeight = 0;
-    NSUInteger contentWeight = 0;
-    for (UIView *child in self.subviews) {
-        if (child.isHidden) {
-            continue;
-        }
-        DoricLayoutConfig *childConfig = child.layoutConfig;
-        if (!childConfig) {
-            childConfig = [DoricLayoutConfig new];
-        }
-        CGSize childSize;
-        if (CGAffineTransformEqualToTransform(child.transform, CGAffineTransformIdentity)) {
-            childSize = [child measureSize:CGSizeMake(size.width - contentWidth, size.height)];
-        } else {
-            childSize = child.bounds.size;
-        }
-        contentWidth += childSize.width + self.space + childConfig.margin.left + childConfig.margin.right;
-        contentHeight = MAX(contentHeight, childSize.height + childConfig.margin.top + childConfig.margin.bottom);
-        contentWeight += childConfig.weight;
-    }
-    if (self.subviews.count > 0) {
-        contentWidth -= self.space;
-    }
-    self.contentWidth = contentWidth;
-    self.contentHeight = contentHeight;
-    self.contentWeight = contentWeight;
-    if (contentWeight) {
-        contentWidth = size.width;
-    }
-    return CGSizeMake(contentWidth, contentHeight);
-}
-
-- (void)layoutSelf:(CGSize)targetSize {
-    self.width = targetSize.width;
-    self.height = targetSize.height;
-    DoricPadding padding = self.padding;
-    CGFloat xStart = padding.left;
+- (void)layoutHLayout {
+    CGFloat xStart = self.paddingLeft;
     if ((self.gravity & DoricGravityLeft) == DoricGravityLeft) {
-        xStart = padding.left;
+        xStart = self.paddingLeft;
     } else if ((self.gravity & DoricGravityRight) == DoricGravityRight) {
-        xStart = targetSize.width - self.contentWidth - padding.right;
+        xStart = self.measuredWidth - self.contentWidth - self.paddingRight;
     } else if ((self.gravity & DoricGravityCenterX) == DoricGravityCenterX) {
-        xStart = (targetSize.width - self.contentWidth - padding.left - padding.right) / 2 + padding.left;
+        xStart = (self.measuredWidth - self.contentWidth - self.paddingLeft - self.paddingRight) / 2 + self.paddingLeft;
     }
-    CGFloat remain = targetSize.width - self.contentWidth - padding.left - padding.right;
-    for (UIView *child in self.subviews) {
-        if (child.isHidden) {
+    for (UIView *child in self.view.subviews) {
+        DoricLayout *layout = child.doricLayout;
+        if (layout.disabled) {
             continue;
         }
-        if (!CGAffineTransformEqualToTransform(child.transform, CGAffineTransformIdentity)) {
-            continue;
-        }
-        DoricLayoutConfig *childConfig = child.layoutConfig;
-        if (!childConfig) {
-            childConfig = [DoricLayoutConfig new];
-        }
+        [layout layout];
 
-        CGSize size = [child measureSize:CGSizeMake(
-                targetSize.width - xStart - padding.right,
-                targetSize.height - padding.top - padding.bottom)];
-        if (childConfig.weight) {
-            size.width += remain / self.contentWeight * childConfig.weight;
-        }
-
-        [child layoutSelf:size];
-
-        DoricGravity gravity = childConfig.alignment | self.gravity;
-
-        CGPoint point = child.frame.origin;
-        if ((gravity & DoricGravityTOP) == DoricGravityTOP) {
-            point.y = padding.top;
+        DoricGravity gravity = layout.alignment | self.gravity;
+        if ((gravity & DoricGravityTop) == DoricGravityTop) {
+            layout.measuredY = self.paddingTop;
         } else if ((gravity & DoricGravityBottom) == DoricGravityBottom) {
-            point.y = targetSize.height - padding.bottom - child.height;
+            layout.measuredY = self.measuredHeight - self.paddingBottom - child.height;
         } else if ((gravity & DoricGravityCenterY) == DoricGravityCenterY) {
-            point.y = targetSize.height / 2 - child.height / 2;
+            layout.measuredY = self.measuredHeight / 2 - layout.measuredHeight / 2;
         } else {
-            point.y = padding.top;
+            layout.measuredY = self.paddingTop;
         }
         if (!gravity) {
-            gravity = DoricGravityTOP;
+            gravity = DoricGravityTop;
         }
-        if (childConfig.margin.top && !((gravity & DoricGravityBottom) == DoricGravityBottom)) {
-            point.y += childConfig.margin.top;
+        if (layout.marginTop && !((gravity & DoricGravityBottom) == DoricGravityBottom)) {
+            layout.measuredY += layout.marginTop;
         }
-        if (childConfig.margin.bottom && !((gravity & DoricGravityTOP) == DoricGravityTOP)) {
-            point.y -= childConfig.margin.bottom;
+        if (layout.marginBottom && !((gravity & DoricGravityTop) == DoricGravityTop)) {
+            layout.measuredY -= layout.marginBottom;
         }
-        if (point.y != child.y) {
-            child.y = point.y;
-        }
-        if (childConfig.margin.left) {
-            xStart += childConfig.margin.left;
-        }
-        child.left = xStart;
-        xStart = child.right + self.space;
-        if (childConfig.margin.right) {
-            xStart += childConfig.margin.right;
-        }
+        layout.measuredX = xStart + layout.marginLeft;
+        xStart += self.spacing + layout.takenWidth;
     }
 }
+
 @end

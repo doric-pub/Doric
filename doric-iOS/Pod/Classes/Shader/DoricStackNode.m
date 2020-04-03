@@ -21,14 +21,13 @@
 //
 
 #import "DoricStackNode.h"
+#import "DoricExtensions.h"
 
 @implementation DoricStackNode
 
-- (DoricStackView *)build {
-    return [DoricStackView new];
-}
-
-- (void)blendView:(DoricStackView *)view forPropName:(NSString *)name propValue:(id)prop {
-    [super blendView:view forPropName:name propValue:prop];
+- (UIView *)build {
+    return [[UIView new] also:^(UIView *it) {
+        it.doricLayout.layoutType = DoricStack;
+    }];
 }
 @end

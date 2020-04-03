@@ -27,25 +27,25 @@
 
 @implementation DoricScrollView
 
-- (void)setContentView:(UIView *)contentView {
-    if (_contentView) {
-        [_contentView removeFromSuperview];
-    }
-    _contentView = contentView;
-    [self addSubview:contentView];
-}
-
-- (CGSize)sizeThatFits:(CGSize)size {
-    if (self.contentView) {
-        return [self.contentView measureSize:size];
-    }
-    return CGSizeZero;
-}
-
-- (void)layoutSelf:(CGSize)targetSize {
-    [super layoutSelf:targetSize];
-    [self setContentSize:self.contentView.frame.size];
-}
+//- (void)setContentView:(UIView *)contentView {
+//    if (_contentView) {
+//        [_contentView removeFromSuperview];
+//    }
+//    _contentView = contentView;
+//    [self addSubview:contentView];
+//}
+//
+//- (CGSize)sizeThatFits:(CGSize)size {
+//    if (self.contentView) {
+//        return [self.contentView measureSize:size];
+//    }
+//    return CGSizeZero;
+//}
+//
+//- (void)layoutSelf:(CGSize)targetSize {
+//    [super layoutSelf:targetSize];
+//    [self setContentSize:self.contentView.frame.size];
+//}
 
 @end
 

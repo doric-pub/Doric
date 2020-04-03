@@ -92,37 +92,7 @@
 }
 
 - (void)blendSubNode:(DoricViewNode *)subNode layoutConfig:(NSDictionary *)layoutConfig {
-    DoricLayoutConfig *params = subNode.layoutConfig;
-
-    [layoutConfig[@"widthSpec"] also:^(NSNumber *it) {
-        if (it) {
-            params.widthSpec = (DoricLayoutSpec) [it integerValue];
-        }
-    }];
-
-    [layoutConfig[@"heightSpec"] also:^(NSNumber *it) {
-        if (it) {
-            params.heightSpec = (DoricLayoutSpec) [it integerValue];
-        }
-    }];
-
-    NSDictionary *margin = layoutConfig[@"margin"];
-    if (margin) {
-        params.margin = DoricMarginMake(
-                [(NSNumber *) margin[@"left"] floatValue],
-                [(NSNumber *) margin[@"top"] floatValue],
-                [(NSNumber *) margin[@"right"] floatValue],
-                [(NSNumber *) margin[@"bottom"] floatValue]);
-    }
-
-    NSNumber *alignment = layoutConfig[@"alignment"];
-    if (alignment) {
-        params.alignment = (DoricGravity) [alignment integerValue];
-    }
-    NSNumber *weight = layoutConfig[@"weight"];
-    if (weight) {
-        params.weight = (DoricGravity) [weight integerValue];
-    }
+    [subNode blendLayoutConfig:layoutConfig];
 }
 
 - (void)blendSubNode:(NSDictionary *)subModel {
@@ -130,8 +100,8 @@
             NSStringFromSelector(_cmd));
 }
 
-- (DoricLayoutConfig *)generateDefaultLayoutParams {
-    DoricLayoutConfig *params = [[DoricLayoutConfig alloc] init];
+- (DoricLayout *)generateDefaultLayoutParams {
+    DoricLayout *params = [[DoricLayout alloc] init];
     return params;
 }
 

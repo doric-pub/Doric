@@ -36,8 +36,6 @@
 
 @property(nonatomic, copy) NSString *type;
 
-@property(nonatomic, readonly) DoricLayoutConfig *layoutConfig;
-
 @property(nonatomic, readonly) NSArray<NSString *> *idList;
 
 - (void)initWithSuperNode:(DoricSuperNode *)superNode;
@@ -53,4 +51,8 @@
 + (__kindof DoricViewNode *)create:(DoricContext *)context withType:(NSString *)type;
 
 - (void)requestLayout;
+
+- (void)blendLayoutConfig:(NSDictionary *)params;
+
+- (void)afterBlended:(NSDictionary *)props;
 @end

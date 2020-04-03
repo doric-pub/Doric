@@ -32,20 +32,13 @@
 
 @implementation DoricTextView
 - (void)drawTextInRect:(CGRect)rect {
-    [super drawTextInRect:UIEdgeInsetsInsetRect(rect, self.padding)];
-}
-
-- (CGSize)measureSize:(CGSize)targetSize {
-    CGSize measuredSize = [super measureSize:targetSize];
-    CGFloat measuredWidth = measuredSize.width;
-    CGFloat measuredHeight = measuredSize.height;
-    if (self.maxWidth >= 0) {
-        measuredWidth = MIN(self.maxWidth, measuredSize.width);
-    }
-    if (self.maxHeight >= 0) {
-        measuredHeight = MIN(self.maxHeight, measuredSize.height);
-    }
-    return CGSizeMake(measuredWidth, measuredHeight);
+    [super drawTextInRect:UIEdgeInsetsInsetRect(
+            rect,
+            UIEdgeInsetsMake(
+                    self.doricLayout.paddingTop,
+                    self.doricLayout.paddingLeft,
+                    self.doricLayout.paddingBottom,
+                    self.doricLayout.paddingRight))];
 }
 @end
 

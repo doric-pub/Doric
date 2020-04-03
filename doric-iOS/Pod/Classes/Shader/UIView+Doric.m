@@ -22,8 +22,25 @@
 //
 
 #import "UIView+Doric.h"
+#import <objc/runtime.h>
+
+static const void *kTagString = &kTagString;
 
 @implementation UIView (Doric)
+- (void)setTagString:(NSString *)tagString {
+    objc_setAssociatedObject(self, kTagString, tagString, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    self.tag = [tagString hash];
+}
+
+- (NSString *)tagString {
+    return objc_getAssociatedObject(self, kTagString);
+}
+
+
+- (UIView *)viewWithTagString:(NSString *)tagString {
+    // notice the potential hash collision
+    return [self viewWithTag:[tagString hash]];
+}
 
 - (CGFloat)x {
     return self.frame.origin.x;

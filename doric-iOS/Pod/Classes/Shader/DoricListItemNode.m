@@ -18,17 +18,9 @@
 //
 
 #import "DoricListItemNode.h"
-#import "DoricExtensions.h"
 
 @interface DoricListItemNode ()
 @end
-
-@interface DoricListItemView : UIView
-@end
-
-@implementation DoricListItemView
-@end
-
 
 @implementation DoricListItemNode
 - (instancetype)initWithContext:(DoricContext *)doricContext {
@@ -43,7 +35,7 @@
     self.reusable = YES;
 }
 
-- (DoricListItemView *)build {
-    return [DoricListItemView new];
+- (void)requestLayout {
+    [self.view.doricLayout apply];
 }
 @end

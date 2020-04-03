@@ -35,24 +35,6 @@
 @end
 
 @implementation DoricTableView
-//- (CGSize)sizeThatFits:(CGSize)size {
-//    if (self.subviews.count > 0) {
-//        CGFloat width = size.width;
-//        CGFloat height = 0;
-//
-//        for (UIView *child in self.subviews) {
-//            CGSize childSize = [child measureSize:size];
-//            width = MAX(childSize.width, width);
-//            height += childSize.height;
-//        }
-//        return CGSizeMake(width, MAX(height, size.height));
-//    }
-//    return size;
-//}
-//
-//- (void)layoutSelf:(CGSize)targetSize {
-//    [super layoutSelf:targetSize];
-//}
 @end
 
 
@@ -153,14 +135,13 @@
         DoricListItemNode *listItemNode = [[DoricListItemNode alloc] initWithContext:self.doricContext];
         [listItemNode initWithSuperNode:self];
         cell.doricListItemNode = listItemNode;
+        listItemNode.view.width = tableView.width;
         [cell.contentView addSubview:listItemNode.view];
     }
     DoricListItemNode *node = cell.doricListItemNode;
     node.viewId = model[@"id"];
     [node blend:props];
-//    CGSize size = [node.view measureSize:CGSizeMake(tableView.width, tableView.height)];
-//    [node.view layoutSelf:size];
-//    [self callItem:position height:size.height];
+    [self callItem:position height:node.view.height];
     return cell;
 }
 

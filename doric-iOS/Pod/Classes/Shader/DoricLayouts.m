@@ -169,10 +169,23 @@ static const void *kLayoutConfig = &kLayoutConfig;
 - (void)measureUndefinedContent:(CGSize)targetSize {
     CGSize measuredSize = [self.view sizeThatFits:targetSize];
     if (self.widthSpec == DoricLayoutFit) {
-        self.measuredWidth = measuredSize.width + self.paddingLeft + self.paddingRight;
+        if ([self.view isKindOfClass:[UIImageView class]]
+                && self.heightSpec != DoricLayoutFit && measuredSize.height > 0) {
+            self.measuredWidth = measuredSize.width / measuredSize.height * self.measuredHeight
+                    + self.paddingLeft + self.paddingRight;
+        } else {
+            self.measuredWidth = measuredSize.width + self.paddingLeft + self.paddingRight;
+        }
     }
     if (self.heightSpec == DoricLayoutFit) {
-        self.measuredHeight = measuredSize.height + self.paddingTop + self.paddingBottom;
+        if ([self.view isKindOfClass:[UIImageView class]]
+                && self.widthSpec != DoricLayoutFit && measuredSize.width > 0) {
+            self.measuredHeight = measuredSize.height / measuredSize.width * self.measuredWidth
+                    + self.paddingTop + self.paddingBottom;
+        } else {
+            self.measuredHeight = measuredSize.height + self.paddingTop + self.paddingBottom;
+        }
+
     }
 }
 

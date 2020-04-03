@@ -21,17 +21,14 @@
 //
 
 #import "DoricImageNode.h"
-#import "Doric.h"
 #import "YYWebImage.h"
+#import "DoricExtensions.h"
+#import "DoricUtil.h"
 
 @interface DoricImageView : YYAnimatedImageView
 @end
 
 @implementation DoricImageView
-
-- (CGSize)sizeThatFits:(CGSize)size {
-    return [self sizeThatFits:size];
-}
 @end
 
 @interface DoricImageNode ()

@@ -17,7 +17,8 @@ static NSString *TYPE = @"popover";
     dispatch_async(dispatch_get_main_queue(), ^{
         UIView *superView = [UIApplication sharedApplication].windows.lastObject;
         if (!self.fullScreenView) {
-            self.fullScreenView = [[DoricStackView new] also:^(UIView *it) {
+            self.fullScreenView = [[UIView new] also:^(UIView *it) {
+                it.doricLayout.layoutType = DoricStack;
                 it.width = superView.width;
                 it.height = superView.height;
                 it.top = it.left = 0;
@@ -33,7 +34,7 @@ static NSString *TYPE = @"popover";
             viewNode = [[DoricViewNode create:self.doricContext withType:type] also:^(DoricViewNode *it) {
                 it.viewId = viewId;
                 [it initWithSuperNode:nil];
-                it.view.layoutConfig = [DoricLayoutConfig new];
+                it.view.doricLayout = [DoricLayout new];
                 [self.fullScreenView addSubview:it.view];
                 
                 NSMutableDictionary <NSString *, DoricViewNode *> *map = self.doricContext.headNodes[TYPE];

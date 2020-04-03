@@ -26,6 +26,14 @@ typedef UIEdgeInsets DoricPadding;
 
 DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bottom);
 
+
+typedef NS_ENUM(NSInteger, DoricLayoutType) {
+    DoricUndefined = 0,
+    DoricStack = 1,
+    DoricVLayout = 2,
+    DoricHLayout = 3,
+};
+
 typedef NS_ENUM(NSInteger, DoricLayoutSpec) {
     DoricLayoutJust = 0,
     DoricLayoutFit = 1,
@@ -40,67 +48,52 @@ typedef NS_ENUM(NSInteger, DoricGravity) {
     DoricGravityShiftY = 4,
     DoricGravityLeft = (DoricGravityStart | DoricGravitySpecified) << DoricGravityShiftX,
     DoricGravityRight = (DoricGravityEnd | DoricGravitySpecified) << DoricGravityShiftX,
-    DoricGravityTOP = (DoricGravityStart | DoricGravitySpecified) << DoricGravityShiftY,
+    DoricGravityTop = (DoricGravityStart | DoricGravitySpecified) << DoricGravityShiftY,
     DoricGravityBottom = (DoricGravityEnd | DoricGravitySpecified) << DoricGravityShiftY,
     DoricGravityCenterX = DoricGravitySpecified << DoricGravityShiftX,
     DoricGravityCenterY = DoricGravitySpecified << DoricGravityShiftY,
     DoricGravityCenter = DoricGravityCenterX | DoricGravityCenterY,
 };
 
-@interface DoricLayoutConfig : NSObject
+@interface DoricLayout : NSObject
 @property(nonatomic, assign) DoricLayoutSpec widthSpec;
 @property(nonatomic, assign) DoricLayoutSpec heightSpec;
-@property(nonatomic) DoricMargin margin;
+
 @property(nonatomic, assign) DoricGravity alignment;
+
+@property(nonatomic, assign) DoricGravity gravity;
+
+@property(nonatomic, assign) CGFloat width;
+@property(nonatomic, assign) CGFloat height;
+@property(nonatomic, assign) CGFloat x;
+@property(nonatomic, assign) CGFloat y;
+
+@property(nonatomic, assign) CGFloat spacing;
+
+@property(nonatomic, assign) CGFloat marginLeft;
+@property(nonatomic, assign) CGFloat marginTop;
+@property(nonatomic, assign) CGFloat marginRight;
+@property(nonatomic, assign) CGFloat marginBottom;
+
+@property(nonatomic, assign) CGFloat paddingLeft;
+@property(nonatomic, assign) CGFloat paddingTop;
+@property(nonatomic, assign) CGFloat paddingRight;
+@property(nonatomic, assign) CGFloat paddingBottom;
+
 @property(nonatomic, assign) NSUInteger weight;
+
+@property(nonatomic, weak) UIView *view;
+
+@property(nonatomic, assign) DoricLayoutType layoutType;
+
+@property(nonatomic, assign) BOOL disabled;
 
 - (instancetype)init;
 
-- (instancetype)initWithWidth:(DoricLayoutSpec)width height:(DoricLayoutSpec)height;
-
-- (instancetype)initWithWidth:(DoricLayoutSpec)width height:(DoricLayoutSpec)height margin:(DoricMargin)margin;
-
+- (void)apply;
 @end
 
 
-@interface DoricLayoutContainer : UIView
-@end
-
-@interface DoricStackView : DoricLayoutContainer
-@end
-
-@interface DoricLinearView : DoricLayoutContainer
-@property(nonatomic, assign) DoricGravity gravity;
-@property(nonatomic, assign) CGFloat space;
-@end
-
-
-@interface DoricVLayoutView : DoricLinearView
-@end
-
-@interface DoricHLayoutView : DoricLinearView
-@end
-
-@interface UIView (DoricLayoutConfig)
-@property(nonatomic, strong) DoricLayoutConfig *layoutConfig;
-@end
-
-@interface UIView (DoricPadding)
-@property(nonatomic, assign) DoricPadding padding;
-@end
-
-@interface UIView (DoricTag)
-@property(nonatomic, copy) NSString *tagString;
-
-- (UIView *)viewWithTagString:(NSString *)tagString;
-@end
-
-@interface UIView (DoricLayouts)
-- (void)layoutSelf:(CGSize)targetSize;
-
-- (CGSize)measureSize:(CGSize)targetSize;
-
-- (void)doricLayoutSubviews;
-
-- (BOOL)requestFromSubview:(UIView *)subview;
+@interface UIView (DoricLayout)
+@property(nonatomic, strong) DoricLayout *doricLayout;
 @end

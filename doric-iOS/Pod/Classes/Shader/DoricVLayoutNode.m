@@ -21,18 +21,21 @@
 //
 
 #import "DoricVLayoutNode.h"
+#import "DoricExtensions.h"
 
 @implementation DoricVLayoutNode
 
-- (DoricVLayoutView *)build {
-    return [DoricVLayoutView new];
+- (UIView *)build {
+    return [[UIView new] also:^(UIView *it) {
+        it.doricLayout.layoutType = DoricVLayout;
+    }];
 }
 
-- (void)blendView:(DoricVLayoutView *)view forPropName:(NSString *)name propValue:(id)prop {
+- (void)blendView:(UIView *)view forPropName:(NSString *)name propValue:(id)prop {
     if ([name isEqualToString:@"gravity"]) {
-        view.gravity = (DoricGravity) [(NSNumber *) prop integerValue];
+        view.doricLayout.gravity = (DoricGravity) [(NSNumber *) prop integerValue];
     } else if ([name isEqualToString:@"space"]) {
-        view.space = [(NSNumber *) prop floatValue];
+        view.doricLayout.spacing = [(NSNumber *) prop floatValue];
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }

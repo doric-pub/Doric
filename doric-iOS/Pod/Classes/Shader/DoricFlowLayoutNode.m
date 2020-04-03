@@ -139,23 +139,6 @@
 @end
 
 @implementation DoricFlowLayoutView
-- (CGSize)sizeThatFits:(CGSize)size {
-    if (self.subviews.count > 0) {
-        CGFloat width = size.width;
-        CGFloat height = size.height;
-        for (UIView *child in self.subviews) {
-            CGSize childSize = [child measureSize:size];
-            width = MAX(childSize.width, width);
-            height = MAX(childSize.height, height);
-        }
-        return CGSizeMake(width, height);
-    }
-    return size;
-}
-
-- (void)layoutSelf:(CGSize)targetSize {
-    [super layoutSelf:targetSize];
-}
 @end
 
 @interface DoricFlowLayoutNode () <UICollectionViewDataSource, UICollectionViewDelegate, DoricFlowLayoutDelegate>
@@ -336,14 +319,14 @@
     node.viewId = model[@"id"];
     [node blend:props];
     CGFloat width = (collectionView.width - (self.columnCount - 1) * self.columnSpace) / self.columnCount;
-    CGSize size = [node.view measureSize:CGSizeMake(width, collectionView.height)];
-    if (position > 0 && position >= self.itemCount && self.onLoadMoreFuncId) {
-        size = CGSizeMake(collectionView.width, size.height);
-        [self callJSResponse:self.onLoadMoreFuncId, nil];
-    }
-
-    [node.view layoutSelf:size];
-    [self callItem:position size:size];
+//    CGSize size = [node.view measureSize:CGSizeMake(width, collectionView.height)];
+//    if (position > 0 && position >= self.itemCount && self.onLoadMoreFuncId) {
+//        size = CGSizeMake(collectionView.width, size.height);
+//        [self callJSResponse:self.onLoadMoreFuncId, nil];
+//    }
+//
+//    [node.view layoutSelf:size];
+//    [self callItem:position size:size];
     return cell;
 }
 

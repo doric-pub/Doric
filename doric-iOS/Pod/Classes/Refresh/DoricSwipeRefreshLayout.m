@@ -54,40 +54,40 @@
     return self;
 }
 
-- (CGSize)sizeThatFits:(CGSize)size {
-    if (self.contentView) {
-        return [self.contentView measureSize:size];
-    }
-    return CGSizeZero;
-}
-
-- (BOOL)requestFromSubview:(UIView *)subview {
-    if (subview == self.headerView) {
-        return NO;
-    }
-    return [super requestFromSubview:subview];
-}
+//- (CGSize)sizeThatFits:(CGSize)size {
+//    if (self.contentView) {
+//        return [self.contentView measureSize:size];
+//    }
+//    return CGSizeZero;
+//}
+//
+//- (BOOL)requestFromSubview:(UIView *)subview {
+//    if (subview == self.headerView) {
+//        return NO;
+//    }
+//    return [super requestFromSubview:subview];
+//}
 
 - (void)layoutSubviews {
     [super layoutSubviews];
 }
 
-- (void)layoutSelf:(CGSize)targetSize {
-    if (self.contentOffset.y != 0) {
-        return;
-    }
-    self.width = targetSize.width;
-    self.height = targetSize.height;
-    [self.headerView also:^(UIView *it) {
-        [it layoutSelf:[it measureSize:targetSize]];
-        it.bottom = 0;
-        it.centerX = self.centerX;
-    }];
-    [self.contentView also:^(UIView *it) {
-        [it layoutSelf:targetSize];
-    }];
-    self.contentSize = self.frame.size;
-}
+//- (void)layoutSelf:(CGSize)targetSize {
+//    if (self.contentOffset.y != 0) {
+//        return;
+//    }
+//    self.width = targetSize.width;
+//    self.height = targetSize.height;
+//    [self.headerView also:^(UIView *it) {
+//        [it layoutSelf:[it measureSize:targetSize]];
+//        it.bottom = 0;
+//        it.centerX = self.centerX;
+//    }];
+//    [self.contentView also:^(UIView *it) {
+//        [it layoutSelf:targetSize];
+//    }];
+//    self.contentSize = self.frame.size;
+//}
 
 - (void)setContentView:(UIView *)contentView {
     if (_contentView) {

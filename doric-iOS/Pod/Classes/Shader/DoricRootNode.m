@@ -35,12 +35,12 @@
     return self;
 }
 
-- (void)layoutSelf:(CGSize)targetSize {
-    [super layoutSelf:targetSize];
-    if (!CGSizeEqualToSize(self.currentSize, targetSize) && self.frameChangedBlock) {
-        self.frameChangedBlock(self.currentSize, targetSize);
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    if (!CGSizeEqualToSize(self.currentSize, self.frame.size) && self.frameChangedBlock) {
+        self.frameChangedBlock(self.currentSize, self.frame.size);
     }
-    self.currentSize = targetSize;
+    self.currentSize = self.frame.size;
 }
 
 - (void)setX:(CGFloat)x {
@@ -54,11 +54,12 @@
 @end
 
 @implementation DoricRootNode
-- (void)setupRootView:(DoricStackView *)view {
+- (void)setupRootView:(UIView *)view {
+    view.doricLayout.layoutType = DoricStack;
     self.view = view;
 }
 
 - (void)requestLayout {
-    [self.view setNeedsLayout];
+    [self.view.doricLayout apply];
 }
 @end

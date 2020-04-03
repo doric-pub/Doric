@@ -20,6 +20,7 @@
 //  Created by pengfei.zhou on 2019/7/30.
 //
 
+#import <DoricCore/DoricExtensions.h>
 #import "DoricViewNode.h"
 #import "DoricUtil.h"
 #import "DoricGroupNode.h"
@@ -121,13 +122,7 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
         ((DoricSuperNode *) self).reusable = superNode.reusable;
     }
     self.superNode = superNode;
-    self.view = [[self build] also:^(UIView *it) {
-        it.layoutConfig = [superNode generateDefaultLayoutParams];
-    }];
-}
-
-- (DoricLayoutConfig *)layoutConfig {
-    return self.view.layoutConfig;
+    self.view = [self build];
 }
 
 - (UIView *)build {
@@ -135,7 +130,6 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
 }
 
 - (void)blend:(NSDictionary *)props {
-    self.view.layoutConfig = self.layoutConfig;
     for (NSString *key in props) {
         id value = props[key];
         if (!value || [value isKindOfClass:[NSNull class]]) {
@@ -144,7 +138,12 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
         [self blendView:self.view forPropName:key propValue:value];
     }
     [self transformProperties];
+    [self afterBlended:props];
+    [self requestLayout];
     self.gradientLayer.frame = CGRectMake(0, 0, self.view.width, self.view.height);
+}
+
+- (void)afterBlended:(NSDictionary *)props {
 }
 
 - (void)transformProperties {
@@ -171,19 +170,13 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
 
 - (void)blendView:(UIView *)view forPropName:(NSString *)name propValue:(id)prop {
     if ([name isEqualToString:@"width"]) {
-        NSNumber *width = (NSNumber *) prop;
-        if ([width floatValue] >= 0) {
-            view.width = [width floatValue];
-        }
+        view.doricLayout.width = [prop floatValue];
     } else if ([name isEqualToString:@"height"]) {
-        NSNumber *height = (NSNumber *) prop;
-        if ([height floatValue] >= 0) {
-            view.height = [height floatValue];
-        }
+        view.doricLayout.height = [prop floatValue];
     } else if ([name isEqualToString:@"x"]) {
-        view.x = [prop floatValue];
+        view.doricLayout.x = [prop floatValue];
     } else if ([name isEqualToString:@"y"]) {
-        view.y = [prop floatValue];
+        view.doricLayout.y = [prop floatValue];
     } else if ([name isEqualToString:@"backgroundColor"]) {
         if ([prop isKindOfClass:[NSNumber class]]) {
             view.backgroundColor = DoricColor(prop);
@@ -298,19 +291,20 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     } else if ([name isEqualToString:@"rotation"]) {
         self.rotation = prop;
     } else if ([name isEqualToString:@"padding"]) {
-        DoricPadding padding;
-        padding.left = padding.right = padding.top = padding.bottom = 0;
+        view.doricLayout.paddingLeft = 0;
+        view.doricLayout.paddingRight = 0;
+        view.doricLayout.paddingTop = 0;
+        view.doricLayout.paddingBottom = 0;
         if ([prop isKindOfClass:[NSDictionary class]]) {
             NSDictionary *dictionary = prop;
-            padding.left = [dictionary[@"left"] floatValue];
-            padding.right = [dictionary[@"right"] floatValue];
-            padding.top = [dictionary[@"top"] floatValue];
-            padding.bottom = [dictionary[@"bottom"] floatValue];
+            view.doricLayout.paddingLeft = [dictionary[@"left"] floatValue];
+            view.doricLayout.paddingRight = [dictionary[@"right"] floatValue];
+            view.doricLayout.paddingTop = [dictionary[@"top"] floatValue];
+            view.doricLayout.paddingBottom = [dictionary[@"bottom"] floatValue];
         }
-        self.view.padding = padding;
     } else if ([name isEqualToString:@"hidden"]) {
         self.view.hidden = [prop boolValue];
-        [self.view.superview setNeedsLayout];
+        self.view.doricLayout.disabled = [prop boolValue];
     } else {
         DoricLog(@"Blend View error for View Type :%@, prop is %@", self.class, name);
     }
@@ -380,38 +374,26 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
 }
 
 - (void)blendLayoutConfig:(NSDictionary *)params {
-    if (!self.layoutConfig) {
-        self.view.layoutConfig = [DoricLayoutConfig new];
-    }
+
     [params[@"widthSpec"] also:^(NSNumber *it) {
-        if (it) {
-            self.layoutConfig.widthSpec = (DoricLayoutSpec) [it integerValue];
-        }
+        self.view.doricLayout.widthSpec = (DoricLayoutSpec) [it integerValue];
     }];
 
     [params[@"heightSpec"] also:^(NSNumber *it) {
-        if (it) {
-            self.layoutConfig.heightSpec = (DoricLayoutSpec) [it integerValue];
-        }
+        self.view.doricLayout.heightSpec = (DoricLayoutSpec) [it integerValue];
     }];
-
-    NSDictionary *margin = params[@"margin"];
-    if (margin) {
-        self.layoutConfig.margin = DoricMarginMake(
-                [(NSNumber *) margin[@"left"] floatValue],
-                [(NSNumber *) margin[@"top"] floatValue],
-                [(NSNumber *) margin[@"right"] floatValue],
-                [(NSNumber *) margin[@"bottom"] floatValue]);
-    }
-
-    NSNumber *alignment = params[@"alignment"];
-    if (alignment) {
-        self.layoutConfig.alignment = (DoricGravity) [alignment integerValue];
-    }
-    NSNumber *weight = params[@"weight"];
-    if (weight) {
-        self.layoutConfig.weight = (DoricGravity) [weight integerValue];
-    }
+    [params[@"margin"] also:^(NSDictionary *it) {
+        self.view.doricLayout.marginLeft = [it[@"left"] floatValue];
+        self.view.doricLayout.marginTop = [it[@"top"] floatValue];
+        self.view.doricLayout.marginRight = [it[@"right"] floatValue];
+        self.view.doricLayout.marginBottom = [it[@"bottom"] floatValue];
+    }];
+    [params[@"alignment"] also:^(NSNumber *it) {
+        self.view.doricLayout.alignment = (DoricGravity) [it integerValue];
+    }];
+    [params[@"weight"] also:^(NSNumber *it) {
+        self.view.doricLayout.weight = (DoricGravity) [it integerValue];
+    }];
 }
 
 - (NSDictionary *)transformation {

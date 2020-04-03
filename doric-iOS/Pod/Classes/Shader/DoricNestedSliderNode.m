@@ -25,27 +25,27 @@
 @end
 
 @implementation DoricNestedSliderView
-- (CGSize)sizeThatFits:(CGSize)size {
-    if (self.subviews.count > 0) {
-        CGFloat width = size.width;
-        CGFloat height = size.height;
-        for (UIView *child in self.subviews) {
-            CGSize childSize = [child measureSize:size];
-            width = MAX(childSize.width, width);
-            height = MAX(childSize.height, height);
-        }
-        return CGSizeMake(width, height);
-    }
-    return size;
-}
-
-- (void)layoutSelf:(CGSize)targetSize {
-    [super layoutSelf:targetSize];
-    [self.subviews forEachIndexed:^(__kindof UIView *obj, NSUInteger idx) {
-        obj.left = idx * self.width;
-    }];
-    [self setContentSize:CGSizeMake(self.subviews.count * self.width, self.height)];
-}
+//- (CGSize)sizeThatFits:(CGSize)size {
+//    if (self.subviews.count > 0) {
+//        CGFloat width = size.width;
+//        CGFloat height = size.height;
+//        for (UIView *child in self.subviews) {
+//            CGSize childSize = [child measureSize:size];
+//            width = MAX(childSize.width, width);
+//            height = MAX(childSize.height, height);
+//        }
+//        return CGSizeMake(width, height);
+//    }
+//    return size;
+//}
+//
+//- (void)layoutSelf:(CGSize)targetSize {
+//    [super layoutSelf:targetSize];
+//    [self.subviews forEachIndexed:^(__kindof UIView *obj, NSUInteger idx) {
+//        obj.left = idx * self.width;
+//    }];
+//    [self setContentSize:CGSizeMake(self.subviews.count * self.width, self.height)];
+//}
 @end
 
 @interface DoricNestedSliderNode () <UIScrollViewDelegate>

@@ -21,7 +21,7 @@
 //
 #import "DoricSlideItemNode.h"
 
-@interface DoricSlideItemView : DoricStackView
+@interface DoricSlideItemView : UIView
 @end
 
 @implementation DoricSlideItemView
@@ -45,7 +45,7 @@
     self.view.clipsToBounds = YES;
 }
 
-- (DoricStackView *)build {
+- (DoricSlideItemView *)build {
     return [DoricSlideItemView new];
 }
 @end

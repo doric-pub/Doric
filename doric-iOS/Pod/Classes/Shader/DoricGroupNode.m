@@ -51,14 +51,8 @@
     }
 }
 
-- (void)blend:(NSDictionary *)props {
-    [super blend:props];
+- (void)afterBlended:(NSDictionary *)props {
     [self configChildNodes];
-}
-
-- (DoricLayoutConfig *)generateDefaultLayoutParams {
-    DoricLayoutConfig *params = [[DoricLayoutConfig alloc] init];
-    return params;
 }
 
 - (void)configChildNodes {

@@ -23,7 +23,7 @@
 @interface DoricListItemNode ()
 @end
 
-@interface DoricListItemView : DoricStackView
+@interface DoricListItemView : UIView
 @end
 
 @implementation DoricListItemView
@@ -43,7 +43,7 @@
     self.reusable = YES;
 }
 
-- (DoricStackView *)build {
+- (DoricListItemView *)build {
     return [DoricListItemView new];
 }
 @end

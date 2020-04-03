@@ -22,5 +22,5 @@
 
 #import "DoricGroupNode.h"
 
-@interface DoricHLayoutNode : DoricGroupNode<DoricHLayoutView *>
+@interface DoricHLayoutNode : DoricGroupNode<UIView *>
 @end

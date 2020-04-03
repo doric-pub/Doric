@@ -19,7 +19,7 @@
 
 #import "DoricFlowLayoutItemNode.h"
 
-@interface DoricFlowLayoutItemView : DoricStackView
+@interface DoricFlowLayoutItemView : UIView
 @end
 
 @implementation DoricFlowLayoutItemView
@@ -42,7 +42,7 @@
     self.reusable = YES;
 }
 
-- (DoricStackView *)build {
+- (DoricFlowLayoutItemView *)build {
     return [DoricFlowLayoutItemView new];
 }
 @end

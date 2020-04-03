@@ -95,6 +95,8 @@ typedef NS_ENUM(NSInteger, DoricGravity) {
 - (instancetype)init;
 
 - (void)apply;
+
+- (void)apply:(CGSize)frameSize;
 @end
 
 

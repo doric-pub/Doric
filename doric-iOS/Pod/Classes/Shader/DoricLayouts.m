@@ -69,14 +69,18 @@ static const void *kLayoutConfig = &kLayoutConfig;
     return self;
 }
 
-- (void)apply {
+- (void)apply:(CGSize)frameSize {
     if (!CGAffineTransformEqualToTransform(self.view.transform, CGAffineTransformIdentity)) {
         return;
     }
     self.resolved = NO;
-    [self measure:self.view.frame.size];
+    [self measure:frameSize];
     [self layout];
     [self setFrame];
+}
+
+- (void)apply {
+    [self apply:self.view.frame.size];
 }
 
 - (void)measure:(CGSize)targetSize {
@@ -433,7 +437,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
         if ((gravity & DoricGravityTop) == DoricGravityTop) {
             layout.measuredY = self.paddingTop;
         } else if ((gravity & DoricGravityBottom) == DoricGravityBottom) {
-            layout.measuredY = self.measuredHeight - self.paddingBottom - child.height;
+            layout.measuredY = self.measuredHeight - self.paddingBottom - layout.measuredHeight;
         } else if ((gravity & DoricGravityCenterY) == DoricGravityCenterY) {
             layout.measuredY = self.measuredHeight / 2 - layout.measuredHeight / 2;
         } else {

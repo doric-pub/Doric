@@ -27,26 +27,26 @@
 
 @implementation DoricScrollView
 
-//- (void)setContentView:(UIView *)contentView {
-//    if (_contentView) {
-//        [_contentView removeFromSuperview];
-//    }
-//    _contentView = contentView;
-//    [self addSubview:contentView];
-//}
-//
-//- (CGSize)sizeThatFits:(CGSize)size {
-//    if (self.contentView) {
-//        return [self.contentView measureSize:size];
-//    }
-//    return CGSizeZero;
-//}
-//
-//- (void)layoutSelf:(CGSize)targetSize {
-//    [super layoutSelf:targetSize];
-//    [self setContentSize:self.contentView.frame.size];
-//}
+- (void)setContentView:(UIView *)contentView {
+    if (_contentView) {
+        [_contentView removeFromSuperview];
+    }
+    _contentView = contentView;
+    [self addSubview:contentView];
+}
 
+- (CGSize)sizeThatFits:(CGSize)size {
+    if (self.contentView) {
+        [self.contentView.doricLayout apply:self.frame.size];
+        return self.contentView.frame.size;
+    }
+    return CGSizeZero;
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    self.contentSize = self.contentView.frame.size;
+}
 @end
 
 @interface DoricScrollerNode () <UIScrollViewDelegate>
@@ -77,8 +77,7 @@
     }
 }
 
-- (void)blend:(NSDictionary *)props {
-    [super blend:props];
+- (void)afterBlended:(NSDictionary *)props {
     NSDictionary *childModel = [self subModelOf:self.childViewId];
     if (!childModel) {
         return;

@@ -27,9 +27,9 @@ typedef UIEdgeInsets DoricPadding;
 DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bottom);
 
 typedef NS_ENUM(NSInteger, DoricLayoutSpec) {
-    DoricLayoutExact = 0,
-    DoricLayoutWrapContent = 1,
-    DoricLayoutAtMost = 2,
+    DoricLayoutJust = 0,
+    DoricLayoutFit = 1,
+    DoricLayoutMost = 2,
 };
 
 typedef NS_ENUM(NSInteger, DoricGravity) {
@@ -40,11 +40,11 @@ typedef NS_ENUM(NSInteger, DoricGravity) {
     DoricGravityShiftY = 4,
     DoricGravityLeft = (DoricGravityStart | DoricGravitySpecified) << DoricGravityShiftX,
     DoricGravityRight = (DoricGravityEnd | DoricGravitySpecified) << DoricGravityShiftX,
-    DoricTOP = (DoricGravityStart | DoricGravitySpecified) << DoricGravityShiftY,
-    DoricBottom = (DoricGravityEnd | DoricGravitySpecified) << DoricGravityShiftY,
-    DoricCenterX = DoricGravitySpecified << DoricGravityShiftX,
-    DoricCenterY = DoricGravitySpecified << DoricGravityShiftY,
-    DoricCenter = DoricCenterX | DoricCenterY,
+    DoricGravityTOP = (DoricGravityStart | DoricGravitySpecified) << DoricGravityShiftY,
+    DoricGravityBottom = (DoricGravityEnd | DoricGravitySpecified) << DoricGravityShiftY,
+    DoricGravityCenterX = DoricGravitySpecified << DoricGravityShiftX,
+    DoricGravityCenterY = DoricGravitySpecified << DoricGravityShiftY,
+    DoricGravityCenter = DoricGravityCenterX | DoricGravityCenterY,
 };
 
 @interface DoricLayoutConfig : NSObject

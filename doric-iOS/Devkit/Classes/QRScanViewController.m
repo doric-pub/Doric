@@ -106,7 +106,7 @@
         NSLog(@"Scan result is %@", result);
         [[DoricDev instance] connectDevKit:[NSString stringWithFormat:@"ws://%@:7777", result]];
         [DoricJSRemoteExecutor configIp:result];
-        ShowToast([NSString stringWithFormat:@"Connected to %@", result], DoricBottom);
+        ShowToast([NSString stringWithFormat:@"Connected to %@", result], DoricGravityBottom);
         [self.navigationController popViewControllerAnimated:NO];
     }
 }

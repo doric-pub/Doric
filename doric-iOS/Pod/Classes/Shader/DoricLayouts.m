@@ -161,6 +161,9 @@ static const void *kLayoutConfig = &kLayoutConfig;
 }
 
 - (void)setFrame {
+    if (!CGAffineTransformEqualToTransform(self.view.transform, CGAffineTransformIdentity)) {
+        return;
+    }
     [self.view.subviews forEach:^(__kindof UIView *obj) {
         [obj.doricLayout setFrame];
     }];

@@ -140,7 +140,11 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     [self afterBlended:props];
     [self transformProperties];
     [self requestLayout];
-    self.gradientLayer.frame = CGRectMake(0, 0, self.view.width, self.view.height);
+    [self.gradientLayer also:^(CAGradientLayer* it) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            it.frame = CGRectMake(0, 0, self.view.width, self.view.height);
+        });
+    }];
 }
 
 - (void)afterBlended:(NSDictionary *)props {

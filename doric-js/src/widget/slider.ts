@@ -105,7 +105,7 @@ export function slider(config: ISlider) {
 
 export function slideItem(item: View | View[], config?: ISlideItem) {
     return (new SlideItem).also((it) => {
-        it.layoutConfig = layoutConfig().fit()
+        it.layoutConfig = layoutConfig().most()
         if (item instanceof View) {
             it.addChild(item)
         } else {

@@ -21,15 +21,6 @@
 //
 #import "DoricSlideItemNode.h"
 
-@interface DoricSlideItemView : UIView
-@end
-
-@implementation DoricSlideItemView
-- (void)layoutSubviews {
-    [super layoutSubviews];
-}
-@end
-
 @implementation DoricSlideItemNode
 
 - (instancetype)initWithContext:(DoricContext *)doricContext {
@@ -45,7 +36,7 @@
     self.view.clipsToBounds = YES;
 }
 
-- (DoricSlideItemView *)build {
-    return [DoricSlideItemView new];
+- (void)requestLayout {
+    [self.view.doricLayout apply];
 }
 @end

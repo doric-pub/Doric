@@ -2015,7 +2015,7 @@ function slider(config) {
 }
 function slideItem(item, config) {
     return (new SlideItem).also(function (it) {
-        it.layoutConfig = layoutConfig().fit();
+        it.layoutConfig = layoutConfig().most();
         if (item instanceof View) {
             it.addChild(item);
         }

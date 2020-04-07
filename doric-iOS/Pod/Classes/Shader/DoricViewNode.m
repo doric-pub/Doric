@@ -137,8 +137,8 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
         }
         [self blendView:self.view forPropName:key propValue:value];
     }
-    [self transformProperties];
     [self afterBlended:props];
+    [self transformProperties];
     [self requestLayout];
     self.gradientLayer.frame = CGRectMake(0, 0, self.view.width, self.view.height);
 }
@@ -157,14 +157,10 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     if (self.rotation) {
         transform = CGAffineTransformRotate(transform, (self.rotation.floatValue ?: 0) * M_PI);
     }
-    if (self.pivotX || self.pivotY) {
-        self.view.layer.anchorPoint = CGPointMake(self.pivotX.floatValue
-                ?: 0.5f, self.pivotY.floatValue ?: 0.5f);
-    }
+    self.view.layer.anchorPoint = CGPointMake(self.pivotX.floatValue
+            ?: 0.5f, self.pivotY.floatValue ?: 0.5f);
     if (!CGAffineTransformEqualToTransform(transform, self.view.transform)) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.view.transform = transform;
-        });
+        self.view.transform = transform;
     }
 }
 

@@ -77,6 +77,14 @@
     self.refreshable = YES;
 }
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    if (self.contentOffset.y != 0) {
+        return;
+    }
+    self.contentSize = self.frame.size;
+}
+
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
     if (-scrollView.contentOffset.y >= self.headerView.height) {
         dispatch_async(dispatch_get_main_queue(), ^{

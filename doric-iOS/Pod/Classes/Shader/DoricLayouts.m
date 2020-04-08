@@ -83,19 +83,25 @@ static const void *kLayoutConfig = &kLayoutConfig;
 }
 
 - (void)measure:(CGSize)targetSize {
+    CGFloat width;
+    CGFloat height;
     if (self.widthSpec == DoricLayoutMost) {
-        self.measuredWidth = targetSize.width;
+        width = self.measuredWidth = targetSize.width;
+    } else if (self.widthSpec == DoricLayoutJust) {
+        width = self.measuredWidth = self.width;
     } else {
-        self.measuredWidth = self.width;
+        width = targetSize.width;
     }
     if (self.heightSpec == DoricLayoutMost) {
-        self.measuredHeight = targetSize.height;
+        height = self.measuredHeight = targetSize.height;
+    } else if (self.heightSpec == DoricLayoutJust) {
+        height = self.measuredHeight = self.height;
     } else {
-        self.measuredHeight = self.height;
+        height = targetSize.height;
     }
     [self measureContent:CGSizeMake(
-            self.measuredWidth - self.paddingLeft - self.paddingRight,
-            self.measuredHeight - self.paddingTop - self.paddingBottom)];
+            width - self.paddingLeft - self.paddingRight,
+            height - self.paddingTop - self.paddingBottom)];
 
     BOOL needRemeasure = NO;
     if (self.maxWidth >= 0) {
@@ -168,10 +174,18 @@ static const void *kLayoutConfig = &kLayoutConfig;
             [obj.doricLayout setFrame];
         }];
     }
-    self.view.width = self.measuredWidth;
-    self.view.height = self.measuredHeight;
-    self.view.x = self.measuredX;
-    self.view.y = self.measuredY;
+    if (self.view.width != self.measuredWidth) {
+        self.view.width = self.measuredWidth;
+    }
+    if (self.view.height != self.measuredHeight) {
+        self.view.height = self.measuredHeight;
+    }
+    if (self.view.x != self.measuredX) {
+        self.view.x = self.measuredX;
+    }
+    if (self.view.y != self.measuredY) {
+        self.view.y = self.measuredY;
+    }
 }
 
 - (void)measureUndefinedContent:(CGSize)targetSize {
@@ -193,7 +207,6 @@ static const void *kLayoutConfig = &kLayoutConfig;
         } else {
             self.measuredHeight = measuredSize.height + self.paddingTop + self.paddingBottom;
         }
-
     }
 }
 

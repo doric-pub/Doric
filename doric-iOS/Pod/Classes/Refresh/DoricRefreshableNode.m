@@ -100,7 +100,6 @@
             self.view.contentView = it.view;
         }];
     }
-    [self.view.contentView.doricLayout apply:self.view.frame.size];
 }
 
 - (void)blendHeader {
@@ -137,7 +136,13 @@
             self.view.headerView = it.view;
         }];
     }
+}
+
+- (void)requestLayout {
     [self.view.headerView.doricLayout apply:self.view.frame.size];
+    self.view.headerView.bottom = 0;
+    self.view.headerView.centerX = self.view.width / 2;
+    [self.view.contentView.doricLayout apply:self.view.frame.size];
 }
 
 - (void)blendSubNode:(NSDictionary *)subModel {

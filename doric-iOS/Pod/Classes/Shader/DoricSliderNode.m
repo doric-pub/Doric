@@ -120,13 +120,12 @@
         DoricSlideItemNode *slideItemNode = [[DoricSlideItemNode alloc] initWithContext:self.doricContext];
         [slideItemNode initWithSuperNode:self];
         cell.doricSlideItemNode = slideItemNode;
-        slideItemNode.view.width = collectionView.width;
-        slideItemNode.view.height = collectionView.height;
         [cell.contentView addSubview:slideItemNode.view];
     }
     DoricSlideItemNode *node = cell.doricSlideItemNode;
     node.viewId = model[@"id"];
     [node blend:props];
+    [node.view.doricLayout apply:CGSizeMake(collectionView.width, collectionView.height)];
     return cell;
 }
 

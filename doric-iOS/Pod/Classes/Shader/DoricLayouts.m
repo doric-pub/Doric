@@ -55,7 +55,6 @@ static const void *kLayoutConfig = &kLayoutConfig;
 @property(nonatomic, assign) CGFloat measuredHeight;
 @property(nonatomic, assign) CGFloat measuredX;
 @property(nonatomic, assign) CGFloat measuredY;
-@property(nonatomic, assign) BOOL resolved;
 @end
 
 @implementation DoricLayout

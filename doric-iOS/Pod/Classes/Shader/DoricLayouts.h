@@ -92,6 +92,8 @@ typedef NS_ENUM(NSInteger, DoricGravity) {
 
 @property(nonatomic, assign) CGFloat maxHeight;
 
+@property(nonatomic, assign) BOOL resolved;
+
 - (instancetype)init;
 
 - (void)apply;

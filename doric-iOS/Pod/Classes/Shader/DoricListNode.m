@@ -141,6 +141,7 @@
     DoricListItemNode *node = cell.doricListItemNode;
     node.viewId = model[@"id"];
     [node blend:props];
+    [node requestLayout];
     [self callItem:position height:node.view.height];
     return cell;
 }

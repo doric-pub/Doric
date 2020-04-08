@@ -37,7 +37,9 @@
 
 - (CGSize)sizeThatFits:(CGSize)size {
     if (self.contentView) {
-        [self.contentView.doricLayout apply:self.frame.size];
+        if (!self.contentView.doricLayout.resolved) {
+            [self.contentView.doricLayout apply:self.frame.size];
+        }
         return self.contentView.frame.size;
     }
     return CGSizeZero;
@@ -115,6 +117,10 @@
         NSDictionary *prop = props[@"contentOffset"];
         self.view.contentOffset = CGPointMake([prop[@"x"] floatValue], [prop[@"y"] floatValue]);
     }
+}
+
+- (void)requestLayout {
+    [self.view.contentView.doricLayout apply:self.view.frame.size];
 }
 
 - (void)blendView:(DoricScrollView *)view forPropName:(NSString *)name propValue:(id)prop {

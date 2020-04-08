@@ -161,4 +161,9 @@
     return nil;
 }
 
+- (void)requestLayout {
+    for (DoricViewNode *node in self.childNodes) {
+        [node requestLayout];
+    }
+}
 @end

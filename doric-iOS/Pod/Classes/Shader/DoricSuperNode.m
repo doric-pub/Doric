@@ -127,8 +127,4 @@
             NSStringFromSelector(_cmd));
     return nil;
 }
-
-- (void)requestLayout {
-    [self.view setNeedsLayout];
-}
 @end

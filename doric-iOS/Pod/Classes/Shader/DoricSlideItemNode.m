@@ -35,8 +35,4 @@
     self.reusable = YES;
     self.view.clipsToBounds = YES;
 }
-
-- (void)requestLayout {
-    [self.view.doricLayout apply];
-}
 @end

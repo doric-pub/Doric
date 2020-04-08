@@ -35,9 +35,11 @@
                              if (self.doricContext.rootNode.viewId == nil) {
                                  self.doricContext.rootNode.viewId = viewId;
                                  [self.doricContext.rootNode blend:args[@"props"]];
+                                 [self.doricContext.rootNode requestLayout];
                              } else {
                                  DoricViewNode *viewNode = [self.doricContext targetViewNode:viewId];
                                  [viewNode blend:args[@"props"]];
+                                 [viewNode requestLayout];
                              }
                          }
                          completion:^(BOOL finished) {

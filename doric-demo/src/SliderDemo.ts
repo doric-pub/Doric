@@ -44,7 +44,7 @@ class SliderPanel extends Panel {
                 },
                 layoutConfig: {
                     widthSpec: LayoutSpec.MOST,
-                    heightSpec: LayoutSpec.FIT,
+                    heightSpec: LayoutSpec.MOST,
                     weight: 1,
                 },
             }),

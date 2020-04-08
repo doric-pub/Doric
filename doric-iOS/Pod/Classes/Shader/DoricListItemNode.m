@@ -36,6 +36,7 @@
 }
 
 - (void)requestLayout {
+    [super requestLayout];
     [self.view.doricLayout apply];
 }
 @end

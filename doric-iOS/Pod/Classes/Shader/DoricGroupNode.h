@@ -25,6 +25,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface DoricGroupNode <V:UIView *> : DoricSuperNode<V>
+@property(nonatomic, copy) NSArray<DoricViewNode *> *childNodes;
+@property(nonatomic, copy) NSArray <NSString *> *childViewIds;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -22,11 +22,6 @@
 
 #import "DoricGroupNode.h"
 
-@interface DoricGroupNode ()
-@property(nonatomic, copy) NSArray<DoricViewNode *> *childNodes;
-@property(nonatomic, copy) NSArray <NSString *> *childViewIds;
-@end
-
 @implementation DoricGroupNode
 
 - (instancetype)initWithContext:(DoricContext *)doricContext {

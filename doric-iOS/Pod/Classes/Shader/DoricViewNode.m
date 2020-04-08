@@ -173,9 +173,9 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     } else if ([name isEqualToString:@"height"]) {
         view.doricLayout.height = [prop floatValue];
     } else if ([name isEqualToString:@"x"]) {
-        view.doricLayout.x = [prop floatValue];
+        view.doricLayout.marginLeft = [prop floatValue];
     } else if ([name isEqualToString:@"y"]) {
-        view.doricLayout.y = [prop floatValue];
+        view.doricLayout.marginTop = [prop floatValue];
     } else if ([name isEqualToString:@"backgroundColor"]) {
         if ([prop isKindOfClass:[NSNumber class]]) {
             view.backgroundColor = DoricColor(prop);

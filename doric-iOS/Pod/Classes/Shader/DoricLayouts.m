@@ -37,8 +37,6 @@ static const void *kLayoutConfig = &kLayoutConfig;
         layout = [DoricLayout new];
         layout.width = self.width;
         layout.height = self.height;
-        layout.x = self.x;
-        layout.y = self.y;
         layout.view = self;
         self.doricLayout = layout;
     }
@@ -360,7 +358,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
             if (layout.marginLeft || layout.marginRight) {
                 layout.measuredX = self.paddingLeft;
             } else {
-                layout.measuredX = layout.x;
+                layout.measuredX = 0;
             }
         }
         if ((gravity & DoricGravityTop) == DoricGravityTop) {
@@ -373,7 +371,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
             if (layout.marginTop || layout.marginBottom) {
                 layout.measuredY = self.paddingTop;
             } else {
-                layout.measuredY = layout.y;
+                layout.measuredY = 0;
             }
         }
 

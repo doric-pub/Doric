@@ -24,6 +24,7 @@
 #import "YYWebImage.h"
 #import "DoricExtensions.h"
 #import "DoricUtil.h"
+#import "DoricSuperNode.h"
 
 @interface DoricImageView : YYAnimatedImageView
 @end
@@ -129,7 +130,11 @@
                                          @{@"width": @(image.size.width), @"height": @(image.size.height)},
                                     nil];
                 }
-                [self requestLayout];
+                DoricSuperNode *node = self.superNode;
+                while (node.superNode != nil) {
+                    node = node.superNode;
+                }
+                [node requestLayout];
             }
         }];
     } else if ([@"scaleType" isEqualToString:name]) {

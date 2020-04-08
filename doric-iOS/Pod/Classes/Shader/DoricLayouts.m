@@ -67,13 +67,11 @@ static const void *kLayoutConfig = &kLayoutConfig;
 }
 
 - (void)apply:(CGSize)frameSize {
-    if (!CGAffineTransformEqualToTransform(self.view.transform, CGAffineTransformIdentity)) {
-        return;
-    }
     self.resolved = NO;
     [self measure:frameSize];
     [self layout];
     [self setFrame];
+    self.resolved = YES;
 }
 
 - (void)apply {
@@ -119,7 +117,6 @@ static const void *kLayoutConfig = &kLayoutConfig;
                 self.measuredWidth - self.paddingLeft - self.paddingRight,
                 self.measuredHeight - self.paddingTop - self.paddingBottom)];
     }
-    self.resolved = YES;
 }
 
 - (void)measureContent:(CGSize)targetSize {
@@ -163,26 +160,28 @@ static const void *kLayoutConfig = &kLayoutConfig;
     }
 }
 
+- (BOOL)rect:(CGRect)rect1 equalTo:(CGRect)rect2 {
+    return ABS(rect1.origin.x - rect2.origin.x) < 0.00001f
+            && ABS(rect1.origin.y - rect2.origin.y) < 0.00001f
+            && ABS(rect1.size.width - rect2.size.width) < 0.00001f
+            && ABS(rect1.size.height - rect2.size.height) < 0.00001f;
+}
+
 - (void)setFrame {
-    if (!CGAffineTransformEqualToTransform(self.view.transform, CGAffineTransformIdentity)) {
-        return;
-    }
     if (self.layoutType != DoricUndefined) {
         [self.view.subviews forEach:^(__kindof UIView *obj) {
             [obj.doricLayout setFrame];
         }];
     }
-    if (self.view.width != self.measuredWidth) {
-        self.view.width = self.measuredWidth;
+    CGRect originFrame = CGRectMake(self.measuredX, self.measuredY, self.measuredWidth, self.measuredHeight);
+    if (!CGAffineTransformEqualToTransform(self.view.transform, CGAffineTransformIdentity)) {
+        CGPoint anchor = self.view.layer.anchorPoint;
+        originFrame = CGRectOffset(originFrame, -anchor.x * self.measuredWidth - self.measuredX, -anchor.y * self.measuredHeight - self.measuredY);
+        originFrame = CGRectApplyAffineTransform(originFrame, self.view.transform);
+        originFrame = CGRectOffset(originFrame, anchor.x * self.measuredWidth + self.measuredX, anchor.y * self.measuredHeight + self.measuredY);
     }
-    if (self.view.height != self.measuredHeight) {
-        self.view.height = self.measuredHeight;
-    }
-    if (self.view.x != self.measuredX) {
-        self.view.x = self.measuredX;
-    }
-    if (self.view.y != self.measuredY) {
-        self.view.y = self.measuredY;
+    if (![self rect:originFrame equalTo:self.view.frame]) {
+        self.view.frame = originFrame;
     }
 }
 

@@ -55,6 +55,7 @@
 
 - (CGSize)sizeThatFits:(CGSize)size {
     if (self.contentView) {
+        [self.contentView.doricLayout apply:size];
         return self.contentView.frame.size;
     }
     return CGSizeZero;

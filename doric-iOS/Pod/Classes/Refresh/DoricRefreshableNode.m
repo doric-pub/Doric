@@ -31,7 +31,6 @@
 - (DoricSwipeRefreshLayout *)build {
     return [[DoricSwipeRefreshLayout new] also:^(DoricSwipeRefreshLayout *it) {
         it.swipePullingDelegate = self;
-
     }];
 }
 
@@ -62,8 +61,7 @@
     }
 }
 
-- (void)blend:(NSDictionary *)props {
-    [super blend:props];
+- (void)afterBlended:(NSDictionary *)props {
     [self blendContent];
     [self blendHeader];
 }
@@ -102,6 +100,7 @@
             self.view.contentView = it.view;
         }];
     }
+    [self.view.contentView.doricLayout apply:self.view.frame.size];
 }
 
 - (void)blendHeader {
@@ -138,6 +137,7 @@
             self.view.headerView = it.view;
         }];
     }
+    [self.view.headerView.doricLayout apply:self.view.frame.size];
 }
 
 - (void)blendSubNode:(NSDictionary *)subModel {

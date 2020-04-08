@@ -216,6 +216,12 @@ static const void *kLayoutConfig = &kLayoutConfig;
     return self.measuredHeight + self.marginTop + self.marginBottom;
 }
 
+- (CGSize)removeMargin:(CGSize)targetSize {
+    return CGSizeMake(
+            targetSize.width - self.marginLeft - self.marginRight,
+            targetSize.height - self.marginTop - self.marginBottom);
+}
+
 - (void)measureStackContent:(CGSize)targetSize {
     CGFloat contentWidth = 0, contentHeight = 0;
     for (__kindof UIView *subview in self.view.subviews) {
@@ -223,7 +229,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
         if (layout.disabled) {
             continue;
         }
-        [layout measure:targetSize];
+        [layout measure:[layout removeMargin:targetSize]];
         contentWidth = MAX(contentWidth, layout.takenWidth);
         contentHeight = MAX(contentHeight, layout.takenHeight);
     }
@@ -249,7 +255,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
             continue;
         }
         had = YES;
-        [layout measure:CGSizeMake(targetSize.width, targetSize.height - contentHeight)];
+        [layout measure:[layout removeMargin:CGSizeMake(targetSize.width, targetSize.height - contentHeight)]];
         contentWidth = MAX(contentWidth, layout.takenWidth);
         contentHeight += layout.takenHeight + self.spacing;
         contentWeight += layout.weight;
@@ -299,7 +305,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
             continue;
         }
         had = YES;
-        [layout measure:CGSizeMake(targetSize.width - contentWidth, targetSize.height)];
+        [layout measure:[layout removeMargin:CGSizeMake(targetSize.width - contentWidth, targetSize.height)]];
         contentWidth += layout.takenWidth + self.spacing;
         contentHeight = MAX(contentHeight, layout.takenHeight);
         contentWeight += layout.weight;

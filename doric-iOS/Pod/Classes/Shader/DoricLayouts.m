@@ -164,9 +164,11 @@ static const void *kLayoutConfig = &kLayoutConfig;
     if (!CGAffineTransformEqualToTransform(self.view.transform, CGAffineTransformIdentity)) {
         return;
     }
-    [self.view.subviews forEach:^(__kindof UIView *obj) {
-        [obj.doricLayout setFrame];
-    }];
+    if (self.layoutType != DoricUndefined) {
+        [self.view.subviews forEach:^(__kindof UIView *obj) {
+            [obj.doricLayout setFrame];
+        }];
+    }
     self.view.width = self.measuredWidth;
     self.view.height = self.measuredHeight;
     self.view.x = self.measuredX;

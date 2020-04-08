@@ -318,7 +318,6 @@
     node.viewId = model[@"id"];
     [node blend:props];
     node.view.width = (collectionView.width - (self.columnCount - 1) * self.columnSpace) / self.columnCount;
-    node.view.height = collectionView.height;
     if (position > 0 && position >= self.itemCount && self.onLoadMoreFuncId) {
         [self callJSResponse:self.onLoadMoreFuncId, nil];
     }

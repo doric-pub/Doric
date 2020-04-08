@@ -24,7 +24,7 @@
 
 @implementation DoricDraggableNode
 - (UIView *)build {
-    UIView *stackView = [UIView new];
+    UIView *stackView = [super build];
     UIPanGestureRecognizer *gesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onDrag:)];
     [stackView addGestureRecognizer:gesture];
     return stackView;
@@ -36,6 +36,8 @@
     originalFrame.origin.x += point.x;
     originalFrame.origin.y += point.y;
     self.view.frame = originalFrame;
+    self.view.doricLayout.marginLeft = originalFrame.origin.x;
+    self.view.doricLayout.marginTop = originalFrame.origin.y;
     [gesture setTranslation:CGPointZero inView:self.view];
     [self callJSResponse:_onDragFunction, @(originalFrame.origin.x), @(originalFrame.origin.y), nil];
 }

@@ -120,6 +120,7 @@
 }
 
 - (void)requestLayout {
+    [self.childNode requestLayout];
     [self.view.contentView.doricLayout apply:self.view.frame.size];
 }
 

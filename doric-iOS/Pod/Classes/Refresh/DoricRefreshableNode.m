@@ -139,6 +139,7 @@
 }
 
 - (void)requestLayout {
+    [self.contentNode requestLayout];
     [self.view.headerView.doricLayout apply:self.view.frame.size];
     self.view.headerView.bottom = 0;
     self.view.headerView.centerX = self.view.width / 2;

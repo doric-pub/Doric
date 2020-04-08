@@ -182,7 +182,6 @@
                 it.delegate = self;
                 it.dataSource = self;
                 [it registerClass:[DoricFlowLayoutViewCell class] forCellWithReuseIdentifier:@"doricCell"];
-                [it registerClass:[DoricFlowLayoutViewCell class] forCellWithReuseIdentifier:@"doricLoadMoreCell"];
                 if (@available(iOS 11, *)) {
                     it.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
                 }
@@ -318,15 +317,13 @@
     DoricFlowLayoutItemNode *node = cell.viewNode;
     node.viewId = model[@"id"];
     [node blend:props];
-    CGFloat width = (collectionView.width - (self.columnCount - 1) * self.columnSpace) / self.columnCount;
-//    CGSize size = [node.view measureSize:CGSizeMake(width, collectionView.height)];
-//    if (position > 0 && position >= self.itemCount && self.onLoadMoreFuncId) {
-//        size = CGSizeMake(collectionView.width, size.height);
-//        [self callJSResponse:self.onLoadMoreFuncId, nil];
-//    }
-//
-//    [node.view layoutSelf:size];
-//    [self callItem:position size:size];
+    node.view.width = (collectionView.width - (self.columnCount - 1) * self.columnSpace) / self.columnCount;
+    node.view.height = collectionView.height;
+    if (position > 0 && position >= self.itemCount && self.onLoadMoreFuncId) {
+        [self callJSResponse:self.onLoadMoreFuncId, nil];
+    }
+    [node.view.doricLayout apply];
+    [self callItem:position size:node.view.frame.size];
     return cell;
 }
 

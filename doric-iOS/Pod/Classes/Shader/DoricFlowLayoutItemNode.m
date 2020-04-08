@@ -19,16 +19,6 @@
 
 #import "DoricFlowLayoutItemNode.h"
 
-@interface DoricFlowLayoutItemView : UIView
-@end
-
-@implementation DoricFlowLayoutItemView
-@end
-
-@interface DoricFlowLayoutItemNode ()
-@end
-
-
 @implementation DoricFlowLayoutItemNode
 - (instancetype)initWithContext:(DoricContext *)doricContext {
     if (self = [super initWithContext:doricContext]) {
@@ -40,9 +30,5 @@
 - (void)initWithSuperNode:(DoricSuperNode *)superNode {
     [super initWithSuperNode:superNode];
     self.reusable = YES;
-}
-
-- (DoricFlowLayoutItemView *)build {
-    return [DoricFlowLayoutItemView new];
 }
 @end

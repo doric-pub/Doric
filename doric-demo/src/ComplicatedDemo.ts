@@ -38,7 +38,8 @@ class MyDemo extends Panel {
                             textColor: Color.WHITE,
                             backgroundColor: colors[idx % colors.length],
                         }))
-                    }
+                    },
+                    layoutConfig: layoutConfig().most(),
                 }),
                 layoutConfig: layoutConfig().most(),
             }).also(v => {

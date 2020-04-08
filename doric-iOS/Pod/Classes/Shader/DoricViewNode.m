@@ -381,10 +381,18 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
         self.view.doricLayout.heightSpec = (DoricLayoutSpec) [it integerValue];
     }];
     [params[@"margin"] also:^(NSDictionary *it) {
-        self.view.doricLayout.marginLeft = [it[@"left"] floatValue];
-        self.view.doricLayout.marginTop = [it[@"top"] floatValue];
-        self.view.doricLayout.marginRight = [it[@"right"] floatValue];
-        self.view.doricLayout.marginBottom = [it[@"bottom"] floatValue];
+        [it[@"left"] also:^(NSNumber* it) {
+            self.view.doricLayout.marginLeft = [it floatValue];
+        }];
+        [it[@"top"] also:^(NSNumber* it) {
+            self.view.doricLayout.marginTop = [it floatValue];
+        }];
+        [it[@"right"] also:^(NSNumber* it) {
+            self.view.doricLayout.marginRight = [it floatValue];
+        }];
+        [it[@"bottom"] also:^(NSNumber* it) {
+            self.view.doricLayout.marginBottom = [it floatValue];
+        }];
     }];
     [params[@"alignment"] also:^(NSNumber *it) {
         self.view.doricLayout.alignment = (DoricGravity) [it integerValue];

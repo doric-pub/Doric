@@ -52,6 +52,7 @@
 #import "DoricCoordinatorPlugin.h"
 #import "DoricSwitchNode.h"
 #import "DoricNotchPlugin.h"
+#import "DoricFlexNode.h"
 
 @interface DoricLibraries : NSObject
 @property(nonatomic, strong) NSMutableSet <DoricLibrary *> *libraries;
@@ -139,6 +140,7 @@
     [self registerViewNode:DoricInputNode.class withName:@"Input"];
     [self registerViewNode:DoricDraggableNode.class withName:@"Draggable"];
     [self registerViewNode:DoricSwitchNode.class withName:@"Switch"];
+    [self registerViewNode:DoricFlexNode.class withName:@"FlexLayout"];
 }
 
 - (void)registerJSBundle:(NSString *)bundle withName:(NSString *)name {

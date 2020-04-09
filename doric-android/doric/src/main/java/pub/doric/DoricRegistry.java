@@ -49,6 +49,7 @@ import pub.doric.shader.SwitchNode;
 import pub.doric.shader.TextNode;
 import pub.doric.shader.VLayoutNode;
 import pub.doric.shader.ViewNode;
+import pub.doric.shader.flex.FlexNode;
 import pub.doric.shader.flowlayout.FlowLayoutItemNode;
 import pub.doric.shader.flowlayout.FlowLayoutNode;
 import pub.doric.shader.list.ListItemNode;
@@ -120,6 +121,7 @@ public class DoricRegistry {
         this.registerViewNode(NestedSliderNode.class);
         this.registerViewNode(DraggableNode.class);
         this.registerViewNode(SwitchNode.class);
+        this.registerViewNode(FlexNode.class);
         initRegistry(this);
     }
 

@@ -92,3 +92,20 @@ export function vlayout(views: View[], config?: IVLayout) {
     }
     return ret
 }
+
+
+
+export class FlexLayout extends Group {
+}
+
+export function flexlayout(views: View[], config: IView) {
+    const ret = new FlexLayout
+    for (let v of views) {
+        ret.addChild(v)
+    }
+    if (config) {
+        for (let key in config) {
+            Reflect.set(ret, key, Reflect.get(config, key, config), ret)
+        }
+    }
+}

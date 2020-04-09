@@ -29,6 +29,7 @@
 #import "DoricSuperNode.h"
 #import "DoricExtensions.h"
 #import "DoricPromise.h"
+#import "DoricFlexNode.h"
 
 void DoricAddEllipticArcPath(CGMutablePathRef path,
         CGPoint origin,
@@ -264,6 +265,11 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     } else if ([name isEqualToString:@"hidden"]) {
         self.view.hidden = [prop boolValue];
         self.view.doricLayout.disabled = [prop boolValue];
+    } else if ([name isEqualToString:@"flexConfig"]) {
+        if ([prop isKindOfClass:[NSDictionary class]]
+                && [self.superNode isKindOfClass:[DoricFlexNode class]]) {
+            [((DoricFlexNode *) self.superNode) blendSubNode:self flexConfig:prop];
+        }
     } else {
         DoricLog(@"Blend View error for View Type :%@, prop is %@", self.class, name);
     }

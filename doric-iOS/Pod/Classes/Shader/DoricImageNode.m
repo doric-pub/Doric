@@ -112,7 +112,7 @@
 - (void)blendView:(UIImageView *)view forPropName:(NSString *)name propValue:(id)prop {
     if ([@"imageUrl" isEqualToString:name]) {
         __weak typeof(self) _self = self;
-        BOOL async = NO;
+        __block BOOL async = NO;
         [view yy_setImageWithURL:[NSURL URLWithString:prop] placeholder:[self currentPlaceHolderImage] options:0 completion:^(UIImage *image, NSURL *url, YYWebImageFromType from, YYWebImageStage stage, NSError *error) {
             __strong typeof(_self) self = _self;
             if (self.placeHolderColor || self.errorColor) {

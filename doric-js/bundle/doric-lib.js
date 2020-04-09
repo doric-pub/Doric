@@ -292,7 +292,6 @@ class View {
     getLocationOnScreen(context) {
         return this.nativeChannel(context, "getLocationOnScreen")();
     }
-    /**----------transform----------*/
     doAnimation(context, animation) {
         return this.nativeChannel(context, "doAnimation")(animation.toModel()).then((args) => {
             for (let key in args) {
@@ -382,6 +381,10 @@ __decorate([
     Property,
     __metadata("design:type", Number)
 ], View.prototype, "rotation", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Object)
+], View.prototype, "flexConfig", void 0);
 class Superview extends View {
     subviewById(id) {
         for (let v of this.allSubviews()) {
@@ -637,6 +640,20 @@ function hlayout(views, config) {
 function vlayout(views, config) {
     const ret = new VLayout;
     ret.layoutConfig = layoutConfig().fit();
+    for (let v of views) {
+        ret.addChild(v);
+    }
+    if (config) {
+        for (let key in config) {
+            Reflect.set(ret, key, Reflect.get(config, key, config), ret);
+        }
+    }
+    return ret;
+}
+class FlexLayout extends Group {
+}
+function flexlayout(views, config) {
+    const ret = new FlexLayout;
     for (let v of views) {
         ret.addChild(v);
     }
@@ -2413,6 +2430,7 @@ exports.CENTER_X = CENTER_X;
 exports.CENTER_Y = CENTER_Y;
 exports.Color = Color;
 exports.Draggable = Draggable;
+exports.FlexLayout = FlexLayout;
 exports.FlowLayout = FlowLayout;
 exports.FlowLayoutItem = FlowLayoutItem;
 exports.Gravity = Gravity;
@@ -2453,6 +2471,7 @@ exports.ViewModel = ViewModel;
 exports.animate = animate;
 exports.coordinator = coordinator;
 exports.draggable = draggable;
+exports.flexlayout = flexlayout;
 exports.flowItem = flowItem;
 exports.flowlayout = flowlayout;
 exports.gravity = gravity;

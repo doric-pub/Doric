@@ -20,7 +20,7 @@
 #import <YogaKit/UIView+Yoga.h>
 #import "DoricFlexNode.h"
 #import "DoricExtensions.h"
-#import "YGLayout.h"
+#import "UIView+Yoga.h"
 
 @interface DoricFlexView : UIView
 @end
@@ -34,22 +34,25 @@
 @implementation DoricFlexNode
 - (UIView *)build {
     return [[DoricFlexView new] also:^(DoricFlexView *it) {
-        it.yoga.isEnabled = YES;
+        [it configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            layout.isEnabled = YES;
+        }];
     }];
 }
 
 - (void)blendView:(UIView *)view forPropName:(NSString *)name propValue:(id)prop {
     if ([name isEqualToString:@"flexConfig"]) {
-        if ([prop isKindOfClass:[NSDictionary class]]) {
-            [((DoricFlexNode *) self.superNode) blendSubNode:self flexConfig:prop];
-        }
+        [self blendYoga:view.yoga from:prop];
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }
 }
 
 - (void)blendSubNode:(DoricViewNode *)subNode flexConfig:(NSDictionary *)flexConfig {
-
+    [subNode.view configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+        layout.isEnabled = YES;
+    }];
+    [self blendYoga:subNode.view.yoga from:flexConfig];
 }
 
 - (void)blendYoga:(YGLayout *)yoga from:(NSDictionary *)flexConfig {
@@ -65,55 +68,135 @@
         yoga.flexDirection = (YGFlexDirection) [(NSNumber *) value integerValue];
     } else if ([name isEqualToString:@"justifyContent"]) {
         yoga.justifyContent = (YGJustify) [(NSNumber *) value integerValue];
-    }else if ([name isEqualToString:@"alignContent"]) {
+    } else if ([name isEqualToString:@"alignContent"]) {
         yoga.alignContent = (YGAlign) [(NSNumber *) value integerValue];
-    }else if ([name isEqualToString:@"justifyContent"]) {
-        yoga.flexDirection = (YGFlexDirection) [(NSNumber *) value integerValue];
-    }else if ([name isEqualToString:@"justifyContent"]) {
-        yoga.flexDirection = (YGFlexDirection) [(NSNumber *) value integerValue];
-    }else if ([name isEqualToString:@"justifyContent"]) {
-        yoga.flexDirection = (YGFlexDirection) [(NSNumber *) value integerValue];
-    }else if ([name isEqualToString:@"justifyContent"]) {
-        yoga.flexDirection = (YGFlexDirection) [(NSNumber *) value integerValue];
-    }else if ([name isEqualToString:@"justifyContent"]) {
-        yoga.flexDirection = (YGFlexDirection) [(NSNumber *) value integerValue];
-    }else if ([name isEqualToString:@"justifyContent"]) {
-        yoga.flexDirection = (YGFlexDirection) [(NSNumber *) value integerValue];
-    }else if ([name isEqualToString:@"justifyContent"]) {
-        yoga.flexDirection = (YGFlexDirection) [(NSNumber *) value integerValue];
-    }else if ([name isEqualToString:@"justifyContent"]) {
-        yoga.flexDirection = (YGFlexDirection) [(NSNumber *) value integerValue];
-    }else if ([name isEqualToString:@"justifyContent"]) {
-        yoga.flexDirection = (YGFlexDirection) [(NSNumber *) value integerValue];
-    }else if ([name isEqualToString:@"justifyContent"]) {
-        yoga.flexDirection = (YGFlexDirection) [(NSNumber *) value integerValue];
-    }else if ([name isEqualToString:@"justifyContent"]) {
-        yoga.flexDirection = (YGFlexDirection) [(NSNumber *) value integerValue];
-    }else if ([name isEqualToString:@"justifyContent"]) {
-        yoga.flexDirection = (YGFlexDirection) [(NSNumber *) value integerValue];
-    }else if ([name isEqualToString:@"justifyContent"]) {
-        yoga.flexDirection = (YGFlexDirection) [(NSNumber *) value integerValue];
-    }else if ([name isEqualToString:@"justifyContent"]) {
-        yoga.flexDirection = (YGFlexDirection) [(NSNumber *) value integerValue];
-    }else if ([name isEqualToString:@"justifyContent"]) {
-        yoga.flexDirection = (YGFlexDirection) [(NSNumber *) value integerValue];
-    }else if ([name isEqualToString:@"justifyContent"]) {
-        yoga.flexDirection = (YGFlexDirection) [(NSNumber *) value integerValue];
-    }else if ([name isEqualToString:@"justifyContent"]) {
-        yoga.flexDirection = (YGFlexDirection) [(NSNumber *) value integerValue];
-    }else if ([name isEqualToString:@"justifyContent"]) {
-        yoga.flexDirection = (YGFlexDirection) [(NSNumber *) value integerValue];
-    }else if ([name isEqualToString:@"justifyContent"]) {
-        yoga.flexDirection = (YGFlexDirection) [(NSNumber *) value integerValue];
-    }else if ([name isEqualToString:@"justifyContent"]) {
-        yoga.flexDirection = (YGFlexDirection) [(NSNumber *) value integerValue];
+    } else if ([name isEqualToString:@"alignItems"]) {
+        yoga.alignItems = (YGAlign) [(NSNumber *) value integerValue];
+    } else if ([name isEqualToString:@"alignSelf"]) {
+        yoga.alignSelf = (YGAlign) [(NSNumber *) value integerValue];
+    } else if ([name isEqualToString:@"positionType"]) {
+        yoga.position = (YGPositionType) [(NSNumber *) value integerValue];
+    } else if ([name isEqualToString:@"flexWrap"]) {
+        yoga.flexWrap = (YGWrap) [(NSNumber *) value integerValue];
+    } else if ([name isEqualToString:@"overFlow"]) {
+        yoga.overflow = (YGOverflow) [(NSNumber *) value integerValue];
+    } else if ([name isEqualToString:@"display"]) {
+        yoga.display = (YGDisplay) [(NSNumber *) value integerValue];
+    } else if ([name isEqualToString:@"flex"]) {
+        yoga.flex = [(NSNumber *) value floatValue];
+    } else if ([name isEqualToString:@"flexGrow"]) {
+        yoga.flexGrow = [(NSNumber *) value floatValue];
+    } else if ([name isEqualToString:@"flexShrink"]) {
+        yoga.flexShrink = [(NSNumber *) value floatValue];
+    } else if ([name isEqualToString:@"flexBasis"]) {
+        yoga.flexBasis = [self translateYGValueFromProperty:value];
+    } else if ([name isEqualToString:@"marginLeft"]) {
+        yoga.marginLeft = [self translateYGValueFromProperty:value];
+    } else if ([name isEqualToString:@"marginRight"]) {
+        yoga.marginRight = [self translateYGValueFromProperty:value];
+    } else if ([name isEqualToString:@"marginTop"]) {
+        yoga.marginTop = [self translateYGValueFromProperty:value];
+    } else if ([name isEqualToString:@"marginBottom"]) {
+        yoga.marginBottom = [self translateYGValueFromProperty:value];
+    } else if ([name isEqualToString:@"marginStart"]) {
+        yoga.marginStart = [self translateYGValueFromProperty:value];
+    } else if ([name isEqualToString:@"marginEnd"]) {
+        yoga.marginEnd = [self translateYGValueFromProperty:value];
+    } else if ([name isEqualToString:@"marginHorizontal"]) {
+        yoga.marginHorizontal = [self translateYGValueFromProperty:value];
+    } else if ([name isEqualToString:@"marginVertical"]) {
+        yoga.marginVertical = [self translateYGValueFromProperty:value];
+    } else if ([name isEqualToString:@"margin"]) {
+        yoga.margin = [self translateYGValueFromProperty:value];
+    } else if ([name isEqualToString:@"paddingLeft"]) {
+        yoga.paddingLeft = [self translateYGValueFromProperty:value];
+    } else if ([name isEqualToString:@"paddingRight"]) {
+        yoga.paddingRight = [self translateYGValueFromProperty:value];
+    } else if ([name isEqualToString:@"paddingTop"]) {
+        yoga.paddingTop = [self translateYGValueFromProperty:value];
+    } else if ([name isEqualToString:@"paddingBottom"]) {
+        yoga.paddingBottom = [self translateYGValueFromProperty:value];
+    } else if ([name isEqualToString:@"paddingStart"]) {
+        yoga.paddingStart = [self translateYGValueFromProperty:value];
+    } else if ([name isEqualToString:@"paddingEnd"]) {
+        yoga.paddingEnd = [self translateYGValueFromProperty:value];
+    } else if ([name isEqualToString:@"paddingHorizontal"]) {
+        yoga.paddingHorizontal = [self translateYGValueFromProperty:value];
+    } else if ([name isEqualToString:@"paddingVertical"]) {
+        yoga.paddingVertical = [self translateYGValueFromProperty:value];
+    } else if ([name isEqualToString:@"padding"]) {
+        yoga.padding = [self translateYGValueFromProperty:value];
+    } else if ([name isEqualToString:@"borderLeftWidth"]) {
+        yoga.borderLeftWidth = [(NSNumber *) value floatValue];
+    } else if ([name isEqualToString:@"borderRightWidth"]) {
+        yoga.borderRightWidth = [(NSNumber *) value floatValue];
+    } else if ([name isEqualToString:@"borderTopWidth"]) {
+        yoga.borderTopWidth = [(NSNumber *) value floatValue];
+    } else if ([name isEqualToString:@"borderBottomWidth"]) {
+        yoga.borderBottomWidth = [(NSNumber *) value floatValue];
+    } else if ([name isEqualToString:@"borderStartWidth"]) {
+        yoga.borderStartWidth = [(NSNumber *) value floatValue];
+    } else if ([name isEqualToString:@"borderEndWidth"]) {
+        yoga.borderEndWidth = [(NSNumber *) value floatValue];
+    } else if ([name isEqualToString:@"borderWidth"]) {
+        yoga.borderWidth = [(NSNumber *) value floatValue];
+    } else if ([name isEqualToString:@"left"]) {
+        yoga.left = [self translateYGValueFromProperty:value];
+    } else if ([name isEqualToString:@"right"]) {
+        yoga.right = [self translateYGValueFromProperty:value];
+    } else if ([name isEqualToString:@"top"]) {
+        yoga.top = [self translateYGValueFromProperty:value];
+    } else if ([name isEqualToString:@"bottom"]) {
+        yoga.bottom = [self translateYGValueFromProperty:value];
+    } else if ([name isEqualToString:@"start"]) {
+        yoga.start = [self translateYGValueFromProperty:value];
+    } else if ([name isEqualToString:@"end"]) {
+        yoga.end = [self translateYGValueFromProperty:value];
+    } else if ([name isEqualToString:@"width"]) {
+        yoga.width = [self translateYGValueFromProperty:value];
+    } else if ([name isEqualToString:@"height"]) {
+        yoga.height = [self translateYGValueFromProperty:value];
+    } else if ([name isEqualToString:@"minWidth"]) {
+        yoga.minWidth = [self translateYGValueFromProperty:value];
+    } else if ([name isEqualToString:@"minHeight"]) {
+        yoga.minHeight = [self translateYGValueFromProperty:value];
+    } else if ([name isEqualToString:@"maxWidth"]) {
+        yoga.maxWidth = [self translateYGValueFromProperty:value];
+    } else if ([name isEqualToString:@"maxHeight"]) {
+        yoga.maxHeight = [self translateYGValueFromProperty:value];
+    } else if ([name isEqualToString:@"aspectRatio"]) {
+        yoga.aspectRatio = [(NSNumber *) value floatValue];
+    } else {
+        NSLog(@"Should not exists in flex box:%@,%@", name, value);
     }
-
 }
 
+- (YGValue)translateYGValueFromProperty:(id)prop {
+    if ([prop isKindOfClass:[NSDictionary class]]) {
+        NSNumber *type = prop[@"type"];
+        NSNumber *value = prop[@"value"];
+        switch (type.integerValue) {
+            case YGUnitPoint:
+                return YGPointValue(value.floatValue);
+            case YGUnitPercent:
+                return YGPercentValue(value.floatValue);
+            case YGUnitUndefined:
+                return YGValueUndefined;
+            default:
+                return YGValueAuto;
+        }
+    } else if ([prop isKindOfClass:[NSNumber class]]) {
+        return YGPointValue([prop floatValue]);
+    } else {
+        return YGValueAuto;
+    }
+}
 
 - (void)requestLayout {
     [super requestLayout];
+    for (UIView *view in self.view.subviews) {
+        [view.doricLayout apply];
+    }
     [self.view.yoga applyLayoutPreservingOrigin:NO];
 }
 @end

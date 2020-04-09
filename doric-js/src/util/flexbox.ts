@@ -16,27 +16,28 @@
 import { Modeling } from "./types";
 
 enum ValueType {
-    Point = 0,
-    Percent = 1,
-    Auto = 2,
+    Undefined = 0,
+    Point = 1,
+    Percent = 2,
+    Auto = 3,
 }
 
-export class FlexValue implements Modeling {
+export class FlexTypedValue implements Modeling {
 
     type = ValueType.Auto
     value = 0
 
-    static Auto = new FlexValue
+    static Auto = new FlexTypedValue
 
     static percent(v: number) {
-        const ret = new FlexValue
+        const ret = new FlexTypedValue
         ret.type = ValueType.Percent
         ret.value = v
         return ret
     }
 
     static point(v: number) {
-        const ret = new FlexValue
+        const ret = new FlexTypedValue
         ret.type = ValueType.Point
         ret.value = v
         return ret
@@ -102,6 +103,7 @@ export enum Display {
     FLEX = 0,
     NONE = 1,
 }
+export type FlexValue = FlexTypedValue | number
 
 export interface FlexConfig {
     direction?: Direction
@@ -140,13 +142,13 @@ export interface FlexConfig {
     padding?: FlexValue
 
 
-    borderWidthLeft?: FlexValue
-    borderWidthRight?: FlexValue
-    borderWidthTop?: FlexValue
-    borderWidthBottom?: FlexValue
-    borderWidthStart?: FlexValue
-    borderWidthEnd?: FlexValue
-    borderWidth?: FlexValue
+    borderLeftWidth?: number
+    borderRightWidth?: number
+    borderTopWidth?: number
+    borderBottomWidth?: number
+    borderStartWidth?: number
+    borderEndWidth?: number
+    borderWidth?: number
 
     left?: FlexValue
     right?: FlexValue

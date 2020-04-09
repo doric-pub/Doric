@@ -66,6 +66,7 @@
 
 - (void)requestLayout {
     [self.childNodes forEachIndexed:^(DoricViewNode *node, NSUInteger idx) {
+        [node requestLayout];
         [node.view.doricLayout apply:self.view.frame.size];
         node.view.left = idx * self.view.width;
     }];

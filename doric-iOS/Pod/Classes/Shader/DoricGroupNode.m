@@ -157,6 +157,7 @@
 }
 
 - (void)requestLayout {
+    [super requestLayout];
     for (DoricViewNode *node in self.childNodes) {
         [node requestLayout];
     }

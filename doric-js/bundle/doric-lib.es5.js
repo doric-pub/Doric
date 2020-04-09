@@ -376,7 +376,6 @@ var View = /** @class */ (function () {
     View.prototype.getLocationOnScreen = function (context) {
         return this.nativeChannel(context, "getLocationOnScreen")();
     };
-    /**----------transform----------*/
     View.prototype.doAnimation = function (context, animation) {
         var _this = this;
         return this.nativeChannel(context, "doAnimation")(animation.toModel()).then(function (args) {
@@ -466,6 +465,10 @@ var View = /** @class */ (function () {
         Property,
         __metadata("design:type", Number)
     ], View.prototype, "rotation", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Object)
+    ], View.prototype, "flexConfig", void 0);
     return View;
 }());
 var Superview = /** @class */ (function (_super) {
@@ -857,6 +860,36 @@ function vlayout(views, config) {
             if (views_3_1 && !views_3_1.done && (_a = views_3.return)) { _a.call(views_3); }
         }
         finally { if (e_3) { throw e_3.error; } }
+    }
+    if (config) {
+        for (var key in config) {
+            Reflect.set(ret, key, Reflect.get(config, key, config), ret);
+        }
+    }
+    return ret;
+}
+var FlexLayout = /** @class */ (function (_super) {
+    __extends$1(FlexLayout, _super);
+    function FlexLayout() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return FlexLayout;
+}(Group));
+function flexlayout(views, config) {
+    var e_4, _a;
+    var ret = new FlexLayout;
+    try {
+        for (var views_4 = __values$1(views), views_4_1 = views_4.next(); !views_4_1.done; views_4_1 = views_4.next()) {
+            var v = views_4_1.value;
+            ret.addChild(v);
+        }
+    }
+    catch (e_4_1) { e_4 = { error: e_4_1 }; }
+    finally {
+        try {
+            if (views_4_1 && !views_4_1.done && (_a = views_4.return)) { _a.call(views_4); }
+        }
+        finally { if (e_4) { throw e_4.error; } }
     }
     if (config) {
         for (var key in config) {
@@ -3185,6 +3218,7 @@ exports.CENTER_X = CENTER_X;
 exports.CENTER_Y = CENTER_Y;
 exports.Color = Color;
 exports.Draggable = Draggable;
+exports.FlexLayout = FlexLayout;
 exports.FlowLayout = FlowLayout;
 exports.FlowLayoutItem = FlowLayoutItem;
 exports.Gravity = Gravity;
@@ -3225,6 +3259,7 @@ exports.ViewModel = ViewModel;
 exports.animate = animate;
 exports.coordinator = coordinator;
 exports.draggable = draggable;
+exports.flexlayout = flexlayout;
 exports.flowItem = flowItem;
 exports.flowlayout = flowlayout;
 exports.gravity = gravity;

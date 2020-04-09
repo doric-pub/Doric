@@ -125,6 +125,7 @@ declare module 'doric/lib/src/ui/view' {
     import { BridgeContext } from "doric/lib/src/runtime/global";
     import { LayoutConfig } from 'doric/lib/src/util/layoutconfig';
     import { IAnimation } from "doric/lib/src/ui/animation";
+    import { FlexConfig } from "doric/lib/src/util/flexbox";
     export function Property(target: Object, propKey: string): void;
     export interface IView {
             width?: number;
@@ -178,6 +179,10 @@ declare module 'doric/lib/src/ui/view' {
                 * rotation*PI
                 */
             rotation?: number;
+            /**
+                * Only affected when its superview or itself is FlexLayout.
+                */
+            flexConfig?: FlexConfig;
     }
     export type NativeViewModel = {
             id: string;
@@ -267,6 +272,7 @@ declare module 'doric/lib/src/ui/view' {
             pivotY?: number;
             rotation?: number;
             /**----------transform----------*/
+            flexConfig?: FlexConfig;
             doAnimation(context: BridgeContext, animation: IAnimation): Promise<void>;
     }
     export abstract class Superview extends View {
@@ -457,6 +463,9 @@ declare module 'doric/lib/src/widget/layouts' {
     export function stack(views: View[], config?: IStack): Stack;
     export function hlayout(views: View[], config?: IHLayout): HLayout;
     export function vlayout(views: View[], config?: IVLayout): VLayout;
+    export class FlexLayout extends Group {
+    }
+    export function flexlayout(views: View[], config: IView): FlexLayout;
     export {};
 }
 
@@ -1299,5 +1308,129 @@ declare module 'doric/lib/src/pattern/mvvm' {
         getViewModel(): ViewModel<M, V> | undefined;
         build(root: Group): void;
     }
+}
+
+declare module 'doric/lib/src/util/flexbox' {
+    import { Modeling } from "doric/lib/src/util/types";
+    enum ValueType {
+        Undefined = 0,
+        Point = 1,
+        Percent = 2,
+        Auto = 3
+    }
+    export class FlexTypedValue implements Modeling {
+        type: ValueType;
+        value: number;
+        static Auto: FlexTypedValue;
+        static percent(v: number): FlexTypedValue;
+        static point(v: number): FlexTypedValue;
+        toModel(): {
+            type: ValueType;
+            value: number;
+        };
+    }
+    export enum FlexDirection {
+        COLUMN = 0,
+        COLUMN_REVERSE = 1,
+        ROW = 2,
+        ROW_REVERSE = 3
+    }
+    export enum Align {
+        AUTO = 0,
+        FLEX_START = 1,
+        CENTER = 2,
+        FLEX_END = 3,
+        STRETCH = 4,
+        BASELINE = 5,
+        SPACE_BETWEEN = 6,
+        SPACE_AROUND = 7
+    }
+    export enum Justify {
+        FLEX_START = 0,
+        CENTER = 1,
+        FLEX_END = 2,
+        SPACE_BETWEEN = 3,
+        SPACE_AROUND = 4,
+        SPACE_EVENLY = 5
+    }
+    export enum Direction {
+        INHERIT = 0,
+        LTR = 1,
+        RTL = 2
+    }
+    export enum PositionType {
+        RELATIVE = 0,
+        ABSOLUTE = 1
+    }
+    export enum Wrap {
+        NO_WRAP = 0,
+        WRAP = 1,
+        WRAP_REVERSE = 2
+    }
+    export enum OverFlow {
+        VISIBLE = 0,
+        HIDDEN = 1,
+        SCROLL = 2
+    }
+    export enum Display {
+        FLEX = 0,
+        NONE = 1
+    }
+    export type FlexValue = FlexTypedValue | number;
+    export interface FlexConfig {
+        direction?: Direction;
+        flexDirection?: FlexDirection;
+        justifyContent?: Justify;
+        alignContent?: Align;
+        alignItems?: Align;
+        alignSelf?: Align;
+        positionType?: PositionType;
+        flexWrap?: Wrap;
+        overFlow?: OverFlow;
+        display?: Display;
+        flex?: number;
+        flexGrow?: number;
+        flexShrink?: number;
+        flexBasis?: FlexValue;
+        marginLeft?: FlexValue;
+        marginRight?: FlexValue;
+        marginTop?: FlexValue;
+        marginBottom?: FlexValue;
+        marginStart?: FlexValue;
+        marginEnd?: FlexValue;
+        marginHorizontal?: FlexValue;
+        marginVertical?: FlexValue;
+        margin?: FlexValue;
+        paddingLeft?: FlexValue;
+        paddingRight?: FlexValue;
+        paddingTop?: FlexValue;
+        paddingBottom?: FlexValue;
+        paddingStart?: FlexValue;
+        paddingEnd?: FlexValue;
+        paddingHorizontal?: FlexValue;
+        paddingVertical?: FlexValue;
+        padding?: FlexValue;
+        borderLeftWidth?: number;
+        borderRightWidth?: number;
+        borderTopWidth?: number;
+        borderBottomWidth?: number;
+        borderStartWidth?: number;
+        borderEndWidth?: number;
+        borderWidth?: number;
+        left?: FlexValue;
+        right?: FlexValue;
+        top?: FlexValue;
+        bottom?: FlexValue;
+        start?: FlexValue;
+        end?: FlexValue;
+        width?: FlexValue;
+        height?: FlexValue;
+        minWidth?: FlexValue;
+        minHeight?: FlexValue;
+        maxWidth?: FlexValue;
+        maxHeight?: FlexValue;
+        aspectRatio?: number;
+    }
+    export {};
 }
 

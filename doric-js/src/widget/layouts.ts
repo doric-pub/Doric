@@ -108,4 +108,5 @@ export function flexlayout(views: View[], config: IView) {
             Reflect.set(ret, key, Reflect.get(config, key, config), ret)
         }
     }
+    return ret
 }

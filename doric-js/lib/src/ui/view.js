@@ -177,7 +177,6 @@ export class View {
     getLocationOnScreen(context) {
         return this.nativeChannel(context, "getLocationOnScreen")();
     }
-    /**----------transform----------*/
     doAnimation(context, animation) {
         return this.nativeChannel(context, "doAnimation")(animation.toModel()).then((args) => {
             for (let key in args) {
@@ -267,6 +266,10 @@ __decorate([
     Property,
     __metadata("design:type", Number)
 ], View.prototype, "rotation", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Object)
+], View.prototype, "flexConfig", void 0);
 export class Superview extends View {
     subviewById(id) {
         for (let v of this.allSubviews()) {

@@ -82,3 +82,17 @@ export function vlayout(views, config) {
     }
     return ret;
 }
+export class FlexLayout extends Group {
+}
+export function flexlayout(views, config) {
+    const ret = new FlexLayout;
+    for (let v of views) {
+        ret.addChild(v);
+    }
+    if (config) {
+        for (let key in config) {
+            Reflect.set(ret, key, Reflect.get(config, key, config), ret);
+        }
+    }
+    return ret;
+}

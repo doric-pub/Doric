@@ -3,6 +3,7 @@ import { Modeling, Model } from "../util/types";
 import { BridgeContext } from "../runtime/global";
 import { LayoutConfig } from '../util/layoutconfig';
 import { IAnimation } from "./animation";
+import { FlexConfig } from "../util/flexbox";
 export declare function Property(target: Object, propKey: string): void;
 export interface IView {
     width?: number;
@@ -56,6 +57,11 @@ export interface IView {
      * rotation*PI
      */
     rotation?: number;
+    /**----------transform----------*/
+    /**
+     * Only affected when its superview or itself is FlexLayout.
+     */
+    flexConfig?: FlexConfig;
 }
 export declare type NativeViewModel = {
     id: string;
@@ -149,6 +155,7 @@ export declare abstract class View implements Modeling, IView {
     pivotY?: number;
     rotation?: number;
     /**----------transform----------*/
+    flexConfig?: FlexConfig;
     doAnimation(context: BridgeContext, animation: IAnimation): Promise<void>;
 }
 export declare abstract class Superview extends View {

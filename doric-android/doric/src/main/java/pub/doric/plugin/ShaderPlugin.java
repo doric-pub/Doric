@@ -92,7 +92,12 @@ public class ShaderPlugin extends DoricJavaPlugin {
 
             @Override
             public void onFinish() {
-                promise.resolve();
+                getDoricContext().getRootNode().getNodeView().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        promise.resolve();
+                    }
+                });
             }
         });
     }

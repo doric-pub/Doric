@@ -112,6 +112,7 @@
 - (void)blendView:(UIImageView *)view forPropName:(NSString *)name propValue:(id)prop {
     if ([@"imageUrl" isEqualToString:name]) {
         __weak typeof(self) _self = self;
+        BOOL async = NO;
         [view yy_setImageWithURL:[NSURL URLWithString:prop] placeholder:[self currentPlaceHolderImage] options:0 completion:^(UIImage *image, NSURL *url, YYWebImageFromType from, YYWebImageStage stage, NSError *error) {
             __strong typeof(_self) self = _self;
             if (self.placeHolderColor || self.errorColor) {
@@ -134,9 +135,12 @@
                 while (node.superNode != nil) {
                     node = node.superNode;
                 }
-                [node requestLayout];
+                if (async) {
+                    [node requestLayout];
+                }
             }
         }];
+        async = YES;
     } else if ([@"scaleType" isEqualToString:name]) {
         switch ([prop integerValue]) {
             case 1: {

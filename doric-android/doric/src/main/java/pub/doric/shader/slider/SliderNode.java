@@ -34,9 +34,10 @@ import pub.doric.shader.SuperNode;
 import pub.doric.shader.ViewNode;
 
 /**
- * @Description: pub.doric.shader
+ * @Description: pub.doric.shader.slider
  * @Author: pengfei.zhou
  * @CreateDate: 2019-11-19
+ * @UpdateDate: 2020-04-09
  */
 @DoricPlugin(name = "Slider")
 public class SliderNode extends SuperNode<RecyclerView> {
@@ -149,6 +150,10 @@ public class SliderNode extends SuperNode<RecyclerView> {
                 break;
             case "onPageSlided":
                 this.onPageSlidedFuncId = prop.asString().toString();
+                break;
+            case "loop":
+                boolean loop = prop.asBoolean().value();
+                slideAdapter.loop = loop;
                 break;
             default:
                 super.blend(view, name, prop);

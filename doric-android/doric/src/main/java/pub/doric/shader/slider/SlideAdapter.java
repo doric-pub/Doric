@@ -33,9 +33,10 @@ import pub.doric.async.AsyncResult;
 import pub.doric.shader.ViewNode;
 
 /**
- * @Description: com.github.penfeizhou.doric.widget
+ * @Description: pub.doric.shader.slider
  * @Author: pengfei.zhou
  * @CreateDate: 2019-11-12
+ * @UpdateDate: 2020-04-09
  */
 class SlideAdapter extends RecyclerView.Adapter<SlideAdapter.DoricViewHolder> {
 
@@ -44,6 +45,8 @@ class SlideAdapter extends RecyclerView.Adapter<SlideAdapter.DoricViewHolder> {
     int batchCount = 3;
     SparseArray<String> itemValues = new SparseArray<>();
     String renderPageFuncId;
+    boolean loop;
+
     SlideAdapter(SliderNode sliderNode) {
         this.sliderNode = sliderNode;
     }

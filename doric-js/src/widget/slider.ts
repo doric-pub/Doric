@@ -36,6 +36,7 @@ export interface ISlider extends IView {
     itemCount: number
     batchCount?: number
     onPageSlided?: (index: number) => void
+    loop?: boolean
 }
 
 export class Slider extends Superview implements ISlider {
@@ -58,13 +59,13 @@ export class Slider extends Superview implements ISlider {
     @Property
     onPageSlided?: (index: number) => void
 
+    @Property
+    loop?: boolean
+
     private getItem(itemIdx: number) {
-        let view = this.cachedViews.get(`${itemIdx}`)
-        if (view === undefined) {
-            view = this.renderPage(itemIdx)
-            view.superview = this
-            this.cachedViews.set(`${itemIdx}`, view)
-        }
+        let view = this.renderPage(itemIdx)
+        view.superview = this
+        this.cachedViews.set(`${itemIdx}`, view)
         return view
     }
 

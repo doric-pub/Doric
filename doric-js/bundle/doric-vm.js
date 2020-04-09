@@ -2916,12 +2916,9 @@ class Slider extends Superview {
         return this.cachedViews.values();
     }
     getItem(itemIdx) {
-        let view = this.cachedViews.get(`${itemIdx}`);
-        if (view === undefined) {
-            view = this.renderPage(itemIdx);
-            view.superview = this;
-            this.cachedViews.set(`${itemIdx}`, view);
-        }
+        let view = this.renderPage(itemIdx);
+        view.superview = this;
+        this.cachedViews.set(`${itemIdx}`, view);
         return view;
     }
     isDirty() {
@@ -2962,6 +2959,10 @@ __decorate$6([
     Property,
     __metadata$6("design:type", Function)
 ], Slider.prototype, "onPageSlided", void 0);
+__decorate$6([
+    Property,
+    __metadata$6("design:type", Boolean)
+], Slider.prototype, "loop", void 0);
 function slider(config) {
     const ret = new Slider;
     for (let key in config) {

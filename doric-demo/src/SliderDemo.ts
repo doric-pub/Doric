@@ -30,6 +30,7 @@ class SliderPanel extends Panel {
             }),
             slider({
                 itemCount: 100,
+                loop: true,
                 renderPage: (idx) => {
                     return slideItem(image({
                         imageUrl: imageUrls[idx % imageUrls.length],

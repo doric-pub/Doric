@@ -15,6 +15,7 @@ export interface ISlider extends IView {
     itemCount: number;
     batchCount?: number;
     onPageSlided?: (index: number) => void;
+    loop?: boolean;
 }
 export declare class Slider extends Superview implements ISlider {
     private cachedViews;
@@ -24,6 +25,7 @@ export declare class Slider extends Superview implements ISlider {
     renderPage: (index: number) => SlideItem;
     batchCount: number;
     onPageSlided?: (index: number) => void;
+    loop?: boolean;
     private getItem;
     isDirty(): boolean;
     private renderBunchedItems;

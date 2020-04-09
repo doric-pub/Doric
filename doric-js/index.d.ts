@@ -632,6 +632,7 @@ declare module 'doric/lib/src/widget/slider' {
         itemCount: number;
         batchCount?: number;
         onPageSlided?: (index: number) => void;
+        loop?: boolean;
     }
     export class Slider extends Superview implements ISlider {
         allSubviews(): IterableIterator<SlideItem>;
@@ -639,6 +640,7 @@ declare module 'doric/lib/src/widget/slider' {
         renderPage: (index: number) => SlideItem;
         batchCount: number;
         onPageSlided?: (index: number) => void;
+        loop?: boolean;
         isDirty(): boolean;
         slidePage(context: BridgeContext, page: number, smooth?: boolean): Promise<any>;
         getSlidedPage(context: BridgeContext): Promise<number>;

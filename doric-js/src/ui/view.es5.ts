@@ -20,6 +20,7 @@ import { loge } from "../util/log";
 import { BridgeContext } from "../runtime/global";
 import { LayoutConfig } from '../util/layoutconfig'
 import { IAnimation } from "./animation";
+import { FlexConfig } from "../util/flexbox";
 
 export function Property(target: View, propKey: string) {
     Object.defineProperty(target, propKey, {
@@ -79,6 +80,11 @@ export interface IView {
      */
     rotation?: number
     /**----------transform----------*/
+
+    /**
+     * Only affected when its superview or itself is FlexLayout.
+     */
+    flexConfig?: FlexConfig
 }
 
 export type NativeViewModel = {
@@ -342,6 +348,9 @@ export abstract class View implements Modeling, IView {
     @Property
     rotation?: number
     /**----------transform----------*/
+
+    @Property
+    flexConfig?: FlexConfig
 
     doAnimation(context: BridgeContext, animation: IAnimation) {
         return this.nativeChannel(context, "doAnimation")(animation.toModel()).then((args) => {

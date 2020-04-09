@@ -11,7 +11,7 @@
 		8BCADA7C23CD5B65005EEF96 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BCADA7B23CD5B64005EEF96 /* NavigationController.m */; };
 		A1E221FB2DCA40D85C4D9520 /* libPods-ExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F233ACD236542275AED3DE0 /* libPods-ExampleTests.a */; };
 		CC537F4B9F59400BA5B4FF8F /* libPods-Example.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DEE8411A69609CC9C86063CC /* libPods-Example.a */; };
-		D751D4B065D8D4FA6594B5EE /* DemoVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D751D19E97EF4EDD7588FEBE /* DemoVC.m */; };
+		D751D4B065D8D4FA6594B5EE /* DemoVC.mm in Sources */ = {isa = PBXBuildFile; fileRef = D751D19E97EF4EDD7588FEBE /* DemoVC.mm */; };
 		D751DDB012BAF476A252CD93 /* DemoLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = D751D2175D09F2C10691FB81 /* DemoLibrary.m */; };
 		E2334AF022E9D2060098A085 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E2334AEF22E9D2060098A085 /* AppDelegate.m */; };
 		E2334AF322E9D2060098A085 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2334AF222E9D2060098A085 /* ViewController.m */; };
@@ -21,6 +21,7 @@
 		E2334AFE22E9D2070098A085 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E2334AFD22E9D2070098A085 /* main.m */; };
 		E2334B0822E9D2070098A085 /* ExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E2334B0722E9D2070098A085 /* ExampleTests.m */; };
 		E2334B1322E9D2070098A085 /* ExampleUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = E2334B1222E9D2070098A085 /* ExampleUITests.m */; };
+		E25428DF243EFC360078AD90 /* Shell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25428DE243EFC360078AD90 /* Shell.swift */; };
 		E2C9315923B0A263007933D9 /* src in Resources */ = {isa = PBXBuildFile; fileRef = E2C9315823B0A263007933D9 /* src */; };
 		ED1C348399AB9D786E6D0FD4 /* libPods-ExampleUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E7A7F41AFE5065A452873298 /* libPods-ExampleUITests.a */; };
 /* End PBXBuildFile section */
@@ -52,7 +53,7 @@
 		8BCADA7B23CD5B64005EEF96 /* NavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
 		B93423722F2E06DC238CDD18 /* Pods-ExampleUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExampleUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ExampleUITests/Pods-ExampleUITests.release.xcconfig"; sourceTree = "<group>"; };
 		B93D4DB00FD244178B7CE7C4 /* Pods-ExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExampleTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ExampleTests/Pods-ExampleTests.release.xcconfig"; sourceTree = "<group>"; };
-		D751D19E97EF4EDD7588FEBE /* DemoVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoVC.m; sourceTree = "<group>"; };
+		D751D19E97EF4EDD7588FEBE /* DemoVC.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DemoVC.mm; sourceTree = "<group>"; };
 		D751D2175D09F2C10691FB81 /* DemoLibrary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoLibrary.m; sourceTree = "<group>"; };
 		D751DB0CB3009E12990F661E /* DemoLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoLibrary.h; sourceTree = "<group>"; };
 		D751DDEC114E037231257E64 /* DemoVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoVC.h; sourceTree = "<group>"; };
@@ -74,6 +75,8 @@
 		E2334B0E22E9D2070098A085 /* ExampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ExampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2334B1222E9D2070098A085 /* ExampleUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExampleUITests.m; sourceTree = "<group>"; };
 		E2334B1422E9D2070098A085 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E25428DD243EFC360078AD90 /* Example-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Example-Bridging-Header.h"; sourceTree = "<group>"; };
+		E25428DE243EFC360078AD90 /* Shell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shell.swift; sourceTree = "<group>"; };
 		E2C9315823B0A263007933D9 /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; name = src; path = "../../../doric-demo/bundle/src"; sourceTree = "<group>"; };
 		E7A7F41AFE5065A452873298 /* libPods-ExampleUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ExampleUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -167,10 +170,12 @@
 				E2334AFC22E9D2070098A085 /* Info.plist */,
 				E2334AF922E9D2070098A085 /* LaunchScreen.storyboard */,
 				E2334AFD22E9D2070098A085 /* main.m */,
-				D751D19E97EF4EDD7588FEBE /* DemoVC.m */,
+				D751D19E97EF4EDD7588FEBE /* DemoVC.mm */,
 				D751DDEC114E037231257E64 /* DemoVC.h */,
 				D751D2175D09F2C10691FB81 /* DemoLibrary.m */,
 				D751DB0CB3009E12990F661E /* DemoLibrary.h */,
+				E25428DE243EFC360078AD90 /* Shell.swift */,
+				E25428DD243EFC360078AD90 /* Example-Bridging-Header.h */,
 			);
 			path = Example;
 			sourceTree = "<group>";
@@ -265,6 +270,7 @@
 				TargetAttributes = {
 					E2334AEA22E9D2060098A085 = {
 						CreatedOnToolsVersion = 10.3;
+						LastSwiftMigration = 1140;
 					};
 					E2334B0222E9D2070098A085 = {
 						CreatedOnToolsVersion = 10.3;
@@ -435,9 +441,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				E2334AF322E9D2060098A085 /* ViewController.m in Sources */,
+				E25428DF243EFC360078AD90 /* Shell.swift in Sources */,
 				E2334AFE22E9D2070098A085 /* main.m in Sources */,
 				E2334AF022E9D2060098A085 /* AppDelegate.m in Sources */,
-				D751D4B065D8D4FA6594B5EE /* DemoVC.m in Sources */,
+				D751D4B065D8D4FA6594B5EE /* DemoVC.mm in Sources */,
 				D751DDB012BAF476A252CD93 /* DemoLibrary.m in Sources */,
 				8BCADA7C23CD5B65005EEF96 /* NavigationController.m in Sources */,
 			);
@@ -611,6 +618,7 @@
 			baseConfigurationReference = 8231E841CCAF382F85C9F576 /* Pods-Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7EE2RX3L3P;
 				INFOPLIST_FILE = Example/Info.plist;
@@ -621,6 +629,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = pub.doric.Example;
 				PRODUCT_NAME = "Doric Playground";
+				SWIFT_OBJC_BRIDGING_HEADER = "Example/Example-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -630,6 +641,7 @@
 			baseConfigurationReference = 3D75F592D76A665674B31A66 /* Pods-Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7EE2RX3L3P;
 				INFOPLIST_FILE = Example/Info.plist;
@@ -640,6 +652,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = pub.doric.Example;
 				PRODUCT_NAME = "Doric Playground";
+				SWIFT_OBJC_BRIDGING_HEADER = "Example/Example-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -648,6 +662,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D91241144B5A3356A3C60644 /* Pods-ExampleTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = ExampleTests/Info.plist;
@@ -667,6 +682,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B93D4DB00FD244178B7CE7C4 /* Pods-ExampleTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = ExampleTests/Info.plist;
@@ -686,6 +702,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 016E930415B91D826F9FFF47 /* Pods-ExampleUITests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = ExampleUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -704,6 +721,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B93423722F2E06DC238CDD18 /* Pods-ExampleUITests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = ExampleUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

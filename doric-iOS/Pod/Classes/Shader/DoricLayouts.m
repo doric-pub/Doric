@@ -272,11 +272,13 @@ static const void *kLayoutConfig = &kLayoutConfig;
             if (layout.disabled) {
                 continue;
             }
-            layout.measuredHeight += remaining / contentWeight * layout.weight;
+            CGFloat measuredHeight = layout.measuredHeight + remaining / contentWeight * layout.weight;
+            layout.measuredHeight = measuredHeight;
             //Need Remeasure
             [layout measureContent:CGSizeMake(
                     layout.measuredWidth - layout.paddingLeft - layout.paddingRight,
-                    layout.measuredHeight - layout.paddingTop - layout.paddingBottom)];
+                    measuredHeight - layout.paddingTop - layout.paddingBottom)];
+            layout.measuredHeight = measuredHeight;
             contentWidth = MAX(contentWidth, layout.takenWidth);
         }
         contentHeight = targetSize.height;
@@ -322,11 +324,13 @@ static const void *kLayoutConfig = &kLayoutConfig;
             if (layout.disabled) {
                 continue;
             }
-            layout.measuredWidth += remaining / contentWeight * layout.weight;
+            CGFloat measuredWidth = layout.measuredWidth + remaining / contentWeight * layout.weight;
+            layout.measuredWidth = measuredWidth;
             //Need Remeasure
             [layout measureContent:CGSizeMake(
-                    layout.measuredWidth - layout.paddingLeft - layout.paddingRight,
+                    measuredWidth - layout.paddingLeft - layout.paddingRight,
                     layout.measuredHeight - layout.paddingTop - layout.paddingBottom)];
+            layout.measuredWidth = measuredWidth;
             contentHeight = MAX(contentHeight, layout.takenHeight);
         }
         contentWidth = targetSize.width;

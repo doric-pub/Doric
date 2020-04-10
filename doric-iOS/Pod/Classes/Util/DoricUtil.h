@@ -23,6 +23,10 @@
 #import <Foundation/Foundation.h>
 #import "DoricLayouts.h"
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 void DoricLog(NSString *_Nonnull format, ...);
 
 UIColor *_Nonnull DoricColor(NSNumber *_Nonnull number);
@@ -44,3 +48,6 @@ void ShowToast(NSString *_Nonnull text, DoricGravity gravity);
 UIImage *_Nonnull UIImageWithColor(UIColor *_Nonnull color);
 
 BOOL hasNotch(void);
+#ifdef __cplusplus
+}
+#endif

@@ -11,7 +11,7 @@
 		8BCADA7C23CD5B65005EEF96 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BCADA7B23CD5B64005EEF96 /* NavigationController.m */; };
 		A1E221FB2DCA40D85C4D9520 /* libPods-ExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F233ACD236542275AED3DE0 /* libPods-ExampleTests.a */; };
 		CC537F4B9F59400BA5B4FF8F /* libPods-Example.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DEE8411A69609CC9C86063CC /* libPods-Example.a */; };
-		D751D4B065D8D4FA6594B5EE /* DemoVC.mm in Sources */ = {isa = PBXBuildFile; fileRef = D751D19E97EF4EDD7588FEBE /* DemoVC.mm */; };
+		D751D4B065D8D4FA6594B5EE /* DemoVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D751D19E97EF4EDD7588FEBE /* DemoVC.m */; };
 		D751DDB012BAF476A252CD93 /* DemoLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = D751D2175D09F2C10691FB81 /* DemoLibrary.m */; };
 		E2334AF022E9D2060098A085 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E2334AEF22E9D2060098A085 /* AppDelegate.m */; };
 		E2334AF322E9D2060098A085 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2334AF222E9D2060098A085 /* ViewController.m */; };
@@ -52,7 +52,7 @@
 		8BCADA7B23CD5B64005EEF96 /* NavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
 		B93423722F2E06DC238CDD18 /* Pods-ExampleUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExampleUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ExampleUITests/Pods-ExampleUITests.release.xcconfig"; sourceTree = "<group>"; };
 		B93D4DB00FD244178B7CE7C4 /* Pods-ExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExampleTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ExampleTests/Pods-ExampleTests.release.xcconfig"; sourceTree = "<group>"; };
-		D751D19E97EF4EDD7588FEBE /* DemoVC.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DemoVC.mm; sourceTree = "<group>"; };
+		D751D19E97EF4EDD7588FEBE /* DemoVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoVC.m; sourceTree = "<group>"; };
 		D751D2175D09F2C10691FB81 /* DemoLibrary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoLibrary.m; sourceTree = "<group>"; };
 		D751DB0CB3009E12990F661E /* DemoLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoLibrary.h; sourceTree = "<group>"; };
 		D751DDEC114E037231257E64 /* DemoVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoVC.h; sourceTree = "<group>"; };
@@ -167,7 +167,7 @@
 				E2334AFC22E9D2070098A085 /* Info.plist */,
 				E2334AF922E9D2070098A085 /* LaunchScreen.storyboard */,
 				E2334AFD22E9D2070098A085 /* main.m */,
-				D751D19E97EF4EDD7588FEBE /* DemoVC.mm */,
+				D751D19E97EF4EDD7588FEBE /* DemoVC.m */,
 				D751DDEC114E037231257E64 /* DemoVC.h */,
 				D751D2175D09F2C10691FB81 /* DemoLibrary.m */,
 				D751DB0CB3009E12990F661E /* DemoLibrary.h */,
@@ -438,7 +438,7 @@
 				E2334AF322E9D2060098A085 /* ViewController.m in Sources */,
 				E2334AFE22E9D2070098A085 /* main.m in Sources */,
 				E2334AF022E9D2060098A085 /* AppDelegate.m in Sources */,
-				D751D4B065D8D4FA6594B5EE /* DemoVC.mm in Sources */,
+				D751D4B065D8D4FA6594B5EE /* DemoVC.m in Sources */,
 				D751DDB012BAF476A252CD93 /* DemoLibrary.m in Sources */,
 				8BCADA7C23CD5B65005EEF96 /* NavigationController.m in Sources */,
 			);
@@ -615,6 +615,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7EE2RX3L3P;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				INFOPLIST_FILE = Example/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -638,6 +639,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7EE2RX3L3P;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				INFOPLIST_FILE = Example/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (

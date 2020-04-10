@@ -18,11 +18,10 @@ package pub.doric.utils;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Rect;
+import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
-
-import androidx.annotation.NonNull;
 
 import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSDecoder;

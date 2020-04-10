@@ -34,6 +34,7 @@
 @implementation DoricFlexNode
 - (UIView *)build {
     return [[DoricFlexView new] also:^(DoricFlexView *it) {
+        it.clipsToBounds = YES;
         [it configureLayoutWithBlock:^(YGLayout *_Nonnull layout) {
             layout.isEnabled = YES;
         }];

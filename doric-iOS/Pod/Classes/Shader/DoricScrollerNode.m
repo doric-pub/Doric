@@ -38,9 +38,11 @@
 - (CGSize)sizeThatFits:(CGSize)size {
     if (self.contentView) {
         if (!self.contentView.doricLayout.resolved) {
-            [self.contentView.doricLayout apply:self.frame.size];
+            [self.contentView.doricLayout apply:size];
         }
-        return self.contentView.frame.size;
+        return CGSizeMake(
+                MIN(size.width, self.contentView.doricLayout.measuredWidth),
+                MIN(size.height, self.contentView.doricLayout.measuredHeight));
     }
     return CGSizeZero;
 }

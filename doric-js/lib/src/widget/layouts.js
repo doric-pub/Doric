@@ -86,6 +86,7 @@ export class FlexLayout extends Group {
 }
 export function flexlayout(views, config) {
     const ret = new FlexLayout;
+    ret.layoutConfig = layoutConfig().fit();
     for (let v of views) {
         ret.addChild(v);
     }

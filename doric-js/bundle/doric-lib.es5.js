@@ -878,6 +878,7 @@ var FlexLayout = /** @class */ (function (_super) {
 function flexlayout(views, config) {
     var e_4, _a;
     var ret = new FlexLayout;
+    ret.layoutConfig = layoutConfig().fit();
     try {
         for (var views_4 = __values$1(views), views_4_1 = views_4.next(); !views_4_1.done; views_4_1 = views_4.next()) {
             var v = views_4_1.value;

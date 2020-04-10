@@ -17,6 +17,10 @@ package pub.doric;
 
 import android.app.Application;
 
+import com.facebook.soloader.SoLoader;
+
+import java.io.IOException;
+
 import pub.doric.loader.DoricJSLoaderManager;
 import pub.doric.loader.IDoricJSLoader;
 
@@ -35,6 +39,11 @@ public class Doric {
      */
     public static void init(Application application) {
         sApplication = application;
+        try {
+            SoLoader.init(application, 0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static Application application() {

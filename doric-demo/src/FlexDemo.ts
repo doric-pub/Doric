@@ -1,6 +1,6 @@
 
 import { Group, Panel, text, gravity, Color, LayoutSpec, vlayout, hlayout, scroller, IVLayout, IHLayout, layoutConfig, stack, Gravity, flexlayout } from "doric";
-import { FlexDirection, Wrap, Justify, Align } from "doric/lib/src/util/flexbox";
+import { FlexDirection, Wrap, Justify, Align, FlexTypedValue } from "doric/lib/src/util/flexbox";
 
 const colors = [
     "#f0932b",
@@ -61,15 +61,15 @@ class LayoutDemo extends Panel {
                 box(4),
             ],
             {
-                layoutConfig: layoutConfig().most(),
+                layoutConfig: layoutConfig().fit(),
                 backgroundColor: Color.GRAY,
                 flexConfig: {
-                    flexDirection: FlexDirection.ROW,
-                    width: 200,
-                    height: 200,
-                    justifyContent: Justify.CENTER,
+                    flexDirection: FlexDirection.COLUMN,
+                    justifyContent: Justify.SPACE_EVENLY,
                     alignContent: Align.CENTER,
                     flexWrap: Wrap.WRAP,
+                    width: FlexTypedValue.Auto,
+                    height: FlexTypedValue.Auto,
                 }
             }
         )

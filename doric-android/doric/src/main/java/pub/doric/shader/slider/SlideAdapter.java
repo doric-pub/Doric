@@ -71,7 +71,11 @@ class SlideAdapter extends RecyclerView.Adapter<SlideAdapter.DoricViewHolder> {
 
     @Override
     public int getItemCount() {
-        return itemCount;
+        if (loop) {
+            return itemCount + 2;
+        } else {
+            return itemCount;
+        }
     }
 
     @Override
@@ -86,11 +90,24 @@ class SlideAdapter extends RecyclerView.Adapter<SlideAdapter.DoricViewHolder> {
     }
 
     private JSValue getItemModel(final int position) {
-        String id = itemValues.get(position);
+        int index;
+        if (loop) {
+            if (position == 0) {
+                index = itemCount - 1;
+            } else if (position == itemCount + 1) {
+                index = 0;
+            } else {
+                index = position - 1;
+            }
+        } else {
+            index = position;
+        }
+
+        String id = itemValues.get(index);
         if (TextUtils.isEmpty(id)) {
             AsyncResult<JSDecoder> asyncResult = sliderNode.callJSResponse(
                     "renderBunchedItems",
-                    position,
+                    index,
                     batchCount);
             try {
                 JSDecoder jsDecoder = asyncResult.synchronous().get();
@@ -100,10 +117,10 @@ class SlideAdapter extends RecyclerView.Adapter<SlideAdapter.DoricViewHolder> {
                     for (int i = 0; i < jsArray.size(); i++) {
                         JSObject itemModel = jsArray.get(i).asObject();
                         String itemId = itemModel.getProperty("id").asString().value();
-                        itemValues.put(i + position, itemId);
+                        itemValues.put(i + index, itemId);
                         sliderNode.setSubModel(itemId, itemModel);
                     }
-                    return sliderNode.getSubModel(itemValues.get(position));
+                    return sliderNode.getSubModel(itemValues.get(index));
                 }
             } catch (Exception e) {
                 e.printStackTrace();

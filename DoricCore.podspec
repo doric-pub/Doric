@@ -25,5 +25,5 @@ Doric iOS SDK for cross platform develpment
   s.dependency 'YYImage/WebP'
   s.dependency 'SocketRocket'
   s.dependency 'YYCache'
-  s.dependency 'YogaKit'
+  s.dependency 'YogaKit/Core'
 end

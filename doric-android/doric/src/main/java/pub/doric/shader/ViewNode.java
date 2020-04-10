@@ -24,6 +24,8 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
+import android.support.annotation.NonNull;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -34,11 +36,6 @@ import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import androidx.annotation.NonNull;
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
-
-import com.facebook.yoga.YogaNode;
-import com.facebook.yoga.android.YogaLayout;
 import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSONBuilder;
@@ -55,7 +52,6 @@ import pub.doric.DoricRegistry;
 import pub.doric.async.AsyncResult;
 import pub.doric.extension.bridge.DoricMethod;
 import pub.doric.extension.bridge.DoricPromise;
-import pub.doric.shader.flex.FlexNode;
 import pub.doric.utils.DoricConstant;
 import pub.doric.utils.DoricContextHolder;
 import pub.doric.utils.DoricLog;

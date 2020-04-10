@@ -1705,7 +1705,7 @@ var doric = (function (exports) {
     (module.exports = function (key, value) {
       return sharedStore[key] || (sharedStore[key] = value !== undefined ? value : {});
     })('versions', []).push({
-      version: '3.6.5',
+      version: '3.6.4',
       mode:  'global',
       copyright: '© 2020 Denis Pushkarev (zloirock.ru)'
     });
@@ -6489,13 +6489,7 @@ var doric = (function (exports) {
         defer = functionBindContext(port.postMessage, port, 1);
       // Browsers with postMessage, skip WebWorkers
       // IE8 has postMessage, but it's sync & typeof its postMessage is 'object'
-      } else if (
-        global_1.addEventListener &&
-        typeof postMessage == 'function' &&
-        !global_1.importScripts &&
-        !fails(post) &&
-        location.protocol !== 'file:'
-      ) {
+      } else if (global_1.addEventListener && typeof postMessage == 'function' && !global_1.importScripts && !fails(post)) {
         defer = post;
         global_1.addEventListener('message', listener, false);
       // IE8-
@@ -9867,7 +9861,7 @@ var doric = (function (exports) {
     var INVALID_PORT = 'Invalid port';
 
     var ALPHA = /[A-Za-z]/;
-    var ALPHANUMERIC = /[\d+-.A-Za-z]/;
+    var ALPHANUMERIC = /[\d+\-.A-Za-z]/;
     var DIGIT = /\d/;
     var HEX_START = /^(0x|0X)/;
     var OCT = /^[0-7]+$/;

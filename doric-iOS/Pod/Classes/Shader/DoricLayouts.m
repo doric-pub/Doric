@@ -77,14 +77,22 @@ static const void *kLayoutConfig = &kLayoutConfig;
     CGFloat width;
     CGFloat height;
     if (self.widthSpec == DoricLayoutMost) {
-        width = self.measuredWidth = targetSize.width;
+        if (self.view.superview.doricLayout.layoutType == DoricHLayout && self.weight > 0) {
+            width = self.measuredWidth = 0;
+        } else {
+            width = self.measuredWidth = targetSize.width;
+        }
     } else if (self.widthSpec == DoricLayoutJust) {
         width = self.measuredWidth = self.width;
     } else {
         width = targetSize.width;
     }
     if (self.heightSpec == DoricLayoutMost) {
-        height = self.measuredHeight = targetSize.height;
+        if (self.view.superview.doricLayout.layoutType == DoricVLayout && self.weight > 0) {
+            height = self.measuredWidth = 0;
+        } else {
+            height = self.measuredHeight = targetSize.height;
+        }
     } else if (self.heightSpec == DoricLayoutJust) {
         height = self.measuredHeight = self.height;
     } else {

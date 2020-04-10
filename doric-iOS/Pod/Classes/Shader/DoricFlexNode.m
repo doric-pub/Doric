@@ -27,14 +27,14 @@
 
 @implementation DoricFlexView
 - (CGSize)sizeThatFits:(CGSize)size {
-    return [self.yoga calculateLayoutWithSize:size];
+    return [self.yoga intrinsicSize];
 }
 @end
 
 @implementation DoricFlexNode
 - (UIView *)build {
     return [[DoricFlexView new] also:^(DoricFlexView *it) {
-        [it configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+        [it configureLayoutWithBlock:^(YGLayout *_Nonnull layout) {
             layout.isEnabled = YES;
         }];
     }];
@@ -49,7 +49,7 @@
 }
 
 - (void)blendSubNode:(DoricViewNode *)subNode flexConfig:(NSDictionary *)flexConfig {
-    [subNode.view configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+    [subNode.view configureLayoutWithBlock:^(YGLayout *_Nonnull layout) {
         layout.isEnabled = YES;
     }];
     [self blendYoga:subNode.view.yoga from:flexConfig];
@@ -195,8 +195,33 @@
 - (void)requestLayout {
     [super requestLayout];
     for (UIView *view in self.view.subviews) {
+        if ([view isKindOfClass:[DoricFlexView class]]) {
+            continue;
+        }
         [view.doricLayout apply];
     }
-    [self.view.yoga applyLayoutPreservingOrigin:NO];
+    if (self.view.doricLayout.widthSpec != DoricLayoutFit) {
+        self.view.yoga.width = YGPointValue(self.view.width);
+    }
+    if (self.view.doricLayout.heightSpec != DoricLayoutFit) {
+        self.view.yoga.height = YGPointValue(self.view.height);
+    }
+    [self.view.yoga applyLayoutPreservingOrigin:YES];
+    /// Need layout again.
+    for (UIView *view in self.view.subviews) {
+        if ([view isKindOfClass:[DoricFlexView class]]) {
+            continue;
+        }
+        if (view.doricLayout.measuredWidth == view.width && view.doricLayout.measuredHeight == view.height) {
+            continue;
+        }
+        view.doricLayout.widthSpec = DoricLayoutJust;
+        view.doricLayout.heightSpec = DoricLayoutJust;
+        view.doricLayout.width = view.width;
+        view.doricLayout.height = view.height;
+        view.doricLayout.measuredX = view.left;
+        view.doricLayout.measuredY = view.top;
+        [view.doricLayout apply];
+    }
 }
 @end

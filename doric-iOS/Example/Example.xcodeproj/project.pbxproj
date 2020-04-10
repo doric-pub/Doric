@@ -21,7 +21,6 @@
 		E2334AFE22E9D2070098A085 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E2334AFD22E9D2070098A085 /* main.m */; };
 		E2334B0822E9D2070098A085 /* ExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E2334B0722E9D2070098A085 /* ExampleTests.m */; };
 		E2334B1322E9D2070098A085 /* ExampleUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = E2334B1222E9D2070098A085 /* ExampleUITests.m */; };
-		E25428DF243EFC360078AD90 /* Shell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25428DE243EFC360078AD90 /* Shell.swift */; };
 		E2C9315923B0A263007933D9 /* src in Resources */ = {isa = PBXBuildFile; fileRef = E2C9315823B0A263007933D9 /* src */; };
 		ED1C348399AB9D786E6D0FD4 /* libPods-ExampleUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E7A7F41AFE5065A452873298 /* libPods-ExampleUITests.a */; };
 /* End PBXBuildFile section */
@@ -75,8 +74,6 @@
 		E2334B0E22E9D2070098A085 /* ExampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ExampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2334B1222E9D2070098A085 /* ExampleUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExampleUITests.m; sourceTree = "<group>"; };
 		E2334B1422E9D2070098A085 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E25428DD243EFC360078AD90 /* Example-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Example-Bridging-Header.h"; sourceTree = "<group>"; };
-		E25428DE243EFC360078AD90 /* Shell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shell.swift; sourceTree = "<group>"; };
 		E2C9315823B0A263007933D9 /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; name = src; path = "../../../doric-demo/bundle/src"; sourceTree = "<group>"; };
 		E7A7F41AFE5065A452873298 /* libPods-ExampleUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ExampleUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -174,8 +171,6 @@
 				D751DDEC114E037231257E64 /* DemoVC.h */,
 				D751D2175D09F2C10691FB81 /* DemoLibrary.m */,
 				D751DB0CB3009E12990F661E /* DemoLibrary.h */,
-				E25428DE243EFC360078AD90 /* Shell.swift */,
-				E25428DD243EFC360078AD90 /* Example-Bridging-Header.h */,
 			);
 			path = Example;
 			sourceTree = "<group>";
@@ -441,7 +436,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E2334AF322E9D2060098A085 /* ViewController.m in Sources */,
-				E25428DF243EFC360078AD90 /* Shell.swift in Sources */,
 				E2334AFE22E9D2070098A085 /* main.m in Sources */,
 				E2334AF022E9D2060098A085 /* AppDelegate.m in Sources */,
 				D751D4B065D8D4FA6594B5EE /* DemoVC.mm in Sources */,
@@ -662,7 +656,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D91241144B5A3356A3C60644 /* Pods-ExampleTests.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = ExampleTests/Info.plist;
@@ -682,7 +675,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B93D4DB00FD244178B7CE7C4 /* Pods-ExampleTests.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = ExampleTests/Info.plist;
@@ -702,7 +694,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 016E930415B91D826F9FFF47 /* Pods-ExampleUITests.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = ExampleUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -721,7 +712,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B93423722F2E06DC238CDD18 /* Pods-ExampleUITests.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = ExampleUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

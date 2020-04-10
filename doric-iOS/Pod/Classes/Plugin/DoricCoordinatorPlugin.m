@@ -21,6 +21,7 @@
 #import "DoricSuperNode.h"
 #import "DoricScrollableProtocol.h"
 #import "DoricUtil.h"
+#import "DoricRootNode.h"
 
 @implementation DoricCoordinatorPlugin
 
@@ -110,6 +111,7 @@
         [self.doricContext.navBar doric_navBar_setBackgroundColor:DoricColor(value)];
     } else {
         [viewNode blend:@{name: value}];
+        [self.doricContext.rootNode requestLayout];
     }
 }
 

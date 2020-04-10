@@ -37,6 +37,8 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 
+import com.facebook.yoga.YogaNode;
+import com.facebook.yoga.android.YogaLayout;
 import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSONBuilder;
@@ -53,6 +55,7 @@ import pub.doric.DoricRegistry;
 import pub.doric.async.AsyncResult;
 import pub.doric.extension.bridge.DoricMethod;
 import pub.doric.extension.bridge.DoricPromise;
+import pub.doric.shader.flex.FlexNode;
 import pub.doric.utils.DoricConstant;
 import pub.doric.utils.DoricContextHolder;
 import pub.doric.utils.DoricLog;
@@ -70,6 +73,11 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     String mId;
     protected ViewGroup.LayoutParams mLayoutParams;
     private String mType;
+    private JSObject mFlexConfig;
+
+    public JSObject getFlexConfig() {
+        return mFlexConfig;
+    }
 
     public ViewNode(DoricContext doricContext) {
         super(doricContext);
@@ -433,6 +441,11 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
             case "hidden":
                 if (prop.isBoolean()) {
                     getNodeView().setVisibility(prop.asBoolean().value() ? View.GONE : View.VISIBLE);
+                }
+                break;
+            case "flexConfig":
+                if (prop.isObject()) {
+                    mFlexConfig = prop.asObject();
                 }
                 break;
             default:

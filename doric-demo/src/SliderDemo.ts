@@ -1,4 +1,4 @@
-import { Group, Panel, List, text, gravity, Color, Stack, LayoutSpec, list, NativeCall, listItem, log, vlayout, Gravity, hlayout, slider, slideItem, image, layoutConfig, ScaleType } from "doric";
+import { Group, Panel, text, gravity, Gravity, Color, LayoutSpec, vlayout, slider, slideItem, image, layoutConfig, ScaleType, switchView, hlayout } from "doric";
 import { colors } from "./utils";
 
 const imageUrls = [
@@ -15,6 +15,27 @@ const imageUrls = [
 @Entry
 class SliderPanel extends Panel {
     build(rootView: Group): void {
+        let pager = slider({
+            itemCount: imageUrls.length,
+            renderPage: (idx) => {
+                return slideItem(image({
+                    imageUrl: imageUrls[idx % imageUrls.length],
+                    scaleType: ScaleType.ScaleAspectFit,
+                    layoutConfig: layoutConfig().configWidth(LayoutSpec.MOST).configHeight(LayoutSpec.MOST).configAlignment(gravity().center()),
+                })).also(it => {
+                    let start = idx
+                    it.onClick = () => {
+                        it.backgroundColor = (colors[++start % colors.length])
+                    }
+                })
+            },
+            layoutConfig: {
+                widthSpec: LayoutSpec.MOST,
+                heightSpec: LayoutSpec.MOST,
+                weight: 1,
+            },
+        })
+
         rootView.addChild(vlayout([
             text({
                 text: "Gallery",
@@ -28,27 +49,31 @@ class SliderPanel extends Panel {
                 textAlignment: gravity().center(),
                 height: 50,
             }),
-            slider({
-                itemCount: 100,
-                loop: true,
-                renderPage: (idx) => {
-                    return slideItem(image({
-                        imageUrl: imageUrls[idx % imageUrls.length],
-                        scaleType: ScaleType.ScaleAspectFit,
-                        layoutConfig: layoutConfig().configWidth(LayoutSpec.MOST).configHeight(LayoutSpec.MOST).configAlignment(gravity().center()),
-                    })).also(it => {
-                        let start = idx
-                        it.onClick = () => {
-                            it.backgroundColor = (colors[++start % colors.length])
-                        }
-                    })
-                },
-                layoutConfig: {
-                    widthSpec: LayoutSpec.MOST,
-                    heightSpec: LayoutSpec.MOST,
-                    weight: 1,
-                },
+            hlayout([
+                text({
+                    text: "Loop",
+                    layoutConfig: {
+                        widthSpec: LayoutSpec.FIT,
+                        heightSpec: LayoutSpec.JUST,
+                    },
+                    textSize: 20,
+                    textColor: Color.BLACK,
+                    textAlignment: gravity().center(),
+                    height: 50,
+                }),
+                switchView({
+                    state: false,
+                    onSwitch: (state) => {
+                        pager.loop = state
+                    },
+                }),
+            ], {
+                layoutConfig: layoutConfig().most().configHeight(LayoutSpec.FIT),
+                gravity: gravity().center(),
+                space: 10,
+                backgroundColor: Color.RED,
             }),
+            pager,
         ]).also(it => {
             it.layoutConfig = {
                 widthSpec: LayoutSpec.MOST,

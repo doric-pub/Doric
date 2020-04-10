@@ -65,12 +65,23 @@ public class SliderNode extends SuperNode<RecyclerView> {
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     View view = snapHelper.findSnapView(layoutManager);
-                    if (view != null && !TextUtils.isEmpty(onPageSlidedFuncId)) {
+                    if (view != null) {
                         int position = layoutManager.getPosition(view);
-                        if (position != lastPosition) {
-                            callJSResponse(onPageSlidedFuncId, position);
+
+                        if (slideAdapter.loop) {
+                            if (position == 0) {
+                                recyclerView.scrollToPosition(slideAdapter.itemCount);
+                            } else if (position == slideAdapter.itemCount + 1) {
+                                recyclerView.scrollToPosition(1);
+                            }
                         }
-                        lastPosition = position;
+
+                        if (!TextUtils.isEmpty(onPageSlidedFuncId)) {
+                            if (position != lastPosition) {
+                                callJSResponse(onPageSlidedFuncId, position);
+                            }
+                            lastPosition = position;
+                        }
                     }
                 }
             }
@@ -154,6 +165,14 @@ public class SliderNode extends SuperNode<RecyclerView> {
             case "loop":
                 boolean loop = prop.asBoolean().value();
                 slideAdapter.loop = loop;
+                if (loop) {
+                    mView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mView.scrollToPosition(1);
+                        }
+                    });
+                }
                 break;
             default:
                 super.blend(view, name, prop);

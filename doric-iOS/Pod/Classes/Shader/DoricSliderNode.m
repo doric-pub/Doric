@@ -36,6 +36,7 @@
 @property(nonatomic, assign) NSUInteger itemCount;
 @property(nonatomic, assign) NSUInteger batchCount;
 @property(nonatomic, copy) NSString *onPageSelectedFuncId;
+@property(nonatomic) BOOL loop;
 @property(nonatomic, assign) NSUInteger lastPosition;
 @property(nonatomic, copy) NSString *renderPageFuncId;
 @end
@@ -90,13 +91,23 @@
         self.batchCount = [prop unsignedIntegerValue];
     } else if ([@"onPageSlided" isEqualToString:name]) {
         self.onPageSelectedFuncId = prop;
+    } else if ([@"loop" isEqualToString:name]) {
+        self.loop = [prop boolValue];
+        if (self.loop) {
+            [self.view reloadData];
+            [self.view setContentOffset:CGPointMake(1 * self.view.width, self.view.contentOffset.y) animated:false];
+        }
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return self.itemCount;
+    if (self.loop) {
+        return self.itemCount + 2;
+    } else {
+        return self.itemCount;
+    }
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -134,17 +145,30 @@
 }
 
 - (NSDictionary *)itemModelAt:(NSUInteger)position {
-    NSString *viewId = self.itemViewIds[@(position)];
+    NSUInteger index;
+    if (self.loop) {
+        if (position == 0) {
+            index = self.itemCount - 1;
+        } else if (position == self.itemCount + 1) {
+            index = 0;
+        } else {
+            index = position - 1;
+        }
+    } else {
+        index = position;
+    }
+    
+    NSString *viewId = self.itemViewIds[@(index)];
     if (viewId && viewId.length > 0) {
         return [self subModelOf:viewId];
     } else {
-        DoricAsyncResult *result = [self callJSResponse:@"renderBunchedItems", @(position), @(self.batchCount), nil];
+        DoricAsyncResult *result = [self callJSResponse:@"renderBunchedItems", @(index), @(self.batchCount), nil];
         JSValue *models = [result waitUntilResult];
         NSArray *array = [models toArray];
         [array enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
             NSString *thisViewId = obj[@"id"];
             [self setSubModel:obj in:thisViewId];
-            NSUInteger pos = position + idx;
+            NSUInteger pos = index + idx;
             self.itemViewIds[@(pos)] = thisViewId;
         }];
         return array[0];
@@ -191,6 +215,15 @@
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     NSUInteger pageIndex = (NSUInteger) (scrollView.contentOffset.x / scrollView.width);
     scrollView.contentOffset = CGPointMake(pageIndex * scrollView.width, scrollView.contentOffset.y);
+    
+    if (self.loop) {
+        if (pageIndex == 0) {
+            [self.view setContentOffset:CGPointMake(self.itemCount * self.view.width, self.view.contentOffset.y) animated:false];
+        } else if (pageIndex == self.itemCount + 1) {
+            [self.view setContentOffset:CGPointMake(1 * self.view.width, self.view.contentOffset.y) animated:false];
+        }
+    }
+    
     if (self.onPageSelectedFuncId && self.onPageSelectedFuncId.length > 0) {
         if (pageIndex != self.lastPosition) {
             [self callJSResponse:self.onPageSelectedFuncId, @(pageIndex), nil];

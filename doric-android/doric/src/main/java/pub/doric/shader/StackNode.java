@@ -15,11 +15,14 @@
  */
 package pub.doric.shader;
 
+import android.content.Context;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import pub.doric.DoricContext;
 import pub.doric.extension.bridge.DoricPlugin;
+import pub.doric.utils.DoricUtils;
 
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
@@ -31,8 +34,46 @@ import com.github.pengfeizhou.jscore.JSValue;
  */
 @DoricPlugin(name = "Stack")
 public class StackNode extends GroupNode<FrameLayout> {
+    private static class MaximumFrameLayout extends FrameLayout {
+        private int maxWidth = Integer.MAX_VALUE;
+        private int maxHeight = Integer.MAX_VALUE;
+
+
+        public MaximumFrameLayout(Context context) {
+            super(context);
+        }
+
+        @Override
+        protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+            int width = getMeasuredWidth();
+            int height = getMeasuredHeight();
+            if (width > maxWidth || height > maxHeight) {
+                width = Math.min(width, maxWidth);
+                height = Math.min(height, maxHeight);
+                widthMeasureSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.AT_MOST);
+                heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.AT_MOST);
+                super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+            }
+        }
+    }
+
+
     public StackNode(DoricContext doricContext) {
         super(doricContext);
+    }
+
+    @Override
+    protected void blendLayoutConfig(JSObject jsObject) {
+        super.blendLayoutConfig(jsObject);
+        JSValue maxWidth = jsObject.getProperty("maxWidth");
+        if (maxWidth.isNumber()) {
+            ((MaximumFrameLayout) mView).maxWidth = DoricUtils.dp2px(maxWidth.asNumber().toFloat());
+        }
+        JSValue maxHeight = jsObject.getProperty("maxHeight");
+        if (maxHeight.isNumber()) {
+            ((MaximumFrameLayout) mView).maxHeight = DoricUtils.dp2px(maxHeight.asNumber().toFloat());
+        }
     }
 
     @Override
@@ -46,7 +87,7 @@ public class StackNode extends GroupNode<FrameLayout> {
 
     @Override
     protected FrameLayout build() {
-        return new FrameLayout(getContext());
+        return new MaximumFrameLayout(getContext());
     }
 
     @Override

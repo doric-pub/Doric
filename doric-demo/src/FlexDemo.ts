@@ -27,22 +27,6 @@ class LayoutDemo extends Panel {
                                         height: 100,
                                     }
                                 }),
-                            // stack([],
-                            //     {
-                            //         backgroundColor: colors[3],
-                            //         flexConfig: {
-                            //             width: 500,
-                            //             height: 300,
-                            //         }
-                            //     }),
-                            // stack([],
-                            //     {
-                            //         backgroundColor: colors[4],
-                            //         flexConfig: {
-                            //             width: 500,
-                            //             height: 500,
-                            //         }
-                            //     }),
                         ],
                         {
                             flexConfig: {
@@ -54,8 +38,8 @@ class LayoutDemo extends Panel {
                         layoutConfig: {
                             widthSpec: LayoutSpec.FIT,
                             heightSpec: LayoutSpec.FIT,
-                            minHeight: 300,
-                            maxHeight: 300,
+                            minHeight: 200,
+                            maxHeight: 400,
                         },
                         backgroundColor: colors[0].alpha(0.3),
                     })

@@ -15,7 +15,9 @@
  */
 package pub.doric.shader;
 
+import android.content.Context;
 import android.text.TextUtils;
+import android.widget.FrameLayout;
 
 import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSObject;
@@ -49,9 +51,45 @@ public class ScrollerNode extends SuperNode<HVScrollView> implements IDoricScrol
     private String onScrollEndFuncId;
     private DoricJSDispatcher jsDispatcher = new DoricJSDispatcher();
 
+    private static class MaximumScrollView extends HVScrollView {
+        private int maxWidth = Integer.MAX_VALUE;
+        private int maxHeight = Integer.MAX_VALUE;
+
+
+        public MaximumScrollView(Context context) {
+            super(context);
+        }
+
+        @Override
+        protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+            int width = getMeasuredWidth();
+            int height = getMeasuredHeight();
+            if (width > maxWidth || height > maxHeight) {
+                width = Math.min(width, maxWidth);
+                height = Math.min(height, maxHeight);
+                widthMeasureSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.AT_MOST);
+                heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.AT_MOST);
+                super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+            }
+        }
+    }
 
     public ScrollerNode(DoricContext doricContext) {
         super(doricContext);
+    }
+
+    @Override
+    protected void blendLayoutConfig(JSObject jsObject) {
+        super.blendLayoutConfig(jsObject);
+        JSValue maxWidth = jsObject.getProperty("maxWidth");
+        if (maxWidth.isNumber()) {
+            ((MaximumScrollView) mView).maxWidth = DoricUtils.dp2px(maxWidth.asNumber().toFloat());
+        }
+        JSValue maxHeight = jsObject.getProperty("maxHeight");
+        if (maxHeight.isNumber()) {
+            ((MaximumScrollView) mView).maxHeight = DoricUtils.dp2px(maxHeight.asNumber().toFloat());
+        }
     }
 
     @Override
@@ -68,7 +106,7 @@ public class ScrollerNode extends SuperNode<HVScrollView> implements IDoricScrol
 
     @Override
     protected HVScrollView build() {
-        HVScrollView hvScrollView = new HVScrollView(getContext());
+        HVScrollView hvScrollView = new MaximumScrollView(getContext());
         hvScrollView.setOnScrollChangeListener(new HVScrollView.OnScrollChangeListener() {
 
             @Override

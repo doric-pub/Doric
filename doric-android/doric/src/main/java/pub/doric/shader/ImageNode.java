@@ -69,6 +69,19 @@ public class ImageNode extends ViewNode<ImageView> {
     }
 
     @Override
+    protected void blendLayoutConfig(JSObject jsObject) {
+        super.blendLayoutConfig(jsObject);
+        JSValue maxWidth = jsObject.getProperty("maxWidth");
+        if (maxWidth.isNumber()) {
+            mView.setMaxWidth(DoricUtils.dp2px(maxWidth.asNumber().toFloat()));
+        }
+        JSValue maxHeight = jsObject.getProperty("maxHeight");
+        if (maxHeight.isNumber()) {
+            mView.setMaxHeight(DoricUtils.dp2px(maxWidth.asNumber().toFloat()));
+        }
+    }
+
+    @Override
     protected ImageView build() {
         ImageView imageView = new ImageView(getContext());
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);

@@ -31,6 +31,8 @@ cd $CURRENT_DIR/doric-web && npm version $CURRENT_VERSION --allow-same-version
 ## CLI
 echo $CURRENT_VERSION > $CURRENT_DIR/doric-cli/target/version
 
+cd $CURRENT_DIR/doric-cli && npm version $CURRENT_VERSION --allow-same-version
+
 # git save
 cd $CURRENT_DIR/
 

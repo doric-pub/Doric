@@ -23,7 +23,6 @@
 #import "DoricContextHolder.h"
 #import "DoricLayouts.h"
 #import "UIView+Doric.h"
-#import <YogaKit/UIView+Yoga.h>
 
 @class DoricSuperNode;
 
@@ -56,6 +55,4 @@
 - (void)blendLayoutConfig:(NSDictionary *)params;
 
 - (void)afterBlended:(NSDictionary *)props;
-
-- (void)blendYoga:(YGLayout *)yoga from:(NSDictionary *)flexConfig;
 @end

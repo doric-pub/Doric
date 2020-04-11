@@ -15,6 +15,7 @@
  */
 package pub.doric.shader;
 
+import android.content.Context;
 import android.graphics.drawable.ShapeDrawable;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -31,8 +32,46 @@ import com.github.pengfeizhou.jscore.JSValue;
  * @CreateDate: 2019-07-23
  */
 public class LinearNode extends GroupNode<LinearLayout> {
+
+    private static class MaximumLinearLayout extends LinearLayout {
+        private int maxWidth = Integer.MAX_VALUE;
+        private int maxHeight = Integer.MAX_VALUE;
+
+
+        public MaximumLinearLayout(Context context) {
+            super(context);
+        }
+
+        @Override
+        protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+            int width = getMeasuredWidth();
+            int height = getMeasuredHeight();
+            if (width > maxWidth || height > maxHeight) {
+                width = Math.min(width, maxWidth);
+                height = Math.min(height, maxHeight);
+                widthMeasureSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.AT_MOST);
+                heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.AT_MOST);
+                super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+            }
+        }
+    }
+
     public LinearNode(DoricContext doricContext) {
         super(doricContext);
+    }
+
+    @Override
+    protected void blendLayoutConfig(JSObject jsObject) {
+        super.blendLayoutConfig(jsObject);
+        JSValue maxWidth = jsObject.getProperty("maxWidth");
+        if (maxWidth.isNumber()) {
+            ((MaximumLinearLayout) mView).maxWidth = DoricUtils.dp2px(maxWidth.asNumber().toFloat());
+        }
+        JSValue maxHeight = jsObject.getProperty("maxHeight");
+        if (maxHeight.isNumber()) {
+            ((MaximumLinearLayout) mView).maxHeight = DoricUtils.dp2px(maxHeight.asNumber().toFloat());
+        }
     }
 
     @Override
@@ -55,7 +94,7 @@ public class LinearNode extends GroupNode<LinearLayout> {
 
     @Override
     protected LinearLayout build() {
-        return new LinearLayout(getContext());
+        return new MaximumLinearLayout(getContext());
     }
 
     @Override

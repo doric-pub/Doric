@@ -21,6 +21,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.widget.TextView;
 
+import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
 import pub.doric.DoricContext;
@@ -46,6 +47,19 @@ public class TextNode extends ViewNode<TextView> {
         tv.setEllipsize(TextUtils.TruncateAt.END);
         tv.setIncludeFontPadding(false);
         return tv;
+    }
+
+    @Override
+    protected void blendLayoutConfig(JSObject jsObject) {
+        super.blendLayoutConfig(jsObject);
+        JSValue maxWidth = jsObject.getProperty("maxWidth");
+        if (maxWidth.isNumber()) {
+            mView.setMaxWidth(DoricUtils.dp2px(maxWidth.asNumber().toFloat()));
+        }
+        JSValue maxHeight = jsObject.getProperty("maxHeight");
+        if (maxHeight.isNumber()) {
+            mView.setMaxHeight(DoricUtils.dp2px(maxWidth.asNumber().toFloat()));
+        }
     }
 
     @Override

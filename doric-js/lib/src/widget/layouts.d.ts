@@ -27,5 +27,5 @@ export declare function hlayout(views: View[], config?: IHLayout): HLayout;
 export declare function vlayout(views: View[], config?: IVLayout): VLayout;
 export declare class FlexLayout extends Group {
 }
-export declare function flexlayout(views: View[], config: IView): FlexLayout;
+export declare function flexlayout(views: View[], config?: IView): FlexLayout;
 export {};

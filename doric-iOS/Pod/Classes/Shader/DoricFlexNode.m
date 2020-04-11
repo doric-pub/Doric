@@ -58,12 +58,6 @@
 
 - (void)requestLayout {
     [super requestLayout];
-    for (UIView *view in self.view.subviews) {
-        if ([view isKindOfClass:[DoricFlexView class]]) {
-            continue;
-        }
-        [view.doricLayout apply];
-    }
     if (self.view.doricLayout.widthSpec != DoricLayoutFit) {
         self.view.yoga.width = YGPointValue(self.view.width);
     }
@@ -73,7 +67,7 @@
     [self.view.yoga applyLayoutPreservingOrigin:YES];
     /// Need layout again.
     for (UIView *view in self.view.subviews) {
-        if ([view isKindOfClass:[DoricFlexView class]]) {
+        if (view.yoga.isEnabled) {
             continue;
         }
         if (view.doricLayout.measuredWidth == view.width && view.doricLayout.measuredHeight == view.height) {

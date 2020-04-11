@@ -10,3 +10,4 @@ export * from './input';
 export * from './nestedSlider';
 export * from './draggable';
 export * from './switch';
+export * from './flexScroller';

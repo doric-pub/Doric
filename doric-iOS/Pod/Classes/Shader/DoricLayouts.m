@@ -55,8 +55,10 @@ static const void *kLayoutConfig = &kLayoutConfig;
     if (self = [super init]) {
         _widthSpec = DoricLayoutJust;
         _heightSpec = DoricLayoutJust;
-        _maxWidth = -1;
-        _maxHeight = -1;
+        _maxWidth = CGFLOAT_MAX;
+        _maxHeight = CGFLOAT_MAX;
+        _minWidth = CGFLOAT_MIN;
+        _minHeight = CGFLOAT_MIN;
     }
     return self;
 }
@@ -103,17 +105,21 @@ static const void *kLayoutConfig = &kLayoutConfig;
             height - self.paddingTop - self.paddingBottom)];
 
     BOOL needRemeasure = NO;
-    if (self.maxWidth >= 0) {
-        if (self.measuredWidth > self.maxWidth) {
-            self.measuredWidth = self.maxWidth;
-            needRemeasure = YES;
-        }
+    if (self.measuredWidth > self.maxWidth) {
+        self.measuredWidth = self.maxWidth;
+        needRemeasure = YES;
     }
-    if (self.maxHeight > 0) {
-        if (self.measuredHeight > self.maxHeight) {
-            self.measuredHeight = self.maxHeight;
-            needRemeasure = YES;
-        }
+    if (self.measuredHeight > self.maxHeight) {
+        self.measuredHeight = self.maxHeight;
+        needRemeasure = YES;
+    }
+    if (self.measuredWidth < self.minWidth) {
+        self.measuredWidth = self.minWidth;
+        needRemeasure = YES;
+    }
+    if (self.measuredHeight < self.minHeight) {
+        self.measuredHeight = self.minHeight;
+        needRemeasure = YES;
     }
     if (needRemeasure) {
         [self measureContent:CGSizeMake(

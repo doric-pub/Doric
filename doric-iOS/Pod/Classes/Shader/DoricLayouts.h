@@ -90,6 +90,10 @@ typedef NS_ENUM(NSInteger, DoricGravity) {
 
 @property(nonatomic, assign) CGFloat maxHeight;
 
+@property(nonatomic, assign) CGFloat minWidth;
+
+@property(nonatomic, assign) CGFloat minHeight;
+
 @property(nonatomic, assign) BOOL resolved;
 
 @property(nonatomic, assign) CGFloat measuredWidth;

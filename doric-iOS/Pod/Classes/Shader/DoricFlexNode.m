@@ -27,6 +27,16 @@
 
 @implementation DoricFlexView
 - (CGSize)sizeThatFits:(CGSize)size {
+    for (UIView *view in self.subviews) {
+        if (!view.doricLayout.disabled) {
+            [view.doricLayout apply];
+            [view configureLayoutWithBlock:^(YGLayout *layout) {
+                layout.isEnabled = YES;
+                layout.width = YGPointValue(view.doricLayout.measuredWidth);
+                layout.height = YGPointValue(view.doricLayout.measuredHeight);
+            }];
+        }
+    }
     return [self.yoga intrinsicSize];
 }
 @end
@@ -53,6 +63,7 @@
     [subNode.view configureLayoutWithBlock:^(YGLayout *_Nonnull layout) {
         layout.isEnabled = YES;
     }];
+    subNode.view.doricLayout.disabled = YES;
     [self blendYoga:subNode.view.yoga from:flexConfig];
 }
 
@@ -195,6 +206,7 @@
 
 - (void)requestLayout {
     [super requestLayout];
+
     if (self.view.doricLayout.widthSpec != DoricLayoutFit) {
         self.view.yoga.width = YGPointValue(self.view.width);
     }
@@ -204,7 +216,7 @@
     [self.view.yoga applyLayoutPreservingOrigin:YES];
     /// Need layout again.
     for (UIView *view in self.view.subviews) {
-        if (view.yoga.isEnabled) {
+        if ([view isKindOfClass:[DoricFlexView class]]) {
             continue;
         }
         if (view.doricLayout.measuredWidth == view.width && view.doricLayout.measuredHeight == view.height) {

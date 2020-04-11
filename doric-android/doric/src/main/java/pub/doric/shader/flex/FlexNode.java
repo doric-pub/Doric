@@ -15,7 +15,9 @@
  */
 package pub.doric.shader.flex;
 
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.facebook.yoga.YogaAlign;
 import com.facebook.yoga.YogaDirection;
@@ -32,6 +34,7 @@ import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
 import pub.doric.DoricContext;
+import pub.doric.R;
 import pub.doric.extension.bridge.DoricPlugin;
 import pub.doric.shader.GroupNode;
 import pub.doric.shader.ViewNode;
@@ -56,7 +59,56 @@ public class FlexNode extends GroupNode<YogaLayout> {
 
     @Override
     protected YogaLayout build() {
-        return new YogaLayout(getContext());
+        YogaLayout yogaLayout = new YogaLayout(getContext()) {
+            @Override
+            protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+                for (int i = 0; i < getChildCount(); i++) {
+                    View child = getChildAt(i);
+                    ViewNode childNode = (ViewNode) child.getTag(R.id.doric_node);
+                    if (childNode != null && childNode.getFlexConfig() == null) {
+                        ViewGroup.LayoutParams layoutParams = child.getLayoutParams();
+                        int childWidthMeasureSpec;
+                        int childHeightMeasureSpec;
+                        if (layoutParams.width == ViewGroup.LayoutParams.MATCH_PARENT) {
+                            childWidthMeasureSpec = View.MeasureSpec.makeMeasureSpec(
+                                    0,
+                                    View.MeasureSpec.AT_MOST);
+                        } else if (layoutParams.width == ViewGroup.LayoutParams.WRAP_CONTENT) {
+                            childWidthMeasureSpec = View.MeasureSpec.makeMeasureSpec(
+                                    0,
+                                    View.MeasureSpec.UNSPECIFIED);
+                        } else {
+                            childWidthMeasureSpec = View.MeasureSpec.makeMeasureSpec(
+                                    layoutParams.width,
+                                    View.MeasureSpec.EXACTLY);
+                        }
+
+                        if (layoutParams.height == ViewGroup.LayoutParams.MATCH_PARENT) {
+                            childHeightMeasureSpec = View.MeasureSpec.makeMeasureSpec(
+                                    0,
+                                    View.MeasureSpec.AT_MOST);
+                        } else if (layoutParams.height == ViewGroup.LayoutParams.WRAP_CONTENT) {
+                            childHeightMeasureSpec = View.MeasureSpec.makeMeasureSpec(
+                                    0,
+                                    View.MeasureSpec.UNSPECIFIED);
+                        } else {
+                            childHeightMeasureSpec = View.MeasureSpec.makeMeasureSpec(
+                                    layoutParams.height,
+                                    View.MeasureSpec.EXACTLY);
+                        }
+                        child.measure(childWidthMeasureSpec, childHeightMeasureSpec);
+                        if (layoutParams.width != ViewGroup.LayoutParams.MATCH_PARENT) {
+                            getYogaNodeForView(child).setWidth(childNode.getView().getMeasuredWidth());
+                        }
+                        if (layoutParams.height != ViewGroup.LayoutParams.MATCH_PARENT) {
+                            getYogaNodeForView(child).setHeight(childNode.getView().getMeasuredHeight());
+                        }
+                    }
+                }
+                super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+            }
+        };
+        return yogaLayout;
     }
 
     @Override
@@ -84,6 +136,9 @@ public class FlexNode extends GroupNode<YogaLayout> {
         super.blend(jsObject);
         for (ViewNode childNode : mChildNodes) {
             YogaNode yogaNode = this.mView.getYogaNodeForView(childNode.getNodeView());
+            if (childNode.getFlexConfig() != null && childNode.getView() instanceof ImageView) {
+                ((ImageView) childNode.getView()).setAdjustViewBounds(false);
+            }
             if (yogaNode != null) {
                 blendSubFlexConfig(yogaNode, childNode.getFlexConfig());
             }
@@ -92,11 +147,11 @@ public class FlexNode extends GroupNode<YogaLayout> {
 
     private void blendSubFlexConfig(YogaNode yogaNode, JSObject jsObject) {
         if (jsObject == null) {
-            return;
-        }
-        for (String name : jsObject.propertySet()) {
-            JSValue value = jsObject.getProperty(name);
-            blendFlexConfig(yogaNode, name, value);
+        } else {
+            for (String name : jsObject.propertySet()) {
+                JSValue value = jsObject.getProperty(name);
+                blendFlexConfig(yogaNode, name, value);
+            }
         }
     }
 

@@ -16,7 +16,6 @@
 package pub.doric.shader;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSObject;

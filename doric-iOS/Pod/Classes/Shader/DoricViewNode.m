@@ -430,6 +430,18 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     [params[@"weight"] also:^(NSNumber *it) {
         self.view.doricLayout.weight = (DoricGravity) [it integerValue];
     }];
+    [params[@"maxWidth"] also:^(NSNumber *it) {
+        self.view.doricLayout.maxWidth = (DoricGravity) [it integerValue];
+    }];
+    [params[@"maxHeight"] also:^(NSNumber *it) {
+        self.view.doricLayout.maxHeight = (DoricGravity) [it integerValue];
+    }];
+    [params[@"minWidth"] also:^(NSNumber *it) {
+           self.view.doricLayout.minWidth = (DoricGravity) [it integerValue];
+    }];
+    [params[@"minHeight"] also:^(NSNumber *it) {
+           self.view.doricLayout.minHeight = (DoricGravity) [it integerValue];
+    }];
 }
 
 - (NSDictionary *)transformation {

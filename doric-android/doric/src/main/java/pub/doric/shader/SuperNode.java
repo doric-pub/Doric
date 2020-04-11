@@ -92,54 +92,7 @@ public abstract class SuperNode<V extends View> extends ViewNode<V> {
     protected abstract void blendSubNode(JSObject subProperties);
 
     protected void blendSubLayoutConfig(ViewNode viewNode, JSObject jsObject) {
-        JSValue margin = jsObject.getProperty("margin");
-        JSValue widthSpec = jsObject.getProperty("widthSpec");
-        JSValue heightSpec = jsObject.getProperty("heightSpec");
-        ViewGroup.LayoutParams layoutParams = viewNode.getLayoutParams();
-        if (widthSpec.isNumber()) {
-            switch (widthSpec.asNumber().toInt()) {
-                case 1:
-                    layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-                    break;
-                case 2:
-                    layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
-                    break;
-                default:
-                    layoutParams.width = Math.max(0, layoutParams.width);
-                    break;
-            }
-        }
-        if (heightSpec.isNumber()) {
-            switch (heightSpec.asNumber().toInt()) {
-                case 1:
-                    layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                    break;
-                case 2:
-                    layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
-                    break;
-                default:
-                    layoutParams.height = Math.max(0, layoutParams.height);
-                    break;
-            }
-        }
-        if (margin.isObject() && layoutParams instanceof ViewGroup.MarginLayoutParams) {
-            JSValue topVal = margin.asObject().getProperty("top");
-            if (topVal.isNumber()) {
-                ((ViewGroup.MarginLayoutParams) layoutParams).topMargin = DoricUtils.dp2px(topVal.asNumber().toFloat());
-            }
-            JSValue leftVal = margin.asObject().getProperty("left");
-            if (leftVal.isNumber()) {
-                ((ViewGroup.MarginLayoutParams) layoutParams).leftMargin = DoricUtils.dp2px(leftVal.asNumber().toFloat());
-            }
-            JSValue rightVal = margin.asObject().getProperty("right");
-            if (rightVal.isNumber()) {
-                ((ViewGroup.MarginLayoutParams) layoutParams).rightMargin = DoricUtils.dp2px(rightVal.asNumber().toFloat());
-            }
-            JSValue bottomVal = margin.asObject().getProperty("bottom");
-            if (bottomVal.isNumber()) {
-                ((ViewGroup.MarginLayoutParams) layoutParams).bottomMargin = DoricUtils.dp2px(bottomVal.asNumber().toFloat());
-            }
-        }
+        viewNode.blendLayoutConfig(jsObject);
     }
 
     private void mixin(JSObject src, JSObject target) {

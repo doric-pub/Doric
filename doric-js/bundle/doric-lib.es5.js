@@ -705,6 +705,22 @@ var LayoutConfigImpl = /** @class */ (function () {
         this.weight = w;
         return this;
     };
+    LayoutConfigImpl.prototype.configMaxWidth = function (v) {
+        this.maxWidth = v;
+        return this;
+    };
+    LayoutConfigImpl.prototype.configMaxHeight = function (v) {
+        this.maxHeight = v;
+        return this;
+    };
+    LayoutConfigImpl.prototype.configMinWidth = function (v) {
+        this.minWidth = v;
+        return this;
+    };
+    LayoutConfigImpl.prototype.configMinHeight = function (v) {
+        this.minHeight = v;
+        return this;
+    };
     LayoutConfigImpl.prototype.toModel = function () {
         return {
             widthSpec: this.widthSpec,

@@ -15,7 +15,7 @@ class LayoutDemo extends Panel {
                                 {
                                     backgroundColor: colors[1],
                                     flexConfig: {
-                                        width: 300,
+                                        width: 500,
                                         height: 100,
                                     }
                                 }),
@@ -27,71 +27,77 @@ class LayoutDemo extends Panel {
                                         height: 100,
                                     }
                                 }),
-                            stack([],
-                                {
-                                    backgroundColor: colors[3],
-                                    flexConfig: {
-                                        width: 100,
-                                        height: 100,
-                                    }
-                                }),
+                            // stack([],
+                            //     {
+                            //         backgroundColor: colors[3],
+                            //         flexConfig: {
+                            //             width: 500,
+                            //             height: 300,
+                            //         }
+                            //     }),
+                            // stack([],
+                            //     {
+                            //         backgroundColor: colors[4],
+                            //         flexConfig: {
+                            //             width: 500,
+                            //             height: 500,
+                            //         }
+                            //     }),
                         ],
                         {
                             flexConfig: {
                                 flexDirection: FlexDirection.COLUMN,
                             },
-                            backgroundColor: colors[4]
+                            backgroundColor: colors[4].alpha(0.1)
                         }),
                     {
                         layoutConfig: {
                             widthSpec: LayoutSpec.FIT,
-                            heightSpec: LayoutSpec.FIT
+                            heightSpec: LayoutSpec.FIT,
+                            minHeight: 300,
+                            maxHeight: 300,
                         },
-                        backgroundColor: colors[0],
+                        backgroundColor: colors[0].alpha(0.3),
                     })
             ],
             {
-                layoutConfig: layoutConfig().just(),
-                width: 250,
-                height: 250,
+                layoutConfig: layoutConfig().fit(),
             }
-        )
-        //.in(root)
-        flexScroller(
-            [
-                stack([],
-                    {
-                        backgroundColor: colors[1],
-                        flexConfig: {
-                            width: 500,
-                            height: 100,
-                        }
-                    }),
-                stack([],
-                    {
-                        backgroundColor: colors[2],
-                        flexConfig: {
-                            width: 100,
-                            height: 100,
-                        }
-                    }),
-                stack([],
-                    {
-                        backgroundColor: colors[3],
-                        flexConfig: {
-                            width: 100,
-                            height: 100,
-                        }
-                    }),
-            ],
-            {
-                backgroundColor: Color.GRAY.alpha(0.3),
-                layoutConfig: layoutConfig().just(),
-                width: 300,
-                height: 300,
-                flexConfig: {
-                    overFlow: OverFlow.HIDDEN,
-                }
-            }).in(root)
+        ).in(root)
+        // flexScroller(
+        //     [
+        //         stack([],
+        //             {
+        //                 backgroundColor: colors[1],
+        //                 flexConfig: {
+        //                     width: 500,
+        //                     height: 100,
+        //                 }
+        //             }),
+        //         stack([],
+        //             {
+        //                 backgroundColor: colors[2],
+        //                 flexConfig: {
+        //                     width: 100,
+        //                     height: 300,
+        //                 }
+        //             }),
+        //         stack([],
+        //             {
+        //                 backgroundColor: colors[3],
+        //                 flexConfig: {
+        //                     width: 100,
+        //                     height: 100,
+        //                 }
+        //             }),
+        //     ],
+        //     {
+        //         backgroundColor: Color.GRAY.alpha(0.3),
+        //         layoutConfig: layoutConfig().fit(),
+        //         flexConfig: {
+        //             maxWidth: 300,
+        //             maxHeight: 300,
+        //         },
+        //     })//.in(root)
     }
 }

@@ -43,6 +43,12 @@ export interface LayoutConfig {
     alignment?: Gravity
     //Only affective in VLayout or HLayout
     weight?: number
+
+    maxWidth?: number
+    maxHeight?: number
+
+    minWidth?: number
+    minHeight?: number
 }
 
 export class LayoutConfigImpl implements LayoutConfig, Modeling {
@@ -57,6 +63,12 @@ export class LayoutConfigImpl implements LayoutConfig, Modeling {
     alignment?: Gravity
     //Only affective in VLayout or HLayout
     weight?: number
+
+    maxWidth?: number
+    maxHeight?: number
+
+    minWidth?: number
+    minHeight?: number
 
     fit() {
         this.widthSpec = LayoutSpec.FIT
@@ -103,6 +115,26 @@ export class LayoutConfigImpl implements LayoutConfig, Modeling {
 
     configWeight(w: number) {
         this.weight = w
+        return this
+    }
+
+    configMaxWidth(v: number) {
+        this.maxWidth = v
+        return this
+    }
+
+    configMaxHeight(v: number) {
+        this.maxHeight = v
+        return this
+    }
+
+    configMinWidth(v: number) {
+        this.minWidth = v
+        return this
+    }
+
+    configMinHeight(v: number) {
+        this.minHeight = v
         return this
     }
 

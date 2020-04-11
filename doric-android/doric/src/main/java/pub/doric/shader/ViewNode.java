@@ -37,8 +37,6 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 
-import com.facebook.yoga.YogaNode;
-import com.facebook.yoga.android.YogaLayout;
 import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSONBuilder;
@@ -55,7 +53,6 @@ import pub.doric.DoricRegistry;
 import pub.doric.async.AsyncResult;
 import pub.doric.extension.bridge.DoricMethod;
 import pub.doric.extension.bridge.DoricPromise;
-import pub.doric.shader.flex.FlexNode;
 import pub.doric.utils.DoricConstant;
 import pub.doric.utils.DoricContextHolder;
 import pub.doric.utils.DoricLog;
@@ -531,7 +528,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         );
     }
 
-    private void blendLayoutConfig(JSObject jsObject) {
+    protected void blendLayoutConfig(JSObject jsObject) {
         JSValue margin = jsObject.getProperty("margin");
         JSValue widthSpec = jsObject.getProperty("widthSpec");
         JSValue heightSpec = jsObject.getProperty("heightSpec");
@@ -583,6 +580,14 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         JSValue jsValue = jsObject.getProperty("alignment");
         if (jsValue.isNumber() && layoutParams instanceof FrameLayout.LayoutParams) {
             ((FrameLayout.LayoutParams) layoutParams).gravity = jsValue.asNumber().toInt();
+        }
+        JSValue minWidthValue = jsObject.getProperty("minWidth");
+        if (minWidthValue.isNumber()) {
+            mView.setMinimumWidth(DoricUtils.dp2px(minWidthValue.asNumber().toFloat()));
+        }
+        JSValue minHeightValue = jsObject.getProperty("minHeight");
+        if (minHeightValue.isNumber()) {
+            mView.setMinimumHeight(DoricUtils.dp2px(minHeightValue.asNumber().toFloat()));
         }
     }
 

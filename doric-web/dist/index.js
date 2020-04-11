@@ -2087,6 +2087,22 @@ class LayoutConfigImpl {
         this.weight = w;
         return this;
     }
+    configMaxWidth(v) {
+        this.maxWidth = v;
+        return this;
+    }
+    configMaxHeight(v) {
+        this.maxHeight = v;
+        return this;
+    }
+    configMinWidth(v) {
+        this.minWidth = v;
+        return this;
+    }
+    configMinHeight(v) {
+        this.minHeight = v;
+        return this;
+    }
     toModel() {
         return {
             widthSpec: this.widthSpec,

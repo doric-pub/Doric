@@ -104,6 +104,15 @@ static const void *kLayoutConfig = &kLayoutConfig;
             width - self.paddingLeft - self.paddingRight,
             height - self.paddingTop - self.paddingBottom)];
 
+    if ([self restrainSize]) {
+        [self measureContent:CGSizeMake(
+                self.measuredWidth - self.paddingLeft - self.paddingRight,
+                self.measuredHeight - self.paddingTop - self.paddingBottom)];
+    }
+    [self restrainSize];
+}
+
+- (BOOL)restrainSize {
     BOOL needRemeasure = NO;
     if (self.measuredWidth > self.maxWidth) {
         self.measuredWidth = self.maxWidth;
@@ -121,11 +130,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
         self.measuredHeight = self.minHeight;
         needRemeasure = YES;
     }
-    if (needRemeasure) {
-        [self measureContent:CGSizeMake(
-                self.measuredWidth - self.paddingLeft - self.paddingRight,
-                self.measuredHeight - self.paddingTop - self.paddingBottom)];
-    }
+    return needRemeasure;
 }
 
 - (void)measureContent:(CGSize)targetSize {

@@ -1197,6 +1197,10 @@ declare module 'doric/lib/src/util/layoutconfig' {
             };
             alignment?: Gravity;
             weight?: number;
+            maxWidth?: number;
+            maxHeight?: number;
+            minWidth?: number;
+            minHeight?: number;
     }
     export class LayoutConfigImpl implements LayoutConfig, Modeling {
             widthSpec?: LayoutSpec;
@@ -1209,6 +1213,10 @@ declare module 'doric/lib/src/util/layoutconfig' {
             };
             alignment?: Gravity;
             weight?: number;
+            maxWidth?: number;
+            maxHeight?: number;
+            minWidth?: number;
+            minHeight?: number;
             fit(): this;
             most(): this;
             just(): this;
@@ -1222,6 +1230,10 @@ declare module 'doric/lib/src/util/layoutconfig' {
             }): this;
             configAlignment(a: Gravity): this;
             configWeight(w: number): this;
+            configMaxWidth(v: number): this;
+            configMaxHeight(v: number): this;
+            configMinWidth(v: number): this;
+            configMinHeight(v: number): this;
             toModel(): {
                     widthSpec: LayoutSpec | undefined;
                     heightSpec: LayoutSpec | undefined;

@@ -30,7 +30,6 @@
 #import "DoricExtensions.h"
 #import "DoricPromise.h"
 #import "DoricFlexNode.h"
-#import "DoricFlexScrollerNode.h"
 
 void DoricAddEllipticArcPath(CGMutablePathRef path,
         CGPoint origin,
@@ -270,8 +269,6 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
         if ([prop isKindOfClass:[NSDictionary class]]) {
             if ([self.superNode isKindOfClass:[DoricFlexNode class]]) {
                 [((DoricFlexNode *) self.superNode) blendSubNode:self flexConfig:prop];
-            } else if ([self.superNode isKindOfClass:[DoricFlexScrollerNode class]]) {
-                [((DoricFlexScrollerNode *) self.superNode) blendSubNode:self flexConfig:prop];
             }
         }
     } else {

@@ -1,5 +1,5 @@
 
-import { Group, Panel, text, gravity, Color, LayoutSpec, vlayout, hlayout, scroller, IVLayout, IHLayout, layoutConfig, stack, Gravity, flexlayout, flexScroller } from "doric";
+import { Group, Panel, text, gravity, Color, LayoutSpec, vlayout, hlayout, scroller, IVLayout, IHLayout, layoutConfig, stack, Gravity, flexlayout } from "doric";
 import { FlexDirection, Wrap, Justify, Align, FlexTypedValue, OverFlow } from "doric/lib/src/util/flexbox";
 import { colors } from "./utils";
 
@@ -40,6 +40,7 @@ class LayoutDemo extends Panel {
                             heightSpec: LayoutSpec.FIT,
                             minHeight: 200,
                             maxHeight: 400,
+                            maxWidth: 300,
                         },
                         backgroundColor: colors[0].alpha(0.3),
                     })

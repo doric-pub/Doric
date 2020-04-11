@@ -88,6 +88,7 @@ declare module 'doric/lib/src/widget/index.widget' {
     export * from 'doric/lib/src/widget/nestedSlider';
     export * from 'doric/lib/src/widget/draggable';
     export * from 'doric/lib/src/widget/switch';
+    export * from 'doric/lib/src/widget/flexScroller';
 }
 
 declare module 'doric/lib/src/native/index.native' {
@@ -465,7 +466,7 @@ declare module 'doric/lib/src/widget/layouts' {
     export function vlayout(views: View[], config?: IVLayout): VLayout;
     export class FlexLayout extends Group {
     }
-    export function flexlayout(views: View[], config: IView): FlexLayout;
+    export function flexlayout(views: View[], config?: IView): FlexLayout;
     export {};
 }
 
@@ -868,6 +869,40 @@ declare module 'doric/lib/src/widget/switch' {
             thumbTintColor?: Color;
     }
     export function switchView(config: ISwitch): Switch;
+}
+
+declare module 'doric/lib/src/widget/flexScroller' {
+    import { View, IView, Group } from 'doric/lib/src/ui/view';
+    import { BridgeContext } from 'doric/lib/src/runtime/global';
+    export function flexScroller(views: View[], config?: IFlexScroller): FlexScroller;
+    export interface IFlexScroller extends IView {
+        contentOffset?: {
+            x: number;
+            y: number;
+        };
+    }
+    export class FlexScroller extends Group implements IFlexScroller {
+        contentOffset?: {
+            x: number;
+            y: number;
+        };
+        onScroll?: (offset: {
+            x: number;
+            y: number;
+        }) => void;
+        onScrollEnd?: (offset: {
+            x: number;
+            y: number;
+        }) => void;
+        scrollTo(context: BridgeContext, offset: {
+            x: number;
+            y: number;
+        }, animated?: boolean): Promise<any>;
+        scrollBy(context: BridgeContext, offset: {
+            x: number;
+            y: number;
+        }, animated?: boolean): Promise<any>;
+    }
 }
 
 declare module 'doric/lib/src/native/modal' {

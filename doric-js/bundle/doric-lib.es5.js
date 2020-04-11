@@ -2629,6 +2629,89 @@ function switchView(config) {
     return ret;
 }
 
+var __extends$e = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) { if (b.hasOwnProperty(p)) { d[p] = b[p]; } } };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __decorate$e = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") { r = Reflect.decorate(decorators, target, key, desc); }
+    else { for (var i = decorators.length - 1; i >= 0; i--) { if (d = decorators[i]) { r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r; } } }
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata$e = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
+};
+var __values$4 = (undefined && undefined.__values) || function(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) { return m.call(o); }
+    if (o && typeof o.length === "number") { return {
+        next: function () {
+            if (o && i >= o.length) { o = void 0; }
+            return { value: o && o[i++], done: !o };
+        }
+    }; }
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+};
+function flexScroller(views, config) {
+    var e_1, _a;
+    var ret = new FlexScroller;
+    ret.layoutConfig = layoutConfig().fit();
+    try {
+        for (var views_1 = __values$4(views), views_1_1 = views_1.next(); !views_1_1.done; views_1_1 = views_1.next()) {
+            var v = views_1_1.value;
+            ret.addChild(v);
+        }
+    }
+    catch (e_1_1) { e_1 = { error: e_1_1 }; }
+    finally {
+        try {
+            if (views_1_1 && !views_1_1.done && (_a = views_1.return)) { _a.call(views_1); }
+        }
+        finally { if (e_1) { throw e_1.error; } }
+    }
+    if (config) {
+        for (var key in config) {
+            Reflect.set(ret, key, Reflect.get(config, key, config), ret);
+        }
+    }
+    return ret;
+}
+var FlexScroller = /** @class */ (function (_super) {
+    __extends$e(FlexScroller, _super);
+    function FlexScroller() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    FlexScroller.prototype.scrollTo = function (context, offset, animated) {
+        return this.nativeChannel(context, "scrollTo")({ offset: offset, animated: animated });
+    };
+    FlexScroller.prototype.scrollBy = function (context, offset, animated) {
+        return this.nativeChannel(context, "scrollBy")({ offset: offset, animated: animated });
+    };
+    __decorate$e([
+        Property,
+        __metadata$e("design:type", Object)
+    ], FlexScroller.prototype, "contentOffset", void 0);
+    __decorate$e([
+        Property,
+        __metadata$e("design:type", Function)
+    ], FlexScroller.prototype, "onScroll", void 0);
+    __decorate$e([
+        Property,
+        __metadata$e("design:type", Function)
+    ], FlexScroller.prototype, "onScrollEnd", void 0);
+    return FlexScroller;
+}(Group));
+
 function modal(context) {
     return {
         toast: function (msg, gravity) {
@@ -2925,7 +3008,7 @@ var __generator = (undefined && undefined.__generator) || function (thisArg, bod
         if (op[0] & 5) { throw op[1]; } return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __values$4 = (undefined && undefined.__values) || function(o) {
+var __values$5 = (undefined && undefined.__values) || function(o) {
     var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
     if (m) { return m.call(o); }
     if (o && typeof o.length === "number") { return {
@@ -2962,10 +3045,10 @@ function animate(context) {
                                     return ret;
                                 }
                                 try {
-                                    for (var _c = __values$4(panel_1.allHeadViews()), _d = _c.next(); !_d.done; _d = _c.next()) {
+                                    for (var _c = __values$5(panel_1.allHeadViews()), _d = _c.next(); !_d.done; _d = _c.next()) {
                                         var map = _d.value;
                                         try {
-                                            for (var _e = (e_2 = void 0, __values$4(map.values())), _f = _e.next(); !_f.done; _f = _e.next()) {
+                                            for (var _e = (e_2 = void 0, __values$5(map.values())), _f = _e.next(); !_f.done; _f = _e.next()) {
                                                 var v = _f.value;
                                                 if (v.isDirty()) {
                                                     var model_1 = v.toModel();
@@ -3081,7 +3164,7 @@ function notch(context) {
     };
 }
 
-var __values$5 = (undefined && undefined.__values) || function(o) {
+var __values$6 = (undefined && undefined.__values) || function(o) {
     var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
     if (m) { return m.call(o); }
     if (o && typeof o.length === "number") { return {
@@ -3112,7 +3195,7 @@ var Observable = /** @class */ (function () {
             this.provider.provide(newV);
         }
         try {
-            for (var _b = __values$5(this.observers), _c = _b.next(); !_c.done; _c = _b.next()) {
+            for (var _b = __values$6(this.observers), _c = _b.next(); !_c.done; _c = _b.next()) {
                 var observer = _c.value;
                 observer(newV);
             }
@@ -3156,7 +3239,7 @@ var Provider = /** @class */ (function () {
     return Provider;
 }());
 
-var __extends$e = (undefined && undefined.__extends) || (function () {
+var __extends$f = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -3197,7 +3280,7 @@ var ViewModel = /** @class */ (function () {
     return ViewModel;
 }());
 var VMPanel = /** @class */ (function (_super) {
-    __extends$e(VMPanel, _super);
+    __extends$f(VMPanel, _super);
     function VMPanel() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -3220,6 +3303,7 @@ exports.CENTER_Y = CENTER_Y;
 exports.Color = Color;
 exports.Draggable = Draggable;
 exports.FlexLayout = FlexLayout;
+exports.FlexScroller = FlexScroller;
 exports.FlowLayout = FlowLayout;
 exports.FlowLayoutItem = FlowLayoutItem;
 exports.Gravity = Gravity;
@@ -3260,6 +3344,7 @@ exports.ViewModel = ViewModel;
 exports.animate = animate;
 exports.coordinator = coordinator;
 exports.draggable = draggable;
+exports.flexScroller = flexScroller;
 exports.flexlayout = flexlayout;
 exports.flowItem = flowItem;
 exports.flowlayout = flowlayout;

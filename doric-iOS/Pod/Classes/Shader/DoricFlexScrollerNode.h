@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from './layouts';
-export * from './text';
-export * from './image';
-export * from './list';
-export * from './slider';
-export * from './scroller';
-export * from './refreshable';
-export * from './flowlayout';
-export * from './input';
-export * from './nestedSlider';
-export * from './draggable';
-export * from './switch';
-export * from './flexScroller';
+//
+// Created by pengfei.zhou on 2020/4/11.
+//
+
+#import <Foundation/Foundation.h>
+
+#import "DoricGroupNode.h"
+
+@interface DoricFlexScrollerNode : DoricGroupNode <UIScrollView *>
+- (void)blendSubNode:(DoricViewNode *)subNode flexConfig:(NSDictionary *)flexConfig;
+@end

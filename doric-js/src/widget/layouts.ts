@@ -98,7 +98,7 @@ export function vlayout(views: View[], config?: IVLayout) {
 export class FlexLayout extends Group {
 }
 
-export function flexlayout(views: View[], config: IView) {
+export function flexlayout(views: View[], config?: IView) {
     const ret = new FlexLayout
     ret.layoutConfig = layoutConfig().fit()
     for (let v of views) {

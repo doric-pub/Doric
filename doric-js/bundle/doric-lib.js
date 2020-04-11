@@ -1956,6 +1956,49 @@ function switchView(config) {
     return ret;
 }
 
+var __decorate$e = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata$e = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+function flexScroller(views, config) {
+    const ret = new FlexScroller;
+    ret.layoutConfig = layoutConfig().fit();
+    for (let v of views) {
+        ret.addChild(v);
+    }
+    if (config) {
+        for (let key in config) {
+            Reflect.set(ret, key, Reflect.get(config, key, config), ret);
+        }
+    }
+    return ret;
+}
+class FlexScroller extends Group {
+    scrollTo(context, offset, animated) {
+        return this.nativeChannel(context, "scrollTo")({ offset, animated });
+    }
+    scrollBy(context, offset, animated) {
+        return this.nativeChannel(context, "scrollBy")({ offset, animated });
+    }
+}
+__decorate$e([
+    Property,
+    __metadata$e("design:type", Object)
+], FlexScroller.prototype, "contentOffset", void 0);
+__decorate$e([
+    Property,
+    __metadata$e("design:type", Function)
+], FlexScroller.prototype, "onScroll", void 0);
+__decorate$e([
+    Property,
+    __metadata$e("design:type", Function)
+], FlexScroller.prototype, "onScrollEnd", void 0);
+
 function modal(context) {
     return {
         toast: (msg, gravity = Gravity.Bottom) => {
@@ -2432,6 +2475,7 @@ exports.CENTER_Y = CENTER_Y;
 exports.Color = Color;
 exports.Draggable = Draggable;
 exports.FlexLayout = FlexLayout;
+exports.FlexScroller = FlexScroller;
 exports.FlowLayout = FlowLayout;
 exports.FlowLayoutItem = FlowLayoutItem;
 exports.Gravity = Gravity;
@@ -2472,6 +2516,7 @@ exports.ViewModel = ViewModel;
 exports.animate = animate;
 exports.coordinator = coordinator;
 exports.draggable = draggable;
+exports.flexScroller = flexScroller;
 exports.flexlayout = flexlayout;
 exports.flowItem = flowItem;
 exports.flowlayout = flowlayout;

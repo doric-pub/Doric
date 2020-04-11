@@ -50,6 +50,7 @@ import java.util.LinkedList;
 
 import pub.doric.DoricContext;
 import pub.doric.DoricRegistry;
+import pub.doric.R;
 import pub.doric.async.AsyncResult;
 import pub.doric.extension.bridge.DoricMethod;
 import pub.doric.extension.bridge.DoricPromise;
@@ -89,6 +90,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         this.mSuperNode = superNode;
         this.mLayoutParams = superNode.generateDefaultLayoutParams();
         this.mView = build();
+        this.mView.setTag(R.id.doric_node, this);
         this.mView.setLayoutParams(mLayoutParams);
     }
 
@@ -104,6 +106,10 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
 
     public String getType() {
         return mType;
+    }
+
+    public T getView() {
+        return mView;
     }
 
     public View getNodeView() {
@@ -466,6 +472,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
             } else {
                 doricLayer.addView(mView, params);
             }
+            this.doricLayer.setTag(R.id.doric_node, this);
         }
         return doricLayer;
     }

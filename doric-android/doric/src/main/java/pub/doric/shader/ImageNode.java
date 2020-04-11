@@ -34,6 +34,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.DrawableImageViewTarget;
 import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.bumptech.glide.request.target.Target;
+import com.facebook.yoga.YogaNode;
 import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
@@ -47,6 +48,7 @@ import androidx.annotation.Nullable;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import pub.doric.DoricContext;
 import pub.doric.extension.bridge.DoricPlugin;
+import pub.doric.shader.flex.FlexNode;
 import pub.doric.utils.DoricLog;
 import pub.doric.utils.DoricUtils;
 
@@ -83,7 +85,12 @@ public class ImageNode extends ViewNode<ImageView> {
 
     @Override
     protected ImageView build() {
-        ImageView imageView = new ImageView(getContext());
+        ImageView imageView = new ImageView(getContext()) {
+            @Override
+            protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+                super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+            }
+        };
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         imageView.setAdjustViewBounds(true);
         return imageView;
@@ -223,6 +230,12 @@ public class ImageNode extends ViewNode<ImageView> {
             @Override
             protected void setResource(@Nullable Drawable resource) {
                 super.setResource(resource);
+                if (mSuperNode instanceof FlexNode) {
+                    YogaNode node = ((FlexNode) mSuperNode).mView.getYogaNodeForView(mView);
+                    if (node != null) {
+                        node.dirty();
+                    }
+                }
             }
         });
     }

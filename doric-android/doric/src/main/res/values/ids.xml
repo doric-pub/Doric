@@ -3,4 +3,5 @@
     <item name="doric_mask_loading" type="id" />
     <item name="doric_mask_error" type="id" />
     <item name="doric_mask_error_retry" type="id" />
+    <item name="doric_node" type="id" />
 </resources>

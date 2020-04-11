@@ -20,7 +20,6 @@
 //  Created by pengfei.zhou on 2019/7/30.
 //
 
-#import <DoricCore/DoricExtensions.h>
 #import "DoricViewNode.h"
 #import "DoricUtil.h"
 #import "DoricGroupNode.h"
@@ -434,10 +433,10 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
         self.view.doricLayout.maxHeight = (DoricGravity) [it integerValue];
     }];
     [params[@"minWidth"] also:^(NSNumber *it) {
-           self.view.doricLayout.minWidth = (DoricGravity) [it integerValue];
+        self.view.doricLayout.minWidth = (DoricGravity) [it integerValue];
     }];
     [params[@"minHeight"] also:^(NSNumber *it) {
-           self.view.doricLayout.minHeight = (DoricGravity) [it integerValue];
+        self.view.doricLayout.minHeight = (DoricGravity) [it integerValue];
     }];
 }
 

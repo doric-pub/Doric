@@ -23,7 +23,7 @@
 #import "DoricContextHolder.h"
 #import "DoricLayouts.h"
 #import "UIView+Doric.h"
-#import "UIView+Yoga.h"
+#import <YogaKit/UIView+Yoga.h>
 
 @class DoricSuperNode;
 

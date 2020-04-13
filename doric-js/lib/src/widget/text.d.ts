@@ -12,6 +12,8 @@ export interface IText extends IView {
     maxWidth?: number;
     maxHeight?: number;
     lineSpacing?: number;
+    strikethrough?: boolean;
+    underline?: boolean;
 }
 export declare class Text extends View implements IText {
     text?: string;
@@ -24,5 +26,7 @@ export declare class Text extends View implements IText {
     maxWidth?: number;
     maxHeight?: number;
     lineSpacing?: number;
+    strikethrough?: boolean;
+    underline?: boolean;
 }
 export declare function text(config: IText): Text;

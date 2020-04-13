@@ -54,6 +54,36 @@ class LayoutDemo extends Panel {
                             widthSpec: LayoutSpec.FIT,
                             heightSpec: LayoutSpec.JUST,
                         },
+                        height: 50,
+                    }),
+                    image({
+                        imageBase64: icon_refresh,
+                        scaleType: ScaleType.ScaleAspectFit,
+                        backgroundColor: Color.GRAY,
+                        layoutConfig: {
+                            widthSpec: LayoutSpec.FIT,
+                            heightSpec: LayoutSpec.JUST,
+                        },
+                        height: 50,
+                    }),
+                    image({
+                        imageBase64: icon_refresh,
+                        scaleType: ScaleType.ScaleAspectFit,
+                        backgroundColor: Color.GRAY,
+                        layoutConfig: {
+                            widthSpec: LayoutSpec.FIT,
+                            heightSpec: LayoutSpec.JUST,
+                        },
+                        height: 50,
+                    }),
+                    image({
+                        imageBase64: icon_refresh,
+                        scaleType: ScaleType.ScaleAspectFit,
+                        backgroundColor: Color.GRAY,
+                        layoutConfig: {
+                            widthSpec: LayoutSpec.FIT,
+                            heightSpec: LayoutSpec.JUST,
+                        },
                         height: 16,
                     }),
                     image({
@@ -75,9 +105,10 @@ class LayoutDemo extends Panel {
                     flexConfig: {
                         flexDirection: FlexDirection.ROW,
                         width: 200,
-                        height: 100,
+                        height: 200,
                         flexWrap: Wrap.WRAP,
-                        alignContent: Align.CENTER,
+                        alignContent: Align.FLEX_END,
+                        alignItems: Align.FLEX_START,
                     },
                     backgroundColor: Color.GRAY.alpha(0.1),
                 }

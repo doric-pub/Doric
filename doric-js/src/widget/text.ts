@@ -29,6 +29,8 @@ export interface IText extends IView {
     maxWidth?: number
     maxHeight?: number
     lineSpacing?: number
+    strikethrough?: boolean
+    underline?: boolean
 }
 
 export class Text extends View implements IText {
@@ -61,6 +63,12 @@ export class Text extends View implements IText {
 
     @Property
     lineSpacing?: number
+
+    @Property
+    strikethrough?: boolean
+
+    @Property
+    underline?: boolean
 }
 
 export function text(config: IText) {

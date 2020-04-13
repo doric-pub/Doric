@@ -28,6 +28,7 @@ import com.facebook.yoga.YogaJustify;
 import com.facebook.yoga.YogaNode;
 import com.facebook.yoga.YogaOverflow;
 import com.facebook.yoga.YogaPositionType;
+import com.facebook.yoga.YogaUnit;
 import com.facebook.yoga.YogaWrap;
 import com.facebook.yoga.android.YogaLayout;
 import com.github.pengfeizhou.jscore.JSObject;
@@ -59,56 +60,111 @@ public class FlexNode extends GroupNode<YogaLayout> {
 
     @Override
     protected YogaLayout build() {
-        YogaLayout yogaLayout = new YogaLayout(getContext()) {
+        return new YogaLayout(getContext()) {
             @Override
             protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
                 for (int i = 0; i < getChildCount(); i++) {
                     View child = getChildAt(i);
                     ViewNode childNode = (ViewNode) child.getTag(R.id.doric_node);
-                    if (childNode != null && childNode.getFlexConfig() == null) {
+                    if (childNode != null) {
                         ViewGroup.LayoutParams layoutParams = child.getLayoutParams();
                         int childWidthMeasureSpec;
                         int childHeightMeasureSpec;
                         if (layoutParams.width == ViewGroup.LayoutParams.MATCH_PARENT) {
-                            childWidthMeasureSpec = View.MeasureSpec.makeMeasureSpec(
-                                    0,
-                                    View.MeasureSpec.AT_MOST);
+                            childWidthMeasureSpec = MeasureSpec.makeMeasureSpec(
+                                    getMeasuredWidth(),
+                                    MeasureSpec.AT_MOST);
                         } else if (layoutParams.width == ViewGroup.LayoutParams.WRAP_CONTENT) {
-                            childWidthMeasureSpec = View.MeasureSpec.makeMeasureSpec(
-                                    0,
-                                    View.MeasureSpec.UNSPECIFIED);
+                            childWidthMeasureSpec = MeasureSpec.makeMeasureSpec(
+                                    getMeasuredHeight(),
+                                    MeasureSpec.UNSPECIFIED);
                         } else {
-                            childWidthMeasureSpec = View.MeasureSpec.makeMeasureSpec(
+                            childWidthMeasureSpec = MeasureSpec.makeMeasureSpec(
                                     layoutParams.width,
-                                    View.MeasureSpec.EXACTLY);
+                                    MeasureSpec.EXACTLY);
                         }
 
                         if (layoutParams.height == ViewGroup.LayoutParams.MATCH_PARENT) {
-                            childHeightMeasureSpec = View.MeasureSpec.makeMeasureSpec(
+                            childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(
                                     0,
-                                    View.MeasureSpec.AT_MOST);
+                                    MeasureSpec.AT_MOST);
                         } else if (layoutParams.height == ViewGroup.LayoutParams.WRAP_CONTENT) {
-                            childHeightMeasureSpec = View.MeasureSpec.makeMeasureSpec(
+                            childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(
                                     0,
-                                    View.MeasureSpec.UNSPECIFIED);
+                                    MeasureSpec.UNSPECIFIED);
                         } else {
-                            childHeightMeasureSpec = View.MeasureSpec.makeMeasureSpec(
+                            childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(
                                     layoutParams.height,
-                                    View.MeasureSpec.EXACTLY);
+                                    MeasureSpec.EXACTLY);
                         }
                         child.measure(childWidthMeasureSpec, childHeightMeasureSpec);
-                        if (layoutParams.width != ViewGroup.LayoutParams.MATCH_PARENT) {
-                            getYogaNodeForView(child).setWidth(childNode.getView().getMeasuredWidth());
-                        }
-                        if (layoutParams.height != ViewGroup.LayoutParams.MATCH_PARENT) {
-                            getYogaNodeForView(child).setHeight(childNode.getView().getMeasuredHeight());
+                        YogaNode node = getYogaNodeForView(child);
+                        if (node != null) {
+                            JSObject flexConfig = childNode.getFlexConfig();
+                            YogaUnit widthUnit = YogaUnit.AUTO;
+                            YogaUnit heightUnit = YogaUnit.AUTO;
+                            if (flexConfig != null) {
+                                JSValue widthValue = flexConfig.getProperty("width");
+                                if (widthValue.isNumber()) {
+                                    widthUnit = YogaUnit.POINT;
+                                } else if (widthValue.isObject()) {
+                                    JSValue typeValue = widthValue.asObject().getProperty("type");
+                                    if (typeValue.isNumber()) {
+                                        widthUnit = YogaUnit.fromInt(typeValue.asNumber().toInt());
+                                    }
+                                }
+                                JSValue heightValue = flexConfig.getProperty("height");
+                                if (heightValue.isNumber()) {
+                                    heightUnit = YogaUnit.POINT;
+                                } else if (heightValue.isObject()) {
+                                    JSValue typeValue = heightValue.asObject().getProperty("type");
+                                    if (typeValue.isNumber()) {
+                                        heightUnit = YogaUnit.fromInt(typeValue.asNumber().toInt());
+                                    }
+                                }
+                            }
+                            if (widthUnit == YogaUnit.AUTO) {
+                                node.setWidth(childNode.getView().getMeasuredWidth());
+                            }
+                            if (heightUnit == YogaUnit.AUTO) {
+                                node.setHeight(childNode.getView().getMeasuredHeight());
+                            }
                         }
                     }
+                }
+                YogaUnit widthUnit = YogaUnit.AUTO;
+                YogaUnit heightUnit = YogaUnit.AUTO;
+                JSObject flexConfig = getFlexConfig();
+                if (flexConfig != null) {
+                    JSValue widthValue = flexConfig.getProperty("width");
+                    if (widthValue.isNumber()) {
+                        widthUnit = YogaUnit.POINT;
+                    } else if (widthValue.isObject()) {
+                        JSValue typeValue = widthValue.asObject().getProperty("type");
+                        if (typeValue.isNumber()) {
+                            widthUnit = YogaUnit.fromInt(typeValue.asNumber().toInt());
+                        }
+                    }
+                    JSValue heightValue = flexConfig.getProperty("height");
+                    if (heightValue.isNumber()) {
+                        heightUnit = YogaUnit.POINT;
+                    } else if (heightValue.isObject()) {
+                        JSValue typeValue = heightValue.asObject().getProperty("type");
+                        if (typeValue.isNumber()) {
+                            heightUnit = YogaUnit.fromInt(typeValue.asNumber().toInt());
+                        }
+                    }
+                }
+                // Because in onLayout yogaNode's width and height would be set to exactly.
+                if (widthUnit == YogaUnit.AUTO) {
+                    getYogaNode().setWidthAuto();
+                }
+                if (heightUnit == YogaUnit.AUTO) {
+                    getYogaNode().setHeightAuto();
                 }
                 super.onMeasure(widthMeasureSpec, heightMeasureSpec);
             }
         };
-        return yogaLayout;
     }
 
     @Override
@@ -126,6 +182,7 @@ public class FlexNode extends GroupNode<YogaLayout> {
     protected void blend(YogaLayout view, String name, JSValue prop) {
         if ("flexConfig".equals(name)) {
             blendSubFlexConfig(mView.getYogaNode(), prop.asObject());
+            this.mFlexConfig = prop.asObject();
         } else {
             super.blend(view, name, prop);
         }

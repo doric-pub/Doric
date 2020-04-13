@@ -6,19 +6,17 @@ var ValueType;
     ValueType[ValueType["Auto"] = 3] = "Auto";
 })(ValueType || (ValueType = {}));
 export class FlexTypedValue {
-    constructor() {
-        this.type = ValueType.Auto;
+    constructor(type) {
         this.value = 0;
+        this.type = type;
     }
     static percent(v) {
-        const ret = new FlexTypedValue;
-        ret.type = ValueType.Percent;
+        const ret = new FlexTypedValue(ValueType.Percent);
         ret.value = v;
         return ret;
     }
     static point(v) {
-        const ret = new FlexTypedValue;
-        ret.type = ValueType.Point;
+        const ret = new FlexTypedValue(ValueType.Point);
         ret.value = v;
         return ret;
     }
@@ -29,7 +27,7 @@ export class FlexTypedValue {
         };
     }
 }
-FlexTypedValue.Auto = new FlexTypedValue;
+FlexTypedValue.Auto = new FlexTypedValue(ValueType.Auto);
 export var FlexDirection;
 (function (FlexDirection) {
     FlexDirection[FlexDirection["COLUMN"] = 0] = "COLUMN";

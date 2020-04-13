@@ -40,92 +40,122 @@ export const ICON_BUBBLE_WHITE_ARROW_UP = "data:image/png;base64,iVBORw0KGgoAAAA
 @Entry
 class LayoutDemo extends Panel {
     build(root: Group) {
-        flexlayout(
-            [
-                // image({
-                //     imageBase64: ICON_GENDER_MAN,
-                //     scaleType: ScaleType.ScaleAspectFit,
-                //     // flexConfig: {
-                //     //     width: FlexTypedValue.Auto,
-                //     //     height: FlexTypedValue.Auto,
-                //     // },
-                //     backgroundColor: Color.GRAY,
-                //     layoutConfig: {
-                //         widthSpec: LayoutSpec.FIT,
-                //         heightSpec: LayoutSpec.JUST,
-                //         alignment: Gravity.Center,
-                //     },
-                //     height: 30,
-                // }),
-                // text({
-                //     text: "1234343434343456",
-                //     backgroundColor: Color.RED,
-                //     flexConfig: {
-                //         width: FlexTypedValue.Auto,
-                //         height: FlexTypedValue.Auto,
-                //     },
-                // }),
-                text({
-                    text: "123456",
-                    backgroundColor: Color.RED,
-                    flexConfig: {
-
-                    },
-                }),
-                image({
-                    imageBase64: ICON_GENDER_MAN,
-                    scaleType: ScaleType.ScaleAspectFit,
-                    layoutConfig: {
-                        widthSpec: LayoutSpec.FIT,
-                        heightSpec: LayoutSpec.JUST,
-                    },
-                    height: 20,
-                    backgroundColor: Color.GRAY,
-                }),
-                image({
-                    imageBase64: ICON_GENDER_MAN,
-                    scaleType: ScaleType.ScaleAspectFit,
-                    flexConfig: {
-                        width: 80,
-                    },
-                    backgroundColor: Color.GRAY,
-                }),
-                image({
-                    imageBase64: ICON_GENDER_MAN,
-                    scaleType: ScaleType.ScaleAspectFit,
-                    flexConfig: {
+        scroller(
+            flexlayout(
+                [
+                    image({
+                        imageBase64: ICON_GENDER_MAN,
+                        scaleType: ScaleType.ScaleAspectFit,
+                        // flexConfig: {
+                        //     width: FlexTypedValue.Auto,
+                        //     height: FlexTypedValue.Auto,
+                        // },
+                        backgroundColor: Color.GRAY,
+                        layoutConfig: {
+                            widthSpec: LayoutSpec.FIT,
+                            heightSpec: LayoutSpec.JUST,
+                            alignment: Gravity.Center,
+                        },
+                        height: 30,
+                    }),
+                    text({
+                        text: "1234343434343456",
+                        backgroundColor: Color.RED,
+                        flexConfig: {
+                            width: FlexTypedValue.Auto,
+                            height: 100,
+                        },
+                    }),
+                    vlayout(
+                        [
+                            text({
+                                text: "11111"
+                            }),
+                            text({
+                                text: "22222"
+                            }),
+                            text({
+                                text: "33333"
+                            }),
+                        ],
+                        {
+                            backgroundColor: Color.GRAY,
+                            flexConfig: {
+                                alignSelf: Align.CENTER,
+                            }
+                        }),
+                    text({
+                        text: "123456sdfdsfdsfdsfdsfsdfsdfsdfsdfdsfs",
+                        backgroundColor: Color.RED,
+                    }),
+                    image({
+                        imageBase64: ICON_GENDER_MAN,
+                        scaleType: ScaleType.ScaleAspectFit,
+                        layoutConfig: {
+                            widthSpec: LayoutSpec.FIT,
+                            heightSpec: LayoutSpec.JUST,
+                        },
                         height: 20,
-                    },
-                    backgroundColor: Color.RED,
-                }),
-                image({
-                    imageBase64: ICON_GENDER_MAN,
-                    scaleType: ScaleType.ScaleAspectFit,
+                        backgroundColor: Color.GRAY,
+                    }),
+                    image({
+                        imageBase64: ICON_GENDER_MAN,
+                        scaleType: ScaleType.ScaleAspectFit,
+                        flexConfig: {
+                            width: 80,
+                        },
+                        backgroundColor: Color.GRAY,
+                    }),
+                    flexlayout(
+                        [
+                            image({
+                                imageBase64: ICON_GENDER_MAN,
+                                scaleType: ScaleType.ScaleAspectFit,
+                                backgroundColor: Color.BLUE,
+                            }),
+                            image({
+                                imageBase64: ICON_GENDER_MAN,
+                                scaleType: ScaleType.ScaleAspectFit,
+                                backgroundColor: Color.BLUE,
+                            }),
+                        ],
+                        {
+                            flexConfig: {
+                                width: 100,
+                                height: 100,
+                            },
+                            backgroundColor: Color.YELLOW,
+                        }),
+                    image({
+                        imageBase64: ICON_GENDER_MAN,
+                        scaleType: ScaleType.ScaleAspectFit,
+                        flexConfig: {
+                            height: 20,
+                        },
+                        backgroundColor: Color.GRAY,
+                    }),
+                ],
+                {
                     flexConfig: {
-                        height: 20,
+                        flexDirection: FlexDirection.ROW,
                     },
-                    backgroundColor: Color.GRAY,
-                }),
-            ],
+                    backgroundColor: Color.GRAY.alpha(0.1),
+                }
+            ),
             {
-                flexConfig: {
-                    width: 300,
-                    height: 300,
-                    flexDirection: FlexDirection.ROW,
-                },
-                backgroundColor: Color.GRAY.alpha(0.1),
+                layoutConfig: layoutConfig().most()
             }
         ).in(root)
 
-        image({
-            imageBase64: ICON_GENDER_MAN,
-            backgroundColor: Color.GRAY,
-            layoutConfig: {
-                widthSpec: LayoutSpec.FIT,
-                heightSpec: LayoutSpec.JUST,
-                alignment: Gravity.Center,
-            },
-            height: 30,
-        }).in(root)
+        // image({
+        //     imageBase64: ICON_GENDER_MAN,
+        //     backgroundColor: Color.GRAY,
+        //     layoutConfig: {
+        //         widthSpec: LayoutSpec.FIT,
+        //         heightSpec: LayoutSpec.JUST,
+        //         alignment: Gravity.Center,
+        //     },
+        //     height: 30,
+        // }).in(root)
     }
 }

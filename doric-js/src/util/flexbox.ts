@@ -24,21 +24,22 @@ enum ValueType {
 
 export class FlexTypedValue implements Modeling {
 
-    type = ValueType.Auto
+    type: ValueType
     value = 0
+    constructor(type: ValueType) {
+        this.type = type
+    }
 
-    static Auto = new FlexTypedValue
+    static Auto = new FlexTypedValue(ValueType.Auto)
 
     static percent(v: number) {
-        const ret = new FlexTypedValue
-        ret.type = ValueType.Percent
+        const ret = new FlexTypedValue(ValueType.Percent)
         ret.value = v
         return ret
     }
 
     static point(v: number) {
-        const ret = new FlexTypedValue
-        ret.type = ValueType.Point
+        const ret = new FlexTypedValue(ValueType.Point)
         ret.value = v
         return ret
     }

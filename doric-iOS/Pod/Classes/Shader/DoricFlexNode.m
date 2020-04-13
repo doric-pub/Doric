@@ -28,14 +28,16 @@
 @implementation DoricFlexView
 - (CGSize)sizeThatFits:(CGSize)size {
     for (UIView *view in self.subviews) {
-        if (!view.doricLayout.disabled) {
-            [view.doricLayout apply];
-            [view configureLayoutWithBlock:^(YGLayout *layout) {
-                layout.isEnabled = YES;
+        [view.doricLayout measure:size];
+        [view configureLayoutWithBlock:^(YGLayout *layout) {
+            layout.isEnabled = YES;
+            if (layout.width.unit == YGUnitUndefined || layout.width.unit == YGUnitAuto) {
                 layout.width = YGPointValue(view.doricLayout.measuredWidth);
+            }
+            if (layout.height.unit == YGUnitUndefined || layout.height.unit == YGUnitAuto) {
                 layout.height = YGPointValue(view.doricLayout.measuredHeight);
-            }];
-        }
+            }
+        }];
     }
     return [self.yoga intrinsicSize];
 }
@@ -205,8 +207,6 @@
 }
 
 - (void)requestLayout {
-    [super requestLayout];
-
     if (self.view.doricLayout.widthSpec != DoricLayoutFit) {
         self.view.yoga.width = YGPointValue(self.view.width);
     }
@@ -230,5 +230,6 @@
         view.doricLayout.measuredY = view.top;
         [view.doricLayout apply];
     }
+    [super requestLayout];
 }
 @end

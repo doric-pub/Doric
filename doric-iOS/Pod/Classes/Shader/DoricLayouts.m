@@ -66,7 +66,6 @@ static const void *kLayoutConfig = &kLayoutConfig;
 - (void)apply:(CGSize)frameSize {
     self.resolved = NO;
     [self measure:frameSize];
-    [self layout];
     [self setFrame];
     self.resolved = YES;
 }
@@ -76,6 +75,11 @@ static const void *kLayoutConfig = &kLayoutConfig;
 }
 
 - (void)measure:(CGSize)targetSize {
+    [self measureSelf:targetSize];
+    [self layout];
+}
+
+- (void)measureSelf:(CGSize)targetSize {
     CGFloat width;
     CGFloat height;
     if (self.widthSpec == DoricLayoutMost) {

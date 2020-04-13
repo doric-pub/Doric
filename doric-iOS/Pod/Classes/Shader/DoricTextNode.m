@@ -42,6 +42,8 @@
 
 @interface DoricTextNode ()
 @property(nonatomic, strong) NSMutableParagraphStyle *paragraphStyle;
+@property(nonatomic, assign) NSNumber *underline;
+@property(nonatomic, assign) NSNumber *strikethrough;
 @end
 
 @implementation DoricTextNode
@@ -53,12 +55,9 @@
 
 - (void)blendView:(UILabel *)view forPropName:(NSString *)name propValue:(id)prop {
     if ([name isEqualToString:@"text"]) {
+        view.text = prop;
         if (self.paragraphStyle) {
-            NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:prop];
-            [attributedString addAttribute:NSParagraphStyleAttributeName value:self.paragraphStyle range:NSMakeRange(0, [attributedString length])];
-            view.attributedText = attributedString;
-        } else {
-            view.text = prop;
+            [self reloadParagraphStyle];
         }
     } else if ([name isEqualToString:@"textSize"]) {
         UIFont *font = view.font;
@@ -113,16 +112,44 @@
         UIFont *font = [UIFont fontWithName:iconfont size:view.font.pointSize];
         view.font = font;
     } else if ([name isEqualToString:@"lineSpacing"]) {
-        self.paragraphStyle = [NSMutableParagraphStyle new];
-        [self.paragraphStyle setLineSpacing:[prop floatValue]];
-        [self.paragraphStyle setAlignment:view.textAlignment];
-        NSString *labelText = view.text ?: @"";
-        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:labelText];
-        [attributedString addAttribute:NSParagraphStyleAttributeName value:self.paragraphStyle range:NSMakeRange(0, [labelText length])];
-        view.attributedText = attributedString;
+        [[self ensureParagraphStyle] also:^(NSMutableParagraphStyle *it) {
+            [it setLineSpacing:[prop floatValue]];
+            [self reloadParagraphStyle];
+        }];
+    } else if ([name isEqualToString:@"underline"]) {
+        [[self ensureParagraphStyle] also:^(NSMutableParagraphStyle *it) {
+            self.underline = prop;
+            [self reloadParagraphStyle];
+        }];
+    } else if ([name isEqualToString:@"strikethrough"]) {
+        [[self ensureParagraphStyle] also:^(NSMutableParagraphStyle *it) {
+            self.strikethrough = prop;
+            [self reloadParagraphStyle];
+        }];
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }
+}
+
+- (NSMutableParagraphStyle *)ensureParagraphStyle {
+    if (self.paragraphStyle == nil) {
+        self.paragraphStyle = [NSMutableParagraphStyle new];
+        self.paragraphStyle.alignment = self.view.textAlignment;
+    }
+    return self.paragraphStyle;
+}
+
+- (void)reloadParagraphStyle {
+    NSString *labelText = self.view.text ?: @"";
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:labelText];
+    [attributedString addAttribute:NSParagraphStyleAttributeName value:self.paragraphStyle range:NSMakeRange(0, [labelText length])];
+    if (self.underline) {
+        [attributedString addAttribute:NSUnderlineStyleAttributeName value:self.underline range:NSMakeRange(0, [labelText length])];
+    }
+    if (self.strikethrough) {
+        [attributedString addAttribute:NSStrikethroughStyleAttributeName value:self.strikethrough range:NSMakeRange(0, [labelText length])];
+    }
+    self.view.attributedText = attributedString;
 }
 
 - (void)blend:(NSDictionary *)props {

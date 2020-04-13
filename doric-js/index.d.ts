@@ -484,6 +484,8 @@ declare module 'doric/lib/src/widget/text' {
         maxWidth?: number;
         maxHeight?: number;
         lineSpacing?: number;
+        strikethrough?: boolean;
+        underline?: boolean;
     }
     export class Text extends View implements IText {
         text?: string;
@@ -496,6 +498,8 @@ declare module 'doric/lib/src/widget/text' {
         maxWidth?: number;
         maxHeight?: number;
         lineSpacing?: number;
+        strikethrough?: boolean;
+        underline?: boolean;
     }
     export function text(config: IText): Text;
 }

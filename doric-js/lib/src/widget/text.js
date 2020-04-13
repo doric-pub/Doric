@@ -68,6 +68,14 @@ __decorate([
     Property,
     __metadata("design:type", Number)
 ], Text.prototype, "lineSpacing", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Boolean)
+], Text.prototype, "strikethrough", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Boolean)
+], Text.prototype, "underline", void 0);
 export function text(config) {
     const ret = new Text;
     ret.layoutConfig = layoutConfig().fit();

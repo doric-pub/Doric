@@ -69,6 +69,18 @@ class TextDemo extends Panel {
                             (this as Text).textColor = Color.BLACK;
                         }
                     }),
+                    text({
+                        text: "This is strikethrough text.",
+                        textSize: 20,
+                        textColor: Color.RED,
+                        strikethrough: true,
+                    }),
+                    text({
+                        text: "This is underline text.",
+                        textSize: 20,
+                        textColor: Color.BLUE,
+                        underline: true,
+                    }),
                 ],
                 {
                     space: 10,

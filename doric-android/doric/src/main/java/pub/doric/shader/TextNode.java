@@ -143,6 +143,16 @@ public class TextNode extends ViewNode<TextView> {
                 }
                 view.setLineSpacing(DoricUtils.dp2px(prop.asNumber().toFloat()), 1);
                 break;
+            case "strikethrough":
+                if (prop.isBoolean()) {
+                    view.getPaint().setStrikeThruText(prop.asBoolean().value());
+                }
+                break;
+            case "underline":
+                if (prop.isBoolean()) {
+                    view.getPaint().setUnderlineText(prop.asBoolean().value());
+                }
+                break;
             default:
                 super.blend(view, name, prop);
                 break;

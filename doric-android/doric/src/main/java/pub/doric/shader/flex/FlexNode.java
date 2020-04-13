@@ -193,9 +193,6 @@ public class FlexNode extends GroupNode<YogaLayout> {
         super.blend(jsObject);
         for (ViewNode childNode : mChildNodes) {
             YogaNode yogaNode = this.mView.getYogaNodeForView(childNode.getNodeView());
-            if (childNode.getFlexConfig() != null && childNode.getView() instanceof ImageView) {
-                ((ImageView) childNode.getView()).setAdjustViewBounds(false);
-            }
             if (yogaNode != null) {
                 blendSubFlexConfig(yogaNode, childNode.getFlexConfig());
             }

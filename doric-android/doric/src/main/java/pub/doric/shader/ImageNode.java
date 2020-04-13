@@ -235,6 +235,7 @@ public class ImageNode extends ViewNode<ImageView> {
                     if (node != null) {
                         node.dirty();
                     }
+                    mView.requestLayout();
                 }
             }
         });

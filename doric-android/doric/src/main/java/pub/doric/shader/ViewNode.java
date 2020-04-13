@@ -71,7 +71,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     String mId;
     protected ViewGroup.LayoutParams mLayoutParams;
     private String mType;
-    private JSObject mFlexConfig;
+    protected JSObject mFlexConfig;
 
     public JSObject getFlexConfig() {
         return mFlexConfig;

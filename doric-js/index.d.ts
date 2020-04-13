@@ -1333,6 +1333,7 @@ declare module 'doric/lib/src/util/flexbox' {
     export class FlexTypedValue implements Modeling {
         type: ValueType;
         value: number;
+        constructor(type: ValueType);
         static Auto: FlexTypedValue;
         static percent(v: number): FlexTypedValue;
         static point(v: number): FlexTypedValue;

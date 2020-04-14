@@ -24,6 +24,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -53,6 +54,7 @@ import pub.doric.DoricRegistry;
 import pub.doric.R;
 import pub.doric.async.AsyncResult;
 import pub.doric.extension.bridge.DoricMethod;
+import pub.doric.extension.bridge.DoricPlugin;
 import pub.doric.extension.bridge.DoricPromise;
 import pub.doric.utils.DoricConstant;
 import pub.doric.utils.DoricContextHolder;
@@ -105,6 +107,9 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     }
 
     public String getType() {
+        if (TextUtils.isEmpty(mType)) {
+            mType = this.getClass().getAnnotation(DoricPlugin.class).name();
+        }
         return mType;
     }
 

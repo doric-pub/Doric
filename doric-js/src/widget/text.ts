@@ -31,6 +31,7 @@ export interface IText extends IView {
     lineSpacing?: number
     strikethrough?: boolean
     underline?: boolean
+    htmlText?: string
 }
 
 export class Text extends View implements IText {
@@ -69,6 +70,9 @@ export class Text extends View implements IText {
 
     @Property
     underline?: boolean
+
+    @Property
+    htmlText?: string
 }
 
 export function text(config: IText) {

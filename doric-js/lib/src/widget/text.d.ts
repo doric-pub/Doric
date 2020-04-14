@@ -14,6 +14,7 @@ export interface IText extends IView {
     lineSpacing?: number;
     strikethrough?: boolean;
     underline?: boolean;
+    htmlText?: string;
 }
 export declare class Text extends View implements IText {
     text?: string;
@@ -28,5 +29,6 @@ export declare class Text extends View implements IText {
     lineSpacing?: number;
     strikethrough?: boolean;
     underline?: boolean;
+    htmlText?: string;
 }
 export declare function text(config: IText): Text;

@@ -486,6 +486,7 @@ declare module 'doric/lib/src/widget/text' {
         lineSpacing?: number;
         strikethrough?: boolean;
         underline?: boolean;
+        htmlText?: string;
     }
     export class Text extends View implements IText {
         text?: string;
@@ -500,6 +501,7 @@ declare module 'doric/lib/src/widget/text' {
         lineSpacing?: number;
         strikethrough?: boolean;
         underline?: boolean;
+        htmlText?: string;
     }
     export function text(config: IText): Text;
 }

@@ -76,6 +76,10 @@ __decorate([
     Property,
     __metadata("design:type", Boolean)
 ], Text.prototype, "underline", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", String)
+], Text.prototype, "htmlText", void 0);
 export function text(config) {
     const ret = new Text;
     ret.layoutConfig = layoutConfig().fit();

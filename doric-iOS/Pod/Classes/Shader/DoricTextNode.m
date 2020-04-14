@@ -126,6 +126,12 @@
             self.strikethrough = prop;
             [self reloadParagraphStyle];
         }];
+    } else if ([name isEqualToString:@"htmlText"]) {
+        NSAttributedString *attStr = [[NSAttributedString alloc] initWithData:[prop dataUsingEncoding:NSUnicodeStringEncoding]
+                                                                      options:@{NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType}
+                                                           documentAttributes:nil
+                                                                        error:nil];
+        view.attributedText = attStr;
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }
@@ -142,6 +148,9 @@
 - (void)reloadParagraphStyle {
     NSString *labelText = self.view.text ?: @"";
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:labelText];
+    if (self.view.attributedText) {
+        [attributedString setAttributedString:self.view.attributedText];
+    }
     [attributedString addAttribute:NSParagraphStyleAttributeName value:self.paragraphStyle range:NSMakeRange(0, [labelText length])];
     if (self.underline) {
         [attributedString addAttribute:NSUnderlineStyleAttributeName value:self.underline range:NSMakeRange(0, [labelText length])];

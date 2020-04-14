@@ -81,6 +81,131 @@ class TextDemo extends Panel {
                         textColor: Color.BLUE,
                         underline: true,
                     }),
+                    text({
+                        maxLines: 0,
+                        maxWidth: root.width,
+                        htmlText: `<div>
+<h1>Supported tags by default</h1>
+<ul>
+<li>
+<h2>br</h2>
+<p>
+To break<br/>lines<br/>in a<br/>paragraph,<br/>use the br tag.
+</p>
+</li>
+<li>
+<h2>p</h2>
+<p>This is a paragraph.</p>
+<p>This is a paragraph.</p>
+<p>Paragraph elements are defined by p tags.</p>
+<p style="color:#FF0000 text-decoration:line-through background:#eeeeee">
+Support setting background color and foreground color and underline.</p>
+</li>
+<li>
+<h2>ul</h2>
+<p>An unordered list:</p>
+<ul>
+<li>coffee</li>
+<li>tea</li>
+<li>milk</li>
+</ul>
+</li>
+
+<li>
+<h2>div</h2>
+<h3>This is a header</h3>
+<p>This is a paragraph.</p>
+
+<div style="color:#00FF00">
+<h3>This is a header</h3>
+<p>This is a paragraph.</p>
+</div>
+</li>
+<li>
+<h2>span</h2>
+<p><span style="color:#FF0000">some text.</span>some other text.</p>
+</li>
+<li>
+<h2>strong</h2>
+<strong>This text is strong</strong>
+</li>
+
+<li>
+<h2>b</h2>
+<p>This is plain text <b>This is bold text</b>。</p>
+</li>
+<li>
+<h2>em</h2>
+<em>This text is emphasized</em>
+</li>
+
+<li>
+<h2>cite</h2>
+<cite>This text is cite</cite>
+</li>
+<li>
+<h2>dfn</h2>
+<dfn>This text is dfn</dfn>
+</li>
+<li>
+<h2>i</h2>
+<i>Italic</i>
+</li>
+<li>
+<h2>big</h2>
+<big>This text is big</big>
+</li>
+<li>
+<h2>small</h2>
+<small>This text is small</small>
+</li>
+<li>
+<h2>font</h2>
+<p><font  color="red" size=30>This is some text!</font></p>
+<p><font  color="blue">This is some text!</font></p>
+<p><font  color="green">This is some text!</font></p>
+</li>
+<li>
+<h1>blockquote</h1>
+Here comes a long quotation:
+<blockquote>
+This is a long quotation. This is a long quotation. This is a long quotation. This
+is a long quotation. This is a long quotation.
+</blockquote>
+Please note that the browser adds line breaks before and after the blockquote element and increases the margins.
+</li>
+<li>
+<h1>tt</h1>
+</li>
+<li>
+<h1>a</h1>
+<a href="https://m.baidu.com">Click anchor</a>
+</li>
+<li>
+<h1>u</h1>
+<u>Underline</u>
+</li>
+<li>
+<h1>strike,s,del</h1>
+<strike>This text is strike</strike>
+<s>This text is s</s>
+<del>This text is del</del>
+</li>
+
+<li>h1-h6</li>
+<h1>h1</h1>
+<h2>h2</h2>
+<h3>h3</h3>
+<h4>h4</h4>
+<h5>h5</h5>
+<h6>h6</h6>
+<li>
+<h1>img</h1>
+</li>
+</ul>
+</div>
+                    `
+                    }),
                 ],
                 {
                     space: 10,

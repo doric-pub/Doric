@@ -16,6 +16,8 @@
 package pub.doric.shader;
 
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -26,6 +28,8 @@ import com.github.pengfeizhou.jscore.JSValue;
 
 import pub.doric.DoricContext;
 import pub.doric.extension.bridge.DoricPlugin;
+import pub.doric.shader.richtext.CustomTagHandler;
+import pub.doric.shader.richtext.HtmlParser;
 import pub.doric.utils.DoricUtils;
 
 /**
@@ -151,6 +155,19 @@ public class TextNode extends ViewNode<TextView> {
             case "underline":
                 if (prop.isBoolean()) {
                     view.getPaint().setUnderlineText(prop.asBoolean().value());
+                }
+                break;
+            case "htmlText":
+                if (prop.isString()) {
+                    view.setText(
+                            HtmlParser.buildSpannedText(prop.asString().value(),
+                                    new Html.ImageGetter() {
+                                        @Override
+                                        public Drawable getDrawable(String source) {
+                                            return null;
+                                        }
+                                    },
+                                    new CustomTagHandler()));
                 }
                 break;
             default:

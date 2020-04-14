@@ -1690,6 +1690,10 @@ var Text = /** @class */ (function (_super) {
         Property,
         __metadata$3("design:type", Boolean)
     ], Text.prototype, "underline", void 0);
+    __decorate$3([
+        Property,
+        __metadata$3("design:type", String)
+    ], Text.prototype, "htmlText", void 0);
     return Text;
 }(View));
 function text(config) {

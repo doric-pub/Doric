@@ -33,6 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface DoricNativeDriver : NSObject <DoricDriverProtocol>
 + (instancetype)instance;
+
++ (instancetype)es5Instance;
 @end
 
 NS_ASSUME_NONNULL_END

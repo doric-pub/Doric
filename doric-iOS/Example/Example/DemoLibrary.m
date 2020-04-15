@@ -20,5 +20,10 @@
 @implementation DemoLibrary
 - (void)load:(DoricRegistry *)registry {
     [registry registerNativePlugin:[DoricDemoPlugin class] withName:@"demo"];
+    NSString *path = [[NSBundle mainBundle] bundlePath];
+    NSString *demoPath = [path stringByAppendingPathComponent:@"src"];
+    NSString *fullPath = [demoPath stringByAppendingPathComponent:@"kotlin.js"];
+    NSString *jsContent = [NSString stringWithContentsOfFile:fullPath encoding:NSUTF8StringEncoding error:nil];
+    [registry registerJSBundle:jsContent withName:@"kotlin"];
 }
 @end

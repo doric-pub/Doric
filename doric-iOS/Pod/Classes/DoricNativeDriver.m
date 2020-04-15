@@ -33,9 +33,9 @@
 
 @dynamic registry;
 
-- (instancetype)init {
+- (instancetype)initWithES5Mode:(BOOL)es5 {
     if (self = [super init]) {
-        _jsExecutor = [[DoricJSEngine alloc] init];
+        _jsExecutor = [[DoricJSEngine alloc] initWithES5Mode:es5];
     }
     return self;
 }
@@ -48,7 +48,16 @@
     static DoricNativeDriver *_instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _instance = [[DoricNativeDriver alloc] init];
+        _instance = [[DoricNativeDriver alloc] initWithES5Mode:NO];
+    });
+    return _instance;
+}
+
++ (instancetype)es5Instance {
+    static DoricNativeDriver *_instance;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _instance = [[DoricNativeDriver alloc] initWithES5Mode:YES];
     });
     return _instance;
 }

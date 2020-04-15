@@ -83,3 +83,18 @@ NSString *const DORIC_ENTITY_SHOW = @"__onShow__";
 NSString *const DORIC_ENTITY_HIDDEN = @"__onHidden__";
 
 NSString *const DORIC_ENTITY_BUILD = @"__build__";
+
+NSString *const DORIC_BUNDLE_SANDBOX_ES5 = @"doric-sandbox.es5";
+
+NSString *const DORIC_BUNDLE_LIB_ES5 = @"doric-lib.es5";
+
+NSString *const TEMPLATE_CONTEXT_CREATE_ES5 = @"Reflect.apply("
+                                              "function(doric,context,Entry,require,exports,module){" "\n"
+                                              "%@"   "\n"
+                                              "},undefined,["
+                                              "doric.__require__('doric'),"
+                                              "doric.jsObtainContext(\"%@\"),"
+                                              "doric.jsObtainEntry(\"%@\"),"
+                                              "doric.__require__"
+                                              ",{},{exports:{}}"
+                                              "])";

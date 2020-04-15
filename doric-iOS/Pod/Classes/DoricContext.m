@@ -31,7 +31,7 @@
 
 - (instancetype)initWithScript:(NSString *)script source:(NSString *)source extra:(NSString *)extra {
     if (self = [super init]) {
-        if ([script hasPrefix:@"(function (_, Kotlin) {"]) {
+        if ([script hasPrefix:DORIC_KOTLIN_PREFIX]) {
             _driver = [DoricNativeDriver es5Instance];
         } else {
             _driver = [DoricNativeDriver instance];

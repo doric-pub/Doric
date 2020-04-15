@@ -87,4 +87,6 @@ public class DoricConstant {
             "doric.__require__" +
             ",{},{exports:{}}" +
             "])";
+
+    public static final String DORIC_KOTLIN_PREFIX = "(function (_, Kotlin) {";
 }

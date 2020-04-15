@@ -54,6 +54,7 @@ public class DoricContext {
     private String extra;
     private JSONObject initParams;
     private IDoricDriver doricDriver;
+    boolean es5Mode = false;
     private final Map<String, Map<String, ViewNode>> mHeadNodes = new HashMap<>();
 
     public Collection<ViewNode> allHeadNodes(String type) {
@@ -141,7 +142,11 @@ public class DoricContext {
 
     public IDoricDriver getDriver() {
         if (doricDriver == null) {
-            doricDriver = DoricNativeDriver.getInstance();
+            if (es5Mode) {
+                doricDriver = DoricNativeDriver.getES5Instance();
+            } else {
+                doricDriver = DoricNativeDriver.getInstance();
+            }
         }
         return doricDriver;
     }

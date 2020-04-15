@@ -43,11 +43,12 @@ public class DoricNativeDriver implements IDoricDriver {
     private final Handler mJSHandler;
 
     private static class Inner {
-        private static final DoricNativeDriver sInstance = new DoricNativeDriver();
+        private static final DoricNativeDriver sInstance = new DoricNativeDriver(false);
+        private static final DoricNativeDriver sES5Instance = new DoricNativeDriver(true);
     }
 
-    private DoricNativeDriver() {
-        doricJSEngine = new DoricJSEngine();
+    private DoricNativeDriver(boolean es5Model) {
+        doricJSEngine = new DoricJSEngine(es5Model);
         mBridgeExecutor = Executors.newCachedThreadPool();
         mUIHandler = new Handler(Looper.getMainLooper());
         mJSHandler = doricJSEngine.getJSHandler();
@@ -55,6 +56,10 @@ public class DoricNativeDriver implements IDoricDriver {
 
     public static DoricNativeDriver getInstance() {
         return Inner.sInstance;
+    }
+
+    public static DoricNativeDriver getES5Instance() {
+        return Inner.sES5Instance;
     }
 
     @Override

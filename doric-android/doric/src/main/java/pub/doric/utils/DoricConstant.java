@@ -22,6 +22,7 @@ package pub.doric.utils;
  */
 public class DoricConstant {
     public static final String DORIC_BUNDLE_SANDBOX = "doric-sandbox.js";
+
     public static final String DORIC_BUNDLE_LIB = "doric-lib.js";
     public static final String DORIC_MODULE_LIB = "doric";
 
@@ -71,4 +72,19 @@ public class DoricConstant {
     public static final String DORIC_ENTITY_SHOW = "__onShow__";
     public static final String DORIC_ENTITY_HIDDEN = "__onHidden__";
     public static final String DORIC_ENTITY_BUILD = "__build__";
+
+
+    public static final String DORIC_BUNDLE_SANDBOX_ES5 = "doric-sandbox.es5.js";
+    public static final String DORIC_BUNDLE_LIB_ES5 = "doric-lib.es5.js";
+
+    public static final String TEMPLATE_CONTEXT_CREATE_ES5 = "Reflect.apply(" +
+            "function(doric,context,Entry,require,exports,module){" + "\n" +
+            "%s" + "\n" +
+            "},undefined,[" +
+            "doric.__require__('doric')," +
+            "doric.jsObtainContext(\"%s\")," +
+            "doric.jsObtainEntry(\"%s\")," +
+            "doric.__require__" +
+            ",{},{exports:{}}" +
+            "])";
 }

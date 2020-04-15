@@ -141,6 +141,10 @@
     [self registerViewNode:DoricDraggableNode.class withName:@"Draggable"];
     [self registerViewNode:DoricSwitchNode.class withName:@"Switch"];
     [self registerViewNode:DoricFlexNode.class withName:@"FlexLayout"];
+
+    NSString *path = [DoricBundle() pathForResource:@"kotlin" ofType:@"js"];
+    NSString *jsContent = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+    [self registerJSBundle:jsContent withName:@"kotlin"];
 }
 
 - (void)registerJSBundle:(NSString *)bundle withName:(NSString *)name {

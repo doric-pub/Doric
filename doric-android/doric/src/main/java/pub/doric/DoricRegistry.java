@@ -58,6 +58,7 @@ import pub.doric.shader.slider.NestedSliderNode;
 import pub.doric.shader.slider.SlideItemNode;
 import pub.doric.shader.slider.SliderNode;
 import pub.doric.utils.DoricMetaInfo;
+import pub.doric.utils.DoricUtils;
 
 /**
  * @Description: pub.doric
@@ -122,6 +123,9 @@ public class DoricRegistry {
         this.registerViewNode(DraggableNode.class);
         this.registerViewNode(SwitchNode.class);
         this.registerViewNode(FlexNode.class);
+
+        this.registerJSBundle("kotlin", DoricUtils.readAssetFile("kotlin.js"));
+
         initRegistry(this);
     }
 

@@ -39,6 +39,9 @@
             }
         }];
     }
+    if (self.yoga.isLeaf) {
+        return CGSizeZero;
+    }
     return [self.yoga intrinsicSize];
 }
 @end

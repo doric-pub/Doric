@@ -29,4 +29,10 @@ program
     .action(function () {
         require('./scripts/command').clean()
     })
+program
+    .command('kotlin <name>')
+    .action(function (name, cmd) {
+        console.log('create kotlin project:' + name + (cmd.native ? ' native' : 'js'))
+        require('./scripts/init')(name, true)
+    })
 program.parse(process.argv)

@@ -135,7 +135,36 @@ function initiOS(path, name) {
         })
     })
 }
-module.exports = function (name) {
+const targetKotlinPath = `${__dirname}/../kotlin-target/`
+
+function initKotlin(path, name) {
+    console.log(`create dir ${path} success`);
+    copyFolder(`${targetKotlinPath}`, `${path}`, () => {
+        [
+            'android/app/src/main/java/pub/doric/example/MainActivity.java',
+            'android/app/build.gradle',
+            'android/app/src/main/res/values/strings.xml',
+            'android/settings.gradle',
+            'iOS/App/SceneDelegate.m',
+            'iOS/App/AppDelegate.m',
+            'iOS/Example.xcodeproj/project.pbxproj',
+            'iOS/Podfile',
+            'settings.gradle',
+            'src/main/kotlin/main.kt',
+            'build.gradle',
+        ].forEach(e => {
+            fs.writeFileSync(`${path}/${e}`,
+                fs.readFileSync(`${targetKotlinPath}/${e}`).toString()
+                    .replace(/__\$__/g, name)
+                    .replace(/__\$Version__/g, currentVersion))
+        })
+
+        console.log(`Create Doric Android Project Success`)
+    })
+}
+
+
+module.exports = function (name, isKotlin = false) {
     if (fs.existsSync(name)) {
         console.warn(`Dir:${process.cwd()}/${name} already exists`)
         return;
@@ -144,8 +173,12 @@ module.exports = function (name) {
         if (err) {
             return console.error(err);
         }
-        initJS(`${process.cwd()}/${name}`, name)
-        initAndroid(`${process.cwd()}/${name}/android`, name)
-        initiOS(`${process.cwd()}/${name}/iOS`, name)
+        if (isKotlin) {
+            initKotlin(`${process.cwd()}/${name}`, name)
+        } else {
+            initJS(`${process.cwd()}/${name}`, name)
+            initAndroid(`${process.cwd()}/${name}/android`, name)
+            initiOS(`${process.cwd()}/${name}/iOS`, name)
+        }
     })
 }

@@ -114,7 +114,7 @@ export declare class RotationAnimation extends Animation {
 }
 export declare class AnimationSet implements IAnimation {
     private animations;
-    _duration: number;
+    private _duration;
     delay?: number;
     addAnimation(anim: IAnimation): void;
     get duration(): number;

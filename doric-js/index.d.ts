@@ -422,7 +422,6 @@ declare module 'doric/lib/src/ui/animation' {
             get toRotation(): number;
     }
     export class AnimationSet implements IAnimation {
-            _duration: number;
             delay?: number;
             addAnimation(anim: IAnimation): void;
             get duration(): number;

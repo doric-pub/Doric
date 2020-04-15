@@ -109,7 +109,8 @@
         view.doricLayout.maxHeight = [prop floatValue];
     } else if ([name isEqualToString:@"font"]) {
         NSString *iconfont = prop;
-        UIFont *font = [UIFont fontWithName:iconfont size:view.font.pointSize];
+        UIFont *font = [UIFont fontWithName:[iconfont stringByReplacingOccurrencesOfString:@".ttf" withString:@""]
+                                       size:view.font.pointSize];
         view.font = font;
     } else if ([name isEqualToString:@"lineSpacing"]) {
         [[self ensureParagraphStyle] also:^(NSMutableParagraphStyle *it) {

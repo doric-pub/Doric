@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        String source = "assets://src/" + BUNDLE_NAME + ".js";
+        String source = "assets://kotlin/" + BUNDLE_NAME + ".js";
         getIntent().putExtra("source", source);
         getIntent().putExtra("alias", BUNDLE_NAME);
         super.onCreate(savedInstanceState);

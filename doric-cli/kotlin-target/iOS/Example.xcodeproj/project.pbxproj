@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		95EDDB7EAB47A65821DBC7EC /* Pods_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB59FE64F1D814FD13C71BB2 /* Pods_Example.framework */; };
-		E2B059BF23C452BB007555C7 /* src in Resources */ = {isa = PBXBuildFile; fileRef = E2B059BE23C452BB007555C7 /* src */; };
+		6AA11B5F86FE3292A43BB74D /* Pods_HelloDoric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CC058F5D6B0D61C95F1E797 /* Pods_HelloDoric.framework */; };
+		E23828FF244729DC00C633A5 /* kotlin in Resources */ = {isa = PBXBuildFile; fileRef = E23828FE244729DC00C633A5 /* kotlin */; };
 		E2F64CEF2399359C0006BD9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E2F64CEE2399359C0006BD9A /* AppDelegate.m */; };
 		E2F64CF22399359C0006BD9A /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E2F64CF12399359C0006BD9A /* SceneDelegate.m */; };
 		E2F64CFA2399359E0006BD9A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E2F64CF92399359E0006BD9A /* Assets.xcassets */; };
@@ -19,9 +19,10 @@
 /* Begin PBXFileReference section */
 		197D29BBE572343DDD72F8A6 /* Pods-Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.debug.xcconfig"; path = "Target Support Files/Pods-Example/Pods-Example.debug.xcconfig"; sourceTree = "<group>"; };
 		5D47A9D4EA2836D57373FDF6 /* Pods-Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.release.xcconfig"; path = "Target Support Files/Pods-Example/Pods-Example.release.xcconfig"; sourceTree = "<group>"; };
-		AB59FE64F1D814FD13C71BB2 /* Pods_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E2B059BE23C452BB007555C7 /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; name = src; path = ../bundle/src; sourceTree = "<group>"; };
-		E2F64CEA2399359C0006BD9A /* __$__.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = __$__.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9CC058F5D6B0D61C95F1E797 /* Pods_HelloDoric.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HelloDoric.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C90C984571E8C68BADBAFC44 /* Pods-HelloDoric.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HelloDoric.debug.xcconfig"; path = "Target Support Files/Pods-HelloDoric/Pods-HelloDoric.debug.xcconfig"; sourceTree = "<group>"; };
+		E23828FE244729DC00C633A5 /* kotlin */ = {isa = PBXFileReference; lastKnownFileType = folder; path = kotlin; sourceTree = "<group>"; };
+		E2F64CEA2399359C0006BD9A /* HelloDoric.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HelloDoric.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2F64CED2399359C0006BD9A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		E2F64CEE2399359C0006BD9A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		E2F64CF02399359C0006BD9A /* SceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
@@ -30,6 +31,7 @@
 		E2F64CFC2399359E0006BD9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E2F64CFE2399359E0006BD9A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E2F64CFF2399359E0006BD9A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		F85C89FB2E9B558162D5B9B5 /* Pods-HelloDoric.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HelloDoric.release.xcconfig"; path = "Target Support Files/Pods-HelloDoric/Pods-HelloDoric.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,7 +39,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				95EDDB7EAB47A65821DBC7EC /* Pods_Example.framework in Frameworks */,
+				6AA11B5F86FE3292A43BB74D /* Pods_HelloDoric.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -49,6 +51,8 @@
 			children = (
 				197D29BBE572343DDD72F8A6 /* Pods-Example.debug.xcconfig */,
 				5D47A9D4EA2836D57373FDF6 /* Pods-Example.release.xcconfig */,
+				C90C984571E8C68BADBAFC44 /* Pods-HelloDoric.debug.xcconfig */,
+				F85C89FB2E9B558162D5B9B5 /* Pods-HelloDoric.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -56,7 +60,7 @@
 		E2F64CE12399359C0006BD9A = {
 			isa = PBXGroup;
 			children = (
-				E2B059BE23C452BB007555C7 /* src */,
+				E23828FE244729DC00C633A5 /* kotlin */,
 				E2F64CEC2399359C0006BD9A /* App */,
 				E2F64CEB2399359C0006BD9A /* Products */,
 				875E7B19E6A1ABA3F802B6B5 /* Pods */,
@@ -67,7 +71,7 @@
 		E2F64CEB2399359C0006BD9A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E2F64CEA2399359C0006BD9A /* __$__.app */,
+				E2F64CEA2399359C0006BD9A /* HelloDoric.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -90,7 +94,7 @@
 		F654B22175F1FDDC9AE817FA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				AB59FE64F1D814FD13C71BB2 /* Pods_Example.framework */,
+				9CC058F5D6B0D61C95F1E797 /* Pods_HelloDoric.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -98,9 +102,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		E2F64CE92399359C0006BD9A /* __$__ */ = {
+		E2F64CE92399359C0006BD9A /* HelloDoric */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E2F64D032399359E0006BD9A /* Build configuration list for PBXNativeTarget "__$__" */;
+			buildConfigurationList = E2F64D032399359E0006BD9A /* Build configuration list for PBXNativeTarget "HelloDoric" */;
 			buildPhases = (
 				8E2E7D30FF8381E7791EA41B /* [CP] Check Pods Manifest.lock */,
 				E2F64D0B2399FFB20006BD9A /* Package JS Bundle */,
@@ -113,9 +117,9 @@
 			);
 			dependencies = (
 			);
-			name = __$__;
+			name = HelloDoric;
 			productName = Example;
-			productReference = E2F64CEA2399359C0006BD9A /* __$__.app */;
+			productReference = E2F64CEA2399359C0006BD9A /* HelloDoric.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -145,7 +149,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				E2F64CE92399359C0006BD9A /* __$__ */,
+				E2F64CE92399359C0006BD9A /* HelloDoric */,
 			);
 		};
 /* End PBXProject section */
@@ -155,7 +159,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E2B059BF23C452BB007555C7 /* src in Resources */,
+				E23828FF244729DC00C633A5 /* kotlin in Resources */,
 				E2F64CFD2399359E0006BD9A /* LaunchScreen.storyboard in Resources */,
 				E2F64CFA2399359E0006BD9A /* Assets.xcassets in Resources */,
 			);
@@ -170,15 +174,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Example/Pods-Example-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-HelloDoric/Pods-HelloDoric-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Example/Pods-Example-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-HelloDoric/Pods-HelloDoric-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Example/Pods-Example-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HelloDoric/Pods-HelloDoric-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		8E2E7D30FF8381E7791EA41B /* [CP] Check Pods Manifest.lock */ = {
@@ -196,7 +200,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Example-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-HelloDoric-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -219,7 +223,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n# Type a script or drag a script file from your workspace to insert its path.\n\nexport NVM_DIR=\"$HOME/.nvm\"\n[ -s \"$NVM_DIR/nvm.sh\" ] && \\. \"$NVM_DIR/nvm.sh\"  # This loads nvm\n[ -s \"$NVM_DIR/bash_completion\" ] && \\. \"$NVM_DIR/bash_completion\"  # This loads nvm bash_completion\n\ncd ../ && doric build\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n# Type a script or drag a script file from your workspace to insert its path.\n\nexport NVM_DIR=\"$HOME/.nvm\"\n[ -s \"$NVM_DIR/nvm.sh\" ] && \\. \"$NVM_DIR/nvm.sh\"  # This loads nvm\n[ -s \"$NVM_DIR/bash_completion\" ] && \\. \"$NVM_DIR/bash_completion\"  # This loads nvm bash_completion\n\ncd ../ && ./gradlew build\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -360,7 +364,7 @@
 		};
 		E2F64D042399359E0006BD9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 197D29BBE572343DDD72F8A6 /* Pods-Example.debug.xcconfig */;
+			baseConfigurationReference = C90C984571E8C68BADBAFC44 /* Pods-HelloDoric.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -379,7 +383,7 @@
 		};
 		E2F64D052399359E0006BD9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5D47A9D4EA2836D57373FDF6 /* Pods-Example.release.xcconfig */;
+			baseConfigurationReference = F85C89FB2E9B558162D5B9B5 /* Pods-HelloDoric.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -408,7 +412,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E2F64D032399359E0006BD9A /* Build configuration list for PBXNativeTarget "__$__" */ = {
+		E2F64D032399359E0006BD9A /* Build configuration list for PBXNativeTarget "HelloDoric" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E2F64D042399359E0006BD9A /* Debug */,

@@ -42,6 +42,7 @@
 @end
 
 @interface DoricJSEngine ()
+@property(nonatomic, assign) BOOL es5Mode;
 @property(nonatomic, strong) NSMutableDictionary *timers;
 @property(nonatomic, strong) DoricBridgeExtension *bridgeExtension;
 @property(nonatomic, strong) NSDictionary *innerEnvironmentDictionary;
@@ -51,8 +52,9 @@
 
 @implementation DoricJSEngine
 
-- (instancetype)init {
+- (instancetype)initWithES5Mode:(BOOL)es5Mode {
     if (self = [super init]) {
+        _es5Mode = es5Mode;
         _jsThread = [[NSThread alloc] initWithTarget:self selector:@selector(threadRun) object:nil];
         [_jsThread start];
         NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
@@ -186,10 +188,18 @@
 
 - (void)initDoricEnvironment {
     @try {
-        [self loadBuiltinJS:DORIC_BUNDLE_SANDBOX];
+        if (@available(iOS 10.0, *)) {
+            if (self.es5Mode) {
+                [self loadBuiltinJS:DORIC_BUNDLE_SANDBOX_ES5];
+            } else {
+                [self loadBuiltinJS:DORIC_BUNDLE_SANDBOX];
+            }
+        } else {
+            [self loadBuiltinJS:DORIC_BUNDLE_SANDBOX_ES5];
+        }
         NSString *path;
         if (@available(iOS 10.0, *)) {
-            path = [DoricBundle() pathForResource:DORIC_BUNDLE_LIB ofType:@"js"];
+            path = [DoricBundle() pathForResource:self.es5Mode ? DORIC_BUNDLE_LIB_ES5 : DORIC_BUNDLE_LIB ofType:@"js"];
         } else {
             path = [DoricBundle() pathForResource:[NSString stringWithFormat:@"%@.es5", DORIC_BUNDLE_LIB] ofType:@"js"];
         }
@@ -202,12 +212,7 @@
 }
 
 - (void)loadBuiltinJS:(NSString *)fileName {
-    NSString *path;
-    if (@available(iOS 10.0, *)) {
-        path = [DoricBundle() pathForResource:DORIC_BUNDLE_SANDBOX ofType:@"js"];
-    } else {
-        path = [DoricBundle() pathForResource:[NSString stringWithFormat:@"%@.es5", DORIC_BUNDLE_SANDBOX] ofType:@"js"];
-    }
+    NSString *path = [DoricBundle() pathForResource:fileName ofType:@"js"];
     NSString *jsContent = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
     [self.jsExecutor loadJSScript:jsContent source:[@"Assets://" stringByAppendingString:fileName]];
 }
@@ -235,7 +240,7 @@
 }
 
 - (NSString *)packageContextScript:(NSString *)contextId content:(NSString *)content {
-    NSString *ret = [NSString stringWithFormat:TEMPLATE_CONTEXT_CREATE, content, contextId, contextId];
+    NSString *ret = [NSString stringWithFormat:self.es5Mode ? TEMPLATE_CONTEXT_CREATE_ES5 : TEMPLATE_CONTEXT_CREATE, content, contextId, contextId];
     return ret;
 }
 

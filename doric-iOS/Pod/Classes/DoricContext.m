@@ -31,7 +31,11 @@
 
 - (instancetype)initWithScript:(NSString *)script source:(NSString *)source extra:(NSString *)extra {
     if (self = [super init]) {
-        _driver = [DoricNativeDriver instance];
+        if ([script hasPrefix:@"(function (_, Kotlin) {"]) {
+            _driver = [DoricNativeDriver es5Instance];
+        } else {
+            _driver = [DoricNativeDriver instance];
+        }
         _pluginInstanceMap = [NSMutableDictionary new];
         _script = script;
         _source = source;

@@ -35,6 +35,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, strong) DoricRegistry *registry;
 
+- (instancetype)initWithES5Mode:(BOOL)es5Mode;
+
 - (void)prepareContext:(NSString *)contextId script:(NSString *)script source:(NSString *)source;
 
 - (void)destroyContext:(NSString *)contextId;

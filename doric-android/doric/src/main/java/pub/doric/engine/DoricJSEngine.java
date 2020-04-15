@@ -59,8 +59,10 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
     protected IDoricJSE mDoricJSE;
     private final DoricTimerExtension mTimerExtension;
     private final DoricRegistry mDoricRegistry = new DoricRegistry();
+    private boolean es5Mode = false;
 
-    public DoricJSEngine() {
+    public DoricJSEngine(boolean es5Mode) {
+        this.es5Mode = es5Mode;
         handlerThread = new HandlerThread(this.getClass().getSimpleName());
         handlerThread.start();
         Looper looper = handlerThread.getLooper();
@@ -195,7 +197,6 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
         mDoricJSE.injectGlobalJSFunction(DoricConstant.INJECT_BRIDGE, new JavaFunction() {
             @Override
             public JavaValue exec(JSDecoder[] args) {
-                String source = "Unknown";
                 try {
                     String contextId = args[0].string();
                     String module = args[1].string();
@@ -213,10 +214,11 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
 
     private void initDoricRuntime() {
         try {
-            loadBuiltinJS(DoricConstant.DORIC_BUNDLE_SANDBOX);
-            String libName = DoricConstant.DORIC_MODULE_LIB;
-            String libJS = DoricUtils.readAssetFile(DoricConstant.DORIC_BUNDLE_LIB);
-            mDoricJSE.loadJS(packageModuleScript(libName, libJS), "Module://" + libName);
+            String sandbox = es5Mode ? DoricConstant.DORIC_BUNDLE_SANDBOX_ES5 : DoricConstant.DORIC_BUNDLE_SANDBOX;
+            String libName = es5Mode ? DoricConstant.DORIC_BUNDLE_LIB_ES5 : DoricConstant.DORIC_BUNDLE_LIB;
+            loadBuiltinJS(sandbox);
+            String libJS = DoricUtils.readAssetFile(libName);
+            mDoricJSE.loadJS(packageModuleScript(DoricConstant.DORIC_MODULE_LIB, libJS), "Module://" + libName);
         } catch (Exception e) {
             mDoricRegistry.onException(null, e);
         }
@@ -248,7 +250,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
     }
 
     private String packageContextScript(String contextId, String content) {
-        return String.format(DoricConstant.TEMPLATE_CONTEXT_CREATE, content, contextId, contextId);
+        return String.format(this.es5Mode ? DoricConstant.TEMPLATE_CONTEXT_CREATE_ES5 : DoricConstant.TEMPLATE_CONTEXT_CREATE, content, contextId, contextId);
     }
 
     private String packageModuleScript(String moduleName, String content) {

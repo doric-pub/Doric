@@ -18,11 +18,13 @@ package pub.doric.demo;
 import pub.doric.DoricComponent;
 import pub.doric.DoricLibrary;
 import pub.doric.DoricRegistry;
+import pub.doric.utils.DoricUtils;
 
 @DoricComponent
 public class DemoLibrary extends DoricLibrary {
     @Override
     public void load(DoricRegistry registry) {
         registry.registerNativePlugin(DemoPlugin.class);
+        registry.registerJSBundle("kotlin", DoricUtils.readAssetFile("src/kotlin.js"));
     }
 }

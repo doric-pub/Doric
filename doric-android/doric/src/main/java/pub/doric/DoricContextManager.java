@@ -52,6 +52,9 @@ public class DoricContextManager {
         final String contextId = String.valueOf(counter.incrementAndGet());
         final DoricContext doricContext = new DoricContext(context, contextId, source, extra);
         doricContextMap.put(contextId, doricContext);
+        if (script.startsWith("(function (_, Kotlin) {")) {
+            doricContext.es5Mode = true;
+        }
         doricContext.getDriver().createContext(contextId, script, source);
         return doricContext;
     }

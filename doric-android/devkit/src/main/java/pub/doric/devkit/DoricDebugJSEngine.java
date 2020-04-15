@@ -19,7 +19,7 @@ public class DoricDebugJSEngine extends DoricJSEngine {
     private IStatusCallback statusCallback;
 
     public DoricDebugJSEngine(IStatusCallback statusCallback) {
-        super();
+        super(false);
         this.statusCallback = statusCallback;
     }
 

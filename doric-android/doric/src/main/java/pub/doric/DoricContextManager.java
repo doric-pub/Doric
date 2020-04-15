@@ -18,6 +18,7 @@ package pub.doric;
 import android.content.Context;
 
 import pub.doric.async.AsyncResult;
+import pub.doric.utils.DoricConstant;
 
 import java.util.Collection;
 import java.util.Map;
@@ -52,7 +53,7 @@ public class DoricContextManager {
         final String contextId = String.valueOf(counter.incrementAndGet());
         final DoricContext doricContext = new DoricContext(context, contextId, source, extra);
         doricContextMap.put(contextId, doricContext);
-        if (script.startsWith("(function (_, Kotlin) {")) {
+        if (script.startsWith(DoricConstant.DORIC_KOTLIN_PREFIX)) {
             doricContext.es5Mode = true;
         }
         doricContext.getDriver().createContext(contextId, script, source);

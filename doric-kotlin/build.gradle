@@ -2,7 +2,7 @@ plugins {
     id 'org.jetbrains.kotlin.js' version '1.3.71'
 }
 
-group 'doric-kotlin.example'
+group 'doric-kotlin'
 version '1.0-SNAPSHOT'
 
 repositories {
@@ -19,3 +19,10 @@ kotlin.target {
     useCommonJs()
     nodejs()
 }
+
+//Properties properties = new Properties()
+//properties.load(project.rootProject.file('../doric-android/version.properties').newDataInputStream())
+ext {
+    Version = '0.1.0'//properties.version
+}
+apply from: rootProject.file('scripts/upload.gradle')

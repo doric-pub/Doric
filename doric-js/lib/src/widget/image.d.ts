@@ -48,5 +48,17 @@ export declare class Image extends View {
         width: number;
         height: number;
     } | undefined) => void;
+    /**
+     * Stretch a image according to pointed rect
+     * Rect contains left, top, right & bottom
+     * For Android, it is based on nine patch
+     * For iOS, it is based on cap insets & stretch mode
+     */
+    stretchInset?: {
+        left: number;
+        top: number;
+        right: number;
+        bottom: number;
+    };
 }
 export declare function image(config: Partial<Image>): Image;

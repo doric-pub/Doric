@@ -1786,6 +1786,10 @@ var Image = /** @class */ (function (_super) {
         Property,
         __metadata$4("design:type", Function)
     ], Image.prototype, "loadCallback", void 0);
+    __decorate$4([
+        Property,
+        __metadata$4("design:type", Object)
+    ], Image.prototype, "stretchInset", void 0);
     return Image;
 }(View));
 function image(config) {

@@ -37,17 +37,39 @@ external open class LinearLayout : Group {
 
 external interface IVLayout : IView {
     var space: Number?
+        get() = definedExternally
+        set(value) = definedExternally
     var gravity: Gravity?
+        get() = definedExternally
+        set(value) = definedExternally
 }
 
-external open class VLayout : LinearLayout, IVLayout
+external open class VLayout : LinearLayout, IVLayout {
+    override var space: Number?
+        get() = definedExternally
+        set(value) = definedExternally
+    override var gravity: Gravity?
+        get() = definedExternally
+        set(value) = definedExternally
+}
 
 external interface IHLayout : IView {
     var space: Number?
+        get() = definedExternally
+        set(value) = definedExternally
     var gravity: Gravity?
+        get() = definedExternally
+        set(value) = definedExternally
 }
 
-external open class HLayout : LinearLayout, IHLayout
+external open class HLayout : LinearLayout, IHLayout {
+    override var space: Number?
+        get() = definedExternally
+        set(value) = definedExternally
+    override var gravity: Gravity?
+        get() = definedExternally
+        set(value) = definedExternally
+}
 
 external fun stack(views: Array<View>, config: IStack = definedExternally): Stack
 

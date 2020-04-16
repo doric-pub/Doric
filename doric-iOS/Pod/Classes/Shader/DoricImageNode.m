@@ -226,6 +226,15 @@
                 [self callJSResponse:self.loadCallbackId, nil];
             }
         }
+    } else if ([@"stretchInset" isEqualToString:name]) {
+        NSDictionary * stretchInsetDic = (NSDictionary *)prop;
+        int left = [stretchInsetDic[@"left"] intValue];
+        int top = [stretchInsetDic[@"top"] intValue];
+        int right = [stretchInsetDic[@"right"] intValue];
+        int bottom = [stretchInsetDic[@"bottom"] intValue];
+        
+        UIImage *result = [view.image resizableImageWithCapInsets:UIEdgeInsetsMake(top - 0.1, left - 0.1, bottom - 0.1, view.image.size.width - right + 0.1) resizingMode:UIImageResizingModeStretch];
+        view.image = result;
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }

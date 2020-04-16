@@ -1,4 +1,4 @@
-import { Panel, Group, scroller, vlayout, image, layoutConfig, LayoutSpec, Input, Gravity, log, stack, hlayout, text, IHLayout, CENTER, slider, slideItem, modal, Slider, Text, Color, View, Stack, animate, flowlayout, FlowLayoutItem, NestedSlider, ScaleType } from "doric";
+import { Panel, Group, scroller, vlayout, image, layoutConfig, LayoutSpec, Input, Gravity, log, stack, hlayout, text, CENTER, slider, slideItem, modal, Slider, Text, Color, View, Stack, animate, flowlayout, FlowLayoutItem, NestedSlider, ScaleType } from "doric";
 import { title, colors } from "./utils";
 
 function tab(idx: number, title: string, sliderView: Slider) {
@@ -52,7 +52,7 @@ class StickDemo extends Panel {
                     ]).apply({
                         layoutConfig: layoutConfig().most(),
                         gravity: Gravity.Center,
-                    } as IHLayout),
+                    }),
                     this.indicator,
                 ]).apply({
                     layoutConfig: layoutConfig().most().configHeight(LayoutSpec.JUST),

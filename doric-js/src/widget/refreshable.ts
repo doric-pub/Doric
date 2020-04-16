@@ -1,18 +1,12 @@
-import { View, Property, Superview, IView, NativeViewModel } from "../ui/view";
+import { View, Property, Superview, NativeViewModel } from "../ui/view";
 import { List } from "./list";
 import { Scroller } from "./scroller";
 import { BridgeContext } from "../runtime/global";
 import { layoutConfig } from "../util/layoutconfig";
 
-export interface IRefreshable extends IView {
-    content: View
-    header?: View
-    onRefresh?: () => void
-}
+export class Refreshable extends Superview {
 
-export class Refreshable extends Superview implements IRefreshable {
-
-    content!: List | Scroller
+    content!: View
 
     header?: View
 
@@ -50,7 +44,7 @@ export class Refreshable extends Superview implements IRefreshable {
     }
 }
 
-export function refreshable(config: IRefreshable) {
+export function refreshable(config: Partial<Refreshable>) {
     const ret = new Refreshable
     ret.layoutConfig = layoutConfig().fit()
     for (let key in config) {

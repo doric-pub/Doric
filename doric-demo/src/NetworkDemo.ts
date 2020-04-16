@@ -1,4 +1,4 @@
-import { Group, Panel, List, text, gravity, Color, Stack, LayoutSpec, list, NativeCall, listItem, log, vlayout, Gravity, hlayout, Text, scroller, layoutConfig, image, IView, IVLayout, ScaleType, modal, IText, network } from "doric";
+import { Group, Panel, gravity, Color, LayoutSpec, vlayout, scroller, layoutConfig, modal, network } from "doric";
 import { title, label, colors } from "./utils";
 
 @Entry
@@ -22,12 +22,12 @@ class NetworkDemo extends Panel {
                         modal(context).toast('Catched:' + JSON.stringify(e))
                     })
                 }
-            } as IText),
+            }),
         ]).apply({
             layoutConfig: layoutConfig().most().configHeight(LayoutSpec.FIT),
             gravity: gravity().center(),
             space: 10,
-        } as IVLayout)).apply({
+        })).apply({
             layoutConfig: layoutConfig().most(),
         }).in(rootView)
     }

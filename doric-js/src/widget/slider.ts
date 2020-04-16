@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Superview, View, Property, IView } from "../ui/view";
-import { Stack, IStack } from "./layouts";
+import { Superview, View, Property } from "../ui/view";
+import { Stack } from "./layouts";
 import { layoutConfig } from "../util/layoutconfig";
 import { BridgeContext } from "../runtime/global";
 
 
-export interface ISlideItem extends IStack {
-    identifier?: string
-}
 
-export class SlideItem extends Stack implements ISlideItem {
+export class SlideItem extends Stack {
     /**
      * Set to reuse native view
      */
@@ -31,15 +28,7 @@ export class SlideItem extends Stack implements ISlideItem {
     identifier?: string
 }
 
-export interface ISlider extends IView {
-    renderPage: (index: number) => SlideItem
-    itemCount: number
-    batchCount?: number
-    onPageSlided?: (index: number) => void
-    loop?: boolean
-}
-
-export class Slider extends Superview implements ISlider {
+export class Slider extends Superview {
     private cachedViews: Map<string, SlideItem> = new Map
 
     private ignoreDirtyCallOnce = false
@@ -96,7 +85,7 @@ export class Slider extends Superview implements ISlider {
 
 }
 
-export function slider(config: ISlider) {
+export function slider(config: Partial<Slider>) {
     const ret = new Slider
     for (let key in config) {
         Reflect.set(ret, key, Reflect.get(config, key, config), ret)
@@ -104,7 +93,7 @@ export function slider(config: ISlider) {
     return ret
 }
 
-export function slideItem(item: View | View[], config?: ISlideItem) {
+export function slideItem(item: View | View[], config?: Partial<SlideItem>) {
     return (new SlideItem).also((it) => {
         it.layoutConfig = layoutConfig().most()
         if (item instanceof View) {

@@ -13,25 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { View, IView, Property } from "../ui/view";
+import { View, Property } from "../ui/view";
 import { Color } from "../util/color";
 import { Gravity } from "../util/gravity";
 import { BridgeContext } from "../runtime/global";
 import { layoutConfig } from "../util/index.util";
 
-export interface IInput extends IView {
-    text?: string
-    textColor?: Color
-    textSize?: number
-    hintText?: string
-    hintTextColor?: Color
-    multilines?: boolean
-    textAlignment?: Gravity
-    onTextChange?: (text: string) => void
-    onFocusChange?: (focused: boolean) => void
-}
-
-export class Input extends View implements IInput {
+export class Input extends View {
 
     @Property
     text?: string
@@ -80,7 +68,7 @@ export class Input extends View implements IInput {
     }
 }
 
-export function input(config: IInput) {
+export function input(config: Partial<Input>) {
     const ret = new Input
     ret.layoutConfig = layoutConfig().just()
     for (let key in config) {

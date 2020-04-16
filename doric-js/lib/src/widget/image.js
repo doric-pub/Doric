@@ -63,7 +63,12 @@ __decorate([
 ], Image.prototype, "placeHolderImage", void 0);
 __decorate([
     Property,
-    __metadata("design:type", Color)
+    __metadata("design:type", Color
+    /**
+     * Display while image is failed to load
+     * It can be file name in local path
+     */
+    )
 ], Image.prototype, "placeHolderColor", void 0);
 __decorate([
     Property,

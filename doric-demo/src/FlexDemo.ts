@@ -1,6 +1,5 @@
 
-import { Group, Panel, text, gravity, Color, LayoutSpec, vlayout, hlayout, scroller, IVLayout, IHLayout, layoutConfig, stack, Gravity, flexlayout, image, ScaleType } from "doric";
-import { FlexDirection, Wrap, Justify, Align, FlexTypedValue, OverFlow } from "doric/lib/src/util/flexbox";
+import { Group, Panel, Color, LayoutSpec, scroller, layoutConfig, flexlayout, image, ScaleType, Align, FlexDirection, Wrap } from "doric";
 import { icon_refresh } from "./utils";
 
 @Entry

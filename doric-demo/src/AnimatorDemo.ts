@@ -1,4 +1,4 @@
-import { animate, Group, Panel, gravity, Color, AnimationSet, vlayout, scroller, layoutConfig, IVLayout, modal, IText, network, View, stack, IHLayout, hlayout, IView, text, TranslationAnimation, ScaleAnimation, RotationAnimation, FillMode } from "doric";
+import { animate, Group, Panel, gravity, Color, vlayout, layoutConfig, modal, stack, hlayout, text, } from "doric";
 import { title, colors, box } from "./utils";
 
 function thisLabel(str: string) {
@@ -175,7 +175,7 @@ class AnimatorDemo extends Panel {
                                     });
                                 }
                             }),
-                        ]).apply({ space: 10 } as IHLayout),
+                        ]).apply({ space: 10 }),
                     ],
                     { space: 10 }
                 ),

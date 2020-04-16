@@ -37,56 +37,6 @@ export function Property(target: View, propKey: string) {
     })
 }
 
-export interface IView {
-    width?: number
-    height?: number
-    backgroundColor?: Color | GradientColor
-    corners?: number | { leftTop?: number; rightTop?: number; leftBottom?: number; rightBottom?: number }
-    border?: { width: number; color: Color; }
-    shadow?: { color: Color; opacity: number; radius: number; offsetX: number; offsetY: number }
-    /**
-     * float [0,..1]
-     */
-    alpha?: number
-    hidden?: boolean
-    padding?: {
-        left?: number,
-        right?: number,
-        top?: number,
-        bottom?: number,
-    }
-    layoutConfig?: LayoutConfig
-    onClick?: Function
-    identifier?: string
-
-    /**++++++++++transform++++++++++*/
-    translationX?: number
-
-    translationY?: number
-
-    scaleX?: number
-
-    scaleY?: number
-    /**
-     * float [0,..1]
-     */
-    pivotX?: number
-    /**
-     * float [0,..1]
-     */
-    pivotY?: number
-    /**
-     * rotation*PI
-     */
-    rotation?: number
-    /**----------transform----------*/
-
-    /**
-     * Only affected when its superview or itself is FlexLayout.
-     */
-    flexConfig?: FlexConfig
-}
-
 export type NativeViewModel = {
     id: string;
     type: string;
@@ -95,7 +45,7 @@ export type NativeViewModel = {
     };
 }
 
-export abstract class View implements Modeling, IView {
+export abstract class View implements Modeling {
     private __dirty_props__!: { [index: string]: Model | undefined }
 
     @Property
@@ -276,7 +226,7 @@ export abstract class View implements Modeling, IView {
         return this
     }
 
-    apply(config: IView) {
+    apply(config: Partial<this>) {
         for (let key in config) {
             Reflect.set(this, key, Reflect.get(config, key, config), this)
         }

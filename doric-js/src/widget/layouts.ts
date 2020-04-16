@@ -13,14 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Group, Property, IView, View } from "../ui/view";
+import { Group, Property, View } from "../ui/view";
 import { Gravity } from "../util/gravity";
 import { layoutConfig } from "../util/layoutconfig";
 
-export interface IStack extends IView {
-}
-
-export class Stack extends Group implements IStack {
+export class Stack extends Group {
 }
 
 export class Root extends Stack {
@@ -34,24 +31,13 @@ class LinearLayout extends Group {
     gravity?: Gravity
 }
 
-export interface IVLayout extends IView {
-    space?: number
-    gravity?: Gravity
+export class VLayout extends LinearLayout {
 }
 
-export class VLayout extends LinearLayout implements IVLayout {
+export class HLayout extends LinearLayout {
 }
 
-
-export interface IHLayout extends IView {
-    space?: number
-    gravity?: Gravity
-}
-
-export class HLayout extends LinearLayout implements IHLayout {
-}
-
-export function stack(views: View[], config?: IStack) {
+export function stack(views: View[], config?: Partial<Stack>) {
     const ret = new Stack
     ret.layoutConfig = layoutConfig().fit()
     for (let v of views) {
@@ -65,7 +51,7 @@ export function stack(views: View[], config?: IStack) {
     return ret
 }
 
-export function hlayout(views: View[], config?: IHLayout) {
+export function hlayout(views: View[], config?: Partial<HLayout>) {
     const ret = new HLayout
     ret.layoutConfig = layoutConfig().fit()
     for (let v of views) {
@@ -79,7 +65,7 @@ export function hlayout(views: View[], config?: IHLayout) {
     return ret
 }
 
-export function vlayout(views: View[], config?: IVLayout) {
+export function vlayout(views: View[], config?: Partial<VLayout>) {
     const ret = new VLayout
     ret.layoutConfig = layoutConfig().fit()
     for (let v of views) {
@@ -98,7 +84,7 @@ export function vlayout(views: View[], config?: IVLayout) {
 export class FlexLayout extends Group {
 }
 
-export function flexlayout(views: View[], config?: IView) {
+export function flexlayout(views: View[], config?: Partial<FlexLayout>) {
     const ret = new FlexLayout
     ret.layoutConfig = layoutConfig().fit()
     for (let v of views) {

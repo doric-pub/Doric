@@ -1,4 +1,4 @@
-import { Panel, scroller, vlayout, text, layoutConfig, LayoutSpec, Color, gravity, IVLayout, Group, IText, navigator, modal } from "doric";
+import { Panel, scroller, vlayout, text, layoutConfig, LayoutSpec, Color, gravity, Group, navigator, modal } from "doric";
 import { colors, label } from "./utils";
 @Entry
 class NaivgatorDemo extends Panel {
@@ -35,7 +35,7 @@ class NaivgatorDemo extends Panel {
                                 },
                             })
                         },
-                    } as IText)
+                    })
                 ),
             label('POP').apply({
                 width: 200,
@@ -47,7 +47,7 @@ class NaivgatorDemo extends Panel {
                 onClick: () => {
                     navigator(context).pop()
                 },
-            } as IText),
+            }),
             label('OpenURL').apply({
                 width: 200,
                 height: 50,
@@ -58,12 +58,12 @@ class NaivgatorDemo extends Panel {
                 onClick: () => {
                     navigator(context).openUrl("https://doric.pub")
                 },
-            } as IText),
+            }),
         ]).apply({
             layoutConfig: layoutConfig().most().configHeight(LayoutSpec.FIT),
             gravity: gravity().center(),
             space: 10,
-        } as IVLayout)).apply({
+        })).apply({
             layoutConfig: layoutConfig().most(),
         }).in(root)
     }

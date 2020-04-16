@@ -1,14 +1,7 @@
-import { Superview, View, IView, NativeViewModel } from '../ui/view';
+import { Superview, View, NativeViewModel } from '../ui/view';
 import { BridgeContext } from '../runtime/global';
-export declare function scroller(content: View, config?: IScroller): Scroller;
-export interface IScroller extends IView {
-    content?: View;
-    contentOffset?: {
-        x: number;
-        y: number;
-    };
-}
-export declare class Scroller extends Superview implements IScroller {
+export declare function scroller(content: View, config?: Partial<Scroller>): Scroller;
+export declare class Scroller extends Superview {
     content: View;
     contentOffset?: {
         x: number;

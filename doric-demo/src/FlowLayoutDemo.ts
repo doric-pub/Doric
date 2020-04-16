@@ -1,4 +1,4 @@
-import { Group, Panel, flowlayout, layoutConfig, FlowLayoutItem, text, Color, IFlowLayout, LayoutSpec, Gravity, flowItem } from "doric";
+import { Group, Panel, flowlayout, layoutConfig, FlowLayoutItem, text, Color, LayoutSpec, Gravity, flowItem } from "doric";
 import { colors, label } from "./utils";
 
 const imageUrls = [

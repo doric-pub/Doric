@@ -36,7 +36,7 @@ class __$__ extends Panel {
                     width: 1,
                 },
                 gravity: Gravity.Center,
-            } as IVLayout)
+            })
             .in(rootView)
     }
 

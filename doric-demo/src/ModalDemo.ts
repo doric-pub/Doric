@@ -1,4 +1,4 @@
-import { Group, Panel, List, text, gravity, Color, Stack, LayoutSpec, list, NativeCall, listItem, log, vlayout, Gravity, hlayout, Text, scroller, layoutConfig, image, IView, IVLayout, ScaleType, IText, modal } from "doric";
+import { Group, Panel, text, Color, LayoutSpec, vlayout, Gravity, scroller, layoutConfig, modal, Text } from "doric";
 import { colors, label } from "./utils";
 
 @Entry
@@ -27,7 +27,7 @@ class ModalDemo extends Panel {
                         onClick: () => {
                             modal(context).toast('This is a toast.')
                         }
-                    } as IText),
+                    }),
                     label('toast on top'),
                     label('Click me').apply({
                         width: 200,
@@ -39,7 +39,7 @@ class ModalDemo extends Panel {
                         onClick: () => {
                             modal(context).toast('This is a toast.', Gravity.Top)
                         }
-                    } as IText),
+                    }),
 
                     label('toast on center'),
                     label('Click me').apply({
@@ -52,7 +52,7 @@ class ModalDemo extends Panel {
                         onClick: () => {
                             modal(context).toast('This is a toast.', Gravity.Center)
                         }
-                    } as IText),
+                    } as Partial<Text>),
                     text({
                         text: "Alert",
                         layoutConfig: layoutConfig().configWidth(LayoutSpec.MOST),
@@ -78,7 +78,7 @@ class ModalDemo extends Panel {
                                 modal(context).toast('Clicked OK.')
                             })
                         }
-                    } as IText),
+                    }),
                     text({
                         text: "Confirm",
                         layoutConfig: layoutConfig().configWidth(LayoutSpec.MOST),
@@ -109,7 +109,7 @@ class ModalDemo extends Panel {
                                     modal(context).toast('Clicked Cancel.')
                                 })
                         }
-                    } as IText),
+                    }),
                     text({
                         text: "Prompt",
                         layoutConfig: layoutConfig().configWidth(LayoutSpec.MOST),
@@ -140,7 +140,7 @@ class ModalDemo extends Panel {
                                     modal(context).toast(`Clicked Cancel.Input:${e}`)
                                 })
                         }
-                    } as IText),
+                    }),
                 ],
                 {
                     layoutConfig: layoutConfig().most().configHeight(LayoutSpec.FIT),

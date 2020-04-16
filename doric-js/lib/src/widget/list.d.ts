@@ -1,31 +1,12 @@
-import { View, Superview, IView, NativeViewModel } from "../ui/view";
-import { Stack, IStack } from "./layouts";
-export interface IListItem extends IStack {
-    identifier?: string;
-}
-export declare class ListItem extends Stack implements IListItem {
+import { View, Superview, NativeViewModel } from "../ui/view";
+import { Stack } from "./layouts";
+export declare class ListItem extends Stack {
     /**
      * Set to reuse native view
      */
     identifier?: string;
 }
-export interface IList extends IView {
-    renderItem: (index: number) => ListItem;
-    itemCount: number;
-    batchCount?: number;
-    onLoadMore?: () => void;
-    loadMore?: boolean;
-    loadMoreView?: ListItem;
-    onScroll?: (offset: {
-        x: number;
-        y: number;
-    }) => void;
-    onScrollEnd?: (offset: {
-        x: number;
-        y: number;
-    }) => void;
-}
-export declare class List extends Superview implements IList {
+export declare class List extends Superview {
     private cachedViews;
     private ignoreDirtyCallOnce;
     allSubviews(): IterableIterator<ListItem> | ListItem[];
@@ -49,5 +30,5 @@ export declare class List extends Superview implements IList {
     private renderBunchedItems;
     toModel(): NativeViewModel;
 }
-export declare function list(config: IList): List;
-export declare function listItem(item: View | View[], config?: IListItem): ListItem;
+export declare function list(config: Partial<List>): List;
+export declare function listItem(item: View | View[], config?: Partial<ListItem>): ListItem;

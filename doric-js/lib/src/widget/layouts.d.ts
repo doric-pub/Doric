@@ -1,8 +1,6 @@
-import { Group, IView, View } from "../ui/view";
+import { Group, View } from "../ui/view";
 import { Gravity } from "../util/gravity";
-export interface IStack extends IView {
-}
-export declare class Stack extends Group implements IStack {
+export declare class Stack extends Group {
 }
 export declare class Root extends Stack {
 }
@@ -10,22 +8,14 @@ declare class LinearLayout extends Group {
     space?: number;
     gravity?: Gravity;
 }
-export interface IVLayout extends IView {
-    space?: number;
-    gravity?: Gravity;
+export declare class VLayout extends LinearLayout {
 }
-export declare class VLayout extends LinearLayout implements IVLayout {
+export declare class HLayout extends LinearLayout {
 }
-export interface IHLayout extends IView {
-    space?: number;
-    gravity?: Gravity;
-}
-export declare class HLayout extends LinearLayout implements IHLayout {
-}
-export declare function stack(views: View[], config?: IStack): Stack;
-export declare function hlayout(views: View[], config?: IHLayout): HLayout;
-export declare function vlayout(views: View[], config?: IVLayout): VLayout;
+export declare function stack(views: View[], config?: Partial<Stack>): Stack;
+export declare function hlayout(views: View[], config?: Partial<HLayout>): HLayout;
+export declare function vlayout(views: View[], config?: Partial<VLayout>): VLayout;
 export declare class FlexLayout extends Group {
 }
-export declare function flexlayout(views: View[], config?: IView): FlexLayout;
+export declare function flexlayout(views: View[], config?: Partial<FlexLayout>): FlexLayout;
 export {};

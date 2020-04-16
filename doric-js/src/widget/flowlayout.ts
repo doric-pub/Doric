@@ -13,15 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Stack, IStack } from './layouts'
-import { Property, IView, Superview, View, NativeViewModel } from '../ui/view'
+import { Stack } from './layouts'
+import { Property, Superview, View, NativeViewModel } from '../ui/view'
 import { layoutConfig } from '../util/index.util'
 
-export interface IFlowLayoutItem extends IStack {
-    identifier?: string
-}
-
-export class FlowLayoutItem extends Stack implements IFlowLayoutItem {
+export class FlowLayoutItem extends Stack {
     /**
     * Set to reuse native view
     */
@@ -29,32 +25,7 @@ export class FlowLayoutItem extends Stack implements IFlowLayoutItem {
     identifier?: string
 }
 
-
-export interface IFlowLayout extends IView {
-    renderItem: (index: number) => FlowLayoutItem
-
-    itemCount: number
-
-    batchCount?: number
-
-    columnCount?: number
-
-    columnSpace?: number
-
-    rowSpace?: number
-
-    loadMore?: boolean
-
-    onLoadMore?: () => void
-
-    loadMoreView?: FlowLayoutItem
-
-    onScroll?: (offset: { x: number, y: number }) => void
-
-    onScrollEnd?: (offset: { x: number, y: number }) => void
-}
-
-export class FlowLayout extends Superview implements IFlowLayout {
+export class FlowLayout extends Superview {
     private cachedViews: Map<string, FlowLayoutItem> = new Map
     private ignoreDirtyCallOnce = false
 
@@ -135,7 +106,7 @@ export class FlowLayout extends Superview implements IFlowLayout {
     }
 }
 
-export function flowlayout(config: IFlowLayout) {
+export function flowlayout(config: Partial<FlowLayout>) {
     const ret = new FlowLayout
     for (let key in config) {
         Reflect.set(ret, key, Reflect.get(config, key, config), ret)
@@ -143,7 +114,7 @@ export function flowlayout(config: IFlowLayout) {
     return ret
 }
 
-export function flowItem(item: View | View[], config?: IFlowLayoutItem) {
+export function flowItem(item: View | View[], config?: Partial<FlowLayoutItem>) {
     return (new FlowLayoutItem).also((it) => {
         it.layoutConfig = layoutConfig().fit()
         if (item instanceof View) {

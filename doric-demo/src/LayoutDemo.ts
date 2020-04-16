@@ -1,5 +1,5 @@
 
-import { Group, Panel, text, gravity, Color, LayoutSpec, vlayout, hlayout, scroller, IVLayout, IHLayout, layoutConfig, stack, Gravity } from "doric";
+import { Group, Panel, text, gravity, Color, LayoutSpec, vlayout, hlayout, scroller, layoutConfig, stack, Gravity } from "doric";
 
 const colors = [
     "#f0932b",

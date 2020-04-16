@@ -1,5 +1,5 @@
 
-import { Group, Panel, Text, text, Color, Stack, vlayout, hlayout, scroller, layoutConfig, Gravity, GradientColor, GradientOrientation } from "doric";
+import { Group, Panel, Text, text, Color, Stack, vlayout, hlayout, scroller, layoutConfig, Gravity, GradientOrientation } from "doric";
 import { colors } from "./utils";
 
 
@@ -28,7 +28,7 @@ function label(str: string) {
 
 @Entry
 class EffectsDemo extends Panel {
-    
+
     build(rootView: Group) {
         scroller(
             vlayout(
@@ -431,7 +431,7 @@ class EffectsDemo extends Panel {
                                     box().apply({
                                         width: 100,
                                         height: 100,
-                                        backgroundColor: { 
+                                        backgroundColor: {
                                             start: colors[0],
                                             end: Color.WHITE,
                                             orientation: GradientOrientation.TOP_BOTTOM
@@ -453,7 +453,7 @@ class EffectsDemo extends Panel {
                                     box().apply({
                                         width: 100,
                                         height: 100,
-                                        backgroundColor: { 
+                                        backgroundColor: {
                                             start: colors[0],
                                             end: Color.WHITE,
                                             orientation: GradientOrientation.TR_BL
@@ -475,7 +475,7 @@ class EffectsDemo extends Panel {
                                     box().apply({
                                         width: 100,
                                         height: 100,
-                                        backgroundColor: { 
+                                        backgroundColor: {
                                             start: colors[0],
                                             end: Color.WHITE,
                                             orientation: GradientOrientation.RIGHT_LEFT
@@ -497,7 +497,7 @@ class EffectsDemo extends Panel {
                                     box().apply({
                                         width: 100,
                                         height: 100,
-                                        backgroundColor: { 
+                                        backgroundColor: {
                                             start: colors[0],
                                             end: Color.WHITE,
                                             orientation: GradientOrientation.BR_TL
@@ -519,7 +519,7 @@ class EffectsDemo extends Panel {
                                     box().apply({
                                         width: 100,
                                         height: 100,
-                                        backgroundColor: { 
+                                        backgroundColor: {
                                             start: colors[0],
                                             end: Color.WHITE,
                                             orientation: GradientOrientation.BOTTOM_TOP
@@ -541,7 +541,7 @@ class EffectsDemo extends Panel {
                                     box().apply({
                                         width: 100,
                                         height: 100,
-                                        backgroundColor: { 
+                                        backgroundColor: {
                                             start: colors[0],
                                             end: Color.WHITE,
                                             orientation: GradientOrientation.BL_TR
@@ -563,7 +563,7 @@ class EffectsDemo extends Panel {
                                     box().apply({
                                         width: 100,
                                         height: 100,
-                                        backgroundColor: { 
+                                        backgroundColor: {
                                             start: colors[0],
                                             end: Color.WHITE,
                                             orientation: GradientOrientation.LEFT_RIGHT
@@ -585,7 +585,7 @@ class EffectsDemo extends Panel {
                                     box().apply({
                                         width: 100,
                                         height: 100,
-                                        backgroundColor: { 
+                                        backgroundColor: {
                                             start: colors[0],
                                             end: Color.WHITE,
                                             orientation: GradientOrientation.TL_BR

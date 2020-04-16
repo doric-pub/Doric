@@ -5,64 +5,6 @@ import { LayoutConfig } from '../util/layoutconfig';
 import { IAnimation } from "./animation";
 import { FlexConfig } from "../util/flexbox";
 export declare function Property(target: Object, propKey: string): void;
-export interface IView {
-    width?: number;
-    height?: number;
-    backgroundColor?: Color | GradientColor;
-    corners?: number | {
-        leftTop?: number;
-        rightTop?: number;
-        leftBottom?: number;
-        rightBottom?: number;
-    };
-    border?: {
-        width: number;
-        color: Color;
-    };
-    shadow?: {
-        color: Color;
-        opacity: number;
-        radius: number;
-        offsetX: number;
-        offsetY: number;
-    };
-    /**
-     * float [0,..1]
-     */
-    alpha?: number;
-    hidden?: boolean;
-    padding?: {
-        left?: number;
-        right?: number;
-        top?: number;
-        bottom?: number;
-    };
-    layoutConfig?: LayoutConfig;
-    onClick?: Function;
-    identifier?: string;
-    /**++++++++++transform++++++++++*/
-    translationX?: number;
-    translationY?: number;
-    scaleX?: number;
-    scaleY?: number;
-    /**
-     * float [0,..1]
-     */
-    pivotX?: number;
-    /**
-     * float [0,..1]
-     */
-    pivotY?: number;
-    /**
-     * rotation*PI
-     */
-    rotation?: number;
-    /**----------transform----------*/
-    /**
-     * Only affected when its superview or itself is FlexLayout.
-     */
-    flexConfig?: FlexConfig;
-}
 export declare type NativeViewModel = {
     id: string;
     type: string;
@@ -70,7 +12,7 @@ export declare type NativeViewModel = {
         [index: string]: Model;
     };
 };
-export declare abstract class View implements Modeling, IView {
+export declare abstract class View implements Modeling {
     width: number;
     height: number;
     x: number;
@@ -93,6 +35,9 @@ export declare abstract class View implements Modeling, IView {
         offsetX: number;
         offsetY: number;
     };
+    /**
+     * float [0,..1]
+     */
     alpha?: number;
     hidden?: boolean;
     viewId: string;
@@ -135,7 +80,7 @@ export declare abstract class View implements Modeling, IView {
     toModel(): NativeViewModel;
     let(block: (it: this) => void): void;
     also(block: (it: this) => void): this;
-    apply(config: IView): this;
+    apply(config: Partial<this>): this;
     in(group: Group): this;
     nativeChannel(context: BridgeContext, name: string): (args?: any) => Promise<any>;
     getWidth(context: BridgeContext): Promise<number>;
@@ -149,12 +94,21 @@ export declare abstract class View implements Modeling, IView {
     /**++++++++++transform++++++++++*/
     translationX?: number;
     translationY?: number;
+    /**
+     * float [0,..1]
+     */
     scaleX?: number;
     scaleY?: number;
     pivotX?: number;
     pivotY?: number;
+    /**
+     * rotation*PI
+     */
     rotation?: number;
     /**----------transform----------*/
+    /**
+     * Only affected when its superview or itself is FlexLayout.
+     */
     flexConfig?: FlexConfig;
     doAnimation(context: BridgeContext, animation: IAnimation): Promise<void>;
 }

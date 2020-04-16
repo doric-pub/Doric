@@ -1,4 +1,4 @@
-import { Stack, hlayout, Group, Color, stack, layoutConfig, LayoutSpec, vlayout, IVLayout, Text, ViewHolder, ViewModel, VMPanel, scroller, modal, text, gravity, Gravity, IHLayout, takeNonNull, View, log, popover } from "doric";
+import { Stack, hlayout, Group, Color, stack, layoutConfig, LayoutSpec, vlayout, Text, ViewHolder, ViewModel, VMPanel, scroller, modal, text, gravity, Gravity, View, popover } from "doric";
 import { colors } from "./utils";
 
 enum State {

@@ -1,4 +1,4 @@
-import { text, vlayout, ViewHolder, VMPanel, ViewModel, Gravity, NativeCall, Text, Color, log, logw, loge, Group, LayoutSpec, layoutConfig, IVLayout, } from "doric"
+import { text, vlayout, ViewHolder, VMPanel, ViewModel, Gravity, NativeCall, Text, Color, log, logw, loge, Group, LayoutSpec, layoutConfig, } from "doric"
 
 interface CountModel {
     count: number

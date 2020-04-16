@@ -17,6 +17,7 @@ package pub.doric.utils;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.graphics.Rect;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
@@ -36,6 +37,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 import pub.doric.Doric;
 
@@ -231,5 +234,57 @@ public class DoricUtils {
             E.printStackTrace();
         }
         return sbar;
+    }
+
+
+    private final static int NO_COLOR = 0x00000001;
+    private final static int X_SIZE = 2;
+    private final static int Y_SIZE = 2;
+    private final static int COLOR_SIZE = 9;
+    private final static int BUFFER_SIZE = X_SIZE * 4 + Y_SIZE * 4 + COLOR_SIZE * 4 + 32;
+
+    public static byte[] getNinePatchChunk(Rect rect) {
+        if (rect == null) {
+            return null;
+        }
+
+        ByteBuffer byteBuffer = ByteBuffer.allocate(BUFFER_SIZE).order(ByteOrder.nativeOrder());
+        // first byte，not equal to zero
+        byteBuffer.put((byte) 1);
+
+        //mDivX length
+        byteBuffer.put((byte) 2);
+        //mDivY length
+        byteBuffer.put((byte) 2);
+        //mColors length
+        byteBuffer.put((byte) COLOR_SIZE);
+
+        //skip
+        byteBuffer.putInt(0);
+        byteBuffer.putInt(0);
+
+        //padding preset zero
+        byteBuffer.putInt(0);
+        byteBuffer.putInt(0);
+        byteBuffer.putInt(0);
+        byteBuffer.putInt(0);
+
+        //skip
+        byteBuffer.putInt(0);
+
+        // mDivX
+        byteBuffer.putInt(rect.left);
+        byteBuffer.putInt(rect.right);
+
+        // mDivY
+        byteBuffer.putInt(rect.top);
+        byteBuffer.putInt(rect.bottom);
+
+        // mColors
+        for (int i = 0; i < COLOR_SIZE; i++) {
+            byteBuffer.putInt(NO_COLOR);
+        }
+
+        return byteBuffer.array();
     }
 }

@@ -29,3 +29,5 @@
 -keep class * {
 @pub.doric.extension.bridge.DoricMethod <fields>;
 }
+
+-keep class com.facebook.yoga.** {*;}

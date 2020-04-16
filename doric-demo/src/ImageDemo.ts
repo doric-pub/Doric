@@ -94,7 +94,7 @@ class ImageDemo extends Panel {
                     }),
                     label('ImageBase64'),
                     image({
-                        imageBase64: img_base64,
+                        imageBase64: img_base64[0],
                         width: 300,
                         height: 300,
                         border: {
@@ -104,6 +104,27 @@ class ImageDemo extends Panel {
                         scaleType: ScaleType.ScaleAspectFill,
                         layoutConfig: layoutConfig().just(),
                     }),
+                    label('NinePatch'),
+                    image({
+                        imageBase64: img_base64[1],
+                        height: 60,
+                        width: 134,
+                        scaleType: ScaleType.ScaleAspectFill,
+                        layoutConfig: layoutConfig().just(),
+                    }),
+                    image({
+                        imageBase64: img_base64[1],
+                        height: 60,
+                        width: 294,
+                        scaleType: ScaleType.ScaleToFill,
+                        layoutConfig: layoutConfig().just(),
+                        stretchInset: {
+                            left: 374,
+                            top: 0,
+                            right: 375,
+                            bottom: 198
+                        }
+                    })
                 ],
                 {
                     layoutConfig: layoutConfig().most().configHeight(LayoutSpec.FIT),

@@ -80,6 +80,14 @@ export class Image extends View {
 
     @Property
     loadCallback?: (image: { width: number; height: number } | undefined) => void
+
+    @Property
+    stretchInset?: {
+        left: number,
+        top: number,
+        right: number,
+        bottom: number
+    }
 }
 
 export function image(config: Partial<Image>) {

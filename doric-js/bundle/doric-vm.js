@@ -2795,6 +2795,10 @@ __decorate$4([
     Property,
     __metadata$4("design:type", Function)
 ], Image.prototype, "loadCallback", void 0);
+__decorate$4([
+    Property,
+    __metadata$4("design:type", Object)
+], Image.prototype, "stretchInset", void 0);
 function image(config) {
     const ret = new Image;
     ret.layoutConfig = layoutConfig().fit();

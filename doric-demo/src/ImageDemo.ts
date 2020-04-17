@@ -104,7 +104,7 @@ class ImageDemo extends Panel {
                         scaleType: ScaleType.ScaleAspectFill,
                         layoutConfig: layoutConfig().just(),
                     }),
-                    label('NinePatch'),
+                    label('StretchInset'),
                     image({
                         imageBase64: img_base64[1],
                         height: 60,

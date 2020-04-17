@@ -240,7 +240,7 @@
         CGFloat top = [self.stretchInsetDic[@"top"] floatValue];
         CGFloat right = [self.stretchInsetDic[@"right"] floatValue];
         CGFloat bottom = [self.stretchInsetDic[@"bottom"] floatValue];
-        UIImage *result = [self.view.image resizableImageWithCapInsets:UIEdgeInsetsMake(top, left, bottom, right) resizingMode:UIImageResizingModeStretch];
+        UIImage *result = [self.view.image resizableImageWithCapInsets:UIEdgeInsetsMake(top * self.view.image.size.height, left * self.view.image.size.width, bottom * self.view.image.size.height, right * self.view.image.size.width) resizingMode:UIImageResizingModeStretch];
         self.view.image = result;
     }
 }

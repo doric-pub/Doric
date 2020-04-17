@@ -40,6 +40,7 @@
 @property(nonatomic, strong) NSNumber *errorColor;
 @property(nonatomic, strong) NSString *errorImage;
 @property(nonatomic, strong) UIVisualEffectView *blurEffectView;
+@property(nonatomic, strong) NSDictionary *stretchInsetDic;
 @end
 
 @implementation DoricImageNode
@@ -227,16 +228,20 @@
             }
         }
     } else if ([@"stretchInset" isEqualToString:name]) {
-        NSDictionary * stretchInsetDic = (NSDictionary *)prop;
-        CGFloat left = [stretchInsetDic[@"left"] floatValue];
-        CGFloat top = [stretchInsetDic[@"top"] floatValue];
-        CGFloat right = [stretchInsetDic[@"right"] floatValue];
-        CGFloat bottom = [stretchInsetDic[@"bottom"] floatValue];
-        UIImage *scaled = [[UIImage alloc] initWithCGImage:view.image.CGImage scale:[[UIScreen mainScreen] scale] orientation:view.image.imageOrientation];
-        UIImage *result = [scaled resizableImageWithCapInsets:UIEdgeInsetsMake(0, 125, 0, 22) resizingMode:UIImageResizingModeStretch];
-        view.image = result;
+        self.stretchInsetDic = (NSDictionary *)prop;
     } else {
         [super blendView:view forPropName:name propValue:prop];
+    }
+}
+
+- (void)afterBlended:(NSDictionary *)props {
+    if (self.stretchInsetDic != nil) {
+        CGFloat left = [self.stretchInsetDic[@"left"] floatValue];
+        CGFloat top = [self.stretchInsetDic[@"top"] floatValue];
+        CGFloat right = [self.stretchInsetDic[@"right"] floatValue];
+        CGFloat bottom = [self.stretchInsetDic[@"bottom"] floatValue];
+        UIImage *result = [self.view.image resizableImageWithCapInsets:UIEdgeInsetsMake(top, left, bottom, right) resizingMode:UIImageResizingModeStretch];
+        self.view.image = result;
     }
 }
 @end

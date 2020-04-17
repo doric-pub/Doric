@@ -119,9 +119,9 @@ class ImageDemo extends Panel {
                         scaleType: ScaleType.ScaleToFill,
                         layoutConfig: layoutConfig().just(),
                         stretchInset: {
-                            left: 374,
+                            left: 125,
                             top: 0,
-                            right: 66,
+                            right: 22,
                             bottom: 0
                         }
                     })

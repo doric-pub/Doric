@@ -68,7 +68,7 @@ public class ImageNode extends ViewNode<ImageView> {
     private String errorImage;
     private int placeHolderColor = Color.TRANSPARENT;
     private int errorColor = Color.TRANSPARENT;
-    private Rect stretchInset = null;
+    private JSObject stretchInset = null;
 
     public ImageNode(DoricContext doricContext) {
         super(doricContext);
@@ -237,11 +237,23 @@ public class ImageNode extends ViewNode<ImageView> {
                     Bitmap bitmap = ((BitmapDrawable) resource).getBitmap();
 
                     if (stretchInset != null) {
+                        float left = stretchInset.getProperty("left").asNumber().toFloat();
+                        float top = stretchInset.getProperty("top").asNumber().toFloat();
+                        float right = stretchInset.getProperty("right").asNumber().toFloat();
+                        float bottom = stretchInset.getProperty("bottom").asNumber().toFloat();
+
+                        Rect rect = new Rect(
+                                (int) (bitmap.getWidth() * left),
+                                (int) (bitmap.getHeight() * top),
+                                (int) (bitmap.getWidth() * (1 - right)),
+                                (int) (bitmap.getHeight() * (1 - bottom))
+                        );
+
                         NinePatchDrawable ninePatchDrawable = new NinePatchDrawable(
                                 getContext().getResources(),
                                 bitmap,
-                                DoricUtils.getNinePatchChunk(stretchInset),
-                                stretchInset,
+                                DoricUtils.getNinePatchChunk(rect),
+                                rect,
                                 null
                         );
                         super.setResource(ninePatchDrawable);
@@ -332,11 +344,7 @@ public class ImageNode extends ViewNode<ImageView> {
                 break;
             case "stretchInset":
                 if (prop.isObject()) {
-                    int left = prop.asObject().getProperty("left").asNumber().toInt();
-                    int top = prop.asObject().getProperty("top").asNumber().toInt();
-                    int right = prop.asObject().getProperty("right").asNumber().toInt();
-                    int bottom = prop.asObject().getProperty("bottom").asNumber().toInt();
-                    stretchInset = new Rect(left, top, right, bottom);
+                    stretchInset = prop.asObject();
                 }
                 break;
             default:

@@ -228,12 +228,12 @@
         }
     } else if ([@"stretchInset" isEqualToString:name]) {
         NSDictionary * stretchInsetDic = (NSDictionary *)prop;
-        int left = [stretchInsetDic[@"left"] intValue];
-        int top = [stretchInsetDic[@"top"] intValue];
-        int right = [stretchInsetDic[@"right"] intValue];
-        int bottom = [stretchInsetDic[@"bottom"] intValue];
-        
-        UIImage *result = [view.image resizableImageWithCapInsets:UIEdgeInsetsMake(top - 0.1, left - 0.1, bottom - 0.1, view.image.size.width - right + 0.1) resizingMode:UIImageResizingModeStretch];
+        CGFloat left = [stretchInsetDic[@"left"] floatValue];
+        CGFloat top = [stretchInsetDic[@"top"] floatValue];
+        CGFloat right = [stretchInsetDic[@"right"] floatValue];
+        CGFloat bottom = [stretchInsetDic[@"bottom"] floatValue];
+        UIImage *scaled = [[UIImage alloc] initWithCGImage:view.image.CGImage scale:[[UIScreen mainScreen] scale] orientation:view.image.imageOrientation];
+        UIImage *result = [scaled resizableImageWithCapInsets:UIEdgeInsetsMake(0, 125, 0, 22) resizingMode:UIImageResizingModeStretch];
         view.image = result;
     } else {
         [super blendView:view forPropName:name propValue:prop];

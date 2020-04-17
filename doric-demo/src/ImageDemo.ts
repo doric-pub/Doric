@@ -121,8 +121,8 @@ class ImageDemo extends Panel {
                         stretchInset: {
                             left: 374,
                             top: 0,
-                            right: 375,
-                            bottom: 198
+                            right: 66,
+                            bottom: 0
                         }
                     })
                 ],

@@ -1266,12 +1266,11 @@ declare module 'doric/lib/src/pattern/mvvm' {
         abstract onAttached(state: M, vh: V): void;
         abstract onBind(state: M, vh: V): void;
     }
-    export type ViewModelClass<M, V extends ViewHolder> = new (m: M, v: V) => ViewModel<M, V>;
-    export type ViewHolderClass<V> = new () => V;
+    export type ClassType<T> = new (...args: any) => T;
     export abstract class VMPanel<M extends Object, V extends ViewHolder> extends Panel {
-        abstract getViewModelClass(): ViewModelClass<M, V>;
+        abstract getViewModelClass(): ClassType<ViewModel<M, V>>;
         abstract getState(): M;
-        abstract getViewHolderClass(): ViewHolderClass<V>;
+        abstract getViewHolderClass(): ClassType<V>;
         getViewModel(): ViewModel<M, V> | undefined;
         build(root: Group): void;
     }

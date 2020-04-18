@@ -1,4 +1,4 @@
-import { Group, Panel, popover, text, gravity, Color, Stack, LayoutSpec, list, NativeCall, listItem, log, vlayout, Gravity, hlayout, Text, scroller, layoutConfig, image, IView, IVLayout, ScaleType, modal, IText, network } from "doric";
+import { Group, Panel, popover, text, gravity, Color, LayoutSpec, vlayout, Gravity, scroller, layoutConfig, modal, } from "doric";
 import { title, label, colors } from "./utils";
 
 @Entry
@@ -32,12 +32,12 @@ class PopoverDemo extends Panel {
                         }, 3000)
                     }))
                 }
-            } as IText),
+            }),
         ]).apply({
             layoutConfig: layoutConfig().most().configHeight(LayoutSpec.FIT),
             gravity: gravity().center(),
             space: 10,
-        } as IVLayout)).apply({
+        })).apply({
             layoutConfig: layoutConfig().most(),
         }).in(rootView)
     }

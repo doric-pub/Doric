@@ -1,4 +1,4 @@
-import { Group, Panel, coordinator, text, gravity, Color, Stack, LayoutSpec, list, NativeCall, listItem, log, vlayout, Gravity, hlayout, Text, scroller, layoutConfig, image, IView, IVLayout, ScaleType, Image } from "doric";
+import { Group, Panel, coordinator, text, gravity, Color, LayoutSpec, log, vlayout, scroller, layoutConfig, image, ScaleType, Image } from "doric";
 import { colors, label } from "./utils";
 import { img_base64 } from "./image_base64";
 const imageUrl = 'https://img.zcool.cn/community/01e75b5da933daa801209e1ffa4649.jpg@1280w_1l_2o_100sh.jpg'
@@ -94,7 +94,7 @@ class ImageDemo extends Panel {
                     }),
                     label('ImageBase64'),
                     image({
-                        imageBase64: img_base64,
+                        imageBase64: img_base64[0],
                         width: 300,
                         height: 300,
                         border: {
@@ -104,6 +104,27 @@ class ImageDemo extends Panel {
                         scaleType: ScaleType.ScaleAspectFill,
                         layoutConfig: layoutConfig().just(),
                     }),
+                    label('StretchInset'),
+                    image({
+                        imageBase64: img_base64[1],
+                        height: 60,
+                        width: 134,
+                        scaleType: ScaleType.ScaleAspectFill,
+                        layoutConfig: layoutConfig().just(),
+                    }),
+                    image({
+                        imageBase64: img_base64[1],
+                        height: 60,
+                        width: 294,
+                        scaleType: ScaleType.ScaleToFill,
+                        layoutConfig: layoutConfig().just(),
+                        stretchInset: {
+                            left: 0.85,
+                            top: 0,
+                            right: 0.149,
+                            bottom: 0
+                        }
+                    })
                 ],
                 {
                     layoutConfig: layoutConfig().most().configHeight(LayoutSpec.FIT),

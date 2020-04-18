@@ -1,4 +1,4 @@
-import { refreshable, Group, Panel, pullable, text, gravity, Color, Stack, LayoutSpec, list, NativeCall, listItem, log, vlayout, Gravity, hlayout, Text, scroller, layoutConfig, image, IView, IVLayout, ScaleType, modal, IText, network, navigator, stack, Image } from "doric";
+import { refreshable, Group, Panel, pullable, gravity, Color, LayoutSpec, log, vlayout, Image, layoutConfig, stack, image } from "doric";
 import { title, label, colors, icon_refresh } from "./utils";
 
 @Entry
@@ -47,7 +47,7 @@ class RefreshableDemo extends Panel {
                     onClick: () => {
                         refreshView.setRefreshing(context, true)
                     }
-                } as IText),
+                }),
                 label('stop Refresh').apply({
                     width: 300,
                     height: 50,
@@ -58,7 +58,7 @@ class RefreshableDemo extends Panel {
                     onClick: () => {
                         refreshView.setRefreshing(context, false)
                     }
-                } as IText),
+                }),
 
                 label('Enable Refresh').apply({
                     width: 300,
@@ -70,7 +70,7 @@ class RefreshableDemo extends Panel {
                     onClick: () => {
                         refreshView.setRefreshable(context, true)
                     }
-                } as IText),
+                }),
 
                 label('Disable Refresh').apply({
                     width: 300,
@@ -82,12 +82,12 @@ class RefreshableDemo extends Panel {
                     onClick: () => {
                         refreshView.setRefreshable(context, false)
                     }
-                } as IText),
+                }),
             ]).apply({
                 layoutConfig: layoutConfig().most().configHeight(LayoutSpec.FIT),
                 gravity: gravity().centerX(),
                 space: 10,
-            } as IVLayout))
+            }))
         }).apply({
             backgroundColor: Color.YELLOW
         }).in(rootView)

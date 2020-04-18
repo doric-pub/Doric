@@ -14,19 +14,15 @@
  * limitations under the License.
  */
 import { Property, View } from "../ui/view"
-import { IStack, Stack } from "../widget/layouts"
+import { Stack } from "../widget/layouts"
 import { layoutConfig } from "../util/layoutconfig"
 
-export interface IDraggable extends IStack {
-    onDrag?: (x: number, y: number) => void
-}
-
-export class Draggable extends Stack implements IDraggable {
+export class Draggable extends Stack {
     @Property
     onDrag?: (x: number, y: number) => void
 }
 
-export function draggable(views: View | View[], config?: IDraggable) {
+export function draggable(views: View | View[], config?: Partial<Draggable>) {
     const ret = new Draggable
     ret.layoutConfig = layoutConfig().fit()
     if (views instanceof View) {

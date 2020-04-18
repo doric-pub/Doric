@@ -1,4 +1,4 @@
-import { storage, Panel, scroller, vlayout, text, layoutConfig, LayoutSpec, Color, gravity, IVLayout, Group, IText, modal, Text, log, loge } from "doric";
+import { storage, Panel, scroller, vlayout, text, layoutConfig, LayoutSpec, Color, gravity, Group, modal, Text, log, loge } from "doric";
 import { colors, label } from "./utils";
 const storedKey = 'StoredKey'
 const zone = 'StorageDemo'
@@ -53,7 +53,7 @@ class StorageDemo extends Panel {
                         })
                     })
                 },
-            } as IText),
+            }),
             label('remove value').apply({
                 width: 200,
                 height: 50,
@@ -66,7 +66,7 @@ class StorageDemo extends Panel {
                         this.update()
                     })
                 },
-            } as IText),
+            }),
             label('clear values').apply({
                 width: 200,
                 height: 50,
@@ -79,12 +79,12 @@ class StorageDemo extends Panel {
                         this.update()
                     })
                 },
-            } as IText),
+            }),
         ]).apply({
             layoutConfig: layoutConfig().most().configHeight(LayoutSpec.FIT),
             gravity: gravity().center(),
             space: 10,
-        } as IVLayout)).apply({
+        })).apply({
             layoutConfig: layoutConfig().most(),
         }).in(root)
         this.update()

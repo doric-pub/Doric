@@ -1,19 +1,8 @@
-import { View, IView } from "../ui/view";
+import { View } from "../ui/view";
 import { Color } from "../util/color";
 import { Gravity } from "../util/gravity";
 import { BridgeContext } from "../runtime/global";
-export interface IInput extends IView {
-    text?: string;
-    textColor?: Color;
-    textSize?: number;
-    hintText?: string;
-    hintTextColor?: Color;
-    multilines?: boolean;
-    textAlignment?: Gravity;
-    onTextChange?: (text: string) => void;
-    onFocusChange?: (focused: boolean) => void;
-}
-export declare class Input extends View implements IInput {
+export declare class Input extends View {
     text?: string;
     textColor?: Color;
     textSize?: number;
@@ -28,4 +17,4 @@ export declare class Input extends View implements IInput {
     requestFocus(context: BridgeContext): Promise<any>;
     releaseFocus(context: BridgeContext): Promise<any>;
 }
-export declare function input(config: IInput): Input;
+export declare function input(config: Partial<Input>): Input;

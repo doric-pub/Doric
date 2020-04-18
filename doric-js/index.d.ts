@@ -111,6 +111,7 @@ declare module 'doric/lib/src/util/index.util' {
     export * from 'doric/lib/src/util/log';
     export * from 'doric/lib/src/util/types';
     export * from 'doric/lib/src/util/uniqueId';
+    export * from 'doric/lib/src/util/flexbox';
 }
 
 declare module 'doric/lib/src/pattern/index.pattern' {
@@ -127,63 +128,6 @@ declare module 'doric/lib/src/ui/view' {
     import { IAnimation } from "doric/lib/src/ui/animation";
     import { FlexConfig } from "doric/lib/src/util/flexbox";
     export function Property(target: Object, propKey: string): void;
-    export interface IView {
-            width?: number;
-            height?: number;
-            backgroundColor?: Color | GradientColor;
-            corners?: number | {
-                    leftTop?: number;
-                    rightTop?: number;
-                    leftBottom?: number;
-                    rightBottom?: number;
-            };
-            border?: {
-                    width: number;
-                    color: Color;
-            };
-            shadow?: {
-                    color: Color;
-                    opacity: number;
-                    radius: number;
-                    offsetX: number;
-                    offsetY: number;
-            };
-            /**
-                * float [0,..1]
-                */
-            alpha?: number;
-            hidden?: boolean;
-            padding?: {
-                    left?: number;
-                    right?: number;
-                    top?: number;
-                    bottom?: number;
-            };
-            layoutConfig?: LayoutConfig;
-            onClick?: Function;
-            identifier?: string;
-            /**++++++++++transform++++++++++*/
-            translationX?: number;
-            translationY?: number;
-            scaleX?: number;
-            scaleY?: number;
-            /**
-                * float [0,..1]
-                */
-            pivotX?: number;
-            /**
-                * float [0,..1]
-                */
-            pivotY?: number;
-            /**
-                * rotation*PI
-                */
-            rotation?: number;
-            /**
-                * Only affected when its superview or itself is FlexLayout.
-                */
-            flexConfig?: FlexConfig;
-    }
     export type NativeViewModel = {
             id: string;
             type: string;
@@ -191,7 +135,7 @@ declare module 'doric/lib/src/ui/view' {
                     [index: string]: Model;
             };
     };
-    export abstract class View implements Modeling, IView {
+    export abstract class View implements Modeling {
             width: number;
             height: number;
             x: number;
@@ -214,6 +158,9 @@ declare module 'doric/lib/src/ui/view' {
                     offsetX: number;
                     offsetY: number;
             };
+            /**
+                * float [0,..1]
+                */
             alpha?: number;
             hidden?: boolean;
             viewId: string;
@@ -252,7 +199,7 @@ declare module 'doric/lib/src/ui/view' {
             toModel(): NativeViewModel;
             let(block: (it: this) => void): void;
             also(block: (it: this) => void): this;
-            apply(config: IView): this;
+            apply(config: Partial<this>): this;
             in(group: Group): this;
             nativeChannel(context: BridgeContext, name: string): (args?: any) => Promise<any>;
             getWidth(context: BridgeContext): Promise<number>;
@@ -266,12 +213,20 @@ declare module 'doric/lib/src/ui/view' {
             /**++++++++++transform++++++++++*/
             translationX?: number;
             translationY?: number;
+            /**
+                * float [0,..1]
+                */
             scaleX?: number;
             scaleY?: number;
             pivotX?: number;
             pivotY?: number;
+            /**
+                * rotation*PI
+                */
             rotation?: number;
-            /**----------transform----------*/
+            /**
+                * Only affected when its superview or itself is FlexLayout.
+                */
             flexConfig?: FlexConfig;
             doAnimation(context: BridgeContext, animation: IAnimation): Promise<void>;
     }
@@ -422,7 +377,6 @@ declare module 'doric/lib/src/ui/animation' {
             get toRotation(): number;
     }
     export class AnimationSet implements IAnimation {
-            _duration: number;
             delay?: number;
             addAnimation(anim: IAnimation): void;
             get duration(): number;
@@ -436,11 +390,9 @@ declare module 'doric/lib/src/ui/animation' {
 }
 
 declare module 'doric/lib/src/widget/layouts' {
-    import { Group, IView, View } from "doric/lib/src/ui/view";
+    import { Group, View } from "doric/lib/src/ui/view";
     import { Gravity } from "doric/lib/src/util/gravity";
-    export interface IStack extends IView {
-    }
-    export class Stack extends Group implements IStack {
+    export class Stack extends Group {
     }
     export class Root extends Stack {
     }
@@ -448,32 +400,24 @@ declare module 'doric/lib/src/widget/layouts' {
         space?: number;
         gravity?: Gravity;
     }
-    export interface IVLayout extends IView {
-        space?: number;
-        gravity?: Gravity;
+    export class VLayout extends LinearLayout {
     }
-    export class VLayout extends LinearLayout implements IVLayout {
+    export class HLayout extends LinearLayout {
     }
-    export interface IHLayout extends IView {
-        space?: number;
-        gravity?: Gravity;
-    }
-    export class HLayout extends LinearLayout implements IHLayout {
-    }
-    export function stack(views: View[], config?: IStack): Stack;
-    export function hlayout(views: View[], config?: IHLayout): HLayout;
-    export function vlayout(views: View[], config?: IVLayout): VLayout;
+    export function stack(views: View[], config?: Partial<Stack>): Stack;
+    export function hlayout(views: View[], config?: Partial<HLayout>): HLayout;
+    export function vlayout(views: View[], config?: Partial<VLayout>): VLayout;
     export class FlexLayout extends Group {
     }
-    export function flexlayout(views: View[], config?: IView): FlexLayout;
+    export function flexlayout(views: View[], config?: Partial<FlexLayout>): FlexLayout;
     export {};
 }
 
 declare module 'doric/lib/src/widget/text' {
-    import { IView, View } from "doric/lib/src/ui/view";
+    import { View } from "doric/lib/src/ui/view";
     import { Color } from "doric/lib/src/util/color";
     import { Gravity } from "doric/lib/src/util/gravity";
-    export interface IText extends IView {
+    export class Text extends View {
         text?: string;
         textColor?: Color;
         textSize?: number;
@@ -488,33 +432,18 @@ declare module 'doric/lib/src/widget/text' {
         underline?: boolean;
         htmlText?: string;
     }
-    export class Text extends View implements IText {
-        text?: string;
-        textColor?: Color;
-        textSize?: number;
-        maxLines?: number;
-        textAlignment?: Gravity;
-        fontStyle?: "normal" | "bold" | "italic" | "bold_italic";
-        font?: string;
-        maxWidth?: number;
-        maxHeight?: number;
-        lineSpacing?: number;
-        strikethrough?: boolean;
-        underline?: boolean;
-        htmlText?: string;
-    }
-    export function text(config: IText): Text;
+    export function text(config: Partial<Text>): Text;
 }
 
 declare module 'doric/lib/src/widget/image' {
-    import { IView, View } from "doric/lib/src/ui/view";
+    import { View } from "doric/lib/src/ui/view";
     import { Color } from "doric/lib/src/util/color";
     export enum ScaleType {
             ScaleToFill = 0,
             ScaleAspectFit = 1,
             ScaleAspectFill = 2
     }
-    export interface IImage extends IView {
+    export class Image extends View {
             imageUrl?: string;
             /**
                 * Read image from local path
@@ -557,55 +486,26 @@ declare module 'doric/lib/src/widget/image' {
                     width: number;
                     height: number;
             } | undefined) => void;
+            stretchInset?: {
+                    left: number;
+                    top: number;
+                    right: number;
+                    bottom: number;
+            };
     }
-    export class Image extends View implements IImage {
-            imageUrl?: string;
-            imagePath?: string;
-            imageRes?: string;
-            imageBase64?: string;
-            scaleType?: ScaleType;
-            isBlur?: boolean;
-            placeHolderImage?: string;
-            placeHolderColor?: Color;
-            errorImage?: string;
-            errorColor?: Color;
-            loadCallback?: (image: {
-                    width: number;
-                    height: number;
-            } | undefined) => void;
-    }
-    export function image(config: IImage): Image;
+    export function image(config: Partial<Image>): Image;
 }
 
 declare module 'doric/lib/src/widget/list' {
-    import { View, Superview, IView, NativeViewModel } from "doric/lib/src/ui/view";
-    import { Stack, IStack } from "doric/lib/src/widget/layouts";
-    export interface IListItem extends IStack {
-        identifier?: string;
-    }
-    export class ListItem extends Stack implements IListItem {
+    import { View, Superview, NativeViewModel } from "doric/lib/src/ui/view";
+    import { Stack } from "doric/lib/src/widget/layouts";
+    export class ListItem extends Stack {
         /**
           * Set to reuse native view
           */
         identifier?: string;
     }
-    export interface IList extends IView {
-        renderItem: (index: number) => ListItem;
-        itemCount: number;
-        batchCount?: number;
-        onLoadMore?: () => void;
-        loadMore?: boolean;
-        loadMoreView?: ListItem;
-        onScroll?: (offset: {
-            x: number;
-            y: number;
-        }) => void;
-        onScrollEnd?: (offset: {
-            x: number;
-            y: number;
-        }) => void;
-    }
-    export class List extends Superview implements IList {
+    export class List extends Superview {
         allSubviews(): IterableIterator<ListItem> | ListItem[];
         itemCount: number;
         renderItem: (index: number) => ListItem;
@@ -625,31 +525,21 @@ declare module 'doric/lib/src/widget/list' {
         isDirty(): boolean;
         toModel(): NativeViewModel;
     }
-    export function list(config: IList): List;
-    export function listItem(item: View | View[], config?: IListItem): ListItem;
+    export function list(config: Partial<List>): List;
+    export function listItem(item: View | View[], config?: Partial<ListItem>): ListItem;
 }
 
 declare module 'doric/lib/src/widget/slider' {
-    import { Superview, View, IView } from "doric/lib/src/ui/view";
-    import { Stack, IStack } from "doric/lib/src/widget/layouts";
+    import { Superview, View } from "doric/lib/src/ui/view";
+    import { Stack } from "doric/lib/src/widget/layouts";
     import { BridgeContext } from "doric/lib/src/runtime/global";
-    export interface ISlideItem extends IStack {
-        identifier?: string;
-    }
-    export class SlideItem extends Stack implements ISlideItem {
+    export class SlideItem extends Stack {
         /**
           * Set to reuse native view
           */
         identifier?: string;
     }
-    export interface ISlider extends IView {
-        renderPage: (index: number) => SlideItem;
-        itemCount: number;
-        batchCount?: number;
-        onPageSlided?: (index: number) => void;
-        loop?: boolean;
-    }
-    export class Slider extends Superview implements ISlider {
+    export class Slider extends Superview {
         allSubviews(): IterableIterator<SlideItem>;
         itemCount: number;
         renderPage: (index: number) => SlideItem;
@@ -660,22 +550,15 @@ declare module 'doric/lib/src/widget/slider' {
         slidePage(context: BridgeContext, page: number, smooth?: boolean): Promise<any>;
         getSlidedPage(context: BridgeContext): Promise<number>;
     }
-    export function slider(config: ISlider): Slider;
-    export function slideItem(item: View | View[], config?: ISlideItem): SlideItem;
+    export function slider(config: Partial<Slider>): Slider;
+    export function slideItem(item: View | View[], config?: Partial<SlideItem>): SlideItem;
 }
 
 declare module 'doric/lib/src/widget/scroller' {
-    import { Superview, View, IView, NativeViewModel } from 'doric/lib/src/ui/view';
+    import { Superview, View, NativeViewModel } from 'doric/lib/src/ui/view';
     import { BridgeContext } from 'doric/lib/src/runtime/global';
-    export function scroller(content: View, config?: IScroller): Scroller;
-    export interface IScroller extends IView {
-        content?: View;
-        contentOffset?: {
-            x: number;
-            y: number;
-        };
-    }
-    export class Scroller extends Superview implements IScroller {
+    export function scroller(content: View, config?: Partial<Scroller>): Scroller;
+    export class Scroller extends Superview {
         content: View;
         contentOffset?: {
             x: number;
@@ -703,17 +586,10 @@ declare module 'doric/lib/src/widget/scroller' {
 }
 
 declare module 'doric/lib/src/widget/refreshable' {
-    import { View, Superview, IView, NativeViewModel } from "doric/lib/src/ui/view";
-    import { List } from "doric/lib/src/widget/list";
-    import { Scroller } from "doric/lib/src/widget/scroller";
+    import { View, Superview, NativeViewModel } from "doric/lib/src/ui/view";
     import { BridgeContext } from "doric/lib/src/runtime/global";
-    export interface IRefreshable extends IView {
+    export class Refreshable extends Superview {
         content: View;
-        header?: View;
-        onRefresh?: () => void;
-    }
-    export class Refreshable extends Superview implements IRefreshable {
-        content: List | Scroller;
         header?: View;
         onRefresh?: () => void;
         allSubviews(): View[];
@@ -723,7 +599,7 @@ declare module 'doric/lib/src/widget/refreshable' {
         isRefreshing(context: BridgeContext): Promise<boolean>;
         toModel(): NativeViewModel;
     }
-    export function refreshable(config: IRefreshable): Refreshable;
+    export function refreshable(config: Partial<Refreshable>): Refreshable;
     export interface IPullable {
         startAnimation(): void;
         stopAnimation(): void;
@@ -733,37 +609,15 @@ declare module 'doric/lib/src/widget/refreshable' {
 }
 
 declare module 'doric/lib/src/widget/flowlayout' {
-    import { Stack, IStack } from 'doric/lib/src/widget/layouts';
-    import { IView, Superview, View, NativeViewModel } from 'doric/lib/src/ui/view';
-    export interface IFlowLayoutItem extends IStack {
-        identifier?: string;
-    }
-    export class FlowLayoutItem extends Stack implements IFlowLayoutItem {
+    import { Stack } from 'doric/lib/src/widget/layouts';
+    import { Superview, View, NativeViewModel } from 'doric/lib/src/ui/view';
+    export class FlowLayoutItem extends Stack {
         /**
          * Set to reuse native view
          */
         identifier?: string;
     }
-    export interface IFlowLayout extends IView {
-        renderItem: (index: number) => FlowLayoutItem;
-        itemCount: number;
-        batchCount?: number;
-        columnCount?: number;
-        columnSpace?: number;
-        rowSpace?: number;
-        loadMore?: boolean;
-        onLoadMore?: () => void;
-        loadMoreView?: FlowLayoutItem;
-        onScroll?: (offset: {
-            x: number;
-            y: number;
-        }) => void;
-        onScrollEnd?: (offset: {
-            x: number;
-            y: number;
-        }) => void;
-    }
-    export class FlowLayout extends Superview implements IFlowLayout {
+    export class FlowLayout extends Superview {
         allSubviews(): IterableIterator<FlowLayoutItem> | FlowLayoutItem[];
         columnCount: number;
         columnSpace?: number;
@@ -786,27 +640,16 @@ declare module 'doric/lib/src/widget/flowlayout' {
         isDirty(): boolean;
         toModel(): NativeViewModel;
     }
-    export function flowlayout(config: IFlowLayout): FlowLayout;
-    export function flowItem(item: View | View[], config?: IFlowLayoutItem): FlowLayoutItem;
+    export function flowlayout(config: Partial<FlowLayout>): FlowLayout;
+    export function flowItem(item: View | View[], config?: Partial<FlowLayoutItem>): FlowLayoutItem;
 }
 
 declare module 'doric/lib/src/widget/input' {
-    import { View, IView } from "doric/lib/src/ui/view";
+    import { View } from "doric/lib/src/ui/view";
     import { Color } from "doric/lib/src/util/color";
     import { Gravity } from "doric/lib/src/util/gravity";
     import { BridgeContext } from "doric/lib/src/runtime/global";
-    export interface IInput extends IView {
-        text?: string;
-        textColor?: Color;
-        textSize?: number;
-        hintText?: string;
-        hintTextColor?: Color;
-        multilines?: boolean;
-        textAlignment?: Gravity;
-        onTextChange?: (text: string) => void;
-        onFocusChange?: (focused: boolean) => void;
-    }
-    export class Input extends View implements IInput {
+    export class Input extends View {
         text?: string;
         textColor?: Color;
         textSize?: number;
@@ -821,7 +664,7 @@ declare module 'doric/lib/src/widget/input' {
         requestFocus(context: BridgeContext): Promise<any>;
         releaseFocus(context: BridgeContext): Promise<any>;
     }
-    export function input(config: IInput): Input;
+    export function input(config: Partial<Input>): Input;
 }
 
 declare module 'doric/lib/src/widget/nestedSlider' {
@@ -837,20 +680,17 @@ declare module 'doric/lib/src/widget/nestedSlider' {
 
 declare module 'doric/lib/src/widget/draggable' {
     import { View } from "doric/lib/src/ui/view";
-    import { IStack, Stack } from "doric/lib/src/widget/layouts";
-    export interface IDraggable extends IStack {
+    import { Stack } from "doric/lib/src/widget/layouts";
+    export class Draggable extends Stack {
         onDrag?: (x: number, y: number) => void;
     }
-    export class Draggable extends Stack implements IDraggable {
-        onDrag?: (x: number, y: number) => void;
-    }
-    export function draggable(views: View | View[], config?: IDraggable): Draggable;
+    export function draggable(views: View | View[], config?: Partial<Draggable>): Draggable;
 }
 
 declare module 'doric/lib/src/widget/switch' {
-    import { View, IView } from "doric/lib/src/ui/view";
+    import { View } from "doric/lib/src/ui/view";
     import { Color } from "doric/lib/src/util/color";
-    export interface ISwitch extends IView {
+    export class Switch extends View {
             /**
                 * True is on ,false is off,defalut is off.
                 */
@@ -859,21 +699,11 @@ declare module 'doric/lib/src/widget/switch' {
                 * Switch change callback
                 */
             onSwitch?: (state: boolean) => void;
-            onTintColor?: Color;
-            offTintColor?: Color;
-            thumbTintColor?: Color;
-    }
-    export class Switch extends View {
-            /**
-                * True is on ,false is off,defalut is off.
-                */
-            state?: boolean;
-            onSwitch?: (state: boolean) => void;
             offTintColor?: Color;
             onTintColor?: Color;
             thumbTintColor?: Color;
     }
-    export function switchView(config: ISwitch): Switch;
+    export function switchView(config: Partial<Switch>): Switch;
 }
 
 declare module 'doric/lib/src/native/modal' {
@@ -1250,84 +1080,6 @@ declare module 'doric/lib/src/util/uniqueId' {
     export function uniqueId(prefix: string): string;
 }
 
-declare module 'doric/lib/src/pattern/candies' {
-    export function take<T>(target: T): (block: (p: T) => void) => void;
-    export function takeNonNull<T, R>(target?: T): (block: (p: T) => R) => R | undefined;
-    export function takeNull<T, R>(target?: T): (block: () => R) => R | undefined;
-    export function takeLet<T, R>(target: T): (block: (p: T) => R | undefined) => R | undefined;
-    export function takeAlso<T>(target: T): (block: (p: T) => void) => T;
-    export function takeIf<T>(target: T): (predicate: (t: T) => boolean) => T | undefined;
-    export function takeUnless<T>(target: T): (predicate: (t: T) => boolean) => T | undefined;
-    export function repeat(action: (count: number) => void): (times: number) => void;
-}
-
-declare module 'doric/lib/src/pattern/provider' {
-    export type Observer<T> = (v: T) => void;
-    export type Updater<T> = (v: T) => T;
-    export interface IObservable<T> {
-        addObserver(observer: Observer<T | undefined>): void;
-        removeObserver(observer: Observer<T | undefined>): void;
-        update(updater: Updater<T | undefined>): void;
-    }
-    export class Observable<M> implements IObservable<M> {
-        constructor(provider: IProvider, clz: {
-            new (...args: any[]): M;
-        });
-        addObserver(observer: Observer<M | undefined>): void;
-        removeObserver(observer: Observer<M | undefined>): void;
-        update(updater: Updater<M | undefined>): void;
-    }
-    export interface IProvider {
-        provide(obj: Object): void;
-        acquire<T>(clz: {
-            new (...args: any[]): T;
-        }): T | undefined;
-        remove<T>(clz: {
-            new (...args: any[]): T;
-        }): void;
-        clear(): void;
-        observe<T>(clz: {
-            new (...args: any[]): T;
-        }): Observable<T>;
-    }
-    export class Provider implements IProvider {
-        provide(obj: Object): void;
-        acquire<T>(clz: {
-            new (...args: any[]): T;
-        }): T | undefined;
-        remove<T>(clz: new (...args: any[]) => T): void;
-        clear(): void;
-        observe<T>(clz: new (...args: any[]) => T): Observable<T>;
-    }
-}
-
-declare module 'doric/lib/src/pattern/mvvm' {
-    import { Group } from "doric/lib/src/ui/view";
-    import { Panel } from "doric/lib/src/ui/panel";
-    export abstract class ViewHolder {
-        abstract build(root: Group): void;
-    }
-    export type Setter<M> = (state: M) => void;
-    export abstract class ViewModel<M extends Object, V extends ViewHolder> {
-        constructor(obj: M, v: V);
-        getState(): M;
-        getViewHolder(): V;
-        updateState(setter: Setter<M>): void;
-        attach(view: Group): void;
-        abstract onAttached(state: M, vh: V): void;
-        abstract onBind(state: M, vh: V): void;
-    }
-    export type ViewModelClass<M, V extends ViewHolder> = new (m: M, v: V) => ViewModel<M, V>;
-    export type ViewHolderClass<V> = new () => V;
-    export abstract class VMPanel<M extends Object, V extends ViewHolder> extends Panel {
-        abstract getViewModelClass(): ViewModelClass<M, V>;
-        abstract getState(): M;
-        abstract getViewHolderClass(): ViewHolderClass<V>;
-        getViewModel(): ViewModel<M, V> | undefined;
-        build(root: Group): void;
-    }
-}
-
 declare module 'doric/lib/src/util/flexbox' {
     import { Modeling } from "doric/lib/src/util/types";
     enum ValueType {
@@ -1451,5 +1203,82 @@ declare module 'doric/lib/src/util/flexbox' {
         aspectRatio?: number;
     }
     export {};
+}
+
+declare module 'doric/lib/src/pattern/candies' {
+    export function take<T>(target: T): (block: (p: T) => void) => void;
+    export function takeNonNull<T, R>(target?: T): (block: (p: T) => R) => R | undefined;
+    export function takeNull<T, R>(target?: T): (block: () => R) => R | undefined;
+    export function takeLet<T, R>(target: T): (block: (p: T) => R | undefined) => R | undefined;
+    export function takeAlso<T>(target: T): (block: (p: T) => void) => T;
+    export function takeIf<T>(target: T): (predicate: (t: T) => boolean) => T | undefined;
+    export function takeUnless<T>(target: T): (predicate: (t: T) => boolean) => T | undefined;
+    export function repeat(action: (count: number) => void): (times: number) => void;
+}
+
+declare module 'doric/lib/src/pattern/provider' {
+    export type Observer<T> = (v: T) => void;
+    export type Updater<T> = (v: T) => T;
+    export interface IObservable<T> {
+        addObserver(observer: Observer<T | undefined>): void;
+        removeObserver(observer: Observer<T | undefined>): void;
+        update(updater: Updater<T | undefined>): void;
+    }
+    export class Observable<M> implements IObservable<M> {
+        constructor(provider: IProvider, clz: {
+            new (...args: any[]): M;
+        });
+        addObserver(observer: Observer<M | undefined>): void;
+        removeObserver(observer: Observer<M | undefined>): void;
+        update(updater: Updater<M | undefined>): void;
+    }
+    export interface IProvider {
+        provide(obj: Object): void;
+        acquire<T>(clz: {
+            new (...args: any[]): T;
+        }): T | undefined;
+        remove<T>(clz: {
+            new (...args: any[]): T;
+        }): void;
+        clear(): void;
+        observe<T>(clz: {
+            new (...args: any[]): T;
+        }): Observable<T>;
+    }
+    export class Provider implements IProvider {
+        provide(obj: Object): void;
+        acquire<T>(clz: {
+            new (...args: any[]): T;
+        }): T | undefined;
+        remove<T>(clz: new (...args: any[]) => T): void;
+        clear(): void;
+        observe<T>(clz: new (...args: any[]) => T): Observable<T>;
+    }
+}
+
+declare module 'doric/lib/src/pattern/mvvm' {
+    import { Group } from "doric/lib/src/ui/view";
+    import { Panel } from "doric/lib/src/ui/panel";
+    export abstract class ViewHolder {
+        abstract build(root: Group): void;
+    }
+    export type Setter<M> = (state: M) => void;
+    export abstract class ViewModel<M extends Object, V extends ViewHolder> {
+        constructor(obj: M, v: V);
+        getState(): M;
+        getViewHolder(): V;
+        updateState(setter: Setter<M>): void;
+        attach(view: Group): void;
+        abstract onAttached(state: M, vh: V): void;
+        abstract onBind(state: M, vh: V): void;
+    }
+    export type ClassType<T> = new (...args: any) => T;
+    export abstract class VMPanel<M extends Object, V extends ViewHolder> extends Panel {
+        abstract getViewModelClass(): ClassType<ViewModel<M, V>>;
+        abstract getState(): M;
+        abstract getViewHolderClass(): ClassType<V>;
+        getViewModel(): ViewModel<M, V> | undefined;
+        build(root: Group): void;
+    }
 }
 

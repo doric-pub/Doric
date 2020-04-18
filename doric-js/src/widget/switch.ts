@@ -13,27 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { View, Property, IView } from "../ui/view";
+import { View, Property } from "../ui/view";
 import { Color } from "../util/color";
 import { layoutConfig } from "../util/index.util";
-
-export interface ISwitch extends IView {
-    /**
-     * True is on ,false is off,defalut is off.
-     */
-    state?: boolean
-    /**
-     * Switch change callback
-     */
-    onSwitch?: (state: boolean) => void
-
-
-    onTintColor?: Color
-
-    offTintColor?: Color
-
-    thumbTintColor?: Color
-}
 
 export class Switch extends View {
     /**
@@ -41,7 +23,9 @@ export class Switch extends View {
      */
     @Property
     state?: boolean
-
+    /**
+     * Switch change callback
+     */
     @Property
     onSwitch?: (state: boolean) => void
 
@@ -55,7 +39,7 @@ export class Switch extends View {
     thumbTintColor?: Color
 }
 
-export function switchView(config: ISwitch) {
+export function switchView(config: Partial<Switch>) {
     const ret = new Switch
     ret.layoutConfig = layoutConfig().just()
     ret.width = 50

@@ -45,6 +45,8 @@ git tag ${CURRENT_VERSION}
 git push 
 
 git push --tags
+echo "Publish CLI"
+cd $CURRENT_DIR/doric-cli && npm publish 
 
 echo "Publish JS"
 cd $CURRENT_DIR/doric-js && npm publish 

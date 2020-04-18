@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-import { View, Property, Superview, IView, NativeViewModel } from "../ui/view";
-import { Stack, IStack } from "./layouts";
-import { layoutConfig, LayoutSpec } from "../util/layoutconfig";
+import { View, Property, Superview, NativeViewModel } from "../ui/view";
+import { Stack } from "./layouts";
+import { layoutConfig } from "../util/layoutconfig";
 
-export interface IListItem extends IStack {
-    identifier?: string
-}
 
-export class ListItem extends Stack implements IListItem {
+export class ListItem extends Stack {
     /**
      * Set to reuse native view
      */
@@ -30,25 +27,7 @@ export class ListItem extends Stack implements IListItem {
     identifier?: string
 }
 
-export interface IList extends IView {
-    renderItem: (index: number) => ListItem
-
-    itemCount: number
-
-    batchCount?: number
-
-    onLoadMore?: () => void
-
-    loadMore?: boolean
-
-    loadMoreView?: ListItem
-
-    onScroll?: (offset: { x: number, y: number }) => void
-
-    onScrollEnd?: (offset: { x: number, y: number }) => void
-}
-
-export class List extends Superview implements IList {
+export class List extends Superview {
     private cachedViews: Map<string, ListItem> = new Map
     private ignoreDirtyCallOnce = false
 
@@ -120,7 +99,7 @@ export class List extends Superview implements IList {
     }
 }
 
-export function list(config: IList) {
+export function list(config: Partial<List>) {
     const ret = new List
     for (let key in config) {
         Reflect.set(ret, key, Reflect.get(config, key, config), ret)
@@ -128,7 +107,7 @@ export function list(config: IList) {
     return ret
 }
 
-export function listItem(item: View | View[], config?: IListItem) {
+export function listItem(item: View | View[], config?: Partial<ListItem>) {
     return (new ListItem).also((it) => {
         it.layoutConfig = layoutConfig().fit()
         if (item instanceof View) {

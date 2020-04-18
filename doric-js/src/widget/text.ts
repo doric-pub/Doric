@@ -13,28 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { IView, View, Property } from "../ui/view"
+import { View, Property } from "../ui/view"
 import { Color } from "../util/color"
 import { Gravity } from "../util/gravity"
 import { layoutConfig } from "../util/layoutconfig"
 
-export interface IText extends IView {
-    text?: string
-    textColor?: Color
-    textSize?: number
-    maxLines?: number
-    textAlignment?: Gravity
-    fontStyle?: "normal" | "bold" | "italic" | "bold_italic"
-    font?: string
-    maxWidth?: number
-    maxHeight?: number
-    lineSpacing?: number
-    strikethrough?: boolean
-    underline?: boolean
-    htmlText?: string
-}
-
-export class Text extends View implements IText {
+export class Text extends View {
     @Property
     text?: string
 
@@ -75,7 +59,7 @@ export class Text extends View implements IText {
     htmlText?: string
 }
 
-export function text(config: IText) {
+export function text(config: Partial<Text>) {
     const ret = new Text
     ret.layoutConfig = layoutConfig().fit()
     for (let key in config) {

@@ -48,6 +48,7 @@ public class TextNode extends ViewNode<TextView> {
         TextView tv = new TextView(getContext());
         tv.setGravity(Gravity.CENTER);
         tv.setMaxLines(1);
+        tv.setSingleLine(true);
         tv.setEllipsize(TextUtils.TruncateAt.END);
         tv.setIncludeFontPadding(false);
         return tv;
@@ -98,6 +99,7 @@ public class TextNode extends ViewNode<TextView> {
                 if (line <= 0) {
                     line = Integer.MAX_VALUE;
                 }
+                view.setSingleLine(line == 1);
                 view.setMaxLines(line);
                 break;
             case "fontStyle":

@@ -40,6 +40,7 @@
 @property(nonatomic, strong) NSNumber *errorColor;
 @property(nonatomic, strong) NSString *errorImage;
 @property(nonatomic, strong) UIVisualEffectView *blurEffectView;
+@property(nonatomic, strong) NSDictionary *stretchInsetDic;
 @end
 
 @implementation DoricImageNode
@@ -166,7 +167,7 @@
         }
         NSData *imageData = [[NSData alloc] initWithBase64EncodedString:base64
                                                                 options:NSDataBase64DecodingIgnoreUnknownCharacters];
-        YYImage *image = [YYImage imageWithData:imageData];
+        YYImage *image = [YYImage imageWithData:imageData scale:UIScreen.mainScreen.scale];
         view.image = image;
     } else if ([@"isBlur" isEqualToString:name]) {
         NSInteger value = [prop intValue];
@@ -226,8 +227,21 @@
                 [self callJSResponse:self.loadCallbackId, nil];
             }
         }
+    } else if ([@"stretchInset" isEqualToString:name]) {
+        self.stretchInsetDic = (NSDictionary *)prop;
     } else {
         [super blendView:view forPropName:name propValue:prop];
+    }
+}
+
+- (void)afterBlended:(NSDictionary *)props {
+    if (self.stretchInsetDic != nil) {
+        CGFloat left = [self.stretchInsetDic[@"left"] floatValue];
+        CGFloat top = [self.stretchInsetDic[@"top"] floatValue];
+        CGFloat right = [self.stretchInsetDic[@"right"] floatValue];
+        CGFloat bottom = [self.stretchInsetDic[@"bottom"] floatValue];
+        UIImage *result = [self.view.image resizableImageWithCapInsets:UIEdgeInsetsMake(top * self.view.image.size.height, left * self.view.image.size.width, bottom * self.view.image.size.height, right * self.view.image.size.width) resizingMode:UIImageResizingModeStretch];
+        self.view.image = result;
     }
 }
 @end

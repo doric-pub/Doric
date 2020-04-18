@@ -1,4 +1,4 @@
-import { Panel, Group, vlayout, layoutConfig, draggable, Color, Text, Draggable, modal, Gravity, stack, text } from "doric";
+import { Panel, Group, vlayout, layoutConfig, draggable, Color, Text, modal, Gravity, stack, text } from "doric";
 import { title } from "./utils";
 @Entry
 class DraggableDemo extends Panel {

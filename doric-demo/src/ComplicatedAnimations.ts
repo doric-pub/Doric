@@ -1,4 +1,4 @@
-import { animate, Group, Panel, gravity, Color, AnimationSet, vlayout, scroller, layoutConfig, IVLayout, modal, IText, network, View, stack, IHLayout, hlayout, IView, text, TranslationAnimation, ScaleAnimation, RotationAnimation, FillMode, TimingFunction } from "doric";
+import { Group, Panel, gravity, Color, AnimationSet, vlayout, layoutConfig, modal, stack, hlayout, text, TranslationAnimation, ScaleAnimation, RotationAnimation, TimingFunction } from "doric";
 import { title, colors, box } from "./utils";
 
 function thisLabel(str: string) {

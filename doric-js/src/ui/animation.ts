@@ -236,7 +236,7 @@ export class RotationAnimation extends Animation {
 
 export class AnimationSet implements IAnimation {
     private animations: IAnimation[] = []
-    _duration = 0
+    private _duration = 0
     delay?: number
     addAnimation(anim: IAnimation) {
         this.animations.push(anim)

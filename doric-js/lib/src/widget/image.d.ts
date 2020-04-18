@@ -1,11 +1,11 @@
-import { IView, View } from "../ui/view";
+import { View } from "../ui/view";
 import { Color } from "../util/color";
 export declare enum ScaleType {
     ScaleToFill = 0,
     ScaleAspectFit = 1,
     ScaleAspectFill = 2
 }
-export interface IImage extends IView {
+export declare class Image extends View {
     imageUrl?: string;
     /**
      * Read image from local path
@@ -48,21 +48,11 @@ export interface IImage extends IView {
         width: number;
         height: number;
     } | undefined) => void;
+    stretchInset?: {
+        left: number;
+        top: number;
+        right: number;
+        bottom: number;
+    };
 }
-export declare class Image extends View implements IImage {
-    imageUrl?: string;
-    imagePath?: string;
-    imageRes?: string;
-    imageBase64?: string;
-    scaleType?: ScaleType;
-    isBlur?: boolean;
-    placeHolderImage?: string;
-    placeHolderColor?: Color;
-    errorImage?: string;
-    errorColor?: Color;
-    loadCallback?: (image: {
-        width: number;
-        height: number;
-    } | undefined) => void;
-}
-export declare function image(config: IImage): Image;
+export declare function image(config: Partial<Image>): Image;

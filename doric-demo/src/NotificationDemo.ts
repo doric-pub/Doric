@@ -1,4 +1,4 @@
-import { Group, Panel, navbar, text, gravity, Color, Stack, LayoutSpec, list, NativeCall, listItem, log, vlayout, Gravity, hlayout, Text, scroller, layoutConfig, image, IView, IVLayout, ScaleType, modal, IText, network, navigator, notification } from "doric";
+import { Group, Panel, gravity, Color, LayoutSpec, vlayout, scroller, layoutConfig, modal, notification } from "doric";
 import { title, label, colors } from "./utils";
 
 @Entry
@@ -24,7 +24,7 @@ class NotificationDemo extends Panel {
                         }
                     })
                 }
-            } as IText),
+            }),
             label('Subscribe').apply({
                 width: 200,
                 height: 50,
@@ -43,7 +43,7 @@ class NotificationDemo extends Panel {
                         this.subscribeId = e
                     })
                 }
-            } as IText),
+            }),
             label('Unsubscribe').apply({
                 width: 200,
                 height: 50,
@@ -58,12 +58,12 @@ class NotificationDemo extends Panel {
                         })
                     }
                 }
-            } as IText),
+            }),
         ]).apply({
             layoutConfig: layoutConfig().most().configHeight(LayoutSpec.FIT),
             gravity: gravity().center(),
             space: 10,
-        } as IVLayout)).apply({
+        })).apply({
             layoutConfig: layoutConfig().most(),
         }).in(rootView)
     }

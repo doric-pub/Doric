@@ -1,4 +1,4 @@
-import { Panel, Group, scroller, vlayout, layoutConfig, LayoutSpec, Input, Gravity, log, input } from "doric";
+import { Panel, Group, scroller, vlayout, layoutConfig, LayoutSpec, Input, Gravity, log } from "doric";
 import { title, colors } from "./utils";
 @Entry
 class InputDemo extends Panel {

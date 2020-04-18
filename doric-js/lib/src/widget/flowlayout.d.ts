@@ -1,34 +1,12 @@
-import { Stack, IStack } from './layouts';
-import { IView, Superview, View, NativeViewModel } from '../ui/view';
-export interface IFlowLayoutItem extends IStack {
-    identifier?: string;
-}
-export declare class FlowLayoutItem extends Stack implements IFlowLayoutItem {
+import { Stack } from './layouts';
+import { Superview, View, NativeViewModel } from '../ui/view';
+export declare class FlowLayoutItem extends Stack {
     /**
     * Set to reuse native view
     */
     identifier?: string;
 }
-export interface IFlowLayout extends IView {
-    renderItem: (index: number) => FlowLayoutItem;
-    itemCount: number;
-    batchCount?: number;
-    columnCount?: number;
-    columnSpace?: number;
-    rowSpace?: number;
-    loadMore?: boolean;
-    onLoadMore?: () => void;
-    loadMoreView?: FlowLayoutItem;
-    onScroll?: (offset: {
-        x: number;
-        y: number;
-    }) => void;
-    onScrollEnd?: (offset: {
-        x: number;
-        y: number;
-    }) => void;
-}
-export declare class FlowLayout extends Superview implements IFlowLayout {
+export declare class FlowLayout extends Superview {
     private cachedViews;
     private ignoreDirtyCallOnce;
     allSubviews(): IterableIterator<FlowLayoutItem> | FlowLayoutItem[];
@@ -55,5 +33,5 @@ export declare class FlowLayout extends Superview implements IFlowLayout {
     private renderBunchedItems;
     toModel(): NativeViewModel;
 }
-export declare function flowlayout(config: IFlowLayout): FlowLayout;
-export declare function flowItem(item: View | View[], config?: IFlowLayoutItem): FlowLayoutItem;
+export declare function flowlayout(config: Partial<FlowLayout>): FlowLayout;
+export declare function flowItem(item: View | View[], config?: Partial<FlowLayoutItem>): FlowLayoutItem;

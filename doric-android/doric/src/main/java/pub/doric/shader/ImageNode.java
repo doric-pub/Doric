@@ -18,12 +18,18 @@ package pub.doric.shader;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.NinePatchDrawable;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
@@ -41,9 +47,6 @@ import com.github.pengfeizhou.jscore.JSValue;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import pub.doric.DoricContext;
@@ -65,6 +68,7 @@ public class ImageNode extends ViewNode<ImageView> {
     private String errorImage;
     private int placeHolderColor = Color.TRANSPARENT;
     private int errorColor = Color.TRANSPARENT;
+    private JSObject stretchInset = null;
 
     public ImageNode(DoricContext doricContext) {
         super(doricContext);
@@ -85,7 +89,7 @@ public class ImageNode extends ViewNode<ImageView> {
 
     @Override
     protected ImageView build() {
-        ImageView imageView = new ImageView(getContext()) {
+        ImageView imageView = new AppCompatImageView(getContext()) {
             @Override
             protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
                 super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -229,7 +233,36 @@ public class ImageNode extends ViewNode<ImageView> {
 
             @Override
             protected void setResource(@Nullable Drawable resource) {
-                super.setResource(resource);
+                if (resource instanceof BitmapDrawable) {
+                    Bitmap bitmap = ((BitmapDrawable) resource).getBitmap();
+
+                    if (stretchInset != null) {
+                        float left = stretchInset.getProperty("left").asNumber().toFloat();
+                        float top = stretchInset.getProperty("top").asNumber().toFloat();
+                        float right = stretchInset.getProperty("right").asNumber().toFloat();
+                        float bottom = stretchInset.getProperty("bottom").asNumber().toFloat();
+
+                        Rect rect = new Rect(
+                                (int) (bitmap.getWidth() * left),
+                                (int) (bitmap.getHeight() * top),
+                                (int) (bitmap.getWidth() * (1 - right)),
+                                (int) (bitmap.getHeight() * (1 - bottom))
+                        );
+
+                        NinePatchDrawable ninePatchDrawable = new NinePatchDrawable(
+                                getContext().getResources(),
+                                bitmap,
+                                DoricUtils.getNinePatchChunk(rect),
+                                rect,
+                                null
+                        );
+                        super.setResource(ninePatchDrawable);
+                    } else {
+                        super.setResource(resource);
+                    }
+                } else {
+                    super.setResource(resource);
+                }
                 if (mSuperNode instanceof FlexNode) {
                     YogaNode node = ((FlexNode) mSuperNode).mView.getYogaNodeForView(mView);
                     if (node != null) {
@@ -307,6 +340,11 @@ public class ImageNode extends ViewNode<ImageView> {
                     if (!TextUtils.isEmpty(loadCallbackId)) {
                         callJSResponse(loadCallbackId);
                     }
+                }
+                break;
+            case "stretchInset":
+                if (prop.isObject()) {
+                    stretchInset = prop.asObject();
                 }
                 break;
             default:

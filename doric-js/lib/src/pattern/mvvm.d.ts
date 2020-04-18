@@ -15,14 +15,13 @@ export declare abstract class ViewModel<M extends Object, V extends ViewHolder> 
     abstract onAttached(state: M, vh: V): void;
     abstract onBind(state: M, vh: V): void;
 }
-export declare type ViewModelClass<M, V extends ViewHolder> = new (m: M, v: V) => ViewModel<M, V>;
-export declare type ViewHolderClass<V> = new () => V;
+export declare type ClassType<T> = new (...args: any) => T;
 export declare abstract class VMPanel<M extends Object, V extends ViewHolder> extends Panel {
     private vm?;
     private vh?;
-    abstract getViewModelClass(): ViewModelClass<M, V>;
+    abstract getViewModelClass(): ClassType<ViewModel<M, V>>;
     abstract getState(): M;
-    abstract getViewHolderClass(): ViewHolderClass<V>;
+    abstract getViewHolderClass(): ClassType<V>;
     getViewModel(): ViewModel<M, V> | undefined;
     build(root: Group): void;
 }

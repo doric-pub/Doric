@@ -39,6 +39,9 @@
             }
         }];
     }
+    if (self.yoga.isLeaf) {
+        return CGSizeZero;
+    }
     return [self.yoga intrinsicSize];
 }
 @end
@@ -219,13 +222,12 @@
         if ([view isKindOfClass:[DoricFlexView class]]) {
             continue;
         }
-        if (view.doricLayout.measuredWidth == view.width && view.doricLayout.measuredHeight == view.height) {
-            continue;
+        if (view.doricLayout.measuredWidth != view.width || view.doricLayout.measuredHeight != view.height) {
+            view.doricLayout.widthSpec = DoricLayoutJust;
+            view.doricLayout.heightSpec = DoricLayoutJust;
+            view.doricLayout.width = view.width;
+            view.doricLayout.height = view.height;
         }
-        view.doricLayout.widthSpec = DoricLayoutJust;
-        view.doricLayout.heightSpec = DoricLayoutJust;
-        view.doricLayout.width = view.width;
-        view.doricLayout.height = view.height;
         view.doricLayout.measuredX = view.left;
         view.doricLayout.measuredY = view.top;
         [view.doricLayout apply];

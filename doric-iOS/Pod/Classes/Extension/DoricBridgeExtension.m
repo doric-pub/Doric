@@ -33,7 +33,7 @@
 @implementation DoricBridgeExtension
 
 - (id)callNativeWithContextId:(NSString *)contextId module:(NSString *)module method:(NSString *)method callbackId:(NSString *)callbackId argument:(id)argument {
-    DoricContext *context = [[DoricContextManager instance] getContext:contextId];
+   __strong DoricContext *context = [[DoricContextManager instance] getContext:contextId];
     DoricRegistry *registry = context.driver.registry;
     Class pluginClass = [registry acquireNativePlugin:module];
     DoricNativePlugin *nativePlugin = context.pluginInstanceMap[module];
@@ -53,6 +53,8 @@
 }
 
 - (id)findClass:(Class)clz target:(id)target context:(DoricContext *)context method:(NSString *)name callbackId:(NSString *)callbackId argument:(id)argument {
+    __strong DoricContext *strongContext = context;
+    
     unsigned int count;
     id ret = nil;
     Method *methods = class_copyMethodList(clz, &count);
@@ -78,7 +80,7 @@
                                 if (idx - 2 > [array count]) {
                                     break;
                                 }
-                                id args = [self createParamWithMethodName:array[idx - 2] context:context callbackId:callbackId argument:argument];
+                                id args = [self createParamWithMethodName:array[idx - 2] context:strongContext callbackId:callbackId argument:argument];
                                 if (args) {
                                     [tempArray addObject:args];
                                 }
@@ -87,7 +89,7 @@
                             [invocation invoke];
                         } @catch (NSException *exception) {
                             DoricLog(@"CallNative Error:%@", exception.reason);
-                            [context.driver.registry onException:exception inContext:context];
+                            [strongContext.driver.registry onException:exception inContext:strongContext];
                         }
                     };
 
@@ -103,7 +105,7 @@
                         ret = [JSValue valueWithObject:[returnValue copy] inContext:[JSContext currentContext]];
                     } else {
                         DoricLog(@"CallNative Error:%@", @"Must return object type");
-                        [context.driver.registry onLog:DoricLogTypeError
+                        [strongContext.driver.registry onLog:DoricLogTypeError
                                                message:[NSString stringWithFormat:@"CallNative Error:%@", @"Must return object type"]];
                         ret = nil;
                     }
@@ -118,7 +120,7 @@
     if (!isFound) {
         Class superclass = class_getSuperclass(clz);
         if (superclass && superclass != [NSObject class]) {
-            return [self findClass:superclass target:target context:context method:name callbackId:callbackId argument:argument];
+            return [self findClass:superclass target:target context:strongContext method:name callbackId:callbackId argument:argument];
         }
     }
     return ret;

@@ -1,7 +1,10 @@
 import { Group, Panel, coordinator, text, gravity, Color, LayoutSpec, log, vlayout, scroller, layoutConfig, image, ScaleType, Image } from "doric";
 import { colors, label } from "./utils";
 import { img_base64 } from "./image_base64";
+
 const imageUrl = 'https://img.zcool.cn/community/01e75b5da933daa801209e1ffa4649.jpg@1280w_1l_2o_100sh.jpg'
+
+import logo from "./images/logo_w.png"
 
 @Entry
 class ImageDemo extends Panel {
@@ -124,7 +127,16 @@ class ImageDemo extends Panel {
                             right: 0.149,
                             bottom: 0
                         }
-                    })
+                    }),
+                    label('Asset Image'),
+                    image({
+                        imageBase64: logo,
+                        width: 235,
+                        height: 235,
+                        backgroundColor: Color.BLACK,
+                        scaleType: ScaleType.ScaleAspectFill,
+                        layoutConfig: layoutConfig().just(),
+                    }),
                 ],
                 {
                     layoutConfig: layoutConfig().most().configHeight(LayoutSpec.FIT),

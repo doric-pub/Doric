@@ -12,6 +12,8 @@ setTimeout(() => {
     ws.listen(7777)
     chokidar.watch(process.cwd() + "/bundle", {
         ignored: /(^|[\/\\])\../,
+        awaitWriteFinish: true,
+        alwaysStat: true,
     }).on('change', (path) => {
         if (ws.debugging) {
             console.log("debugging, hot reload by pass")

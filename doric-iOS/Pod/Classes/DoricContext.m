@@ -41,7 +41,7 @@
         DoricRootNode *rootNode = [[DoricRootNode alloc] initWithContext:self];
         _rootNode = rootNode;
         [self init:extra];
-        [self callEntity:DORIC_ENTITY_CREATE, nil];
+        [self callEntity:DORIC_ENTITY_CREATE withArgumentsArray:@[]];
     }
     return self;
 }
@@ -60,7 +60,7 @@
 }
 
 - (void)dealloc {
-    [self callEntity:DORIC_ENTITY_DESTROY, nil];
+    [self callEntity:DORIC_ENTITY_DESTROY withArgumentsArray:@[]];
     [[DoricContextManager instance] destroyContext:self];
 }
 
@@ -83,7 +83,7 @@
 - (void)init:(NSString *)initData {
     self.extra = initData;
     if (initData) {
-        [self callEntity:DORIC_ENTITY_INIT, initData, nil];
+        [self callEntity:DORIC_ENTITY_INIT withArgumentsArray:@[initData]];
     }
 }
 
@@ -92,7 +92,7 @@
         it[@"width"] = @(size.width);
         it[@"height"] = @(size.height);
     }];
-    [self callEntity:DORIC_ENTITY_BUILD, self.initialParams, nil];
+    [self callEntity:DORIC_ENTITY_BUILD withArgumentsArray:@[self.initialParams]];
 }
 
 - (void)reload:(NSString *)script {
@@ -100,17 +100,17 @@
     self.script = script;
     [self.driver createContext:self.contextId script:script source:self.source];
     [self init:self.extra];
-    [self callEntity:DORIC_ENTITY_CREATE, nil];
-    [self callEntity:DORIC_ENTITY_BUILD, self.initialParams, nil];
+    [self callEntity:DORIC_ENTITY_CREATE withArgumentsArray:@[]];
+    [self callEntity:DORIC_ENTITY_BUILD withArgumentsArray:@[self.initialParams]];
     [self onShow];
 }
 
 - (void)onShow {
-    [self callEntity:DORIC_ENTITY_SHOW, nil];
+    [self callEntity:DORIC_ENTITY_SHOW withArgumentsArray:@[]];
 }
 
 - (void)onHidden {
-    [self callEntity:DORIC_ENTITY_HIDDEN, nil];
+    [self callEntity:DORIC_ENTITY_HIDDEN withArgumentsArray:@[]];
 }
 
 @end

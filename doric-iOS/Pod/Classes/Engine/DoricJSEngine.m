@@ -228,7 +228,7 @@
         NSDictionary *userInfo = timer.userInfo;
         NSNumber *timerId = [userInfo valueForKey:@"timerId"];
         NSNumber *repeat = [userInfo valueForKey:@"repeat"];
-        
+
         __strong typeof(_self) self = _self;
         @try {
             [self invokeDoricMethod:DORIC_TIMER_CALLBACK, timerId, nil];

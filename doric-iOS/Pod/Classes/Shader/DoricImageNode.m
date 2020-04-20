@@ -114,11 +114,13 @@
     if ([@"imageUrl" isEqualToString:name]) {
         __weak typeof(self) _self = self;
         __block BOOL async = NO;
+        view.doricLayout.undefined = YES;
         [view yy_setImageWithURL:[NSURL URLWithString:prop] placeholder:[self currentPlaceHolderImage] options:0 completion:^(UIImage *image, NSURL *url, YYWebImageFromType from, YYWebImageStage stage, NSError *error) {
             __strong typeof(_self) self = _self;
             if (self.placeHolderColor || self.errorColor) {
                 self.view.contentMode = self.contentMode;
             }
+            view.doricLayout.undefined = NO;
             if (error) {
                 [[self currentErrorImage] also:^(UIImage *it) {
                     self.view.image = it;
@@ -132,11 +134,11 @@
                                          @{@"width": @(image.size.width), @"height": @(image.size.height)},
                                     nil];
                 }
-                DoricSuperNode *node = self.superNode;
-                while (node.superNode != nil) {
-                    node = node.superNode;
-                }
                 if (async) {
+                    DoricSuperNode *node = self.superNode;
+                    while (node.superNode != nil) {
+                        node = node.superNode;
+                    }
                     [node requestLayout];
                 }
             }

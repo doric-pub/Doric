@@ -31,11 +31,17 @@
         [view.doricLayout measure:size];
         [view configureLayoutWithBlock:^(YGLayout *layout) {
             layout.isEnabled = YES;
-            if (layout.width.unit == YGUnitUndefined || layout.width.unit == YGUnitAuto) {
-                layout.width = YGPointValue(view.doricLayout.measuredWidth);
+            if (layout.width.unit == YGUnitUndefined
+                    || layout.width.unit == YGUnitAuto) {
+                if (!view.doricLayout.undefined) {
+                    layout.width = YGPointValue(view.doricLayout.measuredWidth);
+                }
             }
-            if (layout.height.unit == YGUnitUndefined || layout.height.unit == YGUnitAuto) {
-                layout.height = YGPointValue(view.doricLayout.measuredHeight);
+            if (layout.height.unit == YGUnitUndefined
+                    || layout.height.unit == YGUnitAuto) {
+                if (!view.doricLayout.undefined) {
+                    layout.height = YGPointValue(view.doricLayout.measuredHeight);
+                }
             }
         }];
     }
@@ -220,6 +226,9 @@
     /// Need layout again.
     for (UIView *view in self.view.subviews) {
         if ([view isKindOfClass:[DoricFlexView class]]) {
+            continue;
+        }
+        if (view.doricLayout.undefined) {
             continue;
         }
         if (view.doricLayout.measuredWidth != view.width || view.doricLayout.measuredHeight != view.height) {

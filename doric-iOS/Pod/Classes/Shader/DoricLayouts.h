@@ -101,6 +101,8 @@ typedef NS_ENUM(NSInteger, DoricGravity) {
 @property(nonatomic, assign) CGFloat measuredX;
 @property(nonatomic, assign) CGFloat measuredY;
 
+@property(nonatomic, assign) BOOL undefined;
+
 - (instancetype)init;
 
 - (void)measure:(CGSize)targetSize;

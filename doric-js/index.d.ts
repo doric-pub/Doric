@@ -1282,3 +1282,7 @@ declare module 'doric/lib/src/pattern/mvvm' {
     }
 }
 
+declare module '*.png' {
+    const value: any;
+    export default value;
+}

@@ -223,11 +223,12 @@
 }
 
 - (void)callbackTimer:(NSTimer *)timer {
-    NSDictionary *userInfo = timer.userInfo;
-    NSNumber *timerId = [userInfo valueForKey:@"timerId"];
-    NSNumber *repeat = [userInfo valueForKey:@"repeat"];
     __weak typeof(self) _self = self;
     dispatch_async(self.jsQueue, ^() {
+        NSDictionary *userInfo = timer.userInfo;
+        NSNumber *timerId = [userInfo valueForKey:@"timerId"];
+        NSNumber *repeat = [userInfo valueForKey:@"repeat"];
+        
         __strong typeof(_self) self = _self;
         @try {
             [self invokeDoricMethod:DORIC_TIMER_CALLBACK, timerId, nil];

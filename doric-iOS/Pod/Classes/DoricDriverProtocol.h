@@ -32,9 +32,11 @@
 
 - (DoricAsyncResult *)destroyContext:(NSString *)contextId;
 
-- (DoricAsyncResult *)invokeDoricMethod:(NSString *)method, ...;
+- (DoricAsyncResult *)invokeDoricMethod:(NSString *)method, ... NS_REQUIRES_NIL_TERMINATION;
 
-- (DoricAsyncResult *)invokeContextEntity:(NSString *)contextId method:(NSString *)method, ...;
+- (DoricAsyncResult *)invokeDoricMethod:(NSString *)method argumentsArray:(NSArray *)args;
+
+- (DoricAsyncResult *)invokeContextEntity:(NSString *)contextId method:(NSString *)method, ... NS_REQUIRES_NIL_TERMINATION;
 
 - (DoricAsyncResult *)invokeContextEntity:(NSString *)contextId method:(NSString *)method arguments:(va_list)args;
 

@@ -40,8 +40,13 @@
 }
 
 - (void)resolve:(id)result {
-    [[self.context.driver invokeDoricMethod:DORIC_BRIDGE_RESOLVE, self.context.contextId, self.callbackId, result, nil]
+    __weak typeof(self) __self = self;
+    [[self.context.driver invokeDoricMethod:DORIC_BRIDGE_RESOLVE
+                             argumentsArray:result
+                                     ? @[self.context.contextId, self.callbackId, result]
+                                     : @[self.context.contextId, self.callbackId]]
             setExceptionCallback:^(NSException *e) {
+                __strong typeof(__self) self = __self;
                 [self.context.driver.registry
                         onException:e
                           inContext:self.context];
@@ -49,8 +54,13 @@
 }
 
 - (void)reject:(id)result {
-    [[self.context.driver invokeDoricMethod:DORIC_BRIDGE_REJECT, self.context.contextId, self.callbackId, result, nil]
+    __weak typeof(self) __self = self;
+    [[self.context.driver invokeDoricMethod:DORIC_BRIDGE_REJECT
+                             argumentsArray:result
+                                     ? @[self.context.contextId, self.callbackId, result]
+                                     : @[self.context.contextId, self.callbackId]]
             setExceptionCallback:^(NSException *e) {
+                __strong typeof(__self) self = __self;
                 [self.context.driver.registry
                         onException:e
                           inContext:self.context];

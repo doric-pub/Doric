@@ -45,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithScript:(NSString *)script source:(NSString *)source extra:(NSString *)extra;
 
-- (DoricAsyncResult *)callEntity:(NSString *)method, ...;
+- (DoricAsyncResult *)callEntity:(NSString *)method, ... NS_REQUIRES_NIL_TERMINATION;
 
 - (DoricAsyncResult *)callEntity:(NSString *)method withArguments:(va_list)args;
 

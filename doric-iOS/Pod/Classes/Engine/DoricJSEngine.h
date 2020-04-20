@@ -40,7 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)destroyContext:(NSString *)contextId;
 
-- (JSValue *)invokeDoricMethod:(NSString *)method, ...;
+- (JSValue *)invokeDoricMethod:(NSString *)method, ... NS_REQUIRES_NIL_TERMINATION;
 
 - (JSValue *)invokeDoricMethod:(NSString *)method arguments:(va_list)args;
 

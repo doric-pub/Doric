@@ -95,7 +95,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
     }
     if (self.heightSpec == DoricLayoutMost) {
         if (self.view.superview.doricLayout.layoutType == DoricVLayout && self.weight > 0) {
-            height = self.measuredWidth = 0;
+            height = self.measuredHeight = 0;
         } else {
             height = self.measuredHeight = targetSize.height;
         }

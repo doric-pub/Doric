@@ -47,8 +47,7 @@
                                                            [promise resolve:nil];
                                                        }];
         [alert addAction:action];
-        UIViewController *vc = [UIApplication sharedApplication].keyWindow.rootViewController;
-        [vc presentViewController:alert animated:YES completion:nil];
+        [self.doricContext.vc presentViewController:alert animated:YES completion:nil];
     });
 }
 
@@ -70,8 +69,7 @@
                                                                  [promise reject:nil];
                                                              }];
         [alert addAction:cancelAction];
-        UIViewController *vc = [UIApplication sharedApplication].keyWindow.rootViewController;
-        [vc presentViewController:alert animated:YES completion:nil];
+        [self.doricContext.vc presentViewController:alert animated:YES completion:nil];
     });
 }
 
@@ -108,8 +106,7 @@
         [alert addAction:cancelAction];
 
 
-        UIViewController *vc = [UIApplication sharedApplication].keyWindow.rootViewController;
-        [vc presentViewController:alert animated:YES completion:nil];
+        [self.doricContext.vc presentViewController:alert animated:YES completion:nil];
     });
 }
 @end

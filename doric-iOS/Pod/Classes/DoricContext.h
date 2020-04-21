@@ -33,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface DoricContext : NSObject
 @property(nonatomic, weak) id <DoricNavigatorDelegate> navigator;
 @property(nonatomic, weak) id <DoricNavBarDelegate> navBar;
+@property(nonatomic, weak) UIViewController *vc;
 @property(nonatomic, strong) NSString *contextId;
 @property(nonatomic, strong) id <DoricDriverProtocol> driver;
 @property(nonatomic, strong) NSMutableDictionary *pluginInstanceMap;

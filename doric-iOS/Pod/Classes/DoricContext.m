@@ -112,5 +112,10 @@
 - (void)onHidden {
     [self callEntity:DORIC_ENTITY_HIDDEN withArgumentsArray:@[]];
 }
-
+- (UIViewController *)vc {
+    if(!_vc) {
+        return [UIApplication sharedApplication].keyWindow.rootViewController;
+    }
+    return _vc;
+}
 @end

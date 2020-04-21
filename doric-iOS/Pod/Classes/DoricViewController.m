@@ -181,6 +181,7 @@ NSString *const DORIC_MASK_RETRY = @"doric_mask_retry";
             [self.doricPanel config:result alias:self.alias extra:self.extra];
             self.doricPanel.doricContext.navigator = self;
             self.doricPanel.doricContext.navBar = self;
+            self.doricPanel.doricContext.vc = self;
         });
     };
     result.exceptionCallback = ^(NSException *e) {

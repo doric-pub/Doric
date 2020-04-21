@@ -16,6 +16,7 @@
 package pub.doric.shader;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -23,6 +24,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.NinePatchDrawable;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.widget.ImageView;
@@ -166,6 +168,11 @@ public class ImageNode extends ViewNode<ImageView> {
     }
 
     private void loadImageUrl(String url) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            if (getContext() instanceof Activity && ((Activity) getContext()).isDestroyed()) {
+                return;
+            }
+        }
         RequestBuilder<Drawable> requestBuilder = Glide.with(getContext())
                 .load(url);
         loadIntoTarget(requestBuilder);

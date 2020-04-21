@@ -322,6 +322,7 @@
         [self callJSResponse:self.onLoadMoreFuncId, nil];
     }
     [node.view.doricLayout apply];
+    [node requestLayout];
     [self callItem:position size:node.view.frame.size];
     return cell;
 }

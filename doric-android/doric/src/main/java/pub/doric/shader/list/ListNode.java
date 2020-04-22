@@ -247,7 +247,7 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
         if (params.getProperty("animated").isBoolean()) {
             animated = params.getProperty("animated").asBoolean().value();
         }
-        JSNumber pos = params.getProperty("pos").asNumber();
+        JSNumber pos = params.getProperty("index").asNumber();
         moveToPosition(pos.toInt(), animated);
     }
 

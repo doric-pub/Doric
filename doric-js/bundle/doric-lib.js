@@ -1395,10 +1395,10 @@ class List extends Superview {
             return this.cachedViews.values();
         }
     }
-    scrollToItem(context, pos, config) {
+    scrollToItem(context, index, config) {
         var _a;
         const animated = (_a = config) === null || _a === void 0 ? void 0 : _a.animated;
-        return this.nativeChannel(context, 'scrollToItem')({ pos, animated });
+        return this.nativeChannel(context, 'scrollToItem')({ index, animated, });
     }
     reset() {
         this.cachedViews.clear();

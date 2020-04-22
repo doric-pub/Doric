@@ -1889,10 +1889,10 @@ var List = /** @class */ (function (_super) {
             return this.cachedViews.values();
         }
     };
-    List.prototype.scrollToItem = function (context, pos, config) {
+    List.prototype.scrollToItem = function (context, index, config) {
         var _a;
         var animated = (_a = config) === null || _a === void 0 ? void 0 : _a.animated;
-        return this.nativeChannel(context, 'scrollToItem')({ pos: pos, animated: animated });
+        return this.nativeChannel(context, 'scrollToItem')({ index: index, animated: animated, });
     };
     List.prototype.reset = function () {
         this.cachedViews.clear();

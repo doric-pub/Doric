@@ -2854,6 +2854,9 @@ class List extends Superview {
             return this.cachedViews.values();
         }
     }
+    scrollToItem(context, pos, animated) {
+        return this.nativeChannel(context, 'scrollToItem')({ pos, animated });
+    }
     reset() {
         this.cachedViews.clear();
         this.itemCount = 0;
@@ -2918,6 +2921,10 @@ __decorate$5([
     Property,
     __metadata$5("design:type", Function)
 ], List.prototype, "onScrollEnd", void 0);
+__decorate$5([
+    Property,
+    __metadata$5("design:type", Number)
+], List.prototype, "scrolledPosition", void 0);
 function list(config) {
     const ret = new List;
     for (let key in config) {

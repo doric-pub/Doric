@@ -1,5 +1,6 @@
 import { View, Superview, NativeViewModel } from "../ui/view";
 import { Stack } from "./layouts";
+import { BridgeContext } from "../runtime/global";
 export declare class ListItem extends Stack {
     /**
      * Set to reuse native view
@@ -24,6 +25,8 @@ export declare class List extends Superview {
         x: number;
         y: number;
     }) => void;
+    scrolledPosition?: number;
+    scrollToItem(context: BridgeContext, pos: number, animated?: boolean): Promise<any>;
     reset(): void;
     private getItem;
     isDirty(): boolean;

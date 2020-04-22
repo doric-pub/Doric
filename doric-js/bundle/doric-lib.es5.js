@@ -1889,6 +1889,9 @@ var List = /** @class */ (function (_super) {
             return this.cachedViews.values();
         }
     };
+    List.prototype.scrollToItem = function (context, pos, animated) {
+        return this.nativeChannel(context, 'scrollToItem')({ pos: pos, animated: animated });
+    };
     List.prototype.reset = function () {
         this.cachedViews.clear();
         this.itemCount = 0;
@@ -1953,6 +1956,10 @@ var List = /** @class */ (function (_super) {
         Property,
         __metadata$5("design:type", Function)
     ], List.prototype, "onScrollEnd", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", Number)
+    ], List.prototype, "scrolledPosition", void 0);
     return List;
 }(Superview));
 function list(config) {

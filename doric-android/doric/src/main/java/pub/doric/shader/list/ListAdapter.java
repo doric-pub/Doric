@@ -84,16 +84,22 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
         return super.getItemViewType(position);
     }
 
-    private JSValue getItemModel(final int position) {
+    private JSValue getItemModel(int position) {
         if (position >= this.listNode.itemCount) {
             return this.listNode.getSubModel(this.listNode.loadMoreViewId);
         }
         String id = listNode.itemValues.get(position);
         if (TextUtils.isEmpty(id)) {
+            int batchCount = listNode.batchCount;
+            int start = position;
+            while (start > 0 && TextUtils.isEmpty(listNode.itemValues.get(start - 1))) {
+                start--;
+                batchCount++;
+            }
             AsyncResult<JSDecoder> asyncResult = listNode.callJSResponse(
                     "renderBunchedItems",
-                    position,
-                    listNode.batchCount);
+                    start,
+                    batchCount);
             try {
                 JSDecoder jsDecoder = asyncResult.synchronous().get();
                 JSValue result = jsDecoder.decode();
@@ -102,7 +108,7 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
                     for (int i = 0; i < jsArray.size(); i++) {
                         JSObject itemModel = jsArray.get(i).asObject();
                         String itemId = itemModel.getProperty("id").asString().value();
-                        listNode.itemValues.put(i + position, itemId);
+                        listNode.itemValues.put(i + start, itemId);
                         listNode.setSubModel(itemId, itemModel);
                     }
                     return listNode.getSubModel(listNode.itemValues.get(position));

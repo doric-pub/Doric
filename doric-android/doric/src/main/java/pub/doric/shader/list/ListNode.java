@@ -24,6 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.pengfeizhou.jscore.JSNumber;
 import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
@@ -36,6 +37,7 @@ import pub.doric.DoricContext;
 import pub.doric.DoricScrollChangeListener;
 import pub.doric.IDoricScrollable;
 import pub.doric.async.AsyncResult;
+import pub.doric.extension.bridge.DoricMethod;
 import pub.doric.extension.bridge.DoricPlugin;
 import pub.doric.shader.SuperNode;
 import pub.doric.shader.ViewNode;
@@ -142,7 +144,7 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
     }
 
     @Override
-    protected void blend(RecyclerView view, String name, JSValue prop) {
+    protected void blend(RecyclerView view, String name, final JSValue prop) {
         switch (name) {
             case "itemCount":
                 if (!prop.isNumber()) {
@@ -188,6 +190,17 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
                 }
                 this.onScrollEndFuncId = prop.asString().value();
                 break;
+            case "scrolledPosition":
+                if (!prop.isNumber()) {
+                    return;
+                }
+                view.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        moveToPosition(prop.asNumber().toInt(), false);
+                    }
+                });
+                break;
             default:
                 super.blend(view, name, prop);
                 break;
@@ -227,4 +240,49 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
     public void removeScrollChangeListener(DoricScrollChangeListener listener) {
         listeners.remove(listener);
     }
+
+    @DoricMethod
+    public void scrollToItem(JSObject params) {
+        boolean animated = false;
+        if (params.getProperty("animated").isBoolean()) {
+            animated = params.getProperty("animated").asBoolean().value();
+        }
+        JSNumber pos = params.getProperty("pos").asNumber();
+        moveToPosition(pos.toInt(), animated);
+    }
+
+    private void moveToPosition(int pos, boolean smooth) {
+        if (mView.getLayoutManager() == null) {
+            return;
+        }
+        if (!(getView().getLayoutManager() instanceof LinearLayoutManager)) {
+            defaultScrollTo(pos, smooth);
+            return;
+        }
+        LinearLayoutManager layoutManager = (LinearLayoutManager) mView.getLayoutManager();
+        int firstItem = layoutManager.findFirstVisibleItemPosition();
+        int lastItem = layoutManager.findLastVisibleItemPosition();
+        if (pos <= firstItem) {
+            defaultScrollTo(pos, smooth);
+        } else if (pos <= lastItem) {
+//            int top = getInnerView().getChildAt(pos - firstItem).getTop();
+//            if (smooth) {
+//                getInnerView().smoothScrollBy(0, top);
+//            } else {
+//                getInnerView().scrollBy(0, top);
+//            }
+        } else {
+            defaultScrollTo(pos, smooth);
+        }
+    }
+
+
+    private void defaultScrollTo(int pos, boolean b) {
+        if (b) {
+            mView.smoothScrollToPosition(pos);
+        } else {
+            mView.scrollToPosition(pos);
+        }
+    }
+
 }

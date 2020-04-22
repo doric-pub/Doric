@@ -56,12 +56,6 @@
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:dic[@"title"]
                                                                        message:dic[@"msg"]
                                                                 preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *okAction = [UIAlertAction actionWithTitle:dic[@"okLabel"] ?: NSLocalizedString(@"Ok", nil)
-                                                           style:UIAlertActionStyleDefault
-                                                         handler:^(UIAlertAction *action) {
-                                                             [promise resolve:nil];
-                                                         }];
-        [alert addAction:okAction];
 
         UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:dic[@"cancelLabel"] ?: NSLocalizedString(@"Cancel", nil)
                                                                style:UIAlertActionStyleDefault
@@ -69,6 +63,14 @@
                                                                  [promise reject:nil];
                                                              }];
         [alert addAction:cancelAction];
+        
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:dic[@"okLabel"] ?: NSLocalizedString(@"Ok", nil)
+                                                           style:UIAlertActionStyleDefault
+                                                         handler:^(UIAlertAction *action) {
+                                                             [promise resolve:nil];
+                                                         }];
+        [alert addAction:okAction];
+        
         [self.doricContext.vc presentViewController:alert animated:YES completion:nil];
     });
 }
@@ -89,13 +91,6 @@
             }
         }];
         __weak typeof(alert) _alert = alert;
-        UIAlertAction *okAction = [UIAlertAction actionWithTitle:dic[@"okLabel"] ?: NSLocalizedString(@"Ok", nil)
-                                                           style:UIAlertActionStyleDefault
-                                                         handler:^(UIAlertAction *action) {
-                                                             __strong typeof(_alert) alert = _alert;
-                                                             [promise resolve:alert.textFields.lastObject.text];
-                                                         }];
-        [alert addAction:okAction];
 
         UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:dic[@"cancelLabel"] ?: NSLocalizedString(@"Cancel", nil)
                                                                style:UIAlertActionStyleDefault
@@ -105,6 +100,13 @@
                                                              }];
         [alert addAction:cancelAction];
 
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:dic[@"okLabel"] ?: NSLocalizedString(@"Ok", nil)
+                                                           style:UIAlertActionStyleDefault
+                                                         handler:^(UIAlertAction *action) {
+                                                             __strong typeof(_alert) alert = _alert;
+                                                             [promise resolve:alert.textFields.lastObject.text];
+                                                         }];
+        [alert addAction:okAction];
 
         [self.doricContext.vc presentViewController:alert animated:YES completion:nil];
     });

@@ -60,8 +60,9 @@
 }
 
 - (void)dealloc {
-    [self callEntity:DORIC_ENTITY_DESTROY withArgumentsArray:@[]];
     [[DoricContextManager instance] destroyContext:self];
+    [self callEntity:DORIC_ENTITY_DESTROY withArgumentsArray:@[]];
+    [self.driver destroyContext:self.contextId];
 }
 
 - (DoricAsyncResult *)callEntity:(NSString *)method, ... {

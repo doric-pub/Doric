@@ -72,7 +72,6 @@
     dispatch_sync(self.mapQueue, ^() {
         [self.doricContextMap removeObjectForKey:contextId];
     });
-    [context.driver destroyContext:contextId];
 }
 
 - (NSArray *)aliveContexts {

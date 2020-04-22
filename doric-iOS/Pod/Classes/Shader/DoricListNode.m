@@ -314,7 +314,7 @@
 
 - (void)scrollToItem:(NSDictionary *)params {
     BOOL animated = [params[@"animated"] boolValue];
-    NSUInteger scrolledPosition = [params[@"pos"] unsignedIntegerValue];
+    NSUInteger scrolledPosition = [params[@"index"] unsignedIntegerValue];
     [self.view scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:scrolledPosition inSection:0] atScrollPosition:UITableViewScrollPositionNone animated:animated];
 }
 

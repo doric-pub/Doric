@@ -107,6 +107,10 @@
         self.onScrollFuncId = prop;
     } else if ([@"onScrollEnd" isEqualToString:name]) {
         self.onScrollEndFuncId = prop;
+    } else if ([@"scrolledPosition" isEqualToString:name]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [view scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[prop unsignedIntegerValue] inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+        });
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }
@@ -299,6 +303,12 @@
 
 - (void)removeDidScrollBlock:(__nonnull DoricDidScrollBlock)didScrollListener {
     [self.didScrollBlocks removeObject:didScrollListener];
+}
+
+- (void)scrollToItem:(NSDictionary *)params {
+    BOOL animated = [params[@"animated"] boolValue];
+    NSUInteger scrolledPosition = [params[@"pos"] unsignedIntegerValue];
+    [self.view scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:scrolledPosition inSection:0] atScrollPosition:UITableViewScrollPositionNone animated:animated];
 }
 
 @end

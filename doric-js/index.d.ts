@@ -499,6 +499,7 @@ declare module 'doric/lib/src/widget/image' {
 declare module 'doric/lib/src/widget/list' {
     import { View, Superview, NativeViewModel } from "doric/lib/src/ui/view";
     import { Stack } from "doric/lib/src/widget/layouts";
+    import { BridgeContext } from "doric/lib/src/runtime/global";
     export class ListItem extends Stack {
         /**
           * Set to reuse native view
@@ -521,6 +522,8 @@ declare module 'doric/lib/src/widget/list' {
             x: number;
             y: number;
         }) => void;
+        scrolledPosition?: number;
+        scrollToItem(context: BridgeContext, pos: number, animated?: boolean): Promise<any>;
         reset(): void;
         isDirty(): boolean;
         toModel(): NativeViewModel;

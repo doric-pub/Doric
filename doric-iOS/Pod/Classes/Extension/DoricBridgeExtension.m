@@ -34,6 +34,9 @@
 
 - (id)callNativeWithContextId:(NSString *)contextId module:(NSString *)module method:(NSString *)method callbackId:(NSString *)callbackId argument:(id)argument {
    __strong DoricContext *context = [[DoricContextManager instance] getContext:contextId];
+    if (!context) {
+        return nil;
+    }
     DoricRegistry *registry = context.driver.registry;
     Class pluginClass = [registry acquireNativePlugin:module];
     DoricNativePlugin *nativePlugin = context.pluginInstanceMap[module];

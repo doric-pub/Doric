@@ -174,6 +174,8 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     } else if ([name isEqualToString:@"backgroundColor"]) {
         if ([prop isKindOfClass:[NSNumber class]]) {
             view.backgroundColor = DoricColor(prop);
+            self.gradientProps = nil;
+            self.gradientSize = CGSizeZero;
         } else if ([prop isKindOfClass:[NSDictionary class]]) {
             self.gradientProps = prop;
         }

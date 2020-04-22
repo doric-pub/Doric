@@ -523,7 +523,9 @@ declare module 'doric/lib/src/widget/list' {
             y: number;
         }) => void;
         scrolledPosition?: number;
-        scrollToItem(context: BridgeContext, pos: number, animated?: boolean): Promise<any>;
+        scrollToItem(context: BridgeContext, pos: number, config?: {
+            animated?: boolean;
+        }): Promise<any>;
         reset(): void;
         isDirty(): boolean;
         toModel(): NativeViewModel;

@@ -2797,6 +2797,10 @@ __decorate$4([
 ], Image.prototype, "loadCallback", void 0);
 __decorate$4([
     Property,
+    __metadata$4("design:type", Number)
+], Image.prototype, "imageScale", void 0);
+__decorate$4([
+    Property,
     __metadata$4("design:type", Object)
 ], Image.prototype, "stretchInset", void 0);
 function image(config) {

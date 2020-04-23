@@ -48,6 +48,13 @@ export declare class Image extends View {
         width: number;
         height: number;
     } | undefined) => void;
+    /**
+     * Default is Environment.screenScale.
+     */
+    imageScale?: number;
+    /**
+     * Unit in pixel
+     */
     stretchInset?: {
         left: number;
         top: number;

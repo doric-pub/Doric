@@ -81,6 +81,14 @@ export class Image extends View {
     @Property
     loadCallback?: (image: { width: number; height: number } | undefined) => void
 
+    /**
+     * Default is Environment.screenScale.
+     */
+    @Property
+    imageScale?: number
+    /**
+     * Unit in pixel
+     */
     @Property
     stretchInset?: {
         left: number,

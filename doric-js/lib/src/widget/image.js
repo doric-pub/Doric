@@ -84,6 +84,10 @@ __decorate([
 ], Image.prototype, "loadCallback", void 0);
 __decorate([
     Property,
+    __metadata("design:type", Number)
+], Image.prototype, "imageScale", void 0);
+__decorate([
+    Property,
     __metadata("design:type", Object)
 ], Image.prototype, "stretchInset", void 0);
 export function image(config) {

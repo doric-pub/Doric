@@ -487,6 +487,13 @@ declare module 'doric/lib/src/widget/image' {
                     width: number;
                     height: number;
             } | undefined) => void;
+            /**
+                * Default is Environment.screenScale.
+                */
+            imageScale?: number;
+            /**
+                * Unit in pixel
+                */
             stretchInset?: {
                     left: number;
                     top: number;

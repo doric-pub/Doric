@@ -229,6 +229,14 @@ public class DoricUtils {
         }
     }
 
+    public static float getScreenScale() {
+        Resources resources = Resources.getSystem();
+        if (resources.getDisplayMetrics() != null) {
+            return resources.getDisplayMetrics().density;
+        } else {
+            return 1;
+        }
+    }
 
     private final static int NO_COLOR = 0x00000001;
     private final static int X_SIZE = 2;

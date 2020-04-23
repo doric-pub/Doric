@@ -34,11 +34,7 @@
 
 - (id)callNativeWithContextId:(NSString *)contextId module:(NSString *)module method:(NSString *)method callbackId:(NSString *)callbackId argument:(id)argument {
    __strong DoricContext *context = [[DoricContextManager instance] getContext:contextId];
-    if (!context) {
-        return nil;
-    }
-    DoricRegistry *registry = context.driver.registry;
-    Class pluginClass = [registry acquireNativePlugin:module];
+    Class pluginClass = [self.registry acquireNativePlugin:module];
     DoricNativePlugin *nativePlugin = context.pluginInstanceMap[module];
     if (nativePlugin == nil) {
         nativePlugin = [(DoricNativePlugin *) [pluginClass alloc] initWithContext:context];
@@ -72,6 +68,7 @@
                 NSMethodSignature *methodSignature = [target methodSignatureForSelector:selector];
                 if (methodSignature) {
                     NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
+                    [invocation retainArguments];
                     invocation.selector = selector;
                     invocation.target = target;
                     __weak __typeof__(self) _self = self;

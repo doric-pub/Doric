@@ -17,7 +17,6 @@ package pub.doric.shader;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;

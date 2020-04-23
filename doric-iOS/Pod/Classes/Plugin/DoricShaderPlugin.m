@@ -95,6 +95,7 @@
                 NSMethodSignature *methodSignature = [target methodSignatureForSelector:selector];
                 if (methodSignature) {
                     NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
+                    [invocation retainArguments];
                     invocation.selector = selector;
                     invocation.target = target;
                     void *retValue;

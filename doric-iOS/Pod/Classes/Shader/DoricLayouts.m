@@ -156,6 +156,12 @@ static const void *kLayoutConfig = &kLayoutConfig;
             break;
         }
     }
+    if (self.view.superview.doricLayout.widthSpec == DoricLayoutFit && self.widthSpec == DoricLayoutMost) {
+        self.measuredWidth = 0;
+    }
+    if (self.view.superview.doricLayout.heightSpec == DoricLayoutFit && self.heightSpec == DoricLayoutMost) {
+        self.measuredHeight = 0;
+    }
 }
 
 - (void)layout {
@@ -373,6 +379,12 @@ static const void *kLayoutConfig = &kLayoutConfig;
         if (layout.disabled) {
             continue;
         }
+        if (self.widthSpec == DoricLayoutFit && layout.widthSpec == DoricLayoutMost) {
+            layout.measuredWidth = self.measuredWidth - layout.marginLeft  - layout.marginRight;
+        }
+        if (self.heightSpec == DoricLayoutFit && layout.heightSpec == DoricLayoutMost) {
+            layout.measuredHeight = self.measuredHeight - layout.marginTop - layout.marginBottom;
+        }
         [layout layout];
         DoricGravity gravity = layout.alignment;
         if ((gravity & DoricGravityLeft) == DoricGravityLeft) {
@@ -434,6 +446,12 @@ static const void *kLayoutConfig = &kLayoutConfig;
         if (layout.disabled) {
             continue;
         }
+        if (self.widthSpec == DoricLayoutFit && layout.widthSpec == DoricLayoutMost) {
+            layout.measuredWidth = self.measuredWidth - layout.marginLeft  - layout.marginRight;
+        }
+        if (self.heightSpec == DoricLayoutFit && layout.heightSpec == DoricLayoutMost) {
+            layout.measuredHeight = self.measuredHeight - yStart - layout.marginTop - layout.marginBottom;
+        }
         [layout layout];
         DoricGravity gravity = layout.alignment | self.gravity;
         if ((gravity & DoricGravityLeft) == DoricGravityLeft) {
@@ -473,6 +491,15 @@ static const void *kLayoutConfig = &kLayoutConfig;
         if (layout.disabled) {
             continue;
         }
+        
+        if (self.widthSpec == DoricLayoutFit && layout.widthSpec == DoricLayoutMost) {
+            layout.measuredWidth = self.measuredWidth - xStart - layout.marginLeft  - layout.marginRight;
+        }
+        
+        if (self.heightSpec == DoricLayoutFit && layout.heightSpec == DoricLayoutMost) {
+            layout.measuredHeight = self.measuredHeight - layout.marginTop - layout.marginBottom;
+        }
+        
         [layout layout];
 
         DoricGravity gravity = layout.alignment | self.gravity;

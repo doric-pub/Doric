@@ -17,8 +17,10 @@ package pub.doric.shader;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
@@ -71,6 +73,7 @@ public class ImageNode extends ViewNode<ImageView> {
     private int placeHolderColor = Color.TRANSPARENT;
     private int errorColor = Color.TRANSPARENT;
     private JSObject stretchInset = null;
+    private float imageScale = DoricUtils.getScreenScale();
 
     public ImageNode(DoricContext doricContext) {
         super(doricContext);
@@ -242,7 +245,13 @@ public class ImageNode extends ViewNode<ImageView> {
             protected void setResource(@Nullable Drawable resource) {
                 if (resource instanceof BitmapDrawable) {
                     Bitmap bitmap = ((BitmapDrawable) resource).getBitmap();
-
+                    if (imageScale != DoricUtils.getScreenScale()) {
+                        float scale = DoricUtils.getScreenScale() / imageScale;
+                        Matrix matrix = new Matrix();
+                        matrix.setScale(scale, scale);
+                        bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+                        resource = new BitmapDrawable(getContext().getResources(), bitmap);
+                    }
                     if (stretchInset != null) {
                         float left = stretchInset.getProperty("left").asNumber().toFloat();
                         float top = stretchInset.getProperty("top").asNumber().toFloat();
@@ -250,10 +259,10 @@ public class ImageNode extends ViewNode<ImageView> {
                         float bottom = stretchInset.getProperty("bottom").asNumber().toFloat();
 
                         Rect rect = new Rect(
-                                (int) (bitmap.getWidth() * left),
-                                (int) (bitmap.getHeight() * top),
-                                (int) (bitmap.getWidth() * (1 - right)),
-                                (int) (bitmap.getHeight() * (1 - bottom))
+                                (int) left,
+                                (int) top,
+                                (int) (bitmap.getWidth() - right),
+                                (int) (bitmap.getHeight() - bottom)
                         );
 
                         NinePatchDrawable ninePatchDrawable = new NinePatchDrawable(
@@ -352,6 +361,11 @@ public class ImageNode extends ViewNode<ImageView> {
             case "stretchInset":
                 if (prop.isObject()) {
                     stretchInset = prop.asObject();
+                }
+                break;
+            case "imageScale":
+                if (prop.isNumber()) {
+                    imageScale = prop.asNumber().toFloat();
                 }
                 break;
             default:

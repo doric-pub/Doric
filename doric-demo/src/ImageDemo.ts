@@ -5,6 +5,7 @@ import { img_base64 } from "./image_base64";
 const imageUrl = 'https://img.zcool.cn/community/01e75b5da933daa801209e1ffa4649.jpg@1280w_1l_2o_100sh.jpg'
 
 import logo from "./images/logo_w.png"
+import button from "./images/button.png"
 
 @Entry
 class ImageDemo extends Panel {
@@ -22,6 +23,59 @@ class ImageDemo extends Panel {
                         textAlignment: gravity().center(),
                         height: 50,
                     }),
+
+                    label('Button'),
+                    image({
+                        imageBase64: button,
+                        scaleType: ScaleType.ScaleToFill,
+                        layoutConfig: {
+                            widthSpec: LayoutSpec.FIT,
+                            heightSpec: LayoutSpec.FIT,
+                        },
+                        imageScale: 2,
+                    }),
+                    image({
+                        imageBase64: button,
+                        scaleType: ScaleType.ScaleToFill,
+                        layoutConfig: {
+                            widthSpec: LayoutSpec.FIT,
+                            heightSpec: LayoutSpec.FIT,
+                        },
+                    }),
+                    image({
+                        imageBase64: button,
+                        scaleType: ScaleType.ScaleToFill,
+                        layoutConfig: {
+                            widthSpec: LayoutSpec.JUST,
+                            heightSpec: LayoutSpec.JUST,
+                        },
+                        width: 200,
+                        height: 150 / 2.75,
+                        stretchInset: {
+                            left: 100,
+                            top: 0,
+                            right: 100,
+                            bottom: 0
+                        },
+                        imageScale: 2.75,
+                    }),
+                    image({
+                        imageBase64: button,
+                        scaleType: ScaleType.ScaleToFill,
+                        layoutConfig: {
+                            widthSpec: LayoutSpec.JUST,
+                            heightSpec: LayoutSpec.JUST,
+                        },
+                        width: 200,
+                        height: 75,
+                        stretchInset: {
+                            left: 100,
+                            top: 0,
+                            right: 100,
+                            bottom: 0
+                        },
+                        imageScale: 2,
+                    }),
                     label('Gif'),
                     image({
                         imageUrl: "https://misc.aotu.io/ONE-SUNDAY/world-cup_2014_42.gif",
@@ -29,7 +83,8 @@ class ImageDemo extends Panel {
                         loadCallback: function (ret) {
                             log('this')
                             log('loadCallback', ret)
-                        }
+                        },
+                        imageScale: 2,
                     }),
                     label('APNG'),
                     image({
@@ -127,15 +182,6 @@ class ImageDemo extends Panel {
                             right: 0.149,
                             bottom: 0
                         }
-                    }),
-                    label('Asset Image'),
-                    image({
-                        imageBase64: logo,
-                        width: 235,
-                        height: 235,
-                        backgroundColor: Color.BLACK,
-                        scaleType: ScaleType.ScaleAspectFill,
-                        layoutConfig: layoutConfig().just(),
                     }),
                 ],
                 {

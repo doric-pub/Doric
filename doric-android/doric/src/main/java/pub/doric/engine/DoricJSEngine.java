@@ -100,11 +100,6 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Resources resources = Resources.getSystem();
-        float scale = 0;
-        if (resources.getDisplayMetrics() != null) {
-            scale = resources.getDisplayMetrics().density;
-        }
         JSONBuilder envObject = new JSONBuilder()
                 .put("platform", "Android")
                 .put("platformVersion", String.valueOf(android.os.Build.VERSION.SDK_INT))
@@ -112,7 +107,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
                 .put("appVersion", appVersion)
                 .put("screenWidth", DoricUtils.px2dp(DoricUtils.getScreenWidth()))
                 .put("screenHeight", DoricUtils.px2dp(DoricUtils.getScreenHeight()))
-                .put("screenScale", scale)
+                .put("screenScale", DoricUtils.getScreenScale())
                 .put("statusBarHeight", DoricUtils.px2dp(DoricUtils.getStatusBarHeight()))
                 .put("hasNotch", false)
                 .put("deviceBrand", Build.BRAND)

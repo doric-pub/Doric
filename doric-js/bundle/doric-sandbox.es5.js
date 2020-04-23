@@ -11678,8 +11678,8 @@ var doric = (function (exports) {
         if (cleanup != null) { subscriptionState.cleanup = typeof cleanup.unsubscribe === 'function'
           ? function () { subscription.unsubscribe(); }
           : aFunction$1(cleanup); }
-      } catch (error) {
-        subscriptionObserver.error(error);
+      } catch (error$1) {
+        subscriptionObserver.error(error$1);
         return;
       } if (subscriptionClosed(subscriptionState)) { cleanupSubscription(subscriptionState); }
     };
@@ -13179,7 +13179,7 @@ var doric = (function (exports) {
           // some Chrome versions have non-configurable methods on DOMTokenList
           if (CollectionPrototype$1[METHOD_NAME] !== es_array_iterator[METHOD_NAME]) { try {
             createNonEnumerableProperty(CollectionPrototype$1, METHOD_NAME, es_array_iterator[METHOD_NAME]);
-          } catch (error) {
+          } catch (error$1) {
             CollectionPrototype$1[METHOD_NAME] = es_array_iterator[METHOD_NAME];
           } }
         } }

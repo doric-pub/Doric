@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'DoricDevkit'
-  s.version          = '0.4.2'
+  s.version          = '0.4.15'
   s.summary          = 'Doric iOS Devkit'
 
   s.description      = <<-DESC

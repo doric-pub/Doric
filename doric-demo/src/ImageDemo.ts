@@ -1,4 +1,4 @@
-import { Group, Panel, coordinator, text, gravity, Color, LayoutSpec, log, vlayout, scroller, layoutConfig, image, ScaleType, Image } from "doric";
+import { Group, Panel, coordinator, text, gravity, Color, LayoutSpec, log, vlayout, scroller, layoutConfig, image, ScaleType, Image, modal } from "doric";
 import { colors, label } from "./utils";
 import { img_base64 } from "./image_base64";
 
@@ -220,5 +220,8 @@ class ImageDemo extends Panel {
                 }
             })
         }).in(rootView)
+    }
+    onDestroy() {
+        modal(context).toast('onDestroy')
     }
 }

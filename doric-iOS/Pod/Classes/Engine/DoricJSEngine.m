@@ -52,7 +52,6 @@
 - (instancetype)init {
     if (self = [super init]) {
         _jsQueue = dispatch_queue_create("doric.jsengine", DISPATCH_QUEUE_SERIAL);
-        _bridgeExtension = [[DoricBridgeExtension alloc] init];
         NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
         struct utsname systemInfo;
         uname(&systemInfo);
@@ -76,6 +75,8 @@
         dispatch_async(_jsQueue, ^() {
             self.timers = [[NSMutableDictionary alloc] init];
             self.registry = [[DoricRegistry alloc] init];
+            self.bridgeExtension = [DoricBridgeExtension new];
+            self.bridgeExtension.registry = self.registry;
             [self initJSEngine];
             [self initJSExecutor];
             [self initDoricEnvironment];

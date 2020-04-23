@@ -36,6 +36,7 @@ declare global {
         libVersion: string;
         screenWidth: number;
         screenHeight: number;
+        screenScale: number;
         statusBarHeight: number;
         hasNotch: boolean;
         /**

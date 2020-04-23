@@ -67,6 +67,7 @@
                 @"appVersion": infoDictionary[@"CFBundleShortVersionString"],
                 @"screenWidth": @([[UIScreen mainScreen] bounds].size.width),
                 @"screenHeight": @([[UIScreen mainScreen] bounds].size.height),
+                @"screenScale": @([[UIScreen mainScreen] scale]),
                 @"statusBarHeight": @([[UIApplication sharedApplication] statusBarFrame].size.height),
                 @"hasNotch": @(hasNotch()),
                 @"deviceBrand": @"Apple",

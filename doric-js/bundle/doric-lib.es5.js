@@ -1894,7 +1894,8 @@ var List = /** @class */ (function (_super) {
         }
     };
     List.prototype.scrollToItem = function (context, index, config) {
-        var animated = config === null || config === void 0 ? void 0 : config.animated;
+        var _a;
+        var animated = (_a = config) === null || _a === void 0 ? void 0 : _a.animated;
         return this.nativeChannel(context, 'scrollToItem')({ index: index, animated: animated, });
     };
     List.prototype.reset = function () {

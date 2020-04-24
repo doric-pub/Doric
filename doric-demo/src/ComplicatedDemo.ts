@@ -53,6 +53,8 @@ class MyDemo extends Panel {
                 height: 200,
                 scaleType: ScaleType.ScaleAspectFill,
             }),
-        ]).in(root)
+        ], {
+            layoutConfig: layoutConfig().most()
+        }).in(root)
     }
 }

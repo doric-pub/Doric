@@ -112,6 +112,7 @@ class ListPanel extends Panel {
                             heightSpec: LayoutSpec.MOST,
                         },
                     }),
+                    layoutConfig: layoutConfig().most(),
                 }),
 
             ],

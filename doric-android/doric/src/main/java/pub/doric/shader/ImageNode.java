@@ -127,6 +127,14 @@ public class ImageNode extends ViewNode<ImageView> {
             if (errorColor.isNumber()) {
                 this.errorColor = errorColor.asNumber().toInt();
             }
+            JSValue stretchInsetValue = jsObject.getProperty("stretchInset");
+            if (stretchInsetValue.isObject()) {
+                this.stretchInset = stretchInsetValue.asObject();
+            }
+            JSValue imageScaleValue = jsObject.getProperty("imageScale");
+            if (imageScaleValue.isNumber()) {
+                this.imageScale = imageScaleValue.asNumber().toFloat();
+            }
         }
         super.blend(jsObject);
     }
@@ -355,16 +363,6 @@ public class ImageNode extends ViewNode<ImageView> {
                     if (!TextUtils.isEmpty(loadCallbackId)) {
                         callJSResponse(loadCallbackId);
                     }
-                }
-                break;
-            case "stretchInset":
-                if (prop.isObject()) {
-                    stretchInset = prop.asObject();
-                }
-                break;
-            case "imageScale":
-                if (prop.isNumber()) {
-                    imageScale = prop.asNumber().toFloat();
                 }
                 break;
             default:

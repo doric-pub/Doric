@@ -45,6 +45,8 @@ NSBundle *_Nonnull DoricBundle(void);
 
 void ShowToast(NSString *_Nonnull text, DoricGravity gravity);
 
+void ShowToastInVC(UIViewController *_Nonnull vc, NSString *_Nonnull text, DoricGravity gravity);
+
 UIImage *_Nonnull UIImageWithColor(UIColor *_Nonnull color);
 
 BOOL hasNotch(void);

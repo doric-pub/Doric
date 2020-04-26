@@ -48,8 +48,7 @@ export class List extends Superview {
         }
     }
     scrollToItem(context, index, config) {
-        var _a;
-        const animated = (_a = config) === null || _a === void 0 ? void 0 : _a.animated;
+        const animated = config === null || config === void 0 ? void 0 : config.animated;
         return this.nativeChannel(context, 'scrollToItem')({ index, animated, });
     }
     reset() {

@@ -33,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface DoricContext : NSObject
 @property(nonatomic, weak) id <DoricNavigatorDelegate> navigator;
 @property(nonatomic, weak) id <DoricNavBarDelegate> navBar;
+@property(nonatomic, weak) UIViewController *vc;
 @property(nonatomic, strong) NSString *contextId;
 @property(nonatomic, strong) id <DoricDriverProtocol> driver;
 @property(nonatomic, strong) NSMutableDictionary *pluginInstanceMap;
@@ -45,7 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithScript:(NSString *)script source:(NSString *)source extra:(NSString *)extra;
 
-- (DoricAsyncResult *)callEntity:(NSString *)method, ...;
+- (DoricAsyncResult *)callEntity:(NSString *)method, ... NS_REQUIRES_NIL_TERMINATION;
 
 - (DoricAsyncResult *)callEntity:(NSString *)method withArguments:(va_list)args;
 

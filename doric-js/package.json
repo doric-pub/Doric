@@ -6,7 +6,7 @@
   "types": "index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc -p tsconfig.es5.json && mv -f lib-es5/src/ui/view.es5.js lib-es5/src/ui/view.js && tsc -d -p . && rollup -c && dts-bundle --configJson dts-bundle.json",
+    "build": "tsc -p tsconfig.es5.json && mv -f lib-es5/src/ui/view.es5.js lib-es5/src/ui/view.js && tsc -d -p . && rollup -c && dts-bundle --configJson dts-bundle.json && cat src/image.d.ts >> index.d.ts",
     "dev": "tsc -w -p . & rollup -c -w",
     "clean": "rm -rf lib && rm -rf lib-es5 &&  rm -rf bundle",
     "prepublish": "npm run build"

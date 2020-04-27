@@ -949,6 +949,7 @@ var Panel = /** @class */ (function () {
         this.__root__ = new Root;
         this.headviews = new Map;
         this.onRenderFinishedCallback = [];
+        this.__rendering__ = false;
     }
     Panel.prototype.onCreate = function () { };
     Panel.prototype.onDestroy = function () { };
@@ -1176,9 +1177,18 @@ var Panel = /** @class */ (function () {
                 }
             });
         }
-        Promise.all(promises).then(function (_) {
-            _this.onRenderFinished();
-        });
+        if (this.__rendering__) {
+            //skip
+            Promise.all(promises).then(function (_) {
+            });
+        }
+        else {
+            this.__rendering__ = true;
+            Promise.all(promises).then(function (_) {
+                _this.__rendering__ = false;
+                _this.onRenderFinished();
+            });
+        }
     };
     Panel.prototype.onRenderFinished = function () {
         this.onRenderFinishedCallback.forEach(function (e) {
@@ -1788,6 +1798,10 @@ var Image = /** @class */ (function (_super) {
     ], Image.prototype, "loadCallback", void 0);
     __decorate$4([
         Property,
+        __metadata$4("design:type", Number)
+    ], Image.prototype, "imageScale", void 0);
+    __decorate$4([
+        Property,
         __metadata$4("design:type", Object)
     ], Image.prototype, "stretchInset", void 0);
     return Image;
@@ -1889,6 +1903,10 @@ var List = /** @class */ (function (_super) {
             return this.cachedViews.values();
         }
     };
+    List.prototype.scrollToItem = function (context, index, config) {
+        var animated = config === null || config === void 0 ? void 0 : config.animated;
+        return this.nativeChannel(context, 'scrollToItem')({ index: index, animated: animated, });
+    };
     List.prototype.reset = function () {
         this.cachedViews.clear();
         this.itemCount = 0;
@@ -1953,6 +1971,10 @@ var List = /** @class */ (function (_super) {
         Property,
         __metadata$5("design:type", Function)
     ], List.prototype, "onScrollEnd", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", Number)
+    ], List.prototype, "scrolledPosition", void 0);
     return List;
 }(Superview));
 function list(config) {

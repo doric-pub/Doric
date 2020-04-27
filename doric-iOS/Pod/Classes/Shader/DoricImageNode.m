@@ -41,11 +41,13 @@
 @property(nonatomic, strong) NSString *errorImage;
 @property(nonatomic, strong) UIVisualEffectView *blurEffectView;
 @property(nonatomic, strong) NSDictionary *stretchInsetDic;
+@property(nonatomic, assign) CGFloat imageScale;
 @end
 
 @implementation DoricImageNode
 
 - (UIImageView *)build {
+    self.imageScale = UIScreen.mainScreen.scale;
     return [[DoricImageView new] also:^(UIImageView *it) {
         it.clipsToBounds = YES;
         it.contentMode = UIViewContentModeScaleAspectFill;
@@ -64,6 +66,9 @@
     }];
     [props[@"errorImage"] also:^(id it) {
         self.errorImage = it;
+    }];
+    [props[@"imageScale"] also:^(NSNumber *it) {
+        self.imageScale = it.floatValue;
     }];
     [super blend:props];
 }
@@ -114,11 +119,13 @@
     if ([@"imageUrl" isEqualToString:name]) {
         __weak typeof(self) _self = self;
         __block BOOL async = NO;
+        view.doricLayout.undefined = YES;
         [view yy_setImageWithURL:[NSURL URLWithString:prop] placeholder:[self currentPlaceHolderImage] options:0 completion:^(UIImage *image, NSURL *url, YYWebImageFromType from, YYWebImageStage stage, NSError *error) {
             __strong typeof(_self) self = _self;
             if (self.placeHolderColor || self.errorColor) {
                 self.view.contentMode = self.contentMode;
             }
+            view.doricLayout.undefined = NO;
             if (error) {
                 [[self currentErrorImage] also:^(UIImage *it) {
                     self.view.image = it;
@@ -127,16 +134,20 @@
                     [self callJSResponse:self.loadCallbackId, nil];
                 }
             } else {
+                if (image.scale != self.imageScale) {
+                    image = [YYImage imageWithCGImage:image.CGImage scale:self.imageScale orientation:image.imageOrientation];
+                    self.view.image = image;
+                }
                 if (self.loadCallbackId.length > 0) {
                     [self callJSResponse:self.loadCallbackId,
                                          @{@"width": @(image.size.width), @"height": @(image.size.height)},
                                     nil];
                 }
-                DoricSuperNode *node = self.superNode;
-                while (node.superNode != nil) {
-                    node = node.superNode;
-                }
                 if (async) {
+                    DoricSuperNode *node = self.superNode;
+                    while (node.superNode != nil) {
+                        node = node.superNode;
+                    }
                     [node requestLayout];
                 }
             }
@@ -167,7 +178,7 @@
         }
         NSData *imageData = [[NSData alloc] initWithBase64EncodedString:base64
                                                                 options:NSDataBase64DecodingIgnoreUnknownCharacters];
-        YYImage *image = [YYImage imageWithData:imageData scale:UIScreen.mainScreen.scale];
+        YYImage *image = [YYImage imageWithData:imageData scale:self.imageScale];
         view.image = image;
     } else if ([@"isBlur" isEqualToString:name]) {
         NSInteger value = [prop intValue];
@@ -216,7 +227,8 @@
     } else if ([@"imagePath" isEqualToString:name]) {
         NSString *path = [[NSBundle mainBundle] bundlePath];
         NSString *fullPath = [path stringByAppendingPathComponent:prop];
-        YYImage *image = [YYImage imageWithContentsOfFile:fullPath];
+        NSData *imgData = [[NSData alloc] initWithContentsOfFile:fullPath];
+        YYImage *image = [YYImage imageWithData:imgData scale:self.imageScale];
         view.image = image;
         if (self.loadCallbackId.length > 0) {
             if (image) {
@@ -229,6 +241,8 @@
         }
     } else if ([@"stretchInset" isEqualToString:name]) {
         self.stretchInsetDic = (NSDictionary *)prop;
+    } else if ([@"imageScale" isEqualToString:name]) {
+        //Do not need set
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }
@@ -240,7 +254,8 @@
         CGFloat top = [self.stretchInsetDic[@"top"] floatValue];
         CGFloat right = [self.stretchInsetDic[@"right"] floatValue];
         CGFloat bottom = [self.stretchInsetDic[@"bottom"] floatValue];
-        UIImage *result = [self.view.image resizableImageWithCapInsets:UIEdgeInsetsMake(top * self.view.image.size.height, left * self.view.image.size.width, bottom * self.view.image.size.height, right * self.view.image.size.width) resizingMode:UIImageResizingModeStretch];
+        CGFloat scale = self.imageScale;
+        UIImage *result = [self.view.image resizableImageWithCapInsets:UIEdgeInsetsMake(top/scale, left/scale, bottom/scale, right/scale) resizingMode:UIImageResizingModeStretch];
         self.view.image = result;
     }
 }

@@ -85,6 +85,34 @@ void ShowToast(NSString *text, DoricGravity gravity) {
     });
 }
 
+void ShowToastInVC(UIViewController *_Nonnull vc, NSString *_Nonnull text, DoricGravity gravity) {
+    UIView *superView = vc.view;
+    UILabel *label = [[UILabel alloc] init];
+    label.font = [UIFont systemFontOfSize:20.f];
+    label.text = text;
+    label.textAlignment = NSTextAlignmentCenter;
+    label.layer.masksToBounds = YES;
+    label.backgroundColor = [UIColor grayColor];
+    label.textColor = [UIColor whiteColor];
+    [label sizeToFit];
+    label.width += 30;
+    label.height += 10;
+    label.layer.cornerRadius = label.height / 2;
+    label.centerX = superView.width / 2;
+    if ((gravity & DoricGravityBottom) == DoricGravityBottom) {
+        label.bottom = superView.height - 20;
+    } else if ((gravity & DoricGravityTop) == DoricGravityTop) {
+        label.top = 108;
+    } else {
+        label.centerY = (superView.height - 88) / 2;
+    }
+
+    [superView addSubview:label];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t) (2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [label removeFromSuperview];
+    });
+}
+
 UIImage *UIImageWithColor(UIColor *color) {
     CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
     UIGraphicsBeginImageContext(rect.size);

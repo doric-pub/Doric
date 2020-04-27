@@ -43,7 +43,7 @@ public class StatusBarPlugin extends DoricJavaPlugin {
                     LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) ((BaseDoricNavBar) getDoricContext().getDoricNavBar()).getLayoutParams();
                     if (hidden) {
                         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-                        lp.topMargin = DoricUtils.getStatusBarHeight(activity);
+                        lp.topMargin = DoricUtils.getStatusBarHeight();
                     } else {
                         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
                         lp.topMargin = 0;

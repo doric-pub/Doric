@@ -137,6 +137,7 @@
     node.viewId = model[@"id"];
     [node blend:props];
     [node.view.doricLayout apply:CGSizeMake(collectionView.width, collectionView.height)];
+    [node requestLayout];
     return cell;
 }
 

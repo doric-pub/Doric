@@ -50,6 +50,7 @@ declare module 'doric/lib/src/runtime/global' {
                     libVersion: string;
                     screenWidth: number;
                     screenHeight: number;
+                    screenScale: number;
                     statusBarHeight: number;
                     hasNotch: boolean;
                     /**
@@ -486,6 +487,13 @@ declare module 'doric/lib/src/widget/image' {
                     width: number;
                     height: number;
             } | undefined) => void;
+            /**
+                * Default is Environment.screenScale.
+                */
+            imageScale?: number;
+            /**
+                * Unit in pixel
+                */
             stretchInset?: {
                     left: number;
                     top: number;
@@ -499,6 +507,7 @@ declare module 'doric/lib/src/widget/image' {
 declare module 'doric/lib/src/widget/list' {
     import { View, Superview, NativeViewModel } from "doric/lib/src/ui/view";
     import { Stack } from "doric/lib/src/widget/layouts";
+    import { BridgeContext } from "doric/lib/src/runtime/global";
     export class ListItem extends Stack {
         /**
           * Set to reuse native view
@@ -521,6 +530,10 @@ declare module 'doric/lib/src/widget/list' {
             x: number;
             y: number;
         }) => void;
+        scrolledPosition?: number;
+        scrollToItem(context: BridgeContext, index: number, config?: {
+            animated?: boolean;
+        }): Promise<any>;
         reset(): void;
         isDirty(): boolean;
         toModel(): NativeViewModel;
@@ -1282,3 +1295,7 @@ declare module 'doric/lib/src/pattern/mvvm' {
     }
 }
 
+declare module '*.png' {
+    const value: any;
+    export default value;
+}

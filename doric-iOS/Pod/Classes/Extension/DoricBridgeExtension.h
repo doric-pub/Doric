@@ -21,10 +21,12 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "DoricRegistry.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface DoricBridgeExtension : NSObject
+@property (nonatomic,weak) DoricRegistry *registry;
+
 - (id)callNativeWithContextId:(NSString *)contextId module:(NSString *)module method:(NSString *)method callbackId:(NSString *)callbackId argument:(id)argument;
 @end
 

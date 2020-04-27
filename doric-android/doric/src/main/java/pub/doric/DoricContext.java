@@ -163,17 +163,29 @@ public class DoricContext {
     }
 
     public void teardown() {
-        callEntity(DoricConstant.DORIC_ENTITY_DESTROY);
-        getDriver().asyncCall(new Callable<Object>() {
+        callEntity(DoricConstant.DORIC_ENTITY_DESTROY).setCallback(new AsyncResult.Callback<JSDecoder>() {
             @Override
-            public Object call() {
-                for (DoricJavaPlugin javaPlugin : mPluginMap.values()) {
-                    javaPlugin.onTearDown();
-                }
-                mPluginMap.clear();
-                return null;
+            public void onResult(JSDecoder result) {
             }
-        }, ThreadMode.UI);
+
+            @Override
+            public void onError(Throwable t) {
+            }
+
+            @Override
+            public void onFinish() {
+                getDriver().asyncCall(new Callable<Object>() {
+                    @Override
+                    public Object call() {
+                        for (DoricJavaPlugin javaPlugin : mPluginMap.values()) {
+                            javaPlugin.onTearDown();
+                        }
+                        mPluginMap.clear();
+                        return null;
+                    }
+                }, ThreadMode.UI);
+            }
+        });
         DoricContextManager.getInstance().destroyContext(this);
     }
 
@@ -187,6 +199,7 @@ public class DoricContext {
     }
 
     public void reload(String script) {
+        getDriver().destroyContext(getContextId());
         for (DoricJavaPlugin javaPlugin : mPluginMap.values()) {
             javaPlugin.onTearDown();
         }

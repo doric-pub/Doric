@@ -52,6 +52,22 @@
     return ret;
 }
 
+- (DoricAsyncResult *)invokeDoricMethod:(NSString *)method argumentsArray:(NSArray *)args {
+    DoricAsyncResult *ret = [[DoricAsyncResult alloc] init];
+    __weak typeof(self) _self = self;
+    dispatch_async(self.jsExecutor.jsQueue, ^() {
+        __strong typeof(_self) self = _self;
+        if (!self) return;
+        @try {
+            JSValue *jsValue = [self.jsExecutor invokeDoricMethod:method argumentsArray:args];
+            [ret setupResult:jsValue];
+        } @catch (NSException *exception) {
+            [ret setupError:exception];
+        }
+    });
+    return ret;
+}
+
 - (DoricAsyncResult<JSValue *> *)invokeDoricMethod:(NSString *)method arguments:(va_list)args {
     DoricAsyncResult *ret = [[DoricAsyncResult alloc] init];
     NSMutableArray *array = [[NSMutableArray alloc] init];

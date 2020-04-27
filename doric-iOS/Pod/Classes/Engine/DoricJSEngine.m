@@ -52,7 +52,6 @@
 - (instancetype)init {
     if (self = [super init]) {
         _jsQueue = dispatch_queue_create("doric.jsengine", DISPATCH_QUEUE_SERIAL);
-        _bridgeExtension = [[DoricBridgeExtension alloc] init];
         NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
         struct utsname systemInfo;
         uname(&systemInfo);
@@ -67,6 +66,7 @@
                 @"appVersion": infoDictionary[@"CFBundleShortVersionString"],
                 @"screenWidth": @([[UIScreen mainScreen] bounds].size.width),
                 @"screenHeight": @([[UIScreen mainScreen] bounds].size.height),
+                @"screenScale": @([[UIScreen mainScreen] scale]),
                 @"statusBarHeight": @([[UIApplication sharedApplication] statusBarFrame].size.height),
                 @"hasNotch": @(hasNotch()),
                 @"deviceBrand": @"Apple",
@@ -75,6 +75,8 @@
         dispatch_async(_jsQueue, ^() {
             self.timers = [[NSMutableDictionary alloc] init];
             self.registry = [[DoricRegistry alloc] init];
+            self.bridgeExtension = [DoricBridgeExtension new];
+            self.bridgeExtension.registry = self.registry;
             [self initJSEngine];
             [self initJSExecutor];
             [self initDoricEnvironment];
@@ -223,10 +225,13 @@
 }
 
 - (void)callbackTimer:(NSTimer *)timer {
+    __weak typeof(self) _self = self;
+    if (!timer.isValid) {
+        return;
+    }
     NSDictionary *userInfo = timer.userInfo;
     NSNumber *timerId = [userInfo valueForKey:@"timerId"];
     NSNumber *repeat = [userInfo valueForKey:@"repeat"];
-    __weak typeof(self) _self = self;
     dispatch_async(self.jsQueue, ^() {
         __strong typeof(_self) self = _self;
         @try {

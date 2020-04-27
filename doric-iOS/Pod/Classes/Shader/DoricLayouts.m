@@ -95,7 +95,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
     }
     if (self.heightSpec == DoricLayoutMost) {
         if (self.view.superview.doricLayout.layoutType == DoricVLayout && self.weight > 0) {
-            height = self.measuredWidth = 0;
+            height = self.measuredHeight = 0;
         } else {
             height = self.measuredHeight = targetSize.height;
         }
@@ -155,6 +155,12 @@ static const void *kLayoutConfig = &kLayoutConfig;
             [self measureUndefinedContent:targetSize];
             break;
         }
+    }
+    if (self.view.superview.doricLayout.layoutType != DoricUndefined && self.view.superview.doricLayout.widthSpec == DoricLayoutFit && self.widthSpec == DoricLayoutMost) {
+        self.measuredWidth = 0;
+    }
+    if (self.view.superview.doricLayout.layoutType != DoricUndefined && self.view.superview.doricLayout.heightSpec == DoricLayoutFit && self.heightSpec == DoricLayoutMost) {
+        self.measuredHeight = 0;
     }
 }
 
@@ -373,6 +379,12 @@ static const void *kLayoutConfig = &kLayoutConfig;
         if (layout.disabled) {
             continue;
         }
+        if (self.widthSpec == DoricLayoutFit && layout.widthSpec == DoricLayoutMost) {
+            layout.measuredWidth = self.measuredWidth - layout.marginLeft  - layout.marginRight;
+        }
+        if (self.heightSpec == DoricLayoutFit && layout.heightSpec == DoricLayoutMost) {
+            layout.measuredHeight = self.measuredHeight - layout.marginTop - layout.marginBottom;
+        }
         [layout layout];
         DoricGravity gravity = layout.alignment;
         if ((gravity & DoricGravityLeft) == DoricGravityLeft) {
@@ -434,6 +446,12 @@ static const void *kLayoutConfig = &kLayoutConfig;
         if (layout.disabled) {
             continue;
         }
+        if (self.widthSpec == DoricLayoutFit && layout.widthSpec == DoricLayoutMost) {
+            layout.measuredWidth = self.measuredWidth - layout.marginLeft  - layout.marginRight;
+        }
+        if (self.heightSpec == DoricLayoutFit && layout.heightSpec == DoricLayoutMost) {
+            layout.measuredHeight = self.measuredHeight - yStart - layout.marginTop - layout.marginBottom;
+        }
         [layout layout];
         DoricGravity gravity = layout.alignment | self.gravity;
         if ((gravity & DoricGravityLeft) == DoricGravityLeft) {
@@ -473,6 +491,15 @@ static const void *kLayoutConfig = &kLayoutConfig;
         if (layout.disabled) {
             continue;
         }
+        
+        if (self.widthSpec == DoricLayoutFit && layout.widthSpec == DoricLayoutMost) {
+            layout.measuredWidth = self.measuredWidth - xStart - layout.marginLeft  - layout.marginRight;
+        }
+        
+        if (self.heightSpec == DoricLayoutFit && layout.heightSpec == DoricLayoutMost) {
+            layout.measuredHeight = self.measuredHeight - layout.marginTop - layout.marginBottom;
+        }
+        
         [layout layout];
 
         DoricGravity gravity = layout.alignment | self.gravity;

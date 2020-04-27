@@ -47,6 +47,10 @@ export class List extends Superview {
             return this.cachedViews.values();
         }
     }
+    scrollToItem(context, index, config) {
+        const animated = config === null || config === void 0 ? void 0 : config.animated;
+        return this.nativeChannel(context, 'scrollToItem')({ index, animated, });
+    }
     reset() {
         this.cachedViews.clear();
         this.itemCount = 0;
@@ -111,6 +115,10 @@ __decorate([
     Property,
     __metadata("design:type", Function)
 ], List.prototype, "onScrollEnd", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Number)
+], List.prototype, "scrolledPosition", void 0);
 export function list(config) {
     const ret = new List;
     for (let key in config) {

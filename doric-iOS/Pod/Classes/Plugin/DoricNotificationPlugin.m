@@ -21,14 +21,14 @@
 
 @interface DoricNotificationPlugin ()
 
-@property(nonatomic, strong) NSMutableDictionary<NSString *, id> *observers;
+@property(nonatomic, copy) NSDictionary<NSString *, id> *observers;
 @end
 
 @implementation DoricNotificationPlugin
 
-- (NSMutableDictionary *)observers {
+- (NSDictionary *)observers {
     if (!_observers) {
-        _observers = [NSMutableDictionary new];
+        _observers = [NSDictionary new];
     }
     return _observers;
 }
@@ -69,7 +69,9 @@
                         DoricPromise *currentPromise = [[DoricPromise alloc] initWithContext:self.doricContext callbackId:callbackId];
                         [currentPromise resolve:note.userInfo];
                     }];
-    self.observers[callbackId] = observer;
+    NSMutableDictionary *mutableDictionary = [self.observers mutableCopy];
+    mutableDictionary[callbackId] = observer;
+    self.observers = mutableDictionary;
     [promise resolve:callbackId];
 }
 
@@ -77,16 +79,18 @@
     id observer = self.observers[subscribeId];
     if (observer) {
         [[NSNotificationCenter defaultCenter] removeObserver:observer];
-        [self.observers removeObjectForKey:subscribeId];
+        NSMutableDictionary *mutableDictionary = [self.observers mutableCopy];
+        [mutableDictionary removeObjectForKey:subscribeId];
+        self.observers = mutableDictionary;
     }
     [promise resolve:nil];
 }
 
 - (void)dealloc {
-    [self.observers enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
+    NSDictionary *dictionary = self.observers;
+    [dictionary enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
         [[NSNotificationCenter defaultCenter] removeObserver:obj];
     }];
-    [self.observers removeAllObjects];
 }
 
 @end

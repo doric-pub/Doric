@@ -704,6 +704,7 @@ class Panel {
         this.__root__ = new Root;
         this.headviews = new Map;
         this.onRenderFinishedCallback = [];
+        this.__rendering__ = false;
     }
     onCreate() { }
     onDestroy() { }
@@ -853,9 +854,18 @@ class Panel {
                 }
             });
         }
-        Promise.all(promises).then(_ => {
-            this.onRenderFinished();
-        });
+        if (this.__rendering__) {
+            //skip
+            Promise.all(promises).then(_ => {
+            });
+        }
+        else {
+            this.__rendering__ = true;
+            Promise.all(promises).then(_ => {
+                this.__rendering__ = false;
+                this.onRenderFinished();
+            });
+        }
     }
     onRenderFinished() {
         this.onRenderFinishedCallback.forEach(e => {
@@ -1338,6 +1348,10 @@ __decorate$4([
 ], Image.prototype, "loadCallback", void 0);
 __decorate$4([
     Property,
+    __metadata$4("design:type", Number)
+], Image.prototype, "imageScale", void 0);
+__decorate$4([
+    Property,
     __metadata$4("design:type", Object)
 ], Image.prototype, "stretchInset", void 0);
 function image(config) {
@@ -1394,6 +1408,10 @@ class List extends Superview {
         else {
             return this.cachedViews.values();
         }
+    }
+    scrollToItem(context, index, config) {
+        const animated = config === null || config === void 0 ? void 0 : config.animated;
+        return this.nativeChannel(context, 'scrollToItem')({ index, animated, });
     }
     reset() {
         this.cachedViews.clear();
@@ -1459,6 +1477,10 @@ __decorate$5([
     Property,
     __metadata$5("design:type", Function)
 ], List.prototype, "onScrollEnd", void 0);
+__decorate$5([
+    Property,
+    __metadata$5("design:type", Number)
+], List.prototype, "scrolledPosition", void 0);
 function list(config) {
     const ret = new List;
     for (let key in config) {

@@ -16,6 +16,8 @@
 package pub.doric.loader;
 
 
+import android.text.TextUtils;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -53,10 +55,12 @@ public class DoricJSLoaderManager {
     }
 
     public AsyncResult<String> loadJSBundle(String source) {
-        Collection<IDoricJSLoader> jsLoaders = getJSLoaders();
-        for (IDoricJSLoader jsLoader : jsLoaders) {
-            if (jsLoader.filter(source)) {
-                return jsLoader.request(source);
+        if (!TextUtils.isEmpty(source)) {
+            Collection<IDoricJSLoader> jsLoaders = getJSLoaders();
+            for (IDoricJSLoader jsLoader : jsLoaders) {
+                if (jsLoader.filter(source)) {
+                    return jsLoader.request(source);
+                }
             }
         }
         AsyncResult<String> ret = new AsyncResult<>();

@@ -17,6 +17,8 @@ package pub.doric.plugin;
 
 import android.app.Activity;
 import android.os.Build;
+import android.os.Looper;
+import android.os.MessageQueue;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -72,6 +74,13 @@ public class ShaderPlugin extends DoricJavaPlugin {
                         viewNode.blend(jsObject.getProperty("props").asObject());
                     }
                 }
+                Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
+                    @Override
+                    public boolean queueIdle() {
+                        promise.resolve();
+                        return false;
+                    }
+                });
                 return null;
             }
         }, ThreadMode.UI).setCallback(new AsyncResult.Callback<Object>() {
@@ -92,12 +101,6 @@ public class ShaderPlugin extends DoricJavaPlugin {
 
             @Override
             public void onFinish() {
-                getDoricContext().getRootNode().getNodeView().post(new Runnable() {
-                    @Override
-                    public void run() {
-                        promise.resolve();
-                    }
-                });
             }
         });
     }

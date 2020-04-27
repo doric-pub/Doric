@@ -107,6 +107,10 @@
         self.onScrollFuncId = prop;
     } else if ([@"onScrollEnd" isEqualToString:name]) {
         self.onScrollEndFuncId = prop;
+    } else if ([@"scrolledPosition" isEqualToString:name]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [view scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[prop unsignedIntegerValue] inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+        });
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }
@@ -165,17 +169,24 @@
     if (viewId && viewId.length > 0) {
         return [self subModelOf:viewId];
     } else {
-        DoricAsyncResult *result = [self callJSResponse:@"renderBunchedItems", @(position), @(self.batchCount), nil];
+        NSInteger batchCount = self.batchCount;
+        NSInteger start = position;
+        while (start > 0 && self.itemViewIds[@(start - 1)] == nil) {
+            start--;
+            batchCount++;
+        }
+        DoricAsyncResult *result = [self callJSResponse:@"renderBunchedItems", @(start), @(batchCount), nil];
         JSValue *models = [result waitUntilResult];
         NSArray *array = [models toArray];
         [array enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
             NSString *thisViewId = obj[@"id"];
             [self setSubModel:obj in:thisViewId];
-            NSUInteger pos = position + idx;
+            NSUInteger pos = start + idx;
             self.itemViewIds[@(pos)] = thisViewId;
         }];
-        if (array.count > 0) {
-            return array[0];
+        NSString *viewId = self.itemViewIds[@(position)];
+        if (viewId && viewId.length > 0) {
+            return [self subModelOf:viewId];
         } else {
             return nil;
         }
@@ -299,6 +310,12 @@
 
 - (void)removeDidScrollBlock:(__nonnull DoricDidScrollBlock)didScrollListener {
     [self.didScrollBlocks removeObject:didScrollListener];
+}
+
+- (void)scrollToItem:(NSDictionary *)params {
+    BOOL animated = [params[@"animated"] boolValue];
+    NSUInteger scrolledPosition = [params[@"index"] unsignedIntegerValue];
+    [self.view scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:scrolledPosition inSection:0] atScrollPosition:UITableViewScrollPositionNone animated:animated];
 }
 
 @end

@@ -17,6 +17,7 @@
 import { View, Property, Superview, NativeViewModel } from "../ui/view";
 import { Stack } from "./layouts";
 import { layoutConfig } from "../util/layoutconfig";
+import { BridgeContext } from "../runtime/global";
 
 
 export class ListItem extends Stack {
@@ -62,6 +63,14 @@ export class List extends Superview {
 
     @Property
     onScrollEnd?: (offset: { x: number, y: number }) => void
+
+    @Property
+    scrolledPosition?: number
+
+    scrollToItem(context: BridgeContext, index: number, config?: { animated?: boolean, }) {
+        const animated = config?.animated
+        return this.nativeChannel(context, 'scrollToItem')({ index, animated, }) as Promise<any>
+    }
 
     reset() {
         this.cachedViews.clear()

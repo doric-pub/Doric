@@ -17,6 +17,7 @@ package pub.doric.utils;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -219,23 +220,23 @@ public class DoricUtils {
     }
 
 
-    public static int getStatusBarHeight(Context context) {
-        Class<?> c = null;
-        Object obj = null;
-        Field field = null;
-        int x = 0, sbar = 0;
-        try {
-            c = Class.forName("com.android.internal.R$dimen");
-            obj = c.newInstance();
-            field = c.getField("status_bar_height");
-            x = Integer.parseInt(field.get(obj).toString());
-            sbar = context.getResources().getDimensionPixelSize(x);
-        } catch (Exception E) {
-            E.printStackTrace();
+    public static int getStatusBarHeight() {
+        int resourceId = Resources.getSystem().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            return Resources.getSystem().getDimensionPixelSize(resourceId);
+        } else {
+            return 0;
         }
-        return sbar;
     }
 
+    public static float getScreenScale() {
+        Resources resources = Resources.getSystem();
+        if (resources.getDisplayMetrics() != null) {
+            return resources.getDisplayMetrics().density;
+        } else {
+            return 1;
+        }
+    }
 
     private final static int NO_COLOR = 0x00000001;
     private final static int X_SIZE = 2;

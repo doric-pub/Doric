@@ -2735,6 +2735,12 @@ var __decorate$3 = (undefined && undefined.__decorate) || function (decorators, 
 var __metadata$3 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+(function (TruncateAt) {
+    TruncateAt[TruncateAt["End"] = 0] = "End";
+    TruncateAt[TruncateAt["Middle"] = 1] = "Middle";
+    TruncateAt[TruncateAt["Start"] = 2] = "Start";
+    TruncateAt[TruncateAt["Clip"] = 3] = "Clip";
+})(exports.TruncateAt || (exports.TruncateAt = {}));
 class Text extends View {
 }
 __decorate$3([
@@ -2789,6 +2795,10 @@ __decorate$3([
     Property,
     __metadata$3("design:type", String)
 ], Text.prototype, "htmlText", void 0);
+__decorate$3([
+    Property,
+    __metadata$3("design:type", Number)
+], Text.prototype, "truncateAt", void 0);
 function text(config) {
     const ret = new Text;
     ret.layoutConfig = layoutConfig().fit();

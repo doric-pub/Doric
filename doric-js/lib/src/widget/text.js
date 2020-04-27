@@ -26,6 +26,13 @@ import { View, Property } from "../ui/view";
 import { Color } from "../util/color";
 import { Gravity } from "../util/gravity";
 import { layoutConfig } from "../util/layoutconfig";
+export var TruncateAt;
+(function (TruncateAt) {
+    TruncateAt[TruncateAt["End"] = 0] = "End";
+    TruncateAt[TruncateAt["Middle"] = 1] = "Middle";
+    TruncateAt[TruncateAt["Start"] = 2] = "Start";
+    TruncateAt[TruncateAt["Clip"] = 3] = "Clip";
+})(TruncateAt || (TruncateAt = {}));
 export class Text extends View {
 }
 __decorate([
@@ -80,6 +87,10 @@ __decorate([
     Property,
     __metadata("design:type", String)
 ], Text.prototype, "htmlText", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Number)
+], Text.prototype, "truncateAt", void 0);
 export function text(config) {
     const ret = new Text;
     ret.layoutConfig = layoutConfig().fit();

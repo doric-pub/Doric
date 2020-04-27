@@ -172,6 +172,24 @@ public class TextNode extends ViewNode<TextView> {
                                     new CustomTagHandler()));
                 }
                 break;
+            case "truncateAt":
+                if (prop.isNumber()) {
+                    switch (prop.asNumber().toInt()) {
+                        case 1:
+                            view.setEllipsize(TextUtils.TruncateAt.MIDDLE);
+                            break;
+                        case 2:
+                            view.setEllipsize(TextUtils.TruncateAt.START);
+                            break;
+                        case 3:
+                            view.setEllipsize(null);
+                            break;
+                        default:
+                            view.setEllipsize(TextUtils.TruncateAt.END);
+                            break;
+                    }
+                }
+                break;
             default:
                 super.blend(view, name, prop);
                 break;

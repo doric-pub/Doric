@@ -1,6 +1,12 @@
 import { View } from "../ui/view";
 import { Color } from "../util/color";
 import { Gravity } from "../util/gravity";
+export declare enum TruncateAt {
+    End = 0,
+    Middle = 1,
+    Start = 2,
+    Clip = 3
+}
 export declare class Text extends View {
     text?: string;
     textColor?: Color;
@@ -15,5 +21,6 @@ export declare class Text extends View {
     strikethrough?: boolean;
     underline?: boolean;
     htmlText?: string;
+    truncateAt?: TruncateAt;
 }
 export declare function text(config: Partial<Text>): Text;

@@ -418,6 +418,12 @@ declare module 'doric/lib/src/widget/text' {
     import { View } from "doric/lib/src/ui/view";
     import { Color } from "doric/lib/src/util/color";
     import { Gravity } from "doric/lib/src/util/gravity";
+    export enum TruncateAt {
+        End = 0,
+        Middle = 1,
+        Start = 2,
+        Clip = 3
+    }
     export class Text extends View {
         text?: string;
         textColor?: Color;
@@ -432,6 +438,7 @@ declare module 'doric/lib/src/widget/text' {
         strikethrough?: boolean;
         underline?: boolean;
         htmlText?: string;
+        truncateAt?: TruncateAt;
     }
     export function text(config: Partial<Text>): Text;
 }

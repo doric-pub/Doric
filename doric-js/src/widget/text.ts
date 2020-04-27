@@ -18,6 +18,13 @@ import { Color } from "../util/color"
 import { Gravity } from "../util/gravity"
 import { layoutConfig } from "../util/layoutconfig"
 
+export enum TruncateAt {
+    End = 0,
+    Middle = 1,
+    Start = 2,
+    Clip = 3,
+}
+
 export class Text extends View {
     @Property
     text?: string
@@ -57,6 +64,9 @@ export class Text extends View {
 
     @Property
     htmlText?: string
+
+    @Property
+    truncateAt?: TruncateAt
 }
 
 export function text(config: Partial<Text>) {

@@ -27,13 +27,12 @@ android {
         }
     }
 }
-
 afterEvaluate {
     buildJSBundle.exec()
 }
 
 task buildJSBundle(type: Exec) {
-    commandLine 'sh', project.rootDir.getParent() + "/bundle.sh"
+    commandLine 'sh', project.getProjectDir().getParent() + "/../bundle.sh"
 }
 
 dependencies {
@@ -63,4 +62,6 @@ dependencies {
     implementation 'com.facebook.yoga.android:yoga-layout:1.16.0'
 }
 
-apply from: rootProject.file('scripts/upload.gradle')
+if (new File('scripts/upload.gradle').exists()) {
+    apply from: rootProject.file('scripts/upload.gradle')
+}

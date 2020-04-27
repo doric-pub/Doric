@@ -252,18 +252,18 @@ public class ImageNode extends ViewNode<ImageView> {
             protected void setResource(@Nullable Drawable resource) {
                 if (resource instanceof BitmapDrawable) {
                     Bitmap bitmap = ((BitmapDrawable) resource).getBitmap();
+                    float scale = DoricUtils.getScreenScale() / imageScale;
                     if (imageScale != DoricUtils.getScreenScale()) {
-                        float scale = DoricUtils.getScreenScale() / imageScale;
                         Matrix matrix = new Matrix();
                         matrix.setScale(scale, scale);
                         bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
                         resource = new BitmapDrawable(getContext().getResources(), bitmap);
                     }
                     if (stretchInset != null) {
-                        float left = stretchInset.getProperty("left").asNumber().toFloat();
-                        float top = stretchInset.getProperty("top").asNumber().toFloat();
-                        float right = stretchInset.getProperty("right").asNumber().toFloat();
-                        float bottom = stretchInset.getProperty("bottom").asNumber().toFloat();
+                        float left = stretchInset.getProperty("left").asNumber().toFloat() * scale;
+                        float top = stretchInset.getProperty("top").asNumber().toFloat() * scale;
+                        float right = stretchInset.getProperty("right").asNumber().toFloat() * scale;
+                        float bottom = stretchInset.getProperty("bottom").asNumber().toFloat() * scale;
 
                         Rect rect = new Rect(
                                 (int) left,

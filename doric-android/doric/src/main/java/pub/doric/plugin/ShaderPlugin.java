@@ -74,6 +74,13 @@ public class ShaderPlugin extends DoricJavaPlugin {
                         viewNode.blend(jsObject.getProperty("props").asObject());
                     }
                 }
+                Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
+                    @Override
+                    public boolean queueIdle() {
+                        promise.resolve();
+                        return false;
+                    }
+                });
                 return null;
             }
         }, ThreadMode.UI).setCallback(new AsyncResult.Callback<Object>() {
@@ -94,13 +101,6 @@ public class ShaderPlugin extends DoricJavaPlugin {
 
             @Override
             public void onFinish() {
-                Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
-                    @Override
-                    public boolean queueIdle() {
-                        promise.resolve();
-                        return false;
-                    }
-                });
             }
         });
     }

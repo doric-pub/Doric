@@ -47,6 +47,8 @@ export abstract class Panel {
 
     private onRenderFinishedCallback: Array<() => void> = []
 
+    private __rendering__ = false
+
     addHeadView(type: string, v: View) {
         let map = this.headviews.get(type)
         if (map) {
@@ -207,9 +209,17 @@ export abstract class Panel {
                 }
             })
         }
-        Promise.all(promises).then(_ => {
-            this.onRenderFinished()
-        })
+        if (this.__rendering__) {
+            //skip
+            Promise.all(promises).then(_ => {
+            })
+        } else {
+            this.__rendering__ = true
+            Promise.all(promises).then(_ => {
+                this.__rendering__ = false
+                this.onRenderFinished()
+            })
+        }
     }
     private onRenderFinished() {
         this.onRenderFinishedCallback.forEach(e => {

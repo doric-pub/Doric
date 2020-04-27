@@ -13,6 +13,7 @@ export declare abstract class Panel {
     private __root__;
     private headviews;
     private onRenderFinishedCallback;
+    private __rendering__;
     addHeadView(type: string, v: View): void;
     allHeadViews(): IterableIterator<Map<string, View>>;
     removeHeadView(type: string, v: View | string): void;

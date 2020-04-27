@@ -199,6 +199,7 @@ public class DoricContext {
     }
 
     public void reload(String script) {
+        getDriver().destroyContext(getContextId());
         for (DoricJavaPlugin javaPlugin : mPluginMap.values()) {
             javaPlugin.onTearDown();
         }

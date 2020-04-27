@@ -97,6 +97,7 @@
 }
 
 - (void)reload:(NSString *)script {
+    [self.driver destroyContext:self.contextId];
     self.rootNode.viewId = nil;
     self.script = script;
     [self.driver createContext:self.contextId script:script source:self.source];

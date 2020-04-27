@@ -17,6 +17,8 @@ package pub.doric.plugin;
 
 import android.app.Activity;
 import android.os.Build;
+import android.os.Looper;
+import android.os.MessageQueue;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -92,10 +94,11 @@ public class ShaderPlugin extends DoricJavaPlugin {
 
             @Override
             public void onFinish() {
-                getDoricContext().getRootNode().getNodeView().post(new Runnable() {
+                Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
                     @Override
-                    public void run() {
+                    public boolean queueIdle() {
                         promise.resolve();
+                        return false;
                     }
                 });
             }

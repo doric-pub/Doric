@@ -949,6 +949,7 @@ var Panel = /** @class */ (function () {
         this.__root__ = new Root;
         this.headviews = new Map;
         this.onRenderFinishedCallback = [];
+        this.__rendering__ = false;
     }
     Panel.prototype.onCreate = function () { };
     Panel.prototype.onDestroy = function () { };
@@ -1176,9 +1177,18 @@ var Panel = /** @class */ (function () {
                 }
             });
         }
-        Promise.all(promises).then(function (_) {
-            _this.onRenderFinished();
-        });
+        if (this.__rendering__) {
+            //skip
+            Promise.all(promises).then(function (_) {
+            });
+        }
+        else {
+            this.__rendering__ = true;
+            Promise.all(promises).then(function (_) {
+                _this.__rendering__ = false;
+                _this.onRenderFinished();
+            });
+        }
     };
     Panel.prototype.onRenderFinished = function () {
         this.onRenderFinishedCallback.forEach(function (e) {

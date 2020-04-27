@@ -2163,6 +2163,7 @@ class Panel {
         this.__root__ = new Root;
         this.headviews = new Map;
         this.onRenderFinishedCallback = [];
+        this.__rendering__ = false;
     }
     onCreate() { }
     onDestroy() { }
@@ -2312,9 +2313,18 @@ class Panel {
                 }
             });
         }
-        Promise.all(promises).then(_ => {
-            this.onRenderFinished();
-        });
+        if (this.__rendering__) {
+            //skip
+            Promise.all(promises).then(_ => {
+            });
+        }
+        else {
+            this.__rendering__ = true;
+            Promise.all(promises).then(_ => {
+                this.__rendering__ = false;
+                this.onRenderFinished();
+            });
+        }
     }
     onRenderFinished() {
         this.onRenderFinishedCallback.forEach(e => {

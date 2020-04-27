@@ -123,6 +123,7 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     }
     self.superNode = superNode;
     self.view = [self build];
+    self.view.clipsToBounds = YES;
 }
 
 - (UIView *)build {

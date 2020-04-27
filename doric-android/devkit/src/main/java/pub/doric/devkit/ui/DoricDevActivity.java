@@ -5,9 +5,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -40,9 +39,9 @@ public class DoricDevActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
-
+        setContentView(R.layout.layout_debug_context);
+        initDisconnect();
         if (DoricDev.getInstance().isInDevMode()) {
-            setContentView(R.layout.layout_debug_context);
             initViews();
         } else {
             if (DevKit.isRunningInEmulator) {
@@ -65,27 +64,10 @@ public class DoricDevActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.doric_devkit_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.doric_action_disconnect) {
-            DoricDev.getInstance().closeDevMode();
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
         if (requestCode == 1) {
             for (int i = 0; i < permissions.length; i++) {
                 if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
@@ -105,7 +87,6 @@ public class DoricDevActivity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onOpenEvent(OpenEvent openEvent) {
-        setContentView(R.layout.layout_debug_context);
         initViews();
     }
 
@@ -119,10 +100,22 @@ public class DoricDevActivity extends AppCompatActivity {
         finish();
     }
 
+    private void initDisconnect(){
+        LinearLayout container = findViewById(R.id.container);
+        Button button=new Button(this);
+        button.setText("断开连接");
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DoricDev.getInstance().closeDevMode();
+                finish();
+            }
+        });
+        container.addView(button);
+    }
     private void initViews() {
         LinearLayout container = findViewById(R.id.container);
         LayoutInflater inflater = LayoutInflater.from(this);
-
         for (final DoricContext doricContext : DoricContextManager.aliveContexts()) {
             View cell = inflater.inflate(R.layout.layout_debug_context_cell, container, false);
 

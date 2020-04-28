@@ -117,7 +117,10 @@ export default
                             commonjs(),
                             json(),
                             buble({
-                                transforms: { dangerousForOf: true }
+                                transforms: {
+                                    dangerousForOf: true,
+                                    generator: false,
+                                }
                             }),
                             image(),
                         ],

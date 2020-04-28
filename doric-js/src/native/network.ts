@@ -35,7 +35,7 @@ export interface IRequest {
 
 export interface IResponse {
     // `data` is the response that was provided by the server
-    data: any,
+    data: string,
     // `status` is the HTTP status code from the server response
     status: number,
     // `headers` the headers that the server responded with

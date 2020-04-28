@@ -12,7 +12,7 @@ export interface IRequest {
     timeout?: number;
 }
 export interface IResponse {
-    data: any;
+    data: string;
     status: number;
     headers?: {
         [index: string]: string;

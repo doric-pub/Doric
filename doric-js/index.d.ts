@@ -795,7 +795,7 @@ declare module 'doric/lib/src/native/network' {
         timeout?: number;
     }
     export interface IResponse {
-        data: any;
+        data: string;
         status: number;
         headers?: {
             [index: string]: string;

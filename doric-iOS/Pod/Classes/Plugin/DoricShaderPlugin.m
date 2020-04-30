@@ -38,7 +38,7 @@
 
         NSString *viewId = argument[@"id"];
 
-        if (self.doricContext.rootNode.viewId == nil) {
+        if (self.doricContext.rootNode.viewId == nil && [@"Root" isEqualToString:argument[@"type"]]) {
             self.doricContext.rootNode.viewId = viewId;
             [self.doricContext.rootNode blend:argument[@"props"]];
             [self.doricContext.rootNode requestLayout];

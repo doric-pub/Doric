@@ -65,7 +65,7 @@ public class ShaderPlugin extends DoricJavaPlugin {
                 }
                 String viewId = jsObject.getProperty("id").asString().value();
                 RootNode rootNode = getDoricContext().getRootNode();
-                if (TextUtils.isEmpty(rootNode.getId())) {
+                if (TextUtils.isEmpty(rootNode.getId()) && "Root".equals(jsObject.getProperty("type").asString().value())) {
                     rootNode.setId(viewId);
                     rootNode.blend(jsObject.getProperty("props").asObject());
                 } else {

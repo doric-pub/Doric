@@ -69,8 +69,8 @@ public class InputNode extends ViewNode<EditText> implements TextWatcher, View.O
                         list.add(currentFilters[i]);
                     }
                 }
-                if(prop.isNumber()){
-                    list.add( new InputFilter.LengthFilter(prop.asNumber().toInt()));
+                if (prop.isNumber()) {
+                    list.add(new InputFilter.LengthFilter(prop.asNumber().toInt()));
                 }
                 InputFilter[] newFilters = list.toArray(new InputFilter[list.size()]);
 

@@ -31,7 +31,7 @@ typedef void (^onFocusChangeBlock)(BOOL focused,DoricInputNode *node);
 @property(nonatomic, copy) onTextChangeBlock onTextChange;
 @property(nonatomic, copy) onFocusChangeBlock onFocusShange;
 @property(nonatomic, strong) UILabel *placeholderLabel;
-
+@property(nonatomic, strong) NSNumber *maxLength;
 @end
 
 @implementation DoricInputNode
@@ -85,7 +85,9 @@ typedef void (^onFocusChangeBlock)(BOOL focused,DoricInputNode *node);
             self.onFocusShange = nil;
         }
 
-    } else{
+    } else if ([name isEqualToString:@"maxLength"]) {
+        self.maxLength = prop;
+    } else {
         [super blendView:view forPropName:name propValue:prop];
     }
 }
@@ -136,6 +138,11 @@ typedef void (^onFocusChangeBlock)(BOOL focused,DoricInputNode *node);
 }
 
 - (void)textViewDidChange:(UITextView *)textView {
+    if (self.maxLength) {
+        if (textView.text.length > self.maxLength.unsignedIntValue) {
+            textView.text = [textView.text substringToIndex:self.maxLength.unsignedIntValue];
+        }
+    }
     if (self.onTextChange) {
         self.onTextChange(textView.text, self);
     }

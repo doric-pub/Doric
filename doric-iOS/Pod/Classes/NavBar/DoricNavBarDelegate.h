@@ -32,4 +32,6 @@
 - (void)doric_navBar_setLeft:(UIView *)view;
 
 - (void)doric_navBar_setRight:(UIView *)view;
+
+- (void)doric_navBar_setCenter:(UIView *)view;
 @end

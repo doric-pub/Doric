@@ -134,6 +134,10 @@ NSString *const DORIC_MASK_RETRY = @"doric_mask_retry";
     self.navigationItem.rightBarButtonItem = custom;
 }
 
+- (void)doric_navBar_setCenter:(UIView *)view {
+    self.navigationItem.titleView = view;
+}
+
 - (BOOL)statusBarHidden {
     return _statusBarHidden;
 }

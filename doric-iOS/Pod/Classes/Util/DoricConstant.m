@@ -98,5 +98,13 @@ NSString *const TEMPLATE_CONTEXT_CREATE_ES5 = @"Reflect.apply("
                                               "doric.__require__"
                                               ",{},{exports:{}}"
                                               "])";
-
-NSString *const DORIC_KOTLIN_PREFIX = @"(function (_, Kotlin) {";
+NSString *const TEMPLATE_MODULE_ES5 = @"Reflect.apply(doric.jsRegisterModule,this,["
+                                    "\"%@\","
+                                    "Reflect.apply(function(__module){"
+                                    "(function(module,exports,require,doric){" "\n"
+                                    "%@" "\n"
+                                    "})(__module,__module.exports,doric.__require__,doric.__require__('doric'));"
+                                    "\nreturn __module.exports;"
+                                    "},this,[{exports:{}}])"
+                                    "])";
+NSString *const DORIC_KOTLIN_PREFIX = @"(function (_, Kotlin";

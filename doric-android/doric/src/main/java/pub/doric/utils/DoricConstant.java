@@ -87,6 +87,14 @@ public class DoricConstant {
             "doric.__require__" +
             ",{},{exports:{}}" +
             "])";
-
-    public static final String DORIC_KOTLIN_PREFIX = "(function (_, Kotlin) {";
+    public static final String TEMPLATE_MODULE_ES5 = "Reflect.apply(doric.jsRegisterModule,this,[" +
+            "\"%s\"," +
+            "Reflect.apply(function(__module){" +
+            "(function(module,exports,require,doric){" + "\n" +
+            "%s" + "\n" +
+            "})(__module,__module.exports,doric.__require__,doric.__require__('doric'));" +
+            "\nreturn __module.exports;" +
+            "},this,[{exports:{}}])" +
+            "])";
+    public static final String DORIC_KOTLIN_PREFIX = "(function (_, Kotlin";
 }

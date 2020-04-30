@@ -62,7 +62,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
     private final DoricRegistry mDoricRegistry = new DoricRegistry();
     private boolean es5Mode = false;
 
-    public DoricJSEngine(boolean es5Mode) {
+    public DoricJSEngine(final boolean es5Mode) {
         this.es5Mode = es5Mode;
         handlerThread = new HandlerThread(this.getClass().getSimpleName());
         handlerThread.start();
@@ -71,6 +71,10 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
         mJSHandler.post(new Runnable() {
             @Override
             public void run() {
+                if (es5Mode) {
+                    mDoricRegistry.registerJSBundle("kotlin", DoricUtils.readAssetFile("kotlin.js"));
+                    mDoricRegistry.registerJSBundle("doric-kotlin", DoricUtils.readAssetFile("doric-kotlin.js"));
+                }
                 initJSEngine();
                 injectGlobal();
                 initDoricRuntime();
@@ -255,7 +259,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
     }
 
     private String packageModuleScript(String moduleName, String content) {
-        return String.format(DoricConstant.TEMPLATE_MODULE, moduleName, content);
+        return String.format(this.es5Mode ? DoricConstant.TEMPLATE_MODULE_ES5 : DoricConstant.TEMPLATE_MODULE, moduleName, content);
     }
 
     public JSDecoder invokeDoricMethod(final String method, final Object... args) {

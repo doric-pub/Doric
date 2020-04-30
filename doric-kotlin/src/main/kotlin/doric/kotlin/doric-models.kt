@@ -301,7 +301,7 @@ fun gravity(): Gravity {
 data class FlexTypedValue(val type: ValueType, val value: Number) : Modeling {
     override fun toModel(): Json {
         return json().also {
-            it["type"] = type
+            it["type"] = type.toModel()
             it["value"] = value
         }
     }
@@ -542,6 +542,17 @@ enum class FontStyle(val value: String) : Modeling {
     BoldItalic("bold_italic");
 
     override fun toModel(): String {
+        return this.value
+    }
+}
+
+enum class ValueType(private val value: Int) : Modeling {
+    Undefined(0),
+    Point(1),
+    Percent(2),
+    Auto(3);
+
+    override fun toModel(): Number {
         return this.value
     }
 }

@@ -123,9 +123,6 @@ public class DoricRegistry {
         this.registerViewNode(DraggableNode.class);
         this.registerViewNode(SwitchNode.class);
         this.registerViewNode(FlexNode.class);
-
-        this.registerJSBundle("kotlin", DoricUtils.readAssetFile("kotlin.js"));
-
         initRegistry(this);
     }
 

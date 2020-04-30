@@ -80,6 +80,15 @@
         [self ensureRunOnJSThread:^() {
             self.timers = [[NSMutableDictionary alloc] init];
             self.registry = [[DoricRegistry alloc] init];
+            if (self.es5Mode) {
+                NSString *path = [DoricBundle() pathForResource:@"kotlin" ofType:@"js"];
+                NSString *jsContent = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+                [self.registry registerJSBundle:jsContent withName:@"kotlin"];
+                path = [DoricBundle() pathForResource:@"doric-kotlin" ofType:@"js"];
+                jsContent = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+                [self.registry registerJSBundle:jsContent withName:@"doric-kotlin"];
+            }
+            
             self.bridgeExtension = [DoricBridgeExtension new];
             self.bridgeExtension.registry = self.registry;
             [self initJSEngine];
@@ -245,7 +254,7 @@
 }
 
 - (NSString *)packageModuleScript:(NSString *)moduleName content:(NSString *)content {
-    NSString *ret = [NSString stringWithFormat:TEMPLATE_MODULE, moduleName, content];
+    NSString *ret = [NSString stringWithFormat:self.es5Mode ? TEMPLATE_MODULE_ES5 : TEMPLATE_MODULE, moduleName, content];
     return ret;
 }
 

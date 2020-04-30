@@ -72,4 +72,6 @@ extern NSString *const DORIC_BUNDLE_LIB_ES5;
 
 extern NSString *const TEMPLATE_CONTEXT_CREATE_ES5;
 
+extern NSString *const TEMPLATE_MODULE_ES5;
+
 extern NSString *const DORIC_KOTLIN_PREFIX;

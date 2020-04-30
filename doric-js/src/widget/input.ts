@@ -48,6 +48,9 @@ export class Input extends View {
     @Property
     onFocusChange?: (focused: boolean) => void
 
+    @Property
+    maxLength?: number
+
     getText(context: BridgeContext) {
         return this.nativeChannel(context, 'getText')() as Promise<string>
     }

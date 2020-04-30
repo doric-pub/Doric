@@ -679,6 +679,7 @@ declare module 'doric/lib/src/widget/input' {
         textAlignment?: Gravity;
         onTextChange?: (text: string) => void;
         onFocusChange?: (focused: boolean) => void;
+        maxLength?: number;
         getText(context: BridgeContext): Promise<string>;
         setSelection(context: BridgeContext, start: number, end?: number): Promise<string>;
         requestFocus(context: BridgeContext): Promise<any>;

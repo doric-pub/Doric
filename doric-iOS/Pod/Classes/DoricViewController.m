@@ -125,16 +125,19 @@ NSString *const DORIC_MASK_RETRY = @"doric_mask_retry";
 }
 
 - (void)doric_navBar_setLeft:(UIView *)view {
+    [view.doricLayout apply:CGSizeMake(self.navigationController.navigationBar.width, self.navigationController.navigationBar.height)];
     UIBarButtonItem *custom = [[UIBarButtonItem alloc] initWithCustomView:view];
     self.navigationItem.leftBarButtonItem = custom;
 }
 
 - (void)doric_navBar_setRight:(UIView *)view {
+    [view.doricLayout apply:CGSizeMake(self.navigationController.navigationBar.width, self.navigationController.navigationBar.height)];
     UIBarButtonItem *custom = [[UIBarButtonItem alloc] initWithCustomView:view];
     self.navigationItem.rightBarButtonItem = custom;
 }
 
 - (void)doric_navBar_setCenter:(UIView *)view {
+    [view.doricLayout apply:CGSizeMake(self.navigationController.navigationBar.width, self.navigationController.navigationBar.height)];
     self.navigationItem.titleView = view;
 }
 

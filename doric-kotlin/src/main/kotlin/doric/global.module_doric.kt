@@ -1,20 +1,14 @@
-@file:Suppress("INTERFACE_WITH_SUPERCLASS", "OVERRIDING_FINAL_MEMBER", "RETURN_TYPE_MISMATCH_ON_OVERRIDE", "CONFLICTING_OVERLOADS", "EXTERNAL_DELEGATION")
+@file:Suppress(
+    "INTERFACE_WITH_SUPERCLASS",
+    "OVERRIDING_FINAL_MEMBER",
+    "RETURN_TYPE_MISMATCH_ON_OVERRIDE",
+    "CONFLICTING_OVERLOADS",
+    "EXTERNAL_DELEGATION"
+)
+
 package doric
 
-import kotlin.js.*
-import kotlin.js.Json
-import org.khronos.webgl.*
-import org.w3c.dom.*
-import org.w3c.dom.events.*
-import org.w3c.dom.parsing.*
-import org.w3c.dom.svg.*
-import org.w3c.dom.url.*
-import org.w3c.fetch.*
-import org.w3c.files.*
-import org.w3c.notifications.*
-import org.w3c.performance.*
-import org.w3c.workers.*
-import org.w3c.xhr.*
+import kotlin.js.Promise
 
 external interface BridgeContext {
     var id: String
@@ -23,3 +17,22 @@ external interface BridgeContext {
     fun function2Id(func: Function<*>): String
     fun removeFuncById(funcId: String)
 }
+
+external interface IEnvironment {
+    val platform: String /* "Android" | "iOS" | "Qt" | "web" */
+    val platformVersion: String
+    val appName: String
+    val appVersion: String
+    val libVersion: String
+    val screenWidth: Number
+    val screenHeight: Number
+    val screenScale: Number
+    val statusBarHeight: Number
+    val hasNotch: Boolean
+    val deviceBrand: String
+    val deviceModel: String
+}
+
+external val context: BridgeContext
+external val Environment: IEnvironment
+external fun Entry(constructor: Any): Any

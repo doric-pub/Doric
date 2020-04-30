@@ -26,6 +26,7 @@
 
 static NSString *TYPE_LEFT = @"navbar_left";
 static NSString *TYPE_RIGHT = @"navbar_right";
+static NSString *TYPE_CENTER = @"navbar_center";
 
 - (void)isHidden:(NSDictionary *)param withPromise:(DoricPromise *)promise {
     if (self.doricContext.navBar) {
@@ -122,6 +123,37 @@ static NSString *TYPE_RIGHT = @"navbar_right";
                         map = [[NSMutableDictionary alloc] init];
                         map[viewId] = it;
                         self.doricContext.headNodes[TYPE_RIGHT] = map;
+                    }
+                }];
+            }
+            [viewNode blend:params[@"props"]];
+            [promise resolve:nil];
+        });
+    } else {
+        [promise reject:@"Not implement NavBar"];
+    }
+}
+
+- (void)setCenter:(NSDictionary *)params withPromise:(DoricPromise *)promise {
+    if (self.doricContext.navBar) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSString *viewId = params[@"id"];
+            NSString *type = params[@"type"];
+            DoricViewNode *viewNode = [self.doricContext targetViewNode:viewId];
+            if (!viewNode) {
+                viewNode = [[DoricViewNode create:self.doricContext withType:type] also:^(DoricViewNode *it) {
+                    it.viewId = viewId;
+                    [it initWithSuperNode:nil];
+                    it.view.doricLayout = [DoricLayout new];
+                    [self.doricContext.navBar doric_navBar_setCenter:it.view];
+                    
+                    NSMutableDictionary <NSString *, DoricViewNode *> *map = self.doricContext.headNodes[TYPE_CENTER];
+                    if (map != nil) {
+                        self.doricContext.headNodes[TYPE_CENTER][viewId] = it;
+                    } else {
+                        map = [[NSMutableDictionary alloc] init];
+                        map[viewId] = it;
+                        self.doricContext.headNodes[TYPE_CENTER] = map;
                     }
                 }];
             }

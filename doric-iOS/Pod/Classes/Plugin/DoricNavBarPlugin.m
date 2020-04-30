@@ -82,8 +82,6 @@ static NSString *TYPE_CENTER = @"navbar_center";
                 viewNode = [[DoricViewNode create:self.doricContext withType:type] also:^(DoricViewNode *it) {
                     it.viewId = viewId;
                     [it initWithSuperNode:nil];
-                    it.view.doricLayout = [DoricLayout new];
-                    [self.doricContext.navBar doric_navBar_setLeft:it.view];
                     
                     NSMutableDictionary <NSString *, DoricViewNode *> *map = self.doricContext.headNodes[TYPE_LEFT];
                     if (map != nil) {
@@ -96,6 +94,7 @@ static NSString *TYPE_CENTER = @"navbar_center";
                 }];
             }
             [viewNode blend:params[@"props"]];
+            [self.doricContext.navBar doric_navBar_setLeft:viewNode.view];
             [promise resolve:nil];
         });
     } else {
@@ -113,8 +112,6 @@ static NSString *TYPE_CENTER = @"navbar_center";
                 viewNode = [[DoricViewNode create:self.doricContext withType:type] also:^(DoricViewNode *it) {
                     it.viewId = viewId;
                     [it initWithSuperNode:nil];
-                    it.view.doricLayout = [DoricLayout new];
-                    [self.doricContext.navBar doric_navBar_setRight:it.view];
                     
                     NSMutableDictionary <NSString *, DoricViewNode *> *map = self.doricContext.headNodes[TYPE_RIGHT];
                     if (map != nil) {
@@ -127,6 +124,7 @@ static NSString *TYPE_CENTER = @"navbar_center";
                 }];
             }
             [viewNode blend:params[@"props"]];
+            [self.doricContext.navBar doric_navBar_setRight:viewNode.view];
             [promise resolve:nil];
         });
     } else {
@@ -144,8 +142,6 @@ static NSString *TYPE_CENTER = @"navbar_center";
                 viewNode = [[DoricViewNode create:self.doricContext withType:type] also:^(DoricViewNode *it) {
                     it.viewId = viewId;
                     [it initWithSuperNode:nil];
-                    it.view.doricLayout = [DoricLayout new];
-                    [self.doricContext.navBar doric_navBar_setCenter:it.view];
                     
                     NSMutableDictionary <NSString *, DoricViewNode *> *map = self.doricContext.headNodes[TYPE_CENTER];
                     if (map != nil) {
@@ -158,6 +154,7 @@ static NSString *TYPE_CENTER = @"navbar_center";
                 }];
             }
             [viewNode blend:params[@"props"]];
+            [self.doricContext.navBar doric_navBar_setCenter:viewNode.view];
             [promise resolve:nil];
         });
     } else {

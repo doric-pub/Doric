@@ -118,6 +118,30 @@ class NavbarDemo extends Panel {
                                 })
                         }
                     }),
+                    label('setCenter').apply({
+                        width: 200,
+                        height: 50,
+                        backgroundColor: colors[0],
+                        textSize: 30,
+                        textColor: Color.WHITE,
+                        layoutConfig: layoutConfig().just(),
+                        onClick: () => {
+                            navbar(context).setCenter(hlayout([
+                                text({
+                                    width: 70,
+                                    height: 44,
+                                    textColor: Color.BLACK,
+                                    layoutConfig: layoutConfig().just().configAlignment(Gravity.Center),
+                                    text: "Center",
+                                }),
+                            ]).apply({
+                                backgroundColor: Color.RED
+                            }))
+                                .catch(e => {
+                                    modal(context).alert(e)
+                                })
+                        }
+                    }),
                     label('Pop').apply({
                         width: 200,
                         height: 50,

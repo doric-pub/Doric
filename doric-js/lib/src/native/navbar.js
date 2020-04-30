@@ -31,6 +31,13 @@ export function navbar(context) {
                 panel.addHeadView("navbar_right", view);
             }
             return context.callNative('navbar', 'setRight', view.toModel());
-        }
+        },
+        setCenter: (view) => {
+            if (panel) {
+                panel.clearHeadViews("navbar_center");
+                panel.addHeadView("navbar_center", view);
+            }
+            return context.callNative('navbar', 'setCenter', view.toModel());
+        },
     };
 }

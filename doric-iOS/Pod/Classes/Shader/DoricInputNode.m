@@ -94,8 +94,11 @@ typedef void (^onFocusChangeBlock)(BOOL focused,DoricInputNode *node);
 
 - (void)blend:(NSDictionary *)props {
     [super blend:props];
-    [self updatePlaceholderLabel];
-    [self.view.superview setNeedsLayout];
+}
+
+- (void)requestLayout {
+    [super requestLayout];
+     [self updatePlaceholderLabel];
 }
 
 #pragma mark - Doric-JS api

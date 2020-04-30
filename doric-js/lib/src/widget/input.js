@@ -79,6 +79,10 @@ __decorate([
     Property,
     __metadata("design:type", Function)
 ], Input.prototype, "onFocusChange", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Number)
+], Input.prototype, "maxLength", void 0);
 export function input(config) {
     const ret = new Input;
     ret.layoutConfig = layoutConfig().just();

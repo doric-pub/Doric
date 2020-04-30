@@ -6,10 +6,12 @@ class InputDemo extends Panel {
         scroller(
             vlayout(
                 [
-                    title("Input Demo"),
+
+                    title("Demo"),
                     (new Input).also(it => {
                         it.layoutConfig = layoutConfig().just().configHeight(LayoutSpec.FIT)
                         it.width = 300
+                        it.maxLength=10;
                         it.multiline = false
                         it.hintText = "HintText"
                         it.textAlignment = Gravity.Left

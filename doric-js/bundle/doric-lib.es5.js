@@ -2610,6 +2610,10 @@ var Input = /** @class */ (function (_super) {
         Property,
         __metadata$a("design:type", Function)
     ], Input.prototype, "onFocusChange", void 0);
+    __decorate$a([
+        Property,
+        __metadata$a("design:type", Number)
+    ], Input.prototype, "maxLength", void 0);
     return Input;
 }(View));
 function input(config) {

@@ -16,6 +16,7 @@
 package pub.doric.shader;
 
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -26,6 +27,8 @@ import android.widget.EditText;
 
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
+
+import java.util.LinkedList;
 
 import pub.doric.DoricContext;
 import pub.doric.extension.bridge.DoricMethod;
@@ -57,6 +60,22 @@ public class InputNode extends ViewNode<EditText> implements TextWatcher, View.O
     @Override
     protected void blend(EditText view, String name, JSValue prop) {
         switch (name) {
+            case "maxLength":
+                InputFilter[] currentFilters = view.getFilters();
+
+                LinkedList<InputFilter> list = new LinkedList<>();
+                for (int i = 0; i < currentFilters.length; i++) {
+                    if (!(currentFilters[i] instanceof InputFilter.LengthFilter)) {
+                        list.add(currentFilters[i]);
+                    }
+                }
+                if(prop.isNumber()){
+                    list.add( new InputFilter.LengthFilter(prop.asNumber().toInt()));
+                }
+                InputFilter[] newFilters = list.toArray(new InputFilter[list.size()]);
+
+                view.setFilters(newFilters);
+                break;
             case "text":
                 view.setText(prop.asString().toString());
                 break;

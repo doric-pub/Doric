@@ -15,14 +15,13 @@
  */
 package pub.doric.navbar;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Build;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,10 +33,7 @@ import android.widget.TextView;
 import androidx.annotation.AttrRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.view.ViewCompat;
 
-import com.qmuiteam.qmui.util.QMUIDeviceHelper;
-import com.qmuiteam.qmui.util.QMUINotchHelper;
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 
 import pub.doric.R;
@@ -129,6 +125,15 @@ public class BaseDoricNavBar extends FrameLayout implements IDoricNavBar {
     public void setRight(View view) {
         mRightContainer.removeAllViews();
         mRightContainer.addView(view);
+    }
+
+    @Override
+    public void setCenter(View view) {
+        mTitleContainer.removeAllViews();
+        mTitleContainer.addView(view);
+        FrameLayout.LayoutParams lp = (LayoutParams) view.getLayoutParams();
+        lp.gravity = Gravity.CENTER;
+        view.setLayoutParams(lp);
     }
 
     private void updateTitleMargins() {

@@ -34,4 +34,6 @@ public interface IDoricNavBar {
     void setLeft(View view);
 
     void setRight(View view);
+
+    void setCenter(View view);
 }

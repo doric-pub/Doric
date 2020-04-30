@@ -2937,7 +2937,8 @@ class List extends Superview {
         }
     }
     scrollToItem(context, index, config) {
-        const animated = config === null || config === void 0 ? void 0 : config.animated;
+        var _a;
+        const animated = (_a = config) === null || _a === void 0 ? void 0 : _a.animated;
         return this.nativeChannel(context, 'scrollToItem')({ index, animated, });
     }
     reset() {
@@ -3686,7 +3687,14 @@ function navbar(context) {
                 panel.addHeadView("navbar_right", view);
             }
             return context.callNative('navbar', 'setRight', view.toModel());
-        }
+        },
+        setCenter: (view) => {
+            if (panel) {
+                panel.clearHeadViews("navbar_center");
+                panel.addHeadView("navbar_center", view);
+            }
+            return context.callNative('navbar', 'setCenter', view.toModel());
+        },
     };
 }
 
@@ -4191,7 +4199,7 @@ return __module.exports;
 var doric_web = (function (exports, axios, sandbox) {
     'use strict';
 
-    axios = axios && Object.prototype.hasOwnProperty.call(axios, 'default') ? axios['default'] : axios;
+    axios = axios && axios.hasOwnProperty('default') ? axios['default'] : axios;
 
     class DoricPlugin {
         constructor(context) {

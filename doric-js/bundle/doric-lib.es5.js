@@ -1914,7 +1914,8 @@ var List = /** @class */ (function (_super) {
         }
     };
     List.prototype.scrollToItem = function (context, index, config) {
-        var animated = config === null || config === void 0 ? void 0 : config.animated;
+        var _a;
+        var animated = (_a = config) === null || _a === void 0 ? void 0 : _a.animated;
         return this.nativeChannel(context, 'scrollToItem')({ index: index, animated: animated, });
     };
     List.prototype.reset = function () {
@@ -2844,7 +2845,14 @@ function navbar(context) {
                 panel.addHeadView("navbar_right", view);
             }
             return context.callNative('navbar', 'setRight', view.toModel());
-        }
+        },
+        setCenter: function (view) {
+            if (panel) {
+                panel.clearHeadViews("navbar_center");
+                panel.addHeadView("navbar_center", view);
+            }
+            return context.callNative('navbar', 'setCenter', view.toModel());
+        },
     };
 }
 

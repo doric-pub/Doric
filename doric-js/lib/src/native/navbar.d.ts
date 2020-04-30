@@ -8,4 +8,5 @@ export declare function navbar(context: BridgeContext): {
     setBgColor: (color: Color) => Promise<any>;
     setLeft: (view: View) => Promise<any>;
     setRight: (view: View) => Promise<any>;
+    setCenter: (view: View) => Promise<any>;
 };

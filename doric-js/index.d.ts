@@ -765,6 +765,7 @@ declare module 'doric/lib/src/native/navbar' {
         setBgColor: (color: Color) => Promise<any>;
         setLeft: (view: View) => Promise<any>;
         setRight: (view: View) => Promise<any>;
+        setCenter: (view: View) => Promise<any>;
     };
 }
 

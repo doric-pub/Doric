@@ -89,12 +89,7 @@ data class Corners(
     var leftBottom: Number? = null,
     var rightBottom: Number? = null
 ) : Modeling {
-    constructor(corner: Number) {
-        this.leftTop = corner
-        this.rightTop = corner
-        this.leftBottom = corner
-        this.rightBottom = corner
-    }
+    constructor(corner: Number) : this(corner, corner, corner, corner)
 
     override fun toModel(): dynamic {
         if (this.leftTop == this.rightTop

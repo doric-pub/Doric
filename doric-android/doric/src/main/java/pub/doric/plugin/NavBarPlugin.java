@@ -15,11 +15,7 @@
  */
 package pub.doric.plugin;
 
-import android.os.Build;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.pengfeizhou.jscore.ArchiveException;
 import com.github.pengfeizhou.jscore.JSDecoder;
@@ -47,6 +43,7 @@ public class NavBarPlugin extends DoricJavaPlugin {
 
     private static final String TYPE_LEFT = "navbar_left";
     private static final String TYPE_RIGHT = "navbar_right";
+    private static final String TYPE_CENTER = "navbar_center";
 
     public NavBarPlugin(DoricContext doricContext) {
         super(doricContext);
@@ -177,6 +174,49 @@ public class NavBarPlugin extends DoricJavaPlugin {
 
                     getDoricContext().clearHeadNodes(TYPE_RIGHT);
                     getDoricContext().addHeadNode(TYPE_RIGHT, node);
+                    return null;
+                }
+            }, ThreadMode.UI).setCallback(new AsyncResult.Callback<Object>() {
+                @Override
+                public void onResult(Object result) {
+                    promise.resolve();
+                }
+
+                @Override
+                public void onError(Throwable t) {
+                    t.printStackTrace();
+                    promise.reject(new JavaValue(t.getLocalizedMessage()));
+                }
+
+                @Override
+                public void onFinish() {
+
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            promise.reject(new JavaValue(e.getLocalizedMessage()));
+        }
+    }
+
+    @DoricMethod(thread = ThreadMode.UI)
+    public void setCenter(JSDecoder decoder, final DoricPromise promise) {
+        try {
+            final JSObject jsObject = decoder.decode().asObject();
+            getDoricContext().getDriver().asyncCall(new Callable<Object>() {
+                @Override
+                public Object call() throws Exception {
+                    String viewId = jsObject.getProperty("id").asString().value();
+                    String type = jsObject.getProperty("type").asString().value();
+                    ViewNode node = ViewNode.create(getDoricContext(), type);
+                    node.setId(viewId);
+                    node.init(new FrameLayout.LayoutParams(0, 0));
+                    node.blend(jsObject.getProperty("props").asObject());
+
+                    getDoricContext().getDoricNavBar().setCenter(node.getNodeView());
+
+                    getDoricContext().clearHeadNodes(TYPE_CENTER);
+                    getDoricContext().addHeadNode(TYPE_CENTER, node);
                     return null;
                 }
             }, ThreadMode.UI).setCallback(new AsyncResult.Callback<Object>() {

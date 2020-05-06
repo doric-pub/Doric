@@ -26,6 +26,7 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -97,19 +98,23 @@ public class DoricPanelFragment extends Fragment implements IDoricNavigator {
     @Override
     public void onResume() {
         super.onResume();
-        doricPanel.onActivityResume();
+        if (!(getActivity() instanceof LifecycleOwner)) {
+            doricPanel.onActivityResume();
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        doricPanel.onActivityPause();
+        if (!(getActivity() instanceof LifecycleOwner)) {
+            doricPanel.onActivityPause();
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (getActivity() == null || !getActivity().isFinishing()) {
+        if (getActivity() == null || !getActivity().isFinishing() || !(getActivity() instanceof LifecycleOwner)) {
             doricPanel.onActivityDestroy();
         }
     }

@@ -27,21 +27,66 @@
 typedef void (^onTextChangeBlock)(NSString *text,DoricInputNode *node);
 typedef void (^onFocusChangeBlock)(BOOL focused,DoricInputNode *node);
 
+@implementation DoricInputView
+
+- (instancetype)init {
+    if (self = [super init]) {
+        self.font = [UIFont systemFontOfSize:12];
+        _placeholderLabel = [UILabel new];
+        _placeholderLabel.numberOfLines = 0;
+        _placeholderLabel.textColor = [UIColor grayColor];
+        _placeholderLabel.userInteractionEnabled = NO;
+        _placeholderLabel.font = self.font;
+        [self insertSubview:_placeholderLabel atIndex:0];
+    }
+    return self;
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    self.placeholderLabel.hidden = self.text.length > 0;
+    if (self.placeholderLabel.hidden) {
+        return;
+    }
+    CGFloat lineFragmentPadding = self.textContainer.lineFragmentPadding;
+    UIEdgeInsets textContainerInset = self.textContainerInset;
+    self.placeholderLabel.x = lineFragmentPadding + textContainerInset.left;
+    self.placeholderLabel.y = textContainerInset.top;
+    self.placeholderLabel.width = self.width - lineFragmentPadding * 2 - textContainerInset.left - textContainerInset.right;
+    [self.placeholderLabel sizeToFit];
+}
+
+- (CGSize)sizeThatFits:(CGSize)size {
+    if (self.text.length > 0) {
+        CGSize ret = [super sizeThatFits:size];
+        return CGSizeMake(ret.width - self.doricLayout.paddingLeft - self.doricLayout.paddingRight, ret.height - self.doricLayout.paddingTop - self.doricLayout.paddingBottom);
+    } else {
+        CGSize ret = [self.placeholderLabel sizeThatFits:size];
+        return CGSizeMake(ret.width, ret.height);
+    }
+}
+
+@end
+
 @interface DoricInputNode()<UITextViewDelegate>
 @property(nonatomic, copy) onTextChangeBlock onTextChange;
 @property(nonatomic, copy) onFocusChangeBlock onFocusShange;
-@property(nonatomic, strong) UILabel *placeholderLabel;
 @property(nonatomic, strong) NSNumber *maxLength;
 @end
 
 @implementation DoricInputNode
-- (UITextView *)build {
-    UITextView *v = [[UITextView alloc] init];
+- (DoricInputView *)build {
+    DoricInputView *v = [[DoricInputView alloc] init];
     v.delegate = self;
+    v.textContainer.lineFragmentPadding = 0;
+    v.doricLayout.paddingTop = v.textContainerInset.top;
+    v.doricLayout.paddingBottom = v.textContainerInset.bottom;
+    v.doricLayout.paddingLeft = v.textContainerInset.left;
+    v.doricLayout.paddingRight = v.textContainerInset.right;
     return v;
 }
 
-- (void)blendView:(UITextView *)view forPropName:(NSString *)name propValue:(id)prop {
+- (void)blendView:(DoricInputView *)view forPropName:(NSString *)name propValue:(id)prop {
     if ([name isEqualToString:@"text"]) {
         view.text = prop;
     } else if ([name isEqualToString:@"textSize"]) {
@@ -65,9 +110,9 @@ typedef void (^onFocusChangeBlock)(BOOL focused,DoricInputNode *node);
             view.textContainer.maximumNumberOfLines = 0;
         }
     } else if ([name isEqualToString:@"hintText"]) {
-        self.placeholderLabel.text = (NSString *)prop;
+        view.placeholderLabel.text = (NSString *)prop;
     } else if ([name isEqualToString:@"hintTextColor"]) {
-        self.placeholderLabel.textColor = DoricColor(prop);
+        view.placeholderLabel.textColor = DoricColor(prop);
     } else if ([name isEqualToString:@"onTextChange"]) {
         if ([prop isKindOfClass:[NSString class]]) {
             self.onTextChange = ^(NSString *text, DoricInputNode *node) {
@@ -95,10 +140,21 @@ typedef void (^onFocusChangeBlock)(BOOL focused,DoricInputNode *node);
 - (void)blend:(NSDictionary *)props {
     [super blend:props];
 }
+- (void)afterBlended:(NSDictionary *)props {
+    [super afterBlended:props];
+    if (self.view.doricLayout.paddingTop != self.view.textContainerInset.top
+        || self.view.doricLayout.paddingLeft != self.view.textContainerInset.left
+        || self.view.doricLayout.paddingBottom != self.view.textContainerInset.bottom
+        || self.view.doricLayout.paddingRight != self.view.textContainerInset.right) {
+        self.view.textContainerInset = UIEdgeInsetsMake(self.view.doricLayout.paddingTop, self.view.doricLayout.paddingLeft, self.view.doricLayout.paddingBottom, self.view.doricLayout.paddingRight);
+    }
+    self.view.placeholderLabel.font = self.view.font;
+    self.view.placeholderLabel.numberOfLines = self.view.textContainer.maximumNumberOfLines;
+}
 
 - (void)requestLayout {
     [super requestLayout];
-     [self updatePlaceholderLabel];
+    [self.view setNeedsLayout];
 }
 
 #pragma mark - Doric-JS api
@@ -149,35 +205,6 @@ typedef void (^onFocusChangeBlock)(BOOL focused,DoricInputNode *node);
     if (self.onTextChange) {
         self.onTextChange(textView.text, self);
     }
-    [self updatePlaceholderLabel];
-}
-
-#pragma mark - placeholderLabel
-- (UILabel *)placeholderLabel {
-    if (!_placeholderLabel) {
-        _placeholderLabel = [[UILabel alloc] init];
-        _placeholderLabel.numberOfLines = 0;
-        _placeholderLabel.userInteractionEnabled = NO;
-    }
-    return _placeholderLabel;
-}
-
-- (void)updatePlaceholderLabel {
-    if (self.view.text.length) {
-        [self.placeholderLabel removeFromSuperview];
-        return;
-    } else {
-        [self.view insertSubview:self.placeholderLabel atIndex:0];
-    }
-  
-    self.placeholderLabel.textAlignment = self.view.textAlignment;
-    CGFloat lineFragmentPadding = self.view.textContainer.lineFragmentPadding;
-    UIEdgeInsets textContainerInset = self.view.textContainerInset;
-
-    CGFloat x = lineFragmentPadding + textContainerInset.left;
-    CGFloat y = textContainerInset.top;
-    CGFloat width = CGRectGetWidth(self.view.bounds) - x - lineFragmentPadding - textContainerInset.right;
-    CGFloat height = [self.placeholderLabel sizeThatFits:CGSizeMake(width, 0)].height;
-    self.placeholderLabel.frame = CGRectMake(x, y, width, height);
+    [textView setNeedsLayout];
 }
 @end

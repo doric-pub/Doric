@@ -49,7 +49,6 @@
 @implementation DoricTextNode
 - (UILabel *)build {
     return [[[DoricTextView alloc] init] also:^(DoricTextView *it) {
-        it.textAlignment = NSTextAlignmentCenter;
         [self ensureParagraphStyle];
     }];
 }
@@ -163,7 +162,7 @@
 - (NSMutableParagraphStyle *)ensureParagraphStyle {
     if (self.paragraphStyle == nil) {
         self.paragraphStyle = [NSMutableParagraphStyle new];
-        self.paragraphStyle.alignment = self.view.textAlignment;
+        self.paragraphStyle.alignment = NSTextAlignmentCenter;
         self.paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
     }
     return self.paragraphStyle;

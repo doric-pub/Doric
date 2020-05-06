@@ -60,7 +60,11 @@ class NaivgatorDemo extends Panel {
                 },
             }),
         ]).apply({
-            layoutConfig: layoutConfig().most().configHeight(LayoutSpec.FIT),
+            layoutConfig: {
+                widthSpec: LayoutSpec.JUST,
+                heightSpec: LayoutSpec.FIT,
+            },
+            width: Environment.screenWidth,
             gravity: gravity().center(),
             space: 10,
         })).apply({

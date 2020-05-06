@@ -3,6 +3,7 @@ import { Root } from '../widget/layouts';
 import { BridgeContext } from '../runtime/global';
 export declare function NativeCall(target: Panel, propertyKey: string, descriptor: PropertyDescriptor): PropertyDescriptor;
 export declare abstract class Panel {
+    private destroyed;
     context: BridgeContext;
     onCreate(): void;
     onDestroy(): void;

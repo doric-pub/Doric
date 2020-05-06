@@ -60,6 +60,7 @@
 }
 
 - (void)dealloc {
+    _destroyed = YES;
     [[DoricContextManager instance] destroyContext:self];
     [self callEntity:DORIC_ENTITY_DESTROY withArgumentsArray:@[]];
     [self.driver destroyContext:self.contextId];

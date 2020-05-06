@@ -23,8 +23,11 @@
 #import "DoricViewNode.h"
 
 NS_ASSUME_NONNULL_BEGIN
+@interface DoricInputView : UITextView
+@property(nonatomic, strong) UILabel *placeholderLabel;
+@end
 
-@interface DoricInputNode : DoricViewNode<UITextView *>
+@interface DoricInputNode : DoricViewNode<DoricInputView *>
 
 @end
 

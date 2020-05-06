@@ -47,7 +47,9 @@
             [self.view addSubview:it];
         }]];
     }];
-    [self.doricContext onShow];
+    if (self.parentViewController != nil) {
+        [self.doricContext onShow];
+    }
 }
 
 - (void)viewWillLayoutSubviews {

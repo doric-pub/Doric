@@ -54,6 +54,8 @@ public class InputNode extends ViewNode<EditText> implements TextWatcher, View.O
         EditText editText = new EditText(getContext());
         editText.addTextChangedListener(this);
         editText.setOnFocusChangeListener(this);
+        editText.setBackground(null);
+        editText.setGravity(Gravity.START | Gravity.TOP);
         return editText;
     }
 
@@ -86,7 +88,7 @@ public class InputNode extends ViewNode<EditText> implements TextWatcher, View.O
                 view.setTextColor(prop.asNumber().toInt());
                 break;
             case "textAlignment":
-                view.setGravity(prop.asNumber().toInt() | Gravity.CENTER_VERTICAL);
+                view.setGravity(prop.asNumber().toInt());
                 break;
             case "hintText":
                 view.setHint(prop.asString().toString());

@@ -18,6 +18,9 @@ package pub.doric.navbar;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.AttrRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.util.AttributeSet;
@@ -29,10 +32,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-
-import androidx.annotation.AttrRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 

@@ -946,6 +946,7 @@ function NativeCall(target, propertyKey, descriptor) {
 }
 var Panel = /** @class */ (function () {
     function Panel() {
+        this.destroyed = false;
         this.__root__ = new Root;
         this.headviews = new Map;
         this.onRenderFinishedCallback = [];
@@ -1002,6 +1003,7 @@ var Panel = /** @class */ (function () {
         this.onCreate();
     };
     Panel.prototype.__onDestroy__ = function () {
+        this.destroyed = true;
         this.onDestroy();
     };
     Panel.prototype.__onShow__ = function () {
@@ -1101,6 +1103,9 @@ var Panel = /** @class */ (function () {
     Panel.prototype.hookAfterNativeCall = function () {
         var e_4, _a, e_5, _b;
         var _this = this;
+        if (this.destroyed) {
+            return;
+        }
         var promises = [];
         if (Environment.platform !== 'web') {
             //Here insert a native call to ensure the promise is resolved done.

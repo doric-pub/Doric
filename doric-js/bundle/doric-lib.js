@@ -701,6 +701,7 @@ function NativeCall(target, propertyKey, descriptor) {
 }
 class Panel {
     constructor() {
+        this.destroyed = false;
         this.__root__ = new Root;
         this.headviews = new Map;
         this.onRenderFinishedCallback = [];
@@ -757,6 +758,7 @@ class Panel {
         this.onCreate();
     }
     __onDestroy__() {
+        this.destroyed = true;
         this.onDestroy();
     }
     __onShow__() {
@@ -819,6 +821,9 @@ class Panel {
         }
     }
     hookAfterNativeCall() {
+        if (this.destroyed) {
+            return;
+        }
         const promises = [];
         if (Environment.platform !== 'web') {
             //Here insert a native call to ensure the promise is resolved done.

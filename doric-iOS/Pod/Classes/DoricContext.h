@@ -43,6 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) DoricRootNode *rootNode;
 @property(nonatomic, strong) NSMutableDictionary <NSString *, NSMutableDictionary <NSString *, DoricViewNode *> *> *headNodes;
 @property(nonatomic, copy) NSString *extra;
+@property(nonatomic, assign) BOOL destroyed;
 
 - (instancetype)initWithScript:(NSString *)script source:(NSString *)source extra:(NSString *)extra;
 

@@ -33,6 +33,7 @@ type Frame = { width: number, height: number }
 declare function nativeEmpty(): void
 
 export abstract class Panel {
+    private destroyed = false
     context!: BridgeContext
     onCreate() { }
     onDestroy() { }
@@ -103,6 +104,7 @@ export abstract class Panel {
 
     @NativeCall
     private __onDestroy__() {
+        this.destroyed = true
         this.onDestroy()
     }
 
@@ -175,6 +177,9 @@ export abstract class Panel {
     }
 
     private hookAfterNativeCall() {
+        if (this.destroyed) {
+            return
+        }
         const promises: Promise<any>[] = []
         if (Environment.platform !== 'web') {
             //Here insert a native call to ensure the promise is resolved done.

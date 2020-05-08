@@ -31,6 +31,21 @@ function getInput(c: Partial<Input>) {
 @Entry
 class InputDemo extends Panel {
     build(root: Group) {
+        var [inputView, ...otherView] = getInput({
+            layoutConfig: {
+                widthSpec: LayoutSpec.FIT,
+                heightSpec: LayoutSpec.FIT,
+            },
+            hintText: "Please input something in one line",
+            border: {
+                width: 1,
+                color: Color.GRAY,
+            },
+            multiline: false,
+            textSize: 20,
+            maxLength: 20,
+            padding: { top: 10, bottom: 11 }
+        });
         scroller(
             vlayout(
                 [
@@ -50,25 +65,15 @@ class InputDemo extends Panel {
                     //     textSize: 40,
                     //     maxLength: 20,
                     // }),
-                    ...getInput({
-                        layoutConfig: {
-                            widthSpec: LayoutSpec.FIT,
-                            heightSpec: LayoutSpec.FIT,
-                        },
-                        hintText: "Please input something in one line",
-                        border: {
-                            width: 1,
-                            color: Color.GRAY,
-                        },
-                        multiline: false,
-                        textSize: 20,
-                        maxLength: 20,
-                        padding: { top: 10, bottom: 11 }
-                    }),
+                    inputView,
+                    ...otherView,
                 ],
                 {
                     space: 10,
-                    layoutConfig: layoutConfig().most().configHeight(LayoutSpec.FIT)
+                    layoutConfig: layoutConfig().most().configHeight(LayoutSpec.MOST),
+                    onClick: () => { 
+                        (inputView as Input).releaseFocus(context);
+                    }
                 }
             ),
             {

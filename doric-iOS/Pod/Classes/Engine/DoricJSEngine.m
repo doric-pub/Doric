@@ -144,8 +144,10 @@
                                           __strong typeof(_self) self = _self;
                                           NSTimer *timer = [self.timers valueForKey:timerId];
                                           if (timer) {
-                                              [timer invalidate];
                                               [self.timers removeObjectForKey:timerId];
+                                              dispatch_async(dispatch_get_main_queue(), ^{
+                                                  [timer invalidate];
+                                              });
                                           }
                                       }];
 

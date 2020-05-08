@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,6 +18,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.gson.JsonObject;
+import com.uuzuche.lib_zxing.activity.CaptureActivity;
+import com.uuzuche.lib_zxing.activity.CodeUtils;
+import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -34,11 +38,12 @@ import pub.doric.devkit.event.OpenEvent;
 import pub.doric.devkit.event.StartDebugEvent;
 
 public class DoricDevActivity extends AppCompatActivity {
-
+    private int REQUEST_CODE=100;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+        ZXingLibrary.initDisplayOpinion(this);
         setContentView(R.layout.layout_debug_context);
         initDisconnect();
         if (DoricDev.getInstance().isInDevMode()) {
@@ -57,8 +62,8 @@ public class DoricDevActivity extends AppCompatActivity {
                                 new String[]{Manifest.permission.CAMERA,}, 1);
                     }
                 } else {
-                    Intent intent = new Intent(DoricDevActivity.this, ScanQRCodeActivity.class);
-                    startActivity(intent);
+                    Intent intent = new Intent(DoricDevActivity.this, CaptureActivity.class);
+                    startActivityForResult(intent, REQUEST_CODE);
                 }
             }
         }
@@ -71,9 +76,26 @@ public class DoricDevActivity extends AppCompatActivity {
         if (requestCode == 1) {
             for (int i = 0; i < permissions.length; i++) {
                 if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                    Intent intent = new Intent(DoricDevActivity.this, ScanQRCodeActivity.class);
-                    startActivity(intent);
+                    Intent intent = new Intent(DoricDevActivity.this, CaptureActivity.class);
+                    startActivityForResult(intent, REQUEST_CODE);
                 }
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (null != data) {
+            Bundle bundle = data.getExtras();
+            if (bundle == null) {
+                return;
+            }
+            if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
+                String result = bundle.getString(CodeUtils.RESULT_STRING);
+                DevKit.ip = result;
+                Toast.makeText(this, "dev kit connecting to " + result, Toast.LENGTH_LONG).show();
+                DevKit.getInstance().connectDevKit("ws://" + result + ":7777");
             }
         }
     }
@@ -107,7 +129,9 @@ public class DoricDevActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DoricDev.getInstance().closeDevMode();
+                if(DoricDev.getInstance().isInDevMode()){
+                    DoricDev.getInstance().closeDevMode();
+                }
                 finish();
             }
         });

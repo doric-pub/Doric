@@ -53,7 +53,7 @@ public class WSClient extends WebSocketListener {
     }
 
     public void close() {
-        webSocket.close(1024, "Close");
+        webSocket.close(1000, "Close");
     }
 
     @Override
@@ -97,6 +97,7 @@ public class WSClient extends WebSocketListener {
     @Override
     public void onClosed(WebSocket webSocket, int code, String reason) {
         super.onClosed(webSocket, code, reason);
+        EventBus.getDefault().post(new ConnectExceptionEvent());
     }
 
     @Override

@@ -1,12 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="pub.doric.devkit">
-
+    <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
 
     <application>
         <activity android:name=".ui.DoricDevActivity" />
-        <activity android:name=".ui.ScanQRCodeActivity" />
     </application>
 </manifest>

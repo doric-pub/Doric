@@ -199,7 +199,8 @@ typedef void (^onFocusChangeBlock)(BOOL focused,DoricInputNode *node);
 - (void)textViewDidChange:(UITextView *)textView {
     if (self.maxLength) {
         if (textView.text.length > self.maxLength.unsignedIntValue) {
-            textView.text = [textView.text substringToIndex:self.maxLength.unsignedIntValue];
+            NSRange range = [textView.text rangeOfComposedCharacterSequencesForRange:NSMakeRange(0, self.maxLength.unsignedIntValue)];
+            textView.text = [textView.text substringWithRange:range];
         }
     }
     if (self.onTextChange) {

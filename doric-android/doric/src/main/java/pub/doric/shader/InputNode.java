@@ -15,6 +15,7 @@
  */
 package pub.doric.shader;
 
+import android.content.Context;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -23,6 +24,7 @@ import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.github.pengfeizhou.jscore.JSObject;
@@ -44,9 +46,11 @@ import pub.doric.extension.bridge.DoricPromise;
 public class InputNode extends ViewNode<EditText> implements TextWatcher, View.OnFocusChangeListener {
     private String onTextChangeId;
     private String onFocusChangeId;
+    private final InputMethodManager mInputMethodManager;
 
     public InputNode(DoricContext doricContext) {
         super(doricContext);
+        mInputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     @Override
@@ -169,6 +173,7 @@ public class InputNode extends ViewNode<EditText> implements TextWatcher, View.O
     @DoricMethod
     public void releaseFocus(DoricPromise promise) {
         mView.clearFocus();
+        mInputMethodManager.hideSoftInputFromWindow(mView.getWindowToken(), 0);
         promise.resolve();
     }
 }

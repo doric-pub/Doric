@@ -198,14 +198,37 @@ typedef void (^onFocusChangeBlock)(BOOL focused,DoricInputNode *node);
 
 - (void)textViewDidChange:(UITextView *)textView {
     if (self.maxLength) {
-        if (textView.text.length > self.maxLength.unsignedIntValue) {
-            NSRange range = [textView.text rangeOfComposedCharacterSequencesForRange:NSMakeRange(0, self.maxLength.unsignedIntValue)];
-            textView.text = [textView.text substringWithRange:range];
+        UITextRange *selectedRange = [textView markedTextRange];
+        UITextPosition *pos = [textView positionFromPosition:selectedRange.start offset:0];
+        if (!pos) {
+            textView.text = [self limitToHansMaxLength:self.maxLength.unsignedIntValue text:textView.text];
         }
     }
     if (self.onTextChange) {
         self.onTextChange(textView.text, self);
     }
     [textView setNeedsLayout];
+}
+
+
+- (NSString *)limitToHansMaxLength:(NSUInteger)maxLen text:(NSString *)text{
+    NSUInteger asciiMaxLen = 2 * maxLen;
+    __block NSUInteger asciiLen = 0;
+    __block NSUInteger subStringRangeLen = 0;
+    [text enumerateSubstringsInRange:NSMakeRange(0, text.length)
+                             options:NSStringEnumerationByComposedCharacterSequences
+                          usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop) {
+        if ([substring canBeConvertedToEncoding:NSASCIIStringEncoding]) {
+            asciiLen += 2;
+        } else {
+            asciiLen += [substring lengthOfBytesUsingEncoding:NSUTF16StringEncoding];
+        }
+        if (asciiLen <= asciiMaxLen) {
+            subStringRangeLen = substringRange.location + substringRange.length;
+        } else {
+            *stop = YES;
+        }
+    }];
+    return [text substringWithRange:NSMakeRange(0, subStringRangeLen)];
 }
 @end

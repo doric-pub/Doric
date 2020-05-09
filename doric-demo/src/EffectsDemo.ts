@@ -777,6 +777,33 @@ class EffectsDemo extends Panel {
                         ],
                         { space: 20 }
                     ),
+                    hlayout(
+                        [
+                            vlayout(
+                                [
+                                    label("Multi-Grad locations"),
+                                    box().apply({
+                                        width: 100,
+                                        height: 100,
+                                        backgroundColor: {
+                                            colors: [colors[0], Color.WHITE, colors[1]],
+                                            locations: [0, 0.3, 1],
+                                            orientation: GradientOrientation.TOP_BOTTOM
+                                        },
+                                        layoutConfig: layoutConfig().just().configMargin({
+                                            left: 5,
+                                            right: 5,
+                                            bottom: 5,
+                                        })
+                                    }),
+                                ],
+                                {
+                                    gravity: Gravity.Center,
+                                    space: 10,
+                                }),
+                        ],
+                        { space: 20}
+                    )
                 ],
                 {
                     space: 20

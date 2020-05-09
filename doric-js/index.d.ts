@@ -959,6 +959,7 @@ declare module 'doric/lib/src/util/color' {
         start?: Color;
         end?: Color;
         colors?: Array<Color>;
+        locations?: Array<Number>;
         orientation: GradientOrientation;
     }
 }

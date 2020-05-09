@@ -94,6 +94,7 @@ export interface GradientColor {
     start?: Color
     end?: Color
     colors?: Array<Color>
+    locations?: Array<Number>
     orientation: GradientOrientation
 }
 

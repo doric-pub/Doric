@@ -22,8 +22,11 @@ import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Shader;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RectShape;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -234,53 +237,68 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                     if (prop.isNumber()) {
                         setBackgroundColor(prop.asNumber().toInt());
                     } else if (prop.isObject()) {
-                        GradientDrawable gradientDrawable = new GradientDrawable();
-                        gradientDrawable.setShape(GradientDrawable.RECTANGLE);
-                        gradientDrawable.setGradientType(GradientDrawable.LINEAR_GRADIENT);
+                        final JSValue dict = prop;
 
-                        if (prop.asObject().propertySet().contains("colors")) {
-                            JSValue colors = prop.asObject().getProperty("colors");
+                        ShapeDrawable shapeDrawable = new ShapeDrawable();
+                        shapeDrawable.setShape(new RectShape());
 
-                            gradientDrawable.setColors(colors.asArray().toIntArray());
-                        } else {
-                            if (prop.asObject().propertySet().contains("start") && prop.asObject().propertySet().contains("end")) {
-                                JSValue start = prop.asObject().getProperty("start");
-                                JSValue end = prop.asObject().getProperty("end");
+                        shapeDrawable.setShaderFactory(new ShapeDrawable.ShaderFactory() {
+                            @Override
+                            public Shader resize(int width, int height) {
+                                LinearGradient linearGradient = null;
 
-                                gradientDrawable.setColors(new int[]{start.asNumber().toInt(), end.asNumber().toInt()});
+                                int[] colors = null;
+                                float[] locations = null;
+
+                                if (dict.asObject().propertySet().contains("colors")) {
+                                    colors = dict.asObject().getProperty("colors").asArray().toIntArray();
+
+                                    if (dict.asObject().propertySet().contains("locations")) {
+                                        locations = dict.asObject().getProperty("locations").asArray().toFloatArray();
+
+                                    }
+                                } else {
+                                    if (dict.asObject().propertySet().contains("start") && dict.asObject().propertySet().contains("end")) {
+                                        JSValue start = dict.asObject().getProperty("start");
+                                        JSValue end = dict.asObject().getProperty("end");
+
+                                        colors = new int[]{start.asNumber().toInt(), end.asNumber().toInt()};
+                                    }
+                                }
+
+                                JSValue orientation = dict.asObject().getProperty("orientation");
+
+                                switch (orientation.asNumber().toInt()) {
+                                    case 0:
+                                        linearGradient = new LinearGradient(0.f, 0.f, 0.f, height, colors, locations, Shader.TileMode.CLAMP);
+                                        break;
+                                    case 1:
+                                        linearGradient = new LinearGradient(width, 0.f, 0.f, height, colors, locations, Shader.TileMode.CLAMP);
+                                        break;
+                                    case 2:
+                                        linearGradient = new LinearGradient(width, 0.f, 0.f, 0.f, colors, locations, Shader.TileMode.CLAMP);
+                                        break;
+                                    case 3:
+                                        linearGradient = new LinearGradient(width, height, 0.f, 0.f, colors, locations, Shader.TileMode.CLAMP);
+                                        break;
+                                    case 4:
+                                        linearGradient = new LinearGradient(0.f, height, 0.f, 0.f, colors, locations, Shader.TileMode.CLAMP);
+                                        break;
+                                    case 5:
+                                        linearGradient = new LinearGradient(0.f, height, width, 0.f, colors, locations, Shader.TileMode.CLAMP);
+                                        break;
+                                    case 6:
+                                        linearGradient = new LinearGradient(0.f, 0.f, width, 0.f, colors, locations, Shader.TileMode.CLAMP);
+                                        break;
+                                    case 7:
+                                        linearGradient = new LinearGradient(0.f, 0.f, width, height, colors, locations, Shader.TileMode.CLAMP);
+                                        break;
+                                }
+
+                                return linearGradient;
                             }
-                        }
-                        JSValue orientation = prop.asObject().getProperty("orientation");
-
-                        switch (orientation.asNumber().toInt()) {
-                            case 0:
-                                gradientDrawable.setOrientation(GradientDrawable.Orientation.TOP_BOTTOM);
-                                break;
-                            case 1:
-                                gradientDrawable.setOrientation(GradientDrawable.Orientation.TR_BL);
-                                break;
-                            case 2:
-                                gradientDrawable.setOrientation(GradientDrawable.Orientation.RIGHT_LEFT);
-                                break;
-                            case 3:
-                                gradientDrawable.setOrientation(GradientDrawable.Orientation.BR_TL);
-                                break;
-                            case 4:
-                                gradientDrawable.setOrientation(GradientDrawable.Orientation.BOTTOM_TOP);
-                                break;
-                            case 5:
-                                gradientDrawable.setOrientation(GradientDrawable.Orientation.BL_TR);
-                                break;
-                            case 6:
-                                gradientDrawable.setOrientation(GradientDrawable.Orientation.LEFT_RIGHT);
-                                break;
-                            case 7:
-                                gradientDrawable.setOrientation(GradientDrawable.Orientation.TL_BR);
-                                break;
-                        }
-
-                        gradientDrawable.setSize(view.getMeasuredWidth(), view.getMeasuredHeight());
-                        view.setBackground(gradientDrawable);
+                        });
+                        view.setBackground(shapeDrawable);
                     }
                 }
                 break;

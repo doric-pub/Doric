@@ -41,7 +41,8 @@ export declare enum GradientOrientation {
     TL_BR = 7
 }
 export interface GradientColor {
-    start: Color;
-    end: Color;
+    start?: Color;
+    end?: Color;
+    colors?: Array<Color>;
     orientation: GradientOrientation;
 }

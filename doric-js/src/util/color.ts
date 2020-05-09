@@ -91,8 +91,9 @@ export enum GradientOrientation {
 }
 
 export interface GradientColor {
-    start: Color
-    end: Color
+    start?: Color
+    end?: Color
+    colors?: Array<Color>
     orientation: GradientOrientation
 }
 

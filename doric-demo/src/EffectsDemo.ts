@@ -604,6 +604,179 @@ class EffectsDemo extends Panel {
                         ],
                         { space: 20 }
                     ),
+                    hlayout(
+                        [
+                            vlayout(
+                                [
+                                    label("Multi-Grad TOP_BOTTOM"),
+                                    box().apply({
+                                        width: 100,
+                                        height: 100,
+                                        backgroundColor: {
+                                            colors: [colors[0], Color.WHITE, colors[1]],
+                                            orientation: GradientOrientation.TOP_BOTTOM
+                                        },
+                                        layoutConfig: layoutConfig().just().configMargin({
+                                            left: 5,
+                                            right: 5,
+                                            bottom: 5,
+                                        })
+                                    }),
+                                ],
+                                {
+                                    gravity: Gravity.Center,
+                                    space: 10,
+                                }),
+                            vlayout(
+                                [
+                                    label("Gradient TR_BL"),
+                                    box().apply({
+                                        width: 100,
+                                        height: 100,
+                                        backgroundColor: {
+                                            colors: [colors[0], Color.WHITE, colors[1]],
+                                            orientation: GradientOrientation.TR_BL
+                                        },
+                                        layoutConfig: layoutConfig().just().configMargin({
+                                            left: 5,
+                                            right: 5,
+                                            bottom: 5,
+                                        })
+                                    }),
+                                ],
+                                {
+                                    gravity: Gravity.Center,
+                                    space: 10,
+                                }),
+                            vlayout(
+                                [
+                                    label("Multi-Grad RIGHT_LEFT"),
+                                    box().apply({
+                                        width: 100,
+                                        height: 100,
+                                        backgroundColor: {
+                                            colors: [colors[0], Color.WHITE, colors[1]],
+                                            orientation: GradientOrientation.RIGHT_LEFT
+                                        },
+                                        layoutConfig: layoutConfig().just().configMargin({
+                                            left: 5,
+                                            right: 5,
+                                            bottom: 5,
+                                        })
+                                    }),
+                                ],
+                                {
+                                    gravity: Gravity.Center,
+                                    space: 10,
+                                }),
+                            vlayout(
+                                [
+                                    label("Multi-Grad BR_TL"),
+                                    box().apply({
+                                        width: 100,
+                                        height: 100,
+                                        backgroundColor: {
+                                            colors: [colors[0], Color.WHITE, colors[1]],
+                                            orientation: GradientOrientation.BR_TL
+                                        },
+                                        layoutConfig: layoutConfig().just().configMargin({
+                                            left: 5,
+                                            right: 5,
+                                            bottom: 5,
+                                        })
+                                    }),
+                                ],
+                                {
+                                    gravity: Gravity.Center,
+                                    space: 10,
+                                }),
+                            vlayout(
+                                [
+                                    label("Multi-Grad BOTTOM_TOP"),
+                                    box().apply({
+                                        width: 100,
+                                        height: 100,
+                                        backgroundColor: {
+                                            colors: [colors[0], Color.WHITE, colors[1]],
+                                            orientation: GradientOrientation.BOTTOM_TOP
+                                        },
+                                        layoutConfig: layoutConfig().just().configMargin({
+                                            left: 5,
+                                            right: 5,
+                                            bottom: 5,
+                                        })
+                                    }),
+                                ],
+                                {
+                                    gravity: Gravity.Center,
+                                    space: 10,
+                                }),
+                            vlayout(
+                                [
+                                    label("Multi-Grad BL_TR"),
+                                    box().apply({
+                                        width: 100,
+                                        height: 100,
+                                        backgroundColor: {
+                                            colors: [colors[0], Color.WHITE, colors[1]],
+                                            orientation: GradientOrientation.BL_TR
+                                        },
+                                        layoutConfig: layoutConfig().just().configMargin({
+                                            left: 5,
+                                            right: 5,
+                                            bottom: 5,
+                                        })
+                                    }),
+                                ],
+                                {
+                                    gravity: Gravity.Center,
+                                    space: 10,
+                                }),
+                            vlayout(
+                                [
+                                    label("Gradient LEFT_RIGHT"),
+                                    box().apply({
+                                        width: 100,
+                                        height: 100,
+                                        backgroundColor: {
+                                            colors: [colors[0], Color.WHITE, colors[1]],
+                                            orientation: GradientOrientation.LEFT_RIGHT
+                                        },
+                                        layoutConfig: layoutConfig().just().configMargin({
+                                            left: 5,
+                                            right: 5,
+                                            bottom: 5,
+                                        })
+                                    }),
+                                ],
+                                {
+                                    gravity: Gravity.Center,
+                                    space: 10,
+                                }),
+                            vlayout(
+                                [
+                                    label("Multi-Grad TL_BR"),
+                                    box().apply({
+                                        width: 100,
+                                        height: 100,
+                                        backgroundColor: {
+                                            colors: [colors[0], Color.WHITE, colors[1]],
+                                            orientation: GradientOrientation.TL_BR
+                                        },
+                                        layoutConfig: layoutConfig().just().configMargin({
+                                            left: 5,
+                                            right: 5,
+                                            bottom: 5,
+                                        })
+                                    }),
+                                ],
+                                {
+                                    gravity: Gravity.Center,
+                                    space: 10,
+                                }),
+                        ],
+                        { space: 20 }
+                    ),
                 ],
                 {
                     space: 20

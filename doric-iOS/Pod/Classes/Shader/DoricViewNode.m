@@ -348,11 +348,13 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
                 [colors addObject:(__bridge id) DoricColor(obj).CGColor];
             }];
         } else {
-            UIColor *start = DoricColor(dict[@"start"]);
-            UIColor *end = DoricColor(dict[@"end"]);
-            
-            [colors addObject:(__bridge id) start.CGColor];
-            [colors addObject:(__bridge id) end.CGColor];
+            if ([dict objectForKey:@"start"] != nil && [dict objectForKey:@"end"] != nil) {
+                UIColor *start = DoricColor(dict[@"start"]);
+                UIColor *end = DoricColor(dict[@"end"]);
+                
+                [colors addObject:(__bridge id) start.CGColor];
+                [colors addObject:(__bridge id) end.CGColor];
+            }
         }
         
         int orientation = [dict[@"orientation"] intValue];

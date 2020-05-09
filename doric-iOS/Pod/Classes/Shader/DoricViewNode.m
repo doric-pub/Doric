@@ -317,6 +317,7 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
 }
 
 - (UIImage *)gradientImageFromColors:(NSArray *)colors
+                           locations:(CGFloat *)locations
                           startPoint:(CGPoint)startPoint
                             endPoint:(CGPoint)endPoint
                              imgSize:(CGSize)imgSize {
@@ -324,7 +325,7 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSaveGState(context);
     CGColorSpaceRef colorSpace = CGColorGetColorSpace((__bridge CGColorRef) colors.lastObject);
-    CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef) colors, NULL);
+    CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef) colors, locations);
     CGPoint start = (CGPoint) {startPoint.x * imgSize.width, startPoint.y * imgSize.height};
     CGPoint end = (CGPoint) {endPoint.x * imgSize.width, endPoint.y * imgSize.height};
     CGContextDrawLinearGradient(context, gradient, start, end, kCGGradientDrawsBeforeStartLocation | kCGGradientDrawsAfterEndLocation);
@@ -341,12 +342,18 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
             return;
         }
         self.gradientSize = self.view.frame.size;
+        
         NSMutableArray *colors = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayLocations = nil;
         if ([dict objectForKey:@"colors"] != nil) {
-            NSMutableArray *array = [dict mutableArrayValueForKey:@"colors"];
-            [array forEach:^(id obj) {
+            NSMutableArray *arrayColors = [dict mutableArrayValueForKey:@"colors"];
+            [arrayColors forEach:^(id obj) {
                 [colors addObject:(__bridge id) DoricColor(obj).CGColor];
             }];
+            if ([dict objectForKey:@"locations"] != nil) {
+                arrayLocations = [dict mutableArrayValueForKey:@"locations"];
+            }
+            
         } else {
             if ([dict objectForKey:@"start"] != nil && [dict objectForKey:@"end"] != nil) {
                 UIColor *start = DoricColor(dict[@"start"]);
@@ -385,10 +392,25 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
             startPoint = CGPointMake(0, 0);
             endPoint = CGPointMake(0, 1);
         }
-        UIImage *gradientImage = [self gradientImageFromColors:colors
-                                                    startPoint:startPoint
-                                                      endPoint:endPoint
-                                                       imgSize:self.gradientSize];
+        
+        UIImage *gradientImage;
+        if (arrayLocations != nil) {
+            CGFloat locations[arrayLocations.count];
+            for (int i = 0; i != arrayLocations.count; i++) {
+                locations[i] = [arrayLocations[i] floatValue];
+            }
+            gradientImage = [self gradientImageFromColors:colors
+                                                         locations:locations
+                                                        startPoint:startPoint
+                                                          endPoint:endPoint
+                                                           imgSize:self.gradientSize];
+        } else {
+            gradientImage = [self gradientImageFromColors:colors
+                                                         locations:NULL
+                                                        startPoint:startPoint
+                                                          endPoint:endPoint
+                                                           imgSize:self.gradientSize];
+        }
         self.view.backgroundColor = [UIColor colorWithPatternImage:gradientImage];
     }];
 }

@@ -341,8 +341,20 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
             return;
         }
         self.gradientSize = self.view.frame.size;
-        UIColor *start = DoricColor(dict[@"start"]);
-        UIColor *end = DoricColor(dict[@"end"]);
+        NSMutableArray *colors = [[NSMutableArray alloc] init];
+        if ([dict objectForKey:@"colors"] != nil) {
+            NSMutableArray *array = [dict mutableArrayValueForKey:@"colors"];
+            [array forEach:^(id obj) {
+                [colors addObject:(__bridge id) DoricColor(obj).CGColor];
+            }];
+        } else {
+            UIColor *start = DoricColor(dict[@"start"]);
+            UIColor *end = DoricColor(dict[@"end"]);
+            
+            [colors addObject:(__bridge id) start.CGColor];
+            [colors addObject:(__bridge id) end.CGColor];
+        }
+        
         int orientation = [dict[@"orientation"] intValue];
         CGPoint startPoint;
         CGPoint endPoint;
@@ -371,7 +383,7 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
             startPoint = CGPointMake(0, 0);
             endPoint = CGPointMake(0, 1);
         }
-        UIImage *gradientImage = [self gradientImageFromColors:@[(__bridge id) start.CGColor, (__bridge id) end.CGColor]
+        UIImage *gradientImage = [self gradientImageFromColors:colors
                                                     startPoint:startPoint
                                                       endPoint:endPoint
                                                        imgSize:self.gradientSize];

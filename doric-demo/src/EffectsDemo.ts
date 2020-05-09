@@ -629,7 +629,7 @@ class EffectsDemo extends Panel {
                                 }),
                             vlayout(
                                 [
-                                    label("Gradient TR_BL"),
+                                    label("Multi-Grad TR_BL"),
                                     box().apply({
                                         width: 100,
                                         height: 100,
@@ -734,7 +734,7 @@ class EffectsDemo extends Panel {
                                 }),
                             vlayout(
                                 [
-                                    label("Gradient LEFT_RIGHT"),
+                                    label("Multi-Grad LEFT_RIGHT"),
                                     box().apply({
                                         width: 100,
                                         height: 100,

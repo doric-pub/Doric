@@ -234,14 +234,21 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                     if (prop.isNumber()) {
                         setBackgroundColor(prop.asNumber().toInt());
                     } else if (prop.isObject()) {
-                        JSValue start = prop.asObject().getProperty("start");
-                        JSValue end = prop.asObject().getProperty("end");
-                        JSValue orientation = prop.asObject().getProperty("orientation");
-
                         GradientDrawable gradientDrawable = new GradientDrawable();
                         gradientDrawable.setShape(GradientDrawable.RECTANGLE);
-                        gradientDrawable.setColors(new int[]{start.asNumber().toInt(), end.asNumber().toInt()});
                         gradientDrawable.setGradientType(GradientDrawable.LINEAR_GRADIENT);
+
+                        if (prop.asObject().propertySet().contains("colors")) {
+                            JSValue colors = prop.asObject().getProperty("colors");
+
+                            gradientDrawable.setColors(colors.asArray().toIntArray());
+                        } else {
+                            JSValue start = prop.asObject().getProperty("start");
+                            JSValue end = prop.asObject().getProperty("end");
+
+                            gradientDrawable.setColors(new int[]{start.asNumber().toInt(), end.asNumber().toInt()});
+                        }
+                        JSValue orientation = prop.asObject().getProperty("orientation");
 
                         switch (orientation.asNumber().toInt()) {
                             case 0:

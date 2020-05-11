@@ -63,6 +63,10 @@ __decorate([
 ], Image.prototype, "placeHolderImage", void 0);
 __decorate([
     Property,
+    __metadata("design:type", String)
+], Image.prototype, "placeHolderImageBase64", void 0);
+__decorate([
+    Property,
     __metadata("design:type", Color
     /**
      * Display while image is failed to load
@@ -74,6 +78,10 @@ __decorate([
     Property,
     __metadata("design:type", String)
 ], Image.prototype, "errorImage", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", String)
+], Image.prototype, "errorImageBase64", void 0);
 __decorate([
     Property,
     __metadata("design:type", Color)

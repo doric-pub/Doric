@@ -57,6 +57,9 @@ export class Image extends View {
      */
     @Property
     placeHolderImage?: string
+
+    @Property
+    placeHolderImageBase64?: string
     /**
      * Display while image is loading 
      * Color
@@ -70,6 +73,9 @@ export class Image extends View {
      */
     @Property
     errorImage?: string
+
+    @Property
+    errorImageBase64?: string
     /**
      * Display while image is failed to load  
      * Color

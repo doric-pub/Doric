@@ -473,6 +473,7 @@ declare module 'doric/lib/src/widget/image' {
                 * Local file name
                 */
             placeHolderImage?: string;
+            placeHolderImageBase64?: string;
             /**
                 * Display while image is loading
                 * Color
@@ -484,6 +485,7 @@ declare module 'doric/lib/src/widget/image' {
                 * It can be file name in local path
                 */
             errorImage?: string;
+            errorImageBase64?: string;
             /**
                 * Display while image is failed to load
                 * Color

@@ -27,6 +27,7 @@ export declare class Image extends View {
      * Local file name
      */
     placeHolderImage?: string;
+    placeHolderImageBase64?: string;
     /**
      * Display while image is loading
      * Color
@@ -38,6 +39,7 @@ export declare class Image extends View {
      * It can be file name in local path
      */
     errorImage?: string;
+    errorImageBase64?: string;
     /**
      * Display while image is failed to load
      * Color

@@ -2801,6 +2801,10 @@ __decorate$4([
 ], Image.prototype, "placeHolderImage", void 0);
 __decorate$4([
     Property,
+    __metadata$4("design:type", String)
+], Image.prototype, "placeHolderImageBase64", void 0);
+__decorate$4([
+    Property,
     __metadata$4("design:type", Color
     /**
      * Display while image is failed to load
@@ -2812,6 +2816,10 @@ __decorate$4([
     Property,
     __metadata$4("design:type", String)
 ], Image.prototype, "errorImage", void 0);
+__decorate$4([
+    Property,
+    __metadata$4("design:type", String)
+], Image.prototype, "errorImageBase64", void 0);
 __decorate$4([
     Property,
     __metadata$4("design:type", Color)

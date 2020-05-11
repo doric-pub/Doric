@@ -18,6 +18,7 @@ package pub.doric.shader;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Rect;
@@ -68,7 +69,9 @@ public class ImageNode extends ViewNode<ImageView> {
     private String loadCallbackId = "";
     private boolean isBlur;
     private String placeHolderImage;
+    private String placeHolderImageBase64;
     private String errorImage;
+    private String errorImageBase64;
     private int placeHolderColor = Color.TRANSPARENT;
     private int errorColor = Color.TRANSPARENT;
     private JSObject stretchInset = null;
@@ -119,6 +122,14 @@ public class ImageNode extends ViewNode<ImageView> {
             if (error.isString()) {
                 this.errorImage = error.asString().value();
             }
+            JSValue placeHolderBase64 = jsObject.getProperty("placeHolderImageBase64");
+            if (placeHolderBase64.isString()) {
+                this.placeHolderImageBase64 = placeHolderBase64.asString().value();
+            }
+            JSValue errorBase64 = jsObject.getProperty("errorImageBase64");
+            if (errorBase64.isString()) {
+                this.errorImageBase64 = errorBase64.asString().value();
+            }
             JSValue placeHolderColor = jsObject.getProperty("placeHolderColor");
             if (placeHolderColor.isNumber()) {
                 this.placeHolderColor = placeHolderColor.asNumber().toInt();
@@ -151,6 +162,23 @@ public class ImageNode extends ViewNode<ImageView> {
                 DoricLog.e("Cannot find PlaceHolder Drawable for " + placeHolderImage);
                 return new ColorDrawable(Color.GRAY);
             }
+        } else if (!TextUtils.isEmpty(placeHolderImageBase64)) {
+            Pattern r = Pattern.compile("data:image/(\\S+?);base64,(\\S+)");
+            Matcher m = r.matcher(placeHolderImageBase64);
+            if (m.find()) {
+                String imageType = m.group(1);
+                String base64 = m.group(2);
+                if (!TextUtils.isEmpty(imageType) && !TextUtils.isEmpty(base64)) {
+                    try {
+                        byte[] data = Base64.decode(base64, Base64.DEFAULT);
+                        return new BitmapDrawable(getContext().getResources(), BitmapFactory.decodeByteArray(data, 0, data.length));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            DoricLog.e("Cannot find PlaceHolderBase64 Drawable for " + placeHolderImageBase64);
+            return getDoricContext().getDriver().getRegistry().getDefaultPlaceHolderDrawable();
         } else if (placeHolderColor != Color.TRANSPARENT) {
             return new ColorDrawable(placeHolderColor);
         } else {
@@ -170,6 +198,23 @@ public class ImageNode extends ViewNode<ImageView> {
                 DoricLog.e("Cannot find Error Drawable for " + errorImage);
                 return new ColorDrawable(Color.GRAY);
             }
+        } else if (!TextUtils.isEmpty(errorImageBase64)) {
+            Pattern r = Pattern.compile("data:image/(\\S+?);base64,(\\S+)");
+            Matcher m = r.matcher(errorImageBase64);
+            if (m.find()) {
+                String imageType = m.group(1);
+                String base64 = m.group(2);
+                if (!TextUtils.isEmpty(imageType) && !TextUtils.isEmpty(base64)) {
+                    try {
+                        byte[] data = Base64.decode(base64, Base64.DEFAULT);
+                        return new BitmapDrawable(getContext().getResources(), BitmapFactory.decodeByteArray(data, 0, data.length));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            DoricLog.e("Cannot find ErrorBase64 Drawable for " + errorImageBase64);
+            return getDoricContext().getDriver().getRegistry().getDefaultErrorDrawable();
         } else if (errorColor != Color.TRANSPARENT) {
             return new ColorDrawable(errorColor);
         } else {

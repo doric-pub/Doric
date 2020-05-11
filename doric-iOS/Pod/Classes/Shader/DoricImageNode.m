@@ -37,8 +37,10 @@
 @property(nonatomic, assign) UIViewContentMode contentMode;
 @property(nonatomic, strong) NSNumber *placeHolderColor;
 @property(nonatomic, strong) NSString *placeHolderImage;
+@property(nonatomic, strong) NSString *placeHolderImageBase64;
 @property(nonatomic, strong) NSNumber *errorColor;
 @property(nonatomic, strong) NSString *errorImage;
+@property(nonatomic, strong) NSString *errorImageBase64;
 @property(nonatomic, strong) UIVisualEffectView *blurEffectView;
 @property(nonatomic, strong) NSDictionary *stretchInsetDic;
 @property(nonatomic, assign) CGFloat imageScale;
@@ -61,11 +63,17 @@
     [props[@"placeHolderImage"] also:^(id it) {
         self.placeHolderImage = it;
     }];
+    [props[@"placeHolderImageBase64"] also:^(id it) {
+        self.placeHolderImageBase64 = it;
+    }];
     [props[@"errorColor"] also:^(id it) {
         self.errorColor = it;
     }];
     [props[@"errorImage"] also:^(id it) {
         self.errorImage = it;
+    }];
+    [props[@"errorImageBase64"] also:^(id it) {
+        self.errorImageBase64 = it;
     }];
     [props[@"imageScale"] also:^(NSNumber *it) {
         self.imageScale = it.floatValue;
@@ -77,6 +85,18 @@
     if (self.placeHolderImage) {
         return [UIImage imageNamed:self.placeHolderImage];
     }
+    
+    if (self.placeHolderImageBase64) {
+        NSString *base64 = self.placeHolderImageBase64;
+        if (YES == [base64 hasPrefix:@"data:image"]) {
+            base64 = [base64 componentsSeparatedByString:@","].lastObject;
+        }
+        NSData *imageData = [[NSData alloc] initWithBase64EncodedString:base64
+                                                                options:NSDataBase64DecodingIgnoreUnknownCharacters];
+        YYImage *image = [YYImage imageWithData:imageData scale:self.imageScale];
+        return image;
+    }
+    
     if (self.placeHolderColor) {
         UIColor *color = DoricColor(self.placeHolderColor);
         CGRect rect = CGRectMake(0, 0, 1, 1);
@@ -98,6 +118,18 @@
     if (self.errorImage) {
         return [UIImage imageNamed:self.errorImage];
     }
+    
+    if (self.errorImageBase64) {
+        NSString *base64 = self.errorImageBase64;
+        if (YES == [base64 hasPrefix:@"data:image"]) {
+            base64 = [base64 componentsSeparatedByString:@","].lastObject;
+        }
+        NSData *imageData = [[NSData alloc] initWithBase64EncodedString:base64
+                                                                options:NSDataBase64DecodingIgnoreUnknownCharacters];
+        YYImage *image = [YYImage imageWithData:imageData scale:self.imageScale];
+        return image;
+    }
+    
     if (self.errorColor) {
         UIColor *color = DoricColor(self.errorColor);
         CGRect rect = CGRectMake(0, 0, 1, 1);

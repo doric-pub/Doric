@@ -55,7 +55,7 @@
 - (DoricAsyncResult *)invokeDoricMethod:(NSString *)method argumentsArray:(NSArray *)args {
     DoricAsyncResult *ret = [[DoricAsyncResult alloc] init];
     __weak typeof(self) _self = self;
-    dispatch_async(self.jsExecutor.jsQueue, ^() {
+    [self.jsExecutor ensureRunOnJSThread:^{
         __strong typeof(_self) self = _self;
         if (!self) return;
         @try {
@@ -64,7 +64,7 @@
         } @catch (NSException *exception) {
             [ret setupError:exception];
         }
-    });
+    }];
     return ret;
 }
 
@@ -76,7 +76,7 @@
         [array addObject:arg];
     }
     __weak typeof(self) _self = self;
-    dispatch_async(self.jsExecutor.jsQueue, ^() {
+    [self.jsExecutor ensureRunOnJSThread:^{
         __strong typeof(_self) self = _self;
         if (!self) return;
         @try {
@@ -85,7 +85,7 @@
         } @catch (NSException *exception) {
             [ret setupError:exception];
         }
-    });
+    }];
     return ret;
 }
 
@@ -108,7 +108,7 @@
         arg = va_arg(args, JSValue *);
     }
     __weak typeof(self) _self = self;
-    dispatch_async(self.jsExecutor.jsQueue, ^() {
+    [self.jsExecutor ensureRunOnJSThread:^{
         __strong typeof(_self) self = _self;
         if (!self) return;
         @try {
@@ -117,7 +117,7 @@
         } @catch (NSException *exception) {
             [ret setupError:exception];
         }
-    });
+    }];
     return ret;
 }
 
@@ -130,7 +130,7 @@
         [array addObject:arg];
     }
     __weak typeof(self) _self = self;
-    dispatch_async(self.jsExecutor.jsQueue, ^() {
+    [self.jsExecutor ensureRunOnJSThread:^{
         __strong typeof(_self) self = _self;
         if (!self) return;
         @try {
@@ -139,14 +139,14 @@
         } @catch (NSException *exception) {
             [ret setupError:exception];
         }
-    });
+    }];
     return ret;
 }
 
 - (DoricAsyncResult *)createContext:(NSString *)contextId script:(NSString *)script source:(NSString *)source {
     DoricAsyncResult *ret = [[DoricAsyncResult alloc] init];
     __weak typeof(self) _self = self;
-    dispatch_async(self.jsExecutor.jsQueue, ^() {
+    [self.jsExecutor ensureRunOnJSThread:^{
         __strong typeof(_self) self = _self;
         if (!self) return;
         @try {
@@ -155,14 +155,14 @@
         } @catch (NSException *exception) {
             [ret setupError:exception];
         }
-    });
+    }];
     return ret;
 }
 
 - (DoricAsyncResult *)destroyContext:(NSString *)contextId {
     DoricAsyncResult *ret = [[DoricAsyncResult alloc] init];
     __weak typeof(self) _self = self;
-    dispatch_async(self.jsExecutor.jsQueue, ^() {
+    [self.jsExecutor ensureRunOnJSThread:^{
         __strong typeof(_self) self = _self;
         if (!self) return;
         @try {
@@ -171,7 +171,7 @@
         } @catch (NSException *exception) {
             [ret setupError:exception];
         }
-    });
+    }];
     return ret;
 }
 

@@ -45,13 +45,16 @@
 @property(nonatomic, strong) NSMutableDictionary *timers;
 @property(nonatomic, strong) DoricBridgeExtension *bridgeExtension;
 @property(nonatomic, strong) NSDictionary *innerEnvironmentDictionary;
+@property(nonatomic, strong) NSThread *jsThread;
+@property(nonatomic, assign) BOOL destroyed;
 @end
 
 @implementation DoricJSEngine
 
 - (instancetype)init {
     if (self = [super init]) {
-        _jsQueue = dispatch_queue_create("doric.jsengine", DISPATCH_QUEUE_SERIAL);
+        _jsThread = [[NSThread alloc] initWithTarget:self selector:@selector(threadRun) object:nil];
+        [_jsThread start];
         NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
         struct utsname systemInfo;
         uname(&systemInfo);
@@ -72,7 +75,7 @@
                 @"deviceBrand": @"Apple",
                 @"deviceModel": platform,
         };
-        dispatch_async(_jsQueue, ^() {
+        [self ensureRunOnJSThread:^() {
             self.timers = [[NSMutableDictionary alloc] init];
             self.registry = [[DoricRegistry alloc] init];
             self.bridgeExtension = [DoricBridgeExtension new];
@@ -80,9 +83,34 @@
             [self initJSEngine];
             [self initJSExecutor];
             [self initDoricEnvironment];
-        });
+        }];
     }
     return self;
+}
+
+- (void)dealloc {
+    _destroyed = YES;
+};
+
+- (void)ensureRunOnJSThread:(dispatch_block_t)block {
+    if (NSThread.currentThread == _jsThread) {
+        block();
+    } else {
+        [self performSelector:@selector(ensureRunOnJSThread:)
+                     onThread:_jsThread
+                   withObject:[block copy]
+                waitUntilDone:NO];
+    }
+}
+
+- (void)threadRun {
+    [[NSRunLoop currentRunLoop] addPort:[NSMachPort port] forMode:NSDefaultRunLoopMode];
+    [NSThread currentThread].name = @"doric.js.engine";
+    while (!_destroyed) {
+        @autoreleasepool {
+            [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+        }
+    }
 }
 
 - (void)initJSEngine {
@@ -234,7 +262,7 @@
     NSDictionary *userInfo = timer.userInfo;
     NSNumber *timerId = [userInfo valueForKey:@"timerId"];
     NSNumber *repeat = [userInfo valueForKey:@"repeat"];
-    dispatch_async(self.jsQueue, ^() {
+    [self ensureRunOnJSThread:^{
         __strong typeof(_self) self = _self;
         @try {
             [self invokeDoricMethod:DORIC_TIMER_CALLBACK, timerId, nil];
@@ -246,6 +274,6 @@
         if (![repeat boolValue]) {
             [self.timers removeObjectForKey:[timerId stringValue]];
         }
-    });
+    }];
 }
 @end

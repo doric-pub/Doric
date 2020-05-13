@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'DoricCore'
-  s.version          = '0.4.6.1'
+  s.version          = '0.4.22.1'
   s.summary          = 'Doric iOS SDK'
 
 
@@ -11,7 +11,7 @@ Doric iOS SDK for cross platform develpment
   s.homepage         = 'https://github.com/doric-pub/doric'
   s.license          = { :type => 'Apache-2.0', :file => 'LICENSE' }
   s.author           = { 'pengfei.zhou' => 'pengfeizhou@foxmail.com' }
-  s.source           = { :git => 'https://github.com/doric-pub/doric.git', :tag => '0.4.6_kotlin' }
+  s.source           = { :git => 'https://github.com/doric-pub/doric.git', :branch => 'feature/kotlin' }
 
   s.ios.deployment_target = '8.0'
 

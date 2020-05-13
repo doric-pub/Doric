@@ -32,7 +32,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, strong) id <DoricJSExecutorProtocol> jsExecutor;
 
-@property(nonatomic, strong) dispatch_queue_t jsQueue;
 
 @property(nonatomic, strong) DoricRegistry *registry;
 
@@ -45,6 +44,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (JSValue *)invokeDoricMethod:(NSString *)method arguments:(va_list)args;
 
 - (JSValue *)invokeDoricMethod:(NSString *)method argumentsArray:(NSArray *)args;
+
+- (void)ensureRunOnJSThread:(dispatch_block_t)block;
 @end
 
 NS_ASSUME_NONNULL_END

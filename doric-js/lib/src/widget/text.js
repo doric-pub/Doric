@@ -33,64 +33,68 @@ export var TruncateAt;
     TruncateAt[TruncateAt["Start"] = 2] = "Start";
     TruncateAt[TruncateAt["Clip"] = 3] = "Clip";
 })(TruncateAt || (TruncateAt = {}));
-export class Text extends View {
-}
-__decorate([
-    Property,
-    __metadata("design:type", String)
-], Text.prototype, "text", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Color)
-], Text.prototype, "textColor", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Number)
-], Text.prototype, "textSize", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Number)
-], Text.prototype, "maxLines", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Gravity)
-], Text.prototype, "textAlignment", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", String)
-], Text.prototype, "fontStyle", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", String)
-], Text.prototype, "font", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Number)
-], Text.prototype, "maxWidth", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Number)
-], Text.prototype, "maxHeight", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Number)
-], Text.prototype, "lineSpacing", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Boolean)
-], Text.prototype, "strikethrough", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Boolean)
-], Text.prototype, "underline", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", String)
-], Text.prototype, "htmlText", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Number)
-], Text.prototype, "truncateAt", void 0);
+let Text = /** @class */ (() => {
+    class Text extends View {
+    }
+    __decorate([
+        Property,
+        __metadata("design:type", String)
+    ], Text.prototype, "text", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Color)
+    ], Text.prototype, "textColor", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Number)
+    ], Text.prototype, "textSize", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Number)
+    ], Text.prototype, "maxLines", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Gravity)
+    ], Text.prototype, "textAlignment", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", String)
+    ], Text.prototype, "fontStyle", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", String)
+    ], Text.prototype, "font", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Number)
+    ], Text.prototype, "maxWidth", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Number)
+    ], Text.prototype, "maxHeight", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Number)
+    ], Text.prototype, "lineSpacing", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Boolean)
+    ], Text.prototype, "strikethrough", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Boolean)
+    ], Text.prototype, "underline", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", String)
+    ], Text.prototype, "htmlText", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Number)
+    ], Text.prototype, "truncateAt", void 0);
+    return Text;
+})();
+export { Text };
 export function text(config) {
     const ret = new Text;
     ret.layoutConfig = layoutConfig().fit();

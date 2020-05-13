@@ -29,16 +29,19 @@ export class Stack extends Group {
 }
 export class Root extends Stack {
 }
-class LinearLayout extends Group {
-}
-__decorate([
-    Property,
-    __metadata("design:type", Number)
-], LinearLayout.prototype, "space", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Gravity)
-], LinearLayout.prototype, "gravity", void 0);
+let LinearLayout = /** @class */ (() => {
+    class LinearLayout extends Group {
+    }
+    __decorate([
+        Property,
+        __metadata("design:type", Number)
+    ], LinearLayout.prototype, "space", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Gravity)
+    ], LinearLayout.prototype, "gravity", void 0);
+    return LinearLayout;
+})();
 export class VLayout extends LinearLayout {
 }
 export class HLayout extends LinearLayout {

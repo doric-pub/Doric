@@ -2,6 +2,8 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
+var reflectMetadata = require('reflect-metadata');
+
 function obj2Model(obj) {
     if (obj instanceof Array) {
         return obj.map(function (e) { return obj2Model(e); });
@@ -23,30 +25,6 @@ function obj2Model(obj) {
         return obj;
     }
 }
-var Mutable = /** @class */ (function () {
-    function Mutable(v) {
-        var _this = this;
-        this.binders = new Set;
-        this.get = function () {
-            return _this.val;
-        };
-        this.set = function (v) {
-            _this.val = v;
-            _this.binders.forEach(function (e) {
-                Reflect.apply(e, undefined, [_this.val]);
-            });
-        };
-        this.val = v;
-    }
-    Mutable.prototype.bind = function (binder) {
-        this.binders.add(binder);
-        Reflect.apply(binder, undefined, [this.val]);
-    };
-    Mutable.of = function (v) {
-        return new Mutable(v);
-    };
-    return Mutable;
-}());
 
 /*
  * Copyright [2019] [Doric.Pub]
@@ -87,22 +65,6 @@ function toString(message) {
         return message.toString();
     }
 }
-function log() {
-    var arguments$1 = arguments;
-
-    var args = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        args[_i] = arguments$1[_i];
-    }
-    var out = "";
-    for (var i = 0; i < arguments.length; i++) {
-        if (i > 0) {
-            out += ',';
-        }
-        out += toString(arguments$1[i]);
-    }
-    nativeLog('d', out);
-}
 function loge() {
     var arguments$1 = arguments;
 
@@ -118,22 +80,6 @@ function loge() {
         out += toString(arguments$1[i]);
     }
     nativeLog('e', out);
-}
-function logw() {
-    var arguments$1 = arguments;
-
-    var message = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        message[_i] = arguments$1[_i];
-    }
-    var out = "";
-    for (var i = 0; i < arguments.length; i++) {
-        if (i > 0) {
-            out += ',';
-        }
-        out += toString(arguments$1[i]);
-    }
-    nativeLog('w', out);
 }
 
 var __extends = (undefined && undefined.__extends) || (function () {
@@ -222,7 +168,7 @@ var View = /** @class */ (function () {
         set: function (v) {
             this.x = v;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(View.prototype, "right", {
@@ -232,7 +178,7 @@ var View = /** @class */ (function () {
         set: function (v) {
             this.x = v - this.width;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(View.prototype, "top", {
@@ -242,7 +188,7 @@ var View = /** @class */ (function () {
         set: function (v) {
             this.y = v;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(View.prototype, "bottom", {
@@ -252,7 +198,7 @@ var View = /** @class */ (function () {
         set: function (v) {
             this.y = v - this.height;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(View.prototype, "centerX", {
@@ -262,7 +208,7 @@ var View = /** @class */ (function () {
         set: function (v) {
             this.x = v - this.width / 2;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(View.prototype, "centerY", {
@@ -272,7 +218,7 @@ var View = /** @class */ (function () {
         set: function (v) {
             this.y = v - this.height / 2;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(View.prototype, "dirtyProps", {
@@ -280,7 +226,7 @@ var View = /** @class */ (function () {
         get: function () {
             return this.__dirty_props__;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     View.prototype.onPropertyChanged = function (propKey, oldV, newV) {
@@ -649,10 +595,8 @@ var Gravity = /** @class */ (function () {
     Gravity.Bottom = Gravity.origin.bottom();
     return Gravity;
 }());
-function gravity() {
-    return new Gravity;
-}
 
+var LayoutSpec;
 (function (LayoutSpec) {
     /**
      * Depends on what's been set on width or height.
@@ -666,75 +610,7 @@ function gravity() {
      * Extend as much as parent let it take.
      */
     LayoutSpec[LayoutSpec["MOST"] = 2] = "MOST";
-})(exports.LayoutSpec || (exports.LayoutSpec = {}));
-var LayoutConfigImpl = /** @class */ (function () {
-    function LayoutConfigImpl() {
-    }
-    LayoutConfigImpl.prototype.fit = function () {
-        this.widthSpec = exports.LayoutSpec.FIT;
-        this.heightSpec = exports.LayoutSpec.FIT;
-        return this;
-    };
-    LayoutConfigImpl.prototype.most = function () {
-        this.widthSpec = exports.LayoutSpec.MOST;
-        this.heightSpec = exports.LayoutSpec.MOST;
-        return this;
-    };
-    LayoutConfigImpl.prototype.just = function () {
-        this.widthSpec = exports.LayoutSpec.JUST;
-        this.heightSpec = exports.LayoutSpec.JUST;
-        return this;
-    };
-    LayoutConfigImpl.prototype.configWidth = function (w) {
-        this.widthSpec = w;
-        return this;
-    };
-    LayoutConfigImpl.prototype.configHeight = function (h) {
-        this.heightSpec = h;
-        return this;
-    };
-    LayoutConfigImpl.prototype.configMargin = function (m) {
-        this.margin = m;
-        return this;
-    };
-    LayoutConfigImpl.prototype.configAlignment = function (a) {
-        this.alignment = a;
-        return this;
-    };
-    LayoutConfigImpl.prototype.configWeight = function (w) {
-        this.weight = w;
-        return this;
-    };
-    LayoutConfigImpl.prototype.configMaxWidth = function (v) {
-        this.maxWidth = v;
-        return this;
-    };
-    LayoutConfigImpl.prototype.configMaxHeight = function (v) {
-        this.maxHeight = v;
-        return this;
-    };
-    LayoutConfigImpl.prototype.configMinWidth = function (v) {
-        this.minWidth = v;
-        return this;
-    };
-    LayoutConfigImpl.prototype.configMinHeight = function (v) {
-        this.minHeight = v;
-        return this;
-    };
-    LayoutConfigImpl.prototype.toModel = function () {
-        return {
-            widthSpec: this.widthSpec,
-            heightSpec: this.heightSpec,
-            margin: this.margin,
-            alignment: this.alignment ? this.alignment.toModel() : undefined,
-            weight: this.weight,
-        };
-    };
-    return LayoutConfigImpl;
-}());
-function layoutConfig() {
-    return new LayoutConfigImpl;
-}
+})(LayoutSpec || (LayoutSpec = {}));
 
 var __extends$1 = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -812,78 +688,6 @@ var HLayout = /** @class */ (function (_super) {
     }
     return HLayout;
 }(LinearLayout));
-function stack(views, config) {
-    var e_1, _a;
-    var ret = new Stack;
-    ret.layoutConfig = layoutConfig().fit();
-    try {
-        for (var views_1 = __values$1(views), views_1_1 = views_1.next(); !views_1_1.done; views_1_1 = views_1.next()) {
-            var v = views_1_1.value;
-            ret.addChild(v);
-        }
-    }
-    catch (e_1_1) { e_1 = { error: e_1_1 }; }
-    finally {
-        try {
-            if (views_1_1 && !views_1_1.done && (_a = views_1.return)) { _a.call(views_1); }
-        }
-        finally { if (e_1) { throw e_1.error; } }
-    }
-    if (config) {
-        for (var key in config) {
-            Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-        }
-    }
-    return ret;
-}
-function hlayout(views, config) {
-    var e_2, _a;
-    var ret = new HLayout;
-    ret.layoutConfig = layoutConfig().fit();
-    try {
-        for (var views_2 = __values$1(views), views_2_1 = views_2.next(); !views_2_1.done; views_2_1 = views_2.next()) {
-            var v = views_2_1.value;
-            ret.addChild(v);
-        }
-    }
-    catch (e_2_1) { e_2 = { error: e_2_1 }; }
-    finally {
-        try {
-            if (views_2_1 && !views_2_1.done && (_a = views_2.return)) { _a.call(views_2); }
-        }
-        finally { if (e_2) { throw e_2.error; } }
-    }
-    if (config) {
-        for (var key in config) {
-            Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-        }
-    }
-    return ret;
-}
-function vlayout(views, config) {
-    var e_3, _a;
-    var ret = new VLayout;
-    ret.layoutConfig = layoutConfig().fit();
-    try {
-        for (var views_3 = __values$1(views), views_3_1 = views_3.next(); !views_3_1.done; views_3_1 = views_3.next()) {
-            var v = views_3_1.value;
-            ret.addChild(v);
-        }
-    }
-    catch (e_3_1) { e_3 = { error: e_3_1 }; }
-    finally {
-        try {
-            if (views_3_1 && !views_3_1.done && (_a = views_3.return)) { _a.call(views_3); }
-        }
-        finally { if (e_3) { throw e_3.error; } }
-    }
-    if (config) {
-        for (var key in config) {
-            Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-        }
-    }
-    return ret;
-}
 var FlexLayout = /** @class */ (function (_super) {
     __extends$1(FlexLayout, _super);
     function FlexLayout() {
@@ -891,30 +695,6 @@ var FlexLayout = /** @class */ (function (_super) {
     }
     return FlexLayout;
 }(Group));
-function flexlayout(views, config) {
-    var e_4, _a;
-    var ret = new FlexLayout;
-    ret.layoutConfig = layoutConfig().fit();
-    try {
-        for (var views_4 = __values$1(views), views_4_1 = views_4.next(); !views_4_1.done; views_4_1 = views_4.next()) {
-            var v = views_4_1.value;
-            ret.addChild(v);
-        }
-    }
-    catch (e_4_1) { e_4 = { error: e_4_1 }; }
-    finally {
-        try {
-            if (views_4_1 && !views_4_1.done && (_a = views_4.return)) { _a.call(views_4); }
-        }
-        finally { if (e_4) { throw e_4.error; } }
-    }
-    if (config) {
-        for (var key in config) {
-            Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-        }
-    }
-    return ret;
-}
 
 var __decorate$2 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -1288,10 +1068,12 @@ var __values$3 = (undefined && undefined.__values) || function(o) {
     }; }
     throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 };
+var RepeatMode;
 (function (RepeatMode) {
     RepeatMode[RepeatMode["RESTART"] = 1] = "RESTART";
     RepeatMode[RepeatMode["REVERSE"] = 2] = "REVERSE";
-})(exports.RepeatMode || (exports.RepeatMode = {}));
+})(RepeatMode || (RepeatMode = {}));
+var FillMode;
 (function (FillMode) {
     /**
      * The receiver is removed from the presentation when the animation is completed.
@@ -1309,7 +1091,8 @@ var __values$3 = (undefined && undefined.__values) || function(o) {
      * The receiver clamps values at both ends of the object’s time space
      */
     FillMode[FillMode["Both"] = 3] = "Both";
-})(exports.FillMode || (exports.FillMode = {}));
+})(FillMode || (FillMode = {}));
+var TimingFunction;
 (function (TimingFunction) {
     /**
      * The system default timing function. Use this function to ensure that the timing of your animations matches that of most system animations.
@@ -1331,12 +1114,12 @@ var __values$3 = (undefined && undefined.__values) || function(o) {
      * Ease-in-ease-out pacing, which causes an animation to begin slowly, accelerate through the middle of its duration, and then slow again before completing.
      */
     TimingFunction[TimingFunction["EaseInEaseOut"] = 4] = "EaseInEaseOut";
-})(exports.TimingFunction || (exports.TimingFunction = {}));
+})(TimingFunction || (TimingFunction = {}));
 var Animation = /** @class */ (function () {
     function Animation() {
         this.changeables = new Map;
         this.duration = 0;
-        this.fillMode = exports.FillMode.Forward;
+        this.fillMode = FillMode.Forward;
     }
     Animation.prototype.toModel = function () {
         var e_1, _a;
@@ -1396,7 +1179,7 @@ var ScaleAnimation = /** @class */ (function (_super) {
         set: function (v) {
             this.scaleXChangeable.fromValue = v;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ScaleAnimation.prototype, "toScaleX", {
@@ -1406,7 +1189,7 @@ var ScaleAnimation = /** @class */ (function (_super) {
         set: function (v) {
             this.scaleXChangeable.toValue = v;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ScaleAnimation.prototype, "fromScaleY", {
@@ -1416,7 +1199,7 @@ var ScaleAnimation = /** @class */ (function (_super) {
         set: function (v) {
             this.scaleYChangeable.fromValue = v;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ScaleAnimation.prototype, "toScaleY", {
@@ -1426,7 +1209,7 @@ var ScaleAnimation = /** @class */ (function (_super) {
         set: function (v) {
             this.scaleYChangeable.toValue = v;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return ScaleAnimation;
@@ -1456,7 +1239,7 @@ var TranslationAnimation = /** @class */ (function (_super) {
         set: function (v) {
             this.translationXChangeable.fromValue = v;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(TranslationAnimation.prototype, "toTranslationX", {
@@ -1466,7 +1249,7 @@ var TranslationAnimation = /** @class */ (function (_super) {
         set: function (v) {
             this.translationXChangeable.toValue = v;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(TranslationAnimation.prototype, "fromTranslationY", {
@@ -1476,7 +1259,7 @@ var TranslationAnimation = /** @class */ (function (_super) {
         set: function (v) {
             this.translationYChangeable.fromValue = v;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(TranslationAnimation.prototype, "toTranslationY", {
@@ -1486,7 +1269,7 @@ var TranslationAnimation = /** @class */ (function (_super) {
         set: function (v) {
             this.translationYChangeable.toValue = v;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return TranslationAnimation;
@@ -1510,7 +1293,7 @@ var RotationAnimation = /** @class */ (function (_super) {
         set: function (v) {
             this.rotationChaneable.fromValue = v;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(RotationAnimation.prototype, "toRotation", {
@@ -1520,7 +1303,7 @@ var RotationAnimation = /** @class */ (function (_super) {
         set: function (v) {
             this.rotationChaneable.toValue = v;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return RotationAnimation;
@@ -1541,7 +1324,7 @@ var AnimationSet = /** @class */ (function () {
             this._duration = v;
             this.animations.forEach(function (e) { return e.duration = v; });
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     AnimationSet.prototype.toModel = function () {
@@ -1611,6 +1394,7 @@ var Color = /** @class */ (function () {
     Color.TRANSPARENT = new Color(0);
     return Color;
 }());
+var GradientOrientation;
 (function (GradientOrientation) {
     /** draw the gradient from the top to the bottom */
     GradientOrientation[GradientOrientation["TOP_BOTTOM"] = 0] = "TOP_BOTTOM";
@@ -1628,7 +1412,7 @@ var Color = /** @class */ (function () {
     GradientOrientation[GradientOrientation["LEFT_RIGHT"] = 6] = "LEFT_RIGHT";
     /** draw the gradient from the top-left to the bottom-right */
     GradientOrientation[GradientOrientation["TL_BR"] = 7] = "TL_BR";
-})(exports.GradientOrientation || (exports.GradientOrientation = {}));
+})(GradientOrientation || (GradientOrientation = {}));
 
 var __extends$3 = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1652,12 +1436,13 @@ var __decorate$3 = (undefined && undefined.__decorate) || function (decorators, 
 var __metadata$3 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
+var TruncateAt;
 (function (TruncateAt) {
     TruncateAt[TruncateAt["End"] = 0] = "End";
     TruncateAt[TruncateAt["Middle"] = 1] = "Middle";
     TruncateAt[TruncateAt["Start"] = 2] = "Start";
     TruncateAt[TruncateAt["Clip"] = 3] = "Clip";
-})(exports.TruncateAt || (exports.TruncateAt = {}));
+})(TruncateAt || (TruncateAt = {}));
 var Text = /** @class */ (function (_super) {
     __extends$3(Text, _super);
     function Text() {
@@ -1721,14 +1506,6 @@ var Text = /** @class */ (function (_super) {
     ], Text.prototype, "truncateAt", void 0);
     return Text;
 }(View));
-function text(config) {
-    var ret = new Text;
-    ret.layoutConfig = layoutConfig().fit();
-    for (var key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-    }
-    return ret;
-}
 
 var __extends$4 = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1752,11 +1529,12 @@ var __decorate$4 = (undefined && undefined.__decorate) || function (decorators, 
 var __metadata$4 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
+var ScaleType;
 (function (ScaleType) {
     ScaleType[ScaleType["ScaleToFill"] = 0] = "ScaleToFill";
     ScaleType[ScaleType["ScaleAspectFit"] = 1] = "ScaleAspectFit";
     ScaleType[ScaleType["ScaleAspectFill"] = 2] = "ScaleAspectFill";
-})(exports.ScaleType || (exports.ScaleType = {}));
+})(ScaleType || (ScaleType = {}));
 var Image = /** @class */ (function (_super) {
     __extends$4(Image, _super);
     function Image() {
@@ -1829,14 +1607,6 @@ var Image = /** @class */ (function (_super) {
     ], Image.prototype, "stretchInset", void 0);
     return Image;
 }(View));
-function image(config) {
-    var ret = new Image;
-    ret.layoutConfig = layoutConfig().fit();
-    for (var key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-    }
-    return ret;
-}
 
 /*
  * Copyright [2019] [Doric.Pub]
@@ -1927,8 +1697,7 @@ var List = /** @class */ (function (_super) {
         }
     };
     List.prototype.scrollToItem = function (context, index, config) {
-        var _a;
-        var animated = (_a = config) === null || _a === void 0 ? void 0 : _a.animated;
+        var animated = config === null || config === void 0 ? void 0 : config.animated;
         return this.nativeChannel(context, 'scrollToItem')({ index: index, animated: animated, });
     };
     List.prototype.reset = function () {
@@ -2001,31 +1770,6 @@ var List = /** @class */ (function (_super) {
     ], List.prototype, "scrolledPosition", void 0);
     return List;
 }(Superview));
-function list(config) {
-    var ret = new List;
-    for (var key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-    }
-    return ret;
-}
-function listItem(item, config) {
-    return (new ListItem).also(function (it) {
-        it.layoutConfig = layoutConfig().fit();
-        if (item instanceof View) {
-            it.addChild(item);
-        }
-        else {
-            item.forEach(function (e) {
-                it.addChild(e);
-            });
-        }
-        if (config) {
-            for (var key in config) {
-                Reflect.set(it, key, Reflect.get(config, key, config), it);
-            }
-        }
-    });
-}
 
 var __extends$6 = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -2124,31 +1868,6 @@ var Slider = /** @class */ (function (_super) {
     ], Slider.prototype, "loop", void 0);
     return Slider;
 }(Superview));
-function slider(config) {
-    var ret = new Slider;
-    for (var key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-    }
-    return ret;
-}
-function slideItem(item, config) {
-    return (new SlideItem).also(function (it) {
-        it.layoutConfig = layoutConfig().most();
-        if (item instanceof View) {
-            it.addChild(item);
-        }
-        else {
-            item.forEach(function (e) {
-                it.addChild(e);
-            });
-        }
-        if (config) {
-            for (var key in config) {
-                Reflect.set(it, key, Reflect.get(config, key, config), it);
-            }
-        }
-    });
-}
 
 var __extends$7 = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -2172,17 +1891,6 @@ var __decorate$7 = (undefined && undefined.__decorate) || function (decorators, 
 var __metadata$7 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
-function scroller(content, config) {
-    return (new Scroller).also(function (v) {
-        v.layoutConfig = layoutConfig().fit();
-        if (config) {
-            for (var key in config) {
-                Reflect.set(v, key, Reflect.get(config, key, config), v);
-            }
-        }
-        v.content = content;
-    });
-}
 var Scroller = /** @class */ (function (_super) {
     __extends$7(Scroller, _super);
     function Scroller() {
@@ -2273,20 +1981,6 @@ var Refreshable = /** @class */ (function (_super) {
     ], Refreshable.prototype, "onRefresh", void 0);
     return Refreshable;
 }(Superview));
-function refreshable(config) {
-    var ret = new Refreshable;
-    ret.layoutConfig = layoutConfig().fit();
-    for (var key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-    }
-    return ret;
-}
-function pullable(v, config) {
-    Reflect.set(v, 'startAnimation', config.startAnimation);
-    Reflect.set(v, 'stopAnimation', config.stopAnimation);
-    Reflect.set(v, 'setPullingDistance', config.setPullingDistance);
-    return v;
-}
 
 var ValueType;
 (function (ValueType) {
@@ -2319,12 +2013,14 @@ var FlexTypedValue = /** @class */ (function () {
     FlexTypedValue.Auto = new FlexTypedValue(ValueType.Auto);
     return FlexTypedValue;
 }());
+var FlexDirection;
 (function (FlexDirection) {
     FlexDirection[FlexDirection["COLUMN"] = 0] = "COLUMN";
     FlexDirection[FlexDirection["COLUMN_REVERSE"] = 1] = "COLUMN_REVERSE";
     FlexDirection[FlexDirection["ROW"] = 2] = "ROW";
     FlexDirection[FlexDirection["ROW_REVERSE"] = 3] = "ROW_REVERSE";
-})(exports.FlexDirection || (exports.FlexDirection = {}));
+})(FlexDirection || (FlexDirection = {}));
+var Align;
 (function (Align) {
     Align[Align["AUTO"] = 0] = "AUTO";
     Align[Align["FLEX_START"] = 1] = "FLEX_START";
@@ -2334,7 +2030,8 @@ var FlexTypedValue = /** @class */ (function () {
     Align[Align["BASELINE"] = 5] = "BASELINE";
     Align[Align["SPACE_BETWEEN"] = 6] = "SPACE_BETWEEN";
     Align[Align["SPACE_AROUND"] = 7] = "SPACE_AROUND";
-})(exports.Align || (exports.Align = {}));
+})(Align || (Align = {}));
+var Justify;
 (function (Justify) {
     Justify[Justify["FLEX_START"] = 0] = "FLEX_START";
     Justify[Justify["CENTER"] = 1] = "CENTER";
@@ -2342,30 +2039,35 @@ var FlexTypedValue = /** @class */ (function () {
     Justify[Justify["SPACE_BETWEEN"] = 3] = "SPACE_BETWEEN";
     Justify[Justify["SPACE_AROUND"] = 4] = "SPACE_AROUND";
     Justify[Justify["SPACE_EVENLY"] = 5] = "SPACE_EVENLY";
-})(exports.Justify || (exports.Justify = {}));
+})(Justify || (Justify = {}));
+var Direction;
 (function (Direction) {
     Direction[Direction["INHERIT"] = 0] = "INHERIT";
     Direction[Direction["LTR"] = 1] = "LTR";
     Direction[Direction["RTL"] = 2] = "RTL";
-})(exports.Direction || (exports.Direction = {}));
+})(Direction || (Direction = {}));
+var PositionType;
 (function (PositionType) {
     PositionType[PositionType["RELATIVE"] = 0] = "RELATIVE";
     PositionType[PositionType["ABSOLUTE"] = 1] = "ABSOLUTE";
-})(exports.PositionType || (exports.PositionType = {}));
+})(PositionType || (PositionType = {}));
+var Wrap;
 (function (Wrap) {
     Wrap[Wrap["NO_WRAP"] = 0] = "NO_WRAP";
     Wrap[Wrap["WRAP"] = 1] = "WRAP";
     Wrap[Wrap["WRAP_REVERSE"] = 2] = "WRAP_REVERSE";
-})(exports.Wrap || (exports.Wrap = {}));
+})(Wrap || (Wrap = {}));
+var OverFlow;
 (function (OverFlow) {
     OverFlow[OverFlow["VISIBLE"] = 0] = "VISIBLE";
     OverFlow[OverFlow["HIDDEN"] = 1] = "HIDDEN";
     OverFlow[OverFlow["SCROLL"] = 2] = "SCROLL";
-})(exports.OverFlow || (exports.OverFlow = {}));
+})(OverFlow || (OverFlow = {}));
+var Display;
 (function (Display) {
     Display[Display["FLEX"] = 0] = "FLEX";
     Display[Display["NONE"] = 1] = "NONE";
-})(exports.Display || (exports.Display = {}));
+})(Display || (Display = {}));
 
 var __extends$9 = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -2519,31 +2221,6 @@ var FlowLayout = /** @class */ (function (_super) {
     ], FlowLayout.prototype, "onScrollEnd", void 0);
     return FlowLayout;
 }(Superview));
-function flowlayout(config) {
-    var ret = new FlowLayout;
-    for (var key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-    }
-    return ret;
-}
-function flowItem(item, config) {
-    return (new FlowLayoutItem).also(function (it) {
-        it.layoutConfig = layoutConfig().fit();
-        if (item instanceof View) {
-            it.addChild(item);
-        }
-        else {
-            item.forEach(function (e) {
-                it.addChild(e);
-            });
-        }
-        if (config) {
-            for (var key in config) {
-                Reflect.set(it, key, Reflect.get(config, key, config), it);
-            }
-        }
-    });
-}
 
 var __extends$a = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -2630,14 +2307,6 @@ var Input = /** @class */ (function (_super) {
     ], Input.prototype, "maxLength", void 0);
     return Input;
 }(View));
-function input(config) {
-    var ret = new Input;
-    ret.layoutConfig = layoutConfig().just();
-    for (var key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-    }
-    return ret;
-}
 
 var __extends$b = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -2716,24 +2385,6 @@ var Draggable = /** @class */ (function (_super) {
     ], Draggable.prototype, "onDrag", void 0);
     return Draggable;
 }(Stack));
-function draggable(views, config) {
-    var ret = new Draggable;
-    ret.layoutConfig = layoutConfig().fit();
-    if (views instanceof View) {
-        ret.addChild(views);
-    }
-    else {
-        views.forEach(function (e) {
-            ret.addChild(e);
-        });
-    }
-    if (config) {
-        for (var key in config) {
-            Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-        }
-    }
-    return ret;
-}
 
 var __extends$d = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -2784,283 +2435,6 @@ var Switch = /** @class */ (function (_super) {
     ], Switch.prototype, "thumbTintColor", void 0);
     return Switch;
 }(View));
-function switchView(config) {
-    var ret = new Switch;
-    ret.layoutConfig = layoutConfig().just();
-    ret.width = 50;
-    ret.height = 30;
-    for (var key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-    }
-    return ret;
-}
-
-function modal(context) {
-    return {
-        toast: function (msg, gravity) {
-            if (gravity === void 0) { gravity = Gravity.Bottom; }
-            context.callNative('modal', 'toast', {
-                msg: msg,
-                gravity: gravity.toModel(),
-            });
-        },
-        alert: function (arg) {
-            if (typeof arg === 'string') {
-                return context.callNative('modal', 'alert', { msg: arg });
-            }
-            else {
-                return context.callNative('modal', 'alert', arg);
-            }
-        },
-        confirm: function (arg) {
-            if (typeof arg === 'string') {
-                return context.callNative('modal', 'confirm', { msg: arg });
-            }
-            else {
-                return context.callNative('modal', 'confirm', arg);
-            }
-        },
-        prompt: function (arg) {
-            return context.callNative('modal', 'prompt', arg);
-        },
-    };
-}
-
-function navbar(context) {
-    var entity = context.entity;
-    var panel = undefined;
-    if (entity instanceof Panel) {
-        panel = entity;
-    }
-    return {
-        isHidden: function () {
-            return context.callNative('navbar', 'isHidden');
-        },
-        setHidden: function (hidden) {
-            return context.callNative('navbar', 'setHidden', { hidden: hidden, });
-        },
-        setTitle: function (title) {
-            return context.callNative('navbar', 'setTitle', { title: title, });
-        },
-        setBgColor: function (color) {
-            return context.callNative('navbar', 'setBgColor', { color: color.toModel(), });
-        },
-        setLeft: function (view) {
-            if (panel) {
-                panel.clearHeadViews("navbar_left");
-                panel.addHeadView("navbar_left", view);
-            }
-            return context.callNative('navbar', 'setLeft', view.toModel());
-        },
-        setRight: function (view) {
-            if (panel) {
-                panel.clearHeadViews("navbar_right");
-                panel.addHeadView("navbar_right", view);
-            }
-            return context.callNative('navbar', 'setRight', view.toModel());
-        },
-        setCenter: function (view) {
-            if (panel) {
-                panel.clearHeadViews("navbar_center");
-                panel.addHeadView("navbar_center", view);
-            }
-            return context.callNative('navbar', 'setCenter', view.toModel());
-        },
-    };
-}
-
-function navigator(context) {
-    var moduleName = "navigator";
-    return {
-        push: function (source, config) {
-            if (config && config.extra) {
-                config.extra = JSON.stringify(config.extra);
-            }
-            return context.callNative(moduleName, 'push', {
-                source: source, config: config
-            });
-        },
-        pop: function (animated) {
-            if (animated === void 0) { animated = true; }
-            return context.callNative(moduleName, 'pop', { animated: animated });
-        },
-        openUrl: function (url) {
-            return context.callNative(moduleName, "openUrl", url);
-        },
-    };
-}
-
-function transformRequest(request) {
-    var url = request.url || "";
-    if (request.params !== undefined) {
-        var queryStrings = [];
-        for (var key in request.params) {
-            queryStrings.push(key + "=" + encodeURIComponent(request.params[key]));
-        }
-        request.url = "" + request.url + (url.indexOf('?') >= 0 ? '&' : '?') + queryStrings.join('&');
-    }
-    if (typeof request.data === 'object') {
-        request.data = JSON.stringify(request.data);
-    }
-    return request;
-}
-function network(context) {
-    return {
-        request: function (config) {
-            return context.callNative('network', 'request', transformRequest(config));
-        },
-        get: function (url, config) {
-            var finalConfig = config;
-            if (finalConfig === undefined) {
-                finalConfig = {};
-            }
-            finalConfig.url = url;
-            finalConfig.method = "get";
-            return context.callNative('network', 'request', transformRequest(finalConfig));
-        },
-        post: function (url, data, config) {
-            var finalConfig = config;
-            if (finalConfig === undefined) {
-                finalConfig = {};
-            }
-            finalConfig.url = url;
-            finalConfig.method = "post";
-            if (data !== undefined) {
-                finalConfig.data = data;
-            }
-            return context.callNative('network', 'request', transformRequest(finalConfig));
-        },
-        put: function (url, data, config) {
-            var finalConfig = config;
-            if (finalConfig === undefined) {
-                finalConfig = {};
-            }
-            finalConfig.url = url;
-            finalConfig.method = "put";
-            if (data !== undefined) {
-                finalConfig.data = data;
-            }
-            return context.callNative('network', 'request', transformRequest(finalConfig));
-        },
-        delete: function (url, data, config) {
-            var finalConfig = config;
-            if (finalConfig === undefined) {
-                finalConfig = {};
-            }
-            finalConfig.url = url;
-            finalConfig.method = "delete";
-            return context.callNative('network', 'request', transformRequest(finalConfig));
-        },
-    };
-}
-
-function storage(context) {
-    return {
-        setItem: function (key, value, zone) {
-            return context.callNative('storage', 'setItem', { key: key, value: value, zone: zone });
-        },
-        getItem: function (key, zone) {
-            return context.callNative('storage', 'getItem', { key: key, zone: zone });
-        },
-        remove: function (key, zone) {
-            return context.callNative('storage', 'remove', { key: key, zone: zone });
-        },
-        clear: function (zone) {
-            return context.callNative('storage', 'clear', { zone: zone });
-        },
-    };
-}
-
-function popover(context) {
-    var entity = context.entity;
-    var panel = undefined;
-    if (entity instanceof Panel) {
-        panel = entity;
-    }
-    return {
-        show: function (view) {
-            if (panel) {
-                panel.addHeadView("popover", view);
-            }
-            return context.callNative('popover', 'show', view.toModel());
-        },
-        dismiss: function (view) {
-            if (view === void 0) { view = undefined; }
-            if (panel) {
-                if (view) {
-                    panel.removeHeadView("popover", view);
-                }
-                else {
-                    panel.clearHeadViews("popover");
-                }
-            }
-            return context.callNative('popover', 'dismiss', view ? { id: view.viewId } : undefined);
-        },
-    };
-}
-
-/*
- * Copyright [2019] [Doric.Pub]
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-function take(target) {
-    return function (block) {
-        block(target);
-    };
-}
-function takeNonNull(target) {
-    return function (block) {
-        if (target !== undefined) {
-            return block(target);
-        }
-    };
-}
-function takeNull(target) {
-    return function (block) {
-        if (target === undefined) {
-            return block();
-        }
-    };
-}
-function takeLet(target) {
-    return function (block) {
-        return block(target);
-    };
-}
-function takeAlso(target) {
-    return function (block) {
-        block(target);
-        return target;
-    };
-}
-function takeIf(target) {
-    return function (predicate) {
-        return predicate(target) ? target : undefined;
-    };
-}
-function takeUnless(target) {
-    return function (predicate) {
-        return predicate(target) ? undefined : target;
-    };
-}
-function repeat(action) {
-    return function (times) {
-        for (var i = 0; i < times; i++) {
-            action(i);
-        }
-    };
-}
 
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -3109,150 +2483,12 @@ var __values$4 = (undefined && undefined.__values) || function(o) {
     }; }
     throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 };
-/**
- * Only supports x,y,width,height,corner(just for four corners),rotation,bgColor,
- * @param panel @see Panel
- */
-function animate(context) {
-    var _this = this;
-    var entity = context.entity;
-    if (entity instanceof Panel) {
-        var panel_1 = entity;
-        return function (args) { return __awaiter(_this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, context.callNative('animate', 'submit')];
-                    case 1:
-                        _a.sent();
-                        args.animations();
-                        return [2 /*return*/, takeLet(panel_1.getRootView())(function (root) {
-                                var e_1, _a, e_2, _b;
-                                if (root.isDirty()) {
-                                    var model = root.toModel();
-                                    model.duration = args.duration;
-                                    var ret = context.callNative('animate', 'animateRender', model);
-                                    root.clean();
-                                    return ret;
-                                }
-                                try {
-                                    for (var _c = __values$4(panel_1.allHeadViews()), _d = _c.next(); !_d.done; _d = _c.next()) {
-                                        var map = _d.value;
-                                        try {
-                                            for (var _e = (e_2 = void 0, __values$4(map.values())), _f = _e.next(); !_f.done; _f = _e.next()) {
-                                                var v = _f.value;
-                                                if (v.isDirty()) {
-                                                    var model_1 = v.toModel();
-                                                    var ret_1 = context.callNative('animate', 'animateRender', model_1);
-                                                    v.clean();
-                                                    return ret_1;
-                                                }
-                                            }
-                                        }
-                                        catch (e_2_1) { e_2 = { error: e_2_1 }; }
-                                        finally {
-                                            try {
-                                                if (_f && !_f.done && (_b = _e.return)) { _b.call(_e); }
-                                            }
-                                            finally { if (e_2) { throw e_2.error; } }
-                                        }
-                                    }
-                                }
-                                catch (e_1_1) { e_1 = { error: e_1_1 }; }
-                                finally {
-                                    try {
-                                        if (_d && !_d.done && (_a = _c.return)) { _a.call(_c); }
-                                    }
-                                    finally { if (e_1) { throw e_1.error; } }
-                                }
-                                throw new Error('Cannot find any animated elements');
-                            })];
-                }
-            });
-        }); };
-    }
-    else {
-        return function (args) {
-            return Promise.reject("Cannot find panel in Context:" + context.id);
-        };
-    }
-}
 
-function notification(context) {
-    return {
-        publish: function (args) {
-            if (args.data !== undefined) {
-                args.data = JSON.stringify(args.data);
-            }
-            return context.callNative('notification', 'publish', args);
-        },
-        subscribe: function (args) {
-            args.callback = context.function2Id(args.callback);
-            return context.callNative('notification', 'subscribe', args);
-        },
-        unsubscribe: function (subscribeId) {
-            context.removeFuncById(subscribeId);
-            return context.callNative('notification', 'unsubscribe', subscribeId);
-        }
-    };
-}
-
+var StatusBarMode;
 (function (StatusBarMode) {
     StatusBarMode[StatusBarMode["LIGHT"] = 0] = "LIGHT";
     StatusBarMode[StatusBarMode["DARK"] = 1] = "DARK";
-})(exports.StatusBarMode || (exports.StatusBarMode = {}));
-function statusbar(context) {
-    return {
-        setHidden: function (hidden) {
-            return context.callNative('statusbar', 'setHidden', { hidden: hidden });
-        },
-        setMode: function (mode) {
-            return context.callNative('statusbar', 'setMode', { mode: mode });
-        },
-        setColor: function (color) {
-            return context.callNative('statusbar', 'setColor', { color: color.toModel() });
-        },
-    };
-}
-
-function viewIdChains(view) {
-    var viewIds = [];
-    var thisView = view;
-    while (thisView != undefined) {
-        viewIds.push(thisView.viewId);
-        thisView = thisView.superview;
-    }
-    return viewIds.reverse();
-}
-function coordinator(context) {
-    return {
-        verticalScrolling: function (argument) {
-            if (context.entity instanceof Panel) {
-                var panel = context.entity;
-                panel.addOnRenderFinishedCallback(function () {
-                    argument.scrollable = viewIdChains(argument.scrollable);
-                    if (argument.target instanceof View) {
-                        argument.target = viewIdChains(argument.target);
-                    }
-                    if (argument.changing.start instanceof Color) {
-                        argument.changing.start = argument.changing.start.toModel();
-                    }
-                    if (argument.changing.end instanceof Color) {
-                        argument.changing.end = argument.changing.end.toModel();
-                    }
-                    context.callNative("coordinator", "verticalScrolling", argument);
-                });
-            }
-        }
-    };
-}
-
-function notch(context) {
-    return {
-        inset: function () {
-            return context.callNative('notch', 'inset', {});
-        }
-    };
-}
+})(StatusBarMode || (StatusBarMode = {}));
 
 var __values$5 = (undefined && undefined.__values) || function(o) {
     var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
@@ -3265,69 +2501,6 @@ var __values$5 = (undefined && undefined.__values) || function(o) {
     }; }
     throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 };
-var Observable = /** @class */ (function () {
-    function Observable(provider, clz) {
-        this.observers = new Set;
-        this.provider = provider;
-        this.clz = clz;
-    }
-    Observable.prototype.addObserver = function (observer) {
-        this.observers.add(observer);
-    };
-    Observable.prototype.removeObserver = function (observer) {
-        this.observers.delete(observer);
-    };
-    Observable.prototype.update = function (updater) {
-        var e_1, _a;
-        var oldV = this.provider.acquire(this.clz);
-        var newV = updater(oldV);
-        if (newV !== undefined) {
-            this.provider.provide(newV);
-        }
-        try {
-            for (var _b = __values$5(this.observers), _c = _b.next(); !_c.done; _c = _b.next()) {
-                var observer = _c.value;
-                observer(newV);
-            }
-        }
-        catch (e_1_1) { e_1 = { error: e_1_1 }; }
-        finally {
-            try {
-                if (_c && !_c.done && (_a = _b.return)) { _a.call(_b); }
-            }
-            finally { if (e_1) { throw e_1.error; } }
-        }
-    };
-    return Observable;
-}());
-var Provider = /** @class */ (function () {
-    function Provider() {
-        this.provision = new Map;
-        this.observableMap = new Map;
-    }
-    Provider.prototype.provide = function (obj) {
-        this.provision.set(obj.constructor, obj);
-    };
-    Provider.prototype.acquire = function (clz) {
-        var ret = this.provision.get(clz);
-        return ret;
-    };
-    Provider.prototype.remove = function (clz) {
-        this.provision.delete(clz);
-    };
-    Provider.prototype.clear = function () {
-        this.provision.clear();
-    };
-    Provider.prototype.observe = function (clz) {
-        var observable = this.observableMap.get(clz);
-        if (observable === undefined) {
-            observable = new Observable(this, clz);
-            this.observableMap.set(clz, observable);
-        }
-        return observable;
-    };
-    return Provider;
-}());
 
 var __extends$e = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -3342,33 +2515,6 @@ var __extends$e = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var ViewHolder = /** @class */ (function () {
-    function ViewHolder() {
-    }
-    return ViewHolder;
-}());
-var ViewModel = /** @class */ (function () {
-    function ViewModel(obj, v) {
-        this.state = obj;
-        this.viewHolder = v;
-    }
-    ViewModel.prototype.getState = function () {
-        return this.state;
-    };
-    ViewModel.prototype.getViewHolder = function () {
-        return this.viewHolder;
-    };
-    ViewModel.prototype.updateState = function (setter) {
-        setter(this.state);
-        this.onBind(this.state, this.viewHolder);
-    };
-    ViewModel.prototype.attach = function (view) {
-        this.viewHolder.build(view);
-        this.onAttached(this.state, this.viewHolder);
-        this.onBind(this.state, this.viewHolder);
-    };
-    return ViewModel;
-}());
 var VMPanel = /** @class */ (function (_super) {
     __extends$e(VMPanel, _super);
     function VMPanel() {
@@ -3385,93 +2531,647 @@ var VMPanel = /** @class */ (function (_super) {
     return VMPanel;
 }(Panel));
 
-exports.AnimationSet = AnimationSet;
-exports.BOTTOM = BOTTOM;
-exports.CENTER = CENTER;
-exports.CENTER_X = CENTER_X;
-exports.CENTER_Y = CENTER_Y;
-exports.Color = Color;
-exports.Draggable = Draggable;
-exports.FlexLayout = FlexLayout;
-exports.FlexTypedValue = FlexTypedValue;
-exports.FlowLayout = FlowLayout;
-exports.FlowLayoutItem = FlowLayoutItem;
-exports.Gravity = Gravity;
-exports.Group = Group;
-exports.HLayout = HLayout;
-exports.Image = Image;
-exports.Input = Input;
-exports.LEFT = LEFT;
-exports.LayoutConfigImpl = LayoutConfigImpl;
-exports.List = List;
-exports.ListItem = ListItem;
-exports.Mutable = Mutable;
-exports.NativeCall = NativeCall;
-exports.NestedSlider = NestedSlider;
-exports.Observable = Observable;
-exports.Panel = Panel;
-exports.Property = Property;
-exports.Provider = Provider;
-exports.RIGHT = RIGHT;
-exports.Refreshable = Refreshable;
-exports.Root = Root;
-exports.RotationAnimation = RotationAnimation;
-exports.ScaleAnimation = ScaleAnimation;
-exports.Scroller = Scroller;
-exports.SlideItem = SlideItem;
-exports.Slider = Slider;
-exports.Stack = Stack;
-exports.Superview = Superview;
-exports.Switch = Switch;
-exports.TOP = TOP;
-exports.Text = Text;
-exports.TranslationAnimation = TranslationAnimation;
-exports.VLayout = VLayout;
-exports.VMPanel = VMPanel;
-exports.View = View;
-exports.ViewHolder = ViewHolder;
-exports.ViewModel = ViewModel;
-exports.animate = animate;
-exports.coordinator = coordinator;
-exports.draggable = draggable;
-exports.flexlayout = flexlayout;
-exports.flowItem = flowItem;
-exports.flowlayout = flowlayout;
-exports.gravity = gravity;
-exports.hlayout = hlayout;
-exports.image = image;
-exports.input = input;
-exports.layoutConfig = layoutConfig;
-exports.list = list;
-exports.listItem = listItem;
-exports.log = log;
-exports.loge = loge;
-exports.logw = logw;
-exports.modal = modal;
-exports.navbar = navbar;
-exports.navigator = navigator;
-exports.network = network;
-exports.notch = notch;
-exports.notification = notification;
-exports.obj2Model = obj2Model;
-exports.popover = popover;
-exports.pullable = pullable;
-exports.refreshable = refreshable;
-exports.repeat = repeat;
-exports.scroller = scroller;
-exports.slideItem = slideItem;
-exports.slider = slider;
-exports.stack = stack;
-exports.statusbar = statusbar;
-exports.storage = storage;
-exports.switchView = switchView;
-exports.take = take;
-exports.takeAlso = takeAlso;
-exports.takeIf = takeIf;
-exports.takeLet = takeLet;
-exports.takeNonNull = takeNonNull;
-exports.takeNull = takeNull;
-exports.takeUnless = takeUnless;
-exports.text = text;
-exports.uniqueId = uniqueId;
-exports.vlayout = vlayout;
+Object.keys(reflectMetadata).forEach(function (k) {
+    if (k !== 'default') Object.defineProperty(exports, k, {
+        enumerable: true,
+        get: function () {
+            return reflectMetadata[k];
+        }
+    });
+});
+Object.defineProperty(exports, 'Align', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.Align;
+    }
+});
+Object.defineProperty(exports, 'AnimationSet', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.AnimationSet;
+    }
+});
+Object.defineProperty(exports, 'BOTTOM', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.BOTTOM;
+    }
+});
+Object.defineProperty(exports, 'CENTER', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.CENTER;
+    }
+});
+Object.defineProperty(exports, 'CENTER_X', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.CENTER_X;
+    }
+});
+Object.defineProperty(exports, 'CENTER_Y', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.CENTER_Y;
+    }
+});
+Object.defineProperty(exports, 'Color', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.Color;
+    }
+});
+Object.defineProperty(exports, 'Direction', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.Direction;
+    }
+});
+Object.defineProperty(exports, 'Display', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.Display;
+    }
+});
+Object.defineProperty(exports, 'Draggable', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.Draggable;
+    }
+});
+Object.defineProperty(exports, 'FillMode', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.FillMode;
+    }
+});
+Object.defineProperty(exports, 'FlexDirection', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.FlexDirection;
+    }
+});
+Object.defineProperty(exports, 'FlexLayout', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.FlexLayout;
+    }
+});
+Object.defineProperty(exports, 'FlexTypedValue', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.FlexTypedValue;
+    }
+});
+Object.defineProperty(exports, 'FlowLayout', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.FlowLayout;
+    }
+});
+Object.defineProperty(exports, 'FlowLayoutItem', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.FlowLayoutItem;
+    }
+});
+Object.defineProperty(exports, 'GradientOrientation', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.GradientOrientation;
+    }
+});
+Object.defineProperty(exports, 'Gravity', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.Gravity;
+    }
+});
+Object.defineProperty(exports, 'Group', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.Group;
+    }
+});
+Object.defineProperty(exports, 'HLayout', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.HLayout;
+    }
+});
+Object.defineProperty(exports, 'Image', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.Image;
+    }
+});
+Object.defineProperty(exports, 'Input', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.Input;
+    }
+});
+Object.defineProperty(exports, 'Justify', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.Justify;
+    }
+});
+Object.defineProperty(exports, 'LEFT', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.LEFT;
+    }
+});
+Object.defineProperty(exports, 'LayoutConfigImpl', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.LayoutConfigImpl;
+    }
+});
+Object.defineProperty(exports, 'LayoutSpec', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.LayoutSpec;
+    }
+});
+Object.defineProperty(exports, 'List', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.List;
+    }
+});
+Object.defineProperty(exports, 'ListItem', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.ListItem;
+    }
+});
+Object.defineProperty(exports, 'Mutable', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.Mutable;
+    }
+});
+Object.defineProperty(exports, 'NativeCall', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.NativeCall;
+    }
+});
+Object.defineProperty(exports, 'NestedSlider', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.NestedSlider;
+    }
+});
+Object.defineProperty(exports, 'Observable', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.Observable;
+    }
+});
+Object.defineProperty(exports, 'OverFlow', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.OverFlow;
+    }
+});
+Object.defineProperty(exports, 'Panel', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.Panel;
+    }
+});
+Object.defineProperty(exports, 'PositionType', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.PositionType;
+    }
+});
+Object.defineProperty(exports, 'Property', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.Property;
+    }
+});
+Object.defineProperty(exports, 'Provider', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.Provider;
+    }
+});
+Object.defineProperty(exports, 'RIGHT', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.RIGHT;
+    }
+});
+Object.defineProperty(exports, 'Refreshable', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.Refreshable;
+    }
+});
+Object.defineProperty(exports, 'RepeatMode', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.RepeatMode;
+    }
+});
+Object.defineProperty(exports, 'Root', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.Root;
+    }
+});
+Object.defineProperty(exports, 'RotationAnimation', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.RotationAnimation;
+    }
+});
+Object.defineProperty(exports, 'ScaleAnimation', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.ScaleAnimation;
+    }
+});
+Object.defineProperty(exports, 'ScaleType', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.ScaleType;
+    }
+});
+Object.defineProperty(exports, 'Scroller', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.Scroller;
+    }
+});
+Object.defineProperty(exports, 'SlideItem', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.SlideItem;
+    }
+});
+Object.defineProperty(exports, 'Slider', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.Slider;
+    }
+});
+Object.defineProperty(exports, 'Stack', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.Stack;
+    }
+});
+Object.defineProperty(exports, 'StatusBarMode', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.StatusBarMode;
+    }
+});
+Object.defineProperty(exports, 'Superview', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.Superview;
+    }
+});
+Object.defineProperty(exports, 'Switch', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.Switch;
+    }
+});
+Object.defineProperty(exports, 'TOP', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.TOP;
+    }
+});
+Object.defineProperty(exports, 'Text', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.Text;
+    }
+});
+Object.defineProperty(exports, 'TimingFunction', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.TimingFunction;
+    }
+});
+Object.defineProperty(exports, 'TranslationAnimation', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.TranslationAnimation;
+    }
+});
+Object.defineProperty(exports, 'TruncateAt', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.TruncateAt;
+    }
+});
+Object.defineProperty(exports, 'VLayout', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.VLayout;
+    }
+});
+Object.defineProperty(exports, 'VMPanel', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.VMPanel;
+    }
+});
+Object.defineProperty(exports, 'View', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.View;
+    }
+});
+Object.defineProperty(exports, 'ViewHolder', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.ViewHolder;
+    }
+});
+Object.defineProperty(exports, 'ViewModel', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.ViewModel;
+    }
+});
+Object.defineProperty(exports, 'Wrap', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.Wrap;
+    }
+});
+Object.defineProperty(exports, 'animate', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.animate;
+    }
+});
+Object.defineProperty(exports, 'coordinator', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.coordinator;
+    }
+});
+Object.defineProperty(exports, 'draggable', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.draggable;
+    }
+});
+Object.defineProperty(exports, 'flexlayout', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.flexlayout;
+    }
+});
+Object.defineProperty(exports, 'flowItem', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.flowItem;
+    }
+});
+Object.defineProperty(exports, 'flowlayout', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.flowlayout;
+    }
+});
+Object.defineProperty(exports, 'gravity', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.gravity;
+    }
+});
+Object.defineProperty(exports, 'hlayout', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.hlayout;
+    }
+});
+Object.defineProperty(exports, 'image', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.image;
+    }
+});
+Object.defineProperty(exports, 'input', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.input;
+    }
+});
+Object.defineProperty(exports, 'layoutConfig', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.layoutConfig;
+    }
+});
+Object.defineProperty(exports, 'list', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.list;
+    }
+});
+Object.defineProperty(exports, 'listItem', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.listItem;
+    }
+});
+Object.defineProperty(exports, 'log', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.log;
+    }
+});
+Object.defineProperty(exports, 'loge', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.loge;
+    }
+});
+Object.defineProperty(exports, 'logw', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.logw;
+    }
+});
+Object.defineProperty(exports, 'modal', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.modal;
+    }
+});
+Object.defineProperty(exports, 'navbar', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.navbar;
+    }
+});
+Object.defineProperty(exports, 'navigator', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.navigator;
+    }
+});
+Object.defineProperty(exports, 'network', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.network;
+    }
+});
+Object.defineProperty(exports, 'notch', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.notch;
+    }
+});
+Object.defineProperty(exports, 'notification', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.notification;
+    }
+});
+Object.defineProperty(exports, 'obj2Model', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.obj2Model;
+    }
+});
+Object.defineProperty(exports, 'popover', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.popover;
+    }
+});
+Object.defineProperty(exports, 'pullable', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.pullable;
+    }
+});
+Object.defineProperty(exports, 'refreshable', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.refreshable;
+    }
+});
+Object.defineProperty(exports, 'repeat', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.repeat;
+    }
+});
+Object.defineProperty(exports, 'scroller', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.scroller;
+    }
+});
+Object.defineProperty(exports, 'slideItem', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.slideItem;
+    }
+});
+Object.defineProperty(exports, 'slider', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.slider;
+    }
+});
+Object.defineProperty(exports, 'stack', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.stack;
+    }
+});
+Object.defineProperty(exports, 'statusbar', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.statusbar;
+    }
+});
+Object.defineProperty(exports, 'storage', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.storage;
+    }
+});
+Object.defineProperty(exports, 'switchView', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.switchView;
+    }
+});
+Object.defineProperty(exports, 'take', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.take;
+    }
+});
+Object.defineProperty(exports, 'takeAlso', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.takeAlso;
+    }
+});
+Object.defineProperty(exports, 'takeIf', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.takeIf;
+    }
+});
+Object.defineProperty(exports, 'takeLet', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.takeLet;
+    }
+});
+Object.defineProperty(exports, 'takeNonNull', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.takeNonNull;
+    }
+});
+Object.defineProperty(exports, 'takeNull', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.takeNull;
+    }
+});
+Object.defineProperty(exports, 'takeUnless', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.takeUnless;
+    }
+});
+Object.defineProperty(exports, 'text', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.text;
+    }
+});
+Object.defineProperty(exports, 'uniqueId', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.uniqueId;
+    }
+});
+Object.defineProperty(exports, 'vlayout', {
+    enumerable: true,
+    get: function () {
+        return reflectMetadata.vlayout;
+    }
+});

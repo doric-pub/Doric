@@ -35,30 +35,34 @@ export function scroller(content, config) {
         v.content = content;
     });
 }
-export class Scroller extends Superview {
-    allSubviews() {
-        return [this.content];
+let Scroller = /** @class */ (() => {
+    class Scroller extends Superview {
+        allSubviews() {
+            return [this.content];
+        }
+        toModel() {
+            this.dirtyProps.content = this.content.viewId;
+            return super.toModel();
+        }
+        scrollTo(context, offset, animated) {
+            return this.nativeChannel(context, "scrollTo")({ offset, animated });
+        }
+        scrollBy(context, offset, animated) {
+            return this.nativeChannel(context, "scrollBy")({ offset, animated });
+        }
     }
-    toModel() {
-        this.dirtyProps.content = this.content.viewId;
-        return super.toModel();
-    }
-    scrollTo(context, offset, animated) {
-        return this.nativeChannel(context, "scrollTo")({ offset, animated });
-    }
-    scrollBy(context, offset, animated) {
-        return this.nativeChannel(context, "scrollBy")({ offset, animated });
-    }
-}
-__decorate([
-    Property,
-    __metadata("design:type", Object)
-], Scroller.prototype, "contentOffset", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Function)
-], Scroller.prototype, "onScroll", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Function)
-], Scroller.prototype, "onScrollEnd", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Object)
+    ], Scroller.prototype, "contentOffset", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Function)
+    ], Scroller.prototype, "onScroll", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Function)
+    ], Scroller.prototype, "onScrollEnd", void 0);
+    return Scroller;
+})();
+export { Scroller };

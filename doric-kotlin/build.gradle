@@ -23,6 +23,6 @@ kotlin.target {
 //Properties properties = new Properties()
 //properties.load(project.rootProject.file('../doric-android/version.properties').newDataInputStream())
 ext {
-    Version = '0.1.1'//properties.version
+    Version = '0.1.2'//properties.version
 }
 apply from: rootProject.file('scripts/upload.gradle')

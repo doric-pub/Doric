@@ -25,101 +25,108 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { View, Property, Superview } from "../ui/view";
 import { Stack } from "./layouts";
 import { layoutConfig } from "../util/layoutconfig";
-export class ListItem extends Stack {
-}
-__decorate([
-    Property,
-    __metadata("design:type", String)
-], ListItem.prototype, "identifier", void 0);
-export class List extends Superview {
-    constructor() {
-        super(...arguments);
-        this.cachedViews = new Map;
-        this.ignoreDirtyCallOnce = false;
-        this.itemCount = 0;
-        this.batchCount = 15;
+let ListItem = /** @class */ (() => {
+    class ListItem extends Stack {
     }
-    allSubviews() {
-        if (this.loadMoreView) {
-            return [...this.cachedViews.values(), this.loadMoreView];
-        }
-        else {
-            return this.cachedViews.values();
-        }
-    }
-    scrollToItem(context, index, config) {
-        var _a;
-        const animated = (_a = config) === null || _a === void 0 ? void 0 : _a.animated;
-        return this.nativeChannel(context, 'scrollToItem')({ index, animated, });
-    }
-    reset() {
-        this.cachedViews.clear();
-        this.itemCount = 0;
-    }
-    getItem(itemIdx) {
-        let view = this.renderItem(itemIdx);
-        view.superview = this;
-        this.cachedViews.set(`${itemIdx}`, view);
-        return view;
-    }
-    isDirty() {
-        if (this.ignoreDirtyCallOnce) {
+    __decorate([
+        Property,
+        __metadata("design:type", String)
+    ], ListItem.prototype, "identifier", void 0);
+    return ListItem;
+})();
+export { ListItem };
+let List = /** @class */ (() => {
+    class List extends Superview {
+        constructor() {
+            super(...arguments);
+            this.cachedViews = new Map;
             this.ignoreDirtyCallOnce = false;
-            //Ignore the dirty call once.
-            return false;
+            this.itemCount = 0;
+            this.batchCount = 15;
         }
-        return super.isDirty();
-    }
-    renderBunchedItems(start, length) {
-        this.ignoreDirtyCallOnce = true;
-        return new Array(Math.max(0, Math.min(length, this.itemCount - start))).fill(0).map((_, idx) => {
-            const listItem = this.getItem(start + idx);
-            return listItem.toModel();
-        });
-    }
-    toModel() {
-        if (this.loadMoreView) {
-            this.dirtyProps['loadMoreView'] = this.loadMoreView.viewId;
+        allSubviews() {
+            if (this.loadMoreView) {
+                return [...this.cachedViews.values(), this.loadMoreView];
+            }
+            else {
+                return this.cachedViews.values();
+            }
         }
-        return super.toModel();
+        scrollToItem(context, index, config) {
+            const animated = config === null || config === void 0 ? void 0 : config.animated;
+            return this.nativeChannel(context, 'scrollToItem')({ index, animated, });
+        }
+        reset() {
+            this.cachedViews.clear();
+            this.itemCount = 0;
+        }
+        getItem(itemIdx) {
+            let view = this.renderItem(itemIdx);
+            view.superview = this;
+            this.cachedViews.set(`${itemIdx}`, view);
+            return view;
+        }
+        isDirty() {
+            if (this.ignoreDirtyCallOnce) {
+                this.ignoreDirtyCallOnce = false;
+                //Ignore the dirty call once.
+                return false;
+            }
+            return super.isDirty();
+        }
+        renderBunchedItems(start, length) {
+            this.ignoreDirtyCallOnce = true;
+            return new Array(Math.max(0, Math.min(length, this.itemCount - start))).fill(0).map((_, idx) => {
+                const listItem = this.getItem(start + idx);
+                return listItem.toModel();
+            });
+        }
+        toModel() {
+            if (this.loadMoreView) {
+                this.dirtyProps['loadMoreView'] = this.loadMoreView.viewId;
+            }
+            return super.toModel();
+        }
     }
-}
-__decorate([
-    Property,
-    __metadata("design:type", Object)
-], List.prototype, "itemCount", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Function)
-], List.prototype, "renderItem", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Object)
-], List.prototype, "batchCount", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Function)
-], List.prototype, "onLoadMore", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Boolean)
-], List.prototype, "loadMore", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", ListItem)
-], List.prototype, "loadMoreView", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Function)
-], List.prototype, "onScroll", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Function)
-], List.prototype, "onScrollEnd", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Number)
-], List.prototype, "scrolledPosition", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Object)
+    ], List.prototype, "itemCount", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Function)
+    ], List.prototype, "renderItem", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Object)
+    ], List.prototype, "batchCount", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Function)
+    ], List.prototype, "onLoadMore", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Boolean)
+    ], List.prototype, "loadMore", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", ListItem)
+    ], List.prototype, "loadMoreView", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Function)
+    ], List.prototype, "onScroll", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Function)
+    ], List.prototype, "onScrollEnd", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Number)
+    ], List.prototype, "scrolledPosition", void 0);
+    return List;
+})();
+export { List };
 export function list(config) {
     const ret = new List;
     for (let key in config) {

@@ -1587,263 +1587,266 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 function Property(target, propKey) {
     Reflect.defineMetadata(propKey, true, target);
 }
-class View {
-    constructor() {
-        this.width = 0;
-        this.height = 0;
-        this.x = 0;
-        this.y = 0;
-        this.viewId = uniqueId('ViewId');
-        this.callbacks = new Map;
-        /** Anchor end*/
-        this.__dirty_props__ = {};
-        this.nativeViewModel = {
-            id: this.viewId,
-            type: this.constructor.name,
-            props: this.__dirty_props__,
-        };
-        return new Proxy(this, {
-            get: (target, p, receiver) => {
-                return Reflect.get(target, p, receiver);
-            },
-            set: (target, p, v, receiver) => {
-                const oldV = Reflect.get(target, p, receiver);
-                const ret = Reflect.set(target, p, v, receiver);
-                if (Reflect.getMetadata(p, target) && oldV !== v) {
-                    receiver.onPropertyChanged(p.toString(), oldV, v);
-                }
-                return ret;
-            }
-        });
-    }
-    callback2Id(f) {
-        const id = uniqueId('Function');
-        this.callbacks.set(id, f);
-        return id;
-    }
-    id2Callback(id) {
-        let f = this.callbacks.get(id);
-        if (f === undefined) {
-            f = Reflect.get(this, id);
-        }
-        return f;
-    }
-    /** Anchor start*/
-    get left() {
-        return this.x;
-    }
-    set left(v) {
-        this.x = v;
-    }
-    get right() {
-        return this.x + this.width;
-    }
-    set right(v) {
-        this.x = v - this.width;
-    }
-    get top() {
-        return this.y;
-    }
-    set top(v) {
-        this.y = v;
-    }
-    get bottom() {
-        return this.y + this.height;
-    }
-    set bottom(v) {
-        this.y = v - this.height;
-    }
-    get centerX() {
-        return this.x + this.width / 2;
-    }
-    get centerY() {
-        return this.y + this.height / 2;
-    }
-    set centerX(v) {
-        this.x = v - this.width / 2;
-    }
-    set centerY(v) {
-        this.y = v - this.height / 2;
-    }
-    get dirtyProps() {
-        return this.__dirty_props__;
-    }
-    onPropertyChanged(propKey, oldV, newV) {
-        if (newV instanceof Function) {
-            newV = this.callback2Id(newV);
-        }
-        else {
-            newV = obj2Model(newV);
-        }
-        this.__dirty_props__[propKey] = newV;
-    }
-    clean() {
-        for (const key in this.__dirty_props__) {
-            if (Reflect.has(this.__dirty_props__, key)) {
-                Reflect.deleteProperty(this.__dirty_props__, key);
-            }
-        }
-    }
-    isDirty() {
-        return Reflect.ownKeys(this.__dirty_props__).length !== 0;
-    }
-    responseCallback(id, ...args) {
-        const f = this.id2Callback(id);
-        if (f instanceof Function) {
-            const argumentsList = [];
-            for (let i = 1; i < arguments.length; i++) {
-                argumentsList.push(arguments[i]);
-            }
-            return Reflect.apply(f, this, argumentsList);
-        }
-        else {
-            loge(`Cannot find callback:${id} for ${JSON.stringify(this.toModel())}`);
-        }
-    }
-    toModel() {
-        return this.nativeViewModel;
-    }
-    let(block) {
-        block(this);
-    }
-    also(block) {
-        block(this);
-        return this;
-    }
-    apply(config) {
-        for (let key in config) {
-            Reflect.set(this, key, Reflect.get(config, key, config), this);
-        }
-        return this;
-    }
-    in(group) {
-        group.addChild(this);
-        return this;
-    }
-    nativeChannel(context, name) {
-        let thisView = this;
-        return function (args = undefined) {
-            const viewIds = [];
-            while (thisView != undefined) {
-                viewIds.push(thisView.viewId);
-                thisView = thisView.superview;
-            }
-            const params = {
-                viewIds: viewIds.reverse(),
-                name,
-                args,
+let View = /** @class */ (() => {
+    class View {
+        constructor() {
+            this.width = 0;
+            this.height = 0;
+            this.x = 0;
+            this.y = 0;
+            this.viewId = uniqueId('ViewId');
+            this.callbacks = new Map;
+            /** Anchor end*/
+            this.__dirty_props__ = {};
+            this.nativeViewModel = {
+                id: this.viewId,
+                type: this.constructor.name,
+                props: this.__dirty_props__,
             };
-            return context.callNative('shader', 'command', params);
-        };
-    }
-    getWidth(context) {
-        return this.nativeChannel(context, 'getWidth')();
-    }
-    getHeight(context) {
-        return this.nativeChannel(context, 'getHeight')();
-    }
-    getX(context) {
-        return this.nativeChannel(context, 'getX')();
-    }
-    getY(context) {
-        return this.nativeChannel(context, 'getY')();
-    }
-    getLocationOnScreen(context) {
-        return this.nativeChannel(context, "getLocationOnScreen")();
-    }
-    doAnimation(context, animation) {
-        return this.nativeChannel(context, "doAnimation")(animation.toModel()).then((args) => {
-            for (let key in args) {
-                Reflect.set(this, key, Reflect.get(args, key, args), this);
-                Reflect.deleteProperty(this.__dirty_props__, key);
+            return new Proxy(this, {
+                get: (target, p, receiver) => {
+                    return Reflect.get(target, p, receiver);
+                },
+                set: (target, p, v, receiver) => {
+                    const oldV = Reflect.get(target, p, receiver);
+                    const ret = Reflect.set(target, p, v, receiver);
+                    if (Reflect.getMetadata(p, target) && oldV !== v) {
+                        receiver.onPropertyChanged(p.toString(), oldV, v);
+                    }
+                    return ret;
+                }
+            });
+        }
+        callback2Id(f) {
+            const id = uniqueId('Function');
+            this.callbacks.set(id, f);
+            return id;
+        }
+        id2Callback(id) {
+            let f = this.callbacks.get(id);
+            if (f === undefined) {
+                f = Reflect.get(this, id);
             }
-        });
+            return f;
+        }
+        /** Anchor start*/
+        get left() {
+            return this.x;
+        }
+        set left(v) {
+            this.x = v;
+        }
+        get right() {
+            return this.x + this.width;
+        }
+        set right(v) {
+            this.x = v - this.width;
+        }
+        get top() {
+            return this.y;
+        }
+        set top(v) {
+            this.y = v;
+        }
+        get bottom() {
+            return this.y + this.height;
+        }
+        set bottom(v) {
+            this.y = v - this.height;
+        }
+        get centerX() {
+            return this.x + this.width / 2;
+        }
+        get centerY() {
+            return this.y + this.height / 2;
+        }
+        set centerX(v) {
+            this.x = v - this.width / 2;
+        }
+        set centerY(v) {
+            this.y = v - this.height / 2;
+        }
+        get dirtyProps() {
+            return this.__dirty_props__;
+        }
+        onPropertyChanged(propKey, oldV, newV) {
+            if (newV instanceof Function) {
+                newV = this.callback2Id(newV);
+            }
+            else {
+                newV = obj2Model(newV);
+            }
+            this.__dirty_props__[propKey] = newV;
+        }
+        clean() {
+            for (const key in this.__dirty_props__) {
+                if (Reflect.has(this.__dirty_props__, key)) {
+                    Reflect.deleteProperty(this.__dirty_props__, key);
+                }
+            }
+        }
+        isDirty() {
+            return Reflect.ownKeys(this.__dirty_props__).length !== 0;
+        }
+        responseCallback(id, ...args) {
+            const f = this.id2Callback(id);
+            if (f instanceof Function) {
+                const argumentsList = [];
+                for (let i = 1; i < arguments.length; i++) {
+                    argumentsList.push(arguments[i]);
+                }
+                return Reflect.apply(f, this, argumentsList);
+            }
+            else {
+                loge(`Cannot find callback:${id} for ${JSON.stringify(this.toModel())}`);
+            }
+        }
+        toModel() {
+            return this.nativeViewModel;
+        }
+        let(block) {
+            block(this);
+        }
+        also(block) {
+            block(this);
+            return this;
+        }
+        apply(config) {
+            for (let key in config) {
+                Reflect.set(this, key, Reflect.get(config, key, config), this);
+            }
+            return this;
+        }
+        in(group) {
+            group.addChild(this);
+            return this;
+        }
+        nativeChannel(context, name) {
+            let thisView = this;
+            return function (args = undefined) {
+                const viewIds = [];
+                while (thisView != undefined) {
+                    viewIds.push(thisView.viewId);
+                    thisView = thisView.superview;
+                }
+                const params = {
+                    viewIds: viewIds.reverse(),
+                    name,
+                    args,
+                };
+                return context.callNative('shader', 'command', params);
+            };
+        }
+        getWidth(context) {
+            return this.nativeChannel(context, 'getWidth')();
+        }
+        getHeight(context) {
+            return this.nativeChannel(context, 'getHeight')();
+        }
+        getX(context) {
+            return this.nativeChannel(context, 'getX')();
+        }
+        getY(context) {
+            return this.nativeChannel(context, 'getY')();
+        }
+        getLocationOnScreen(context) {
+            return this.nativeChannel(context, "getLocationOnScreen")();
+        }
+        doAnimation(context, animation) {
+            return this.nativeChannel(context, "doAnimation")(animation.toModel()).then((args) => {
+                for (let key in args) {
+                    Reflect.set(this, key, Reflect.get(args, key, args), this);
+                    Reflect.deleteProperty(this.__dirty_props__, key);
+                }
+            });
+        }
     }
-}
-__decorate([
-    Property,
-    __metadata("design:type", Number)
-], View.prototype, "width", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Number)
-], View.prototype, "height", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Number)
-], View.prototype, "x", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Number)
-], View.prototype, "y", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Object)
-], View.prototype, "backgroundColor", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Object)
-], View.prototype, "corners", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Object)
-], View.prototype, "border", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Object)
-], View.prototype, "shadow", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Number)
-], View.prototype, "alpha", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Boolean)
-], View.prototype, "hidden", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Object)
-], View.prototype, "padding", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Object)
-], View.prototype, "layoutConfig", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Function)
-], View.prototype, "onClick", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Number)
-], View.prototype, "translationX", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Number)
-], View.prototype, "translationY", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Number)
-], View.prototype, "scaleX", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Number)
-], View.prototype, "scaleY", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Number)
-], View.prototype, "pivotX", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Number)
-], View.prototype, "pivotY", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Number)
-], View.prototype, "rotation", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Object)
-], View.prototype, "flexConfig", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Number)
+    ], View.prototype, "width", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Number)
+    ], View.prototype, "height", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Number)
+    ], View.prototype, "x", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Number)
+    ], View.prototype, "y", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Object)
+    ], View.prototype, "backgroundColor", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Object)
+    ], View.prototype, "corners", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Object)
+    ], View.prototype, "border", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Object)
+    ], View.prototype, "shadow", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Number)
+    ], View.prototype, "alpha", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Boolean)
+    ], View.prototype, "hidden", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Object)
+    ], View.prototype, "padding", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Object)
+    ], View.prototype, "layoutConfig", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Function)
+    ], View.prototype, "onClick", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Number)
+    ], View.prototype, "translationX", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Number)
+    ], View.prototype, "translationY", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Number)
+    ], View.prototype, "scaleX", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Number)
+    ], View.prototype, "scaleY", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Number)
+    ], View.prototype, "pivotX", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Number)
+    ], View.prototype, "pivotY", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Number)
+    ], View.prototype, "rotation", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Object)
+    ], View.prototype, "flexConfig", void 0);
+    return View;
+})();
 class Superview extends View {
     subviewById(id) {
         for (let v of this.allSubviews()) {
@@ -1917,64 +1920,67 @@ const BOTTOM = (END | SPECIFIED) << SHIFT_Y;
 const CENTER_X = SPECIFIED << SHIFT_X;
 const CENTER_Y = SPECIFIED << SHIFT_Y;
 const CENTER = CENTER_X | CENTER_Y;
-class Gravity {
-    constructor() {
-        this.val = 0;
+let Gravity = /** @class */ (() => {
+    class Gravity {
+        constructor() {
+            this.val = 0;
+        }
+        left() {
+            const val = this.val | LEFT;
+            const ret = new Gravity;
+            ret.val = val;
+            return ret;
+        }
+        right() {
+            const val = this.val | RIGHT;
+            const ret = new Gravity;
+            ret.val = val;
+            return ret;
+        }
+        top() {
+            const val = this.val | TOP;
+            const ret = new Gravity;
+            ret.val = val;
+            return ret;
+        }
+        bottom() {
+            const val = this.val | BOTTOM;
+            const ret = new Gravity;
+            ret.val = val;
+            return ret;
+        }
+        center() {
+            const val = this.val | CENTER;
+            const ret = new Gravity;
+            ret.val = val;
+            return ret;
+        }
+        centerX() {
+            const val = this.val | CENTER_X;
+            const ret = new Gravity;
+            ret.val = val;
+            return ret;
+        }
+        centerY() {
+            const val = this.val | CENTER_Y;
+            const ret = new Gravity;
+            ret.val = val;
+            return ret;
+        }
+        toModel() {
+            return this.val;
+        }
     }
-    left() {
-        const val = this.val | LEFT;
-        const ret = new Gravity;
-        ret.val = val;
-        return ret;
-    }
-    right() {
-        const val = this.val | RIGHT;
-        const ret = new Gravity;
-        ret.val = val;
-        return ret;
-    }
-    top() {
-        const val = this.val | TOP;
-        const ret = new Gravity;
-        ret.val = val;
-        return ret;
-    }
-    bottom() {
-        const val = this.val | BOTTOM;
-        const ret = new Gravity;
-        ret.val = val;
-        return ret;
-    }
-    center() {
-        const val = this.val | CENTER;
-        const ret = new Gravity;
-        ret.val = val;
-        return ret;
-    }
-    centerX() {
-        const val = this.val | CENTER_X;
-        const ret = new Gravity;
-        ret.val = val;
-        return ret;
-    }
-    centerY() {
-        const val = this.val | CENTER_Y;
-        const ret = new Gravity;
-        ret.val = val;
-        return ret;
-    }
-    toModel() {
-        return this.val;
-    }
-}
-Gravity.origin = new Gravity;
-Gravity.Center = Gravity.origin.center();
-Gravity.CenterX = Gravity.origin.centerX();
-Gravity.CenterY = Gravity.origin.centerY();
-Gravity.Left = Gravity.origin.left();
-Gravity.Right = Gravity.origin.right();
-Gravity.Top = Gravity.origin.top();
-Gravity.Bottom = Gravity.origin.bottom();
+    Gravity.origin = new Gravity;
+    Gravity.Center = Gravity.origin.center();
+    Gravity.CenterX = Gravity.origin.centerX();
+    Gravity.CenterY = Gravity.origin.centerY();
+    Gravity.Left = Gravity.origin.left();
+    Gravity.Right = Gravity.origin.right();
+    Gravity.Top = Gravity.origin.top();
+    Gravity.Bottom = Gravity.origin.bottom();
+    return Gravity;
+})();
 function gravity() {
     return new Gravity;
 }
@@ -2072,16 +2078,19 @@ class Stack extends Group {
 }
 class Root extends Stack {
 }
-class LinearLayout extends Group {
-}
-__decorate$1([
-    Property,
-    __metadata$1("design:type", Number)
-], LinearLayout.prototype, "space", void 0);
-__decorate$1([
-    Property,
-    __metadata$1("design:type", Gravity)
-], LinearLayout.prototype, "gravity", void 0);
+let LinearLayout = /** @class */ (() => {
+    class LinearLayout extends Group {
+    }
+    __decorate$1([
+        Property,
+        __metadata$1("design:type", Number)
+    ], LinearLayout.prototype, "space", void 0);
+    __decorate$1([
+        Property,
+        __metadata$1("design:type", Gravity)
+    ], LinearLayout.prototype, "gravity", void 0);
+    return LinearLayout;
+})();
 class VLayout extends LinearLayout {
 }
 class HLayout extends LinearLayout {
@@ -2158,231 +2167,234 @@ function NativeCall(target, propertyKey, descriptor) {
     };
     return descriptor;
 }
-class Panel {
-    constructor() {
-        this.destroyed = false;
-        this.__root__ = new Root;
-        this.headviews = new Map;
-        this.onRenderFinishedCallback = [];
-        this.__rendering__ = false;
-    }
-    onCreate() { }
-    onDestroy() { }
-    onShow() { }
-    onHidden() { }
-    addHeadView(type, v) {
-        let map = this.headviews.get(type);
-        if (map) {
-            map.set(v.viewId, v);
+let Panel = /** @class */ (() => {
+    class Panel {
+        constructor() {
+            this.destroyed = false;
+            this.__root__ = new Root;
+            this.headviews = new Map;
+            this.onRenderFinishedCallback = [];
+            this.__rendering__ = false;
         }
-        else {
-            map = new Map;
-            map.set(v.viewId, v);
-            this.headviews.set(type, map);
-        }
-    }
-    allHeadViews() {
-        return this.headviews.values();
-    }
-    removeHeadView(type, v) {
-        if (this.headviews.has(type)) {
+        onCreate() { }
+        onDestroy() { }
+        onShow() { }
+        onHidden() { }
+        addHeadView(type, v) {
             let map = this.headviews.get(type);
             if (map) {
-                if (v instanceof View) {
-                    map.delete(v.viewId);
-                }
-                else {
-                    map.delete(v);
-                }
-            }
-        }
-    }
-    clearHeadViews(type) {
-        if (this.headviews.has(type)) {
-            this.headviews.delete(type);
-        }
-    }
-    getRootView() {
-        return this.__root__;
-    }
-    getInitData() {
-        return this.__data__;
-    }
-    __init__(data) {
-        if (data) {
-            this.__data__ = JSON.parse(data);
-        }
-    }
-    __onCreate__() {
-        this.onCreate();
-    }
-    __onDestroy__() {
-        this.destroyed = true;
-        this.onDestroy();
-    }
-    __onShow__() {
-        this.onShow();
-    }
-    __onHidden__() {
-        this.onHidden();
-    }
-    __build__(frame) {
-        this.__root__.width = frame.width;
-        this.__root__.height = frame.height;
-        this.__root__.children.length = 0;
-        this.build(this.__root__);
-    }
-    __response__(viewIds, callbackId) {
-        const v = this.retrospectView(viewIds);
-        if (v === undefined) {
-            loge(`Cannot find view for ${viewIds}`);
-        }
-        else {
-            const argumentsList = [callbackId];
-            for (let i = 2; i < arguments.length; i++) {
-                argumentsList.push(arguments[i]);
-            }
-            return Reflect.apply(v.responseCallback, v, argumentsList);
-        }
-    }
-    retrospectView(ids) {
-        return ids.reduce((acc, cur) => {
-            if (acc === undefined) {
-                if (cur === this.__root__.viewId) {
-                    return this.__root__;
-                }
-                for (let map of this.headviews.values()) {
-                    if (map.has(cur)) {
-                        return map.get(cur);
-                    }
-                }
-                return undefined;
+                map.set(v.viewId, v);
             }
             else {
-                if (Reflect.has(acc, "subviewById")) {
-                    return Reflect.apply(Reflect.get(acc, "subviewById"), acc, [cur]);
-                }
-                return acc;
-            }
-        }, undefined);
-    }
-    nativeRender(model) {
-        return this.context.callNative("shader", "render", model);
-    }
-    hookBeforeNativeCall() {
-        if (Environment.platform !== 'web') {
-            this.__root__.clean();
-            for (let map of this.headviews.values()) {
-                for (let v of map.values()) {
-                    v.clean();
-                }
+                map = new Map;
+                map.set(v.viewId, v);
+                this.headviews.set(type, map);
             }
         }
-    }
-    hookAfterNativeCall() {
-        if (this.destroyed) {
-            return;
+        allHeadViews() {
+            return this.headviews.values();
         }
-        const promises = [];
-        if (Environment.platform !== 'web') {
-            //Here insert a native call to ensure the promise is resolved done.
-            nativeEmpty();
-            if (this.__root__.isDirty()) {
-                const model = this.__root__.toModel();
-                promises.push(this.nativeRender(model));
-            }
-            for (let map of this.headviews.values()) {
-                for (let v of map.values()) {
-                    if (v.isDirty()) {
-                        const model = v.toModel();
-                        promises.push(this.nativeRender(model));
+        removeHeadView(type, v) {
+            if (this.headviews.has(type)) {
+                let map = this.headviews.get(type);
+                if (map) {
+                    if (v instanceof View) {
+                        map.delete(v.viewId);
+                    }
+                    else {
+                        map.delete(v);
                     }
                 }
             }
         }
-        else {
-            Promise.resolve().then(() => {
+        clearHeadViews(type) {
+            if (this.headviews.has(type)) {
+                this.headviews.delete(type);
+            }
+        }
+        getRootView() {
+            return this.__root__;
+        }
+        getInitData() {
+            return this.__data__;
+        }
+        __init__(data) {
+            if (data) {
+                this.__data__ = JSON.parse(data);
+            }
+        }
+        __onCreate__() {
+            this.onCreate();
+        }
+        __onDestroy__() {
+            this.destroyed = true;
+            this.onDestroy();
+        }
+        __onShow__() {
+            this.onShow();
+        }
+        __onHidden__() {
+            this.onHidden();
+        }
+        __build__(frame) {
+            this.__root__.width = frame.width;
+            this.__root__.height = frame.height;
+            this.__root__.children.length = 0;
+            this.build(this.__root__);
+        }
+        __response__(viewIds, callbackId) {
+            const v = this.retrospectView(viewIds);
+            if (v === undefined) {
+                loge(`Cannot find view for ${viewIds}`);
+            }
+            else {
+                const argumentsList = [callbackId];
+                for (let i = 2; i < arguments.length; i++) {
+                    argumentsList.push(arguments[i]);
+                }
+                return Reflect.apply(v.responseCallback, v, argumentsList);
+            }
+        }
+        retrospectView(ids) {
+            return ids.reduce((acc, cur) => {
+                if (acc === undefined) {
+                    if (cur === this.__root__.viewId) {
+                        return this.__root__;
+                    }
+                    for (let map of this.headviews.values()) {
+                        if (map.has(cur)) {
+                            return map.get(cur);
+                        }
+                    }
+                    return undefined;
+                }
+                else {
+                    if (Reflect.has(acc, "subviewById")) {
+                        return Reflect.apply(Reflect.get(acc, "subviewById"), acc, [cur]);
+                    }
+                    return acc;
+                }
+            }, undefined);
+        }
+        nativeRender(model) {
+            return this.context.callNative("shader", "render", model);
+        }
+        hookBeforeNativeCall() {
+            if (Environment.platform !== 'web') {
+                this.__root__.clean();
+                for (let map of this.headviews.values()) {
+                    for (let v of map.values()) {
+                        v.clean();
+                    }
+                }
+            }
+        }
+        hookAfterNativeCall() {
+            if (this.destroyed) {
+                return;
+            }
+            const promises = [];
+            if (Environment.platform !== 'web') {
+                //Here insert a native call to ensure the promise is resolved done.
+                nativeEmpty();
                 if (this.__root__.isDirty()) {
                     const model = this.__root__.toModel();
                     promises.push(this.nativeRender(model));
-                    this.__root__.clean();
                 }
                 for (let map of this.headviews.values()) {
                     for (let v of map.values()) {
                         if (v.isDirty()) {
                             const model = v.toModel();
                             promises.push(this.nativeRender(model));
-                            v.clean();
                         }
                     }
                 }
-            });
+            }
+            else {
+                Promise.resolve().then(() => {
+                    if (this.__root__.isDirty()) {
+                        const model = this.__root__.toModel();
+                        promises.push(this.nativeRender(model));
+                        this.__root__.clean();
+                    }
+                    for (let map of this.headviews.values()) {
+                        for (let v of map.values()) {
+                            if (v.isDirty()) {
+                                const model = v.toModel();
+                                promises.push(this.nativeRender(model));
+                                v.clean();
+                            }
+                        }
+                    }
+                });
+            }
+            if (this.__rendering__) {
+                //skip
+                Promise.all(promises).then(_ => {
+                });
+            }
+            else {
+                this.__rendering__ = true;
+                Promise.all(promises).then(_ => {
+                    this.__rendering__ = false;
+                    this.onRenderFinished();
+                });
+            }
         }
-        if (this.__rendering__) {
-            //skip
-            Promise.all(promises).then(_ => {
+        onRenderFinished() {
+            this.onRenderFinishedCallback.forEach(e => {
+                e();
             });
+            this.onRenderFinishedCallback.length = 0;
         }
-        else {
-            this.__rendering__ = true;
-            Promise.all(promises).then(_ => {
-                this.__rendering__ = false;
-                this.onRenderFinished();
-            });
+        addOnRenderFinishedCallback(cb) {
+            this.onRenderFinishedCallback.push(cb);
         }
     }
-    onRenderFinished() {
-        this.onRenderFinishedCallback.forEach(e => {
-            e();
-        });
-        this.onRenderFinishedCallback.length = 0;
-    }
-    addOnRenderFinishedCallback(cb) {
-        this.onRenderFinishedCallback.push(cb);
-    }
-}
-__decorate$2([
-    NativeCall,
-    __metadata$2("design:type", Function),
-    __metadata$2("design:paramtypes", [String]),
-    __metadata$2("design:returntype", void 0)
-], Panel.prototype, "__init__", null);
-__decorate$2([
-    NativeCall,
-    __metadata$2("design:type", Function),
-    __metadata$2("design:paramtypes", []),
-    __metadata$2("design:returntype", void 0)
-], Panel.prototype, "__onCreate__", null);
-__decorate$2([
-    NativeCall,
-    __metadata$2("design:type", Function),
-    __metadata$2("design:paramtypes", []),
-    __metadata$2("design:returntype", void 0)
-], Panel.prototype, "__onDestroy__", null);
-__decorate$2([
-    NativeCall,
-    __metadata$2("design:type", Function),
-    __metadata$2("design:paramtypes", []),
-    __metadata$2("design:returntype", void 0)
-], Panel.prototype, "__onShow__", null);
-__decorate$2([
-    NativeCall,
-    __metadata$2("design:type", Function),
-    __metadata$2("design:paramtypes", []),
-    __metadata$2("design:returntype", void 0)
-], Panel.prototype, "__onHidden__", null);
-__decorate$2([
-    NativeCall,
-    __metadata$2("design:type", Function),
-    __metadata$2("design:paramtypes", [Object]),
-    __metadata$2("design:returntype", void 0)
-], Panel.prototype, "__build__", null);
-__decorate$2([
-    NativeCall,
-    __metadata$2("design:type", Function),
-    __metadata$2("design:paramtypes", [Array, String]),
-    __metadata$2("design:returntype", void 0)
-], Panel.prototype, "__response__", null);
+    __decorate$2([
+        NativeCall,
+        __metadata$2("design:type", Function),
+        __metadata$2("design:paramtypes", [String]),
+        __metadata$2("design:returntype", void 0)
+    ], Panel.prototype, "__init__", null);
+    __decorate$2([
+        NativeCall,
+        __metadata$2("design:type", Function),
+        __metadata$2("design:paramtypes", []),
+        __metadata$2("design:returntype", void 0)
+    ], Panel.prototype, "__onCreate__", null);
+    __decorate$2([
+        NativeCall,
+        __metadata$2("design:type", Function),
+        __metadata$2("design:paramtypes", []),
+        __metadata$2("design:returntype", void 0)
+    ], Panel.prototype, "__onDestroy__", null);
+    __decorate$2([
+        NativeCall,
+        __metadata$2("design:type", Function),
+        __metadata$2("design:paramtypes", []),
+        __metadata$2("design:returntype", void 0)
+    ], Panel.prototype, "__onShow__", null);
+    __decorate$2([
+        NativeCall,
+        __metadata$2("design:type", Function),
+        __metadata$2("design:paramtypes", []),
+        __metadata$2("design:returntype", void 0)
+    ], Panel.prototype, "__onHidden__", null);
+    __decorate$2([
+        NativeCall,
+        __metadata$2("design:type", Function),
+        __metadata$2("design:paramtypes", [Object]),
+        __metadata$2("design:returntype", void 0)
+    ], Panel.prototype, "__build__", null);
+    __decorate$2([
+        NativeCall,
+        __metadata$2("design:type", Function),
+        __metadata$2("design:paramtypes", [Array, String]),
+        __metadata$2("design:returntype", void 0)
+    ], Panel.prototype, "__response__", null);
+    return Panel;
+})();
 
 /*
  * Copyright [2019] [Doric.Pub]
@@ -2603,57 +2615,60 @@ class AnimationSet {
 /**
  *  Store color as format AARRGGBB or RRGGBB
  */
-class Color {
-    constructor(v) {
-        this._value = 0;
-        this._value = v | 0x0;
+let Color = /** @class */ (() => {
+    class Color {
+        constructor(v) {
+            this._value = 0;
+            this._value = v | 0x0;
+        }
+        static parse(str) {
+            if (!str.startsWith("#")) {
+                throw new Error(`Parse color error with ${str}`);
+            }
+            const val = parseInt(str.substr(1), 16);
+            if (str.length === 7) {
+                return new Color(val | 0xff000000);
+            }
+            else if (str.length === 9) {
+                return new Color(val);
+            }
+            else {
+                throw new Error(`Parse color error with ${str}`);
+            }
+        }
+        static safeParse(str, defVal = Color.TRANSPARENT) {
+            let color = defVal;
+            try {
+                color = Color.parse(str);
+            }
+            catch (e) {
+            }
+            finally {
+                return color;
+            }
+        }
+        alpha(v) {
+            v = v * 255;
+            return new Color((this._value & 0xffffff) | ((v & 0xff) << 24));
+        }
+        toModel() {
+            return this._value;
+        }
     }
-    static parse(str) {
-        if (!str.startsWith("#")) {
-            throw new Error(`Parse color error with ${str}`);
-        }
-        const val = parseInt(str.substr(1), 16);
-        if (str.length === 7) {
-            return new Color(val | 0xff000000);
-        }
-        else if (str.length === 9) {
-            return new Color(val);
-        }
-        else {
-            throw new Error(`Parse color error with ${str}`);
-        }
-    }
-    static safeParse(str, defVal = Color.TRANSPARENT) {
-        let color = defVal;
-        try {
-            color = Color.parse(str);
-        }
-        catch (e) {
-        }
-        finally {
-            return color;
-        }
-    }
-    alpha(v) {
-        v = v * 255;
-        return new Color((this._value & 0xffffff) | ((v & 0xff) << 24));
-    }
-    toModel() {
-        return this._value;
-    }
-}
-Color.BLACK = new Color(0xFF000000);
-Color.DKGRAY = new Color(0xFF444444);
-Color.GRAY = new Color(0xFF888888);
-Color.LTGRAY = new Color(0xFFCCCCCC);
-Color.WHITE = new Color(0xFFFFFFFF);
-Color.RED = new Color(0xFFFF0000);
-Color.GREEN = new Color(0xFF00FF00);
-Color.BLUE = new Color(0xFF0000FF);
-Color.YELLOW = new Color(0xFFFFFF00);
-Color.CYAN = new Color(0xFF00FFFF);
-Color.MAGENTA = new Color(0xFFFF00FF);
-Color.TRANSPARENT = new Color(0);
+    Color.BLACK = new Color(0xFF000000);
+    Color.DKGRAY = new Color(0xFF444444);
+    Color.GRAY = new Color(0xFF888888);
+    Color.LTGRAY = new Color(0xFFCCCCCC);
+    Color.WHITE = new Color(0xFFFFFFFF);
+    Color.RED = new Color(0xFFFF0000);
+    Color.GREEN = new Color(0xFF00FF00);
+    Color.BLUE = new Color(0xFF0000FF);
+    Color.YELLOW = new Color(0xFFFFFF00);
+    Color.CYAN = new Color(0xFF00FFFF);
+    Color.MAGENTA = new Color(0xFFFF00FF);
+    Color.TRANSPARENT = new Color(0);
+    return Color;
+})();
 (function (GradientOrientation) {
     /** draw the gradient from the top to the bottom */
     GradientOrientation[GradientOrientation["TOP_BOTTOM"] = 0] = "TOP_BOTTOM";
@@ -2688,64 +2703,67 @@ var __metadata$3 = (undefined && undefined.__metadata) || function (k, v) {
     TruncateAt[TruncateAt["Start"] = 2] = "Start";
     TruncateAt[TruncateAt["Clip"] = 3] = "Clip";
 })(exports.TruncateAt || (exports.TruncateAt = {}));
-class Text extends View {
-}
-__decorate$3([
-    Property,
-    __metadata$3("design:type", String)
-], Text.prototype, "text", void 0);
-__decorate$3([
-    Property,
-    __metadata$3("design:type", Color)
-], Text.prototype, "textColor", void 0);
-__decorate$3([
-    Property,
-    __metadata$3("design:type", Number)
-], Text.prototype, "textSize", void 0);
-__decorate$3([
-    Property,
-    __metadata$3("design:type", Number)
-], Text.prototype, "maxLines", void 0);
-__decorate$3([
-    Property,
-    __metadata$3("design:type", Gravity)
-], Text.prototype, "textAlignment", void 0);
-__decorate$3([
-    Property,
-    __metadata$3("design:type", String)
-], Text.prototype, "fontStyle", void 0);
-__decorate$3([
-    Property,
-    __metadata$3("design:type", String)
-], Text.prototype, "font", void 0);
-__decorate$3([
-    Property,
-    __metadata$3("design:type", Number)
-], Text.prototype, "maxWidth", void 0);
-__decorate$3([
-    Property,
-    __metadata$3("design:type", Number)
-], Text.prototype, "maxHeight", void 0);
-__decorate$3([
-    Property,
-    __metadata$3("design:type", Number)
-], Text.prototype, "lineSpacing", void 0);
-__decorate$3([
-    Property,
-    __metadata$3("design:type", Boolean)
-], Text.prototype, "strikethrough", void 0);
-__decorate$3([
-    Property,
-    __metadata$3("design:type", Boolean)
-], Text.prototype, "underline", void 0);
-__decorate$3([
-    Property,
-    __metadata$3("design:type", String)
-], Text.prototype, "htmlText", void 0);
-__decorate$3([
-    Property,
-    __metadata$3("design:type", Number)
-], Text.prototype, "truncateAt", void 0);
+let Text = /** @class */ (() => {
+    class Text extends View {
+    }
+    __decorate$3([
+        Property,
+        __metadata$3("design:type", String)
+    ], Text.prototype, "text", void 0);
+    __decorate$3([
+        Property,
+        __metadata$3("design:type", Color)
+    ], Text.prototype, "textColor", void 0);
+    __decorate$3([
+        Property,
+        __metadata$3("design:type", Number)
+    ], Text.prototype, "textSize", void 0);
+    __decorate$3([
+        Property,
+        __metadata$3("design:type", Number)
+    ], Text.prototype, "maxLines", void 0);
+    __decorate$3([
+        Property,
+        __metadata$3("design:type", Gravity)
+    ], Text.prototype, "textAlignment", void 0);
+    __decorate$3([
+        Property,
+        __metadata$3("design:type", String)
+    ], Text.prototype, "fontStyle", void 0);
+    __decorate$3([
+        Property,
+        __metadata$3("design:type", String)
+    ], Text.prototype, "font", void 0);
+    __decorate$3([
+        Property,
+        __metadata$3("design:type", Number)
+    ], Text.prototype, "maxWidth", void 0);
+    __decorate$3([
+        Property,
+        __metadata$3("design:type", Number)
+    ], Text.prototype, "maxHeight", void 0);
+    __decorate$3([
+        Property,
+        __metadata$3("design:type", Number)
+    ], Text.prototype, "lineSpacing", void 0);
+    __decorate$3([
+        Property,
+        __metadata$3("design:type", Boolean)
+    ], Text.prototype, "strikethrough", void 0);
+    __decorate$3([
+        Property,
+        __metadata$3("design:type", Boolean)
+    ], Text.prototype, "underline", void 0);
+    __decorate$3([
+        Property,
+        __metadata$3("design:type", String)
+    ], Text.prototype, "htmlText", void 0);
+    __decorate$3([
+        Property,
+        __metadata$3("design:type", Number)
+    ], Text.prototype, "truncateAt", void 0);
+    return Text;
+})();
 function text(config) {
     const ret = new Text;
     ret.layoutConfig = layoutConfig().fit();
@@ -2769,73 +2787,76 @@ var __metadata$4 = (undefined && undefined.__metadata) || function (k, v) {
     ScaleType[ScaleType["ScaleAspectFit"] = 1] = "ScaleAspectFit";
     ScaleType[ScaleType["ScaleAspectFill"] = 2] = "ScaleAspectFill";
 })(exports.ScaleType || (exports.ScaleType = {}));
-class Image extends View {
-}
-__decorate$4([
-    Property,
-    __metadata$4("design:type", String)
-], Image.prototype, "imageUrl", void 0);
-__decorate$4([
-    Property,
-    __metadata$4("design:type", String)
-], Image.prototype, "imagePath", void 0);
-__decorate$4([
-    Property,
-    __metadata$4("design:type", String)
-], Image.prototype, "imageRes", void 0);
-__decorate$4([
-    Property,
-    __metadata$4("design:type", String)
-], Image.prototype, "imageBase64", void 0);
-__decorate$4([
-    Property,
-    __metadata$4("design:type", Number)
-], Image.prototype, "scaleType", void 0);
-__decorate$4([
-    Property,
-    __metadata$4("design:type", Boolean)
-], Image.prototype, "isBlur", void 0);
-__decorate$4([
-    Property,
-    __metadata$4("design:type", String)
-], Image.prototype, "placeHolderImage", void 0);
-__decorate$4([
-    Property,
-    __metadata$4("design:type", String)
-], Image.prototype, "placeHolderImageBase64", void 0);
-__decorate$4([
-    Property,
-    __metadata$4("design:type", Color
-    /**
-     * Display while image is failed to load
-     * It can be file name in local path
-     */
-    )
-], Image.prototype, "placeHolderColor", void 0);
-__decorate$4([
-    Property,
-    __metadata$4("design:type", String)
-], Image.prototype, "errorImage", void 0);
-__decorate$4([
-    Property,
-    __metadata$4("design:type", String)
-], Image.prototype, "errorImageBase64", void 0);
-__decorate$4([
-    Property,
-    __metadata$4("design:type", Color)
-], Image.prototype, "errorColor", void 0);
-__decorate$4([
-    Property,
-    __metadata$4("design:type", Function)
-], Image.prototype, "loadCallback", void 0);
-__decorate$4([
-    Property,
-    __metadata$4("design:type", Number)
-], Image.prototype, "imageScale", void 0);
-__decorate$4([
-    Property,
-    __metadata$4("design:type", Object)
-], Image.prototype, "stretchInset", void 0);
+let Image = /** @class */ (() => {
+    class Image extends View {
+    }
+    __decorate$4([
+        Property,
+        __metadata$4("design:type", String)
+    ], Image.prototype, "imageUrl", void 0);
+    __decorate$4([
+        Property,
+        __metadata$4("design:type", String)
+    ], Image.prototype, "imagePath", void 0);
+    __decorate$4([
+        Property,
+        __metadata$4("design:type", String)
+    ], Image.prototype, "imageRes", void 0);
+    __decorate$4([
+        Property,
+        __metadata$4("design:type", String)
+    ], Image.prototype, "imageBase64", void 0);
+    __decorate$4([
+        Property,
+        __metadata$4("design:type", Number)
+    ], Image.prototype, "scaleType", void 0);
+    __decorate$4([
+        Property,
+        __metadata$4("design:type", Boolean)
+    ], Image.prototype, "isBlur", void 0);
+    __decorate$4([
+        Property,
+        __metadata$4("design:type", String)
+    ], Image.prototype, "placeHolderImage", void 0);
+    __decorate$4([
+        Property,
+        __metadata$4("design:type", String)
+    ], Image.prototype, "placeHolderImageBase64", void 0);
+    __decorate$4([
+        Property,
+        __metadata$4("design:type", Color
+        /**
+         * Display while image is failed to load
+         * It can be file name in local path
+         */
+        )
+    ], Image.prototype, "placeHolderColor", void 0);
+    __decorate$4([
+        Property,
+        __metadata$4("design:type", String)
+    ], Image.prototype, "errorImage", void 0);
+    __decorate$4([
+        Property,
+        __metadata$4("design:type", String)
+    ], Image.prototype, "errorImageBase64", void 0);
+    __decorate$4([
+        Property,
+        __metadata$4("design:type", Color)
+    ], Image.prototype, "errorColor", void 0);
+    __decorate$4([
+        Property,
+        __metadata$4("design:type", Function)
+    ], Image.prototype, "loadCallback", void 0);
+    __decorate$4([
+        Property,
+        __metadata$4("design:type", Number)
+    ], Image.prototype, "imageScale", void 0);
+    __decorate$4([
+        Property,
+        __metadata$4("design:type", Object)
+    ], Image.prototype, "stretchInset", void 0);
+    return Image;
+})();
 function image(config) {
     const ret = new Image;
     ret.layoutConfig = layoutConfig().fit();
@@ -2869,101 +2890,106 @@ var __decorate$5 = (undefined && undefined.__decorate) || function (decorators, 
 var __metadata$5 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-class ListItem extends Stack {
-}
-__decorate$5([
-    Property,
-    __metadata$5("design:type", String)
-], ListItem.prototype, "identifier", void 0);
-class List extends Superview {
-    constructor() {
-        super(...arguments);
-        this.cachedViews = new Map;
-        this.ignoreDirtyCallOnce = false;
-        this.itemCount = 0;
-        this.batchCount = 15;
+let ListItem = /** @class */ (() => {
+    class ListItem extends Stack {
     }
-    allSubviews() {
-        if (this.loadMoreView) {
-            return [...this.cachedViews.values(), this.loadMoreView];
-        }
-        else {
-            return this.cachedViews.values();
-        }
-    }
-    scrollToItem(context, index, config) {
-        var _a;
-        const animated = (_a = config) === null || _a === void 0 ? void 0 : _a.animated;
-        return this.nativeChannel(context, 'scrollToItem')({ index, animated, });
-    }
-    reset() {
-        this.cachedViews.clear();
-        this.itemCount = 0;
-    }
-    getItem(itemIdx) {
-        let view = this.renderItem(itemIdx);
-        view.superview = this;
-        this.cachedViews.set(`${itemIdx}`, view);
-        return view;
-    }
-    isDirty() {
-        if (this.ignoreDirtyCallOnce) {
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", String)
+    ], ListItem.prototype, "identifier", void 0);
+    return ListItem;
+})();
+let List = /** @class */ (() => {
+    class List extends Superview {
+        constructor() {
+            super(...arguments);
+            this.cachedViews = new Map;
             this.ignoreDirtyCallOnce = false;
-            //Ignore the dirty call once.
-            return false;
+            this.itemCount = 0;
+            this.batchCount = 15;
         }
-        return super.isDirty();
-    }
-    renderBunchedItems(start, length) {
-        this.ignoreDirtyCallOnce = true;
-        return new Array(Math.max(0, Math.min(length, this.itemCount - start))).fill(0).map((_, idx) => {
-            const listItem = this.getItem(start + idx);
-            return listItem.toModel();
-        });
-    }
-    toModel() {
-        if (this.loadMoreView) {
-            this.dirtyProps['loadMoreView'] = this.loadMoreView.viewId;
+        allSubviews() {
+            if (this.loadMoreView) {
+                return [...this.cachedViews.values(), this.loadMoreView];
+            }
+            else {
+                return this.cachedViews.values();
+            }
         }
-        return super.toModel();
+        scrollToItem(context, index, config) {
+            const animated = config === null || config === void 0 ? void 0 : config.animated;
+            return this.nativeChannel(context, 'scrollToItem')({ index, animated, });
+        }
+        reset() {
+            this.cachedViews.clear();
+            this.itemCount = 0;
+        }
+        getItem(itemIdx) {
+            let view = this.renderItem(itemIdx);
+            view.superview = this;
+            this.cachedViews.set(`${itemIdx}`, view);
+            return view;
+        }
+        isDirty() {
+            if (this.ignoreDirtyCallOnce) {
+                this.ignoreDirtyCallOnce = false;
+                //Ignore the dirty call once.
+                return false;
+            }
+            return super.isDirty();
+        }
+        renderBunchedItems(start, length) {
+            this.ignoreDirtyCallOnce = true;
+            return new Array(Math.max(0, Math.min(length, this.itemCount - start))).fill(0).map((_, idx) => {
+                const listItem = this.getItem(start + idx);
+                return listItem.toModel();
+            });
+        }
+        toModel() {
+            if (this.loadMoreView) {
+                this.dirtyProps['loadMoreView'] = this.loadMoreView.viewId;
+            }
+            return super.toModel();
+        }
     }
-}
-__decorate$5([
-    Property,
-    __metadata$5("design:type", Object)
-], List.prototype, "itemCount", void 0);
-__decorate$5([
-    Property,
-    __metadata$5("design:type", Function)
-], List.prototype, "renderItem", void 0);
-__decorate$5([
-    Property,
-    __metadata$5("design:type", Object)
-], List.prototype, "batchCount", void 0);
-__decorate$5([
-    Property,
-    __metadata$5("design:type", Function)
-], List.prototype, "onLoadMore", void 0);
-__decorate$5([
-    Property,
-    __metadata$5("design:type", Boolean)
-], List.prototype, "loadMore", void 0);
-__decorate$5([
-    Property,
-    __metadata$5("design:type", ListItem)
-], List.prototype, "loadMoreView", void 0);
-__decorate$5([
-    Property,
-    __metadata$5("design:type", Function)
-], List.prototype, "onScroll", void 0);
-__decorate$5([
-    Property,
-    __metadata$5("design:type", Function)
-], List.prototype, "onScrollEnd", void 0);
-__decorate$5([
-    Property,
-    __metadata$5("design:type", Number)
-], List.prototype, "scrolledPosition", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", Object)
+    ], List.prototype, "itemCount", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", Function)
+    ], List.prototype, "renderItem", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", Object)
+    ], List.prototype, "batchCount", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", Function)
+    ], List.prototype, "onLoadMore", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", Boolean)
+    ], List.prototype, "loadMore", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", ListItem)
+    ], List.prototype, "loadMoreView", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", Function)
+    ], List.prototype, "onScroll", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", Function)
+    ], List.prototype, "onScrollEnd", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", Number)
+    ], List.prototype, "scrolledPosition", void 0);
+    return List;
+})();
 function list(config) {
     const ret = new List;
     for (let key in config) {
@@ -2999,71 +3025,77 @@ var __decorate$6 = (undefined && undefined.__decorate) || function (decorators, 
 var __metadata$6 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-class SlideItem extends Stack {
-}
-__decorate$6([
-    Property,
-    __metadata$6("design:type", String)
-], SlideItem.prototype, "identifier", void 0);
-class Slider extends Superview {
-    constructor() {
-        super(...arguments);
-        this.cachedViews = new Map;
-        this.ignoreDirtyCallOnce = false;
-        this.itemCount = 0;
-        this.batchCount = 3;
+let SlideItem = /** @class */ (() => {
+    class SlideItem extends Stack {
     }
-    allSubviews() {
-        return this.cachedViews.values();
-    }
-    getItem(itemIdx) {
-        let view = this.renderPage(itemIdx);
-        view.superview = this;
-        this.cachedViews.set(`${itemIdx}`, view);
-        return view;
-    }
-    isDirty() {
-        if (this.ignoreDirtyCallOnce) {
+    __decorate$6([
+        Property,
+        __metadata$6("design:type", String)
+    ], SlideItem.prototype, "identifier", void 0);
+    return SlideItem;
+})();
+let Slider = /** @class */ (() => {
+    class Slider extends Superview {
+        constructor() {
+            super(...arguments);
+            this.cachedViews = new Map;
             this.ignoreDirtyCallOnce = false;
-            //Ignore the dirty call once.
-            return false;
+            this.itemCount = 0;
+            this.batchCount = 3;
         }
-        return super.isDirty();
+        allSubviews() {
+            return this.cachedViews.values();
+        }
+        getItem(itemIdx) {
+            let view = this.renderPage(itemIdx);
+            view.superview = this;
+            this.cachedViews.set(`${itemIdx}`, view);
+            return view;
+        }
+        isDirty() {
+            if (this.ignoreDirtyCallOnce) {
+                this.ignoreDirtyCallOnce = false;
+                //Ignore the dirty call once.
+                return false;
+            }
+            return super.isDirty();
+        }
+        renderBunchedItems(start, length) {
+            this.ignoreDirtyCallOnce = true;
+            return new Array(Math.min(length, this.itemCount - start)).fill(0).map((_, idx) => {
+                const slideItem = this.getItem(start + idx);
+                return slideItem.toModel();
+            });
+        }
+        slidePage(context, page, smooth = false) {
+            return this.nativeChannel(context, "slidePage")({ page, smooth });
+        }
+        getSlidedPage(context) {
+            return this.nativeChannel(context, "getSlidedPage")();
+        }
     }
-    renderBunchedItems(start, length) {
-        this.ignoreDirtyCallOnce = true;
-        return new Array(Math.min(length, this.itemCount - start)).fill(0).map((_, idx) => {
-            const slideItem = this.getItem(start + idx);
-            return slideItem.toModel();
-        });
-    }
-    slidePage(context, page, smooth = false) {
-        return this.nativeChannel(context, "slidePage")({ page, smooth });
-    }
-    getSlidedPage(context) {
-        return this.nativeChannel(context, "getSlidedPage")();
-    }
-}
-__decorate$6([
-    Property,
-    __metadata$6("design:type", Object)
-], Slider.prototype, "itemCount", void 0);
-__decorate$6([
-    Property,
-    __metadata$6("design:type", Function)
-], Slider.prototype, "renderPage", void 0);
-__decorate$6([
-    Property,
-    __metadata$6("design:type", Object)
-], Slider.prototype, "batchCount", void 0);
-__decorate$6([
-    Property,
-    __metadata$6("design:type", Function)
-], Slider.prototype, "onPageSlided", void 0);
-__decorate$6([
-    Property,
-    __metadata$6("design:type", Boolean)
-], Slider.prototype, "loop", void 0);
+    __decorate$6([
+        Property,
+        __metadata$6("design:type", Object)
+    ], Slider.prototype, "itemCount", void 0);
+    __decorate$6([
+        Property,
+        __metadata$6("design:type", Function)
+    ], Slider.prototype, "renderPage", void 0);
+    __decorate$6([
+        Property,
+        __metadata$6("design:type", Object)
+    ], Slider.prototype, "batchCount", void 0);
+    __decorate$6([
+        Property,
+        __metadata$6("design:type", Function)
+    ], Slider.prototype, "onPageSlided", void 0);
+    __decorate$6([
+        Property,
+        __metadata$6("design:type", Boolean)
+    ], Slider.prototype, "loop", void 0);
+    return Slider;
+})();
 function slider(config) {
     const ret = new Slider;
     for (let key in config) {
@@ -3110,33 +3142,36 @@ function scroller(content, config) {
         v.content = content;
     });
 }
-class Scroller extends Superview {
-    allSubviews() {
-        return [this.content];
+let Scroller = /** @class */ (() => {
+    class Scroller extends Superview {
+        allSubviews() {
+            return [this.content];
+        }
+        toModel() {
+            this.dirtyProps.content = this.content.viewId;
+            return super.toModel();
+        }
+        scrollTo(context, offset, animated) {
+            return this.nativeChannel(context, "scrollTo")({ offset, animated });
+        }
+        scrollBy(context, offset, animated) {
+            return this.nativeChannel(context, "scrollBy")({ offset, animated });
+        }
     }
-    toModel() {
-        this.dirtyProps.content = this.content.viewId;
-        return super.toModel();
-    }
-    scrollTo(context, offset, animated) {
-        return this.nativeChannel(context, "scrollTo")({ offset, animated });
-    }
-    scrollBy(context, offset, animated) {
-        return this.nativeChannel(context, "scrollBy")({ offset, animated });
-    }
-}
-__decorate$7([
-    Property,
-    __metadata$7("design:type", Object)
-], Scroller.prototype, "contentOffset", void 0);
-__decorate$7([
-    Property,
-    __metadata$7("design:type", Function)
-], Scroller.prototype, "onScroll", void 0);
-__decorate$7([
-    Property,
-    __metadata$7("design:type", Function)
-], Scroller.prototype, "onScrollEnd", void 0);
+    __decorate$7([
+        Property,
+        __metadata$7("design:type", Object)
+    ], Scroller.prototype, "contentOffset", void 0);
+    __decorate$7([
+        Property,
+        __metadata$7("design:type", Function)
+    ], Scroller.prototype, "onScroll", void 0);
+    __decorate$7([
+        Property,
+        __metadata$7("design:type", Function)
+    ], Scroller.prototype, "onScrollEnd", void 0);
+    return Scroller;
+})();
 
 var __decorate$8 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -3147,36 +3182,39 @@ var __decorate$8 = (undefined && undefined.__decorate) || function (decorators, 
 var __metadata$8 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-class Refreshable extends Superview {
-    allSubviews() {
-        const ret = [this.content];
-        if (this.header) {
-            ret.push(this.header);
+let Refreshable = /** @class */ (() => {
+    class Refreshable extends Superview {
+        allSubviews() {
+            const ret = [this.content];
+            if (this.header) {
+                ret.push(this.header);
+            }
+            return ret;
         }
-        return ret;
+        setRefreshable(context, refreshable) {
+            return this.nativeChannel(context, 'setRefreshable')(refreshable);
+        }
+        setRefreshing(context, refreshing) {
+            return this.nativeChannel(context, 'setRefreshing')(refreshing);
+        }
+        isRefreshable(context) {
+            return this.nativeChannel(context, 'isRefreshable')();
+        }
+        isRefreshing(context) {
+            return this.nativeChannel(context, 'isRefreshing')();
+        }
+        toModel() {
+            this.dirtyProps.content = this.content.viewId;
+            this.dirtyProps.header = (this.header || {}).viewId;
+            return super.toModel();
+        }
     }
-    setRefreshable(context, refreshable) {
-        return this.nativeChannel(context, 'setRefreshable')(refreshable);
-    }
-    setRefreshing(context, refreshing) {
-        return this.nativeChannel(context, 'setRefreshing')(refreshing);
-    }
-    isRefreshable(context) {
-        return this.nativeChannel(context, 'isRefreshable')();
-    }
-    isRefreshing(context) {
-        return this.nativeChannel(context, 'isRefreshing')();
-    }
-    toModel() {
-        this.dirtyProps.content = this.content.viewId;
-        this.dirtyProps.header = (this.header || {}).viewId;
-        return super.toModel();
-    }
-}
-__decorate$8([
-    Property,
-    __metadata$8("design:type", Function)
-], Refreshable.prototype, "onRefresh", void 0);
+    __decorate$8([
+        Property,
+        __metadata$8("design:type", Function)
+    ], Refreshable.prototype, "onRefresh", void 0);
+    return Refreshable;
+})();
 function refreshable(config) {
     const ret = new Refreshable;
     ret.layoutConfig = layoutConfig().fit();
@@ -3199,29 +3237,32 @@ var ValueType;
     ValueType[ValueType["Percent"] = 2] = "Percent";
     ValueType[ValueType["Auto"] = 3] = "Auto";
 })(ValueType || (ValueType = {}));
-class FlexTypedValue {
-    constructor(type) {
-        this.value = 0;
-        this.type = type;
+let FlexTypedValue = /** @class */ (() => {
+    class FlexTypedValue {
+        constructor(type) {
+            this.value = 0;
+            this.type = type;
+        }
+        static percent(v) {
+            const ret = new FlexTypedValue(ValueType.Percent);
+            ret.value = v;
+            return ret;
+        }
+        static point(v) {
+            const ret = new FlexTypedValue(ValueType.Point);
+            ret.value = v;
+            return ret;
+        }
+        toModel() {
+            return {
+                type: this.type,
+                value: this.value,
+            };
+        }
     }
-    static percent(v) {
-        const ret = new FlexTypedValue(ValueType.Percent);
-        ret.value = v;
-        return ret;
-    }
-    static point(v) {
-        const ret = new FlexTypedValue(ValueType.Point);
-        ret.value = v;
-        return ret;
-    }
-    toModel() {
-        return {
-            type: this.type,
-            value: this.value,
-        };
-    }
-}
-FlexTypedValue.Auto = new FlexTypedValue(ValueType.Auto);
+    FlexTypedValue.Auto = new FlexTypedValue(ValueType.Auto);
+    return FlexTypedValue;
+})();
 (function (FlexDirection) {
     FlexDirection[FlexDirection["COLUMN"] = 0] = "COLUMN";
     FlexDirection[FlexDirection["COLUMN_REVERSE"] = 1] = "COLUMN_REVERSE";
@@ -3279,105 +3320,111 @@ var __decorate$9 = (undefined && undefined.__decorate) || function (decorators, 
 var __metadata$9 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-class FlowLayoutItem extends Stack {
-}
-__decorate$9([
-    Property,
-    __metadata$9("design:type", String)
-], FlowLayoutItem.prototype, "identifier", void 0);
-class FlowLayout extends Superview {
-    constructor() {
-        super(...arguments);
-        this.cachedViews = new Map;
-        this.ignoreDirtyCallOnce = false;
-        this.columnCount = 2;
-        this.itemCount = 0;
-        this.batchCount = 15;
+let FlowLayoutItem = /** @class */ (() => {
+    class FlowLayoutItem extends Stack {
     }
-    allSubviews() {
-        if (this.loadMoreView) {
-            return [...this.cachedViews.values(), this.loadMoreView];
-        }
-        else {
-            return this.cachedViews.values();
-        }
-    }
-    reset() {
-        this.cachedViews.clear();
-        this.itemCount = 0;
-    }
-    getItem(itemIdx) {
-        let view = this.renderItem(itemIdx);
-        view.superview = this;
-        this.cachedViews.set(`${itemIdx}`, view);
-        return view;
-    }
-    isDirty() {
-        if (this.ignoreDirtyCallOnce) {
+    __decorate$9([
+        Property,
+        __metadata$9("design:type", String)
+    ], FlowLayoutItem.prototype, "identifier", void 0);
+    return FlowLayoutItem;
+})();
+let FlowLayout = /** @class */ (() => {
+    class FlowLayout extends Superview {
+        constructor() {
+            super(...arguments);
+            this.cachedViews = new Map;
             this.ignoreDirtyCallOnce = false;
-            //Ignore the dirty call once.
-            return false;
+            this.columnCount = 2;
+            this.itemCount = 0;
+            this.batchCount = 15;
         }
-        return super.isDirty();
-    }
-    renderBunchedItems(start, length) {
-        this.ignoreDirtyCallOnce = true;
-        return new Array(Math.min(length, this.itemCount - start)).fill(0).map((_, idx) => {
-            const listItem = this.getItem(start + idx);
-            return listItem.toModel();
-        });
-    }
-    toModel() {
-        if (this.loadMoreView) {
-            this.dirtyProps['loadMoreView'] = this.loadMoreView.viewId;
+        allSubviews() {
+            if (this.loadMoreView) {
+                return [...this.cachedViews.values(), this.loadMoreView];
+            }
+            else {
+                return this.cachedViews.values();
+            }
         }
-        return super.toModel();
+        reset() {
+            this.cachedViews.clear();
+            this.itemCount = 0;
+        }
+        getItem(itemIdx) {
+            let view = this.renderItem(itemIdx);
+            view.superview = this;
+            this.cachedViews.set(`${itemIdx}`, view);
+            return view;
+        }
+        isDirty() {
+            if (this.ignoreDirtyCallOnce) {
+                this.ignoreDirtyCallOnce = false;
+                //Ignore the dirty call once.
+                return false;
+            }
+            return super.isDirty();
+        }
+        renderBunchedItems(start, length) {
+            this.ignoreDirtyCallOnce = true;
+            return new Array(Math.min(length, this.itemCount - start)).fill(0).map((_, idx) => {
+                const listItem = this.getItem(start + idx);
+                return listItem.toModel();
+            });
+        }
+        toModel() {
+            if (this.loadMoreView) {
+                this.dirtyProps['loadMoreView'] = this.loadMoreView.viewId;
+            }
+            return super.toModel();
+        }
     }
-}
-__decorate$9([
-    Property,
-    __metadata$9("design:type", Object)
-], FlowLayout.prototype, "columnCount", void 0);
-__decorate$9([
-    Property,
-    __metadata$9("design:type", Number)
-], FlowLayout.prototype, "columnSpace", void 0);
-__decorate$9([
-    Property,
-    __metadata$9("design:type", Number)
-], FlowLayout.prototype, "rowSpace", void 0);
-__decorate$9([
-    Property,
-    __metadata$9("design:type", Object)
-], FlowLayout.prototype, "itemCount", void 0);
-__decorate$9([
-    Property,
-    __metadata$9("design:type", Function)
-], FlowLayout.prototype, "renderItem", void 0);
-__decorate$9([
-    Property,
-    __metadata$9("design:type", Object)
-], FlowLayout.prototype, "batchCount", void 0);
-__decorate$9([
-    Property,
-    __metadata$9("design:type", Function)
-], FlowLayout.prototype, "onLoadMore", void 0);
-__decorate$9([
-    Property,
-    __metadata$9("design:type", Boolean)
-], FlowLayout.prototype, "loadMore", void 0);
-__decorate$9([
-    Property,
-    __metadata$9("design:type", FlowLayoutItem)
-], FlowLayout.prototype, "loadMoreView", void 0);
-__decorate$9([
-    Property,
-    __metadata$9("design:type", Function)
-], FlowLayout.prototype, "onScroll", void 0);
-__decorate$9([
-    Property,
-    __metadata$9("design:type", Function)
-], FlowLayout.prototype, "onScrollEnd", void 0);
+    __decorate$9([
+        Property,
+        __metadata$9("design:type", Object)
+    ], FlowLayout.prototype, "columnCount", void 0);
+    __decorate$9([
+        Property,
+        __metadata$9("design:type", Number)
+    ], FlowLayout.prototype, "columnSpace", void 0);
+    __decorate$9([
+        Property,
+        __metadata$9("design:type", Number)
+    ], FlowLayout.prototype, "rowSpace", void 0);
+    __decorate$9([
+        Property,
+        __metadata$9("design:type", Object)
+    ], FlowLayout.prototype, "itemCount", void 0);
+    __decorate$9([
+        Property,
+        __metadata$9("design:type", Function)
+    ], FlowLayout.prototype, "renderItem", void 0);
+    __decorate$9([
+        Property,
+        __metadata$9("design:type", Object)
+    ], FlowLayout.prototype, "batchCount", void 0);
+    __decorate$9([
+        Property,
+        __metadata$9("design:type", Function)
+    ], FlowLayout.prototype, "onLoadMore", void 0);
+    __decorate$9([
+        Property,
+        __metadata$9("design:type", Boolean)
+    ], FlowLayout.prototype, "loadMore", void 0);
+    __decorate$9([
+        Property,
+        __metadata$9("design:type", FlowLayoutItem)
+    ], FlowLayout.prototype, "loadMoreView", void 0);
+    __decorate$9([
+        Property,
+        __metadata$9("design:type", Function)
+    ], FlowLayout.prototype, "onScroll", void 0);
+    __decorate$9([
+        Property,
+        __metadata$9("design:type", Function)
+    ], FlowLayout.prototype, "onScrollEnd", void 0);
+    return FlowLayout;
+})();
 function flowlayout(config) {
     const ret = new FlowLayout;
     for (let key in config) {
@@ -3413,63 +3460,66 @@ var __decorate$a = (undefined && undefined.__decorate) || function (decorators, 
 var __metadata$a = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-class Input extends View {
-    getText(context) {
-        return this.nativeChannel(context, 'getText')();
+let Input = /** @class */ (() => {
+    class Input extends View {
+        getText(context) {
+            return this.nativeChannel(context, 'getText')();
+        }
+        setSelection(context, start, end = start) {
+            return this.nativeChannel(context, 'setSelection')({
+                start,
+                end,
+            });
+        }
+        requestFocus(context) {
+            return this.nativeChannel(context, 'requestFocus')();
+        }
+        releaseFocus(context) {
+            return this.nativeChannel(context, 'releaseFocus')();
+        }
     }
-    setSelection(context, start, end = start) {
-        return this.nativeChannel(context, 'setSelection')({
-            start,
-            end,
-        });
-    }
-    requestFocus(context) {
-        return this.nativeChannel(context, 'requestFocus')();
-    }
-    releaseFocus(context) {
-        return this.nativeChannel(context, 'releaseFocus')();
-    }
-}
-__decorate$a([
-    Property,
-    __metadata$a("design:type", String)
-], Input.prototype, "text", void 0);
-__decorate$a([
-    Property,
-    __metadata$a("design:type", Color)
-], Input.prototype, "textColor", void 0);
-__decorate$a([
-    Property,
-    __metadata$a("design:type", Number)
-], Input.prototype, "textSize", void 0);
-__decorate$a([
-    Property,
-    __metadata$a("design:type", String)
-], Input.prototype, "hintText", void 0);
-__decorate$a([
-    Property,
-    __metadata$a("design:type", Color)
-], Input.prototype, "hintTextColor", void 0);
-__decorate$a([
-    Property,
-    __metadata$a("design:type", Boolean)
-], Input.prototype, "multiline", void 0);
-__decorate$a([
-    Property,
-    __metadata$a("design:type", Gravity)
-], Input.prototype, "textAlignment", void 0);
-__decorate$a([
-    Property,
-    __metadata$a("design:type", Function)
-], Input.prototype, "onTextChange", void 0);
-__decorate$a([
-    Property,
-    __metadata$a("design:type", Function)
-], Input.prototype, "onFocusChange", void 0);
-__decorate$a([
-    Property,
-    __metadata$a("design:type", Number)
-], Input.prototype, "maxLength", void 0);
+    __decorate$a([
+        Property,
+        __metadata$a("design:type", String)
+    ], Input.prototype, "text", void 0);
+    __decorate$a([
+        Property,
+        __metadata$a("design:type", Color)
+    ], Input.prototype, "textColor", void 0);
+    __decorate$a([
+        Property,
+        __metadata$a("design:type", Number)
+    ], Input.prototype, "textSize", void 0);
+    __decorate$a([
+        Property,
+        __metadata$a("design:type", String)
+    ], Input.prototype, "hintText", void 0);
+    __decorate$a([
+        Property,
+        __metadata$a("design:type", Color)
+    ], Input.prototype, "hintTextColor", void 0);
+    __decorate$a([
+        Property,
+        __metadata$a("design:type", Boolean)
+    ], Input.prototype, "multiline", void 0);
+    __decorate$a([
+        Property,
+        __metadata$a("design:type", Gravity)
+    ], Input.prototype, "textAlignment", void 0);
+    __decorate$a([
+        Property,
+        __metadata$a("design:type", Function)
+    ], Input.prototype, "onTextChange", void 0);
+    __decorate$a([
+        Property,
+        __metadata$a("design:type", Function)
+    ], Input.prototype, "onFocusChange", void 0);
+    __decorate$a([
+        Property,
+        __metadata$a("design:type", Number)
+    ], Input.prototype, "maxLength", void 0);
+    return Input;
+})();
 function input(config) {
     const ret = new Input;
     ret.layoutConfig = layoutConfig().just();
@@ -3488,21 +3538,24 @@ var __decorate$b = (undefined && undefined.__decorate) || function (decorators, 
 var __metadata$b = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-class NestedSlider extends Group {
-    addSlideItem(view) {
-        this.addChild(view);
+let NestedSlider = /** @class */ (() => {
+    class NestedSlider extends Group {
+        addSlideItem(view) {
+            this.addChild(view);
+        }
+        slidePage(context, page, smooth = false) {
+            return this.nativeChannel(context, "slidePage")({ page, smooth });
+        }
+        getSlidedPage(context) {
+            return this.nativeChannel(context, "getSlidedPage")();
+        }
     }
-    slidePage(context, page, smooth = false) {
-        return this.nativeChannel(context, "slidePage")({ page, smooth });
-    }
-    getSlidedPage(context) {
-        return this.nativeChannel(context, "getSlidedPage")();
-    }
-}
-__decorate$b([
-    Property,
-    __metadata$b("design:type", Function)
-], NestedSlider.prototype, "onPageSlided", void 0);
+    __decorate$b([
+        Property,
+        __metadata$b("design:type", Function)
+    ], NestedSlider.prototype, "onPageSlided", void 0);
+    return NestedSlider;
+})();
 
 var __decorate$c = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -3513,12 +3566,15 @@ var __decorate$c = (undefined && undefined.__decorate) || function (decorators, 
 var __metadata$c = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-class Draggable extends Stack {
-}
-__decorate$c([
-    Property,
-    __metadata$c("design:type", Function)
-], Draggable.prototype, "onDrag", void 0);
+let Draggable = /** @class */ (() => {
+    class Draggable extends Stack {
+    }
+    __decorate$c([
+        Property,
+        __metadata$c("design:type", Function)
+    ], Draggable.prototype, "onDrag", void 0);
+    return Draggable;
+})();
 function draggable(views, config) {
     const ret = new Draggable;
     ret.layoutConfig = layoutConfig().fit();
@@ -3547,28 +3603,31 @@ var __decorate$d = (undefined && undefined.__decorate) || function (decorators, 
 var __metadata$d = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-class Switch extends View {
-}
-__decorate$d([
-    Property,
-    __metadata$d("design:type", Boolean)
-], Switch.prototype, "state", void 0);
-__decorate$d([
-    Property,
-    __metadata$d("design:type", Function)
-], Switch.prototype, "onSwitch", void 0);
-__decorate$d([
-    Property,
-    __metadata$d("design:type", Color)
-], Switch.prototype, "offTintColor", void 0);
-__decorate$d([
-    Property,
-    __metadata$d("design:type", Color)
-], Switch.prototype, "onTintColor", void 0);
-__decorate$d([
-    Property,
-    __metadata$d("design:type", Color)
-], Switch.prototype, "thumbTintColor", void 0);
+let Switch = /** @class */ (() => {
+    class Switch extends View {
+    }
+    __decorate$d([
+        Property,
+        __metadata$d("design:type", Boolean)
+    ], Switch.prototype, "state", void 0);
+    __decorate$d([
+        Property,
+        __metadata$d("design:type", Function)
+    ], Switch.prototype, "onSwitch", void 0);
+    __decorate$d([
+        Property,
+        __metadata$d("design:type", Color)
+    ], Switch.prototype, "offTintColor", void 0);
+    __decorate$d([
+        Property,
+        __metadata$d("design:type", Color)
+    ], Switch.prototype, "onTintColor", void 0);
+    __decorate$d([
+        Property,
+        __metadata$d("design:type", Color)
+    ], Switch.prototype, "thumbTintColor", void 0);
+    return Switch;
+})();
 function switchView(config) {
     const ret = new Switch;
     ret.layoutConfig = layoutConfig().just();

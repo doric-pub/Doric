@@ -737,21 +737,21 @@ declare module 'doric/lib/src/native/modal' {
         alert: (arg: string | {
             title: string;
             msg: string;
-            okLabel?: string | undefined;
+            okLabel?: string;
         }) => Promise<any>;
         confirm: (arg: string | {
             title: string;
             msg: string;
-            okLabel?: string | undefined;
-            cancelLabel?: string | undefined;
+            okLabel?: string;
+            cancelLabel?: string;
         }) => Promise<any>;
         prompt: (arg: {
-            title?: string | undefined;
-            msg?: string | undefined;
-            okLabel?: string | undefined;
-            cancelLabel?: string | undefined;
-            text?: string | undefined;
-            defaultText?: string | undefined;
+            title?: string;
+            msg?: string;
+            okLabel?: string;
+            cancelLabel?: string;
+            text?: string;
+            defaultText?: string;
         }) => Promise<string>;
     };
 }
@@ -849,10 +849,10 @@ declare module 'doric/lib/src/native/notification' {
     import { BridgeContext } from "doric/lib/src/runtime/global";
     export function notification(context: BridgeContext): {
         publish: (args: {
-            biz?: string | undefined;
+            biz?: string;
             name: string;
-            data?: object | undefined;
-            androidSystem?: boolean | undefined;
+            data?: object;
+            androidSystem?: boolean;
         }) => Promise<any>;
         subscribe: (args: {
             biz?: string | undefined;
@@ -887,14 +887,14 @@ declare module 'doric/lib/src/native/coordinator' {
     import { Color } from "doric/lib/src/util/color";
     export function coordinator(context: BridgeContext): {
         verticalScrolling: (argument: {
-            scrollable: List | Scroller | FlowLayout;
+            scrollable: Scroller | List | FlowLayout;
             scrollRange: {
                 start: number;
                 end: number;
             };
             target: View | "NavBar";
             changing: {
-                name: "width" | "height" | "x" | "y" | "backgroundColor" | "alpha";
+                name: "backgroundColor" | "width" | "height" | "x" | "y" | "alpha";
                 start: number | Color;
                 end: number | Color;
             };

@@ -5,20 +5,20 @@ export declare function modal(context: BridgeContext): {
     alert: (arg: string | {
         title: string;
         msg: string;
-        okLabel?: string | undefined;
+        okLabel?: string;
     }) => Promise<any>;
     confirm: (arg: string | {
         title: string;
         msg: string;
-        okLabel?: string | undefined;
-        cancelLabel?: string | undefined;
+        okLabel?: string;
+        cancelLabel?: string;
     }) => Promise<any>;
     prompt: (arg: {
-        title?: string | undefined;
-        msg?: string | undefined;
-        okLabel?: string | undefined;
-        cancelLabel?: string | undefined;
-        text?: string | undefined;
-        defaultText?: string | undefined;
+        title?: string;
+        msg?: string;
+        okLabel?: string;
+        cancelLabel?: string;
+        text?: string;
+        defaultText?: string;
     }) => Promise<string>;
 };

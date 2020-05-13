@@ -25,71 +25,79 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { Superview, View, Property } from "../ui/view";
 import { Stack } from "./layouts";
 import { layoutConfig } from "../util/layoutconfig";
-export class SlideItem extends Stack {
-}
-__decorate([
-    Property,
-    __metadata("design:type", String)
-], SlideItem.prototype, "identifier", void 0);
-export class Slider extends Superview {
-    constructor() {
-        super(...arguments);
-        this.cachedViews = new Map;
-        this.ignoreDirtyCallOnce = false;
-        this.itemCount = 0;
-        this.batchCount = 3;
+let SlideItem = /** @class */ (() => {
+    class SlideItem extends Stack {
     }
-    allSubviews() {
-        return this.cachedViews.values();
-    }
-    getItem(itemIdx) {
-        let view = this.renderPage(itemIdx);
-        view.superview = this;
-        this.cachedViews.set(`${itemIdx}`, view);
-        return view;
-    }
-    isDirty() {
-        if (this.ignoreDirtyCallOnce) {
+    __decorate([
+        Property,
+        __metadata("design:type", String)
+    ], SlideItem.prototype, "identifier", void 0);
+    return SlideItem;
+})();
+export { SlideItem };
+let Slider = /** @class */ (() => {
+    class Slider extends Superview {
+        constructor() {
+            super(...arguments);
+            this.cachedViews = new Map;
             this.ignoreDirtyCallOnce = false;
-            //Ignore the dirty call once.
-            return false;
+            this.itemCount = 0;
+            this.batchCount = 3;
         }
-        return super.isDirty();
+        allSubviews() {
+            return this.cachedViews.values();
+        }
+        getItem(itemIdx) {
+            let view = this.renderPage(itemIdx);
+            view.superview = this;
+            this.cachedViews.set(`${itemIdx}`, view);
+            return view;
+        }
+        isDirty() {
+            if (this.ignoreDirtyCallOnce) {
+                this.ignoreDirtyCallOnce = false;
+                //Ignore the dirty call once.
+                return false;
+            }
+            return super.isDirty();
+        }
+        renderBunchedItems(start, length) {
+            this.ignoreDirtyCallOnce = true;
+            return new Array(Math.min(length, this.itemCount - start)).fill(0).map((_, idx) => {
+                const slideItem = this.getItem(start + idx);
+                return slideItem.toModel();
+            });
+        }
+        slidePage(context, page, smooth = false) {
+            return this.nativeChannel(context, "slidePage")({ page, smooth });
+        }
+        getSlidedPage(context) {
+            return this.nativeChannel(context, "getSlidedPage")();
+        }
     }
-    renderBunchedItems(start, length) {
-        this.ignoreDirtyCallOnce = true;
-        return new Array(Math.min(length, this.itemCount - start)).fill(0).map((_, idx) => {
-            const slideItem = this.getItem(start + idx);
-            return slideItem.toModel();
-        });
-    }
-    slidePage(context, page, smooth = false) {
-        return this.nativeChannel(context, "slidePage")({ page, smooth });
-    }
-    getSlidedPage(context) {
-        return this.nativeChannel(context, "getSlidedPage")();
-    }
-}
-__decorate([
-    Property,
-    __metadata("design:type", Object)
-], Slider.prototype, "itemCount", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Function)
-], Slider.prototype, "renderPage", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Object)
-], Slider.prototype, "batchCount", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Function)
-], Slider.prototype, "onPageSlided", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Boolean)
-], Slider.prototype, "loop", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Object)
+    ], Slider.prototype, "itemCount", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Function)
+    ], Slider.prototype, "renderPage", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Object)
+    ], Slider.prototype, "batchCount", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Function)
+    ], Slider.prototype, "onPageSlided", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Boolean)
+    ], Slider.prototype, "loop", void 0);
+    return Slider;
+})();
+export { Slider };
 export function slider(config) {
     const ret = new Slider;
     for (let key in config) {

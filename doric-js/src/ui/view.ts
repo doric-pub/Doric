@@ -378,5 +378,15 @@ export abstract class Group extends Superview {
     addChild(view: View) {
         this.children.push(view)
     }
+
+    removeChild(view: View) {
+        const ret = this.children.filter(e => e !== view)
+        this.children.length = 0
+        ret.forEach(e => this.addChild(e))
+    }
+
+    removeAllChildren() {
+        this.children.length = 0
+    }
 }
 

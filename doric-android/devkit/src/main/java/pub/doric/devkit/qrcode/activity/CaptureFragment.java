@@ -5,15 +5,14 @@ import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
-
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
@@ -38,7 +37,7 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
     private String characterSet;
     private InactivityTimer inactivityTimer;
     private static final float BEEP_VOLUME = 0.10f;
-    private boolean vibrate=false;
+    private boolean vibrate = false;
     private SurfaceView surfaceView;
     private SurfaceHolder surfaceHolder;
     private CodeUtils.AnalyzeCallback analyzeCallback;
@@ -47,7 +46,6 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         CameraManager.init(getActivity().getApplication());
 
@@ -199,7 +197,6 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
     }
 
 
-
     public CodeUtils.AnalyzeCallback getAnalyzeCallback() {
         return analyzeCallback;
     }
@@ -221,6 +218,7 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
     interface CameraInitCallBack {
         /**
          * Callback for Camera init result.
+         *
          * @param e If is's null,means success.otherwise Camera init failed with the Exception.
          */
         void callBack(Exception e);

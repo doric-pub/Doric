@@ -242,6 +242,8 @@ declare module 'doric/lib/src/ui/view' {
             readonly children: View[];
             allSubviews(): View[];
             addChild(view: View): void;
+            removeChild(view: View): void;
+            removeAllChildren(): void;
     }
 }
 

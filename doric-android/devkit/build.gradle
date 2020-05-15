@@ -1,13 +1,13 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
 
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 29
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
 
@@ -27,18 +27,19 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation "pub.doric:core:${rootProject.ext.Version}"
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation "com.google.android.material:material:1.0.0"
+    implementation "pub.doric.legacy:core:${rootProject.ext.Version}"
+    implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.squareup.okhttp3:okhttp:3.12.1'
     implementation 'com.google.code.gson:gson:2.8.5'
+
+    implementation 'com.android.support:design:28.0.0'
+    
     api 'org.greenrobot:eventbus:3.1.1'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
     implementation 'com.google.zxing:core:3.3.0'
     implementation 'com.google.zxing:android-core:3.3.0'
-
 }
 
 apply from: rootProject.file('scripts/upload.gradle')

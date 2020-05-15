@@ -7,5 +7,6 @@
 
     <application>
         <activity android:name=".ui.DoricDevActivity" />
+        <activity android:name=".qrcode.activity.CaptureActivity"/>
     </application>
 </manifest>

@@ -18,9 +18,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.gson.JsonObject;
-import com.uuzuche.lib_zxing.activity.CaptureActivity;
-import com.uuzuche.lib_zxing.activity.CodeUtils;
-import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -36,14 +33,18 @@ import pub.doric.devkit.event.ConnectExceptionEvent;
 import pub.doric.devkit.event.EOFExceptionEvent;
 import pub.doric.devkit.event.OpenEvent;
 import pub.doric.devkit.event.StartDebugEvent;
+import pub.doric.devkit.qrcode.DisplayUtil;
+import pub.doric.devkit.qrcode.activity.CaptureActivity;
+import pub.doric.devkit.qrcode.activity.CodeUtils;
 
 public class DoricDevActivity extends AppCompatActivity {
-    private int REQUEST_CODE=100;
+    private int REQUEST_CODE = 100;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
-        ZXingLibrary.initDisplayOpinion(this);
+        DisplayUtil.initDisplayOpinion(getApplicationContext());
         setContentView(R.layout.layout_debug_context);
         initDisconnect();
         if (DoricDev.getInstance().isInDevMode()) {
@@ -122,14 +123,14 @@ public class DoricDevActivity extends AppCompatActivity {
         finish();
     }
 
-    private void initDisconnect(){
+    private void initDisconnect() {
         LinearLayout container = findViewById(R.id.container);
-        Button button=new Button(this);
+        Button button = new Button(this);
         button.setText("断开连接");
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(DoricDev.getInstance().isInDevMode()){
+                if (DoricDev.getInstance().isInDevMode()) {
                     DoricDev.getInstance().closeDevMode();
                 }
                 finish();
@@ -137,6 +138,7 @@ public class DoricDevActivity extends AppCompatActivity {
         });
         container.addView(button);
     }
+
     private void initViews() {
         LinearLayout container = findViewById(R.id.container);
         LayoutInflater inflater = LayoutInflater.from(this);

@@ -26,63 +26,67 @@ import { View, Property } from "../ui/view";
 import { Color } from "../util/color";
 import { Gravity } from "../util/gravity";
 import { layoutConfig } from "../util/index.util";
-export class Input extends View {
-    getText(context) {
-        return this.nativeChannel(context, 'getText')();
+let Input = /** @class */ (() => {
+    class Input extends View {
+        getText(context) {
+            return this.nativeChannel(context, 'getText')();
+        }
+        setSelection(context, start, end = start) {
+            return this.nativeChannel(context, 'setSelection')({
+                start,
+                end,
+            });
+        }
+        requestFocus(context) {
+            return this.nativeChannel(context, 'requestFocus')();
+        }
+        releaseFocus(context) {
+            return this.nativeChannel(context, 'releaseFocus')();
+        }
     }
-    setSelection(context, start, end = start) {
-        return this.nativeChannel(context, 'setSelection')({
-            start,
-            end,
-        });
-    }
-    requestFocus(context) {
-        return this.nativeChannel(context, 'requestFocus')();
-    }
-    releaseFocus(context) {
-        return this.nativeChannel(context, 'releaseFocus')();
-    }
-}
-__decorate([
-    Property,
-    __metadata("design:type", String)
-], Input.prototype, "text", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Color)
-], Input.prototype, "textColor", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Number)
-], Input.prototype, "textSize", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", String)
-], Input.prototype, "hintText", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Color)
-], Input.prototype, "hintTextColor", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Boolean)
-], Input.prototype, "multiline", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Gravity)
-], Input.prototype, "textAlignment", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Function)
-], Input.prototype, "onTextChange", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Function)
-], Input.prototype, "onFocusChange", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Number)
-], Input.prototype, "maxLength", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", String)
+    ], Input.prototype, "text", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Color)
+    ], Input.prototype, "textColor", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Number)
+    ], Input.prototype, "textSize", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", String)
+    ], Input.prototype, "hintText", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Color)
+    ], Input.prototype, "hintTextColor", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Boolean)
+    ], Input.prototype, "multiline", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Gravity)
+    ], Input.prototype, "textAlignment", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Function)
+    ], Input.prototype, "onTextChange", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Function)
+    ], Input.prototype, "onFocusChange", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Number)
+    ], Input.prototype, "maxLength", void 0);
+    return Input;
+})();
+export { Input };
 export function input(config) {
     const ret = new Input;
     ret.layoutConfig = layoutConfig().just();

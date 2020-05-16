@@ -23,18 +23,22 @@ var __metadata = (this && this.__metadata) || function (k, v) {
  * limitations under the License.
  */
 import { Group, Property } from '../ui/view';
-export class NestedSlider extends Group {
-    addSlideItem(view) {
-        this.addChild(view);
+let NestedSlider = /** @class */ (() => {
+    class NestedSlider extends Group {
+        addSlideItem(view) {
+            this.addChild(view);
+        }
+        slidePage(context, page, smooth = false) {
+            return this.nativeChannel(context, "slidePage")({ page, smooth });
+        }
+        getSlidedPage(context) {
+            return this.nativeChannel(context, "getSlidedPage")();
+        }
     }
-    slidePage(context, page, smooth = false) {
-        return this.nativeChannel(context, "slidePage")({ page, smooth });
-    }
-    getSlidedPage(context) {
-        return this.nativeChannel(context, "getSlidedPage")();
-    }
-}
-__decorate([
-    Property,
-    __metadata("design:type", Function)
-], NestedSlider.prototype, "onPageSlided", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Function)
+    ], NestedSlider.prototype, "onPageSlided", void 0);
+    return NestedSlider;
+})();
+export { NestedSlider };

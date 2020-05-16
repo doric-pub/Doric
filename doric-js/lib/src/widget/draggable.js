@@ -25,12 +25,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { Property, View } from "../ui/view";
 import { Stack } from "../widget/layouts";
 import { layoutConfig } from "../util/layoutconfig";
-export class Draggable extends Stack {
-}
-__decorate([
-    Property,
-    __metadata("design:type", Function)
-], Draggable.prototype, "onDrag", void 0);
+let Draggable = /** @class */ (() => {
+    class Draggable extends Stack {
+    }
+    __decorate([
+        Property,
+        __metadata("design:type", Function)
+    ], Draggable.prototype, "onDrag", void 0);
+    return Draggable;
+})();
+export { Draggable };
 export function draggable(views, config) {
     const ret = new Draggable;
     ret.layoutConfig = layoutConfig().fit();

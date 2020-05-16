@@ -1,4 +1,3 @@
-export * from 'reflect-metadata';
 export declare type BridgeContext = {
     /**
      * The identify of current context

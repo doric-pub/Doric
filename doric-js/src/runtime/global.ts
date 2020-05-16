@@ -13,8 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from 'reflect-metadata'
-
 export type BridgeContext = {
     /**
      * The identify of current context

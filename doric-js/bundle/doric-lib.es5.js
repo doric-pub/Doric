@@ -222,7 +222,7 @@ var View = /** @class */ (function () {
         set: function (v) {
             this.x = v;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(View.prototype, "right", {
@@ -232,7 +232,7 @@ var View = /** @class */ (function () {
         set: function (v) {
             this.x = v - this.width;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(View.prototype, "top", {
@@ -242,7 +242,7 @@ var View = /** @class */ (function () {
         set: function (v) {
             this.y = v;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(View.prototype, "bottom", {
@@ -252,7 +252,7 @@ var View = /** @class */ (function () {
         set: function (v) {
             this.y = v - this.height;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(View.prototype, "centerX", {
@@ -262,7 +262,7 @@ var View = /** @class */ (function () {
         set: function (v) {
             this.x = v - this.width / 2;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(View.prototype, "centerY", {
@@ -272,7 +272,7 @@ var View = /** @class */ (function () {
         set: function (v) {
             this.y = v - this.height / 2;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(View.prototype, "dirtyProps", {
@@ -280,7 +280,7 @@ var View = /** @class */ (function () {
         get: function () {
             return this.__dirty_props__;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     View.prototype.onPropertyChanged = function (propKey, oldV, newV) {
@@ -1396,7 +1396,7 @@ var ScaleAnimation = /** @class */ (function (_super) {
         set: function (v) {
             this.scaleXChangeable.fromValue = v;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ScaleAnimation.prototype, "toScaleX", {
@@ -1406,7 +1406,7 @@ var ScaleAnimation = /** @class */ (function (_super) {
         set: function (v) {
             this.scaleXChangeable.toValue = v;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ScaleAnimation.prototype, "fromScaleY", {
@@ -1416,7 +1416,7 @@ var ScaleAnimation = /** @class */ (function (_super) {
         set: function (v) {
             this.scaleYChangeable.fromValue = v;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ScaleAnimation.prototype, "toScaleY", {
@@ -1426,7 +1426,7 @@ var ScaleAnimation = /** @class */ (function (_super) {
         set: function (v) {
             this.scaleYChangeable.toValue = v;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return ScaleAnimation;
@@ -1456,7 +1456,7 @@ var TranslationAnimation = /** @class */ (function (_super) {
         set: function (v) {
             this.translationXChangeable.fromValue = v;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(TranslationAnimation.prototype, "toTranslationX", {
@@ -1466,7 +1466,7 @@ var TranslationAnimation = /** @class */ (function (_super) {
         set: function (v) {
             this.translationXChangeable.toValue = v;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(TranslationAnimation.prototype, "fromTranslationY", {
@@ -1476,7 +1476,7 @@ var TranslationAnimation = /** @class */ (function (_super) {
         set: function (v) {
             this.translationYChangeable.fromValue = v;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(TranslationAnimation.prototype, "toTranslationY", {
@@ -1486,7 +1486,7 @@ var TranslationAnimation = /** @class */ (function (_super) {
         set: function (v) {
             this.translationYChangeable.toValue = v;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return TranslationAnimation;
@@ -1510,7 +1510,7 @@ var RotationAnimation = /** @class */ (function (_super) {
         set: function (v) {
             this.rotationChaneable.fromValue = v;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(RotationAnimation.prototype, "toRotation", {
@@ -1520,7 +1520,7 @@ var RotationAnimation = /** @class */ (function (_super) {
         set: function (v) {
             this.rotationChaneable.toValue = v;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return RotationAnimation;
@@ -1541,7 +1541,7 @@ var AnimationSet = /** @class */ (function () {
             this._duration = v;
             this.animations.forEach(function (e) { return e.duration = v; });
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     AnimationSet.prototype.toModel = function () {
@@ -1927,8 +1927,7 @@ var List = /** @class */ (function (_super) {
         }
     };
     List.prototype.scrollToItem = function (context, index, config) {
-        var _a;
-        var animated = (_a = config) === null || _a === void 0 ? void 0 : _a.animated;
+        var animated = config === null || config === void 0 ? void 0 : config.animated;
         return this.nativeChannel(context, 'scrollToItem')({ index: index, animated: animated, });
     };
     List.prototype.reset = function () {

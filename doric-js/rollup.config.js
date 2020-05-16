@@ -27,7 +27,6 @@ export default [
         plugins: [
             resolve({ mainFields: ["jsnext"] }),
         ],
-        external: ['reflect-metadata'],
         onwarn: function (warning) {
             if (warning.code === 'THIS_IS_UNDEFINED') { return; }
             console.warn(warning.message);
@@ -80,7 +79,6 @@ export default [
                 transforms: { dangerousForOf: true }
             }),
         ],
-        external: ['reflect-metadata'],
         onwarn: function (warning) {
             if (warning.code === 'THIS_IS_UNDEFINED') { return; }
             console.warn(warning.message);

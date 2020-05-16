@@ -29,7 +29,7 @@
     "reflect-metadata": "^0.1.13",
     "rollup": "^1.29.0",
     "tslib": "^1.10.0",
-    "typescript": "^3.7.4",
+    "typescript": "^3.9.2",
     "ws": "^7.2.1"
   },
   "publishConfig": {

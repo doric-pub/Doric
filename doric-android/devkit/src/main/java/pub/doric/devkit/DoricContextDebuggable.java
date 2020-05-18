@@ -22,8 +22,9 @@ public class DoricContextDebuggable {
                 doricContext.setDriver(doricDebugDriver);
 
                 doricContext.getRootNode().setId("");
-                doricContext.callEntity(DoricConstant.DORIC_ENTITY_INIT, doricContext.getInitParams(), doricContext.getExtra());
+                doricContext.callEntity(DoricConstant.DORIC_ENTITY_INIT, doricContext.getExtra());
                 doricContext.callEntity(DoricConstant.DORIC_ENTITY_CREATE);
+                doricContext.callEntity(DoricConstant.DORIC_ENTITY_BUILD, doricContext.getInitParams());
             }
         });
     }
@@ -34,8 +35,9 @@ public class DoricContextDebuggable {
         doricContext.setDriver(DoricNativeDriver.getInstance());
 
         doricContext.getRootNode().setId("");
-        doricContext.callEntity(DoricConstant.DORIC_ENTITY_INIT, doricContext.getInitParams(), doricContext.getExtra());
+        doricContext.callEntity(DoricConstant.DORIC_ENTITY_INIT, doricContext.getExtra());
         doricContext.callEntity(DoricConstant.DORIC_ENTITY_CREATE);
+        doricContext.callEntity(DoricConstant.DORIC_ENTITY_BUILD, doricContext.getInitParams());
     }
 
     public DoricContext getContext() {

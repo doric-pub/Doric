@@ -2228,7 +2228,7 @@ let Panel = /** @class */ (() => {
         }
         __init__(data) {
             if (data) {
-                this.__data__ = JSON.parse(data);
+                this.__data__ = data.width ? data: JSON.parse(data);
             }
         }
         __onCreate__() {

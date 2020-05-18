@@ -125,14 +125,16 @@
 - (void)onStopDebugEvent {
     _context.driver = [DoricNativeDriver instance];
     _context.rootNode.viewId = nil;
-    [_context callEntity:DORIC_ENTITY_INIT, _context.initialParams, nil];
+    [_context callEntity:DORIC_ENTITY_INIT, _context.extra, nil];
     [_context callEntity:DORIC_ENTITY_CREATE, nil];
+    [_context callEntity:DORIC_ENTITY_BUILD withArgumentsArray:@[_context.initialParams]];
 }
 
 - (void)onDebuggerReadyEvent {
     _context.driver = _driver;
     _context.rootNode.viewId = nil;
-    [_context callEntity:DORIC_ENTITY_INIT, _context.initialParams, nil];
+    [_context callEntity:DORIC_ENTITY_INIT, _context.extra, nil];
     [_context callEntity:DORIC_ENTITY_CREATE, nil];
+    [_context callEntity:DORIC_ENTITY_BUILD withArgumentsArray:@[_context.initialParams]];
 }
 @end

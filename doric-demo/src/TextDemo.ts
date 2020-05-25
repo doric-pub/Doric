@@ -46,13 +46,34 @@ class TextDemo extends Panel {
                         fontStyle: "bold_italic"
                     }),
                     text({
-                        text: "This is Icon Font text \ue631",
+                        text: "Icon Font text from   \ue631 ",
+                        textSize: 10,
                         font: 'iconfont'
                     }),
                     text({
-                        text: "This is Icon Font text \ue631",
+                        text: "Icon Font text from   \ue631 ",
                         textSize: 30,
                         font: 'iconfont'
+                    }),
+                    text({
+                        text: "Icon Font text from res/font/  \ue631 ",
+                        textSize: 10,
+                        font: 'font_iconfont'
+                    }),
+                    text({
+                        text: "Icon Font text from res/font/  \ue631 ",
+                        textSize: 30,
+                        font: 'font_iconfont.ttf'
+                    }),
+                    text({
+                        text: "Icon Font text from assets/fonts/  \ue631 ",
+                        textSize: 10,
+                        font: 'fonts/assets_iconfont'
+                    }),
+                    text({
+                        text: "Icon Font text from assets/fonts/  \ue631 ",
+                        textSize: 30,
+                        font: 'fonts/assets_iconfont.ttf'
                     }),
                     text({
                         text: "This is line Spaceing 0,\nSecond line",

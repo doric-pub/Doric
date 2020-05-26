@@ -64,10 +64,14 @@ public class DoricPanelFragment extends Fragment implements IDoricNavigator {
             loadJSBundle();
         } else {
             DoricPanel panel = view.findViewById(R.id.doric_panel);
-            if (doricPanel != view.findViewById(R.id.doric_panel)) {
-                DoricContext context = doricPanel.getDoricContext();
-                panel.config(context);
+            if (doricPanel != panel) {
+                DoricContext doricContext = doricPanel.getDoricContext();
                 doricPanel = panel;
+                if (doricContext == null) {
+                    loadJSBundle();
+                } else {
+                    panel.config(doricContext);
+                }
             }
         }
     }

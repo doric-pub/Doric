@@ -11,8 +11,15 @@ class TextDemo extends Panel {
                         text: "This is normal text",
                     }),
                     text({
-                        text: "This is normal text",
+                        text: "This is normal text with shadow ",
                         textSize: 20,
+                        shadow:  {
+                            color: Color.parse("#1DD6DE"),
+                            offsetX: 0,
+                            offsetY: 1,
+                            opacity: 0.8,
+                            radius: 3.0
+                        }
                     }),
                     text({
                         text: "This is normal text",

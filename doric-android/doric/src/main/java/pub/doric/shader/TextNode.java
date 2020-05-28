@@ -223,6 +223,17 @@ public class TextNode extends ViewNode<TextView> {
                     }
                 }
                 break;
+            case "shadow":
+                if (prop.isObject()) {
+                    mView.setAlpha((prop.asObject().getProperty("opacity").asNumber().toFloat()));
+                    mView.setShadowLayer(
+                            prop.asObject().getProperty("radius").asNumber().toFloat(),
+                            DoricUtils.dp2px(prop.asObject().getProperty("offsetX").asNumber().toFloat()),
+                            DoricUtils.dp2px(prop.asObject().getProperty("offsetY").asNumber().toFloat()),
+                            prop.asObject().getProperty("color").asNumber().toInt()
+                    );
+                }
+                break;
             default:
                 super.blend(view, name, prop);
                 break;

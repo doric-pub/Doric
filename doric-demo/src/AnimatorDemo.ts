@@ -1,4 +1,4 @@
-import { animate, Group, Panel, gravity, Color, vlayout, layoutConfig, modal, stack, hlayout, text, } from "doric";
+import { animate, Group, Panel, gravity, Color, vlayout, layoutConfig, modal, stack, hlayout, text, image, } from "doric";
 import { title, colors, box } from "./utils";
 
 function thisLabel(str: string) {
@@ -16,7 +16,9 @@ function thisLabel(str: string) {
 @Entry
 class AnimatorDemo extends Panel {
     build(rootView: Group): void {
-        const view = box(2)
+        const view = image({
+            imageUrl: "https://pic3.zhimg.com/v2-5847d0813bd0deba333fcbe52435e83e_b.jpg"
+        })
         view.onClick = () => {
             modal(context).toast('Clicked')
         }
@@ -42,6 +44,8 @@ class AnimatorDemo extends Panel {
                                             view.translationX = 0
                                             view.translationY = 0
                                             view.rotation = 0
+                                            view.rotationX = 0
+                                            view.rotationY = 0
                                         },
                                         duration: 1500,
                                     }).then(() => {
@@ -119,9 +123,37 @@ class AnimatorDemo extends Panel {
                                         animate(context)({
                                             animations: () => {
                                                 if (view.rotation) {
-                                                    view.rotation += 0.5
+                                                    view.rotation += 0.25
                                                 } else {
-                                                    view.rotation = 0.5
+                                                    view.rotation = 0.25
+                                                }
+                                            },
+                                            duration: 1000,
+                                        });
+                                    }
+                                }),
+                                thisLabel('RotationX').apply({
+                                    onClick: () => {
+                                        animate(context)({
+                                            animations: () => {
+                                                if (view.rotationX) {
+                                                    view.rotationX += 0.25
+                                                } else {
+                                                    view.rotationX = 0.25
+                                                }
+                                            },
+                                            duration: 1000,
+                                        });
+                                    }
+                                }),
+                                thisLabel('RotationY').apply({
+                                    onClick: () => {
+                                        animate(context)({
+                                            animations: () => {
+                                                if (view.rotationY) {
+                                                    view.rotationY += 0.25
+                                                } else {
+                                                    view.rotationY = 0.25
                                                 }
                                             },
                                             duration: 1000,

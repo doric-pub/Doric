@@ -102,6 +102,8 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
 @property(nonatomic, copy) NSNumber *scaleX;
 @property(nonatomic, copy) NSNumber *scaleY;
 @property(nonatomic, copy) NSNumber *rotation;
+@property(nonatomic, copy) NSNumber *rotationX;
+@property(nonatomic, copy) NSNumber *rotationY;
 @property(nonatomic, copy) NSNumber *pivotX;
 @property(nonatomic, copy) NSNumber *pivotY;
 @property(nonatomic, strong) NSDictionary *gradientProps;
@@ -158,8 +160,24 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     }
     self.view.layer.anchorPoint = CGPointMake(self.pivotX.floatValue
             ?: 0.5f, self.pivotY.floatValue ?: 0.5f);
-    if (!CGAffineTransformEqualToTransform(transform, self.view.transform)) {
-        self.view.transform = transform;
+
+    if (self.rotationX || self.rotationY) {
+        CATransform3D transform3D = CATransform3DMakeAffineTransform(transform);
+        transform3D.m34 = -1.0 / 500;
+
+        if (self.rotationX) {
+            transform3D = CATransform3DRotate(transform3D, (self.rotationX.floatValue ?: 0) * M_PI, 1, 0, 0);
+        }
+        if (self.rotationY) {
+            transform3D = CATransform3DRotate(transform3D, (self.rotationY.floatValue ?: 0) * M_PI, 0, 1, 0);
+        }
+        if (!CATransform3DEqualToTransform(transform3D, self.view.layer.transform)) {
+            self.view.layer.transform = transform3D;
+        }
+    } else {
+        if (!CGAffineTransformEqualToTransform(transform, self.view.transform)) {
+            self.view.transform = transform;
+        }
     }
 }
 
@@ -252,6 +270,10 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
         self.pivotY = prop;
     } else if ([name isEqualToString:@"rotation"]) {
         self.rotation = prop;
+    } else if ([name isEqualToString:@"rotationX"]) {
+        self.rotationX = prop;
+    } else if ([name isEqualToString:@"rotationY"]) {
+        self.rotationY = prop;
     } else if ([name isEqualToString:@"padding"]) {
         view.doricLayout.paddingLeft = 0;
         view.doricLayout.paddingRight = 0;
@@ -342,28 +364,28 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
             return;
         }
         self.gradientSize = self.view.frame.size;
-        
+
         NSMutableArray *colors = [[NSMutableArray alloc] init];
         NSMutableArray *arrayLocations = nil;
-        if ([dict objectForKey:@"colors"] != nil) {
+        if (dict[@"colors"] != nil) {
             NSMutableArray *arrayColors = [dict mutableArrayValueForKey:@"colors"];
             [arrayColors forEach:^(id obj) {
                 [colors addObject:(__bridge id) DoricColor(obj).CGColor];
             }];
-            if ([dict objectForKey:@"locations"] != nil) {
+            if (dict[@"locations"] != nil) {
                 arrayLocations = [dict mutableArrayValueForKey:@"locations"];
             }
-            
+
         } else {
-            if ([dict objectForKey:@"start"] != nil && [dict objectForKey:@"end"] != nil) {
+            if (dict[@"start"] != nil && dict[@"end"] != nil) {
                 UIColor *start = DoricColor(dict[@"start"]);
                 UIColor *end = DoricColor(dict[@"end"]);
-                
+
                 [colors addObject:(__bridge id) start.CGColor];
                 [colors addObject:(__bridge id) end.CGColor];
             }
         }
-        
+
         int orientation = [dict[@"orientation"] intValue];
         CGPoint startPoint;
         CGPoint endPoint;
@@ -392,7 +414,7 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
             startPoint = CGPointMake(0, 0);
             endPoint = CGPointMake(0, 1);
         }
-        
+
         UIImage *gradientImage;
         if (arrayLocations != nil) {
             CGFloat locations[arrayLocations.count];
@@ -400,16 +422,16 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
                 locations[i] = [arrayLocations[i] floatValue];
             }
             gradientImage = [self gradientImageFromColors:colors
-                                                         locations:locations
-                                                        startPoint:startPoint
-                                                          endPoint:endPoint
-                                                           imgSize:self.gradientSize];
+                                                locations:locations
+                                               startPoint:startPoint
+                                                 endPoint:endPoint
+                                                  imgSize:self.gradientSize];
         } else {
             gradientImage = [self gradientImageFromColors:colors
-                                                         locations:NULL
-                                                        startPoint:startPoint
-                                                          endPoint:endPoint
-                                                           imgSize:self.gradientSize];
+                                                locations:NULL
+                                               startPoint:startPoint
+                                                 endPoint:endPoint
+                                                  imgSize:self.gradientSize];
         }
         self.view.backgroundColor = [UIColor colorWithPatternImage:gradientImage];
     }];

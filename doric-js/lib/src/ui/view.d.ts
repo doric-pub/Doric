@@ -103,8 +103,19 @@ export declare abstract class View implements Modeling {
     pivotY?: number;
     /**
      * rotation*PI
+     * In Z
      */
     rotation?: number;
+    /**
+     * rotation*PI
+     * In X
+     */
+    rotationX?: number;
+    /**
+     * rotation*PI
+     * In Y
+     */
+    rotationY?: number;
     /**----------transform----------*/
     /**
      * Only affected when its superview or itself is FlexLayout.

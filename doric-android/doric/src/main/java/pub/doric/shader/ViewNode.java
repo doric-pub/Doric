@@ -23,6 +23,7 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
+import android.graphics.Matrix;
 import android.graphics.Shader;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.ShapeDrawable;
@@ -32,9 +33,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
+import android.view.animation.Transformation;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
@@ -468,6 +471,34 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                     setRotation(prop.asNumber().toFloat());
                 }
                 break;
+            case "rotationX":
+                if (!prop.isNumber()) {
+                    return;
+                }
+                if (isAnimating()) {
+                    addAnimator(ObjectAnimator.ofFloat(
+                            this,
+                            name,
+                            getRotationX(),
+                            prop.asNumber().toFloat()));
+                } else {
+                    setRotationX(prop.asNumber().toFloat());
+                }
+                break;
+            case "rotationY":
+                if (!prop.isNumber()) {
+                    return;
+                }
+                if (isAnimating()) {
+                    addAnimator(ObjectAnimator.ofFloat(
+                            this,
+                            name,
+                            getRotationY(),
+                            prop.asNumber().toFloat()));
+                } else {
+                    setRotationY(prop.asNumber().toFloat());
+                }
+                break;
             case "padding":
                 if (prop.isObject()) {
                     setPadding(prop.asObject());
@@ -798,6 +829,26 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     }
 
     @DoricMethod
+    public void setRotationX(float rotation) {
+        getNodeView().setRotationX(rotation * 180);
+    }
+
+    @DoricMethod
+    public float getRotationX() {
+        return getNodeView().getRotationX() / 180;
+    }
+
+    @DoricMethod
+    public void setRotationY(float rotation) {
+        getNodeView().setRotationY(rotation * 180);
+    }
+
+    @DoricMethod
+    public float getRotationY() {
+        return getNodeView().getRotationY() / 180;
+    }
+
+    @DoricMethod
     public void setPivotX(float v) {
         getNodeView().setPivotX(v * getNodeView().getWidth());
     }
@@ -1003,5 +1054,19 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 .put("x", DoricUtils.px2dp(position[0]))
                 .put("y", DoricUtils.px2dp(position[1]))
                 .toJSONObject();
+    }
+
+    private static class MyAnimation extends Animation {
+        private Matrix matrix;
+
+        public MyAnimation(Matrix matrix) {
+            this.matrix = matrix;
+        }
+
+        @Override
+        protected void applyTransformation(float interpolatedTime, Transformation t) {
+            super.applyTransformation(interpolatedTime, t);
+            t.getMatrix().set(matrix);
+        }
     }
 }

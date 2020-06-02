@@ -297,6 +297,19 @@ export abstract class View implements Modeling {
 
     @Property
     rotation?: number
+
+    /**
+     * rotation*PI
+     * In X
+     */
+    @Property
+    rotationX?: number
+    /**
+     * rotation*PI
+     * In Y
+     */
+    @Property
+    rotationY?: number
     /**----------transform----------*/
 
     @Property

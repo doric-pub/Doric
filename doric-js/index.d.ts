@@ -220,8 +220,19 @@ declare module 'doric/lib/src/ui/view' {
             pivotY?: number;
             /**
                 * rotation*PI
+                * In Z
                 */
             rotation?: number;
+            /**
+                * rotation*PI
+                * In X
+                */
+            rotationX?: number;
+            /**
+                * rotation*PI
+                * In Y
+                */
+            rotationY?: number;
             /**
                 * Only affected when its superview or itself is FlexLayout.
                 */

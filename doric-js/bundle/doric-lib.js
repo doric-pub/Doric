@@ -384,6 +384,14 @@ let View = /** @class */ (() => {
     ], View.prototype, "rotation", void 0);
     __decorate([
         Property,
+        __metadata("design:type", Number)
+    ], View.prototype, "rotationX", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", Number)
+    ], View.prototype, "rotationY", void 0);
+    __decorate([
+        Property,
         __metadata("design:type", Object)
     ], View.prototype, "flexConfig", void 0);
     return View;

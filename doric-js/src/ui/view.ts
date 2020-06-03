@@ -311,6 +311,13 @@ export abstract class View implements Modeling {
      */
     @Property
     rotationY?: number
+
+    /**
+     * Determines the distance between the z=0 plane and the user in order to give a 3D-positioned element some perspective.
+     * Default is 200
+     */
+    @Property
+    perspective?: number
     /**----------transform----------*/
     /**
      * Only affected when its superview or itself is FlexLayout.

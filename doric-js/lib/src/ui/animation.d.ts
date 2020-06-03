@@ -1,5 +1,5 @@
 import { Modeling, Model } from "../util/types";
-export declare type AnimatedKey = "translationX" | "translationY" | "scaleX" | "scaleY" | "rotation" | "pivotX" | "pivotY";
+export declare type AnimatedKey = "translationX" | "translationY" | "scaleX" | "scaleY" | "rotation" | "pivotX" | "pivotY" | "rotationX" | "rotationY";
 export declare enum RepeatMode {
     RESTART = 1,
     REVERSE = 2
@@ -105,6 +105,22 @@ export declare class TranslationAnimation extends Animation {
     get toTranslationY(): number;
 }
 export declare class RotationAnimation extends Animation {
+    private rotationChaneable;
+    constructor();
+    set fromRotation(v: number);
+    get fromRotation(): number;
+    set toRotation(v: number);
+    get toRotation(): number;
+}
+export declare class RotationXAnimation extends Animation {
+    private rotationChaneable;
+    constructor();
+    set fromRotation(v: number);
+    get fromRotation(): number;
+    set toRotation(v: number);
+    get toRotation(): number;
+}
+export declare class RotationYAnimation extends Animation {
     private rotationChaneable;
     constructor();
     set fromRotation(v: number);

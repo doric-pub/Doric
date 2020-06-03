@@ -234,6 +234,11 @@ declare module 'doric/lib/src/ui/view' {
                 */
             rotationY?: number;
             /**
+                * Determines the distance between the z=0 plane and the user in order to give a 3D-positioned element some perspective.
+                * Default is 200
+                */
+            perspective?: number;
+            /**
                 * Only affected when its superview or itself is FlexLayout.
                 */
             flexConfig?: FlexConfig;
@@ -279,7 +284,7 @@ declare module 'doric/lib/src/ui/panel' {
 
 declare module 'doric/lib/src/ui/animation' {
     import { Modeling, Model } from "doric/lib/src/util/types";
-    export type AnimatedKey = "translationX" | "translationY" | "scaleX" | "scaleY" | "rotation" | "pivotX" | "pivotY";
+    export type AnimatedKey = "translationX" | "translationY" | "scaleX" | "scaleY" | "rotation" | "pivotX" | "pivotY" | "rotationX" | "rotationY";
     export enum RepeatMode {
             RESTART = 1,
             REVERSE = 2
@@ -381,6 +386,20 @@ declare module 'doric/lib/src/ui/animation' {
             get toTranslationY(): number;
     }
     export class RotationAnimation extends Animation {
+            constructor();
+            set fromRotation(v: number);
+            get fromRotation(): number;
+            set toRotation(v: number);
+            get toRotation(): number;
+    }
+    export class RotationXAnimation extends Animation {
+            constructor();
+            set fromRotation(v: number);
+            get fromRotation(): number;
+            set toRotation(v: number);
+            get toRotation(): number;
+    }
+    export class RotationYAnimation extends Animation {
             constructor();
             set fromRotation(v: number);
             get fromRotation(): number;

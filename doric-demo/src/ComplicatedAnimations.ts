@@ -1,4 +1,4 @@
-import { Group, Panel, gravity, Color, AnimationSet, vlayout, layoutConfig, modal, stack, hlayout, text, TranslationAnimation, ScaleAnimation, RotationAnimation, TimingFunction } from "doric";
+import { Group, Panel, gravity, Color, AnimationSet, vlayout, layoutConfig, modal, stack, hlayout, text, TranslationAnimation, ScaleAnimation, RotationAnimation, TimingFunction, RotationXAnimation, RotationYAnimation, image } from "doric";
 import { title, colors, box } from "./utils";
 
 function thisLabel(str: string) {
@@ -17,7 +17,9 @@ function thisLabel(str: string) {
 class AnimationDemo extends Panel {
     build(rootView: Group): void {
         const view = box(2)
-        const view2 = box(3)
+        const view2 = image({
+            imageUrl: "https://pic3.zhimg.com/v2-5847d0813bd0deba333fcbe52435e83e_b.jpg"
+        })
         view.onClick = () => {
             modal(context).toast('Clicked')
         }
@@ -130,6 +132,28 @@ class AnimationDemo extends Panel {
                                         view.doAnimation(context, animationSet)
                                     }
                                 }),
+                                thisLabel('rotationX').apply({
+                                    onClick: () => {
+                                        const rotation = new RotationXAnimation
+                                        rotation.duration = 5000
+                                        rotation.fromRotation = 0
+                                        rotation.toRotation = 0.5
+                                        const animationSet = new AnimationSet
+                                        animationSet.addAnimation(rotation)
+                                        view2.doAnimation(context, animationSet)
+                                    }
+                                }),
+                                thisLabel('rotationY').apply({
+                                    onClick: () => {
+                                        const rotation = new RotationYAnimation
+                                        rotation.duration = 5000
+                                        rotation.fromRotation = 0
+                                        rotation.toRotation = 4
+                                        const animationSet = new AnimationSet
+                                        animationSet.addAnimation(rotation)
+                                        view2.doAnimation(context, animationSet)
+                                    }
+                                }),
                             ],
                             { space: 10 }
                         ),
@@ -202,7 +226,7 @@ class AnimationDemo extends Panel {
                         view2.also(v => {
                             v.x = v.y = 20
                             v.y = 40
-                            v.scaleX = 1.5
+                            //v.scaleX = 1.5
                         })
                     ],
                     {

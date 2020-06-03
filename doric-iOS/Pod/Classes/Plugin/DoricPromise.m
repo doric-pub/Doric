@@ -41,6 +41,9 @@
 
 - (void)resolve:(id)result {
     __weak typeof(self) __self = self;
+    if (self.context == nil) {
+        return;
+    }
     [[self.context.driver invokeDoricMethod:DORIC_BRIDGE_RESOLVE
                              argumentsArray:result
                                      ? @[self.context.contextId, self.callbackId, result]

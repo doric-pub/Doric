@@ -192,6 +192,52 @@ export class RotationAnimation extends Animation {
         return this.rotationChaneable.toValue;
     }
 }
+export class RotationXAnimation extends Animation {
+    constructor() {
+        super();
+        this.rotationChaneable = {
+            key: "rotationX",
+            fromValue: 1,
+            toValue: 1,
+        };
+        this.changeables.set("rotationX", this.rotationChaneable);
+    }
+    set fromRotation(v) {
+        this.rotationChaneable.fromValue = v;
+    }
+    get fromRotation() {
+        return this.rotationChaneable.fromValue;
+    }
+    set toRotation(v) {
+        this.rotationChaneable.toValue = v;
+    }
+    get toRotation() {
+        return this.rotationChaneable.toValue;
+    }
+}
+export class RotationYAnimation extends Animation {
+    constructor() {
+        super();
+        this.rotationChaneable = {
+            key: "rotationY",
+            fromValue: 1,
+            toValue: 1,
+        };
+        this.changeables.set("rotationY", this.rotationChaneable);
+    }
+    set fromRotation(v) {
+        this.rotationChaneable.fromValue = v;
+    }
+    get fromRotation() {
+        return this.rotationChaneable.fromValue;
+    }
+    set toRotation(v) {
+        this.rotationChaneable.toValue = v;
+    }
+    get toRotation() {
+        return this.rotationChaneable.toValue;
+    }
+}
 export class AnimationSet {
     constructor() {
         this.animations = [];

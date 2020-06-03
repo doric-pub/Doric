@@ -108,6 +108,7 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
 @property(nonatomic, copy) NSNumber *pivotY;
 @property(nonatomic, strong) NSDictionary *gradientProps;
 @property(nonatomic, assign) CGSize gradientSize;
+@property(nonatomic, assign) CGFloat perspective;
 @end
 
 @implementation DoricViewNode
@@ -115,6 +116,7 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
 - (instancetype)initWithContext:(DoricContext *)doricContext {
     if (self = [super initWithContext:doricContext]) {
         _callbackIds = [[NSMutableDictionary alloc] init];
+        _perspective = 200;
     }
     return self;
 }
@@ -163,8 +165,7 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
 
     if (self.rotationX || self.rotationY) {
         CATransform3D transform3D = CATransform3DMakeAffineTransform(transform);
-        transform3D.m34 = -1.0 / 500;
-
+        transform3D.m34 = -1.0 / self.perspective;
         if (self.rotationX) {
             transform3D = CATransform3DRotate(transform3D, (self.rotationX.floatValue ?: 0) * M_PI, 1, 0, 0);
         }
@@ -274,6 +275,8 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
         self.rotationX = prop;
     } else if ([name isEqualToString:@"rotationY"]) {
         self.rotationY = prop;
+    } else if ([name isEqualToString:@"perspective"]) {
+        self.perspective = [prop floatValue];
     } else if ([name isEqualToString:@"padding"]) {
         view.doricLayout.paddingLeft = 0;
         view.doricLayout.paddingRight = 0;
@@ -733,6 +736,12 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     if ([@"rotation" isEqualToString:key]) {
         return self.rotation;
     }
+    if ([@"rotationX" isEqualToString:key]) {
+        return self.rotationX;
+    }
+    if ([@"rotationY" isEqualToString:key]) {
+        return self.rotationY;
+    }
     return nil;
 }
 
@@ -747,6 +756,10 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
         self.scaleY = value;
     } else if ([@"rotation" isEqualToString:key]) {
         self.rotation = value;
+    } else if ([@"rotationX" isEqualToString:key]) {
+        self.rotationX = value;
+    } else if ([@"rotationY" isEqualToString:key]) {
+        self.rotationY = value;
     }
 }
 
@@ -763,6 +776,14 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
         animation.toValue = params[@"toValue"];
     } else if ([@"rotation" isEqualToString:key]) {
         animation.keyPath = @"transform.rotation.z";
+        animation.fromValue = @([params[@"fromValue"] floatValue] * M_PI);
+        animation.toValue = @([params[@"toValue"] floatValue] * M_PI);
+    } else if ([@"rotationX" isEqualToString:key]) {
+        animation.keyPath = @"transform.rotation.x";
+        animation.fromValue = @([params[@"fromValue"] floatValue] * M_PI);
+        animation.toValue = @([params[@"toValue"] floatValue] * M_PI);
+    } else if ([@"rotationY" isEqualToString:key]) {
+        animation.keyPath = @"transform.rotation.y";
         animation.fromValue = @([params[@"fromValue"] floatValue] * M_PI);
         animation.toValue = @([params[@"toValue"] floatValue] * M_PI);
     } else if ([@"backgroundColor" isEqualToString:key]) {

@@ -392,6 +392,10 @@ let View = /** @class */ (() => {
     ], View.prototype, "rotationY", void 0);
     __decorate([
         Property,
+        __metadata("design:type", Number)
+    ], View.prototype, "perspective", void 0);
+    __decorate([
+        Property,
         __metadata("design:type", Object)
     ], View.prototype, "flexConfig", void 0);
     return View;
@@ -1130,6 +1134,52 @@ class RotationAnimation extends Animation {
             toValue: 1,
         };
         this.changeables.set("rotation", this.rotationChaneable);
+    }
+    set fromRotation(v) {
+        this.rotationChaneable.fromValue = v;
+    }
+    get fromRotation() {
+        return this.rotationChaneable.fromValue;
+    }
+    set toRotation(v) {
+        this.rotationChaneable.toValue = v;
+    }
+    get toRotation() {
+        return this.rotationChaneable.toValue;
+    }
+}
+class RotationXAnimation extends Animation {
+    constructor() {
+        super();
+        this.rotationChaneable = {
+            key: "rotationX",
+            fromValue: 1,
+            toValue: 1,
+        };
+        this.changeables.set("rotationX", this.rotationChaneable);
+    }
+    set fromRotation(v) {
+        this.rotationChaneable.fromValue = v;
+    }
+    get fromRotation() {
+        return this.rotationChaneable.fromValue;
+    }
+    set toRotation(v) {
+        this.rotationChaneable.toValue = v;
+    }
+    get toRotation() {
+        return this.rotationChaneable.toValue;
+    }
+}
+class RotationYAnimation extends Animation {
+    constructor() {
+        super();
+        this.rotationChaneable = {
+            key: "rotationY",
+            fromValue: 1,
+            toValue: 1,
+        };
+        this.changeables.set("rotationY", this.rotationChaneable);
     }
     set fromRotation(v) {
         this.rotationChaneable.fromValue = v;
@@ -2702,6 +2752,8 @@ exports.RIGHT = RIGHT;
 exports.Refreshable = Refreshable;
 exports.Root = Root;
 exports.RotationAnimation = RotationAnimation;
+exports.RotationXAnimation = RotationXAnimation;
+exports.RotationYAnimation = RotationYAnimation;
 exports.ScaleAnimation = ScaleAnimation;
 exports.Scroller = Scroller;
 exports.SlideItem = SlideItem;

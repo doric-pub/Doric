@@ -23,7 +23,6 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
-import android.graphics.Matrix;
 import android.graphics.Shader;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.ShapeDrawable;
@@ -33,11 +32,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
-import android.view.animation.Transformation;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
@@ -512,6 +509,11 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
             case "flexConfig":
                 if (prop.isObject()) {
                     mFlexConfig = prop.asObject();
+                }
+                break;
+            case "perspective":
+                if (prop.isNumber()) {
+                    getNodeView().setCameraDistance(getContext().getResources().getDisplayMetrics().densityDpi * prop.asNumber().toFloat() / 25);
                 }
                 break;
             default:
@@ -1054,19 +1056,5 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 .put("x", DoricUtils.px2dp(position[0]))
                 .put("y", DoricUtils.px2dp(position[1]))
                 .toJSONObject();
-    }
-
-    private static class MyAnimation extends Animation {
-        private Matrix matrix;
-
-        public MyAnimation(Matrix matrix) {
-            this.matrix = matrix;
-        }
-
-        @Override
-        protected void applyTransformation(float interpolatedTime, Transformation t) {
-            super.applyTransformation(interpolatedTime, t);
-            t.getMatrix().set(matrix);
-        }
     }
 }

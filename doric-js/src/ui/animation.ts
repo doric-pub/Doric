@@ -16,7 +16,7 @@
 
 import { Modeling, Model } from "../util/types"
 
-export type AnimatedKey = "translationX" | "translationY" | "scaleX" | "scaleY" | "rotation" | "pivotX" | "pivotY"
+export type AnimatedKey = "translationX" | "translationY" | "scaleX" | "scaleY" | "rotation" | "pivotX" | "pivotY" | "rotationX" | "rotationY"
 
 export enum RepeatMode {
     RESTART = 1,
@@ -234,6 +234,60 @@ export class RotationAnimation extends Animation {
     }
 }
 
+export class RotationXAnimation extends Animation {
+    private rotationChaneable: Changeable = {
+        key: "rotationX",
+        fromValue: 1,
+        toValue: 1,
+    }
+    constructor() {
+        super()
+        this.changeables.set("rotationX", this.rotationChaneable)
+    }
+
+    set fromRotation(v: number) {
+        this.rotationChaneable.fromValue = v
+    }
+
+    get fromRotation() {
+        return this.rotationChaneable.fromValue
+    }
+
+    set toRotation(v: number) {
+        this.rotationChaneable.toValue = v
+    }
+
+    get toRotation() {
+        return this.rotationChaneable.toValue
+    }
+}
+export class RotationYAnimation extends Animation {
+    private rotationChaneable: Changeable = {
+        key: "rotationY",
+        fromValue: 1,
+        toValue: 1,
+    }
+    constructor() {
+        super()
+        this.changeables.set("rotationY", this.rotationChaneable)
+    }
+
+    set fromRotation(v: number) {
+        this.rotationChaneable.fromValue = v
+    }
+
+    get fromRotation() {
+        return this.rotationChaneable.fromValue
+    }
+
+    set toRotation(v: number) {
+        this.rotationChaneable.toValue = v
+    }
+
+    get toRotation() {
+        return this.rotationChaneable.toValue
+    }
+}
 export class AnimationSet implements IAnimation {
     private animations: IAnimation[] = []
     private _duration = 0

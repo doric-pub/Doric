@@ -475,6 +475,10 @@ var View = /** @class */ (function () {
     ], View.prototype, "rotationY", void 0);
     __decorate([
         Property,
+        __metadata("design:type", Number)
+    ], View.prototype, "perspective", void 0);
+    __decorate([
+        Property,
         __metadata("design:type", Object)
     ], View.prototype, "flexConfig", void 0);
     return View;
@@ -1532,6 +1536,74 @@ var RotationAnimation = /** @class */ (function (_super) {
         configurable: true
     });
     return RotationAnimation;
+}(Animation));
+var RotationXAnimation = /** @class */ (function (_super) {
+    __extends$2(RotationXAnimation, _super);
+    function RotationXAnimation() {
+        var _this = _super.call(this) || this;
+        _this.rotationChaneable = {
+            key: "rotationX",
+            fromValue: 1,
+            toValue: 1,
+        };
+        _this.changeables.set("rotationX", _this.rotationChaneable);
+        return _this;
+    }
+    Object.defineProperty(RotationXAnimation.prototype, "fromRotation", {
+        get: function () {
+            return this.rotationChaneable.fromValue;
+        },
+        set: function (v) {
+            this.rotationChaneable.fromValue = v;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(RotationXAnimation.prototype, "toRotation", {
+        get: function () {
+            return this.rotationChaneable.toValue;
+        },
+        set: function (v) {
+            this.rotationChaneable.toValue = v;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    return RotationXAnimation;
+}(Animation));
+var RotationYAnimation = /** @class */ (function (_super) {
+    __extends$2(RotationYAnimation, _super);
+    function RotationYAnimation() {
+        var _this = _super.call(this) || this;
+        _this.rotationChaneable = {
+            key: "rotationY",
+            fromValue: 1,
+            toValue: 1,
+        };
+        _this.changeables.set("rotationY", _this.rotationChaneable);
+        return _this;
+    }
+    Object.defineProperty(RotationYAnimation.prototype, "fromRotation", {
+        get: function () {
+            return this.rotationChaneable.fromValue;
+        },
+        set: function (v) {
+            this.rotationChaneable.fromValue = v;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(RotationYAnimation.prototype, "toRotation", {
+        get: function () {
+            return this.rotationChaneable.toValue;
+        },
+        set: function (v) {
+            this.rotationChaneable.toValue = v;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    return RotationYAnimation;
 }(Animation));
 var AnimationSet = /** @class */ (function () {
     function AnimationSet() {
@@ -3423,6 +3495,8 @@ exports.RIGHT = RIGHT;
 exports.Refreshable = Refreshable;
 exports.Root = Root;
 exports.RotationAnimation = RotationAnimation;
+exports.RotationXAnimation = RotationXAnimation;
+exports.RotationYAnimation = RotationYAnimation;
 exports.ScaleAnimation = ScaleAnimation;
 exports.Scroller = Scroller;
 exports.SlideItem = SlideItem;

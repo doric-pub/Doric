@@ -29,6 +29,7 @@ import android.graphics.drawable.NinePatchDrawable;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Pair;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -48,9 +49,6 @@ import com.facebook.yoga.YogaNode;
 import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import pub.doric.DoricContext;
@@ -163,11 +161,11 @@ public class ImageNode extends ViewNode<ImageView> {
                 return new ColorDrawable(Color.GRAY);
             }
         } else if (!TextUtils.isEmpty(placeHolderImageBase64)) {
-            Pattern r = Pattern.compile("data:image/(\\S+?);base64,(\\S+)");
-            Matcher m = r.matcher(placeHolderImageBase64);
-            if (m.find()) {
-                String imageType = m.group(1);
-                String base64 = m.group(2);
+            Pair<String, String> result = DoricUtils.translateBase64(placeHolderImageBase64);
+            if (result != null) {
+                String imageType = result.first;
+                String base64 = result.second;
+
                 if (!TextUtils.isEmpty(imageType) && !TextUtils.isEmpty(base64)) {
                     try {
                         byte[] data = Base64.decode(base64, Base64.DEFAULT);
@@ -177,6 +175,7 @@ public class ImageNode extends ViewNode<ImageView> {
                     }
                 }
             }
+
             DoricLog.e("Cannot find PlaceHolderBase64 Drawable for " + placeHolderImageBase64);
             return getDoricContext().getDriver().getRegistry().getDefaultPlaceHolderDrawable();
         } else if (placeHolderColor != Color.TRANSPARENT) {
@@ -199,11 +198,11 @@ public class ImageNode extends ViewNode<ImageView> {
                 return new ColorDrawable(Color.GRAY);
             }
         } else if (!TextUtils.isEmpty(errorImageBase64)) {
-            Pattern r = Pattern.compile("data:image/(\\S+?);base64,(\\S+)");
-            Matcher m = r.matcher(errorImageBase64);
-            if (m.find()) {
-                String imageType = m.group(1);
-                String base64 = m.group(2);
+            Pair<String, String> result = DoricUtils.translateBase64(errorImageBase64);
+            if (result != null) {
+                String imageType = result.first;
+                String base64 = result.second;
+
                 if (!TextUtils.isEmpty(imageType) && !TextUtils.isEmpty(base64)) {
                     try {
                         byte[] data = Base64.decode(base64, Base64.DEFAULT);
@@ -213,6 +212,7 @@ public class ImageNode extends ViewNode<ImageView> {
                     }
                 }
             }
+
             DoricLog.e("Cannot find ErrorBase64 Drawable for " + errorImageBase64);
             return getDoricContext().getDriver().getRegistry().getDefaultErrorDrawable();
         } else if (errorColor != Color.TRANSPARENT) {
@@ -372,11 +372,12 @@ public class ImageNode extends ViewNode<ImageView> {
                 if (!prop.isString()) {
                     return;
                 }
-                Pattern r = Pattern.compile("data:image/(\\S+?);base64,(\\S+)");
-                Matcher m = r.matcher(prop.asString().value());
-                if (m.find()) {
-                    String imageType = m.group(1);
-                    String base64 = m.group(2);
+                String input = prop.asString().value();
+                Pair<String, String> result = DoricUtils.translateBase64(input);
+                if (result != null) {
+                    String imageType = result.first;
+                    String base64 = result.second;
+
                     if (!TextUtils.isEmpty(imageType) && !TextUtils.isEmpty(base64)) {
                         try {
                             byte[] data = Base64.decode(base64, Base64.DEFAULT);
@@ -386,6 +387,7 @@ public class ImageNode extends ViewNode<ImageView> {
                         }
                     }
                 }
+
                 break;
             case "imagePath":
                 if (!prop.isString()) {

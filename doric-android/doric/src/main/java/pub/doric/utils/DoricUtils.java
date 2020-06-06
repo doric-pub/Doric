@@ -20,6 +20,7 @@ import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
+import android.util.Pair;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -37,7 +38,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Array;
-import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -287,5 +287,22 @@ public class DoricUtils {
         }
 
         return byteBuffer.array();
+    }
+
+    public static Pair<String, String> translateBase64(String input) {
+        String typePrefix = "data:image/";
+        String dataPrefix = ";base64,";
+
+        int typeIndex = input.indexOf(typePrefix);
+        int dataIndex = input.indexOf(dataPrefix);
+
+        if (typeIndex != -1 && dataIndex != -1) {
+            String imageType = input.substring(typePrefix.length() + 1, dataIndex);
+            String base64 = input.substring(dataIndex + dataPrefix.length());
+
+            return new Pair<>(imageType, base64);
+        }
+
+        return null;
     }
 }

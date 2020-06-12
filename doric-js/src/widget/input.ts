@@ -32,6 +32,9 @@ export class Input extends View {
 
     @Property
     hintText?: string
+    
+    @Property
+    inputType?: InputType
 
     @Property
     hintTextColor?: Color
@@ -69,6 +72,18 @@ export class Input extends View {
     releaseFocus(context: BridgeContext) {
         return this.nativeChannel(context, 'releaseFocus')()
     }
+}
+
+export enum InputType{
+    Default = 0,
+
+    Number = 1,
+
+    NumberSigned = 2,
+
+    Alphabet = 3,
+
+    Phone = 4,
 }
 
 export function input(config: Partial<Input>) {

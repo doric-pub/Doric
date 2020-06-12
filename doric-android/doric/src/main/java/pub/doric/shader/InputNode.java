@@ -131,7 +131,7 @@ public class InputNode extends ViewNode<EditText> implements TextWatcher, View.O
                             mView.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                             break;
                         case 3:
-                            mView.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
+                            mView.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
                             break;
                         case 4:
                             mView.setInputType(InputType.TYPE_CLASS_PHONE);

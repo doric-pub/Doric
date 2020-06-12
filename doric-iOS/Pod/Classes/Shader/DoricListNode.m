@@ -226,9 +226,11 @@
     self.itemHeights[@(position)] = @(height);
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:position inSection:0];
     if (@available(iOS 10.0, *)) {
-        [UIView performWithoutAnimation:^{
-            [self.view reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-        }];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [UIView performWithoutAnimation:^{
+                [self.view reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+            }];
+        });
     } else {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.view reloadData];

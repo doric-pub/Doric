@@ -705,6 +705,7 @@ declare module 'doric/lib/src/widget/input' {
         textColor?: Color;
         textSize?: number;
         hintText?: string;
+        inputType?: InputType;
         hintTextColor?: Color;
         multiline?: boolean;
         textAlignment?: Gravity;
@@ -715,6 +716,13 @@ declare module 'doric/lib/src/widget/input' {
         setSelection(context: BridgeContext, start: number, end?: number): Promise<string>;
         requestFocus(context: BridgeContext): Promise<any>;
         releaseFocus(context: BridgeContext): Promise<any>;
+    }
+    export enum InputType {
+        Default = 0,
+        Number = 1,
+        NumberSigned = 2,
+        Alphabet = 3,
+        Phone = 4
     }
     export function input(config: Partial<Input>): Input;
 }

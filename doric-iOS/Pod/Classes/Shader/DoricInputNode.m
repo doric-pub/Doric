@@ -132,7 +132,31 @@ typedef void (^onFocusChangeBlock)(BOOL focused,DoricInputNode *node);
 
     } else if ([name isEqualToString:@"maxLength"]) {
         self.maxLength = prop;
-    } else {
+    }
+    else if([name isEqualToString:@"inputType"]){
+        switch ([prop integerValue]) {
+            case 1: {
+//                [self.view setKeyboardType: UIKeyboardTypeNumberPad ];
+                break;
+            }
+            case 2: {
+                [self.view setKeyboardType: UIKeyboardTypeDecimalPad];
+                break;
+            }
+            case 3: {
+                [self.view setKeyboardType: UIKeyboardTypeAlphabet];
+                break;
+            }
+            case 4: {
+                [self.view setKeyboardType: UIKeyboardTypePhonePad];
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+    }
+    else {
         [super blendView:view forPropName:name propValue:prop];
     }
 }

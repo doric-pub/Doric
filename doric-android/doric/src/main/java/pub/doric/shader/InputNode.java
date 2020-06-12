@@ -44,9 +44,9 @@ import pub.doric.extension.bridge.DoricPromise;
  */
 @DoricPlugin(name = "Input")
 public class InputNode extends ViewNode<EditText> implements TextWatcher, View.OnFocusChangeListener {
+    private final InputMethodManager mInputMethodManager;
     private String onTextChangeId;
     private String onFocusChangeId;
-    private final InputMethodManager mInputMethodManager;
 
     public InputNode(DoricContext doricContext) {
         super(doricContext);
@@ -119,6 +119,24 @@ public class InputNode extends ViewNode<EditText> implements TextWatcher, View.O
                     onFocusChangeId = prop.asString().value();
                 } else {
                     onFocusChangeId = null;
+                }
+                break;
+            case "inputType":
+                if (prop.isNumber()) {
+                    switch (prop.asNumber().toInt()) {
+                        case 1:
+                            mView.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
+                            break;
+                        case 2:
+                            mView.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                            break;
+                        case 3:
+                            mView.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
+                            break;
+                        case 4:
+                            mView.setInputType(InputType.TYPE_CLASS_PHONE);
+                            break;
+                    }
                 }
                 break;
             default:

@@ -1,4 +1,4 @@
-import { Panel, Group, scroller, vlayout, layoutConfig, LayoutSpec, Input, Gravity, log, input, text, Color, Text } from "doric";
+import { Panel, Group, scroller, vlayout, layoutConfig, LayoutSpec, Input, Gravity, log, input, text, Color, Text, InputType } from "doric";
 import { title } from "./utils";
 @Entry
 class TextDemo extends Panel {
@@ -7,6 +7,35 @@ class TextDemo extends Panel {
             vlayout(
                 [
                     title("Text Demo"),
+                    input({
+                        width : 100,
+                        height:100,
+                        inputType: InputType.Number,
+                        hintText: "number"    
+                    }),
+
+                    // input({
+                    //     width : 100,
+                    //     height:100,
+                    //     inputType: InputType.NumberSigned,
+                    //     hintText: "NumberSigned"    
+                    // }),
+
+                    // input({
+                    //     width : 100,
+                    //     height:100,
+                    //     inputType: InputType.Alphabet,
+                    //     hintText: "Alphabet"    
+                    // }),
+
+                    // input({
+                    //     width : 100,
+                    //     height:100,
+                    //     inputType: InputType.Phone,
+                    //     hintText: "Phone" 
+                   
+                    // }),
+
                     text({
                         text: "This is normal text",
                     }),

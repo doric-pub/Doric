@@ -31,77 +31,73 @@ export var ScaleType;
     ScaleType[ScaleType["ScaleAspectFit"] = 1] = "ScaleAspectFit";
     ScaleType[ScaleType["ScaleAspectFill"] = 2] = "ScaleAspectFill";
 })(ScaleType || (ScaleType = {}));
-let Image = /** @class */ (() => {
-    class Image extends View {
-    }
-    __decorate([
-        Property,
-        __metadata("design:type", String)
-    ], Image.prototype, "imageUrl", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", String)
-    ], Image.prototype, "imagePath", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", String)
-    ], Image.prototype, "imageRes", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", String)
-    ], Image.prototype, "imageBase64", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", Number)
-    ], Image.prototype, "scaleType", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", Boolean)
-    ], Image.prototype, "isBlur", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", String)
-    ], Image.prototype, "placeHolderImage", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", String)
-    ], Image.prototype, "placeHolderImageBase64", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", Color
-        /**
-         * Display while image is failed to load
-         * It can be file name in local path
-         */
-        )
-    ], Image.prototype, "placeHolderColor", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", String)
-    ], Image.prototype, "errorImage", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", String)
-    ], Image.prototype, "errorImageBase64", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", Color)
-    ], Image.prototype, "errorColor", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", Function)
-    ], Image.prototype, "loadCallback", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", Number)
-    ], Image.prototype, "imageScale", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", Object)
-    ], Image.prototype, "stretchInset", void 0);
-    return Image;
-})();
-export { Image };
+export class Image extends View {
+}
+__decorate([
+    Property,
+    __metadata("design:type", String)
+], Image.prototype, "imageUrl", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", String)
+], Image.prototype, "imagePath", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", String)
+], Image.prototype, "imageRes", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", String)
+], Image.prototype, "imageBase64", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Number)
+], Image.prototype, "scaleType", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Boolean)
+], Image.prototype, "isBlur", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", String)
+], Image.prototype, "placeHolderImage", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", String)
+], Image.prototype, "placeHolderImageBase64", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Color
+    /**
+     * Display while image is failed to load
+     * It can be file name in local path
+     */
+    )
+], Image.prototype, "placeHolderColor", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", String)
+], Image.prototype, "errorImage", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", String)
+], Image.prototype, "errorImageBase64", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Color)
+], Image.prototype, "errorColor", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Function)
+], Image.prototype, "loadCallback", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Number)
+], Image.prototype, "imageScale", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Object)
+], Image.prototype, "stretchInset", void 0);
 export function image(config) {
     const ret = new Image;
     ret.layoutConfig = layoutConfig().fit();

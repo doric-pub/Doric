@@ -720,7 +720,7 @@ declare module 'doric/lib/src/widget/input' {
     export enum InputType {
         Default = 0,
         Number = 1,
-        NumberSigned = 2,
+        Decimal = 2,
         Alphabet = 3,
         Phone = 4
     }

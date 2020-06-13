@@ -22,7 +22,7 @@ export declare class Input extends View {
 export declare enum InputType {
     Default = 0,
     Number = 1,
-    NumberSigned = 2,
+    Decimal = 2,
     Alphabet = 3,
     Phone = 4
 }

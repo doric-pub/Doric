@@ -2685,6 +2685,10 @@ var Input = /** @class */ (function (_super) {
     ], Input.prototype, "hintText", void 0);
     __decorate$a([
         Property,
+        __metadata$a("design:type", Number)
+    ], Input.prototype, "inputType", void 0);
+    __decorate$a([
+        Property,
         __metadata$a("design:type", Color)
     ], Input.prototype, "hintTextColor", void 0);
     __decorate$a([
@@ -2709,6 +2713,13 @@ var Input = /** @class */ (function (_super) {
     ], Input.prototype, "maxLength", void 0);
     return Input;
 }(View));
+(function (InputType) {
+    InputType[InputType["Default"] = 0] = "Default";
+    InputType[InputType["Number"] = 1] = "Number";
+    InputType[InputType["Decimal"] = 2] = "Decimal";
+    InputType[InputType["Alphabet"] = 3] = "Alphabet";
+    InputType[InputType["Phone"] = 4] = "Phone";
+})(exports.InputType || (exports.InputType = {}));
 function input(config) {
     var ret = new Input;
     ret.layoutConfig = layoutConfig().just();

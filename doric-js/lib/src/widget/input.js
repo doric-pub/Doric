@@ -62,6 +62,10 @@ let Input = /** @class */ (() => {
     ], Input.prototype, "hintText", void 0);
     __decorate([
         Property,
+        __metadata("design:type", Number)
+    ], Input.prototype, "inputType", void 0);
+    __decorate([
+        Property,
         __metadata("design:type", Color)
     ], Input.prototype, "hintTextColor", void 0);
     __decorate([
@@ -87,6 +91,14 @@ let Input = /** @class */ (() => {
     return Input;
 })();
 export { Input };
+export var InputType;
+(function (InputType) {
+    InputType[InputType["Default"] = 0] = "Default";
+    InputType[InputType["Number"] = 1] = "Number";
+    InputType[InputType["Decimal"] = 2] = "Decimal";
+    InputType[InputType["Alphabet"] = 3] = "Alphabet";
+    InputType[InputType["Phone"] = 4] = "Phone";
+})(InputType || (InputType = {}));
 export function input(config) {
     const ret = new Input;
     ret.layoutConfig = layoutConfig().just();

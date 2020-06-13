@@ -1,4 +1,4 @@
-import { Panel, Group, scroller, vlayout, layoutConfig, LayoutSpec, Input, Gravity, log, Color, input, text } from "doric";
+import { Panel, Group, scroller, vlayout, layoutConfig, LayoutSpec, Input, Gravity, log, Color, input, text, InputType } from "doric";
 import { title, colors } from "./utils";
 
 
@@ -44,7 +44,8 @@ class InputDemo extends Panel {
             multiline: false,
             textSize: 20,
             maxLength: 20,
-            padding: { top: 10, bottom: 11 }
+            padding: { top: 10, bottom: 11 },
+            inputType: InputType.Decimal
         });
         scroller(
             vlayout(
@@ -71,7 +72,7 @@ class InputDemo extends Panel {
                 {
                     space: 10,
                     layoutConfig: layoutConfig().most().configHeight(LayoutSpec.MOST),
-                    onClick: () => { 
+                    onClick: () => {
                         (inputView as Input).releaseFocus(context);
                     }
                 }

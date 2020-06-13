@@ -32,7 +32,7 @@ export class Input extends View {
 
     @Property
     hintText?: string
-    
+
     @Property
     inputType?: InputType
 
@@ -74,12 +74,12 @@ export class Input extends View {
     }
 }
 
-export enum InputType{
+export enum InputType {
     Default = 0,
 
     Number = 1,
 
-    NumberSigned = 2,
+    Decimal = 2,
 
     Alphabet = 3,
 

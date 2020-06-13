@@ -136,6 +136,9 @@ public class InputNode extends ViewNode<EditText> implements TextWatcher, View.O
                         case 4:
                             mView.setInputType(InputType.TYPE_CLASS_PHONE);
                             break;
+                        default:
+                            mView.setInputType(InputType.TYPE_CLASS_TEXT);
+                            break;
                     }
                 }
                 break;

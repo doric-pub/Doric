@@ -24,8 +24,9 @@
 #import "DoricUtil.h"
 #import "DoricPromise.h"
 
-typedef void (^onTextChangeBlock)(NSString *text,DoricInputNode *node);
-typedef void (^onFocusChangeBlock)(BOOL focused,DoricInputNode *node);
+typedef void (^onTextChangeBlock)(NSString *text, DoricInputNode *node);
+
+typedef void (^onFocusChangeBlock)(BOOL focused, DoricInputNode *node);
 
 @implementation DoricInputView
 
@@ -68,7 +69,7 @@ typedef void (^onFocusChangeBlock)(BOOL focused,DoricInputNode *node);
 
 @end
 
-@interface DoricInputNode()<UITextViewDelegate>
+@interface DoricInputNode () <UITextViewDelegate>
 @property(nonatomic, copy) onTextChangeBlock onTextChange;
 @property(nonatomic, copy) onFocusChangeBlock onFocusShange;
 @property(nonatomic, strong) NSNumber *maxLength;
@@ -106,57 +107,56 @@ typedef void (^onFocusChangeBlock)(BOOL focused,DoricInputNode *node);
         BOOL mutilin = [(NSNumber *) prop boolValue];
         if (!mutilin) {
             view.textContainer.maximumNumberOfLines = 1;
-        }else {
+        } else {
             view.textContainer.maximumNumberOfLines = 0;
         }
     } else if ([name isEqualToString:@"hintText"]) {
-        view.placeholderLabel.text = (NSString *)prop;
+        view.placeholderLabel.text = (NSString *) prop;
     } else if ([name isEqualToString:@"hintTextColor"]) {
         view.placeholderLabel.textColor = DoricColor(prop);
     } else if ([name isEqualToString:@"onTextChange"]) {
         if ([prop isKindOfClass:[NSString class]]) {
             self.onTextChange = ^(NSString *text, DoricInputNode *node) {
-                [node callJSResponse:prop,text,nil];
+                [node callJSResponse:prop, text, nil];
             };
-        }else {
+        } else {
             self.onTextChange = nil;
         }
     } else if ([name isEqualToString:@"onFocusChange"]) {
         if ([prop isKindOfClass:[NSString class]]) {
             self.onFocusShange = ^(BOOL focused, DoricInputNode *node) {
-                [node callJSResponse:prop,@(focused),nil];
+                [node callJSResponse:prop, @(focused), nil];
             };
-        }else {
+        } else {
             self.onFocusShange = nil;
         }
 
     } else if ([name isEqualToString:@"maxLength"]) {
         self.maxLength = prop;
-    }
-    else if([name isEqualToString:@"inputType"]){
+    } else if ([name isEqualToString:@"inputType"]) {
         switch ([prop integerValue]) {
             case 1: {
-//                [self.view setKeyboardType: UIKeyboardTypeNumberPad ];
+                [self.view setKeyboardType:UIKeyboardTypeNumberPad];
                 break;
             }
             case 2: {
-                [self.view setKeyboardType: UIKeyboardTypeDecimalPad];
+                [self.view setKeyboardType:UIKeyboardTypeDecimalPad];
                 break;
             }
             case 3: {
-                [self.view setKeyboardType: UIKeyboardTypeAlphabet];
+                [self.view setKeyboardType:UIKeyboardTypeAlphabet];
                 break;
             }
             case 4: {
-                [self.view setKeyboardType: UIKeyboardTypePhonePad];
+                [self.view setKeyboardType:UIKeyboardTypePhonePad];
                 break;
             }
             default: {
+                [self.view setKeyboardType:UIKeyboardTypeDefault];
                 break;
             }
         }
-    }
-    else {
+    } else {
         [super blendView:view forPropName:name propValue:prop];
     }
 }
@@ -164,12 +164,13 @@ typedef void (^onFocusChangeBlock)(BOOL focused,DoricInputNode *node);
 - (void)blend:(NSDictionary *)props {
     [super blend:props];
 }
+
 - (void)afterBlended:(NSDictionary *)props {
     [super afterBlended:props];
     if (self.view.doricLayout.paddingTop != self.view.textContainerInset.top
-        || self.view.doricLayout.paddingLeft != self.view.textContainerInset.left
-        || self.view.doricLayout.paddingBottom != self.view.textContainerInset.bottom
-        || self.view.doricLayout.paddingRight != self.view.textContainerInset.right) {
+            || self.view.doricLayout.paddingLeft != self.view.textContainerInset.left
+            || self.view.doricLayout.paddingBottom != self.view.textContainerInset.bottom
+            || self.view.doricLayout.paddingRight != self.view.textContainerInset.right) {
         self.view.textContainerInset = UIEdgeInsetsMake(self.view.doricLayout.paddingTop, self.view.doricLayout.paddingLeft, self.view.doricLayout.paddingBottom, self.view.doricLayout.paddingRight);
     }
     self.view.placeholderLabel.font = self.view.font;
@@ -182,6 +183,7 @@ typedef void (^onFocusChangeBlock)(BOOL focused,DoricInputNode *node);
 }
 
 #pragma mark - Doric-JS api
+
 - (NSString *)getText {
     return self.view.text;
 }
@@ -189,12 +191,12 @@ typedef void (^onFocusChangeBlock)(BOOL focused,DoricInputNode *node);
 - (void)setSelection:(NSDictionary *)params withPromise:(DoricPromise *)promise {
     NSString *start = params[@"start"];
     NSString *end = params[@"end"];
-    
+
     if (([start isKindOfClass:[NSString class]] || [start isKindOfClass:[NSNumber class]]) &&
-        ([start isKindOfClass:[NSString class]] || [start isKindOfClass:[NSNumber class]])) {
+            ([start isKindOfClass:[NSString class]] || [start isKindOfClass:[NSNumber class]])) {
         self.view.selectedRange = NSMakeRange(start.intValue, end.intValue - start.intValue);
     }
-    
+
     [promise resolve:nil];
 }
 
@@ -207,12 +209,14 @@ typedef void (^onFocusChangeBlock)(BOOL focused,DoricInputNode *node);
 }
 
 #pragma mark - UITextViewDelegate
+
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
     if (self.onFocusShange) {
         self.onFocusShange(YES, self);
     }
     return YES;
 }
+
 - (BOOL)textViewShouldEndEditing:(UITextView *)textView {
     if (self.onFocusShange) {
         self.onFocusShange(NO, self);
@@ -235,24 +239,24 @@ typedef void (^onFocusChangeBlock)(BOOL focused,DoricInputNode *node);
 }
 
 
-- (NSString *)limitToHansMaxLength:(NSUInteger)maxLen text:(NSString *)text{
+- (NSString *)limitToHansMaxLength:(NSUInteger)maxLen text:(NSString *)text {
     NSUInteger asciiMaxLen = 2 * maxLen;
     __block NSUInteger asciiLen = 0;
     __block NSUInteger subStringRangeLen = 0;
     [text enumerateSubstringsInRange:NSMakeRange(0, text.length)
                              options:NSStringEnumerationByComposedCharacterSequences
                           usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop) {
-        if ([substring canBeConvertedToEncoding:NSASCIIStringEncoding]) {
-            asciiLen += 2;
-        } else {
-            asciiLen += [substring lengthOfBytesUsingEncoding:NSUTF16StringEncoding];
-        }
-        if (asciiLen <= asciiMaxLen) {
-            subStringRangeLen = substringRange.location + substringRange.length;
-        } else {
-            *stop = YES;
-        }
-    }];
+                              if ([substring canBeConvertedToEncoding:NSASCIIStringEncoding]) {
+                                  asciiLen += 2;
+                              } else {
+                                  asciiLen += [substring lengthOfBytesUsingEncoding:NSUTF16StringEncoding];
+                              }
+                              if (asciiLen <= asciiMaxLen) {
+                                  subStringRangeLen = substringRange.location + substringRange.length;
+                              } else {
+                                  *stop = YES;
+                              }
+                          }];
     return [text substringWithRange:NSMakeRange(0, subStringRangeLen)];
 }
 @end

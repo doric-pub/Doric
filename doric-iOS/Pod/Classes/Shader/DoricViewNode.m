@@ -526,6 +526,9 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     }
     animation.removedOnCompletion = NO;
     animation.fillMode = kCAFillModeForwards;
+    if(animation.duration==0){
+        animation.duration=FLT_MIN;
+    }
     [self.view.layer addAnimation:animation forKey:nil];
 }
 

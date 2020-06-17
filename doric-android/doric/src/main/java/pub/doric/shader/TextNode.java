@@ -17,13 +17,12 @@ package pub.doric.shader;
 
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.res.ResourcesCompat;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.widget.TextView;
-
-import androidx.core.content.res.ResourcesCompat;
 
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;

@@ -1,9 +1,8 @@
 package pub.doric.demo;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.FrameLayout;
 
 import pub.doric.refresh.DoricSwipeLayout;

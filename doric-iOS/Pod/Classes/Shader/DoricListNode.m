@@ -145,6 +145,7 @@
     DoricListItemNode *node = cell.doricListItemNode;
     node.viewId = model[@"id"];
     [node blend:props];
+    [node.view.doricLayout apply:CGSizeMake(tableView.width, tableView.height)];
     [node requestLayout];
     [self callItem:position height:node.view.height];
     return cell;
@@ -220,7 +221,7 @@
 
 - (void)callItem:(NSUInteger)position height:(CGFloat)height {
     NSNumber *old = self.itemHeights[@(position)];
-    if (old && old.floatValue == height) {
+    if (old && [old isEqualToNumber:@(height)]) {
         return;
     }
     self.itemHeights[@(position)] = @(height);

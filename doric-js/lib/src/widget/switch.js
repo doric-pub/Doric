@@ -25,32 +25,28 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { View, Property } from "../ui/view";
 import { Color } from "../util/color";
 import { layoutConfig } from "../util/index.util";
-let Switch = /** @class */ (() => {
-    class Switch extends View {
-    }
-    __decorate([
-        Property,
-        __metadata("design:type", Boolean)
-    ], Switch.prototype, "state", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", Function)
-    ], Switch.prototype, "onSwitch", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", Color)
-    ], Switch.prototype, "offTintColor", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", Color)
-    ], Switch.prototype, "onTintColor", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", Color)
-    ], Switch.prototype, "thumbTintColor", void 0);
-    return Switch;
-})();
-export { Switch };
+export class Switch extends View {
+}
+__decorate([
+    Property,
+    __metadata("design:type", Boolean)
+], Switch.prototype, "state", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Function)
+], Switch.prototype, "onSwitch", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Color)
+], Switch.prototype, "offTintColor", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Color)
+], Switch.prototype, "onTintColor", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Color)
+], Switch.prototype, "thumbTintColor", void 0);
 export function switchView(config) {
     const ret = new Switch;
     ret.layoutConfig = layoutConfig().just();

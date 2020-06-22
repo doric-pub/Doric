@@ -5,33 +5,29 @@ var ValueType;
     ValueType[ValueType["Percent"] = 2] = "Percent";
     ValueType[ValueType["Auto"] = 3] = "Auto";
 })(ValueType || (ValueType = {}));
-let FlexTypedValue = /** @class */ (() => {
-    class FlexTypedValue {
-        constructor(type) {
-            this.value = 0;
-            this.type = type;
-        }
-        static percent(v) {
-            const ret = new FlexTypedValue(ValueType.Percent);
-            ret.value = v;
-            return ret;
-        }
-        static point(v) {
-            const ret = new FlexTypedValue(ValueType.Point);
-            ret.value = v;
-            return ret;
-        }
-        toModel() {
-            return {
-                type: this.type,
-                value: this.value,
-            };
-        }
+export class FlexTypedValue {
+    constructor(type) {
+        this.value = 0;
+        this.type = type;
     }
-    FlexTypedValue.Auto = new FlexTypedValue(ValueType.Auto);
-    return FlexTypedValue;
-})();
-export { FlexTypedValue };
+    static percent(v) {
+        const ret = new FlexTypedValue(ValueType.Percent);
+        ret.value = v;
+        return ret;
+    }
+    static point(v) {
+        const ret = new FlexTypedValue(ValueType.Point);
+        ret.value = v;
+        return ret;
+    }
+    toModel() {
+        return {
+            type: this.type,
+            value: this.value,
+        };
+    }
+}
+FlexTypedValue.Auto = new FlexTypedValue(ValueType.Auto);
 export var FlexDirection;
 (function (FlexDirection) {
     FlexDirection[FlexDirection["COLUMN"] = 0] = "COLUMN";

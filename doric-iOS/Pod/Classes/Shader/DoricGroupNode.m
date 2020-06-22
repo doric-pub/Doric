@@ -77,7 +77,11 @@
                         viewNode.viewId = viewId;
                         [viewNode initWithSuperNode:self];
                         [viewNode blend:model[@"props"]];
-                        [childNodes insertObject:viewNode atIndex:idx];
+                        if (idx >= childNodes.count) {
+                            [childNodes addObject:viewNode];
+                        } else {
+                            [childNodes insertObject:viewNode atIndex:idx];
+                        }
                         [self.view insertSubview:viewNode.view atIndex:idx];
                     }
                 } else {
@@ -95,9 +99,16 @@
                         DoricViewNode *reused = childNodes[(NSUInteger) position];
                         [childNodes removeObjectAtIndex:(NSUInteger) position];
                         [childNodes removeObjectAtIndex:idx];
-                        [childNodes insertObject:reused atIndex:idx];
-                        [childNodes insertObject:oldNode atIndex:(NSUInteger) position];
-
+                        if (idx >= childNodes.count) {
+                            [childNodes addObject:reused];
+                        } else {
+                            [childNodes insertObject:reused atIndex:idx];
+                        }
+                        if (position >= childNodes.count) {
+                            [childNodes addObject:oldNode];
+                        } else {
+                            [childNodes insertObject:oldNode atIndex:(NSUInteger) position];
+                        }
                         ///View swap index
                         [reused.view removeFromSuperview];
                         [oldNode.view removeFromSuperview];
@@ -109,7 +120,11 @@
                         viewNode.viewId = viewId;
                         [viewNode initWithSuperNode:self];
                         [viewNode blend:model[@"props"]];
-                        [childNodes insertObject:viewNode atIndex:idx];
+                        if (idx >= childNodes.count) {
+                            [childNodes addObject:viewNode];
+                        } else {
+                            [childNodes insertObject:viewNode atIndex:idx];
+                        }
                         [self.view insertSubview:viewNode.view atIndex:idx];
                     }
                 }
@@ -123,7 +138,11 @@
             viewNode.viewId = viewId;
             [viewNode initWithSuperNode:self];
             [viewNode blend:model[@"props"]];
-            [childNodes insertObject:viewNode atIndex:idx];
+            if (idx >= childNodes.count) {
+                [childNodes addObject:viewNode];
+            } else {
+                [childNodes insertObject:viewNode atIndex:idx];
+            }
             [self.view insertSubview:viewNode.view atIndex:idx];
         }
     }

@@ -25,113 +25,105 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { Stack } from './layouts';
 import { Property, Superview, View } from '../ui/view';
 import { layoutConfig } from '../util/index.util';
-let FlowLayoutItem = /** @class */ (() => {
-    class FlowLayoutItem extends Stack {
+export class FlowLayoutItem extends Stack {
+}
+__decorate([
+    Property,
+    __metadata("design:type", String)
+], FlowLayoutItem.prototype, "identifier", void 0);
+export class FlowLayout extends Superview {
+    constructor() {
+        super(...arguments);
+        this.cachedViews = new Map;
+        this.ignoreDirtyCallOnce = false;
+        this.columnCount = 2;
+        this.itemCount = 0;
+        this.batchCount = 15;
     }
-    __decorate([
-        Property,
-        __metadata("design:type", String)
-    ], FlowLayoutItem.prototype, "identifier", void 0);
-    return FlowLayoutItem;
-})();
-export { FlowLayoutItem };
-let FlowLayout = /** @class */ (() => {
-    class FlowLayout extends Superview {
-        constructor() {
-            super(...arguments);
-            this.cachedViews = new Map;
+    allSubviews() {
+        if (this.loadMoreView) {
+            return [...this.cachedViews.values(), this.loadMoreView];
+        }
+        else {
+            return this.cachedViews.values();
+        }
+    }
+    reset() {
+        this.cachedViews.clear();
+        this.itemCount = 0;
+    }
+    getItem(itemIdx) {
+        let view = this.renderItem(itemIdx);
+        view.superview = this;
+        this.cachedViews.set(`${itemIdx}`, view);
+        return view;
+    }
+    isDirty() {
+        if (this.ignoreDirtyCallOnce) {
             this.ignoreDirtyCallOnce = false;
-            this.columnCount = 2;
-            this.itemCount = 0;
-            this.batchCount = 15;
+            //Ignore the dirty call once.
+            return false;
         }
-        allSubviews() {
-            if (this.loadMoreView) {
-                return [...this.cachedViews.values(), this.loadMoreView];
-            }
-            else {
-                return this.cachedViews.values();
-            }
-        }
-        reset() {
-            this.cachedViews.clear();
-            this.itemCount = 0;
-        }
-        getItem(itemIdx) {
-            let view = this.renderItem(itemIdx);
-            view.superview = this;
-            this.cachedViews.set(`${itemIdx}`, view);
-            return view;
-        }
-        isDirty() {
-            if (this.ignoreDirtyCallOnce) {
-                this.ignoreDirtyCallOnce = false;
-                //Ignore the dirty call once.
-                return false;
-            }
-            return super.isDirty();
-        }
-        renderBunchedItems(start, length) {
-            this.ignoreDirtyCallOnce = true;
-            return new Array(Math.min(length, this.itemCount - start)).fill(0).map((_, idx) => {
-                const listItem = this.getItem(start + idx);
-                return listItem.toModel();
-            });
-        }
-        toModel() {
-            if (this.loadMoreView) {
-                this.dirtyProps['loadMoreView'] = this.loadMoreView.viewId;
-            }
-            return super.toModel();
-        }
+        return super.isDirty();
     }
-    __decorate([
-        Property,
-        __metadata("design:type", Object)
-    ], FlowLayout.prototype, "columnCount", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", Number)
-    ], FlowLayout.prototype, "columnSpace", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", Number)
-    ], FlowLayout.prototype, "rowSpace", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", Object)
-    ], FlowLayout.prototype, "itemCount", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", Function)
-    ], FlowLayout.prototype, "renderItem", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", Object)
-    ], FlowLayout.prototype, "batchCount", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", Function)
-    ], FlowLayout.prototype, "onLoadMore", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", Boolean)
-    ], FlowLayout.prototype, "loadMore", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", FlowLayoutItem)
-    ], FlowLayout.prototype, "loadMoreView", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", Function)
-    ], FlowLayout.prototype, "onScroll", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", Function)
-    ], FlowLayout.prototype, "onScrollEnd", void 0);
-    return FlowLayout;
-})();
-export { FlowLayout };
+    renderBunchedItems(start, length) {
+        this.ignoreDirtyCallOnce = true;
+        return new Array(Math.min(length, this.itemCount - start)).fill(0).map((_, idx) => {
+            const listItem = this.getItem(start + idx);
+            return listItem.toModel();
+        });
+    }
+    toModel() {
+        if (this.loadMoreView) {
+            this.dirtyProps['loadMoreView'] = this.loadMoreView.viewId;
+        }
+        return super.toModel();
+    }
+}
+__decorate([
+    Property,
+    __metadata("design:type", Object)
+], FlowLayout.prototype, "columnCount", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Number)
+], FlowLayout.prototype, "columnSpace", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Number)
+], FlowLayout.prototype, "rowSpace", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Object)
+], FlowLayout.prototype, "itemCount", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Function)
+], FlowLayout.prototype, "renderItem", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Object)
+], FlowLayout.prototype, "batchCount", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Function)
+], FlowLayout.prototype, "onLoadMore", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Boolean)
+], FlowLayout.prototype, "loadMore", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", FlowLayoutItem)
+], FlowLayout.prototype, "loadMoreView", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Function)
+], FlowLayout.prototype, "onScroll", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Function)
+], FlowLayout.prototype, "onScrollEnd", void 0);
 export function flowlayout(config) {
     const ret = new FlowLayout;
     for (let key in config) {

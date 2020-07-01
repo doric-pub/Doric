@@ -139,6 +139,7 @@
         DoricListItemNode *listItemNode = [[DoricListItemNode alloc] initWithContext:self.doricContext];
         [listItemNode initWithSuperNode:self];
         cell.doricListItemNode = listItemNode;
+        cell.backgroundColor=[UIColor clearColor];
         listItemNode.view.width = tableView.width;
         [cell.contentView addSubview:listItemNode.view];
     }

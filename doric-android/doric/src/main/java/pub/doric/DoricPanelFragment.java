@@ -78,6 +78,9 @@ public class DoricPanelFragment extends Fragment implements IDoricNavigator {
 
     @Override
     public void push(String source, String alias, String extra) {
+        if (getActivity() == null || getActivity().isFinishing()) {
+            return;
+        }
         Bundle argument = new Bundle();
         argument.putString("source", source);
         argument.putString("alias", alias);
@@ -86,8 +89,12 @@ public class DoricPanelFragment extends Fragment implements IDoricNavigator {
                 .navigate(R.id.action_doricPanelFragment_to_doricPanelFragment, argument);
     }
 
+
     @Override
     public void pop() {
+        if (getActivity() == null || getActivity().isFinishing()) {
+            return;
+        }
         if (!getNavController().popBackStack()) {
             if (getActivity() != null) {
                 getActivity().finish();

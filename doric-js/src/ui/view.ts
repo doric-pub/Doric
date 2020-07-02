@@ -69,6 +69,8 @@ export abstract class View implements Modeling {
 
     viewId = uniqueId('ViewId')
 
+    tag?: string
+    
     @Property
     padding?: {
         left?: number,

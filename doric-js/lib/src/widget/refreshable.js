@@ -9,40 +9,36 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 import { Property, Superview } from "../ui/view";
 import { layoutConfig } from "../util/layoutconfig";
-let Refreshable = /** @class */ (() => {
-    class Refreshable extends Superview {
-        allSubviews() {
-            const ret = [this.content];
-            if (this.header) {
-                ret.push(this.header);
-            }
-            return ret;
+export class Refreshable extends Superview {
+    allSubviews() {
+        const ret = [this.content];
+        if (this.header) {
+            ret.push(this.header);
         }
-        setRefreshable(context, refreshable) {
-            return this.nativeChannel(context, 'setRefreshable')(refreshable);
-        }
-        setRefreshing(context, refreshing) {
-            return this.nativeChannel(context, 'setRefreshing')(refreshing);
-        }
-        isRefreshable(context) {
-            return this.nativeChannel(context, 'isRefreshable')();
-        }
-        isRefreshing(context) {
-            return this.nativeChannel(context, 'isRefreshing')();
-        }
-        toModel() {
-            this.dirtyProps.content = this.content.viewId;
-            this.dirtyProps.header = (this.header || {}).viewId;
-            return super.toModel();
-        }
+        return ret;
     }
-    __decorate([
-        Property,
-        __metadata("design:type", Function)
-    ], Refreshable.prototype, "onRefresh", void 0);
-    return Refreshable;
-})();
-export { Refreshable };
+    setRefreshable(context, refreshable) {
+        return this.nativeChannel(context, 'setRefreshable')(refreshable);
+    }
+    setRefreshing(context, refreshing) {
+        return this.nativeChannel(context, 'setRefreshing')(refreshing);
+    }
+    isRefreshable(context) {
+        return this.nativeChannel(context, 'isRefreshable')();
+    }
+    isRefreshing(context) {
+        return this.nativeChannel(context, 'isRefreshing')();
+    }
+    toModel() {
+        this.dirtyProps.content = this.content.viewId;
+        this.dirtyProps.header = (this.header || {}).viewId;
+        return super.toModel();
+    }
+}
+__decorate([
+    Property,
+    __metadata("design:type", Function)
+], Refreshable.prototype, "onRefresh", void 0);
 export function refreshable(config) {
     const ret = new Refreshable;
     ret.layoutConfig = layoutConfig().fit();

@@ -20,11 +20,11 @@ import android.graphics.drawable.ShapeDrawable;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import pub.doric.DoricContext;
-import pub.doric.utils.DoricUtils;
-
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
+
+import pub.doric.DoricContext;
+import pub.doric.utils.DoricUtils;
 
 /**
  * @Description: com.github.penfeizhou.doric.shader
@@ -94,7 +94,9 @@ public class LinearNode extends GroupNode<LinearLayout> {
 
     @Override
     protected LinearLayout build() {
-        return new MaximumLinearLayout(getContext());
+        LinearLayout linearLayout= new MaximumLinearLayout(getContext());
+        linearLayout.setBaselineAligned(false);
+        return  linearLayout;
     }
 
     @Override

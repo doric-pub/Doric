@@ -1,4 +1,4 @@
-import { Panel, Group, scroller, vlayout, layoutConfig, LayoutSpec, Input, Gravity, log, input, text, Color, Text, InputType } from "doric";
+import { Panel, Group, scroller, vlayout, layoutConfig, LayoutSpec, Input, Gravity, log, input, text, Color, Text, InputType, hlayout } from "doric";
 import { title } from "./utils";
 @Entry
 class TextDemo extends Panel {
@@ -8,41 +8,40 @@ class TextDemo extends Panel {
                 [
                     title("Text Demo"),
                     input({
-                        width : 100,
-                        height:100,
+                        width: 100,
+                        height: 100,
                         inputType: InputType.Number,
-                        hintText: "number"    
+                        hintText: "number"
                     }),
-
-                    // input({
-                    //     width : 100,
-                    //     height:100,
-                    //     inputType: InputType.NumberSigned,
-                    //     hintText: "NumberSigned"    
-                    // }),
-
-                    // input({
-                    //     width : 100,
-                    //     height:100,
-                    //     inputType: InputType.Alphabet,
-                    //     hintText: "Alphabet"    
-                    // }),
-
-                    // input({
-                    //     width : 100,
-                    //     height:100,
-                    //     inputType: InputType.Phone,
-                    //     hintText: "Phone" 
-                   
-                    // }),
-
+                    hlayout([
+                        text({
+                            text: "size 10",
+                            textSize: 10,
+                            backgroundColor: Color.GREEN
+                        }),
+                        text({
+                            text: "size 25",
+                            textSize: 25,
+                            backgroundColor: Color.BLUE
+                        }),
+                        text({
+                            text: "size 18",
+                            textSize: 18,
+                            backgroundColor: Color.LTGRAY,
+                        })
+                    ], {
+                        backgroundColor: Color.RED,
+                        height: 50,
+                        gravity: Gravity.CenterX,
+                        layoutConfig: layoutConfig().configWidth(LayoutSpec.MOST).configHeight(LayoutSpec.JUST),
+                    }),
                     text({
                         text: "This is normal text",
                     }),
                     text({
                         text: "This is normal text with shadow ",
                         textSize: 20,
-                        shadow:  {
+                        shadow: {
                             color: Color.parse("#1DD6DE"),
                             offsetX: 0,
                             offsetY: 1,

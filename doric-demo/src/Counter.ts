@@ -9,13 +9,15 @@ class CounterView extends ViewHolder {
     build(root: Group) {
         vlayout(
             [
-                this.number = text({
-                    textSize: 40,
+                 text({
+                     textSize: 40,
+                     tag:"tvNumber"
                 }),
 
-                this.counter = text({
-                    text: "Click To Count",
+                text({
+                    text: "Click To Count 1",
                     textSize: 20,
+                    tag:"tvCounter"
                 }),
             ],
             {
@@ -24,6 +26,8 @@ class CounterView extends ViewHolder {
                 space: 20,
             }
         ).in(root)
+       this.number= root.findViewByTag("tvNumber")!
+       this.counter= root.findViewByTag("tvCounter")!
     }
 }
 

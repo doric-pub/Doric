@@ -41,6 +41,7 @@ export declare abstract class View implements Modeling {
     alpha?: number;
     hidden?: boolean;
     viewId: string;
+    tag?: string;
     padding?: {
         left?: number;
         right?: number;
@@ -53,6 +54,7 @@ export declare abstract class View implements Modeling {
     callbacks: Map<String, Function>;
     private callback2Id;
     private id2Callback;
+    findViewByTag(tag: string): View | undefined;
     constructor();
     /** Anchor start*/
     get left(): number;
@@ -130,6 +132,8 @@ export declare abstract class View implements Modeling {
 }
 export declare abstract class Superview extends View {
     subviewById(id: string): View | undefined;
+    findViewByTag(tag: string): View | undefined;
+    private findViewTraversal;
     abstract allSubviews(): Iterable<View>;
     isDirty(): boolean;
     clean(): void;

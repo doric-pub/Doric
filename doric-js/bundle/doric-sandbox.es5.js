@@ -59,18 +59,8 @@ var doric = (function (exports) {
 
     var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
-    function createCommonjsModule(fn, basedir, module) {
-    	return module = {
-    	  path: basedir,
-    	  exports: {},
-    	  require: function (path, base) {
-          return commonjsRequire(path, (base === undefined || base === null) ? module.path : base);
-        }
-    	}, fn(module, module.exports), module.exports;
-    }
-
-    function commonjsRequire () {
-    	throw new Error('Dynamic requires are not currently supported by @rollup/plugin-commonjs');
+    function createCommonjsModule(fn, module) {
+    	return module = { exports: {} }, fn(module, module.exports), module.exports;
     }
 
     /*! *****************************************************************************
@@ -2855,6 +2845,10 @@ var doric = (function (exports) {
 
     hiddenKeys[METADATA] = true;
     });
+    var internalMetadata_1 = internalMetadata.REQUIRED;
+    var internalMetadata_2 = internalMetadata.fastKey;
+    var internalMetadata_3 = internalMetadata.getWeakData;
+    var internalMetadata_4 = internalMetadata.onFreeze;
 
     var onFreeze = internalMetadata.onFreeze;
 

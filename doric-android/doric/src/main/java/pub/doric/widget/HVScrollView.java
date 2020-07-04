@@ -198,6 +198,7 @@ public class HVScrollView extends FrameLayout implements NestedScrollingParent,
     private float mVerticalScrollFactor;
 
     private OnScrollChangeListener mOnScrollChangeListener;
+    private boolean mInTouch = false;
 
     public HVScrollView(Context context) {
         this(context, null);
@@ -692,9 +693,6 @@ public class HVScrollView extends FrameLayout implements NestedScrollingParent,
             return;
         }
         mScrollState = state;
-        if (state == SCROLL_STATE_IDLE && mOnScrollChangeListener != null) {
-            mOnScrollChangeListener.onScrollEnd(this, getScrollX(), getScrollY());
-        }
     }
 
     private void cancelTouch() {
@@ -895,7 +893,7 @@ public class HVScrollView extends FrameLayout implements NestedScrollingParent,
 
         switch (actionMasked) {
             case MotionEvent.ACTION_DOWN: {
-
+                mInTouch = true;
                 /*
                  * If being flinged and user touches, stop the fling. isFinished
                  * will be false if being flinged.
@@ -920,6 +918,8 @@ public class HVScrollView extends FrameLayout implements NestedScrollingParent,
                 break;
             }
             case MotionEvent.ACTION_MOVE:
+                mInTouch = true;
+
                 final int activePointerIndex = ev.findPointerIndex(mActivePointerId);
                 if (activePointerIndex == -1) {
                     Log.e(TAG, "Invalid pointerId=" + mActivePointerId + " in onTouchEvent");
@@ -1041,6 +1041,8 @@ public class HVScrollView extends FrameLayout implements NestedScrollingParent,
                 }
                 break;
             case MotionEvent.ACTION_UP:
+                mInTouch = false;
+
                 final VelocityTracker velocityTracker = mVelocityTracker;
                 velocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
 
@@ -1058,6 +1060,8 @@ public class HVScrollView extends FrameLayout implements NestedScrollingParent,
                 resetTouch();
                 break;
             case MotionEvent.ACTION_CANCEL:
+                mInTouch = false;
+
                 if (mScrollState == SCROLL_STATE_DRAGGING) {
                     if (mScroller.springBack(getScrollX(), getScrollY(), 0, getScrollRangeX(), 0, getScrollRangeY())) {
                         ViewCompat.postInvalidateOnAnimation(this);
@@ -1996,6 +2000,11 @@ public class HVScrollView extends FrameLayout implements NestedScrollingParent,
                 setScrollState(SCROLL_STATE_IDLE); // setting state to idle will stop this.
             } else {
                 ViewCompat.postInvalidateOnAnimation(this);
+            }
+        }
+        if (mScroller.isFinished() && !mInTouch) {
+            if (mOnScrollChangeListener != null) {
+                mOnScrollChangeListener.onScrollEnd(HVScrollView.this, getScrollX(), getScrollY());
             }
         }
     }

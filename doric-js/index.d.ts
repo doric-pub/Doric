@@ -162,6 +162,7 @@ declare module 'doric/lib/src/ui/view' {
             alpha?: number;
             hidden?: boolean;
             viewId: string;
+            tag?: string;
             padding?: {
                     left?: number;
                     right?: number;
@@ -172,6 +173,7 @@ declare module 'doric/lib/src/ui/view' {
             onClick?: Function;
             superview?: Superview;
             callbacks: Map<String, Function>;
+            findViewByTag(tag: string): View | undefined;
             constructor();
             /** Anchor start*/
             get left(): number;
@@ -246,6 +248,7 @@ declare module 'doric/lib/src/ui/view' {
     }
     export abstract class Superview extends View {
             subviewById(id: string): View | undefined;
+            findViewByTag(tag: string): View | undefined;
             abstract allSubviews(): Iterable<View>;
             isDirty(): boolean;
             clean(): void;

@@ -1686,6 +1686,12 @@ class View {
         }
         return f;
     }
+    findViewByTag(tag) {
+        if (tag === this.tag) {
+            return this;
+        }
+        return undefined;
+    }
     /** Anchor start*/
     get left() {
         return this.x;
@@ -1921,6 +1927,21 @@ class Superview extends View {
                 return v;
             }
         }
+    }
+    findViewByTag(tag) {
+        if (tag === this.tag) {
+            return this;
+        }
+        return this.findViewTraversal(this, tag);
+    }
+    findViewTraversal(view, tag) {
+        for (let v of view.allSubviews()) {
+            let find = v.findViewByTag(tag);
+            if (find) {
+                return find;
+            }
+        }
+        return undefined;
     }
     isDirty() {
         if (super.isDirty()) {

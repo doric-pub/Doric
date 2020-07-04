@@ -69,6 +69,8 @@ export abstract class View implements Modeling {
 
     viewId = uniqueId('ViewId')
 
+    tag?: string
+
     @Property
     padding?: {
         left?: number,
@@ -99,6 +101,13 @@ export abstract class View implements Modeling {
             f = Reflect.get(this, id) as Function
         }
         return f
+    }
+
+    findViewByTag(tag: string): View | undefined {
+        if (tag === this.tag) {
+            return this;
+        }
+        return undefined;
     }
 
     constructor() {
@@ -342,6 +351,23 @@ export abstract class Superview extends View {
                 return v
             }
         }
+    }
+
+    findViewByTag(tag: string): View | undefined {
+        if (tag === this.tag) {
+            return this
+        }
+        return this.findViewTraversal(this, tag)
+    }
+
+    private findViewTraversal(view: Superview, tag: string): View | undefined {
+        for (let v of view.allSubviews()) {
+            let find = v.findViewByTag(tag);
+            if (find) {
+                return find;
+            }
+        }
+        return undefined;
     }
     abstract allSubviews(): Iterable<View>
 

@@ -85,8 +85,11 @@ public class DoricPanelFragment extends Fragment implements IDoricNavigator {
         argument.putString("source", source);
         argument.putString("alias", alias);
         argument.putString("extra", extra);
-        getNavController()
-                .navigate(R.id.action_doricPanelFragment_to_doricPanelFragment, argument);
+        NavController navController = getNavController();
+        if (navController != null) {
+            getNavController()
+                    .navigate(R.id.action_doricPanelFragment_to_doricPanelFragment, argument);
+        }
     }
 
 
@@ -95,14 +98,19 @@ public class DoricPanelFragment extends Fragment implements IDoricNavigator {
         if (getActivity() == null || getActivity().isFinishing()) {
             return;
         }
-        if (!getNavController().popBackStack()) {
+        NavController navController = getNavController();
+        if (navController != null && navController.popBackStack()) {
             if (getActivity() != null) {
                 getActivity().finish();
             }
         }
     }
 
+    @Nullable
     private NavController getNavController() {
+        if (getView() == null) {
+            return null;
+        }
         return Navigation.findNavController(getView());
     }
 

@@ -100,9 +100,7 @@ public class DoricPanelFragment extends Fragment implements IDoricNavigator {
         }
         NavController navController = getNavController();
         if (navController != null && navController.popBackStack()) {
-            if (getActivity() != null) {
                 getActivity().finish();
-            }
         }
     }
 

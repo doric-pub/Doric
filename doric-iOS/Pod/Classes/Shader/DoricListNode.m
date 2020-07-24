@@ -139,7 +139,7 @@
         DoricListItemNode *listItemNode = [[DoricListItemNode alloc] initWithContext:self.doricContext];
         [listItemNode initWithSuperNode:self];
         cell.doricListItemNode = listItemNode;
-        cell.backgroundColor=[UIColor clearColor];
+        cell.backgroundColor = [UIColor clearColor];
         listItemNode.view.width = tableView.width;
         [cell.contentView addSubview:listItemNode.view];
     }
@@ -225,11 +225,14 @@
     if (old && [old isEqualToNumber:@(height)]) {
         return;
     }
+    NSUInteger currentCount = self.itemCount + (self.loadMore ? 1 : 0);
     self.itemHeights[@(position)] = @(height);
     if (@available(iOS 10.0, *)) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [UIView performWithoutAnimation:^{
-                if([self.view numberOfRowsInSection:0]<=position){
+                NSUInteger itemCount = self.itemCount + (self.loadMore ? 1 : 0);
+                if ([self.view numberOfRowsInSection:0] <= position || currentCount != itemCount) {
+                    [self.view reloadData];
                     return;
                 }
                 NSIndexPath *indexPath = [NSIndexPath indexPathForRow:position inSection:0];

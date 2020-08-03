@@ -79,6 +79,8 @@ public class DoricUtils {
             return new JavaValue(((JSONBuilder) arg).toJSONObject());
         } else if (arg instanceof JSONObject) {
             return new JavaValue((JSONObject) arg);
+        } else if (arg instanceof JSONArray) {
+            return new JavaValue((JSONArray) arg);
         } else if (arg instanceof String) {
             return new JavaValue((String) arg);
         } else if (arg instanceof Integer) {

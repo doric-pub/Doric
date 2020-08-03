@@ -12,15 +12,15 @@
     "dependencies": {
         "doric": "file:../doric-js",
         "reflect-metadata": "^0.1.13",
-        "rollup": "^2.18.2",
+        "rollup": "^2.23.0",
         "tslib": "^2.0.0",
-        "typescript": "^3.9.6"
+        "typescript": "^3.9.7"
     },
     "devDependencies": {
         "@rollup/plugin-buble": "^0.21.3",
-        "@rollup/plugin-commonjs": "^13.0.0",
+        "@rollup/plugin-commonjs": "^14.0.0",
         "@rollup/plugin-image": "^2.0.5",
         "@rollup/plugin-json": "^4.1.0",
-        "@rollup/plugin-node-resolve": "^8.1.0"
+        "@rollup/plugin-node-resolve": "^8.4.0"
     }
 }

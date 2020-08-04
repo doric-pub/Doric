@@ -231,7 +231,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [UIView performWithoutAnimation:^{
                 NSUInteger itemCount = self.itemCount + (self.loadMore ? 1 : 0);
-                if ([self.view numberOfRowsInSection:0] <= position || currentCount != itemCount) {
+                if (itemCount <= position || currentCount != itemCount) {
                     [self.view reloadData];
                     return;
                 }

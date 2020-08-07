@@ -244,7 +244,11 @@
         }
     } else if ([@"imageRes" isEqualToString:name]) {
         YYImage *image = [YYImage imageNamed:prop];
-        view.image = image;
+        if (image) {
+            view.image = image;
+        } else {
+            view.image = [UIImage imageNamed:prop];
+        }
 
         if (self.loadCallbackId.length > 0) {
             if (image) {

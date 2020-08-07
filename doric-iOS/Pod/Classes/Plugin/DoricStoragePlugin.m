@@ -74,8 +74,8 @@ static NSString *doric_prefix = @"pref";
     NSString *zone = argument[@"zone"];
     NSString *key = argument[@"key"];
     YYDiskCache *diskCache = [self getDiskCache:zone];
-    [diskCache objectForKey:key withBlock:^(NSString *key, NSString *value) {
-        [promise resolve:value];
+    [diskCache objectForKey:key withBlock:^(NSString *_Nonnull key, id <NSCoding> _Nullable object) {
+        [promise resolve:object];
     }];
 }
 

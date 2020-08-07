@@ -243,7 +243,7 @@
 
         }
     } else if ([@"imageRes" isEqualToString:name]) {
-        YYImage *image = [YYImage imageNamed:prop];
+        UIImage *image = [UIImage imageNamed:prop];
         view.image = image;
 
         if (self.loadCallbackId.length > 0) {

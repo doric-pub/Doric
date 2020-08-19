@@ -118,6 +118,11 @@
         [self setContentOffset:(CGPoint) {0, 0} animated:YES];
         self.scrollEnabled = YES;
     }
+    if (refreshing) {
+        [self.swipePullingDelegate startAnimation];
+    } else {
+        [self.swipePullingDelegate stopAnimation];
+    }
     _refreshing = refreshing;
 }
 

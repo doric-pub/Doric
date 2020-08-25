@@ -17,6 +17,7 @@ package pub.doric.utils;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
@@ -164,8 +165,14 @@ public class DoricUtils {
         Display display = manager.getDefaultDisplay();
         if (display != null) {
             display.getMetrics(dm);
-            sScreenWidthPixels = dm.widthPixels;
-            sScreenHeightPixels = dm.heightPixels;
+            int orientation = context.getResources().getConfiguration().orientation;
+            if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                sScreenWidthPixels = dm.widthPixels;
+                sScreenHeightPixels = dm.heightPixels;
+            } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                sScreenWidthPixels = dm.heightPixels;
+                sScreenHeightPixels = dm.widthPixels;
+            }
         }
         return sScreenWidthPixels;
     }
@@ -187,8 +194,14 @@ public class DoricUtils {
         Display display = manager.getDefaultDisplay();
         if (display != null) {
             display.getMetrics(dm);
-            sScreenWidthPixels = dm.widthPixels;
-            sScreenHeightPixels = dm.heightPixels;
+            int orientation = context.getResources().getConfiguration().orientation;
+            if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                sScreenWidthPixels = dm.widthPixels;
+                sScreenHeightPixels = dm.heightPixels;
+            } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                sScreenWidthPixels = dm.heightPixels;
+                sScreenHeightPixels = dm.widthPixels;
+            }
         }
         return sScreenHeightPixels;
     }

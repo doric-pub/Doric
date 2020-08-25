@@ -62,13 +62,25 @@
         if (TARGET_OS_SIMULATOR == 1) {
             platform = [NSProcessInfo new].environment[@"SIMULATOR_MODEL_IDENTIFIER"];
         }
+        
+        UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+        CGFloat screenWidth;
+        CGFloat screenHeight;
+        if (orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown) {
+            screenWidth = [[UIScreen mainScreen] bounds].size.width;
+            screenHeight = [[UIScreen mainScreen] bounds].size.height;
+        } else {
+            screenWidth = [[UIScreen mainScreen] bounds].size.height;
+            screenHeight = [[UIScreen mainScreen] bounds].size.width;
+        }
+        
         _innerEnvironmentDictionary = @{
                 @"platform": @"iOS",
                 @"platformVersion": [[UIDevice currentDevice] systemVersion],
                 @"appName": infoDictionary[@"CFBundleName"],
                 @"appVersion": infoDictionary[@"CFBundleShortVersionString"],
-                @"screenWidth": @([[UIScreen mainScreen] bounds].size.width),
-                @"screenHeight": @([[UIScreen mainScreen] bounds].size.height),
+                @"screenWidth": @(screenWidth),
+                @"screenHeight": @(screenHeight),
                 @"screenScale": @([[UIScreen mainScreen] scale]),
                 @"statusBarHeight": @([[UIApplication sharedApplication] statusBarFrame].size.height),
                 @"hasNotch": @(hasNotch()),

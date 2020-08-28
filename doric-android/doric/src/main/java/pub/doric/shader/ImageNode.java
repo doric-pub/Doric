@@ -17,6 +17,7 @@ package pub.doric.shader;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -223,12 +224,13 @@ public class ImageNode extends ViewNode<ImageView> {
     }
 
     private void loadImageUrl(String url) {
+        Context context = DoricUtils.unwrap(getContext());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            if (getContext() instanceof Activity && ((Activity) getContext()).isDestroyed()) {
+            if (context instanceof Activity && ((Activity) context).isDestroyed()) {
                 return;
             }
         }
-        RequestBuilder<Drawable> requestBuilder = Glide.with(getContext())
+        RequestBuilder<Drawable> requestBuilder = Glide.with(context)
                 .load(url);
         loadIntoTarget(requestBuilder);
     }

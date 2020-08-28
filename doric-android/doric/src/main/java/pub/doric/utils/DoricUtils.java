@@ -16,6 +16,7 @@
 package pub.doric.utils;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.res.AssetManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -319,5 +320,13 @@ public class DoricUtils {
         }
 
         return null;
+    }
+
+    public static Context unwrap(Context context) {
+        while (context instanceof ContextWrapper) {
+            context = ((ContextWrapper) context).getBaseContext();
+        }
+
+        return context;
     }
 }

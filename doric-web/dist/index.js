@@ -4311,7 +4311,9 @@ return __module.exports;
 var doric_web = (function (exports, axios, sandbox) {
     'use strict';
 
-    axios = axios && Object.prototype.hasOwnProperty.call(axios, 'default') ? axios['default'] : axios;
+    function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+
+    var axios__default = /*#__PURE__*/_interopDefaultLegacy(axios);
 
     class DoricPlugin {
         constructor(context) {
@@ -5731,7 +5733,7 @@ ${content}
         }
         connectedCallback() {
             if (this.src && this.context === undefined) {
-                axios.get(this.src).then(result => {
+                axios__default['default'].get(this.src).then(result => {
                     this.load(result.data);
                 });
             }

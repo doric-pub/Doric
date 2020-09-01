@@ -18,9 +18,8 @@ package pub.doric;
 import android.animation.AnimatorSet;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-
-import androidx.fragment.app.Fragment;
 
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSONBuilder;

@@ -75,6 +75,9 @@ public class DoricPanelFragment extends Fragment implements IDoricNavigator {
                 }
             }
         }
+        if (getContext() instanceof LifecycleOwner) {
+            ((LifecycleOwner) getContext()).getLifecycle().removeObserver(doricPanel);
+        }
     }
 
     @Override
@@ -116,7 +119,7 @@ public class DoricPanelFragment extends Fragment implements IDoricNavigator {
     @Override
     public void onResume() {
         super.onResume();
-        if (!(getActivity() instanceof LifecycleOwner) && doricPanel != null) {
+        if (doricPanel != null) {
             doricPanel.onActivityResume();
         }
     }
@@ -124,7 +127,7 @@ public class DoricPanelFragment extends Fragment implements IDoricNavigator {
     @Override
     public void onPause() {
         super.onPause();
-        if (!(getActivity() instanceof LifecycleOwner) && doricPanel != null) {
+        if (doricPanel != null) {
             doricPanel.onActivityPause();
         }
     }
@@ -132,8 +135,7 @@ public class DoricPanelFragment extends Fragment implements IDoricNavigator {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if ((getActivity() == null || !getActivity().isFinishing() || !(getActivity() instanceof LifecycleOwner))
-                && doricPanel != null) {
+        if (doricPanel != null) {
             doricPanel.onActivityDestroy();
         }
     }

@@ -15,6 +15,7 @@
  */
 package pub.doric;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -115,7 +116,7 @@ public class DoricPanelFragment extends Fragment implements IDoricNavigator {
     @Override
     public void onResume() {
         super.onResume();
-        if (!(getActivity() instanceof LifecycleOwner && doricPanel != null)) {
+        if (!(getActivity() instanceof LifecycleOwner) && doricPanel != null) {
             doricPanel.onActivityResume();
         }
     }
@@ -225,4 +226,8 @@ public class DoricPanelFragment extends Fragment implements IDoricNavigator {
         });
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        doricPanel.onActivityResult(requestCode, resultCode, data);
+    }
 }

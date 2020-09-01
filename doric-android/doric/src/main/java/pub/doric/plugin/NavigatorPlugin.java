@@ -25,6 +25,7 @@ import com.github.pengfeizhou.jscore.JSValue;
 import com.github.pengfeizhou.jscore.JavaValue;
 
 import pub.doric.Doric;
+import pub.doric.DoricActivity;
 import pub.doric.DoricContext;
 import pub.doric.extension.bridge.DoricMethod;
 import pub.doric.extension.bridge.DoricPlugin;
@@ -53,6 +54,7 @@ public class NavigatorPlugin extends DoricJavaPlugin {
                 String alias = source;
                 String extra = "";
                 JSValue config = jsObject.getProperty("config");
+                boolean singlePage = false;
                 if (config.isObject()) {
                     JSValue aliasJS = config.asObject().getProperty("alias");
                     if (aliasJS.isString()) {
@@ -62,11 +64,23 @@ public class NavigatorPlugin extends DoricJavaPlugin {
                     if (extraJS.isString()) {
                         extra = extraJS.asString().value();
                     }
+                    JSValue singlePageJS = config.asObject().getProperty("singlePage");
+                    if (singlePageJS.isBoolean()) {
+                        singlePage = singlePageJS.asBoolean().value();
+                    }
                 }
-                navigator.push(jsObject.getProperty("source").asString().value(),
-                        alias,
-                        extra
-                );
+                if (singlePage) {
+                    navigator.push(jsObject.getProperty("source").asString().value(),
+                            alias,
+                            extra
+                    );
+                } else {
+                    Intent intent = new Intent(getDoricContext().getContext(), DoricActivity.class);
+                    intent.putExtra("source", source);
+                    intent.putExtra("alias", alias);
+                    intent.putExtra("extra", extra);
+                    getDoricContext().getContext().startActivity(intent);
+                }
                 promise.resolve();
             } catch (ArchiveException e) {
                 e.printStackTrace();

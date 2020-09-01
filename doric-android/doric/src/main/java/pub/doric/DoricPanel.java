@@ -24,6 +24,7 @@ import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.OnLifecycleEvent;
 
+import android.content.Intent;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
@@ -121,6 +122,12 @@ public class DoricPanel extends FrameLayout implements LifecycleObserver {
     public void onActivityDestroy() {
         if (mDoricContext != null) {
             mDoricContext.teardown();
+        }
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (mDoricContext != null) {
+            mDoricContext.onActivityResult(requestCode, resultCode, data);
         }
     }
 

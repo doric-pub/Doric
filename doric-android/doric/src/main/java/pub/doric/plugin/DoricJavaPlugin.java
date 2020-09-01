@@ -15,6 +15,8 @@
  */
 package pub.doric.plugin;
 
+import android.content.Intent;
+
 import pub.doric.DoricContext;
 import pub.doric.utils.DoricContextHolder;
 
@@ -29,6 +31,13 @@ public abstract class DoricJavaPlugin extends DoricContextHolder {
     }
 
     public void onTearDown() {
+
+    }
+
+    /**
+     * Called when use {@link DoricContext#startActivityForResult(Intent, int)}
+     */
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
     }
 }

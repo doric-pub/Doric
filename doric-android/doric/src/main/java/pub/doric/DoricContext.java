@@ -17,7 +17,10 @@ package pub.doric;
 
 import android.animation.AnimatorSet;
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
+
+import androidx.fragment.app.Fragment;
 
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSONBuilder;
@@ -257,5 +260,24 @@ public class DoricContext {
 
     public String getExtra() {
         return extra;
+    }
+
+    /**
+     * Use this to take effect of {@link #onActivityResult(int, int, Intent)}
+     */
+    public void startActivityForResult(Intent intent, int requestCode) {
+        if (doricNavigator instanceof Fragment) {
+            ((Fragment) doricNavigator).startActivityForResult(intent, requestCode);
+        }
+    }
+
+    /**
+     * To use this,
+     * you should use {@link #startActivityForResult(Intent, int)}.
+     */
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        for (DoricJavaPlugin javaPlugin : mPluginMap.values()) {
+            javaPlugin.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

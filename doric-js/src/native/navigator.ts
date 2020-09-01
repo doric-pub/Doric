@@ -22,6 +22,7 @@ export function navigator(context: BridgeContext) {
             alias?: string,
             animated?: boolean,
             extra?: object,
+            singlePage?: boolean,
         }) => {
             if (config && config.extra) {
                 (config as any).extra = JSON.stringify(config.extra)

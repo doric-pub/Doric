@@ -1,8 +1,8 @@
 name: Release
-on: 
-#  push: 
-#    tags: 
-#      - 'v*.*.*'
+on:
+  #  push:
+  #    tags:
+  #      - 'v*.*.*'
   release:
     types:
       - published
@@ -10,53 +10,53 @@ jobs:
   build:
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: setup JDK 1.8
-      uses: actions/setup-java@v1
-      with:
+      - uses: actions/checkout@v1
+      - name: setup JDK 1.8
+        uses: actions/setup-java@v1
+        with:
           java-version: 1.8
-    - uses: actions/setup-node@v1
-      with:
+      - uses: actions/setup-node@v1
+        with:
           node-version: 10
-          registry-url: 'https://registry.npmjs.org'
-    - name: Config Github Account
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        git config user.email "pengfeizhou@foxmail.com"
-        git config user.name "pengfei.zhou"
-        git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-        git checkout master
-    - name: Setup
-      run: sh setup.sh
-    - name: Install Cocoapods
-      run: |
-        gem install cocoapods
-    - name: Echo current Version
-      run: |
-        echo ${GITHUB_REF:11}>version
-        echo "Current Version is "${GITHUB_REF:11}
-    - name: Publish
-      run: |
-        sh publish.sh
-      env:
-        COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        BINTARY_USER: ${{ secrets.BINTARY_USER }} 
-        BINTARY_REPO: ${{ secrets.BINTARY_REPO }} 
-        BINTARY_APIKEY: ${{ secrets.BINTARY_APIKEY }}
-    - name: Publish legacy
-      run: |
-        sh publish-android-legacy.sh
-      env:
-        BINTARY_USER: ${{ secrets.BINTARY_USER }} 
-        BINTARY_REPO: ${{ secrets.BINTARY_REPO }} 
-        BINTARY_APIKEY: ${{ secrets.BINTARY_APIKEY }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: dingtalk
-      uses: satak/webrequest-action@master
-      with:
-        url: ${{ secrets.dingtalk_webhook }}
-        method: POST
-        payload: '{"msgtype": "text", "text": {"content": "Doric version ${{env.GITHUB_REF}} released."}}'
-        headers: '{"Content-Type": "application/json"}'
+          registry-url: "https://registry.npmjs.org"
+      - name: Config Github Account
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.email "pengfeizhou@foxmail.com"
+          git config user.name "pengfei.zhou"
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+          git checkout master
+      - name: Setup
+        run: sh setup.sh
+      - name: Install Cocoapods
+        run: |
+          gem install cocoapods
+      - name: Echo current Version
+        run: |
+          echo ${GITHUB_REF:11}>version
+          echo "Current Version is "${GITHUB_REF:11}
+      - name: Publish
+        run: |
+          sh publish.sh
+        env:
+          COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          BINTARY_USER: ${{ secrets.BINTARY_USER }}
+          BINTARY_REPO: ${{ secrets.BINTARY_REPO }}
+          BINTARY_APIKEY: ${{ secrets.BINTARY_APIKEY }}
+      # - name: Publish legacy
+      #   run: |
+      #     sh publish-android-legacy.sh
+      #   env:
+      #     BINTARY_USER: ${{ secrets.BINTARY_USER }}
+      #     BINTARY_REPO: ${{ secrets.BINTARY_REPO }}
+      #     BINTARY_APIKEY: ${{ secrets.BINTARY_APIKEY }}
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: dingtalk
+        uses: satak/webrequest-action@master
+        with:
+          url: ${{ secrets.dingtalk_webhook }}
+          method: POST
+          payload: '{"msgtype": "text", "text": {"content": "Doric version ${{env.GITHUB_REF}} released."}}'
+          headers: '{"Content-Type": "application/json"}'

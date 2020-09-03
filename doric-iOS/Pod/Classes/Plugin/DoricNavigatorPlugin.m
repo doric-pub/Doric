@@ -53,12 +53,13 @@
 - (void)openUrl:(NSString *)urlString withPromise:(DoricPromise *)promise {
     dispatch_async(dispatch_get_main_queue(), ^{
         NSURL *url = [NSURL URLWithString:urlString];
-        if ([[UIApplication sharedApplication] canOpenURL:url]) {
-            [[UIApplication sharedApplication] openURL:url];
-            [promise resolve:nil];
-        } else {
-            [promise reject:@"Cannot open"];
-        }
+        [UIApplication.sharedApplication openURL:url options:@{} completionHandler:^(BOOL success) {
+            if (success) {
+                [promise resolve:nil];
+            } else {
+                [promise reject:@"Cannot open"];
+            }
+        }];
     });
 }
 @end

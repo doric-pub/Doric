@@ -840,8 +840,10 @@ declare module 'doric/lib/src/native/navbar' {
 
 declare module 'doric/lib/src/native/navigator' {
     import { BridgeContext } from "doric/lib/src/runtime/global";
+    import { ClassType } from "doric/lib/src/pattern/mvvm";
+    import { Panel } from "doric/lib/src/ui/panel";
     export function navigator(context: BridgeContext): {
-        push: (source: string, config?: {
+        push: (source: string | ClassType<Panel>, config?: {
             alias?: string | undefined;
             animated?: boolean | undefined;
             extra?: object | undefined;

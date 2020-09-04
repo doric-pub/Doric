@@ -8,6 +8,7 @@ export declare class Context {
         resolve: Function;
         reject: Function;
     }>;
+    classes: Map<string, ClassType<object>>;
     hookBeforeNativeCall(): void;
     hookAfterNativeCall(): void;
     constructor(id: string);
@@ -22,7 +23,7 @@ export declare function __require__(name: string): any;
 export declare function jsRegisterModule(name: string, moduleObject: any): void;
 export declare function jsCallEntityMethod(contextId: string, methodName: string, args?: any): any;
 declare type ClassType<T> = new (...args: any) => T;
-export declare function jsObtainEntry(contextId: string): (args: ClassType<object> | ClassType<object>[]) => ((constructor: ClassType<object>) => {
+export declare function jsObtainEntry(contextId: string): () => ((constructor: ClassType<object>) => {
     new (...args: any): {
         context: Context | undefined;
     };

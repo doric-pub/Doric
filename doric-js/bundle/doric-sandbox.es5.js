@@ -1280,6 +1280,7 @@ var doric = (function (exports) {
     var Context = /** @class */ (function () {
         function Context(id) {
             this.callbacks = new Map;
+            this.classes = new Map;
             this.id = id;
         }
         Context.prototype.hookBeforeNativeCall = function () {
@@ -1395,6 +1396,8 @@ var doric = (function (exports) {
     function jsObtainEntry(contextId) {
         var context = jsObtainContext(contextId);
         var exportFunc = function (constructor) {
+            var _a;
+            (_a = context === null || context === void 0 ? void 0 : context.classes) === null || _a === void 0 ? void 0 : _a.set(constructor.name, constructor);
             var ret = /** @class */ (function (_super) {
                 __extends(class_1, _super);
                 function class_1() {
@@ -1404,17 +1407,42 @@ var doric = (function (exports) {
                 }
                 return class_1;
             }(constructor));
-            if (context) {
-                context.register(new ret);
-            }
+            context === null || context === void 0 ? void 0 : context.register(new ret);
             return ret;
         };
-        return function (args) {
-            if (args instanceof Array) {
-                return exportFunc;
+        return function () {
+            if (arguments.length === 1) {
+                var args = arguments[0];
+                if (args instanceof Array) {
+                    args.forEach(function (clz) {
+                        var _a;
+                        (_a = context === null || context === void 0 ? void 0 : context.classes) === null || _a === void 0 ? void 0 : _a.set(clz.name, clz);
+                    });
+                    return exportFunc;
+                }
+                else {
+                    return exportFunc(args);
+                }
+            }
+            else if (arguments.length === 2) {
+                var srcContextId = arguments[0];
+                var className = arguments[1];
+                var srcContext = gContexts.get(srcContextId);
+                if (srcContext) {
+                    var clz = srcContext.classes.get(className);
+                    if (clz) {
+                        return exportFunc(clz);
+                    }
+                    else {
+                        throw new Error("Cannot find class:" + className + " in context:" + srcContextId);
+                    }
+                }
+                else {
+                    throw new Error("Cannot find context for " + srcContextId);
+                }
             }
             else {
-                return exportFunc(args);
+                throw new Error("Entry arguments error:" + arguments);
             }
         };
     }

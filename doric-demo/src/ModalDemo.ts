@@ -2,7 +2,7 @@ import { Group, Panel, text, Color, LayoutSpec, vlayout, Gravity, scroller, layo
 import { colors, label } from "./utils";
 
 @Entry
-class ModalDemo extends Panel {
+export class ModalDemo extends Panel {
     build(rootView: Group): void {
         scroller(
             vlayout(

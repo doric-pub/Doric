@@ -74,6 +74,7 @@ export function jsCallReject(contextId, callbackId, args) {
 export class Context {
     constructor(id) {
         this.callbacks = new Map;
+        this.classes = new Map;
         this.id = id;
         return new Proxy(this, {
             get: (target, p) => {
@@ -214,23 +215,50 @@ export function jsCallEntityMethod(contextId, methodName, args) {
 export function jsObtainEntry(contextId) {
     const context = jsObtainContext(contextId);
     const exportFunc = (constructor) => {
+        var _a;
+        (_a = context === null || context === void 0 ? void 0 : context.classes) === null || _a === void 0 ? void 0 : _a.set(constructor.name, constructor);
         const ret = class extends constructor {
             constructor() {
                 super(...arguments);
                 this.context = context;
             }
         };
-        if (context) {
-            context.register(new ret);
-        }
+        context === null || context === void 0 ? void 0 : context.register(new ret);
         return ret;
     };
-    return (args) => {
-        if (args instanceof Array) {
-            return exportFunc;
+    return function () {
+        if (arguments.length === 1) {
+            const args = arguments[0];
+            if (args instanceof Array) {
+                args.forEach(clz => {
+                    var _a;
+                    (_a = context === null || context === void 0 ? void 0 : context.classes) === null || _a === void 0 ? void 0 : _a.set(clz.name, clz);
+                });
+                return exportFunc;
+            }
+            else {
+                return exportFunc(args);
+            }
+        }
+        else if (arguments.length === 2) {
+            const srcContextId = arguments[0];
+            const className = arguments[1];
+            const srcContext = gContexts.get(srcContextId);
+            if (srcContext) {
+                const clz = srcContext.classes.get(className);
+                if (clz) {
+                    return exportFunc(clz);
+                }
+                else {
+                    throw new Error(`Cannot find class:${className} in context:${srcContextId}`);
+                }
+            }
+            else {
+                throw new Error(`Cannot find context for ${srcContextId}`);
+            }
         }
         else {
-            return exportFunc(args);
+            throw new Error(`Entry arguments error:${arguments}`);
         }
     };
 }

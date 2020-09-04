@@ -14,16 +14,21 @@
  * limitations under the License.
  */
 import { BridgeContext } from "../runtime/global"
+import { ClassType } from "../pattern/mvvm"
+import { Panel } from "../ui/panel"
 
 export function navigator(context: BridgeContext) {
     const moduleName = "navigator"
     return {
-        push: (source: string, config?: {
+        push: (source: string | ClassType<Panel>, config?: {
             alias?: string,
             animated?: boolean,
             extra?: object,
             singlePage?: boolean,
         }) => {
+            if (typeof source === 'function') {
+                source = `_internal_://export?class=${encodeURIComponent(source.name)}&context=${context.id}`
+            }
             if (config && config.extra) {
                 (config as any).extra = JSON.stringify(config.extra)
             }

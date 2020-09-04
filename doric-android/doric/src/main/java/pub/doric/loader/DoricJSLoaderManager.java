@@ -16,6 +16,7 @@
 package pub.doric.loader;
 
 
+import android.net.Uri;
 import android.text.TextUtils;
 
 import java.util.Collection;
@@ -56,6 +57,13 @@ public class DoricJSLoaderManager {
 
     public AsyncResult<String> loadJSBundle(String source) {
         if (!TextUtils.isEmpty(source)) {
+            if (source.startsWith("_internal_")) {
+                Uri uri = Uri.parse(source);
+                String srcContextId = uri.getQueryParameter("context");
+                String className = uri.getQueryParameter("class");
+                source = String.format("Entry('%s','%s')", srcContextId, className);
+                return new AsyncResult<>(source);
+            }
             Collection<IDoricJSLoader> jsLoaders = getJSLoaders();
             for (IDoricJSLoader jsLoader : jsLoaders) {
                 if (jsLoader.filter(source)) {

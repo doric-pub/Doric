@@ -2963,6 +2963,9 @@ function navigator(context) {
     var moduleName = "navigator";
     return {
         push: function (source, config) {
+            if (typeof source === 'function') {
+                source = "_internal_://export?class=" + encodeURIComponent(source.name) + "&context=" + context.id;
+            }
             if (config && config.extra) {
                 config.extra = JSON.stringify(config.extra);
             }

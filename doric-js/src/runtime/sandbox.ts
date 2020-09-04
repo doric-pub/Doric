@@ -30,6 +30,17 @@ import "reflect-metadata"
  * doric.jsObtainEntry(id),
  * doric.__require__,
  * ])
+ * // Direct load class
+ * Reflect.apply(
+ * function(doric,context,Entry,require){
+ *  //Script content
+ *  Entry('lastContextId','className')
+ * },doric.jsObtainContext(id),[
+ * undefined,
+ * doric.jsObtainContext(id),
+ * doric.jsObtainEntry(id),
+ * doric.__require__,
+ * ])
  * // load module in global scope
  * Reflect.apply(doric.jsRegisterModule,this,[
  *  moduleName,
@@ -117,6 +128,7 @@ export class Context {
     entity: any
     id: string
     callbacks: Map<string, { resolve: Function, reject: Function }> = new Map
+    classes: Map<string, ClassType<object>> = new Map
 
     hookBeforeNativeCall() {
         if (this.entity && Reflect.has(this.entity, 'hookBeforeNativeCall')) {
@@ -260,24 +272,46 @@ export function jsCallEntityMethod(contextId: string, methodName: string, args?:
         loge(`Cannot find method for context id:${contextId},method name is:${methodName}`)
     }
 }
+
 type ClassType<T> = new (...args: any) => T
 
 export function jsObtainEntry(contextId: string) {
     const context = jsObtainContext(contextId)
     const exportFunc = (constructor: ClassType<object>) => {
+        context?.classes?.set(constructor.name, constructor)
         const ret = class extends constructor {
             context = context
         }
-        if (context) {
-            context.register(new ret)
-        }
+        context?.register(new ret)
         return ret
     }
-    return (args: ClassType<object> | ClassType<object>[]) => {
-        if (args instanceof Array) {
-            return exportFunc
+    return function () {
+        if (arguments.length === 1) {
+            const args = arguments[0]
+            if (args instanceof Array) {
+                args.forEach(clz => {
+                    context?.classes?.set(clz.name, clz)
+                })
+                return exportFunc
+            } else {
+                return exportFunc(args)
+            }
+        } else if (arguments.length === 2) {
+            const srcContextId = arguments[0] as string
+            const className = arguments[1] as string
+            const srcContext = gContexts.get(srcContextId)
+            if (srcContext) {
+                const clz = srcContext.classes.get(className)
+                if (clz) {
+                    return exportFunc(clz)
+                } else {
+                    throw new Error(`Cannot find class:${className} in context:${srcContextId}`)
+                }
+            } else {
+                throw new Error(`Cannot find context for ${srcContextId}`)
+            }
         } else {
-            return exportFunc(args)
+            throw new Error(`Entry arguments error:${arguments}`)
         }
     }
 }

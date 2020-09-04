@@ -1,5 +1,6 @@
 package pub.doric.plugin;
 
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
@@ -7,6 +8,7 @@ import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 import com.github.pengfeizhou.jscore.JavaValue;
+import com.qmuiteam.qmui.util.QMUIDisplayHelper;
 
 import java.util.concurrent.Callable;
 
@@ -40,11 +42,37 @@ public class PopoverPlugin extends DoricJavaPlugin {
             getDoricContext().getDriver().asyncCall(new Callable<Object>() {
                 @Override
                 public Object call() throws Exception {
+                    ViewGroup decorView = (ViewGroup) getDoricContext().getRootNode().getNodeView().getRootView();
                     if (mFullScreenView == null) {
                         mFullScreenView = new FrameLayout(getDoricContext().getContext());
-                        ViewGroup decorView = (ViewGroup) getDoricContext().getRootNode().getNodeView().getRootView();
-                        decorView.addView(mFullScreenView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                                ViewGroup.LayoutParams.MATCH_PARENT));
+                        View navBar = (View) getDoricContext().getDoricNavBar();
+                        ViewGroup.MarginLayoutParams layoutParams = new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                                ViewGroup.LayoutParams.MATCH_PARENT);
+                        int marginTop = 0;
+                        if (navBar != null && navBar.getVisibility() == View.VISIBLE) {
+                            int[] navBarLocation = new int[2];
+                            navBar.getLocationOnScreen(navBarLocation);
+                            int[] decorViewLocation = new int[2];
+                            decorView.getLocationOnScreen(decorViewLocation);
+                            marginTop = navBarLocation[1] - decorViewLocation[1] + navBar.getHeight();
+                        }
+                        layoutParams.topMargin = marginTop;
+                        layoutParams.bottomMargin = QMUIDisplayHelper.getNavMenuHeight(getDoricContext().getContext());
+                        decorView.addView(mFullScreenView, layoutParams);
+                    } else {
+                        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) mFullScreenView.getLayoutParams();
+                        View navBar = (View) getDoricContext().getDoricNavBar();
+                        int marginTop = 0;
+                        if (navBar != null && navBar.getVisibility() == View.VISIBLE) {
+                            int[] navBarLocation = new int[2];
+                            navBar.getLocationOnScreen(navBarLocation);
+                            int[] decorViewLocation = new int[2];
+                            decorView.getLocationOnScreen(decorViewLocation);
+                            marginTop = navBarLocation[1] - decorViewLocation[1] + navBar.getHeight();
+                        }
+                        layoutParams.topMargin = marginTop;
+                        layoutParams.bottomMargin = QMUIDisplayHelper.getNavMenuHeight(getDoricContext().getContext());
+                        mFullScreenView.setLayoutParams(layoutParams);
                     }
                     mFullScreenView.bringToFront();
                     String viewId = jsObject.getProperty("id").asString().value();

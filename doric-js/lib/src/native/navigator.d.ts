@@ -1,6 +1,7 @@
 import { BridgeContext } from "../runtime/global";
 import { ClassType } from "../pattern/mvvm";
 import { Panel } from "../ui/panel";
+export declare function internalScheme(context: BridgeContext, panelClass: ClassType<Panel>): string;
 export declare function navigator(context: BridgeContext): {
     push: (source: string | ClassType<Panel>, config?: {
         alias?: string | undefined;

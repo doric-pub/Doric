@@ -57,6 +57,28 @@
 
 - (DoricAsyncResult <NSString *> *)request:(NSString *)source {
     __block DoricAsyncResult *ret;
+    if ([source hasPrefix:@"_internal_://"]) {
+        ret = [DoricAsyncResult new];
+        __block NSString *contextId = nil;
+        __block NSString *className = nil;
+        NSURLComponents *components = [NSURLComponents componentsWithString:source];
+        [components.queryItems forEach:^(NSURLQueryItem *obj) {
+            if ([obj.name isEqualToString:@"class"]) {
+                className = obj.value;
+            } else if ([obj.name isEqualToString:@"context"]) {
+                contextId = obj.value;
+            }
+        }];
+        if (contextId && className) {
+            [ret setupResult:[NSString stringWithFormat:@"Entry('%@','%@')", contextId, className]];
+        } else {
+            [ret setupError:[NSException exceptionWithName:@"LoadingError"
+                                                    reason:[NSString stringWithFormat:@"Scheme %@ format error", source]
+                                                  userInfo:nil]];
+        }
+        return ret;
+
+    }
     [self.loaders enumerateObjectsUsingBlock:^(id <DoricLoaderProtocol> obj, BOOL *stop) {
         if ([obj filter:source]) {
             ret = [obj request:source];

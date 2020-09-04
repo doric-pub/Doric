@@ -842,6 +842,7 @@ declare module 'doric/lib/src/native/navigator' {
     import { BridgeContext } from "doric/lib/src/runtime/global";
     import { ClassType } from "doric/lib/src/pattern/mvvm";
     import { Panel } from "doric/lib/src/ui/panel";
+    export function internalScheme(context: BridgeContext, panelClass: ClassType<Panel>): string;
     export function navigator(context: BridgeContext): {
         push: (source: string | ClassType<Panel>, config?: {
             alias?: string | undefined;

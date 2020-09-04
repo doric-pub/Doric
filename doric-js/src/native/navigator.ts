@@ -17,6 +17,10 @@ import { BridgeContext } from "../runtime/global"
 import { ClassType } from "../pattern/mvvm"
 import { Panel } from "../ui/panel"
 
+export function internalScheme(context: BridgeContext, panelClass: ClassType<Panel>) {
+    return `_internal_://export?class=${encodeURIComponent(panelClass.name)}&context=${context.id}`
+}
+
 export function navigator(context: BridgeContext) {
     const moduleName = "navigator"
     return {
@@ -27,7 +31,7 @@ export function navigator(context: BridgeContext) {
             singlePage?: boolean,
         }) => {
             if (typeof source === 'function') {
-                source = `_internal_://export?class=${encodeURIComponent(source.name)}&context=${context.id}`
+                source = internalScheme(context, source)
             }
             if (config && config.extra) {
                 (config as any).extra = JSON.stringify(config.extra)

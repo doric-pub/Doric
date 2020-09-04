@@ -57,7 +57,7 @@ public class DoricJSLoaderManager {
 
     public AsyncResult<String> loadJSBundle(String source) {
         if (!TextUtils.isEmpty(source)) {
-            if (source.startsWith("_internal_")) {
+            if (source.startsWith("_internal_://")) {
                 Uri uri = Uri.parse(source);
                 String srcContextId = uri.getQueryParameter("context");
                 String className = uri.getQueryParameter("class");

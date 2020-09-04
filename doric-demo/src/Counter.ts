@@ -9,15 +9,15 @@ class CounterView extends ViewHolder {
     build(root: Group) {
         vlayout(
             [
-                 text({
-                     textSize: 40,
-                     tag:"tvNumber"
+                text({
+                    textSize: 40,
+                    tag: "tvNumber"
                 }),
 
                 text({
                     text: "Click To Count 1",
                     textSize: 20,
-                    tag:"tvCounter"
+                    tag: "tvCounter"
                 }),
             ],
             {
@@ -26,8 +26,8 @@ class CounterView extends ViewHolder {
                 space: 20,
             }
         ).in(root)
-       this.number= root.findViewByTag("tvNumber")!
-       this.counter= root.findViewByTag("tvCounter")!
+        this.number = root.findViewByTag("tvNumber")!
+        this.counter = root.findViewByTag("tvCounter")!
     }
 }
 
@@ -45,7 +45,7 @@ class CounterVM extends ViewModel<CountModel, CounterView> {
 }
 
 @Entry
-class MyPage extends VMPanel<CountModel, CounterView>{
+export class CounterPage extends VMPanel<CountModel, CounterView>{
 
 
     getViewHolderClass() {

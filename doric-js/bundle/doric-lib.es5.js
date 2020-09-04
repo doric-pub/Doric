@@ -2959,12 +2959,15 @@ function navbar(context) {
     };
 }
 
+function internalScheme(context, panelClass) {
+    return "_internal_://export?class=" + encodeURIComponent(panelClass.name) + "&context=" + context.id;
+}
 function navigator(context) {
     var moduleName = "navigator";
     return {
         push: function (source, config) {
             if (typeof source === 'function') {
-                source = "_internal_://export?class=" + encodeURIComponent(source.name) + "&context=" + context.id;
+                source = internalScheme(context, source);
             }
             if (config && config.extra) {
                 config.extra = JSON.stringify(config.extra);
@@ -3536,6 +3539,7 @@ exports.gravity = gravity;
 exports.hlayout = hlayout;
 exports.image = image;
 exports.input = input;
+exports.internalScheme = internalScheme;
 exports.layoutConfig = layoutConfig;
 exports.list = list;
 exports.listItem = listItem;

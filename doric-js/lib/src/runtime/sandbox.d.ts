@@ -21,9 +21,15 @@ export declare function jsReleaseContext(id: string): void;
 export declare function __require__(name: string): any;
 export declare function jsRegisterModule(name: string, moduleObject: any): void;
 export declare function jsCallEntityMethod(contextId: string, methodName: string, args?: any): any;
-export declare function jsObtainEntry(contextId: string): <T extends new (...args: any[]) => {}>(constructor: T) => {
-    new (...args: any[]): {
+declare type ClassType<T> = new (...args: any) => T;
+export declare function jsObtainEntry(contextId: string): (args: ClassType<object> | ClassType<object>[]) => ((constructor: ClassType<object>) => {
+    new (...args: any): {
         context: Context | undefined;
     };
-} & T;
+}) | {
+    new (...args: any): {
+        context: Context | undefined;
+    };
+};
 export declare function jsCallbackTimer(timerId: number): void;
+export {};

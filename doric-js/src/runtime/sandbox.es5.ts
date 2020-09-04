@@ -233,10 +233,11 @@ export function jsCallEntityMethod(contextId: string, methodName: string, args?:
         loge(`Cannot find method for context id:${contextId},method name is:${methodName}`)
     }
 }
+type ClassType<T> = new (...args: any) => T
 
 export function jsObtainEntry(contextId: string) {
     const context = jsObtainContext(contextId)
-    return <T extends { new(...args: any[]): {} }>(constructor: T) => {
+    const exportFunc = (constructor: ClassType<object>) => {
         const ret = class extends constructor {
             context = context
         }
@@ -244,6 +245,13 @@ export function jsObtainEntry(contextId: string) {
             context.register(new ret)
         }
         return ret
+    }
+    return (args: ClassType<object> | ClassType<object>[]) => {
+        if (args instanceof Array) {
+            return exportFunc
+        } else {
+            return exportFunc(args)
+        }
     }
 }
 

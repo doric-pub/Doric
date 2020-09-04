@@ -1394,7 +1394,7 @@ var doric = (function (exports) {
     }
     function jsObtainEntry(contextId) {
         var context = jsObtainContext(contextId);
-        return function (constructor) {
+        var exportFunc = function (constructor) {
             var ret = /** @class */ (function (_super) {
                 __extends(class_1, _super);
                 function class_1() {
@@ -1408,6 +1408,14 @@ var doric = (function (exports) {
                 context.register(new ret);
             }
             return ret;
+        };
+        return function (args) {
+            if (args instanceof Array) {
+                return exportFunc;
+            }
+            else {
+                return exportFunc(args);
+            }
         };
     }
     var global$1 = Function('return this')();

@@ -213,7 +213,7 @@ export function jsCallEntityMethod(contextId, methodName, args) {
 }
 export function jsObtainEntry(contextId) {
     const context = jsObtainContext(contextId);
-    return (constructor) => {
+    const exportFunc = (constructor) => {
         const ret = class extends constructor {
             constructor() {
                 super(...arguments);
@@ -224,6 +224,14 @@ export function jsObtainEntry(contextId) {
             context.register(new ret);
         }
         return ret;
+    };
+    return (args) => {
+        if (args instanceof Array) {
+            return exportFunc;
+        }
+        else {
+            return exportFunc(args);
+        }
     };
 }
 const global = Function('return this')();

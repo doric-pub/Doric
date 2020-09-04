@@ -1,3 +1,5 @@
+import { Panel } from "../ui/panel";
+import { ClassType } from "../pattern/mvvm";
 export declare type BridgeContext = {
     /**
      * The identify of current context
@@ -48,8 +50,7 @@ declare global {
         deviceModel: string;
         [index: string]: number | string | boolean | object | undefined;
     };
-    function Entry(constructor: {
-        new (...args: any[]): {};
-    }): any;
+    function Entry(constructor: ClassType<Panel>): void;
+    function Entry(exports: ClassType<Panel>[]): (constructor: ClassType<Panel>) => void;
 }
 export {};

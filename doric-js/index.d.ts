@@ -10,6 +10,8 @@ declare module 'doric' {
 }
 
 declare module 'doric/lib/src/runtime/global' {
+    import { Panel } from "doric/lib/src/ui/panel";
+    import { ClassType } from "doric/lib/src/pattern/mvvm";
     export type BridgeContext = {
             /**
                 * The identify of current context
@@ -60,9 +62,8 @@ declare module 'doric/lib/src/runtime/global' {
                     deviceModel: string;
                     [index: string]: number | string | boolean | object | undefined;
             };
-            function Entry(constructor: {
-                    new (...args: any[]): {};
-            }): any;
+            function Entry(constructor: ClassType<Panel>): void;
+            function Entry(exports: ClassType<Panel>[]): (constructor: ClassType<Panel>) => void;
     }
     export {};
 }
@@ -116,6 +117,54 @@ declare module 'doric/lib/src/pattern/index.pattern' {
     export * from 'doric/lib/src/pattern/candies';
     export * from 'doric/lib/src/pattern/provider';
     export * from 'doric/lib/src/pattern/mvvm';
+}
+
+declare module 'doric/lib/src/ui/panel' {
+    import { View, Group } from "doric/lib/src/ui/view";
+    import { Root } from 'doric/lib/src/widget/layouts';
+    import { BridgeContext } from 'doric/lib/src/runtime/global';
+    export function NativeCall(target: Panel, propertyKey: string, descriptor: PropertyDescriptor): PropertyDescriptor;
+    export abstract class Panel {
+        context: BridgeContext;
+        onCreate(): void;
+        onDestroy(): void;
+        onShow(): void;
+        onHidden(): void;
+        abstract build(rootView: Group): void;
+        addHeadView(type: string, v: View): void;
+        allHeadViews(): IterableIterator<Map<string, View>>;
+        removeHeadView(type: string, v: View | string): void;
+        clearHeadViews(type: string): void;
+        getRootView(): Root;
+        getInitData(): object | undefined;
+        addOnRenderFinishedCallback(cb: () => void): void;
+    }
+}
+
+declare module 'doric/lib/src/pattern/mvvm' {
+    import { Group } from "doric/lib/src/ui/view";
+    import { Panel } from "doric/lib/src/ui/panel";
+    export abstract class ViewHolder {
+        abstract build(root: Group): void;
+    }
+    export type Setter<M> = (state: M) => void;
+    export abstract class ViewModel<M extends Object, V extends ViewHolder> {
+        constructor(obj: M, v: V);
+        getState(): M;
+        getViewHolder(): V;
+        updateState(setter: Setter<M>): void;
+        attach(view: Group): void;
+        abstract onAttached(state: M, vh: V): void;
+        abstract onBind(state: M, vh: V): void;
+    }
+    export type ClassType<T> = new (...args: any) => T;
+    export abstract class VMPanel<M extends Object, V extends ViewHolder> extends Panel {
+        abstract getViewModelClass(): ClassType<ViewModel<M, V>>;
+        abstract getState(): M;
+        abstract getViewHolderClass(): ClassType<V>;
+        getViewModel(): ViewModel<M, V> | undefined;
+        build(root: Group): void;
+    }
 }
 
 declare module 'doric/lib/src/ui/view' {
@@ -260,28 +309,6 @@ declare module 'doric/lib/src/ui/view' {
             addChild(view: View): void;
             removeChild(view: View): void;
             removeAllChildren(): void;
-    }
-}
-
-declare module 'doric/lib/src/ui/panel' {
-    import { View, Group } from "doric/lib/src/ui/view";
-    import { Root } from 'doric/lib/src/widget/layouts';
-    import { BridgeContext } from 'doric/lib/src/runtime/global';
-    export function NativeCall(target: Panel, propertyKey: string, descriptor: PropertyDescriptor): PropertyDescriptor;
-    export abstract class Panel {
-        context: BridgeContext;
-        onCreate(): void;
-        onDestroy(): void;
-        onShow(): void;
-        onHidden(): void;
-        abstract build(rootView: Group): void;
-        addHeadView(type: string, v: View): void;
-        allHeadViews(): IterableIterator<Map<string, View>>;
-        removeHeadView(type: string, v: View | string): void;
-        clearHeadViews(type: string): void;
-        getRootView(): Root;
-        getInitData(): object | undefined;
-        addOnRenderFinishedCallback(cb: () => void): void;
     }
 }
 
@@ -1320,32 +1347,6 @@ declare module 'doric/lib/src/pattern/provider' {
         remove<T>(clz: new (...args: any[]) => T): void;
         clear(): void;
         observe<T>(clz: new (...args: any[]) => T): Observable<T>;
-    }
-}
-
-declare module 'doric/lib/src/pattern/mvvm' {
-    import { Group } from "doric/lib/src/ui/view";
-    import { Panel } from "doric/lib/src/ui/panel";
-    export abstract class ViewHolder {
-        abstract build(root: Group): void;
-    }
-    export type Setter<M> = (state: M) => void;
-    export abstract class ViewModel<M extends Object, V extends ViewHolder> {
-        constructor(obj: M, v: V);
-        getState(): M;
-        getViewHolder(): V;
-        updateState(setter: Setter<M>): void;
-        attach(view: Group): void;
-        abstract onAttached(state: M, vh: V): void;
-        abstract onBind(state: M, vh: V): void;
-    }
-    export type ClassType<T> = new (...args: any) => T;
-    export abstract class VMPanel<M extends Object, V extends ViewHolder> extends Panel {
-        abstract getViewModelClass(): ClassType<ViewModel<M, V>>;
-        abstract getState(): M;
-        abstract getViewHolderClass(): ClassType<V>;
-        getViewModel(): ViewModel<M, V> | undefined;
-        build(root: Group): void;
     }
 }
 

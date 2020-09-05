@@ -102,7 +102,7 @@ void ShowToastInVC(UIViewController *_Nonnull vc, NSString *_Nonnull text, Doric
     if ((gravity & DoricGravityBottom) == DoricGravityBottom) {
         label.bottom = superView.height - 20;
     } else if ((gravity & DoricGravityTop) == DoricGravityTop) {
-        label.top = 108;
+        label.top = 20;
     } else {
         label.centerY = (superView.height - 88) / 2;
     }

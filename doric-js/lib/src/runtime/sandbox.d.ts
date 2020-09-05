@@ -23,14 +23,6 @@ export declare function __require__(name: string): any;
 export declare function jsRegisterModule(name: string, moduleObject: any): void;
 export declare function jsCallEntityMethod(contextId: string, methodName: string, args?: any): any;
 declare type ClassType<T> = new (...args: any) => T;
-export declare function jsObtainEntry(contextId: string): () => ((constructor: ClassType<object>) => {
-    new (...args: any): {
-        context: Context | undefined;
-    };
-}) | {
-    new (...args: any): {
-        context: Context | undefined;
-    };
-};
+export declare function jsObtainEntry(contextId: string): () => ClassType<object> | ((constructor: ClassType<object>) => ClassType<object>);
 export declare function jsCallbackTimer(timerId: number): void;
 export {};

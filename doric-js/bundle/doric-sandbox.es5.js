@@ -1205,19 +1205,21 @@ var doric = (function (exports) {
         });
     })(Reflect$1 || (Reflect$1 = {}));
 
-    var __extends = (undefined && undefined.__extends) || (function () {
-        var extendStatics = function (d, b) {
-            extendStatics = Object.setPrototypeOf ||
-                ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-                function (d, b) { for (var p in b) { if (b.hasOwnProperty(p)) { d[p] = b[p]; } } };
-            return extendStatics(d, b);
-        };
-        return function (d, b) {
-            extendStatics(d, b);
-            function __() { this.constructor = d; }
-            d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-        };
-    })();
+    /*
+     * Copyright [2019] [Doric.Pub]
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     * http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
     function hookBeforeNativeCall(context) {
         if (context) {
             Reflect.defineMetadata('__doric_context__', context, global$1);
@@ -1396,19 +1398,11 @@ var doric = (function (exports) {
     function jsObtainEntry(contextId) {
         var context = jsObtainContext(contextId);
         var exportFunc = function (constructor) {
-            var _a;
-            (_a = context === null || context === void 0 ? void 0 : context.classes) === null || _a === void 0 ? void 0 : _a.set(constructor.name, constructor);
-            var ret = /** @class */ (function (_super) {
-                __extends(class_1, _super);
-                function class_1() {
-                    var _this = _super !== null && _super.apply(this, arguments) || this;
-                    _this.context = context;
-                    return _this;
-                }
-                return class_1;
-            }(constructor));
-            context === null || context === void 0 ? void 0 : context.register(new ret);
-            return ret;
+            context === null || context === void 0 ? void 0 : context.classes.set(constructor.name, constructor);
+            var ret = new constructor;
+            Reflect.set(ret, 'context', context);
+            context === null || context === void 0 ? void 0 : context.register(ret);
+            return constructor;
         };
         return function () {
             if (arguments.length === 1) {

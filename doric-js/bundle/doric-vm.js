@@ -1420,24 +1420,18 @@ function jsCallEntityMethod(contextId, methodName, args) {
 function jsObtainEntry(contextId) {
     const context = jsObtainContext(contextId);
     const exportFunc = (constructor) => {
-        var _a;
-        (_a = context === null || context === void 0 ? void 0 : context.classes) === null || _a === void 0 ? void 0 : _a.set(constructor.name, constructor);
-        const ret = class extends constructor {
-            constructor() {
-                super(...arguments);
-                this.context = context;
-            }
-        };
-        context === null || context === void 0 ? void 0 : context.register(new ret);
-        return ret;
+        context === null || context === void 0 ? void 0 : context.classes.set(constructor.name, constructor);
+        const ret = new constructor;
+        Reflect.set(ret, 'context', context);
+        context === null || context === void 0 ? void 0 : context.register(ret);
+        return constructor;
     };
     return function () {
         if (arguments.length === 1) {
             const args = arguments[0];
             if (args instanceof Array) {
                 args.forEach(clz => {
-                    var _a;
-                    (_a = context === null || context === void 0 ? void 0 : context.classes) === null || _a === void 0 ? void 0 : _a.set(clz.name, clz);
+                    context === null || context === void 0 ? void 0 : context.classes.set(clz.name, clz);
                 });
                 return exportFunc;
             }

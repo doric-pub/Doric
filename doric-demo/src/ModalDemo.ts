@@ -25,7 +25,7 @@ export class ModalDemo extends Panel {
                         textColor: Color.WHITE,
                         layoutConfig: layoutConfig().just(),
                         onClick: () => {
-                            modal(context).toast('This is a toast.')
+                            modal(this.context).toast('This is a toast.')
                         }
                     }),
                     label('toast on top'),
@@ -37,7 +37,7 @@ export class ModalDemo extends Panel {
                         textColor: Color.WHITE,
                         layoutConfig: layoutConfig().just(),
                         onClick: () => {
-                            modal(context).toast('This is a toast.', Gravity.Top)
+                            modal(this.context).toast('This is a toast.', Gravity.Top)
                         }
                     }),
 
@@ -50,7 +50,7 @@ export class ModalDemo extends Panel {
                         textColor: Color.WHITE,
                         layoutConfig: layoutConfig().just(),
                         onClick: () => {
-                            modal(context).toast('This is a toast.', Gravity.Center)
+                            modal(this.context).toast('This is a toast.', Gravity.Center)
                         }
                     } as Partial<Text>),
                     text({
@@ -70,12 +70,12 @@ export class ModalDemo extends Panel {
                         textColor: Color.WHITE,
                         layoutConfig: layoutConfig().just(),
                         onClick: () => {
-                            modal(context).alert({
+                            modal(this.context).alert({
                                 msg: 'This is alert.',
                                 title: 'Alert title',
                                 okLabel: "OkLabel"
                             }).then(e => {
-                                modal(context).toast('Clicked OK.')
+                                modal(this.context).toast('Clicked OK.')
                             })
                         }
                     }),
@@ -96,17 +96,17 @@ export class ModalDemo extends Panel {
                         textColor: Color.WHITE,
                         layoutConfig: layoutConfig().just(),
                         onClick: () => {
-                            modal(context).confirm({
+                            modal(this.context).confirm({
                                 msg: 'This is Confirm.',
                                 title: 'Confirm title',
                                 okLabel: "OkLabel",
                                 cancelLabel: 'CancelLabel',
                             }).then(
                                 () => {
-                                    modal(context).toast('Clicked OK.')
+                                    modal(this.context).toast('Clicked OK.')
                                 },
                                 () => {
-                                    modal(context).toast('Clicked Cancel.')
+                                    modal(this.context).toast('Clicked Cancel.')
                                 })
                         }
                     }),
@@ -127,17 +127,17 @@ export class ModalDemo extends Panel {
                         textColor: Color.WHITE,
                         layoutConfig: layoutConfig().just(),
                         onClick: () => {
-                            modal(context).prompt({
+                            modal(this.context).prompt({
                                 msg: 'This is Prompt.',
                                 title: 'Prompt title',
                                 okLabel: "OkLabel",
                                 cancelLabel: 'CancelLabel',
                             }).then(
                                 e => {
-                                    modal(context).toast(`Clicked OK.Input:${e}`)
+                                    modal(this.context).toast(`Clicked OK.Input:${e}`)
                                 },
                                 e => {
-                                    modal(context).toast(`Clicked Cancel.Input:${e}`)
+                                    modal(this.context).toast(`Clicked Cancel.Input:${e}`)
                                 })
                         }
                     }),

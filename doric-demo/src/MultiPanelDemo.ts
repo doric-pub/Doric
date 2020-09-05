@@ -32,6 +32,17 @@ class MultiPanelDemo extends Panel {
                             navigator(context).push(CounterPage)
                         }
                     }),
+                    label('Multi Panel').apply({
+                        width: 200,
+                        height: 50,
+                        backgroundColor: colors[0],
+                        textSize: 30,
+                        textColor: Color.WHITE,
+                        layoutConfig: layoutConfig().just(),
+                        onClick: () => {
+                            navigator(context).push(MultiPanelDemo)
+                        }
+                    }),
                 ],
                 {
                     layoutConfig: layoutConfig().most().configHeight(LayoutSpec.FIT),

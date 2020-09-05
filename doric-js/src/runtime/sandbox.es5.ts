@@ -240,12 +240,11 @@ type ClassType<T> = new (...args: any) => T
 export function jsObtainEntry(contextId: string) {
     const context = jsObtainContext(contextId)
     const exportFunc = (constructor: ClassType<object>) => {
-        context?.classes?.set(constructor.name, constructor)
-        const ret = class extends constructor {
-            context = context
-        }
-        context?.register(new ret)
-        return ret
+        context?.classes.set(constructor.name, constructor)
+        const ret = new constructor
+        Reflect.set(ret, 'context', context)
+        context?.register(ret)
+        return constructor
     }
     return function () {
         if (arguments.length === 1) {

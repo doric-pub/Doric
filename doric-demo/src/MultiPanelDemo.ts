@@ -2,8 +2,9 @@ import { Group, Panel, navbar, text, gravity, Color, LayoutSpec, vlayout, Gravit
 import { title, label, colors } from "./utils";
 import { ModalDemo } from "./ModalDemo";
 import { CounterPage } from './Counter'
+import { PopoverDemo } from "./PopoverDemo";
 
-@Entry(exports = [ModalDemo, CounterPage])
+@Entry
 class MultiPanelDemo extends Panel {
     build(rootView: Group): void {
         scroller(
@@ -30,6 +31,17 @@ class MultiPanelDemo extends Panel {
                         layoutConfig: layoutConfig().just(),
                         onClick: () => {
                             navigator(context).push(CounterPage)
+                        }
+                    }),
+                    label('Popover').apply({
+                        width: 200,
+                        height: 50,
+                        backgroundColor: colors[0],
+                        textSize: 30,
+                        textColor: Color.WHITE,
+                        layoutConfig: layoutConfig().just(),
+                        onClick: () => {
+                            navigator(context).push(PopoverDemo)
                         }
                     }),
                     label('Multi Panel').apply({

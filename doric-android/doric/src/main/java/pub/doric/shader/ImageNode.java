@@ -354,6 +354,9 @@ public class ImageNode extends ViewNode<ImageView> {
                 loadImageUrl(prop.asString().value());
                 break;
             case "scaleType":
+                if (!prop.isNumber()) {
+                    return;
+                }
                 int scaleType = prop.asNumber().toInt();
                 switch (scaleType) {
                     case 1:

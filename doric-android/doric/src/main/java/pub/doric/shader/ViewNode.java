@@ -267,32 +267,33 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                                 }
 
                                 JSValue orientation = dict.asObject().getProperty("orientation");
-
-                                switch (orientation.asNumber().toInt()) {
-                                    case 0:
-                                        linearGradient = new LinearGradient(0.f, 0.f, 0.f, height, colors, locations, Shader.TileMode.CLAMP);
-                                        break;
-                                    case 1:
-                                        linearGradient = new LinearGradient(width, 0.f, 0.f, height, colors, locations, Shader.TileMode.CLAMP);
-                                        break;
-                                    case 2:
-                                        linearGradient = new LinearGradient(width, 0.f, 0.f, 0.f, colors, locations, Shader.TileMode.CLAMP);
-                                        break;
-                                    case 3:
-                                        linearGradient = new LinearGradient(width, height, 0.f, 0.f, colors, locations, Shader.TileMode.CLAMP);
-                                        break;
-                                    case 4:
-                                        linearGradient = new LinearGradient(0.f, height, 0.f, 0.f, colors, locations, Shader.TileMode.CLAMP);
-                                        break;
-                                    case 5:
-                                        linearGradient = new LinearGradient(0.f, height, width, 0.f, colors, locations, Shader.TileMode.CLAMP);
-                                        break;
-                                    case 6:
-                                        linearGradient = new LinearGradient(0.f, 0.f, width, 0.f, colors, locations, Shader.TileMode.CLAMP);
-                                        break;
-                                    case 7:
-                                        linearGradient = new LinearGradient(0.f, 0.f, width, height, colors, locations, Shader.TileMode.CLAMP);
-                                        break;
+                                if (orientation.isNumber()) {
+                                    switch (orientation.asNumber().toInt()) {
+                                        case 0:
+                                            linearGradient = new LinearGradient(0.f, 0.f, 0.f, height, colors, locations, Shader.TileMode.CLAMP);
+                                            break;
+                                        case 1:
+                                            linearGradient = new LinearGradient(width, 0.f, 0.f, height, colors, locations, Shader.TileMode.CLAMP);
+                                            break;
+                                        case 2:
+                                            linearGradient = new LinearGradient(width, 0.f, 0.f, 0.f, colors, locations, Shader.TileMode.CLAMP);
+                                            break;
+                                        case 3:
+                                            linearGradient = new LinearGradient(width, height, 0.f, 0.f, colors, locations, Shader.TileMode.CLAMP);
+                                            break;
+                                        case 4:
+                                            linearGradient = new LinearGradient(0.f, height, 0.f, 0.f, colors, locations, Shader.TileMode.CLAMP);
+                                            break;
+                                        case 5:
+                                            linearGradient = new LinearGradient(0.f, height, width, 0.f, colors, locations, Shader.TileMode.CLAMP);
+                                            break;
+                                        case 6:
+                                            linearGradient = new LinearGradient(0.f, 0.f, width, 0.f, colors, locations, Shader.TileMode.CLAMP);
+                                            break;
+                                        case 7:
+                                            linearGradient = new LinearGradient(0.f, 0.f, width, height, colors, locations, Shader.TileMode.CLAMP);
+                                            break;
+                                    }
                                 }
 
                                 return linearGradient;

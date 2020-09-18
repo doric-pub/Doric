@@ -2,7 +2,9 @@
  platform :ios, '10.0'
 
 target 'Example' do
-
+  
+  use_frameworks!
+  
   pod 'DoricCore', :path => '../../'
   pod 'DoricDevkit', :path => '../../'
   target 'ExampleTests' do

@@ -30,6 +30,17 @@
 @end
 
 @implementation DoricImageView
+- (void)displayLayer:(CALayer *)layer {
+    if (@available(iOS 14.0, *)) {
+        if (self.isAnimating) {
+            [super displayLayer:layer];
+        } else {
+            layer.contents = (__bridge id) self.image.CGImage;
+        };
+    } else {
+        [super displayLayer:layer];
+    }
+}
 @end
 
 @interface DoricImageNode ()
@@ -85,7 +96,7 @@
     if (self.placeHolderImage) {
         return [UIImage imageNamed:self.placeHolderImage];
     }
-    
+
     if (self.placeHolderImageBase64) {
         NSString *base64 = self.placeHolderImageBase64;
         if (YES == [base64 hasPrefix:@"data:image"]) {
@@ -96,7 +107,7 @@
         YYImage *image = [YYImage imageWithData:imageData scale:self.imageScale];
         return image;
     }
-    
+
     if (self.placeHolderColor) {
         UIColor *color = DoricColor(self.placeHolderColor);
         CGRect rect = CGRectMake(0, 0, 1, 1);
@@ -118,7 +129,7 @@
     if (self.errorImage) {
         return [UIImage imageNamed:self.errorImage];
     }
-    
+
     if (self.errorImageBase64) {
         NSString *base64 = self.errorImageBase64;
         if (YES == [base64 hasPrefix:@"data:image"]) {
@@ -129,7 +140,7 @@
         YYImage *image = [YYImage imageWithData:imageData scale:self.imageScale];
         return image;
     }
-    
+
     if (self.errorColor) {
         UIColor *color = DoricColor(self.errorColor);
         CGRect rect = CGRectMake(0, 0, 1, 1);
@@ -276,7 +287,7 @@
             }
         }
     } else if ([@"stretchInset" isEqualToString:name]) {
-        self.stretchInsetDic = (NSDictionary *)prop;
+        self.stretchInsetDic = (NSDictionary *) prop;
     } else if ([@"imageScale" isEqualToString:name]) {
         //Do not need set
     } else {
@@ -291,7 +302,7 @@
         CGFloat right = [self.stretchInsetDic[@"right"] floatValue];
         CGFloat bottom = [self.stretchInsetDic[@"bottom"] floatValue];
         CGFloat scale = self.imageScale;
-        UIImage *result = [self.view.image resizableImageWithCapInsets:UIEdgeInsetsMake(top/scale, left/scale, bottom/scale, right/scale) resizingMode:UIImageResizingModeStretch];
+        UIImage *result = [self.view.image resizableImageWithCapInsets:UIEdgeInsetsMake(top / scale, left / scale, bottom / scale, right / scale) resizingMode:UIImageResizingModeStretch];
         self.view.image = result;
     }
 }

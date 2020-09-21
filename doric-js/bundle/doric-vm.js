@@ -4184,6 +4184,7 @@ class VMPanel extends Panel {
     build(root) {
         this.vh = new (this.getViewHolderClass());
         this.vm = new (this.getViewModelClass())(this.getState(), this.vh);
+        this.vm.context = this.context;
         this.vm.attach(root);
     }
 }

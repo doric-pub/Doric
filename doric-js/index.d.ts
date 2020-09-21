@@ -144,11 +144,13 @@ declare module 'doric/lib/src/ui/panel' {
 declare module 'doric/lib/src/pattern/mvvm' {
     import { Group } from "doric/lib/src/ui/view";
     import { Panel } from "doric/lib/src/ui/panel";
+    import { BridgeContext } from "doric/lib/src/runtime/global";
     export abstract class ViewHolder {
         abstract build(root: Group): void;
     }
     export type Setter<M> = (state: M) => void;
     export abstract class ViewModel<M extends Object, V extends ViewHolder> {
+        context: BridgeContext;
         constructor(obj: M, v: V);
         getState(): M;
         getViewHolder(): V;

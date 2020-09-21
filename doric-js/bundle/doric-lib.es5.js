@@ -3476,6 +3476,7 @@ var VMPanel = /** @class */ (function (_super) {
     VMPanel.prototype.build = function (root) {
         this.vh = new (this.getViewHolderClass());
         this.vm = new (this.getViewModelClass())(this.getState(), this.vh);
+        this.vm.context = this.context;
         this.vm.attach(root);
     };
     return VMPanel;

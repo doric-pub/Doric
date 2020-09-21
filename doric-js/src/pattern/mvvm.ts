@@ -15,6 +15,7 @@
  */
 import { Group } from "../ui/view"
 import { Panel } from "../ui/panel"
+import { BridgeContext } from "../runtime/global"
 
 export abstract class ViewHolder {
     abstract build(root: Group): void
@@ -23,6 +24,7 @@ export abstract class ViewHolder {
 export type Setter<M> = (state: M) => void
 
 export abstract class ViewModel<M extends Object, V extends ViewHolder> {
+    context!: BridgeContext
     private state: M
     private viewHolder: V
 
@@ -57,10 +59,8 @@ export abstract class ViewModel<M extends Object, V extends ViewHolder> {
 export type ClassType<T> = new (...args: any) => T
 
 export abstract class VMPanel<M extends Object, V extends ViewHolder> extends Panel {
-
     private vm?: ViewModel<M, V>
     private vh?: V
-
     abstract getViewModelClass(): ClassType<ViewModel<M, V>>
 
     abstract getState(): M
@@ -74,6 +74,7 @@ export abstract class VMPanel<M extends Object, V extends ViewHolder> extends Pa
     build(root: Group): void {
         this.vh = new (this.getViewHolderClass())
         this.vm = new (this.getViewModelClass())(this.getState(), this.vh)
+        this.vm.context = this.context
         this.vm.attach(root)
     }
 }

@@ -1258,6 +1258,7 @@ var doric = (function (exports) {
     class Context {
         constructor(id) {
             this.callbacks = new Map;
+            this.classes = new Map;
             this.id = id;
             return new Proxy(this, {
                 get: (target, p) => {
@@ -1397,17 +1398,46 @@ var doric = (function (exports) {
     }
     function jsObtainEntry(contextId) {
         const context = jsObtainContext(contextId);
-        return (constructor) => {
-            const ret = class extends constructor {
-                constructor() {
-                    super(...arguments);
-                    this.context = context;
+        const exportFunc = (constructor) => {
+            context === null || context === void 0 ? void 0 : context.classes.set(constructor.name, constructor);
+            const ret = new constructor;
+            Reflect.set(ret, 'context', context);
+            context === null || context === void 0 ? void 0 : context.register(ret);
+            return constructor;
+        };
+        return function () {
+            if (arguments.length === 1) {
+                const args = arguments[0];
+                if (args instanceof Array) {
+                    args.forEach(clz => {
+                        context === null || context === void 0 ? void 0 : context.classes.set(clz.name, clz);
+                    });
+                    return exportFunc;
                 }
-            };
-            if (context) {
-                context.register(new ret);
+                else {
+                    return exportFunc(args);
+                }
             }
-            return ret;
+            else if (arguments.length === 2) {
+                const srcContextId = arguments[0];
+                const className = arguments[1];
+                const srcContext = gContexts.get(srcContextId);
+                if (srcContext) {
+                    const clz = srcContext.classes.get(className);
+                    if (clz) {
+                        return exportFunc(clz);
+                    }
+                    else {
+                        throw new Error(`Cannot find class:${className} in context:${srcContextId}`);
+                    }
+                }
+                else {
+                    throw new Error(`Cannot find context for ${srcContextId}`);
+                }
+            }
+            else {
+                throw new Error(`Entry arguments error:${arguments}`);
+            }
         };
     }
     const global$1 = Function('return this')();
@@ -3808,10 +3838,16 @@ function navbar(context) {
     };
 }
 
+function internalScheme(context, panelClass) {
+    return `_internal_://export?class=${encodeURIComponent(panelClass.name)}&context=${context.id}`;
+}
 function navigator(context) {
     const moduleName = "navigator";
     return {
         push: (source, config) => {
+            if (typeof source === 'function') {
+                source = internalScheme(context, source);
+            }
             if (config && config.extra) {
                 config.extra = JSON.stringify(config.extra);
             }
@@ -4206,6 +4242,7 @@ class VMPanel extends Panel {
     build(root) {
         this.vh = new (this.getViewHolderClass());
         this.vm = new (this.getViewModelClass())(this.getState(), this.vh);
+        this.vm.context = this.context;
         this.vm.attach(root);
     }
 }
@@ -4268,6 +4305,7 @@ exports.gravity = gravity;
 exports.hlayout = hlayout;
 exports.image = image;
 exports.input = input;
+exports.internalScheme = internalScheme;
 exports.layoutConfig = layoutConfig;
 exports.list = list;
 exports.listItem = listItem;

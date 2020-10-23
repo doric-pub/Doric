@@ -19,4 +19,6 @@ Doric iOS Devkit for debugging & hotload.
   s.public_header_files = 'doric-iOS/Devkit/Classes/**/*.h'
 
   s.dependency 'DoricCore'
+
+  s.dependency 'SocketRocket'
 end

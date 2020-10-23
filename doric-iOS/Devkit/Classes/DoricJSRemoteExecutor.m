@@ -20,7 +20,7 @@
 //  Created by 王劲鹏 on 2019/10/31.
 //
 #import "DoricJSRemoteExecutor.h"
-#import <SocketRocket/SRWebSocket.h>
+#import "SRWebSocket.h"
 #import "DoricUtil.h"
 #import "DoricJSRemoteArgType.h"
 #import "NSString+JsonString.h"

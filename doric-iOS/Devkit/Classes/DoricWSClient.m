@@ -21,7 +21,7 @@
 //
 
 #import "DoricWSClient.h"
-#import <SocketRocket/SRWebSocket.h>
+#import "SRWebSocket.h"
 #import "DoricUtil.h"
 #import "DoricContextManager.h"
 

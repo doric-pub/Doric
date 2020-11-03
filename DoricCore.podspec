@@ -26,4 +26,5 @@ Doric iOS SDK for cross platform develpment
   s.dependency 'YYCache'
   s.dependency 'YogaKit/Core'
   s.dependency 'Yoga'
+  s.pod_target_xcconfig = { 'VALID_ARCHS[sdk=iphonesimulator*]' => '' }
 end

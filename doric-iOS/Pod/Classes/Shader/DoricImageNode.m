@@ -30,7 +30,7 @@
 @end
 
 @implementation DoricImageView
-- (void)displayLayer:(CALXayer *)layer {
+- (void)displayLayer:(CALayer *)layer {
     if (@available(iOS 14.0, *)) {
         if (self.isAnimating) {
             [super displayLayer:layer];

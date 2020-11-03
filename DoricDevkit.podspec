@@ -21,5 +21,4 @@ Doric iOS Devkit for debugging & hotload.
   s.dependency 'DoricCore'
 
   s.dependency 'SocketRocket'
-  s.pod_target_xcconfig = { 'VALID_ARCHS[sdk=iphonesimulator*]' => '' }
 end

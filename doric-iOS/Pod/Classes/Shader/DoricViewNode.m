@@ -173,8 +173,8 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
             transform3D = CATransform3DRotate(transform3D, (self.rotationY.floatValue ?: 0) * M_PI, 0, 1, 0);
         }
         if (!CATransform3DEqualToTransform(transform3D, self.view.layer.transform)) {
-            self.view.layer.shouldRasterize=TRUE;
-            self.view.layer.rasterizationScale=[[UIScreen mainScreen] scale];
+            self.view.layer.shouldRasterize = TRUE;
+            self.view.layer.rasterizationScale = [[UIScreen mainScreen] scale];
             self.view.layer.transform = transform3D;
         }
     } else {
@@ -553,8 +553,8 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     }
     animation.removedOnCompletion = NO;
     animation.fillMode = kCAFillModeForwards;
-    if(animation.duration==0){
-        animation.duration=FLT_MIN;
+    if (animation.duration == 0) {
+        animation.duration = FLT_MIN;
     }
     [self.view.layer addAnimation:animation forKey:nil];
 }

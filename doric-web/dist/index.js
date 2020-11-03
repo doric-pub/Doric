@@ -1537,6 +1537,8 @@ var doric = (function (exports) {
     exports.jsRegisterModule = jsRegisterModule;
     exports.jsReleaseContext = jsReleaseContext;
 
+    Object.defineProperty(exports, '__esModule', { value: true });
+
     return exports;
 
 }({}));
@@ -5864,6 +5866,8 @@ ${content}
     exports.registerViewNode = registerViewNode;
     exports.toPixelString = toPixelString;
     exports.toRGBAString = toRGBAString;
+
+    Object.defineProperty(exports, '__esModule', { value: true });
 
     return exports;
 

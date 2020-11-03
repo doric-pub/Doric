@@ -177,6 +177,8 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
         }
     } else {
         if (!CGAffineTransformEqualToTransform(transform, self.view.transform)) {
+            self.view.layer.shouldRasterize=true;
+            self.view.layer.rasterizationScale=[[UIScreen mainScreen] scale];
             self.view.transform = transform;
         }
     }

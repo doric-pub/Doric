@@ -22,15 +22,14 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Region;
 import android.os.Build;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 /**
  * @Description: com.github.penfeizhou.doric.shader
@@ -117,7 +116,7 @@ public class DoricLayer extends FrameLayout {
     public void setShadow(int sdColor, int sdOpacity, int sdRadius, int offsetX, int offsetY) {
         if (mShadowPaint == null) {
             mShadowPaint = new Paint();
-            mShadowPaint.setAntiAlias(true);
+            mShadowPaint.setAntiAlias(false);
             mShadowPaint.setStyle(Paint.Style.FILL);
         }
         mShadowPaint.setColor(sdColor);

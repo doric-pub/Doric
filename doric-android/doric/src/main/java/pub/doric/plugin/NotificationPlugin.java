@@ -46,8 +46,8 @@ import pub.doric.extension.bridge.DoricPromise;
 @DoricPlugin(name = "notification")
 public class NotificationPlugin extends DoricJavaPlugin {
 
-    private HashMap<String, BroadcastReceiver> systemReceivers = new HashMap<>();
-    private HashMap<String, BroadcastReceiver> localReceivers = new HashMap<>();
+    private final HashMap<String, BroadcastReceiver> systemReceivers = new HashMap<>();
+    private final HashMap<String, BroadcastReceiver> localReceivers = new HashMap<>();
 
     public NotificationPlugin(DoricContext doricContext) {
         super(doricContext);
@@ -74,7 +74,12 @@ public class NotificationPlugin extends DoricJavaPlugin {
         Intent intent = new Intent(name);
         intent.putExtra("__doric_data__", data);
         if (androidSystem) {
-            getDoricContext().getContext().sendBroadcast(intent);
+            String permission = null;
+            JSValue jsValue = args.getProperty("permission");
+            if (jsValue.isString()) {
+                permission = jsValue.asString().value();
+            }
+            getDoricContext().getContext().sendBroadcast(intent, permission);
         } else {
             LocalBroadcastManager.getInstance(getDoricContext().getContext()).sendBroadcast(intent);
         }
@@ -125,7 +130,12 @@ public class NotificationPlugin extends DoricJavaPlugin {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(name);
         if (androidSystem) {
-            getDoricContext().getContext().registerReceiver(receiver, intentFilter);
+            String permission = null;
+            JSValue jsValue = args.getProperty("permission");
+            if (jsValue.isString()) {
+                permission = jsValue.asString().value();
+            }
+            getDoricContext().getContext().registerReceiver(receiver, intentFilter, permission, null);
             systemReceivers.put(callbackId, receiver);
         } else {
             LocalBroadcastManager.getInstance(getDoricContext().getContext())

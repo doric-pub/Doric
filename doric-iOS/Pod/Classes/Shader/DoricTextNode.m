@@ -42,8 +42,8 @@
 
 @interface DoricTextNode ()
 @property(nonatomic, strong) NSMutableParagraphStyle *paragraphStyle;
-@property(nonatomic, assign) NSNumber *underline;
-@property(nonatomic, assign) NSNumber *strikethrough;
+@property(nonatomic, copy) NSNumber *underline;
+@property(nonatomic, copy) NSNumber *strikethrough;
 @end
 
 @implementation DoricTextNode

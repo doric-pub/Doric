@@ -24,7 +24,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-
 @interface DoricAsyncResult <R> : NSObject
 @property(nonatomic, strong) void (^resultCallback)(R result);
 @property(nonatomic, strong) void (^exceptionCallback)(NSException *e);
@@ -39,6 +38,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (R)getResult;
 
 - (R)waitUntilResult;
+
+- (id)waitUntilResult:(id (^)(R result))transformer;
+
 @end
 
 NS_ASSUME_NONNULL_END

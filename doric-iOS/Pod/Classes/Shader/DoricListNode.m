@@ -178,8 +178,9 @@
             batchCount++;
         }
         DoricAsyncResult *result = [self callJSResponse:@"renderBunchedItems", @(start), @(batchCount), nil];
-        JSValue *models = [result waitUntilResult];
-        NSArray *array = [models toArray];
+        NSArray *array = [result waitUntilResult:^(JSValue *models) {
+            return [models toArray];
+        }];
         [array enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
             NSString *thisViewId = obj[@"id"];
             [self setSubModel:obj in:thisViewId];

@@ -20,16 +20,16 @@
 #import "DoricExtensions.h"
 
 @implementation NSObject (Doric)
-- (id)apply:(id (^)(id it))block {
+- (id)apply:(id (NS_NOESCAPE ^)(id it))block {
     return block(self);
 }
 
-- (instancetype)also:(void (^)(id it))block {
+- (instancetype)also:(void (NS_NOESCAPE ^)(id it))block {
     block(self);
     return self;
 }
 
-- (void)let:(void (^)(id it))block {
+- (void)let:(void (NS_NOESCAPE ^)(id it))block {
     block(self);
 }
 @end

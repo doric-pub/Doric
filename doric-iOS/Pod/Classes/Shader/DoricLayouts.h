@@ -109,7 +109,10 @@ typedef NS_ENUM(NSInteger, DoricGravity) {
 
 - (void)apply;
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmissing-noescape"
 - (void)apply:(CGSize)frameSize;
+#pragma clang diagnostic pop
 @end
 
 

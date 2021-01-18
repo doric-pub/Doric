@@ -32,7 +32,13 @@
 - (void)inset:(NSDictionary *)argument withPromise:(DoricPromise *)promise {
     dispatch_async(dispatch_get_main_queue(), ^{
         if (@available(iOS 11.0, *)) {
-            UIView *superView = [UIApplication sharedApplication].windows.lastObject;
+            UIView *superView;
+            if (self.doricContext.vc) {
+                superView = self.doricContext.vc.view.window;
+            } else {
+                superView = [UIApplication sharedApplication].windows.lastObject;
+            }
+            
             CGFloat top = superView.safeAreaInsets.top;
             CGFloat left = superView.safeAreaInsets.left;
             CGFloat bottom = superView.safeAreaInsets.bottom;

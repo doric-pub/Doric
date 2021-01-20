@@ -15,7 +15,7 @@ function searchImages(dir, images) {
         if (stat.isDirectory()) {
             searchImages(path.join(dir, item), images)
         } else {
-            if(fullPath.endsWith('.png')) {
+            if (fullPath.endsWith('.png')) {
                 images.push(fullPath)
             }
         }
@@ -39,11 +39,13 @@ function mkdirsSync(dirname) {
 
 allImages.forEach((value) => {
     let path = __dirname + '/build/' + value
+    path = path.split("\\").join("/")
     let index = path.lastIndexOf('/')
     mkdirsSync(path.substring(0, index))
 
     fs.copyFile(__dirname + '/' + value, __dirname + '/build/' + value, error => {
-        console.log(error)
+        if (error)
+            console.log(error)
     })
 })
 
@@ -55,7 +57,7 @@ function readDirs(dirPath, files) {
         })
     } else {
         for (let bundle of bundles) {
-            if (dirPath.match(new RegExp(`^${bundle}`))) {
+            if (dirPath.replace("\\", "/").match(new RegExp(`^${bundle}`))) {
                 files.push(dirPath)
             }
         }

@@ -22,7 +22,7 @@ Doric iOS SDK for cross platform develpment
 
   s.public_header_files = 'doric-iOS/Pod/Classes/**/*.h'
   s.dependency 'YYWebImage'
-  #s.dependency 'YYImage/WebP'
+  s.dependency 'YYImage/WebP'
   s.dependency 'YYCache'
   s.dependency 'YogaKit/Core'
   s.dependency 'Yoga'

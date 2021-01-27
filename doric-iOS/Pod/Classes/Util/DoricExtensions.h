@@ -21,11 +21,11 @@
 
 
 @interface NSObject (Doric)
-- (id)apply:(id (^)(id it))block;
+- (id)apply:(id (NS_NOESCAPE ^)(id it))block;
 
-- (instancetype)also:(void (^)(id it))block;
+- (instancetype)also:(void (NS_NOESCAPE ^)(id it))block;
 
-- (void)let:(void (^)(id it))block;
+- (void)let:(void (NS_NOESCAPE ^)(id it))block;
 @end
 
 @interface NSArray <ObjectType> (Doric)

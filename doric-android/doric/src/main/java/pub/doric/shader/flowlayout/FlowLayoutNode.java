@@ -88,6 +88,7 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
     private String onScrollFuncId;
     private String onScrollEndFuncId;
     private DoricJSDispatcher jsDispatcher = new DoricJSDispatcher();
+    private int itemCount = 0;
 
     public FlowLayoutNode(DoricContext doricContext) {
         super(doricContext);
@@ -138,7 +139,7 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
                 if (!prop.isNumber()) {
                     return;
                 }
-                this.flowAdapter.itemCount = prop.asNumber().toInt();
+                this.itemCount = prop.asNumber().toInt();
                 break;
             case "renderItem":
                 if (!prop.isString()) {
@@ -220,6 +221,7 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
             mView.post(new Runnable() {
                 @Override
                 public void run() {
+                    flowAdapter.itemCount = itemCount;
                     flowAdapter.notifyDataSetChanged();
                 }
             });

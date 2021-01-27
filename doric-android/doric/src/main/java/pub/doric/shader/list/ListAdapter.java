@@ -44,6 +44,8 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
         this.listNode = listNode;
     }
 
+    private int itemCount = 0;
+
     @NonNull
     @Override
     public DoricViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -67,7 +69,7 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
 
     @Override
     public int getItemCount() {
-        return this.listNode.itemCount + (this.listNode.loadMore ? 1 : 0);
+        return this.itemCount;
     }
 
     @Override
@@ -82,6 +84,10 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
             }
         }
         return super.getItemViewType(position);
+    }
+
+    public void setItemCount(int itemCount) {
+        this.itemCount = itemCount;
     }
 
     private JSValue getItemModel(int position) {

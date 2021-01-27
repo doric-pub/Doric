@@ -44,6 +44,7 @@ public class SliderNode extends SuperNode<RecyclerView> {
     private final SlideAdapter slideAdapter;
     private String onPageSlidedFuncId;
     private int lastPosition = 0;
+    private int itemCount = 0;
 
     public SliderNode(DoricContext doricContext) {
         super(doricContext);
@@ -135,6 +136,7 @@ public class SliderNode extends SuperNode<RecyclerView> {
             mView.post(new Runnable() {
                 @Override
                 public void run() {
+                    slideAdapter.itemCount = itemCount;
                     slideAdapter.notifyDataSetChanged();
                 }
             });
@@ -145,7 +147,7 @@ public class SliderNode extends SuperNode<RecyclerView> {
     protected void blend(RecyclerView view, String name, JSValue prop) {
         switch (name) {
             case "itemCount":
-                this.slideAdapter.itemCount = prop.asNumber().toInt();
+                this.itemCount = prop.asNumber().toInt();
                 break;
             case "renderPage":
                 // If reset renderItem,should reset native cache.

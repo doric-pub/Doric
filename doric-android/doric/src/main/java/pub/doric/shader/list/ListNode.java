@@ -59,10 +59,10 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
     SparseArray<String> itemValues = new SparseArray<>();
     boolean loadMore = false;
     String loadMoreViewId;
-    private Set<DoricScrollChangeListener> listeners = new HashSet<>();
+    private final Set<DoricScrollChangeListener> listeners = new HashSet<>();
     private String onScrollFuncId;
     private String onScrollEndFuncId;
-    private DoricJSDispatcher jsDispatcher = new DoricJSDispatcher();
+    private final DoricJSDispatcher jsDispatcher = new DoricJSDispatcher();
 
     public ListNode(DoricContext doricContext) {
         super(doricContext);
@@ -137,6 +137,7 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
             mView.post(new Runnable() {
                 @Override
                 public void run() {
+                    listAdapter.setItemCount(itemCount + (loadMore ? 1 : 0));
                     listAdapter.notifyDataSetChanged();
                 }
             });

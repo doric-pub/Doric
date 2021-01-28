@@ -1,11 +1,7 @@
 name: Release
 on:
-  #  push:
-  #    tags:
-  #      - 'v*.*.*'
   release:
-    types:
-      - published
+    types: [created]
 jobs:
   build:
     runs-on: macos-latest

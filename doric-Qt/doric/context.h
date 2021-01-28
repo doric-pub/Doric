@@ -17,10 +17,7 @@ private:
 public:
     Context(QString contextId, QString source, QString extra);
 
-    static Context* create(QString script, QString source, QString extra)
-    {
-        return NULL;
-    }
+    static Context* create(QString script, QString source, QString extra);
 
     InterfaceDriver* getDriver();
 };

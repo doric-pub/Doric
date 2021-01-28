@@ -23,6 +23,7 @@
 #import "DoricImageNode.h"
 #import "DoricExtensions.h"
 #import "DoricUtil.h"
+#import "DoricSuperNode.h"
 
 #if __has_include(<YYWebImage/YYWebImage.h>)
 
@@ -44,8 +45,18 @@
     }
 }
 @end
-#else
 
+#elif __has_include(<SDWebImage/SDWebImage.h>)
+
+#import <SDWebImage/SDWebImage.h>
+
+@interface DoricImageView : SDAnimatedImageView
+@end
+
+@implementation DoricImageView
+@end
+
+#else
 @interface DoricImageView : UIImageView
 @end
 
@@ -118,6 +129,8 @@
                                                                 options:NSDataBase64DecodingIgnoreUnknownCharacters];
 #if __has_include(<YYWebImage/YYWebImage.h>)
         YYImage *image = [YYImage imageWithData:imageData scale:self.imageScale];
+#elif __has_include(<SDWebImage/SDWebImage.h>)
+        SDAnimatedImage *image = [SDAnimatedImage imageWithData:imageData scale:self.imageScale];
 #else
         UIImage *image = [UIImage imageWithData:imageData scale:self.imageScale];
 #endif
@@ -155,6 +168,8 @@
                                                                 options:NSDataBase64DecodingIgnoreUnknownCharacters];
 #if __has_include(<YYWebImage/YYWebImage.h>)
         YYImage *image = [YYImage imageWithData:imageData scale:self.imageScale];
+#elif __has_include(<SDWebImage/SDWebImage.h>)
+        SDAnimatedImage *image = [SDAnimatedImage imageWithData:imageData scale:self.imageScale];
 #else
         UIImage *image = [UIImage imageWithData:imageData scale:self.imageScale];
 #endif
@@ -216,6 +231,44 @@
                 }
             }
         }];
+#elif __has_include(<SDWebImage/SDWebImage.h>)
+        [view sd_setImageWithURL:[NSURL URLWithString:prop] placeholderImage:[self currentPlaceHolderImage] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+            __strong typeof(_self) self = _self;
+            if (self.placeHolderColor || self.errorColor) {
+                self.view.contentMode = self.contentMode;
+            }
+            view.doricLayout.undefined = NO;
+            if (error) {
+                [[self currentErrorImage] also:^(UIImage *it) {
+                    self.view.image = it;
+                }];
+                if (self.loadCallbackId.length > 0) {
+                    [self callJSResponse:self.loadCallbackId, nil];
+                }
+            } else {
+                if (image.scale != self.imageScale) {
+                    if ([image isKindOfClass:SDAnimatedImage.class]) {
+                        image = [SDAnimatedImage imageWithData:((SDAnimatedImage *) image).animatedImageData scale:self.imageScale];
+                    } else {
+                        image = [UIImage imageWithCGImage:image.CGImage scale:self.imageScale orientation:image.imageOrientation];
+                    }
+                    self.view.image = image;
+                }
+                if (self.loadCallbackId.length > 0) {
+                    [self callJSResponse:self.loadCallbackId,
+                                         @{@"width": @(image.size.width), @"height": @(image.size.height)},
+                                    nil];
+                }
+                if (async) {
+                    DoricSuperNode *node = self.superNode;
+                    while (node.superNode != nil) {
+                        node = node.superNode;
+                    }
+                    [node requestLayout];
+                }
+            }
+
+        }];
 #else
         DoricLog(@"Do not support load image url");
 #endif
@@ -247,6 +300,8 @@
                                                                 options:NSDataBase64DecodingIgnoreUnknownCharacters];
 #if __has_include(<YYWebImage/YYWebImage.h>)
         YYImage *image = [YYImage imageWithData:imageData scale:self.imageScale];
+#elif __has_include(<SDWebImage/SDWebImage.h>)
+        SDAnimatedImage *image = [SDAnimatedImage imageWithData:imageData scale:self.imageScale];
 #else
         UIImage *image = [UIImage imageWithData:imageData scale:self.imageScale];
 #endif
@@ -284,6 +339,8 @@
     } else if ([@"imageRes" isEqualToString:name]) {
 #if __has_include(<YYWebImage/YYWebImage.h>)
         YYImage *image = [YYImage imageNamed:prop];
+#elif __has_include(<SDWebImage/SDWebImage.h>)
+        SDAnimatedImage *image = [SDAnimatedImage imageNamed:prop];
 #else
         UIImage *image = [UIImage imageNamed:prop];
 #endif
@@ -309,6 +366,8 @@
         NSData *imgData = [[NSData alloc] initWithContentsOfFile:fullPath];
 #if __has_include(<YYWebImage/YYWebImage.h>)
         YYImage *image = [YYImage imageWithData:imgData scale:self.imageScale];
+#elif __has_include(<SDWebImage/SDWebImage.h>)
+        SDAnimatedImage *image = [SDAnimatedImage imageWithData:imgData scale:self.imageScale];
 #else
         UIImage *image = [UIImage imageWithData:imgData scale:self.imageScale];
 #endif

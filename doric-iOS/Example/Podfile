@@ -3,7 +3,7 @@
 
 target 'Example' do
   
-  use_frameworks!
+  use_modular_headers!
   
   pod 'DoricCore', :path => '../../'
   pod 'DoricDevkit', :path => '../../'
@@ -11,6 +11,10 @@ target 'Example' do
   #pod 'YYWebImage'
   
   #pod 'YYImage/WebP'
+
+  pod 'SDWebImage'
+
+  pod 'SDWebImageWebPCoder'
 
   target 'ExampleTests' do
     inherit! :search_paths

@@ -1,7 +1,8 @@
-#ifndef NATIVE_EMPTY_H
-#define NATIVE_EMPTY_H
+#ifndef NATIVEEMPTY_H
+#define NATIVEEMPTY_H
 
 #include <QObject>
+#include <QJSValue>
 
 class NativeEmpty : public QObject {
     Q_OBJECT
@@ -9,7 +10,7 @@ class NativeEmpty : public QObject {
 public:
     NativeEmpty(QObject *parent = nullptr) : QObject(parent) {}
 
-    Q_INVOKABLE void function();
+    Q_INVOKABLE QJSValue function();
 };
 
-#endif // NATIVE_EMPTY_H
+#endif // NATIVEEMPTY_H

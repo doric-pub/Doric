@@ -1,60 +1,35 @@
-#ifndef ASYNC_RESULT_H
-#define ASYNC_RESULT_H
+#ifndef ASYNCRESULT_H
+#define ASYNCRESULT_H
 
-#include <QDebug>
-#include <QVariant>
+#include <QJSValue>
 
 #include "callback.h"
+#include "settable_future.h"
 
-template <class R>
-class AsyncResult {
+static QJSValue EMPTY(QJSValue::NullValue);
 
+class AsyncResult
+{
 private:
-    QVariant result;
-    Callback<R> *callback = nullptr;
+    QJSValue result = EMPTY;
+    Callback *callback;
 
 public:
-    AsyncResult() {}
+    AsyncResult();
 
-    AsyncResult(R result) {
-        this->result.setValue(result);
-    }
+    AsyncResult(QJSValue result);
 
-    void setResult(R result) {
-        this->result.setValue(result);
-        if (callback != nullptr) {
-            this->callback->onResult(result);
-            this->callback->onFinish();
-        }
-    }
+    void setResult(QJSValue result);
 
-    void setError(QException exception) {
-        this->result->setValue(exception);
-        if (callback != nullptr) {
-            this->callback->onError(exception);
-            this->callback->onFinish();
-        }
-    }
+    void setError(QJSValue exception);
 
-    bool hasResult() {
-        qDebug() << result.typeName();
-        return !QString(result.typeName()).isEmpty();
-    }
+    bool hasResult();
 
-    R *getResult() {
-        return static_cast<R*>(result.data());
-    }
+    QJSValue getResult();
 
-    void setCallback(Callback<R> *callback) {
-        this->callback = callback;
-        if (QException *exception = static_cast<QException*>(result.data())) {
-            this->callback->onError(*exception);
-            this->callback->onFinish();
-        } else if (hasResult()) {
-            this->callback->onResult(*getResult());
-            this->callback->onFinish();
-        }
-    }
+    void setCallback(Callback *callback);
+
+    SettableFuture *synchronous();
 };
 
-#endif // ASYNC_RESULT_H
+#endif // ASYNCRESULT_H

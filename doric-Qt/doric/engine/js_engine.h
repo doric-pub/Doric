@@ -1,38 +1,28 @@
-#ifndef JS_ENGINE_H
-#define JS_ENGINE_H
+#ifndef JSENGINE_H
+#define JSENGINE_H
 
-#include <QJSEngine>
+#include <QJSValue>
+#include <QThreadPool>
 
-#include "native/native_bridge.h"
-#include "native/native_empty.h"
-#include "native/native_log.h"
-#include "native/native_timer.h"
-#include "registry.h"
+#include "interface_jse.h"
 
-class JSEngine {
-
-public:
-    QJSEngine *engine = new QJSEngine();
-
-    Registry *registry = new Registry();
-
-    JSEngine();
-
-    void prepareContext(int contextId, QString *script);
-
-    void destroyContext(int contextId);
-
+class JSEngine : public QObject
+{
+    Q_OBJECT
 private:
-    NativeLog *nativeLog = new NativeLog();
-    NativeTimer *nativeTimer = new NativeTimer(engine);
-    NativeEmpty *nativeEmpty = new NativeEmpty();
-    NativeBridge *nativeBridge = new NativeBridge();
+    QThreadPool mJSThreadPool;
+    InterfaceJSE *mJSE;
 
-    void initJSEngine();
+    void loadBuiltinJS(QString assetName);
+    void prepareContext(QString contextId, QString script, QString source);
+    QString packageContextScript(QString contextId, QString content);
+    QString packageModuleScript(QString moduleName, QString content);
+public:
+    explicit JSEngine(QObject *parent = nullptr);
 
-    void injectGlobal();
+    QJSValue invokeDoricMethod(QString method, QJSValueList arguments);
 
-    void initDoricRuntime();
+    ~JSEngine();
 };
 
-#endif // JS_ENGINE_H
+#endif // JSENGINE_H

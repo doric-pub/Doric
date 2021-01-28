@@ -1,8 +1,9 @@
 #include <QTimer>
 
-#include "native_timer.h"
+#include "timer_extension.h"
+#include "../utils/constant.h"
 
-Q_INVOKABLE void NativeTimer::setTimer(long timerId, int time, bool repeat) {
+Q_INVOKABLE void TimerExtension::setTimer(long timerId, int time, bool repeat) {
     QTimer *timer = new QTimer(this);
     timer->setSingleShot(!repeat);
     connect(timer, &QTimer::timeout, this, [=] () {
@@ -10,11 +11,7 @@ Q_INVOKABLE void NativeTimer::setTimer(long timerId, int time, bool repeat) {
             deletedTimerIds->remove(timerId);
             delete timer;
         } else {
-            engine->evaluate(
-                        Constant::GLOBAL_DORIC + "." +
-                        Constant::DORIC_TIMER_CALLBACK + "(" +
-                        QString::number(timerId) + ")"
-                        );
+            this->method(timerId);
 
             if (!repeat) {
                 deletedTimerIds->remove(timerId);
@@ -25,6 +22,6 @@ Q_INVOKABLE void NativeTimer::setTimer(long timerId, int time, bool repeat) {
     timer->start(time);
 }
 
-void NativeTimer::clearTimer(long timerId) {
+Q_INVOKABLE void TimerExtension::clearTimer(long timerId) {
     deletedTimerIds->insert(timerId);
 }

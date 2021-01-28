@@ -1,81 +1,107 @@
-#include <QDebug>
-#include <QFile>
-#include <QResource>
+#include <QGuiApplication>
+#include <QJsonObject>
+#include <QRect>
+#include <QScreen>
+#include <QSysInfo>
+#include <QtConcurrent/QtConcurrent>
 
-#include "constant.h"
 #include "js_engine.h"
+#include "native_jse.h"
+#include "../utils/constant.h"
+#include "native_log.h"
+#include "native_empty.h"
+#include "timer_extension.h"
+#include "bridge_extension.h"
+#include "../utils/utils.h"
 
-JSEngine::JSEngine() {
-    initJSEngine();
-    injectGlobal();
-    initDoricRuntime();
+JSEngine::JSEngine(QObject *parent) : QObject(parent)
+{
+    mJSThreadPool.setMaxThreadCount(1);
+
+    QtConcurrent::run(&mJSThreadPool, [this]{
+        mJSE = new NativeJSE();
+    });
+    QtConcurrent::run(&mJSThreadPool, [this]{
+        // inject env
+        QScreen *screen = QGuiApplication::primaryScreen();
+        QRect screenGeometry = screen->geometry();
+        int screenWidth = screenGeometry.width();
+        int screenHeight = screenGeometry.height();
+
+        QObject *envObject = new QObject();
+        envObject->setProperty("platform", "Qt");
+        envObject->setProperty("platformVersion", qVersion());
+        envObject->setProperty("appName", "appName");
+        envObject->setProperty("appVersion", "appVersion");
+        envObject->setProperty("screenWidth", screenWidth);
+        envObject->setProperty("screenHeight", screenHeight);
+        envObject->setProperty("screenScale", 1);
+        envObject->setProperty("statusBarHeight", 0);
+        envObject->setProperty("hasNotch", false);
+        envObject->setProperty("deviceBrand", QSysInfo::prettyProductName());
+        envObject->setProperty("deviceModel", QSysInfo::productType());
+
+        mJSE->injectGlobalJSObject(Constant::INJECT_ENVIRONMENT, envObject);
+
+        // inject log
+        NativeLog *nativeLog = new NativeLog();
+        mJSE->injectGlobalJSFunction(Constant::INJECT_LOG, nativeLog, "function");
+
+        // inject empty
+        NativeEmpty *nativeEmpty = new NativeEmpty();
+        mJSE->injectGlobalJSFunction(Constant::INJECT_EMPTY, nativeEmpty, "function");
+
+        // inject timer set & clear
+        std::function<void(void)> func = [](){};
+        TimerExtension *timerExtension = new TimerExtension([this](long timerId){
+            QJSValueList arguments;
+            arguments.append(QJSValue((int)timerId));
+            this->invokeDoricMethod(Constant::DORIC_TIMER_CALLBACK, arguments);
+        });
+        mJSE->injectGlobalJSFunction(Constant::INJECT_TIMER_SET, timerExtension, "setTimer");
+        mJSE->injectGlobalJSFunction(Constant::INJECT_TIMER_CLEAR, timerExtension, "clearTimer");
+
+        BridgeExtension *bridgeExtension = new BridgeExtension();
+        mJSE->injectGlobalJSFunction(Constant::INJECT_BRIDGE, bridgeExtension, "callNative");
+    });
+    QtConcurrent::run(&mJSThreadPool, [this]{
+        loadBuiltinJS(Constant::DORIC_BUNDLE_SANDBOX);
+
+        QString libName = Constant::DORIC_MODULE_LIB;
+        QString libJS = Utils::readAssetFile("/doric", Constant::DORIC_BUNDLE_LIB);
+        QString script = packageModuleScript(libName, libJS);
+
+        mJSE->loadJS(script, "Module://" + libName);
+    });
 }
 
-void JSEngine::prepareContext(int contextId, QString *script) {
-    QString contextIdString = QString::number(contextId);
-    QString source = QString(Constant::TEMPLATE_CONTEXT_CREATE)
-            .replace("%s1", *script)
-            .replace("%s2", contextIdString)
-            .replace("%s3", contextIdString)
-            .replace("%s4", contextIdString);
-    QJSValue result = engine->evaluate(source, "context://" + contextIdString);
-    qDebug() << "context://" + contextIdString + " result: " + result.toString();
+QJSValue JSEngine::invokeDoricMethod(QString method, QJSValueList arguments)
+{
+    return mJSE->invokeObject(Constant::GLOBAL_DORIC, method, arguments);
 }
 
-void JSEngine::destroyContext(int contextId) {
-    QString contextIdString = QString::number(contextId);
-    QString source = QString(Constant::TEMPLATE_CONTEXT_DESTROY)
-            .replace("%s", contextIdString);
-    QJSValue result = engine->evaluate(source, "_context://" + contextIdString);
-    qDebug() << "context://" + contextIdString + " result: " + result.toString();
+void JSEngine::loadBuiltinJS(QString assetName)
+{
+    QString script = Utils::readAssetFile("/doric", assetName);
+    QString result = mJSE->loadJS(script, "Assets://" + assetName);
 }
 
-void JSEngine::initJSEngine() {
-    engine->installExtensions(QJSEngine::AllExtensions);
+void JSEngine::prepareContext(QString contextId, QString script, QString source)
+{
+    mJSE->loadJS(packageContextScript(contextId, script), "Context://" + source);
 }
 
-void JSEngine::injectGlobal() {
-    QJSValue log = engine->newQObject(nativeLog);
-    engine->globalObject().setProperty(Constant::INJECT_LOG, log.property("function"));
-
-    QJSValue timer = engine->newQObject(nativeTimer);
-    engine->globalObject().setProperty(Constant::INJECT_TIMER_SET, timer.property("setTimer"));
-    engine->globalObject().setProperty(Constant::INJECT_TIMER_CLEAR, timer.property("clearTimer"));
-
-    QJSValue empty = engine->newQObject(nativeEmpty);
-    engine->globalObject().setProperty(Constant::INJECT_EMPTY, empty.property("function"));
-
-    QJSValue bridge = engine->newQObject(nativeBridge);
-    engine->globalObject().setProperty(Constant::INJECT_BRIDGE, bridge.property("function"));
+QString JSEngine::packageContextScript(QString contextId, QString content)
+{
+    return QString(Constant::TEMPLATE_CONTEXT_CREATE).replace("%s1", content).replace("%s2", contextId).replace("%s3", contextId);
 }
 
-void JSEngine::initDoricRuntime() {
-    {
-        QResource resource(":/doric/doric-sandbox.js");
-        QFile *file = new QFile(resource.fileName());
-        file->open(QFile::ReadOnly | QFile::Text);
-        QTextStream in(file);
-        QString script = in.readAll();
-        file->close();
-        delete file;
+QString JSEngine::packageModuleScript(QString moduleName, QString content)
+{
+    return QString(Constant::TEMPLATE_MODULE).replace("%s1", moduleName).replace("%s2", content);
+}
 
-        QJSValue result = engine->evaluate(script, "doric-sandbox.js");
-        qDebug() << "doric-sandbox.js result: " + result.toString();
-    }
+JSEngine::~JSEngine()
+{
 
-    {
-        QResource resource(":/doric/doric-lib.js");
-        QFile *file = new QFile(resource.fileName());
-        file->open(QFile::ReadOnly | QFile::Text);
-        QTextStream in(file);
-        QString script = in.readAll();
-        file->close();
-        delete file;
-
-        QString lib = QString(Constant::TEMPLATE_MODULE)
-                .replace("%s1", "doric")
-                .replace("%s2", script);
-        QJSValue result = engine->evaluate(lib, "doric-lib.js");
-        qDebug() << "doric-lib.js result: " + result.toString();
-    }
 }

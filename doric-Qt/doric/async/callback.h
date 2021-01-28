@@ -1,16 +1,13 @@
 #ifndef CALLBACK_H
 #define CALLBACK_H
 
-#include <QException>
+#include <QJSValue>
 
-template <class R>
 class Callback {
-
 public:
+    virtual void onResult(QJSValue result) = 0;
 
-    virtual void onResult(R result) = 0;
-
-    virtual void onError(QException exception) = 0;
+    virtual void onError(QJSValue error) = 0;
 
     virtual void onFinish() = 0;
 };

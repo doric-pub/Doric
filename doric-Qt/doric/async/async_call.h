@@ -8,7 +8,7 @@ class AsyncCall {
 public:
     static void ensureRunInThreadPool(QThreadPool &threadPool, QRunnable *runnable)
     {
-
+        threadPool.start(runnable);
     }
 };
 

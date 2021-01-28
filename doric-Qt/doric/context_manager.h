@@ -33,7 +33,7 @@ public:
         int contextId = counter->fetchAndAddOrdered(1);
         Context *context = new Context(QString::number(contextId), source, extra);
         contextMap->insert(QString::number(contextId), context);
-        context->driver->createContext(contextId, script);
+        context->getDriver()->createContext(QString::number(contextId), script, source);
         return context;
     }
 };

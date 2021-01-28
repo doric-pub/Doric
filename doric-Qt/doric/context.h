@@ -12,7 +12,7 @@ private:
     QString source;
     QString script;
     QString extra;
-    InterfaceDriver *driver;
+    InterfaceDriver *driver = NULL;
 
 public:
     Context(QString contextId, QString source, QString extra);

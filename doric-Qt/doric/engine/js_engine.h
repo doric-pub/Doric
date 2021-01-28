@@ -10,7 +10,6 @@ class JSEngine : public QObject
 {
     Q_OBJECT
 private:
-    QThreadPool mJSThreadPool;
     InterfaceJSE *mJSE;
 
     void loadBuiltinJS(QString assetName);
@@ -18,6 +17,8 @@ private:
     QString packageContextScript(QString contextId, QString content);
     QString packageModuleScript(QString moduleName, QString content);
 public:
+    QThreadPool mJSThreadPool;
+
     explicit JSEngine(QObject *parent = nullptr);
 
     QJSValue invokeDoricMethod(QString method, QJSValueList arguments);

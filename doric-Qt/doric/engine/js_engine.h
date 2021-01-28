@@ -13,7 +13,6 @@ private:
     InterfaceJSE *mJSE;
 
     void loadBuiltinJS(QString assetName);
-    void prepareContext(QString contextId, QString script, QString source);
     QString packageContextScript(QString contextId, QString content);
     QString packageModuleScript(QString moduleName, QString content);
 public:
@@ -21,9 +20,10 @@ public:
 
     explicit JSEngine(QObject *parent = nullptr);
 
-    QJSValue invokeDoricMethod(QString method, QJSValueList arguments);
-
     ~JSEngine();
+
+    QJSValue invokeDoricMethod(QString method, QJSValueList arguments);
+    void prepareContext(QString contextId, QString script, QString source);
 };
 
 #endif // JSENGINE_H

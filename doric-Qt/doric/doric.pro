@@ -17,6 +17,7 @@ SOURCES += \
         async/async_result.cpp \
         async/settable_future.cpp \
         context.cpp \
+        context_manager.cpp \
         engine/bridge_extension.cpp \
         engine/js_engine.cpp \
         engine/native_empty.cpp \

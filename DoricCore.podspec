@@ -21,13 +21,7 @@ Doric iOS SDK for cross platform develpment
   }
 
   s.public_header_files = 'doric-iOS/Pod/Classes/**/*.h'
-  s.dependency 'YYWebImage'
-  #s.dependency 'YYImage/WebP'
   s.dependency 'YYCache'
   s.dependency 'YogaKit/Core'
   s.dependency 'Yoga'
-  
-  # https://github.com/CocoaPods/CocoaPods/issues/10065
-  #s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
-  #s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
 end

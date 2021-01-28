@@ -7,6 +7,11 @@ target 'Example' do
   
   pod 'DoricCore', :path => '../../'
   pod 'DoricDevkit', :path => '../../'
+
+  #pod 'YYWebImage'
+  
+  #pod 'YYImage/WebP'
+
   target 'ExampleTests' do
     inherit! :search_paths
     # Pods for testing

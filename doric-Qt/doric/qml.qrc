@@ -1,4 +1,8 @@
 <RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>qtquickcontrols2.conf</file>
+    </qresource>
     <qresource prefix="/doric">
         <file alias="doric-sandbox.js">../../doric-js/bundle/doric-sandbox.js</file>
         <file alias="doric-lib.js">../../doric-js/bundle/doric-lib.js</file>

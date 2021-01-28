@@ -7,16 +7,19 @@ class Singleton
 {
 private:
     static Singleton *local_instance;
-    Singleton() {
+    Singleton()
+    {
         qDebug() << "constructor";
     }
 
-    ~Singleton() {
+    ~Singleton()
+    {
         qDebug() << "destructor";
     }
 
 public:
-    static Singleton *getInstance() {
+    static Singleton *getInstance()
+    {
         static Singleton locla_s;
         return &locla_s;
     }

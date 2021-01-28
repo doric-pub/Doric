@@ -1,45 +1,41 @@
-#ifndef CONTEXT_MANAGER_H
-#define CONTEXT_MANAGER_H
+#ifndef CONTEXTMANAGER_H
+#define CONTEXTMANAGER_H
 
-#include <QAtomicInt>
 #include <QDebug>
-#include <QMap>
 
 #include "context.h"
 
 class ContextManager
 {
 private:
-
     static ContextManager *local_instance;
-    ContextManager() {
-        qDebug() << "ContextManager constructor";
+    ContextManager()
+    {
+        qDebug() << "ContextManager create";
     }
 
-    ~ContextManager() {
-        qDebug() << "ContextManager destructor";
+    ~ContextManager()
+    {
+        qDebug() << "ContextManager destroy";
     }
 
     QAtomicInt *counter = new QAtomicInt();
-    QMap<int, Context*> *contextMap = new QMap<int, Context*>();
+    QMap<QString, Context*> *contextMap = new QMap<QString, Context*>();
 
 public:
-    static ContextManager *getInstance() {
-        static ContextManager locla_s;
-        return &locla_s;
+    static ContextManager *getInstance()
+    {
+        static ContextManager instance;
+        return &instance;
     }
 
-    Context *createContext(QString *script, QString *source) {
+    Context *createContext(QString script, QString source, QString extra) {
         int contextId = counter->fetchAndAddOrdered(1);
-        Context *context = new Context(contextId, source);
-        contextMap->insert(contextId, context);
+        Context *context = new Context(QString::number(contextId), source, extra);
+        contextMap->insert(QString::number(contextId), context);
         context->driver->createContext(contextId, script);
         return context;
     }
-
-    Context *getContext(int contextId) {
-        return contextMap->take(contextId);
-    }
 };
 
-#endif // CONTEXT_MANAGER_H
+#endif // CONTEXTMANAGER_H

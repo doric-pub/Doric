@@ -1,6 +1,4 @@
-QT += \
-    quick \
-    widgets
+QT += quick
 
 CONFIG += c++11
 
@@ -16,17 +14,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        constant.cpp \
+        async/async_result.cpp \
+        async/settable_future.cpp \
         context.cpp \
-        driver/native_driver.cpp \
+        engine/bridge_extension.cpp \
         engine/js_engine.cpp \
+        engine/native_empty.cpp \
+        engine/native_jse.cpp \
+        engine/native_log.cpp \
+        engine/timer_extension.cpp \
         main.cpp \
-        native/native_bridge.cpp \
-        native/native_empty.cpp \
-        native/native_log.cpp \
-        native/native_timer.cpp \
-        plugin/shader_plugin.cpp \
-        registry.cpp
+        native_driver.cpp \
+        utils/constant.cpp
 
 RESOURCES += qml.qrc
 
@@ -42,22 +41,22 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    async/async_call.h \
     async/async_result.h \
     async/callback.h \
-    constant.h \
+    async/settable_future.h \
     context.h \
-    context_holder.h \
     context_manager.h \
-    driver/driver.h \
-    driver/native_driver.h \
+    engine/bridge_extension.h \
+    engine/interface_jse.h \
     engine/js_engine.h \
-    native/native_bridge.h \
-    native/native_empty.h \
-    native/native_log.h \
-    native/native_timer.h \
-    plugin/shader_plugin.h \
-    registry.h \
-    shader/layer.h \
-    template/custom_callback.h \
+    engine/native_empty.h \
+    engine/native_jse.h \
+    engine/native_log.h \
+    engine/timer_extension.h \
+    interface_driver.h \
+    native_driver.h \
     template/singleton.h \
-    utility/utility.h
+    utils/constant.h \
+    utils/count_down_latch.h \
+    utils/utils.h

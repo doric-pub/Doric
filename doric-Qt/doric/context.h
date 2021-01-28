@@ -3,23 +3,26 @@
 
 #include <QString>
 
-#include "driver/driver.h"
+#include "interface_driver.h"
 
 class Context
 {
-
 private:
-    int contextId;
-    QString *source;
+    QString mContextId;
+    QString source;
+    QString script;
+    QString extra;
+    InterfaceDriver *driver;
 
 public:
-    Driver *driver;
+    Context(QString contextId, QString source, QString extra);
 
-    Context(int contextId, QString *source);
+    static Context* create(QString script, QString source, QString extra)
+    {
+        return NULL;
+    }
 
-    void show();
-
-    void init(double width, double height);
+    InterfaceDriver* getDriver();
 };
 
 #endif // CONTEXT_H

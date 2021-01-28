@@ -1,5 +1,5 @@
-#ifndef NATIVELOG_H
-#define NATIVELOG_H
+#ifndef NATIVE_LOG_H
+#define NATIVE_LOG_H
 
 #include <QObject>
 
@@ -12,4 +12,4 @@ public:
     Q_INVOKABLE void function(QString level, QString content);
 };
 
-#endif // NATIVELOG_H
+#endif // NATIVE_LOG_H

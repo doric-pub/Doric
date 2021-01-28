@@ -1,46 +1,26 @@
-#include <QApplication>
-#include <QDialog>
-#include <QFile>
-#include <QResource>
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
+#include <QDebug>
 
-#include "context_manager.h"
+#include "engine/js_engine.h"
 #include "async/async_result.h"
-#include "template/custom_callback.h"
 
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
-    {
-        QWidget *widget = new QWidget(nullptr, Qt::WindowType::Window);
-        widget->setWindowTitle(QString("Hello Doric"));
-        widget->resize(360, 640);
-        widget->show();
-    }
-    {
-        QResource resource(":/doric/Snake.js");
-        QFile *file = new QFile(resource.fileName());
-        file->open(QFile::ReadOnly | QFile::Text);
-        QTextStream in(file);
-        QString script = in.readAll();
-        file->close();
-        delete file;
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
-        QString *source = new QString("Snake.js");
-        Context *context = ContextManager::getInstance()->createContext(&script, source);
-        context->show();
-        context->init(180, 320);
-        delete source;
-    }
+    QGuiApplication app(argc, argv);
 
-    {
-        // code for test
-        QJsonValue *a = new QJsonValue();
-        AsyncResult<QJsonValue> *result = new AsyncResult<QJsonValue>(*a);
-        CustomCallback<QJsonValue> *callback = new CustomCallback<QJsonValue>();
-        result->setCallback(callback);
-        qDebug() << result->hasResult();
-        qDebug() << result->getResult();
-    }
+    QQmlApplicationEngine engine;
+    const QUrl url(QStringLiteral("qrc:/main.qml"));
+    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
+                     &app, [url](QObject *obj, const QUrl &objUrl) {
+        if (!obj && url == objUrl)
+            QCoreApplication::exit(-1);
+    }, Qt::QueuedConnection);
+    engine.load(url);
+
+    JSEngine jsEngine;
 
     return app.exec();
 }

@@ -9,9 +9,10 @@
 #import "AppDelegate.h"
 #import "NavigationController.h"
 #import "ViewController.h"
+#if __has_include(<SDWebImage/SDWebImage.h>)
 #import <SDWebImage/SDWebImage.h>
 #import <SDWebImageWebPCoder/SDWebImageWebPCoder.h>
-
+#endif
 @interface AppDelegate ()
 @property(nonatomic, strong) UIViewController *rootVC;
 @property(nonatomic, strong) NavigationController *navigationController;
@@ -30,7 +31,9 @@
     self.window.rootViewController = self.navigationController;
     [self.window addSubview:self.navigationController.view];
     [self.window makeKeyAndVisible];
+#if __has_include(<SDWebImage/SDWebImage.h>)
     [SDImageCodersManager.sharedManager addCoder:SDImageWebPCoder.sharedCoder];
+#endif
     return YES;
 }
 

@@ -18,13 +18,113 @@
 //
 
 #import "DoricStoragePlugin.h"
-#import "YYDiskCache.h"
+
+#if __has_include(<PINCache/PINCache.h>)
+
+#import <PINCache/PINCache.h>
+
+#define DoricCache PINCache
+
+@interface PINCache (Doric)
+- (void)setObject:(NSString *)value forKey:(NSString *)key withBlock:(void (^)())block;
+
+- (void)objectForKey:(NSString *)key withBlock:(void (^)(NSString *, id <NSCoding>))block;
+
+- (void)removeObjectForKey:(NSString *)key withBlock:(void (^)(NSString *))block;
+
+- (void)removeAllObjectsWithBlock:(void (^)())pFunction;
+@end
+
+@implementation PINCache (Doric)
+
+- (void)setObject:(NSString *)value forKey:(NSString *)key withBlock:(void (^)())block {
+    [self setObjectAsync:value forKey:key completion:^(id <PINCaching> cache, NSString *key, id object) {
+        block();
+    }];
+}
+
+- (void)objectForKey:(NSString *)key withBlock:(void (^)(NSString *, id <NSCoding>))block {
+    [self objectForKeyAsync:key completion:^(id <PINCaching> cache, NSString *key, id object) {
+        block(key, object);
+    }];
+}
+
+- (void)removeObjectForKey:(NSString *)key withBlock:(void (^)(NSString *))block {
+    [self removeObjectForKeyAsync:key completion:^(id <PINCaching> cache, NSString *key, id object) {
+        block(key);
+    }];
+}
+
+- (void)removeAllObjectsWithBlock:(void (^)())block {
+    [self removeAllObjectsAsync:^(id <PINCaching> cache) {
+        block();
+    }];
+}
+@end
+
+#elif __has_include(<YYCache/YYCache.h>)
+
+#import <YYCache/YYCache.h>
+
+@interface DoricCache : YYCache
+- (instancetype)initWithName:(NSString *)prefix rootPath:(NSString *)path;
+@end
+
+@implementation DoricCache
+- (instancetype)initWithName:(NSString *)prefix rootPath:(NSString *)path {
+    return [self initWithPath:[path
+            stringByAppendingPathComponent:prefix]];
+}
+@end
+
+#elif __has_include(<TMCache/TMCache.h>)
+
+#import <TMCache/TMCache.h>
+
+@interface DoricCache : TMCache
+- (void)setObject:(NSString *)value forKey:(NSString *)key withBlock:(void (^)())block;
+
+- (void)objectForKey:(NSString *)key withBlock:(void (^)(NSString *, id <NSCoding>))block;
+
+- (void)removeObjectForKey:(NSString *)key withBlock:(void (^)(NSString *))block;
+
+- (void)removeAllObjectsWithBlock:(void (^)())pFunction;
+@end
+
+@implementation DoricCache
+
+- (void)setObject:(NSString *)value forKey:(NSString *)key withBlock:(void (^)())block {
+    [self setObject:value forKey:key block:^(TMCache *cache, NSString *key, id object) {
+        block();
+    }];
+}
+
+- (void)objectForKey:(NSString *)key withBlock:(void (^)(NSString *, id <NSCoding>))block {
+    [self objectForKey:key block:^(TMCache *cache, NSString *key, id object) {
+        block(key, object);
+    }];
+}
+
+- (void)removeObjectForKey:(NSString *)key withBlock:(void (^)(NSString *))block {
+    [self removeObjectForKey:key block:^(TMCache *cache, NSString *key, id object) {
+        block(key);
+    }];
+}
+
+- (void)removeAllObjectsWithBlock:(void (^)())block {
+    [self removeAllObjects:^(TMCache *cache) {
+        block();
+    }];
+}
+@end
+#endif
+
 
 static NSString *doric_prefix = @"pref";
 
 @interface DoricStoragePlugin ()
-@property(atomic, strong) NSMutableDictionary <NSString *, YYDiskCache *> *cachedMap;
-@property(nonatomic, strong) YYDiskCache *defaultCache;
+@property(atomic, strong) NSMutableDictionary <NSString *, DoricCache *> *cachedMap;
+@property(nonatomic, strong) DoricCache *defaultCache;
 @property(nonatomic, copy) NSString *basePath;
 @end
 
@@ -38,20 +138,20 @@ static NSString *doric_prefix = @"pref";
     return self;
 }
 
-- (YYDiskCache *)defaultCache {
+- (DoricCache *)defaultCache {
     if (!_defaultCache) {
-        _defaultCache = [[YYDiskCache alloc] initWithPath:[self.basePath stringByAppendingPathComponent:doric_prefix]];
+        _defaultCache = [[DoricCache alloc] initWithName:doric_prefix rootPath:self.basePath];
     }
     return _defaultCache;
 }
 
-- (YYDiskCache *)getDiskCache:(NSString *)zone {
-    YYDiskCache *diskCache;
+- (DoricCache *)getDiskCache:(NSString *)zone {
+    DoricCache *diskCache;
     if (zone) {
         diskCache = self.cachedMap[zone];
         if (!diskCache) {
-            diskCache = [[YYDiskCache alloc] initWithPath:[self.basePath
-                    stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@", doric_prefix, zone]]];
+            diskCache = [[DoricCache alloc] initWithName:[NSString stringWithFormat:@"%@_%@", doric_prefix, zone]
+                                                rootPath:self.basePath];
             self.cachedMap[zone] = diskCache;
         }
     } else {
@@ -64,7 +164,7 @@ static NSString *doric_prefix = @"pref";
     NSString *zone = argument[@"zone"];
     NSString *key = argument[@"key"];
     NSString *value = argument[@"value"];
-    YYDiskCache *diskCache = [self getDiskCache:zone];
+    DoricCache *diskCache = [self getDiskCache:zone];
     [diskCache setObject:value forKey:key withBlock:^{
         [promise resolve:nil];
     }];
@@ -73,7 +173,7 @@ static NSString *doric_prefix = @"pref";
 - (void)getItem:(NSDictionary *)argument withPromise:(DoricPromise *)promise {
     NSString *zone = argument[@"zone"];
     NSString *key = argument[@"key"];
-    YYDiskCache *diskCache = [self getDiskCache:zone];
+    DoricCache *diskCache = [self getDiskCache:zone];
     [diskCache objectForKey:key withBlock:^(NSString *_Nonnull key, id <NSCoding> _Nullable object) {
         [promise resolve:object];
     }];
@@ -82,7 +182,7 @@ static NSString *doric_prefix = @"pref";
 - (void)remove:(NSDictionary *)argument withPromise:(DoricPromise *)promise {
     NSString *zone = argument[@"zone"];
     NSString *key = argument[@"key"];
-    YYDiskCache *diskCache = [self getDiskCache:zone];
+    DoricCache *diskCache = [self getDiskCache:zone];
     [diskCache removeObjectForKey:key withBlock:^(NSString *key) {
         [promise resolve:nil];
     }];
@@ -90,7 +190,7 @@ static NSString *doric_prefix = @"pref";
 
 - (void)clear:(NSDictionary *)argument withPromise:(DoricPromise *)promise {
     NSString *zone = argument[@"zone"];
-    YYDiskCache *diskCache = [self getDiskCache:zone];
+    DoricCache *diskCache = [self getDiskCache:zone];
     [diskCache removeAllObjectsWithBlock:^{
         [promise resolve:nil];
     }];

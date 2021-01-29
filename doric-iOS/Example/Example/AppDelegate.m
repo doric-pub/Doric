@@ -9,6 +9,8 @@
 #import "AppDelegate.h"
 #import "NavigationController.h"
 #import "ViewController.h"
+#import <SDWebImage/SDWebImage.h>
+#import <SDWebImageWebPCoder/SDWebImageWebPCoder.h>
 
 @interface AppDelegate ()
 @property(nonatomic, strong) UIViewController *rootVC;
@@ -28,6 +30,7 @@
     self.window.rootViewController = self.navigationController;
     [self.window addSubview:self.navigationController.view];
     [self.window makeKeyAndVisible];
+    [SDImageCodersManager.sharedManager addCoder:SDImageWebPCoder.sharedCoder];
     return YES;
 }
 

@@ -16,11 +16,12 @@ target 'Example' do
 
   pod 'SDWebImageWebPCoder'
 
-  pod 'YYCache'
+  #pod 'YYCache'
 
   #pod 'TMCache'
   
   pod 'PINCache'
+  
   target 'ExampleTests' do
     inherit! :search_paths
     # Pods for testing

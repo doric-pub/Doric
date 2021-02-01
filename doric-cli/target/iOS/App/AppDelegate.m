@@ -8,6 +8,10 @@
 
 #import "AppDelegate.h"
 #import <DoricCore/Doric.h>
+#if __has_include(<SDWebImage/SDWebImage.h>)
+#import <SDWebImage/SDWebImage.h>
+#import <SDWebImageWebPCoder/SDWebImageWebPCoder.h>
+#endif
 
 @interface AppDelegate ()
 @end
@@ -15,6 +19,9 @@
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+#if __has_include(<SDWebImage/SDWebImage.h>)
+    [SDImageCodersManager.sharedManager addCoder:SDImageWebPCoder.sharedCoder];
+#endif
     return YES;
 }
 

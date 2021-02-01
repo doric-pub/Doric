@@ -15,4 +15,10 @@ target '__$__' do
   # Pods for __$__
   pod 'DoricCore', "#{version}"
   pod 'DoricDevkit', "#{version}"
+  
+  pod 'SDWebImage'
+
+  pod 'SDWebImageWebPCoder'
+
+  pod 'PINCache'
 end

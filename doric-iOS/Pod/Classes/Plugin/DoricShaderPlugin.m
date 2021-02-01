@@ -33,7 +33,7 @@
         return;
     }
     __weak typeof(self) _self = self;
-    dispatch_async(dispatch_get_main_queue(), ^{
+    [self.doricContext dispatchToMainQueue:^{
         __strong typeof(_self) self = _self;
         if (self.doricContext == nil) {
             return;
@@ -50,11 +50,13 @@
             [viewNode requestLayout];
         }
         [promise resolve:nil];
-    });
+    }];
 }
 
 - (void)command:(NSDictionary *)argument withPromise:(DoricPromise *)promise {
-    dispatch_async(dispatch_get_main_queue(), ^{
+    __weak typeof(self) _self = self;
+    [self.doricContext dispatchToMainQueue:^{
+        __strong typeof(_self) self = _self;
         if (self.doricContext == nil) {
             return;
         }
@@ -76,7 +78,7 @@
         } else {
             [self findClass:[viewNode class] target:viewNode method:name promise:promise argument:args];
         }
-    });
+    }];
 }
 
 - (id)createParamWithMethodName:(NSString *)method promise:(DoricPromise *)promise argument:(id)argument {

@@ -27,7 +27,9 @@
 @implementation DoricModalPlugin
 
 - (void)toast:(NSDictionary *)dic withPromise:(DoricPromise *)promise {
-    dispatch_async(dispatch_get_main_queue(), ^{
+    __weak typeof(self) _self = self;
+    [self.doricContext dispatchToMainQueue:^{
+        __strong typeof(_self) self = _self;
         __block DoricGravity gravity = DoricGravityBottom;
         [dic[@"gravity"] also:^(NSNumber *it) {
             gravity = (DoricGravity) [it integerValue];
@@ -37,11 +39,13 @@
         } else {
             ShowToast(dic[@"msg"], gravity);
         }
-    });
+    }];
 }
 
 - (void)alert:(NSDictionary *)dic withPromise:(DoricPromise *)promise {
-    dispatch_async(dispatch_get_main_queue(), ^{
+    __weak typeof(self) _self = self;
+    [self.doricContext dispatchToMainQueue:^{
+        __strong typeof(_self) self = _self;
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:dic[@"title"]
                                                                        message:dic[@"msg"]
                                                                 preferredStyle:UIAlertControllerStyleAlert];
@@ -52,11 +56,13 @@
                                                        }];
         [alert addAction:action];
         [self.doricContext.vc presentViewController:alert animated:YES completion:nil];
-    });
+    }];
 }
 
 - (void)confirm:(NSDictionary *)dic withPromise:(DoricPromise *)promise {
-    dispatch_async(dispatch_get_main_queue(), ^{
+    __weak typeof(self) _self = self;
+    [self.doricContext dispatchToMainQueue:^{
+        __strong typeof(_self) self = _self;
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:dic[@"title"]
                                                                        message:dic[@"msg"]
                                                                 preferredStyle:UIAlertControllerStyleAlert];
@@ -67,20 +73,22 @@
                                                                  [promise reject:nil];
                                                              }];
         [alert addAction:cancelAction];
-        
+
         UIAlertAction *okAction = [UIAlertAction actionWithTitle:dic[@"okLabel"] ?: NSLocalizedString(@"Ok", nil)
                                                            style:UIAlertActionStyleDefault
                                                          handler:^(UIAlertAction *action) {
                                                              [promise resolve:nil];
                                                          }];
         [alert addAction:okAction];
-        
+
         [self.doricContext.vc presentViewController:alert animated:YES completion:nil];
-    });
+    }];
 }
 
 - (void)prompt:(NSDictionary *)dic withPromise:(DoricPromise *)promise {
-    dispatch_async(dispatch_get_main_queue(), ^{
+    __weak typeof(self) _self = self;
+    [self.doricContext dispatchToMainQueue:^{
+        __strong typeof(_self) self = _self;
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:dic[@"title"]
                                                                        message:dic[@"msg"]
                                                                 preferredStyle:UIAlertControllerStyleAlert];
@@ -113,6 +121,6 @@
         [alert addAction:okAction];
 
         [self.doricContext.vc presentViewController:alert animated:YES completion:nil];
-    });
+    }];
 }
 @end

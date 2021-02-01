@@ -26,7 +26,9 @@
 @implementation DoricCoordinatorPlugin
 
 - (void)verticalScrolling:(NSDictionary *)params withPromise:(DoricPromise *)promise {
-    dispatch_async(dispatch_get_main_queue(), ^{
+    __weak typeof(self) _self = self;
+    [self.doricContext dispatchToMainQueue:^{
+        __strong typeof(_self) self = _self;
         NSArray <NSString *> *scrollableIds = params[@"scrollable"];
         DoricViewNode *scrollNode = nil;
         for (NSString *value in scrollableIds) {
@@ -103,7 +105,7 @@
         } else {
             [promise reject:@"Scroller type error"];
         }
-    });
+    }];
 }
 
 - (void)setValue:(DoricViewNode *)viewNode isNavBar:(BOOL)isNavBar name:(NSString *)name value:(id)value {

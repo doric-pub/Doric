@@ -17,6 +17,8 @@
 // Created by pengfei.zhou on 2020/1/8.
 //
 
+#import <DoricCore/Doric.h>
+#import <DoricCore/DoricCore-umbrella.h>
 #import "DoricNotificationPlugin.h"
 
 @interface DoricNotificationPlugin ()
@@ -34,12 +36,12 @@
 }
 
 - (void)publish:(NSDictionary *)dic withPromise:(DoricPromise *)promise {
-    NSString *biz = dic[@"biz"];
-    NSString *name = dic[@"name"];
+    NSString *biz = [dic optString:@"biz"];
+    NSString *name = [dic optString:@"name"];
     if (biz) {
         name = [NSString stringWithFormat:@"__doric__%@#%@", biz, name];
     }
-    NSString *data = dic[@"data"];
+    NSString *data = [dic optString:@"data"];
     NSDictionary *dataDic = nil;
     if (data) {
         NSData *jsonData = [data dataUsingEncoding:NSUTF8StringEncoding];
@@ -53,12 +55,12 @@
 }
 
 - (void)subscribe:(NSDictionary *)dic withPromise:(DoricPromise *)promise {
-    NSString *biz = dic[@"biz"];
-    NSString *name = dic[@"name"];
+    NSString *biz = [dic optString:@"biz"];
+    NSString *name = [dic optString:@"name"];
     if (biz) {
         name = [NSString stringWithFormat:@"__doric__%@#%@", biz, name];
     }
-    NSString *callbackId = dic[@"callback"];
+    NSString *callbackId = [dic optString:@"callback"];
     __weak typeof(self) _self = self;
     id observer = [[NSNotificationCenter defaultCenter]
             addObserverForName:name

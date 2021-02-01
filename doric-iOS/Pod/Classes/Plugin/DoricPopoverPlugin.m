@@ -32,8 +32,8 @@ static NSString *TYPE = @"popover";
         }
         [superView bringSubviewToFront:self.fullScreenView];
         self.fullScreenView.hidden = NO;
-        NSString *viewId = params[@"id"];
-        NSString *type = params[@"type"];
+        NSString *viewId = [params optString:@"id"];
+        NSString *type = [params optString:@"type"];
         DoricViewNode *viewNode = [self.doricContext targetViewNode:viewId];
         if (!viewNode) {
             viewNode = [[DoricViewNode create:self.doricContext withType:type] also:^(DoricViewNode *it) {
@@ -51,14 +51,14 @@ static NSString *TYPE = @"popover";
                 }
             }];
         }
-        [viewNode blend:params[@"props"]];
+        [viewNode blend:[params optObject:@"props"]];
         [self.fullScreenView.doricLayout apply];
         [promise resolve:nil];
     }];
 }
 
 - (void)dismiss:(NSDictionary *)params withPromise:(DoricPromise *)promise {
-    NSString *viewId = params[@"id"];
+    NSString *viewId = [params optString:@"id"];
     __weak typeof(self) _self = self;
     [self.doricContext dispatchToMainQueue:^{
         __strong typeof(_self) self = _self;

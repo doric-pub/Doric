@@ -26,18 +26,18 @@
 #define DoricCache PINCache
 
 @interface PINCache (Doric)
-- (void)setObject:(NSString *)value forKey:(NSString *)key withBlock:(void (^)())block;
+- (void)setObject:(NSString *)value forKey:(NSString *)key withBlock:(void (^)(void))block;
 
 - (void)objectForKey:(NSString *)key withBlock:(void (^)(NSString *, id <NSCoding>))block;
 
 - (void)removeObjectForKey:(NSString *)key withBlock:(void (^)(NSString *))block;
 
-- (void)removeAllObjectsWithBlock:(void (^)())pFunction;
+- (void)removeAllObjectsWithBlock:(void (^)(void))pFunction;
 @end
 
 @implementation PINCache (Doric)
 
-- (void)setObject:(NSString *)value forKey:(NSString *)key withBlock:(void (^)())block {
+- (void)setObject:(NSString *)value forKey:(NSString *)key withBlock:(void (^)(void))block {
     [self setObjectAsync:value forKey:key completion:^(id <PINCaching> cache, NSString *key, id object) {
         block();
     }];
@@ -55,7 +55,7 @@
     }];
 }
 
-- (void)removeAllObjectsWithBlock:(void (^)())block {
+- (void)removeAllObjectsWithBlock:(void (^)(void))block {
     [self removeAllObjectsAsync:^(id <PINCaching> cache) {
         block();
     }];

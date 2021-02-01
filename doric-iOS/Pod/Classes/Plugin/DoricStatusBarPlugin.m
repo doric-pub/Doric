@@ -19,7 +19,6 @@
 
 #import "DoricStatusBarPlugin.h"
 #import "DoricUtil.h"
-#import "DoricViewNode.h"
 #import "DoricExtensions.h"
 #import "DoricViewController.h"
 
@@ -32,7 +31,7 @@
         if (self.doricContext.navBar) {
             if ([self.doricContext.navBar isKindOfClass:DoricViewController.class]) {
                 DoricViewController *target = ((DoricViewController *) self.doricContext.navBar);
-                target.statusBarHidden = [param[@"hidden"] boolValue];
+                target.statusBarHidden = [param optBool:@"hidden"];
                 [target setNeedsStatusBarAppearanceUpdate];
             }
         }
@@ -46,7 +45,7 @@
         if (self.doricContext.navBar) {
             if ([self.doricContext.navBar isKindOfClass:DoricViewController.class]) {
                 DoricViewController *target = ((DoricViewController *) self.doricContext.navBar);
-                target.statusBarMode = [param[@"mode"] intValue];
+                target.statusBarMode = [[param optNumber:@"mode"] intValue];
                 [target setNeedsStatusBarAppearanceUpdate];
             }
         }
@@ -58,7 +57,7 @@
     [self.doricContext dispatchToMainQueue:^{
         __strong typeof(_self) self = _self;
         if (self.doricContext.navBar) {
-            UIColor *color = DoricColor(param[@"color"]);
+            UIColor *color = DoricColor([param optNumber:@"color"]);
             [self.doricContext.navBar doric_navBar_setBackgroundColor:color];
         }
     }];

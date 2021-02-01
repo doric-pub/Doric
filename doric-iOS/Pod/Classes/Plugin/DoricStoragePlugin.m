@@ -22,6 +22,8 @@
 #if __has_include(<PINCache/PINCache.h>)
 
 #import <PINCache/PINCache.h>
+#import <DoricCore/Doric.h>
+#import <DoricCore/DoricCore-umbrella.h>
 
 #define DoricCache PINCache
 
@@ -161,9 +163,9 @@ static NSString *doric_prefix = @"pref";
 }
 
 - (void)setItem:(NSDictionary *)argument withPromise:(DoricPromise *)promise {
-    NSString *zone = argument[@"zone"];
-    NSString *key = argument[@"key"];
-    NSString *value = argument[@"value"];
+    NSString *zone = [argument optString:@"zone"];
+    NSString *key = [argument optString:@"key"];
+    NSString *value = [argument optString:@"value"];
     DoricCache *diskCache = [self getDiskCache:zone];
     [diskCache setObject:value forKey:key withBlock:^{
         [promise resolve:nil];
@@ -171,8 +173,8 @@ static NSString *doric_prefix = @"pref";
 }
 
 - (void)getItem:(NSDictionary *)argument withPromise:(DoricPromise *)promise {
-    NSString *zone = argument[@"zone"];
-    NSString *key = argument[@"key"];
+    NSString *zone = [argument optString:@"zone"];
+    NSString *key = [argument optString:@"key"];
     DoricCache *diskCache = [self getDiskCache:zone];
     [diskCache objectForKey:key withBlock:^(NSString *_Nonnull key, id <NSCoding> _Nullable object) {
         [promise resolve:object];
@@ -180,8 +182,8 @@ static NSString *doric_prefix = @"pref";
 }
 
 - (void)remove:(NSDictionary *)argument withPromise:(DoricPromise *)promise {
-    NSString *zone = argument[@"zone"];
-    NSString *key = argument[@"key"];
+    NSString *zone = [argument optString:@"zone"];
+    NSString *key = [argument optString:@"key"];
     DoricCache *diskCache = [self getDiskCache:zone];
     [diskCache removeObjectForKey:key withBlock:^(NSString *key) {
         [promise resolve:nil];
@@ -189,7 +191,7 @@ static NSString *doric_prefix = @"pref";
 }
 
 - (void)clear:(NSDictionary *)argument withPromise:(DoricPromise *)promise {
-    NSString *zone = argument[@"zone"];
+    NSString *zone = [argument optString:@"zone"];
     DoricCache *diskCache = [self getDiskCache:zone];
     [diskCache removeAllObjectsWithBlock:^{
         [promise resolve:nil];

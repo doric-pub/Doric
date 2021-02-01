@@ -17,8 +17,10 @@
 // Created by pengfei.zhou on 2019/11/29.
 //
 
+#import <DoricCore/Doric.h>
 #import "DoricAnimatePlugin.h"
 #import "DoricRootNode.h"
+#import "DoricExtensions.h"
 
 @implementation DoricAnimatePlugin
 
@@ -27,20 +29,21 @@
 }
 
 - (void)animateRender:(NSDictionary *)args withPromise:(DoricPromise *)promise {
-    NSNumber *duration = args[@"duration"];
+    NSNumber *duration = [args optNumber:@"duration"];
+    NSString *viewId = [args optString:@"id"];
+    NSDictionary *props = [args optObject:@"props"];
     __weak typeof(self) _self = self;
     [self.doricContext dispatchToMainQueue:^{
         __strong typeof(_self) self = _self;
-        NSString *viewId = args[@"id"];
         [UIView animateWithDuration:[duration floatValue] / 1000
                          animations:^{
                              if (self.doricContext.rootNode.viewId == nil) {
                                  self.doricContext.rootNode.viewId = viewId;
-                                 [self.doricContext.rootNode blend:args[@"props"]];
+                                 [self.doricContext.rootNode blend:props];
                                  [self.doricContext.rootNode requestLayout];
                              } else {
                                  DoricViewNode *viewNode = [self.doricContext targetViewNode:viewId];
-                                 [viewNode blend:args[@"props"]];
+                                 [viewNode blend:props];
                                  [viewNode requestLayout];
                              }
                          }

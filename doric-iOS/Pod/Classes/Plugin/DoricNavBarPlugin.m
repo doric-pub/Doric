@@ -45,7 +45,7 @@ static NSString *TYPE_CENTER = @"navbar_center";
         __weak typeof(self) _self = self;
         [self.doricContext dispatchToMainQueue:^{
             __strong typeof(_self) self = _self;
-            [self.doricContext.navBar doric_navBar_setHidden:[param[@"hidden"] boolValue]];
+            [self.doricContext.navBar doric_navBar_setHidden:[param optBool:@"hidden"]];
             [promise resolve:nil];
         }];
     } else {
@@ -58,7 +58,7 @@ static NSString *TYPE_CENTER = @"navbar_center";
         __weak typeof(self) _self = self;
         [self.doricContext dispatchToMainQueue:^{
             __strong typeof(_self) self = _self;
-            [self.doricContext.navBar doric_navBar_setTitle:param[@"title"]];
+            [self.doricContext.navBar doric_navBar_setTitle:[param optString:@"title"]];
             [promise resolve:nil];
         }];
     } else {
@@ -71,7 +71,7 @@ static NSString *TYPE_CENTER = @"navbar_center";
         __weak typeof(self) _self = self;
         [self.doricContext dispatchToMainQueue:^{
             __strong typeof(_self) self = _self;
-            UIColor *color = DoricColor(param[@"color"]);
+            UIColor *color = DoricColor([param optNumber:@"color"]);
             [self.doricContext.navBar doric_navBar_setBackgroundColor:color];
             [promise resolve:nil];
         }];
@@ -85,8 +85,8 @@ static NSString *TYPE_CENTER = @"navbar_center";
         __weak typeof(self) _self = self;
         [self.doricContext dispatchToMainQueue:^{
             __strong typeof(_self) self = _self;
-            NSString *viewId = params[@"id"];
-            NSString *type = params[@"type"];
+            NSString *viewId = [params optString:@"id"];
+            NSString *type = [params optString:@"type"];
             DoricViewNode *viewNode = [self.doricContext targetViewNode:viewId];
             if (!viewNode) {
                 viewNode = [[DoricViewNode create:self.doricContext withType:type] also:^(DoricViewNode *it) {
@@ -103,7 +103,7 @@ static NSString *TYPE_CENTER = @"navbar_center";
                     }
                 }];
             }
-            [viewNode blend:params[@"props"]];
+            [viewNode blend:[params optObject:@"props"]];
             [self.doricContext.navBar doric_navBar_setLeft:viewNode.view];
             [promise resolve:nil];
         }];
@@ -117,8 +117,8 @@ static NSString *TYPE_CENTER = @"navbar_center";
         __weak typeof(self) _self = self;
         [self.doricContext dispatchToMainQueue:^{
             __strong typeof(_self) self = _self;
-            NSString *viewId = params[@"id"];
-            NSString *type = params[@"type"];
+            NSString *viewId = [params optString:@"id"];
+            NSString *type = [params optString:@"type"];
             DoricViewNode *viewNode = [self.doricContext targetViewNode:viewId];
             if (!viewNode) {
                 viewNode = [[DoricViewNode create:self.doricContext withType:type] also:^(DoricViewNode *it) {
@@ -135,7 +135,7 @@ static NSString *TYPE_CENTER = @"navbar_center";
                     }
                 }];
             }
-            [viewNode blend:params[@"props"]];
+            [viewNode blend:[params optObject:@"props"]];
             [self.doricContext.navBar doric_navBar_setRight:viewNode.view];
             [promise resolve:nil];
         }];
@@ -149,8 +149,8 @@ static NSString *TYPE_CENTER = @"navbar_center";
         __weak typeof(self) _self = self;
         [self.doricContext dispatchToMainQueue:^{
             __strong typeof(_self) self = _self;
-            NSString *viewId = params[@"id"];
-            NSString *type = params[@"type"];
+            NSString *viewId = [params optString:@"id"];
+            NSString *type = [params optString:@"type"];
             DoricViewNode *viewNode = [self.doricContext targetViewNode:viewId];
             if (!viewNode) {
                 viewNode = [[DoricViewNode create:self.doricContext withType:type] also:^(DoricViewNode *it) {
@@ -167,7 +167,7 @@ static NSString *TYPE_CENTER = @"navbar_center";
                     }
                 }];
             }
-            [viewNode blend:params[@"props"]];
+            [viewNode blend:[params optObject:@"props"]];
             [self.doricContext.navBar doric_navBar_setCenter:viewNode.view];
             [promise resolve:nil];
         }];

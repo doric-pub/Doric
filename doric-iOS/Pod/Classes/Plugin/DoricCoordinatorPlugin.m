@@ -17,11 +17,13 @@
 // Created by pengfei.zhou on 2020/2/13.
 //
 
+#import <DoricCore/Doric.h>
 #import "DoricCoordinatorPlugin.h"
 #import "DoricSuperNode.h"
 #import "DoricScrollableProtocol.h"
 #import "DoricUtil.h"
 #import "DoricRootNode.h"
+#import "DoricExtensions.h"
 
 @implementation DoricCoordinatorPlugin
 
@@ -29,7 +31,7 @@
     __weak typeof(self) _self = self;
     [self.doricContext dispatchToMainQueue:^{
         __strong typeof(_self) self = _self;
-        NSArray <NSString *> *scrollableIds = params[@"scrollable"];
+        NSArray <NSString *> *scrollableIds = [params optArray:@"scrollable"];
         DoricViewNode *scrollNode = nil;
         for (NSString *value in scrollableIds) {
             if (!scrollNode) {
@@ -44,9 +46,9 @@
             [promise reject:@"Cannot find scrollable view"];
             return;
         }
-        NSDictionary *scrollRange = params[@"scrollRange"];
-        CGFloat startAnchor = [scrollRange[@"start"] floatValue];
-        CGFloat endAnchor = [scrollRange[@"end"] floatValue];
+        NSDictionary *scrollRange = [params optObject:@"scrollRange"];
+        CGFloat startAnchor = [[scrollRange optNumber:@"start"] floatValue];
+        CGFloat endAnchor = [[scrollRange optNumber:@"end"] floatValue];
         id target = params[@"target"];
         BOOL isNavBar = false;
         DoricViewNode *targetNode = nil;
@@ -66,10 +68,10 @@
                 [promise reject:@"Cannot find target view"];
             }
         }
-        NSDictionary *changing = params[@"changing"];
-        NSString *name = changing[@"name"];
-        NSNumber *changingStart = changing[@"start"];
-        NSNumber *changingEnd = changing[@"end"];
+        NSDictionary *changing = [params optObject:@"changing"];
+        NSString *name = [changing optString:@"name"];
+        NSNumber *changingStart = [changing optNumber:@"start"];
+        NSNumber *changingEnd = [changing optNumber:@"end"];
         if ([scrollNode conformsToProtocol:@protocol(DoricScrollableProtocol)]) {
             __weak typeof(self) __self = self;
             [(id <DoricScrollableProtocol>) scrollNode addDidScrollBlock:^(UIScrollView *scrollView) {

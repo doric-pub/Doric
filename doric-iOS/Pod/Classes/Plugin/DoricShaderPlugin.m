@@ -23,6 +23,7 @@
 #import "DoricShaderPlugin.h"
 #import "DoricRootNode.h"
 #import "DoricUtil.h"
+#import "DoricExtensions.h"
 
 #import <objc/runtime.h>
 
@@ -38,15 +39,15 @@
         if (self.doricContext == nil) {
             return;
         }
-        NSString *viewId = argument[@"id"];
+        NSString *viewId = [argument optString:@"id"];
 
-        if (self.doricContext.rootNode.viewId == nil && [@"Root" isEqualToString:argument[@"type"]]) {
+        if (self.doricContext.rootNode.viewId == nil && [@"Root" isEqualToString:[argument optString:@"type"]]) {
             self.doricContext.rootNode.viewId = viewId;
-            [self.doricContext.rootNode blend:argument[@"props"]];
+            [self.doricContext.rootNode blend:[argument optObject:@"props"]];
             [self.doricContext.rootNode requestLayout];
         } else {
             DoricViewNode *viewNode = [self.doricContext targetViewNode:viewId];
-            [viewNode blend:argument[@"props"]];
+            [viewNode blend:[argument optObject:@"props"]];
             [viewNode requestLayout];
         }
         [promise resolve:nil];
@@ -60,9 +61,9 @@
         if (self.doricContext == nil) {
             return;
         }
-        NSArray *viewIds = argument[@"viewIds"];
+        NSArray *viewIds = [argument optArray:@"viewIds"];
         id args = argument[@"args"];
-        NSString *name = argument[@"name"];
+        NSString *name = [argument optString:@"name"];
         DoricViewNode *viewNode = nil;
         for (NSString *viewId in viewIds) {
             if (!viewNode) {

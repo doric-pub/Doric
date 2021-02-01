@@ -31,13 +31,13 @@
     [self.doricContext dispatchToMainQueue:^{
         __strong typeof(_self) self = _self;
         __block DoricGravity gravity = DoricGravityBottom;
-        [dic[@"gravity"] also:^(NSNumber *it) {
+        [[dic optNumber:@"gravity"] also:^(NSNumber *it) {
             gravity = (DoricGravity) [it integerValue];
         }];
         if (self.doricContext.vc) {
-            ShowToastInVC(self.doricContext.vc, dic[@"msg"], gravity);
+            ShowToastInVC(self.doricContext.vc, [dic optString:@"msg"], gravity);
         } else {
-            ShowToast(dic[@"msg"], gravity);
+            ShowToast([dic optString:@"msg"], gravity);
         }
     }];
 }
@@ -46,10 +46,10 @@
     __weak typeof(self) _self = self;
     [self.doricContext dispatchToMainQueue:^{
         __strong typeof(_self) self = _self;
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:dic[@"title"]
-                                                                       message:dic[@"msg"]
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:[dic optString:@"title"]
+                                                                       message:[dic optString:@"msg"]
                                                                 preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *action = [UIAlertAction actionWithTitle:dic[@"okLabel"] ?: NSLocalizedString(@"OK", nil)
+        UIAlertAction *action = [UIAlertAction actionWithTitle:[dic optString:@"okLabel"] ?: NSLocalizedString(@"OK", nil)
                                                          style:UIAlertActionStyleDefault
                                                        handler:^(UIAlertAction *action) {
                                                            [promise resolve:nil];
@@ -63,18 +63,18 @@
     __weak typeof(self) _self = self;
     [self.doricContext dispatchToMainQueue:^{
         __strong typeof(_self) self = _self;
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:dic[@"title"]
-                                                                       message:dic[@"msg"]
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:[dic optString:@"title"]
+                                                                       message:[dic optString:@"msg"]
                                                                 preferredStyle:UIAlertControllerStyleAlert];
 
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:dic[@"cancelLabel"] ?: NSLocalizedString(@"Cancel", nil)
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[dic optString:@"cancelLabel"] ?: NSLocalizedString(@"Cancel", nil)
                                                                style:UIAlertActionStyleDefault
                                                              handler:^(UIAlertAction *action) {
                                                                  [promise reject:nil];
                                                              }];
         [alert addAction:cancelAction];
 
-        UIAlertAction *okAction = [UIAlertAction actionWithTitle:dic[@"okLabel"] ?: NSLocalizedString(@"Ok", nil)
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:[dic optString:@"okLabel"] ?: NSLocalizedString(@"Ok", nil)
                                                            style:UIAlertActionStyleDefault
                                                          handler:^(UIAlertAction *action) {
                                                              [promise resolve:nil];
@@ -89,11 +89,11 @@
     __weak typeof(self) _self = self;
     [self.doricContext dispatchToMainQueue:^{
         __strong typeof(_self) self = _self;
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:dic[@"title"]
-                                                                       message:dic[@"msg"]
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:[dic optString:@"title"]
+                                                                       message:[dic optString:@"msg"]
                                                                 preferredStyle:UIAlertControllerStyleAlert];
-        NSString *placeholder = dic[@"defaultText"];
-        NSString *preText = dic[@"text"];
+        NSString *placeholder = [dic optString:@"defaultText"];
+        NSString *preText = [dic optString:@"text"];
         [alert addTextFieldWithConfigurationHandler:^(UITextField *_Nonnull textField) {
             if (placeholder.length > 0) {
                 textField.placeholder = placeholder;
@@ -104,7 +104,7 @@
         }];
         __weak typeof(alert) _alert = alert;
 
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:dic[@"cancelLabel"] ?: NSLocalizedString(@"Cancel", nil)
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[dic optString:@"cancelLabel"] ?: NSLocalizedString(@"Cancel", nil)
                                                                style:UIAlertActionStyleDefault
                                                              handler:^(UIAlertAction *action) {
                                                                  __strong typeof(_alert) alert = _alert;
@@ -112,7 +112,7 @@
                                                              }];
         [alert addAction:cancelAction];
 
-        UIAlertAction *okAction = [UIAlertAction actionWithTitle:dic[@"okLabel"] ?: NSLocalizedString(@"Ok", nil)
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:[dic optString:@"okLabel"] ?: NSLocalizedString(@"Ok", nil)
                                                            style:UIAlertActionStyleDefault
                                                          handler:^(UIAlertAction *action) {
                                                              __strong typeof(_alert) alert = _alert;

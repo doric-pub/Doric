@@ -17,8 +17,9 @@
 // Created by pengfei.zhou on 2019/11/23.
 //
 
+#import <DoricCore/Doric.h>
 #import "DoricNavigatorPlugin.h"
-
+#import "DoricExtensions.h"
 
 @implementation DoricNavigatorPlugin
 - (void)push:(NSDictionary *)params {
@@ -26,17 +27,12 @@
     [self.doricContext dispatchToMainQueue:^{
         __strong typeof(_self) self = _self;
         BOOL animated = YES;
-        NSString *source = params[@"source"];
+        NSString *source = [params optString:@"source"];
         NSString *alias = source;
-        NSDictionary *config = params[@"config"];
+        NSDictionary *config = [params optObject:@"config"];
         if (config) {
-            if (config[@"animated"]) {
-                animated = [config[@"animated"] boolValue];
-            }
-
-            if (config[@"alias"]) {
-                alias = config[@"alias"];
-            }
+            animated = [config optBool:@"animated" defaultValue:animated];
+            alias = [config optString:@"alias" defaultValue:source];
         }
         [self.doricContext.navigator doric_navigator_push:source alias:alias animated:animated extra:config[@"extra"]];
     }];
@@ -46,10 +42,7 @@
     __weak typeof(self) _self = self;
     [self.doricContext dispatchToMainQueue:^{
         __strong typeof(_self) self = _self;
-        BOOL animated = YES;
-        if (params[@"animated"]) {
-            animated = [params[@"animated"] boolValue];
-        }
+        BOOL animated = [params optBool:@"animated" defaultValue:YES];
         [self.doricContext.navigator doric_navigator_pop:animated];
     }];
 }

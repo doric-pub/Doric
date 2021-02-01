@@ -17,16 +17,17 @@
 // Created by pengfei.zhou on 2019/11/21.
 //
 
+#import <DoricCore/Doric.h>
 #import "DoricNetworkPlugin.h"
-
+#import "DoricExtensions.h"
 
 @implementation DoricNetworkPlugin
 - (void)request:(NSDictionary *)dic withPromise:(DoricPromise *)promise {
-    NSString *url = dic[@"url"];
-    NSString *method = dic[@"method"];
-    NSDictionary <NSString *, NSString *> *headers = dic[@"headers"];
-    NSNumber *timeout = dic[@"timeout"];
-    NSString *data = dic[@"data"];
+    NSString *url = [dic optString:@"url"];
+    NSString *method = [dic optString:@"method"];
+    NSDictionary <NSString *, NSString *> *headers = [dic optObject:@"headers"];
+    NSNumber *timeout = [dic optNumber:@"timeout"];
+    NSString *data = [dic optString:@"data"];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
     request.HTTPMethod = method.uppercaseString;
     if (timeout) {

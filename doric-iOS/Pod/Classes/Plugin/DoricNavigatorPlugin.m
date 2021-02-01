@@ -22,7 +22,9 @@
 
 @implementation DoricNavigatorPlugin
 - (void)push:(NSDictionary *)params {
-    dispatch_async(dispatch_get_main_queue(), ^{
+    __weak typeof(self) _self = self;
+    [self.doricContext dispatchToMainQueue:^{
+        __strong typeof(_self) self = _self;
         BOOL animated = YES;
         NSString *source = params[@"source"];
         NSString *alias = source;
@@ -37,21 +39,23 @@
             }
         }
         [self.doricContext.navigator doric_navigator_push:source alias:alias animated:animated extra:config[@"extra"]];
-    });
+    }];
 }
 
 - (void)pop:(NSDictionary *)params {
-    dispatch_async(dispatch_get_main_queue(), ^{
+    __weak typeof(self) _self = self;
+    [self.doricContext dispatchToMainQueue:^{
+        __strong typeof(_self) self = _self;
         BOOL animated = YES;
         if (params[@"animated"]) {
             animated = [params[@"animated"] boolValue];
         }
         [self.doricContext.navigator doric_navigator_pop:animated];
-    });
+    }];
 }
 
 - (void)openUrl:(NSString *)urlString withPromise:(DoricPromise *)promise {
-    dispatch_async(dispatch_get_main_queue(), ^{
+    [self.doricContext dispatchToMainQueue:^{
         NSURL *url = [NSURL URLWithString:urlString];
         [UIApplication.sharedApplication openURL:url options:@{} completionHandler:^(BOOL success) {
             if (success) {
@@ -60,6 +64,6 @@
                 [promise reject:@"Cannot open"];
             }
         }];
-    });
+    }];
 }
 @end

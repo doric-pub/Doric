@@ -14,7 +14,9 @@
 static NSString *TYPE = @"popover";
 
 - (void)show:(NSDictionary *)params withPromise:(DoricPromise *)promise {
-    dispatch_async(dispatch_get_main_queue(), ^{
+    __weak typeof(self) _self = self;
+    [self.doricContext dispatchToMainQueue:^{
+        __strong typeof(_self) self = _self;
         UIView *superView = self.doricContext.vc.view;
         if (!self.fullScreenView) {
             self.fullScreenView = [[UIView new] also:^(UIView *it) {
@@ -52,12 +54,14 @@ static NSString *TYPE = @"popover";
         [viewNode blend:params[@"props"]];
         [self.fullScreenView.doricLayout apply];
         [promise resolve:nil];
-    });
+    }];
 }
 
 - (void)dismiss:(NSDictionary *)params withPromise:(DoricPromise *)promise {
     NSString *viewId = params[@"id"];
-    dispatch_async(dispatch_get_main_queue(), ^{
+    __weak typeof(self) _self = self;
+    [self.doricContext dispatchToMainQueue:^{
+        __strong typeof(_self) self = _self;
         if (viewId) {
             DoricViewNode *viewNode = [self.doricContext targetViewNode:viewId];
             [self dismissViewNode:viewNode];
@@ -65,7 +69,7 @@ static NSString *TYPE = @"popover";
             [self dismissPopover];
         }
         [promise resolve:nil];
-    });
+    }];
 }
 
 - (void)dismissViewNode:(DoricViewNode *)node {

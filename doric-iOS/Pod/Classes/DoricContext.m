@@ -26,6 +26,7 @@
 #import "DoricConstant.h"
 #import "DoricExtensions.h"
 #import "DoricNativeDriver.h"
+#import "DoricUtil.h"
 
 @implementation DoricContext
 
@@ -115,10 +116,23 @@
 - (void)onHidden {
     [self callEntity:DORIC_ENTITY_HIDDEN withArgumentsArray:@[]];
 }
+
 - (UIViewController *)vc {
-    if(!_vc) {
+    if (!_vc) {
         return [UIApplication sharedApplication].keyWindow.rootViewController;
     }
     return _vc;
+}
+
+
+- (void)dispatchToMainQueue:(_Nonnull dispatch_block_t)block {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        @try {
+            block();
+        } @catch (NSException *exception) {
+            DoricLog(@"dispatchToMainQueue Error:%@", exception.reason);
+            [self.driver.registry onException:exception inContext:self];
+        }
+    });
 }
 @end

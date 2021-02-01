@@ -26,36 +26,42 @@
 @implementation DoricStatusBarPlugin
 
 - (void)setHidden:(NSDictionary *)param withPromise:(DoricPromise *)promise {
-    dispatch_async(dispatch_get_main_queue(), ^{
+    __weak typeof(self) _self = self;
+    [self.doricContext dispatchToMainQueue:^{
+        __strong typeof(_self) self = _self;
         if (self.doricContext.navBar) {
             if ([self.doricContext.navBar isKindOfClass:DoricViewController.class]) {
-                DoricViewController * target = ((DoricViewController *)self.doricContext.navBar);
+                DoricViewController *target = ((DoricViewController *) self.doricContext.navBar);
                 target.statusBarHidden = [param[@"hidden"] boolValue];
                 [target setNeedsStatusBarAppearanceUpdate];
             }
         }
-    });
+    }];
 }
 
 - (void)setMode:(NSDictionary *)param withPromise:(DoricPromise *)promise {
-    dispatch_async(dispatch_get_main_queue(), ^{
+    __weak typeof(self) _self = self;
+    [self.doricContext dispatchToMainQueue:^{
+        __strong typeof(_self) self = _self;
         if (self.doricContext.navBar) {
             if ([self.doricContext.navBar isKindOfClass:DoricViewController.class]) {
-                DoricViewController * target = ((DoricViewController *)self.doricContext.navBar);
+                DoricViewController *target = ((DoricViewController *) self.doricContext.navBar);
                 target.statusBarMode = [param[@"mode"] intValue];
                 [target setNeedsStatusBarAppearanceUpdate];
             }
         }
-    });
+    }];
 }
 
 - (void)setColor:(NSDictionary *)param withPromise:(DoricPromise *)promise {
-    dispatch_async(dispatch_get_main_queue(), ^{
+    __weak typeof(self) _self = self;
+    [self.doricContext dispatchToMainQueue:^{
+        __strong typeof(_self) self = _self;
         if (self.doricContext.navBar) {
             UIColor *color = DoricColor(param[@"color"]);
             [self.doricContext.navBar doric_navBar_setBackgroundColor:color];
         }
-    });
+    }];
 }
 
 @end

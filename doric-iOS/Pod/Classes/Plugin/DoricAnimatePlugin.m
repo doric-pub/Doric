@@ -28,7 +28,9 @@
 
 - (void)animateRender:(NSDictionary *)args withPromise:(DoricPromise *)promise {
     NSNumber *duration = args[@"duration"];
-    dispatch_async(dispatch_get_main_queue(), ^{
+    __weak typeof(self) _self = self;
+    [self.doricContext dispatchToMainQueue:^{
+        __strong typeof(_self) self = _self;
         NSString *viewId = args[@"id"];
         [UIView animateWithDuration:[duration floatValue] / 1000
                          animations:^{
@@ -45,6 +47,6 @@
                          completion:^(BOOL finished) {
                              [promise resolve:nil];
                          }];
-    });
+    }];
 }
 @end

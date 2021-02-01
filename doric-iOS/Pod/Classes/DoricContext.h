@@ -64,6 +64,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)onHidden;
 
 - (DoricViewNode *)targetViewNode:(NSString *)viewId;
+
+- (void)dispatchToMainQueue:(_Nonnull dispatch_block_t)block;
 @end
 
 NS_ASSUME_NONNULL_END

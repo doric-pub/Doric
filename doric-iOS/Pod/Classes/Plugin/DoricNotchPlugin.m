@@ -30,7 +30,9 @@
 }
 
 - (void)inset:(NSDictionary *)argument withPromise:(DoricPromise *)promise {
-    dispatch_async(dispatch_get_main_queue(), ^{
+    __weak typeof(self) _self = self;
+    [self.doricContext dispatchToMainQueue:^{
+        __strong typeof(_self) self = _self;
         if (@available(iOS 11.0, *)) {
             UIView *superView;
             if (self.doricContext.vc) {
@@ -38,25 +40,25 @@
             } else {
                 superView = [UIApplication sharedApplication].windows.lastObject;
             }
-            
+
             CGFloat top = superView.safeAreaInsets.top;
             CGFloat left = superView.safeAreaInsets.left;
             CGFloat bottom = superView.safeAreaInsets.bottom;
             CGFloat right = superView.safeAreaInsets.right;
             [promise resolve:@{
-                @"top": @(top),
-                @"left": @(left),
-                @"bottom": @(bottom),
-                @"right": @(right),
+                    @"top": @(top),
+                    @"left": @(left),
+                    @"bottom": @(bottom),
+                    @"right": @(right),
             }];
         } else {
             [promise resolve:@{
-                @"top": @(0),
-                @"left": @(0),
-                @"bottom": @(0),
-                @"right": @(0),
+                    @"top": @(0),
+                    @"left": @(0),
+                    @"bottom": @(0),
+                    @"right": @(0),
             }];
         }
-    });
+    }];
 }
 @end

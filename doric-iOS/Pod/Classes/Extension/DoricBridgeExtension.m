@@ -33,7 +33,7 @@
 @implementation DoricBridgeExtension
 
 - (id)callNativeWithContextId:(NSString *)contextId module:(NSString *)module method:(NSString *)method callbackId:(NSString *)callbackId argument:(id)argument {
-   __strong DoricContext *context = [[DoricContextManager instance] getContext:contextId];
+    __strong DoricContext *context = [[DoricContextManager instance] getContext:contextId];
     if (context.destroyed) {
         return nil;
     }
@@ -56,7 +56,7 @@
 
 - (id)findClass:(Class)clz target:(id)target context:(DoricContext *)context method:(NSString *)name callbackId:(NSString *)callbackId argument:(id)argument {
     __strong DoricContext *strongContext = context;
-    
+
     unsigned int count;
     id ret = nil;
     Method *methods = class_copyMethodList(clz, &count);
@@ -109,7 +109,7 @@
                     } else {
                         DoricLog(@"CallNative Error:%@", @"Must return object type");
                         [strongContext.driver.registry onLog:DoricLogTypeError
-                                               message:[NSString stringWithFormat:@"CallNative Error:%@", @"Must return object type"]];
+                                                     message:[NSString stringWithFormat:@"CallNative Error:%@", @"Must return object type"]];
                         ret = nil;
                     }
                 }

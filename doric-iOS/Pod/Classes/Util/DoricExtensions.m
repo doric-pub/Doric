@@ -18,6 +18,7 @@
 //
 
 #import "DoricExtensions.h"
+#import "DoricUtil.h"
 
 @implementation NSObject (Doric)
 - (instancetype)also:(void (NS_NOESCAPE ^)(id it))block {
@@ -95,4 +96,81 @@
     return [temp copy];
 }
 
+@end
+
+
+@implementation NSDictionary (Doric)
+- (NSString *)optString:(NSString *)key {
+    return [self optString:key defaultValue:nil];
+}
+
+- (NSNumber *)optNumber:(NSString *)key {
+    return [self optNumber:key defaultValue:nil];
+
+}
+
+- (NSDictionary *)optObject:(NSString *)key {
+    return [self optObject:key defaultValue:nil];
+
+}
+
+- (NSArray *)optArray:(NSString *)key {
+    return [self optArray:key defaultValue:nil];
+}
+
+- (bool)optBool:(NSString *)key {
+    return [self optBool:key defaultValue:NO];
+}
+
+- (NSString *)optString:(NSString *)key defaultValue:(NSString *)value {
+    id val = self[key];
+    if ([val isKindOfClass:NSString.class]) {
+        return val;
+    } else if (val) {
+        DoricLog(@"Doric Type Error: %@, key = %@, value = %@", self, key, val);
+    }
+    return value;
+}
+
+
+- (NSNumber *)optNumber:(NSString *)key defaultValue:(NSNumber *)value {
+    id val = self[key];
+    if ([val isKindOfClass:NSNumber.class]) {
+        return val;
+    } else if (val) {
+        DoricLog(@"Doric Type Error: %@, key = %@, value = %@", self, key, val);
+    }
+    return value;
+}
+
+- (NSDictionary *)optObject:(NSString *)key defaultValue:(NSDictionary *)value {
+    id val = self[key];
+    if ([val isKindOfClass:NSDictionary.class]) {
+        return val;
+    } else if (val) {
+        DoricLog(@"Doric Type Error: %@, key = %@, value = %@", self, key, val);
+    }
+    return value;
+}
+
+
+- (NSArray *)optArray:(NSString *)key defaultValue:(NSArray *)value {
+    id val = self[key];
+    if ([val isKindOfClass:NSArray.class]) {
+        return val;
+    } else if (val) {
+        DoricLog(@"Doric Type Error: %@, key = %@, value = %@", self, key, val);
+    }
+    return value;
+}
+
+- (bool)optBool:(NSString *)key defaultValue:(bool)value {
+    id val = self[key];
+    if ([val isKindOfClass:NSNumber.class]) {
+        return ((NSNumber *) val).boolValue;
+    } else if (val) {
+        DoricLog(@"Doric Type Error: %@, key = %@, value = %@", self, key, val);
+    }
+    return value;
+}
 @end

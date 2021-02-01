@@ -21,8 +21,6 @@
 
 
 @interface NSObject (Doric)
-- (id)apply:(id (NS_NOESCAPE ^)(id it))block;
-
 - (instancetype)also:(void (NS_NOESCAPE ^)(id it))block;
 
 - (void)let:(void (NS_NOESCAPE ^)(id it))block;

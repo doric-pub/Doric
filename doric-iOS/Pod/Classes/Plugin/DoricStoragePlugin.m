@@ -18,12 +18,11 @@
 //
 
 #import "DoricStoragePlugin.h"
+#import "DoricExtensions.h"
 
 #if __has_include(<PINCache/PINCache.h>)
 
 #import <PINCache/PINCache.h>
-#import <DoricCore/Doric.h>
-#import <DoricCore/DoricCore-umbrella.h>
 
 #define DoricCache PINCache
 
@@ -119,6 +118,39 @@
     }];
 }
 @end
+
+#else
+
+@interface DoricCache : NSObject
+- (instancetype)initWithName:(NSString *)prefix rootPath:(NSString *)path;
+
+- (void)setObject:(NSString *)value forKey:(NSString *)key withBlock:(void (^)())block;
+
+- (void)objectForKey:(NSString *)key withBlock:(void (^)(NSString *, id <NSCoding>))block;
+
+- (void)removeObjectForKey:(NSString *)key withBlock:(void (^)(NSString *))block;
+
+- (void)removeAllObjectsWithBlock:(void (^)())pFunction;
+@end
+
+@implementation DoricCache
+- (instancetype)initWithName:(NSString *)prefix rootPath:(NSString *)path {
+    return [self init];
+}
+
+- (void)setObject:(NSString *)value forKey:(NSString *)key withBlock:(void (^)())block {
+}
+
+- (void)objectForKey:(NSString *)key withBlock:(void (^)(NSString *, id <NSCoding>))block {
+}
+
+- (void)removeObjectForKey:(NSString *)key withBlock:(void (^)(NSString *))block {
+}
+
+- (void)removeAllObjectsWithBlock:(void (^)())block {
+}
+@end
+
 #endif
 
 

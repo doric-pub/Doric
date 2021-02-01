@@ -43,3 +43,25 @@
 
 - (NSArray <ObjectType> *)filter:(BOOL (NS_NOESCAPE ^)(ObjectType obj))block;
 @end
+
+@interface NSDictionary (Doric)
+- (NSString *)optString:(NSString *)key;
+
+- (NSNumber *)optNumber:(NSString *)key;
+
+- (NSDictionary *)optObject:(NSString *)key;
+
+- (NSArray *)optArray:(NSString *)key;
+
+- (bool)optBool:(NSString *)key;
+
+- (NSString *)optString:(NSString *)key defaultValue:(NSString *)value;
+
+- (NSNumber *)optNumber:(NSString *)key defaultValue:(NSNumber *)value;
+
+- (NSDictionary *)optObject:(NSString *)key defaultValue:(NSDictionary *)value;
+
+- (NSArray *)optArray:(NSString *)key defaultValue:(NSArray *)value;
+
+- (bool)optBool:(NSString *)key defaultValue:(bool)value;
+@end

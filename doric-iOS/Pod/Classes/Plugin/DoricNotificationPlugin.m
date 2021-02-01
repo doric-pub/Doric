@@ -18,7 +18,6 @@
 //
 
 #import <DoricCore/Doric.h>
-#import <DoricCore/DoricCore-umbrella.h>
 #import "DoricNotificationPlugin.h"
 
 @interface DoricNotificationPlugin ()

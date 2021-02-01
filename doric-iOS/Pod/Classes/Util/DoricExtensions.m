@@ -20,10 +20,6 @@
 #import "DoricExtensions.h"
 
 @implementation NSObject (Doric)
-- (id)apply:(id (^)(NS_NOESCAPE id it))block {
-    return block(self);
-}
-
 - (instancetype)also:(void (NS_NOESCAPE ^)(id it))block {
     block(self);
     return self;

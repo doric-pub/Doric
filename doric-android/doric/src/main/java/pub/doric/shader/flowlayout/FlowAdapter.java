@@ -45,6 +45,7 @@ class FlowAdapter extends RecyclerView.Adapter<FlowAdapter.DoricViewHolder> {
     int itemCount = 0;
     int batchCount = 15;
     SparseArray<String> itemValues = new SparseArray<>();
+    private int loadAnchor = 0;
 
     FlowAdapter(FlowLayoutNode flowLayoutNode) {
         this.flowLayoutNode = flowLayoutNode;
@@ -66,9 +67,8 @@ class FlowAdapter extends RecyclerView.Adapter<FlowAdapter.DoricViewHolder> {
             holder.flowLayoutItemNode.setId(jsObject.getProperty("id").asString().value());
             holder.flowLayoutItemNode.blend(jsObject.getProperty("props").asObject());
         }
-        if (position >= this.itemCount) {
-            this.flowLayoutNode.callJSResponse(this.flowLayoutNode.onLoadMoreFuncId);
-
+        if (position >= this.itemCount && !TextUtils.isEmpty(this.flowLayoutNode.onLoadMoreFuncId)) {
+            callLoadMore();
             StaggeredGridLayoutManager.LayoutParams layoutParams = new StaggeredGridLayoutManager.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     holder.itemView.getLayoutParams().height
@@ -140,6 +140,14 @@ class FlowAdapter extends RecyclerView.Adapter<FlowAdapter.DoricViewHolder> {
             if (subProperties.getProperty("id").asString().value().equals(itemValues.valueAt(i))) {
                 notifyItemChanged(i);
             }
+        }
+    }
+
+
+    private void callLoadMore() {
+        if (loadAnchor != itemCount) {
+            loadAnchor = itemCount;
+            this.flowLayoutNode.callJSResponse(this.flowLayoutNode.onLoadMoreFuncId);
         }
     }
 

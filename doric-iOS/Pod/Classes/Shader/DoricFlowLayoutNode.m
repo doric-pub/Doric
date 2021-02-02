@@ -158,6 +158,7 @@
 @property(nonatomic, copy) NSString *onScrollFuncId;
 @property(nonatomic, copy) NSString *onScrollEndFuncId;
 @property(nonatomic, strong) DoricJSDispatcher *jsDispatcher;
+@property(nonatomic, assign) NSUInteger loadAnchor;
 @end
 
 @implementation DoricFlowLayoutNode
@@ -298,6 +299,14 @@
     [self.view.collectionViewLayout invalidateLayout];
 }
 
+
+- (void)callLoadMore {
+    if (self.itemCount != self.loadAnchor) {
+        self.loadAnchor = self.itemCount;
+        [self callJSResponse:self.onLoadMoreFuncId, nil];
+    }
+}
+
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     return self.itemCount + (self.loadMore ? 1 : 0);
 }
@@ -320,7 +329,7 @@
     [node blend:props];
     node.view.width = (collectionView.width - (self.columnCount - 1) * self.columnSpace) / self.columnCount;
     if (position > 0 && position >= self.itemCount && self.onLoadMoreFuncId) {
-        [self callJSResponse:self.onLoadMoreFuncId, nil];
+        [self callLoadMore];
     }
     [node.view.doricLayout apply];
     [node requestLayout];

@@ -34,4 +34,9 @@ const QString Constant::TEMPLATE_MODULE = QString("Reflect.apply(doric.jsRegiste
 const QString Constant::TEMPLATE_CONTEXT_DESTROY = QString("doric.jsReleaseContext(\"%s\")");
 
 const QString Constant::GLOBAL_DORIC = "doric";
+const QString Constant::DORIC_CONTEXT_INVOKE = "jsCallEntityMethod";
 const QString Constant::DORIC_TIMER_CALLBACK = "jsCallbackTimer";
+
+const QString Constant::DORIC_ENTITY_INIT = "__init__";
+const QString Constant::DORIC_ENTITY_CREATE = "__onCreate__";
+const QString Constant::DORIC_ENTITY_BUILD = "__build__";

@@ -17,7 +17,7 @@ public:
 
     void injectGlobalJSFunction(QString name, QObject *function, QString property) override;
 
-    QJSValue invokeObject(QString objectName, QString functionName, QJSValueList arguments) override;
+    QJSValue invokeObject(QString objectName, QString functionName, QVariantList arguments) override;
 };
 
 #endif // NATIVE_JSE_H

@@ -29,9 +29,9 @@ public:
         return &instance;
     }
 
-    void invokeContextEntityMethod(QString contextId, QString method, QList<QObject> args) override;
+    void invokeContextEntityMethod(QString contextId, QString method, QVariantList args) override;
 
-    void invokeDoricMethod(QString method, QList<QObject> args) override;
+    void invokeDoricMethod(QString method, QVariantList args) override;
 
     void createContext(QString contextId, QString script, QString source) override;
 

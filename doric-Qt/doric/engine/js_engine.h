@@ -22,7 +22,7 @@ public:
 
     ~JSEngine();
 
-    QJSValue invokeDoricMethod(QString method, QJSValueList arguments);
+    QJSValue invokeDoricMethod(QString method, QVariantList arguments);
     void prepareContext(QString contextId, QString script, QString source);
 };
 

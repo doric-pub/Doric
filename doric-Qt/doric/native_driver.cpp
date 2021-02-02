@@ -1,16 +1,21 @@
-#include "native_driver.h"
-#include "async/async_call.h"
-
 #include <functional>
 
-void NativeDriver::invokeContextEntityMethod(QString contextId, QString method, QList<QObject> args)
-{
+#include "native_driver.h"
+#include "async/async_call.h"
+#include "utils/constant.h"
 
+void NativeDriver::invokeContextEntityMethod(QString contextId, QString method, QVariantList args)
+{
+    args.insert(0, QVariant(contextId));
+    args.insert(1, QVariant(method));
+    invokeDoricMethod(Constant::DORIC_CONTEXT_INVOKE, args);
 }
 
-void NativeDriver::invokeDoricMethod(QString method, QList<QObject> args)
+void NativeDriver::invokeDoricMethod(QString method, QVariantList args)
 {
-
+    return AsyncCall::ensureRunInThreadPool(&jsEngine.mJSThreadPool, [this, method, args]{
+        qDebug() << "invokeDoricMethod: " << this->jsEngine.invokeDoricMethod(method, args).toString();
+    });
 }
 
 void NativeDriver::createContext(QString contextId, QString script, QString source)

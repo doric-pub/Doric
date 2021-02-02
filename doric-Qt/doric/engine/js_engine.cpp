@@ -10,6 +10,7 @@
 #include "../utils/constant.h"
 #include "native_log.h"
 #include "native_empty.h"
+#include "native_require.h"
 #include "timer_extension.h"
 #include "bridge_extension.h"
 #include "../utils/utils.h"
@@ -51,11 +52,14 @@ JSEngine::JSEngine(QObject *parent) : QObject(parent)
         NativeEmpty *nativeEmpty = new NativeEmpty();
         mJSE->injectGlobalJSFunction(Constant::INJECT_EMPTY, nativeEmpty, "function");
 
+        // inject require
+        NativeRequire *nativeRequire = new NativeRequire();
+        mJSE->injectGlobalJSFunction(Constant::INJECT_REQUIRE, nativeRequire, "function");
+
         // inject timer set & clear
-        std::function<void(void)> func = [](){};
         TimerExtension *timerExtension = new TimerExtension([this](long timerId){
-            QJSValueList arguments;
-            arguments.append(QJSValue((int)timerId));
+            QVariantList arguments;
+            arguments.push_back(QVariant((int)timerId));
             this->invokeDoricMethod(Constant::DORIC_TIMER_CALLBACK, arguments);
         });
         mJSE->injectGlobalJSFunction(Constant::INJECT_TIMER_SET, timerExtension, "setTimer");
@@ -75,7 +79,7 @@ JSEngine::JSEngine(QObject *parent) : QObject(parent)
     });
 }
 
-QJSValue JSEngine::invokeDoricMethod(QString method, QJSValueList arguments)
+QJSValue JSEngine::invokeDoricMethod(QString method, QVariantList arguments)
 {
     return mJSE->invokeObject(Constant::GLOBAL_DORIC, method, arguments);
 }

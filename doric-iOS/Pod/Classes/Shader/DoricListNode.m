@@ -47,6 +47,7 @@
 @property(nonatomic, copy) NSString *renderItemFuncId;
 @property(nonatomic, copy) NSString *loadMoreViewId;
 @property(nonatomic, assign) BOOL loadMore;
+@property(nonatomic, assign) NSUInteger loadAnchor;
 @property(nonatomic, strong) NSMutableSet <DoricDidScrollBlock> *didScrollBlocks;
 @property(nonatomic, copy) NSString *onScrollFuncId;
 @property(nonatomic, copy) NSString *onScrollEndFuncId;
@@ -124,6 +125,13 @@
     return self.itemCount + (self.loadMore ? 1 : 0);
 }
 
+- (void)callLoadMore {
+    if (self.itemCount != self.loadAnchor) {
+        self.loadAnchor = self.itemCount;
+        [self callJSResponse:self.onLoadMoreFuncId, nil];
+    }
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSUInteger position = (NSUInteger) indexPath.row;
     NSDictionary *model = [self itemModelAt:position];
@@ -131,7 +139,7 @@
     NSString *reuseId = props[@"identifier"];
     if (position > 0 && position >= self.itemCount && self.onLoadMoreFuncId) {
         reuseId = @"doricLoadMoreCell";
-        [self callJSResponse:self.onLoadMoreFuncId, nil];
+        [self callLoadMore];
     }
     DoricTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseId ?: @"doriccell"];
     if (!cell) {

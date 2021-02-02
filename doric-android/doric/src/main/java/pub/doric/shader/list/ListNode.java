@@ -16,7 +16,6 @@
 package pub.doric.shader.list;
 
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 
@@ -63,7 +62,6 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
     private String onScrollFuncId;
     private String onScrollEndFuncId;
     private final DoricJSDispatcher jsDispatcher = new DoricJSDispatcher();
-
     public ListNode(DoricContext doricContext) {
         super(doricContext);
         this.listAdapter = new ListAdapter(this);

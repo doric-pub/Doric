@@ -45,6 +45,7 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
     }
 
     private int itemCount = 0;
+    private int loadAnchor = 0;
 
     @NonNull
     @Override
@@ -62,8 +63,8 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
             holder.listItemNode.setId(jsObject.getProperty("id").asString().value());
             holder.listItemNode.blend(jsObject.getProperty("props").asObject());
         }
-        if (position >= this.listNode.itemCount) {
-            this.listNode.callJSResponse(this.listNode.onLoadMoreFuncId);
+        if (position >= this.listNode.itemCount && !TextUtils.isEmpty(this.listNode.onLoadMoreFuncId)) {
+            callLoadMore();
         }
     }
 
@@ -139,6 +140,13 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
             if (subProperties.getProperty("id").asString().value().equals(listNode.itemValues.valueAt(i))) {
                 notifyItemChanged(i);
             }
+        }
+    }
+
+    private void callLoadMore() {
+        if (loadAnchor != itemCount) {
+            loadAnchor = itemCount;
+            this.listNode.callJSResponse(this.listNode.onLoadMoreFuncId);
         }
     }
 

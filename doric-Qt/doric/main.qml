@@ -12,11 +12,20 @@ ApplicationWindow {
 
         ListView {
             width: parent.width
-            model: 20
-            delegate: ItemDelegate {
-                text: "Item " + (index + 1)
+            model: 1
+            delegate: Rectangle {
+                Column {
+                    anchors.centerIn: parent
+                    Text {
+                        text: {return "Snake.js"}
+                    }
+                }
                 width: parent.width
-                height: 100
+                height: 60
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {demoBridge.navigate(index)}
+                }
             }
         }
     }

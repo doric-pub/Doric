@@ -1,5 +1,8 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
+
+#include "demo/demo_bridge.h"
 
 int main(int argc, char *argv[])
 {
@@ -14,7 +17,11 @@ int main(int argc, char *argv[])
         if (!obj && url == objUrl)
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
-    engine.load(url);
 
+
+    DemoBridge *demoBridge = new DemoBridge();
+    auto context = engine.rootContext();
+    context->setContextProperty("demoBridge", demoBridge);
+    engine.load(url);
     return app.exec();
 }

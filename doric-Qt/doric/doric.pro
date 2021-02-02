@@ -18,14 +18,18 @@ SOURCES += \
         async/settable_future.cpp \
         context.cpp \
         context_manager.cpp \
+        demo/demo_bridge.cpp \
         engine/bridge_extension.cpp \
         engine/js_engine.cpp \
         engine/native_empty.cpp \
         engine/native_jse.cpp \
         engine/native_log.cpp \
+        engine/native_require.cpp \
         engine/timer_extension.cpp \
         main.cpp \
         native_driver.cpp \
+        panel.cpp \
+        shader/root_node.cpp \
         utils/constant.cpp
 
 RESOURCES += qml.qrc
@@ -48,15 +52,19 @@ HEADERS += \
     async/settable_future.h \
     context.h \
     context_manager.h \
+    demo/demo_bridge.h \
     engine/bridge_extension.h \
     engine/interface_jse.h \
     engine/js_engine.h \
     engine/native_empty.h \
     engine/native_jse.h \
     engine/native_log.h \
+    engine/native_require.h \
     engine/timer_extension.h \
     interface_driver.h \
     native_driver.h \
+    panel.h \
+    shader/root_node.h \
     template/singleton.h \
     utils/constant.h \
     utils/count_down_latch.h \

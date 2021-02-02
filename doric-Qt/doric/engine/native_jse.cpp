@@ -35,9 +35,35 @@ void NativeJSE::injectGlobalJSFunction(QString name, QObject *function, QString 
     mJSEngine.globalObject().setProperty(name, functionObject.property(property));
 }
 
-QJSValue NativeJSE::invokeObject(QString objectName, QString functionName, QJSValueList arguments)
+QJSValue NativeJSE::invokeObject(QString objectName, QString functionName, QVariantList arguments)
 {
     QJSValue object = mJSEngine.evaluate(objectName);
     QJSValue function = object.property(functionName);
-    return function.call(arguments);
+
+    QJSValueList args;
+    foreach(QVariant variant, arguments) {
+        if (variant.type() == QVariant::String) {
+            args.push_back(QJSValue(variant.toString()));
+        } else if (variant.type() == QVariant::Map) {
+            QJSValue arg = mJSEngine.newObject();
+            QMap<QString, QVariant> map = variant.toMap();
+            foreach (QString key, map.keys()) {
+                QVariant value = map.value(key);
+                if (value.type() == QVariant::String) {
+                    arg.setProperty(key, value.toString());
+                } else if (value.type() == QVariant::Int) {
+                    arg.setProperty(key, value.toInt());
+                }
+            }
+            args.push_back(arg);
+        }
+    }
+
+    QJSValue result = function.call(args);
+    if (result.isError())
+        qDebug()
+                << "Uncaught exception at line"
+                << result.property("lineNumber").toInt()
+                << ":" << result.toString();
+    return result;
 }

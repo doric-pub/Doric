@@ -2,14 +2,14 @@
 #define INTERFACEDRIVER_H
 
 #include <QString>
-#include <QObject>
+#include <QVariant>
 
 class InterfaceDriver
 {
 public:
-    virtual void invokeContextEntityMethod(QString contextId, QString method, QList<QObject> args) = 0;
+    virtual void invokeContextEntityMethod(QString contextId, QString method, QVariantList args) = 0;
 
-    virtual void invokeDoricMethod(QString method, QList<QObject> args) = 0;
+    virtual void invokeDoricMethod(QString method, QVariantList args) = 0;
 
     virtual void createContext(QString contextId, QString script, QString source) = 0;
 

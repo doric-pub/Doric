@@ -19,7 +19,6 @@ import android.util.Log;
 import android.view.ViewGroup;
 
 import pub.doric.DoricContext;
-import pub.doric.utils.DoricLog;
 
 import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSObject;

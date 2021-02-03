@@ -14,7 +14,7 @@ void NativeDriver::invokeContextEntityMethod(QString contextId, QString method, 
 void NativeDriver::invokeDoricMethod(QString method, QVariantList args)
 {
     return AsyncCall::ensureRunInThreadPool(&jsEngine.mJSThreadPool, [this, method, args]{
-        qDebug() << "invokeDoricMethod: " << this->jsEngine.invokeDoricMethod(method, args).toString();
+        this->jsEngine.invokeDoricMethod(method, args).toString();
     });
 }
 

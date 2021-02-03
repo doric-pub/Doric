@@ -13,7 +13,7 @@ void DemoBridge::navigate(QVariant route)
 {
     switch (route.toInt()) {
     case 0:
-        QString name = "Snake.js";
+        QString name = "Snake.es5.js";
         QString script = Utils::readAssetFile("/doric/bundles", name);
 
         Panel panel;

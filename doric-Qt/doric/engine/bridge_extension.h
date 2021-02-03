@@ -10,7 +10,7 @@ class BridgeExtension : public QObject
 public:
     explicit BridgeExtension(QObject *parent = nullptr);
 
-    void callNative(QString contextId, QString module, QString methodName, QString callbackId, QJSValue jsValue);
+    Q_INVOKABLE void callNative(QString contextId, QString module, QString methodName, QString callbackId, QJSValue jsValue);
 };
 
 #endif // BRIDGEEXTENSION_H

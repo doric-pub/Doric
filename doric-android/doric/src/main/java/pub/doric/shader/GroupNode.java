@@ -43,10 +43,15 @@ public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
     @Override
     protected void blend(F view, String name, JSValue prop) {
         if ("children".equals(name)) {
-            JSArray ids = prop.asArray();
             mChildViewIds.clear();
-            for (int i = 0; i < ids.size(); i++) {
-                mChildViewIds.add(ids.get(i).asString().value());
+            if (prop.isArray()) {
+                JSArray ids = prop.asArray();
+                for (int i = 0; i < ids.size(); i++) {
+                    JSValue value = ids.get(i);
+                    if (value.isString()) {
+                        mChildViewIds.add(value.asString().value());
+                    }
+                }
             }
         } else {
             super.blend(view, name, prop);

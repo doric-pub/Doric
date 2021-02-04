@@ -14,25 +14,25 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        async/async_result.cpp \
-        async/settable_future.cpp \
-        context.cpp \
-        context_manager.cpp \
-        demo/demo_bridge.cpp \
-        engine/bridge_extension.cpp \
-        engine/js_engine.cpp \
-        engine/native_empty.cpp \
-        engine/native_jse.cpp \
-        engine/native_log.cpp \
-        engine/native_require.cpp \
-        engine/timer_extension.cpp \
+        DoricContext.cpp \
+        DoricContextManager.cpp \
+        DoricNativeDriver.cpp \
+        DoricPanel.cpp \
+        DoricRegistry.cpp \
+        async/DoricAsyncResult.cpp \
+        async/DoricSettableFuture.cpp \
+        demo/DoricDemoBridge.cpp \
+        engine/DoricBridgeExtension.cpp \
+        engine/DoricJSEngine.cpp \
+        engine/DoricNativeEmpty.cpp \
+        engine/DoricNativeJSE.cpp \
+        engine/DoricNativeLog.cpp \
+        engine/DoricNativeRequire.cpp \
+        engine/DoricTimerExtension.cpp \
         main.cpp \
-        native_driver.cpp \
-        panel.cpp \
-        plugin/shader_plugin.cpp \
-        registry.cpp \
-        shader/root_node.cpp \
-        utils/constant.cpp
+        plugin/DoricShaderPlugin.cpp \
+        shader/DoricRootNode.cpp \
+        utils/DoricConstant.cpp
 
 RESOURCES += qml.qrc
 
@@ -48,29 +48,29 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    async/async_call.h \
-    async/async_result.h \
-    async/callback.h \
-    async/settable_future.h \
-    context.h \
-    context_manager.h \
-    demo/demo_bridge.h \
-    engine/bridge_extension.h \
-    engine/interface_jse.h \
-    engine/js_engine.h \
-    engine/native_empty.h \
-    engine/native_jse.h \
-    engine/native_log.h \
-    engine/native_require.h \
-    engine/timer_extension.h \
-    interface_driver.h \
-    native_driver.h \
-    panel.h \
-    plugin/shader_plugin.h \
-    registry.h \
-    shader/root_node.h \
-    template/singleton.h \
-    utils/constant.h \
-    utils/count_down_latch.h \
-    utils/object_factory.h \
-    utils/utils.h
+    DoricContext.h \
+    DoricContextManager.h \
+    DoricInterfaceDriver.h \
+    DoricNativeDriver.h \
+    DoricPanel.h \
+    DoricRegistry.h \
+    async/DoricAsyncCall.h \
+    async/DoricAsyncResult.h \
+    async/DoricCallback.h \
+    async/DoricSettableFuture.h \
+    demo/DoricDemoBridge.h \
+    engine/DoricBridgeExtension.h \
+    engine/DoricInterfaceJSE.h \
+    engine/DoricJSEngine.h \
+    engine/DoricNativeEmpty.h \
+    engine/DoricNativeJSE.h \
+    engine/DoricNativeLog.h \
+    engine/DoricNativeRequire.h \
+    engine/DoricTimerExtension.h \
+    plugin/DoricShaderPlugin.h \
+    shader/DoricRootNode.h \
+    template/DoricSingleton.h \
+    utils/DoricConstant.h \
+    utils/DoricCountDownLatch.h \
+    utils/DoricObjectFactory.h \
+    utils/DoricUtils.h

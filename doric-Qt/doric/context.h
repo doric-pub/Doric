@@ -10,6 +10,7 @@ class Context
 {
 private:
     QString mContextId;
+    QMap<QString, QObject*> mPluginMap;
     RootNode *mRootNode;
     QString source;
     QString script;
@@ -29,6 +30,8 @@ public:
     void callEntity(QString methodName, QVariantList args);
 
     InterfaceDriver* getDriver();
+
+    QObject* obtainPlugin(QString name);
 };
 
 #endif // CONTEXT_H

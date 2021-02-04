@@ -29,3 +29,8 @@ void NativeDriver::destroyContext(QString contextId)
 {
 
 }
+
+Registry *NativeDriver::getRegistry()
+{
+    return this->jsEngine.getRegistry();
+}

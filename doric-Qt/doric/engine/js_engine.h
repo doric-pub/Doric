@@ -5,12 +5,14 @@
 #include <QThreadPool>
 
 #include "interface_jse.h"
+#include "../registry.h"
 
 class JSEngine : public QObject
 {
     Q_OBJECT
 private:
     InterfaceJSE *mJSE;
+    Registry *mRegistry = new Registry();
 
     void loadBuiltinJS(QString assetName);
     QString packageContextScript(QString contextId, QString content);
@@ -22,8 +24,9 @@ public:
 
     ~JSEngine();
 
-    QJSValue invokeDoricMethod(QString method, QVariantList arguments);
     void prepareContext(QString contextId, QString script, QString source);
+    QJSValue invokeDoricMethod(QString method, QVariantList arguments);
+    Registry *getRegistry();
 };
 
 #endif // JSENGINE_H

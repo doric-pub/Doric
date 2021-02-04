@@ -218,7 +218,7 @@
                 if (self.loadCallbackId.length > 0) {
                     [self callJSResponse:self.loadCallbackId, nil];
                 }
-            } else {
+            } else if (image && stage == YYWebImageStageFinished) {
                 if (image.scale != self.imageScale) {
                     image = [YYImage imageWithCGImage:image.CGImage scale:self.imageScale orientation:image.imageOrientation];
                     self.view.image = image;

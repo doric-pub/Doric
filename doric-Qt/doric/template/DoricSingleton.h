@@ -12,8 +12,8 @@ private:
 
 public:
   static DoricSingleton *getInstance() {
-    static DoricSingleton locla_s;
-    return &locla_s;
+    static DoricSingleton instance;
+    return &instance;
   }
 };
 

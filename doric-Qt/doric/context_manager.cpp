@@ -8,3 +8,8 @@ Context *ContextManager::createContext(QString script, QString source, QString e
     context->getDriver()->createContext(QString::number(contextId), script, source);
     return context;
 }
+
+Context *ContextManager::getContext(QString contextId)
+{
+    return contextMap->take(contextId);
+}

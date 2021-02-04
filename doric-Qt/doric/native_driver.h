@@ -12,12 +12,10 @@ private:
     static NativeDriver *local_instance;
     NativeDriver()
     {
-        qDebug() << "constructor";
     }
 
     ~NativeDriver()
     {
-        qDebug() << "destructor";
     }
 
     JSEngine jsEngine;
@@ -36,5 +34,7 @@ public:
     void createContext(QString contextId, QString script, QString source) override;
 
     void destroyContext(QString contextId) override;
+
+    Registry * getRegistry() override;
 };
 #endif // NATIVEDRIVER_H

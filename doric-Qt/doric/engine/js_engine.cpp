@@ -79,6 +79,11 @@ JSEngine::JSEngine(QObject *parent) : QObject(parent)
     });
 }
 
+void JSEngine::prepareContext(QString contextId, QString script, QString source)
+{
+    mJSE->loadJS(packageContextScript(contextId, script), "Context://" + source);
+}
+
 QJSValue JSEngine::invokeDoricMethod(QString method, QVariantList arguments)
 {
     return mJSE->invokeObject(Constant::GLOBAL_DORIC, method, arguments);
@@ -90,11 +95,6 @@ void JSEngine::loadBuiltinJS(QString assetName)
     QString result = mJSE->loadJS(script, "Assets://" + assetName);
 }
 
-void JSEngine::prepareContext(QString contextId, QString script, QString source)
-{
-    mJSE->loadJS(packageContextScript(contextId, script), "Context://" + source);
-}
-
 QString JSEngine::packageContextScript(QString contextId, QString content)
 {
     return QString(Constant::TEMPLATE_CONTEXT_CREATE).replace("%s1", content).replace("%s2", contextId).replace("%s3", contextId);
@@ -103,6 +103,11 @@ QString JSEngine::packageContextScript(QString contextId, QString content)
 QString JSEngine::packageModuleScript(QString moduleName, QString content)
 {
     return QString(Constant::TEMPLATE_MODULE).replace("%s1", moduleName).replace("%s2", content);
+}
+
+Registry *JSEngine::getRegistry()
+{
+    return this->mRegistry;
 }
 
 JSEngine::~JSEngine()

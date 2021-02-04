@@ -4,6 +4,8 @@
 #include <QString>
 #include <QVariant>
 
+#include "registry.h"
+
 class InterfaceDriver
 {
 public:
@@ -14,6 +16,8 @@ public:
     virtual void createContext(QString contextId, QString script, QString source) = 0;
 
     virtual void destroyContext(QString contextId) = 0;
+
+    virtual Registry* getRegistry() = 0;
 };
 
 #endif // INTERFACEDRIVER_H

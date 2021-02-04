@@ -11,12 +11,10 @@ private:
     static ContextManager *local_instance;
     ContextManager()
     {
-        qDebug() << "ContextManager create";
     }
 
     ~ContextManager()
     {
-        qDebug() << "ContextManager destroy";
     }
 
     QAtomicInt *counter = new QAtomicInt();
@@ -30,6 +28,8 @@ public:
     }
 
     Context *createContext(QString script, QString source, QString extra);
+
+    Context *getContext(QString contextId);
 };
 
 #endif // CONTEXTMANAGER_H

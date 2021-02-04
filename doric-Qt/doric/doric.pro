@@ -29,6 +29,8 @@ SOURCES += \
         main.cpp \
         native_driver.cpp \
         panel.cpp \
+        plugin/shader_plugin.cpp \
+        registry.cpp \
         shader/root_node.cpp \
         utils/constant.cpp
 
@@ -64,8 +66,11 @@ HEADERS += \
     interface_driver.h \
     native_driver.h \
     panel.h \
+    plugin/shader_plugin.h \
+    registry.h \
     shader/root_node.h \
     template/singleton.h \
     utils/constant.h \
     utils/count_down_latch.h \
+    utils/object_factory.h \
     utils/utils.h

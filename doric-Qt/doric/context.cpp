@@ -60,3 +60,14 @@ InterfaceDriver* Context::getDriver()
     }
     return driver;
 }
+
+QObject* Context::obtainPlugin(QString name)
+{
+    if (mPluginMap.keys().contains(name)) {
+        return mPluginMap.value(name);
+    } else {
+        QObject *plugin = getDriver()->getRegistry()->pluginInfoMap.createObject(name);
+        mPluginMap.insert(name, plugin);
+        return plugin;
+    }
+}

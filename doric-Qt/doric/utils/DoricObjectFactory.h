@@ -1,9 +1,9 @@
+#ifndef OBJECTFACTORY_H
+#define OBJECTFACTORY_H
+
 #include <QByteArray>
 #include <QHash>
 #include <QMetaObject>
-
-#ifndef OBJECTFACTORY_H
-#define OBJECTFACTORY_H
 
 class DoricObjectFactory {
 public:

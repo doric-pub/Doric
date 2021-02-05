@@ -1,5 +1,13 @@
 import globLib, { IOptions } from "glob";
 
+export async function delay(timeout: number) {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve('');
+        }, timeout);
+    });
+}
+
 export function getAssetsDir() {
     return `${__dirname}/../assets`;
 }

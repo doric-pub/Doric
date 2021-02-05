@@ -3,7 +3,7 @@
 import commander from "commander"
 import { build, clean } from "./actions";
 import create from "./create"
-
+import dev from "./dev"
 commander
     .command('create <name>')
     .action(async function (name, cmd) {
@@ -16,7 +16,8 @@ commander
     })
 commander
     .command('dev')
-    .action(function () {
+    .action(async function () {
+        await dev()
     })
 commander
     .command('build')

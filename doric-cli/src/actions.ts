@@ -17,16 +17,21 @@ export async function clean() {
     await Shell.exec("rm", ["-rf", "bundle"]);
 }
 
-export async function doMerge(jsFile: string) {
-    const mappingFile = `${jsFile}.map`;
+async function doMerge(jsFile: string) {
+    const mapFile = `${jsFile}.map`;
     console.log(`Bundle -> ${jsFile.green}`);
-    if (!fs.existsSync(mappingFile)) {
+    if (!fs.existsSync(mapFile)) {
         return;
     }
-    console.log(`       -> ${mappingFile.green}`);
+    console.log(`       -> ${mapFile.green}`);
+    await mergeMap(mapFile);
+}
+
+
+export async function mergeMap(mapFile: string) {
     const mergedMap = createMergedSourceMapFromFiles([
-        mappingFile.replace(/bundle\//, 'build/'),
-        mappingFile,
+        mapFile.replace(/bundle\//, 'build/'),
+        mapFile,
     ], true);
-    await fs.promises.writeFile(mappingFile, mergedMap);
+    await fs.promises.writeFile(mapFile, mergedMap);
 }

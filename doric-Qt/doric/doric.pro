@@ -32,7 +32,8 @@ SOURCES += \
         main.cpp \
         plugin/DoricShaderPlugin.cpp \
         shader/DoricRootNode.cpp \
-        utils/DoricConstant.cpp
+        utils/DoricConstant.cpp \
+        utils/DoricContextHolder.cpp
 
 RESOURCES += qml.qrc
 
@@ -67,10 +68,12 @@ HEADERS += \
     engine/DoricNativeLog.h \
     engine/DoricNativeRequire.h \
     engine/DoricTimerExtension.h \
+    plugin/DoricNativePlugin.h \
     plugin/DoricShaderPlugin.h \
     shader/DoricRootNode.h \
     template/DoricSingleton.h \
     utils/DoricConstant.h \
+    utils/DoricContextHolder.h \
     utils/DoricCountDownLatch.h \
     utils/DoricObjectFactory.h \
     utils/DoricUtils.h

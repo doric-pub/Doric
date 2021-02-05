@@ -19,7 +19,6 @@ void DoricBridgeExtension::callNative(QString contextId, QString module,
                               Qt::DirectConnection, QGenericReturnArgument(),
                               Q_ARG(QJSValue, jsValue),
                               Q_ARG(QString, callbackId));
-    qDebug() << plugin;
   }
   qDebug() << "contextId: " + contextId;
   qDebug() << "module: " + module;

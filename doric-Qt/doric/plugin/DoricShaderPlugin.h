@@ -4,10 +4,12 @@
 #include <QJSValue>
 #include <QObject>
 
-class DoricShaderPlugin : public QObject {
+#include "DoricNativePlugin.h"
+
+class DoricShaderPlugin : public DoricNativePlugin {
   Q_OBJECT
 public:
-  DoricShaderPlugin(QObject *parent);
+  using DoricNativePlugin::DoricNativePlugin;
 
   Q_INVOKABLE void render(QJSValue jsValue, QString callbackId);
 };

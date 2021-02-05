@@ -1,7 +1,9 @@
 #include "DoricContext.h"
 #include "DoricContextManager.h"
 #include "DoricNativeDriver.h"
+
 #include "utils/DoricConstant.h"
+#include "utils/DoricContextHolder.h"
 
 DoricContext::DoricContext(QString contextId, QString source, QString extra) {
   this->mRootNode = new DoricRootNode();
@@ -63,6 +65,7 @@ QObject *DoricContext::obtainPlugin(QString name) {
   } else {
     QObject *plugin =
         getDriver()->getRegistry()->pluginInfoMap.createObject(name);
+    dynamic_cast<DoricContextHolder *>(plugin)->setContext(this);
     mPluginMap.insert(name, plugin);
     return plugin;
   }

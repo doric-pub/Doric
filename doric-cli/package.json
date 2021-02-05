@@ -2,12 +2,16 @@
   "name": "doric-cli",
   "version": "0.6.13",
   "description": "Doric command line tools",
-  "main": "index.js",
+  "main": "dist/index.js",
   "bin": {
-    "doric": "index.js"
+    "doric": "dist/index.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "tsc && node dist/index.js",
+    "clean": "rm -rf dist",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "npm run clean && npm run build"
   },
   "repository": {
     "type": "git",
@@ -20,8 +24,10 @@
   },
   "homepage": "https://github.com/penfeizhou/doric#readme",
   "dependencies": {
+    "@types/node": "^14.14.25",
     "child_process": "^1.0.2",
     "chokidar": "^3.4.1",
+    "colors": "^1.4.0",
     "commander": "^6.0.0",
     "keypress": "^0.2.1",
     "nodejs-websocket": "^1.7.2",

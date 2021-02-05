@@ -1,0 +1,5 @@
+Podfile.lock
+*.xcworkspace/
+Pods/
+.idea/
+*.xcodeproj/xcuserdata/

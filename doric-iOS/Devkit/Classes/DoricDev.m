@@ -28,6 +28,16 @@
 #import "DoricWSClient.h"
 #import "DoricDebugDriver.h"
 #import "DoricDevViewController.h"
+#import "DoricDevMonitor.h"
+
+@interface DoricDevLibrary : DoricLibrary
+@end
+
+@implementation DoricDevLibrary
+- (void)load:(DoricRegistry *)registry {
+
+}
+@end
 
 @interface DoricDev ()
 @property(nonatomic, strong) DoricWSClient *wsclient;
@@ -46,6 +56,12 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onEnterDebugEvent) name:@"EnterDebugEvent" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onStopDebugEvent) name:@"StopDebugEvent" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onDebuggerReadyEvent) name:@"DebuggerReadyEvent" object:nil];
+        [Doric registerLibrary:[DoricDevLibrary new]];
+        NSValue *value = DoricContextManager.instance.aliveContexts.firstObject;
+        if (value) {
+            DoricContext *context = value.nonretainedObjectValue;
+            [context.driver.registry registerMonitor:[DoricDevMonitor new]];
+        }
     }
     return self;
 }

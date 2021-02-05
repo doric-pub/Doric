@@ -9,9 +9,12 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+
 import pub.doric.Doric;
 import pub.doric.DoricContext;
 import pub.doric.DoricContextManager;
+import pub.doric.DoricLibrary;
+import pub.doric.DoricRegistry;
 import pub.doric.devkit.event.ConnectExceptionEvent;
 import pub.doric.devkit.event.EOFExceptionEvent;
 import pub.doric.devkit.event.EnterDebugEvent;
@@ -31,6 +34,16 @@ public class DevKit implements IDevKit {
     }
 
     private DevKit() {
+        Doric.registerLibrary(new DoricLibrary() {
+            @Override
+            public void load(DoricRegistry registry) {
+                registry.registerMonitor(new DoricDevMonitor());
+            }
+        });
+        for (DoricContext context : DoricContextManager.aliveContexts()) {
+            context.getDriver().getRegistry().registerMonitor(new DoricDevMonitor());
+            break;
+        }
         EventBus.getDefault().register(this);
     }
 

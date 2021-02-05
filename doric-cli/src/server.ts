@@ -50,11 +50,11 @@ export async function createServer() {
                     break;
                 case 'LOG':
                     if (resultObject.data.type == 'DEFAULT') {
-                        console.log((resultObject.data.message as string).green);
+                        console.log(`>>>>>>${(resultObject.data.message as string).green}>>>>>>`);
                     } else if (resultObject.data.type == 'ERROR') {
-                        console.log((resultObject.data.message as string).red);
+                        console.log(`>>>>>>${(resultObject.data.message as string).red}>>>>>>`);
                     } else if (resultObject.data.type == 'WARN') {
-                        console.log((resultObject.data.message as string).yellow);
+                        console.log(`>>>>>>${(resultObject.data.message as string).yellow}>>>>>>`);
                     }
                     break
             }

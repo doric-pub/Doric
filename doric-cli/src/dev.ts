@@ -60,12 +60,20 @@ export default async function dev() {
   await delay(3000);
   console.warn("Start watching");
   server.listen(7777);
+  const cachedContents: Record<string, string> = {}
   chokidar
     .watch(process.cwd() + "/bundle", {
       ignored: /.*?\.map/,
       alwaysStat: true,
     })
     .on("change", (jsFile) => {
+      const content = fs.readFileSync(jsFile, "utf-8");
+      if (cachedContents[jsFile]) {
+        if (content.indexOf(cachedContents[jsFile]) >= 0) {
+          return;
+        }
+      }
+      cachedContents[jsFile] = content;
       console.log("*******", jsFile.replace(process.cwd(), "")
         .replace("/bundle/src/", "")
         .replace(".js", "")
@@ -74,23 +82,21 @@ export default async function dev() {
         console.log("debugging, hot reload by pass");
         return;
       }
-      fs.readFile(jsFile, "utf-8", (error, data) => {
-        try {
-          const sourceMap = mergeMap(`${jsFile}.map`);
-          server.connections.forEach((e: any) => {
-            e.sendText(
-              JSON.stringify({
-                cmd: "RELOAD",
-                script: data,
-                source: (jsFile.match(/[^/\\]*$/) || [""])[0],
-                sourceMap,
-              })
-            );
-          });
-        } catch (e) {
-          console.error(e);
-        }
-      });
+      try {
+        const sourceMap = mergeMap(`${jsFile}.map`);
+        server.connections.forEach((e: any) => {
+          e.sendText(
+            JSON.stringify({
+              cmd: "RELOAD",
+              script: content,
+              source: (jsFile.match(/[^/\\]*$/) || [""])[0],
+              sourceMap,
+            })
+          );
+        });
+      } catch (e) {
+        console.error(e);
+      }
     });
 
 

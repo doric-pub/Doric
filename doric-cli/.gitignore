@@ -1,7 +1,6 @@
 node_modules/
-build/
-bundle/
 .project
 .classpath
 .settings/
 package-lock.json
+dist

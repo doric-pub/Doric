@@ -30,7 +30,7 @@ function doMerge(startPath, fileName) {
     if (filePath.indexOf('.es5.') >= 0){
         return
     }
-    console.log('File change:', filePath)
+    console.log('File changed:', filePath)
     const mergedMap = SourceMapMerger.createMergedSourceMapFromFiles([
         filePath.replace(/bundle\//, 'build/'),
         filePath,
@@ -38,6 +38,7 @@ function doMerge(startPath, fileName) {
     fs.writeFileSync(filePath, mergedMap)
     return mergedMap
 }
+
 function mergeMappings() {
     fromDir("bundle", ".map")
 }

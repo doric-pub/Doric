@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import commander from "commander"
+import { build, clean } from "./actions";
 import create from "./create"
 
 commander
@@ -19,10 +20,12 @@ commander
     })
 commander
     .command('build')
-    .action(function () {
+    .action(async function () {
+        await build();
     })
 commander
     .command('clean')
-    .action(function () {
+    .action(async function () {
+        await clean();
     })
 commander.parse(process.argv)

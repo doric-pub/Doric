@@ -19,6 +19,11 @@ void DoricNativeDriver::invokeDoricMethod(QString method, QVariantList args) {
       });
 }
 
+DoricAsyncResult *DoricNativeDriver::asyncCall(QRunnable *runnable,
+                                               DoricThreadMode mode) {
+  return NULL;
+}
+
 void DoricNativeDriver::createContext(QString contextId, QString script,
                                       QString source) {
   DoricAsyncCall::ensureRunInThreadPool(

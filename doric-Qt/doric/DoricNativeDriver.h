@@ -26,6 +26,8 @@ public:
 
   void invokeDoricMethod(QString method, QVariantList args) override;
 
+  DoricAsyncResult * asyncCall(QRunnable *runnable, DoricThreadMode mode) override;
+
   void createContext(QString contextId, QString script,
                      QString source) override;
 

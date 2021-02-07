@@ -29,9 +29,12 @@ async function doMerge(jsFile: string) {
 
 
 export async function mergeMap(mapFile: string) {
-    const mergedMap = createMergedSourceMapFromFiles([
-        mapFile.replace(/bundle\//, 'build/'),
-        mapFile,
-    ], true);
-    await fs.promises.writeFile(mapFile, mergedMap);
+    const buildMap = mapFile.replace(/bundle\//, 'build/')
+    if (fs.existsSync(buildMap)) {
+        const mergedMap = createMergedSourceMapFromFiles([
+            buildMap,
+            mapFile,
+        ], true);
+        await fs.promises.writeFile(mapFile, mergedMap);
+    }
 }

@@ -76,4 +76,5 @@ HEADERS += \
     utils/DoricContextHolder.h \
     utils/DoricCountDownLatch.h \
     utils/DoricObjectFactory.h \
+    utils/DoricThreadMode.h \
     utils/DoricUtils.h

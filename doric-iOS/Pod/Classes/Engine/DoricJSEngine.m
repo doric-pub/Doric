@@ -87,9 +87,9 @@
                 @"deviceBrand": @"Apple",
                 @"deviceModel": platform,
         };
+        self.registry = [[DoricRegistry alloc] init];
         [self ensureRunOnJSThread:^() {
             self.timers = [[NSMutableDictionary alloc] init];
-            self.registry = [[DoricRegistry alloc] init];
             self.bridgeExtension = [DoricBridgeExtension new];
             self.bridgeExtension.registry = self.registry;
             [self initJSEngine];

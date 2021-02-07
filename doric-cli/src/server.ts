@@ -8,19 +8,20 @@ export async function createServer() {
     let contextId: string = "0"
     let clientConnection: any = null
     let debuggerConnection: any = null
+    let deviceId = 0
     const server = (ws as any).createServer((connection: any) => {
+        let thisDeviceId = deviceId++
         console.log('Connected', connection.headers.host)
         if (connection.headers.host.startsWith("localhost")) {
-            console.log(`Debugger ${connection.key} attached to dev kit`.green)
+            console.log(`Debugger ${thisDeviceId} attached to dev kit`.green)
             debuggerConnection = connection
             clientConnection.sendText(JSON.stringify({
                 cmd: 'SWITCH_TO_DEBUG',
                 contextId: contextId
             }), () => { })
         } else {
-            console.log(`Client ${connection.key} attached to dev kit`.green)
+            console.log(`Client ${thisDeviceId} attached to dev kit`.green)
         }
-
         connection.on('text', function (result: string) {
             let resultObject = JSON.parse(result)
             switch (resultObject.cmd) {
@@ -49,12 +50,19 @@ export async function createServer() {
                     console.log(resultObject.data.exception.red);
                     break;
                 case 'LOG':
+                    const date = new Date
+                    const format = function (num: number) {
+                        return (Array(2).join("0") + num).slice(-2);
+                    };
+                    const timeStr = `${format(date.getHours())}:${format(date.getMinutes())}:${format(date.getSeconds())}.${(Array(3).join("0") + date.getMilliseconds()).slice(-3)}`
+                    let logContent = resultObject.data.message as string
+
                     if (resultObject.data.type == 'DEFAULT') {
-                        console.log(`>>>>>>${(resultObject.data.message as string).green}>>>>>>`);
+                        console.log(`${timeStr} Device ${thisDeviceId} ${"[I]".green} ${logContent.green}`.bgBlue);
                     } else if (resultObject.data.type == 'ERROR') {
-                        console.log(`>>>>>>${(resultObject.data.message as string).red}>>>>>>`);
+                        console.log(`${timeStr} Device ${thisDeviceId} ${"[E]".green} ${logContent.green}`.bgRed);
                     } else if (resultObject.data.type == 'WARN') {
-                        console.log(`>>>>>>${(resultObject.data.message as string).yellow}>>>>>>`);
+                        console.log(`${timeStr.black} ${("Device " + thisDeviceId).black} ${"[W]".green} ${logContent.green}`.bgYellow);
                     }
                     break
             }

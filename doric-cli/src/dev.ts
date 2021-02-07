@@ -83,7 +83,10 @@ export default async function dev() {
         return;
       }
       try {
-        const sourceMap = mergeMap(`${jsFile}.map`);
+        const sourceMap = `${jsFile}.map`
+        if (fs.existsSync(sourceMap)) {
+          mergeMap(sourceMap);
+        }
         server.connections.forEach((e: any) => {
           e.sendText(
             JSON.stringify({

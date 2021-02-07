@@ -41,6 +41,9 @@ class CounterVM extends ViewModel<CountModel, CounterView> {
     }
     onBind(s: CountModel, vh: CounterView) {
         vh.number.text = `${s.count}`
+        log("onBind\nseee")
+        logw("onBind")
+        loge("onBind")
     }
 }
 

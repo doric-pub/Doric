@@ -14,6 +14,7 @@ import pub.doric.Doric;
 import pub.doric.DoricContext;
 import pub.doric.DoricContextManager;
 import pub.doric.DoricLibrary;
+import pub.doric.DoricNativeDriver;
 import pub.doric.DoricRegistry;
 import pub.doric.devkit.event.ConnectExceptionEvent;
 import pub.doric.devkit.event.EOFExceptionEvent;
@@ -34,16 +35,7 @@ public class DevKit implements IDevKit {
     }
 
     private DevKit() {
-        Doric.registerLibrary(new DoricLibrary() {
-            @Override
-            public void load(DoricRegistry registry) {
-                registry.registerMonitor(new DoricDevMonitor());
-            }
-        });
-        for (DoricContext context : DoricContextManager.aliveContexts()) {
-            context.getDriver().getRegistry().registerMonitor(new DoricDevMonitor());
-            break;
-        }
+        DoricNativeDriver.getInstance().getRegistry().registerMonitor(new DoricDevMonitor());
         EventBus.getDefault().register(this);
     }
 

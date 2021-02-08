@@ -32,6 +32,7 @@ SOURCES += \
         main.cpp \
         plugin/DoricShaderPlugin.cpp \
         shader/DoricRootNode.cpp \
+        shader/DoricViewNode.cpp \
         utils/DoricConstant.cpp \
         utils/DoricContextHolder.cpp
 
@@ -71,6 +72,7 @@ HEADERS += \
     plugin/DoricNativePlugin.h \
     plugin/DoricShaderPlugin.h \
     shader/DoricRootNode.h \
+    shader/DoricViewNode.h \
     template/DoricSingleton.h \
     utils/DoricConstant.h \
     utils/DoricContextHolder.h \

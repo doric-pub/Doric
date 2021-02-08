@@ -19,8 +19,15 @@ void DoricNativeDriver::invokeDoricMethod(QString method, QVariantList args) {
       });
 }
 
-DoricAsyncResult *DoricNativeDriver::asyncCall(QRunnable *runnable,
+DoricAsyncResult *DoricNativeDriver::asyncCall(std::function<void()> lambda,
                                                DoricThreadMode mode) {
+  switch (mode) {
+  case UI:
+    break;
+  case JS:
+    DoricAsyncCall::ensureRunInThreadPool(&jsEngine.mJSThreadPool, lambda);
+    break;
+  }
   return NULL;
 }
 

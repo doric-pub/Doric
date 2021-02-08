@@ -1,5 +1,8 @@
-#include "DoricNativeJSE.h"
 #include <QDebug>
+#include <QJSValueIterator>
+
+#include "../utils/DoricUtils.h"
+#include "DoricNativeJSE.h"
 
 DoricNativeJSE::DoricNativeJSE() {
   mJSEngine.installExtensions(QJSEngine::AllExtensions);
@@ -34,6 +37,9 @@ void DoricNativeJSE::injectGlobalJSFunction(QString name, QObject *function,
 
 QJSValue DoricNativeJSE::invokeObject(QString objectName, QString functionName,
                                       QVariantList arguments) {
+  QString script = DoricUtils::readAssetFile("/test", "test.js");
+  mJSEngine.evaluate(script);
+
   QJSValue object = mJSEngine.evaluate(objectName);
   QJSValue function = object.property(functionName);
 
@@ -58,13 +64,11 @@ QJSValue DoricNativeJSE::invokeObject(QString objectName, QString functionName,
 
   QJSValue result = function.call(args);
   if (result.isError()) {
-    qDebug() << "++++++++++++++++++++++++";
-    qCritical() << "Uncaught exception at line"
-                << result.property("lineNumber").toInt() << ":"
-                << result.toString();
+    qCritical() << "++++++++++++++++++++++++++++++++++++++++++++++++";
+    qCritical() << result.toString();
     QStringList stacktraces = result.property("stack").toString().split("\n");
     foreach (QString stacktrace, stacktraces) { qDebug() << stacktrace; }
-    qDebug() << "------------------------";
+    qCritical() << "------------------------------------------------";
   }
 
   return result;

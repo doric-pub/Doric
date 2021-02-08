@@ -19,6 +19,7 @@ import android.util.Log;
 
 import com.google.gson.JsonObject;
 
+import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import pub.doric.DoricContext;
@@ -39,6 +40,7 @@ public class DoricDevMonitor implements IDoricMonitor {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("source", "In source file: " + (context != null ? context.getSource() : "Unknown"));
         StringWriter stringWriter = new StringWriter();
+        e.printStackTrace(new PrintWriter(stringWriter));
         jsonObject.addProperty("exception", stringWriter.toString());
         DevKit.getInstance().sendDevCommand(IDevKit.Command.EXCEPTION, jsonObject);
     }

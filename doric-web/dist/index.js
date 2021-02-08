@@ -3648,6 +3648,10 @@ __decorate$a([
     Property,
     __metadata$a("design:type", Number)
 ], Input.prototype, "maxLength", void 0);
+__decorate$a([
+    Property,
+    __metadata$a("design:type", Boolean)
+], Input.prototype, "password", void 0);
 (function (InputType) {
     InputType[InputType["Default"] = 0] = "Default";
     InputType[InputType["Number"] = 1] = "Number";

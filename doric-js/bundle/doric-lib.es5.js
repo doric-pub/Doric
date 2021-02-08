@@ -2711,6 +2711,10 @@ var Input = /** @class */ (function (_super) {
         Property,
         __metadata$a("design:type", Number)
     ], Input.prototype, "maxLength", void 0);
+    __decorate$a([
+        Property,
+        __metadata$a("design:type", Boolean)
+    ], Input.prototype, "password", void 0);
     return Input;
 }(View));
 (function (InputType) {

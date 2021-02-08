@@ -24,6 +24,7 @@ import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -123,23 +124,68 @@ public class InputNode extends ViewNode<EditText> implements TextWatcher, View.O
                 break;
             case "inputType":
                 if (prop.isNumber()) {
+                    final int variation =
+                            mView.getInputType() & (EditorInfo.TYPE_MASK_CLASS | EditorInfo.TYPE_MASK_VARIATION);
+                    boolean isPassword = variation
+                            == (EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_VARIATION_PASSWORD)
+                            || variation
+                            == (EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_VARIATION_WEB_PASSWORD)
+                            || variation
+                            == (EditorInfo.TYPE_CLASS_NUMBER | EditorInfo.TYPE_NUMBER_VARIATION_PASSWORD);
+                    int inputType;
                     switch (prop.asNumber().toInt()) {
                         case 1:
-                            mView.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
+                            inputType = InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL;
+                            if (isPassword) {
+                                inputType = inputType | InputType.TYPE_NUMBER_VARIATION_PASSWORD;
+                            }
                             break;
                         case 2:
-                            mView.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                            inputType = InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL;
+                            if (isPassword) {
+                                inputType = inputType | InputType.TYPE_NUMBER_VARIATION_PASSWORD;
+                            }
                             break;
                         case 3:
-                            mView.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+                            inputType = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS;
+                            if (isPassword) {
+                                inputType = inputType | InputType.TYPE_TEXT_VARIATION_PASSWORD;
+                            }
                             break;
                         case 4:
-                            mView.setInputType(InputType.TYPE_CLASS_PHONE);
+                            inputType = InputType.TYPE_CLASS_PHONE;
+                            if (isPassword) {
+                                inputType = inputType | InputType.TYPE_NUMBER_VARIATION_PASSWORD;
+                            }
                             break;
                         default:
-                            mView.setInputType(InputType.TYPE_CLASS_TEXT);
+                            inputType = InputType.TYPE_CLASS_TEXT;
+                            if (isPassword) {
+                                inputType = inputType | InputType.TYPE_TEXT_VARIATION_PASSWORD;
+                            }
                             break;
                     }
+                    mView.setInputType(inputType);
+                }
+                break;
+            case "password":
+                if (prop.isBoolean()) {
+                    final int variation =
+                            mView.getInputType() & (EditorInfo.TYPE_MASK_CLASS | EditorInfo.TYPE_MASK_VARIATION);
+                    if ((variation & EditorInfo.TYPE_CLASS_NUMBER) == EditorInfo.TYPE_CLASS_NUMBER) {
+                        if (prop.asBoolean().value()) {
+                            mView.setInputType(mView.getInputType() | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+                        } else {
+                            mView.setInputType(mView.getInputType() & (~InputType.TYPE_NUMBER_VARIATION_PASSWORD));
+                        }
+                    } else {
+                        if (prop.asBoolean().value()) {
+                            mView.setInputType(mView.getInputType() | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                        } else {
+                            mView.setInputType(mView.getInputType() & (~InputType.TYPE_TEXT_VARIATION_PASSWORD));
+                        }
+                    }
+
                 }
                 break;
             default:

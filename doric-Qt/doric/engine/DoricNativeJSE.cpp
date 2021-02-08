@@ -57,9 +57,15 @@ QJSValue DoricNativeJSE::invokeObject(QString objectName, QString functionName,
   }
 
   QJSValue result = function.call(args);
-  if (result.isError())
+  if (result.isError()) {
     qDebug() << "Uncaught exception at line"
              << result.property("lineNumber").toInt() << ":"
              << result.toString();
+    QStringList stacktraces = result.property("stack").toString().split("\n");
+    qDebug() << "++++++++++++++++++++++++";
+    foreach (QString stacktrace, stacktraces) { qDebug() << stacktrace; }
+    qDebug() << "------------------------";
+  }
+
   return result;
 }

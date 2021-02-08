@@ -16,7 +16,7 @@ public:
 
   virtual void invokeDoricMethod(QString method, QVariantList args) = 0;
 
-  virtual DoricAsyncResult *asyncCall(QRunnable *runnable,
+  virtual DoricAsyncResult *asyncCall(std::function<void()> lambda,
                                       DoricThreadMode mode) = 0;
 
   virtual void createContext(QString contextId, QString script,

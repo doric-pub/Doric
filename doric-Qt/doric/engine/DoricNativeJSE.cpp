@@ -37,9 +37,6 @@ void DoricNativeJSE::injectGlobalJSFunction(QString name, QObject *function,
 
 QJSValue DoricNativeJSE::invokeObject(QString objectName, QString functionName,
                                       QVariantList arguments) {
-  QString script = DoricUtils::readAssetFile("/test", "test.js");
-  mJSEngine.evaluate(script);
-
   QJSValue object = mJSEngine.evaluate(objectName);
   QJSValue function = object.property(functionName);
 

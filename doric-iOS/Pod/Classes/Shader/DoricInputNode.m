@@ -104,8 +104,8 @@ typedef void (^onFocusChangeBlock)(BOOL focused, DoricInputNode *node);
         }
         view.textAlignment = alignment;
     } else if ([name isEqualToString:@"multiline"]) {
-        BOOL mutilin = [(NSNumber *) prop boolValue];
-        if (!mutilin) {
+        BOOL value = [(NSNumber *) prop boolValue];
+        if (!value) {
             view.textContainer.maximumNumberOfLines = 1;
         } else {
             view.textContainer.maximumNumberOfLines = 0;
@@ -156,6 +156,8 @@ typedef void (^onFocusChangeBlock)(BOOL focused, DoricInputNode *node);
                 break;
             }
         }
+    } else if ([name isEqualToString:@"password"]) {
+        self.view.secureTextEntry = [(NSNumber *) prop boolValue];
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }

@@ -87,6 +87,10 @@ __decorate([
     Property,
     __metadata("design:type", Number)
 ], Input.prototype, "maxLength", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Boolean)
+], Input.prototype, "password", void 0);
 export var InputType;
 (function (InputType) {
     InputType[InputType["Default"] = 0] = "Default";

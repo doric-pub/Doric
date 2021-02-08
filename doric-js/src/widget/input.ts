@@ -53,6 +53,9 @@ export class Input extends View {
 
     @Property
     maxLength?: number
+    
+    @Property
+    password?: boolean
 
     getText(context: BridgeContext) {
         return this.nativeChannel(context, 'getText')() as Promise<string>

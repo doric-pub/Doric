@@ -15,6 +15,7 @@
  */
 package pub.doric;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -59,5 +60,14 @@ public class DoricActivity extends AppCompatActivity {
      */
     protected String getExtra() {
         return getIntent().getStringExtra("extra");
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        int requestIndex = requestCode >> 16;
+        if (requestIndex == 0 && mDoricFragment != null) {
+            mDoricFragment.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

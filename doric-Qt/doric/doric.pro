@@ -31,7 +31,10 @@ SOURCES += \
         engine/DoricTimerExtension.cpp \
         main.cpp \
         plugin/DoricShaderPlugin.cpp \
+        shader/DoricGroupNode.cpp \
         shader/DoricRootNode.cpp \
+        shader/DoricStackNode.cpp \
+        shader/DoricSuperNode.cpp \
         shader/DoricViewNode.cpp \
         utils/DoricConstant.cpp \
         utils/DoricContextHolder.cpp
@@ -71,7 +74,10 @@ HEADERS += \
     engine/DoricTimerExtension.h \
     plugin/DoricNativePlugin.h \
     plugin/DoricShaderPlugin.h \
+    shader/DoricGroupNode.h \
     shader/DoricRootNode.h \
+    shader/DoricStackNode.h \
+    shader/DoricSuperNode.h \
     shader/DoricViewNode.h \
     template/DoricSingleton.h \
     utils/DoricConstant.h \

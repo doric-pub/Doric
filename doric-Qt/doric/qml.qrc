@@ -2,7 +2,7 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>qtquickcontrols2.conf</file>
-        <file>view.qml</file>
+        <file>stack.qml</file>
     </qresource>
     <qresource prefix="/doric">
         <file alias="doric-sandbox.js">../../doric-js/bundle/doric-sandbox.js</file>

@@ -23,6 +23,7 @@ DoricAsyncResult *DoricNativeDriver::asyncCall(std::function<void()> lambda,
                                                DoricThreadMode mode) {
   switch (mode) {
   case UI:
+    DoricAsyncCall::ensureRunInMain(lambda);
     break;
   case JS:
     DoricAsyncCall::ensureRunInThreadPool(&jsEngine.mJSThreadPool, lambda);

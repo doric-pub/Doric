@@ -59,6 +59,8 @@ DoricInterfaceDriver *DoricContext::getDriver() {
   return driver;
 }
 
+DoricRootNode *DoricContext::getRootNode() { return mRootNode; }
+
 QObject *DoricContext::obtainPlugin(QString name) {
   if (mPluginMap.keys().contains(name)) {
     return mPluginMap.value(name);

@@ -30,6 +30,8 @@ public:
 
   DoricInterfaceDriver *getDriver();
 
+  DoricRootNode *getRootNode();
+
   QObject *obtainPlugin(QString name);
 };
 

@@ -58,17 +58,18 @@
         [self.navigationController pushViewController:[QRScanViewController new] animated:NO];
     }
 }
+
 - (void)onClose {
     [[DoricDev instance] closeDevMode];
     [self.navigationController popViewControllerAnimated:YES];
 }
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [DoricContextManager.instance aliveContexts].count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSValue *value = [DoricContextManager.instance aliveContexts][(NSUInteger) indexPath.row];
-    DoricContext *context = value.nonretainedObjectValue;
+    DoricContext *context = [DoricContextManager.instance aliveContexts][(NSUInteger) indexPath.row];
     NSString *path = context.source;
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     if (cell == nil) {
@@ -84,8 +85,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSValue *value = [DoricContextManager.instance aliveContexts][(NSUInteger) indexPath.row];
-    DoricContext *context = value.nonretainedObjectValue;
+    DoricContext *context = [DoricContextManager.instance aliveContexts][(NSUInteger) indexPath.row];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"StartDebugEvent" object:context.contextId];
     NSDictionary *jsonDic = @{
             @"cmd": @"DEBUG",

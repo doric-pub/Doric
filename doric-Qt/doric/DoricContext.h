@@ -4,7 +4,8 @@
 #include <QVariant>
 
 #include "DoricInterfaceDriver.h"
-#include "shader/DoricRootNode.h"
+
+class DoricRootNode;
 
 class DoricContext {
 private:

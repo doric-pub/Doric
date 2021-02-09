@@ -9,7 +9,7 @@ DoricDemoBridge::DoricDemoBridge(QObject *parent) : QObject(parent) {}
 void DoricDemoBridge::navigate(QVariant route) {
   switch (route.toInt()) {
   case 0:
-    QString name = "Snake.js";
+    QString name = "Snake.es5.js";
     QString script = DoricUtils::readAssetFile("/doric/bundles", name);
 
     DoricPanel panel;

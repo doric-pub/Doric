@@ -2,6 +2,7 @@
 #include "DoricContextManager.h"
 #include "DoricNativeDriver.h"
 
+#include "shader/DoricRootNode.h"
 #include "utils/DoricConstant.h"
 #include "utils/DoricContextHolder.h"
 

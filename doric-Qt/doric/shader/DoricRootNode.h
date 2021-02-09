@@ -1,9 +1,13 @@
 #ifndef ROOTNODE_H
 #define ROOTNODE_H
 
-class DoricRootNode {
+#include "DoricStackNode.h"
+
+class DoricRootNode : public DoricStackNode {
 public:
-  DoricRootNode();
+  using DoricStackNode::DoricStackNode;
+
+  void setRootView();
 };
 
 #endif // ROOTNODE_H

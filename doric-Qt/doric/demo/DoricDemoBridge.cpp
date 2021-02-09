@@ -1,4 +1,6 @@
 #include <QDebug>
+#include <QQuickItem>
+#include <QQuickView>
 
 #include "DoricDemoBridge.h"
 #include "DoricPanel.h"
@@ -12,8 +14,17 @@ void DoricDemoBridge::navigate(QVariant route) {
     QString name = "Snake.es5.js";
     QString script = DoricUtils::readAssetFile("/doric/bundles", name);
 
-    DoricPanel panel;
-    panel.config(script, name, NULL);
+    QQuickView *view = new QQuickView();
+    view->setWidth(960);
+    view->setHeight(720);
+    QColor color("blue");
+    view->setColor(color);
+    view->show();
+
+    view->rootObject();
+
+    DoricPanel *panel = new DoricPanel();
+    panel->config(script, name, NULL);
     break;
   }
 }

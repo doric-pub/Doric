@@ -1,3 +1,3 @@
 #include "DoricRootNode.h"
 
-DoricRootNode::DoricRootNode() {}
+void DoricRootNode::setRootView() {}

@@ -25,7 +25,7 @@
 @interface DoricContextManager ()
 
 @property(nonatomic) NSInteger counter;
-@property(nonatomic, strong) NSMutableDictionary <NSString *, NSValue *> *doricContextMap;
+@property(nonatomic, strong) NSMapTable <NSString *, DoricContext *> *contextMapTable;
 @property(nonatomic, strong) dispatch_queue_t mapQueue;
 @end
 
@@ -33,9 +33,11 @@
 
 - (instancetype)init {
     if (self = [super init]) {
-        _doricContextMap = [[NSMutableDictionary alloc] init];
         _counter = 0;
         _mapQueue = dispatch_queue_create("doric.contextmap", DISPATCH_QUEUE_SERIAL);
+        _contextMapTable = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsCopyIn
+                                                     valueOptions:NSPointerFunctionsWeakMemory
+                                                         capacity:0];
     }
     return self;
 }
@@ -52,8 +54,7 @@
 - (void)createContext:(DoricContext *)context script:(NSString *)script source:(NSString *)source {
     context.contextId = [NSString stringWithFormat:@"%ld", (long) ++self.counter];
     dispatch_sync(self.mapQueue, ^() {
-        NSValue *value = [NSValue valueWithNonretainedObject:context];
-        self.doricContextMap[context.contextId] = value;
+        [self.contextMapTable setObject:context forKey:context.contextId];
     });
     [context.driver createContext:context.contextId script:script source:source];
 }
@@ -61,8 +62,7 @@
 - (DoricContext *)getContext:(NSString *)contextId {
     __block DoricContext *context;
     dispatch_sync(self.mapQueue, ^{
-        NSValue *value = self.doricContextMap[contextId];
-        context = value.nonretainedObjectValue;
+        context = [self.contextMapTable objectForKey:contextId];
     });
     return context;
 }
@@ -70,12 +70,18 @@
 - (void)destroyContext:(DoricContext *)context {
     NSString *contextId = context.contextId;
     dispatch_sync(self.mapQueue, ^() {
-        [self.doricContextMap removeObjectForKey:contextId];
+        [self.contextMapTable removeObjectForKey:contextId];
     });
 }
 
-- (NSArray *)aliveContexts {
-    return [self.doricContextMap allValues];
+- (NSArray <DoricContext *> *)aliveContexts {
+    NSEnumerator *enumerator = [self.contextMapTable objectEnumerator];
+    NSMutableArray *ret = [NSMutableArray new];
+    DoricContext *context;
+    while ((context = [enumerator nextObject])) {
+        [ret addObject:context];
+    }
+    return ret;
 }
 
 @end

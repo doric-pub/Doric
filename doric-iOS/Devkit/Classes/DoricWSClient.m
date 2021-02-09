@@ -64,8 +64,7 @@
     } else if ([cmd compare:@"RELOAD"] == NSOrderedSame) {
         NSString *source = [[dic valueForKey:@"source"] mutableCopy];
         NSString *script = [dic valueForKey:@"script"];
-        for (NSValue *value in  [[DoricContextManager instance] aliveContexts]) {
-            DoricContext *context = value.nonretainedObjectValue;
+        for (DoricContext *context in  [[DoricContextManager instance] aliveContexts]) {
             if ([source containsString:context.source] || [context.source isEqualToString:@"__dev__"]) {
                 [context reload:script];
             }

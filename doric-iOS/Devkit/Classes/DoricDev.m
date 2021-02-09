@@ -111,8 +111,7 @@
 - (void)onStartDebugEvent:(NSNotification *)notification {
     NSString *contextId = notification.object;
     ShowToast(contextId, DoricGravityBottom);
-    for (NSValue *value in  [[DoricContextManager instance] aliveContexts]) {
-        DoricContext *context = value.nonretainedObjectValue;
+    for (DoricContext *context in  [[DoricContextManager instance] aliveContexts]) {
         BOOL result = [context.contextId compare:contextId] == NSOrderedSame;
         if (result) {
             _context = context;

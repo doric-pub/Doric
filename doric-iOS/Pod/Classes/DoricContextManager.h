@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (DoricContext *)getContext:(NSString *)contextId;
 
-- (NSArray *)aliveContexts;
+- (NSArray <DoricContext *> *)aliveContexts;
 @end
 
 NS_ASSUME_NONNULL_END

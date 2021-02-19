@@ -10,6 +10,6 @@ void DoricPanel::config(QString script, QString alias, QString extra) {
 
 void DoricPanel::config(DoricContext *context) {
   this->mContext = context;
-  this->mContext->getRootNode()->setRootView();
-  this->mContext->build(960, 720);
+  this->mContext->getRootNode()->setRootView(this);
+  this->mContext->build(width(), height());
 }

@@ -1,5 +1,4 @@
 #include <QDebug>
-#include <QQuickItem>
 #include <QQuickView>
 
 #include "DoricDemoBridge.h"
@@ -15,15 +14,16 @@ void DoricDemoBridge::navigate(QVariant route) {
     QString script = DoricUtils::readAssetFile("/doric/bundles", name);
 
     QQuickView *view = new QQuickView();
-    view->setWidth(960);
-    view->setHeight(720);
-    QColor color("blue");
-    view->setColor(color);
+    view->setWidth(450);
+    view->setHeight(800);
+    QColor blue("blue");
+    view->setColor(blue);
     view->show();
 
-    view->rootObject();
-
     DoricPanel *panel = new DoricPanel();
+    panel->setParent(view);
+    panel->setWidth(450);
+    panel->setHeight(800);
     panel->config(script, name, NULL);
     break;
   }

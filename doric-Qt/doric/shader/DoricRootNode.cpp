@@ -1,3 +1,5 @@
 #include "DoricRootNode.h"
 
-void DoricRootNode::setRootView() {}
+void DoricRootNode::setRootView(QQuickItem *rootView) {
+  this->mView = rootView;
+}

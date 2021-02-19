@@ -1,9 +1,11 @@
 #ifndef PANEL_H
 #define PANEL_H
 
+#include <QQuickItem>
+
 #include "DoricContext.h"
 
-class DoricPanel {
+class DoricPanel : public QQuickItem {
 private:
   DoricContext *mContext;
   int renderedWidth = -1;

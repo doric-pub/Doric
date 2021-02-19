@@ -2,6 +2,9 @@ import fs from "fs";
 import { exec, spawn } from "child_process";
 import ws from "nodejs-websocket";
 import "colors";
+import path from "path";
+import { delay, glob } from "./util";
+import { Shell } from "./shell";
 
 export async function createServer() {
     console.log("Create Server")
@@ -22,7 +25,7 @@ export async function createServer() {
         } else {
             console.log(`Client ${thisDeviceId} attached to dev kit`.green)
         }
-        connection.on('text', function (result: string) {
+        connection.on('text', async function (result: string) {
             let resultObject = JSON.parse(result)
             switch (resultObject.cmd) {
                 case 'DEBUG':
@@ -30,20 +33,27 @@ export async function createServer() {
                     (server as any).debugging = true;
                     console.log("Enter debugging");
                     contextId = resultObject.data.contextId;
-                    let projectHome = '.';
-
-                    fs.writeFileSync(projectHome + '/build/context', contextId, 'utf8');
-
-                    let source = resultObject.data.source;
-                    console.log(connection.key + " request debug, project home: " + projectHome);
-                    spawn('code', [projectHome, projectHome + "/src/" + source]);
-                    setTimeout(() => {
-                        exec('osascript -e \'tell application "System Events"\ntell application "Visual Studio Code" to activate\nkey code 96\nend tell\'', (err, stdout, stderr) => {
-                            if (err) {
-                                console.log(`stdout: ${err}`)
-                            }
+                    const projectHome = '.';
+                    await fs.promises.writeFile(path.resolve(projectHome, "build", "context"), contextId, "utf-8");
+                    let source = resultObject.data.source as string;
+                    if (source.startsWith(".js")) {
+                        source = source.replace(".js", ".ts");
+                    } else if (!source.startsWith(".ts")) {
+                        source = source + ".ts"
+                    }
+                    let sourceFile = path.resolve(projectHome, "src", source);
+                    if (!fs.existsSync(sourceFile)) {
+                        const tsFiles = await glob(source, {
+                            cwd: path.resolve(projectHome, "src")
                         })
-                    }, 1500);
+                        if (!!!tsFiles || tsFiles.length === 0) {
+                            console.error(`Cannot find ${source} in ${path.resolve(projectHome)}`);
+                        }
+                        sourceFile = tsFiles[0];
+                    }
+                    console.log(connection.key + " request debug, project home: " + projectHome);
+                    await Shell.exec("code", [projectHome, sourceFile]);
+                    await delay(1500);
                     break;
                 case 'EXCEPTION':
                     console.log(resultObject.data.source.red);

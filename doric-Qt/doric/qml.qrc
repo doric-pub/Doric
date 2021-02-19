@@ -1,8 +1,7 @@
 <RCC>
     <qresource prefix="/">
-        <file>main.qml</file>
-        <file>qtquickcontrols2.conf</file>
-        <file>stack.qml</file>
+        <file alias="main.qml">./resources/main.qml</file>
+        <file alias="qtquickcontrols2.conf">./resources/qtquickcontrols2.conf</file>
     </qresource>
     <qresource prefix="/doric">
         <file alias="doric-sandbox.js">../../doric-js/bundle/doric-sandbox.js</file>
@@ -13,5 +12,10 @@
     <qresource prefix="/doric/bundles">
         <file alias="Snake.js">../../doric-demo/bundle/src/Snake.js</file>
         <file alias="Snake.es5.js">../../doric-demo/bundle/src/Snake.es5.js</file>
+    </qresource>
+    <qresource prefix="/doric/qml">
+        <file alias="view.qml">./resources/view.qml</file>
+        <file alias="panel.qml">./resources/panel.qml</file>
+        <file alias="stack.qml">./resources/stack.qml</file>
     </qresource>
 </RCC>

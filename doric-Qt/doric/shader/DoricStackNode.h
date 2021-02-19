@@ -3,14 +3,13 @@
 
 #include "DoricGroupNode.h"
 
-class DoricStackNode : public DoricGroupNode
-{
+class DoricStackNode : public DoricGroupNode {
 public:
-    using DoricGroupNode::DoricGroupNode;
+  using DoricGroupNode::DoricGroupNode;
 
-    QQuickItem *build() override;
+  QQuickItem *build() override;
 
-    void blendLayoutConfig() override;
+  void blendLayoutConfig() override;
 };
 
 #endif // DORICSTACKNODE_H

@@ -24,13 +24,13 @@
   "dependencies": {
     "@types/ws": "^7.2.6",
     "core-js": "^3.6.5",
-    "dts-bundle": "^0.7.3",
     "proxy-polyfill": "^0.3.2",
     "reflect-metadata": "^0.1.13",
     "rollup": "^2.23.0",
     "tslib": "^2.0.0",
     "typescript": "^3.9.7",
-    "ws": "^7.3.1"
+    "ws": "^7.3.1",
+    "dts-bundle": "^0.7.3"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"

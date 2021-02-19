@@ -8,7 +8,7 @@ class DoricStackNode : public DoricGroupNode
 public:
     using DoricGroupNode::DoricGroupNode;
 
-    QQmlComponent *build() override;
+    QQuickItem *build() override;
 
     void blendLayoutConfig() override;
 };

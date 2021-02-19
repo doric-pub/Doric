@@ -1,14 +1,13 @@
 #include "DoricStackNode.h"
 
-QQmlComponent *DoricStackNode::build() {
-  QQmlComponent *component = new QQmlComponent();
+QQuickItem *DoricStackNode::build() {
+  QQmlComponent component;
 
   const QUrl url(QStringLiteral("qrc:/stack.qml"));
-  component->loadUrl(url);
+  component.loadUrl(url);
 
-  return component;
+  QQuickItem *item = qobject_cast<QQuickItem *>(component.create());
+  return item;
 }
 
-void DoricStackNode::blendLayoutConfig() {
-    DoricViewNode::blendLayoutConfig();
-}
+void DoricStackNode::blendLayoutConfig() { DoricViewNode::blendLayoutConfig(); }

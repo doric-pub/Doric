@@ -1,16 +1,16 @@
 #ifndef DORICVIEWNODE_H
 #define DORICVIEWNODE_H
 
-#include <QQmlComponent>
+#include <QQuickItem>
 
 #include "../utils/DoricContextHolder.h"
 
 class DoricViewNode : public DoricContextHolder {
 
 protected:
-  QQmlComponent mView;
+  QQuickItem *mView;
 
-  virtual QQmlComponent *build() = 0;
+  virtual QQuickItem *build() = 0;
 
   virtual void blendLayoutConfig();
 

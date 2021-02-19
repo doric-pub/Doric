@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 import * as doric from './src/runtime/sandbox';
-import * as WebSocket from 'ws';
-const WebSocketClient = require('ws');
-const fs = require('fs');
-let context = process.cwd() + '/build/context';
-const contextId = fs.readFileSync(context, { encoding: 'utf8' });
+import WebSocket from "ws";
+import fs from "fs";
+import path from 'path';
+const contextFile = path.resolve(process.cwd(), 'build', 'context');
+const contextId = fs.readFileSync(contextFile, { encoding: 'utf8' });
 console.log("debugging context id: " + contextId);
 let global = new Function('return this')();
 global.setTimeout = global.doricSetTimeout;
@@ -28,17 +28,6 @@ global.clearInterval = global.doricClearInterval;
 global.doric = doric;
 global.context = doric.jsObtainContext(contextId);
 global.Entry = doric.jsObtainEntry(contextId);
-// dev kit client
-const devClient = new WebSocketClient('ws://localhost:7777');
-devClient.on('open', function open() {
-    console.log('dev kit connected on 7777');
-});
-devClient.on('message', function incoming(data) {
-    console.log(data);
-});
-devClient.on('error', function incoming(error) {
-    console.log(error);
-});
 // debug server
 const debugServer = new WebSocket.Server({ port: 2080 });
 debugServer.on('connection', function connection(ws) {
@@ -133,5 +122,21 @@ global.injectGlobal = (objName, obj) => {
 global.sendToNative = () => {
 };
 global.receiveFromNative = () => {
+};
+global.nativeLog = (type, msg) => {
+    switch (type) {
+        case "w": {
+            console.warn(msg);
+            break;
+        }
+        case "e": {
+            console.error(msg);
+            break;
+        }
+        default: {
+            console.log(msg);
+            break;
+        }
+    }
 };
 export * from './index';

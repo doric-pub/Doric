@@ -561,6 +561,7 @@ function gravity() {
     return new Gravity;
 }
 
+exports.LayoutSpec = void 0;
 (function (LayoutSpec) {
     /**
      * Depends on what's been set on width or height.
@@ -981,10 +982,12 @@ __decorate$2([
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+exports.RepeatMode = void 0;
 (function (RepeatMode) {
     RepeatMode[RepeatMode["RESTART"] = 1] = "RESTART";
     RepeatMode[RepeatMode["REVERSE"] = 2] = "REVERSE";
 })(exports.RepeatMode || (exports.RepeatMode = {}));
+exports.FillMode = void 0;
 (function (FillMode) {
     /**
      * The receiver is removed from the presentation when the animation is completed.
@@ -1003,6 +1006,7 @@ __decorate$2([
      */
     FillMode[FillMode["Both"] = 3] = "Both";
 })(exports.FillMode || (exports.FillMode = {}));
+exports.TimingFunction = void 0;
 (function (TimingFunction) {
     /**
      * The system default timing function. Use this function to ensure that the timing of your animations matches that of most system animations.
@@ -1282,6 +1286,7 @@ Color.YELLOW = new Color(0xFFFFFF00);
 Color.CYAN = new Color(0xFF00FFFF);
 Color.MAGENTA = new Color(0xFFFF00FF);
 Color.TRANSPARENT = new Color(0);
+exports.GradientOrientation = void 0;
 (function (GradientOrientation) {
     /** draw the gradient from the top to the bottom */
     GradientOrientation[GradientOrientation["TOP_BOTTOM"] = 0] = "TOP_BOTTOM";
@@ -1310,6 +1315,7 @@ var __decorate$3 = (undefined && undefined.__decorate) || function (decorators, 
 var __metadata$3 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+exports.TruncateAt = void 0;
 (function (TruncateAt) {
     TruncateAt[TruncateAt["End"] = 0] = "End";
     TruncateAt[TruncateAt["Middle"] = 1] = "Middle";
@@ -1392,6 +1398,7 @@ var __decorate$4 = (undefined && undefined.__decorate) || function (decorators, 
 var __metadata$4 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+exports.ScaleType = void 0;
 (function (ScaleType) {
     ScaleType[ScaleType["ScaleToFill"] = 0] = "ScaleToFill";
     ScaleType[ScaleType["ScaleAspectFit"] = 1] = "ScaleAspectFit";
@@ -1849,12 +1856,14 @@ class FlexTypedValue {
     }
 }
 FlexTypedValue.Auto = new FlexTypedValue(ValueType.Auto);
+exports.FlexDirection = void 0;
 (function (FlexDirection) {
     FlexDirection[FlexDirection["COLUMN"] = 0] = "COLUMN";
     FlexDirection[FlexDirection["COLUMN_REVERSE"] = 1] = "COLUMN_REVERSE";
     FlexDirection[FlexDirection["ROW"] = 2] = "ROW";
     FlexDirection[FlexDirection["ROW_REVERSE"] = 3] = "ROW_REVERSE";
 })(exports.FlexDirection || (exports.FlexDirection = {}));
+exports.Align = void 0;
 (function (Align) {
     Align[Align["AUTO"] = 0] = "AUTO";
     Align[Align["FLEX_START"] = 1] = "FLEX_START";
@@ -1865,6 +1874,7 @@ FlexTypedValue.Auto = new FlexTypedValue(ValueType.Auto);
     Align[Align["SPACE_BETWEEN"] = 6] = "SPACE_BETWEEN";
     Align[Align["SPACE_AROUND"] = 7] = "SPACE_AROUND";
 })(exports.Align || (exports.Align = {}));
+exports.Justify = void 0;
 (function (Justify) {
     Justify[Justify["FLEX_START"] = 0] = "FLEX_START";
     Justify[Justify["CENTER"] = 1] = "CENTER";
@@ -1873,25 +1883,30 @@ FlexTypedValue.Auto = new FlexTypedValue(ValueType.Auto);
     Justify[Justify["SPACE_AROUND"] = 4] = "SPACE_AROUND";
     Justify[Justify["SPACE_EVENLY"] = 5] = "SPACE_EVENLY";
 })(exports.Justify || (exports.Justify = {}));
+exports.Direction = void 0;
 (function (Direction) {
     Direction[Direction["INHERIT"] = 0] = "INHERIT";
     Direction[Direction["LTR"] = 1] = "LTR";
     Direction[Direction["RTL"] = 2] = "RTL";
 })(exports.Direction || (exports.Direction = {}));
+exports.PositionType = void 0;
 (function (PositionType) {
     PositionType[PositionType["RELATIVE"] = 0] = "RELATIVE";
     PositionType[PositionType["ABSOLUTE"] = 1] = "ABSOLUTE";
 })(exports.PositionType || (exports.PositionType = {}));
+exports.Wrap = void 0;
 (function (Wrap) {
     Wrap[Wrap["NO_WRAP"] = 0] = "NO_WRAP";
     Wrap[Wrap["WRAP"] = 1] = "WRAP";
     Wrap[Wrap["WRAP_REVERSE"] = 2] = "WRAP_REVERSE";
 })(exports.Wrap || (exports.Wrap = {}));
+exports.OverFlow = void 0;
 (function (OverFlow) {
     OverFlow[OverFlow["VISIBLE"] = 0] = "VISIBLE";
     OverFlow[OverFlow["HIDDEN"] = 1] = "HIDDEN";
     OverFlow[OverFlow["SCROLL"] = 2] = "SCROLL";
 })(exports.OverFlow || (exports.OverFlow = {}));
+exports.Display = void 0;
 (function (Display) {
     Display[Display["FLEX"] = 0] = "FLEX";
     Display[Display["NONE"] = 1] = "NONE";
@@ -2105,6 +2120,7 @@ __decorate$a([
     Property,
     __metadata$a("design:type", Boolean)
 ], Input.prototype, "password", void 0);
+exports.InputType = void 0;
 (function (InputType) {
     InputType[InputType["Default"] = 0] = "Default";
     InputType[InputType["Number"] = 1] = "Number";
@@ -2560,6 +2576,7 @@ function notification(context) {
     };
 }
 
+exports.StatusBarMode = void 0;
 (function (StatusBarMode) {
     StatusBarMode[StatusBarMode["LIGHT"] = 0] = "LIGHT";
     StatusBarMode[StatusBarMode["DARK"] = 1] = "DARK";

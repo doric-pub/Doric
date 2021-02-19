@@ -33,6 +33,8 @@ public:
 
   void setId(QString id);
 
-  void blend(QJSValue jsValue);
+  virtual void blend(QJSValue jsValue);
+
+  virtual void blend(QQuickItem *view, QString name, QJSValue prop);
 };
 #endif // DORICVIEWNODE_H

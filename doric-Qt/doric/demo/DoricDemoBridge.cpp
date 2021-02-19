@@ -21,23 +21,18 @@ void DoricDemoBridge::navigate(QVariant route) {
       view->setHeight(800);
     }
 
-    DoricPanel *panel = new DoricPanel();
-    panel->setParentItem(view->rootObject());
-    panel->setWidth(450);
-    panel->setHeight(800);
-    panel->config(script, name, NULL);
+    {
+      QQmlComponent component(view->engine());
+      const QUrl url(QStringLiteral("qrc:/doric/qml/panel.qml"));
+      component.loadUrl(url);
+      QQuickItem *quickItem = qobject_cast<QQuickItem *>(component.create());
+      DoricPanel *panel = new DoricPanel(quickItem);
+      quickItem->setWidth(450);
+      quickItem->setHeight(800);
+      quickItem->setParentItem(view->rootObject());
 
-    QQmlEngine *engine = view->engine();
-    QQmlComponent component(engine);
-    const QUrl empty(QStringLiteral("qrc:/doric/qml/panel.qml"));
-    component.loadUrl(empty);
-    QQuickItem *childItem = qobject_cast<QQuickItem *>(component.create());
-
-    if (childItem == nullptr) {
-      qCritical() << component.errorString();
-      return;
+      panel->config(script, name, NULL);
     }
-    childItem->setParentItem(view->rootObject());
 
     view->show();
     break;

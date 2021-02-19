@@ -1,6 +1,8 @@
-#include "DoricViewNode.h"
+#include <QJSValueIterator>
+
 #include "../utils/DoricUtils.h"
 #include "DoricSuperNode.h"
+#include "DoricViewNode.h"
 
 void DoricViewNode::blendLayoutConfig() {}
 
@@ -19,4 +21,18 @@ QString DoricViewNode::getId() { return mId; }
 
 void DoricViewNode::setId(QString id) { mId = id; }
 
-void DoricViewNode::blend(QJSValue jsValue) { qDebug() << jsValue.toString(); }
+void DoricViewNode::blend(QJSValue jsValue) {
+  QJSValueIterator it(jsValue);
+  while (it.hasNext()) {
+    it.next();
+    qDebug() << it.name() << ": " << it.value().toString();
+    blend(mView, it.name(), it.value());
+  }
+}
+
+void DoricViewNode::blend(QQuickItem *view, QString name, QJSValue prop) {
+  if (name == "width") {
+
+  } else if (name == "height") {
+  }
+}

@@ -5,14 +5,16 @@
 
 #include "DoricContext.h"
 
-class DoricPanel : public QQuickItem {
+class DoricPanel {
 private:
   DoricContext *mContext;
   int renderedWidth = -1;
   int renderedHeight = -1;
 
+  QQuickItem *mQuickItem;
+
 public:
-  DoricPanel();
+  DoricPanel(QQuickItem *quickItem);
 
   void config(QString script, QString alias, QString extra);
 

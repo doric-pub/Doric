@@ -3,7 +3,7 @@
 QQuickItem *DoricStackNode::build() {
   QQmlComponent component;
 
-  const QUrl url(QStringLiteral("qrc:/stack.qml"));
+  const QUrl url(QStringLiteral("qrc:/doric/qml/stack.qml"));
   component.loadUrl(url);
 
   QQuickItem *item = qobject_cast<QQuickItem *>(component.create());

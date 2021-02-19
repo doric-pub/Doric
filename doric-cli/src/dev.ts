@@ -59,7 +59,6 @@ export default async function dev() {
   process.stdin.resume();
   await delay(3000);
   console.warn("Start watching");
-  server.listen(7777);
   const cachedContents: Record<string, string> = {}
   chokidar
     .watch(process.cwd() + "/bundle", {
@@ -87,8 +86,8 @@ export default async function dev() {
         if (fs.existsSync(sourceMap)) {
           mergeMap(sourceMap);
         }
-        server.connections.forEach((e: any) => {
-          e.sendText(
+        server.clients.forEach((e) => {
+          e.send(
             JSON.stringify({
               cmd: "RELOAD",
               script: content,

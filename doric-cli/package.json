@@ -32,14 +32,17 @@
     "commander": "^6.0.0",
     "glob": "^7.1.6",
     "keypress": "^0.2.1",
-    "nodejs-websocket": "^1.7.2",
     "qrcode-terminal": "^0.12.0",
     "rollup": "^2.23.0",
     "shelljs": "^0.8.4",
     "source-map-merger": "^0.2.0",
-    "typescript": "^3.9.7"
+    "typescript": "^3.9.7",
+    "ws": "^7.4.3"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
+  },
+  "devDependencies": {
+    "@types/ws": "^7.4.0"
   }
 }

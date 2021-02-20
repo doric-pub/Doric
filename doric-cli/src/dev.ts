@@ -76,11 +76,7 @@ export default async function dev() {
       console.log("*******", jsFile.replace(process.cwd(), "")
         .replace("/bundle/src/", "")
         .replace(".js", "")
-        .green, "*******")
-      if ((server as any).debugging) {
-        console.log("debugging, hot reload by pass");
-        return;
-      }
+        .green, "*******");
       try {
         const sourceMap = `${jsFile}.map`
         if (fs.existsSync(sourceMap)) {

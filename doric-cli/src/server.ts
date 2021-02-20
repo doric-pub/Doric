@@ -69,7 +69,6 @@ export async function createServer() {
             });
             ws.on('close', function (code: number) {
                 console.log('close: code = ' + code, thisDeviceId);
-                (ws as any).debugging = false;
                 if (ws === debug) {
                     console.log("quit debugging");
                     client?.send(JSON.stringify({

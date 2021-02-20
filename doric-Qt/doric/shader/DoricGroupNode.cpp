@@ -28,7 +28,7 @@ void DoricGroupNode::configChildNode() {
     QString id = mChildViewIds.at(idx);
     QJSValue model = getSubModel(id);
     if (model.isUndefined()) {
-//      getContext()->getDriver()->getRegistry();
+      DoricRegistry *registry = getContext()->getDriver()->getRegistry();
       continue;
     }
     QString type = model.property("type").toString();

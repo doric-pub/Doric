@@ -8,6 +8,7 @@
 
 DoricContext::DoricContext(QString contextId, QString source, QString extra) {
   this->mRootNode = new DoricRootNode();
+  this->mRootNode->setContext(this);
 
   this->mContextId = contextId;
   this->source = source;

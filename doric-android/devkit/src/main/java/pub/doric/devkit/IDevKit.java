@@ -14,4 +14,8 @@ public interface IDevKit {
     void sendDevCommand(IDevKit.Command command, JSONObject jsonObject);
 
     void disconnectDevKit();
+
+    void startDebugging(String source);
+
+    void stopDebugging(boolean resume);
 }

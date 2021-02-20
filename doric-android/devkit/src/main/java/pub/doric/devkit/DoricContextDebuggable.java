@@ -5,34 +5,28 @@ import pub.doric.IDoricDriver;
 
 public class DoricContextDebuggable {
     private final DoricContext doricContext;
-    private DoricDebugDriver debugDriver;
     private final IDoricDriver nativeDriver;
-    public boolean isDebugging = false;
+    private final WSClient wsClient;
 
-    public DoricContextDebuggable(DoricContext doricContext) {
+    public DoricContextDebuggable(WSClient wsClient, DoricContext doricContext) {
+        this.wsClient = wsClient;
         this.doricContext = doricContext;
-        this.isDebugging = true;
         this.nativeDriver = this.doricContext.getDriver();
     }
 
     public void startDebug() {
-        debugDriver = new DoricDebugDriver(new IStatusCallback() {
-            @Override
-            public void start() {
-                doricContext.setDriver(debugDriver);
-                doricContext.reload(doricContext.getScript());
-            }
-        });
-    }
-
-    public void stopDebug() {
-        isDebugging = false;
-        doricContext.setDriver(nativeDriver);
-        debugDriver.destroy();
+        doricContext.setDriver(new DoricDebugDriver(this.wsClient));
         doricContext.reload(doricContext.getScript());
     }
 
-    public DoricContext getContext() {
-        return doricContext;
+    public void stopDebug(boolean resume) {
+        IDoricDriver doricDriver = doricContext.getDriver();
+        if (doricDriver instanceof DoricDebugDriver) {
+            ((DoricDebugDriver) doricDriver).destroy();
+        }
+        if (resume) {
+            doricContext.setDriver(nativeDriver);
+            doricContext.reload(doricContext.getScript());
+        }
     }
 }

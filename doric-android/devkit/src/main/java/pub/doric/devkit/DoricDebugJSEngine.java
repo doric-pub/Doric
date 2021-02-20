@@ -4,16 +4,15 @@ import pub.doric.devkit.remote.DoricRemoteJSExecutor;
 import pub.doric.engine.DoricJSEngine;
 
 public class DoricDebugJSEngine extends DoricJSEngine {
+    private final WSClient wsClient;
 
-    private IStatusCallback statusCallback;
-
-    public DoricDebugJSEngine(IStatusCallback statusCallback) {
+    public DoricDebugJSEngine(WSClient wsClient) {
         super();
-        this.statusCallback = statusCallback;
+        this.wsClient = wsClient;
     }
 
     @Override
     protected void initJSEngine() {
-        mDoricJSE = new DoricRemoteJSExecutor(statusCallback);
+        mDoricJSE = new DoricRemoteJSExecutor(this.wsClient);
     }
 }

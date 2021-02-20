@@ -20,15 +20,15 @@ import com.github.pengfeizhou.jscore.JSRuntimeException;
 import com.github.pengfeizhou.jscore.JavaFunction;
 import com.github.pengfeizhou.jscore.JavaValue;
 
-import pub.doric.devkit.IStatusCallback;
+import pub.doric.devkit.WSClient;
 import pub.doric.engine.IDoricJSE;
 
 public class DoricRemoteJSExecutor implements IDoricJSE {
 
     private final RemoteJSExecutor mRemoteJSExecutor;
 
-    public DoricRemoteJSExecutor(IStatusCallback statusCallback) {
-        this.mRemoteJSExecutor = new RemoteJSExecutor(statusCallback);
+    public DoricRemoteJSExecutor(WSClient wsClient) {
+        this.mRemoteJSExecutor = new RemoteJSExecutor(wsClient);
     }
 
     @Override

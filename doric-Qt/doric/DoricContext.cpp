@@ -66,8 +66,7 @@ QObject *DoricContext::obtainPlugin(QString name) {
   if (mPluginMap.keys().contains(name)) {
     return mPluginMap.value(name);
   } else {
-    QObject *plugin =
-        getDriver()->getRegistry()->pluginInfoMap.createObject(name);
+    QObject *plugin = getDriver()->getRegistry()->plugins.createObject(name);
     dynamic_cast<DoricContextHolder *>(plugin)->setContext(this);
     mPluginMap.insert(name, plugin);
     return plugin;

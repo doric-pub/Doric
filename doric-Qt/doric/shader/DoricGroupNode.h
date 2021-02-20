@@ -17,6 +17,8 @@ protected:
   QList<QString> mChildViewIds;
 
   void configChildNode();
+
+  virtual void blendSubNode(QJSValue subProperties) override;
 };
 
 #endif // DORICGROUPNODE_H

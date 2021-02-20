@@ -15,6 +15,8 @@
  */
 package pub.doric.devkit;
 
+import com.github.pengfeizhou.jscore.JSONBuilder;
+
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,11 +30,10 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
+import pub.doric.DoricContext;
 import pub.doric.devkit.event.ConnectExceptionEvent;
 import pub.doric.devkit.event.EOFExceptionEvent;
-import pub.doric.devkit.event.EnterDebugEvent;
 import pub.doric.devkit.event.OpenEvent;
-import pub.doric.devkit.event.ReloadEvent;
 
 /**
  * @Description: com.github.penfeizhou.doric.dev
@@ -68,19 +69,24 @@ public class WSClient extends WebSocketListener {
         super.onMessage(webSocket, text);
         try {
             JSONObject jsonObject = new JSONObject(text);
+            String type = jsonObject.optString("type");
             String cmd = jsonObject.optString("cmd");
-            switch (cmd) {
-                case "RELOAD": {
-                    String source = jsonObject.optString("source");
-                    String script = jsonObject.optString("script");
-                    EventBus.getDefault().post(new ReloadEvent(source, script));
+            JSONObject payload = jsonObject.optJSONObject("payload");
+            if ("D2C".equals(type)) {
+                if ("DEBUG_REQ".equals(cmd)) {
+                    String source = payload.optString("source");
+                    DoricContext context = DevKit.getInstance().requestDebugContext(source);
+                    sendToDebugger("DEBUG_RES", new JSONBuilder()
+                            .put("contextId", context == null ? "" : context.getContextId())
+                            .toJSONObject());
                 }
-                break;
-                case "SWITCH_TO_DEBUG": {
-                    String contextId = jsonObject.optString("contextId");
-                    EventBus.getDefault().post(new EnterDebugEvent());
+
+            } else if ("S2C".equals(type)) {
+                if ("RELOAD".equals(cmd)) {
+                    String source = payload.optString("source");
+                    String script = payload.optString("script");
+                    DevKit.getInstance().reload(source, script);
                 }
-                break;
             }
 
         } catch (JSONException e) {
@@ -111,7 +117,20 @@ public class WSClient extends WebSocketListener {
         }
     }
 
-    public void send(String command) {
-        webSocket.send(command);
+    public void sendToDebugger(String command, JSONObject payload) {
+        webSocket.send(new JSONBuilder()
+                .put("type", "C2D")
+                .put("cmd", command)
+                .put("payload", payload)
+                .toString());
     }
+
+    public void sendToServer(String command, JSONObject payload) {
+        webSocket.send(new JSONBuilder()
+                .put("type", "C2S")
+                .put("cmd", command)
+                .put("payload", payload)
+                .toString());
+    }
+
 }

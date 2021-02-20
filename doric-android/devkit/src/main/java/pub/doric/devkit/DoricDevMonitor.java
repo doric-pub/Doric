@@ -17,7 +17,7 @@ package pub.doric.devkit;
 
 import android.util.Log;
 
-import com.google.gson.JsonObject;
+import com.github.pengfeizhou.jscore.JSONBuilder;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -37,12 +37,14 @@ public class DoricDevMonitor implements IDoricMonitor {
         if (!DoricDev.getInstance().isInDevMode()) {
             return;
         }
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("source", "In source file: " + (context != null ? context.getSource() : "Unknown"));
         StringWriter stringWriter = new StringWriter();
         e.printStackTrace(new PrintWriter(stringWriter));
-        jsonObject.addProperty("exception", stringWriter.toString());
-        DevKit.getInstance().sendDevCommand(IDevKit.Command.EXCEPTION, jsonObject);
+        DevKit.getInstance().sendDevCommand(
+                IDevKit.Command.EXCEPTION,
+                new JSONBuilder()
+                        .put("source", "In source file: " + (context != null ? context.getSource() : "Unknown"))
+                        .put("exception", stringWriter.toString())
+                        .toJSONObject());
     }
 
     @Override
@@ -64,9 +66,11 @@ public class DoricDevMonitor implements IDoricMonitor {
                 DoricLog.suffix_d("_js", message);
                 break;
         }
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("type", typeString);
-        jsonObject.addProperty("message", message);
-        DevKit.getInstance().sendDevCommand(IDevKit.Command.LOG, jsonObject);
+        DevKit.getInstance().sendDevCommand(
+                IDevKit.Command.LOG,
+                new JSONBuilder()
+                        .put("type", typeString)
+                        .put("message", message)
+                        .toJSONObject());
     }
 }

@@ -7,7 +7,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Debug TS",
+            "name": "Doric Debugger",
             "program": "${workspaceFolder}/${relativeFile}",
             "preLaunchTask": "Doric Build",
             "sourceMaps": true,

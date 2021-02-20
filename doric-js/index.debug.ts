@@ -15,27 +15,88 @@
  */
 import * as doric from './src/runtime/sandbox'
 import WebSocket from "ws"
-import fs from "fs"
 import path from 'path'
-const contextFile = path.resolve(process.cwd(), 'build', 'context');
-const contextId = fs.readFileSync(contextFile, { encoding: 'utf8' })
-console.log("debugging context id: " + contextId)
+
+type MSG = {
+  type: "D2C" | "C2D" | "C2S" | "D2S" | "S2C" | "S2D",
+  cmd: string,
+  payload: { [index: string]: string }
+}
+
+let contextId: string | undefined = undefined;
 
 let global = new Function('return this')()
 global.setTimeout = global.doricSetTimeout
 global.setInterval = global.doricSetInterval
 global.clearTimeout = global.doricClearTimeout
 global.clearInterval = global.doricClearInterval
-
 global.doric = doric
-global.context = doric.jsObtainContext(contextId)
-global.Entry = doric.jsObtainEntry(contextId)
+
+
+async function initNativeEnvironment(source: string) {
+  // dev kit client
+  return new Promise<string>((resolve, reject) => {
+    const devClient = new WebSocket('ws://localhost:7777')
+    devClient.on('open', () => {
+      console.log('Connectted Devkit on port', '7777')
+      devClient.send(JSON.stringify({
+        type: "D2C",
+        payload: {
+          cmd: "DEBUG_REQ",
+          source,
+        },
+      }))
+    })
+    devClient.on('message', (data) => {
+      console.log(data)
+      const msg = JSON.parse(data as string) as { type: string, cwd: string, [idx: string]: string }
+      switch (msg.cwd) {
+        case "DEBUG_RES":
+          const contextId = msg.contextId;
+          if (contextId?.length > 0) {
+            resolve(contextId)
+          } else {
+            reject(`Cannot find applicable context in client for source ${source}`)
+          }
+          break;
+      }
+    })
+    devClient.on('error', (error) => {
+      console.log(error)
+      reject(error)
+    })
+  })
+}
+
+
+global.Entry = function () {
+  if (!!contextId) {
+    return Reflect.apply(doric.jsObtainEntry(contextId), doric, arguments);
+  } else {
+    const jsFile = new Error().stack?.split("\n")
+      .map(e => e.match(/at\s__decorate\s\((.*?)\)/))
+      .find(e => !!e)?.[1].match(/(.*?\.js)/)?.[1];
+    if (!jsFile) {
+      throw new Error("Cannot find debugging file");
+    }
+    const source = path.basename(jsFile)
+    const args = arguments
+    console.log(`Debugging ${source}`)
+    initNativeEnvironment(source).then(ret => {
+      contextId = ret;
+      console.log("debugging context id: " + contextId);
+      global.context = doric.jsObtainContext(contextId);
+      Reflect.apply(doric.jsObtainEntry(contextId), doric, args);
+    }).catch(error => console.error(error));
+    return arguments[0];
+  }
+}
 
 // debug server
 const debugServer = new WebSocket.Server({ port: 2080 })
-debugServer.on('connection', function connection(ws) {
+debugServer.on('connection', (ws) => {
   console.log('connected')
-  ws.on('message', function incoming(message: string) {
+  ws.on('message', (message: string) => {
     let messageObject = JSON.parse(message)
     switch (messageObject.cmd) {
       case "injectGlobalJSObject":

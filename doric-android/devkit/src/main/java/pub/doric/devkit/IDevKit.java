@@ -1,16 +1,17 @@
 package pub.doric.devkit;
 
-import com.google.gson.JsonObject;
+
+import org.json.JSONObject;
 
 public interface IDevKit {
 
     enum Command {
-        DEBUG, HOT_RELOAD, EXCEPTION, LOG
+        HOT_RELOAD, EXCEPTION, LOG
     }
 
     void connectDevKit(String url);
 
-    void sendDevCommand(IDevKit.Command command, JsonObject jsonObject);
+    void sendDevCommand(IDevKit.Command command, JSONObject jsonObject);
 
     void disconnectDevKit();
 }

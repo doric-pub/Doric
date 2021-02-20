@@ -1,6 +1,6 @@
 import { exec } from "child_process"
 import chokidar from "chokidar";
-import { createServer } from "./server"
+import { createServer, MSG } from "./server"
 import { delay } from "./util";
 import fs from "fs";
 import { mergeMap } from "./actions";
@@ -89,11 +89,14 @@ export default async function dev() {
         server.clients.forEach((e) => {
           e.send(
             JSON.stringify({
+              type: "S2C",
               cmd: "RELOAD",
-              script: content,
-              source: (jsFile.match(/[^/\\]*$/) || [""])[0],
-              sourceMap,
-            })
+              payload: {
+                script: content,
+                source: (jsFile.match(/[^/\\]*$/) || [""])[0],
+                sourceMap,
+              }
+            } as MSG)
           );
         });
       } catch (e) {

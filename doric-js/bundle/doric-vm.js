@@ -3,13 +3,11 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 var WebSocket = require('ws');
-var fs = require('fs');
 var path = require('path');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
 var WebSocket__default = /*#__PURE__*/_interopDefaultLegacy(WebSocket);
-var fs__default = /*#__PURE__*/_interopDefaultLegacy(fs);
 var path__default = /*#__PURE__*/_interopDefaultLegacy(path);
 
 /*
@@ -4218,37 +4216,86 @@ class VMPanel extends Panel {
     }
 }
 
-/*
- * Copyright [2019] [Doric.Pub]
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-const contextFile = path__default['default'].resolve(process.cwd(), 'build', 'context');
-const contextId = fs__default['default'].readFileSync(contextFile, { encoding: 'utf8' });
-console.log("debugging context id: " + contextId);
+var __awaiter$1 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+let contextId = undefined;
 let global$2 = new Function('return this')();
 global$2.setTimeout = global$2.doricSetTimeout;
 global$2.setInterval = global$2.doricSetInterval;
 global$2.clearTimeout = global$2.doricClearTimeout;
 global$2.clearInterval = global$2.doricClearInterval;
 global$2.doric = doric;
-global$2.context = jsObtainContext(contextId);
-global$2.Entry = jsObtainEntry(contextId);
+function initNativeEnvironment(source) {
+    return __awaiter$1(this, void 0, void 0, function* () {
+        // dev kit client
+        return new Promise((resolve, reject) => {
+            const devClient = new WebSocket__default['default']('ws://localhost:7777');
+            devClient.on('open', () => {
+                console.log('Connectted Devkit on port', '7777');
+                devClient.send(JSON.stringify({
+                    type: "D2C",
+                    payload: {
+                        cmd: "DEBUG_REQ",
+                        source,
+                    },
+                }));
+            });
+            devClient.on('message', (data) => {
+                console.log(data);
+                const msg = JSON.parse(data);
+                switch (msg.cwd) {
+                    case "DEBUG_RES":
+                        const contextId = msg.contextId;
+                        if ((contextId === null || contextId === void 0 ? void 0 : contextId.length) > 0) {
+                            resolve(contextId);
+                        }
+                        else {
+                            reject(`Cannot find applicable context in client for source ${source}`);
+                        }
+                        break;
+                }
+            });
+            devClient.on('error', (error) => {
+                console.log(error);
+                reject(error);
+            });
+        });
+    });
+}
+global$2.Entry = function () {
+    var _a, _b, _c;
+    if (!!contextId) {
+        return Reflect.apply(jsObtainEntry(contextId), doric, arguments);
+    }
+    else {
+        const jsFile = (_c = (_b = (_a = new Error().stack) === null || _a === void 0 ? void 0 : _a.split("\n").map(e => e.match(/at\s__decorate\s\((.*?)\)/)).find(e => !!e)) === null || _b === void 0 ? void 0 : _b[1].match(/(.*?\.js)/)) === null || _c === void 0 ? void 0 : _c[1];
+        if (!jsFile) {
+            throw new Error("Cannot find debugging file");
+        }
+        const source = path__default['default'].basename(jsFile);
+        const args = arguments;
+        console.log(`Debugging ${source}`);
+        initNativeEnvironment(source).then(ret => {
+            contextId = ret;
+            console.log("debugging context id: " + contextId);
+            global$2.context = jsObtainContext(contextId);
+            Reflect.apply(jsObtainEntry(contextId), doric, args);
+        }).catch(error => console.error(error));
+        return arguments[0];
+    }
+};
 // debug server
 const debugServer = new WebSocket__default['default'].Server({ port: 2080 });
-debugServer.on('connection', function connection(ws) {
+debugServer.on('connection', (ws) => {
     console.log('connected');
-    ws.on('message', function incoming(message) {
+    ws.on('message', (message) => {
         let messageObject = JSON.parse(message);
         switch (messageObject.cmd) {
             case "injectGlobalJSObject":

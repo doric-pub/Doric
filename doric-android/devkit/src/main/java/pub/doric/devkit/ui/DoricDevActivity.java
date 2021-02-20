@@ -17,8 +17,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.google.gson.JsonObject;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -27,12 +25,10 @@ import pub.doric.DoricContext;
 import pub.doric.DoricContextManager;
 import pub.doric.devkit.DevKit;
 import pub.doric.devkit.DoricDev;
-import pub.doric.devkit.IDevKit;
 import pub.doric.devkit.R;
 import pub.doric.devkit.event.ConnectExceptionEvent;
 import pub.doric.devkit.event.EOFExceptionEvent;
 import pub.doric.devkit.event.OpenEvent;
-import pub.doric.devkit.event.StartDebugEvent;
 import pub.doric.devkit.qrcode.DisplayUtil;
 import pub.doric.devkit.qrcode.activity.CaptureActivity;
 import pub.doric.devkit.qrcode.activity.CodeUtils;
@@ -154,11 +150,7 @@ public class DoricDevActivity extends AppCompatActivity {
             cell.findViewById(R.id.debug_text_view).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    EventBus.getDefault().post(new StartDebugEvent(doricContext.getContextId()));
-                    JsonObject jsonObject = new JsonObject();
-                    jsonObject.addProperty("contextId", doricContext.getContextId());
-                    jsonObject.addProperty("source", doricContext.getSource().replace(".js", ".ts"));
-                    DevKit.getInstance().sendDevCommand(IDevKit.Command.DEBUG, jsonObject);
+
                 }
             });
 

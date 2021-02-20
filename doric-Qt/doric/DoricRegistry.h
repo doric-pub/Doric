@@ -7,12 +7,17 @@
 
 class DoricRegistry {
 public:
-  DoricObjectFactory pluginInfoMap;
+  DoricObjectFactory plugins;
+  DoricObjectFactory nodes;
 
   DoricRegistry();
 
   template <typename T> void registerNativePlugin(QString name) {
-    pluginInfoMap.registerClass<T>(name);
+    plugins.registerClass<T>(name);
+  }
+
+  template <typename T> void registerViewNode(QString name) {
+    nodes.registerClass<T>(name);
   }
 
   bool acquirePluginInfo(QString name);

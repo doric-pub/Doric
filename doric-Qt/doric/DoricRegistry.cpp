@@ -7,5 +7,5 @@ DoricRegistry::DoricRegistry() {
 }
 
 bool DoricRegistry::acquirePluginInfo(QString name) {
-  return pluginInfoMap.acquireClass(name);
+  return plugins.acquireClass(name);
 }

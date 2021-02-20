@@ -20,9 +20,7 @@ void DoricBridgeExtension::callNative(QString contextId, QString module,
                               Q_ARG(QJSValue, jsValue),
                               Q_ARG(QString, callbackId));
   }
-  qDebug() << "contextId: " + contextId;
-  qDebug() << "module: " + module;
-  qDebug() << "methodName: " + methodName;
-  qDebug() << "callbackId: " + callbackId;
-  qDebug() << "jsValue: " + jsValue.toString();
+  qDebug() << "contextId: " + contextId << "module: " + module
+           << "methodName: " + methodName << "callbackId: " + callbackId
+           << "jsValue: " + jsValue.toString();
 }

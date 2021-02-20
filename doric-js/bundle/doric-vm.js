@@ -4236,33 +4236,111 @@ function initNativeEnvironment(source) {
     return __awaiter$1(this, void 0, void 0, function* () {
         // dev kit client
         return new Promise((resolve, reject) => {
-            const devClient = new WebSocket__default['default']('ws://localhost:7777');
-            devClient.on('open', () => {
+            const ws = new WebSocket__default['default']('ws://localhost:7777')
+                .on('open', () => {
                 console.log('Connectted Devkit on port', '7777');
-                devClient.send(JSON.stringify({
+                ws.send(JSON.stringify({
                     type: "D2C",
+                    cmd: "DEBUG_REQ",
                     payload: {
-                        cmd: "DEBUG_REQ",
                         source,
                     },
                 }));
-            });
-            devClient.on('message', (data) => {
-                console.log(data);
+            })
+                .on('message', (data) => {
+                var _a;
                 const msg = JSON.parse(data);
-                switch (msg.cwd) {
+                const payload = msg.payload;
+                switch (msg.cmd) {
                     case "DEBUG_RES":
-                        const contextId = msg.contextId;
-                        if ((contextId === null || contextId === void 0 ? void 0 : contextId.length) > 0) {
-                            resolve(contextId);
+                        const contextId = msg.payload.contextId;
+                        resolve(contextId);
+                        break;
+                    case "injectGlobalJSObject":
+                        console.log("injectGlobalJSObject", payload);
+                        const type = payload.type;
+                        const value = payload.value;
+                        let arg;
+                        if (type === 0) {
+                            arg = null;
                         }
-                        else {
-                            reject(`Cannot find applicable context in client for source ${source}`);
+                        else if (type === 1) {
+                            arg = parseFloat(value);
                         }
+                        else if (type === 2) {
+                            arg = (value == 'true');
+                        }
+                        else if (type === 3) {
+                            arg = value.toString();
+                        }
+                        else if (type === 4) {
+                            arg = JSON.parse(value);
+                        }
+                        else if (type === 5) {
+                            arg = JSON.parse(value);
+                        }
+                        Reflect.set(global$2, payload.name, arg);
+                        break;
+                    case "injectGlobalJSFunction":
+                        console.log("injectGlobalJSFunction", payload);
+                        Reflect.set(global$2, payload.name, function () {
+                            let args = [].slice.call(arguments);
+                            console.log(args);
+                            console.log("injected", payload.name, args);
+                            ws.send(JSON.stringify({
+                                type: "D2C",
+                                cmd: 'injectGlobalJSFunction',
+                                payload: {
+                                    name: payload.name,
+                                    arguments: args
+                                }
+                            }));
+                        });
+                        break;
+                    case "invokeMethod":
+                        console.log("invokeMethod", payload);
+                        const values = payload.values;
+                        let args = [];
+                        for (let i = 0; i < values.length; i++) {
+                            let value = values[i];
+                            if (value.type === 0) {
+                                args.push(null);
+                            }
+                            else if (value.type === 1) {
+                                args.push(parseFloat(value.value));
+                            }
+                            else if (value.type === 2) {
+                                args.push((value.value == 'true'));
+                            }
+                            else if (value.type === 3) {
+                                args.push(value.value.toString());
+                            }
+                            else if (value.type === 4) {
+                                args.push(JSON.parse(value.value));
+                            }
+                            else if (value.type === 5) {
+                                args.push(JSON.parse(value.value));
+                            }
+                        }
+                        const object = Reflect.get(global$2, payload.objectName);
+                        const method = Reflect.get(object, payload.functionName);
+                        const result = Reflect.apply(method, undefined, args);
+                        console.log(result);
+                        ws.send(JSON.stringify({
+                            type: "D2C",
+                            cmd: 'invokeMethod',
+                            payload: {
+                                result
+                            }
+                        }));
+                        break;
+                    case "DEBUG_STOP":
+                        console.log(((_a = msg.payload) === null || _a === void 0 ? void 0 : _a.msg) || "Stop debugging");
+                        process.exit(0);
                         break;
                 }
-            });
-            devClient.on('error', (error) => {
+            })
+                .on('error', (error) => {
                 console.log(error);
                 reject(error);
             });
@@ -4287,98 +4365,10 @@ global$2.Entry = function () {
             console.log("debugging context id: " + contextId);
             global$2.context = jsObtainContext(contextId);
             Reflect.apply(jsObtainEntry(contextId), doric, args);
-        }).catch(error => console.error(error));
+        });
         return arguments[0];
     }
 };
-// debug server
-const debugServer = new WebSocket__default['default'].Server({ port: 2080 });
-debugServer.on('connection', (ws) => {
-    console.log('connected');
-    ws.on('message', (message) => {
-        let messageObject = JSON.parse(message);
-        switch (messageObject.cmd) {
-            case "injectGlobalJSObject":
-                console.log(messageObject.name);
-                let type = messageObject.type;
-                let value = messageObject.value;
-                let arg;
-                if (type.type === 0) {
-                    arg = null;
-                }
-                else if (type === 1) {
-                    arg = parseFloat(value);
-                }
-                else if (type === 2) {
-                    arg = (value == 'true');
-                }
-                else if (type === 3) {
-                    arg = value.toString();
-                }
-                else if (type === 4) {
-                    arg = JSON.parse(value);
-                }
-                else if (type === 5) {
-                    arg = JSON.parse(value);
-                }
-                Reflect.set(global$2, messageObject.name, arg);
-                break;
-            case "injectGlobalJSFunction":
-                console.log(messageObject.name);
-                Reflect.set(global$2, messageObject.name, function () {
-                    let args = [].slice.call(arguments);
-                    console.log("===============================");
-                    console.log(args);
-                    console.log("===============================");
-                    ws.send(JSON.stringify({
-                        cmd: 'injectGlobalJSFunction',
-                        name: messageObject.name,
-                        arguments: args
-                    }));
-                });
-                break;
-            case "invokeMethod":
-                console.log(messageObject.objectName);
-                console.log(messageObject.functionName);
-                let args = [];
-                for (let i = 0; i < messageObject.values.length; i++) {
-                    let value = messageObject.values[i];
-                    if (value.type === 0) {
-                        args.push(null);
-                    }
-                    else if (value.type === 1) {
-                        args.push(parseFloat(value.value));
-                    }
-                    else if (value.type === 2) {
-                        args.push((value.value == 'true'));
-                    }
-                    else if (value.type === 3) {
-                        args.push(value.value.toString());
-                    }
-                    else if (value.type === 4) {
-                        args.push(JSON.parse(value.value));
-                    }
-                    else if (value.type === 5) {
-                        args.push(JSON.parse(value.value));
-                    }
-                }
-                console.log(args);
-                console.log(messageObject.hashKey);
-                let object = Reflect.get(global$2, messageObject.objectName);
-                let method = Reflect.get(object, messageObject.functionName);
-                let result = Reflect.apply(method, undefined, args);
-                console.log(result);
-                ws.send(JSON.stringify({
-                    cmd: 'invokeMethod',
-                    result: result
-                }));
-                break;
-        }
-    });
-});
-debugServer.on('listening', function connection(ws) {
-    console.log('debugger server started on 2080');
-});
 global$2.injectGlobal = (objName, obj) => {
     Reflect.set(global$2, objName, JSON.parse(obj));
 };

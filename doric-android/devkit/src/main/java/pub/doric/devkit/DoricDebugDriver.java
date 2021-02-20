@@ -28,7 +28,6 @@ import pub.doric.DoricRegistry;
 import pub.doric.IDoricDriver;
 import pub.doric.async.AsyncCall;
 import pub.doric.async.AsyncResult;
-import pub.doric.engine.DoricJSEngine;
 import pub.doric.utils.DoricConstant;
 import pub.doric.utils.DoricLog;
 import pub.doric.utils.ThreadMode;
@@ -39,17 +38,17 @@ import pub.doric.utils.ThreadMode;
  * @CreateDate: 2019-07-18
  */
 public class DoricDebugDriver implements IDoricDriver {
-    private final DoricJSEngine doricJSEngine;
+    private final DoricDebugJSEngine doricDebugJSEngine;
     private final ExecutorService mBridgeExecutor;
     private final Handler mUIHandler;
     private final Handler mJSHandler;
+    private String theContextId = null;
 
-
-    public DoricDebugDriver(IStatusCallback statusCallback) {
-        doricJSEngine = new DoricDebugJSEngine(statusCallback);
+    public DoricDebugDriver(WSClient wsClient) {
+        doricDebugJSEngine = new DoricDebugJSEngine(wsClient);
         mBridgeExecutor = Executors.newCachedThreadPool();
         mUIHandler = new Handler(Looper.getMainLooper());
-        mJSHandler = doricJSEngine.getJSHandler();
+        mJSHandler = doricDebugJSEngine.getJSHandler();
     }
 
     @Override
@@ -69,7 +68,7 @@ public class DoricDebugDriver implements IDoricDriver {
             @Override
             public JSDecoder call() {
                 try {
-                    return doricJSEngine.invokeDoricMethod(method, args);
+                    return doricDebugJSEngine.invokeDoricMethod(method, args);
                 } catch (Exception e) {
                     DoricLog.e("invokeDoricMethod(%s,...),error is %s", method, e.getLocalizedMessage());
                     return new JSDecoder(null);
@@ -97,7 +96,7 @@ public class DoricDebugDriver implements IDoricDriver {
             @Override
             public Boolean call() {
                 try {
-                    doricJSEngine.prepareContext(contextId, script, source);
+                    theContextId = contextId;
                     return true;
                 } catch (Exception e) {
                     DoricLog.e("createContext %s error is %s", source, e.getLocalizedMessage());
@@ -113,7 +112,9 @@ public class DoricDebugDriver implements IDoricDriver {
             @Override
             public Boolean call() {
                 try {
-                    doricJSEngine.destroyContext(contextId);
+                    if (contextId.equals(theContextId)) {
+                        DevKit.getInstance().stopDebugging(false);
+                    }
                     return true;
                 } catch (Exception e) {
                     DoricLog.e("destroyContext %s error is %s", contextId, e.getLocalizedMessage());
@@ -125,11 +126,11 @@ public class DoricDebugDriver implements IDoricDriver {
 
     @Override
     public DoricRegistry getRegistry() {
-        return doricJSEngine.getRegistry();
+        return doricDebugJSEngine.getRegistry();
     }
 
     public void destroy() {
-        doricJSEngine.teardown();
+        doricDebugJSEngine.teardown();
         mBridgeExecutor.shutdown();
     }
 }

@@ -23,6 +23,8 @@ import org.json.JSONObject;
 
 import java.io.EOFException;
 import java.net.ConnectException;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -43,6 +45,12 @@ import pub.doric.devkit.event.OpenEvent;
 public class WSClient extends WebSocketListener {
     private final WebSocket webSocket;
 
+    public interface Interceptor {
+        boolean intercept(String type, String command, JSONObject payload) throws JSONException;
+    }
+
+    private Set<Interceptor> interceptors = new HashSet<>();
+
     public WSClient(String url) {
         OkHttpClient okHttpClient = new OkHttpClient
                 .Builder()
@@ -51,6 +59,15 @@ public class WSClient extends WebSocketListener {
                 .build();
         Request request = new Request.Builder().url(url).build();
         webSocket = okHttpClient.newWebSocket(request, this);
+    }
+
+    public void addInterceptor(Interceptor interceptor) {
+        interceptors.add(interceptor);
+    }
+
+
+    public void removeInterceptor(Interceptor interceptor) {
+        interceptors.remove(interceptor);
     }
 
     public void close() {
@@ -72,23 +89,21 @@ public class WSClient extends WebSocketListener {
             String type = jsonObject.optString("type");
             String cmd = jsonObject.optString("cmd");
             JSONObject payload = jsonObject.optJSONObject("payload");
-            if ("D2C".equals(type)) {
-                if ("DEBUG_REQ".equals(cmd)) {
-                    String source = payload.optString("source");
-                    DoricContext context = DevKit.getInstance().requestDebugContext(source);
-                    sendToDebugger("DEBUG_RES", new JSONBuilder()
-                            .put("contextId", context == null ? "" : context.getContextId())
-                            .toJSONObject());
-                }
-
-            } else if ("S2C".equals(type)) {
-                if ("RELOAD".equals(cmd)) {
-                    String source = payload.optString("source");
-                    String script = payload.optString("script");
-                    DevKit.getInstance().reload(source, script);
+            for (Interceptor interceptor : interceptors) {
+                if (interceptor.intercept(type, cmd, payload)) {
+                    return;
                 }
             }
-
+            if ("DEBUG_REQ".equals(cmd)) {
+                String source = payload.optString("source");
+                DevKit.getInstance().startDebugging(source);
+            } else if ("DEBUG_STOP".equals(cmd)) {
+                DevKit.getInstance().stopDebugging(true);
+            } else if ("RELOAD".equals(cmd)) {
+                String source = payload.optString("source");
+                String script = payload.optString("script");
+                DevKit.getInstance().reload(source, script);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

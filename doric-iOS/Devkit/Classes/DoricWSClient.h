@@ -24,12 +24,22 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol DoricWSClientInterceptor <NSObject>
+- (BOOL)interceptType:(NSString *)type command:(NSString *)cmd payload:(NSDictionary *)payload;
+@end
+
 @interface DoricWSClient : NSObject
 - (instancetype)initWithUrl:(NSString *)url;
 
-- (void)send:(NSString *)command;
-
 - (void)close;
+
+- (void)addInterceptor:(id <DoricWSClientInterceptor>)interceptor;
+
+- (void)removeInterceptor:(id <DoricWSClientInterceptor>)interceptor;
+
+- (void)sendToDebugger:(NSString *)cmd payload:(NSDictionary *)payload;
+
+- (void)sendToServer:(NSString *)cmd payload:(NSDictionary *)payload;
 @end
 
 NS_ASSUME_NONNULL_END

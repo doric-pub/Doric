@@ -12,7 +12,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface NSString (JsonString)
-+ (NSString *)dc_convertToJsonWithDic:(NSDictionary *)dic;
++ (NSString *)dc_convertToJsonWithDic:(id)obj;
 @end
 
 NS_ASSUME_NONNULL_END

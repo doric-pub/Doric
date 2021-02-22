@@ -25,7 +25,6 @@
 
 #import "DoricDev.h"
 #import "DoricDevViewController.h"
-#import "DoricJSRemoteExecutor.h"
 #import "QRScanViewController.h"
 
 @interface DoricDevViewController () <UITableViewDelegate, UITableViewDataSource>
@@ -51,7 +50,6 @@
     }
     if (self.isSimulator) {
         NSString *result = @"127.0.0.1";
-        [DoricJSRemoteExecutor configIp:result];
         [[DoricDev instance] connectDevKit:[NSString stringWithFormat:@"ws://%@:7777", result]];
         ShowToast([NSString stringWithFormat:@"Connected to %@", result], DoricGravityBottom);
     } else {
@@ -94,9 +92,6 @@
                     @"source": [context.source stringByReplacingOccurrencesOfString:@".js" withString:@".ts"]
             }
     };
-
-    NSString *jsonStr = [NSString dc_convertToJsonWithDic:jsonDic];
-    [[DoricDev instance] sendDevCommand:jsonStr];
 }
 
 @end

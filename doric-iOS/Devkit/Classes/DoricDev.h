@@ -19,10 +19,12 @@
 //
 //  Created by jingpeng.wang on 2020/2/25.
 //
+#import "DoricWSClient.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface DoricDev : NSObject
+@property(nonatomic, strong) DoricWSClient *wsClient;
 + (instancetype)instance;
 
 - (void)openDevMode;
@@ -33,8 +35,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)connectDevKit:(NSString *)url;
 
-- (void)sendDevCommand:(NSString *)command;
+- (void)startDebugging:(NSString *)source;
 
+- (void)stopDebugging:(BOOL)resume;
+
+- (void)reload:(NSString *)source script:(NSString *)script;
 @end
 
 NS_ASSUME_NONNULL_END

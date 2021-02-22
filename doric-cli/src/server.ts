@@ -1,5 +1,8 @@
 import WebSocket from "ws"
 import "colors";
+import path from "path";
+import { glob } from "./util";
+import { Shell } from "./shell";
 
 export type MSG = {
     type: "D2C" | "C2D" | "C2S" | "D2S" | "S2C" | "S2D",
@@ -45,6 +48,26 @@ export async function createServer() {
                     debug?.send(result);
                 } else if (resultObject.type === "C2S") {
                     switch (resultObject.cmd) {
+                        case 'DEBUG':
+                            let source = resultObject.payload.source as string;
+                            if (source.endsWith(".js")) {
+                                source = source.replace(".js", ".ts");
+                            } else if (!source.endsWith(".ts")) {
+                                source = source + ".ts"
+                            }
+                            const tsFiles = await glob(`**/${source}`, {
+                                cwd: path.resolve(process.cwd(), "src")
+                            })
+                            if (!!!tsFiles || tsFiles.length === 0) {
+                                console.error(`Cannot find ${source} in ${path.resolve(process.cwd(), "src")}`);
+                            }
+                            const sourceFile = tsFiles[0];
+                            Shell.exec("node", [
+                                "--inspect-brk",
+                                path.resolve(process.cwd(), "src", sourceFile)
+                            ])
+                            console.log(`Debugger on ${sourceFile}`);
+                            break;
                         case 'EXCEPTION':
                             console.log(resultObject.payload.source.red);
                             console.log(resultObject.payload.exception.red);

@@ -6,7 +6,7 @@ import org.json.JSONObject;
 public interface IDevKit {
 
     enum Command {
-        HOT_RELOAD, EXCEPTION, LOG
+        HOT_RELOAD, EXCEPTION, LOG, DEBUG
     }
 
     void connectDevKit(String url);

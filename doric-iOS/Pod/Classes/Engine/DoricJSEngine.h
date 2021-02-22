@@ -46,6 +46,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (JSValue *)invokeDoricMethod:(NSString *)method argumentsArray:(NSArray *)args;
 
 - (void)ensureRunOnJSThread:(dispatch_block_t)block;
+
+- (void)initJSEngine;
 @end
 
 NS_ASSUME_NONNULL_END

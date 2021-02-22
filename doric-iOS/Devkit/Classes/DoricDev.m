@@ -20,20 +20,50 @@
 //  Created by jingpeng.wang on 2020/2/25.
 //
 #import <DoricCore/Doric.h>
-#import <DoricCore/DoricContextManager.h>
 #import <DoricCore/DoricNativeDriver.h>
-#import <DoricCore/DoricConstant.h>
+#import <DoricCore/DoricContextManager.h>
 
 #import "DoricDev.h"
-#import "DoricWSClient.h"
 #import "DoricDebugDriver.h"
 #import "DoricDevViewController.h"
 #import "DoricDevMonitor.h"
 
+@interface DoricContextDebuggable : NSObject
+@property(nonatomic, weak) DoricContext *doricContext;
+@property(nonatomic, weak) id <DoricDriverProtocol> nativeDriver;
+@property(nonatomic, weak) DoricWSClient *wsClient;
+@end
+
+@implementation DoricContextDebuggable
+- (instancetype)initWithWSClient:(DoricWSClient *)client context:(DoricContext *)context {
+    if (self = [super init]) {
+        _wsClient = client;
+        _doricContext = context;
+        _nativeDriver = context.driver;
+    }
+    return self;
+}
+
+- (void)startDebug {
+    [self.doricContext setDriver:[[DoricDebugDriver alloc] initWithWSClient:self.wsClient]];
+    [self.doricContext reload:self.doricContext.script];
+}
+
+- (void)stopDebug:(BOOL)resume {
+    id <DoricDriverProtocol> driver = self.doricContext.driver;
+    if ([driver isKindOfClass:DoricDebugDriver.class]) {
+
+    }
+    if (resume) {
+        self.doricContext.driver = self.nativeDriver;
+        [self.doricContext reload:self.doricContext.script];
+    }
+}
+@end
+
+
 @interface DoricDev ()
-@property(nonatomic, strong) DoricWSClient *wsclient;
-@property(nonatomic, strong) DoricContext *context;
-@property(nonatomic, strong) DoricDebugDriver *driver;
+@property(nonatomic, strong) DoricContextDebuggable *debuggable;
 @end
 
 @implementation DoricDev
@@ -43,10 +73,6 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onOpenEvent) name:@"OpenEvent" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onEOFEvent) name:@"EOFEvent" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onConnectExceptionEvent) name:@"ConnectExceptionEvent" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onStartDebugEvent:) name:@"StartDebugEvent" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onEnterDebugEvent) name:@"EnterDebugEvent" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onStopDebugEvent) name:@"StopDebugEvent" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onDebuggerReadyEvent) name:@"DebuggerReadyEvent" object:nil];
         [DoricNativeDriver.instance.registry registerMonitor:[DoricDevMonitor new]];
     }
     return self;
@@ -75,25 +101,21 @@
 }
 
 - (void)closeDevMode {
-    if (self.wsclient) {
-        [self.wsclient close];
-        self.wsclient = nil;
+    if (self.wsClient) {
+        [self.wsClient close];
+        self.wsClient = nil;
     }
 }
 
 - (BOOL)isInDevMode {
-    return self.wsclient != nil;
+    return self.wsClient != nil;
 }
 
 - (void)connectDevKit:(NSString *)url {
-    if (self.wsclient) {
-        [self.wsclient close];
+    if (self.wsClient) {
+        [self.wsClient close];
     }
-    self.wsclient = [[DoricWSClient alloc] initWithUrl:url];
-}
-
-- (void)sendDevCommand:(NSString *)command {
-    [self.wsclient send:command];
+    self.wsClient = [[DoricWSClient alloc] initWithUrl:url];
 }
 
 - (void)onOpenEvent {
@@ -108,34 +130,51 @@
     ShowToast(@"dev kit connection exception", DoricGravityBottom);
 }
 
-- (void)onStartDebugEvent:(NSNotification *)notification {
-    NSString *contextId = notification.object;
-    ShowToast(contextId, DoricGravityBottom);
-    for (DoricContext *context in  [[DoricContextManager instance] aliveContexts]) {
-        BOOL result = [context.contextId compare:contextId] == NSOrderedSame;
-        if (result) {
-            _context = context;
+- (DoricContext *)matchContext:(NSString *)source {
+    for (DoricContext *context in [DoricContextManager.instance aliveContexts]) {
+        if ([source containsString:context.source] || [context.source isEqualToString:@"__dev__"]) {
+            return context;
         }
+    }
+    return nil;
+}
+
+- (void)reload:(NSString *)source script:(NSString *)script {
+    DoricContext *context = [self matchContext:source];
+    if (context) {
+        if ([context.driver isKindOfClass:DoricDebugDriver.class]) {
+            DoricLog(@"Context source %@ in debugging,skip reload", source);
+        } else {
+            DoricLog(@"Context reload :id %@,source %@", context.contextId, source);
+            [context reload:script];
+        }
+    } else {
+        DoricLog(@"Cannot find context source %@ for reload", source);
     }
 }
 
-- (void)onEnterDebugEvent {
-    _driver = [DoricDebugDriver new];
-}
+- (void)startDebugging:(NSString *)source {
+    [self.debuggable stopDebug:YES];
+    DoricContext *context = [self matchContext:source];
+    if (context) {
+        [self.wsClient sendToDebugger:@"DEBUG_RES" payload:@{
+                @"contextId": context.contextId
+        }];
+        self.debuggable = [[DoricContextDebuggable alloc] initWithWSClient:self.wsClient context:context];
+        [self.debuggable startDebug];
+    } else {
+        DoricLog(@"Cannot find context source %@ for debugging", source);
+        [self.wsClient sendToDebugger:@"DEBUG_STOP" payload:@{
+                @"msg": @"Cannot find suitable alive context for debugging"
+        }];
+    }
+};
 
-- (void)onStopDebugEvent {
-    _context.driver = [DoricNativeDriver instance];
-    _context.rootNode.viewId = nil;
-    [_context callEntity:DORIC_ENTITY_INIT, _context.extra, nil];
-    [_context callEntity:DORIC_ENTITY_CREATE, nil];
-    [_context callEntity:DORIC_ENTITY_BUILD withArgumentsArray:@[_context.initialParams]];
-}
-
-- (void)onDebuggerReadyEvent {
-    _context.driver = _driver;
-    _context.rootNode.viewId = nil;
-    [_context callEntity:DORIC_ENTITY_INIT, _context.extra, nil];
-    [_context callEntity:DORIC_ENTITY_CREATE, nil];
-    [_context callEntity:DORIC_ENTITY_BUILD withArgumentsArray:@[_context.initialParams]];
+- (void)stopDebugging:(BOOL)resume {
+    [self.wsClient sendToDebugger:@"DEBUG_STOP" payload:@{
+            @"msg": @"Stop debugging"
+    }];
+    [self.debuggable stopDebug:resume];
+    self.debuggable = nil;
 }
 @end

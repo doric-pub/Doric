@@ -29,6 +29,7 @@ void DoricGroupNode::configChildNode() {
     QJSValue model = getSubModel(id);
     if (model.isUndefined()) {
       DoricRegistry *registry = getContext()->getDriver()->getRegistry();
+      qCritical() << "model.isUndefined()";
       continue;
     }
     QString type = model.property("type").toString();
@@ -37,7 +38,77 @@ void DoricGroupNode::configChildNode() {
       if (id == oldNode->getId()) {
         // The same, skip
         if (mReusable) {
+          if (oldNode->getType() == type) {
+            oldNode->setId(id);
+            oldNode->blend(model.property("props"));
+          } else {
+            mChildNodes.remove(idx);
+            oldNode->getNodeView()->setParent(nullptr);
+            oldNode->getNodeView()->setParentItem(nullptr);
+            oldNode->getNodeView()->deleteLater();
+
+            DoricViewNode *newNode = DoricViewNode::create(getContext(), type);
+            if (newNode != nullptr) {
+              newNode->setId(id);
+              newNode->init(this);
+              newNode->blend(model.property("props"));
+              mChildNodes.insert(idx, newNode);
+
+              int minIndex = qMin(idx, mView->childItems().size());
+              newNode->getNodeView()->setParentItem(mView);
+              newNode->getNodeView()->stackBefore(
+                  mView->childItems().at(minIndex));
+            }
+          }
         } else {
+          // Find in remain nodes
+          int position = -1;
+          for (int start = idx + 1; start < mChildNodes.size(); start++) {
+            DoricViewNode *node = mChildNodes.at(start);
+            if (id == node->getId()) {
+              // Found
+              position = start;
+              break;
+            }
+            if (position >= 0) {
+              // Found swap idx,position
+              DoricViewNode *reused = mChildNodes.at(position);
+              mChildNodes.removeAt(position);
+
+              DoricViewNode *abandoned = mChildNodes.at(idx);
+              mChildNodes.insert(idx, reused);
+              mChildNodes.insert(position, abandoned);
+
+              // View swap index
+              reused->getNodeView()->setParent(nullptr);
+              reused->getNodeView()->setParentItem(nullptr);
+              int minIndex = qMin(idx, mView->childItems().size());
+              reused->getNodeView()->setParentItem(mView);
+              reused->getNodeView()->stackBefore(
+                  mView->childItems().at(minIndex));
+
+              abandoned->getNodeView()->setParent(nullptr);
+              abandoned->getNodeView()->setParentItem(nullptr);
+              abandoned->getNodeView()->setParentItem(mView);
+              abandoned->getNodeView()->stackBefore(
+                  mView->childItems().at(position));
+            } else {
+              // Not found,insert
+              DoricViewNode *newNode =
+                  DoricViewNode::create(getContext(), type);
+              if (newNode != nullptr) {
+                newNode->setId(id);
+                newNode->init(this);
+                newNode->blend(model.property("props"));
+                mChildNodes.insert(idx, newNode);
+
+                int minIndex = qMin(idx, mView->childItems().size());
+                newNode->getNodeView()->setParentItem(mView);
+                newNode->getNodeView()->stackBefore(
+                    mView->childItems().at(minIndex));
+              }
+            }
+          }
         }
       }
     } else {

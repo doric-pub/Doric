@@ -29,9 +29,28 @@ public:
 
   void init(DoricSuperNode *superNode);
 
+  static DoricViewNode *create(DoricContext *context, QString type) {
+    bool classRegistered =
+        context->getDriver()->getRegistry()->acquireNodeInfo(type);
+    if (classRegistered) {
+      QObject *node =
+          context->getDriver()->getRegistry()->nodes.createObject(type);
+      DoricViewNode *castNode = dynamic_cast<DoricViewNode *>(node);
+      castNode->setContext(context);
+      castNode->mType = type;
+      return castNode;
+    } else {
+      return nullptr;
+    }
+  }
+
   QString getId();
 
   void setId(QString id);
+
+  QString getType();
+
+  QQuickItem *getNodeView();
 
   virtual void blend(QJSValue jsValue);
 

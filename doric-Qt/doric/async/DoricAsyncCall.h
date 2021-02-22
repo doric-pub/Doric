@@ -15,18 +15,11 @@ public:
   }
 
   template <typename Function>
-  static void ensureRunInMain(Function &&function) {
-    struct Event : public QEvent {
-      using DecayedFunction = typename std::decay<Function>::type;
-      DecayedFunction decayedFunction;
-      Event(DecayedFunction &&decayedFunction)
-          : QEvent(QEvent::None), decayedFunction(std::move(decayedFunction)) {}
-      Event(const DecayedFunction &decayedFunction)
-          : QEvent(QEvent::None), decayedFunction(decayedFunction) {}
-      ~Event() { decayedFunction(); }
-    };
-    QCoreApplication::postEvent(qApp,
-                                new Event(std::forward<Function>(function)));
+  static void ensureRunInMain(Function &&function,
+                              QThread *thread = qApp->thread()) {
+    auto *obj = QAbstractEventDispatcher::instance(thread);
+    Q_ASSERT(obj);
+    QMetaObject::invokeMethod(obj, std::forward<Function>(function));
   }
 };
 

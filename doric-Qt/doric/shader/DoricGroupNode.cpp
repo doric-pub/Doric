@@ -13,7 +13,6 @@ void DoricGroupNode::blend(QQuickItem *view, QString name, QJSValue prop) {
       }
     }
   } else {
-    qCritical() << "group node blend";
     DoricSuperNode::blend(view, name, prop);
   }
 }

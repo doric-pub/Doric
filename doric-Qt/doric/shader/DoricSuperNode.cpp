@@ -13,7 +13,6 @@ void DoricSuperNode::blend(QQuickItem *view, QString name, QJSValue prop) {
       }
     }
   } else {
-    qCritical() << "super node blend";
     DoricViewNode::blend(view, name, prop);
   }
 }

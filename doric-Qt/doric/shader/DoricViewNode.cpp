@@ -21,26 +21,24 @@ QString DoricViewNode::getId() { return mId; }
 
 void DoricViewNode::setId(QString id) { mId = id; }
 
+QString DoricViewNode::getType() { return mType; }
+
+QQuickItem *DoricViewNode::getNodeView() { return mView; }
+
 void DoricViewNode::blend(QJSValue jsValue) {
   QJSValueIterator it(jsValue);
-  QMap<QString, QJSValue> values;
   while (it.hasNext()) {
     it.next();
-    values.insert(it.name(), it.value());
-  }
-
-  auto keys = values.keys();
-  for (const QString &key : keys) {
-    qCritical() << key << ": " << values.value(key).toString();
-    qCritical() << mView;
-    blend(mView, key, values.value(key));
+    blend(mView, it.name(), it.value());
   }
 }
 
 void DoricViewNode::blend(QQuickItem *view, QString name, QJSValue prop) {
   qCritical() << "view node blend";
   if (name == "width") {
-
+    view->setWidth(100);
   } else if (name == "height") {
+    view->setHeight(100);
+  } else if (name == "backgroundColor") {
   }
 }

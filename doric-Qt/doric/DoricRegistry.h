@@ -21,6 +21,8 @@ public:
   }
 
   bool acquirePluginInfo(QString name);
+
+  bool acquireNodeInfo(QString name);
 };
 
 #endif // REGISTRY_H

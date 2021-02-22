@@ -49,7 +49,7 @@ public class WSClient extends WebSocketListener {
         boolean intercept(String type, String command, JSONObject payload) throws JSONException;
     }
 
-    private Set<Interceptor> interceptors = new HashSet<>();
+    private final Set<Interceptor> interceptors = new HashSet<>();
 
     public WSClient(String url) {
         OkHttpClient okHttpClient = new OkHttpClient

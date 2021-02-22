@@ -1,3 +1,18 @@
+/*
+* Copyright [2019] [Doric.Pub]
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 //
 //  DoricDevMonitor.m
 //  DoricDevkit
@@ -8,7 +23,6 @@
 #import "DoricDevMonitor.h"
 
 #import "DoricDev.h"
-#import "NSString+JsonString.h"
 #import "Doric.h"
 
 @implementation DoricDevMonitor
@@ -16,16 +30,11 @@
     if (!DoricDev.instance.isInDevMode) {
         return;
     }
-    NSDictionary *jsonDic = @{
-            @"cmd": @"EXCEPTION",
-            @"data": @{
-                    @"source": [context.source stringByReplacingOccurrencesOfString:@".js" withString:@".ts"],
-                    @"exception": exception.reason
-            }
-    };
-
-    NSString *jsonStr = [NSString dc_convertToJsonWithDic:jsonDic];
-    [[DoricDev instance] sendDevCommand:jsonStr];
+    [DoricDev.instance.wsClient sendToServer:@"EXCEPTION"
+                                     payload:@{
+                                             @"source": [context.source stringByReplacingOccurrencesOfString:@".js" withString:@".ts"],
+                                             @"exception": exception.reason
+                                     }];
 }
 
 - (void)onLog:(DoricLogType)type message:(NSString *)message {
@@ -33,23 +42,16 @@
         return;
     }
     NSString *typeString = @"DEFAULT";
-    if (type == DoricLogTypeDebug) {
-        typeString = @"DEFAULT";
-    } else if (type == DoricLogTypeWarning) {
+    if (type == DoricLogTypeWarning) {
         typeString = @"WARN";
     } else if (type == DoricLogTypeError) {
         typeString = @"ERROR";
     }
 
-    NSDictionary *jsonDic = @{
-            @"cmd": @"LOG",
-            @"data": @{
-                    @"type": typeString,
-                    @"message": message
-            }
-    };
-
-    NSString *jsonStr = [NSString dc_convertToJsonWithDic:jsonDic];
-    [[DoricDev instance] sendDevCommand:jsonStr];
+    [DoricDev.instance.wsClient sendToServer:@"EXCEPTION"
+                                     payload:@{
+                                             @"type": typeString,
+                                             @"message": message
+                                     }];
 }
 @end

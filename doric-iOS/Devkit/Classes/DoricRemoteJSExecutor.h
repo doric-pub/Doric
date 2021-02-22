@@ -14,24 +14,20 @@
 * limitations under the License.
 */
 //
-//  DoricJSRemoteExecutor.h
-//  Pods
+//  DoricRemoteJSExecutor.h
+//  DoricDevkit
 //
-//  Created by 王劲鹏 on 2019/10/31.
+//  Created by pengfei.zhou on 2021/2/22.
 //
 
 #import <Foundation/Foundation.h>
 #import <DoricCore/DoricJSExecutorProtocol.h>
+#import "DoricWSClient.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DoricJSRemoteExecutor : NSObject <DoricJSExecutorProtocol>
-
-@property(nonatomic, strong) dispatch_semaphore_t semaphore;
-
-+ (void)configIp:(NSString *)ip;
-
-- (void)close;
+@interface DoricRemoteJSExecutor : NSObject <DoricJSExecutorProtocol>
+- (instancetype)initWithWSClient:(DoricWSClient *)wsClient;
 @end
 
 NS_ASSUME_NONNULL_END

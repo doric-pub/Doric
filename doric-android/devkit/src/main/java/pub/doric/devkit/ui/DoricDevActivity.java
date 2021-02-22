@@ -17,6 +17,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.github.pengfeizhou.jscore.JSONBuilder;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -25,6 +27,7 @@ import pub.doric.DoricContext;
 import pub.doric.DoricContextManager;
 import pub.doric.devkit.DevKit;
 import pub.doric.devkit.DoricDev;
+import pub.doric.devkit.IDevKit;
 import pub.doric.devkit.R;
 import pub.doric.devkit.event.ConnectExceptionEvent;
 import pub.doric.devkit.event.EOFExceptionEvent;
@@ -150,7 +153,11 @@ public class DoricDevActivity extends AppCompatActivity {
             cell.findViewById(R.id.debug_text_view).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    DevKit.getInstance().sendDevCommand(
+                            IDevKit.Command.DEBUG,
+                            new JSONBuilder()
+                                    .put("source", doricContext.getSource())
+                                    .toJSONObject());
                 }
             });
 

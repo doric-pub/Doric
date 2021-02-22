@@ -22,16 +22,20 @@
 
 #import "DoricWSClient.h"
 #import "SRWebSocket.h"
-#import "DoricUtil.h"
-#import "DoricContextManager.h"
+#import <DoricCore/Doric.h>
+#import <DoricCore/DoricContextManager.h>
+#import <DoricCore/NSString+JsonString.h>
+#import "DoricDev.h"
 
 @interface DoricWSClient () <SRWebSocketDelegate>
 @property(nonatomic, strong) SRWebSocket *websocket;
+@property(nonatomic, strong) NSHashTable <id <DoricWSClientInterceptor>> *interceptors;
 @end
 
 @implementation DoricWSClient
 - (instancetype)initWithUrl:(NSString *)url {
     if (self = [super init]) {
+        _interceptors = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
         _websocket = [[SRWebSocket alloc] initWithURL:[NSURL URLWithString:url]];
         _websocket.delegate = self;
         [_websocket open];
@@ -58,7 +62,27 @@
         DoricLog(@"webSocketdidReceiveMessage parse error：%@", err);
         return;
     }
-    NSString *cmd = [[dic valueForKey:@"cmd"] mutableCopy];
+
+    NSString *type = dic[@"type"];
+    NSString *cmd = dic[@"cmd"];
+    NSDictionary *payload = dic[@"payload"];
+    for (id <DoricWSClientInterceptor> interceptor in self.interceptors) {
+        if ([interceptor interceptType:type command:cmd payload:payload]) {
+            return;
+        }
+    }
+
+    if ([cmd isEqualToString:@"DEBUG_REQ"]) {
+        NSString *source = payload[@"source"];
+        [DoricDev.instance startDebugging:source];
+    } else if ([cmd isEqualToString:@"DEBUG_STOP"]) {
+        [DoricDev.instance stopDebugging:YES];
+    } else if ([cmd isEqualToString:@"RELOAD"]) {
+        NSString *source = payload[@"source"];
+        NSString *script = payload[@"script"];
+        [DoricDev.instance reload:source script:script];
+    }
+
     if ([cmd compare:@"SWITCH_TO_DEBUG"] == NSOrderedSame) {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"EnterDebugEvent" object:nil];
     } else if ([cmd compare:@"RELOAD"] == NSOrderedSame) {
@@ -82,8 +106,33 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"EOFEvent" object:nil];
 }
 
-- (void)send:(NSString *)command {
-    [_websocket send:command];
+- (void)send:(NSDictionary *)command {
+    NSString *jsonStr = [NSString dc_convertToJsonWithDic:command];
+    [_websocket send:jsonStr];
+}
+
+- (void)addInterceptor:(id <DoricWSClientInterceptor>)interceptor {
+    [self.interceptors addObject:interceptor];
+}
+
+- (void)removeInterceptor:(id <DoricWSClientInterceptor>)interceptor {
+    [self.interceptors removeObject:interceptor];
+}
+
+- (void)sendToDebugger:(NSString *)cmd payload:(NSDictionary *)payload {
+    [self send:@{
+            @"type": @"C2D",
+            @"cmd": cmd,
+            @"payload": payload,
+    }];
+}
+
+- (void)sendToServer:(NSString *)cmd payload:(NSDictionary *)payload {
+    [self send:@{
+            @"type": @"C2S",
+            @"cmd": cmd,
+            @"payload": payload,
+    }];
 }
 
 - (void)close {

@@ -23,19 +23,21 @@
 #import "DoricDebugDriver.h"
 #import "DoricDebugJSEngine.h"
 #import "DoricConstant.h"
-#import "DoricContextManager.h"
+#import "DoricDev.h"
 
 @interface DoricDebugDriver ()
 @property(nonatomic, strong) DoricJSEngine *jsExecutor;
+@property(nonatomic, copy) NSString *theContextId;
 @end
 
 @implementation DoricDebugDriver
 
 @dynamic registry;
 
-- (instancetype)init {
+- (instancetype)initWithWSClient:(DoricWSClient *)wsClient {
     if (self = [super init]) {
-        _jsExecutor = [[DoricDebugJSEngine alloc] init];
+        _jsExecutor = [[DoricDebugJSEngine alloc] initWithWSClient:wsClient];
+        _theContextId = nil;
     }
     return self;
 }
@@ -150,7 +152,7 @@
         __strong typeof(_self) self = _self;
         if (!self) return;
         @try {
-            [self.jsExecutor prepareContext:contextId script:script source:source];
+            self.theContextId = contextId;
             [ret setupResult:@YES];
         } @catch (NSException *exception) {
             [ret setupError:exception];
@@ -166,7 +168,9 @@
         __strong typeof(_self) self = _self;
         if (!self) return;
         @try {
-            [self.jsExecutor destroyContext:contextId];
+            if ([contextId isEqualToString:self.theContextId]) {
+                [DoricDev.instance stopDebugging:NO];
+            }
             [ret setupResult:@YES];
         } @catch (NSException *exception) {
             [ret setupError:exception];

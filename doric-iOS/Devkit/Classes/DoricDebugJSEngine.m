@@ -22,68 +22,22 @@
 
 #import "DoricContext.h"
 #import "DoricDebugJSEngine.h"
-#import "DoricJSRemoteExecutor.h"
-#import "DoricUtil.h"
-#import "NSString+JsonString.h"
-#import "DoricDev.h"
-
-@interface DoricDebugMonitor : NSObject <DoricMonitorProtocol>
-@end
-
-@implementation DoricDebugMonitor
-- (void)onException:(NSException *)exception inContext:(DoricContext *)context {
-    DoricLog(@"DefaultMonitor - source: %@-  onException - %@", context.source, exception.reason);
-    NSDictionary *jsonDic = @{
-            @"cmd": @"EXCEPTION",
-            @"data": @{
-                    @"source": [context.source stringByReplacingOccurrencesOfString:@".js" withString:@".ts"],
-                    @"exception": exception.reason
-            }
-    };
-
-    NSString *jsonStr = [NSString dc_convertToJsonWithDic:jsonDic];
-    [[DoricDev instance] sendDevCommand:jsonStr];
-}
-
-- (void)onLog:(DoricLogType)type message:(NSString *)message {
-    DoricLog(message);
-    
-    NSString *typeString = @"DEFAULT";
-    if (type == DoricLogTypeDebug) {
-        typeString = @"DEFAULT";
-    } else if (type == DoricLogTypeWarning) {
-        typeString = @"WARN";
-    } else if (type == DoricLogTypeError) {
-        typeString = @"ERROR";
-    }
-    
-    NSDictionary *jsonDic = @{
-            @"cmd": @"LOG",
-            @"data": @{
-                    @"type": typeString,
-                    @"message": message
-            }
-    };
-
-    NSString *jsonStr = [NSString dc_convertToJsonWithDic:jsonDic];
-    [[DoricDev instance] sendDevCommand:jsonStr];
-}
-@end
+#import "DoricRemoteJSExecutor.h"
 
 @interface DoricDebugJSEngine ()
+@property(nonatomic, weak) DoricWSClient *wsClient;
 @end
 
 @implementation DoricDebugJSEngine
 
-- (instancetype)init {
+- (instancetype)initWithWSClient:(DoricWSClient *)wsClient {
     if (self = [super init]) {
+        _wsClient = wsClient;
     }
     return self;
 }
 
 - (void)initJSEngine {
-    [self.registry registerMonitor:[DoricDebugMonitor new]];
-    self.jsExecutor = [[DoricJSRemoteExecutor alloc] init];
+    self.jsExecutor = [[DoricRemoteJSExecutor alloc] initWithWSClient:self.wsClient];
 }
-
 @end

@@ -96,6 +96,7 @@
             [self initJSExecutor];
             [self initDoricEnvironment];
         }];
+        [self.registry registerMonitor:[DoricDefaultMonitor new]];
     }
     return self;
 }
@@ -126,7 +127,6 @@
 }
 
 - (void)initJSEngine {
-    [self.registry registerMonitor:[DoricDefaultMonitor new]];
     self.jsExecutor = [DoricJSCoreExecutor new];
 }
 

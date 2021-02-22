@@ -9,11 +9,11 @@
 #import "DoricUtil.h"
 
 @implementation NSString (JsonString)
-+ (NSString *)dc_convertToJsonWithDic:(NSDictionary *)dic {
++ (NSString *)dc_convertToJsonWithDic:(id)obj {
     NSError *err;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:&err];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:obj options:NSJSONWritingPrettyPrinted error:&err];
     NSString *jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    
+
     if (err) {
         DoricLog(NSStringFromSelector(_cmd), @"Convert dictionary to json string failed.");
         return nil;

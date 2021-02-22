@@ -34,7 +34,6 @@ void DoricViewNode::blend(QJSValue jsValue) {
 }
 
 void DoricViewNode::blend(QQuickItem *view, QString name, QJSValue prop) {
-  qCritical() << "view node blend";
   if (name == "width") {
     view->setWidth(100);
   } else if (name == "height") {

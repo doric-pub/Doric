@@ -1,9 +1,9 @@
-#include "DoricStackNode.h"
+#include "DoricVLayoutNode.h"
 
-QQuickItem *DoricStackNode::build() {
+QQuickItem *DoricVLayoutNode::build() {
   QQmlComponent component(getContext()->getQmlEngine());
 
-  const QUrl url(QStringLiteral("qrc:/doric/qml/stack.qml"));
+  const QUrl url(QStringLiteral("qrc:/doric/qml/vlayout.qml"));
   component.loadUrl(url);
 
   qCritical() << component.errorString();
@@ -11,5 +11,3 @@ QQuickItem *DoricStackNode::build() {
   QQuickItem *item = qobject_cast<QQuickItem *>(component.create());
   return item;
 }
-
-void DoricStackNode::blendLayoutConfig() { DoricViewNode::blendLayoutConfig(); }

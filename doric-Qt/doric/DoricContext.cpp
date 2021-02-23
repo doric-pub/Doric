@@ -73,3 +73,7 @@ QObject *DoricContext::obtainPlugin(QString name) {
     return plugin;
   }
 }
+
+void DoricContext::setQmlEngine(QQmlEngine *engine) { mQmlEngine = engine; }
+
+QQmlEngine *DoricContext::getQmlEngine() { return mQmlEngine; }

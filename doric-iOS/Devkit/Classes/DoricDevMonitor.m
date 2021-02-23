@@ -48,7 +48,7 @@
         typeString = @"ERROR";
     }
 
-    [DoricDev.instance.wsClient sendToServer:@"EXCEPTION"
+    [DoricDev.instance.wsClient sendToServer:@"LOG"
                                      payload:@{
                                              @"type": typeString,
                                              @"message": message

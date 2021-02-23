@@ -78,7 +78,7 @@ typedef id (^Block5)(id arg0, id arg1, id arg2, id arg3, id arg4);
         [self.wsClient sendToDebugger:@"injectGlobalJSObject" payload:@{
                 @"name": name,
                 @"type": @(DoricJSRemoteArgTypeNumber),
-                @"value": obj,
+                @"value": [NSString stringWithFormat:@"%@", obj],
         }];
     } else if ([obj isKindOfClass:NSString.class]) {
         [self.wsClient sendToDebugger:@"injectGlobalJSObject" payload:@{
@@ -90,13 +90,13 @@ typedef id (^Block5)(id arg0, id arg1, id arg2, id arg3, id arg4);
         [self.wsClient sendToDebugger:@"injectGlobalJSObject" payload:@{
                 @"name": name,
                 @"type": @(DoricJSRemoteArgTypeObject),
-                @"value": obj,
+                @"value": [NSString dc_convertToJsonWithDic:obj],
         }];
     } else if ([obj isKindOfClass:NSArray.class]) {
         [self.wsClient sendToDebugger:@"injectGlobalJSObject" payload:@{
                 @"name": name,
                 @"type": @(DoricJSRemoteArgTypeArray),
-                @"value": obj,
+                @"value": [NSString dc_convertToJsonWithDic:obj],
         }];
     } else if (obj == nil) {
         [self.wsClient sendToDebugger:@"injectGlobalJSObject" payload:@{
@@ -160,22 +160,20 @@ typedef id (^Block5)(id arg0, id arg1, id arg2, id arg3, id arg4);
             NSString *name = payload[@"name"];
             NSArray *argsArr = payload[@"arguments"];
             id tmpBlk = self.blockMDic[name];
-            id result;
             if (argsArr.count == 0) {
-                result = ((Block0) tmpBlk)();
+               ((Block0) tmpBlk)();
             } else if (argsArr.count == 1) {
-                result = ((Block1) tmpBlk)(argsArr[0]);
+                 ((Block1) tmpBlk)(argsArr[0]);
             } else if (argsArr.count == 2) {
-                result = ((Block2) tmpBlk)(argsArr[0], argsArr[1]);
+                 ((Block2) tmpBlk)(argsArr[0], argsArr[1]);
             } else if (argsArr.count == 3) {
-                result = ((Block3) tmpBlk)(argsArr[0], argsArr[1], argsArr[2]);
+                 ((Block3) tmpBlk)(argsArr[0], argsArr[1], argsArr[2]);
             } else if (argsArr.count == 4) {
-                result = ((Block4) tmpBlk)(argsArr[0], argsArr[1], argsArr[2], argsArr[3]);
+                 ((Block4) tmpBlk)(argsArr[0], argsArr[1], argsArr[2], argsArr[3]);
             } else if (argsArr.count == 5) {
-                result = ((Block5) tmpBlk)(argsArr[0], argsArr[1], argsArr[2], argsArr[3], argsArr[4]);
+                ((Block5) tmpBlk)(argsArr[0], argsArr[1], argsArr[2], argsArr[3], argsArr[4]);
             } else {
                 DoricLog(@"error:args to more than 5. args:%@", argsArr);
-                result = nil;
             }
         } else if ([cmd isEqualToString:@"invokeMethod"]) {
             @try {

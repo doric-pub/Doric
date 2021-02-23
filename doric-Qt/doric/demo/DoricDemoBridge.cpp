@@ -26,7 +26,7 @@ void DoricDemoBridge::navigate(QVariant route) {
       const QUrl url(QStringLiteral("qrc:/doric/qml/panel.qml"));
       component.loadUrl(url);
       QQuickItem *quickItem = qobject_cast<QQuickItem *>(component.create());
-      DoricPanel *panel = new DoricPanel(quickItem);
+      DoricPanel *panel = new DoricPanel(view->engine(), quickItem);
       quickItem->setWidth(450);
       quickItem->setHeight(800);
       quickItem->setParentItem(view->rootObject());

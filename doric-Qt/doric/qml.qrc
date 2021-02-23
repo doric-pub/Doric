@@ -17,5 +17,6 @@
         <file alias="view.qml">./resources/view.qml</file>
         <file alias="panel.qml">./resources/panel.qml</file>
         <file alias="stack.qml">./resources/stack.qml</file>
+        <file alias="vlayout.qml">./resources/vlayout.qml</file>
     </qresource>
 </RCC>

@@ -11,10 +11,11 @@ private:
   int renderedWidth = -1;
   int renderedHeight = -1;
 
+  QQmlEngine *mQmlEngine;
   QQuickItem *mQuickItem;
 
 public:
-  DoricPanel(QQuickItem *quickItem);
+  DoricPanel(QQmlEngine *qmlEngine, QQuickItem *quickItem);
 
   void config(QString script, QString alias, QString extra);
 

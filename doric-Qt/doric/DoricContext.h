@@ -1,6 +1,7 @@
 #ifndef CONTEXT_H
 #define CONTEXT_H
 
+#include <QQmlEngine>
 #include <QVariant>
 
 #include "DoricInterfaceDriver.h"
@@ -17,6 +18,7 @@ private:
   QString extra;
   QVariant initParams;
   DoricInterfaceDriver *driver = NULL;
+  QQmlEngine *mQmlEngine;
 
 public:
   DoricContext(QString contextId, QString source, QString extra);
@@ -34,6 +36,10 @@ public:
   DoricRootNode *getRootNode();
 
   QObject *obtainPlugin(QString name);
+
+  void setQmlEngine(QQmlEngine *engine);
+
+  QQmlEngine *getQmlEngine();
 };
 
 #endif // CONTEXT_H

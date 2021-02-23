@@ -39,8 +39,8 @@ public class DoricDevMonitor implements IDoricMonitor {
         }
         StringWriter stringWriter = new StringWriter();
         e.printStackTrace(new PrintWriter(stringWriter));
-        DevKit.getInstance().sendDevCommand(
-                IDevKit.Command.EXCEPTION,
+        DoricDev.getInstance().sendDevCommand(
+                "EXCEPTION",
                 new JSONBuilder()
                         .put("source", "In source file: " + (context != null ? context.getSource() : "Unknown"))
                         .put("exception", stringWriter.toString())
@@ -66,8 +66,8 @@ public class DoricDevMonitor implements IDoricMonitor {
                 DoricLog.suffix_d("_js", message);
                 break;
         }
-        DevKit.getInstance().sendDevCommand(
-                IDevKit.Command.LOG,
+        DoricDev.getInstance().sendDevCommand(
+                "LOG",
                 new JSONBuilder()
                         .put("type", typeString)
                         .put("message", message)

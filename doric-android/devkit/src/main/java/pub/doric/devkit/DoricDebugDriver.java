@@ -113,7 +113,7 @@ public class DoricDebugDriver implements IDoricDriver {
             public Boolean call() {
                 try {
                     if (contextId.equals(theContextId)) {
-                        DevKit.getInstance().stopDebugging(false);
+                        DoricDev.getInstance().stopDebugging(false);
                     }
                     return true;
                 } catch (Exception e) {

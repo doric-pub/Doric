@@ -63,6 +63,7 @@
 
 
 @interface DoricDev ()
+@property(nonatomic, strong, nullable) DoricWSClient *wsClient;
 @property(nonatomic, strong) DoricContextDebuggable *debuggable;
 @end
 
@@ -176,5 +177,9 @@
     }];
     [self.debuggable stopDebug:resume];
     self.debuggable = nil;
+}
+
+- (void)sendDevCommand:(NSString *)command payload:(NSDictionary *)payload {
+    [self.wsClient sendToServer:command payload:payload];
 }
 @end

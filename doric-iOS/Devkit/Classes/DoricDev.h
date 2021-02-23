@@ -24,7 +24,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface DoricDev : NSObject
-@property(nonatomic, strong, nullable) DoricWSClient *wsClient;
 
 + (instancetype)instance;
 
@@ -41,6 +40,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)stopDebugging:(BOOL)resume;
 
 - (void)reload:(NSString *)source script:(NSString *)script;
+
+- (void)sendDevCommand:(NSString *)command payload:(NSDictionary *)payload;
 @end
 
 NS_ASSUME_NONNULL_END

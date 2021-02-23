@@ -25,9 +25,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import pub.doric.DoricContext;
 import pub.doric.DoricContextManager;
-import pub.doric.devkit.DevKit;
 import pub.doric.devkit.DoricDev;
-import pub.doric.devkit.IDevKit;
 import pub.doric.devkit.R;
 import pub.doric.devkit.event.ConnectExceptionEvent;
 import pub.doric.devkit.event.EOFExceptionEvent;
@@ -49,9 +47,8 @@ public class DoricDevActivity extends AppCompatActivity {
         if (DoricDev.getInstance().isInDevMode()) {
             initViews();
         } else {
-            if (DevKit.isRunningInEmulator) {
-                DevKit.ip = "10.0.2.2";
-                DevKit.getInstance().connectDevKit("ws://" + DevKit.ip + ":7777");
+            if (DoricDev.getInstance().isRunningInEmulator) {
+                DoricDev.getInstance().connectDevKit("ws://" + "10.0.2.2" + ":7777");
             } else {
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                         != PackageManager.PERMISSION_GRANTED) {
@@ -93,9 +90,8 @@ public class DoricDevActivity extends AppCompatActivity {
             }
             if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
                 String result = bundle.getString(CodeUtils.RESULT_STRING);
-                DevKit.ip = result;
                 Toast.makeText(this, "dev kit connecting to " + result, Toast.LENGTH_LONG).show();
-                DevKit.getInstance().connectDevKit("ws://" + result + ":7777");
+                DoricDev.getInstance().connectDevKit("ws://" + result + ":7777");
             }
         }
     }
@@ -153,8 +149,8 @@ public class DoricDevActivity extends AppCompatActivity {
             cell.findViewById(R.id.debug_text_view).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    DevKit.getInstance().sendDevCommand(
-                            IDevKit.Command.DEBUG,
+                    DoricDev.getInstance().sendDevCommand(
+                            "DEBUG",
                             new JSONBuilder()
                                     .put("source", doricContext.getSource())
                                     .toJSONObject());

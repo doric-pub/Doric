@@ -9,9 +9,15 @@ void DoricShaderPlugin::render(QJSValue jsValue, QString callbackId) {
         QString viewId = jsValue.property("id").toString();
         DoricRootNode *rootNode = getContext()->getRootNode();
 
-        if (rootNode->getId().isEmpty() && jsValue.property("type").toString() == "Root") {
+        if (rootNode->getId().isEmpty() &&
+            jsValue.property("type").toString() == "Root") {
           rootNode->setId(viewId);
           rootNode->blend(jsValue.property("props"));
+        } else {
+          DoricViewNode *viewNode = getContext()->targetViewNode(viewId);
+          if (viewNode != nullptr) {
+            viewNode->blend(jsValue.property("props"));
+          }
         }
       },
       DoricThreadMode::UI);

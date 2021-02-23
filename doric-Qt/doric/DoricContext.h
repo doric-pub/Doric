@@ -6,6 +6,7 @@
 
 #include "DoricInterfaceDriver.h"
 
+class DoricViewNode;
 class DoricRootNode;
 
 class DoricContext {
@@ -40,6 +41,8 @@ public:
   void setQmlEngine(QQmlEngine *engine);
 
   QQmlEngine *getQmlEngine();
+
+  DoricViewNode *targetViewNode(QString id);
 };
 
 #endif // CONTEXT_H

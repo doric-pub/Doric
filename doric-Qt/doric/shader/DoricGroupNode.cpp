@@ -36,11 +36,14 @@ void DoricGroupNode::configChildNode() {
       DoricViewNode *oldNode = mChildNodes.at(idx);
       if (id == oldNode->getId()) {
         // The same, skip
+      } else {
         if (mReusable) {
           if (oldNode->getType() == type) {
+            // Same type,can be reused
             oldNode->setId(id);
             oldNode->blend(model.property("props"));
           } else {
+            // Replace this view
             mChildNodes.remove(idx);
             oldNode->getNodeView()->setParent(nullptr);
             oldNode->getNodeView()->setParentItem(nullptr);
@@ -69,50 +72,62 @@ void DoricGroupNode::configChildNode() {
               position = start;
               break;
             }
-            if (position >= 0) {
-              // Found swap idx,position
-              DoricViewNode *reused = mChildNodes.at(position);
-              mChildNodes.removeAt(position);
+          }
+          if (position >= 0) {
+            // Found swap idx,position
+            DoricViewNode *reused = mChildNodes.at(position);
+            DoricViewNode *abandoned = mChildNodes.at(idx);
+            mChildNodes.swapItemsAt(position, idx);
 
-              DoricViewNode *abandoned = mChildNodes.at(idx);
-              mChildNodes.insert(idx, reused);
-              mChildNodes.insert(position, abandoned);
+            // View swap index
+            reused->getNodeView()->setParentItem(nullptr);
+            int minIndex = qMin(idx, mView->childItems().size());
+            reused->getNodeView()->setParentItem(mView);
+            reused->getNodeView()->stackBefore(
+                mView->childItems().at(minIndex));
 
-              // View swap index
-              reused->getNodeView()->setParent(nullptr);
-              reused->getNodeView()->setParentItem(nullptr);
+            abandoned->getNodeView()->stackBefore(
+                mView->childItems().at(position));
+          } else {
+            // Not found,insert
+            DoricViewNode *newNode = DoricViewNode::create(getContext(), type);
+            if (newNode != nullptr) {
+              newNode->setId(id);
+              newNode->init(this);
+              newNode->blend(model.property("props"));
+              mChildNodes.insert(idx, newNode);
+
               int minIndex = qMin(idx, mView->childItems().size());
-              reused->getNodeView()->setParentItem(mView);
-              reused->getNodeView()->stackBefore(
+              newNode->getNodeView()->setParentItem(mView);
+              newNode->getNodeView()->stackBefore(
                   mView->childItems().at(minIndex));
-
-              abandoned->getNodeView()->setParent(nullptr);
-              abandoned->getNodeView()->setParentItem(nullptr);
-              abandoned->getNodeView()->setParentItem(mView);
-              abandoned->getNodeView()->stackBefore(
-                  mView->childItems().at(position));
-            } else {
-              // Not found,insert
-              DoricViewNode *newNode =
-                  DoricViewNode::create(getContext(), type);
-              if (newNode != nullptr) {
-                newNode->setId(id);
-                newNode->init(this);
-                newNode->blend(model.property("props"));
-                mChildNodes.insert(idx, newNode);
-
-                int minIndex = qMin(idx, mView->childItems().size());
-                newNode->getNodeView()->setParentItem(mView);
-                newNode->getNodeView()->stackBefore(
-                    mView->childItems().at(minIndex));
-              }
             }
           }
         }
       }
     } else {
       // Insert
+      DoricViewNode *newNode = DoricViewNode::create(getContext(), type);
+      if (newNode != nullptr) {
+        newNode->setId(id);
+        newNode->init(this);
+        newNode->blend(model.property("props"));
+        mChildNodes.append(newNode);
+
+        int minIndex = qMin(idx, mView->childItems().size());
+        newNode->getNodeView()->setParentItem(mView);
+        newNode->getNodeView()->stackBefore(mView->childItems().at(minIndex));
+      }
     }
+  }
+
+  int size = mChildNodes.size();
+  for (int idx = mChildViewIds.size(); idx < size; idx++) {
+    DoricViewNode *viewNode = mChildNodes.at(mChildViewIds.size());
+    mChildNodes.remove(mChildViewIds.size());
+    viewNode->getNodeView()->setParent(nullptr);
+    viewNode->getNodeView()->setParentItem(nullptr);
+    viewNode->getNodeView()->deleteLater();
   }
 }
 

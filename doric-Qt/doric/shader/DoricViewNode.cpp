@@ -35,9 +35,15 @@ void DoricViewNode::blend(QJSValue jsValue) {
 
 void DoricViewNode::blend(QQuickItem *view, QString name, QJSValue prop) {
   if (name == "width") {
-    view->setWidth(100);
+    if (!prop.isNumber()) {
+      return;
+    }
+    view->setWidth(prop.toInt());
   } else if (name == "height") {
-    view->setHeight(100);
+    if (!prop.isNumber()) {
+      return;
+    }
+    view->setHeight(prop.toInt());
   } else if (name == "backgroundColor") {
   }
 }

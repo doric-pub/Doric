@@ -163,12 +163,10 @@
 
 - (DoricAsyncResult *)destroyContext:(NSString *)contextId {
     DoricAsyncResult *ret = [[DoricAsyncResult alloc] init];
-    __weak typeof(self) _self = self;
+    NSString *theContextId = self.theContextId;
     [self.jsExecutor ensureRunOnJSThread:^{
-        __strong typeof(_self) self = _self;
-        if (!self) return;
         @try {
-            if ([contextId isEqualToString:self.theContextId]) {
+            if ([contextId isEqualToString:theContextId]) {
                 [DoricDev.instance stopDebugging:NO];
             }
             [ret setupResult:@YES];

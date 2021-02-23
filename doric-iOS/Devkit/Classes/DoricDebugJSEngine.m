@@ -23,6 +23,7 @@
 #import "DoricContext.h"
 #import "DoricDebugJSEngine.h"
 #import "DoricRemoteJSExecutor.h"
+#import "DoricDevMonitor.h"
 
 @interface DoricDebugJSEngine ()
 @property(nonatomic, weak) DoricWSClient *wsClient;
@@ -33,6 +34,7 @@
 - (instancetype)initWithWSClient:(DoricWSClient *)wsClient {
     if (self = [super init]) {
         _wsClient = wsClient;
+        [self.registry registerMonitor:[DoricDevMonitor new]];
     }
     return self;
 }

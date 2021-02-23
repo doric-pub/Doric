@@ -24,7 +24,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface DoricDev : NSObject
-@property(nonatomic, strong) DoricWSClient *wsClient;
+@property(nonatomic, strong, nullable) DoricWSClient *wsClient;
+
 + (instancetype)instance;
 
 - (void)openDevMode;

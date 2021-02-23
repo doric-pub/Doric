@@ -42,7 +42,7 @@
 @end
 
 @interface DoricJSEngine ()
-@property(nonatomic, strong) NSMutableDictionary *timers;
+@property(nonatomic, strong) NSMutableDictionary <NSNumber *, NSTimer *> *timers;
 @property(nonatomic, strong) DoricBridgeExtension *bridgeExtension;
 @property(nonatomic, strong) NSDictionary *innerEnvironmentDictionary;
 @property(nonatomic, strong) NSThread *jsThread;
@@ -170,19 +170,18 @@
     [self.jsExecutor injectGlobalJSObject:INJECT_TIMER_SET
                                       obj:^(NSNumber *timerId, NSNumber *interval, NSNumber *isInterval) {
                                           __strong typeof(_self) self = _self;
-                                          NSString *timerId_str = [timerId stringValue];
                                           BOOL repeat = [isInterval boolValue];
                                           NSTimer *timer = [NSTimer timerWithTimeInterval:[interval doubleValue] / 1000 target:self selector:@selector(callbackTimer:) userInfo:@{@"timerId": timerId, @"repeat": isInterval} repeats:repeat];
-                                          [self.timers setValue:timer forKey:timerId_str];
+                                          self.timers[timerId] = timer;
                                           dispatch_async(dispatch_get_main_queue(), ^() {
                                               [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
                                           });
                                       }];
 
     [self.jsExecutor injectGlobalJSObject:INJECT_TIMER_CLEAR
-                                      obj:^(NSString *timerId) {
+                                      obj:^(NSNumber *timerId) {
                                           __strong typeof(_self) self = _self;
-                                          NSTimer *timer = [self.timers valueForKey:timerId];
+                                          NSTimer *timer = self.timers[timerId];
                                           if (timer) {
                                               [self.timers removeObjectForKey:timerId];
                                               dispatch_async(dispatch_get_main_queue(), ^{
@@ -284,7 +283,7 @@
                          message:[NSString stringWithFormat:@"Timer Callback error:%@", exception.reason]];
         }
         if (![repeat boolValue]) {
-            [self.timers removeObjectForKey:[timerId stringValue]];
+            [self.timers removeObjectForKey:timerId];
         }
     }];
 }

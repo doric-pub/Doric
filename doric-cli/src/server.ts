@@ -29,10 +29,22 @@ export async function createServer() {
             ws.on('message', async function (result: string) {
                 const resultObject = JSON.parse(result) as MSG
                 if (resultObject.type === "D2C") {
+                    console.log("D2C", wss.clients.size, client)
                     if (client === undefined) {
-                        wss?.clients.forEach(e => {
-                            e.send(result);
-                        })
+                        if (wss.clients.size <= 1) {
+                            debug?.send(JSON.stringify({
+                                type: "S2D",
+                                cmd: "DEBUG_STOP",
+                                payload: {
+                                    msg: "No devices connected.",
+                                }
+                            } as MSG));
+                            console.log("Debugger need at least one connected device.")
+                        } else {
+                            wss.clients.forEach(e => {
+                                e.send(result);
+                            })
+                        }
                     } else {
                         client.send(result);
                     }
@@ -114,7 +126,10 @@ export async function createServer() {
                     console.log("quit debugging");
                     client?.send(JSON.stringify({
                         type: "S2C",
-                        cmd: "DEBUG_STOP"
+                        cmd: "DEBUG_STOP",
+                        payload: {
+                            msg: "Debugger quit",
+                        }
                     } as MSG));
                 }
                 if (ws === client) {
@@ -122,7 +137,10 @@ export async function createServer() {
                     client = undefined;
                     debug?.send(JSON.stringify({
                         type: "S2D",
-                        cmd: "DEBUG_STOP"
+                        cmd: "DEBUG_STOP",
+                        payload: {
+                            msg: "Debugging device quit",
+                        }
                     } as MSG));
                 }
             });

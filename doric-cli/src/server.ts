@@ -102,6 +102,10 @@ export async function createServer() {
                 if (ws === client) {
                     console.log("quit debugging");
                     client = undefined
+                    debug?.send(JSON.stringify({
+                        type: "S2D",
+                        cmd: "DEBUG_STOP"
+                    } as MSG));
                 }
             });
             ws.on('error', function (code: number) {
@@ -115,7 +119,11 @@ export async function createServer() {
                 }
                 if (ws === client) {
                     console.log("quit debugging");
-                    client = undefined
+                    client = undefined;
+                    debug?.send(JSON.stringify({
+                        type: "S2D",
+                        cmd: "DEBUG_STOP"
+                    } as MSG));
                 }
             });
         });

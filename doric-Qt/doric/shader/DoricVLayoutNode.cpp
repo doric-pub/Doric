@@ -6,7 +6,9 @@ QQuickItem *DoricVLayoutNode::build() {
   const QUrl url(QStringLiteral("qrc:/doric/qml/vlayout.qml"));
   component.loadUrl(url);
 
-  qCritical() << component.errorString();
+  if (component.isError()) {
+    qCritical() << component.errorString();
+  }
 
   QQuickItem *item = qobject_cast<QQuickItem *>(component.create());
   return item;

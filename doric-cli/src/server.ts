@@ -29,7 +29,6 @@ export async function createServer() {
             ws.on('message', async function (result: string) {
                 const resultObject = JSON.parse(result) as MSG
                 if (resultObject.type === "D2C") {
-                    console.log("D2C", wss.clients.size, client)
                     if (client === undefined) {
                         if (wss.clients.size <= 1) {
                             debug?.send(JSON.stringify({
@@ -110,6 +109,7 @@ export async function createServer() {
                         type: "S2C",
                         cmd: "DEBUG_STOP"
                     } as MSG));
+                    client = undefined;
                 }
                 if (ws === client) {
                     console.log("quit debugging");

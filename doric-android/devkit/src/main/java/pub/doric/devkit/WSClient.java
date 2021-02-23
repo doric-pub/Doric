@@ -32,7 +32,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
-import pub.doric.DoricContext;
 import pub.doric.devkit.event.ConnectExceptionEvent;
 import pub.doric.devkit.event.EOFExceptionEvent;
 import pub.doric.devkit.event.OpenEvent;
@@ -96,13 +95,13 @@ public class WSClient extends WebSocketListener {
             }
             if ("DEBUG_REQ".equals(cmd)) {
                 String source = payload.optString("source");
-                DevKit.getInstance().startDebugging(source);
+                DoricDev.getInstance().startDebugging(source);
             } else if ("DEBUG_STOP".equals(cmd)) {
-                DevKit.getInstance().stopDebugging(true);
+                DoricDev.getInstance().stopDebugging(true);
             } else if ("RELOAD".equals(cmd)) {
                 String source = payload.optString("source");
                 String script = payload.optString("script");
-                DevKit.getInstance().reload(source, script);
+                DoricDev.getInstance().reload(source, script);
             }
         } catch (JSONException e) {
             e.printStackTrace();

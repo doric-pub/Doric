@@ -30,11 +30,11 @@
     if (!DoricDev.instance.isInDevMode) {
         return;
     }
-    [DoricDev.instance.wsClient sendToServer:@"EXCEPTION"
-                                     payload:@{
-                                             @"source": [context.source stringByReplacingOccurrencesOfString:@".js" withString:@".ts"],
-                                             @"exception": exception.reason
-                                     }];
+    [DoricDev.instance sendDevCommand:@"EXCEPTION"
+                              payload:@{
+                                      @"source": [context.source stringByReplacingOccurrencesOfString:@".js" withString:@".ts"],
+                                      @"exception": exception.reason
+                              }];
 }
 
 - (void)onLog:(DoricLogType)type message:(NSString *)message {
@@ -48,10 +48,10 @@
         typeString = @"ERROR";
     }
 
-    [DoricDev.instance.wsClient sendToServer:@"LOG"
-                                     payload:@{
-                                             @"type": typeString,
-                                             @"message": message
-                                     }];
+    [DoricDev.instance sendDevCommand:@"LOG"
+                              payload:@{
+                                      @"type": typeString,
+                                      @"message": message
+                              }];
 }
 @end

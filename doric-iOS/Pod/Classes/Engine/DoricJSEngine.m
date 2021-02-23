@@ -62,7 +62,7 @@
         if (TARGET_OS_SIMULATOR == 1) {
             platform = [NSProcessInfo new].environment[@"SIMULATOR_MODEL_IDENTIFIER"];
         }
-        
+
         UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
         CGFloat screenWidth;
         CGFloat screenHeight;
@@ -73,7 +73,7 @@
             screenWidth = [[UIScreen mainScreen] bounds].size.height;
             screenHeight = [[UIScreen mainScreen] bounds].size.width;
         }
-        
+
         _innerEnvironmentDictionary = @{
                 @"platform": @"iOS",
                 @"platformVersion": [[UIDevice currentDevice] systemVersion],

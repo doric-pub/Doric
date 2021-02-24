@@ -187,7 +187,7 @@
     if (self.isSimulator) {
         NSString *result = @"127.0.0.1";
         [[DoricDev instance] connectDevKit:[NSString stringWithFormat:@"ws://%@:7777", result]];
-        ShowToast([NSString stringWithFormat:@"Connected to %@", result], DoricGravityBottom);
+        ShowToast([NSString stringWithFormat:@"Connecting to %@", result], DoricGravityBottom);
     } else {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Please input devkit ip"
                                                                        message:@""

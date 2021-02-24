@@ -13,6 +13,7 @@ import java.io.EOFException;
 import java.net.ConnectException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.WeakHashMap;
 
 import pub.doric.Doric;
 import pub.doric.DoricContext;
@@ -30,10 +31,16 @@ public class DoricDev {
         void onClose(String url);
 
         void onFailure(Throwable throwable);
+
+        void onReload(DoricContext context, String source);
+
+        void onStartDebugging(DoricContext context);
+
+        void onStopDebugging();
     }
 
     private final Set<StatusCallback> callbacks = new HashSet<>();
-
+    private final WeakHashMap<String, DoricContext> reloadingContexts = new WeakHashMap<>();
     public final boolean isRunningInEmulator;
     private final Handler uiHandler = new Handler(Looper.getMainLooper());
 
@@ -109,7 +116,7 @@ public class DoricDev {
         if (debuggable != null) {
             debuggable.stopDebug(true);
         }
-        DoricContext context = matchContext(source);
+        final DoricContext context = matchContext(source);
         if (context == null) {
             DoricLog.d("Cannot find  context source %s for debugging", source);
             wsClient.sendToDebugger("DEBUG_STOP", new JSONBuilder()
@@ -123,6 +130,14 @@ public class DoricDev {
                             .toJSONObject());
             debuggable = new DoricContextDebuggable(wsClient, context);
             debuggable.startDebug();
+            uiHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    for (StatusCallback callback : callbacks) {
+                        callback.onStartDebugging(context);
+                    }
+                }
+            });
         }
     }
 
@@ -133,6 +148,14 @@ public class DoricDev {
         if (debuggable != null) {
             debuggable.stopDebug(resume);
             debuggable = null;
+            uiHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    for (StatusCallback callback : callbacks) {
+                        callback.onStopDebugging();
+                    }
+                }
+            });
         }
     }
 
@@ -190,8 +213,8 @@ public class DoricDev {
         return null;
     }
 
-    public void reload(String source, String script) {
-        DoricContext context = matchContext(source);
+    public void reload(String source, final String script) {
+        final DoricContext context = matchContext(source);
         if (context == null) {
             DoricLog.d("Cannot find context source %s for reload", source);
         } else if (context.getDriver() instanceof DoricDebugDriver) {
@@ -199,6 +222,22 @@ public class DoricDev {
         } else {
             DoricLog.d("Context reload :id %s,source %s ", context.getContextId(), source);
             context.reload(script);
+            if (reloadingContexts.get(context.getContextId()) == null) {
+                reloadingContexts.put(context.getContextId(), context);
+            }
+            uiHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    for (StatusCallback callback : callbacks) {
+                        callback.onReload(context, script);
+                    }
+                }
+            });
+
         }
+    }
+
+    public boolean isReloadingContext(DoricContext context) {
+        return reloadingContexts.get(context.getContextId()) != null;
     }
 }

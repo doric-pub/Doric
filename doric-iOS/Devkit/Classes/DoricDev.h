@@ -23,7 +23,23 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol DoricDevStatusCallback <NSObject>
+- (void)onOpen:(NSString *)url;
+
+- (void)onClose:(NSString *)url;
+
+- (void)onFailure:(NSError *)error;
+
+- (void)onReload:(DoricContext *)context script:(NSString *)script;
+
+- (void)onStartDebugging:(DoricContext *)context;
+
+- (void)onStopDebugging;
+
+@end
+
 @interface DoricDev : NSObject
+@property(nonatomic, readonly) NSString *ip;
 
 + (instancetype)instance;
 
@@ -35,13 +51,25 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)connectDevKit:(NSString *)url;
 
+- (void)onOpen;
+
+- (void)onClose;
+
+- (void)onFailure:(NSError *)error;
+
 - (void)startDebugging:(NSString *)source;
 
 - (void)stopDebugging:(BOOL)resume;
 
+- (BOOL)isReloadingContext:(DoricContext *)context;
+
 - (void)reload:(NSString *)source script:(NSString *)script;
 
 - (void)sendDevCommand:(NSString *)command payload:(NSDictionary *)payload;
+
+- (void)addStatusCallback:(id <DoricDevStatusCallback>)callback;
+
+- (void)removeStatusCallback:(id <DoricDevStatusCallback>)callback;
 @end
 
 NS_ASSUME_NONNULL_END

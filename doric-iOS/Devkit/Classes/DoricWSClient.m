@@ -46,6 +46,7 @@
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket {
     DoricLog(@"webSocketDidOpen");
     [[NSNotificationCenter defaultCenter] postNotificationName:@"OpenEvent" object:nil];
+    [DoricDev.instance onOpen];
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceivePong:(NSData *)pongPayload {
@@ -98,12 +99,12 @@
 
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {
     DoricLog(@"webSocketdidFailWithError");
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"ConnectExceptionEvent" object:nil];
+    [DoricDev.instance onFailure:error];
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
     DoricLog(@"webSocketdidCloseWithCode");
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"EOFEvent" object:nil];
+    [DoricDev.instance onClose];
 }
 
 - (void)send:(NSDictionary *)command {

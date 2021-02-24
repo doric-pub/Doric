@@ -47,7 +47,7 @@ class CounterView extends ViewHolder {
     this.number = root.findViewByTag("tvNumber")!;
     this.counter = root.findViewByTag("tvCounter")!;
   }
-}   
+}
 
 class CounterVM extends ViewModel<CountModel, CounterView> {
   onAttached(s: CountModel, vh: CounterView) {
@@ -59,7 +59,7 @@ class CounterVM extends ViewModel<CountModel, CounterView> {
   }
   onBind(s: CountModel, vh: CounterView) {
     vh.number.text = `${s.count}`;
-    log("onBind\nseee");
+    log("onBind");
     logw("onBind");
     loge("onBind");
   }

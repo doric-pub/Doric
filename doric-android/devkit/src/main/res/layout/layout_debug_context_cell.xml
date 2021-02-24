@@ -6,9 +6,8 @@
 
     <TextView
         android:id="@+id/context_id_text_view"
-        android:layout_width="0dp"
+        android:layout_width="50dp"
         android:layout_height="60dp"
-        android:layout_weight="1"
         android:gravity="center"
         android:singleLine="true"
         android:text="{Context Id}"
@@ -18,21 +17,15 @@
         android:id="@+id/source_text_view"
         android:layout_width="0dp"
         android:layout_height="60dp"
-        android:layout_weight="3"
+        android:layout_weight="1"
         android:gravity="center"
         android:singleLine="true"
         android:text="{Source}"
         android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/debug_text_view"
-        android:layout_width="0dp"
+    <ImageView
+        android:id="@+id/icon_debug"
+        android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_weight="1"
-        android:background="#ff0000"
-        android:gravity="center"
-        android:singleLine="true"
-        android:text="Debug"
-        android:textColor="#ffffff"
-        android:textSize="20sp" />
+        android:background="#ff0000" />
 </LinearLayout>

@@ -51,8 +51,8 @@ void DoricViewNode::blend(QQuickItem *view, QString name, QJSValue prop) {
     view->setProperty("x", prop.toInt());
   } else if (name == "y") {
     view->setProperty("y", prop.toInt());
-  } else if (name == "space") {
-    view->setProperty("spacing", prop.toInt());
+  } else if (name == "corners") {
+    view->setProperty("radius", prop.toInt());
   } else {
     qCritical() << name << ": " << prop.toString();
   }

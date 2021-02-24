@@ -305,7 +305,7 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
     }
 }
 
-- (void)onClick:(UIView *)view {
+- (void)onClick:(UITapGestureRecognizer *)recognizer {
     [self callJSResponse:self.callbackIds[@"onClick"], nil];
 }
 

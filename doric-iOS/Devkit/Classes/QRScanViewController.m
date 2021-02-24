@@ -39,7 +39,7 @@
 @implementation QRScanViewController
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"扫一扫";
+    self.title = @"Scan QRCode";
     [self configBasicDevice];
     [self configPinchGes];
     [self.session startRunning];

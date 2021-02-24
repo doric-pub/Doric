@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="60dp"
+    android:gravity="center_vertical"
     android:orientation="horizontal">
 
     <TextView
         android:id="@+id/context_id_text_view"
         android:layout_width="50dp"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:singleLine="true"
         android:text="{Context Id}"
@@ -16,16 +17,22 @@
     <TextView
         android:id="@+id/source_text_view"
         android:layout_width="0dp"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
         android:singleLine="true"
         android:text="{Source}"
         android:textSize="20sp" />
 
-    <ImageView
-        android:id="@+id/icon_debug"
+    <FrameLayout
+        android:id="@+id/layout_btn"
         android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:background="#ff0000" />
+        android:layout_height="60dp">
+
+        <ImageView
+            android:id="@+id/icon_debug"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center" />
+    </FrameLayout>
 </LinearLayout>

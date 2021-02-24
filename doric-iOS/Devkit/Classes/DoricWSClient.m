@@ -45,7 +45,6 @@
 
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket {
     DoricLog(@"webSocketDidOpen");
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"OpenEvent" object:nil];
     [DoricDev.instance onOpen];
 }
 
@@ -82,18 +81,6 @@
         NSString *source = payload[@"source"];
         NSString *script = payload[@"script"];
         [DoricDev.instance reload:source script:script];
-    }
-
-    if ([cmd compare:@"SWITCH_TO_DEBUG"] == NSOrderedSame) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"EnterDebugEvent" object:nil];
-    } else if ([cmd compare:@"RELOAD"] == NSOrderedSame) {
-        NSString *source = [[dic valueForKey:@"source"] mutableCopy];
-        NSString *script = [dic valueForKey:@"script"];
-        for (DoricContext *context in  [[DoricContextManager instance] aliveContexts]) {
-            if ([source containsString:context.source] || [context.source isEqualToString:@"__dev__"]) {
-                [context reload:script];
-            }
-        }
     }
 }
 
@@ -138,5 +125,6 @@
 
 - (void)close {
     [self.websocket close];
+    [DoricDev.instance onClose];
 }
 @end

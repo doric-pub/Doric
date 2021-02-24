@@ -46,5 +46,5 @@ afterEvaluate {
 
 task buildJSBundle(type: Exec) {
     workingDir project.rootDir.getParent()
-    commandLine 'doric', 'build'
+    commandLine 'npm', 'run', 'build'
 }

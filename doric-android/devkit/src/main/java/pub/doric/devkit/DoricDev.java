@@ -1,29 +1,41 @@
 package pub.doric.devkit;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.Toast;
 
 import com.github.pengfeizhou.jscore.JSONBuilder;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
+
+import java.io.EOFException;
+import java.net.ConnectException;
+import java.util.HashSet;
+import java.util.Set;
 
 import pub.doric.Doric;
 import pub.doric.DoricContext;
 import pub.doric.DoricContextManager;
 import pub.doric.DoricNativeDriver;
-import pub.doric.devkit.event.ConnectExceptionEvent;
-import pub.doric.devkit.event.EOFExceptionEvent;
-import pub.doric.devkit.event.OpenEvent;
-import pub.doric.devkit.event.StopDebugEvent;
 import pub.doric.devkit.ui.DoricDevActivity;
 import pub.doric.devkit.util.SimulatorUtil;
 import pub.doric.utils.DoricLog;
 
 public class DoricDev {
+
+    public interface StatusCallback {
+        void onOpen(String url);
+
+        void onClose(String url);
+
+        void onFailure(Throwable throwable);
+    }
+
+    private final Set<StatusCallback> callbacks = new HashSet<>();
+
     public final boolean isRunningInEmulator;
+    private final Handler uiHandler = new Handler(Looper.getMainLooper());
 
     private static class Inner {
         private static final DoricDev sInstance = new DoricDev();
@@ -32,7 +44,6 @@ public class DoricDev {
     private DoricDev() {
         this.isRunningInEmulator = SimulatorUtil.isSimulator(Doric.application());
         DoricNativeDriver.getInstance().getRegistry().registerMonitor(new DoricDevMonitor());
-        EventBus.getDefault().register(this);
     }
 
     public static DoricDev getInstance() {
@@ -46,7 +57,10 @@ public class DoricDev {
     }
 
     public void closeDevMode() {
-        disconnectDevKit();
+        if (wsClient != null) {
+            wsClient.close();
+            wsClient = null;
+        }
     }
 
     public boolean isInDevMode() {
@@ -59,18 +73,36 @@ public class DoricDev {
     private boolean devKitConnected = false;
 
     private DoricContextDebuggable debuggable;
+    private String url;
+
+    public void addStatusListener(StatusCallback listener) {
+        this.callbacks.add(listener);
+    }
+
+    public void removeStatusListener(StatusCallback listener) {
+        this.callbacks.remove(listener);
+    }
 
     public void connectDevKit(String url) {
+        if (wsClient != null) {
+            wsClient.close();
+        }
+        devKitConnected = false;
         wsClient = new WSClient(url);
+        this.url = url;
+    }
+
+    public String getIP() {
+        if (wsClient != null) {
+            return url.replace("ws://", "").replace(":7777", "");
+        } else {
+            return "0.0.0.0";
+        }
+
     }
 
     public void sendDevCommand(String command, JSONObject jsonObject) {
         wsClient.sendToServer(command, jsonObject);
-    }
-
-    public void disconnectDevKit() {
-        wsClient.close();
-        wsClient = null;
     }
 
     public void startDebugging(String source) {
@@ -105,27 +137,48 @@ public class DoricDev {
     }
 
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onOpenEvent(OpenEvent openEvent) {
+    public void onOpen() {
         devKitConnected = true;
-        Toast.makeText(Doric.application(), "dev kit connected", Toast.LENGTH_LONG).show();
+        uiHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(Doric.application(), "dev kit connected", Toast.LENGTH_LONG).show();
+                for (StatusCallback callback : callbacks) {
+                    callback.onOpen(url);
+                }
+            }
+        });
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEOFEvent(EOFExceptionEvent eofExceptionEvent) {
+    public void onClose() {
         devKitConnected = false;
-        Toast.makeText(Doric.application(), "dev kit eof exception", Toast.LENGTH_LONG).show();
+        uiHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                for (StatusCallback callback : callbacks) {
+                    callback.onClose(url);
+                }
+            }
+        });
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onConnectExceptionEvent(ConnectExceptionEvent connectExceptionEvent) {
+    public void onFailure(final Throwable t) {
         devKitConnected = false;
-        Toast.makeText(Doric.application(), "dev kit connection exception", Toast.LENGTH_LONG).show();
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onQuitDebugEvent(StopDebugEvent quitDebugEvent) {
-        stopDebugging(true);
+        uiHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (t instanceof EOFException) {
+                    Toast.makeText(Doric.application(), "Devkit lost connection", Toast.LENGTH_LONG).show();
+                } else if (t instanceof ConnectException) {
+                    Toast.makeText(Doric.application(), "Devkit connect to " + getIP() + " failed", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(Doric.application(), "Devkit connect fail:" + t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                }
+                for (StatusCallback callback : callbacks) {
+                    callback.onFailure(t);
+                }
+            }
+        });
     }
 
     public DoricContext matchContext(String source) {

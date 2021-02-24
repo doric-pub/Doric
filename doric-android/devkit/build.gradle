@@ -31,13 +31,11 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation "com.google.android.material:material:1.1.0"
     implementation 'com.squareup.okhttp3:okhttp:3.12.1'
-    api 'org.greenrobot:eventbus:3.2.0'
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'com.google.zxing:core:3.4.0'
     implementation 'com.google.zxing:android-core:3.3.0'
-
 }
 
 apply from: rootProject.file('scripts/upload.gradle')

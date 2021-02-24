@@ -17,12 +17,9 @@ package pub.doric.devkit;
 
 import com.github.pengfeizhou.jscore.JSONBuilder;
 
-import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.EOFException;
-import java.net.ConnectException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -32,9 +29,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
-import pub.doric.devkit.event.ConnectExceptionEvent;
-import pub.doric.devkit.event.EOFExceptionEvent;
-import pub.doric.devkit.event.OpenEvent;
 
 /**
  * @Description: com.github.penfeizhou.doric.dev
@@ -76,8 +70,7 @@ public class WSClient extends WebSocketListener {
     @Override
     public void onOpen(WebSocket webSocket, Response response) {
         super.onOpen(webSocket, response);
-
-        EventBus.getDefault().post(new OpenEvent());
+        DoricDev.getInstance().onOpen();
     }
 
     @Override
@@ -117,18 +110,13 @@ public class WSClient extends WebSocketListener {
     @Override
     public void onClosed(WebSocket webSocket, int code, String reason) {
         super.onClosed(webSocket, code, reason);
-        EventBus.getDefault().post(new ConnectExceptionEvent());
+        DoricDev.getInstance().onClose();
     }
 
     @Override
     public void onFailure(WebSocket webSocket, Throwable t, Response response) {
         super.onFailure(webSocket, t, response);
-
-        if (t instanceof EOFException) {
-            EventBus.getDefault().post(new EOFExceptionEvent());
-        } else if (t instanceof ConnectException) {
-            EventBus.getDefault().post(new ConnectExceptionEvent());
-        }
+        DoricDev.getInstance().onFailure(t);
     }
 
     public void sendToDebugger(String command, JSONObject payload) {

@@ -65,15 +65,17 @@
 @interface DoricDev ()
 @property(nonatomic, strong, nullable) DoricWSClient *wsClient;
 @property(nonatomic, strong) DoricContextDebuggable *debuggable;
+@property(nonatomic, strong) NSHashTable <id <DoricDevStatusCallback>> *callbacks;
+@property(nonatomic, strong) NSHashTable <DoricContext *> *reloadingContexts;
+@property(nonatomic, assign) BOOL devKitConnected;
+@property(nonatomic, copy) NSString *url;
 @end
 
 @implementation DoricDev
 
 - (instancetype)init {
     if (self = [super init]) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onOpenEvent) name:@"OpenEvent" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onEOFEvent) name:@"EOFEvent" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onConnectExceptionEvent) name:@"ConnectExceptionEvent" object:nil];
+        _callbacks = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
         [DoricNativeDriver.instance.registry registerMonitor:[DoricDevMonitor new]];
     }
     return self;
@@ -109,27 +111,49 @@
 }
 
 - (BOOL)isInDevMode {
-    return self.wsClient != nil;
+    return self.devKitConnected;
 }
 
 - (void)connectDevKit:(NSString *)url {
     if (self.wsClient) {
         [self.wsClient close];
     }
+    self.devKitConnected = NO;
     self.wsClient = [[DoricWSClient alloc] initWithUrl:url];
+    self.url = url;
 }
 
-- (void)onOpenEvent {
-    ShowToast(@"dev kit connected", DoricGravityBottom);
+- (void)onOpen {
+    self.devKitConnected = YES;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        for (id <DoricDevStatusCallback> callback in self.callbacks) {
+            [callback onOpen:self.url];
+        }
+    });
 }
 
-- (void)onEOFEvent {
-    ShowToast(@"dev kit eof exception", DoricGravityBottom);
+- (void)onClose {
+    self.devKitConnected = NO;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        for (id <DoricDevStatusCallback> callback in self.callbacks) {
+            [callback onClose:self.url];
+        }
+    });
 }
 
-- (void)onConnectExceptionEvent {
-    ShowToast(@"dev kit connection exception", DoricGravityBottom);
+- (void)onFailure:(NSError *)error {
+    self.devKitConnected = NO;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        for (id <DoricDevStatusCallback> callback in self.callbacks) {
+            [callback onFailure:error];
+        }
+    });
 }
+
+- (BOOL)isReloadingContext:(DoricContext *)context {
+    return [self.reloadingContexts containsObject:context];
+}
+
 
 - (DoricContext *)matchContext:(NSString *)source {
     for (DoricContext *context in [DoricContextManager.instance aliveContexts]) {
@@ -148,6 +172,12 @@
         } else {
             DoricLog(@"Context reload :id %@,source %@", context.contextId, source);
             [context reload:script];
+            [self.reloadingContexts addObject:context];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                for (id <DoricDevStatusCallback> callback in self.callbacks) {
+                    [callback onReload:context script:script];
+                }
+            });
         }
     } else {
         DoricLog(@"Cannot find context source %@ for reload", source);
@@ -163,6 +193,11 @@
         }];
         self.debuggable = [[DoricContextDebuggable alloc] initWithWSClient:self.wsClient context:context];
         [self.debuggable startDebug];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            for (id <DoricDevStatusCallback> callback in self.callbacks) {
+                [callback onStartDebugging:context];
+            }
+        });
     } else {
         DoricLog(@"Cannot find context source %@ for debugging", source);
         [self.wsClient sendToDebugger:@"DEBUG_STOP" payload:@{
@@ -177,9 +212,29 @@
     }];
     [self.debuggable stopDebug:resume];
     self.debuggable = nil;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        for (id <DoricDevStatusCallback> callback in self.callbacks) {
+            [callback onStopDebugging];
+        }
+    });
 }
 
 - (void)sendDevCommand:(NSString *)command payload:(NSDictionary *)payload {
     [self.wsClient sendToServer:command payload:payload];
+}
+
+- (void)addStatusCallback:(id)callback {
+    [self.callbacks addObject:callback];
+}
+
+- (void)removeStatusCallback:(id)callback {
+    [self.callbacks removeObject:callback];
+}
+
+- (NSString *)ip {
+    return [[self.url stringByReplacingOccurrencesOfString:@"ws://"
+                                                withString:@""]
+            stringByReplacingOccurrencesOfString:@":7777"
+                                      withString:@""];
 }
 @end

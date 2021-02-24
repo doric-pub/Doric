@@ -21,7 +21,6 @@
 //
 #import <DoricCore/Doric.h>
 #import <DoricCore/DoricContextManager.h>
-#import "NSString+JsonString.h"
 
 #import "DoricDev.h"
 #import "DoricDevViewController.h"

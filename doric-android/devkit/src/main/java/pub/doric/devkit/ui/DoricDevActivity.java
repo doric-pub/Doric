@@ -62,13 +62,13 @@ public class DoricDevActivity extends AppCompatActivity implements DoricDev.Stat
     @Override
     protected void onStart() {
         super.onStart();
-        DoricDev.getInstance().addStatusListener(this);
+        DoricDev.getInstance().addStatusCallback(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        DoricDev.getInstance().removeStatusListener(this);
+        DoricDev.getInstance().removeStatusCallback(this);
     }
 
     @Override
@@ -197,7 +197,7 @@ public class DoricDevActivity extends AppCompatActivity implements DoricDev.Stat
     }
 
     @Override
-    public void onReload(DoricContext context, String source) {
+    public void onReload(DoricContext context, String script) {
         this.cellAdapter.notifyDataSetChanged();
     }
 

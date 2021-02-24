@@ -32,7 +32,7 @@ public class DoricDev {
 
         void onFailure(Throwable throwable);
 
-        void onReload(DoricContext context, String source);
+        void onReload(DoricContext context, String script);
 
         void onStartDebugging(DoricContext context);
 
@@ -82,11 +82,11 @@ public class DoricDev {
     private DoricContextDebuggable debuggable;
     private String url;
 
-    public void addStatusListener(StatusCallback listener) {
+    public void addStatusCallback(StatusCallback listener) {
         this.callbacks.add(listener);
     }
 
-    public void removeStatusListener(StatusCallback listener) {
+    public void removeStatusCallback(StatusCallback listener) {
         this.callbacks.remove(listener);
     }
 

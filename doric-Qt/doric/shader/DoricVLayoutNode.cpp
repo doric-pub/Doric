@@ -13,3 +13,13 @@ QQuickItem *DoricVLayoutNode::build() {
   QQuickItem *item = qobject_cast<QQuickItem *>(component.create());
   return item;
 }
+
+void DoricVLayoutNode::blend(QQuickItem *view, QString name, QJSValue prop) {
+  if (name == "space") {
+    view->setProperty("spacing", prop.toInt());
+  } else if (name == "gravity") {
+    qWarning() << "gravity: " << prop.toInt();
+  } else {
+    DoricGroupNode::blend(view, name, prop);
+  }
+}

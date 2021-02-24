@@ -8,6 +8,8 @@ public:
   using DoricGroupNode::DoricGroupNode;
 
   QQuickItem *build() override;
+
+  virtual void blend(QQuickItem *view, QString name, QJSValue prop) override;
 };
 
 #endif // DORICVLAYOUTNODE_H

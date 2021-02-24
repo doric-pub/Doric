@@ -268,7 +268,7 @@ public class DoricDevActivity extends AppCompatActivity implements DoricDev.Stat
             holder.layoutBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (true) {
+                    if (DoricDev.getInstance().isInDevMode()) {
                         final String items[] = {"View source",};
                         AlertDialog.Builder builder = new AlertDialog.Builder(holder.itemView.getContext(), R.style.Theme_Doric_Modal);
                         builder.setTitle(String.format("%s %s", context.getContextId(), context.getSource()));

@@ -19,7 +19,6 @@ void DoricSuperNode::blend(QQuickItem *view, QString name, QJSValue prop) {
 
 void DoricSuperNode::mixinSubNode(QJSValue subNode) {
   QString id = subNode.property("id").toString();
-  qCritical() << id;
   QList<QString> keys = subNodes.keys();
   if (!keys.contains(id)) {
     subNodes.insert(id, subNode);

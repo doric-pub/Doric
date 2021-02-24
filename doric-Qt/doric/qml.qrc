@@ -18,5 +18,6 @@
         <file alias="panel.qml">./resources/panel.qml</file>
         <file alias="stack.qml">./resources/stack.qml</file>
         <file alias="vlayout.qml">./resources/vlayout.qml</file>
+        <file alias="hlayout.qml">./resources/hlayout.qml</file>
     </qresource>
 </RCC>

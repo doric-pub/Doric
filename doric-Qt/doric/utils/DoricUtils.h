@@ -1,6 +1,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include <QColor>
 #include <QFile>
 #include <QResource>
 #include <QString>
@@ -24,6 +25,14 @@ public:
   template <typename Base, typename T>
   static inline bool instanceof (const T *) {
     return std::is_base_of<Base, T>::value;
+  }
+
+  static QColor doricColor(long colorValue) {
+    float a = ((colorValue >> 24) & 0xff);
+    float r = ((colorValue >> 16) & 0xff);
+    float g = ((colorValue >> 8) & 0xff);
+    float b = ((colorValue >> 0) & 0xff);
+    return QColor(r, g, b, a);
   }
 };
 

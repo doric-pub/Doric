@@ -45,5 +45,9 @@ void DoricViewNode::blend(QQuickItem *view, QString name, QJSValue prop) {
     }
     view->setHeight(prop.toInt());
   } else if (name == "backgroundColor") {
+    QString color = DoricUtils::doricColor(prop.toNumber()).name();
+    qCritical() << prop.toInt();
+    qCritical() << color;
+    view->setProperty("color", color);
   }
 }

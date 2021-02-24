@@ -11,6 +11,7 @@ DoricRegistry::DoricRegistry() {
   registerViewNode<DoricRootNode>("Root");
   registerViewNode<DoricStackNode>("Stack");
   registerViewNode<DoricVLayoutNode>("VLayout");
+  registerViewNode<DoricVLayoutNode>("HLayout");
 }
 
 bool DoricRegistry::acquirePluginInfo(QString name) {

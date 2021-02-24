@@ -106,6 +106,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"Doric Devkit";
+    self.edgesForExtendedLayout = UIRectEdgeNone;
     self.view.backgroundColor = UIColor.whiteColor;
     self.headerView = [[UIView new] also:^(UIView *it) {
         it.width = self.view.width;

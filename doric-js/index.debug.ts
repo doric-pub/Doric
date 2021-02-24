@@ -136,27 +136,33 @@ async function initNativeEnvironment(source: string) {
   })
 }
 
-
+const entryHooks: Function[] = []
 global.Entry = function () {
   if (!!contextId) {
     return Reflect.apply(doric.jsObtainEntry(contextId), doric, arguments);
   } else {
+    console.log(new Error().stack)
     const jsFile = new Error().stack?.split("\n")
-      .map(e => e.match(/at\s__decorate\s\((.*?)\)/))
+      .map(e => e.match(/at\s__decorate.*?\s\((.*?)\)/))
       .find(e => !!e)?.[1].match(/(.*?\.js)/)?.[1];
     if (!jsFile) {
       throw new Error("Cannot find debugging file");
     }
-    const source = path.basename(jsFile)
     const args = arguments
-    console.log(`Debugging ${source}`)
-    initNativeEnvironment(source).then(ret => {
-      contextId = ret;
-      console.log("debugging context id: " + contextId);
-      global.context = doric.jsObtainContext(contextId);
+    entryHooks.push((contextId: string) => {
       Reflect.apply(doric.jsObtainEntry(contextId), doric, args);
-    });
-    return arguments[0];
+    })
+    if (entryHooks.length <= 1) {
+      const source = path.basename(jsFile)
+      console.log(`Debugging ${source}`)
+      initNativeEnvironment(source).then(ret => {
+        contextId = ret;
+        console.log("debugging context id: " + contextId);
+        global.context = doric.jsObtainContext(contextId);
+        entryHooks.forEach(e => e(contextId))
+      });
+      return arguments[0];
+    }
   }
 }
 

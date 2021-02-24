@@ -50,12 +50,8 @@
 }
 
 - (void)stopDebug:(BOOL)resume {
-    id <DoricDriverProtocol> driver = self.doricContext.driver;
-    if ([driver isKindOfClass:DoricDebugDriver.class]) {
-
-    }
+    self.doricContext.driver = self.nativeDriver;
     if (resume) {
-        self.doricContext.driver = self.nativeDriver;
         [self.doricContext reload:self.doricContext.script];
     }
 }
@@ -76,6 +72,7 @@
 - (instancetype)init {
     if (self = [super init]) {
         _callbacks = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
+        _reloadingContexts = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
         [DoricNativeDriver.instance.registry registerMonitor:[DoricDevMonitor new]];
     }
     return self;
@@ -104,6 +101,7 @@
 }
 
 - (void)closeDevMode {
+    [self stopDebugging:YES];
     if (self.wsClient) {
         [self.wsClient close];
         self.wsClient = nil;

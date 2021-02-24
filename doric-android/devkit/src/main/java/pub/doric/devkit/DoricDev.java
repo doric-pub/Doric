@@ -64,6 +64,7 @@ public class DoricDev {
     }
 
     public void closeDevMode() {
+        stopDebugging(true);
         if (wsClient != null) {
             wsClient.close();
             wsClient = null;

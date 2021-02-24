@@ -54,12 +54,16 @@ void DoricGroupNode::configChildNode() {
               newNode->setId(id);
               newNode->init(this);
               newNode->blend(model.property("props"));
-              mChildNodes.insert(idx, newNode);
 
-              int minIndex = qMin(idx, mView->childItems().size());
-              newNode->getNodeView()->setParentItem(mView);
-              newNode->getNodeView()->stackBefore(
-                  mView->childItems().at(minIndex));
+              if (idx >= mChildNodes.size()) {
+                mChildNodes.append(newNode);
+                newNode->getNodeView()->setParentItem(mView);
+              } else {
+                mChildNodes.insert(idx, newNode);
+                newNode->getNodeView()->setParentItem(mView);
+                newNode->getNodeView()->stackBefore(
+                    mView->childItems().at(idx));
+              }
             }
           }
         } else {
@@ -75,19 +79,8 @@ void DoricGroupNode::configChildNode() {
           }
           if (position >= 0) {
             // Found swap idx,position
-            DoricViewNode *reused = mChildNodes.at(position);
-            DoricViewNode *abandoned = mChildNodes.at(idx);
             mChildNodes.swapItemsAt(position, idx);
-
-            // View swap index
-            reused->getNodeView()->setParentItem(nullptr);
-            int minIndex = qMin(idx, mView->childItems().size());
-            reused->getNodeView()->setParentItem(mView);
-            reused->getNodeView()->stackBefore(
-                mView->childItems().at(minIndex));
-
-            abandoned->getNodeView()->stackBefore(
-                mView->childItems().at(position));
+            mView->childItems().swapItemsAt(position, idx);
           } else {
             // Not found,insert
             DoricViewNode *newNode = DoricViewNode::create(getContext(), type);
@@ -95,12 +88,16 @@ void DoricGroupNode::configChildNode() {
               newNode->setId(id);
               newNode->init(this);
               newNode->blend(model.property("props"));
-              mChildNodes.insert(idx, newNode);
 
-              int minIndex = qMin(idx, mView->childItems().size());
-              newNode->getNodeView()->setParentItem(mView);
-              newNode->getNodeView()->stackBefore(
-                  mView->childItems().at(minIndex));
+              if (idx >= mChildNodes.size()) {
+                mChildNodes.append(newNode);
+                newNode->getNodeView()->setParentItem(mView);
+              } else {
+                mChildNodes.insert(idx, newNode);
+                newNode->getNodeView()->setParentItem(mView);
+                newNode->getNodeView()->stackBefore(
+                    mView->childItems().at(idx));
+              }
             }
           }
         }
@@ -112,11 +109,15 @@ void DoricGroupNode::configChildNode() {
         newNode->setId(id);
         newNode->init(this);
         newNode->blend(model.property("props"));
-        mChildNodes.append(newNode);
 
-        int minIndex = qMin(idx, mView->childItems().size());
-        newNode->getNodeView()->setParentItem(mView);
-        newNode->getNodeView()->stackBefore(mView->childItems().at(minIndex));
+        if (idx >= mChildNodes.size()) {
+          mChildNodes.append(newNode);
+          newNode->getNodeView()->setParentItem(mView);
+        } else {
+          mChildNodes.insert(idx, newNode);
+          newNode->getNodeView()->setParentItem(mView);
+          newNode->getNodeView()->stackBefore(mView->childItems().at(idx));
+        }
       }
     }
   }

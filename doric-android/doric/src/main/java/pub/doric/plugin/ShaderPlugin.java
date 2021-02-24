@@ -17,22 +17,10 @@ package pub.doric.plugin;
 
 import android.app.Activity;
 import android.os.Build;
-import android.os.Looper;
-import android.os.MessageQueue;
 import android.text.TextUtils;
 import android.util.Log;
-
-import pub.doric.DoricContext;
-import pub.doric.async.AsyncResult;
-import pub.doric.extension.bridge.DoricMethod;
-import pub.doric.extension.bridge.DoricPlugin;
-import pub.doric.extension.bridge.DoricPromise;
-import pub.doric.shader.SuperNode;
-import pub.doric.shader.ViewNode;
-import pub.doric.utils.DoricMetaInfo;
-import pub.doric.utils.DoricUtils;
-import pub.doric.utils.ThreadMode;
-import pub.doric.shader.RootNode;
+import android.view.Choreographer;
+import android.view.View;
 
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
@@ -40,6 +28,18 @@ import com.github.pengfeizhou.jscore.JavaValue;
 
 import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
+
+import pub.doric.DoricContext;
+import pub.doric.async.AsyncResult;
+import pub.doric.extension.bridge.DoricMethod;
+import pub.doric.extension.bridge.DoricPlugin;
+import pub.doric.extension.bridge.DoricPromise;
+import pub.doric.shader.RootNode;
+import pub.doric.shader.SuperNode;
+import pub.doric.shader.ViewNode;
+import pub.doric.utils.DoricMetaInfo;
+import pub.doric.utils.DoricUtils;
+import pub.doric.utils.ThreadMode;
 
 /**
  * @Description: com.github.penfeizhou.doric.plugin
@@ -64,21 +64,30 @@ public class ShaderPlugin extends DoricJavaPlugin {
                     }
                 }
                 String viewId = jsObject.getProperty("id").asString().value();
+
                 RootNode rootNode = getDoricContext().getRootNode();
+                ViewNode targetNode = rootNode;
                 if (TextUtils.isEmpty(rootNode.getId()) && "Root".equals(jsObject.getProperty("type").asString().value())) {
                     rootNode.setId(viewId);
                     rootNode.blend(jsObject.getProperty("props").asObject());
                 } else {
                     ViewNode viewNode = getDoricContext().targetViewNode(viewId);
                     if (viewNode != null) {
+                        targetNode = viewNode;
                         viewNode.blend(jsObject.getProperty("props").asObject());
                     }
                 }
-                Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
+                final View targetView = targetNode.getNodeView();
+                Choreographer.getInstance().postFrameCallback(new Choreographer.FrameCallback() {
                     @Override
-                    public boolean queueIdle() {
-                        promise.resolve();
-                        return false;
+                    public void doFrame(long frameTimeNanos) {
+                        Choreographer.getInstance().removeFrameCallback(this);
+                        targetView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                promise.resolve();
+                            }
+                        });
                     }
                 });
                 return null;

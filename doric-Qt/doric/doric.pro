@@ -37,6 +37,7 @@ SOURCES += \
         shader/DoricRootNode.cpp \
         shader/DoricStackNode.cpp \
         shader/DoricSuperNode.cpp \
+        shader/DoricTextNode.cpp \
         shader/DoricVLayoutNode.cpp \
         shader/DoricViewNode.cpp \
         utils/DoricConstant.cpp \
@@ -83,6 +84,7 @@ HEADERS += \
     shader/DoricRootNode.h \
     shader/DoricStackNode.h \
     shader/DoricSuperNode.h \
+    shader/DoricTextNode.h \
     shader/DoricVLayoutNode.h \
     shader/DoricViewNode.h \
     template/DoricSingleton.h \

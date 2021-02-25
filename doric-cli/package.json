@@ -37,7 +37,8 @@
     "shelljs": "^0.8.4",
     "source-map-merger": "^0.2.0",
     "typescript": "^3.9.7",
-    "ws": "^7.4.3"
+    "ws": "^7.4.3",
+    "xml-js": "^1.6.11"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"

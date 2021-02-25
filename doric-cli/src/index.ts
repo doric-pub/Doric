@@ -4,6 +4,7 @@ import commander from "commander"
 import { build, clean } from "./actions";
 import create from "./create"
 import dev from "./dev"
+import { run } from "./run";
 commander
     .command('create <name>')
     .action(async function (name, cmd) {
@@ -29,4 +30,11 @@ commander
     .action(async function () {
         await clean();
     })
+
+commander
+    .command('run <platform>')
+    .action(async function (platform, cmd) {
+        await run(platform);
+    })
 commander.parse(process.argv)
+

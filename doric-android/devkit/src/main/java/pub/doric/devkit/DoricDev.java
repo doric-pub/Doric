@@ -206,8 +206,10 @@ public class DoricDev {
     }
 
     public DoricContext matchContext(String source) {
+        source = source.replace(".js", "").replace(".ts", "");
         for (DoricContext context : DoricContextManager.aliveContexts()) {
-            if (source.contains(context.getSource()) || context.getSource().equals("__dev__")) {
+            String doricSource = context.getSource().replace(".js", "").replace(".ts", "");
+            if (source.equals(doricSource) || doricSource.equals("__dev__")) {
                 return context;
             }
         }

@@ -154,8 +154,18 @@
 
 
 - (DoricContext *)matchContext:(NSString *)source {
+    source = [[source stringByReplacingOccurrencesOfString:@".js"
+                                                withString:@""]
+            stringByReplacingOccurrencesOfString:@".ts"
+                                      withString:@""
+    ];
     for (DoricContext *context in [DoricContextManager.instance aliveContexts]) {
-        if ([source containsString:context.source] || [context.source isEqualToString:@"__dev__"]) {
+        NSString *contextSource = [[context.source stringByReplacingOccurrencesOfString:@".js"
+                                                                             withString:@""]
+                stringByReplacingOccurrencesOfString:@".ts"
+                                          withString:@""
+        ];
+        if ([source isEqualToString:contextSource] || [contextSource isEqualToString:@"__dev__"]) {
             return context;
         }
     }

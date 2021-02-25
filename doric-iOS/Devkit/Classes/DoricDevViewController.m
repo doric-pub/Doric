@@ -298,7 +298,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     DoricContextCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     if (cell == nil) {
-        cell = [[DoricContextCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cellID"];
+        cell = [[DoricContextCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     DoricContext *context = [DoricContextManager.instance aliveContexts][(NSUInteger) indexPath.row];

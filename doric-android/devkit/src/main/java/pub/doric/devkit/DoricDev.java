@@ -101,7 +101,7 @@ public class DoricDev {
     }
 
     public String getIP() {
-        if (wsClient != null) {
+        if (url != null) {
             return url.replace("ws://", "").replace(":7777", "");
         } else {
             return "0.0.0.0";

@@ -6,21 +6,21 @@
         {
             "label": "Doric Build",
             "type": "shell",
-            "command": "doric build",
+            "command": "npm run build",
             "group": "build",
             "problemMatcher": []
         },
         {
             "label": "Doric Clean",
             "type": "shell",
-            "command": "doric clean",
+            "command": "npm run clean",
             "group": "build",
             "problemMatcher": []
         },
         {
             "label": "Doric Dev",
             "type": "shell",
-            "command": "doric dev",
+            "command": "npm run dev",
             "group": "build",
             "problemMatcher": []
         }

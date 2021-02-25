@@ -194,6 +194,9 @@
                                                                 preferredStyle:UIAlertControllerStyleAlert];
         [alert addTextFieldWithConfigurationHandler:^(UITextField *_Nonnull textField) {
             textField.placeholder = @"192.168.1.1";
+            if (DoricDev.instance.ip) {
+                textField.text = DoricDev.instance.ip;
+            }
         }];
         __weak typeof(alert) _alert = alert;
 

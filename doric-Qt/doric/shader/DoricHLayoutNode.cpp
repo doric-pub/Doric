@@ -19,6 +19,10 @@ void DoricHLayoutNode::blend(QQuickItem *view, QString name, QJSValue prop) {
     view->setProperty("spacing", prop.toInt());
   } else if (name == "gravity") {
     qWarning() << "gravity: " << prop.toInt();
+    switch (prop.toInt()) {
+    case 1:
+      break;
+    }
   } else {
     DoricGroupNode::blend(view, name, prop);
   }

@@ -4,6 +4,7 @@
 #include "shader/DoricRootNode.h"
 #include "shader/DoricStackNode.h"
 #include "shader/DoricVLayoutNode.h"
+#include "shader/DoricHLayoutNode.h"
 
 DoricRegistry::DoricRegistry() {
   registerNativePlugin<DoricShaderPlugin>("shader");
@@ -11,7 +12,7 @@ DoricRegistry::DoricRegistry() {
   registerViewNode<DoricRootNode>("Root");
   registerViewNode<DoricStackNode>("Stack");
   registerViewNode<DoricVLayoutNode>("VLayout");
-  registerViewNode<DoricVLayoutNode>("HLayout");
+  registerViewNode<DoricHLayoutNode>("HLayout");
 }
 
 bool DoricRegistry::acquirePluginInfo(QString name) {

@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         Intent intent = new Intent(tv.getContext(), DoricActivity.class);
                         intent.putExtra("source", "assets://src/" + data[position - 1]);
-                        intent.putExtra("alias", data[position - 1]);
+                        intent.putExtra("alias", data[position - 1].replace(".js", ""));
                         tv.getContext().startActivity(intent);
                     }
                 });

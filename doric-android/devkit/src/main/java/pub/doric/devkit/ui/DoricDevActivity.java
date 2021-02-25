@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -152,6 +153,11 @@ public class DoricDevActivity extends AppCompatActivity implements DoricDev.Stat
                     View v = LayoutInflater.from(DoricDevActivity.this).inflate(R.layout.doric_modal_prompt, null);
                     final EditText editText = v.findViewById(R.id.edit_input);
                     editText.setHint("192.168.1.1");
+                    String ip = DoricDev.getInstance().getIP();
+                    if (!TextUtils.isEmpty(ip)) {
+                        editText.setText(ip);
+                        editText.setSelection(ip.length());
+                    }
                     builder.setView(v);
                     builder
                             .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {

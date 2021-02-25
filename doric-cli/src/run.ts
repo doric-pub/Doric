@@ -34,6 +34,7 @@ async function runAndroid() {
     console.log("====================");
     await Shell.exec("sh", ["gradlew", "assembleDebug"], {
         cwd: androidDir,
+        env: process.env,
         consoleHandler: (info) => console.log(info)
     });
     const apkFiles = await glob("**/outputs/apk/debug/*.apk", {

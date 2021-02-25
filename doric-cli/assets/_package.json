@@ -1,27 +1,27 @@
 {
-    "name": "__$__",
-    "version": "0.1.0",
-    "main": "index.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "build": "doric build",
-        "dev": "doric dev",
-        "clean": "doric clean"
-    },
-    "license": "Apache-2.0",
-    "dependencies": {
-        "doric": "__$Version__",
-        "doric-cli": "__$Version__",
-        "reflect-metadata": "^0.1.13",
-        "rollup": "^1.27.14",
-        "tslib": "^1.10.0",
-        "typescript": "^3.7.4"
-    },
-    "devDependencies": {
-        "@rollup/plugin-buble": "^0.21.0",
-        "@rollup/plugin-commonjs": "^11.0.1",
-        "@rollup/plugin-image": "^2.0.4",
-        "@rollup/plugin-json": "^4.0.2",
-        "@rollup/plugin-node-resolve": "^7.0.0"
-    }
+  "name": "__$__",
+  "version": "0.1.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "doric build",
+    "dev": "doric dev",
+    "clean": "doric clean"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "doric": "__$Version__",
+    "doric-cli": "__$Version__",
+    "reflect-metadata": "^0.1.13",
+    "rollup": "^2.23.0",
+    "tslib": "^2.0.0",
+    "typescript": "^3.9.7"
+  },
+  "devDependencies": {
+    "@rollup/plugin-buble": "^0.21.3",
+    "@rollup/plugin-commonjs": "^14.0.0",
+    "@rollup/plugin-image": "^2.0.5",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^8.4.0"
+  }
 }

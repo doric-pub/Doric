@@ -141,7 +141,6 @@ global.Entry = function () {
   if (!!contextId) {
     return Reflect.apply(doric.jsObtainEntry(contextId), doric, arguments);
   } else {
-    console.log(new Error().stack)
     const jsFile = new Error().stack?.split("\n")
       .map(e => e.match(/at\s__decorate.*?\s\((.*?)\)/))
       .find(e => !!e)?.[1].match(/(.*?\.js)/)?.[1];

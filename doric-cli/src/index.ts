@@ -5,6 +5,9 @@ import { build, clean } from "./actions";
 import create from "./create"
 import dev from "./dev"
 import { run } from "./run";
+
+(process.env.FORCE_COLOR as any) = true
+
 commander
     .command('create <name>')
     .action(async function (name, cmd) {

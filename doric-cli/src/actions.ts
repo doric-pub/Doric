@@ -4,8 +4,26 @@ import fs from "fs";
 import { glob } from "./util";
 import path from "path";
 export async function build() {
-    await Shell.exec("node", ["node_modules/.bin/tsc", "-p", "."]);
-    await Shell.exec("node", ["node_modules/.bin/rollup", "-c"]);
+    let ret = await Shell.exec("node", ["node_modules/.bin/tsc", "-p", "."], {
+        env: process.env,
+        consoleHandler: (info) => {
+            console.log(info);
+        }
+    });
+    if (ret !== 0) {
+        console.log("Compile error".red);
+        return;
+    }
+    ret = await Shell.exec("node", ["node_modules/.bin/rollup", "-c",], {
+        env: process.env,
+        consoleHandler: (info) => {
+            console.log(info);
+        }
+    });
+    if (ret !== 0) {
+        console.log("Compile error".red);
+        return;
+    }
     const bundleFiles = await glob("bundle/**/*.js");
     for (let bundleFile of bundleFiles) {
         await doMerge(bundleFile);

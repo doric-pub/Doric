@@ -31,8 +31,21 @@ function getIPAdress() {
 
 export default async function dev() {
   const server = await createServer()
-  const tscProcess = exec("node node_modules/.bin/tsc -w -p .");
-  const rollupProcess = exec("node node_modules/.bin/rollup -c -w");
+  const tscProcess = exec("node node_modules/.bin/tsc -w -p .", {
+    env: process.env,
+  });
+  const rollupProcess = exec("node node_modules/.bin/rollup -c -w", {
+    env: process.env,
+  });
+  [tscProcess, rollupProcess].forEach(e => {
+    e.stdout?.on("data", (data) => {
+      console.log(data.toString());
+    });
+    e.stderr?.on("data", (data) => {
+      console.log(data.toString());
+    });
+  })
+
   console.warn("Waiting ...");
   const ips = getIPAdress();
   ips.forEach((e) => {

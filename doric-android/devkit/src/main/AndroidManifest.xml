@@ -7,9 +7,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
 
     <application>
-        <activity
-            android:name=".ui.DoricDevActivity"
-            android:exported="true" />
+        <activity android:name=".ui.DoricDevActivity" />
         <activity android:name=".qrcode.activity.CaptureActivity" />
     </application>
 </manifest>

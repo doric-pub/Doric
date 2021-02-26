@@ -41,7 +41,19 @@ SOURCES += \
         shader/DoricVLayoutNode.cpp \
         shader/DoricViewNode.cpp \
         utils/DoricConstant.cpp \
-        utils/DoricContextHolder.cpp
+        utils/DoricContextHolder.cpp \
+        yoga/Utils.cpp \
+        yoga/YGConfig.cpp \
+        yoga/YGEnums.cpp \
+        yoga/YGLayout.cpp \
+        yoga/YGNode.cpp \
+        yoga/YGNodePrint.cpp \
+        yoga/YGStyle.cpp \
+        yoga/YGValue.cpp \
+        yoga/Yoga.cpp \
+        yoga/event/event.cpp \
+        yoga/internal/experiments.cpp \
+        yoga/log.cpp
 
 RESOURCES += qml.qrc
 
@@ -93,4 +105,22 @@ HEADERS += \
     utils/DoricCountDownLatch.h \
     utils/DoricObjectFactory.h \
     utils/DoricThreadMode.h \
-    utils/DoricUtils.h
+    utils/DoricUtils.h \
+    yoga/Bitfield.h \
+    yoga/CompactValue.h \
+    yoga/Utils.h \
+    yoga/YGConfig.h \
+    yoga/YGEnums.h \
+    yoga/YGFloatOptional.h \
+    yoga/YGLayout.h \
+    yoga/YGMacros.h \
+    yoga/YGNode.h \
+    yoga/YGNodePrint.h \
+    yoga/YGStyle.h \
+    yoga/YGValue.h \
+    yoga/Yoga-internal.h \
+    yoga/Yoga.h \
+    yoga/event/event.h \
+    yoga/internal/experiments-inl.h \
+    yoga/internal/experiments.h \
+    yoga/log.h

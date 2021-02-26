@@ -33,7 +33,6 @@ SOURCES += \
         plugin/DoricShaderPlugin.cpp \
         shader/DoricGroupNode.cpp \
         shader/DoricHLayoutNode.cpp \
-        shader/DoricLayout.cpp \
         shader/DoricRootNode.cpp \
         shader/DoricStackNode.cpp \
         shader/DoricSuperNode.cpp \
@@ -92,7 +91,6 @@ HEADERS += \
     plugin/DoricShaderPlugin.h \
     shader/DoricGroupNode.h \
     shader/DoricHLayoutNode.h \
-    shader/DoricLayout.h \
     shader/DoricRootNode.h \
     shader/DoricStackNode.h \
     shader/DoricSuperNode.h \

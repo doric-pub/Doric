@@ -3,3 +3,4 @@ Podfile.lock
 Pods/
 .idea/
 *.xcodeproj/xcuserdata/
+build/

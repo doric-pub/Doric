@@ -1441,7 +1441,7 @@ var doric = (function (exports) {
         };
     }
     var global$1 = Function('return this')();
-    var __timerId__ = 0;
+    var __timerId__ = 1;
     var timerInfos = new Map;
     var _setTimeout = global$1.setTimeout;
     var _setInterval = global$1.setInterval;

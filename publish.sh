@@ -29,7 +29,7 @@ sed -i "" "s/\(version[ ]*= \)'[0-9 \.]*'/\1'$CURRENT_VERSION'/g" $CURRENT_DIR/D
 cd $CURRENT_DIR/doric-web && npm version $CURRENT_VERSION --allow-same-version
 
 ## CLI
-echo $CURRENT_VERSION > $CURRENT_DIR/doric-cli/target/version
+echo $CURRENT_VERSION > $CURRENT_DIR/doric-cli/assets/version
 
 cd $CURRENT_DIR/doric-cli && npm version $CURRENT_VERSION --allow-same-version
 

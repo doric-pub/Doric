@@ -14,7 +14,7 @@ export async function run(platform: string) {
       await runiOS();
       break;
     default:
-      throw new Error("Donnot support " + platform);
+      throw new Error("Do not support " + platform);
   }
 }
 

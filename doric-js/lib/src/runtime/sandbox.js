@@ -257,7 +257,7 @@ export function jsObtainEntry(contextId) {
     };
 }
 const global = Function('return this')();
-let __timerId__ = 0;
+let __timerId__ = 1;
 const timerInfos = new Map;
 const _setTimeout = global.setTimeout;
 const _setInterval = global.setInterval;

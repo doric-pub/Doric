@@ -54,7 +54,7 @@ async function initAndroid(dir: string, name: string) {
             sourceFile,
             (await fs.promises.readFile(sourceFile, "utf-8"))
                 .replace(/__\$__/g, name)
-                .replace(/__\$appKey__/g, name.replace(/-/g,"_").toLowerCase())
+                .replace(/__\$appKey__/g, name.replace(/-/g, "_").toLowerCase())
                 .replace(/__\$Version__/g, currentVersion));
     }
     console.log(`Create Doric Android Project Success`.green);
@@ -73,7 +73,7 @@ async function initiOS(dir: string, name: string) {
             sourceFile,
             (await fs.promises.readFile(sourceFile, "utf-8"))
                 .replace(/__\$__/g, name)
-                .replace(/__\$appKey__/g, name.replace(/-/g,"_").toLowerCase())
+                .replace(/__\$appKey__/g, name.replace(/-/g, "_").toLowerCase())
                 .replace(/__\$Version__/g, currentVersion));
     }
     await fs.promises.rename(path.resolve(iOSDir, "Example.xcodeproj"), path.resolve(iOSDir, `${name}.xcodeproj`));
@@ -101,7 +101,12 @@ export default async function create(name: string) {
         await initiOS(cwd, name)
     }
     console.log("Install node modules ...".green)
-    await Shell.exec('npm', ['install'], { cwd });
-    await Shell.exec('npm', ['run', 'build'], { cwd });
+    await Shell.exec('npm', ['install'], {
+        cwd,
+        env: process.env,
+        consoleHandler: (info) => {
+            console.log(info)
+        }
+    });
     console.log("Installed, welcome!".green)
 }

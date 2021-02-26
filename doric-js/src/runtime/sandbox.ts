@@ -316,7 +316,7 @@ export function jsObtainEntry(contextId: string) {
 }
 
 const global = Function('return this')()
-let __timerId__ = 0
+let __timerId__ = 1
 
 const timerInfos: Map<number, { callback: () => void, context?: Context }> = new Map
 

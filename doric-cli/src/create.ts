@@ -18,7 +18,6 @@ async function shellCopy(dist: string, src: string) {
 }
 
 async function initJS(dir: string, name: string) {
-    console.log(`Project location ${dir}`);
     await fs.promises.writeFile(
         path.resolve(dir, "package.json"),
         (await fs.promises.readFile(path.resolve(targetJSPath, "_package.json"), "utf-8"))
@@ -87,6 +86,7 @@ export default async function create(name: string) {
         return;
     }
     await fs.promises.mkdir(name)
+    console.log(`Create doric project at ${cwd}`);
     await initJS(cwd, name)
     const androidDir = `${cwd}/android`
     if (fs.existsSync(androidDir)) {

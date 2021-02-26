@@ -43,7 +43,8 @@ async function initAndroid(dir: string, name: string) {
     const androidDir = `${dir}/android`
     await shellCopy(dir, targetAndroidPath);
     for (let file of [
-        'app/src/main/java/pub/doric/example/MainActivity.java',
+        'app/src/main/java/pub/doric/android/MainActivity.java',
+        'app/src/main/AndroidManifest.xml',
         'app/build.gradle',
         'app/src/main/res/values/strings.xml',
         'settings.gradle',
@@ -52,7 +53,9 @@ async function initAndroid(dir: string, name: string) {
         await fs.promises.writeFile(
             sourceFile,
             (await fs.promises.readFile(sourceFile, "utf-8"))
-                .replace(/__\$__/g, name).replace(/__\$Version__/g, currentVersion));
+                .replace(/__\$__/g, name)
+                .replace(/__\$appKey__/g, name.replace(/-/g,"_").toLowerCase())
+                .replace(/__\$Version__/g, currentVersion));
     }
     console.log(`Create Doric Android Project Success`.green);
 }
@@ -69,7 +72,9 @@ async function initiOS(dir: string, name: string) {
         await fs.promises.writeFile(
             sourceFile,
             (await fs.promises.readFile(sourceFile, "utf-8"))
-                .replace(/__\$__/g, name).replace(/__\$Version__/g, currentVersion));
+                .replace(/__\$__/g, name)
+                .replace(/__\$appKey__/g, name.replace(/-/g,"_").toLowerCase())
+                .replace(/__\$Version__/g, currentVersion));
     }
     await fs.promises.rename(path.resolve(iOSDir, "Example.xcodeproj"), path.resolve(iOSDir, `${name}.xcodeproj`));
     console.log(`Create Doric iOS Project Success`.green);

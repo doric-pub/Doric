@@ -1,11 +1,11 @@
-package pub.doric.example;
+package pub.doric.android;
 
 import android.app.Application;
 
 import pub.doric.Doric;
 
 /**
- * @Description: pub.doric.example
+ * @Description: pub.doric.android
  * @Author: pengfei.zhou
  * @CreateDate: 2019-12-05
  */

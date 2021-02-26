@@ -1,4 +1,4 @@
-package pub.doric.example;
+package pub.doric.android;
 
 import android.os.Bundle;
 import android.view.View;

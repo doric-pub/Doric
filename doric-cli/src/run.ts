@@ -4,8 +4,6 @@ import { glob } from "./util";
 import path from "path";
 import xml2js, { Element } from "xml-js";
 import inquirer from "inquirer";
-import { constants } from "buffer";
-import { blue } from "colors";
 
 export async function run(platform: string) {
   switch (platform.toLowerCase()) {
@@ -183,7 +181,7 @@ async function runiOS() {
     [
       "-workspace", workspace,
       "-scheme", scheme,
-      "-sdk", "iphonesimulator",
+      ...selectedDevice.isSimulator ? ["-sdk", "iphonesimulator",] : [],
       "-derivedDataPath", "build"
     ],
     {
@@ -197,8 +195,9 @@ async function runiOS() {
     console.log("Compile error".red);
     return;
   }
-  const iOSAPPs = await glob("**/*.app", { cwd: path.resolve(iOSDir, "build") });
-
+  const iOSAPPs = await glob(
+    `**/*${selectedDevice.isSimulator ? "iphonesimulator" : "iphoneos"}/*.app`,
+    { cwd: path.resolve(iOSDir, "build") });
   if (iOSAPPs?.length !== 1) {
     console.log("Cannot find built app".red);
     return;
@@ -207,8 +206,23 @@ async function runiOS() {
 
   console.log("Built iOS APP".green, iOSAPP.blue);
   console.log("====================");
-  await Shell.exec("xcrun", ["instruments", "-w", selectedDevice.deviceId])
   console.log("Installing APP to".green, selectedDevice.name.blue);
-  await Shell.exec("xcrun", ["simctl", "install", selectedDevice.deviceId, iOSAPP]);
-  await Shell.exec("xcrun", ["simctl", "launch", selectedDevice.deviceId, "pub.doric.ios.hellodoric"]);
+  if (selectedDevice.isSimulator) {
+    const pxjFile = path.resolve(iOSDir, (await glob("**/project.pbxproj", { cwd: iOSDir }))[0]);
+    const pxjContent = await fs.promises.readFile(pxjFile, "utf-8");
+    const bundleId = /PRODUCT_BUNDLE_IDENTIFIER\s=\s(\S*?);/g.exec(pxjContent)?.[1];
+    await Shell.exec("xcrun", ["instruments", "-w", selectedDevice.deviceId])
+    await Shell.exec("xcrun", ["simctl", "install", selectedDevice.deviceId, iOSAPP]);
+    await Shell.exec("xcrun", ["simctl", "launch", selectedDevice.deviceId, bundleId || `pub.doric.ios.${scheme.toLowerCase()}`]);
+  } else {
+    const iosDeploy = path.resolve("node_modules", ".bin", "ios-deploy")
+    await Shell.exec(
+      iosDeploy,
+      [
+        "--id", selectedDevice.deviceId,
+        "--justlaunch",
+        "--debug",
+        "--bundle", iOSAPP
+      ])
+  }
 }

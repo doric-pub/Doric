@@ -1468,7 +1468,7 @@ function jsObtainEntry(contextId) {
     };
 }
 const global$1 = Function('return this')();
-let __timerId__ = 0;
+let __timerId__ = 1;
 const timerInfos = new Map;
 const _setTimeout = global$1.setTimeout;
 const _setInterval = global$1.setInterval;
@@ -4354,7 +4354,6 @@ global$2.Entry = function () {
         return Reflect.apply(jsObtainEntry(contextId), doric, arguments);
     }
     else {
-        console.log(new Error().stack);
         const jsFile = (_c = (_b = (_a = new Error().stack) === null || _a === void 0 ? void 0 : _a.split("\n").map(e => e.match(/at\s__decorate.*?\s\((.*?)\)/)).find(e => !!e)) === null || _b === void 0 ? void 0 : _b[1].match(/(.*?\.js)/)) === null || _c === void 0 ? void 0 : _c[1];
         if (!jsFile) {
             throw new Error("Cannot find debugging file");

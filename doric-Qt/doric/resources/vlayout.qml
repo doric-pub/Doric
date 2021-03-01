@@ -3,5 +3,9 @@ import QtQuick.Controls 2.5
 
 Flex {
     flexDirection: "column"
+    flexWrap: "wrap"
+    justifyContent: "flexStart"
+    alignItems: "flexStart"
+    alignContent: "stretch"
 }
 

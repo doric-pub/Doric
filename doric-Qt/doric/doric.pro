@@ -41,6 +41,9 @@ SOURCES += \
         shader/DoricViewNode.cpp \
         utils/DoricConstant.cpp \
         utils/DoricContextHolder.cpp \
+        widget/flex/FlexLayout.cpp \
+        widget/flex/FlexLayoutConfig.cpp \
+        widget/flex/FlexLayoutService.cpp \
         yoga/Utils.cpp \
         yoga/YGConfig.cpp \
         yoga/YGEnums.cpp \
@@ -104,6 +107,9 @@ HEADERS += \
     utils/DoricObjectFactory.h \
     utils/DoricThreadMode.h \
     utils/DoricUtils.h \
+    widget/flex/FlexLayout.h \
+    widget/flex/FlexLayoutConfig.h \
+    widget/flex/FlexLayoutService.h \
     yoga/Bitfield.h \
     yoga/CompactValue.h \
     yoga/Utils.h \

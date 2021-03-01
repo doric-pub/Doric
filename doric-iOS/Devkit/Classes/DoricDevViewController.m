@@ -73,19 +73,21 @@
 }
 
 - (void)onClick {
-    if (DoricDev.instance.isInDevMode) {
-
-        UIAlertController *alertController = [[UIAlertController alloc] init];
-        UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:nil];
-        UIAlertAction *viewSource = [UIAlertAction actionWithTitle:@"View source" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            ShowToast(@"View source", DoricGravityBottom);
-        }];
-        [alertController addAction:cancel];
-        [alertController addAction:viewSource];
-        [self.vc presentViewController:alertController animated:true completion:nil];
-    } else {
-        ShowToast(@"Please connect to devkit first", DoricGravityBottom);
-    }
+    UIAlertController *alertController = [[UIAlertController alloc] init];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:nil];
+    UIAlertAction *viewSource = [UIAlertAction actionWithTitle:@"View source" style:UIAlertActionStyleDefault handler:^(UIAlertAction *_) {
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:@"View source: %@", self.doricContext.source]
+                                                                       message:self.doricContext.script
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *action = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil)
+                                                         style:UIAlertActionStyleDefault
+                                                       handler:nil];
+        [alert addAction:action];
+        [self.vc presentViewController:alert animated:YES completion:nil];
+    }];
+    [alertController addAction:cancel];
+    [alertController addAction:viewSource];
+    [self.vc presentViewController:alertController animated:true completion:nil];
 }
 @end
 
@@ -304,7 +306,7 @@
     DoricContext *context = [DoricContextManager.instance aliveContexts][(NSUInteger) indexPath.row];
     NSString *contextId = context.contextId;
     NSString *source = context.source;
-    cell.doricContext = nil;
+    cell.doricContext = context;
     cell.contentView.width = tableView.width;
     cell.contentView.height = 60;
     cell.tvId.text = contextId;

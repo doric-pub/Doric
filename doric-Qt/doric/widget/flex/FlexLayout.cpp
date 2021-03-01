@@ -2,7 +2,6 @@
 
 FlexLayout::FlexLayout(FlexLayoutConfig *config, QObject *parent)
     : QObject(parent) {
-  qCritical() << "create flex";
   node = YGNodeNewWithConfig(config->getConfig());
   this->config = config;
 }

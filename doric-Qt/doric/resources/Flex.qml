@@ -25,7 +25,7 @@ Item {
     property string alignItems: "auto"
     property string alignSelf: "auto"
 
-    property string justifyContent: "spaceBetween"
+    property string justifyContent: "flexStart"
 
     property string display: "flex"
 

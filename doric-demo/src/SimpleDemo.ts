@@ -4,20 +4,65 @@ import { Group, Panel, text, gravity, Color, LayoutSpec, vlayout, hlayout, scrol
 class LayoutDemo extends Panel {
     build(rootView: Group) {
         hlayout([
-            stack([], {
+            vlayout([
+                stack([], {
+                    width: 100,
+                    height: 100,
+                    backgroundColor: Color.RED
+                }),
+                stack([], {
+                    width: 100,
+                    height: 100,
+                    backgroundColor: Color.GREEN
+                }),
+                stack([], {
+                    width: 100,
+                    height: 100,
+                    backgroundColor: Color.BLUE
+                })
+            ], {
                 width: 100,
-                height: 100,
-                backgroundColor: Color.RED
+                height: 300,
             }),
-            stack([], {
+            vlayout([
+                stack([], {
+                    width: 100,
+                    height: 100,
+                    backgroundColor: Color.GREEN
+                }),
+                stack([], {
+                    width: 100,
+                    height: 100,
+                    backgroundColor: Color.BLUE
+                }),
+                stack([], {
+                    width: 100,
+                    height: 100,
+                    backgroundColor: Color.RED
+                })
+            ], {
                 width: 100,
-                height: 100,
-                backgroundColor: Color.GREEN
+                height: 300,
             }),
-            stack([], {
+            vlayout([
+                stack([], {
+                    width: 100,
+                    height: 100,
+                    backgroundColor: Color.BLUE
+                }),
+                stack([], {
+                    width: 100,
+                    height: 100,
+                    backgroundColor: Color.RED
+                }),
+                stack([], {
+                    width: 100,
+                    height: 100,
+                    backgroundColor: Color.GREEN
+                })
+            ], {
                 width: 100,
-                height: 100,
-                backgroundColor: Color.BLUE
+                height: 300,
             })
         ], {
             width: 300,

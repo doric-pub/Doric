@@ -274,24 +274,33 @@ public class DoricDevActivity extends AppCompatActivity implements DoricDev.Stat
             holder.layoutBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (DoricDev.getInstance().isInDevMode()) {
-                        final String items[] = {"View source",};
-                        AlertDialog.Builder builder = new AlertDialog.Builder(holder.itemView.getContext(), R.style.Theme_Doric_Modal);
-                        builder.setTitle(String.format("%s %s", context.getContextId(), context.getSource()));
-                        builder.setIcon(new BitmapDrawable(icon_on));
-                        builder.setItems(items, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (which == 0) {
-                                    Toast.makeText(Doric.application(), "View source", Toast.LENGTH_LONG).show();
-                                }
-                                dialog.dismiss();
+                    final String[] items = DoricDev.getInstance().isInDevMode()
+                            ? new String[]{"View source",}
+                            : new String[]{"View source",};
+                    AlertDialog.Builder builder = new AlertDialog.Builder(holder.itemView.getContext(), R.style.Theme_Doric_Modal);
+                    builder.setTitle(String.format("%s %s", context.getContextId(), context.getSource()));
+                    builder.setIcon(new BitmapDrawable(holder.itemView.getContext().getResources(), icon_on));
+                    builder.setItems(items, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (which == 0) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(holder.itemView.getContext(), R.style.Theme_Doric_Modal_Alert);
+                                builder.setTitle("View source: " + context.getSource());
+                                String btnTitle = holder.itemView.getContext().getString(android.R.string.ok);
+                                builder.setMessage(context.getScript())
+                                        .setPositiveButton(btnTitle, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                builder.setCancelable(false);
+                                builder.show();
                             }
-                        });
-                        builder.create().show();
-                    } else {
-                        Toast.makeText(Doric.application(), "Please connect to devkit first", Toast.LENGTH_LONG).show();
-                    }
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.create().show();
                 }
             });
         }

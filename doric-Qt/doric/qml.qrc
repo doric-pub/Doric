@@ -14,6 +14,7 @@
         <file alias="Snake.es5.js">../../doric-demo/bundle/src/Snake.es5.js</file>
     </qresource>
     <qresource prefix="/doric/qml">
+        <file alias="Flex.qml">./resources/Flex.qml</file>
         <file alias="view.qml">./resources/view.qml</file>
         <file alias="panel.qml">./resources/panel.qml</file>
         <file alias="stack.qml">./resources/stack.qml</file>

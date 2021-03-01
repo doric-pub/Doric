@@ -1,5 +1,5 @@
-import QtQuick 2.10
-import QtQuick.Layouts 1.1
+import QtQuick 2.12
+import QtQuick.Layouts 1.15
 import pub.doric.widget 1.0
 
 Item {

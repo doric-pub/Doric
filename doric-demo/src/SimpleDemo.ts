@@ -3,7 +3,7 @@ import { Group, Panel, text, gravity, Color, LayoutSpec, vlayout, hlayout, scrol
 @Entry
 class LayoutDemo extends Panel {
     build(rootView: Group) {
-        vlayout([
+        hlayout([
             stack([], {
                 width: 100,
                 height: 100,

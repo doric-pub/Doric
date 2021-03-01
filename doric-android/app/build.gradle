@@ -24,6 +24,14 @@ android {
     }
 }
 
+afterEvaluate {
+    buildJSBundle.exec()
+}
+
+task buildJSBundle(type: Exec) {
+    commandLine 'sh', project.getProjectDir().getParent() + "/../bundle.sh"
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'

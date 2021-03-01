@@ -23,16 +23,9 @@ android {
     }
     sourceSets {
         main {
-            assets.srcDirs = [project.getProjectDir().getParentFile().getParent() + "/doric-js/bundle"]
+            assets.srcDirs = ["../../doric-js/bundle"]
         }
     }
-}
-afterEvaluate {
-    buildJSBundle.exec()
-}
-
-task buildJSBundle(type: Exec) {
-    commandLine 'sh', project.getProjectDir().getParent() + "/../bundle.sh"
 }
 
 dependencies {

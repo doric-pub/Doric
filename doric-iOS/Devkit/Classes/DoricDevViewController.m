@@ -21,6 +21,7 @@
 //
 #import <DoricCore/Doric.h>
 #import <DoricCore/DoricContextManager.h>
+#import<CommonCrypto/CommonDigest.h>
 
 #import "DoricDev.h"
 #import "DoricDevViewController.h"
@@ -72,13 +73,30 @@
     return self;
 }
 
+- (NSString *)md5:(NSString *)input {
+    const char *cStr = [input UTF8String];
+    unsigned char digest[CC_MD5_DIGEST_LENGTH];
+    CC_MD5(cStr, (CC_LONG) strlen(cStr), digest);
+
+    NSMutableString *output = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
+    for (int i = 0; i < CC_MD5_DIGEST_LENGTH; i++) {
+        [output appendFormat:@"%02x", digest[i]];
+    }
+    return output;
+
+}
+
 - (void)onClick {
     UIAlertController *alertController = [[UIAlertController alloc] init];
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:nil];
     UIAlertAction *viewSource = [UIAlertAction actionWithTitle:@"View source" style:UIAlertActionStyleDefault handler:^(UIAlertAction *_) {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:@"View source: %@", self.doricContext.source]
-                                                                       message:self.doricContext.script
-                                                                preferredStyle:UIAlertControllerStyleAlert];
+                                                                       message:[NSString stringWithFormat:@"Size:%@\nMD5:%@\nScript:\n%@",
+                                                                                                          @(self.doricContext.script.length),
+                                                                                                          [self md5:self.doricContext.script],
+                                                                                                          self.doricContext.script]
+                                                                preferredStyle:
+                                                                        UIAlertControllerStyleAlert];
         UIAlertAction *action = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil)
                                                          style:UIAlertActionStyleDefault
                                                        handler:nil];

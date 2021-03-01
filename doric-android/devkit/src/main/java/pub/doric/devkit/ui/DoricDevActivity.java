@@ -28,7 +28,11 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import pub.doric.Doric;
 import pub.doric.DoricContext;
@@ -228,6 +232,27 @@ public class DoricDevActivity extends AppCompatActivity implements DoricDev.Stat
         }
     }
 
+    private static String toHex(byte[] bytes) {
+        char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+        char[] resultCharArray = new char[bytes.length * 2];
+        int index = 0;
+        for (byte b : bytes) {
+            resultCharArray[index++] = hexDigits[b >>> 4 & 0xf];
+            resultCharArray[index++] = hexDigits[b & 0xf];
+        }
+        return new String(resultCharArray);
+    }
+
+    private static String md5(String s) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] bytes = md.digest(s.getBytes(Charset.forName("UTF-8")));
+            return toHex(bytes);
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
     private static class ContextCellAdapter extends RecyclerView.Adapter<ContextCellHolder> {
         private final ArrayList<DoricContext> contexts = new ArrayList<>();
         private Bitmap icon_off;
@@ -285,9 +310,16 @@ public class DoricDevActivity extends AppCompatActivity implements DoricDev.Stat
                         public void onClick(DialogInterface dialog, int which) {
                             if (which == 0) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(holder.itemView.getContext(), R.style.Theme_Doric_Modal_Alert);
-                                builder.setTitle("View source: " + context.getSource());
+                                builder.setTitle(String.format(Locale.getDefault(),
+                                        "View source: %s",
+                                        context.getSource()));
                                 String btnTitle = holder.itemView.getContext().getString(android.R.string.ok);
-                                builder.setMessage(context.getScript())
+                                builder.setMessage(
+                                        String.format(Locale.getDefault(),
+                                                "Size:%d\nMD5:%s\nScript:\n%s",
+                                                context.getScript().length(),
+                                                md5(context.getScript()),
+                                                context.getScript()))
                                         .setPositiveButton(btnTitle, new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {

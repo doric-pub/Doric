@@ -147,6 +147,7 @@ function initNativeEnvironment(source) {
         });
     });
 }
+global.context = doric.jsObtainContext("FakeContext");
 const entryHooks = [];
 global.Entry = function () {
     var _a, _b, _c;
@@ -168,7 +169,9 @@ global.Entry = function () {
             initNativeEnvironment(source).then(ret => {
                 contextId = ret;
                 console.log("debugging context id: " + contextId);
-                global.context = doric.jsObtainContext(contextId);
+                const realContext = doric.jsObtainContext(contextId);
+                global.context.id = contextId;
+                global.context = realContext;
                 entryHooks.forEach(e => e(contextId));
             });
             return arguments[0];
@@ -197,5 +200,11 @@ global.nativeLog = (type, msg) => {
             break;
         }
     }
+};
+global.nativeRequire = () => {
+    console.error("Do not call nativeRequire here");
+};
+global.nativeBridge = () => {
+    console.error("Do not call nativeBridge here");
 };
 export * from './index';

@@ -4347,6 +4347,7 @@ function initNativeEnvironment(source) {
         });
     });
 }
+global$1.context = jsObtainContext("FakeContext");
 const entryHooks = [];
 global$1.Entry = function () {
     var _a, _b, _c;
@@ -4368,7 +4369,9 @@ global$1.Entry = function () {
             initNativeEnvironment(source).then(ret => {
                 contextId = ret;
                 console.log("debugging context id: " + contextId);
-                global$1.context = jsObtainContext(contextId);
+                const realContext = jsObtainContext(contextId);
+                global$1.context.id = contextId;
+                global$1.context = realContext;
                 entryHooks.forEach(e => e(contextId));
             });
             return arguments[0];
@@ -4397,6 +4400,12 @@ global$1.nativeLog = (type, msg) => {
             break;
         }
     }
+};
+global$1.nativeRequire = () => {
+    console.error("Do not call nativeRequire here");
+};
+global$1.nativeBridge = () => {
+    console.error("Do not call nativeBridge here");
 };
 
 exports.AnimationSet = AnimationSet;

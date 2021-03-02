@@ -145,6 +145,7 @@ public class DoricDev {
     public void requestDebugging(DoricContext context) {
         wsClient.sendToServer("DEBUG", new JSONBuilder()
                 .put("source", context.getSource())
+                .put("script", context.getScript())
                 .toJSONObject());
     }
 

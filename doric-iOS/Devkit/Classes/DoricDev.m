@@ -229,7 +229,8 @@
 
 - (void)requestDebugging:(DoricContext *)context {
     [self.wsClient sendToServer:@"DEBUG" payload:@{
-            @"source": context.source
+            @"source": context.source,
+            @"script": context.script,
     }];
 }
 

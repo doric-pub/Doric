@@ -4403,9 +4403,11 @@ global$1.nativeLog = (type, msg) => {
 };
 global$1.nativeRequire = () => {
     console.error("Do not call nativeRequire here");
+    return false;
 };
 global$1.nativeBridge = () => {
     console.error("Do not call nativeBridge here");
+    return false;
 };
 
 exports.AnimationSet = AnimationSet;

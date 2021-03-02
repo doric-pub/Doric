@@ -14,4 +14,12 @@ QQuickItem *DoricStackNode::build() {
   return item;
 }
 
-void DoricStackNode::blendLayoutConfig() { DoricViewNode::blendLayoutConfig(); }
+void DoricStackNode::blendLayoutConfig(QJSValue jsValue) {
+  DoricViewNode::blendLayoutConfig(jsValue);
+  QJSValue maxWidth = jsValue.property("maxWidth");
+  if (maxWidth.isNumber()) {
+  }
+  QJSValue maxHeight = jsValue.property("maxHeight");
+  if (maxHeight.isNumber()) {
+  }
+}

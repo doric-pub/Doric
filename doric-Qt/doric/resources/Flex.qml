@@ -271,7 +271,7 @@ Rectangle {
     }
 
     function updatePositions() {
-        if (flex.height != 0 && flex.width != 0) {
+        if (flex.height !== 0 && flex.width !== 0) {
             var rootNode = flexLayoutService.createNode();
             processNode(flex, rootNode);
             var nodes = []

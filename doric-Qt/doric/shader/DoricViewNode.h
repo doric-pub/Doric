@@ -16,8 +16,6 @@ protected:
 
   virtual QQuickItem *build() = 0;
 
-  virtual void blendLayoutConfig();
-
   void setLayoutConfig(QJSValue layoutConfig);
 
 private:
@@ -55,5 +53,7 @@ public:
   virtual void blend(QJSValue jsValue);
 
   virtual void blend(QQuickItem *view, QString name, QJSValue prop);
+
+  virtual void blendLayoutConfig(QJSValue jsObject);
 };
 #endif // DORICVIEWNODE_H

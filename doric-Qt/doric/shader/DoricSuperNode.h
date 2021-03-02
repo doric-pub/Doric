@@ -10,8 +10,6 @@ private:
 protected:
   virtual void blend(QQuickItem *view, QString name, QJSValue prop) override;
 
-  void blendSubLayoutConfig(DoricViewNode *viewNode);
-
   virtual void blendSubNode(QJSValue subProperties) = 0;
 
 public:
@@ -20,6 +18,8 @@ public:
   bool mReusable = false;
 
   QJSValue getSubModel(QString id);
+
+  void blendSubLayoutConfig(DoricViewNode *viewNode, QJSValue jsValue);
 
 private:
   void mixinSubNode(QJSValue subNode);

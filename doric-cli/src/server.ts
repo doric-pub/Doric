@@ -100,7 +100,8 @@ export async function createServer() {
                                 }
                             )
                             console.log(`Debugger on ${debuggingFile}`.green);
-                            console.log(`Please open Chrome`);
+                            console.log(`Please open Chrome inspector`, "chrome://inspect/#devices".white.bgGreen);
+                            console.log(`And click ${"Open dedicated DevTools for Node".white.bgBlue}`)
                             break;
                         case 'EXCEPTION':
                             console.log(resultObject.payload.source.red);

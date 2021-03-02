@@ -53,7 +53,7 @@ export async function createServer() {
                 } else if (resultObject.type === "C2D") {
                     if (resultObject.cmd === "DEBUG_STOP") {
                         client = undefined;
-                        debugProcess?.kill(0);
+                        debugProcess?.kill("SIGABRT");
                     }
                     if (client === undefined) {
                         client = ws;
@@ -141,6 +141,7 @@ export async function createServer() {
                         type: "S2D",
                         cmd: "DEBUG_STOP"
                     } as MSG));
+                    debugProcess?.kill("SIGABRT");
                 }
             });
             ws.on('error', function (code: number) {

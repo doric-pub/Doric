@@ -299,16 +299,19 @@ public class DoricDevActivity extends AppCompatActivity implements DoricDev.Stat
             holder.layoutBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final String[] items = DoricDev.getInstance().isInDevMode()
-                            ? new String[]{"View source",}
-                            : new String[]{"View source",};
+                    ArrayList<String> list = new ArrayList<>();
+                    list.add("View source");
+                    if (context.getDriver() instanceof DoricDebugDriver) {
+                        list.add("Stop debugging");
+                    }
+                    final String[] items = list.toArray(new String[0]);
                     AlertDialog.Builder builder = new AlertDialog.Builder(holder.itemView.getContext(), R.style.Theme_Doric_Modal);
                     builder.setTitle(String.format("%s %s", context.getContextId(), context.getSource()));
                     builder.setIcon(new BitmapDrawable(holder.itemView.getContext().getResources(), icon_on));
                     builder.setItems(items, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            if (which == 0) {
+                            if ("View source".equals(items[which])) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(holder.itemView.getContext(), R.style.Theme_Doric_Modal_Alert);
                                 builder.setTitle(String.format(Locale.getDefault(),
                                         "View source: %s",
@@ -328,6 +331,8 @@ public class DoricDevActivity extends AppCompatActivity implements DoricDev.Stat
                                         });
                                 builder.setCancelable(false);
                                 builder.show();
+                            } else if ("Stop debugging".equals(items[which])) {
+                                DoricDev.getInstance().stopDebugging(true);
                             }
                             dialog.dismiss();
                         }

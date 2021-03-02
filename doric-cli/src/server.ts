@@ -4,6 +4,7 @@ import path from "path";
 import { glob } from "./util";
 import { Shell } from "./shell";
 import { ChildProcess, } from "child_process";
+import fs from "fs";
 
 export type MSG = {
     type: "D2C" | "C2D" | "C2S" | "D2S" | "S2C" | "S2D",
@@ -72,10 +73,19 @@ export async function createServer() {
                             const jsFile = await glob(`**/${source}`, {
                                 cwd: path.resolve(process.cwd(), "bundle")
                             })
+                            let debuggingFile: string
                             if (!!!jsFile || jsFile.length === 0) {
                                 console.error(`Cannot find ${source} in ${path.resolve(process.cwd(), "bundle")}`);
+                                let script = resultObject.payload.script as string;
+                                const debuggingDir = path.resolve(process.cwd(), "debug");
+                                if (!fs.existsSync(debuggingDir)) {
+                                    await fs.promises.mkdir(debuggingDir);
+                                }
+                                debuggingFile = path.resolve(debuggingDir, source);
+                                await fs.promises.writeFile(debuggingFile, script, "utf-8");
+                            } else {
+                                debuggingFile = path.resolve(process.cwd(), "bundle", jsFile[0]);
                             }
-                            const debuggingFile = path.resolve(process.cwd(), "bundle", jsFile[0]);
                             debugProcess = await Shell.execProcess(
                                 "node",
                                 [

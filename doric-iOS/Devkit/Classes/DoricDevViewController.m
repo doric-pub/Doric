@@ -105,6 +105,13 @@
     }];
     [alertController addAction:cancel];
     [alertController addAction:viewSource];
+    if ([self.doricContext.driver isKindOfClass:DoricDebugDriver.class]) {
+        UIAlertAction *stopDebugging = [UIAlertAction actionWithTitle:@"Stop debugging" style:UIAlertActionStyleDefault handler:^(UIAlertAction *_) {
+            [DoricDev.instance stopDebugging:YES];
+        }];
+        [alertController addAction:stopDebugging];
+    }
+
     [self.vc presentViewController:alertController animated:true completion:nil];
 }
 @end
@@ -311,11 +318,15 @@
     return [UIImage imageWithData:imageData];
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)tableView:(UITableView *)tableView
+ numberOfRowsInSection:
+         (NSInteger)section {
     return [DoricContextManager.instance aliveContexts].count;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView
+         cellForRowAtIndexPath:
+                 (NSIndexPath *)indexPath {
     DoricContextCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     if (cell == nil) {
         cell = [[DoricContextCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
@@ -351,7 +362,9 @@
     return cell;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (CGFloat)   tableView:(UITableView *)tableView
+heightForRowAtIndexPath:
+        (NSIndexPath *)indexPath {
     return 60.f;
 }
 
@@ -375,7 +388,9 @@
     [self.listView reloadData];
 }
 
-- (void)onReload:(DoricContext *)context script:(NSString *)script {
+- (void)onReload:(DoricContext *)context
+          script:
+                  (NSString *)script {
     [self.listView reloadData];
 }
 

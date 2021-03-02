@@ -32,10 +32,10 @@
     "inquirer": "^8.0.0",
     "keypress": "^0.2.1",
     "qrcode-terminal": "^0.12.0",
-    "rollup": "^2.23.0",
+    "rollup": "^2.24.0",
     "shelljs": "^0.8.4",
     "source-map-merger": "^0.2.0",
-    "typescript": "^3.9.7",
+    "typescript": "^4.2.2",
     "ws": "^7.4.3",
     "xml-js": "^1.6.11"
   },

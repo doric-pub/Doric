@@ -136,29 +136,31 @@ function logw() {
     nativeLog('w', out);
 }
 
-var __extends = (undefined && undefined.__extends) || (function () {
+var __extends$e = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) { if (b.hasOwnProperty(p)) { d[p] = b[p]; } } };
+            function (d, b) { for (var p in b) { if (Object.prototype.hasOwnProperty.call(b, p)) { d[p] = b[p]; } } };
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            { throw new TypeError("Class extends value " + String(b) + " is not a constructor or null"); }
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$d = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") { r = Reflect.decorate(decorators, target, key, desc); }
     else { for (var i = decorators.length - 1; i >= 0; i--) { if (d = decorators[i]) { r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r; } } }
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$d = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
-var __values = (undefined && undefined.__values) || function(o) {
+var __values$5 = (undefined && undefined.__values) || function(o) {
     var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
     if (m) { return m.call(o); }
     if (o && typeof o.length === "number") { return {
@@ -385,113 +387,113 @@ var View = /** @class */ (function () {
             }
         });
     };
-    __decorate([
+    __decorate$d([
         Property,
-        __metadata("design:type", Number)
+        __metadata$d("design:type", Number)
     ], View.prototype, "width", void 0);
-    __decorate([
+    __decorate$d([
         Property,
-        __metadata("design:type", Number)
+        __metadata$d("design:type", Number)
     ], View.prototype, "height", void 0);
-    __decorate([
+    __decorate$d([
         Property,
-        __metadata("design:type", Number)
+        __metadata$d("design:type", Number)
     ], View.prototype, "x", void 0);
-    __decorate([
+    __decorate$d([
         Property,
-        __metadata("design:type", Number)
+        __metadata$d("design:type", Number)
     ], View.prototype, "y", void 0);
-    __decorate([
+    __decorate$d([
         Property,
-        __metadata("design:type", Object)
+        __metadata$d("design:type", Object)
     ], View.prototype, "backgroundColor", void 0);
-    __decorate([
+    __decorate$d([
         Property,
-        __metadata("design:type", Object)
+        __metadata$d("design:type", Object)
     ], View.prototype, "corners", void 0);
-    __decorate([
+    __decorate$d([
         Property,
-        __metadata("design:type", Object)
+        __metadata$d("design:type", Object)
     ], View.prototype, "border", void 0);
-    __decorate([
+    __decorate$d([
         Property,
-        __metadata("design:type", Object)
+        __metadata$d("design:type", Object)
     ], View.prototype, "shadow", void 0);
-    __decorate([
+    __decorate$d([
         Property,
-        __metadata("design:type", Number)
+        __metadata$d("design:type", Number)
     ], View.prototype, "alpha", void 0);
-    __decorate([
+    __decorate$d([
         Property,
-        __metadata("design:type", Boolean)
+        __metadata$d("design:type", Boolean)
     ], View.prototype, "hidden", void 0);
-    __decorate([
+    __decorate$d([
         Property,
-        __metadata("design:type", Object)
+        __metadata$d("design:type", Object)
     ], View.prototype, "padding", void 0);
-    __decorate([
+    __decorate$d([
         Property,
-        __metadata("design:type", Object)
+        __metadata$d("design:type", Object)
     ], View.prototype, "layoutConfig", void 0);
-    __decorate([
+    __decorate$d([
         Property,
-        __metadata("design:type", Function)
+        __metadata$d("design:type", Function)
     ], View.prototype, "onClick", void 0);
-    __decorate([
+    __decorate$d([
         Property,
-        __metadata("design:type", Number)
+        __metadata$d("design:type", Number)
     ], View.prototype, "translationX", void 0);
-    __decorate([
+    __decorate$d([
         Property,
-        __metadata("design:type", Number)
+        __metadata$d("design:type", Number)
     ], View.prototype, "translationY", void 0);
-    __decorate([
+    __decorate$d([
         Property,
-        __metadata("design:type", Number)
+        __metadata$d("design:type", Number)
     ], View.prototype, "scaleX", void 0);
-    __decorate([
+    __decorate$d([
         Property,
-        __metadata("design:type", Number)
+        __metadata$d("design:type", Number)
     ], View.prototype, "scaleY", void 0);
-    __decorate([
+    __decorate$d([
         Property,
-        __metadata("design:type", Number)
+        __metadata$d("design:type", Number)
     ], View.prototype, "pivotX", void 0);
-    __decorate([
+    __decorate$d([
         Property,
-        __metadata("design:type", Number)
+        __metadata$d("design:type", Number)
     ], View.prototype, "pivotY", void 0);
-    __decorate([
+    __decorate$d([
         Property,
-        __metadata("design:type", Number)
+        __metadata$d("design:type", Number)
     ], View.prototype, "rotation", void 0);
-    __decorate([
+    __decorate$d([
         Property,
-        __metadata("design:type", Number)
+        __metadata$d("design:type", Number)
     ], View.prototype, "rotationX", void 0);
-    __decorate([
+    __decorate$d([
         Property,
-        __metadata("design:type", Number)
+        __metadata$d("design:type", Number)
     ], View.prototype, "rotationY", void 0);
-    __decorate([
+    __decorate$d([
         Property,
-        __metadata("design:type", Number)
+        __metadata$d("design:type", Number)
     ], View.prototype, "perspective", void 0);
-    __decorate([
+    __decorate$d([
         Property,
-        __metadata("design:type", Object)
+        __metadata$d("design:type", Object)
     ], View.prototype, "flexConfig", void 0);
     return View;
 }());
 var Superview = /** @class */ (function (_super) {
-    __extends(Superview, _super);
+    __extends$e(Superview, _super);
     function Superview() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     Superview.prototype.subviewById = function (id) {
         var e_1, _a;
         try {
-            for (var _b = __values(this.allSubviews()), _c = _b.next(); !_c.done; _c = _b.next()) {
+            for (var _b = __values$5(this.allSubviews()), _c = _b.next(); !_c.done; _c = _b.next()) {
                 var v = _c.value;
                 if (v.viewId === id) {
                     return v;
@@ -513,7 +515,7 @@ var Superview = /** @class */ (function (_super) {
         }
         else {
             try {
-                for (var _b = __values(this.allSubviews()), _c = _b.next(); !_c.done; _c = _b.next()) {
+                for (var _b = __values$5(this.allSubviews()), _c = _b.next(); !_c.done; _c = _b.next()) {
                     var v = _c.value;
                     if (v.isDirty()) {
                         return true;
@@ -533,7 +535,7 @@ var Superview = /** @class */ (function (_super) {
     Superview.prototype.clean = function () {
         var e_3, _a;
         try {
-            for (var _b = __values(this.allSubviews()), _c = _b.next(); !_c.done; _c = _b.next()) {
+            for (var _b = __values$5(this.allSubviews()), _c = _b.next(); !_c.done; _c = _b.next()) {
                 var v = _c.value;
                 v.clean();
             }
@@ -551,7 +553,7 @@ var Superview = /** @class */ (function (_super) {
         var e_4, _a;
         var subviews = [];
         try {
-            for (var _b = __values(this.allSubviews()), _c = _b.next(); !_c.done; _c = _b.next()) {
+            for (var _b = __values$5(this.allSubviews()), _c = _b.next(); !_c.done; _c = _b.next()) {
                 var v = _c.value;
                 if (v != undefined) {
                     v.superview = this;
@@ -574,7 +576,7 @@ var Superview = /** @class */ (function (_super) {
     return Superview;
 }(View));
 var Group = /** @class */ (function (_super) {
-    __extends(Group, _super);
+    __extends$e(Group, _super);
     function Group() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.children = [];
@@ -749,29 +751,31 @@ function layoutConfig() {
     return new LayoutConfigImpl;
 }
 
-var __extends$1 = (undefined && undefined.__extends) || (function () {
+var __extends$d = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) { if (b.hasOwnProperty(p)) { d[p] = b[p]; } } };
+            function (d, b) { for (var p in b) { if (Object.prototype.hasOwnProperty.call(b, p)) { d[p] = b[p]; } } };
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            { throw new TypeError("Class extends value " + String(b) + " is not a constructor or null"); }
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate$1 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$c = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") { r = Reflect.decorate(decorators, target, key, desc); }
     else { for (var i = decorators.length - 1; i >= 0; i--) { if (d = decorators[i]) { r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r; } } }
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$1 = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$c = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
-var __values$1 = (undefined && undefined.__values) || function(o) {
+var __values$4 = (undefined && undefined.__values) || function(o) {
     var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
     if (m) { return m.call(o); }
     if (o && typeof o.length === "number") { return {
@@ -783,43 +787,43 @@ var __values$1 = (undefined && undefined.__values) || function(o) {
     throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 };
 var Stack = /** @class */ (function (_super) {
-    __extends$1(Stack, _super);
+    __extends$d(Stack, _super);
     function Stack() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     return Stack;
 }(Group));
 var Root = /** @class */ (function (_super) {
-    __extends$1(Root, _super);
+    __extends$d(Root, _super);
     function Root() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     return Root;
 }(Stack));
 var LinearLayout = /** @class */ (function (_super) {
-    __extends$1(LinearLayout, _super);
+    __extends$d(LinearLayout, _super);
     function LinearLayout() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    __decorate$1([
+    __decorate$c([
         Property,
-        __metadata$1("design:type", Number)
+        __metadata$c("design:type", Number)
     ], LinearLayout.prototype, "space", void 0);
-    __decorate$1([
+    __decorate$c([
         Property,
-        __metadata$1("design:type", Gravity)
+        __metadata$c("design:type", Gravity)
     ], LinearLayout.prototype, "gravity", void 0);
     return LinearLayout;
 }(Group));
 var VLayout = /** @class */ (function (_super) {
-    __extends$1(VLayout, _super);
+    __extends$d(VLayout, _super);
     function VLayout() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     return VLayout;
 }(LinearLayout));
 var HLayout = /** @class */ (function (_super) {
-    __extends$1(HLayout, _super);
+    __extends$d(HLayout, _super);
     function HLayout() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -830,7 +834,7 @@ function stack(views, config) {
     var ret = new Stack;
     ret.layoutConfig = layoutConfig().fit();
     try {
-        for (var views_1 = __values$1(views), views_1_1 = views_1.next(); !views_1_1.done; views_1_1 = views_1.next()) {
+        for (var views_1 = __values$4(views), views_1_1 = views_1.next(); !views_1_1.done; views_1_1 = views_1.next()) {
             var v = views_1_1.value;
             ret.addChild(v);
         }
@@ -854,7 +858,7 @@ function hlayout(views, config) {
     var ret = new HLayout;
     ret.layoutConfig = layoutConfig().fit();
     try {
-        for (var views_2 = __values$1(views), views_2_1 = views_2.next(); !views_2_1.done; views_2_1 = views_2.next()) {
+        for (var views_2 = __values$4(views), views_2_1 = views_2.next(); !views_2_1.done; views_2_1 = views_2.next()) {
             var v = views_2_1.value;
             ret.addChild(v);
         }
@@ -878,7 +882,7 @@ function vlayout(views, config) {
     var ret = new VLayout;
     ret.layoutConfig = layoutConfig().fit();
     try {
-        for (var views_3 = __values$1(views), views_3_1 = views_3.next(); !views_3_1.done; views_3_1 = views_3.next()) {
+        for (var views_3 = __values$4(views), views_3_1 = views_3.next(); !views_3_1.done; views_3_1 = views_3.next()) {
             var v = views_3_1.value;
             ret.addChild(v);
         }
@@ -898,7 +902,7 @@ function vlayout(views, config) {
     return ret;
 }
 var FlexLayout = /** @class */ (function (_super) {
-    __extends$1(FlexLayout, _super);
+    __extends$d(FlexLayout, _super);
     function FlexLayout() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -909,7 +913,7 @@ function flexlayout(views, config) {
     var ret = new FlexLayout;
     ret.layoutConfig = layoutConfig().fit();
     try {
-        for (var views_4 = __values$1(views), views_4_1 = views_4.next(); !views_4_1.done; views_4_1 = views_4.next()) {
+        for (var views_4 = __values$4(views), views_4_1 = views_4.next(); !views_4_1.done; views_4_1 = views_4.next()) {
             var v = views_4_1.value;
             ret.addChild(v);
         }
@@ -929,16 +933,16 @@ function flexlayout(views, config) {
     return ret;
 }
 
-var __decorate$2 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$b = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") { r = Reflect.decorate(decorators, target, key, desc); }
     else { for (var i = decorators.length - 1; i >= 0; i--) { if (d = decorators[i]) { r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r; } } }
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$2 = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$b = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
-var __values$2 = (undefined && undefined.__values) || function(o) {
+var __values$3 = (undefined && undefined.__values) || function(o) {
     var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
     if (m) { return m.call(o); }
     if (o && typeof o.length === "number") { return {
@@ -1055,7 +1059,7 @@ var Panel = /** @class */ (function () {
                     return _this.__root__;
                 }
                 try {
-                    for (var _b = __values$2(_this.headviews.values()), _c = _b.next(); !_c.done; _c = _b.next()) {
+                    for (var _b = __values$3(_this.headviews.values()), _c = _b.next(); !_c.done; _c = _b.next()) {
                         var map = _c.value;
                         if (map.has(cur)) {
                             return map.get(cur);
@@ -1087,10 +1091,10 @@ var Panel = /** @class */ (function () {
         if (Environment.platform !== 'web') {
             this.__root__.clean();
             try {
-                for (var _c = __values$2(this.headviews.values()), _d = _c.next(); !_d.done; _d = _c.next()) {
+                for (var _c = __values$3(this.headviews.values()), _d = _c.next(); !_d.done; _d = _c.next()) {
                     var map = _d.value;
                     try {
-                        for (var _e = (e_3 = void 0, __values$2(map.values())), _f = _e.next(); !_f.done; _f = _e.next()) {
+                        for (var _e = (e_3 = void 0, __values$3(map.values())), _f = _e.next(); !_f.done; _f = _e.next()) {
                             var v = _f.value;
                             v.clean();
                         }
@@ -1128,10 +1132,10 @@ var Panel = /** @class */ (function () {
                 promises.push(this.nativeRender(model));
             }
             try {
-                for (var _c = __values$2(this.headviews.values()), _d = _c.next(); !_d.done; _d = _c.next()) {
+                for (var _c = __values$3(this.headviews.values()), _d = _c.next(); !_d.done; _d = _c.next()) {
                     var map = _d.value;
                     try {
-                        for (var _e = (e_5 = void 0, __values$2(map.values())), _f = _e.next(); !_f.done; _f = _e.next()) {
+                        for (var _e = (e_5 = void 0, __values$3(map.values())), _f = _e.next(); !_f.done; _f = _e.next()) {
                             var v = _f.value;
                             if (v.isDirty()) {
                                 var model = v.toModel();
@@ -1165,10 +1169,10 @@ var Panel = /** @class */ (function () {
                     _this.__root__.clean();
                 }
                 try {
-                    for (var _c = __values$2(_this.headviews.values()), _d = _c.next(); !_d.done; _d = _c.next()) {
+                    for (var _c = __values$3(_this.headviews.values()), _d = _c.next(); !_d.done; _d = _c.next()) {
                         var map = _d.value;
                         try {
-                            for (var _e = (e_7 = void 0, __values$2(map.values())), _f = _e.next(); !_f.done; _f = _e.next()) {
+                            for (var _e = (e_7 = void 0, __values$3(map.values())), _f = _e.next(); !_f.done; _f = _e.next()) {
                                 var v = _f.value;
                                 if (v.isDirty()) {
                                     var model = v.toModel();
@@ -1217,47 +1221,47 @@ var Panel = /** @class */ (function () {
     Panel.prototype.addOnRenderFinishedCallback = function (cb) {
         this.onRenderFinishedCallback.push(cb);
     };
-    __decorate$2([
+    __decorate$b([
         NativeCall,
-        __metadata$2("design:type", Function),
-        __metadata$2("design:paramtypes", [String]),
-        __metadata$2("design:returntype", void 0)
+        __metadata$b("design:type", Function),
+        __metadata$b("design:paramtypes", [String]),
+        __metadata$b("design:returntype", void 0)
     ], Panel.prototype, "__init__", null);
-    __decorate$2([
+    __decorate$b([
         NativeCall,
-        __metadata$2("design:type", Function),
-        __metadata$2("design:paramtypes", []),
-        __metadata$2("design:returntype", void 0)
+        __metadata$b("design:type", Function),
+        __metadata$b("design:paramtypes", []),
+        __metadata$b("design:returntype", void 0)
     ], Panel.prototype, "__onCreate__", null);
-    __decorate$2([
+    __decorate$b([
         NativeCall,
-        __metadata$2("design:type", Function),
-        __metadata$2("design:paramtypes", []),
-        __metadata$2("design:returntype", void 0)
+        __metadata$b("design:type", Function),
+        __metadata$b("design:paramtypes", []),
+        __metadata$b("design:returntype", void 0)
     ], Panel.prototype, "__onDestroy__", null);
-    __decorate$2([
+    __decorate$b([
         NativeCall,
-        __metadata$2("design:type", Function),
-        __metadata$2("design:paramtypes", []),
-        __metadata$2("design:returntype", void 0)
+        __metadata$b("design:type", Function),
+        __metadata$b("design:paramtypes", []),
+        __metadata$b("design:returntype", void 0)
     ], Panel.prototype, "__onShow__", null);
-    __decorate$2([
+    __decorate$b([
         NativeCall,
-        __metadata$2("design:type", Function),
-        __metadata$2("design:paramtypes", []),
-        __metadata$2("design:returntype", void 0)
+        __metadata$b("design:type", Function),
+        __metadata$b("design:paramtypes", []),
+        __metadata$b("design:returntype", void 0)
     ], Panel.prototype, "__onHidden__", null);
-    __decorate$2([
+    __decorate$b([
         NativeCall,
-        __metadata$2("design:type", Function),
-        __metadata$2("design:paramtypes", [Object]),
-        __metadata$2("design:returntype", void 0)
+        __metadata$b("design:type", Function),
+        __metadata$b("design:paramtypes", [Object]),
+        __metadata$b("design:returntype", void 0)
     ], Panel.prototype, "__build__", null);
-    __decorate$2([
+    __decorate$b([
         NativeCall,
-        __metadata$2("design:type", Function),
-        __metadata$2("design:paramtypes", [Array, String]),
-        __metadata$2("design:returntype", void 0)
+        __metadata$b("design:type", Function),
+        __metadata$b("design:paramtypes", [Array, String]),
+        __metadata$b("design:returntype", void 0)
     ], Panel.prototype, "__response__", null);
     return Panel;
 }());
@@ -1277,20 +1281,22 @@ var Panel = /** @class */ (function () {
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-var __extends$2 = (undefined && undefined.__extends) || (function () {
+var __extends$c = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) { if (b.hasOwnProperty(p)) { d[p] = b[p]; } } };
+            function (d, b) { for (var p in b) { if (Object.prototype.hasOwnProperty.call(b, p)) { d[p] = b[p]; } } };
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            { throw new TypeError("Class extends value " + String(b) + " is not a constructor or null"); }
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __values$3 = (undefined && undefined.__values) || function(o) {
+var __values$2 = (undefined && undefined.__values) || function(o) {
     var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
     if (m) { return m.call(o); }
     if (o && typeof o.length === "number") { return {
@@ -1358,7 +1364,7 @@ var Animation = /** @class */ (function () {
         var e_1, _a;
         var changeables = [];
         try {
-            for (var _b = __values$3(this.changeables.values()), _c = _b.next(); !_c.done; _c = _b.next()) {
+            for (var _b = __values$2(this.changeables.values()), _c = _b.next(); !_c.done; _c = _b.next()) {
                 var e = _c.value;
                 changeables.push({
                     key: e.key,
@@ -1388,7 +1394,7 @@ var Animation = /** @class */ (function () {
     return Animation;
 }());
 var ScaleAnimation = /** @class */ (function (_super) {
-    __extends$2(ScaleAnimation, _super);
+    __extends$c(ScaleAnimation, _super);
     function ScaleAnimation() {
         var _this = _super.call(this) || this;
         _this.scaleXChangeable = {
@@ -1448,7 +1454,7 @@ var ScaleAnimation = /** @class */ (function (_super) {
     return ScaleAnimation;
 }(Animation));
 var TranslationAnimation = /** @class */ (function (_super) {
-    __extends$2(TranslationAnimation, _super);
+    __extends$c(TranslationAnimation, _super);
     function TranslationAnimation() {
         var _this = _super.call(this) || this;
         _this.translationXChangeable = {
@@ -1508,7 +1514,7 @@ var TranslationAnimation = /** @class */ (function (_super) {
     return TranslationAnimation;
 }(Animation));
 var RotationAnimation = /** @class */ (function (_super) {
-    __extends$2(RotationAnimation, _super);
+    __extends$c(RotationAnimation, _super);
     function RotationAnimation() {
         var _this = _super.call(this) || this;
         _this.rotationChaneable = {
@@ -1542,7 +1548,7 @@ var RotationAnimation = /** @class */ (function (_super) {
     return RotationAnimation;
 }(Animation));
 var RotationXAnimation = /** @class */ (function (_super) {
-    __extends$2(RotationXAnimation, _super);
+    __extends$c(RotationXAnimation, _super);
     function RotationXAnimation() {
         var _this = _super.call(this) || this;
         _this.rotationChaneable = {
@@ -1576,7 +1582,7 @@ var RotationXAnimation = /** @class */ (function (_super) {
     return RotationXAnimation;
 }(Animation));
 var RotationYAnimation = /** @class */ (function (_super) {
-    __extends$2(RotationYAnimation, _super);
+    __extends$c(RotationYAnimation, _super);
     function RotationYAnimation() {
         var _this = _super.call(this) || this;
         _this.rotationChaneable = {
@@ -1715,26 +1721,28 @@ exports.GradientOrientation = void 0;
     GradientOrientation[GradientOrientation["TL_BR"] = 7] = "TL_BR";
 })(exports.GradientOrientation || (exports.GradientOrientation = {}));
 
-var __extends$3 = (undefined && undefined.__extends) || (function () {
+var __extends$b = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) { if (b.hasOwnProperty(p)) { d[p] = b[p]; } } };
+            function (d, b) { for (var p in b) { if (Object.prototype.hasOwnProperty.call(b, p)) { d[p] = b[p]; } } };
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            { throw new TypeError("Class extends value " + String(b) + " is not a constructor or null"); }
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate$3 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$a = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") { r = Reflect.decorate(decorators, target, key, desc); }
     else { for (var i = decorators.length - 1; i >= 0; i--) { if (d = decorators[i]) { r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r; } } }
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$3 = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$a = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
 exports.TruncateAt = void 0;
@@ -1745,65 +1753,65 @@ exports.TruncateAt = void 0;
     TruncateAt[TruncateAt["Clip"] = 3] = "Clip";
 })(exports.TruncateAt || (exports.TruncateAt = {}));
 var Text = /** @class */ (function (_super) {
-    __extends$3(Text, _super);
+    __extends$b(Text, _super);
     function Text() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    __decorate$3([
+    __decorate$a([
         Property,
-        __metadata$3("design:type", String)
+        __metadata$a("design:type", String)
     ], Text.prototype, "text", void 0);
-    __decorate$3([
+    __decorate$a([
         Property,
-        __metadata$3("design:type", Color)
+        __metadata$a("design:type", Color)
     ], Text.prototype, "textColor", void 0);
-    __decorate$3([
+    __decorate$a([
         Property,
-        __metadata$3("design:type", Number)
+        __metadata$a("design:type", Number)
     ], Text.prototype, "textSize", void 0);
-    __decorate$3([
+    __decorate$a([
         Property,
-        __metadata$3("design:type", Number)
+        __metadata$a("design:type", Number)
     ], Text.prototype, "maxLines", void 0);
-    __decorate$3([
+    __decorate$a([
         Property,
-        __metadata$3("design:type", Gravity)
+        __metadata$a("design:type", Gravity)
     ], Text.prototype, "textAlignment", void 0);
-    __decorate$3([
+    __decorate$a([
         Property,
-        __metadata$3("design:type", String)
+        __metadata$a("design:type", String)
     ], Text.prototype, "fontStyle", void 0);
-    __decorate$3([
+    __decorate$a([
         Property,
-        __metadata$3("design:type", String)
+        __metadata$a("design:type", String)
     ], Text.prototype, "font", void 0);
-    __decorate$3([
+    __decorate$a([
         Property,
-        __metadata$3("design:type", Number)
+        __metadata$a("design:type", Number)
     ], Text.prototype, "maxWidth", void 0);
-    __decorate$3([
+    __decorate$a([
         Property,
-        __metadata$3("design:type", Number)
+        __metadata$a("design:type", Number)
     ], Text.prototype, "maxHeight", void 0);
-    __decorate$3([
+    __decorate$a([
         Property,
-        __metadata$3("design:type", Number)
+        __metadata$a("design:type", Number)
     ], Text.prototype, "lineSpacing", void 0);
-    __decorate$3([
+    __decorate$a([
         Property,
-        __metadata$3("design:type", Boolean)
+        __metadata$a("design:type", Boolean)
     ], Text.prototype, "strikethrough", void 0);
-    __decorate$3([
+    __decorate$a([
         Property,
-        __metadata$3("design:type", Boolean)
+        __metadata$a("design:type", Boolean)
     ], Text.prototype, "underline", void 0);
-    __decorate$3([
+    __decorate$a([
         Property,
-        __metadata$3("design:type", String)
+        __metadata$a("design:type", String)
     ], Text.prototype, "htmlText", void 0);
-    __decorate$3([
+    __decorate$a([
         Property,
-        __metadata$3("design:type", Number)
+        __metadata$a("design:type", Number)
     ], Text.prototype, "truncateAt", void 0);
     return Text;
 }(View));
@@ -1816,26 +1824,28 @@ function text(config) {
     return ret;
 }
 
-var __extends$4 = (undefined && undefined.__extends) || (function () {
+var __extends$a = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) { if (b.hasOwnProperty(p)) { d[p] = b[p]; } } };
+            function (d, b) { for (var p in b) { if (Object.prototype.hasOwnProperty.call(b, p)) { d[p] = b[p]; } } };
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            { throw new TypeError("Class extends value " + String(b) + " is not a constructor or null"); }
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate$4 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$9 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") { r = Reflect.decorate(decorators, target, key, desc); }
     else { for (var i = decorators.length - 1; i >= 0; i--) { if (d = decorators[i]) { r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r; } } }
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$4 = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$9 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
 exports.ScaleType = void 0;
@@ -1845,74 +1855,74 @@ exports.ScaleType = void 0;
     ScaleType[ScaleType["ScaleAspectFill"] = 2] = "ScaleAspectFill";
 })(exports.ScaleType || (exports.ScaleType = {}));
 var Image = /** @class */ (function (_super) {
-    __extends$4(Image, _super);
+    __extends$a(Image, _super);
     function Image() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    __decorate$4([
+    __decorate$9([
         Property,
-        __metadata$4("design:type", String)
+        __metadata$9("design:type", String)
     ], Image.prototype, "imageUrl", void 0);
-    __decorate$4([
+    __decorate$9([
         Property,
-        __metadata$4("design:type", String)
+        __metadata$9("design:type", String)
     ], Image.prototype, "imagePath", void 0);
-    __decorate$4([
+    __decorate$9([
         Property,
-        __metadata$4("design:type", String)
+        __metadata$9("design:type", String)
     ], Image.prototype, "imageRes", void 0);
-    __decorate$4([
+    __decorate$9([
         Property,
-        __metadata$4("design:type", String)
+        __metadata$9("design:type", String)
     ], Image.prototype, "imageBase64", void 0);
-    __decorate$4([
+    __decorate$9([
         Property,
-        __metadata$4("design:type", Number)
+        __metadata$9("design:type", Number)
     ], Image.prototype, "scaleType", void 0);
-    __decorate$4([
+    __decorate$9([
         Property,
-        __metadata$4("design:type", Boolean)
+        __metadata$9("design:type", Boolean)
     ], Image.prototype, "isBlur", void 0);
-    __decorate$4([
+    __decorate$9([
         Property,
-        __metadata$4("design:type", String)
+        __metadata$9("design:type", String)
     ], Image.prototype, "placeHolderImage", void 0);
-    __decorate$4([
+    __decorate$9([
         Property,
-        __metadata$4("design:type", String)
+        __metadata$9("design:type", String)
     ], Image.prototype, "placeHolderImageBase64", void 0);
-    __decorate$4([
+    __decorate$9([
         Property,
-        __metadata$4("design:type", Color
+        __metadata$9("design:type", Color
         /**
          * Display while image is failed to load
          * It can be file name in local path
          */
         )
     ], Image.prototype, "placeHolderColor", void 0);
-    __decorate$4([
+    __decorate$9([
         Property,
-        __metadata$4("design:type", String)
+        __metadata$9("design:type", String)
     ], Image.prototype, "errorImage", void 0);
-    __decorate$4([
+    __decorate$9([
         Property,
-        __metadata$4("design:type", String)
+        __metadata$9("design:type", String)
     ], Image.prototype, "errorImageBase64", void 0);
-    __decorate$4([
+    __decorate$9([
         Property,
-        __metadata$4("design:type", Color)
+        __metadata$9("design:type", Color)
     ], Image.prototype, "errorColor", void 0);
-    __decorate$4([
+    __decorate$9([
         Property,
-        __metadata$4("design:type", Function)
+        __metadata$9("design:type", Function)
     ], Image.prototype, "loadCallback", void 0);
-    __decorate$4([
+    __decorate$9([
         Property,
-        __metadata$4("design:type", Number)
+        __metadata$9("design:type", Number)
     ], Image.prototype, "imageScale", void 0);
-    __decorate$4([
+    __decorate$9([
         Property,
-        __metadata$4("design:type", Object)
+        __metadata$9("design:type", Object)
     ], Image.prototype, "stretchInset", void 0);
     return Image;
 }(View));
@@ -1940,29 +1950,31 @@ function image(config) {
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-var __extends$5 = (undefined && undefined.__extends) || (function () {
+var __extends$9 = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) { if (b.hasOwnProperty(p)) { d[p] = b[p]; } } };
+            function (d, b) { for (var p in b) { if (Object.prototype.hasOwnProperty.call(b, p)) { d[p] = b[p]; } } };
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            { throw new TypeError("Class extends value " + String(b) + " is not a constructor or null"); }
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate$5 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$8 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") { r = Reflect.decorate(decorators, target, key, desc); }
     else { for (var i = decorators.length - 1; i >= 0; i--) { if (d = decorators[i]) { r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r; } } }
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$5 = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$8 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
-var __read = (undefined && undefined.__read) || function (o, n) {
+var __read$1 = (undefined && undefined.__read) || function (o, n) {
     var m = typeof Symbol === "function" && o[Symbol.iterator];
     if (!m) { return o; }
     var i = m.call(o), r, ar = [], e;
@@ -1978,25 +1990,24 @@ var __read = (undefined && undefined.__read) || function (o, n) {
     }
     return ar;
 };
-var __spread = (undefined && undefined.__spread) || function () {
-    var arguments$1 = arguments;
-
-    for (var ar = [], i = 0; i < arguments.length; i++) { ar = ar.concat(__read(arguments$1[i])); }
-    return ar;
+var __spreadArray$1 = (undefined && undefined.__spreadArray) || function (to, from) {
+    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
+        { to[j] = from[i]; }
+    return to;
 };
 var ListItem = /** @class */ (function (_super) {
-    __extends$5(ListItem, _super);
+    __extends$9(ListItem, _super);
     function ListItem() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    __decorate$5([
+    __decorate$8([
         Property,
-        __metadata$5("design:type", String)
+        __metadata$8("design:type", String)
     ], ListItem.prototype, "identifier", void 0);
     return ListItem;
 }(Stack));
 var List = /** @class */ (function (_super) {
-    __extends$5(List, _super);
+    __extends$9(List, _super);
     function List() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.cachedViews = new Map;
@@ -2007,7 +2018,7 @@ var List = /** @class */ (function (_super) {
     }
     List.prototype.allSubviews = function () {
         if (this.loadMoreView) {
-            return __spread(this.cachedViews.values(), [this.loadMoreView]);
+            return __spreadArray$1(__spreadArray$1([], __read$1(this.cachedViews.values())), [this.loadMoreView]);
         }
         else {
             return this.cachedViews.values();
@@ -2049,41 +2060,41 @@ var List = /** @class */ (function (_super) {
         }
         return _super.prototype.toModel.call(this);
     };
-    __decorate$5([
+    __decorate$8([
         Property,
-        __metadata$5("design:type", Object)
+        __metadata$8("design:type", Object)
     ], List.prototype, "itemCount", void 0);
-    __decorate$5([
+    __decorate$8([
         Property,
-        __metadata$5("design:type", Function)
+        __metadata$8("design:type", Function)
     ], List.prototype, "renderItem", void 0);
-    __decorate$5([
+    __decorate$8([
         Property,
-        __metadata$5("design:type", Object)
+        __metadata$8("design:type", Object)
     ], List.prototype, "batchCount", void 0);
-    __decorate$5([
+    __decorate$8([
         Property,
-        __metadata$5("design:type", Function)
+        __metadata$8("design:type", Function)
     ], List.prototype, "onLoadMore", void 0);
-    __decorate$5([
+    __decorate$8([
         Property,
-        __metadata$5("design:type", Boolean)
+        __metadata$8("design:type", Boolean)
     ], List.prototype, "loadMore", void 0);
-    __decorate$5([
+    __decorate$8([
         Property,
-        __metadata$5("design:type", ListItem)
+        __metadata$8("design:type", ListItem)
     ], List.prototype, "loadMoreView", void 0);
-    __decorate$5([
+    __decorate$8([
         Property,
-        __metadata$5("design:type", Function)
+        __metadata$8("design:type", Function)
     ], List.prototype, "onScroll", void 0);
-    __decorate$5([
+    __decorate$8([
         Property,
-        __metadata$5("design:type", Function)
+        __metadata$8("design:type", Function)
     ], List.prototype, "onScrollEnd", void 0);
-    __decorate$5([
+    __decorate$8([
         Property,
-        __metadata$5("design:type", Number)
+        __metadata$8("design:type", Number)
     ], List.prototype, "scrolledPosition", void 0);
     return List;
 }(Superview));
@@ -2113,41 +2124,43 @@ function listItem(item, config) {
     });
 }
 
-var __extends$6 = (undefined && undefined.__extends) || (function () {
+var __extends$8 = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) { if (b.hasOwnProperty(p)) { d[p] = b[p]; } } };
+            function (d, b) { for (var p in b) { if (Object.prototype.hasOwnProperty.call(b, p)) { d[p] = b[p]; } } };
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            { throw new TypeError("Class extends value " + String(b) + " is not a constructor or null"); }
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate$6 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$7 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") { r = Reflect.decorate(decorators, target, key, desc); }
     else { for (var i = decorators.length - 1; i >= 0; i--) { if (d = decorators[i]) { r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r; } } }
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$6 = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$7 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
 var SlideItem = /** @class */ (function (_super) {
-    __extends$6(SlideItem, _super);
+    __extends$8(SlideItem, _super);
     function SlideItem() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    __decorate$6([
+    __decorate$7([
         Property,
-        __metadata$6("design:type", String)
+        __metadata$7("design:type", String)
     ], SlideItem.prototype, "identifier", void 0);
     return SlideItem;
 }(Stack));
 var Slider = /** @class */ (function (_super) {
-    __extends$6(Slider, _super);
+    __extends$8(Slider, _super);
     function Slider() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.cachedViews = new Map;
@@ -2188,25 +2201,25 @@ var Slider = /** @class */ (function (_super) {
     Slider.prototype.getSlidedPage = function (context) {
         return this.nativeChannel(context, "getSlidedPage")();
     };
-    __decorate$6([
+    __decorate$7([
         Property,
-        __metadata$6("design:type", Object)
+        __metadata$7("design:type", Object)
     ], Slider.prototype, "itemCount", void 0);
-    __decorate$6([
+    __decorate$7([
         Property,
-        __metadata$6("design:type", Function)
+        __metadata$7("design:type", Function)
     ], Slider.prototype, "renderPage", void 0);
-    __decorate$6([
+    __decorate$7([
         Property,
-        __metadata$6("design:type", Object)
+        __metadata$7("design:type", Object)
     ], Slider.prototype, "batchCount", void 0);
-    __decorate$6([
+    __decorate$7([
         Property,
-        __metadata$6("design:type", Function)
+        __metadata$7("design:type", Function)
     ], Slider.prototype, "onPageSlided", void 0);
-    __decorate$6([
+    __decorate$7([
         Property,
-        __metadata$6("design:type", Boolean)
+        __metadata$7("design:type", Boolean)
     ], Slider.prototype, "loop", void 0);
     return Slider;
 }(Superview));
@@ -2240,22 +2253,24 @@ var __extends$7 = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) { if (b.hasOwnProperty(p)) { d[p] = b[p]; } } };
+            function (d, b) { for (var p in b) { if (Object.prototype.hasOwnProperty.call(b, p)) { d[p] = b[p]; } } };
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            { throw new TypeError("Class extends value " + String(b) + " is not a constructor or null"); }
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate$7 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$6 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") { r = Reflect.decorate(decorators, target, key, desc); }
     else { for (var i = decorators.length - 1; i >= 0; i--) { if (d = decorators[i]) { r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r; } } }
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$7 = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$6 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
 function scroller(content, config) {
@@ -2287,45 +2302,47 @@ var Scroller = /** @class */ (function (_super) {
     Scroller.prototype.scrollBy = function (context, offset, animated) {
         return this.nativeChannel(context, "scrollBy")({ offset: offset, animated: animated });
     };
-    __decorate$7([
+    __decorate$6([
         Property,
-        __metadata$7("design:type", Object)
+        __metadata$6("design:type", Object)
     ], Scroller.prototype, "contentOffset", void 0);
-    __decorate$7([
+    __decorate$6([
         Property,
-        __metadata$7("design:type", Function)
+        __metadata$6("design:type", Function)
     ], Scroller.prototype, "onScroll", void 0);
-    __decorate$7([
+    __decorate$6([
         Property,
-        __metadata$7("design:type", Function)
+        __metadata$6("design:type", Function)
     ], Scroller.prototype, "onScrollEnd", void 0);
     return Scroller;
 }(Superview));
 
-var __extends$8 = (undefined && undefined.__extends) || (function () {
+var __extends$6 = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) { if (b.hasOwnProperty(p)) { d[p] = b[p]; } } };
+            function (d, b) { for (var p in b) { if (Object.prototype.hasOwnProperty.call(b, p)) { d[p] = b[p]; } } };
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            { throw new TypeError("Class extends value " + String(b) + " is not a constructor or null"); }
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate$8 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$5 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") { r = Reflect.decorate(decorators, target, key, desc); }
     else { for (var i = decorators.length - 1; i >= 0; i--) { if (d = decorators[i]) { r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r; } } }
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$8 = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$5 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
 var Refreshable = /** @class */ (function (_super) {
-    __extends$8(Refreshable, _super);
+    __extends$6(Refreshable, _super);
     function Refreshable() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -2353,9 +2370,9 @@ var Refreshable = /** @class */ (function (_super) {
         this.dirtyProps.header = (this.header || {}).viewId;
         return _super.prototype.toModel.call(this);
     };
-    __decorate$8([
+    __decorate$5([
         Property,
-        __metadata$8("design:type", Function)
+        __metadata$5("design:type", Function)
     ], Refreshable.prototype, "onRefresh", void 0);
     return Refreshable;
 }(Superview));
@@ -2461,29 +2478,31 @@ exports.Display = void 0;
     Display[Display["NONE"] = 1] = "NONE";
 })(exports.Display || (exports.Display = {}));
 
-var __extends$9 = (undefined && undefined.__extends) || (function () {
+var __extends$5 = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) { if (b.hasOwnProperty(p)) { d[p] = b[p]; } } };
+            function (d, b) { for (var p in b) { if (Object.prototype.hasOwnProperty.call(b, p)) { d[p] = b[p]; } } };
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            { throw new TypeError("Class extends value " + String(b) + " is not a constructor or null"); }
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate$9 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$4 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") { r = Reflect.decorate(decorators, target, key, desc); }
     else { for (var i = decorators.length - 1; i >= 0; i--) { if (d = decorators[i]) { r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r; } } }
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$9 = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$4 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
-var __read$1 = (undefined && undefined.__read) || function (o, n) {
+var __read = (undefined && undefined.__read) || function (o, n) {
     var m = typeof Symbol === "function" && o[Symbol.iterator];
     if (!m) { return o; }
     var i = m.call(o), r, ar = [], e;
@@ -2499,25 +2518,24 @@ var __read$1 = (undefined && undefined.__read) || function (o, n) {
     }
     return ar;
 };
-var __spread$1 = (undefined && undefined.__spread) || function () {
-    var arguments$1 = arguments;
-
-    for (var ar = [], i = 0; i < arguments.length; i++) { ar = ar.concat(__read$1(arguments$1[i])); }
-    return ar;
+var __spreadArray = (undefined && undefined.__spreadArray) || function (to, from) {
+    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
+        { to[j] = from[i]; }
+    return to;
 };
 var FlowLayoutItem = /** @class */ (function (_super) {
-    __extends$9(FlowLayoutItem, _super);
+    __extends$5(FlowLayoutItem, _super);
     function FlowLayoutItem() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    __decorate$9([
+    __decorate$4([
         Property,
-        __metadata$9("design:type", String)
+        __metadata$4("design:type", String)
     ], FlowLayoutItem.prototype, "identifier", void 0);
     return FlowLayoutItem;
 }(Stack));
 var FlowLayout = /** @class */ (function (_super) {
-    __extends$9(FlowLayout, _super);
+    __extends$5(FlowLayout, _super);
     function FlowLayout() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.cachedViews = new Map;
@@ -2529,7 +2547,7 @@ var FlowLayout = /** @class */ (function (_super) {
     }
     FlowLayout.prototype.allSubviews = function () {
         if (this.loadMoreView) {
-            return __spread$1(this.cachedViews.values(), [this.loadMoreView]);
+            return __spreadArray(__spreadArray([], __read(this.cachedViews.values())), [this.loadMoreView]);
         }
         else {
             return this.cachedViews.values();
@@ -2567,49 +2585,49 @@ var FlowLayout = /** @class */ (function (_super) {
         }
         return _super.prototype.toModel.call(this);
     };
-    __decorate$9([
+    __decorate$4([
         Property,
-        __metadata$9("design:type", Object)
+        __metadata$4("design:type", Object)
     ], FlowLayout.prototype, "columnCount", void 0);
-    __decorate$9([
+    __decorate$4([
         Property,
-        __metadata$9("design:type", Number)
+        __metadata$4("design:type", Number)
     ], FlowLayout.prototype, "columnSpace", void 0);
-    __decorate$9([
+    __decorate$4([
         Property,
-        __metadata$9("design:type", Number)
+        __metadata$4("design:type", Number)
     ], FlowLayout.prototype, "rowSpace", void 0);
-    __decorate$9([
+    __decorate$4([
         Property,
-        __metadata$9("design:type", Object)
+        __metadata$4("design:type", Object)
     ], FlowLayout.prototype, "itemCount", void 0);
-    __decorate$9([
+    __decorate$4([
         Property,
-        __metadata$9("design:type", Function)
+        __metadata$4("design:type", Function)
     ], FlowLayout.prototype, "renderItem", void 0);
-    __decorate$9([
+    __decorate$4([
         Property,
-        __metadata$9("design:type", Object)
+        __metadata$4("design:type", Object)
     ], FlowLayout.prototype, "batchCount", void 0);
-    __decorate$9([
+    __decorate$4([
         Property,
-        __metadata$9("design:type", Function)
+        __metadata$4("design:type", Function)
     ], FlowLayout.prototype, "onLoadMore", void 0);
-    __decorate$9([
+    __decorate$4([
         Property,
-        __metadata$9("design:type", Boolean)
+        __metadata$4("design:type", Boolean)
     ], FlowLayout.prototype, "loadMore", void 0);
-    __decorate$9([
+    __decorate$4([
         Property,
-        __metadata$9("design:type", FlowLayoutItem)
+        __metadata$4("design:type", FlowLayoutItem)
     ], FlowLayout.prototype, "loadMoreView", void 0);
-    __decorate$9([
+    __decorate$4([
         Property,
-        __metadata$9("design:type", Function)
+        __metadata$4("design:type", Function)
     ], FlowLayout.prototype, "onScroll", void 0);
-    __decorate$9([
+    __decorate$4([
         Property,
-        __metadata$9("design:type", Function)
+        __metadata$4("design:type", Function)
     ], FlowLayout.prototype, "onScrollEnd", void 0);
     return FlowLayout;
 }(Superview));
@@ -2639,30 +2657,32 @@ function flowItem(item, config) {
     });
 }
 
-var __extends$a = (undefined && undefined.__extends) || (function () {
+var __extends$4 = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) { if (b.hasOwnProperty(p)) { d[p] = b[p]; } } };
+            function (d, b) { for (var p in b) { if (Object.prototype.hasOwnProperty.call(b, p)) { d[p] = b[p]; } } };
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            { throw new TypeError("Class extends value " + String(b) + " is not a constructor or null"); }
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate$a = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$3 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") { r = Reflect.decorate(decorators, target, key, desc); }
     else { for (var i = decorators.length - 1; i >= 0; i--) { if (d = decorators[i]) { r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r; } } }
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$a = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$3 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
 var Input = /** @class */ (function (_super) {
-    __extends$a(Input, _super);
+    __extends$4(Input, _super);
     function Input() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -2682,53 +2702,53 @@ var Input = /** @class */ (function (_super) {
     Input.prototype.releaseFocus = function (context) {
         return this.nativeChannel(context, 'releaseFocus')();
     };
-    __decorate$a([
+    __decorate$3([
         Property,
-        __metadata$a("design:type", String)
+        __metadata$3("design:type", String)
     ], Input.prototype, "text", void 0);
-    __decorate$a([
+    __decorate$3([
         Property,
-        __metadata$a("design:type", Color)
+        __metadata$3("design:type", Color)
     ], Input.prototype, "textColor", void 0);
-    __decorate$a([
+    __decorate$3([
         Property,
-        __metadata$a("design:type", Number)
+        __metadata$3("design:type", Number)
     ], Input.prototype, "textSize", void 0);
-    __decorate$a([
+    __decorate$3([
         Property,
-        __metadata$a("design:type", String)
+        __metadata$3("design:type", String)
     ], Input.prototype, "hintText", void 0);
-    __decorate$a([
+    __decorate$3([
         Property,
-        __metadata$a("design:type", Number)
+        __metadata$3("design:type", Number)
     ], Input.prototype, "inputType", void 0);
-    __decorate$a([
+    __decorate$3([
         Property,
-        __metadata$a("design:type", Color)
+        __metadata$3("design:type", Color)
     ], Input.prototype, "hintTextColor", void 0);
-    __decorate$a([
+    __decorate$3([
         Property,
-        __metadata$a("design:type", Boolean)
+        __metadata$3("design:type", Boolean)
     ], Input.prototype, "multiline", void 0);
-    __decorate$a([
+    __decorate$3([
         Property,
-        __metadata$a("design:type", Gravity)
+        __metadata$3("design:type", Gravity)
     ], Input.prototype, "textAlignment", void 0);
-    __decorate$a([
+    __decorate$3([
         Property,
-        __metadata$a("design:type", Function)
+        __metadata$3("design:type", Function)
     ], Input.prototype, "onTextChange", void 0);
-    __decorate$a([
+    __decorate$3([
         Property,
-        __metadata$a("design:type", Function)
+        __metadata$3("design:type", Function)
     ], Input.prototype, "onFocusChange", void 0);
-    __decorate$a([
+    __decorate$3([
         Property,
-        __metadata$a("design:type", Number)
+        __metadata$3("design:type", Number)
     ], Input.prototype, "maxLength", void 0);
-    __decorate$a([
+    __decorate$3([
         Property,
-        __metadata$a("design:type", Boolean)
+        __metadata$3("design:type", Boolean)
     ], Input.prototype, "password", void 0);
     return Input;
 }(View));
@@ -2749,30 +2769,32 @@ function input(config) {
     return ret;
 }
 
-var __extends$b = (undefined && undefined.__extends) || (function () {
+var __extends$3 = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) { if (b.hasOwnProperty(p)) { d[p] = b[p]; } } };
+            function (d, b) { for (var p in b) { if (Object.prototype.hasOwnProperty.call(b, p)) { d[p] = b[p]; } } };
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            { throw new TypeError("Class extends value " + String(b) + " is not a constructor or null"); }
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate$b = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$2 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") { r = Reflect.decorate(decorators, target, key, desc); }
     else { for (var i = decorators.length - 1; i >= 0; i--) { if (d = decorators[i]) { r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r; } } }
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$b = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$2 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
 var NestedSlider = /** @class */ (function (_super) {
-    __extends$b(NestedSlider, _super);
+    __extends$3(NestedSlider, _super);
     function NestedSlider() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -2786,43 +2808,45 @@ var NestedSlider = /** @class */ (function (_super) {
     NestedSlider.prototype.getSlidedPage = function (context) {
         return this.nativeChannel(context, "getSlidedPage")();
     };
-    __decorate$b([
+    __decorate$2([
         Property,
-        __metadata$b("design:type", Function)
+        __metadata$2("design:type", Function)
     ], NestedSlider.prototype, "onPageSlided", void 0);
     return NestedSlider;
 }(Group));
 
-var __extends$c = (undefined && undefined.__extends) || (function () {
+var __extends$2 = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) { if (b.hasOwnProperty(p)) { d[p] = b[p]; } } };
+            function (d, b) { for (var p in b) { if (Object.prototype.hasOwnProperty.call(b, p)) { d[p] = b[p]; } } };
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            { throw new TypeError("Class extends value " + String(b) + " is not a constructor or null"); }
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate$c = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$1 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") { r = Reflect.decorate(decorators, target, key, desc); }
     else { for (var i = decorators.length - 1; i >= 0; i--) { if (d = decorators[i]) { r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r; } } }
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$c = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$1 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
 var Draggable = /** @class */ (function (_super) {
-    __extends$c(Draggable, _super);
+    __extends$2(Draggable, _super);
     function Draggable() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    __decorate$c([
+    __decorate$1([
         Property,
-        __metadata$c("design:type", Function)
+        __metadata$1("design:type", Function)
     ], Draggable.prototype, "onDrag", void 0);
     return Draggable;
 }(Stack));
@@ -2845,52 +2869,54 @@ function draggable(views, config) {
     return ret;
 }
 
-var __extends$d = (undefined && undefined.__extends) || (function () {
+var __extends$1 = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) { if (b.hasOwnProperty(p)) { d[p] = b[p]; } } };
+            function (d, b) { for (var p in b) { if (Object.prototype.hasOwnProperty.call(b, p)) { d[p] = b[p]; } } };
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            { throw new TypeError("Class extends value " + String(b) + " is not a constructor or null"); }
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate$d = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") { r = Reflect.decorate(decorators, target, key, desc); }
     else { for (var i = decorators.length - 1; i >= 0; i--) { if (d = decorators[i]) { r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r; } } }
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$d = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
 var Switch = /** @class */ (function (_super) {
-    __extends$d(Switch, _super);
+    __extends$1(Switch, _super);
     function Switch() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    __decorate$d([
+    __decorate([
         Property,
-        __metadata$d("design:type", Boolean)
+        __metadata("design:type", Boolean)
     ], Switch.prototype, "state", void 0);
-    __decorate$d([
+    __decorate([
         Property,
-        __metadata$d("design:type", Function)
+        __metadata("design:type", Function)
     ], Switch.prototype, "onSwitch", void 0);
-    __decorate$d([
+    __decorate([
         Property,
-        __metadata$d("design:type", Color)
+        __metadata("design:type", Color)
     ], Switch.prototype, "offTintColor", void 0);
-    __decorate$d([
+    __decorate([
         Property,
-        __metadata$d("design:type", Color)
+        __metadata("design:type", Color)
     ], Switch.prototype, "onTintColor", void 0);
-    __decorate$d([
+    __decorate([
         Property,
-        __metadata$d("design:type", Color)
+        __metadata("design:type", Color)
     ], Switch.prototype, "thumbTintColor", void 0);
     return Switch;
 }(View));
@@ -3214,7 +3240,7 @@ var __generator = (undefined && undefined.__generator) || function (thisArg, bod
         if (op[0] & 5) { throw op[1]; } return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __values$4 = (undefined && undefined.__values) || function(o) {
+var __values$1 = (undefined && undefined.__values) || function(o) {
     var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
     if (m) { return m.call(o); }
     if (o && typeof o.length === "number") { return {
@@ -3251,10 +3277,10 @@ function animate(context) {
                                     return ret;
                                 }
                                 try {
-                                    for (var _c = __values$4(panel_1.allHeadViews()), _d = _c.next(); !_d.done; _d = _c.next()) {
+                                    for (var _c = __values$1(panel_1.allHeadViews()), _d = _c.next(); !_d.done; _d = _c.next()) {
                                         var map = _d.value;
                                         try {
-                                            for (var _e = (e_2 = void 0, __values$4(map.values())), _f = _e.next(); !_f.done; _f = _e.next()) {
+                                            for (var _e = (e_2 = void 0, __values$1(map.values())), _f = _e.next(); !_f.done; _f = _e.next()) {
                                                 var v = _f.value;
                                                 if (v.isDirty()) {
                                                     var model_1 = v.toModel();
@@ -3371,7 +3397,7 @@ function notch(context) {
     };
 }
 
-var __values$5 = (undefined && undefined.__values) || function(o) {
+var __values = (undefined && undefined.__values) || function(o) {
     var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
     if (m) { return m.call(o); }
     if (o && typeof o.length === "number") { return {
@@ -3402,7 +3428,7 @@ var Observable = /** @class */ (function () {
             this.provider.provide(newV);
         }
         try {
-            for (var _b = __values$5(this.observers), _c = _b.next(); !_c.done; _c = _b.next()) {
+            for (var _b = __values(this.observers), _c = _b.next(); !_c.done; _c = _b.next()) {
                 var observer = _c.value;
                 observer(newV);
             }
@@ -3446,14 +3472,16 @@ var Provider = /** @class */ (function () {
     return Provider;
 }());
 
-var __extends$e = (undefined && undefined.__extends) || (function () {
+var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) { if (b.hasOwnProperty(p)) { d[p] = b[p]; } } };
+            function (d, b) { for (var p in b) { if (Object.prototype.hasOwnProperty.call(b, p)) { d[p] = b[p]; } } };
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            { throw new TypeError("Class extends value " + String(b) + " is not a constructor or null"); }
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -3487,7 +3515,7 @@ var ViewModel = /** @class */ (function () {
     return ViewModel;
 }());
 var VMPanel = /** @class */ (function (_super) {
-    __extends$e(VMPanel, _super);
+    __extends(VMPanel, _super);
     function VMPanel() {
         return _super !== null && _super.apply(this, arguments) || this;
     }

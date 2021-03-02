@@ -2,7 +2,7 @@ import QtQuick 2.12
 import QtQuick.Layouts 1.15
 import pub.doric.widget 1.0
 
-Item {
+Rectangle {
     id: flex
 
     property int minHeight: 0

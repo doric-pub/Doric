@@ -132,6 +132,7 @@
 
 - (void)onClose {
     self.devKitConnected = NO;
+    [self stopDebugging:YES];
     dispatch_async(dispatch_get_main_queue(), ^{
         for (id <DoricDevStatusCallback> callback in self.callbacks) {
             [callback onClose:self.url];
@@ -141,6 +142,7 @@
 
 - (void)onFailure:(NSError *)error {
     self.devKitConnected = NO;
+    [self stopDebugging:YES];
     dispatch_async(dispatch_get_main_queue(), ^{
         for (id <DoricDevStatusCallback> callback in self.callbacks) {
             [callback onFailure:error];

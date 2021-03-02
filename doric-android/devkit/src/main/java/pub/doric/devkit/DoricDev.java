@@ -183,6 +183,7 @@ public class DoricDev {
 
     public void onClose() {
         devKitConnected = false;
+        stopDebugging(true);
         uiHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -195,6 +196,7 @@ public class DoricDev {
 
     public void onFailure(final Throwable t) {
         devKitConnected = false;
+        stopDebugging(true);
         uiHandler.post(new Runnable() {
             @Override
             public void run() {

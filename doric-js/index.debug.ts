@@ -16,6 +16,7 @@
 import * as doric from './src/runtime/sandbox'
 import WebSocket from "ws"
 import path from 'path'
+import { BridgeContext } from './src/runtime/global';
 
 type MSG = {
   type: "D2C" | "C2D" | "C2S" | "D2S" | "S2C" | "S2D",
@@ -136,6 +137,7 @@ async function initNativeEnvironment(source: string) {
   })
 }
 
+global.context = doric.jsObtainContext("FakeContext");
 const entryHooks: Function[] = []
 global.Entry = function () {
   if (!!contextId) {
@@ -157,7 +159,9 @@ global.Entry = function () {
       initNativeEnvironment(source).then(ret => {
         contextId = ret;
         console.log("debugging context id: " + contextId);
-        global.context = doric.jsObtainContext(contextId);
+        const realContext = doric.jsObtainContext(contextId);
+        global.context.id = contextId;
+        global.context = realContext;
         entryHooks.forEach(e => e(contextId))
       });
       return arguments[0];
@@ -190,6 +194,16 @@ global.nativeLog = (type: string, msg: string) => {
       break;
     }
   }
+}
+
+global.nativeRequire = () => {
+  console.error("Do not call nativeRequire here");
+  return false;
+}
+
+global.nativeBridge = () => {
+  console.error("Do not call nativeBridge here");
+  return false;
 }
 
 export * from './index'

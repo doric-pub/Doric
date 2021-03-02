@@ -66,7 +66,7 @@ function initDoric() {
             console.log(`Cannot require JS Bundle :${moduleName}`)
             return false
         } else {
-            loadJS(moduleName, packageModuleScript(moduleName, packageModuleScript(name, bundle)))
+            loadJS(moduleName, packageModuleScript(moduleName, bundle))
             return true
         }
     })

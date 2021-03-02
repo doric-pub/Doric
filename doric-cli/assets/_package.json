@@ -16,7 +16,6 @@
     "doric-cli": "__$Version__",
     "reflect-metadata": "^0.1.13",
     "rollup": "^2.24.0",
-    "tslib": "^2.1.0",
     "typescript": "^4.2.2"
   },
   "devDependencies": {

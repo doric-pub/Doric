@@ -142,6 +142,12 @@ public class DoricDev {
         }
     }
 
+    public void requestDebugging(DoricContext context) {
+        wsClient.sendToServer("DEBUG", new JSONBuilder()
+                .put("source", context.getSource())
+                .toJSONObject());
+    }
+
     public void stopDebugging(boolean resume) {
         wsClient.sendToDebugger("DEBUG_STOP", new JSONBuilder()
                 .put("msg", "Stop debugging")

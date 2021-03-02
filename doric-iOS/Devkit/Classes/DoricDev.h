@@ -61,6 +61,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)stopDebugging:(BOOL)resume;
 
+- (void)requestDebugging:(DoricContext *)context;
+
 - (BOOL)isReloadingContext:(DoricContext *)context;
 
 - (void)reload:(NSString *)source script:(NSString *)script;

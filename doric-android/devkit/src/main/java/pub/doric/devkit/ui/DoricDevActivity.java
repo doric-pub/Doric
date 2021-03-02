@@ -301,8 +301,12 @@ public class DoricDevActivity extends AppCompatActivity implements DoricDev.Stat
                 public void onClick(View v) {
                     ArrayList<String> list = new ArrayList<>();
                     list.add("View source");
-                    if (context.getDriver() instanceof DoricDebugDriver) {
-                        list.add("Stop debugging");
+                    if (DoricDev.getInstance().isInDevMode()) {
+                        if (context.getDriver() instanceof DoricDebugDriver) {
+                            list.add("Stop debugging");
+                        } else {
+                            list.add("Start debugging");
+                        }
                     }
                     final String[] items = list.toArray(new String[0]);
                     AlertDialog.Builder builder = new AlertDialog.Builder(holder.itemView.getContext(), R.style.Theme_Doric_Modal);
@@ -333,6 +337,8 @@ public class DoricDevActivity extends AppCompatActivity implements DoricDev.Stat
                                 builder.show();
                             } else if ("Stop debugging".equals(items[which])) {
                                 DoricDev.getInstance().stopDebugging(true);
+                            } else if ("Start debugging".equals(items[which])) {
+                                DoricDev.getInstance().requestDebugging(context);
                             }
                             dialog.dismiss();
                         }

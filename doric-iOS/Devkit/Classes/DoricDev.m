@@ -227,6 +227,12 @@
     });
 }
 
+- (void)requestDebugging:(DoricContext *)context {
+    [self.wsClient sendToServer:@"DEBUG" payload:@{
+            @"source": context.source
+    }];
+}
+
 - (void)sendDevCommand:(NSString *)command payload:(NSDictionary *)payload {
     [self.wsClient sendToServer:command payload:payload];
 }

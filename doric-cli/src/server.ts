@@ -3,6 +3,7 @@ import "colors";
 import path from "path";
 import { glob } from "./util";
 import { Shell } from "./shell";
+import { ChildProcess, } from "child_process";
 
 export type MSG = {
     type: "D2C" | "C2D" | "C2S" | "D2S" | "S2C" | "S2D",
@@ -14,6 +15,7 @@ export async function createServer() {
     let client: WebSocket | undefined = undefined;
     let debug: WebSocket | undefined = undefined;
     let deviceId = 0
+    let debugProcess: ChildProcess | undefined = undefined;
     const wss = new WebSocket.Server({ port: 7777 })
         .on("connection", (ws, request) => {
             let thisDeviceId: string
@@ -50,6 +52,7 @@ export async function createServer() {
                 } else if (resultObject.type === "C2D") {
                     if (resultObject.cmd === "DEBUG_STOP") {
                         client = undefined;
+                        debugProcess?.kill(0);
                     }
                     if (client === undefined) {
                         client = ws;
@@ -61,23 +64,33 @@ export async function createServer() {
                     switch (resultObject.cmd) {
                         case 'DEBUG':
                             let source = resultObject.payload.source as string;
-                            if (source.endsWith(".js")) {
-                                source = source.replace(".js", ".ts");
-                            } else if (!source.endsWith(".ts")) {
-                                source = source + ".ts"
+                            if (source.endsWith(".ts")) {
+                                source = source.replace(".ts", ".js");
+                            } else if (!source.endsWith(".js")) {
+                                source = source + ".js"
                             }
-                            const tsFiles = await glob(`**/${source}`, {
-                                cwd: path.resolve(process.cwd(), "src")
+                            const jsFile = await glob(`**/${source}`, {
+                                cwd: path.resolve(process.cwd(), "bundle")
                             })
-                            if (!!!tsFiles || tsFiles.length === 0) {
-                                console.error(`Cannot find ${source} in ${path.resolve(process.cwd(), "src")}`);
+                            if (!!!jsFile || jsFile.length === 0) {
+                                console.error(`Cannot find ${source} in ${path.resolve(process.cwd(), "bundle")}`);
                             }
-                            const sourceFile = tsFiles[0];
-                            Shell.exec("node", [
-                                "--inspect-brk",
-                                path.resolve(process.cwd(), "src", sourceFile)
-                            ])
-                            console.log(`Debugger on ${sourceFile}`);
+                            const debuggingFile = path.resolve(process.cwd(), "bundle", jsFile[0]);
+                            debugProcess = await Shell.execProcess(
+                                "node",
+                                [
+                                    "--inspect-brk",
+                                    debuggingFile,
+                                ],
+                                {
+                                    env: process.env,
+                                    consoleHandler: (log) => {
+                                        console.log(`Debugger>>>`.gray, log);
+                                    }
+                                }
+                            )
+                            console.log(`Debugger on ${debuggingFile}`.green);
+                            console.log(`Please open Chrome`);
                             break;
                         case 'EXCEPTION':
                             console.log(resultObject.payload.source.red);

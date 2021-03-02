@@ -105,11 +105,18 @@
     }];
     [alertController addAction:cancel];
     [alertController addAction:viewSource];
-    if ([self.doricContext.driver isKindOfClass:DoricDebugDriver.class]) {
-        UIAlertAction *stopDebugging = [UIAlertAction actionWithTitle:@"Stop debugging" style:UIAlertActionStyleDefault handler:^(UIAlertAction *_) {
-            [DoricDev.instance stopDebugging:YES];
-        }];
-        [alertController addAction:stopDebugging];
+    if (DoricDev.instance.isInDevMode) {
+        if ([self.doricContext.driver isKindOfClass:DoricDebugDriver.class]) {
+            UIAlertAction *stopDebugging = [UIAlertAction actionWithTitle:@"Stop debugging" style:UIAlertActionStyleDefault handler:^(UIAlertAction *_) {
+                [DoricDev.instance stopDebugging:YES];
+            }];
+            [alertController addAction:stopDebugging];
+        } else {
+            UIAlertAction *startDebugging = [UIAlertAction actionWithTitle:@"Start debugging" style:UIAlertActionStyleDefault handler:^(UIAlertAction *_) {
+                [DoricDev.instance requestDebugging:self.doricContext];
+            }];
+            [alertController addAction:startDebugging];
+        }
     }
 
     [self.vc presentViewController:alertController animated:true completion:nil];

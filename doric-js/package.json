@@ -24,11 +24,9 @@
   "dependencies": {
     "@types/ws": "^7.2.6",
     "core-js": "^3.9.1",
-    "dts-bundle": "^0.7.3",
     "proxy-polyfill": "^0.3.2",
     "reflect-metadata": "^0.1.13",
     "rollup": "^2.40.0",
-    "tslib": "^2.1.0",
     "typescript": "^4.2.2",
     "ws": "^7.4.3"
   },
@@ -36,8 +34,9 @@
     "registry": "https://registry.npmjs.org"
   },
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "^8.4.0",
+    "dts-bundle": "^0.7.3",
     "@rollup/plugin-buble": "^0.21.3",
-    "@rollup/plugin-commonjs": "^14.0.0"
+    "@rollup/plugin-commonjs": "^14.0.0",
+    "@rollup/plugin-node-resolve": "^8.4.0"
   }
 }

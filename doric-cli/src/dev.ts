@@ -31,47 +31,8 @@ function getIPAdress() {
 
 export default async function dev() {
   const server = await createServer()
-  const tscProcess = exec("node node_modules/.bin/tsc -w -p .", {
-    env: process.env,
-  });
-  const rollupProcess = exec("node node_modules/.bin/rollup -c -w", {
-    env: process.env,
-  });
-  [tscProcess, rollupProcess].forEach(e => {
-    e.stdout?.on("data", (data) => {
-      console.log(data.toString());
-    });
-    e.stderr?.on("data", (data) => {
-      console.log(data.toString());
-    });
-  })
 
-  console.warn("Waiting ...");
-  const ips = getIPAdress();
-  ips.forEach((e) => {
-    console.log(`IP:${e}`);
-    qrcode.generate(e, { small: true });
-  });
 
-  keypress(process.stdin);
-  process.stdin.on("keypress", function (ch, key) {
-    if (key && key.ctrl && key.name == "r") {
-      ips.forEach((e) => {
-        console.log(`IP:${e}`);
-        qrcode.generate(e, { small: true });
-      });
-    }
-    if (key && key.ctrl && key.name == "c") {
-      process.stdin.pause();
-      tscProcess.kill("SIGABRT");
-      rollupProcess.kill("SIGABRT");
-      process.exit(0);
-    }
-  });
-  process.stdin.setRawMode(true);
-  process.stdin.resume();
-  await delay(3000);
-  console.warn("Start watching");
   const cachedContents: Record<string, string> = {}
   chokidar
     .watch(process.cwd() + "/bundle", {
@@ -82,6 +43,10 @@ export default async function dev() {
       const content = fs.readFileSync(jsFile, "utf-8");
       if (cachedContents[jsFile]) {
         if (content.indexOf(cachedContents[jsFile]) >= 0) {
+          const sourceMap = `${jsFile}.map`
+          if (fs.existsSync(sourceMap)) {
+            mergeMap(sourceMap);
+          }
           return;
         }
       }
@@ -113,7 +78,47 @@ export default async function dev() {
       }
     });
 
+  const tscProcess = exec("node node_modules/.bin/tsc -w -p .", {
+    env: process.env,
+  });
+  const rollupProcess = exec("node node_modules/.bin/rollup -c -w", {
+    env: process.env,
+  });
+  [tscProcess, rollupProcess].forEach(e => {
+    e.stdout?.on("data", (data) => {
+      console.log(data.toString());
+    });
+    e.stderr?.on("data", (data) => {
+      console.log(data.toString());
+    });
+  })
 
+  console.warn("Waiting ...");
+  keypress(process.stdin);
+  const ips = getIPAdress();
+  process.stdin.on("keypress", function (ch, key) {
+    if (key && key.ctrl && key.name == "r") {
+      ips.forEach((e) => {
+        console.log(`IP:${e}`);
+        qrcode.generate(e, { small: true });
+      });
+    }
+    if (key && key.ctrl && key.name == "c") {
+      process.stdin.pause();
+      tscProcess.kill("SIGABRT");
+      rollupProcess.kill("SIGABRT");
+      process.exit(0);
+    }
+  });
+  process.stdin.setRawMode(true);
+  process.stdin.resume();
+
+  await delay(3000);
+  console.warn("Start watching");
+  ips.forEach((e) => {
+    console.log(`IP:${e}`);
+    qrcode.generate(e, { small: true });
+  });
 }
 
 

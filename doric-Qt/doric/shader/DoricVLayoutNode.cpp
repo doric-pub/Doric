@@ -18,9 +18,9 @@ void DoricVLayoutNode::blend(QQuickItem *view, QString name, QJSValue prop) {
   if (name == "space") {
     view->setProperty("spacing", prop.toInt());
   } else if (name == "gravity") {
-    qWarning() << "gravity: " << prop.toInt();
     switch (prop.toInt()) {
     case 1:
+      view->setProperty("alignItems", "center");
       break;
     }
   } else {

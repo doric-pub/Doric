@@ -49,3 +49,8 @@ QJSValue DoricSuperNode::getSubModel(QString id) {
     return QJSValue::UndefinedValue;
   }
 }
+
+void DoricSuperNode::blendSubLayoutConfig(DoricViewNode *viewNode,
+                                          QJSValue jsValue) {
+  viewNode->blendLayoutConfig(jsValue);
+}

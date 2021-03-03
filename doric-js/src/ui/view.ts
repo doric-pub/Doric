@@ -22,8 +22,15 @@ import { LayoutConfig } from '../util/layoutconfig'
 import { IAnimation } from "./animation";
 import { FlexConfig } from "../util/flexbox";
 
+const PROP_CONSIST = 1;
+const PROP_INCONSIST = 2;
+
 export function Property(target: Object, propKey: string) {
-    Reflect.defineMetadata(propKey, true, target)
+    Reflect.defineMetadata(propKey, PROP_CONSIST, target)
+}
+
+export function InconsistProperty(target: Object, propKey: string) {
+    Reflect.defineMetadata(propKey, PROP_INCONSIST, target)
 }
 
 export type NativeViewModel = {
@@ -118,7 +125,9 @@ export abstract class View implements Modeling {
             set: (target, p, v, receiver) => {
                 const oldV = Reflect.get(target, p, receiver)
                 const ret = Reflect.set(target, p, v, receiver)
-                if (Reflect.getMetadata(p, target) && oldV !== v) {
+                if (Reflect.getMetadata(p, target) === PROP_CONSIST && oldV !== v) {
+                    receiver.onPropertyChanged(p.toString(), oldV, v)
+                } else if (Reflect.getMetadata(p, target) === PROP_INCONSIST) {
                     receiver.onPropertyChanged(p.toString(), oldV, v)
                 }
                 return ret

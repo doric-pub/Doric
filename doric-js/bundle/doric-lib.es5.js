@@ -185,6 +185,18 @@ function Property(target, propKey) {
         },
     });
 }
+function InconsistProperty(target, propKey) {
+    Object.defineProperty(target, propKey, {
+        get: function () {
+            return Reflect.get(this, "__prop__" + propKey, this);
+        },
+        set: function (v) {
+            var oldV = Reflect.get(this, "__prop__" + propKey, this);
+            Reflect.set(this, "__prop__" + propKey, v, this);
+            Reflect.apply(this.onPropertyChanged, this, [propKey, oldV, v]);
+        },
+    });
+}
 var View = /** @class */ (function () {
     function View() {
         this.width = 0;
@@ -3546,6 +3558,7 @@ exports.Gravity = Gravity;
 exports.Group = Group;
 exports.HLayout = HLayout;
 exports.Image = Image;
+exports.InconsistProperty = InconsistProperty;
 exports.Input = Input;
 exports.LEFT = LEFT;
 exports.LayoutConfigImpl = LayoutConfigImpl;

@@ -177,6 +177,7 @@ declare module 'doric/lib/src/ui/view' {
     import { IAnimation } from "doric/lib/src/ui/animation";
     import { FlexConfig } from "doric/lib/src/util/flexbox";
     export function Property(target: Object, propKey: string): void;
+    export function InconsistProperty(target: Object, propKey: string): void;
     export type NativeViewModel = {
             id: string;
             type: string;

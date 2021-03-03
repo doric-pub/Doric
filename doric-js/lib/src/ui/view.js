@@ -10,8 +10,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { obj2Model } from "../util/types";
 import { uniqueId } from "../util/uniqueId";
 import { loge } from "../util/log";
+const PROP_CONSIST = 1;
+const PROP_INCONSIST = 2;
 export function Property(target, propKey) {
-    Reflect.defineMetadata(propKey, true, target);
+    Reflect.defineMetadata(propKey, PROP_CONSIST, target);
+}
+export function InconsistProperty(target, propKey) {
+    Reflect.defineMetadata(propKey, PROP_INCONSIST, target);
 }
 export class View {
     constructor() {
@@ -35,7 +40,10 @@ export class View {
             set: (target, p, v, receiver) => {
                 const oldV = Reflect.get(target, p, receiver);
                 const ret = Reflect.set(target, p, v, receiver);
-                if (Reflect.getMetadata(p, target) && oldV !== v) {
+                if (Reflect.getMetadata(p, target) === PROP_CONSIST && oldV !== v) {
+                    receiver.onPropertyChanged(p.toString(), oldV, v);
+                }
+                else if (Reflect.getMetadata(p, target) === PROP_INCONSIST) {
                     receiver.onPropertyChanged(p.toString(), oldV, v);
                 }
                 return ret;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { View, Property } from "../ui/view";
+import { View, Property, InconsistProperty } from "../ui/view";
 import { Color } from "../util/color";
 import { Gravity } from "../util/gravity";
 import { BridgeContext } from "../runtime/global";
@@ -21,7 +21,7 @@ import { layoutConfig } from "../util/index.util";
 
 export class Input extends View {
 
-    @Property
+    @InconsistProperty
     text?: string
 
     @Property
@@ -53,7 +53,7 @@ export class Input extends View {
 
     @Property
     maxLength?: number
-    
+
     @Property
     password?: boolean
 

@@ -5,6 +5,7 @@ import { LayoutConfig } from '../util/layoutconfig';
 import { IAnimation } from "./animation";
 import { FlexConfig } from "../util/flexbox";
 export declare function Property(target: Object, propKey: string): void;
+export declare function InconsistProperty(target: Object, propKey: string): void;
 export declare type NativeViewModel = {
     id: string;
     type: string;

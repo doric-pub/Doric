@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { View, Property } from "../ui/view";
+import { View, Property, InconsistProperty } from "../ui/view";
 import { Color } from "../util/color";
 import { layoutConfig } from "../util/index.util";
 
@@ -21,7 +21,7 @@ export class Switch extends View {
     /**
      * True is on ,false is off,defalut is off.
      */
-    @Property
+    @InconsistProperty
     state?: boolean
     /**
      * Switch change callback

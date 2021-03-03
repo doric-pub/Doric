@@ -37,6 +37,19 @@ export function Property(target: View, propKey: string) {
     })
 }
 
+export function InconsistProperty(target: Object, propKey: string) {
+    Object.defineProperty(target, propKey, {
+        get: function () {
+            return Reflect.get(this, `__prop__${propKey}`, this)
+        },
+        set: function (v) {
+            const oldV = Reflect.get(this, `__prop__${propKey}`, this)
+            Reflect.set(this, `__prop__${propKey}`, v, this)
+            Reflect.apply(this.onPropertyChanged, this, [propKey, oldV, v])
+        },
+    })
+}
+
 export type NativeViewModel = {
     id: string;
     type: string;

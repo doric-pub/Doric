@@ -203,8 +203,10 @@ global.nativeLog = (type, msg) => {
 };
 global.nativeRequire = () => {
     console.error("Do not call nativeRequire here");
+    return false;
 };
 global.nativeBridge = () => {
     console.error("Do not call nativeBridge here");
+    return false;
 };
 export * from './index';

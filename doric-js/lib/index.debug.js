@@ -202,11 +202,25 @@ global.nativeLog = (type, msg) => {
     }
 };
 global.nativeRequire = () => {
-    console.error("Do not call nativeRequire here");
+    console.error("nativeRequire", new Error().stack);
+    console.error("Do not call here in debugging");
     return false;
 };
 global.nativeBridge = () => {
-    console.error("Do not call nativeBridge here");
+    console.error("nativeBridge", new Error().stack);
+    console.error("Do not call here in debugging");
     return false;
 };
+global.Envrionment = new Proxy({}, {
+    get: (target, p, receiver) => {
+        console.error("Environment Getter", new Error().stack);
+        console.error("Do not call here in debugging");
+        return undefined;
+    },
+    set: (target, p, v, receiver) => {
+        console.error("Environment Setter", new Error().stack);
+        console.error("Do not call here in debugging");
+        return Reflect.set(target, p, v, receiver);
+    }
+});
 export * from './index';

@@ -61,9 +61,13 @@ async function doMerge(jsFile: string) {
 
 export async function mergeMap(mapFile: string) {
     const mapContent = await fs.promises.readFile(mapFile, "utf-8");
-    if (JSON.parse(mapContent).merged) {
-        console.log("Already merged");
-        return;
+    try {
+        if (JSON.parse(mapContent).merged) {
+            console.log("Already merged");
+            return;
+        }
+    } catch (err) {
+        console.error(err);
     }
     const lockFile = `${mapFile}.lock`;
     if (fs.existsSync(lockFile)) {

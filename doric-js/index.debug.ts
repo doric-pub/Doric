@@ -16,7 +16,6 @@
 import * as doric from './src/runtime/sandbox'
 import WebSocket from "ws"
 import path from 'path'
-import { BridgeContext } from './src/runtime/global';
 
 type MSG = {
   type: "D2C" | "C2D" | "C2S" | "D2S" | "S2C" | "S2D",
@@ -197,13 +196,24 @@ global.nativeLog = (type: string, msg: string) => {
 }
 
 global.nativeRequire = () => {
-  console.error("Do not call nativeRequire here");
+  console.error("In debugger,do not support call nativeRequire here", new Error().stack);
   return false;
 }
 
 global.nativeBridge = () => {
-  console.error("Do not call nativeBridge here");
+  console.error("In debugger,do not support call nativeBridge here", new Error().stack);
   return false;
 }
+
+global.Envrionment = new Proxy({}, {
+  get: (target, p, receiver) => {
+    console.error("In debugger,do not support get Environment's value here", new Error().stack)
+    return undefined
+  },
+  set: (target, p, v, receiver) => {
+    console.error("In debugger,do not support set Environment's value here", new Error().stack)
+    return Reflect.set(target, p, v, receiver);
+  }
+})
 
 export * from './index'

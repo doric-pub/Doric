@@ -22,13 +22,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { View, Property } from "../ui/view";
+import { View, Property, InconsistProperty } from "../ui/view";
 import { Color } from "../util/color";
 import { layoutConfig } from "../util/index.util";
 export class Switch extends View {
 }
 __decorate([
-    Property,
+    InconsistProperty,
     __metadata("design:type", Boolean)
 ], Switch.prototype, "state", void 0);
 __decorate([

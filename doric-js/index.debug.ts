@@ -196,22 +196,26 @@ global.nativeLog = (type: string, msg: string) => {
 }
 
 global.nativeRequire = () => {
-  console.error("In debugger,do not support call nativeRequire here", new Error().stack);
+  console.error("nativeRequire", new Error().stack);
+  console.error("Do not call here in debugging");
   return false;
 }
 
 global.nativeBridge = () => {
-  console.error("In debugger,do not support call nativeBridge here", new Error().stack);
+  console.error("nativeBridge", new Error().stack);
+  console.error("Do not call here in debugging");
   return false;
 }
 
 global.Envrionment = new Proxy({}, {
   get: (target, p, receiver) => {
-    console.error("In debugger,do not support get Environment's value here", new Error().stack)
+    console.error("Environment Getter", new Error().stack);
+    console.error("Do not call here in debugging");
     return undefined
   },
   set: (target, p, v, receiver) => {
-    console.error("In debugger,do not support set Environment's value here", new Error().stack)
+    console.error("Environment Setter", new Error().stack)
+    console.error("Do not call here in debugging");
     return Reflect.set(target, p, v, receiver);
   }
 })

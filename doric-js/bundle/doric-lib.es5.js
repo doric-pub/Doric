@@ -2715,7 +2715,7 @@ var Input = /** @class */ (function (_super) {
         return this.nativeChannel(context, 'releaseFocus')();
     };
     __decorate$3([
-        Property,
+        InconsistProperty,
         __metadata$3("design:type", String)
     ], Input.prototype, "text", void 0);
     __decorate$3([
@@ -2911,7 +2911,7 @@ var Switch = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     __decorate([
-        Property,
+        InconsistProperty,
         __metadata("design:type", Boolean)
     ], Switch.prototype, "state", void 0);
     __decorate([

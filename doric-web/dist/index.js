@@ -1674,8 +1674,13 @@ var __decorate$d = (undefined && undefined.__decorate) || function (decorators, 
 var __metadata$d = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+const PROP_CONSIST = 1;
+const PROP_INCONSIST = 2;
 function Property(target, propKey) {
-    Reflect.defineMetadata(propKey, true, target);
+    Reflect.defineMetadata(propKey, PROP_CONSIST, target);
+}
+function InconsistProperty(target, propKey) {
+    Reflect.defineMetadata(propKey, PROP_INCONSIST, target);
 }
 class View {
     constructor() {
@@ -1699,7 +1704,10 @@ class View {
             set: (target, p, v, receiver) => {
                 const oldV = Reflect.get(target, p, receiver);
                 const ret = Reflect.set(target, p, v, receiver);
-                if (Reflect.getMetadata(p, target) && oldV !== v) {
+                if (Reflect.getMetadata(p, target) === PROP_CONSIST && oldV !== v) {
+                    receiver.onPropertyChanged(p.toString(), oldV, v);
+                }
+                else if (Reflect.getMetadata(p, target) === PROP_INCONSIST) {
                     receiver.onPropertyChanged(p.toString(), oldV, v);
                 }
                 return ret;
@@ -3622,7 +3630,7 @@ class Input extends View {
     }
 }
 __decorate$3([
-    Property,
+    InconsistProperty,
     __metadata$3("design:type", String)
 ], Input.prototype, "text", void 0);
 __decorate$3([
@@ -3757,7 +3765,7 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 class Switch extends View {
 }
 __decorate([
-    Property,
+    InconsistProperty,
     __metadata("design:type", Boolean)
 ], Switch.prototype, "state", void 0);
 __decorate([
@@ -4285,6 +4293,7 @@ exports.Gravity = Gravity;
 exports.Group = Group;
 exports.HLayout = HLayout;
 exports.Image = Image;
+exports.InconsistProperty = InconsistProperty;
 exports.Input = Input;
 exports.LEFT = LEFT;
 exports.LayoutConfigImpl = LayoutConfigImpl;
@@ -4407,6 +4416,7 @@ var doric_web = (function (exports, axios, sandbox) {
         }
     }
 
+    exports.LayoutSpec = void 0;
     (function (LayoutSpec) {
         LayoutSpec[LayoutSpec["EXACTLY"] = 0] = "EXACTLY";
         LayoutSpec[LayoutSpec["WRAP_CONTENT"] = 1] = "WRAP_CONTENT";
@@ -5887,6 +5897,8 @@ ${content}
     exports.registerViewNode = registerViewNode;
     exports.toPixelString = toPixelString;
     exports.toRGBAString = toRGBAString;
+
+    Object.defineProperty(exports, '__esModule', { value: true });
 
     return exports;
 

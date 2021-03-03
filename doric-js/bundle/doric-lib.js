@@ -2081,7 +2081,7 @@ class Input extends View {
     }
 }
 __decorate$3([
-    Property,
+    InconsistProperty,
     __metadata$3("design:type", String)
 ], Input.prototype, "text", void 0);
 __decorate$3([
@@ -2216,7 +2216,7 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 class Switch extends View {
 }
 __decorate([
-    Property,
+    InconsistProperty,
     __metadata("design:type", Boolean)
 ], Switch.prototype, "state", void 0);
 __decorate([

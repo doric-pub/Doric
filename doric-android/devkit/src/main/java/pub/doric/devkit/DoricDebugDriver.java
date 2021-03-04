@@ -62,7 +62,7 @@ public class DoricDebugDriver implements IDoricDriver {
 
     @Override
     public AsyncResult<JSDecoder> invokeDoricMethod(final String method, final Object... args) {
-        return AsyncCall.ensureRunInExecutor(mBridgeExecutor, new Callable<JSDecoder>() {
+        return asyncCall(new Callable<JSDecoder>() {
             @Override
             public JSDecoder call() {
                 try {
@@ -72,7 +72,7 @@ public class DoricDebugDriver implements IDoricDriver {
                     return new JSDecoder(null);
                 }
             }
-        });
+        }, ThreadMode.JS);
     }
 
     @Override
@@ -80,8 +80,11 @@ public class DoricDebugDriver implements IDoricDriver {
         switch (threadMode) {
             case UI:
                 return AsyncCall.ensureRunInHandler(mUIHandler, callable);
-            case INDEPENDENT:
             case JS:
+                if (!doricDebugJSEngine.isInvokingMethod()) {
+                    return AsyncCall.ensureRunInHandler(doricDebugJSEngine.getJSHandler(), callable);
+                }
+            case INDEPENDENT:
             default:
                 return AsyncCall.ensureRunInExecutor(mBridgeExecutor, callable);
         }
@@ -89,7 +92,7 @@ public class DoricDebugDriver implements IDoricDriver {
 
     @Override
     public AsyncResult<Boolean> createContext(final String contextId, final String script, final String source) {
-        return AsyncCall.ensureRunInExecutor(mBridgeExecutor, new Callable<Boolean>() {
+        return asyncCall(new Callable<Boolean>() {
             @Override
             public Boolean call() {
                 try {
@@ -100,12 +103,12 @@ public class DoricDebugDriver implements IDoricDriver {
                     return false;
                 }
             }
-        });
+        }, ThreadMode.JS);
     }
 
     @Override
     public AsyncResult<Boolean> destroyContext(final String contextId) {
-        return AsyncCall.ensureRunInExecutor(mBridgeExecutor, new Callable<Boolean>() {
+        return asyncCall(new Callable<Boolean>() {
             @Override
             public Boolean call() {
                 try {
@@ -118,7 +121,7 @@ public class DoricDebugDriver implements IDoricDriver {
                     return false;
                 }
             }
-        });
+        }, ThreadMode.JS);
     }
 
     @Override

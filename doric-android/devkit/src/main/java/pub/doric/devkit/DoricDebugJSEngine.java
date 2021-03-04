@@ -31,4 +31,11 @@ public class DoricDebugJSEngine extends DoricJSEngine {
     protected void initJSEngine() {
         mDoricJSE = new DoricRemoteJSExecutor(this.wsClient);
     }
+
+    public boolean isInvokingMethod() {
+        if (mDoricJSE instanceof DoricRemoteJSExecutor) {
+            return ((DoricRemoteJSExecutor) mDoricJSE).isInvokingMethod();
+        }
+        return false;
+    }
 }

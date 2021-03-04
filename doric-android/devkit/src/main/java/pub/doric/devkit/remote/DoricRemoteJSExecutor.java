@@ -60,4 +60,8 @@ public class DoricRemoteJSExecutor implements IDoricJSE {
     public void teardown() {
         mRemoteJSExecutor.destroy();
     }
+
+    public boolean isInvokingMethod() {
+        return mRemoteJSExecutor.invokingMethod;
+    }
 }

@@ -16,6 +16,7 @@
 import * as doric from './src/runtime/sandbox'
 import WebSocket from "ws"
 import path from 'path'
+import { Panel } from './src/ui/panel';
 
 type MSG = {
   type: "D2C" | "C2D" | "C2S" | "D2S" | "S2C" | "S2D",
@@ -26,6 +27,7 @@ type MSG = {
 let contextId: string | undefined = undefined;
 
 let global = new Function('return this')()
+const originSetTimeout = global.setTimeout
 global.setTimeout = global.doricSetTimeout
 global.setInterval = global.doricSetInterval
 global.clearTimeout = global.doricClearTimeout
@@ -73,10 +75,16 @@ async function initNativeEnvironment(source: string) {
             } else if (type === 5) {
               arg = JSON.parse(value)
             }
+            if (payload.name === "Environment") {
+              (arg as any).debugging = true
+            }
             Reflect.set(global, payload.name as string, arg)
             break
           case "injectGlobalJSFunction":
             console.log("injectGlobalJSFunction", payload);
+            if (payload.name === "nativeEmpty") {
+              break
+            }
             Reflect.set(global, payload.name as string, function () {
               let args = [].slice.call(arguments)
               console.log(args)
@@ -221,5 +229,31 @@ global.Envrionment = new Proxy({}, {
     return Reflect.set(target, p, v, receiver);
   }
 })
+
+global.nativeEmpty = () => {
+  originSetTimeout(() => {
+    for (let context of doric.allContexts()) {
+      const entity = context.entity
+      if (entity instanceof Panel) {
+        const panel = entity as Panel
+        if (panel.getRootView().isDirty()) {
+          const model = panel.getRootView().toModel()
+          context.callNative("shader", "render", model)
+          panel.getRootView().clean()
+        }
+        for (let map of panel.allHeadViews()) {
+          for (let v of map.values()) {
+            if (v.isDirty()) {
+              const model = v.toModel()
+              context.callNative("shader", "render", model)
+              v.clean()
+            }
+          }
+        }
+      }
+    }
+
+  }, 0)
+}
 
 export * from './index'

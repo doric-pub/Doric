@@ -198,8 +198,10 @@ typedef id (^Block5)(id arg0, id arg1, id arg2, id arg3, id arg4);
             } @finally {
                 DoricLog(@"Unlock:%@", payload);
                 dispatch_semaphore_t semaphore = self.semaphores[callId];
-                [self.semaphores removeObjectForKey:callId];
-                DC_UNLOCK(semaphore);
+                if (semaphore) {
+                    [self.semaphores removeObjectForKey:callId];
+                    DC_UNLOCK(semaphore);
+                }
             }
         }
     }

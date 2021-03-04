@@ -1324,6 +1324,9 @@ var doric = (function (exports) {
     }());
     var gContexts = new Map;
     var gModules = new Map;
+    function allContexts() {
+        return gContexts.values();
+    }
     function jsObtainContext(id) {
         if (gContexts.has(id)) {
             var context_1 = gContexts.get(id);
@@ -13763,6 +13766,7 @@ var doric = (function (exports) {
     exports.Context = Context;
     exports.__moduleExports = coreJs;
     exports.__require__ = __require__;
+    exports.allContexts = allContexts;
     exports.jsCallEntityMethod = jsCallEntityMethod;
     exports.jsCallReject = jsCallReject;
     exports.jsCallResolve = jsCallResolve;

@@ -17,6 +17,7 @@ export declare class Context {
     function2Id(func: Function): string;
     removeFuncById(funcId: string): void;
 }
+export declare function allContexts(): IterableIterator<Context>;
 export declare function jsObtainContext(id: string): Context | undefined;
 export declare function jsReleaseContext(id: string): void;
 export declare function __require__(name: string): any;

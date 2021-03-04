@@ -92,7 +92,8 @@ async function initNativeEnvironment(source: string) {
             })
             break
           case "invokeMethod":
-            console.log("invokeMethod", payload)
+            const callId = payload.callId;
+            console.log("invokeMethod", callId, payload)
             const values = payload.values as { type: number, value: string }[]
             let args = []
             for (let i = 0; i < values.length; i++) {
@@ -114,12 +115,13 @@ async function initNativeEnvironment(source: string) {
             const object = Reflect.get(global, payload.objectName as string)
             const method = Reflect.get(object, payload.functionName as string)
             const result = Reflect.apply(method, undefined, args)
-            console.log(result)
+            console.log("Result", callId, result)
             ws.send(JSON.stringify({
               type: "D2C",
               cmd: 'invokeMethod',
               payload: {
-                result
+                result,
+                callId,
               }
             } as MSG))
             break;

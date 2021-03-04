@@ -103,6 +103,9 @@
 
 - (void)teardown {
     _destroyed = YES;
+    //To ensure runloop continue.
+    [self ensureRunOnJSThread:^{
+    }];
 }
 
 - (void)ensureRunOnJSThread:(dispatch_block_t)block {

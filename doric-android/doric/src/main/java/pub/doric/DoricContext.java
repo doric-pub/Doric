@@ -212,6 +212,7 @@ public class DoricContext {
         this.script = script;
         this.mRootNode.setId("");
         this.mRootNode.clearSubModel();
+        this.mRootNode.getView().removeAllViews();
         getDriver().createContext(mContextId, script, source);
         init(this.extra);
         callEntity(DoricConstant.DORIC_ENTITY_CREATE);

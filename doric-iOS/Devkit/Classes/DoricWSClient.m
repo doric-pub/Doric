@@ -38,6 +38,7 @@
         _interceptors = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
         _websocket = [[SRWebSocket alloc] initWithURL:[NSURL URLWithString:url]];
         _websocket.delegate = self;
+        _websocket.delegateDispatchQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
         [_websocket open];
     }
     return self;

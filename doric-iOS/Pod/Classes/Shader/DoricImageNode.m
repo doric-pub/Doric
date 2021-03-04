@@ -210,7 +210,7 @@
             if (self.placeHolderColor || self.errorColor) {
                 self.view.contentMode = self.contentMode;
             }
-            view.doricLayout.undefined = NO;
+            self.view.doricLayout.undefined = NO;
             if (error) {
                 [[self currentErrorImage] also:^(UIImage *it) {
                     self.view.image = it;
@@ -248,7 +248,7 @@
                            if (self.placeHolderColor || self.errorColor) {
                                self.view.contentMode = self.contentMode;
                            }
-                           view.doricLayout.undefined = NO;
+                           self.view.doricLayout.undefined = NO;
                            if (error) {
                                [[self currentErrorImage] also:^(UIImage *it) {
                                    self.view.image = it;

@@ -195,4 +195,8 @@
         dispatch_async(dispatch_get_main_queue(), block);
     }
 }
+
+- (void)dealloc {
+    [self.jsExecutor teardown];
+}
 @end

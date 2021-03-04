@@ -57,7 +57,7 @@
 - (DoricAsyncResult *)invokeDoricMethod:(NSString *)method argumentsArray:(NSArray *)args {
     DoricAsyncResult *ret = [[DoricAsyncResult alloc] init];
     __weak typeof(self) _self = self;
-    [self.jsExecutor ensureRunOnJSThread:^{
+    [self runInJSQueue:^{
         __strong typeof(_self) self = _self;
         if (!self) return;
         @try {
@@ -78,7 +78,7 @@
         [array addObject:arg];
     }
     __weak typeof(self) _self = self;
-    [self.jsExecutor ensureRunOnJSThread:^{
+    [self runInJSQueue:^{
         __strong typeof(_self) self = _self;
         if (!self) return;
         @try {
@@ -110,7 +110,7 @@
         arg = va_arg(args, JSValue *);
     }
     __weak typeof(self) _self = self;
-    [self.jsExecutor ensureRunOnJSThread:^{
+    [self runInJSQueue:^{
         __strong typeof(_self) self = _self;
         if (!self) return;
         @try {
@@ -132,7 +132,7 @@
         [array addObject:arg];
     }
     __weak typeof(self) _self = self;
-    [self.jsExecutor ensureRunOnJSThread:^{
+    [self runInJSQueue:^{
         __strong typeof(_self) self = _self;
         if (!self) return;
         @try {
@@ -148,7 +148,7 @@
 - (DoricAsyncResult *)createContext:(NSString *)contextId script:(NSString *)script source:(NSString *)source {
     DoricAsyncResult *ret = [[DoricAsyncResult alloc] init];
     __weak typeof(self) _self = self;
-    [self.jsExecutor ensureRunOnJSThread:^{
+    [self runInJSQueue:^{
         __strong typeof(_self) self = _self;
         if (!self) return;
         @try {
@@ -164,7 +164,7 @@
 - (DoricAsyncResult *)destroyContext:(NSString *)contextId {
     DoricAsyncResult *ret = [[DoricAsyncResult alloc] init];
     NSString *theContextId = self.theContextId;
-    [self.jsExecutor ensureRunOnJSThread:^{
+    [self runInJSQueue:^{
         @try {
             if ([contextId isEqualToString:theContextId]) {
                 [DoricDev.instance stopDebugging:NO];
@@ -177,11 +177,25 @@
     return ret;
 }
 
+- (void)runInJSQueue:(dispatch_block_t)block {
+    [self.jsExecutor ensureRunOnJSThread:^{
+        block();
+    }];
+}
+
 - (void)ensureSyncInMainQueue:(dispatch_block_t)block {
     if (strcmp(dispatch_queue_get_label(DISPATCH_CURRENT_QUEUE_LABEL), dispatch_queue_get_label(dispatch_get_main_queue())) == 0) {
         block();
     } else {
         dispatch_async(dispatch_get_main_queue(), block);
     }
+}
+
+- (void)dealloc {
+    [self.jsExecutor teardown];
+}
+
+- (void)teardown {
+    [self.jsExecutor teardown];
 }
 @end

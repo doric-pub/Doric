@@ -48,6 +48,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)ensureRunOnJSThread:(dispatch_block_t)block;
 
 - (void)initJSEngine;
+
+- (void)teardown;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -181,4 +181,10 @@
         [node requestLayout];
     }
 }
+
+- (void)clearSubModel {
+    [super clearSubModel];
+    self.childNodes = @[];
+    self.childViewIds = @[];
+}
 @end

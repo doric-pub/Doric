@@ -42,4 +42,21 @@
 - (void)initJSEngine {
     self.jsExecutor = [[DoricRemoteJSExecutor alloc] initWithWSClient:self.wsClient];
 }
+
+- (void)teardown {
+    [super teardown];
+    if ([self.jsExecutor isKindOfClass:DoricRemoteJSExecutor.class]) {
+        [((DoricRemoteJSExecutor *) (self.jsExecutor)) teardown];
+    }
+}
+
+- (void)ensureRunOnJSThread:(dispatch_block_t)block {
+    if ([self.jsExecutor isKindOfClass:DoricRemoteJSExecutor.class]
+            && ((DoricRemoteJSExecutor *) (self.jsExecutor)).invokingMethod) {
+        NSThread *thread = [[NSThread alloc] initWithBlock:block];
+        [thread start];
+    } else {
+        [super ensureRunOnJSThread:block];
+    }
+}
 @end

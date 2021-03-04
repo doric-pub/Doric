@@ -23,10 +23,13 @@
 #import <Foundation/Foundation.h>
 #import <DoricCore/Doric.h>
 #import "DoricWSClient.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface DoricDebugDriver : NSObject <DoricDriverProtocol>
 - (instancetype)initWithWSClient:(DoricWSClient *)wsClient;
+
+- (void)teardown;
 @end
 
 NS_ASSUME_NONNULL_END

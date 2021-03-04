@@ -5,5 +5,5 @@ Flex {
     flexDirection: "row"
     justifyContent: "flexStart"
     alignItems: "flexStart"
-    alignContent: "stretch"
+    alignContent: "flexStart"
 }

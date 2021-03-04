@@ -26,6 +26,8 @@ public class RemoteJSExecutor implements WSClient.Interceptor {
     private Map<Integer, Thread> mThreads = new HashMap<>();
     private Map<Integer, JSDecoder> mResults = new HashMap<>();
 
+    public volatile boolean invokingMethod = false;
+
     public RemoteJSExecutor(WSClient wsClient) {
         this.wsClient = wsClient;
         this.wsClient.addInterceptor(this);
@@ -79,9 +81,11 @@ public class RemoteJSExecutor implements WSClient.Interceptor {
                         .put("callId", callId)
                         .put("hashKey", hashKey)
                         .toJSONObject());
+        invokingMethod = true;
         Thread thread = Thread.currentThread();
         mThreads.put(callId, thread);
         LockSupport.park(thread);
+        invokingMethod = false;
         return mResults.remove(callId);
     }
 

@@ -129,11 +129,11 @@ public class DoricDev {
                     new JSONBuilder()
                             .put("contextId", context.getContextId())
                             .toJSONObject());
-            debuggable = new DoricContextDebuggable(wsClient, context);
-            debuggable.startDebug();
             uiHandler.post(new Runnable() {
                 @Override
                 public void run() {
+                    debuggable = new DoricContextDebuggable(wsClient, context);
+                    debuggable.startDebug();
                     for (StatusCallback callback : callbacks) {
                         callback.onStartDebugging(context);
                     }
@@ -149,16 +149,16 @@ public class DoricDev {
                 .toJSONObject());
     }
 
-    public void stopDebugging(boolean resume) {
+    public void stopDebugging(final boolean resume) {
         wsClient.sendToDebugger("DEBUG_STOP", new JSONBuilder()
                 .put("msg", "Stop debugging")
                 .toJSONObject());
         if (debuggable != null) {
-            debuggable.stopDebug(resume);
-            debuggable = null;
             uiHandler.post(new Runnable() {
                 @Override
                 public void run() {
+                    debuggable.stopDebug(resume);
+                    debuggable = null;
                     for (StatusCallback callback : callbacks) {
                         callback.onStopDebugging();
                     }

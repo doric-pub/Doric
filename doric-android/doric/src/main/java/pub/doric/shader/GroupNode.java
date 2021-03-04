@@ -166,4 +166,11 @@ public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
         }
         return null;
     }
+
+    @Override
+    public void clearSubModel() {
+        super.clearSubModel();
+        mChildNodes.clear();
+        mChildViewIds.clear();
+    }
 }

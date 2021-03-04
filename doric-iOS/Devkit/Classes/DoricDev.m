@@ -32,6 +32,8 @@
 @property(nonatomic, weak) DoricContext *doricContext;
 @property(nonatomic, weak) id <DoricDriverProtocol> nativeDriver;
 @property(nonatomic, weak) DoricWSClient *wsClient;
+@property(nonatomic, weak) DoricDebugDriver *debugDriver;
+
 @end
 
 @implementation DoricContextDebuggable
@@ -46,10 +48,12 @@
 
 - (void)startDebug {
     [self.doricContext setDriver:[[DoricDebugDriver alloc] initWithWSClient:self.wsClient]];
+    self.debugDriver = self.doricContext.driver;
     [self.doricContext reload:self.doricContext.script];
 }
 
 - (void)stopDebug:(BOOL)resume {
+    [self.debugDriver teardown];
     self.doricContext.driver = self.nativeDriver;
     if (resume) {
         [self.doricContext reload:self.doricContext.script];

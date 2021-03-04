@@ -101,9 +101,9 @@
     return self;
 }
 
-- (void)dealloc {
+- (void)teardown {
     _destroyed = YES;
-};
+}
 
 - (void)ensureRunOnJSThread:(dispatch_block_t)block {
     if (NSThread.currentThread == _jsThread) {

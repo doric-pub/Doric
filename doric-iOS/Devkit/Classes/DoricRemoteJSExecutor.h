@@ -27,7 +27,11 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface DoricRemoteJSExecutor : NSObject <DoricJSExecutorProtocol>
+@property(nonatomic, assign) BOOL invokingMethod;
+
 - (instancetype)initWithWSClient:(DoricWSClient *)wsClient;
+
+- (void)teardown;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -11,15 +11,20 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.LockSupport;
 
 import pub.doric.devkit.WSClient;
 
 public class RemoteJSExecutor implements WSClient.Interceptor {
     private final Map<String, JavaFunction> globalFunctions = new HashMap<>();
-    private JSDecoder temp;
     private final WSClient wsClient;
     private final Thread currentThread;
+
+    private final AtomicInteger callIdCounter = new AtomicInteger();
+
+    private Map<Integer, Thread> mThreads = new HashMap<>();
+    private Map<Integer, JSDecoder> mResults = new HashMap<>();
 
     public RemoteJSExecutor(WSClient wsClient) {
         this.wsClient = wsClient;
@@ -63,6 +68,7 @@ public class RemoteJSExecutor implements WSClient.Interceptor {
                     .put("value", javaValue.getValue())
                     .toJSONObject());
         }
+        int callId = callIdCounter.incrementAndGet();
         wsClient.sendToDebugger(
                 "invokeMethod",
                 new JSONBuilder()
@@ -70,11 +76,13 @@ public class RemoteJSExecutor implements WSClient.Interceptor {
                         .put("objectName", objectName)
                         .put("functionName", functionName)
                         .put("values", jsonArray)
+                        .put("callId", callId)
                         .put("hashKey", hashKey)
                         .toJSONObject());
-
-        LockSupport.park(Thread.currentThread());
-        return temp;
+        Thread thread = Thread.currentThread();
+        mThreads.put(callId, thread);
+        LockSupport.park(thread);
+        return mResults.remove(callId);
     }
 
     public void destroy() {
@@ -99,15 +107,16 @@ public class RemoteJSExecutor implements WSClient.Interceptor {
                 }
                 break;
                 case "invokeMethod": {
+                    int callId = payload.optInt("callId");
                     try {
                         Object result = payload.opt("result");
                         ValueBuilder vb = new ValueBuilder(result);
-                        temp = new JSDecoder(vb.build());
+                        mResults.put(callId, new JSDecoder(vb.build()));
                         System.out.println(result);
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     } finally {
-                        LockSupport.unpark(currentThread);
+                        LockSupport.unpark(mThreads.remove(callId));
                     }
                 }
                 break;

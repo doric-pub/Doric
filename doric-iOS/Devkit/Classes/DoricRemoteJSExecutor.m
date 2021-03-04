@@ -49,8 +49,9 @@ typedef id (^Block5)(id arg0, id arg1, id arg2, id arg3, id arg4);
 @interface DoricRemoteJSExecutor () <DoricWSClientInterceptor>
 @property(nonatomic, weak) DoricWSClient *wsClient;
 @property(nonatomic, strong) NSMutableDictionary <NSString *, id> *blockMDic;
-@property(nonatomic, strong) JSValue *temp;
-@property(nonatomic, strong) dispatch_semaphore_t semaphore;
+@property(nonatomic) NSInteger counter;
+@property(nonatomic, strong) NSMutableDictionary <NSNumber *, dispatch_semaphore_t> *semaphores;
+@property(nonatomic, strong) NSMutableDictionary <NSNumber *, JSValue *> *results;
 @end
 
 @implementation DoricRemoteJSExecutor
@@ -59,7 +60,9 @@ typedef id (^Block5)(id arg0, id arg1, id arg2, id arg3, id arg4);
         _wsClient = wsClient;
         [_wsClient addInterceptor:self];
         _blockMDic = [NSMutableDictionary new];
-        _semaphore = dispatch_semaphore_create(0);
+        _semaphores = [NSMutableDictionary new];
+        _results = [NSMutableDictionary new];
+        _counter = 0;
     }
     return self;
 }
@@ -114,17 +117,23 @@ typedef id (^Block5)(id arg0, id arg1, id arg2, id arg3, id arg4);
         NSDictionary *dic = [self dicForArg:arg];
         [argsMArr addObject:dic];
     }
-
+    NSInteger callId = ++self.counter;
     [self.wsClient sendToDebugger:@"invokeMethod" payload:@{
             @"cmd": @"invokeMethod",
             @"objectName": objName,
             @"functionName": funcName,
+            @"callId": @(callId),
             @"values": [argsMArr copy]
     }];
-
-    DC_LOCK(self.semaphore);
-
-    return self.temp;
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    self.semaphores[@(callId)] = semaphore;
+    self.invokingMethod = YES;
+    DoricLog(@"Lock %@",@(callId));
+    DC_LOCK(semaphore);
+    JSValue *result = self.results[@(callId)];
+    [self.results removeObjectForKey:@(callId)];
+    self.invokingMethod = NO;
+    return result;
 }
 
 - (NSDictionary *)dicForArg:(id)arg {
@@ -161,32 +170,43 @@ typedef id (^Block5)(id arg0, id arg1, id arg2, id arg3, id arg4);
             NSArray *argsArr = payload[@"arguments"];
             id tmpBlk = self.blockMDic[name];
             if (argsArr.count == 0) {
-               ((Block0) tmpBlk)();
+                ((Block0) tmpBlk)();
             } else if (argsArr.count == 1) {
-                 ((Block1) tmpBlk)(argsArr[0]);
+                ((Block1) tmpBlk)(argsArr[0]);
             } else if (argsArr.count == 2) {
-                 ((Block2) tmpBlk)(argsArr[0], argsArr[1]);
+                ((Block2) tmpBlk)(argsArr[0], argsArr[1]);
             } else if (argsArr.count == 3) {
-                 ((Block3) tmpBlk)(argsArr[0], argsArr[1], argsArr[2]);
+                ((Block3) tmpBlk)(argsArr[0], argsArr[1], argsArr[2]);
             } else if (argsArr.count == 4) {
-                 ((Block4) tmpBlk)(argsArr[0], argsArr[1], argsArr[2], argsArr[3]);
+                ((Block4) tmpBlk)(argsArr[0], argsArr[1], argsArr[2], argsArr[3]);
             } else if (argsArr.count == 5) {
                 ((Block5) tmpBlk)(argsArr[0], argsArr[1], argsArr[2], argsArr[3], argsArr[4]);
             } else {
                 DoricLog(@"error:args to more than 5. args:%@", argsArr);
             }
         } else if ([cmd isEqualToString:@"invokeMethod"]) {
+            NSNumber *callId = payload[@"callId"];
             @try {
-                self.temp = [JSValue valueWithObject:payload[@"result"] inContext:nil];
+                JSValue *value = [JSValue valueWithObject:payload[@"result"] inContext:nil];
+                self.results[callId] = value;
             } @catch (NSException *exception) {
                 DoricLog(@"debugger ", NSStringFromSelector(_cmd), exception.reason);
             } @finally {
-                DC_UNLOCK(self.semaphore);
+                DoricLog(@"Unlock:%@",payload);
+                dispatch_semaphore_t semaphore = self.semaphores[callId];
+                [self.semaphores removeObjectForKey:callId];
+                DC_UNLOCK(semaphore);
             }
         }
     }
     return NO;
 }
 
+- (void)teardown {
+    [self.blockMDic removeAllObjects];
+    [self.semaphores enumerateKeysAndObjectsUsingBlock:^(NSNumber *key, dispatch_semaphore_t obj, BOOL *stop) {
+        DC_UNLOCK(obj);
+    }];
+}
 
 @end

@@ -143,6 +143,9 @@ export class Context {
 }
 const gContexts = new Map;
 const gModules = new Map;
+export function allContexts() {
+    return gContexts.values();
+}
 export function jsObtainContext(id) {
     if (gContexts.has(id)) {
         const context = gContexts.get(id);

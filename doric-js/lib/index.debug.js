@@ -25,8 +25,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import * as doric from './src/runtime/sandbox';
 import WebSocket from "ws";
 import path from 'path';
+import { Panel } from './src/ui/panel';
 let contextId = undefined;
 let global = new Function('return this')();
+const originSetTimeout = global.setTimeout;
 global.setTimeout = global.doricSetTimeout;
 global.setInterval = global.doricSetInterval;
 global.clearTimeout = global.doricClearTimeout;
@@ -79,10 +81,16 @@ function initNativeEnvironment(source) {
                         else if (type === 5) {
                             arg = JSON.parse(value);
                         }
+                        if (payload.name === "Environment") {
+                            arg.debugging = true;
+                        }
                         Reflect.set(global, payload.name, arg);
                         break;
                     case "injectGlobalJSFunction":
                         console.log("injectGlobalJSFunction", payload);
+                        if (payload.name === "nativeEmpty") {
+                            break;
+                        }
                         Reflect.set(global, payload.name, function () {
                             let args = [].slice.call(arguments);
                             console.log(args);
@@ -225,4 +233,28 @@ global.Envrionment = new Proxy({}, {
         return Reflect.set(target, p, v, receiver);
     }
 });
+global.nativeEmpty = () => {
+    originSetTimeout(() => {
+        for (let context of doric.allContexts()) {
+            const entity = context.entity;
+            if (entity instanceof Panel) {
+                const panel = entity;
+                if (panel.getRootView().isDirty()) {
+                    const model = panel.getRootView().toModel();
+                    context.callNative("shader", "render", model);
+                    panel.getRootView().clean();
+                }
+                for (let map of panel.allHeadViews()) {
+                    for (let v of map.values()) {
+                        if (v.isDirty()) {
+                            const model = v.toModel();
+                            context.callNative("shader", "render", model);
+                            v.clean();
+                        }
+                    }
+                }
+            }
+        }
+    }, 0);
+};
 export * from './index';

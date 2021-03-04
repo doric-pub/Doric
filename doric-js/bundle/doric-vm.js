@@ -1354,6 +1354,9 @@ class Context {
 }
 const gContexts = new Map;
 const gModules = new Map;
+function allContexts() {
+    return gContexts.values();
+}
 function jsObtainContext(id) {
     if (gContexts.has(id)) {
         const context = gContexts.get(id);
@@ -1558,6 +1561,7 @@ var doric = /*#__PURE__*/Object.freeze({
     jsCallResolve: jsCallResolve,
     jsCallReject: jsCallReject,
     Context: Context,
+    allContexts: allContexts,
     jsObtainContext: jsObtainContext,
     jsReleaseContext: jsReleaseContext,
     __require__: __require__,
@@ -4235,6 +4239,7 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 };
 let contextId = undefined;
 let global$1 = new Function('return this')();
+const originSetTimeout = global$1.setTimeout;
 global$1.setTimeout = global$1.doricSetTimeout;
 global$1.setInterval = global$1.doricSetInterval;
 global$1.clearTimeout = global$1.doricClearTimeout;
@@ -4287,10 +4292,16 @@ function initNativeEnvironment(source) {
                         else if (type === 5) {
                             arg = JSON.parse(value);
                         }
+                        if (payload.name === "Environment") {
+                            arg.debugging = true;
+                        }
                         Reflect.set(global$1, payload.name, arg);
                         break;
                     case "injectGlobalJSFunction":
                         console.log("injectGlobalJSFunction", payload);
+                        if (payload.name === "nativeEmpty") {
+                            break;
+                        }
                         Reflect.set(global$1, payload.name, function () {
                             let args = [].slice.call(arguments);
                             console.log(args);
@@ -4433,6 +4444,30 @@ global$1.Envrionment = new Proxy({}, {
         return Reflect.set(target, p, v, receiver);
     }
 });
+global$1.nativeEmpty = () => {
+    originSetTimeout(() => {
+        for (let context of allContexts()) {
+            const entity = context.entity;
+            if (entity instanceof Panel) {
+                const panel = entity;
+                if (panel.getRootView().isDirty()) {
+                    const model = panel.getRootView().toModel();
+                    context.callNative("shader", "render", model);
+                    panel.getRootView().clean();
+                }
+                for (let map of panel.allHeadViews()) {
+                    for (let v of map.values()) {
+                        if (v.isDirty()) {
+                            const model = v.toModel();
+                            context.callNative("shader", "render", model);
+                            v.clean();
+                        }
+                    }
+                }
+            }
+        }
+    }, 0);
+};
 
 exports.AnimationSet = AnimationSet;
 exports.BOTTOM = BOTTOM;

@@ -52,6 +52,7 @@ typedef id (^Block5)(id arg0, id arg1, id arg2, id arg3, id arg4);
 @property(nonatomic) NSInteger counter;
 @property(nonatomic, strong) NSMutableDictionary <NSNumber *, dispatch_semaphore_t> *semaphores;
 @property(nonatomic, strong) NSMutableDictionary <NSNumber *, JSValue *> *results;
+@property(nonatomic, strong) JSContext *jsContext;
 @end
 
 @implementation DoricRemoteJSExecutor
@@ -63,6 +64,7 @@ typedef id (^Block5)(id arg0, id arg1, id arg2, id arg3, id arg4);
         _semaphores = [NSMutableDictionary new];
         _results = [NSMutableDictionary new];
         _counter = 0;
+        _jsContext = [[JSContext alloc] init];
     }
     return self;
 }
@@ -128,7 +130,7 @@ typedef id (^Block5)(id arg0, id arg1, id arg2, id arg3, id arg4);
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     self.semaphores[@(callId)] = semaphore;
     self.invokingMethod = YES;
-    DoricLog(@"Lock %@",@(callId));
+    DoricLog(@"Lock %@", @(callId));
     DC_LOCK(semaphore);
     JSValue *result = self.results[@(callId)];
     [self.results removeObjectForKey:@(callId)];
@@ -169,7 +171,9 @@ typedef id (^Block5)(id arg0, id arg1, id arg2, id arg3, id arg4);
             NSString *name = payload[@"name"];
             NSArray *argsArr = payload[@"arguments"];
             id tmpBlk = self.blockMDic[name];
-            if (argsArr.count == 0) {
+            if (!tmpBlk) {
+                DoricLog(@"Cannot find inject function:%@", name);
+            } else if (argsArr.count == 0) {
                 ((Block0) tmpBlk)();
             } else if (argsArr.count == 1) {
                 ((Block1) tmpBlk)(argsArr[0]);
@@ -187,12 +191,12 @@ typedef id (^Block5)(id arg0, id arg1, id arg2, id arg3, id arg4);
         } else if ([cmd isEqualToString:@"invokeMethod"]) {
             NSNumber *callId = payload[@"callId"];
             @try {
-                JSValue *value = [JSValue valueWithObject:payload[@"result"] inContext:nil];
+                JSValue *value = [JSValue valueWithObject:payload[@"result"] inContext:self.jsContext];
                 self.results[callId] = value;
             } @catch (NSException *exception) {
                 DoricLog(@"debugger ", NSStringFromSelector(_cmd), exception.reason);
             } @finally {
-                DoricLog(@"Unlock:%@",payload);
+                DoricLog(@"Unlock:%@", payload);
                 dispatch_semaphore_t semaphore = self.semaphores[callId];
                 [self.semaphores removeObjectForKey:callId];
                 DC_UNLOCK(semaphore);

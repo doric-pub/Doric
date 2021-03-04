@@ -102,6 +102,9 @@
     [self.driver destroyContext:self.contextId];
     self.rootNode.viewId = nil;
     [self.rootNode clearSubModel];
+    [self.rootNode.view.subviews forEach:^(__kindof UIView *obj) {
+        [obj removeFromSuperview];
+    }];
     self.script = script;
     [self.driver createContext:self.contextId script:script source:self.source];
     [self init:self.extra];

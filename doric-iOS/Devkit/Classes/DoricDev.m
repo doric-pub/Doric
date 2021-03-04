@@ -205,9 +205,9 @@
         [self.wsClient sendToDebugger:@"DEBUG_RES" payload:@{
                 @"contextId": context.contextId
         }];
-        self.debuggable = [[DoricContextDebuggable alloc] initWithWSClient:self.wsClient context:context];
-        [self.debuggable startDebug];
         dispatch_async(dispatch_get_main_queue(), ^{
+            self.debuggable = [[DoricContextDebuggable alloc] initWithWSClient:self.wsClient context:context];
+            [self.debuggable startDebug];
             for (id <DoricDevStatusCallback> callback in self.callbacks) {
                 [callback onStartDebugging:context];
             }
@@ -224,9 +224,9 @@
     [self.wsClient sendToDebugger:@"DEBUG_STOP" payload:@{
             @"msg": @"Stop debugging"
     }];
-    [self.debuggable stopDebug:resume];
-    self.debuggable = nil;
     dispatch_async(dispatch_get_main_queue(), ^{
+        [self.debuggable stopDebug:resume];
+        self.debuggable = nil;
         for (id <DoricDevStatusCallback> callback in self.callbacks) {
             [callback onStopDebugging];
         }

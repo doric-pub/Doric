@@ -3,6 +3,7 @@
 #include <QQmlContext>
 
 #include "demo/DoricDemoBridge.h"
+#include "widget/flex/FlexLayoutService.h"
 
 int main(int argc, char *argv[]) {
   QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
@@ -23,5 +24,8 @@ int main(int argc, char *argv[]) {
   auto context = engine.rootContext();
   context->setContextProperty("demoBridge", demoBridge);
   engine.load(url);
+
+  qmlRegisterType<FlexLayoutService>("pub.doric.widget", 1, 0,
+                                     "FlexLayoutService");
   return app.exec();
 }

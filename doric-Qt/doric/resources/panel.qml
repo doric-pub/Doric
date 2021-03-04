@@ -1,6 +1,12 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
 
-Rectangle {
+Flex {
+    flexDirection: "row"
+    justifyContent: "flexStart"
+    alignItems: "flexStart"
+    alignContent: "flexStart"
+    flexWrap: "noWrap"
 
+    color: 'cyan'
 }

@@ -15,7 +15,21 @@ void DoricViewNode::blendLayoutConfig(QJSValue jsObject) {
       qCritical() << 1;
       break;
     case 2:
+      qCritical() << 2;
+      break;
+    default:
+      qCritical() << "default";
+      break;
+    }
+  }
+
+  if (heightSpec.isNumber()) {
+    switch (heightSpec.toInt()) {
+    case 1:
       qCritical() << 1;
+      break;
+    case 2:
+      qCritical() << 2;
       break;
     default:
       qCritical() << "default";

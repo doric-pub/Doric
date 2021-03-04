@@ -5,6 +5,6 @@ Flex {
     flexDirection: "column"
     justifyContent: "flexStart"
     alignItems: "flexStart"
-    alignContent: "stretch"
+    alignContent: "flexStart"
 }
 

@@ -16,7 +16,7 @@ QQuickItem *DoricTextNode::build() {
 
 void DoricTextNode::blend(QQuickItem *view, QString name, QJSValue prop) {
   if (name == "text") {
-    view->setProperty("text", prop.toString());
+    view->childItems().at(0)->setProperty("text", prop.toString());
   } else {
     DoricViewNode::blend(view, name, prop);
   }

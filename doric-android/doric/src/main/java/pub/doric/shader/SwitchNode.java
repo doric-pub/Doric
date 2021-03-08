@@ -39,6 +39,8 @@ public class SwitchNode extends ViewNode<SwitchCompat> {
     private int onTintColor = 0xff52d769;
     private int thumbTintColor = Color.WHITE;
 
+    private boolean checkByCodeToggle = false;
+
     public SwitchNode(DoricContext doricContext) {
         super(doricContext);
     }
@@ -55,7 +57,9 @@ public class SwitchNode extends ViewNode<SwitchCompat> {
                 if (!prop.isBoolean()) {
                     return;
                 }
+                checkByCodeToggle = true;
                 view.setChecked(prop.asBoolean().value());
+                checkByCodeToggle = false;
                 break;
             case "onSwitch":
                 if (!prop.isString()) {
@@ -65,6 +69,7 @@ public class SwitchNode extends ViewNode<SwitchCompat> {
                 view.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (checkByCodeToggle) return;
                         callJSResponse(callbackId, isChecked);
                     }
                 });

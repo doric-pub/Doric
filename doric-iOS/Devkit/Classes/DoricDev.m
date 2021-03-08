@@ -185,9 +185,10 @@
             DoricLog(@"Context source %@ in debugging,skip reload", source);
         } else {
             DoricLog(@"Context reload :id %@,source %@", context.contextId, source);
-            [context reload:script];
-            [self.reloadingContexts addObject:context];
+            
             dispatch_async(dispatch_get_main_queue(), ^{
+                [context reload:script];
+                [self.reloadingContexts addObject:context];
                 for (id <DoricDevStatusCallback> callback in self.callbacks) {
                     [callback onReload:context script:script];
                 }

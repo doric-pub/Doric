@@ -233,13 +233,14 @@ public class DoricDev {
             DoricLog.d("Context source %s in debugging,skip reload", source);
         } else {
             DoricLog.d("Context reload :id %s,source %s ", context.getContextId(), source);
-            context.reload(script);
-            if (reloadingContexts.get(context.getContextId()) == null) {
-                reloadingContexts.put(context.getContextId(), context);
-            }
             uiHandler.post(new Runnable() {
                 @Override
                 public void run() {
+                    context.reload(script);
+                    if (reloadingContexts.get(context.getContextId()) == null) {
+                        reloadingContexts.put(context.getContextId(), context);
+                    }
+                    
                     for (StatusCallback callback : callbacks) {
                         callback.onReload(context, script);
                     }

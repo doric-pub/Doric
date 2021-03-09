@@ -77,6 +77,7 @@
         it.delegate = self;
         it.separatorStyle = UITableViewCellSeparatorStyleNone;
         it.allowsSelection = NO;
+        it.estimatedRowHeight = 0; // avoid reload data blink
         if (@available(iOS 11, *)) {
             it.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }

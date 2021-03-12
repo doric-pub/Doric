@@ -207,6 +207,7 @@
 
 - (void)blendSubNode:(NSDictionary *)subModel {
     ///Here async blend sub node because the item count need to be applied first.
+    NSUInteger currentCount = self.itemCount + (self.loadMore ? 1 : 0);
     dispatch_async(dispatch_get_main_queue(), ^{
         NSString *viewId = subModel[@"id"];
         DoricViewNode *viewNode = [self subNodeWithViewId:viewId];
@@ -220,8 +221,13 @@
         [self.itemViewIds enumerateKeysAndObjectsUsingBlock:^(NSNumber *_Nonnull key, NSString *_Nonnull obj, BOOL *_Nonnull stop) {
             if ([viewId isEqualToString:obj]) {
                 *stop = YES;
-                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[key integerValue] inSection:0];
                 [UIView performWithoutAnimation:^{
+                    NSUInteger itemCount = self.itemCount + (self.loadMore ? 1 : 0);
+                    if (itemCount <= [key integerValue] || currentCount != itemCount) {
+                        [self.view reloadData];
+                        return;
+                    }
+                    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[key integerValue] inSection:0];
                     [self.view reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
                 }];
             }

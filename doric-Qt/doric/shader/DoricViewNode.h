@@ -20,9 +20,12 @@ protected:
 
 private:
   QString mId;
-  QString mType;
+
+  QJSValue mLayoutConfig;
 
 public:
+  QString mType;
+
   using DoricContextHolder::DoricContextHolder;
 
   void init(DoricSuperNode *superNode);

@@ -11,6 +11,9 @@ int main(int argc, char *argv[]) {
   QGuiApplication app(argc, argv);
 
   QQmlApplicationEngine engine;
+  qmlRegisterType<FlexLayoutService>("pub.doric.widget", 1, 0,
+                                     "FlexLayoutService");
+  //  const QUrl url(QStringLiteral("qrc:/doric/qml/test-layout.qml"));
   const QUrl url(QStringLiteral("qrc:/main.qml"));
   QObject::connect(
       &engine, &QQmlApplicationEngine::objectCreated, &app,
@@ -20,12 +23,11 @@ int main(int argc, char *argv[]) {
       },
       Qt::QueuedConnection);
 
-  DoricDemoBridge *demoBridge = new DoricDemoBridge();
   auto context = engine.rootContext();
+  DoricDemoBridge *demoBridge = new DoricDemoBridge();
   context->setContextProperty("demoBridge", demoBridge);
+
   engine.load(url);
 
-  qmlRegisterType<FlexLayoutService>("pub.doric.widget", 1, 0,
-                                     "FlexLayoutService");
   return app.exec();
 }

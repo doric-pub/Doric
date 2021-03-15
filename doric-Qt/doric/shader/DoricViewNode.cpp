@@ -5,34 +5,36 @@
 #include "DoricViewNode.h"
 
 void DoricViewNode::blendLayoutConfig(QJSValue jsObject) {
+  this->mLayoutConfig = jsObject;
+
   QJSValue margin = jsObject.property("margin");
   QJSValue widthSpec = jsObject.property("widthSpec");
   QJSValue heightSpec = jsObject.property("heightSpec");
 
   if (widthSpec.isNumber()) {
     switch (widthSpec.toInt()) {
+    case 0:
+      mView->setProperty("widthSpec", 0);
+      break;
     case 1:
-      qCritical() << 1;
+      mView->setProperty("widthSpec", 1);
       break;
     case 2:
-      qCritical() << 2;
-      break;
-    default:
-      qCritical() << "default";
+      mView->setProperty("widthSpec", 2);
       break;
     }
   }
 
   if (heightSpec.isNumber()) {
     switch (heightSpec.toInt()) {
+    case 0:
+      mView->setProperty("heightSpec", 0);
+      break;
     case 1:
-      qCritical() << 1;
+      mView->setProperty("heightSpec", 1);
       break;
     case 2:
-      qCritical() << 2;
-      break;
-    default:
-      qCritical() << "default";
+      mView->setProperty("heightSpec", 2);
       break;
     }
   }
@@ -80,12 +82,30 @@ void DoricViewNode::blend(QQuickItem *view, QString name, QJSValue prop) {
     if (!prop.isNumber()) {
       return;
     }
-    view->setWidth(prop.toInt());
+    if (this->mLayoutConfig.isUndefined()) {
+      view->setWidth(prop.toInt());
+    } else {
+      QJSValue widthSpec = this->mLayoutConfig.property("widthSpec");
+      if (widthSpec.isNumber()) {
+        if (widthSpec.toInt() == 0) {
+          view->setWidth(prop.toInt());
+        }
+      }
+    }
   } else if (name == "height") {
     if (!prop.isNumber()) {
       return;
     }
-    view->setHeight(prop.toInt());
+    if (this->mLayoutConfig.isUndefined()) {
+      view->setHeight(prop.toInt());
+    } else {
+      QJSValue heightSpec = this->mLayoutConfig.property("heightSpec");
+      if (heightSpec.isNumber()) {
+        if (heightSpec.toInt() == 0) {
+          view->setHeight(prop.toInt());
+        }
+      }
+    }
   } else if (name == "backgroundColor") {
     QString color = DoricUtils::doricColor(prop.toNumber()).name();
     view->setProperty("color", color);
@@ -95,6 +115,8 @@ void DoricViewNode::blend(QQuickItem *view, QString name, QJSValue prop) {
     view->setProperty("y", prop.toInt());
   } else if (name == "corners") {
     view->setProperty("radius", prop.toInt());
+  } else if (name == "layoutConfig") {
+
   } else {
     qCritical() << name << ": " << prop.toString();
   }

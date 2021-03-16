@@ -19,7 +19,7 @@ Rectangle {
     }
 
     onChildrenRectChanged: () => {
-        console.log(tag, uuid + " childrenRect: " + uuid + " onChildrenRectChanged: " +childrenRect)
+        console.log(tag, uuid + " onChildrenRectChanged: " + childrenRect)
         this.childrenRectWidth = childrenRect.width
         this.childrenRectHeight = childrenRect.height
 

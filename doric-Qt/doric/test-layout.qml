@@ -13,38 +13,19 @@ ApplicationWindow {
         width: childrenRect.width
         height: childrenRect.height
 
-        RowLayout {
+        ColumnLayout {
             spacing: 0
+            width: 400
+
             Rectangle {
-                width: 100
-                height: 100
-                color: 'black'
-                Layout.alignment: Qt.AlignTop | Qt.AlignLeft
-            }
-            Rectangle {
-                Layout.topMargin: 30
-                width: 100
-                height: 100
-                color: 'yellow'
-            }
-            Rectangle {
-                Layout.topMargin: 0
-                width: 100
-                height: 100
-                color: 'black'
-                Layout.alignment: Qt.AlignTop | Qt.AlignLeft
-            }
-            Rectangle {
-                width: 100
-                height: 100
-                color: 'yellow'
-            }
-            Rectangle {
+                Layout.alignment: Qt.AlignHCenter
                 width: 100
                 height: 100
                 color: 'black'
             }
+
             Rectangle {
+                Layout.alignment: Qt.AlignHCenter
                 width: 100
                 height: 100
                 color: 'yellow'

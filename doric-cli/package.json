@@ -9,9 +9,10 @@
   "scripts": {
     "start": "tsc && node dist/index.js",
     "clean": "rm -rf dist",
+    "clean-win32": "del dist",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepublish": "npm run clean && npm run build"
+    "prepublish": "npm run clean-win32 && npm run build"
   },
   "repository": {
     "type": "git",

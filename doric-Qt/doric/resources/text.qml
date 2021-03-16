@@ -23,10 +23,10 @@ Rectangle {
         this.childrenRectWidth = childrenRect.width
         this.childrenRectHeight = childrenRect.height
 
-        if (this.width === 0) {
+        if (this.width < this.childrenRectWidth) {
             this.width = this.childrenRectWidth
         }
-        if (this.height === 0) {
+        if (this.height < this.childrenRectHeight) {
             this.height = this.childrenRectHeight
         }
     }

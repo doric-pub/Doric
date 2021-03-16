@@ -1,4 +1,5 @@
 #include "DoricTextNode.h"
+#include "../utils/DoricUtils.h"
 
 QQuickItem *DoricTextNode::build() {
   QQmlComponent component(getContext()->getQmlEngine());
@@ -17,6 +18,13 @@ QQuickItem *DoricTextNode::build() {
 void DoricTextNode::blend(QQuickItem *view, QString name, QJSValue prop) {
   if (name == "text") {
     view->childItems().at(0)->setProperty("text", prop.toString());
+  } else if (name == "textColor") {
+    QString color = DoricUtils::doricColor(prop.toNumber()).name();
+    view->childItems().at(0)->setProperty("color", color);
+  } else if (name == "textSize") {
+    QFont font = view->childItems().at(0)->property("font").value<QFont>();
+    font.setPixelSize(prop.toNumber());
+    view->childItems().at(0)->setProperty("font", QVariant(font));
   } else {
     DoricViewNode::blend(view, name, prop);
   }

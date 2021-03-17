@@ -11,9 +11,12 @@ void DoricDemoBridge::navigate(QVariant route) {
   QString name;
   switch (route.toInt()) {
   case 0:
-    name = "SimpleDemo.es5.js";
+    name = "Gobang.es5.js";
     break;
   case 1:
+    name = "SimpleDemo.es5.js";
+    break;
+  case 2:
     name = "Snake.es5.js";
     break;
   }

@@ -14,18 +14,22 @@ ApplicationWindow {
         height: childrenRect.height
 
         ColumnLayout {
+            property int gravity: 0
+            onGravityChanged: {
+                console.log(children[0].Layout.alignment)
+                children[0].Layout.alignment = 1
+            }
+
             spacing: 0
-            width: 400
+            height: 600
 
             Rectangle {
-                Layout.alignment: Qt.AlignHCenter
                 width: 100
                 height: 100
                 color: 'black'
             }
 
             Rectangle {
-                Layout.alignment: Qt.AlignHCenter
                 width: 100
                 height: 100
                 color: 'yellow'

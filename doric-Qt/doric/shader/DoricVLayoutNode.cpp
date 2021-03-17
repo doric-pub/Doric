@@ -18,11 +18,7 @@ void DoricVLayoutNode::blend(QQuickItem *view, QString name, QJSValue prop) {
   if (name == "space") {
     view->childItems().at(0)->setProperty("spacing", prop.toInt());
   } else if (name == "gravity") {
-    switch (prop.toInt()) {
-    case 1:
-      view->setProperty("alignItems", "center");
-      break;
-    }
+    view->childItems().at(0)->setProperty("gravity", prop.toInt());
   } else {
     DoricGroupNode::blend(view, name, prop);
   }

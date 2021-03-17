@@ -3,15 +3,17 @@ import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.15
 
 import "util.mjs" as Util
+import "gravity.mjs" as Gravity
 
 Rectangle {
+    property var tag: "VLayout"
+
     property var uuid: Util.uuidv4()
+
     property int widthSpec: 0
     property int heightSpec: 0
     property int childrenRectWidth: childrenRect.width
     property int childrenRectHeight: childrenRect.height
-
-    property var tag: "VLayout"
 
     onWidthChanged: () => {
         console.log(tag, uuid + " onWidthChanged: " + this.width)
@@ -24,8 +26,10 @@ Rectangle {
     onWidthSpecChanged: () => {
         console.log(tag, uuid + " onWidthSpecChanged: " + this.widthSpec)
         console.log(tag, uuid + " parent width: " + parent.width)
+
         if (this.widthSpec === 2) {
             this.width = parent.width
+            children[0].width = parent.width
         }
     }
 
@@ -35,6 +39,7 @@ Rectangle {
 
         if (this.heightSpec === 2) {
             this.height = parent.height
+//            children[0].height = parent.height
         }
     }
 
@@ -56,6 +61,20 @@ Rectangle {
     color: 'transparent'
 
     ColumnLayout {
+        property int gravity: 0
+
         spacing: 0
+
+        onChildrenChanged: () => {
+            console.log(tag, uuid + " gravity: " + gravity)
+
+            for (var i = 0;i !== children.length;i++) {
+                switch(this.gravity) {
+                    case Gravity.enumerate().CENTER_X:
+                        children[i].Layout.alignment = Qt.AlignHCenter
+                        break
+                }
+            }
+        }
     }
 }

@@ -12,7 +12,7 @@ ApplicationWindow {
 
         ListView {
             width: parent.width
-            model: 2
+            model: 3
             delegate: Rectangle {
                 Column {
                     anchors.centerIn: parent
@@ -20,8 +20,10 @@ ApplicationWindow {
                         text: {
                             switch (index) {
                                 case 0:
-                                    return "SimpleDemo.es5.js"
+                                    return "Gobang.es5.js"
                                 case 1:
+                                    return "SimpleDemo.es5.js"
+                                case 2:
                                     return "Snake.es5.js"
                             }
                         }

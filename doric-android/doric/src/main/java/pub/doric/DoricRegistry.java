@@ -27,6 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import pub.doric.plugin.AnimatePlugin;
 import pub.doric.plugin.CoordinatorPlugin;
 import pub.doric.plugin.DoricJavaPlugin;
+import pub.doric.plugin.KeyboardPlugin;
 import pub.doric.plugin.ModalPlugin;
 import pub.doric.plugin.NavBarPlugin;
 import pub.doric.plugin.NavigatorPlugin;
@@ -102,6 +103,7 @@ public class DoricRegistry {
         this.registerNativePlugin(StatusBarPlugin.class);
         this.registerNativePlugin(CoordinatorPlugin.class);
         this.registerNativePlugin(NotchPlugin.class);
+        this.registerNativePlugin(KeyboardPlugin.class);
 
         this.registerViewNode(RootNode.class);
         this.registerViewNode(TextNode.class);

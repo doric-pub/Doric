@@ -41,6 +41,7 @@ SOURCES += \
         shader/DoricViewNode.cpp \
         utils/DoricConstant.cpp \
         utils/DoricContextHolder.cpp \
+        utils/DoricMouseAreaBridge.cpp \
         widget/flex/FlexLayout.cpp \
         widget/flex/FlexLayoutConfig.cpp \
         widget/flex/FlexLayoutService.cpp \
@@ -104,6 +105,7 @@ HEADERS += \
     utils/DoricConstant.h \
     utils/DoricContextHolder.h \
     utils/DoricCountDownLatch.h \
+    utils/DoricMouseAreaBridge.h \
     utils/DoricObjectFactory.h \
     utils/DoricThreadMode.h \
     utils/DoricUtils.h \

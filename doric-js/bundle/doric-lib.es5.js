@@ -3409,6 +3409,18 @@ function notch(context) {
     };
 }
 
+function keyboard(context) {
+    return {
+        subscribe: function (callback) {
+            return context.callNative('keyboard', 'subscribe', context.function2Id(callback));
+        },
+        unsubscribe: function (subscribeId) {
+            context.removeFuncById(subscribeId);
+            return context.callNative('keyboard', 'unsubscribe', subscribeId);
+        }
+    };
+}
+
 var __values = (undefined && undefined.__values) || function(o) {
     var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
     if (m) { return m.call(o); }
@@ -3603,6 +3615,7 @@ exports.hlayout = hlayout;
 exports.image = image;
 exports.input = input;
 exports.internalScheme = internalScheme;
+exports.keyboard = keyboard;
 exports.layoutConfig = layoutConfig;
 exports.list = list;
 exports.listItem = listItem;

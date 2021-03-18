@@ -101,6 +101,7 @@ declare module 'doric/lib/src/native/index.native' {
     export * from 'doric/lib/src/native/statusbar';
     export * from 'doric/lib/src/native/coordinator';
     export * from 'doric/lib/src/native/notch';
+    export * from 'doric/lib/src/native/keyboard';
 }
 
 declare module 'doric/lib/src/util/index.util' {
@@ -988,6 +989,16 @@ declare module 'doric/lib/src/native/notch' {
             bottom: number;
             right: number;
         }>;
+    };
+}
+
+declare module 'doric/lib/src/native/keyboard' {
+    import { BridgeContext } from "doric/lib/src/runtime/global";
+    export function keyboard(context: BridgeContext): {
+        subscribe: (callback: (data: {
+            height: number;
+        }) => void) => Promise<string>;
+        unsubscribe: (subscribeId: string) => Promise<any>;
     };
 }
 

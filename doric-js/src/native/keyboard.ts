@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from './modal';
-export * from './navbar';
-export * from './navigator';
-export * from './network';
-export * from './storage';
-export * from './popover';
-export * from './animate';
-export * from './notification';
-export * from './statusbar';
-export * from './coordinator';
-export * from './notch';
-export * from './keyboard';
+import { BridgeContext } from "../runtime/global"
+export function keyboard(context: BridgeContext) {
+    return {
+        subscribe: (callback: (data: { height: number }) => void) => {
+            return context.callNative('keyboard', 'subscribe', context.function2Id(callback)) as Promise<string>
+        },
+        unsubscribe: (subscribeId: string) => {
+            context.removeFuncById(subscribeId)
+            return context.callNative('keyboard', 'unsubscribe', subscribeId)
+        }
+    }
+}

@@ -1,6 +1,8 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
+
 import "util.mjs" as Util
+import "gravity.mjs" as Gravity
 
 Rectangle {
     property var uuid: Util.uuidv4()
@@ -32,6 +34,18 @@ Rectangle {
     }
 
     Text {
+        property int textAlignment: 0
 
+        onTextAlignmentChanged: {
+            let gravity = Gravity.enumerate()
+            let result = this.textAlignment | gravity.CENTER_Y
+            console.log(tag, uuid + " onTextAlignmentChanged: " + this.textAlignment)
+            switch(result) {
+                case gravity.CENTER:
+                    this.anchors.horizontalCenter = parent.horizontalCenter
+                    this.anchors.verticalCenter = parent.verticalCenter
+                    break
+            }
+        }
     }
 }

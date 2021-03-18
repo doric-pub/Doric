@@ -1,9 +1,11 @@
 #include <QDebug>
+#include <QQmlContext>
 #include <QQuickView>
 
 #include "DoricDemoBridge.h"
 #include "DoricPanel.h"
 #include "utils/DoricUtils.h"
+#include "utils/DoricMouseAreaBridge.h"
 
 DoricDemoBridge::DoricDemoBridge(QObject *parent) : QObject(parent) {}
 
@@ -44,4 +46,8 @@ void DoricDemoBridge::navigate(QVariant route) {
   }
 
   view->show();
+
+  auto context = view->engine()->rootContext();
+  DoricMouseAreaBridge *mouseAreaBridge = new DoricMouseAreaBridge();
+  context->setContextProperty("mouseAreaBridge", mouseAreaBridge);
 }

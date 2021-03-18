@@ -48,4 +48,11 @@ Rectangle {
             }
         }
     }
+
+    MouseArea {
+        anchors.fill: parent
+        onClicked: {
+            mouseAreaBridge.onClick("index")
+        }
+    }
 }

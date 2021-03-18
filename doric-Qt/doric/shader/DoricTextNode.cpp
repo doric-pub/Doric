@@ -25,6 +25,8 @@ void DoricTextNode::blend(QQuickItem *view, QString name, QJSValue prop) {
     QFont font = view->childItems().at(0)->property("font").value<QFont>();
     font.setPixelSize(prop.toNumber());
     view->childItems().at(0)->setProperty("font", QVariant(font));
+  } else if (name == "textAlignment") {
+    view->childItems().at(0)->setProperty("textAlignment", prop.toInt());
   } else {
     DoricViewNode::blend(view, name, prop);
   }

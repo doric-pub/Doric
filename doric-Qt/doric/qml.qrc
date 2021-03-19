@@ -8,6 +8,7 @@
         <file alias="doric-lib.es5.js">../../doric-js/bundle/doric-lib.es5.js</file>
     </qresource>
     <qresource prefix="/doric/bundles">
+        <file alias="Counter.es5.js">../../doric-demo/bundle/src/Counter.es5.js</file>
         <file alias="Gobang.es5.js">../../doric-demo/bundle/src/Gobang.es5.js</file>
         <file alias="SimpleDemo.es5.js">../../doric-demo/bundle/src/SimpleDemo.es5.js</file>
         <file alias="Snake.es5.js">../../doric-demo/bundle/src/Snake.es5.js</file>

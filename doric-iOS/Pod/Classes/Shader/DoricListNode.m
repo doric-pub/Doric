@@ -228,7 +228,12 @@
                         return;
                     }
                     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[key integerValue] inSection:0];
-                    [self.view reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+                    @try {
+                        [self.view reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+                    }
+                    @catch(id exception) {
+                        [self.doricContext.driver.registry onException:exception inContext:self.doricContext];
+                    }
                 }];
             }
         }];
@@ -252,7 +257,12 @@
                     return;
                 }
                 NSIndexPath *indexPath = [NSIndexPath indexPathForRow:position inSection:0];
-                [self.view reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+                @try {
+                    [self.view reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+                }
+                @catch(id exception) {
+                    [self.doricContext.driver.registry onException:exception inContext:self.doricContext];
+                }
             }];
         });
     } else {

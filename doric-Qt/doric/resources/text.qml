@@ -5,6 +5,8 @@ import "util.mjs" as Util
 import "gravity.mjs" as Gravity
 
 Rectangle {
+    property int wrapper: 0
+
     property var uuid: Util.uuidv4()
     property int childrenRectWidth: childrenRect.width
     property int childrenRectHeight: childrenRect.width
@@ -52,7 +54,7 @@ Rectangle {
     MouseArea {
         anchors.fill: parent
         onClicked: {
-            mouseAreaBridge.onClick("index")
+            mouseAreaBridge.onClick(wrapper)
         }
     }
 }

@@ -11,6 +11,7 @@ QQuickItem *DoricStackNode::build() {
   }
 
   QQuickItem *item = qobject_cast<QQuickItem *>(component.create());
+  item->setProperty("wrapper", (qint64)this);
   return item;
 }
 

@@ -23,6 +23,10 @@ private:
 
   QJSValue mLayoutConfig;
 
+  QList<QString> getIdList();
+
+  QString clickFunction;
+
 public:
   QString mType;
 
@@ -58,5 +62,9 @@ public:
   virtual void blend(QQuickItem *view, QString name, QJSValue prop);
 
   virtual void blendLayoutConfig(QJSValue jsObject);
+
+  void onClick();
+
+  void callJSResponse(QString funcId, QVariantList args);
 };
 #endif // DORICVIEWNODE_H

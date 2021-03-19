@@ -1,5 +1,6 @@
 #include <QJSValueIterator>
 
+#include "../utils/DoricConstant.h"
 #include "../utils/DoricUtils.h"
 #include "DoricSuperNode.h"
 #include "DoricViewNode.h"
@@ -115,9 +116,41 @@ void DoricViewNode::blend(QQuickItem *view, QString name, QJSValue prop) {
     view->setProperty("y", prop.toInt());
   } else if (name == "corners") {
     view->setProperty("radius", prop.toInt());
-  } else if (name == "layoutConfig") {
-
+  } else if (name == "onClick") {
+    if (prop.isString())
+      clickFunction = prop.toString();
   } else {
     qCritical() << name << ": " << prop.toString();
   }
+}
+
+QList<QString> DoricViewNode::getIdList() {
+  QList<QString> ids;
+
+  DoricViewNode *viewNode = this;
+  do {
+    ids.append(viewNode->mId);
+    viewNode = viewNode->mSuperNode;
+  } while (viewNode != nullptr);
+
+  return ids;
+}
+
+void DoricViewNode::callJSResponse(QString funcId, QVariantList args) {
+  QVariantList nArgs;
+  QList<QString> idList = getIdList();
+  nArgs.append(idList);
+  nArgs.append(funcId);
+  foreach (const QVariant &arg, args)
+    nArgs.append(arg);
+
+  return getContext()->callEntity(DoricConstant::DORIC_ENTITY_RESPONSE, nArgs);
+}
+
+void DoricViewNode::onClick() {
+  if (clickFunction.isEmpty()) {
+    return;
+  }
+  QVariantList args;
+  callJSResponse(clickFunction, args);
 }

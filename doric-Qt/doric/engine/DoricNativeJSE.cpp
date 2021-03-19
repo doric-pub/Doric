@@ -56,6 +56,14 @@ QJSValue DoricNativeJSE::invokeObject(QString objectName, QString functionName,
         }
       }
       args.push_back(arg);
+    } else if (variant.type() == QVariant::StringList) {
+      QStringList array = variant.toStringList();
+      QJSValue arg = mJSEngine.newArray(array.size());
+
+      for (int i = 0; i != array.size(); i++) {
+        arg.setProperty(i, array.at(i));
+      }
+      args.push_back(arg);
     }
   }
 

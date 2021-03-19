@@ -5,7 +5,10 @@ import QtQuick.Layouts 1.15
 import "util.mjs" as Util
 
 Rectangle {
+    property int wrapper: 0
+
     property var uuid: Util.uuidv4()
+
     property int widthSpec: 0
     property int heightSpec: 0
     property int childrenRectWidth: childrenRect.width
@@ -54,4 +57,11 @@ Rectangle {
     }
 
     color: 'transparent'
+
+    MouseArea {
+        anchors.fill: parent
+        onClicked: {
+            mouseAreaBridge.onClick(wrapper)
+        }
+    }
 }

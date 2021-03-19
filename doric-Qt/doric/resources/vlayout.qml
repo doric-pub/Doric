@@ -6,6 +6,8 @@ import "util.mjs" as Util
 import "gravity.mjs" as Gravity
 
 Rectangle {
+    property int wrapper: 0
+
     property var tag: "VLayout"
 
     property var uuid: Util.uuidv4()
@@ -29,7 +31,7 @@ Rectangle {
 
         if (this.widthSpec === 2) {
             this.width = parent.width
-            children[0].width = parent.width
+            children[1].width = parent.width
         }
     }
 
@@ -39,7 +41,7 @@ Rectangle {
 
         if (this.heightSpec === 2) {
             this.height = parent.height
-//            children[0].height = parent.height
+//            children[1].height = parent.height
         }
     }
 
@@ -59,6 +61,13 @@ Rectangle {
     }
 
     color: 'transparent'
+
+    MouseArea {
+        anchors.fill: parent
+        onClicked: {
+            mouseAreaBridge.onClick(wrapper)
+        }
+    }
 
     ColumnLayout {
         property int gravity: 0

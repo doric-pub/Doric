@@ -10,7 +10,7 @@ public:
   explicit DoricMouseAreaBridge(QObject *parent = nullptr);
 
   Q_INVOKABLE
-  void onClick(QVariant functionId);
+  void onClick(qint64 pointer);
 signals:
 };
 

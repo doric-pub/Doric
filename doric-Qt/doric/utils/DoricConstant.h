@@ -26,6 +26,7 @@ public:
   static const QString DORIC_CONTEXT_INVOKE;
   static const QString DORIC_TIMER_CALLBACK;
 
+  static const QString DORIC_ENTITY_RESPONSE;
   static const QString DORIC_ENTITY_CREATE;
   static const QString DORIC_ENTITY_INIT;
   static const QString DORIC_ENTITY_BUILD;

@@ -27,7 +27,7 @@ void DoricGroupNode::configChildNode() {
   if (mType.isEmpty() || mType == "Stack") {
     parent = mView;
   } else {
-    parent = mView->childItems().at(0);
+    parent = mView->childItems().at(1);
   }
   for (int idx = 0; idx < mChildViewIds.size(); idx++) {
     QString id = mChildViewIds.at(idx);

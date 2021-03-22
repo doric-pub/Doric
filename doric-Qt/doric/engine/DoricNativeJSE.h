@@ -3,6 +3,10 @@
 
 #include "DoricInterfaceJSE.h"
 #include <QJSEngine>
+#include <excpt.h>
+
+#include "libplatform/libplatform.h"
+#include "v8.h"
 
 class DoricNativeJSE : public DoricInterfaceJSE {
 private:

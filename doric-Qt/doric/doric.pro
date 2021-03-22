@@ -7,6 +7,7 @@ CONFIG += c++11
 # depend on your compiler). Refer to the documentation for the
 # deprecated API to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
+DEFINES += V8_COMPRESS_POINTERS
 
 # You can also make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -130,3 +131,21 @@ HEADERS += \
     yoga/internal/experiments-inl.h \
     yoga/internal/experiments.h \
     yoga/log.h
+
+LIBS += -lwinmm
+LIBS += -lAdvapi32
+LIBS += -lDbghelp
+
+INCLUDEPATH += $$PWD/v8
+
+LIBS += -L$$PWD/library/v8/release/
+LIBS += -lv8_monolith
+
+win32:CONFIG(debug, debug|release): {
+    QMAKE_CFLAGS_DEBUG += -MT
+    QMAKE_CXXFLAGS_DEBUG += -MT
+}
+else:win32:CONFIG(release, debug|release): {
+    QMAKE_CFLAGS_RELEASE += -MT
+    QMAKE_CXXFLAGS_RELEASE += -MT
+}

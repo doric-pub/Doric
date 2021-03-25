@@ -84,7 +84,9 @@ public class InputNode extends ViewNode<EditText> implements TextWatcher, View.O
                 view.setFilters(newFilters);
                 break;
             case "text":
-                view.setText(prop.asString().toString());
+                String text = prop.isString() ? prop.asString().toString() : "";
+                view.setText(text);
+                view.setSelection(text.length());
                 break;
             case "textSize":
                 view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, prop.asNumber().toFloat());

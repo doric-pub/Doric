@@ -35,7 +35,7 @@ uploadArchives {
                 description 'git rev-parse HEAD'.execute([], projectDir).text.trim()
             }
 
-            repository(url: repo + properties.name) {
+            repository(url: repo) {
                 authentication(userName: user, password: apiKey)
             }
         }

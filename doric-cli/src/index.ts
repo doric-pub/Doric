@@ -26,7 +26,10 @@ commander
 commander
     .command('build')
     .action(async function () {
-        await build();
+        const ret = await build();
+        if (ret != 0) {
+            process.exit(ret)
+        }
     })
 commander
     .command('clean')

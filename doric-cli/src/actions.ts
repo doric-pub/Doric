@@ -12,7 +12,7 @@ export async function build() {
     });
     if (ret !== 0) {
         console.log("Compile error".red);
-        return;
+        return -1;
     }
     ret = await Shell.exec("node", ["node_modules/.bin/rollup", "-c",], {
         env: process.env,
@@ -22,7 +22,7 @@ export async function build() {
     });
     if (ret !== 0) {
         console.log("Compile error".red);
-        return;
+        return -1;
     }
     const bundleFiles = await glob("bundle/**/*.js");
     for (let bundleFile of bundleFiles) {
@@ -41,6 +41,7 @@ export async function build() {
             }
         }
     }
+    return 0
 }
 
 export async function clean() {

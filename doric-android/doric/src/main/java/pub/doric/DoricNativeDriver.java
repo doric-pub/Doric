@@ -21,6 +21,8 @@ import android.util.Log;
 
 import com.github.pengfeizhou.jscore.JSDecoder;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -28,6 +30,7 @@ import java.util.concurrent.Executors;
 import pub.doric.async.AsyncCall;
 import pub.doric.async.AsyncResult;
 import pub.doric.engine.DoricJSEngine;
+import pub.doric.performance.DoricPerformanceProfile;
 import pub.doric.utils.DoricConstant;
 import pub.doric.utils.ThreadMode;
 
@@ -82,7 +85,6 @@ public class DoricNativeDriver implements IDoricDriver {
 
             @Override
             public void onFinish() {
-
             }
         });
         return asyncResult;
@@ -90,10 +92,38 @@ public class DoricNativeDriver implements IDoricDriver {
 
     @Override
     public AsyncResult<JSDecoder> invokeDoricMethod(final String method, final Object... args) {
+        DoricPerformanceProfile profile = null;
+        Object contextId = args.length > 0 ? args[0] : null;
+        if (contextId instanceof String) {
+            DoricContext context = DoricContextManager.getContext((String) contextId);
+            if (context != null) {
+                profile = context.getPerformanceProfile();
+            }
+        }
+        StringBuilder stringBuilder = new StringBuilder(DoricPerformanceProfile.STEP_Call)
+                .append(":");
+        for (Object object : args) {
+            if (object == contextId) {
+                continue;
+            }
+            stringBuilder.append(object.toString()).append(",");
+        }
+        final String anchorName = stringBuilder.toString();
+        final DoricPerformanceProfile finalProfile = profile;
+        if (finalProfile != null) {
+            finalProfile.prepare(anchorName);
+        }
         return AsyncCall.ensureRunInHandler(mJSHandler, new Callable<JSDecoder>() {
             @Override
             public JSDecoder call() {
-                return doricJSEngine.invokeDoricMethod(method, args);
+                if (finalProfile != null) {
+                    finalProfile.start(anchorName);
+                }
+                JSDecoder decoder = doricJSEngine.invokeDoricMethod(method, args);
+                if (finalProfile != null) {
+                    finalProfile.end(anchorName);
+                }
+                return decoder;
             }
         });
     }
@@ -113,11 +143,15 @@ public class DoricNativeDriver implements IDoricDriver {
 
     @Override
     public AsyncResult<Boolean> createContext(final String contextId, final String script, final String source) {
+        final DoricPerformanceProfile performanceProfile = DoricContextManager.getContext(contextId).getPerformanceProfile();
+        performanceProfile.prepare(DoricPerformanceProfile.STEP_CREATE);
         return AsyncCall.ensureRunInHandler(mJSHandler, new Callable<Boolean>() {
             @Override
             public Boolean call() {
                 try {
+                    performanceProfile.start(DoricPerformanceProfile.STEP_CREATE);
                     doricJSEngine.prepareContext(contextId, script, source);
+                    performanceProfile.end(DoricPerformanceProfile.STEP_CREATE);
                     return true;
                 } catch (Exception e) {
                     doricJSEngine.getRegistry().onException(DoricContextManager.getContext(contextId), e);
@@ -130,11 +164,15 @@ public class DoricNativeDriver implements IDoricDriver {
 
     @Override
     public AsyncResult<Boolean> destroyContext(final String contextId) {
+        final DoricPerformanceProfile profile = DoricContextManager.getContext(contextId).getPerformanceProfile();
+        profile.prepare(DoricPerformanceProfile.STEP_DESTROY);
         return AsyncCall.ensureRunInHandler(mJSHandler, new Callable<Boolean>() {
             @Override
             public Boolean call() {
                 try {
+                    profile.start(DoricPerformanceProfile.STEP_DESTROY);
                     doricJSEngine.destroyContext(contextId);
+                    profile.end(DoricPerformanceProfile.STEP_DESTROY);
                     return true;
                 } catch (Exception e) {
                     doricJSEngine.getRegistry().onException(DoricContextManager.getContext(contextId), e);

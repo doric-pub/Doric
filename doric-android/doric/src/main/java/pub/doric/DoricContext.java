@@ -19,8 +19,6 @@ import android.animation.AnimatorSet;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
-import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
@@ -37,6 +35,7 @@ import java.util.concurrent.Callable;
 import pub.doric.async.AsyncResult;
 import pub.doric.navbar.IDoricNavBar;
 import pub.doric.navigator.IDoricNavigator;
+import pub.doric.performance.DoricPerformanceProfile;
 import pub.doric.plugin.DoricJavaPlugin;
 import pub.doric.shader.RootNode;
 import pub.doric.shader.ViewNode;
@@ -60,6 +59,7 @@ public class DoricContext {
     private JSONObject initParams;
     private IDoricDriver doricDriver;
     private final Map<String, Map<String, ViewNode>> mHeadNodes = new HashMap<>();
+    private final DoricPerformanceProfile performanceProfile;
 
     public Collection<ViewNode> allHeadNodes(String type) {
         return mHeadNodes.get(type).values();
@@ -107,6 +107,11 @@ public class DoricContext {
         this.mContextId = contextId;
         this.source = source;
         this.extra = extra;
+        this.performanceProfile = new DoricPerformanceProfile(contextId);
+    }
+
+    public DoricPerformanceProfile getPerformanceProfile() {
+        return this.performanceProfile;
     }
 
     public String getSource() {

@@ -44,6 +44,7 @@ import pub.doric.DoricRegistry;
 import pub.doric.IDoricMonitor;
 import pub.doric.extension.bridge.DoricBridgeExtension;
 import pub.doric.extension.timer.DoricTimerExtension;
+import pub.doric.performance.DoricPerformanceProfile;
 import pub.doric.utils.DoricConstant;
 import pub.doric.utils.DoricLog;
 import pub.doric.utils.DoricUtils;
@@ -62,9 +63,11 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
     private boolean initialized = false;
     private final DoricRegistry mDoricRegistry;
     private final Map<String, Object> mEnvironmentMap = new ConcurrentHashMap<>();
+    private final DoricPerformanceProfile globalProfile = new DoricPerformanceProfile("JSEngine");
 
     public DoricJSEngine() {
         mDoricRegistry = new DoricRegistry(this);
+        globalProfile.prepare(DoricPerformanceProfile.PART_INIT);
         handlerThread = new HandlerThread(this.getClass().getSimpleName());
         handlerThread.start();
         Looper looper = handlerThread.getLooper();
@@ -72,10 +75,12 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
         mJSHandler.post(new Runnable() {
             @Override
             public void run() {
+                globalProfile.start(DoricPerformanceProfile.PART_INIT);
                 initJSEngine();
                 injectGlobal();
                 initDoricRuntime();
                 initialized = true;
+                globalProfile.end(DoricPerformanceProfile.PART_INIT);
             }
         });
         mTimerExtension = new DoricTimerExtension(looper, this);
@@ -285,7 +290,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
             values.add(DoricUtils.toJavaValue(arg));
         }
         return mDoricJSE.invokeMethod(DoricConstant.GLOBAL_DORIC, method,
-                values.toArray(new JavaValue[values.size()]), false);
+                values.toArray(new JavaValue[0]), false);
     }
 
     @Override

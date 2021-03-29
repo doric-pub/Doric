@@ -24,6 +24,7 @@
 #import "DoricDriverProtocol.h"
 #import "DoricNavigatorDelegate.h"
 #import "DoricNavBarDelegate.h"
+#import "DoricPerformanceProfile.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -44,6 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) NSMutableDictionary <NSString *, NSMutableDictionary <NSString *, DoricViewNode *> *> *headNodes;
 @property(nonatomic, copy) NSString *extra;
 @property(nonatomic, assign) BOOL destroyed;
+@property(nonatomic, strong) DoricPerformanceProfile *performanceProfile;
 
 - (instancetype)initWithScript:(NSString *)script source:(NSString *)source extra:(NSString *)extra;
 

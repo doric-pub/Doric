@@ -24,6 +24,7 @@
 #import "DoricJSEngine.h"
 #import "DoricConstant.h"
 #import "DoricContextManager.h"
+#import "DoricPerformanceProfile.h"
 
 @interface DoricNativeDriver ()
 @property(nonatomic, strong) DoricJSEngine *jsExecutor;
@@ -109,20 +110,28 @@
 - (DoricAsyncResult *)invokeContextEntity:(NSString *)contextId method:(NSString *)method arguments:(va_list)args {
     DoricAsyncResult *ret = [[DoricAsyncResult alloc] init];
     NSMutableArray *array = [[NSMutableArray alloc] init];
+    NSMutableArray *printedArgs = [[NSMutableArray alloc] init];
     [array addObject:contextId];
     [array addObject:method];
+    [printedArgs addObject:method];
     id arg = va_arg(args, id);
     while (arg != nil) {
         [array addObject:arg];
+        [printedArgs addObject:arg];
         arg = va_arg(args, JSValue *);
     }
+    DoricPerformanceProfile *performanceProfile = [DoricContextManager.instance getContext:contextId].performanceProfile;
+    NSString *anchorName = [NSString stringWithFormat:@"call:%@", [printedArgs componentsJoinedByString:@","]];
+    [performanceProfile prepare:anchorName];
     __weak typeof(self) _self = self;
     [self.jsExecutor ensureRunOnJSThread:^{
         __strong typeof(_self) self = _self;
         if (!self) return;
         @try {
+            [performanceProfile start:anchorName];
             JSValue *jsValue = [self.jsExecutor invokeDoricMethod:DORIC_CONTEXT_INVOKE argumentsArray:array];
             [ret setupResult:jsValue];
+            [performanceProfile end:anchorName];
         } @catch (NSException *exception) {
             [ret setupError:exception];
             [self.jsExecutor.registry onException:exception inContext:[[DoricContextManager instance] getContext:contextId]];
@@ -139,13 +148,18 @@
     for (id arg in args) {
         [array addObject:arg];
     }
+    DoricPerformanceProfile *performanceProfile = [DoricContextManager.instance getContext:contextId].performanceProfile;
+    NSString *anchorName = [NSString stringWithFormat:@"call:%@,%@", method, [args componentsJoinedByString:@","]];
+    [performanceProfile prepare:anchorName];
     __weak typeof(self) _self = self;
     [self.jsExecutor ensureRunOnJSThread:^{
         __strong typeof(_self) self = _self;
         if (!self) return;
         @try {
+            [performanceProfile start:anchorName];
             JSValue *jsValue = [self.jsExecutor invokeDoricMethod:DORIC_CONTEXT_INVOKE argumentsArray:array];
             [ret setupResult:jsValue];
+            [performanceProfile end:anchorName];
         } @catch (NSException *exception) {
             [ret setupError:exception];
             [self.jsExecutor.registry onException:exception inContext:[[DoricContextManager instance] getContext:contextId]];
@@ -156,13 +170,17 @@
 
 - (DoricAsyncResult *)createContext:(NSString *)contextId script:(NSString *)script source:(NSString *)source {
     DoricAsyncResult *ret = [[DoricAsyncResult alloc] init];
+    DoricPerformanceProfile *performanceProfile = [DoricContextManager.instance getContext:contextId].performanceProfile;
+    [performanceProfile prepare:@"Create"];
     __weak typeof(self) _self = self;
     [self.jsExecutor ensureRunOnJSThread:^{
         __strong typeof(_self) self = _self;
         if (!self) return;
         @try {
+            [performanceProfile start:@"Create"];
             [self.jsExecutor prepareContext:contextId script:script source:source];
             [ret setupResult:@YES];
+            [performanceProfile end:@"Create"];
         } @catch (NSException *exception) {
             [ret setupError:exception];
             [self.registry onException:exception inContext:[[DoricContextManager instance] getContext:contextId]];
@@ -173,13 +191,17 @@
 
 - (DoricAsyncResult *)destroyContext:(NSString *)contextId {
     DoricAsyncResult *ret = [[DoricAsyncResult alloc] init];
+    DoricPerformanceProfile *performanceProfile = [DoricContextManager.instance getContext:contextId].performanceProfile;
+    [performanceProfile prepare:@"Destroy"];
     __weak typeof(self) _self = self;
     [self.jsExecutor ensureRunOnJSThread:^{
         __strong typeof(_self) self = _self;
         if (!self) return;
         @try {
+            [performanceProfile start:@"Destroy"];
             [self.jsExecutor destroyContext:contextId];
             [ret setupResult:@YES];
+            [performanceProfile end:@"Destroy"];
         } @catch (NSException *exception) {
             [ret setupError:exception];
             [self.jsExecutor.registry onException:exception inContext:[[DoricContextManager instance] getContext:contextId]];

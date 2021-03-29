@@ -28,6 +28,7 @@
 #import <sys/utsname.h>
 #import "DoricContext.h"
 #import "DoricContextManager.h"
+#import "DoricPerformanceProfile.h"
 
 @interface DoricDefaultMonitor : NSObject <DoricMonitorProtocol>
 @end
@@ -49,6 +50,7 @@
 @property(nonatomic, strong) NSThread *jsThread;
 @property(nonatomic, assign) BOOL destroyed;
 @property(nonatomic, assign) BOOL initialized;
+@property(nonatomic, strong) DoricPerformanceProfile *profile;
 @end
 
 @implementation DoricJSEngine
@@ -56,6 +58,8 @@
 - (instancetype)init {
     if (self = [super init]) {
         _initialized = NO;
+        _profile = [[DoricPerformanceProfile alloc] initWithName:@"JSEngine"];
+        [_profile prepare:@"Init"];
         _jsThread = [[NSThread alloc] initWithTarget:self selector:@selector(threadRun) object:nil];
         [_jsThread start];
         NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
@@ -93,6 +97,7 @@
         }.mutableCopy;
         self.registry = [[DoricRegistry alloc] initWithJSEngine:self];
         [self ensureRunOnJSThread:^() {
+            [_profile start:@"Init"];
             self.timers = [[NSMutableDictionary alloc] init];
             self.bridgeExtension = [DoricBridgeExtension new];
             self.bridgeExtension.registry = self.registry;
@@ -100,6 +105,7 @@
             [self initJSExecutor];
             [self initDoricEnvironment];
             self.initialized = YES;
+            [_profile end:@"Init"];
         }];
         [self.registry registerMonitor:[DoricDefaultMonitor new]];
     }

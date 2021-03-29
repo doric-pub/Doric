@@ -34,6 +34,7 @@ import pub.doric.async.AsyncResult;
 import pub.doric.extension.bridge.DoricMethod;
 import pub.doric.extension.bridge.DoricPlugin;
 import pub.doric.extension.bridge.DoricPromise;
+import pub.doric.performance.DoricPerformanceProfile;
 import pub.doric.shader.RootNode;
 import pub.doric.shader.SuperNode;
 import pub.doric.shader.ViewNode;
@@ -54,9 +55,13 @@ public class ShaderPlugin extends DoricJavaPlugin {
 
     @DoricMethod
     public void render(final JSObject jsObject, final DoricPromise promise) {
+        final DoricPerformanceProfile profile = getDoricContext().getPerformanceProfile();
+        profile.prepare(DoricPerformanceProfile.STEP_RENDER);
         getDoricContext().getDriver().asyncCall(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
+                profile.start(DoricPerformanceProfile.STEP_RENDER);
+
                 if (getDoricContext().getContext() instanceof Activity) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1
                             && ((Activity) getDoricContext().getContext()).isDestroyed()) {
@@ -110,6 +115,7 @@ public class ShaderPlugin extends DoricJavaPlugin {
 
             @Override
             public void onFinish() {
+                profile.end(DoricPerformanceProfile.STEP_RENDER);
             }
         });
     }

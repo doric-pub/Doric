@@ -33,12 +33,14 @@
     if (!argument) {
         return;
     }
+    [self.doricContext.performanceProfile prepare:@"Render"];
     __weak typeof(self) _self = self;
     [self.doricContext dispatchToMainQueue:^{
         __strong typeof(_self) self = _self;
         if (self.doricContext == nil) {
             return;
         }
+        [self.doricContext.performanceProfile start:@"Render"];
         NSString *viewId = [argument optString:@"id"];
 
         if (self.doricContext.rootNode.viewId == nil && [@"Root" isEqualToString:[argument optString:@"type"]]) {
@@ -51,6 +53,7 @@
             [viewNode requestLayout];
         }
         [promise resolve:nil];
+        [self.doricContext.performanceProfile end:@"Render"];
     }];
 }
 

@@ -34,6 +34,8 @@ public class KeyboardPlugin extends DoricJavaPlugin {
 
     private final Set<String> callbackIds = new HashSet<>();
 
+    private float keyboardHeight = 0;
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public KeyboardPlugin(DoricContext doricContext) {
         super(doricContext);
@@ -61,7 +63,13 @@ public class KeyboardPlugin extends DoricJavaPlugin {
 
                             JSONObject data = new JSONObject();
                             try {
+                                data.put("oldBottomMargin", 0);
+                                data.put("bottomMargin", 0);
+                                data.put("oldHeight", keyboardHeight);
                                 data.put("height", DoricUtils.px2dp(heightDiff - virtualNavigationHeight));
+
+                                keyboardHeight = DoricUtils.px2dp(heightDiff - virtualNavigationHeight);
+
                                 callback.resolve(new JavaValue(data));
                             } catch (JSONException e) {
                                 e.printStackTrace();

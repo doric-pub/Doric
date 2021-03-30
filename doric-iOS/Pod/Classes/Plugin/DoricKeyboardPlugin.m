@@ -45,12 +45,15 @@
 
         CGRect beginFrame = [[note.userInfo valueForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
         CGRect endFrame = [[note.userInfo valueForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-
-        BOOL isOpen = endFrame.origin.y < beginFrame.origin.y;
-        int heightDiff = isOpen ? beginFrame.origin.y - endFrame.origin.y : 0;
+        
+        CGFloat oldBottomMargin = [[UIScreen mainScreen] bounds].size.height - beginFrame.origin.y - beginFrame.size.height;
+        CGFloat bottomMargin = [[UIScreen mainScreen] bounds].size.height - endFrame.origin.y - endFrame.size.height;
         
         NSDictionary *dict = @{
-            @"height": @(heightDiff),
+            @"oldBottomMargin": @(oldBottomMargin),
+            @"oldHeight": @(beginFrame.size.height),
+            @"bottomMargin": @(bottomMargin),
+            @"height": @(endFrame.size.height),
         };
 
         DoricPromise *currentPromise = [[DoricPromise alloc] initWithContext:self.doricContext callbackId:callbackId];

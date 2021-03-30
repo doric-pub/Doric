@@ -16,7 +16,7 @@
 import { BridgeContext } from "../runtime/global"
 export function keyboard(context: BridgeContext) {
     return {
-        subscribe: (callback: (data: { height: number }) => void) => {
+        subscribe: (callback: (data: { oldBottomMargin: number, oldHeight: number, bottomMargin: number, height: number }) => void) => {
             return context.callNative('keyboard', 'subscribe', context.function2Id(callback)) as Promise<string>
         },
         unsubscribe: (subscribeId: string) => {

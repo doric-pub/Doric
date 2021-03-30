@@ -4196,6 +4196,18 @@ function notch(context) {
     };
 }
 
+function keyboard(context) {
+    return {
+        subscribe: (callback) => {
+            return context.callNative('keyboard', 'subscribe', context.function2Id(callback));
+        },
+        unsubscribe: (subscribeId) => {
+            context.removeFuncById(subscribeId);
+            return context.callNative('keyboard', 'unsubscribe', subscribeId);
+        }
+    };
+}
+
 class Observable {
     constructor(provider, clz) {
         this.observers = new Set;
@@ -4342,6 +4354,7 @@ exports.hlayout = hlayout;
 exports.image = image;
 exports.input = input;
 exports.internalScheme = internalScheme;
+exports.keyboard = keyboard;
 exports.layoutConfig = layoutConfig;
 exports.list = list;
 exports.listItem = listItem;
@@ -4420,6 +4433,7 @@ var doric_web = (function (exports, axios, sandbox) {
         }
     }
 
+    exports.LayoutSpec = void 0;
     (function (LayoutSpec) {
         LayoutSpec[LayoutSpec["EXACTLY"] = 0] = "EXACTLY";
         LayoutSpec[LayoutSpec["WRAP_CONTENT"] = 1] = "WRAP_CONTENT";
@@ -5900,6 +5914,8 @@ ${content}
     exports.registerViewNode = registerViewNode;
     exports.toPixelString = toPixelString;
     exports.toRGBAString = toRGBAString;
+
+    Object.defineProperty(exports, '__esModule', { value: true });
 
     return exports;
 

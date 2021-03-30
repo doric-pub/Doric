@@ -1,4 +1,4 @@
-import { Group, Panel, gravity, Color, LayoutSpec, vlayout, LayoutConfigImpl, layoutConfig, modal, keyboard, text, input, Input, InputType, Gravity, stack } from "doric";
+import { Group, Panel, gravity, Color, LayoutSpec, vlayout, layoutConfig, modal, keyboard, text, input, Input, InputType, Gravity, stack } from "doric";
 import { title, label, colors } from "./utils";
 
 function getInput(c: Partial<Input>) {
@@ -69,7 +69,7 @@ class KeyboardDemo extends Panel {
                     layoutConfig: layoutConfig().just(),
                     onClick: () => {
                         keyboard(context).subscribe(data => {
-                            bottomView.translationY = -data.height
+                            bottomView.translationY = - (data.bottomMargin + data.height)
                         }).then(e => {
                             modal(context).toast(`Keyboard Subscribe`)
                             this.subscribeId = e

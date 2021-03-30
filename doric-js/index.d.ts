@@ -996,6 +996,9 @@ declare module 'doric/lib/src/native/keyboard' {
     import { BridgeContext } from "doric/lib/src/runtime/global";
     export function keyboard(context: BridgeContext): {
         subscribe: (callback: (data: {
+            oldBottomMargin: number;
+            oldHeight: number;
+            bottomMargin: number;
             height: number;
         }) => void) => Promise<string>;
         unsubscribe: (subscribeId: string) => Promise<any>;

@@ -16,6 +16,8 @@ private:
   v8::Isolate::Scope *m_isolate_scope;
   v8::Global<v8::Context> *m_global_context;
 
+  void injectObject(const char *string, v8::Local<v8::Value> local);
+
   v8::Local<v8::Value> innerExec(const char *script, const char *source,
                                  std::string *exception_str);
 

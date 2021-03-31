@@ -10,6 +10,7 @@
 class V8Executor {
 
 private:
+  std::unique_ptr<v8::Platform> platform;
   v8::Isolate::CreateParams create_params;
   v8::Isolate *m_isolate;
   v8::Isolate::Scope *m_isolate_scope;

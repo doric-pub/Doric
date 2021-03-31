@@ -102,6 +102,7 @@ QJSValue DoricJSEngine::invokeDoricMethod(QString method,
 void DoricJSEngine::loadBuiltinJS(QString assetName) {
   QString script = DoricUtils::readAssetFile("/doric", assetName);
   QString result = mJSE->loadJS(script, "Assets://" + assetName);
+  qDebug() << result;
 }
 
 QString DoricJSEngine::packageContextScript(QString contextId,

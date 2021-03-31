@@ -1,10 +1,7 @@
 #include "V8Executor.h"
 #include "JSValueHelper.h"
 
-#include <QThread>
-
-V8Executor::V8Executor() {
-  std::unique_ptr<v8::Platform> platform = v8::platform::NewDefaultPlatform();
+V8Executor::V8Executor() : platform(v8::platform::NewDefaultPlatform()) {
   v8::V8::InitializePlatform(platform.get());
   v8::V8::Initialize();
 

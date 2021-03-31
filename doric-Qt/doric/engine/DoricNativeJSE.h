@@ -2,13 +2,13 @@
 #define NATIVE_JSE_H
 
 #include "DoricInterfaceJSE.h"
-#include "native/NativeExecutor.h"
+//#include "native/NativeExecutor.h"
 #include "v8/V8Executor.h"
 
 class DoricNativeJSE : public DoricInterfaceJSE {
 private:
   V8Executor *v8Executor;
-  NativeExecutor *nativeExecutor;
+//  NativeExecutor *nativeExecutor;
 
 public:
   DoricNativeJSE();

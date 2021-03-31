@@ -1,2 +1,3 @@
 /build-doric-*/
 .DS_Store
+/doric/library/v8/release/v8_monolith.lib

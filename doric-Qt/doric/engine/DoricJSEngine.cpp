@@ -17,8 +17,12 @@
 
 DoricJSEngine::DoricJSEngine(QObject *parent) : QObject(parent) {
   mJSThreadPool.setMaxThreadCount(1);
+  mJSThreadPool.setStackSize(3000000000);
 
-  QtConcurrent::run(&mJSThreadPool, [this] { mJSE = new DoricNativeJSE(); });
+  QtConcurrent::run(&mJSThreadPool, [this] {
+    qDebug() << QThread::currentThread()->stackSize();
+    mJSE = new DoricNativeJSE();
+  });
   QtConcurrent::run(&mJSThreadPool, [this] {
     // inject env
     QScreen *screen = QGuiApplication::primaryScreen();

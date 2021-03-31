@@ -2,15 +2,13 @@
 #define NATIVE_JSE_H
 
 #include "DoricInterfaceJSE.h"
-#include <QJSEngine>
-#include <excpt.h>
-
-#include "libplatform/libplatform.h"
-#include "v8.h"
+#include "native/NativeExecutor.h"
+#include "v8/V8Executor.h"
 
 class DoricNativeJSE : public DoricInterfaceJSE {
 private:
-  QJSEngine mJSEngine;
+  V8Executor *v8Executor;
+  NativeExecutor *nativeExecutor;
 
 public:
   DoricNativeJSE();

@@ -35,8 +35,11 @@ V8Executor::~V8Executor() {
 }
 
 QString V8Executor::loadJS(QString script, QString source) {
+  v8::Isolate *isolate = m_isolate;
+
   std::string exception;
-  v8::HandleScope scope(m_isolate);
+
+  v8::HandleScope scope(isolate);
   v8::Local<v8::Value> ret = innerExec(script.toUtf8().constData(),
                                        source.toUtf8().constData(), &exception);
   std::string result = ToString(ret);
@@ -45,15 +48,21 @@ QString V8Executor::loadJS(QString script, QString source) {
 }
 
 void V8Executor::injectGlobalJSObject(QString name, QObject *target) {
-  v8::HandleScope handleScope(v8::Isolate::GetCurrent());
+  v8::Isolate *isolate = m_isolate;
+  v8::HandleScope handleScope(isolate);
+
   v8::Local<v8::Value> local = ObjectToJS(target);
 
+  injectObject(name.toUtf8().constData(), local);
+}
+
+void V8Executor::injectObject(const char *string, v8::Local<v8::Value> local) {
   v8::Isolate *isolate = m_isolate;
+
   v8::HandleScope handle_scope(isolate);
   v8::Local<v8::Context> context = isolate->GetEnteredOrMicrotaskContext();
   v8::Local<v8::Object> object = context->Global();
-  v8::Maybe<bool> result =
-      object->Set(context, NewV8String(name.toUtf8().constData()), local);
+  v8::Maybe<bool> result = object->Set(context, NewV8String(string), local);
   result.ToChecked();
 }
 
@@ -61,6 +70,7 @@ v8::Local<v8::Value> V8Executor::innerExec(const char *script,
                                            const char *source,
                                            std::string *exception_str) {
   v8::Isolate *isolate = m_isolate;
+
   v8::EscapableHandleScope handle_scope(isolate);
   v8::Local<v8::Value> result = Undefined(isolate);
   v8::Local<v8::Context> context = isolate->GetEnteredOrMicrotaskContext();

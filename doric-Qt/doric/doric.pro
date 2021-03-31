@@ -30,6 +30,9 @@ SOURCES += \
         engine/DoricNativeLog.cpp \
         engine/DoricNativeRequire.cpp \
         engine/DoricTimerExtension.cpp \
+        engine/native/NativeExecutor.cpp \
+        engine/v8/JSValueHelper.cpp \
+        engine/v8/V8Executor.cpp \
         main.cpp \
         plugin/DoricShaderPlugin.cpp \
         shader/DoricGroupNode.cpp \
@@ -92,6 +95,9 @@ HEADERS += \
     engine/DoricNativeLog.h \
     engine/DoricNativeRequire.h \
     engine/DoricTimerExtension.h \
+    engine/native/NativeExecutor.h \
+    engine/v8/JSValueHelper.h \
+    engine/v8/V8Executor.h \
     plugin/DoricNativePlugin.h \
     plugin/DoricShaderPlugin.h \
     shader/DoricGroupNode.h \

@@ -1,7 +1,6 @@
 #include "DoricNativeEmpty.h"
 #include <QDebug>
 
-Q_INVOKABLE QJSValue DoricNativeEmpty::function() {
+Q_INVOKABLE void DoricNativeEmpty::function() {
   qDebug() << "nativeEmpty";
-  return QJSValue::NullValue;
 }

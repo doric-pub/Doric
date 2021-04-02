@@ -4,8 +4,12 @@
 #include "libplatform/libplatform.h"
 #include "v8/v8.h"
 
+#include <QMap>
 #include <QObject>
 #include <QString>
+
+static QMap<QString, QPair<QObject *, QString>> *map =
+    new QMap<QString, QPair<QObject *, QString>>();
 
 class V8Executor {
 
@@ -21,6 +25,9 @@ private:
   v8::Local<v8::Value> innerExec(const char *script, const char *source,
                                  std::string *exception_str);
 
+  void injectFunctions(const char *objectName, const char *functionName,
+                       bool hashKey);
+
 public:
   V8Executor();
 
@@ -28,7 +35,10 @@ public:
 
   QString loadJS(QString script, QString source);
 
-  void injectGlobalJSObject(QString name, QObject *object);
+  void injectGlobalJSObject(QString name, std::string target);
+
+  void injectGlobalJSFunction(QString name, QObject *function,
+                              QString property);
 };
 
 #endif // V8EXECUTOR_H

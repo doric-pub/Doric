@@ -1,7 +1,6 @@
 #ifndef JSVALUEHELPER_H
 #define JSVALUEHELPER_H
 
-#include <QVariant>
 #include <string>
 
 #include "v8/v8.h"
@@ -11,8 +10,12 @@
                           v8::NewStringType::kNormal)                          \
       .ToLocalChecked()
 
-std::string ToString(v8::Local<v8::Value> object);
+std::string JS2String(v8::Local<v8::Value> object);
 
-v8::Local<v8::Value> ObjectToJS(QObject *object);
+double JS2Number(v8::Local<v8::Value> value);
+
+bool JS2Bool(v8::Local<v8::Value> value);
+
+v8::Local<v8::Value> String2JS(std::string string);
 
 #endif // JSVALUEHELPER_H

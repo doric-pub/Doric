@@ -20,13 +20,13 @@ ApplicationWindow {
                         text: {
                             switch (index) {
                                 case 0:
-                                    return "Counter.es5.js"
+                                    return "Counter.js"
                                 case 1:
-                                    return "Gobang.es5.js"
+                                    return "Gobang.js"
                                 case 2:
-                                    return "SimpleDemo.es5.js"
+                                    return "SimpleDemo.js"
                                 case 3:
-                                    return "Snake.es5.js"
+                                    return "Snake.js"
                             }
                         }
                     }

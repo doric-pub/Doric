@@ -1,18 +1,16 @@
-#include <QJSValueIterator>
-
+#include "DoricViewNode.h"
 #include "../utils/DoricConstant.h"
 #include "../utils/DoricUtils.h"
 #include "DoricSuperNode.h"
-#include "DoricViewNode.h"
 
-void DoricViewNode::blendLayoutConfig(QJSValue jsObject) {
+void DoricViewNode::blendLayoutConfig(QJsonValue jsObject) {
   this->mLayoutConfig = jsObject;
 
-  QJSValue margin = jsObject.property("margin");
-  QJSValue widthSpec = jsObject.property("widthSpec");
-  QJSValue heightSpec = jsObject.property("heightSpec");
+  QJsonValue margin = jsObject["margin"];
+  QJsonValue widthSpec = jsObject["widthSpec"];
+  QJsonValue heightSpec = jsObject["heightSpec"];
 
-  if (widthSpec.isNumber()) {
+  if (widthSpec.isDouble()) {
     switch (widthSpec.toInt()) {
     case 0:
       mView->setProperty("widthSpec", 0);
@@ -26,7 +24,7 @@ void DoricViewNode::blendLayoutConfig(QJSValue jsObject) {
     }
   }
 
-  if (heightSpec.isNumber()) {
+  if (heightSpec.isDouble()) {
     switch (heightSpec.toInt()) {
     case 0:
       mView->setProperty("heightSpec", 0);
@@ -41,7 +39,7 @@ void DoricViewNode::blendLayoutConfig(QJSValue jsObject) {
   }
 }
 
-void DoricViewNode::setLayoutConfig(QJSValue layoutConfig) {
+void DoricViewNode::setLayoutConfig(QJsonValue layoutConfig) {
   if (mSuperNode != nullptr) {
     mSuperNode->blendSubLayoutConfig(this, layoutConfig);
   } else {
@@ -55,6 +53,7 @@ void DoricViewNode::init(DoricSuperNode *superNode) {
     thiz->mReusable = superNode->mReusable;
   }
   this->mSuperNode = superNode;
+  this->mLayoutConfig = superNode->generateDefaultLayoutConfig();
   this->mView = build();
 }
 
@@ -66,49 +65,49 @@ QString DoricViewNode::getType() { return mType; }
 
 QQuickItem *DoricViewNode::getNodeView() { return mView; }
 
-void DoricViewNode::blend(QJSValue jsValue) {
-  QJSValue value = jsValue.property("layoutConfig");
+void DoricViewNode::blend(QJsonValue jsValue) {
+  QJsonValue value = jsValue["layoutConfig"];
   if (value.isObject()) {
     setLayoutConfig(value);
   }
-  QJSValueIterator it(jsValue);
-  while (it.hasNext()) {
-    it.next();
-    blend(mView, it.name(), it.value());
+
+  foreach (const QString &key, jsValue.toObject().keys()) {
+    QJsonValue value = jsValue[key];
+    blend(mView, key, value);
   }
 }
 
-void DoricViewNode::blend(QQuickItem *view, QString name, QJSValue prop) {
+void DoricViewNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
   if (name == "width") {
-    if (!prop.isNumber()) {
+    if (!prop.isDouble()) {
       return;
     }
     if (this->mLayoutConfig.isUndefined()) {
       view->setWidth(prop.toInt());
     } else {
-      QJSValue widthSpec = this->mLayoutConfig.property("widthSpec");
-      if (widthSpec.isNumber()) {
+      QJsonValue widthSpec = this->mLayoutConfig["widthSpec"];
+      if (widthSpec.isDouble()) {
         if (widthSpec.toInt() == 0) {
           view->setWidth(prop.toInt());
         }
       }
     }
   } else if (name == "height") {
-    if (!prop.isNumber()) {
+    if (!prop.isDouble()) {
       return;
     }
     if (this->mLayoutConfig.isUndefined()) {
       view->setHeight(prop.toInt());
     } else {
-      QJSValue heightSpec = this->mLayoutConfig.property("heightSpec");
-      if (heightSpec.isNumber()) {
+      QJsonValue heightSpec = this->mLayoutConfig["heightSpec"];
+      if (heightSpec.isDouble()) {
         if (heightSpec.toInt() == 0) {
           view->setHeight(prop.toInt());
         }
       }
     }
   } else if (name == "backgroundColor") {
-    QString color = DoricUtils::doricColor(prop.toNumber()).name();
+    QString color = DoricUtils::doricColor(prop.toInt()).name();
     view->setProperty("color", color);
   } else if (name == "x") {
     view->setProperty("x", prop.toInt());

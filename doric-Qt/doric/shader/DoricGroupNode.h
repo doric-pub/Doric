@@ -7,9 +7,9 @@ class DoricGroupNode : public DoricSuperNode {
 public:
   using DoricSuperNode::DoricSuperNode;
 
-  virtual void blend(QQuickItem *view, QString name, QJSValue prop) override;
+  virtual void blend(QQuickItem *view, QString name, QJsonValue prop) override;
 
-  virtual void blend(QJSValue jsValue) override;
+  virtual void blend(QJsonValue jsValue) override;
 
 protected:
   QList<DoricViewNode *> mChildNodes;
@@ -18,7 +18,7 @@ protected:
 
   void configChildNode();
 
-  virtual void blendSubNode(QJSValue subProperties) override;
+  virtual void blendSubNode(QJsonValue subProperties) override;
 };
 
 #endif // DORICGROUPNODE_H

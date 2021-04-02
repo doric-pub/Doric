@@ -9,7 +9,7 @@ public:
 
   QQuickItem *build() override;
 
-  virtual void blend(QQuickItem *view, QString name, QJSValue prop) override;
+  virtual void blend(QQuickItem *view, QString name, QJsonValue prop) override;
 };
 
 #endif // DORICVLAYOUTNODE_H

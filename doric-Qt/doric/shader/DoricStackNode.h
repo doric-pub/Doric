@@ -9,7 +9,7 @@ public:
 
   QQuickItem *build() override;
 
-  void blendLayoutConfig(QJSValue jsValue) override;
+  void blendLayoutConfig(QJsonValue jsValue) override;
 };
 
 #endif // DORICSTACKNODE_H

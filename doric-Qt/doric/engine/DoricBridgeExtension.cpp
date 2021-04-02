@@ -21,7 +21,7 @@ void DoricBridgeExtension::callNative(QString contextId, QString module,
     QObject *plugin = context->obtainPlugin(module);
     QMetaObject::invokeMethod(plugin, methodName.toUtf8(), Qt::DirectConnection,
                               QGenericReturnArgument(),
-                              Q_ARG(QJsonObject, jsValue),
+                              Q_ARG(QJsonObject *, &jsValue),
                               Q_ARG(QString, callbackId));
   }
   qDebug() << "contextId: " + contextId << "module: " + module

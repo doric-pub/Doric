@@ -15,7 +15,7 @@ QQuickItem *DoricVLayoutNode::build() {
   return item;
 }
 
-void DoricVLayoutNode::blend(QQuickItem *view, QString name, QJSValue prop) {
+void DoricVLayoutNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
   if (name == "space") {
     view->childItems().at(1)->setProperty("spacing", prop.toInt());
   } else if (name == "gravity") {

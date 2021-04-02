@@ -2,6 +2,8 @@
 #define DORICVIEWNODE_H
 
 #include <QQuickItem>
+#include <QJsonValue>
+#include <QJsonObject>
 
 #include "../utils/DoricContextHolder.h"
 
@@ -16,12 +18,12 @@ protected:
 
   virtual QQuickItem *build() = 0;
 
-  void setLayoutConfig(QJSValue layoutConfig);
+  void setLayoutConfig(QJsonValue layoutConfig);
 
 private:
   QString mId;
 
-  QJSValue mLayoutConfig;
+  QJsonValue mLayoutConfig;
 
   QList<QString> getIdList();
 
@@ -57,11 +59,11 @@ public:
 
   QQuickItem *getNodeView();
 
-  virtual void blend(QJSValue jsValue);
+  virtual void blend(QJsonValue jsValue);
 
-  virtual void blend(QQuickItem *view, QString name, QJSValue prop);
+  virtual void blend(QQuickItem *view, QString name, QJsonValue prop);
 
-  virtual void blendLayoutConfig(QJSValue jsObject);
+  virtual void blendLayoutConfig(QJsonValue jsObject);
 
   void onClick();
 

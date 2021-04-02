@@ -15,12 +15,12 @@ QQuickItem *DoricStackNode::build() {
   return item;
 }
 
-void DoricStackNode::blendLayoutConfig(QJSValue jsValue) {
+void DoricStackNode::blendLayoutConfig(QJsonValue jsValue) {
   DoricViewNode::blendLayoutConfig(jsValue);
-  QJSValue maxWidth = jsValue.property("maxWidth");
-  if (maxWidth.isNumber()) {
+  QJsonValue maxWidth = jsValue["maxWidth"];
+  if (maxWidth.isDouble()) {
   }
-  QJSValue maxHeight = jsValue.property("maxHeight");
-  if (maxHeight.isNumber()) {
+  QJsonValue maxHeight = jsValue["maxHeight"];
+  if (maxHeight.isDouble()) {
   }
 }

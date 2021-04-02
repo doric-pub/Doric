@@ -1,9 +1,6 @@
 #include "JSValueHelper.h"
 
-#include <QJsonDocument>
-#include <QJsonObject>
-
-std::string ToString(v8::Local<v8::Value> object) {
+std::string JS2String(v8::Local<v8::Value> object) {
   v8::Isolate *isolate = v8::Isolate::GetCurrent();
   v8::HandleScope handleScope(isolate);
   v8::Local<v8::Context> context = isolate->GetEnteredOrMicrotaskContext();
@@ -22,42 +19,39 @@ std::string ToString(v8::Local<v8::Value> object) {
     return std::string(*str2 ? *str2 : "<string conversion failed>");
   }
 
-  v8::Local<v8::Object> global = context->Global();
-  v8::Local<v8::Object> JSON = global->Get(context, NewV8String("JSON"))
-                                   .ToLocalChecked()
-                                   ->ToObject(context)
-                                   .ToLocalChecked();
-  v8::Local<v8::Value> argv[] = {object};
-  v8::Local<v8::Function> JSON_stringify = v8::Local<v8::Function>::Cast(
-      JSON->Get(context, NewV8String("stringify")).ToLocalChecked());
   v8::String::Utf8Value str(
-      isolate, JSON_stringify->Call(context, JSON, 1, argv).ToLocalChecked());
+      isolate, v8::JSON::Stringify(context, object).ToLocalChecked());
   return std::string(*str ? *str : "<string conversion failed>");
 }
 
-v8::Local<v8::Value> ObjectToJS(QObject *object) {
-  QJsonObject jsonObject;
-
-  QList<QByteArray> propertyNames = object->dynamicPropertyNames();
-  foreach (QByteArray propertyName, propertyNames) {
-    QString key = QString::fromStdString(propertyName.toStdString());
-    object->property(propertyName).toString();
-    if (key == "undefined" || key.isEmpty()) {
-
-    } else {
-      jsonObject[key] = QJsonValue::fromVariant(object->property(propertyName));
-    }
+double JS2Number(v8::Local<v8::Value> value) {
+  v8::HandleScope handleScope(v8::Isolate::GetCurrent());
+  v8::Local<v8::Context> context =
+      v8::Isolate::GetCurrent()->GetCurrentContext();
+  if (value->IsNumber()) {
+    return value->ToNumber(context).ToLocalChecked()->Value();
+  } else {
+    return 0;
   }
+}
 
-  QJsonDocument doc(jsonObject);
-  QString strJson(doc.toJson(QJsonDocument::Compact));
+bool JS2Bool(v8::Local<v8::Value> value) {
+  v8::HandleScope handleScope(v8::Isolate::GetCurrent());
+  if (value->IsBoolean()) {
+    return value->ToBoolean(v8::Isolate::GetCurrent())->Value();
+  } else {
+    return false;
+  }
+}
 
+v8::Local<v8::Value> String2JS(std::string string) {
   v8::Isolate *isolate = v8::Isolate::GetCurrent();
   v8::EscapableHandleScope handleScope(isolate);
   v8::Local<v8::Context> context = isolate->GetEnteredOrMicrotaskContext();
-  v8::Local<v8::String> jsString = NewV8String(strJson.toUtf8().constData());
+  v8::Local<v8::String> jsString = NewV8String(string.c_str());
 
-  v8::Local<v8::Value> ret = v8::JSON::Parse(context, jsString).ToLocalChecked();
+  v8::Local<v8::Value> ret =
+      v8::JSON::Parse(context, jsString).ToLocalChecked();
 
   return handleScope.Escape(ret);
 }

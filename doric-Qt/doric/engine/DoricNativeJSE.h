@@ -2,16 +2,20 @@
 #define NATIVE_JSE_H
 
 #include "DoricInterfaceJSE.h"
-//#include "native/NativeExecutor.h"
+#include "native/NativeExecutor.h"
 #include "v8/V8Executor.h"
+
+enum class JSEType { V8, Native };
 
 class DoricNativeJSE : public DoricInterfaceJSE {
 private:
+  JSEType mType;
+
   V8Executor *v8Executor;
-//  NativeExecutor *nativeExecutor;
+  NativeExecutor *nativeExecutor;
 
 public:
-  DoricNativeJSE();
+  DoricNativeJSE(JSEType type);
 
   QString loadJS(QString script, QString source) override;
 

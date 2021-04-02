@@ -1,7 +1,6 @@
 #ifndef NATIVEEMPTY_H
 #define NATIVEEMPTY_H
 
-#include <QJSValue>
 #include <QObject>
 
 class DoricNativeEmpty : public QObject {
@@ -10,7 +9,7 @@ class DoricNativeEmpty : public QObject {
 public:
   DoricNativeEmpty(QObject *parent = nullptr) : QObject(parent) {}
 
-  Q_INVOKABLE QJSValue function();
+  Q_INVOKABLE void function();
 };
 
 #endif // NATIVEEMPTY_H

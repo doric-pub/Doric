@@ -1,6 +1,7 @@
 #ifndef JSVALUEHELPER_H
 #define JSVALUEHELPER_H
 
+#include <QVariant>
 #include <string>
 
 #include "v8/v8.h"
@@ -17,5 +18,7 @@ double JS2Number(v8::Local<v8::Value> value);
 bool JS2Bool(v8::Local<v8::Value> value);
 
 v8::Local<v8::Value> String2JS(std::string string);
+
+v8::Local<v8::Value> Variant2JS(QVariant variant);
 
 #endif // JSVALUEHELPER_H

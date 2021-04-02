@@ -98,7 +98,7 @@ void DoricJSEngine::prepareContext(QString contextId, QString script,
   mJSE->loadJS(packageContextScript(contextId, script), "Context://" + source);
 }
 
-QJSValue DoricJSEngine::invokeDoricMethod(QString method,
+void DoricJSEngine::invokeDoricMethod(QString method,
                                           QVariantList arguments) {
   return mJSE->invokeObject(DoricConstant::GLOBAL_DORIC, method, arguments);
 }

@@ -1,7 +1,6 @@
 #ifndef INTERFACE_JSE_H
 #define INTERFACE_JSE_H
 
-#include <QJSValue>
 #include <QString>
 #include <QVariant>
 
@@ -14,7 +13,7 @@ public:
   virtual void injectGlobalJSFunction(QString name, QObject *function,
                                       QString property) = 0;
 
-  virtual QJSValue invokeObject(QString objectName, QString functionName,
+  virtual void invokeObject(QString objectName, QString functionName,
                                 QVariantList arguments) = 0;
 };
 

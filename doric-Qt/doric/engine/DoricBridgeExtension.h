@@ -11,7 +11,7 @@ public:
 
   Q_INVOKABLE void callNative(QString contextId, QString module,
                               QString methodName, QString callbackId,
-                              QJSValue jsValue);
+                              QString argument);
 };
 
 #endif // BRIDGEEXTENSION_H

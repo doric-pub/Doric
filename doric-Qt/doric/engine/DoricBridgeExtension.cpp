@@ -1,4 +1,6 @@
 #include <QDebug>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QMetaObject>
 
 #include "../DoricContextManager.h"
@@ -8,7 +10,9 @@ DoricBridgeExtension::DoricBridgeExtension(QObject *parent) : QObject(parent) {}
 
 void DoricBridgeExtension::callNative(QString contextId, QString module,
                                       QString methodName, QString callbackId,
-                                      QJSValue jsValue) {
+                                      QString argument) {
+  QJsonDocument document = QJsonDocument::fromJson(argument.toUtf8());
+  QJsonObject jsValue = document.object();
   DoricContext *context =
       DoricContextManager::getInstance()->getContext(contextId);
   bool classRegistered =
@@ -17,10 +21,10 @@ void DoricBridgeExtension::callNative(QString contextId, QString module,
     QObject *plugin = context->obtainPlugin(module);
     QMetaObject::invokeMethod(plugin, methodName.toUtf8(), Qt::DirectConnection,
                               QGenericReturnArgument(),
-                              Q_ARG(QJSValue, jsValue),
+                              Q_ARG(QJsonObject, jsValue),
                               Q_ARG(QString, callbackId));
   }
   qDebug() << "contextId: " + contextId << "module: " + module
            << "methodName: " + methodName << "callbackId: " + callbackId
-           << "jsValue: " + jsValue.toString();
+           << "jsValue: " + argument;
 }

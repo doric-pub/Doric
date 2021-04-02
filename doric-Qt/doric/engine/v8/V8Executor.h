@@ -28,6 +28,11 @@ private:
   void injectFunctions(const char *objectName, const char *functionName,
                        bool hashKey);
 
+  v8::Local<v8::Value> invokeMethod(const char *objectName,
+                                    const char *functionName, int argc,
+                                    v8::Local<v8::Value> argv[],
+                                    std::string *exception_str);
+
 public:
   V8Executor();
 
@@ -39,6 +44,9 @@ public:
 
   void injectGlobalJSFunction(QString name, QObject *function,
                               QString property);
+
+  void invokeObject(QString objectName, QString functionName,
+                    QVariantList arguments);
 };
 
 #endif // V8EXECUTOR_H

@@ -1,5 +1,8 @@
 #include "JSValueHelper.h"
 
+#include <QJsonDocument>
+#include <QJsonObject>
+
 std::string JS2String(v8::Local<v8::Value> object) {
   v8::Isolate *isolate = v8::Isolate::GetCurrent();
   v8::HandleScope handleScope(isolate);
@@ -54,4 +57,28 @@ v8::Local<v8::Value> String2JS(std::string string) {
       v8::JSON::Parse(context, jsString).ToLocalChecked();
 
   return handleScope.Escape(ret);
+}
+
+v8::Local<v8::Value> Variant2JS(QVariant variant) {
+  v8::Isolate *isolate = v8::Isolate::GetCurrent();
+  v8::EscapableHandleScope handle_scope(isolate);
+
+  v8::Local<v8::Value> jsValue;
+  if (variant.type() == QVariant::String) {
+    jsValue = NewV8String(variant.toString().toUtf8().constData());
+  } else if (variant.type() == QVariant::Map) {
+    QMap<QString, QVariant> map = variant.toMap();
+
+    QJsonObject jsonObject;
+    foreach (QString key, map.keys()) {
+      QVariant value = map.value(key);
+      jsonObject.insert(key, QJsonValue::fromVariant(value));
+    }
+    QJsonDocument doc(jsonObject);
+    QString strJson(doc.toJson(QJsonDocument::Compact));
+    jsValue = String2JS(strJson.toUtf8().constData());
+  } else if (variant.type() == QVariant::StringList) {
+    qDebug() << "";
+  }
+  return handle_scope.Escape(jsValue);
 }

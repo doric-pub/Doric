@@ -24,7 +24,7 @@ public:
   void injectGlobalJSFunction(QString name, QObject *function,
                               QString property) override;
 
-  QJSValue invokeObject(QString objectName, QString functionName,
+  void invokeObject(QString objectName, QString functionName,
                         QVariantList arguments) override;
 };
 

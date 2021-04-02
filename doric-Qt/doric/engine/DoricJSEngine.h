@@ -25,7 +25,7 @@ public:
   ~DoricJSEngine();
 
   void prepareContext(QString contextId, QString script, QString source);
-  QJSValue invokeDoricMethod(QString method, QVariantList arguments);
+  void invokeDoricMethod(QString method, QVariantList arguments);
   DoricRegistry *getRegistry();
 };
 

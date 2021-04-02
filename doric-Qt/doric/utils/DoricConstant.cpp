@@ -1,7 +1,7 @@
 #include "DoricConstant.h"
 
-const QString DoricConstant::DORIC_BUNDLE_SANDBOX = "doric-sandbox.es5.js";
-const QString DoricConstant::DORIC_BUNDLE_LIB = "doric-lib.es5.js";
+const QString DoricConstant::DORIC_BUNDLE_SANDBOX = "doric-sandbox.js";
+const QString DoricConstant::DORIC_BUNDLE_LIB = "doric-lib.js";
 const QString DoricConstant::DORIC_MODULE_LIB = "doric";
 
 const QString DoricConstant::INJECT_ENVIRONMENT = "Environment";

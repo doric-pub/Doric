@@ -11,7 +11,7 @@ class DoricShaderPlugin : public DoricNativePlugin {
 public:
   using DoricNativePlugin::DoricNativePlugin;
 
-  Q_INVOKABLE void render(QJSValue jsValue, QString callbackId);
+  Q_INVOKABLE void render(QJsonObject *jsValue, QString callbackId);
 };
 
 #endif // SHADERPLUGIN_H

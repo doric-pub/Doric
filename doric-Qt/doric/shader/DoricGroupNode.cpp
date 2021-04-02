@@ -1,12 +1,13 @@
 #include "DoricGroupNode.h"
 
-void DoricGroupNode::blend(QQuickItem *view, QString name, QJSValue prop) {
+void DoricGroupNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
   if (name == "children") {
     mChildViewIds.clear();
     if (prop.isArray()) {
-      const int length = prop.property("length").toInt();
+      QJsonArray array = prop.toArray();
+      const int length = array.size();
       for (int i = 0; i < length; ++i) {
-        QJSValue value = prop.property(i);
+        QJsonValue value = array.at(i);
         if (value.isString()) {
           mChildViewIds.append(value.toString());
         }
@@ -17,7 +18,7 @@ void DoricGroupNode::blend(QQuickItem *view, QString name, QJSValue prop) {
   }
 }
 
-void DoricGroupNode::blend(QJSValue jsValue) {
+void DoricGroupNode::blend(QJsonValue jsValue) {
   DoricViewNode::blend(jsValue);
   configChildNode();
 }
@@ -31,13 +32,13 @@ void DoricGroupNode::configChildNode() {
   }
   for (int idx = 0; idx < mChildViewIds.size(); idx++) {
     QString id = mChildViewIds.at(idx);
-    QJSValue model = getSubModel(id);
+    QJsonValue model = getSubModel(id);
     if (model.isUndefined()) {
       DoricRegistry *registry = getContext()->getDriver()->getRegistry();
       qCritical() << "model.isUndefined()";
       continue;
     }
-    QString type = model.property("type").toString();
+    QString type = model["type"].toString();
     if (idx < mChildNodes.size()) {
       DoricViewNode *oldNode = mChildNodes.at(idx);
       if (id == oldNode->getId()) {
@@ -47,7 +48,7 @@ void DoricGroupNode::configChildNode() {
           if (oldNode->getType() == type) {
             // Same type,can be reused
             oldNode->setId(id);
-            oldNode->blend(model.property("props"));
+            oldNode->blend(model["props"]);
           } else {
             // Replace this view
             mChildNodes.remove(idx);
@@ -70,7 +71,7 @@ void DoricGroupNode::configChildNode() {
                     parent->childItems().at(idx));
               }
 
-              newNode->blend(model.property("props"));
+              newNode->blend(model["props"]);
             }
           }
         } else {
@@ -105,7 +106,7 @@ void DoricGroupNode::configChildNode() {
                     parent->childItems().at(idx));
               }
 
-              newNode->blend(model.property("props"));
+              newNode->blend(model["props"]);
             }
           }
         }
@@ -126,7 +127,7 @@ void DoricGroupNode::configChildNode() {
           newNode->getNodeView()->stackBefore(parent->childItems().at(idx));
         }
 
-        newNode->blend(model.property("props"));
+        newNode->blend(model["props"]);
       }
     }
   }
@@ -141,11 +142,11 @@ void DoricGroupNode::configChildNode() {
   }
 }
 
-void DoricGroupNode::blendSubNode(QJSValue subProperties) {
-  QString subNodeId = subProperties.property("id").toString();
+void DoricGroupNode::blendSubNode(QJsonValue subProperties) {
+  QString subNodeId = subProperties["id"].toString();
   for (DoricViewNode *node : mChildNodes) {
     if (subNodeId == node->getId()) {
-      node->blend(subProperties.property("props"));
+      node->blend(subProperties["props"]);
       break;
     }
   }

@@ -79,7 +79,7 @@ void V8Executor::invokeObject(QString objectName, QString functionName,
   int valueSize = arguments.size();
 
   auto js_values = new v8::Local<v8::Value>[valueSize];
-  for (uint32_t i = 0; i < valueSize; i++) {
+  for (int i = 0; i < valueSize; i++) {
     js_values[i] = Variant2JS(arguments.at(i));
   }
   v8::Local<v8::Value> value = invokeMethod(objectName.toUtf8().constData(),

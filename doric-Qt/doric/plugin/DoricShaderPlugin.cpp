@@ -1,24 +1,29 @@
 #include <QDebug>
+#include <QJsonDocument>
 #include <QJsonObject>
 
 #include "../shader/DoricRootNode.h"
 #include "DoricShaderPlugin.h"
 
-void DoricShaderPlugin::render(QJsonObject *jsValue, QString callbackId) {
+void DoricShaderPlugin::render(QString jsValueString, QString callbackId) {
   getContext()->getDriver()->asyncCall(
-      [this, jsValue] {
+      [this, jsValueString] {
         try {
-          QString viewId = jsValue->value("id").toString();
+          QJsonDocument document =
+              QJsonDocument::fromJson(jsValueString.toUtf8());
+          QJsonValue jsValue = document.object();
+
+          QString viewId = jsValue["id"].toString();
           DoricRootNode *rootNode = getContext()->getRootNode();
 
           if (rootNode->getId().isEmpty() &&
-              jsValue->value("type").toString() == "Root") {
+              jsValue["type"].toString() == "Root") {
             rootNode->setId(viewId);
-            rootNode->blend(jsValue->value("props"));
+            rootNode->blend(jsValue["props"]);
           } else {
             DoricViewNode *viewNode = getContext()->targetViewNode(viewId);
             if (viewNode != nullptr) {
-              viewNode->blend(jsValue->value("props"));
+              viewNode->blend(jsValue["props"]);
             }
           }
         } catch (...) {

@@ -7,6 +7,8 @@ import "util.mjs" as Util
 Rectangle {
     property int wrapper: 0
 
+    clip: true
+
     property var uuid: Util.uuidv4()
 
     property int widthSpec: 0

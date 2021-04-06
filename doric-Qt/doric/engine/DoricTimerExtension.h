@@ -21,5 +21,8 @@ public:
   Q_INVOKABLE void setTimer(long timerId, int time, bool repeat);
 
   Q_INVOKABLE void clearTimer(long timerId);
+
+signals:
+  void startTimer();
 };
 #endif // NATIVETIMER_H

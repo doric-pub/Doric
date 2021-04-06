@@ -8,6 +8,8 @@ import "gravity.mjs" as Gravity
 Rectangle {
     property int wrapper: 0
 
+    clip: true
+
     property var tag: "HLayout"
 
     property var uuid: Util.uuidv4()

@@ -12,5 +12,5 @@ DoricContext *DoricContextManager::createContext(QString script, QString source,
 }
 
 DoricContext *DoricContextManager::getContext(QString contextId) {
-  return contextMap->take(contextId);
+  return contextMap->value(contextId);
 }

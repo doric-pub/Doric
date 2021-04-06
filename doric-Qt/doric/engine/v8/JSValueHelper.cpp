@@ -61,6 +61,7 @@ v8::Local<v8::Value> String2JS(std::string string) {
 
 v8::Local<v8::Value> Variant2JS(QVariant variant) {
   v8::Isolate *isolate = v8::Isolate::GetCurrent();
+
   v8::EscapableHandleScope handle_scope(isolate);
   v8::Local<v8::Context> context = isolate->GetEnteredOrMicrotaskContext();
 
@@ -87,6 +88,8 @@ v8::Local<v8::Value> Variant2JS(QVariant variant) {
       result.ToChecked();
     }
     jsValue = array;
+  } else if (variant.type() == QVariant::Int) {
+    jsValue = v8::Number::New(isolate, variant.toDouble());
   }
   return handle_scope.Escape(jsValue);
 }

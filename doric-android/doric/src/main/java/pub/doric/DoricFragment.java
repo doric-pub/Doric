@@ -15,6 +15,7 @@
  */
 package pub.doric;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -93,5 +94,16 @@ public class DoricFragment extends Fragment {
     public void setErrorView(View view) {
         view.setId(R.id.doric_mask_error);
         this.errorView = view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        for (Fragment fragment : getChildFragmentManager().getFragments()) {
+            fragment.onActivityResult(requestCode, resultCode, data);
+            for (Fragment childFragment : fragment.getChildFragmentManager().getFragments()) {
+                childFragment.onActivityResult(requestCode, resultCode, data);
+            }
+        }
     }
 }

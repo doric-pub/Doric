@@ -63,10 +63,12 @@ DoricJSEngine::DoricJSEngine(QObject *parent) : QObject(parent) {
       // inject timer set & clear
       DoricTimerExtension *timerExtension =
           new DoricTimerExtension([this](long timerId) {
-            QVariantList arguments;
-            arguments.push_back(QVariant((int)timerId));
-            this->invokeDoricMethod(DoricConstant::DORIC_TIMER_CALLBACK,
-                                    arguments);
+            auto result = QtConcurrent::run(&mJSThreadPool, [this, timerId] {
+              QVariantList arguments;
+              arguments.push_back(QVariant((int)timerId));
+              this->invokeDoricMethod(DoricConstant::DORIC_TIMER_CALLBACK,
+                                      arguments);
+            });
           });
       mJSE->injectGlobalJSFunction(DoricConstant::INJECT_TIMER_SET,
                                    timerExtension, "setTimer");
@@ -98,8 +100,7 @@ void DoricJSEngine::prepareContext(QString contextId, QString script,
   mJSE->loadJS(packageContextScript(contextId, script), "Context://" + source);
 }
 
-void DoricJSEngine::invokeDoricMethod(QString method,
-                                          QVariantList arguments) {
+void DoricJSEngine::invokeDoricMethod(QString method, QVariantList arguments) {
   return mJSE->invokeObject(DoricConstant::GLOBAL_DORIC, method, arguments);
 }
 

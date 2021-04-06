@@ -12,28 +12,28 @@ void DoricViewNode::blendLayoutConfig(QJsonValue jsObject) {
 
   if (widthSpec.isDouble()) {
     switch (widthSpec.toInt()) {
-    case 0:
-      mView->setProperty("widthSpec", 0);
+    case SpecMode::JUST:
+      mView->setProperty("widthSpec", SpecMode::JUST);
       break;
-    case 1:
-      mView->setProperty("widthSpec", 1);
+    case SpecMode::FIT:
+      mView->setProperty("widthSpec", SpecMode::FIT);
       break;
-    case 2:
-      mView->setProperty("widthSpec", 2);
+    case SpecMode::MOST:
+      mView->setProperty("widthSpec", SpecMode::MOST);
       break;
     }
   }
 
   if (heightSpec.isDouble()) {
     switch (heightSpec.toInt()) {
-    case 0:
-      mView->setProperty("heightSpec", 0);
+    case SpecMode::JUST:
+      mView->setProperty("heightSpec", SpecMode::JUST);
       break;
-    case 1:
-      mView->setProperty("heightSpec", 1);
+    case SpecMode::FIT:
+      mView->setProperty("heightSpec", SpecMode::FIT);
       break;
-    case 2:
-      mView->setProperty("heightSpec", 2);
+    case SpecMode::MOST:
+      mView->setProperty("heightSpec", SpecMode::MOST);
       break;
     }
   }
@@ -87,7 +87,7 @@ void DoricViewNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
     } else {
       QJsonValue widthSpec = this->mLayoutConfig["widthSpec"];
       if (widthSpec.isDouble()) {
-        if (widthSpec.toInt() == 0) {
+        if (widthSpec.toInt() == SpecMode::JUST) {
           view->setWidth(prop.toInt());
         }
       }
@@ -101,7 +101,7 @@ void DoricViewNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
     } else {
       QJsonValue heightSpec = this->mLayoutConfig["heightSpec"];
       if (heightSpec.isDouble()) {
-        if (heightSpec.toInt() == 0) {
+        if (heightSpec.toInt() == SpecMode::JUST) {
           view->setHeight(prop.toInt());
         }
       }

@@ -57,7 +57,7 @@ void DoricSuperNode::blendSubLayoutConfig(DoricViewNode *viewNode,
 
 QJsonValue DoricSuperNode::generateDefaultLayoutConfig() {
   QJsonObject layoutConfig;
-  layoutConfig.insert("widthSpec", 0);
-  layoutConfig.insert("heightSpec", 0);
+  layoutConfig.insert("widthSpec", SpecMode::JUST);
+  layoutConfig.insert("heightSpec", SpecMode::JUST);
   return layoutConfig;
 }

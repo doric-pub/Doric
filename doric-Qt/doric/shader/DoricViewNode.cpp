@@ -128,7 +128,7 @@ QList<QString> DoricViewNode::getIdList() {
 
   DoricViewNode *viewNode = this;
   do {
-    ids.append(viewNode->mId);
+    ids.insert(0, viewNode->mId);
     viewNode = viewNode->mSuperNode;
   } while (viewNode != nullptr);
 

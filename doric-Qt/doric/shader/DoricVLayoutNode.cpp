@@ -11,7 +11,7 @@ QQuickItem *DoricVLayoutNode::build() {
   }
 
   QQuickItem *item = qobject_cast<QQuickItem *>(component.create());
-  item->setProperty("wrapper", (qint64)this);
+  item->setProperty("wrapper", QString::number((qint64)this));
   return item;
 }
 

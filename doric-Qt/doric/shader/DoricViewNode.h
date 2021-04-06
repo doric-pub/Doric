@@ -21,7 +21,7 @@ class DoricViewNode : public DoricContextHolder {
 protected:
   QQuickItem *mView;
 
-  DoricSuperNode *mSuperNode;
+  DoricSuperNode *mSuperNode = nullptr;
 
   virtual QQuickItem *build() = 0;
 

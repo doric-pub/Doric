@@ -62,6 +62,7 @@ v8::Local<v8::Value> String2JS(std::string string) {
 v8::Local<v8::Value> Variant2JS(QVariant variant) {
   v8::Isolate *isolate = v8::Isolate::GetCurrent();
   v8::EscapableHandleScope handle_scope(isolate);
+  v8::Local<v8::Context> context = isolate->GetEnteredOrMicrotaskContext();
 
   v8::Local<v8::Value> jsValue;
   if (variant.type() == QVariant::String) {
@@ -78,7 +79,14 @@ v8::Local<v8::Value> Variant2JS(QVariant variant) {
     QString strJson(doc.toJson(QJsonDocument::Compact));
     jsValue = String2JS(strJson.toUtf8().constData());
   } else if (variant.type() == QVariant::StringList) {
-    qDebug() << "";
+    QStringList list = variant.toStringList();
+    v8::Handle<v8::Array> array = v8::Array::New(isolate, list.size());
+    for (int i = 0; i != list.size(); i++) {
+      v8::Local<v8::Value> value = NewV8String(list.at(i).toUtf8().constData());
+      auto result = array->Set(context, i, value);
+      result.ToChecked();
+    }
+    jsValue = array;
   }
   return handle_scope.Escape(jsValue);
 }

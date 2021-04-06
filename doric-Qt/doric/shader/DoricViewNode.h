@@ -1,11 +1,18 @@
 #ifndef DORICVIEWNODE_H
 #define DORICVIEWNODE_H
 
-#include <QQuickItem>
-#include <QJsonValue>
 #include <QJsonObject>
+#include <QJsonValue>
+#include <QQuickItem>
 
 #include "../utils/DoricContextHolder.h"
+
+class SpecMode {
+public:
+  const static int JUST = 0;
+  const static int FIT = 1;
+  const static int MOST = 2;
+};
 
 class DoricSuperNode;
 

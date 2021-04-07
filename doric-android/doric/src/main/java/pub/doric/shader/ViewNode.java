@@ -504,7 +504,10 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 break;
             case "hidden":
                 if (prop.isBoolean()) {
-                    getNodeView().setVisibility(prop.asBoolean().value() ? View.GONE : View.VISIBLE);
+                    if (doricLayer != null) {
+                        doricLayer.setVisibility(prop.asBoolean().value() ? View.GONE : View.VISIBLE);
+                    }
+                    mView.setVisibility(prop.asBoolean().value() ? View.GONE : View.VISIBLE);
                 }
                 break;
             case "flexConfig":

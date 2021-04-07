@@ -138,20 +138,38 @@ HEADERS += \
     yoga/internal/experiments.h \
     yoga/log.h
 
-LIBS += -lwinmm
-LIBS += -lAdvapi32
-LIBS += -lDbghelp
-
-INCLUDEPATH += $$PWD/v8
-
-LIBS += -L$$PWD/library/v8/release/
-LIBS += -lv8_monolith
-
 win32:CONFIG(debug, debug|release): {
     QMAKE_CFLAGS_DEBUG += -MT
     QMAKE_CXXFLAGS_DEBUG += -MT
+
+    LIBS += -lwinmm
+    LIBS += -lAdvapi32
+    LIBS += -lDbghelp
+
+    INCLUDEPATH += $$PWD/library/v8/win32/include
+
+    LIBS += -L$$PWD/library/v8/win32/release/
+    LIBS += -lv8_monolith
 }
 else:win32:CONFIG(release, debug|release): {
     QMAKE_CFLAGS_RELEASE += -MT
     QMAKE_CXXFLAGS_RELEASE += -MT
+
+    LIBS += -lwinmm
+    LIBS += -lAdvapi32
+    LIBS += -lDbghelp
+
+    INCLUDEPATH += $$PWD/library/v8/win32/include
+
+    LIBS += -L$$PWD/library/v8/win32/release/
+    LIBS += -lv8_monolith
+}
+else:unix: {
+    QMAKE_CFLAGS_RELEASE += -MT
+    QMAKE_CXXFLAGS_RELEASE += -MT
+
+    INCLUDEPATH += $$PWD/library/v8/darwin/include
+
+    LIBS += -L$$PWD/library/v8/darwin/release/
+    LIBS += -lv8_monolith
 }

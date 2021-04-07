@@ -1,2 +1,4 @@
 /build-doric-*/
 .DS_Store
+/doric/library/v8/darwin/release/libv8_monolith.a
+/doric/library/v8/win32/release/v8_monolith.lib

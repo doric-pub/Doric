@@ -6,7 +6,7 @@ import "util.mjs" as Util
 import "gravity.mjs" as Gravity
 
 Rectangle {
-    property int wrapper: 0
+    property var wrapper
 
     clip: true
 
@@ -19,15 +19,15 @@ Rectangle {
     property int childrenRectWidth: childrenRect.width
     property int childrenRectHeight: childrenRect.height
 
-    onWidthChanged: () => {
+    onWidthChanged: {
         console.log(tag, uuid + " onWidthChanged: " + this.width)
     }
 
-    onHeightChanged: () => {
+    onHeightChanged: {
         console.log(tag, uuid + " onHeightChanged: " + this.height)
     }
 
-    onWidthSpecChanged: () => {
+    onWidthSpecChanged: {
         console.log(tag, uuid + " onWidthSpecChanged: " + this.widthSpec)
         console.log(tag, uuid + " parent width: " + parent.width)
 
@@ -37,7 +37,7 @@ Rectangle {
         }
     }
 
-    onHeightSpecChanged: () => {
+    onHeightSpecChanged: {
         console.log(tag, uuid + " onHeightSpecChanged: " + this.heightSpec)
         console.log(tag, uuid + " parent height: " + parent.height)
 
@@ -47,7 +47,7 @@ Rectangle {
         }
     }
 
-    onChildrenRectChanged: () => {
+    onChildrenRectChanged: {
         console.log(tag, uuid + " widthSpec: " + widthSpec + " heightSpec: " + heightSpec)
         console.log(tag, uuid + " onChildrenRectChanged: " + childrenRect)
         this.childrenRectWidth = childrenRect.width
@@ -67,6 +67,7 @@ Rectangle {
     MouseArea {
         anchors.fill: parent
         onClicked: {
+            console.log(tag, uuid + " wrapper: " + wrapper)
             mouseAreaBridge.onClick(wrapper)
         }
     }
@@ -76,7 +77,7 @@ Rectangle {
 
         spacing: 0
 
-        onChildrenChanged: () => {
+        onChildrenChanged: {
             console.log(tag, uuid + " gravity: " + gravity)
             for (var i = 0;i !== children.length;i++) {
                 switch(this.gravity) {

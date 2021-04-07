@@ -118,7 +118,7 @@ void DoricViewNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
   } else if (name == "onClick") {
     if (prop.isString())
       clickFunction = prop.toString();
-  } else {
+  } else if (name != "layoutConfig") {
     qCritical() << name << ": " << prop.toString();
   }
 }

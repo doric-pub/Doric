@@ -14,15 +14,15 @@ Rectangle {
 
     property var tag: "Text"
 
-    onWidthChanged: () => {
+    onWidthChanged: {
         console.log(tag, uuid + " onWidthChanged: " + this.width)
     }
 
-    onHeightChanged: () => {
+    onHeightChanged: {
         console.log(tag, uuid + " onHeightChanged: " + this.height)
     }
 
-    onChildrenRectChanged: () => {
+    onChildrenRectChanged: {
         console.log(tag, uuid + " onChildrenRectChanged: " + childrenRect)
         this.childrenRectWidth = childrenRect.width
         this.childrenRectHeight = childrenRect.height
@@ -54,6 +54,7 @@ Rectangle {
     MouseArea {
         anchors.fill: parent
         onClicked: {
+            console.log(tag, uuid + " wrapper: " + wrapper)
             mouseAreaBridge.onClick(wrapper)
         }
     }

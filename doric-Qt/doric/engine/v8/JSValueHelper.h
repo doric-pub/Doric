@@ -4,7 +4,7 @@
 #include <QVariant>
 #include <string>
 
-#include "v8/v8.h"
+#include "v8.h"
 
 #define NewV8String(name)                                                      \
   v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), name,                     \

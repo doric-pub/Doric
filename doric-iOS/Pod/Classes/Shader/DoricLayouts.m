@@ -22,6 +22,43 @@
 #import "UIView+Doric.h"
 #import "DoricExtensions.h"
 
+void DoricAddEllipticArcPath(CGMutablePathRef path,
+        CGPoint origin,
+        CGFloat radius,
+        CGFloat startAngle,
+        CGFloat endAngle) {
+    CGAffineTransform t = CGAffineTransformMakeTranslation(origin.x, origin.y);
+    CGPathAddArc(path, &t, 0, 0, radius, startAngle, endAngle, NO);
+}
+
+
+CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
+        CGFloat leftTop,
+        CGFloat rightTop,
+        CGFloat rightBottom,
+        CGFloat leftBottom) {
+    const CGFloat minX = CGRectGetMinX(bounds);
+    const CGFloat minY = CGRectGetMinY(bounds);
+    const CGFloat maxX = CGRectGetMaxX(bounds);
+    const CGFloat maxY = CGRectGetMaxY(bounds);
+
+    CGMutablePathRef path = CGPathCreateMutable();
+    DoricAddEllipticArcPath(path, (CGPoint) {
+            minX + leftTop, minY + leftTop
+    }, leftTop, M_PI, 3 * M_PI_2);
+    DoricAddEllipticArcPath(path, (CGPoint) {
+            maxX - rightTop, minY + rightTop
+    }, rightTop, 3 * M_PI_2, 0);
+    DoricAddEllipticArcPath(path, (CGPoint) {
+            maxX - rightBottom, maxY - rightBottom
+    }, rightBottom, 0, M_PI_2);
+    DoricAddEllipticArcPath(path, (CGPoint) {
+            minX + leftBottom, maxY - leftBottom
+    }, leftBottom, M_PI_2, M_PI);
+    CGPathCloseSubpath(path);
+    return path;
+}
+
 static const void *kLayoutConfig = &kLayoutConfig;
 
 @implementation UIView (DoricLayout)
@@ -206,6 +243,14 @@ static const void *kLayoutConfig = &kLayoutConfig;
     }
     if (![self rect:originFrame equalTo:self.view.frame]) {
         self.view.frame = originFrame;
+        if (!UIEdgeInsetsEqualToEdgeInsets(self.corners, UIEdgeInsetsZero)) {
+            CAShapeLayer *shapeLayer = [CAShapeLayer layer];
+            CGPathRef path = DoricCreateRoundedRectPath(self.view.bounds,
+                    self.corners.top, self.corners.left, self.corners.bottom, self.corners.right);
+            shapeLayer.path = path;
+            CGPathRelease(path);
+            self.view.layer.mask = shapeLayer;
+        }
     }
 }
 
@@ -380,7 +425,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
             continue;
         }
         if (self.widthSpec == DoricLayoutFit && layout.widthSpec == DoricLayoutMost) {
-            layout.measuredWidth = self.measuredWidth - layout.marginLeft  - layout.marginRight;
+            layout.measuredWidth = self.measuredWidth - layout.marginLeft - layout.marginRight;
         }
         if (self.heightSpec == DoricLayoutFit && layout.heightSpec == DoricLayoutMost) {
             layout.measuredHeight = self.measuredHeight - layout.marginTop - layout.marginBottom;
@@ -447,7 +492,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
             continue;
         }
         if (self.widthSpec == DoricLayoutFit && layout.widthSpec == DoricLayoutMost) {
-            layout.measuredWidth = self.measuredWidth - layout.marginLeft  - layout.marginRight;
+            layout.measuredWidth = self.measuredWidth - layout.marginLeft - layout.marginRight;
         }
         if (self.heightSpec == DoricLayoutFit && layout.heightSpec == DoricLayoutMost) {
             layout.measuredHeight = self.measuredHeight - yStart - layout.marginTop - layout.marginBottom;
@@ -491,15 +536,15 @@ static const void *kLayoutConfig = &kLayoutConfig;
         if (layout.disabled) {
             continue;
         }
-        
+
         if (self.widthSpec == DoricLayoutFit && layout.widthSpec == DoricLayoutMost) {
-            layout.measuredWidth = self.measuredWidth - xStart - layout.marginLeft  - layout.marginRight;
+            layout.measuredWidth = self.measuredWidth - xStart - layout.marginLeft - layout.marginRight;
         }
-        
+
         if (self.heightSpec == DoricLayoutFit && layout.heightSpec == DoricLayoutMost) {
             layout.measuredHeight = self.measuredHeight - layout.marginTop - layout.marginBottom;
         }
-        
+
         [layout layout];
 
         DoricGravity gravity = layout.alignment | self.gravity;

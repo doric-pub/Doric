@@ -30,43 +30,6 @@
 #import "DoricPromise.h"
 #import "DoricFlexNode.h"
 
-void DoricAddEllipticArcPath(CGMutablePathRef path,
-        CGPoint origin,
-        CGFloat radius,
-        CGFloat startAngle,
-        CGFloat endAngle) {
-    CGAffineTransform t = CGAffineTransformMakeTranslation(origin.x, origin.y);
-    CGPathAddArc(path, &t, 0, 0, radius, startAngle, endAngle, NO);
-}
-
-
-CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
-        CGFloat leftTop,
-        CGFloat rightTop,
-        CGFloat rightBottom,
-        CGFloat leftBottom) {
-    const CGFloat minX = CGRectGetMinX(bounds);
-    const CGFloat minY = CGRectGetMinY(bounds);
-    const CGFloat maxX = CGRectGetMaxX(bounds);
-    const CGFloat maxY = CGRectGetMaxY(bounds);
-
-    CGMutablePathRef path = CGPathCreateMutable();
-    DoricAddEllipticArcPath(path, (CGPoint) {
-            minX + leftTop, minY + leftTop
-    }, leftTop, M_PI, 3 * M_PI_2);
-    DoricAddEllipticArcPath(path, (CGPoint) {
-            maxX - rightTop, minY + rightTop
-    }, rightTop, 3 * M_PI_2, 0);
-    DoricAddEllipticArcPath(path, (CGPoint) {
-            maxX - rightBottom, maxY - rightBottom
-    }, rightBottom, 0, M_PI_2);
-    DoricAddEllipticArcPath(path, (CGPoint) {
-            minX + leftBottom, maxY - leftBottom
-    }, leftBottom, M_PI_2, M_PI);
-    CGPathCloseSubpath(path);
-    return path;
-}
-
 @interface AnimationCallback : NSObject <CAAnimationDelegate>
 @property(nonatomic, strong) NSMutableDictionary *dictionary;
 @property(nonatomic, strong) void (^startBlock)(AnimationCallback *callback);
@@ -234,13 +197,7 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
                     || ABS(leftTop - rightBottom) > CGFLOAT_MIN
                     || ABS(leftTop - leftBottom) > CGFLOAT_MIN) {
                 view.layer.cornerRadius = 0;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    CAShapeLayer *shapeLayer = [CAShapeLayer layer];
-                    CGPathRef path = DoricCreateRoundedRectPath(self.view.bounds, leftTop, rightTop, rightBottom, leftBottom);
-                    shapeLayer.path = path;
-                    CGPathRelease(path);
-                    view.layer.mask = shapeLayer;
-                });
+                view.doricLayout.corners = UIEdgeInsetsMake(leftTop, rightTop, rightBottom, leftBottom);
             } else {
                 view.layer.cornerRadius = leftTop;
                 view.layer.mask = nil;

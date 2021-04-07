@@ -103,6 +103,8 @@ typedef NS_ENUM(NSInteger, DoricGravity) {
 
 @property(nonatomic, assign) BOOL undefined;
 
+@property(nonatomic, assign) UIEdgeInsets corners;
+
 - (instancetype)init;
 
 - (void)measure:(CGSize)targetSize;

@@ -43,7 +43,7 @@ Rectangle {
 
         if (this.heightSpec === 2) {
             this.height = parent.height
-//            children[1].height = parent.height
+            children[1].height = parent.height
         }
     }
 
@@ -77,16 +77,36 @@ Rectangle {
 
         spacing: 0
 
+        Item {
+            id: head
+            objectName: "head"
+        }
+
         onChildrenChanged: {
             console.log(tag, uuid + " gravity: " + gravity)
 
             for (var i = 0;i !== children.length;i++) {
-                switch(this.gravity) {
-                    case Gravity.enumerate().CENTER_X:
-                        children[i].Layout.alignment = Qt.AlignHCenter
-                        break
+                if (children[i] !== head && children[i] !== tail) {
+                    switch(this.gravity) {
+                        case Gravity.enumerate().CENTER_X:
+                            children[i].Layout.alignment = Qt.AlignHCenter
+                            break
+                        case Gravity.enumerate().CENTER:
+                            children[i].Layout.alignment = Qt.AlignCenter
+                            break
+                    }
                 }
             }
+
+            if (gravity === Gravity.enumerate().CENTER || gravity === Gravity.enumerate().CENTER_Y) {
+                head.Layout.fillHeight = true
+            }
+        }
+
+        Item {
+            id: tail
+            objectName: "tail"
+            Layout.fillHeight: true
         }
     }
 }

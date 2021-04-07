@@ -16,10 +16,11 @@ QQuickItem *DoricHLayoutNode::build() {
 }
 
 void DoricHLayoutNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
+  QQuickItem *container = view->childItems().at(1);
   if (name == "space") {
-    view->childItems().at(1)->setProperty("spacing", prop.toInt());
+    container->setProperty("spacing", prop.toInt());
   } else if (name == "gravity") {
-    view->childItems().at(1)->setProperty("gravity", prop.toInt());
+    container->setProperty("gravity", prop.toInt());
   } else {
     DoricGroupNode::blend(view, name, prop);
   }

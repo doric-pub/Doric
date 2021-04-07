@@ -25,10 +25,10 @@ void DoricGroupNode::blend(QJsonValue jsValue) {
 
 void DoricGroupNode::configChildNode() {
   QQuickItem *parent = nullptr;
-  if (mType.isEmpty() || mType == "Stack") {
-    parent = mView;
-  } else {
+  if (mType == "HLayout" || mType == "VLayout") {
     parent = mView->childItems().at(1);
+  } else {
+    parent = mView;
   }
   for (int idx = 0; idx < mChildViewIds.size(); idx++) {
     QString id = mChildViewIds.at(idx);
@@ -140,6 +140,23 @@ void DoricGroupNode::configChildNode() {
     viewNode->getNodeView()->setParentItem(nullptr);
     viewNode->getNodeView()->deleteLater();
   }
+
+  // handle tail
+  if (mType == "VLayout" || mType == "HLayout") {
+      int tailIndex = -1;
+      for (int idx = 0; idx < parent->childItems().size(); idx++) {
+        if (parent->childItems().at(idx)->objectName() == "tail") {
+          tailIndex = idx;
+          break;
+        }
+      }
+      if (tailIndex != -1 && tailIndex != parent->childItems().size() - 1) {
+        QQuickItem *tail = parent->childItems().at(tailIndex);
+        tail->setParentItem(nullptr);
+        tail->setParentItem(parent);
+      }
+  }
+
 }
 
 void DoricGroupNode::blendSubNode(QJsonValue subProperties) {

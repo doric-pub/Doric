@@ -101,12 +101,17 @@ Rectangle {
             if (gravity === Gravity.enumerate().CENTER || gravity === Gravity.enumerate().CENTER_Y) {
                 head.Layout.fillHeight = true
             }
+
+            if (parent.heightSpec == 1) {
+                tail.Layout.fillHeight = false
+            } else {
+                tail.Layout.fillHeight = true
+            }
         }
 
         Item {
             id: tail
             objectName: "tail"
-            Layout.fillHeight: true
         }
     }
 }

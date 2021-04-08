@@ -3,6 +3,7 @@
 #include "plugin/DoricShaderPlugin.h"
 #include "shader/DoricHLayoutNode.h"
 #include "shader/DoricRootNode.h"
+#include "shader/DoricScrollerNode.h"
 #include "shader/DoricStackNode.h"
 #include "shader/DoricTextNode.h"
 #include "shader/DoricVLayoutNode.h"
@@ -15,6 +16,7 @@ DoricRegistry::DoricRegistry() {
   registerViewNode<DoricVLayoutNode>("VLayout");
   registerViewNode<DoricHLayoutNode>("HLayout");
   registerViewNode<DoricTextNode>("Text");
+  registerViewNode<DoricScrollerNode>("Scroller");
 }
 
 bool DoricRegistry::acquirePluginInfo(QString name) {

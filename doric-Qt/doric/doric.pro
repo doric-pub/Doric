@@ -38,6 +38,7 @@ SOURCES += \
         shader/DoricGroupNode.cpp \
         shader/DoricHLayoutNode.cpp \
         shader/DoricRootNode.cpp \
+        shader/DoricScrollerNode.cpp \
         shader/DoricStackNode.cpp \
         shader/DoricSuperNode.cpp \
         shader/DoricTextNode.cpp \
@@ -103,6 +104,7 @@ HEADERS += \
     shader/DoricGroupNode.h \
     shader/DoricHLayoutNode.h \
     shader/DoricRootNode.h \
+    shader/DoricScrollerNode.h \
     shader/DoricStackNode.h \
     shader/DoricSuperNode.h \
     shader/DoricTextNode.h \

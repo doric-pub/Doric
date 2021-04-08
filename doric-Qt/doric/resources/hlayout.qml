@@ -100,12 +100,17 @@ Rectangle {
             if (gravity === Gravity.enumerate().CENTER || gravity === Gravity.enumerate().CENTER_X) {
                 head.Layout.fillWidth = true
             }
+
+            if (parent.widthSpec == 1) {
+                tail.Layout.fillWidth = false
+            } else {
+                tail.Layout.fillWidth = true
+            }
         }
 
         Item {
             id: tail
             objectName: "tail"
-            Layout.fillWidth: true
         }
     }
 }

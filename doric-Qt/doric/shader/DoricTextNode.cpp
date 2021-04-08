@@ -19,16 +19,16 @@ QQuickItem *DoricTextNode::build() {
 
 void DoricTextNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
   if (name == "text") {
-    view->childItems().at(0)->setProperty("text", prop.toString());
+    view->setProperty("text", prop.toString());
   } else if (name == "textColor") {
     QString color = DoricUtils::doricColor(prop.toInt()).name();
-    view->childItems().at(0)->setProperty("color", color);
+    view->setProperty("color", color);
   } else if (name == "textSize") {
-    QFont font = view->childItems().at(0)->property("font").value<QFont>();
+    QFont font = view->property("font").value<QFont>();
     font.setPixelSize(prop.toInt());
-    view->childItems().at(0)->setProperty("font", QVariant(font));
+    view->setProperty("font", QVariant(font));
   } else if (name == "textAlignment") {
-    view->childItems().at(0)->setProperty("textAlignment", prop.toInt());
+    view->setProperty("textAlignment", prop.toInt());
   } else {
     DoricViewNode::blend(view, name, prop);
   }

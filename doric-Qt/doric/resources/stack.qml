@@ -60,6 +60,12 @@ Rectangle {
 
     color: 'transparent'
 
+    property var backgroundColor
+
+    onBackgroundColorChanged: {
+        color = backgroundColor
+    }
+
     MouseArea {
         anchors.fill: parent
         onClicked: {

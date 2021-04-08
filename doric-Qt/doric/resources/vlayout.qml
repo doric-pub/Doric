@@ -98,13 +98,14 @@ Rectangle {
                 }
             }
 
-            if (gravity === Gravity.enumerate().CENTER || gravity === Gravity.enumerate().CENTER_Y) {
-                head.Layout.fillHeight = true
-            }
-
             if (parent.heightSpec == 1) {
                 tail.Layout.fillHeight = false
             } else {
+                if (gravity === Gravity.enumerate().CENTER || gravity === Gravity.enumerate().CENTER_Y) {
+                    head.Layout.fillHeight = true
+                } else {
+                    head.Layout.fillHeight = false
+                }
                 tail.Layout.fillHeight = true
             }
         }

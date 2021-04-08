@@ -21,6 +21,8 @@
         <file alias="vlayout.qml">resources/vlayout.qml</file>
         <file alias="hlayout.qml">resources/hlayout.qml</file>
         <file alias="text.qml">resources/text.qml</file>
+        <file alias="scroller.qml">resources/scroller.qml</file>
+
         <file alias="util.mjs">resources/util.mjs</file>
         <file alias="gravity.mjs">resources/gravity.mjs</file>
         <file alias="test-layout.qml">resources/test-layout.qml</file>

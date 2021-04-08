@@ -108,7 +108,7 @@ void DoricViewNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
     }
   } else if (name == "backgroundColor") {
     QString color = DoricUtils::doricColor(prop.toInt()).name();
-    view->setProperty("color", color);
+    view->setProperty("backgroundColor", color);
   } else if (name == "x") {
     view->setProperty("x", prop.toInt());
   } else if (name == "y") {

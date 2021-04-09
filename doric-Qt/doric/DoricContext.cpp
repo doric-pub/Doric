@@ -15,6 +15,12 @@ DoricContext::DoricContext(QString contextId, QString source, QString extra) {
   this->extra = extra;
 }
 
+DoricContext::~DoricContext() {
+  QVariantList args;
+  callEntity(DoricConstant::DORIC_ENTITY_DESTROY, args);
+  DoricContextManager::getInstance()->destroyContext(this);
+}
+
 DoricContext *DoricContext::create(QString script, QString source,
                                    QString extra) {
   DoricContext *context =
@@ -84,3 +90,5 @@ DoricViewNode *DoricContext::targetViewNode(QString id) {
   }
   return nullptr;
 }
+
+QString DoricContext::getContextId() { return mContextId; }

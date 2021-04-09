@@ -17,6 +17,8 @@ private:
 public:
   DoricPanel(QQmlEngine *qmlEngine, QQuickItem *quickItem);
 
+  ~DoricPanel();
+
   void config(QString script, QString alias, QString extra);
 
   void config(DoricContext *context);

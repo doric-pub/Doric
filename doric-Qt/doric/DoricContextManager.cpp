@@ -14,3 +14,8 @@ DoricContext *DoricContextManager::createContext(QString script, QString source,
 DoricContext *DoricContextManager::getContext(QString contextId) {
   return contextMap->value(contextId);
 }
+
+void DoricContextManager::destroyContext(DoricContext *context) {
+  context->getDriver()->destroyContext(context->getContextId());
+  contextMap->remove(context->getContextId());
+}

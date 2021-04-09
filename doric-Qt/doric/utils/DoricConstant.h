@@ -30,6 +30,7 @@ public:
   static const QString DORIC_ENTITY_CREATE;
   static const QString DORIC_ENTITY_INIT;
   static const QString DORIC_ENTITY_BUILD;
+  static const QString DORIC_ENTITY_DESTROY;
 };
 
 #endif // CONSTANT_H

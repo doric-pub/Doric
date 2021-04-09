@@ -3,7 +3,7 @@ import QtQuick.Controls 2.5
 
 ApplicationWindow {
     visible: true
-    width: 960
+    width: 405
     height: 720
     title: qsTr("Scroll")
 

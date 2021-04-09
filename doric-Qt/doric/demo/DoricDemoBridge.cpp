@@ -4,8 +4,8 @@
 
 #include "DoricDemoBridge.h"
 #include "DoricPanel.h"
-#include "utils/DoricUtils.h"
 #include "utils/DoricMouseAreaBridge.h"
+#include "utils/DoricUtils.h"
 
 DoricDemoBridge::DoricDemoBridge(QObject *parent) : QObject(parent) {}
 
@@ -33,6 +33,10 @@ void DoricDemoBridge::navigate(QVariant route) {
     view->setSource(url);
     view->setWidth(405);
     view->setHeight(720);
+    Qt::WindowFlags flag = Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint |
+                           Qt::WindowTitleHint | Qt::WindowCloseButtonHint |
+                           Qt::CustomizeWindowHint | Qt::WindowSystemMenuHint;
+    view->setFlags(flag);
   }
 
   {
@@ -46,6 +50,12 @@ void DoricDemoBridge::navigate(QVariant route) {
     quickItem->setParentItem(view->rootObject());
 
     panel->config(script, name, NULL);
+
+    connect(view, &QQuickView::visibleChanged, this, [view, panel]() {
+      if (!view->isVisible()) {
+        delete panel;
+      }
+    });
   }
 
   view->show();

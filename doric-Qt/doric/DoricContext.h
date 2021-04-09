@@ -24,6 +24,8 @@ private:
 public:
   DoricContext(QString contextId, QString source, QString extra);
 
+  ~DoricContext();
+
   static DoricContext *create(QString script, QString source, QString extra);
 
   void init(QString initData);
@@ -43,6 +45,8 @@ public:
   QQmlEngine *getQmlEngine();
 
   DoricViewNode *targetViewNode(QString id);
+
+  QString getContextId();
 };
 
 #endif // CONTEXT_H

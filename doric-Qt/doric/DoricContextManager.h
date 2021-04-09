@@ -25,6 +25,8 @@ public:
   DoricContext *createContext(QString script, QString source, QString extra);
 
   DoricContext *getContext(QString contextId);
+
+  void destroyContext(DoricContext *context);
 };
 
 #endif // CONTEXTMANAGER_H

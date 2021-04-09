@@ -33,3 +33,4 @@ const QString DoricConstant::DORIC_ENTITY_RESPONSE = "__response__";
 const QString DoricConstant::DORIC_ENTITY_INIT = "__init__";
 const QString DoricConstant::DORIC_ENTITY_CREATE = "__onCreate__";
 const QString DoricConstant::DORIC_ENTITY_BUILD = "__build__";
+const QString DoricConstant::DORIC_ENTITY_DESTROY = "__onDestroy__";

@@ -6,6 +6,10 @@ DoricPanel::DoricPanel(QQmlEngine *qmlEngine, QQuickItem *quickItem) {
   mQuickItem = quickItem;
 }
 
+DoricPanel::~DoricPanel() {
+    delete mContext;
+}
+
 void DoricPanel::config(QString script, QString alias, QString extra) {
   DoricContext *context = DoricContext::create(script, alias, extra);
   config(context);

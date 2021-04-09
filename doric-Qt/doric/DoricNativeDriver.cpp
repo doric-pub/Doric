@@ -14,9 +14,8 @@ void DoricNativeDriver::invokeContextEntityMethod(QString contextId,
 
 void DoricNativeDriver::invokeDoricMethod(QString method, QVariantList args) {
   return DoricAsyncCall::ensureRunInThreadPool(
-      &jsEngine.mJSThreadPool, [this, method, args] {
-        this->jsEngine.invokeDoricMethod(method, args);
-      });
+      &jsEngine.mJSThreadPool,
+      [this, method, args] { this->jsEngine.invokeDoricMethod(method, args); });
 }
 
 DoricAsyncResult *DoricNativeDriver::asyncCall(std::function<void()> lambda,
@@ -40,7 +39,11 @@ void DoricNativeDriver::createContext(QString contextId, QString script,
       });
 }
 
-void DoricNativeDriver::destroyContext(QString contextId) {}
+void DoricNativeDriver::destroyContext(QString contextId) {
+  DoricAsyncCall::ensureRunInThreadPool(
+      &jsEngine.mJSThreadPool,
+      [this, contextId] { this->jsEngine.destroyContext(contextId); });
+}
 
 DoricRegistry *DoricNativeDriver::getRegistry() {
   return this->jsEngine.getRegistry();

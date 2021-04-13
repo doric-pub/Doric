@@ -23,8 +23,6 @@ public:
 
   void blendSubLayoutConfig(DoricViewNode *viewNode, QJsonValue jsValue);
 
-  QJsonValue generateDefaultLayoutConfig();
-
 private:
   void mixinSubNode(QJsonValue subNode);
 

@@ -20,16 +20,13 @@ void DoricGroupNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
 
 void DoricGroupNode::blend(QJsonValue jsValue) {
   DoricViewNode::blend(jsValue);
-  configChildNode();
 }
 
+void DoricGroupNode::afterBlended(QJsonValue props) { configChildNode(); }
+
 void DoricGroupNode::configChildNode() {
-  QQuickItem *parent = nullptr;
-  if (mType == "HLayout" || mType == "VLayout") {
-    parent = mView->childItems().at(1);
-  } else {
-    parent = mView;
-  }
+  QQuickItem *parent = mView;
+
   for (int idx = 0; idx < mChildViewIds.size(); idx++) {
     QString id = mChildViewIds.at(idx);
     QJsonValue model = getSubModel(id);
@@ -140,23 +137,6 @@ void DoricGroupNode::configChildNode() {
     viewNode->getNodeView()->setParentItem(nullptr);
     viewNode->getNodeView()->deleteLater();
   }
-
-  // handle tail
-  if (mType == "VLayout" || mType == "HLayout") {
-      int tailIndex = -1;
-      for (int idx = 0; idx < parent->childItems().size(); idx++) {
-        if (parent->childItems().at(idx)->objectName() == "tail") {
-          tailIndex = idx;
-          break;
-        }
-      }
-      if (tailIndex != -1 && tailIndex != parent->childItems().size() - 1) {
-        QQuickItem *tail = parent->childItems().at(tailIndex);
-        tail->setParentItem(nullptr);
-        tail->setParentItem(parent);
-      }
-  }
-
 }
 
 void DoricGroupNode::blendSubNode(QJsonValue subProperties) {
@@ -167,4 +147,9 @@ void DoricGroupNode::blendSubNode(QJsonValue subProperties) {
       break;
     }
   }
+}
+
+void DoricGroupNode::requestLayout() {
+  DoricSuperNode::requestLayout();
+  foreach (DoricViewNode *node, this->mChildNodes) { node->requestLayout(); }
 }

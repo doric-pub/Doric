@@ -11,16 +11,20 @@ QQuickItem *DoricVLayoutNode::build() {
   }
 
   QQuickItem *item = qobject_cast<QQuickItem *>(component.create());
+  this->createLayouts(item);
+
+  getLayouts()->setLayoutType(DoricLayoutType::DoricVLayout);
+
   item->setProperty("wrapper", QString::number((qint64)this));
   return item;
 }
 
 void DoricVLayoutNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
-  QQuickItem *container = view->childItems().at(1);
+  QQuickItem *container = view;
   if (name == "space") {
-    container->setProperty("spacing", prop.toInt());
+    getLayouts()->setSpacing(prop.toInt());
   } else if (name == "gravity") {
-    container->setProperty("gravity", prop.toInt());
+    getLayouts()->setGravity(prop.toInt());
   } else {
     DoricGroupNode::blend(view, name, prop);
   }

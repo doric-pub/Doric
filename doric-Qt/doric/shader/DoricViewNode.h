@@ -6,13 +6,7 @@
 #include <QQuickItem>
 
 #include "../utils/DoricContextHolder.h"
-
-class SpecMode {
-public:
-  const static int JUST = 0;
-  const static int FIT = 1;
-  const static int MOST = 2;
-};
+#include "../utils/DoricLayouts.h"
 
 class DoricSuperNode;
 
@@ -21,16 +15,20 @@ class DoricViewNode : public DoricContextHolder {
 protected:
   QQuickItem *mView;
 
+  DoricLayouts *mLayouts = nullptr;
+
   DoricSuperNode *mSuperNode = nullptr;
 
   virtual QQuickItem *build() = 0;
+
+  void createLayouts(QQuickItem *view);
+
+  DoricLayouts *getLayouts();
 
   void setLayoutConfig(QJsonValue layoutConfig);
 
 private:
   QString mId;
-
-  QJsonValue mLayoutConfig;
 
   QList<QString> getIdList();
 
@@ -70,7 +68,11 @@ public:
 
   virtual void blend(QQuickItem *view, QString name, QJsonValue prop);
 
+  virtual void afterBlended(QJsonValue prop);
+
   virtual void blendLayoutConfig(QJsonValue jsObject);
+
+  virtual void requestLayout();
 
   void onClick();
 

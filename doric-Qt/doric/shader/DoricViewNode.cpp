@@ -3,41 +3,61 @@
 #include "../utils/DoricUtils.h"
 #include "DoricSuperNode.h"
 
-void DoricViewNode::blendLayoutConfig(QJsonValue jsObject) {
-  this->mLayoutConfig = jsObject;
+void DoricViewNode::blendLayoutConfig(QJsonValue jsValue) {
+  QJsonObject jsObject = jsValue.toObject();
+  if (jsObject.contains("widthSpec"))
+    getLayouts()->setWidthSpec(jsObject["widthSpec"].toInt());
 
-  QJsonValue margin = jsObject["margin"];
-  QJsonValue widthSpec = jsObject["widthSpec"];
-  QJsonValue heightSpec = jsObject["heightSpec"];
+  if (jsObject.contains("heightSpec"))
+    getLayouts()->setHeightSpec(jsObject["heightSpec"].toInt());
 
-  if (widthSpec.isDouble()) {
-    switch (widthSpec.toInt()) {
-    case SpecMode::JUST:
-      mView->setProperty("widthSpec", SpecMode::JUST);
-      break;
-    case SpecMode::FIT:
-      mView->setProperty("widthSpec", SpecMode::FIT);
-      break;
-    case SpecMode::MOST:
-      mView->setProperty("widthSpec", SpecMode::MOST);
-      break;
-    }
+  if (jsObject.contains("margin")) {
+    QJsonObject margin = jsObject["margin"].toObject();
+
+    if (margin.contains("left"))
+      getLayouts()->setMarginLeft(margin["left"].toInt());
+
+    if (margin.contains("top"))
+      getLayouts()->setMarginTop(margin["top"].toInt());
+
+    if (margin.contains("right"))
+      getLayouts()->setMarginRight(margin["right"].toInt());
+
+    if (margin.contains("bottom"))
+      getLayouts()->setMarginBottom(margin["bottom"].toInt());
   }
 
-  if (heightSpec.isDouble()) {
-    switch (heightSpec.toInt()) {
-    case SpecMode::JUST:
-      mView->setProperty("heightSpec", SpecMode::JUST);
-      break;
-    case SpecMode::FIT:
-      mView->setProperty("heightSpec", SpecMode::FIT);
-      break;
-    case SpecMode::MOST:
-      mView->setProperty("heightSpec", SpecMode::MOST);
-      break;
-    }
+  if (jsObject.contains("alignment"))
+    getLayouts()->setAlignment(jsObject["alignment"].toInt());
+
+  if (jsObject.contains("weight"))
+    getLayouts()->setWeight(jsObject["weight"].toInt());
+
+  if (jsObject.contains("maxWidth"))
+    getLayouts()->setMaxWidth(jsObject["maxWidth"].toInt());
+
+  if (jsObject.contains("maxHeight"))
+    getLayouts()->setMaxHeight(jsObject["maxHeight"].toInt());
+
+  if (jsObject.contains("minWidth"))
+    getLayouts()->setMinWidth(jsObject["minWidth"].toInt());
+
+  if (jsObject.contains("minHeight"))
+    getLayouts()->setMinHeight(jsObject["minHeight"].toInt());
+}
+
+void DoricViewNode::createLayouts(QQuickItem *view) {
+  if (mLayouts == nullptr) {
+    mLayouts = new DoricLayouts();
+    mLayouts->setWidth(view->width());
+    mLayouts->setHeight(view->height());
+    mLayouts->setView(view);
+
+    view->setProperty("doricLayout", QString::number((qint64)mLayouts));
   }
 }
+
+DoricLayouts *DoricViewNode::getLayouts() { return mLayouts; }
 
 void DoricViewNode::setLayoutConfig(QJsonValue layoutConfig) {
   if (mSuperNode != nullptr) {
@@ -53,8 +73,8 @@ void DoricViewNode::init(DoricSuperNode *superNode) {
     thiz->mReusable = superNode->mReusable;
   }
   this->mSuperNode = superNode;
-  this->mLayoutConfig = superNode->generateDefaultLayoutConfig();
   this->mView = build();
+  getLayouts();
 }
 
 QString DoricViewNode::getId() { return mId; }
@@ -75,53 +95,40 @@ void DoricViewNode::blend(QJsonValue jsValue) {
     QJsonValue value = jsValue[key];
     blend(mView, key, value);
   }
+
+  this->afterBlended(jsValue);
 }
 
 void DoricViewNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
   if (name == "width") {
-    if (!prop.isDouble()) {
-      return;
-    }
-    if (this->mLayoutConfig.isUndefined()) {
-      view->setWidth(prop.toInt());
-    } else {
-      QJsonValue widthSpec = this->mLayoutConfig["widthSpec"];
-      if (widthSpec.isDouble()) {
-        if (widthSpec.toInt() == SpecMode::JUST) {
-          view->setWidth(prop.toInt());
-        }
-      }
-    }
+    getLayouts()->setWidth(prop.toInt());
   } else if (name == "height") {
-    if (!prop.isDouble()) {
-      return;
-    }
-    if (this->mLayoutConfig.isUndefined()) {
-      view->setHeight(prop.toInt());
-    } else {
-      QJsonValue heightSpec = this->mLayoutConfig["heightSpec"];
-      if (heightSpec.isDouble()) {
-        if (heightSpec.toInt() == SpecMode::JUST) {
-          view->setHeight(prop.toInt());
-        }
-      }
-    }
+    getLayouts()->setHeight(prop.toInt());
   } else if (name == "backgroundColor") {
     QString color = DoricUtils::doricColor(prop.toInt()).name();
     view->setProperty("backgroundColor", color);
   } else if (name == "x") {
-    view->setProperty("x", prop.toInt());
+    getLayouts()->setMarginLeft(prop.toInt());
   } else if (name == "y") {
-    view->setProperty("y", prop.toInt());
+    getLayouts()->setMarginRight(prop.toInt());
   } else if (name == "corners") {
     view->setProperty("radius", prop.toInt());
   } else if (name == "onClick") {
     if (prop.isString())
       clickFunction = prop.toString();
+  } else if (name == "padding") {
+    getLayouts()->setPaddingLeft(prop["left"].toInt());
+    getLayouts()->setPaddingRight(prop["right"].toInt());
+    getLayouts()->setPaddingTop(prop["top"].toInt());
+    getLayouts()->setPaddingBottom(prop["bottom"].toInt());
+  } else if (name == "hidden") {
+    getLayouts()->setDisabled(prop.toBool());
   } else if (name != "layoutConfig") {
     qCritical() << name << ": " << prop.toString();
   }
 }
+
+void DoricViewNode::afterBlended(QJsonValue prop) {}
 
 QList<QString> DoricViewNode::getIdList() {
   QList<QString> ids;
@@ -134,6 +141,8 @@ QList<QString> DoricViewNode::getIdList() {
 
   return ids;
 }
+
+void DoricViewNode::requestLayout() {}
 
 void DoricViewNode::callJSResponse(QString funcId, QVariantList args) {
   QVariantList nArgs;

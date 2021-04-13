@@ -20,10 +20,12 @@ void DoricShaderPlugin::render(QString jsValueString, QString callbackId) {
               jsValue["type"].toString() == "Root") {
             rootNode->setId(viewId);
             rootNode->blend(jsValue["props"]);
+            rootNode->requestLayout();
           } else {
             DoricViewNode *viewNode = getContext()->targetViewNode(viewId);
             if (viewNode != nullptr) {
               viewNode->blend(jsValue["props"]);
+              viewNode->requestLayout();
             }
           }
         } catch (...) {

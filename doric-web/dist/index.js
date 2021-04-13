@@ -4433,7 +4433,6 @@ var doric_web = (function (exports, axios, sandbox) {
         }
     }
 
-    exports.LayoutSpec = void 0;
     (function (LayoutSpec) {
         LayoutSpec[LayoutSpec["EXACTLY"] = 0] = "EXACTLY";
         LayoutSpec[LayoutSpec["WRAP_CONTENT"] = 1] = "WRAP_CONTENT";
@@ -5914,8 +5913,6 @@ ${content}
     exports.registerViewNode = registerViewNode;
     exports.toPixelString = toPixelString;
     exports.toRGBAString = toRGBAString;
-
-    Object.defineProperty(exports, '__esModule', { value: true });
 
     return exports;
 

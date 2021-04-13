@@ -21,9 +21,17 @@ export class DoricElement extends HTMLElement {
         this.setAttribute('alias', v)
     }
 
+    get initData() {
+        return this.getAttribute('data') as string
+    }
+
+    set initData(v: string) {
+        this.setAttribute('data', v)
+    }
+
     connectedCallback() {
         if (this.src && this.context === undefined) {
-            axios.get<string>(this.src).then(result => {
+            axios.get(this.src).then(result => {
                 this.load(result.data)
             })
         }
@@ -41,11 +49,14 @@ export class DoricElement extends HTMLElement {
     }
 
     onDestroy() {
+        this.context?.onDestroy()
         this.context?.teardown()
     }
 
     load(content: string) {
         this.context = new DoricContext(content)
+        this.context.init(this.initData)
+        this.context.onCreate()
         const divElement = document.createElement('div')
         divElement.style.position = 'relative'
         divElement.style.height = '100%'
@@ -55,5 +66,6 @@ export class DoricElement extends HTMLElement {
             width: divElement.offsetWidth,
             height: divElement.offsetHeight,
         })
+        this.context.onShow()
     }
 }

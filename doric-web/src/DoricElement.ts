@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { loadDoricJSBundle } from './DoricBundleLoader'
 import { DoricContext } from './DoricContext'
 
 
@@ -31,8 +32,8 @@ export class DoricElement extends HTMLElement {
 
     connectedCallback() {
         if (this.src && this.context === undefined) {
-            axios.get(this.src).then(result => {
-                this.load(result.data)
+            loadDoricJSBundle(this.src).then(result => {
+                this.load(result)
             })
         }
     }

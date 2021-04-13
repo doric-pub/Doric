@@ -4402,6 +4402,37 @@ var doric_web = (function (exports, axios, sandbox) {
 
     var axios__default = /*#__PURE__*/_interopDefaultLegacy(axios);
 
+    var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+        function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+        return new (P || (P = Promise))(function (resolve, reject) {
+            function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+            function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+            function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+            step((generator = generator.apply(thisArg, _arguments || [])).next());
+        });
+    };
+    const loaders = [
+        {
+            filter: () => true,
+            request: (source) => __awaiter(void 0, void 0, void 0, function* () {
+                const result = yield axios__default['default'].get(source);
+                return result.data;
+            })
+        }
+    ];
+    function registerDoricJSLoader(loader) {
+        loaders.push(loader);
+    }
+    function loadDoricJSBundle(source) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const matched = loaders.filter(e => e.filter(source));
+            if (matched.length > 0) {
+                return matched[matched.length - 1].request(source);
+            }
+            throw new Error(`Cannot find matched loader for '${source}'`);
+        });
+    }
+
     class DoricPlugin {
         constructor(context) {
             this.context = context;
@@ -5788,8 +5819,20 @@ ${content}
             }
             return Reflect.apply(sandbox.jsCallEntityMethod, this.panel, argumentsList);
         }
-        init(extra) {
-            this.invokeEntityMethod("__init__", extra ? JSON.stringify(extra) : undefined);
+        init(data) {
+            this.invokeEntityMethod("__init__", data);
+        }
+        onCreate() {
+            this.invokeEntityMethod("__onCreate__");
+        }
+        onDestroy() {
+            this.invokeEntityMethod("__onDestroy__");
+        }
+        onShow() {
+            this.invokeEntityMethod("__onShow__");
+        }
+        onHidden() {
+            this.invokeEntityMethod("__onHidden__");
         }
         build(frame) {
             this.invokeEntityMethod("__build__", frame);
@@ -5818,10 +5861,16 @@ ${content}
         set alias(v) {
             this.setAttribute('alias', v);
         }
+        get initData() {
+            return this.getAttribute('data');
+        }
+        set initData(v) {
+            this.setAttribute('data', v);
+        }
         connectedCallback() {
             if (this.src && this.context === undefined) {
-                axios__default['default'].get(this.src).then(result => {
-                    this.load(result.data);
+                loadDoricJSBundle(this.src).then(result => {
+                    this.load(result);
                 });
             }
         }
@@ -5832,11 +5881,14 @@ ${content}
         attributeChangedCallback() {
         }
         onDestroy() {
-            var _a;
-            (_a = this.context) === null || _a === void 0 ? void 0 : _a.teardown();
+            var _a, _b;
+            (_a = this.context) === null || _a === void 0 ? void 0 : _a.onDestroy();
+            (_b = this.context) === null || _b === void 0 ? void 0 : _b.teardown();
         }
         load(content) {
             this.context = new DoricContext(content);
+            this.context.init(this.initData);
+            this.context.onCreate();
             const divElement = document.createElement('div');
             divElement.style.position = 'relative';
             divElement.style.height = '100%';
@@ -5846,6 +5898,7 @@ ${content}
                 width: divElement.offsetWidth,
                 height: divElement.offsetHeight,
             });
+            this.context.onShow();
         }
     }
 
@@ -5885,8 +5938,24 @@ ${content}
         }
     }
 
+    var __awaiter$1 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+        function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+        return new (P || (P = Promise))(function (resolve, reject) {
+            function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+            function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+            function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+            step((generator = generator.apply(thisArg, _arguments || [])).next());
+        });
+    };
     window.customElements.define('doric-div', DoricElement);
     window.customElements.define('doric-navigation', NavigationElement);
+    registerDoricJSLoader({
+        filter: (source) => source.startsWith("assets://"),
+        request: (source) => __awaiter$1(void 0, void 0, void 0, function* () {
+            const ret = yield axios__default['default'].get(source.replace("assets://", `${window.location.href}/../../doric-demo/bundle/`));
+            return ret.data;
+        })
+    });
 
     exports.BOTTOM = BOTTOM;
     exports.CENTER = CENTER;

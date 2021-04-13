@@ -39,9 +39,27 @@ export class DoricContext {
         return Reflect.apply(jsCallEntityMethod, this.panel, argumentsList)
     }
 
-    init(extra?: object) {
-        this.invokeEntityMethod("__init__", extra ? JSON.stringify(extra) : undefined)
+    init(data?: string) {
+        this.invokeEntityMethod("__init__", data)
     }
+
+    onCreate() {
+        this.invokeEntityMethod("__onCreate__")
+    }
+
+
+    onDestroy() {
+        this.invokeEntityMethod("__onDestroy__")
+    }
+
+    onShow() {
+        this.invokeEntityMethod("__onShow__")
+    }
+
+    onHidden() {
+        this.invokeEntityMethod("__onHidden__")
+    }
+
     build(frame: {
         width: number,
         height: number,

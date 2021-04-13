@@ -2443,9 +2443,26 @@ class Panel {
                     }
                 }
             }
+            if (this.__rendering__) {
+                //skip
+                Promise.all(promises).then(_ => {
+                });
+            }
+            else {
+                this.__rendering__ = true;
+                Promise.all(promises).then(_ => {
+                    this.__rendering__ = false;
+                    this.onRenderFinished();
+                });
+            }
         }
         else {
-            Promise.resolve().then(() => {
+            if (this.__rendering__) {
+                //skip
+                return;
+            }
+            this.__rendering__ = true;
+            Function("return this")().setTimeout(() => {
                 if (this.__root__.isDirty()) {
                     const model = this.__root__.toModel();
                     promises.push(this.nativeRender(model));
@@ -2460,19 +2477,11 @@ class Panel {
                         }
                     }
                 }
-            });
-        }
-        if (this.__rendering__) {
-            //skip
-            Promise.all(promises).then(_ => {
-            });
-        }
-        else {
-            this.__rendering__ = true;
-            Promise.all(promises).then(_ => {
                 this.__rendering__ = false;
-                this.onRenderFinished();
-            });
+                Promise.all(promises).then(_ => {
+                    this.onRenderFinished();
+                });
+            }, 0);
         }
     }
     onRenderFinished() {
@@ -5689,7 +5698,7 @@ ${content}
     }
     function initDoric() {
         injectGlobalObject("Environment", {
-            platform: "h5"
+            platform: "web"
         });
         injectGlobalObject("nativeEmpty", () => undefined);
         injectGlobalObject('nativeLog', (type, message) => {

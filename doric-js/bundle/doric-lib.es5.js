@@ -1171,9 +1171,26 @@ var Panel = /** @class */ (function () {
                 }
                 finally { if (e_4) { throw e_4.error; } }
             }
+            if (this.__rendering__) {
+                //skip
+                Promise.all(promises).then(function (_) {
+                });
+            }
+            else {
+                this.__rendering__ = true;
+                Promise.all(promises).then(function (_) {
+                    _this.__rendering__ = false;
+                    _this.onRenderFinished();
+                });
+            }
         }
         else {
-            Promise.resolve().then(function () {
+            if (this.__rendering__) {
+                //skip
+                return;
+            }
+            this.__rendering__ = true;
+            Function("return this")().setTimeout(function () {
                 var e_6, _a, e_7, _b;
                 if (_this.__root__.isDirty()) {
                     var model = _this.__root__.toModel();
@@ -1209,19 +1226,11 @@ var Panel = /** @class */ (function () {
                     }
                     finally { if (e_6) { throw e_6.error; } }
                 }
-            });
-        }
-        if (this.__rendering__) {
-            //skip
-            Promise.all(promises).then(function (_) {
-            });
-        }
-        else {
-            this.__rendering__ = true;
-            Promise.all(promises).then(function (_) {
                 _this.__rendering__ = false;
-                _this.onRenderFinished();
-            });
+                Promise.all(promises).then(function (_) {
+                    _this.onRenderFinished();
+                });
+            }, 0);
         }
     };
     Panel.prototype.onRenderFinished = function () {

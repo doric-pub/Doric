@@ -41,7 +41,7 @@ ${content}
 
 function initDoric() {
     injectGlobalObject("Environment", {
-        platform: "h5"
+        platform: "web"
     })
 
     injectGlobalObject("nativeEmpty", () => undefined)

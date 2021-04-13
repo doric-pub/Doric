@@ -10,6 +10,8 @@ public:
   using DoricStackNode::DoricStackNode;
 
   void setRootView(QQuickItem *rootView);
+
+  virtual void requestLayout() override;
 };
 
 #endif // ROOTNODE_H

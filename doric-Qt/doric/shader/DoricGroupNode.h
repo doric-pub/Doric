@@ -19,6 +19,10 @@ protected:
   void configChildNode();
 
   virtual void blendSubNode(QJsonValue subProperties) override;
+
+  virtual void afterBlended(QJsonValue props) override;
+
+  virtual void requestLayout() override;
 };
 
 #endif // DORICGROUPNODE_H

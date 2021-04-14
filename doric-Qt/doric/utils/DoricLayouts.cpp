@@ -455,7 +455,7 @@ void DoricLayouts::setFrame() {
   }
 
   qCritical() << "DoricLayouts: " << tag << this->view->property("uuid")
-              << " measuredHeight: " << this->measuredHeight
+              << " measuredWidth: " << this->measuredWidth
               << " measuredHeight: " << this->measuredHeight
               << " measuredX: " << this->measuredX
               << " measuredY: " << this->measuredY;

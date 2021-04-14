@@ -1,12 +1,48 @@
 #include "DoricLayouts.h"
 
-DoricLayouts::DoricLayouts() {
+DoricLayouts::DoricLayouts(QObject *parent) : QObject(parent) {
   this->widthSpec = DoricLayoutSpec::DoricLayoutJust;
   this->heightSpec = DoricLayoutSpec::DoricLayoutJust;
-  this->maxWidth = 32767;
-  this->maxHeight = 32767;
+
+  this->alignment = 0;
+  this->gravity = 0;
+
+  this->width = 0;
+  this->height = 0;
+
+  this->spacing = 0;
+
+  this->marginBottom = 0;
+  this->marginTop = 0;
+  this->marginLeft = 0;
+  this->marginRight = 0;
+
+  this->paddingLeft = 0;
+  this->paddingRight = 0;
+  this->paddingBottom = 0;
+  this->paddingTop = 0;
+
+  this->weight = 0;
+
+  this->layoutType = DoricLayoutType::DoricUndefined;
+
+  this->disabled = false;
+
+  this->maxWidth = INT_MAX;
+  this->maxHeight = INT_MAX;
   this->minWidth = 0;
   this->minHeight = 0;
+
+  this->measuredWidth = 0;
+  this->measuredHeight = 0;
+
+  this->measuredX = 0;
+  this->measuredY = 0;
+
+  this->undefined = false;
+
+  this->contentWidth = 0;
+  this->contentHeight = 0;
 }
 
 void DoricLayouts::setWidthSpec(int widthSpec) { this->widthSpec = widthSpec; }
@@ -51,6 +87,7 @@ void DoricLayouts::setWeight(int weight) { this->weight = weight; }
 
 void DoricLayouts::setView(QQuickItem *view) {
   this->view = view;
+  this->setParent(view);
   this->tag = view->property("tag").toString();
 }
 
@@ -92,15 +129,15 @@ void DoricLayouts::measureSelf(int targetWidth, int targetHeight) {
         (DoricLayouts *)(parent->property("doricLayout").toULongLong());
     if (parentDoricLayout->layoutType == DoricLayoutType::DoricHLayout &&
         this->weight > 0) {
-      width = this->measuredWidth = 0;
-      setMeasuredWidth();
+      width = 0;
+      setMeasuredWidth(0);
     } else {
-      width = this->measuredWidth = targetWidth;
-      setMeasuredWidth();
+      width = targetWidth;
+      setMeasuredWidth(targetWidth);
     }
   } else if (this->widthSpec == DoricLayoutSpec::DoricLayoutJust) {
-    width = this->measuredWidth = this->width;
-    setMeasuredWidth();
+    width = this->width;
+    setMeasuredWidth(this->width);
   } else {
     width = targetWidth;
   }
@@ -113,12 +150,15 @@ void DoricLayouts::measureSelf(int targetWidth, int targetHeight) {
         (DoricLayouts *)(parent->property("doricLayout").toULongLong());
     if (parentDoricLayout->layoutType == DoricLayoutType::DoricVLayout &&
         this->weight > 0) {
-      height = this->measuredHeight = 0;
+      height = 0;
+      setMeasuredHeight(0);
     } else {
-      height = this->measuredHeight = targetHeight;
+      height = targetHeight;
+      setMeasuredHeight(targetHeight);
     }
   } else if (this->heightSpec == DoricLayoutSpec::DoricLayoutJust) {
-    height = this->measuredHeight = this->height;
+    height = this->height;
+    setMeasuredHeight(this->height);
   } else {
     height = targetHeight;
   }
@@ -137,6 +177,7 @@ void DoricLayouts::measureSelf(int targetWidth, int targetHeight) {
 }
 
 void DoricLayouts::measureContent(int targetWidth, int targetHeight) {
+  qCritical() << "measureContent: " << tag << this->view->property("uuid");
   switch (this->layoutType) {
   case DoricLayoutType::DoricStack: {
     this->measureStackContent(targetWidth, targetHeight);
@@ -163,13 +204,12 @@ void DoricLayouts::measureContent(int targetWidth, int targetHeight) {
     if (parentDoricLayout->layoutType != DoricLayoutType::DoricUndefined &&
         parentDoricLayout->widthSpec == DoricLayoutSpec::DoricLayoutFit &&
         this->widthSpec == DoricLayoutSpec::DoricLayoutMost) {
-      this->measuredWidth = 0;
-        setMeasuredWidth();
+      setMeasuredWidth(0);
     }
     if (parentDoricLayout->layoutType != DoricLayoutType::DoricUndefined &&
         parentDoricLayout->heightSpec == DoricLayoutSpec::DoricLayoutFit &&
         this->heightSpec == DoricLayoutSpec::DoricLayoutMost) {
-      this->measuredHeight = 0;
+      setMeasuredHeight(0);
     }
   }
 }
@@ -185,11 +225,10 @@ void DoricLayouts::measureUndefinedContent(int targetWidth, int targetHeight) {
     height = targetHeight;
   }
   if (this->widthSpec == DoricLayoutSpec::DoricLayoutFit) {
-    this->measuredWidth = width + this->paddingLeft + this->paddingRight;
-      setMeasuredWidth();
+    setMeasuredWidth(width + this->paddingLeft + this->paddingRight);
   }
   if (this->heightSpec == DoricLayoutSpec::DoricLayoutFit) {
-    this->measuredHeight = height + this->paddingTop + this->paddingBottom;
+    setMeasuredHeight(height + this->paddingTop + this->paddingBottom);
   }
 }
 void DoricLayouts::measureStackContent(int targetWidth, int targetHeight) {
@@ -211,13 +250,11 @@ void DoricLayouts::measureStackContent(int targetWidth, int targetHeight) {
     contentHeight = qMax(contentHeight, layout->takenHeight());
   }
   if (this->widthSpec == DoricLayoutSpec::DoricLayoutFit) {
-    this->measuredWidth = contentWidth + this->paddingLeft + this->paddingRight;
-      setMeasuredWidth();
+    setMeasuredWidth(contentWidth + this->paddingLeft + this->paddingRight);
   }
 
   if (this->heightSpec == DoricLayoutSpec::DoricLayoutFit) {
-    this->measuredHeight =
-        contentHeight + this->paddingTop + this->paddingBottom;
+    setMeasuredHeight(contentHeight + this->paddingTop + this->paddingBottom);
   }
 
   this->contentWidth = contentWidth;
@@ -277,13 +314,11 @@ void DoricLayouts::measureVLayoutContent(int targetWidth, int targetHeight) {
   }
 
   if (this->widthSpec == DoricLayoutSpec::DoricLayoutFit) {
-    this->measuredWidth = contentWidth + this->paddingLeft + this->paddingRight;
-      setMeasuredWidth();
+    setMeasuredWidth(contentWidth + this->paddingLeft + this->paddingRight);
   }
 
   if (this->heightSpec == DoricLayoutSpec::DoricLayoutFit) {
-    this->measuredHeight =
-        contentHeight + this->paddingTop + this->paddingBottom;
+    setMeasuredHeight(contentHeight + this->paddingTop + this->paddingBottom);
   }
 
   this->contentWidth = contentWidth;
@@ -342,13 +377,11 @@ void DoricLayouts::measureHLayoutContent(int targetWidth, int targetHeight) {
   }
 
   if (this->widthSpec == DoricLayoutSpec::DoricLayoutFit) {
-    this->measuredWidth = contentWidth + this->paddingLeft + this->paddingRight;
-      setMeasuredWidth();
+    setMeasuredWidth(contentWidth + this->paddingLeft + this->paddingRight);
   }
 
   if (this->heightSpec == DoricLayoutSpec::DoricLayoutFit) {
-    this->measuredHeight =
-        contentHeight + this->paddingTop + this->paddingBottom;
+    setMeasuredHeight(contentHeight + this->paddingTop + this->paddingBottom);
   }
 
   this->contentWidth = contentWidth;
@@ -370,21 +403,19 @@ QPair<int, int> DoricLayouts::removeMargin(int targetWidth, int targetHeight) {
 bool DoricLayouts::restrainSize() {
   bool needRemeasure = false;
   if (this->measuredWidth > this->maxWidth) {
-    this->measuredWidth = this->maxWidth;
-      setMeasuredWidth();
+    setMeasuredWidth(this->maxWidth);
     needRemeasure = true;
   }
   if (this->measuredHeight > this->maxHeight) {
-    this->measuredHeight = this->maxHeight;
+    setMeasuredHeight(this->maxHeight);
     needRemeasure = true;
   }
   if (this->measuredWidth < this->minWidth) {
-    this->measuredWidth = this->minWidth;
-      setMeasuredWidth();
+    setMeasuredWidth(this->minWidth);
     needRemeasure = true;
   }
   if (this->measuredHeight < this->minHeight) {
-    this->measuredHeight = this->minHeight;
+    setMeasuredHeight(this->minHeight);
     needRemeasure = true;
   }
   return needRemeasure;
@@ -422,6 +453,12 @@ void DoricLayouts::setFrame() {
       layout->setFrame();
     }
   }
+
+  qCritical() << "DoricLayouts: " << tag << this->view->property("uuid")
+              << " measuredHeight: " << this->measuredHeight
+              << " measuredHeight: " << this->measuredHeight
+              << " measuredX: " << this->measuredX
+              << " measuredY: " << this->measuredY;
 
   this->view->setProperty("width", this->measuredWidth);
   this->view->setProperty("height", this->measuredHeight);
@@ -649,12 +686,20 @@ void DoricLayouts::layoutHLayout() {
 }
 
 // Private Section
-void DoricLayouts::setMeasuredWidth() {
+void DoricLayouts::setMeasuredWidth(int measuredWidth) {
+  this->measuredWidth = measuredWidth;
   qCritical() << "DoricLayouts: " << tag << this->view->property("uuid")
               << " measuredWidth: " << this->measuredWidth;
+  if (this->measuredWidth > 1000 || this->measuredWidth < 0) {
+    qDebug() << "";
+  }
 }
 
-void DoricLayouts::setMeasuredHeight() {
-  qCritical() << "DoricLayouts: " << tag
+void DoricLayouts::setMeasuredHeight(int measuredHeight) {
+  this->measuredHeight = measuredHeight;
+  qCritical() << "DoricLayouts: " << tag << this->view->property("uuid")
               << " measuredHeight: " << this->measuredHeight;
+  if (this->measuredHeight > 2000 || this->measuredHeight < 0) {
+    qDebug() << "";
+  }
 }

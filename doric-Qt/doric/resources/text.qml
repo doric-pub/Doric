@@ -39,12 +39,12 @@ TextArea {
     }
 
     onWidthChanged: {
-//        bg.implicitWidth = width
+        bg.implicitWidth = width
         console.log(tag, uuid + " onWidthChanged: " + this.width)
     }
 
     onHeightChanged: {
-//        bg.implicitHeight = height
+        bg.implicitHeight = height
         console.log(tag, uuid + " onHeightChanged: " + this.height)
     }
 

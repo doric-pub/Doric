@@ -41,9 +41,9 @@ public:
       DoricGravityCenterX | DoricGravityCenterY;
 };
 
-class DoricLayouts {
+class DoricLayouts : public QObject {
 public:
-  DoricLayouts();
+  explicit DoricLayouts(QObject *parent = nullptr);
 
   void setWidthSpec(int widthSpec);
   void setHeightSpec(int heightSpec);
@@ -150,9 +150,9 @@ private:
   bool resolved;
 
   int measuredWidth;
-  void setMeasuredWidth();
+  void setMeasuredWidth(int measuredWidth);
   int measuredHeight;
-  void setMeasuredHeight();
+  void setMeasuredHeight(int measuredHeight);
   int measuredX;
   int measuredY;
 

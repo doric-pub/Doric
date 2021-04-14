@@ -35,6 +35,9 @@
 @end
 
 @implementation DoricTableView
+- (CGSize)sizeThatFits:(CGSize)size {
+    return [super sizeThatFits:size];
+}
 @end
 
 
@@ -232,7 +235,7 @@
                     @try {
                         [self.view reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
                     }
-                    @catch(id exception) {
+                    @catch (id exception) {
                         [self.doricContext.driver.registry onException:exception inContext:self.doricContext];
                     }
                 }];
@@ -251,6 +254,13 @@
     self.itemHeights[@(position)] = @(height);
     if (@available(iOS 10.0, *)) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            if (self.view.doricLayout.heightSpec == DoricLayoutFit) {
+                DoricSuperNode *node = self.superNode;
+                while (node.superNode != nil) {
+                    node = node.superNode;
+                }
+                [node requestLayout];
+            }
             [UIView performWithoutAnimation:^{
                 NSUInteger itemCount = self.itemCount + (self.loadMore ? 1 : 0);
                 if (itemCount <= position || currentCount != itemCount) {
@@ -261,13 +271,20 @@
                 @try {
                     [self.view reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
                 }
-                @catch(id exception) {
+                @catch (id exception) {
                     [self.doricContext.driver.registry onException:exception inContext:self.doricContext];
                 }
             }];
         });
     } else {
         dispatch_async(dispatch_get_main_queue(), ^{
+            if (self.view.doricLayout.heightSpec == DoricLayoutFit) {
+                DoricSuperNode *node = self.superNode;
+                while (node.superNode != nil) {
+                    node = node.superNode;
+                }
+                [node requestLayout];
+            }
             [self.view reloadData];
         });
     }

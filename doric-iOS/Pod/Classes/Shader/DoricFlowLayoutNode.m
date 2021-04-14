@@ -296,6 +296,13 @@
         return;
     }
     self.itemSizeInfo[@(position)] = [NSValue valueWithCGSize:size];
+    if (self.view.doricLayout.widthSpec == DoricLayoutFit || self.view.doricLayout.heightSpec == DoricLayoutFit) {
+        DoricSuperNode *node = self.superNode;
+        while (node.superNode != nil) {
+            node = node.superNode;
+        }
+        [node requestLayout];
+    }
     [self.view.collectionViewLayout invalidateLayout];
 }
 

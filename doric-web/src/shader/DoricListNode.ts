@@ -43,8 +43,8 @@ export class DoricListNode extends DoricSuperNode {
         }
     }
 
-    onBlended() {
-        super.onBlended()
+    onBlending() {
+        super.onBlending()
         if (this.childNodes.length !== this.itemCount) {
             const ret = this.pureCallJSResponse("renderBunchedItems", this.childNodes.length, this.itemCount) as DVModel[]
             this.childNodes = this.childNodes.concat(ret.map(e => {

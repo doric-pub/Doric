@@ -4557,8 +4557,11 @@ var doric_web = (function (exports, axios, sandbox) {
             for (let key in props) {
                 this.blendProps(this.view, key, props[key]);
             }
-            this.onBlended();
+            this.onBlending();
             this.layout();
+            this.onBlended();
+        }
+        onBlending() {
         }
         onBlended() {
         }
@@ -4792,8 +4795,8 @@ var doric_web = (function (exports, axios, sandbox) {
         blend(props) {
             super.blend(props);
         }
-        onBlended() {
-            super.onBlended();
+        onBlending() {
+            super.onBlending();
             this.configChildNode();
         }
         configChildNode() {
@@ -5237,8 +5240,8 @@ var doric_web = (function (exports, axios, sandbox) {
         getSubNodeById(viewId) {
             return viewId === this.childViewId ? this.childNode : undefined;
         }
-        onBlended() {
-            super.onBlended();
+        onBlending() {
+            super.onBlending();
             const model = this.getSubModel(this.childViewId);
             if (model === undefined) {
                 return;
@@ -5503,8 +5506,8 @@ var doric_web = (function (exports, axios, sandbox) {
                 this.view.removeChild(this.view.lastElementChild);
             }
         }
-        onBlended() {
-            super.onBlended();
+        onBlending() {
+            super.onBlending();
             if (this.childNodes.length !== this.itemCount) {
                 const ret = this.pureCallJSResponse("renderBunchedItems", this.childNodes.length, this.itemCount);
                 this.childNodes = this.childNodes.concat(ret.map(e => {
@@ -5633,6 +5636,35 @@ var doric_web = (function (exports, axios, sandbox) {
         }
     }
 
+    class DoricRefreshableNode extends DoricSuperNode {
+        blendSubNode(model) {
+        }
+        getSubNodeById(viewId) {
+            return undefined;
+        }
+        build() {
+            const ret = document.createElement('div');
+            ret.style.overflow = "scroll";
+            const header = document.createElement('div');
+            const content = document.createElement('div');
+            header.style.width = "100%";
+            header.style.height = "200px";
+            header.style.backgroundColor = "red";
+            content.style.width = "100%";
+            content.style.height = "100%";
+            content.style.backgroundColor = "blue";
+            ret.appendChild(header);
+            ret.appendChild(content);
+            ret.addEventListener("scroll", () => {
+                ret.scrollTop = 200;
+            });
+            return ret;
+        }
+        onBlended() {
+            this.view.scrollTop = 200;
+        }
+    }
+
     const bundles = new Map;
     const plugins = new Map;
     const nodes = new Map;
@@ -5668,6 +5700,7 @@ var doric_web = (function (exports, axios, sandbox) {
     registerViewNode('ListItem', DoricListItemNode);
     registerViewNode('List', DoricListNode);
     registerViewNode('Draggable', DoricDraggableNode);
+    registerViewNode('Refreshable', DoricRefreshableNode);
 
     function getScriptId(contextId) {
         return `__doric_script_${contextId}`;

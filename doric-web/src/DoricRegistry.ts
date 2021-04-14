@@ -14,6 +14,7 @@ import { PopoverPlugin } from './plugins/PopoverPlugin'
 import { DoricListItemNode } from "./shader/DoricListItemNode"
 import { DoricListNode } from "./shader/DoricListNode"
 import { DoricDraggableNode } from "./shader/DoricDraggableNode"
+import { DoricRefreshableNode } from "./shader/DoricRefreshableNode"
 
 const bundles: Map<string, string> = new Map
 
@@ -63,3 +64,4 @@ registerViewNode('Scroller', DoricScrollerNode)
 registerViewNode('ListItem', DoricListItemNode)
 registerViewNode('List', DoricListNode)
 registerViewNode('Draggable', DoricDraggableNode)
+registerViewNode('Refreshable', DoricRefreshableNode)

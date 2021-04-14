@@ -17,7 +17,8 @@ class NaivgatorDemo extends Panel {
                 height: 50,
             }),
             ...[
-                'NavbarDemo',
+                'NavbarDemo', "DraggableDemo",
+                "RefreshableDemo",
                 'Counter', 'EffectsDemo', 'ImageDemo', 'LayoutDemo',
                 'ListDemo', 'ModalDemo', 'NavigatorDemo',
                 'NetworkDemo', 'ScrollerDemo', 'SliderDemo', 'Snake', 'StorageDemo', 'PopoverDemo'].map(e =>

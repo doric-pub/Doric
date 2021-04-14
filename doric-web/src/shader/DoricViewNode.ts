@@ -141,12 +141,18 @@ export abstract class DoricViewNode {
         for (let key in props) {
             this.blendProps(this.view, key, props[key])
         }
-        this.onBlended()
+        this.onBlending()
         this.layout()
     }
+
+    onBlending() {
+
+    }
+
     onBlended() {
 
     }
+
     configBorder() {
         if (this.border) {
             this.view.style.borderStyle = "solid"
@@ -397,8 +403,8 @@ export abstract class DoricGroupViewNode extends DoricSuperNode {
     blend(props: { [index: string]: any }) {
         super.blend(props)
     }
-    onBlended() {
-        super.onBlended()
+    onBlending() {
+        super.onBlending()
         this.configChildNode()
     }
     configChildNode() {

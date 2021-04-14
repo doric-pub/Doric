@@ -24,8 +24,8 @@ export class DoricScrollerNode extends DoricSuperNode {
         return viewId === this.childViewId ? this.childNode : undefined
     }
 
-    onBlended() {
-        super.onBlended()
+    onBlending() {
+        super.onBlending()
         const model = this.getSubModel(this.childViewId)
         if (model === undefined) {
             return

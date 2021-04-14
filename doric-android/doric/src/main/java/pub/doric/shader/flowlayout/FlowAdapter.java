@@ -103,7 +103,7 @@ class FlowAdapter extends RecyclerView.Adapter<FlowAdapter.DoricViewHolder> {
         }
         String id = itemValues.get(position);
         if (TextUtils.isEmpty(id)) {
-            AsyncResult<JSDecoder> asyncResult = flowLayoutNode.callJSResponse(
+            AsyncResult<JSDecoder> asyncResult = flowLayoutNode.pureCallJSResponse(
                     "renderBunchedItems",
                     position,
                     batchCount);

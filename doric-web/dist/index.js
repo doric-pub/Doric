@@ -1399,6 +1399,27 @@ var doric = (function (exports) {
             loge(`Cannot find method for context id:${contextId},method name is:${methodName}`);
         }
     }
+    function pureCallEntityMethod(contextId, methodName, args) {
+        const context = gContexts.get(contextId);
+        if (context === undefined) {
+            loge(`Cannot find context for context id:${contextId}`);
+            return;
+        }
+        if (context.entity === undefined) {
+            loge(`Cannot find holder for context id:${contextId}`);
+            return;
+        }
+        if (Reflect.has(context.entity, methodName)) {
+            const argumentsList = [];
+            for (let i = 2; i < arguments.length; i++) {
+                argumentsList.push(arguments[i]);
+            }
+            return Reflect.apply(Reflect.get(context.entity, methodName), context.entity, argumentsList);
+        }
+        else {
+            loge(`Cannot find method for context id:${contextId},method name is:${methodName}`);
+        }
+    }
     function jsObtainEntry(contextId) {
         const context = jsObtainContext(contextId);
         const exportFunc = (constructor) => {
@@ -1540,6 +1561,7 @@ var doric = (function (exports) {
     exports.jsObtainEntry = jsObtainEntry;
     exports.jsRegisterModule = jsRegisterModule;
     exports.jsReleaseContext = jsReleaseContext;
+    exports.pureCallEntityMethod = pureCallEntityMethod;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
@@ -3084,7 +3106,6 @@ class List extends Superview {
     constructor() {
         super(...arguments);
         this.cachedViews = new Map;
-        this.ignoreDirtyCallOnce = false;
         this.itemCount = 0;
         this.batchCount = 15;
     }
@@ -3110,16 +3131,7 @@ class List extends Superview {
         this.cachedViews.set(`${itemIdx}`, view);
         return view;
     }
-    isDirty() {
-        if (this.ignoreDirtyCallOnce) {
-            this.ignoreDirtyCallOnce = false;
-            //Ignore the dirty call once.
-            return false;
-        }
-        return super.isDirty();
-    }
     renderBunchedItems(start, length) {
-        this.ignoreDirtyCallOnce = true;
         return new Array(Math.max(0, Math.min(length, this.itemCount - start))).fill(0).map((_, idx) => {
             const listItem = this.getItem(start + idx);
             return listItem.toModel();
@@ -3213,7 +3225,6 @@ class Slider extends Superview {
     constructor() {
         super(...arguments);
         this.cachedViews = new Map;
-        this.ignoreDirtyCallOnce = false;
         this.itemCount = 0;
         this.batchCount = 3;
     }
@@ -3226,16 +3237,7 @@ class Slider extends Superview {
         this.cachedViews.set(`${itemIdx}`, view);
         return view;
     }
-    isDirty() {
-        if (this.ignoreDirtyCallOnce) {
-            this.ignoreDirtyCallOnce = false;
-            //Ignore the dirty call once.
-            return false;
-        }
-        return super.isDirty();
-    }
     renderBunchedItems(start, length) {
-        this.ignoreDirtyCallOnce = true;
         return new Array(Math.min(length, this.itemCount - start)).fill(0).map((_, idx) => {
             const slideItem = this.getItem(start + idx);
             return slideItem.toModel();
@@ -3501,7 +3503,6 @@ class FlowLayout extends Superview {
     constructor() {
         super(...arguments);
         this.cachedViews = new Map;
-        this.ignoreDirtyCallOnce = false;
         this.columnCount = 2;
         this.itemCount = 0;
         this.batchCount = 15;
@@ -3524,16 +3525,7 @@ class FlowLayout extends Superview {
         this.cachedViews.set(`${itemIdx}`, view);
         return view;
     }
-    isDirty() {
-        if (this.ignoreDirtyCallOnce) {
-            this.ignoreDirtyCallOnce = false;
-            //Ignore the dirty call once.
-            return false;
-        }
-        return super.isDirty();
-    }
     renderBunchedItems(start, length) {
-        this.ignoreDirtyCallOnce = true;
         return new Array(Math.min(length, this.itemCount - start)).fill(0).map((_, idx) => {
             const listItem = this.getItem(start + idx);
             return listItem.toModel();
@@ -4723,6 +4715,13 @@ var doric_web = (function (exports, axios, sandbox) {
             }
             return Reflect.apply(this.context.invokeEntityMethod, this.context, argumentsList);
         }
+        pureCallJSResponse(funcId, ...args) {
+            const argumentsList = ['__response__', this.getIdList(), funcId];
+            for (let i = 1; i < arguments.length; i++) {
+                argumentsList.push(arguments[i]);
+            }
+            return Reflect.apply(this.context.pureInvokeEntityMethod, this.context, argumentsList);
+        }
     }
     class DoricSuperNode extends DoricViewNode {
         constructor() {
@@ -5507,7 +5506,7 @@ var doric_web = (function (exports, axios, sandbox) {
         onBlended() {
             super.onBlended();
             if (this.childNodes.length !== this.itemCount) {
-                const ret = this.callJSResponse("renderBunchedItems", this.childNodes.length, this.itemCount);
+                const ret = this.pureCallJSResponse("renderBunchedItems", this.childNodes.length, this.itemCount);
                 this.childNodes = this.childNodes.concat(ret.map(e => {
                     const viewNode = DoricViewNode.create(this.context, e.type);
                     viewNode.viewId = e.id;
@@ -5532,6 +5531,9 @@ var doric_web = (function (exports, axios, sandbox) {
                 }
                 if (this.loadMoreViewNode) {
                     this.view.appendChild(this.loadMoreViewNode.view);
+                }
+                if (this.view.scrollTop + this.view.offsetHeight === this.view.scrollHeight) {
+                    this.onScrollToEnd();
                 }
             }
         }
@@ -5827,6 +5829,13 @@ ${content}
                 argumentsList.push(arguments[i]);
             }
             return Reflect.apply(sandbox.jsCallEntityMethod, this.panel, argumentsList);
+        }
+        pureInvokeEntityMethod(method, ...otherArgs) {
+            const argumentsList = [this.contextId];
+            for (let i = 0; i < arguments.length; i++) {
+                argumentsList.push(arguments[i]);
+            }
+            return Reflect.apply(sandbox.pureCallEntityMethod, this.panel, argumentsList);
         }
         init(data) {
             this.invokeEntityMethod("__init__", data);

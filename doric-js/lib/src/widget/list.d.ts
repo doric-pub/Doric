@@ -9,7 +9,6 @@ export declare class ListItem extends Stack {
 }
 export declare class List extends Superview {
     private cachedViews;
-    private ignoreDirtyCallOnce;
     allSubviews(): IterableIterator<ListItem> | ListItem[];
     itemCount: number;
     renderItem: (index: number) => ListItem;
@@ -31,7 +30,6 @@ export declare class List extends Superview {
     }): Promise<any>;
     reset(): void;
     private getItem;
-    isDirty(): boolean;
     private renderBunchedItems;
     toModel(): NativeViewModel;
 }

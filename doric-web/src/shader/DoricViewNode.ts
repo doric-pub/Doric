@@ -311,6 +311,14 @@ export abstract class DoricViewNode {
         }
         return Reflect.apply(this.context.invokeEntityMethod, this.context, argumentsList)
     }
+
+    pureCallJSResponse(funcId: string, ...args: any) {
+        const argumentsList: any = ['__response__', this.getIdList(), funcId]
+        for (let i = 1; i < arguments.length; i++) {
+            argumentsList.push(arguments[i])
+        }
+        return Reflect.apply(this.context.pureInvokeEntityMethod, this.context, argumentsList)
+    }
 }
 
 

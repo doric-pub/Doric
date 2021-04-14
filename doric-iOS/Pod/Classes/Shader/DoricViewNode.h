@@ -48,6 +48,8 @@
 
 - (DoricAsyncResult *)callJSResponse:(NSString *)funcId, ...;
 
+- (DoricAsyncResult *)pureCallJSResponse:(NSString *)funcId, ...;
+
 + (__kindof DoricViewNode *)create:(DoricContext *)context withType:(NSString *)type;
 
 - (void)requestLayout;

@@ -46,7 +46,7 @@ export class DoricListNode extends DoricSuperNode {
     onBlended() {
         super.onBlended()
         if (this.childNodes.length !== this.itemCount) {
-            const ret = this.callJSResponse("renderBunchedItems", this.childNodes.length, this.itemCount) as DVModel[]
+            const ret = this.pureCallJSResponse("renderBunchedItems", this.childNodes.length, this.itemCount) as DVModel[]
             this.childNodes = this.childNodes.concat(ret.map(e => {
                 const viewNode = DoricViewNode.create(this.context, e.type) as DoricListItemNode
                 viewNode.viewId = e.id
@@ -71,6 +71,9 @@ export class DoricListNode extends DoricSuperNode {
             }
             if (this.loadMoreViewNode) {
                 this.view.appendChild(this.loadMoreViewNode.view)
+            }
+            if (this.view.scrollTop + this.view.offsetHeight === this.view.scrollHeight) {
+                this.onScrollToEnd()
             }
         }
     }

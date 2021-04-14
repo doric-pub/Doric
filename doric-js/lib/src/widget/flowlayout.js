@@ -35,7 +35,6 @@ export class FlowLayout extends Superview {
     constructor() {
         super(...arguments);
         this.cachedViews = new Map;
-        this.ignoreDirtyCallOnce = false;
         this.columnCount = 2;
         this.itemCount = 0;
         this.batchCount = 15;
@@ -58,16 +57,7 @@ export class FlowLayout extends Superview {
         this.cachedViews.set(`${itemIdx}`, view);
         return view;
     }
-    isDirty() {
-        if (this.ignoreDirtyCallOnce) {
-            this.ignoreDirtyCallOnce = false;
-            //Ignore the dirty call once.
-            return false;
-        }
-        return super.isDirty();
-    }
     renderBunchedItems(start, length) {
-        this.ignoreDirtyCallOnce = true;
         return new Array(Math.min(length, this.itemCount - start)).fill(0).map((_, idx) => {
             const listItem = this.getItem(start + idx);
             return listItem.toModel();

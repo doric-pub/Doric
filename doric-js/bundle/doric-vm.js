@@ -1426,6 +1426,27 @@ function jsCallEntityMethod(contextId, methodName, args) {
         loge(`Cannot find method for context id:${contextId},method name is:${methodName}`);
     }
 }
+function pureCallEntityMethod(contextId, methodName, args) {
+    const context = gContexts.get(contextId);
+    if (context === undefined) {
+        loge(`Cannot find context for context id:${contextId}`);
+        return;
+    }
+    if (context.entity === undefined) {
+        loge(`Cannot find holder for context id:${contextId}`);
+        return;
+    }
+    if (Reflect.has(context.entity, methodName)) {
+        const argumentsList = [];
+        for (let i = 2; i < arguments.length; i++) {
+            argumentsList.push(arguments[i]);
+        }
+        return Reflect.apply(Reflect.get(context.entity, methodName), context.entity, argumentsList);
+    }
+    else {
+        loge(`Cannot find method for context id:${contextId},method name is:${methodName}`);
+    }
+}
 function jsObtainEntry(contextId) {
     const context = jsObtainContext(contextId);
     const exportFunc = (constructor) => {
@@ -1567,6 +1588,7 @@ var doric = /*#__PURE__*/Object.freeze({
     __require__: __require__,
     jsRegisterModule: jsRegisterModule,
     jsCallEntityMethod: jsCallEntityMethod,
+    pureCallEntityMethod: pureCallEntityMethod,
     jsObtainEntry: jsObtainEntry,
     jsCallbackTimer: jsCallbackTimer
 });
@@ -3030,7 +3052,6 @@ class List extends Superview {
     constructor() {
         super(...arguments);
         this.cachedViews = new Map;
-        this.ignoreDirtyCallOnce = false;
         this.itemCount = 0;
         this.batchCount = 15;
     }
@@ -3056,16 +3077,7 @@ class List extends Superview {
         this.cachedViews.set(`${itemIdx}`, view);
         return view;
     }
-    isDirty() {
-        if (this.ignoreDirtyCallOnce) {
-            this.ignoreDirtyCallOnce = false;
-            //Ignore the dirty call once.
-            return false;
-        }
-        return super.isDirty();
-    }
     renderBunchedItems(start, length) {
-        this.ignoreDirtyCallOnce = true;
         return new Array(Math.max(0, Math.min(length, this.itemCount - start))).fill(0).map((_, idx) => {
             const listItem = this.getItem(start + idx);
             return listItem.toModel();
@@ -3159,7 +3171,6 @@ class Slider extends Superview {
     constructor() {
         super(...arguments);
         this.cachedViews = new Map;
-        this.ignoreDirtyCallOnce = false;
         this.itemCount = 0;
         this.batchCount = 3;
     }
@@ -3172,16 +3183,7 @@ class Slider extends Superview {
         this.cachedViews.set(`${itemIdx}`, view);
         return view;
     }
-    isDirty() {
-        if (this.ignoreDirtyCallOnce) {
-            this.ignoreDirtyCallOnce = false;
-            //Ignore the dirty call once.
-            return false;
-        }
-        return super.isDirty();
-    }
     renderBunchedItems(start, length) {
-        this.ignoreDirtyCallOnce = true;
         return new Array(Math.min(length, this.itemCount - start)).fill(0).map((_, idx) => {
             const slideItem = this.getItem(start + idx);
             return slideItem.toModel();
@@ -3447,7 +3449,6 @@ class FlowLayout extends Superview {
     constructor() {
         super(...arguments);
         this.cachedViews = new Map;
-        this.ignoreDirtyCallOnce = false;
         this.columnCount = 2;
         this.itemCount = 0;
         this.batchCount = 15;
@@ -3470,16 +3471,7 @@ class FlowLayout extends Superview {
         this.cachedViews.set(`${itemIdx}`, view);
         return view;
     }
-    isDirty() {
-        if (this.ignoreDirtyCallOnce) {
-            this.ignoreDirtyCallOnce = false;
-            //Ignore the dirty call once.
-            return false;
-        }
-        return super.isDirty();
-    }
     renderBunchedItems(start, length) {
-        this.ignoreDirtyCallOnce = true;
         return new Array(Math.min(length, this.itemCount - start)).fill(0).map((_, idx) => {
             const listItem = this.getItem(start + idx);
             return listItem.toModel();

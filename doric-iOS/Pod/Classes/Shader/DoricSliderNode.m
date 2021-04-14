@@ -158,12 +158,12 @@
     } else {
         index = position;
     }
-    
+
     NSString *viewId = self.itemViewIds[@(index)];
     if (viewId && viewId.length > 0) {
         return [self subModelOf:viewId];
     } else {
-        DoricAsyncResult *result = [self callJSResponse:@"renderBunchedItems", @(index), @(self.batchCount), nil];
+        DoricAsyncResult *result = [self pureCallJSResponse:@"renderBunchedItems", @(index), @(self.batchCount), nil];
         NSArray *array = [result waitUntilResult:^(JSValue *models) {
             return [models toArray];
         }];
@@ -217,7 +217,7 @@
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     NSUInteger pageIndex = (NSUInteger) (scrollView.contentOffset.x / scrollView.width);
     scrollView.contentOffset = CGPointMake(pageIndex * scrollView.width, scrollView.contentOffset.y);
-    
+
     if (self.loop) {
         if (pageIndex == 0) {
             [self.view setContentOffset:CGPointMake(self.itemCount * self.view.width, self.view.contentOffset.y) animated:false];
@@ -225,7 +225,7 @@
             [self.view setContentOffset:CGPointMake(1 * self.view.width, self.view.contentOffset.y) animated:false];
         }
     }
-    
+
     if (self.onPageSelectedFuncId && self.onPageSelectedFuncId.length > 0) {
         if (pageIndex != self.lastPosition) {
             [self callJSResponse:self.onPageSelectedFuncId, @(pageIndex), nil];

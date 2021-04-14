@@ -607,7 +607,6 @@ declare module 'doric/lib/src/widget/list' {
             animated?: boolean;
         }): Promise<any>;
         reset(): void;
-        isDirty(): boolean;
         toModel(): NativeViewModel;
     }
     export function list(config: Partial<List>): List;
@@ -631,7 +630,6 @@ declare module 'doric/lib/src/widget/slider' {
         batchCount: number;
         onPageSlided?: (index: number) => void;
         loop?: boolean;
-        isDirty(): boolean;
         slidePage(context: BridgeContext, page: number, smooth?: boolean): Promise<any>;
         getSlidedPage(context: BridgeContext): Promise<number>;
     }
@@ -722,7 +720,6 @@ declare module 'doric/lib/src/widget/flowlayout' {
             y: number;
         }) => void;
         reset(): void;
-        isDirty(): boolean;
         toModel(): NativeViewModel;
     }
     export function flowlayout(config: Partial<FlowLayout>): FlowLayout;

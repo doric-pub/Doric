@@ -1397,6 +1397,27 @@ var doric = (function (exports) {
             loge(`Cannot find method for context id:${contextId},method name is:${methodName}`);
         }
     }
+    function pureCallEntityMethod(contextId, methodName, args) {
+        const context = gContexts.get(contextId);
+        if (context === undefined) {
+            loge(`Cannot find context for context id:${contextId}`);
+            return;
+        }
+        if (context.entity === undefined) {
+            loge(`Cannot find holder for context id:${contextId}`);
+            return;
+        }
+        if (Reflect.has(context.entity, methodName)) {
+            const argumentsList = [];
+            for (let i = 2; i < arguments.length; i++) {
+                argumentsList.push(arguments[i]);
+            }
+            return Reflect.apply(Reflect.get(context.entity, methodName), context.entity, argumentsList);
+        }
+        else {
+            loge(`Cannot find method for context id:${contextId},method name is:${methodName}`);
+        }
+    }
     function jsObtainEntry(contextId) {
         const context = jsObtainContext(contextId);
         const exportFunc = (constructor) => {
@@ -1538,6 +1559,7 @@ var doric = (function (exports) {
     exports.jsObtainEntry = jsObtainEntry;
     exports.jsRegisterModule = jsRegisterModule;
     exports.jsReleaseContext = jsReleaseContext;
+    exports.pureCallEntityMethod = pureCallEntityMethod;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 

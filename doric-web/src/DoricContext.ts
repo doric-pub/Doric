@@ -1,4 +1,4 @@
-import { jsObtainContext, jsCallEntityMethod } from 'doric/src/runtime/sandbox'
+import { jsObtainContext, jsCallEntityMethod, pureCallEntityMethod } from 'doric/src/runtime/sandbox'
 import { Panel } from 'doric'
 import { DoricPlugin } from "./DoricPlugin"
 import { createContext, destroyContext } from "./DoricDriver"
@@ -37,6 +37,14 @@ export class DoricContext {
             argumentsList.push(arguments[i])
         }
         return Reflect.apply(jsCallEntityMethod, this.panel, argumentsList)
+    }
+
+    pureInvokeEntityMethod(method: string, ...otherArgs: any) {
+        const argumentsList: any = [this.contextId]
+        for (let i = 0; i < arguments.length; i++) {
+            argumentsList.push(arguments[i])
+        }
+        return Reflect.apply(pureCallEntityMethod, this.panel, argumentsList)
     }
 
     init(data?: string) {

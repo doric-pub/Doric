@@ -2032,7 +2032,6 @@ var List = /** @class */ (function (_super) {
     function List() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.cachedViews = new Map;
-        _this.ignoreDirtyCallOnce = false;
         _this.itemCount = 0;
         _this.batchCount = 15;
         return _this;
@@ -2059,17 +2058,8 @@ var List = /** @class */ (function (_super) {
         this.cachedViews.set("" + itemIdx, view);
         return view;
     };
-    List.prototype.isDirty = function () {
-        if (this.ignoreDirtyCallOnce) {
-            this.ignoreDirtyCallOnce = false;
-            //Ignore the dirty call once.
-            return false;
-        }
-        return _super.prototype.isDirty.call(this);
-    };
     List.prototype.renderBunchedItems = function (start, length) {
         var _this = this;
-        this.ignoreDirtyCallOnce = true;
         return new Array(Math.max(0, Math.min(length, this.itemCount - start))).fill(0).map(function (_, idx) {
             var listItem = _this.getItem(start + idx);
             return listItem.toModel();
@@ -2185,7 +2175,6 @@ var Slider = /** @class */ (function (_super) {
     function Slider() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.cachedViews = new Map;
-        _this.ignoreDirtyCallOnce = false;
         _this.itemCount = 0;
         _this.batchCount = 3;
         return _this;
@@ -2199,17 +2188,8 @@ var Slider = /** @class */ (function (_super) {
         this.cachedViews.set("" + itemIdx, view);
         return view;
     };
-    Slider.prototype.isDirty = function () {
-        if (this.ignoreDirtyCallOnce) {
-            this.ignoreDirtyCallOnce = false;
-            //Ignore the dirty call once.
-            return false;
-        }
-        return _super.prototype.isDirty.call(this);
-    };
     Slider.prototype.renderBunchedItems = function (start, length) {
         var _this = this;
-        this.ignoreDirtyCallOnce = true;
         return new Array(Math.min(length, this.itemCount - start)).fill(0).map(function (_, idx) {
             var slideItem = _this.getItem(start + idx);
             return slideItem.toModel();
@@ -2560,7 +2540,6 @@ var FlowLayout = /** @class */ (function (_super) {
     function FlowLayout() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.cachedViews = new Map;
-        _this.ignoreDirtyCallOnce = false;
         _this.columnCount = 2;
         _this.itemCount = 0;
         _this.batchCount = 15;
@@ -2584,17 +2563,8 @@ var FlowLayout = /** @class */ (function (_super) {
         this.cachedViews.set("" + itemIdx, view);
         return view;
     };
-    FlowLayout.prototype.isDirty = function () {
-        if (this.ignoreDirtyCallOnce) {
-            this.ignoreDirtyCallOnce = false;
-            //Ignore the dirty call once.
-            return false;
-        }
-        return _super.prototype.isDirty.call(this);
-    };
     FlowLayout.prototype.renderBunchedItems = function (start, length) {
         var _this = this;
-        this.ignoreDirtyCallOnce = true;
         return new Array(Math.min(length, this.itemCount - start)).fill(0).map(function (_, idx) {
             var listItem = _this.getItem(start + idx);
             return listItem.toModel();

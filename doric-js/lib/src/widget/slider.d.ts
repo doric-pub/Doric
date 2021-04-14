@@ -9,7 +9,6 @@ export declare class SlideItem extends Stack {
 }
 export declare class Slider extends Superview {
     private cachedViews;
-    private ignoreDirtyCallOnce;
     allSubviews(): IterableIterator<SlideItem>;
     itemCount: number;
     renderPage: (index: number) => SlideItem;
@@ -17,7 +16,6 @@ export declare class Slider extends Superview {
     onPageSlided?: (index: number) => void;
     loop?: boolean;
     private getItem;
-    isDirty(): boolean;
     private renderBunchedItems;
     slidePage(context: BridgeContext, page: number, smooth?: boolean): Promise<any>;
     getSlidedPage(context: BridgeContext): Promise<number>;

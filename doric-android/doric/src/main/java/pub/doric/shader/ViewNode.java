@@ -567,6 +567,36 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         return getDoricContext().callEntity(DoricConstant.DORIC_ENTITY_RESPONSE, nArgs);
     }
 
+    public AsyncResult<JSDecoder> pureCallJSResponse(String funcId, Object... args) {
+        final Object[] nArgs = new Object[args.length + 4];
+        nArgs[0] = getDoricContext().getContextId();
+        nArgs[1] = DoricConstant.DORIC_ENTITY_RESPONSE;
+        nArgs[2] = getIdList();
+        nArgs[3] = funcId;
+        if (args.length > 0) {
+            System.arraycopy(args, 0, nArgs, 4, args.length);
+        }
+        final AsyncResult<JSDecoder> asyncResult = new AsyncResult<>();
+        getDoricContext().getDriver().invokeDoricMethod(DoricConstant.DORIC_CONTEXT_INVOKE_PURE, nArgs).setCallback(new AsyncResult.Callback<JSDecoder>() {
+            @Override
+            public void onResult(JSDecoder result) {
+                asyncResult.setResult(result);
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                getDoricContext().getDriver().getRegistry().onException(getDoricContext(), t instanceof Exception ? (Exception) t : new RuntimeException(t));
+                asyncResult.setError(t);
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        });
+        return asyncResult;
+    }
+
     public static ViewNode create(DoricContext doricContext, String type) {
         DoricRegistry registry = doricContext.getDriver().getRegistry();
         DoricMetaInfo<ViewNode> clz = registry.acquireViewNodeInfo(type);

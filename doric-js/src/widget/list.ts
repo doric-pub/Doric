@@ -30,7 +30,6 @@ export class ListItem extends Stack {
 
 export class List extends Superview {
     private cachedViews: Map<string, ListItem> = new Map
-    private ignoreDirtyCallOnce = false
 
     allSubviews() {
         if (this.loadMoreView) {
@@ -83,17 +82,7 @@ export class List extends Superview {
         return view
     }
 
-    isDirty() {
-        if (this.ignoreDirtyCallOnce) {
-            this.ignoreDirtyCallOnce = false
-            //Ignore the dirty call once.
-            return false
-        }
-        return super.isDirty()
-    }
-
     private renderBunchedItems(start: number, length: number) {
-        this.ignoreDirtyCallOnce = true
         return new Array(Math.max(0, Math.min(length, this.itemCount - start))).fill(0).map((_, idx) => {
             const listItem = this.getItem(start + idx)
             return listItem.toModel()

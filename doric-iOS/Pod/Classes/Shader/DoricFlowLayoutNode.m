@@ -237,7 +237,7 @@
     if (viewId && viewId.length > 0) {
         return [self subModelOf:viewId];
     } else {
-        DoricAsyncResult *result = [self callJSResponse:@"renderBunchedItems", @(position), @(self.batchCount), nil];
+        DoricAsyncResult *result = [self pureCallJSResponse:@"renderBunchedItems", @(position), @(self.batchCount), nil];
         NSArray *array = [result waitUntilResult:^(JSValue *models) {
             return [models toArray];
         }];

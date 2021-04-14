@@ -31,8 +31,6 @@ export class SlideItem extends Stack {
 export class Slider extends Superview {
     private cachedViews: Map<string, SlideItem> = new Map
 
-    private ignoreDirtyCallOnce = false
-
     allSubviews() {
         return this.cachedViews.values()
     }
@@ -58,17 +56,7 @@ export class Slider extends Superview {
         return view
     }
 
-    isDirty() {
-        if (this.ignoreDirtyCallOnce) {
-            this.ignoreDirtyCallOnce = false
-            //Ignore the dirty call once.
-            return false
-        }
-        return super.isDirty()
-    }
-
     private renderBunchedItems(start: number, length: number) {
-        this.ignoreDirtyCallOnce = true;
         return new Array(Math.min(length, this.itemCount - start)).fill(0).map((_, idx) => {
             const slideItem = this.getItem(start + idx)
             return slideItem.toModel()

@@ -8,7 +8,6 @@ export declare class FlowLayoutItem extends Stack {
 }
 export declare class FlowLayout extends Superview {
     private cachedViews;
-    private ignoreDirtyCallOnce;
     allSubviews(): IterableIterator<FlowLayoutItem> | FlowLayoutItem[];
     columnCount: number;
     columnSpace?: number;
@@ -29,7 +28,6 @@ export declare class FlowLayout extends Superview {
     }) => void;
     reset(): void;
     private getItem;
-    isDirty(): boolean;
     private renderBunchedItems;
     toModel(): NativeViewModel;
 }

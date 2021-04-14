@@ -190,7 +190,7 @@
             start--;
             batchCount++;
         }
-        DoricAsyncResult *result = [self callJSResponse:@"renderBunchedItems", @(start), @(batchCount), nil];
+        DoricAsyncResult *result = [self pureCallJSResponse:@"renderBunchedItems", @(start), @(batchCount), nil];
         NSArray *array = [result waitUntilResult:^(JSValue *models) {
             return [models toArray];
         }];

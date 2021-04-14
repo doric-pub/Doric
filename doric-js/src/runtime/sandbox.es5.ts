@@ -238,6 +238,26 @@ export function jsCallEntityMethod(contextId: string, methodName: string, args?:
     }
 }
 
+export function pureCallEntityMethod(contextId: string, methodName: string, args?: any) {
+    const context = gContexts.get(contextId)
+    if (context === undefined) {
+        loge(`Cannot find context for context id:${contextId}`)
+        return
+    }
+    if (context.entity === undefined) {
+        loge(`Cannot find holder for context id:${contextId}`)
+        return
+    }
+    if (Reflect.has(context.entity, methodName)) {
+        const argumentsList: any = []
+        for (let i = 2; i < arguments.length; i++) {
+            argumentsList.push(arguments[i])
+        }
+        return Reflect.apply(Reflect.get(context.entity, methodName), context.entity, argumentsList)
+    } else {
+        loge(`Cannot find method for context id:${contextId},method name is:${methodName}`)
+    }
+}
 type ClassType<T> = new (...args: any) => T
 
 export function jsObtainEntry(contextId: string) {

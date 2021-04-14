@@ -292,6 +292,30 @@
     return ret;
 }
 
+- (DoricAsyncResult *)pureCallJSResponse:(NSString *)funcId, ... {
+    NSMutableArray *array = [[NSMutableArray alloc] init];
+    [array addObject:self.doricContext.contextId];
+    [array addObject:DORIC_ENTITY_RESPONSE];
+    [array addObject:self.idList];
+    [array addObject:funcId];
+    va_list args;
+    va_start(args, funcId);
+    id arg;
+    while ((arg = va_arg(args, id)) != nil) {
+        [array addObject:arg];
+    }
+    DoricAsyncResult *ret = [self.doricContext.driver invokeDoricMethod:DORIC_CONTEXT_INVOKE_PURE argumentsArray:array];
+    __weak typeof(self) __self = self;
+    ret.exceptionCallback = ^(NSException *e) {
+        __strong typeof(__self) self = __self;
+        [self.doricContext.driver.registry
+                onException:e
+                  inContext:self.doricContext];
+    };
+    va_end(args);
+    return ret;
+}
+
 + (__kindof DoricViewNode *)create:(DoricContext *)context withType:(NSString *)type {
     DoricRegistry *registry = context.driver.registry;
     Class clz = [registry acquireViewNode:type];

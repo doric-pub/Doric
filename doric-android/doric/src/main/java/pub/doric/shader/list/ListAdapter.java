@@ -103,7 +103,7 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
                 start--;
                 batchCount++;
             }
-            AsyncResult<JSDecoder> asyncResult = listNode.callJSResponse(
+            AsyncResult<JSDecoder> asyncResult = listNode.pureCallJSResponse(
                     "renderBunchedItems",
                     start,
                     batchCount);

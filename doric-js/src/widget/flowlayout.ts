@@ -27,7 +27,6 @@ export class FlowLayoutItem extends Stack {
 
 export class FlowLayout extends Superview {
     private cachedViews: Map<string, FlowLayoutItem> = new Map
-    private ignoreDirtyCallOnce = false
 
     allSubviews() {
         if (this.loadMoreView) {
@@ -80,18 +79,7 @@ export class FlowLayout extends Superview {
         this.cachedViews.set(`${itemIdx}`, view)
         return view
     }
-
-    isDirty() {
-        if (this.ignoreDirtyCallOnce) {
-            this.ignoreDirtyCallOnce = false
-            //Ignore the dirty call once.
-            return false
-        }
-        return super.isDirty()
-    }
-
     private renderBunchedItems(start: number, length: number) {
-        this.ignoreDirtyCallOnce = true;
         return new Array(Math.min(length, this.itemCount - start)).fill(0).map((_, idx) => {
             const listItem = this.getItem(start + idx)
             return listItem.toModel()

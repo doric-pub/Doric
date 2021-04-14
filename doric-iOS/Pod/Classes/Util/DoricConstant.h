@@ -46,6 +46,8 @@ extern NSString *const DORIC_CONTEXT_RELEASE;
 
 extern NSString *const DORIC_CONTEXT_INVOKE;
 
+extern NSString *const DORIC_CONTEXT_INVOKE_PURE;
+
 extern NSString *const DORIC_TIMER_CALLBACK;
 
 extern NSString *const DORIC_BRIDGE_RESOLVE;

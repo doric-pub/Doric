@@ -105,7 +105,7 @@ class SlideAdapter extends RecyclerView.Adapter<SlideAdapter.DoricViewHolder> {
 
         String id = itemValues.get(index);
         if (TextUtils.isEmpty(id)) {
-            AsyncResult<JSDecoder> asyncResult = sliderNode.callJSResponse(
+            AsyncResult<JSDecoder> asyncResult = sliderNode.pureCallJSResponse(
                     "renderBunchedItems",
                     index,
                     batchCount);

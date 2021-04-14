@@ -50,9 +50,9 @@ class ListVH extends ViewHolder {
                     itemCount: 0,
                     layoutConfig: {
                         widthSpec: LayoutSpec.MOST,
-                        heightSpec: LayoutSpec.FIT,
+                        heightSpec: LayoutSpec.JUST,
+                        weight: 1
                     },
-                    backgroundColor: Color.YELLOW,
                 })
             ],
             {

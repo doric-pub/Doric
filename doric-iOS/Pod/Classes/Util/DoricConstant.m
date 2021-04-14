@@ -64,6 +64,8 @@ NSString *const DORIC_CONTEXT_RELEASE = @"jsReleaseContext";
 
 NSString *const DORIC_CONTEXT_INVOKE = @"jsCallEntityMethod";
 
+NSString *const DORIC_CONTEXT_INVOKE_PURE = @"pureCallEntityMethod";
+
 NSString *const DORIC_TIMER_CALLBACK = @"jsCallbackTimer";
 
 NSString *const DORIC_BRIDGE_RESOLVE = @"jsCallResolve";

@@ -6,17 +6,18 @@ export class ShaderPlugin extends DoricPlugin {
         if (this.context.rootNode.viewId?.length > 0) {
             if (this.context.rootNode.viewId === ret.id) {
                 this.context.rootNode.blend(ret.props)
+                this.context.rootNode.onBlended()
             } else {
                 for (let map of this.context.headNodes.values()) {
                     const viewNode = map.get(ret.id)
-                    if (viewNode) {
-                        viewNode.blend(ret.props)
-                    }
+                    viewNode?.blend(ret.props)
+                    viewNode?.onBlended()
                 }
             }
         } else {
             this.context.rootNode.viewId = ret.id
             this.context.rootNode.blend(ret.props)
+            this.context.rootNode.onBlended()
         }
     }
 }

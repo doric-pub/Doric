@@ -78,10 +78,7 @@ export class DoricListNode extends DoricSuperNode {
         }
     }
     blendSubNode(model: DVModel) {
-        const viewNode = this.getSubNodeById(model.id)
-        if (viewNode) {
-            viewNode.blend(model.props)
-        }
+        this.getSubNodeById(model.id)?.blend(model.props)
     }
 
     getSubNodeById(viewId: string) {
@@ -108,5 +105,9 @@ export class DoricListNode extends DoricSuperNode {
             }
         })
         return ret
+    }
+    onBlended() {
+        super.onBlended()
+        this.childNodes.forEach(e => e.onBlended())
     }
 }

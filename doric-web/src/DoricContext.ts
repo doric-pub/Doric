@@ -27,6 +27,17 @@ export class DoricContext {
         this.rootNode = new DoricStackNode(this)
     }
 
+    targetViewNode(viewId: string) {
+        if (this.rootNode.viewId === viewId) {
+            return this.rootNode
+        }
+        for (let nodes of this.headNodes.values()) {
+            if (nodes.has(viewId)) {
+                return nodes.get(viewId)
+            }
+        }
+    }
+
     get panel() {
         return jsObtainContext(this.contextId)?.entity as Panel
     }
@@ -54,7 +65,6 @@ export class DoricContext {
     onCreate() {
         this.invokeEntityMethod("__onCreate__")
     }
-
 
     onDestroy() {
         this.invokeEntityMethod("__onDestroy__")

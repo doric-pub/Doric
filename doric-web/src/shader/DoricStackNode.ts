@@ -1,4 +1,4 @@
-import { DoricGroupViewNode, LayoutSpec, FrameSize, LEFT, RIGHT, CENTER_X, CENTER_Y, TOP, BOTTOM, toPixelString } from "./DoricViewNode";
+import { DoricGroupViewNode, LayoutSpec, FrameSize, LEFT, RIGHT, CENTER_X, CENTER_Y, TOP, BOTTOM, toPixelString, pixelString2Number } from "./DoricViewNode";
 
 export class DoricStackNode extends DoricGroupViewNode {
 
@@ -19,13 +19,19 @@ export class DoricStackNode extends DoricGroupViewNode {
     configSize() {
         if (this.layoutConfig.widthSpec === LayoutSpec.WRAP_CONTENT) {
             const width = this.childNodes.reduce((prev, current) => {
-                return Math.max(prev, current.view.offsetWidth)
+                const computedStyle = window.getComputedStyle(current.view)
+                return Math.max(prev, current.view.offsetWidth
+                    + pixelString2Number(computedStyle.marginLeft)
+                    + pixelString2Number(computedStyle.marginRight))
             }, 0)
             this.view.style.width = toPixelString(width)
         }
         if (this.layoutConfig.heightSpec === LayoutSpec.WRAP_CONTENT) {
             const height = this.childNodes.reduce((prev, current) => {
-                return Math.max(prev, current.view.offsetHeight)
+                const computedStyle = window.getComputedStyle(current.view)
+                return Math.max(prev, current.view.offsetHeight
+                    + pixelString2Number(computedStyle.marginTop)
+                    + pixelString2Number(computedStyle.marginBottom))
             }, 0)
             this.view.style.height = toPixelString(height)
         }

@@ -4462,6 +4462,9 @@ var doric_web = (function (exports, axios, sandbox) {
     function toPixelString(v) {
         return `${v}px`;
     }
+    function pixelString2Number(v) {
+        return parseFloat(v.substring(0, v.indexOf("px")));
+    }
     function toRGBAString(color) {
         let strs = [];
         for (let i = 0; i < 32; i += 8) {
@@ -4736,13 +4739,13 @@ var doric_web = (function (exports, axios, sandbox) {
             this.backgroundColor = v;
         }
         getAlpha() {
-            return this.view.style.opacity;
+            return parseFloat(this.view.style.opacity);
         }
         setAlpha(v) {
             this.view.style.opacity = `${v}`;
         }
         getCorners() {
-            return this.view.style.borderRadius;
+            return parseFloat(this.view.style.borderRadius);
         }
         setCorners(v) {
             this.view.style.borderRadius = toPixelString(v);
@@ -4994,13 +4997,19 @@ var doric_web = (function (exports, axios, sandbox) {
         configSize() {
             if (this.layoutConfig.widthSpec === exports.LayoutSpec.WRAP_CONTENT) {
                 const width = this.childNodes.reduce((prev, current) => {
-                    return Math.max(prev, current.view.offsetWidth);
+                    const computedStyle = window.getComputedStyle(current.view);
+                    return Math.max(prev, current.view.offsetWidth
+                        + pixelString2Number(computedStyle.marginLeft)
+                        + pixelString2Number(computedStyle.marginRight));
                 }, 0);
                 this.view.style.width = toPixelString(width);
             }
             if (this.layoutConfig.heightSpec === exports.LayoutSpec.WRAP_CONTENT) {
                 const height = this.childNodes.reduce((prev, current) => {
-                    return Math.max(prev, current.view.offsetHeight);
+                    const computedStyle = window.getComputedStyle(current.view);
+                    return Math.max(prev, current.view.offsetHeight
+                        + pixelString2Number(computedStyle.marginTop)
+                        + pixelString2Number(computedStyle.marginBottom));
                 }, 0);
                 this.view.style.height = toPixelString(height);
             }
@@ -5725,6 +5734,7 @@ var doric_web = (function (exports, axios, sandbox) {
             super(...arguments);
             this.headerViewId = "";
             this.contentViewId = "";
+            this.refreshable = true;
         }
         build() {
             const ret = document.createElement('div');
@@ -5742,22 +5752,39 @@ var doric_web = (function (exports, axios, sandbox) {
             ret.appendChild(content);
             let touchStart = 0;
             ret.ontouchstart = (ev) => {
+                if (!this.refreshable) {
+                    return;
+                }
                 touchStart = ev.touches[0].pageY;
             };
             ret.ontouchmove = (ev) => {
-                ret.scrollTop = Math.max(0, header.offsetHeight - (ev.touches[0].pageY - touchStart));
+                if (!this.refreshable) {
+                    return;
+                }
+                ret.scrollTop = Math.max(0, header.offsetHeight - (ev.touches[0].pageY - touchStart) * 0.68);
+            };
+            const touchend = () => {
+                var _a, _b;
+                if (!this.refreshable) {
+                    return;
+                }
+                if (header.offsetHeight - ret.scrollTop >= (((_a = this.headerNode) === null || _a === void 0 ? void 0 : _a.getWidth()) || 0)) {
+                    this.setRefreshing(true);
+                    (_b = this.onRefreshCallback) === null || _b === void 0 ? void 0 : _b.call(this);
+                }
+                else {
+                    // To idel
+                    ret.scrollTo({
+                        top: header.offsetHeight,
+                        behavior: "smooth"
+                    });
+                }
             };
             ret.ontouchcancel = () => {
-                ret.scrollTo({
-                    top: header.offsetHeight,
-                    behavior: "smooth"
-                });
+                touchend();
             };
             ret.ontouchend = () => {
-                ret.scrollTo({
-                    top: header.offsetHeight,
-                    behavior: "smooth"
-                });
+                touchend();
             };
             window.requestAnimationFrame(() => {
                 ret.scrollTop = header.offsetHeight;
@@ -5889,7 +5916,10 @@ var doric_web = (function (exports, axios, sandbox) {
             }
         }
         setRefreshable(v) {
-            console.log("setRefreshable", v);
+            this.refreshable = v;
+            if (!v) {
+                this.setRefreshing(false);
+            }
         }
     }
 
@@ -6266,6 +6296,7 @@ ${content}
     exports.destroyContext = destroyContext;
     exports.injectGlobalObject = injectGlobalObject;
     exports.loadJS = loadJS;
+    exports.pixelString2Number = pixelString2Number;
     exports.registerJSBundle = registerJSBundle;
     exports.registerPlugin = registerPlugin;
     exports.registerViewNode = registerViewNode;

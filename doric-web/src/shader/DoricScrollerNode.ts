@@ -63,7 +63,8 @@ export class DoricScrollerNode extends DoricSuperNode {
         }
     }
 
-    layout() {
-        super.layout()
+    onBlended() {
+        super.onBlended()
+        this.childNode?.onBlended()
     }
 }

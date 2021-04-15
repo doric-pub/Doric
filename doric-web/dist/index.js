@@ -4448,19 +4448,20 @@ var doric_web = (function (exports, axios, sandbox) {
             if (((_a = this.context.rootNode.viewId) === null || _a === void 0 ? void 0 : _a.length) > 0) {
                 if (this.context.rootNode.viewId === ret.id) {
                     this.context.rootNode.blend(ret.props);
+                    this.context.rootNode.onBlended();
                 }
                 else {
                     for (let map of this.context.headNodes.values()) {
                         const viewNode = map.get(ret.id);
-                        if (viewNode) {
-                            viewNode.blend(ret.props);
-                        }
+                        viewNode === null || viewNode === void 0 ? void 0 : viewNode.blend(ret.props);
+                        viewNode === null || viewNode === void 0 ? void 0 : viewNode.onBlended();
                     }
                 }
             }
             else {
                 this.context.rootNode.viewId = ret.id;
                 this.context.rootNode.blend(ret.props);
+                this.context.rootNode.onBlended();
             }
         }
     }
@@ -4559,7 +4560,6 @@ var doric_web = (function (exports, axios, sandbox) {
             }
             this.onBlending();
             this.layout();
-            this.onBlended();
         }
         onBlending() {
         }
@@ -4798,6 +4798,10 @@ var doric_web = (function (exports, axios, sandbox) {
         onBlending() {
             super.onBlending();
             this.configChildNode();
+        }
+        onBlended() {
+            super.onBlended();
+            this.childNodes.forEach(e => e.onBlended());
         }
         configChildNode() {
             this.childViewIds.forEach((childViewId, index) => {
@@ -5279,8 +5283,10 @@ var doric_web = (function (exports, axios, sandbox) {
                 this.childNode = childNode;
             }
         }
-        layout() {
-            super.layout();
+        onBlended() {
+            var _a;
+            super.onBlended();
+            (_a = this.childNode) === null || _a === void 0 ? void 0 : _a.onBlended();
         }
     }
 
@@ -5541,10 +5547,8 @@ var doric_web = (function (exports, axios, sandbox) {
             }
         }
         blendSubNode(model) {
-            const viewNode = this.getSubNodeById(model.id);
-            if (viewNode) {
-                viewNode.blend(model.props);
-            }
+            var _a;
+            (_a = this.getSubNodeById(model.id)) === null || _a === void 0 ? void 0 : _a.blend(model.props);
         }
         getSubNodeById(viewId) {
             if (viewId === this.loadMoreViewId) {
@@ -5568,6 +5572,10 @@ var doric_web = (function (exports, axios, sandbox) {
                 }
             });
             return ret;
+        }
+        onBlended() {
+            super.onBlended();
+            this.childNodes.forEach(e => e.onBlended());
         }
     }
 
@@ -5637,31 +5645,151 @@ var doric_web = (function (exports, axios, sandbox) {
     }
 
     class DoricRefreshableNode extends DoricSuperNode {
-        blendSubNode(model) {
-        }
-        getSubNodeById(viewId) {
-            return undefined;
+        constructor() {
+            super(...arguments);
+            this.headerViewId = "";
+            this.contentViewId = "";
         }
         build() {
             const ret = document.createElement('div');
-            ret.style.overflow = "scroll";
+            ret.style.overflow = "hidden";
             const header = document.createElement('div');
             const content = document.createElement('div');
             header.style.width = "100%";
-            header.style.height = "200px";
-            header.style.backgroundColor = "red";
+            header.style.height = "auto";
             content.style.width = "100%";
             content.style.height = "100%";
-            content.style.backgroundColor = "blue";
             ret.appendChild(header);
             ret.appendChild(content);
-            ret.addEventListener("scroll", () => {
-                ret.scrollTop = 200;
+            let touchStart = 0;
+            ret.ontouchstart = (ev) => {
+                touchStart = ev.touches[0].pageY;
+            };
+            ret.ontouchmove = (ev) => {
+                ret.scrollTop = Math.max(0, header.offsetHeight - (ev.touches[0].pageY - touchStart));
+            };
+            ret.ontouchcancel = () => {
+                ret.scrollTo({
+                    top: header.offsetHeight,
+                    behavior: "smooth"
+                });
+            };
+            ret.ontouchend = () => {
+                ret.scrollTo({
+                    top: header.offsetHeight,
+                    behavior: "smooth"
+                });
+            };
+            window.requestAnimationFrame(() => {
+                ret.scrollTop = header.offsetHeight;
             });
+            this.headerContainer = header;
+            this.contentContainer = content;
             return ret;
         }
+        blendProps(v, propName, prop) {
+            if (propName === 'content') {
+                this.contentViewId = prop;
+            }
+            else if (propName === 'header') {
+                this.headerViewId = prop;
+            }
+            else if (propName === 'onRefresh') {
+                this.onRefreshCallback = () => {
+                    this.callJSResponse(prop);
+                };
+            }
+            else {
+                super.blendProps(v, propName, prop);
+            }
+        }
+        blendSubNode(model) {
+            var _a;
+            (_a = this.getSubNodeById(model.id)) === null || _a === void 0 ? void 0 : _a.blend(model.props);
+        }
+        getSubNodeById(viewId) {
+            if (viewId === this.headerViewId) {
+                return this.headerNode;
+            }
+            else if (viewId === this.contentViewId) {
+                return this.contentNode;
+            }
+            return undefined;
+        }
+        onBlending() {
+            var _a, _b, _c, _d, _e, _f;
+            super.onBlending();
+            {
+                const headerModel = this.getSubModel(this.headerViewId);
+                if (headerModel) {
+                    if (this.headerNode) {
+                        if (this.headerNode.viewId !== this.headerViewId) {
+                            if (this.reusable && this.headerNode.viewType === headerModel.type) {
+                                this.headerNode.viewId = headerModel.id;
+                                this.headerNode.blend(headerModel.props);
+                            }
+                            else {
+                                (_a = this.headerContainer) === null || _a === void 0 ? void 0 : _a.removeChild(this.headerNode.view);
+                                const headerNode = DoricViewNode.create(this.context, headerModel.type);
+                                if (headerNode) {
+                                    headerNode.viewId = headerModel.id;
+                                    headerNode.init(this);
+                                    headerNode.blend(headerModel.props);
+                                    (_b = this.headerContainer) === null || _b === void 0 ? void 0 : _b.appendChild(headerNode.view);
+                                    this.headerNode = headerNode;
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        const headerNode = DoricViewNode.create(this.context, headerModel.type);
+                        if (headerNode) {
+                            headerNode.viewId = headerModel.id;
+                            headerNode.init(this);
+                            headerNode.blend(headerModel.props);
+                            (_c = this.headerContainer) === null || _c === void 0 ? void 0 : _c.appendChild(headerNode.view);
+                            this.headerNode = headerNode;
+                        }
+                    }
+                }
+            }
+            {
+                const contentModel = this.getSubModel(this.contentViewId);
+                if (contentModel) {
+                    if (this.contentNode) {
+                        if (this.contentNode.viewId !== this.contentViewId) {
+                            if (this.reusable && this.contentNode.viewType === contentModel.type) {
+                                this.contentNode.viewId = contentModel.id;
+                                this.contentNode.blend(contentModel.props);
+                            }
+                            else {
+                                (_d = this.contentContainer) === null || _d === void 0 ? void 0 : _d.removeChild(this.contentNode.view);
+                                const contentNode = DoricViewNode.create(this.context, contentModel.type);
+                                if (contentNode) {
+                                    contentNode.viewId = contentModel.id;
+                                    contentNode.init(this);
+                                    contentNode.blend(contentModel.props);
+                                    (_e = this.contentContainer) === null || _e === void 0 ? void 0 : _e.appendChild(contentNode.view);
+                                    this.contentNode = contentNode;
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        const contentNode = DoricViewNode.create(this.context, contentModel.type);
+                        if (contentNode) {
+                            contentNode.viewId = contentModel.id;
+                            contentNode.init(this);
+                            contentNode.blend(contentModel.props);
+                            (_f = this.contentContainer) === null || _f === void 0 ? void 0 : _f.appendChild(contentNode.view);
+                            this.contentNode = contentNode;
+                        }
+                    }
+                }
+            }
+        }
         onBlended() {
-            this.view.scrollTop = 200;
+            super.onBlended();
         }
     }
 

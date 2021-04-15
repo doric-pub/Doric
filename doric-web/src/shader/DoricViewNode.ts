@@ -403,10 +403,17 @@ export abstract class DoricGroupViewNode extends DoricSuperNode {
     blend(props: { [index: string]: any }) {
         super.blend(props)
     }
+
     onBlending() {
         super.onBlending()
         this.configChildNode()
     }
+
+    onBlended() {
+        super.onBlended()
+        this.childNodes.forEach(e => e.onBlended())
+    }
+
     configChildNode() {
         this.childViewIds.forEach((childViewId, index) => {
             const model = this.getSubModel(childViewId)

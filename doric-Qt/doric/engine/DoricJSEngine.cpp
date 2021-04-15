@@ -17,6 +17,7 @@
 
 DoricJSEngine::DoricJSEngine(QObject *parent) : QObject(parent) {
   mJSThreadPool.setMaxThreadCount(1);
+  mJSThreadPool.setExpiryTimeout(-1);
 
   {
     auto result = QtConcurrent::run(

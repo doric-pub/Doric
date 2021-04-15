@@ -52,20 +52,20 @@ public:
 
   void setGravity(int gravity);
 
-  void setWidth(int width);
-  void setHeight(int height);
+  void setWidth(qreal width);
+  void setHeight(qreal height);
 
-  void setSpacing(int spacing);
+  void setSpacing(qreal spacing);
 
-  void setMarginLeft(int marginLeft);
-  void setMarginTop(int marginTop);
-  void setMarginRight(int marginRight);
-  void setMarginBottom(int marginBottom);
+  void setMarginLeft(qreal marginLeft);
+  void setMarginTop(qreal marginTop);
+  void setMarginRight(qreal marginRight);
+  void setMarginBottom(qreal marginBottom);
 
-  void setPaddingLeft(int paddingLeft);
-  void setPaddingTop(int paddingTop);
-  void setPaddingRight(int paddingRight);
-  void setPaddingBottom(int paddingBottom);
+  void setPaddingLeft(qreal paddingLeft);
+  void setPaddingTop(qreal paddingTop);
+  void setPaddingRight(qreal paddingRight);
+  void setPaddingBottom(qreal paddingBottom);
 
   void setWeight(int weight);
 
@@ -75,39 +75,14 @@ public:
 
   void setDisabled(bool disabled);
 
-  void setMaxWidth(int maxWidth);
-  void setMaxHeight(int maxHeight);
-  void setMinWidth(int minWidth);
-  void setMinHeight(int minHeight);
+  void setMaxWidth(qreal maxWidth);
+  void setMaxHeight(qreal maxHeight);
+  void setMinWidth(qreal minWidth);
+  void setMinHeight(qreal minHeight);
 
-  void apply(int targetWidth, int targetHeight);
+  void apply(qreal targetWidth, qreal targetHeight);
 
   void apply();
-
-  void measure(int targetWidth, int targetHeight);
-
-  void measureSelf(int targetWidth, int targetHeight);
-
-  void measureContent(int targetWidth, int targetHeight);
-
-  void measureUndefinedContent(int targetWidth, int targetHeight);
-  void measureStackContent(int targetWidth, int targetHeight);
-  void measureVLayoutContent(int targetWidth, int targetHeight);
-  void measureHLayoutContent(int targetWidth, int targetHeight);
-
-  int takenWidth();
-  int takenHeight();
-  QPair<int, int> removeMargin(int targetWidth, int targetHeight);
-
-  bool restrainSize();
-
-  void layout();
-
-  void layoutStack();
-  void layoutVLayout();
-  void layoutHLayout();
-
-  void setFrame();
 
 private:
   QString tag;
@@ -119,20 +94,20 @@ private:
 
   int gravity;
 
-  int width;
-  int height;
+  qreal width;
+  qreal height;
 
-  int spacing;
+  qreal spacing;
 
-  int marginLeft;
-  int marginTop;
-  int marginRight;
-  int marginBottom;
+  qreal marginLeft;
+  qreal marginTop;
+  qreal marginRight;
+  qreal marginBottom;
 
-  int paddingLeft;
-  int paddingTop;
-  int paddingRight;
-  int paddingBottom;
+  qreal paddingLeft;
+  qreal paddingTop;
+  qreal paddingRight;
+  qreal paddingBottom;
 
   int weight;
 
@@ -142,25 +117,52 @@ private:
 
   bool disabled;
 
-  int maxWidth;
-  int maxHeight;
-  int minWidth;
-  int minHeight;
+  qreal maxWidth;
+  qreal maxHeight;
+  qreal minWidth;
+  qreal minHeight;
 
   bool resolved;
 
-  int measuredWidth;
-  void setMeasuredWidth(int measuredWidth);
-  int measuredHeight;
-  void setMeasuredHeight(int measuredHeight);
-  int measuredX;
-  int measuredY;
+  qreal measuredWidth;
+  void setMeasuredWidth(qreal measuredWidth);
+  qreal measuredHeight;
+  void setMeasuredHeight(qreal measuredHeight);
+  qreal measuredX;
+  void setMeasuredX(qreal measuredX);
+  qreal measuredY;
+  void setMeasuredY(qreal measuredY);
 
   bool undefined;
 
   //
-  int contentWidth;
-  int contentHeight;
+  qreal contentWidth;
+  qreal contentHeight;
+
+  void measure(qreal targetWidth, qreal targetHeight);
+
+  void measureSelf(qreal targetWidth, qreal targetHeight);
+
+  void measureContent(qreal targetWidth, qreal targetHeight);
+
+  void measureUndefinedContent(qreal targetWidth, qreal targetHeight);
+  void measureStackContent(qreal targetWidth, qreal targetHeight);
+  void measureVLayoutContent(qreal targetWidth, qreal targetHeight);
+  void measureHLayoutContent(qreal targetWidth, qreal targetHeight);
+
+  qreal takenWidth();
+  qreal takenHeight();
+  QPair<qreal, qreal> removeMargin(qreal targetWidth, qreal targetHeight);
+
+  bool restrainSize();
+
+  void layout();
+
+  void layoutStack();
+  void layoutVLayout();
+  void layoutHLayout();
+
+  void setFrame();
 };
 
 #endif // DORICLAYOUTS_H

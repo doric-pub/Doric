@@ -33,6 +33,10 @@ export function toPixelString(v: number) {
     return `${v}px`
 }
 
+export function pixelString2Number(v: string) {
+    return parseFloat(v.substring(0, v.indexOf("px")))
+}
+
 export function toRGBAString(color: number) {
     let strs = []
     for (let i = 0; i < 32; i += 8) {
@@ -369,7 +373,7 @@ export abstract class DoricViewNode {
     }
 
     getAlpha() {
-        return this.view.style.opacity
+        return parseFloat(this.view.style.opacity)
     }
 
     setAlpha(v: number) {
@@ -377,7 +381,7 @@ export abstract class DoricViewNode {
     }
 
     getCorners() {
-        return this.view.style.borderRadius
+        return parseFloat(this.view.style.borderRadius)
     }
 
     setCorners(v: number) {

@@ -13,7 +13,7 @@ export class DoricRefreshableNode extends DoricSuperNode {
     headerContainer?: HTMLDivElement
 
     contentContainer?: HTMLDivElement
-
+    refreshable = true
     build() {
         const ret = document.createElement('div')
         ret.style.overflow = "hidden"
@@ -30,22 +30,37 @@ export class DoricRefreshableNode extends DoricSuperNode {
         ret.appendChild(content)
         let touchStart = 0
         ret.ontouchstart = (ev) => {
+            if (!this.refreshable) {
+                return
+            }
             touchStart = ev.touches[0].pageY
         }
         ret.ontouchmove = (ev) => {
-            ret.scrollTop = Math.max(0, header.offsetHeight - (ev.touches[0].pageY - touchStart))
+            if (!this.refreshable) {
+                return
+            }
+            ret.scrollTop = Math.max(0, header.offsetHeight - (ev.touches[0].pageY - touchStart) * 0.68)
+        }
+        const touchend = () => {
+            if (!this.refreshable) {
+                return
+            }
+            if (header.offsetHeight - ret.scrollTop >= (this.headerNode?.getWidth() || 0)) {
+                this.setRefreshing(true)
+                this.onRefreshCallback?.()
+            } else {
+                // To idel
+                ret.scrollTo({
+                    top: header.offsetHeight,
+                    behavior: "smooth"
+                })
+            }
         }
         ret.ontouchcancel = () => {
-            ret.scrollTo({
-                top: header.offsetHeight,
-                behavior: "smooth"
-            })
+            touchend()
         }
         ret.ontouchend = () => {
-            ret.scrollTo({
-                top: header.offsetHeight,
-                behavior: "smooth"
-            })
+            touchend()
         }
         window.requestAnimationFrame(() => {
             ret.scrollTop = header.offsetHeight
@@ -172,6 +187,9 @@ export class DoricRefreshableNode extends DoricSuperNode {
     }
 
     setRefreshable(v: boolean) {
-        console.log("setRefreshable", v)
+        this.refreshable = v
+        if (!v) {
+            this.setRefreshing(false)
+        }
     }
 }

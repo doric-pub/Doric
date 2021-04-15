@@ -99,7 +99,6 @@ export abstract class DoricViewNode {
 
     view!: HTMLElement
 
-
     constructor(context: DoricContext) {
         this.context = context
     }
@@ -146,7 +145,6 @@ export abstract class DoricViewNode {
     }
 
     onBlending() {
-
     }
 
     onBlended() {
@@ -282,6 +280,9 @@ export abstract class DoricViewNode {
                     this.view.style.boxShadow = ""
                 }
                 break
+            case 'alpha':
+                this.view.style.opacity = `${prop}`
+                break
         }
     }
 
@@ -325,6 +326,72 @@ export abstract class DoricViewNode {
         }
         return Reflect.apply(this.context.pureInvokeEntityMethod, this.context, argumentsList)
     }
+
+    /** ++++++++++call from doric ++++++++++*/
+    getWidth() {
+        return this.view.offsetWidth
+    }
+
+    getHeight() {
+        return this.view.offsetHeight
+    }
+
+    setWidth(v: number) {
+        this.view.style.width = toPixelString(v)
+    }
+
+    setHeight(v: number) {
+        this.view.style.height = toPixelString(v)
+    }
+
+    getX() {
+        return this.view.offsetLeft
+    }
+
+    getY() {
+        return this.view.offsetTop
+    }
+
+    setX(v: number) {
+        this.view.style.left = toPixelString(v)
+    }
+
+    setY(v: number) {
+        this.view.style.top = toPixelString(v)
+    }
+
+    getBackgroundColor() {
+        return this.view.style.backgroundColor
+    }
+
+    setBackgroundColor(v: number) {
+        this.backgroundColor = v
+    }
+
+    getAlpha() {
+        return this.view.style.opacity
+    }
+
+    setAlpha(v: number) {
+        this.view.style.opacity = `${v}`
+    }
+
+    getCorners() {
+        return this.view.style.borderRadius
+    }
+
+    setCorners(v: number) {
+        this.view.style.borderRadius = toPixelString(v)
+    }
+
+    getLocationOnScreen() {
+        const rect = this.view.getClientRects()[0]
+        return {
+            x: rect.left,
+            y: rect.top,
+        }
+    }
+    /** ----------call from doric ----------*/
 }
 
 

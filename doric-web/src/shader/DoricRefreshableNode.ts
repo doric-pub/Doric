@@ -20,7 +20,10 @@ export class DoricRefreshableNode extends DoricSuperNode {
         const header = document.createElement('div')
         const content = document.createElement('div')
         header.style.width = "100%"
-        header.style.height = "auto"
+        header.style.height = "100%"
+        header.style.display = "flex"
+        header.style.alignItems = "flex-end"
+        header.style.justifyContent = "center"
         content.style.width = "100%"
         content.style.height = "100%"
         ret.appendChild(header)
@@ -151,4 +154,24 @@ export class DoricRefreshableNode extends DoricSuperNode {
         super.onBlended()
     }
 
+    setRefreshing(v: boolean) {
+        if (!this.headerContainer || !this.headerNode) {
+            return
+        }
+        if (v) {
+            this.view.scrollTo({
+                top: this.headerContainer.offsetHeight - this.headerNode.getHeight(),
+                behavior: "smooth"
+            })
+        } else {
+            this.view.scrollTo({
+                top: this.headerContainer?.offsetHeight,
+                behavior: "smooth"
+            })
+        }
+    }
+
+    setRefreshable(v: boolean) {
+        console.log("setRefreshable", v)
+    }
 }

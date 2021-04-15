@@ -22,7 +22,7 @@ QQuickItem *DoricVLayoutNode::build() {
 void DoricVLayoutNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
   QQuickItem *container = view;
   if (name == "space") {
-    getLayouts()->setSpacing(prop.toInt());
+    getLayouts()->setSpacing(prop.toDouble());
   } else if (name == "gravity") {
     getLayouts()->setGravity(prop.toInt());
   } else {

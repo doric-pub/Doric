@@ -15,16 +15,16 @@ void DoricViewNode::blendLayoutConfig(QJsonValue jsValue) {
     QJsonObject margin = jsObject["margin"].toObject();
 
     if (margin.contains("left"))
-      getLayouts()->setMarginLeft(margin["left"].toInt());
+      getLayouts()->setMarginLeft(margin["left"].toDouble());
 
     if (margin.contains("top"))
-      getLayouts()->setMarginTop(margin["top"].toInt());
+      getLayouts()->setMarginTop(margin["top"].toDouble());
 
     if (margin.contains("right"))
-      getLayouts()->setMarginRight(margin["right"].toInt());
+      getLayouts()->setMarginRight(margin["right"].toDouble());
 
     if (margin.contains("bottom"))
-      getLayouts()->setMarginBottom(margin["bottom"].toInt());
+      getLayouts()->setMarginBottom(margin["bottom"].toDouble());
   }
 
   if (jsObject.contains("alignment"))
@@ -34,16 +34,16 @@ void DoricViewNode::blendLayoutConfig(QJsonValue jsValue) {
     getLayouts()->setWeight(jsObject["weight"].toInt());
 
   if (jsObject.contains("maxWidth"))
-    getLayouts()->setMaxWidth(jsObject["maxWidth"].toInt());
+    getLayouts()->setMaxWidth(jsObject["maxWidth"].toDouble());
 
   if (jsObject.contains("maxHeight"))
-    getLayouts()->setMaxHeight(jsObject["maxHeight"].toInt());
+    getLayouts()->setMaxHeight(jsObject["maxHeight"].toDouble());
 
   if (jsObject.contains("minWidth"))
-    getLayouts()->setMinWidth(jsObject["minWidth"].toInt());
+    getLayouts()->setMinWidth(jsObject["minWidth"].toDouble());
 
   if (jsObject.contains("minHeight"))
-    getLayouts()->setMinHeight(jsObject["minHeight"].toInt());
+    getLayouts()->setMinHeight(jsObject["minHeight"].toDouble());
 }
 
 void DoricViewNode::createLayouts(QQuickItem *view) {
@@ -101,26 +101,26 @@ void DoricViewNode::blend(QJsonValue jsValue) {
 
 void DoricViewNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
   if (name == "width") {
-    getLayouts()->setWidth(prop.toInt());
+    getLayouts()->setWidth(prop.toDouble());
   } else if (name == "height") {
-    getLayouts()->setHeight(prop.toInt());
+    getLayouts()->setHeight(prop.toDouble());
   } else if (name == "backgroundColor") {
     QString color = DoricUtils::doricColor(prop.toInt()).name();
     view->setProperty("backgroundColor", color);
   } else if (name == "x") {
-    getLayouts()->setMarginLeft(prop.toInt());
+    getLayouts()->setMarginLeft(prop.toDouble());
   } else if (name == "y") {
-    getLayouts()->setMarginTop(prop.toInt());
+    getLayouts()->setMarginTop(prop.toDouble());
   } else if (name == "corners") {
     view->setProperty("radius", prop.toInt());
   } else if (name == "onClick") {
     if (prop.isString())
       clickFunction = prop.toString();
   } else if (name == "padding") {
-    getLayouts()->setPaddingLeft(prop["left"].toInt());
-    getLayouts()->setPaddingRight(prop["right"].toInt());
-    getLayouts()->setPaddingTop(prop["top"].toInt());
-    getLayouts()->setPaddingBottom(prop["bottom"].toInt());
+    getLayouts()->setPaddingLeft(prop["left"].toDouble());
+    getLayouts()->setPaddingRight(prop["right"].toDouble());
+    getLayouts()->setPaddingTop(prop["top"].toDouble());
+    getLayouts()->setPaddingBottom(prop["bottom"].toDouble());
   } else if (name == "hidden") {
     getLayouts()->setDisabled(prop.toBool());
   } else if (name != "layoutConfig") {

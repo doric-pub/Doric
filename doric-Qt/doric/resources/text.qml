@@ -31,6 +31,9 @@ TextArea {
         bg.color = backgroundColor
     }
 
+    horizontalAlignment: TextInput.AlignHCenter
+    verticalAlignment: TextInput.AlignVCenter
+
     onTextAlignmentChanged: {
         let gravity = Gravity.enumerate()
         let result = this.textAlignment | gravity.CENTER_Y

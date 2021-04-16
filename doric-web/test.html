@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta content="telephone=yes" name="format-detection" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="white">
+    <meta name="x5-fullscreen" content="true">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <title>H5开关效果</title>
+    <style>
+        * {margin: 0;padding: 0;}
+        body{background:#f1f1f1;}
+        .swich{width:200px;margin:100px auto;}
+        .swich .box{width:60px;height:30px;background:#ccc;border-radius:20px;transition: all .5s ease;}
+        .swich input{display:none;}
+        .swich .box span{display:inline-block;height:30px;width:30px;border-radius:15px;background:#fff;transform:translateX(0px);transition: all .5s ease;}
+        .swich-on .box{background:forestgreen;transition: all .5s ease;}
+        .swich-on .box span{transform:translateX(30px);transition: all .5s ease;}
+    </style>
+
+</head>
+
+<body>
+    <div class="swich">
+        <input type="checkbox" value="" name=""/>
+        <div class="box">
+            <span></span>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    (function(select){
+        var box = document.querySelector(select)
+        var checkbox = box.querySelector("input");
+        box.onclick = function(){
+            this.classList.toggle("swich-on");
+            if(checkbox.checked){
+                console.log("已经选中");
+                checkbox.checked = "true";
+            }else{
+                console.log("没有选中");
+                checkbox.checked = "false";
+            }
+        }
+    })(".swich");
+</script>

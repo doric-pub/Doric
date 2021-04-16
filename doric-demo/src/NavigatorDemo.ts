@@ -18,6 +18,9 @@ class NaivgatorDemo extends Panel {
             }),
             ...[
                 'AnimatorDemo',
+                'Gobang',
+                'SwitchDemo',
+                'SliderDemo',
                 'NavbarDemo',
                 "DraggableDemo",
                 "RefreshableDemo",
@@ -30,7 +33,6 @@ class NaivgatorDemo extends Panel {
                 'NavigatorDemo',
                 'NetworkDemo',
                 'ScrollerDemo',
-                'SliderDemo',
                 'Snake',
                 'StorageDemo',
                 'PopoverDemo'].map(e =>

@@ -13,6 +13,11 @@ TextArea {
 
     readOnly: true
 
+    leftPadding: 0
+    topPadding: 0
+    rightPadding: 0
+    bottomPadding: 0
+
     property int textAlignment: 0
 
     background: Rectangle {

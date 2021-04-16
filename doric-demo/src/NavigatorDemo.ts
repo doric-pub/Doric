@@ -17,11 +17,23 @@ class NaivgatorDemo extends Panel {
                 height: 50,
             }),
             ...[
-                'NavbarDemo', "DraggableDemo",
+                'AnimatorDemo',
+                'NavbarDemo',
+                "DraggableDemo",
                 "RefreshableDemo",
-                'Counter', 'EffectsDemo', 'ImageDemo', 'LayoutDemo',
-                'ListDemo', 'ModalDemo', 'NavigatorDemo',
-                'NetworkDemo', 'ScrollerDemo', 'SliderDemo', 'Snake', 'StorageDemo', 'PopoverDemo'].map(e =>
+                'Counter',
+                'EffectsDemo',
+                'ImageDemo',
+                'LayoutDemo',
+                'ListDemo',
+                'ModalDemo',
+                'NavigatorDemo',
+                'NetworkDemo',
+                'ScrollerDemo',
+                'SliderDemo',
+                'Snake',
+                'StorageDemo',
+                'PopoverDemo'].map(e =>
                     label(e).apply({
                         height: 50,
                         backgroundColor: colors[0],

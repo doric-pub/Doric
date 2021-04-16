@@ -103,6 +103,8 @@ export abstract class DoricViewNode {
 
     view!: HTMLElement
 
+    _originDisplay: string = ""
+
     transform: {
         translateX?: number,
         translateY?: number,
@@ -127,6 +129,7 @@ export abstract class DoricViewNode {
             }
         }
         this.view = this.build()
+        this._originDisplay = this.view.style.display
     }
 
     abstract build(): HTMLElement
@@ -320,6 +323,13 @@ export abstract class DoricViewNode {
                         x: 0.5,
                         y: prop,
                     }
+                }
+                break
+            case 'hidden':
+                if (prop === true) {
+                    this.view.style.display = "none"
+                } else {
+                    this.view.style.display = this._originDisplay
                 }
                 break
             default:

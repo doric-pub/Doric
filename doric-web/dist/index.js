@@ -4550,57 +4550,67 @@ var doric_web = (function (exports, axios, sandbox) {
         }
         configBorder() {
             if (this.border) {
-                this.view.style.borderStyle = "solid";
-                this.view.style.borderWidth = toPixelString(this.border.width);
-                this.view.style.borderColor = toRGBAString(this.border.color);
+                this.applyCSSStyle({
+                    borderStyle: "solid",
+                    borderWidth: toPixelString(this.border.width),
+                    borderColor: toRGBAString(this.border.color),
+                });
             }
         }
         configWidth() {
+            let width;
             switch (this.layoutConfig.widthSpec) {
                 case exports.LayoutSpec.WRAP_CONTENT:
-                    this.view.style.width = "max-content";
+                    width = "max-content";
                     break;
                 case exports.LayoutSpec.AT_MOST:
-                    this.view.style.width = "100%";
+                    width = "100%";
                     break;
                 case exports.LayoutSpec.EXACTLY:
                 default:
-                    this.view.style.width = toPixelString(this.frameWidth
+                    width = toPixelString(this.frameWidth
                         - this.paddingLeft - this.paddingRight
                         - this.borderWidth * 2);
                     break;
             }
+            this.applyCSSStyle({ width });
         }
         configHeight() {
+            let height;
             switch (this.layoutConfig.heightSpec) {
                 case exports.LayoutSpec.WRAP_CONTENT:
-                    this.view.style.height = "max-content";
+                    height = "max-content";
                     break;
                 case exports.LayoutSpec.AT_MOST:
-                    this.view.style.height = "100%";
+                    height = "100%";
                     break;
                 case exports.LayoutSpec.EXACTLY:
                 default:
-                    this.view.style.height = toPixelString(this.frameHeight
+                    height = toPixelString(this.frameHeight
                         - this.paddingTop - this.paddingBottom
                         - this.borderWidth * 2);
                     break;
             }
+            this.applyCSSStyle({ height });
         }
         configMargin() {
             if (this.layoutConfig.margin) {
-                this.view.style.marginLeft = toPixelString(this.layoutConfig.margin.left || 0);
-                this.view.style.marginRight = toPixelString(this.layoutConfig.margin.right || 0);
-                this.view.style.marginTop = toPixelString(this.layoutConfig.margin.top || 0);
-                this.view.style.marginBottom = toPixelString(this.layoutConfig.margin.bottom || 0);
+                this.applyCSSStyle({
+                    marginLeft: toPixelString(this.layoutConfig.margin.left || 0),
+                    marginRight: toPixelString(this.layoutConfig.margin.right || 0),
+                    marginTop: toPixelString(this.layoutConfig.margin.top || 0),
+                    marginBottom: toPixelString(this.layoutConfig.margin.bottom || 0),
+                });
             }
         }
         configPadding() {
             if (this.padding) {
-                this.view.style.paddingLeft = toPixelString(this.paddingLeft);
-                this.view.style.paddingRight = toPixelString(this.paddingRight);
-                this.view.style.paddingTop = toPixelString(this.paddingTop);
-                this.view.style.paddingBottom = toPixelString(this.paddingBottom);
+                this.applyCSSStyle({
+                    paddingLeft: toPixelString(this.paddingLeft),
+                    paddingRight: toPixelString(this.paddingRight),
+                    paddingTop: toPixelString(this.paddingTop),
+                    paddingBottom: toPixelString(this.paddingBottom),
+                });
             }
         }
         layout() {
@@ -4647,34 +4657,60 @@ var doric_web = (function (exports, axios, sandbox) {
                     break;
                 case 'corners':
                     if (typeof prop === 'object') {
-                        this.view.style.borderTopLeftRadius = toPixelString(prop.leftTop);
-                        this.view.style.borderTopRightRadius = toPixelString(prop.rightTop);
-                        this.view.style.borderBottomRightRadius = toPixelString(prop.rightBottom);
-                        this.view.style.borderBottomLeftRadius = toPixelString(prop.leftBottom);
+                        this.applyCSSStyle({
+                            borderTopLeftRadius: toPixelString(prop.leftTop),
+                            borderTopRightRadius: toPixelString(prop.rightTop),
+                            borderBottomRightRadius: toPixelString(prop.rightBottom),
+                            borderBottomLeftRadius: toPixelString(prop.leftBottom),
+                        });
                     }
                     else {
-                        this.view.style.borderRadius = toPixelString(prop);
+                        this.applyCSSStyle({ borderRadius: toPixelString(prop) });
                     }
                     break;
                 case 'shadow':
                     const opacity = prop.opacity || 0;
+                    let boxShadow;
                     if (opacity > 0) {
                         const offsetX = prop.offsetX || 0;
                         const offsetY = prop.offsetY || 0;
                         const shadowColor = prop.color || 0xff000000;
                         const shadowRadius = prop.radius;
                         const alpha = opacity * 255;
-                        this.view.style.boxShadow = `${toPixelString(offsetX)} ${toPixelString(offsetY)} ${toPixelString(shadowRadius)} ${toRGBAString((shadowColor & 0xffffff) | ((alpha & 0xff) << 24))} `;
+                        boxShadow = `${toPixelString(offsetX)} ${toPixelString(offsetY)} ${toPixelString(shadowRadius)} ${toRGBAString((shadowColor & 0xffffff) | ((alpha & 0xff) << 24))} `;
                     }
                     else {
-                        this.view.style.boxShadow = "";
+                        boxShadow = "";
                     }
+                    this.applyCSSStyle({
+                        boxShadow,
+                    });
                     break;
                 case 'alpha':
-                    this.view.style.opacity = `${prop}`;
+                    this.applyCSSStyle({
+                        opacity: `${prop}`,
+                    });
                     break;
                 case 'rotation':
                     this.transform.rotation = prop;
+                    break;
+                case 'rotationX':
+                    this.transform.rotationX = prop;
+                    break;
+                case 'rotationY':
+                    this.transform.rotationY = prop;
+                    break;
+                case 'scaleX':
+                    this.transform.scaleX = prop;
+                    break;
+                case 'scaleY':
+                    this.transform.scaleY = prop;
+                    break;
+                case 'translationX':
+                    this.transform.translateX = prop;
+                    break;
+                case 'translationY':
+                    this.transform.translateY = prop;
                     break;
                 case 'pivotX':
                     if (this.transformOrigin) {
@@ -4699,12 +4735,9 @@ var doric_web = (function (exports, axios, sandbox) {
                     }
                     break;
                 case 'hidden':
-                    if (prop === true) {
-                        this.view.style.display = "none";
-                    }
-                    else {
-                        this.view.style.display = this._originDisplay;
-                    }
+                    this.applyCSSStyle({
+                        display: prop === true ? "none" : this._originDisplay
+                    });
                     break;
                 default:
                     console.error(`Cannot blend prop for ${propName}`);
@@ -4712,7 +4745,7 @@ var doric_web = (function (exports, axios, sandbox) {
             }
         }
         set backgroundColor(v) {
-            this.view.style.backgroundColor = toRGBAString(v);
+            this.applyCSSStyle({ backgroundColor: toRGBAString(v) });
         }
         static create(context, type) {
             const viewNodeClass = acquireViewNode(type);
@@ -4748,30 +4781,44 @@ var doric_web = (function (exports, axios, sandbox) {
             return Reflect.apply(this.context.pureInvokeEntityMethod, this.context, argumentsList);
         }
         updateTransform() {
-            this.view.style.transform = Object.entries(this.transform).filter((e) => !!e[1]).map((e) => {
-                const v = e[1] || 0;
-                switch (e[0]) {
-                    case "translateX":
-                        return `translateX(${v}px)`;
-                    case "scaleX":
-                        return `scaleX(${v})`;
-                    case "scaleY":
-                        return `scaleY(${v})`;
-                    case "rotation":
-                        return `rotate(${v / 2}turn)`;
-                    case "rotateX":
-                        return `rotateX(${v / 2}turn)`;
-                    case "rotateY":
-                        return `rotateY(${v / 2}turn)`;
-                    default:
-                        console.error(`Do not support transform ${e[0]}`);
-                        return "";
-                }
-            }).join(" ");
+            this.applyCSSStyle({
+                transform: Object.entries(this.transform).filter((e) => !!e[1]).map((e) => {
+                    const v = e[1] || 0;
+                    switch (e[0]) {
+                        case "translateX":
+                            return `translateX(${v}px)`;
+                        case "scaleX":
+                            return `scaleX(${v})`;
+                        case "scaleY":
+                            return `scaleY(${v})`;
+                        case "rotation":
+                            return `rotate(${v / 2}turn)`;
+                        case "rotationX":
+                            return `rotateX(${v / 2}turn)`;
+                        case "rotationY":
+                            return `rotateY(${v / 2}turn)`;
+                        default:
+                            console.error(`Do not support transform ${e[0]}`);
+                            return "";
+                    }
+                }).join(" ")
+            });
         }
         updateTransformOrigin() {
             if (this.transformOrigin) {
-                this.view.style.transformOrigin = `${Math.round(this.transformOrigin.x * 100)}% ${Math.round(this.transformOrigin.y * 100)}%`;
+                this.applyCSSStyle({
+                    transformOrigin: `${Math.round(this.transformOrigin.x * 100)}% ${Math.round(this.transformOrigin.y * 100)}%`
+                });
+            }
+        }
+        applyCSSStyle(cssStyle) {
+            if (this.context.inAnimation()) {
+                this.context.addAnimation(this, cssStyle);
+            }
+            else {
+                for (let v in cssStyle) {
+                    Reflect.set(this.view.style, v, cssStyle[v]);
+                }
             }
         }
         /** ++++++++++call from doric ++++++++++*/
@@ -5164,28 +5211,33 @@ var doric_web = (function (exports, axios, sandbox) {
         }
         configOffset() {
             this.childNodes.forEach(e => {
-                e.view.style.position = "absolute";
-                e.view.style.left = toPixelString(e.offsetX + this.paddingLeft);
-                e.view.style.top = toPixelString(e.offsetY + this.paddingTop);
+                const position = "absolute";
+                let left = toPixelString(e.offsetX + this.paddingLeft);
+                let top = toPixelString(e.offsetY + this.paddingTop);
                 const gravity = e.layoutConfig.alignment;
                 if ((gravity & LEFT) === LEFT) {
-                    e.view.style.left = toPixelString(0);
+                    left = toPixelString(0);
                 }
                 else if ((gravity & RIGHT) === RIGHT) {
-                    e.view.style.left = toPixelString(this.view.offsetWidth - e.view.offsetWidth);
+                    left = toPixelString(this.view.offsetWidth - e.view.offsetWidth);
                 }
                 else if ((gravity & CENTER_X) === CENTER_X) {
-                    e.view.style.left = toPixelString(this.view.offsetWidth / 2 - e.view.offsetWidth / 2);
+                    left = toPixelString(this.view.offsetWidth / 2 - e.view.offsetWidth / 2);
                 }
                 if ((gravity & TOP) === TOP) {
-                    e.view.style.top = toPixelString(0);
+                    top = toPixelString(0);
                 }
                 else if ((gravity & BOTTOM) === BOTTOM) {
-                    e.view.style.top = toPixelString(this.view.offsetHeight - e.view.offsetHeight);
+                    top = toPixelString(this.view.offsetHeight - e.view.offsetHeight);
                 }
                 else if ((gravity & CENTER_Y) === CENTER_Y) {
-                    e.view.style.top = toPixelString(this.view.offsetHeight / 2 - e.view.offsetHeight / 2);
+                    top = toPixelString(this.view.offsetHeight / 2 - e.view.offsetHeight / 2);
                 }
+                e.applyCSSStyle({
+                    position,
+                    left,
+                    top,
+                });
             });
         }
     }
@@ -6076,6 +6128,48 @@ var doric_web = (function (exports, axios, sandbox) {
         }
     }
 
+    class AnimatePlugin extends DoricPlugin {
+        submit() {
+            return Promise.resolve();
+        }
+        animateRender(args) {
+            var _a;
+            this.context.animationSet = [];
+            if (((_a = this.context.rootNode.viewId) === null || _a === void 0 ? void 0 : _a.length) > 0) {
+                const viewNode = this.context.targetViewNode(args.id);
+                viewNode === null || viewNode === void 0 ? void 0 : viewNode.blend(args.props);
+                viewNode === null || viewNode === void 0 ? void 0 : viewNode.onBlended();
+            }
+            else {
+                this.context.rootNode.viewId = args.id;
+                this.context.rootNode.blend(args.props);
+                this.context.rootNode.onBlended();
+            }
+            return new Promise(resolve => {
+                Promise.resolve().then(() => {
+                    var _a;
+                    Promise.all(((_a = this.context.animationSet) === null || _a === void 0 ? void 0 : _a.map(e => {
+                        return new Promise(resolve => {
+                            const animation = e.viewNode.view.animate([e.keyFrame], {
+                                duration: args.duration,
+                                fill: "forwards"
+                            });
+                            animation.onfinish = () => {
+                                resolve(true);
+                            };
+                        });
+                    })) || [])
+                        .then(() => {
+                        resolve(0);
+                    })
+                        .finally(() => {
+                        this.context.animationSet = undefined;
+                    });
+                });
+            });
+        }
+    }
+
     const bundles = new Map;
     const plugins = new Map;
     const nodes = new Map;
@@ -6102,6 +6196,7 @@ var doric_web = (function (exports, axios, sandbox) {
     registerPlugin('storage', StoragePlugin);
     registerPlugin('navigator', NavigatorPlugin);
     registerPlugin('popover', PopoverPlugin);
+    registerPlugin('animate', AnimatePlugin);
     registerViewNode('Stack', DoricStackNode);
     registerViewNode('VLayout', DoricVLayoutNode);
     registerViewNode('HLayout', DoricHLayoutNode);
@@ -6308,6 +6403,16 @@ ${content}
         }
         build(frame) {
             this.invokeEntityMethod("__build__", frame);
+        }
+        inAnimation() {
+            return !!this.animationSet;
+        }
+        addAnimation(viewNode, keyFrame) {
+            var _a;
+            (_a = this.animationSet) === null || _a === void 0 ? void 0 : _a.push({
+                viewNode,
+                keyFrame
+            });
         }
         teardown() {
             for (let plugin of this.pluginInstances.values()) {

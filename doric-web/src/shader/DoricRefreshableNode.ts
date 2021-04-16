@@ -39,7 +39,9 @@ export class DoricRefreshableNode extends DoricSuperNode {
             if (!this.refreshable) {
                 return
             }
-            ret.scrollTop = Math.max(0, header.offsetHeight - (ev.touches[0].pageY - touchStart) * 0.68)
+            const offset = (ev.touches[0].pageY - touchStart) * 0.68
+            ret.scrollTop = Math.max(0, header.offsetHeight - offset)
+            this.headerNode?.callJSResponse("setPullingDistance", offset)
         }
         const touchend = () => {
             if (!this.refreshable) {
@@ -178,11 +180,13 @@ export class DoricRefreshableNode extends DoricSuperNode {
                 top: this.headerContainer.offsetHeight - this.headerNode.getHeight(),
                 behavior: "smooth"
             })
+            this.headerNode.callJSResponse("startAnimation")
         } else {
             this.view.scrollTo({
                 top: this.headerContainer?.offsetHeight,
                 behavior: "smooth"
             })
+            this.headerNode.callJSResponse("stopAnimation")
         }
     }
 

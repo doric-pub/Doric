@@ -4505,6 +4505,7 @@ var doric_web = (function (exports, axios, sandbox) {
             this.frameHeight = 0;
             this.offsetX = 0;
             this.offsetY = 0;
+            this.transform = {};
             this.context = context;
         }
         init(superNode) {
@@ -4541,6 +4542,7 @@ var doric_web = (function (exports, axios, sandbox) {
             this.layout();
         }
         onBlending() {
+            this.updateTransform();
         }
         onBlended() {
         }
@@ -4669,6 +4671,34 @@ var doric_web = (function (exports, axios, sandbox) {
                 case 'alpha':
                     this.view.style.opacity = `${prop}`;
                     break;
+                case 'rotation':
+                    this.transform.rotation = prop;
+                    break;
+                case 'pivotX':
+                    if (this.transformOrigin) {
+                        this.transformOrigin.x = prop;
+                    }
+                    else {
+                        this.transformOrigin = {
+                            x: prop,
+                            y: 0.5,
+                        };
+                    }
+                    break;
+                case 'pivotY':
+                    if (this.transformOrigin) {
+                        this.transformOrigin.y = prop;
+                    }
+                    else {
+                        this.transformOrigin = {
+                            x: 0.5,
+                            y: prop,
+                        };
+                    }
+                    break;
+                default:
+                    console.error(`Cannot blend prop for ${propName}`);
+                    break;
             }
         }
         set backgroundColor(v) {
@@ -4706,6 +4736,33 @@ var doric_web = (function (exports, axios, sandbox) {
                 argumentsList.push(arguments[i]);
             }
             return Reflect.apply(this.context.pureInvokeEntityMethod, this.context, argumentsList);
+        }
+        updateTransform() {
+            this.view.style.transform = Object.entries(this.transform).filter((e) => !!e[1]).map((e) => {
+                const v = e[1] || 0;
+                switch (e[0]) {
+                    case "translateX":
+                        return `translateX(${v}px)`;
+                    case "scaleX":
+                        return `scaleX(${v})`;
+                    case "scaleY":
+                        return `scaleY(${v})`;
+                    case "rotation":
+                        return `rotate(${v / 2}turn)`;
+                    case "rotateX":
+                        return `rotateX(${v / 2}turn)`;
+                    case "rotateY":
+                        return `rotateY(${v / 2}turn)`;
+                    default:
+                        console.error(`Do not support transform ${e[0]}`);
+                        return "";
+                }
+            }).join(" ");
+        }
+        updateTransformOrigin() {
+            if (this.transformOrigin) {
+                this.view.style.transformOrigin = `${Math.round(this.transformOrigin.x * 100)}% ${Math.round(this.transformOrigin.y * 100)}%`;
+            }
         }
         /** ++++++++++call from doric ++++++++++*/
         getWidth() {
@@ -4756,6 +4813,87 @@ var doric_web = (function (exports, axios, sandbox) {
                 x: rect.left,
                 y: rect.top,
             };
+        }
+        getRotation() {
+            return this.transform.rotation;
+        }
+        setRotation(v) {
+            this.transform.rotation = v;
+            this.updateTransform();
+        }
+        getRotationX() {
+            return this.transform.rotationX;
+        }
+        setRotationX(v) {
+            this.transform.rotationX = v;
+            this.updateTransform();
+        }
+        getRotationY() {
+            return this.transform.rotationY;
+        }
+        setRotationY(v) {
+            this.transform.rotationY = v;
+            this.updateTransform();
+        }
+        getTranslationX() {
+            return this.transform.translateX;
+        }
+        setTranslationX(v) {
+            this.transform.translateX = v;
+            this.updateTransform();
+        }
+        getTranslationY() {
+            return this.transform.translateY;
+        }
+        setTranslationY(v) {
+            this.transform.translateY = v;
+            this.updateTransform();
+        }
+        getScaleX() {
+            return this.transform.scaleX;
+        }
+        setScaleX(v) {
+            this.transform.scaleX = v;
+            this.updateTransform();
+        }
+        getScaleY() {
+            return this.transform.scaleY;
+        }
+        setScaleY(v) {
+            this.transform.scaleY = v;
+            this.updateTransform();
+        }
+        getPivotX() {
+            var _a;
+            return ((_a = this.transformOrigin) === null || _a === void 0 ? void 0 : _a.x) || 0.5;
+        }
+        setPivotX(v) {
+            if (this.transformOrigin) {
+                this.transformOrigin.x = v;
+            }
+            else {
+                this.transformOrigin = {
+                    x: v,
+                    y: 0.5,
+                };
+            }
+            this.updateTransform();
+        }
+        getPivotY() {
+            var _a;
+            return ((_a = this.transformOrigin) === null || _a === void 0 ? void 0 : _a.y) || 0.5;
+        }
+        setPivotY(v) {
+            if (this.transformOrigin) {
+                this.transformOrigin.y = v;
+            }
+            else {
+                this.transformOrigin = {
+                    x: 0.5,
+                    y: v,
+                };
+            }
+            this.updateTransform();
         }
     }
     class DoricSuperNode extends DoricViewNode {
@@ -5758,10 +5896,13 @@ var doric_web = (function (exports, axios, sandbox) {
                 touchStart = ev.touches[0].pageY;
             };
             ret.ontouchmove = (ev) => {
+                var _a;
                 if (!this.refreshable) {
                     return;
                 }
-                ret.scrollTop = Math.max(0, header.offsetHeight - (ev.touches[0].pageY - touchStart) * 0.68);
+                const offset = (ev.touches[0].pageY - touchStart) * 0.68;
+                ret.scrollTop = Math.max(0, header.offsetHeight - offset);
+                (_a = this.headerNode) === null || _a === void 0 ? void 0 : _a.callJSResponse("setPullingDistance", offset);
             };
             const touchend = () => {
                 var _a, _b;
@@ -5907,12 +6048,14 @@ var doric_web = (function (exports, axios, sandbox) {
                     top: this.headerContainer.offsetHeight - this.headerNode.getHeight(),
                     behavior: "smooth"
                 });
+                this.headerNode.callJSResponse("startAnimation");
             }
             else {
                 this.view.scrollTo({
                     top: (_a = this.headerContainer) === null || _a === void 0 ? void 0 : _a.offsetHeight,
                     behavior: "smooth"
                 });
+                this.headerNode.callJSResponse("stopAnimation");
             }
         }
         setRefreshable(v) {

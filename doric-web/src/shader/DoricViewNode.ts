@@ -103,6 +103,18 @@ export abstract class DoricViewNode {
 
     view!: HTMLElement
 
+    transform: {
+        translateX?: number,
+        translateY?: number,
+        scaleX?: number,
+        scaleY?: number,
+        rotation?: number,
+        rotationX?: number,
+        rotationY?: number
+    } = {}
+
+    transformOrigin: { x: number, y: number } | undefined
+
     constructor(context: DoricContext) {
         this.context = context
     }
@@ -149,10 +161,10 @@ export abstract class DoricViewNode {
     }
 
     onBlending() {
+        this.updateTransform()
     }
 
     onBlended() {
-
     }
 
     configBorder() {
@@ -287,6 +299,32 @@ export abstract class DoricViewNode {
             case 'alpha':
                 this.view.style.opacity = `${prop}`
                 break
+            case 'rotation':
+                this.transform.rotation = prop
+                break
+            case 'pivotX':
+                if (this.transformOrigin) {
+                    this.transformOrigin.x = prop
+                } else {
+                    this.transformOrigin = {
+                        x: prop,
+                        y: 0.5,
+                    }
+                }
+                break
+            case 'pivotY':
+                if (this.transformOrigin) {
+                    this.transformOrigin.y = prop
+                } else {
+                    this.transformOrigin = {
+                        x: 0.5,
+                        y: prop,
+                    }
+                }
+                break
+            default:
+                console.error(`Cannot blend prop for ${propName}`)
+                break
         }
     }
 
@@ -331,6 +369,35 @@ export abstract class DoricViewNode {
         return Reflect.apply(this.context.pureInvokeEntityMethod, this.context, argumentsList)
     }
 
+
+    updateTransform() {
+        this.view.style.transform = Object.entries(this.transform).filter((e: [string, number?]) => !!e[1]).map((e: [string, number?]) => {
+            const v = e[1] || 0
+            switch (e[0]) {
+                case "translateX":
+                    return `translateX(${v}px)`
+                case "scaleX":
+                    return `scaleX(${v})`
+                case "scaleY":
+                    return `scaleY(${v})`
+                case "rotation":
+                    return `rotate(${v / 2}turn)`
+                case "rotateX":
+                    return `rotateX(${v / 2}turn)`
+                case "rotateY":
+                    return `rotateY(${v / 2}turn)`
+                default:
+                    console.error(`Do not support transform ${e[0]}`)
+                    return ""
+            }
+        }).join(" ")
+    }
+
+    updateTransformOrigin() {
+        if (this.transformOrigin) {
+            this.view.style.transformOrigin = `${Math.round(this.transformOrigin.x * 100)}% ${Math.round(this.transformOrigin.y * 100)}%`
+        }
+    }
     /** ++++++++++call from doric ++++++++++*/
     getWidth() {
         return this.view.offsetWidth
@@ -394,6 +461,101 @@ export abstract class DoricViewNode {
             x: rect.left,
             y: rect.top,
         }
+    }
+
+    getRotation() {
+        return this.transform.rotation
+    }
+
+    setRotation(v: number) {
+        this.transform.rotation = v
+        this.updateTransform()
+    }
+
+    getRotationX() {
+        return this.transform.rotationX
+    }
+
+    setRotationX(v: number) {
+        this.transform.rotationX = v
+        this.updateTransform()
+    }
+
+    getRotationY() {
+        return this.transform.rotationY
+    }
+
+    setRotationY(v: number) {
+        this.transform.rotationY = v
+        this.updateTransform()
+    }
+
+    getTranslationX() {
+        return this.transform.translateX
+    }
+
+    setTranslationX(v: number) {
+        this.transform.translateX = v
+        this.updateTransform()
+    }
+
+    getTranslationY() {
+        return this.transform.translateY
+    }
+
+    setTranslationY(v: number) {
+        this.transform.translateY = v
+        this.updateTransform()
+    }
+
+    getScaleX() {
+        return this.transform.scaleX
+    }
+
+    setScaleX(v: number) {
+        this.transform.scaleX = v
+        this.updateTransform()
+    }
+
+    getScaleY() {
+        return this.transform.scaleY
+    }
+
+    setScaleY(v: number) {
+        this.transform.scaleY = v
+        this.updateTransform()
+    }
+
+    getPivotX() {
+        return this.transformOrigin?.x || 0.5
+    }
+
+    setPivotX(v: number) {
+        if (this.transformOrigin) {
+            this.transformOrigin.x = v
+        } else {
+            this.transformOrigin = {
+                x: v,
+                y: 0.5,
+            }
+        }
+        this.updateTransform()
+    }
+
+    getPivotY() {
+        return this.transformOrigin?.y || 0.5
+    }
+
+    setPivotY(v: number) {
+        if (this.transformOrigin) {
+            this.transformOrigin.y = v
+        } else {
+            this.transformOrigin = {
+                x: 0.5,
+                y: v,
+            }
+        }
+        this.updateTransform()
     }
     /** ----------call from doric ----------*/
 }

@@ -11,8 +11,8 @@ ScrollView {
 
     property var tag: "Scroller"
 
-    ScrollBar.horizontal.policy: ScrollBar.AlwaysOn
-    ScrollBar.vertical.policy: ScrollBar.AlwaysOn
+    ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+    ScrollBar.vertical.policy: ScrollBar.AlwaysOff
 
     clip: true
 
@@ -37,11 +37,27 @@ ScrollView {
         console.log(tag, uuid + " onHeightChanged: " + this.height)
     }
 
-//    MouseArea {
-//        anchors.fill: parent
-//        onClicked: {
-//            console.log(tag, uuid + " wrapper: " + wrapper)
-//            mouseAreaBridge.onClick(wrapper)
-//        }
-//    }
+    onImplicitWidthChanged: {
+        console.log(tag, uuid + " onImplicitWidthChanged: " + this.implicitWidth)
+    }
+
+    onImplicitHeightChanged: {
+        console.log(tag, uuid + " onImplicitHeightChanged: " + this.implicitHeight)
+    }
+
+    onContentWidthChanged: {
+        console.log(tag, uuid + " onContentWidthChanged: " + this.contentWidth)
+    }
+
+    onContentHeightChanged: {
+        console.log(tag, uuid + " onContentHeightChanged: " + this.contentHeight)
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        onClicked: {
+            console.log(tag, uuid + " wrapper: " + wrapper)
+            mouseAreaBridge.onClick(wrapper)
+        }
+    }
 }

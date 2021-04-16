@@ -84,6 +84,9 @@ public:
 
   void apply();
 
+  qreal getMeasuredWidth();
+  qreal getMeasuredHeight();
+
 private:
   QString tag;
 

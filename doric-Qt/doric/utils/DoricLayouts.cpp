@@ -204,18 +204,20 @@ void DoricLayouts::measureContent(qreal targetWidth, qreal targetHeight) {
   }
 
   QQuickItem *parent = this->view->parentItem();
-  DoricLayouts *parentDoricLayout =
-      (DoricLayouts *)(parent->property("doricLayout").toULongLong());
-  if (parentDoricLayout != nullptr) {
-    if (parentDoricLayout->layoutType != DoricLayoutType::DoricUndefined &&
-        parentDoricLayout->widthSpec == DoricLayoutSpec::DoricLayoutFit &&
-        this->widthSpec == DoricLayoutSpec::DoricLayoutMost) {
-      setMeasuredWidth(0);
-    }
-    if (parentDoricLayout->layoutType != DoricLayoutType::DoricUndefined &&
-        parentDoricLayout->heightSpec == DoricLayoutSpec::DoricLayoutFit &&
-        this->heightSpec == DoricLayoutSpec::DoricLayoutMost) {
-      setMeasuredHeight(0);
+  if (parent != nullptr) {
+    DoricLayouts *parentDoricLayout =
+        (DoricLayouts *)(parent->property("doricLayout").toULongLong());
+    if (parentDoricLayout != nullptr) {
+      if (parentDoricLayout->layoutType != DoricLayoutType::DoricUndefined &&
+          parentDoricLayout->widthSpec == DoricLayoutSpec::DoricLayoutFit &&
+          this->widthSpec == DoricLayoutSpec::DoricLayoutMost) {
+        setMeasuredWidth(0);
+      }
+      if (parentDoricLayout->layoutType != DoricLayoutType::DoricUndefined &&
+          parentDoricLayout->heightSpec == DoricLayoutSpec::DoricLayoutFit &&
+          this->heightSpec == DoricLayoutSpec::DoricLayoutMost) {
+        setMeasuredHeight(0);
+      }
     }
   }
 }
@@ -464,7 +466,8 @@ void DoricLayouts::setFrame() {
     }
   }
 
-  qCritical() << "DoricLayouts: " << tag << this->view->property("uuid")
+  qCritical() << "DoricLayouts setProperty: " << tag
+              << this->view->property("uuid")
               << " measuredWidth: " << this->measuredWidth
               << " measuredHeight: " << this->measuredHeight
               << " width: " << this->view->width()
@@ -707,11 +710,15 @@ void DoricLayouts::setMeasuredWidth(qreal measuredWidth) {
               << " measuredWidth: " << this->measuredWidth;
 }
 
+qreal DoricLayouts::getMeasuredWidth() { return this->measuredWidth; }
+
 void DoricLayouts::setMeasuredHeight(qreal measuredHeight) {
   this->measuredHeight = measuredHeight;
   qCritical() << "DoricLayouts: " << tag << this->view->property("uuid")
               << " measuredHeight: " << this->measuredHeight;
 }
+
+qreal DoricLayouts::getMeasuredHeight() { return this->measuredHeight; }
 
 void DoricLayouts::setMeasuredX(qreal measuredX) {
   this->measuredX = measuredX;

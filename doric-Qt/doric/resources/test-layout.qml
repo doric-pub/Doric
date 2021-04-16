@@ -14,8 +14,8 @@ ApplicationWindow {
         width: 200
         height: 200
 
-        ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
-        ScrollBar.vertical.policy: ScrollBar.AlwaysOff
+        ScrollBar.horizontal.policy: ScrollBar.AlwaysOn
+        ScrollBar.vertical.policy: ScrollBar.AlwaysOn
 
         clip: true
 
@@ -44,17 +44,14 @@ ApplicationWindow {
             console.log(tag, uuid + " onHeightChanged: " + this.height)
         }
 
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                console.log(tag, uuid + " wrapper: " + wrapper)
-                mouseAreaBridge.onClick(wrapper)
-            }
-        }
+        Rectangle {
+            implicitWidth: 400
+            implicitHeight: 400
 
-        Label {
-            text: "ABC"
-            font.pixelSize: 224
+            Label {
+                text: "ABC"
+                font.pixelSize: 124
+            }
         }
     }
 }

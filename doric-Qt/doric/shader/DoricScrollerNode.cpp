@@ -72,7 +72,10 @@ void DoricScrollerNode::afterBlended(QJsonValue jsValue) {
         mChildNode->init(this);
         mChildNode->blend(props);
 
-        mChildNode->getNodeView()->setParentItem(parent);
+        QQmlListProperty<QQuickItem> contentChildren =
+            qvariant_cast<QQmlListProperty<QQuickItem>>(
+                parent->property("contentChildren"));
+        contentChildren.append(&contentChildren, mChildNode->getNodeView());
       }
     }
   } else {
@@ -81,13 +84,24 @@ void DoricScrollerNode::afterBlended(QJsonValue jsValue) {
     mChildNode->init(this);
     mChildNode->blend(props);
 
-    mChildNode->getNodeView()->setParentItem(parent);
+    QQmlListProperty<QQuickItem> contentChildren =
+        qvariant_cast<QQmlListProperty<QQuickItem>>(
+            parent->property("contentChildren"));
+    contentChildren.append(&contentChildren, mChildNode->getNodeView());
   }
 }
 
 void DoricScrollerNode::requestLayout() {
   this->mChildNode->requestLayout();
-  getLayouts()->apply(mView->width(), mView->height());
+  DoricLayouts *layout = (DoricLayouts *)(mChildNode->getNodeView()
+                                              ->property("doricLayout")
+                                              .toULongLong());
+  if (layout != nullptr) {
+    layout->apply(mView->width(), mView->height());
+
+    mView->setProperty("contentWidth", layout->getMeasuredWidth());
+    mView->setProperty("contentHeight", layout->getMeasuredHeight());
+  }
 }
 
 void DoricScrollerNode::blendSubNode(QJsonValue subProperties) {

@@ -528,19 +528,20 @@ void DoricLayouts::layoutStack() {
 
     if ((gravity & DoricGravity::DoricGravityTop) ==
         DoricGravity::DoricGravityTop) {
-      layout->measuredY = this->paddingTop;
+      layout->setMeasuredY(this->paddingTop);
     } else if ((gravity & DoricGravity::DoricGravityBottom) ==
                DoricGravity::DoricGravityBottom) {
-      layout->measuredY =
-          this->measuredHeight - this->paddingBottom - layout->measuredHeight;
+      layout->setMeasuredY(this->measuredHeight - this->paddingBottom -
+                           layout->measuredHeight);
     } else if ((gravity & DoricGravity::DoricGravityCenterY) ==
                DoricGravity::DoricGravityCenterY) {
-      layout->measuredY = this->measuredHeight / 2 - layout->measuredHeight / 2;
+      layout->setMeasuredY(this->measuredHeight / 2 -
+                           layout->measuredHeight / 2);
     } else {
       if (layout->marginTop || layout->marginBottom) {
-        layout->measuredY = this->paddingTop;
+        layout->setMeasuredY(this->paddingTop);
       } else {
-        layout->measuredY = 0;
+        layout->setMeasuredY(0);
       }
     }
 
@@ -628,7 +629,7 @@ void DoricLayouts::layoutVLayout() {
                                  DoricGravity::DoricGravityLeft)) {
       layout->measuredX -= layout->marginRight;
     }
-    layout->measuredY = yStart + layout->marginTop;
+    layout->setMeasuredY(yStart + layout->marginTop);
     yStart += this->spacing + layout->takenHeight();
   }
 }
@@ -676,16 +677,17 @@ void DoricLayouts::layoutHLayout() {
     int gravity = layout->alignment | this->gravity;
     if ((gravity & DoricGravity::DoricGravityTop) ==
         DoricGravity::DoricGravityTop) {
-      layout->measuredY = this->paddingTop;
+      layout->setMeasuredY(this->paddingTop);
     } else if ((gravity & DoricGravity::DoricGravityBottom) ==
                DoricGravity::DoricGravityBottom) {
-      layout->measuredY =
-          this->measuredHeight - this->paddingBottom - layout->measuredHeight;
+      layout->setMeasuredY(this->measuredHeight - this->paddingBottom -
+                           layout->measuredHeight);
     } else if ((gravity & DoricGravity::DoricGravityCenterY) ==
                DoricGravity::DoricGravityCenterY) {
-      layout->measuredY = this->measuredHeight / 2 - layout->measuredHeight / 2;
+      layout->setMeasuredY(this->measuredHeight / 2 -
+                           layout->measuredHeight / 2);
     } else {
-      layout->measuredY = this->paddingTop;
+      layout->setMeasuredY(this->paddingTop);
     }
     if (!gravity) {
       gravity = DoricGravity::DoricGravityTop;

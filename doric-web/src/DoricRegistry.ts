@@ -15,6 +15,7 @@ import { DoricListItemNode } from "./shader/DoricListItemNode"
 import { DoricListNode } from "./shader/DoricListNode"
 import { DoricDraggableNode } from "./shader/DoricDraggableNode"
 import { DoricRefreshableNode } from "./shader/DoricRefreshableNode"
+import { AnimatePlugin } from "./plugins/AnimatePlugin"
 
 const bundles: Map<string, string> = new Map
 
@@ -54,6 +55,7 @@ registerPlugin('modal', ModalPlugin)
 registerPlugin('storage', StoragePlugin)
 registerPlugin('navigator', NavigatorPlugin)
 registerPlugin('popover', PopoverPlugin)
+registerPlugin('animate', AnimatePlugin)
 
 registerViewNode('Stack', DoricStackNode)
 registerViewNode('VLayout', DoricVLayoutNode)

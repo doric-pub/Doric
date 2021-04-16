@@ -49,11 +49,19 @@ TextArea {
     onWidthChanged: {
         bg.implicitWidth = width
         console.log(tag, uuid + " onWidthChanged: " + this.width)
+
+        let tempText = this.text
+        this.text = ""
+        this.text = tempText
     }
 
     onHeightChanged: {
         bg.implicitHeight = height
         console.log(tag, uuid + " onHeightChanged: " + this.height)
+
+        let tempText = this.text
+        this.text = ""
+        this.text = tempText
     }
 
     MouseArea {

@@ -4505,6 +4505,7 @@ var doric_web = (function (exports, axios, sandbox) {
             this.frameHeight = 0;
             this.offsetX = 0;
             this.offsetY = 0;
+            this._originDisplay = "";
             this.transform = {};
             this.context = context;
         }
@@ -4516,6 +4517,7 @@ var doric_web = (function (exports, axios, sandbox) {
                 }
             }
             this.view = this.build();
+            this._originDisplay = this.view.style.display;
         }
         get paddingLeft() {
             return this.padding.left || 0;
@@ -4694,6 +4696,14 @@ var doric_web = (function (exports, axios, sandbox) {
                             x: 0.5,
                             y: prop,
                         };
+                    }
+                    break;
+                case 'hidden':
+                    if (prop === true) {
+                        this.view.style.display = "none";
+                    }
+                    else {
+                        this.view.style.display = this._originDisplay;
                     }
                     break;
                 default:

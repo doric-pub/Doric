@@ -17,12 +17,15 @@ function thisLabel(str: string) {
 class AnimatorDemo extends Panel {
     build(rootView: Group): void {
         const view = image({
-            imageUrl: "https://pic3.zhimg.com/v2-5847d0813bd0deba333fcbe52435e83e_b.jpg"
+            imageUrl: "https://pic3.zhimg.com/v2-5847d0813bd0deba333fcbe52435e83e_b.jpg",
+            layoutConfig: layoutConfig().just(),
+            width: 100,
+            height: 100
         })
         view.onClick = () => {
             modal(context).toast('Clicked')
         }
-        const view2 = box(3)
+        //const view = box(3)
         let idx = 0
         vlayout(
             [
@@ -65,7 +68,7 @@ class AnimatorDemo extends Panel {
                                             animations: () => {
                                                 view.x = view.x || 0
                                                 view.x += 100
-                                                view2.x += 50
+                                                //view2.x += 50
                                             },
                                             duration: 1000,
                                         })
@@ -77,7 +80,7 @@ class AnimatorDemo extends Panel {
                                             animations: () => {
                                                 view.y = view.y || 0
                                                 view.y += 100
-                                                view2.y += 50
+                                                //view2.y += 50
                                             },
                                             duration: 1000,
                                         })
@@ -222,7 +225,6 @@ class AnimatorDemo extends Panel {
             ],
             {
                 layoutConfig: layoutConfig().most(),
-                gravity: gravity().center(),
                 space: 10,
             }
         ).in(rootView)

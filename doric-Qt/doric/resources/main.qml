@@ -10,6 +10,9 @@ ApplicationWindow {
     ScrollView {
         anchors.fill: parent
 
+        ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+        ScrollBar.vertical.policy: ScrollBar.AlwaysOff
+
         ListView {
             width: parent.width
             model: 5

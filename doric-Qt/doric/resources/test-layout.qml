@@ -8,32 +8,53 @@ ApplicationWindow {
     height: 800
     title: qsTr("Scroll")
 
-    Rectangle {
-        color: 'red'
-        width: childrenRect.width
-        height: childrenRect.height
+    ScrollView {
+        property var wrapper
 
-        ColumnLayout {
-            property int gravity: 0
-            onGravityChanged: {
-                console.log(children[0].Layout.alignment)
-                children[0].Layout.alignment = 1
+        width: 200
+        height: 200
+
+        ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+        ScrollBar.vertical.policy: ScrollBar.AlwaysOff
+
+        clip: true
+
+//        property var uuid: Util.uuidv4()
+
+        property var tag: "Scroller"
+
+        background: Rectangle {
+            id: bg
+            color: 'red'
+        }
+
+        property var backgroundColor
+
+        onBackgroundColorChanged: {
+            bg.color = backgroundColor
+        }
+
+        onWidthChanged: {
+            bg.implicitWidth = width
+            console.log(tag, uuid + " onWidthChanged: " + this.width)
+        }
+
+        onHeightChanged: {
+            bg.implicitHeight = height
+            console.log(tag, uuid + " onHeightChanged: " + this.height)
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                console.log(tag, uuid + " wrapper: " + wrapper)
+                mouseAreaBridge.onClick(wrapper)
             }
+        }
 
-            spacing: 0
-            height: 600
-
-            Rectangle {
-                width: 100
-                height: 100
-                color: 'black'
-            }
-
-            Rectangle {
-                width: 100
-                height: 100
-                color: 'yellow'
-            }
+        Label {
+            text: "ABC"
+            font.pixelSize: 224
         }
     }
 }

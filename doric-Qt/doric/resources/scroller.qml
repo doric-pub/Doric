@@ -4,74 +4,44 @@ import QtQuick.Layouts 1.15
 
 import "util.mjs" as Util
 
-Rectangle {
+ScrollView {
     property var wrapper
-
-    clip: true
-
-    property var tag: "Scroller"
 
     property var uuid: Util.uuidv4()
 
-    property int widthSpec: 0
-    property int heightSpec: 0
-    property int childrenRectWidth: childrenRect.width
-    property int childrenRectHeight: childrenRect.height
+    property var tag: "Scroller"
+
+    ScrollBar.horizontal.policy: ScrollBar.AlwaysOn
+    ScrollBar.vertical.policy: ScrollBar.AlwaysOn
+
+    clip: true
+
+    background: Rectangle {
+        id: bg
+        color: 'transparent'
+    }
+
+    property var backgroundColor
+
+    onBackgroundColorChanged: {
+        bg.color = backgroundColor
+    }
 
     onWidthChanged: {
+        bg.implicitWidth = width
         console.log(tag, uuid + " onWidthChanged: " + this.width)
     }
 
     onHeightChanged: {
+        bg.implicitHeight = height
         console.log(tag, uuid + " onHeightChanged: " + this.height)
     }
 
-    onWidthSpecChanged: {
-        console.log(tag, uuid + " onWidthSpecChanged: " + this.widthSpec)
-        console.log(tag, uuid + " parent width: " + parent.width)
-
-        if (this.widthSpec === 2) {
-            this.width = parent.width
-            children[1].width = parent.width
-        }
-    }
-
-    onHeightSpecChanged: {
-        console.log(tag, uuid + " onHeightSpecChanged: " + this.heightSpec)
-        console.log(tag, uuid + " parent height: " + parent.height)
-
-        if (this.heightSpec === 2) {
-            this.height = parent.height
-            children[1].height = parent.height
-        }
-    }
-
-    onChildrenRectChanged: {
-        console.log(tag, uuid + " widthSpec: " + widthSpec + " heightSpec: " + heightSpec)
-        console.log(tag, uuid + " onChildrenRectChanged: " + childrenRect)
-        this.childrenRectWidth = childrenRect.width
-        this.childrenRectHeight = childrenRect.height
-
-        if (this.widthSpec === 1) {
-            this.width = childrenRectWidth
-        }
-
-        if (this.heightSpec === 1) {
-            this.height = childrenRectHeight
-        }
-    }
-
-    color: 'transparent'
-
-    MouseArea {
-        anchors.fill: parent
-        onClicked: {
-            console.log(tag, uuid + " wrapper: " + wrapper)
-            mouseAreaBridge.onClick(wrapper)
-        }
-    }
-
-    ScrollView {
-
-    }
+//    MouseArea {
+//        anchors.fill: parent
+//        onClicked: {
+//            console.log(tag, uuid + " wrapper: " + wrapper)
+//            mouseAreaBridge.onClick(wrapper)
+//        }
+//    }
 }

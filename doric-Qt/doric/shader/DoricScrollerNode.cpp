@@ -11,15 +11,12 @@ QQuickItem *DoricScrollerNode::build() {
   }
 
   QQuickItem *item = qobject_cast<QQuickItem *>(component.create());
+  this->createLayouts(item);
+
+  getLayouts()->setLayoutType(DoricLayoutType::DoricStack);
 
   item->setProperty("wrapper", QString::number((qint64)this));
   return item;
-}
-
-void DoricScrollerNode::blendSubNode(QJsonValue subProperties) {
-  if (mChildNode != nullptr) {
-    mChildNode->blend(subProperties["props"]);
-  }
 }
 
 void DoricScrollerNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
@@ -43,8 +40,7 @@ void DoricScrollerNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
   }
 }
 
-void DoricScrollerNode::blend(QJsonValue jsValue) {
-  DoricViewNode::blend(jsValue);
+void DoricScrollerNode::afterBlended(QJsonValue jsValue) {
   QJsonValue contentModel = getSubModel(mChildViewId);
   if (contentModel == QJsonValue::Undefined) {
     return;
@@ -54,7 +50,7 @@ void DoricScrollerNode::blend(QJsonValue jsValue) {
   QString type = contentModel["type"].toString();
   QJsonValue props = contentModel["props"];
 
-  QQuickItem *parent = mView->childItems().at(1);
+  QQuickItem *parent = mView;
 
   if (mChildNode != nullptr) {
     if (viewId == mChildNode->getId()) {
@@ -86,5 +82,16 @@ void DoricScrollerNode::blend(QJsonValue jsValue) {
     mChildNode->blend(props);
 
     mChildNode->getNodeView()->setParentItem(parent);
+  }
+}
+
+void DoricScrollerNode::requestLayout() {
+  this->mChildNode->requestLayout();
+  getLayouts()->apply(mView->width(), mView->height());
+}
+
+void DoricScrollerNode::blendSubNode(QJsonValue subProperties) {
+  if (mChildNode != nullptr) {
+    mChildNode->blend(subProperties["props"]);
   }
 }

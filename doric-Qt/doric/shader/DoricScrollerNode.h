@@ -18,9 +18,11 @@ public:
 
   virtual void blend(QQuickItem *view, QString name, QJsonValue prop) override;
 
-  virtual void blend(QJsonValue jsValue) override;
-
   virtual void blendSubNode(QJsonValue subProperties) override;
+
+  virtual void afterBlended(QJsonValue jsValue) override;
+
+  virtual void requestLayout() override;
 };
 
 #endif // DORICSCROLLERNODE_H

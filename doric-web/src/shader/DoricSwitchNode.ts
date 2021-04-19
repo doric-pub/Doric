@@ -33,31 +33,37 @@ export class DoricSwitchNode extends DoricViewNode {
         ret.appendChild(input)
         ret.appendChild(box)
         ret.onclick = () => {
-            if (input.checked === false) {
-                span.animate(
-                    [{ transform: "translateX(30px)" }], {
-                    duration: 200,
-                    fill: "forwards"
-                })
-                box.animate([{ backgroundColor: this.onTintColor }], {
-                    duration: 200,
-                    fill: "forwards"
-                })
-                input.checked = true
-            } else {
-                span.animate([{ transform: "translateX(0px)" }], {
-                    duration: 200,
-                    fill: "forwards"
-                })
-                box.animate([{ backgroundColor: this.offTintColor }], {
-                    duration: 200,
-                    fill: "forwards"
-                })
-                input.checked = false
+            try {
+
+                if (input.checked === false) {
+                    span.animate(
+                        [{ transform: "translateX(0px)" }, { transform: "translateX(30px)" }], {
+                        duration: 200,
+                        fill: "forwards"
+                    })
+                    box.animate([{ backgroundColor: this.offTintColor }, { backgroundColor: this.onTintColor }], {
+                        duration: 200,
+                        fill: "forwards"
+                    })
+                    input.checked = true
+                } else {
+                    span.animate([{ transform: "translateX(30px)" }, { transform: "translateX(0px)" }], {
+                        duration: 200,
+                        fill: "forwards"
+                    })
+                    box.animate([{ backgroundColor: this.onTintColor }, { backgroundColor: this.offTintColor }], {
+                        duration: 200,
+                        fill: "forwards"
+                    })
+                    input.checked = false
+                }
+                if (this.onSwitchFuncId) {
+                    this.callJSResponse(this.onSwitchFuncId, input.checked)
+                }
+            } catch (e) {
+                alert(e)
             }
-            if (this.onSwitchFuncId) {
-                this.callJSResponse(this.onSwitchFuncId, input.checked)
-            }
+
         }
         this.input = input
         this.span = span

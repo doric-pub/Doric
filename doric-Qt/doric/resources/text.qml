@@ -64,6 +64,20 @@ TextArea {
         this.text = tempText
     }
 
+    onTextChanged: {
+        console.log(tag, uuid + " onTextChanged: " + this.text)
+    }
+
+    property var borderWidth: 0
+    onBorderWidthChanged: {
+        bg.border.width = borderWidth
+    }
+
+    property var borderColor: ""
+    onBorderColorChanged: {
+        bg.border.color = borderColor
+    }
+
     MouseArea {
         anchors.fill: parent
         onClicked: {

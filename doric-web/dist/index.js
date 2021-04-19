@@ -6171,6 +6171,11 @@ var doric_web = (function (exports, axios, sandbox) {
     }
 
     class DoricSwitchNode extends DoricViewNode {
+        constructor() {
+            super(...arguments);
+            this.offTintColor = "#e6e6e6";
+            this.onTintColor = "#52d769";
+        }
         build() {
             const ret = document.createElement('div');
             ret.style.position = "relative";
@@ -6190,6 +6195,7 @@ var doric_web = (function (exports, axios, sandbox) {
             span.style.width = "30px";
             span.style.borderRadius = "15px";
             span.style.background = "#fff";
+            span.style.boxShadow = "0px 3px 3px #eee";
             box.appendChild(span);
             ret.appendChild(input);
             ret.appendChild(box);
@@ -6199,7 +6205,7 @@ var doric_web = (function (exports, axios, sandbox) {
                         duration: 200,
                         fill: "forwards"
                     });
-                    box.animate([{ backgroundColor: "forestgreen" }], {
+                    box.animate([{ backgroundColor: this.onTintColor }], {
                         duration: 200,
                         fill: "forwards"
                     });
@@ -6210,7 +6216,7 @@ var doric_web = (function (exports, axios, sandbox) {
                         duration: 200,
                         fill: "forwards"
                     });
-                    box.animate([{ backgroundColor: "#ccc" }], {
+                    box.animate([{ backgroundColor: this.offTintColor }], {
                         duration: 200,
                         fill: "forwards"
                     });
@@ -6229,15 +6235,15 @@ var doric_web = (function (exports, axios, sandbox) {
             if (!this.input || !this.span || !this.box) {
                 return;
             }
-            if (this.input.checked === false) {
+            if (v) {
                 this.span.style.transform = "translateX(30px)";
-                this.box.style.backgroundColor = "forestgreen";
-                this.input.checked = true;
+                this.box.style.backgroundColor = this.onTintColor;
+                this.input.checked = v;
             }
             else {
                 this.span.style.transform = "translateX(0px)";
-                this.box.style.backgroundColor = "#ccc";
-                this.input.checked = false;
+                this.box.style.backgroundColor = this.offTintColor;
+                this.input.checked = v;
             }
         }
         blendProps(v, propName, prop) {
@@ -6249,10 +6255,17 @@ var doric_web = (function (exports, axios, sandbox) {
                     this.onSwitchFuncId = prop;
                     break;
                 case "offTintColor":
+                    this.offTintColor = toRGBAString(prop);
+                    this.setChecked(this.getState());
                     break;
                 case "onTintColor":
+                    this.onTintColor = toRGBAString(prop);
+                    this.setChecked(this.getState());
                     break;
                 case "thumbTintColor":
+                    if (this.span) {
+                        this.span.style.backgroundColor = toRGBAString(prop);
+                    }
                     break;
                 default:
                     super.blendProps(v, propName, prop);

@@ -1,10 +1,13 @@
-import { DoricViewNode } from "./DoricViewNode";
+import { DoricViewNode, toRGBAString } from "./DoricViewNode";
 
 export class DoricSwitchNode extends DoricViewNode {
     input?: HTMLInputElement
     box?: HTMLDivElement
     span?: HTMLSpanElement
     onSwitchFuncId?: string
+
+    private offTintColor = "#e6e6e6"
+    private onTintColor = "#52d769"
 
     build() {
         const ret = document.createElement('div')
@@ -25,6 +28,7 @@ export class DoricSwitchNode extends DoricViewNode {
         span.style.width = "30px"
         span.style.borderRadius = "15px"
         span.style.background = "#fff"
+        span.style.boxShadow = "0px 3px 3px #eee"
         box.appendChild(span)
         ret.appendChild(input)
         ret.appendChild(box)
@@ -35,7 +39,7 @@ export class DoricSwitchNode extends DoricViewNode {
                     duration: 200,
                     fill: "forwards"
                 })
-                box.animate([{ backgroundColor: "forestgreen" }], {
+                box.animate([{ backgroundColor: this.onTintColor }], {
                     duration: 200,
                     fill: "forwards"
                 })
@@ -45,7 +49,7 @@ export class DoricSwitchNode extends DoricViewNode {
                     duration: 200,
                     fill: "forwards"
                 })
-                box.animate([{ backgroundColor: "#ccc" }], {
+                box.animate([{ backgroundColor: this.offTintColor }], {
                     duration: 200,
                     fill: "forwards"
                 })
@@ -65,14 +69,14 @@ export class DoricSwitchNode extends DoricViewNode {
         if (!this.input || !this.span || !this.box) {
             return
         }
-        if (this.input.checked === false) {
+        if (v) {
             this.span.style.transform = "translateX(30px)"
-            this.box.style.backgroundColor = "forestgreen"
-            this.input.checked = true
+            this.box.style.backgroundColor = this.onTintColor
+            this.input.checked = v
         } else {
             this.span.style.transform = "translateX(0px)"
-            this.box.style.backgroundColor = "#ccc"
-            this.input.checked = false
+            this.box.style.backgroundColor = this.offTintColor
+            this.input.checked = v
         }
     }
 
@@ -85,10 +89,17 @@ export class DoricSwitchNode extends DoricViewNode {
                 this.onSwitchFuncId = prop
                 break
             case "offTintColor":
+                this.offTintColor = toRGBAString(prop)
+                this.setChecked(this.getState())
                 break
             case "onTintColor":
+                this.onTintColor = toRGBAString(prop)
+                this.setChecked(this.getState())
                 break
             case "thumbTintColor":
+                if (this.span) {
+                    this.span.style.backgroundColor = toRGBAString(prop)
+                }
                 break
             default:
                 super.blendProps(v, propName, prop)

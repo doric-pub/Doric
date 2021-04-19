@@ -23,6 +23,8 @@ public:
   virtual void afterBlended(QJsonValue jsValue) override;
 
   virtual void requestLayout() override;
+
+  QSizeF sizeThatFits(QSizeF size);
 };
 
 #endif // DORICSCROLLERNODE_H

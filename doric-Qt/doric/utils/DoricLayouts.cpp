@@ -211,12 +211,12 @@ void DoricLayouts::measureContent(qreal targetWidth, qreal targetHeight) {
       if (parentDoricLayout->layoutType != DoricLayoutType::DoricUndefined &&
           parentDoricLayout->widthSpec == DoricLayoutSpec::DoricLayoutFit &&
           this->widthSpec == DoricLayoutSpec::DoricLayoutMost) {
-        setMeasuredWidth(0);
+        setMeasuredWidth(targetWidth);
       }
       if (parentDoricLayout->layoutType != DoricLayoutType::DoricUndefined &&
           parentDoricLayout->heightSpec == DoricLayoutSpec::DoricLayoutFit &&
           this->heightSpec == DoricLayoutSpec::DoricLayoutMost) {
-        setMeasuredHeight(0);
+        setMeasuredHeight(targetHeight);
       }
     }
   }

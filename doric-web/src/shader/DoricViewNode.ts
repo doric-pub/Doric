@@ -40,17 +40,11 @@ export function pixelString2Number(v: string) {
 export function toRGBAString(color: number) {
     let strs = []
     for (let i = 0; i < 32; i += 8) {
-
-        strs.push(((color >> i) & 0xff).toString(16))
+        strs.push(((color >> i) & 0xff))
     }
-    strs = strs.map(e => {
-        if (e.length === 1) {
-            return '0' + e
-        }
-        return e
-    }).reverse()
-    /// RGBA
-    return `#${strs[1]}${strs[2]}${strs[3]}${strs[0]}`
+    strs = strs.reverse()
+    /// RGBAd
+    return `rgba(${strs[1]},${strs[2]},${strs[3]},${strs[0] / 255})`
 }
 
 

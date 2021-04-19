@@ -27,6 +27,16 @@ ScrollView {
         bg.color = backgroundColor
     }
 
+    property var borderWidth: 0
+    onBorderWidthChanged: {
+        bg.border.width = borderWidth
+    }
+
+    property var borderColor: ""
+    onBorderColorChanged: {
+        bg.border.color = borderColor
+    }
+
     onWidthChanged: {
         bg.implicitWidth = width
         console.log(tag, uuid + " onWidthChanged: " + this.width)

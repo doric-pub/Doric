@@ -29,6 +29,16 @@ Rectangle {
         color = backgroundColor
     }
 
+    property var borderWidth: 0
+    onBorderWidthChanged: {
+        border.width = borderWidth
+    }
+
+    property var borderColor: ""
+    onBorderColorChanged: {
+        border.color = borderColor
+    }
+
     MouseArea {
         anchors.fill: parent
         onClicked: {

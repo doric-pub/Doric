@@ -105,14 +105,15 @@ void DoricViewNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
   } else if (name == "height") {
     getLayouts()->setHeight(prop.toDouble());
   } else if (name == "backgroundColor") {
-    QString color = DoricUtils::doricColor(prop.toInt()).name();
-    view->setProperty("backgroundColor", color);
+    view->setProperty(
+        "backgroundColor",
+        QVariant::fromValue(DoricUtils::doricColor(prop.toInt())));
   } else if (name == "x") {
     getLayouts()->setMarginLeft(prop.toDouble());
   } else if (name == "y") {
     getLayouts()->setMarginTop(prop.toDouble());
   } else if (name == "corners") {
-    view->setProperty("radius", prop.toInt());
+    view->setProperty("radius", prop.toDouble());
   } else if (name == "onClick") {
     if (prop.isString())
       clickFunction = prop.toString();
@@ -123,6 +124,11 @@ void DoricViewNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
     getLayouts()->setPaddingBottom(prop["bottom"].toDouble());
   } else if (name == "hidden") {
     getLayouts()->setDisabled(prop.toBool());
+  } else if (name == "border") {
+    qreal borderWidth = prop["width"].toDouble();
+    QString borderColor = DoricUtils::doricColor(prop["color"].toInt()).name();
+    view->setProperty("borderWidth", borderWidth);
+    view->setProperty("borderColor", borderColor);
   } else if (name != "layoutConfig") {
     qCritical() << name << ": " << prop.toString();
   }

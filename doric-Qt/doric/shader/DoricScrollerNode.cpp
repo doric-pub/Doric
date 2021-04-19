@@ -97,7 +97,7 @@ void DoricScrollerNode::requestLayout() {
                                               ->property("doricLayout")
                                               .toULongLong());
   if (layout != nullptr) {
-    layout->apply(mView->width(), mView->height());
+    layout->apply(QSizeF(mView->width(), mView->height()));
 
     mView->setProperty("contentWidth", layout->getMeasuredWidth());
     mView->setProperty("contentHeight", layout->getMeasuredHeight());

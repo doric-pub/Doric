@@ -80,7 +80,7 @@ public:
   void setMinWidth(qreal minWidth);
   void setMinHeight(qreal minHeight);
 
-  void apply(qreal targetWidth, qreal targetHeight);
+  void apply(QSizeF frameSize);
 
   void apply();
 
@@ -142,20 +142,20 @@ private:
   qreal contentWidth;
   qreal contentHeight;
 
-  void measure(qreal targetWidth, qreal targetHeight);
+  void measure(QSizeF targetSize);
 
-  void measureSelf(qreal targetWidth, qreal targetHeight);
+  void measureSelf(QSizeF targetSize);
 
-  void measureContent(qreal targetWidth, qreal targetHeight);
+  void measureContent(QSizeF targetSize);
 
-  void measureUndefinedContent(qreal targetWidth, qreal targetHeight);
-  void measureStackContent(qreal targetWidth, qreal targetHeight);
-  void measureVLayoutContent(qreal targetWidth, qreal targetHeight);
-  void measureHLayoutContent(qreal targetWidth, qreal targetHeight);
+  void measureUndefinedContent(QSizeF targetSize);
+  void measureStackContent(QSizeF targetSize);
+  void measureVLayoutContent(QSizeF targetSize);
+  void measureHLayoutContent(QSizeF targetSize);
 
   qreal takenWidth();
   qreal takenHeight();
-  QPair<qreal, qreal> removeMargin(qreal targetWidth, qreal targetHeight);
+  QSizeF removeMargin(QSizeF targetSize);
 
   bool restrainSize();
 

@@ -194,10 +194,10 @@ static const void *kLayoutConfig = &kLayoutConfig;
         }
     }
     if (self.view.superview.doricLayout.layoutType != DoricUndefined && self.view.superview.doricLayout.widthSpec == DoricLayoutFit && self.widthSpec == DoricLayoutMost) {
-        self.measuredWidth = 0;
+        self.measuredWidth = targetSize.width;
     }
     if (self.view.superview.doricLayout.layoutType != DoricUndefined && self.view.superview.doricLayout.heightSpec == DoricLayoutFit && self.heightSpec == DoricLayoutMost) {
-        self.measuredHeight = 0;
+        self.measuredHeight = targetSize.height;
     }
 }
 

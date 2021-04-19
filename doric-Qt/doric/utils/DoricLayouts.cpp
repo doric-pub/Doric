@@ -1,4 +1,5 @@
 #include "DoricLayouts.h"
+#include "shader/DoricScrollerNode.h"
 
 DoricLayouts::DoricLayouts(QObject *parent) : QObject(parent) {
   this->widthSpec = DoricLayoutSpec::DoricLayoutJust;
@@ -222,15 +223,27 @@ void DoricLayouts::measureContent(QSizeF targetSize) {
 }
 
 void DoricLayouts::measureUndefinedContent(QSizeF targetSize) {
+  // begin size that fits
   qreal width = this->view->width();
   qreal height = this->view->height();
 
-  if (width > targetSize.width()) {
-    width = targetSize.width();
+  if (tag == "Scroller") {
+    QObject *object =
+        (QObject *)(this->view->property("wrapper").toULongLong());
+    DoricScrollerNode *viewNode = dynamic_cast<DoricScrollerNode *>(object);
+    QSizeF measuredSize = viewNode->sizeThatFits(targetSize);
+    width = measuredSize.width();
+    height = measuredSize.height();
+  } else {
+    if (width > targetSize.width()) {
+      width = targetSize.width();
+    }
+    if (height > targetSize.height()) {
+      height = targetSize.height();
+    }
   }
-  if (height > targetSize.height()) {
-    height = targetSize.height();
-  }
+  // end size that fits
+
   if (this->widthSpec == DoricLayoutSpec::DoricLayoutFit) {
     setMeasuredWidth(width + this->paddingLeft + this->paddingRight);
   }

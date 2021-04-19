@@ -13,8 +13,6 @@ QQuickItem *DoricScrollerNode::build() {
   QQuickItem *item = qobject_cast<QQuickItem *>(component.create());
   this->createLayouts(item);
 
-  getLayouts()->setLayoutType(DoricLayoutType::DoricStack);
-
   item->setProperty("wrapper", QString::number((qint64)this));
   return item;
 }
@@ -108,4 +106,14 @@ void DoricScrollerNode::blendSubNode(QJsonValue subProperties) {
   if (mChildNode != nullptr) {
     mChildNode->blend(subProperties["props"]);
   }
+}
+
+QSizeF DoricScrollerNode::sizeThatFits(QSizeF size) {
+  DoricLayouts *layout = (DoricLayouts *)mChildNode->getNodeView()
+                             ->property("doricLayout")
+                             .toULongLong();
+  layout->apply(size);
+
+  return QSizeF(qMin(size.width(), layout->getMeasuredWidth()),
+                qMin(size.height(), layout->getMeasuredHeight()));
 }

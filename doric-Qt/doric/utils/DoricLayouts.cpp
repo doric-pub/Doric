@@ -108,25 +108,25 @@ void DoricLayouts::setMinHeight(qreal minHeight) {
   this->minHeight = minHeight;
 }
 
-void DoricLayouts::apply(qreal targetWidth, qreal targetHeight) {
+void DoricLayouts::apply(QSizeF frameSize) {
   this->resolved = false;
 
-  this->measure(targetWidth, targetHeight);
+  this->measure(frameSize);
   this->setFrame();
 
   this->resolved = true;
 }
 
 void DoricLayouts::apply() {
-  this->apply(this->view->width(), this->view->height());
+  this->apply(QSizeF(this->view->width(), this->view->height()));
 }
 
-void DoricLayouts::measure(qreal targetWidth, qreal targetHeight) {
-  this->measureSelf(targetWidth, targetHeight);
+void DoricLayouts::measure(QSizeF targetSize) {
+  this->measureSelf(targetSize);
   this->layout();
 }
 
-void DoricLayouts::measureSelf(qreal targetWidth, qreal targetHeight) {
+void DoricLayouts::measureSelf(QSizeF targetSize) {
   // measure width
   qreal width;
   if (this->widthSpec == DoricLayoutSpec::DoricLayoutMost) {
@@ -138,14 +138,14 @@ void DoricLayouts::measureSelf(qreal targetWidth, qreal targetHeight) {
       width = 0;
       setMeasuredWidth(0);
     } else {
-      width = targetWidth;
-      setMeasuredWidth(targetWidth);
+      width = targetSize.width();
+      setMeasuredWidth(targetSize.width());
     }
   } else if (this->widthSpec == DoricLayoutSpec::DoricLayoutJust) {
     width = this->width;
     setMeasuredWidth(this->width);
   } else {
-    width = targetWidth;
+    width = targetSize.width();
   }
 
   // measure height
@@ -159,46 +159,45 @@ void DoricLayouts::measureSelf(qreal targetWidth, qreal targetHeight) {
       height = 0;
       setMeasuredHeight(0);
     } else {
-      height = targetHeight;
-      setMeasuredHeight(targetHeight);
+      height = targetSize.height();
+      setMeasuredHeight(targetSize.height());
     }
   } else if (this->heightSpec == DoricLayoutSpec::DoricLayoutJust) {
     height = this->height;
     setMeasuredHeight(this->height);
   } else {
-    height = targetHeight;
+    height = targetSize.height();
   }
 
   // measure content
-
-  this->measureContent(width - this->paddingLeft - this->paddingRight,
-                       height - this->paddingTop - this->paddingBottom);
+  this->measureContent(QSizeF(width - this->paddingLeft - this->paddingRight,
+                              height - this->paddingTop - this->paddingBottom));
 
   if (this->restrainSize()) {
     this->measureContent(
-        this->measuredWidth - this->paddingLeft - this->paddingRight,
-        this->measuredHeight - this->paddingTop - this->paddingBottom);
+        QSizeF(this->measuredWidth - this->paddingLeft - this->paddingRight,
+               this->measuredHeight - this->paddingTop - this->paddingBottom));
   }
   this->restrainSize();
 }
 
-void DoricLayouts::measureContent(qreal targetWidth, qreal targetHeight) {
+void DoricLayouts::measureContent(QSizeF targetSize) {
   qCritical() << "measureContent: " << tag << this->view->property("uuid");
   switch (this->layoutType) {
   case DoricLayoutType::DoricStack: {
-    this->measureStackContent(targetWidth, targetHeight);
+    this->measureStackContent(targetSize);
     break;
   }
   case DoricLayoutType::DoricVLayout: {
-    this->measureVLayoutContent(targetWidth, targetHeight);
+    this->measureVLayoutContent(targetSize);
     break;
   }
   case DoricLayoutType::DoricHLayout: {
-    this->measureHLayoutContent(targetWidth, targetHeight);
+    this->measureHLayoutContent(targetSize);
     break;
   }
   default: {
-    this->measureUndefinedContent(targetWidth, targetHeight);
+    this->measureUndefinedContent(targetSize);
     break;
   }
   }
@@ -211,27 +210,26 @@ void DoricLayouts::measureContent(qreal targetWidth, qreal targetHeight) {
       if (parentDoricLayout->layoutType != DoricLayoutType::DoricUndefined &&
           parentDoricLayout->widthSpec == DoricLayoutSpec::DoricLayoutFit &&
           this->widthSpec == DoricLayoutSpec::DoricLayoutMost) {
-        setMeasuredWidth(targetWidth);
+        setMeasuredWidth(targetSize.width());
       }
       if (parentDoricLayout->layoutType != DoricLayoutType::DoricUndefined &&
           parentDoricLayout->heightSpec == DoricLayoutSpec::DoricLayoutFit &&
           this->heightSpec == DoricLayoutSpec::DoricLayoutMost) {
-        setMeasuredHeight(targetHeight);
+        setMeasuredHeight(targetSize.height());
       }
     }
   }
 }
 
-void DoricLayouts::measureUndefinedContent(qreal targetWidth,
-                                           qreal targetHeight) {
+void DoricLayouts::measureUndefinedContent(QSizeF targetSize) {
   qreal width = this->view->width();
   qreal height = this->view->height();
 
-  if (width > targetWidth) {
-    width = targetWidth;
+  if (width > targetSize.width()) {
+    width = targetSize.width();
   }
-  if (height > targetHeight) {
-    height = targetHeight;
+  if (height > targetSize.height()) {
+    height = targetSize.height();
   }
   if (this->widthSpec == DoricLayoutSpec::DoricLayoutFit) {
     setMeasuredWidth(width + this->paddingLeft + this->paddingRight);
@@ -240,7 +238,7 @@ void DoricLayouts::measureUndefinedContent(qreal targetWidth,
     setMeasuredHeight(height + this->paddingTop + this->paddingBottom);
   }
 }
-void DoricLayouts::measureStackContent(qreal targetWidth, qreal targetHeight) {
+void DoricLayouts::measureStackContent(QSizeF targetSize) {
   qreal contentWidth = 0, contentHeight = 0;
   foreach (QQuickItem *subview, this->view->childItems()) {
     DoricLayouts *layout =
@@ -253,8 +251,7 @@ void DoricLayouts::measureStackContent(qreal targetWidth, qreal targetHeight) {
       continue;
     }
 
-    QPair<int, int> size = layout->removeMargin(targetWidth, targetHeight);
-    layout->measure(size.first, size.second);
+    layout->measure(layout->removeMargin(targetSize));
     contentWidth = qMax(contentWidth, layout->takenWidth());
     contentHeight = qMax(contentHeight, layout->takenHeight());
   }
@@ -269,8 +266,7 @@ void DoricLayouts::measureStackContent(qreal targetWidth, qreal targetHeight) {
   this->contentWidth = contentWidth;
   this->contentHeight = contentHeight;
 }
-void DoricLayouts::measureVLayoutContent(qreal targetWidth,
-                                         qreal targetHeight) {
+void DoricLayouts::measureVLayoutContent(QSizeF targetSize) {
   qreal contentWidth = 0, contentHeight = 0, contentWeight = 0;
   bool had = false;
   foreach (QQuickItem *subview, this->view->childItems()) {
@@ -285,9 +281,8 @@ void DoricLayouts::measureVLayoutContent(qreal targetWidth,
     }
     had = true;
 
-    QPair<int, int> pair =
-        layout->removeMargin(targetWidth, targetHeight - contentHeight);
-    layout->measure(pair.first, pair.second);
+    layout->measure(layout->removeMargin(
+        QSizeF(targetSize.width(), targetSize.height() - contentHeight)));
     contentWidth = qMax(contentWidth, layout->takenWidth());
     contentHeight += layout->takenHeight() + this->spacing;
     contentWeight += layout->weight;
@@ -298,7 +293,7 @@ void DoricLayouts::measureVLayoutContent(qreal targetWidth,
   }
 
   if (contentWeight > 0) {
-    qreal remaining = targetHeight - contentHeight;
+    qreal remaining = targetSize.height() - contentHeight;
     contentWidth = 0;
     foreach (QQuickItem *subview, this->view->childItems()) {
       DoricLayouts *layout =
@@ -314,13 +309,13 @@ void DoricLayouts::measureVLayoutContent(qreal targetWidth,
           layout->measuredHeight + remaining / contentWeight * layout->weight;
       layout->measuredHeight = measuredHeight;
       // Need Remeasure
-      layout->measureContent(
+      layout->measureContent(QSizeF(
           layout->measuredWidth - layout->paddingLeft - layout->paddingRight,
-          measuredHeight - layout->paddingTop - layout->paddingBottom);
+          measuredHeight - layout->paddingTop - layout->paddingBottom));
       layout->measuredHeight = measuredHeight;
       contentWidth = qMax(contentWidth, layout->takenWidth());
     }
-    contentHeight = targetHeight;
+    contentHeight = targetSize.height();
   }
 
   if (this->widthSpec == DoricLayoutSpec::DoricLayoutFit) {
@@ -334,8 +329,7 @@ void DoricLayouts::measureVLayoutContent(qreal targetWidth,
   this->contentWidth = contentWidth;
   this->contentHeight = contentHeight;
 }
-void DoricLayouts::measureHLayoutContent(qreal targetWidth,
-                                         qreal targetHeight) {
+void DoricLayouts::measureHLayoutContent(QSizeF targetSize) {
   qreal contentWidth = 0, contentHeight = 0, contentWeight = 0;
   bool had = false;
   foreach (QQuickItem *subview, this->view->childItems()) {
@@ -349,9 +343,9 @@ void DoricLayouts::measureHLayoutContent(qreal targetWidth,
       continue;
     }
     had = true;
-    QPair<int, int> pair =
-        layout->removeMargin(targetWidth - contentWidth, targetHeight);
-    layout->measure(pair.first, pair.second);
+
+    layout->measure(layout->removeMargin(
+        QSizeF(targetSize.width() - contentWidth, targetSize.height())));
     contentWidth += layout->takenWidth() + this->spacing;
     contentHeight = qMax(contentHeight, layout->takenHeight());
     contentWeight += layout->weight;
@@ -362,7 +356,7 @@ void DoricLayouts::measureHLayoutContent(qreal targetWidth,
   }
 
   if (contentWeight > 0) {
-    qreal remaining = targetWidth - contentWidth;
+    qreal remaining = targetSize.width() - contentWidth;
     contentHeight = 0;
     foreach (QQuickItem *subview, this->view->childItems()) {
       DoricLayouts *layout =
@@ -378,13 +372,13 @@ void DoricLayouts::measureHLayoutContent(qreal targetWidth,
           layout->measuredWidth + remaining / contentWeight * layout->weight;
       layout->measuredWidth = measuredWidth;
       // Need Remeasure
-      layout->measureContent(
+      layout->measureContent(QSizeF(
           measuredWidth - layout->paddingLeft - layout->paddingRight,
-          layout->measuredHeight - layout->paddingTop - layout->paddingBottom);
+          layout->measuredHeight - layout->paddingTop - layout->paddingBottom));
       layout->measuredWidth = measuredWidth;
       contentHeight = qMax(contentHeight, layout->takenHeight());
     }
-    contentWidth = targetWidth;
+    contentWidth = targetSize.width();
   }
 
   if (this->widthSpec == DoricLayoutSpec::DoricLayoutFit) {
@@ -405,11 +399,9 @@ qreal DoricLayouts::takenWidth() {
 qreal DoricLayouts::takenHeight() {
   return this->measuredHeight + this->marginTop + this->marginBottom;
 }
-QPair<qreal, qreal> DoricLayouts::removeMargin(qreal targetWidth,
-                                               qreal targetHeight) {
-  QPair<int, int> pair(targetWidth - this->marginLeft - this->marginRight,
-                       targetHeight - this->marginTop - this->marginBottom);
-  return pair;
+QSizeF DoricLayouts::removeMargin(QSizeF targetSize) {
+  return QSizeF(targetSize.width() - this->marginLeft - this->marginRight,
+                targetSize.height() - this->marginTop - this->marginBottom);
 }
 
 bool DoricLayouts::restrainSize() {

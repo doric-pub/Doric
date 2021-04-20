@@ -24,14 +24,40 @@ export class AnimatePlugin extends DoricPlugin {
                 Promise.all(
                     this.context.animationSet?.map(e => {
                         return new Promise(resolve => {
-                            const animation = e.viewNode.view.animate(
-                                [e.keyFrame as Keyframe],
-                                {
-                                    duration: args.duration,
-                                    fill: "forwards"
-                                })
-                            animation.onfinish = () => {
-                                resolve(true)
+                            const keyFrame: Keyframe = {}
+                            const ensureNonString = (key: string, value: any) => {
+                                if (!!value && value !== "") {
+                                    return value
+                                }
+                                switch ((key)) {
+                                    case "backgroundColor":
+                                        return "transparent"
+                                    case "transform":
+                                        return "none"
+                                    default:
+                                        return "none"
+                                }
+                            }
+                            for (let k in e.keyFrame) {
+                                keyFrame[k] = ensureNonString(k, e.viewNode.view.style[k])
+                                e.keyFrame[k] = ensureNonString(k, e.keyFrame[k])
+                            }
+                            try {
+                                const animation = e.viewNode.view.animate(
+                                    [keyFrame, e.keyFrame as Keyframe],
+                                    {
+                                        duration: args.duration,
+                                        fill: "forwards"
+                                    })
+                                animation.onfinish = () => {
+                                    Object.entries(e.keyFrame).forEach(entry => {
+                                        Reflect.set(e.viewNode.view.style, entry[0], entry[1])
+                                    })
+                                    resolve(true)
+                                }
+                            } catch (e) {
+                                console.error(e)
+                                alert(e.stack)
                             }
                         })
                     }) || [])

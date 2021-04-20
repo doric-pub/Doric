@@ -1,9 +1,6 @@
 #ifndef SHADERPLUGIN_H
 #define SHADERPLUGIN_H
 
-#include <QJSValue>
-#include <QObject>
-
 #include "DoricNativePlugin.h"
 
 class DoricShaderPlugin : public DoricNativePlugin {

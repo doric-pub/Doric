@@ -11,6 +11,8 @@ public:
 
   void setRootView(QQuickItem *rootView);
 
+  QQuickItem *getRootView();
+
   virtual void requestLayout() override;
 };
 

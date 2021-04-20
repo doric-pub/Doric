@@ -7,6 +7,8 @@ void DoricRootNode::setRootView(QQuickItem *rootView) {
   this->getLayouts()->setLayoutType(DoricLayoutType::DoricStack);
 }
 
+QQuickItem *DoricRootNode::getRootView() { return mView; }
+
 void DoricRootNode::requestLayout() {
   getLayouts()->apply();
   DoricStackNode::requestLayout();

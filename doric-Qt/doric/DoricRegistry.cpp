@@ -1,6 +1,8 @@
 #include "DoricRegistry.h"
 
+#include "plugin/DoricModalPlugin.h"
 #include "plugin/DoricShaderPlugin.h"
+
 #include "shader/DoricHLayoutNode.h"
 #include "shader/DoricRootNode.h"
 #include "shader/DoricScrollerNode.h"
@@ -10,6 +12,7 @@
 
 DoricRegistry::DoricRegistry() {
   registerNativePlugin<DoricShaderPlugin>("shader");
+  registerNativePlugin<DoricModalPlugin>("modal");
 
   registerViewNode<DoricRootNode>("Root");
   registerViewNode<DoricStackNode>("Stack");

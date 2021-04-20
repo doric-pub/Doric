@@ -34,6 +34,7 @@ SOURCES += \
         engine/v8/JSValueHelper.cpp \
         engine/v8/V8Executor.cpp \
         main.cpp \
+        plugin/DoricModalPlugin.cpp \
         plugin/DoricShaderPlugin.cpp \
         shader/DoricGroupNode.cpp \
         shader/DoricHLayoutNode.cpp \
@@ -100,6 +101,7 @@ HEADERS += \
     engine/native/NativeExecutor.h \
     engine/v8/JSValueHelper.h \
     engine/v8/V8Executor.h \
+    plugin/DoricModalPlugin.h \
     plugin/DoricNativePlugin.h \
     plugin/DoricShaderPlugin.h \
     shader/DoricGroupNode.h \

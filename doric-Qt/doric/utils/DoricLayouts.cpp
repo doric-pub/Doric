@@ -224,31 +224,34 @@ void DoricLayouts::measureContent(QSizeF targetSize) {
 
 void DoricLayouts::measureUndefinedContent(QSizeF targetSize) {
   // begin size that fits
-  qreal width = this->view->width();
-  qreal height = this->view->height();
+  QSizeF measuredSize;
 
   if (tag == "Scroller") {
     QObject *object =
         (QObject *)(this->view->property("wrapper").toULongLong());
     DoricScrollerNode *viewNode = dynamic_cast<DoricScrollerNode *>(object);
-    QSizeF measuredSize = viewNode->sizeThatFits(targetSize);
-    width = measuredSize.width();
-    height = measuredSize.height();
+    measuredSize = viewNode->sizeThatFits(targetSize);
   } else {
-    if (width > targetSize.width()) {
-      width = targetSize.width();
+    qreal actualWidth = this->view->width();
+    qreal actualHeight = this->view->height();
+    if (actualWidth > targetSize.width()) {
+      actualWidth = targetSize.width();
     }
-    if (height > targetSize.height()) {
-      height = targetSize.height();
+    if (actualHeight > targetSize.height()) {
+      actualHeight = targetSize.height();
     }
+
+    measuredSize = QSizeF(actualWidth, actualHeight);
   }
   // end size that fits
 
   if (this->widthSpec == DoricLayoutSpec::DoricLayoutFit) {
-    setMeasuredWidth(width + this->paddingLeft + this->paddingRight);
+    setMeasuredWidth(measuredSize.width() + this->paddingLeft +
+                     this->paddingRight);
   }
   if (this->heightSpec == DoricLayoutSpec::DoricLayoutFit) {
-    setMeasuredHeight(height + this->paddingTop + this->paddingBottom);
+    setMeasuredHeight(measuredSize.height() + this->paddingTop +
+                      this->paddingBottom);
   }
 }
 void DoricLayouts::measureStackContent(QSizeF targetSize) {

@@ -20,7 +20,10 @@ export class DoricContext {
     pluginInstances: Map<string, DoricPlugin> = new Map
     rootNode: DoricStackNode
     headNodes: Map<string, Map<string, DoricViewNode>> = new Map
-    animationSet?: { viewNode: DoricViewNode, keyFrame: Partial<CSSStyleDeclaration> }[]
+    animationSet?: {
+        viewNode: DoricViewNode,
+        keyFrame: Partial<CSSStyleDeclaration>,
+    }[]
 
     constructor(content: string) {
         createContext(this.contextId, content)
@@ -93,7 +96,7 @@ export class DoricContext {
     addAnimation(viewNode: DoricViewNode, keyFrame: Partial<CSSStyleDeclaration>) {
         this.animationSet?.push({
             viewNode,
-            keyFrame
+            keyFrame,
         })
     }
 

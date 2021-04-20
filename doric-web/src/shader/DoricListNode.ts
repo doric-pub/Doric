@@ -85,7 +85,7 @@ export class DoricListNode extends DoricSuperNode {
         if (viewId === this.loadMoreViewId) {
             return this.loadMoreViewNode
         }
-        return this.childNodes.filter(e => e.viewId === viewId)[0]
+        return this.childNodes.filter(e => e.viewId === viewId)?.[0]
     }
 
     onScrollToEnd() {

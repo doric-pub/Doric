@@ -17,6 +17,8 @@ import { DoricDraggableNode } from "./shader/DoricDraggableNode"
 import { DoricRefreshableNode } from "./shader/DoricRefreshableNode"
 import { AnimatePlugin } from "./plugins/AnimatePlugin"
 import { DoricSwitchNode } from "./shader/DoricSwitchNode"
+import { DoricSliderNode } from "./shader/DoricSliderNode"
+import { DoricSlideItemNode } from "./shader/DoricSlideItemNode"
 
 const bundles: Map<string, string> = new Map
 
@@ -69,3 +71,5 @@ registerViewNode('List', DoricListNode)
 registerViewNode('Draggable', DoricDraggableNode)
 registerViewNode('Refreshable', DoricRefreshableNode)
 registerViewNode('Switch', DoricSwitchNode)
+registerViewNode('Slider', DoricSliderNode)
+registerViewNode('SlideItem', DoricSlideItemNode)

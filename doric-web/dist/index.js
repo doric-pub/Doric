@@ -4397,2280 +4397,2877 @@ return __module.exports;
 /**--------Lib--------*/
     
 var doric_web = (function (exports, axios, sandbox) {
-    'use strict';
+	'use strict';
 
-    function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+	function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
-    var axios__default = /*#__PURE__*/_interopDefaultLegacy(axios);
+	var axios__default = /*#__PURE__*/_interopDefaultLegacy(axios);
 
-    var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-        function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-        return new (P || (P = Promise))(function (resolve, reject) {
-            function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-            function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-            function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-            step((generator = generator.apply(thisArg, _arguments || [])).next());
-        });
-    };
-    const loaders = [
-        {
-            filter: () => true,
-            request: (source) => __awaiter(void 0, void 0, void 0, function* () {
-                const result = yield axios__default['default'].get(source);
-                return result.data;
-            })
-        }
-    ];
-    function registerDoricJSLoader(loader) {
-        loaders.push(loader);
-    }
-    function loadDoricJSBundle(source) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const matched = loaders.filter(e => e.filter(source));
-            if (matched.length > 0) {
-                return matched[matched.length - 1].request(source);
-            }
-            throw new Error(`Cannot find matched loader for '${source}'`);
-        });
-    }
+	function createCommonjsModule(fn, basedir, module) {
+		return module = {
+		  path: basedir,
+		  exports: {},
+		  require: function (path, base) {
+	      return commonjsRequire(path, (base === undefined || base === null) ? module.path : base);
+	    }
+		}, fn(module, module.exports), module.exports;
+	}
 
-    class DoricPlugin {
-        constructor(context) {
-            this.context = context;
-        }
-        onTearDown() {
-        }
-    }
+	function commonjsRequire () {
+		throw new Error('Dynamic requires are not currently supported by @rollup/plugin-commonjs');
+	}
 
-    (function (LayoutSpec) {
-        LayoutSpec[LayoutSpec["EXACTLY"] = 0] = "EXACTLY";
-        LayoutSpec[LayoutSpec["WRAP_CONTENT"] = 1] = "WRAP_CONTENT";
-        LayoutSpec[LayoutSpec["AT_MOST"] = 2] = "AT_MOST";
-    })(exports.LayoutSpec || (exports.LayoutSpec = {}));
-    const SPECIFIED = 1;
-    const START = 1 << 1;
-    const END = 1 << 2;
-    const SHIFT_X = 0;
-    const SHIFT_Y = 4;
-    const LEFT = (START | SPECIFIED) << SHIFT_X;
-    const RIGHT = (END | SPECIFIED) << SHIFT_X;
-    const TOP = (START | SPECIFIED) << SHIFT_Y;
-    const BOTTOM = (END | SPECIFIED) << SHIFT_Y;
-    const CENTER_X = SPECIFIED << SHIFT_X;
-    const CENTER_Y = SPECIFIED << SHIFT_Y;
-    const CENTER = CENTER_X | CENTER_Y;
-    function toPixelString(v) {
-        return `${v}px`;
-    }
-    function pixelString2Number(v) {
-        return parseFloat(v.substring(0, v.indexOf("px")));
-    }
-    function toRGBAString(color) {
-        let strs = [];
-        for (let i = 0; i < 32; i += 8) {
-            strs.push(((color >> i) & 0xff).toString(16));
-        }
-        strs = strs.map(e => {
-            if (e.length === 1) {
-                return '0' + e;
-            }
-            return e;
-        }).reverse();
-        /// RGBA
-        return `#${strs[1]}${strs[2]}${strs[3]}${strs[0]}`;
-    }
-    class DoricViewNode {
-        constructor(context) {
-            this.viewId = "";
-            this.viewType = "View";
-            this.layoutConfig = {
-                widthSpec: exports.LayoutSpec.EXACTLY,
-                heightSpec: exports.LayoutSpec.EXACTLY,
-                alignment: 0,
-                weight: 0,
-                margin: {
-                    left: 0,
-                    right: 0,
-                    top: 0,
-                    bottom: 0
-                }
-            };
-            this.padding = {
-                left: 0,
-                right: 0,
-                top: 0,
-                bottom: 0,
-            };
-            this.frameWidth = 0;
-            this.frameHeight = 0;
-            this.offsetX = 0;
-            this.offsetY = 0;
-            this._originDisplay = "";
-            this.transform = {};
-            this.context = context;
-        }
-        init(superNode) {
-            if (superNode) {
-                this.superNode = superNode;
-                if (this instanceof DoricSuperNode) {
-                    this.reusable = superNode.reusable;
-                }
-            }
-            this.view = this.build();
-            this._originDisplay = this.view.style.display;
-        }
-        get paddingLeft() {
-            return this.padding.left || 0;
-        }
-        get paddingRight() {
-            return this.padding.right || 0;
-        }
-        get paddingTop() {
-            return this.padding.top || 0;
-        }
-        get paddingBottom() {
-            return this.padding.bottom || 0;
-        }
-        get borderWidth() {
-            var _a;
-            return ((_a = this.border) === null || _a === void 0 ? void 0 : _a.width) || 0;
-        }
-        blend(props) {
-            this.view.id = `${this.viewId}`;
-            for (let key in props) {
-                this.blendProps(this.view, key, props[key]);
-            }
-            this.onBlending();
-            this.layout();
-        }
-        onBlending() {
-            this.updateTransform();
-        }
-        onBlended() {
-        }
-        configBorder() {
-            if (this.border) {
-                this.applyCSSStyle({
-                    borderStyle: "solid",
-                    borderWidth: toPixelString(this.border.width),
-                    borderColor: toRGBAString(this.border.color),
-                });
-            }
-        }
-        configWidth() {
-            let width;
-            switch (this.layoutConfig.widthSpec) {
-                case exports.LayoutSpec.WRAP_CONTENT:
-                    width = "max-content";
-                    break;
-                case exports.LayoutSpec.AT_MOST:
-                    width = "100%";
-                    break;
-                case exports.LayoutSpec.EXACTLY:
-                default:
-                    width = toPixelString(this.frameWidth
-                        - this.paddingLeft - this.paddingRight
-                        - this.borderWidth * 2);
-                    break;
-            }
-            this.applyCSSStyle({ width });
-        }
-        configHeight() {
-            let height;
-            switch (this.layoutConfig.heightSpec) {
-                case exports.LayoutSpec.WRAP_CONTENT:
-                    height = "max-content";
-                    break;
-                case exports.LayoutSpec.AT_MOST:
-                    height = "100%";
-                    break;
-                case exports.LayoutSpec.EXACTLY:
-                default:
-                    height = toPixelString(this.frameHeight
-                        - this.paddingTop - this.paddingBottom
-                        - this.borderWidth * 2);
-                    break;
-            }
-            this.applyCSSStyle({ height });
-        }
-        configMargin() {
-            if (this.layoutConfig.margin) {
-                this.applyCSSStyle({
-                    marginLeft: toPixelString(this.layoutConfig.margin.left || 0),
-                    marginRight: toPixelString(this.layoutConfig.margin.right || 0),
-                    marginTop: toPixelString(this.layoutConfig.margin.top || 0),
-                    marginBottom: toPixelString(this.layoutConfig.margin.bottom || 0),
-                });
-            }
-        }
-        configPadding() {
-            if (this.padding) {
-                this.applyCSSStyle({
-                    paddingLeft: toPixelString(this.paddingLeft),
-                    paddingRight: toPixelString(this.paddingRight),
-                    paddingTop: toPixelString(this.paddingTop),
-                    paddingBottom: toPixelString(this.paddingBottom),
-                });
-            }
-        }
-        layout() {
-            this.configMargin();
-            this.configBorder();
-            this.configPadding();
-            this.configWidth();
-            this.configHeight();
-        }
-        blendProps(v, propName, prop) {
-            switch (propName) {
-                case "border":
-                    this.border = prop;
-                    break;
-                case "padding":
-                    this.padding = prop;
-                    break;
-                case 'width':
-                    this.frameWidth = prop;
-                    break;
-                case 'height':
-                    this.frameHeight = prop;
-                    break;
-                case 'backgroundColor':
-                    this.backgroundColor = prop;
-                    break;
-                case 'layoutConfig':
-                    const layoutConfig = prop;
-                    for (let key in layoutConfig) {
-                        Reflect.set(this.layoutConfig, key, Reflect.get(layoutConfig, key, layoutConfig));
-                    }
-                    break;
-                case 'x':
-                    this.offsetX = prop;
-                    break;
-                case 'y':
-                    this.offsetY = prop;
-                    break;
-                case 'onClick':
-                    this.view.onclick = (event) => {
-                        this.callJSResponse(prop);
-                        event.stopPropagation();
-                    };
-                    break;
-                case 'corners':
-                    if (typeof prop === 'object') {
-                        this.applyCSSStyle({
-                            borderTopLeftRadius: toPixelString(prop.leftTop),
-                            borderTopRightRadius: toPixelString(prop.rightTop),
-                            borderBottomRightRadius: toPixelString(prop.rightBottom),
-                            borderBottomLeftRadius: toPixelString(prop.leftBottom),
-                        });
-                    }
-                    else {
-                        this.applyCSSStyle({ borderRadius: toPixelString(prop) });
-                    }
-                    break;
-                case 'shadow':
-                    const opacity = prop.opacity || 0;
-                    let boxShadow;
-                    if (opacity > 0) {
-                        const offsetX = prop.offsetX || 0;
-                        const offsetY = prop.offsetY || 0;
-                        const shadowColor = prop.color || 0xff000000;
-                        const shadowRadius = prop.radius;
-                        const alpha = opacity * 255;
-                        boxShadow = `${toPixelString(offsetX)} ${toPixelString(offsetY)} ${toPixelString(shadowRadius)} ${toRGBAString((shadowColor & 0xffffff) | ((alpha & 0xff) << 24))} `;
-                    }
-                    else {
-                        boxShadow = "";
-                    }
-                    this.applyCSSStyle({
-                        boxShadow,
-                    });
-                    break;
-                case 'alpha':
-                    this.applyCSSStyle({
-                        opacity: `${prop}`,
-                    });
-                    break;
-                case 'rotation':
-                    this.transform.rotation = prop;
-                    break;
-                case 'rotationX':
-                    this.transform.rotationX = prop;
-                    break;
-                case 'rotationY':
-                    this.transform.rotationY = prop;
-                    break;
-                case 'scaleX':
-                    this.transform.scaleX = prop;
-                    break;
-                case 'scaleY':
-                    this.transform.scaleY = prop;
-                    break;
-                case 'translationX':
-                    this.transform.translateX = prop;
-                    break;
-                case 'translationY':
-                    this.transform.translateY = prop;
-                    break;
-                case 'pivotX':
-                    if (this.transformOrigin) {
-                        this.transformOrigin.x = prop;
-                    }
-                    else {
-                        this.transformOrigin = {
-                            x: prop,
-                            y: 0.5,
-                        };
-                    }
-                    break;
-                case 'pivotY':
-                    if (this.transformOrigin) {
-                        this.transformOrigin.y = prop;
-                    }
-                    else {
-                        this.transformOrigin = {
-                            x: 0.5,
-                            y: prop,
-                        };
-                    }
-                    break;
-                case 'hidden':
-                    this.applyCSSStyle({
-                        display: prop === true ? "none" : this._originDisplay
-                    });
-                    break;
-                default:
-                    console.error(`Cannot blend prop for ${propName}`);
-                    break;
-            }
-        }
-        set backgroundColor(v) {
-            this.applyCSSStyle({ backgroundColor: toRGBAString(v) });
-        }
-        static create(context, type) {
-            const viewNodeClass = acquireViewNode(type);
-            if (viewNodeClass === undefined) {
-                console.error(`Cannot find ViewNode for ${type}`);
-                return undefined;
-            }
-            const ret = new viewNodeClass(context);
-            ret.viewType = type;
-            return ret;
-        }
-        getIdList() {
-            const ids = [];
-            let viewNode = this;
-            do {
-                ids.push(viewNode.viewId);
-                viewNode = viewNode.superNode;
-            } while (viewNode);
-            return ids.reverse();
-        }
-        callJSResponse(funcId, ...args) {
-            const argumentsList = ['__response__', this.getIdList(), funcId];
-            for (let i = 1; i < arguments.length; i++) {
-                argumentsList.push(arguments[i]);
-            }
-            return Reflect.apply(this.context.invokeEntityMethod, this.context, argumentsList);
-        }
-        pureCallJSResponse(funcId, ...args) {
-            const argumentsList = ['__response__', this.getIdList(), funcId];
-            for (let i = 1; i < arguments.length; i++) {
-                argumentsList.push(arguments[i]);
-            }
-            return Reflect.apply(this.context.pureInvokeEntityMethod, this.context, argumentsList);
-        }
-        updateTransform() {
-            this.applyCSSStyle({
-                transform: Object.entries(this.transform).filter((e) => !!e[1]).map((e) => {
-                    const v = e[1] || 0;
-                    switch (e[0]) {
-                        case "translateX":
-                            return `translateX(${v}px)`;
-                        case "scaleX":
-                            return `scaleX(${v})`;
-                        case "scaleY":
-                            return `scaleY(${v})`;
-                        case "rotation":
-                            return `rotate(${v / 2}turn)`;
-                        case "rotationX":
-                            return `rotateX(${v / 2}turn)`;
-                        case "rotationY":
-                            return `rotateY(${v / 2}turn)`;
-                        default:
-                            console.error(`Do not support transform ${e[0]}`);
-                            return "";
-                    }
-                }).join(" ")
-            });
-        }
-        updateTransformOrigin() {
-            if (this.transformOrigin) {
-                this.applyCSSStyle({
-                    transformOrigin: `${Math.round(this.transformOrigin.x * 100)}% ${Math.round(this.transformOrigin.y * 100)}%`
-                });
-            }
-        }
-        applyCSSStyle(cssStyle) {
-            if (this.context.inAnimation()) {
-                this.context.addAnimation(this, cssStyle);
-            }
-            else {
-                for (let v in cssStyle) {
-                    Reflect.set(this.view.style, v, cssStyle[v]);
-                }
-            }
-        }
-        /** ++++++++++call from doric ++++++++++*/
-        getWidth() {
-            return this.view.offsetWidth;
-        }
-        getHeight() {
-            return this.view.offsetHeight;
-        }
-        setWidth(v) {
-            this.view.style.width = toPixelString(v);
-        }
-        setHeight(v) {
-            this.view.style.height = toPixelString(v);
-        }
-        getX() {
-            return this.view.offsetLeft;
-        }
-        getY() {
-            return this.view.offsetTop;
-        }
-        setX(v) {
-            this.view.style.left = toPixelString(v);
-        }
-        setY(v) {
-            this.view.style.top = toPixelString(v);
-        }
-        getBackgroundColor() {
-            return this.view.style.backgroundColor;
-        }
-        setBackgroundColor(v) {
-            this.backgroundColor = v;
-        }
-        getAlpha() {
-            return parseFloat(this.view.style.opacity);
-        }
-        setAlpha(v) {
-            this.view.style.opacity = `${v}`;
-        }
-        getCorners() {
-            return parseFloat(this.view.style.borderRadius);
-        }
-        setCorners(v) {
-            this.view.style.borderRadius = toPixelString(v);
-        }
-        getLocationOnScreen() {
-            const rect = this.view.getClientRects()[0];
-            return {
-                x: rect.left,
-                y: rect.top,
-            };
-        }
-        getRotation() {
-            return this.transform.rotation;
-        }
-        setRotation(v) {
-            this.transform.rotation = v;
-            this.updateTransform();
-        }
-        getRotationX() {
-            return this.transform.rotationX;
-        }
-        setRotationX(v) {
-            this.transform.rotationX = v;
-            this.updateTransform();
-        }
-        getRotationY() {
-            return this.transform.rotationY;
-        }
-        setRotationY(v) {
-            this.transform.rotationY = v;
-            this.updateTransform();
-        }
-        getTranslationX() {
-            return this.transform.translateX;
-        }
-        setTranslationX(v) {
-            this.transform.translateX = v;
-            this.updateTransform();
-        }
-        getTranslationY() {
-            return this.transform.translateY;
-        }
-        setTranslationY(v) {
-            this.transform.translateY = v;
-            this.updateTransform();
-        }
-        getScaleX() {
-            return this.transform.scaleX;
-        }
-        setScaleX(v) {
-            this.transform.scaleX = v;
-            this.updateTransform();
-        }
-        getScaleY() {
-            return this.transform.scaleY;
-        }
-        setScaleY(v) {
-            this.transform.scaleY = v;
-            this.updateTransform();
-        }
-        getPivotX() {
-            var _a;
-            return ((_a = this.transformOrigin) === null || _a === void 0 ? void 0 : _a.x) || 0.5;
-        }
-        setPivotX(v) {
-            if (this.transformOrigin) {
-                this.transformOrigin.x = v;
-            }
-            else {
-                this.transformOrigin = {
-                    x: v,
-                    y: 0.5,
-                };
-            }
-            this.updateTransform();
-        }
-        getPivotY() {
-            var _a;
-            return ((_a = this.transformOrigin) === null || _a === void 0 ? void 0 : _a.y) || 0.5;
-        }
-        setPivotY(v) {
-            if (this.transformOrigin) {
-                this.transformOrigin.y = v;
-            }
-            else {
-                this.transformOrigin = {
-                    x: 0.5,
-                    y: v,
-                };
-            }
-            this.updateTransform();
-        }
-    }
-    class DoricSuperNode extends DoricViewNode {
-        constructor() {
-            super(...arguments);
-            this.reusable = false;
-            this.subModels = new Map;
-        }
-        blendProps(v, propName, prop) {
-            if (propName === 'subviews') {
-                if (prop instanceof Array) {
-                    prop.forEach((e) => {
-                        this.mixinSubModel(e);
-                        this.blendSubNode(e);
-                    });
-                }
-            }
-            else {
-                super.blendProps(v, propName, prop);
-            }
-        }
-        mixinSubModel(subNode) {
-            const oldValue = this.getSubModel(subNode.id);
-            if (oldValue) {
-                this.mixin(subNode, oldValue);
-            }
-            else {
-                this.subModels.set(subNode.id, subNode);
-            }
-        }
-        getSubModel(id) {
-            return this.subModels.get(id);
-        }
-        mixin(src, target) {
-            for (let key in src.props) {
-                if (key === "subviews") {
-                    continue;
-                }
-                Reflect.set(target.props, key, Reflect.get(src.props, key));
-            }
-        }
-        clearSubModels() {
-            this.subModels.clear();
-        }
-        removeSubModel(id) {
-            this.subModels.delete(id);
-        }
-    }
-    class DoricGroupViewNode extends DoricSuperNode {
-        constructor() {
-            super(...arguments);
-            this.childNodes = [];
-            this.childViewIds = [];
-        }
-        init(superNode) {
-            super.init(superNode);
-            this.view.style.overflow = "hidden";
-        }
-        blendProps(v, propName, prop) {
-            if (propName === 'children') {
-                if (prop instanceof Array) {
-                    this.childViewIds = prop;
-                }
-            }
-            else {
-                super.blendProps(v, propName, prop);
-            }
-        }
-        blend(props) {
-            super.blend(props);
-        }
-        onBlending() {
-            super.onBlending();
-            this.configChildNode();
-        }
-        onBlended() {
-            super.onBlended();
-            this.childNodes.forEach(e => e.onBlended());
-        }
-        configChildNode() {
-            this.childViewIds.forEach((childViewId, index) => {
-                const model = this.getSubModel(childViewId);
-                if (model === undefined) {
-                    return;
-                }
-                if (index < this.childNodes.length) {
-                    const oldNode = this.childNodes[index];
-                    if (oldNode.viewId === childViewId) ;
-                    else {
-                        if (this.reusable) {
-                            if (oldNode.viewType === model.type) {
-                                //Same type,can be reused
-                                oldNode.viewId = childViewId;
-                                oldNode.blend(model.props);
-                            }
-                            else {
-                                //Replace this view
-                                this.view.removeChild(oldNode.view);
-                                const newNode = DoricViewNode.create(this.context, model.type);
-                                if (newNode === undefined) {
-                                    return;
-                                }
-                                newNode.viewId = childViewId;
-                                newNode.init(this);
-                                newNode.blend(model.props);
-                                this.childNodes[index] = newNode;
-                                this.view.replaceChild(newNode.view, oldNode.view);
-                            }
-                        }
-                        else {
-                            //Find in remain nodes
-                            let position = -1;
-                            for (let start = index + 1; start < this.childNodes.length; start++) {
-                                if (childViewId === this.childNodes[start].viewId) {
-                                    //Found
-                                    position = start;
-                                    break;
-                                }
-                            }
-                            if (position >= 0) {
-                                //Found swap idx,position
-                                const reused = this.childNodes[position];
-                                const abandoned = this.childNodes[index];
-                                this.childNodes[index] = reused;
-                                this.childNodes[position] = abandoned;
-                                this.view.removeChild(reused.view);
-                                this.view.insertBefore(reused.view, abandoned.view);
-                                this.view.removeChild(abandoned.view);
-                                if (position === this.view.childElementCount - 1) {
-                                    this.view.appendChild(abandoned.view);
-                                }
-                                else {
-                                    this.view.insertBefore(abandoned.view, this.view.children[position]);
-                                }
-                            }
-                            else {
-                                //Not found,insert
-                                const newNode = DoricViewNode.create(this.context, model.type);
-                                if (newNode === undefined) {
-                                    return;
-                                }
-                                newNode.viewId = childViewId;
-                                newNode.init(this);
-                                newNode.blend(model.props);
-                                this.childNodes[index] = newNode;
-                                this.view.insertBefore(newNode.view, this.view.children[index]);
-                            }
-                        }
-                    }
-                }
-                else {
-                    //Insert
-                    const newNode = DoricViewNode.create(this.context, model.type);
-                    if (newNode === undefined) {
-                        return;
-                    }
-                    newNode.viewId = childViewId;
-                    newNode.init(this);
-                    newNode.blend(model.props);
-                    this.childNodes.push(newNode);
-                    this.view.appendChild(newNode.view);
-                }
-            });
-            let size = this.childNodes.length;
-            for (let idx = this.childViewIds.length; idx < size; idx++) {
-                this.view.removeChild(this.childNodes[idx].view);
-            }
-            this.childNodes = this.childNodes.slice(0, this.childViewIds.length);
-        }
-        blendSubNode(model) {
-            var _a;
-            (_a = this.getSubNodeById(model.id)) === null || _a === void 0 ? void 0 : _a.blend(model.props);
-        }
-        getSubNodeById(viewId) {
-            return this.childNodes.filter(e => e.viewId === viewId)[0];
-        }
-    }
+	var smoothscroll = createCommonjsModule(function (module, exports) {
+	/* smoothscroll v0.4.4 - 2019 - Dustan Kasten, Jeremias Menichelli - MIT License */
+	(function () {
 
-    class ShaderPlugin extends DoricPlugin {
-        render(ret) {
-            var _a;
-            if (((_a = this.context.rootNode.viewId) === null || _a === void 0 ? void 0 : _a.length) > 0) {
-                const viewNode = this.context.targetViewNode(ret.id);
-                viewNode === null || viewNode === void 0 ? void 0 : viewNode.blend(ret.props);
-                viewNode === null || viewNode === void 0 ? void 0 : viewNode.onBlended();
-            }
-            else {
-                this.context.rootNode.viewId = ret.id;
-                this.context.rootNode.blend(ret.props);
-                this.context.rootNode.onBlended();
-            }
-        }
-        command(options) {
-            let viewNode = undefined;
-            for (let viewId of options.viewIds) {
-                if (!viewNode) {
-                    viewNode = this.context.targetViewNode(viewId);
-                }
-                else {
-                    if (viewNode instanceof DoricSuperNode) {
-                        viewNode = viewNode.getSubNodeById(viewId);
-                    }
-                }
-            }
-            if (!viewNode) {
-                return Promise.reject("Cannot find opposite view");
-            }
-            else {
-                const target = viewNode;
-                return new Promise((resolve, reject) => {
-                    try {
-                        const method = Reflect.get(target, options.name);
-                        if (!method) {
-                            reject(`"Cannot find plugin method in class:${target},method:${options.name}"`);
-                        }
-                        resolve(Reflect.apply(method, target, [options.args]));
-                    }
-                    catch (err) {
-                        reject(err);
-                    }
-                });
-            }
-        }
-    }
+	  // polyfill
+	  function polyfill() {
+	    // aliases
+	    var w = window;
+	    var d = document;
 
-    class DoricStackNode extends DoricGroupViewNode {
-        build() {
-            const ret = document.createElement('div');
-            ret.style.position = "relative";
-            return ret;
-        }
-        layout() {
-            super.layout();
-            Promise.resolve().then(_ => {
-                this.configSize();
-                this.configOffset();
-            });
-        }
-        configSize() {
-            if (this.layoutConfig.widthSpec === exports.LayoutSpec.WRAP_CONTENT) {
-                const width = this.childNodes.reduce((prev, current) => {
-                    const computedStyle = window.getComputedStyle(current.view);
-                    return Math.max(prev, current.view.offsetWidth
-                        + pixelString2Number(computedStyle.marginLeft)
-                        + pixelString2Number(computedStyle.marginRight));
-                }, 0);
-                this.view.style.width = toPixelString(width);
-            }
-            if (this.layoutConfig.heightSpec === exports.LayoutSpec.WRAP_CONTENT) {
-                const height = this.childNodes.reduce((prev, current) => {
-                    const computedStyle = window.getComputedStyle(current.view);
-                    return Math.max(prev, current.view.offsetHeight
-                        + pixelString2Number(computedStyle.marginTop)
-                        + pixelString2Number(computedStyle.marginBottom));
-                }, 0);
-                this.view.style.height = toPixelString(height);
-            }
-        }
-        configOffset() {
-            this.childNodes.forEach(e => {
-                const position = "absolute";
-                let left = toPixelString(e.offsetX + this.paddingLeft);
-                let top = toPixelString(e.offsetY + this.paddingTop);
-                const gravity = e.layoutConfig.alignment;
-                if ((gravity & LEFT) === LEFT) {
-                    left = toPixelString(0);
-                }
-                else if ((gravity & RIGHT) === RIGHT) {
-                    left = toPixelString(this.view.offsetWidth - e.view.offsetWidth);
-                }
-                else if ((gravity & CENTER_X) === CENTER_X) {
-                    left = toPixelString(this.view.offsetWidth / 2 - e.view.offsetWidth / 2);
-                }
-                if ((gravity & TOP) === TOP) {
-                    top = toPixelString(0);
-                }
-                else if ((gravity & BOTTOM) === BOTTOM) {
-                    top = toPixelString(this.view.offsetHeight - e.view.offsetHeight);
-                }
-                else if ((gravity & CENTER_Y) === CENTER_Y) {
-                    top = toPixelString(this.view.offsetHeight / 2 - e.view.offsetHeight / 2);
-                }
-                e.applyCSSStyle({
-                    position,
-                    left,
-                    top,
-                });
-            });
-        }
-    }
+	    // return if scroll behavior is supported and polyfill is not forced
+	    if (
+	      'scrollBehavior' in d.documentElement.style &&
+	      w.__forceSmoothScrollPolyfill__ !== true
+	    ) {
+	      return;
+	    }
 
-    class DoricVLayoutNode extends DoricGroupViewNode {
-        constructor() {
-            super(...arguments);
-            this.space = 0;
-            this.gravity = 0;
-        }
-        build() {
-            const ret = document.createElement('div');
-            ret.style.display = "flex";
-            ret.style.flexDirection = "column";
-            ret.style.flexWrap = "nowrap";
-            return ret;
-        }
-        blendProps(v, propName, prop) {
-            if (propName === 'space') {
-                this.space = prop;
-            }
-            else if (propName === 'gravity') {
-                this.gravity = prop;
-                if ((this.gravity & LEFT) === LEFT) {
-                    this.view.style.alignItems = "flex-start";
-                }
-                else if ((this.gravity & RIGHT) === RIGHT) {
-                    this.view.style.alignItems = "flex-end";
-                }
-                else if ((this.gravity & CENTER_X) === CENTER_X) {
-                    this.view.style.alignItems = "center";
-                }
-                if ((this.gravity & TOP) === TOP) {
-                    this.view.style.justifyContent = "flex-start";
-                }
-                else if ((this.gravity & BOTTOM) === BOTTOM) {
-                    this.view.style.justifyContent = "flex-end";
-                }
-                else if ((this.gravity & CENTER_Y) === CENTER_Y) {
-                    this.view.style.justifyContent = "center";
-                }
-            }
-            else {
-                super.blendProps(v, propName, prop);
-            }
-        }
-        layout() {
-            super.layout();
-            this.childNodes.forEach((e, idx) => {
-                var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
-                e.view.style.flexShrink = "0";
-                if ((_a = e.layoutConfig) === null || _a === void 0 ? void 0 : _a.weight) {
-                    e.view.style.flex = `${(_b = e.layoutConfig) === null || _b === void 0 ? void 0 : _b.weight}`;
-                }
-                e.view.style.marginTop = toPixelString(((_d = (_c = e.layoutConfig) === null || _c === void 0 ? void 0 : _c.margin) === null || _d === void 0 ? void 0 : _d.top) || 0);
-                e.view.style.marginBottom = toPixelString((idx === this.childNodes.length - 1) ? 0 : this.space
-                    + (((_f = (_e = e.layoutConfig) === null || _e === void 0 ? void 0 : _e.margin) === null || _f === void 0 ? void 0 : _f.bottom) || 0));
-                e.view.style.marginLeft = toPixelString(((_h = (_g = e.layoutConfig) === null || _g === void 0 ? void 0 : _g.margin) === null || _h === void 0 ? void 0 : _h.left) || 0);
-                e.view.style.marginRight = toPixelString(((_k = (_j = e.layoutConfig) === null || _j === void 0 ? void 0 : _j.margin) === null || _k === void 0 ? void 0 : _k.right) || 0);
-                if ((e.layoutConfig.alignment & LEFT) === LEFT) {
-                    e.view.style.alignSelf = "flex-start";
-                }
-                else if ((e.layoutConfig.alignment & RIGHT) === RIGHT) {
-                    e.view.style.alignSelf = "flex-end";
-                }
-                else if ((e.layoutConfig.alignment & CENTER_X) === CENTER_X) {
-                    e.view.style.alignSelf = "center";
-                }
-            });
-        }
-    }
+	    // globals
+	    var Element = w.HTMLElement || w.Element;
+	    var SCROLL_TIME = 468;
 
-    class DoricHLayoutNode extends DoricGroupViewNode {
-        constructor() {
-            super(...arguments);
-            this.space = 0;
-            this.gravity = 0;
-        }
-        build() {
-            const ret = document.createElement('div');
-            ret.style.display = "flex";
-            ret.style.flexDirection = "row";
-            ret.style.flexWrap = "nowrap";
-            return ret;
-        }
-        blendProps(v, propName, prop) {
-            if (propName === 'space') {
-                this.space = prop;
-            }
-            else if (propName === 'gravity') {
-                this.gravity = prop;
-                this.gravity = prop;
-                if ((this.gravity & LEFT) === LEFT) {
-                    this.view.style.justifyContent = "flex-start";
-                }
-                else if ((this.gravity & RIGHT) === RIGHT) {
-                    this.view.style.justifyContent = "flex-end";
-                }
-                else if ((this.gravity & CENTER_X) === CENTER_X) {
-                    this.view.style.justifyContent = "center";
-                }
-                if ((this.gravity & TOP) === TOP) {
-                    this.view.style.alignItems = "flex-start";
-                }
-                else if ((this.gravity & BOTTOM) === BOTTOM) {
-                    this.view.style.alignItems = "flex-end";
-                }
-                else if ((this.gravity & CENTER_Y) === CENTER_Y) {
-                    this.view.style.alignItems = "center";
-                }
-            }
-            else {
-                super.blendProps(v, propName, prop);
-            }
-        }
-        layout() {
-            super.layout();
-            this.childNodes.forEach((e, idx) => {
-                var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
-                e.view.style.flexShrink = "0";
-                if ((_a = e.layoutConfig) === null || _a === void 0 ? void 0 : _a.weight) {
-                    e.view.style.flex = `${(_b = e.layoutConfig) === null || _b === void 0 ? void 0 : _b.weight}`;
-                }
-                e.view.style.marginLeft = toPixelString(((_d = (_c = e.layoutConfig) === null || _c === void 0 ? void 0 : _c.margin) === null || _d === void 0 ? void 0 : _d.left) || 0);
-                e.view.style.marginRight = toPixelString((idx === this.childNodes.length - 1) ? 0 : this.space
-                    + (((_f = (_e = e.layoutConfig) === null || _e === void 0 ? void 0 : _e.margin) === null || _f === void 0 ? void 0 : _f.right) || 0));
-                e.view.style.marginTop = toPixelString(((_h = (_g = e.layoutConfig) === null || _g === void 0 ? void 0 : _g.margin) === null || _h === void 0 ? void 0 : _h.top) || 0);
-                e.view.style.marginBottom = toPixelString(((_k = (_j = e.layoutConfig) === null || _j === void 0 ? void 0 : _j.margin) === null || _k === void 0 ? void 0 : _k.bottom) || 0);
-                if ((e.layoutConfig.alignment & TOP) === TOP) {
-                    e.view.style.alignSelf = "flex-start";
-                }
-                else if ((e.layoutConfig.alignment & BOTTOM) === BOTTOM) {
-                    e.view.style.alignSelf = "flex-end";
-                }
-                else if ((e.layoutConfig.alignment & CENTER_Y) === CENTER_Y) {
-                    e.view.style.alignSelf = "center";
-                }
-            });
-        }
-    }
+	    // object gathering original scroll methods
+	    var original = {
+	      scroll: w.scroll || w.scrollTo,
+	      scrollBy: w.scrollBy,
+	      elementScroll: Element.prototype.scroll || scrollElement,
+	      scrollIntoView: Element.prototype.scrollIntoView
+	    };
 
-    class DoricTextNode extends DoricViewNode {
-        build() {
-            const div = document.createElement('div');
-            div.style.display = "flex";
-            this.textElement = document.createElement('span');
-            div.appendChild(this.textElement);
-            div.style.justifyContent = "center";
-            div.style.alignItems = "center";
-            return div;
-        }
-        blendProps(v, propName, prop) {
-            switch (propName) {
-                case 'text':
-                    this.textElement.innerText = prop;
-                    break;
-                case 'textSize':
-                    v.style.fontSize = toPixelString(prop);
-                    break;
-                case 'textColor':
-                    v.style.color = toRGBAString(prop);
-                    break;
-                case 'textAlignment':
-                    const gravity = prop;
-                    if ((gravity & LEFT) === LEFT) {
-                        v.style.justifyContent = "flex-start";
-                    }
-                    else if ((gravity & RIGHT) === RIGHT) {
-                        v.style.justifyContent = "flex-end";
-                    }
-                    else if ((gravity & CENTER_X) === CENTER_X) {
-                        v.style.justifyContent = "center";
-                    }
-                    if ((gravity & TOP) === TOP) {
-                        v.style.alignItems = "flex-start";
-                    }
-                    else if ((gravity & BOTTOM) === BOTTOM) {
-                        v.style.alignItems = "flex-end";
-                    }
-                    else if ((gravity & CENTER_Y) === CENTER_Y) {
-                        v.style.alignItems = "center";
-                    }
-                    break;
-                case "fontStyle":
-                    switch (prop) {
-                        case "bold":
-                            v.style.fontWeight = "bold";
-                            v.style.fontStyle = "normal";
-                            break;
-                        case "italic":
-                            v.style.fontWeight = "normal";
-                            v.style.fontStyle = "italic";
-                            break;
-                        case "bold_italic":
-                            v.style.fontWeight = "bold";
-                            v.style.fontStyle = "italic";
-                            break;
-                        default:
-                            v.style.fontWeight = "normal";
-                            v.style.fontStyle = "normal";
-                            break;
-                    }
-                    break;
-                default:
-                    super.blendProps(v, propName, prop);
-                    break;
-            }
-        }
-    }
+	    // define timing method
+	    var now =
+	      w.performance && w.performance.now
+	        ? w.performance.now.bind(w.performance)
+	        : Date.now;
 
-    var ScaleType;
-    (function (ScaleType) {
-        ScaleType[ScaleType["ScaleToFill"] = 0] = "ScaleToFill";
-        ScaleType[ScaleType["ScaleAspectFit"] = 1] = "ScaleAspectFit";
-        ScaleType[ScaleType["ScaleAspectFill"] = 2] = "ScaleAspectFill";
-    })(ScaleType || (ScaleType = {}));
-    class DoricImageNode extends DoricViewNode {
-        build() {
-            const ret = document.createElement('img');
-            ret.style.objectFit = "fill";
-            return ret;
-        }
-        blendProps(v, propName, prop) {
-            switch (propName) {
-                case 'imageUrl':
-                    v.setAttribute('src', prop);
-                    break;
-                case 'imageBase64':
-                    v.setAttribute('src', prop);
-                    break;
-                case 'loadCallback':
-                    v.onload = () => {
-                        this.callJSResponse(prop, {
-                            width: v.width,
-                            height: v.height
-                        });
-                    };
-                    break;
-                case 'scaleType':
-                    switch (prop) {
-                        case ScaleType.ScaleToFill:
-                            v.style.objectFit = "fill";
-                            break;
-                        case ScaleType.ScaleAspectFit:
-                            v.style.objectFit = "contain";
-                            break;
-                        case ScaleType.ScaleAspectFill:
-                            v.style.objectFit = "cover";
-                            break;
-                    }
-                    break;
-                case 'isBlur':
-                    if (prop) {
-                        v.style.filter = 'blur(8px)';
-                    }
-                    else {
-                        v.style.filter = '';
-                    }
-                    break;
-                default:
-                    super.blendProps(v, propName, prop);
-                    break;
-            }
-        }
-    }
+	    /**
+	     * indicates if a the current browser is made by Microsoft
+	     * @method isMicrosoftBrowser
+	     * @param {String} userAgent
+	     * @returns {Boolean}
+	     */
+	    function isMicrosoftBrowser(userAgent) {
+	      var userAgentPatterns = ['MSIE ', 'Trident/', 'Edge/'];
 
-    class DoricScrollerNode extends DoricSuperNode {
-        constructor() {
-            super(...arguments);
-            this.childViewId = "";
-        }
-        build() {
-            const ret = document.createElement('div');
-            ret.style.overflow = "scroll";
-            return ret;
-        }
-        blendProps(v, propName, prop) {
-            if (propName === 'content') {
-                this.childViewId = prop;
-            }
-            else {
-                super.blendProps(v, propName, prop);
-            }
-        }
-        blendSubNode(model) {
-            var _a;
-            (_a = this.childNode) === null || _a === void 0 ? void 0 : _a.blend(model.props);
-        }
-        getSubNodeById(viewId) {
-            return viewId === this.childViewId ? this.childNode : undefined;
-        }
-        onBlending() {
-            super.onBlending();
-            const model = this.getSubModel(this.childViewId);
-            if (model === undefined) {
-                return;
-            }
-            if (this.childNode) {
-                if (this.childNode.viewId === this.childViewId) ;
-                else {
-                    if (this.reusable && this.childNode.viewType === model.type) {
-                        this.childNode.viewId = model.id;
-                        this.childNode.blend(model.props);
-                    }
-                    else {
-                        this.view.removeChild(this.childNode.view);
-                        const childNode = DoricViewNode.create(this.context, model.type);
-                        if (childNode === undefined) {
-                            return;
-                        }
-                        childNode.viewId = model.id;
-                        childNode.init(this);
-                        childNode.blend(model.props);
-                        this.view.appendChild(childNode.view);
-                        this.childNode = childNode;
-                    }
-                }
-            }
-            else {
-                const childNode = DoricViewNode.create(this.context, model.type);
-                if (childNode === undefined) {
-                    return;
-                }
-                childNode.viewId = model.id;
-                childNode.init(this);
-                childNode.blend(model.props);
-                this.view.appendChild(childNode.view);
-                this.childNode = childNode;
-            }
-        }
-        onBlended() {
-            var _a;
-            super.onBlended();
-            (_a = this.childNode) === null || _a === void 0 ? void 0 : _a.onBlended();
-        }
-    }
+	      return new RegExp(userAgentPatterns.join('|')).test(userAgent);
+	    }
 
-    class ModalPlugin extends DoricPlugin {
-        toast(args) {
-            const toastElement = document.createElement('div');
-            toastElement.style.position = "absolute";
-            toastElement.style.textAlign = "center";
-            toastElement.style.width = "100%";
-            const textElement = document.createElement('span');
-            textElement.innerText = args.msg || "";
-            textElement.style.backgroundColor = "#777777";
-            textElement.style.color = "white";
-            textElement.style.paddingLeft = '20px';
-            textElement.style.paddingRight = '20px';
-            textElement.style.paddingTop = '10px';
-            textElement.style.paddingBottom = '10px';
-            toastElement.appendChild(textElement);
-            document.body.appendChild(toastElement);
-            const gravity = args.gravity || BOTTOM;
-            if ((gravity & TOP) == TOP) {
-                toastElement.style.top = toPixelString(30);
-            }
-            else if ((gravity & BOTTOM) == BOTTOM) {
-                toastElement.style.bottom = toPixelString(30);
-            }
-            else if ((gravity & CENTER_Y) == CENTER_Y) {
-                toastElement.style.top = toPixelString(document.body.offsetHeight / 2 - toastElement.offsetHeight / 2);
-            }
-            setTimeout(() => {
-                document.body.removeChild(toastElement);
-            }, 2000);
-            return Promise.resolve();
-        }
-        alert(args) {
-            window.alert(args.msg || "");
-            return Promise.resolve();
-        }
-        confirm(args) {
-            if (window.confirm(args.msg || "")) {
-                return Promise.resolve();
-            }
-            else {
-                return Promise.reject();
-            }
-        }
-        prompt(args) {
-            const result = window.prompt(args.msg || "", args.defaultText);
-            if (result) {
-                return Promise.resolve(result);
-            }
-            else {
-                return Promise.reject(result);
-            }
-        }
-    }
+	    /*
+	     * IE has rounding bug rounding down clientHeight and clientWidth and
+	     * rounding up scrollHeight and scrollWidth causing false positives
+	     * on hasScrollableSpace
+	     */
+	    var ROUNDING_TOLERANCE = isMicrosoftBrowser(w.navigator.userAgent) ? 1 : 0;
 
-    class StoragePlugin extends DoricPlugin {
-        setItem(args) {
-            localStorage.setItem(`${args.zone}_${args.key}`, args.value);
-            return Promise.resolve();
-        }
-        getItem(args) {
-            return Promise.resolve(localStorage.getItem(`${args.zone}_${args.key}`));
-        }
-        remove(args) {
-            localStorage.removeItem(`${args.zone}_${args.key}`);
-            return Promise.resolve();
-        }
-        clear(args) {
-            let removingKeys = [];
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (key && key.startsWith(`${args.zone}_`)) {
-                    removingKeys.push(key);
-                }
-            }
-            removingKeys.forEach(e => {
-                localStorage.removeItem(e);
-            });
-            return Promise.resolve();
-        }
-    }
+	    /**
+	     * changes scroll position inside an element
+	     * @method scrollElement
+	     * @param {Number} x
+	     * @param {Number} y
+	     * @returns {undefined}
+	     */
+	    function scrollElement(x, y) {
+	      this.scrollLeft = x;
+	      this.scrollTop = y;
+	    }
 
-    class NavigatorPlugin extends DoricPlugin {
-        constructor() {
-            super(...arguments);
-            this.navigation = document.getElementsByTagName('doric-navigation')[0];
-        }
-        push(args) {
-            var _a;
-            if (this.navigation) {
-                const div = new DoricElement;
-                div.src = args.source;
-                div.alias = ((_a = args.config) === null || _a === void 0 ? void 0 : _a.alias) || args.source;
-                this.navigation.push(div);
-                return Promise.resolve();
-            }
-            else {
-                return Promise.reject('Not implemented');
-            }
-        }
-        pop() {
-            if (this.navigation) {
-                this.navigation.pop();
-                return Promise.resolve();
-            }
-            else {
-                return Promise.reject('Not implemented');
-            }
-        }
-    }
+	    /**
+	     * returns result of applying ease math function to a number
+	     * @method ease
+	     * @param {Number} k
+	     * @returns {Number}
+	     */
+	    function ease(k) {
+	      return 0.5 * (1 - Math.cos(Math.PI * k));
+	    }
 
-    class PopoverPlugin extends DoricPlugin {
-        constructor(context) {
-            super(context);
-            this.fullScreen = document.createElement('div');
-            this.fullScreen.id = `PopOver__${context.contextId}`;
-            this.fullScreen.style.position = 'fixed';
-            this.fullScreen.style.top = '0px';
-            this.fullScreen.style.width = "100%";
-            this.fullScreen.style.height = "100%";
-        }
-        show(model) {
-            const viewNode = DoricViewNode.create(this.context, model.type);
-            if (viewNode === undefined) {
-                return Promise.reject(`Cannot create ViewNode for ${model.type}`);
-            }
-            viewNode.viewId = model.id;
-            viewNode.init();
-            viewNode.blend(model.props);
-            this.fullScreen.appendChild(viewNode.view);
-            let map = this.context.headNodes.get(PopoverPlugin.TYPE);
-            if (map) {
-                map.set(model.id, viewNode);
-            }
-            else {
-                map = new Map;
-                map.set(model.id, viewNode);
-                this.context.headNodes.set(PopoverPlugin.TYPE, map);
-            }
-            if (!document.body.contains(this.fullScreen)) {
-                document.body.appendChild(this.fullScreen);
-            }
-            return Promise.resolve();
-        }
-        dismiss(args) {
-            if (args) {
-                let map = this.context.headNodes.get(PopoverPlugin.TYPE);
-                if (map) {
-                    const viewNode = map.get(args.id);
-                    if (viewNode) {
-                        this.fullScreen.removeChild(viewNode.view);
-                    }
-                    if (map.size === 0) {
-                        document.body.removeChild(this.fullScreen);
-                    }
-                }
-            }
-            else {
-                this.dismissAll();
-            }
-            return Promise.resolve();
-        }
-        dismissAll() {
-            let map = this.context.headNodes.get(PopoverPlugin.TYPE);
-            if (map) {
-                for (let node of map.values()) {
-                    map.delete(node.viewId);
-                    this.fullScreen.removeChild(node.view);
-                }
-            }
-            if (document.body.contains(this.fullScreen)) {
-                document.body.removeChild(this.fullScreen);
-            }
-        }
-        onTearDown() {
-            super.onTearDown();
-            this.dismissAll();
-        }
-    }
-    PopoverPlugin.TYPE = "popover";
+	    /**
+	     * indicates if a smooth behavior should be applied
+	     * @method shouldBailOut
+	     * @param {Number|Object} firstArg
+	     * @returns {Boolean}
+	     */
+	    function shouldBailOut(firstArg) {
+	      if (
+	        firstArg === null ||
+	        typeof firstArg !== 'object' ||
+	        firstArg.behavior === undefined ||
+	        firstArg.behavior === 'auto' ||
+	        firstArg.behavior === 'instant'
+	      ) {
+	        // first argument is not an object/null
+	        // or behavior is auto, instant or undefined
+	        return true;
+	      }
 
-    class DoricListItemNode extends DoricStackNode {
-    }
+	      if (typeof firstArg === 'object' && firstArg.behavior === 'smooth') {
+	        // first argument is an object and behavior is smooth
+	        return false;
+	      }
 
-    class DoricListNode extends DoricSuperNode {
-        constructor() {
-            super(...arguments);
-            this.itemCount = 0;
-            this.batchCount = 15;
-            this.loadMore = false;
-            this.childNodes = [];
-        }
-        blendProps(v, propName, prop) {
-            switch (propName) {
-                case "itemCount":
-                    this.itemCount = prop;
-                    break;
-                case "renderItem":
-                    this.reset();
-                    this.renderItemFuncId = prop;
-                    break;
-                case "onLoadMore":
-                    this.onLoadMoreFuncId = prop;
-                    break;
-                case "loadMoreView":
-                    this.loadMoreViewId = prop;
-                    break;
-                case "batchCount":
-                    this.batchCount = prop;
-                    break;
-                case "loadMore":
-                    this.loadMore = prop;
-                    break;
-                default:
-                    super.blendProps(v, propName, prop);
-                    break;
-            }
-        }
-        reset() {
-            while (this.view.lastElementChild) {
-                this.view.removeChild(this.view.lastElementChild);
-            }
-        }
-        onBlending() {
-            super.onBlending();
-            if (this.childNodes.length !== this.itemCount) {
-                const ret = this.pureCallJSResponse("renderBunchedItems", this.childNodes.length, this.itemCount);
-                this.childNodes = this.childNodes.concat(ret.map(e => {
-                    const viewNode = DoricViewNode.create(this.context, e.type);
-                    viewNode.viewId = e.id;
-                    viewNode.init(this);
-                    viewNode.blend(e.props);
-                    this.view.appendChild(viewNode.view);
-                    return viewNode;
-                }));
-            }
-            if (this.loadMoreViewNode && this.view.contains(this.loadMoreViewNode.view)) {
-                this.view.removeChild(this.loadMoreViewNode.view);
-            }
-            if (this.loadMore) {
-                if (!this.loadMoreViewNode) {
-                    const loadMoreViewModel = this.getSubModel(this.loadMoreViewId || "");
-                    if (loadMoreViewModel) {
-                        this.loadMoreViewNode = DoricViewNode.create(this.context, loadMoreViewModel.type);
-                        this.loadMoreViewNode.viewId = loadMoreViewModel.id;
-                        this.loadMoreViewNode.init(this);
-                        this.loadMoreViewNode.blend(loadMoreViewModel.props);
-                    }
-                }
-                if (this.loadMoreViewNode) {
-                    this.view.appendChild(this.loadMoreViewNode.view);
-                }
-                if (this.view.scrollTop + this.view.offsetHeight === this.view.scrollHeight) {
-                    this.onScrollToEnd();
-                }
-            }
-        }
-        blendSubNode(model) {
-            var _a;
-            (_a = this.getSubNodeById(model.id)) === null || _a === void 0 ? void 0 : _a.blend(model.props);
-        }
-        getSubNodeById(viewId) {
-            if (viewId === this.loadMoreViewId) {
-                return this.loadMoreViewNode;
-            }
-            return this.childNodes.filter(e => e.viewId === viewId)[0];
-        }
-        onScrollToEnd() {
-            if (this.loadMore && this.onLoadMoreFuncId) {
-                this.callJSResponse(this.onLoadMoreFuncId);
-            }
-        }
-        build() {
-            const ret = document.createElement('div');
-            ret.style.overflow = "scroll";
-            ret.addEventListener("scroll", () => {
-                if (this.loadMore) {
-                    if (ret.scrollTop + ret.offsetHeight === ret.scrollHeight) {
-                        this.onScrollToEnd();
-                    }
-                }
-            });
-            return ret;
-        }
-        onBlended() {
-            super.onBlended();
-            this.childNodes.forEach(e => e.onBlended());
-        }
-    }
+	      // throw error when behavior is not supported
+	      throw new TypeError(
+	        'behavior member of ScrollOptions ' +
+	          firstArg.behavior +
+	          ' is not a valid value for enumeration ScrollBehavior.'
+	      );
+	    }
 
-    class DoricDraggableNode extends DoricStackNode {
-        constructor() {
-            super(...arguments);
-            this.onDrag = "";
-            this.dragging = false;
-            this.lastX = 0;
-            this.lastY = 0;
-        }
-        build() {
-            const ret = document.createElement('div');
-            ret.ontouchstart = (event) => {
-                this.dragging = true;
-                this.lastX = event.targetTouches[0].clientX;
-                this.lastY = event.targetTouches[0].clientY;
-            };
-            ret.ontouchend = (event) => {
-                this.dragging = false;
-            };
-            ret.ontouchcancel = (event) => {
-                this.dragging = false;
-            };
-            ret.ontouchmove = (event) => {
-                if (this.dragging) {
-                    this.offsetX += (event.targetTouches[0].clientX - this.lastX);
-                    this.offsetY += (event.targetTouches[0].clientY - this.lastY);
-                    this.callJSResponse(this.onDrag, this.offsetX, this.offsetY);
-                    this.lastX = event.targetTouches[0].clientX;
-                    this.lastY = event.targetTouches[0].clientY;
-                }
-            };
-            ret.onmousedown = (event) => {
-                this.dragging = true;
-                this.lastX = event.x;
-                this.lastY = event.y;
-            };
-            ret.onmousemove = (event) => {
-                if (this.dragging) {
-                    this.offsetX += (event.x - this.lastX);
-                    this.offsetY += (event.y - this.lastY);
-                    this.callJSResponse(this.onDrag, this.offsetX, this.offsetY);
-                    this.lastX = event.x;
-                    this.lastY = event.y;
-                }
-            };
-            ret.onmouseup = (event) => {
-                this.dragging = false;
-            };
-            ret.onmouseout = (event) => {
-                this.dragging = false;
-            };
-            ret.style.position = "relative";
-            return ret;
-        }
-        blendProps(v, propName, prop) {
-            switch (propName) {
-                case 'onDrag':
-                    this.onDrag = prop;
-                    break;
-                default:
-                    super.blendProps(v, propName, prop);
-                    break;
-            }
-        }
-    }
+	    /**
+	     * indicates if an element has scrollable space in the provided axis
+	     * @method hasScrollableSpace
+	     * @param {Node} el
+	     * @param {String} axis
+	     * @returns {Boolean}
+	     */
+	    function hasScrollableSpace(el, axis) {
+	      if (axis === 'Y') {
+	        return el.clientHeight + ROUNDING_TOLERANCE < el.scrollHeight;
+	      }
 
-    class DoricRefreshableNode extends DoricSuperNode {
-        constructor() {
-            super(...arguments);
-            this.headerViewId = "";
-            this.contentViewId = "";
-            this.refreshable = true;
-        }
-        build() {
-            const ret = document.createElement('div');
-            ret.style.overflow = "hidden";
-            const header = document.createElement('div');
-            const content = document.createElement('div');
-            header.style.width = "100%";
-            header.style.height = "100%";
-            header.style.display = "flex";
-            header.style.alignItems = "flex-end";
-            header.style.justifyContent = "center";
-            content.style.width = "100%";
-            content.style.height = "100%";
-            ret.appendChild(header);
-            ret.appendChild(content);
-            let touchStart = 0;
-            ret.ontouchstart = (ev) => {
-                if (!this.refreshable) {
-                    return;
-                }
-                touchStart = ev.touches[0].pageY;
-            };
-            ret.ontouchmove = (ev) => {
-                var _a;
-                if (!this.refreshable) {
-                    return;
-                }
-                const offset = (ev.touches[0].pageY - touchStart) * 0.68;
-                ret.scrollTop = Math.max(0, header.offsetHeight - offset);
-                (_a = this.headerNode) === null || _a === void 0 ? void 0 : _a.callJSResponse("setPullingDistance", offset);
-            };
-            const touchend = () => {
-                var _a, _b;
-                if (!this.refreshable) {
-                    return;
-                }
-                if (header.offsetHeight - ret.scrollTop >= (((_a = this.headerNode) === null || _a === void 0 ? void 0 : _a.getWidth()) || 0)) {
-                    this.setRefreshing(true);
-                    (_b = this.onRefreshCallback) === null || _b === void 0 ? void 0 : _b.call(this);
-                }
-                else {
-                    // To idel
-                    ret.scrollTo({
-                        top: header.offsetHeight,
-                        behavior: "smooth"
-                    });
-                }
-            };
-            ret.ontouchcancel = () => {
-                touchend();
-            };
-            ret.ontouchend = () => {
-                touchend();
-            };
-            window.requestAnimationFrame(() => {
-                ret.scrollTop = header.offsetHeight;
-            });
-            this.headerContainer = header;
-            this.contentContainer = content;
-            return ret;
-        }
-        blendProps(v, propName, prop) {
-            if (propName === 'content') {
-                this.contentViewId = prop;
-            }
-            else if (propName === 'header') {
-                this.headerViewId = prop;
-            }
-            else if (propName === 'onRefresh') {
-                this.onRefreshCallback = () => {
-                    this.callJSResponse(prop);
-                };
-            }
-            else {
-                super.blendProps(v, propName, prop);
-            }
-        }
-        blendSubNode(model) {
-            var _a;
-            (_a = this.getSubNodeById(model.id)) === null || _a === void 0 ? void 0 : _a.blend(model.props);
-        }
-        getSubNodeById(viewId) {
-            if (viewId === this.headerViewId) {
-                return this.headerNode;
-            }
-            else if (viewId === this.contentViewId) {
-                return this.contentNode;
-            }
-            return undefined;
-        }
-        onBlending() {
-            var _a, _b, _c, _d, _e, _f;
-            super.onBlending();
-            {
-                const headerModel = this.getSubModel(this.headerViewId);
-                if (headerModel) {
-                    if (this.headerNode) {
-                        if (this.headerNode.viewId !== this.headerViewId) {
-                            if (this.reusable && this.headerNode.viewType === headerModel.type) {
-                                this.headerNode.viewId = headerModel.id;
-                                this.headerNode.blend(headerModel.props);
-                            }
-                            else {
-                                (_a = this.headerContainer) === null || _a === void 0 ? void 0 : _a.removeChild(this.headerNode.view);
-                                const headerNode = DoricViewNode.create(this.context, headerModel.type);
-                                if (headerNode) {
-                                    headerNode.viewId = headerModel.id;
-                                    headerNode.init(this);
-                                    headerNode.blend(headerModel.props);
-                                    (_b = this.headerContainer) === null || _b === void 0 ? void 0 : _b.appendChild(headerNode.view);
-                                    this.headerNode = headerNode;
-                                }
-                            }
-                        }
-                    }
-                    else {
-                        const headerNode = DoricViewNode.create(this.context, headerModel.type);
-                        if (headerNode) {
-                            headerNode.viewId = headerModel.id;
-                            headerNode.init(this);
-                            headerNode.blend(headerModel.props);
-                            (_c = this.headerContainer) === null || _c === void 0 ? void 0 : _c.appendChild(headerNode.view);
-                            this.headerNode = headerNode;
-                        }
-                    }
-                }
-            }
-            {
-                const contentModel = this.getSubModel(this.contentViewId);
-                if (contentModel) {
-                    if (this.contentNode) {
-                        if (this.contentNode.viewId !== this.contentViewId) {
-                            if (this.reusable && this.contentNode.viewType === contentModel.type) {
-                                this.contentNode.viewId = contentModel.id;
-                                this.contentNode.blend(contentModel.props);
-                            }
-                            else {
-                                (_d = this.contentContainer) === null || _d === void 0 ? void 0 : _d.removeChild(this.contentNode.view);
-                                const contentNode = DoricViewNode.create(this.context, contentModel.type);
-                                if (contentNode) {
-                                    contentNode.viewId = contentModel.id;
-                                    contentNode.init(this);
-                                    contentNode.blend(contentModel.props);
-                                    (_e = this.contentContainer) === null || _e === void 0 ? void 0 : _e.appendChild(contentNode.view);
-                                    this.contentNode = contentNode;
-                                }
-                            }
-                        }
-                    }
-                    else {
-                        const contentNode = DoricViewNode.create(this.context, contentModel.type);
-                        if (contentNode) {
-                            contentNode.viewId = contentModel.id;
-                            contentNode.init(this);
-                            contentNode.blend(contentModel.props);
-                            (_f = this.contentContainer) === null || _f === void 0 ? void 0 : _f.appendChild(contentNode.view);
-                            this.contentNode = contentNode;
-                        }
-                    }
-                }
-            }
-        }
-        onBlended() {
-            super.onBlended();
-        }
-        setRefreshing(v) {
-            var _a;
-            if (!this.headerContainer || !this.headerNode) {
-                return;
-            }
-            if (v) {
-                this.view.scrollTo({
-                    top: this.headerContainer.offsetHeight - this.headerNode.getHeight(),
-                    behavior: "smooth"
-                });
-                this.headerNode.callJSResponse("startAnimation");
-            }
-            else {
-                this.view.scrollTo({
-                    top: (_a = this.headerContainer) === null || _a === void 0 ? void 0 : _a.offsetHeight,
-                    behavior: "smooth"
-                });
-                this.headerNode.callJSResponse("stopAnimation");
-            }
-        }
-        setRefreshable(v) {
-            this.refreshable = v;
-            if (!v) {
-                this.setRefreshing(false);
-            }
-        }
-    }
+	      if (axis === 'X') {
+	        return el.clientWidth + ROUNDING_TOLERANCE < el.scrollWidth;
+	      }
+	    }
 
-    class AnimatePlugin extends DoricPlugin {
-        submit() {
-            return Promise.resolve();
-        }
-        animateRender(args) {
-            var _a;
-            this.context.animationSet = [];
-            if (((_a = this.context.rootNode.viewId) === null || _a === void 0 ? void 0 : _a.length) > 0) {
-                const viewNode = this.context.targetViewNode(args.id);
-                viewNode === null || viewNode === void 0 ? void 0 : viewNode.blend(args.props);
-                viewNode === null || viewNode === void 0 ? void 0 : viewNode.onBlended();
-            }
-            else {
-                this.context.rootNode.viewId = args.id;
-                this.context.rootNode.blend(args.props);
-                this.context.rootNode.onBlended();
-            }
-            return new Promise(resolve => {
-                Promise.resolve().then(() => {
-                    var _a;
-                    Promise.all(((_a = this.context.animationSet) === null || _a === void 0 ? void 0 : _a.map(e => {
-                        return new Promise(resolve => {
-                            const animation = e.viewNode.view.animate([e.keyFrame], {
-                                duration: args.duration,
-                                fill: "forwards"
-                            });
-                            animation.onfinish = () => {
-                                resolve(true);
-                            };
-                        });
-                    })) || [])
-                        .then(() => {
-                        resolve(0);
-                    })
-                        .finally(() => {
-                        this.context.animationSet = undefined;
-                    });
-                });
-            });
-        }
-    }
+	    /**
+	     * indicates if an element has a scrollable overflow property in the axis
+	     * @method canOverflow
+	     * @param {Node} el
+	     * @param {String} axis
+	     * @returns {Boolean}
+	     */
+	    function canOverflow(el, axis) {
+	      var overflowValue = w.getComputedStyle(el, null)['overflow' + axis];
 
-    class DoricSwitchNode extends DoricViewNode {
-        constructor() {
-            super(...arguments);
-            this.offTintColor = "#e6e6e6";
-            this.onTintColor = "#52d769";
-        }
-        build() {
-            const ret = document.createElement('div');
-            ret.style.position = "relative";
-            ret.style.width = "50px";
-            ret.style.height = "30px";
-            const input = document.createElement('input');
-            input.type = "checkbox";
-            input.style.display = "none";
-            const box = document.createElement('div');
-            box.style.width = "100%";
-            box.style.height = "100%";
-            box.style.backgroundColor = "#ccc";
-            box.style.borderRadius = "15px";
-            const span = document.createElement('span');
-            span.style.display = "inline-block";
-            span.style.height = "30px";
-            span.style.width = "30px";
-            span.style.borderRadius = "15px";
-            span.style.background = "#fff";
-            span.style.boxShadow = "0px 3px 3px #eee";
-            box.appendChild(span);
-            ret.appendChild(input);
-            ret.appendChild(box);
-            ret.onclick = () => {
-                if (input.checked === false) {
-                    span.animate([{ transform: "translateX(30px)" }], {
-                        duration: 200,
-                        fill: "forwards"
-                    });
-                    box.animate([{ backgroundColor: this.onTintColor }], {
-                        duration: 200,
-                        fill: "forwards"
-                    });
-                    input.checked = true;
-                }
-                else {
-                    span.animate([{ transform: "translateX(0px)" }], {
-                        duration: 200,
-                        fill: "forwards"
-                    });
-                    box.animate([{ backgroundColor: this.offTintColor }], {
-                        duration: 200,
-                        fill: "forwards"
-                    });
-                    input.checked = false;
-                }
-                if (this.onSwitchFuncId) {
-                    this.callJSResponse(this.onSwitchFuncId, input.checked);
-                }
-            };
-            this.input = input;
-            this.span = span;
-            this.box = box;
-            return ret;
-        }
-        setChecked(v) {
-            if (!this.input || !this.span || !this.box) {
-                return;
-            }
-            if (v) {
-                this.span.style.transform = "translateX(30px)";
-                this.box.style.backgroundColor = this.onTintColor;
-                this.input.checked = v;
-            }
-            else {
-                this.span.style.transform = "translateX(0px)";
-                this.box.style.backgroundColor = this.offTintColor;
-                this.input.checked = v;
-            }
-        }
-        blendProps(v, propName, prop) {
-            switch (propName) {
-                case "state":
-                    this.setChecked(prop);
-                    break;
-                case "onSwitch":
-                    this.onSwitchFuncId = prop;
-                    break;
-                case "offTintColor":
-                    this.offTintColor = toRGBAString(prop);
-                    this.setChecked(this.getState());
-                    break;
-                case "onTintColor":
-                    this.onTintColor = toRGBAString(prop);
-                    this.setChecked(this.getState());
-                    break;
-                case "thumbTintColor":
-                    if (this.span) {
-                        this.span.style.backgroundColor = toRGBAString(prop);
-                    }
-                    break;
-                default:
-                    super.blendProps(v, propName, prop);
-                    break;
-            }
-        }
-        getState() {
-            var _a;
-            return ((_a = this.input) === null || _a === void 0 ? void 0 : _a.checked) || false;
-        }
-    }
+	      return overflowValue === 'auto' || overflowValue === 'scroll';
+	    }
 
-    const bundles = new Map;
-    const plugins = new Map;
-    const nodes = new Map;
-    function acquireJSBundle(name) {
-        return bundles.get(name);
-    }
-    function registerJSBundle(name, bundle) {
-        bundles.set(name, bundle);
-    }
-    function registerPlugin(name, plugin) {
-        plugins.set(name, plugin);
-    }
-    function acquirePlugin(name) {
-        return plugins.get(name);
-    }
-    function registerViewNode(name, node) {
-        nodes.set(name, node);
-    }
-    function acquireViewNode(name) {
-        return nodes.get(name);
-    }
-    registerPlugin('shader', ShaderPlugin);
-    registerPlugin('modal', ModalPlugin);
-    registerPlugin('storage', StoragePlugin);
-    registerPlugin('navigator', NavigatorPlugin);
-    registerPlugin('popover', PopoverPlugin);
-    registerPlugin('animate', AnimatePlugin);
-    registerViewNode('Stack', DoricStackNode);
-    registerViewNode('VLayout', DoricVLayoutNode);
-    registerViewNode('HLayout', DoricHLayoutNode);
-    registerViewNode('Text', DoricTextNode);
-    registerViewNode('Image', DoricImageNode);
-    registerViewNode('Scroller', DoricScrollerNode);
-    registerViewNode('ListItem', DoricListItemNode);
-    registerViewNode('List', DoricListNode);
-    registerViewNode('Draggable', DoricDraggableNode);
-    registerViewNode('Refreshable', DoricRefreshableNode);
-    registerViewNode('Switch', DoricSwitchNode);
+	    /**
+	     * indicates if an element can be scrolled in either axis
+	     * @method isScrollable
+	     * @param {Node} el
+	     * @param {String} axis
+	     * @returns {Boolean}
+	     */
+	    function isScrollable(el) {
+	      var isScrollableY = hasScrollableSpace(el, 'Y') && canOverflow(el, 'Y');
+	      var isScrollableX = hasScrollableSpace(el, 'X') && canOverflow(el, 'X');
 
-    function getScriptId(contextId) {
-        return `__doric_script_${contextId}`;
-    }
-    const originSetTimeout = window.setTimeout;
-    const originClearTimeout = window.clearTimeout;
-    const originSetInterval = window.setInterval;
-    const originClearInterval = window.clearInterval;
-    const timers = new Map;
-    function injectGlobalObject(name, value) {
-        Reflect.set(window, name, value, window);
-    }
-    function loadJS(contextId, script) {
-        const scriptElement = document.createElement('script');
-        scriptElement.text = script;
-        scriptElement.id = getScriptId(contextId);
-        document.body.appendChild(scriptElement);
-    }
-    function packageModuleScript(name, content) {
-        return `Reflect.apply(doric.jsRegisterModule,this,[${name},Reflect.apply(function(__module){(function(module,exports,require,setTimeout,setInterval,clearTimeout,clearInterval){
+	      return isScrollableY || isScrollableX;
+	    }
+
+	    /**
+	     * finds scrollable parent of an element
+	     * @method findScrollableParent
+	     * @param {Node} el
+	     * @returns {Node} el
+	     */
+	    function findScrollableParent(el) {
+	      while (el !== d.body && isScrollable(el) === false) {
+	        el = el.parentNode || el.host;
+	      }
+
+	      return el;
+	    }
+
+	    /**
+	     * self invoked function that, given a context, steps through scrolling
+	     * @method step
+	     * @param {Object} context
+	     * @returns {undefined}
+	     */
+	    function step(context) {
+	      var time = now();
+	      var value;
+	      var currentX;
+	      var currentY;
+	      var elapsed = (time - context.startTime) / SCROLL_TIME;
+
+	      // avoid elapsed times higher than one
+	      elapsed = elapsed > 1 ? 1 : elapsed;
+
+	      // apply easing to elapsed time
+	      value = ease(elapsed);
+
+	      currentX = context.startX + (context.x - context.startX) * value;
+	      currentY = context.startY + (context.y - context.startY) * value;
+
+	      context.method.call(context.scrollable, currentX, currentY);
+
+	      // scroll more if we have not reached our destination
+	      if (currentX !== context.x || currentY !== context.y) {
+	        w.requestAnimationFrame(step.bind(w, context));
+	      }
+	    }
+
+	    /**
+	     * scrolls window or element with a smooth behavior
+	     * @method smoothScroll
+	     * @param {Object|Node} el
+	     * @param {Number} x
+	     * @param {Number} y
+	     * @returns {undefined}
+	     */
+	    function smoothScroll(el, x, y) {
+	      var scrollable;
+	      var startX;
+	      var startY;
+	      var method;
+	      var startTime = now();
+
+	      // define scroll context
+	      if (el === d.body) {
+	        scrollable = w;
+	        startX = w.scrollX || w.pageXOffset;
+	        startY = w.scrollY || w.pageYOffset;
+	        method = original.scroll;
+	      } else {
+	        scrollable = el;
+	        startX = el.scrollLeft;
+	        startY = el.scrollTop;
+	        method = scrollElement;
+	      }
+
+	      // scroll looping over a frame
+	      step({
+	        scrollable: scrollable,
+	        method: method,
+	        startTime: startTime,
+	        startX: startX,
+	        startY: startY,
+	        x: x,
+	        y: y
+	      });
+	    }
+
+	    // ORIGINAL METHODS OVERRIDES
+	    // w.scroll and w.scrollTo
+	    w.scroll = w.scrollTo = function() {
+	      // avoid action when no arguments are passed
+	      if (arguments[0] === undefined) {
+	        return;
+	      }
+
+	      // avoid smooth behavior if not required
+	      if (shouldBailOut(arguments[0]) === true) {
+	        original.scroll.call(
+	          w,
+	          arguments[0].left !== undefined
+	            ? arguments[0].left
+	            : typeof arguments[0] !== 'object'
+	              ? arguments[0]
+	              : w.scrollX || w.pageXOffset,
+	          // use top prop, second argument if present or fallback to scrollY
+	          arguments[0].top !== undefined
+	            ? arguments[0].top
+	            : arguments[1] !== undefined
+	              ? arguments[1]
+	              : w.scrollY || w.pageYOffset
+	        );
+
+	        return;
+	      }
+
+	      // LET THE SMOOTHNESS BEGIN!
+	      smoothScroll.call(
+	        w,
+	        d.body,
+	        arguments[0].left !== undefined
+	          ? ~~arguments[0].left
+	          : w.scrollX || w.pageXOffset,
+	        arguments[0].top !== undefined
+	          ? ~~arguments[0].top
+	          : w.scrollY || w.pageYOffset
+	      );
+	    };
+
+	    // w.scrollBy
+	    w.scrollBy = function() {
+	      // avoid action when no arguments are passed
+	      if (arguments[0] === undefined) {
+	        return;
+	      }
+
+	      // avoid smooth behavior if not required
+	      if (shouldBailOut(arguments[0])) {
+	        original.scrollBy.call(
+	          w,
+	          arguments[0].left !== undefined
+	            ? arguments[0].left
+	            : typeof arguments[0] !== 'object' ? arguments[0] : 0,
+	          arguments[0].top !== undefined
+	            ? arguments[0].top
+	            : arguments[1] !== undefined ? arguments[1] : 0
+	        );
+
+	        return;
+	      }
+
+	      // LET THE SMOOTHNESS BEGIN!
+	      smoothScroll.call(
+	        w,
+	        d.body,
+	        ~~arguments[0].left + (w.scrollX || w.pageXOffset),
+	        ~~arguments[0].top + (w.scrollY || w.pageYOffset)
+	      );
+	    };
+
+	    // Element.prototype.scroll and Element.prototype.scrollTo
+	    Element.prototype.scroll = Element.prototype.scrollTo = function() {
+	      // avoid action when no arguments are passed
+	      if (arguments[0] === undefined) {
+	        return;
+	      }
+
+	      // avoid smooth behavior if not required
+	      if (shouldBailOut(arguments[0]) === true) {
+	        // if one number is passed, throw error to match Firefox implementation
+	        if (typeof arguments[0] === 'number' && arguments[1] === undefined) {
+	          throw new SyntaxError('Value could not be converted');
+	        }
+
+	        original.elementScroll.call(
+	          this,
+	          // use left prop, first number argument or fallback to scrollLeft
+	          arguments[0].left !== undefined
+	            ? ~~arguments[0].left
+	            : typeof arguments[0] !== 'object' ? ~~arguments[0] : this.scrollLeft,
+	          // use top prop, second argument or fallback to scrollTop
+	          arguments[0].top !== undefined
+	            ? ~~arguments[0].top
+	            : arguments[1] !== undefined ? ~~arguments[1] : this.scrollTop
+	        );
+
+	        return;
+	      }
+
+	      var left = arguments[0].left;
+	      var top = arguments[0].top;
+
+	      // LET THE SMOOTHNESS BEGIN!
+	      smoothScroll.call(
+	        this,
+	        this,
+	        typeof left === 'undefined' ? this.scrollLeft : ~~left,
+	        typeof top === 'undefined' ? this.scrollTop : ~~top
+	      );
+	    };
+
+	    // Element.prototype.scrollBy
+	    Element.prototype.scrollBy = function() {
+	      // avoid action when no arguments are passed
+	      if (arguments[0] === undefined) {
+	        return;
+	      }
+
+	      // avoid smooth behavior if not required
+	      if (shouldBailOut(arguments[0]) === true) {
+	        original.elementScroll.call(
+	          this,
+	          arguments[0].left !== undefined
+	            ? ~~arguments[0].left + this.scrollLeft
+	            : ~~arguments[0] + this.scrollLeft,
+	          arguments[0].top !== undefined
+	            ? ~~arguments[0].top + this.scrollTop
+	            : ~~arguments[1] + this.scrollTop
+	        );
+
+	        return;
+	      }
+
+	      this.scroll({
+	        left: ~~arguments[0].left + this.scrollLeft,
+	        top: ~~arguments[0].top + this.scrollTop,
+	        behavior: arguments[0].behavior
+	      });
+	    };
+
+	    // Element.prototype.scrollIntoView
+	    Element.prototype.scrollIntoView = function() {
+	      // avoid smooth behavior if not required
+	      if (shouldBailOut(arguments[0]) === true) {
+	        original.scrollIntoView.call(
+	          this,
+	          arguments[0] === undefined ? true : arguments[0]
+	        );
+
+	        return;
+	      }
+
+	      // LET THE SMOOTHNESS BEGIN!
+	      var scrollableParent = findScrollableParent(this);
+	      var parentRects = scrollableParent.getBoundingClientRect();
+	      var clientRects = this.getBoundingClientRect();
+
+	      if (scrollableParent !== d.body) {
+	        // reveal element inside parent
+	        smoothScroll.call(
+	          this,
+	          scrollableParent,
+	          scrollableParent.scrollLeft + clientRects.left - parentRects.left,
+	          scrollableParent.scrollTop + clientRects.top - parentRects.top
+	        );
+
+	        // reveal parent in viewport unless is fixed
+	        if (w.getComputedStyle(scrollableParent).position !== 'fixed') {
+	          w.scrollBy({
+	            left: parentRects.left,
+	            top: parentRects.top,
+	            behavior: 'smooth'
+	          });
+	        }
+	      } else {
+	        // reveal element in viewport
+	        w.scrollBy({
+	          left: clientRects.left,
+	          top: clientRects.top,
+	          behavior: 'smooth'
+	        });
+	      }
+	    };
+	  }
+
+	  {
+	    // commonjs
+	    module.exports = { polyfill: polyfill };
+	  }
+
+	}());
+	});
+
+	var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+	    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+	    return new (P || (P = Promise))(function (resolve, reject) {
+	        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+	        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+	        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+	        step((generator = generator.apply(thisArg, _arguments || [])).next());
+	    });
+	};
+	const loaders = [
+	    {
+	        filter: () => true,
+	        request: (source) => __awaiter(void 0, void 0, void 0, function* () {
+	            const result = yield axios__default['default'].get(source);
+	            return result.data;
+	        })
+	    }
+	];
+	function registerDoricJSLoader(loader) {
+	    loaders.push(loader);
+	}
+	function loadDoricJSBundle(source) {
+	    return __awaiter(this, void 0, void 0, function* () {
+	        const matched = loaders.filter(e => e.filter(source));
+	        if (matched.length > 0) {
+	            return matched[matched.length - 1].request(source);
+	        }
+	        throw new Error(`Cannot find matched loader for '${source}'`);
+	    });
+	}
+
+	class DoricPlugin {
+	    constructor(context) {
+	        this.context = context;
+	    }
+	    onTearDown() {
+	    }
+	}
+
+	(function (LayoutSpec) {
+	    LayoutSpec[LayoutSpec["EXACTLY"] = 0] = "EXACTLY";
+	    LayoutSpec[LayoutSpec["WRAP_CONTENT"] = 1] = "WRAP_CONTENT";
+	    LayoutSpec[LayoutSpec["AT_MOST"] = 2] = "AT_MOST";
+	})(exports.LayoutSpec || (exports.LayoutSpec = {}));
+	const SPECIFIED = 1;
+	const START = 1 << 1;
+	const END = 1 << 2;
+	const SHIFT_X = 0;
+	const SHIFT_Y = 4;
+	const LEFT = (START | SPECIFIED) << SHIFT_X;
+	const RIGHT = (END | SPECIFIED) << SHIFT_X;
+	const TOP = (START | SPECIFIED) << SHIFT_Y;
+	const BOTTOM = (END | SPECIFIED) << SHIFT_Y;
+	const CENTER_X = SPECIFIED << SHIFT_X;
+	const CENTER_Y = SPECIFIED << SHIFT_Y;
+	const CENTER = CENTER_X | CENTER_Y;
+	function toPixelString(v) {
+	    return `${v}px`;
+	}
+	function pixelString2Number(v) {
+	    return parseFloat(v.substring(0, v.indexOf("px")));
+	}
+	function toRGBAString(color) {
+	    let strs = [];
+	    for (let i = 0; i < 32; i += 8) {
+	        strs.push(((color >> i) & 0xff));
+	    }
+	    strs = strs.reverse();
+	    /// RGBAd
+	    return `rgba(${strs[1]},${strs[2]},${strs[3]},${strs[0] / 255})`;
+	}
+	class DoricViewNode {
+	    constructor(context) {
+	        this.viewId = "";
+	        this.viewType = "View";
+	        this.layoutConfig = {
+	            widthSpec: exports.LayoutSpec.EXACTLY,
+	            heightSpec: exports.LayoutSpec.EXACTLY,
+	            alignment: 0,
+	            weight: 0,
+	            margin: {
+	                left: 0,
+	                right: 0,
+	                top: 0,
+	                bottom: 0
+	            }
+	        };
+	        this.padding = {
+	            left: 0,
+	            right: 0,
+	            top: 0,
+	            bottom: 0,
+	        };
+	        this.frameWidth = 0;
+	        this.frameHeight = 0;
+	        this.offsetX = 0;
+	        this.offsetY = 0;
+	        this._originDisplay = "";
+	        this.transform = {};
+	        this.context = context;
+	    }
+	    init(superNode) {
+	        if (superNode) {
+	            this.superNode = superNode;
+	            if (this instanceof DoricSuperNode) {
+	                this.reusable = superNode.reusable;
+	            }
+	        }
+	        this.view = this.build();
+	        this._originDisplay = this.view.style.display;
+	    }
+	    get paddingLeft() {
+	        return this.padding.left || 0;
+	    }
+	    get paddingRight() {
+	        return this.padding.right || 0;
+	    }
+	    get paddingTop() {
+	        return this.padding.top || 0;
+	    }
+	    get paddingBottom() {
+	        return this.padding.bottom || 0;
+	    }
+	    get borderWidth() {
+	        var _a;
+	        return ((_a = this.border) === null || _a === void 0 ? void 0 : _a.width) || 0;
+	    }
+	    blend(props) {
+	        this.view.id = `${this.viewId}`;
+	        for (let key in props) {
+	            this.blendProps(this.view, key, props[key]);
+	        }
+	        this.onBlending();
+	        this.layout();
+	    }
+	    onBlending() {
+	        this.updateTransform();
+	    }
+	    onBlended() {
+	    }
+	    configBorder() {
+	        if (this.border) {
+	            this.applyCSSStyle({
+	                borderStyle: "solid",
+	                borderWidth: toPixelString(this.border.width),
+	                borderColor: toRGBAString(this.border.color),
+	            });
+	        }
+	    }
+	    configWidth() {
+	        let width;
+	        switch (this.layoutConfig.widthSpec) {
+	            case exports.LayoutSpec.WRAP_CONTENT:
+	                width = "max-content";
+	                break;
+	            case exports.LayoutSpec.AT_MOST:
+	                width = "100%";
+	                break;
+	            case exports.LayoutSpec.EXACTLY:
+	            default:
+	                width = toPixelString(this.frameWidth
+	                    - this.paddingLeft - this.paddingRight
+	                    - this.borderWidth * 2);
+	                break;
+	        }
+	        this.applyCSSStyle({ width });
+	    }
+	    configHeight() {
+	        let height;
+	        switch (this.layoutConfig.heightSpec) {
+	            case exports.LayoutSpec.WRAP_CONTENT:
+	                height = "max-content";
+	                break;
+	            case exports.LayoutSpec.AT_MOST:
+	                height = "100%";
+	                break;
+	            case exports.LayoutSpec.EXACTLY:
+	            default:
+	                height = toPixelString(this.frameHeight
+	                    - this.paddingTop - this.paddingBottom
+	                    - this.borderWidth * 2);
+	                break;
+	        }
+	        this.applyCSSStyle({ height });
+	    }
+	    configMargin() {
+	        if (this.layoutConfig.margin) {
+	            this.applyCSSStyle({
+	                marginLeft: toPixelString(this.layoutConfig.margin.left || 0),
+	                marginRight: toPixelString(this.layoutConfig.margin.right || 0),
+	                marginTop: toPixelString(this.layoutConfig.margin.top || 0),
+	                marginBottom: toPixelString(this.layoutConfig.margin.bottom || 0),
+	            });
+	        }
+	    }
+	    configPadding() {
+	        if (this.padding) {
+	            this.applyCSSStyle({
+	                paddingLeft: toPixelString(this.paddingLeft),
+	                paddingRight: toPixelString(this.paddingRight),
+	                paddingTop: toPixelString(this.paddingTop),
+	                paddingBottom: toPixelString(this.paddingBottom),
+	            });
+	        }
+	    }
+	    layout() {
+	        this.configMargin();
+	        this.configBorder();
+	        this.configPadding();
+	        this.configWidth();
+	        this.configHeight();
+	    }
+	    blendProps(v, propName, prop) {
+	        switch (propName) {
+	            case "border":
+	                this.border = prop;
+	                break;
+	            case "padding":
+	                this.padding = prop;
+	                break;
+	            case 'width':
+	                this.frameWidth = prop;
+	                break;
+	            case 'height':
+	                this.frameHeight = prop;
+	                break;
+	            case 'backgroundColor':
+	                this.backgroundColor = prop;
+	                break;
+	            case 'layoutConfig':
+	                const layoutConfig = prop;
+	                for (let key in layoutConfig) {
+	                    Reflect.set(this.layoutConfig, key, Reflect.get(layoutConfig, key, layoutConfig));
+	                }
+	                break;
+	            case 'x':
+	                this.offsetX = prop;
+	                break;
+	            case 'y':
+	                this.offsetY = prop;
+	                break;
+	            case 'onClick':
+	                this.view.onclick = (event) => {
+	                    this.callJSResponse(prop);
+	                    event.stopPropagation();
+	                };
+	                break;
+	            case 'corners':
+	                if (typeof prop === 'object') {
+	                    this.applyCSSStyle({
+	                        borderTopLeftRadius: toPixelString(prop.leftTop),
+	                        borderTopRightRadius: toPixelString(prop.rightTop),
+	                        borderBottomRightRadius: toPixelString(prop.rightBottom),
+	                        borderBottomLeftRadius: toPixelString(prop.leftBottom),
+	                    });
+	                }
+	                else {
+	                    this.applyCSSStyle({ borderRadius: toPixelString(prop) });
+	                }
+	                break;
+	            case 'shadow':
+	                const opacity = prop.opacity || 0;
+	                let boxShadow;
+	                if (opacity > 0) {
+	                    const offsetX = prop.offsetX || 0;
+	                    const offsetY = prop.offsetY || 0;
+	                    const shadowColor = prop.color || 0xff000000;
+	                    const shadowRadius = prop.radius;
+	                    const alpha = opacity * 255;
+	                    boxShadow = `${toPixelString(offsetX)} ${toPixelString(offsetY)} ${toPixelString(shadowRadius)} ${toRGBAString((shadowColor & 0xffffff) | ((alpha & 0xff) << 24))} `;
+	                }
+	                else {
+	                    boxShadow = "";
+	                }
+	                this.applyCSSStyle({
+	                    boxShadow,
+	                });
+	                break;
+	            case 'alpha':
+	                this.applyCSSStyle({
+	                    opacity: `${prop}`,
+	                });
+	                break;
+	            case 'rotation':
+	                this.transform.rotation = prop;
+	                break;
+	            case 'rotationX':
+	                this.transform.rotationX = prop;
+	                break;
+	            case 'rotationY':
+	                this.transform.rotationY = prop;
+	                break;
+	            case 'scaleX':
+	                this.transform.scaleX = prop;
+	                break;
+	            case 'scaleY':
+	                this.transform.scaleY = prop;
+	                break;
+	            case 'translationX':
+	                this.transform.translateX = prop;
+	                break;
+	            case 'translationY':
+	                this.transform.translateY = prop;
+	                break;
+	            case 'pivotX':
+	                if (this.transformOrigin) {
+	                    this.transformOrigin.x = prop;
+	                }
+	                else {
+	                    this.transformOrigin = {
+	                        x: prop,
+	                        y: 0.5,
+	                    };
+	                }
+	                break;
+	            case 'pivotY':
+	                if (this.transformOrigin) {
+	                    this.transformOrigin.y = prop;
+	                }
+	                else {
+	                    this.transformOrigin = {
+	                        x: 0.5,
+	                        y: prop,
+	                    };
+	                }
+	                break;
+	            case 'hidden':
+	                this.applyCSSStyle({
+	                    display: prop === true ? "none" : this._originDisplay
+	                });
+	                break;
+	            default:
+	                console.error(`Cannot blend prop for ${propName}`);
+	                break;
+	        }
+	    }
+	    set backgroundColor(v) {
+	        this.applyCSSStyle({ backgroundColor: toRGBAString(v) });
+	    }
+	    static create(context, type) {
+	        const viewNodeClass = acquireViewNode(type);
+	        if (viewNodeClass === undefined) {
+	            console.error(`Cannot find ViewNode for ${type}`);
+	            return undefined;
+	        }
+	        const ret = new viewNodeClass(context);
+	        ret.viewType = type;
+	        return ret;
+	    }
+	    getIdList() {
+	        const ids = [];
+	        let viewNode = this;
+	        do {
+	            ids.push(viewNode.viewId);
+	            viewNode = viewNode.superNode;
+	        } while (viewNode);
+	        return ids.reverse();
+	    }
+	    callJSResponse(funcId, ...args) {
+	        const argumentsList = ['__response__', this.getIdList(), funcId];
+	        for (let i = 1; i < arguments.length; i++) {
+	            argumentsList.push(arguments[i]);
+	        }
+	        return Reflect.apply(this.context.invokeEntityMethod, this.context, argumentsList);
+	    }
+	    pureCallJSResponse(funcId, ...args) {
+	        const argumentsList = ['__response__', this.getIdList(), funcId];
+	        for (let i = 1; i < arguments.length; i++) {
+	            argumentsList.push(arguments[i]);
+	        }
+	        return Reflect.apply(this.context.pureInvokeEntityMethod, this.context, argumentsList);
+	    }
+	    updateTransform() {
+	        this.applyCSSStyle({
+	            transform: Object.entries(this.transform).filter((e) => !!e[1]).map((e) => {
+	                const v = e[1] || 0;
+	                switch (e[0]) {
+	                    case "translateX":
+	                        return `translateX(${v}px)`;
+	                    case "scaleX":
+	                        return `scaleX(${v})`;
+	                    case "scaleY":
+	                        return `scaleY(${v})`;
+	                    case "rotation":
+	                        return `rotate(${v / 2}turn)`;
+	                    case "rotationX":
+	                        return `rotateX(${v / 2}turn)`;
+	                    case "rotationY":
+	                        return `rotateY(${v / 2}turn)`;
+	                    default:
+	                        console.error(`Do not support transform ${e[0]}`);
+	                        return "";
+	                }
+	            }).join(" ")
+	        });
+	    }
+	    updateTransformOrigin() {
+	        if (this.transformOrigin) {
+	            this.applyCSSStyle({
+	                transformOrigin: `${Math.round(this.transformOrigin.x * 100)}% ${Math.round(this.transformOrigin.y * 100)}%`
+	            });
+	        }
+	    }
+	    applyCSSStyle(cssStyle) {
+	        if (this.context.inAnimation()) {
+	            this.context.addAnimation(this, cssStyle);
+	        }
+	        else {
+	            for (let v in cssStyle) {
+	                Reflect.set(this.view.style, v, cssStyle[v]);
+	            }
+	        }
+	    }
+	    /** ++++++++++call from doric ++++++++++*/
+	    getWidth() {
+	        return this.view.offsetWidth;
+	    }
+	    getHeight() {
+	        return this.view.offsetHeight;
+	    }
+	    setWidth(v) {
+	        this.view.style.width = toPixelString(v);
+	    }
+	    setHeight(v) {
+	        this.view.style.height = toPixelString(v);
+	    }
+	    getX() {
+	        return this.view.offsetLeft;
+	    }
+	    getY() {
+	        return this.view.offsetTop;
+	    }
+	    setX(v) {
+	        this.view.style.left = toPixelString(v);
+	    }
+	    setY(v) {
+	        this.view.style.top = toPixelString(v);
+	    }
+	    getBackgroundColor() {
+	        return this.view.style.backgroundColor;
+	    }
+	    setBackgroundColor(v) {
+	        this.backgroundColor = v;
+	    }
+	    getAlpha() {
+	        return parseFloat(this.view.style.opacity);
+	    }
+	    setAlpha(v) {
+	        this.view.style.opacity = `${v}`;
+	    }
+	    getCorners() {
+	        return parseFloat(this.view.style.borderRadius);
+	    }
+	    setCorners(v) {
+	        this.view.style.borderRadius = toPixelString(v);
+	    }
+	    getLocationOnScreen() {
+	        const rect = this.view.getClientRects()[0];
+	        return {
+	            x: rect.left,
+	            y: rect.top,
+	        };
+	    }
+	    getRotation() {
+	        return this.transform.rotation;
+	    }
+	    setRotation(v) {
+	        this.transform.rotation = v;
+	        this.updateTransform();
+	    }
+	    getRotationX() {
+	        return this.transform.rotationX;
+	    }
+	    setRotationX(v) {
+	        this.transform.rotationX = v;
+	        this.updateTransform();
+	    }
+	    getRotationY() {
+	        return this.transform.rotationY;
+	    }
+	    setRotationY(v) {
+	        this.transform.rotationY = v;
+	        this.updateTransform();
+	    }
+	    getTranslationX() {
+	        return this.transform.translateX;
+	    }
+	    setTranslationX(v) {
+	        this.transform.translateX = v;
+	        this.updateTransform();
+	    }
+	    getTranslationY() {
+	        return this.transform.translateY;
+	    }
+	    setTranslationY(v) {
+	        this.transform.translateY = v;
+	        this.updateTransform();
+	    }
+	    getScaleX() {
+	        return this.transform.scaleX;
+	    }
+	    setScaleX(v) {
+	        this.transform.scaleX = v;
+	        this.updateTransform();
+	    }
+	    getScaleY() {
+	        return this.transform.scaleY;
+	    }
+	    setScaleY(v) {
+	        this.transform.scaleY = v;
+	        this.updateTransform();
+	    }
+	    getPivotX() {
+	        var _a;
+	        return ((_a = this.transformOrigin) === null || _a === void 0 ? void 0 : _a.x) || 0.5;
+	    }
+	    setPivotX(v) {
+	        if (this.transformOrigin) {
+	            this.transformOrigin.x = v;
+	        }
+	        else {
+	            this.transformOrigin = {
+	                x: v,
+	                y: 0.5,
+	            };
+	        }
+	        this.updateTransform();
+	    }
+	    getPivotY() {
+	        var _a;
+	        return ((_a = this.transformOrigin) === null || _a === void 0 ? void 0 : _a.y) || 0.5;
+	    }
+	    setPivotY(v) {
+	        if (this.transformOrigin) {
+	            this.transformOrigin.y = v;
+	        }
+	        else {
+	            this.transformOrigin = {
+	                x: 0.5,
+	                y: v,
+	            };
+	        }
+	        this.updateTransform();
+	    }
+	}
+	class DoricSuperNode extends DoricViewNode {
+	    constructor() {
+	        super(...arguments);
+	        this.reusable = false;
+	        this.subModels = new Map;
+	    }
+	    blendProps(v, propName, prop) {
+	        if (propName === 'subviews') {
+	            if (prop instanceof Array) {
+	                prop.forEach((e) => {
+	                    this.mixinSubModel(e);
+	                    this.blendSubNode(e);
+	                });
+	            }
+	        }
+	        else {
+	            super.blendProps(v, propName, prop);
+	        }
+	    }
+	    mixinSubModel(subNode) {
+	        const oldValue = this.getSubModel(subNode.id);
+	        if (oldValue) {
+	            this.mixin(subNode, oldValue);
+	        }
+	        else {
+	            this.subModels.set(subNode.id, subNode);
+	        }
+	    }
+	    getSubModel(id) {
+	        return this.subModels.get(id);
+	    }
+	    mixin(src, target) {
+	        for (let key in src.props) {
+	            if (key === "subviews") {
+	                continue;
+	            }
+	            Reflect.set(target.props, key, Reflect.get(src.props, key));
+	        }
+	    }
+	    clearSubModels() {
+	        this.subModels.clear();
+	    }
+	    removeSubModel(id) {
+	        this.subModels.delete(id);
+	    }
+	}
+	class DoricGroupViewNode extends DoricSuperNode {
+	    constructor() {
+	        super(...arguments);
+	        this.childNodes = [];
+	        this.childViewIds = [];
+	    }
+	    init(superNode) {
+	        super.init(superNode);
+	        this.view.style.overflow = "hidden";
+	    }
+	    blendProps(v, propName, prop) {
+	        if (propName === 'children') {
+	            if (prop instanceof Array) {
+	                this.childViewIds = prop;
+	            }
+	        }
+	        else {
+	            super.blendProps(v, propName, prop);
+	        }
+	    }
+	    blend(props) {
+	        super.blend(props);
+	    }
+	    onBlending() {
+	        super.onBlending();
+	        this.configChildNode();
+	    }
+	    onBlended() {
+	        super.onBlended();
+	        this.childNodes.forEach(e => e.onBlended());
+	    }
+	    configChildNode() {
+	        this.childViewIds.forEach((childViewId, index) => {
+	            const model = this.getSubModel(childViewId);
+	            if (model === undefined) {
+	                return;
+	            }
+	            if (index < this.childNodes.length) {
+	                const oldNode = this.childNodes[index];
+	                if (oldNode.viewId === childViewId) ;
+	                else {
+	                    if (this.reusable) {
+	                        if (oldNode.viewType === model.type) {
+	                            //Same type,can be reused
+	                            oldNode.viewId = childViewId;
+	                            oldNode.blend(model.props);
+	                        }
+	                        else {
+	                            //Replace this view
+	                            this.view.removeChild(oldNode.view);
+	                            const newNode = DoricViewNode.create(this.context, model.type);
+	                            if (newNode === undefined) {
+	                                return;
+	                            }
+	                            newNode.viewId = childViewId;
+	                            newNode.init(this);
+	                            newNode.blend(model.props);
+	                            this.childNodes[index] = newNode;
+	                            this.view.replaceChild(newNode.view, oldNode.view);
+	                        }
+	                    }
+	                    else {
+	                        //Find in remain nodes
+	                        let position = -1;
+	                        for (let start = index + 1; start < this.childNodes.length; start++) {
+	                            if (childViewId === this.childNodes[start].viewId) {
+	                                //Found
+	                                position = start;
+	                                break;
+	                            }
+	                        }
+	                        if (position >= 0) {
+	                            //Found swap idx,position
+	                            const reused = this.childNodes[position];
+	                            const abandoned = this.childNodes[index];
+	                            this.childNodes[index] = reused;
+	                            this.childNodes[position] = abandoned;
+	                            this.view.removeChild(reused.view);
+	                            this.view.insertBefore(reused.view, abandoned.view);
+	                            this.view.removeChild(abandoned.view);
+	                            if (position === this.view.childElementCount - 1) {
+	                                this.view.appendChild(abandoned.view);
+	                            }
+	                            else {
+	                                this.view.insertBefore(abandoned.view, this.view.children[position]);
+	                            }
+	                        }
+	                        else {
+	                            //Not found,insert
+	                            const newNode = DoricViewNode.create(this.context, model.type);
+	                            if (newNode === undefined) {
+	                                return;
+	                            }
+	                            newNode.viewId = childViewId;
+	                            newNode.init(this);
+	                            newNode.blend(model.props);
+	                            this.childNodes[index] = newNode;
+	                            this.view.insertBefore(newNode.view, this.view.children[index]);
+	                        }
+	                    }
+	                }
+	            }
+	            else {
+	                //Insert
+	                const newNode = DoricViewNode.create(this.context, model.type);
+	                if (newNode === undefined) {
+	                    return;
+	                }
+	                newNode.viewId = childViewId;
+	                newNode.init(this);
+	                newNode.blend(model.props);
+	                this.childNodes.push(newNode);
+	                this.view.appendChild(newNode.view);
+	            }
+	        });
+	        let size = this.childNodes.length;
+	        for (let idx = this.childViewIds.length; idx < size; idx++) {
+	            this.view.removeChild(this.childNodes[idx].view);
+	        }
+	        this.childNodes = this.childNodes.slice(0, this.childViewIds.length);
+	    }
+	    blendSubNode(model) {
+	        var _a;
+	        (_a = this.getSubNodeById(model.id)) === null || _a === void 0 ? void 0 : _a.blend(model.props);
+	    }
+	    getSubNodeById(viewId) {
+	        return this.childNodes.filter(e => e.viewId === viewId)[0];
+	    }
+	}
+
+	class ShaderPlugin extends DoricPlugin {
+	    render(ret) {
+	        var _a;
+	        if (((_a = this.context.rootNode.viewId) === null || _a === void 0 ? void 0 : _a.length) > 0) {
+	            const viewNode = this.context.targetViewNode(ret.id);
+	            viewNode === null || viewNode === void 0 ? void 0 : viewNode.blend(ret.props);
+	            viewNode === null || viewNode === void 0 ? void 0 : viewNode.onBlended();
+	        }
+	        else {
+	            this.context.rootNode.viewId = ret.id;
+	            this.context.rootNode.blend(ret.props);
+	            this.context.rootNode.onBlended();
+	        }
+	    }
+	    command(options) {
+	        let viewNode = undefined;
+	        for (let viewId of options.viewIds) {
+	            if (!viewNode) {
+	                viewNode = this.context.targetViewNode(viewId);
+	            }
+	            else {
+	                if (viewNode instanceof DoricSuperNode) {
+	                    viewNode = viewNode.getSubNodeById(viewId);
+	                }
+	            }
+	        }
+	        if (!viewNode) {
+	            return Promise.reject("Cannot find opposite view");
+	        }
+	        else {
+	            const target = viewNode;
+	            return new Promise((resolve, reject) => {
+	                try {
+	                    const method = Reflect.get(target, options.name);
+	                    if (!method) {
+	                        reject(`"Cannot find plugin method in class:${target},method:${options.name}"`);
+	                    }
+	                    resolve(Reflect.apply(method, target, [options.args]));
+	                }
+	                catch (err) {
+	                    reject(err);
+	                }
+	            });
+	        }
+	    }
+	}
+
+	class DoricStackNode extends DoricGroupViewNode {
+	    build() {
+	        const ret = document.createElement('div');
+	        ret.style.position = "relative";
+	        return ret;
+	    }
+	    layout() {
+	        super.layout();
+	        Promise.resolve().then(_ => {
+	            this.configSize();
+	            this.configOffset();
+	        });
+	    }
+	    configSize() {
+	        if (this.layoutConfig.widthSpec === exports.LayoutSpec.WRAP_CONTENT) {
+	            const width = this.childNodes.reduce((prev, current) => {
+	                const computedStyle = window.getComputedStyle(current.view);
+	                return Math.max(prev, current.view.offsetWidth
+	                    + pixelString2Number(computedStyle.marginLeft)
+	                    + pixelString2Number(computedStyle.marginRight));
+	            }, 0);
+	            this.view.style.width = toPixelString(width);
+	        }
+	        if (this.layoutConfig.heightSpec === exports.LayoutSpec.WRAP_CONTENT) {
+	            const height = this.childNodes.reduce((prev, current) => {
+	                const computedStyle = window.getComputedStyle(current.view);
+	                return Math.max(prev, current.view.offsetHeight
+	                    + pixelString2Number(computedStyle.marginTop)
+	                    + pixelString2Number(computedStyle.marginBottom));
+	            }, 0);
+	            this.view.style.height = toPixelString(height);
+	        }
+	    }
+	    configOffset() {
+	        this.childNodes.forEach(e => {
+	            const position = "absolute";
+	            let left = toPixelString(e.offsetX + this.paddingLeft);
+	            let top = toPixelString(e.offsetY + this.paddingTop);
+	            const gravity = e.layoutConfig.alignment;
+	            if ((gravity & LEFT) === LEFT) {
+	                left = toPixelString(0);
+	            }
+	            else if ((gravity & RIGHT) === RIGHT) {
+	                left = toPixelString(this.view.offsetWidth - e.view.offsetWidth);
+	            }
+	            else if ((gravity & CENTER_X) === CENTER_X) {
+	                left = toPixelString(this.view.offsetWidth / 2 - e.view.offsetWidth / 2);
+	            }
+	            if ((gravity & TOP) === TOP) {
+	                top = toPixelString(0);
+	            }
+	            else if ((gravity & BOTTOM) === BOTTOM) {
+	                top = toPixelString(this.view.offsetHeight - e.view.offsetHeight);
+	            }
+	            else if ((gravity & CENTER_Y) === CENTER_Y) {
+	                top = toPixelString(this.view.offsetHeight / 2 - e.view.offsetHeight / 2);
+	            }
+	            e.applyCSSStyle({
+	                position,
+	                left,
+	                top,
+	            });
+	        });
+	    }
+	}
+
+	class DoricVLayoutNode extends DoricGroupViewNode {
+	    constructor() {
+	        super(...arguments);
+	        this.space = 0;
+	        this.gravity = 0;
+	    }
+	    build() {
+	        const ret = document.createElement('div');
+	        ret.style.display = "flex";
+	        ret.style.flexDirection = "column";
+	        ret.style.flexWrap = "nowrap";
+	        return ret;
+	    }
+	    blendProps(v, propName, prop) {
+	        if (propName === 'space') {
+	            this.space = prop;
+	        }
+	        else if (propName === 'gravity') {
+	            this.gravity = prop;
+	            if ((this.gravity & LEFT) === LEFT) {
+	                this.view.style.alignItems = "flex-start";
+	            }
+	            else if ((this.gravity & RIGHT) === RIGHT) {
+	                this.view.style.alignItems = "flex-end";
+	            }
+	            else if ((this.gravity & CENTER_X) === CENTER_X) {
+	                this.view.style.alignItems = "center";
+	            }
+	            if ((this.gravity & TOP) === TOP) {
+	                this.view.style.justifyContent = "flex-start";
+	            }
+	            else if ((this.gravity & BOTTOM) === BOTTOM) {
+	                this.view.style.justifyContent = "flex-end";
+	            }
+	            else if ((this.gravity & CENTER_Y) === CENTER_Y) {
+	                this.view.style.justifyContent = "center";
+	            }
+	        }
+	        else {
+	            super.blendProps(v, propName, prop);
+	        }
+	    }
+	    layout() {
+	        super.layout();
+	        this.childNodes.forEach((e, idx) => {
+	            var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
+	            e.view.style.flexShrink = "0";
+	            if ((_a = e.layoutConfig) === null || _a === void 0 ? void 0 : _a.weight) {
+	                e.view.style.flex = `${(_b = e.layoutConfig) === null || _b === void 0 ? void 0 : _b.weight}`;
+	            }
+	            e.view.style.marginTop = toPixelString(((_d = (_c = e.layoutConfig) === null || _c === void 0 ? void 0 : _c.margin) === null || _d === void 0 ? void 0 : _d.top) || 0);
+	            e.view.style.marginBottom = toPixelString((idx === this.childNodes.length - 1) ? 0 : this.space
+	                + (((_f = (_e = e.layoutConfig) === null || _e === void 0 ? void 0 : _e.margin) === null || _f === void 0 ? void 0 : _f.bottom) || 0));
+	            e.view.style.marginLeft = toPixelString(((_h = (_g = e.layoutConfig) === null || _g === void 0 ? void 0 : _g.margin) === null || _h === void 0 ? void 0 : _h.left) || 0);
+	            e.view.style.marginRight = toPixelString(((_k = (_j = e.layoutConfig) === null || _j === void 0 ? void 0 : _j.margin) === null || _k === void 0 ? void 0 : _k.right) || 0);
+	            if ((e.layoutConfig.alignment & LEFT) === LEFT) {
+	                e.view.style.alignSelf = "flex-start";
+	            }
+	            else if ((e.layoutConfig.alignment & RIGHT) === RIGHT) {
+	                e.view.style.alignSelf = "flex-end";
+	            }
+	            else if ((e.layoutConfig.alignment & CENTER_X) === CENTER_X) {
+	                e.view.style.alignSelf = "center";
+	            }
+	        });
+	    }
+	}
+
+	class DoricHLayoutNode extends DoricGroupViewNode {
+	    constructor() {
+	        super(...arguments);
+	        this.space = 0;
+	        this.gravity = 0;
+	    }
+	    build() {
+	        const ret = document.createElement('div');
+	        ret.style.display = "flex";
+	        ret.style.flexDirection = "row";
+	        ret.style.flexWrap = "nowrap";
+	        return ret;
+	    }
+	    blendProps(v, propName, prop) {
+	        if (propName === 'space') {
+	            this.space = prop;
+	        }
+	        else if (propName === 'gravity') {
+	            this.gravity = prop;
+	            this.gravity = prop;
+	            if ((this.gravity & LEFT) === LEFT) {
+	                this.view.style.justifyContent = "flex-start";
+	            }
+	            else if ((this.gravity & RIGHT) === RIGHT) {
+	                this.view.style.justifyContent = "flex-end";
+	            }
+	            else if ((this.gravity & CENTER_X) === CENTER_X) {
+	                this.view.style.justifyContent = "center";
+	            }
+	            if ((this.gravity & TOP) === TOP) {
+	                this.view.style.alignItems = "flex-start";
+	            }
+	            else if ((this.gravity & BOTTOM) === BOTTOM) {
+	                this.view.style.alignItems = "flex-end";
+	            }
+	            else if ((this.gravity & CENTER_Y) === CENTER_Y) {
+	                this.view.style.alignItems = "center";
+	            }
+	        }
+	        else {
+	            super.blendProps(v, propName, prop);
+	        }
+	    }
+	    layout() {
+	        super.layout();
+	        this.childNodes.forEach((e, idx) => {
+	            var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
+	            e.view.style.flexShrink = "0";
+	            if ((_a = e.layoutConfig) === null || _a === void 0 ? void 0 : _a.weight) {
+	                e.view.style.flex = `${(_b = e.layoutConfig) === null || _b === void 0 ? void 0 : _b.weight}`;
+	            }
+	            e.view.style.marginLeft = toPixelString(((_d = (_c = e.layoutConfig) === null || _c === void 0 ? void 0 : _c.margin) === null || _d === void 0 ? void 0 : _d.left) || 0);
+	            e.view.style.marginRight = toPixelString((idx === this.childNodes.length - 1) ? 0 : this.space
+	                + (((_f = (_e = e.layoutConfig) === null || _e === void 0 ? void 0 : _e.margin) === null || _f === void 0 ? void 0 : _f.right) || 0));
+	            e.view.style.marginTop = toPixelString(((_h = (_g = e.layoutConfig) === null || _g === void 0 ? void 0 : _g.margin) === null || _h === void 0 ? void 0 : _h.top) || 0);
+	            e.view.style.marginBottom = toPixelString(((_k = (_j = e.layoutConfig) === null || _j === void 0 ? void 0 : _j.margin) === null || _k === void 0 ? void 0 : _k.bottom) || 0);
+	            if ((e.layoutConfig.alignment & TOP) === TOP) {
+	                e.view.style.alignSelf = "flex-start";
+	            }
+	            else if ((e.layoutConfig.alignment & BOTTOM) === BOTTOM) {
+	                e.view.style.alignSelf = "flex-end";
+	            }
+	            else if ((e.layoutConfig.alignment & CENTER_Y) === CENTER_Y) {
+	                e.view.style.alignSelf = "center";
+	            }
+	        });
+	    }
+	}
+
+	class DoricTextNode extends DoricViewNode {
+	    build() {
+	        const div = document.createElement('div');
+	        div.style.display = "flex";
+	        this.textElement = document.createElement('span');
+	        div.appendChild(this.textElement);
+	        div.style.justifyContent = "center";
+	        div.style.alignItems = "center";
+	        return div;
+	    }
+	    blendProps(v, propName, prop) {
+	        switch (propName) {
+	            case 'text':
+	                this.textElement.innerText = prop;
+	                break;
+	            case 'textSize':
+	                v.style.fontSize = toPixelString(prop);
+	                break;
+	            case 'textColor':
+	                v.style.color = toRGBAString(prop);
+	                break;
+	            case 'textAlignment':
+	                const gravity = prop;
+	                if ((gravity & LEFT) === LEFT) {
+	                    v.style.justifyContent = "flex-start";
+	                }
+	                else if ((gravity & RIGHT) === RIGHT) {
+	                    v.style.justifyContent = "flex-end";
+	                }
+	                else if ((gravity & CENTER_X) === CENTER_X) {
+	                    v.style.justifyContent = "center";
+	                }
+	                if ((gravity & TOP) === TOP) {
+	                    v.style.alignItems = "flex-start";
+	                }
+	                else if ((gravity & BOTTOM) === BOTTOM) {
+	                    v.style.alignItems = "flex-end";
+	                }
+	                else if ((gravity & CENTER_Y) === CENTER_Y) {
+	                    v.style.alignItems = "center";
+	                }
+	                break;
+	            case "fontStyle":
+	                switch (prop) {
+	                    case "bold":
+	                        v.style.fontWeight = "bold";
+	                        v.style.fontStyle = "normal";
+	                        break;
+	                    case "italic":
+	                        v.style.fontWeight = "normal";
+	                        v.style.fontStyle = "italic";
+	                        break;
+	                    case "bold_italic":
+	                        v.style.fontWeight = "bold";
+	                        v.style.fontStyle = "italic";
+	                        break;
+	                    default:
+	                        v.style.fontWeight = "normal";
+	                        v.style.fontStyle = "normal";
+	                        break;
+	                }
+	                break;
+	            default:
+	                super.blendProps(v, propName, prop);
+	                break;
+	        }
+	    }
+	}
+
+	var ScaleType;
+	(function (ScaleType) {
+	    ScaleType[ScaleType["ScaleToFill"] = 0] = "ScaleToFill";
+	    ScaleType[ScaleType["ScaleAspectFit"] = 1] = "ScaleAspectFit";
+	    ScaleType[ScaleType["ScaleAspectFill"] = 2] = "ScaleAspectFill";
+	})(ScaleType || (ScaleType = {}));
+	class DoricImageNode extends DoricViewNode {
+	    build() {
+	        const ret = document.createElement('img');
+	        ret.style.objectFit = "fill";
+	        return ret;
+	    }
+	    blendProps(v, propName, prop) {
+	        switch (propName) {
+	            case 'imageUrl':
+	                v.setAttribute('src', prop);
+	                break;
+	            case 'imageBase64':
+	                v.setAttribute('src', prop);
+	                break;
+	            case 'loadCallback':
+	                v.onload = () => {
+	                    this.callJSResponse(prop, {
+	                        width: v.width,
+	                        height: v.height
+	                    });
+	                };
+	                break;
+	            case 'scaleType':
+	                switch (prop) {
+	                    case ScaleType.ScaleToFill:
+	                        v.style.objectFit = "fill";
+	                        break;
+	                    case ScaleType.ScaleAspectFit:
+	                        v.style.objectFit = "contain";
+	                        break;
+	                    case ScaleType.ScaleAspectFill:
+	                        v.style.objectFit = "cover";
+	                        break;
+	                }
+	                break;
+	            case 'isBlur':
+	                if (prop) {
+	                    v.style.filter = 'blur(8px)';
+	                }
+	                else {
+	                    v.style.filter = '';
+	                }
+	                break;
+	            default:
+	                super.blendProps(v, propName, prop);
+	                break;
+	        }
+	    }
+	}
+
+	class DoricScrollerNode extends DoricSuperNode {
+	    constructor() {
+	        super(...arguments);
+	        this.childViewId = "";
+	    }
+	    build() {
+	        const ret = document.createElement('div');
+	        ret.style.overflow = "scroll";
+	        return ret;
+	    }
+	    blendProps(v, propName, prop) {
+	        if (propName === 'content') {
+	            this.childViewId = prop;
+	        }
+	        else {
+	            super.blendProps(v, propName, prop);
+	        }
+	    }
+	    blendSubNode(model) {
+	        var _a;
+	        (_a = this.childNode) === null || _a === void 0 ? void 0 : _a.blend(model.props);
+	    }
+	    getSubNodeById(viewId) {
+	        return viewId === this.childViewId ? this.childNode : undefined;
+	    }
+	    onBlending() {
+	        super.onBlending();
+	        const model = this.getSubModel(this.childViewId);
+	        if (model === undefined) {
+	            return;
+	        }
+	        if (this.childNode) {
+	            if (this.childNode.viewId === this.childViewId) ;
+	            else {
+	                if (this.reusable && this.childNode.viewType === model.type) {
+	                    this.childNode.viewId = model.id;
+	                    this.childNode.blend(model.props);
+	                }
+	                else {
+	                    this.view.removeChild(this.childNode.view);
+	                    const childNode = DoricViewNode.create(this.context, model.type);
+	                    if (childNode === undefined) {
+	                        return;
+	                    }
+	                    childNode.viewId = model.id;
+	                    childNode.init(this);
+	                    childNode.blend(model.props);
+	                    this.view.appendChild(childNode.view);
+	                    this.childNode = childNode;
+	                }
+	            }
+	        }
+	        else {
+	            const childNode = DoricViewNode.create(this.context, model.type);
+	            if (childNode === undefined) {
+	                return;
+	            }
+	            childNode.viewId = model.id;
+	            childNode.init(this);
+	            childNode.blend(model.props);
+	            this.view.appendChild(childNode.view);
+	            this.childNode = childNode;
+	        }
+	    }
+	    onBlended() {
+	        var _a;
+	        super.onBlended();
+	        (_a = this.childNode) === null || _a === void 0 ? void 0 : _a.onBlended();
+	    }
+	}
+
+	class ModalPlugin extends DoricPlugin {
+	    toast(args) {
+	        const toastElement = document.createElement('div');
+	        toastElement.style.position = "absolute";
+	        toastElement.style.textAlign = "center";
+	        toastElement.style.width = "100%";
+	        const textElement = document.createElement('span');
+	        textElement.innerText = args.msg || "";
+	        textElement.style.backgroundColor = "#777777";
+	        textElement.style.color = "white";
+	        textElement.style.paddingLeft = '20px';
+	        textElement.style.paddingRight = '20px';
+	        textElement.style.paddingTop = '10px';
+	        textElement.style.paddingBottom = '10px';
+	        toastElement.appendChild(textElement);
+	        document.body.appendChild(toastElement);
+	        const gravity = args.gravity || BOTTOM;
+	        if ((gravity & TOP) == TOP) {
+	            toastElement.style.top = toPixelString(30);
+	        }
+	        else if ((gravity & BOTTOM) == BOTTOM) {
+	            toastElement.style.bottom = toPixelString(30);
+	        }
+	        else if ((gravity & CENTER_Y) == CENTER_Y) {
+	            toastElement.style.top = toPixelString(document.body.offsetHeight / 2 - toastElement.offsetHeight / 2);
+	        }
+	        setTimeout(() => {
+	            document.body.removeChild(toastElement);
+	        }, 2000);
+	        return Promise.resolve();
+	    }
+	    alert(args) {
+	        window.alert(args.msg || "");
+	        return Promise.resolve();
+	    }
+	    confirm(args) {
+	        if (window.confirm(args.msg || "")) {
+	            return Promise.resolve();
+	        }
+	        else {
+	            return Promise.reject();
+	        }
+	    }
+	    prompt(args) {
+	        const result = window.prompt(args.msg || "", args.defaultText);
+	        if (result) {
+	            return Promise.resolve(result);
+	        }
+	        else {
+	            return Promise.reject(result);
+	        }
+	    }
+	}
+
+	class StoragePlugin extends DoricPlugin {
+	    setItem(args) {
+	        localStorage.setItem(`${args.zone}_${args.key}`, args.value);
+	        return Promise.resolve();
+	    }
+	    getItem(args) {
+	        return Promise.resolve(localStorage.getItem(`${args.zone}_${args.key}`));
+	    }
+	    remove(args) {
+	        localStorage.removeItem(`${args.zone}_${args.key}`);
+	        return Promise.resolve();
+	    }
+	    clear(args) {
+	        let removingKeys = [];
+	        for (let i = 0; i < localStorage.length; i++) {
+	            const key = localStorage.key(i);
+	            if (key && key.startsWith(`${args.zone}_`)) {
+	                removingKeys.push(key);
+	            }
+	        }
+	        removingKeys.forEach(e => {
+	            localStorage.removeItem(e);
+	        });
+	        return Promise.resolve();
+	    }
+	}
+
+	class NavigatorPlugin extends DoricPlugin {
+	    constructor() {
+	        super(...arguments);
+	        this.navigation = document.getElementsByTagName('doric-navigation')[0];
+	    }
+	    push(args) {
+	        var _a;
+	        if (this.navigation) {
+	            const div = new DoricElement;
+	            div.src = args.source;
+	            div.alias = ((_a = args.config) === null || _a === void 0 ? void 0 : _a.alias) || args.source;
+	            this.navigation.push(div);
+	            return Promise.resolve();
+	        }
+	        else {
+	            return Promise.reject('Not implemented');
+	        }
+	    }
+	    pop() {
+	        if (this.navigation) {
+	            this.navigation.pop();
+	            return Promise.resolve();
+	        }
+	        else {
+	            return Promise.reject('Not implemented');
+	        }
+	    }
+	}
+
+	class PopoverPlugin extends DoricPlugin {
+	    constructor(context) {
+	        super(context);
+	        this.fullScreen = document.createElement('div');
+	        this.fullScreen.id = `PopOver__${context.contextId}`;
+	        this.fullScreen.style.position = 'fixed';
+	        this.fullScreen.style.top = '0px';
+	        this.fullScreen.style.width = "100%";
+	        this.fullScreen.style.height = "100%";
+	    }
+	    show(model) {
+	        const viewNode = DoricViewNode.create(this.context, model.type);
+	        if (viewNode === undefined) {
+	            return Promise.reject(`Cannot create ViewNode for ${model.type}`);
+	        }
+	        viewNode.viewId = model.id;
+	        viewNode.init();
+	        viewNode.blend(model.props);
+	        this.fullScreen.appendChild(viewNode.view);
+	        let map = this.context.headNodes.get(PopoverPlugin.TYPE);
+	        if (map) {
+	            map.set(model.id, viewNode);
+	        }
+	        else {
+	            map = new Map;
+	            map.set(model.id, viewNode);
+	            this.context.headNodes.set(PopoverPlugin.TYPE, map);
+	        }
+	        if (!document.body.contains(this.fullScreen)) {
+	            document.body.appendChild(this.fullScreen);
+	        }
+	        return Promise.resolve();
+	    }
+	    dismiss(args) {
+	        if (args) {
+	            let map = this.context.headNodes.get(PopoverPlugin.TYPE);
+	            if (map) {
+	                const viewNode = map.get(args.id);
+	                if (viewNode) {
+	                    this.fullScreen.removeChild(viewNode.view);
+	                }
+	                if (map.size === 0) {
+	                    document.body.removeChild(this.fullScreen);
+	                }
+	            }
+	        }
+	        else {
+	            this.dismissAll();
+	        }
+	        return Promise.resolve();
+	    }
+	    dismissAll() {
+	        let map = this.context.headNodes.get(PopoverPlugin.TYPE);
+	        if (map) {
+	            for (let node of map.values()) {
+	                map.delete(node.viewId);
+	                this.fullScreen.removeChild(node.view);
+	            }
+	        }
+	        if (document.body.contains(this.fullScreen)) {
+	            document.body.removeChild(this.fullScreen);
+	        }
+	    }
+	    onTearDown() {
+	        super.onTearDown();
+	        this.dismissAll();
+	    }
+	}
+	PopoverPlugin.TYPE = "popover";
+
+	class DoricListItemNode extends DoricStackNode {
+	    constructor(context) {
+	        super(context);
+	        this.reusable = true;
+	    }
+	}
+
+	class DoricListNode extends DoricSuperNode {
+	    constructor() {
+	        super(...arguments);
+	        this.itemCount = 0;
+	        this.batchCount = 15;
+	        this.loadMore = false;
+	        this.childNodes = [];
+	    }
+	    blendProps(v, propName, prop) {
+	        switch (propName) {
+	            case "itemCount":
+	                this.itemCount = prop;
+	                break;
+	            case "renderItem":
+	                this.reset();
+	                this.renderItemFuncId = prop;
+	                break;
+	            case "onLoadMore":
+	                this.onLoadMoreFuncId = prop;
+	                break;
+	            case "loadMoreView":
+	                this.loadMoreViewId = prop;
+	                break;
+	            case "batchCount":
+	                this.batchCount = prop;
+	                break;
+	            case "loadMore":
+	                this.loadMore = prop;
+	                break;
+	            default:
+	                super.blendProps(v, propName, prop);
+	                break;
+	        }
+	    }
+	    reset() {
+	        while (this.view.lastElementChild) {
+	            this.view.removeChild(this.view.lastElementChild);
+	        }
+	    }
+	    onBlending() {
+	        super.onBlending();
+	        if (this.childNodes.length !== this.itemCount) {
+	            const ret = this.pureCallJSResponse("renderBunchedItems", this.childNodes.length, this.itemCount);
+	            this.childNodes = this.childNodes.concat(ret.map(e => {
+	                const viewNode = DoricViewNode.create(this.context, e.type);
+	                viewNode.viewId = e.id;
+	                viewNode.init(this);
+	                viewNode.blend(e.props);
+	                this.view.appendChild(viewNode.view);
+	                return viewNode;
+	            }));
+	        }
+	        if (this.loadMoreViewNode && this.view.contains(this.loadMoreViewNode.view)) {
+	            this.view.removeChild(this.loadMoreViewNode.view);
+	        }
+	        if (this.loadMore) {
+	            if (!this.loadMoreViewNode) {
+	                const loadMoreViewModel = this.getSubModel(this.loadMoreViewId || "");
+	                if (loadMoreViewModel) {
+	                    this.loadMoreViewNode = DoricViewNode.create(this.context, loadMoreViewModel.type);
+	                    this.loadMoreViewNode.viewId = loadMoreViewModel.id;
+	                    this.loadMoreViewNode.init(this);
+	                    this.loadMoreViewNode.blend(loadMoreViewModel.props);
+	                }
+	            }
+	            if (this.loadMoreViewNode) {
+	                this.view.appendChild(this.loadMoreViewNode.view);
+	            }
+	            if (this.view.scrollTop + this.view.offsetHeight === this.view.scrollHeight) {
+	                this.onScrollToEnd();
+	            }
+	        }
+	    }
+	    blendSubNode(model) {
+	        var _a;
+	        (_a = this.getSubNodeById(model.id)) === null || _a === void 0 ? void 0 : _a.blend(model.props);
+	    }
+	    getSubNodeById(viewId) {
+	        var _a;
+	        if (viewId === this.loadMoreViewId) {
+	            return this.loadMoreViewNode;
+	        }
+	        return (_a = this.childNodes.filter(e => e.viewId === viewId)) === null || _a === void 0 ? void 0 : _a[0];
+	    }
+	    onScrollToEnd() {
+	        if (this.loadMore && this.onLoadMoreFuncId) {
+	            this.callJSResponse(this.onLoadMoreFuncId);
+	        }
+	    }
+	    build() {
+	        const ret = document.createElement('div');
+	        ret.style.overflow = "scroll";
+	        ret.addEventListener("scroll", () => {
+	            if (this.loadMore) {
+	                if (ret.scrollTop + ret.offsetHeight === ret.scrollHeight) {
+	                    this.onScrollToEnd();
+	                }
+	            }
+	        });
+	        return ret;
+	    }
+	    onBlended() {
+	        super.onBlended();
+	        this.childNodes.forEach(e => e.onBlended());
+	    }
+	}
+
+	class DoricDraggableNode extends DoricStackNode {
+	    constructor() {
+	        super(...arguments);
+	        this.onDrag = "";
+	        this.dragging = false;
+	        this.lastX = 0;
+	        this.lastY = 0;
+	    }
+	    build() {
+	        const ret = document.createElement('div');
+	        ret.ontouchstart = (event) => {
+	            this.dragging = true;
+	            this.lastX = event.targetTouches[0].clientX;
+	            this.lastY = event.targetTouches[0].clientY;
+	        };
+	        ret.ontouchend = (event) => {
+	            this.dragging = false;
+	        };
+	        ret.ontouchcancel = (event) => {
+	            this.dragging = false;
+	        };
+	        ret.ontouchmove = (event) => {
+	            if (this.dragging) {
+	                this.offsetX += (event.targetTouches[0].clientX - this.lastX);
+	                this.offsetY += (event.targetTouches[0].clientY - this.lastY);
+	                this.callJSResponse(this.onDrag, this.offsetX, this.offsetY);
+	                this.lastX = event.targetTouches[0].clientX;
+	                this.lastY = event.targetTouches[0].clientY;
+	            }
+	        };
+	        ret.onmousedown = (event) => {
+	            this.dragging = true;
+	            this.lastX = event.x;
+	            this.lastY = event.y;
+	        };
+	        ret.onmousemove = (event) => {
+	            if (this.dragging) {
+	                this.offsetX += (event.x - this.lastX);
+	                this.offsetY += (event.y - this.lastY);
+	                this.callJSResponse(this.onDrag, this.offsetX, this.offsetY);
+	                this.lastX = event.x;
+	                this.lastY = event.y;
+	            }
+	        };
+	        ret.onmouseup = (event) => {
+	            this.dragging = false;
+	        };
+	        ret.onmouseout = (event) => {
+	            this.dragging = false;
+	        };
+	        ret.style.position = "relative";
+	        return ret;
+	    }
+	    blendProps(v, propName, prop) {
+	        switch (propName) {
+	            case 'onDrag':
+	                this.onDrag = prop;
+	                break;
+	            default:
+	                super.blendProps(v, propName, prop);
+	                break;
+	        }
+	    }
+	}
+
+	class DoricRefreshableNode extends DoricSuperNode {
+	    constructor() {
+	        super(...arguments);
+	        this.headerViewId = "";
+	        this.contentViewId = "";
+	        this.refreshable = true;
+	    }
+	    build() {
+	        const ret = document.createElement('div');
+	        ret.style.overflow = "hidden";
+	        const header = document.createElement('div');
+	        const content = document.createElement('div');
+	        header.style.width = "100%";
+	        header.style.height = "100%";
+	        header.style.display = "flex";
+	        header.style.alignItems = "flex-end";
+	        header.style.justifyContent = "center";
+	        content.style.width = "100%";
+	        content.style.height = "100%";
+	        ret.appendChild(header);
+	        ret.appendChild(content);
+	        let touchStart = 0;
+	        ret.ontouchstart = (ev) => {
+	            if (!this.refreshable) {
+	                return;
+	            }
+	            touchStart = ev.touches[0].pageY;
+	        };
+	        ret.ontouchmove = (ev) => {
+	            var _a;
+	            if (!this.refreshable) {
+	                return;
+	            }
+	            const offset = (ev.touches[0].pageY - touchStart) * 0.68;
+	            ret.scrollTop = Math.max(0, header.offsetHeight - offset);
+	            (_a = this.headerNode) === null || _a === void 0 ? void 0 : _a.callJSResponse("setPullingDistance", offset);
+	        };
+	        const touchend = () => {
+	            var _a, _b;
+	            if (!this.refreshable) {
+	                return;
+	            }
+	            if (header.offsetHeight - ret.scrollTop >= (((_a = this.headerNode) === null || _a === void 0 ? void 0 : _a.getWidth()) || 0)) {
+	                this.setRefreshing(true);
+	                (_b = this.onRefreshCallback) === null || _b === void 0 ? void 0 : _b.call(this);
+	            }
+	            else {
+	                // To idel
+	                ret.scrollTo({
+	                    top: header.offsetHeight,
+	                    behavior: "smooth"
+	                });
+	            }
+	        };
+	        ret.ontouchcancel = () => {
+	            touchend();
+	        };
+	        ret.ontouchend = () => {
+	            touchend();
+	        };
+	        window.requestAnimationFrame(() => {
+	            ret.scrollTop = header.offsetHeight;
+	        });
+	        this.headerContainer = header;
+	        this.contentContainer = content;
+	        return ret;
+	    }
+	    blendProps(v, propName, prop) {
+	        if (propName === 'content') {
+	            this.contentViewId = prop;
+	        }
+	        else if (propName === 'header') {
+	            this.headerViewId = prop;
+	        }
+	        else if (propName === 'onRefresh') {
+	            this.onRefreshCallback = () => {
+	                this.callJSResponse(prop);
+	            };
+	        }
+	        else {
+	            super.blendProps(v, propName, prop);
+	        }
+	    }
+	    blendSubNode(model) {
+	        var _a;
+	        (_a = this.getSubNodeById(model.id)) === null || _a === void 0 ? void 0 : _a.blend(model.props);
+	    }
+	    getSubNodeById(viewId) {
+	        if (viewId === this.headerViewId) {
+	            return this.headerNode;
+	        }
+	        else if (viewId === this.contentViewId) {
+	            return this.contentNode;
+	        }
+	        return undefined;
+	    }
+	    onBlending() {
+	        var _a, _b, _c, _d, _e, _f;
+	        super.onBlending();
+	        {
+	            const headerModel = this.getSubModel(this.headerViewId);
+	            if (headerModel) {
+	                if (this.headerNode) {
+	                    if (this.headerNode.viewId !== this.headerViewId) {
+	                        if (this.reusable && this.headerNode.viewType === headerModel.type) {
+	                            this.headerNode.viewId = headerModel.id;
+	                            this.headerNode.blend(headerModel.props);
+	                        }
+	                        else {
+	                            (_a = this.headerContainer) === null || _a === void 0 ? void 0 : _a.removeChild(this.headerNode.view);
+	                            const headerNode = DoricViewNode.create(this.context, headerModel.type);
+	                            if (headerNode) {
+	                                headerNode.viewId = headerModel.id;
+	                                headerNode.init(this);
+	                                headerNode.blend(headerModel.props);
+	                                (_b = this.headerContainer) === null || _b === void 0 ? void 0 : _b.appendChild(headerNode.view);
+	                                this.headerNode = headerNode;
+	                            }
+	                        }
+	                    }
+	                }
+	                else {
+	                    const headerNode = DoricViewNode.create(this.context, headerModel.type);
+	                    if (headerNode) {
+	                        headerNode.viewId = headerModel.id;
+	                        headerNode.init(this);
+	                        headerNode.blend(headerModel.props);
+	                        (_c = this.headerContainer) === null || _c === void 0 ? void 0 : _c.appendChild(headerNode.view);
+	                        this.headerNode = headerNode;
+	                    }
+	                }
+	            }
+	        }
+	        {
+	            const contentModel = this.getSubModel(this.contentViewId);
+	            if (contentModel) {
+	                if (this.contentNode) {
+	                    if (this.contentNode.viewId !== this.contentViewId) {
+	                        if (this.reusable && this.contentNode.viewType === contentModel.type) {
+	                            this.contentNode.viewId = contentModel.id;
+	                            this.contentNode.blend(contentModel.props);
+	                        }
+	                        else {
+	                            (_d = this.contentContainer) === null || _d === void 0 ? void 0 : _d.removeChild(this.contentNode.view);
+	                            const contentNode = DoricViewNode.create(this.context, contentModel.type);
+	                            if (contentNode) {
+	                                contentNode.viewId = contentModel.id;
+	                                contentNode.init(this);
+	                                contentNode.blend(contentModel.props);
+	                                (_e = this.contentContainer) === null || _e === void 0 ? void 0 : _e.appendChild(contentNode.view);
+	                                this.contentNode = contentNode;
+	                            }
+	                        }
+	                    }
+	                }
+	                else {
+	                    const contentNode = DoricViewNode.create(this.context, contentModel.type);
+	                    if (contentNode) {
+	                        contentNode.viewId = contentModel.id;
+	                        contentNode.init(this);
+	                        contentNode.blend(contentModel.props);
+	                        (_f = this.contentContainer) === null || _f === void 0 ? void 0 : _f.appendChild(contentNode.view);
+	                        this.contentNode = contentNode;
+	                    }
+	                }
+	            }
+	        }
+	    }
+	    onBlended() {
+	        super.onBlended();
+	    }
+	    setRefreshing(v) {
+	        var _a;
+	        if (!this.headerContainer || !this.headerNode) {
+	            return;
+	        }
+	        if (v) {
+	            this.view.scrollTo({
+	                top: this.headerContainer.offsetHeight - this.headerNode.getHeight(),
+	                behavior: "smooth"
+	            });
+	            this.headerNode.callJSResponse("startAnimation");
+	        }
+	        else {
+	            this.view.scrollTo({
+	                top: (_a = this.headerContainer) === null || _a === void 0 ? void 0 : _a.offsetHeight,
+	                behavior: "smooth"
+	            });
+	            this.headerNode.callJSResponse("stopAnimation");
+	        }
+	    }
+	    setRefreshable(v) {
+	        this.refreshable = v;
+	        if (!v) {
+	            this.setRefreshing(false);
+	        }
+	    }
+	}
+
+	class AnimatePlugin extends DoricPlugin {
+	    submit() {
+	        return Promise.resolve();
+	    }
+	    animateRender(args) {
+	        var _a;
+	        this.context.animationSet = [];
+	        if (((_a = this.context.rootNode.viewId) === null || _a === void 0 ? void 0 : _a.length) > 0) {
+	            const viewNode = this.context.targetViewNode(args.id);
+	            viewNode === null || viewNode === void 0 ? void 0 : viewNode.blend(args.props);
+	            viewNode === null || viewNode === void 0 ? void 0 : viewNode.onBlended();
+	        }
+	        else {
+	            this.context.rootNode.viewId = args.id;
+	            this.context.rootNode.blend(args.props);
+	            this.context.rootNode.onBlended();
+	        }
+	        return new Promise(resolve => {
+	            Promise.resolve().then(() => {
+	                var _a;
+	                Promise.all(((_a = this.context.animationSet) === null || _a === void 0 ? void 0 : _a.map(e => {
+	                    return new Promise(resolve => {
+	                        const keyFrame = {};
+	                        const ensureNonString = (key, value) => {
+	                            if (!!value && value !== "") {
+	                                return value;
+	                            }
+	                            switch ((key)) {
+	                                case "backgroundColor":
+	                                    return "transparent";
+	                                case "transform":
+	                                    return "none";
+	                                default:
+	                                    return "none";
+	                            }
+	                        };
+	                        for (let k in e.keyFrame) {
+	                            keyFrame[k] = ensureNonString(k, e.viewNode.view.style[k]);
+	                            e.keyFrame[k] = ensureNonString(k, e.keyFrame[k]);
+	                        }
+	                        try {
+	                            const animation = e.viewNode.view.animate([keyFrame, e.keyFrame], {
+	                                duration: args.duration,
+	                                fill: "forwards"
+	                            });
+	                            animation.onfinish = () => {
+	                                Object.entries(e.keyFrame).forEach(entry => {
+	                                    Reflect.set(e.viewNode.view.style, entry[0], entry[1]);
+	                                });
+	                                resolve(true);
+	                            };
+	                        }
+	                        catch (e) {
+	                            console.error(e);
+	                            alert(e.stack);
+	                        }
+	                    });
+	                })) || [])
+	                    .then(() => {
+	                    resolve(0);
+	                })
+	                    .finally(() => {
+	                    this.context.animationSet = undefined;
+	                });
+	            });
+	        });
+	    }
+	}
+
+	class DoricSwitchNode extends DoricViewNode {
+	    constructor() {
+	        super(...arguments);
+	        this.offTintColor = "#e6e6e6";
+	        this.onTintColor = "#52d769";
+	    }
+	    build() {
+	        const ret = document.createElement('div');
+	        ret.style.position = "relative";
+	        ret.style.width = "50px";
+	        ret.style.height = "30px";
+	        const input = document.createElement('input');
+	        input.type = "checkbox";
+	        input.style.display = "none";
+	        const box = document.createElement('div');
+	        box.style.width = "100%";
+	        box.style.height = "100%";
+	        box.style.backgroundColor = "#ccc";
+	        box.style.borderRadius = "15px";
+	        const span = document.createElement('span');
+	        span.style.display = "inline-block";
+	        span.style.height = "30px";
+	        span.style.width = "30px";
+	        span.style.borderRadius = "15px";
+	        span.style.background = "#fff";
+	        span.style.boxShadow = "0px 3px 3px #eee";
+	        box.appendChild(span);
+	        ret.appendChild(input);
+	        ret.appendChild(box);
+	        ret.onclick = () => {
+	            try {
+	                if (input.checked === false) {
+	                    span.animate([{ transform: "translateX(0px)" }, { transform: "translateX(30px)" }], {
+	                        duration: 200,
+	                        fill: "forwards"
+	                    });
+	                    box.animate([{ backgroundColor: this.offTintColor }, { backgroundColor: this.onTintColor }], {
+	                        duration: 200,
+	                        fill: "forwards"
+	                    });
+	                    input.checked = true;
+	                }
+	                else {
+	                    span.animate([{ transform: "translateX(30px)" }, { transform: "translateX(0px)" }], {
+	                        duration: 200,
+	                        fill: "forwards"
+	                    });
+	                    box.animate([{ backgroundColor: this.onTintColor }, { backgroundColor: this.offTintColor }], {
+	                        duration: 200,
+	                        fill: "forwards"
+	                    });
+	                    input.checked = false;
+	                }
+	                if (this.onSwitchFuncId) {
+	                    this.callJSResponse(this.onSwitchFuncId, input.checked);
+	                }
+	            }
+	            catch (e) {
+	                alert(e);
+	            }
+	        };
+	        this.input = input;
+	        this.span = span;
+	        this.box = box;
+	        return ret;
+	    }
+	    setChecked(v) {
+	        if (!this.input || !this.span || !this.box) {
+	            return;
+	        }
+	        if (v) {
+	            this.span.style.transform = "translateX(30px)";
+	            this.box.style.backgroundColor = this.onTintColor;
+	            this.input.checked = v;
+	        }
+	        else {
+	            this.span.style.transform = "translateX(0px)";
+	            this.box.style.backgroundColor = this.offTintColor;
+	            this.input.checked = v;
+	        }
+	    }
+	    blendProps(v, propName, prop) {
+	        switch (propName) {
+	            case "state":
+	                this.setChecked(prop);
+	                break;
+	            case "onSwitch":
+	                this.onSwitchFuncId = prop;
+	                break;
+	            case "offTintColor":
+	                this.offTintColor = toRGBAString(prop);
+	                this.setChecked(this.getState());
+	                break;
+	            case "onTintColor":
+	                this.onTintColor = toRGBAString(prop);
+	                this.setChecked(this.getState());
+	                break;
+	            case "thumbTintColor":
+	                if (this.span) {
+	                    this.span.style.backgroundColor = toRGBAString(prop);
+	                }
+	                break;
+	            default:
+	                super.blendProps(v, propName, prop);
+	                break;
+	        }
+	    }
+	    getState() {
+	        var _a;
+	        return ((_a = this.input) === null || _a === void 0 ? void 0 : _a.checked) || false;
+	    }
+	}
+
+	class DoricSliderNode extends DoricSuperNode {
+	    constructor() {
+	        super(...arguments);
+	        this.itemCount = 0;
+	        this.renderPageFuncId = "";
+	        this.batchCount = 15;
+	        this.onPageSelectedFuncId = "";
+	        this.loop = false;
+	        this.childNodes = [];
+	    }
+	    blendProps(v, propName, prop) {
+	        if (propName === 'itemCount') {
+	            this.itemCount = prop;
+	        }
+	        else if (propName === 'renderPage') {
+	            if (prop !== this.renderPageFuncId) {
+	                this.childNodes = [];
+	                this.renderPageFuncId = prop;
+	            }
+	        }
+	        else if (propName === 'batchCount') {
+	            this.batchCount = prop;
+	        }
+	        else if (propName === 'onPageSlided') {
+	            this.onPageSelectedFuncId = prop;
+	        }
+	        else if (propName === 'loop') {
+	            this.loop = prop;
+	        }
+	        else {
+	            super.blendProps(v, propName, prop);
+	        }
+	    }
+	    blendSubNode(model) {
+	        var _a;
+	        (_a = this.getSubNodeById(model.id)) === null || _a === void 0 ? void 0 : _a.blend(model.props);
+	    }
+	    getSubNodeById(viewId) {
+	        var _a;
+	        return (_a = this.childNodes.filter(e => e.viewId === viewId)) === null || _a === void 0 ? void 0 : _a[0];
+	    }
+	    onBlending() {
+	        super.onBlending();
+	        if (this.childNodes.length !== this.itemCount) {
+	            const ret = this.pureCallJSResponse("renderBunchedItems", this.childNodes.length, this.itemCount);
+	            this.childNodes = this.childNodes.concat(ret.map(e => {
+	                const viewNode = DoricViewNode.create(this.context, e.type);
+	                viewNode.viewId = e.id;
+	                viewNode.init(this);
+	                viewNode.blend(e.props);
+	                this.view.appendChild(viewNode.view);
+	                return viewNode;
+	            }));
+	        }
+	    }
+	    build() {
+	        const ret = document.createElement('div');
+	        ret.style.overflow = "hidden";
+	        ret.style.display = "inline";
+	        ret.style.whiteSpace = "nowrap";
+	        let touchStartX = 0;
+	        let currentIndex = 0;
+	        ret.ontouchstart = (ev) => {
+	            currentIndex = Math.round(ret.scrollLeft / ret.offsetWidth);
+	            touchStartX = ev.touches[0].pageX;
+	        };
+	        ret.ontouchmove = (ev) => {
+	            const offsetX = (touchStartX - ev.touches[0].pageX) * 3;
+	            ret.scrollTo({
+	                left: currentIndex * ret.offsetWidth + offsetX
+	            });
+	        };
+	        ret.ontouchcancel = ret.ontouchend = () => {
+	            currentIndex = Math.round(ret.scrollLeft / ret.offsetWidth);
+	            ret.scrollTo({
+	                left: currentIndex * ret.offsetWidth,
+	                behavior: "smooth"
+	            });
+	        };
+	        return ret;
+	    }
+	    getSlidedPage() {
+	        return Math.round(this.view.scrollLeft / this.view.offsetWidth);
+	    }
+	    slidePage(params) {
+	        if (params.smooth) {
+	            this.view.scrollTo({
+	                left: this.view.offsetWidth * params.page,
+	                behavior: "smooth"
+	            });
+	        }
+	        else {
+	            this.view.scrollTo({
+	                left: this.view.offsetWidth * params.page
+	            });
+	        }
+	        if (this.onPageSelectedFuncId.length > 0) {
+	            this.callJSResponse(this.onPageSelectedFuncId, params.page);
+	        }
+	    }
+	}
+
+	class DoricSlideItemNode extends DoricStackNode {
+	    constructor(context) {
+	        super(context);
+	        this.reusable = true;
+	    }
+	    build() {
+	        const ret = super.build();
+	        ret.style.display = "inline-block";
+	        ret.style.width = "100%";
+	        ret.style.height = "100%";
+	        return ret;
+	    }
+	}
+
+	const bundles = new Map;
+	const plugins = new Map;
+	const nodes = new Map;
+	function acquireJSBundle(name) {
+	    return bundles.get(name);
+	}
+	function registerJSBundle(name, bundle) {
+	    bundles.set(name, bundle);
+	}
+	function registerPlugin(name, plugin) {
+	    plugins.set(name, plugin);
+	}
+	function acquirePlugin(name) {
+	    return plugins.get(name);
+	}
+	function registerViewNode(name, node) {
+	    nodes.set(name, node);
+	}
+	function acquireViewNode(name) {
+	    return nodes.get(name);
+	}
+	registerPlugin('shader', ShaderPlugin);
+	registerPlugin('modal', ModalPlugin);
+	registerPlugin('storage', StoragePlugin);
+	registerPlugin('navigator', NavigatorPlugin);
+	registerPlugin('popover', PopoverPlugin);
+	registerPlugin('animate', AnimatePlugin);
+	registerViewNode('Stack', DoricStackNode);
+	registerViewNode('VLayout', DoricVLayoutNode);
+	registerViewNode('HLayout', DoricHLayoutNode);
+	registerViewNode('Text', DoricTextNode);
+	registerViewNode('Image', DoricImageNode);
+	registerViewNode('Scroller', DoricScrollerNode);
+	registerViewNode('ListItem', DoricListItemNode);
+	registerViewNode('List', DoricListNode);
+	registerViewNode('Draggable', DoricDraggableNode);
+	registerViewNode('Refreshable', DoricRefreshableNode);
+	registerViewNode('Switch', DoricSwitchNode);
+	registerViewNode('Slider', DoricSliderNode);
+	registerViewNode('SlideItem', DoricSlideItemNode);
+
+	function getScriptId(contextId) {
+	    return `__doric_script_${contextId}`;
+	}
+	const originSetTimeout = window.setTimeout;
+	const originClearTimeout = window.clearTimeout;
+	const originSetInterval = window.setInterval;
+	const originClearInterval = window.clearInterval;
+	const timers = new Map;
+	function injectGlobalObject(name, value) {
+	    Reflect.set(window, name, value, window);
+	}
+	function loadJS(contextId, script) {
+	    const scriptElement = document.createElement('script');
+	    scriptElement.text = script;
+	    scriptElement.id = getScriptId(contextId);
+	    document.body.appendChild(scriptElement);
+	}
+	function packageModuleScript(name, content) {
+	    return `Reflect.apply(doric.jsRegisterModule,this,[${name},Reflect.apply(function(__module){(function(module,exports,require,setTimeout,setInterval,clearTimeout,clearInterval){
 ${content}
 })(__module,__module.exports,doric.__require__,doricSetTimeout,doricSetInterval,doricClearTimeout,doricClearInterval);
 return __module.exports;},this,[{exports:{}}])])`;
-    }
-    function packageCreateContext(contextId, content) {
-        return `//@ sourceURL=contextId_${contextId}.js
+	}
+	function packageCreateContext(contextId, content) {
+	    return `//@ sourceURL=contextId_${contextId}.js
 Reflect.apply(function(doric,context,Entry,require,exports,setTimeout,setInterval,clearTimeout,clearInterval){
 ${content}
 },undefined,[undefined,doric.jsObtainContext("${contextId}"),doric.jsObtainEntry("${contextId}"),doric.__require__,{},doricSetTimeout,doricSetInterval,doricClearTimeout,doricClearInterval])`;
-    }
-    function initDoric() {
-        injectGlobalObject("Environment", {
-            platform: "web"
-        });
-        injectGlobalObject("nativeEmpty", () => undefined);
-        injectGlobalObject('nativeLog', (type, message) => {
-            switch (type) {
-                case 'd':
-                    console.log(message);
-                    break;
-                case 'w':
-                    console.warn(message);
-                    break;
-                case 'e':
-                    console.error(message);
-                    break;
-            }
-        });
-        injectGlobalObject('nativeRequire', (moduleName) => {
-            const bundle = acquireJSBundle(moduleName);
-            if (bundle === undefined || bundle.length === 0) {
-                console.log(`Cannot require JS Bundle :${moduleName}`);
-                return false;
-            }
-            else {
-                loadJS(moduleName, packageModuleScript(moduleName, bundle));
-                return true;
-            }
-        });
-        injectGlobalObject('nativeBridge', (contextId, namespace, method, callbackId, args) => {
-            const pluginClass = acquirePlugin(namespace);
-            const doricContext = getDoricContext(contextId);
-            if (pluginClass === undefined) {
-                console.error(`Cannot find Plugin:${namespace}`);
-                return false;
-            }
-            if (doricContext === undefined) {
-                console.error(`Cannot find Doric Context:${contextId}`);
-                return false;
-            }
-            let plugin = doricContext.pluginInstances.get(namespace);
-            if (plugin === undefined) {
-                plugin = new pluginClass(doricContext);
-                doricContext.pluginInstances.set(namespace, plugin);
-            }
-            if (!Reflect.has(plugin, method)) {
-                console.error(`Cannot find Method:${method} in plugin ${namespace}`);
-                return false;
-            }
-            const pluginMethod = Reflect.get(plugin, method, plugin);
-            if (typeof pluginMethod !== 'function') {
-                console.error(`Plugin ${namespace}'s property ${method}'s type is ${typeof pluginMethod} not function,`);
-            }
-            const ret = Reflect.apply(pluginMethod, plugin, [args]);
-            if (ret instanceof Promise) {
-                ret.then(e => {
-                    sandbox.jsCallResolve(contextId, callbackId, e);
-                }, e => {
-                    sandbox.jsCallReject(contextId, callbackId, e);
-                });
-            }
-            else if (ret !== undefined) {
-                sandbox.jsCallResolve(contextId, callbackId, ret);
-            }
-            return true;
-        });
-        injectGlobalObject('nativeSetTimer', (timerId, time, repeat) => {
-            if (repeat) {
-                const handleId = originSetInterval(() => {
-                    sandbox.jsCallbackTimer(timerId);
-                }, time);
-                timers.set(timerId, { handleId, repeat });
-            }
-            else {
-                const handleId = originSetTimeout(() => {
-                    sandbox.jsCallbackTimer(timerId);
-                }, time);
-                timers.set(timerId, { handleId, repeat });
-            }
-        });
-        injectGlobalObject('nativeClearTimer', (timerId) => {
-            const timerInfo = timers.get(timerId);
-            if (timerInfo) {
-                if (timerInfo.repeat) {
-                    originClearInterval(timerInfo.handleId);
-                }
-                else {
-                    originClearTimeout(timerInfo.handleId);
-                }
-            }
-        });
-    }
-    function createContext(contextId, content) {
-        loadJS(contextId, packageCreateContext(contextId, content));
-    }
-    function destroyContext(contextId) {
-        sandbox.jsReleaseContext(contextId);
-        const scriptElement = document.getElementById(getScriptId(contextId));
-        if (scriptElement) {
-            document.body.removeChild(scriptElement);
-        }
-    }
-    initDoric();
+	}
+	function initDoric() {
+	    injectGlobalObject("Environment", {
+	        platform: "web"
+	    });
+	    injectGlobalObject("nativeEmpty", () => undefined);
+	    injectGlobalObject('nativeLog', (type, message) => {
+	        switch (type) {
+	            case 'd':
+	                console.log(message);
+	                break;
+	            case 'w':
+	                console.warn(message);
+	                break;
+	            case 'e':
+	                console.error(message);
+	                break;
+	        }
+	    });
+	    injectGlobalObject('nativeRequire', (moduleName) => {
+	        const bundle = acquireJSBundle(moduleName);
+	        if (bundle === undefined || bundle.length === 0) {
+	            console.log(`Cannot require JS Bundle :${moduleName}`);
+	            return false;
+	        }
+	        else {
+	            loadJS(moduleName, packageModuleScript(moduleName, bundle));
+	            return true;
+	        }
+	    });
+	    injectGlobalObject('nativeBridge', (contextId, namespace, method, callbackId, args) => {
+	        const pluginClass = acquirePlugin(namespace);
+	        const doricContext = getDoricContext(contextId);
+	        if (pluginClass === undefined) {
+	            console.error(`Cannot find Plugin:${namespace}`);
+	            return false;
+	        }
+	        if (doricContext === undefined) {
+	            console.error(`Cannot find Doric Context:${contextId}`);
+	            return false;
+	        }
+	        let plugin = doricContext.pluginInstances.get(namespace);
+	        if (plugin === undefined) {
+	            plugin = new pluginClass(doricContext);
+	            doricContext.pluginInstances.set(namespace, plugin);
+	        }
+	        if (!Reflect.has(plugin, method)) {
+	            console.error(`Cannot find Method:${method} in plugin ${namespace}`);
+	            return false;
+	        }
+	        const pluginMethod = Reflect.get(plugin, method, plugin);
+	        if (typeof pluginMethod !== 'function') {
+	            console.error(`Plugin ${namespace}'s property ${method}'s type is ${typeof pluginMethod} not function,`);
+	        }
+	        const ret = Reflect.apply(pluginMethod, plugin, [args]);
+	        if (ret instanceof Promise) {
+	            ret.then(e => {
+	                sandbox.jsCallResolve(contextId, callbackId, e);
+	            }, e => {
+	                sandbox.jsCallReject(contextId, callbackId, e);
+	            });
+	        }
+	        else if (ret !== undefined) {
+	            sandbox.jsCallResolve(contextId, callbackId, ret);
+	        }
+	        return true;
+	    });
+	    injectGlobalObject('nativeSetTimer', (timerId, time, repeat) => {
+	        if (repeat) {
+	            const handleId = originSetInterval(() => {
+	                sandbox.jsCallbackTimer(timerId);
+	            }, time);
+	            timers.set(timerId, { handleId, repeat });
+	        }
+	        else {
+	            const handleId = originSetTimeout(() => {
+	                sandbox.jsCallbackTimer(timerId);
+	            }, time);
+	            timers.set(timerId, { handleId, repeat });
+	        }
+	    });
+	    injectGlobalObject('nativeClearTimer', (timerId) => {
+	        const timerInfo = timers.get(timerId);
+	        if (timerInfo) {
+	            if (timerInfo.repeat) {
+	                originClearInterval(timerInfo.handleId);
+	            }
+	            else {
+	                originClearTimeout(timerInfo.handleId);
+	            }
+	        }
+	    });
+	}
+	function createContext(contextId, content) {
+	    loadJS(contextId, packageCreateContext(contextId, content));
+	}
+	function destroyContext(contextId) {
+	    sandbox.jsReleaseContext(contextId);
+	    const scriptElement = document.getElementById(getScriptId(contextId));
+	    if (scriptElement) {
+	        document.body.removeChild(scriptElement);
+	    }
+	}
+	initDoric();
 
-    const doricContexts = new Map;
-    let __contextId__ = 0;
-    function getContextId() {
-        return `context_${__contextId__++}`;
-    }
-    function getDoricContext(contextId) {
-        return doricContexts.get(contextId);
-    }
-    class DoricContext {
-        constructor(content) {
-            this.contextId = getContextId();
-            this.pluginInstances = new Map;
-            this.headNodes = new Map;
-            createContext(this.contextId, content);
-            doricContexts.set(this.contextId, this);
-            this.rootNode = new DoricStackNode(this);
-        }
-        targetViewNode(viewId) {
-            if (this.rootNode.viewId === viewId) {
-                return this.rootNode;
-            }
-            for (let nodes of this.headNodes.values()) {
-                if (nodes.has(viewId)) {
-                    return nodes.get(viewId);
-                }
-            }
-        }
-        get panel() {
-            var _a;
-            return (_a = sandbox.jsObtainContext(this.contextId)) === null || _a === void 0 ? void 0 : _a.entity;
-        }
-        invokeEntityMethod(method, ...otherArgs) {
-            const argumentsList = [this.contextId];
-            for (let i = 0; i < arguments.length; i++) {
-                argumentsList.push(arguments[i]);
-            }
-            return Reflect.apply(sandbox.jsCallEntityMethod, this.panel, argumentsList);
-        }
-        pureInvokeEntityMethod(method, ...otherArgs) {
-            const argumentsList = [this.contextId];
-            for (let i = 0; i < arguments.length; i++) {
-                argumentsList.push(arguments[i]);
-            }
-            return Reflect.apply(sandbox.pureCallEntityMethod, this.panel, argumentsList);
-        }
-        init(data) {
-            this.invokeEntityMethod("__init__", data);
-        }
-        onCreate() {
-            this.invokeEntityMethod("__onCreate__");
-        }
-        onDestroy() {
-            this.invokeEntityMethod("__onDestroy__");
-        }
-        onShow() {
-            this.invokeEntityMethod("__onShow__");
-        }
-        onHidden() {
-            this.invokeEntityMethod("__onHidden__");
-        }
-        build(frame) {
-            this.invokeEntityMethod("__build__", frame);
-        }
-        inAnimation() {
-            return !!this.animationSet;
-        }
-        addAnimation(viewNode, keyFrame) {
-            var _a;
-            (_a = this.animationSet) === null || _a === void 0 ? void 0 : _a.push({
-                viewNode,
-                keyFrame
-            });
-        }
-        teardown() {
-            for (let plugin of this.pluginInstances.values()) {
-                plugin.onTearDown();
-            }
-            destroyContext(this.contextId);
-        }
-    }
+	const doricContexts = new Map;
+	let __contextId__ = 0;
+	function getContextId() {
+	    return `context_${__contextId__++}`;
+	}
+	function getDoricContext(contextId) {
+	    return doricContexts.get(contextId);
+	}
+	class DoricContext {
+	    constructor(content) {
+	        this.contextId = getContextId();
+	        this.pluginInstances = new Map;
+	        this.headNodes = new Map;
+	        createContext(this.contextId, content);
+	        doricContexts.set(this.contextId, this);
+	        this.rootNode = new DoricStackNode(this);
+	    }
+	    targetViewNode(viewId) {
+	        if (this.rootNode.viewId === viewId) {
+	            return this.rootNode;
+	        }
+	        for (let nodes of this.headNodes.values()) {
+	            if (nodes.has(viewId)) {
+	                return nodes.get(viewId);
+	            }
+	        }
+	    }
+	    get panel() {
+	        var _a;
+	        return (_a = sandbox.jsObtainContext(this.contextId)) === null || _a === void 0 ? void 0 : _a.entity;
+	    }
+	    invokeEntityMethod(method, ...otherArgs) {
+	        const argumentsList = [this.contextId];
+	        for (let i = 0; i < arguments.length; i++) {
+	            argumentsList.push(arguments[i]);
+	        }
+	        return Reflect.apply(sandbox.jsCallEntityMethod, this.panel, argumentsList);
+	    }
+	    pureInvokeEntityMethod(method, ...otherArgs) {
+	        const argumentsList = [this.contextId];
+	        for (let i = 0; i < arguments.length; i++) {
+	            argumentsList.push(arguments[i]);
+	        }
+	        return Reflect.apply(sandbox.pureCallEntityMethod, this.panel, argumentsList);
+	    }
+	    init(data) {
+	        this.invokeEntityMethod("__init__", data);
+	    }
+	    onCreate() {
+	        this.invokeEntityMethod("__onCreate__");
+	    }
+	    onDestroy() {
+	        this.invokeEntityMethod("__onDestroy__");
+	    }
+	    onShow() {
+	        this.invokeEntityMethod("__onShow__");
+	    }
+	    onHidden() {
+	        this.invokeEntityMethod("__onHidden__");
+	    }
+	    build(frame) {
+	        this.invokeEntityMethod("__build__", frame);
+	    }
+	    inAnimation() {
+	        return !!this.animationSet;
+	    }
+	    addAnimation(viewNode, keyFrame) {
+	        var _a;
+	        (_a = this.animationSet) === null || _a === void 0 ? void 0 : _a.push({
+	            viewNode,
+	            keyFrame,
+	        });
+	    }
+	    teardown() {
+	        for (let plugin of this.pluginInstances.values()) {
+	            plugin.onTearDown();
+	        }
+	        destroyContext(this.contextId);
+	    }
+	}
 
-    class DoricElement extends HTMLElement {
-        constructor() {
-            super();
-        }
-        get src() {
-            return this.getAttribute('src');
-        }
-        get alias() {
-            return this.getAttribute('alias');
-        }
-        set src(v) {
-            this.setAttribute('src', v);
-        }
-        set alias(v) {
-            this.setAttribute('alias', v);
-        }
-        get initData() {
-            return this.getAttribute('data');
-        }
-        set initData(v) {
-            this.setAttribute('data', v);
-        }
-        connectedCallback() {
-            if (this.src && this.context === undefined) {
-                loadDoricJSBundle(this.src).then(result => {
-                    this.load(result);
-                });
-            }
-        }
-        disconnectedCallback() {
-        }
-        adoptedCallback() {
-        }
-        attributeChangedCallback() {
-        }
-        onDestroy() {
-            var _a, _b;
-            (_a = this.context) === null || _a === void 0 ? void 0 : _a.onDestroy();
-            (_b = this.context) === null || _b === void 0 ? void 0 : _b.teardown();
-        }
-        load(content) {
-            this.context = new DoricContext(content);
-            this.context.init(this.initData);
-            this.context.onCreate();
-            const divElement = document.createElement('div');
-            divElement.style.position = 'relative';
-            divElement.style.height = '100%';
-            this.append(divElement);
-            this.context.rootNode.view = divElement;
-            this.context.build({
-                width: divElement.offsetWidth,
-                height: divElement.offsetHeight,
-            });
-            this.context.onShow();
-        }
-    }
+	class DoricElement extends HTMLElement {
+	    constructor() {
+	        super();
+	    }
+	    get src() {
+	        return this.getAttribute('src');
+	    }
+	    get alias() {
+	        return this.getAttribute('alias');
+	    }
+	    set src(v) {
+	        this.setAttribute('src', v);
+	    }
+	    set alias(v) {
+	        this.setAttribute('alias', v);
+	    }
+	    get initData() {
+	        return this.getAttribute('data');
+	    }
+	    set initData(v) {
+	        this.setAttribute('data', v);
+	    }
+	    connectedCallback() {
+	        if (this.src && this.context === undefined) {
+	            loadDoricJSBundle(this.src).then(result => {
+	                this.load(result);
+	            });
+	        }
+	    }
+	    disconnectedCallback() {
+	    }
+	    adoptedCallback() {
+	    }
+	    attributeChangedCallback() {
+	    }
+	    onDestroy() {
+	        var _a, _b;
+	        (_a = this.context) === null || _a === void 0 ? void 0 : _a.onDestroy();
+	        (_b = this.context) === null || _b === void 0 ? void 0 : _b.teardown();
+	    }
+	    load(content) {
+	        this.context = new DoricContext(content);
+	        this.context.init(this.initData);
+	        this.context.onCreate();
+	        const divElement = document.createElement('div');
+	        divElement.style.position = 'relative';
+	        divElement.style.height = '100%';
+	        this.append(divElement);
+	        this.context.rootNode.view = divElement;
+	        this.context.build({
+	            width: divElement.offsetWidth,
+	            height: divElement.offsetHeight,
+	        });
+	        this.context.onShow();
+	    }
+	}
 
-    class NavigationElement extends HTMLElement {
-        constructor() {
-            super(...arguments);
-            this.elementStack = [];
-        }
-        get currentNode() {
-            for (let i = 0; i < this.childNodes.length; i++) {
-                if (this.childNodes[i] instanceof DoricElement) {
-                    return this.childNodes[i];
-                }
-            }
-            return undefined;
-        }
-        push(element) {
-            const currentNode = this.currentNode;
-            if (currentNode) {
-                this.elementStack.push(currentNode);
-                this.replaceChild(element, currentNode);
-            }
-            else {
-                this.appendChild(element);
-            }
-        }
-        pop() {
-            const lastElement = this.elementStack.pop();
-            const currentNode = this.currentNode;
-            if (lastElement && currentNode) {
-                this.replaceChild(lastElement, currentNode);
-                currentNode.onDestroy();
-            }
-            else {
-                window.history.back();
-            }
-        }
-    }
+	class NavigationElement extends HTMLElement {
+	    constructor() {
+	        super(...arguments);
+	        this.elementStack = [];
+	    }
+	    get currentNode() {
+	        for (let i = 0; i < this.childNodes.length; i++) {
+	            if (this.childNodes[i] instanceof DoricElement) {
+	                return this.childNodes[i];
+	            }
+	        }
+	        return undefined;
+	    }
+	    push(element) {
+	        const currentNode = this.currentNode;
+	        if (currentNode) {
+	            this.elementStack.push(currentNode);
+	            this.replaceChild(element, currentNode);
+	        }
+	        else {
+	            this.appendChild(element);
+	        }
+	    }
+	    pop() {
+	        const lastElement = this.elementStack.pop();
+	        const currentNode = this.currentNode;
+	        if (lastElement && currentNode) {
+	            this.replaceChild(lastElement, currentNode);
+	            currentNode.onDestroy();
+	        }
+	        else {
+	            window.history.back();
+	        }
+	    }
+	}
 
-    var __awaiter$1 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-        function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-        return new (P || (P = Promise))(function (resolve, reject) {
-            function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-            function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-            function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-            step((generator = generator.apply(thisArg, _arguments || [])).next());
-        });
-    };
-    window.customElements.define('doric-div', DoricElement);
-    window.customElements.define('doric-navigation', NavigationElement);
-    registerDoricJSLoader({
-        filter: (source) => source.startsWith("assets://"),
-        request: (source) => __awaiter$1(void 0, void 0, void 0, function* () {
-            const ret = yield axios__default['default'].get(source.replace("assets://", `${window.location.href}/../../doric-demo/bundle/`));
-            return ret.data;
-        })
-    });
+	var __awaiter$1 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+	    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+	    return new (P || (P = Promise))(function (resolve, reject) {
+	        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+	        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+	        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+	        step((generator = generator.apply(thisArg, _arguments || [])).next());
+	    });
+	};
+	window.customElements.define('doric-div', DoricElement);
+	window.customElements.define('doric-navigation', NavigationElement);
+	smoothscroll.polyfill();
+	registerDoricJSLoader({
+	    filter: (source) => source.startsWith("assets://"),
+	    request: (source) => __awaiter$1(void 0, void 0, void 0, function* () {
+	        const ret = yield axios__default['default'].get(source.replace("assets://", `${window.location.href}/../../doric-demo/bundle/`));
+	        return ret.data;
+	    })
+	});
 
-    exports.BOTTOM = BOTTOM;
-    exports.CENTER = CENTER;
-    exports.CENTER_X = CENTER_X;
-    exports.CENTER_Y = CENTER_Y;
-    exports.DoricElement = DoricElement;
-    exports.DoricGroupViewNode = DoricGroupViewNode;
-    exports.DoricPlugin = DoricPlugin;
-    exports.DoricSuperNode = DoricSuperNode;
-    exports.DoricViewNode = DoricViewNode;
-    exports.LEFT = LEFT;
-    exports.NavigationElement = NavigationElement;
-    exports.RIGHT = RIGHT;
-    exports.TOP = TOP;
-    exports.acquireJSBundle = acquireJSBundle;
-    exports.acquirePlugin = acquirePlugin;
-    exports.acquireViewNode = acquireViewNode;
-    exports.createContext = createContext;
-    exports.destroyContext = destroyContext;
-    exports.injectGlobalObject = injectGlobalObject;
-    exports.loadJS = loadJS;
-    exports.pixelString2Number = pixelString2Number;
-    exports.registerJSBundle = registerJSBundle;
-    exports.registerPlugin = registerPlugin;
-    exports.registerViewNode = registerViewNode;
-    exports.toPixelString = toPixelString;
-    exports.toRGBAString = toRGBAString;
+	exports.BOTTOM = BOTTOM;
+	exports.CENTER = CENTER;
+	exports.CENTER_X = CENTER_X;
+	exports.CENTER_Y = CENTER_Y;
+	exports.DoricElement = DoricElement;
+	exports.DoricGroupViewNode = DoricGroupViewNode;
+	exports.DoricPlugin = DoricPlugin;
+	exports.DoricSuperNode = DoricSuperNode;
+	exports.DoricViewNode = DoricViewNode;
+	exports.LEFT = LEFT;
+	exports.NavigationElement = NavigationElement;
+	exports.RIGHT = RIGHT;
+	exports.TOP = TOP;
+	exports.acquireJSBundle = acquireJSBundle;
+	exports.acquirePlugin = acquirePlugin;
+	exports.acquireViewNode = acquireViewNode;
+	exports.createContext = createContext;
+	exports.destroyContext = destroyContext;
+	exports.injectGlobalObject = injectGlobalObject;
+	exports.loadJS = loadJS;
+	exports.pixelString2Number = pixelString2Number;
+	exports.registerJSBundle = registerJSBundle;
+	exports.registerPlugin = registerPlugin;
+	exports.registerViewNode = registerViewNode;
+	exports.toPixelString = toPixelString;
+	exports.toRGBAString = toRGBAString;
 
-    return exports;
+	return exports;
 
 }({}, axios, doric));
 //# sourceMappingURL=index.js.map

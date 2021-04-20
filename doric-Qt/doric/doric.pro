@@ -123,7 +123,7 @@ HEADERS += \
     widget/flex/FlexLayout.h \
     widget/flex/FlexLayoutConfig.h \
     widget/flex/FlexLayoutService.h \
-    yoga/Bitfield.h \
+    yoga/BitUtils.h \
     yoga/CompactValue.h \
     yoga/Utils.h \
     yoga/YGConfig.h \

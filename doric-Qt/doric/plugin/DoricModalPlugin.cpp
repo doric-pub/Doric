@@ -5,7 +5,7 @@
 #include <QJsonDocument>
 #include <QObject>
 #include <QQmlComponent>
-#include <QQuickItem>
+#include <QQuickWindow>
 #include <QTimer>
 
 void DoricModalPlugin::toast(QString jsValueString, QString callbackId) {
@@ -18,56 +18,55 @@ void DoricModalPlugin::toast(QString jsValueString, QString callbackId) {
         QString msg = jsValue["msg"].toString();
         int gravity = jsValue["gravity"].toInt();
 
-        QQuickItem *rootObject =
-            getContext()->getRootNode()->getRootView()->parentItem();
         QQmlComponent component(getContext()->getQmlEngine());
         const QUrl url(QStringLiteral("qrc:/doric/qml/toast.qml"));
         component.loadUrl(url);
         if (component.isError()) {
           qCritical() << component.errorString();
         }
-        QQuickItem *item = qobject_cast<QQuickItem *>(component.create());
-        item->setParentItem(rootObject);
+        QQuickWindow *window = qobject_cast<QQuickWindow *>(component.create());
 
+        QQuickWindow *parentWindow =
+            getContext()->getRootNode()->getRootView()->window();
+
+        window->contentItem()
+            ->childItems()
+            .at(0)
+            ->childItems()
+            .at(0)
+            ->setProperty("text", msg);
+
+        std::function setX = [window, parentWindow]() {
+          window->setProperty("x",
+                              (parentWindow->width() - window->width()) / 2.f +
+                                  parentWindow->x());
+        };
+        std::function setY = [window, parentWindow, gravity]() {
+          if ((gravity & DoricGravity::DoricGravityBottom) ==
+              DoricGravity::DoricGravityBottom) {
+            window->setProperty("y", parentWindow->height() - window->height() -
+                                         20 + parentWindow->y());
+          } else if ((gravity & DoricGravity::DoricGravityTop) ==
+                     DoricGravity::DoricGravityTop) {
+            window->setProperty("y", 20 + parentWindow->y());
+          } else {
+            window->setProperty(
+                "y", (parentWindow->height() - window->height()) / 2 +
+                         parentWindow->y());
+          }
+        };
+        // init set x
+        setX();
         // init set y
-        if ((gravity & DoricGravity::DoricGravityBottom) ==
-            DoricGravity::DoricGravityBottom) {
-          item->setProperty("y", rootObject->height() - item->height() - 20);
-        } else if ((gravity & DoricGravity::DoricGravityTop) ==
-                   DoricGravity::DoricGravityTop) {
-          item->setProperty("y", 20);
-        } else {
-          item->setProperty("y", (rootObject->height() - item->height()) / 2);
-        }
+        setY();
 
         // update x
-        connect(item, &QQuickItem::widthChanged, [rootObject, item]() {
-          item->setProperty("x", (rootObject->width() - item->width()) / 2.f);
-        });
+        connect(window, &QQuickWindow::widthChanged, setX);
 
         // update y
-        connect(
-            item, &QQuickItem::heightChanged, [rootObject, item, gravity]() {
-              if ((gravity & DoricGravity::DoricGravityBottom) ==
-                  DoricGravity::DoricGravityBottom) {
-                item->setProperty("y",
-                                  rootObject->height() - item->height() - 20);
-              } else if ((gravity & DoricGravity::DoricGravityTop) ==
-                         DoricGravity::DoricGravityTop) {
-                item->setProperty("y", 20);
-              } else {
-                item->setProperty("y",
-                                  (rootObject->height() - item->height()) / 2);
-              }
-            });
+        connect(window, &QQuickWindow::heightChanged, setY);
 
-        item->childItems().at(0)->childItems().at(0)->setProperty("text", msg);
-
-        QTimer::singleShot(2000, qApp, [item]() {
-          item->setParent(nullptr);
-          item->setParentItem(nullptr);
-          item->deleteLater();
-        });
+        QTimer::singleShot(2000, qApp, [window]() { window->deleteLater(); });
       },
       DoricThreadMode::UI);
 }

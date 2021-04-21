@@ -15,6 +15,7 @@
  */
 
 import { Modeling, Model } from "../util/types"
+import { uniqueId } from "../util/uniqueId"
 
 export type AnimatedKey = "translationX" | "translationY" | "scaleX" | "scaleY" | "rotation" | "pivotX" | "pivotY" | "rotationX" | "rotationY"
 
@@ -26,6 +27,7 @@ export enum RepeatMode {
 export interface IAnimation extends Modeling {
     duration: number
     delay?: number
+    id: string
 }
 
 export interface Changeable {
@@ -85,6 +87,7 @@ abstract class Animation implements IAnimation {
     delay?: number
     fillMode = FillMode.Forward
     timingFunction?: TimingFunction
+    id = uniqueId("Animation")
     toModel() {
         const changeables = []
         for (let e of this.changeables.values()) {
@@ -102,7 +105,8 @@ abstract class Animation implements IAnimation {
             repeatCount: this.repeatCount,
             repeatMode: this.repeatMode,
             fillMode: this.fillMode,
-            timingFunction: this.timingFunction
+            timingFunction: this.timingFunction,
+            id: this.id,
         }
     }
 }
@@ -160,13 +164,13 @@ export class ScaleAnimation extends Animation {
 export class TranslationAnimation extends Animation {
     private translationXChangeable: Changeable = {
         key: "translationX",
-        fromValue: 1,
-        toValue: 1,
+        fromValue: 0,
+        toValue: 0,
     }
     private translationYChangeable: Changeable = {
         key: "translationY",
-        fromValue: 1,
-        toValue: 1,
+        fromValue: 0,
+        toValue: 0,
     }
     constructor() {
         super()
@@ -292,6 +296,8 @@ export class AnimationSet implements IAnimation {
     private animations: IAnimation[] = []
     private _duration = 0
     delay?: number
+    id = uniqueId("AnimationSet")
+
     addAnimation(anim: IAnimation) {
         this.animations.push(anim)
     }
@@ -311,6 +317,7 @@ export class AnimationSet implements IAnimation {
                 return e.toModel()
             }) as Model,
             delay: this.delay,
+            id: this.id,
         }
     }
 }

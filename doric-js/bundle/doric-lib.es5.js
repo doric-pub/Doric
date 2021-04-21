@@ -1380,6 +1380,7 @@ var Animation = /** @class */ (function () {
         this.changeables = new Map;
         this.duration = 0;
         this.fillMode = exports.FillMode.Forward;
+        this.id = uniqueId("Animation");
     }
     Animation.prototype.toModel = function () {
         var e_1, _a;
@@ -1409,7 +1410,8 @@ var Animation = /** @class */ (function () {
             repeatCount: this.repeatCount,
             repeatMode: this.repeatMode,
             fillMode: this.fillMode,
-            timingFunction: this.timingFunction
+            timingFunction: this.timingFunction,
+            id: this.id,
         };
     };
     return Animation;
@@ -1480,13 +1482,13 @@ var TranslationAnimation = /** @class */ (function (_super) {
         var _this = _super.call(this) || this;
         _this.translationXChangeable = {
             key: "translationX",
-            fromValue: 1,
-            toValue: 1,
+            fromValue: 0,
+            toValue: 0,
         };
         _this.translationYChangeable = {
             key: "translationY",
-            fromValue: 1,
-            toValue: 1,
+            fromValue: 0,
+            toValue: 0,
         };
         _this.changeables.set("translationX", _this.translationXChangeable);
         _this.changeables.set("translationY", _this.translationYChangeable);
@@ -1640,6 +1642,7 @@ var AnimationSet = /** @class */ (function () {
     function AnimationSet() {
         this.animations = [];
         this._duration = 0;
+        this.id = uniqueId("AnimationSet");
     }
     AnimationSet.prototype.addAnimation = function (anim) {
         this.animations.push(anim);
@@ -1661,6 +1664,7 @@ var AnimationSet = /** @class */ (function () {
                 return e.toModel();
             }),
             delay: this.delay,
+            id: this.id,
         };
     };
     return AnimationSet;

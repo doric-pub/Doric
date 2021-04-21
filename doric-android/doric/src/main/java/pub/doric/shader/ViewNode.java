@@ -51,6 +51,7 @@ import com.github.pengfeizhou.jscore.JavaValue;
 import org.json.JSONObject;
 
 import java.util.LinkedList;
+import java.util.WeakHashMap;
 
 import pub.doric.DoricContext;
 import pub.doric.DoricRegistry;
@@ -77,6 +78,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     protected ViewGroup.LayoutParams mLayoutParams;
     private String mType;
     protected JSObject mFlexConfig;
+    private final WeakHashMap<String, Animator> animators = new WeakHashMap<>();
 
     public JSObject getFlexConfig() {
         return mFlexConfig;
@@ -904,7 +906,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         return getNodeView().getPivotY() / getNodeView().getHeight();
     }
 
-    private String[] animatedKeys = {
+    private final String[] animatedKeys = {
             "translationX",
             "translationY",
             "scaleX",
@@ -916,7 +918,25 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     public void doAnimation(JSValue value, final DoricPromise promise) {
         Animator animator = parseAnimator(value);
         if (animator != null) {
+            String animatorId = value.asObject().getProperty("id").asString().value();
+            animators.put(animatorId, animator);
+//            final float tx = getTranslationX();
+//            final float ty = getTranslationY();
+//            final float sx = getScaleX();
+//            final float sy = getScaleY();
+//            final float r = getRotation();
             animator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationCancel(Animator animation) {
+                    super.onAnimationCancel(animation);
+//                    setTranslationX(tx);
+//                    setTranslationY(ty);
+//                    setScaleX(sx);
+//                    setScaleY(sy);
+//                    setRotation(r);
+                    promise.reject(new JavaValue("Animation cancelled"));
+                }
+
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     super.onAnimationEnd(animation);
@@ -928,6 +948,28 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 }
             });
             animator.start();
+        }
+    }
+
+    @DoricMethod
+    public void clearAnimation(String id, final DoricPromise promise) {
+        Animator animator = animators.get(id);
+        if (animator != null) {
+            animator.cancel();
+            promise.resolve();
+        } else {
+            promise.reject(new JavaValue("Cannot find running animation for " + id));
+        }
+    }
+
+    @DoricMethod
+    public void cancelAnimation(String id, final DoricPromise promise) {
+        Animator animator = animators.get(id);
+        if (animator != null) {
+            animator.cancel();
+            promise.resolve();
+        } else {
+            promise.reject(new JavaValue("Cannot find running animation for " + id));
         }
     }
 

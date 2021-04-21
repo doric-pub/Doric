@@ -7,6 +7,7 @@ export declare enum RepeatMode {
 export interface IAnimation extends Modeling {
     duration: number;
     delay?: number;
+    id: string;
 }
 export interface Changeable {
     fromValue: number;
@@ -63,6 +64,7 @@ declare abstract class Animation implements IAnimation {
     delay?: number;
     fillMode: FillMode;
     timingFunction?: TimingFunction;
+    id: string;
     toModel(): {
         type: string;
         delay: number | undefined;
@@ -76,6 +78,7 @@ declare abstract class Animation implements IAnimation {
         repeatMode: RepeatMode | undefined;
         fillMode: FillMode;
         timingFunction: TimingFunction | undefined;
+        id: string;
     };
 }
 export declare class ScaleAnimation extends Animation {
@@ -132,12 +135,14 @@ export declare class AnimationSet implements IAnimation {
     private animations;
     private _duration;
     delay?: number;
+    id: string;
     addAnimation(anim: IAnimation): void;
     get duration(): number;
     set duration(v: number);
     toModel(): {
         animations: Model;
         delay: number | undefined;
+        id: string;
     };
 }
 export {};

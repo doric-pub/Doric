@@ -30,12 +30,27 @@ void DoricModalPlugin::toast(QString jsValueString, QString callbackId) {
         item->setParentItem(rootObject);
 
         item->childItems().at(0)->childItems().at(0)->setProperty("text", msg);
-        item->setProperty("y", rootObject->height() - item->height() - 20);
 
+        // init set x
+        item->setProperty("x", (rootObject->width() - item->width()) / 2.f);
+        // init set y
+        if ((gravity & DoricGravity::DoricGravityBottom) ==
+            DoricGravity::DoricGravityBottom) {
+          item->setProperty("y", rootObject->height() - item->height() - 20);
+        } else if ((gravity & DoricGravity::DoricGravityTop) ==
+                   DoricGravity::DoricGravityTop) {
+          item->setProperty("y", 20);
+        } else {
+          item->setProperty("y",
+                            (rootObject->height() - item->height() - 88) / 2);
+        }
+
+        // update x
         connect(item, &QQuickItem::widthChanged, [rootObject, item]() {
           item->setProperty("x", (rootObject->width() - item->width()) / 2.f);
         });
 
+        // update y
         connect(item, &QQuickItem::heightChanged,
                 [rootObject, item, gravity]() {
                   if ((gravity & DoricGravity::DoricGravityBottom) ==

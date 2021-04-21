@@ -134,7 +134,8 @@ void DoricLayouts::measureSelf(QSizeF targetSize) {
     QQuickItem *parent = this->view->parentItem();
     DoricLayouts *parentDoricLayout =
         (DoricLayouts *)(parent->property("doricLayout").toULongLong());
-    if (parentDoricLayout->layoutType == DoricLayoutType::DoricHLayout &&
+    if (parentDoricLayout != nullptr &&
+        parentDoricLayout->layoutType == DoricLayoutType::DoricHLayout &&
         this->weight > 0) {
       width = 0;
       setMeasuredWidth(0);
@@ -155,7 +156,8 @@ void DoricLayouts::measureSelf(QSizeF targetSize) {
     QQuickItem *parent = this->view->parentItem();
     DoricLayouts *parentDoricLayout =
         (DoricLayouts *)(parent->property("doricLayout").toULongLong());
-    if (parentDoricLayout->layoutType == DoricLayoutType::DoricVLayout &&
+    if (parentDoricLayout != nullptr &&
+        parentDoricLayout->layoutType == DoricLayoutType::DoricVLayout &&
         this->weight > 0) {
       height = 0;
       setMeasuredHeight(0);

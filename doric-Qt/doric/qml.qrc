@@ -11,6 +11,7 @@
         <file alias="Counter.js">../../doric-demo/bundle/src/Counter.js</file>
         <file alias="Gobang.js">../../doric-demo/bundle/src/Gobang.js</file>
         <file alias="LayoutDemo.js">../../doric-demo/bundle/src/LayoutDemo.js</file>
+        <file alias="ModalDemo.js">../../doric-demo/bundle/src/ModalDemo.js</file>
         <file alias="SimpleDemo.js">../../doric-demo/bundle/src/SimpleDemo.js</file>
         <file alias="Snake.js">../../doric-demo/bundle/src/Snake.js</file>
     </qresource>

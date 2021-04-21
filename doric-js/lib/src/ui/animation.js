@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { uniqueId } from "../util/uniqueId";
 export var RepeatMode;
 (function (RepeatMode) {
     RepeatMode[RepeatMode["RESTART"] = 1] = "RESTART";
@@ -65,6 +66,7 @@ class Animation {
         this.changeables = new Map;
         this.duration = 0;
         this.fillMode = FillMode.Forward;
+        this.id = uniqueId("Animation");
     }
     toModel() {
         const changeables = [];
@@ -83,7 +85,8 @@ class Animation {
             repeatCount: this.repeatCount,
             repeatMode: this.repeatMode,
             fillMode: this.fillMode,
-            timingFunction: this.timingFunction
+            timingFunction: this.timingFunction,
+            id: this.id,
         };
     }
 }
@@ -133,13 +136,13 @@ export class TranslationAnimation extends Animation {
         super();
         this.translationXChangeable = {
             key: "translationX",
-            fromValue: 1,
-            toValue: 1,
+            fromValue: 0,
+            toValue: 0,
         };
         this.translationYChangeable = {
             key: "translationY",
-            fromValue: 1,
-            toValue: 1,
+            fromValue: 0,
+            toValue: 0,
         };
         this.changeables.set("translationX", this.translationXChangeable);
         this.changeables.set("translationY", this.translationYChangeable);
@@ -242,6 +245,7 @@ export class AnimationSet {
     constructor() {
         this.animations = [];
         this._duration = 0;
+        this.id = uniqueId("AnimationSet");
     }
     addAnimation(anim) {
         this.animations.push(anim);
@@ -259,6 +263,7 @@ export class AnimationSet {
                 return e.toModel();
             }),
             delay: this.delay,
+            id: this.id,
         };
     }
 }

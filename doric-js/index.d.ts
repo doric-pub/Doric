@@ -298,6 +298,7 @@ declare module 'doric/lib/src/ui/view' {
                 */
             flexConfig?: FlexConfig;
             doAnimation(context: BridgeContext, animation: IAnimation): Promise<void>;
+            cancelAnimation(context: BridgeContext, animation: IAnimation): Promise<void>;
     }
     export abstract class Superview extends View {
             subviewById(id: string): View | undefined;
@@ -326,6 +327,7 @@ declare module 'doric/lib/src/ui/animation' {
     export interface IAnimation extends Modeling {
             duration: number;
             delay?: number;
+            id: string;
     }
     export interface Changeable {
             fromValue: number;
@@ -382,6 +384,7 @@ declare module 'doric/lib/src/ui/animation' {
             delay?: number;
             fillMode: FillMode;
             timingFunction?: TimingFunction;
+            id: string;
             toModel(): {
                     type: string;
                     delay: number | undefined;
@@ -395,6 +398,7 @@ declare module 'doric/lib/src/ui/animation' {
                     repeatMode: RepeatMode | undefined;
                     fillMode: FillMode;
                     timingFunction: TimingFunction | undefined;
+                    id: string;
             };
     }
     export class ScaleAnimation extends Animation {
@@ -442,12 +446,14 @@ declare module 'doric/lib/src/ui/animation' {
     }
     export class AnimationSet implements IAnimation {
             delay?: number;
+            id: string;
             addAnimation(anim: IAnimation): void;
             get duration(): number;
             set duration(v: number);
             toModel(): {
                     animations: Model;
                     delay: number | undefined;
+                    id: string;
             };
     }
     export {};

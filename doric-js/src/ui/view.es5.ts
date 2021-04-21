@@ -342,6 +342,16 @@ export abstract class View implements Modeling {
             }
         })
     }
+
+    clearAnimation(context: BridgeContext, animation: IAnimation) {
+        return this.nativeChannel(context, "clearAnimation")(animation.id).then(() => {
+            this.__dirty_props__.translationX = this.translationX || 0
+            this.__dirty_props__.translationY = this.translationY || 0
+            this.__dirty_props__.scaleX = this.scaleX || 1
+            this.__dirty_props__.scaleY = this.scaleY || 1
+            this.__dirty_props__.rotation = this.rotation || 0
+        })
+    }
 }
 
 export abstract class Superview extends View {

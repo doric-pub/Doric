@@ -29,8 +29,6 @@ void DoricModalPlugin::toast(QString jsValueString, QString callbackId) {
         QQuickItem *item = qobject_cast<QQuickItem *>(component.create());
         item->setParentItem(rootObject);
 
-        item->childItems().at(0)->childItems().at(0)->setProperty("text", msg);
-
         // init set y
         if ((gravity & DoricGravity::DoricGravityBottom) ==
             DoricGravity::DoricGravityBottom) {
@@ -39,8 +37,7 @@ void DoricModalPlugin::toast(QString jsValueString, QString callbackId) {
                    DoricGravity::DoricGravityTop) {
           item->setProperty("y", 20);
         } else {
-          item->setProperty("y",
-                            (rootObject->height() - item->height() - 88) / 2);
+          item->setProperty("y", (rootObject->height() - item->height()) / 2);
         }
 
         // update x
@@ -49,20 +46,22 @@ void DoricModalPlugin::toast(QString jsValueString, QString callbackId) {
         });
 
         // update y
-        connect(item, &QQuickItem::heightChanged,
-                [rootObject, item, gravity]() {
-                  if ((gravity & DoricGravity::DoricGravityBottom) ==
-                      DoricGravity::DoricGravityBottom) {
-                    item->setProperty("y", rootObject->height() -
-                                               item->height() - 20);
-                  } else if ((gravity & DoricGravity::DoricGravityTop) ==
-                             DoricGravity::DoricGravityTop) {
-                    item->setProperty("y", 20);
-                  } else {
-                    item->setProperty(
-                        "y", (rootObject->height() - item->height() - 88) / 2);
-                  }
-                });
+        connect(
+            item, &QQuickItem::heightChanged, [rootObject, item, gravity]() {
+              if ((gravity & DoricGravity::DoricGravityBottom) ==
+                  DoricGravity::DoricGravityBottom) {
+                item->setProperty("y",
+                                  rootObject->height() - item->height() - 20);
+              } else if ((gravity & DoricGravity::DoricGravityTop) ==
+                         DoricGravity::DoricGravityTop) {
+                item->setProperty("y", 20);
+              } else {
+                item->setProperty("y",
+                                  (rootObject->height() - item->height()) / 2);
+              }
+            });
+
+        item->childItems().at(0)->childItems().at(0)->setProperty("text", msg);
 
         QTimer::singleShot(2000, qApp, [item]() {
           item->setParent(nullptr);

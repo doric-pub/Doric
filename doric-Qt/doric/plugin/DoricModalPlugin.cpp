@@ -31,8 +31,6 @@ void DoricModalPlugin::toast(QString jsValueString, QString callbackId) {
 
         item->childItems().at(0)->childItems().at(0)->setProperty("text", msg);
 
-        // init set x
-        item->setProperty("x", (rootObject->width() - item->width()) / 2.f);
         // init set y
         if ((gravity & DoricGravity::DoricGravityBottom) ==
             DoricGravity::DoricGravityBottom) {

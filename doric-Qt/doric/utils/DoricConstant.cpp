@@ -28,6 +28,8 @@ const QString DoricConstant::TEMPLATE_CONTEXT_DESTROY =
 const QString DoricConstant::GLOBAL_DORIC = "doric";
 const QString DoricConstant::DORIC_CONTEXT_INVOKE = "jsCallEntityMethod";
 const QString DoricConstant::DORIC_TIMER_CALLBACK = "jsCallbackTimer";
+const QString DoricConstant::DORIC_BRIDGE_RESOLVE = "jsCallResolve";
+const QString DoricConstant::DORIC_BRIDGE_REJECT = "jsCallReject";
 
 const QString DoricConstant::DORIC_ENTITY_RESPONSE = "__response__";
 const QString DoricConstant::DORIC_ENTITY_INIT = "__init__";

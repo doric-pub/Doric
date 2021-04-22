@@ -80,7 +80,7 @@ void DoricPopoverPlugin::show(QString jsValueString, QString callbackId) {
 
 void DoricPopoverPlugin::dismiss(QString jsValueString, QString callbackId) {
   getContext()->getDriver()->asyncCall(
-      [this, jsValueString] {
+      [this, jsValueString, callbackId] {
         QJsonDocument document =
             QJsonDocument::fromJson(jsValueString.toUtf8());
         QJsonValue jsValue = document.object();
@@ -93,6 +93,9 @@ void DoricPopoverPlugin::dismiss(QString jsValueString, QString callbackId) {
         } else {
           this->dismissPopover();
         }
+
+        QVariantList args;
+        DoricPromise::resolve(getContext(), callbackId, args);
       },
       DoricThreadMode::UI);
 }

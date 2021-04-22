@@ -15,6 +15,14 @@ public:
     context->getDriver()->invokeDoricMethod(DoricConstant::DORIC_BRIDGE_RESOLVE,
                                             params);
   }
+
+  static void reject(DoricContext *context, QString callbackId) {
+    QVariantList params;
+    params.append(context->getContextId());
+    params.append(callbackId);
+    context->getDriver()->invokeDoricMethod(DoricConstant::DORIC_BRIDGE_REJECT,
+                                            params);
+  }
 };
 
 #endif // DORICPROMISE_H

@@ -47,7 +47,7 @@ SOURCES += \
         shader/DoricViewNode.cpp \
         utils/DoricConstant.cpp \
         utils/DoricContextHolder.cpp \
-        utils/DoricDialogOnAcceptedBridge.cpp \
+        utils/DoricDialogBridge.cpp \
         utils/DoricLayouts.cpp \
         utils/DoricMouseAreaBridge.cpp \
         widget/flex/FlexLayout.cpp \
@@ -119,7 +119,7 @@ HEADERS += \
     utils/DoricConstant.h \
     utils/DoricContextHolder.h \
     utils/DoricCountDownLatch.h \
-    utils/DoricDialogOnAcceptedBridge.h \
+    utils/DoricDialogBridge.h \
     utils/DoricLayouts.h \
     utils/DoricMouseAreaBridge.h \
     utils/DoricObjectFactory.h \

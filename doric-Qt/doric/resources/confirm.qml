@@ -14,6 +14,7 @@ Window {
 
     property var title
     property var okLabel
+    property var cancelLabel
 
     onTitleChanged: {
         dialog.title = title
@@ -23,13 +24,21 @@ Window {
         dialog.standardButton(Dialog.Ok).text = qsTrId(okLabel)
     }
 
+    onCancelLabelChanged: {
+        dialog.standardButton(Dialog.Cancel).text = qsTrId(cancelLabel)
+    }
+
     Dialog {
         id: dialog
-        standardButtons: Dialog.Ok
+        standardButtons: Dialog.Ok | Dialog.Cancel
         modal: true
 
         onAccepted: {
             dialogBridge.onAccepted(pointer, plugin, callbackId)
+        }
+
+        onRejected: {
+            dialogBridge.onRejected(pointer, plugin, callbackId)
         }
 
         onWidthChanged: {

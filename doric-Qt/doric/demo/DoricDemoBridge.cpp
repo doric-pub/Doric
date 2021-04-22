@@ -5,7 +5,7 @@
 #include "DoricDemoBridge.h"
 #include "DoricPanel.h"
 #include "utils/DoricMouseAreaBridge.h"
-#include "utils/DoricDialogOnAcceptedBridge.h"
+#include "utils/DoricDialogBridge.h"
 #include "utils/DoricUtils.h"
 
 DoricDemoBridge::DoricDemoBridge(QObject *parent) : QObject(parent) {}
@@ -70,6 +70,6 @@ void DoricDemoBridge::navigate(QVariant route) {
   auto context = view->engine()->rootContext();
   DoricMouseAreaBridge *mouseAreaBridge = new DoricMouseAreaBridge();
   context->setContextProperty("mouseAreaBridge", mouseAreaBridge);
-  DoricDialogOnAcceptedBridge *dialogOnAcceptedBridge = new DoricDialogOnAcceptedBridge();
-  context->setContextProperty("dialogOnAcceptedBridge", dialogOnAcceptedBridge);
+  DoricDialogBridge *dialogBridge = new DoricDialogBridge();
+  context->setContextProperty("dialogBridge", dialogBridge);
 }

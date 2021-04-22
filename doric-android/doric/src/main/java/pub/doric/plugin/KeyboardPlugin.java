@@ -9,6 +9,7 @@ import androidx.annotation.RequiresApi;
 import com.github.pengfeizhou.jscore.JSString;
 import com.github.pengfeizhou.jscore.JavaValue;
 import com.qmuiteam.qmui.util.QMUIKeyboardHelper;
+import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,7 +51,13 @@ public class KeyboardPlugin extends DoricJavaPlugin {
             activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
             int usableHeight = metrics.heightPixels;
 
-            final int virtualNavigationHeight = realHeight - usableHeight;
+            boolean navigationBarShow = DoricUtils.checkNavigationBarShow(activity, activity.getWindow());
+            final int space;
+            if (navigationBarShow) {
+                space = realHeight - usableHeight;
+            } else {
+                space = QMUIStatusBarHelper.getStatusbarHeight(activity);
+            }
 
             QMUIKeyboardHelper.setVisibilityEventListener(activity, new QMUIKeyboardHelper.KeyboardVisibilityEventListener() {
                 @Override
@@ -66,9 +73,9 @@ public class KeyboardPlugin extends DoricJavaPlugin {
                                 data.put("oldBottomMargin", 0);
                                 data.put("bottomMargin", 0);
                                 data.put("oldHeight", keyboardHeight);
-                                data.put("height", DoricUtils.px2dp(heightDiff - virtualNavigationHeight));
+                                data.put("height", DoricUtils.px2dp(heightDiff - space));
 
-                                keyboardHeight = DoricUtils.px2dp(heightDiff - virtualNavigationHeight);
+                                keyboardHeight = DoricUtils.px2dp(heightDiff - space);
 
                                 callback.resolve(new JavaValue(data));
                             } catch (JSONException e) {

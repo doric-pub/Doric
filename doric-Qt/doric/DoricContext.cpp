@@ -101,6 +101,7 @@ void DoricContext::addHeadNode(QString type, DoricViewNode *viewNode) {
   if (mHeadNodes.contains(type)) {
     QMap<QString, DoricViewNode *> map = mHeadNodes[type];
     map.insert(viewNode->getId(), viewNode);
+    mHeadNodes.insert(type, map);
   } else {
     QMap<QString, DoricViewNode *> map;
     map.insert(viewNode->getId(), viewNode);
@@ -112,6 +113,7 @@ void DoricContext::removeHeadNode(QString type, DoricViewNode *viewNode) {
   if (mHeadNodes.contains(type)) {
     QMap<QString, DoricViewNode *> map = mHeadNodes[type];
     map.remove(viewNode->getId());
+    mHeadNodes.insert(type, map);
   }
 }
 
@@ -119,5 +121,6 @@ void DoricContext::clearHeadNodes(QString type) {
   if (mHeadNodes.contains(type)) {
     QMap<QString, DoricViewNode *> map = mHeadNodes[type];
     map.clear();
+    mHeadNodes.insert(type, map);
   }
 }

@@ -399,6 +399,19 @@ var View = /** @class */ (function () {
             }
         });
     };
+    View.prototype.clearAnimation = function (context, animation) {
+        var _this = this;
+        return this.nativeChannel(context, "clearAnimation")(animation.id).then(function () {
+            _this.__dirty_props__.translationX = _this.translationX || 0;
+            _this.__dirty_props__.translationY = _this.translationY || 0;
+            _this.__dirty_props__.scaleX = _this.scaleX || 1;
+            _this.__dirty_props__.scaleY = _this.scaleY || 1;
+            _this.__dirty_props__.rotation = _this.rotation || 0;
+        });
+    };
+    View.prototype.cancelAnimation = function (context, animation) {
+        return this.nativeChannel(context, "cancelAnimation")(animation.id);
+    };
     __decorate$d([
         Property,
         __metadata$d("design:type", Number)

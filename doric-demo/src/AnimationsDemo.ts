@@ -18,21 +18,30 @@ class Animations extends Panel {
                     height: 20,
                     backgroundColor: Color.BLUE,
                 }),
+
                 text({
                     text: "Start",
                     onClick: () => {
                         view.doAnimation(context, animation)
                     }
                 }),
+
                 text({
                     text: "Cancel",
                     onClick: () => {
                         view.cancelAnimation(context, animation)
                     }
                 }),
+
+                text({
+                    text: "Clear",
+                    onClick: () => {
+                        view.clearAnimation(context, animation)
+                    }
+                }),
             ],
             {
-                space: 10,
+                space: 20,
                 layoutConfig: layoutConfig().most(),
                 gravity: Gravity.Center
             }).in(root)

@@ -352,6 +352,10 @@ export abstract class View implements Modeling {
             this.__dirty_props__.rotation = this.rotation || 0
         })
     }
+
+    cancelAnimation(context: BridgeContext, animation: IAnimation) {
+        return this.nativeChannel(context, "cancelAnimation")(animation.id)
+    }
 }
 
 export abstract class Superview extends View {

@@ -52,6 +52,7 @@ public:
       castNode->mType = type;
       return castNode;
     } else {
+      qCritical() << "DoricViewNode create error: " + type;
       return nullptr;
     }
   }

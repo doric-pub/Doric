@@ -1691,110 +1691,6 @@ function logw(...message) {
     nativeLog('w', out);
 }
 
-const SPECIFIED = 1;
-const START = 1 << 1;
-const END = 1 << 2;
-const SHIFT_X = 0;
-const SHIFT_Y = 4;
-const LEFT = (START | SPECIFIED) << SHIFT_X;
-const RIGHT = (END | SPECIFIED) << SHIFT_X;
-const TOP = (START | SPECIFIED) << SHIFT_Y;
-const BOTTOM = (END | SPECIFIED) << SHIFT_Y;
-const CENTER_X = SPECIFIED << SHIFT_X;
-const CENTER_Y = SPECIFIED << SHIFT_Y;
-const CENTER = CENTER_X | CENTER_Y;
-class Gravity {
-    constructor() {
-        this.val = 0;
-    }
-    left() {
-        const val = this.val | LEFT;
-        const ret = new Gravity;
-        ret.val = val;
-        return ret;
-    }
-    right() {
-        const val = this.val | RIGHT;
-        const ret = new Gravity;
-        ret.val = val;
-        return ret;
-    }
-    top() {
-        const val = this.val | TOP;
-        const ret = new Gravity;
-        ret.val = val;
-        return ret;
-    }
-    bottom() {
-        const val = this.val | BOTTOM;
-        const ret = new Gravity;
-        ret.val = val;
-        return ret;
-    }
-    center() {
-        const val = this.val | CENTER;
-        const ret = new Gravity;
-        ret.val = val;
-        return ret;
-    }
-    centerX() {
-        const val = this.val | CENTER_X;
-        const ret = new Gravity;
-        ret.val = val;
-        return ret;
-    }
-    centerY() {
-        const val = this.val | CENTER_Y;
-        const ret = new Gravity;
-        ret.val = val;
-        return ret;
-    }
-    toModel() {
-        return this.val;
-    }
-}
-Gravity.origin = new Gravity;
-Gravity.Center = Gravity.origin.center();
-Gravity.CenterX = Gravity.origin.centerX();
-Gravity.CenterY = Gravity.origin.centerY();
-Gravity.Left = Gravity.origin.left();
-Gravity.Right = Gravity.origin.right();
-Gravity.Top = Gravity.origin.top();
-Gravity.Bottom = Gravity.origin.bottom();
-function gravity() {
-    return new Gravity;
-}
-
-function modal(context) {
-    return {
-        toast: (msg, gravity = Gravity.Bottom) => {
-            context.callNative('modal', 'toast', {
-                msg,
-                gravity: gravity.toModel(),
-            });
-        },
-        alert: (arg) => {
-            if (typeof arg === 'string') {
-                return context.callNative('modal', 'alert', { msg: arg });
-            }
-            else {
-                return context.callNative('modal', 'alert', arg);
-            }
-        },
-        confirm: (arg) => {
-            if (typeof arg === 'string') {
-                return context.callNative('modal', 'confirm', { msg: arg });
-            }
-            else {
-                return context.callNative('modal', 'confirm', arg);
-            }
-        },
-        prompt: (arg) => {
-            return context.callNative('modal', 'prompt', arg);
-        },
-    };
-}
-
 var __decorate$d = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -2006,9 +1902,8 @@ class View {
         return this.nativeChannel(context, "cancelAnimation")(animation.id).then((args) => {
             for (let key in args) {
                 Reflect.set(this, key, Reflect.get(args, key, args), this);
-                //Reflect.deleteProperty(this.__dirty_props__, key)
+                Reflect.deleteProperty(this.__dirty_props__, key);
             }
-            modal(context).alert(JSON.stringify(this.__dirty_props__));
         });
     }
 }
@@ -2190,6 +2085,80 @@ class Group extends Superview {
     removeAllChildren() {
         this.children.length = 0;
     }
+}
+
+const SPECIFIED = 1;
+const START = 1 << 1;
+const END = 1 << 2;
+const SHIFT_X = 0;
+const SHIFT_Y = 4;
+const LEFT = (START | SPECIFIED) << SHIFT_X;
+const RIGHT = (END | SPECIFIED) << SHIFT_X;
+const TOP = (START | SPECIFIED) << SHIFT_Y;
+const BOTTOM = (END | SPECIFIED) << SHIFT_Y;
+const CENTER_X = SPECIFIED << SHIFT_X;
+const CENTER_Y = SPECIFIED << SHIFT_Y;
+const CENTER = CENTER_X | CENTER_Y;
+class Gravity {
+    constructor() {
+        this.val = 0;
+    }
+    left() {
+        const val = this.val | LEFT;
+        const ret = new Gravity;
+        ret.val = val;
+        return ret;
+    }
+    right() {
+        const val = this.val | RIGHT;
+        const ret = new Gravity;
+        ret.val = val;
+        return ret;
+    }
+    top() {
+        const val = this.val | TOP;
+        const ret = new Gravity;
+        ret.val = val;
+        return ret;
+    }
+    bottom() {
+        const val = this.val | BOTTOM;
+        const ret = new Gravity;
+        ret.val = val;
+        return ret;
+    }
+    center() {
+        const val = this.val | CENTER;
+        const ret = new Gravity;
+        ret.val = val;
+        return ret;
+    }
+    centerX() {
+        const val = this.val | CENTER_X;
+        const ret = new Gravity;
+        ret.val = val;
+        return ret;
+    }
+    centerY() {
+        const val = this.val | CENTER_Y;
+        const ret = new Gravity;
+        ret.val = val;
+        return ret;
+    }
+    toModel() {
+        return this.val;
+    }
+}
+Gravity.origin = new Gravity;
+Gravity.Center = Gravity.origin.center();
+Gravity.CenterX = Gravity.origin.centerX();
+Gravity.CenterY = Gravity.origin.centerY();
+Gravity.Left = Gravity.origin.left();
+Gravity.Right = Gravity.origin.right();
+Gravity.Top = Gravity.origin.top();
+Gravity.Bottom = Gravity.origin.bottom();
+function gravity() {
+    return new Gravity;
 }
 
 exports.LayoutSpec = void 0;
@@ -3852,6 +3821,36 @@ function switchView(config) {
     return ret;
 }
 
+function modal(context) {
+    return {
+        toast: (msg, gravity = Gravity.Bottom) => {
+            context.callNative('modal', 'toast', {
+                msg,
+                gravity: gravity.toModel(),
+            });
+        },
+        alert: (arg) => {
+            if (typeof arg === 'string') {
+                return context.callNative('modal', 'alert', { msg: arg });
+            }
+            else {
+                return context.callNative('modal', 'alert', arg);
+            }
+        },
+        confirm: (arg) => {
+            if (typeof arg === 'string') {
+                return context.callNative('modal', 'confirm', { msg: arg });
+            }
+            else {
+                return context.callNative('modal', 'confirm', arg);
+            }
+        },
+        prompt: (arg) => {
+            return context.callNative('modal', 'prompt', arg);
+        },
+    };
+}
+
 function navbar(context) {
     const entity = context.entity;
     let panel = undefined;
@@ -4871,7 +4870,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	}());
 	});
 
-	var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+	var __awaiter$1 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
 	    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
 	    return new (P || (P = Promise))(function (resolve, reject) {
 	        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -4883,7 +4882,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	const loaders = [
 	    {
 	        filter: () => true,
-	        request: (source) => __awaiter(void 0, void 0, void 0, function* () {
+	        request: (source) => __awaiter$1(void 0, void 0, void 0, function* () {
 	            const result = yield axios__default['default'].get(source);
 	            return result.data;
 	        })
@@ -4893,7 +4892,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	    loaders.push(loader);
 	}
 	function loadDoricJSBundle(source) {
-	    return __awaiter(this, void 0, void 0, function* () {
+	    return __awaiter$1(this, void 0, void 0, function* () {
 	        const matched = loaders.filter(e => e.filter(source));
 	        if (matched.length > 0) {
 	            return matched[matched.length - 1].request(source);
@@ -4910,6 +4909,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	    }
 	}
 
+	exports.LayoutSpec = void 0;
 	(function (LayoutSpec) {
 	    LayoutSpec[LayoutSpec["EXACTLY"] = 0] = "EXACTLY";
 	    LayoutSpec[LayoutSpec["WRAP_CONTENT"] = 1] = "WRAP_CONTENT";
@@ -7248,7 +7248,7 @@ ${content}
 	    }
 	}
 
-	var __awaiter$1 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+	var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
 	    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
 	    return new (P || (P = Promise))(function (resolve, reject) {
 	        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -7262,7 +7262,7 @@ ${content}
 	smoothscroll.polyfill();
 	registerDoricJSLoader({
 	    filter: (source) => source.startsWith("assets://"),
-	    request: (source) => __awaiter$1(void 0, void 0, void 0, function* () {
+	    request: (source) => __awaiter(void 0, void 0, void 0, function* () {
 	        const ret = yield axios__default['default'].get(source.replace("assets://", `${window.location.href}/../../doric-demo/bundle/`));
 	        return ret.data;
 	    })
@@ -7294,6 +7294,8 @@ ${content}
 	exports.registerViewNode = registerViewNode;
 	exports.toPixelString = toPixelString;
 	exports.toRGBAString = toRGBAString;
+
+	Object.defineProperty(exports, '__esModule', { value: true });
 
 	return exports;
 

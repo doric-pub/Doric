@@ -13,8 +13,16 @@ public:
                   QString callbackId);
 
   Q_INVOKABLE
+  void onAcceptedWithInput(QString windowPointer, QString pluginPointer,
+                           QString callbackId, QString input);
+
+  Q_INVOKABLE
   void onRejected(QString windowPointer, QString pluginPointer,
                   QString callbackId);
+
+  Q_INVOKABLE
+  void onRejectedWithInput(QString windowPointer, QString pluginPointer,
+                           QString callbackId, QString input);
 };
 
 #endif // DORICDIALOGBRIDGE_H

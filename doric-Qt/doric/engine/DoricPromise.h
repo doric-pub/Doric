@@ -8,18 +8,26 @@
 
 class DoricPromise {
 public:
-  static void resolve(DoricContext *context, QString callbackId) {
+  static void resolve(DoricContext *context, QString callbackId,
+                      QVariantList args) {
     QVariantList params;
     params.append(context->getContextId());
     params.append(callbackId);
+
+    foreach (QVariant arg, args) { params.append(arg); }
+
     context->getDriver()->invokeDoricMethod(DoricConstant::DORIC_BRIDGE_RESOLVE,
                                             params);
   }
 
-  static void reject(DoricContext *context, QString callbackId) {
+  static void reject(DoricContext *context, QString callbackId,
+                     QVariantList args) {
     QVariantList params;
     params.append(context->getContextId());
     params.append(callbackId);
+
+    foreach (QVariant arg, args) { params.append(arg); }
+
     context->getDriver()->invokeDoricMethod(DoricConstant::DORIC_BRIDGE_REJECT,
                                             params);
   }

@@ -21,6 +21,8 @@ private:
   DoricInterfaceDriver *driver = NULL;
   QQmlEngine *mQmlEngine;
 
+  QMap<QString, QMap<QString, DoricViewNode *>> mHeadNodes;
+
 public:
   DoricContext(QString contextId, QString source, QString extra);
 
@@ -47,6 +49,14 @@ public:
   DoricViewNode *targetViewNode(QString id);
 
   QString getContextId();
+
+  QList<DoricViewNode *> allHeadNodes(QString type);
+
+  void addHeadNode(QString type, DoricViewNode *viewNode);
+
+  void removeHeadNode(QString type, DoricViewNode *viewNode);
+
+  void clearHeadNodes(QString type);
 };
 
 #endif // CONTEXT_H

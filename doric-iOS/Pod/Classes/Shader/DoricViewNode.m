@@ -579,7 +579,14 @@
         ((AnimationCallback *) caAnimation.delegate).cancelBlock();
     }
     [self.view.layer removeAnimationForKey:animationId];
-    [promise resolve:nil];
+    CGAffineTransform affineTransform = self.view.layer.presentationLayer.affineTransform;
+    self.translationX = @(affineTransform.tx);
+    self.translationY = @(affineTransform.ty);
+    CGFloat angle = atan2f((float) affineTransform.b, (float) affineTransform.a);
+    self.rotation = @(angle / M_PI);
+    self.scaleX = @(affineTransform.a);
+    self.scaleY = @(affineTransform.d);
+    [promise resolve:self.transformation];
 }
 
 - (CFTimeInterval)computeDurationOfAnimations:(NSArray<CAAnimation *> *)animations {

@@ -410,7 +410,13 @@ var View = /** @class */ (function () {
         });
     };
     View.prototype.cancelAnimation = function (context, animation) {
-        return this.nativeChannel(context, "cancelAnimation")(animation.id);
+        var _this = this;
+        return this.nativeChannel(context, "cancelAnimation")(animation.id).then(function (args) {
+            for (var key in args) {
+                Reflect.set(_this, key, Reflect.get(args, key, args), _this);
+                Reflect.deleteProperty(_this.__dirty_props__, key);
+            }
+        });
     };
     __decorate$d([
         Property,

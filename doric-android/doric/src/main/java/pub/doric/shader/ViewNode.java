@@ -956,7 +956,11 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         if (animator != null) {
             animator.cancel();
         }
-        promise.resolve();
+        JSONBuilder jsonBuilder = new JSONBuilder();
+        for (String key : animatedKeys) {
+            jsonBuilder.put(key, getAnimatedValue(key));
+        }
+        promise.resolve(jsonBuilder.toValue());
     }
 
     private Animator parseAnimator(JSValue value) {

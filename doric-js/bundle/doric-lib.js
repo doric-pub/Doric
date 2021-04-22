@@ -116,6 +116,110 @@ function logw(...message) {
     nativeLog('w', out);
 }
 
+const SPECIFIED = 1;
+const START = 1 << 1;
+const END = 1 << 2;
+const SHIFT_X = 0;
+const SHIFT_Y = 4;
+const LEFT = (START | SPECIFIED) << SHIFT_X;
+const RIGHT = (END | SPECIFIED) << SHIFT_X;
+const TOP = (START | SPECIFIED) << SHIFT_Y;
+const BOTTOM = (END | SPECIFIED) << SHIFT_Y;
+const CENTER_X = SPECIFIED << SHIFT_X;
+const CENTER_Y = SPECIFIED << SHIFT_Y;
+const CENTER = CENTER_X | CENTER_Y;
+class Gravity {
+    constructor() {
+        this.val = 0;
+    }
+    left() {
+        const val = this.val | LEFT;
+        const ret = new Gravity;
+        ret.val = val;
+        return ret;
+    }
+    right() {
+        const val = this.val | RIGHT;
+        const ret = new Gravity;
+        ret.val = val;
+        return ret;
+    }
+    top() {
+        const val = this.val | TOP;
+        const ret = new Gravity;
+        ret.val = val;
+        return ret;
+    }
+    bottom() {
+        const val = this.val | BOTTOM;
+        const ret = new Gravity;
+        ret.val = val;
+        return ret;
+    }
+    center() {
+        const val = this.val | CENTER;
+        const ret = new Gravity;
+        ret.val = val;
+        return ret;
+    }
+    centerX() {
+        const val = this.val | CENTER_X;
+        const ret = new Gravity;
+        ret.val = val;
+        return ret;
+    }
+    centerY() {
+        const val = this.val | CENTER_Y;
+        const ret = new Gravity;
+        ret.val = val;
+        return ret;
+    }
+    toModel() {
+        return this.val;
+    }
+}
+Gravity.origin = new Gravity;
+Gravity.Center = Gravity.origin.center();
+Gravity.CenterX = Gravity.origin.centerX();
+Gravity.CenterY = Gravity.origin.centerY();
+Gravity.Left = Gravity.origin.left();
+Gravity.Right = Gravity.origin.right();
+Gravity.Top = Gravity.origin.top();
+Gravity.Bottom = Gravity.origin.bottom();
+function gravity() {
+    return new Gravity;
+}
+
+function modal(context) {
+    return {
+        toast: (msg, gravity = Gravity.Bottom) => {
+            context.callNative('modal', 'toast', {
+                msg,
+                gravity: gravity.toModel(),
+            });
+        },
+        alert: (arg) => {
+            if (typeof arg === 'string') {
+                return context.callNative('modal', 'alert', { msg: arg });
+            }
+            else {
+                return context.callNative('modal', 'alert', arg);
+            }
+        },
+        confirm: (arg) => {
+            if (typeof arg === 'string') {
+                return context.callNative('modal', 'confirm', { msg: arg });
+            }
+            else {
+                return context.callNative('modal', 'confirm', arg);
+            }
+        },
+        prompt: (arg) => {
+            return context.callNative('modal', 'prompt', arg);
+        },
+    };
+}
+
 var __decorate$d = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -324,7 +428,13 @@ class View {
         });
     }
     cancelAnimation(context, animation) {
-        return this.nativeChannel(context, "cancelAnimation")(animation.id);
+        return this.nativeChannel(context, "cancelAnimation")(animation.id).then((args) => {
+            for (let key in args) {
+                Reflect.set(this, key, Reflect.get(args, key, args), this);
+                //Reflect.deleteProperty(this.__dirty_props__, key)
+            }
+            modal(context).alert(JSON.stringify(this.__dirty_props__));
+        });
     }
 }
 __decorate$d([
@@ -505,80 +615,6 @@ class Group extends Superview {
     removeAllChildren() {
         this.children.length = 0;
     }
-}
-
-const SPECIFIED = 1;
-const START = 1 << 1;
-const END = 1 << 2;
-const SHIFT_X = 0;
-const SHIFT_Y = 4;
-const LEFT = (START | SPECIFIED) << SHIFT_X;
-const RIGHT = (END | SPECIFIED) << SHIFT_X;
-const TOP = (START | SPECIFIED) << SHIFT_Y;
-const BOTTOM = (END | SPECIFIED) << SHIFT_Y;
-const CENTER_X = SPECIFIED << SHIFT_X;
-const CENTER_Y = SPECIFIED << SHIFT_Y;
-const CENTER = CENTER_X | CENTER_Y;
-class Gravity {
-    constructor() {
-        this.val = 0;
-    }
-    left() {
-        const val = this.val | LEFT;
-        const ret = new Gravity;
-        ret.val = val;
-        return ret;
-    }
-    right() {
-        const val = this.val | RIGHT;
-        const ret = new Gravity;
-        ret.val = val;
-        return ret;
-    }
-    top() {
-        const val = this.val | TOP;
-        const ret = new Gravity;
-        ret.val = val;
-        return ret;
-    }
-    bottom() {
-        const val = this.val | BOTTOM;
-        const ret = new Gravity;
-        ret.val = val;
-        return ret;
-    }
-    center() {
-        const val = this.val | CENTER;
-        const ret = new Gravity;
-        ret.val = val;
-        return ret;
-    }
-    centerX() {
-        const val = this.val | CENTER_X;
-        const ret = new Gravity;
-        ret.val = val;
-        return ret;
-    }
-    centerY() {
-        const val = this.val | CENTER_Y;
-        const ret = new Gravity;
-        ret.val = val;
-        return ret;
-    }
-    toModel() {
-        return this.val;
-    }
-}
-Gravity.origin = new Gravity;
-Gravity.Center = Gravity.origin.center();
-Gravity.CenterX = Gravity.origin.centerX();
-Gravity.CenterY = Gravity.origin.centerY();
-Gravity.Left = Gravity.origin.left();
-Gravity.Right = Gravity.origin.right();
-Gravity.Top = Gravity.origin.top();
-Gravity.Bottom = Gravity.origin.bottom();
-function gravity() {
-    return new Gravity;
 }
 
 exports.LayoutSpec = void 0;
@@ -2239,36 +2275,6 @@ function switchView(config) {
         Reflect.set(ret, key, Reflect.get(config, key, config), ret);
     }
     return ret;
-}
-
-function modal(context) {
-    return {
-        toast: (msg, gravity = Gravity.Bottom) => {
-            context.callNative('modal', 'toast', {
-                msg,
-                gravity: gravity.toModel(),
-            });
-        },
-        alert: (arg) => {
-            if (typeof arg === 'string') {
-                return context.callNative('modal', 'alert', { msg: arg });
-            }
-            else {
-                return context.callNative('modal', 'alert', arg);
-            }
-        },
-        confirm: (arg) => {
-            if (typeof arg === 'string') {
-                return context.callNative('modal', 'confirm', { msg: arg });
-            }
-            else {
-                return context.callNative('modal', 'confirm', arg);
-            }
-        },
-        prompt: (arg) => {
-            return context.callNative('modal', 'prompt', arg);
-        },
-    };
 }
 
 function navbar(context) {

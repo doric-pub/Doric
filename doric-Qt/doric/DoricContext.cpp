@@ -92,3 +92,32 @@ DoricViewNode *DoricContext::targetViewNode(QString id) {
 }
 
 QString DoricContext::getContextId() { return mContextId; }
+
+QList<DoricViewNode *> DoricContext::allHeadNodes(QString type) {
+  return mHeadNodes[type].values();
+}
+
+void DoricContext::addHeadNode(QString type, DoricViewNode *viewNode) {
+  if (mHeadNodes.contains(type)) {
+    QMap<QString, DoricViewNode *> map = mHeadNodes[type];
+    map.insert(viewNode->getId(), viewNode);
+  } else {
+    QMap<QString, DoricViewNode *> map;
+    map.insert(viewNode->getId(), viewNode);
+    mHeadNodes.insert(type, map);
+  }
+}
+
+void DoricContext::removeHeadNode(QString type, DoricViewNode *viewNode) {
+  if (mHeadNodes.contains(type)) {
+    QMap<QString, DoricViewNode *> map = mHeadNodes[type];
+    map.remove(viewNode->getId());
+  }
+}
+
+void DoricContext::clearHeadNodes(QString type) {
+  if (mHeadNodes.contains(type)) {
+    QMap<QString, DoricViewNode *> map = mHeadNodes[type];
+    map.clear();
+  }
+}

@@ -35,6 +35,7 @@ SOURCES += \
         engine/v8/V8Executor.cpp \
         main.cpp \
         plugin/DoricModalPlugin.cpp \
+        plugin/DoricPopoverPlugin.cpp \
         plugin/DoricShaderPlugin.cpp \
         shader/DoricGroupNode.cpp \
         shader/DoricHLayoutNode.cpp \
@@ -105,6 +106,7 @@ HEADERS += \
     engine/v8/V8Executor.h \
     plugin/DoricModalPlugin.h \
     plugin/DoricNativePlugin.h \
+    plugin/DoricPopoverPlugin.h \
     plugin/DoricShaderPlugin.h \
     shader/DoricGroupNode.h \
     shader/DoricHLayoutNode.h \

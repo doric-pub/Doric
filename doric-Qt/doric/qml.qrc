@@ -10,6 +10,7 @@
     <qresource prefix="/doric/bundles">
         <file alias="Counter.js">../../doric-demo/bundle/src/Counter.js</file>
         <file alias="Gobang.js">../../doric-demo/bundle/src/Gobang.js</file>
+        <file alias="ImageDemo.js">../../doric-demo/bundle/src/ImageDemo.js</file>
         <file alias="LayoutDemo.js">../../doric-demo/bundle/src/LayoutDemo.js</file>
         <file alias="ModalDemo.js">../../doric-demo/bundle/src/ModalDemo.js</file>
         <file alias="PopoverDemo.js">../../doric-demo/bundle/src/PopoverDemo.js</file>

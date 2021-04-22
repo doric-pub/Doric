@@ -920,20 +920,10 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         if (animator != null) {
             String animatorId = value.asObject().getProperty("id").asString().value();
             animators.put(animatorId, animator);
-//            final float tx = getTranslationX();
-//            final float ty = getTranslationY();
-//            final float sx = getScaleX();
-//            final float sy = getScaleY();
-//            final float r = getRotation();
             animator.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationCancel(Animator animation) {
                     super.onAnimationCancel(animation);
-//                    setTranslationX(tx);
-//                    setTranslationY(ty);
-//                    setScaleX(sx);
-//                    setScaleY(sy);
-//                    setRotation(r);
                     promise.reject(new JavaValue("Animation cancelled"));
                 }
 
@@ -956,10 +946,8 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         Animator animator = animators.get(id);
         if (animator != null) {
             animator.cancel();
-            promise.resolve();
-        } else {
-            promise.reject(new JavaValue("Cannot find running animation for " + id));
         }
+        promise.resolve();
     }
 
     @DoricMethod
@@ -967,10 +955,8 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         Animator animator = animators.get(id);
         if (animator != null) {
             animator.cancel();
-            promise.resolve();
-        } else {
-            promise.reject(new JavaValue("Cannot find running animation for " + id));
         }
+        promise.resolve();
     }
 
     private Animator parseAnimator(JSValue value) {

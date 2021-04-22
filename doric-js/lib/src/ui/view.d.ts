@@ -130,7 +130,8 @@ export declare abstract class View implements Modeling {
      */
     flexConfig?: FlexConfig;
     doAnimation(context: BridgeContext, animation: IAnimation): Promise<void>;
-    cancelAnimation(context: BridgeContext, animation: IAnimation): Promise<void>;
+    clearAnimation(context: BridgeContext, animation: IAnimation): Promise<void>;
+    cancelAnimation(context: BridgeContext, animation: IAnimation): Promise<any>;
 }
 export declare abstract class Superview extends View {
     subviewById(id: string): View | undefined;

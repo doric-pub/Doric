@@ -1889,6 +1889,18 @@ class View {
             }
         });
     }
+    clearAnimation(context, animation) {
+        return this.nativeChannel(context, "clearAnimation")(animation.id).then(() => {
+            this.__dirty_props__.translationX = this.translationX || 0;
+            this.__dirty_props__.translationY = this.translationY || 0;
+            this.__dirty_props__.scaleX = this.scaleX || 1;
+            this.__dirty_props__.scaleY = this.scaleY || 1;
+            this.__dirty_props__.rotation = this.rotation || 0;
+        });
+    }
+    cancelAnimation(context, animation) {
+        return this.nativeChannel(context, "cancelAnimation")(animation.id);
+    }
 }
 __decorate$d([
     Property,
@@ -2626,6 +2638,7 @@ class Animation {
         this.changeables = new Map;
         this.duration = 0;
         this.fillMode = exports.FillMode.Forward;
+        this.id = uniqueId("Animation");
     }
     toModel() {
         const changeables = [];
@@ -2644,7 +2657,8 @@ class Animation {
             repeatCount: this.repeatCount,
             repeatMode: this.repeatMode,
             fillMode: this.fillMode,
-            timingFunction: this.timingFunction
+            timingFunction: this.timingFunction,
+            id: this.id,
         };
     }
 }
@@ -2694,13 +2708,13 @@ class TranslationAnimation extends Animation {
         super();
         this.translationXChangeable = {
             key: "translationX",
-            fromValue: 1,
-            toValue: 1,
+            fromValue: 0,
+            toValue: 0,
         };
         this.translationYChangeable = {
             key: "translationY",
-            fromValue: 1,
-            toValue: 1,
+            fromValue: 0,
+            toValue: 0,
         };
         this.changeables.set("translationX", this.translationXChangeable);
         this.changeables.set("translationY", this.translationYChangeable);
@@ -2803,6 +2817,7 @@ class AnimationSet {
     constructor() {
         this.animations = [];
         this._duration = 0;
+        this.id = uniqueId("AnimationSet");
     }
     addAnimation(anim) {
         this.animations.push(anim);
@@ -2820,6 +2835,7 @@ class AnimationSet {
                 return e.toModel();
             }),
             delay: this.delay,
+            id: this.id,
         };
     }
 }
@@ -6829,11 +6845,17 @@ var doric_web = (function (exports, axios, sandbox) {
 	            });
 	        };
 	        ret.ontouchcancel = ret.ontouchend = () => {
+	            let originInndex = currentIndex;
 	            currentIndex = Math.round(ret.scrollLeft / ret.offsetWidth);
 	            ret.scrollTo({
 	                left: currentIndex * ret.offsetWidth,
 	                behavior: "smooth"
 	            });
+	            if (originInndex !== currentIndex) {
+	                if (this.onPageSelectedFuncId.length > 0) {
+	                    this.callJSResponse(this.onPageSelectedFuncId, currentIndex);
+	                }
+	            }
 	        };
 	        return ret;
 	    }

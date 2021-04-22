@@ -69,11 +69,17 @@ export class DoricSliderNode extends DoricSuperNode {
             })
         }
         ret.ontouchcancel = ret.ontouchend = () => {
+            let originInndex = currentIndex
             currentIndex = Math.round(ret.scrollLeft / ret.offsetWidth)
             ret.scrollTo({
                 left: currentIndex * ret.offsetWidth,
                 behavior: "smooth"
             })
+            if (originInndex !== currentIndex) {
+                if (this.onPageSelectedFuncId.length > 0) {
+                    this.callJSResponse(this.onPageSelectedFuncId, currentIndex)
+                }
+            }
         }
         return ret
     }

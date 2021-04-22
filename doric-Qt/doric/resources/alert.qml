@@ -12,9 +12,19 @@ Window {
     property var plugin
     property var callbackId
 
+    property var title
+    property var okLabel
+
+    onTitleChanged: {
+        dialog.title = title
+    }
+
+    onOkLabelChanged: {
+        dialog.standardButton(Dialog.Ok).text = qsTrId(okLabel)
+    }
+
     Dialog {
         id: dialog
-        title: "Title"
         standardButtons: Dialog.Ok
         modal: true
 
@@ -33,6 +43,5 @@ Window {
 
     Component.onCompleted: {
         dialog.open()
-        dialog.standardButton(Dialog.Ok).text = qsTrId("OkLabel")
     }
 }

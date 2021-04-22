@@ -12,7 +12,11 @@ public:
 
   Q_INVOKABLE void alert(QString jsValueString, QString callbackId);
 
-  void onAccept(QString callbackId);
+  Q_INVOKABLE void confirm(QString jsValueString, QString callbackId);
+
+  void onAccepted(QString callbackId);
+
+  void onRejected(QString callbackId);
 };
 
 #endif // DORICMODALPLUGIN_H

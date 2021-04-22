@@ -124,6 +124,64 @@ void DoricModalPlugin::alert(QString jsValueString, QString callbackId) {
       DoricThreadMode::UI);
 }
 
-void DoricModalPlugin::onAccept(QString callbackId) {
+void DoricModalPlugin::confirm(QString jsValueString, QString callbackId) {
+  getContext()->getDriver()->asyncCall(
+      [this, jsValueString, callbackId] {
+        QJsonDocument document =
+            QJsonDocument::fromJson(jsValueString.toUtf8());
+        QJsonValue jsValue = document.object();
+
+        QJsonValue titleVal = jsValue["title"];
+        QJsonValue msgVal = jsValue["msg"];
+        QJsonValue okBtn = jsValue["okLabel"];
+        QJsonValue cancelBtn = jsValue["cancelLabel"];
+
+        QQmlComponent component(getContext()->getQmlEngine());
+        const QUrl url(QStringLiteral("qrc:/doric/qml/confirm.qml"));
+        component.loadUrl(url);
+        if (component.isError()) {
+          qCritical() << component.errorString();
+        }
+        QQuickWindow *window = qobject_cast<QQuickWindow *>(component.create());
+        window->setProperty("pointer", QString::number((qint64)window));
+        window->setProperty("plugin", QString::number((qint64)this));
+        window->setProperty("callbackId", callbackId);
+
+        window->setProperty("title", titleVal.toString());
+        window->setProperty("okLabel", okBtn.toString());
+        window->setProperty("cancelLabel", cancelBtn.toString());
+
+        QQuickWindow *parentWindow =
+            getContext()->getRootNode()->getRootView()->window();
+
+        std::function setX = [window, parentWindow]() {
+          window->setProperty("x",
+                              (parentWindow->width() - window->width()) / 2.f +
+                                  parentWindow->x());
+        };
+        std::function setY = [window, parentWindow]() {
+          window->setProperty("y",
+                              (parentWindow->height() - window->height()) / 2 +
+                                  parentWindow->y());
+        };
+        // init set x
+        setX();
+        // init set y
+        setY();
+
+        // update x
+        connect(window, &QQuickWindow::widthChanged, setX);
+
+        // update y
+        connect(window, &QQuickWindow::heightChanged, setY);
+      },
+      DoricThreadMode::UI);
+}
+
+void DoricModalPlugin::onAccepted(QString callbackId) {
   DoricPromise::resolve(getContext(), callbackId);
+}
+
+void DoricModalPlugin::onRejected(QString callbackId) {
+  DoricPromise::reject(getContext(), callbackId);
 }

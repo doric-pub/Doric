@@ -27,6 +27,7 @@
 
         <file alias="toast.qml">resources/toast.qml</file>
         <file alias="alert.qml">resources/alert.qml</file>
+        <file alias="confirm.qml">resources/confirm.qml</file>
 
         <file alias="util.mjs">resources/util.mjs</file>
         <file alias="gravity.mjs">resources/gravity.mjs</file>

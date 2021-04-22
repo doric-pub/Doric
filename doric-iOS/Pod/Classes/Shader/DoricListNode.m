@@ -252,7 +252,7 @@
     }
     NSUInteger currentCount = self.itemCount + (self.loadMore ? 1 : 0);
     self.itemHeights[@(position)] = @(height);
-    if (@available(iOS 10.0, *)) {
+    if (@available(iOS 12.0, *)) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (self.view.doricLayout.heightSpec == DoricLayoutFit) {
                 DoricSuperNode *node = self.superNode;

@@ -13,11 +13,16 @@ Window {
     property var callbackId
 
     property var title
+    property var msg
     property var okLabel
     property var cancelLabel
 
     onTitleChanged: {
         dialog.title = title
+    }
+
+    onMsgChanged: {
+        content.text = msg
     }
 
     onOkLabelChanged: {
@@ -32,6 +37,9 @@ Window {
         id: dialog
         standardButtons: Dialog.Ok | Dialog.Cancel
         modal: true
+        contentItem: Text {
+            id: content
+        }
 
         onAccepted: {
             dialogBridge.onAccepted(pointer, plugin, callbackId)

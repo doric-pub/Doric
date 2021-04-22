@@ -95,6 +95,7 @@ void DoricModalPlugin::alert(QString jsValueString, QString callbackId) {
         window->setProperty("callbackId", callbackId);
 
         window->setProperty("title", titleVal.toString());
+        window->setProperty("msg", msgVal.toString());
         window->setProperty("okLabel", okBtn.toString());
 
         QQuickWindow *parentWindow =
@@ -148,6 +149,7 @@ void DoricModalPlugin::confirm(QString jsValueString, QString callbackId) {
         window->setProperty("callbackId", callbackId);
 
         window->setProperty("title", titleVal.toString());
+        window->setProperty("msg", msgVal.toString());
         window->setProperty("okLabel", okBtn.toString());
         window->setProperty("cancelLabel", cancelBtn.toString());
 

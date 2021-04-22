@@ -47,6 +47,7 @@ SOURCES += \
         shader/DoricViewNode.cpp \
         utils/DoricConstant.cpp \
         utils/DoricContextHolder.cpp \
+        utils/DoricDialogOnAcceptedBridge.cpp \
         utils/DoricLayouts.cpp \
         utils/DoricMouseAreaBridge.cpp \
         widget/flex/FlexLayout.cpp \
@@ -97,6 +98,7 @@ HEADERS += \
     engine/DoricNativeJSE.h \
     engine/DoricNativeLog.h \
     engine/DoricNativeRequire.h \
+    engine/DoricPromise.h \
     engine/DoricTimerExtension.h \
     engine/native/NativeExecutor.h \
     engine/v8/JSValueHelper.h \
@@ -117,6 +119,7 @@ HEADERS += \
     utils/DoricConstant.h \
     utils/DoricContextHolder.h \
     utils/DoricCountDownLatch.h \
+    utils/DoricDialogOnAcceptedBridge.h \
     utils/DoricLayouts.h \
     utils/DoricMouseAreaBridge.h \
     utils/DoricObjectFactory.h \

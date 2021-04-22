@@ -299,7 +299,7 @@ declare module 'doric/lib/src/ui/view' {
             flexConfig?: FlexConfig;
             doAnimation(context: BridgeContext, animation: IAnimation): Promise<void>;
             clearAnimation(context: BridgeContext, animation: IAnimation): Promise<void>;
-            cancelAnimation(context: BridgeContext, animation: IAnimation): Promise<any>;
+            cancelAnimation(context: BridgeContext, animation: IAnimation): Promise<void>;
     }
     export abstract class Superview extends View {
             subviewById(id: string): View | undefined;

@@ -21,6 +21,7 @@ import { BridgeContext } from "../runtime/global";
 import { LayoutConfig } from '../util/layoutconfig'
 import { IAnimation } from "./animation";
 import { FlexConfig } from "../util/flexbox";
+import { modal } from "../native/modal";
 
 const PROP_CONSIST = 1;
 const PROP_INCONSIST = 2;
@@ -363,7 +364,12 @@ export abstract class View implements Modeling {
     }
 
     cancelAnimation(context: BridgeContext, animation: IAnimation) {
-        return this.nativeChannel(context, "cancelAnimation")(animation.id)
+        return this.nativeChannel(context, "cancelAnimation")(animation.id).then((args) => {
+            for (let key in args) {
+                Reflect.set(this, key, Reflect.get(args, key, args), this)
+                Reflect.deleteProperty(this.__dirty_props__, key)
+            }
+        })
     }
 }
 

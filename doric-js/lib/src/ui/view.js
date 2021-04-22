@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { obj2Model } from "../util/types";
 import { uniqueId } from "../util/uniqueId";
 import { loge } from "../util/log";
+import { modal } from "../native/modal";
 const PROP_CONSIST = 1;
 const PROP_INCONSIST = 2;
 export function Property(target, propKey) {
@@ -209,7 +210,13 @@ export class View {
         });
     }
     cancelAnimation(context, animation) {
-        return this.nativeChannel(context, "cancelAnimation")(animation.id);
+        return this.nativeChannel(context, "cancelAnimation")(animation.id).then((args) => {
+            for (let key in args) {
+                Reflect.set(this, key, Reflect.get(args, key, args), this);
+                //Reflect.deleteProperty(this.__dirty_props__, key)
+            }
+            modal(context).alert(JSON.stringify(this.__dirty_props__));
+        });
     }
 }
 __decorate([

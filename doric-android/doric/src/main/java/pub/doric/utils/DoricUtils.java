@@ -21,13 +21,18 @@ import android.content.ContextWrapper;
 import android.content.res.AssetManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Point;
 import android.graphics.Rect;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Pair;
 import android.view.Display;
+import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSDecoder;
@@ -328,5 +333,26 @@ public class DoricUtils {
             context = ((ContextWrapper) context).getBaseContext();
         }
         return context;
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    public static boolean checkNavigationBarShow(@NonNull Context context, @NonNull Window window) {
+        boolean show;
+        Display display = window.getWindowManager().getDefaultDisplay();
+        Point point = new Point();
+        display.getRealSize(point);
+
+        View decorView = window.getDecorView();
+        Configuration conf = context.getResources().getConfiguration();
+        if (Configuration.ORIENTATION_LANDSCAPE == conf.orientation) {
+            View contentView = decorView.findViewById(android.R.id.content);
+            show = (point.x != contentView.getWidth());
+        } else {
+            Rect rect = new Rect();
+            decorView.getWindowVisibleDisplayFrame(rect);
+            show = (rect.bottom != point.y);
+        }
+        return show;
     }
 }

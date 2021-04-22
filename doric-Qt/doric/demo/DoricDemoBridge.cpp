@@ -4,8 +4,8 @@
 
 #include "DoricDemoBridge.h"
 #include "DoricPanel.h"
-#include "utils/DoricMouseAreaBridge.h"
 #include "utils/DoricDialogBridge.h"
+#include "utils/DoricMouseAreaBridge.h"
 #include "utils/DoricUtils.h"
 
 DoricDemoBridge::DoricDemoBridge(QObject *parent) : QObject(parent) {}
@@ -26,9 +26,12 @@ void DoricDemoBridge::navigate(QVariant route) {
     name = "ModalDemo.js";
     break;
   case 4:
-    name = "SimpleDemo.js";
+    name = "PopoverDemo.js";
     break;
   case 5:
+    name = "SimpleDemo.js";
+    break;
+  case 6:
     name = "Snake.js";
     break;
   }

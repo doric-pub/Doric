@@ -21,6 +21,9 @@ export class NestedSlider extends Group {
     @Property
     onPageSlided?: (index: number) => void
 
+    @Property
+    scrollable?: boolean
+
     addSlideItem(view: View) {
         this.addChild(view)
     }

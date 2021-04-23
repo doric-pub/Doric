@@ -15,7 +15,9 @@
  */
 package pub.doric.shader.slider;
 
+import android.annotation.SuppressLint;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -80,9 +82,25 @@ public class NestedSliderNode extends GroupNode<ViewPager> implements ViewPager.
         return viewPager;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void blend(ViewPager view, String name, JSValue prop) {
         switch (name) {
+            case "scrollable":
+                if (!prop.isBoolean()) {
+                    return;
+                }
+                if (prop.asBoolean().value()) {
+                    this.getView().setOnTouchListener(null);
+                } else {
+                    this.getView().setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            return true;
+                        }
+                    });
+                }
+                break;
             case "onPageSlided":
                 this.onPageSlidedFuncId = prop.asString().toString();
                 break;

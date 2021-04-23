@@ -49,6 +49,9 @@ export class Slider extends Superview {
     @Property
     loop?: boolean
 
+    @Property
+    scrollable?: boolean
+
     private getItem(itemIdx: number) {
         let view = this.renderPage(itemIdx)
         view.superview = this

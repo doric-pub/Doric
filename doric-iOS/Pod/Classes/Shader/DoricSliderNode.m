@@ -75,7 +75,9 @@
 }
 
 - (void)blendView:(UICollectionView *)view forPropName:(NSString *)name propValue:(id)prop {
-    if ([@"itemCount" isEqualToString:name]) {
+    if ([@"scrollable" isEqualToString:name]) {
+        self.view.scrollEnabled = [prop boolValue];
+    } else if ([@"itemCount" isEqualToString:name]) {
         self.itemCount = [prop unsignedIntegerValue];
         [self.view reloadData];
     } else if ([@"renderPage" isEqualToString:name]) {

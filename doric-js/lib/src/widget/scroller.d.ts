@@ -15,6 +15,7 @@ export declare class Scroller extends Superview {
         x: number;
         y: number;
     }) => void;
+    scrollable?: boolean;
     allSubviews(): View[];
     toModel(): NativeViewModel;
     scrollTo(context: BridgeContext, offset: {

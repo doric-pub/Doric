@@ -2130,6 +2130,10 @@ var List = /** @class */ (function (_super) {
         Property,
         __metadata$8("design:type", Number)
     ], List.prototype, "scrolledPosition", void 0);
+    __decorate$8([
+        Property,
+        __metadata$8("design:type", Boolean)
+    ], List.prototype, "scrollable", void 0);
     return List;
 }(Superview));
 function list(config) {
@@ -2245,6 +2249,10 @@ var Slider = /** @class */ (function (_super) {
         Property,
         __metadata$7("design:type", Boolean)
     ], Slider.prototype, "loop", void 0);
+    __decorate$7([
+        Property,
+        __metadata$7("design:type", Boolean)
+    ], Slider.prototype, "scrollable", void 0);
     return Slider;
 }(Superview));
 function slider(config) {
@@ -2338,6 +2346,10 @@ var Scroller = /** @class */ (function (_super) {
         Property,
         __metadata$6("design:type", Function)
     ], Scroller.prototype, "onScrollEnd", void 0);
+    __decorate$6([
+        Property,
+        __metadata$6("design:type", Boolean)
+    ], Scroller.prototype, "scrollable", void 0);
     return Scroller;
 }(Superview));
 
@@ -2643,6 +2655,10 @@ var FlowLayout = /** @class */ (function (_super) {
         Property,
         __metadata$4("design:type", Function)
     ], FlowLayout.prototype, "onScrollEnd", void 0);
+    __decorate$4([
+        Property,
+        __metadata$4("design:type", Boolean)
+    ], FlowLayout.prototype, "scrollable", void 0);
     return FlowLayout;
 }(Superview));
 function flowlayout(config) {
@@ -2826,6 +2842,10 @@ var NestedSlider = /** @class */ (function (_super) {
         Property,
         __metadata$2("design:type", Function)
     ], NestedSlider.prototype, "onPageSlided", void 0);
+    __decorate$2([
+        Property,
+        __metadata$2("design:type", Boolean)
+    ], NestedSlider.prototype, "scrollable", void 0);
     return NestedSlider;
 }(Group));
 

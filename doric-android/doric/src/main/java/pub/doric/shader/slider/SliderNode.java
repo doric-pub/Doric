@@ -45,6 +45,7 @@ public class SliderNode extends SuperNode<RecyclerView> {
     private String onPageSlidedFuncId;
     private int lastPosition = 0;
     private int itemCount = 0;
+    private boolean scrollable = true;
 
     public SliderNode(DoricContext doricContext) {
         super(doricContext);
@@ -55,7 +56,15 @@ public class SliderNode extends SuperNode<RecyclerView> {
     protected RecyclerView build() {
         RecyclerView recyclerView = new RecyclerView(getContext());
 
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext()) {
+            @Override
+            public boolean canScrollHorizontally() {
+                if (!scrollable) {
+                    return false;
+                }
+                return super.canScrollHorizontally();
+            }
+        };
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(layoutManager);
         final PagerSnapHelper snapHelper = new PagerSnapHelper();
@@ -146,6 +155,12 @@ public class SliderNode extends SuperNode<RecyclerView> {
     @Override
     protected void blend(RecyclerView view, String name, JSValue prop) {
         switch (name) {
+            case "scrollable":
+                if (!prop.isBoolean()) {
+                    return;
+                }
+                this.scrollable = prop.asBoolean().value();
+                break;
             case "itemCount":
                 this.itemCount = prop.asNumber().toInt();
                 break;

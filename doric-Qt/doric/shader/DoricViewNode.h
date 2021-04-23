@@ -17,8 +17,6 @@ protected:
 
   DoricLayouts *mLayouts = nullptr;
 
-  DoricSuperNode *mSuperNode = nullptr;
-
   virtual QQuickItem *build() = 0;
 
   void createLayouts(QQuickItem *view);
@@ -36,6 +34,8 @@ private:
 
 public:
   QString mType;
+
+  DoricSuperNode *mSuperNode = nullptr;
 
   using DoricContextHolder::DoricContextHolder;
 

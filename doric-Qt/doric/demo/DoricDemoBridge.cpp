@@ -5,6 +5,7 @@
 #include "DoricDemoBridge.h"
 #include "DoricPanel.h"
 #include "utils/DoricDialogBridge.h"
+#include "utils/DoricImageBridge.h"
 #include "utils/DoricMouseAreaBridge.h"
 #include "utils/DoricUtils.h"
 
@@ -44,8 +45,8 @@ void DoricDemoBridge::navigate(QVariant route) {
   {
     const QUrl url(QStringLiteral("qrc:/doric/qml/view.qml"));
     view->setSource(url);
-    view->setWidth(405);
-    view->setHeight(720);
+    view->setWidth(600);
+    view->setHeight(800);
     Qt::WindowFlags flag = Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint |
                            Qt::WindowTitleHint | Qt::WindowCloseButtonHint |
                            Qt::CustomizeWindowHint | Qt::WindowSystemMenuHint;
@@ -58,8 +59,8 @@ void DoricDemoBridge::navigate(QVariant route) {
     component.loadUrl(url);
     QQuickItem *quickItem = qobject_cast<QQuickItem *>(component.create());
     DoricPanel *panel = new DoricPanel(view->engine(), quickItem);
-    quickItem->setWidth(405);
-    quickItem->setHeight(720);
+    quickItem->setWidth(600);
+    quickItem->setHeight(800);
     quickItem->setParentItem(view->rootObject());
 
     panel->config(script, name, NULL);
@@ -78,4 +79,6 @@ void DoricDemoBridge::navigate(QVariant route) {
   context->setContextProperty("mouseAreaBridge", mouseAreaBridge);
   DoricDialogBridge *dialogBridge = new DoricDialogBridge();
   context->setContextProperty("dialogBridge", dialogBridge);
+  DoricImageBridge *imageBridge = new DoricImageBridge();
+  context->setContextProperty("imageBridge", imageBridge);
 }

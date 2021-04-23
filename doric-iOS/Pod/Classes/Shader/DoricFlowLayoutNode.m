@@ -190,7 +190,9 @@
 }
 
 - (void)blendView:(UICollectionView *)view forPropName:(NSString *)name propValue:(id)prop {
-    if ([@"columnSpace" isEqualToString:name]) {
+    if ([@"scrollable" isEqualToString:name]) {
+        self.view.scrollEnabled = [prop boolValue];
+    } else if ([@"columnSpace" isEqualToString:name]) {
         self.columnSpace = [prop floatValue];
         [self.view.collectionViewLayout invalidateLayout];
     } else if ([@"rowSpace" isEqualToString:name]) {

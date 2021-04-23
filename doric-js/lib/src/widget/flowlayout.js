@@ -114,6 +114,10 @@ __decorate([
     Property,
     __metadata("design:type", Function)
 ], FlowLayout.prototype, "onScrollEnd", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Boolean)
+], FlowLayout.prototype, "scrollable", void 0);
 export function flowlayout(config) {
     const ret = new FlowLayout;
     for (let key in config) {

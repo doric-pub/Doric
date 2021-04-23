@@ -15,6 +15,7 @@ export declare class Slider extends Superview {
     batchCount: number;
     onPageSlided?: (index: number) => void;
     loop?: boolean;
+    scrollable?: boolean;
     private getItem;
     private renderBunchedItems;
     slidePage(context: BridgeContext, page: number, smooth?: boolean): Promise<any>;

@@ -25,6 +25,7 @@ export declare class List extends Superview {
         y: number;
     }) => void;
     scrolledPosition?: number;
+    scrollable?: boolean;
     scrollToItem(context: BridgeContext, index: number, config?: {
         animated?: boolean;
     }): Promise<any>;

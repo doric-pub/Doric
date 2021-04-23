@@ -109,6 +109,10 @@ __decorate([
     Property,
     __metadata("design:type", Number)
 ], List.prototype, "scrolledPosition", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Boolean)
+], List.prototype, "scrollable", void 0);
 export function list(config) {
     const ret = new List;
     for (let key in config) {

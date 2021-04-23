@@ -62,3 +62,7 @@ __decorate([
     Property,
     __metadata("design:type", Function)
 ], Scroller.prototype, "onScrollEnd", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Boolean)
+], Scroller.prototype, "scrollable", void 0);

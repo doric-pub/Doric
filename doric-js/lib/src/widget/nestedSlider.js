@@ -38,3 +38,7 @@ __decorate([
     Property,
     __metadata("design:type", Function)
 ], NestedSlider.prototype, "onPageSlided", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Boolean)
+], NestedSlider.prototype, "scrollable", void 0);

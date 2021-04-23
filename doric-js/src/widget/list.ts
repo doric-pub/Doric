@@ -66,6 +66,9 @@ export class List extends Superview {
     @Property
     scrolledPosition?: number
 
+    @Property
+    scrollable?: boolean
+
     scrollToItem(context: BridgeContext, index: number, config?: { animated?: boolean, }) {
         const animated = config?.animated
         return this.nativeChannel(context, 'scrollToItem')({ index, animated, }) as Promise<any>

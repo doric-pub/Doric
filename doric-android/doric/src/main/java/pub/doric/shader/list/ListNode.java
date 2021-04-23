@@ -62,10 +62,13 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
     private String onScrollFuncId;
     private String onScrollEndFuncId;
     private final DoricJSDispatcher jsDispatcher = new DoricJSDispatcher();
+
     public ListNode(DoricContext doricContext) {
         super(doricContext);
         this.listAdapter = new ListAdapter(this);
     }
+
+    private boolean scrollable = true;
 
     @Override
     protected void blendSubNode(JSObject subProperties) {
@@ -85,7 +88,15 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
     @Override
     protected RecyclerView build() {
         RecyclerView recyclerView = new RecyclerView(getContext());
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()) {
+            @Override
+            public boolean canScrollVertically() {
+                if (!scrollable) {
+                    return false;
+                }
+                return super.canScrollVertically();
+            }
+        });
         recyclerView.setAdapter(this.listAdapter);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -145,6 +156,12 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
     @Override
     protected void blend(RecyclerView view, String name, final JSValue prop) {
         switch (name) {
+            case "scrollable":
+                if (!prop.isBoolean()) {
+                    return;
+                }
+                this.scrollable = prop.asBoolean().value();
+                break;
             case "itemCount":
                 if (!prop.isNumber()) {
                     return;

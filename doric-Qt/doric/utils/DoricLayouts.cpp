@@ -236,12 +236,6 @@ void DoricLayouts::measureUndefinedContent(QSizeF targetSize) {
   } else {
     qreal actualWidth = this->view->width();
     qreal actualHeight = this->view->height();
-    if (actualWidth > targetSize.width()) {
-      actualWidth = targetSize.width();
-    }
-    if (actualHeight > targetSize.height()) {
-      actualHeight = targetSize.height();
-    }
 
     measuredSize = QSizeF(actualWidth, actualHeight);
   }

@@ -46,7 +46,9 @@
 }
 
 - (void)blendView:(UIScrollView *)view forPropName:(NSString *)name propValue:(id)prop {
-    if ([@"onPageSlided" isEqualToString:name]) {
+    if ([@"scrollable" isEqualToString:name]) {
+        self.view.scrollEnabled = [prop boolValue];
+    } else if ([@"onPageSlided" isEqualToString:name]) {
         self.onPageSelectedFuncId = prop;
     } else {
         [super blendView:view forPropName:name propValue:prop];

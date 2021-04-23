@@ -39,6 +39,7 @@ SOURCES += \
         plugin/DoricShaderPlugin.cpp \
         shader/DoricGroupNode.cpp \
         shader/DoricHLayoutNode.cpp \
+        shader/DoricImageNode.cpp \
         shader/DoricRootNode.cpp \
         shader/DoricScrollerNode.cpp \
         shader/DoricStackNode.cpp \
@@ -49,6 +50,7 @@ SOURCES += \
         utils/DoricConstant.cpp \
         utils/DoricContextHolder.cpp \
         utils/DoricDialogBridge.cpp \
+        utils/DoricImageBridge.cpp \
         utils/DoricLayouts.cpp \
         utils/DoricMouseAreaBridge.cpp \
         widget/flex/FlexLayout.cpp \
@@ -110,6 +112,7 @@ HEADERS += \
     plugin/DoricShaderPlugin.h \
     shader/DoricGroupNode.h \
     shader/DoricHLayoutNode.h \
+    shader/DoricImageNode.h \
     shader/DoricRootNode.h \
     shader/DoricScrollerNode.h \
     shader/DoricStackNode.h \
@@ -122,6 +125,7 @@ HEADERS += \
     utils/DoricContextHolder.h \
     utils/DoricCountDownLatch.h \
     utils/DoricDialogBridge.h \
+    utils/DoricImageBridge.h \
     utils/DoricLayouts.h \
     utils/DoricMouseAreaBridge.h \
     utils/DoricObjectFactory.h \

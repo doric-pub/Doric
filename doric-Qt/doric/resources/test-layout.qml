@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.15
 
 ApplicationWindow {
     visible: true
-    width: 450
+    width: 600
     height: 800
     title: qsTr("Scroll")
 

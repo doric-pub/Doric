@@ -26,6 +26,7 @@
         <file alias="hlayout.qml">resources/hlayout.qml</file>
         <file alias="text.qml">resources/text.qml</file>
         <file alias="scroller.qml">resources/scroller.qml</file>
+        <file alias="image.qml">resources/image.qml</file>
 
         <file alias="toast.qml">resources/toast.qml</file>
         <file alias="alert.qml">resources/alert.qml</file>

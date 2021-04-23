@@ -42,6 +42,9 @@ export class Scroller extends Superview {
     @Property
     onScrollEnd?: (offset: { x: number, y: number }) => void
 
+    @Property
+    scrollable?: boolean
+
     allSubviews() {
         return [this.content]
     }

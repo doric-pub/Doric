@@ -15,8 +15,11 @@
  */
 package pub.doric.shader;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import com.github.pengfeizhou.jscore.JSONBuilder;
@@ -144,9 +147,24 @@ public class ScrollerNode extends SuperNode<HVScrollView> implements IDoricScrol
         return hvScrollView;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void blend(HVScrollView view, String name, JSValue prop) {
-        if ("content".equals(name)) {
+        if ("scrollable".equals(name)) {
+            if (!prop.isBoolean()) {
+                return;
+            }
+            if (prop.asBoolean().value()) {
+                this.getView().setOnTouchListener(null);
+            } else {
+                this.getView().setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        return true;
+                    }
+                });
+            }
+        } else if ("content".equals(name)) {
             if (!prop.isString()) {
                 return;
             }

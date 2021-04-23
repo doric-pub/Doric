@@ -127,7 +127,9 @@
 }
 
 - (void)blendView:(DoricScrollView *)view forPropName:(NSString *)name propValue:(id)prop {
-    if ([@"content" isEqualToString:name]) {
+    if ([@"scrollable" isEqualToString:name]) {
+        self.view.scrollEnabled = [prop boolValue];
+    } else if ([@"content" isEqualToString:name]) {
         self.childViewId = prop;
     } else if ([@"onScroll" isEqualToString:name]) {
         self.onScrollFuncId = prop;

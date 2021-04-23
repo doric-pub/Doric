@@ -69,6 +69,9 @@ export class FlowLayout extends Superview {
     @Property
     onScrollEnd?: (offset: { x: number, y: number }) => void
 
+    @Property
+    scrollable?: boolean
+
     reset() {
         this.cachedViews.clear()
         this.itemCount = 0

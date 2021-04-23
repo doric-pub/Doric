@@ -71,6 +71,14 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
                 e.printStackTrace();
             }
         }
+
+        @Override
+        public boolean canScrollVertically() {
+            if (!scrollable) {
+                return false;
+            }
+            return super.canScrollVertically();
+        }
     };
     private int columnSpace = 0;
     private int rowSpace = 0;
@@ -89,6 +97,7 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
     private String onScrollEndFuncId;
     private DoricJSDispatcher jsDispatcher = new DoricJSDispatcher();
     private int itemCount = 0;
+    private boolean scrollable = true;
 
     public FlowLayoutNode(DoricContext doricContext) {
         super(doricContext);
@@ -117,6 +126,12 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
     @Override
     protected void blend(RecyclerView view, String name, JSValue prop) {
         switch (name) {
+            case "scrollable":
+                if (!prop.isBoolean()) {
+                    return;
+                }
+                this.scrollable = prop.asBoolean().value();
+                break;
             case "columnSpace":
                 if (!prop.isNumber()) {
                     return;

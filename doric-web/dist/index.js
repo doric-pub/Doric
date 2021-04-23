@@ -1577,9 +1577,12 @@ Reflect.apply(doric.jsRegisterModule,this,["doric",Reflect.apply(function(__modu
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-function obj2Model(obj) {
-    if (obj instanceof Array) {
-        return obj.map(e => obj2Model(e));
+function obj2Model(obj, convertor) {
+    if (obj instanceof Function) {
+        return convertor(obj);
+    }
+    else if (obj instanceof Array) {
+        return obj.map(e => obj2Model(e, convertor));
     }
     else if (obj instanceof Object) {
         if (Reflect.has(obj, 'toModel') && Reflect.get(obj, 'toModel') instanceof Function) {
@@ -1589,7 +1592,7 @@ function obj2Model(obj) {
         else {
             for (let key in obj) {
                 const val = Reflect.get(obj, key);
-                Reflect.set(obj, key, obj2Model(val));
+                Reflect.set(obj, key, obj2Model(val, convertor));
             }
             return obj;
         }
@@ -1803,7 +1806,7 @@ class View {
             newV = this.callback2Id(newV);
         }
         else {
-            newV = obj2Model(newV);
+            newV = obj2Model(newV, (v) => this.callback2Id(v));
         }
         this.__dirty_props__[propKey] = newV;
     }
@@ -3123,6 +3126,10 @@ __decorate$8([
     Property,
     __metadata$8("design:type", String)
 ], ListItem.prototype, "identifier", void 0);
+__decorate$8([
+    Property,
+    __metadata$8("design:type", Array)
+], ListItem.prototype, "actions", void 0);
 class List extends Superview {
     constructor() {
         super(...arguments);

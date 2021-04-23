@@ -31,6 +31,10 @@ __decorate([
     Property,
     __metadata("design:type", String)
 ], ListItem.prototype, "identifier", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Array)
+], ListItem.prototype, "actions", void 0);
 export class List extends Superview {
     constructor() {
         super(...arguments);

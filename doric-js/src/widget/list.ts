@@ -18,7 +18,7 @@ import { View, Property, Superview, NativeViewModel } from "../ui/view";
 import { Stack } from "./layouts";
 import { layoutConfig } from "../util/layoutconfig";
 import { BridgeContext } from "../runtime/global";
-
+import { Color } from "../util/color";
 
 export class ListItem extends Stack {
     /**
@@ -26,6 +26,13 @@ export class ListItem extends Stack {
      */
     @Property
     identifier?: string
+
+    @Property
+    actions?: {
+        title: string,
+        backgroundColor?: Color,
+        callback: () => void,
+    }[]
 }
 
 export class List extends Superview {

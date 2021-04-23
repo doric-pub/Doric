@@ -113,7 +113,7 @@ export class View {
             newV = this.callback2Id(newV);
         }
         else {
-            newV = obj2Model(newV);
+            newV = obj2Model(newV, (v) => this.callback2Id(v));
         }
         this.__dirty_props__[propKey] = newV;
     }

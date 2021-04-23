@@ -1,4 +1,4 @@
-import { Group, Panel, List, text, gravity, Color, LayoutSpec, list, listItem, log, vlayout, Gravity, hlayout, Text, refreshable, Refreshable, ListItem, layoutConfig, ViewHolder, ViewModel, VMPanel, loge } from "doric";
+import { Group, Panel, List, text, gravity, Color, LayoutSpec, list, listItem, log, vlayout, Gravity, hlayout, Text, refreshable, Refreshable, ListItem, layoutConfig, ViewHolder, ViewModel, VMPanel, loge, modal } from "doric";
 
 interface ItemModel {
     text: string
@@ -80,6 +80,21 @@ class ListVM extends ViewModel<ListModel, ListVH> {
                         widthSpec: LayoutSpec.MOST,
                         heightSpec: LayoutSpec.FIT,
                     }
+                }).apply({
+                    actions: [
+                        {
+                            title: "First",
+                            callback: () => {
+                                modal(context).alert("First action")
+                            }
+                        },
+                        {
+                            title: "Second",
+                            callback: () => {
+                                modal(context).alert("Second action")
+                            }
+                        }
+                    ]
                 })
             },
             onLoadMore: async () => {

@@ -18,11 +18,14 @@
 //
 
 #import <JavaScriptCore/JavaScriptCore.h>
+#import <DoricCore/Doric.h>
 #import "DoricListNode.h"
 #import "DoricExtensions.h"
 #import "DoricListItemNode.h"
 #import "DoricRefreshableNode.h"
 #import "DoricJSDispatcher.h"
+#import "DoricUtil.h"
+#import "DoricExtensions.h"
 
 @interface DoricTableViewCell : UITableViewCell
 @property(nonatomic, strong) DoricListItemNode *doricListItemNode;
@@ -44,6 +47,7 @@
 @interface DoricListNode () <UITableViewDataSource, UITableViewDelegate>
 @property(nonatomic, strong) NSMutableDictionary <NSNumber *, NSString *> *itemViewIds;
 @property(nonatomic, strong) NSMutableDictionary <NSNumber *, NSNumber *> *itemHeights;
+@property(nonatomic, strong) NSMutableDictionary <NSNumber *, NSArray *> *itemActions;
 @property(nonatomic, assign) NSUInteger itemCount;
 @property(nonatomic, assign) NSUInteger batchCount;
 @property(nonatomic, copy) NSString *onLoadMoreFuncId;
@@ -62,6 +66,7 @@
     if (self = [super initWithContext:doricContext]) {
         _itemViewIds = [NSMutableDictionary new];
         _itemHeights = [NSMutableDictionary new];
+        _itemActions = [NSMutableDictionary new];
         _batchCount = 15;
     }
     return self;
@@ -144,6 +149,7 @@
     NSDictionary *model = [self itemModelAt:position];
     NSDictionary *props = model[@"props"];
     NSString *reuseId = props[@"identifier"];
+    self.itemActions[@(position)] = props[@"actions"];
     if (position > 0 && position >= self.itemCount && self.onLoadMoreFuncId) {
         reuseId = @"doricLoadMoreCell";
         [self callLoadMore];
@@ -175,7 +181,53 @@
     } else {
         return 44.f;
     }
+}
 
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSArray *actions = self.itemActions[@(indexPath.row)];
+    return actions.count > 0;
+}
+
+- (nullable NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSArray *actions = self.itemActions[@(indexPath.row)];
+    NSMutableArray <UITableViewRowAction *> *array = [NSMutableArray new];
+    for (NSDictionary *action in actions) {
+        __weak typeof(self) _self = self;
+        UITableViewRowAction *tableViewRowAction = [UITableViewRowAction
+                rowActionWithStyle:UITableViewRowActionStyleNormal
+                             title:action[@"title"]
+                           handler:^(UITableViewRowAction *tableViewRowAction, NSIndexPath *indexPath) {
+                               __strong typeof(_self) self = _self;
+                               [self callJSResponse:action[@"callback"], nil];
+                           }];
+        [action[@"backgroundColor"] let:^(id it) {
+            tableViewRowAction.backgroundColor = DoricColor(it);
+        }];
+        [array addObject:tableViewRowAction];
+    }
+    return array;
+}
+
+- (nullable UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath  API_AVAILABLE(ios(11.0)) {
+    NSArray *actions = self.itemActions[@(indexPath.row)];
+    NSMutableArray<UIContextualAction *> *array = [NSMutableArray new];
+    for (NSDictionary *action in actions) {
+        __weak typeof(self) _self = self;
+        UIContextualAction *contextualAction = [UIContextualAction
+                contextualActionWithStyle:UIContextualActionStyleNormal
+                                    title:action[@"title"]
+                                  handler:^(UIContextualAction *_Nonnull contextualAction, __kindof UIView *_Nonnull sourceView, void (^_Nonnull completionHandler)(BOOL)) {
+                                      __strong typeof(_self) self = _self;
+                                      [self callJSResponse:action[@"callback"], nil];
+                                  }];
+        [action[@"backgroundColor"] let:^(id it) {
+            contextualAction.backgroundColor = DoricColor(it);
+        }];
+        [array addObject:contextualAction];
+    }
+    UISwipeActionsConfiguration *configuration = [UISwipeActionsConfiguration configurationWithActions:array];
+    configuration.performsFirstActionWithFullSwipe = NO;
+    return configuration;
 }
 
 - (NSDictionary *)itemModelAt:(NSUInteger)position {

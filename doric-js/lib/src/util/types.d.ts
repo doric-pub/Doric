@@ -1,7 +1,7 @@
 export interface Modeling {
     toModel(): Model;
 }
-export declare function obj2Model(obj: Model): Model;
+export declare function obj2Model(obj: Model, convertor: (v: Function) => string): Model;
 declare type _M = string | number | boolean | Modeling | {
     [index: string]: Model;
 } | undefined;

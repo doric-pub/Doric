@@ -2,9 +2,12 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-function obj2Model(obj) {
-    if (obj instanceof Array) {
-        return obj.map(function (e) { return obj2Model(e); });
+function obj2Model(obj, convertor) {
+    if (obj instanceof Function) {
+        return convertor(obj);
+    }
+    else if (obj instanceof Array) {
+        return obj.map(function (e) { return obj2Model(e, convertor); });
     }
     else if (obj instanceof Object) {
         if (Reflect.has(obj, 'toModel') && Reflect.get(obj, 'toModel') instanceof Function) {
@@ -14,7 +17,7 @@ function obj2Model(obj) {
         else {
             for (var key in obj) {
                 var val = Reflect.get(obj, key);
-                Reflect.set(obj, key, obj2Model(val));
+                Reflect.set(obj, key, obj2Model(val, convertor));
             }
             return obj;
         }
@@ -298,11 +301,12 @@ var View = /** @class */ (function () {
         configurable: true
     });
     View.prototype.onPropertyChanged = function (propKey, oldV, newV) {
+        var _this = this;
         if (newV instanceof Function) {
             newV = this.callback2Id(newV);
         }
         else {
-            newV = obj2Model(newV);
+            newV = obj2Model(newV, function (v) { return _this.callback2Id(v); });
         }
         if (this.__dirty_props__ === undefined) {
             this.__dirty_props__ = {};
@@ -2048,6 +2052,10 @@ var ListItem = /** @class */ (function (_super) {
         Property,
         __metadata$8("design:type", String)
     ], ListItem.prototype, "identifier", void 0);
+    __decorate$8([
+        Property,
+        __metadata$8("design:type", Array)
+    ], ListItem.prototype, "actions", void 0);
     return ListItem;
 }(Stack));
 var List = /** @class */ (function (_super) {

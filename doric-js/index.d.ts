@@ -587,11 +587,17 @@ declare module 'doric/lib/src/widget/list' {
     import { View, Superview, NativeViewModel } from "doric/lib/src/ui/view";
     import { Stack } from "doric/lib/src/widget/layouts";
     import { BridgeContext } from "doric/lib/src/runtime/global";
+    import { Color } from "doric/lib/src/util/color";
     export class ListItem extends Stack {
         /**
           * Set to reuse native view
           */
         identifier?: string;
+        actions?: {
+            title: string;
+            backgroundColor?: Color;
+            callback: () => void;
+        }[];
     }
     export class List extends Superview {
         allSubviews(): IterableIterator<ListItem> | ListItem[];
@@ -1187,7 +1193,7 @@ declare module 'doric/lib/src/util/types' {
     export interface Modeling {
         toModel(): Model;
     }
-    export function obj2Model(obj: Model): Model;
+    export function obj2Model(obj: Model, convertor: (v: Function) => string): Model;
     type _M = string | number | boolean | Modeling | {
         [index: string]: Model;
     } | undefined;

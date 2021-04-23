@@ -1,11 +1,17 @@
 import { View, Superview, NativeViewModel } from "../ui/view";
 import { Stack } from "./layouts";
 import { BridgeContext } from "../runtime/global";
+import { Color } from "../util/color";
 export declare class ListItem extends Stack {
     /**
      * Set to reuse native view
      */
     identifier?: string;
+    actions?: {
+        title: string;
+        backgroundColor?: Color;
+        callback: () => void;
+    }[];
 }
 export declare class List extends Superview {
     private cachedViews;

@@ -1,6 +1,9 @@
-export function obj2Model(obj) {
-    if (obj instanceof Array) {
-        return obj.map(e => obj2Model(e));
+export function obj2Model(obj, convertor) {
+    if (obj instanceof Function) {
+        return convertor(obj);
+    }
+    else if (obj instanceof Array) {
+        return obj.map(e => obj2Model(e, convertor));
     }
     else if (obj instanceof Object) {
         if (Reflect.has(obj, 'toModel') && Reflect.get(obj, 'toModel') instanceof Function) {
@@ -10,7 +13,7 @@ export function obj2Model(obj) {
         else {
             for (let key in obj) {
                 const val = Reflect.get(obj, key);
-                Reflect.set(obj, key, obj2Model(val));
+                Reflect.set(obj, key, obj2Model(val, convertor));
             }
             return obj;
         }

@@ -130,6 +130,7 @@ HEADERS += \
     utils/DoricImageBridge.h \
     utils/DoricLayouts.h \
     utils/DoricMouseAreaBridge.h \
+    utils/DoricNetworkService.h \
     utils/DoricObjectFactory.h \
     utils/DoricThreadMode.h \
     utils/DoricUtils.h \

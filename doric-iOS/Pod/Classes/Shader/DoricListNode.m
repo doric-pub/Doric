@@ -192,13 +192,16 @@
     NSArray *actions = self.itemActions[@(indexPath.row)];
     NSMutableArray <UITableViewRowAction *> *array = [NSMutableArray new];
     for (NSDictionary *action in actions) {
-        __weak typeof(self) _self = self;
         UITableViewRowAction *tableViewRowAction = [UITableViewRowAction
                 rowActionWithStyle:UITableViewRowActionStyleNormal
                              title:action[@"title"]
                            handler:^(UITableViewRowAction *tableViewRowAction, NSIndexPath *indexPath) {
-                               __strong typeof(_self) self = _self;
-                               [self callJSResponse:action[@"callback"], nil];
+                               UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                               if ([cell isKindOfClass:DoricTableViewCell.class]) {
+                                   [((DoricTableViewCell *) cell).doricListItemNode callJSResponse:action[@"callback"], nil];
+                               } else {
+                                   DoricLog(@"Cannot find table cell");
+                               }
                            }];
         [action[@"backgroundColor"] let:^(id it) {
             tableViewRowAction.backgroundColor = DoricColor(it);
@@ -212,13 +215,16 @@
     NSArray *actions = self.itemActions[@(indexPath.row)];
     NSMutableArray<UIContextualAction *> *array = [NSMutableArray new];
     for (NSDictionary *action in actions) {
-        __weak typeof(self) _self = self;
         UIContextualAction *contextualAction = [UIContextualAction
                 contextualActionWithStyle:UIContextualActionStyleNormal
                                     title:action[@"title"]
                                   handler:^(UIContextualAction *_Nonnull contextualAction, __kindof UIView *_Nonnull sourceView, void (^_Nonnull completionHandler)(BOOL)) {
-                                      __strong typeof(_self) self = _self;
-                                      [self callJSResponse:action[@"callback"], nil];
+                                      UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                                      if ([cell isKindOfClass:DoricTableViewCell.class]) {
+                                          [((DoricTableViewCell *) cell).doricListItemNode callJSResponse:action[@"callback"], nil];
+                                      } else {
+                                          DoricLog(@"Cannot find table cell");
+                                      }
                                   }];
         [action[@"backgroundColor"] let:^(id it) {
             contextualAction.backgroundColor = DoricColor(it);

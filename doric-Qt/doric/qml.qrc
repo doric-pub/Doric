@@ -13,6 +13,7 @@
         <file alias="ImageDemo.js">../../doric-demo/bundle/src/ImageDemo.js</file>
         <file alias="LayoutDemo.js">../../doric-demo/bundle/src/LayoutDemo.js</file>
         <file alias="ModalDemo.js">../../doric-demo/bundle/src/ModalDemo.js</file>
+        <file alias="NetworkDemo.js">../../doric-demo/bundle/src/NetworkDemo.js</file>
         <file alias="PopoverDemo.js">../../doric-demo/bundle/src/PopoverDemo.js</file>
         <file alias="SimpleDemo.js">../../doric-demo/bundle/src/SimpleDemo.js</file>
         <file alias="Snake.js">../../doric-demo/bundle/src/Snake.js</file>

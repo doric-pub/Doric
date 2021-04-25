@@ -9,6 +9,7 @@
     </qresource>
     <qresource prefix="/doric/bundles">
         <file alias="Counter.js">../../doric-demo/bundle/src/Counter.js</file>
+        <file alias="EffectsDemo.js">../../doric-demo/bundle/src/EffectsDemo.js</file>
         <file alias="Gobang.js">../../doric-demo/bundle/src/Gobang.js</file>
         <file alias="ImageDemo.js">../../doric-demo/bundle/src/ImageDemo.js</file>
         <file alias="LayoutDemo.js">../../doric-demo/bundle/src/LayoutDemo.js</file>

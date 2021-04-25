@@ -84,12 +84,14 @@ class ListVM extends ViewModel<ListModel, ListVH> {
                     actions: [
                         {
                             title: "First",
+                            backgroundColor: Color.RED,
                             callback: () => {
                                 modal(context).alert("First action")
                             }
                         },
                         {
                             title: "Second",
+                            backgroundColor: Color.BLUE,
                             callback: () => {
                                 modal(context).alert("Second action")
                             }

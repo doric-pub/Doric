@@ -4897,7 +4897,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	}());
 	});
 
-	var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+	var __awaiter$1 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
 	    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
 	    return new (P || (P = Promise))(function (resolve, reject) {
 	        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -4909,7 +4909,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	const loaders = [
 	    {
 	        filter: () => true,
-	        request: (source) => __awaiter(void 0, void 0, void 0, function* () {
+	        request: (source) => __awaiter$1(void 0, void 0, void 0, function* () {
 	            const result = yield axios__default['default'].get(source);
 	            return result.data;
 	        })
@@ -4919,7 +4919,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	    loaders.push(loader);
 	}
 	function loadDoricJSBundle(source) {
-	    return __awaiter(this, void 0, void 0, function* () {
+	    return __awaiter$1(this, void 0, void 0, function* () {
 	        const matched = loaders.filter(e => e.filter(source));
 	        if (matched.length > 0) {
 	            return matched[matched.length - 1].request(source);
@@ -4936,6 +4936,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	    }
 	}
 
+	exports.LayoutSpec = void 0;
 	(function (LayoutSpec) {
 	    LayoutSpec[LayoutSpec["EXACTLY"] = 0] = "EXACTLY";
 	    LayoutSpec[LayoutSpec["WRAP_CONTENT"] = 1] = "WRAP_CONTENT";
@@ -7274,7 +7275,7 @@ ${content}
 	    }
 	}
 
-	var __awaiter$1 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+	var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
 	    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
 	    return new (P || (P = Promise))(function (resolve, reject) {
 	        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -7288,7 +7289,7 @@ ${content}
 	smoothscroll.polyfill();
 	registerDoricJSLoader({
 	    filter: (source) => source.startsWith("assets://"),
-	    request: (source) => __awaiter$1(void 0, void 0, void 0, function* () {
+	    request: (source) => __awaiter(void 0, void 0, void 0, function* () {
 	        const ret = yield axios__default['default'].get(source.replace("assets://", `${window.location.href}/../../doric-demo/bundle/`));
 	        return ret.data;
 	    })
@@ -7320,6 +7321,8 @@ ${content}
 	exports.registerViewNode = registerViewNode;
 	exports.toPixelString = toPixelString;
 	exports.toRGBAString = toRGBAString;
+
+	Object.defineProperty(exports, '__esModule', { value: true });
 
 	return exports;
 

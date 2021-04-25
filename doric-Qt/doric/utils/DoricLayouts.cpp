@@ -132,16 +132,22 @@ void DoricLayouts::measureSelf(QSizeF targetSize) {
   qreal width;
   if (this->widthSpec == DoricLayoutSpec::DoricLayoutMost) {
     QQuickItem *parent = this->view->parentItem();
-    DoricLayouts *parentDoricLayout =
-        (DoricLayouts *)(parent->property("doricLayout").toULongLong());
-    if (parentDoricLayout != nullptr &&
-        parentDoricLayout->layoutType == DoricLayoutType::DoricHLayout &&
-        this->weight > 0) {
-      width = 0;
-      setMeasuredWidth(0);
-    } else {
+    if (parent == nullptr) {
+      // incase parent is scroller
       width = targetSize.width();
       setMeasuredWidth(targetSize.width());
+    } else {
+      DoricLayouts *parentDoricLayout =
+          (DoricLayouts *)(parent->property("doricLayout").toULongLong());
+      if (parentDoricLayout != nullptr &&
+          parentDoricLayout->layoutType == DoricLayoutType::DoricHLayout &&
+          this->weight > 0) {
+        width = 0;
+        setMeasuredWidth(0);
+      } else {
+        width = targetSize.width();
+        setMeasuredWidth(targetSize.width());
+      }
     }
   } else if (this->widthSpec == DoricLayoutSpec::DoricLayoutJust) {
     width = this->width;
@@ -154,17 +160,24 @@ void DoricLayouts::measureSelf(QSizeF targetSize) {
   qreal height;
   if (this->heightSpec == DoricLayoutSpec::DoricLayoutMost) {
     QQuickItem *parent = this->view->parentItem();
-    DoricLayouts *parentDoricLayout =
-        (DoricLayouts *)(parent->property("doricLayout").toULongLong());
-    if (parentDoricLayout != nullptr &&
-        parentDoricLayout->layoutType == DoricLayoutType::DoricVLayout &&
-        this->weight > 0) {
-      height = 0;
-      setMeasuredHeight(0);
-    } else {
+    if (parent == nullptr) {
+      // incase parent is scroller
       height = targetSize.height();
       setMeasuredHeight(targetSize.height());
+    } else {
+      DoricLayouts *parentDoricLayout =
+          (DoricLayouts *)(parent->property("doricLayout").toULongLong());
+      if (parentDoricLayout != nullptr &&
+          parentDoricLayout->layoutType == DoricLayoutType::DoricVLayout &&
+          this->weight > 0) {
+        height = 0;
+        setMeasuredHeight(0);
+      } else {
+        height = targetSize.height();
+        setMeasuredHeight(targetSize.height());
+      }
     }
+
   } else if (this->heightSpec == DoricLayoutSpec::DoricLayoutJust) {
     height = this->height;
     setMeasuredHeight(this->height);

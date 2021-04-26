@@ -11,8 +11,17 @@ DoricBridgeExtension::DoricBridgeExtension(QObject *parent) : QObject(parent) {}
 void DoricBridgeExtension::callNative(QString contextId, QString module,
                                       QString methodName, QString callbackId,
                                       QString argument) {
+  qDebug() << "contextId: " + contextId << "module: " + module
+           << "methodName: " + methodName << "callbackId: " + callbackId
+           << "jsValue: " + argument;
+
   DoricContext *context =
       DoricContextManager::getInstance()->getContext(contextId);
+
+  if (context == nullptr) {
+    qCritical() << "cannot find context: " + contextId;
+    return;
+  }
   bool classRegistered =
       context->getDriver()->getRegistry()->acquirePluginInfo(module);
   if (classRegistered) {
@@ -22,7 +31,4 @@ void DoricBridgeExtension::callNative(QString contextId, QString module,
                               Q_ARG(QString, argument),
                               Q_ARG(QString, callbackId));
   }
-  qDebug() << "contextId: " + contextId << "module: " + module
-           << "methodName: " + methodName << "callbackId: " + callbackId
-           << "jsValue: " + argument;
 }

@@ -1,5 +1,7 @@
 #include "NativeExecutor.h"
 
+#include <QDebug>
+
 NativeExecutor::NativeExecutor() {
   mJSEngine = new QJSEngine();
   mJSEngine->installExtensions(QJSEngine::AllExtensions);

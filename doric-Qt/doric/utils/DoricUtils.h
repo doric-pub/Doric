@@ -14,7 +14,7 @@ public:
     QFile *file = new QFile(resource.fileName());
     file->open(QFile::ReadOnly | QFile::Text);
     QTextStream in(file);
-    in.setEncoding(QStringConverter::Encoding::Utf8);
+    in.setAutoDetectUnicode(true);
     QString content = in.readAll();
     file->close();
     delete file;

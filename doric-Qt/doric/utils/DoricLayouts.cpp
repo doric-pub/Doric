@@ -492,9 +492,9 @@ void DoricLayouts::setFrame() {
               << " measuredX: " << this->measuredX
               << " measuredY: " << this->measuredY;
 
-  if (qFabs(this->measuredWidth - this->view->width() >= 0.00001f))
+  if (qAbs(this->measuredWidth - this->view->width() >= 0.00001f))
     this->view->setProperty("width", this->measuredWidth);
-  if (qFabs(this->measuredHeight - this->view->height() >= 0.00001f))
+  if (qAbs(this->measuredHeight - this->view->height() >= 0.00001f))
     this->view->setProperty("height", this->measuredHeight);
 
   this->view->setProperty("x", this->measuredX);

@@ -153,7 +153,7 @@ void DoricViewNode::requestLayout() {}
 void DoricViewNode::callJSResponse(QString funcId, QVariantList args) {
   QVariantList nArgs;
   QList<QString> idList = getIdList();
-  nArgs.append(idList);
+  nArgs.append(QVariant(idList));
   nArgs.append(funcId);
   foreach (const QVariant &arg, args)
     nArgs.append(arg);

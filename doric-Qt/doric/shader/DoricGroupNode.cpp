@@ -48,7 +48,7 @@ void DoricGroupNode::configChildNode() {
             oldNode->blend(model["props"]);
           } else {
             // Replace this view
-            mChildNodes.remove(idx);
+            mChildNodes.removeAt(idx);
             oldNode->getNodeView()->setParent(nullptr);
             oldNode->getNodeView()->setParentItem(nullptr);
             oldNode->getNodeView()->deleteLater();
@@ -132,7 +132,7 @@ void DoricGroupNode::configChildNode() {
   int size = mChildNodes.size();
   for (int idx = mChildViewIds.size(); idx < size; idx++) {
     DoricViewNode *viewNode = mChildNodes.at(mChildViewIds.size());
-    mChildNodes.remove(mChildViewIds.size());
+    mChildNodes.removeAt(mChildViewIds.size());
     viewNode->getNodeView()->setParent(nullptr);
     viewNode->getNodeView()->setParentItem(nullptr);
     viewNode->getNodeView()->deleteLater();

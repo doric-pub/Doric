@@ -35,14 +35,16 @@ void DoricModalPlugin::toast(QString jsValueString, QString callbackId) {
             .at(0)
             ->childItems()
             .at(0)
+            ->childItems()
+            .at(0)
             ->setProperty("text", msg);
 
-        std::function setX = [window, parentWindow]() {
+        std::function<void()> setX = [window, parentWindow]() {
           window->setProperty("x",
                               (parentWindow->width() - window->width()) / 2.f +
                                   parentWindow->x());
         };
-        std::function setY = [window, parentWindow, gravity]() {
+        std::function<void()> setY = [window, parentWindow, gravity]() {
           if ((gravity & DoricGravity::DoricGravityBottom) ==
               DoricGravity::DoricGravityBottom) {
             window->setProperty("y", parentWindow->height() - window->height() -
@@ -101,12 +103,12 @@ void DoricModalPlugin::alert(QString jsValueString, QString callbackId) {
         QQuickWindow *parentWindow =
             getContext()->getRootNode()->getRootView()->window();
 
-        std::function setX = [window, parentWindow]() {
+        std::function<void()> setX = [window, parentWindow]() {
           window->setProperty("x",
                               (parentWindow->width() - window->width()) / 2.f +
                                   parentWindow->x());
         };
-        std::function setY = [window, parentWindow]() {
+        std::function<void()> setY = [window, parentWindow]() {
           window->setProperty("y",
                               (parentWindow->height() - window->height()) / 2 +
                                   parentWindow->y());
@@ -156,12 +158,12 @@ void DoricModalPlugin::confirm(QString jsValueString, QString callbackId) {
         QQuickWindow *parentWindow =
             getContext()->getRootNode()->getRootView()->window();
 
-        std::function setX = [window, parentWindow]() {
+        std::function<void()> setX = [window, parentWindow]() {
           window->setProperty("x",
                               (parentWindow->width() - window->width()) / 2.f +
                                   parentWindow->x());
         };
-        std::function setY = [window, parentWindow]() {
+        std::function<void()> setY = [window, parentWindow]() {
           window->setProperty("y",
                               (parentWindow->height() - window->height()) / 2 +
                                   parentWindow->y());
@@ -211,12 +213,12 @@ void DoricModalPlugin::prompt(QString jsValueString, QString callbackId) {
         QQuickWindow *parentWindow =
             getContext()->getRootNode()->getRootView()->window();
 
-        std::function setX = [window, parentWindow]() {
+        std::function<void()> setX = [window, parentWindow]() {
           window->setProperty("x",
                               (parentWindow->width() - window->width()) / 2.f +
                                   parentWindow->x());
         };
-        std::function setY = [window, parentWindow]() {
+        std::function<void()> setY = [window, parentWindow]() {
           window->setProperty("y",
                               (parentWindow->height() - window->height()) / 2 +
                                   parentWindow->y());

@@ -53,8 +53,8 @@ void DoricImageNode::onReady() {
     QVariantList args;
 
     QMap<QString, QVariant> map;
-    map.insert("width", 0);
-    map.insert("height", 0);
+    map.insert("width", mView->width());
+    map.insert("height", mView->height());
 
     args.append(QVariant::fromValue(map));
     this->callJSResponse(this->loadCallbackId, args);

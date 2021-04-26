@@ -35,6 +35,10 @@ public:
       }
     }
 
+    if (timeoutVal.isDouble()) {
+      networkAccessManager.setTransferTimeout(timeoutVal.toInt());
+    }
+
     if (method == "get") {
       httpRequest.setUrl(QUrl(url));
       QNetworkReply *reply = networkAccessManager.get(httpRequest);
@@ -44,9 +48,9 @@ public:
             reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 
         if (reply->error() == QNetworkReply::NoError) {
-          emit response(statusCode, reply->readAll());
+          emit response(statusCode, reply->rawHeaderList(), reply->readAll());
         } else {
-          emit response(statusCode, QByteArray());
+          emit response(statusCode, reply->rawHeaderList(), QByteArray());
         }
 
         reply->deleteLater();
@@ -56,7 +60,7 @@ public:
   }
 signals:
   void run(QJsonValue jsValue);
-  void response(int code, QByteArray data);
+  void response(int code, QList<QByteArray> headers, QByteArray data);
 };
 
 class DoricNetworkService : public QObject {

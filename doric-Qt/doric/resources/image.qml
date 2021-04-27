@@ -2,6 +2,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.5
 
 import "util.mjs" as Util
+import QtGraphicalEffects 1.12
 
 AnimatedImage {
     property var wrapper
@@ -82,5 +83,21 @@ AnimatedImage {
             console.log(tag, uuid + " wrapper: " + wrapper)
             mouseAreaBridge.onClick(wrapper)
         }
+    }
+
+    property var isBlur: false
+    onIsBlurChanged: {
+        console.log(tag, uuid + " onIsBlurChanged: " + this.isBlur)
+        if (isBlur) {
+            this.layer.enabled = true
+        } else {
+            this.layer.enabled = false
+        }
+    }
+
+    layer.enabled: false
+    layer.effect: FastBlur {
+        radius: 50
+        transparentBorder: true
     }
 }

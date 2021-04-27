@@ -43,6 +43,10 @@ void DoricImageNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
   } else if (name == "imageBase64") {
     container->setProperty("fillMode", this->contentMode);
     container->setProperty("source", prop.toString());
+  } else if (name == "isBlur") {
+    if (prop.toBool()) {
+      container->setProperty("isBlur", prop.toBool());
+    }
   } else {
     DoricViewNode::blend(view, name, prop);
   }

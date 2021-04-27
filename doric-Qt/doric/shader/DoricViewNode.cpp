@@ -129,6 +129,13 @@ void DoricViewNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
     QString borderColor = DoricUtils::doricColor(prop["color"].toInt()).name();
     view->setProperty("borderWidth", borderWidth);
     view->setProperty("borderColor", borderColor);
+  } else if (name == "shadow") {
+    view->setProperty("shadowColor", QVariant::fromValue(DoricUtils::doricColor(
+                                         prop["color"].toInt())));
+    view->setProperty("shadowRadius", prop["radius"].toDouble());
+    view->setProperty("shadowOffsetX", prop["offsetX"].toDouble());
+    view->setProperty("shadowOffsetY", prop["offsetY"].toDouble());
+    view->setProperty("shadowOpacity", prop["opacity"].toDouble());
   } else if (name != "layoutConfig") {
     qCritical() << name << ": " << prop.toString();
   }

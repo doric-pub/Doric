@@ -2,6 +2,9 @@ QT += quick
 
 CONFIG += c++14
 
+TEMPLATE = lib
+CONFIG += staticlib
+
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
 # depend on your compiler). Refer to the documentation for the
@@ -22,7 +25,6 @@ SOURCES += \
         DoricRegistry.cpp \
         async/DoricAsyncResult.cpp \
         async/DoricSettableFuture.cpp \
-        demo/DoricDemoBridge.cpp \
         engine/DoricBridgeExtension.cpp \
         engine/DoricJSEngine.cpp \
         engine/DoricNativeEmpty.cpp \
@@ -33,7 +35,6 @@ SOURCES += \
         engine/native/NativeExecutor.cpp \
         engine/v8/JSValueHelper.cpp \
         engine/v8/V8Executor.cpp \
-        main.cpp \
         plugin/DoricModalPlugin.cpp \
         plugin/DoricNetworkPlugin.cpp \
         plugin/DoricPopoverPlugin.cpp \
@@ -94,7 +95,6 @@ HEADERS += \
     async/DoricAsyncResult.h \
     async/DoricCallback.h \
     async/DoricSettableFuture.h \
-    demo/DoricDemoBridge.h \
     engine/DoricBridgeExtension.h \
     engine/DoricInterfaceJSE.h \
     engine/DoricJSEngine.h \
@@ -164,9 +164,9 @@ win32:CONFIG(debug, debug|release): {
     LIBS += -lAdvapi32
     LIBS += -lDbghelp
 
-    INCLUDEPATH += $$PWD/../v8/v8/win32/include
+    INCLUDEPATH += $$PWD/../../v8/v8/win32/include
 
-    LIBS += -L$$PWD/../v8/v8/win32/release/
+    LIBS += -L$$PWD/../../v8/v8/win32/release/
     LIBS += -lv8_monolith
 }
 else:win32:CONFIG(release, debug|release): {
@@ -177,17 +177,17 @@ else:win32:CONFIG(release, debug|release): {
     LIBS += -lAdvapi32
     LIBS += -lDbghelp
 
-    INCLUDEPATH += $$PWD/../v8/v8/win32/include
+    INCLUDEPATH += $$PWD/../../v8/v8/win32/include
 
-    LIBS += -L$$PWD/library/../v8/v8/win32/release/
+    LIBS += -L$$PWD/../../v8/v8/win32/release/
     LIBS += -lv8_monolith
 }
 else:unix: {
     QMAKE_CFLAGS_RELEASE += -MT
     QMAKE_CXXFLAGS_RELEASE += -MT
 
-    INCLUDEPATH += $$PWD/../v8/v8/darwin/include
+    INCLUDEPATH += $$PWD/../../v8/v8/darwin/include
 
-    LIBS += -L$$PWD/../v8/v8/darwin/release/
+    LIBS += -L$$PWD/../../v8/v8/darwin/release/
     LIBS += -lv8_monolith
 }

@@ -239,7 +239,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                     if (prop.isNumber()) {
                         setBackgroundColor(prop.asNumber().toInt());
                     } else if (prop.isObject()) {
-                        final JSValue dict = prop;
+                        final JSObject dict = prop.asObject();
 
                         ShapeDrawable shapeDrawable = new ShapeDrawable();
                         shapeDrawable.setShape(new RectShape());
@@ -252,23 +252,31 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                                 int[] colors = null;
                                 float[] locations = null;
 
-                                if (dict.asObject().propertySet().contains("colors")) {
-                                    colors = dict.asObject().getProperty("colors").asArray().toIntArray();
-
-                                    if (dict.asObject().propertySet().contains("locations")) {
-                                        locations = dict.asObject().getProperty("locations").asArray().toFloatArray();
-
+                                if (dict.propertySet().contains("colors")) {
+                                    JSValue colorsValue = dict.getProperty("colors");
+                                    if (colorsValue.isArray()) {
+                                        colors = colorsValue.asArray().toIntArray();
+                                    }
+                                    if (dict.propertySet().contains("locations")) {
+                                        JSValue locationsValue = dict.getProperty("locations");
+                                        if (locationsValue.isArray()) {
+                                            locations = locationsValue.asArray().toFloatArray();
+                                        }
                                     }
                                 } else {
-                                    if (dict.asObject().propertySet().contains("start") && dict.asObject().propertySet().contains("end")) {
-                                        JSValue start = dict.asObject().getProperty("start");
-                                        JSValue end = dict.asObject().getProperty("end");
-
-                                        colors = new int[]{start.asNumber().toInt(), end.asNumber().toInt()};
+                                    if (dict.propertySet().contains("start") && dict.propertySet().contains("end")) {
+                                        JSValue start = dict.getProperty("start");
+                                        JSValue end = dict.getProperty("end");
+                                        if (start.isNumber() && end.isNumber()) {
+                                            colors = new int[]{start.asNumber().toInt(), end.asNumber().toInt()};
+                                        }
                                     }
                                 }
+                                if (colors == null) {
+                                    colors = new int[]{Color.TRANSPARENT, Color.TRANSPARENT};
+                                }
 
-                                JSValue orientation = dict.asObject().getProperty("orientation");
+                                JSValue orientation = dict.getProperty("orientation");
                                 if (orientation.isNumber()) {
                                     switch (orientation.asNumber().toInt()) {
                                         case 0:

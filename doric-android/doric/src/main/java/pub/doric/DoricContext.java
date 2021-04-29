@@ -53,7 +53,7 @@ public class DoricContext {
     private final String mContextId;
     private final Map<String, DoricJavaPlugin> mPluginMap = new HashMap<>();
     private final Context mContext;
-    private RootNode mRootNode = new RootNode(this);
+    private final RootNode mRootNode = new RootNode(this);
     private final String source;
     private String script;
     private String extra;
@@ -198,7 +198,9 @@ public class DoricContext {
         DoricJavaPlugin plugin = mPluginMap.get(doricMetaInfo.getName());
         if (plugin == null) {
             plugin = doricMetaInfo.createInstance(this);
-            mPluginMap.put(doricMetaInfo.getName(), plugin);
+            if (plugin != null) {
+                mPluginMap.put(doricMetaInfo.getName(), plugin);
+            }
         }
         return plugin;
     }
@@ -281,7 +283,9 @@ public class DoricContext {
      */
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         for (DoricJavaPlugin javaPlugin : mPluginMap.values()) {
-            javaPlugin.onActivityResult(requestCode, resultCode, data);
+            if (javaPlugin != null) {
+                javaPlugin.onActivityResult(requestCode, resultCode, data);
+            }
         }
     }
 }

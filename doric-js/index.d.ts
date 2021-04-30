@@ -617,6 +617,7 @@ declare module 'doric/lib/src/widget/list' {
         }) => void;
         scrolledPosition?: number;
         scrollable?: boolean;
+        bounces?: boolean;
         scrollToItem(context: BridgeContext, index: number, config?: {
             animated?: boolean;
         }): Promise<any>;
@@ -672,6 +673,7 @@ declare module 'doric/lib/src/widget/scroller' {
             y: number;
         }) => void;
         scrollable?: boolean;
+        bounces?: boolean;
         allSubviews(): View[];
         toModel(): NativeViewModel;
         scrollTo(context: BridgeContext, offset: {
@@ -737,6 +739,7 @@ declare module 'doric/lib/src/widget/flowlayout' {
             y: number;
         }) => void;
         scrollable?: boolean;
+        bounces?: boolean;
         reset(): void;
         toModel(): NativeViewModel;
     }
@@ -783,6 +786,7 @@ declare module 'doric/lib/src/widget/nestedSlider' {
     export class NestedSlider extends Group {
         onPageSlided?: (index: number) => void;
         scrollable?: boolean;
+        bounces?: boolean;
         addSlideItem(view: View): void;
         slidePage(context: BridgeContext, page: number, smooth?: boolean): Promise<any>;
         getSlidedPage(context: BridgeContext): Promise<number>;

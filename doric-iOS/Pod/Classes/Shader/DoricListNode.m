@@ -96,6 +96,8 @@
 - (void)blendView:(UITableView *)view forPropName:(NSString *)name propValue:(id)prop {
     if ([@"scrollable" isEqualToString:name]) {
         self.view.scrollEnabled = [prop boolValue];
+    } else if ([@"bounces" isEqualToString:name]) {
+        self.view.bounces = [prop boolValue];
     } else if ([@"itemCount" isEqualToString:name]) {
         self.itemCount = [prop unsignedIntegerValue];
         [self.view reloadData];

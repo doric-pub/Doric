@@ -24,6 +24,9 @@ export class NestedSlider extends Group {
     @Property
     scrollable?: boolean
 
+    @Property
+    bounces?: boolean
+
     addSlideItem(view: View) {
         this.addChild(view)
     }

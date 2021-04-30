@@ -105,9 +105,53 @@ void DoricViewNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
   } else if (name == "height") {
     getLayouts()->setHeight(prop.toDouble());
   } else if (name == "backgroundColor") {
-    view->setProperty(
-        "backgroundColor",
-        QVariant::fromValue(DoricUtils::doricColor(prop.toInt())));
+    if (prop.isDouble()) {
+      view->setProperty("backgroundColorIsObject", false);
+      view->setProperty(
+          "backgroundColor",
+          QVariant::fromValue(DoricUtils::doricColor(prop.toInt())));
+    } else if (prop.isObject()) {
+      QJsonObject dict = prop.toObject();
+      view->setProperty("backgroundColorIsObject", true);
+
+      QJsonValue orientation = prop["orientation"];
+      if (orientation.isDouble()) {
+        view->setProperty("orientation", orientation.toInt());
+      }
+      if (dict.keys().contains("colors")) {
+        QVector<int> colors;
+        QJsonArray colorArray = dict["colors"].toArray();
+        for (int i = 0; i != colorArray.size(); i++) {
+          colors.append(colorArray.at(i).toInt());
+        }
+
+        if (dict.keys().contains("locations")) {
+          QJsonValue locationsValue = dict["locations"];
+          if (locationsValue.isArray()) {
+            QVector<double> locations;
+            QJsonArray locationArray = locationsValue.toArray();
+            for (int i = 0; i != locationArray.size(); i++) {
+              locations.append(locationArray.at(i).toDouble());
+            }
+            view->setProperty("gradientLocations",
+                              QVariant::fromValue(locations));
+          }
+        }
+
+        view->setProperty("gradientColors", QVariant::fromValue(colors));
+      } else {
+        if (dict.keys().contains("start") && dict.keys().contains("end")) {
+          int start = dict["start"].toInt();
+          int end = dict["end"].toInt();
+
+          QVector<int> colors;
+          colors.append(start);
+          colors.append(end);
+
+          view->setProperty("gradientColors", QVariant::fromValue(colors));
+        }
+      }
+    }
   } else if (name == "x") {
     getLayouts()->setMarginLeft(prop.toDouble());
   } else if (name == "y") {

@@ -6946,6 +6946,70 @@ var doric_web = (function (exports, axios, sandbox) {
 	    }
 	}
 
+	var NotificationCenter;
+	(function (NotificationCenter) {
+	    let receivers = [];
+	    function publish(notification) {
+	        receivers.filter(e => e.name === notification.name).forEach(e => {
+	            e.callback(notification.data);
+	        });
+	    }
+	    NotificationCenter.publish = publish;
+	    function subscribe(receiver) {
+	        receivers.push(receiver);
+	    }
+	    NotificationCenter.subscribe = subscribe;
+	    function unsubscribe(receiver) {
+	        receivers = receivers.filter(e => e !== receiver);
+	    }
+	    NotificationCenter.unsubscribe = unsubscribe;
+	})(NotificationCenter || (NotificationCenter = {}));
+	class NotificationPlugin extends DoricPlugin {
+	    constructor() {
+	        super(...arguments);
+	        this.receivers = {};
+	    }
+	    publish(args) {
+	        const key = `__doric__${args.biz || ""}#${args.name}`;
+	        NotificationCenter.publish({
+	            name: key,
+	            data: !!args.data ? JSON.parse(args.data) : undefined
+	        });
+	        return true;
+	    }
+	    subscribe(args) {
+	        const key = `__doric__${args.biz || ""}#${args.name}`;
+	        const receiver = {
+	            name: key,
+	            callback: (data) => {
+	                sandbox.jsCallResolve(this.context.contextId, args.callback, data);
+	            }
+	        };
+	        this.receivers[args.callback] = receiver;
+	        NotificationCenter.subscribe(receiver);
+	        return args.callback;
+	    }
+	    unsubscribe(subscribeId) {
+	        const recevier = this.receivers[subscribeId];
+	        if (recevier) {
+	            NotificationCenter.unsubscribe(recevier);
+	            this.receivers[subscribeId] = undefined;
+	            return true;
+	        }
+	        else {
+	            return false;
+	        }
+	    }
+	    onTearDown() {
+	        Object.entries(this.receivers).map(e => e[1]).filter(e => !!e).forEach(e => {
+	            if (e) {
+	                NotificationCenter.unsubscribe(e);
+	            }
+	        });
+	        this.receivers = {};
+	    }
+	}
+
 	const bundles = new Map;
 	const plugins = new Map;
 	const nodes = new Map;
@@ -6973,6 +7037,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	registerPlugin('navigator', NavigatorPlugin);
 	registerPlugin('popover', PopoverPlugin);
 	registerPlugin('animate', AnimatePlugin);
+	registerPlugin('notification', NotificationPlugin);
 	registerViewNode('Stack', DoricStackNode);
 	registerViewNode('VLayout', DoricVLayoutNode);
 	registerViewNode('HLayout', DoricHLayoutNode);
@@ -7078,7 +7143,9 @@ ${content}
 	            });
 	        }
 	        else if (ret !== undefined) {
-	            sandbox.jsCallResolve(contextId, callbackId, ret);
+	            Promise.resolve(ret).then((ret) => {
+	                sandbox.jsCallResolve(contextId, callbackId, ret);
+	            });
 	        }
 	        return true;
 	    });

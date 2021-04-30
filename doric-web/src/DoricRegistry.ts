@@ -19,6 +19,7 @@ import { AnimatePlugin } from "./plugins/AnimatePlugin"
 import { DoricSwitchNode } from "./shader/DoricSwitchNode"
 import { DoricSliderNode } from "./shader/DoricSliderNode"
 import { DoricSlideItemNode } from "./shader/DoricSlideItemNode"
+import { NotificationPlugin } from "./plugins/NotificationPlugin"
 
 const bundles: Map<string, string> = new Map
 
@@ -59,6 +60,7 @@ registerPlugin('storage', StoragePlugin)
 registerPlugin('navigator', NavigatorPlugin)
 registerPlugin('popover', PopoverPlugin)
 registerPlugin('animate', AnimatePlugin)
+registerPlugin('notification', NotificationPlugin)
 
 registerViewNode('Stack', DoricStackNode)
 registerViewNode('VLayout', DoricVLayoutNode)

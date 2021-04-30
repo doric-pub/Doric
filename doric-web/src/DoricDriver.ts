@@ -1,4 +1,4 @@
-import { jsCallResolve, jsCallReject, jsCallbackTimer, jsCallEntityMethod, jsReleaseContext } from 'doric/src/runtime/sandbox'
+import { jsCallResolve, jsCallReject, jsCallbackTimer, jsReleaseContext } from 'doric/src/runtime/sandbox'
 import { acquireJSBundle, acquirePlugin } from './DoricRegistry'
 import { getDoricContext } from './DoricContext'
 import { DoricPlugin } from './DoricPlugin'
@@ -104,7 +104,9 @@ function initDoric() {
                     jsCallReject(contextId, callbackId, e)
                 })
         } else if (ret !== undefined) {
-            jsCallResolve(contextId, callbackId, ret)
+            Promise.resolve(ret).then((ret) => {
+                jsCallResolve(contextId, callbackId, ret)
+            })
         }
         return true
     })

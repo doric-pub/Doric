@@ -59,7 +59,6 @@
 - (UICollectionView *)build {
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
     [flowLayout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
-
     return [[[DoricSliderView alloc] initWithFrame:CGRectZero
                               collectionViewLayout:flowLayout]
             also:^(UICollectionView *it) {
@@ -67,6 +66,8 @@
                 it.pagingEnabled = YES;
                 it.delegate = self;
                 it.dataSource = self;
+                it.showsHorizontalScrollIndicator = NO;
+                it.showsVerticalScrollIndicator = NO;
                 [it registerClass:[DoricSliderViewCell class] forCellWithReuseIdentifier:@"doricCell"];
                 if (@available(iOS 11, *)) {
                     it.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;

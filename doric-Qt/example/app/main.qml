@@ -15,7 +15,7 @@ ApplicationWindow {
 
         ListView {
             width: parent.width
-            model: 10
+            model: 11
             delegate: Rectangle {
                 Column {
                     anchors.centerIn: parent
@@ -33,14 +33,16 @@ ApplicationWindow {
                                 case 4:
                                     return "LayoutDemo.js"
                                 case 5:
-                                    return "ModalDemo.js"
+                                    return "LayoutTestDemo.js"
                                 case 6:
-                                    return "NetworkDemo.js"
+                                    return "ModalDemo.js"
                                 case 7:
-                                    return "PopoverDemo.js"
+                                    return "NetworkDemo.js"
                                 case 8:
-                                    return "SimpleDemo.js"
+                                    return "PopoverDemo.js"
                                 case 9:
+                                    return "SimpleDemo.js"
+                                case 10:
                                     return "Snake.js"
                             }
                         }

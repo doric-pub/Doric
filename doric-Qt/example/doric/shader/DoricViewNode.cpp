@@ -113,7 +113,14 @@ void DoricViewNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
   } else if (name == "y") {
     getLayouts()->setMarginTop(prop.toDouble());
   } else if (name == "corners") {
-    view->setProperty("radius", prop.toDouble());
+    if (prop.isDouble()) {
+      view->setProperty("radius", prop.toDouble());
+    } else if (prop.isObject()) {
+      view->setProperty("radiusLeftTop", prop["leftTop"].toDouble());
+      view->setProperty("radiusRightTop", prop["rightTop"].toDouble());
+      view->setProperty("radiusLeftBottom", prop["leftBottom"].toDouble());
+      view->setProperty("radiusRightBottom", prop["rightBottom"].toDouble());
+    }
   } else if (name == "onClick") {
     if (prop.isString())
       clickFunction = prop.toString();

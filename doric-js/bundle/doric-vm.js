@@ -3158,6 +3158,10 @@ __decorate$8([
     Property,
     __metadata$8("design:type", Boolean)
 ], List.prototype, "scrollable", void 0);
+__decorate$8([
+    Property,
+    __metadata$8("design:type", Boolean)
+], List.prototype, "bounces", void 0);
 function list(config) {
     const ret = new List;
     for (let key in config) {
@@ -3333,6 +3337,10 @@ __decorate$6([
     Property,
     __metadata$6("design:type", Boolean)
 ], Scroller.prototype, "scrollable", void 0);
+__decorate$6([
+    Property,
+    __metadata$6("design:type", Boolean)
+], Scroller.prototype, "bounces", void 0);
 
 var __decorate$5 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -3576,6 +3584,10 @@ __decorate$4([
     Property,
     __metadata$4("design:type", Boolean)
 ], FlowLayout.prototype, "scrollable", void 0);
+__decorate$4([
+    Property,
+    __metadata$4("design:type", Boolean)
+], FlowLayout.prototype, "bounces", void 0);
 function flowlayout(config) {
     const ret = new FlowLayout;
     for (let key in config) {
@@ -3721,6 +3733,10 @@ __decorate$2([
     Property,
     __metadata$2("design:type", Boolean)
 ], NestedSlider.prototype, "scrollable", void 0);
+__decorate$2([
+    Property,
+    __metadata$2("design:type", Boolean)
+], NestedSlider.prototype, "bounces", void 0);
 
 var __decorate$1 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;

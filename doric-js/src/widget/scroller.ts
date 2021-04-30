@@ -45,6 +45,9 @@ export class Scroller extends Superview {
     @Property
     scrollable?: boolean
 
+    @Property
+    bounces?: boolean
+
     allSubviews() {
         return [this.content]
     }

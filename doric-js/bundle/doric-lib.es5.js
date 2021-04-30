@@ -2142,6 +2142,10 @@ var List = /** @class */ (function (_super) {
         Property,
         __metadata$8("design:type", Boolean)
     ], List.prototype, "scrollable", void 0);
+    __decorate$8([
+        Property,
+        __metadata$8("design:type", Boolean)
+    ], List.prototype, "bounces", void 0);
     return List;
 }(Superview));
 function list(config) {
@@ -2362,6 +2366,10 @@ var Scroller = /** @class */ (function (_super) {
         Property,
         __metadata$6("design:type", Boolean)
     ], Scroller.prototype, "scrollable", void 0);
+    __decorate$6([
+        Property,
+        __metadata$6("design:type", Boolean)
+    ], Scroller.prototype, "bounces", void 0);
     return Scroller;
 }(Superview));
 
@@ -2671,6 +2679,10 @@ var FlowLayout = /** @class */ (function (_super) {
         Property,
         __metadata$4("design:type", Boolean)
     ], FlowLayout.prototype, "scrollable", void 0);
+    __decorate$4([
+        Property,
+        __metadata$4("design:type", Boolean)
+    ], FlowLayout.prototype, "bounces", void 0);
     return FlowLayout;
 }(Superview));
 function flowlayout(config) {
@@ -2858,6 +2870,10 @@ var NestedSlider = /** @class */ (function (_super) {
         Property,
         __metadata$2("design:type", Boolean)
     ], NestedSlider.prototype, "scrollable", void 0);
+    __decorate$2([
+        Property,
+        __metadata$2("design:type", Boolean)
+    ], NestedSlider.prototype, "bounces", void 0);
     return NestedSlider;
 }(Group));
 

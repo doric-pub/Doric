@@ -27,6 +27,7 @@ export declare class FlowLayout extends Superview {
         y: number;
     }) => void;
     scrollable?: boolean;
+    bounces?: boolean;
     reset(): void;
     private getItem;
     private renderBunchedItems;

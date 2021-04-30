@@ -66,3 +66,7 @@ __decorate([
     Property,
     __metadata("design:type", Boolean)
 ], Scroller.prototype, "scrollable", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Boolean)
+], Scroller.prototype, "bounces", void 0);

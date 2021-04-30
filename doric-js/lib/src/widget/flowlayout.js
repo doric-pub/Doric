@@ -118,6 +118,10 @@ __decorate([
     Property,
     __metadata("design:type", Boolean)
 ], FlowLayout.prototype, "scrollable", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Boolean)
+], FlowLayout.prototype, "bounces", void 0);
 export function flowlayout(config) {
     const ret = new FlowLayout;
     for (let key in config) {

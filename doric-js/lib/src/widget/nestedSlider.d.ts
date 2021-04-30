@@ -3,6 +3,7 @@ import { BridgeContext } from '../runtime/global';
 export declare class NestedSlider extends Group {
     onPageSlided?: (index: number) => void;
     scrollable?: boolean;
+    bounces?: boolean;
     addSlideItem(view: View): void;
     slidePage(context: BridgeContext, page: number, smooth?: boolean): Promise<any>;
     getSlidedPage(context: BridgeContext): Promise<number>;

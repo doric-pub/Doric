@@ -72,6 +72,9 @@ export class FlowLayout extends Superview {
     @Property
     scrollable?: boolean
 
+    @Property
+    bounces?: boolean
+
     reset() {
         this.cachedViews.clear()
         this.itemCount = 0

@@ -2261,6 +2261,10 @@ var Slider = /** @class */ (function (_super) {
         Property,
         __metadata$7("design:type", Boolean)
     ], Slider.prototype, "scrollable", void 0);
+    __decorate$7([
+        Property,
+        __metadata$7("design:type", Boolean)
+    ], Slider.prototype, "bounces", void 0);
     return Slider;
 }(Superview));
 function slider(config) {

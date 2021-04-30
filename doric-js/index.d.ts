@@ -645,6 +645,7 @@ declare module 'doric/lib/src/widget/slider' {
         onPageSlided?: (index: number) => void;
         loop?: boolean;
         scrollable?: boolean;
+        bounces?: boolean;
         slidePage(context: BridgeContext, page: number, smooth?: boolean): Promise<any>;
         getSlidedPage(context: BridgeContext): Promise<number>;
     }

@@ -84,6 +84,10 @@ __decorate([
     Property,
     __metadata("design:type", Boolean)
 ], Slider.prototype, "scrollable", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Boolean)
+], Slider.prototype, "bounces", void 0);
 export function slider(config) {
     const ret = new Slider;
     for (let key in config) {

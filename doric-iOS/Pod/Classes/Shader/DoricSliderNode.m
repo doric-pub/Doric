@@ -100,6 +100,8 @@
             [self.view reloadData];
             [self.view setContentOffset:CGPointMake(1 * self.view.width, self.view.contentOffset.y) animated:false];
         }
+    } else if ([@"bounces" isEqualToString:name]) {
+        self.view.bounces = [prop boolValue];
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }

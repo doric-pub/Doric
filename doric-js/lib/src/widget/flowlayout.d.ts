@@ -27,6 +27,9 @@ export declare class FlowLayout extends Superview {
         y: number;
     }) => void;
     scrollable?: boolean;
+    /**
+     * Take effect only on iOS
+     */
     bounces?: boolean;
     reset(): void;
     private getItem;

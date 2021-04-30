@@ -589,40 +589,43 @@ declare module 'doric/lib/src/widget/list' {
     import { BridgeContext } from "doric/lib/src/runtime/global";
     import { Color } from "doric/lib/src/util/color";
     export class ListItem extends Stack {
-        /**
-          * Set to reuse native view
-          */
-        identifier?: string;
-        actions?: {
-            title: string;
-            backgroundColor?: Color;
-            callback: () => void;
-        }[];
+            /**
+                * Set to reuse native view
+                */
+            identifier?: string;
+            actions?: {
+                    title: string;
+                    backgroundColor?: Color;
+                    callback: () => void;
+            }[];
     }
     export class List extends Superview {
-        allSubviews(): IterableIterator<ListItem> | ListItem[];
-        itemCount: number;
-        renderItem: (index: number) => ListItem;
-        batchCount: number;
-        onLoadMore?: () => void;
-        loadMore?: boolean;
-        loadMoreView?: ListItem;
-        onScroll?: (offset: {
-            x: number;
-            y: number;
-        }) => void;
-        onScrollEnd?: (offset: {
-            x: number;
-            y: number;
-        }) => void;
-        scrolledPosition?: number;
-        scrollable?: boolean;
-        bounces?: boolean;
-        scrollToItem(context: BridgeContext, index: number, config?: {
-            animated?: boolean;
-        }): Promise<any>;
-        reset(): void;
-        toModel(): NativeViewModel;
+            allSubviews(): IterableIterator<ListItem> | ListItem[];
+            itemCount: number;
+            renderItem: (index: number) => ListItem;
+            batchCount: number;
+            onLoadMore?: () => void;
+            loadMore?: boolean;
+            loadMoreView?: ListItem;
+            onScroll?: (offset: {
+                    x: number;
+                    y: number;
+            }) => void;
+            onScrollEnd?: (offset: {
+                    x: number;
+                    y: number;
+            }) => void;
+            scrolledPosition?: number;
+            scrollable?: boolean;
+            /**
+                * Take effect only on iOS
+                */
+            bounces?: boolean;
+            scrollToItem(context: BridgeContext, index: number, config?: {
+                    animated?: boolean;
+            }): Promise<any>;
+            reset(): void;
+            toModel(): NativeViewModel;
     }
     export function list(config: Partial<List>): List;
     export function listItem(item: View | View[], config?: Partial<ListItem>): ListItem;
@@ -633,22 +636,25 @@ declare module 'doric/lib/src/widget/slider' {
     import { Stack } from "doric/lib/src/widget/layouts";
     import { BridgeContext } from "doric/lib/src/runtime/global";
     export class SlideItem extends Stack {
-        /**
-          * Set to reuse native view
-          */
-        identifier?: string;
+            /**
+                * Set to reuse native view
+                */
+            identifier?: string;
     }
     export class Slider extends Superview {
-        allSubviews(): IterableIterator<SlideItem>;
-        itemCount: number;
-        renderPage: (index: number) => SlideItem;
-        batchCount: number;
-        onPageSlided?: (index: number) => void;
-        loop?: boolean;
-        scrollable?: boolean;
-        bounces?: boolean;
-        slidePage(context: BridgeContext, page: number, smooth?: boolean): Promise<any>;
-        getSlidedPage(context: BridgeContext): Promise<number>;
+            allSubviews(): IterableIterator<SlideItem>;
+            itemCount: number;
+            renderPage: (index: number) => SlideItem;
+            batchCount: number;
+            onPageSlided?: (index: number) => void;
+            loop?: boolean;
+            scrollable?: boolean;
+            /**
+                * Take effect only on iOS
+                */
+            bounces?: boolean;
+            slidePage(context: BridgeContext, page: number, smooth?: boolean): Promise<any>;
+            getSlidedPage(context: BridgeContext): Promise<number>;
     }
     export function slider(config: Partial<Slider>): Slider;
     export function slideItem(item: View | View[], config?: Partial<SlideItem>): SlideItem;
@@ -673,6 +679,9 @@ declare module 'doric/lib/src/widget/scroller' {
             y: number;
         }) => void;
         scrollable?: boolean;
+        /**
+          * Take effect only on iOS
+          */
         bounces?: boolean;
         allSubviews(): View[];
         toModel(): NativeViewModel;
@@ -714,34 +723,37 @@ declare module 'doric/lib/src/widget/flowlayout' {
     import { Stack } from 'doric/lib/src/widget/layouts';
     import { Superview, View, NativeViewModel } from 'doric/lib/src/ui/view';
     export class FlowLayoutItem extends Stack {
-        /**
-         * Set to reuse native view
-         */
-        identifier?: string;
+            /**
+             * Set to reuse native view
+             */
+            identifier?: string;
     }
     export class FlowLayout extends Superview {
-        allSubviews(): IterableIterator<FlowLayoutItem> | FlowLayoutItem[];
-        columnCount: number;
-        columnSpace?: number;
-        rowSpace?: number;
-        itemCount: number;
-        renderItem: (index: number) => FlowLayoutItem;
-        batchCount: number;
-        onLoadMore?: () => void;
-        loadMore?: boolean;
-        loadMoreView?: FlowLayoutItem;
-        onScroll?: (offset: {
-            x: number;
-            y: number;
-        }) => void;
-        onScrollEnd?: (offset: {
-            x: number;
-            y: number;
-        }) => void;
-        scrollable?: boolean;
-        bounces?: boolean;
-        reset(): void;
-        toModel(): NativeViewModel;
+            allSubviews(): IterableIterator<FlowLayoutItem> | FlowLayoutItem[];
+            columnCount: number;
+            columnSpace?: number;
+            rowSpace?: number;
+            itemCount: number;
+            renderItem: (index: number) => FlowLayoutItem;
+            batchCount: number;
+            onLoadMore?: () => void;
+            loadMore?: boolean;
+            loadMoreView?: FlowLayoutItem;
+            onScroll?: (offset: {
+                    x: number;
+                    y: number;
+            }) => void;
+            onScrollEnd?: (offset: {
+                    x: number;
+                    y: number;
+            }) => void;
+            scrollable?: boolean;
+            /**
+                * Take effect only on iOS
+                */
+            bounces?: boolean;
+            reset(): void;
+            toModel(): NativeViewModel;
     }
     export function flowlayout(config: Partial<FlowLayout>): FlowLayout;
     export function flowItem(item: View | View[], config?: Partial<FlowLayoutItem>): FlowLayoutItem;
@@ -786,6 +798,9 @@ declare module 'doric/lib/src/widget/nestedSlider' {
     export class NestedSlider extends Group {
         onPageSlided?: (index: number) => void;
         scrollable?: boolean;
+        /**
+          * Take effect only on iOS
+          */
         bounces?: boolean;
         addSlideItem(view: View): void;
         slidePage(context: BridgeContext, page: number, smooth?: boolean): Promise<any>;

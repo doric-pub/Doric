@@ -75,7 +75,9 @@ export class List extends Superview {
 
     @Property
     scrollable?: boolean
-
+    /**
+     * Take effect only on iOS
+     */
     @Property
     bounces?: boolean
 

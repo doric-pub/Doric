@@ -16,6 +16,9 @@ export declare class Scroller extends Superview {
         y: number;
     }) => void;
     scrollable?: boolean;
+    /**
+     * Take effect only on iOS
+     */
     bounces?: boolean;
     allSubviews(): View[];
     toModel(): NativeViewModel;

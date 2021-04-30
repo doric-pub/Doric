@@ -23,7 +23,9 @@ export class NestedSlider extends Group {
 
     @Property
     scrollable?: boolean
-
+    /**
+     * Take effect only on iOS
+     */
     @Property
     bounces?: boolean
 

@@ -32,6 +32,9 @@ export declare class List extends Superview {
     }) => void;
     scrolledPosition?: number;
     scrollable?: boolean;
+    /**
+     * Take effect only on iOS
+     */
     bounces?: boolean;
     scrollToItem(context: BridgeContext, index: number, config?: {
         animated?: boolean;

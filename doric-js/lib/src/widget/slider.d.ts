@@ -16,6 +16,9 @@ export declare class Slider extends Superview {
     onPageSlided?: (index: number) => void;
     loop?: boolean;
     scrollable?: boolean;
+    /**
+     * Take effect only on iOS
+     */
     bounces?: boolean;
     private getItem;
     private renderBunchedItems;

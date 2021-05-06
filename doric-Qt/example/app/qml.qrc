@@ -15,6 +15,7 @@
         <file alias="NetworkDemo.js">../../../doric-demo/bundle/src/NetworkDemo.js</file>
         <file alias="PopoverDemo.js">../../../doric-demo/bundle/src/PopoverDemo.js</file>
         <file alias="SimpleDemo.js">../../../doric-demo/bundle/src/SimpleDemo.js</file>
+        <file alias="ScrollerDemo.js">../../../doric-demo/bundle/src/ScrollerDemo.js</file>
         <file alias="Snake.js">../../../doric-demo/bundle/src/Snake.js</file>
         <file alias="StorageDemo.js">../../../doric-demo/bundle/src/StorageDemo.js</file>
     </qresource>

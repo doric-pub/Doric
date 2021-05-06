@@ -42,12 +42,15 @@ void DoricDemoBridge::navigate(QVariant route) {
     name = "PopoverDemo.js";
     break;
   case 9:
-    name = "SimpleDemo.js";
+    name = "ScrollerDemo.js";
     break;
   case 10:
-    name = "Snake.js";
+    name = "SimpleDemo.js";
     break;
   case 11:
+    name = "Snake.js";
+    break;
+  case 12:
     name = "StorageDemo.js";
     break;
   }

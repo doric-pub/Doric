@@ -207,8 +207,17 @@ void DoricModalPlugin::prompt(QString jsValueString, QString callbackId) {
 
         window->setProperty("title", titleVal.toString());
         window->setProperty("msg", msgVal.toString());
-        window->setProperty("okLabel", okBtn.toString());
-        window->setProperty("cancelLabel", cancelBtn.toString());
+        if (okBtn.isString()) {
+          window->setProperty("okLabel", okBtn.toString());
+        } else {
+          window->setProperty("okLabel", "ok");
+        }
+
+        if (cancelBtn.isString()) {
+          window->setProperty("cancelLabel", cancelBtn.toString());
+        } else {
+          window->setProperty("cancelLabel", "cancel");
+        }
 
         QQuickWindow *parentWindow =
             getContext()->getRootNode()->getRootView()->window();

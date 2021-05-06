@@ -39,6 +39,7 @@ SOURCES += \
         plugin/DoricNetworkPlugin.cpp \
         plugin/DoricPopoverPlugin.cpp \
         plugin/DoricShaderPlugin.cpp \
+        plugin/DoricStoragePlugin.cpp \
         shader/DoricGroupNode.cpp \
         shader/DoricHLayoutNode.cpp \
         shader/DoricImageNode.cpp \
@@ -112,6 +113,7 @@ HEADERS += \
     plugin/DoricNetworkPlugin.h \
     plugin/DoricPopoverPlugin.h \
     plugin/DoricShaderPlugin.h \
+    plugin/DoricStoragePlugin.h \
     shader/DoricGroupNode.h \
     shader/DoricHLayoutNode.h \
     shader/DoricImageNode.h \

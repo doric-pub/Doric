@@ -4,6 +4,7 @@
 #include "plugin/DoricNetworkPlugin.h"
 #include "plugin/DoricPopoverPlugin.h"
 #include "plugin/DoricShaderPlugin.h"
+#include "plugin/DoricStoragePlugin.h"
 
 #include "shader/DoricHLayoutNode.h"
 #include "shader/DoricImageNode.h"
@@ -18,6 +19,7 @@ DoricRegistry::DoricRegistry() {
   registerNativePlugin<DoricModalPlugin>("modal");
   registerNativePlugin<DoricPopoverPlugin>("popover");
   registerNativePlugin<DoricNetworkPlugin>("network");
+  registerNativePlugin<DoricStoragePlugin>("storage");
 
   registerViewNode<DoricRootNode>("Root");
   registerViewNode<DoricStackNode>("Stack");

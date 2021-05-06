@@ -47,6 +47,9 @@ void DoricDemoBridge::navigate(QVariant route) {
   case 10:
     name = "Snake.js";
     break;
+  case 11:
+    name = "StorageDemo.js";
+    break;
   }
   QString script = DoricUtils::readAssetFile("/doric/bundles", name);
 

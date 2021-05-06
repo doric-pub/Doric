@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
   QQmlApplicationEngine engine;
   qmlRegisterType<FlexLayoutService>("pub.doric.widget", 1, 0,
                                      "FlexLayoutService");
-//  const QUrl url(QStringLiteral("qrc:/doric/qml/test-layout.qml"));
+//  const QUrl url(QStringLiteral("qrc:/test-layout.qml"));
   const QUrl url(QStringLiteral("qrc:/main.qml"));
   QObject::connect(
       &engine, &QQmlApplicationEngine::objectCreated, &app,

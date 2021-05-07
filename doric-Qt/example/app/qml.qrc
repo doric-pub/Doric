@@ -33,6 +33,7 @@
         <file alias="text.qml">../doric/resources/text.qml</file>
         <file alias="scroller.qml">../doric/resources/scroller.qml</file>
         <file alias="image.qml">../doric/resources/image.qml</file>
+        <file alias="slider.qml">../doric/resources/slider.qml</file>
 
         <file alias="toast.qml">../doric/resources/toast.qml</file>
         <file alias="alert.qml">../doric/resources/alert.qml</file>

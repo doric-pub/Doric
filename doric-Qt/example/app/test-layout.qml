@@ -8,50 +8,33 @@ ApplicationWindow {
     height: 800
     title: qsTr("Scroll")
 
-    ScrollView {
-        property var wrapper
+    SwipeView {
+        id: view
 
-        width: 200
-        height: 200
-
-        ScrollBar.horizontal.policy: ScrollBar.AlwaysOn
-        ScrollBar.vertical.policy: ScrollBar.AlwaysOn
-
-        clip: true
-
-//        property var uuid: Util.uuidv4()
-
-        property var tag: "Scroller"
-
-        background: Rectangle {
-            id: bg
-            color: 'red'
-        }
-
-        property var backgroundColor
-
-        onBackgroundColorChanged: {
-            bg.color = backgroundColor
-        }
-
-        onWidthChanged: {
-            bg.implicitWidth = width
-            console.log(tag, uuid + " onWidthChanged: " + this.width)
-        }
-
-        onHeightChanged: {
-            bg.implicitHeight = height
-            console.log(tag, uuid + " onHeightChanged: " + this.height)
-        }
+        currentIndex: 0
+        anchors.fill: parent
 
         Rectangle {
-            implicitWidth: 400
-            implicitHeight: 400
-
-            Label {
-                text: "ABC"
-                font.pixelSize: 124
-            }
+            id: firstPage
+            color: 'red'
         }
+        Rectangle {
+            id: secondPage
+            color: 'green'
+        }
+        Rectangle {
+            id: thirdPage
+            color: 'blue'
+        }
+    }
+
+    PageIndicator {
+        id: indicator
+
+        count: view.count
+        currentIndex: view.currentIndex
+
+        anchors.bottom: view.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
     }
 }

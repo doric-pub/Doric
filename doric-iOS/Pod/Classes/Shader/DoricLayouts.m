@@ -443,11 +443,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
         } else if ((gravity & DoricGravityCenterX) == DoricGravityCenterX) {
             layout.measuredX = self.measuredWidth / 2 - layout.measuredWidth / 2;
         } else {
-            if (layout.marginLeft || layout.marginRight) {
-                layout.measuredX = self.paddingLeft;
-            } else {
-                layout.measuredX = 0;
-            }
+            layout.measuredX = self.paddingLeft;
         }
         if ((gravity & DoricGravityTop) == DoricGravityTop) {
             layout.measuredY = self.paddingTop;
@@ -456,11 +452,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
         } else if ((gravity & DoricGravityCenterY) == DoricGravityCenterY) {
             layout.measuredY = self.measuredHeight / 2 - layout.measuredHeight / 2;
         } else {
-            if (layout.marginTop || layout.marginBottom) {
-                layout.measuredY = self.paddingTop;
-            } else {
-                layout.measuredY = 0;
-            }
+            layout.measuredY = self.paddingTop;
         }
 
         if (!gravity) {

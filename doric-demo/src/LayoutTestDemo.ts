@@ -20,6 +20,50 @@ class LayoutTest extends Panel {
                 stack(
                     [
                         stack(
+                            [
+
+                                text({
+                                    text: "This is a stack content xxxxx",
+                                    textSize: 20,
+                                    textColor: Color.WHITE,
+                                }),
+                            ],
+                            {
+                                layoutConfig: layoutConfig().most(),
+                                backgroundColor: Color.BLUE
+                            }
+                        ),
+                        stack(
+                            [
+
+                                text({
+                                    text: "This is a stack content 000000000",
+                                    textSize: 20,
+                                    textColor: Color.WHITE,
+                                }),
+                            ],
+                            {
+                                layoutConfig: layoutConfig().most(),
+                                backgroundColor: Color.YELLOW,
+                                alpha: 0.1
+                            }
+                        ),
+                        text({
+                            text: "This is a stack content",
+                            textSize: 20,
+                            textColor: Color.WHITE,
+                        }),
+                    ],
+                    {
+                        layoutConfig: {
+                            widthSpec: LayoutSpec.FIT,
+                            heightSpec: LayoutSpec.FIT,
+                        },
+                        backgroundColor: Color.RED
+                    }),
+                stack(
+                    [
+                        stack(
                             [],
                             {
                                 layoutConfig: layoutConfig().most(),
@@ -49,7 +93,7 @@ class LayoutTest extends Panel {
                             }
                         ),
                         text({
-                            text: "This is a stack content",
+                            text: "This is a vlayout content",
                             textSize: 20,
                             textColor: Color.WHITE,
                         }),

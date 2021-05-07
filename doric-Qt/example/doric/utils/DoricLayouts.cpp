@@ -140,8 +140,12 @@ void DoricLayouts::measureSelf(QSizeF targetSize) {
       DoricLayouts *parentDoricLayout =
           (DoricLayouts *)(parent->property("doricLayout").toULongLong());
       if (parentDoricLayout != nullptr &&
-          parentDoricLayout->layoutType == DoricLayoutType::DoricHLayout &&
-          this->weight > 0) {
+          parentDoricLayout->widthSpec == DoricLayoutSpec::DoricLayoutFit) {
+        width = targetSize.width();
+      } else if (parentDoricLayout != nullptr &&
+                 parentDoricLayout->layoutType ==
+                     DoricLayoutType::DoricHLayout &&
+                 this->weight > 0) {
         width = 0;
         setMeasuredWidth(0);
       } else {
@@ -223,15 +227,17 @@ void DoricLayouts::measureContent(QSizeF targetSize) {
     DoricLayouts *parentDoricLayout =
         (DoricLayouts *)(parent->property("doricLayout").toULongLong());
     if (parentDoricLayout != nullptr) {
-      if (parentDoricLayout->layoutType != DoricLayoutType::DoricUndefined &&
-          parentDoricLayout->widthSpec == DoricLayoutSpec::DoricLayoutFit &&
+
+      if (parentDoricLayout->widthSpec == DoricLayoutSpec::DoricLayoutFit &&
           this->widthSpec == DoricLayoutSpec::DoricLayoutMost) {
-        setMeasuredWidth(targetSize.width());
+        setMeasuredWidth(this->contentWidth + this->paddingLeft +
+                         this->paddingRight);
       }
-      if (parentDoricLayout->layoutType != DoricLayoutType::DoricUndefined &&
-          parentDoricLayout->heightSpec == DoricLayoutSpec::DoricLayoutFit &&
+
+      if (parentDoricLayout->heightSpec == DoricLayoutSpec::DoricLayoutFit &&
           this->heightSpec == DoricLayoutSpec::DoricLayoutMost) {
-        setMeasuredHeight(targetSize.height());
+        setMeasuredHeight(this->contentHeight + this->paddingTop +
+                          this->paddingBottom);
       }
     }
   }
@@ -515,12 +521,12 @@ void DoricLayouts::layoutStack() {
     if (this->widthSpec == DoricLayoutSpec::DoricLayoutFit &&
         layout->widthSpec == DoricLayoutSpec::DoricLayoutMost) {
       layout->measuredWidth =
-          this->measuredWidth - layout->marginLeft - layout->marginRight;
+          this->contentWidth - layout->marginLeft - layout->marginRight;
     }
     if (this->heightSpec == DoricLayoutSpec::DoricLayoutFit &&
         layout->heightSpec == DoricLayoutSpec::DoricLayoutMost) {
       layout->measuredHeight =
-          this->measuredHeight - layout->marginTop - layout->marginBottom;
+          this->contentHeight - layout->marginTop - layout->marginBottom;
     }
     layout->layout();
 
@@ -536,11 +542,7 @@ void DoricLayouts::layoutStack() {
                DoricGravity::DoricGravityCenterX) {
       layout->setMeasuredX(this->measuredWidth / 2 - layout->measuredWidth / 2);
     } else {
-      if (layout->marginLeft || layout->marginRight) {
-        layout->setMeasuredX(this->paddingLeft);
-      } else {
-        layout->setMeasuredX(0);
-      }
+      layout->setMeasuredX(this->paddingLeft);
     }
 
     if ((gravity & DoricGravity::DoricGravityTop) ==
@@ -555,11 +557,7 @@ void DoricLayouts::layoutStack() {
       layout->setMeasuredY(this->measuredHeight / 2 -
                            layout->measuredHeight / 2);
     } else {
-      if (layout->marginTop || layout->marginBottom) {
-        layout->setMeasuredY(this->paddingTop);
-      } else {
-        layout->setMeasuredY(0);
-      }
+      layout->setMeasuredY(this->paddingTop);
     }
 
     if (!gravity) {
@@ -613,12 +611,7 @@ void DoricLayouts::layoutVLayout() {
     if (this->widthSpec == DoricLayoutSpec::DoricLayoutFit &&
         layout->widthSpec == DoricLayoutSpec::DoricLayoutMost) {
       layout->measuredWidth =
-          this->measuredWidth - layout->marginLeft - layout->marginRight;
-    }
-    if (this->heightSpec == DoricLayoutSpec::DoricLayoutFit &&
-        layout->heightSpec == DoricLayoutSpec::DoricLayoutMost) {
-      layout->measuredHeight = this->measuredHeight - yStart -
-                               layout->marginTop - layout->marginBottom;
+          this->contentWidth - layout->marginLeft - layout->marginRight;
     }
     layout->layout();
     int gravity = layout->alignment | this->gravity;
@@ -677,16 +670,10 @@ void DoricLayouts::layoutHLayout() {
       continue;
     }
 
-    if (this->widthSpec == DoricLayoutSpec::DoricLayoutFit &&
-        layout->widthSpec == DoricLayoutSpec::DoricLayoutMost) {
-      layout->measuredWidth = this->measuredWidth - xStart -
-                              layout->marginLeft - layout->marginRight;
-    }
-
     if (this->heightSpec == DoricLayoutSpec::DoricLayoutFit &&
         layout->heightSpec == DoricLayoutSpec::DoricLayoutMost) {
       layout->measuredHeight =
-          this->measuredHeight - layout->marginTop - layout->marginBottom;
+          this->contentHeight - layout->marginTop - layout->marginBottom;
     }
 
     layout->layout();

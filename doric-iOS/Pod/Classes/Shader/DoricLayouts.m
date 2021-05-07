@@ -120,7 +120,9 @@ static const void *kLayoutConfig = &kLayoutConfig;
     CGFloat width;
     CGFloat height;
     if (self.widthSpec == DoricLayoutMost) {
-        if (self.view.superview.doricLayout.layoutType == DoricHLayout && self.weight > 0) {
+        if (self.view.superview.doricLayout.widthSpec == DoricLayoutFit) {
+            width = targetSize.width;
+        } else if (self.view.superview.doricLayout.layoutType == DoricHLayout && self.weight > 0) {
             width = self.measuredWidth = 0;
         } else {
             width = self.measuredWidth = targetSize.width;
@@ -193,11 +195,13 @@ static const void *kLayoutConfig = &kLayoutConfig;
             break;
         }
     }
-    if (self.view.superview.doricLayout.layoutType != DoricUndefined && self.view.superview.doricLayout.widthSpec == DoricLayoutFit && self.widthSpec == DoricLayoutMost) {
-        self.measuredWidth = targetSize.width;
+
+    if (self.view.superview.doricLayout.widthSpec == DoricLayoutFit && self.widthSpec == DoricLayoutMost) {
+        self.measuredWidth = self.contentWidth + self.paddingLeft + self.paddingRight;
     }
-    if (self.view.superview.doricLayout.layoutType != DoricUndefined && self.view.superview.doricLayout.heightSpec == DoricLayoutFit && self.heightSpec == DoricLayoutMost) {
-        self.measuredHeight = targetSize.height;
+
+    if (self.view.superview.doricLayout.heightSpec == DoricLayoutFit && self.heightSpec == DoricLayoutMost) {
+        self.measuredHeight = self.contentHeight + self.paddingTop + self.paddingBottom;
     }
 }
 
@@ -494,9 +498,6 @@ static const void *kLayoutConfig = &kLayoutConfig;
         if (self.widthSpec == DoricLayoutFit && layout.widthSpec == DoricLayoutMost) {
             layout.measuredWidth = self.measuredWidth - layout.marginLeft - layout.marginRight;
         }
-        if (self.heightSpec == DoricLayoutFit && layout.heightSpec == DoricLayoutMost) {
-            layout.measuredHeight = self.measuredHeight - yStart - layout.marginTop - layout.marginBottom;
-        }
         [layout layout];
         DoricGravity gravity = layout.alignment | self.gravity;
         if ((gravity & DoricGravityLeft) == DoricGravityLeft) {
@@ -535,10 +536,6 @@ static const void *kLayoutConfig = &kLayoutConfig;
         DoricLayout *layout = child.doricLayout;
         if (layout.disabled) {
             continue;
-        }
-
-        if (self.widthSpec == DoricLayoutFit && layout.widthSpec == DoricLayoutMost) {
-            layout.measuredWidth = self.measuredWidth - xStart - layout.marginLeft - layout.marginRight;
         }
 
         if (self.heightSpec == DoricLayoutFit && layout.heightSpec == DoricLayoutMost) {

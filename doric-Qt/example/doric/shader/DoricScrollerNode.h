@@ -25,6 +25,8 @@ public:
   virtual void requestLayout() override;
 
   QSizeF sizeThatFits(QSizeF size);
+
+  virtual DoricViewNode *getSubNodeById(QString id) override;
 };
 
 #endif // DORICSCROLLERNODE_H

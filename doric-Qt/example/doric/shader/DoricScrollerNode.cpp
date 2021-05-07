@@ -117,3 +117,7 @@ QSizeF DoricScrollerNode::sizeThatFits(QSizeF size) {
   return QSizeF(qMin(size.width(), layout->getMeasuredWidth()),
                 qMin(size.height(), layout->getMeasuredHeight()));
 }
+
+DoricViewNode *DoricScrollerNode::getSubNodeById(QString id) {
+  return id == mChildNode->getId() ? mChildNode : nullptr;
+}

@@ -153,3 +153,13 @@ void DoricGroupNode::requestLayout() {
   DoricSuperNode::requestLayout();
   foreach (DoricViewNode *node, this->mChildNodes) { node->requestLayout(); }
 }
+
+DoricViewNode *DoricGroupNode::getSubNodeById(QString id) {
+  DoricSuperNode::requestLayout();
+  foreach (DoricViewNode *node, this->mChildNodes) {
+    if (id == node->getId()) {
+      return node;
+    }
+  }
+  return nullptr;
+}

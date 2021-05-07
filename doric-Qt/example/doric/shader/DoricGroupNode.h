@@ -23,6 +23,8 @@ protected:
   virtual void afterBlended(QJsonValue props) override;
 
   virtual void requestLayout() override;
+
+  virtual DoricViewNode *getSubNodeById(QString id) override;
 };
 
 #endif // DORICGROUPNODE_H

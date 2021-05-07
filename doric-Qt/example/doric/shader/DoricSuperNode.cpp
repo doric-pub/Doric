@@ -54,3 +54,33 @@ void DoricSuperNode::blendSubLayoutConfig(DoricViewNode *viewNode,
                                           QJsonValue jsValue) {
   viewNode->blendLayoutConfig(jsValue);
 }
+
+bool DoricSuperNode::viewIdIsEqual(QJsonValue src, QJsonValue target) {
+  QString srcId = src["id"].toString();
+  QString targetId = target["id"].toString();
+  return srcId == targetId;
+}
+
+void DoricSuperNode::recursiveMixin(QJsonValue src, QJsonValue target) {
+  QJsonObject srcProps = src["props"].toObject();
+  QJsonObject targetProps = target["props"].toObject();
+  QJsonValue oriSubviews = targetProps["subviews"];
+  for (QString key : srcProps.keys()) {
+    QJsonValue jsValue = srcProps[key];
+    if ("subviews" == key && jsValue.isArray()) {
+      QJsonArray subviews = jsValue.toArray();
+      for (QJsonValue subview : subviews) {
+        if (oriSubviews.isArray()) {
+          for (QJsonValue targetSubview : oriSubviews.toArray()) {
+            if (viewIdIsEqual(subview, targetSubview)) {
+              recursiveMixin(subview, targetSubview);
+              break;
+            }
+          }
+        }
+      }
+      continue;
+    }
+    targetProps.insert(key, jsValue);
+  }
+}

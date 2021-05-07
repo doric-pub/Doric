@@ -429,10 +429,10 @@ static const void *kLayoutConfig = &kLayoutConfig;
             continue;
         }
         if (self.widthSpec == DoricLayoutFit && layout.widthSpec == DoricLayoutMost) {
-            layout.measuredWidth = self.measuredWidth - layout.marginLeft - layout.marginRight;
+            layout.measuredWidth = self.contentWidth - layout.marginLeft - layout.marginRight;
         }
         if (self.heightSpec == DoricLayoutFit && layout.heightSpec == DoricLayoutMost) {
-            layout.measuredHeight = self.measuredHeight - layout.marginTop - layout.marginBottom;
+            layout.measuredHeight = self.contentHeight - layout.marginTop - layout.marginBottom;
         }
         [layout layout];
         DoricGravity gravity = layout.alignment;
@@ -488,7 +488,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
             continue;
         }
         if (self.widthSpec == DoricLayoutFit && layout.widthSpec == DoricLayoutMost) {
-            layout.measuredWidth = self.measuredWidth - layout.marginLeft - layout.marginRight;
+            layout.measuredWidth = self.contentWidth - layout.marginLeft - layout.marginRight;
         }
         [layout layout];
         DoricGravity gravity = layout.alignment | self.gravity;
@@ -531,7 +531,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
         }
 
         if (self.heightSpec == DoricLayoutFit && layout.heightSpec == DoricLayoutMost) {
-            layout.measuredHeight = self.measuredHeight - layout.marginTop - layout.marginBottom;
+            layout.measuredHeight = self.contentHeight - layout.marginTop - layout.marginBottom;
         }
 
         [layout layout];

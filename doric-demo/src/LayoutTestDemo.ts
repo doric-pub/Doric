@@ -1,4 +1,4 @@
-import { Panel, Group, vlayout, LayoutSpec, text, Color, gravity, stack, layoutConfig, scroller, Gravity, View } from "doric";
+import { Panel, Group, vlayout, LayoutSpec, text, Color, gravity, stack, layoutConfig, scroller, Gravity, View, hlayout } from "doric";
 
 function grid(title: string, view: View) {
     return vlayout(
@@ -28,23 +28,30 @@ function grid(title: string, view: View) {
 
 }
 function content() {
-    return stack(
-        [],
-        {
-            layoutConfig: {
-                widthSpec: LayoutSpec.JUST,
-                heightSpec: LayoutSpec.JUST,
-                margin: {
-                    left: 10,
-                    right: 10,
-                    top: 10,
-                    bottom: 10
-                }
-            },
-            width: 100,
-            height: 100,
-            backgroundColor: Color.parse("#34495e")
-        })
+    return [
+        text({
+            text: "Content",
+            textColor: Color.WHITE,
+            backgroundColor: Color.parse("#34495e"),
+        }),
+        stack(
+            [],
+            {
+                layoutConfig: {
+                    widthSpec: LayoutSpec.JUST,
+                    heightSpec: LayoutSpec.JUST,
+                    margin: {
+                        left: 10,
+                        right: 10,
+                        top: 10,
+                        bottom: 10
+                    }
+                },
+                width: 100,
+                height: 100,
+                backgroundColor: Color.parse("#34495e")
+            })
+    ]
 }
 
 function case1() {
@@ -52,10 +59,11 @@ function case1() {
         [
             stack(
                 [
-                    content(),
+                    ...content(),
                 ],
                 {
                     layoutConfig: layoutConfig().most(),
+                    backgroundColor: Color.parse("#1abc9c")
                 })
         ],
         {
@@ -78,7 +86,7 @@ function case2() {
                     layoutConfig: layoutConfig().most(),
                     backgroundColor: Color.parse("#1abc9c")
                 }),
-            content(),
+            ...content(),
         ],
         {
             layoutConfig: layoutConfig().fit(),
@@ -161,6 +169,108 @@ class LayoutTest extends Panel {
         scroller(
             vlayout(
                 [
+                    grid(
+                        "VLayout fit -> most -> just",
+                        vlayout(
+                            [
+                                stack(
+                                    [
+                                        ...content(),
+                                    ],
+                                    {
+                                        layoutConfig: layoutConfig().most(),
+                                        backgroundColor: Color.parse("#1abc9c"),
+                                        padding: {
+                                            left: 10, right: 10,
+                                            top: 10, bottom: 10,
+                                        }
+                                    })
+                            ],
+                            {
+                                layoutConfig: layoutConfig().fit(),
+                                backgroundColor: Color.parse("#9b59b6"),
+                                padding: {
+                                    left: 10, right: 10,
+                                    top: 10, bottom: 10,
+                                }
+                            })
+                    ),
+                    grid(
+                        "VLayout fit -> most, just",
+                        vlayout(
+                            [
+                                stack(
+                                    [],
+                                    {
+                                        layoutConfig: layoutConfig().most(),
+                                        backgroundColor: Color.parse("#1abc9c"),
+                                        padding: {
+                                            left: 10, right: 10,
+                                            top: 10, bottom: 10,
+                                        }
+                                    }),
+                                ...content(),
+                            ],
+                            {
+                                layoutConfig: layoutConfig().fit(),
+                                backgroundColor: Color.parse("#9b59b6"),
+                                padding: {
+                                    left: 10, right: 10,
+                                    top: 10, bottom: 10,
+                                }
+                            })
+                    ),
+                    grid(
+                        "HLayout fit -> most -> just",
+                        hlayout(
+                            [
+                                stack(
+                                    [
+                                        ...content(),
+                                    ],
+                                    {
+                                        layoutConfig: layoutConfig().most(),
+                                        backgroundColor: Color.parse("#1abc9c"),
+                                        padding: {
+                                            left: 10, right: 10,
+                                            top: 10, bottom: 10,
+                                        }
+                                    })
+                            ],
+                            {
+                                layoutConfig: layoutConfig().fit(),
+                                backgroundColor: Color.parse("#9b59b6"),
+                                padding: {
+                                    left: 10, right: 10,
+                                    top: 10, bottom: 10,
+                                }
+                            })
+                    ),
+                    grid(
+                        "HLayout fit -> most, just",
+                        hlayout(
+                            [
+                                stack(
+                                    [],
+                                    {
+                                        layoutConfig: layoutConfig().most(),
+                                        backgroundColor: Color.parse("#1abc9c"),
+                                        padding: {
+                                            left: 10, right: 10,
+                                            top: 10, bottom: 10,
+                                        }
+                                    }),
+                                ...content(),
+                            ],
+                            {
+                                layoutConfig: layoutConfig().fit(),
+                                backgroundColor: Color.parse("#9b59b6"),
+                                padding: {
+                                    left: 10, right: 10,
+                                    top: 10, bottom: 10,
+                                }
+                            })
+                    ),
                     grid(
                         "Stack fit -> most -> just",
                         case1(),

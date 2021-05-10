@@ -50,6 +50,7 @@ SOURCES += \
         shader/DoricTextNode.cpp \
         shader/DoricVLayoutNode.cpp \
         shader/DoricViewNode.cpp \
+        shader/slider/DoricSlideItemNode.cpp \
         shader/slider/DoricSliderNode.cpp \
         utils/DoricConstant.cpp \
         utils/DoricContextHolder.cpp \
@@ -125,6 +126,7 @@ HEADERS += \
     shader/DoricTextNode.h \
     shader/DoricVLayoutNode.h \
     shader/DoricViewNode.h \
+    shader/slider/DoricSlideItemNode.h \
     shader/slider/DoricSliderNode.h \
     template/DoricSingleton.h \
     utils/DoricConstant.h \

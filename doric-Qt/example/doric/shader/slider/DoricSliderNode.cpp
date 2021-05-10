@@ -35,3 +35,12 @@ void DoricSliderNode::blendSubNode(QJsonValue subProperties) {
 void DoricSliderNode::blend(QJsonValue jsValue) {}
 
 void DoricSliderNode::blend(QQuickItem *view, QString name, QJsonValue prop) {}
+
+void DoricSliderNode::afterBlended(QJsonValue prop) {
+  if (this->childNodes.length() != this->itemCount) {
+    QVariantList args;
+    args.append(this->childNodes.length());
+    args.append(this->itemCount);
+    this->pureCallJSResponse("renderBunchedItems", args);
+  }
+}

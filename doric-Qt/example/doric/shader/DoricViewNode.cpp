@@ -219,6 +219,20 @@ void DoricViewNode::callJSResponse(QString funcId, QVariantList args) {
   return getContext()->callEntity(DoricConstant::DORIC_ENTITY_RESPONSE, nArgs);
 }
 
+void DoricViewNode::pureCallJSResponse(QString funcId, QVariantList args) {
+  QVariantList nArgs;
+  nArgs.append(getContext()->getContextId());
+  nArgs.append(DoricConstant::DORIC_ENTITY_RESPONSE);
+  QList<QString> idList = getIdList();
+  nArgs.append(QVariant(idList));
+  nArgs.append(funcId);
+  foreach (const QVariant &arg, args)
+    nArgs.append(arg);
+
+  return getContext()->callEntity(DoricConstant::DORIC_CONTEXT_INVOKE_PURE,
+                                  nArgs);
+}
+
 void DoricViewNode::onClick() {
   if (clickFunction.isEmpty()) {
     return;

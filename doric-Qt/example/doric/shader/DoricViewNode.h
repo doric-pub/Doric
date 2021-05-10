@@ -78,5 +78,7 @@ public:
   void onClick();
 
   void callJSResponse(QString funcId, QVariantList args);
+
+  void pureCallJSResponse(QString funcId, QVariantList args);
 };
 #endif // DORICVIEWNODE_H

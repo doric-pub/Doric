@@ -13,6 +13,8 @@
 #include "shader/DoricStackNode.h"
 #include "shader/DoricTextNode.h"
 #include "shader/DoricVLayoutNode.h"
+#include "shader/slider/DoricSlideItemNode.h"
+#include "shader/slider/DoricSliderNode.h"
 
 DoricRegistry::DoricRegistry() {
   registerNativePlugin<DoricShaderPlugin>("shader");
@@ -28,6 +30,8 @@ DoricRegistry::DoricRegistry() {
   registerViewNode<DoricTextNode>("Text");
   registerViewNode<DoricScrollerNode>("Scroller");
   registerViewNode<DoricImageNode>("Image");
+  registerViewNode<DoricSliderNode>("Slider");
+  registerViewNode<DoricSlideItemNode>("SlideItem");
 }
 
 bool DoricRegistry::acquirePluginInfo(QString name) {

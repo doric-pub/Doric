@@ -21,18 +21,20 @@ public:
     return &instance;
   }
 
-  void invokeContextEntityMethod(QString contextId, QString method,
-                                 QVariantList args) override;
+  std::shared_ptr<DoricAsyncResult>
+  invokeContextEntityMethod(QString contextId, QString method,
+                            QVariantList args) override;
 
-  void invokeDoricMethod(QString method, QVariantList args) override;
+  std::shared_ptr<DoricAsyncResult>
+  invokeDoricMethod(QString method, QVariantList args) override;
 
-  DoricAsyncResult *asyncCall(std::function<void()> lambda,
-                              DoricThreadMode mode) override;
+  std::shared_ptr<DoricAsyncResult> asyncCall(std::function<void()> lambda,
+                                              DoricThreadMode mode) override;
 
-  void createContext(QString contextId, QString script,
-                     QString source) override;
+  std::shared_ptr<DoricAsyncResult>
+  createContext(QString contextId, QString script, QString source) override;
 
-  void destroyContext(QString contextId) override;
+  std::shared_ptr<DoricAsyncResult> destroyContext(QString contextId) override;
 
   DoricRegistry *getRegistry() override;
 };

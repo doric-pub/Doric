@@ -4,22 +4,26 @@
 #include "async/DoricAsyncCall.h"
 #include "utils/DoricConstant.h"
 
-void DoricNativeDriver::invokeContextEntityMethod(QString contextId,
-                                                  QString method,
-                                                  QVariantList args) {
+std::shared_ptr<DoricAsyncResult>
+DoricNativeDriver::invokeContextEntityMethod(QString contextId, QString method,
+                                             QVariantList args) {
   args.insert(0, QVariant(contextId));
   args.insert(1, QVariant(method));
-  invokeDoricMethod(DoricConstant::DORIC_CONTEXT_INVOKE, args);
+  return invokeDoricMethod(DoricConstant::DORIC_CONTEXT_INVOKE, args);
 }
 
-void DoricNativeDriver::invokeDoricMethod(QString method, QVariantList args) {
-  return DoricAsyncCall::ensureRunInThreadPool(
+std::shared_ptr<DoricAsyncResult>
+DoricNativeDriver::invokeDoricMethod(QString method, QVariantList args) {
+  DoricAsyncCall::ensureRunInThreadPool(
       &jsEngine.mJSThreadPool,
       [this, method, args] { this->jsEngine.invokeDoricMethod(method, args); });
+
+  return std::make_shared<DoricAsyncResult>();
 }
 
-DoricAsyncResult *DoricNativeDriver::asyncCall(std::function<void()> lambda,
-                                               DoricThreadMode mode) {
+std::shared_ptr<DoricAsyncResult>
+DoricNativeDriver::asyncCall(std::function<void()> lambda,
+                             DoricThreadMode mode) {
   switch (mode) {
   case UI:
     DoricAsyncCall::ensureRunInMain(lambda);
@@ -31,18 +35,24 @@ DoricAsyncResult *DoricNativeDriver::asyncCall(std::function<void()> lambda,
   return NULL;
 }
 
-void DoricNativeDriver::createContext(QString contextId, QString script,
-                                      QString source) {
+std::shared_ptr<DoricAsyncResult>
+DoricNativeDriver::createContext(QString contextId, QString script,
+                                 QString source) {
   DoricAsyncCall::ensureRunInThreadPool(
       &jsEngine.mJSThreadPool, [this, contextId, script, source] {
         this->jsEngine.prepareContext(contextId, script, source);
       });
+
+  return std::make_shared<DoricAsyncResult>();
 }
 
-void DoricNativeDriver::destroyContext(QString contextId) {
+std::shared_ptr<DoricAsyncResult>
+DoricNativeDriver::destroyContext(QString contextId) {
   DoricAsyncCall::ensureRunInThreadPool(
       &jsEngine.mJSThreadPool,
       [this, contextId] { this->jsEngine.destroyContext(contextId); });
+
+  return std::make_shared<DoricAsyncResult>();
 }
 
 DoricRegistry *DoricNativeDriver::getRegistry() {

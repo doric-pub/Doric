@@ -208,7 +208,8 @@ QList<QString> DoricViewNode::getIdList() {
 
 void DoricViewNode::requestLayout() {}
 
-void DoricViewNode::callJSResponse(QString funcId, QVariantList args) {
+std::shared_ptr<DoricAsyncResult>
+DoricViewNode::callJSResponse(QString funcId, QVariantList args) {
   QVariantList nArgs;
   QList<QString> idList = getIdList();
   nArgs.append(QVariant(idList));
@@ -219,7 +220,8 @@ void DoricViewNode::callJSResponse(QString funcId, QVariantList args) {
   return getContext()->callEntity(DoricConstant::DORIC_ENTITY_RESPONSE, nArgs);
 }
 
-void DoricViewNode::pureCallJSResponse(QString funcId, QVariantList args) {
+std::shared_ptr<DoricAsyncResult>
+DoricViewNode::pureCallJSResponse(QString funcId, QVariantList args) {
   QVariantList nArgs;
   nArgs.append(getContext()->getContextId());
   nArgs.append(DoricConstant::DORIC_ENTITY_RESPONSE);

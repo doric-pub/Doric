@@ -17,7 +17,7 @@ QQuickItem *DoricSliderNode::build() {
   return item;
 }
 
-DoricViewNode *DoricSliderNode::getSubNodeById(QString id) {}
+DoricViewNode *DoricSliderNode::getSubNodeById(QString id) { return nullptr; }
 
 void DoricSliderNode::blendSubNode(QJsonValue subProperties) {
   QString viewId = subProperties["id"].toString();

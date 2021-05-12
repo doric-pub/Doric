@@ -54,7 +54,8 @@ void DoricContext::build(int width, int height) {
   callEntity(DoricConstant::DORIC_ENTITY_BUILD, args);
 }
 
-void DoricContext::callEntity(QString methodName, QVariantList args) {
+std::shared_ptr<DoricAsyncResult> DoricContext::callEntity(QString methodName,
+                                                           QVariantList args) {
   return getDriver()->invokeContextEntityMethod(this->mContextId, methodName,
                                                 args);
 }

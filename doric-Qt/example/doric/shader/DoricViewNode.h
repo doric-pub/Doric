@@ -77,8 +77,10 @@ public:
 
   void onClick();
 
-  void callJSResponse(QString funcId, QVariantList args);
+  std::shared_ptr<DoricAsyncResult> callJSResponse(QString funcId,
+                                                   QVariantList args);
 
-  void pureCallJSResponse(QString funcId, QVariantList args);
+  std::shared_ptr<DoricAsyncResult> pureCallJSResponse(QString funcId,
+                                                       QVariantList args);
 };
 #endif // DORICVIEWNODE_H

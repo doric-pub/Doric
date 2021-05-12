@@ -34,7 +34,8 @@ public:
 
   void build(int width, int height);
 
-  void callEntity(QString methodName, QVariantList args);
+  std::shared_ptr<DoricAsyncResult> callEntity(QString methodName,
+                                               QVariantList args);
 
   DoricInterfaceDriver *getDriver();
 

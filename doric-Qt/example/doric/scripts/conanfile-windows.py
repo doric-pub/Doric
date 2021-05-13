@@ -6,7 +6,7 @@ class DoricCore(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
 
     def package(self):
-        self.copy("*.h", dst="include", src="doric")
-        self.copy("*.lib", dst="lib",src="../binary/dest")
+        self.copy("*.h", dst="include", src="../../doric")
+        self.copy("*.lib", dst="lib",src="../../../binary/doric")
     def package_info(self):
         self.cpp_info.libs = ["DoricCore"]

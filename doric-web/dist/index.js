@@ -4363,10 +4363,38 @@ class VMPanel extends Panel {
     }
 }
 
-class ModularPanel extends Panel {
+class Module extends Panel {
+    dispatchMessage(message) {
+        var _a;
+        (_a = this.superPanel) === null || _a === void 0 ? void 0 : _a.dispatchMessage(message);
+    }
+    onMessage(message) { }
+}
+class ModularPanel extends Module {
     constructor() {
         super();
-        this.modules = this.setupModules().map(e => new e);
+        this.modules = this.setupModules().map(e => {
+            const instance = new e;
+            if (instance instanceof Module) {
+                instance.superPanel = this;
+            }
+            return instance;
+        });
+    }
+    dispatchMessage(message) {
+        if (this.superPanel) {
+            this.superPanel.dispatchMessage(message);
+        }
+        else {
+            this.onMessage(message);
+        }
+    }
+    onMessage(message) {
+        this.modules.forEach(e => {
+            if (e instanceof Module) {
+                e.onMessage(message);
+            }
+        });
     }
     build(root) {
         const groupView = this.setupShelf(root);
@@ -4430,6 +4458,7 @@ exports.LayoutConfigImpl = LayoutConfigImpl;
 exports.List = List;
 exports.ListItem = ListItem;
 exports.ModularPanel = ModularPanel;
+exports.Module = Module;
 exports.Mutable = Mutable;
 exports.NativeCall = NativeCall;
 exports.NestedSlider = NestedSlider;

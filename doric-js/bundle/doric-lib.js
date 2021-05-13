@@ -2788,6 +2788,51 @@ class VMPanel extends Panel {
     }
 }
 
+class ModularPanel extends Panel {
+    constructor() {
+        super();
+        this.modules = this.setupModules().map(e => new e);
+    }
+    build(root) {
+        const groupView = this.setupShelf(root);
+        this.modules.forEach(e => {
+            Reflect.set(e, "__root__", groupView);
+            e.build(groupView);
+        });
+    }
+    onCreate() {
+        super.onCreate();
+        this.modules.forEach(e => {
+            e.context = this.context;
+            e.onCreate();
+        });
+    }
+    onDestroy() {
+        super.onDestroy();
+        this.modules.forEach(e => {
+            e.onDestroy();
+        });
+    }
+    onShow() {
+        super.onShow();
+        this.modules.forEach(e => {
+            e.onShow();
+        });
+    }
+    onHidden() {
+        super.onHidden();
+        this.modules.forEach(e => {
+            e.onHidden();
+        });
+    }
+    onRenderFinished() {
+        super.onRenderFinished();
+        this.modules.forEach(e => {
+            e.onRenderFinished();
+        });
+    }
+}
+
 exports.AnimationSet = AnimationSet;
 exports.BOTTOM = BOTTOM;
 exports.CENTER = CENTER;
@@ -2809,6 +2854,7 @@ exports.LEFT = LEFT;
 exports.LayoutConfigImpl = LayoutConfigImpl;
 exports.List = List;
 exports.ListItem = ListItem;
+exports.ModularPanel = ModularPanel;
 exports.Mutable = Mutable;
 exports.NativeCall = NativeCall;
 exports.NestedSlider = NestedSlider;

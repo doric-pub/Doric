@@ -139,7 +139,7 @@ function logw() {
     nativeLog('w', out);
 }
 
-var __extends$e = (undefined && undefined.__extends) || (function () {
+var __extends$f = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -521,7 +521,7 @@ var View = /** @class */ (function () {
     return View;
 }());
 var Superview = /** @class */ (function (_super) {
-    __extends$e(Superview, _super);
+    __extends$f(Superview, _super);
     function Superview() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -611,7 +611,7 @@ var Superview = /** @class */ (function (_super) {
     return Superview;
 }(View));
 var Group = /** @class */ (function (_super) {
-    __extends$e(Group, _super);
+    __extends$f(Group, _super);
     function Group() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.children = [];
@@ -786,7 +786,7 @@ function layoutConfig() {
     return new LayoutConfigImpl;
 }
 
-var __extends$d = (undefined && undefined.__extends) || (function () {
+var __extends$e = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -822,21 +822,21 @@ var __values$4 = (undefined && undefined.__values) || function(o) {
     throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 };
 var Stack = /** @class */ (function (_super) {
-    __extends$d(Stack, _super);
+    __extends$e(Stack, _super);
     function Stack() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     return Stack;
 }(Group));
 var Root = /** @class */ (function (_super) {
-    __extends$d(Root, _super);
+    __extends$e(Root, _super);
     function Root() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     return Root;
 }(Stack));
 var LinearLayout = /** @class */ (function (_super) {
-    __extends$d(LinearLayout, _super);
+    __extends$e(LinearLayout, _super);
     function LinearLayout() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -851,14 +851,14 @@ var LinearLayout = /** @class */ (function (_super) {
     return LinearLayout;
 }(Group));
 var VLayout = /** @class */ (function (_super) {
-    __extends$d(VLayout, _super);
+    __extends$e(VLayout, _super);
     function VLayout() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     return VLayout;
 }(LinearLayout));
 var HLayout = /** @class */ (function (_super) {
-    __extends$d(HLayout, _super);
+    __extends$e(HLayout, _super);
     function HLayout() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -937,7 +937,7 @@ function vlayout(views, config) {
     return ret;
 }
 var FlexLayout = /** @class */ (function (_super) {
-    __extends$d(FlexLayout, _super);
+    __extends$e(FlexLayout, _super);
     function FlexLayout() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -1325,7 +1325,7 @@ var Panel = /** @class */ (function () {
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-var __extends$c = (undefined && undefined.__extends) || (function () {
+var __extends$d = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -1440,7 +1440,7 @@ var Animation = /** @class */ (function () {
     return Animation;
 }());
 var ScaleAnimation = /** @class */ (function (_super) {
-    __extends$c(ScaleAnimation, _super);
+    __extends$d(ScaleAnimation, _super);
     function ScaleAnimation() {
         var _this = _super.call(this) || this;
         _this.scaleXChangeable = {
@@ -1500,7 +1500,7 @@ var ScaleAnimation = /** @class */ (function (_super) {
     return ScaleAnimation;
 }(Animation));
 var TranslationAnimation = /** @class */ (function (_super) {
-    __extends$c(TranslationAnimation, _super);
+    __extends$d(TranslationAnimation, _super);
     function TranslationAnimation() {
         var _this = _super.call(this) || this;
         _this.translationXChangeable = {
@@ -1560,7 +1560,7 @@ var TranslationAnimation = /** @class */ (function (_super) {
     return TranslationAnimation;
 }(Animation));
 var RotationAnimation = /** @class */ (function (_super) {
-    __extends$c(RotationAnimation, _super);
+    __extends$d(RotationAnimation, _super);
     function RotationAnimation() {
         var _this = _super.call(this) || this;
         _this.rotationChaneable = {
@@ -1594,7 +1594,7 @@ var RotationAnimation = /** @class */ (function (_super) {
     return RotationAnimation;
 }(Animation));
 var RotationXAnimation = /** @class */ (function (_super) {
-    __extends$c(RotationXAnimation, _super);
+    __extends$d(RotationXAnimation, _super);
     function RotationXAnimation() {
         var _this = _super.call(this) || this;
         _this.rotationChaneable = {
@@ -1628,7 +1628,7 @@ var RotationXAnimation = /** @class */ (function (_super) {
     return RotationXAnimation;
 }(Animation));
 var RotationYAnimation = /** @class */ (function (_super) {
-    __extends$c(RotationYAnimation, _super);
+    __extends$d(RotationYAnimation, _super);
     function RotationYAnimation() {
         var _this = _super.call(this) || this;
         _this.rotationChaneable = {
@@ -1769,7 +1769,7 @@ exports.GradientOrientation = void 0;
     GradientOrientation[GradientOrientation["TL_BR"] = 7] = "TL_BR";
 })(exports.GradientOrientation || (exports.GradientOrientation = {}));
 
-var __extends$b = (undefined && undefined.__extends) || (function () {
+var __extends$c = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -1801,7 +1801,7 @@ exports.TruncateAt = void 0;
     TruncateAt[TruncateAt["Clip"] = 3] = "Clip";
 })(exports.TruncateAt || (exports.TruncateAt = {}));
 var Text = /** @class */ (function (_super) {
-    __extends$b(Text, _super);
+    __extends$c(Text, _super);
     function Text() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -1872,7 +1872,7 @@ function text(config) {
     return ret;
 }
 
-var __extends$a = (undefined && undefined.__extends) || (function () {
+var __extends$b = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -1903,7 +1903,7 @@ exports.ScaleType = void 0;
     ScaleType[ScaleType["ScaleAspectFill"] = 2] = "ScaleAspectFill";
 })(exports.ScaleType || (exports.ScaleType = {}));
 var Image = /** @class */ (function (_super) {
-    __extends$a(Image, _super);
+    __extends$b(Image, _super);
     function Image() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -1998,7 +1998,7 @@ function image(config) {
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-var __extends$9 = (undefined && undefined.__extends) || (function () {
+var __extends$a = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -2044,7 +2044,7 @@ var __spreadArray$1 = (undefined && undefined.__spreadArray) || function (to, fr
     return to;
 };
 var ListItem = /** @class */ (function (_super) {
-    __extends$9(ListItem, _super);
+    __extends$a(ListItem, _super);
     function ListItem() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -2059,7 +2059,7 @@ var ListItem = /** @class */ (function (_super) {
     return ListItem;
 }(Stack));
 var List = /** @class */ (function (_super) {
-    __extends$9(List, _super);
+    __extends$a(List, _super);
     function List() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.cachedViews = new Map;
@@ -2174,7 +2174,7 @@ function listItem(item, config) {
     });
 }
 
-var __extends$8 = (undefined && undefined.__extends) || (function () {
+var __extends$9 = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -2199,7 +2199,7 @@ var __metadata$7 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
 var SlideItem = /** @class */ (function (_super) {
-    __extends$8(SlideItem, _super);
+    __extends$9(SlideItem, _super);
     function SlideItem() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -2210,7 +2210,7 @@ var SlideItem = /** @class */ (function (_super) {
     return SlideItem;
 }(Stack));
 var Slider = /** @class */ (function (_super) {
-    __extends$8(Slider, _super);
+    __extends$9(Slider, _super);
     function Slider() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.cachedViews = new Map;
@@ -2297,7 +2297,7 @@ function slideItem(item, config) {
     });
 }
 
-var __extends$7 = (undefined && undefined.__extends) || (function () {
+var __extends$8 = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -2333,7 +2333,7 @@ function scroller(content, config) {
     });
 }
 var Scroller = /** @class */ (function (_super) {
-    __extends$7(Scroller, _super);
+    __extends$8(Scroller, _super);
     function Scroller() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -2373,7 +2373,7 @@ var Scroller = /** @class */ (function (_super) {
     return Scroller;
 }(Superview));
 
-var __extends$6 = (undefined && undefined.__extends) || (function () {
+var __extends$7 = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -2398,7 +2398,7 @@ var __metadata$5 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
 var Refreshable = /** @class */ (function (_super) {
-    __extends$6(Refreshable, _super);
+    __extends$7(Refreshable, _super);
     function Refreshable() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -2534,7 +2534,7 @@ exports.Display = void 0;
     Display[Display["NONE"] = 1] = "NONE";
 })(exports.Display || (exports.Display = {}));
 
-var __extends$5 = (undefined && undefined.__extends) || (function () {
+var __extends$6 = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -2580,7 +2580,7 @@ var __spreadArray = (undefined && undefined.__spreadArray) || function (to, from
     return to;
 };
 var FlowLayoutItem = /** @class */ (function (_super) {
-    __extends$5(FlowLayoutItem, _super);
+    __extends$6(FlowLayoutItem, _super);
     function FlowLayoutItem() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -2591,7 +2591,7 @@ var FlowLayoutItem = /** @class */ (function (_super) {
     return FlowLayoutItem;
 }(Stack));
 var FlowLayout = /** @class */ (function (_super) {
-    __extends$5(FlowLayout, _super);
+    __extends$6(FlowLayout, _super);
     function FlowLayout() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.cachedViews = new Map;
@@ -2711,7 +2711,7 @@ function flowItem(item, config) {
     });
 }
 
-var __extends$4 = (undefined && undefined.__extends) || (function () {
+var __extends$5 = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -2736,7 +2736,7 @@ var __metadata$3 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
 var Input = /** @class */ (function (_super) {
-    __extends$4(Input, _super);
+    __extends$5(Input, _super);
     function Input() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -2823,7 +2823,7 @@ function input(config) {
     return ret;
 }
 
-var __extends$3 = (undefined && undefined.__extends) || (function () {
+var __extends$4 = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -2848,7 +2848,7 @@ var __metadata$2 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
 var NestedSlider = /** @class */ (function (_super) {
-    __extends$3(NestedSlider, _super);
+    __extends$4(NestedSlider, _super);
     function NestedSlider() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -2877,7 +2877,7 @@ var NestedSlider = /** @class */ (function (_super) {
     return NestedSlider;
 }(Group));
 
-var __extends$2 = (undefined && undefined.__extends) || (function () {
+var __extends$3 = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -2902,7 +2902,7 @@ var __metadata$1 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
 var Draggable = /** @class */ (function (_super) {
-    __extends$2(Draggable, _super);
+    __extends$3(Draggable, _super);
     function Draggable() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -2931,7 +2931,7 @@ function draggable(views, config) {
     return ret;
 }
 
-var __extends$1 = (undefined && undefined.__extends) || (function () {
+var __extends$2 = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -2956,7 +2956,7 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
 var Switch = /** @class */ (function (_super) {
-    __extends$1(Switch, _super);
+    __extends$2(Switch, _super);
     function Switch() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -3546,7 +3546,7 @@ var Provider = /** @class */ (function () {
     return Provider;
 }());
 
-var __extends = (undefined && undefined.__extends) || (function () {
+var __extends$1 = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -3589,7 +3589,7 @@ var ViewModel = /** @class */ (function () {
     return ViewModel;
 }());
 var VMPanel = /** @class */ (function (_super) {
-    __extends(VMPanel, _super);
+    __extends$1(VMPanel, _super);
     function VMPanel() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -3603,6 +3603,70 @@ var VMPanel = /** @class */ (function (_super) {
         this.vm.attach(root);
     };
     return VMPanel;
+}(Panel));
+
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) { if (Object.prototype.hasOwnProperty.call(b, p)) { d[p] = b[p]; } } };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            { throw new TypeError("Class extends value " + String(b) + " is not a constructor or null"); }
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var ModularPanel = /** @class */ (function (_super) {
+    __extends(ModularPanel, _super);
+    function ModularPanel() {
+        var _this = _super.call(this) || this;
+        _this.modules = _this.setupModules().map(function (e) { return new e; });
+        return _this;
+    }
+    ModularPanel.prototype.build = function (root) {
+        var groupView = this.setupShelf(root);
+        this.modules.forEach(function (e) {
+            Reflect.set(e, "__root__", groupView);
+            e.build(groupView);
+        });
+    };
+    ModularPanel.prototype.onCreate = function () {
+        var _this = this;
+        _super.prototype.onCreate.call(this);
+        this.modules.forEach(function (e) {
+            e.context = _this.context;
+            e.onCreate();
+        });
+    };
+    ModularPanel.prototype.onDestroy = function () {
+        _super.prototype.onDestroy.call(this);
+        this.modules.forEach(function (e) {
+            e.onDestroy();
+        });
+    };
+    ModularPanel.prototype.onShow = function () {
+        _super.prototype.onShow.call(this);
+        this.modules.forEach(function (e) {
+            e.onShow();
+        });
+    };
+    ModularPanel.prototype.onHidden = function () {
+        _super.prototype.onHidden.call(this);
+        this.modules.forEach(function (e) {
+            e.onHidden();
+        });
+    };
+    ModularPanel.prototype.onRenderFinished = function () {
+        _super.prototype.onRenderFinished.call(this);
+        this.modules.forEach(function (e) {
+            e.onRenderFinished();
+        });
+    };
+    return ModularPanel;
 }(Panel));
 
 exports.AnimationSet = AnimationSet;
@@ -3626,6 +3690,7 @@ exports.LEFT = LEFT;
 exports.LayoutConfigImpl = LayoutConfigImpl;
 exports.List = List;
 exports.ListItem = ListItem;
+exports.ModularPanel = ModularPanel;
 exports.Mutable = Mutable;
 exports.NativeCall = NativeCall;
 exports.NestedSlider = NestedSlider;

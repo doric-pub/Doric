@@ -11,7 +11,7 @@ declare module 'doric' {
 
 declare module 'doric/lib/src/runtime/global' {
     import { Panel } from "doric/lib/src/ui/panel";
-    import { ClassType } from "doric/lib/src/pattern/mvvm";
+    import { ClassType } from "doric/lib/src/util/types";
     export type BridgeContext = {
             /**
                 * The identify of current context
@@ -138,36 +138,29 @@ declare module 'doric/lib/src/ui/panel' {
         clearHeadViews(type: string): void;
         getRootView(): Root;
         getInitData(): object | undefined;
+        onRenderFinished(): void;
         addOnRenderFinishedCallback(cb: () => void): void;
     }
 }
 
-declare module 'doric/lib/src/pattern/mvvm' {
-    import { Group } from "doric/lib/src/ui/view";
-    import { Panel } from "doric/lib/src/ui/panel";
-    import { BridgeContext } from "doric/lib/src/runtime/global";
-    export abstract class ViewHolder {
-        abstract build(root: Group): void;
+declare module 'doric/lib/src/util/types' {
+    export interface Modeling {
+        toModel(): Model;
     }
-    export type Setter<M> = (state: M) => void;
-    export abstract class ViewModel<M extends Object, V extends ViewHolder> {
-        context: BridgeContext;
-        constructor(obj: M, v: V);
-        getState(): M;
-        getViewHolder(): V;
-        updateState(setter: Setter<M>): void;
-        attach(view: Group): void;
-        abstract onAttached(state: M, vh: V): void;
-        abstract onBind(state: M, vh: V): void;
+    export function obj2Model(obj: Model, convertor: (v: Function) => string): Model;
+    type _M = string | number | boolean | Modeling | {
+        [index: string]: Model;
+    } | undefined;
+    export type Model = _M | Array<_M>;
+    export type Binder<T> = (v: T) => void;
+    export class Mutable<T> {
+        get: () => T;
+        set: (v: T) => void;
+        bind(binder: Binder<T>): void;
+        static of<E>(v: E): Mutable<E>;
     }
     export type ClassType<T> = new (...args: any) => T;
-    export abstract class VMPanel<M extends Object, V extends ViewHolder> extends Panel {
-        abstract getViewModelClass(): ClassType<ViewModel<M, V>>;
-        abstract getState(): M;
-        abstract getViewHolderClass(): ClassType<V>;
-        getViewModel(): ViewModel<M, V> | undefined;
-        build(root: Group): void;
-    }
+    export {};
 }
 
 declare module 'doric/lib/src/ui/view' {
@@ -880,8 +873,8 @@ declare module 'doric/lib/src/native/navbar' {
 
 declare module 'doric/lib/src/native/navigator' {
     import { BridgeContext } from "doric/lib/src/runtime/global";
-    import { ClassType } from "doric/lib/src/pattern/mvvm";
     import { Panel } from "doric/lib/src/ui/panel";
+    import { ClassType } from "doric/lib/src/util/types";
     export function internalScheme(context: BridgeContext, panelClass: ClassType<Panel>): string;
     export function navigator(context: BridgeContext): {
         push: (source: string | ClassType<Panel>, config?: {
@@ -1209,25 +1202,6 @@ declare module 'doric/lib/src/util/log' {
     export function logw(...message: any): void;
 }
 
-declare module 'doric/lib/src/util/types' {
-    export interface Modeling {
-        toModel(): Model;
-    }
-    export function obj2Model(obj: Model, convertor: (v: Function) => string): Model;
-    type _M = string | number | boolean | Modeling | {
-        [index: string]: Model;
-    } | undefined;
-    export type Model = _M | Array<_M>;
-    export type Binder<T> = (v: T) => void;
-    export class Mutable<T> {
-        get: () => T;
-        set: (v: T) => void;
-        bind(binder: Binder<T>): void;
-        static of<E>(v: E): Mutable<E>;
-    }
-    export {};
-}
-
 declare module 'doric/lib/src/util/uniqueId' {
     export function uniqueId(prefix: string): string;
 }
@@ -1405,6 +1379,34 @@ declare module 'doric/lib/src/pattern/provider' {
         remove<T>(clz: new (...args: any[]) => T): void;
         clear(): void;
         observe<T>(clz: new (...args: any[]) => T): Observable<T>;
+    }
+}
+
+declare module 'doric/lib/src/pattern/mvvm' {
+    import { Group } from "doric/lib/src/ui/view";
+    import { Panel } from "doric/lib/src/ui/panel";
+    import { BridgeContext } from "doric/lib/src/runtime/global";
+    import { ClassType } from "doric/lib/src/util/types";
+    export abstract class ViewHolder {
+        abstract build(root: Group): void;
+    }
+    export type Setter<M> = (state: M) => void;
+    export abstract class ViewModel<M extends Object, V extends ViewHolder> {
+        context: BridgeContext;
+        constructor(obj: M, v: V);
+        getState(): M;
+        getViewHolder(): V;
+        updateState(setter: Setter<M>): void;
+        attach(view: Group): void;
+        abstract onAttached(state: M, vh: V): void;
+        abstract onBind(state: M, vh: V): void;
+    }
+    export abstract class VMPanel<M extends Object, V extends ViewHolder> extends Panel {
+        abstract getViewModelClass(): ClassType<ViewModel<M, V>>;
+        abstract getState(): M;
+        abstract getViewHolderClass(): ClassType<V>;
+        getViewModel(): ViewModel<M, V> | undefined;
+        build(root: Group): void;
     }
 }
 

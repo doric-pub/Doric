@@ -16,6 +16,7 @@
 import { Group } from "../ui/view"
 import { Panel } from "../ui/panel"
 import { BridgeContext } from "../runtime/global"
+import { ClassType } from "../util/types"
 
 export abstract class ViewHolder {
     abstract build(root: Group): void
@@ -56,7 +57,6 @@ export abstract class ViewModel<M extends Object, V extends ViewHolder> {
     abstract onBind(state: M, vh: V): void
 }
 
-export type ClassType<T> = new (...args: any) => T
 
 export abstract class VMPanel<M extends Object, V extends ViewHolder> extends Panel {
     private vm?: ViewModel<M, V>

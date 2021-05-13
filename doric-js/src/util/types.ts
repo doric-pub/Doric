@@ -71,3 +71,5 @@ export class Mutable<T>{
         return new Mutable(v)
     }
 }
+
+export type ClassType<T> = new (...args: any) => T

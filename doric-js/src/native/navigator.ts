@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 import { BridgeContext } from "../runtime/global"
-import { ClassType } from "../pattern/mvvm"
 import { Panel } from "../ui/panel"
+import { ClassType } from "../util/types"
 
 export function internalScheme(context: BridgeContext, panelClass: ClassType<Panel>) {
     return `_internal_://export?class=${encodeURIComponent(panelClass.name)}&context=${context.id}`

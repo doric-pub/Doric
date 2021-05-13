@@ -16,4 +16,5 @@ export declare class Mutable<T> {
     bind(binder: Binder<T>): void;
     static of<E>(v: E): Mutable<E>;
 }
+export declare type ClassType<T> = new (...args: any) => T;
 export {};

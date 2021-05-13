@@ -1,5 +1,5 @@
 import { Panel } from "../ui/panel"
-import { ClassType } from "../pattern/mvvm"
+import { ClassType } from "../util/types"
 
 /*
  * Copyright [2019] [Doric.Pub]

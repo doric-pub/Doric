@@ -235,7 +235,8 @@ export abstract class Panel {
             }, 0)
         }
     }
-    private onRenderFinished() {
+
+    onRenderFinished() {
         this.onRenderFinishedCallback.forEach(e => {
             e()
         })

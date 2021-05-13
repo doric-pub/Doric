@@ -278,6 +278,10 @@ static const void *kLayoutConfig = &kLayoutConfig;
             self.measuredHeight = measuredSize.height + self.paddingTop + self.paddingBottom;
         }
     }
+
+    self.contentWidth = measuredSize.width;
+
+    self.contentHeight = measuredSize.height;
 }
 
 - (CGFloat)takenWidth {

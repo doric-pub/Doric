@@ -55,4 +55,6 @@ else:unix: {
 
 INCLUDEPATH += $$PWD/../doric
 
-LIBS += -L$$OUT_PWD/../../binary/doric -lDoricCore
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../binary/doric/release/ -lDoricCore
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../binary/doric/debug/ -lDoricCore
+else:macx: LIBS += -L$$OUT_PWD/../../binary/doric -lDoricCore

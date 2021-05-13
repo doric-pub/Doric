@@ -7,6 +7,9 @@ class DoricCore(ConanFile):
 
     def package(self):
         self.copy("*.h", dst="include", src="../../doric")
-        self.copy("*.lib", dst="lib",src="../../../binary/doric")
+        self.copy("*.lib", dst="lib",src="../../../binary/doric/debug")
+        self.copy("*.pdb", dst="bin",src="../../../binary/doric/debug")
+        self.copy("*", dst="qml",src="../resources")
+        self.copy("*.js", dst="js",src="../../../../doric-js/bundle")
     def package_info(self):
         self.cpp_info.libs = ["DoricCore"]

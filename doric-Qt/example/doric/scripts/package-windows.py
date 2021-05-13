@@ -30,11 +30,9 @@ def main():
     else:
        print("params error.");
        return;
-    system('conan export-pkg ./conanfile-windows.py DoricCore/%s@bixin/stable -s build_type=Debug -s os=Windows' % version)
-    system('conan export-pkg ./conanfile-windows.py DoricCore/%s@bixin/stable -s build_type=Release -s os=Windows' % version)
+    system('conan export-pkg ./conanfile-windows-debug.py DoricCore/%s@bixin/stable -s build_type=Debug -s os=Windows' % version)
+    system('conan export-pkg ./conanfile-windows-release.py DoricCore/%s@bixin/stable -s build_type=Release -s os=Windows' % version)
     if isOnline == "1":
        system('conan upload DoricCore/%s@bixin/stable --all -r=pc' % version)
-       system('git tag %s' % version)
-       system('git push --tags')
 if __name__ == "__main__":
     main()

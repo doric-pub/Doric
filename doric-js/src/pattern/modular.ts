@@ -4,7 +4,6 @@ import { ClassType } from "../util/types"
 
 export abstract class ModularPanel extends Panel {
     private modules: Panel[]
-
     constructor() {
         super()
         this.modules = this.setupModules().map(e => new e)
@@ -14,7 +13,6 @@ export abstract class ModularPanel extends Panel {
     abstract setupShelf(root: Group): Group
 
     build(root: Group) {
-        root.children.length = 0
         const groupView = this.setupShelf(root)
         this.modules.forEach(e => {
             Reflect.set(e, "__root__", groupView)
@@ -25,6 +23,7 @@ export abstract class ModularPanel extends Panel {
     onCreate() {
         super.onCreate()
         this.modules.forEach(e => {
+            e.context = this.context
             e.onCreate()
         })
     }

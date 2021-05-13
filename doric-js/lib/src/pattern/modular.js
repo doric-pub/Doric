@@ -1,9 +1,8 @@
 import { Panel } from "../ui/panel";
 export class ModularPanel extends Panel {
-    constructor(modules) {
+    constructor() {
         super();
-        this.modules = [];
-        this.modules = modules;
+        this.modules = this.setupModules().map(e => new e);
     }
     build(root) {
         const groupView = this.setupShelf(root);
@@ -15,6 +14,7 @@ export class ModularPanel extends Panel {
     onCreate() {
         super.onCreate();
         this.modules.forEach(e => {
+            e.context = this.context;
             e.onCreate();
         });
     }

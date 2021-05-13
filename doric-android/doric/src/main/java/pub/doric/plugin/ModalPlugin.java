@@ -59,7 +59,7 @@ public class ModalPlugin extends DoricJavaPlugin {
                 gravity = gravityVal.asNumber().toInt();
             }
             Toast toast = Toast.makeText(getDoricContext().getContext(),
-                    jsObject.getProperty("msg").asString().value(),
+                    msg,
                     Toast.LENGTH_SHORT);
             if ((gravity & Gravity.TOP) == Gravity.TOP) {
                 toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, DoricUtils.dp2px(50));
@@ -67,7 +67,6 @@ public class ModalPlugin extends DoricJavaPlugin {
                 toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, DoricUtils.dp2px(50));
             } else {
                 toast.setGravity(Gravity.CENTER | Gravity.CENTER_HORIZONTAL, 0, 0);
-
             }
             toast.show();
         } catch (Exception e) {

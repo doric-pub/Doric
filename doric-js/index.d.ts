@@ -118,6 +118,7 @@ declare module 'doric/lib/src/pattern/index.pattern' {
     export * from 'doric/lib/src/pattern/candies';
     export * from 'doric/lib/src/pattern/provider';
     export * from 'doric/lib/src/pattern/mvvm';
+    export * from 'doric/lib/src/pattern/modular';
 }
 
 declare module 'doric/lib/src/ui/panel' {
@@ -1407,6 +1408,23 @@ declare module 'doric/lib/src/pattern/mvvm' {
         abstract getViewHolderClass(): ClassType<V>;
         getViewModel(): ViewModel<M, V> | undefined;
         build(root: Group): void;
+    }
+}
+
+declare module 'doric/lib/src/pattern/modular' {
+    import { Panel } from "doric/lib/src/ui/panel";
+    import { Group } from "doric/lib/src/ui/view";
+    import { ClassType } from "doric/lib/src/util/types";
+    export abstract class ModularPanel extends Panel {
+        constructor();
+        abstract setupModules(): ClassType<Panel>[];
+        abstract setupShelf(root: Group): Group;
+        build(root: Group): void;
+        onCreate(): void;
+        onDestroy(): void;
+        onShow(): void;
+        onHidden(): void;
+        onRenderFinished(): void;
     }
 }
 

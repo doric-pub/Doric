@@ -3620,13 +3620,46 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var Module = /** @class */ (function (_super) {
+    __extends(Module, _super);
+    function Module() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Module.prototype.dispatchMessage = function (message) {
+        var _a;
+        (_a = this.superPanel) === null || _a === void 0 ? void 0 : _a.dispatchMessage(message);
+    };
+    Module.prototype.onMessage = function (message) { };
+    return Module;
+}(Panel));
 var ModularPanel = /** @class */ (function (_super) {
     __extends(ModularPanel, _super);
     function ModularPanel() {
         var _this = _super.call(this) || this;
-        _this.modules = _this.setupModules().map(function (e) { return new e; });
+        _this.modules = _this.setupModules().map(function (e) {
+            var instance = new e;
+            if (instance instanceof Module) {
+                instance.superPanel = _this;
+            }
+            return instance;
+        });
         return _this;
     }
+    ModularPanel.prototype.dispatchMessage = function (message) {
+        if (this.superPanel) {
+            this.superPanel.dispatchMessage(message);
+        }
+        else {
+            this.onMessage(message);
+        }
+    };
+    ModularPanel.prototype.onMessage = function (message) {
+        this.modules.forEach(function (e) {
+            if (e instanceof Module) {
+                e.onMessage(message);
+            }
+        });
+    };
     ModularPanel.prototype.build = function (root) {
         var groupView = this.setupShelf(root);
         this.modules.forEach(function (e) {
@@ -3667,7 +3700,7 @@ var ModularPanel = /** @class */ (function (_super) {
         });
     };
     return ModularPanel;
-}(Panel));
+}(Module));
 
 exports.AnimationSet = AnimationSet;
 exports.BOTTOM = BOTTOM;
@@ -3691,6 +3724,7 @@ exports.LayoutConfigImpl = LayoutConfigImpl;
 exports.List = List;
 exports.ListItem = ListItem;
 exports.ModularPanel = ModularPanel;
+exports.Module = Module;
 exports.Mutable = Mutable;
 exports.NativeCall = NativeCall;
 exports.NestedSlider = NestedSlider;

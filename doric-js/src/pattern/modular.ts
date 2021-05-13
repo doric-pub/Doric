@@ -2,15 +2,50 @@ import { Panel } from "../ui/panel"
 import { Group } from "../ui/view"
 import { ClassType } from "../util/types"
 
-export abstract class ModularPanel extends Panel {
+export abstract class Module extends Panel {
+    superPanel?: ModularPanel
+
+    dispatchMessage(message: any) {
+        this.superPanel?.dispatchMessage(message)
+    }
+
+    onMessage(message: any) { }
+}
+
+export abstract class ModularPanel extends Module {
     private modules: Panel[]
+
     constructor() {
         super()
-        this.modules = this.setupModules().map(e => new e)
+        this.modules = this.setupModules().map(e => {
+            const instance = new e
+            if (instance instanceof Module) {
+                instance.superPanel = this
+            }
+            return instance
+        })
     }
 
     abstract setupModules(): ClassType<Panel>[]
+
     abstract setupShelf(root: Group): Group
+
+    dispatchMessage(message: any) {
+        if (this.superPanel) {
+            this.superPanel.dispatchMessage(message)
+        } else {
+            this.onMessage(message)
+        }
+    }
+
+    onMessage(message: any) {
+        this.modules.forEach(e => {
+            if (e instanceof Module) {
+                e.onMessage(message)
+            }
+        })
+    }
+
 
     build(root: Group) {
         const groupView = this.setupShelf(root)

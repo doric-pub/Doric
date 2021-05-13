@@ -1415,10 +1415,17 @@ declare module 'doric/lib/src/pattern/modular' {
     import { Panel } from "doric/lib/src/ui/panel";
     import { Group } from "doric/lib/src/ui/view";
     import { ClassType } from "doric/lib/src/util/types";
-    export abstract class ModularPanel extends Panel {
+    export abstract class Module extends Panel {
+        superPanel?: ModularPanel;
+        dispatchMessage(message: any): void;
+        onMessage(message: any): void;
+    }
+    export abstract class ModularPanel extends Module {
         constructor();
         abstract setupModules(): ClassType<Panel>[];
         abstract setupShelf(root: Group): Group;
+        dispatchMessage(message: any): void;
+        onMessage(message: any): void;
         build(root: Group): void;
         onCreate(): void;
         onDestroy(): void;

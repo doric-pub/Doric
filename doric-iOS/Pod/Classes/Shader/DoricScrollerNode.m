@@ -41,8 +41,8 @@
             [self.contentView.doricLayout apply:size];
         }
         return CGSizeMake(
-                MIN(size.width, self.contentView.doricLayout.measuredWidth),
-                MIN(size.height, self.contentView.doricLayout.measuredHeight));
+                self.contentView.doricLayout.measuredWidth,
+                self.contentView.doricLayout.measuredHeight);
     }
     return CGSizeZero;
 }

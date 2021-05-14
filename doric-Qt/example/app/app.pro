@@ -14,6 +14,7 @@ HEADERS += \
     demo/DoricDemoBridge.h
 
 RESOURCES += qml.qrc
+QTQUICK_COMPILER_SKIPPED_RESOURCES += qml.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =

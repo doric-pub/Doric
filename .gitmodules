@@ -1,3 +1,0 @@
-[submodule "doric-Qt/v8"]
-	path = doric-Qt/v8
-	url = git@git.yupaopao.com:terminal/desktop/ci-pc/v8.git

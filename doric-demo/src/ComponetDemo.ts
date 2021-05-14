@@ -1,14 +1,16 @@
 import { layoutConfig, LayoutSpec, Panel, Root, scroller, vlayout } from "doric";
-import { richTitleView, } from "./components/RichTitleView";
+import { preferenceView } from "./components/PreferenceView";
+import { RichTitleView, richTitleView } from "./components/RichTitleView";
 import logo from "./images/logo_w.png"
 
 @Entry
 class ComponentDemo extends Panel {
     build(root: Root) {
+        let richTitle: RichTitleView
         scroller(
             vlayout(
                 [
-                    richTitleView().applyChild({
+                    richTitle = richTitleView().applyChild({
                         title: {
                             text: "This is title"
                         },
@@ -19,7 +21,39 @@ class ComponentDemo extends Panel {
                             imageBase64: logo,
                         }
                     }),
-
+                    preferenceView().applyChild({
+                        title: {
+                            text: "Show Icon"
+                        },
+                        switch: {
+                            state: true,
+                            onSwitch: (ret) => {
+                                richTitle.icon.hidden = !ret
+                            }
+                        }
+                    }),
+                    preferenceView().applyChild({
+                        title: {
+                            text: "Show Title"
+                        },
+                        switch: {
+                            state: true,
+                            onSwitch: (ret) => {
+                                richTitle.title.hidden = !ret
+                            }
+                        }
+                    }),
+                    preferenceView().applyChild({
+                        title: {
+                            text: "Show Subtitle"
+                        },
+                        switch: {
+                            state: true,
+                            onSwitch: (ret) => {
+                                richTitle.subTitle.hidden = !ret
+                            }
+                        }
+                    }),
                 ],
                 {
                     layoutConfig: {

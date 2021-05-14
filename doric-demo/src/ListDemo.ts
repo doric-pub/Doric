@@ -74,7 +74,8 @@ class ListVM extends ViewModel<ListModel, ListVH> {
                         widthSpec: LayoutSpec.MOST,
                         heightSpec: LayoutSpec.JUST,
                     },
-                    height: 50
+                    height: 50,
+                    onClick: () => {modal(context).alert(data.text)}
                 }), {
                     layoutConfig: {
                         widthSpec: LayoutSpec.MOST,

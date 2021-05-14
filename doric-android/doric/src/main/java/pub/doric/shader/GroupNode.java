@@ -18,13 +18,13 @@ package pub.doric.shader;
 import android.util.Log;
 import android.view.ViewGroup;
 
-import pub.doric.DoricContext;
-
 import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
 import java.util.ArrayList;
+
+import pub.doric.DoricContext;
 
 /**
  * @Description: com.github.penfeizhou.doric.widget
@@ -172,5 +172,9 @@ public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
         super.clearSubModel();
         mChildNodes.clear();
         mChildViewIds.clear();
+    }
+
+    public ArrayList<ViewNode> getChildNodes() {
+        return mChildNodes;
     }
 }

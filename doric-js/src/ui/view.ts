@@ -191,8 +191,12 @@ export abstract class View implements Modeling {
 
     nativeViewModel: NativeViewModel = {
         id: this.viewId,
-        type: this.constructor.name,
+        type: this.viewType(),
         props: this.__dirty_props__,
+    }
+
+    viewType() {
+        return this.constructor.name
     }
 
     onPropertyChanged(propKey: string, oldV: Model, newV: Model): void {

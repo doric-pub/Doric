@@ -1,9 +1,20 @@
 import { Panel } from "../ui/panel"
 import { Group } from "../ui/view"
 import { ClassType } from "../util/types"
+import { Provider } from "./provider"
 
 export abstract class Module extends Panel {
     superPanel?: ModularPanel
+
+    __provider?: Provider
+
+    get provider(): Provider | undefined {
+        return this.__provider || (this.superPanel?.provider)
+    }
+
+    set provider(provider: Provider | undefined) {
+        this.__provider = provider
+    }
 
     dispatchMessage(message: any) {
         this.superPanel?.dispatchMessage(message)

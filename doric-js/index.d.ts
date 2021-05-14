@@ -239,6 +239,7 @@ declare module 'doric/lib/src/ui/view' {
                     [index: string]: Model;
             };
             nativeViewModel: NativeViewModel;
+            viewType(): string;
             onPropertyChanged(propKey: string, oldV: Model, newV: Model): void;
             clean(): void;
             isDirty(): boolean;
@@ -1415,8 +1416,12 @@ declare module 'doric/lib/src/pattern/modular' {
     import { Panel } from "doric/lib/src/ui/panel";
     import { Group } from "doric/lib/src/ui/view";
     import { ClassType } from "doric/lib/src/util/types";
+    import { Provider } from "doric/lib/src/pattern/provider";
     export abstract class Module extends Panel {
         superPanel?: ModularPanel;
+        __provider?: Provider;
+        get provider(): Provider | undefined;
+        set provider(provider: Provider | undefined);
         dispatchMessage(message: any): void;
         onMessage(message: any): void;
     }

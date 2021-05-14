@@ -1,5 +1,12 @@
 import { Panel } from "../ui/panel";
 export class Module extends Panel {
+    get provider() {
+        var _a;
+        return this.__provider || ((_a = this.superPanel) === null || _a === void 0 ? void 0 : _a.provider);
+    }
+    set provider(provider) {
+        this.__provider = provider;
+    }
     dispatchMessage(message) {
         var _a;
         (_a = this.superPanel) === null || _a === void 0 ? void 0 : _a.dispatchMessage(message);

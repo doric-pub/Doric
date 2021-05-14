@@ -1723,7 +1723,7 @@ class View {
         this.__dirty_props__ = {};
         this.nativeViewModel = {
             id: this.viewId,
-            type: this.constructor.name,
+            type: this.viewType(),
             props: this.__dirty_props__,
         };
         return new Proxy(this, {
@@ -1800,6 +1800,9 @@ class View {
     }
     get dirtyProps() {
         return this.__dirty_props__;
+    }
+    viewType() {
+        return this.constructor.name;
     }
     onPropertyChanged(propKey, oldV, newV) {
         if (newV instanceof Function) {
@@ -4364,6 +4367,13 @@ class VMPanel extends Panel {
 }
 
 class Module extends Panel {
+    get provider() {
+        var _a;
+        return this.__provider || ((_a = this.superPanel) === null || _a === void 0 ? void 0 : _a.provider);
+    }
+    set provider(provider) {
+        this.__provider = provider;
+    }
     dispatchMessage(message) {
         var _a;
         (_a = this.superPanel) === null || _a === void 0 ? void 0 : _a.dispatchMessage(message);

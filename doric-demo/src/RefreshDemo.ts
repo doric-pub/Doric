@@ -112,12 +112,15 @@ class ListPanel extends Panel {
                             heightSpec: LayoutSpec.MOST,
                         },
                     }),
+                    layoutConfig: {
+                        widthSpec: LayoutSpec.MOST,
+                        heightSpec: LayoutSpec.FIT,
+                        weight: 1,
+                    },
                 }),
-
             ],
             {
                 layoutConfig: layoutConfig().most(),
-                backgroundColor: Color.WHITE
             }).in(rootView)
         refreshView.backgroundColor = Color.YELLOW
     }

@@ -19,45 +19,7 @@ class ComponentDemo extends Panel {
                             imageBase64: logo,
                         }
                     }),
-                    richTitleView().applyChild({
-                        title: {
-                            text: "Title"
-                        },
-                        subTitle: {
-                            text: "Subtitle"
-                        },
-                    }),
-                    richTitleView().applyChild({
-                        icon: {
-                            imageBase64: logo,
-                        },
-                        subTitle: {
-                            text: "Subtitle"
-                        },
-                    }),
-                    richTitleView().applyChild({
-                        icon: {
-                            imageBase64: logo,
-                        },
-                        title: {
-                            text: "Title"
-                        },
-                    }),
-                    richTitleView().applyChild({
-                        title: {
-                            text: "Just title"
-                        },
-                    }),
-                    richTitleView().applyChild({
-                        subTitle: {
-                            text: "Just subtitle"
-                        },
-                    }),
-                    richTitleView().applyChild({
-                        icon: {
-                            imageBase64: logo,
-                        },
-                    }),
+
                 ],
                 {
                     layoutConfig: {

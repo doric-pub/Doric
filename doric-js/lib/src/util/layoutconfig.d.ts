@@ -46,8 +46,14 @@ export declare class LayoutConfigImpl implements LayoutConfig, Modeling {
     minWidth?: number;
     minHeight?: number;
     fit(): this;
+    fitWidth(): this;
+    fitHeight(): this;
     most(): this;
+    mostWidth(): this;
+    mostHeight(): this;
     just(): this;
+    justWidth(): this;
+    justHeight(): this;
     configWidth(w: LayoutSpec): this;
     configHeight(h: LayoutSpec): this;
     configMargin(m: {

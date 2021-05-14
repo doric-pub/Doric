@@ -619,13 +619,37 @@ class LayoutConfigImpl {
         this.heightSpec = exports.LayoutSpec.FIT;
         return this;
     }
+    fitWidth() {
+        this.widthSpec = exports.LayoutSpec.FIT;
+        return this;
+    }
+    fitHeight() {
+        this.heightSpec = exports.LayoutSpec.FIT;
+        return this;
+    }
     most() {
         this.widthSpec = exports.LayoutSpec.MOST;
         this.heightSpec = exports.LayoutSpec.MOST;
         return this;
     }
+    mostWidth() {
+        this.widthSpec = exports.LayoutSpec.MOST;
+        return this;
+    }
+    mostHeight() {
+        this.widthSpec = exports.LayoutSpec.MOST;
+        return this;
+    }
     just() {
         this.widthSpec = exports.LayoutSpec.JUST;
+        this.heightSpec = exports.LayoutSpec.JUST;
+        return this;
+    }
+    justWidth() {
+        this.widthSpec = exports.LayoutSpec.JUST;
+        return this;
+    }
+    justHeight() {
         this.heightSpec = exports.LayoutSpec.JUST;
         return this;
     }

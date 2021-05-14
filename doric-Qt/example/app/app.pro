@@ -27,14 +27,14 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 win32:CONFIG(debug, debug|release): {
-    QMAKE_CFLAGS_DEBUG += -MT
-    QMAKE_CXXFLAGS_DEBUG += -MT
+    QMAKE_CFLAGS_DEBUG += -MTd
+    QMAKE_CXXFLAGS_DEBUG += -MTd
 
     LIBS += -lwinmm
     LIBS += -lAdvapi32
     LIBS += -lDbghelp
 
-    LIBS += -L$$PWD/../../v8/v8/win32/release/
+    LIBS += -L$$PWD/../../v8/v8/win32/debug/
     LIBS += -lv8_monolith
 }
 else:win32:CONFIG(release, debug|release): {

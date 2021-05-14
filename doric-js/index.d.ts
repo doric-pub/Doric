@@ -166,13 +166,14 @@ declare module 'doric/lib/src/util/types' {
 
 declare module 'doric/lib/src/ui/view' {
     import { Color, GradientColor } from "doric/lib/src/util/color";
-    import { Modeling, Model } from "doric/lib/src/util/types";
+    import { Modeling, Model, ClassType } from "doric/lib/src/util/types";
     import { BridgeContext } from "doric/lib/src/runtime/global";
     import { LayoutConfig } from 'doric/lib/src/util/layoutconfig';
     import { IAnimation } from "doric/lib/src/ui/animation";
     import { FlexConfig } from "doric/lib/src/util/flexbox";
     export function Property(target: Object, propKey: string): void;
     export function InconsistProperty(target: Object, propKey: string): void;
+    export function ViewComponent(constructor: ClassType<any>): void;
     export type NativeViewModel = {
             id: string;
             type: string;
@@ -239,7 +240,7 @@ declare module 'doric/lib/src/ui/view' {
                     [index: string]: Model;
             };
             nativeViewModel: NativeViewModel;
-            viewType(): string;
+            viewType(): any;
             onPropertyChanged(propKey: string, oldV: Model, newV: Model): void;
             clean(): void;
             isDirty(): boolean;

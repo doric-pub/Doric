@@ -1,11 +1,12 @@
 import { Color, GradientColor } from "../util/color";
-import { Modeling, Model } from "../util/types";
+import { Modeling, Model, ClassType } from "../util/types";
 import { BridgeContext } from "../runtime/global";
 import { LayoutConfig } from '../util/layoutconfig';
 import { IAnimation } from "./animation";
 import { FlexConfig } from "../util/flexbox";
 export declare function Property(target: Object, propKey: string): void;
 export declare function InconsistProperty(target: Object, propKey: string): void;
+export declare function ViewComponent(constructor: ClassType<any>): void;
 export declare type NativeViewModel = {
     id: string;
     type: string;
@@ -76,7 +77,7 @@ export declare abstract class View implements Modeling {
         [index: string]: Model;
     };
     nativeViewModel: NativeViewModel;
-    viewType(): string;
+    viewType(): any;
     onPropertyChanged(propKey: string, oldV: Model, newV: Model): void;
     clean(): void;
     isDirty(): boolean;

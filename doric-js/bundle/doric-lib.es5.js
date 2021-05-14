@@ -209,7 +209,7 @@ var View = /** @class */ (function () {
         this.viewId = uniqueId('ViewId');
         this.nativeViewModel = {
             id: this.viewId,
-            type: this.constructor.name,
+            type: this.viewType(),
             props: this.__dirty_props__,
         };
     }
@@ -300,6 +300,9 @@ var View = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    View.prototype.viewType = function () {
+        return this.constructor.name;
+    };
     View.prototype.onPropertyChanged = function (propKey, oldV, newV) {
         var _this = this;
         if (newV instanceof Function) {
@@ -3625,6 +3628,17 @@ var Module = /** @class */ (function (_super) {
     function Module() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
+    Object.defineProperty(Module.prototype, "provider", {
+        get: function () {
+            var _a;
+            return this.__provider || ((_a = this.superPanel) === null || _a === void 0 ? void 0 : _a.provider);
+        },
+        set: function (provider) {
+            this.__provider = provider;
+        },
+        enumerable: false,
+        configurable: true
+    });
     Module.prototype.dispatchMessage = function (message) {
         var _a;
         (_a = this.superPanel) === null || _a === void 0 ? void 0 : _a.dispatchMessage(message);

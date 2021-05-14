@@ -1,8 +1,12 @@
 import { Panel } from "../ui/panel";
 import { Group } from "../ui/view";
 import { ClassType } from "../util/types";
+import { Provider } from "./provider";
 export declare abstract class Module extends Panel {
     superPanel?: ModularPanel;
+    __provider?: Provider;
+    get provider(): Provider | undefined;
+    set provider(provider: Provider | undefined);
     dispatchMessage(message: any): void;
     onMessage(message: any): void;
 }

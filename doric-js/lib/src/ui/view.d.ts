@@ -76,6 +76,7 @@ export declare abstract class View implements Modeling {
         [index: string]: Model;
     };
     nativeViewModel: NativeViewModel;
+    viewType(): string;
     onPropertyChanged(propKey: string, oldV: Model, newV: Model): void;
     clean(): void;
     isDirty(): boolean;

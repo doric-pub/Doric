@@ -30,7 +30,7 @@ export class View {
         this.__dirty_props__ = {};
         this.nativeViewModel = {
             id: this.viewId,
-            type: this.constructor.name,
+            type: this.viewType(),
             props: this.__dirty_props__,
         };
         return new Proxy(this, {
@@ -107,6 +107,9 @@ export class View {
     }
     get dirtyProps() {
         return this.__dirty_props__;
+    }
+    viewType() {
+        return this.constructor.name;
     }
     onPropertyChanged(propKey, oldV, newV) {
         if (newV instanceof Function) {

@@ -130,11 +130,16 @@ var __metadata$d = (undefined && undefined.__metadata) || function (k, v) {
 };
 const PROP_CONSIST = 1;
 const PROP_INCONSIST = 2;
+const PROP_KEY_VIEW_TYPE = "ViewType";
 function Property(target, propKey) {
     Reflect.defineMetadata(propKey, PROP_CONSIST, target);
 }
 function InconsistProperty(target, propKey) {
     Reflect.defineMetadata(propKey, PROP_INCONSIST, target);
+}
+function ViewComponent(constructor) {
+    const name = Reflect.getMetadata(PROP_KEY_VIEW_TYPE, constructor) || Object.getPrototypeOf(constructor).name;
+    Reflect.defineMetadata(PROP_KEY_VIEW_TYPE, name, constructor);
 }
 class View {
     constructor() {
@@ -227,7 +232,8 @@ class View {
         return this.__dirty_props__;
     }
     viewType() {
-        return this.constructor.name;
+        const viewType = Reflect.getMetadata(PROP_KEY_VIEW_TYPE, this.constructor);
+        return viewType || this.constructor.name;
     }
     onPropertyChanged(propKey, oldV, newV) {
         if (newV instanceof Function) {
@@ -2920,6 +2926,7 @@ exports.TranslationAnimation = TranslationAnimation;
 exports.VLayout = VLayout;
 exports.VMPanel = VMPanel;
 exports.View = View;
+exports.ViewComponent = ViewComponent;
 exports.ViewHolder = ViewHolder;
 exports.ViewModel = ViewModel;
 exports.animate = animate;

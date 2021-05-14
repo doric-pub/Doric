@@ -12,11 +12,16 @@ import { uniqueId } from "../util/uniqueId";
 import { loge } from "../util/log";
 const PROP_CONSIST = 1;
 const PROP_INCONSIST = 2;
+const PROP_KEY_VIEW_TYPE = "ViewType";
 export function Property(target, propKey) {
     Reflect.defineMetadata(propKey, PROP_CONSIST, target);
 }
 export function InconsistProperty(target, propKey) {
     Reflect.defineMetadata(propKey, PROP_INCONSIST, target);
+}
+export function ViewComponent(constructor) {
+    const name = Reflect.getMetadata(PROP_KEY_VIEW_TYPE, constructor) || Object.getPrototypeOf(constructor).name;
+    Reflect.defineMetadata(PROP_KEY_VIEW_TYPE, name, constructor);
 }
 export class View {
     constructor() {
@@ -109,7 +114,8 @@ export class View {
         return this.__dirty_props__;
     }
     viewType() {
-        return this.constructor.name;
+        const viewType = Reflect.getMetadata(PROP_KEY_VIEW_TYPE, this.constructor);
+        return viewType || this.constructor.name;
     }
     onPropertyChanged(propKey, oldV, newV) {
         if (newV instanceof Function) {

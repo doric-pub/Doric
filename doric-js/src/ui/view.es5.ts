@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { Color, GradientColor } from "../util/color"
-import { Modeling, Model, obj2Model } from "../util/types";
+import { Modeling, Model, obj2Model, ClassType } from "../util/types";
 import { uniqueId } from "../util/uniqueId";
 import { loge } from "../util/log";
 import { BridgeContext } from "../runtime/global";
@@ -48,6 +48,13 @@ export function InconsistProperty(target: Object, propKey: string) {
             Reflect.apply(this.onPropertyChanged, this, [propKey, oldV, v])
         },
     })
+}
+
+const PROP_KEY_VIEW_TYPE = "__prop__ViewType";
+
+export function ViewComponent(constructor: ClassType<any>) {
+    const name = Reflect.get(constructor, PROP_KEY_VIEW_TYPE) || Object.getPrototypeOf(constructor).name
+    Reflect.set(constructor, PROP_KEY_VIEW_TYPE, name)
 }
 
 export type NativeViewModel = {
@@ -190,7 +197,7 @@ export abstract class View implements Modeling {
     }
 
     viewType() {
-        return this.constructor.name
+        return Reflect.get(this.constructor, PROP_KEY_VIEW_TYPE) || this.constructor.name
     }
 
     onPropertyChanged(propKey: string, oldV: Model, newV: Model): void {

@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 import { Color, GradientColor } from "../util/color"
-import { Modeling, Model, obj2Model } from "../util/types";
+import { Modeling, Model, obj2Model, ClassType } from "../util/types";
 import { uniqueId } from "../util/uniqueId";
 import { loge } from "../util/log";
 import { BridgeContext } from "../runtime/global";
 import { LayoutConfig } from '../util/layoutconfig'
 import { IAnimation } from "./animation";
 import { FlexConfig } from "../util/flexbox";
-import { modal } from "../native/modal";
 
 const PROP_CONSIST = 1;
 const PROP_INCONSIST = 2;
+const PROP_KEY_VIEW_TYPE = "ViewType";
 
 export function Property(target: Object, propKey: string) {
     Reflect.defineMetadata(propKey, PROP_CONSIST, target)
@@ -32,6 +32,11 @@ export function Property(target: Object, propKey: string) {
 
 export function InconsistProperty(target: Object, propKey: string) {
     Reflect.defineMetadata(propKey, PROP_INCONSIST, target)
+}
+
+export function ViewComponent(constructor: ClassType<any>) {
+    const name = Reflect.getMetadata(PROP_KEY_VIEW_TYPE, constructor) || Object.getPrototypeOf(constructor).name
+    Reflect.defineMetadata(PROP_KEY_VIEW_TYPE, name, constructor)
 }
 
 export type NativeViewModel = {
@@ -196,7 +201,8 @@ export abstract class View implements Modeling {
     }
 
     viewType() {
-        return this.constructor.name
+        const viewType = Reflect.getMetadata(PROP_KEY_VIEW_TYPE, this.constructor)
+        return viewType || this.constructor.name
     }
 
     onPropertyChanged(propKey: string, oldV: Model, newV: Model): void {

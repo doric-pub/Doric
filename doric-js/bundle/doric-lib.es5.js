@@ -200,6 +200,11 @@ function InconsistProperty(target, propKey) {
         },
     });
 }
+var PROP_KEY_VIEW_TYPE = "__prop__ViewType";
+function ViewComponent(constructor) {
+    var name = Reflect.get(constructor, PROP_KEY_VIEW_TYPE) || Object.getPrototypeOf(constructor).name;
+    Reflect.set(constructor, PROP_KEY_VIEW_TYPE, name);
+}
 var View = /** @class */ (function () {
     function View() {
         this.width = 0;
@@ -301,7 +306,7 @@ var View = /** @class */ (function () {
         configurable: true
     });
     View.prototype.viewType = function () {
-        return this.constructor.name;
+        return Reflect.get(this.constructor, PROP_KEY_VIEW_TYPE) || this.constructor.name;
     };
     View.prototype.onPropertyChanged = function (propKey, oldV, newV) {
         var _this = this;
@@ -3765,6 +3770,7 @@ exports.TranslationAnimation = TranslationAnimation;
 exports.VLayout = VLayout;
 exports.VMPanel = VMPanel;
 exports.View = View;
+exports.ViewComponent = ViewComponent;
 exports.ViewHolder = ViewHolder;
 exports.ViewModel = ViewModel;
 exports.animate = animate;

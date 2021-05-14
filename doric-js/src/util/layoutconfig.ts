@@ -76,14 +76,44 @@ export class LayoutConfigImpl implements LayoutConfig, Modeling {
         return this
     }
 
+    fitWidth() {
+        this.widthSpec = LayoutSpec.FIT
+        return this
+    }
+
+    fitHeight() {
+        this.heightSpec = LayoutSpec.FIT
+        return this
+    }
+
     most() {
         this.widthSpec = LayoutSpec.MOST
         this.heightSpec = LayoutSpec.MOST
         return this
     }
 
+    mostWidth() {
+        this.widthSpec = LayoutSpec.MOST
+        return this
+    }
+
+    mostHeight() {
+        this.widthSpec = LayoutSpec.MOST
+        return this
+    }
+
     just() {
         this.widthSpec = LayoutSpec.JUST
+        this.heightSpec = LayoutSpec.JUST
+        return this
+    }
+
+    justWidth() {
+        this.widthSpec = LayoutSpec.JUST
+        return this
+    }
+
+    justHeight() {
         this.heightSpec = LayoutSpec.JUST
         return this
     }

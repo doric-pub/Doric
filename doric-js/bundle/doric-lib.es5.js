@@ -733,13 +733,37 @@ var LayoutConfigImpl = /** @class */ (function () {
         this.heightSpec = exports.LayoutSpec.FIT;
         return this;
     };
+    LayoutConfigImpl.prototype.fitWidth = function () {
+        this.widthSpec = exports.LayoutSpec.FIT;
+        return this;
+    };
+    LayoutConfigImpl.prototype.fitHeight = function () {
+        this.heightSpec = exports.LayoutSpec.FIT;
+        return this;
+    };
     LayoutConfigImpl.prototype.most = function () {
         this.widthSpec = exports.LayoutSpec.MOST;
         this.heightSpec = exports.LayoutSpec.MOST;
         return this;
     };
+    LayoutConfigImpl.prototype.mostWidth = function () {
+        this.widthSpec = exports.LayoutSpec.MOST;
+        return this;
+    };
+    LayoutConfigImpl.prototype.mostHeight = function () {
+        this.widthSpec = exports.LayoutSpec.MOST;
+        return this;
+    };
     LayoutConfigImpl.prototype.just = function () {
         this.widthSpec = exports.LayoutSpec.JUST;
+        this.heightSpec = exports.LayoutSpec.JUST;
+        return this;
+    };
+    LayoutConfigImpl.prototype.justWidth = function () {
+        this.widthSpec = exports.LayoutSpec.JUST;
+        return this;
+    };
+    LayoutConfigImpl.prototype.justHeight = function () {
         this.heightSpec = exports.LayoutSpec.JUST;
         return this;
     };

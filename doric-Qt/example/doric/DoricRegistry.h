@@ -1,12 +1,27 @@
 #ifndef REGISTRY_H
 #define REGISTRY_H
 
+#include <QDebug>
 #include <QString>
 
 #include "utils/DoricObjectFactory.h"
 
+class DoricLibrary;
+
 class DoricRegistry {
+private:
+  static DoricRegistry *local_instance;
+
+  ~DoricRegistry() { qDebug() << "destructor"; }
+
 public:
+  static DoricRegistry *getInstance() {
+    static DoricRegistry instance;
+    return &instance;
+  }
+
+  QSet<DoricLibrary *> doricLibraries;
+
   DoricObjectFactory plugins;
   DoricObjectFactory nodes;
 
@@ -23,6 +38,8 @@ public:
   bool acquirePluginInfo(QString name);
 
   bool acquireNodeInfo(QString name);
+
+  void registerLibrary(DoricLibrary *doricLibrary);
 };
 
 #endif // REGISTRY_H

@@ -1,4 +1,5 @@
 #include "DoricRegistry.h"
+#include "DoricLibrary.h"
 
 #include "plugin/DoricModalPlugin.h"
 #include "plugin/DoricNetworkPlugin.h"
@@ -40,4 +41,9 @@ bool DoricRegistry::acquirePluginInfo(QString name) {
 
 bool DoricRegistry::acquireNodeInfo(QString name) {
   return nodes.acquireClass(name);
+}
+
+void DoricRegistry::registerLibrary(DoricLibrary *doricLibrary) {
+  doricLibraries.insert(doricLibrary);
+  doricLibrary->load(this);
 }

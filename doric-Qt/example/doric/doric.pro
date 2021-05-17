@@ -89,9 +89,11 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    Doric.h \
     DoricContext.h \
     DoricContextManager.h \
     DoricInterfaceDriver.h \
+    DoricLibrary.h \
     DoricNativeDriver.h \
     DoricPanel.h \
     DoricRegistry.h \

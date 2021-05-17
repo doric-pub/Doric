@@ -11,7 +11,7 @@ class DoricJSEngine : public QObject {
   Q_OBJECT
 private:
   DoricInterfaceJSE *mJSE;
-  DoricRegistry *mRegistry = new DoricRegistry();
+  DoricRegistry *mRegistry = DoricRegistry::getInstance();
 
   void loadBuiltinJS(QString assetName);
   QString packageContextScript(QString contextId, QString content);

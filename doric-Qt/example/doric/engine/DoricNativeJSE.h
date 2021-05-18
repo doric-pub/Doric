@@ -1,13 +1,15 @@
 #ifndef NATIVE_JSE_H
 #define NATIVE_JSE_H
 
+#include "DoricExport.h"
+
 #include "DoricInterfaceJSE.h"
 #include "native/NativeExecutor.h"
 #include "v8/V8Executor.h"
 
 enum class JSEType { V8, Native };
 
-class DoricNativeJSE : public DoricInterfaceJSE {
+class DORIC_EXPORT DoricNativeJSE : public DoricInterfaceJSE {
 private:
   JSEType mType;
 

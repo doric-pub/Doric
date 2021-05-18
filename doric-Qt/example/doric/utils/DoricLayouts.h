@@ -3,7 +3,9 @@
 
 #include <QQuickItem>
 
-class DoricLayoutType {
+#include "DoricExport.h"
+
+class DORIC_EXPORT DoricLayoutType {
 public:
   const static int DoricUndefined = 0;
   const static int DoricStack = 1;
@@ -11,14 +13,14 @@ public:
   const static int DoricHLayout = 3;
 };
 
-class DoricLayoutSpec {
+class DORIC_EXPORT DoricLayoutSpec {
 public:
   const static int DoricLayoutJust = 0;
   const static int DoricLayoutFit = 1;
   const static int DoricLayoutMost = 2;
 };
 
-class DoricGravity {
+class DORIC_EXPORT DoricGravity {
 public:
   const static int DoricGravitySpecified = 1;
   const static int DoricGravityStart = 1 << 1;
@@ -41,7 +43,7 @@ public:
       DoricGravityCenterX | DoricGravityCenterY;
 };
 
-class DoricLayouts : public QObject {
+class DORIC_EXPORT DoricLayouts : public QObject {
 public:
   explicit DoricLayouts(QObject *parent = nullptr);
 

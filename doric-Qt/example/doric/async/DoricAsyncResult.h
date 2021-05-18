@@ -3,12 +3,14 @@
 
 #include <QJSValue>
 
+#include "DoricExport.h"
+
 #include "DoricCallback.h"
 #include "DoricSettableFuture.h"
 
 static QJSValue EMPTY(QJSValue::NullValue);
 
-class DoricAsyncResult {
+class DORIC_EXPORT DoricAsyncResult {
 private:
   QJSValue result = EMPTY;
   DoricCallback *callback;

@@ -3,7 +3,9 @@
 
 #include <QString>
 
-class DoricConstant {
+#include "DoricExport.h"
+
+class DORIC_EXPORT DoricConstant {
 
 public:
   static const QString DORIC_BUNDLE_SANDBOX;

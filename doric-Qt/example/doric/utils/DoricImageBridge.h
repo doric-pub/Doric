@@ -3,7 +3,9 @@
 
 #include <QObject>
 
-class DoricImageBridge : public QObject {
+#include "DoricExport.h"
+
+class DORIC_EXPORT DoricImageBridge : public QObject {
   Q_OBJECT
 public:
   explicit DoricImageBridge(QObject *parent = nullptr);

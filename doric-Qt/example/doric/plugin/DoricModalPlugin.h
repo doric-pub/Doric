@@ -1,9 +1,11 @@
 #ifndef DORICMODALPLUGIN_H
 #define DORICMODALPLUGIN_H
 
+#include "DoricExport.h"
+
 #include "DoricNativePlugin.h"
 
-class DoricModalPlugin : public DoricNativePlugin {
+class DORIC_EXPORT DoricModalPlugin : public DoricNativePlugin {
   Q_OBJECT
 public:
   using DoricNativePlugin::DoricNativePlugin;

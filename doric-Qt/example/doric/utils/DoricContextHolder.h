@@ -1,9 +1,11 @@
 #ifndef DORICCONTEXTHOLDER_H
 #define DORICCONTEXTHOLDER_H
 
+#include "DoricExport.h"
+
 #include "../DoricContext.h"
 
-class DoricContextHolder : public QObject {
+class DORIC_EXPORT DoricContextHolder : public QObject {
 protected:
   DoricContext *mContext = NULL;
 

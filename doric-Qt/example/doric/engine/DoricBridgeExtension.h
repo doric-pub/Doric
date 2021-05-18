@@ -4,7 +4,9 @@
 #include <QJSValue>
 #include <QObject>
 
-class DoricBridgeExtension : public QObject {
+#include "DoricExport.h"
+
+class DORIC_EXPORT DoricBridgeExtension : public QObject {
   Q_OBJECT
 public:
   explicit DoricBridgeExtension(QObject *parent = nullptr);

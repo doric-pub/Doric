@@ -1,9 +1,11 @@
 #ifndef DORICGROUPNODE_H
 #define DORICGROUPNODE_H
 
+#include "DoricExport.h"
+
 #include "DoricSuperNode.h"
 
-class DoricGroupNode : public DoricSuperNode {
+class DORIC_EXPORT DoricGroupNode : public DoricSuperNode {
 public:
   using DoricSuperNode::DoricSuperNode;
 

@@ -4,7 +4,9 @@
 #include <QObject>
 #include <QVariant>
 
-class DoricMouseAreaBridge : public QObject {
+#include "DoricExport.h"
+
+class DORIC_EXPORT DoricMouseAreaBridge : public QObject {
   Q_OBJECT
 public:
   explicit DoricMouseAreaBridge(QObject *parent = nullptr);

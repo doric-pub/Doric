@@ -3,9 +3,11 @@
 
 #include <QQuickItem>
 
+#include "DoricExport.h"
+
 #include "DoricStackNode.h"
 
-class DoricRootNode : public DoricStackNode {
+class DORIC_EXPORT DoricRootNode : public DoricStackNode {
 public:
   using DoricStackNode::DoricStackNode;
 

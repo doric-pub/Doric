@@ -4,9 +4,11 @@
 #include <QObject>
 #include <QtDebug>
 
+#include "DoricExport.h"
+
 #include "yoga/Yoga.h"
 
-class FlexLayoutConfig : public QObject {
+class DORIC_EXPORT FlexLayoutConfig : public QObject {
   Q_OBJECT
 private:
   YGConfigRef config;

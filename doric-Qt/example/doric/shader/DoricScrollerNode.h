@@ -1,9 +1,11 @@
 #ifndef DORICSCROLLERNODE_H
 #define DORICSCROLLERNODE_H
 
+#include "DoricExport.h"
+
 #include "DoricSuperNode.h"
 
-class DoricScrollerNode : public DoricSuperNode {
+class DORIC_EXPORT DoricScrollerNode : public DoricSuperNode {
 private:
   DoricViewNode *mChildNode = nullptr;
 

@@ -1,13 +1,15 @@
 #ifndef DORICPOPOVERPLUGIN_H
 #define DORICPOPOVERPLUGIN_H
 
-#include "DoricNativePlugin.h"
-
 #include <QQuickItem>
+
+#include "DoricExport.h"
+
+#include "DoricNativePlugin.h"
 
 static QString TYPE = "popover";
 
-class DoricPopoverPlugin : public DoricNativePlugin {
+class DORIC_EXPORT DoricPopoverPlugin : public DoricNativePlugin {
   Q_OBJECT
 public:
   using DoricNativePlugin::DoricNativePlugin;

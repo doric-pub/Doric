@@ -3,9 +3,11 @@
 
 #include <QDebug>
 
+#include "DoricExport.h"
+
 #include "DoricContext.h"
 
-class DoricContextManager {
+class DORIC_EXPORT DoricContextManager {
 private:
   static DoricContextManager *local_instance;
   DoricContextManager() {}

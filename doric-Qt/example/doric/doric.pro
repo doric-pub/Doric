@@ -199,4 +199,6 @@ else:unix: {
 
     LIBS += -L$$PWD/../../v8/v8/darwin/release/
     LIBS += -lv8_monolith
+
+    DEFINES += V8_COMPRESS_POINTERS
 }

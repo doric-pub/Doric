@@ -100,8 +100,15 @@ export abstract class ModularPanel extends Module {
         })
     }
 
+    /**
+     * @returns Class list of current submodules
+     */
     abstract setupModules(): ClassType<Panel>[]
 
+    /**
+     * @param root Current module's rootview
+     * @returns provided for submodules as their rootview
+     */
     abstract setupShelf(root: Group): Group
 
     dispatchMessage(message: any) {

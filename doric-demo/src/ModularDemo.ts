@@ -1,9 +1,9 @@
-import { Module, Color, Gravity, Group, layoutConfig, LayoutSpec, ModularPanel, scroller, text, vlayout, hlayout, Text, HLayout, View, VLayout, Provider, stack, } from "doric";
+import { Module, Color, Gravity, Group, layoutConfig, LayoutSpec, ModularPanel, scroller, text, vlayout, hlayout, Text, HLayout, View, VLayout, Provider, stack, loge, } from "doric";
 import { CounterPage } from "./Counter";
 
 let moduleId = 0
 
-class ReceivedMessage {
+class ProvidedData {
     received: string[] = []
     mounted: Record<string, boolean> = {}
 }
@@ -13,7 +13,7 @@ class SingleModule extends Module {
 
     onCreate() {
         super.onCreate()
-        this.provider?.observe(ReceivedMessage).addObserver((state => {
+        this.provider?.observe(ProvidedData).addObserver((state => {
             if (state?.mounted[this.name()] === false) {
                 this.unmount()
             } else {
@@ -48,7 +48,7 @@ class SingleModule extends Module {
                     textSize: 20,
                     onClick: () => {
                         this.dispatchMessage(`Hello from ${this.name()}`)
-                        this.provider?.observe(ReceivedMessage)?.update(state => {
+                        this.provider?.observe(ProvidedData)?.update(state => {
                             state?.received.push(this.name())
                             return state
                         })
@@ -64,7 +64,7 @@ class SingleModule extends Module {
                     textSize: 12,
                     textColor: Color.WHITE,
                     onClick: () => {
-                        this.provider?.observe(ReceivedMessage)?.update(state => {
+                        this.provider?.observe(ProvidedData)?.update(state => {
                             if (state) {
                                 state.mounted[this.name()] = false
                             }
@@ -120,7 +120,7 @@ abstract class GroupModule extends ModularPanel {
                     textSize: 20,
                     onClick: () => {
                         this.dispatchMessage(`Hello from ${this.name()}`)
-                        this.provider?.observe(ReceivedMessage)?.update(state => {
+                        this.provider?.observe(ProvidedData)?.update(state => {
                             state?.received.push(this.name())
                             return state
                         })
@@ -192,7 +192,7 @@ class ProviderWatcher extends SingleModule {
 
     onCreate() {
         super.onCreate()
-        this.provider?.observe(ReceivedMessage)?.addObserver((ret) => {
+        this.provider?.observe(ProvidedData)?.addObserver((ret) => {
             this.contentLabel!.text = ret?.received?.join("\n")
         })
     }
@@ -326,6 +326,9 @@ class ScrollableVerticalModule extends GroupModule {
             SingleModule,
         ]
     }
+    onCreate() {
+        this.provider?.remove(ProvidedData)
+    }
 }
 
 class ScrollableHorizontalModule extends GroupModule {
@@ -377,7 +380,7 @@ class ResetModule extends SingleModule {
                 text: "Reset",
                 textColor: Color.WHITE,
                 onClick: () => {
-                    this.provider?.observe(ReceivedMessage).update(state => {
+                    this.provider?.observe(ProvidedData).update(state => {
                         if (state) {
                             state.mounted = {}
                         }
@@ -391,9 +394,14 @@ class ResetModule extends SingleModule {
 
 @Entry
 class ModularDemo extends ModularPanel {
-    setupModules() {
+
+    constructor() {
+        super()
         this.provider = new Provider
-        this.provider.provide(new ReceivedMessage)
+        this.provider.provide(new ProvidedData)
+    }
+
+    setupModules() {
         return [
             SingleModule,
             ProviderWatcher,

@@ -1,13 +1,26 @@
-import { Module, Color, Gravity, Group, layoutConfig, LayoutSpec, ModularPanel, Panel, scroller, text, vlayout, modal, hlayout, Text, ClassType, HLayout, View, VLayout, Provider, loge } from "doric";
+import { Module, Color, Gravity, Group, layoutConfig, LayoutSpec, ModularPanel, scroller, text, vlayout, hlayout, Text, HLayout, View, VLayout, Provider, stack, } from "doric";
 import { CounterPage } from "./Counter";
+
 let moduleId = 0
 
 class ReceivedMessage {
     received: string[] = []
+    mounted: Record<string, boolean> = {}
 }
 
 class SingleModule extends Module {
     myId = ++moduleId
+
+    onCreate() {
+        super.onCreate()
+        this.provider?.observe(ReceivedMessage).addObserver((state => {
+            if (state?.mounted[this.name()] === false) {
+                this.unmount()
+            } else {
+                this.mount()
+            }
+        }))
+    }
 
     name() {
         return `${this.constructor.name}#${this.myId}`
@@ -45,6 +58,19 @@ class SingleModule extends Module {
                     textSize: 12,
                     text: this.discription(),
                     textColor: Color.WHITE,
+                }),
+                text({
+                    text: "Unmount",
+                    textSize: 12,
+                    textColor: Color.WHITE,
+                    onClick: () => {
+                        this.provider?.observe(ReceivedMessage)?.update(state => {
+                            if (state) {
+                                state.mounted[this.name()] = false
+                            }
+                            return state
+                        })
+                    }
                 }),
                 ...this.buildExtraContent(),
             ],
@@ -340,6 +366,28 @@ class ScrollableHorizontalModule extends GroupModule {
 }
 
 
+class ResetModule extends SingleModule {
+    discription() {
+        return "This module reset all modules to mounted."
+    }
+
+    buildExtraContent() {
+        return [
+            text({
+                text: "Reset",
+                textColor: Color.WHITE,
+                onClick: () => {
+                    this.provider?.observe(ReceivedMessage).update(state => {
+                        if (state) {
+                            state.mounted = {}
+                        }
+                        return state
+                    })
+                },
+            })
+        ]
+    }
+}
 
 @Entry
 class ModularDemo extends ModularPanel {
@@ -355,6 +403,7 @@ class ModularDemo extends ModularPanel {
             ScrollableVerticalModule,
             ScrollableHorizontalModule,
             CounterPage,
+            ResetModule,
         ]
     }
     setupShelf(root: Group) {

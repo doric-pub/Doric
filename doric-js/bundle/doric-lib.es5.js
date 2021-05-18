@@ -3655,7 +3655,9 @@ var __extends = (undefined && undefined.__extends) || (function () {
 var Module = /** @class */ (function (_super) {
     __extends(Module, _super);
     function Module() {
-        return _super !== null && _super.apply(this, arguments) || this;
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.unmounted = false;
+        return _this;
     }
     Object.defineProperty(Module.prototype, "provider", {
         get: function () {
@@ -3668,13 +3670,68 @@ var Module = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
+    Module.prototype.mount = function () {
+        var _a;
+        if (this.unmounted) {
+            this.unmounted = false;
+            (_a = this.superPanel) === null || _a === void 0 ? void 0 : _a.onStructureChanged(this, true);
+            this.onMounted();
+        }
+    };
+    Module.prototype.unmount = function () {
+        var _a;
+        if (!this.unmounted) {
+            this.unmounted = true;
+            (_a = this.superPanel) === null || _a === void 0 ? void 0 : _a.onStructureChanged(this, false);
+            this.onUnmounted();
+        }
+    };
+    Object.defineProperty(Module.prototype, "mounted", {
+        get: function () {
+            return !this.unmounted;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    /**
+     * Dispatch message to other modules.
+     * @param message which is sent out
+     */
     Module.prototype.dispatchMessage = function (message) {
         var _a;
         (_a = this.superPanel) === null || _a === void 0 ? void 0 : _a.dispatchMessage(message);
     };
+    /**
+     * Dispatched messages can be received by override this method.
+     * @param message recevied message
+     */
     Module.prototype.onMessage = function (message) { };
+    /**
+     * Called when this module is mounted
+     */
+    Module.prototype.onMounted = function () { };
+    /**
+     * Called when this module is unmounted
+     */
+    Module.prototype.onUnmounted = function () { };
     return Module;
 }(Panel));
+var VMModule = /** @class */ (function (_super) {
+    __extends(VMModule, _super);
+    function VMModule() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    VMModule.prototype.getViewModel = function () {
+        return this.vm;
+    };
+    VMModule.prototype.build = function (root) {
+        this.vh = new (this.getViewHolderClass());
+        this.vm = new (this.getViewModelClass())(this.getState(), this.vh);
+        this.vm.context = this.context;
+        this.vm.attach(root);
+    };
+    return VMModule;
+}(Module));
 var ModularPanel = /** @class */ (function (_super) {
     __extends(ModularPanel, _super);
     function ModularPanel() {
@@ -3696,16 +3753,38 @@ var ModularPanel = /** @class */ (function (_super) {
             this.onMessage(message);
         }
     };
+    Object.defineProperty(ModularPanel.prototype, "mountedModules", {
+        get: function () {
+            return this.modules.filter(function (e) { return !(e instanceof Module) || e.mounted; });
+        },
+        enumerable: false,
+        configurable: true
+    });
     ModularPanel.prototype.onMessage = function (message) {
-        this.modules.forEach(function (e) {
+        this.mountedModules.forEach(function (e) {
             if (e instanceof Module) {
                 e.onMessage(message);
             }
         });
     };
+    ModularPanel.prototype.onStructureChanged = function (module, mounted) {
+        var _this = this;
+        if (this.superPanel) {
+            this.superPanel.onStructureChanged(module, mounted);
+        }
+        else {
+            if (!!!this.scheduledRebuild) {
+                this.scheduledRebuild = setTimeout(function () {
+                    _this.scheduledRebuild = undefined;
+                    _this.getRootView().children.length = 0;
+                    _this.build(_this.getRootView());
+                }, 0);
+            }
+        }
+    };
     ModularPanel.prototype.build = function (root) {
         var groupView = this.setupShelf(root);
-        this.modules.forEach(function (e) {
+        this.mountedModules.forEach(function (e) {
             Reflect.set(e, "__root__", groupView);
             e.build(groupView);
         });
@@ -3713,32 +3792,32 @@ var ModularPanel = /** @class */ (function (_super) {
     ModularPanel.prototype.onCreate = function () {
         var _this = this;
         _super.prototype.onCreate.call(this);
-        this.modules.forEach(function (e) {
+        this.mountedModules.forEach(function (e) {
             e.context = _this.context;
             e.onCreate();
         });
     };
     ModularPanel.prototype.onDestroy = function () {
         _super.prototype.onDestroy.call(this);
-        this.modules.forEach(function (e) {
+        this.mountedModules.forEach(function (e) {
             e.onDestroy();
         });
     };
     ModularPanel.prototype.onShow = function () {
         _super.prototype.onShow.call(this);
-        this.modules.forEach(function (e) {
+        this.mountedModules.forEach(function (e) {
             e.onShow();
         });
     };
     ModularPanel.prototype.onHidden = function () {
         _super.prototype.onHidden.call(this);
-        this.modules.forEach(function (e) {
+        this.mountedModules.forEach(function (e) {
             e.onHidden();
         });
     };
     ModularPanel.prototype.onRenderFinished = function () {
         _super.prototype.onRenderFinished.call(this);
-        this.modules.forEach(function (e) {
+        this.mountedModules.forEach(function (e) {
             e.onRenderFinished();
         });
     };
@@ -3792,6 +3871,7 @@ exports.TOP = TOP;
 exports.Text = Text;
 exports.TranslationAnimation = TranslationAnimation;
 exports.VLayout = VLayout;
+exports.VMModule = VMModule;
 exports.VMPanel = VMPanel;
 exports.View = View;
 exports.ViewComponent = ViewComponent;

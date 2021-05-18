@@ -4,12 +4,14 @@
 #include <QQmlEngine>
 #include <QVariant>
 
+#include "DoricExport.h"
+
 #include "DoricInterfaceDriver.h"
 
 class DoricViewNode;
 class DoricRootNode;
 
-class DoricContext {
+class DORIC_EXPORT DoricContext {
 private:
   QString mContextId;
   QMap<QString, QObject *> mPluginMap;

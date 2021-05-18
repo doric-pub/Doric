@@ -3,10 +3,12 @@
 
 #include <QDebug>
 
+#include "DoricExport.h"
+
 #include "DoricInterfaceDriver.h"
 #include "engine/DoricJSEngine.h"
 
-class DoricNativeDriver : public DoricInterfaceDriver {
+class DORIC_EXPORT DoricNativeDriver : public DoricInterfaceDriver {
 private:
   static DoricNativeDriver *local_instance;
   DoricNativeDriver() {}

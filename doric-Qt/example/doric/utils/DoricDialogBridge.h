@@ -3,7 +3,9 @@
 
 #include <QObject>
 
-class DoricDialogBridge : public QObject {
+#include "DoricExport.h"
+
+class DORIC_EXPORT DoricDialogBridge : public QObject {
   Q_OBJECT
 public:
   explicit DoricDialogBridge(QObject *parent = nullptr);

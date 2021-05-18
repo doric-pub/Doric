@@ -1,9 +1,11 @@
 #ifndef DORICVLAYOUTNODE_H
 #define DORICVLAYOUTNODE_H
 
+#include "DoricExport.h"
+
 #include "DoricGroupNode.h"
 
-class DoricVLayoutNode : public DoricGroupNode {
+class DORIC_EXPORT DoricVLayoutNode : public DoricGroupNode {
 public:
   using DoricGroupNode::DoricGroupNode;
 

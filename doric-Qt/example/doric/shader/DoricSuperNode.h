@@ -3,9 +3,11 @@
 
 #include <QJsonArray>
 
+#include "DoricExport.h"
+
 #include "DoricViewNode.h"
 
-class DoricSuperNode : public DoricViewNode {
+class DORIC_EXPORT DoricSuperNode : public DoricViewNode {
 private:
   QMap<QString, QJsonValue> subNodes;
 

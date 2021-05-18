@@ -4,7 +4,9 @@
 #include <QObject>
 #include <QSet>
 
-class DoricTimerExtension : public QObject {
+#include "DoricExport.h"
+
+class DORIC_EXPORT DoricTimerExtension : public QObject {
   Q_OBJECT
 
 private:

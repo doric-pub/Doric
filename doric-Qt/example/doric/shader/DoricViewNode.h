@@ -5,12 +5,14 @@
 #include <QJsonValue>
 #include <QQuickItem>
 
+#include "DoricExport.h"
+
 #include "../utils/DoricContextHolder.h"
 #include "../utils/DoricLayouts.h"
 
 class DoricSuperNode;
 
-class DoricViewNode : public DoricContextHolder {
+class DORIC_EXPORT DoricViewNode : public DoricContextHolder {
 
 protected:
   QQuickItem *mView;

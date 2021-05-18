@@ -6,12 +6,14 @@
 #include <QVariant>
 #include <QtDebug>
 
+#include "DoricExport.h"
+
 #include "FlexLayoutConfig.h"
 #include "FlexLayout.h"
 
 #include "yoga/Yoga.h"
 
-class FlexLayoutService : public QObject {
+class DORIC_EXPORT FlexLayoutService : public QObject {
   Q_OBJECT
 private:
   FlexLayoutConfig *config;

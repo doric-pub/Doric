@@ -3,7 +3,9 @@
 
 #include <QObject>
 
-class DoricNativeLog : public QObject {
+#include "DoricExport.h"
+
+class DORIC_EXPORT DoricNativeLog : public QObject {
   Q_OBJECT
 
 public:

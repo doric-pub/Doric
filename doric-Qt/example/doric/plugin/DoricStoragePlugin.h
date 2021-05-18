@@ -1,9 +1,11 @@
 #ifndef DORICSTORAGEPLUGIN_H
 #define DORICSTORAGEPLUGIN_H
 
+#include "DoricExport.h"
+
 #include "DoricNativePlugin.h"
 
-class DoricStoragePlugin : public DoricNativePlugin {
+class DORIC_EXPORT DoricStoragePlugin : public DoricNativePlugin {
   Q_OBJECT
 private:
   static const QString PREF_NAME;

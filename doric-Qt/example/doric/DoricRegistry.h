@@ -4,11 +4,13 @@
 #include <QDebug>
 #include <QString>
 
+#include "DoricExport.h"
+
 #include "utils/DoricObjectFactory.h"
 
 class DoricLibrary;
 
-class DoricRegistry {
+class DORIC_EXPORT DoricRegistry {
 private:
   static DoricRegistry *local_instance;
 

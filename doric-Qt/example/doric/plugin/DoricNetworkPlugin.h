@@ -1,9 +1,11 @@
 #ifndef DORICNETWORKPLUGIN_H
 #define DORICNETWORKPLUGIN_H
 
+#include "DoricExport.h"
+
 #include "DoricNativePlugin.h"
 
-class DoricNetworkPlugin : public DoricNativePlugin {
+class DORIC_EXPORT DoricNetworkPlugin : public DoricNativePlugin {
   Q_OBJECT
 public:
   using DoricNativePlugin::DoricNativePlugin;

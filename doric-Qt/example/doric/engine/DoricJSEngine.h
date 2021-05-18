@@ -4,10 +4,12 @@
 #include <QJSValue>
 #include <QThreadPool>
 
+#include "DoricExport.h"
+
 #include "../DoricRegistry.h"
 #include "DoricInterfaceJSE.h"
 
-class DoricJSEngine : public QObject {
+class DORIC_EXPORT DoricJSEngine : public QObject {
   Q_OBJECT
 private:
   DoricInterfaceJSE *mJSE;

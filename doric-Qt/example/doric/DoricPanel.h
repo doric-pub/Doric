@@ -3,9 +3,11 @@
 
 #include <QQuickItem>
 
+#include "DoricExport.h"
+
 #include "DoricContext.h"
 
-class DoricPanel {
+class DORIC_EXPORT DoricPanel {
 private:
   DoricContext *mContext;
   int renderedWidth = -1;

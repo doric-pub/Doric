@@ -1,10 +1,12 @@
 #ifndef DORICSLIDERNODE_H
 #define DORICSLIDERNODE_H
 
+#include "DoricExport.h"
+
 #include "DoricSlideItemNode.h"
 #include "shader/DoricSuperNode.h"
 
-class DoricSliderNode : public DoricSuperNode {
+class DORIC_EXPORT DoricSliderNode : public DoricSuperNode {
 
 private:
   int itemCount = 0;

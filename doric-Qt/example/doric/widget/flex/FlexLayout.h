@@ -6,10 +6,12 @@
 #include <QVariant>
 #include <QtDebug>
 
+#include "DoricExport.h"
+
 #include "yoga/Yoga.h"
 #include "FlexLayoutConfig.h"
 
-class FlexLayout : public QObject {
+class DORIC_EXPORT FlexLayout : public QObject {
   Q_OBJECT
 
   Q_PROPERTY(int flexShrink READ getFlexShrink WRITE setFlexShrink)

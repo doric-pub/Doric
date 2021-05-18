@@ -1,9 +1,11 @@
 #ifndef DORICIMAGENODE_H
 #define DORICIMAGENODE_H
 
+#include "DoricExport.h"
+
 #include "DoricViewNode.h"
 
-class DoricImageNode : public DoricViewNode {
+class DORIC_EXPORT DoricImageNode : public DoricViewNode {
 public:
   using DoricViewNode::DoricViewNode;
 

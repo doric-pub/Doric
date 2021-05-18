@@ -1,9 +1,11 @@
 #ifndef DORICTEXTNODE_H
 #define DORICTEXTNODE_H
 
+#include "DoricExport.h"
+
 #include "DoricViewNode.h"
 
-class DoricTextNode : public DoricViewNode {
+class DORIC_EXPORT DoricTextNode : public DoricViewNode {
 public:
   using DoricViewNode::DoricViewNode;
 

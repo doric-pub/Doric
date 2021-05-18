@@ -3,9 +3,11 @@
 
 #include <QJSValue>
 
+#include "DoricExport.h"
+
 #include "utils/DoricCountDownLatch.h"
 
-class DoricSettableFuture {
+class DORIC_EXPORT DoricSettableFuture {
 private:
   QJSValue mResult;
   DoricCountDownLatch *mReadyLatch = new DoricCountDownLatch();

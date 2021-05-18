@@ -1423,27 +1423,56 @@ declare module 'doric/lib/src/pattern/modular' {
     import { Panel } from "doric/lib/src/ui/panel";
     import { Group } from "doric/lib/src/ui/view";
     import { ClassType } from "doric/lib/src/util/types";
+    import { ViewHolder, ViewModel } from "doric/lib/src/pattern/mvvm";
     import { Provider } from "doric/lib/src/pattern/provider";
     export abstract class Module extends Panel {
-        superPanel?: ModularPanel;
-        __provider?: Provider;
-        get provider(): Provider | undefined;
-        set provider(provider: Provider | undefined);
-        dispatchMessage(message: any): void;
-        onMessage(message: any): void;
+            superPanel?: ModularPanel;
+            __provider?: Provider;
+            get provider(): Provider | undefined;
+            set provider(provider: Provider | undefined);
+            mount(): void;
+            unmount(): void;
+            get mounted(): boolean;
+            /**
+                * Dispatch message to other modules.
+                * @param message which is sent out
+                */
+            dispatchMessage(message: any): void;
+            /**
+                * Dispatched messages can be received by override this method.
+                * @param message recevied message
+                */
+            onMessage(message: any): void;
+            /**
+                * Called when this module is mounted
+                */
+            onMounted(): void;
+            /**
+                * Called when this module is unmounted
+                */
+            onUnmounted(): void;
+    }
+    export abstract class VMModule<M extends Object, V extends ViewHolder> extends Module {
+            abstract getViewModelClass(): ClassType<ViewModel<M, V>>;
+            abstract getState(): M;
+            abstract getViewHolderClass(): ClassType<V>;
+            getViewModel(): ViewModel<M, V> | undefined;
+            build(root: Group): void;
     }
     export abstract class ModularPanel extends Module {
-        constructor();
-        abstract setupModules(): ClassType<Panel>[];
-        abstract setupShelf(root: Group): Group;
-        dispatchMessage(message: any): void;
-        onMessage(message: any): void;
-        build(root: Group): void;
-        onCreate(): void;
-        onDestroy(): void;
-        onShow(): void;
-        onHidden(): void;
-        onRenderFinished(): void;
+            constructor();
+            abstract setupModules(): ClassType<Panel>[];
+            abstract setupShelf(root: Group): Group;
+            dispatchMessage(message: any): void;
+            get mountedModules(): Panel[];
+            onMessage(message: any): void;
+            onStructureChanged(module: Module, mounted: boolean): void;
+            build(root: Group): void;
+            onCreate(): void;
+            onDestroy(): void;
+            onShow(): void;
+            onHidden(): void;
+            onRenderFinished(): void;
     }
 }
 

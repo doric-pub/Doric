@@ -30,6 +30,8 @@ void DoricTextNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
     view->setProperty("font", QVariant(font));
   } else if (name == "textAlignment") {
     view->setProperty("textAlignment", prop.toInt());
+  } else if (name == "fontStyle") {
+    view->setProperty("fontStyle", prop.toString());
   } else {
     DoricViewNode::blend(view, name, prop);
   }

@@ -20,6 +20,19 @@ TextArea {
 
     property int textAlignment: 0
 
+    property var fontStyle: ""
+
+    onFontStyleChanged: {
+        if (fontStyle === "bold") {
+            font.weight = Font.Bold
+        } else if (fontStyle === "italic") {
+            font.italic = true
+        } else if (fontStyle === "bold_italic") {
+            font.weight = Font.Bold
+            font.italic = true
+        }
+    }
+
     background: Rectangle {
         id: bg
         color: 'transparent'

@@ -177,7 +177,7 @@ win32:CONFIG(debug, debug|release): {
 
     INCLUDEPATH += $$PWD/../../v8/v8/win32/include
 
-    LIBS += -L$$PWD/../../v8/v8/win32/debug/
+    LIBS += -L$$PWD/../../v8/v8/win32/debug/ia32/
     LIBS += -lv8_monolith
 }
 else:win32:CONFIG(release, debug|release): {
@@ -190,7 +190,7 @@ else:win32:CONFIG(release, debug|release): {
 
     INCLUDEPATH += $$PWD/../../v8/v8/win32/include
 
-    LIBS += -L$$PWD/../../v8/v8/win32/release/
+    LIBS += -L$$PWD/../../v8/v8/win32/release/ia32/
     LIBS += -lv8_monolith
 }
 else:unix: {

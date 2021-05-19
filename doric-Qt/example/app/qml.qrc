@@ -43,4 +43,12 @@
         <file alias="util.mjs">../doric/resources/util.mjs</file>
         <file alias="gravity.mjs">../doric/resources/gravity.mjs</file>
     </qresource>
+
+    <qresource prefix="/resource/main/">
+        <file alias="pic_cp_gift_box.png">./resources/pic_cp_gift_box.png</file>
+        <file alias="icon_cp_gift_box_tips.png">./resources/icon_cp_gift_box_tips.png</file>
+        <file alias="pic_tab_welfare.png">./resources/pic_tab_welfare.png</file>
+        <file alias="pic_tab_condition.png">./resources/pic_tab_condition.png</file>
+        <file alias="pic_cp_invitation_2.png">./resources/pic_cp_invitation_2.png</file>
+    </qresource>
 </RCC>

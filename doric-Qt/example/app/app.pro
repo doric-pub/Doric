@@ -37,10 +37,6 @@ else:win32:CONFIG(release, debug|release): {
     LIBS += -lAdvapi32
     LIBS += -lDbghelp
 }
-else:unix: {
-    LIBS += -L$$PWD/../../v8/v8/darwin/release/
-    LIBS += -lv8_monolith
-}
 
 INCLUDEPATH += $$PWD/../doric
 

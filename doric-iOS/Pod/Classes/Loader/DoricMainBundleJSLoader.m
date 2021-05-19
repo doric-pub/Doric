@@ -32,7 +32,9 @@
     NSError *error;
     NSString *jsContent = [NSString stringWithContentsOfFile:fullPath encoding:NSUTF8StringEncoding error:&error];
     if (error) {
-        [ret setupError:[NSException new]];
+        [ret setupError:[NSException exceptionWithName:@"Loading JS in Main bundle error"
+                                                reason:error.description
+                                              userInfo:error.userInfo]];
     } else {
         [ret setupResult:jsContent];
     }

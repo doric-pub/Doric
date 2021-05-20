@@ -291,13 +291,13 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
     public void onLog(int type, String message) {
         switch (type) {
             case Log.ERROR:
-                DoricLog.suffix_e("_js", message);
+                DoricLog.suffix_e("_js", "%s", message);
                 break;
             case Log.WARN:
-                DoricLog.suffix_w("_js", message);
+                DoricLog.suffix_w("_js", "%s", message);
                 break;
             default:
-                DoricLog.suffix_d("_js", message);
+                DoricLog.suffix_d("_js", "%s", message);
                 break;
         }
     }

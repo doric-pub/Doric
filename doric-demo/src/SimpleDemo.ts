@@ -19,7 +19,10 @@ class SimpleDemo extends Panel {
                     layoutConfig: layoutConfig().fit().configMargin({
                         top: 23,
                         right: 23
-                    }).configAlignment(gravity().right())
+                    }).configAlignment(gravity().right()),
+                    onClick: () => {
+                        context.callNative('cp_introduce_view', 'showRule')
+                    }
                 }),
                 text({
                     text: " 购买并开启1个誓言礼盒\r\n即可获得1个邀请组CP的道具",
@@ -73,7 +76,6 @@ class SimpleDemo extends Panel {
                 width: 400,
                 height: 759,
                 layoutConfig: layoutConfig().just(),
-                backgroundColor: Color.RED
             }), {
                 layoutConfig: layoutConfig().most(),
             })

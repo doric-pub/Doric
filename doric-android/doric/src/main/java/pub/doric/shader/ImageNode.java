@@ -145,6 +145,11 @@ public class ImageNode extends ViewNode<ImageView> {
             if (imageScaleValue.isNumber()) {
                 this.imageScale = imageScaleValue.asNumber().toFloat();
             }
+            JSValue loadCallback = jsObject.getProperty("loadCallback");
+            if (loadCallback.isString()) {
+                this.loadCallbackId = loadCallback.asString().value();
+            }
+
         }
         super.blend(jsObject);
     }
@@ -371,7 +376,7 @@ public class ImageNode extends ViewNode<ImageView> {
                 }
                 break;
             case "loadCallback":
-                this.loadCallbackId = prop.asString().value();
+                // Do not need set
                 break;
             case "imageBase64":
                 if (!prop.isString()) {

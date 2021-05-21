@@ -12,7 +12,7 @@
     "clean-win32": "del dist",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepublish": "npm run clean-win32 && npm run build"
+    "prepublish": "npm run clean && npm run build"
   },
   "repository": {
     "type": "git",

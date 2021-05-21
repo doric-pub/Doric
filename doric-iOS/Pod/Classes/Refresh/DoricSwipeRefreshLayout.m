@@ -96,7 +96,17 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (scrollView.contentOffset.y <= 0) {
-        [self.swipePullingDelegate setPullingDistance:-scrollView.contentOffset.y];
+        if ([self.contentView isKindOfClass:UIScrollView.class]
+                && ((UIScrollView *) self.contentView).contentOffset.y > 0) {
+            scrollView.contentOffset = (CGPoint) {0, 0};
+        } else {
+            [self.swipePullingDelegate setPullingDistance:-scrollView.contentOffset.y];
+        }
+    } else if (scrollView.contentOffset.y + scrollView.height > scrollView.contentSize.height) {
+        if ([self.contentView isKindOfClass:UIScrollView.class]
+                && ((UIScrollView *) self.contentView).contentOffset.y + self.contentView.height < ((UIScrollView *) self.contentView).contentSize.height) {
+            scrollView.contentOffset = (CGPoint) {0, scrollView.contentSize.height - scrollView.height};
+        }
     }
 }
 

@@ -112,6 +112,9 @@
     [props[@"imageScale"] also:^(NSNumber *it) {
         self.imageScale = it.floatValue;
     }];
+    [props[@"loadCallback"] also:^(NSString *it) {
+        self.loadCallbackId = it;
+    }];
     [super blend:props];
 }
 
@@ -292,7 +295,7 @@
         }
         self.contentMode = self.view.contentMode;
     } else if ([@"loadCallback" isEqualToString:name]) {
-        self.loadCallbackId = prop;
+        // Do not need set
     } else if ([@"imageBase64" isEqualToString:name]) {
         NSString *base64 = prop;
         if (YES == [base64 hasPrefix:@"data:image"]) {

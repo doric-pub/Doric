@@ -65,6 +65,10 @@ void DoricTextNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
     DoricLayouts *layout =
         (DoricLayouts *)(mView->property("doricLayout").toULongLong());
     layout->setMaxHeight(prop.toDouble());
+  } else if (name == "strikethrough") {
+    view->setProperty("strikethrough", prop.toBool());
+  } else if (name == "underline") {
+    view->setProperty("underline", prop.toBool());
   } else {
     DoricViewNode::blend(view, name, prop);
   }

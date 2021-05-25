@@ -45,6 +45,7 @@ SOURCES += \
         shader/DoricGroupNode.cpp \
         shader/DoricHLayoutNode.cpp \
         shader/DoricImageNode.cpp \
+        shader/DoricInputNode.cpp \
         shader/DoricRootNode.cpp \
         shader/DoricScrollerNode.cpp \
         shader/DoricStackNode.cpp \
@@ -123,6 +124,7 @@ HEADERS += \
     shader/DoricGroupNode.h \
     shader/DoricHLayoutNode.h \
     shader/DoricImageNode.h \
+    shader/DoricInputNode.h \
     shader/DoricRootNode.h \
     shader/DoricScrollerNode.h \
     shader/DoricStackNode.h \

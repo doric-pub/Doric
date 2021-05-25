@@ -56,11 +56,13 @@ void DoricNativeJSE::injectGlobalJSFunction(QString name, QObject *function,
   }
 }
 
-void DoricNativeJSE::invokeObject(QString objectName, QString functionName,
-                                  QVariantList arguments) {
+QString DoricNativeJSE::invokeObject(QString objectName, QString functionName,
+                                     QVariantList arguments) {
   if (mType == JSEType::V8) {
-    v8Executor->invokeObject(objectName, functionName, arguments);
+    return v8Executor->invokeObject(objectName, functionName, arguments);
   } else if (mType == JSEType::Native) {
-    nativeExecutor->invokeObject(objectName, functionName, arguments);
+    return nativeExecutor->invokeObject(objectName, functionName, arguments)
+        .toString();
   }
+  return QString();
 }

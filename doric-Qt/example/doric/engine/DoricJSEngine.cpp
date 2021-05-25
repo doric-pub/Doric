@@ -96,18 +96,20 @@ DoricJSEngine::DoricJSEngine(QObject *parent) : QObject(parent) {
   }
 }
 
-void DoricJSEngine::prepareContext(QString contextId, QString script,
-                                   QString source) {
-  mJSE->loadJS(packageContextScript(contextId, script), "Context://" + source);
+QString DoricJSEngine::prepareContext(QString contextId, QString script,
+                                      QString source) {
+  return mJSE->loadJS(packageContextScript(contextId, script),
+                      "Context://" + source);
 }
 
-void DoricJSEngine::destroyContext(QString contextId) {
+QString DoricJSEngine::destroyContext(QString contextId) {
   QString script =
       QString(DoricConstant::TEMPLATE_CONTEXT_DESTROY).replace("%s", contextId);
-  mJSE->loadJS(script, "_Context://" + contextId);
+  return mJSE->loadJS(script, "_Context://" + contextId);
 }
 
-void DoricJSEngine::invokeDoricMethod(QString method, QVariantList arguments) {
+QString DoricJSEngine::invokeDoricMethod(QString method,
+                                         QVariantList arguments) {
   return mJSE->invokeObject(DoricConstant::GLOBAL_DORIC, method, arguments);
 }
 

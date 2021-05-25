@@ -101,7 +101,6 @@ HEADERS += \
     DoricRegistry.h \
     async/DoricAsyncCall.h \
     async/DoricAsyncResult.h \
-    async/DoricCallback.h \
     async/DoricSettableFuture.h \
     engine/DoricBridgeExtension.h \
     engine/DoricInterfaceJSE.h \

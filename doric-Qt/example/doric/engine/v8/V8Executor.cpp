@@ -72,8 +72,8 @@ void V8Executor::injectGlobalJSFunction(QString name, QObject *function,
   injectFunctions(nullptr, name.toUtf8().constData(), true);
 }
 
-void V8Executor::invokeObject(QString objectName, QString functionName,
-                              QVariantList arguments) {
+QString V8Executor::invokeObject(QString objectName, QString functionName,
+                                 QVariantList arguments) {
   std::string exception;
   v8::HandleScope handleScope(m_isolate);
   int valueSize = arguments.size();
@@ -86,6 +86,9 @@ void V8Executor::invokeObject(QString objectName, QString functionName,
                                             functionName.toUtf8().constData(),
                                             valueSize, js_values, &exception);
   delete[] js_values;
+
+  std::string result = JS2String(value);
+  return QString::fromUtf8(result.c_str());
 }
 
 // private segment

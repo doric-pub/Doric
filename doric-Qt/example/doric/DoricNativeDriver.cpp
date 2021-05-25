@@ -14,11 +14,15 @@ DoricNativeDriver::invokeContextEntityMethod(QString contextId, QString method,
 
 std::shared_ptr<DoricAsyncResult>
 DoricNativeDriver::invokeDoricMethod(QString method, QVariantList args) {
+  std::shared_ptr<DoricAsyncResult> asyncResult =
+      std::make_shared<DoricAsyncResult>();
   DoricAsyncCall::ensureRunInThreadPool(
-      &jsEngine.mJSThreadPool,
-      [this, method, args] { this->jsEngine.invokeDoricMethod(method, args); });
+      &jsEngine.mJSThreadPool, [this, method, args, asyncResult] {
+        QString result = this->jsEngine.invokeDoricMethod(method, args);
+        asyncResult->setResult(result);
+      });
 
-  return std::make_shared<DoricAsyncResult>();
+  return asyncResult;
 }
 
 std::shared_ptr<DoricAsyncResult>
@@ -26,10 +30,11 @@ DoricNativeDriver::asyncCall(std::function<void()> lambda,
                              DoricThreadMode mode) {
   switch (mode) {
   case UI:
-    DoricAsyncCall::ensureRunInMain(lambda);
+    return DoricAsyncCall::ensureRunInMain(lambda);
     break;
   case JS:
-    DoricAsyncCall::ensureRunInThreadPool(&jsEngine.mJSThreadPool, lambda);
+    return DoricAsyncCall::ensureRunInThreadPool(&jsEngine.mJSThreadPool,
+                                                 lambda);
     break;
   }
   return NULL;
@@ -38,21 +43,31 @@ DoricNativeDriver::asyncCall(std::function<void()> lambda,
 std::shared_ptr<DoricAsyncResult>
 DoricNativeDriver::createContext(QString contextId, QString script,
                                  QString source) {
+  std::shared_ptr<DoricAsyncResult> asyncResult =
+      std::make_shared<DoricAsyncResult>();
+
   DoricAsyncCall::ensureRunInThreadPool(
-      &jsEngine.mJSThreadPool, [this, contextId, script, source] {
-        this->jsEngine.prepareContext(contextId, script, source);
+      &jsEngine.mJSThreadPool, [this, contextId, script, source, asyncResult] {
+        QString result =
+            this->jsEngine.prepareContext(contextId, script, source);
+        asyncResult->setResult(result);
       });
 
-  return std::make_shared<DoricAsyncResult>();
+  return asyncResult;
 }
 
 std::shared_ptr<DoricAsyncResult>
 DoricNativeDriver::destroyContext(QString contextId) {
-  DoricAsyncCall::ensureRunInThreadPool(
-      &jsEngine.mJSThreadPool,
-      [this, contextId] { this->jsEngine.destroyContext(contextId); });
+  std::shared_ptr<DoricAsyncResult> asyncResult =
+      std::make_shared<DoricAsyncResult>();
 
-  return std::make_shared<DoricAsyncResult>();
+  DoricAsyncCall::ensureRunInThreadPool(
+      &jsEngine.mJSThreadPool, [this, contextId, asyncResult] {
+        QString result = this->jsEngine.destroyContext(contextId);
+        asyncResult->setResult(result);
+      });
+
+  return asyncResult;
 }
 
 DoricRegistry *DoricNativeDriver::getRegistry() {

@@ -125,4 +125,16 @@ TextArea {
     }
 
     textFormat: TextEdit.AutoText
+
+    property var strikethrough: false
+
+    onStrikethroughChanged: {
+        font.strikeout = strikethrough
+    }
+
+    property var underline: false
+
+    onUnderlineChanged: {
+        font.underline = underline
+    }
 }

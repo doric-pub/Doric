@@ -15,7 +15,7 @@ ApplicationWindow {
 
         ListView {
             width: parent.width
-            model: 14
+            model: 15
             delegate: Rectangle {
                 Column {
                     anchors.centerIn: parent
@@ -31,24 +31,26 @@ ApplicationWindow {
                                 case 3:
                                     return "ImageDemo.js"
                                 case 4:
-                                    return "LayoutDemo.js"
+                                    return "InputDemo.js"
                                 case 5:
-                                    return "LayoutTestDemo.js"
+                                    return "LayoutDemo.js"
                                 case 6:
-                                    return "ModalDemo.js"
+                                    return "LayoutTestDemo.js"
                                 case 7:
-                                    return "NetworkDemo.js"
+                                    return "ModalDemo.js"
                                 case 8:
-                                    return "PopoverDemo.js"
+                                    return "NetworkDemo.js"
                                 case 9:
-                                    return "ScrollerDemo.js"
+                                    return "PopoverDemo.js"
                                 case 10:
-                                    return "SimpleDemo.js"
+                                    return "ScrollerDemo.js"
                                 case 11:
-                                    return "Snake.js"
+                                    return "SimpleDemo.js"
                                 case 12:
-                                    return "StorageDemo.js"
+                                    return "Snake.js"
                                 case 13:
+                                    return "StorageDemo.js"
+                                case 14:
                                     return "TextDemo.js"
                             }
                         }

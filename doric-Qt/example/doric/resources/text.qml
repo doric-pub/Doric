@@ -1,5 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
+import QtGraphicalEffects 1.12
 
 import "util.mjs" as Util
 import "gravity.mjs" as Gravity
@@ -97,5 +98,29 @@ TextArea {
             console.log(tag, uuid + " wrapper: " + wrapper)
             mouseAreaBridge.onClick(wrapper)
         }
+    }
+
+    property var shadowColor
+    property var shadowRadius
+    property var shadowOffsetX
+    property var shadowOffsetY
+    property var shadowOpacity
+
+    onShadowOpacityChanged: {
+        if (shadowOpacity > 0) {
+            layer.enabled = true
+        } else {
+            layer.enabled = false
+        }
+    }
+
+    layer.enabled: false
+    layer.effect: DropShadow {
+        horizontalOffset: shadowOffsetX
+        verticalOffset: shadowOffsetY
+        radius: shadowRadius
+        samples: 16
+        color: shadowColor
+        transparentBorder: true
     }
 }

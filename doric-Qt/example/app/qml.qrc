@@ -18,6 +18,7 @@
         <file alias="ScrollerDemo.js">../../../doric-demo/bundle/src/ScrollerDemo.js</file>
         <file alias="Snake.js">../../../doric-demo/bundle/src/Snake.js</file>
         <file alias="StorageDemo.js">../../../doric-demo/bundle/src/StorageDemo.js</file>
+        <file alias="TextDemo.js">../../../doric-demo/bundle/src/TextDemo.js</file>
     </qresource>
     <qresource prefix="/doric">
         <file alias="doric-sandbox.js">../../../doric-js/bundle/doric-sandbox.js</file>

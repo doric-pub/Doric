@@ -11,6 +11,8 @@ public:
 
   QQuickItem *build() override;
 
+  virtual void blendLayoutConfig(QJsonValue jsObject) override;
+
   virtual void blend(QQuickItem *view, QString name, QJsonValue prop) override;
 };
 

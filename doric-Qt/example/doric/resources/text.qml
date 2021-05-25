@@ -123,4 +123,6 @@ TextArea {
         color: shadowColor
         transparentBorder: true
     }
+
+    textFormat: TextEdit.AutoText
 }

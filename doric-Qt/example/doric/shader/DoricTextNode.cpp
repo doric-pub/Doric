@@ -18,6 +18,22 @@ QQuickItem *DoricTextNode::build() {
   return item;
 }
 
+void DoricTextNode::blendLayoutConfig(QJsonValue jsObject) {
+  DoricViewNode::blendLayoutConfig(jsObject);
+
+  DoricLayouts *layout =
+      (DoricLayouts *)(mView->property("doricLayout").toULongLong());
+
+  QJsonValue maxWidth = jsObject["maxWidth"];
+  if (maxWidth.isDouble()) {
+    layout->setMaxWidth(maxWidth.toDouble());
+  }
+  QJsonValue maxHeight = jsObject["maxHeight"];
+  if (maxHeight.isDouble()) {
+    layout->setMaxHeight(maxHeight.toDouble());
+  }
+}
+
 void DoricTextNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
   if (name == "text") {
     view->setProperty("text", prop.toString());
@@ -39,6 +55,16 @@ void DoricTextNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
     view->setProperty("shadowOffsetX", prop["offsetX"].toDouble());
     view->setProperty("shadowOffsetY", prop["offsetY"].toDouble());
     view->setProperty("shadowOpacity", prop["opacity"].toDouble());
+  } else if (name == "htmlText") {
+    view->setProperty("text", prop.toString());
+  } else if (name == "maxWidth") {
+    DoricLayouts *layout =
+        (DoricLayouts *)(mView->property("doricLayout").toULongLong());
+    layout->setMaxWidth(prop.toDouble());
+  } else if (name == "maxHeight") {
+    DoricLayouts *layout =
+        (DoricLayouts *)(mView->property("doricLayout").toULongLong());
+    layout->setMaxHeight(prop.toDouble());
   } else {
     DoricViewNode::blend(view, name, prop);
   }

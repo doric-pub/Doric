@@ -26,11 +26,11 @@ public:
 
   ~DoricJSEngine();
 
-  void prepareContext(QString contextId, QString script, QString source);
+  QString prepareContext(QString contextId, QString script, QString source);
 
-  void destroyContext(QString contextId);
+  QString destroyContext(QString contextId);
 
-  void invokeDoricMethod(QString method, QVariantList arguments);
+  QString invokeDoricMethod(QString method, QVariantList arguments);
 
   DoricRegistry *getRegistry();
 };

@@ -5,30 +5,28 @@
 
 #include "DoricExport.h"
 
-#include "DoricCallback.h"
 #include "DoricSettableFuture.h"
 
-static QJSValue EMPTY(QJSValue::NullValue);
+static QString EMPTY("");
 
 class DORIC_EXPORT DoricAsyncResult {
 private:
-  QJSValue result = EMPTY;
-  DoricCallback *callback;
+  QString result = EMPTY;
 
 public:
+  std::function<void()> resultCallback;
+  std::function<void()> exceptionCallback;
+  std::function<void()> finishCallback;
+
   DoricAsyncResult();
 
-  DoricAsyncResult(QJSValue result);
+  void setResult(QString result);
 
-  void setResult(QJSValue result);
-
-  void setError(QJSValue exception);
+  void setError(QString exception);
 
   bool hasResult();
 
   QJSValue getResult();
-
-  void setCallback(DoricCallback *callback);
 
   DoricSettableFuture *synchronous();
 };

@@ -45,8 +45,8 @@ public:
   void injectGlobalJSFunction(QString name, QObject *function,
                               QString property);
 
-  void invokeObject(QString objectName, QString functionName,
-                    QVariantList arguments);
+  QString invokeObject(QString objectName, QString functionName,
+                       QVariantList arguments);
 };
 
 #endif // V8EXECUTOR_H

@@ -5,21 +5,43 @@
 #include <QThreadPool>
 #include <QtConcurrent/QtConcurrent>
 
+#include "DoricAsyncResult.h"
+
 class DoricAsyncCall {
 
 public:
-  static void ensureRunInThreadPool(QThreadPool *threadPool,
-                                    std::function<void()> lambda) {
-    QFuture<std::function<void()>::result_type> future =
-        QtConcurrent::run(threadPool, lambda);
+  template <typename Function>
+  static std::shared_ptr<DoricAsyncResult>
+  ensureRunInThreadPool(QThreadPool *threadPool, Function &&function) {
+    std::shared_ptr<DoricAsyncResult> asyncResult =
+        std::make_shared<DoricAsyncResult>();
+
+    Function lambda = std::forward<Function>(function);
+
+    QtConcurrent::run(threadPool, [lambda, asyncResult]() {
+      lambda();
+      //      asyncResult->setResult(result);
+    });
+
+    return asyncResult;
   }
 
   template <typename Function>
-  static void ensureRunInMain(Function &&function,
-                              QThread *thread = qApp->thread()) {
+  static std::shared_ptr<DoricAsyncResult>
+  ensureRunInMain(Function &&function, QThread *thread = qApp->thread()) {
+    std::shared_ptr<DoricAsyncResult> asyncResult =
+        std::make_shared<DoricAsyncResult>();
+
     auto *obj = QAbstractEventDispatcher::instance(thread);
     Q_ASSERT(obj);
-    QMetaObject::invokeMethod(obj, std::forward<Function>(function));
+
+    Function lambda = std::forward<Function>(function);
+    QMetaObject::invokeMethod(obj, [lambda, asyncResult]() {
+      lambda();
+      //        asyncResult->setResult(result);
+    });
+
+    return asyncResult;
   }
 };
 

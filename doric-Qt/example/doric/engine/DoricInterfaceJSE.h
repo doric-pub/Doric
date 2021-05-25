@@ -13,8 +13,8 @@ public:
   virtual void injectGlobalJSFunction(QString name, QObject *function,
                                       QString property) = 0;
 
-  virtual void invokeObject(QString objectName, QString functionName,
-                                QVariantList arguments) = 0;
+  virtual QString invokeObject(QString objectName, QString functionName,
+                               QVariantList arguments) = 0;
 };
 
 #endif // INTERFACE_JSE_H

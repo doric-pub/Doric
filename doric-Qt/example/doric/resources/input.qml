@@ -5,8 +5,6 @@ import "util.mjs" as Util
 import "gravity.mjs" as Gravity
 
 TextArea {
-    property var wrapper
-
     property var uuid: Util.uuidv4()
 
     property var tag: "Input"
@@ -30,7 +28,7 @@ TextArea {
     }
 
     horizontalAlignment: TextInput.AlignLeft
-    verticalAlignment: TextInput.AlignVCenter
+    verticalAlignment: TextInput.AlignTop
 
     onTextAlignmentChanged: {
         let gravity = Gravity.enumerate()
@@ -74,13 +72,5 @@ TextArea {
     property var borderColor: ""
     onBorderColorChanged: {
         bg.border.color = borderColor
-    }
-
-    MouseArea {
-        anchors.fill: parent
-        onClicked: {
-            console.log(tag, uuid + " wrapper: " + wrapper)
-            mouseAreaBridge.onClick(wrapper)
-        }
     }
 }

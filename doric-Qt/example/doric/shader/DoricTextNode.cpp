@@ -32,6 +32,13 @@ void DoricTextNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
     view->setProperty("textAlignment", prop.toInt());
   } else if (name == "fontStyle") {
     view->setProperty("fontStyle", prop.toString());
+  } else if (name == "shadow") {
+    view->setProperty("shadowColor", QVariant::fromValue(DoricUtils::doricColor(
+                                         prop["color"].toInt())));
+    view->setProperty("shadowRadius", prop["radius"].toDouble());
+    view->setProperty("shadowOffsetX", prop["offsetX"].toDouble());
+    view->setProperty("shadowOffsetY", prop["offsetY"].toDouble());
+    view->setProperty("shadowOpacity", prop["opacity"].toDouble());
   } else {
     DoricViewNode::blend(view, name, prop);
   }

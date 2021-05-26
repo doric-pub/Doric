@@ -1,4 +1,5 @@
 #include "DoricInputNode.h"
+#include "../utils/DoricUtils.h"
 
 QQuickItem *DoricInputNode::build() {
   QQmlComponent component(getContext()->getQmlEngine());
@@ -18,7 +19,16 @@ QQuickItem *DoricInputNode::build() {
 }
 
 void DoricInputNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
-  if (name == "hintText") {
+  if (name == "text") {
+    view->setProperty("text", prop.toString());
+  } else if (name == "textColor") {
+    QString color = DoricUtils::doricColor(prop.toInt()).name();
+    view->setProperty("color", color);
+  } else if (name == "textSize") {
+    QFont font = view->property("font").value<QFont>();
+    font.setPixelSize(prop.toInt());
+    view->setProperty("font", QVariant(font));
+  } else if (name == "hintText") {
     view->setProperty("placeholderText", prop.toString());
   } else if (name == "textAlignment") {
     view->setProperty("textAlignment", prop.toInt());

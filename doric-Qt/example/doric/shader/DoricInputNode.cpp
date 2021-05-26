@@ -18,5 +18,11 @@ QQuickItem *DoricInputNode::build() {
 }
 
 void DoricInputNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
-  { DoricViewNode::blend(view, name, prop); }
+  if (name == "hintText") {
+    view->setProperty("placeholderText", prop.toString());
+  } else if (name == "textAlignment") {
+    view->setProperty("textAlignment", prop.toInt());
+  } else {
+    DoricViewNode::blend(view, name, prop);
+  }
 }

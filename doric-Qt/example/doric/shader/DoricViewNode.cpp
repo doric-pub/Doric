@@ -188,7 +188,7 @@ void DoricViewNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
     view->setProperty("shadowOffsetY", prop["offsetY"].toDouble());
     view->setProperty("shadowOpacity", prop["opacity"].toDouble());
   } else if (name != "layoutConfig") {
-    qCritical() << name << ": " << prop.toString();
+    qCritical() << "unhandled prop: " << name << ": " << prop.toString();
   }
 }
 

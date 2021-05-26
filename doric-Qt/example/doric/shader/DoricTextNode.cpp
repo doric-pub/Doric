@@ -46,6 +46,8 @@ void DoricTextNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
     view->setProperty("font", QVariant(font));
   } else if (name == "textAlignment") {
     view->setProperty("textAlignment", prop.toInt());
+  } else if (name == "maxLines") {
+    view->setProperty("lineCount", prop.toInt());
   } else if (name == "fontStyle") {
     view->setProperty("fontStyle", prop.toString());
   } else if (name == "shadow") {
@@ -69,6 +71,8 @@ void DoricTextNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
     view->setProperty("strikethrough", prop.toBool());
   } else if (name == "underline") {
     view->setProperty("underline", prop.toBool());
+  } else if (name == "lineSpacing") {
+
   } else {
     DoricViewNode::blend(view, name, prop);
   }

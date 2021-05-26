@@ -50,6 +50,26 @@ void DoricTextNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
     view->setProperty("lineCount", prop.toInt());
   } else if (name == "fontStyle") {
     view->setProperty("fontStyle", prop.toString());
+  } else if (name == "font") {
+    QString font = prop.toString();
+    QString fontPath = "";
+    QString fontName = font;
+
+    if (font.contains("/")) {
+      int separatorIndex = font.lastIndexOf("/");
+      fontPath = QStringRef(&font, 0, separatorIndex + 1).toString();
+      fontName = QStringRef(&font, separatorIndex + 1,
+                            font.length() - separatorIndex - 1)
+                     .toString();
+    }
+
+    if (fontName.endsWith(".ttf")) {
+      fontName = fontName.replace(".ttf", "");
+    }
+
+    QString path = "qrc:/" + fontPath + fontName + ".ttf";
+
+    view->setProperty("fontSource", path);
   } else if (name == "shadow") {
     view->setProperty("shadowColor", QVariant::fromValue(DoricUtils::doricColor(
                                          prop["color"].toInt())));

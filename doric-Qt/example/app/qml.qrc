@@ -3,6 +3,10 @@
         <file>main.qml</file>
         <file>test-layout.qml</file>
         <file>qtquickcontrols2.conf</file>
+        <file alias="iconfont.ttf">../../../doric-demo/bundle/iconfont.ttf</file>
+    </qresource>
+    <qresource prefix="/fonts">
+        <file alias="assets_iconfont.ttf">./resources/assets_iconfont.ttf</file>
     </qresource>
     <qresource prefix="/doric/bundles">
         <file alias="Counter.js">../../../doric-demo/bundle/src/Counter.js</file>

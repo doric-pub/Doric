@@ -6,6 +6,8 @@ import "util.mjs" as Util
 import "gravity.mjs" as Gravity
 
 TextArea {
+    FontLoader { id: webFont }
+
     property var wrapper
 
     property var uuid: Util.uuidv4()
@@ -20,6 +22,13 @@ TextArea {
     bottomPadding: 0
 
     property int textAlignment: 0
+
+    property var fontSource: ""
+
+    onFontSourceChanged: {
+        webFont.source = fontSource
+        font.family = webFont.name
+    }
 
     property var fontStyle: ""
 

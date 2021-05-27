@@ -58,6 +58,9 @@ void DoricDemoBridge::navigate(QVariant route) {
     name = "StorageDemo.js";
     break;
   case 14:
+    name = "SwitchDemo.js";
+    break;
+  case 15:
     name = "TextDemo.js";
     break;
   }

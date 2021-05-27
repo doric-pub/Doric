@@ -13,6 +13,7 @@
 #include "shader/DoricRootNode.h"
 #include "shader/DoricScrollerNode.h"
 #include "shader/DoricStackNode.h"
+#include "shader/DoricSwitchNode.h"
 #include "shader/DoricTextNode.h"
 #include "shader/DoricVLayoutNode.h"
 #include "shader/slider/DoricSlideItemNode.h"
@@ -35,6 +36,7 @@ DoricRegistry::DoricRegistry() {
   registerViewNode<DoricSliderNode>("Slider");
   registerViewNode<DoricSlideItemNode>("SlideItem");
   registerViewNode<DoricInputNode>("Input");
+  registerViewNode<DoricSwitchNode>("Switch");
 }
 
 bool DoricRegistry::acquirePluginInfo(QString name) {

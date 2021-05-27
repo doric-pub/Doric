@@ -50,6 +50,7 @@ SOURCES += \
         shader/DoricScrollerNode.cpp \
         shader/DoricStackNode.cpp \
         shader/DoricSuperNode.cpp \
+        shader/DoricSwitchNode.cpp \
         shader/DoricTextNode.cpp \
         shader/DoricVLayoutNode.cpp \
         shader/DoricViewNode.cpp \
@@ -130,6 +131,7 @@ HEADERS += \
     shader/DoricScrollerNode.h \
     shader/DoricStackNode.h \
     shader/DoricSuperNode.h \
+    shader/DoricSwitchNode.h \
     shader/DoricTextNode.h \
     shader/DoricVLayoutNode.h \
     shader/DoricViewNode.h \

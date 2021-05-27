@@ -79,6 +79,7 @@ void DoricTextNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
     view->setProperty("shadowOpacity", prop["opacity"].toDouble());
   } else if (name == "htmlText") {
     view->setProperty("text", prop.toString());
+    view->setProperty("htmlText", true);
   } else if (name == "maxWidth") {
     DoricLayouts *layout =
         (DoricLayouts *)(mView->property("doricLayout").toULongLong());

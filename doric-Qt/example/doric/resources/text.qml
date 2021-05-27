@@ -124,7 +124,13 @@ Text {
         transparentBorder: true
     }
 
-    textFormat: TextEdit.AutoText
+    property var htmlText: false
+
+    onHtmlTextChanged: {
+        if (htmlText) {
+            textFormat = TextEdit.RichText
+        }
+    }
 
     property var strikethrough: false
 

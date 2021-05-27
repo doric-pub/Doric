@@ -6,6 +6,10 @@
 #include "DoricViewNode.h"
 
 class DORIC_EXPORT DoricSwitchNode : public DoricViewNode {
+
+private:
+  bool checkByCodeToggle = false;
+
 public:
   using DoricViewNode::DoricViewNode;
 

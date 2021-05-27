@@ -21,15 +21,22 @@ QQuickItem *DoricSwitchNode::build() {
 
 void DoricSwitchNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
   if (name == "state") {
-
+    checkByCodeToggle = true;
+    view->setProperty("checked", prop.toBool());
+    checkByCodeToggle = false;
   } else if (name == "onSwitch") {
 
   } else if (name == "offTintColor") {
-
+    view->setProperty(
+        "offTintColor",
+        QVariant::fromValue(DoricUtils::doricColor(prop.toInt())));
   } else if (name == "onTintColor") {
-
+    view->setProperty("onTintColor", QVariant::fromValue(
+                                         DoricUtils::doricColor(prop.toInt())));
   } else if (name == "thumbTintColor") {
-
+    view->setProperty(
+        "thumbTintColor",
+        QVariant::fromValue(DoricUtils::doricColor(prop.toInt())));
   } else {
     DoricViewNode::blend(view, name, prop);
   }

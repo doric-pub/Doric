@@ -25,7 +25,7 @@ void DoricSwitchNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
     view->setProperty("checked", prop.toBool());
     checkByCodeToggle = false;
   } else if (name == "onSwitch") {
-
+    onSwitchFuncId = prop.toString();
   } else if (name == "offTintColor") {
     view->setProperty(
         "offTintColor",
@@ -39,5 +39,15 @@ void DoricSwitchNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
         QVariant::fromValue(DoricUtils::doricColor(prop.toInt())));
   } else {
     DoricViewNode::blend(view, name, prop);
+  }
+}
+
+void DoricSwitchNode::onSwitch(bool checked) {
+  if (checkByCodeToggle)
+    return;
+  if (!onSwitchFuncId.isEmpty()) {
+    QVariantList args;
+    args.append(checked);
+    callJSResponse(onSwitchFuncId, args);
   }
 }

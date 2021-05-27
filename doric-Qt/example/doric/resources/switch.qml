@@ -28,5 +28,6 @@ Switch {
         } else {
             this.indicator.children[0].color = offTintColor
         }
+        switchBridge.onSwitch(wrapper, checked)
     }
 }

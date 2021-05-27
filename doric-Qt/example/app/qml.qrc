@@ -23,6 +23,7 @@
         <file alias="ScrollerDemo.js">../../../doric-demo/bundle/src/ScrollerDemo.js</file>
         <file alias="Snake.js">../../../doric-demo/bundle/src/Snake.js</file>
         <file alias="StorageDemo.js">../../../doric-demo/bundle/src/StorageDemo.js</file>
+        <file alias="SwitchDemo.js">../../../doric-demo/bundle/src/SwitchDemo.js</file>
         <file alias="TextDemo.js">../../../doric-demo/bundle/src/TextDemo.js</file>
     </qresource>
     <qresource prefix="/doric">
@@ -41,6 +42,7 @@
         <file alias="image.qml">../doric/resources/image.qml</file>
         <file alias="slider.qml">../doric/resources/slider.qml</file>
         <file alias="input.qml">../doric/resources/input.qml</file>
+        <file alias="switch.qml">../doric/resources/switch.qml</file>
 
         <file alias="toast.qml">../doric/resources/toast.qml</file>
         <file alias="alert.qml">../doric/resources/alert.qml</file>

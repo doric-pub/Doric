@@ -5,7 +5,13 @@ import QtGraphicalEffects 1.12
 import "util.mjs" as Util
 import "gravity.mjs" as Gravity
 
-TextArea {
+Text {
+    Rectangle {
+        id: bg
+        color: 'transparent'
+        z: -1
+    }
+
     FontLoader { id: webFont }
 
     property var wrapper
@@ -13,8 +19,6 @@ TextArea {
     property var uuid: Util.uuidv4()
 
     property var tag: "Text"
-
-    readOnly: true
 
     leftPadding: 0
     topPadding: 0
@@ -43,11 +47,6 @@ TextArea {
         }
     }
 
-    background: Rectangle {
-        id: bg
-        color: 'transparent'
-    }
-
     property var backgroundColor
 
     onBackgroundColorChanged: {
@@ -72,19 +71,11 @@ TextArea {
     onWidthChanged: {
         bg.implicitWidth = width
         console.log(tag, uuid + " onWidthChanged: " + this.width)
-
-        let tempText = this.text
-        this.text = ""
-        this.text = tempText
     }
 
     onHeightChanged: {
         bg.implicitHeight = height
         console.log(tag, uuid + " onHeightChanged: " + this.height)
-
-        let tempText = this.text
-        this.text = ""
-        this.text = tempText
     }
 
     onTextChanged: {
@@ -145,5 +136,14 @@ TextArea {
 
     onUnderlineChanged: {
         font.underline = underline
+    }
+
+    property var lineSpacing: -1
+
+    onLineSpacingChanged: {
+        if (lineSpacing > 0) {
+            lineHeightMode = Text.FixedHeight
+            lineHeight = lineSpacing
+        }
     }
 }

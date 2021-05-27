@@ -92,7 +92,7 @@ void DoricTextNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
   } else if (name == "underline") {
     view->setProperty("underline", prop.toBool());
   } else if (name == "lineSpacing") {
-
+    view->setProperty("lineSpacing", prop.toDouble());
   } else {
     DoricViewNode::blend(view, name, prop);
   }

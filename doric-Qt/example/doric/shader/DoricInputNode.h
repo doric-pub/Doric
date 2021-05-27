@@ -20,6 +20,8 @@ public:
   QSizeF sizeThatFits(QSizeF size);
 
   void onTextChange(QString text);
+
+  void onFocusChange(bool hasFocus);
 };
 
 #endif // DORICINPUTNODE_H

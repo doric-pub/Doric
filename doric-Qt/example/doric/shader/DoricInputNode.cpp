@@ -64,3 +64,11 @@ void DoricInputNode::onTextChange(QString text) {
     callJSResponse(onTextChangeId, args);
   }
 }
+
+void DoricInputNode::onFocusChange(bool hasFocus) {
+  if (!onFocusChangeId.isEmpty()) {
+    QVariantList args;
+    args.append(hasFocus);
+    callJSResponse(onFocusChangeId, args);
+  }
+}

@@ -15,7 +15,7 @@ public:
   void onTextChange(QString pointer, QString text);
 
   Q_INVOKABLE
-  void onFocusChange(QString pointer);
+  void onFocusChange(QString pointer, bool hasFocus);
 signals:
 };
 

@@ -11,7 +11,9 @@ void DoricInputBridge::onTextChange(QString pointer, QString text) {
   inputNode->onTextChange(text);
 }
 
-void DoricInputBridge::onFocusChange(QString pointer) {
+void DoricInputBridge::onFocusChange(QString pointer, bool hasFocus) {
   QObject *object = (QObject *)(pointer.toULongLong());
   DoricInputNode *inputNode = dynamic_cast<DoricInputNode *>(object);
+
+  inputNode->onFocusChange(hasFocus);
 }

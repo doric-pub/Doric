@@ -6,6 +6,7 @@
 #include "DoricPanel.h"
 #include "utils/DoricDialogBridge.h"
 #include "utils/DoricImageBridge.h"
+#include "utils/DoricInputBridge.h"
 #include "utils/DoricMouseAreaBridge.h"
 #include "utils/DoricUtils.h"
 
@@ -102,4 +103,6 @@ void DoricDemoBridge::navigate(QVariant route) {
   context->setContextProperty("dialogBridge", dialogBridge);
   DoricImageBridge *imageBridge = new DoricImageBridge();
   context->setContextProperty("imageBridge", imageBridge);
+  DoricInputBridge *inputBridge = new DoricInputBridge();
+  context->setContextProperty("inputBridge", inputBridge);
 }

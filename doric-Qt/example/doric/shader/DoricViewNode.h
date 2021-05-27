@@ -84,5 +84,7 @@ public:
 
   std::shared_ptr<DoricAsyncResult> pureCallJSResponse(QString funcId,
                                                        QVariantList args);
+
+  QSizeF sizeThatFits(QSizeF size);
 };
 #endif // DORICVIEWNODE_H

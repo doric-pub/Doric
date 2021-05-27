@@ -242,3 +242,8 @@ void DoricViewNode::onClick() {
   QVariantList args;
   callJSResponse(clickFunction, args);
 }
+
+QSizeF DoricViewNode::sizeThatFits(QSizeF size) {
+  return QSizeF(qMin(size.width(), mView->width()),
+                qMin(size.height(), mView->height()));
+}

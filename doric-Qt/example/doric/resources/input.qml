@@ -5,6 +5,8 @@ import "util.mjs" as Util
 import "gravity.mjs" as Gravity
 
 TextArea {
+    property var wrapper
+
     property var uuid: Util.uuidv4()
 
     property var tag: "Input"
@@ -62,6 +64,7 @@ TextArea {
 
     onTextChanged: {
         console.log(tag, uuid + " onTextChanged: " + this.text)
+        inputBridge.onTextChange(wrapper, this.text)
     }
 
     property var borderWidth: 0

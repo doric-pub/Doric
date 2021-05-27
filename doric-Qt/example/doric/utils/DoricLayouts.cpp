@@ -1,4 +1,5 @@
 #include "DoricLayouts.h"
+#include "shader/DoricInputNode.h"
 #include "shader/DoricScrollerNode.h"
 
 DoricLayouts::DoricLayouts(QObject *parent) : QObject(parent) {
@@ -76,15 +77,19 @@ void DoricLayouts::setMarginBottom(qreal marginBottom) {
 void DoricLayouts::setPaddingLeft(qreal paddingLeft) {
   this->paddingLeft = paddingLeft;
 }
+qreal DoricLayouts::getPaddingLeft() { return this->paddingLeft; }
 void DoricLayouts::setPaddingTop(qreal paddingTop) {
   this->paddingTop = paddingTop;
 }
+qreal DoricLayouts::getPaddingTop() { return this->paddingTop; }
 void DoricLayouts::setPaddingRight(qreal paddingRight) {
   this->paddingRight = paddingRight;
 }
+qreal DoricLayouts::getPaddingRight() { return this->paddingRight; }
 void DoricLayouts::setPaddingBottom(qreal paddingBottom) {
   this->paddingBottom = paddingBottom;
 }
+qreal DoricLayouts::getPaddingBottom() { return this->paddingBottom; }
 
 void DoricLayouts::setWeight(int weight) { this->weight = weight; }
 
@@ -252,6 +257,11 @@ void DoricLayouts::measureUndefinedContent(QSizeF targetSize) {
         (QObject *)(this->view->property("wrapper").toULongLong());
     DoricScrollerNode *viewNode = dynamic_cast<DoricScrollerNode *>(object);
     measuredSize = viewNode->sizeThatFits(targetSize);
+  } else if (tag == "Input") {
+    QObject *object =
+        (QObject *)(this->view->property("wrapper").toULongLong());
+    DoricInputNode *viewNode = dynamic_cast<DoricInputNode *>(object);
+    measuredSize = viewNode->sizeThatFits(targetSize);
   } else {
     qreal actualWidth = this->view->width();
     qreal actualHeight = this->view->height();
@@ -268,6 +278,10 @@ void DoricLayouts::measureUndefinedContent(QSizeF targetSize) {
     setMeasuredHeight(measuredSize.height() + this->paddingTop +
                       this->paddingBottom);
   }
+
+  this->contentWidth = measuredSize.width();
+
+  this->contentHeight = measuredSize.height();
 }
 void DoricLayouts::measureStackContent(QSizeF targetSize) {
   qreal contentWidth = 0, contentHeight = 0;

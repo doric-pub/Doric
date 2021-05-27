@@ -65,9 +65,13 @@ public:
   void setMarginBottom(qreal marginBottom);
 
   void setPaddingLeft(qreal paddingLeft);
+  qreal getPaddingLeft();
   void setPaddingTop(qreal paddingTop);
+  qreal getPaddingTop();
   void setPaddingRight(qreal paddingRight);
+  qreal getPaddingRight();
   void setPaddingBottom(qreal paddingBottom);
+  qreal getPaddingBottom();
 
   void setWeight(int weight);
 

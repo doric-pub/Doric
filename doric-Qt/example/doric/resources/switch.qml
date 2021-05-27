@@ -10,8 +10,8 @@ Switch {
 
     property var tag: "Switch"
 
-    property var offTintColor: "#42000000"
-    property var onTintColor: "#00ff00"
+    property var offTintColor: "#e6e6e6"
+    property var onTintColor: "#52d769"
     property var thumbTintColor: "white"
 
     Component.onCompleted: {
@@ -23,9 +23,6 @@ Switch {
     }
 
     onCheckedChanged: {
-        console.log(onTintColor)
-        console.log(offTintColor)
-        console.log(thumbTintColor)
         if (checked) {
             this.indicator.children[0].color = onTintColor
         } else {

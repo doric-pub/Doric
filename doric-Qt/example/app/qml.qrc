@@ -9,6 +9,7 @@
         <file alias="assets_iconfont.ttf">./resources/assets_iconfont.ttf</file>
     </qresource>
     <qresource prefix="/doric/bundles">
+        <file alias="ComponetDemo.js">../../../doric-demo/bundle/src/ComponetDemo.js</file>
         <file alias="Counter.js">../../../doric-demo/bundle/src/Counter.js</file>
         <file alias="EffectsDemo.js">../../../doric-demo/bundle/src/EffectsDemo.js</file>
         <file alias="Gobang.js">../../../doric-demo/bundle/src/Gobang.js</file>

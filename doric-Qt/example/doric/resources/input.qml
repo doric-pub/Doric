@@ -67,6 +67,11 @@ TextArea {
         inputBridge.onTextChange(wrapper, this.text)
     }
 
+    onFocusChanged: {
+        console.log(tag, uuid + " onFocusChanged: " + this.focus)
+        inputBridge.onFocusChange(wrapper, this.focus)
+    }
+
     property var borderWidth: 0
     onBorderWidthChanged: {
         bg.border.width = borderWidth

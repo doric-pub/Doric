@@ -90,6 +90,8 @@ v8::Local<v8::Value> Variant2JS(QVariant variant) {
     jsValue = array;
   } else if (variant.type() == QVariant::Int) {
     jsValue = v8::Number::New(isolate, variant.toDouble());
+  } else if (variant.type() == QVariant::Bool) {
+    jsValue = v8::Boolean::New(isolate, variant.toBool());
   } else if (variant.type() == QVariant::Invalid) {
     jsValue = v8::Undefined(isolate);
   }

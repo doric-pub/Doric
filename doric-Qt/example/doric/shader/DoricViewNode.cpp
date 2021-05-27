@@ -175,6 +175,7 @@ void DoricViewNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
     getLayouts()->setPaddingBottom(prop["bottom"].toDouble());
   } else if (name == "hidden") {
     getLayouts()->setDisabled(prop.toBool());
+    mView->setVisible(!prop.toBool());
   } else if (name == "border") {
     qreal borderWidth = prop["width"].toDouble();
     QString borderColor = DoricUtils::doricColor(prop["color"].toInt()).name();

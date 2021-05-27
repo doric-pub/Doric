@@ -17,51 +17,54 @@ void DoricDemoBridge::navigate(QVariant route) {
   QString name;
   switch (route.toInt()) {
   case 0:
-    name = "Counter.js";
+    name = "ComponetDemo.js";
     break;
   case 1:
-    name = "EffectsDemo.js";
+    name = "Counter.js";
     break;
   case 2:
-    name = "Gobang.js";
+    name = "EffectsDemo.js";
     break;
   case 3:
-    name = "ImageDemo.js";
+    name = "Gobang.js";
     break;
   case 4:
-    name = "InputDemo.js";
+    name = "ImageDemo.js";
     break;
   case 5:
-    name = "LayoutDemo.js";
+    name = "InputDemo.js";
     break;
   case 6:
-    name = "LayoutTestDemo.js";
+    name = "LayoutDemo.js";
     break;
   case 7:
-    name = "ModalDemo.js";
+    name = "LayoutTestDemo.js";
     break;
   case 8:
-    name = "NetworkDemo.js";
+    name = "ModalDemo.js";
     break;
   case 9:
-    name = "PopoverDemo.js";
+    name = "NetworkDemo.js";
     break;
   case 10:
-    name = "ScrollerDemo.js";
+    name = "PopoverDemo.js";
     break;
   case 11:
-    name = "SimpleDemo.js";
+    name = "ScrollerDemo.js";
     break;
   case 12:
-    name = "Snake.js";
+    name = "SimpleDemo.js";
     break;
   case 13:
-    name = "StorageDemo.js";
+    name = "Snake.js";
     break;
   case 14:
-    name = "SwitchDemo.js";
+    name = "StorageDemo.js";
     break;
   case 15:
+    name = "SwitchDemo.js";
+    break;
+  case 16:
     name = "TextDemo.js";
     break;
   }

@@ -93,6 +93,8 @@ public:
   qreal getMeasuredWidth();
   qreal getMeasuredHeight();
 
+  bool getResolved();
+
 private:
   QString tag;
 

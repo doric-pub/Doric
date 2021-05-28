@@ -751,3 +751,5 @@ void DoricLayouts::setMeasuredY(qreal measuredY) {
   qCritical() << "DoricLayouts: " << tag << this->view->property("uuid")
               << " measuredY: " << this->measuredY;
 }
+
+bool DoricLayouts::getResolved() { return resolved; }

@@ -50,7 +50,7 @@ void DoricSliderNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
   } else if (name == "loop") {
     this->loop = prop.toBool();
   } else {
-    DoricViewNode::blend(view, name, prop);
+    DoricSuperNode::blend(view, name, prop);
   }
 }
 
@@ -81,8 +81,5 @@ void DoricSliderNode::afterBlended(QJsonValue prop) {
         newNode->blend(model["props"]);
       }
     }
-
-    int size = childNodes.size();
-    qDebug() << size;
   }
 }

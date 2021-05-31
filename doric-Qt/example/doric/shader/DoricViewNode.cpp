@@ -189,7 +189,8 @@ void DoricViewNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
     view->setProperty("shadowOffsetY", prop["offsetY"].toDouble());
     view->setProperty("shadowOpacity", prop["opacity"].toDouble());
   } else if (name != "layoutConfig") {
-    qCritical() << mType << " unhandled prop: " << name << ": " << prop.toString();
+    qCritical() << mType << " unhandled prop: " << name << ": "
+                << prop.toString();
   }
 }
 
@@ -238,6 +239,7 @@ DoricViewNode::pureCallJSResponse(QString funcId, QVariantList args) {
 
 void DoricViewNode::onClick() {
   if (clickFunction.isEmpty()) {
+    mSuperNode->onClick();
     return;
   }
   QVariantList args;

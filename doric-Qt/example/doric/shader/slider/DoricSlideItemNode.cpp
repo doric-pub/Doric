@@ -18,3 +18,5 @@ QQuickItem *DoricSlideItemNode::build() {
   item->setProperty("wrapper", QString::number((qint64)this));
   return item;
 }
+
+void DoricSlideItemNode::apply() { getLayouts()->apply(); }

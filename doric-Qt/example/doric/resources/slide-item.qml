@@ -19,12 +19,16 @@ Rectangle {
         console.log(tag, uuid + " onWidthChanged: " + this.width)
 
         updateGradient()
+
+        slideItemBridge.apply(wrapper)
     }
 
     onHeightChanged: {
         console.log(tag, uuid + " onHeightChanged: " + this.height)
 
         updateGradient()
+
+        slideItemBridge.apply(wrapper)
     }
 
     color: 'transparent'

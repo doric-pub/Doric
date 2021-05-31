@@ -8,6 +8,7 @@
 #include "utils/DoricImageBridge.h"
 #include "utils/DoricInputBridge.h"
 #include "utils/DoricMouseAreaBridge.h"
+#include "utils/DoricSlideItemBridge.h"
 #include "utils/DoricSwitchBridge.h"
 #include "utils/DoricUtils.h"
 
@@ -120,4 +121,6 @@ void DoricDemoBridge::navigate(QVariant route) {
   context->setContextProperty("inputBridge", inputBridge);
   DoricSwitchBridge *switchBridge = new DoricSwitchBridge();
   context->setContextProperty("switchBridge", switchBridge);
+  DoricSlideItemBridge *slideItemBridge = new DoricSlideItemBridge();
+  context->setContextProperty("slideItemBridge", slideItemBridge);
 }

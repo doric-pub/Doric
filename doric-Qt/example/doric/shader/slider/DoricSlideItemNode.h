@@ -10,6 +10,8 @@ public:
   using DoricStackNode::DoricStackNode;
 
   QQuickItem *build() override;
+
+  void apply();
 };
 
 #endif // DORICSLIDEITEMNODE_H

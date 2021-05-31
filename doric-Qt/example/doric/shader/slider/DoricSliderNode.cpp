@@ -1,5 +1,7 @@
 #include "DoricSliderNode.h"
 
+#include <QJsonDocument>
+
 QQuickItem *DoricSliderNode::build() {
   QQmlComponent component(getContext()->getQmlEngine());
 
@@ -17,18 +19,19 @@ QQuickItem *DoricSliderNode::build() {
   return item;
 }
 
-DoricViewNode *DoricSliderNode::getSubNodeById(QString id) { return nullptr; }
+DoricViewNode *DoricSliderNode::getSubNodeById(QString id) {
+  for (int i = 0; i != childNodes.size(); i++) {
+    if (childNodes.at(i)->getId() == id) {
+      return childNodes.at(i);
+    }
+  }
+}
 
 void DoricSliderNode::blendSubNode(QJsonValue subProperties) {
   QString viewId = subProperties["id"].toString();
   DoricViewNode *node = getSubNodeById(viewId);
   if (node != nullptr) {
     node->blend(subProperties["props"]);
-  } else {
-    QJsonValue oldModel = getSubModel(viewId);
-    if (oldModel != QJsonValue::Undefined) {
-      DoricSuperNode::recursiveMixin(subProperties, oldModel);
-    }
   }
 }
 
@@ -58,7 +61,28 @@ void DoricSliderNode::afterBlended(QJsonValue prop) {
     args.append(this->itemCount);
     std::shared_ptr<DoricAsyncResult> asyncResult =
         this->pureCallJSResponse("renderBunchedItems", args);
-    QString result = asyncResult->waitUntilResult();
-    qDebug() << result;
+    QString jsValueString = asyncResult->waitUntilResult();
+
+    QJsonDocument document = QJsonDocument::fromJson(jsValueString.toUtf8());
+    QJsonArray jsValue = document.array();
+
+    for (int i = 0; i != jsValue.size(); i++) {
+      QJsonValue model = jsValue.at(i);
+      QString id = model["id"].toString();
+      QString type = model["type"].toString();
+      DoricViewNode *newNode = DoricViewNode::create(getContext(), type);
+      if (newNode != nullptr) {
+        newNode->setId(id);
+        newNode->init(this);
+
+        this->childNodes.append((DoricSlideItemNode *)newNode);
+        newNode->getNodeView()->setParentItem(mView);
+
+        newNode->blend(model["props"]);
+      }
+    }
+
+    int size = childNodes.size();
+    qDebug() << size;
   }
 }

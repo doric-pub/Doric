@@ -40,12 +40,4 @@ SwipeView {
     onBorderColorChanged: {
         bg.border.color = borderColor
     }
-
-    MouseArea {
-        anchors.fill: parent
-        onClicked: {
-            console.log(tag, uuid + " wrapper: " + wrapper)
-            mouseAreaBridge.onClick(wrapper)
-        }
-    }
 }

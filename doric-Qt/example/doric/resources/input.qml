@@ -89,6 +89,17 @@ TextField {
         }
     }
 
+    property var password: false
+    onPasswordChanged: {
+        if (password) {
+            this.echoMode = TextInput.Password
+        } else {
+            this.echoMode = TextInput.Normal
+        }
+    }
+
+    passwordCharacter: "•"
+
     property var borderWidth: 0
     onBorderWidthChanged: {
         bg.border.width = borderWidth

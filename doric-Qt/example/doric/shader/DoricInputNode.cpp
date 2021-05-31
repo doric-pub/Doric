@@ -46,6 +46,8 @@ void DoricInputNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
     view->setProperty("maximumLength", prop.toInt());
   } else if (name == "inputType") {
     view->setProperty("inputType", prop.toInt());
+  } else if (name == "password") {
+    view->setProperty("password", prop.toBool());
   } else {
     DoricViewNode::blend(view, name, prop);
   }

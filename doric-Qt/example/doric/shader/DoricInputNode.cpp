@@ -42,6 +42,10 @@ void DoricInputNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
     view->setProperty("rightPadding", prop["right"].toDouble());
     view->setProperty("topPadding", prop["top"].toDouble());
     view->setProperty("bottomPadding", prop["bottom"].toDouble());
+  } else if (name == "maxLength") {
+    view->setProperty("maximumLength", prop.toInt());
+  } else if (name == "inputType") {
+    view->setProperty("inputType", prop.toInt());
   } else {
     DoricViewNode::blend(view, name, prop);
   }

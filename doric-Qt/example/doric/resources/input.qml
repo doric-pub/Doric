@@ -4,7 +4,7 @@ import QtQuick.Controls 2.5
 import "util.mjs" as Util
 import "gravity.mjs" as Gravity
 
-TextArea {
+TextField {
     property var wrapper
 
     property var uuid: Util.uuidv4()
@@ -47,19 +47,11 @@ TextArea {
     onWidthChanged: {
         bg.implicitWidth = width
         console.log(tag, uuid + " onWidthChanged: " + this.width)
-
-        let tempText = this.text
-        this.text = ""
-        this.text = tempText
     }
 
     onHeightChanged: {
         bg.implicitHeight = height
         console.log(tag, uuid + " onHeightChanged: " + this.height)
-
-        let tempText = this.text
-        this.text = ""
-        this.text = tempText
     }
 
     onTextChanged: {
@@ -70,6 +62,31 @@ TextArea {
     onFocusChanged: {
         console.log(tag, uuid + " onFocusChanged: " + this.focus)
         inputBridge.onFocusChange(wrapper, this.focus)
+    }
+
+    onMaximumLengthChanged: {
+        console.log(tag, uuid + " onMaximumLengthChanged: " + this.maximumLength)
+    }
+
+    property var inputType: 0
+
+    property var numberValidator: IntValidator {}
+    property var decimalValidator: DoubleValidator {}
+    property var alphabetValidator: RegExpValidator { regExp: /^[A-Z]+$/i}
+
+    onInputTypeChanged: {
+        console.log(tag, uuid + " onInputTypeChanged: " + this.inputType)
+        switch (inputType) {
+        case 1:
+            this.validator = numberValidator
+            break
+        case 2:
+            this.validator = decimalValidator
+            break
+        case 3:
+            this.validator = alphabetValidator
+            break
+        }
     }
 
     property var borderWidth: 0

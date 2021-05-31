@@ -1,17 +1,13 @@
 #ifndef ASYNCRESULT_H
 #define ASYNCRESULT_H
 
-#include <QJSValue>
+#include <QString>
 
 #include "DoricExport.h"
 
-#include "DoricSettableFuture.h"
-
-static QString EMPTY("");
-
 class DORIC_EXPORT DoricAsyncResult {
 private:
-  QString result = EMPTY;
+  QString result;
 
 public:
   std::function<void()> resultCallback;
@@ -26,9 +22,9 @@ public:
 
   bool hasResult();
 
-  QJSValue getResult();
+  QString getResult();
 
-  DoricSettableFuture *synchronous();
+  QString waitUntilResult();
 };
 
 #endif // ASYNCRESULT_H

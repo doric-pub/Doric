@@ -25,8 +25,6 @@ public:
 
   virtual void blendSubNode(QJsonValue subProperties) override;
 
-  virtual void blend(QJsonValue jsValue) override;
-
   virtual void blend(QQuickItem *view, QString name, QJsonValue prop) override;
 
   virtual void afterBlended(QJsonValue prop) override;

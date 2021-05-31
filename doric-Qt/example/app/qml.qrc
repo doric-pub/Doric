@@ -44,6 +44,7 @@
         <file alias="scroller.qml">../doric/resources/scroller.qml</file>
         <file alias="image.qml">../doric/resources/image.qml</file>
         <file alias="slider.qml">../doric/resources/slider.qml</file>
+        <file alias="slide-item.qml">../doric/resources/slide-item.qml</file>
         <file alias="input.qml">../doric/resources/input.qml</file>
         <file alias="switch.qml">../doric/resources/switch.qml</file>
 

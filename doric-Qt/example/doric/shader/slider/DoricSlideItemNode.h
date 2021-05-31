@@ -8,6 +8,8 @@
 class DORIC_EXPORT DoricSlideItemNode : public DoricStackNode {
 public:
   using DoricStackNode::DoricStackNode;
+
+  QQuickItem *build() override;
 };
 
 #endif // DORICSLIDEITEMNODE_H

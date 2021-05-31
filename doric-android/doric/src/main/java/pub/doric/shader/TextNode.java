@@ -66,7 +66,7 @@ public class TextNode extends ViewNode<TextView> {
         }
         JSValue maxHeight = jsObject.getProperty("maxHeight");
         if (maxHeight.isNumber()) {
-            mView.setMaxHeight(DoricUtils.dp2px(maxWidth.asNumber().toFloat()));
+            mView.setMaxHeight(DoricUtils.dp2px(maxHeight.asNumber().toFloat()));
         }
     }
 
@@ -125,16 +125,16 @@ public class TextNode extends ViewNode<TextView> {
                     return;
                 }
                 String font = prop.asString().toString();
-                String fontPath="";
-                String fontName=font;
-                if(font.contains("/")){
-                    int separatorIndex=font.lastIndexOf("/");
-                    fontPath=font.substring(0,separatorIndex+1);
-                    fontName=font.substring(separatorIndex+1);
+                String fontPath = "";
+                String fontName = font;
+                if (font.contains("/")) {
+                    int separatorIndex = font.lastIndexOf("/");
+                    fontPath = font.substring(0, separatorIndex + 1);
+                    fontName = font.substring(separatorIndex + 1);
                 }
 
                 if (fontName.endsWith(".ttf")) {
-                    fontName = fontName.replace(".ttf","");
+                    fontName = fontName.replace(".ttf", "");
                 }
 
                 int resId = getContext().getResources().getIdentifier(
@@ -145,20 +145,20 @@ public class TextNode extends ViewNode<TextView> {
                     try {
                         Typeface iconFont = ResourcesCompat.getFont(getContext(), resId);
                         view.setTypeface(iconFont);
-                    }catch (Exception e){
-                        DoricLog.e("Error Font asset  "+font+" in res/font");
+                    } catch (Exception e) {
+                        DoricLog.e("Error Font asset  " + font + " in res/font");
                     }
 
                 } else {
-                    fontName = fontPath+
+                    fontName = fontPath +
                             fontName +
                             ".ttf";
                     try {
                         Typeface iconFont = Typeface.createFromAsset(getContext().getAssets(), fontName);
                         view.setTypeface(iconFont);
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
-                        DoricLog.e(font+" not found in Assets");
+                        DoricLog.e(font + " not found in Assets");
                     }
 
                 }

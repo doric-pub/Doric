@@ -26,7 +26,6 @@ SOURCES += \
         DoricPanel.cpp \
         DoricRegistry.cpp \
         async/DoricAsyncResult.cpp \
-        async/DoricSettableFuture.cpp \
         engine/DoricBridgeExtension.cpp \
         engine/DoricJSEngine.cpp \
         engine/DoricNativeEmpty.cpp \
@@ -105,7 +104,6 @@ HEADERS += \
     DoricRegistry.h \
     async/DoricAsyncCall.h \
     async/DoricAsyncResult.h \
-    async/DoricSettableFuture.h \
     engine/DoricBridgeExtension.h \
     engine/DoricInterfaceJSE.h \
     engine/DoricJSEngine.h \

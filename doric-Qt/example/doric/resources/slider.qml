@@ -1,6 +1,8 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
 
+import "util.mjs" as Util
+
 SwipeView {
     property var wrapper
 

@@ -32,15 +32,33 @@ void DoricSliderNode::blendSubNode(QJsonValue subProperties) {
   }
 }
 
-void DoricSliderNode::blend(QJsonValue jsValue) {}
-
-void DoricSliderNode::blend(QQuickItem *view, QString name, QJsonValue prop) {}
+void DoricSliderNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
+  if (name == "itemCount") {
+    this->itemCount = prop.toInt();
+  } else if (name == "renderPage") {
+    if (prop.toString() != this->renderPageFuncId) {
+      this->childNodes.clear();
+      this->renderPageFuncId = prop.toString();
+    }
+  } else if (name == "batchCount") {
+    this->batchCount = prop.toInt();
+  } else if (name == "onPageSlided") {
+    this->onPageSelectedFuncId = prop.toString();
+  } else if (name == "loop") {
+    this->loop = prop.toBool();
+  } else {
+    DoricViewNode::blend(view, name, prop);
+  }
+}
 
 void DoricSliderNode::afterBlended(QJsonValue prop) {
   if (this->childNodes.length() != this->itemCount) {
     QVariantList args;
     args.append(this->childNodes.length());
     args.append(this->itemCount);
-    this->pureCallJSResponse("renderBunchedItems", args);
+    std::shared_ptr<DoricAsyncResult> asyncResult =
+        this->pureCallJSResponse("renderBunchedItems", args);
+    QString result = asyncResult->waitUntilResult();
+    qDebug() << result;
   }
 }

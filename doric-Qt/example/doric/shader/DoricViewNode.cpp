@@ -232,8 +232,8 @@ DoricViewNode::pureCallJSResponse(QString funcId, QVariantList args) {
   foreach (const QVariant &arg, args)
     nArgs.append(arg);
 
-  return getContext()->callEntity(DoricConstant::DORIC_CONTEXT_INVOKE_PURE,
-                                  nArgs);
+  return getContext()->getDriver()->invokeDoricMethod(
+      DoricConstant::DORIC_CONTEXT_INVOKE_PURE, nArgs);
 }
 
 void DoricViewNode::onClick() {

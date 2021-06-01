@@ -34,3 +34,7 @@ void DoricShaderPlugin::render(QString jsValueString, QString callbackId) {
       },
       DoricThreadMode::UI);
 }
+
+void DoricShaderPlugin::command(QString jsValueString, QString callbackId) {
+  qCritical() << "command: " << jsValueString << " " << callbackId;
+}

@@ -67,6 +67,10 @@ void DoricSliderNode::afterBlended(QJsonValue prop) {
     QJsonDocument document = QJsonDocument::fromJson(jsValueString.toUtf8());
     QJsonArray jsValue = document.array();
 
+    QQmlListProperty<QQuickItem> contentChildren =
+        qvariant_cast<QQmlListProperty<QQuickItem>>(
+            mView->property("contentChildren"));
+
     for (int i = 0; i != jsValue.size(); i++) {
       QJsonValue model = jsValue.at(i);
       QString id = model["id"].toString();
@@ -77,7 +81,7 @@ void DoricSliderNode::afterBlended(QJsonValue prop) {
         newNode->init(this);
 
         this->childNodes.append((DoricSlideItemNode *)newNode);
-        newNode->getNodeView()->setParentItem(mView);
+        contentChildren.append(&contentChildren, newNode->getNodeView());
 
         newNode->blend(model["props"]);
       }

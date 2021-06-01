@@ -40,4 +40,9 @@ SwipeView {
     onBorderColorChanged: {
         bg.border.color = borderColor
     }
+
+    onCurrentIndexChanged: {
+        console.log(tag, uuid + " onCurrentIndexChanged: " + this.currentIndex)
+    }
+
 }

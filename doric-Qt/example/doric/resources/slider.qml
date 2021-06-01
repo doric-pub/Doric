@@ -43,6 +43,7 @@ SwipeView {
 
     onCurrentIndexChanged: {
         console.log(tag, uuid + " onCurrentIndexChanged: " + this.currentIndex)
+        sliderBridge.onPageSlided(wrapper)
     }
 
 }

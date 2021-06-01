@@ -63,6 +63,7 @@ SOURCES += \
         utils/DoricLayouts.cpp \
         utils/DoricMouseAreaBridge.cpp \
         utils/DoricSlideItemBridge.cpp \
+        utils/DoricSliderBridge.cpp \
         utils/DoricSwitchBridge.cpp \
         widget/flex/FlexLayout.cpp \
         widget/flex/FlexLayoutConfig.cpp \
@@ -149,6 +150,7 @@ HEADERS += \
     utils/DoricNetworkService.h \
     utils/DoricObjectFactory.h \
     utils/DoricSlideItemBridge.h \
+    utils/DoricSliderBridge.h \
     utils/DoricSwitchBridge.h \
     utils/DoricThreadMode.h \
     utils/DoricUtils.h \

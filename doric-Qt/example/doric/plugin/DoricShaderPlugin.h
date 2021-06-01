@@ -11,6 +11,8 @@ public:
   using DoricNativePlugin::DoricNativePlugin;
 
   Q_INVOKABLE void render(QString jsValueString, QString callbackId);
+
+  Q_INVOKABLE void command(QString jsValueString, QString callbackId);
 };
 
 #endif // SHADERPLUGIN_H

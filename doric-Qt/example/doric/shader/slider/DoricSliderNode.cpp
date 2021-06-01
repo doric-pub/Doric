@@ -25,6 +25,7 @@ DoricViewNode *DoricSliderNode::getSubNodeById(QString id) {
       return childNodes.at(i);
     }
   }
+  return nullptr;
 }
 
 void DoricSliderNode::blendSubNode(QJsonValue subProperties) {

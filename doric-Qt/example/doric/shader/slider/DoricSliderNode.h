@@ -12,7 +12,7 @@ private:
   int itemCount = 0;
   QString renderPageFuncId;
   int batchCount = 15;
-  QString onPageSelectedFuncId;
+  QString onPageSlidedFuncId;
   bool loop = false;
   QList<DoricSlideItemNode *> childNodes;
 
@@ -28,6 +28,8 @@ public:
   virtual void blend(QQuickItem *view, QString name, QJsonValue prop) override;
 
   virtual void afterBlended(QJsonValue prop) override;
+
+  void onPageSlided();
 };
 
 #endif // DORICSLIDERNODE_H

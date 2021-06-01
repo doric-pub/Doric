@@ -47,7 +47,7 @@ void DoricSliderNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
   } else if (name == "batchCount") {
     this->batchCount = prop.toInt();
   } else if (name == "onPageSlided") {
-    this->onPageSelectedFuncId = prop.toString();
+    this->onPageSlidedFuncId = prop.toString();
   } else if (name == "loop") {
     this->loop = prop.toBool();
   } else {
@@ -87,4 +87,11 @@ void DoricSliderNode::afterBlended(QJsonValue prop) {
       }
     }
   }
+}
+
+void DoricSliderNode::onPageSlided() {
+  int currentIndex = mView->property("currentIndex").toInt();
+  QVariantList args;
+  args.append(currentIndex);
+  callJSResponse(this->onPageSlidedFuncId, args);
 }

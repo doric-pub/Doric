@@ -239,7 +239,8 @@ DoricViewNode::pureCallJSResponse(QString funcId, QVariantList args) {
 
 void DoricViewNode::onClick() {
   if (clickFunction.isEmpty()) {
-    mSuperNode->onClick();
+    if (mSuperNode != nullptr)
+      mSuperNode->onClick();
     return;
   }
   QVariantList args;

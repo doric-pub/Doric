@@ -8,7 +8,7 @@
 class DORIC_EXPORT DoricDraggableNode : public DoricStackNode {
 
 private:
-  QString onDrag;
+  QString onDragFunction;
 
 public:
   using DoricStackNode::DoricStackNode;
@@ -16,6 +16,8 @@ public:
   QQuickItem *build() override;
 
   virtual void blend(QQuickItem *view, QString name, QJsonValue prop) override;
+
+  void onDrag(double x, double y);
 };
 
 #endif // DORICDRAGGABLENODE_H

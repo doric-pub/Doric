@@ -20,8 +20,17 @@ QQuickItem *DoricDraggableNode::build() {
 void DoricDraggableNode::blend(QQuickItem *view, QString name,
                                QJsonValue prop) {
   if (name == "onDrag") {
-    onDrag = prop.toString();
+    onDragFunction = prop.toString();
   } else {
     DoricStackNode::blend(view, name, prop);
   }
+}
+
+void DoricDraggableNode::onDrag(double x, double y) {
+  getLayouts()->setMarginLeft(x);
+  getLayouts()->setMarginTop(y);
+  QVariantList args;
+  args.append(x);
+  args.append(y);
+  callJSResponse(onDragFunction, args);
 }

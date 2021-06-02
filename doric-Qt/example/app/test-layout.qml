@@ -9,16 +9,30 @@ ApplicationWindow {
     title: qsTr("Scroll")
 
     Rectangle {
-        width: 200; height: 200
-        color: "red"
+        anchors.fill: parent
 
-        Drag.active: dragArea.drag.active
+        Rectangle {
+            id: root
 
-        MouseArea {
-            id: dragArea
-            anchors.fill: parent
+            width: 200; height: 200
+            color: "red"
 
-            drag.target: parent
+            Drag.active: dragArea.drag.active
+
+            MouseArea {
+                id: dragArea
+                anchors.fill: parent
+
+                drag.target: parent
+
+                onPositionChanged: {
+                    var positionToParent = mapToItem(root.parent, mouse.x, mouse.y)
+                    var positionToRoot = mapToItem(root, mouse.x, mouse.y)
+                    console.log(positionToParent, positionToRoot)
+                }
+            }
         }
     }
+
+
 }

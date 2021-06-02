@@ -52,6 +52,15 @@ Rectangle {
         anchors.fill: parent
 
         drag.target: parent
+
+        onPositionChanged: {
+            let positionToRootParent = mapToItem(root.parent, mouse.x, mouse.y)
+            let positionToRoot = mapToItem(root, mouse.x, mouse.y)
+            let xDiff = positionToRootParent.x - positionToRoot.x
+            let yDiff = positionToRootParent.y - positionToRoot.y
+
+            console.log(tag, uuid + " onPositionChanged: " + xDiff + ", " + yDiff)
+        }
     }
 
     property var shadowColor

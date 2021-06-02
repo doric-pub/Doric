@@ -42,6 +42,7 @@ SOURCES += \
         plugin/DoricShaderPlugin.cpp \
         plugin/DoricStoragePlugin.cpp \
         shader/DoricDraggableNode.cpp \
+        shader/DoricFlexNode.cpp \
         shader/DoricGroupNode.cpp \
         shader/DoricHLayoutNode.cpp \
         shader/DoricImageNode.cpp \
@@ -127,6 +128,7 @@ HEADERS += \
     plugin/DoricShaderPlugin.h \
     plugin/DoricStoragePlugin.h \
     shader/DoricDraggableNode.h \
+    shader/DoricFlexNode.h \
     shader/DoricGroupNode.h \
     shader/DoricHLayoutNode.h \
     shader/DoricImageNode.h \

@@ -48,6 +48,7 @@
         <file alias="slide-item.qml">../doric/resources/slide-item.qml</file>
         <file alias="input.qml">../doric/resources/input.qml</file>
         <file alias="switch.qml">../doric/resources/switch.qml</file>
+        <file alias="draggable.qml">../doric/resources/draggable.qml</file>
 
         <file alias="toast.qml">../doric/resources/toast.qml</file>
         <file alias="alert.qml">../doric/resources/alert.qml</file>

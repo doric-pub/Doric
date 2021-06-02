@@ -60,6 +60,8 @@ Rectangle {
             let yDiff = positionToRootParent.y - positionToRoot.y
 
             console.log(tag, uuid + " onPositionChanged: " + xDiff + ", " + yDiff)
+
+            draggableBridge.onDrag(wrapper, xDiff, yDiff)
         }
     }
 

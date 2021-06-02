@@ -88,7 +88,8 @@ v8::Local<v8::Value> Variant2JS(QVariant variant) {
       result.ToChecked();
     }
     jsValue = array;
-  } else if (variant.type() == QVariant::Int) {
+  } else if (variant.type() == QVariant::Int ||
+             variant.type() == QVariant::Double) {
     jsValue = v8::Number::New(isolate, variant.toDouble());
   } else if (variant.type() == QVariant::Bool) {
     jsValue = v8::Boolean::New(isolate, variant.toBool());

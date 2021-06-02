@@ -8,6 +8,7 @@
 #include "plugin/DoricStoragePlugin.h"
 
 #include "shader/DoricDraggableNode.h"
+#include "shader/DoricFlexNode.h"
 #include "shader/DoricHLayoutNode.h"
 #include "shader/DoricImageNode.h"
 #include "shader/DoricInputNode.h"
@@ -39,6 +40,7 @@ DoricRegistry::DoricRegistry() {
   registerViewNode<DoricInputNode>("Input");
   registerViewNode<DoricSwitchNode>("Switch");
   registerViewNode<DoricDraggableNode>("Draggable");
+  registerViewNode<DoricFlexNode>("FlexLayout");
 }
 
 bool DoricRegistry::acquirePluginInfo(QString name) {

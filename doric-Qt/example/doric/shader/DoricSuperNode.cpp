@@ -18,6 +18,11 @@ void DoricSuperNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
   }
 }
 
+void DoricSuperNode::blendSubNode(DoricViewNode *subNode,
+                                  QJsonValue layoutConfig) {
+  subNode->blendLayoutConfig(layoutConfig);
+}
+
 void DoricSuperNode::mixinSubNode(QJsonValue subNode) {
   QString id = subNode["id"].toString();
   QList<QString> keys = subNodes.keys();

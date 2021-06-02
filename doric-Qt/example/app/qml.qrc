@@ -35,7 +35,7 @@
         <file alias="doric-lib.js">../../../doric-js/bundle/doric-lib.js</file>
     </qresource>
     <qresource prefix="/doric/qml">
-        <file alias="Flex.qml">../doric/resources/Flex.qml</file>
+        <file alias="FlexItem.qml">../doric/resources/FlexItem.qml</file>
         <file alias="view.qml">../doric/resources/view.qml</file>
         <file alias="panel.qml">../doric/resources/panel.qml</file>
         <file alias="stack.qml">../doric/resources/stack.qml</file>
@@ -49,6 +49,7 @@
         <file alias="input.qml">../doric/resources/input.qml</file>
         <file alias="switch.qml">../doric/resources/switch.qml</file>
         <file alias="draggable.qml">../doric/resources/draggable.qml</file>
+        <file alias="flex.qml">../doric/resources/flex.qml</file>
 
         <file alias="toast.qml">../doric/resources/toast.qml</file>
         <file alias="alert.qml">../doric/resources/alert.qml</file>

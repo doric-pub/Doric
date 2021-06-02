@@ -15,7 +15,7 @@ ApplicationWindow {
 
         ListView {
             width: parent.width
-            model: 19
+            model: 20
             delegate: Rectangle {
                 Column {
                     anchors.centerIn: parent
@@ -27,38 +27,40 @@ ApplicationWindow {
                                 case 1:
                                     return "Counter.js"
                                 case 2:
-                                    return "EffectsDemo.js"
+                                    return "DraggableDemo.js"
                                 case 3:
-                                    return "Gobang.js"
+                                    return "EffectsDemo.js"
                                 case 4:
-                                    return "ImageDemo.js"
+                                    return "Gobang.js"
                                 case 5:
-                                    return "InputDemo.js"
+                                    return "ImageDemo.js"
                                 case 6:
-                                    return "LayoutDemo.js"
+                                    return "InputDemo.js"
                                 case 7:
-                                    return "LayoutTestDemo.js"
+                                    return "LayoutDemo.js"
                                 case 8:
-                                    return "ModalDemo.js"
+                                    return "LayoutTestDemo.js"
                                 case 9:
-                                    return "ModularDemo.js"
+                                    return "ModalDemo.js"
                                 case 10:
-                                    return "NetworkDemo.js"
+                                    return "ModularDemo.js"
                                 case 11:
-                                    return "PopoverDemo.js"
+                                    return "NetworkDemo.js"
                                 case 12:
-                                    return "ScrollerDemo.js"
+                                    return "PopoverDemo.js"
                                 case 13:
-                                    return "SimpleDemo.js"
+                                    return "ScrollerDemo.js"
                                 case 14:
-                                    return "SliderDemo.js"
+                                    return "SimpleDemo.js"
                                 case 15:
-                                    return "Snake.js"
+                                    return "SliderDemo.js"
                                 case 16:
-                                    return "StorageDemo.js"
+                                    return "Snake.js"
                                 case 17:
-                                    return "SwitchDemo.js"
+                                    return "StorageDemo.js"
                                 case 18:
+                                    return "SwitchDemo.js"
+                                case 19:
                                     return "TextDemo.js"
                             }
                         }

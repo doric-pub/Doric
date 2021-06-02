@@ -11,6 +11,7 @@
     <qresource prefix="/doric/bundles">
         <file alias="ComponetDemo.js">../../../doric-demo/bundle/src/ComponetDemo.js</file>
         <file alias="Counter.js">../../../doric-demo/bundle/src/Counter.js</file>
+        <file alias="DraggableDemo.js">../../../doric-demo/bundle/src/DraggableDemo.js</file>
         <file alias="EffectsDemo.js">../../../doric-demo/bundle/src/EffectsDemo.js</file>
         <file alias="Gobang.js">../../../doric-demo/bundle/src/Gobang.js</file>
         <file alias="ImageDemo.js">../../../doric-demo/bundle/src/ImageDemo.js</file>

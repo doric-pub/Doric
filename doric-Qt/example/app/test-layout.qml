@@ -8,33 +8,17 @@ ApplicationWindow {
     height: 800
     title: qsTr("Scroll")
 
-    SwipeView {
-        id: view
+    Rectangle {
+        width: 200; height: 200
+        color: "red"
 
-        currentIndex: 0
-        anchors.fill: parent
+        Drag.active: dragArea.drag.active
 
-        Rectangle {
-            id: firstPage
-            color: 'red'
+        MouseArea {
+            id: dragArea
+            anchors.fill: parent
+
+            drag.target: parent
         }
-        Rectangle {
-            id: secondPage
-            color: 'green'
-        }
-        Rectangle {
-            id: thirdPage
-            color: 'blue'
-        }
-    }
-
-    PageIndicator {
-        id: indicator
-
-        count: view.count
-        currentIndex: view.currentIndex
-
-        anchors.bottom: view.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
     }
 }

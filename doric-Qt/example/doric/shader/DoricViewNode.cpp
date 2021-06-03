@@ -47,17 +47,17 @@ void DoricViewNode::blendLayoutConfig(QJsonValue jsValue) {
 }
 
 void DoricViewNode::createLayouts(QQuickItem *view) {
-  if (mLayouts == nullptr) {
-    mLayouts = new DoricLayouts();
-    mLayouts->setWidth(view->width());
-    mLayouts->setHeight(view->height());
-    mLayouts->setView(view);
+  if (mDoricLayouts == nullptr) {
+    mDoricLayouts = new DoricLayouts();
+    mDoricLayouts->setWidth(view->width());
+    mDoricLayouts->setHeight(view->height());
+    mDoricLayouts->setView(view);
 
-    view->setProperty("doricLayout", QString::number((qint64)mLayouts));
+    view->setProperty("doricLayout", QString::number((qint64)mDoricLayouts));
   }
 }
 
-DoricLayouts *DoricViewNode::getLayouts() { return mLayouts; }
+DoricLayouts *DoricViewNode::getLayouts() { return mDoricLayouts; }
 
 void DoricViewNode::setLayoutConfig(QJsonValue layoutConfig) {
   if (mSuperNode != nullptr) {

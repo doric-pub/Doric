@@ -451,7 +451,7 @@ export abstract class Group extends Superview {
         set: (target, index, value) => {
             const ret = Reflect.set(target, index, value)
             // Let getDirty return true
-            this.dirtyProps.children = this.children.map(e => e.viewId)
+            this.dirtyProps.children = (target as View[]).map(e => e.viewId)
             return ret
         }
     })

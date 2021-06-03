@@ -17,7 +17,7 @@ class DORIC_EXPORT DoricViewNode : public DoricContextHolder {
 protected:
   QQuickItem *mView;
 
-  DoricLayouts *mLayouts = nullptr;
+  DoricLayouts *mDoricLayouts = nullptr;
 
   virtual QQuickItem *build() = 0;
 

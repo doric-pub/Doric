@@ -15,6 +15,17 @@ public:
     static DoricGlobalBroadcast instance;
     return &instance;
   }
+
+  QString subscribe(QString name, std::function<void(QString)> callback);
+
+  void unsubscribe(QString subscribeId);
+
+  void publish(QString name, QString data);
+
+private:
+  QAtomicInt idGenerator;
+
+  QMap<QString, QList<QPair<QString, std::function<void(QString)>>>> subjects;
 };
 
 #endif // DORICGLOBALBROADCAST_H

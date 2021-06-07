@@ -62,6 +62,7 @@ SOURCES += \
         utils/DoricContextHolder.cpp \
         utils/DoricDialogBridge.cpp \
         utils/DoricDraggableBridge.cpp \
+        utils/DoricGlobalBroadcast.cpp \
         utils/DoricImageBridge.cpp \
         utils/DoricInputBridge.cpp \
         utils/DoricLayouts.cpp \
@@ -151,6 +152,7 @@ HEADERS += \
     utils/DoricCountDownLatch.h \
     utils/DoricDialogBridge.h \
     utils/DoricDraggableBridge.h \
+    utils/DoricGlobalBroadcast.h \
     utils/DoricImageBridge.h \
     utils/DoricInputBridge.h \
     utils/DoricLayouts.h \

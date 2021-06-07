@@ -22,6 +22,8 @@
 #include "shader/slider/DoricSliderNode.h"
 
 DoricRegistry::DoricRegistry() {
+  qDebug() << "DoricRegistry constructor";
+
   registerNativePlugin<DoricShaderPlugin>("shader");
   registerNativePlugin<DoricModalPlugin>("modal");
   registerNativePlugin<DoricPopoverPlugin>("popover");

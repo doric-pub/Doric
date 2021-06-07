@@ -11,9 +11,9 @@
 class DORIC_EXPORT DoricNativeDriver : public DoricInterfaceDriver {
 private:
   static DoricNativeDriver *local_instance;
-  DoricNativeDriver() {}
+  DoricNativeDriver() { qDebug() << "DoricNativeDriver constructor"; }
 
-  ~DoricNativeDriver() {}
+  ~DoricNativeDriver() { qDebug() << "DoricNativeDriver destructor"; }
 
   DoricJSEngine jsEngine;
 

@@ -14,7 +14,7 @@ class DORIC_EXPORT DoricRegistry {
 private:
   static DoricRegistry *local_instance;
 
-  ~DoricRegistry() { qDebug() << "destructor"; }
+  ~DoricRegistry() { qDebug() << "DoricRegistry destructor"; }
 
 public:
   static DoricRegistry *getInstance() {

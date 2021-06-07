@@ -70,11 +70,11 @@ private:
 
   static DoricNetworkService *local_instance;
   DoricNetworkService() {
-    qDebug() << "constructor";
+    qDebug() << "DoricNetworkService constructor";
     thread.start();
   }
 
-  ~DoricNetworkService() { qDebug() << "destructor"; }
+  ~DoricNetworkService() { qDebug() << "DoricNetworkService destructor"; }
 
 public:
   static DoricNetworkService *getInstance() {

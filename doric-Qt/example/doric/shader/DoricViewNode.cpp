@@ -88,7 +88,11 @@ QQuickItem *DoricViewNode::getNodeView() { return mView; }
 void DoricViewNode::blend(QJsonValue jsValue) {
   QJsonValue value = jsValue["layoutConfig"];
   if (value.isObject()) {
-    setLayoutConfig(value);
+    if (mSuperNode != nullptr) {
+      mSuperNode->blendSubNode(this, value);
+    } else {
+      setLayoutConfig(value);
+    }
   }
 
   foreach (const QString &key, jsValue.toObject().keys()) {

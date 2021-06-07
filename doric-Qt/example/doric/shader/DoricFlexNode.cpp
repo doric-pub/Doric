@@ -26,8 +26,14 @@ void DoricFlexNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
 }
 
 void DoricFlexNode::blendSubNode(DoricViewNode *subNode,
-                                 QJsonValue flexConfig) {}
+                                 QJsonValue flexConfig) {
+  qDebug() << "blendSubNode";
+}
 
-void DoricFlexNode::blendYoga(YGLayout *yoga, QJsonValue flexConfig) {}
+void DoricFlexNode::blendYoga(YGLayout *yoga, QJsonValue flexConfig) {
+  qDebug() << "blendYoga";
+}
 
-void DoricFlexNode::blendYoga(YGLayout *yoga, QString name, QJsonValue prop) {}
+void DoricFlexNode::blendYoga(YGLayout *yoga, QString name, QJsonValue prop) {
+  qDebug() << "blendYoga";
+}

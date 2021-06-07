@@ -16,8 +16,6 @@ protected:
 
   virtual void blendSubNode(QJsonValue subProperties) = 0;
 
-  virtual void blendSubNode(DoricViewNode *subNode, QJsonValue layoutConfig);
-
   void recursiveMixin(QJsonValue src, QJsonValue target);
 
 public:
@@ -30,6 +28,8 @@ public:
   void blendSubLayoutConfig(DoricViewNode *viewNode, QJsonValue jsValue);
 
   virtual DoricViewNode *getSubNodeById(QString id) = 0;
+
+  virtual void blendSubNode(DoricViewNode *subNode, QJsonValue layoutConfig);
 
 private:
   void mixinSubNode(QJsonValue subNode);

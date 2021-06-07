@@ -10,9 +10,9 @@
 class DORIC_EXPORT DoricContextManager {
 private:
   static DoricContextManager *local_instance;
-  DoricContextManager() {}
+  DoricContextManager() { qDebug() << "DoricContextManager constructor"; }
 
-  ~DoricContextManager() {}
+  ~DoricContextManager() { qDebug() << "DoricContextManager destructor"; }
 
   QAtomicInt *counter = new QAtomicInt();
   QMap<QString, DoricContext *> *contextMap =

@@ -38,6 +38,7 @@ SOURCES += \
         engine/v8/V8Executor.cpp \
         plugin/DoricModalPlugin.cpp \
         plugin/DoricNetworkPlugin.cpp \
+        plugin/DoricNotificationPlugin.cpp \
         plugin/DoricPopoverPlugin.cpp \
         plugin/DoricShaderPlugin.cpp \
         plugin/DoricStoragePlugin.cpp \
@@ -124,6 +125,7 @@ HEADERS += \
     plugin/DoricModalPlugin.h \
     plugin/DoricNativePlugin.h \
     plugin/DoricNetworkPlugin.h \
+    plugin/DoricNotificationPlugin.h \
     plugin/DoricPopoverPlugin.h \
     plugin/DoricShaderPlugin.h \
     plugin/DoricStoragePlugin.h \

@@ -228,13 +228,9 @@ typedef void (^onFocusChangeBlock)(BOOL focused, DoricInputNode *node);
 
 - (void)textViewDidChange:(UITextView *)textView {
     if (textView.markedTextRange) return;
-    
+
     if (self.maxLength) {
-        UITextRange *selectedRange = [textView markedTextRange];
-        UITextPosition *pos = [textView positionFromPosition:selectedRange.start offset:0];
-        if (!pos) {
-            textView.text = [self limitToHansMaxLength:self.maxLength.unsignedIntValue text:textView.text];
-        }
+        textView.text = [self limitToHansMaxLength:self.maxLength.unsignedIntValue text:textView.text];
     }
     if (self.onTextChange) {
         self.onTextChange(textView.text, self);

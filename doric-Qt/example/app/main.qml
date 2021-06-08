@@ -96,7 +96,6 @@ ApplicationWindow {
 
     StackView {
         id: stack
-        initialItem: entry
         anchors.fill: parent
     }
 }

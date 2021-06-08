@@ -22,7 +22,7 @@
 #import "DoricExtensions.h"
 
 @implementation DoricNavigatorPlugin
-- (void)push:(NSDictionary *)params {
+- (void)push:(NSDictionary *)params withPromise:(DoricPromise *)promise {
     __weak typeof(self) _self = self;
     [self.doricContext dispatchToMainQueue:^{
         __strong typeof(_self) self = _self;
@@ -35,15 +35,37 @@
             alias = [config optString:@"alias" defaultValue:source];
         }
         [self.doricContext.navigator doric_navigator_push:source alias:alias animated:animated extra:config[@"extra"]];
+        [promise resolve:nil];
     }];
 }
 
-- (void)pop:(NSDictionary *)params {
+- (void)pop:(NSDictionary *)params withPromise:(DoricPromise *)promise {
     __weak typeof(self) _self = self;
     [self.doricContext dispatchToMainQueue:^{
         __strong typeof(_self) self = _self;
         BOOL animated = [params optBool:@"animated" defaultValue:YES];
         [self.doricContext.navigator doric_navigator_pop:animated];
+        [promise resolve:nil];
+    }];
+}
+
+- (void)popSelf:(NSDictionary *)params withPromise:(DoricPromise *)promise {
+    __weak typeof(self) _self = self;
+    [self.doricContext dispatchToMainQueue:^{
+        __strong typeof(_self) self = _self;
+        BOOL animated = [params optBool:@"animated" defaultValue:YES];
+        [self.doricContext.navigator doric_navigator_popSelf:animated];
+        [promise resolve:nil];
+    }];
+}
+
+- (void)popToRoot:(NSDictionary *)params withPromise:(DoricPromise *)promise {
+    __weak typeof(self) _self = self;
+    [self.doricContext dispatchToMainQueue:^{
+        __strong typeof(_self) self = _self;
+        BOOL animated = [params optBool:@"animated" defaultValue:YES];
+        [self.doricContext.navigator doric_navigator_popToRoot:animated];
+        [promise resolve:nil];
     }];
 }
 

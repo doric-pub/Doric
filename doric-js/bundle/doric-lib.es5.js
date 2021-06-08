@@ -3120,6 +3120,14 @@ function navigator(context) {
             if (animated === void 0) { animated = true; }
             return context.callNative(moduleName, 'pop', { animated: animated });
         },
+        popSelf: function (animated) {
+            if (animated === void 0) { animated = true; }
+            return context.callNative(moduleName, 'popSelf', { animated: animated });
+        },
+        popToRoot: function (animated) {
+            if (animated === void 0) { animated = true; }
+            return context.callNative(moduleName, 'popToRoot', { animated: animated });
+        },
         openUrl: function (url) {
             return context.callNative(moduleName, "openUrl", url);
         },

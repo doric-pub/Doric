@@ -1,4 +1,4 @@
-import { Panel, scroller, vlayout, text, layoutConfig, LayoutSpec, Color, gravity, Group, navigator, modal } from "doric";
+import { Panel, scroller, vlayout, text, layoutConfig, LayoutSpec, Color, gravity, Group, navigator, modal, notification } from "doric";
 import { colors, label } from "./utils";
 @Entry
 class NaivgatorDemo extends Panel {
@@ -62,6 +62,46 @@ class NaivgatorDemo extends Panel {
                 layoutConfig: layoutConfig().just(),
                 onClick: () => {
                     navigator(context).pop()
+                },
+            }),
+            label('Register Pop Self').apply({
+                width: 200,
+                height: 50,
+                backgroundColor: colors[0],
+                textSize: 30,
+                textColor: Color.WHITE,
+                layoutConfig: layoutConfig().just(),
+                onClick: () => {
+                    notification(context).subscribe({
+                        name: "PopSelf",
+                        callback: () => {
+                            navigator(context).popSelf()
+                        }
+                    })
+                },
+            }),
+            label('Send Pop Self').apply({
+                width: 200,
+                height: 50,
+                backgroundColor: colors[0],
+                textSize: 30,
+                textColor: Color.WHITE,
+                layoutConfig: layoutConfig().just(),
+                onClick: () => {
+                    notification(context).publish({
+                        name: "PopSelf"
+                    })
+                },
+            }),
+            label('Back to Root').apply({
+                width: 200,
+                height: 50,
+                backgroundColor: colors[0],
+                textSize: 30,
+                textColor: Color.WHITE,
+                layoutConfig: layoutConfig().just(),
+                onClick: () => {
+                    navigator(context).popToRoot()
                 },
             }),
             label('OpenURL').apply({

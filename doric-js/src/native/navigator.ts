@@ -43,6 +43,12 @@ export function navigator(context: BridgeContext) {
         pop: (animated = true) => {
             return context.callNative(moduleName, 'pop', { animated })
         },
+        popSelf: (animated = true) => {
+            return context.callNative(moduleName, 'popSelf', { animated })
+        },
+        popToRoot: (animated = true) => {
+            return context.callNative(moduleName, 'popToRoot', { animated })
+        },
         openUrl: (url: string) => {
             return context.callNative(moduleName, "openUrl", url)
         },

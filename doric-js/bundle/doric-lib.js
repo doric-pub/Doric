@@ -2419,6 +2419,12 @@ function navigator(context) {
         pop: (animated = true) => {
             return context.callNative(moduleName, 'pop', { animated });
         },
+        popSelf: (animated = true) => {
+            return context.callNative(moduleName, 'popSelf', { animated });
+        },
+        popToRoot: (animated = true) => {
+            return context.callNative(moduleName, 'popToRoot', { animated });
+        },
         openUrl: (url) => {
             return context.callNative(moduleName, "openUrl", url);
         },

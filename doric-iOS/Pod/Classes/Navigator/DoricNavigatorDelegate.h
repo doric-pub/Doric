@@ -23,4 +23,8 @@
 - (void)doric_navigator_push:(NSString *)source alias:(NSString *)alias animated:(BOOL)animated extra:(NSString *)extra;
 
 - (void)doric_navigator_pop:(BOOL)animated;
+
+- (void)doric_navigator_popSelf:(BOOL)animated;
+
+- (void)doric_navigator_popToRoot:(BOOL)animated;
 @end

@@ -2,16 +2,19 @@
 #define DEMOBRIDGE_H
 
 #include <QObject>
-#include <QVariant>
+#include <QQmlApplicationEngine>
 
 class DoricDemoBridge : public QObject {
   Q_OBJECT
 public:
-  explicit DoricDemoBridge(QObject *parent = nullptr);
+  explicit DoricDemoBridge(QQmlApplicationEngine *engine,
+                           QObject *parent = nullptr);
 
   Q_INVOKABLE
   void navigate(QVariant route);
-signals:
+
+private:
+  QQmlApplicationEngine *mEngine;
 };
 
 #endif // DEMOBRIDGE_H

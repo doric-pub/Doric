@@ -1,7 +1,7 @@
 #include <QGuiApplication>
+#include <QMovie>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
-#include <QMovie>
 
 #include "demo/DoricDemoBridge.h"
 #include "widget/flex/FlexLayoutService.h"
@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
       Qt::QueuedConnection);
 
   auto context = engine.rootContext();
-  DoricDemoBridge *demoBridge = new DoricDemoBridge();
+  DoricDemoBridge *demoBridge = new DoricDemoBridge(&engine);
   context->setContextProperty("demoBridge", demoBridge);
 
   qDebug() << QMovie::supportedFormats();

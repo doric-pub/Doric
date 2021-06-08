@@ -5,16 +5,16 @@
 
 #include "DoricNativePlugin.h"
 
-#include <QUdpSocket>
-
 class DORIC_EXPORT DoricNotificationPlugin : public DoricNativePlugin {
   Q_OBJECT
 
 private:
-  QUdpSocket udpSocket;
+  QList<QString> subscriptions;
 
 public:
   using DoricNativePlugin::DoricNativePlugin;
+
+  ~DoricNotificationPlugin();
 
   Q_INVOKABLE void publish(QString jsValueString, QString callbackId);
 

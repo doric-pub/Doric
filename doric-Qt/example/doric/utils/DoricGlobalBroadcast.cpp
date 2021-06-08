@@ -42,7 +42,11 @@ void DoricGlobalBroadcast::unsubscribe(QString subscribeId) {
     QList<QPair<QString, std::function<void(QString)>>> value =
         this->subjects[targetKey];
     value.removeAt(targetIndex);
-    this->subjects.insert(targetKey, value);
+    if (value.size() == 0) {
+      this->subjects.remove(targetKey);
+    } else {
+      this->subjects.insert(targetKey, value);
+    }
   }
 }
 

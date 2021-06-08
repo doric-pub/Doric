@@ -5,9 +5,17 @@ ApplicationWindow {
     visible: true
     width: 600
     height: 800
-    title: qsTr("Scroll")
+    title: qsTr("Doric Demo")
+
+    StackView {
+        id: stack
+        initialItem: entry
+        anchors.fill: parent
+    }
 
     ScrollView {
+        id: entry
+
         anchors.fill: parent
 
         ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
@@ -15,7 +23,7 @@ ApplicationWindow {
 
         ListView {
             width: parent.width
-            model: 22
+            model: 23
             delegate: Rectangle {
                 Column {
                     anchors.centerIn: parent
@@ -47,24 +55,26 @@ ApplicationWindow {
                                 case 11:
                                     return "ModularDemo.js"
                                 case 12:
-                                    return "NetworkDemo.js"
+                                    return "NavigatorDemo.js"
                                 case 13:
-                                    return "NotificationDemo.js"
+                                    return "NetworkDemo.js"
                                 case 14:
-                                    return "PopoverDemo.js"
+                                    return "NotificationDemo.js"
                                 case 15:
-                                    return "ScrollerDemo.js"
+                                    return "PopoverDemo.js"
                                 case 16:
-                                    return "SimpleDemo.js"
+                                    return "ScrollerDemo.js"
                                 case 17:
-                                    return "SliderDemo.js"
+                                    return "SimpleDemo.js"
                                 case 18:
-                                    return "Snake.js"
+                                    return "SliderDemo.js"
                                 case 19:
-                                    return "StorageDemo.js"
+                                    return "Snake.js"
                                 case 20:
-                                    return "SwitchDemo.js"
+                                    return "StorageDemo.js"
                                 case 21:
+                                    return "SwitchDemo.js"
+                                case 22:
                                     return "TextDemo.js"
                             }
                         }

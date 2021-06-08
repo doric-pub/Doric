@@ -98,7 +98,11 @@ void DoricModalPlugin::alert(QString jsValueString, QString callbackId) {
 
         window->setProperty("title", titleVal.toString());
         window->setProperty("msg", msgVal.toString());
-        window->setProperty("okLabel", okBtn.toString());
+        if (okBtn.isString()) {
+          window->setProperty("okLabel", okBtn.toString());
+        } else {
+          window->setProperty("okLabel", "ok");
+        }
 
         QQuickWindow *parentWindow =
             getContext()->getRootNode()->getRootView()->window();

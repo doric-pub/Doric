@@ -29,6 +29,8 @@ Text {
 
     property var fontSource: ""
 
+    elide: Text.ElideRight
+
     onFontSourceChanged: {
         webFont.source = fontSource
         font.family = webFont.name

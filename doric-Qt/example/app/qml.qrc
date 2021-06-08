@@ -21,6 +21,7 @@
         <file alias="LayoutTestDemo.js">../../../doric-demo/bundle/src/LayoutTestDemo.js</file>
         <file alias="ModalDemo.js">../../../doric-demo/bundle/src/ModalDemo.js</file>
         <file alias="ModularDemo.js">../../../doric-demo/bundle/src/ModularDemo.js</file>
+        <file alias="NavigatorDemo.js">../../../doric-demo/bundle/src/NavigatorDemo.js</file>
         <file alias="NetworkDemo.js">../../../doric-demo/bundle/src/NetworkDemo.js</file>
         <file alias="NotificationDemo.js">../../../doric-demo/bundle/src/NotificationDemo.js</file>
         <file alias="PopoverDemo.js">../../../doric-demo/bundle/src/PopoverDemo.js</file>

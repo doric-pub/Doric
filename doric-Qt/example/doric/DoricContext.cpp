@@ -19,6 +19,8 @@ DoricContext::~DoricContext() {
   QVariantList args;
   callEntity(DoricConstant::DORIC_ENTITY_DESTROY, args);
   DoricContextManager::getInstance()->destroyContext(this);
+  QList<QObject *> plugins = mPluginMap.values();
+  foreach (QObject *plugin, plugins) { delete plugin; }
 }
 
 DoricContext *DoricContext::create(QString script, QString source,

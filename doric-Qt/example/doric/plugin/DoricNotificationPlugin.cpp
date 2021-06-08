@@ -53,6 +53,7 @@ void DoricNotificationPlugin::subscribe(QString jsValueString,
         args.append(data);
         DoricPromise::resolve(getContext(), notificationCallbackId, args);
       });
+  subscriptions.append(subscribeId);
 
   getContext()->getDriver()->asyncCall(
       [this, callbackId, notificationCallbackId] {
@@ -68,7 +69,9 @@ void DoricNotificationPlugin::unsubscribe(QString jsValueString,
   QJsonDocument document = QJsonDocument::fromJson(jsValueString.toUtf8());
   QJsonValue jsValue = document.object();
 
-  DoricGlobalBroadcast::getInstance()->unsubscribe(jsValueString);
+  QString subscribeId = jsValueString;
+  DoricGlobalBroadcast::getInstance()->unsubscribe(subscribeId);
+  subscriptions.removeOne(subscribeId);
 
   getContext()->getDriver()->asyncCall(
       [this, callbackId] {
@@ -76,4 +79,10 @@ void DoricNotificationPlugin::unsubscribe(QString jsValueString,
         DoricPromise::resolve(getContext(), callbackId, args);
       },
       DoricThreadMode::JS);
+}
+
+DoricNotificationPlugin::~DoricNotificationPlugin() {
+  foreach (QString subscribeId, this->subscriptions) {
+    DoricGlobalBroadcast::getInstance()->unsubscribe(subscribeId);
+  }
 }

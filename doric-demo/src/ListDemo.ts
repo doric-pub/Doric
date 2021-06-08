@@ -1,4 +1,4 @@
-import { Group, Panel, List, text, gravity, Color, LayoutSpec, list, listItem, log, vlayout, Gravity, hlayout, Text, refreshable, Refreshable, ListItem, layoutConfig, ViewHolder, ViewModel, VMPanel, loge, modal } from "doric";
+import { Group, Panel, List, text, gravity, Color, LayoutSpec, list, listItem, log, vlayout, Gravity, hlayout, Text, refreshable, Refreshable, ListItem, layoutConfig, ViewHolder, ViewModel, VMPanel, loge, modal, stack } from "doric";
 
 interface ItemModel {
     text: string
@@ -67,34 +67,37 @@ class ListVM extends ViewModel<ListModel, ListVH> {
         vh.list.apply({
             renderItem: (index) => {
                 const data = state.data[index]
-                return listItem(text({
-                    text: data.text,
-                    textSize: 20,
-                    layoutConfig: {
-                        widthSpec: LayoutSpec.MOST,
-                        heightSpec: LayoutSpec.JUST,
-                    },
-                    height: 50,
-                    onClick: () => {modal(context).alert(data.text)}
-                }), {
+                return listItem(stack([
+                    text({
+                        text: data.text,
+                        textSize: 20,
+                        layoutConfig: {
+                            widthSpec: LayoutSpec.FIT,
+                            heightSpec: LayoutSpec.JUST,
+                        },
+                        height: 50,
+                        onClick: () => { modal(context).alert(data.text) }
+                    })
+                ]), {
                     layoutConfig: {
                         widthSpec: LayoutSpec.MOST,
                         heightSpec: LayoutSpec.FIT,
-                    }
+                    },
+                    //onClick: () => { modal(context).alert("Item Clicked " + index) }
                 }).apply({
                     actions: [
                         {
                             title: "First",
                             backgroundColor: Color.RED,
                             callback: () => {
-                                modal(context).alert("First action")
+                                modal(context).alert("First action " + index)
                             }
                         },
                         {
                             title: "Second",
                             backgroundColor: Color.BLUE,
                             callback: () => {
-                                modal(context).alert("Second action")
+                                modal(context).alert("Second action " + index)
                             }
                         }
                     ]

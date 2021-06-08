@@ -64,7 +64,7 @@ public class ListItemNode extends StackNode {
         getNodeView().getLayoutParams().width = getLayoutParams().width;
         getNodeView().getLayoutParams().height = getLayoutParams().height;
         if (this.actions != null && this.actions.size() > 0) {
-            getView().setOnLongClickListener(new View.OnLongClickListener() {
+            onLongClickListener = new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     if (actions == null || actions.size() == 0) {
@@ -89,7 +89,7 @@ public class ListItemNode extends StackNode {
                             }).show();
                     return true;
                 }
-            });
+            };
 
             recursiveHandleLongClick(this);
         }
@@ -98,13 +98,13 @@ public class ListItemNode extends StackNode {
     private void recursiveHandleLongClick(GroupNode groupNode) {
         for (int i = 0; i != groupNode.getChildNodes().size(); i++) {
             ViewNode node = (ViewNode) groupNode.getChildNodes().get(i);
-            node.getView().setOnLongClickListener(new View.OnLongClickListener() {
+            node.onLongClickListener = new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    getView().performLongClick();
-                    return false;
+                    onLongClickListener.onLongClick(getView());
+                    return true;
                 }
-            });
+            };
 
             if (node instanceof GroupNode) {
                 recursiveHandleLongClick((GroupNode) node);

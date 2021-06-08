@@ -28,6 +28,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.text.TextUtils;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -80,12 +82,62 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     protected JSObject mFlexConfig;
     private final WeakHashMap<String, Animator> animators = new WeakHashMap<>();
 
+    public final GestureDetector gestureDetector;
+    public View.OnLongClickListener onLongClickListener;
+    public View.OnClickListener onClickListener;
+
     public JSObject getFlexConfig() {
         return mFlexConfig;
     }
 
     public ViewNode(DoricContext doricContext) {
         super(doricContext);
+
+        gestureDetector = new GestureDetector(doricContext.getContext(), new GestureDetector.OnGestureListener() {
+            @Override
+            public boolean onDown(MotionEvent e) {
+                return true;
+            }
+
+            @Override
+            public void onShowPress(MotionEvent e) {
+
+            }
+
+            @Override
+            public boolean onSingleTapUp(MotionEvent e) {
+                if (onClickListener != null) {
+                    onClickListener.onClick(mView);
+                } else {
+                    SuperNode superNode = mSuperNode;
+                    while (superNode != null) {
+                        if (superNode.onClickListener != null) {
+                            superNode.onClickListener.onClick(superNode.mView);
+                            break;
+                        } else {
+                            superNode = superNode.mSuperNode;
+                        }
+                    }
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+                return false;
+            }
+
+            @Override
+            public void onLongPress(MotionEvent e) {
+                if (onLongClickListener != null)
+                    onLongClickListener.onLongClick(mView);
+            }
+
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                return false;
+            }
+        });
     }
 
     private DoricLayer doricLayer;
@@ -99,12 +151,24 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         this.mView = build();
         this.mView.setTag(R.id.doric_node, this);
         this.mView.setLayoutParams(mLayoutParams);
+        this.mView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return gestureDetector.onTouchEvent(event);
+            }
+        });
     }
 
     public void init(ViewGroup.LayoutParams layoutParams) {
         this.mLayoutParams = layoutParams;
         this.mView = build();
         this.mView.setLayoutParams(layoutParams);
+        this.mView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return gestureDetector.onTouchEvent(event);
+            }
+        });
     }
 
     public void setId(String id) {
@@ -318,12 +382,12 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                     return;
                 }
                 final String functionId = prop.asString().value();
-                view.setOnClickListener(new View.OnClickListener() {
+                onClickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         callJSResponse(functionId);
                     }
-                });
+                };
                 break;
             case "border":
                 if (prop.isObject()) {

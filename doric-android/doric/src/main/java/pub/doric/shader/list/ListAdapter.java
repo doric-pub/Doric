@@ -15,6 +15,8 @@
  */
 package pub.doric.shader.list;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -147,6 +149,39 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
         if (loadAnchor != itemCount) {
             loadAnchor = itemCount;
             this.listNode.callJSResponse(this.listNode.onLoadMoreFuncId);
+        }
+    }
+
+    public void onItemLongClick(int position, View childView) {
+        JSValue jsValue = getItemModel(position);
+        if (jsValue != null && jsValue.isObject()) {
+            JSObject jsObject = jsValue.asObject();
+            String id = jsObject.getProperty("id").asString().value();
+            final ViewNode itemNode = this.listNode.getSubNodeById(id);
+            JSObject props = jsObject.getProperty("props").asObject();
+            JSValue prop = props.getProperty("actions");
+            if (itemNode != null && prop.isArray()) {
+                JSArray actions = prop.asArray();
+                if (actions != null && actions.size() > 0) {
+                    String[] items = new String[actions.size()];
+                    final String[] callbacks = new String[actions.size()];
+                    for (int i = 0; i < actions.size(); i++) {
+                        JSObject action = actions.get(i).asObject();
+                        String title = action.getProperty("title").asString().value();
+                        String callback = action.getProperty("callback").asString().value();
+                        items[i] = title;
+                        callbacks[i] = callback;
+                    }
+                    new AlertDialog.Builder(childView.getContext())
+                            .setItems(items, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    itemNode.callJSResponse(callbacks[which]);
+                                    dialog.dismiss();
+                                }
+                            }).show();
+                }
+            }
         }
     }
 

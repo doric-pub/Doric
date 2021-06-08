@@ -17,6 +17,8 @@ package pub.doric.shader.list;
 
 import android.text.TextUtils;
 import android.util.SparseArray;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -87,7 +89,7 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
 
     @Override
     protected RecyclerView build() {
-        RecyclerView recyclerView = new RecyclerView(getContext());
+        final RecyclerView recyclerView = new RecyclerView(getContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()) {
             @Override
             public boolean canScrollVertically() {
@@ -134,6 +136,29 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
                                         .toJSONObject());
                     }
                 }
+            }
+        });
+        final GestureDetector gestureDetector = new GestureDetector(
+                getContext(),
+                new GestureDetector.SimpleOnGestureListener() {
+                    @Override
+                    public void onLongPress(MotionEvent e) {
+                        super.onLongPress(e);
+                        View childView = recyclerView.findChildViewUnder(e.getX(), e.getY());
+                        if (childView != null) {
+                            int position = recyclerView.getChildLayoutPosition(childView);
+                            listAdapter.onItemLongClick(position, childView);
+                        }
+                    }
+                });
+
+        recyclerView.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+                if (gestureDetector.onTouchEvent(e)) {
+                    return true;
+                }
+                return false;
             }
         });
         return recyclerView;

@@ -26,9 +26,7 @@ import com.github.pengfeizhou.jscore.JSValue;
 
 import pub.doric.DoricContext;
 import pub.doric.extension.bridge.DoricPlugin;
-import pub.doric.shader.GroupNode;
 import pub.doric.shader.StackNode;
-import pub.doric.shader.ViewNode;
 
 /**
  * @Description: com.github.penfeizhou.doric.widget
@@ -48,9 +46,6 @@ public class ListItemNode extends StackNode {
     @Override
     protected void blend(FrameLayout view, String name, JSValue prop) {
         if ("actions".equals(name)) {
-            if (prop.isArray()) {
-                this.actions = prop.asArray();
-            }
         } else if ("identifier".equals(name)) {
             this.identifier = prop.asString().value();
         } else {
@@ -90,25 +85,6 @@ public class ListItemNode extends StackNode {
                     return true;
                 }
             });
-
-            recursiveHandleLongClick(this);
-        }
-    }
-
-    private void recursiveHandleLongClick(GroupNode groupNode) {
-        for (int i = 0; i != groupNode.getChildNodes().size(); i++) {
-            ViewNode node = (ViewNode) groupNode.getChildNodes().get(i);
-            node.getView().setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    getView().performLongClick();
-                    return false;
-                }
-            });
-
-            if (node instanceof GroupNode) {
-                recursiveHandleLongClick((GroupNode) node);
-            }
         }
     }
 }

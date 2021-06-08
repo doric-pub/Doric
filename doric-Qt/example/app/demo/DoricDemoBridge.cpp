@@ -14,9 +14,32 @@
 #include "utils/DoricSwitchBridge.h"
 #include "utils/DoricUtils.h"
 
-DoricDemoBridge::DoricDemoBridge(QObject *parent) : QObject(parent) {}
+DoricDemoBridge::DoricDemoBridge(QQmlApplicationEngine *engine, QObject *parent)
+    : QObject(parent) {
+  this->mEngine = engine;
+
+  auto context = mEngine->rootContext();
+  DoricMouseAreaBridge *mouseAreaBridge = new DoricMouseAreaBridge();
+  context->setContextProperty("mouseAreaBridge", mouseAreaBridge);
+  DoricDialogBridge *dialogBridge = new DoricDialogBridge();
+  context->setContextProperty("dialogBridge", dialogBridge);
+  DoricImageBridge *imageBridge = new DoricImageBridge();
+  context->setContextProperty("imageBridge", imageBridge);
+  DoricInputBridge *inputBridge = new DoricInputBridge();
+  context->setContextProperty("inputBridge", inputBridge);
+  DoricSwitchBridge *switchBridge = new DoricSwitchBridge();
+  context->setContextProperty("switchBridge", switchBridge);
+  DoricSlideItemBridge *slideItemBridge = new DoricSlideItemBridge();
+  context->setContextProperty("slideItemBridge", slideItemBridge);
+  DoricSliderBridge *sliderBridge = new DoricSliderBridge();
+  context->setContextProperty("sliderBridge", sliderBridge);
+  DoricDraggableBridge *draggableBridge = new DoricDraggableBridge();
+  context->setContextProperty("draggableBridge", draggableBridge);
+}
 
 void DoricDemoBridge::navigate(QVariant route) {
+  qDebug() << mEngine->rootObjects()[0]->children();
+
   QString name;
   switch (route.toInt()) {
   case 0:
@@ -91,54 +114,16 @@ void DoricDemoBridge::navigate(QVariant route) {
   }
   QString script = DoricUtils::readAssetFile("/doric/bundles", name);
 
-  QQuickView *view = new QQuickView();
-  {
-    const QUrl url(QStringLiteral("qrc:/doric/qml/view.qml"));
-    view->setSource(url);
-    view->setWidth(600);
-    view->setHeight(800);
-    Qt::WindowFlags flag = Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint |
-                           Qt::WindowTitleHint | Qt::WindowCloseButtonHint |
-                           Qt::CustomizeWindowHint | Qt::WindowSystemMenuHint;
-    view->setFlags(flag);
-  }
+  QQmlComponent component(mEngine);
+  const QUrl url(QStringLiteral("qrc:/doric/qml/panel.qml"));
+  component.loadUrl(url);
+  QQuickItem *quickItem = qobject_cast<QQuickItem *>(component.create());
+  DoricPanel *panel = new DoricPanel(mEngine, quickItem);
+  quickItem->setWidth(600);
+  quickItem->setHeight(800);
+  QQuickItem *root = qobject_cast<QQuickItem *>(
+      mEngine->rootObjects().at(0)->children().at(1));
+  quickItem->setParentItem(root);
 
-  {
-    QQmlComponent component(view->engine());
-    const QUrl url(QStringLiteral("qrc:/doric/qml/panel.qml"));
-    component.loadUrl(url);
-    QQuickItem *quickItem = qobject_cast<QQuickItem *>(component.create());
-    DoricPanel *panel = new DoricPanel(view->engine(), quickItem);
-    quickItem->setWidth(600);
-    quickItem->setHeight(800);
-    quickItem->setParentItem(view->rootObject());
-
-    panel->config(script, name, NULL);
-
-    connect(view, &QQuickView::visibleChanged, this, [view, panel]() {
-      if (!view->isVisible()) {
-        delete panel;
-      }
-    });
-  }
-
-  view->show();
-
-  auto context = view->engine()->rootContext();
-  DoricMouseAreaBridge *mouseAreaBridge = new DoricMouseAreaBridge();
-  context->setContextProperty("mouseAreaBridge", mouseAreaBridge);
-  DoricDialogBridge *dialogBridge = new DoricDialogBridge();
-  context->setContextProperty("dialogBridge", dialogBridge);
-  DoricImageBridge *imageBridge = new DoricImageBridge();
-  context->setContextProperty("imageBridge", imageBridge);
-  DoricInputBridge *inputBridge = new DoricInputBridge();
-  context->setContextProperty("inputBridge", inputBridge);
-  DoricSwitchBridge *switchBridge = new DoricSwitchBridge();
-  context->setContextProperty("switchBridge", switchBridge);
-  DoricSlideItemBridge *slideItemBridge = new DoricSlideItemBridge();
-  context->setContextProperty("slideItemBridge", slideItemBridge);
-  DoricSliderBridge *sliderBridge = new DoricSliderBridge();
-  context->setContextProperty("sliderBridge", sliderBridge);
-  DoricDraggableBridge *draggableBridge = new DoricDraggableBridge();
-  context->setContextProperty("draggableBridge", draggableBridge);
+  panel->config(script, name, NULL);
 }

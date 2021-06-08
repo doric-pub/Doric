@@ -10,5 +10,7 @@ export declare function navigator(context: BridgeContext): {
         singlePage?: boolean | undefined;
     } | undefined) => Promise<any>;
     pop: (animated?: boolean) => Promise<any>;
+    popSelf: (animated?: boolean) => Promise<any>;
+    popToRoot: (animated?: boolean) => Promise<any>;
     openUrl: (url: string) => Promise<any>;
 };

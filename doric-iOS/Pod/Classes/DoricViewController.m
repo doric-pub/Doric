@@ -29,9 +29,6 @@ NSString *const DORIC_MASK_RETRY = @"doric_mask_retry";
 @property(nonatomic) BOOL navBarHidden;
 @property(nonatomic, strong) UIImage *navBarImage;
 @property(nonatomic, strong) UIView *maskView;
-@property(nonatomic, copy) NSString *source;
-@property(nonatomic, copy) NSString *alias;
-@property(nonatomic, copy) NSString *extra;
 @end
 
 @implementation DoricViewController
@@ -105,8 +102,32 @@ NSString *const DORIC_MASK_RETRY = @"doric_mask_retry";
 }
 
 - (void)doric_navigator_pop:(BOOL)animated {
-    [self.navigationController popViewControllerAnimated:animated];
+    if (self.presentingViewController) {
+        [self dismissViewControllerAnimated:animated completion:nil];
+    } else {
+        [self.navigationController popViewControllerAnimated:animated];
+    }
 }
+
+- (void)doric_navigator_popSelf:(BOOL)animated {
+    if (self.presentingViewController) {
+        [self dismissViewControllerAnimated:animated completion:nil];
+    } else {
+        NSMutableArray *tempStack = [self.navigationController.viewControllers mutableCopy];
+        for (UIViewController *vc in self.navigationController.viewControllers) {
+            if (vc == self) {
+                [tempStack removeObject:vc];
+                break;
+            }
+        }
+        [self.navigationController setViewControllers:[tempStack copy] animated:animated];
+    }
+}
+
+- (void)doric_navigator_popToRoot:(BOOL)animated {
+    [self.navigationController popToRootViewControllerAnimated:animated];
+}
+
 
 - (BOOL)doric_navBar_isHidden {
     return self.navigationController.navigationBarHidden;

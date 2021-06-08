@@ -16,6 +16,7 @@
 package pub.doric.plugin;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 
 import com.github.pengfeizhou.jscore.ArchiveException;
@@ -113,5 +114,25 @@ public class NavigatorPlugin extends DoricJavaPlugin {
         } catch (Exception e) {
             promise.reject(new JavaValue(e.getLocalizedMessage()));
         }
+    }
+
+    @DoricMethod(thread = ThreadMode.UI)
+    public void popSelf(DoricPromise promise) {
+        IDoricNavigator navigator = getDoricContext().getDoricNavigator();
+        if (navigator != null) {
+            navigator.pop();
+            promise.resolve();
+        } else {
+            promise.reject(new JavaValue("Navigator not implemented"));
+        }
+    }
+
+    @DoricMethod(thread = ThreadMode.UI)
+    public void popToRoot(DoricPromise promise) {
+        PackageManager pm = getDoricContext().getContext().getPackageManager();
+        Intent intent = pm.getLaunchIntentForPackage(getDoricContext().getContext().getPackageName());
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        getDoricContext().getContext().startActivity(intent);
+        promise.resolve();
     }
 }

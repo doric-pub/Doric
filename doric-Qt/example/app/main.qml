@@ -14,10 +14,55 @@ ApplicationWindow {
 
         Rectangle {
             id: navbar
-            color: "red"
             visible: false
             Layout.fillWidth: true
             Layout.preferredHeight: 44
+
+            Text {
+                text: "Title"
+                font.pixelSize: 16
+                anchors.centerIn: parent
+            }
+
+            RowLayout {
+                anchors.verticalCenter: parent.verticalCenter
+                Rectangle {
+                    Layout.preferredWidth: 10
+                }
+
+                Image {
+                    Layout.preferredWidth: 24
+                    Layout.preferredHeight: 24
+                    id: name
+                    source: "qrc:/doric/qml/doric_icon_back.png"
+                }
+
+                Text {
+                    text: "Left"
+                    font.pixelSize: 16
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        stack.pop()
+                    }
+                }
+            }
+
+            RowLayout {
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+
+                Text {
+                    text: "Right"
+                    font.pixelSize: 16
+                }
+
+                Rectangle {
+                    Layout.preferredWidth: 10
+                }
+            }
         }
 
         Rectangle {

@@ -83,9 +83,11 @@ QObject *DoricContext::obtainPlugin(QString name) {
   }
 }
 
-void DoricContext::setQmlEngine(QQmlEngine *engine) { mQmlEngine = engine; }
+void DoricContext::setQmlEngine(QQmlApplicationEngine *engine) {
+  mQmlEngine = engine;
+}
 
-QQmlEngine *DoricContext::getQmlEngine() { return mQmlEngine; }
+QQmlApplicationEngine *DoricContext::getQmlEngine() { return mQmlEngine; }
 
 DoricViewNode *DoricContext::targetViewNode(QString id) {
   if (id == mRootNode->getId()) {

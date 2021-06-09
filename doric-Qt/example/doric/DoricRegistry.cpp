@@ -2,6 +2,7 @@
 #include "DoricLibrary.h"
 
 #include "plugin/DoricModalPlugin.h"
+#include "plugin/DoricNavigatorPlugin.h"
 #include "plugin/DoricNetworkPlugin.h"
 #include "plugin/DoricNotificationPlugin.h"
 #include "plugin/DoricPopoverPlugin.h"
@@ -31,6 +32,7 @@ DoricRegistry::DoricRegistry() {
   registerNativePlugin<DoricNetworkPlugin>("network");
   registerNativePlugin<DoricStoragePlugin>("storage");
   registerNativePlugin<DoricNotificationPlugin>("notification");
+  registerNativePlugin<DoricNavigatorPlugin>("navigator");
 
   registerViewNode<DoricRootNode>("Root");
   registerViewNode<DoricStackNode>("Stack");

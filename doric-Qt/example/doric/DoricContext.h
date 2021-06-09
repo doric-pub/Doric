@@ -1,7 +1,7 @@
 #ifndef CONTEXT_H
 #define CONTEXT_H
 
-#include <QQmlEngine>
+#include <QQmlApplicationEngine>
 #include <QVariant>
 
 #include "DoricExport.h"
@@ -21,7 +21,7 @@ private:
   QString extra;
   QVariant initParams;
   DoricInterfaceDriver *driver = NULL;
-  QQmlEngine *mQmlEngine;
+  QQmlApplicationEngine *mQmlEngine;
 
   QMap<QString, QMap<QString, DoricViewNode *>> mHeadNodes;
 
@@ -45,9 +45,9 @@ public:
 
   QObject *obtainPlugin(QString name);
 
-  void setQmlEngine(QQmlEngine *engine);
+  void setQmlEngine(QQmlApplicationEngine *engine);
 
-  QQmlEngine *getQmlEngine();
+  QQmlApplicationEngine *getQmlEngine();
 
   DoricViewNode *targetViewNode(QString id);
 

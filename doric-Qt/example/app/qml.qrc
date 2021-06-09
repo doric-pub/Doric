@@ -61,6 +61,8 @@
 
         <file alias="util.mjs">../doric/resources/util.mjs</file>
         <file alias="gravity.mjs">../doric/resources/gravity.mjs</file>
+
+        <file alias="doric_icon_back.png">../doric/resources/doric_icon_back.png</file>
     </qresource>
 
     <qresource prefix="/resource/main/">

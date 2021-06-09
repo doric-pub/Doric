@@ -89,6 +89,9 @@
                                 }
                                 [invocation setArgument:&args atIndex:idx];
                             }
+                            if (!context || context.destroyed) {
+                                return;
+                            }
                             [invocation invoke];
                         } @catch (NSException *exception) {
                             DoricLog(@"CallNative Error:%@", exception.reason);

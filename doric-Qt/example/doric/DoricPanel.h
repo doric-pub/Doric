@@ -13,11 +13,11 @@ private:
   int renderedWidth = -1;
   int renderedHeight = -1;
 
-  QQmlEngine *mQmlEngine;
+  QQmlApplicationEngine *mQmlEngine;
   QQuickItem *mQuickItem;
 
 public:
-  DoricPanel(QQmlEngine *qmlEngine, QQuickItem *quickItem);
+  DoricPanel(QQmlApplicationEngine *qmlEngine, QQuickItem *quickItem);
 
   ~DoricPanel();
 

@@ -1,14 +1,13 @@
 #include "DoricPanel.h"
 #include "shader/DoricRootNode.h"
 
-DoricPanel::DoricPanel(QQmlEngine *qmlEngine, QQuickItem *quickItem) {
+DoricPanel::DoricPanel(QQmlApplicationEngine *qmlEngine,
+                       QQuickItem *quickItem) {
   mQmlEngine = qmlEngine;
   mQuickItem = quickItem;
 }
 
-DoricPanel::~DoricPanel() {
-    delete mContext;
-}
+DoricPanel::~DoricPanel() { delete mContext; }
 
 void DoricPanel::config(QString script, QString alias, QString extra) {
   DoricContext *context = DoricContext::create(script, alias, extra);

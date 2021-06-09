@@ -45,7 +45,7 @@ ApplicationWindow {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        stack.pop()
+                        navigatorPop()
                     }
                 }
             }
@@ -169,6 +169,7 @@ ApplicationWindow {
 
     function navigatorPop() {
         stack.pop()
+        console.log("stack.depth", stack.depth)
         if (stack.depth > 1) {
             navbar.visible = true
         } else {

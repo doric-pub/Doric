@@ -1,6 +1,5 @@
 #include <QDebug>
 #include <QQmlContext>
-#include <QQuickView>
 
 #include "DoricDemoBridge.h"
 #include "DoricPanel.h"
@@ -38,8 +37,6 @@ DoricDemoBridge::DoricDemoBridge(QQmlApplicationEngine *engine, QObject *parent)
 }
 
 void DoricDemoBridge::navigate(QVariant route) {
-  qDebug() << mEngine->rootObjects()[0]->children();
-
   QString name;
   switch (route.toInt()) {
   case 0:
@@ -117,13 +114,14 @@ void DoricDemoBridge::navigate(QVariant route) {
   QQmlComponent component(mEngine);
   const QUrl url(QStringLiteral("qrc:/doric/qml/panel.qml"));
   component.loadUrl(url);
-  QQuickItem *quickItem = qobject_cast<QQuickItem *>(component.create());
+  QObject *object = component.create();
+  QQuickItem *quickItem = qobject_cast<QQuickItem *>(object);
   DoricPanel *panel = new DoricPanel(mEngine, quickItem);
   quickItem->setWidth(600);
   quickItem->setHeight(800);
-  QQuickItem *root = qobject_cast<QQuickItem *>(
-      mEngine->rootObjects().at(0)->children().at(1));
-  quickItem->setParentItem(root);
-
   panel->config(script, name, NULL);
+
+  QObject *window = mEngine->rootObjects().at(0);
+  QVariant arg = QVariant::fromValue(object);
+  QMetaObject::invokeMethod(window, "navigatorPush", Q_ARG(QVariant, arg));
 }

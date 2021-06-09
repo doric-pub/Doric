@@ -7,10 +7,11 @@ ApplicationWindow {
     height: 800
     title: qsTr("Doric Demo")
 
-    Rectangle {
+    StackView {
+        id: stack
+        objectName: "stackView"
         anchors.fill: parent
-
-        ScrollView {
+        initialItem: ScrollView {
             id: entry
 
             anchors.fill: parent
@@ -88,14 +89,9 @@ ApplicationWindow {
                 }
             }
         }
-
-        onChildrenChanged: {
-            stack.push(this.children[this.children.length - 1])
-        }
     }
 
-    StackView {
-        id: stack
-        anchors.fill: parent
+    function navigatorPush(page) {
+        stack.push(page)
     }
 }

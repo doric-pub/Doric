@@ -2,6 +2,7 @@
 
 #include "DoricPanel.h"
 #include "engine/DoricPromise.h"
+#include "loader/DoricJSLoaderManager.h"
 #include "utils/DoricUtils.h"
 
 #include <QJsonDocument>
@@ -26,9 +27,11 @@ void DoricNavigatorPlugin::push(QString jsValueString, QString callbackId) {
   }
 
   getContext()->getDriver()->asyncCall(
-      [this, alias] {
-        QString name = alias;
-        QString script = DoricUtils::readAssetFile("/doric/bundles", name);
+      [this, source, alias] {
+        std::shared_ptr<DoricAsyncResult> asyncResult =
+            DoricJSLoaderManager::getInstance()->request(source);
+
+        QString script = asyncResult->getResult();
 
         QQmlComponent component(getContext()->getQmlEngine());
         const QUrl url(QStringLiteral("qrc:/doric/qml/panel.qml"));
@@ -39,7 +42,7 @@ void DoricNavigatorPlugin::push(QString jsValueString, QString callbackId) {
             new DoricPanel(getContext()->getQmlEngine(), quickItem);
         quickItem->setWidth(600);
         quickItem->setHeight(800);
-        panel->config(script, name, NULL);
+        panel->config(script, alias, NULL);
 
         QObject *window = getContext()->getQmlEngine()->rootObjects().at(0);
         QVariant arg = QVariant::fromValue(object);

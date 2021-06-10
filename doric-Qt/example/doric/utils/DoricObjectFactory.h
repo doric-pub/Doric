@@ -5,7 +5,9 @@
 #include <QHash>
 #include <QMetaObject>
 
-class DoricObjectFactory {
+#include "DoricExport.h"
+
+class DORIC_EXPORT DoricObjectFactory {
 public:
   template <typename T> static void registerClass(QString name) {
     constructors().insert(name, &constructorHelper<T>);

@@ -5,11 +5,13 @@
 #include <QString>
 #include <QVariant>
 
+#include "DoricExport.h"
+
 #include "DoricRegistry.h"
 #include "async/DoricAsyncResult.h"
 #include "utils/DoricThreadMode.h"
 
-class DoricInterfaceDriver {
+class DORIC_EXPORT DoricInterfaceDriver {
 public:
   virtual std::shared_ptr<DoricAsyncResult>
   invokeContextEntityMethod(QString contextId, QString method,

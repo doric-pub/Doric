@@ -3,9 +3,11 @@
 
 #include <QDebug>
 
+#include "DoricExport.h"
+
 #include "DoricInterfaceLoader.h"
 
-class DoricJSLoaderManager {
+class DORIC_EXPORT DoricJSLoaderManager {
 private:
   static DoricJSLoaderManager *local_instance;
 

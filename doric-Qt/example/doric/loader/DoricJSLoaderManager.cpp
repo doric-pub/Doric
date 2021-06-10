@@ -1,7 +1,10 @@
 #include "DoricJSLoaderManager.h"
+#include "DoricAssetJSLoader.h"
 
 DoricJSLoaderManager::DoricJSLoaderManager() {
   qDebug() << "DoricJSLoaderManager constructor";
+
+  addJSLoader(new DoricAssetJSLoader());
 }
 
 void DoricJSLoaderManager::addJSLoader(DoricInterfaceLoader *jsLoader) {

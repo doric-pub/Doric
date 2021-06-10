@@ -1,9 +1,11 @@
 #ifndef DORIC_H
 #define DORIC_H
 
+#include "DoricExport.h"
+
 #include "DoricLibrary.h"
 
-class Doric {
+class DORIC_EXPORT Doric {
 public:
   static void registerLibrary(DoricLibrary *doricLibrary) {
     DoricRegistry::getInstance()->registerLibrary(doricLibrary);

@@ -5,7 +5,7 @@ import QtQuick.Layouts 1.15
 ApplicationWindow {
     id: window
 
-    flags: flags | Qt.WindowStaysOnTopHint  | Qt.Tool | Qt.FramelessWindowHint | Qt.WindowTransparentForInput
+    flags: Qt.WindowStaysOnTopHint  | Qt.Tool | Qt.FramelessWindowHint | Qt.WindowTransparentForInput
 
     color: "#bb000000"
     visible: true

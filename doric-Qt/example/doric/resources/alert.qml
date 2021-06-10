@@ -4,7 +4,7 @@ import QtQuick.Controls 2.12
 ApplicationWindow {
     id: window
 
-    flags: flags | Qt.WindowStaysOnTopHint | Qt.Tool | Qt.FramelessWindowHint
+    flags: Qt.WindowStaysOnTopHint | Qt.Tool | Qt.FramelessWindowHint
     visible: true
     modality: Qt.ApplicationModal
 

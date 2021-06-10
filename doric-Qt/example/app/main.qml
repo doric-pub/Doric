@@ -169,7 +169,6 @@ ApplicationWindow {
 
     function navigatorPop() {
         stack.pop()
-        console.log("stack.depth", stack.depth)
         if (stack.depth > 1) {
             navbar.visible = true
         } else {

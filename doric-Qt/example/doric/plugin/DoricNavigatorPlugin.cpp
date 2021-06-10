@@ -59,7 +59,21 @@ void DoricNavigatorPlugin::push(QString jsValueString, QString callbackId) {
       DoricThreadMode::JS);
 }
 
-void DoricNavigatorPlugin::pop(QString jsValueString, QString callbackId) {}
+void DoricNavigatorPlugin::pop(QString jsValueString, QString callbackId) {
+  getContext()->getDriver()->asyncCall(
+      [this] {
+        QObject *window = getContext()->getQmlEngine()->rootObjects().at(0);
+        QMetaObject::invokeMethod(window, "navigatorPop");
+      },
+      DoricThreadMode::UI);
+
+  getContext()->getDriver()->asyncCall(
+      [this, callbackId] {
+        QVariantList args;
+        DoricPromise::resolve(getContext(), callbackId, args);
+      },
+      DoricThreadMode::JS);
+}
 
 void DoricNavigatorPlugin::popSelf(QString jsValueString, QString callbackId) {}
 

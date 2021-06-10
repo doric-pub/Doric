@@ -10,7 +10,7 @@ private:
   QString result;
 
 public:
-  std::function<void()> resultCallback;
+  std::function<void()> resultCallback = [] {};
   std::function<void()> exceptionCallback;
   std::function<void()> finishCallback;
 

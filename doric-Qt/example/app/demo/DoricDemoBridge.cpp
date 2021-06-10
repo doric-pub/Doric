@@ -3,6 +3,7 @@
 
 #include "DoricDemoBridge.h"
 #include "DoricPanel.h"
+#include "loader/DoricJSLoaderManager.h"
 #include "utils/DoricDialogBridge.h"
 #include "utils/DoricDraggableBridge.h"
 #include "utils/DoricImageBridge.h"
@@ -36,9 +37,9 @@ DoricDemoBridge::DoricDemoBridge(QQmlApplicationEngine *engine, QObject *parent)
   context->setContextProperty("draggableBridge", draggableBridge);
 }
 
-void DoricDemoBridge::navigate(QVariant route) {
+void DoricDemoBridge::navigate(QVariant path, QVariant index) {
   QString name;
-  switch (route.toInt()) {
+  switch (index.toInt()) {
   case 0:
     name = "ComponetDemo.js";
     break;
@@ -109,7 +110,12 @@ void DoricDemoBridge::navigate(QVariant route) {
     name = "TextDemo.js";
     break;
   }
-  QString script = DoricUtils::readAssetFile("/doric/bundles", name);
+
+  QString resourcePath = path.toString();
+  std::shared_ptr<DoricAsyncResult> asyncResult =
+      DoricJSLoaderManager::getInstance()->request(resourcePath + name);
+
+  QString script = asyncResult->getResult();
 
   QQmlComponent component(mEngine);
   const QUrl url(QStringLiteral("qrc:/doric/qml/panel.qml"));

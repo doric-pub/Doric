@@ -39,6 +39,7 @@ SOURCES += \
         loader/DoricAssetJSLoader.cpp \
         loader/DoricJSLoaderManager.cpp \
         plugin/DoricModalPlugin.cpp \
+        plugin/DoricNavBarPlugin.cpp \
         plugin/DoricNavigatorPlugin.cpp \
         plugin/DoricNetworkPlugin.cpp \
         plugin/DoricNotificationPlugin.cpp \
@@ -131,6 +132,7 @@ HEADERS += \
     loader/DoricJSLoaderManager.h \
     plugin/DoricModalPlugin.h \
     plugin/DoricNativePlugin.h \
+    plugin/DoricNavBarPlugin.h \
     plugin/DoricNavigatorPlugin.h \
     plugin/DoricNetworkPlugin.h \
     plugin/DoricNotificationPlugin.h \

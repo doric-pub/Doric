@@ -175,4 +175,16 @@ ApplicationWindow {
             navbar.visible = false
         }
     }
+
+    function navigatorPopToRoot() {
+        while (stack.depth > 1) {
+            stack.pop()
+        }
+
+        if (stack.depth > 1) {
+            navbar.visible = true
+        } else {
+            navbar.visible = false
+        }
+    }
 }

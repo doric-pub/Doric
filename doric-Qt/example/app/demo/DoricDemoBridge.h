@@ -11,7 +11,7 @@ public:
                            QObject *parent = nullptr);
 
   Q_INVOKABLE
-  void navigate(QVariant path, QVariant index);
+  void navigate(QVariant source, QVariant alias);
 
 private:
   QQmlApplicationEngine *mEngine;

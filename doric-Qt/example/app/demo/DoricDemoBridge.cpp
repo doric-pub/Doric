@@ -37,83 +37,9 @@ DoricDemoBridge::DoricDemoBridge(QQmlApplicationEngine *engine, QObject *parent)
   context->setContextProperty("draggableBridge", draggableBridge);
 }
 
-void DoricDemoBridge::navigate(QVariant path, QVariant index) {
-  QString name;
-  switch (index.toInt()) {
-  case 0:
-    name = "ComponetDemo.js";
-    break;
-  case 1:
-    name = "Counter.js";
-    break;
-  case 2:
-    name = "DraggableDemo.js";
-    break;
-  case 3:
-    name = "EffectsDemo.js";
-    break;
-  case 4:
-    name = "FlexDemo.js";
-    break;
-  case 5:
-    name = "Gobang.js";
-    break;
-  case 6:
-    name = "ImageDemo.js";
-    break;
-  case 7:
-    name = "InputDemo.js";
-    break;
-  case 8:
-    name = "LayoutDemo.js";
-    break;
-  case 9:
-    name = "LayoutTestDemo.js";
-    break;
-  case 10:
-    name = "ModalDemo.js";
-    break;
-  case 11:
-    name = "ModularDemo.js";
-    break;
-  case 12:
-    name = "NavigatorDemo.js";
-    break;
-  case 13:
-    name = "NetworkDemo.js";
-    break;
-  case 14:
-    name = "NotificationDemo.js";
-    break;
-  case 15:
-    name = "PopoverDemo.js";
-    break;
-  case 16:
-    name = "ScrollerDemo.js";
-    break;
-  case 17:
-    name = "SimpleDemo.js";
-    break;
-  case 18:
-    name = "SliderDemo.js";
-    break;
-  case 19:
-    name = "Snake.js";
-    break;
-  case 20:
-    name = "StorageDemo.js";
-    break;
-  case 21:
-    name = "SwitchDemo.js";
-    break;
-  case 22:
-    name = "TextDemo.js";
-    break;
-  }
-
-  QString resourcePath = path.toString();
+void DoricDemoBridge::navigate(QVariant source, QVariant alias) {
   std::shared_ptr<DoricAsyncResult> asyncResult =
-      DoricJSLoaderManager::getInstance()->request(resourcePath + name);
+      DoricJSLoaderManager::getInstance()->request(source.toString());
 
   QString script = asyncResult->getResult();
 
@@ -125,7 +51,7 @@ void DoricDemoBridge::navigate(QVariant path, QVariant index) {
   DoricPanel *panel = new DoricPanel(mEngine, quickItem);
   quickItem->setWidth(600);
   quickItem->setHeight(800);
-  panel->config(script, name, NULL);
+  panel->config(script, alias.toString(), NULL);
 
   QObject *window = mEngine->rootObjects().at(0);
   QVariant arg = QVariant::fromValue(object);

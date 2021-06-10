@@ -24,6 +24,19 @@ public:
     return content;
   }
 
+  static QString readAssetFile(QString resourcePath) {
+    QResource resource(":" + resourcePath);
+    QFile *file = new QFile(resource.fileName());
+    file->open(QFile::ReadOnly | QFile::Text);
+    QTextStream in(file);
+    in.setCodec("UTF-8");
+    QString content = in.readAll();
+    file->close();
+    delete file;
+
+    return content;
+  }
+
   template <typename Base, typename T>
   static inline bool instanceof (const T *) {
     return std::is_base_of<Base, T>::value;

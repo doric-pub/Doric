@@ -148,7 +148,7 @@ ApplicationWindow {
                             MouseArea {
                                 anchors.fill: parent
                                 onClicked: {
-                                    demoBridge.navigate(index)
+                                    demoBridge.navigate("assets://src/", index)
                                 }
                             }
                         }

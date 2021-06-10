@@ -83,63 +83,68 @@ ApplicationWindow {
                     ScrollBar.vertical.policy: ScrollBar.AlwaysOff
 
                     ListView {
+                        id: list
                         width: parent.width
                         model: 23
                         boundsBehavior: Flickable.StopAtBounds
+
+                        function getSource(index) : string {
+                            switch (index) {
+                                case 0:
+                                    return "ComponetDemo.js"
+                                case 1:
+                                    return "Counter.js"
+                                case 2:
+                                    return "DraggableDemo.js"
+                                case 3:
+                                    return "EffectsDemo.js"
+                                case 4:
+                                    return "FlexDemo.js"
+                                case 5:
+                                    return "Gobang.js"
+                                case 6:
+                                    return "ImageDemo.js"
+                                case 7:
+                                    return "InputDemo.js"
+                                case 8:
+                                    return "LayoutDemo.js"
+                                case 9:
+                                    return "LayoutTestDemo.js"
+                                case 10:
+                                    return "ModalDemo.js"
+                                case 11:
+                                    return "ModularDemo.js"
+                                case 12:
+                                    return "NavigatorDemo.js"
+                                case 13:
+                                    return "NetworkDemo.js"
+                                case 14:
+                                    return "NotificationDemo.js"
+                                case 15:
+                                    return "PopoverDemo.js"
+                                case 16:
+                                    return "ScrollerDemo.js"
+                                case 17:
+                                    return "SimpleDemo.js"
+                                case 18:
+                                    return "SliderDemo.js"
+                                case 19:
+                                    return "Snake.js"
+                                case 20:
+                                    return "StorageDemo.js"
+                                case 21:
+                                    return "SwitchDemo.js"
+                                case 22:
+                                    return "TextDemo.js"
+                            }
+                        }
 
                         delegate: Rectangle {
                             Column {
                                 anchors.centerIn: parent
                                 Text {
                                     text: {
-                                        switch (index) {
-                                            case 0:
-                                                return "ComponetDemo.js"
-                                            case 1:
-                                                return "Counter.js"
-                                            case 2:
-                                                return "DraggableDemo.js"
-                                            case 3:
-                                                return "EffectsDemo.js"
-                                            case 4:
-                                                return "FlexDemo.js"
-                                            case 5:
-                                                return "Gobang.js"
-                                            case 6:
-                                                return "ImageDemo.js"
-                                            case 7:
-                                                return "InputDemo.js"
-                                            case 8:
-                                                return "LayoutDemo.js"
-                                            case 9:
-                                                return "LayoutTestDemo.js"
-                                            case 10:
-                                                return "ModalDemo.js"
-                                            case 11:
-                                                return "ModularDemo.js"
-                                            case 12:
-                                                return "NavigatorDemo.js"
-                                            case 13:
-                                                return "NetworkDemo.js"
-                                            case 14:
-                                                return "NotificationDemo.js"
-                                            case 15:
-                                                return "PopoverDemo.js"
-                                            case 16:
-                                                return "ScrollerDemo.js"
-                                            case 17:
-                                                return "SimpleDemo.js"
-                                            case 18:
-                                                return "SliderDemo.js"
-                                            case 19:
-                                                return "Snake.js"
-                                            case 20:
-                                                return "StorageDemo.js"
-                                            case 21:
-                                                return "SwitchDemo.js"
-                                            case 22:
-                                                return "TextDemo.js"
-                                        }
+                                        return list.getSource(index)
                                     }
                                 }
                             }
@@ -148,7 +153,8 @@ ApplicationWindow {
                             MouseArea {
                                 anchors.fill: parent
                                 onClicked: {
-                                    demoBridge.navigate("assets://src/", index)
+                                    let source = list.getSource(index)
+                                    demoBridge.navigate("assets://src/" + source, source)
                                 }
                             }
                         }

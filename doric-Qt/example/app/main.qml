@@ -43,7 +43,8 @@ ApplicationWindow {
                 }
 
                 MouseArea {
-                    anchors.fill: parent
+                    width: parent.width
+                    height: parent.height
                     onClicked: {
                         navigatorPop()
                     }
@@ -66,25 +67,27 @@ ApplicationWindow {
         }
 
         Rectangle {
+            id: content
             Layout.fillWidth: true
             Layout.fillHeight: true
 
             StackView {
                 id: stack
                 objectName: "stackView"
-                anchors.fill: parent
+                anchors.fill: content
 
                 initialItem: ScrollView {
                     id: entry
 
-                    anchors.fill: parent
+                    width: content.width
+                    height: content.height
 
                     ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
                     ScrollBar.vertical.policy: ScrollBar.AlwaysOff
 
                     ListView {
                         id: list
-                        width: parent.width
+                        width: content.width
                         model: 23
                         boundsBehavior: Flickable.StopAtBounds
 
@@ -148,7 +151,7 @@ ApplicationWindow {
                                     }
                                 }
                             }
-                            width: parent.width
+                            width: content.width
                             height: 60
                             MouseArea {
                                 anchors.fill: parent

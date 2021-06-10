@@ -14,14 +14,28 @@ ApplicationWindow {
 
         Rectangle {
             id: navbar
+            objectName: "navbar"
             visible: false
             Layout.fillWidth: true
             Layout.preferredHeight: 44
 
-            Text {
-                text: "Title"
-                font.pixelSize: 16
-                anchors.centerIn: parent
+            Rectangle {
+                anchors.fill: parent
+                color: "transparent"
+
+                Text {
+                    anchors.centerIn: parent
+                    objectName: "title"
+                    font.pixelSize: 16
+                }
+
+                Rectangle {
+                    anchors.centerIn: parent
+                    objectName: "center"
+                    color: "red"
+                    width: childrenRect.width
+                    height: childrenRect.height
+                }
             }
 
             RowLayout {
@@ -30,16 +44,15 @@ ApplicationWindow {
                     Layout.preferredWidth: 10
                 }
 
-                Image {
-                    Layout.preferredWidth: 24
-                    Layout.preferredHeight: 24
-                    id: name
-                    source: "qrc:/doric/qml/doric_icon_back.png"
-                }
+                RowLayout {
+                    objectName: "left"
 
-                Text {
-                    text: "Left"
-                    font.pixelSize: 16
+                    Image {
+                        Layout.preferredWidth: 24
+                        Layout.preferredHeight: 24
+                        id: name
+                        source: "qrc:/doric/qml/doric_icon_back.png"
+                    }
                 }
 
                 MouseArea {
@@ -55,9 +68,8 @@ ApplicationWindow {
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
 
-                Text {
-                    text: "Right"
-                    font.pixelSize: 16
+                RowLayout {
+                    objectName: "right"
                 }
 
                 Rectangle {
@@ -88,7 +100,7 @@ ApplicationWindow {
                     ListView {
                         id: list
                         width: content.width
-                        model: 23
+                        model: 24
                         boundsBehavior: Flickable.StopAtBounds
 
                         function getSource(index) : string {
@@ -118,26 +130,28 @@ ApplicationWindow {
                                 case 11:
                                     return "ModularDemo.js"
                                 case 12:
-                                    return "NavigatorDemo.js"
+                                    return "NavBarDemo.js"
                                 case 13:
-                                    return "NetworkDemo.js"
+                                    return "NavigatorDemo.js"
                                 case 14:
-                                    return "NotificationDemo.js"
+                                    return "NetworkDemo.js"
                                 case 15:
-                                    return "PopoverDemo.js"
+                                    return "NotificationDemo.js"
                                 case 16:
-                                    return "ScrollerDemo.js"
+                                    return "PopoverDemo.js"
                                 case 17:
-                                    return "SimpleDemo.js"
+                                    return "ScrollerDemo.js"
                                 case 18:
-                                    return "SliderDemo.js"
+                                    return "SimpleDemo.js"
                                 case 19:
-                                    return "Snake.js"
+                                    return "SliderDemo.js"
                                 case 20:
-                                    return "StorageDemo.js"
+                                    return "Snake.js"
                                 case 21:
-                                    return "SwitchDemo.js"
+                                    return "StorageDemo.js"
                                 case 22:
+                                    return "SwitchDemo.js"
+                                case 23:
                                     return "TextDemo.js"
                             }
                         }

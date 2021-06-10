@@ -5,6 +5,7 @@
 #include "loader/DoricJSLoaderManager.h"
 #include "utils/DoricUtils.h"
 
+#include <QDesktopServices>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QQmlApplicationEngine>
@@ -108,4 +109,15 @@ void DoricNavigatorPlugin::popToRoot(QString jsValueString,
       DoricThreadMode::JS);
 }
 
-void DoricNavigatorPlugin::openUrl(QString jsValueString, QString callbackId) {}
+void DoricNavigatorPlugin::openUrl(QString jsValueString, QString callbackId) {
+  getContext()->getDriver()->asyncCall(
+      [jsValueString] { QDesktopServices::openUrl(QUrl(jsValueString)); },
+      DoricThreadMode::UI);
+
+  getContext()->getDriver()->asyncCall(
+      [this, callbackId] {
+        QVariantList args;
+        DoricPromise::resolve(getContext(), callbackId, args);
+      },
+      DoricThreadMode::JS);
+}

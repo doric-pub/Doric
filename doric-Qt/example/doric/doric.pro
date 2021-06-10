@@ -36,6 +36,7 @@ SOURCES += \
         engine/native/NativeExecutor.cpp \
         engine/v8/JSValueHelper.cpp \
         engine/v8/V8Executor.cpp \
+        loader/DoricAssetJSLoader.cpp \
         loader/DoricJSLoaderManager.cpp \
         plugin/DoricModalPlugin.cpp \
         plugin/DoricNavigatorPlugin.cpp \
@@ -125,6 +126,7 @@ HEADERS += \
     engine/native/NativeExecutor.h \
     engine/v8/JSValueHelper.h \
     engine/v8/V8Executor.h \
+    loader/DoricAssetJSLoader.h \
     loader/DoricInterfaceLoader.h \
     loader/DoricJSLoaderManager.h \
     plugin/DoricModalPlugin.h \

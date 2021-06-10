@@ -3,7 +3,9 @@
 
 #include <QDebug>
 
-class DoricGlobalBroadcast {
+#include "DoricExport.h"
+
+class DORIC_EXPORT DoricGlobalBroadcast {
 private:
   static DoricGlobalBroadcast *local_instance;
   DoricGlobalBroadcast() { qDebug() << "DoricGlobalBroadcast constructor"; }

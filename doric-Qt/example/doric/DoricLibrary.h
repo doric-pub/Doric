@@ -1,9 +1,11 @@
 #ifndef DORICLIBRARY_H
 #define DORICLIBRARY_H
 
+#include "DoricExport.h"
+
 #include "DoricRegistry.h"
 
-class DoricLibrary {
+class DORIC_EXPORT DoricLibrary {
 public:
   virtual void load(DoricRegistry *registry) = 0;
 };

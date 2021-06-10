@@ -3,7 +3,9 @@
 
 #include <QDebug>
 
-class DoricSingleton {
+#include "DoricExport.h"
+
+class DORIC_EXPORT DoricSingleton {
 private:
   static DoricSingleton *local_instance;
   DoricSingleton() { qDebug() << "constructor"; }

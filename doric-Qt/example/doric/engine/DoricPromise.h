@@ -6,7 +6,9 @@
 #include "DoricContext.h"
 #include "utils/DoricConstant.h"
 
-class DoricPromise {
+#include "DoricExport.h"
+
+class DORIC_EXPORT DoricPromise {
 public:
   static void resolve(DoricContext *context, QString callbackId,
                       QVariantList args) {

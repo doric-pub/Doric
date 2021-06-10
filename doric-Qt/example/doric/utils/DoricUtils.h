@@ -7,7 +7,9 @@
 #include <QString>
 #include <QTextStream>
 
-class DoricUtils {
+#include "DoricExport.h"
+
+class DORIC_EXPORT DoricUtils {
 public:
   static QString readAssetFile(QString preffix, QString assetName) {
     QResource resource(":" + preffix + "/" + assetName);

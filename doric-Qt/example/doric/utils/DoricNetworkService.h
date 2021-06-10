@@ -9,7 +9,9 @@
 #include <QNetworkRequest>
 #include <QThread>
 
-class InnerTask : public QObject {
+#include "DoricExport.h"
+
+class DORIC_EXPORT InnerTask : public QObject {
   Q_OBJECT
 private:
   QNetworkRequest httpRequest;
@@ -63,7 +65,7 @@ signals:
   void response(int code, QList<QByteArray> headers, QByteArray data);
 };
 
-class DoricNetworkService : public QObject {
+class DORIC_EXPORT DoricNetworkService : public QObject {
   Q_OBJECT
 private:
   QThread thread;

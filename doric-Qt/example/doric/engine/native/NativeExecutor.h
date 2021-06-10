@@ -3,7 +3,9 @@
 
 #include <QJSEngine>
 
-class NativeExecutor {
+#include "DoricExport.h"
+
+class DORIC_EXPORT NativeExecutor {
 
 private:
   QJSEngine *mJSEngine;

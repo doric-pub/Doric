@@ -1,11 +1,13 @@
 #ifndef DORICINTERFACELOADER_H
 #define DORICINTERFACELOADER_H
 
-#include "async/DoricAsyncResult.h"
-
 #include <QString>
 
-class DoricInterfaceLoader {
+#include "DoricExport.h"
+
+#include "async/DoricAsyncResult.h"
+
+class DORIC_EXPORT DoricInterfaceLoader {
 public:
   virtual bool filter(QString source) = 0;
 

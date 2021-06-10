@@ -8,10 +8,12 @@
 #include <QObject>
 #include <QString>
 
+#include "DoricExport.h"
+
 static QMap<QString, QPair<QObject *, QString>> *map =
     new QMap<QString, QPair<QObject *, QString>>();
 
-class V8Executor {
+class DORIC_EXPORT V8Executor {
 
 private:
   std::unique_ptr<v8::Platform> platform;

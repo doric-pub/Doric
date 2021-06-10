@@ -4,7 +4,9 @@
 #include <QString>
 #include <QVariant>
 
-class DoricInterfaceJSE {
+#include "DoricExport.h"
+
+class DORIC_EXPORT DoricInterfaceJSE {
 public:
   virtual QString loadJS(QString script, QString source) = 0;
 

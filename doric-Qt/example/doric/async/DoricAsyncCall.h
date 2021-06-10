@@ -5,9 +5,11 @@
 #include <QThreadPool>
 #include <QtConcurrent/QtConcurrent>
 
+#include "DoricExport.h"
+
 #include "DoricAsyncResult.h"
 
-class DoricAsyncCall {
+class DORIC_EXPORT DoricAsyncCall {
 
 public:
   template <typename Function>

@@ -3799,6 +3799,10 @@ __decorate$3([
     Property,
     __metadata$3("design:type", Function)
 ], Input.prototype, "onSubmitEditing", void 0);
+__decorate$3([
+    Property,
+    __metadata$3("design:type", Function)
+], Input.prototype, "beforeTextChange", void 0);
 exports.InputType = void 0;
 (function (InputType) {
     InputType[InputType["Default"] = 0] = "Default";

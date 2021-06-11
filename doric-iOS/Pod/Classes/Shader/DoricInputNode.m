@@ -20,6 +20,7 @@
 //  Created by 姜腾 on 2019/12/11.
 //
 
+#import <JavaScriptCore/JavaScriptCore.h>
 #import "DoricInputNode.h"
 #import "DoricUtil.h"
 #import "DoricPromise.h"
@@ -76,6 +77,7 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
 @property(nonatomic, copy) onFocusChangeBlock onFocusChange;
 @property(nonatomic, copy) onSubmitEditingBlock onSubmitEditing;
 @property(nonatomic, strong) NSNumber *maxLength;
+@property(nonatomic, copy) NSString *beforeTextChangeFuncId;
 @end
 
 @implementation DoricInputNode
@@ -116,6 +118,8 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
         } else {
             view.textContainer.maximumNumberOfLines = 0;
         }
+    } else if ([name isEqualToString:@"beforeTextChange"]) {
+        self.beforeTextChangeFuncId = prop;
     } else if ([name isEqualToString:@"hintText"]) {
         view.placeholderLabel.text = (NSString *) prop;
     } else if ([name isEqualToString:@"hintTextColor"]) {
@@ -282,6 +286,22 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
             }
             return NO;
         }
+    }
+
+    if (self.beforeTextChangeFuncId) {
+        DoricAsyncResult *asyncResult = [self
+                pureCallJSResponse:self.beforeTextChangeFuncId,
+                                   @{
+                                           @"editing": textView.text,
+                                           @"start": @(range.location),
+                                           @"length": @(range.length),
+                                           @"replacement": text,
+                                   },
+                        nil];
+        NSNumber *ret = [asyncResult waitUntilResult:^(JSValue *model) {
+            return [model toNumber];
+        }];
+        return [ret boolValue];
     }
     return YES;
 }

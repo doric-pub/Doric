@@ -75,6 +75,14 @@ export class Input extends View {
     @Property
     onSubmitEditing?: (text: string) => void
 
+    @Property
+    beforeTextChange?: (change: {
+        editing: string,
+        start: number,
+        length: number,
+        replacement: string,
+    }) => boolean
+
     getText(context: BridgeContext) {
         return this.nativeChannel(context, 'getText')() as Promise<string>
     }

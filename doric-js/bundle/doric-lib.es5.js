@@ -2860,6 +2860,10 @@ var Input = /** @class */ (function (_super) {
         Property,
         __metadata$3("design:type", Function)
     ], Input.prototype, "onSubmitEditing", void 0);
+    __decorate$3([
+        Property,
+        __metadata$3("design:type", Function)
+    ], Input.prototype, "beforeTextChange", void 0);
     return Input;
 }(View));
 exports.InputType = void 0;

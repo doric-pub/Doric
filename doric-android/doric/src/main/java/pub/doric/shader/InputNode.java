@@ -190,6 +190,37 @@ public class InputNode extends ViewNode<EditText> implements TextWatcher, View.O
 
                 }
                 break;
+            case "editable":
+                if (prop.isBoolean()) {
+                    view.setEnabled(prop.asBoolean().value());
+                }
+                break;
+            case "returnKeyType":
+                if (prop.isNumber()) {
+                    int returnKeyType = prop.asNumber().toInt();
+                    switch (returnKeyType) {
+                        case 1:
+                            view.setImeOptions(EditorInfo.IME_ACTION_DONE);
+                            break;
+                        case 2:
+                            view.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+                            break;
+                        case 3:
+                            view.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+                            break;
+                        case 4:
+                            view.setImeOptions(EditorInfo.IME_ACTION_GO);
+                            break;
+                        case 5:
+                            view.setImeOptions(EditorInfo.IME_ACTION_SEND);
+                            break;
+                        case 0:
+                        default:
+                            view.setImeOptions(EditorInfo.IME_ACTION_UNSPECIFIED);
+                            break;
+                    }
+                }
+                break;
             default:
                 super.blend(view, name, prop);
                 break;

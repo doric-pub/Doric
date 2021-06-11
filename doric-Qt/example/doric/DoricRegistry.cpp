@@ -21,6 +21,8 @@
 #include "shader/DoricSwitchNode.h"
 #include "shader/DoricTextNode.h"
 #include "shader/DoricVLayoutNode.h"
+#include "shader/list/DoricListItemNode.h"
+#include "shader/list/DoricListNode.h"
 #include "shader/slider/DoricSlideItemNode.h"
 #include "shader/slider/DoricSliderNode.h"
 
@@ -49,6 +51,8 @@ DoricRegistry::DoricRegistry() {
   registerViewNode<DoricSwitchNode>("Switch");
   registerViewNode<DoricDraggableNode>("Draggable");
   registerViewNode<DoricFlexNode>("FlexLayout");
+  registerViewNode<DoricListNode>("List");
+  registerViewNode<DoricListItemNode>("ListItem");
 }
 
 bool DoricRegistry::acquirePluginInfo(QString name) {

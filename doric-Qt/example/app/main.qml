@@ -100,7 +100,7 @@ ApplicationWindow {
                     ListView {
                         id: list
                         width: content.width
-                        model: 24
+                        model: 25
                         boundsBehavior: Flickable.StopAtBounds
 
                         function getSource(index) : string {
@@ -126,32 +126,34 @@ ApplicationWindow {
                                 case 9:
                                     return "LayoutTestDemo.js"
                                 case 10:
-                                    return "ModalDemo.js"
+                                    return "ListDemo.js"
                                 case 11:
-                                    return "ModularDemo.js"
+                                    return "ModalDemo.js"
                                 case 12:
-                                    return "NavBarDemo.js"
+                                    return "ModularDemo.js"
                                 case 13:
-                                    return "NavigatorDemo.js"
+                                    return "NavBarDemo.js"
                                 case 14:
-                                    return "NetworkDemo.js"
+                                    return "NavigatorDemo.js"
                                 case 15:
-                                    return "NotificationDemo.js"
+                                    return "NetworkDemo.js"
                                 case 16:
-                                    return "PopoverDemo.js"
+                                    return "NotificationDemo.js"
                                 case 17:
-                                    return "ScrollerDemo.js"
+                                    return "PopoverDemo.js"
                                 case 18:
-                                    return "SimpleDemo.js"
+                                    return "ScrollerDemo.js"
                                 case 19:
-                                    return "SliderDemo.js"
+                                    return "SimpleDemo.js"
                                 case 20:
-                                    return "Snake.js"
+                                    return "SliderDemo.js"
                                 case 21:
-                                    return "StorageDemo.js"
+                                    return "Snake.js"
                                 case 22:
-                                    return "SwitchDemo.js"
+                                    return "StorageDemo.js"
                                 case 23:
+                                    return "SwitchDemo.js"
+                                case 24:
                                     return "TextDemo.js"
                             }
                         }

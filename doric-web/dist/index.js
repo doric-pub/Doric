@@ -3729,6 +3729,9 @@ class Input extends View {
             end,
         });
     }
+    getSelection(context) {
+        return this.nativeChannel(context, 'getSelection')();
+    }
     requestFocus(context) {
         return this.nativeChannel(context, 'requestFocus')();
     }

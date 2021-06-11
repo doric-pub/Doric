@@ -19,6 +19,7 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.TypedValue;
@@ -30,8 +31,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
+
+import org.json.JSONObject;
 
 import java.util.LinkedList;
 
@@ -73,15 +77,15 @@ public class InputNode extends ViewNode<EditText> implements TextWatcher, View.O
                 InputFilter[] currentFilters = view.getFilters();
 
                 LinkedList<InputFilter> list = new LinkedList<>();
-                for (int i = 0; i < currentFilters.length; i++) {
-                    if (!(currentFilters[i] instanceof InputFilter.LengthFilter)) {
-                        list.add(currentFilters[i]);
+                for (InputFilter currentFilter : currentFilters) {
+                    if (!(currentFilter instanceof InputFilter.LengthFilter)) {
+                        list.add(currentFilter);
                     }
                 }
                 if (prop.isNumber()) {
                     list.add(new InputFilter.LengthFilter(prop.asNumber().toInt()));
                 }
-                InputFilter[] newFilters = list.toArray(new InputFilter[list.size()]);
+                InputFilter[] newFilters = list.toArray(new InputFilter[0]);
 
                 view.setFilters(newFilters);
                 break;
@@ -286,6 +290,14 @@ public class InputNode extends ViewNode<EditText> implements TextWatcher, View.O
         int end = jsObject.getProperty("end").asNumber().toInt();
         mView.setSelection(start, end);
         doricPromise.resolve();
+    }
+
+    @DoricMethod
+    public JSONObject getSelection() {
+        return new JSONBuilder()
+                .put("start", mView.getSelectionStart())
+                .put("end", mView.getSelectionEnd())
+                .toJSONObject();
     }
 
     @DoricMethod

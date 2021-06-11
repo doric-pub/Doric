@@ -2791,6 +2791,9 @@ var Input = /** @class */ (function (_super) {
             end: end,
         });
     };
+    Input.prototype.getSelection = function (context) {
+        return this.nativeChannel(context, 'getSelection')();
+    };
     Input.prototype.requestFocus = function (context) {
         return this.nativeChannel(context, 'requestFocus')();
     };

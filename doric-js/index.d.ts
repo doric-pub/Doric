@@ -785,7 +785,11 @@ declare module 'doric/lib/src/widget/input' {
         returnKeyType?: ReturnKeyType;
         onSubmitEditing?: (text: string) => void;
         getText(context: BridgeContext): Promise<string>;
-        setSelection(context: BridgeContext, start: number, end?: number): Promise<string>;
+        setSelection(context: BridgeContext, start: number, end?: number): Promise<any>;
+        getSelection(context: BridgeContext): Promise<{
+            start: number;
+            end: number;
+        }>;
         requestFocus(context: BridgeContext): Promise<any>;
         releaseFocus(context: BridgeContext): Promise<any>;
     }

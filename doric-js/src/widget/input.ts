@@ -75,7 +75,6 @@ export class Input extends View {
     @Property
     onSubmitEditing?: (text: string) => void
 
-
     getText(context: BridgeContext) {
         return this.nativeChannel(context, 'getText')() as Promise<string>
     }
@@ -84,8 +83,16 @@ export class Input extends View {
         return this.nativeChannel(context, 'setSelection')({
             start,
             end,
-        }) as Promise<string>
+        }) as Promise<any>
     }
+
+    getSelection(context: BridgeContext) {
+        return this.nativeChannel(context, 'getSelection')() as Promise<{
+            start: number,
+            end: number,
+        }>
+    }
+
 
     requestFocus(context: BridgeContext) {
         return this.nativeChannel(context, 'requestFocus')()

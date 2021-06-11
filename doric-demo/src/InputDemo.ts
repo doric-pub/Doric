@@ -67,6 +67,17 @@ function getInput(c: Partial<Input>) {
         }
       }
     }),
+    preferenceView().applyChild({
+      title: {
+        text: "maxLength"
+      },
+      switch: {
+        state: true,
+        onSwitch: (ret) => {
+          inputView.maxLength = 20
+        }
+      }
+    }),
   ];
 }
 

@@ -243,6 +243,13 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
     [promise resolve:nil];
 }
 
+- (NSDictionary *)getSelection {
+    return @{
+            @"start": @([self.view offsetFromPosition:self.view.beginningOfDocument toPosition:self.view.selectedTextRange.start]),
+            @"end": @([self.view offsetFromPosition:self.view.beginningOfDocument toPosition:self.view.selectedTextRange.end]),
+    };
+}
+
 - (void)requestFocus {
     [self.view becomeFirstResponder];
 }

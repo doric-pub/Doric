@@ -31,6 +31,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.github.pengfeizhou.jscore.ArchiveException;
+import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
@@ -40,6 +42,7 @@ import org.json.JSONObject;
 import java.util.LinkedList;
 
 import pub.doric.DoricContext;
+import pub.doric.async.AsyncResult;
 import pub.doric.extension.bridge.DoricMethod;
 import pub.doric.extension.bridge.DoricPlugin;
 import pub.doric.extension.bridge.DoricPromise;
@@ -50,10 +53,11 @@ import pub.doric.extension.bridge.DoricPromise;
  * @CreateDate: 2019-12-06
  */
 @DoricPlugin(name = "Input")
-public class InputNode extends ViewNode<EditText> implements TextWatcher, View.OnFocusChangeListener {
+public class InputNode extends ViewNode<EditText> implements TextWatcher, View.OnFocusChangeListener, InputFilter {
     private final InputMethodManager mInputMethodManager;
     private String onTextChangeId;
     private String onFocusChangeId;
+    private String beforeTextChangeId;
 
     public InputNode(DoricContext doricContext) {
         super(doricContext);
@@ -67,6 +71,7 @@ public class InputNode extends ViewNode<EditText> implements TextWatcher, View.O
         editText.setOnFocusChangeListener(this);
         editText.setBackground(null);
         editText.setGravity(Gravity.START | Gravity.TOP);
+        editText.setFilters(new InputFilter[]{this});
         return editText;
     }
 
@@ -114,6 +119,13 @@ public class InputNode extends ViewNode<EditText> implements TextWatcher, View.O
                     view.setInputType(view.getInputType() | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                 } else {
                     view.setInputType(view.getInputType() & ~InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+                }
+                break;
+            case "beforeTextChange":
+                if (prop.isString()) {
+                    beforeTextChangeId = prop.asString().value();
+                } else {
+                    beforeTextChangeId = null;
                 }
                 break;
             case "onTextChange":
@@ -311,5 +323,26 @@ public class InputNode extends ViewNode<EditText> implements TextWatcher, View.O
         mView.clearFocus();
         mInputMethodManager.hideSoftInputFromWindow(mView.getWindowToken(), 0);
         promise.resolve();
+    }
+
+    @Override
+    public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+        if (TextUtils.isEmpty(beforeTextChangeId)) {
+            return null;
+        }
+        AsyncResult<JSDecoder> asyncResult = callJSResponse(beforeTextChangeId,
+                new JSONBuilder()
+                        .put("start", "")
+                        .put("length", "")
+                        .put("text", "")
+                        .toJSONObject());
+        JSDecoder jsDecoder = asyncResult.synchronous().get();
+        boolean ret = true;
+        try {
+            ret = jsDecoder.bool();
+        } catch (ArchiveException e) {
+            e.printStackTrace();
+        }
+        return ret ? null : "";
     }
 }

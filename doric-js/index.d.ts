@@ -784,6 +784,12 @@ declare module 'doric/lib/src/widget/input' {
         editable?: boolean;
         returnKeyType?: ReturnKeyType;
         onSubmitEditing?: (text: string) => void;
+        beforeTextChange?: (change: {
+            editing: string;
+            start: number;
+            length: number;
+            replacement: string;
+        }) => boolean;
         getText(context: BridgeContext): Promise<string>;
         setSelection(context: BridgeContext, start: number, end?: number): Promise<any>;
         getSelection(context: BridgeContext): Promise<{

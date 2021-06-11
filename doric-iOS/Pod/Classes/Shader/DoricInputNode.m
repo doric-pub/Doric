@@ -157,7 +157,31 @@ typedef void (^onFocusChangeBlock)(BOOL focused, DoricInputNode *node);
             }
         }
     } else if ([name isEqualToString:@"password"]) {
-        self.view.secureTextEntry = [(NSNumber *) prop boolValue];
+        view.secureTextEntry = [(NSNumber *) prop boolValue];
+    } else if ([name isEqualToString:@"editable"]) {
+        view.editable = [(NSNumber *) prop boolValue];
+    } else if ([name isEqualToString:@"returnKeyType"]) {
+        switch ([(NSNumber *) prop integerValue]) {
+            case 1:
+                view.returnKeyType = UIReturnKeyDone;
+                break;
+            case 2:
+                view.returnKeyType = UIReturnKeySearch;
+                break;
+            case 3:
+                view.returnKeyType = UIReturnKeyNext;
+                break;
+            case 4:
+                view.returnKeyType = UIReturnKeyGo;
+                break;
+            case 5:
+                view.returnKeyType = UIReturnKeySend;
+                break;
+            case 0:
+            default:
+                view.returnKeyType = UIReturnKeyDefault;
+                break;
+        }
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }

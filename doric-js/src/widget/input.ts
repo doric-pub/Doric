@@ -19,6 +19,15 @@ import { Gravity } from "../util/gravity";
 import { BridgeContext } from "../runtime/global";
 import { layoutConfig } from "../util/index.util";
 
+export enum ReturnKeyType {
+    Default = 0,
+    Done = 1,
+    Search = 2,
+    Next = 3,
+    Go = 4,
+    Send = 5,
+}
+
 export class Input extends View {
 
     @InconsistProperty
@@ -56,6 +65,12 @@ export class Input extends View {
 
     @Property
     password?: boolean
+
+    @Property
+    editable?: boolean
+
+    @Property
+    returnKeyType?: ReturnKeyType
 
     getText(context: BridgeContext) {
         return this.nativeChannel(context, 'getText')() as Promise<string>

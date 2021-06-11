@@ -8,6 +8,7 @@
 #include "utils/DoricDraggableBridge.h"
 #include "utils/DoricImageBridge.h"
 #include "utils/DoricInputBridge.h"
+#include "utils/DoricListBridge.h"
 #include "utils/DoricMouseAreaBridge.h"
 #include "utils/DoricSlideItemBridge.h"
 #include "utils/DoricSliderBridge.h"
@@ -35,6 +36,8 @@ DoricDemoBridge::DoricDemoBridge(QQmlApplicationEngine *engine, QObject *parent)
   context->setContextProperty("sliderBridge", sliderBridge);
   DoricDraggableBridge *draggableBridge = new DoricDraggableBridge();
   context->setContextProperty("draggableBridge", draggableBridge);
+  DoricListBridge *listBridge = new DoricListBridge();
+  context->setContextProperty("listBridge", listBridge);
 }
 
 void DoricDemoBridge::navigate(QVariant source, QVariant alias) {

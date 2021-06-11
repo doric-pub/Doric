@@ -72,6 +72,7 @@ SOURCES += \
         utils/DoricImageBridge.cpp \
         utils/DoricInputBridge.cpp \
         utils/DoricLayouts.cpp \
+        utils/DoricListBridge.cpp \
         utils/DoricMouseAreaBridge.cpp \
         utils/DoricSlideItemBridge.cpp \
         utils/DoricSliderBridge.cpp \
@@ -169,6 +170,7 @@ HEADERS += \
     utils/DoricImageBridge.h \
     utils/DoricInputBridge.h \
     utils/DoricLayouts.h \
+    utils/DoricListBridge.h \
     utils/DoricMouseAreaBridge.h \
     utils/DoricNetworkService.h \
     utils/DoricObjectFactory.h \

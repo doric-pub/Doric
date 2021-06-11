@@ -60,6 +60,8 @@ SOURCES += \
         shader/DoricTextNode.cpp \
         shader/DoricVLayoutNode.cpp \
         shader/DoricViewNode.cpp \
+        shader/list/DoricListItemNode.cpp \
+        shader/list/DoricListNode.cpp \
         shader/slider/DoricSlideItemNode.cpp \
         shader/slider/DoricSliderNode.cpp \
         utils/DoricConstant.cpp \
@@ -153,6 +155,8 @@ HEADERS += \
     shader/DoricTextNode.h \
     shader/DoricVLayoutNode.h \
     shader/DoricViewNode.h \
+    shader/list/DoricListItemNode.h \
+    shader/list/DoricListNode.h \
     shader/slider/DoricSlideItemNode.h \
     shader/slider/DoricSliderNode.h \
     template/DoricSingleton.h \

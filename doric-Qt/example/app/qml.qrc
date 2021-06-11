@@ -18,6 +18,7 @@
         <file alias="ImageDemo.js">../../../doric-demo/bundle/src/ImageDemo.js</file>
         <file alias="InputDemo.js">../../../doric-demo/bundle/src/InputDemo.js</file>
         <file alias="LayoutDemo.js">../../../doric-demo/bundle/src/LayoutDemo.js</file>
+        <file alias="ListDemo.js">../../../doric-demo/bundle/src/ListDemo.js</file>
         <file alias="LayoutTestDemo.js">../../../doric-demo/bundle/src/LayoutTestDemo.js</file>
         <file alias="ModalDemo.js">../../../doric-demo/bundle/src/ModalDemo.js</file>
         <file alias="ModularDemo.js">../../../doric-demo/bundle/src/ModularDemo.js</file>
@@ -54,6 +55,8 @@
         <file alias="switch.qml">../doric/resources/switch.qml</file>
         <file alias="draggable.qml">../doric/resources/draggable.qml</file>
         <file alias="flex.qml">../doric/resources/flex.qml</file>
+        <file alias="list.qml">../doric/resources/list.qml</file>
+        <file alias="list-item.qml">../doric/resources/list-item.qml</file>
 
         <file alias="toast.qml">../doric/resources/toast.qml</file>
         <file alias="alert.qml">../doric/resources/alert.qml</file>

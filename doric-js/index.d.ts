@@ -760,6 +760,14 @@ declare module 'doric/lib/src/widget/input' {
     import { Color } from "doric/lib/src/util/color";
     import { Gravity } from "doric/lib/src/util/gravity";
     import { BridgeContext } from "doric/lib/src/runtime/global";
+    export enum ReturnKeyType {
+        Default = 0,
+        Done = 1,
+        Search = 2,
+        Next = 3,
+        Go = 4,
+        Send = 5
+    }
     export class Input extends View {
         text?: string;
         textColor?: Color;
@@ -773,6 +781,9 @@ declare module 'doric/lib/src/widget/input' {
         onFocusChange?: (focused: boolean) => void;
         maxLength?: number;
         password?: boolean;
+        editable?: boolean;
+        returnKeyType?: ReturnKeyType;
+        onSubmitEditing?: (text: string) => void;
         getText(context: BridgeContext): Promise<string>;
         setSelection(context: BridgeContext, start: number, end?: number): Promise<string>;
         requestFocus(context: BridgeContext): Promise<any>;

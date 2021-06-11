@@ -6,14 +6,12 @@ import {
   layoutConfig,
   LayoutSpec,
   Input,
-  Gravity,
-  log,
   Color,
   input,
   text,
-  InputType,
 } from "doric";
-import { title, colors } from "./utils";
+import { preferenceView } from "./components/PreferenceView";
+import { title } from "./utils";
 
 function getInput(c: Partial<Input>) {
   const inputView = input(c);
@@ -37,56 +35,64 @@ function getInput(c: Partial<Input>) {
   inputView.onTextChange = (text) => {
     inputed.text = `Inputed:${text}`;
   };
-  return [inputView, isFocused, inputed];
+  inputView.onSubmitEditing = (text) => {
+    inputed.text = `Submited: ${text}`
+  };
+
+
+
+  return [
+    inputView,
+    isFocused,
+    inputed,
+    preferenceView().applyChild({
+      title: {
+        text: "Multiline"
+      },
+      switch: {
+        state: true,
+        onSwitch: (ret) => {
+          inputView.multiline = ret
+        }
+      }
+    }),
+    preferenceView().applyChild({
+      title: {
+        text: "Editable"
+      },
+      switch: {
+        state: true,
+        onSwitch: (ret) => {
+          inputView.editable = ret
+        }
+      }
+    }),
+  ];
 }
 
 @Entry
 class InputDemo extends Panel {
   build(root: Group) {
-    var [inputView, ...otherView] = getInput({
-      layoutConfig: {
-        widthSpec: LayoutSpec.FIT,
-        heightSpec: LayoutSpec.FIT,
-      },
-      hintText: "Please input something in one line",
-      border: {
-        width: 1,
-        color: Color.GRAY,
-      },
-      multiline: false,
-      textSize: 20,
-      maxLength: 20,
-      padding: { top: 10, bottom: 11 },
-      inputType: InputType.Decimal,
-      password: true,
-    });
+    let inputView: Input
     scroller(
       vlayout(
         [
           title("Demo"),
-          // ...getInput({
-          //     layoutConfig: {
-          //         widthSpec: LayoutSpec.JUST,
-          //         heightSpec: LayoutSpec.FIT,
-          //     },
-          //     width: 300,
-          //     hintText: "Please input something",
-          //     border: {
-          //         width: 1,
-          //         color: Color.GRAY,
-          //     },
-          //     textSize: 40,
-          //     maxLength: 20,
-          // }),
-          inputView,
-          ...otherView,
+          ...getInput({
+            layoutConfig: {
+              widthSpec: LayoutSpec.MOST,
+              heightSpec: LayoutSpec.FIT,
+            },
+            hintText: "Please input something",
+            border: {
+              width: 1,
+              color: Color.GRAY,
+            },
+          }),
         ],
         {
           space: 10,
           layoutConfig: layoutConfig().most().configHeight(LayoutSpec.MOST),
-          onClick: () => {
-            (inputView as Input).releaseFocus(context);
-          },
         }
       ),
       {

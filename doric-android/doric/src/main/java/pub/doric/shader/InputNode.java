@@ -23,10 +23,12 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
@@ -220,6 +222,28 @@ public class InputNode extends ViewNode<EditText> implements TextWatcher, View.O
                             break;
                     }
                 }
+                break;
+            case "onSubmitEditing":
+                if (!prop.isString()) {
+                    return;
+                }
+                final String functionId = prop.asString().value();
+                view.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                    @Override
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                        switch (actionId) {
+                            case EditorInfo.IME_ACTION_UNSPECIFIED:
+                            case EditorInfo.IME_ACTION_NEXT:
+                            case EditorInfo.IME_ACTION_DONE:
+                            case EditorInfo.IME_ACTION_GO:
+                            case EditorInfo.IME_ACTION_SEARCH:
+                            case EditorInfo.IME_ACTION_SEND:
+                                callJSResponse(functionId, v.getText().toString());
+                                return true;
+                        }
+                        return false;
+                    }
+                });
                 break;
             default:
                 super.blend(view, name, prop);

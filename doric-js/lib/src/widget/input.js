@@ -26,6 +26,15 @@ import { View, Property, InconsistProperty } from "../ui/view";
 import { Color } from "../util/color";
 import { Gravity } from "../util/gravity";
 import { layoutConfig } from "../util/index.util";
+export var ReturnKeyType;
+(function (ReturnKeyType) {
+    ReturnKeyType[ReturnKeyType["Default"] = 0] = "Default";
+    ReturnKeyType[ReturnKeyType["Done"] = 1] = "Done";
+    ReturnKeyType[ReturnKeyType["Search"] = 2] = "Search";
+    ReturnKeyType[ReturnKeyType["Next"] = 3] = "Next";
+    ReturnKeyType[ReturnKeyType["Go"] = 4] = "Go";
+    ReturnKeyType[ReturnKeyType["Send"] = 5] = "Send";
+})(ReturnKeyType || (ReturnKeyType = {}));
 export class Input extends View {
     getText(context) {
         return this.nativeChannel(context, 'getText')();
@@ -91,6 +100,18 @@ __decorate([
     Property,
     __metadata("design:type", Boolean)
 ], Input.prototype, "password", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Boolean)
+], Input.prototype, "editable", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Number)
+], Input.prototype, "returnKeyType", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Function)
+], Input.prototype, "onSubmitEditing", void 0);
 export var InputType;
 (function (InputType) {
     InputType[InputType["Default"] = 0] = "Default";

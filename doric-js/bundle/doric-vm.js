@@ -3656,6 +3656,15 @@ var __decorate$3 = (undefined && undefined.__decorate) || function (decorators, 
 var __metadata$3 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+exports.ReturnKeyType = void 0;
+(function (ReturnKeyType) {
+    ReturnKeyType[ReturnKeyType["Default"] = 0] = "Default";
+    ReturnKeyType[ReturnKeyType["Done"] = 1] = "Done";
+    ReturnKeyType[ReturnKeyType["Search"] = 2] = "Search";
+    ReturnKeyType[ReturnKeyType["Next"] = 3] = "Next";
+    ReturnKeyType[ReturnKeyType["Go"] = 4] = "Go";
+    ReturnKeyType[ReturnKeyType["Send"] = 5] = "Send";
+})(exports.ReturnKeyType || (exports.ReturnKeyType = {}));
 class Input extends View {
     getText(context) {
         return this.nativeChannel(context, 'getText')();
@@ -3721,6 +3730,18 @@ __decorate$3([
     Property,
     __metadata$3("design:type", Boolean)
 ], Input.prototype, "password", void 0);
+__decorate$3([
+    Property,
+    __metadata$3("design:type", Boolean)
+], Input.prototype, "editable", void 0);
+__decorate$3([
+    Property,
+    __metadata$3("design:type", Number)
+], Input.prototype, "returnKeyType", void 0);
+__decorate$3([
+    Property,
+    __metadata$3("design:type", Function)
+], Input.prototype, "onSubmitEditing", void 0);
 exports.InputType = void 0;
 (function (InputType) {
     InputType[InputType["Default"] = 0] = "Default";

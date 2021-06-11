@@ -105,6 +105,7 @@
     }
 
     if (width == self.collectionView.width) {
+        x = 0;
         CGFloat maxY = 0;
         for (NSNumber *column in self.columnHeightInfo.allValues) {
             maxY = MAX(maxY, [column floatValue]);
@@ -338,7 +339,12 @@
     DoricFlowLayoutItemNode *node = cell.viewNode;
     node.viewId = model[@"id"];
     [node blend:props];
-    node.view.width = (collectionView.width - (self.columnCount - 1) * self.columnSpace) / self.columnCount;
+    if (position > 0 && position >= self.itemCount) {
+        node.view.width = collectionView.width;
+    } else {
+        node.view.width = (collectionView.width - (self.columnCount - 1) * self.columnSpace) / self.columnCount;
+    }
+    
     if (position > 0 && position >= self.itemCount && self.onLoadMoreFuncId) {
         [self callLoadMore];
     }

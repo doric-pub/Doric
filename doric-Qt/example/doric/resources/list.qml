@@ -45,4 +45,9 @@ ListView {
         console.log(tag, uuid + " onCurrentIndexChanged: " + this.currentIndex)
     }
 
+    delegate: Rectangle {
+        Component.onCompleted: {
+//            listBridge.getItemModel(index)
+        }
+    }
 }

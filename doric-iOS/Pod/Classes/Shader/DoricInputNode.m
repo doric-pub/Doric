@@ -28,6 +28,8 @@ typedef void (^onTextChangeBlock)(NSString *text, DoricInputNode *node);
 
 typedef void (^onFocusChangeBlock)(BOOL focused, DoricInputNode *node);
 
+typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
+
 @implementation DoricInputView
 
 - (instancetype)init {
@@ -71,7 +73,8 @@ typedef void (^onFocusChangeBlock)(BOOL focused, DoricInputNode *node);
 
 @interface DoricInputNode () <UITextViewDelegate>
 @property(nonatomic, copy) onTextChangeBlock onTextChange;
-@property(nonatomic, copy) onFocusChangeBlock onFocusShange;
+@property(nonatomic, copy) onFocusChangeBlock onFocusChange;
+@property(nonatomic, copy) onSubmitEditingBlock onSubmitEditing;
 @property(nonatomic, strong) NSNumber *maxLength;
 @end
 
@@ -107,6 +110,9 @@ typedef void (^onFocusChangeBlock)(BOOL focused, DoricInputNode *node);
         BOOL value = [(NSNumber *) prop boolValue];
         if (!value) {
             view.textContainer.maximumNumberOfLines = 1;
+            if (view.text.length > 0) {
+                view.text = [view.text stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
+            }
         } else {
             view.textContainer.maximumNumberOfLines = 0;
         }
@@ -124,11 +130,11 @@ typedef void (^onFocusChangeBlock)(BOOL focused, DoricInputNode *node);
         }
     } else if ([name isEqualToString:@"onFocusChange"]) {
         if ([prop isKindOfClass:[NSString class]]) {
-            self.onFocusShange = ^(BOOL focused, DoricInputNode *node) {
+            self.onFocusChange = ^(BOOL focused, DoricInputNode *node) {
                 [node callJSResponse:prop, @(focused), nil];
             };
         } else {
-            self.onFocusShange = nil;
+            self.onFocusChange = nil;
         }
 
     } else if ([name isEqualToString:@"maxLength"]) {
@@ -161,6 +167,9 @@ typedef void (^onFocusChangeBlock)(BOOL focused, DoricInputNode *node);
     } else if ([name isEqualToString:@"editable"]) {
         view.editable = [(NSNumber *) prop boolValue];
     } else if ([name isEqualToString:@"returnKeyType"]) {
+        if (view.textContainer.maximumNumberOfLines == 1) {
+            return;
+        }
         switch ([(NSNumber *) prop integerValue]) {
             case 1:
                 view.returnKeyType = UIReturnKeyDone;
@@ -181,6 +190,14 @@ typedef void (^onFocusChangeBlock)(BOOL focused, DoricInputNode *node);
             default:
                 view.returnKeyType = UIReturnKeyDefault;
                 break;
+        }
+    } else if ([name isEqualToString:@"onSubmitEditing"]) {
+        if ([prop isKindOfClass:[NSString class]]) {
+            self.onSubmitEditing = ^(NSString *text, DoricInputNode *node) {
+                [node callJSResponse:prop, text, nil];
+            };
+        } else {
+            self.onSubmitEditing = nil;
         }
     } else {
         [super blendView:view forPropName:name propValue:prop];
@@ -237,15 +254,27 @@ typedef void (^onFocusChangeBlock)(BOOL focused, DoricInputNode *node);
 #pragma mark - UITextViewDelegate
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
-    if (self.onFocusShange) {
-        self.onFocusShange(YES, self);
+    if (self.onFocusChange) {
+        self.onFocusChange(YES, self);
     }
     return YES;
 }
 
 - (BOOL)textViewShouldEndEditing:(UITextView *)textView {
-    if (self.onFocusShange) {
-        self.onFocusShange(NO, self);
+    if (self.onFocusChange) {
+        self.onFocusChange(NO, self);
+    }
+    return YES;
+}
+
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    if ([text isEqualToString:@"\n"]) {
+        if (textView.textContainer.maximumNumberOfLines == 1) {
+            if (self.onSubmitEditing) {
+                self.onSubmitEditing(textView.text, self);
+            }
+            return NO;
+        }
     }
     return YES;
 }

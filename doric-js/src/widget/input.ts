@@ -72,6 +72,10 @@ export class Input extends View {
     @Property
     returnKeyType?: ReturnKeyType
 
+    @Property
+    onSubmitEditing?: (text: string) => void
+
+
     getText(context: BridgeContext) {
         return this.nativeChannel(context, 'getText')() as Promise<string>
     }

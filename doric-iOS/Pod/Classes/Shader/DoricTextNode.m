@@ -186,6 +186,6 @@
 
 - (void)blend:(NSDictionary *)props {
     [super blend:props];
-    [self.view.superview setNeedsLayout];
+    self.view.doricLayout.resolved = NO;
 }
 @end

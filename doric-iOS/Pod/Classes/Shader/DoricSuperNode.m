@@ -39,6 +39,7 @@
             [self mixinSubNode:subModel];
             [self blendSubNode:subModel];
         }
+        self.view.doricLayout.resolved = NO;
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }

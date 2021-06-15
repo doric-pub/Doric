@@ -98,3 +98,9 @@ void DoricTextNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
     DoricViewNode::blend(view, name, prop);
   }
 }
+
+void DoricTextNode::blend(QJsonValue jsValue) {
+  DoricViewNode::blend(jsValue);
+
+  getLayouts()->setResolved(false);
+}

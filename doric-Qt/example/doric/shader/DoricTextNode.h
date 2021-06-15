@@ -13,6 +13,8 @@ public:
 
   virtual void blendLayoutConfig(QJsonValue jsObject) override;
 
+  virtual void blend(QJsonValue jsValue) override;
+
   virtual void blend(QQuickItem *view, QString name, QJsonValue prop) override;
 };
 

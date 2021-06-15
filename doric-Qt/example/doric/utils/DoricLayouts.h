@@ -94,6 +94,7 @@ public:
   qreal getMeasuredHeight();
 
   bool getResolved();
+  void setResolved(bool resolved);
 
 private:
   QString tag;

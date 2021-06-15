@@ -753,3 +753,5 @@ void DoricLayouts::setMeasuredY(qreal measuredY) {
 }
 
 bool DoricLayouts::getResolved() { return resolved; }
+
+void DoricLayouts::setResolved(bool resolved) { this->resolved = resolved; }

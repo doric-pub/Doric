@@ -12,6 +12,8 @@ void DoricSuperNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
         mixinSubNode(subNode);
         blendSubNode(subNode);
       }
+
+      getLayouts()->setResolved(false);
     }
   } else {
     DoricViewNode::blend(view, name, prop);

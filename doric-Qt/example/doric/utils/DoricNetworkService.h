@@ -10,6 +10,7 @@
 #include <QThread>
 
 #include "DoricExport.h"
+#include "ReplyTimeout.h"
 
 class DORIC_EXPORT InnerTask : public QObject {
   Q_OBJECT
@@ -37,13 +38,13 @@ public:
       }
     }
 
-    if (timeoutVal.isDouble()) {
-      networkAccessManager.setTransferTimeout(timeoutVal.toInt());
-    }
-
     if (method == "get") {
       httpRequest.setUrl(QUrl(url));
       QNetworkReply *reply = networkAccessManager.get(httpRequest);
+
+      if (timeoutVal.isDouble()) {
+        ReplyTimeout::set(reply, timeoutVal.toInt());
+      }
 
       connect(reply, &QNetworkReply::finished, this, [this, reply] {
         int statusCode =

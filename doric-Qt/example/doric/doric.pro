@@ -179,6 +179,7 @@ HEADERS += \
     utils/DoricSwitchBridge.h \
     utils/DoricThreadMode.h \
     utils/DoricUtils.h \
+    utils/ReplyTimeout.h \
     widget/flex/FlexLayout.h \
     widget/flex/FlexLayoutConfig.h \
     widget/flex/FlexLayoutService.h \

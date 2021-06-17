@@ -90,7 +90,12 @@
 
 - (UICollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath {
     NSNumber *minYOfColumn = @(0);
-    for (NSNumber *key in self.columnHeightInfo.allKeys) {
+    NSArray<NSNumber *> *keys = self.columnHeightInfo.allKeys;
+    NSArray<NSNumber *> *sortedKeys = [keys sortedArrayUsingComparator:^NSComparisonResult(NSNumber * obj1, NSNumber *obj2) {
+        return [obj1 intValue] <= [obj2 intValue] ? -1 : 1;
+    }];
+    
+    for (NSNumber *key in sortedKeys) {
         if ([self.columnHeightInfo[key] floatValue] < [self.columnHeightInfo[minYOfColumn] floatValue]) {
             minYOfColumn = key;
         }

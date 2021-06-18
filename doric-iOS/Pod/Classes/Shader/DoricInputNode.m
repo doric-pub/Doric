@@ -307,6 +307,12 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
 }
 
 - (void)textViewDidChange:(UITextView *)textView {
+    if (textView.markedTextRange || textView.text.length > 0) {
+        self.view.placeholderLabel.hidden = YES;
+    } else {
+        self.view.placeholderLabel.hidden = NO;
+    }
+    
     if (textView.markedTextRange) return;
 
     if (self.maxLength) {

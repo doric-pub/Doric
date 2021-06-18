@@ -123,7 +123,7 @@
 
 - (void)requestLayout {
     [self.childNode requestLayout];
-    [self.view.doricLayout apply:self.view.frame.size];
+    [self.view.contentView.doricLayout apply:self.view.frame.size];
 }
 
 - (void)blendView:(DoricScrollView *)view forPropName:(NSString *)name propValue:(id)prop {

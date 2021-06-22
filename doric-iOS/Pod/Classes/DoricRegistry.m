@@ -57,6 +57,7 @@
 
 @interface DoricLibraries : NSObject
 @property(nonatomic, strong) NSMutableSet <DoricLibrary *> *libraries;
+@property(nonatomic, strong) NSMutableArray <NSValue *> *registries;
 
 + (instancetype)instance;
 @end
@@ -65,6 +66,7 @@
 - (instancetype)init {
     if (self = [super init]) {
         _libraries = [NSMutableSet new];
+        _registries = [NSMutableArray new];
     }
     return self;
 }
@@ -93,6 +95,12 @@
 
 + (void)register:(DoricLibrary *)library {
     [DoricLibraries.instance.libraries addObject:library];
+    for (NSValue *value in DoricLibraries.instance.registries) {
+        DoricRegistry *registry = value.nonretainedObjectValue;
+        if (registry) {
+            [library load:registry];
+        }
+    }
 }
 
 - (instancetype)init {
@@ -106,6 +114,8 @@
         [DoricLibraries.instance.libraries enumerateObjectsUsingBlock:^(DoricLibrary *obj, BOOL *stop) {
             [obj load:self];
         }];
+        NSValue *value = [NSValue valueWithNonretainedObject:self];
+        [DoricLibraries.instance.registries addObject:value];
     }
     return self;
 }

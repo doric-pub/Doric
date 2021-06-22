@@ -54,7 +54,7 @@ import pub.doric.utils.DoricUtils;
  */
 public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.TimerCallback, IDoricMonitor {
 
-    private HandlerThread handlerThread;
+    private final HandlerThread handlerThread;
     private final Handler mJSHandler;
     private final DoricBridgeExtension mDoricBridgeExtension = new DoricBridgeExtension();
     protected IDoricJSE mDoricJSE;

@@ -18,8 +18,11 @@ package pub.doric;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -66,14 +69,15 @@ import pub.doric.utils.DoricMetaInfo;
  * @CreateDate: 2019-07-20
  */
 public class DoricRegistry {
-    private static Map<String, String> bundles = new ConcurrentHashMap<>();
-    private static Set<DoricLibrary> doricLibraries = new HashSet<>();
-    private Map<String, Object> extendedEnvValues = new HashMap<>();
+    private static final Map<String, String> bundles = new ConcurrentHashMap<>();
+    private static final Set<DoricLibrary> doricLibraries = new HashSet<>();
+    private static final List<WeakReference<DoricRegistry>> registries = new ArrayList<>();
+    private final Map<String, Object> extendedEnvValues = new HashMap<>();
 
-    private Map<String, DoricMetaInfo<DoricJavaPlugin>> pluginInfoMap = new HashMap<>();
-    private Map<String, DoricMetaInfo<ViewNode>> nodeInfoMap = new HashMap<>();
+    private final Map<String, DoricMetaInfo<DoricJavaPlugin>> pluginInfoMap = new HashMap<>();
+    private final Map<String, DoricMetaInfo<ViewNode>> nodeInfoMap = new HashMap<>();
 
-    private Set<IDoricMonitor> monitors = new HashSet<>();
+    private final Set<IDoricMonitor> monitors = new HashSet<>();
 
     private Drawable defaultPlaceHolderDrawable = null;
 
@@ -85,9 +89,14 @@ public class DoricRegistry {
         }
     }
 
-
     public static void register(DoricLibrary doricLibrary) {
         doricLibraries.add(doricLibrary);
+        for (WeakReference<DoricRegistry> registryWeakReference : registries) {
+            DoricRegistry registry = registryWeakReference.get();
+            if (registry != null) {
+                doricLibrary.load(registry);
+            }
+        }
     }
 
     public DoricRegistry() {
@@ -125,6 +134,7 @@ public class DoricRegistry {
         this.registerViewNode(SwitchNode.class);
         this.registerViewNode(FlexNode.class);
         initRegistry(this);
+        registries.add(new WeakReference<>(this));
     }
 
     public void registerJSBundle(String name, String bundle) {
@@ -156,7 +166,6 @@ public class DoricRegistry {
     public String acquireJSBundle(String name) {
         return bundles.get(name);
     }
-
 
     public void setEnvironmentVariable(String key, Object val) {
         extendedEnvValues.put(key, val);

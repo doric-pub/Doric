@@ -168,6 +168,7 @@
             self.gradientSize = CGSizeZero;
         } else if ([prop isKindOfClass:[NSDictionary class]]) {
             self.gradientProps = prop;
+            self.gradientSize = CGSizeZero;
         }
     } else if ([name isEqualToString:@"alpha"]) {
         view.alpha = [prop floatValue];

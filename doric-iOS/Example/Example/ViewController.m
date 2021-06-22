@@ -69,7 +69,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row == 0) {
-        [[DoricDev instance] openDevMode];
+        [[DoricDev instance] openDevMode:self];
         return;
     }
     NSString *file = self.demoFilePaths[(NSUInteger) indexPath.row];

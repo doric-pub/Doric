@@ -2158,7 +2158,7 @@ class LayoutConfigImpl {
         return this;
     }
     mostHeight() {
-        this.widthSpec = exports.LayoutSpec.MOST;
+        this.heightSpec = exports.LayoutSpec.MOST;
         return this;
     }
     just() {

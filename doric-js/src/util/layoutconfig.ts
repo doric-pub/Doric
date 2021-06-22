@@ -98,7 +98,7 @@ export class LayoutConfigImpl implements LayoutConfig, Modeling {
     }
 
     mostHeight() {
-        this.widthSpec = LayoutSpec.MOST
+        this.heightSpec = LayoutSpec.MOST
         return this
     }
 

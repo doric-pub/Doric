@@ -29,6 +29,7 @@
 #import "DoricExtensions.h"
 #import "DoricPromise.h"
 #import "DoricFlexNode.h"
+#import "DoricErrorHintNode.h"
 
 @interface AnimationCallback : NSObject <CAAnimationDelegate>
 @property(nonatomic, strong) NSMutableDictionary *dictionary;
@@ -322,7 +323,13 @@
 + (__kindof DoricViewNode *)create:(DoricContext *)context withType:(NSString *)type {
     DoricRegistry *registry = context.driver.registry;
     Class clz = [registry acquireViewNode:type];
-    DoricViewNode *viewNode = [(DoricViewNode *) [clz alloc] initWithContext:context];
+    DoricViewNode *viewNode;
+    if (!clz) {
+        viewNode = [[DoricErrorHintNode alloc] initWithContext:context];
+        ((DoricErrorHintNode *) viewNode).hintText = type;
+    } else {
+        viewNode = [(DoricViewNode *) [clz alloc] initWithContext:context];
+    }
     viewNode.type = type;
     return viewNode;
 }

@@ -21,7 +21,6 @@
 //
 
 #import "DoricBridgeExtension.h"
-#import "DoricRegistry.h"
 #import "DoricContextManager.h"
 #import "DoricNativePlugin.h"
 #import "DoricUtil.h"
@@ -38,6 +37,13 @@
         return nil;
     }
     Class pluginClass = [self.registry acquireNativePlugin:module];
+    if (!pluginClass) {
+        [[[DoricPromise alloc] initWithContext:context callbackId:callbackId]
+                reject:[NSString stringWithFormat:@"Cannot obtain plugin instance:%@, method:%@",
+                                                  module,
+                                                  method]];
+        return @(NO);
+    }
     DoricNativePlugin *nativePlugin = context.pluginInstanceMap[module];
     if (nativePlugin == nil) {
         nativePlugin = [(DoricNativePlugin *) [pluginClass alloc] initWithContext:context];
@@ -96,6 +102,7 @@
                         } @catch (NSException *exception) {
                             DoricLog(@"CallNative Error:%@", exception.reason);
                             [strongContext.driver.registry onException:exception inContext:strongContext];
+                            [[[DoricPromise alloc] initWithContext:context callbackId:callbackId] reject:exception.reason];
                         }
                     };
 
@@ -127,6 +134,11 @@
         Class superclass = class_getSuperclass(clz);
         if (superclass && superclass != [NSObject class]) {
             return [self findClass:superclass target:target context:strongContext method:name callbackId:callbackId argument:argument];
+        } else {
+            [[[DoricPromise alloc] initWithContext:context callbackId:callbackId]
+                    reject:[NSString stringWithFormat:@"Cannot find plugin method in class:%@, method:%@",
+                                                      NSStringFromClass(clz),
+                                                      name]];
         }
     }
     return ret;

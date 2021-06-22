@@ -609,9 +609,15 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
 
     public static ViewNode create(DoricContext doricContext, String type) {
         DoricRegistry registry = doricContext.getDriver().getRegistry();
-        DoricMetaInfo<ViewNode> clz = registry.acquireViewNodeInfo(type);
+        DoricMetaInfo<? extends ViewNode> clz = registry.acquireViewNodeInfo(type);
+        if (clz == null) {
+            clz = new DoricMetaInfo<>(ErrorHintNode.class);
+        }
         ViewNode ret = clz.createInstance(doricContext);
         ret.mType = type;
+        if (ret instanceof ErrorHintNode) {
+            ((ErrorHintNode) ret).setHintText(type);
+        }
         return ret;
     }
 

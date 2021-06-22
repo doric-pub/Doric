@@ -751,7 +751,7 @@ var LayoutConfigImpl = /** @class */ (function () {
         return this;
     };
     LayoutConfigImpl.prototype.mostHeight = function () {
-        this.widthSpec = exports.LayoutSpec.MOST;
+        this.heightSpec = exports.LayoutSpec.MOST;
         return this;
     };
     LayoutConfigImpl.prototype.just = function () {

@@ -45,30 +45,42 @@ public class DoricBridgeExtension {
         final DoricContext context = DoricContextManager.getContext(contextId);
         DoricMetaInfo<DoricJavaPlugin> pluginInfo = context.getDriver().getRegistry().acquirePluginInfo(module);
         if (pluginInfo == null) {
+            String errorMsg = String.format("Cannot find plugin class:%s", module);
             context.getDriver().getRegistry().onLog(
                     Log.ERROR,
-                    String.format("Cannot find plugin class:%s", module));
+                    errorMsg);
+            new DoricPromise(context, callbackId)
+                    .reject(new JavaValue(errorMsg));
             return new JavaValue(false);
         }
         final DoricJavaPlugin doricJavaPlugin = context.obtainPlugin(pluginInfo);
         if (doricJavaPlugin == null) {
+            String errorMsg = String.format("Cannot obtain plugin instance:%s,method:%s", module, methodName);
             context.getDriver().getRegistry().onLog(
                     Log.ERROR,
-                    String.format("Cannot obtain plugin instance:%s,method:%s", module, methodName));
+                    errorMsg);
+            new DoricPromise(context, callbackId)
+                    .reject(new JavaValue(errorMsg));
             return new JavaValue(false);
         }
         final Method method = pluginInfo.getMethod(methodName);
         if (method == null) {
+            String errorMsg = String.format("Cannot find plugin method in class:%s,method:%s", module, methodName);
             context.getDriver().getRegistry().onLog(
                     Log.ERROR,
-                    String.format("Cannot find plugin method in class:%s,method:%s", module, methodName));
+                    errorMsg);
+            new DoricPromise(context, callbackId)
+                    .reject(new JavaValue(errorMsg));
             return new JavaValue(false);
         }
         DoricMethod doricMethod = method.getAnnotation(DoricMethod.class);
         if (doricMethod == null) {
+            String errorMsg = String.format("Cannot find DoricMethod annotation in class:%s,method:%s", module, methodName);
             context.getDriver().getRegistry().onLog(
                     Log.ERROR,
-                    String.format("Cannot find DoricMethod annotation in class:%s,method:%s", module, methodName));
+                    errorMsg);
+            new DoricPromise(context, callbackId)
+                    .reject(new JavaValue(errorMsg));
             return new JavaValue(false);
         }
         Callable<JavaValue> callable = new Callable<JavaValue>() {
@@ -100,6 +112,8 @@ public class DoricBridgeExtension {
                 context.getDriver().getRegistry().onException(
                         context,
                         t instanceof Exception ? (Exception) t : new RuntimeException(t));
+                new DoricPromise(context, callbackId)
+                        .reject(new JavaValue(t.getMessage()));
             }
 
             @Override

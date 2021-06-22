@@ -27,6 +27,7 @@
 #import "DoricDebugDriver.h"
 #import "DoricDevViewController.h"
 #import "DoricDevMonitor.h"
+#import "DoricUtil.h"
 
 @interface DoricContextDebuggable : NSObject
 @property(nonatomic, weak) DoricContext *doricContext;
@@ -95,6 +96,19 @@
     DoricDevViewController *devViewController = [DoricDevViewController new];
 
     UIViewController *viewController = [UIApplication sharedApplication].delegate.window.rootViewController;
+    UINavigationController *navigationController;
+    if ([viewController isKindOfClass:[UINavigationController class]]) {
+        navigationController = (UINavigationController *) viewController;
+    } else {
+        navigationController = viewController.navigationController;
+    }
+    [navigationController pushViewController:devViewController animated:NO];
+}
+
+- (void)openDevMode:(UIViewController *)vc {
+    DoricDevViewController *devViewController = [DoricDevViewController new];
+
+    UIViewController *viewController = findBestViewController(vc);
     UINavigationController *navigationController;
     if ([viewController isKindOfClass:[UINavigationController class]]) {
         navigationController = (UINavigationController *) viewController;
@@ -259,4 +273,36 @@
             stringByReplacingOccurrencesOfString:@":7777"
                                       withString:@""];
 }
+
+UIViewController* _Nonnull findBestViewController(UIViewController* _Nonnull vc) {
+    if (vc.presentedViewController && ![vc.presentedViewController isKindOfClass:[UIAlertController class]]) {
+        // Return presented view controller
+        return findBestViewController(vc.presentedViewController);
+    } else if ([vc isKindOfClass:[UISplitViewController class]]) {
+        // Return right hand side
+        UISplitViewController* svc = (UISplitViewController*) vc;
+        if (svc.viewControllers.count > 0)
+            return findBestViewController(svc.viewControllers.lastObject);
+        else
+            return vc;
+    } else if ([vc isKindOfClass:[UINavigationController class]]) {
+        // Return top view
+        UINavigationController* svc = (UINavigationController*) vc;
+        if (svc.viewControllers.count > 0)
+            return findBestViewController(svc.topViewController);
+        else
+            return vc;
+    } else if ([vc isKindOfClass:[UITabBarController class]]) {
+        // Return visible view
+        UITabBarController* svc = (UITabBarController*) vc;
+        if (svc.viewControllers.count > 0)
+            return findBestViewController(svc.selectedViewController);
+        else
+            return vc;
+    } else  {
+        // Unknown view controller type, return last child view controller
+        return vc;
+    }
+}
+
 @end

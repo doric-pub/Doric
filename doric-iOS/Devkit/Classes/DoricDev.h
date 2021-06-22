@@ -45,6 +45,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)openDevMode;
 
+- (void)openDevMode:(UIViewController *)vc;
+
 - (void)closeDevMode;
 
 - (BOOL)isInDevMode;
@@ -72,6 +74,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)addStatusCallback:(id <DoricDevStatusCallback>)callback;
 
 - (void)removeStatusCallback:(id <DoricDevStatusCallback>)callback;
+
+UIViewController* _Nonnull findBestViewController(UIViewController* _Nonnull vc);
+
 @end
 
 NS_ASSUME_NONNULL_END

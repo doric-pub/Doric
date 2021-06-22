@@ -1298,12 +1298,12 @@ var doric = (function (exports) {
         Context.prototype.callNative = function (namespace, method, args) {
             var _this = this;
             var callbackId = uniqueId('callback');
-            nativeBridge(this.id, namespace, method, callbackId, args);
             return new Promise(function (resolve, reject) {
                 _this.callbacks.set(callbackId, {
                     resolve: resolve,
                     reject: reject,
                 });
+                nativeBridge(_this.id, namespace, method, callbackId, args);
             });
         };
         Context.prototype.register = function (instance) {

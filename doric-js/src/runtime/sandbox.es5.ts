@@ -136,12 +136,12 @@ export class Context {
     }
     callNative(namespace: string, method: string, args?: any): Promise<any> {
         const callbackId = uniqueId('callback')
-        nativeBridge(this.id, namespace, method, callbackId, args)
         return new Promise((resolve, reject) => {
             this.callbacks.set(callbackId, {
                 resolve,
                 reject,
             })
+            nativeBridge(this.id, namespace, method, callbackId, args)
         })
     }
     register(instance: Object) {

@@ -408,6 +408,14 @@ export abstract class Superview extends View {
         const subviews = []
         for (let v of this.allSubviews()) {
             if (v != undefined) {
+                if (v.superview && v.superview !== this) {
+                    //It had been added to another view, need to be marked totally
+                    for (let key in v) {
+                        if (key.startsWith("__prop__")) {
+                            v.onPropertyChanged(key, undefined, Reflect.get(v, key))
+                        }
+                    }
+                }
                 v.superview = this
                 if (v.isDirty()) {
                     subviews.push(v.toModel())

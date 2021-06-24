@@ -599,6 +599,14 @@ var Superview = /** @class */ (function (_super) {
             for (var _b = __values$5(this.allSubviews()), _c = _b.next(); !_c.done; _c = _b.next()) {
                 var v = _c.value;
                 if (v != undefined) {
+                    if (v.superview && v.superview !== this) {
+                        //It had been added to another view, need to be marked totally
+                        for (var key in v) {
+                            if (key.startsWith("__prop__")) {
+                                v.onPropertyChanged(key, undefined, Reflect.get(v, key));
+                            }
+                        }
+                    }
                     v.superview = this;
                     if (v.isDirty()) {
                         subviews.push(v.toModel());

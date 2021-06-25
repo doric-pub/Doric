@@ -593,17 +593,35 @@ var Superview = /** @class */ (function (_super) {
         _super.prototype.clean.call(this);
     };
     Superview.prototype.toModel = function () {
-        var e_4, _a;
+        var e_4, _a, e_5, _b;
         var subviews = [];
         try {
-            for (var _b = __values$5(this.allSubviews()), _c = _b.next(); !_c.done; _c = _b.next()) {
-                var v = _c.value;
+            for (var _c = __values$5(this.allSubviews()), _d = _c.next(); !_d.done; _d = _c.next()) {
+                var v = _d.value;
                 if (v != undefined) {
                     if (v.superview && v.superview !== this) {
                         //It had been added to another view, need to be marked totally
                         for (var key in v) {
                             if (key.startsWith("__prop__")) {
                                 v.onPropertyChanged(key, undefined, Reflect.get(v, key));
+                            }
+                            if (v instanceof Superview) {
+                                try {
+                                    for (var _e = (e_5 = void 0, __values$5(v.allSubviews())), _f = _e.next(); !_f.done; _f = _e.next()) {
+                                        var subview = _f.value;
+                                        subview.superview = {};
+                                    }
+                                }
+                                catch (e_5_1) { e_5 = { error: e_5_1 }; }
+                                finally {
+                                    try {
+                                        if (_f && !_f.done && (_b = _e.return)) { _b.call(_e); }
+                                    }
+                                    finally { if (e_5) { throw e_5.error; } }
+                                }
+                            }
+                            if (v instanceof Group) {
+                                v.dirtyProps.children = v.children.map(function (e) { return e.viewId; });
                             }
                         }
                     }
@@ -617,7 +635,7 @@ var Superview = /** @class */ (function (_super) {
         catch (e_4_1) { e_4 = { error: e_4_1 }; }
         finally {
             try {
-                if (_c && !_c.done && (_a = _b.return)) { _a.call(_b); }
+                if (_d && !_d.done && (_a = _c.return)) { _a.call(_c); }
             }
             finally { if (e_4) { throw e_4.error; } }
         }

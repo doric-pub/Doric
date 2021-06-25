@@ -2067,6 +2067,14 @@ class Superview extends View {
                         if (Reflect.getMetadata(key, v) === PROP_CONSIST || Reflect.getMetadata(key, v) === PROP_INCONSIST) {
                             v.onPropertyChanged(key, undefined, Reflect.get(v, key));
                         }
+                        if (v instanceof Superview) {
+                            for (const subview of v.allSubviews()) {
+                                subview.superview = {};
+                            }
+                        }
+                        if (v instanceof Group) {
+                            v.dirtyProps.children = v.children.map(e => e.viewId);
+                        }
                     }
                 }
                 v.superview = this;

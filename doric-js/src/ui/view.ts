@@ -382,7 +382,6 @@ export abstract class View implements Modeling {
         })
     }
 }
-
 export abstract class Superview extends View {
     subviewById(id: string): View | undefined {
         for (let v of this.allSubviews()) {
@@ -439,6 +438,14 @@ export abstract class Superview extends View {
                     for (let key in v) {
                         if (Reflect.getMetadata(key, v) === PROP_CONSIST || Reflect.getMetadata(key, v) === PROP_INCONSIST) {
                             v.onPropertyChanged(key, undefined, Reflect.get(v, key))
+                        }
+                        if (v instanceof Superview) {
+                            for (const subview of v.allSubviews()) {
+                                subview.superview = {} as Superview
+                            }
+                        }
+                        if (v instanceof Group) {
+                            v.dirtyProps.children = v.children.map(e => e.viewId)
                         }
                     }
                 }

@@ -414,6 +414,14 @@ export abstract class Superview extends View {
                         if (key.startsWith("__prop__")) {
                             v.onPropertyChanged(key, undefined, Reflect.get(v, key))
                         }
+                        if (v instanceof Superview) {
+                            for (const subview of v.allSubviews()) {
+                                subview.superview = {} as Superview
+                            }
+                        }
+                        if (v instanceof Group) {
+                            v.dirtyProps.children = v.children.map(e => e.viewId)
+                        }
                     }
                 }
                 v.superview = this

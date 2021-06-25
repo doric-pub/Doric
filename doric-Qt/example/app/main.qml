@@ -32,7 +32,6 @@ ApplicationWindow {
                 Rectangle {
                     anchors.centerIn: parent
                     objectName: "center"
-                    color: "red"
                     width: childrenRect.width
                     height: childrenRect.height
                 }
@@ -65,15 +64,17 @@ ApplicationWindow {
             }
 
             RowLayout {
-                anchors.right: parent.right
+                id: rightSection
+                height: navbar.height
                 anchors.verticalCenter: parent.verticalCenter
 
                 RowLayout {
                     objectName: "right"
-                }
+                    width: childrenRect.width
 
-                Rectangle {
-                    Layout.preferredWidth: 10
+                    onChildrenRectChanged: {
+                        rightSection.x = navbar.width - this.childrenRect.width - 10
+                    }
                 }
             }
         }

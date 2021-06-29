@@ -22,7 +22,7 @@
 
 @interface DoricNotificationPlugin ()
 
-@property(nonatomic, copy) NSDictionary<NSString *, id> *observers;
+@property(nonatomic, strong) NSDictionary<NSString *, id> *observers;
 @end
 
 @implementation DoricNotificationPlugin

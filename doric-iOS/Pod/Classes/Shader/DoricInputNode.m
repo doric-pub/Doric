@@ -56,8 +56,14 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
     UIEdgeInsets textContainerInset = self.textContainerInset;
     self.placeholderLabel.x = lineFragmentPadding + textContainerInset.left;
     self.placeholderLabel.y = textContainerInset.top;
-    self.placeholderLabel.width = self.width - lineFragmentPadding * 2 - textContainerInset.left - textContainerInset.right;
-    [self.placeholderLabel sizeToFit];
+    
+    float desiredWidth = self.width - lineFragmentPadding * 2 - textContainerInset.left - textContainerInset.right;
+    CGSize fitSize = [self.placeholderLabel sizeThatFits:CGSizeMake(desiredWidth, 0)];
+    
+    if (fitSize.width < desiredWidth) {
+        self.placeholderLabel.width = desiredWidth;
+    }
+    self.placeholderLabel.height = fitSize.height;
 }
 
 - (CGSize)sizeThatFits:(CGSize)size {
@@ -108,6 +114,7 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
             alignment = NSTextAlignmentRight;
         }
         view.textAlignment = alignment;
+        view.placeholderLabel.textAlignment = alignment;
     } else if ([name isEqualToString:@"multiline"]) {
         BOOL value = [(NSNumber *) prop boolValue];
         if (!value) {

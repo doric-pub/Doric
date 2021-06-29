@@ -315,6 +315,7 @@ public class InputNode extends ViewNode<EditText> implements TextWatcher, View.O
     @DoricMethod
     public void requestFocus(DoricPromise promise) {
         mView.requestFocus();
+        mInputMethodManager.showSoftInput(mView, 0);
         promise.resolve();
     }
 

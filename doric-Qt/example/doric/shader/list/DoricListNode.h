@@ -5,6 +5,7 @@
 
 #include "DoricListItemNode.h"
 #include "shader/DoricSuperNode.h"
+#include "DoricListAdapter.h"
 
 class DORIC_EXPORT DoricListNode : public DoricSuperNode {
 
@@ -17,7 +18,7 @@ private:
   QString loadMoreViewId;
   QString onScrollFuncId;
   QString onScrollEndFuncId;
-  QList<DoricListItemNode *> childNodes;
+  DoricListAdapter listAdapter;
 
 public:
   using DoricSuperNode::DoricSuperNode;
@@ -31,6 +32,8 @@ public:
   virtual void blend(QQuickItem *view, QString name, QJsonValue prop) override;
 
   virtual void afterBlended(QJsonValue prop) override;
+
+  void bind(QVariant rectangle, int position);
 };
 
 #endif // DORICLISTNODE_H

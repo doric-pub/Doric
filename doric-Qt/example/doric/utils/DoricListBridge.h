@@ -10,6 +10,9 @@ class DORIC_EXPORT DoricListBridge : public QObject {
   Q_OBJECT
 public:
   explicit DoricListBridge(QObject *parent = nullptr);
+
+  Q_INVOKABLE
+  void bind(QString pointer, QVariant rectangle, int position);
 };
 
 #endif // DORICLISTBRIDGE_H

@@ -47,7 +47,7 @@ ListView {
 
     delegate: Rectangle {
         Component.onCompleted: {
-//            listBridge.getItemModel(index)
+            listBridge.bind(wrapper, this, index)
         }
     }
 }

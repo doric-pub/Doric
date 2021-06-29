@@ -21,6 +21,19 @@ DoricViewNode *DoricListNode::getSubNodeById(QString id) {}
 
 void DoricListNode::blendSubNode(QJsonValue subProperties) {}
 
-void DoricListNode::blend(QQuickItem *view, QString name, QJsonValue prop) {}
+void DoricListNode::blend(QQuickItem *view, QString name, QJsonValue prop) {
+  if (name == "itemCount") {
+    this->itemCount = prop.toInt();
+  } else {
+    DoricSuperNode::blend(view, name, prop);
+  }
+}
 
-void DoricListNode::afterBlended(QJsonValue prop) {}
+void DoricListNode::afterBlended(QJsonValue prop) {
+  mView->setProperty("model", this->itemCount);
+}
+
+// adapter method
+void DoricListNode::bind(QVariant rectangle, int position) {
+  listAdapter.bind(rectangle, position);
+}

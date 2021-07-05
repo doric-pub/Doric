@@ -96,9 +96,22 @@
         self.onPageSelectedFuncId = prop;
     } else if ([@"loop" isEqualToString:name]) {
         self.loop = [prop boolValue];
+        
+        __weak typeof(self) _self = self;
         if (self.loop) {
-            [self.view reloadData];
-            [self.view setContentOffset:CGPointMake(1 * self.view.width, self.view.contentOffset.y) animated:false];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                __strong typeof(_self) self = _self;
+                
+                [self.view reloadData];
+                [self.view setContentOffset:CGPointMake(1 * self.view.width, self.view.contentOffset.y) animated:false];
+            });
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                __strong typeof(_self) self = _self;
+                
+                [self.view reloadData];
+                [self.view setContentOffset:CGPointMake(0, self.view.contentOffset.y) animated:false];
+            });
         }
     } else if ([@"bounces" isEqualToString:name]) {
         self.view.bounces = [prop boolValue];
@@ -226,8 +239,12 @@
     if (self.loop) {
         if (pageIndex == 0) {
             [self.view setContentOffset:CGPointMake(self.itemCount * self.view.width, self.view.contentOffset.y) animated:false];
+            pageIndex = self.itemCount - 1;
         } else if (pageIndex == self.itemCount + 1) {
             [self.view setContentOffset:CGPointMake(1 * self.view.width, self.view.contentOffset.y) animated:false];
+            pageIndex = 0;
+        } else {
+            pageIndex = pageIndex - 1;
         }
     }
 
@@ -242,7 +259,13 @@
 - (void)slidePage:(NSDictionary *)params withPromise:(DoricPromise *)promise {
     NSUInteger pageIndex = [params[@"page"] unsignedIntegerValue];
     BOOL smooth = [params[@"smooth"] boolValue];
-    [self.view setContentOffset:CGPointMake(pageIndex * self.view.width, self.view.contentOffset.y) animated:smooth];
+    
+    if (self.loop) {
+        [self.view setContentOffset:CGPointMake((pageIndex + 1) * self.view.width, self.view.contentOffset.y) animated:smooth];
+    } else {
+        [self.view setContentOffset:CGPointMake(pageIndex * self.view.width, self.view.contentOffset.y) animated:smooth];
+    }
+   
     [promise resolve:nil];
     self.lastPosition = pageIndex;
     if (self.onPageSelectedFuncId && self.onPageSelectedFuncId.length > 0) {
@@ -252,7 +275,11 @@
 
 - (NSNumber *)getSlidedPage {
     NSUInteger pageIndex = (NSUInteger) (self.view.contentOffset.x / self.view.width);
-    return @(pageIndex);
+    if (self.loop) {
+        return @(pageIndex - 1);
+    } else {
+        return @(pageIndex);
+    }
 }
 
 @end

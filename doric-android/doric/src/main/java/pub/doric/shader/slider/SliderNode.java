@@ -81,8 +81,14 @@ public class SliderNode extends SuperNode<RecyclerView> {
                         if (slideAdapter.loop) {
                             if (position == 0) {
                                 recyclerView.scrollToPosition(slideAdapter.itemCount);
+
+                                position = slideAdapter.itemCount - 1;
                             } else if (position == slideAdapter.itemCount + 1) {
                                 recyclerView.scrollToPosition(1);
+
+                                position = 0;
+                            } else {
+                                position = position - 1;
                             }
                         }
 
@@ -202,9 +208,18 @@ public class SliderNode extends SuperNode<RecyclerView> {
         int page = params.getProperty("page").asNumber().toInt();
         boolean smooth = params.getProperty("smooth").asBoolean().value();
         if (smooth) {
-            mView.smoothScrollToPosition(page);
+            if (slideAdapter.loop) {
+                mView.smoothScrollToPosition(page + 1);
+            } else {
+                mView.smoothScrollToPosition(page);
+            }
+
         } else {
-            mView.scrollToPosition(page);
+            if (slideAdapter.loop) {
+                mView.scrollToPosition(page + 1);
+            } else {
+                mView.scrollToPosition(page);
+            }
         }
         if (!TextUtils.isEmpty(onPageSlidedFuncId)) {
             callJSResponse(onPageSlidedFuncId, page);
@@ -216,6 +231,11 @@ public class SliderNode extends SuperNode<RecyclerView> {
     @DoricMethod
     public int getSlidedPage() {
         LinearLayoutManager linearLayoutManager = (LinearLayoutManager) mView.getLayoutManager();
-        return linearLayoutManager != null ? linearLayoutManager.findFirstVisibleItemPosition() : 0;
+        int pageIndex = linearLayoutManager != null ? linearLayoutManager.findFirstVisibleItemPosition() : 0;
+        if (slideAdapter.loop) {
+            return pageIndex - 1;
+        } else {
+            return pageIndex;
+        }
     }
 }

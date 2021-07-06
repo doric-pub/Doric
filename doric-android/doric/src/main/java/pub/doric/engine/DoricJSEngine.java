@@ -18,7 +18,6 @@ package pub.doric.engine;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -35,6 +34,7 @@ import com.github.pengfeizhou.jscore.JavaFunction;
 import com.github.pengfeizhou.jscore.JavaValue;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Map;
 
 import pub.doric.Doric;
@@ -60,6 +60,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
     protected IDoricJSE mDoricJSE;
     private final DoricTimerExtension mTimerExtension;
     private final DoricRegistry mDoricRegistry = new DoricRegistry();
+    private final JSONBuilder mEnvironment = new JSONBuilder();
 
     public DoricJSEngine() {
         handlerThread = new HandlerThread(this.getClass().getSimpleName());
@@ -100,7 +101,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
         } catch (Exception e) {
             e.printStackTrace();
         }
-        JSONBuilder envObject = new JSONBuilder()
+        mEnvironment
                 .put("platform", "Android")
                 .put("platformVersion", String.valueOf(android.os.Build.VERSION.SDK_INT))
                 .put("appName", appName)
@@ -111,15 +112,17 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
                 .put("statusBarHeight", DoricUtils.px2dp(DoricUtils.getStatusBarHeight()))
                 .put("hasNotch", false)
                 .put("deviceBrand", Build.BRAND)
-                .put("deviceModel", Build.MODEL);
+                .put("deviceModel", Build.MODEL)
+                .put("localeLanguage", context.getResources().getConfiguration().locale.getLanguage())
+                .put("localeCountry", context.getResources().getConfiguration().locale.getCountry());
 
         Map<String, Object> extend = mDoricRegistry.getEnvironmentVariables();
         for (String key : extend.keySet()) {
-            envObject.put(key, extend.get(key));
+            mEnvironment.put(key, extend.get(key));
         }
 
         mDoricJSE.injectGlobalJSObject(DoricConstant.INJECT_ENVIRONMENT,
-                new JavaValue(envObject.toJSONObject()));
+                new JavaValue(mEnvironment.toJSONObject()));
 
         mDoricJSE.injectGlobalJSFunction(DoricConstant.INJECT_LOG, new JavaFunction() {
             @Override

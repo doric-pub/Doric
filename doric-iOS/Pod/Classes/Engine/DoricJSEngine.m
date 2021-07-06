@@ -44,7 +44,7 @@
 @interface DoricJSEngine ()
 @property(nonatomic, strong) NSMutableDictionary <NSNumber *, NSTimer *> *timers;
 @property(nonatomic, strong) DoricBridgeExtension *bridgeExtension;
-@property(nonatomic, strong) NSDictionary *innerEnvironmentDictionary;
+@property(nonatomic, strong) NSMutableDictionary *environmentDictionary;
 @property(nonatomic, strong) NSThread *jsThread;
 @property(nonatomic, assign) BOOL destroyed;
 @end
@@ -73,8 +73,7 @@
             screenWidth = [[UIScreen mainScreen] bounds].size.height;
             screenHeight = [[UIScreen mainScreen] bounds].size.width;
         }
-
-        _innerEnvironmentDictionary = @{
+        _environmentDictionary = @{
                 @"platform": @"iOS",
                 @"platformVersion": [[UIDevice currentDevice] systemVersion],
                 @"appName": infoDictionary[@"CFBundleName"],
@@ -86,7 +85,9 @@
                 @"hasNotch": @(hasNotch()),
                 @"deviceBrand": @"Apple",
                 @"deviceModel": platform,
-        };
+                @"localeLanguage": [[NSLocale currentLocale] objectForKey:NSLocaleLanguageCode],
+                @"localeCountry": [[NSLocale currentLocale] objectForKey:NSLocaleCountryCode],
+        }.mutableCopy;
         self.registry = [[DoricRegistry alloc] init];
         [self ensureRunOnJSThread:^() {
             self.timers = [[NSMutableDictionary alloc] init];
@@ -135,12 +136,10 @@
 
 - (void)initJSExecutor {
     __weak typeof(self) _self = self;
-    NSMutableDictionary *envDic = [self.innerEnvironmentDictionary mutableCopy];
     [self.registry.environmentVariables enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
-        envDic[key] = obj;
+        self.environmentDictionary[key] = obj;
     }];
-
-    [self.jsExecutor injectGlobalJSObject:INJECT_ENVIRONMENT obj:[envDic copy]];
+    [self.jsExecutor injectGlobalJSObject:INJECT_ENVIRONMENT obj:[self.environmentDictionary copy]];
     [self.jsExecutor injectGlobalJSObject:INJECT_LOG obj:^(NSString *type, NSString *message) {
         if ([type isEqualToString:@"e"]) {
             [self.registry onLog:DoricLogTypeError message:message];

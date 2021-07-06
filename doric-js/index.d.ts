@@ -60,6 +60,14 @@ declare module 'doric/lib/src/runtime/global' {
                         * ex: iPhone12,5 or pixel 3
                         */
                     deviceModel: string;
+                    /**
+                        * The language code for current locale
+                        */
+                    localeLanguage: string;
+                    /**
+                        * The country/region code for current locale
+                        */
+                    localeCountry: string;
                     [index: string]: number | string | boolean | object | undefined;
             };
             function Entry(constructor: ClassType<Panel>): void;

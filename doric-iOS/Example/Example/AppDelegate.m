@@ -9,10 +9,15 @@
 #import "AppDelegate.h"
 #import "NavigationController.h"
 #import "ViewController.h"
+#import "DoricRegistry.h"
+
 #if __has_include(<SDWebImage/SDWebImage.h>)
+
 #import <SDWebImage/SDWebImage.h>
 #import <SDWebImageWebPCoder/SDWebImageWebPCoder.h>
+
 #endif
+
 @interface AppDelegate ()
 @property(nonatomic, strong) UIViewController *rootVC;
 @property(nonatomic, strong) NavigationController *navigationController;
@@ -21,8 +26,20 @@
 @implementation AppDelegate
 
 
+- (void)localeChanged {
+    [DoricRegistry setEnvironmentValue:@{
+            @"localeLanguage": [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleLanguageCode],
+            @"localeCountry": [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode],
+    }];
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(localeChanged)
+                                                 name:UITextFieldTextDidChangeNotification
+                                               object:nil];
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.rootVC = [[ViewController alloc] init];
 

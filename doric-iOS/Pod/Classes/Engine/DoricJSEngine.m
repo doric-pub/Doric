@@ -106,9 +106,9 @@
     return self;
 }
 
-- (void)setEnvironment:(NSString *)key variable:(id)value {
+- (void)setEnvironmentValue:(NSDictionary *)value {
     [self ensureRunOnJSThread:^{
-        self.environmentDictionary[key] = value;
+        [self.environmentDictionary addEntriesFromDictionary:value];
         if (self.initialized) {
             [self.jsExecutor injectGlobalJSObject:INJECT_ENVIRONMENT obj:[self.environmentDictionary copy]];
             for (DoricContext *doricContext in DoricContextManager.instance.aliveContexts) {

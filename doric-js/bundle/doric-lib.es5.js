@@ -1066,6 +1066,10 @@ var Panel = /** @class */ (function () {
     Panel.prototype.onDestroy = function () { };
     Panel.prototype.onShow = function () { };
     Panel.prototype.onHidden = function () { };
+    Panel.prototype.onEnvChanged = function () {
+        this.__root__.children.length = 0;
+        this.build(this.__root__);
+    };
     Panel.prototype.addHeadView = function (type, v) {
         var map = this.headviews.get(type);
         if (map) {
@@ -1127,6 +1131,9 @@ var Panel = /** @class */ (function () {
         this.__root__.height = frame.height;
         this.__root__.children.length = 0;
         this.build(this.__root__);
+    };
+    Panel.prototype.__onEnvChanged__ = function () {
+        this.onEnvChanged();
     };
     Panel.prototype.__response__ = function (viewIds, callbackId) {
         var arguments$1 = arguments;
@@ -1359,6 +1366,12 @@ var Panel = /** @class */ (function () {
         __metadata$b("design:paramtypes", [Object]),
         __metadata$b("design:returntype", void 0)
     ], Panel.prototype, "__build__", null);
+    __decorate$b([
+        NativeCall,
+        __metadata$b("design:type", Function),
+        __metadata$b("design:paramtypes", []),
+        __metadata$b("design:returntype", void 0)
+    ], Panel.prototype, "__onEnvChanged__", null);
     __decorate$b([
         NativeCall,
         __metadata$b("design:type", Function),

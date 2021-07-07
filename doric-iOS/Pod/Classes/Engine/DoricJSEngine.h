@@ -51,7 +51,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)teardown;
 
-- (void)setEnvironment:(NSString *)key variable:(id)value;
+- (void)setEnvironmentValue:(NSDictionary *)value;
 @end
 
 NS_ASSUME_NONNULL_END

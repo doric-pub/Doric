@@ -58,6 +58,7 @@
 @interface DoricLibraries : NSObject
 @property(nonatomic, strong) NSMutableSet <DoricLibrary *> *libraries;
 @property(nonatomic, strong) NSMutableArray <NSValue *> *registries;
+@property(nonatomic, strong) NSMutableDictionary *envDic;
 
 + (instancetype)instance;
 @end
@@ -67,6 +68,7 @@
     if (self = [super init]) {
         _libraries = [NSMutableSet new];
         _registries = [NSMutableArray new];
+        _envDic = [NSMutableDictionary new];
     }
     return self;
 }
@@ -93,13 +95,6 @@
 
 @implementation DoricRegistry
 
-- (instancetype)initWithJSEngine:(DoricJSEngine *)jsEngine {
-    if (self = [super init]) {
-        _jsEngine = jsEngine;
-    }
-    return self;
-}
-
 + (void)register:(DoricLibrary *)library {
     [DoricLibraries.instance.libraries addObject:library];
     for (NSValue *value in DoricLibraries.instance.registries) {
@@ -110,17 +105,29 @@
     }
 }
 
-- (instancetype)init {
++ (void)setEnvironmentValue:(NSDictionary *)value {
+    [DoricLibraries.instance.envDic addEntriesFromDictionary:value];
+    for (NSValue *val in DoricLibraries.instance.registries) {
+        DoricRegistry *registry = val.nonretainedObjectValue;
+        if (registry) {
+            [registry innerSetEnvironmentValue:value];
+        }
+    }
+}
+
+- (instancetype)initWithJSEngine:(DoricJSEngine *)jsEngine {
     if (self = [super init]) {
+        _jsEngine = jsEngine;
         _bundles = [NSMutableDictionary new];
         _plugins = [NSMutableDictionary new];
         _nodes = [NSMutableDictionary new];
-        [self innerRegister];
         _monitors = [NSMutableSet new];
+        NSValue *value = [NSValue valueWithNonretainedObject:self];
+        [self innerRegister];
         [DoricLibraries.instance.libraries enumerateObjectsUsingBlock:^(DoricLibrary *obj, BOOL *stop) {
             [obj load:self];
         }];
-        NSValue *value = [NSValue valueWithNonretainedObject:self];
+        [jsEngine setEnvironmentValue:DoricLibraries.instance.envDic];
         [DoricLibraries.instance.registries addObject:value];
     }
     return self;
@@ -185,8 +192,8 @@
     return self.nodes[name];
 }
 
-- (void)setEnvironment:(NSString *)key variable:(id)value {
-    [self.jsEngine setEnvironment:key variable:value];
+- (void)innerSetEnvironmentValue:(NSDictionary *)value {
+    [self.jsEngine setEnvironmentValue:value];
 }
 
 - (void)registerMonitor:(id <DoricMonitorProtocol>)monitor {

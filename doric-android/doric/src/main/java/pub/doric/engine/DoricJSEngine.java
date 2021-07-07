@@ -34,11 +34,12 @@ import com.github.pengfeizhou.jscore.JavaFunction;
 import com.github.pengfeizhou.jscore.JavaValue;
 
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import pub.doric.Doric;
 import pub.doric.DoricContext;
+import pub.doric.DoricContextManager;
 import pub.doric.DoricRegistry;
 import pub.doric.IDoricMonitor;
 import pub.doric.extension.bridge.DoricBridgeExtension;
@@ -59,8 +60,9 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
     private final DoricBridgeExtension mDoricBridgeExtension = new DoricBridgeExtension();
     protected IDoricJSE mDoricJSE;
     private final DoricTimerExtension mTimerExtension;
-    private final DoricRegistry mDoricRegistry = new DoricRegistry();
-    private final JSONBuilder mEnvironment = new JSONBuilder();
+    private final DoricRegistry mDoricRegistry = new DoricRegistry(this);
+    private final Map<String, Object> mEnvironmentMap = new ConcurrentHashMap<>();
+    private boolean initialized = false;
 
     public DoricJSEngine() {
         handlerThread = new HandlerThread(this.getClass().getSimpleName());
@@ -73,6 +75,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
                 initJSEngine();
                 injectGlobal();
                 initDoricRuntime();
+                initialized = true;
             }
         });
         mTimerExtension = new DoricTimerExtension(looper, this);
@@ -85,6 +88,26 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
 
     protected void initJSEngine() {
         mDoricJSE = new DoricNativeJSExecutor();
+    }
+
+    public void setEnvironmentVariable(String key, Object v) {
+        mEnvironmentMap.put(key, v);
+        if (initialized) {
+            final JSONBuilder jsonBuilder = new JSONBuilder();
+            for (String k : mEnvironmentMap.keySet()) {
+                jsonBuilder.put(k, mEnvironmentMap.get(k));
+            }
+            mJSHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mDoricJSE.injectGlobalJSObject(DoricConstant.INJECT_ENVIRONMENT,
+                            new JavaValue(jsonBuilder.toJSONObject()));
+                }
+            });
+            for(DoricContext context:DoricContextManager.aliveContexts()){
+                context.onEnvChanged();
+            }
+        }
     }
 
     private void injectGlobal() {
@@ -101,29 +124,26 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
         } catch (Exception e) {
             e.printStackTrace();
         }
-        mEnvironment
-                .put("platform", "Android")
-                .put("platformVersion", String.valueOf(android.os.Build.VERSION.SDK_INT))
-                .put("appName", appName)
-                .put("appVersion", appVersion)
-                .put("screenWidth", DoricUtils.px2dp(DoricUtils.getScreenWidth()))
-                .put("screenHeight", DoricUtils.px2dp(DoricUtils.getScreenHeight()))
-                .put("screenScale", DoricUtils.getScreenScale())
-                .put("statusBarHeight", DoricUtils.px2dp(DoricUtils.getStatusBarHeight()))
-                .put("hasNotch", false)
-                .put("deviceBrand", Build.BRAND)
-                .put("deviceModel", Build.MODEL)
-                .put("localeLanguage", context.getResources().getConfiguration().locale.getLanguage())
-                .put("localeCountry", context.getResources().getConfiguration().locale.getCountry());
+        mEnvironmentMap.put("platform", "Android");
+        mEnvironmentMap.put("platformVersion", String.valueOf(android.os.Build.VERSION.SDK_INT));
+        mEnvironmentMap.put("appName", appName);
+        mEnvironmentMap.put("appVersion", appVersion);
+        mEnvironmentMap.put("screenWidth", DoricUtils.px2dp(DoricUtils.getScreenWidth()));
+        mEnvironmentMap.put("screenHeight", DoricUtils.px2dp(DoricUtils.getScreenHeight()));
+        mEnvironmentMap.put("screenScale", DoricUtils.getScreenScale());
+        mEnvironmentMap.put("statusBarHeight", DoricUtils.px2dp(DoricUtils.getStatusBarHeight()));
+        mEnvironmentMap.put("hasNotch", false);
+        mEnvironmentMap.put("deviceBrand", Build.BRAND);
+        mEnvironmentMap.put("deviceModel", Build.MODEL);
+        mEnvironmentMap.put("localeLanguage", context.getResources().getConfiguration().locale.getLanguage());
+        mEnvironmentMap.put("localeCountry", context.getResources().getConfiguration().locale.getCountry());
 
-        Map<String, Object> extend = mDoricRegistry.getEnvironmentVariables();
-        for (String key : extend.keySet()) {
-            mEnvironment.put(key, extend.get(key));
+        JSONBuilder jsonBuilder = new JSONBuilder();
+        for (String key : mEnvironmentMap.keySet()) {
+            jsonBuilder.put(key, mEnvironmentMap.get(key));
         }
-
         mDoricJSE.injectGlobalJSObject(DoricConstant.INJECT_ENVIRONMENT,
-                new JavaValue(mEnvironment.toJSONObject()));
-
+                new JavaValue(jsonBuilder.toJSONObject()));
         mDoricJSE.injectGlobalJSFunction(DoricConstant.INJECT_LOG, new JavaFunction() {
             @Override
             public JavaValue exec(JSDecoder[] args) {

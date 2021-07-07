@@ -26,10 +26,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 @class DoricLibrary;
+@class DoricJSEngine;
 
 @interface DoricRegistry : NSObject <DoricMonitorProtocol>
 @property(nonatomic, strong) UIImage *defaultPlaceHolderImage;
 @property(nonatomic, strong) UIImage *defaultErrorImage;
+
+- (instancetype)initWithJSEngine:(DoricJSEngine *)jsEngine;
 
 - (NSString *)acquireJSBundle:(NSString *)name;
 
@@ -45,8 +48,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (Class)acquireViewNode:(NSString *)name;
 
 - (void)setEnvironment:(NSString *)key variable:(id)value;
-
-- (NSDictionary *)environmentVariables;
 
 - (void)registerMonitor:(id <DoricMonitorProtocol>)monitor;
 

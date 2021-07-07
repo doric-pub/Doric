@@ -67,3 +67,5 @@ extern NSString *const DORIC_ENTITY_SHOW;
 extern NSString *const DORIC_ENTITY_HIDDEN;
 
 extern NSString *const DORIC_ENTITY_BUILD;
+
+extern NSString *const DORIC_ENTITY_ENV_CHANGE;

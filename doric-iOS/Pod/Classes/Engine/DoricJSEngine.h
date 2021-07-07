@@ -50,6 +50,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)initJSEngine;
 
 - (void)teardown;
+
+- (void)setEnvironment:(NSString *)key variable:(id)value;
 @end
 
 NS_ASSUME_NONNULL_END

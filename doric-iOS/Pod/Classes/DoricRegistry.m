@@ -48,12 +48,12 @@
 #import "DoricLibrary.h"
 #import "DoricNotificationPlugin.h"
 #import "DoricStatusBarPlugin.h"
-#import "DoricUtil.h"
 #import "DoricCoordinatorPlugin.h"
 #import "DoricSwitchNode.h"
 #import "DoricNotchPlugin.h"
 #import "DoricFlexNode.h"
 #import "DoricKeyboardPlugin.h"
+#import "DoricJSEngine.h"
 
 @interface DoricLibraries : NSObject
 @property(nonatomic, strong) NSMutableSet <DoricLibrary *> *libraries;
@@ -87,11 +87,18 @@
 @property(nonatomic, strong) NSMutableDictionary *bundles;
 @property(nonatomic, strong) NSMutableDictionary *plugins;
 @property(nonatomic, strong) NSMutableDictionary *nodes;
-@property(nonatomic, strong) NSMutableDictionary <NSString *, id> *envVariables;
 @property(nonatomic, strong) NSMutableSet <id <DoricMonitorProtocol>> *monitors;
+@property(nonatomic, weak) DoricJSEngine *jsEngine;
 @end
 
 @implementation DoricRegistry
+
+- (instancetype)initWithJSEngine:(DoricJSEngine *)jsEngine {
+    if (self = [super init]) {
+        _jsEngine = jsEngine;
+    }
+    return self;
+}
 
 + (void)register:(DoricLibrary *)library {
     [DoricLibraries.instance.libraries addObject:library];
@@ -108,7 +115,6 @@
         _bundles = [NSMutableDictionary new];
         _plugins = [NSMutableDictionary new];
         _nodes = [NSMutableDictionary new];
-        _envVariables = [NSMutableDictionary new];
         [self innerRegister];
         _monitors = [NSMutableSet new];
         [DoricLibraries.instance.libraries enumerateObjectsUsingBlock:^(DoricLibrary *obj, BOOL *stop) {
@@ -180,11 +186,7 @@
 }
 
 - (void)setEnvironment:(NSString *)key variable:(id)value {
-    self.envVariables[key] = value;
-}
-
-- (NSDictionary *)environmentVariables {
-    return self.envVariables;
+    [self.jsEngine setEnvironment:key variable:value];
 }
 
 - (void)registerMonitor:(id <DoricMonitorProtocol>)monitor {

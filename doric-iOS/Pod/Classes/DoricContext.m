@@ -121,6 +121,10 @@
     [self callEntity:DORIC_ENTITY_HIDDEN withArgumentsArray:@[]];
 }
 
+- (void)onEnvChanged {
+    [self callEntity:DORIC_ENTITY_ENV_CHANGE withArgumentsArray:@[]];
+}
+
 - (UIViewController *)vc {
     if (!_vc) {
         return [UIApplication sharedApplication].keyWindow.rootViewController;

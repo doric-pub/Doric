@@ -288,4 +288,8 @@ public class DoricContext {
             }
         }
     }
+
+    public void onEnvChanged() {
+        callEntity(DoricConstant.DORIC_ENTITY_ENV_CHANGE);
+    }
 }

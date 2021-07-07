@@ -27,6 +27,7 @@
 #import "DoricBridgeExtension.h"
 #import <sys/utsname.h>
 #import "DoricContext.h"
+#import "DoricContextManager.h"
 
 @interface DoricDefaultMonitor : NSObject <DoricMonitorProtocol>
 @end
@@ -47,12 +48,14 @@
 @property(nonatomic, strong) NSMutableDictionary *environmentDictionary;
 @property(nonatomic, strong) NSThread *jsThread;
 @property(nonatomic, assign) BOOL destroyed;
+@property(nonatomic, assign) BOOL initialized;
 @end
 
 @implementation DoricJSEngine
 
 - (instancetype)init {
     if (self = [super init]) {
+        _initialized = NO;
         _jsThread = [[NSThread alloc] initWithTarget:self selector:@selector(threadRun) object:nil];
         [_jsThread start];
         NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
@@ -88,7 +91,7 @@
                 @"localeLanguage": [[NSLocale currentLocale] objectForKey:NSLocaleLanguageCode],
                 @"localeCountry": [[NSLocale currentLocale] objectForKey:NSLocaleCountryCode],
         }.mutableCopy;
-        self.registry = [[DoricRegistry alloc] init];
+        self.registry = [[DoricRegistry alloc] initWithJSEngine:self];
         [self ensureRunOnJSThread:^() {
             self.timers = [[NSMutableDictionary alloc] init];
             self.bridgeExtension = [DoricBridgeExtension new];
@@ -96,10 +99,23 @@
             [self initJSEngine];
             [self initJSExecutor];
             [self initDoricEnvironment];
+            self.initialized = YES;
         }];
         [self.registry registerMonitor:[DoricDefaultMonitor new]];
     }
     return self;
+}
+
+- (void)setEnvironment:(NSString *)key variable:(id)value {
+    [self ensureRunOnJSThread:^{
+        self.environmentDictionary[key] = value;
+        if (self.initialized) {
+            [self.jsExecutor injectGlobalJSObject:INJECT_ENVIRONMENT obj:[self.environmentDictionary copy]];
+            for (DoricContext *doricContext in DoricContextManager.instance.aliveContexts) {
+                [doricContext onEnvChanged];
+            }
+        }
+    }];
 }
 
 - (void)teardown {
@@ -136,9 +152,6 @@
 
 - (void)initJSExecutor {
     __weak typeof(self) _self = self;
-    [self.registry.environmentVariables enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
-        self.environmentDictionary[key] = obj;
-    }];
     [self.jsExecutor injectGlobalJSObject:INJECT_ENVIRONMENT obj:[self.environmentDictionary copy]];
     [self.jsExecutor injectGlobalJSObject:INJECT_LOG obj:^(NSString *type, NSString *message) {
         if ([type isEqualToString:@"e"]) {

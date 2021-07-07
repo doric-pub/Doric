@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import pub.doric.engine.DoricJSEngine;
 import pub.doric.plugin.AnimatePlugin;
 import pub.doric.plugin.CoordinatorPlugin;
 import pub.doric.plugin.DoricJavaPlugin;
@@ -72,8 +73,6 @@ public class DoricRegistry {
     private static final Map<String, String> bundles = new ConcurrentHashMap<>();
     private static final Set<DoricLibrary> doricLibraries = new HashSet<>();
     private static final List<WeakReference<DoricRegistry>> registries = new ArrayList<>();
-    private final Map<String, Object> extendedEnvValues = new HashMap<>();
-
     private final Map<String, DoricMetaInfo<DoricJavaPlugin>> pluginInfoMap = new HashMap<>();
     private final Map<String, DoricMetaInfo<ViewNode>> nodeInfoMap = new HashMap<>();
 
@@ -99,7 +98,10 @@ public class DoricRegistry {
         }
     }
 
-    public DoricRegistry() {
+    private final WeakReference<DoricJSEngine> doricJSEngineWeakReference;
+
+    public DoricRegistry(DoricJSEngine doricJSEngine) {
+        doricJSEngineWeakReference = new WeakReference<>(doricJSEngine);
         this.registerNativePlugin(ShaderPlugin.class);
         this.registerNativePlugin(ModalPlugin.class);
         this.registerNativePlugin(NetworkPlugin.class);
@@ -168,11 +170,11 @@ public class DoricRegistry {
     }
 
     public void setEnvironmentVariable(String key, Object val) {
-        extendedEnvValues.put(key, val);
-    }
-
-    public Map<String, Object> getEnvironmentVariables() {
-        return extendedEnvValues;
+        DoricJSEngine doricJSEngine = doricJSEngineWeakReference.get();
+        if (doricJSEngine == null) {
+            return;
+        }
+        doricJSEngine.setEnvironmentVariable(key, val);
     }
 
     public void registerMonitor(IDoricMonitor monitor) {

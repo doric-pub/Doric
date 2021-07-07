@@ -39,7 +39,10 @@ export abstract class Panel {
     onDestroy() { }
     onShow() { }
     onHidden() { }
-
+    onEnvChanged() {
+        this.__root__.children.length = 0
+        this.build(this.__root__)
+    }
     abstract build(rootView: Group): void
 
     private __data__?: object
@@ -124,6 +127,11 @@ export abstract class Panel {
         this.__root__.height = frame.height
         this.__root__.children.length = 0
         this.build(this.__root__)
+    }
+
+    @NativeCall
+    private __onEnvChanged__() {
+        this.onEnvChanged()
     }
 
     @NativeCall

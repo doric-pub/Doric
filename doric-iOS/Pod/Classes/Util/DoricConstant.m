@@ -85,3 +85,5 @@ NSString *const DORIC_ENTITY_SHOW = @"__onShow__";
 NSString *const DORIC_ENTITY_HIDDEN = @"__onHidden__";
 
 NSString *const DORIC_ENTITY_BUILD = @"__build__";
+
+NSString *const DORIC_ENTITY_ENV_CHANGE = @"__onEnvChanged__";

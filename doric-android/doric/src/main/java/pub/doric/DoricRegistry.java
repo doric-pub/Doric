@@ -73,6 +73,7 @@ public class DoricRegistry {
     private static final Map<String, String> bundles = new ConcurrentHashMap<>();
     private static final Set<DoricLibrary> doricLibraries = new HashSet<>();
     private static final List<WeakReference<DoricRegistry>> registries = new ArrayList<>();
+    private static final Map<String, Object> envMap = new ConcurrentHashMap<>();
     private final Map<String, DoricMetaInfo<DoricJavaPlugin>> pluginInfoMap = new HashMap<>();
     private final Map<String, DoricMetaInfo<ViewNode>> nodeInfoMap = new HashMap<>();
 
@@ -94,6 +95,16 @@ public class DoricRegistry {
             DoricRegistry registry = registryWeakReference.get();
             if (registry != null) {
                 doricLibrary.load(registry);
+            }
+        }
+    }
+
+    public static void setEnvironmentValue(Map<String, Object> value) {
+        envMap.putAll(value);
+        for (WeakReference<DoricRegistry> registryWeakReference : registries) {
+            DoricRegistry registry = registryWeakReference.get();
+            if (registry != null) {
+                registry.innerSetEnvironmentValue(value);
             }
         }
     }
@@ -136,6 +147,7 @@ public class DoricRegistry {
         this.registerViewNode(SwitchNode.class);
         this.registerViewNode(FlexNode.class);
         initRegistry(this);
+        doricJSEngine.setEnvironmentValue(envMap);
         registries.add(new WeakReference<>(this));
     }
 
@@ -169,12 +181,12 @@ public class DoricRegistry {
         return bundles.get(name);
     }
 
-    public void setEnvironmentVariable(String key, Object val) {
+    private void innerSetEnvironmentValue(Map<String, Object> value) {
         DoricJSEngine doricJSEngine = doricJSEngineWeakReference.get();
         if (doricJSEngine == null) {
             return;
         }
-        doricJSEngine.setEnvironmentVariable(key, val);
+        doricJSEngine.setEnvironmentValue(value);
     }
 
     public void registerMonitor(IDoricMonitor monitor) {

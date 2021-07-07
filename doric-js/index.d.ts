@@ -140,6 +140,7 @@ declare module 'doric/lib/src/ui/panel' {
         onDestroy(): void;
         onShow(): void;
         onHidden(): void;
+        onEnvChanged(): void;
         abstract build(rootView: Group): void;
         addHeadView(type: string, v: View): void;
         allHeadViews(): IterableIterator<Map<string, View>>;

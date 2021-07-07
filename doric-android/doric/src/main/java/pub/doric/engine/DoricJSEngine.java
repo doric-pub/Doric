@@ -54,17 +54,17 @@ import pub.doric.utils.DoricUtils;
  * @CreateDate: 2019-07-18
  */
 public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.TimerCallback, IDoricMonitor {
-
     private final HandlerThread handlerThread;
     private final Handler mJSHandler;
     private final DoricBridgeExtension mDoricBridgeExtension = new DoricBridgeExtension();
     protected IDoricJSE mDoricJSE;
     private final DoricTimerExtension mTimerExtension;
-    private final DoricRegistry mDoricRegistry = new DoricRegistry(this);
-    private final Map<String, Object> mEnvironmentMap = new ConcurrentHashMap<>();
     private boolean initialized = false;
+    private final DoricRegistry mDoricRegistry;
+    private final Map<String, Object> mEnvironmentMap = new ConcurrentHashMap<>();
 
     public DoricJSEngine() {
+        mDoricRegistry = new DoricRegistry(this);
         handlerThread = new HandlerThread(this.getClass().getSimpleName());
         handlerThread.start();
         Looper looper = handlerThread.getLooper();
@@ -90,8 +90,8 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
         mDoricJSE = new DoricNativeJSExecutor();
     }
 
-    public void setEnvironmentVariable(String key, Object v) {
-        mEnvironmentMap.put(key, v);
+    public void setEnvironmentValue(Map<String, Object> values) {
+        mEnvironmentMap.putAll(values);
         if (initialized) {
             final JSONBuilder jsonBuilder = new JSONBuilder();
             for (String k : mEnvironmentMap.keySet()) {
@@ -104,7 +104,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
                             new JavaValue(jsonBuilder.toJSONObject()));
                 }
             });
-            for(DoricContext context:DoricContextManager.aliveContexts()){
+            for (DoricContext context : DoricContextManager.aliveContexts()) {
                 context.onEnvChanged();
             }
         }

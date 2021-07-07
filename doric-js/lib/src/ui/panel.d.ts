@@ -9,6 +9,7 @@ export declare abstract class Panel {
     onDestroy(): void;
     onShow(): void;
     onHidden(): void;
+    onEnvChanged(): void;
     abstract build(rootView: Group): void;
     private __data__?;
     private __root__;
@@ -27,6 +28,7 @@ export declare abstract class Panel {
     private __onShow__;
     private __onHidden__;
     private __build__;
+    private __onEnvChanged__;
     private __response__;
     private retrospectView;
     private nativeRender;

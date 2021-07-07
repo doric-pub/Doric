@@ -16,6 +16,13 @@
 package pub.doric.demo;
 
 import android.app.Application;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import pub.doric.Doric;
 import pub.doric.DoricRegistry;
@@ -26,5 +33,16 @@ public class MyApplication extends Application {
         super.onCreate();
         Doric.init(this);
         DoricRegistry.register(new DemoLibrary());
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_LOCALE_CHANGED);
+        registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("localeLanguage", context.getResources().getConfiguration().locale.getLanguage());
+                map.put("localeCountry", context.getResources().getConfiguration().locale.getCountry());
+                DoricRegistry.setEnvironmentValue(map);
+            }
+        }, intentFilter);
     }
 }

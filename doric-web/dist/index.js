@@ -2405,6 +2405,10 @@ class Panel {
     onDestroy() { }
     onShow() { }
     onHidden() { }
+    onEnvChanged() {
+        this.__root__.children.length = 0;
+        this.build(this.__root__);
+    }
     addHeadView(type, v) {
         let map = this.headviews.get(type);
         if (map) {
@@ -2466,6 +2470,9 @@ class Panel {
         this.__root__.height = frame.height;
         this.__root__.children.length = 0;
         this.build(this.__root__);
+    }
+    __onEnvChanged__() {
+        this.onEnvChanged();
     }
     __response__(viewIds, callbackId) {
         const v = this.retrospectView(viewIds);
@@ -2621,6 +2628,12 @@ __decorate$b([
     __metadata$b("design:paramtypes", [Object]),
     __metadata$b("design:returntype", void 0)
 ], Panel.prototype, "__build__", null);
+__decorate$b([
+    NativeCall,
+    __metadata$b("design:type", Function),
+    __metadata$b("design:paramtypes", []),
+    __metadata$b("design:returntype", void 0)
+], Panel.prototype, "__onEnvChanged__", null);
 __decorate$b([
     NativeCall,
     __metadata$b("design:type", Function),

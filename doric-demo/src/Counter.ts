@@ -27,6 +27,12 @@ class CounterView extends ViewHolder {
   build(root: Group) {
     vlayout(
       [
+        text({
+          text: `Current language is ${Environment.localeLanguage}`,
+        }),
+        text({
+          text: `Current country is ${Environment.localeCountry}`,
+        }),
         this.number = text({
           textSize: 40,
           tag: "tvNumber",
@@ -67,6 +73,9 @@ class CounterVM extends ViewModel<CountModel, CounterView> {
 
 @Entry
 export class CounterPage extends VMPanel<CountModel, CounterView> {
+  state = {
+    count: 1,
+  }
   constructor() {
     super();
     log("Constructor");
@@ -80,8 +89,6 @@ export class CounterPage extends VMPanel<CountModel, CounterView> {
   }
 
   getState(): CountModel {
-    return {
-      count: 1,
-    };
+    return this.state;
   }
 }

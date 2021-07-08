@@ -34,11 +34,14 @@
 @interface DoricSliderNode () <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property(nonatomic, strong) NSMutableDictionary <NSNumber *, NSString *> *itemViewIds;
 @property(nonatomic, assign) NSUInteger itemCount;
+@property(nonatomic, assign) NSUInteger propItemCount;
 @property(nonatomic, assign) NSUInteger batchCount;
 @property(nonatomic, copy) NSString *onPageSelectedFuncId;
 @property(nonatomic) BOOL loop;
+@property(nonatomic) BOOL propLoop;
 @property(nonatomic, assign) NSUInteger lastPosition;
 @property(nonatomic, copy) NSString *renderPageFuncId;
+@property(nonatomic, copy) NSString *propRenderPageFuncId;
 @end
 
 @interface DoricSliderView : UICollectionView
@@ -79,44 +82,54 @@
     if ([@"scrollable" isEqualToString:name]) {
         self.view.scrollEnabled = [prop boolValue];
     } else if ([@"itemCount" isEqualToString:name]) {
-        self.itemCount = [prop unsignedIntegerValue];
-        [self.view reloadData];
+        self.propItemCount = [prop unsignedIntegerValue];
     } else if ([@"renderPage" isEqualToString:name]) {
-        if ([self.renderPageFuncId isEqualToString:prop]) {
-
-        } else {
-            [self.itemViewIds removeAllObjects];
-            [self clearSubModel];
-            [self.view reloadData];
-            self.renderPageFuncId = prop;
-        }
+        self.propRenderPageFuncId = prop;
     } else if ([@"batchCount" isEqualToString:name]) {
         self.batchCount = [prop unsignedIntegerValue];
     } else if ([@"onPageSlided" isEqualToString:name]) {
         self.onPageSelectedFuncId = prop;
     } else if ([@"loop" isEqualToString:name]) {
-        self.loop = [prop boolValue];
-        
-        __weak typeof(self) _self = self;
-        if (self.loop) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                __strong typeof(_self) self = _self;
-                
-                [self.view reloadData];
-                [self.view setContentOffset:CGPointMake(1 * self.view.width, self.view.contentOffset.y) animated:false];
-            });
-        } else {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                __strong typeof(_self) self = _self;
-                
-                [self.view reloadData];
-                [self.view setContentOffset:CGPointMake(0, self.view.contentOffset.y) animated:false];
-            });
-        }
+        self.propLoop = [prop boolValue];
     } else if ([@"bounces" isEqualToString:name]) {
         self.view.bounces = [prop boolValue];
     } else {
         [super blendView:view forPropName:name propValue:prop];
+    }
+}
+
+- (void)afterBlended:(NSDictionary *)props {
+    bool needToScroll = (self.propLoop && !self.loop)
+    || (![self.renderPageFuncId isEqualToString: self.propRenderPageFuncId])
+                    || (self.itemCount == 0 && self.propItemCount > 0);
+    
+    // handle item count
+    if (self.itemCount != self.propItemCount) {
+        self.itemCount = self.propItemCount;
+        [self.view reloadData];
+    }
+    
+    // handle render page
+    if ([self.renderPageFuncId isEqualToString:self.propRenderPageFuncId]) {
+
+    } else {
+        [self.itemViewIds removeAllObjects];
+        [self clearSubModel];
+        [self.view reloadData];
+        self.renderPageFuncId = self.propRenderPageFuncId;
+    }
+    
+    // handle loop
+    self.loop = self.propLoop;
+    
+    __weak typeof(self) _self = self;
+    if (needToScroll) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(_self) self = _self;
+            
+            [self.view reloadData];
+            [self.view setContentOffset:CGPointMake(1 * self.view.width, self.view.contentOffset.y) animated:false];
+        });
     }
 }
 

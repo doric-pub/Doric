@@ -52,6 +52,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)registerMonitor:(id <DoricMonitorProtocol>)monitor;
 
 + (void)register:(DoricLibrary *)library;
+
++ (void)enablePerformance:(BOOL)enable;
+
++ (BOOL)isEnablePerformance;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -21,13 +21,13 @@
 //
 
 #import "DoricPerformanceProfile.h"
-
-const bool _DEBUG = YES;
+#import "DoricRegistry.h"
 
 @interface DoricPerformanceProfile ()
 @property(nonatomic, copy) NSString *name;
 @property(nonatomic, strong) NSMutableDictionary <NSString *, NSNumber *> *anchorMap;
 @property(nonatomic, strong) dispatch_queue_t anchorQueue;
+@property(nonatomic, assign) BOOL enable;
 @end
 
 @implementation DoricPerformanceProfile
@@ -36,6 +36,7 @@ const bool _DEBUG = YES;
         _name = name;
         _anchorQueue = dispatch_queue_create("doric.performance.profile", DISPATCH_QUEUE_SERIAL);
         _anchorMap = [NSMutableDictionary new];
+        _enable = [DoricRegistry isEnablePerformance];
     }
     return self;
 }
@@ -53,7 +54,7 @@ const bool _DEBUG = YES;
 }
 
 - (void)markAnchor:(NSString *)eventName {
-    if (!_DEBUG) {
+    if (!self.enable) {
         return;
     }
     NSUInteger time = (NSUInteger) ([[NSDate date] timeIntervalSince1970] * 1000);
@@ -73,12 +74,13 @@ const bool _DEBUG = YES;
 
 - (void)end:(NSString *)anchorName {
     [self markAnchor:[self getEndAnchor:anchorName]];
-    if (_DEBUG) {
-        [self print:anchorName];
-    }
+    [self print:anchorName];
 }
 
 - (void)print:(NSString *)anchorName {
+    if (!self.enable) {
+        return;
+    }
     dispatch_async(self.anchorQueue, ^{
         NSNumber *prepare = self.anchorMap[[self getPrepareAnchor:anchorName]];
         NSNumber *start = self.anchorMap[[self getStartAnchor:anchorName]];

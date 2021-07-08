@@ -59,6 +59,7 @@
 @property(nonatomic, strong) NSMutableSet <DoricLibrary *> *libraries;
 @property(nonatomic, strong) NSMutableArray <NSValue *> *registries;
 @property(nonatomic, strong) NSMutableDictionary *envDic;
+@property(nonatomic, assign) BOOL enablePerformance;
 
 + (instancetype)instance;
 @end
@@ -69,6 +70,7 @@
         _libraries = [NSMutableSet new];
         _registries = [NSMutableArray new];
         _envDic = [NSMutableDictionary new];
+        _enablePerformance = NO;
     }
     return self;
 }
@@ -131,6 +133,14 @@
         [DoricLibraries.instance.registries addObject:value];
     }
     return self;
+}
+
++ (void)enablePerformance:(BOOL)enable {
+    DoricLibraries.instance.enablePerformance = enable;
+}
+
++ (BOOL)isEnablePerformance {
+    return DoricLibraries.instance.enablePerformance;
 }
 
 - (void)innerRegister {

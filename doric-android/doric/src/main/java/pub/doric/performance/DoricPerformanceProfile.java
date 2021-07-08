@@ -15,10 +15,14 @@
  */
 package pub.doric.performance;
 
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.util.Log;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+
+import pub.doric.DoricRegistry;
 
 /**
  * @Description: pub.doric.performance
@@ -37,18 +41,37 @@ public class DoricPerformanceProfile {
     private static final String MARK_END = "end";
     private final String name;
 
-    private static final boolean DEBUG = true;
+    private boolean enable = DoricRegistry.isEnablePerformance();
+    private static final Handler performanceHandler;
+
+    static {
+        HandlerThread performanceThread = new HandlerThread("DoricPerformance");
+        performanceThread.start();
+        performanceHandler = new Handler(performanceThread.getLooper());
+    }
+
 
     public DoricPerformanceProfile(String name) {
         this.name = name;
     }
 
-    private final Map<String, Long> anchorMap = new ConcurrentHashMap<>();
+    public void enable(boolean enable) {
+        this.enable = enable;
+    }
 
-    private void markAnchor(String eventName) {
-        if (DEBUG) {
-            anchorMap.put(eventName, System.currentTimeMillis());
+    private final Map<String, Long> anchorMap = new HashMap<>();
+
+    private void markAnchor(final String eventName) {
+        if (!enable) {
+            return;
         }
+        performanceHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                long time = System.currentTimeMillis();
+                anchorMap.put(eventName, time);
+            }
+        });
     }
 
     private String getPrepareAnchor(String anchorName) {
@@ -73,25 +96,31 @@ public class DoricPerformanceProfile {
 
     public void end(String anchorName) {
         markAnchor(getEndAnchor(anchorName));
-        if (DEBUG) {
-            print(anchorName);
-        }
+        print(anchorName);
     }
 
-    private void print(String anchorName) {
-        Long prepare = anchorMap.get(getPrepareAnchor(anchorName));
-        Long start = anchorMap.get(getStartAnchor(anchorName));
-        Long end = anchorMap.get(getEndAnchor(anchorName));
-        if (end == null) {
-            end = System.currentTimeMillis();
+    private void print(final String anchorName) {
+        if (!enable) {
+            return;
         }
-        if (start == null) {
-            start = end;
-        }
-        if (prepare == null) {
-            prepare = start;
-        }
-        Log.d(TAG, String.format("%s: %s prepared %dms, cost %dms.",
-                name, anchorName, start - prepare, end - start));
+        performanceHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Long prepare = anchorMap.get(getPrepareAnchor(anchorName));
+                Long start = anchorMap.get(getStartAnchor(anchorName));
+                Long end = anchorMap.get(getEndAnchor(anchorName));
+                if (end == null) {
+                    end = System.currentTimeMillis();
+                }
+                if (start == null) {
+                    start = end;
+                }
+                if (prepare == null) {
+                    prepare = start;
+                }
+                Log.d(TAG, String.format("%s: %s prepared %dms, cost %dms.",
+                        name, anchorName, start - prepare, end - start));
+            }
+        });
     }
 }

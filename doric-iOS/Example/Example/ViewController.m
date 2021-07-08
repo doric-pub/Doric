@@ -46,6 +46,7 @@
         it.delegate = self;
     }]];
     [DoricRegistry register:[DemoLibrary new]];
+    [DoricRegistry enablePerformance:YES];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

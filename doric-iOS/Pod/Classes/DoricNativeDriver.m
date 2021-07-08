@@ -170,7 +170,8 @@
 
 - (DoricAsyncResult *)createContext:(NSString *)contextId script:(NSString *)script source:(NSString *)source {
     DoricAsyncResult *ret = [[DoricAsyncResult alloc] init];
-    DoricPerformanceProfile *performanceProfile = [DoricContextManager.instance getContext:contextId].performanceProfile;
+    DoricPerformanceProfile *performanceProfile = [DoricContextManager.instance getContext:contextId].performanceProfile
+            ?: [[DoricPerformanceProfile alloc] initWithName:contextId];
     [performanceProfile prepare:@"Create"];
     __weak typeof(self) _self = self;
     [self.jsExecutor ensureRunOnJSThread:^{
@@ -191,7 +192,8 @@
 
 - (DoricAsyncResult *)destroyContext:(NSString *)contextId {
     DoricAsyncResult *ret = [[DoricAsyncResult alloc] init];
-    DoricPerformanceProfile *performanceProfile = [DoricContextManager.instance getContext:contextId].performanceProfile;
+    DoricPerformanceProfile *performanceProfile = [DoricContextManager.instance getContext:contextId].performanceProfile
+            ?: [[DoricPerformanceProfile alloc] initWithName:contextId];
     [performanceProfile prepare:@"Destroy"];
     __weak typeof(self) _self = self;
     [self.jsExecutor ensureRunOnJSThread:^{

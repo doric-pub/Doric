@@ -146,7 +146,7 @@ public class DoricNativeDriver implements IDoricDriver {
         if (doricContext != null) {
             return doricContext.getPerformanceProfile();
         }
-        return new DoricPerformanceProfile("Empty");
+        return new DoricPerformanceProfile(contextId);
     }
 
     @Override

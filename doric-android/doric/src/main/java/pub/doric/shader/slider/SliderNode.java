@@ -45,6 +45,8 @@ public class SliderNode extends SuperNode<RecyclerView> {
     private String onPageSlidedFuncId;
     private int lastPosition = 0;
     private int itemCount = 0;
+    private boolean loop = false;
+    private String renderPageFuncId;
     private boolean scrollable = true;
 
     public SliderNode(DoricContext doricContext) {
@@ -147,12 +149,35 @@ public class SliderNode extends SuperNode<RecyclerView> {
     @Override
     public void blend(JSObject jsObject) {
         super.blend(jsObject);
+
+        final boolean needToScroll = (loop && !slideAdapter.loop)
+                || (!renderPageFuncId.equals(slideAdapter.renderPageFuncId))
+                || (slideAdapter.itemCount == 0 && itemCount > 0);
+
+        // If reset renderItem,should reset native cache.
+        if (!renderPageFuncId.equals(slideAdapter.renderPageFuncId)) {
+            slideAdapter.itemValues.clear();
+            clearSubModel();
+            slideAdapter.renderPageFuncId = renderPageFuncId;
+        }
+
+        slideAdapter.loop = loop;
+
         if (mView != null) {
             mView.post(new Runnable() {
                 @Override
                 public void run() {
                     slideAdapter.itemCount = itemCount;
                     slideAdapter.notifyDataSetChanged();
+
+                    if (needToScroll) {
+                        mView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                mView.scrollToPosition(1);
+                            }
+                        });
+                    }
                 }
             });
         }
@@ -171,13 +196,7 @@ public class SliderNode extends SuperNode<RecyclerView> {
                 this.itemCount = prop.asNumber().toInt();
                 break;
             case "renderPage":
-                // If reset renderItem,should reset native cache.
-                String funcId = prop.asString().value();
-                if (!funcId.equals(this.slideAdapter.renderPageFuncId)) {
-                    this.slideAdapter.itemValues.clear();
-                    clearSubModel();
-                    this.slideAdapter.renderPageFuncId = funcId;
-                }
+                this.renderPageFuncId = prop.asString().value();
                 break;
             case "batchCount":
                 this.slideAdapter.batchCount = prop.asNumber().toInt();
@@ -186,16 +205,7 @@ public class SliderNode extends SuperNode<RecyclerView> {
                 this.onPageSlidedFuncId = prop.asString().toString();
                 break;
             case "loop":
-                boolean loop = prop.asBoolean().value();
-                slideAdapter.loop = loop;
-                if (loop) {
-                    mView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            mView.scrollToPosition(1);
-                        }
-                    });
-                }
+                this.loop = prop.asBoolean().value();
                 break;
             default:
                 super.blend(view, name, prop);

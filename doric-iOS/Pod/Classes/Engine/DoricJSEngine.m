@@ -97,7 +97,7 @@
         }.mutableCopy;
         self.registry = [[DoricRegistry alloc] initWithJSEngine:self];
         [self ensureRunOnJSThread:^() {
-            [_profile start:@"Init"];
+            [self.profile start:@"Init"];
             self.timers = [[NSMutableDictionary alloc] init];
             self.bridgeExtension = [DoricBridgeExtension new];
             self.bridgeExtension.registry = self.registry;
@@ -105,7 +105,7 @@
             [self initJSExecutor];
             [self initDoricEnvironment];
             self.initialized = YES;
-            [_profile end:@"Init"];
+            [self.profile end:@"Init"];
         }];
         [self.registry registerMonitor:[DoricDefaultMonitor new]];
     }

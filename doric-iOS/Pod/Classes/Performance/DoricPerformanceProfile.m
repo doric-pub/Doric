@@ -28,6 +28,7 @@
 @property(nonatomic, strong) NSMutableDictionary <NSString *, NSNumber *> *anchorMap;
 @property(nonatomic, strong) dispatch_queue_t anchorQueue;
 @property(nonatomic, assign) BOOL enable;
+@property(nonatomic, strong) NSHashTable<id <DoricPerformanceAnchorHookProtocol>> *hooks;
 @end
 
 @implementation DoricPerformanceProfile
@@ -37,8 +38,17 @@
         _anchorQueue = dispatch_queue_create("doric.performance.profile", DISPATCH_QUEUE_SERIAL);
         _anchorMap = [NSMutableDictionary new];
         _enable = [DoricRegistry isEnablePerformance];
+        _hooks = [NSHashTable new];
     }
     return self;
+}
+
+- (void)addAnchorHook:(id)hook {
+    [self.hooks addObject:hook];
+}
+
+- (void)removeAnchorHook:(id)hook {
+    [self.hooks removeObject:hook];
 }
 
 - (NSString *)getPrepareAnchor:(NSString *)anchorName {
@@ -100,6 +110,9 @@
                 @(start.integerValue - prepare.integerValue),
                 @(end.integerValue - start.integerValue)
         );
+        for (id <DoricPerformanceAnchorHookProtocol> hook in self.hooks) {
+            [hook onAnchorName:anchorName prepare:prepare start:start end:end];
+        }
     });
 }
 @end

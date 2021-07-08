@@ -174,6 +174,7 @@
         _itemSizeInfo = [NSMutableDictionary new];
         _batchCount = 15;
         _columnCount = 2;
+        _loadAnchor = -1;
     }
     return self;
 }
@@ -344,13 +345,13 @@
     DoricFlowLayoutItemNode *node = cell.viewNode;
     node.viewId = model[@"id"];
     [node blend:props];
-    if (position > 0 && position >= self.itemCount) {
+    if (position >= self.itemCount) {
         node.view.width = collectionView.width;
     } else {
         node.view.width = (collectionView.width - (self.columnCount - 1) * self.columnSpace) / self.columnCount;
     }
     
-    if (position > 0 && position >= self.itemCount && self.onLoadMoreFuncId) {
+    if (position >= self.itemCount && self.onLoadMoreFuncId) {
         [self callLoadMore];
     }
     [node.view.doricLayout apply];

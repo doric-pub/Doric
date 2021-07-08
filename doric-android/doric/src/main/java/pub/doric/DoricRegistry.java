@@ -83,6 +83,16 @@ public class DoricRegistry {
 
     private Drawable defaultErrorDrawable = null;
 
+    private static boolean enablePerformance = false;
+
+    public static void enablePerformance(boolean enable) {
+        enablePerformance = enable;
+    }
+
+    public static boolean isEnablePerformance() {
+        return enablePerformance;
+    }
+
     private static void initRegistry(DoricRegistry doricRegistry) {
         for (DoricLibrary library : doricLibraries) {
             library.load(doricRegistry);

@@ -44,5 +44,6 @@ public class MyApplication extends Application {
                 DoricRegistry.setEnvironmentValue(map);
             }
         }, intentFilter);
+        //DoricRegistry.enablePerformance(true);
     }
 }

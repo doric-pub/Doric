@@ -24,6 +24,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol DoricPerformanceAnchorHookProtocol <NSObject>
+- (void)onAnchorName:(NSString *)name
+             prepare:(NSNumber *)prepare
+               start:(NSNumber *)start
+                 end:(NSNumber *)end;
+@end
+
+
 @interface DoricPerformanceProfile : NSObject
 - (instancetype)initWithName:(NSString *)name;
 
@@ -32,6 +40,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)start:(NSString *)anchorName;
 
 - (void)end:(NSString *)anchorName;
+
+- (void)addAnchorHook:(id <DoricPerformanceAnchorHookProtocol>)hook;
+
+- (void)removeAnchorHook:(id <DoricPerformanceAnchorHookProtocol>)hook;
 @end
 
 NS_ASSUME_NONNULL_END

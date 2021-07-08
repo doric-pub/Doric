@@ -20,7 +20,9 @@ import android.os.HandlerThread;
 import android.util.Log;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import pub.doric.DoricRegistry;
 
@@ -43,6 +45,7 @@ public class DoricPerformanceProfile {
 
     private boolean enable = DoricRegistry.isEnablePerformance();
     private static final Handler performanceHandler;
+    private final Set<AnchorHook> hooks = new HashSet<>();
 
     static {
         HandlerThread performanceThread = new HandlerThread("DoricPerformance");
@@ -50,9 +53,20 @@ public class DoricPerformanceProfile {
         performanceHandler = new Handler(performanceThread.getLooper());
     }
 
+    public interface AnchorHook {
+        void onAnchor(String name, long prepare, long start, long end);
+    }
 
     public DoricPerformanceProfile(String name) {
         this.name = name;
+    }
+
+    public void addAnchorHook(AnchorHook hook) {
+        this.hooks.add(hook);
+    }
+
+    public void removeAnchorHook(AnchorHook hook) {
+        this.hooks.remove(hook);
     }
 
     public void enable(boolean enable) {
@@ -120,6 +134,9 @@ public class DoricPerformanceProfile {
                 }
                 Log.d(TAG, String.format("%s: %s prepared %dms, cost %dms.",
                         name, anchorName, start - prepare, end - start));
+                for (AnchorHook hook : hooks) {
+                    hook.onAnchor(anchorName, prepare, start, end);
+                }
             }
         });
     }

@@ -57,7 +57,7 @@
 
 @interface DoricLibraries : NSObject
 @property(nonatomic, strong) NSMutableSet <DoricLibrary *> *libraries;
-@property(nonatomic, strong) NSMutableArray <NSValue *> *registries;
+@property(nonatomic, strong) NSHashTable<DoricRegistry *> *registries;
 @property(nonatomic, strong) NSMutableDictionary *envDic;
 @property(nonatomic, assign) BOOL enablePerformance;
 
@@ -68,7 +68,7 @@
 - (instancetype)init {
     if (self = [super init]) {
         _libraries = [NSMutableSet new];
-        _registries = [NSMutableArray new];
+        _registries = [NSHashTable new];
         _envDic = [NSMutableDictionary new];
         _enablePerformance = NO;
     }
@@ -99,8 +99,7 @@
 
 + (void)register:(DoricLibrary *)library {
     [DoricLibraries.instance.libraries addObject:library];
-    for (NSValue *value in DoricLibraries.instance.registries) {
-        DoricRegistry *registry = value.nonretainedObjectValue;
+    for (DoricRegistry *registry in DoricLibraries.instance.registries) {
         if (registry) {
             [library load:registry];
         }
@@ -109,8 +108,7 @@
 
 + (void)setEnvironmentValue:(NSDictionary *)value {
     [DoricLibraries.instance.envDic addEntriesFromDictionary:value];
-    for (NSValue *val in DoricLibraries.instance.registries) {
-        DoricRegistry *registry = val.nonretainedObjectValue;
+    for (DoricRegistry *registry in DoricLibraries.instance.registries) {
         if (registry) {
             [registry innerSetEnvironmentValue:value];
         }
@@ -124,13 +122,12 @@
         _plugins = [NSMutableDictionary new];
         _nodes = [NSMutableDictionary new];
         _monitors = [NSMutableSet new];
-        NSValue *value = [NSValue valueWithNonretainedObject:self];
         [self innerRegister];
         [DoricLibraries.instance.libraries enumerateObjectsUsingBlock:^(DoricLibrary *obj, BOOL *stop) {
             [obj load:self];
         }];
         [jsEngine setEnvironmentValue:DoricLibraries.instance.envDic];
-        [DoricLibraries.instance.registries addObject:value];
+        [DoricLibraries.instance.registries addObject:self];
     }
     return self;
 }

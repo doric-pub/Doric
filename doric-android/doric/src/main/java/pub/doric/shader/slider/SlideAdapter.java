@@ -62,7 +62,7 @@ class SlideAdapter extends RecyclerView.Adapter<SlideAdapter.DoricViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull DoricViewHolder holder, int position) {
         JSValue jsValue = getItemModel(position);
-        if (jsValue.isObject()) {
+        if (jsValue != null && jsValue.isObject()) {
             JSObject jsObject = jsValue.asObject();
             holder.slideItemNode.setId(jsObject.getProperty("id").asString().value());
             holder.slideItemNode.blend(jsObject.getProperty("props").asObject());
@@ -71,7 +71,7 @@ class SlideAdapter extends RecyclerView.Adapter<SlideAdapter.DoricViewHolder> {
 
     @Override
     public int getItemCount() {
-        if (loop) {
+        if (loop && itemCount > 0) {
             return itemCount + 2;
         } else {
             return itemCount;
@@ -81,7 +81,7 @@ class SlideAdapter extends RecyclerView.Adapter<SlideAdapter.DoricViewHolder> {
     @Override
     public int getItemViewType(int position) {
         JSValue value = getItemModel(position);
-        if (value.isObject()) {
+        if (value != null && value.isObject()) {
             if (value.asObject().getProperty("identifier").isString()) {
                 return value.asObject().getProperty("identifier").asString().value().hashCode();
             }

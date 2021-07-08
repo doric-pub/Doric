@@ -121,7 +121,7 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    if (self.loop) {
+    if (self.loop && self.itemCount > 0) {
         return self.itemCount + 2;
     } else {
         return self.itemCount;

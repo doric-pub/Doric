@@ -141,17 +141,25 @@ public class DoricNativeDriver implements IDoricDriver {
         }
     }
 
+    private DoricPerformanceProfile getDoricPerformanceProfile(String contextId) {
+        DoricContext doricContext = DoricContextManager.getContext(contextId);
+        if (doricContext != null) {
+            return doricContext.getPerformanceProfile();
+        }
+        return new DoricPerformanceProfile("Empty");
+    }
+
     @Override
     public AsyncResult<Boolean> createContext(final String contextId, final String script, final String source) {
-        final DoricPerformanceProfile performanceProfile = DoricContextManager.getContext(contextId).getPerformanceProfile();
-        performanceProfile.prepare(DoricPerformanceProfile.STEP_CREATE);
+        final DoricPerformanceProfile profile = getDoricPerformanceProfile(contextId);
+        profile.prepare(DoricPerformanceProfile.STEP_CREATE);
         return AsyncCall.ensureRunInHandler(mJSHandler, new Callable<Boolean>() {
             @Override
             public Boolean call() {
                 try {
-                    performanceProfile.start(DoricPerformanceProfile.STEP_CREATE);
+                    profile.start(DoricPerformanceProfile.STEP_CREATE);
                     doricJSEngine.prepareContext(contextId, script, source);
-                    performanceProfile.end(DoricPerformanceProfile.STEP_CREATE);
+                    profile.end(DoricPerformanceProfile.STEP_CREATE);
                     return true;
                 } catch (Exception e) {
                     doricJSEngine.getRegistry().onException(DoricContextManager.getContext(contextId), e);
@@ -164,7 +172,7 @@ public class DoricNativeDriver implements IDoricDriver {
 
     @Override
     public AsyncResult<Boolean> destroyContext(final String contextId) {
-        final DoricPerformanceProfile profile = DoricContextManager.getContext(contextId).getPerformanceProfile();
+        final DoricPerformanceProfile profile = getDoricPerformanceProfile(contextId);
         profile.prepare(DoricPerformanceProfile.STEP_DESTROY);
         return AsyncCall.ensureRunInHandler(mJSHandler, new Callable<Boolean>() {
             @Override

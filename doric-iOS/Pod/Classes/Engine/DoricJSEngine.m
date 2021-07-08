@@ -92,8 +92,8 @@
                 @"hasNotch": @(hasNotch()),
                 @"deviceBrand": @"Apple",
                 @"deviceModel": platform,
-                @"localeLanguage": [[NSLocale currentLocale] objectForKey:NSLocaleLanguageCode],
-                @"localeCountry": [[NSLocale currentLocale] objectForKey:NSLocaleCountryCode],
+                @"localeLanguage": [[NSLocale currentLocale] objectForKey:NSLocaleLanguageCode] ?: @"",
+                @"localeCountry": [[NSLocale currentLocale] objectForKey:NSLocaleCountryCode] ?: @"",
         }.mutableCopy;
         self.registry = [[DoricRegistry alloc] initWithJSEngine:self];
         [self ensureRunOnJSThread:^() {

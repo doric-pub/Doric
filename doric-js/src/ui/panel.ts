@@ -168,8 +168,29 @@ export abstract class Panel {
             }
         }, undefined)
     }
+    private snapshotEnabled = false
+
+    private renderSnapshots: Model[] = []
+
+    @NativeCall
+    private __renderSnapshotDepth__() {
+        return this.renderSnapshots.length
+    }
+
+    @NativeCall
+    private __restoreRenderSnapshot__(idx: number) {
+        return [...this.renderSnapshots].slice(0, idx)
+    }
+
+    @NativeCall
+    private __enableSnapshot__() {
+        this.snapshotEnabled = true
+    }
 
     private nativeRender(model: Model) {
+        if (this.snapshotEnabled) {
+            this.renderSnapshots.push(JSON.parse(JSON.stringify(model)))
+        }
         return this.context.callNative("shader", "render", model)
     }
 

@@ -85,12 +85,22 @@ public class DoricRegistry {
 
     private static boolean enablePerformance = false;
 
+    private static boolean enableRenderSnapshot = false;
+
     public static void enablePerformance(boolean enable) {
         enablePerformance = enable;
     }
 
     public static boolean isEnablePerformance() {
         return enablePerformance;
+    }
+
+    public static void enableRenderSnapshot(boolean enable) {
+        enableRenderSnapshot = enable;
+    }
+
+    public static boolean isEnableRenderSnapshot() {
+        return enableRenderSnapshot;
     }
 
     private static void initRegistry(DoricRegistry doricRegistry) {

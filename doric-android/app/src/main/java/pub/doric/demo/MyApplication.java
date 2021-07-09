@@ -45,5 +45,6 @@ public class MyApplication extends Application {
             }
         }, intentFilter);
         DoricRegistry.enablePerformance(true);
+        DoricRegistry.enableRenderSnapshot(true);
     }
 }

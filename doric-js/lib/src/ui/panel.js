@@ -40,6 +40,8 @@ export class Panel {
         this.headviews = new Map;
         this.onRenderFinishedCallback = [];
         this.__rendering__ = false;
+        this.snapshotEnabled = false;
+        this.renderSnapshots = [];
     }
     onCreate() { }
     onDestroy() { }
@@ -148,7 +150,19 @@ export class Panel {
             }
         }, undefined);
     }
+    __renderSnapshotDepth__() {
+        return this.renderSnapshots.length;
+    }
+    __restoreRenderSnapshot__(idx) {
+        return [...this.renderSnapshots].slice(0, idx);
+    }
+    __enableSnapshot__() {
+        this.snapshotEnabled = true;
+    }
     nativeRender(model) {
+        if (this.snapshotEnabled) {
+            this.renderSnapshots.push(JSON.parse(JSON.stringify(model)));
+        }
         return this.context.callNative("shader", "render", model);
     }
     hookBeforeNativeCall() {
@@ -280,3 +294,21 @@ __decorate([
     __metadata("design:paramtypes", [Array, String]),
     __metadata("design:returntype", void 0)
 ], Panel.prototype, "__response__", null);
+__decorate([
+    NativeCall,
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], Panel.prototype, "__renderSnapshotDepth__", null);
+__decorate([
+    NativeCall,
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", void 0)
+], Panel.prototype, "__restoreRenderSnapshot__", null);
+__decorate([
+    NativeCall,
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], Panel.prototype, "__enableSnapshot__", null);

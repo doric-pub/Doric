@@ -1046,6 +1046,27 @@ var __values$3 = (undefined && undefined.__values) || function(o) {
     }; }
     throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 };
+var __read$2 = (undefined && undefined.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) { return o; }
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) { ar.push(r.value); }
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) { m.call(i); }
+        }
+        finally { if (e) { throw e.error; } }
+    }
+    return ar;
+};
+var __spreadArray$2 = (undefined && undefined.__spreadArray) || function (to, from) {
+    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
+        { to[j] = from[i]; }
+    return to;
+};
 function NativeCall(target, propertyKey, descriptor) {
     var originVal = descriptor.value;
     descriptor.value = function () {
@@ -1061,6 +1082,8 @@ var Panel = /** @class */ (function () {
         this.headviews = new Map;
         this.onRenderFinishedCallback = [];
         this.__rendering__ = false;
+        this.snapshotEnabled = false;
+        this.renderSnapshots = [];
     }
     Panel.prototype.onCreate = function () { };
     Panel.prototype.onDestroy = function () { };
@@ -1183,7 +1206,19 @@ var Panel = /** @class */ (function () {
             }
         }, undefined);
     };
+    Panel.prototype.__renderSnapshotDepth__ = function () {
+        return this.renderSnapshots.length;
+    };
+    Panel.prototype.__restoreRenderSnapshot__ = function (idx) {
+        return __spreadArray$2([], __read$2(this.renderSnapshots)).slice(0, idx);
+    };
+    Panel.prototype.__enableSnapshot__ = function () {
+        this.snapshotEnabled = true;
+    };
     Panel.prototype.nativeRender = function (model) {
+        if (this.snapshotEnabled) {
+            this.renderSnapshots.push(JSON.parse(JSON.stringify(model)));
+        }
         return this.context.callNative("shader", "render", model);
     };
     Panel.prototype.hookBeforeNativeCall = function () {
@@ -1378,6 +1413,24 @@ var Panel = /** @class */ (function () {
         __metadata$b("design:paramtypes", [Array, String]),
         __metadata$b("design:returntype", void 0)
     ], Panel.prototype, "__response__", null);
+    __decorate$b([
+        NativeCall,
+        __metadata$b("design:type", Function),
+        __metadata$b("design:paramtypes", []),
+        __metadata$b("design:returntype", void 0)
+    ], Panel.prototype, "__renderSnapshotDepth__", null);
+    __decorate$b([
+        NativeCall,
+        __metadata$b("design:type", Function),
+        __metadata$b("design:paramtypes", [Number]),
+        __metadata$b("design:returntype", void 0)
+    ], Panel.prototype, "__restoreRenderSnapshot__", null);
+    __decorate$b([
+        NativeCall,
+        __metadata$b("design:type", Function),
+        __metadata$b("design:paramtypes", []),
+        __metadata$b("design:returntype", void 0)
+    ], Panel.prototype, "__enableSnapshot__", null);
     return Panel;
 }());
 

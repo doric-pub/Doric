@@ -31,6 +31,11 @@ export declare abstract class Panel {
     private __onEnvChanged__;
     private __response__;
     private retrospectView;
+    private snapshotEnabled;
+    private renderSnapshots;
+    private __renderSnapshotDepth__;
+    private __restoreRenderSnapshot__;
+    private __enableSnapshot__;
     private nativeRender;
     private hookBeforeNativeCall;
     private hookAfterNativeCall;

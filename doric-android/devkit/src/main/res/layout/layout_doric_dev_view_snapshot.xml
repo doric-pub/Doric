@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="#ecf0f1"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="15dp">
+
+        <ImageView
+            android:id="@+id/snap_pre"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/icon_doricdev_prev" />
+
+        <TextView
+            android:id="@+id/snap_idx"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:text="1"
+            android:textColor="#000"
+            android:textSize="30dp" />
+
+        <ImageView
+            android:id="@+id/snap_next"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/icon_doricdev_next" />
+
+        <ImageView
+            android:id="@+id/snap_close"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/icon_doricdev_close" />
+    </LinearLayout>
+
+</merge>

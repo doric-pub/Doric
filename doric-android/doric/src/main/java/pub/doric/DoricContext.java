@@ -131,6 +131,9 @@ public class DoricContext {
     }
 
     public void init(String initData) {
+        if (DoricRegistry.isEnableRenderSnapshot()) {
+            callEntity("__enableSnapshot__");
+        }
         this.extra = initData;
         if (!TextUtils.isEmpty(initData)) {
             callEntity(DoricConstant.DORIC_ENTITY_INIT, initData);

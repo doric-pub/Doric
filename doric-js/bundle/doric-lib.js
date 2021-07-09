@@ -825,6 +825,8 @@ class Panel {
         this.headviews = new Map;
         this.onRenderFinishedCallback = [];
         this.__rendering__ = false;
+        this.snapshotEnabled = false;
+        this.renderSnapshots = [];
     }
     onCreate() { }
     onDestroy() { }
@@ -933,7 +935,19 @@ class Panel {
             }
         }, undefined);
     }
+    __renderSnapshotDepth__() {
+        return this.renderSnapshots.length;
+    }
+    __restoreRenderSnapshot__(idx) {
+        return [...this.renderSnapshots].slice(0, idx);
+    }
+    __enableSnapshot__() {
+        this.snapshotEnabled = true;
+    }
     nativeRender(model) {
+        if (this.snapshotEnabled) {
+            this.renderSnapshots.push(JSON.parse(JSON.stringify(model)));
+        }
         return this.context.callNative("shader", "render", model);
     }
     hookBeforeNativeCall() {
@@ -1065,6 +1079,24 @@ __decorate$b([
     __metadata$b("design:paramtypes", [Array, String]),
     __metadata$b("design:returntype", void 0)
 ], Panel.prototype, "__response__", null);
+__decorate$b([
+    NativeCall,
+    __metadata$b("design:type", Function),
+    __metadata$b("design:paramtypes", []),
+    __metadata$b("design:returntype", void 0)
+], Panel.prototype, "__renderSnapshotDepth__", null);
+__decorate$b([
+    NativeCall,
+    __metadata$b("design:type", Function),
+    __metadata$b("design:paramtypes", [Number]),
+    __metadata$b("design:returntype", void 0)
+], Panel.prototype, "__restoreRenderSnapshot__", null);
+__decorate$b([
+    NativeCall,
+    __metadata$b("design:type", Function),
+    __metadata$b("design:paramtypes", []),
+    __metadata$b("design:returntype", void 0)
+], Panel.prototype, "__enableSnapshot__", null);
 
 /*
  * Copyright [2019] [Doric.Pub]

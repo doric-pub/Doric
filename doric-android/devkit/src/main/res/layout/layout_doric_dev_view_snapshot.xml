@@ -5,18 +5,29 @@
 
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="255dp"
+        android:layout_height="70dp"
         android:layout_marginTop="5dp"
         android:background="#ecf0f1"
         android:gravity="center"
         android:orientation="horizontal"
-        android:padding="15dp">
+        android:paddingLeft="0dp"
+        android:paddingTop="15dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="15dp">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="5dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/icon_doricdev_move" />
 
         <ImageView
             android:id="@+id/snap_pre"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:scaleType="fitXY"
             android:src="@drawable/icon_doricdev_prev" />
 
         <TextView
@@ -34,6 +45,7 @@
             android:id="@+id/snap_next"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:scaleType="fitXY"
             android:src="@drawable/icon_doricdev_next" />
 
         <ImageView
@@ -41,6 +53,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginLeft="20dp"
+            android:scaleType="fitXY"
             android:src="@drawable/icon_doricdev_close" />
     </LinearLayout>
 

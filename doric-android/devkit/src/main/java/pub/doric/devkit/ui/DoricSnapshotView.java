@@ -21,10 +21,8 @@ import android.content.Context;
 import android.os.Build;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -50,10 +48,7 @@ import pub.doric.utils.ThreadMode;
  * @CreateDate: 2021/7/9
  */
 @SuppressLint("ViewConstructor")
-public class DoricSnapshotView extends FrameLayout {
-    private int lastX;
-
-    private int lastY;
+public class DoricSnapshotView extends DoricFloatingView {
     private final DoricContext doricContext;
     private int snapNo = -1;
     private int snapSize = 0;
@@ -65,7 +60,7 @@ public class DoricSnapshotView extends FrameLayout {
         super(context);
         this.doricContext = doricContext;
         initView(context);
-        this.setAlpha(0.5f);
+        this.setAlpha(0.8f);
     }
 
     private void initView(Context context) {
@@ -131,31 +126,9 @@ public class DoricSnapshotView extends FrameLayout {
 
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        int x = (int) event.getX();
-        int y = (int) event.getY();
-
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                lastX = x;
-                lastY = y;
-                break;
-            case MotionEvent.ACTION_MOVE:
-                int offsetX = x - lastX;
-                int offsetY = y - lastY;
-                layout(getLeft() + offsetX, getTop() + offsetY, getRight() + offsetX, getBottom() + offsetY);
-                break;
-            default:
-                break;
-        }
-        return true;
-    }
-
     private void rollupSnapshot(int index) {
-        spanPre.setVisibility(index <= 0 ? View.INVISIBLE : View.VISIBLE);
-        spanNext.setVisibility(index >= snapSize ? View.INVISIBLE : View.VISIBLE);
+        spanPre.setImageAlpha(index <= 0 ? 0x7f : 0xff);
+        spanNext.setImageAlpha(index >= snapSize ? 0x7f : 0xff);
         snapIndex.setText(String.valueOf(index));
         doricContext.callEntity("__restoreRenderSnapshot__", index).setCallback(new AsyncResult.Callback<JSDecoder>() {
             @Override

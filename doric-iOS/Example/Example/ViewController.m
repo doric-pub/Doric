@@ -68,6 +68,10 @@
     return TARGET_OS_SIMULATOR == 1;
 }
 
+- (void)onOpenDevkit {
+    [[DoricDev instance] openDevMode];
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row == 0) {
         [[DoricDev instance] openDevMode:self];
@@ -79,6 +83,8 @@
                      alias:self.demoFilePaths[(NSUInteger) indexPath.row]
                      extra:nil
     ];
+    UIBarButtonItem *rightBarItem = [[UIBarButtonItem alloc] initWithTitle:@"Devkit" style:UIBarButtonItemStylePlain target:self action:@selector(onOpenDevkit)];
+    doricViewController.navigationItem.rightBarButtonItem = rightBarItem;
     [self.navigationController pushViewController:doricViewController animated:NO];
 }
 

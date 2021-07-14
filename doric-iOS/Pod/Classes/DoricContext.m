@@ -84,6 +84,9 @@
 }
 
 - (void)init:(NSString *)initData {
+    if ([DoricRegistry isEnableRenderSnapshot]) {
+        [self callEntity:@"__enableSnapshot__" withArgumentsArray:@[]];
+    }
     self.extra = initData;
     if (initData) {
         [self callEntity:DORIC_ENTITY_INIT withArgumentsArray:@[initData]];

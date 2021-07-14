@@ -121,7 +121,7 @@
     }
     if ([DoricRegistry isEnableRenderSnapshot]) {
         UIAlertAction *snapshot = [UIAlertAction actionWithTitle:@"Snapshot" style:UIAlertActionStyleDefault handler:^(UIAlertAction *_) {
-            DoricSnapshotView *doricSnapshotView = [DoricSnapshotView new];
+            DoricSnapshotView *doricSnapshotView = [[DoricSnapshotView alloc] initWithDoricContext:self.doricContext];
             doricSnapshotView.top = 50;
             [self.doricContext.vc.view addSubview:doricSnapshotView];
             [self.vc.navigationController popViewControllerAnimated:NO];

@@ -60,6 +60,7 @@
 @property(nonatomic, strong) NSHashTable<DoricRegistry *> *registries;
 @property(nonatomic, strong) NSMutableDictionary *envDic;
 @property(nonatomic, assign) BOOL enablePerformance;
+@property(nonatomic, assign) BOOL enableRecordSnapshot;
 
 + (instancetype)instance;
 @end
@@ -71,6 +72,7 @@
         _registries = [NSHashTable new];
         _envDic = [NSMutableDictionary new];
         _enablePerformance = NO;
+        _enableRecordSnapshot = NO;
     }
     return self;
 }
@@ -138,6 +140,14 @@
 
 + (BOOL)isEnablePerformance {
     return DoricLibraries.instance.enablePerformance;
+}
+
++ (void)enableRenderSnapshot:(BOOL)enable {
+    DoricLibraries.instance.enableRecordSnapshot = enable;
+}
+
++ (BOOL)isEnableRenderSnapshot {
+    return DoricLibraries.instance.enableRecordSnapshot;
 }
 
 - (void)innerRegister {

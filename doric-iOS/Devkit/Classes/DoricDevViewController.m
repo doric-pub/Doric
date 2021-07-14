@@ -27,6 +27,7 @@
 #import "DoricDevViewController.h"
 #import "QRScanViewController.h"
 #import "DoricDebugDriver.h"
+#import "DoricRegistry.h"
 
 @interface DoricContextCell : UITableViewCell
 @property(nonatomic, strong) UILabel *tvId;
@@ -130,7 +131,10 @@
 @property(nonatomic, strong) UILabel *tvInput;
 @property(nonatomic, strong) UILabel *tvScan;
 @property(nonatomic, strong) UILabel *tvDisconnect;
-
+@property(nonatomic, strong) UILabel *tvSnapshot;
+@property(nonatomic, strong) UILabel *tvPerformance;
+@property(nonatomic, strong) UISwitch *switchSnapshot;
+@property(nonatomic, strong) UISwitch *switchPerformance;
 @property(nonatomic, strong) UITableView *listView;
 
 @end
@@ -144,7 +148,7 @@
     self.view.backgroundColor = UIColor.whiteColor;
     self.headerView = [[UIView new] also:^(UIView *it) {
         it.width = self.view.width;
-        it.height = 60;
+        it.height = 140;
         it.backgroundColor = DoricColor(@(0xff70a1ff));
         [self.view addSubview:it];
     }];
@@ -208,9 +212,41 @@
         UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(disconnect)];
         [it addGestureRecognizer:tapGestureRecognizer];
     }];
+    self.tvSnapshot = [[UILabel new] also:^(UILabel *it) {
+        it.text = @"Record Snapshot";
+        it.textColor = [UIColor whiteColor];
+        it.font = [UIFont systemFontOfSize:15];
+        it.textAlignment = NSTextAlignmentCenter;
+        [it sizeToFit];
+        [self.headerView addSubview:it];
+    }];
+    self.tvPerformance = [[UILabel new] also:^(UILabel *it) {
+        it.text = @"Performance";
+        it.textColor = [UIColor whiteColor];
+        it.font = [UIFont systemFontOfSize:15];
+        it.textAlignment = NSTextAlignmentCenter;
+        [it sizeToFit];
+        [self.headerView addSubview:it];
+    }];
+    self.switchSnapshot = [[UISwitch new] also:^(UISwitch *it) {
+        [it addTarget:self action:@selector(onSnapshotSwitch) forControlEvents:UIControlEventValueChanged];
+        [self.headerView addSubview:it];
+    }];
+    self.switchPerformance = [[UISwitch new] also:^(UISwitch *it) {
+        [it addTarget:self action:@selector(onPerformanceSwitch) forControlEvents:UIControlEventValueChanged];
+        [self.headerView addSubview:it];
+    }];
     [self initHeaders];
     [self initList];
     [DoricDev.instance addStatusCallback:self];
+}
+
+- (void)onSnapshotSwitch {
+    [DoricRegistry enableRenderSnapshot:self.switchSnapshot.isOn];
+}
+
+- (void)onPerformanceSwitch {
+    [DoricRegistry enablePerformance:self.switchPerformance.isOn];
 }
 
 - (void)disconnect {
@@ -276,8 +312,8 @@
 
         self.tvConnection.left = self.tvLabel.right + 20;
         self.tvDisconnect.right = self.view.width - 15;
-        self.tvConnection.centerY = self.headerView.centerY;
-        self.tvDisconnect.centerY = self.headerView.centerY;
+        self.tvConnection.top = 15;
+        self.tvDisconnect.top = 15;
     } else {
         self.tvConnection.text = @"Disconnected";
         self.tvInput.hidden = NO;
@@ -292,10 +328,22 @@
         self.tvConnection.left = self.tvLabel.right + 20;
         self.tvScan.right = self.view.width - 15;
         self.tvInput.right = self.tvScan.left - 10;
-        self.tvConnection.centerY = self.headerView.centerY;
-        self.tvScan.centerY = self.headerView.centerY;
-        self.tvInput.centerY = self.headerView.centerY;
+
+        self.tvConnection.top = 15;
+        self.tvScan.top = 15;
+        self.tvInput.top = 15;
     }
+    self.tvSnapshot.left = self.tvLabel.right + 20;
+    self.switchSnapshot.left = self.tvSnapshot.right + 20;
+    self.switchSnapshot.top = self.tvConnection.bottom + 15;
+    self.tvSnapshot.centerY = self.switchSnapshot.centerY;
+    self.switchSnapshot.on = [DoricRegistry isEnableRenderSnapshot];
+
+    self.tvPerformance.left = self.tvLabel.right + 20;
+    self.switchPerformance.left = self.tvPerformance.right + 20;
+    self.switchPerformance.top = self.switchSnapshot.bottom + 15;
+    self.tvPerformance.centerY = self.switchPerformance.centerY;
+    self.switchPerformance.on = [DoricRegistry isEnablePerformance];
 }
 
 - (void)initList {
@@ -325,15 +373,12 @@
     return [UIImage imageWithData:imageData];
 }
 
-- (NSInteger)tableView:(UITableView *)tableView
- numberOfRowsInSection:
-         (NSInteger)section {
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:
+        (NSInteger)section {
     return [DoricContextManager.instance aliveContexts].count;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView
-         cellForRowAtIndexPath:
-                 (NSIndexPath *)indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     DoricContextCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     if (cell == nil) {
         cell = [[DoricContextCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
@@ -369,9 +414,7 @@
     return cell;
 }
 
-- (CGFloat)   tableView:(UITableView *)tableView
-heightForRowAtIndexPath:
-        (NSIndexPath *)indexPath {
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 60.f;
 }
 

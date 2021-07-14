@@ -56,6 +56,10 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)enablePerformance:(BOOL)enable;
 
 + (BOOL)isEnablePerformance;
+
++ (void)enableRenderSnapshot:(BOOL)enable;
+
++ (BOOL)isEnableRenderSnapshot;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -27,7 +27,7 @@
 #import "DoricDevViewController.h"
 #import "QRScanViewController.h"
 #import "DoricDebugDriver.h"
-#import "DoricRegistry.h"
+#import "DoricSnapshotView.h"
 
 @interface DoricContextCell : UITableViewCell
 @property(nonatomic, strong) UILabel *tvId;
@@ -121,7 +121,10 @@
     }
     if ([DoricRegistry isEnableRenderSnapshot]) {
         UIAlertAction *snapshot = [UIAlertAction actionWithTitle:@"Snapshot" style:UIAlertActionStyleDefault handler:^(UIAlertAction *_) {
-           
+            DoricSnapshotView *doricSnapshotView = [DoricSnapshotView new];
+            doricSnapshotView.top = 50;
+            [self.doricContext.vc.view addSubview:doricSnapshotView];
+            [self.vc.navigationController popViewControllerAnimated:NO];
         }];
         [alertController addAction:snapshot];
     }

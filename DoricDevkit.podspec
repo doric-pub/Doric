@@ -24,4 +24,6 @@ Doric iOS Devkit for debugging & hotload.
   s.dependency 'DoricCore'
 
   s.dependency 'SocketRocket'
+  
+  s.dependency 'RATreeView'
 end

@@ -119,6 +119,12 @@
             [alertController addAction:startDebugging];
         }
     }
+    if ([DoricRegistry isEnableRenderSnapshot]) {
+        UIAlertAction *snapshot = [UIAlertAction actionWithTitle:@"Snapshot" style:UIAlertActionStyleDefault handler:^(UIAlertAction *_) {
+           
+        }];
+        [alertController addAction:snapshot];
+    }
 
     [self.vc presentViewController:alertController animated:true completion:nil];
 }

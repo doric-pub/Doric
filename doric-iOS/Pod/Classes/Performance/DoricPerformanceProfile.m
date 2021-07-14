@@ -51,6 +51,10 @@
     [self.hooks removeObject:hook];
 }
 
+- (void)enable:(bool)enable {
+    self.enable = enable;
+}
+
 - (NSString *)getPrepareAnchor:(NSString *)anchorName {
     return [NSString stringWithFormat:@"%@#prepare", anchorName];
 }

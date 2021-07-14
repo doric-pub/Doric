@@ -17,8 +17,20 @@
 // Created by pengfei.zhou on 2021/7/14.
 //
 
-#import <Foundation/Foundation.h>
+#import "DoricSnapshotView.h"
+#import <DoricCore/Doric.h>
 
+@implementation DoricSnapshotView
+- (instancetype)init {
+    if (self = [super init]) {
+        [self setupUI];
+    }
+    return self;
+}
 
-@interface DoricFloatView : UIView
+- (void)setupUI {
+    self.width = 20;
+    self.height = 20;
+    self.backgroundColor = [UIColor redColor];
+}
 @end

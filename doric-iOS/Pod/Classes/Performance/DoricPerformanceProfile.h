@@ -44,6 +44,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)addAnchorHook:(id <DoricPerformanceAnchorHookProtocol>)hook;
 
 - (void)removeAnchorHook:(id <DoricPerformanceAnchorHookProtocol>)hook;
+
+- (void)enable:(bool)enable;
 @end
 
 NS_ASSUME_NONNULL_END

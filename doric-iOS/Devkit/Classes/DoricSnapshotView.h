@@ -20,6 +20,8 @@
 #import <Foundation/Foundation.h>
 
 #import "DoricFloatView.h"
+#import <DoricCore/Doric.h>
 
 @interface DoricSnapshotView : DoricFloatView
+- (instancetype)initWithDoricContext:(DoricContext *)context;
 @end

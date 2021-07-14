@@ -47,6 +47,7 @@
     }]];
     [DoricRegistry register:[DemoLibrary new]];
     [DoricRegistry enablePerformance:YES];
+    [DoricRegistry enableRenderSnapshot:YES];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

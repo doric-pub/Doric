@@ -19,6 +19,7 @@
 
 #import <Foundation/Foundation.h>
 
+#import "DoricFloatView.h"
 
-@interface DoricFloatView : UIView
+@interface DoricSnapshotView : DoricFloatView
 @end

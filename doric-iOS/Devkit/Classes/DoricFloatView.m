@@ -1,5 +1,5 @@
 /*
- * Copyright [2019] [Doric.Pub]
+ * Copyright [2021] [Doric.Pub]
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,25 @@
 //
 
 #import "DoricFloatView.h"
-
+#import <DoricCore/Doric.h>
 
 @implementation DoricFloatView
+- (instancetype)init {
+    if (self = [super init]) {
+        UIPanGestureRecognizer *gesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onDrag:)];
+        [self addGestureRecognizer:gesture];
+    }
+    return self;
+}
 
+- (void)onDrag:(UIPanGestureRecognizer *)gesture {
+    CGPoint point = [gesture translationInView:self];
+    CGRect originalFrame = self.frame;
+    originalFrame.origin.x += point.x;
+    originalFrame.origin.y += point.y;
+    self.frame = originalFrame;
+    self.left = originalFrame.origin.x;
+    self.top = originalFrame.origin.y;
+    [gesture setTranslation:CGPointZero inView:self];
+}
 @end

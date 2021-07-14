@@ -15,7 +15,10 @@ Doric iOS Devkit for debugging & hotload.
   s.ios.deployment_target = '8.0'
 
   s.source_files = 'doric-iOS/Devkit/Classes/**/*'
-
+  
+  s.resource_bundles = {
+    'DoricDevkit' => ['doric-iOS/Devkit/Assets/**/*']
+  }
   s.public_header_files = 'doric-iOS/Devkit/Classes/**/*.h'
 
   s.dependency 'DoricCore'

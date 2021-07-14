@@ -30,6 +30,7 @@
 #import "DoricSnapshotView.h"
 #import "DoricShowNodeTreeViewController.h"
 #import "DoricRegistry.h"
+#import "DoricSnapshotView.h"
 
 @interface DoricContextCell : UITableViewCell
 @property(nonatomic, strong) UILabel *tvId;

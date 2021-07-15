@@ -186,7 +186,7 @@
                                   collectionViewLayout:flowLayout]
             also:^(UICollectionView *it) {
                 it.backgroundColor = [UIColor whiteColor];
-                it.pagingEnabled = YES;
+                it.pagingEnabled = NO;
                 it.delegate = self;
                 it.dataSource = self;
                 [it registerClass:[DoricFlowLayoutViewCell class] forCellWithReuseIdentifier:@"doricCell"];

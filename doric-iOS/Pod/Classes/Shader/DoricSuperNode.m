@@ -128,4 +128,20 @@
             NSStringFromSelector(_cmd));
     return nil;
 }
+
+- (NSArray *)getSubNodeViewIds {
+    NSMutableArray *discardedItems = [NSMutableArray array];
+    
+    NSMutableArray *allKeys = [[NSMutableArray alloc]init];
+    allKeys = [NSMutableArray arrayWithArray:[self.subNodes allKeys]];
+    for (NSString *key in allKeys) {
+        if ([self subNodeWithViewId:key] == nil) {
+            [discardedItems addObject:key];
+        }
+    }
+    
+    [allKeys removeObjectsInArray:discardedItems];
+    
+    return allKeys;
+}
 @end

@@ -191,7 +191,6 @@
                 it.dataSource = self;
                 it.showsVerticalScrollIndicator = NO;
                 it.showsHorizontalScrollIndicator = NO;
-                [it registerClass:[DoricFlowLayoutViewCell class] forCellWithReuseIdentifier:@"doricCell"];
                 if (@available(iOS 11, *)) {
                     it.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
                 }
@@ -335,8 +334,13 @@
     NSUInteger position = (NSUInteger) indexPath.row;
     NSDictionary *model = [self itemModelAt:position];
     NSDictionary *props = model[@"props"];
-
-    DoricFlowLayoutViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"doricCell" forIndexPath:indexPath];
+    NSString *identifier = props[@"identifier"] ?: @"doricCell";
+    if (position >= self.itemCount && self.onLoadMoreFuncId) {
+        identifier = @"doricLoadMoreCell";
+        [self callLoadMore];
+    }
+    [collectionView registerClass:[DoricFlowLayoutViewCell class] forCellWithReuseIdentifier:identifier];
+    DoricFlowLayoutViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
     if (!cell.viewNode) {
         DoricFlowLayoutItemNode *itemNode = [[DoricFlowLayoutItemNode alloc] initWithContext:self.doricContext];
         [itemNode initWithSuperNode:self];
@@ -351,10 +355,6 @@
         node.view.width = collectionView.width;
     } else {
         node.view.width = (collectionView.width - (self.columnCount - 1) * self.columnSpace) / self.columnCount;
-    }
-
-    if (position >= self.itemCount && self.onLoadMoreFuncId) {
-        [self callLoadMore];
     }
     [node.view.doricLayout apply];
     [node requestLayout];

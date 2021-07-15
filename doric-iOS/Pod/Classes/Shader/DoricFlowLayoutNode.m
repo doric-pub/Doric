@@ -91,10 +91,10 @@
 - (UICollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath {
     NSNumber *minYOfColumn = @(0);
     NSArray<NSNumber *> *keys = self.columnHeightInfo.allKeys;
-    NSArray<NSNumber *> *sortedKeys = [keys sortedArrayUsingComparator:^NSComparisonResult(NSNumber * obj1, NSNumber *obj2) {
+    NSArray<NSNumber *> *sortedKeys = [keys sortedArrayUsingComparator:^NSComparisonResult(NSNumber *obj1, NSNumber *obj2) {
         return [obj1 intValue] <= [obj2 intValue] ? -1 : 1;
     }];
-    
+
     for (NSNumber *key in sortedKeys) {
         if ([self.columnHeightInfo[key] floatValue] < [self.columnHeightInfo[minYOfColumn] floatValue]) {
             minYOfColumn = key;
@@ -164,7 +164,7 @@
 @property(nonatomic, copy) NSString *onScrollFuncId;
 @property(nonatomic, copy) NSString *onScrollEndFuncId;
 @property(nonatomic, strong) DoricJSDispatcher *jsDispatcher;
-@property(nonatomic, assign) NSUInteger loadAnchor;
+@property(nonatomic, assign) NSInteger loadAnchor;
 @end
 
 @implementation DoricFlowLayoutNode
@@ -350,7 +350,7 @@
     } else {
         node.view.width = (collectionView.width - (self.columnCount - 1) * self.columnSpace) / self.columnCount;
     }
-    
+
     if (position >= self.itemCount && self.onLoadMoreFuncId) {
         [self callLoadMore];
     }

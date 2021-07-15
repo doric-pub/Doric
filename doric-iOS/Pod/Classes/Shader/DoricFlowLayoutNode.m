@@ -111,11 +111,15 @@
 
     if (width == self.collectionView.width) {
         x = 0;
-        CGFloat maxY = 0;
-        for (NSNumber *column in self.columnHeightInfo.allValues) {
-            maxY = MAX(maxY, [column floatValue]);
+        NSNumber *maxYColumn = @(0);
+        for (NSNumber *key in sortedKeys) {
+            if ([self.columnHeightInfo[key] floatValue] > [self.columnHeightInfo[maxYColumn] floatValue]) {
+                maxYColumn = key;
+            }
         }
+        CGFloat maxY = [self.columnHeightInfo[maxYColumn] floatValue];
         y = maxY + self.rowSpace;
+        self.columnHeightInfo[maxYColumn] = @(y + height);
     } else {
         self.columnHeightInfo[minYOfColumn] = @(y + height);
     }

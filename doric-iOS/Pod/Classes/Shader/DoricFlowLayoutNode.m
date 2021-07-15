@@ -189,6 +189,8 @@
                 it.pagingEnabled = NO;
                 it.delegate = self;
                 it.dataSource = self;
+                it.showsVerticalScrollIndicator = NO;
+                it.showsHorizontalScrollIndicator = NO;
                 [it registerClass:[DoricFlowLayoutViewCell class] forCellWithReuseIdentifier:@"doricCell"];
                 if (@available(iOS 11, *)) {
                     it.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;

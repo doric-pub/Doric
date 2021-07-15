@@ -87,10 +87,6 @@
     UIBarButtonItem *rightBarItem = [[UIBarButtonItem alloc] initWithTitle:@"Devkit" style:UIBarButtonItemStylePlain target:self action:@selector(onOpenDevkit)];
     doricViewController.navigationItem.rightBarButtonItem = rightBarItem;
     [self.navigationController pushViewController:doricViewController animated:NO];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [[DoricDev instance] openDevMode:self];
-    });
 }
 
 @end

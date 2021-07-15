@@ -26,6 +26,7 @@
 #import <DoricCore/DoricContextManager.h>
 #import <DoricCore/DoricContext.h>
 #import <DoricCore/DoricGroupNode.h>
+#import <DoricCore/DoricRootNode.h>
 
 @interface DoricShowNodeTreeViewController () <RATreeViewDelegate, RATreeViewDataSource>
 @property(nonatomic, weak) DoricContext *doricContext;
@@ -54,13 +55,31 @@
     DoricShowNodeTreeViewCell *cell = [treeView dequeueReusableCellWithIdentifier:@"cell"];
     DoricViewNode *viewNode = (DoricViewNode *)item;
     
+    NSString *type = viewNode.type;
+    if ([item isKindOfClass:[DoricRootNode class]]) {
+        type = @"Root";
+    }
+    
     NSString *viewId = [[@" <" stringByAppendingString:viewNode.viewId] stringByAppendingString:@"> "];
-    cell.nodeNameLabel.text = [NSStringFromClass([item class]) stringByAppendingString:viewId];
+    
+    NSString *value = [type stringByAppendingString:viewId];
+    if ([item isKindOfClass:[DoricGroupNode class]]) {
+        DoricGroupNode *groupNode = item;
+        NSString *childDesc = [[@"(" stringByAppendingString:[@(groupNode.childNodes.count) stringValue]] stringByAppendingString:@" Child)"];
+        value = [value stringByAppendingString:childDesc];
+    } else if ([item isKindOfClass:[DoricSuperNode class]]) {
+        DoricSuperNode *superNode = item;
+        NSArray *viewIds = [superNode getSubNodeViewIds];
+        NSString *childDesc = [[@"(" stringByAppendingString:[@(viewIds.count)stringValue]] stringByAppendingString:@" Child)"];
+        value = [value stringByAppendingString:childDesc];
+    }
+    
+    cell.nodeNameLabel.text = value;
     [cell.nodeNameLabel sizeToFit];
     
     NSInteger indent = [treeView levelForCellForItem:item];
-    cell.nodeIcon.left = 5 + indent * 20;
-    cell.nodeNameLabel.left = 30 + indent * 20;
+    cell.nodeIcon.left = 5 + indent * 15;
+    cell.nodeNameLabel.left = 30 + indent * 15;
     
     return cell;
 }

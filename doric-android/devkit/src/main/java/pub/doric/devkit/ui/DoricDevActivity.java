@@ -21,7 +21,6 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -49,6 +48,8 @@ import pub.doric.devkit.R;
 import pub.doric.devkit.qrcode.DisplayUtil;
 import pub.doric.devkit.qrcode.activity.CaptureActivity;
 import pub.doric.devkit.qrcode.activity.CodeUtils;
+
+import static pub.doric.devkit.ui.DoricShowNodeTreeActivity.DORIC_CONTEXT_ID_KEY;
 
 public class DoricDevActivity extends AppCompatActivity implements DoricDev.StatusCallback {
     private int REQUEST_CODE = 100;
@@ -363,6 +364,9 @@ public class DoricDevActivity extends AppCompatActivity implements DoricDev.Stat
                             builder.show();
                         }
                     });
+                    ArrayList<String> list = new ArrayList<>();
+                    list.add("View source");
+                    list.add("Show node tree");
                     if (DoricDev.getInstance().isInDevMode()) {
                         if (context.getDriver() instanceof DoricDebugDriver) {
                             actionMap.put("Stop debugging", new DialogInterface.OnClickListener() {

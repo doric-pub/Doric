@@ -11,5 +11,6 @@
             android:name=".ui.DoricDevActivity"
             android:theme="@style/Theme.Design.Light.NoActionBar" />
         <activity android:name=".qrcode.activity.CaptureActivity" />
+        <activity android:name=".ui.DoricShowNodeTreeActivity" />
     </application>
 </manifest>

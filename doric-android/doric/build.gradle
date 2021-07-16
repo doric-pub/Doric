@@ -55,6 +55,8 @@ dependencies {
     implementation 'com.facebook.yoga.android:yoga-layout:1.16.0'
     implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.0.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation 'com.facebook.soloader:soloader:0.9.0'
+    implementation 'com.facebook.fbjni:fbjni:0.2.2'
 }
 
 if (new File('scripts/upload.gradle').exists()) {

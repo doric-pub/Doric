@@ -36,7 +36,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import pub.doric.DoricContext;
 import pub.doric.DoricContextManager;
@@ -335,50 +337,53 @@ public class DoricDevActivity extends AppCompatActivity implements DoricDev.Stat
             holder.layoutBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View v) {
-                    ArrayList<String> list = new ArrayList<>();
-                    list.add("View source");
+                    final Map<String, DialogInterface.OnClickListener> actionMap = new HashMap<>();
+
+                    actionMap.put("View source", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(holder.itemView.getContext(), R.style.Theme_Doric_Modal_Alert);
+                            builder.setTitle(String.format(Locale.getDefault(),
+                                    "View source: %s",
+                                    context.getSource()));
+                            String btnTitle = holder.itemView.getContext().getString(android.R.string.ok);
+                            builder.setMessage(
+                                    String.format(Locale.getDefault(),
+                                            "Size:%d\nMD5:%s\nScript:\n%s",
+                                            context.getScript().length(),
+                                            md5(context.getScript()),
+                                            context.getScript()))
+                                    .setPositiveButton(btnTitle, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            builder.setCancelable(false);
+                            builder.show();
+                        }
+                    });
                     if (DoricDev.getInstance().isInDevMode()) {
                         if (context.getDriver() instanceof DoricDebugDriver) {
-                            list.add("Stop debugging");
+                            actionMap.put("Stop debugging", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    DoricDev.getInstance().stopDebugging(true);
+                                }
+                            });
                         } else {
-                            list.add("Start debugging");
+                            actionMap.put("Start debugging", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    DoricDev.getInstance().requestDebugging(context);
+                                }
+                            });
                         }
                     }
                     if (DoricRegistry.isEnableRenderSnapshot()) {
-                        list.add("Snapshot");
-                    }
-                    final String[] items = list.toArray(new String[0]);
-                    AlertDialog.Builder builder = new AlertDialog.Builder(holder.itemView.getContext(), R.style.Theme_Doric_Modal);
-                    builder.setTitle(String.format("%s %s", context.getContextId(), context.getSource()));
-                    builder.setIcon(new BitmapDrawable(holder.itemView.getContext().getResources(), icon_on));
-                    builder.setItems(items, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if ("View source".equals(items[which])) {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(holder.itemView.getContext(), R.style.Theme_Doric_Modal_Alert);
-                                builder.setTitle(String.format(Locale.getDefault(),
-                                        "View source: %s",
-                                        context.getSource()));
-                                String btnTitle = holder.itemView.getContext().getString(android.R.string.ok);
-                                builder.setMessage(
-                                        String.format(Locale.getDefault(),
-                                                "Size:%d\nMD5:%s\nScript:\n%s",
-                                                context.getScript().length(),
-                                                md5(context.getScript()),
-                                                context.getScript()))
-                                        .setPositiveButton(btnTitle, new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.dismiss();
-                                            }
-                                        });
-                                builder.setCancelable(false);
-                                builder.show();
-                            } else if ("Stop debugging".equals(items[which])) {
-                                DoricDev.getInstance().stopDebugging(true);
-                            } else if ("Start debugging".equals(items[which])) {
-                                DoricDev.getInstance().requestDebugging(context);
-                            } else if ("Snapshot".endsWith(items[which])) {
+                        actionMap.put("Snapshot", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
                                 Activity activity = (Activity) context.getContext();
                                 ViewGroup view = (ViewGroup) activity.getWindow().getDecorView();
                                 DoricSnapshotView doricSnapshotView = new DoricSnapshotView(activity, context);
@@ -386,6 +391,20 @@ public class DoricDevActivity extends AppCompatActivity implements DoricDev.Stat
                                 layoutParams.topMargin = 200;
                                 view.addView(doricSnapshotView, layoutParams);
                                 ((Activity) v.getContext()).finish();
+                            }
+                        });
+                    }
+                    final String[] items = actionMap.keySet().toArray(new String[0]);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(holder.itemView.getContext(), R.style.Theme_Doric_Modal);
+                    builder.setTitle(String.format("%s %s", context.getContextId(), context.getSource()));
+                    builder.setIcon(new BitmapDrawable(holder.itemView.getContext().getResources(), icon_on));
+                    builder.setItems(items, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String title = items[which];
+                            DialogInterface.OnClickListener listener = actionMap.get(title);
+                            if (listener != null) {
+                                listener.onClick(dialog, which);
                             }
                             dialog.dismiss();
                         }

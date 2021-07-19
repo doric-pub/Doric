@@ -398,6 +398,16 @@ public class DoricDevActivity extends AppCompatActivity implements DoricDev.Stat
                             }
                         });
                     }
+                    if (DoricRegistry.isEnablePerformance()) {
+                        actionMap.put("Performance", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Map<String, Long> anchorMap = context.getPerformanceProfile().getAnchorMap();
+
+                                ((Activity) v.getContext()).finish();
+                            }
+                        });
+                    }
                     final String[] items = actionMap.keySet().toArray(new String[0]);
                     AlertDialog.Builder builder = new AlertDialog.Builder(holder.itemView.getContext(), R.style.Theme_Doric_Modal);
                     builder.setTitle(String.format("%s %s", context.getContextId(), context.getSource()));

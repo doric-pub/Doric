@@ -1,4 +1,4 @@
-import { Panel, Group, scroller, vlayout, layoutConfig, LayoutSpec, Input, Gravity, log, input, text, Color, Text, InputType, hlayout } from "doric";
+import { Panel, Group, scroller, vlayout, layoutConfig, LayoutSpec, Input, Gravity, log, input, text, Color, Text, InputType, hlayout, GradientOrientation } from "doric";
 import { title } from "./utils";
 @Entry
 class TextDemo extends Panel {
@@ -37,6 +37,95 @@ class TextDemo extends Panel {
                     }),
                     text({
                         text: "This is normal text",
+                    }),
+                    hlayout([
+                        text({
+                            text: "T_B",
+                            textSize: 80,
+                            textColor: {
+                                start: Color.RED,
+                                end: Color.GREEN,
+                                orientation: GradientOrientation.TOP_BOTTOM,
+                            }
+                        }),
+                        text({
+                            text: "TR_BL",
+                            textSize: 80,
+                            textColor: {
+                                start: Color.RED,
+                                end: Color.GREEN,
+                                orientation: GradientOrientation.TR_BL,
+                            }
+                        }),
+                        text({
+                            text: "R_L",
+                            textSize: 80,
+                            textColor: {
+                                start: Color.RED,
+                                end: Color.GREEN,
+                                orientation: GradientOrientation.RIGHT_LEFT,
+                            }
+                        }),
+                        text({
+                            text: "BR_TL",
+                            textSize: 80,
+                            textColor: {
+                                start: Color.RED,
+                                end: Color.GREEN,
+                                orientation: GradientOrientation.BR_TL,
+                            }
+                        }),
+                    ], {
+                        space: 20
+                    }),
+                    hlayout([
+                        text({
+                            text: "B_T",
+                            textSize: 80,
+                            textColor: {
+                                start: Color.RED,
+                                end: Color.GREEN,
+                                orientation: GradientOrientation.BOTTOM_TOP,
+                            }
+                        }),
+                        text({
+                            text: "BL_TR",
+                            textSize: 80,
+                            textColor: {
+                                start: Color.RED,
+                                end: Color.GREEN,
+                                orientation: GradientOrientation.BL_TR,
+                            }
+                        }),
+                        text({
+                            text: "L_R",
+                            textSize: 80,
+                            textColor: {
+                                start: Color.RED,
+                                end: Color.GREEN,
+                                orientation: GradientOrientation.LEFT_RIGHT,
+                            }
+                        }),
+                        text({
+                            text: "TL_BR",
+                            textSize: 80,
+                            textColor: {
+                                start: Color.RED,
+                                end: Color.GREEN,
+                                orientation: GradientOrientation.TL_BR,
+                            }
+                        }),
+                    ], {
+                        space: 20
+                    }),
+                    text({
+                        text: "grad",
+                        textSize: 120,
+                        textColor: {
+                            colors: [Color.GREEN, Color.WHITE, Color.RED],
+                            locations: [0, 0.5, 1],
+                            orientation: GradientOrientation.TOP_BOTTOM
+                        }
                     }),
                     text({
                         text: "This is normal text with shadow ",

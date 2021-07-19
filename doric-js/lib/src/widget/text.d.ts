@@ -1,5 +1,5 @@
 import { View } from "../ui/view";
-import { Color } from "../util/color";
+import { Color, GradientColor } from "../util/color";
 import { Gravity } from "../util/gravity";
 export declare enum TruncateAt {
     End = 0,
@@ -9,7 +9,7 @@ export declare enum TruncateAt {
 }
 export declare class Text extends View {
     text?: string;
-    textColor?: Color;
+    textColor?: Color | GradientColor;
     textSize?: number;
     maxLines?: number;
     textAlignment?: Gravity;

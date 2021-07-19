@@ -2856,6 +2856,89 @@ class AnimationSet {
     }
 }
 
+var __decorate$a = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata$a = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+exports.TruncateAt = void 0;
+(function (TruncateAt) {
+    TruncateAt[TruncateAt["End"] = 0] = "End";
+    TruncateAt[TruncateAt["Middle"] = 1] = "Middle";
+    TruncateAt[TruncateAt["Start"] = 2] = "Start";
+    TruncateAt[TruncateAt["Clip"] = 3] = "Clip";
+})(exports.TruncateAt || (exports.TruncateAt = {}));
+class Text extends View {
+}
+__decorate$a([
+    Property,
+    __metadata$a("design:type", String)
+], Text.prototype, "text", void 0);
+__decorate$a([
+    Property,
+    __metadata$a("design:type", Object)
+], Text.prototype, "textColor", void 0);
+__decorate$a([
+    Property,
+    __metadata$a("design:type", Number)
+], Text.prototype, "textSize", void 0);
+__decorate$a([
+    Property,
+    __metadata$a("design:type", Number)
+], Text.prototype, "maxLines", void 0);
+__decorate$a([
+    Property,
+    __metadata$a("design:type", Gravity)
+], Text.prototype, "textAlignment", void 0);
+__decorate$a([
+    Property,
+    __metadata$a("design:type", String)
+], Text.prototype, "fontStyle", void 0);
+__decorate$a([
+    Property,
+    __metadata$a("design:type", String)
+], Text.prototype, "font", void 0);
+__decorate$a([
+    Property,
+    __metadata$a("design:type", Number)
+], Text.prototype, "maxWidth", void 0);
+__decorate$a([
+    Property,
+    __metadata$a("design:type", Number)
+], Text.prototype, "maxHeight", void 0);
+__decorate$a([
+    Property,
+    __metadata$a("design:type", Number)
+], Text.prototype, "lineSpacing", void 0);
+__decorate$a([
+    Property,
+    __metadata$a("design:type", Boolean)
+], Text.prototype, "strikethrough", void 0);
+__decorate$a([
+    Property,
+    __metadata$a("design:type", Boolean)
+], Text.prototype, "underline", void 0);
+__decorate$a([
+    Property,
+    __metadata$a("design:type", String)
+], Text.prototype, "htmlText", void 0);
+__decorate$a([
+    Property,
+    __metadata$a("design:type", Number)
+], Text.prototype, "truncateAt", void 0);
+function text(config) {
+    const ret = new Text;
+    ret.layoutConfig = layoutConfig().fit();
+    for (let key in config) {
+        Reflect.set(ret, key, Reflect.get(config, key, config), ret);
+    }
+    return ret;
+}
+
 /**
  *  Store color as format AARRGGBB or RRGGBB
  */
@@ -2929,89 +3012,6 @@ exports.GradientOrientation = void 0;
     /** draw the gradient from the top-left to the bottom-right */
     GradientOrientation[GradientOrientation["TL_BR"] = 7] = "TL_BR";
 })(exports.GradientOrientation || (exports.GradientOrientation = {}));
-
-var __decorate$a = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata$a = (undefined && undefined.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-exports.TruncateAt = void 0;
-(function (TruncateAt) {
-    TruncateAt[TruncateAt["End"] = 0] = "End";
-    TruncateAt[TruncateAt["Middle"] = 1] = "Middle";
-    TruncateAt[TruncateAt["Start"] = 2] = "Start";
-    TruncateAt[TruncateAt["Clip"] = 3] = "Clip";
-})(exports.TruncateAt || (exports.TruncateAt = {}));
-class Text extends View {
-}
-__decorate$a([
-    Property,
-    __metadata$a("design:type", String)
-], Text.prototype, "text", void 0);
-__decorate$a([
-    Property,
-    __metadata$a("design:type", Color)
-], Text.prototype, "textColor", void 0);
-__decorate$a([
-    Property,
-    __metadata$a("design:type", Number)
-], Text.prototype, "textSize", void 0);
-__decorate$a([
-    Property,
-    __metadata$a("design:type", Number)
-], Text.prototype, "maxLines", void 0);
-__decorate$a([
-    Property,
-    __metadata$a("design:type", Gravity)
-], Text.prototype, "textAlignment", void 0);
-__decorate$a([
-    Property,
-    __metadata$a("design:type", String)
-], Text.prototype, "fontStyle", void 0);
-__decorate$a([
-    Property,
-    __metadata$a("design:type", String)
-], Text.prototype, "font", void 0);
-__decorate$a([
-    Property,
-    __metadata$a("design:type", Number)
-], Text.prototype, "maxWidth", void 0);
-__decorate$a([
-    Property,
-    __metadata$a("design:type", Number)
-], Text.prototype, "maxHeight", void 0);
-__decorate$a([
-    Property,
-    __metadata$a("design:type", Number)
-], Text.prototype, "lineSpacing", void 0);
-__decorate$a([
-    Property,
-    __metadata$a("design:type", Boolean)
-], Text.prototype, "strikethrough", void 0);
-__decorate$a([
-    Property,
-    __metadata$a("design:type", Boolean)
-], Text.prototype, "underline", void 0);
-__decorate$a([
-    Property,
-    __metadata$a("design:type", String)
-], Text.prototype, "htmlText", void 0);
-__decorate$a([
-    Property,
-    __metadata$a("design:type", Number)
-], Text.prototype, "truncateAt", void 0);
-function text(config) {
-    const ret = new Text;
-    ret.layoutConfig = layoutConfig().fit();
-    for (let key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-    }
-    return ret;
-}
 
 var __decorate$9 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;

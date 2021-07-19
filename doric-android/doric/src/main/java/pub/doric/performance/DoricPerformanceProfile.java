@@ -113,6 +113,10 @@ public class DoricPerformanceProfile {
         print(anchorName);
     }
 
+    public Map<String, Long> getAnchorMap() {
+        return this.anchorMap;
+    }
+
     private void print(final String anchorName) {
         if (!enable) {
             return;

@@ -33,6 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 @interface DoricPerformanceProfile : NSObject
+@property(nonatomic, strong) NSMutableDictionary <NSString *, NSNumber *> *anchorMap;
+
 - (instancetype)initWithName:(NSString *)name;
 
 - (void)prepare:(NSString *)anchorName;

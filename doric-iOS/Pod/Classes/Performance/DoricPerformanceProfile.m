@@ -25,7 +25,6 @@
 
 @interface DoricPerformanceProfile ()
 @property(nonatomic, copy) NSString *name;
-@property(nonatomic, strong) NSMutableDictionary <NSString *, NSNumber *> *anchorMap;
 @property(nonatomic, strong) dispatch_queue_t anchorQueue;
 @property(nonatomic, assign) BOOL enable;
 @property(nonatomic, strong) NSHashTable<id <DoricPerformanceAnchorHookProtocol>> *hooks;

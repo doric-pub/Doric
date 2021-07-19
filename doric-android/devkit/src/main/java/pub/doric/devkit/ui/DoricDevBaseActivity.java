@@ -15,19 +15,27 @@
  */
 package pub.doric.devkit.ui;
 
-
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
+import pub.doric.DoricContext;
+import pub.doric.DoricContextManager;
 
 /**
  * @Description: pub.doric.devkit.ui
  * @Author: pengfei.zhou
  * @CreateDate: 2021/7/19
  */
-public class DoricDevPerfActivity extends DoricDevBaseActivity {
+public class DoricDevBaseActivity extends AppCompatActivity {
+    public static final String DORIC_CONTEXT_ID_KEY = "DORIC_CONTEXT_ID";
+    protected DoricContext doricContext;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        String contextId = getIntent().getStringExtra(DORIC_CONTEXT_ID_KEY);
+        doricContext = DoricContextManager.getContext(contextId);
     }
 }

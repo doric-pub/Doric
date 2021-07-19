@@ -1,3 +1,18 @@
+/*
+ * Copyright [2020] [Doric.Pub]
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package pub.doric.devkit.ui;
 
 import android.Manifest;
@@ -399,19 +414,21 @@ public class DoricDevActivity extends AppCompatActivity implements DoricDev.Stat
                         actionMap.put("Performance", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Map<String, Long> anchorMap = context.getPerformanceProfile().getAnchorMap();
-
+                                Intent intent = new Intent(holder.itemView.getContext(), DoricDevPerfActivity.class);
+                                intent.putExtra(DORIC_CONTEXT_ID_KEY, context.getContextId());
+                                v.getContext().startActivity(intent);
                                 ((Activity) v.getContext()).finish();
                             }
                         });
                     }
 
-                    actionMap.put("Show node tree", new DialogInterface.OnClickListener() {
+                    actionMap.put("View node tree", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             Intent intent = new Intent(holder.itemView.getContext(), DoricShowNodeTreeActivity.class);
                             intent.putExtra(DORIC_CONTEXT_ID_KEY, context.getContextId());
                             v.getContext().startActivity(intent);
+                            ((Activity) v.getContext()).finish();
                         }
                     });
                     final String[] items = actionMap.keySet().toArray(new String[0]);

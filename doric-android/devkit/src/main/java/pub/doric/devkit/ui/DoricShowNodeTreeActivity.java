@@ -1,8 +1,22 @@
+/*
+ * Copyright [2021] [Doric.Pub]
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package pub.doric.devkit.ui;
 
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,8 +26,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import pub.doric.DoricContext;
-import pub.doric.DoricContextManager;
 import pub.doric.devkit.R;
 import pub.doric.devkit.ui.treeview.DoricViewNodeLayoutItemType;
 import pub.doric.devkit.ui.treeview.DoricViewNodeTreeViewBinder;
@@ -22,20 +34,14 @@ import pub.doric.devkit.ui.treeview.TreeViewAdapter;
 import pub.doric.shader.GroupNode;
 import pub.doric.shader.ViewNode;
 
-public class DoricShowNodeTreeActivity extends AppCompatActivity {
-
-    public static final String DORIC_CONTEXT_ID_KEY = "DORIC_CONTEXT_ID";
+public class DoricShowNodeTreeActivity extends DoricDevBaseActivity {
 
     private RecyclerView rv;
     private TreeViewAdapter adapter;
 
-    private DoricContext doricContext;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String contextId = getIntent().getStringExtra(DORIC_CONTEXT_ID_KEY);
-        doricContext = DoricContextManager.getContext(contextId);
 
         setContentView(R.layout.layout_show_node_tree);
         initView();

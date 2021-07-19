@@ -44,6 +44,8 @@
 @property(nonatomic, strong) NSMutableParagraphStyle *paragraphStyle;
 @property(nonatomic, copy) NSNumber *underline;
 @property(nonatomic, copy) NSNumber *strikethrough;
+@property(nonatomic, strong) NSDictionary *textGradientProps;
+@property(nonatomic, assign) CGSize textGradientSize;
 @end
 
 @implementation DoricTextNode
@@ -67,7 +69,14 @@
             view.font = [UIFont systemFontOfSize:[(NSNumber *) prop floatValue]];
         }
     } else if ([name isEqualToString:@"textColor"]) {
-        view.textColor = DoricColor(prop);
+        if ([prop isKindOfClass:[NSNumber class]]) {
+            view.textColor = DoricColor(prop);
+            self.textGradientProps = nil;
+            self.textGradientSize = CGSizeZero;
+        } else if ([prop isKindOfClass:[NSDictionary class]]) {
+            self.textGradientProps = prop;
+            self.textGradientSize = CGSizeZero;
+        }
     } else if ([name isEqualToString:@"textAlignment"]) {
         DoricGravity gravity = (DoricGravity) [(NSNumber *) prop integerValue];
         NSTextAlignment alignment = NSTextAlignmentCenter;
@@ -187,5 +196,106 @@
 - (void)blend:(NSDictionary *)props {
     [super blend:props];
     self.view.doricLayout.resolved = NO;
+}
+
+- (void)requestLayout {
+    [super requestLayout];
+    
+    [self.textGradientProps also:^(NSDictionary *dict) {
+        if (CGSizeEqualToSize(self.textGradientSize, self.view.frame.size)) {
+            return;
+        }
+        self.textGradientSize = self.view.frame.size;
+
+        NSMutableArray *colors = [[NSMutableArray alloc] init];
+        NSMutableArray *arrayLocations = nil;
+        if (dict[@"colors"] != nil) {
+            NSMutableArray *arrayColors = [dict mutableArrayValueForKey:@"colors"];
+            [arrayColors forEach:^(id obj) {
+                [colors addObject:(__bridge id) DoricColor(obj).CGColor];
+            }];
+            if (dict[@"locations"] != nil) {
+                arrayLocations = [dict mutableArrayValueForKey:@"locations"];
+            }
+
+        } else {
+            if (dict[@"start"] != nil && dict[@"end"] != nil) {
+                UIColor *start = DoricColor(dict[@"start"]);
+                UIColor *end = DoricColor(dict[@"end"]);
+
+                [colors addObject:(__bridge id) start.CGColor];
+                [colors addObject:(__bridge id) end.CGColor];
+            }
+        }
+
+        int orientation = [dict[@"orientation"] intValue];
+        CGPoint startPoint;
+        CGPoint endPoint;
+        if (orientation == 1) {
+            startPoint = CGPointMake(1, 0);
+            endPoint = CGPointMake(0, 1);
+        } else if (orientation == 2) {
+            startPoint = CGPointMake(1, 0);
+            endPoint = CGPointMake(0, 0);
+        } else if (orientation == 3) {
+            startPoint = CGPointMake(1, 1);
+            endPoint = CGPointMake(0, 0);
+        } else if (orientation == 4) {
+            startPoint = CGPointMake(0, 1);
+            endPoint = CGPointMake(0, 0);
+        } else if (orientation == 5) {
+            startPoint = CGPointMake(0, 1);
+            endPoint = CGPointMake(1, 0);
+        } else if (orientation == 6) {
+            startPoint = CGPointMake(0, 0);
+            endPoint = CGPointMake(1, 0);
+        } else if (orientation == 7) {
+            startPoint = CGPointMake(0, 0);
+            endPoint = CGPointMake(1, 1);
+        } else {
+            startPoint = CGPointMake(0, 0);
+            endPoint = CGPointMake(0, 1);
+        }
+
+        UIImage *gradientImage;
+        if (arrayLocations != nil) {
+            CGFloat locations[arrayLocations.count];
+            for (int i = 0; i != arrayLocations.count; i++) {
+                locations[i] = [arrayLocations[i] floatValue];
+            }
+            gradientImage = [self gradientImageFromColors:colors
+                                                locations:locations
+                                               startPoint:startPoint
+                                                 endPoint:endPoint
+                                                  imgSize:self.textGradientSize];
+        } else {
+            gradientImage = [self gradientImageFromColors:colors
+                                                locations:NULL
+                                               startPoint:startPoint
+                                                 endPoint:endPoint
+                                                  imgSize:self.textGradientSize];
+        }
+        self.view.textColor = [UIColor colorWithPatternImage:gradientImage];
+    }];
+}
+
+- (UIImage *)gradientImageFromColors:(NSArray *)colors
+                           locations:(CGFloat *)locations
+                          startPoint:(CGPoint)startPoint
+                            endPoint:(CGPoint)endPoint
+                             imgSize:(CGSize)imgSize {
+    UIGraphicsBeginImageContextWithOptions(imgSize, NO, [UIScreen mainScreen].scale);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSaveGState(context);
+    CGColorSpaceRef colorSpace = CGColorGetColorSpace((__bridge CGColorRef) colors.lastObject);
+    CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef) colors, locations);
+    CGPoint start = (CGPoint) {startPoint.x * imgSize.width, startPoint.y * imgSize.height};
+    CGPoint end = (CGPoint) {endPoint.x * imgSize.width, endPoint.y * imgSize.height};
+    CGContextDrawLinearGradient(context, gradient, start, end, kCGGradientDrawsBeforeStartLocation | kCGGradientDrawsAfterEndLocation);
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    CGGradientRelease(gradient);
+    CGContextRestoreGState(context);
+    UIGraphicsEndImageContext();
+    return image;
 }
 @end

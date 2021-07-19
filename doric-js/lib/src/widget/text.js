@@ -23,7 +23,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
  * limitations under the License.
  */
 import { View, Property } from "../ui/view";
-import { Color } from "../util/color";
 import { Gravity } from "../util/gravity";
 import { layoutConfig } from "../util/layoutconfig";
 export var TruncateAt;
@@ -41,7 +40,7 @@ __decorate([
 ], Text.prototype, "text", void 0);
 __decorate([
     Property,
-    __metadata("design:type", Color)
+    __metadata("design:type", Object)
 ], Text.prototype, "textColor", void 0);
 __decorate([
     Property,

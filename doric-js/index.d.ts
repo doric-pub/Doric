@@ -491,7 +491,7 @@ declare module 'doric/lib/src/widget/layouts' {
 
 declare module 'doric/lib/src/widget/text' {
     import { View } from "doric/lib/src/ui/view";
-    import { Color } from "doric/lib/src/util/color";
+    import { Color, GradientColor } from "doric/lib/src/util/color";
     import { Gravity } from "doric/lib/src/util/gravity";
     export enum TruncateAt {
         End = 0,
@@ -501,7 +501,7 @@ declare module 'doric/lib/src/widget/text' {
     }
     export class Text extends View {
         text?: string;
-        textColor?: Color;
+        textColor?: Color | GradientColor;
         textSize?: number;
         maxLines?: number;
         textAlignment?: Gravity;

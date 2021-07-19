@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { View, Property } from "../ui/view"
-import { Color } from "../util/color"
+import { Color, GradientColor } from "../util/color"
 import { Gravity } from "../util/gravity"
 import { layoutConfig } from "../util/layoutconfig"
 
@@ -30,7 +30,7 @@ export class Text extends View {
     text?: string
 
     @Property
-    textColor?: Color
+    textColor?: Color | GradientColor
 
     @Property
     textSize?: number

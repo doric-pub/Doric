@@ -364,9 +364,6 @@ public class DoricDevActivity extends AppCompatActivity implements DoricDev.Stat
                             builder.show();
                         }
                     });
-                    ArrayList<String> list = new ArrayList<>();
-                    list.add("View source");
-                    list.add("Show node tree");
                     if (DoricDev.getInstance().isInDevMode()) {
                         if (context.getDriver() instanceof DoricDebugDriver) {
                             actionMap.put("Stop debugging", new DialogInterface.OnClickListener() {
@@ -408,6 +405,15 @@ public class DoricDevActivity extends AppCompatActivity implements DoricDev.Stat
                             }
                         });
                     }
+
+                    actionMap.put("Show node tree", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(holder.itemView.getContext(), DoricShowNodeTreeActivity.class);
+                            intent.putExtra(DORIC_CONTEXT_ID_KEY, context.getContextId());
+                            v.getContext().startActivity(intent);
+                        }
+                    });
                     final String[] items = actionMap.keySet().toArray(new String[0]);
                     AlertDialog.Builder builder = new AlertDialog.Builder(holder.itemView.getContext(), R.style.Theme_Doric_Modal);
                     builder.setTitle(String.format("%s %s", context.getContextId(), context.getSource()));

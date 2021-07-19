@@ -41,7 +41,7 @@ class TextDemo extends Panel {
                     hlayout([
                         text({
                             text: "T_B",
-                            textSize: 80,
+                            textSize: 60,
                             textColor: {
                                 start: Color.RED,
                                 end: Color.GREEN,
@@ -49,30 +49,12 @@ class TextDemo extends Panel {
                             }
                         }),
                         text({
-                            text: "TR_BL",
-                            textSize: 80,
+                            text: "B_T",
+                            textSize: 60,
                             textColor: {
                                 start: Color.RED,
                                 end: Color.GREEN,
-                                orientation: GradientOrientation.TR_BL,
-                            }
-                        }),
-                        text({
-                            text: "R_L",
-                            textSize: 80,
-                            textColor: {
-                                start: Color.RED,
-                                end: Color.GREEN,
-                                orientation: GradientOrientation.RIGHT_LEFT,
-                            }
-                        }),
-                        text({
-                            text: "BR_TL",
-                            textSize: 80,
-                            textColor: {
-                                start: Color.RED,
-                                end: Color.GREEN,
-                                orientation: GradientOrientation.BR_TL,
+                                orientation: GradientOrientation.BOTTOM_TOP,
                             }
                         }),
                     ], {
@@ -80,35 +62,61 @@ class TextDemo extends Panel {
                     }),
                     hlayout([
                         text({
-                            text: "B_T",
-                            textSize: 80,
+                            text: "TR_BL",
+                            textSize: 60,
                             textColor: {
                                 start: Color.RED,
                                 end: Color.GREEN,
-                                orientation: GradientOrientation.BOTTOM_TOP,
+                                orientation: GradientOrientation.TR_BL,
                             }
                         }),
                         text({
                             text: "BL_TR",
-                            textSize: 80,
+                            textSize: 60,
                             textColor: {
                                 start: Color.RED,
                                 end: Color.GREEN,
                                 orientation: GradientOrientation.BL_TR,
                             }
                         }),
+                    ], {
+                        space: 20
+                    }),
+                    hlayout([
+                        text({
+                            text: "R_L",
+                            textSize: 60,
+                            textColor: {
+                                start: Color.RED,
+                                end: Color.GREEN,
+                                orientation: GradientOrientation.RIGHT_LEFT,
+                            }
+                        }),
                         text({
                             text: "L_R",
-                            textSize: 80,
+                            textSize: 60,
                             textColor: {
                                 start: Color.RED,
                                 end: Color.GREEN,
                                 orientation: GradientOrientation.LEFT_RIGHT,
                             }
                         }),
+                    ], {
+                        space: 20
+                    }),
+                    hlayout([
+                        text({
+                            text: "BR_TL",
+                            textSize: 60,
+                            textColor: {
+                                start: Color.RED,
+                                end: Color.GREEN,
+                                orientation: GradientOrientation.BR_TL,
+                            }
+                        }),
                         text({
                             text: "TL_BR",
-                            textSize: 80,
+                            textSize: 60,
                             textColor: {
                                 start: Color.RED,
                                 end: Color.GREEN,
@@ -120,7 +128,7 @@ class TextDemo extends Panel {
                     }),
                     text({
                         text: "grad",
-                        textSize: 120,
+                        textSize: 100,
                         textColor: {
                             colors: [Color.GREEN, Color.WHITE, Color.RED],
                             locations: [0, 0.5, 1],

@@ -15,9 +15,15 @@
  */
 package pub.doric.shader;
 
+import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
+import android.text.Layout;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -71,7 +77,7 @@ public class TextNode extends ViewNode<TextView> {
     }
 
     @Override
-    protected void blend(TextView view, String name, JSValue prop) {
+    protected void blend(final TextView view, String name, final JSValue prop) {
         switch (name) {
             case "text":
                 if (!prop.isString()) {
@@ -86,10 +92,83 @@ public class TextNode extends ViewNode<TextView> {
                 view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, prop.asNumber().toFloat());
                 break;
             case "textColor":
-                if (!prop.isNumber()) {
-                    return;
+                if (prop.isNumber()) {
+                    view.setTextColor(prop.asNumber().toInt());
+                } else if (prop.isObject()) {
+                    view.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            final JSObject dict = prop.asObject();
+
+                            LinearGradient linearGradient = null;
+
+                            int[] colors = null;
+                            float[] locations = null;
+
+                            if (dict.propertySet().contains("colors")) {
+                                JSValue colorsValue = dict.getProperty("colors");
+                                if (colorsValue.isArray()) {
+                                    colors = colorsValue.asArray().toIntArray();
+                                }
+                                if (dict.propertySet().contains("locations")) {
+                                    JSValue locationsValue = dict.getProperty("locations");
+                                    if (locationsValue.isArray()) {
+                                        locations = locationsValue.asArray().toFloatArray();
+                                    }
+                                }
+                            } else {
+                                if (dict.propertySet().contains("start") && dict.propertySet().contains("end")) {
+                                    JSValue start = dict.getProperty("start");
+                                    JSValue end = dict.getProperty("end");
+                                    if (start.isNumber() && end.isNumber()) {
+                                        colors = new int[]{start.asNumber().toInt(), end.asNumber().toInt()};
+                                    }
+                                }
+                            }
+                            if (colors == null) {
+                                colors = new int[]{Color.TRANSPARENT, Color.TRANSPARENT};
+                            }
+
+                            JSValue orientation = dict.getProperty("orientation");
+
+                            float width = view.getMeasuredWidth();
+                            float height = view.getMeasuredHeight();
+
+                            float angle = 0;
+
+                            if (orientation.isNumber()) {
+                                switch (orientation.asNumber().toInt()) {
+                                    case 0:
+                                        angle = 270;
+                                        break;
+                                    case 1:
+                                        angle = (float) Math.toDegrees(Math.atan2(-width, -height));
+                                        break;
+                                    case 2:
+                                        angle = 180;
+                                        break;
+                                    case 3:
+                                        angle = (float) Math.toDegrees(Math.atan2(width, -height));
+                                        break;
+                                    case 4:
+                                        angle = 90;
+                                        break;
+                                    case 5:
+                                        angle = (float) Math.toDegrees(Math.atan2(width, height));
+                                        break;
+                                    case 6:
+                                        angle = 0;
+                                        break;
+                                    case 7:
+                                        angle = (float) Math.toDegrees(Math.atan2(-width, height));
+                                        break;
+                                }
+                            }
+
+                            setGradientTextColor(view, angle, colors, locations);
+                        }
+                    });
                 }
-                view.setTextColor(prop.asNumber().toInt());
                 break;
             case "textAlignment":
                 if (!prop.isNumber()) {
@@ -238,5 +317,45 @@ public class TextNode extends ViewNode<TextView> {
                 super.blend(view, name, prop);
                 break;
         }
+    }
+
+    public static void setGradientTextColor(final TextView textView, final float angle, final int[] colors, final float[] positions) {
+        final Rect textBound = new Rect(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE);
+
+        final Layout layout = textView.getLayout();
+        for (int i = 0; i < textView.getLineCount(); i++) {
+            float left = layout.getLineLeft(i);
+            float right = layout.getLineRight(i);
+            if (left < textBound.left) textBound.left = (int) left;
+            if (right > textBound.right) textBound.right = (int) right;
+        }
+        textBound.top = layout.getLineTop(0);
+        textBound.bottom = layout.getLineBottom(textView.getLineCount() - 1);
+        if (textView.getIncludeFontPadding()) {
+            Paint.FontMetrics fontMetrics = textView.getPaint().getFontMetrics();
+            textBound.top += (fontMetrics.ascent - fontMetrics.top);
+            textBound.bottom -= (fontMetrics.bottom - fontMetrics.descent);
+        }
+
+        double angleInRadians = Math.toRadians(angle);
+
+        double r = Math.sqrt(Math.pow(textBound.bottom - textBound.top, 2) +
+                Math.pow(textBound.right - textBound.left, 2)) / 2;
+
+        float centerX = textBound.left + (textBound.right - textBound.left) / 2.f;
+        float centerY = textBound.top + (textBound.bottom - textBound.top) / 2.f;
+
+        float startX = (float) (centerX - r * Math.cos(angleInRadians));
+        float startY = (float) (centerY + r * Math.sin(angleInRadians));
+
+        float endX = (float) (centerX + r * Math.cos(angleInRadians));
+        float endY = (float) (centerY - r * Math.sin(angleInRadians));
+
+        Shader textShader = new LinearGradient(startX, startY, endX, endY, colors, positions,
+                Shader.TileMode.CLAMP);
+
+        textView.setTextColor(Color.WHITE);
+        textView.getPaint().setShader(textShader);
+        textView.invalidate();
     }
 }

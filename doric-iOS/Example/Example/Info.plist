@@ -29,6 +29,8 @@
 	<string>Scan QR Code</string>
 	<key>UIAppFonts</key>
 	<array>
+		<string>DINPro.ttf</string>
+		<string>Hanabi.ttf</string>
 		<string>iconfont.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>

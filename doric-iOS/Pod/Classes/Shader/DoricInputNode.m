@@ -102,7 +102,12 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
     if ([name isEqualToString:@"text"]) {
         view.text = prop;
     } else if ([name isEqualToString:@"textSize"]) {
-        view.font = [UIFont systemFontOfSize:[(NSNumber *) prop floatValue]];
+        UIFont *font = view.font;
+        if (font) {
+            view.font = [view.font fontWithSize:[(NSNumber *) prop floatValue]];
+        } else {
+            view.font = [UIFont systemFontOfSize:[(NSNumber *) prop floatValue]];
+        }
     } else if ([name isEqualToString:@"textColor"]) {
         view.textColor = DoricColor(prop);
     } else if ([name isEqualToString:@"textAlignment"]) {
@@ -115,6 +120,11 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
         }
         view.textAlignment = alignment;
         view.placeholderLabel.textAlignment = alignment;
+    } else if ([name isEqualToString:@"font"]) {
+        NSString *iconfont = prop;
+        UIFont *font = [UIFont fontWithName:[iconfont stringByReplacingOccurrencesOfString:@".ttf" withString:@""]
+                                       size:view.font.pointSize];
+        view.font = font;
     } else if ([name isEqualToString:@"multiline"]) {
         BOOL value = [(NSNumber *) prop boolValue];
         if (!value) {
@@ -131,6 +141,11 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
         view.placeholderLabel.text = (NSString *) prop;
     } else if ([name isEqualToString:@"hintTextColor"]) {
         view.placeholderLabel.textColor = DoricColor(prop);
+    } else if ([name isEqualToString:@"hintFont"]) {
+        NSString *iconfont = prop;
+        UIFont *font = [UIFont fontWithName:[iconfont stringByReplacingOccurrencesOfString:@".ttf" withString:@""]
+                                       size:view.font.pointSize];
+        view.placeholderLabel.font = font;
     } else if ([name isEqualToString:@"onTextChange"]) {
         if ([prop isKindOfClass:[NSString class]]) {
             self.onTextChange = ^(NSString *text, DoricInputNode *node) {
@@ -227,7 +242,14 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
             || self.view.doricLayout.paddingRight != self.view.textContainerInset.right) {
         self.view.textContainerInset = UIEdgeInsetsMake(self.view.doricLayout.paddingTop, self.view.doricLayout.paddingLeft, self.view.doricLayout.paddingBottom, self.view.doricLayout.paddingRight);
     }
-    self.view.placeholderLabel.font = self.view.font;
+    
+    UIFont *font = self.view.placeholderLabel.font;
+    if (font) {
+        self.view.placeholderLabel.font = [self.view.placeholderLabel.font fontWithSize:self.view.font.pointSize];
+    } else {
+        self.view.placeholderLabel.font = self.view.font;
+    }
+    
     self.view.placeholderLabel.numberOfLines = self.view.textContainer.maximumNumberOfLines;
 }
 

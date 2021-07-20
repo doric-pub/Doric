@@ -11,6 +11,8 @@
 		1BCA4753C9D35032A0288028 /* libPods-ExampleUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FD2D6CCC8DCDABA7F86EAE7C /* libPods-ExampleUITests.a */; };
 		52F56220E3A039DD5E3EA3B2 /* libPods-Example.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4650C6577493F533466F084B /* libPods-Example.a */; };
 		8B429D94241B66A300572570 /* iconfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8B429D93241B66A200572570 /* iconfont.ttf */; };
+		8B5E51F126A6B68E00D06220 /* Hanabi.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8B5E51F026A6B68900D06220 /* Hanabi.ttf */; };
+		8B71685F26A5AF0E0087291A /* DINPro.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8B71685E26A5AE9A0087291A /* DINPro.ttf */; };
 		8BCADA7C23CD5B65005EEF96 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BCADA7B23CD5B64005EEF96 /* NavigationController.m */; };
 		D751D4B065D8D4FA6594B5EE /* DemoVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D751D19E97EF4EDD7588FEBE /* DemoVC.m */; };
 		D751DDB012BAF476A252CD93 /* DemoLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = D751D2175D09F2C10691FB81 /* DemoLibrary.m */; };
@@ -49,6 +51,8 @@
 		8231E841CCAF382F85C9F576 /* Pods-Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Example/Pods-Example.debug.xcconfig"; sourceTree = "<group>"; };
 		8A68295410FE7498FAFBB726 /* libPods-ExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B429D93241B66A200572570 /* iconfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = iconfont.ttf; path = "../../../doric-demo/bundle/iconfont.ttf"; sourceTree = "<group>"; };
+		8B5E51F026A6B68900D06220 /* Hanabi.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Hanabi.ttf; path = "../../../doric-demo/bundle/Hanabi.ttf"; sourceTree = "<group>"; };
+		8B71685E26A5AE9A0087291A /* DINPro.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = DINPro.ttf; path = "../../../doric-demo/bundle/DINPro.ttf"; sourceTree = "<group>"; };
 		8BCADA7A23CD5B5F005EEF96 /* NavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NavigationController.h; sourceTree = "<group>"; };
 		8BCADA7B23CD5B64005EEF96 /* NavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
 		B93423722F2E06DC238CDD18 /* Pods-ExampleUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExampleUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ExampleUITests/Pods-ExampleUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -154,6 +158,8 @@
 		E2334AED22E9D2060098A085 /* Example */ = {
 			isa = PBXGroup;
 			children = (
+				8B71685E26A5AE9A0087291A /* DINPro.ttf */,
+				8B5E51F026A6B68900D06220 /* Hanabi.ttf */,
 				8B429D93241B66A200572570 /* iconfont.ttf */,
 				E2C9315823B0A263007933D9 /* src */,
 				E2334AEE22E9D2060098A085 /* AppDelegate.h */,
@@ -302,6 +308,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8B5E51F126A6B68E00D06220 /* Hanabi.ttf in Resources */,
+				8B71685F26A5AF0E0087291A /* DINPro.ttf in Resources */,
 				E2334AFB22E9D2070098A085 /* LaunchScreen.storyboard in Resources */,
 				E2334AF822E9D2070098A085 /* Assets.xcassets in Resources */,
 				E2334AF622E9D2060098A085 /* Main.storyboard in Resources */,

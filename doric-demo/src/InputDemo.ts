@@ -99,6 +99,10 @@ class InputDemo extends Panel {
               width: 1,
               color: Color.GRAY,
             },
+            font: 'DINPro',
+            hintFont: 'Hanabi',
+            textColor: Color.RED,
+            hintTextColor: Color.GREEN,
           }),
         ],
         {

@@ -35,6 +35,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    NSArray<NSString *> *fonts = [UIFont familyNames];
 
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(localeChanged)

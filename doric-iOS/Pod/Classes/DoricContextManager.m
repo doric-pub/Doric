@@ -54,6 +54,9 @@
 - (void)createContext:(DoricContext *)context script:(NSString *)script source:(NSString *)source {
     context.contextId = [NSString stringWithFormat:@"%ld", (long) ++self.counter];
     context.performanceProfile = [[DoricPerformanceProfile alloc] initWithName:context.contextId];
+    if (context.driver.registry.globalPerformanceAnchorHook) {
+        [context.performanceProfile addAnchorHook:context.driver.registry.globalPerformanceAnchorHook];
+    }
     dispatch_sync(self.mapQueue, ^() {
         [self.contextMapTable setObject:context forKey:context.contextId];
     });

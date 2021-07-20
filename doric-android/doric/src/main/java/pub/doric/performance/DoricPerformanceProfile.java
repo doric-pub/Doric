@@ -57,6 +57,10 @@ public class DoricPerformanceProfile {
         void onAnchor(String name, long prepare, long start, long end);
     }
 
+    public interface GlobalAnchorHook extends AnchorHook {
+        void onAnchor(DoricPerformanceProfile profile, String name, long prepare, long start, long end);
+    }
+
     public DoricPerformanceProfile(String name) {
         this.name = name;
     }
@@ -113,10 +117,6 @@ public class DoricPerformanceProfile {
         print(anchorName);
     }
 
-    public Map<String, Long> getAnchorMap() {
-        return this.anchorMap;
-    }
-
     private void print(final String anchorName) {
         if (!enable) {
             return;
@@ -139,7 +139,11 @@ public class DoricPerformanceProfile {
                 Log.d(TAG, String.format("%s: %s prepared %dms, cost %dms.",
                         name, anchorName, start - prepare, end - start));
                 for (AnchorHook hook : hooks) {
-                    hook.onAnchor(anchorName, prepare, start, end);
+                    if (hook instanceof GlobalAnchorHook) {
+                        ((GlobalAnchorHook) hook).onAnchor(DoricPerformanceProfile.this, anchorName, prepare, start, end);
+                    } else {
+                        hook.onAnchor(anchorName, prepare, start, end);
+                    }
                 }
             }
         });

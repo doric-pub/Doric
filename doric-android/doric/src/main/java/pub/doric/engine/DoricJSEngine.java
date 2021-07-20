@@ -67,6 +67,10 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
 
     public DoricJSEngine() {
         mDoricRegistry = new DoricRegistry(this);
+        DoricPerformanceProfile.AnchorHook anchorHook = mDoricRegistry.getGlobalPerformanceAnchorHook();
+        if (anchorHook != null) {
+            globalProfile.addAnchorHook(anchorHook);
+        }
         globalProfile.prepare(DoricPerformanceProfile.PART_INIT);
         handlerThread = new HandlerThread(this.getClass().getSimpleName());
         handlerThread.start();

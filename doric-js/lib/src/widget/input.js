@@ -70,7 +70,15 @@ __decorate([
 __decorate([
     Property,
     __metadata("design:type", String)
+], Input.prototype, "font", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", String)
 ], Input.prototype, "hintText", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", String)
+], Input.prototype, "hintFont", void 0);
 __decorate([
     Property,
     __metadata("design:type", Number)

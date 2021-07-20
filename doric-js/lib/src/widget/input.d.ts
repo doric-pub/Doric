@@ -14,7 +14,9 @@ export declare class Input extends View {
     text?: string;
     textColor?: Color;
     textSize?: number;
+    font?: string;
     hintText?: string;
+    hintFont?: string;
     inputType?: InputType;
     hintTextColor?: Color;
     multiline?: boolean;

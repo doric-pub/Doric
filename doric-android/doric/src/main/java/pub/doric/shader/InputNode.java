@@ -16,6 +16,7 @@
 package pub.doric.shader;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -30,6 +31,8 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.core.content.res.ResourcesCompat;
 
 import com.github.pengfeizhou.jscore.ArchiveException;
 import com.github.pengfeizhou.jscore.JSDecoder;
@@ -46,6 +49,10 @@ import pub.doric.async.AsyncResult;
 import pub.doric.extension.bridge.DoricMethod;
 import pub.doric.extension.bridge.DoricPlugin;
 import pub.doric.extension.bridge.DoricPromise;
+import pub.doric.shader.input.CustomHint;
+import pub.doric.utils.DoricLog;
+
+import static pub.doric.utils.DoricUtils.dp2px;
 
 /**
  * @Description: pub.doric.shader
@@ -58,6 +65,10 @@ public class InputNode extends ViewNode<EditText> implements TextWatcher, View.O
     private String onTextChangeId;
     private String onFocusChangeId;
     private String beforeTextChangeId;
+
+    private String hintText;
+    private String hintFont;
+    private float textSize;
 
     public InputNode(DoricContext doricContext) {
         super(doricContext);
@@ -72,7 +83,65 @@ public class InputNode extends ViewNode<EditText> implements TextWatcher, View.O
         editText.setBackground(null);
         editText.setGravity(Gravity.START | Gravity.TOP);
         editText.setFilters(new InputFilter[]{this});
+
+        textSize = editText.getTextSize();
         return editText;
+    }
+
+    @Override
+    public void blend(JSObject jsObject) {
+        super.blend(jsObject);
+
+        CustomHint customHint;
+        if (hintFont != null) {
+            if (hintText != null) {
+                String font = hintFont;
+                String fontPath = "";
+                String fontName = font;
+                if (font.contains("/")) {
+                    int separatorIndex = font.lastIndexOf("/");
+                    fontPath = font.substring(0, separatorIndex + 1);
+                    fontName = font.substring(separatorIndex + 1);
+                }
+
+                if (fontName.endsWith(".ttf")) {
+                    fontName = fontName.replace(".ttf", "");
+                }
+
+                int resId = getContext().getResources().getIdentifier(
+                        fontName.toLowerCase(),
+                        "font",
+                        getContext().getPackageName());
+                if (resId > 0) {
+                    try {
+                        Typeface iconFont = ResourcesCompat.getFont(getContext(), resId);
+                        customHint = new CustomHint(iconFont, hintText, textSize);
+
+                        mView.setHint(customHint);
+                    } catch (Exception e) {
+                        DoricLog.e("Error Font asset  " + font + " in res/font");
+                    }
+
+                } else {
+                    fontName = fontPath +
+                            fontName +
+                            ".ttf";
+                    try {
+                        Typeface iconFont = Typeface.createFromAsset(getContext().getAssets(), fontName);
+                        customHint = new CustomHint(iconFont, hintText, textSize);
+
+                        mView.setHint(customHint);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        DoricLog.e(font + " not found in Assets");
+                    }
+                }
+            }
+        } else {
+            if (hintText != null) {
+                mView.setHint(hintText);
+            }
+        }
     }
 
     @Override
@@ -100,6 +169,7 @@ public class InputNode extends ViewNode<EditText> implements TextWatcher, View.O
                 view.setSelection(text.length());
                 break;
             case "textSize":
+                textSize = dp2px(prop.asNumber().toFloat());
                 view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, prop.asNumber().toFloat());
                 break;
             case "textColor":
@@ -108,11 +178,58 @@ public class InputNode extends ViewNode<EditText> implements TextWatcher, View.O
             case "textAlignment":
                 view.setGravity(prop.asNumber().toInt());
                 break;
+            case "font":
+                if (!prop.isString()) {
+                    return;
+                }
+                String font = prop.asString().toString();
+                String fontPath = "";
+                String fontName = font;
+                if (font.contains("/")) {
+                    int separatorIndex = font.lastIndexOf("/");
+                    fontPath = font.substring(0, separatorIndex + 1);
+                    fontName = font.substring(separatorIndex + 1);
+                }
+
+                if (fontName.endsWith(".ttf")) {
+                    fontName = fontName.replace(".ttf", "");
+                }
+
+                int resId = getContext().getResources().getIdentifier(
+                        fontName.toLowerCase(),
+                        "font",
+                        getContext().getPackageName());
+                if (resId > 0) {
+                    try {
+                        Typeface iconFont = ResourcesCompat.getFont(getContext(), resId);
+                        view.setTypeface(iconFont);
+                    } catch (Exception e) {
+                        DoricLog.e("Error Font asset  " + font + " in res/font");
+                    }
+
+                } else {
+                    fontName = fontPath +
+                            fontName +
+                            ".ttf";
+                    try {
+                        Typeface iconFont = Typeface.createFromAsset(getContext().getAssets(), fontName);
+                        view.setTypeface(iconFont);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        DoricLog.e(font + " not found in Assets");
+                    }
+
+                }
+
+                break;
             case "hintText":
-                view.setHint(prop.asString().toString());
+                this.hintText = prop.asString().toString();
                 break;
             case "hintTextColor":
                 view.setHintTextColor(prop.asNumber().toInt());
+                break;
+            case "hintFont":
+                this.hintFont = prop.asString().toString();
                 break;
             case "multiline":
                 if (prop.asBoolean().value()) {

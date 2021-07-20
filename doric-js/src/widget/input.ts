@@ -40,7 +40,13 @@ export class Input extends View {
     textSize?: number
 
     @Property
+    font?: string
+
+    @Property
     hintText?: string
+
+    @Property
+    hintFont?: string
 
     @Property
     inputType?: InputType

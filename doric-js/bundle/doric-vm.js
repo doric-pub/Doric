@@ -3729,7 +3729,15 @@ __decorate$3([
 __decorate$3([
     Property,
     __metadata$3("design:type", String)
+], Input.prototype, "font", void 0);
+__decorate$3([
+    Property,
+    __metadata$3("design:type", String)
 ], Input.prototype, "hintText", void 0);
+__decorate$3([
+    Property,
+    __metadata$3("design:type", String)
+], Input.prototype, "hintFont", void 0);
 __decorate$3([
     Property,
     __metadata$3("design:type", Number)

@@ -781,7 +781,9 @@ declare module 'doric/lib/src/widget/input' {
         text?: string;
         textColor?: Color;
         textSize?: number;
+        font?: string;
         hintText?: string;
+        hintFont?: string;
         inputType?: InputType;
         hintTextColor?: Color;
         multiline?: boolean;

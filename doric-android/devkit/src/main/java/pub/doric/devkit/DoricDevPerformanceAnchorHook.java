@@ -15,6 +15,8 @@
  */
 package pub.doric.devkit;
 
+import android.util.Log;
+
 import pub.doric.performance.DoricPerformanceProfile;
 
 /**
@@ -22,9 +24,17 @@ import pub.doric.performance.DoricPerformanceProfile;
  * @Author: pengfei.zhou
  * @CreateDate: 2021/7/20
  */
-public class DoricDevPerformanceAnchorHook implements DoricPerformanceProfile.AnchorHook {
+public class DoricDevPerformanceAnchorHook implements DoricPerformanceProfile.GlobalAnchorHook {
+    private static final String TAG = "DoricPerformance";
+
+    @Override
+    public void onAnchor(DoricPerformanceProfile profile, String name, long prepare, long start, long end) {
+        Log.d(TAG, String.format("%s: %s prepared %dms, cost %dms.",
+                profile.getName(), name, start - prepare, end - start));
+    }
+
     @Override
     public void onAnchor(String name, long prepare, long start, long end) {
-
+        //DO nothing
     }
 }

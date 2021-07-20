@@ -42,6 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface DoricPerformanceProfile : NSObject
+@property(nonatomic, copy) NSString *name;
 
 - (instancetype)initWithName:(NSString *)name;
 

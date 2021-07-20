@@ -24,7 +24,6 @@
 #import "DoricRegistry.h"
 
 @interface DoricPerformanceProfile ()
-@property(nonatomic, copy) NSString *name;
 @property(nonatomic, strong) dispatch_queue_t anchorQueue;
 @property(nonatomic, assign) BOOL enable;
 @property(nonatomic, strong) NSHashTable<id <DoricPerformanceAnchorHookProtocol>> *hooks;
@@ -108,15 +107,9 @@
         if (!prepare) {
             prepare = start;
         }
-        NSLog(@"[DoricPerformanceProfile] %@: %@ prepared %@ms, cost %@ms",
-                self.name,
-                anchorName,
-                @(start.integerValue - prepare.integerValue),
-                @(end.integerValue - start.integerValue)
-        );
         for (id <DoricPerformanceAnchorHookProtocol> hook in self.hooks) {
             if ([hook conformsToProtocol:@protocol(DoricPerformanceGlobalAnchorHookProtocol)]) {
-                [hook onAnchorName:anchorName prepare:end start:end end:end in:self];
+                [(id <DoricPerformanceGlobalAnchorHookProtocol>) hook onAnchorName:anchorName prepare:end start:end end:end in:self];
             } else {
                 [hook onAnchorName:anchorName prepare:prepare start:start end:end];
             }

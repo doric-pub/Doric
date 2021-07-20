@@ -78,24 +78,24 @@ public class DoricDevPerfActivity extends DoricDevBaseActivity {
         private List<AnchorNode> anchorNodes = new ArrayList<>();
 
         private MyAdapter() {
-            Map<String, Long> anchorMap = doricContext.getPerformanceProfile().getAnchorMap();
-            for (String key : anchorMap.keySet()) {
-                if (key.endsWith("#prepare")) {
-                    Long prepare = anchorMap.get(key);
-                    if (prepare != null) {
-                        AnchorNode anchorNode = new AnchorNode();
-                        anchorNode.name = key.substring(0, key.lastIndexOf("#prepare"));
-                        anchorNode.prepare = prepare;
-                        anchorNodes.add(anchorNode);
-                    }
-                }
-            }
-            Collections.sort(anchorNodes, new Comparator<AnchorNode>() {
-                @Override
-                public int compare(AnchorNode o1, AnchorNode o2) {
-                    return (int) (o1.prepare - o2.prepare);
-                }
-            });
+//            Map<String, Long> anchorMap = doricContext.getPerformanceProfile().getAnchorMap();
+//            for (String key : anchorMap.keySet()) {
+//                if (key.endsWith("#prepare")) {
+//                    Long prepare = anchorMap.get(key);
+//                    if (prepare != null) {
+//                        AnchorNode anchorNode = new AnchorNode();
+//                        anchorNode.name = key.substring(0, key.lastIndexOf("#prepare"));
+//                        anchorNode.prepare = prepare;
+//                        anchorNodes.add(anchorNode);
+//                    }
+//                }
+//            }
+//            Collections.sort(anchorNodes, new Comparator<AnchorNode>() {
+//                @Override
+//                public int compare(AnchorNode o1, AnchorNode o2) {
+//                    return (int) (o1.prepare - o2.prepare);
+//                }
+//            });
         }
 
         @Override

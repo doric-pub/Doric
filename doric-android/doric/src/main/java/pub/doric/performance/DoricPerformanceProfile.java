@@ -65,6 +65,10 @@ public class DoricPerformanceProfile {
         this.name = name;
     }
 
+    public String getName() {
+        return this.name;
+    }
+
     public void addAnchorHook(AnchorHook hook) {
         this.hooks.add(hook);
     }
@@ -136,8 +140,6 @@ public class DoricPerformanceProfile {
                 if (prepare == null) {
                     prepare = start;
                 }
-                Log.d(TAG, String.format("%s: %s prepared %dms, cost %dms.",
-                        name, anchorName, start - prepare, end - start));
                 for (AnchorHook hook : hooks) {
                     if (hook instanceof GlobalAnchorHook) {
                         ((GlobalAnchorHook) hook).onAnchor(DoricPerformanceProfile.this, anchorName, prepare, start, end);

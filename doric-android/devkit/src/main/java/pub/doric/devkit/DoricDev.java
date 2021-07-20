@@ -52,12 +52,7 @@ public class DoricDev {
     private DoricDev() {
         this.isRunningInEmulator = SimulatorUtil.isSimulator(Doric.application());
         DoricNativeDriver.getInstance().getRegistry().registerMonitor(new DoricDevMonitor());
-        DoricNativeDriver.getInstance().getRegistry().setGlobalPerformanceAnchorHook(new DoricPerformanceProfile.AnchorHook() {
-            @Override
-            public void onAnchor(String name, long prepare, long start, long end) {
-
-            }
-        });
+        DoricNativeDriver.getInstance().getRegistry().setGlobalPerformanceAnchorHook(new DoricDevPerformanceAnchorHook());
     }
 
     public static DoricDev getInstance() {

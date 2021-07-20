@@ -31,9 +31,17 @@ NS_ASSUME_NONNULL_BEGIN
                  end:(NSNumber *)end;
 @end
 
+@class DoricPerformanceProfile;
+
+@protocol DoricPerformanceGlobalAnchorHookProtocol <NSObject, DoricPerformanceAnchorHookProtocol>
+- (void)onAnchorName:(NSString *)name
+             prepare:(NSNumber *)prepare
+               start:(NSNumber *)start
+                 end:(NSNumber *)end
+                  in:(DoricPerformanceProfile *)profile;
+@end
 
 @interface DoricPerformanceProfile : NSObject
-@property(nonatomic, strong) NSMutableDictionary <NSString *, NSNumber *> *anchorMap;
 
 - (instancetype)initWithName:(NSString *)name;
 

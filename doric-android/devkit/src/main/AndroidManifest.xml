@@ -12,6 +12,8 @@
             android:theme="@style/Theme.Design.Light.NoActionBar" />
         <activity android:name=".qrcode.activity.CaptureActivity" />
         <activity android:name=".ui.DoricShowNodeTreeActivity" />
-        <activity android:name=".ui.DoricDevPerfActivity" />
+        <activity
+            android:name=".ui.DoricDevPerfActivity"
+            android:theme="@style/Theme.Design.Light.NoActionBar" />
     </application>
 </manifest>

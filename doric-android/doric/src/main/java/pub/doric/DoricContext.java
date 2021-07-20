@@ -108,6 +108,10 @@ public class DoricContext {
         this.source = source;
         this.extra = extra;
         this.performanceProfile = new DoricPerformanceProfile(contextId);
+        DoricPerformanceProfile.AnchorHook anchorHook = getDriver().getRegistry().getGlobalPerformanceAnchorHook();
+        if (anchorHook != null) {
+            this.performanceProfile.addAnchorHook(anchorHook);
+        }
     }
 
     public DoricPerformanceProfile getPerformanceProfile() {

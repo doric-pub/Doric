@@ -27,10 +27,12 @@
 NS_ASSUME_NONNULL_BEGIN
 @class DoricLibrary;
 @class DoricJSEngine;
+@protocol DoricPerformanceGlobalAnchorHookProtocol;
 
 @interface DoricRegistry : NSObject <DoricMonitorProtocol>
 @property(nonatomic, strong) UIImage *defaultPlaceHolderImage;
 @property(nonatomic, strong) UIImage *defaultErrorImage;
+@property(nonatomic, strong) id <DoricPerformanceGlobalAnchorHookProtocol> globalPerformanceAnchorHook;
 
 - (instancetype)initWithJSEngine:(DoricJSEngine *)jsEngine;
 

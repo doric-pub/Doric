@@ -417,7 +417,6 @@ public class DoricDevActivity extends AppCompatActivity implements DoricDev.Stat
                                 Intent intent = new Intent(holder.itemView.getContext(), DoricDevPerfActivity.class);
                                 intent.putExtra(DORIC_CONTEXT_ID_KEY, context.getContextId());
                                 v.getContext().startActivity(intent);
-                                ((Activity) v.getContext()).finish();
                             }
                         });
                     }
@@ -428,7 +427,6 @@ public class DoricDevActivity extends AppCompatActivity implements DoricDev.Stat
                             Intent intent = new Intent(holder.itemView.getContext(), DoricShowNodeTreeActivity.class);
                             intent.putExtra(DORIC_CONTEXT_ID_KEY, context.getContextId());
                             v.getContext().startActivity(intent);
-                            ((Activity) v.getContext()).finish();
                         }
                     });
                     final String[] items = actionMap.keySet().toArray(new String[0]);

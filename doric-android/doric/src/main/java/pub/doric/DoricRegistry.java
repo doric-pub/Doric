@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import pub.doric.engine.DoricJSEngine;
+import pub.doric.performance.DoricPerformanceProfile;
 import pub.doric.plugin.AnimatePlugin;
 import pub.doric.plugin.CoordinatorPlugin;
 import pub.doric.plugin.DoricJavaPlugin;
@@ -246,4 +247,16 @@ public class DoricRegistry {
     public void setDefaultErrorDrawable(Drawable defaultErrorDrawable) {
         this.defaultErrorDrawable = defaultErrorDrawable;
     }
+
+
+    private DoricPerformanceProfile.GlobalAnchorHook globalPerformanceAnchorHook;
+
+    public void setGlobalPerformanceAnchorHook(DoricPerformanceProfile.GlobalAnchorHook anchorHook) {
+        globalPerformanceAnchorHook = anchorHook;
+    }
+
+    public DoricPerformanceProfile.GlobalAnchorHook getGlobalPerformanceAnchorHook() {
+        return globalPerformanceAnchorHook;
+    }
+
 }

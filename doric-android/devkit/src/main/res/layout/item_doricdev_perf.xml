@@ -5,7 +5,8 @@
     android:background="#ecf0f1"
     android:gravity="center_vertical"
     android:orientation="vertical"
-    android:paddingLeft="10dp">
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,16 +32,32 @@
             android:layout_weight="1">
 
             <View
-                android:id="@+id/waterfall_prepared"
-                android:layout_width="30dp"
+                android:id="@+id/waterfall_prefix"
+                android:layout_width="0dp"
                 android:layout_height="20dp"
+
+                android:layout_weight="1" />
+
+            <View
+                android:id="@+id/waterfall_prepared"
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+
+                android:layout_weight="1"
                 android:background="#1abc9c" />
 
             <View
                 android:id="@+id/waterfall_worked"
-                android:layout_width="60dp"
+                android:layout_width="0dp"
                 android:layout_height="20dp"
+                android:layout_weight="1"
                 android:background="#f1c40f" />
+
+            <View
+                android:id="@+id/waterfall_suffix"
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="1" />
         </LinearLayout>
     </LinearLayout>
 

@@ -23,6 +23,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"Doric Demo";
+    [DoricDev instance];
     [self.navigationController.navigationBar setBackgroundImage:UIImageWithColor(UIColor.whiteColor) forBarMetrics:UIBarMetricsDefault];
     NSString *path = [[NSBundle mainBundle] bundlePath];
     NSString *demoPath = [path stringByAppendingPathComponent:@"src"];

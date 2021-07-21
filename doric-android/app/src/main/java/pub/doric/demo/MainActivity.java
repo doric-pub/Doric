@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        DoricDev.getInstance();
     }
 
     public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

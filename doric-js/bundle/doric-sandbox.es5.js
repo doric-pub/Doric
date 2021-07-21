@@ -1677,7 +1677,7 @@ var doric = (function (exports) {
 
     var hasOwnProperty = {}.hasOwnProperty;
 
-    var has$1 = Object.hasOwn || function hasOwn(it, key) {
+    var has$1 = function hasOwn(it, key) {
       return hasOwnProperty.call(toObject(it), key);
     };
 
@@ -1764,7 +1764,7 @@ var doric = (function (exports) {
 
     var functionToString = Function.toString;
 
-    // this helper broken in `core-js@3.4.1-3.4.4`, so we can't use `shared` helper
+    // this helper broken in `3.4.1-3.4.4`, so we can't use `shared` helper
     if (typeof sharedStore.inspectSource != 'function') {
       sharedStore.inspectSource = function (it) {
         return functionToString.call(it);
@@ -1783,7 +1783,7 @@ var doric = (function (exports) {
     (module.exports = function (key, value) {
       return sharedStore[key] || (sharedStore[key] = value !== undefined ? value : {});
     })('versions', []).push({
-      version: '3.14.0',
+      version: '3.12.1',
       mode: 'global',
       copyright: '© 2021 Denis Pushkarev (zloirock.ru)'
     });
@@ -1911,12 +1911,12 @@ var doric = (function (exports) {
     };
 
     var ceil$2 = Math.ceil;
-    var floor$a = Math.floor;
+    var floor$9 = Math.floor;
 
     // `ToInteger` abstract operation
     // https://tc39.es/ecma262/#sec-tointeger
     var toInteger = function (argument) {
-      return isNaN(argument = +argument) ? 0 : (argument > 0 ? floor$a : ceil$2)(argument);
+      return isNaN(argument = +argument) ? 0 : (argument > 0 ? floor$9 : ceil$2)(argument);
     };
 
     var min$9 = Math.min;
@@ -2131,10 +2131,8 @@ var doric = (function (exports) {
 
     // eslint-disable-next-line es/no-object-getownpropertysymbols -- required for testing
     var nativeSymbol = !!Object.getOwnPropertySymbols && !fails(function () {
-      var symbol = Symbol();
-      // Chrome 38 Symbol has incorrect toString conversion
-      // `get-own-property-symbols` polyfill symbols converted to object are not Symbol instances
-      return !String(symbol) || !(Object(symbol) instanceof Symbol) ||
+      return !String(Symbol()) ||
+        // Chrome 38 Symbol has incorrect toString conversion
         // Chrome 38-40 symbols are not inherited from DOM collections prototypes to instances
         !Symbol.sham && engineV8Version && engineV8Version < 41;
     });
@@ -3288,6 +3286,7 @@ var doric = (function (exports) {
     var callWithSafeIterationClosing = function (iterator, fn, value, ENTRIES) {
       try {
         return ENTRIES ? fn(anObject(value)[0], value[1]) : fn(value);
+      // 7.4.6 IteratorClose(iterator, completion)
       } catch (error) {
         iteratorClose(iterator);
         throw error;
@@ -3444,8 +3443,7 @@ var doric = (function (exports) {
 
     if (NEW_ITERATOR_PROTOTYPE) { IteratorPrototype$3 = {}; }
 
-    // `%IteratorPrototype%[@@iterator]()` method
-    // https://tc39.es/ecma262/#sec-%iteratorprototype%-@@iterator
+    // 25.1.2.1.1 %IteratorPrototype%[@@iterator]()
     if (!has$1(IteratorPrototype$3, ITERATOR$5)) {
       createNonEnumerableProperty(IteratorPrototype$3, ITERATOR$5, returnThis$2);
     }
@@ -3519,7 +3517,7 @@ var doric = (function (exports) {
         }
       }
 
-      // fix Array.prototype.{ values, @@iterator }.name in V8 / FF
+      // fix Array#{values, @@iterator}.name in V8 / FF
       if (DEFAULT == VALUES && nativeIterator && nativeIterator.name !== VALUES) {
         INCORRECT_VALUES_NAME = true;
         defaultIterator = function values() { return nativeIterator.call(this); };
@@ -3816,64 +3814,8 @@ var doric = (function (exports) {
       }
     });
 
-    // TODO: use something more complex like timsort?
-    var floor$9 = Math.floor;
-
-    var mergeSort = function (array, comparefn) {
-      var length = array.length;
-      var middle = floor$9(length / 2);
-      return length < 8 ? insertionSort(array, comparefn) : merge(
-        mergeSort(array.slice(0, middle), comparefn),
-        mergeSort(array.slice(middle), comparefn),
-        comparefn
-      );
-    };
-
-    var insertionSort = function (array, comparefn) {
-      var length = array.length;
-      var i = 1;
-      var element, j;
-
-      while (i < length) {
-        j = i;
-        element = array[i];
-        while (j && comparefn(array[j - 1], element) > 0) {
-          array[j] = array[--j];
-        }
-        if (j !== i++) { array[j] = element; }
-      } return array;
-    };
-
-    var merge = function (left, right, comparefn) {
-      var llength = left.length;
-      var rlength = right.length;
-      var lindex = 0;
-      var rindex = 0;
-      var result = [];
-
-      while (lindex < llength || rindex < rlength) {
-        if (lindex < llength && rindex < rlength) {
-          result.push(comparefn(left[lindex], right[rindex]) <= 0 ? left[lindex++] : right[rindex++]);
-        } else {
-          result.push(lindex < llength ? left[lindex++] : right[rindex++]);
-        }
-      } return result;
-    };
-
-    var arraySort = mergeSort;
-
-    var firefox = engineUserAgent.match(/firefox\/(\d+)/i);
-
-    var engineFfVersion = !!firefox && +firefox[1];
-
-    var engineIsIeOrEdge = /MSIE|Trident/.test(engineUserAgent);
-
-    var webkit = engineUserAgent.match(/AppleWebKit\/(\d+)\./);
-
-    var engineWebkitVersion = !!webkit && +webkit[1];
-
     var test = [];
-    var nativeSort$1 = test.sort;
+    var nativeSort = test.sort;
 
     // IE8-
     var FAILS_ON_UNDEFINED = fails(function () {
@@ -3886,78 +3828,15 @@ var doric = (function (exports) {
     // Old WebKit
     var STRICT_METHOD = arrayMethodIsStrict('sort');
 
-    var STABLE_SORT$1 = !fails(function () {
-      // feature detection can be too slow, so check engines versions
-      if (engineV8Version) { return engineV8Version < 70; }
-      if (engineFfVersion && engineFfVersion > 3) { return; }
-      if (engineIsIeOrEdge) { return true; }
-      if (engineWebkitVersion) { return engineWebkitVersion < 603; }
-
-      var result = '';
-      var code, chr, value, index;
-
-      // generate an array with more 512 elements (Chakra and old V8 fails only in this case)
-      for (code = 65; code < 76; code++) {
-        chr = String.fromCharCode(code);
-
-        switch (code) {
-          case 66: case 69: case 70: case 72: value = 3; break;
-          case 68: case 71: value = 4; break;
-          default: value = 2;
-        }
-
-        for (index = 0; index < 47; index++) {
-          test.push({ k: chr + index, v: value });
-        }
-      }
-
-      test.sort(function (a, b) { return b.v - a.v; });
-
-      for (index = 0; index < test.length; index++) {
-        chr = test[index].k.charAt(0);
-        if (result.charAt(result.length - 1) !== chr) { result += chr; }
-      }
-
-      return result !== 'DGBEFHACIJK';
-    });
-
-    var FORCED$l = FAILS_ON_UNDEFINED || !FAILS_ON_NULL || !STRICT_METHOD || !STABLE_SORT$1;
-
-    var getSortCompare$1 = function (comparefn) {
-      return function (x, y) {
-        if (y === undefined) { return -1; }
-        if (x === undefined) { return 1; }
-        if (comparefn !== undefined) { return +comparefn(x, y) || 0; }
-        return String(x) > String(y) ? 1 : -1;
-      };
-    };
+    var FORCED$l = FAILS_ON_UNDEFINED || !FAILS_ON_NULL || !STRICT_METHOD;
 
     // `Array.prototype.sort` method
     // https://tc39.es/ecma262/#sec-array.prototype.sort
     _export({ target: 'Array', proto: true, forced: FORCED$l }, {
       sort: function sort(comparefn) {
-        if (comparefn !== undefined) { aFunction(comparefn); }
-
-        var array = toObject(this);
-
-        if (STABLE_SORT$1) { return comparefn === undefined ? nativeSort$1.call(array) : nativeSort$1.call(array, comparefn); }
-
-        var items = [];
-        var arrayLength = toLength(array.length);
-        var itemsLength, index;
-
-        for (index = 0; index < arrayLength; index++) {
-          if (index in array) { items.push(array[index]); }
-        }
-
-        items = arraySort(items, getSortCompare$1(comparefn));
-        itemsLength = items.length;
-        index = 0;
-
-        while (index < itemsLength) { array[index] = items[index++]; }
-        while (index < arrayLength) { delete array[index++]; }
-
-        return array;
+        return comparefn === undefined
+          ? nativeSort.call(toObject(this))
+          : nativeSort.call(toObject(this), aFunction(comparefn));
       }
     });
 
@@ -4707,8 +4586,6 @@ var doric = (function (exports) {
       }
     });
 
-    // `Date.prototype[@@toPrimitive](hint)` method implementation
-    // https://tc39.es/ecma262/#sec-date.prototype-@@toprimitive
     var dateToPrimitive = function (hint) {
       if (hint !== 'string' && hint !== 'number' && hint !== 'default') {
         throw TypeError('Incorrect hint');
@@ -5091,9 +4968,8 @@ var doric = (function (exports) {
         };
 
         redefineAll(C.prototype, {
-          // `{ Map, Set }.prototype.clear()` methods
-          // https://tc39.es/ecma262/#sec-map.prototype.clear
-          // https://tc39.es/ecma262/#sec-set.prototype.clear
+          // 23.1.3.1 Map.prototype.clear()
+          // 23.2.3.2 Set.prototype.clear()
           clear: function clear() {
             var that = this;
             var state = getInternalState(that);
@@ -5109,9 +4985,8 @@ var doric = (function (exports) {
             if (descriptors) { state.size = 0; }
             else { that.size = 0; }
           },
-          // `{ Map, Set }.prototype.delete(key)` methods
-          // https://tc39.es/ecma262/#sec-map.prototype.delete
-          // https://tc39.es/ecma262/#sec-set.prototype.delete
+          // 23.1.3.3 Map.prototype.delete(key)
+          // 23.2.3.4 Set.prototype.delete(value)
           'delete': function (key) {
             var that = this;
             var state = getInternalState(that);
@@ -5129,9 +5004,8 @@ var doric = (function (exports) {
               else { that.size--; }
             } return !!entry;
           },
-          // `{ Map, Set }.prototype.forEach(callbackfn, thisArg = undefined)` methods
-          // https://tc39.es/ecma262/#sec-map.prototype.foreach
-          // https://tc39.es/ecma262/#sec-set.prototype.foreach
+          // 23.2.3.6 Set.prototype.forEach(callbackfn, thisArg = undefined)
+          // 23.1.3.5 Map.prototype.forEach(callbackfn, thisArg = undefined)
           forEach: function forEach(callbackfn /* , that = undefined */) {
             var state = getInternalState(this);
             var boundFunction = functionBindContext(callbackfn, arguments.length > 1 ? arguments[1] : undefined, 3);
@@ -5142,29 +5016,25 @@ var doric = (function (exports) {
               while (entry && entry.removed) { entry = entry.previous; }
             }
           },
-          // `{ Map, Set}.prototype.has(key)` methods
-          // https://tc39.es/ecma262/#sec-map.prototype.has
-          // https://tc39.es/ecma262/#sec-set.prototype.has
+          // 23.1.3.7 Map.prototype.has(key)
+          // 23.2.3.7 Set.prototype.has(value)
           has: function has(key) {
             return !!getEntry(this, key);
           }
         });
 
         redefineAll(C.prototype, IS_MAP ? {
-          // `Map.prototype.get(key)` method
-          // https://tc39.es/ecma262/#sec-map.prototype.get
+          // 23.1.3.6 Map.prototype.get(key)
           get: function get(key) {
             var entry = getEntry(this, key);
             return entry && entry.value;
           },
-          // `Map.prototype.set(key, value)` method
-          // https://tc39.es/ecma262/#sec-map.prototype.set
+          // 23.1.3.9 Map.prototype.set(key, value)
           set: function set(key, value) {
             return define(this, key === 0 ? 0 : key, value);
           }
         } : {
-          // `Set.prototype.add(value)` method
-          // https://tc39.es/ecma262/#sec-set.prototype.add
+          // 23.2.3.1 Set.prototype.add(value)
           add: function add(value) {
             return define(this, value = value === 0 ? 0 : value, value);
           }
@@ -5180,15 +5050,8 @@ var doric = (function (exports) {
         var ITERATOR_NAME = CONSTRUCTOR_NAME + ' Iterator';
         var getInternalCollectionState = internalStateGetterFor$1(CONSTRUCTOR_NAME);
         var getInternalIteratorState = internalStateGetterFor$1(ITERATOR_NAME);
-        // `{ Map, Set }.prototype.{ keys, values, entries, @@iterator }()` methods
-        // https://tc39.es/ecma262/#sec-map.prototype.entries
-        // https://tc39.es/ecma262/#sec-map.prototype.keys
-        // https://tc39.es/ecma262/#sec-map.prototype.values
-        // https://tc39.es/ecma262/#sec-map.prototype-@@iterator
-        // https://tc39.es/ecma262/#sec-set.prototype.entries
-        // https://tc39.es/ecma262/#sec-set.prototype.keys
-        // https://tc39.es/ecma262/#sec-set.prototype.values
-        // https://tc39.es/ecma262/#sec-set.prototype-@@iterator
+        // add .keys, .values, .entries, [@@iterator]
+        // 23.1.3.4, 23.1.3.8, 23.1.3.11, 23.1.3.12, 23.2.3.5, 23.2.3.8, 23.2.3.10, 23.2.3.11
         defineIterator(C, CONSTRUCTOR_NAME, function (iterated, kind) {
           setInternalState$d(this, {
             type: ITERATOR_NAME,
@@ -5215,9 +5078,7 @@ var doric = (function (exports) {
           return { value: [entry.key, entry.value], done: false };
         }, IS_MAP ? 'entries' : 'values', !IS_MAP, true);
 
-        // `{ Map, Set }.prototype[@@species]` accessors
-        // https://tc39.es/ecma262/#sec-get-map-@@species
-        // https://tc39.es/ecma262/#sec-get-set-@@species
+        // add [@@species], 23.1.2.2, 23.2.2.2
         setSpecies(CONSTRUCTOR_NAME);
       }
     };
@@ -5934,9 +5795,6 @@ var doric = (function (exports) {
 
     // Forced replacement object prototype accessors methods
     var objectPrototypeAccessorsForced = !fails(function () {
-      // This feature detection crashes old WebKit
-      // https://github.com/zloirock/core-js/issues/232
-      if (engineWebkitVersion && engineWebkitVersion < 535) { return; }
       var key = Math.random();
       // In FF throws only define methods
       // eslint-disable-next-line no-undef, no-useless-call -- required for testing
@@ -6462,8 +6320,7 @@ var doric = (function (exports) {
       this.reject = aFunction(reject);
     };
 
-    // `NewPromiseCapability` abstract operation
-    // https://tc39.es/ecma262/#sec-newpromisecapability
+    // 25.4.1.5 NewPromiseCapability(C)
     var f = function (C) {
       return new PromiseCapability(C);
     };
@@ -8041,7 +7898,6 @@ var doric = (function (exports) {
     var SUBSTITUTION_SYMBOLS = /\$([$&'`]|\d{1,2}|<[^>]*>)/g;
     var SUBSTITUTION_SYMBOLS_NO_NAMED = /\$([$&'`]|\d{1,2})/g;
 
-    // `GetSubstitution` abstract operation
     // https://tc39.es/ecma262/#sec-getsubstitution
     var getSubstitution = function (matched, str, position, captures, namedCaptures, replacement) {
       var tailPos = position + matched.length;
@@ -8464,7 +8320,7 @@ var doric = (function (exports) {
 
     var quot = /"/g;
 
-    // `CreateHTML` abstract operation
+    // B.2.3.2.1 CreateHTML(string, tag, attribute, value)
     // https://tc39.es/ecma262/#sec-createhtml
     var createHtml = function (string, tag, attribute, value) {
       var S = String(requireObjectCoercible(string));
@@ -9251,78 +9107,13 @@ var doric = (function (exports) {
 
     var aTypedArray$7 = arrayBufferViewCore.aTypedArray;
     var exportTypedArrayMethod$8 = arrayBufferViewCore.exportTypedArrayMethod;
-    var Uint16Array = global_1.Uint16Array;
-    var nativeSort = Uint16Array && Uint16Array.prototype.sort;
-
-    // WebKit
-    var ACCEPT_INCORRECT_ARGUMENTS = !!nativeSort && !fails(function () {
-      var array = new Uint16Array(2);
-      array.sort(null);
-      array.sort({});
-    });
-
-    var STABLE_SORT = !!nativeSort && !fails(function () {
-      // feature detection can be too slow, so check engines versions
-      if (engineV8Version) { return engineV8Version < 74; }
-      if (engineFfVersion) { return engineFfVersion < 67; }
-      if (engineIsIeOrEdge) { return true; }
-      if (engineWebkitVersion) { return engineWebkitVersion < 602; }
-
-      var array = new Uint16Array(516);
-      var expected = Array(516);
-      var index, mod;
-
-      for (index = 0; index < 516; index++) {
-        mod = index % 4;
-        array[index] = 515 - index;
-        expected[index] = index - 2 * mod + 3;
-      }
-
-      array.sort(function (a, b) {
-        return (a / 4 | 0) - (b / 4 | 0);
-      });
-
-      for (index = 0; index < 516; index++) {
-        if (array[index] !== expected[index]) { return true; }
-      }
-    });
-
-    var getSortCompare = function (comparefn) {
-      return function (x, y) {
-        if (comparefn !== undefined) { return +comparefn(x, y) || 0; }
-        // eslint-disable-next-line no-self-compare -- NaN check
-        if (y !== y) { return -1; }
-        // eslint-disable-next-line no-self-compare -- NaN check
-        if (x !== x) { return 1; }
-        if (x === 0 && y === 0) { return 1 / x > 0 && 1 / y < 0 ? 1 : -1; }
-        return x > y;
-      };
-    };
+    var $sort = [].sort;
 
     // `%TypedArray%.prototype.sort` method
     // https://tc39.es/ecma262/#sec-%typedarray%.prototype.sort
     exportTypedArrayMethod$8('sort', function sort(comparefn) {
-      var array = this;
-      if (comparefn !== undefined) { aFunction(comparefn); }
-      if (STABLE_SORT) { return nativeSort.call(array, comparefn); }
-
-      aTypedArray$7(array);
-      var arrayLength = toLength(array.length);
-      var items = Array(arrayLength);
-      var index;
-
-      for (index = 0; index < arrayLength; index++) {
-        items[index] = array[index];
-      }
-
-      items = arraySort(array, getSortCompare(comparefn));
-
-      for (index = 0; index < arrayLength; index++) {
-        array[index] = items[index];
-      }
-
-      return array;
-    }, !STABLE_SORT || ACCEPT_INCORRECT_ARGUMENTS);
+      return $sort.call(aTypedArray$7(this), comparefn);
+    });
 
     var aTypedArray$6 = arrayBufferViewCore.aTypedArray;
     var exportTypedArrayMethod$7 = arrayBufferViewCore.exportTypedArrayMethod;
@@ -9459,9 +9250,8 @@ var doric = (function (exports) {
         };
 
         redefineAll(C.prototype, {
-          // `{ WeakMap, WeakSet }.prototype.delete(key)` methods
-          // https://tc39.es/ecma262/#sec-weakmap.prototype.delete
-          // https://tc39.es/ecma262/#sec-weakset.prototype.delete
+          // 23.3.3.2 WeakMap.prototype.delete(key)
+          // 23.4.3.3 WeakSet.prototype.delete(value)
           'delete': function (key) {
             var state = getInternalState(this);
             if (!isObject(key)) { return false; }
@@ -9469,9 +9259,8 @@ var doric = (function (exports) {
             if (data === true) { return uncaughtFrozenStore(state)['delete'](key); }
             return data && has$1(data, state.id) && delete data[state.id];
           },
-          // `{ WeakMap, WeakSet }.prototype.has(key)` methods
-          // https://tc39.es/ecma262/#sec-weakmap.prototype.has
-          // https://tc39.es/ecma262/#sec-weakset.prototype.has
+          // 23.3.3.4 WeakMap.prototype.has(key)
+          // 23.4.3.4 WeakSet.prototype.has(value)
           has: function has(key) {
             var state = getInternalState(this);
             if (!isObject(key)) { return false; }
@@ -9482,8 +9271,7 @@ var doric = (function (exports) {
         });
 
         redefineAll(C.prototype, IS_MAP ? {
-          // `WeakMap.prototype.get(key)` method
-          // https://tc39.es/ecma262/#sec-weakmap.prototype.get
+          // 23.3.3.3 WeakMap.prototype.get(key)
           get: function get(key) {
             var state = getInternalState(this);
             if (isObject(key)) {
@@ -9492,14 +9280,12 @@ var doric = (function (exports) {
               return data ? data[state.id] : undefined;
             }
           },
-          // `WeakMap.prototype.set(key, value)` method
-          // https://tc39.es/ecma262/#sec-weakmap.prototype.set
+          // 23.3.3.5 WeakMap.prototype.set(key, value)
           set: function set(key, value) {
             return define(this, key, value);
           }
         } : {
-          // `WeakSet.prototype.add(value)` method
-          // https://tc39.es/ecma262/#sec-weakset.prototype.add
+          // 23.4.3.1 WeakSet.prototype.add(value)
           add: function add(value) {
             return define(this, value, true);
           }

@@ -20,12 +20,14 @@
 
 #import "RATreeNodeItem.h"
 
+@protocol RATreeNodeItemDataSource;
+
 @interface RATreeNodeItem ()
 
-@property (nonatomic, strong) id item;
-@property (nonatomic, weak) id parent;
-@property (nonatomic) NSInteger index;
+@property(nonatomic, strong) id item;
+@property(nonatomic, weak) id parent;
+@property(nonatomic) NSInteger index;
 
-@property (nonatomic, weak) id<RATreeNodeItemDataSource> dataSource;
+@property(nonatomic, weak) id <RATreeNodeItemDataSource> dataSource;
 
 @end

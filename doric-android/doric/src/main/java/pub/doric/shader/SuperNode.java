@@ -23,10 +23,11 @@ import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import pub.doric.DoricContext;
-import pub.doric.utils.DoricUtils;
 
 /**
  * @Description: pub.doric.shader
@@ -135,5 +136,18 @@ public abstract class SuperNode<V extends View> extends ViewNode<V> {
             }
             targetProps.asObject().setProperty(key, jsValue);
         }
+    }
+
+    public Set<String> getSubNodeViewIds() {
+        Set<String> allKeys = subNodes.keySet();
+        Iterator<String> iterator = allKeys.iterator();
+        while (iterator.hasNext()) {
+            String element = iterator.next();
+            if (getSubNodeById(element) == null) {
+                iterator.remove();
+            }
+        }
+
+        return allKeys;
     }
 }

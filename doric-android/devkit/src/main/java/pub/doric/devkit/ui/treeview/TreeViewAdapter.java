@@ -15,11 +15,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import pub.doric.utils.DoricUtils;
+
 public class TreeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String KEY_IS_EXPAND = "IS_EXPAND";
     private final List<? extends TreeViewBinder> viewBinders;
     private List<TreeNode> displayNodes;
-    private int padding = 30;
+    private int padding = DoricUtils.dp2px(15);
     private OnTreeNodeListener onTreeNodeListener;
     private boolean toCollapseChild;
 

@@ -1783,7 +1783,7 @@ var doric = (function (exports) {
     (module.exports = function (key, value) {
       return sharedStore[key] || (sharedStore[key] = value !== undefined ? value : {});
     })('versions', []).push({
-      version: '3.14.0',
+      version: '3.15.2',
       mode: 'global',
       copyright: '© 2021 Denis Pushkarev (zloirock.ru)'
     });
@@ -1919,23 +1919,23 @@ var doric = (function (exports) {
       return isNaN(argument = +argument) ? 0 : (argument > 0 ? floor$a : ceil$2)(argument);
     };
 
-    var min$9 = Math.min;
+    var min$a = Math.min;
 
     // `ToLength` abstract operation
     // https://tc39.es/ecma262/#sec-tolength
     var toLength = function (argument) {
-      return argument > 0 ? min$9(toInteger(argument), 0x1FFFFFFFFFFFFF) : 0; // 2 ** 53 - 1 == 9007199254740991
+      return argument > 0 ? min$a(toInteger(argument), 0x1FFFFFFFFFFFFF) : 0; // 2 ** 53 - 1 == 9007199254740991
     };
 
-    var max$5 = Math.max;
-    var min$8 = Math.min;
+    var max$6 = Math.max;
+    var min$9 = Math.min;
 
     // Helper for a popular repeating case of the spec:
     // Let integer be ? ToInteger(index).
     // If integer < 0, let result be max((length + integer), 0); else let result be min(integer, length).
     var toAbsoluteIndex = function (index, length) {
       var integer = toInteger(index);
-      return integer < 0 ? max$5(integer + length, 0) : min$8(integer, length);
+      return integer < 0 ? max$6(integer + length, 0) : min$9(integer, length);
     };
 
     // `Array.prototype.{ indexOf, includes }` methods implementation
@@ -2294,16 +2294,16 @@ var doric = (function (exports) {
     	f: f$1
     };
 
-    var defineProperty$d = objectDefineProperty.f;
+    var defineProperty$e = objectDefineProperty.f;
 
     var defineWellKnownSymbol = function (NAME) {
       var Symbol = path.Symbol || (path.Symbol = {});
-      if (!has$1(Symbol, NAME)) { defineProperty$d(Symbol, NAME, {
+      if (!has$1(Symbol, NAME)) { defineProperty$e(Symbol, NAME, {
         value: wellKnownSymbolWrapped.f(NAME)
       }); }
     };
 
-    var defineProperty$c = objectDefineProperty.f;
+    var defineProperty$d = objectDefineProperty.f;
 
 
 
@@ -2311,7 +2311,7 @@ var doric = (function (exports) {
 
     var setToStringTag = function (it, TAG, STATIC) {
       if (it && !has$1(it = STATIC ? it : it.prototype, TO_STRING_TAG$8)) {
-        defineProperty$c(it, TO_STRING_TAG$8, { configurable: true, value: TAG });
+        defineProperty$d(it, TO_STRING_TAG$8, { configurable: true, value: TAG });
       }
     };
 
@@ -2435,7 +2435,7 @@ var doric = (function (exports) {
     var PROTOTYPE$1 = 'prototype';
     var TO_PRIMITIVE$1 = wellKnownSymbol('toPrimitive');
     var setInternalState$g = internalState.set;
-    var getInternalState$d = internalState.getterFor(SYMBOL);
+    var getInternalState$f = internalState.getterFor(SYMBOL);
     var ObjectPrototype$3 = Object[PROTOTYPE$1];
     var $Symbol = global_1.Symbol;
     var $stringify$1 = getBuiltIn('JSON', 'stringify');
@@ -2569,7 +2569,7 @@ var doric = (function (exports) {
       };
 
       redefine($Symbol[PROTOTYPE$1], 'toString', function toString() {
-        return getInternalState$d(this).tag;
+        return getInternalState$f(this).tag;
       });
 
       redefine($Symbol, 'withoutSetter', function (description) {
@@ -2591,7 +2591,7 @@ var doric = (function (exports) {
         nativeDefineProperty($Symbol[PROTOTYPE$1], 'description', {
           configurable: true,
           get: function description() {
-            return getInternalState$d(this).description;
+            return getInternalState$f(this).description;
           }
         });
         {
@@ -2706,7 +2706,7 @@ var doric = (function (exports) {
 
     hiddenKeys$1[HIDDEN] = true;
 
-    var defineProperty$b = objectDefineProperty.f;
+    var defineProperty$c = objectDefineProperty.f;
 
 
     var NativeSymbol = global_1.Symbol;
@@ -2733,7 +2733,7 @@ var doric = (function (exports) {
       var symbolToString = symbolPrototype.toString;
       var native = String(NativeSymbol('test')) == 'Symbol(test)';
       var regexp = /^Symbol\((.*)\)[^)]+$/;
-      defineProperty$b(symbolPrototype, 'description', {
+      defineProperty$c(symbolPrototype, 'description', {
         configurable: true,
         get: function description() {
           var symbol = isObject(this) ? this.valueOf() : this;
@@ -3061,7 +3061,7 @@ var doric = (function (exports) {
       }
     });
 
-    var min$7 = Math.min;
+    var min$8 = Math.min;
 
     // `Array.prototype.copyWithin` method implementation
     // https://tc39.es/ecma262/#sec-array.prototype.copywithin
@@ -3072,7 +3072,7 @@ var doric = (function (exports) {
       var to = toAbsoluteIndex(target, len);
       var from = toAbsoluteIndex(start, len);
       var end = arguments.length > 2 ? arguments[2] : undefined;
-      var count = min$7((end === undefined ? len : toAbsoluteIndex(end, len)) - from, len - to);
+      var count = min$8((end === undefined ? len : toAbsoluteIndex(end, len)) - from, len - to);
       var inc = 1;
       if (from < to && to < from + count) {
         inc = -1;
@@ -3550,7 +3550,7 @@ var doric = (function (exports) {
 
     var ARRAY_ITERATOR = 'Array Iterator';
     var setInternalState$f = internalState.set;
-    var getInternalState$c = internalState.getterFor(ARRAY_ITERATOR);
+    var getInternalState$e = internalState.getterFor(ARRAY_ITERATOR);
 
     // `Array.prototype.entries` method
     // https://tc39.es/ecma262/#sec-array.prototype.entries
@@ -3572,7 +3572,7 @@ var doric = (function (exports) {
     // `%ArrayIteratorPrototype%.next` method
     // https://tc39.es/ecma262/#sec-%arrayiteratorprototype%.next
     }, function () {
-      var state = getInternalState$c(this);
+      var state = getInternalState$e(this);
       var target = state.target;
       var kind = state.kind;
       var index = state.index++;
@@ -3614,7 +3614,7 @@ var doric = (function (exports) {
 
 
 
-    var min$6 = Math.min;
+    var min$7 = Math.min;
     var $lastIndexOf = [].lastIndexOf;
     var NEGATIVE_ZERO = !!$lastIndexOf && 1 / [1].lastIndexOf(1, -0) < 0;
     var STRICT_METHOD$4 = arrayMethodIsStrict('lastIndexOf');
@@ -3628,7 +3628,7 @@ var doric = (function (exports) {
       var O = toIndexedObject(this);
       var length = toLength(O.length);
       var index = length - 1;
-      if (arguments.length > 1) { index = min$6(index, toInteger(arguments[1])); }
+      if (arguments.length > 1) { index = min$7(index, toInteger(arguments[1])); }
       if (index < 0) { index = length + index; }
       for (;index >= 0; index--) { if (index in O && O[index] === searchElement) { return index || 0; } }
       return -1;
@@ -3770,7 +3770,7 @@ var doric = (function (exports) {
 
     var SPECIES$4 = wellKnownSymbol('species');
     var nativeSlice = [].slice;
-    var max$4 = Math.max;
+    var max$5 = Math.max;
 
     // `Array.prototype.slice` method
     // https://tc39.es/ecma262/#sec-array.prototype.slice
@@ -3796,7 +3796,7 @@ var doric = (function (exports) {
             return nativeSlice.call(O, k, fin);
           }
         }
-        result = new (Constructor === undefined ? Array : Constructor)(max$4(fin - k, 0));
+        result = new (Constructor === undefined ? Array : Constructor)(max$5(fin - k, 0));
         for (n = 0; k < fin; k++, n++) { if (k in O) { createProperty(result, n, O[k]); } }
         result.length = n;
         return result;
@@ -3981,8 +3981,8 @@ var doric = (function (exports) {
 
     var HAS_SPECIES_SUPPORT = arrayMethodHasSpeciesSupport('splice');
 
-    var max$3 = Math.max;
-    var min$5 = Math.min;
+    var max$4 = Math.max;
+    var min$6 = Math.min;
     var MAX_SAFE_INTEGER = 0x1FFFFFFFFFFFFF;
     var MAXIMUM_ALLOWED_LENGTH_EXCEEDED = 'Maximum allowed length exceeded';
 
@@ -4005,7 +4005,7 @@ var doric = (function (exports) {
           actualDeleteCount = len - actualStart;
         } else {
           insertCount = argumentsLength - 2;
-          actualDeleteCount = min$5(max$3(toInteger(deleteCount), 0), len - actualStart);
+          actualDeleteCount = min$6(max$4(toInteger(deleteCount), 0), len - actualStart);
         }
         if (len + insertCount - actualDeleteCount > MAX_SAFE_INTEGER) {
           throw TypeError(MAXIMUM_ALLOWED_LENGTH_EXCEEDED);
@@ -4166,12 +4166,12 @@ var doric = (function (exports) {
     };
 
     var getOwnPropertyNames$3 = objectGetOwnPropertyNames.f;
-    var defineProperty$a = objectDefineProperty.f;
+    var defineProperty$b = objectDefineProperty.f;
 
 
 
 
-    var getInternalState$b = internalState.get;
+    var getInternalState$d = internalState.get;
     var setInternalState$e = internalState.set;
     var ARRAY_BUFFER$1 = 'ArrayBuffer';
     var DATA_VIEW = 'DataView';
@@ -4213,14 +4213,14 @@ var doric = (function (exports) {
     };
 
     var addGetter = function (Constructor, key) {
-      defineProperty$a(Constructor[PROTOTYPE], key, { get: function () { return getInternalState$b(this)[key]; } });
+      defineProperty$b(Constructor[PROTOTYPE], key, { get: function () { return getInternalState$d(this)[key]; } });
     };
 
     var get$1 = function (view, count, index, isLittleEndian) {
       var intIndex = toIndex(index);
-      var store = getInternalState$b(view);
+      var store = getInternalState$d(view);
       if (intIndex + count > store.byteLength) { throw RangeError$1(WRONG_INDEX); }
-      var bytes = getInternalState$b(store.buffer).bytes;
+      var bytes = getInternalState$d(store.buffer).bytes;
       var start = intIndex + store.byteOffset;
       var pack = bytes.slice(start, start + count);
       return isLittleEndian ? pack : pack.reverse();
@@ -4228,9 +4228,9 @@ var doric = (function (exports) {
 
     var set$2 = function (view, count, index, conversion, value, isLittleEndian) {
       var intIndex = toIndex(index);
-      var store = getInternalState$b(view);
+      var store = getInternalState$d(view);
       if (intIndex + count > store.byteLength) { throw RangeError$1(WRONG_INDEX); }
-      var bytes = getInternalState$b(store.buffer).bytes;
+      var bytes = getInternalState$d(store.buffer).bytes;
       var start = intIndex + store.byteOffset;
       var pack = conversion(+value);
       for (var i = 0; i < count; i++) { bytes[start + i] = pack[isLittleEndian ? i : count - i - 1]; }
@@ -4250,7 +4250,7 @@ var doric = (function (exports) {
       $DataView = function DataView(buffer, byteOffset, byteLength) {
         anInstance(this, $DataView, DATA_VIEW);
         anInstance(buffer, $ArrayBuffer, DATA_VIEW);
-        var bufferLength = getInternalState$b(buffer).byteLength;
+        var bufferLength = getInternalState$d(buffer).byteLength;
         var offset = toInteger(byteOffset);
         if (offset < 0 || offset > bufferLength) { throw RangeError$1('Wrong offset'); }
         byteLength = byteLength === undefined ? bufferLength - offset : toLength(byteLength);
@@ -4392,7 +4392,7 @@ var doric = (function (exports) {
 
     setSpecies(ARRAY_BUFFER);
 
-    var defineProperty$9 = objectDefineProperty.f;
+    var defineProperty$a = objectDefineProperty.f;
 
 
 
@@ -4530,7 +4530,7 @@ var doric = (function (exports) {
 
     if (descriptors && !has$1(TypedArrayPrototype, TO_STRING_TAG$5)) {
       TYPED_ARRAY_TAG_REQIRED = true;
-      defineProperty$9(TypedArrayPrototype, TO_STRING_TAG$5, { get: function () {
+      defineProperty$a(TypedArrayPrototype, TO_STRING_TAG$5, { get: function () {
         return isObject(this) ? this[TYPED_ARRAY_TAG] : undefined;
       } });
       for (NAME$1 in TypedArrayConstructorsList) { if (global_1[NAME$1]) {
@@ -4603,12 +4603,43 @@ var doric = (function (exports) {
       DataView: arrayBuffer.DataView
     });
 
+    var getFullYear = Date.prototype.getFullYear;
+
+    // `Date.prototype.getYear` method
+    // https://tc39.es/ecma262/#sec-date.prototype.getyear
+    _export({ target: 'Date', proto: true }, {
+      getYear: function getYear() {
+        return getFullYear.call(this) - 1900;
+      }
+    });
+
     // `Date.now` method
     // https://tc39.es/ecma262/#sec-date.now
     _export({ target: 'Date', stat: true }, {
       now: function now() {
         return new Date().getTime();
       }
+    });
+
+    var getTime$2 = Date.prototype.getTime;
+    var setFullYear = Date.prototype.setFullYear;
+
+    // `Date.prototype.setYear` method
+    // https://tc39.es/ecma262/#sec-date.prototype.setyear
+    _export({ target: 'Date', proto: true }, {
+      setYear: function setYear(year) {
+        // validate
+        getTime$2.call(this);
+        var yi = toInteger(year);
+        var yyyy = 0 <= yi && yi <= 99 ? yi + 1900 : yi;
+        return setFullYear.call(this, yyyy);
+      }
+    });
+
+    // `Date.prototype.toGMTString` method
+    // https://tc39.es/ecma262/#sec-date.prototype.togmtstring
+    _export({ target: 'Date', proto: true }, {
+      toGMTString: Date.prototype.toUTCString
     });
 
     // `String.prototype.repeat` method implementation
@@ -4740,7 +4771,40 @@ var doric = (function (exports) {
       });
     }
 
-    var slice$1 = [].slice;
+    var raw = /[\w*+\-./@]/;
+
+    var hex$1 = function (code, length) {
+      var result = code.toString(16);
+      while (result.length < length) { result = '0' + result; }
+      return result;
+    };
+
+    // `escape` method
+    // https://tc39.es/ecma262/#sec-escape-string
+    _export({ global: true }, {
+      escape: function escape(string) {
+        var str = String(string);
+        var result = '';
+        var length = str.length;
+        var index = 0;
+        var chr, code;
+        while (index < length) {
+          chr = str.charAt(index++);
+          if (raw.test(chr)) {
+            result += chr;
+          } else {
+            code = chr.charCodeAt(0);
+            if (code < 256) {
+              result += '%' + hex$1(code, 2);
+            } else {
+              result += '%u' + hex$1(code, 4).toUpperCase();
+            }
+          }
+        } return result;
+      }
+    });
+
+    var slice$2 = [].slice;
     var factories = {};
 
     var construct = function (C, argsLength, args) {
@@ -4755,9 +4819,9 @@ var doric = (function (exports) {
     // https://tc39.es/ecma262/#sec-function.prototype.bind
     var functionBind = Function.bind || function bind(that /* , ...args */) {
       var fn = aFunction(this);
-      var partArgs = slice$1.call(arguments, 1);
+      var partArgs = slice$2.call(arguments, 1);
       var boundFunction = function bound(/* args... */) {
-        var args = partArgs.concat(slice$1.call(arguments));
+        var args = partArgs.concat(slice$2.call(arguments));
         return this instanceof boundFunction ? construct(fn, args.length, args) : fn.apply(that, args);
       };
       if (isObject(fn.prototype)) { boundFunction.prototype = fn.prototype; }
@@ -4785,7 +4849,7 @@ var doric = (function (exports) {
       } });
     }
 
-    var defineProperty$8 = objectDefineProperty.f;
+    var defineProperty$9 = objectDefineProperty.f;
 
     var FunctionPrototype = Function.prototype;
     var FunctionPrototypeToString = FunctionPrototype.toString;
@@ -4795,7 +4859,7 @@ var doric = (function (exports) {
     // Function instances `.name` property
     // https://tc39.es/ecma262/#sec-function-instances-name
     if (descriptors && !(NAME in FunctionPrototype)) {
-      defineProperty$8(FunctionPrototype, NAME, {
+      defineProperty$9(FunctionPrototype, NAME, {
         configurable: true,
         get: function () {
           try {
@@ -4868,7 +4932,7 @@ var doric = (function (exports) {
 
     var setMetadata = function (it) {
       defineProperty(it, METADATA, { value: {
-        objectID: 'O' + ++id, // object ID
+        objectID: 'O' + id++, // object ID
         weakData: {}          // weak collections IDs
       } });
     };
@@ -5020,7 +5084,7 @@ var doric = (function (exports) {
       return Constructor;
     };
 
-    var defineProperty$7 = objectDefineProperty.f;
+    var defineProperty$8 = objectDefineProperty.f;
 
 
 
@@ -5169,7 +5233,7 @@ var doric = (function (exports) {
             return define(this, value = value === 0 ? 0 : value, value);
           }
         });
-        if (descriptors) { defineProperty$7(C.prototype, 'size', {
+        if (descriptors) { defineProperty$8(C.prototype, 'size', {
           get: function () {
             return getInternalState(this).size;
           }
@@ -5549,7 +5613,7 @@ var doric = (function (exports) {
 
     var getOwnPropertyNames$2 = objectGetOwnPropertyNames.f;
     var getOwnPropertyDescriptor$6 = objectGetOwnPropertyDescriptor.f;
-    var defineProperty$6 = objectDefineProperty.f;
+    var defineProperty$7 = objectDefineProperty.f;
     var trim$2 = stringTrim.trim;
 
     var NUMBER = 'Number';
@@ -5609,7 +5673,7 @@ var doric = (function (exports) {
         'fromString,range'
       ).split(','), j = 0, key; keys$1.length > j; j++) {
         if (has$1(NativeNumber, key = keys$1[j]) && !has$1(NumberWrapper, key)) {
-          defineProperty$6(NumberWrapper, key, getOwnPropertyDescriptor$6(NativeNumber, key));
+          defineProperty$7(NumberWrapper, key, getOwnPropertyDescriptor$6(NativeNumber, key));
         }
       }
       NumberWrapper.prototype = NumberPrototype;
@@ -5874,16 +5938,16 @@ var doric = (function (exports) {
     // eslint-disable-next-line es/no-object-assign -- safe
     var $assign = Object.assign;
     // eslint-disable-next-line es/no-object-defineproperty -- required for testing
-    var defineProperty$5 = Object.defineProperty;
+    var defineProperty$6 = Object.defineProperty;
 
     // `Object.assign` method
     // https://tc39.es/ecma262/#sec-object.assign
     var objectAssign = !$assign || fails(function () {
       // should have correct order of operations (Edge bug)
-      if (descriptors && $assign({ b: 1 }, $assign(defineProperty$5({}, 'a', {
+      if (descriptors && $assign({ b: 1 }, $assign(defineProperty$6({}, 'a', {
         enumerable: true,
         get: function () {
-          defineProperty$5(this, 'b', {
+          defineProperty$6(this, 'b', {
             value: 3,
             enumerable: false
           });
@@ -6513,7 +6577,7 @@ var doric = (function (exports) {
 
     var SPECIES$1 = wellKnownSymbol('species');
     var PROMISE = 'Promise';
-    var getInternalState$a = internalState.get;
+    var getInternalState$c = internalState.get;
     var setInternalState$c = internalState.set;
     var getInternalPromiseState = internalState.getterFor(PROMISE);
     var NativePromisePrototype = nativePromiseConstructor && nativePromiseConstructor.prototype;
@@ -6537,7 +6601,8 @@ var doric = (function (exports) {
     var Internal, OwnPromiseCapability, PromiseWrapper, nativeThen;
 
     var FORCED$a = isForced_1(PROMISE, function () {
-      var GLOBAL_CORE_JS_PROMISE = inspectSource(PromiseConstructor) !== String(PromiseConstructor);
+      var PROMISE_CONSTRUCTOR_SOURCE = inspectSource(PromiseConstructor);
+      var GLOBAL_CORE_JS_PROMISE = PROMISE_CONSTRUCTOR_SOURCE !== String(PromiseConstructor);
       // V8 6.6 (Node 10 and Chrome 66) have a bug with resolving custom thenables
       // https://bugs.chromium.org/p/chromium/issues/detail?id=830565
       // We can't detect it synchronously, so just check versions
@@ -6545,7 +6610,7 @@ var doric = (function (exports) {
       // We can't use @@species feature detection in V8 since it causes
       // deoptimization and performance degradation
       // https://github.com/zloirock/core-js/issues/679
-      if (engineV8Version >= 51 && /native code/.test(PromiseConstructor)) { return false; }
+      if (engineV8Version >= 51 && /native code/.test(PROMISE_CONSTRUCTOR_SOURCE)) { return false; }
       // Detect correctness of subclassing with @@species support
       var promise = new PromiseConstructor(function (resolve) { resolve(1); });
       var FakePromise = function (exec) {
@@ -6713,7 +6778,7 @@ var doric = (function (exports) {
         anInstance(this, PromiseConstructor, PROMISE);
         aFunction(executor);
         Internal.call(this);
-        var state = getInternalState$a(this);
+        var state = getInternalState$c(this);
         try {
           executor(bind(internalResolve, state), bind(internalReject, state));
         } catch (error) {
@@ -6756,7 +6821,7 @@ var doric = (function (exports) {
       });
       OwnPromiseCapability = function () {
         var promise = new Internal();
-        var state = getInternalState$a(promise);
+        var state = getInternalState$c(promise);
         this.promise = promise;
         this.resolve = bind(internalResolve, state);
         this.reject = bind(internalReject, state);
@@ -7230,13 +7295,11 @@ var doric = (function (exports) {
     };
 
     // babel-minify transpiles RegExp('a', 'y') -> /a/y and it causes SyntaxError,
-    // so we use an intermediate function.
-    function RE(s, f) {
+    var RE = function (s, f) {
       return RegExp(s, f);
-    }
+    };
 
-    var UNSUPPORTED_Y$5 = fails(function () {
-      // babel-minify transpiles RegExp('a', 'y') -> /a/y and it causes SyntaxError
+    var UNSUPPORTED_Y$4 = fails(function () {
       var re = RE('a', 'y');
       re.lastIndex = 2;
       return re.exec('abcd') != null;
@@ -7250,12 +7313,26 @@ var doric = (function (exports) {
     });
 
     var regexpStickyHelpers = {
-    	UNSUPPORTED_Y: UNSUPPORTED_Y$5,
+    	UNSUPPORTED_Y: UNSUPPORTED_Y$4,
     	BROKEN_CARET: BROKEN_CARET
     };
 
-    var defineProperty$4 = objectDefineProperty.f;
+    var regexpUnsupportedDotAll = fails(function () {
+      // babel-minify transpiles RegExp('.', 's') -> /./s and it causes SyntaxError
+      var re = RegExp('.', (typeof '').charAt(0));
+      return !(re.dotAll && re.exec('\n') && re.flags === 's');
+    });
+
+    var regexpUnsupportedNcg = fails(function () {
+      // babel-minify transpiles RegExp('.', 'g') -> /./g and it causes SyntaxError
+      var re = RegExp('(?<a>b)', (typeof '').charAt(5));
+      return re.exec('b').groups.a !== 'b' ||
+        'b'.replace(re, '$<a>c') !== 'bc';
+    });
+
+    var defineProperty$5 = objectDefineProperty.f;
     var getOwnPropertyNames = objectGetOwnPropertyNames.f;
+
 
 
 
@@ -7265,82 +7342,206 @@ var doric = (function (exports) {
 
 
 
+
+
     var MATCH$1 = wellKnownSymbol('match');
     var NativeRegExp = global_1.RegExp;
-    var RegExpPrototype$5 = NativeRegExp.prototype;
+    var RegExpPrototype$6 = NativeRegExp.prototype;
+    // TODO: Use only propper RegExpIdentifierName
+    var IS_NCG = /^\?<[^\s\d!#%&*+<=>@^][^\s!#%&*+<=>@^]*>/;
     var re1 = /a/g;
     var re2 = /a/g;
 
     // "new" should create a new object, old webkit bug
     var CORRECT_NEW = new NativeRegExp(re1) !== re1;
 
-    var UNSUPPORTED_Y$4 = regexpStickyHelpers.UNSUPPORTED_Y;
+    var UNSUPPORTED_Y$3 = regexpStickyHelpers.UNSUPPORTED_Y;
 
-    var FORCED$8 = descriptors && isForced_1('RegExp', (!CORRECT_NEW || UNSUPPORTED_Y$4 || fails(function () {
-      re2[MATCH$1] = false;
-      // RegExp constructor can alter flags and IsRegExp works correct with @@match
-      return NativeRegExp(re1) != re1 || NativeRegExp(re2) == re2 || NativeRegExp(re1, 'i') != '/a/i';
-    })));
+    var BASE_FORCED = descriptors &&
+      (!CORRECT_NEW || UNSUPPORTED_Y$3 || regexpUnsupportedDotAll || regexpUnsupportedNcg || fails(function () {
+        re2[MATCH$1] = false;
+        // RegExp constructor can alter flags and IsRegExp works correct with @@match
+        return NativeRegExp(re1) != re1 || NativeRegExp(re2) == re2 || NativeRegExp(re1, 'i') != '/a/i';
+      }));
+
+    var handleDotAll = function (string) {
+      var length = string.length;
+      var index = 0;
+      var result = '';
+      var brackets = false;
+      var chr;
+      for (; index <= length; index++) {
+        chr = string.charAt(index);
+        if (chr === '\\') {
+          result += chr + string.charAt(++index);
+          continue;
+        }
+        if (!brackets && chr === '.') {
+          result += '[\\s\\S]';
+        } else {
+          if (chr === '[') {
+            brackets = true;
+          } else if (chr === ']') {
+            brackets = false;
+          } result += chr;
+        }
+      } return result;
+    };
+
+    var handleNCG = function (string) {
+      var length = string.length;
+      var index = 0;
+      var result = '';
+      var named = [];
+      var names = {};
+      var brackets = false;
+      var ncg = false;
+      var groupid = 0;
+      var groupname = '';
+      var chr;
+      for (; index <= length; index++) {
+        chr = string.charAt(index);
+        if (chr === '\\') {
+          chr = chr + string.charAt(++index);
+        } else if (chr === ']') {
+          brackets = false;
+        } else if (!brackets) { switch (true) {
+          case chr === '[':
+            brackets = true;
+            break;
+          case chr === '(':
+            if (IS_NCG.test(string.slice(index + 1))) {
+              index += 2;
+              ncg = true;
+            }
+            result += chr;
+            groupid++;
+            continue;
+          case chr === '>' && ncg:
+            if (groupname === '' || has$1(names, groupname)) {
+              throw new SyntaxError('Invalid capture group name');
+            }
+            names[groupname] = true;
+            named.push([groupname, groupid]);
+            ncg = false;
+            groupname = '';
+            continue;
+        } }
+        if (ncg) { groupname += chr; }
+        else { result += chr; }
+      } return [result, named];
+    };
 
     // `RegExp` constructor
     // https://tc39.es/ecma262/#sec-regexp-constructor
-    if (FORCED$8) {
+    if (isForced_1('RegExp', BASE_FORCED)) {
       var RegExpWrapper = function RegExp(pattern, flags) {
         var thisIsRegExp = this instanceof RegExpWrapper;
         var patternIsRegExp = isRegexp(pattern);
         var flagsAreUndefined = flags === undefined;
-        var sticky;
+        var groups = [];
+        var rawPattern = pattern;
+        var rawFlags, dotAll, sticky, handled, result, state;
 
-        if (!thisIsRegExp && patternIsRegExp && pattern.constructor === RegExpWrapper && flagsAreUndefined) {
+        if (!thisIsRegExp && patternIsRegExp && flagsAreUndefined && pattern.constructor === RegExpWrapper) {
           return pattern;
         }
 
-        if (CORRECT_NEW) {
-          if (patternIsRegExp && !flagsAreUndefined) { pattern = pattern.source; }
-        } else if (pattern instanceof RegExpWrapper) {
-          if (flagsAreUndefined) { flags = regexpFlags.call(pattern); }
+        if (patternIsRegExp || pattern instanceof RegExpWrapper) {
           pattern = pattern.source;
+          if (flagsAreUndefined) { flags = 'flags' in rawPattern ? rawPattern.flags : regexpFlags.call(rawPattern); }
         }
 
-        if (UNSUPPORTED_Y$4) {
+        pattern = pattern === undefined ? '' : String(pattern);
+        flags = flags === undefined ? '' : String(flags);
+        rawPattern = pattern;
+
+        if (regexpUnsupportedDotAll && 'dotAll' in re1) {
+          dotAll = !!flags && flags.indexOf('s') > -1;
+          if (dotAll) { flags = flags.replace(/s/g, ''); }
+        }
+
+        rawFlags = flags;
+
+        if (UNSUPPORTED_Y$3 && 'sticky' in re1) {
           sticky = !!flags && flags.indexOf('y') > -1;
           if (sticky) { flags = flags.replace(/y/g, ''); }
         }
 
-        var result = inheritIfRequired(
-          CORRECT_NEW ? new NativeRegExp(pattern, flags) : NativeRegExp(pattern, flags),
-          thisIsRegExp ? this : RegExpPrototype$5,
-          RegExpWrapper
-        );
-
-        if (UNSUPPORTED_Y$4 && sticky) {
-          var state = enforceInternalState(result);
-          state.sticky = true;
+        if (regexpUnsupportedNcg) {
+          handled = handleNCG(pattern);
+          pattern = handled[0];
+          groups = handled[1];
         }
+
+        result = inheritIfRequired(NativeRegExp(pattern, flags), thisIsRegExp ? this : RegExpPrototype$6, RegExpWrapper);
+
+        if (dotAll || sticky || groups.length) {
+          state = enforceInternalState(result);
+          if (dotAll) {
+            state.dotAll = true;
+            state.raw = RegExpWrapper(handleDotAll(pattern), rawFlags);
+          }
+          if (sticky) { state.sticky = true; }
+          if (groups.length) { state.groups = groups; }
+        }
+
+        if (pattern !== rawPattern) { try {
+          // fails in old engines, but we have no alternatives for unsupported regex syntax
+          createNonEnumerableProperty(result, 'source', rawPattern === '' ? '(?:)' : rawPattern);
+        } catch (error) { /* empty */ } }
 
         return result;
       };
+
       var proxy = function (key) {
-        key in RegExpWrapper || defineProperty$4(RegExpWrapper, key, {
+        key in RegExpWrapper || defineProperty$5(RegExpWrapper, key, {
           configurable: true,
           get: function () { return NativeRegExp[key]; },
           set: function (it) { NativeRegExp[key] = it; }
         });
       };
-      var keys = getOwnPropertyNames(NativeRegExp);
-      var index = 0;
-      while (keys.length > index) { proxy(keys[index++]); }
-      RegExpPrototype$5.constructor = RegExpWrapper;
-      RegExpWrapper.prototype = RegExpPrototype$5;
+
+      for (var keys = getOwnPropertyNames(NativeRegExp), index = 0; keys.length > index;) {
+        proxy(keys[index++]);
+      }
+
+      RegExpPrototype$6.constructor = RegExpWrapper;
+      RegExpWrapper.prototype = RegExpPrototype$6;
       redefine(global_1, 'RegExp', RegExpWrapper);
     }
 
     // https://tc39.es/ecma262/#sec-get-regexp-@@species
     setSpecies('RegExp');
 
+    var defineProperty$4 = objectDefineProperty.f;
+    var getInternalState$b = internalState.get;
+    var RegExpPrototype$5 = RegExp.prototype;
+
+    // `RegExp.prototype.dotAll` getter
+    // https://tc39.es/ecma262/#sec-get-regexp.prototype.dotall
+    if (descriptors && regexpUnsupportedDotAll) {
+      defineProperty$4(RegExpPrototype$5, 'dotAll', {
+        configurable: true,
+        get: function () {
+          if (this === RegExpPrototype$5) { return undefined; }
+          // We can't use InternalStateModule.getterFor because
+          // we don't add metadata for regexps created by a literal.
+          if (this instanceof RegExp) {
+            return !!getInternalState$b(this).dotAll;
+          }
+          throw TypeError('Incompatible receiver, RegExp required');
+        }
+      });
+    }
+
     /* eslint-disable regexp/no-assertion-capturing-group, regexp/no-empty-group, regexp/no-lazy-ends -- testing */
     /* eslint-disable regexp/no-useless-quantifier -- testing */
 
+
+
+
+    var getInternalState$a = internalState.get;
 
 
 
@@ -7357,18 +7558,30 @@ var doric = (function (exports) {
       return re1.lastIndex !== 0 || re2.lastIndex !== 0;
     })();
 
-    var UNSUPPORTED_Y$3 = regexpStickyHelpers.UNSUPPORTED_Y || regexpStickyHelpers.BROKEN_CARET;
+    var UNSUPPORTED_Y$2 = regexpStickyHelpers.UNSUPPORTED_Y || regexpStickyHelpers.BROKEN_CARET;
 
     // nonparticipating capturing group, copied from es5-shim's String#split patch.
     var NPCG_INCLUDED = /()??/.exec('')[1] !== undefined;
 
-    var PATCH = UPDATES_LAST_INDEX_WRONG || NPCG_INCLUDED || UNSUPPORTED_Y$3;
+    var PATCH = UPDATES_LAST_INDEX_WRONG || NPCG_INCLUDED || UNSUPPORTED_Y$2 || regexpUnsupportedDotAll || regexpUnsupportedNcg;
 
     if (PATCH) {
+      // eslint-disable-next-line max-statements -- TODO
       patchedExec = function exec(str) {
         var re = this;
-        var lastIndex, reCopy, match, i;
-        var sticky = UNSUPPORTED_Y$3 && re.sticky;
+        var state = getInternalState$a(re);
+        var raw = state.raw;
+        var result, reCopy, lastIndex, match, i, object, group;
+
+        if (raw) {
+          raw.lastIndex = re.lastIndex;
+          result = patchedExec.call(raw, str);
+          re.lastIndex = raw.lastIndex;
+          return result;
+        }
+
+        var groups = state.groups;
+        var sticky = UNSUPPORTED_Y$2 && re.sticky;
         var flags = regexpFlags.call(re);
         var source = re.source;
         var charsAdded = 0;
@@ -7421,6 +7634,14 @@ var doric = (function (exports) {
           });
         }
 
+        if (match && groups) {
+          match.groups = object = objectCreate(null);
+          for (i = 0; i < groups.length; i++) {
+            group = groups[i];
+            object[group[0]] = match[group[1]];
+          }
+        }
+
         return match;
       };
     }
@@ -7433,17 +7654,17 @@ var doric = (function (exports) {
       exec: regexpExec
     });
 
-    var UNSUPPORTED_Y$2 = regexpStickyHelpers.UNSUPPORTED_Y;
+    var FORCED$8 = descriptors && fails(function () {
+      // eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
+      return Object.getOwnPropertyDescriptor(RegExp.prototype, 'flags').get.call({ dotAll: true, sticky: true }) !== 'sy';
+    });
 
     // `RegExp.prototype.flags` getter
     // https://tc39.es/ecma262/#sec-get-regexp.prototype.flags
-    // eslint-disable-next-line es/no-regexp-prototype-flags -- required for testing
-    if (descriptors && (/./g.flags != 'g' || UNSUPPORTED_Y$2)) {
-      objectDefineProperty.f(RegExp.prototype, 'flags', {
-        configurable: true,
-        get: regexpFlags
-      });
-    }
+    if (FORCED$8) { objectDefineProperty.f(RegExp.prototype, 'flags', {
+      configurable: true,
+      get: regexpFlags
+    }); }
 
     var UNSUPPORTED_Y$1 = regexpStickyHelpers.UNSUPPORTED_Y;
     var defineProperty$3 = objectDefineProperty.f;
@@ -7453,7 +7674,7 @@ var doric = (function (exports) {
     // `RegExp.prototype.sticky` getter
     // https://tc39.es/ecma262/#sec-get-regexp.prototype.sticky
     if (descriptors && UNSUPPORTED_Y$1) {
-      defineProperty$3(RegExp.prototype, 'sticky', {
+      defineProperty$3(RegExpPrototype$4, 'sticky', {
         configurable: true,
         get: function () {
           if (this === RegExpPrototype$4) { return undefined; }
@@ -7589,7 +7810,7 @@ var doric = (function (exports) {
 
     // eslint-disable-next-line es/no-string-prototype-endswith -- safe
     var $endsWith = ''.endsWith;
-    var min$4 = Math.min;
+    var min$5 = Math.min;
 
     var CORRECT_IS_REGEXP_LOGIC$1 = correctIsRegexpLogic('endsWith');
     // https://github.com/zloirock/core-js/pull/702
@@ -7606,7 +7827,7 @@ var doric = (function (exports) {
         notARegexp(searchString);
         var endPosition = arguments.length > 1 ? arguments[1] : undefined;
         var len = toLength(that.length);
-        var end = endPosition === undefined ? len : min$4(toLength(endPosition), len);
+        var end = endPosition === undefined ? len : min$5(toLength(endPosition), len);
         var search = String(searchString);
         return $endsWith
           ? $endsWith.call(that, search, end)
@@ -7614,7 +7835,7 @@ var doric = (function (exports) {
       }
     });
 
-    var fromCharCode = String.fromCharCode;
+    var fromCharCode$1 = String.fromCharCode;
     // eslint-disable-next-line es/no-string-fromcodepoint -- required for testing
     var $fromCodePoint = String.fromCodePoint;
 
@@ -7636,8 +7857,8 @@ var doric = (function (exports) {
           code = +arguments$1[i++];
           if (toAbsoluteIndex(code, 0x10FFFF) !== code) { throw RangeError(code + ' is not a valid code point'); }
           elements.push(code < 0x10000
-            ? fromCharCode(code)
-            : fromCharCode(((code -= 0x10000) >> 10) + 0xD800, code % 0x400 + 0xDC00)
+            ? fromCharCode$1(code)
+            : fromCharCode$1(((code -= 0x10000) >> 10) + 0xD800, code % 0x400 + 0xDC00)
           );
         } return elements.join('');
       }
@@ -7692,47 +7913,7 @@ var doric = (function (exports) {
     var SPECIES = wellKnownSymbol('species');
     var RegExpPrototype$2 = RegExp.prototype;
 
-    var REPLACE_SUPPORTS_NAMED_GROUPS = !fails(function () {
-      // #replace needs built-in support for named groups.
-      // #match works fine because it just return the exec results, even if it has
-      // a "grops" property.
-      var re = /./;
-      re.exec = function () {
-        var result = [];
-        result.groups = { a: '7' };
-        return result;
-      };
-      return ''.replace(re, '$<a>') !== '7';
-    });
-
-    // IE <= 11 replaces $0 with the whole match, as if it was $&
-    // https://stackoverflow.com/questions/6024666/getting-ie-to-replace-a-regex-with-the-literal-string-0
-    var REPLACE_KEEPS_$0 = (function () {
-      // eslint-disable-next-line regexp/prefer-escape-replacement-dollar-char -- required for testing
-      return 'a'.replace(/./, '$0') === '$0';
-    })();
-
-    var REPLACE$1 = wellKnownSymbol('replace');
-    // Safari <= 13.0.3(?) substitutes nth capture where n>m with an empty string
-    var REGEXP_REPLACE_SUBSTITUTES_UNDEFINED_CAPTURE = (function () {
-      if (/./[REPLACE$1]) {
-        return /./[REPLACE$1]('a', '$0') === '';
-      }
-      return false;
-    })();
-
-    // Chrome 51 has a buggy "split" implementation when RegExp#exec !== nativeExec
-    // Weex JS has frozen built-in prototypes, so use try / catch wrapper
-    var SPLIT_WORKS_WITH_OVERWRITTEN_EXEC = !fails(function () {
-      // eslint-disable-next-line regexp/no-empty-group -- required for testing
-      var re = /(?:)/;
-      var originalExec = re.exec;
-      re.exec = function () { return originalExec.apply(this, arguments); };
-      var result = 'ab'.split(re);
-      return result.length !== 2 || result[0] !== 'a' || result[1] !== 'b';
-    });
-
-    var fixRegexpWellKnownSymbolLogic = function (KEY, length, exec, sham) {
+    var fixRegexpWellKnownSymbolLogic = function (KEY, exec, FORCED, SHAM) {
       var SYMBOL = wellKnownSymbol(KEY);
 
       var DELEGATES_TO_SYMBOL = !fails(function () {
@@ -7769,12 +7950,7 @@ var doric = (function (exports) {
       if (
         !DELEGATES_TO_SYMBOL ||
         !DELEGATES_TO_EXEC ||
-        (KEY === 'replace' && !(
-          REPLACE_SUPPORTS_NAMED_GROUPS &&
-          REPLACE_KEEPS_$0 &&
-          !REGEXP_REPLACE_SUBSTITUTES_UNDEFINED_CAPTURE
-        )) ||
-        (KEY === 'split' && !SPLIT_WORKS_WITH_OVERWRITTEN_EXEC)
+        FORCED
       ) {
         var nativeRegExpMethod = /./[SYMBOL];
         var methods = exec(SYMBOL, ''[KEY], function (nativeMethod, regexp, str, arg2, forceStringMethod) {
@@ -7789,25 +7965,13 @@ var doric = (function (exports) {
             return { done: true, value: nativeMethod.call(str, regexp, arg2) };
           }
           return { done: false };
-        }, {
-          REPLACE_KEEPS_$0: REPLACE_KEEPS_$0,
-          REGEXP_REPLACE_SUBSTITUTES_UNDEFINED_CAPTURE: REGEXP_REPLACE_SUBSTITUTES_UNDEFINED_CAPTURE
         });
-        var stringMethod = methods[0];
-        var regexMethod = methods[1];
 
-        redefine(String.prototype, KEY, stringMethod);
-        redefine(RegExpPrototype$2, SYMBOL, length == 2
-          // 21.2.5.8 RegExp.prototype[@@replace](string, replaceValue)
-          // 21.2.5.11 RegExp.prototype[@@split](string, limit)
-          ? function (string, arg) { return regexMethod.call(string, this, arg); }
-          // 21.2.5.6 RegExp.prototype[@@match](string)
-          // 21.2.5.9 RegExp.prototype[@@search](string)
-          : function (string) { return regexMethod.call(string, this); }
-        );
+        redefine(String.prototype, KEY, methods[0]);
+        redefine(RegExpPrototype$2, SYMBOL, methods[1]);
       }
 
-      if (sham) { createNonEnumerableProperty(RegExpPrototype$2[SYMBOL], 'sham', true); }
+      if (SHAM) { createNonEnumerableProperty(RegExpPrototype$2[SYMBOL], 'sham', true); }
     };
 
     var charAt$2 = stringMultibyte.charAt;
@@ -7838,7 +8002,7 @@ var doric = (function (exports) {
     };
 
     // @@match logic
-    fixRegexpWellKnownSymbolLogic('match', 1, function (MATCH, nativeMatch, maybeCallNative) {
+    fixRegexpWellKnownSymbolLogic('match', function (MATCH, nativeMatch, maybeCallNative) {
       return [
         // `String.prototype.match` method
         // https://tc39.es/ecma262/#sec-string.prototype.match
@@ -7849,12 +8013,12 @@ var doric = (function (exports) {
         },
         // `RegExp.prototype[@@match]` method
         // https://tc39.es/ecma262/#sec-regexp.prototype-@@match
-        function (regexp) {
-          var res = maybeCallNative(nativeMatch, regexp, this);
+        function (string) {
+          var res = maybeCallNative(nativeMatch, this, string);
           if (res.done) { return res.value; }
 
-          var rx = anObject(regexp);
-          var S = String(this);
+          var rx = anObject(this);
+          var S = String(string);
 
           if (!rx.global) { return regexpExecAbstract(rx, S); }
 
@@ -8076,17 +8240,41 @@ var doric = (function (exports) {
       });
     };
 
-    var max$2 = Math.max;
-    var min$3 = Math.min;
+    var REPLACE$1 = wellKnownSymbol('replace');
+    var max$3 = Math.max;
+    var min$4 = Math.min;
 
     var maybeToString = function (it) {
       return it === undefined ? it : String(it);
     };
 
+    // IE <= 11 replaces $0 with the whole match, as if it was $&
+    // https://stackoverflow.com/questions/6024666/getting-ie-to-replace-a-regex-with-the-literal-string-0
+    var REPLACE_KEEPS_$0 = (function () {
+      // eslint-disable-next-line regexp/prefer-escape-replacement-dollar-char -- required for testing
+      return 'a'.replace(/./, '$0') === '$0';
+    })();
+
+    // Safari <= 13.0.3(?) substitutes nth capture where n>m with an empty string
+    var REGEXP_REPLACE_SUBSTITUTES_UNDEFINED_CAPTURE = (function () {
+      if (/./[REPLACE$1]) {
+        return /./[REPLACE$1]('a', '$0') === '';
+      }
+      return false;
+    })();
+
+    var REPLACE_SUPPORTS_NAMED_GROUPS = !fails(function () {
+      var re = /./;
+      re.exec = function () {
+        var result = [];
+        result.groups = { a: '7' };
+        return result;
+      };
+      return ''.replace(re, '$<a>') !== '7';
+    });
+
     // @@replace logic
-    fixRegexpWellKnownSymbolLogic('replace', 2, function (REPLACE, nativeReplace, maybeCallNative, reason) {
-      var REGEXP_REPLACE_SUBSTITUTES_UNDEFINED_CAPTURE = reason.REGEXP_REPLACE_SUBSTITUTES_UNDEFINED_CAPTURE;
-      var REPLACE_KEEPS_$0 = reason.REPLACE_KEEPS_$0;
+    fixRegexpWellKnownSymbolLogic('replace', function (_, nativeReplace, maybeCallNative) {
       var UNSAFE_SUBSTITUTE = REGEXP_REPLACE_SUBSTITUTES_UNDEFINED_CAPTURE ? '$' : '$0';
 
       return [
@@ -8094,24 +8282,25 @@ var doric = (function (exports) {
         // https://tc39.es/ecma262/#sec-string.prototype.replace
         function replace(searchValue, replaceValue) {
           var O = requireObjectCoercible(this);
-          var replacer = searchValue == undefined ? undefined : searchValue[REPLACE];
+          var replacer = searchValue == undefined ? undefined : searchValue[REPLACE$1];
           return replacer !== undefined
             ? replacer.call(searchValue, O, replaceValue)
             : nativeReplace.call(String(O), searchValue, replaceValue);
         },
         // `RegExp.prototype[@@replace]` method
         // https://tc39.es/ecma262/#sec-regexp.prototype-@@replace
-        function (regexp, replaceValue) {
+        function (string, replaceValue) {
           if (
-            (!REGEXP_REPLACE_SUBSTITUTES_UNDEFINED_CAPTURE && REPLACE_KEEPS_$0) ||
-            (typeof replaceValue === 'string' && replaceValue.indexOf(UNSAFE_SUBSTITUTE) === -1)
+            typeof replaceValue === 'string' &&
+            replaceValue.indexOf(UNSAFE_SUBSTITUTE) === -1 &&
+            replaceValue.indexOf('$<') === -1
           ) {
-            var res = maybeCallNative(nativeReplace, regexp, this, replaceValue);
+            var res = maybeCallNative(nativeReplace, this, string, replaceValue);
             if (res.done) { return res.value; }
           }
 
-          var rx = anObject(regexp);
-          var S = String(this);
+          var rx = anObject(this);
+          var S = String(string);
 
           var functionalReplace = typeof replaceValue === 'function';
           if (!functionalReplace) { replaceValue = String(replaceValue); }
@@ -8139,7 +8328,7 @@ var doric = (function (exports) {
             result = results[i];
 
             var matched = String(result[0]);
-            var position = max$2(min$3(toInteger(result.index), S.length), 0);
+            var position = max$3(min$4(toInteger(result.index), S.length), 0);
             var captures = [];
             // NOTE: This is equivalent to
             //   captures = result.slice(1).map(maybeToString)
@@ -8163,11 +8352,11 @@ var doric = (function (exports) {
           return accumulatedResult + S.slice(nextSourcePosition);
         }
       ];
-    });
+    }, !REPLACE_SUPPORTS_NAMED_GROUPS || !REPLACE_KEEPS_$0 || REGEXP_REPLACE_SUBSTITUTES_UNDEFINED_CAPTURE);
 
     var REPLACE = wellKnownSymbol('replace');
     var RegExpPrototype = RegExp.prototype;
-    var max$1 = Math.max;
+    var max$2 = Math.max;
 
     var stringIndexOf = function (string, searchValue, fromIndex) {
       if (fromIndex > string.length) { return -1; }
@@ -8203,7 +8392,7 @@ var doric = (function (exports) {
         functionalReplace = typeof replaceValue === 'function';
         if (!functionalReplace) { replaceValue = String(replaceValue); }
         searchLength = searchString.length;
-        advanceBy = max$1(1, searchLength);
+        advanceBy = max$2(1, searchLength);
         position = stringIndexOf(string, searchString, 0);
         while (position !== -1) {
           if (functionalReplace) {
@@ -8223,7 +8412,7 @@ var doric = (function (exports) {
     });
 
     // @@search logic
-    fixRegexpWellKnownSymbolLogic('search', 1, function (SEARCH, nativeSearch, maybeCallNative) {
+    fixRegexpWellKnownSymbolLogic('search', function (SEARCH, nativeSearch, maybeCallNative) {
       return [
         // `String.prototype.search` method
         // https://tc39.es/ecma262/#sec-string.prototype.search
@@ -8234,12 +8423,12 @@ var doric = (function (exports) {
         },
         // `RegExp.prototype[@@search]` method
         // https://tc39.es/ecma262/#sec-regexp.prototype-@@search
-        function (regexp) {
-          var res = maybeCallNative(nativeSearch, regexp, this);
+        function (string) {
+          var res = maybeCallNative(nativeSearch, this, string);
           if (res.done) { return res.value; }
 
-          var rx = anObject(regexp);
-          var S = String(this);
+          var rx = anObject(this);
+          var S = String(string);
 
           var previousLastIndex = rx.lastIndex;
           if (!sameValue(previousLastIndex, 0)) { rx.lastIndex = 0; }
@@ -8252,11 +8441,22 @@ var doric = (function (exports) {
 
     var UNSUPPORTED_Y = regexpStickyHelpers.UNSUPPORTED_Y;
     var arrayPush = [].push;
-    var min$2 = Math.min;
+    var min$3 = Math.min;
     var MAX_UINT32 = 0xFFFFFFFF;
 
+    // Chrome 51 has a buggy "split" implementation when RegExp#exec !== nativeExec
+    // Weex JS has frozen built-in prototypes, so use try / catch wrapper
+    var SPLIT_WORKS_WITH_OVERWRITTEN_EXEC = !fails(function () {
+      // eslint-disable-next-line regexp/no-empty-group -- required for testing
+      var re = /(?:)/;
+      var originalExec = re.exec;
+      re.exec = function () { return originalExec.apply(this, arguments); };
+      var result = 'ab'.split(re);
+      return result.length !== 2 || result[0] !== 'a' || result[1] !== 'b';
+    });
+
     // @@split logic
-    fixRegexpWellKnownSymbolLogic('split', 2, function (SPLIT, nativeSplit, maybeCallNative) {
+    fixRegexpWellKnownSymbolLogic('split', function (SPLIT, nativeSplit, maybeCallNative) {
       var internalSplit;
       if (
         'abbc'.split(/(b)*/)[1] == 'c' ||
@@ -8325,12 +8525,12 @@ var doric = (function (exports) {
         //
         // NOTE: This cannot be properly polyfilled in engines that don't support
         // the 'y' flag.
-        function (regexp, limit) {
-          var res = maybeCallNative(internalSplit, regexp, this, limit, internalSplit !== nativeSplit);
+        function (string, limit) {
+          var res = maybeCallNative(internalSplit, this, string, limit, internalSplit !== nativeSplit);
           if (res.done) { return res.value; }
 
-          var rx = anObject(regexp);
-          var S = String(this);
+          var rx = anObject(this);
+          var S = String(string);
           var C = speciesConstructor(rx, RegExp);
 
           var unicodeMatching = rx.unicode;
@@ -8354,7 +8554,7 @@ var doric = (function (exports) {
             var e;
             if (
               z === null ||
-              (e = min$2(toLength(splitter.lastIndex + (UNSUPPORTED_Y ? q : 0)), S.length)) === p
+              (e = min$3(toLength(splitter.lastIndex + (UNSUPPORTED_Y ? q : 0)), S.length)) === p
             ) {
               q = advanceStringIndex(S, q, unicodeMatching);
             } else {
@@ -8371,7 +8571,7 @@ var doric = (function (exports) {
           return A;
         }
       ];
-    }, UNSUPPORTED_Y);
+    }, !SPLIT_WORKS_WITH_OVERWRITTEN_EXEC, UNSUPPORTED_Y);
 
     var getOwnPropertyDescriptor = objectGetOwnPropertyDescriptor.f;
 
@@ -8382,7 +8582,7 @@ var doric = (function (exports) {
 
     // eslint-disable-next-line es/no-string-prototype-startswith -- safe
     var $startsWith = ''.startsWith;
-    var min$1 = Math.min;
+    var min$2 = Math.min;
 
     var CORRECT_IS_REGEXP_LOGIC = correctIsRegexpLogic('startsWith');
     // https://github.com/zloirock/core-js/pull/702
@@ -8397,11 +8597,32 @@ var doric = (function (exports) {
       startsWith: function startsWith(searchString /* , position = 0 */) {
         var that = String(requireObjectCoercible(this));
         notARegexp(searchString);
-        var index = toLength(min$1(arguments.length > 1 ? arguments[1] : undefined, that.length));
+        var index = toLength(min$2(arguments.length > 1 ? arguments[1] : undefined, that.length));
         var search = String(searchString);
         return $startsWith
           ? $startsWith.call(that, search, index)
           : that.slice(index, index + search.length) === search;
+      }
+    });
+
+    var slice$1 = ''.slice;
+    var max$1 = Math.max;
+    var min$1 = Math.min;
+
+    // `String.prototype.substr` method
+    // https://tc39.es/ecma262/#sec-string.prototype.substr
+    _export({ target: 'String', proto: true }, {
+      substr: function substr(start, length) {
+        var that = String(requireObjectCoercible(this));
+        var size = that.length;
+        var intStart = toInteger(start);
+        var intLength, intEnd;
+        if (intStart === Infinity) { intStart = 0; }
+        if (intStart < 0) { intStart = max$1(size + intStart, 0); }
+        intLength = length === undefined ? size : toInteger(length);
+        if (intLength <= 0 || intLength === Infinity) { return ''; }
+        intEnd = min$1(intStart + intLength, size);
+        return intStart >= intEnd ? '' : slice$1.call(that, intStart, intEnd);
       }
     });
 
@@ -9383,6 +9604,43 @@ var doric = (function (exports) {
     // `%TypedArray%.prototype.toString` method
     // https://tc39.es/ecma262/#sec-%typedarray%.prototype.tostring
     exportTypedArrayMethod$5('toString', arrayToString, IS_NOT_ARRAY_METHOD);
+
+    var fromCharCode = String.fromCharCode;
+    var hex2 = /^[\da-f]{2}$/i;
+    var hex4 = /^[\da-f]{4}$/i;
+
+    // `unescape` method
+    // https://tc39.es/ecma262/#sec-unescape-string
+    _export({ global: true }, {
+      unescape: function unescape(string) {
+        var str = String(string);
+        var result = '';
+        var length = str.length;
+        var index = 0;
+        var chr, slice;
+        while (index < length) {
+          chr = str.charAt(index++);
+          if (chr === '%') {
+            if (str.charAt(index) === 'u') {
+              slice = str.slice(index + 1, index + 5);
+              if (hex4.test(slice)) {
+                result += fromCharCode(parseInt(slice, 16));
+                index += 5;
+                continue;
+              }
+            } else {
+              slice = str.slice(index, index + 2);
+              if (hex2.test(slice)) {
+                result += fromCharCode(parseInt(slice, 16));
+                index += 2;
+                continue;
+              }
+            }
+          }
+          result += chr;
+        } return result;
+      }
+    });
 
     var getWeakData = internalMetadata.getWeakData;
 
@@ -13101,13 +13359,13 @@ var doric = (function (exports) {
     // eslint-disable-next-line regexp/no-obscure-range -- safe
     var ALPHANUMERIC = /[\d+-.A-Za-z]/;
     var DIGIT = /\d/;
-    var HEX_START = /^(0x|0X)/;
+    var HEX_START = /^0x/i;
     var OCT = /^[0-7]+$/;
     var DEC = /^\d+$/;
     var HEX = /^[\dA-Fa-f]+$/;
     /* eslint-disable no-control-regex -- safe */
-    var FORBIDDEN_HOST_CODE_POINT = /[\0\t\n\r #%/:?@[\\]]/;
-    var FORBIDDEN_HOST_CODE_POINT_EXCLUDING_PERCENT = /[\0\t\n\r #/:?@[\\]]/;
+    var FORBIDDEN_HOST_CODE_POINT = /[\0\t\n\r #%/:<>?@[\\\]^|]/;
+    var FORBIDDEN_HOST_CODE_POINT_EXCLUDING_PERCENT = /[\0\t\n\r #/:<>?@[\\\]^|]/;
     var LEADING_AND_TRAILING_C0_CONTROL_OR_SPACE = /^[\u0000-\u001F ]+|[\u0000-\u001F ]+$/g;
     var TAB_AND_NEW_LINE = /[\t\n\r]/g;
     /* eslint-enable no-control-regex -- safe */

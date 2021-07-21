@@ -18,15 +18,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <DoricCore/Doric.h>
 
-@interface DoricDevAnchorNode : NSObject
-@property(nonatomic, copy) NSString *name;
-@property(nonatomic, assign) long prepare;
-@property(nonatomic, assign) long start;
-@property(nonatomic, assign) long end;
-@end
 
-@interface DoricDevPerformanceAnchorHook : NSObject <DoricPerformanceGlobalAnchorHookProtocol>
-- (NSArray <DoricDevAnchorNode *> *)getAnchorNodeList:(NSString *)name;
+@interface DoricDevPerfVC : UIViewController
+- (instancetype)initWithContextId:(NSString *)contextId;
 @end

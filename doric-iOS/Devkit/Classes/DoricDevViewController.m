@@ -31,6 +31,7 @@
 #import "DoricShowNodeTreeViewController.h"
 #import "DoricRegistry.h"
 #import "DoricSnapshotView.h"
+#import "DoricDevPerfVC.h"
 
 @interface DoricContextCell : UITableViewCell
 @property(nonatomic, strong) UILabel *tvId;
@@ -109,22 +110,8 @@
     }];
     [alertController addAction:cancel];
     [alertController addAction:viewSource];
-    
-    UIAlertAction *showNodeTree = [UIAlertAction actionWithTitle:@"Show node tree" style:UIAlertActionStyleDefault handler:^(UIAlertAction *_) {
-        DoricShowNodeTreeViewController *doricShowNodeTreeViewController = [[DoricShowNodeTreeViewController alloc] init];
-        doricShowNodeTreeViewController.contextId = self.doricContext.contextId;
-        
-        UIViewController *viewController = [UIApplication sharedApplication].delegate.window.rootViewController;
-        UINavigationController *navigationController;
-        if ([viewController isKindOfClass:[UINavigationController class]]) {
-            navigationController = (UINavigationController *) viewController;
-        } else {
-            navigationController = viewController.navigationController;
-        }
-        [navigationController pushViewController:doricShowNodeTreeViewController animated:NO];
-    }];
-    [alertController addAction:showNodeTree];
-    
+
+
     if (DoricDev.instance.isInDevMode) {
         if ([self.doricContext.driver isKindOfClass:DoricDebugDriver.class]) {
             UIAlertAction *stopDebugging = [UIAlertAction actionWithTitle:@"Stop debugging" style:UIAlertActionStyleDefault handler:^(UIAlertAction *_) {
@@ -147,6 +134,39 @@
         }];
         [alertController addAction:snapshot];
     }
+
+    if ([DoricRegistry isEnablePerformance]) {
+        UIAlertAction *performanceAction = [UIAlertAction
+                actionWithTitle:@"Performance"
+                          style:UIAlertActionStyleDefault
+                        handler:^(UIAlertAction *_) {
+                            DoricDevPerfVC *doricDevPerfVc = [[DoricDevPerfVC alloc] initWithContextId:self.doricContext.contextId];
+                            UIViewController *viewController = [UIApplication sharedApplication].delegate.window.rootViewController;
+                            UINavigationController *navigationController;
+                            if ([viewController isKindOfClass:[UINavigationController class]]) {
+                                navigationController = (UINavigationController *) viewController;
+                            } else {
+                                navigationController = viewController.navigationController;
+                            }
+                            [navigationController pushViewController:doricDevPerfVc animated:NO];
+                        }];
+        [alertController addAction:performanceAction];
+    }
+
+    UIAlertAction *showNodeTree = [UIAlertAction actionWithTitle:@"View node tree" style:UIAlertActionStyleDefault handler:^(UIAlertAction *_) {
+        DoricShowNodeTreeViewController *doricShowNodeTreeViewController = [[DoricShowNodeTreeViewController alloc] init];
+        doricShowNodeTreeViewController.contextId = self.doricContext.contextId;
+
+        UIViewController *viewController = [UIApplication sharedApplication].delegate.window.rootViewController;
+        UINavigationController *navigationController;
+        if ([viewController isKindOfClass:[UINavigationController class]]) {
+            navigationController = (UINavigationController *) viewController;
+        } else {
+            navigationController = viewController.navigationController;
+        }
+        [navigationController pushViewController:doricShowNodeTreeViewController animated:NO];
+    }];
+    [alertController addAction:showNodeTree];
 
     [self.vc presentViewController:alertController animated:true completion:nil];
 }

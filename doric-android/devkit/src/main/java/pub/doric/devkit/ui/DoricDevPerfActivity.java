@@ -51,7 +51,7 @@ public class DoricDevPerfActivity extends DoricDevBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doricdev_perf);
         TextView textView = findViewById(R.id.tv_title);
-        textView.setText(String.format("Doric %s <%s>", doricContext.getSource(), doricContext.getContextId()));
+        textView.setText(String.format("%s <%s>", doricContext.getSource(), doricContext.getContextId()));
         RecyclerView recyclerView = findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         myAdapter = new MyAdapter();
@@ -127,12 +127,12 @@ public class DoricDevPerfActivity extends DoricDevBaseActivity {
                     if (prevNode != null) {
                         gap = Math.min(16, anchorNode.prepare - prevNode.end);
                     }
-                    position = position + gap;
+                    position += gap;
                     anchorItem.position = position;
                     anchorItem.prepared = anchorNode.start - anchorNode.prepare;
                     anchorItem.worked = anchorNode.end - anchorNode.start;
                     anchorNodes.add(anchorItem);
-                    position = position + anchorItem.prepared + anchorItem.worked;
+                    position += anchorItem.prepared + anchorItem.worked;
                     prevNode = anchorNode;
                 }
                 duration = position;

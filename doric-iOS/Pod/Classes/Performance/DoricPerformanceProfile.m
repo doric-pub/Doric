@@ -18,7 +18,7 @@
 //  DoricCore
 //
 //  Created by pengfei.zhou on 2021/3/29.
-//
+//  
 
 #import "DoricPerformanceProfile.h"
 #import "DoricRegistry.h"
@@ -109,7 +109,7 @@
         }
         for (id <DoricPerformanceAnchorHookProtocol> hook in self.hooks) {
             if ([hook conformsToProtocol:@protocol(DoricPerformanceGlobalAnchorHookProtocol)]) {
-                [(id <DoricPerformanceGlobalAnchorHookProtocol>) hook onAnchorName:anchorName prepare:end start:end end:end in:self];
+                [(id <DoricPerformanceGlobalAnchorHookProtocol>) hook onAnchorName:anchorName prepare:prepare start:start end:end in:self];
             } else {
                 [hook onAnchorName:anchorName prepare:prepare start:start end:end];
             }

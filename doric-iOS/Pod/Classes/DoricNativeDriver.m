@@ -55,13 +55,29 @@
 }
 
 - (DoricAsyncResult *)invokeDoricMethod:(NSString *)method argumentsArray:(NSArray *)args {
+    id contextId = args.count > 0 ? args[0] : nil;
+    DoricPerformanceProfile *profile = nil;
+    if ([contextId isKindOfClass:NSString.class]) {
+        profile = [DoricContextManager.instance getContext:contextId].performanceProfile;
+    }
+    NSMutableArray *printedArgs = [[NSMutableArray alloc] init];
+    for (id arg in args) {
+        if (arg == contextId) {
+            continue;
+        }
+        [printedArgs addObject:arg];
+    }
+    NSString *anchorName = [NSString stringWithFormat:@"Call:%@", [printedArgs componentsJoinedByString:@","]];
+    [profile prepare:anchorName];
     DoricAsyncResult *ret = [[DoricAsyncResult alloc] init];
     __weak typeof(self) _self = self;
     [self.jsExecutor ensureRunOnJSThread:^{
         __strong typeof(_self) self = _self;
         if (!self) return;
         @try {
+            [profile start:anchorName];
             JSValue *jsValue = [self.jsExecutor invokeDoricMethod:method argumentsArray:args];
+            [profile end:anchorName];
             [ret setupResult:jsValue];
         } @catch (NSException *exception) {
             [ret setupError:exception];
@@ -79,24 +95,12 @@
 }
 
 - (DoricAsyncResult<JSValue *> *)invokeDoricMethod:(NSString *)method arguments:(va_list)args {
-    DoricAsyncResult *ret = [[DoricAsyncResult alloc] init];
     NSMutableArray *array = [[NSMutableArray alloc] init];
     id arg;
     while ((arg = va_arg(args, id)) != nil) {
         [array addObject:arg];
     }
-    __weak typeof(self) _self = self;
-    [self.jsExecutor ensureRunOnJSThread:^{
-        __strong typeof(_self) self = _self;
-        if (!self) return;
-        @try {
-            JSValue *jsValue = [self.jsExecutor invokeDoricMethod:method argumentsArray:array];
-            [ret setupResult:jsValue];
-        } @catch (NSException *exception) {
-            [ret setupError:exception];
-        }
-    }];
-    return ret;
+    return [self invokeDoricMethod:method argumentsArray:array];
 }
 
 - (DoricAsyncResult<JSValue *> *)invokeContextEntity:(NSString *)contextId method:(NSString *)method, ... {
@@ -108,36 +112,15 @@
 }
 
 - (DoricAsyncResult *)invokeContextEntity:(NSString *)contextId method:(NSString *)method arguments:(va_list)args {
-    DoricAsyncResult *ret = [[DoricAsyncResult alloc] init];
     NSMutableArray *array = [[NSMutableArray alloc] init];
-    NSMutableArray *printedArgs = [[NSMutableArray alloc] init];
     [array addObject:contextId];
     [array addObject:method];
-    [printedArgs addObject:method];
     id arg = va_arg(args, id);
     while (arg != nil) {
         [array addObject:arg];
-        [printedArgs addObject:arg];
         arg = va_arg(args, JSValue *);
     }
-    DoricPerformanceProfile *performanceProfile = [DoricContextManager.instance getContext:contextId].performanceProfile;
-    NSString *anchorName = [NSString stringWithFormat:@"call:%@", [printedArgs componentsJoinedByString:@","]];
-    [performanceProfile prepare:anchorName];
-    __weak typeof(self) _self = self;
-    [self.jsExecutor ensureRunOnJSThread:^{
-        __strong typeof(_self) self = _self;
-        if (!self) return;
-        @try {
-            [performanceProfile start:anchorName];
-            JSValue *jsValue = [self.jsExecutor invokeDoricMethod:DORIC_CONTEXT_INVOKE argumentsArray:array];
-            [ret setupResult:jsValue];
-            [performanceProfile end:anchorName];
-        } @catch (NSException *exception) {
-            [ret setupError:exception];
-            [self.jsExecutor.registry onException:exception inContext:[[DoricContextManager instance] getContext:contextId]];
-        }
-    }];
-    return ret;
+    return [self invokeContextEntity:contextId method:method argumentsArray:array];
 }
 
 - (DoricAsyncResult *)invokeContextEntity:(NSString *)contextId method:(NSString *)method argumentsArray:(NSArray *)args {
@@ -145,26 +128,15 @@
     NSMutableArray *array = [[NSMutableArray alloc] init];
     [array addObject:contextId];
     [array addObject:method];
-    for (id arg in args) {
-        [array addObject:arg];
-    }
-    DoricPerformanceProfile *performanceProfile = [DoricContextManager.instance getContext:contextId].performanceProfile;
-    NSString *anchorName = [NSString stringWithFormat:@"call:%@,%@", method, [args componentsJoinedByString:@","]];
-    [performanceProfile prepare:anchorName];
-    __weak typeof(self) _self = self;
-    [self.jsExecutor ensureRunOnJSThread:^{
-        __strong typeof(_self) self = _self;
-        if (!self) return;
-        @try {
-            [performanceProfile start:anchorName];
-            JSValue *jsValue = [self.jsExecutor invokeDoricMethod:DORIC_CONTEXT_INVOKE argumentsArray:array];
-            [ret setupResult:jsValue];
-            [performanceProfile end:anchorName];
-        } @catch (NSException *exception) {
-            [ret setupError:exception];
-            [self.jsExecutor.registry onException:exception inContext:[[DoricContextManager instance] getContext:contextId]];
-        }
-    }];
+    [array addObjectsFromArray:args];
+    DoricAsyncResult *result = [self invokeDoricMethod:DORIC_CONTEXT_INVOKE argumentsArray:array];
+    result.resultCallback = ^(id result) {
+        [ret setupResult:result];
+    };
+    result.exceptionCallback = ^(NSException *e) {
+        [ret setupError:e];
+        [self.jsExecutor.registry onException:e inContext:[[DoricContextManager instance] getContext:contextId]];
+    };
     return ret;
 }
 

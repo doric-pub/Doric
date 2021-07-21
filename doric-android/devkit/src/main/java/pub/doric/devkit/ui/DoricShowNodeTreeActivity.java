@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Set;
 
 import pub.doric.devkit.R;
 import pub.doric.devkit.ui.treeview.DoricViewNodeLayoutItemType;
@@ -32,6 +33,7 @@ import pub.doric.devkit.ui.treeview.DoricViewNodeTreeViewBinder;
 import pub.doric.devkit.ui.treeview.TreeNode;
 import pub.doric.devkit.ui.treeview.TreeViewAdapter;
 import pub.doric.shader.GroupNode;
+import pub.doric.shader.SuperNode;
 import pub.doric.shader.ViewNode;
 
 public class DoricShowNodeTreeActivity extends DoricDevBaseActivity {
@@ -69,6 +71,17 @@ public class DoricShowNodeTreeActivity extends DoricDevBaseActivity {
                     treeNode.addChild(temp);
 
                     viewQueue.offer((ViewNode) groupNode.getChildNodes().get(i));
+                    treeQueue.offer(temp);
+                }
+            } else if (viewNode instanceof SuperNode) {
+                SuperNode superNode = (SuperNode) viewNode;
+                Set<String> viewIds = superNode.getSubNodeViewIds();
+                for (String viewId : viewIds) {
+                    assert treeNode != null;
+                    TreeNode<DoricViewNodeLayoutItemType> temp = new TreeNode(new DoricViewNodeLayoutItemType(superNode.getSubNodeById(viewId)));
+                    treeNode.addChild(temp);
+
+                    viewQueue.offer(superNode.getSubNodeById(viewId));
                     treeQueue.offer(temp);
                 }
             }

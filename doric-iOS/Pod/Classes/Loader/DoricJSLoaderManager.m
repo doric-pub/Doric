@@ -24,12 +24,18 @@
 #import "DoricMainBundleJSLoader.h"
 #import "DoricHttpJSLoader.h"
 #import "Doric.h"
+#import "DoricSingleton.h"
 
 @interface DoricJSLoaderManager ()
 @property(nonatomic, copy) NSSet <id <DoricLoaderProtocol>> *loaders;
 @end
 
 @implementation DoricJSLoaderManager
+
++ (instancetype)instance {
+    return DoricSingleton.instance.jsLoaderManager;
+}
+
 - (instancetype)init {
     if (self = [super init]) {
         _loaders = [[NSSet alloc] initWithArray:@[

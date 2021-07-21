@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import pub.doric.DoricSingleton;
 import pub.doric.async.AsyncResult;
 
 /**
@@ -68,4 +69,8 @@ public class DoricJSLoaderManager {
         return ret;
     }
 
+
+    public static DoricJSLoaderManager getInstance() {
+        return DoricSingleton.getInstance().getJsLoaderManager();
+    }
 }

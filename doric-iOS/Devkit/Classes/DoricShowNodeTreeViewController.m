@@ -27,6 +27,7 @@
 #import <DoricCore/DoricContext.h>
 #import <DoricCore/DoricGroupNode.h>
 #import <DoricCore/DoricRootNode.h>
+#import <DoricCore/DoricSuperNode.h>
 
 @interface DoricShowNodeTreeViewController () <RATreeViewDelegate, RATreeViewDataSource>
 @property(nonatomic, weak) DoricContext *doricContext;
@@ -36,12 +37,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     self.doricContext = [[DoricContextManager instance] getContext:self.contextId];
-    
+
     RATreeView *treeView = [[RATreeView alloc] initWithFrame:self.view.bounds];
     [self.view addSubview:treeView];
-    
+
     treeView.delegate = self;
     treeView.dataSource = self;
     [treeView registerClass:DoricShowNodeTreeViewCell.self forCellReuseIdentifier:@"cell"];
@@ -53,15 +54,15 @@
 
 - (nonnull UITableViewCell *)treeView:(nonnull RATreeView *)treeView cellForItem:(nullable id)item {
     DoricShowNodeTreeViewCell *cell = [treeView dequeueReusableCellWithIdentifier:@"cell"];
-    DoricViewNode *viewNode = (DoricViewNode *)item;
-    
+    DoricViewNode *viewNode = (DoricViewNode *) item;
+
     NSString *type = viewNode.type;
     if ([item isKindOfClass:[DoricRootNode class]]) {
         type = @"Root";
     }
-    
+
     NSString *viewId = [[@" <" stringByAppendingString:viewNode.viewId] stringByAppendingString:@"> "];
-    
+
     NSString *value = [type stringByAppendingString:viewId];
     if ([item isKindOfClass:[DoricGroupNode class]]) {
         DoricGroupNode *groupNode = item;
@@ -70,17 +71,17 @@
     } else if ([item isKindOfClass:[DoricSuperNode class]]) {
         DoricSuperNode *superNode = item;
         NSArray *viewIds = [superNode getSubNodeViewIds];
-        NSString *childDesc = [[@"(" stringByAppendingString:[@(viewIds.count)stringValue]] stringByAppendingString:@" Child)"];
+        NSString *childDesc = [[@"(" stringByAppendingString:[@(viewIds.count) stringValue]] stringByAppendingString:@" Child)"];
         value = [value stringByAppendingString:childDesc];
     }
-    
+
     cell.nodeNameLabel.text = value;
     [cell.nodeNameLabel sizeToFit];
-    
+
     NSInteger indent = [treeView levelForCellForItem:item];
     cell.nodeIcon.left = 5 + indent * 15;
     cell.nodeNameLabel.left = 30 + indent * 15;
-    
+
     return cell;
 }
 

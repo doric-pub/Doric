@@ -46,9 +46,9 @@
         it.dataSource = self;
         it.delegate = self;
     }]];
-    [DoricRegistry register:[DemoLibrary new]];
-    [DoricRegistry enablePerformance:YES];
-    [DoricRegistry enableRenderSnapshot:YES];
+    [Doric registerLibrary:[DemoLibrary new]];
+    [Doric enablePerformance:YES];
+    [Doric enableRenderSnapshot:YES];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

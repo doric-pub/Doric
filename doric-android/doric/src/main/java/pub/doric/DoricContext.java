@@ -135,7 +135,7 @@ public class DoricContext {
     }
 
     public void init(String initData) {
-        if (DoricRegistry.isEnableRenderSnapshot()) {
+        if (Doric.isEnableRenderSnapshot()) {
             callEntity("__enableSnapshot__");
         }
         this.extra = initData;
@@ -158,7 +158,7 @@ public class DoricContext {
 
     public IDoricDriver getDriver() {
         if (doricDriver == null) {
-            doricDriver = DoricNativeDriver.getInstance();
+            doricDriver = DoricSingleton.getInstance().getNativeDriver();
         }
         return doricDriver;
     }

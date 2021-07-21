@@ -20,6 +20,7 @@
 //  Created by jingpeng.wang on 2020/2/25.
 //
 #import <DoricCore/Doric.h>
+#import <DoricCore/DoricSingleton.h>
 #import <DoricCore/DoricNativeDriver.h>
 #import <DoricCore/DoricContextManager.h>
 
@@ -78,8 +79,8 @@
     if (self = [super init]) {
         _callbacks = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
         _reloadingContexts = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
-        [DoricNativeDriver.instance.registry registerMonitor:[DoricDevMonitor new]];
-        DoricNativeDriver.instance.registry.globalPerformanceAnchorHook = [DoricDevPerformanceAnchorHook new];
+        [DoricSingleton.instance.nativeDriver.registry registerMonitor:[DoricDevMonitor new]];
+        DoricSingleton.instance.nativeDriver.registry.globalPerformanceAnchorHook = [DoricDevPerformanceAnchorHook new];
     }
     return self;
 }

@@ -22,6 +22,7 @@
 #import "UIView+Doric.h"
 #import "DoricExtensions.h"
 #import "DoricUtil.h"
+#import "DoricSingleton.h"
 
 NSString *const DORIC_MASK_RETRY = @"doric_mask_retry";
 
@@ -202,7 +203,7 @@ NSString *const DORIC_MASK_RETRY = @"doric_mask_retry";
 
 - (void)loadJSBundle {
     [self showLoading];
-    DoricAsyncResult <NSString *> *result = [DoricJSLoaderManager.instance request:self.source];
+    DoricAsyncResult <NSString *> *result = [DoricSingleton.instance.jsLoaderManager request:self.source];
     result.resultCallback = ^(NSString *result) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self hideMask];

@@ -25,8 +25,6 @@
 #import "DoricAsyncResult.h"
 
 @interface DoricJSLoaderManager : NSObject
-+ (instancetype)instance;
-
 - (void)addJSLoader:(id <DoricLoaderProtocol>)loader;
 
 - (DoricAsyncResult <NSString *> *)request:(NSString *)source;

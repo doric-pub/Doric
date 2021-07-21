@@ -21,6 +21,7 @@
 //
 
 #import "DoricContextManager.h"
+#import "DoricSingleton.h"
 
 @interface DoricContextManager ()
 
@@ -43,12 +44,7 @@
 }
 
 + (instancetype)instance {
-    static DoricContextManager *_instance;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _instance = [[DoricContextManager alloc] init];
-    });
-    return _instance;
+    return DoricSingleton.instance.contextManager;
 }
 
 - (void)createContext:(DoricContext *)context script:(NSString *)script source:(NSString *)source {

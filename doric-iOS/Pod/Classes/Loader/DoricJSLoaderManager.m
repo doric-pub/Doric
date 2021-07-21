@@ -30,15 +30,6 @@
 @end
 
 @implementation DoricJSLoaderManager
-+ (instancetype)instance {
-    static DoricJSLoaderManager *_instance;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _instance = [DoricJSLoaderManager new];
-    });
-    return _instance;
-}
-
 - (instancetype)init {
     if (self = [super init]) {
         _loaders = [[NSSet alloc] initWithArray:@[

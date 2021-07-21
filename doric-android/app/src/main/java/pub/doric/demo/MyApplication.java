@@ -26,6 +26,7 @@ import java.util.Map;
 
 import pub.doric.Doric;
 import pub.doric.DoricRegistry;
+import pub.doric.DoricSingleton;
 
 public class MyApplication extends Application {
     @Override
@@ -41,10 +42,10 @@ public class MyApplication extends Application {
                 Map<String, Object> map = new HashMap<>();
                 map.put("localeLanguage", context.getResources().getConfiguration().locale.getLanguage());
                 map.put("localeCountry", context.getResources().getConfiguration().locale.getCountry());
-                DoricRegistry.setEnvironmentValue(map);
+                DoricSingleton.getInstance().setEnvironmentValue(map);
             }
         }, intentFilter);
-        DoricRegistry.enablePerformance(true);
-        DoricRegistry.enableRenderSnapshot(true);
+        Doric.enablePerformance(true);
+        Doric.enableRenderSnapshot(true);
     }
 }

@@ -40,7 +40,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)registerJSBundle:(NSString *)bundle withName:(NSString *)name;
 
-
 - (void)registerNativePlugin:(Class)pluginClass withName:(NSString *)name;
 
 - (Class)acquireNativePlugin:(NSString *)name;
@@ -49,19 +48,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (Class)acquireViewNode:(NSString *)name;
 
-+ (void)setEnvironmentValue:(NSDictionary *)value;
-
 - (void)registerMonitor:(id <DoricMonitorProtocol>)monitor;
+
+- (void)innerSetEnvironmentValue:(NSDictionary *)value;
 
 + (void)register:(DoricLibrary *)library;
 
-+ (void)enablePerformance:(BOOL)enable;
-
-+ (BOOL)isEnablePerformance;
-
-+ (void)enableRenderSnapshot:(BOOL)enable;
-
-+ (BOOL)isEnableRenderSnapshot;
 @end
 
 NS_ASSUME_NONNULL_END

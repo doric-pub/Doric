@@ -20,6 +20,7 @@
 //  Created by pengfei.zhou on 2020/2/28.
 //
 #import "Doric.h"
+#import "DoricSingleton.h"
 
 @implementation Doric
 
@@ -28,6 +29,26 @@
 }
 
 + (void)addJSLoader:(id <DoricLoaderProtocol>)loader {
-    [[DoricJSLoaderManager instance] addJSLoader:loader];
+    [DoricSingleton.instance.jsLoaderManager addJSLoader:loader];
+}
+
++ (void)enablePerformance:(BOOL)enable {
+    DoricSingleton.instance.enablePerformance = enable;
+}
+
++ (BOOL)isEnablePerformance {
+    return DoricSingleton.instance.enablePerformance;
+}
+
++ (void)enableRenderSnapshot:(BOOL)enable {
+    DoricSingleton.instance.enableRecordSnapshot = enable;
+}
+
++ (BOOL)isEnableRenderSnapshot {
+    return DoricSingleton.instance.enableRecordSnapshot;
+}
+
++ (void)setEnvironmentValue:(NSDictionary *)value {
+    [DoricSingleton.instance setEnvironmentValue:value];
 }
 @end

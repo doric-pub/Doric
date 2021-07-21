@@ -54,9 +54,9 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import pub.doric.Doric;
 import pub.doric.DoricContext;
 import pub.doric.DoricContextManager;
-import pub.doric.DoricRegistry;
 import pub.doric.devkit.DoricDebugDriver;
 import pub.doric.devkit.DoricDev;
 import pub.doric.devkit.R;
@@ -209,21 +209,21 @@ public class DoricDevActivity extends AppCompatActivity implements DoricDev.Stat
             }
         });
         SwitchCompat snapshotSwitch = findViewById(R.id.switch_snapshot);
-        snapshotSwitch.setChecked(DoricRegistry.isEnableRenderSnapshot());
+        snapshotSwitch.setChecked(Doric.isEnableRenderSnapshot());
         snapshotSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                DoricRegistry.enableRenderSnapshot(isChecked);
+                Doric.enableRenderSnapshot(isChecked);
             }
         });
         setSwitch(snapshotSwitch);
 
         SwitchCompat profileSwitch = findViewById(R.id.switch_profile);
-        profileSwitch.setChecked(DoricRegistry.isEnablePerformance());
+        profileSwitch.setChecked(Doric.isEnablePerformance());
         profileSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                DoricRegistry.enablePerformance(isChecked);
+                Doric.enablePerformance(isChecked);
             }
         });
         setSwitch(profileSwitch);
@@ -396,7 +396,7 @@ public class DoricDevActivity extends AppCompatActivity implements DoricDev.Stat
                             });
                         }
                     }
-                    if (DoricRegistry.isEnableRenderSnapshot()) {
+                    if (Doric.isEnableRenderSnapshot()) {
                         actionMap.put("Snapshot", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -410,7 +410,7 @@ public class DoricDevActivity extends AppCompatActivity implements DoricDev.Stat
                             }
                         });
                     }
-                    if (DoricRegistry.isEnablePerformance()) {
+                    if (Doric.isEnablePerformance()) {
                         actionMap.put("Performance", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {

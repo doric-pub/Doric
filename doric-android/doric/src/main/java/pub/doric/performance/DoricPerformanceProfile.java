@@ -17,14 +17,13 @@ package pub.doric.performance;
 
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.util.Log;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import pub.doric.DoricRegistry;
+import pub.doric.Doric;
 
 /**
  * @Description: pub.doric.performance
@@ -43,7 +42,7 @@ public class DoricPerformanceProfile {
     private static final String MARK_END = "end";
     private final String name;
 
-    private boolean enable = DoricRegistry.isEnablePerformance();
+    private boolean enable = Doric.isEnablePerformance();
     private static final Handler performanceHandler;
     private final Set<AnchorHook> hooks = new HashSet<>();
 

@@ -32,15 +32,11 @@ import pub.doric.async.AsyncResult;
  */
 public class DoricJSLoaderManager {
 
-    private Set<IDoricJSLoader> jsLoaders = new HashSet<>();
+    private final Set<IDoricJSLoader> jsLoaders = new HashSet<>();
 
-    private DoricJSLoaderManager() {
+    public DoricJSLoaderManager() {
         addJSLoader(new DoricAssetJSLoader());
         addJSLoader(new DoricHttpJSLoader());
-    }
-
-    private static class Inner {
-        private static final DoricJSLoaderManager sInstance = new DoricJSLoaderManager();
     }
 
     public void addJSLoader(IDoricJSLoader jsLoader) {
@@ -49,10 +45,6 @@ public class DoricJSLoaderManager {
 
     private Collection<IDoricJSLoader> getJSLoaders() {
         return jsLoaders;
-    }
-
-    public static DoricJSLoaderManager getInstance() {
-        return Inner.sInstance;
     }
 
     public AsyncResult<String> loadJSBundle(String source) {

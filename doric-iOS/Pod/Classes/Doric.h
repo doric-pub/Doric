@@ -49,4 +49,14 @@
  * */
 + (void)addJSLoader:(id <DoricLoaderProtocol>)loader;
 
+
++ (void)enablePerformance:(BOOL)enable;
+
++ (BOOL)isEnablePerformance;
+
++ (void)enableRenderSnapshot:(BOOL)enable;
+
++ (BOOL)isEnableRenderSnapshot;
+
++ (void)setEnvironmentValue:(NSDictionary *)value;
 @end

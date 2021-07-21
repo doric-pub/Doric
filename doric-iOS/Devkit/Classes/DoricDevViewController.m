@@ -125,7 +125,7 @@
             [alertController addAction:startDebugging];
         }
     }
-    if ([DoricRegistry isEnableRenderSnapshot]) {
+    if ([Doric isEnableRenderSnapshot]) {
         UIAlertAction *snapshot = [UIAlertAction actionWithTitle:@"Snapshot" style:UIAlertActionStyleDefault handler:^(UIAlertAction *_) {
             DoricSnapshotView *doricSnapshotView = [[DoricSnapshotView alloc] initWithDoricContext:self.doricContext];
             doricSnapshotView.top = 50;
@@ -135,7 +135,7 @@
         [alertController addAction:snapshot];
     }
 
-    if ([DoricRegistry isEnablePerformance]) {
+    if ([Doric isEnablePerformance]) {
         UIAlertAction *performanceAction = [UIAlertAction
                 actionWithTitle:@"Performance"
                           style:UIAlertActionStyleDefault
@@ -290,11 +290,11 @@
 }
 
 - (void)onSnapshotSwitch {
-    [DoricRegistry enableRenderSnapshot:self.switchSnapshot.isOn];
+    [Doric enableRenderSnapshot:self.switchSnapshot.isOn];
 }
 
 - (void)onPerformanceSwitch {
-    [DoricRegistry enablePerformance:self.switchPerformance.isOn];
+    [Doric enablePerformance:self.switchPerformance.isOn];
 }
 
 - (void)disconnect {
@@ -385,13 +385,13 @@
     self.switchSnapshot.left = self.tvSnapshot.right + 20;
     self.switchSnapshot.top = self.tvConnection.bottom + 15;
     self.tvSnapshot.centerY = self.switchSnapshot.centerY;
-    self.switchSnapshot.on = [DoricRegistry isEnableRenderSnapshot];
+    self.switchSnapshot.on = [Doric isEnableRenderSnapshot];
 
     self.tvPerformance.left = self.tvLabel.right + 20;
     self.switchPerformance.left = self.tvPerformance.right + 20;
     self.switchPerformance.top = self.switchSnapshot.bottom + 15;
     self.tvPerformance.centerY = self.switchPerformance.centerY;
-    self.switchPerformance.on = [DoricRegistry isEnablePerformance];
+    self.switchPerformance.on = [Doric isEnablePerformance];
 }
 
 - (void)initList {

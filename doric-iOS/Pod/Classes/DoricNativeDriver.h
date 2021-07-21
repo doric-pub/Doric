@@ -32,7 +32,6 @@ typedef NS_ENUM(NSInteger, DoricQueueMode) {
 NS_ASSUME_NONNULL_BEGIN
 
 @interface DoricNativeDriver : NSObject <DoricDriverProtocol>
-+ (instancetype)instance;
 @end
 
 NS_ASSUME_NONNULL_END

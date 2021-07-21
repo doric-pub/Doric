@@ -9,7 +9,7 @@
 #import "AppDelegate.h"
 #import "NavigationController.h"
 #import "ViewController.h"
-#import "DoricRegistry.h"
+#import <DoricCore/Doric.h>
 
 #if __has_include(<SDWebImage/SDWebImage.h>)
 
@@ -27,7 +27,7 @@
 
 
 - (void)localeChanged {
-    [DoricRegistry setEnvironmentValue:@{
+    [Doric setEnvironmentValue:@{
             @"localeLanguage": [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleLanguageCode],
             @"localeCountry": [[NSLocale autoupdatingCurrentLocale] objectForKey:NSLocaleCountryCode],
     }];

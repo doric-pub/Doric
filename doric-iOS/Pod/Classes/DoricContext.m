@@ -27,12 +27,13 @@
 #import "DoricExtensions.h"
 #import "DoricNativeDriver.h"
 #import "DoricUtil.h"
+#import "DoricSingleton.h"
 
 @implementation DoricContext
 
 - (instancetype)initWithScript:(NSString *)script source:(NSString *)source extra:(NSString *)extra {
     if (self = [super init]) {
-        _driver = [DoricNativeDriver instance];
+        _driver = DoricSingleton.instance.nativeDriver;
         _pluginInstanceMap = [NSMutableDictionary new];
         _script = script;
         _source = source;
@@ -84,7 +85,7 @@
 }
 
 - (void)init:(NSString *)initData {
-    if ([DoricRegistry isEnableRenderSnapshot]) {
+    if (DoricSingleton.instance.enableRecordSnapshot) {
         [self callEntity:@"__enableSnapshot__" withArgumentsArray:@[]];
     }
     self.extra = initData;
@@ -134,7 +135,6 @@
     }
     return _vc;
 }
-
 
 - (void)dispatchToMainQueue:(_Nonnull dispatch_block_t)block {
     dispatch_async(dispatch_get_main_queue(), ^{

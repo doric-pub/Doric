@@ -22,6 +22,7 @@
 
 #import "DoricPerformanceProfile.h"
 #import "DoricRegistry.h"
+#import "DoricSingleton.h"
 
 @interface DoricPerformanceProfile ()
 @property(nonatomic, strong) dispatch_queue_t anchorQueue;
@@ -36,7 +37,7 @@
         _name = name;
         _anchorQueue = dispatch_queue_create("doric.performance.profile", DISPATCH_QUEUE_SERIAL);
         _anchorMap = [NSMutableDictionary new];
-        _enable = [DoricRegistry isEnablePerformance];
+        _enable = DoricSingleton.instance.enablePerformance;
         _hooks = [NSHashTable new];
     }
     return self;

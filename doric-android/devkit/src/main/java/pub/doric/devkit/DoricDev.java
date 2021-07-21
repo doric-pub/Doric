@@ -19,6 +19,7 @@ import pub.doric.Doric;
 import pub.doric.DoricContext;
 import pub.doric.DoricContextManager;
 import pub.doric.DoricNativeDriver;
+import pub.doric.DoricSingleton;
 import pub.doric.devkit.ui.DoricDevActivity;
 import pub.doric.devkit.util.SimulatorUtil;
 import pub.doric.performance.DoricPerformanceProfile;
@@ -51,8 +52,8 @@ public class DoricDev {
 
     private DoricDev() {
         this.isRunningInEmulator = SimulatorUtil.isSimulator(Doric.application());
-        DoricNativeDriver.getInstance().getRegistry().registerMonitor(new DoricDevMonitor());
-        DoricNativeDriver.getInstance().getRegistry().setGlobalPerformanceAnchorHook(new DoricDevPerformanceAnchorHook());
+        DoricSingleton.getInstance().getNativeDriver().getRegistry().registerMonitor(new DoricDevMonitor());
+        DoricSingleton.getInstance().getNativeDriver().getRegistry().setGlobalPerformanceAnchorHook(new DoricDevPerformanceAnchorHook());
     }
 
     public static DoricDev getInstance() {

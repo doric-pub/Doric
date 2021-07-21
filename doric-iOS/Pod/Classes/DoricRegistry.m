@@ -54,39 +54,7 @@
 #import "DoricFlexNode.h"
 #import "DoricKeyboardPlugin.h"
 #import "DoricJSEngine.h"
-
-@interface DoricLibraries : NSObject
-@property(nonatomic, strong) NSMutableSet <DoricLibrary *> *libraries;
-@property(nonatomic, strong) NSHashTable<DoricRegistry *> *registries;
-@property(nonatomic, strong) NSMutableDictionary *envDic;
-@property(nonatomic, assign) BOOL enablePerformance;
-@property(nonatomic, assign) BOOL enableRecordSnapshot;
-
-+ (instancetype)instance;
-@end
-
-@implementation DoricLibraries
-- (instancetype)init {
-    if (self = [super init]) {
-        _libraries = [NSMutableSet new];
-        _registries = [NSHashTable new];
-        _envDic = [NSMutableDictionary new];
-        _enablePerformance = NO;
-        _enableRecordSnapshot = NO;
-    }
-    return self;
-}
-
-+ (instancetype)instance {
-    static DoricLibraries *_instance;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _instance = [[DoricLibraries alloc] init];
-    });
-    return _instance;
-}
-
-@end
+#import "DoricSingleton.h"
 
 @interface DoricRegistry ()
 
@@ -100,22 +68,14 @@
 @implementation DoricRegistry
 
 + (void)register:(DoricLibrary *)library {
-    [DoricLibraries.instance.libraries addObject:library];
-    for (DoricRegistry *registry in DoricLibraries.instance.registries) {
+    [DoricSingleton.instance.libraries addObject:library];
+    for (DoricRegistry *registry in DoricSingleton.instance.registries) {
         if (registry) {
             [library load:registry];
         }
     }
 }
 
-+ (void)setEnvironmentValue:(NSDictionary *)value {
-    [DoricLibraries.instance.envDic addEntriesFromDictionary:value];
-    for (DoricRegistry *registry in DoricLibraries.instance.registries) {
-        if (registry) {
-            [registry innerSetEnvironmentValue:value];
-        }
-    }
-}
 
 - (instancetype)initWithJSEngine:(DoricJSEngine *)jsEngine {
     if (self = [super init]) {
@@ -125,29 +85,13 @@
         _nodes = [NSMutableDictionary new];
         _monitors = [NSMutableSet new];
         [self innerRegister];
-        [DoricLibraries.instance.libraries enumerateObjectsUsingBlock:^(DoricLibrary *obj, BOOL *stop) {
+        [DoricSingleton.instance.libraries enumerateObjectsUsingBlock:^(DoricLibrary *obj, BOOL *stop) {
             [obj load:self];
         }];
-        [jsEngine setEnvironmentValue:DoricLibraries.instance.envDic];
-        [DoricLibraries.instance.registries addObject:self];
+        [jsEngine setEnvironmentValue:DoricSingleton.instance.envDic];
+        [DoricSingleton.instance.registries addObject:self];
     }
     return self;
-}
-
-+ (void)enablePerformance:(BOOL)enable {
-    DoricLibraries.instance.enablePerformance = enable;
-}
-
-+ (BOOL)isEnablePerformance {
-    return DoricLibraries.instance.enablePerformance;
-}
-
-+ (void)enableRenderSnapshot:(BOOL)enable {
-    DoricLibraries.instance.enableRecordSnapshot = enable;
-}
-
-+ (BOOL)isEnableRenderSnapshot {
-    return DoricLibraries.instance.enableRecordSnapshot;
 }
 
 - (void)innerRegister {

@@ -43,19 +43,11 @@ public class DoricNativeDriver implements IDoricDriver {
     private final Handler mUIHandler;
     private final Handler mJSHandler;
 
-    private static class Inner {
-        private static final DoricNativeDriver sInstance = new DoricNativeDriver();
-    }
-
-    private DoricNativeDriver() {
+    public DoricNativeDriver() {
         doricJSEngine = new DoricJSEngine();
         mBridgeExecutor = Executors.newCachedThreadPool();
         mUIHandler = new Handler(Looper.getMainLooper());
         mJSHandler = doricJSEngine.getJSHandler();
-    }
-
-    public static DoricNativeDriver getInstance() {
-        return Inner.sInstance;
     }
 
     @Override

@@ -35,17 +35,8 @@ public class DoricContextManager {
     private final AtomicInteger counter = new AtomicInteger();
     private final Map<String, DoricContext> doricContextMap = new ConcurrentHashMap<>();
 
-
-    private static class Inner {
-        private static final DoricContextManager sInstance = new DoricContextManager();
-    }
-
-    private DoricContextManager() {
-
-    }
-
     public static DoricContextManager getInstance() {
-        return Inner.sInstance;
+        return DoricSingleton.getInstance().getContextManager();
     }
 
     DoricContext createContext(Context context, final String script, final String source, String extra) {

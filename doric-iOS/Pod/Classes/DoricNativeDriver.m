@@ -45,15 +45,6 @@
     return self.jsExecutor.registry;
 }
 
-+ (instancetype)instance {
-    static DoricNativeDriver *_instance;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _instance = [[DoricNativeDriver alloc] init];
-    });
-    return _instance;
-}
-
 - (DoricAsyncResult *)invokeDoricMethod:(NSString *)method argumentsArray:(NSArray *)args {
     id contextId = args.count > 0 ? args[0] : nil;
     DoricPerformanceProfile *profile = nil;

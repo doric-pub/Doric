@@ -20,8 +20,8 @@ import android.app.Application;
 import com.facebook.soloader.SoLoader;
 
 import java.io.IOException;
+import java.util.Map;
 
-import pub.doric.loader.DoricJSLoaderManager;
 import pub.doric.loader.IDoricJSLoader;
 
 /**
@@ -56,7 +56,7 @@ public class Doric {
      * @param doricLibrary Which registered in global
      */
     public static void registerLibrary(DoricLibrary doricLibrary) {
-        DoricRegistry.register(doricLibrary);
+        DoricSingleton.getInstance().registerLibrary(doricLibrary);
     }
 
     /**
@@ -65,6 +65,27 @@ public class Doric {
      * @param jsLoader Which added in global
      */
     public static void addJSLoader(IDoricJSLoader jsLoader) {
-        DoricJSLoaderManager.getInstance().addJSLoader(jsLoader);
+        DoricSingleton.getInstance().getJsLoaderManager().addJSLoader(jsLoader);
     }
+
+    public void setEnvironmentValue(Map<String, Object> value) {
+        DoricSingleton.getInstance().setEnvironmentValue(value);
+    }
+
+    public static void enablePerformance(boolean enable) {
+        DoricSingleton.getInstance().enablePerformance = enable;
+    }
+
+    public static boolean isEnablePerformance() {
+        return DoricSingleton.getInstance().enablePerformance;
+    }
+
+    public static void enableRenderSnapshot(boolean enable) {
+        DoricSingleton.getInstance().enableRenderSnapshot = enable;
+    }
+
+    public static boolean isEnableRenderSnapshot() {
+        return DoricSingleton.getInstance().enableRenderSnapshot;
+    }
+
 }

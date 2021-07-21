@@ -198,7 +198,7 @@ public class DoricPanelFragment extends Fragment implements IDoricNavigator {
         final String alias = argument.getString("alias");
         String source = argument.getString("source");
         final String extra = argument.getString("extra");
-        DoricJSLoaderManager.getInstance().loadJSBundle(source).setCallback(new AsyncResult.Callback<String>() {
+        DoricSingleton.getInstance().getJsLoaderManager().loadJSBundle(source).setCallback(new AsyncResult.Callback<String>() {
             @Override
             public void onResult(String result) {
                 if (getActivity() == null) {

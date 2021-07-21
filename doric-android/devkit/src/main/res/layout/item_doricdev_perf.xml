@@ -65,7 +65,8 @@
         android:id="@+id/layout_expand"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#bdc3c7"
+        android:layout_marginBottom="10dp"
+        android:background="#0f000000"
         android:gravity="center_vertical"
         android:orientation="vertical"
         android:paddingLeft="15dp">

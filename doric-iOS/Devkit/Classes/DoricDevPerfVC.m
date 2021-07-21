@@ -32,12 +32,27 @@
 
 @implementation DoricDevAnchorItem
 - (CGFloat)cellHeight {
+    if (self.expanded) {
+        if ([self.name hasPrefix:@"Call"]) {
+            if ([self.name componentsSeparatedByString:@","].count > 1) {
+                return 40 + 5 + 16 + 5 + 16 + 5 + 16 + 10;
+            } else {
+                return 40 + 5 + 16 + 5 + 16 + 10;
+            }
+        } else {
+            return 40 + 5 + 16 + 10;
+        }
+    }
     return 40;
 }
 @end
 
 @interface DoricDevAnchorCell : UITableViewCell
 @property(nonatomic, strong) UILabel *labelName;
+@property(nonatomic, strong) UILabel *funcName;
+@property(nonatomic, strong) UILabel *argumentName;
+@property(nonatomic, strong) UILabel *costTime;
+@property(nonatomic, strong) UIView *expandedView;
 @property(nonatomic, strong) UIView *waterfallPrepared;
 @property(nonatomic, strong) UIView *waterfallWorked;
 @property(nonatomic, assign) long duration;
@@ -69,6 +84,25 @@
             it.height = 20;
             [self.contentView addSubview:it];
         }];
+        self.expandedView = [[UIView new] also:^(UIView *it) {
+            it.backgroundColor = DoricColor(@(0x0f000000));
+            [self.contentView addSubview:it];
+        }];
+        self.funcName = [[UILabel new] also:^(UILabel *it) {
+            it.font = [UIFont systemFontOfSize:12];
+            it.textColor = [UIColor blackColor];
+            [self.expandedView addSubview:it];
+        }];
+        self.argumentName = [[UILabel new] also:^(UILabel *it) {
+            it.font = [UIFont systemFontOfSize:12];
+            it.textColor = [UIColor blackColor];
+            [self.expandedView addSubview:it];
+        }];
+        self.costTime = [[UILabel new] also:^(UILabel *it) {
+            it.font = [UIFont systemFontOfSize:12];
+            it.textColor = [UIColor blackColor];
+            [self.expandedView addSubview:it];
+        }];
     }
     return self;
 }
@@ -78,17 +112,7 @@
     self.contentView.height = [anchorItem cellHeight];
     self.labelName.left = 15;
     self.labelName.centerY = 20;
-    if ([anchorItem.name hasPrefix:@"Call"]) {
-        self.labelName.text = @"Call";
-        self.labelName.backgroundColor = DoricColor(@(0xff3498db));
-    } else {
-        if ([anchorItem.name isEqualToString:@"Render"]) {
-            self.labelName.backgroundColor = DoricColor(@(0xffe74c3c));
-        } else {
-            self.labelName.backgroundColor = DoricColor(@(0xff2ecc71));
-        }
-        self.labelName.text = anchorItem.name;
-    }
+
     self.waterfallPrepared.centerY = 20;
     self.waterfallWorked.centerY = 20;
     CGFloat all = self.width - 15 - self.labelName.width - 15 - 15;
@@ -96,6 +120,72 @@
     self.waterfallPrepared.width = ((CGFloat) anchorItem.prepared / (CGFloat) self.duration) * all;
     self.waterfallWorked.left = self.waterfallPrepared.right;
     self.waterfallWorked.width = ((CGFloat) MAX(anchorItem.worked, 1) / (CGFloat) self.duration) * all;
+
+    self.expandedView.hidden = anchorItem.expanded ? NO : YES;
+    self.expandedView.width = self.width - 15;
+    self.expandedView.left = 15;
+    self.expandedView.top = 40;
+    self.costTime.text = [NSString stringWithFormat:@"%@ ms", @(anchorItem.prepared + anchorItem.worked)];
+    self.costTime.width = self.expandedView.width - 15;
+    self.costTime.left = 15;
+    self.costTime.height = 16;
+
+    if ([anchorItem.name hasPrefix:@"Call"]) {
+        self.labelName.text = @"Call";
+        self.labelName.backgroundColor = DoricColor(@(0xff3498db));
+        NSString *extraInfo = [anchorItem.name substringFromIndex:@"Call:".length];
+        NSRange range = [extraInfo rangeOfString:@","];
+        if (range.location != NSNotFound) {
+            NSUInteger location = range.location;
+            NSString *method = [extraInfo substringToIndex:location];
+            NSString *params = [extraInfo substringFromIndex:location + 1];
+
+            self.expandedView.height = 5 + 16 + 5 + 16 + 5 + 16;
+            [self.funcName also:^(UILabel *it) {
+                it.hidden = NO;
+                it.text = method;
+                it.width = self.expandedView.width - 15;
+                it.height = 16;
+                it.left = 15;
+            }];
+
+            [self.argumentName also:^(UILabel *it) {
+                it.hidden = NO;
+                it.text = params;
+                it.width = self.expandedView.width - 15;
+                it.height = 16;
+                it.left = 15;
+            }];
+
+            self.funcName.top = 5;
+            self.argumentName.top = self.funcName.bottom + 5;
+            self.costTime.top = self.argumentName.bottom + 5;
+        } else {
+            self.expandedView.height = 5 + 16 + 5 + 16;
+            self.argumentName.hidden = YES;
+            [self.funcName also:^(UILabel *it) {
+                it.hidden = NO;
+                it.text = extraInfo;
+                it.width = self.expandedView.width - 15;
+                it.height = 16;
+                it.left = 15;
+            }];
+
+            self.funcName.top = 5;
+            self.costTime.top = self.funcName.bottom + 5;
+        }
+    } else {
+        self.expandedView.height = 5 + 16;
+        if ([anchorItem.name isEqualToString:@"Render"]) {
+            self.labelName.backgroundColor = DoricColor(@(0xffe74c3c));
+        } else {
+            self.labelName.backgroundColor = DoricColor(@(0xff2ecc71));
+        }
+        self.labelName.text = anchorItem.name;
+        self.funcName.hidden = YES;
+        self.argumentName.hidden = YES;
+        self.costTime.top = 5;
+    }
 }
 @end
 
@@ -144,7 +234,12 @@
         it.font = [UIFont systemFontOfSize:16];
         it.text = @"Expand[+]";
         [it sizeToFit];
+        it.userInteractionEnabled = YES;
         [self.headerView addSubview:it];
+        UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc]
+                initWithTarget:self
+                        action:@selector(onRightButtonClicked)];
+        [it addGestureRecognizer:tapGestureRecognizer];
     }];
     self.rightButton.right = self.headerView.right - 15;
     self.rightButton.centerY = self.headerView.centerY;
@@ -154,10 +249,10 @@
         it.delegate = self;
         it.dataSource = self;
         it.separatorStyle = UITableViewCellSeparatorStyleNone;
-        it.allowsSelection = NO;
         [self.view addSubview:it];
     }];
     self.tableView.top = self.headerView.bottom;
+    self.tableView.backgroundColor = DoricColor(@(0xffeeeeee));
     if ([self.doricContext.driver.registry.globalPerformanceAnchorHook
             isKindOfClass:DoricDevPerformanceAnchorHook.class]) {
         NSArray <DoricDevAnchorNode *> *nodes = [((DoricDevPerformanceAnchorHook *) self.doricContext.driver.registry.globalPerformanceAnchorHook)
@@ -197,7 +292,7 @@
     cell.width = tableView.width;
     cell.duration = self.duration;
     NSUInteger position = (NSUInteger) indexPath.row;
-    cell.backgroundColor = position % 2 == 0 ? DoricColor(@(0xffecf0f1)) : [UIColor whiteColor];
+    cell.backgroundColor = position % 2 == 0 ? DoricColor(@(0x2ff1c40f)) : DoricColor(@(0x2f2ecc71));
     [cell refreshUI:self.anchorItems[position]];
     return cell;
 }
@@ -209,5 +304,41 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSUInteger position = (NSUInteger) indexPath.row;
     return [self.anchorItems[position] cellHeight];
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSUInteger position = (NSUInteger) indexPath.row;
+    self.anchorItems[position].expanded = !self.anchorItems[position].expanded;
+    [tableView reloadData];
+    [self updateButton];
+}
+
+- (BOOL)allExpanded {
+    for (DoricDevAnchorItem *item in self.anchorItems) {
+        if (!item.expanded) {
+            return NO;
+        }
+    }
+    return YES;
+}
+
+- (void)updateButton {
+    self.rightButton.text = self.allExpanded ? @"Collapse[-]" : @"Expand[+]";
+    [self.rightButton sizeToFit];
+    self.rightButton.right = self.view.width - 15;
+}
+
+- (void)onRightButtonClicked {
+    if (self.allExpanded) {
+        [self.anchorItems forEach:^(DoricDevAnchorItem *obj) {
+            obj.expanded = NO;
+        }];
+    } else {
+        [self.anchorItems forEach:^(DoricDevAnchorItem *obj) {
+            obj.expanded = YES;
+        }];
+    }
+    [self updateButton];
+    [self.tableView reloadData];
 }
 @end

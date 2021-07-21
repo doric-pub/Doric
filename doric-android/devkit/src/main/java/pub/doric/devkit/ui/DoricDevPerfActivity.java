@@ -171,7 +171,7 @@ public class DoricDevPerfActivity extends DoricDevBaseActivity {
 
         @Override
         public void onBindViewHolder(@NonNull PerfCellHolder holder, int position) {
-            holder.itemView.setBackgroundColor(position % 2 == 0 ? Color.parseColor("#ecf0f1") : Color.WHITE);
+            holder.itemView.setBackgroundColor(position % 2 == 0 ? 0x2ff1c40f : 0x2f2ecc71);
             final AnchorItem anchorItem = anchorNodes.get(position);
             holder.layoutExpand.setVisibility(anchorItem.expanded ? View.VISIBLE : View.GONE);
             if (anchorItem.name.startsWith("Call")) {

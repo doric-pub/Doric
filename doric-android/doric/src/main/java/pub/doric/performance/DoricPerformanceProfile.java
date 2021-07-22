@@ -31,7 +31,6 @@ import pub.doric.Doric;
  * @CreateDate: 3/29/21
  */
 public class DoricPerformanceProfile {
-    private static final String TAG = DoricPerformanceProfile.class.getSimpleName();
     public static final String PART_INIT = "Init";
     public static final String STEP_CREATE = "Create";
     public static final String STEP_Call = "Call";

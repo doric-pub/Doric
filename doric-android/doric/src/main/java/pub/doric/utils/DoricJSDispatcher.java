@@ -18,6 +18,8 @@ package pub.doric.utils;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.github.pengfeizhou.jscore.JSDecoder;
+
 import java.util.LinkedList;
 import java.util.concurrent.Callable;
 
@@ -28,12 +30,12 @@ import pub.doric.async.AsyncResult;
  * @Author: pengfei.zhou
  * @CreateDate: 2020-03-25
  */
-public class DoricJSDispatcher implements AsyncResult.Callback {
-    private LinkedList<Callable<AsyncResult>> blocks = new LinkedList<>();
+public class DoricJSDispatcher implements AsyncResult.Callback<JSDecoder> {
+    private final LinkedList<Callable<AsyncResult<JSDecoder>>> blocks = new LinkedList<>();
     private boolean consuming = false;
-    private Handler mHandler = new Handler(Looper.getMainLooper());
+    private final Handler mHandler = new Handler(Looper.getMainLooper());
 
-    public void dispatch(Callable<AsyncResult> block) {
+    public void dispatch(Callable<AsyncResult<JSDecoder>> block) {
         if (blocks.size() > 0) {
             blocks.clear();
         }
@@ -44,11 +46,11 @@ public class DoricJSDispatcher implements AsyncResult.Callback {
     }
 
     private void consume() {
-        Callable<AsyncResult> block = blocks.pollLast();
+        Callable<AsyncResult<JSDecoder>> block = blocks.pollLast();
         if (block != null) {
             consuming = true;
             try {
-                AsyncResult result = block.call();
+                AsyncResult<JSDecoder> result = block.call();
                 result.setCallback(this);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -60,7 +62,17 @@ public class DoricJSDispatcher implements AsyncResult.Callback {
     }
 
     @Override
-    public void onResult(Object result) {
+    public void onResult(JSDecoder result) {
+
+    }
+
+    @Override
+    public void onError(Throwable t) {
+
+    }
+
+    @Override
+    public void onFinish() {
         if (Looper.myLooper() == mHandler.getLooper()) {
             consume();
         } else {
@@ -71,15 +83,5 @@ public class DoricJSDispatcher implements AsyncResult.Callback {
                 }
             });
         }
-    }
-
-    @Override
-    public void onError(Throwable t) {
-
-    }
-
-    @Override
-    public void onFinish() {
-
     }
 }

@@ -25,7 +25,6 @@ import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 import com.github.pengfeizhou.jscore.JavaValue;
 
-import pub.doric.Doric;
 import pub.doric.DoricActivity;
 import pub.doric.DoricContext;
 import pub.doric.extension.bridge.DoricMethod;

@@ -32,7 +32,6 @@ import pub.doric.extension.bridge.DoricPromise;
 import pub.doric.utils.DoricUtils;
 import pub.doric.utils.ThreadMode;
 
-import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 import com.github.pengfeizhou.jscore.JavaValue;

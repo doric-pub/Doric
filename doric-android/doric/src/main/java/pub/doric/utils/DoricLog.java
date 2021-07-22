@@ -26,7 +26,7 @@ import pub.doric.Doric;
  * @CreateDate: 2019-07-18
  */
 public class DoricLog {
-    private static String TAG = Doric.class.getSimpleName();
+    private static final String TAG = Doric.class.getSimpleName();
 
 
     public static void d(String message, Object... args) {

@@ -65,14 +65,14 @@ public class CoordinatorPlugin extends DoricJavaPlugin {
             @Override
             public Object call() throws Exception {
                 JSValue[] scrollableIds = argument.getProperty("scrollable").asArray().toArray();
-                ViewNode scrollNode = null;
+                ViewNode<?> scrollNode = null;
                 for (JSValue value : scrollableIds) {
                     if (scrollNode == null) {
                         scrollNode = getDoricContext().targetViewNode(value.asString().value());
                     } else {
                         if (value.isString() && scrollNode instanceof SuperNode) {
                             String viewId = value.asString().value();
-                            scrollNode = ((SuperNode) scrollNode).getSubNodeById(viewId);
+                            scrollNode = ((SuperNode<?>) scrollNode).getSubNodeById(viewId);
                         }
                     }
                 }
@@ -85,7 +85,7 @@ public class CoordinatorPlugin extends DoricJavaPlugin {
 
                 JSValue target = argument.getProperty("target");
                 boolean isNavBar = false;
-                ViewNode targetNode = null;
+                ViewNode<?> targetNode = null;
                 if (target.isString() && "NavBar".equals(target.asString().value())) {
                     isNavBar = true;
                 } else if (target.isArray()) {
@@ -96,7 +96,7 @@ public class CoordinatorPlugin extends DoricJavaPlugin {
                         } else {
                             if (value.isString() && targetNode instanceof SuperNode) {
                                 String viewId = value.asString().value();
-                                targetNode = ((SuperNode) targetNode).getSubNodeById(viewId);
+                                targetNode = ((SuperNode<?>) targetNode).getSubNodeById(viewId);
                             }
                         }
                     }
@@ -109,8 +109,8 @@ public class CoordinatorPlugin extends DoricJavaPlugin {
                 final float changingEnd = changing.getProperty("end").asNumber().toFloat();
 
 
-                final ViewNode finalScrollNode = scrollNode;
-                final ViewNode finalTargetNode = targetNode;
+                final ViewNode<?> finalScrollNode = scrollNode;
+                final ViewNode<?> finalTargetNode = targetNode;
                 final boolean finalIsNavBar = isNavBar;
 
                 if (finalScrollNode instanceof IDoricScrollable) {
@@ -163,7 +163,7 @@ public class CoordinatorPlugin extends DoricJavaPlugin {
         });
     }
 
-    private void setValue(ViewNode viewNode, boolean isNavBar, String name, float value) {
+    private void setValue(ViewNode<?> viewNode, boolean isNavBar, String name, float value) {
         if ("backgroundColor".equals(name) && isNavBar) {
             getDoricContext().getDoricNavBar().setBackgroundColor((int) value);
         } else {

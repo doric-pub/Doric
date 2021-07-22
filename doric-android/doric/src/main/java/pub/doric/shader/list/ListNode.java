@@ -25,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSNumber;
 import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSObject;
@@ -75,7 +76,7 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
     @Override
     protected void blendSubNode(JSObject subProperties) {
         String viewId = subProperties.getProperty("id").asString().value();
-        ViewNode node = getSubNodeById(viewId);
+        ViewNode<?> node = getSubNodeById(viewId);
         if (node != null) {
             node.blend(subProperties.getProperty("props").asObject());
         } else {
@@ -110,9 +111,9 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
                     listener.onScrollChange(recyclerView, offsetX, offsetY, offsetX - dx, offsetY - dy);
                 }
                 if (!TextUtils.isEmpty(onScrollFuncId)) {
-                    jsDispatcher.dispatch(new Callable<AsyncResult>() {
+                    jsDispatcher.dispatch(new Callable<AsyncResult<JSDecoder>>() {
                         @Override
-                        public AsyncResult call() throws Exception {
+                        public AsyncResult<JSDecoder> call() {
                             return callJSResponse(onScrollFuncId, new JSONBuilder()
                                     .put("x", DoricUtils.px2dp(offsetX))
                                     .put("y", DoricUtils.px2dp(offsetY))
@@ -154,11 +155,8 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
 
         recyclerView.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
             @Override
-            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-                if (gestureDetector.onTouchEvent(e)) {
-                    return true;
-                }
-                return false;
+            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+                return gestureDetector.onTouchEvent(e);
             }
         });
         return recyclerView;
@@ -249,12 +247,12 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
     }
 
     @Override
-    protected void blendSubLayoutConfig(ViewNode viewNode, JSObject jsObject) {
+    protected void blendSubLayoutConfig(ViewNode<?> viewNode, JSObject jsObject) {
         super.blendSubLayoutConfig(viewNode, jsObject);
     }
 
     @Override
-    public ViewNode getSubNodeById(String id) {
+    public ViewNode<?> getSubNodeById(String id) {
         RecyclerView.LayoutManager manager = mView.getLayoutManager();
         if (manager == null) {
             return null;
@@ -305,14 +303,7 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
         int lastItem = layoutManager.findLastVisibleItemPosition();
         if (pos <= firstItem) {
             defaultScrollTo(pos, smooth);
-        } else if (pos <= lastItem) {
-//            int top = getInnerView().getChildAt(pos - firstItem).getTop();
-//            if (smooth) {
-//                getInnerView().smoothScrollBy(0, top);
-//            } else {
-//                getInnerView().scrollBy(0, top);
-//            }
-        } else {
+        } else if (pos > lastItem) {
             defaultScrollTo(pos, smooth);
         }
     }

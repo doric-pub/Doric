@@ -17,7 +17,6 @@ package pub.doric.plugin;
 
 import android.content.Context;
 
-import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 import com.github.pengfeizhou.jscore.JavaValue;

@@ -36,7 +36,6 @@ import pub.doric.shader.StackNode;
 @DoricPlugin(name = "ListItem")
 public class ListItemNode extends StackNode {
     public String identifier = "";
-    private JSArray actions = null;
 
     public ListItemNode(DoricContext doricContext) {
         super(doricContext);
@@ -58,33 +57,5 @@ public class ListItemNode extends StackNode {
         super.blend(jsObject);
         getNodeView().getLayoutParams().width = getLayoutParams().width;
         getNodeView().getLayoutParams().height = getLayoutParams().height;
-        if (this.actions != null && this.actions.size() > 0) {
-            getView().setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    if (actions == null || actions.size() == 0) {
-                        return false;
-                    }
-                    String[] items = new String[actions.size()];
-                    final String[] callbacks = new String[actions.size()];
-                    for (int i = 0; i < actions.size(); i++) {
-                        JSObject action = actions.get(i).asObject();
-                        String title = action.getProperty("title").asString().value();
-                        String callback = action.getProperty("callback").asString().value();
-                        items[i] = title;
-                        callbacks[i] = callback;
-                    }
-                    new AlertDialog.Builder(getContext())
-                            .setItems(items, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    callJSResponse(callbacks[which]);
-                                    dialog.dismiss();
-                                }
-                            }).show();
-                    return true;
-                }
-            });
-        }
     }
 }

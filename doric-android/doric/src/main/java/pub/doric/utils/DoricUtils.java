@@ -114,7 +114,7 @@ public class DoricUtils {
         }
     }
 
-    public static Object toJavaObject(@NonNull Class clz, JSDecoder decoder) throws Exception {
+    public static Object toJavaObject(@NonNull Class<?> clz, JSDecoder decoder) throws Exception {
         if (clz == JSDecoder.class) {
             return decoder;
         } else {
@@ -122,7 +122,7 @@ public class DoricUtils {
         }
     }
 
-    public static Object toJavaObject(@NonNull Class clz, JSValue jsValue) throws Exception {
+    public static Object toJavaObject(@NonNull Class<?> clz, JSValue jsValue) {
         if (clz == JSValue.class || JSValue.class.isAssignableFrom(clz)) {
             return jsValue;
         } else if (clz == String.class) {
@@ -138,12 +138,13 @@ public class DoricUtils {
         } else if (clz == double.class || clz == Double.class) {
             return jsValue.asNumber().toDouble();
         } else if (clz.isArray()) {
-            Class elementClass = clz.getComponentType();
+            Class<?> elementClass = clz.getComponentType();
             Object ret;
             if (jsValue.isArray()) {
                 JSArray jsArray = jsValue.asArray();
                 ret = Array.newInstance(clz, jsArray.size());
                 for (int i = 0; i < jsArray.size(); i++) {
+                    assert elementClass != null;
                     Array.set(ret, i, toJavaObject(elementClass, jsArray.get(i)));
                 }
             } else if (jsValue.isNull()) {

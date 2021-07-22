@@ -21,7 +21,7 @@ public class NotchPlugin extends DoricJavaPlugin {
     }
 
     @DoricMethod(thread = ThreadMode.UI)
-    public void inset(JSObject jsObject, final DoricPromise promise) {
+    public void inset(final DoricPromise promise) {
         View view = getDoricContext().getRootNode().getNodeView();
         int top = QMUINotchHelper.getSafeInsetTop(view);
         int left = QMUINotchHelper.getSafeInsetLeft(view);

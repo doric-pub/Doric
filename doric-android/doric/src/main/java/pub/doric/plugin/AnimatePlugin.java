@@ -40,7 +40,7 @@ public class AnimatePlugin extends DoricJavaPlugin {
     public void animateRender(final JSObject jsObject, final DoricPromise promise) {
         getDoricContext().getDriver().asyncCall(new Callable<Object>() {
             @Override
-            public Object call() throws Exception {
+            public Object call() {
                 final long duration = jsObject.getProperty("duration").asNumber().toLong();
                 AnimatorSet animatorSet = new AnimatorSet();
                 getDoricContext().setAnimatorSet(animatorSet);
@@ -50,7 +50,7 @@ public class AnimatePlugin extends DoricJavaPlugin {
                     rootNode.setId(viewId);
                     rootNode.blend(jsObject.getProperty("props").asObject());
                 } else {
-                    ViewNode viewNode = getDoricContext().targetViewNode(viewId);
+                    ViewNode<?> viewNode = getDoricContext().targetViewNode(viewId);
                     if (viewNode != null) {
                         viewNode.blend(jsObject.getProperty("props").asObject());
                     }

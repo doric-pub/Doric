@@ -173,7 +173,7 @@ public class FlexNode extends GroupNode<YogaLayout> {
     }
 
     @Override
-    protected void blendSubLayoutConfig(ViewNode viewNode, JSObject jsObject) {
+    protected void blendSubLayoutConfig(ViewNode<?> viewNode, JSObject jsObject) {
         super.blendSubLayoutConfig(viewNode, jsObject);
     }
 
@@ -190,7 +190,7 @@ public class FlexNode extends GroupNode<YogaLayout> {
     @Override
     public void blend(JSObject jsObject) {
         super.blend(jsObject);
-        for (ViewNode childNode : mChildNodes) {
+        for (ViewNode<?> childNode : mChildNodes) {
             YogaNode yogaNode = this.mView.getYogaNodeForView(childNode.getNodeView());
             if (yogaNode != null) {
                 blendSubFlexConfig(yogaNode, childNode.getFlexConfig());
@@ -199,8 +199,7 @@ public class FlexNode extends GroupNode<YogaLayout> {
     }
 
     private void blendSubFlexConfig(YogaNode yogaNode, JSObject jsObject) {
-        if (jsObject == null) {
-        } else {
+        if (jsObject != null) {
             for (String name : jsObject.propertySet()) {
                 JSValue value = jsObject.getProperty(name);
                 blendFlexConfig(yogaNode, name, value);

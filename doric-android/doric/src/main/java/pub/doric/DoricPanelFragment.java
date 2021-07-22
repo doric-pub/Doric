@@ -47,7 +47,7 @@ import pub.doric.utils.DoricLog;
  */
 public class DoricPanelFragment extends Fragment implements IDoricNavigator {
     private DoricPanel doricPanel;
-    private Handler uiHandler = new Handler(Looper.getMainLooper());
+    private final Handler uiHandler = new Handler(Looper.getMainLooper());
     private FrameLayout maskView;
 
     @Override

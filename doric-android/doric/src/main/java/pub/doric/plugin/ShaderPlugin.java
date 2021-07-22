@@ -59,7 +59,7 @@ public class ShaderPlugin extends DoricJavaPlugin {
         profile.prepare(DoricPerformanceProfile.STEP_RENDER);
         getDoricContext().getDriver().asyncCall(new Callable<Object>() {
             @Override
-            public Object call() throws Exception {
+            public Object call() {
                 profile.start(DoricPerformanceProfile.STEP_RENDER);
 
                 if (getDoricContext().getContext() instanceof Activity) {
@@ -71,12 +71,12 @@ public class ShaderPlugin extends DoricJavaPlugin {
                 String viewId = jsObject.getProperty("id").asString().value();
 
                 RootNode rootNode = getDoricContext().getRootNode();
-                ViewNode targetNode = rootNode;
+                ViewNode<?> targetNode = rootNode;
                 if (TextUtils.isEmpty(rootNode.getId()) && "Root".equals(jsObject.getProperty("type").asString().value())) {
                     rootNode.setId(viewId);
                     rootNode.blend(jsObject.getProperty("props").asObject());
                 } else {
-                    ViewNode viewNode = getDoricContext().targetViewNode(viewId);
+                    ViewNode<?> viewNode = getDoricContext().targetViewNode(viewId);
                     if (viewNode != null) {
                         targetNode = viewNode;
                         viewNode.blend(jsObject.getProperty("props").asObject());
@@ -124,26 +124,26 @@ public class ShaderPlugin extends DoricJavaPlugin {
     public void command(final JSObject jsObject, final DoricPromise doricPromise) {
         getDoricContext().getDriver().asyncCall(new Callable<Object>() {
             @Override
-            public Object call() throws Exception {
+            public Object call() {
                 final JSValue[] viewIds = jsObject.getProperty("viewIds").asArray().toArray();
                 final String name = jsObject.getProperty("name").asString().value();
                 final JSValue args = jsObject.getProperty("args");
-                ViewNode viewNode = null;
+                ViewNode<?> viewNode = null;
                 for (JSValue value : viewIds) {
                     if (viewNode == null) {
                         viewNode = getDoricContext().targetViewNode(value.asString().value());
                     } else {
                         if (value.isString() && viewNode instanceof SuperNode) {
                             String viewId = value.asString().value();
-                            viewNode = ((SuperNode) viewNode).getSubNodeById(viewId);
+                            viewNode = ((SuperNode<?>) viewNode).getSubNodeById(viewId);
                         }
                     }
                 }
                 if (viewNode == null) {
                     doricPromise.reject(new JavaValue("Cannot find opposite view"));
                 } else {
-                    final ViewNode targetViewNode = viewNode;
-                    DoricMetaInfo<ViewNode> pluginInfo = getDoricContext().getDriver().getRegistry()
+                    final ViewNode<?> targetViewNode = viewNode;
+                    DoricMetaInfo<ViewNode<?>> pluginInfo = getDoricContext().getDriver().getRegistry()
                             .acquireViewNodeInfo(viewNode.getType());
                     final Method method = pluginInfo.getMethod(name);
                     if (method == null) {
@@ -156,7 +156,7 @@ public class ShaderPlugin extends DoricJavaPlugin {
                         Callable<JavaValue> callable = new Callable<JavaValue>() {
                             @Override
                             public JavaValue call() throws Exception {
-                                Class[] classes = method.getParameterTypes();
+                                Class<?>[] classes = method.getParameterTypes();
                                 Object ret;
                                 if (classes.length == 0) {
                                     ret = method.invoke(targetViewNode);
@@ -202,7 +202,7 @@ public class ShaderPlugin extends DoricJavaPlugin {
     }
 
 
-    private Object createParam(Class clz, DoricPromise doricPromise, JSValue jsValue) {
+    private Object createParam(Class<?> clz, DoricPromise doricPromise, JSValue jsValue) {
         if (clz == DoricPromise.class) {
             return doricPromise;
         } else {

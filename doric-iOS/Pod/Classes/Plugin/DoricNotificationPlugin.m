@@ -22,16 +22,25 @@
 
 @interface DoricNotificationPlugin ()
 
-@property(nonatomic, strong) NSDictionary<NSString *, id> *observers;
+@property(nonatomic, strong) NSMutableDictionary<NSString *, id> *observers;
+@property (nonatomic, strong) dispatch_queue_t syncQuene;
+
 @end
 
 @implementation DoricNotificationPlugin
 
 - (NSDictionary *)observers {
     if (!_observers) {
-        _observers = [NSDictionary new];
+        _observers = [NSMutableDictionary new];
     }
     return _observers;
+}
+
+- (dispatch_queue_t)syncQuene {
+    if (!_syncQuene) {
+        _syncQuene = dispatch_queue_create("pub.doric.plugin.notification", DISPATCH_QUEUE_CONCURRENT);
+    }
+    return _syncQuene;
 }
 
 - (void)publish:(NSDictionary *)dic withPromise:(DoricPromise *)promise {
@@ -70,26 +79,33 @@
                         DoricPromise *currentPromise = [[DoricPromise alloc] initWithContext:self.doricContext callbackId:callbackId];
                         [currentPromise resolve:note.userInfo];
                     }];
-    NSMutableDictionary *mutableDictionary = [self.observers mutableCopy];
-    mutableDictionary[callbackId] = observer;
-    self.observers = mutableDictionary;
+    
+    dispatch_barrier_async(self.syncQuene, ^{
+        [self.observers setObject:observer forKey:callbackId];
+    });
     [promise resolve:callbackId];
 }
 
 - (void)unsubscribe:(NSString *)subscribeId withPromise:(DoricPromise *)promise {
-    id observer = self.observers[subscribeId];
+    __block id observer = nil;
+    dispatch_sync(self.syncQuene, ^{
+        observer = [self.observers objectForKey:subscribeId];
+    });
     if (observer) {
         [[NSNotificationCenter defaultCenter] removeObserver:observer];
-        NSMutableDictionary *mutableDictionary = [self.observers mutableCopy];
-        [mutableDictionary removeObjectForKey:subscribeId];
-        self.observers = mutableDictionary;
+        dispatch_barrier_async(self.syncQuene, ^{
+            [self.observers removeObjectForKey:subscribeId];
+        });
     }
     [promise resolve:nil];
 }
 
 - (void)dealloc {
-    NSDictionary *dictionary = self.observers;
-    [dictionary enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
+    __block NSArray *values;
+    dispatch_sync(self.syncQuene, ^{
+        values = [self.observers allValues];
+    });
+    [values enumerateObjectsUsingBlock:^(id obj, NSUInteger index, BOOL *stop) {
         [[NSNotificationCenter defaultCenter] removeObserver:obj];
     }];
 }

@@ -20,10 +20,10 @@ import pub.doric.shader.ViewNode;
 public class RefreshableNode extends SuperNode<DoricSwipeLayout> implements PullingListener {
 
     private String mContentViewId;
-    private ViewNode mContentNode;
+    private ViewNode<?> mContentNode;
 
     private String mHeaderViewId;
-    private ViewNode mHeaderNode;
+    private ViewNode<?> mHeaderNode;
 
     public RefreshableNode(DoricContext doricContext) {
         super(doricContext);
@@ -139,7 +139,7 @@ public class RefreshableNode extends SuperNode<DoricSwipeLayout> implements Pull
     }
 
     @Override
-    public ViewNode getSubNodeById(String id) {
+    public ViewNode<?> getSubNodeById(String id) {
         if (id.equals(mContentViewId)) {
             return mContentNode;
         }
@@ -152,7 +152,7 @@ public class RefreshableNode extends SuperNode<DoricSwipeLayout> implements Pull
     @Override
     protected void blendSubNode(JSObject subProperties) {
         String viewId = subProperties.getProperty("id").asString().value();
-        ViewNode node = getSubNodeById(viewId);
+        ViewNode<?> node = getSubNodeById(viewId);
         if (node != null) {
             node.blend(subProperties.getProperty("props").asObject());
         }

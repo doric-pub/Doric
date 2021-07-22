@@ -100,8 +100,6 @@ public class TextNode extends ViewNode<TextView> {
                         public void run() {
                             final JSObject dict = prop.asObject();
 
-                            LinearGradient linearGradient = null;
-
                             int[] colors = null;
                             float[] locations = null;
 

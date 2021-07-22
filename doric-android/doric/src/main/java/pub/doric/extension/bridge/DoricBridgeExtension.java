@@ -86,7 +86,7 @@ public class DoricBridgeExtension {
         Callable<JavaValue> callable = new Callable<JavaValue>() {
             @Override
             public JavaValue call() throws Exception {
-                Class[] classes = method.getParameterTypes();
+                Class<?>[] classes = method.getParameterTypes();
                 Object ret;
                 if (classes.length == 0) {
                     ret = method.invoke(doricJavaPlugin);

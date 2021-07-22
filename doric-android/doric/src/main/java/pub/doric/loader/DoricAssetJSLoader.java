@@ -57,7 +57,7 @@ public class DoricAssetJSLoader implements IDoricJSLoader {
                     e.printStackTrace();
                 }
             }
-            return result;
         }
+        return result;
     }
 }

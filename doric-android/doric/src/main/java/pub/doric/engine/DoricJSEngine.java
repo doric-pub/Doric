@@ -228,7 +228,6 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
         mDoricJSE.injectGlobalJSFunction(DoricConstant.INJECT_BRIDGE, new JavaFunction() {
             @Override
             public JavaValue exec(JSDecoder[] args) {
-                String source = "Unknown";
                 try {
                     String contextId = args[0].string();
                     String module = args[1].string();

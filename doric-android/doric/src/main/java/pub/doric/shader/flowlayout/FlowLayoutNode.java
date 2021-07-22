@@ -17,13 +17,13 @@ package pub.doric.shader.flowlayout;
 
 import android.graphics.Rect;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
@@ -82,7 +82,7 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
     };
     private int columnSpace = 0;
     private int rowSpace = 0;
-    private Rect padding = new Rect();
+    private final Rect padding = new Rect();
     private final RecyclerView.ItemDecoration spacingItemDecoration = new RecyclerView.ItemDecoration() {
         @Override
         public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
@@ -92,10 +92,10 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
     String onLoadMoreFuncId;
     boolean loadMore = false;
     String loadMoreViewId;
-    private Set<DoricScrollChangeListener> listeners = new HashSet<>();
+    private final Set<DoricScrollChangeListener> listeners = new HashSet<>();
     private String onScrollFuncId;
     private String onScrollEndFuncId;
-    private DoricJSDispatcher jsDispatcher = new DoricJSDispatcher();
+    private final DoricJSDispatcher jsDispatcher = new DoricJSDispatcher();
     private int itemCount = 0;
     private boolean scrollable = true;
 
@@ -105,7 +105,7 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
     }
 
     @Override
-    public ViewNode getSubNodeById(String id) {
+    public ViewNode<?> getSubNodeById(String id) {
         RecyclerView.LayoutManager manager = mView.getLayoutManager();
         if (manager == null) {
             return null;
@@ -246,7 +246,7 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
     @Override
     protected void blendSubNode(JSObject subProperties) {
         String viewId = subProperties.getProperty("id").asString().value();
-        ViewNode node = getSubNodeById(viewId);
+        ViewNode<?> node = getSubNodeById(viewId);
         if (node != null) {
             node.blend(subProperties.getProperty("props").asObject());
         } else {
@@ -274,9 +274,9 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
                     listener.onScrollChange(recyclerView, offsetX, offsetY, offsetX - dx, offsetY - dy);
                 }
                 if (!TextUtils.isEmpty(onScrollFuncId)) {
-                    jsDispatcher.dispatch(new Callable<AsyncResult>() {
+                    jsDispatcher.dispatch(new Callable<AsyncResult<JSDecoder>>() {
                         @Override
-                        public AsyncResult call() throws Exception {
+                        public AsyncResult<JSDecoder> call() {
                             return callJSResponse(onScrollFuncId, new JSONBuilder()
                                     .put("x", DoricUtils.px2dp(offsetX))
                                     .put("y", DoricUtils.px2dp(offsetY))

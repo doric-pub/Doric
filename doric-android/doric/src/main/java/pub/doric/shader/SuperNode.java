@@ -35,14 +35,14 @@ import pub.doric.DoricContext;
  * @CreateDate: 2019-11-13
  */
 public abstract class SuperNode<V extends View> extends ViewNode<V> {
-    private Map<String, JSObject> subNodes = new HashMap<>();
+    private final Map<String, JSObject> subNodes = new HashMap<>();
     protected boolean mReusable = false;
 
     public SuperNode(DoricContext doricContext) {
         super(doricContext);
     }
 
-    public abstract ViewNode getSubNodeById(String id);
+    public abstract ViewNode<?> getSubNodeById(String id);
 
     protected ViewGroup.LayoutParams generateDefaultLayoutParams() {
         return new ViewGroup.LayoutParams(0, 0);
@@ -92,7 +92,7 @@ public abstract class SuperNode<V extends View> extends ViewNode<V> {
 
     protected abstract void blendSubNode(JSObject subProperties);
 
-    protected void blendSubLayoutConfig(ViewNode viewNode, JSObject jsObject) {
+    protected void blendSubLayoutConfig(ViewNode<?> viewNode, JSObject jsObject) {
         viewNode.blendLayoutConfig(jsObject);
     }
 

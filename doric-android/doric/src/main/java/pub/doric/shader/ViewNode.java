@@ -73,7 +73,7 @@ import pub.doric.utils.DoricUtils;
  */
 public abstract class ViewNode<T extends View> extends DoricContextHolder {
     protected T mView;
-    SuperNode mSuperNode;
+    SuperNode<?> mSuperNode;
     String mId;
     protected ViewGroup.LayoutParams mLayoutParams;
     private String mType;
@@ -90,7 +90,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
 
     private DoricLayer doricLayer;
 
-    public void init(SuperNode superNode) {
+    public void init(SuperNode<?> superNode) {
         if (this instanceof SuperNode) {
             ((SuperNode<T>) this).mReusable = superNode.mReusable;
         }
@@ -113,7 +113,12 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
 
     public String getType() {
         if (TextUtils.isEmpty(mType)) {
-            mType = this.getClass().getAnnotation(DoricPlugin.class).name();
+            DoricPlugin annotation = this.getClass().getAnnotation(DoricPlugin.class);
+            if (annotation != null) {
+                mType = annotation.name();
+            } else {
+                mType = "Error";
+            }
         }
         return mType;
     }
@@ -558,7 +563,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
 
     String[] getIdList() {
         LinkedList<String> ids = new LinkedList<>();
-        ViewNode viewNode = this;
+        ViewNode<?> viewNode = this;
         do {
             ids.push(viewNode.mId);
             viewNode = viewNode.mSuperNode;
@@ -607,13 +612,13 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         return asyncResult;
     }
 
-    public static ViewNode create(DoricContext doricContext, String type) {
+    public static ViewNode<?> create(DoricContext doricContext, String type) {
         DoricRegistry registry = doricContext.getDriver().getRegistry();
-        DoricMetaInfo<? extends ViewNode> clz = registry.acquireViewNodeInfo(type);
+        DoricMetaInfo<? extends ViewNode<?>> clz = registry.acquireViewNodeInfo(type);
         if (clz == null) {
             clz = new DoricMetaInfo<>(ErrorHintNode.class);
         }
-        ViewNode ret = clz.createInstance(doricContext);
+        ViewNode<?> ret = clz.createInstance(doricContext);
         ret.mType = type;
         if (ret instanceof ErrorHintNode) {
             ((ErrorHintNode) ret).setHintText(type);
@@ -1053,14 +1058,13 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 startVal,
                 endVal
         );
-        setFillMode(animator, key, startVal, endVal, fillMode);
+        setFillMode(animator, key, startVal, fillMode);
         return animator;
     }
 
     private void setFillMode(ObjectAnimator animator,
                              final String key,
                              float startVal,
-                             float endVal,
                              JSValue jsValue) {
         int fillMode = 0;
         if (jsValue.isNumber()) {

@@ -32,7 +32,7 @@ public class DoricTimerExtension implements Handler.Callback {
     private static final int MSG_TIMER = 0;
     private final Handler mTimerHandler;
     private final TimerCallback mTimerCallback;
-    private Set<Long> mDeletedTimerIds = new HashSet<>();
+    private final Set<Long> mDeletedTimerIds = new HashSet<>();
 
     public DoricTimerExtension(Looper looper, TimerCallback timerCallback) {
         mTimerHandler = new Handler(looper, this);
@@ -73,7 +73,7 @@ public class DoricTimerExtension implements Handler.Callback {
         mTimerHandler.removeCallbacksAndMessages(null);
     }
 
-    private class TimerInfo {
+    private static class TimerInfo {
         long timerId;
         long time;
         boolean repeat;

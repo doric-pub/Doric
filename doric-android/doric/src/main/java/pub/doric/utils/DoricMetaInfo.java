@@ -35,13 +35,16 @@ public class DoricMetaInfo<T extends DoricContextHolder> {
 
     private Constructor<? extends T> pluginConstructor;
 
-    private Map<String, Method> methodMap = new ConcurrentHashMap<>();
+    private final Map<String, Method> methodMap = new ConcurrentHashMap<>();
     private String name;
 
     public DoricMetaInfo(Class<? extends T> pluginClass) {
         try {
             this.pluginConstructor = pluginClass.getDeclaredConstructor(DoricContext.class);
             DoricPlugin doricPlugin = pluginClass.getAnnotation(DoricPlugin.class);
+            if (doricPlugin == null) {
+                throw new RuntimeException("Cannot find DoricPlugin annotation for " + pluginClass.toString());
+            }
             this.name = doricPlugin.name();
             Method[] methods = pluginClass.getMethods();
             for (Method method : methods) {

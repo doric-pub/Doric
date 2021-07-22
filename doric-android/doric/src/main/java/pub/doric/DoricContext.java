@@ -27,6 +27,7 @@ import com.github.pengfeizhou.jscore.JSONBuilder;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,15 +59,20 @@ public class DoricContext {
     private String extra;
     private JSONObject initParams;
     private IDoricDriver doricDriver;
-    private final Map<String, Map<String, ViewNode>> mHeadNodes = new HashMap<>();
+    private final Map<String, Map<String, ViewNode<?>>> mHeadNodes = new HashMap<>();
     private final DoricPerformanceProfile performanceProfile;
 
-    public Collection<ViewNode> allHeadNodes(String type) {
-        return mHeadNodes.get(type).values();
+    public Collection<ViewNode<?>> allHeadNodes(String type) {
+        Map<String, ViewNode<?>> headNode = mHeadNodes.get(type);
+        if (headNode != null) {
+            return headNode.values();
+        } else {
+            return new ArrayList<>();
+        }
     }
 
-    public void addHeadNode(String type, ViewNode viewNode) {
-        Map<String, ViewNode> map = mHeadNodes.get(type);
+    public void addHeadNode(String type, ViewNode<?> viewNode) {
+        Map<String, ViewNode<?>> map = mHeadNodes.get(type);
         if (map != null) {
             map.put(viewNode.getId(), viewNode);
         } else {
@@ -76,25 +82,25 @@ public class DoricContext {
         }
     }
 
-    public void removeHeadNode(String type, ViewNode viewNode) {
-        Map<String, ViewNode> map = mHeadNodes.get(type);
+    public void removeHeadNode(String type, ViewNode<?> viewNode) {
+        Map<String, ViewNode<?>> map = mHeadNodes.get(type);
         if (map != null) {
             map.remove(viewNode.getId());
         }
     }
 
     public void clearHeadNodes(String type) {
-        Map<String, ViewNode> map = mHeadNodes.get(type);
+        Map<String, ViewNode<?>> map = mHeadNodes.get(type);
         if (map != null) {
             map.clear();
         }
     }
 
-    public ViewNode targetViewNode(String id) {
+    public ViewNode<?> targetViewNode(String id) {
         if (id.equals(mRootNode.getId())) {
             return mRootNode;
         }
-        for (Map<String, ViewNode> map : mHeadNodes.values()) {
+        for (Map<String, ViewNode<?>> map : mHeadNodes.values()) {
             if (map.containsKey(id)) {
                 return map.get(id);
             }

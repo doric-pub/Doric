@@ -21,20 +21,28 @@ package pub.doric.async;
  * @CreateDate: 2019-07-19
  */
 public class AsyncResult<R> {
-    private static Object EMPTY = new Object();
-    private Object result = EMPTY;
+    private enum State {
+        IDLE,
+        RESULT,
+        ERROR,
+    }
 
+    private R result = null;
     private Callback<R> callback = null;
+    private State state = State.IDLE;
+    private Throwable throwable = null;
 
     public AsyncResult() {
     }
 
     public AsyncResult(R r) {
         this.result = r;
+        this.state = State.RESULT;
     }
 
     public void setResult(R result) {
         this.result = result;
+        this.state = State.RESULT;
         if (this.callback != null) {
             this.callback.onResult(result);
             this.callback.onFinish();
@@ -42,7 +50,8 @@ public class AsyncResult<R> {
     }
 
     public void setError(Throwable result) {
-        this.result = result;
+        this.throwable = result;
+        this.state = State.ERROR;
         if (this.callback != null) {
             this.callback.onError(result);
             this.callback.onFinish();
@@ -50,20 +59,20 @@ public class AsyncResult<R> {
     }
 
     public boolean hasResult() {
-        return result != EMPTY;
+        return this.state == State.RESULT;
     }
 
     public R getResult() {
-        return (R) result;
+        return result;
     }
 
     public void setCallback(Callback<R> callback) {
         this.callback = callback;
-        if (result instanceof Throwable) {
-            this.callback.onError((Throwable) result);
+        if (this.state == State.ERROR) {
+            this.callback.onError(throwable);
             this.callback.onFinish();
-        } else if (result != EMPTY) {
-            this.callback.onResult((R) result);
+        } else if (this.state == State.RESULT) {
+            this.callback.onResult(result);
             this.callback.onFinish();
         }
     }

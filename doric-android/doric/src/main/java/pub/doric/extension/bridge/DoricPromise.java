@@ -15,8 +15,6 @@
  */
 package pub.doric.extension.bridge;
 
-import android.util.Log;
-
 import pub.doric.DoricContext;
 import pub.doric.async.AsyncResult;
 import pub.doric.utils.DoricConstant;

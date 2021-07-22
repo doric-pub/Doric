@@ -37,10 +37,10 @@ import androidx.annotation.RequiresApi;
  * @CreateDate: 2019-07-31
  */
 public class DoricLayer extends FrameLayout {
-    private Path mCornerPath = new Path();
+    private final Path mCornerPath = new Path();
     private Paint mShadowPaint;
     private Paint mBorderPaint;
-    private RectF mRect = new RectF();
+    private final RectF mRect = new RectF();
     private float[] mCornerRadii;
 
     public DoricLayer(@NonNull Context context) {

@@ -20,8 +20,8 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.FrameLayout;
 
+import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
@@ -48,8 +48,8 @@ import pub.doric.widget.HVScrollView;
 @DoricPlugin(name = "Scroller")
 public class ScrollerNode extends SuperNode<HVScrollView> implements IDoricScrollable {
     private String mChildViewId;
-    private ViewNode mChildNode;
-    private Set<DoricScrollChangeListener> listeners = new HashSet<>();
+    private ViewNode<?> mChildNode;
+    private final Set<DoricScrollChangeListener> listeners = new HashSet<>();
     private String onScrollFuncId;
     private String onScrollEndFuncId;
     private DoricJSDispatcher jsDispatcher = new DoricJSDispatcher();
@@ -96,7 +96,7 @@ public class ScrollerNode extends SuperNode<HVScrollView> implements IDoricScrol
     }
 
     @Override
-    public ViewNode getSubNodeById(String id) {
+    public ViewNode<?> getSubNodeById(String id) {
         return id.equals(mChildNode.getId()) ? mChildNode : null;
     }
 
@@ -118,17 +118,15 @@ public class ScrollerNode extends SuperNode<HVScrollView> implements IDoricScrol
                     listener.onScrollChange(v, scrollX, scrollY, oldScrollX, oldScrollY);
                 }
                 if (!TextUtils.isEmpty(onScrollFuncId)) {
-                    if (!TextUtils.isEmpty(onScrollFuncId)) {
-                        jsDispatcher.dispatch(new Callable<AsyncResult>() {
-                            @Override
-                            public AsyncResult call() throws Exception {
-                                return callJSResponse(onScrollFuncId, new JSONBuilder()
-                                        .put("x", DoricUtils.px2dp(scrollX))
-                                        .put("y", DoricUtils.px2dp(scrollY))
-                                        .toJSONObject());
-                            }
-                        });
-                    }
+                    jsDispatcher.dispatch(new Callable<AsyncResult<JSDecoder>>() {
+                        @Override
+                        public AsyncResult<JSDecoder> call() throws Exception {
+                            return callJSResponse(onScrollFuncId, new JSONBuilder()
+                                    .put("x", DoricUtils.px2dp(scrollX))
+                                    .put("y", DoricUtils.px2dp(scrollY))
+                                    .toJSONObject());
+                        }
+                    });
                 }
             }
 

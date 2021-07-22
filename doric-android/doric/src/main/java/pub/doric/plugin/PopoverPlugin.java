@@ -41,7 +41,7 @@ public class PopoverPlugin extends DoricJavaPlugin {
             final JSObject jsObject = decoder.decode().asObject();
             getDoricContext().getDriver().asyncCall(new Callable<Object>() {
                 @Override
-                public Object call() throws Exception {
+                public Object call() {
                     ViewGroup decorView = (ViewGroup) getDoricContext().getRootNode().getNodeView().getRootView();
                     if (mFullScreenView == null) {
                         mFullScreenView = new FrameLayout(getDoricContext().getContext());
@@ -77,7 +77,7 @@ public class PopoverPlugin extends DoricJavaPlugin {
                     mFullScreenView.bringToFront();
                     String viewId = jsObject.getProperty("id").asString().value();
                     String type = jsObject.getProperty("type").asString().value();
-                    ViewNode node = ViewNode.create(getDoricContext(), type);
+                    ViewNode<?> node = ViewNode.create(getDoricContext(), type);
                     node.setId(viewId);
                     node.init(new FrameLayout.LayoutParams(0, 0));
                     node.blend(jsObject.getProperty("props").asObject());
@@ -113,10 +113,10 @@ public class PopoverPlugin extends DoricJavaPlugin {
         try {
             getDoricContext().getDriver().asyncCall(new Callable<Object>() {
                 @Override
-                public Object call() throws Exception {
+                public Object call() {
                     if (value.isObject()) {
                         String viewId = value.asObject().getProperty("id").asString().value();
-                        ViewNode node = getDoricContext().targetViewNode(viewId);
+                        ViewNode<?> node = getDoricContext().targetViewNode(viewId);
                         dismissViewNode(node);
                     } else {
                         dismissPopover();
@@ -148,7 +148,7 @@ public class PopoverPlugin extends DoricJavaPlugin {
         }
     }
 
-    private void dismissViewNode(ViewNode node) {
+    private void dismissViewNode(ViewNode<?> node) {
         getDoricContext().removeHeadNode(TYPE, node);
         mFullScreenView.removeView(node.getNodeView());
         if (getDoricContext().allHeadNodes(TYPE).isEmpty()) {
@@ -159,7 +159,7 @@ public class PopoverPlugin extends DoricJavaPlugin {
     }
 
     private void dismissPopover() {
-        for (ViewNode node : getDoricContext().allHeadNodes(TYPE)) {
+        for (ViewNode<?> node : getDoricContext().allHeadNodes(TYPE)) {
             dismissViewNode(node);
         }
     }

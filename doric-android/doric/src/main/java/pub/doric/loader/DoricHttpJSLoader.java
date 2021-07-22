@@ -32,7 +32,7 @@ import pub.doric.async.AsyncResult;
  * @CreateDate: 2019-11-23
  */
 public class DoricHttpJSLoader implements IDoricJSLoader {
-    private OkHttpClient okHttpClient = new OkHttpClient();
+    private final OkHttpClient okHttpClient = new OkHttpClient();
 
     @Override
     public boolean filter(String source) {
@@ -51,6 +51,7 @@ public class DoricHttpJSLoader implements IDoricJSLoader {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) {
                 try {
+                    assert response.body() != null;
                     ret.setResult(response.body().string());
                 } catch (Exception e) {
                     ret.setError(e);

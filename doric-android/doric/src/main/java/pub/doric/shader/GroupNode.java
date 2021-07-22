@@ -32,7 +32,7 @@ import pub.doric.DoricContext;
  * @CreateDate: 2019-07-20
  */
 public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
-    protected ArrayList<ViewNode> mChildNodes = new ArrayList<>();
+    protected ArrayList<ViewNode<?>> mChildNodes = new ArrayList<>();
     protected ArrayList<String> mChildViewIds = new ArrayList<>();
 
     public GroupNode(DoricContext doricContext) {
@@ -75,7 +75,7 @@ public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
             }
             String type = model.getProperty("type").asString().value();
             if (idx < mChildNodes.size()) {
-                ViewNode oldNode = mChildNodes.get(idx);
+                ViewNode<?> oldNode = mChildNodes.get(idx);
                 if (id.equals(oldNode.getId())) {
                     //The same,skip
                 } else {
@@ -88,7 +88,7 @@ public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
                             //Replace this view
                             mChildNodes.remove(idx);
                             mView.removeView(oldNode.getNodeView());
-                            ViewNode newNode = ViewNode.create(getDoricContext(), type);
+                            ViewNode<?> newNode = ViewNode.create(getDoricContext(), type);
                             newNode.setId(id);
                             newNode.init(this);
                             newNode.blend(model.getProperty("props").asObject());
@@ -99,7 +99,7 @@ public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
                         //Find in remain nodes
                         int position = -1;
                         for (int start = idx + 1; start < mChildNodes.size(); start++) {
-                            ViewNode node = mChildNodes.get(start);
+                            ViewNode<?> node = mChildNodes.get(start);
                             if (id.equals(node.getId())) {
                                 //Found
                                 position = start;
@@ -108,8 +108,8 @@ public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
                         }
                         if (position >= 0) {
                             //Found swap idx,position
-                            ViewNode reused = mChildNodes.remove(position);
-                            ViewNode abandoned = mChildNodes.remove(idx);
+                            ViewNode<?> reused = mChildNodes.remove(position);
+                            ViewNode<?> abandoned = mChildNodes.remove(idx);
                             mChildNodes.set(idx, reused);
                             mChildNodes.set(position, abandoned);
                             //View swap index
@@ -119,7 +119,7 @@ public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
                             mView.addView(abandoned.getNodeView(), position);
                         } else {
                             //Not found,insert
-                            ViewNode newNode = ViewNode.create(getDoricContext(), type);
+                            ViewNode<?> newNode = ViewNode.create(getDoricContext(), type);
                             newNode.setId(id);
                             newNode.init(this);
                             newNode.blend(model.getProperty("props").asObject());
@@ -131,7 +131,7 @@ public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
                 }
             } else {
                 //Insert
-                ViewNode newNode = ViewNode.create(getDoricContext(), type);
+                ViewNode<?> newNode = ViewNode.create(getDoricContext(), type);
                 newNode.setId(id);
                 newNode.init(this);
                 newNode.blend(model.getProperty("props").asObject());
@@ -141,7 +141,7 @@ public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
         }
         int size = mChildNodes.size();
         for (int idx = mChildViewIds.size(); idx < size; idx++) {
-            ViewNode viewNode = mChildNodes.remove(mChildViewIds.size());
+            ViewNode<?> viewNode = mChildNodes.remove(mChildViewIds.size());
             mView.removeView(viewNode.getNodeView());
         }
     }
@@ -149,7 +149,7 @@ public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
     @Override
     protected void blendSubNode(JSObject subProp) {
         String subNodeId = subProp.getProperty("id").asString().value();
-        for (ViewNode node : mChildNodes) {
+        for (ViewNode<?> node : mChildNodes) {
             if (subNodeId.equals(node.getId())) {
                 node.blend(subProp.getProperty("props").asObject());
                 break;
@@ -158,8 +158,8 @@ public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
     }
 
     @Override
-    public ViewNode getSubNodeById(String id) {
-        for (ViewNode node : mChildNodes) {
+    public ViewNode<?> getSubNodeById(String id) {
+        for (ViewNode<?> node : mChildNodes) {
             if (id.equals(node.getId())) {
                 return node;
             }
@@ -174,7 +174,7 @@ public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
         mChildViewIds.clear();
     }
 
-    public ArrayList<ViewNode> getChildNodes() {
+    public ArrayList<ViewNode<?>> getChildNodes() {
         return mChildNodes;
     }
 }

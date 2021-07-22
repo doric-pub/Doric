@@ -69,7 +69,7 @@ import pub.doric.utils.DoricMetaInfo;
  */
 public class DoricRegistry {
     private final Map<String, DoricMetaInfo<DoricJavaPlugin>> pluginInfoMap = new HashMap<>();
-    private final Map<String, DoricMetaInfo<ViewNode>> nodeInfoMap = new HashMap<>();
+    private final Map<String, DoricMetaInfo<ViewNode<?>>> nodeInfoMap = new HashMap<>();
 
     private final Set<IDoricMonitor> monitors = new HashSet<>();
 
@@ -141,14 +141,14 @@ public class DoricRegistry {
         return pluginInfoMap.get(name);
     }
 
-    public void registerViewNode(Class<? extends ViewNode> pluginClass) {
-        DoricMetaInfo<ViewNode> doricMetaInfo = new DoricMetaInfo<>(pluginClass);
+    public void registerViewNode(Class<? extends ViewNode<?>> pluginClass) {
+        DoricMetaInfo<ViewNode<?>> doricMetaInfo = new DoricMetaInfo<>(pluginClass);
         if (!TextUtils.isEmpty(doricMetaInfo.getName())) {
             nodeInfoMap.put(doricMetaInfo.getName(), doricMetaInfo);
         }
     }
 
-    public DoricMetaInfo<ViewNode> acquireViewNodeInfo(String name) {
+    public DoricMetaInfo<ViewNode<?>> acquireViewNodeInfo(String name) {
         return nodeInfoMap.get(name);
     }
 

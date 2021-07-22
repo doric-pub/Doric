@@ -450,9 +450,10 @@ public class InputNode extends ViewNode<EditText> implements TextWatcher, View.O
         }
         AsyncResult<JSDecoder> asyncResult = callJSResponse(beforeTextChangeId,
                 new JSONBuilder()
-                        .put("start", "")
-                        .put("length", "")
-                        .put("text", "")
+                        .put("editing", dest.toString())
+                        .put("start", dstart)
+                        .put("length", dend - dstart)
+                        .put("replacement", source.toString())
                         .toJSONObject());
         JSDecoder jsDecoder = asyncResult.synchronous().get();
         boolean ret = true;

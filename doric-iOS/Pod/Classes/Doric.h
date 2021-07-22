@@ -59,4 +59,6 @@
 + (BOOL)isEnableRenderSnapshot;
 
 + (void)setEnvironmentValue:(NSDictionary *)value;
+
++ (DoricJSLoaderManager *)jsLoaderManager;
 @end

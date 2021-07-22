@@ -25,6 +25,7 @@
 #import "DoricConstant.h"
 #import "DoricContextManager.h"
 #import "DoricPerformanceProfile.h"
+#import "DoricSingleton.h"
 
 @interface DoricNativeDriver ()
 @property(nonatomic, strong) DoricJSEngine *jsExecutor;
@@ -33,6 +34,10 @@
 @implementation DoricNativeDriver
 
 @dynamic registry;
+
++ (instancetype)instance {
+    return DoricSingleton.instance.nativeDriver;
+}
 
 - (instancetype)init {
     if (self = [super init]) {

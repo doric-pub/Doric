@@ -77,7 +77,7 @@ public class DoricSingleton {
         }
     }
 
-    public DoricJSLoaderManager getJsLoaderManager() {
+    public DoricJSLoaderManager getJSLoaderManager() {
         return jsLoaderManager;
     }
 

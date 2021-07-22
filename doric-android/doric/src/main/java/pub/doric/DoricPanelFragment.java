@@ -35,7 +35,6 @@ import java.util.concurrent.Callable;
 
 import pub.doric.async.AsyncCall;
 import pub.doric.async.AsyncResult;
-import pub.doric.loader.DoricJSLoaderManager;
 import pub.doric.navbar.BaseDoricNavBar;
 import pub.doric.navigator.IDoricNavigator;
 import pub.doric.utils.DoricLog;
@@ -198,7 +197,7 @@ public class DoricPanelFragment extends Fragment implements IDoricNavigator {
         final String alias = argument.getString("alias");
         String source = argument.getString("source");
         final String extra = argument.getString("extra");
-        DoricSingleton.getInstance().getJsLoaderManager().loadJSBundle(source).setCallback(new AsyncResult.Callback<String>() {
+        DoricSingleton.getInstance().getJSLoaderManager().loadJSBundle(source).setCallback(new AsyncResult.Callback<String>() {
             @Override
             public void onResult(String result) {
                 if (getActivity() == null) {

@@ -69,8 +69,8 @@ public class DoricJSLoaderManager {
         return ret;
     }
 
-
+    @Deprecated
     public static DoricJSLoaderManager getInstance() {
-        return DoricSingleton.getInstance().getJsLoaderManager();
+        return DoricSingleton.getInstance().getJSLoaderManager();
     }
 }

@@ -32,6 +32,7 @@ typedef NS_ENUM(NSInteger, DoricQueueMode) {
 NS_ASSUME_NONNULL_BEGIN
 
 @interface DoricNativeDriver : NSObject <DoricDriverProtocol>
++ (instancetype)instance DEPRECATED_MSG_ATTRIBUTE("Do not use this api");;
 @end
 
 NS_ASSUME_NONNULL_END

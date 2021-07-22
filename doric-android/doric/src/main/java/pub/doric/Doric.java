@@ -22,6 +22,7 @@ import com.facebook.soloader.SoLoader;
 import java.io.IOException;
 import java.util.Map;
 
+import pub.doric.loader.DoricJSLoaderManager;
 import pub.doric.loader.IDoricJSLoader;
 
 /**
@@ -65,7 +66,7 @@ public class Doric {
      * @param jsLoader Which added in global
      */
     public static void addJSLoader(IDoricJSLoader jsLoader) {
-        DoricSingleton.getInstance().getJsLoaderManager().addJSLoader(jsLoader);
+        DoricSingleton.getInstance().getJSLoaderManager().addJSLoader(jsLoader);
     }
 
     public void setEnvironmentValue(Map<String, Object> value) {
@@ -88,4 +89,7 @@ public class Doric {
         return DoricSingleton.getInstance().enableRenderSnapshot;
     }
 
+    public static DoricJSLoaderManager getJSLoaderManager() {
+        return DoricSingleton.getInstance().getJSLoaderManager();
+    }
 }

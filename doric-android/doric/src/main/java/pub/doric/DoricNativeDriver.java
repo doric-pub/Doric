@@ -50,6 +50,11 @@ public class DoricNativeDriver implements IDoricDriver {
         mJSHandler = doricJSEngine.getJSHandler();
     }
 
+    @Deprecated
+    public static DoricNativeDriver getInstance() {
+        return DoricSingleton.getInstance().getNativeDriver();
+    }
+
     @Override
     public AsyncResult<JSDecoder> invokeContextEntityMethod(final String contextId, final String method, final Object... args) {
         final AsyncResult<JSDecoder> asyncResult = new AsyncResult<>();

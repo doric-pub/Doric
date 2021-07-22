@@ -51,4 +51,8 @@
 + (void)setEnvironmentValue:(NSDictionary *)value {
     [DoricSingleton.instance setEnvironmentValue:value];
 }
+
++ (DoricJSLoaderManager *)jsLoaderManager {
+    return DoricSingleton.instance.jsLoaderManager;
+}
 @end

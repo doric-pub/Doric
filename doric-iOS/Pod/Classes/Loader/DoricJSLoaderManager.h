@@ -25,7 +25,7 @@
 #import "DoricAsyncResult.h"
 
 @interface DoricJSLoaderManager : NSObject
-+ (instancetype)instance;
++ (instancetype)instance DEPRECATED_MSG_ATTRIBUTE("Use Doric.jsLoaderManager instead");
 
 - (void)addJSLoader:(id <DoricLoaderProtocol>)loader;
 

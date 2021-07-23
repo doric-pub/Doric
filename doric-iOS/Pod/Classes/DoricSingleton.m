@@ -28,7 +28,7 @@
 - (instancetype)init {
     if (self = [super init]) {
         _libraries = [NSMutableSet new];
-        _registries = [NSHashTable new];
+        _registries = [NSHashTable weakObjectsHashTable];
         _envDic = [NSMutableDictionary new];
         _enablePerformance = NO;
         _enableRecordSnapshot = NO;

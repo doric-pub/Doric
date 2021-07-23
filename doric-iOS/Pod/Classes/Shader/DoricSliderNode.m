@@ -100,15 +100,15 @@
 
 - (void)afterBlended:(NSDictionary *)props {
     bool needToScroll = (self.propLoop && !self.loop)
-    || (![self.renderPageFuncId isEqualToString: self.propRenderPageFuncId])
-                    || (self.itemCount == 0 && self.propItemCount > 0);
-    
+            || (![self.renderPageFuncId isEqualToString:self.propRenderPageFuncId])
+            || (self.itemCount == 0 && self.propItemCount > 0);
+
     // handle item count
     if (self.itemCount != self.propItemCount) {
         self.itemCount = self.propItemCount;
         [self.view reloadData];
     }
-    
+
     // handle render page
     if ([self.renderPageFuncId isEqualToString:self.propRenderPageFuncId]) {
 
@@ -118,15 +118,15 @@
         [self.view reloadData];
         self.renderPageFuncId = self.propRenderPageFuncId;
     }
-    
+
     // handle loop
     self.loop = self.propLoop;
-    
+
     __weak typeof(self) _self = self;
     if (needToScroll) {
         dispatch_async(dispatch_get_main_queue(), ^{
             __strong typeof(_self) self = _self;
-            
+
             [self.view reloadData];
             [self.view setContentOffset:CGPointMake(1 * self.view.width, self.view.contentOffset.y) animated:false];
         });
@@ -159,7 +159,7 @@
     NSDictionary *props = model[@"props"];
     DoricSliderViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"doricCell" forIndexPath:indexPath];
     if (!cell.doricSlideItemNode) {
-        DoricSlideItemNode *slideItemNode = [[DoricSlideItemNode alloc] initWithContext:self.doricContext];
+        DoricSlideItemNode *slideItemNode = (DoricSlideItemNode *) [DoricViewNode create:self.doricContext withType:@"SlideItem"];
         [slideItemNode initWithSuperNode:self];
         cell.doricSlideItemNode = slideItemNode;
         [cell.contentView addSubview:slideItemNode.view];
@@ -272,13 +272,13 @@
 - (void)slidePage:(NSDictionary *)params withPromise:(DoricPromise *)promise {
     NSUInteger pageIndex = [params[@"page"] unsignedIntegerValue];
     BOOL smooth = [params[@"smooth"] boolValue];
-    
+
     if (self.loop) {
         [self.view setContentOffset:CGPointMake((pageIndex + 1) * self.view.width, self.view.contentOffset.y) animated:smooth];
     } else {
         [self.view setContentOffset:CGPointMake(pageIndex * self.view.width, self.view.contentOffset.y) animated:smooth];
     }
-   
+
     [promise resolve:nil];
     self.lastPosition = pageIndex;
     if (self.onPageSelectedFuncId && self.onPageSelectedFuncId.length > 0) {

@@ -159,7 +159,7 @@
     DoricTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseId ?: @"doriccell"];
     if (!cell) {
         cell = [[DoricTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseId ?: @"doriccell"];
-        DoricListItemNode *listItemNode = [[DoricListItemNode alloc] initWithContext:self.doricContext];
+        DoricListItemNode *listItemNode = (DoricListItemNode *) [DoricViewNode create:self.doricContext withType:@"ListItem"];
         [listItemNode initWithSuperNode:self];
         cell.doricListItemNode = listItemNode;
         cell.backgroundColor = [UIColor clearColor];

@@ -11,7 +11,10 @@ import org.json.JSONObject;
 
 import java.io.EOFException;
 import java.net.ConnectException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.WeakHashMap;
 
@@ -120,13 +123,14 @@ public class DoricDev {
         if (debuggable != null) {
             debuggable.stopDebug(true);
         }
-        final DoricContext context = matchContext(source);
-        if (context == null) {
+        List<DoricContext> contexts = matchAllContext(source);
+        if (contexts.size() <= 0) {
             DoricLog.d("Cannot find  context source %s for debugging", source);
             wsClient.sendToDebugger("DEBUG_STOP", new JSONBuilder()
                     .put("msg", "Cannot find suitable alive context for debugging")
                     .toJSONObject());
         } else {
+            final DoricContext context = contexts.get(contexts.size() - 1);
             wsClient.sendToDebugger(
                     "DEBUG_RES",
                     new JSONBuilder()
@@ -217,40 +221,45 @@ public class DoricDev {
         });
     }
 
-    public DoricContext matchContext(String source) {
+    private List<DoricContext> matchAllContext(String source) {
+        List<DoricContext> list = new ArrayList<>();
         source = source.replace(".js", "").replace(".ts", "");
         for (DoricContext context : DoricContextManager.aliveContexts()) {
             String doricSource = context.getSource().replace(".js", "").replace(".ts", "");
             if (source.equals(doricSource) || doricSource.equals("__dev__")) {
-                return context;
+                list.add(context);
             }
         }
-        return null;
+        return list;
     }
 
     public void reload(String source, final String script) {
-        final DoricContext context = matchContext(source);
-        if (context == null) {
+        List<DoricContext> contexts = matchAllContext(source);
+        if (contexts.size() <= 0) {
             DoricLog.d("Cannot find context source %s for reload", source);
-        } else if (context.getDriver() instanceof DoricDebugDriver) {
-            DoricLog.d("Context source %s in debugging,skip reload", source);
         } else {
-            DoricLog.d("Context reload :id %s,source %s ", context.getContextId(), source);
-            uiHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    context.reload(script);
-                    if (reloadingContexts.get(context.getContextId()) == null) {
-                        reloadingContexts.put(context.getContextId(), context);
-                    }
+            for (final DoricContext context : contexts) {
+                if (context.getDriver() instanceof DoricDebugDriver) {
+                    DoricLog.d("Context source %s in debugging,skip reload", source);
+                } else {
+                    DoricLog.d("Context reload :id %s,source %s ", context.getContextId(), source);
+                    uiHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            context.reload(script);
+                            if (reloadingContexts.get(context.getContextId()) == null) {
+                                reloadingContexts.put(context.getContextId(), context);
+                            }
 
-                    for (StatusCallback callback : callbacks) {
-                        callback.onReload(context, script);
-                    }
+                            for (StatusCallback callback : callbacks) {
+                                callback.onReload(context, script);
+                            }
+                        }
+                    });
                 }
-            });
-
+            }
         }
+
     }
 
     public boolean isReloadingContext(DoricContext context) {

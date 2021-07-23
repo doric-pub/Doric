@@ -165,7 +165,9 @@ public class InputNode extends ViewNode<EditText> implements TextWatcher, View.O
                 break;
             case "text":
                 String text = prop.isString() ? prop.asString().toString() : "";
-                view.setText(text);
+                if (!view.getText().toString().equals(text)) {
+                    view.setText(text);
+                }
                 view.setSelection(text.length());
                 break;
             case "textSize":

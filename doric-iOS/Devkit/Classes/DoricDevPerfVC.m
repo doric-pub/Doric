@@ -151,7 +151,7 @@
 
             [self.argumentName also:^(UILabel *it) {
                 it.hidden = NO;
-                it.text = params;
+                it.text = [params stringByReplacingOccurrencesOfString:@"\n" withString:@"\t"];
                 it.width = self.expandedView.width - 15;
                 it.height = 16;
                 it.left = 15;

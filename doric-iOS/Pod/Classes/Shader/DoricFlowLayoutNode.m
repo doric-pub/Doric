@@ -346,7 +346,7 @@
     [collectionView registerClass:[DoricFlowLayoutViewCell class] forCellWithReuseIdentifier:identifier];
     DoricFlowLayoutViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
     if (!cell.viewNode) {
-        DoricFlowLayoutItemNode *itemNode = [[DoricFlowLayoutItemNode alloc] initWithContext:self.doricContext];
+        DoricFlowLayoutItemNode *itemNode = (DoricFlowLayoutItemNode *) [DoricViewNode create:self.doricContext withType:@"FlowLayoutItem"];
         [itemNode initWithSuperNode:self];
         cell.viewNode = itemNode;
         [cell.contentView addSubview:itemNode.view];

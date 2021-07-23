@@ -119,10 +119,10 @@ public class NavBarPlugin extends DoricJavaPlugin {
             final JSObject jsObject = decoder.decode().asObject();
             getDoricContext().getDriver().asyncCall(new Callable<Object>() {
                 @Override
-                public Object call() throws Exception {
+                public Object call() {
                     String viewId = jsObject.getProperty("id").asString().value();
                     String type = jsObject.getProperty("type").asString().value();
-                    ViewNode node = ViewNode.create(getDoricContext(), type);
+                    ViewNode<?> node = ViewNode.create(getDoricContext(), type);
                     node.setId(viewId);
                     node.init(new FrameLayout.LayoutParams(0, 0));
                     node.blend(jsObject.getProperty("props").asObject());
@@ -162,10 +162,10 @@ public class NavBarPlugin extends DoricJavaPlugin {
             final JSObject jsObject = decoder.decode().asObject();
             getDoricContext().getDriver().asyncCall(new Callable<Object>() {
                 @Override
-                public Object call() throws Exception {
+                public Object call() {
                     String viewId = jsObject.getProperty("id").asString().value();
                     String type = jsObject.getProperty("type").asString().value();
-                    ViewNode node = ViewNode.create(getDoricContext(), type);
+                    ViewNode<?> node = ViewNode.create(getDoricContext(), type);
                     node.setId(viewId);
                     node.init(new FrameLayout.LayoutParams(0, 0));
                     node.blend(jsObject.getProperty("props").asObject());
@@ -205,10 +205,10 @@ public class NavBarPlugin extends DoricJavaPlugin {
             final JSObject jsObject = decoder.decode().asObject();
             getDoricContext().getDriver().asyncCall(new Callable<Object>() {
                 @Override
-                public Object call() throws Exception {
+                public Object call() {
                     String viewId = jsObject.getProperty("id").asString().value();
                     String type = jsObject.getProperty("type").asString().value();
-                    ViewNode node = ViewNode.create(getDoricContext(), type);
+                    ViewNode<?> node = ViewNode.create(getDoricContext(), type);
                     node.setId(viewId);
                     node.init(new FrameLayout.LayoutParams(0, 0));
                     node.blend(jsObject.getProperty("props").asObject());

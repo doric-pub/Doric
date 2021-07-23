@@ -175,7 +175,8 @@
 }
 
 
-- (DoricContext *)matchContext:(NSString *)source {
+- (NSArray<DoricContext *> *)matchAllContexts:(NSString *)source {
+    NSMutableArray <DoricContext *> *array = [NSMutableArray new];
     source = [[source stringByReplacingOccurrencesOfString:@".js"
                                                 withString:@""]
             stringByReplacingOccurrencesOfString:@".ts"
@@ -188,37 +189,44 @@
                                           withString:@""
         ];
         if ([source isEqualToString:contextSource] || [contextSource isEqualToString:@"__dev__"]) {
-            return context;
+            [array addObject:context];
         }
     }
-    return nil;
+    return array;
 }
 
 - (void)reload:(NSString *)source script:(NSString *)script {
-    DoricContext *context = [self matchContext:source];
-    if (context) {
-        if ([context.driver isKindOfClass:DoricDebugDriver.class]) {
-            DoricLog(@"Context source %@ in debugging,skip reload", source);
-        } else {
-            DoricLog(@"Context reload :id %@,source %@", context.contextId, source);
-
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [context reload:script];
-                [self.reloadingContexts addObject:context];
-                for (id <DoricDevStatusCallback> callback in self.callbacks) {
-                    [callback onReload:context script:script];
-                }
-            });
-        }
-    } else {
+    NSArray<DoricContext *> *contexts = [self matchAllContexts:source];
+    if (contexts.count <= 0) {
         DoricLog(@"Cannot find context source %@ for reload", source);
+    } else {
+        [contexts forEach:^(DoricContext *context) {
+            if ([context.driver isKindOfClass:DoricDebugDriver.class]) {
+                DoricLog(@"Context source %@ in debugging,skip reload", source);
+            } else {
+                DoricLog(@"Context reload :id %@,source %@", context.contextId, source);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [context reload:script];
+                    [self.reloadingContexts addObject:context];
+                    for (id <DoricDevStatusCallback> callback in self.callbacks) {
+                        [callback onReload:context script:script];
+                    }
+                });
+            }
+        }];
     }
 }
 
 - (void)startDebugging:(NSString *)source {
     [self.debuggable stopDebug:YES];
-    DoricContext *context = [self matchContext:source];
-    if (context) {
+    NSArray<DoricContext *> *contexts = [self matchAllContexts:source];
+    if (contexts.count <= 0) {
+        DoricLog(@"Cannot find context source %@ for debugging", source);
+        [self.wsClient sendToDebugger:@"DEBUG_STOP" payload:@{
+                @"msg": @"Cannot find suitable alive context for debugging"
+        }];
+    } else {
+        DoricContext *context = contexts.lastObject;
         [self.wsClient sendToDebugger:@"DEBUG_RES" payload:@{
                 @"contextId": context.contextId
         }];
@@ -229,11 +237,6 @@
                 [callback onStartDebugging:context];
             }
         });
-    } else {
-        DoricLog(@"Cannot find context source %@ for debugging", source);
-        [self.wsClient sendToDebugger:@"DEBUG_STOP" payload:@{
-                @"msg": @"Cannot find suitable alive context for debugging"
-        }];
     }
 };
 

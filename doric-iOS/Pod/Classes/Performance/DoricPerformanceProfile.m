@@ -38,7 +38,7 @@
         _anchorQueue = dispatch_queue_create("doric.performance.profile", DISPATCH_QUEUE_SERIAL);
         _anchorMap = [NSMutableDictionary new];
         _enable = DoricSingleton.instance.enablePerformance;
-        _hooks = [NSHashTable new];
+        _hooks = [NSHashTable weakObjectsHashTable];
     }
     return self;
 }

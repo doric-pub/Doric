@@ -28,6 +28,15 @@ export declare class Input extends View {
     editable?: boolean;
     returnKeyType?: ReturnKeyType;
     onSubmitEditing?: (text: string) => void;
+    /**
+     * Called before text is changed
+     * @param editing: text already in box
+     * @param replacement: text which will replace part of editing
+     * @param start: the start index of replacing part
+     * @param length: the length of replacing part
+     *
+     * @returns: true means the replacement will take effect, otherwise does not
+     */
     beforeTextChange?: (change: {
         editing: string;
         start: number;

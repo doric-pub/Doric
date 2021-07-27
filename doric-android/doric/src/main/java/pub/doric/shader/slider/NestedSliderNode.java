@@ -151,7 +151,7 @@ public class NestedSliderNode extends GroupNode<ViewPager> implements ViewPager.
             JSObject model = getSubModel(id);
             String type = model.getProperty("type").asString().value();
             if (idx < mChildNodes.size()) {
-                ViewNode oldNode = mChildNodes.get(idx);
+                ViewNode<?> oldNode = mChildNodes.get(idx);
                 if (id.equals(oldNode.getId())) {
                     //The same,skip
                 } else {
@@ -164,7 +164,7 @@ public class NestedSliderNode extends GroupNode<ViewPager> implements ViewPager.
                             //Replace this view
                             mChildNodes.remove(idx);
                             slideItems.remove(oldNode.getNodeView());
-                            ViewNode newNode = ViewNode.create(getDoricContext(), type);
+                            ViewNode<?> newNode = ViewNode.create(getDoricContext(), type);
                             newNode.setId(id);
                             newNode.init(this);
                             newNode.blend(model.getProperty("props").asObject());
@@ -175,7 +175,7 @@ public class NestedSliderNode extends GroupNode<ViewPager> implements ViewPager.
                         //Find in remain nodes
                         int position = -1;
                         for (int start = idx + 1; start < mChildNodes.size(); start++) {
-                            ViewNode node = mChildNodes.get(start);
+                            ViewNode<?> node = mChildNodes.get(start);
                             if (id.equals(node.getId())) {
                                 //Found
                                 position = start;
@@ -184,8 +184,8 @@ public class NestedSliderNode extends GroupNode<ViewPager> implements ViewPager.
                         }
                         if (position >= 0) {
                             //Found swap idx,position
-                            ViewNode reused = mChildNodes.remove(position);
-                            ViewNode abandoned = mChildNodes.remove(idx);
+                            ViewNode<?> reused = mChildNodes.remove(position);
+                            ViewNode<?> abandoned = mChildNodes.remove(idx);
                             mChildNodes.set(idx, reused);
                             mChildNodes.set(position, abandoned);
                             //View swap index
@@ -195,7 +195,7 @@ public class NestedSliderNode extends GroupNode<ViewPager> implements ViewPager.
                             slideItems.add(position, abandoned.getNodeView());
                         } else {
                             //Not found,insert
-                            ViewNode newNode = ViewNode.create(getDoricContext(), type);
+                            ViewNode<?> newNode = ViewNode.create(getDoricContext(), type);
                             newNode.setId(id);
                             newNode.init(this);
                             newNode.blend(model.getProperty("props").asObject());

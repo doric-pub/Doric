@@ -60,6 +60,7 @@ class StickDemo extends Panel {
                 }),
 
                 (new NestedSlider).also(v => {
+                    v.scrollable = false
                     this.sliderView = v;
                     v.onPageSlided = (idx) => {
                         this.refreshTabs(idx)

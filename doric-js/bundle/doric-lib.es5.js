@@ -3241,7 +3241,8 @@ function navigator(context) {
                 config.extra = JSON.stringify(config.extra);
             }
             return context.callNative(moduleName, 'push', {
-                source: source, config: config
+                source: source,
+                config: config
             });
         },
         pop: function (animated) {

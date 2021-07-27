@@ -207,7 +207,7 @@ public class NestedSliderNode extends GroupNode<ViewPager> implements ViewPager.
                 }
             } else {
                 //Insert
-                ViewNode newNode = ViewNode.create(getDoricContext(), type);
+                ViewNode<?> newNode = ViewNode.create(getDoricContext(), type);
                 newNode.setId(id);
                 newNode.init(this);
                 newNode.blend(model.getProperty("props").asObject());
@@ -217,7 +217,7 @@ public class NestedSliderNode extends GroupNode<ViewPager> implements ViewPager.
         }
         int size = mChildNodes.size();
         for (int idx = mChildViewIds.size(); idx < size; idx++) {
-            ViewNode viewNode = mChildNodes.remove(mChildViewIds.size());
+            ViewNode<?> viewNode = mChildNodes.remove(mChildViewIds.size());
             slideItems.remove(viewNode.getNodeView());
         }
         mView.getAdapter().notifyDataSetChanged();

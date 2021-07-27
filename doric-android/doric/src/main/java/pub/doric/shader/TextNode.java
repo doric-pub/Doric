@@ -27,6 +27,7 @@ import android.text.Layout;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import androidx.core.content.res.ResourcesCompat;
@@ -95,9 +96,11 @@ public class TextNode extends ViewNode<TextView> {
                 if (prop.isNumber()) {
                     view.setTextColor(prop.asNumber().toInt());
                 } else if (prop.isObject()) {
-                    view.post(new Runnable() {
+                    view.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                         @Override
-                        public void run() {
+                        public boolean onPreDraw() {
+                            view.getViewTreeObserver().removeOnPreDrawListener(this);
+
                             final JSObject dict = prop.asObject();
 
                             int[] colors = null;
@@ -164,8 +167,11 @@ public class TextNode extends ViewNode<TextView> {
                             }
 
                             setGradientTextColor(view, angle, colors, locations);
+
+                            return true;
                         }
                     });
+                    view.invalidate();
                 }
                 break;
             case "textAlignment":
@@ -321,6 +327,11 @@ public class TextNode extends ViewNode<TextView> {
         final Rect textBound = new Rect(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE);
 
         final Layout layout = textView.getLayout();
+
+        if (layout == null) {
+            return;
+        }
+
         for (int i = 0; i < textView.getLineCount(); i++) {
             float left = layout.getLineLeft(i);
             float right = layout.getLineRight(i);

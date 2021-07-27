@@ -16,6 +16,7 @@
 package pub.doric.shader.slider;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,7 +28,6 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
-
 
 import java.util.ArrayList;
 
@@ -45,16 +45,60 @@ import pub.doric.shader.ViewNode;
  */
 @DoricPlugin(name = "NestedSlider")
 public class NestedSliderNode extends GroupNode<ViewPager> implements ViewPager.OnPageChangeListener {
-    private ArrayList<View> slideItems = new ArrayList<>();
+    private final ArrayList<View> slideItems = new ArrayList<>();
     private String onPageSlidedFuncId;
 
     public NestedSliderNode(DoricContext doricContext) {
         super(doricContext);
     }
 
+    private static class CustomViewPager extends ViewPager {
+        private boolean scrollable = true;
+
+        private int startX;
+        private int startY;
+
+        public CustomViewPager(Context context) {
+            super(context);
+        }
+
+        public void setScrollable(boolean scrollable) {
+            this.scrollable = scrollable;
+        }
+
+        @Override
+        public boolean onInterceptTouchEvent(MotionEvent ev) {
+            if (!scrollable) {
+                switch (ev.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        startX = (int) ev.getX();
+                        startY = (int) ev.getY();
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        int dX = (int) (ev.getX() - startX);
+                        int dY = (int) (ev.getY() - startY);
+                        return Math.abs(dX) > Math.abs(dY);
+                    case MotionEvent.ACTION_UP:
+                        break;
+                }
+            }
+            return super.onInterceptTouchEvent(ev);
+        }
+
+        @SuppressLint("ClickableViewAccessibility")
+        @Override
+        public boolean onTouchEvent(MotionEvent ev) {
+            if (scrollable) {
+                return super.onTouchEvent(ev);
+            } else {
+                return false;
+            }
+        }
+    }
+
     @Override
     protected ViewPager build() {
-        ViewPager viewPager = new ViewPager(getContext());
+        CustomViewPager viewPager = new CustomViewPager(getContext());
         viewPager.setAdapter(new PagerAdapter() {
             @Override
             public int getCount() {
@@ -82,7 +126,6 @@ public class NestedSliderNode extends GroupNode<ViewPager> implements ViewPager.
         return viewPager;
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void blend(ViewPager view, String name, JSValue prop) {
         switch (name) {
@@ -90,16 +133,7 @@ public class NestedSliderNode extends GroupNode<ViewPager> implements ViewPager.
                 if (!prop.isBoolean()) {
                     return;
                 }
-                if (prop.asBoolean().value()) {
-                    this.getView().setOnTouchListener(null);
-                } else {
-                    this.getView().setOnTouchListener(new View.OnTouchListener() {
-                        @Override
-                        public boolean onTouch(View v, MotionEvent event) {
-                            return true;
-                        }
-                    });
-                }
+                ((CustomViewPager) view).setScrollable(prop.asBoolean().value());
                 break;
             case "onPageSlided":
                 this.onPageSlidedFuncId = prop.asString().toString();

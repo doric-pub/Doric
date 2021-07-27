@@ -110,6 +110,8 @@
         }
         if (fontDescriptor) {
             font = [UIFont fontWithDescriptor:fontDescriptor size:0];
+        } else {
+            font = [UIFont systemFontOfSize:view.font.pointSize];
         }
         view.font = font;
     } else if ([name isEqualToString:@"maxWidth"]) {
@@ -200,7 +202,7 @@
 
 - (void)requestLayout {
     [super requestLayout];
-    
+
     [self.textGradientProps also:^(NSDictionary *dict) {
         if (CGSizeEqualToSize(self.textGradientSize, self.view.frame.size)) {
             return;

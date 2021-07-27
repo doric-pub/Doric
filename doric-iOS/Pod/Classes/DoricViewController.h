@@ -25,7 +25,7 @@
 extern NSString *const DORIC_MASK_RETRY;
 
 
-@interface DoricViewController : UIViewController <DoricNavigatorDelegate, DoricNavBarDelegate>
+@interface DoricViewController : UIViewController <DoricNavigatorDelegate, DoricNavBarDelegate, DoricStatusBarDelegate>
 @property(nonatomic, copy) NSString *source;
 @property(nonatomic, copy) NSString *alias;
 @property(nonatomic, copy) NSString *extra;

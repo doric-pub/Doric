@@ -163,6 +163,16 @@ NSString *const DORIC_MASK_RETRY = @"doric_mask_retry";
     self.navigationItem.titleView = view;
 }
 
+- (void)doric_statusBar_setHidden:(BOOL)hidden {
+    self.statusBarHidden = hidden;
+    [self setNeedsStatusBarAppearanceUpdate];
+}
+
+- (void)doric_statusBar_setMode:(int)mode {
+    self.statusBarMode = mode;
+    [self setNeedsStatusBarAppearanceUpdate];
+}
+
 - (BOOL)statusBarHidden {
     return _statusBarHidden;
 }
@@ -210,6 +220,7 @@ NSString *const DORIC_MASK_RETRY = @"doric_mask_retry";
             [self.doricPanel config:result alias:self.alias extra:self.extra];
             self.doricPanel.doricContext.navigator = self;
             self.doricPanel.doricContext.navBar = self;
+            self.doricPanel.doricContext.statusBar = self;
             self.doricPanel.doricContext.vc = self;
         });
     };

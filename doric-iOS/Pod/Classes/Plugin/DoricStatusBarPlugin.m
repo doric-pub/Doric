@@ -28,12 +28,8 @@
     __weak typeof(self) _self = self;
     [self.doricContext dispatchToMainQueue:^{
         __strong typeof(_self) self = _self;
-        if (self.doricContext.navBar) {
-            if ([self.doricContext.navBar isKindOfClass:DoricViewController.class]) {
-                DoricViewController *target = ((DoricViewController *) self.doricContext.navBar);
-                target.statusBarHidden = [param optBool:@"hidden"];
-                [target setNeedsStatusBarAppearanceUpdate];
-            }
+        if (self.doricContext.statusBar) {
+            [self.doricContext.statusBar doric_statusBar_setHidden:[param optBool:@"hidden"]];
         }
     }];
 }
@@ -42,12 +38,8 @@
     __weak typeof(self) _self = self;
     [self.doricContext dispatchToMainQueue:^{
         __strong typeof(_self) self = _self;
-        if (self.doricContext.navBar) {
-            if ([self.doricContext.navBar isKindOfClass:DoricViewController.class]) {
-                DoricViewController *target = ((DoricViewController *) self.doricContext.navBar);
-                target.statusBarMode = [[param optNumber:@"mode"] intValue];
-                [target setNeedsStatusBarAppearanceUpdate];
-            }
+        if (self.doricContext.statusBar) {
+            [self.doricContext.statusBar doric_statusBar_setMode:[[param optNumber:@"mode"] intValue]];
         }
     }];
 }

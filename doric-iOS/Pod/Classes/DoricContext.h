@@ -24,6 +24,7 @@
 #import "DoricDriverProtocol.h"
 #import "DoricNavigatorDelegate.h"
 #import "DoricNavBarDelegate.h"
+#import "DoricStatusBarDelegate.h"
 #import "DoricPerformanceProfile.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -34,6 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface DoricContext : NSObject
 @property(nonatomic, weak) id <DoricNavigatorDelegate> navigator;
 @property(nonatomic, weak) id <DoricNavBarDelegate> navBar;
+@property(nonatomic, weak) id <DoricStatusBarDelegate> statusBar;
 @property(nonatomic, weak) UIViewController *vc;
 @property(nonatomic, strong) NSString *contextId;
 @property(nonatomic, strong) id <DoricDriverProtocol> driver;

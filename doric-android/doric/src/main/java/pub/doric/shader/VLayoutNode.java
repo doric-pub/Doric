@@ -15,7 +15,7 @@
  */
 package pub.doric.shader;
 
-import android.widget.LinearLayout;
+import androidx.appcompat.widget.DoricLinearLayoutCompat;
 
 import pub.doric.DoricContext;
 import pub.doric.extension.bridge.DoricPlugin;
@@ -32,9 +32,9 @@ public class VLayoutNode extends LinearNode {
     }
 
     @Override
-    protected LinearLayout build() {
-        LinearLayout linearLayout = super.build();
-        linearLayout.setOrientation(LinearLayout.VERTICAL);
+    protected DoricLinearLayoutCompat build() {
+        DoricLinearLayoutCompat linearLayout = super.build();
+        linearLayout.setOrientation(DoricLinearLayoutCompat.VERTICAL);
         return linearLayout;
     }
 

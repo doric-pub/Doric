@@ -39,6 +39,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.DoricLinearLayoutCompat;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 
 import com.github.pengfeizhou.jscore.JSArray;
@@ -159,7 +160,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
             } else {
                 params = mLayoutParams;
             }
-            if (mLayoutParams instanceof LinearLayout.LayoutParams && ((LinearLayout.LayoutParams) mLayoutParams).weight > 0) {
+            if (mLayoutParams instanceof DoricLinearLayoutCompat.LayoutParams && ((DoricLinearLayoutCompat.LayoutParams) mLayoutParams).weight > 0) {
                 if (mSuperNode instanceof VLayoutNode) {
                     params.height = ViewGroup.LayoutParams.MATCH_PARENT;
                 } else if (mSuperNode instanceof HLayoutNode) {

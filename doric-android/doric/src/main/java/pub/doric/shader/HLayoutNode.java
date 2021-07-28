@@ -15,12 +15,12 @@
  */
 package pub.doric.shader;
 
-import android.widget.LinearLayout;
+
+import androidx.appcompat.widget.DoricLinearLayoutCompat;
 
 import pub.doric.DoricContext;
 import pub.doric.extension.bridge.DoricPlugin;
 
-import com.github.pengfeizhou.jscore.JSObject;
 
 /**
  * @Description: com.github.penfeizhou.doric.shader
@@ -34,9 +34,9 @@ public class HLayoutNode extends LinearNode {
     }
 
     @Override
-    protected LinearLayout build() {
-        LinearLayout linearLayout = super.build();
-        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+    protected DoricLinearLayoutCompat build() {
+        DoricLinearLayoutCompat linearLayout = super.build();
+        linearLayout.setOrientation(DoricLinearLayoutCompat.HORIZONTAL);
         return linearLayout;
     }
 }

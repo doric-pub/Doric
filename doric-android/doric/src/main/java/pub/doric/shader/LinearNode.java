@@ -18,7 +18,8 @@ package pub.doric.shader;
 import android.content.Context;
 import android.graphics.drawable.ShapeDrawable;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+
+import androidx.appcompat.widget.DoricLinearLayoutCompat;
 
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
@@ -31,9 +32,9 @@ import pub.doric.utils.DoricUtils;
  * @Author: pengfei.zhou
  * @CreateDate: 2019-07-23
  */
-public class LinearNode extends GroupNode<LinearLayout> {
+public class LinearNode extends GroupNode<DoricLinearLayoutCompat> {
 
-    private static class MaximumLinearLayout extends LinearLayout {
+    private static class MaximumLinearLayout extends DoricLinearLayoutCompat {
         private int maxWidth = Integer.MAX_VALUE;
         private int maxHeight = Integer.MAX_VALUE;
 
@@ -55,6 +56,11 @@ public class LinearNode extends GroupNode<LinearLayout> {
                 super.onMeasure(widthMeasureSpec, heightMeasureSpec);
             }
         }
+
+        @Override
+        protected void onLayout(boolean changed, int l, int t, int r, int b) {
+            super.onLayout(changed, l, t, r, b);
+        }
     }
 
     public LinearNode(DoricContext doricContext) {
@@ -75,32 +81,32 @@ public class LinearNode extends GroupNode<LinearLayout> {
     }
 
     @Override
-    protected void blendSubLayoutConfig(ViewNode viewNode, JSObject layoutConfig) {
+    protected void blendSubLayoutConfig(ViewNode<?> viewNode, JSObject layoutConfig) {
         super.blendSubLayoutConfig(viewNode, layoutConfig);
         JSValue jsValue = layoutConfig.getProperty("alignment");
         if (jsValue.isNumber()) {
-            ((LinearLayout.LayoutParams) viewNode.getLayoutParams()).gravity = jsValue.asNumber().toInt();
+            ((DoricLinearLayoutCompat.LayoutParams) viewNode.getLayoutParams()).gravity = jsValue.asNumber().toInt();
         }
         JSValue weight = layoutConfig.getProperty("weight");
         if (weight.isNumber()) {
-            ((LinearLayout.LayoutParams) viewNode.getLayoutParams()).weight = weight.asNumber().toInt();
+            ((DoricLinearLayoutCompat.LayoutParams) viewNode.getLayoutParams()).weight = weight.asNumber().toInt();
         }
     }
 
     @Override
     protected ViewGroup.LayoutParams generateDefaultLayoutParams() {
-        return new LinearLayout.LayoutParams(0, 0);
+        return new DoricLinearLayoutCompat.LayoutParams(0, 0);
     }
 
     @Override
-    protected LinearLayout build() {
-        LinearLayout linearLayout= new MaximumLinearLayout(getContext());
+    protected DoricLinearLayoutCompat build() {
+        DoricLinearLayoutCompat linearLayout = new MaximumLinearLayout(getContext());
         linearLayout.setBaselineAligned(false);
-        return  linearLayout;
+        return linearLayout;
     }
 
     @Override
-    protected void blend(LinearLayout view, String name, JSValue prop) {
+    protected void blend(DoricLinearLayoutCompat view, String name, JSValue prop) {
         switch (name) {
             case "space":
                 if (!prop.isNumber()) {
@@ -110,12 +116,12 @@ public class LinearNode extends GroupNode<LinearLayout> {
                 if (view.getDividerDrawable() == null) {
                     shapeDrawable = new ShapeDrawable();
                     shapeDrawable.setAlpha(0);
-                    view.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
+                    view.setShowDividers(DoricLinearLayoutCompat.SHOW_DIVIDER_MIDDLE);
                 } else {
                     shapeDrawable = (ShapeDrawable) view.getDividerDrawable();
                     view.setDividerDrawable(null);
                 }
-                if (view.getOrientation() == LinearLayout.VERTICAL) {
+                if (view.getOrientation() == DoricLinearLayoutCompat.VERTICAL) {
                     shapeDrawable.setIntrinsicHeight(DoricUtils.dp2px(prop.asNumber().toFloat()));
                 } else {
                     shapeDrawable.setIntrinsicWidth(DoricUtils.dp2px(prop.asNumber().toFloat()));

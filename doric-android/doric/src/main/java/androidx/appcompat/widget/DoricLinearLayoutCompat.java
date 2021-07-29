@@ -854,6 +854,9 @@ public class DoricLinearLayoutCompat extends ViewGroup {
                 final int totalLength = mTotalLength;
                 mTotalLength = Math.max(totalLength, totalLength + child.getMeasuredHeight() +
                         lp.topMargin + lp.bottomMargin + getNextLocationOffset(child));
+                if (hasDividerBeforeChildAt(i)) {
+                    mTotalLength += mDividerHeight;
+                }
             }
 
             // Add in our padding
@@ -1234,7 +1237,9 @@ public class DoricLinearLayoutCompat extends ViewGroup {
                     mTotalLength = Math.max(totalLength, totalLength + child.getMeasuredWidth() +
                             lp.leftMargin + lp.rightMargin + getNextLocationOffset(child));
                 }
-
+                if (mTotalLength > 0 && hasDividerBeforeChildAt(count)) {
+                    mTotalLength += mDividerWidth;
+                }
                 boolean matchHeightLocally = heightMode != MeasureSpec.EXACTLY &&
                         lp.height == LayoutParams.MATCH_PARENT;
 

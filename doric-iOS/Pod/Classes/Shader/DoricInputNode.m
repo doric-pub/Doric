@@ -225,6 +225,10 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
         } else {
             self.onSubmitEditing = nil;
         }
+    } else if ([name isEqualToString:@"enableHorizontalScrollBar"]) {
+        view.showsHorizontalScrollIndicator = [prop boolValue];;
+    } else if ([name isEqualToString:@"enableVerticalScrollBar"]) {
+        view.showsVerticalScrollIndicator = [prop boolValue];;
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }

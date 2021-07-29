@@ -100,6 +100,14 @@ static const void *kLayoutConfig = &kLayoutConfig;
     return self;
 }
 
+- (void)setMeasuredWidth:(CGFloat)measuredWidth {
+    _measuredWidth = MAX(0, measuredWidth);
+}
+
+- (void)setMeasuredHeight:(CGFloat)measuredHeight {
+    _measuredHeight = MAX(0, measuredHeight);
+}
+
 - (void)apply:(CGSize)frameSize {
     self.resolved = NO;
     [self measure:frameSize];
@@ -344,11 +352,14 @@ static const void *kLayoutConfig = &kLayoutConfig;
     if (contentWeight > 0) {
         CGFloat remaining = targetSize.height - contentHeight;
         contentWidth = 0;
+        contentHeight = 0;
+        had = NO;
         for (__kindof UIView *subview in self.view.subviews) {
             DoricLayout *layout = subview.doricLayout;
             if (layout.disabled) {
                 continue;
             }
+            had = YES;
             CGFloat measuredHeight = layout.measuredHeight + remaining / contentWeight * layout.weight;
             layout.measuredHeight = measuredHeight;
             //Need Remeasure
@@ -357,8 +368,11 @@ static const void *kLayoutConfig = &kLayoutConfig;
                     measuredHeight - layout.paddingTop - layout.paddingBottom)];
             layout.measuredHeight = measuredHeight;
             contentWidth = MAX(contentWidth, layout.takenWidth);
+            contentHeight += layout.takenHeight + self.spacing;
         }
-        contentHeight = targetSize.height;
+        if (had) {
+            contentHeight -= self.spacing;
+        }
     }
 
     if (self.widthSpec == DoricLayoutFit) {
@@ -395,12 +409,15 @@ static const void *kLayoutConfig = &kLayoutConfig;
 
     if (contentWeight > 0) {
         CGFloat remaining = targetSize.width - contentWidth;
+        contentWidth = 0;
         contentHeight = 0;
+        had = NO;
         for (__kindof UIView *subview in self.view.subviews) {
             DoricLayout *layout = subview.doricLayout;
             if (layout.disabled) {
                 continue;
             }
+            had = YES;
             CGFloat measuredWidth = layout.measuredWidth + remaining / contentWeight * layout.weight;
             layout.measuredWidth = measuredWidth;
             //Need Remeasure
@@ -408,9 +425,12 @@ static const void *kLayoutConfig = &kLayoutConfig;
                     measuredWidth - layout.paddingLeft - layout.paddingRight,
                     layout.measuredHeight - layout.paddingTop - layout.paddingBottom)];
             layout.measuredWidth = measuredWidth;
+            contentWidth += layout.takenWidth + self.spacing;
             contentHeight = MAX(contentHeight, layout.takenHeight);
         }
-        contentWidth = targetSize.width;
+        if (had) {
+            contentWidth -= self.spacing;
+        }
     }
 
     if (self.widthSpec == DoricLayoutFit) {

@@ -125,6 +125,14 @@ __decorate([
 ], Input.prototype, "onSubmitEditing", void 0);
 __decorate([
     Property,
+    __metadata("design:type", Boolean)
+], Input.prototype, "enableHorizontalScrollBar", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Boolean)
+], Input.prototype, "enableVerticalScrollBar", void 0);
+__decorate([
+    Property,
     __metadata("design:type", Function)
 ], Input.prototype, "beforeTextChange", void 0);
 export var InputType;

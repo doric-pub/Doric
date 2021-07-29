@@ -81,6 +81,12 @@ export class Input extends View {
     @Property
     onSubmitEditing?: (text: string) => void
 
+    @Property
+    enableHorizontalScrollBar?: boolean
+
+    @Property
+    enableVerticalScrollBar?: boolean
+
     /**
      * Called before text is changed
      * @param editing: text already in box

@@ -28,6 +28,8 @@ export declare class Input extends View {
     editable?: boolean;
     returnKeyType?: ReturnKeyType;
     onSubmitEditing?: (text: string) => void;
+    enableHorizontalScrollBar?: boolean;
+    enableVerticalScrollBar?: boolean;
     /**
      * Called before text is changed
      * @param editing: text already in box

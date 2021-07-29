@@ -2295,6 +2295,14 @@ __decorate$3([
 ], Input.prototype, "onSubmitEditing", void 0);
 __decorate$3([
     Property,
+    __metadata$3("design:type", Boolean)
+], Input.prototype, "enableHorizontalScrollBar", void 0);
+__decorate$3([
+    Property,
+    __metadata$3("design:type", Boolean)
+], Input.prototype, "enableVerticalScrollBar", void 0);
+__decorate$3([
+    Property,
     __metadata$3("design:type", Function)
 ], Input.prototype, "beforeTextChange", void 0);
 exports.InputType = void 0;

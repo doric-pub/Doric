@@ -380,6 +380,18 @@ public class InputNode extends ViewNode<EditText> implements TextWatcher, View.O
                     }
                 });
                 break;
+            case "enableHorizontalScrollBar":
+                if (!prop.isBoolean()) {
+                    return;
+                }
+                view.setHorizontalScrollBarEnabled(prop.asBoolean().value());
+                break;
+            case "enableVerticalScrollBar":
+                if (!prop.isBoolean()) {
+                    return;
+                }
+                view.setVerticalScrollBarEnabled(prop.asBoolean().value());
+                break;
             default:
                 super.blend(view, name, prop);
                 break;

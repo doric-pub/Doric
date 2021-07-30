@@ -245,9 +245,6 @@ public class NestedSliderNode extends GroupNode<ViewPager> implements ViewPager.
         int page = params.getProperty("page").asNumber().toInt();
         boolean smooth = params.getProperty("smooth").asBoolean().value();
         mView.setCurrentItem(page, smooth);
-        if (!TextUtils.isEmpty(onPageSlidedFuncId)) {
-            callJSResponse(onPageSlidedFuncId, page);
-        }
         promise.resolve();
     }
 

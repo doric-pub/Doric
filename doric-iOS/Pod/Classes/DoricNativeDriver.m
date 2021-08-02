@@ -109,8 +109,6 @@
 
 - (DoricAsyncResult *)invokeContextEntity:(NSString *)contextId method:(NSString *)method arguments:(va_list)args {
     NSMutableArray *array = [[NSMutableArray alloc] init];
-    [array addObject:contextId];
-    [array addObject:method];
     id arg = va_arg(args, id);
     while (arg != nil) {
         [array addObject:arg];

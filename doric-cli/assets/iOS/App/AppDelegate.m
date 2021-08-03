@@ -1,11 +1,3 @@
-//
-//  AppDelegate.m
-//  Example
-//
-//  Created by pengfei.zhou on 2019/12/5.
-//  Copyright © 2019 pengfei.zhou. All rights reserved.
-//
-
 #import "AppDelegate.h"
 #import <DoricCore/Doric.h>
 #if __has_include(<SDWebImage/SDWebImage.h>)

@@ -1,5 +1,5 @@
 include ':app'
-rootProject.name='TemplateLibrary'
+rootProject.name='Example'
 
 include ":lib"
 project(":lib").projectDir = file("../../android")

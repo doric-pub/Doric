@@ -1,7 +1,6 @@
 import fs from "fs"
 import path from "path"
-import { exec } from "child_process"
-import { getAssetsDir } from "./util"
+import { getAssetsDir, getLibAssetsDir } from "./util"
 import { Shell } from "./shell";
 
 const targetJSPath = getAssetsDir();
@@ -79,7 +78,7 @@ async function initiOS(dir: string, name: string) {
     console.log(`Create Doric iOS Project Success`.green);
 }
 
-export default async function create(name: string) {
+export async function create(name: string) {
     const cwd = path.resolve(process.cwd(), name)
     if (fs.existsSync(name)) {
         console.warn(`Dir:${cwd}/${name} already exists`)
@@ -103,6 +102,78 @@ export default async function create(name: string) {
     console.log("Install node modules ...".green)
     await Shell.exec('npm', ['install'], {
         cwd,
+        env: process.env,
+        consoleHandler: (info) => {
+            console.log(info)
+        }
+    });
+    console.log("Installed, welcome!".green)
+}
+
+async function modifyContent(cwd: string, name: string) {
+    const dealingFiles = [
+        "package.json",
+        "rollup.config.js",
+        "android/src/main/java/pub/doric/library/DoricTemplateLibrary.java",
+        "iOS/Classes/DoricTemplateLibrary.h",
+        "iOS/Classes/DoricTemplateLibrary.m",
+        "Template.podspec",
+        "example/android/app/src/main/java/pub/doric/android/MainApplication.java",
+        "example/iOS/App/SceneDelegate.m",
+        "example/src/Example.ts",
+        "example/package.json",
+    ]
+    for (let dealingFile of dealingFiles) {
+        const filePath = await path.resolve(cwd, dealingFile)
+        let content = await fs.promises.readFile(filePath, "utf-8")
+        content = content
+            .replace(/__\$__/g, name.toLocaleLowerCase())
+            .replace(/__\$RawName__/g, name)
+            .replace(/__\$Version__/g, currentVersion)
+        await fs.promises.writeFile(filePath, content, "utf-8")
+    }
+}
+
+async function renameFiles(cwd: string, name: string) {
+    const renameFiles: [string, string][] = [
+        ["android/src/main/java/pub/doric/library", "DoricTemplateLibrary.java"],
+        [".", "Template.podspec"],
+        ["iOS/Classes", "DoricTemplateLibrary.h"],
+        ["iOS/Classes", "DoricTemplateLibrary.m"],
+    ]
+    for (let renameFile of renameFiles) {
+        await fs.promises.rename(
+            path.resolve(cwd, renameFile[0], renameFile[1]),
+            path.resolve(cwd, renameFile[0], renameFile[1].replace("Template", name)))
+    }
+}
+
+export async function createLib(name: string) {
+    const cwd = path.resolve(process.cwd(), name)
+    if (fs.existsSync(name)) {
+        console.warn(`Dir:${cwd}/${name} already exists`)
+        return;
+    }
+    await fs.promises.mkdir(name)
+    const libAssets = getLibAssetsDir()
+    console.log(`Create doric library project at ${cwd}`)
+    const files = await fs.promises.readdir(libAssets)
+    for (let file of files) {
+        await shellCopy(cwd, path.resolve(libAssets, file))
+    }
+    await modifyContent(cwd, name)
+    await renameFiles(cwd, name)
+    console.log("Install node modules ...".green)
+    await Shell.exec('npm', ['install'], {
+        cwd,
+        env: process.env,
+        consoleHandler: (info) => {
+            console.log(info)
+        }
+    });
+    console.log("Install example project ...".green)
+    await Shell.exec('npm', ['install'], {
+        cwd: path.resolve(cwd, "example"),
         env: process.env,
         consoleHandler: (info) => {
             console.log(info)

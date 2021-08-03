@@ -1,0 +1,46 @@
+import groovy.json.JsonSlurper
+
+def model = new JsonSlurper().parse(new File(project.getProjectDir().parent + File.separator + "package.json"))
+def doricSDKVersion = model.dependencies.doric.replace("^", "").replace(">=","")
+
+println("Doric Version:" + doricSDKVersion)
+
+buildscript {
+    repositories {
+        mavenCentral()
+        google()
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.5.3'
+    }
+}
+
+rootProject.allprojects {
+    repositories {
+        mavenCentral()
+        google()
+        jcenter()
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 29
+
+    sourceSets {
+        main.assets.srcDirs += "../dist"
+    }
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+    }
+}
+
+dependencies {
+    api "pub.doric:core:$doricSDKVersion"
+}

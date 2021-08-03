@@ -11,7 +11,9 @@ export async function delay(timeout: number) {
 export function getAssetsDir() {
     return `${__dirname}/../assets`;
 }
-
+export function getLibAssetsDir() {
+    return `${__dirname}/../assets-lib`;
+}
 export async function glob(pattern: string, options?: IOptions) {
     return new Promise((resolve, reject) => {
         if (options) {

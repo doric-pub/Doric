@@ -1,0 +1,5 @@
+android/
+iOS/
+.vscode/
+node_modules/
+example/

@@ -120,6 +120,7 @@ async function modifyContent(cwd: string, name: string) {
         "Template.podspec",
         "example/android/app/src/main/java/pub/doric/android/MainApplication.java",
         "example/iOS/App/SceneDelegate.m",
+        "example/iOS/Podfile",
         "example/src/Example.ts",
         "example/package.json",
     ]

@@ -22,5 +22,5 @@ target 'Example' do
 
   pod 'PINCache'
   
-  pod 'TemplateLibrary',           :path => '../../'
+  pod '__$RawName__',           :path => '../../'
 end

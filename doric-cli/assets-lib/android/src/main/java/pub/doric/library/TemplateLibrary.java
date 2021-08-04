@@ -9,7 +9,7 @@ import pub.doric.DoricLibrary;
 import pub.doric.DoricRegistry;
 
 @DoricComponent
-public class Doric__$RawName__Library extends DoricLibrary {
+public class __$RawName__Library extends DoricLibrary {
     @Override
     public void load(DoricRegistry registry) {
         try {

@@ -1,7 +1,7 @@
-#import "Doric__$RawName__Library.h"
+#import "__$RawName__Library.h"
 #import "DoricDemoPlugin.h"
 
-@implementation Doric__$RawName__Library
+@implementation __$RawName__Library
 - (void)load:(DoricRegistry *)registry {
     NSString *path = [[NSBundle mainBundle] bundlePath];
     NSString *fullPath = [path stringByAppendingPathComponent:@"bundle___$__.js"];

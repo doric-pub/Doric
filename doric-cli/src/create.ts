@@ -114,9 +114,9 @@ async function modifyContent(cwd: string, name: string) {
     const dealingFiles = [
         "package.json",
         "rollup.config.js",
-        "android/src/main/java/pub/doric/library/DoricTemplateLibrary.java",
-        "iOS/Classes/DoricTemplateLibrary.h",
-        "iOS/Classes/DoricTemplateLibrary.m",
+        "android/src/main/java/pub/doric/library/TemplateLibrary.java",
+        "iOS/Classes/TemplateLibrary.h",
+        "iOS/Classes/TemplateLibrary.m",
         "Template.podspec",
         "example/android/app/src/main/java/pub/doric/android/MainApplication.java",
         "example/iOS/App/SceneDelegate.m",
@@ -137,10 +137,10 @@ async function modifyContent(cwd: string, name: string) {
 
 async function renameFiles(cwd: string, name: string) {
     const renameFiles: [string, string][] = [
-        ["android/src/main/java/pub/doric/library", "DoricTemplateLibrary.java"],
+        ["android/src/main/java/pub/doric/library", "TemplateLibrary.java"],
         [".", "Template.podspec"],
-        ["iOS/Classes", "DoricTemplateLibrary.h"],
-        ["iOS/Classes", "DoricTemplateLibrary.m"],
+        ["iOS/Classes", "TemplateLibrary.h"],
+        ["iOS/Classes", "TemplateLibrary.m"],
     ]
     for (let renameFile of renameFiles) {
         await fs.promises.rename(

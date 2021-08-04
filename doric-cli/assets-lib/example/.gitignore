@@ -1,0 +1,10 @@
+node_modules/
+build/
+bundle/
+xcuserdata
+.gradle
+.idea/
+Pods/
+*.lock
+*.xcworkspace/xcshareddata/xcdebugger/
+package-lock.json

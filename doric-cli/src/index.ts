@@ -2,7 +2,7 @@
 
 import commander from "commander"
 import { build, clean } from "./actions";
-import create from "./create"
+import { create, createLib } from "./create"
 import dev from "./dev"
 import { run } from "./run";
 
@@ -12,6 +12,11 @@ commander
     .command('create <name>')
     .action(async function (name, cmd) {
         await create(name);
+    })
+commander
+    .command('createLib <name>')
+    .action(async function (name, cmd) {
+        await createLib(name);
     })
 commander
     .command('new <name>')

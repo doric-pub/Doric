@@ -1,0 +1,23 @@
+{
+  "name": "example",
+  "version": "0.1.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "cd ../ && doric build && cd - && doric build",
+    "dev": "doric dev",
+    "clean": "doric clean",
+    "android": "doric run android",
+    "ios": "doric run iOS"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "reflect-metadata": "^0.1.13",
+    "rollup": "^2.24.0",
+    "typescript": "^4.2.2",
+    "__$__": "file:../"
+  },
+  "optionalDependencies": {
+    "ios-deploy": "^1.11.4"
+  }
+}

@@ -1,0 +1,5 @@
+include ':app'
+rootProject.name='Example'
+
+include ":lib"
+project(":lib").projectDir = file("../../android")

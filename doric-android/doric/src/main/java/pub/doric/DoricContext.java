@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.github.pengfeizhou.jscore.JSDecoder;
@@ -309,5 +310,26 @@ public class DoricContext {
 
     public void onEnvChanged() {
         callEntity(DoricConstant.DORIC_ENTITY_ENV_CHANGE);
+    }
+
+    /**
+     * Use this to take effect of {@link #onRequestPermissionsResult(int, String[], int[])}
+     */
+    public void requestPermissions(@NonNull String[] permissions, int requestCode) {
+        if (doricNavigator instanceof Fragment) {
+            ((Fragment) doricNavigator).requestPermissions(permissions, requestCode);
+        }
+    }
+
+    /**
+     * To use this,
+     * you should use {@link #requestPermissions(String[], int)}.
+     */
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        for (DoricJavaPlugin javaPlugin : mPluginMap.values()) {
+            if (javaPlugin != null) {
+                javaPlugin.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            }
+        }
     }
 }

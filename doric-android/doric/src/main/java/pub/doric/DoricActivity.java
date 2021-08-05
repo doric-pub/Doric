@@ -18,6 +18,7 @@ package pub.doric;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -68,6 +69,15 @@ public class DoricActivity extends AppCompatActivity {
         int requestIndex = requestCode >> 16;
         if (requestIndex == 0 && mDoricFragment != null) {
             mDoricFragment.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        int requestIndex = requestCode >> 16;
+        if (requestIndex == 0 && mDoricFragment != null) {
+            mDoricFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 }

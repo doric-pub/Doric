@@ -231,4 +231,9 @@ public class DoricPanelFragment extends Fragment implements IDoricNavigator {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         doricPanel.onActivityResult(requestCode, resultCode, data);
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        doricPanel.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
 }

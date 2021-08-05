@@ -106,4 +106,15 @@ public class DoricFragment extends Fragment {
             }
         }
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        for (Fragment fragment : getChildFragmentManager().getFragments()) {
+            fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            for (Fragment childFragment : fragment.getChildFragmentManager().getFragments()) {
+                childFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            }
+        }
+    }
 }

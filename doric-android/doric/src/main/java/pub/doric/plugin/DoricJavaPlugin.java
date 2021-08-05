@@ -40,4 +40,11 @@ public abstract class DoricJavaPlugin extends DoricContextHolder {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
     }
+
+    /**
+     * Called when use {@link DoricContext#requestPermissions(String[], int)}
+     */
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+
+    }
 }

@@ -131,6 +131,12 @@ public class DoricPanel extends FrameLayout implements LifecycleObserver {
         }
     }
 
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (mDoricContext != null) {
+            mDoricContext.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
     public interface FrameChangedListener {
         void onFrameChanged(int width, int height);
     }

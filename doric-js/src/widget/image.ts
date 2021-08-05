@@ -28,6 +28,11 @@ export class Image extends View {
     imageUrl?: string
 
     /** 
+     * Read image from local file system.
+    */
+    @Property
+    imageFilePath?: string
+    /** 
      * Read image from local path
      * For android,it based on assets dir.
      * For iOS,it based on main bundle dir.

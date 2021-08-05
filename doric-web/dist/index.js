@@ -3123,6 +3123,10 @@ __decorate$9([
 __decorate$9([
     Property,
     __metadata$9("design:type", String)
+], Image.prototype, "imageFilePath", void 0);
+__decorate$9([
+    Property,
+    __metadata$9("design:type", String)
 ], Image.prototype, "imagePath", void 0);
 __decorate$9([
     Property,

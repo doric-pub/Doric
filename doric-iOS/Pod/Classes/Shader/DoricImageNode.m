@@ -345,16 +345,7 @@
 
         }
     } else if ([@"imageRes" isEqualToString:name]) {
-#if __has_include(<YYWebImage/YYWebImage.h>)
-        YYImage *image = [YYImage imageNamed:prop];
-#elif __has_include(<SDWebImage/SDWebImage.h>)
-        UIImage *image = [SDAnimatedImage imageNamed:prop];
-        if (!image) {
-            image = [UIImage imageNamed:prop];
-        }
-#else
-        UIImage *image = [UIImage imageNamed:prop];
-#endif
+        UIImage *image = [self imageNamed:prop];
         if (image) {
             view.image = image;
         } else {
@@ -375,16 +366,20 @@
         NSString *path = [[NSBundle mainBundle] bundlePath];
         NSString *fullPath = [path stringByAppendingPathComponent:prop];
         NSData *imgData = [[NSData alloc] initWithContentsOfFile:fullPath];
-#if __has_include(<YYWebImage/YYWebImage.h>)
-        YYImage *image = [YYImage imageWithData:imgData scale:self.imageScale];
-#elif __has_include(<SDWebImage/SDWebImage.h>)
-        UIImage *image = [SDAnimatedImage imageWithData:imgData scale:self.imageScale];
-        if (!image) {
-            image = [UIImage imageWithData:imgData scale:self.imageScale];
+        UIImage *image = [self imageFromData:imgData];
+        view.image = image;
+        if (self.loadCallbackId.length > 0) {
+            if (image) {
+                [self callJSResponse:self.loadCallbackId,
+                                     @{@"width": @(image.size.width), @"height": @(image.size.height)},
+                                nil];
+            } else {
+                [self callJSResponse:self.loadCallbackId, nil];
+            }
         }
-#else
-        UIImage *image = [UIImage imageWithData:imgData scale:self.imageScale];
-#endif
+    } else if ([@"imageFilePath" isEqualToString:name]) {
+        NSData *imgData = [[NSData alloc] initWithContentsOfFile:prop];
+        UIImage *image = [self imageFromData:imgData];
         view.image = image;
         if (self.loadCallbackId.length > 0) {
             if (image) {
@@ -402,6 +397,34 @@
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }
+}
+
+- (UIImage *)imageNamed:(NSString *)name {
+#if __has_include(<YYWebImage/YYWebImage.h>)
+    YYImage *image = [YYImage imageNamed:name];
+#elif __has_include(<SDWebImage/SDWebImage.h>)
+    UIImage *image = [SDAnimatedImage imageNamed:name];
+    if (!image) {
+        image = [UIImage imageNamed:name];
+    }
+#else
+    UIImage *image = [UIImage imageNamed:prop];
+#endif
+    return image;
+}
+
+- (UIImage *)imageFromData:(NSData *)imgData {
+#if __has_include(<YYWebImage/YYWebImage.h>)
+    YYImage *image = [YYImage imageWithData:imgData scale:self.imageScale];
+#elif __has_include(<SDWebImage/SDWebImage.h>)
+    UIImage *image = [SDAnimatedImage imageWithData:imgData scale:self.imageScale];
+    if (!image) {
+        image = [UIImage imageWithData:imgData scale:self.imageScale];
+    }
+#else
+    UIImage *image = [UIImage imageWithData:imgData scale:self.imageScale];
+#endif
+    return image;
 }
 
 - (void)afterBlended:(NSDictionary *)props {

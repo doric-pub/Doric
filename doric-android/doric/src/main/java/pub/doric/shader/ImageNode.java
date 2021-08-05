@@ -51,6 +51,8 @@ import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
+import java.io.File;
+
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import pub.doric.DoricContext;
 import pub.doric.extension.bridge.DoricPlugin;
@@ -421,6 +423,14 @@ public class ImageNode extends ViewNode<ImageView> {
                         callJSResponse(loadCallbackId);
                     }
                 }
+                break;
+            case "imageFilePath":
+                if (!prop.isString()) {
+                    return;
+                }
+                String filePath = prop.asString().value();
+                File file = new File(filePath);
+                loadIntoTarget(Glide.with(getContext()).load(file));
                 break;
             default:
                 super.blend(view, name, prop);

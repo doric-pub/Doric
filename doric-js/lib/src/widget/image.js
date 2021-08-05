@@ -40,6 +40,10 @@ __decorate([
 __decorate([
     Property,
     __metadata("design:type", String)
+], Image.prototype, "imageFilePath", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", String)
 ], Image.prototype, "imagePath", void 0);
 __decorate([
     Property,

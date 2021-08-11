@@ -34,6 +34,9 @@
         _enableRecordSnapshot = NO;
         _jsLoaderManager = [DoricJSLoaderManager new];
         _contextManager = [DoricContextManager new];
+        _storageCaches = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsCopyIn
+                                                   valueOptions:NSPointerFunctionsWeakMemory
+                                                       capacity:0];
     }
     return self;
 }

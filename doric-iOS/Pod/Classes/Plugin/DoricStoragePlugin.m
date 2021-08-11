@@ -19,6 +19,7 @@
 
 #import "DoricStoragePlugin.h"
 #import "DoricExtensions.h"
+#import "DoricSingleton.h"
 
 #if __has_include(<PINCache/PINCache.h>)
 
@@ -184,8 +185,12 @@ static NSString *doric_prefix = @"pref";
     if (zone) {
         diskCache = self.cachedMap[zone];
         if (!diskCache) {
-            diskCache = [[DoricCache alloc] initWithName:[NSString stringWithFormat:@"%@_%@", doric_prefix, zone]
-                                                rootPath:self.basePath];
+            diskCache = [DoricSingleton.instance.storageCaches objectForKey:zone];
+            if (!diskCache) {
+                diskCache = [[DoricCache alloc] initWithName:[NSString stringWithFormat:@"%@_%@", doric_prefix, zone]
+                                                    rootPath:self.basePath];
+                [DoricSingleton.instance.storageCaches setObject:diskCache forKey:zone];
+            }
             self.cachedMap[zone] = diskCache;
         }
     } else {

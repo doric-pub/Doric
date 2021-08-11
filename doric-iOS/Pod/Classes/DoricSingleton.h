@@ -34,6 +34,7 @@
 @property(nonatomic, strong) DoricJSLoaderManager *jsLoaderManager;
 @property(nonatomic, strong) DoricNativeDriver *nativeDriver;
 @property(nonatomic, strong) DoricContextManager *contextManager;
+@property(nonatomic, strong) NSMapTable<NSString *, id> *storageCaches;
 
 + (instancetype)instance;
 

@@ -25,7 +25,10 @@
 - (void)request:(NSDictionary *)dic withPromise:(DoricPromise *)promise {
     NSString *url = [dic optString:@"url"];
     NSString *method = [dic optString:@"method"];
-    NSDictionary <NSString *, NSString *> *headers = [dic optObject:@"headers"];
+    NSMutableDictionary <NSString *, NSString *> *headers = [[dic optObject:@"headers"] mutableCopy];
+    if(!headers[@"Content-Type"]){
+        headers[@"Content-Type"] = @"application/json; charset=utf-8";
+    }
     NSNumber *timeout = [dic optNumber:@"timeout"];
     NSString *data = [dic optString:@"data"];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:url]];

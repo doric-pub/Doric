@@ -431,7 +431,19 @@
 - (void)scrollToItem:(NSDictionary *)params {
     BOOL animated = [params[@"animated"] boolValue];
     NSUInteger scrolledPosition = [params[@"index"] unsignedIntegerValue];
-    [self.view scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:scrolledPosition inSection:0] atScrollPosition:UITableViewScrollPositionNone animated:animated];
+    
+    if (scrolledPosition < self.itemCount && scrolledPosition >= 0) {
+        for (int i = 0; i <= scrolledPosition; i++) {
+            [self tableView:self.view cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.view scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:scrolledPosition inSection:0] atScrollPosition:UITableViewScrollPositionNone animated:animated];
+        });
+    } else {
+        [self.doricContext.driver.registry onLog:DoricLogTypeError
+                                     message:[NSString stringWithFormat:@"scrollToItem Error:%@", @"scrolledPosition range error"]];
+    }
 }
 
 @end

@@ -111,7 +111,7 @@
         if (fontDescriptor) {
             font = [UIFont fontWithDescriptor:fontDescriptor size:0];
         } else {
-            font = [UIFont systemFontOfSize:view.font.pointSize];
+            font = [UIFont fontWithName:font.fontName size:font.pointSize];
         }
         view.font = font;
     } else if ([name isEqualToString:@"maxWidth"]) {

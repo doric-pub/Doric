@@ -1474,6 +1474,9 @@ function jsObtainEntry(contextId) {
             const className = arguments[1];
             const srcContext = gContexts.get(srcContextId);
             if (srcContext) {
+                srcContext.classes.forEach((v, k) => {
+                    context === null || context === void 0 ? void 0 : context.classes.set(k, v);
+                });
                 const clz = srcContext.classes.get(className);
                 if (clz) {
                     return exportFunc(clz);

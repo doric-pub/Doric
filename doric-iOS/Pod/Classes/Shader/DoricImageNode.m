@@ -408,7 +408,7 @@
         image = [UIImage imageNamed:name];
     }
 #else
-    UIImage *image = [UIImage imageNamed:prop];
+    UIImage *image = [UIImage imageNamed:name];
 #endif
     return image;
 }

@@ -285,6 +285,9 @@ export function jsObtainEntry(contextId: string) {
             const className = arguments[1] as string
             const srcContext = gContexts.get(srcContextId)
             if (srcContext) {
+                srcContext.classes.forEach((v, k) => {
+                    context?.classes.set(k, v)
+                })
                 const clz = srcContext.classes.get(className)
                 if (clz) {
                     return exportFunc(clz)

@@ -48,3 +48,18 @@ task buildJSBundle(type: Exec) {
     workingDir project.rootDir.getParent()
     commandLine 'npm', 'run', 'build'
 }
+
+def nodeModuleDir = new File(rootDir.getParent() + File.separator + "node_modules")
+if (nodeModuleDir.isDirectory()) {
+    nodeModuleDir.listFiles().each {
+        if (new File(it.getAbsolutePath() + File.separator + "__doric_library__").exists()) {
+            println("Find doric plugin library ${it.name} in ${it}")
+            def name = it.name
+            android {
+                dependencies {
+                    implementation project(":${name}")
+                }
+            }
+        }
+    }
+}

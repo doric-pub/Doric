@@ -21,4 +21,18 @@ target '__$__' do
   pod 'SDWebImageWebPCoder'
 
   pod 'PINCache'
+
+  dir_node_modules = File.join(__dir__,"../node_modules")
+  Dir.foreach(dir_node_modules) do |file|
+    if File.exist?(File.join(dir_node_modules, file, "__doric_library__"))
+      puts "Doric Library: #{File.join(dir_node_modules, file)}"
+      ret = Dir.glob(File.join(dir_node_modules,file,"*.podspec"))
+      if(ret.length > 0)
+        podspecPath = ret[0]
+        extn = File.extname  podspecPath 
+        podspecName = File.basename podspecPath, extn
+        pod podspecName,  :path => File.join(dir_node_modules, file)
+      end
+    end
+  end  
 end

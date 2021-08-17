@@ -1,2 +1,13 @@
 include ':app'
 rootProject.name='__$__'
+
+def nodeModuleDir = new File(rootDir.getParent() + File.separator + "node_modules")
+if (nodeModuleDir.isDirectory()) {
+    nodeModuleDir.listFiles().each {
+        if (new File(it.getAbsolutePath() + File.separator + "__doric_library__").exists()) {
+            println("Find doric plugin library ${it.name} in ${it}")
+            include ":${it.name}"
+            project(":${it.name}").projectDir = file(it.getAbsolutePath() + File.separator + "android")
+        }
+    }
+}

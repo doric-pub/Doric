@@ -87,24 +87,17 @@
 }
 
 - (void)unsubscribe:(NSString *)subscribeId withPromise:(DoricPromise *)promise {
-    __block id observer = nil;
-    dispatch_sync(self.syncQuene, ^{
-        observer = [self.observers objectForKey:subscribeId];
-    });
-    if (observer) {
+    dispatch_barrier_async(self.syncQuene, ^{
+        id observer = [self.observers objectForKey:subscribeId];
         [[NSNotificationCenter defaultCenter] removeObserver:observer];
-        dispatch_barrier_async(self.syncQuene, ^{
-            [self.observers removeObjectForKey:subscribeId];
-        });
-    }
-    [promise resolve:nil];
+        [self.observers removeObjectForKey:subscribeId];
+        
+        [promise resolve:nil];
+    });
 }
 
 - (void)dealloc {
-    __block NSArray *values;
-    dispatch_sync(self.syncQuene, ^{
-        values = [self.observers allValues];
-    });
+    NSArray *values = [self.observers allValues];
     [values enumerateObjectsUsingBlock:^(id obj, NSUInteger index, BOOL *stop) {
         [[NSNotificationCenter defaultCenter] removeObserver:obj];
     }];

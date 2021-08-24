@@ -226,13 +226,6 @@
                 @"msg": @"Cannot find suitable alive context for debugging"
         }];
     } else {
-        [DoricSingleton.instance.bundles enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-            [self.wsClient sendToDebugger:@"LOAD_MODULE"
-                                  payload:@{
-                                          @"name": key,
-                                          @"content": obj,
-                                  }];
-        }];
         DoricContext *context = contexts.lastObject;
         [self.wsClient sendToDebugger:@"DEBUG_RES" payload:@{
                 @"contextId": context.contextId

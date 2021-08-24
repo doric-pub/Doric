@@ -91,8 +91,4 @@ public class DoricSingleton {
     public DoricContextManager getContextManager() {
         return doricContextManager;
     }
-
-    public Map<String, String> getJSBundles() {
-        return bundles;
-    }
 }

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 
@@ -131,6 +132,15 @@ public class DoricDev {
                     .toJSONObject());
         } else {
             final DoricContext context = contexts.get(contexts.size() - 1);
+            Map<String, String> bundles = DoricSingleton.getInstance().getJSBundles();
+            for (String key : bundles.keySet()) {
+                wsClient.sendToDebugger(
+                        "LOAD_MODULE",
+                        new JSONBuilder()
+                                .put("name", key)
+                                .put("content", bundles.get(key))
+                                .toJSONObject());
+            }
             wsClient.sendToDebugger(
                     "DEBUG_RES",
                     new JSONBuilder()

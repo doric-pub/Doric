@@ -4644,18 +4644,6 @@ function initNativeEnvironment(source) {
                 const msg = JSON.parse(data);
                 const payload = msg.payload;
                 switch (msg.cmd) {
-                    case "":
-                        const { name, content } = payload;
-                        Reflect.apply(jsRegisterModule, undefined, [
-                            name,
-                            Reflect.apply((function (__module) {
-                                eval(`(function (module, exports, require) {
-                    ${content}
-                  })(__module, __module.exports, doric.__require__)`);
-                                return __module.exports;
-                            }), undefined, [{ exports: {} }])
-                        ]);
-                        break;
                     case "DEBUG_RES":
                         const contextId = msg.payload.contextId;
                         resolve(contextId);

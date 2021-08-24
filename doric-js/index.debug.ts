@@ -53,24 +53,6 @@ async function initNativeEnvironment(source: string) {
         const msg = JSON.parse(data as string) as MSG
         const payload = msg.payload
         switch (msg.cmd) {
-          case "":
-            const { name, content } = payload as {
-              name: string,
-              content: string
-            }
-            Reflect.apply(
-              doric.jsRegisterModule,
-              undefined,
-              [
-                name,
-                Reflect.apply((function (__module: { exports: object }) {
-                  eval(`(function (module, exports, require) {
-                    ${content}
-                  })(__module, __module.exports, doric.__require__)`)
-                  return __module.exports
-                }), undefined, [{ exports: {} }])
-              ]);
-            break;
           case "DEBUG_RES":
             const contextId = msg.payload.contextId as string;
             resolve(contextId);

@@ -4811,7 +4811,7 @@ global$1.nativeBridge = () => {
     console.error("Do not call here in debugging");
     return false;
 };
-global$1.Envrionment = new Proxy({}, {
+global$1.Environment = new Proxy({}, {
     get: (target, p, receiver) => {
         console.error("Environment Getter", new Error().stack);
         console.error("Do not call here in debugging");

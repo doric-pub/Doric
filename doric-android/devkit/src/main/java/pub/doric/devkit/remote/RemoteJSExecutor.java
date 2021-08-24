@@ -19,19 +19,17 @@ import pub.doric.devkit.WSClient;
 public class RemoteJSExecutor implements WSClient.Interceptor {
     private final Map<String, JavaFunction> globalFunctions = new HashMap<>();
     private final WSClient wsClient;
-    private final Thread currentThread;
 
     private final AtomicInteger callIdCounter = new AtomicInteger();
 
-    private Map<Integer, Thread> mThreads = new HashMap<>();
-    private Map<Integer, JSDecoder> mResults = new HashMap<>();
+    private final Map<Integer, Thread> mThreads = new HashMap<>();
+    private final Map<Integer, JSDecoder> mResults = new HashMap<>();
 
     public volatile boolean invokingMethod = false;
 
     public RemoteJSExecutor(WSClient wsClient) {
         this.wsClient = wsClient;
         this.wsClient.addInterceptor(this);
-        currentThread = Thread.currentThread();
     }
 
     public String loadJS(String script, String source) {

@@ -26,6 +26,7 @@
 @class DoricContextManager;
 
 @interface DoricSingleton : NSObject
+@property(nonatomic, strong) NSMutableDictionary *bundles;
 @property(nonatomic, strong) NSMutableSet <DoricLibrary *> *libraries;
 @property(nonatomic, strong) NSHashTable<DoricRegistry *> *registries;
 @property(nonatomic, strong) NSMutableDictionary *envDic;

@@ -58,7 +58,6 @@
 
 @interface DoricRegistry ()
 
-@property(nonatomic, strong) NSMutableDictionary *bundles;
 @property(nonatomic, strong) NSMutableDictionary *plugins;
 @property(nonatomic, strong) NSMutableDictionary *nodes;
 @property(nonatomic, strong) NSMutableSet <id <DoricMonitorProtocol>> *monitors;
@@ -80,7 +79,6 @@
 - (instancetype)initWithJSEngine:(DoricJSEngine *)jsEngine {
     if (self = [super init]) {
         _jsEngine = jsEngine;
-        _bundles = [NSMutableDictionary new];
         _plugins = [NSMutableDictionary new];
         _nodes = [NSMutableDictionary new];
         _monitors = [NSMutableSet new];
@@ -130,11 +128,11 @@
 }
 
 - (void)registerJSBundle:(NSString *)bundle withName:(NSString *)name {
-    self.bundles[name] = bundle;
+    DoricSingleton.instance.bundles[name] = bundle;
 }
 
 - (NSString *)acquireJSBundle:(NSString *)name {
-    return self.bundles[name];
+    return DoricSingleton.instance.bundles[name];
 }
 
 - (void)registerNativePlugin:(Class)pluginClass withName:(NSString *)name {

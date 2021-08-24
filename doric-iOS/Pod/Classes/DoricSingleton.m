@@ -37,6 +37,7 @@
         _storageCaches = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsCopyIn
                                                    valueOptions:NSPointerFunctionsWeakMemory
                                                        capacity:0];
+        _bundles = [NSMutableDictionary new];
     }
     return self;
 }

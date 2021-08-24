@@ -23,24 +23,24 @@
 @interface DoricNotificationPlugin ()
 
 @property(nonatomic, strong) NSMutableDictionary<NSString *, id> *observers;
-@property (nonatomic, strong) dispatch_queue_t syncQuene;
+@property(nonatomic, strong) dispatch_queue_t syncQueue;
 
 @end
 
 @implementation DoricNotificationPlugin
 
-- (NSDictionary *)observers {
+- (NSMutableDictionary<NSString *, id> *)observers {
     if (!_observers) {
         _observers = [NSMutableDictionary new];
     }
     return _observers;
 }
 
-- (dispatch_queue_t)syncQuene {
-    if (!_syncQuene) {
-        _syncQuene = dispatch_queue_create("pub.doric.plugin.notification", DISPATCH_QUEUE_CONCURRENT);
+- (dispatch_queue_t)syncQueue {
+    if (!_syncQueue) {
+        _syncQueue = dispatch_queue_create("pub.doric.plugin.notification", DISPATCH_QUEUE_CONCURRENT);
     }
-    return _syncQuene;
+    return _syncQueue;
 }
 
 - (void)publish:(NSDictionary *)dic withPromise:(DoricPromise *)promise {
@@ -79,19 +79,18 @@
                         DoricPromise *currentPromise = [[DoricPromise alloc] initWithContext:self.doricContext callbackId:callbackId];
                         [currentPromise resolve:note.userInfo];
                     }];
-    
-    dispatch_barrier_async(self.syncQuene, ^{
-        [self.observers setObject:observer forKey:callbackId];
+
+    dispatch_barrier_async(self.syncQueue, ^{
+        self.observers[callbackId] = observer;
     });
     [promise resolve:callbackId];
 }
 
 - (void)unsubscribe:(NSString *)subscribeId withPromise:(DoricPromise *)promise {
-    dispatch_barrier_async(self.syncQuene, ^{
-        id observer = [self.observers objectForKey:subscribeId];
+    dispatch_barrier_async(self.syncQueue, ^{
+        id observer = self.observers[subscribeId];
         [[NSNotificationCenter defaultCenter] removeObserver:observer];
         [self.observers removeObjectForKey:subscribeId];
-        
         [promise resolve:nil];
     });
 }

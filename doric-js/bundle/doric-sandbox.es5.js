@@ -1449,6 +1449,9 @@ var doric = (function (exports) {
                 var className = arguments[1];
                 var srcContext = gContexts.get(srcContextId);
                 if (srcContext) {
+                    srcContext.classes.forEach(function (v, k) {
+                        context === null || context === void 0 ? void 0 : context.classes.set(k, v);
+                    });
                     var clz = srcContext.classes.get(className);
                     if (clz) {
                         return exportFunc(clz);

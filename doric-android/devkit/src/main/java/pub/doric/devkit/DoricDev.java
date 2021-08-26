@@ -57,6 +57,7 @@ public class DoricDev {
         this.isRunningInEmulator = SimulatorUtil.isSimulator(Doric.application());
         DoricSingleton.getInstance().getNativeDriver().getRegistry().registerMonitor(new DoricDevMonitor());
         DoricSingleton.getInstance().getNativeDriver().getRegistry().setGlobalPerformanceAnchorHook(new DoricDevPerformanceAnchorHook());
+        DoricSingleton.getInstance().getNativeDriver().getRegistry().registerNativePlugin(DoricDevkitPlugin.class);
     }
 
     public static DoricDev getInstance() {

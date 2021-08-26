@@ -29,6 +29,7 @@
 #import "DoricDevViewController.h"
 #import "DoricDevMonitor.h"
 #import "DoricDevPerformanceAnchorHook.h"
+#import "DoricDevkitPlugin.h"
 
 @interface DoricContextDebuggable : NSObject
 @property(nonatomic, weak) DoricContext *doricContext;
@@ -81,6 +82,7 @@
         _reloadingContexts = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
         [DoricSingleton.instance.nativeDriver.registry registerMonitor:[DoricDevMonitor new]];
         DoricSingleton.instance.nativeDriver.registry.globalPerformanceAnchorHook = [DoricDevPerformanceAnchorHook new];
+        [DoricSingleton.instance.nativeDriver.registry registerNativePlugin:DoricDevkitPlugin.class withName:@"devkit"];
     }
     return self;
 }

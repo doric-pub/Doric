@@ -112,8 +112,6 @@ export class Image extends View {
 export function image(config: Partial<Image>) {
     const ret = new Image
     ret.layoutConfig = layoutConfig().fit()
-    for (let key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret)
-    }
+    ret.apply(config)
     return ret
 }

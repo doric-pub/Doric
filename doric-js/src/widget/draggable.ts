@@ -33,9 +33,7 @@ export function draggable(views: View | View[], config?: Partial<Draggable>) {
         })
     }
     if (config) {
-        for (let key in config) {
-            Reflect.set(ret, key, Reflect.get(config, key, config), ret)
-        }
+        ret.apply(config)
     }
     return ret
 }

@@ -47,9 +47,7 @@ export class Refreshable extends Superview {
 export function refreshable(config: Partial<Refreshable>) {
     const ret = new Refreshable
     ret.layoutConfig = layoutConfig().fit()
-    for (let key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret)
-    }
+    ret.apply(config)
     return ret
 }
 

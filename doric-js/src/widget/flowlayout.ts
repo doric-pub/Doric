@@ -121,9 +121,7 @@ export function flowItem(item: View | View[], config?: Partial<FlowLayoutItem>) 
             })
         }
         if (config) {
-            for (let key in config) {
-                Reflect.set(it, key, Reflect.get(config, key, config), it)
-            }
+            it.apply(config)
         }
     })
 }

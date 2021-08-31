@@ -940,9 +940,7 @@ function stack(views, config) {
         finally { if (e_1) { throw e_1.error; } }
     }
     if (config) {
-        for (var key in config) {
-            Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-        }
+        ret.apply(config);
     }
     return ret;
 }
@@ -964,9 +962,7 @@ function hlayout(views, config) {
         finally { if (e_2) { throw e_2.error; } }
     }
     if (config) {
-        for (var key in config) {
-            Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-        }
+        ret.apply(config);
     }
     return ret;
 }
@@ -988,9 +984,7 @@ function vlayout(views, config) {
         finally { if (e_3) { throw e_3.error; } }
     }
     if (config) {
-        for (var key in config) {
-            Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-        }
+        ret.apply(config);
     }
     return ret;
 }
@@ -1019,9 +1013,7 @@ function flexlayout(views, config) {
         finally { if (e_4) { throw e_4.error; } }
     }
     if (config) {
-        for (var key in config) {
-            Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-        }
+        ret.apply(config);
     }
     return ret;
 }
@@ -1914,9 +1906,7 @@ var Text = /** @class */ (function (_super) {
 function text(config) {
     var ret = new Text;
     ret.layoutConfig = layoutConfig().fit();
-    for (var key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-    }
+    ret.apply(config);
     return ret;
 }
 
@@ -2105,9 +2095,7 @@ var Image = /** @class */ (function (_super) {
 function image(config) {
     var ret = new Image;
     ret.layoutConfig = layoutConfig().fit();
-    for (var key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-    }
+    ret.apply(config);
     return ret;
 }
 
@@ -2278,9 +2266,7 @@ var List = /** @class */ (function (_super) {
 }(Superview));
 function list(config) {
     var ret = new List;
-    for (var key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-    }
+    ret.apply(config);
     return ret;
 }
 function listItem(item, config) {
@@ -2295,9 +2281,7 @@ function listItem(item, config) {
             });
         }
         if (config) {
-            for (var key in config) {
-                Reflect.set(it, key, Reflect.get(config, key, config), it);
-            }
+            it.apply(config);
         }
     });
 }
@@ -2401,9 +2385,7 @@ var Slider = /** @class */ (function (_super) {
 }(Superview));
 function slider(config) {
     var ret = new Slider;
-    for (var key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-    }
+    ret.apply(config);
     return ret;
 }
 function slideItem(item, config) {
@@ -2453,9 +2435,7 @@ function scroller(content, config) {
     return (new Scroller).also(function (v) {
         v.layoutConfig = layoutConfig().fit();
         if (config) {
-            for (var key in config) {
-                Reflect.set(v, key, Reflect.get(config, key, config), v);
-            }
+            v.apply(config);
         }
         v.content = content;
     });
@@ -2563,9 +2543,7 @@ var Refreshable = /** @class */ (function (_super) {
 function refreshable(config) {
     var ret = new Refreshable;
     ret.layoutConfig = layoutConfig().fit();
-    for (var key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-    }
+    ret.apply(config);
     return ret;
 }
 function pullable(v, config) {
@@ -2832,9 +2810,7 @@ function flowItem(item, config) {
             });
         }
         if (config) {
-            for (var key in config) {
-                Reflect.set(it, key, Reflect.get(config, key, config), it);
-            }
+            it.apply(config);
         }
     });
 }
@@ -2989,9 +2965,7 @@ exports.InputType = void 0;
 function input(config) {
     var ret = new Input;
     ret.layoutConfig = layoutConfig().just();
-    for (var key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-    }
+    ret.apply(config);
     return ret;
 }
 
@@ -3096,9 +3070,7 @@ function draggable(views, config) {
         });
     }
     if (config) {
-        for (var key in config) {
-            Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-        }
+        ret.apply(config);
     }
     return ret;
 }
@@ -3159,9 +3131,7 @@ function switchView(config) {
     ret.layoutConfig = layoutConfig().just();
     ret.width = 50;
     ret.height = 30;
-    for (var key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-    }
+    ret.apply(config);
     return ret;
 }
 

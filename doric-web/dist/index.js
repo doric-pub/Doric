@@ -1896,6 +1896,9 @@ class View {
     getLocationOnScreen(context) {
         return this.nativeChannel(context, "getLocationOnScreen")();
     }
+    set props(props) {
+        this.apply(props);
+    }
     doAnimation(context, animation) {
         return this.nativeChannel(context, "doAnimation")(animation.toModel()).then((args) => {
             for (let key in args) {
@@ -2331,9 +2334,7 @@ function stack(views, config) {
         ret.addChild(v);
     }
     if (config) {
-        for (let key in config) {
-            Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-        }
+        ret.apply(config);
     }
     return ret;
 }
@@ -2344,9 +2345,7 @@ function hlayout(views, config) {
         ret.addChild(v);
     }
     if (config) {
-        for (let key in config) {
-            Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-        }
+        ret.apply(config);
     }
     return ret;
 }
@@ -2357,9 +2356,7 @@ function vlayout(views, config) {
         ret.addChild(v);
     }
     if (config) {
-        for (let key in config) {
-            Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-        }
+        ret.apply(config);
     }
     return ret;
 }
@@ -2372,9 +2369,7 @@ function flexlayout(views, config) {
         ret.addChild(v);
     }
     if (config) {
-        for (let key in config) {
-            Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-        }
+        ret.apply(config);
     }
     return ret;
 }
@@ -3022,9 +3017,7 @@ __decorate$a([
 function text(config) {
     const ret = new Text;
     ret.layoutConfig = layoutConfig().fit();
-    for (let key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-    }
+    ret.apply(config);
     return ret;
 }
 
@@ -3191,9 +3184,7 @@ __decorate$9([
 function image(config) {
     const ret = new Image;
     ret.layoutConfig = layoutConfig().fit();
-    for (let key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-    }
+    ret.apply(config);
     return ret;
 }
 
@@ -3319,9 +3310,7 @@ __decorate$8([
 ], List.prototype, "bounces", void 0);
 function list(config) {
     const ret = new List;
-    for (let key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-    }
+    ret.apply(config);
     return ret;
 }
 function listItem(item, config) {
@@ -3336,9 +3325,7 @@ function listItem(item, config) {
             });
         }
         if (config) {
-            for (let key in config) {
-                Reflect.set(it, key, Reflect.get(config, key, config), it);
-            }
+            it.apply(config);
         }
     });
 }
@@ -3417,9 +3404,7 @@ __decorate$7([
 ], Slider.prototype, "bounces", void 0);
 function slider(config) {
     const ret = new Slider;
-    for (let key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-    }
+    ret.apply(config);
     return ret;
 }
 function slideItem(item, config) {
@@ -3454,9 +3439,7 @@ function scroller(content, config) {
     return (new Scroller).also(v => {
         v.layoutConfig = layoutConfig().fit();
         if (config) {
-            for (let key in config) {
-                Reflect.set(v, key, Reflect.get(config, key, config), v);
-            }
+            v.apply(config);
         }
         v.content = content;
     });
@@ -3539,9 +3522,7 @@ __decorate$5([
 function refreshable(config) {
     const ret = new Refreshable;
     ret.layoutConfig = layoutConfig().fit();
-    for (let key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-    }
+    ret.apply(config);
     return ret;
 }
 function pullable(v, config) {
@@ -3762,9 +3743,7 @@ function flowItem(item, config) {
             });
         }
         if (config) {
-            for (let key in config) {
-                Reflect.set(it, key, Reflect.get(config, key, config), it);
-            }
+            it.apply(config);
         }
     });
 }
@@ -3898,9 +3877,7 @@ exports.InputType = void 0;
 function input(config) {
     const ret = new Input;
     ret.layoutConfig = layoutConfig().just();
-    for (let key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-    }
+    ret.apply(config);
     return ret;
 }
 
@@ -3964,9 +3941,7 @@ function draggable(views, config) {
         });
     }
     if (config) {
-        for (let key in config) {
-            Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-        }
+        ret.apply(config);
     }
     return ret;
 }
@@ -4007,9 +3982,7 @@ function switchView(config) {
     ret.layoutConfig = layoutConfig().just();
     ret.width = 50;
     ret.height = 30;
-    for (let key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-    }
+    ret.apply(config);
     return ret;
 }
 

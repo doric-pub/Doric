@@ -50,9 +50,7 @@ export function stack(views, config) {
         ret.addChild(v);
     }
     if (config) {
-        for (let key in config) {
-            Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-        }
+        ret.apply(config);
     }
     return ret;
 }
@@ -63,9 +61,7 @@ export function hlayout(views, config) {
         ret.addChild(v);
     }
     if (config) {
-        for (let key in config) {
-            Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-        }
+        ret.apply(config);
     }
     return ret;
 }
@@ -76,9 +72,7 @@ export function vlayout(views, config) {
         ret.addChild(v);
     }
     if (config) {
-        for (let key in config) {
-            Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-        }
+        ret.apply(config);
     }
     return ret;
 }
@@ -91,9 +85,7 @@ export function flexlayout(views, config) {
         ret.addChild(v);
     }
     if (config) {
-        for (let key in config) {
-            Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-        }
+        ret.apply(config);
     }
     return ret;
 }

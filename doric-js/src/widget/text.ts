@@ -72,8 +72,6 @@ export class Text extends View {
 export function text(config: Partial<Text>) {
     const ret = new Text
     ret.layoutConfig = layoutConfig().fit()
-    for (let key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret)
-    }
+    ret.apply(config)
     return ret
 }

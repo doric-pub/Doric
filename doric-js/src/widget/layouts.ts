@@ -44,9 +44,7 @@ export function stack(views: View[], config?: Partial<Stack>) {
         ret.addChild(v)
     }
     if (config) {
-        for (let key in config) {
-            Reflect.set(ret, key, Reflect.get(config, key, config), ret)
-        }
+        ret.apply(config)
     }
     return ret
 }
@@ -58,9 +56,7 @@ export function hlayout(views: View[], config?: Partial<HLayout>) {
         ret.addChild(v)
     }
     if (config) {
-        for (let key in config) {
-            Reflect.set(ret, key, Reflect.get(config, key, config), ret)
-        }
+        ret.apply(config)
     }
     return ret
 }
@@ -72,9 +68,7 @@ export function vlayout(views: View[], config?: Partial<VLayout>) {
         ret.addChild(v)
     }
     if (config) {
-        for (let key in config) {
-            Reflect.set(ret, key, Reflect.get(config, key, config), ret)
-        }
+        ret.apply(config)
     }
     return ret
 }
@@ -91,9 +85,7 @@ export function flexlayout(views: View[], config?: Partial<FlexLayout>) {
         ret.addChild(v)
     }
     if (config) {
-        for (let key in config) {
-            Reflect.set(ret, key, Reflect.get(config, key, config), ret)
-        }
+        ret.apply(config)
     }
     return ret
 }

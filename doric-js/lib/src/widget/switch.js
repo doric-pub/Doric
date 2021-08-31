@@ -52,8 +52,6 @@ export function switchView(config) {
     ret.layoutConfig = layoutConfig().just();
     ret.width = 50;
     ret.height = 30;
-    for (let key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-    }
+    ret.apply(config);
     return ret;
 }

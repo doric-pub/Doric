@@ -28,9 +28,7 @@ export function scroller(content, config) {
     return (new Scroller).also(v => {
         v.layoutConfig = layoutConfig().fit();
         if (config) {
-            for (let key in config) {
-                Reflect.set(v, key, Reflect.get(config, key, config), v);
-            }
+            v.apply(config);
         }
         v.content = content;
     });

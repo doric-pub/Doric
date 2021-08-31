@@ -43,9 +43,7 @@ export function draggable(views, config) {
         });
     }
     if (config) {
-        for (let key in config) {
-            Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-        }
+        ret.apply(config);
     }
     return ret;
 }

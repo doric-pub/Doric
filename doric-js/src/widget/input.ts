@@ -147,8 +147,6 @@ export enum InputType {
 export function input(config: Partial<Input>) {
     const ret = new Input
     ret.layoutConfig = layoutConfig().just()
-    for (let key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret)
-    }
+    ret.apply(config)
     return ret
 }

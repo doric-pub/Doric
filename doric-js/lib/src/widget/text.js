@@ -93,8 +93,6 @@ __decorate([
 export function text(config) {
     const ret = new Text;
     ret.layoutConfig = layoutConfig().fit();
-    for (let key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-    }
+    ret.apply(config);
     return ret;
 }

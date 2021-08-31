@@ -200,6 +200,9 @@ export class View {
     getLocationOnScreen(context) {
         return this.nativeChannel(context, "getLocationOnScreen")();
     }
+    set props(props) {
+        this.apply(props);
+    }
     doAnimation(context, animation) {
         return this.nativeChannel(context, "doAnimation")(animation.toModel()).then((args) => {
             for (let key in args) {

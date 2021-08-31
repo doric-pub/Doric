@@ -105,8 +105,6 @@ __decorate([
 export function image(config) {
     const ret = new Image;
     ret.layoutConfig = layoutConfig().fit();
-    for (let key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-    }
+    ret.apply(config);
     return ret;
 }

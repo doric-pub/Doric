@@ -302,6 +302,7 @@ declare module 'doric/lib/src/ui/view' {
                 * Only affected when its superview or itself is FlexLayout.
                 */
             flexConfig?: FlexConfig;
+            set props(props: Partial<this>);
             doAnimation(context: BridgeContext, animation: IAnimation): Promise<void>;
             clearAnimation(context: BridgeContext, animation: IAnimation): Promise<void>;
             cancelAnimation(context: BridgeContext, animation: IAnimation): Promise<void>;

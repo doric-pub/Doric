@@ -114,9 +114,7 @@ export class List extends Superview {
 
 export function list(config: Partial<List>) {
     const ret = new List
-    for (let key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret)
-    }
+    ret.apply(config)
     return ret
 }
 
@@ -131,9 +129,7 @@ export function listItem(item: View | View[], config?: Partial<ListItem>) {
             })
         }
         if (config) {
-            for (let key in config) {
-                Reflect.set(it, key, Reflect.get(config, key, config), it)
-            }
+            it.apply(config)
         }
     })
 }

@@ -83,9 +83,7 @@ export class Slider extends Superview {
 
 export function slider(config: Partial<Slider>) {
     const ret = new Slider
-    for (let key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret)
-    }
+    ret.apply(config)
     return ret
 }
 

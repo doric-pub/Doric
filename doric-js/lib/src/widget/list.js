@@ -123,9 +123,7 @@ __decorate([
 ], List.prototype, "bounces", void 0);
 export function list(config) {
     const ret = new List;
-    for (let key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-    }
+    ret.apply(config);
     return ret;
 }
 export function listItem(item, config) {
@@ -140,9 +138,7 @@ export function listItem(item, config) {
             });
         }
         if (config) {
-            for (let key in config) {
-                Reflect.set(it, key, Reflect.get(config, key, config), it);
-            }
+            it.apply(config);
         }
     });
 }

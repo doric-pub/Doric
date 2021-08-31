@@ -354,6 +354,10 @@ export abstract class View implements Modeling {
     @Property
     flexConfig?: FlexConfig
 
+    set props(props: Partial<this>) {
+        this.apply(props)
+    }
+
     doAnimation(context: BridgeContext, animation: IAnimation) {
         return this.nativeChannel(context, "doAnimation")(animation.toModel()).then((args) => {
             for (let key in args) {

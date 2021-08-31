@@ -90,9 +90,7 @@ __decorate([
 ], Slider.prototype, "bounces", void 0);
 export function slider(config) {
     const ret = new Slider;
-    for (let key in config) {
-        Reflect.set(ret, key, Reflect.get(config, key, config), ret);
-    }
+    ret.apply(config);
     return ret;
 }
 export function slideItem(item, config) {

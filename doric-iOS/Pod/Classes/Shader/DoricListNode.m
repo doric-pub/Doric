@@ -369,6 +369,11 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    // avoid bottom bounces conflict with scroll
+    if ([self.superNode isKindOfClass:[DoricRefreshableNode class]]) {
+        ((DoricSwipeRefreshLayout *)self.superNode.view).bounces = scrollView.contentOffset.y <= 0;
+    }
+
     for (DoricDidScrollBlock block in self.didScrollBlocks) {
         block(scrollView);
     }

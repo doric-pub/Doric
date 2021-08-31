@@ -57,7 +57,6 @@ export class AnimatePlugin extends DoricPlugin {
                                 }
                             } catch (e) {
                                 console.error(e)
-                                alert(e.stack)
                             }
                         })
                     }) || [])

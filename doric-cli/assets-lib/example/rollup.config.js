@@ -80,7 +80,7 @@ dirs.forEach((e) => {
   readDirs(e, allFiles);
 });
 export default allFiles
-  .map((e) => e.replace(".ts", ""))
+  .map((e) => e.replace(/.tsx*/, ""))
   .map((bundle) => {
     return {
       input: `build/${bundle}.js`,

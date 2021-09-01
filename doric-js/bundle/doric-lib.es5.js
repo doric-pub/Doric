@@ -2640,6 +2640,32 @@ exports.Display = void 0;
     Display[Display["NONE"] = 1] = "NONE";
 })(exports.Display || (exports.Display = {}));
 
+var jsx = {
+    createElement: function (constructor, config) {
+        var arguments$1 = arguments;
+
+        var children = [];
+        for (var _i = 2; _i < arguments.length; _i++) {
+            children[_i - 2] = arguments$1[_i];
+        }
+        var e = new constructor();
+        if (config) {
+            for (var key in config) {
+                Reflect.set(e, key, Reflect.get(config, key, config), e);
+            }
+        }
+        if (children && children.length > 0) {
+            if (e instanceof Group) {
+                children.forEach(function (child) { return e.addChild(child); });
+            }
+            else {
+                throw new Error("Can only add child to group view, do not support " + constructor.name);
+            }
+        }
+        return e;
+    },
+};
+
 var __extends$6 = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -4006,6 +4032,7 @@ exports.hlayout = hlayout;
 exports.image = image;
 exports.input = input;
 exports.internalScheme = internalScheme;
+exports.jsx = jsx;
 exports.keyboard = keyboard;
 exports.layoutConfig = layoutConfig;
 exports.list = list;

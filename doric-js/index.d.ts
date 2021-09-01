@@ -120,6 +120,7 @@ declare module 'doric/lib/src/util/index.util' {
     export * from 'doric/lib/src/util/types';
     export * from 'doric/lib/src/util/uniqueId';
     export * from 'doric/lib/src/util/flexbox';
+    export * from 'doric/lib/src/util/jsx';
 }
 
 declare module 'doric/lib/src/pattern/index.pattern' {
@@ -1388,6 +1389,28 @@ declare module 'doric/lib/src/util/flexbox' {
         aspectRatio?: number;
     }
     export {};
+}
+
+declare module 'doric/lib/src/util/jsx' {
+    import { View } from "doric/lib/src/ui/view";
+    import { ClassType } from "doric/lib/src/util/types";
+    export const jsx: {
+        createElement: <T extends View>(constructor: ClassType<T>, config: Partial<T> | null, ...children: View[]) => T;
+    };
+    global {
+        namespace JSX {
+            interface IntrinsicElements {
+            }
+            interface ElementClass extends View {
+            }
+            interface ElementAttributesProperty {
+                props: {};
+            }
+            interface ElementChildrenAttribute {
+                children: View[];
+            }
+        }
+    }
 }
 
 declare module 'doric/lib/src/pattern/candies' {

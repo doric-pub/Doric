@@ -108,7 +108,7 @@ export default allFiles
 // If need ES5 support enable following configs
 // .concat(
 //     allFiles
-//         .map(e => e.replace('.ts', ''))
+//         .map(e => e.replace(/.tsx*/, ''))
 //         .map(bundle => {
 //             return {
 //                 input: `build/${bundle}.js`,

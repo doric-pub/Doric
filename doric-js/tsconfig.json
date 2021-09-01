@@ -58,6 +58,7 @@
   },
   "include": [
     "**/*.ts",
+    "src/custom.dts",
   ],
   "exclude": [
     "**/*.es5.ts",

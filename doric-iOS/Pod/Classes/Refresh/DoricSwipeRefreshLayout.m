@@ -91,6 +91,13 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             self.refreshing = YES;
         });
+    } else if (scrollView.contentOffset.y + scrollView.height > scrollView.contentSize.height) {
+        self.bounces = NO;
+        [UIView animateWithDuration:0.2f animations:^{
+            scrollView.contentOffset = (CGPoint) {0, scrollView.contentSize.height - scrollView.height};
+        }                completion:^(BOOL finished) {
+            self.bounces = YES;
+        }];
     }
 }
 

@@ -2699,6 +2699,20 @@ var __extends$7 = (undefined && undefined.__extends) || (function () {
 })();
 exports.jsx = void 0;
 (function (jsx) {
+    function addElement(group, v) {
+        if (v instanceof Array) {
+            v.forEach(function (e) { return addElement(group, e); });
+        }
+        else if (v instanceof Fragment) {
+            v.children.forEach(function (e) { return addElement(group, e); });
+        }
+        else if (v instanceof View) {
+            group.addChild(v);
+        }
+        else {
+            throw new Error("Can only use view as child");
+        }
+    }
     function createElement(constructor, config) {
         var arguments$1 = arguments;
 
@@ -2714,12 +2728,7 @@ exports.jsx = void 0;
         if (children && children.length > 0) {
             if (e instanceof Group) {
                 children.forEach(function (child) {
-                    if (child instanceof Fragment) {
-                        child.children.forEach(function (c) { return e.addChild(c); });
-                    }
-                    else {
-                        e.addChild(child);
-                    }
+                    addElement(e, child);
                 });
             }
             else {

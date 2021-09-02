@@ -21,7 +21,7 @@ function createFragment() {
 @Entry
 class Counter extends Panel {
   build(root: Group) {
-    const fragmnets = createFragment();
+    const fragments = createFragment();
     const ref = makeRef<Text>();
     let count = 0;
     <VLayout
@@ -42,7 +42,13 @@ class Counter extends Panel {
           ref.current.text = `${count}`;
         }}
       />
-      {fragmnets}
+      {fragments}
+      {[0, 1, 2, 3].map((i) => (
+        <>
+          <Text text={`Index ${i}`} />
+          <Text text={`Subtitle ${i}`} textSize={10} />
+        </>
+      ))}
     </VLayout>;
   }
 }

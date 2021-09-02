@@ -3,6 +3,20 @@ import { layoutConfig } from "./layoutconfig";
 import { ClassType } from "./types";
 
 export namespace jsx {
+    function addElement(group: Group, v: any) {
+        if (v instanceof Array) {
+            v.forEach(e => addElement(group, e))
+        } else if (v instanceof Fragment) {
+            v.children.forEach(e => addElement(group, e))
+        } else if (v instanceof View) {
+            group.addChild(v)
+        } else {
+            throw new Error(
+                `Can only use view as child`
+            );
+        }
+    }
+
     export function createElement<T extends View>(
         constructor: ClassType<T>,
         config: Partial<T> | null,
@@ -16,11 +30,7 @@ export namespace jsx {
         if (children && children.length > 0) {
             if (e instanceof Group) {
                 children.forEach((child) => {
-                    if (child instanceof Fragment) {
-                        child.children.forEach(c => e.addChild(c))
-                    } else {
-                        e.addChild(child)
-                    }
+                    addElement(e, child)
                 });
             } else {
                 throw new Error(

@@ -36,7 +36,6 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.DoricLinearLayoutCompat;
@@ -543,6 +542,9 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
 
     @NonNull
     private DoricLayer requireDoricLayer() {
+        if (mView instanceof DoricLayer) {
+            return (DoricLayer) mView;
+        }
         if (doricLayer == null) {
             doricLayer = new DoricLayer(getContext());
             doricLayer.setLayoutParams(mLayoutParams);

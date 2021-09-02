@@ -15,12 +15,8 @@
  */
 package pub.doric.shader.list;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.view.View;
 import android.widget.FrameLayout;
 
-import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 

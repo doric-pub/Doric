@@ -21,22 +21,17 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Region;
-import android.os.Build;
-import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 
 /**
  * @Description: com.github.penfeizhou.doric.shader
  * @Author: pengfei.zhou
  * @CreateDate: 2019-07-31
  */
-public class DoricLayer extends FrameLayout {
+public class DoricLayer extends MaximumFrameLayout {
     private final Path mCornerPath = new Path();
     private Paint mShadowPaint;
     private Paint mBorderPaint;
@@ -47,19 +42,6 @@ public class DoricLayer extends FrameLayout {
         super(context);
     }
 
-    public DoricLayer(@NonNull Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public DoricLayer(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public DoricLayer(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-    }
-
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -67,6 +49,16 @@ public class DoricLayer extends FrameLayout {
 
     @Override
     public void draw(Canvas canvas) {
+        mRect.left = 0;
+        mRect.right = getWidth();
+        mRect.top = 0;
+        mRect.bottom = getHeight();
+        if (mCornerRadii != null) {
+            canvas.save();
+            mCornerPath.reset();
+            mCornerPath.addRoundRect(mRect, mCornerRadii, Path.Direction.CW);
+            canvas.clipPath(mCornerPath);
+        }
         super.draw(canvas);
     }
 
@@ -81,6 +73,9 @@ public class DoricLayer extends FrameLayout {
         mRect.right = getWidth();
         mRect.top = 0;
         mRect.bottom = getHeight();
+        if (canvas.getSaveCount() > 1) {
+            canvas.restore();
+        }
         canvas.save();
         if (mCornerRadii != null) {
             mCornerPath.reset();

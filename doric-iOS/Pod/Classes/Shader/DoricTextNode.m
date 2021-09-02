@@ -286,18 +286,37 @@
                           startPoint:(CGPoint)startPoint
                             endPoint:(CGPoint)endPoint
                              imgSize:(CGSize)imgSize {
-    UIGraphicsBeginImageContextWithOptions(imgSize, NO, [UIScreen mainScreen].scale);
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextSaveGState(context);
-    CGColorSpaceRef colorSpace = CGColorGetColorSpace((__bridge CGColorRef) colors.lastObject);
-    CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef) colors, locations);
-    CGPoint start = (CGPoint) {startPoint.x * imgSize.width, startPoint.y * imgSize.height};
-    CGPoint end = (CGPoint) {endPoint.x * imgSize.width, endPoint.y * imgSize.height};
-    CGContextDrawLinearGradient(context, gradient, start, end, kCGGradientDrawsBeforeStartLocation | kCGGradientDrawsAfterEndLocation);
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    CGGradientRelease(gradient);
-    CGContextRestoreGState(context);
-    UIGraphicsEndImageContext();
-    return image;
+    if (@available(iOS 10.0, *)) {
+        UIGraphicsImageRendererFormat *format = [[UIGraphicsImageRendererFormat alloc] init];
+        format.scale = [UIScreen mainScreen].scale;
+        UIGraphicsImageRenderer *render = [[UIGraphicsImageRenderer alloc]initWithSize:imgSize format:format];
+        UIImage *image = [render imageWithActions:^(UIGraphicsImageRendererContext * _Nonnull rendererContext) {
+            CGContextRef context = rendererContext.CGContext;
+            
+            CGContextSaveGState(context);
+            CGColorSpaceRef colorSpace = CGColorGetColorSpace((__bridge CGColorRef) colors.lastObject);
+            CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef) colors, locations);
+            CGPoint start = (CGPoint) {startPoint.x * imgSize.width, startPoint.y * imgSize.height};
+            CGPoint end = (CGPoint) {endPoint.x * imgSize.width, endPoint.y * imgSize.height};
+            CGContextDrawLinearGradient(context, gradient, start, end, kCGGradientDrawsBeforeStartLocation | kCGGradientDrawsAfterEndLocation);
+            CGGradientRelease(gradient);
+            CGContextRestoreGState(context);
+        }];
+        return image;
+    } else {
+        UIGraphicsBeginImageContextWithOptions(imgSize, NO, [UIScreen mainScreen].scale);
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        CGContextSaveGState(context);
+        CGColorSpaceRef colorSpace = CGColorGetColorSpace((__bridge CGColorRef) colors.lastObject);
+        CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef) colors, locations);
+        CGPoint start = (CGPoint) {startPoint.x * imgSize.width, startPoint.y * imgSize.height};
+        CGPoint end = (CGPoint) {endPoint.x * imgSize.width, endPoint.y * imgSize.height};
+        CGContextDrawLinearGradient(context, gradient, start, end, kCGGradientDrawsBeforeStartLocation | kCGGradientDrawsAfterEndLocation);
+        UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+        CGGradientRelease(gradient);
+        CGContextRestoreGState(context);
+        UIGraphicsEndImageContext();
+        return image;
+    }
 }
 @end

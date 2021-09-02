@@ -147,15 +147,29 @@
         UIColor *color = DoricColor(self.placeHolderColor);
         CGRect rect = CGRectMake(0, 0, 1, 1);
         self.view.contentMode = UIViewContentModeScaleToFill;
-        UIGraphicsBeginImageContextWithOptions(rect.size, NO, [UIScreen mainScreen].scale);
+        
+        if (@available(iOS 10.0, *)) {
+            UIGraphicsImageRendererFormat *format = [[UIGraphicsImageRendererFormat alloc] init];
+            format.scale = [UIScreen mainScreen].scale;
+            UIGraphicsImageRenderer *render = [[UIGraphicsImageRenderer alloc]initWithSize:rect.size format:format];
+            UIImage *image = [render imageWithActions:^(UIGraphicsImageRendererContext * _Nonnull rendererContext) {
+                CGContextRef context = rendererContext.CGContext;
+                
+                CGContextSetFillColorWithColor(context, color.CGColor);
+                CGContextFillRect(context, rect);
+            }];
+            return image;
+        } else {
+            UIGraphicsBeginImageContextWithOptions(rect.size, NO, [UIScreen mainScreen].scale);
 
-        CGContextRef context = UIGraphicsGetCurrentContext();
-        CGContextSetFillColorWithColor(context, color.CGColor);
-        CGContextFillRect(context, rect);
+            CGContextRef context = UIGraphicsGetCurrentContext();
+            CGContextSetFillColorWithColor(context, color.CGColor);
+            CGContextFillRect(context, rect);
 
-        UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-        return image;
+            UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
+            return image;
+        }
     }
     return self.doricContext.driver.registry.defaultPlaceHolderImage;
 }
@@ -189,15 +203,29 @@
         UIColor *color = DoricColor(self.errorColor);
         CGRect rect = CGRectMake(0, 0, 1, 1);
         self.view.contentMode = UIViewContentModeScaleToFill;
-        UIGraphicsBeginImageContextWithOptions(rect.size, NO, [UIScreen mainScreen].scale);
+        
+        if (@available(iOS 10.0, *)) {
+            UIGraphicsImageRendererFormat *format = [[UIGraphicsImageRendererFormat alloc] init];
+            format.scale = [UIScreen mainScreen].scale;
+            UIGraphicsImageRenderer *render = [[UIGraphicsImageRenderer alloc]initWithSize:rect.size format:format];
+            UIImage *image = [render imageWithActions:^(UIGraphicsImageRendererContext * _Nonnull rendererContext) {
+                CGContextRef context = rendererContext.CGContext;
+                
+                CGContextSetFillColorWithColor(context, color.CGColor);
+                CGContextFillRect(context, rect);
+            }];
+            return image;
+        } else {
+            UIGraphicsBeginImageContextWithOptions(rect.size, NO, [UIScreen mainScreen].scale);
 
-        CGContextRef context = UIGraphicsGetCurrentContext();
-        CGContextSetFillColorWithColor(context, color.CGColor);
-        CGContextFillRect(context, rect);
+            CGContextRef context = UIGraphicsGetCurrentContext();
+            CGContextSetFillColorWithColor(context, color.CGColor);
+            CGContextFillRect(context, rect);
 
-        UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-        return image;
+            UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
+            return image;
+        }
     }
     return self.doricContext.driver.registry.defaultErrorImage;
 }

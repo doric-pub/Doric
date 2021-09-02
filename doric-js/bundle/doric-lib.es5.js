@@ -205,6 +205,27 @@ function ViewComponent(constructor) {
     var name = Reflect.get(constructor, PROP_KEY_VIEW_TYPE) || Object.getPrototypeOf(constructor).name;
     Reflect.set(constructor, PROP_KEY_VIEW_TYPE, name);
 }
+var Ref = /** @class */ (function () {
+    function Ref() {
+    }
+    Object.defineProperty(Ref.prototype, "current", {
+        get: function () {
+            if (!!!this.view) {
+                throw new Error("Ref is empty");
+            }
+            return this.view;
+        },
+        set: function (v) {
+            this.view = v;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    return Ref;
+}());
+function makeRef() {
+    return new Ref;
+}
 var View = /** @class */ (function () {
     function View() {
         this.width = 0;
@@ -402,6 +423,27 @@ var View = /** @class */ (function () {
     View.prototype.getLocationOnScreen = function (context) {
         return this.nativeChannel(context, "getLocationOnScreen")();
     };
+    Object.defineProperty(View.prototype, "props", {
+        set: function (props) {
+            this.apply(props);
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(View.prototype, "parent", {
+        set: function (v) {
+            this.in(v);
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(View.prototype, "ref", {
+        set: function (ref) {
+            ref.current = this;
+        },
+        enumerable: false,
+        configurable: true
+    });
     View.prototype.doAnimation = function (context, animation) {
         var _this = this;
         return this.nativeChannel(context, "doAnimation")(animation.toModel()).then(function (args) {
@@ -2649,10 +2691,9 @@ var jsx = {
             children[_i - 2] = arguments$1[_i];
         }
         var e = new constructor();
+        e.layoutConfig = layoutConfig().fit();
         if (config) {
-            for (var key in config) {
-                Reflect.set(e, key, Reflect.get(config, key, config), e);
-            }
+            e.apply(config);
         }
         if (children && children.length > 0) {
             if (e instanceof Group) {
@@ -3999,6 +4040,7 @@ exports.Panel = Panel;
 exports.Property = Property;
 exports.Provider = Provider;
 exports.RIGHT = RIGHT;
+exports.Ref = Ref;
 exports.Refreshable = Refreshable;
 exports.Root = Root;
 exports.RotationAnimation = RotationAnimation;
@@ -4040,6 +4082,7 @@ exports.listItem = listItem;
 exports.log = log;
 exports.loge = loge;
 exports.logw = logw;
+exports.makeRef = makeRef;
 exports.modal = modal;
 exports.navbar = navbar;
 exports.navigator = navigator;

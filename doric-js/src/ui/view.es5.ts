@@ -65,6 +65,25 @@ export type NativeViewModel = {
     };
 }
 
+export class Ref<T extends View> {
+    private view?: T;
+
+    set current(v: T) {
+        this.view = v
+    }
+
+    get current() {
+        if (!!!this.view) {
+            throw new Error("Ref is empty")
+        }
+        return this.view
+    }
+}
+
+export function makeRef() {
+    return new Ref
+}
+
 export abstract class View implements Modeling {
     private __dirty_props__!: { [index: string]: Model | undefined }
 
@@ -344,6 +363,18 @@ export abstract class View implements Modeling {
 
     @Property
     flexConfig?: FlexConfig
+
+    set props(props: Partial<this>) {
+        this.apply(props)
+    }
+
+    set parent(v: Group) {
+        this.in(v)
+    }
+
+    set ref(ref: Ref<this>) {
+        ref.current = this
+    }
 
     doAnimation(context: BridgeContext, animation: IAnimation) {
         return this.nativeChannel(context, "doAnimation")(animation.toModel()).then((args) => {

@@ -23,6 +23,20 @@ export function ViewComponent(constructor) {
     const name = Reflect.getMetadata(PROP_KEY_VIEW_TYPE, constructor) || Object.getPrototypeOf(constructor).name;
     Reflect.defineMetadata(PROP_KEY_VIEW_TYPE, name, constructor);
 }
+export class Ref {
+    set current(v) {
+        this.view = v;
+    }
+    get current() {
+        if (!!!this.view) {
+            throw new Error("Ref is empty");
+        }
+        return this.view;
+    }
+}
+export function makeRef() {
+    return new Ref;
+}
 export class View {
     constructor() {
         this.width = 0;
@@ -202,6 +216,12 @@ export class View {
     }
     set props(props) {
         this.apply(props);
+    }
+    set parent(v) {
+        this.in(v);
+    }
+    set ref(ref) {
+        ref.current = this;
     }
     doAnimation(context, animation) {
         return this.nativeChannel(context, "doAnimation")(animation.toModel()).then((args) => {

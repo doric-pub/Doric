@@ -14,6 +14,12 @@ export declare type NativeViewModel = {
         [index: string]: Model;
     };
 };
+export declare class Ref<T extends View> {
+    private view?;
+    set current(v: T);
+    get current(): T;
+}
+export declare function makeRef<T extends View>(): Ref<T>;
 export declare abstract class View implements Modeling {
     width: number;
     height: number;
@@ -132,6 +138,8 @@ export declare abstract class View implements Modeling {
      */
     flexConfig?: FlexConfig;
     set props(props: Partial<this>);
+    set parent(v: Group);
+    set ref(ref: Ref<this>);
     doAnimation(context: BridgeContext, animation: IAnimation): Promise<void>;
     clearAnimation(context: BridgeContext, animation: IAnimation): Promise<void>;
     cancelAnimation(context: BridgeContext, animation: IAnimation): Promise<void>;

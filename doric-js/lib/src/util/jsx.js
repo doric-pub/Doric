@@ -1,11 +1,11 @@
 import { Group } from "../ui/view";
+import { layoutConfig } from "./layoutconfig";
 export const jsx = {
     createElement: function (constructor, config, ...children) {
         const e = new constructor();
+        e.layoutConfig = layoutConfig().fit();
         if (config) {
-            for (let key in config) {
-                Reflect.set(e, key, Reflect.get(config, key, config), e);
-            }
+            e.apply(config);
         }
         if (children && children.length > 0) {
             if (e instanceof Group) {

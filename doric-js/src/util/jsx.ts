@@ -1,4 +1,5 @@
 import { Group, View } from "../ui/view";
+import { layoutConfig } from "./layoutconfig";
 import { ClassType } from "./types";
 
 export const jsx = {
@@ -8,10 +9,9 @@ export const jsx = {
         ...children: View[]
     ): T {
         const e = new constructor();
+        e.layoutConfig = layoutConfig().fit()
         if (config) {
-            for (let key in config) {
-                Reflect.set(e, key, Reflect.get(config, key, config), e);
-            }
+            e.apply(config)
         }
         if (children && children.length > 0) {
             if (e instanceof Group) {

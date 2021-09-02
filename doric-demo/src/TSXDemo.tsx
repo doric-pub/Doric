@@ -5,31 +5,23 @@ import {
   Gravity,
   Group,
   LayoutSpec,
-  Image,
   Text,
   makeRef,
 } from "doric";
 
-// class MyPanel extends Panel {
-//   build(root: Group) {
-//     <VLayout
-//       space={20}
-//       gravity={Gravity.Center}
-//       layoutConfig={{
-//         widthSpec: LayoutSpec.MOST,
-//         heightSpec: LayoutSpec.MOST,
-//       }}
-//       parent={root}
-//     >
-//       <Image imageUrl="https://doric.pub/logo.png" />
-//       <Text text="Hello,Doric" textSize={20} />
-//     </VLayout>;
-//   }
-// }
+function createFragment() {
+  return (
+    <>
+      <Text text="This is line 1 in fragment"></Text>
+      <Text text="This is line 2 in fragment"></Text>
+    </>
+  );
+}
 
 @Entry
 class Counter extends Panel {
   build(root: Group) {
+    const fragmnets = createFragment();
     const ref = makeRef<Text>();
     let count = 0;
     <VLayout
@@ -50,6 +42,7 @@ class Counter extends Panel {
           ref.current.text = `${count}`;
         }}
       />
+      {fragmnets}
     </VLayout>;
   }
 }

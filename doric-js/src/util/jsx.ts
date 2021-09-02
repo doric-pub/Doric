@@ -2,12 +2,12 @@ import { Group, View } from "../ui/view";
 import { layoutConfig } from "./layoutconfig";
 import { ClassType } from "./types";
 
-export const jsx = {
-    createElement: function <T extends View>(
+export namespace jsx {
+    export function createElement<T extends View>(
         constructor: ClassType<T>,
         config: Partial<T> | null,
         ...children: View[]
-    ): T {
+    ) {
         const e = new constructor();
         e.layoutConfig = layoutConfig().fit()
         if (config) {
@@ -15,7 +15,13 @@ export const jsx = {
         }
         if (children && children.length > 0) {
             if (e instanceof Group) {
-                children.forEach((child) => e.addChild(child));
+                children.forEach((child) => {
+                    if (child instanceof Fragment) {
+                        child.children.forEach(c => e.addChild(c))
+                    } else {
+                        e.addChild(child)
+                    }
+                });
             } else {
                 throw new Error(
                     `Can only add child to group view, do not support ${constructor.name}`
@@ -23,7 +29,8 @@ export const jsx = {
             }
         }
         return e;
-    },
+    }
+    export class Fragment extends Group { }
 }
 
 declare global {

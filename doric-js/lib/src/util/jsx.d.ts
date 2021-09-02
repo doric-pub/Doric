@@ -1,8 +1,10 @@
-import { View } from "../ui/view";
+import { Group, View } from "../ui/view";
 import { ClassType } from "./types";
-export declare const jsx: {
-    createElement: <T extends View>(constructor: ClassType<T>, config: Partial<T> | null, ...children: View[]) => T;
-};
+export declare namespace jsx {
+    function createElement<T extends View>(constructor: ClassType<T>, config: Partial<T> | null, ...children: View[]): T;
+    class Fragment extends Group {
+    }
+}
 declare global {
     namespace JSX {
         interface IntrinsicElements {

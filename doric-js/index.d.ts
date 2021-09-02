@@ -1399,11 +1399,13 @@ declare module 'doric/lib/src/util/flexbox' {
 }
 
 declare module 'doric/lib/src/util/jsx' {
-    import { View } from "doric/lib/src/ui/view";
+    import { Group, View } from "doric/lib/src/ui/view";
     import { ClassType } from "doric/lib/src/util/types";
-    export const jsx: {
-        createElement: <T extends View>(constructor: ClassType<T>, config: Partial<T> | null, ...children: View[]) => T;
-    };
+    export namespace jsx {
+        function createElement<T extends View>(constructor: ClassType<T>, config: Partial<T> | null, ...children: View[]): T;
+        class Fragment extends Group {
+        }
+    }
     global {
         namespace JSX {
             interface IntrinsicElements {

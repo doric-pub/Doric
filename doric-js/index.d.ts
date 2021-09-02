@@ -191,6 +191,11 @@ declare module 'doric/lib/src/ui/view' {
                     [index: string]: Model;
             };
     };
+    export class Ref<T extends View> {
+            set current(v: T);
+            get current(): T;
+    }
+    export function makeRef<T extends View>(): Ref<T>;
     export abstract class View implements Modeling {
             width: number;
             height: number;
@@ -304,6 +309,8 @@ declare module 'doric/lib/src/ui/view' {
                 */
             flexConfig?: FlexConfig;
             set props(props: Partial<this>);
+            set parent(v: Group);
+            set ref(ref: Ref<this>);
             doAnimation(context: BridgeContext, animation: IAnimation): Promise<void>;
             clearAnimation(context: BridgeContext, animation: IAnimation): Promise<void>;
             cancelAnimation(context: BridgeContext, animation: IAnimation): Promise<void>;

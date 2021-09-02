@@ -47,6 +47,25 @@ export type NativeViewModel = {
     };
 }
 
+export class Ref<T extends View> {
+    private view?: T;
+
+    set current(v: T) {
+        this.view = v
+    }
+
+    get current() {
+        if (!!!this.view) {
+            throw new Error("Ref is empty")
+        }
+        return this.view
+    }
+}
+
+export function makeRef<T extends View>(): Ref<T> {
+    return new Ref
+}
+
 export abstract class View implements Modeling {
     @Property
     width: number = 0
@@ -356,6 +375,14 @@ export abstract class View implements Modeling {
 
     set props(props: Partial<this>) {
         this.apply(props)
+    }
+
+    set parent(v: Group) {
+        this.in(v)
+    }
+
+    set ref(ref: Ref<this>) {
+        ref.current = this
     }
 
     doAnimation(context: BridgeContext, animation: IAnimation) {

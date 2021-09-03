@@ -17,7 +17,7 @@ import {
   Scroller,
   jsx,
   VLayout,
-  makeRef,
+  createRef,
   HLayout,
 } from "doric";
 import { colors } from "./utils";
@@ -216,11 +216,11 @@ interface GoBangState {
 class GoBangVH extends ViewHolder {
   root!: Group;
   gap = 0;
-  currentRole = makeRef<Text>();
-  result = makeRef<Text>();
+  currentRole = createRef<Text>();
+  result = createRef<Text>();
   targetZone: View[] = [];
-  gameMode = makeRef<Text>();
-  assistant = makeRef<Text>();
+  gameMode = createRef<Text>();
+  assistant = createRef<Text>();
   build(root: Group): void {
     this.root = root;
   }

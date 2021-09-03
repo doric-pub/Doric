@@ -195,7 +195,7 @@ declare module 'doric/lib/src/ui/view' {
             set current(v: T);
             get current(): T;
     }
-    export function makeRef<T extends View>(): Ref<T>;
+    export function createRef<T extends View>(): Ref<T>;
     export abstract class View implements Modeling {
             width: number;
             height: number;

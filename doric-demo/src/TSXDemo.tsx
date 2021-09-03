@@ -6,10 +6,7 @@ import {
   Group,
   layoutConfig,
   Text,
-  makeRef,
-  Stack,
-  Color,
-  modal,
+  createRef,
 } from "doric";
 
 function createFragment() {
@@ -25,7 +22,7 @@ function createFragment() {
 class Counter extends Panel {
   build(root: Group) {
     const fragments = createFragment();
-    const ref = makeRef<Text>();
+    const ref = createRef<Text>();
     let count = 0;
     <VLayout
       space={20}

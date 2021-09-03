@@ -19,7 +19,7 @@ export declare class Ref<T extends View> {
     set current(v: T);
     get current(): T;
 }
-export declare function makeRef<T extends View>(): Ref<T>;
+export declare function createRef<T extends View>(): Ref<T>;
 export declare abstract class View implements Modeling {
     width: number;
     height: number;

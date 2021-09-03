@@ -80,7 +80,7 @@ export class Ref<T extends View> {
     }
 }
 
-export function makeRef() {
+export function createRef() {
     return new Ref
 }
 

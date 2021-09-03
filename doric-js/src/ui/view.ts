@@ -62,7 +62,7 @@ export class Ref<T extends View> {
     }
 }
 
-export function makeRef<T extends View>(): Ref<T> {
+export function createRef<T extends View>(): Ref<T> {
     return new Ref
 }
 

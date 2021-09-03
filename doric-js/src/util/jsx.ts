@@ -1,6 +1,5 @@
 import { Group, View } from "../ui/view";
 import { layoutConfig } from "./layoutconfig";
-import { loge } from "./log";
 import { ClassType } from "./types";
 
 export namespace jsx {

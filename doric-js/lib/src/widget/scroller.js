@@ -47,6 +47,9 @@ export class Scroller extends Superview {
     scrollBy(context, offset, animated) {
         return this.nativeChannel(context, "scrollBy")({ offset, animated });
     }
+    set innerElement(e) {
+        this.content = e;
+    }
 }
 __decorate([
     Property,

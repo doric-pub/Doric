@@ -25,7 +25,7 @@ export enum TruncateAt {
     Clip = 3,
 }
 
-export class Text extends View {
+export class Text extends View implements JSX.ElementChildrenAttribute {
     @Property
     text?: string
 
@@ -67,6 +67,10 @@ export class Text extends View {
 
     @Property
     truncateAt?: TruncateAt
+
+    set innerElement(e: string) {
+        this.text = e
+    }
 }
 
 export function text(config: Partial<Text>) {

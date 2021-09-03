@@ -7,7 +7,7 @@ export declare enum TruncateAt {
     Start = 2,
     Clip = 3
 }
-export declare class Text extends View {
+export declare class Text extends View implements JSX.ElementChildrenAttribute {
     text?: string;
     textColor?: Color | GradientColor;
     textSize?: number;
@@ -22,5 +22,6 @@ export declare class Text extends View {
     underline?: boolean;
     htmlText?: string;
     truncateAt?: TruncateAt;
+    set innerElement(e: string);
 }
 export declare function text(config: Partial<Text>): Text;

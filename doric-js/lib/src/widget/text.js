@@ -33,6 +33,9 @@ export var TruncateAt;
     TruncateAt[TruncateAt["Clip"] = 3] = "Clip";
 })(TruncateAt || (TruncateAt = {}));
 export class Text extends View {
+    set innerElement(e) {
+        this.text = e;
+    }
 }
 __decorate([
     Property,

@@ -465,6 +465,9 @@ export abstract class Superview extends View {
         return super.toModel()
     }
 }
+export type ViewArray = View[]
+
+export type ViewFragment = View | ViewArray
 
 export abstract class Group extends Superview {
 
@@ -477,6 +480,20 @@ export abstract class Group extends Superview {
     addChild(view: View) {
         this.children.push(view)
         this.dirtyProps.children = this.children.map(e => e.viewId)
+    }
+
+    private addInnerElement(e: View | ViewFragment | ViewFragment[] | undefined | null) {
+        if (e instanceof Array) {
+            e.forEach(e => this.addInnerElement(e))
+        } else if (e instanceof View) {
+            this.addChild(e)
+        } else {
+            loge(`Not allowed to add ${typeof e}`)
+        }
+    }
+
+    set innerElement(e: View | ViewFragment | ViewFragment[] | undefined | null) {
+        this.addInnerElement(e)
     }
 }
 

@@ -1,7 +1,7 @@
 import { Superview, View, NativeViewModel } from '../ui/view';
 import { BridgeContext } from '../runtime/global';
 export declare function scroller(content: View, config?: Partial<Scroller>): Scroller;
-export declare class Scroller extends Superview {
+export declare class Scroller extends Superview implements JSX.ElementChildrenAttribute {
     content: View;
     contentOffset?: {
         x: number;
@@ -30,4 +30,5 @@ export declare class Scroller extends Superview {
         x: number;
         y: number;
     }, animated?: boolean): Promise<any>;
+    set innerElement(e: View);
 }

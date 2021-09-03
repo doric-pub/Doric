@@ -1676,7 +1676,7 @@ class Ref {
         return this.view;
     }
 }
-function makeRef() {
+function createRef() {
     return new Ref;
 }
 class View {
@@ -4956,6 +4956,7 @@ exports.ViewHolder = ViewHolder;
 exports.ViewModel = ViewModel;
 exports.animate = animate;
 exports.coordinator = coordinator;
+exports.createRef = createRef;
 exports.draggable = draggable;
 exports.flexlayout = flexlayout;
 exports.flowItem = flowItem;
@@ -4972,7 +4973,6 @@ exports.listItem = listItem;
 exports.log = log;
 exports.loge = loge;
 exports.logw = logw;
-exports.makeRef = makeRef;
 exports.modal = modal;
 exports.navbar = navbar;
 exports.navigator = navigator;

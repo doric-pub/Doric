@@ -34,7 +34,7 @@ export class Ref {
         return this.view;
     }
 }
-export function makeRef() {
+export function createRef() {
     return new Ref;
 }
 export class View {

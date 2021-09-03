@@ -4,7 +4,7 @@ import { Scroller } from "./scroller";
 import { BridgeContext } from "../runtime/global";
 import { layoutConfig } from "../util/layoutconfig";
 
-export class Refreshable extends Superview {
+export class Refreshable extends Superview implements JSX.ElementChildrenAttribute {
 
     content!: View
 
@@ -41,6 +41,15 @@ export class Refreshable extends Superview {
         this.dirtyProps.content = this.content.viewId
         this.dirtyProps.header = ((this.header || {}) as any).viewId
         return super.toModel()
+    }
+
+    set innerElement(e: View | [View, View]) {
+        if (e instanceof View) {
+            this.content = e
+        } else {
+            this.header = e[0]
+            this.content = e[1]
+        }
     }
 }
 

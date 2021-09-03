@@ -1,13 +1,13 @@
 import { Group, View } from "../ui/view";
 import { ClassType } from "./types";
 export declare namespace jsx {
-    function createElement<T extends View>(constructor: ClassType<T>, config: Partial<T> | null, ...children: View[]): T;
+    function createElement<T extends View>(constructor: ClassType<T>, config: Partial<T> | null, ...children: any[]): any[] | T;
     class Fragment extends Group {
     }
 }
 declare global {
     namespace JSX {
-        interface IntrinsicElements {
+        interface Element extends View {
         }
         interface ElementClass extends View {
         }
@@ -15,7 +15,9 @@ declare global {
             props: {};
         }
         interface ElementChildrenAttribute {
-            children: View[];
+            innerElement: any;
+        }
+        interface IntrinsicElements {
         }
     }
 }

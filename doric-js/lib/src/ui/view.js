@@ -443,4 +443,18 @@ export class Group extends Superview {
     removeAllChildren() {
         this.children.length = 0;
     }
+    addInnerElement(e) {
+        if (e instanceof Array) {
+            e.forEach(e => this.addInnerElement(e));
+        }
+        else if (e instanceof View) {
+            this.addChild(e);
+        }
+        else {
+            loge(`Not allowed to add ${typeof e}`);
+        }
+    }
+    set innerElement(e) {
+        this.addInnerElement(e);
+    }
 }

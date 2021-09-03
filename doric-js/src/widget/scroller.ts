@@ -28,7 +28,7 @@ export function scroller(content: View, config?: Partial<Scroller>) {
 }
 
 
-export class Scroller extends Superview {
+export class Scroller extends Superview implements JSX.ElementChildrenAttribute {
     content!: View
 
     @Property
@@ -63,5 +63,9 @@ export class Scroller extends Superview {
 
     scrollBy(context: BridgeContext, offset: { x: number, y: number }, animated?: boolean) {
         return this.nativeChannel(context, "scrollBy")({ offset, animated })
+    }
+
+    set innerElement(e: View) {
+        this.content = e
     }
 }

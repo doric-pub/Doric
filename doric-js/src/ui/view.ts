@@ -491,7 +491,11 @@ export abstract class Superview extends View {
     }
 }
 
-export abstract class Group extends Superview {
+export type ViewArray = View[]
+
+export type ViewFragment = View | ViewArray
+
+export abstract class Group extends Superview implements JSX.ElementChildrenAttribute {
 
     readonly children: View[] = new Proxy([], {
         set: (target, index, value) => {
@@ -518,6 +522,19 @@ export abstract class Group extends Superview {
 
     removeAllChildren() {
         this.children.length = 0
+    }
+
+    private addInnerElement(e: View | ViewFragment | ViewFragment[] | undefined | null) {
+        if (e instanceof Array) {
+            e.forEach(e => this.addInnerElement(e))
+        } else if (e instanceof View) {
+            this.addChild(e)
+        } else {
+            loge(`Not allowed to add ${typeof e}`)
+        }
+    }
+    set innerElement(e: View | ViewFragment | ViewFragment[] | undefined | null) {
+        this.addInnerElement(e)
     }
 }
 

@@ -700,6 +700,25 @@ var Group = /** @class */ (function (_super) {
         this.children.push(view);
         this.dirtyProps.children = this.children.map(function (e) { return e.viewId; });
     };
+    Group.prototype.addInnerElement = function (e) {
+        var _this = this;
+        if (e instanceof Array) {
+            e.forEach(function (e) { return _this.addInnerElement(e); });
+        }
+        else if (e instanceof View) {
+            this.addChild(e);
+        }
+        else {
+            loge("Not allowed to add " + typeof e);
+        }
+    };
+    Object.defineProperty(Group.prototype, "innerElement", {
+        set: function (e) {
+            this.addInnerElement(e);
+        },
+        enumerable: false,
+        configurable: true
+    });
     return Group;
 }(Superview));
 
@@ -1887,6 +1906,13 @@ var Text = /** @class */ (function (_super) {
     function Text() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
+    Object.defineProperty(Text.prototype, "innerElement", {
+        set: function (e) {
+            this.text = e;
+        },
+        enumerable: false,
+        configurable: true
+    });
     __decorate$a([
         Property,
         __metadata$a("design:type", String)
@@ -2500,6 +2526,13 @@ var Scroller = /** @class */ (function (_super) {
     Scroller.prototype.scrollBy = function (context, offset, animated) {
         return this.nativeChannel(context, "scrollBy")({ offset: offset, animated: animated });
     };
+    Object.defineProperty(Scroller.prototype, "innerElement", {
+        set: function (e) {
+            this.content = e;
+        },
+        enumerable: false,
+        configurable: true
+    });
     __decorate$6([
         Property,
         __metadata$6("design:type", Object)
@@ -2576,6 +2609,19 @@ var Refreshable = /** @class */ (function (_super) {
         this.dirtyProps.header = (this.header || {}).viewId;
         return _super.prototype.toModel.call(this);
     };
+    Object.defineProperty(Refreshable.prototype, "innerElement", {
+        set: function (e) {
+            if (e instanceof View) {
+                this.content = e;
+            }
+            else {
+                this.header = e[0];
+                this.content = e[1];
+            }
+        },
+        enumerable: false,
+        configurable: true
+    });
     __decorate$5([
         Property,
         __metadata$5("design:type", Function)
@@ -2699,20 +2745,6 @@ var __extends$7 = (undefined && undefined.__extends) || (function () {
 })();
 exports.jsx = void 0;
 (function (jsx) {
-    function addElement(group, v) {
-        if (v instanceof Array) {
-            v.forEach(function (e) { return addElement(group, e); });
-        }
-        else if (v instanceof Fragment) {
-            v.children.forEach(function (e) { return addElement(group, e); });
-        }
-        else if (v instanceof View) {
-            group.addChild(v);
-        }
-        else {
-            throw new Error("Can only use view as child");
-        }
-    }
     function createElement(constructor, config) {
         var arguments$1 = arguments;
 
@@ -2721,18 +2753,22 @@ exports.jsx = void 0;
             children[_i - 2] = arguments$1[_i];
         }
         var e = new constructor();
+        if (e instanceof Fragment) {
+            return children;
+        }
         e.layoutConfig = layoutConfig().fit();
         if (config) {
             e.apply(config);
         }
         if (children && children.length > 0) {
-            if (e instanceof Group) {
-                children.forEach(function (child) {
-                    addElement(e, child);
-                });
+            if (children.length === 1) {
+                children = children[0];
+            }
+            if (Reflect.has(e, "innerElement")) {
+                Reflect.set(e, "innerElement", children, e);
             }
             else {
-                throw new Error("Can only add child to group view, do not support " + constructor.name);
+                throw new Error("Do not support " + constructor.name + " for " + children);
             }
         }
         return e;

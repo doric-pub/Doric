@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Property, Superview } from "../ui/view";
+import { View, Property, Superview } from "../ui/view";
 import { layoutConfig } from "../util/layoutconfig";
 export class Refreshable extends Superview {
     allSubviews() {
@@ -33,6 +33,15 @@ export class Refreshable extends Superview {
         this.dirtyProps.content = this.content.viewId;
         this.dirtyProps.header = (this.header || {}).viewId;
         return super.toModel();
+    }
+    set innerElement(e) {
+        if (e instanceof View) {
+            this.content = e;
+        }
+        else {
+            this.header = e[0];
+            this.content = e[1];
+        }
     }
 }
 __decorate([

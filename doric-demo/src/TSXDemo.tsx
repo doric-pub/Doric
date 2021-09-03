@@ -4,9 +4,12 @@ import {
   Panel,
   Gravity,
   Group,
-  LayoutSpec,
+  layoutConfig,
   Text,
   makeRef,
+  Stack,
+  Color,
+  modal,
 } from "doric";
 
 function createFragment() {
@@ -27,27 +30,24 @@ class Counter extends Panel {
     <VLayout
       space={20}
       gravity={Gravity.Center}
-      layoutConfig={{
-        widthSpec: LayoutSpec.MOST,
-        heightSpec: LayoutSpec.MOST,
-      }}
+      layoutConfig={layoutConfig().fit().configAlignment(Gravity.Center)}
       parent={root}
     >
-      <Text text={`${count}`} textSize={40} ref={ref} />
+      <Text textSize={40} ref={ref}>
+        {`${count}`}
+      </Text>
       <Text
-        text="Click to count"
         textSize={20}
+        text="Click to count"
         onClick={() => {
           count++;
           ref.current.text = `${count}`;
         }}
-      />
+      ></Text>
+      {fragments}
       {fragments}
       {[0, 1, 2, 3].map((i) => (
-        <>
-          <Text text={`Index ${i}`} />
-          <Text text={`Subtitle ${i}`} textSize={10} />
-        </>
+        <Text text={`Index ${i}`} />
       ))}
     </VLayout>;
   }

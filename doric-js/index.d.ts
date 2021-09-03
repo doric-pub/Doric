@@ -323,12 +323,15 @@ declare module 'doric/lib/src/ui/view' {
             clean(): void;
             toModel(): NativeViewModel;
     }
-    export abstract class Group extends Superview {
+    export type ViewArray = View[];
+    export type ViewFragment = View | ViewArray;
+    export abstract class Group extends Superview implements JSX.ElementChildrenAttribute {
             readonly children: View[];
             allSubviews(): View[];
             addChild(view: View): void;
             removeChild(view: View): void;
             removeAllChildren(): void;
+            set innerElement(e: View | ViewFragment | ViewFragment[] | undefined | null);
     }
 }
 
@@ -508,7 +511,7 @@ declare module 'doric/lib/src/widget/text' {
         Start = 2,
         Clip = 3
     }
-    export class Text extends View {
+    export class Text extends View implements JSX.ElementChildrenAttribute {
         text?: string;
         textColor?: Color | GradientColor;
         textSize?: number;
@@ -523,6 +526,7 @@ declare module 'doric/lib/src/widget/text' {
         underline?: boolean;
         htmlText?: string;
         truncateAt?: TruncateAt;
+        set innerElement(e: string);
     }
     export function text(config: Partial<Text>): Text;
 }
@@ -682,7 +686,7 @@ declare module 'doric/lib/src/widget/scroller' {
     import { Superview, View, NativeViewModel } from 'doric/lib/src/ui/view';
     import { BridgeContext } from 'doric/lib/src/runtime/global';
     export function scroller(content: View, config?: Partial<Scroller>): Scroller;
-    export class Scroller extends Superview {
+    export class Scroller extends Superview implements JSX.ElementChildrenAttribute {
         content: View;
         contentOffset?: {
             x: number;
@@ -711,13 +715,14 @@ declare module 'doric/lib/src/widget/scroller' {
             x: number;
             y: number;
         }, animated?: boolean): Promise<any>;
+        set innerElement(e: View);
     }
 }
 
 declare module 'doric/lib/src/widget/refreshable' {
     import { View, Superview, NativeViewModel } from "doric/lib/src/ui/view";
     import { BridgeContext } from "doric/lib/src/runtime/global";
-    export class Refreshable extends Superview {
+    export class Refreshable extends Superview implements JSX.ElementChildrenAttribute {
         content: View;
         header?: View;
         onRefresh?: () => void;
@@ -727,6 +732,7 @@ declare module 'doric/lib/src/widget/refreshable' {
         isRefreshable(context: BridgeContext): Promise<boolean>;
         isRefreshing(context: BridgeContext): Promise<boolean>;
         toModel(): NativeViewModel;
+        set innerElement(e: View | [View, View]);
     }
     export function refreshable(config: Partial<Refreshable>): Refreshable;
     export interface IPullable {
@@ -1402,13 +1408,13 @@ declare module 'doric/lib/src/util/jsx' {
     import { Group, View } from "doric/lib/src/ui/view";
     import { ClassType } from "doric/lib/src/util/types";
     export namespace jsx {
-        function createElement<T extends View>(constructor: ClassType<T>, config: Partial<T> | null, ...children: View[]): T;
+        function createElement<T extends View>(constructor: ClassType<T>, config: Partial<T> | null, ...children: any[]): any[] | T;
         class Fragment extends Group {
         }
     }
     global {
         namespace JSX {
-            interface IntrinsicElements {
+            interface Element extends View {
             }
             interface ElementClass extends View {
             }
@@ -1416,7 +1422,9 @@ declare module 'doric/lib/src/util/jsx' {
                 props: {};
             }
             interface ElementChildrenAttribute {
-                children: View[];
+                innerElement: any;
+            }
+            interface IntrinsicElements {
             }
         }
     }

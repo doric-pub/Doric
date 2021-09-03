@@ -2139,6 +2139,20 @@ class Group extends Superview {
     removeAllChildren() {
         this.children.length = 0;
     }
+    addInnerElement(e) {
+        if (e instanceof Array) {
+            e.forEach(e => this.addInnerElement(e));
+        }
+        else if (e instanceof View) {
+            this.addChild(e);
+        }
+        else {
+            loge(`Not allowed to add ${typeof e}`);
+        }
+    }
+    set innerElement(e) {
+        this.addInnerElement(e);
+    }
 }
 
 const SPECIFIED = 1;
@@ -2977,6 +2991,9 @@ exports.TruncateAt = void 0;
     TruncateAt[TruncateAt["Clip"] = 3] = "Clip";
 })(exports.TruncateAt || (exports.TruncateAt = {}));
 class Text extends View {
+    set innerElement(e) {
+        this.text = e;
+    }
 }
 __decorate$a([
     Property,
@@ -3478,6 +3495,9 @@ class Scroller extends Superview {
     scrollBy(context, offset, animated) {
         return this.nativeChannel(context, "scrollBy")({ offset, animated });
     }
+    set innerElement(e) {
+        this.content = e;
+    }
 }
 __decorate$6([
     Property,
@@ -3533,6 +3553,15 @@ class Refreshable extends Superview {
         this.dirtyProps.content = this.content.viewId;
         this.dirtyProps.header = (this.header || {}).viewId;
         return super.toModel();
+    }
+    set innerElement(e) {
+        if (e instanceof View) {
+            this.content = e;
+        }
+        else {
+            this.header = e[0];
+            this.content = e[1];
+        }
     }
 }
 __decorate$5([
@@ -3640,34 +3669,24 @@ exports.Display = void 0;
 
 exports.jsx = void 0;
 (function (jsx) {
-    function addElement(group, v) {
-        if (v instanceof Array) {
-            v.forEach(e => addElement(group, e));
-        }
-        else if (v instanceof Fragment) {
-            v.children.forEach(e => addElement(group, e));
-        }
-        else if (v instanceof View) {
-            group.addChild(v);
-        }
-        else {
-            throw new Error(`Can only use view as child`);
-        }
-    }
     function createElement(constructor, config, ...children) {
         const e = new constructor();
+        if (e instanceof Fragment) {
+            return children;
+        }
         e.layoutConfig = layoutConfig().fit();
         if (config) {
             e.apply(config);
         }
         if (children && children.length > 0) {
-            if (e instanceof Group) {
-                children.forEach((child) => {
-                    addElement(e, child);
-                });
+            if (children.length === 1) {
+                children = children[0];
+            }
+            if (Reflect.has(e, "innerElement")) {
+                Reflect.set(e, "innerElement", children, e);
             }
             else {
-                throw new Error(`Can only add child to group view, do not support ${constructor.name}`);
+                throw new Error(`Do not support ${constructor.name} for ${children}`);
             }
         }
         return e;

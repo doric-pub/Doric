@@ -153,10 +153,14 @@ export declare abstract class Superview extends View {
     clean(): void;
     toModel(): NativeViewModel;
 }
-export declare abstract class Group extends Superview {
+export declare type ViewArray = View[];
+export declare type ViewFragment = View | ViewArray;
+export declare abstract class Group extends Superview implements JSX.ElementChildrenAttribute {
     readonly children: View[];
     allSubviews(): View[];
     addChild(view: View): void;
     removeChild(view: View): void;
     removeAllChildren(): void;
+    private addInnerElement;
+    set innerElement(e: View | ViewFragment | ViewFragment[] | undefined | null);
 }

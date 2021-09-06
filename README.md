@@ -26,55 +26,39 @@
 </div>
 
 # Doric
-Doric是一套高性能的跨平台开发框架,使用TSX/TypeScript开发,一套代码可在不同平台展示出同样的页面.当前已支持Android、iOS、Qt等平台及WebComponent引入.
+Doric是一套高性能的跨平台开发框架,使用TSX/TypeScript开发,一套代码可在不同平台展示出同样的页面.
 
-## 项目特色
+## 特色
 ### 跨平台
 Doric目前已支持Android、iOS、Qt、Web,可通过一套代码在各平台展示一致的前端页面.
 ### 高性能
+Doric渲染视图时使用原生组件,在API上遵循原生接口,在架构上采用脏值检测、局部更新等多种机制实现JS与原生间的高效通信,Doric页面的渲染及运行性能可真正达到与原生媲美.
+### 易上手
+Doric提供脚手架工具`doric-cli`及开发调试工具`Devkit`,提供热重载、断点调试、性能瀑布图、节点查看器等多种工具,帮助开发者更方便快捷地开发页面,并进行分析调试.
 ### 易扩展
-### 高可用
-### 灵活
+Doric中提供了通用的视图组件和平台的原生能力模块,可以满足常用的需求.
+同时,Doric中也提供了完备的插件机制,您可以通过向Doric注册插件来向Doric中提供视图组件或原生能力.
 
 ## 快速使用
-### 项目地址: [https://doric.pub](https://doric.pub)
+> 项目地址: [https://doric.pub](https://doric.pub)
 * 您可以直接打开网页[Doric Playgroud](https://p.doric.pub/play/?e=167#example/HelloDoric.ts)快速体验Doric中的风格
 * 您可以通过`doric-cli`命令行工具直接创建Doric工程,可参考[安装使用](https://doric.pub/docs/index.html#%E5%AE%89%E8%A3%85Doric)
 * 如果您需要在现有Android项目中接入使用Doric,可参考[在Android中使用Doric](https://doric.pub/api/android.html)
 * 如果您需要在现有iOS项目中接入使用Doric,可参考[在iOS中使用Doric](https://doric.pub/api/ios.html)
 
 ## 示例代码
-### 声明式UI    
-```typescript
-   vlayout(
-       [
-           image({
-               imageUrl: 'https://doric.pub/logo.png'
-           }),
-           text({
-               text: "Hello,Doric",
-               textSize: 16,
-           }),
-       ],
-       {
-           layoutConfig: layoutConfig().fit().configAlignment(Gravity.Center),
-           space: 20,
-           gravity: Gravity.Center
-       }
-   ).in(root)
-```
-### TSX写法 (v0.9.0以上支持)
-```tsx
-<VLayout
-      parent={root}
-      layoutConfig={layoutConfig().fit().configAlignment(Gravity.Center)}
-      space={20}
-      gravity={Gravity.Center}
-    >
-      <Image imageUrl="https://doric.pub/logo.png" />
-      <Text textSize={16}>Hello,Doric</Text>
-</VLayout>
-```
+您可以通过下方代码体验Doric中的编写风格
+### 声明式UI
+您可以根据喜好,使用TypeScript或TSX语法书写布局.
+| TypeScript | TSX |
+| ---- | ---- |
+| <img src="https://user-images.githubusercontent.com/9526211/132191388-6e3740ce-2ad6-4847-86f4-a1f94a5a3a77.png" height="300px" /> | <img src="https://user-images.githubusercontent.com/9526211/132192041-bb547cb8-574b-44bb-9d8f-071f4e235f3a.png" height="300px"/>|
+
+### 跨平台统一
+下图为代码在Android及iOS应用上的运行截图
+| Android | iOS |
+| ---- | ---- |
+| !<img src="https://user-images.githubusercontent.com/9526211/132187361-dcafe2d1-120a-4145-ab98-3836b378576e.png" height="500px"/> | <img src="https://user-images.githubusercontent.com/9526211/132191681-0512abd2-0692-4e4f-9605-bf24d9b898c2.png" height="500px"/>|
 
 ## License
 

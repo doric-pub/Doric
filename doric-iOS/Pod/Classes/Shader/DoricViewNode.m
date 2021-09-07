@@ -343,10 +343,10 @@
     if (@available(iOS 10.0, *)) {
         UIGraphicsImageRendererFormat *format = [[UIGraphicsImageRendererFormat alloc] init];
         format.scale = [UIScreen mainScreen].scale;
-        UIGraphicsImageRenderer *render = [[UIGraphicsImageRenderer alloc]initWithSize:imgSize format:format];
-        UIImage *image = [render imageWithActions:^(UIGraphicsImageRendererContext * _Nonnull rendererContext) {
+        UIGraphicsImageRenderer *render = [[UIGraphicsImageRenderer alloc] initWithSize:imgSize format:format];
+        UIImage *image = [render imageWithActions:^(UIGraphicsImageRendererContext *_Nonnull rendererContext) {
             CGContextRef context = rendererContext.CGContext;
-            
+
             CGContextSaveGState(context);
             CGColorSpaceRef colorSpace = CGColorGetColorSpace((__bridge CGColorRef) colors.lastObject);
             CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef) colors, locations);
@@ -768,6 +768,29 @@
     if ([@"rotationY" isEqualToString:key]) {
         return self.rotationY;
     }
+    if ([@"backgroundColor" isEqualToString:key]) {
+        CGColorRef cgColor = self.view.backgroundColor.CGColor;
+        if (CGColorGetNumberOfComponents(cgColor) < 4) {
+            const CGFloat *components = CGColorGetComponents(cgColor);
+            CGFloat r = components[0];
+            CGFloat g = components[1];
+            CGFloat b = components[2];
+            return @((int) (b * 255) + (((int) (g * 255)) << 8) + (((int) (r * 255)) << 16) + (0xff
+                    << 24));
+        }
+
+        const CGFloat *components = CGColorGetComponents(cgColor);
+        CGFloat r = components[0];
+        CGFloat g = components[1];
+        CGFloat b = components[2];
+        CGFloat a = components[3];
+        return @((int) (b * 255) + (((int) (g * 255)) << 8) + (((int) (r * 255)) << 16) + (
+                ((int) (a * 255))
+                        << 24));
+    }
+    if ([@"alpha" isEqualToString:key]) {
+        return @(self.view.alpha);
+    }
     return nil;
 }
 
@@ -786,6 +809,10 @@
         self.rotationX = value;
     } else if ([@"rotationY" isEqualToString:key]) {
         self.rotationY = value;
+    } else if ([@"backgroundColor" isEqualToString:key]) {
+        self.view.backgroundColor = DoricColor(value);
+    } else if ([@"alpha" isEqualToString:key]) {
+        self.view.alpha = value.floatValue;
     }
 }
 
@@ -822,6 +849,10 @@
         animation.toValue = @([params[@"toValue"] floatValue] * M_PI);
     } else if ([@"backgroundColor" isEqualToString:key]) {
         animation.keyPath = @"backgroundColor";
+        animation.fromValue = (id)DoricColor(params[@"fromValue"]).CGColor;
+        animation.toValue = (id)DoricColor(params[@"toValue"]).CGColor;
+    } else if ([@"alpha" isEqualToString:key]) {
+        animation.keyPath = @"opacity";
         animation.fromValue = params[@"fromValue"];
         animation.toValue = params[@"toValue"];
     }

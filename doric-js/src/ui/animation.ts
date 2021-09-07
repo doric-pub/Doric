@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
+import { Color } from "../util/color"
 import { Modeling, Model } from "../util/types"
 import { uniqueId } from "../util/uniqueId"
 
-export type AnimatedKey = "translationX" | "translationY" | "scaleX" | "scaleY" | "rotation" | "pivotX" | "pivotY" | "rotationX" | "rotationY"
+export type AnimatedKey = "translationX" | "translationY" | "scaleX" | "scaleY" | "rotation" | "pivotX" | "pivotY" | "rotationX" | "rotationY" | "backgroundColor" | "alpha"
 
 export enum RepeatMode {
     RESTART = 1,
@@ -209,7 +210,9 @@ export class TranslationAnimation extends Animation {
         return this.translationYChangeable.toValue
     }
 }
-
+/**
+ * Rotation range is [0..2]
+ */
 export class RotationAnimation extends Animation {
     private rotationChaneable: Changeable = {
         key: "rotation",
@@ -237,7 +240,9 @@ export class RotationAnimation extends Animation {
         return this.rotationChaneable.toValue
     }
 }
-
+/**
+ * Rotation range is [0..2]
+ */
 export class RotationXAnimation extends Animation {
     private rotationChaneable: Changeable = {
         key: "rotationX",
@@ -265,6 +270,9 @@ export class RotationXAnimation extends Animation {
         return this.rotationChaneable.toValue
     }
 }
+/**
+ * Rotation range is [0..2]
+ */
 export class RotationYAnimation extends Animation {
     private rotationChaneable: Changeable = {
         key: "rotationY",
@@ -292,6 +300,70 @@ export class RotationYAnimation extends Animation {
         return this.rotationChaneable.toValue
     }
 }
+
+export class BackgroundColorAnimation extends Animation {
+    private backgroundColorChangeable: Changeable = {
+        key: "backgroundColor",
+        fromValue: Color.TRANSPARENT._value,
+        toValue: Color.TRANSPARENT._value,
+    }
+
+    constructor() {
+        super()
+        this.changeables.set("backgroundColor", this.backgroundColorChangeable)
+    }
+
+    set fromColor(color: Color) {
+        this.backgroundColorChangeable.fromValue = color._value
+    }
+
+    get fromColor() {
+        return new Color(this.backgroundColorChangeable.fromValue)
+    }
+
+    set toColor(v: Color) {
+        this.backgroundColorChangeable.toValue = v._value
+    }
+
+    get toColor() {
+        return new Color(this.backgroundColorChangeable.toValue)
+    }
+}
+
+/**
+ * Alpha range is [0..1]
+ */
+export class AlphaAnimation extends Animation {
+    private opacityChangeable: Changeable = {
+        key: "alpha",
+        fromValue: 1,
+        toValue: 1,
+    }
+
+    constructor() {
+        super()
+        this.changeables.set("alpha", this.opacityChangeable)
+    }
+
+    set from(v: number) {
+        this.opacityChangeable.fromValue = v
+    }
+
+    get from() {
+        return this.opacityChangeable.fromValue
+    }
+
+    set to(v: number) {
+        this.opacityChangeable.toValue = v
+    }
+
+    get to() {
+        return this.opacityChangeable.toValue
+    }
+}
+
+
+
 export class AnimationSet implements IAnimation {
     private animations: IAnimation[] = []
     private _duration = 0

@@ -1054,15 +1054,28 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
 
     private ObjectAnimator parseChangeable(JSObject jsObject, JSValue fillMode) {
         String key = jsObject.getProperty("key").asString().value();
-        float startVal = jsObject.getProperty("fromValue").asNumber().toFloat();
-        float endVal = jsObject.getProperty("toValue").asNumber().toFloat();
-        ObjectAnimator animator = ObjectAnimator.ofFloat(this,
-                key,
-                startVal,
-                endVal
-        );
-        setFillMode(animator, key, startVal, fillMode);
-        return animator;
+        if ("backgroundColor".equals(key)) {
+            int startVal = jsObject.getProperty("fromValue").asNumber().toInt();
+            int endVal = jsObject.getProperty("toValue").asNumber().toInt();
+            ObjectAnimator animator = ObjectAnimator.ofInt(this,
+                    key,
+                    startVal,
+                    endVal
+            );
+            animator.setEvaluator(new ArgbEvaluator());
+            setFillMode(animator, key, startVal, fillMode);
+            return animator;
+        } else {
+            float startVal = jsObject.getProperty("fromValue").asNumber().toFloat();
+            float endVal = jsObject.getProperty("toValue").asNumber().toFloat();
+            ObjectAnimator animator = ObjectAnimator.ofFloat(this,
+                    key,
+                    startVal,
+                    endVal
+            );
+            setFillMode(animator, key, startVal, fillMode);
+            return animator;
+        }
     }
 
     private void setFillMode(ObjectAnimator animator,
@@ -1112,6 +1125,12 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 break;
             case "rotation":
                 setRotation(value);
+                break;
+            case "backgroundColor":
+                setBackgroundColor((int) value);
+                break;
+            case "alpha":
+                setAlpha(value);
                 break;
             default:
                 break;

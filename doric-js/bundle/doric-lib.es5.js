@@ -1487,6 +1487,82 @@ var Panel = /** @class */ (function () {
     return Panel;
 }());
 
+/**
+ *  Store color as format AARRGGBB or RRGGBB
+ */
+var Color = /** @class */ (function () {
+    function Color(v) {
+        this._value = 0;
+        this._value = v | 0x0;
+    }
+    Color.parse = function (str) {
+        if (!str.startsWith("#")) {
+            throw new Error("Parse color error with " + str);
+        }
+        var val = parseInt(str.substr(1), 16);
+        if (str.length === 7) {
+            return new Color(val | 0xff000000);
+        }
+        else if (str.length === 9) {
+            return new Color(val);
+        }
+        else {
+            throw new Error("Parse color error with " + str);
+        }
+    };
+    Color.safeParse = function (str, defVal) {
+        if (defVal === void 0) { defVal = Color.TRANSPARENT; }
+        var color = defVal;
+        try {
+            color = Color.parse(str);
+        }
+        catch (e) {
+        }
+        finally {
+            return color;
+        }
+    };
+    Color.prototype.alpha = function (v) {
+        v = v * 255;
+        return new Color((this._value & 0xffffff) | ((v & 0xff) << 24));
+    };
+    Color.prototype.toModel = function () {
+        return this._value;
+    };
+    Color.BLACK = new Color(0xFF000000);
+    Color.DKGRAY = new Color(0xFF444444);
+    Color.GRAY = new Color(0xFF888888);
+    Color.LTGRAY = new Color(0xFFCCCCCC);
+    Color.WHITE = new Color(0xFFFFFFFF);
+    Color.RED = new Color(0xFFFF0000);
+    Color.GREEN = new Color(0xFF00FF00);
+    Color.BLUE = new Color(0xFF0000FF);
+    Color.YELLOW = new Color(0xFFFFFF00);
+    Color.CYAN = new Color(0xFF00FFFF);
+    Color.MAGENTA = new Color(0xFFFF00FF);
+    Color.TRANSPARENT = new Color(0);
+    return Color;
+}());
+exports.GradientOrientation = void 0;
+(function (GradientOrientation) {
+    /** draw the gradient from the top to the bottom */
+    GradientOrientation[GradientOrientation["TOP_BOTTOM"] = 0] = "TOP_BOTTOM";
+    /** draw the gradient from the top-right to the bottom-left */
+    GradientOrientation[GradientOrientation["TR_BL"] = 1] = "TR_BL";
+    /** draw the gradient from the right to the left */
+    GradientOrientation[GradientOrientation["RIGHT_LEFT"] = 2] = "RIGHT_LEFT";
+    /** draw the gradient from the bottom-right to the top-left */
+    GradientOrientation[GradientOrientation["BR_TL"] = 3] = "BR_TL";
+    /** draw the gradient from the bottom to the top */
+    GradientOrientation[GradientOrientation["BOTTOM_TOP"] = 4] = "BOTTOM_TOP";
+    /** draw the gradient from the bottom-left to the top-right */
+    GradientOrientation[GradientOrientation["BL_TR"] = 5] = "BL_TR";
+    /** draw the gradient from the left to the right */
+    GradientOrientation[GradientOrientation["LEFT_RIGHT"] = 6] = "LEFT_RIGHT";
+    /** draw the gradient from the top-left to the bottom-right */
+    GradientOrientation[GradientOrientation["TL_BR"] = 7] = "TL_BR";
+})(exports.GradientOrientation || (exports.GradientOrientation = {}));
+
 /*
  * Copyright [2019] [Doric.Pub]
  *
@@ -1736,6 +1812,9 @@ var TranslationAnimation = /** @class */ (function (_super) {
     });
     return TranslationAnimation;
 }(Animation));
+/**
+ * Rotation range is [0..2]
+ */
 var RotationAnimation = /** @class */ (function (_super) {
     __extends$e(RotationAnimation, _super);
     function RotationAnimation() {
@@ -1770,6 +1849,9 @@ var RotationAnimation = /** @class */ (function (_super) {
     });
     return RotationAnimation;
 }(Animation));
+/**
+ * Rotation range is [0..2]
+ */
 var RotationXAnimation = /** @class */ (function (_super) {
     __extends$e(RotationXAnimation, _super);
     function RotationXAnimation() {
@@ -1804,6 +1886,9 @@ var RotationXAnimation = /** @class */ (function (_super) {
     });
     return RotationXAnimation;
 }(Animation));
+/**
+ * Rotation range is [0..2]
+ */
 var RotationYAnimation = /** @class */ (function (_super) {
     __extends$e(RotationYAnimation, _super);
     function RotationYAnimation() {
@@ -1837,6 +1922,77 @@ var RotationYAnimation = /** @class */ (function (_super) {
         configurable: true
     });
     return RotationYAnimation;
+}(Animation));
+var BackgroundColorAnimation = /** @class */ (function (_super) {
+    __extends$e(BackgroundColorAnimation, _super);
+    function BackgroundColorAnimation() {
+        var _this = _super.call(this) || this;
+        _this.backgroundColorChangeable = {
+            key: "backgroundColor",
+            fromValue: Color.TRANSPARENT._value,
+            toValue: Color.TRANSPARENT._value,
+        };
+        _this.changeables.set("backgroundColor", _this.backgroundColorChangeable);
+        return _this;
+    }
+    Object.defineProperty(BackgroundColorAnimation.prototype, "fromColor", {
+        get: function () {
+            return new Color(this.backgroundColorChangeable.fromValue);
+        },
+        set: function (color) {
+            this.backgroundColorChangeable.fromValue = color._value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(BackgroundColorAnimation.prototype, "toColor", {
+        get: function () {
+            return new Color(this.backgroundColorChangeable.toValue);
+        },
+        set: function (v) {
+            this.backgroundColorChangeable.toValue = v._value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    return BackgroundColorAnimation;
+}(Animation));
+/**
+ * Alpha range is [0..1]
+ */
+var AlphaAnimation = /** @class */ (function (_super) {
+    __extends$e(AlphaAnimation, _super);
+    function AlphaAnimation() {
+        var _this = _super.call(this) || this;
+        _this.opacityChangeable = {
+            key: "alpha",
+            fromValue: 1,
+            toValue: 1,
+        };
+        _this.changeables.set("alpha", _this.opacityChangeable);
+        return _this;
+    }
+    Object.defineProperty(AlphaAnimation.prototype, "from", {
+        get: function () {
+            return this.opacityChangeable.fromValue;
+        },
+        set: function (v) {
+            this.opacityChangeable.fromValue = v;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(AlphaAnimation.prototype, "to", {
+        get: function () {
+            return this.opacityChangeable.toValue;
+        },
+        set: function (v) {
+            this.opacityChangeable.toValue = v;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    return AlphaAnimation;
 }(Animation));
 var AnimationSet = /** @class */ (function () {
     function AnimationSet() {
@@ -1977,82 +2133,6 @@ function text(config) {
     ret.apply(config);
     return ret;
 }
-
-/**
- *  Store color as format AARRGGBB or RRGGBB
- */
-var Color = /** @class */ (function () {
-    function Color(v) {
-        this._value = 0;
-        this._value = v | 0x0;
-    }
-    Color.parse = function (str) {
-        if (!str.startsWith("#")) {
-            throw new Error("Parse color error with " + str);
-        }
-        var val = parseInt(str.substr(1), 16);
-        if (str.length === 7) {
-            return new Color(val | 0xff000000);
-        }
-        else if (str.length === 9) {
-            return new Color(val);
-        }
-        else {
-            throw new Error("Parse color error with " + str);
-        }
-    };
-    Color.safeParse = function (str, defVal) {
-        if (defVal === void 0) { defVal = Color.TRANSPARENT; }
-        var color = defVal;
-        try {
-            color = Color.parse(str);
-        }
-        catch (e) {
-        }
-        finally {
-            return color;
-        }
-    };
-    Color.prototype.alpha = function (v) {
-        v = v * 255;
-        return new Color((this._value & 0xffffff) | ((v & 0xff) << 24));
-    };
-    Color.prototype.toModel = function () {
-        return this._value;
-    };
-    Color.BLACK = new Color(0xFF000000);
-    Color.DKGRAY = new Color(0xFF444444);
-    Color.GRAY = new Color(0xFF888888);
-    Color.LTGRAY = new Color(0xFFCCCCCC);
-    Color.WHITE = new Color(0xFFFFFFFF);
-    Color.RED = new Color(0xFFFF0000);
-    Color.GREEN = new Color(0xFF00FF00);
-    Color.BLUE = new Color(0xFF0000FF);
-    Color.YELLOW = new Color(0xFFFFFF00);
-    Color.CYAN = new Color(0xFF00FFFF);
-    Color.MAGENTA = new Color(0xFFFF00FF);
-    Color.TRANSPARENT = new Color(0);
-    return Color;
-}());
-exports.GradientOrientation = void 0;
-(function (GradientOrientation) {
-    /** draw the gradient from the top to the bottom */
-    GradientOrientation[GradientOrientation["TOP_BOTTOM"] = 0] = "TOP_BOTTOM";
-    /** draw the gradient from the top-right to the bottom-left */
-    GradientOrientation[GradientOrientation["TR_BL"] = 1] = "TR_BL";
-    /** draw the gradient from the right to the left */
-    GradientOrientation[GradientOrientation["RIGHT_LEFT"] = 2] = "RIGHT_LEFT";
-    /** draw the gradient from the bottom-right to the top-left */
-    GradientOrientation[GradientOrientation["BR_TL"] = 3] = "BR_TL";
-    /** draw the gradient from the bottom to the top */
-    GradientOrientation[GradientOrientation["BOTTOM_TOP"] = 4] = "BOTTOM_TOP";
-    /** draw the gradient from the bottom-left to the top-right */
-    GradientOrientation[GradientOrientation["BL_TR"] = 5] = "BL_TR";
-    /** draw the gradient from the left to the right */
-    GradientOrientation[GradientOrientation["LEFT_RIGHT"] = 6] = "LEFT_RIGHT";
-    /** draw the gradient from the top-left to the bottom-right */
-    GradientOrientation[GradientOrientation["TL_BR"] = 7] = "TL_BR";
-})(exports.GradientOrientation || (exports.GradientOrientation = {}));
 
 var __extends$c = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -4086,8 +4166,10 @@ var ModularPanel = /** @class */ (function (_super) {
     return ModularPanel;
 }(Module));
 
+exports.AlphaAnimation = AlphaAnimation;
 exports.AnimationSet = AnimationSet;
 exports.BOTTOM = BOTTOM;
+exports.BackgroundColorAnimation = BackgroundColorAnimation;
 exports.CENTER = CENTER;
 exports.CENTER_X = CENTER_X;
 exports.CENTER_Y = CENTER_Y;

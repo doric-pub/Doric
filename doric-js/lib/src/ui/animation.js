@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Color } from "../util/color";
 import { uniqueId } from "../util/uniqueId";
 export var RepeatMode;
 (function (RepeatMode) {
@@ -172,6 +173,9 @@ export class TranslationAnimation extends Animation {
         return this.translationYChangeable.toValue;
     }
 }
+/**
+ * Rotation range is [0..2]
+ */
 export class RotationAnimation extends Animation {
     constructor() {
         super();
@@ -195,6 +199,9 @@ export class RotationAnimation extends Animation {
         return this.rotationChaneable.toValue;
     }
 }
+/**
+ * Rotation range is [0..2]
+ */
 export class RotationXAnimation extends Animation {
     constructor() {
         super();
@@ -218,6 +225,9 @@ export class RotationXAnimation extends Animation {
         return this.rotationChaneable.toValue;
     }
 }
+/**
+ * Rotation range is [0..2]
+ */
 export class RotationYAnimation extends Animation {
     constructor() {
         super();
@@ -239,6 +249,55 @@ export class RotationYAnimation extends Animation {
     }
     get toRotation() {
         return this.rotationChaneable.toValue;
+    }
+}
+export class BackgroundColorAnimation extends Animation {
+    constructor() {
+        super();
+        this.backgroundColorChangeable = {
+            key: "backgroundColor",
+            fromValue: Color.TRANSPARENT._value,
+            toValue: Color.TRANSPARENT._value,
+        };
+        this.changeables.set("backgroundColor", this.backgroundColorChangeable);
+    }
+    set fromColor(color) {
+        this.backgroundColorChangeable.fromValue = color._value;
+    }
+    get fromColor() {
+        return new Color(this.backgroundColorChangeable.fromValue);
+    }
+    set toColor(v) {
+        this.backgroundColorChangeable.toValue = v._value;
+    }
+    get toColor() {
+        return new Color(this.backgroundColorChangeable.toValue);
+    }
+}
+/**
+ * Alpha range is [0..1]
+ */
+export class AlphaAnimation extends Animation {
+    constructor() {
+        super();
+        this.opacityChangeable = {
+            key: "alpha",
+            fromValue: 1,
+            toValue: 1,
+        };
+        this.changeables.set("alpha", this.opacityChangeable);
+    }
+    set from(v) {
+        this.opacityChangeable.fromValue = v;
+    }
+    get from() {
+        return this.opacityChangeable.fromValue;
+    }
+    set to(v) {
+        this.opacityChangeable.toValue = v;
+    }
+    get to() {
+        return this.opacityChangeable.toValue;
     }
 }
 export class AnimationSet {

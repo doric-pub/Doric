@@ -336,8 +336,9 @@ declare module 'doric/lib/src/ui/view' {
 }
 
 declare module 'doric/lib/src/ui/animation' {
+    import { Color } from "doric/lib/src/util/color";
     import { Modeling, Model } from "doric/lib/src/util/types";
-    export type AnimatedKey = "translationX" | "translationY" | "scaleX" | "scaleY" | "rotation" | "pivotX" | "pivotY" | "rotationX" | "rotationY";
+    export type AnimatedKey = "translationX" | "translationY" | "scaleX" | "scaleY" | "rotation" | "pivotX" | "pivotY" | "rotationX" | "rotationY" | "backgroundColor" | "alpha";
     export enum RepeatMode {
             RESTART = 1,
             REVERSE = 2
@@ -441,6 +442,9 @@ declare module 'doric/lib/src/ui/animation' {
             set toTranslationY(v: number);
             get toTranslationY(): number;
     }
+    /**
+        * Rotation range is [0..2]
+        */
     export class RotationAnimation extends Animation {
             constructor();
             set fromRotation(v: number);
@@ -448,6 +452,9 @@ declare module 'doric/lib/src/ui/animation' {
             set toRotation(v: number);
             get toRotation(): number;
     }
+    /**
+        * Rotation range is [0..2]
+        */
     export class RotationXAnimation extends Animation {
             constructor();
             set fromRotation(v: number);
@@ -455,12 +462,32 @@ declare module 'doric/lib/src/ui/animation' {
             set toRotation(v: number);
             get toRotation(): number;
     }
+    /**
+        * Rotation range is [0..2]
+        */
     export class RotationYAnimation extends Animation {
             constructor();
             set fromRotation(v: number);
             get fromRotation(): number;
             set toRotation(v: number);
             get toRotation(): number;
+    }
+    export class BackgroundColorAnimation extends Animation {
+            constructor();
+            set fromColor(color: Color);
+            get fromColor(): Color;
+            set toColor(v: Color);
+            get toColor(): Color;
+    }
+    /**
+        * Alpha range is [0..1]
+        */
+    export class AlphaAnimation extends Animation {
+            constructor();
+            set from(v: number);
+            get from(): number;
+            set to(v: number);
+            get to(): number;
     }
     export class AnimationSet implements IAnimation {
             delay?: number;

@@ -1,5 +1,6 @@
+import { Color } from "../util/color";
 import { Modeling, Model } from "../util/types";
-export declare type AnimatedKey = "translationX" | "translationY" | "scaleX" | "scaleY" | "rotation" | "pivotX" | "pivotY" | "rotationX" | "rotationY";
+export declare type AnimatedKey = "translationX" | "translationY" | "scaleX" | "scaleY" | "rotation" | "pivotX" | "pivotY" | "rotationX" | "rotationY" | "backgroundColor" | "alpha";
 export declare enum RepeatMode {
     RESTART = 1,
     REVERSE = 2
@@ -107,6 +108,9 @@ export declare class TranslationAnimation extends Animation {
     set toTranslationY(v: number);
     get toTranslationY(): number;
 }
+/**
+ * Rotation range is [0..2]
+ */
 export declare class RotationAnimation extends Animation {
     private rotationChaneable;
     constructor();
@@ -115,6 +119,9 @@ export declare class RotationAnimation extends Animation {
     set toRotation(v: number);
     get toRotation(): number;
 }
+/**
+ * Rotation range is [0..2]
+ */
 export declare class RotationXAnimation extends Animation {
     private rotationChaneable;
     constructor();
@@ -123,6 +130,9 @@ export declare class RotationXAnimation extends Animation {
     set toRotation(v: number);
     get toRotation(): number;
 }
+/**
+ * Rotation range is [0..2]
+ */
 export declare class RotationYAnimation extends Animation {
     private rotationChaneable;
     constructor();
@@ -130,6 +140,25 @@ export declare class RotationYAnimation extends Animation {
     get fromRotation(): number;
     set toRotation(v: number);
     get toRotation(): number;
+}
+export declare class BackgroundColorAnimation extends Animation {
+    private backgroundColorChangeable;
+    constructor();
+    set fromColor(color: Color);
+    get fromColor(): Color;
+    set toColor(v: Color);
+    get toColor(): Color;
+}
+/**
+ * Alpha range is [0..1]
+ */
+export declare class AlphaAnimation extends Animation {
+    private opacityChangeable;
+    constructor();
+    set from(v: number);
+    get from(): number;
+    set to(v: number);
+    get to(): number;
 }
 export declare class AnimationSet implements IAnimation {
     private animations;

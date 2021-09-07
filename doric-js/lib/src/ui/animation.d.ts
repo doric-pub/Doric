@@ -16,6 +16,10 @@ export interface Changeable {
     key: AnimatedKey;
     repeatCount?: number;
     repeatMode?: RepeatMode;
+    keyFrames?: {
+        percent: number;
+        value: number;
+    }[];
 }
 export declare enum FillMode {
     /**
@@ -74,6 +78,10 @@ declare abstract class Animation implements IAnimation {
             key: AnimatedKey;
             fromValue: number;
             toValue: number;
+            keyFrames: {
+                percent: number;
+                value: number;
+            }[] | undefined;
         }[];
         repeatCount: number | undefined;
         repeatMode: RepeatMode | undefined;
@@ -86,6 +94,14 @@ export declare class ScaleAnimation extends Animation {
     private scaleXChangeable;
     private scaleYChangeable;
     constructor();
+    set xKeyFrames(keyFrames: {
+        percent: number;
+        value: number;
+    }[]);
+    set yKeyFrames(keyFrames: {
+        percent: number;
+        value: number;
+    }[]);
     set fromScaleX(v: number);
     get fromScaleX(): number;
     set toScaleX(v: number);
@@ -99,6 +115,14 @@ export declare class TranslationAnimation extends Animation {
     private translationXChangeable;
     private translationYChangeable;
     constructor();
+    set xKeyFrames(keyFrames: {
+        percent: number;
+        value: number;
+    }[]);
+    set yKeyFrames(keyFrames: {
+        percent: number;
+        value: number;
+    }[]);
     set fromTranslationX(v: number);
     get fromTranslationX(): number;
     set toTranslationX(v: number);
@@ -118,6 +142,10 @@ export declare class RotationAnimation extends Animation {
     get fromRotation(): number;
     set toRotation(v: number);
     get toRotation(): number;
+    set keyFrames(keyFrames: {
+        percent: number;
+        value: number;
+    }[]);
 }
 /**
  * Rotation range is [0..2]
@@ -129,6 +157,10 @@ export declare class RotationXAnimation extends Animation {
     get fromRotation(): number;
     set toRotation(v: number);
     get toRotation(): number;
+    set keyFrames(keyFrames: {
+        percent: number;
+        value: number;
+    }[]);
 }
 /**
  * Rotation range is [0..2]
@@ -140,6 +172,10 @@ export declare class RotationYAnimation extends Animation {
     get fromRotation(): number;
     set toRotation(v: number);
     get toRotation(): number;
+    set keyFrames(keyFrames: {
+        percent: number;
+        value: number;
+    }[]);
 }
 export declare class BackgroundColorAnimation extends Animation {
     private backgroundColorChangeable;
@@ -148,6 +184,10 @@ export declare class BackgroundColorAnimation extends Animation {
     get fromColor(): Color;
     set toColor(v: Color);
     get toColor(): Color;
+    set keyFrames(keyFrames: {
+        percent: number;
+        value: Color;
+    }[]);
 }
 /**
  * Alpha range is [0..1]
@@ -159,6 +199,10 @@ export declare class AlphaAnimation extends Animation {
     get from(): number;
     set to(v: number);
     get to(): number;
+    set keyFrames(keyFrames: {
+        percent: number;
+        value: number;
+    }[]);
 }
 export declare class AnimationSet implements IAnimation {
     private animations;

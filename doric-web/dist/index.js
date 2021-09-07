@@ -2855,6 +2855,7 @@ class Animation {
                 key: e.key,
                 fromValue: e.fromValue,
                 toValue: e.toValue,
+                keyFrames: e.keyFrames,
             });
         }
         return {
@@ -2885,6 +2886,12 @@ class ScaleAnimation extends Animation {
         };
         this.changeables.set("scaleX", this.scaleXChangeable);
         this.changeables.set("scaleY", this.scaleYChangeable);
+    }
+    set xKeyFrames(keyFrames) {
+        this.scaleXChangeable.keyFrames = keyFrames;
+    }
+    set yKeyFrames(keyFrames) {
+        this.scaleYChangeable.keyFrames = keyFrames;
     }
     set fromScaleX(v) {
         this.scaleXChangeable.fromValue = v;
@@ -2926,6 +2933,12 @@ class TranslationAnimation extends Animation {
         };
         this.changeables.set("translationX", this.translationXChangeable);
         this.changeables.set("translationY", this.translationYChangeable);
+    }
+    set xKeyFrames(keyFrames) {
+        this.translationXChangeable.keyFrames = keyFrames;
+    }
+    set yKeyFrames(keyFrames) {
+        this.translationYChangeable.keyFrames = keyFrames;
     }
     set fromTranslationX(v) {
         this.translationXChangeable.fromValue = v;
@@ -2977,6 +2990,9 @@ class RotationAnimation extends Animation {
     get toRotation() {
         return this.rotationChaneable.toValue;
     }
+    set keyFrames(keyFrames) {
+        this.rotationChaneable.keyFrames = keyFrames;
+    }
 }
 /**
  * Rotation range is [0..2]
@@ -3002,6 +3018,9 @@ class RotationXAnimation extends Animation {
     }
     get toRotation() {
         return this.rotationChaneable.toValue;
+    }
+    set keyFrames(keyFrames) {
+        this.rotationChaneable.keyFrames = keyFrames;
     }
 }
 /**
@@ -3029,6 +3048,9 @@ class RotationYAnimation extends Animation {
     get toRotation() {
         return this.rotationChaneable.toValue;
     }
+    set keyFrames(keyFrames) {
+        this.rotationChaneable.keyFrames = keyFrames;
+    }
 }
 class BackgroundColorAnimation extends Animation {
     constructor() {
@@ -3051,6 +3073,9 @@ class BackgroundColorAnimation extends Animation {
     }
     get toColor() {
         return new Color(this.backgroundColorChangeable.toValue);
+    }
+    set keyFrames(keyFrames) {
+        this.backgroundColorChangeable.keyFrames = keyFrames.map(e => { return { percent: e.percent, value: e.value.toModel() }; });
     }
 }
 /**
@@ -3077,6 +3102,9 @@ class AlphaAnimation extends Animation {
     }
     get to() {
         return this.opacityChangeable.toValue;
+    }
+    set keyFrames(keyFrames) {
+        this.opacityChangeable.keyFrames = keyFrames;
     }
 }
 class AnimationSet {

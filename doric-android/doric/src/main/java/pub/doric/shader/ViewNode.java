@@ -19,7 +19,9 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
+import android.animation.Keyframe;
 import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
@@ -1054,28 +1056,49 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
 
     private ObjectAnimator parseChangeable(JSObject jsObject, JSValue fillMode) {
         String key = jsObject.getProperty("key").asString().value();
-        if ("backgroundColor".equals(key)) {
-            int startVal = jsObject.getProperty("fromValue").asNumber().toInt();
-            int endVal = jsObject.getProperty("toValue").asNumber().toInt();
-            ObjectAnimator animator = ObjectAnimator.ofInt(this,
-                    key,
-                    startVal,
-                    endVal
-            );
-            animator.setEvaluator(new ArgbEvaluator());
-            setFillMode(animator, key, startVal, fillMode);
-            return animator;
+        boolean castInt = "backgroundColor".equals(key);
+        ObjectAnimator animator;
+        float startVal = 0;
+        if (jsObject.getProperty("keyFrames").isArray()) {
+            JSArray keyFrames = jsObject.getProperty("keyFrames").asArray();
+            Keyframe[] keyFrameArray = new Keyframe[keyFrames.size()];
+            for (int i = 0; i < keyFrames.size(); i++) {
+                JSObject keyFrame = keyFrames.get(i).asObject();
+                float percent = keyFrame.getProperty("percent").asNumber().toFloat();
+                float value = keyFrame.getProperty("value").asNumber().toFloat();
+                if (i == 0) {
+                    startVal = value;
+                }
+                if (castInt) {
+                    keyFrameArray[i] = Keyframe.ofInt(percent, (int) value);
+                } else {
+                    keyFrameArray[i] = Keyframe.ofFloat(percent, value);
+                }
+            }
+            PropertyValuesHolder frameHolder = PropertyValuesHolder.ofKeyframe(key, keyFrameArray);
+            animator = ObjectAnimator.ofPropertyValuesHolder(this, frameHolder);
         } else {
-            float startVal = jsObject.getProperty("fromValue").asNumber().toFloat();
+            startVal = jsObject.getProperty("fromValue").asNumber().toFloat();
             float endVal = jsObject.getProperty("toValue").asNumber().toFloat();
-            ObjectAnimator animator = ObjectAnimator.ofFloat(this,
-                    key,
-                    startVal,
-                    endVal
-            );
-            setFillMode(animator, key, startVal, fillMode);
-            return animator;
+            if (castInt) {
+                animator = ObjectAnimator.ofInt(this,
+                        key,
+                        (int) startVal,
+                        (int) endVal
+                );
+            } else {
+                animator = ObjectAnimator.ofFloat(this,
+                        key,
+                        startVal,
+                        endVal
+                );
+            }
         }
+        if (castInt) {
+            animator.setEvaluator(new ArgbEvaluator());
+        }
+        setFillMode(animator, key, startVal, fillMode);
+        return animator;
     }
 
     private void setFillMode(ObjectAnimator animator,

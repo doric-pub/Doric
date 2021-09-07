@@ -1668,6 +1668,7 @@ var Animation = /** @class */ (function () {
                     key: e.key,
                     fromValue: e.fromValue,
                     toValue: e.toValue,
+                    keyFrames: e.keyFrames,
                 });
             }
         }
@@ -1710,6 +1711,20 @@ var ScaleAnimation = /** @class */ (function (_super) {
         _this.changeables.set("scaleY", _this.scaleYChangeable);
         return _this;
     }
+    Object.defineProperty(ScaleAnimation.prototype, "xKeyFrames", {
+        set: function (keyFrames) {
+            this.scaleXChangeable.keyFrames = keyFrames;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ScaleAnimation.prototype, "yKeyFrames", {
+        set: function (keyFrames) {
+            this.scaleYChangeable.keyFrames = keyFrames;
+        },
+        enumerable: false,
+        configurable: true
+    });
     Object.defineProperty(ScaleAnimation.prototype, "fromScaleX", {
         get: function () {
             return this.scaleXChangeable.fromValue;
@@ -1770,6 +1785,20 @@ var TranslationAnimation = /** @class */ (function (_super) {
         _this.changeables.set("translationY", _this.translationYChangeable);
         return _this;
     }
+    Object.defineProperty(TranslationAnimation.prototype, "xKeyFrames", {
+        set: function (keyFrames) {
+            this.translationXChangeable.keyFrames = keyFrames;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TranslationAnimation.prototype, "yKeyFrames", {
+        set: function (keyFrames) {
+            this.translationYChangeable.keyFrames = keyFrames;
+        },
+        enumerable: false,
+        configurable: true
+    });
     Object.defineProperty(TranslationAnimation.prototype, "fromTranslationX", {
         get: function () {
             return this.translationXChangeable.fromValue;
@@ -1847,6 +1876,13 @@ var RotationAnimation = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
+    Object.defineProperty(RotationAnimation.prototype, "keyFrames", {
+        set: function (keyFrames) {
+            this.rotationChaneable.keyFrames = keyFrames;
+        },
+        enumerable: false,
+        configurable: true
+    });
     return RotationAnimation;
 }(Animation));
 /**
@@ -1880,6 +1916,13 @@ var RotationXAnimation = /** @class */ (function (_super) {
         },
         set: function (v) {
             this.rotationChaneable.toValue = v;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(RotationXAnimation.prototype, "keyFrames", {
+        set: function (keyFrames) {
+            this.rotationChaneable.keyFrames = keyFrames;
         },
         enumerable: false,
         configurable: true
@@ -1921,6 +1964,13 @@ var RotationYAnimation = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
+    Object.defineProperty(RotationYAnimation.prototype, "keyFrames", {
+        set: function (keyFrames) {
+            this.rotationChaneable.keyFrames = keyFrames;
+        },
+        enumerable: false,
+        configurable: true
+    });
     return RotationYAnimation;
 }(Animation));
 var BackgroundColorAnimation = /** @class */ (function (_super) {
@@ -1951,6 +2001,13 @@ var BackgroundColorAnimation = /** @class */ (function (_super) {
         },
         set: function (v) {
             this.backgroundColorChangeable.toValue = v._value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(BackgroundColorAnimation.prototype, "keyFrames", {
+        set: function (keyFrames) {
+            this.backgroundColorChangeable.keyFrames = keyFrames.map(function (e) { return { percent: e.percent, value: e.value.toModel() }; });
         },
         enumerable: false,
         configurable: true
@@ -1988,6 +2045,13 @@ var AlphaAnimation = /** @class */ (function (_super) {
         },
         set: function (v) {
             this.opacityChangeable.toValue = v;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(AlphaAnimation.prototype, "keyFrames", {
+        set: function (keyFrames) {
+            this.opacityChangeable.keyFrames = keyFrames;
         },
         enumerable: false,
         configurable: true

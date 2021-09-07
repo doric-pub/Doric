@@ -24,7 +24,7 @@
     <img src="https://img.shields.io/cocoapods/v/DoricCore"/>
   </a>
 </div>
-## [中文](README-zh_CN.md)
+## [English](README.md)
 # Doric
 Doric是一套高性能的跨平台开发框架,使用TSX/TypeScript开发,一套代码可在不同平台展示出同样的页面.
 

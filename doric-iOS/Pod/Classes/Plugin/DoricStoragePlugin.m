@@ -20,8 +20,9 @@
 #import "DoricStoragePlugin.h"
 #import "DoricExtensions.h"
 #import "DoricSingleton.h"
+#import "DoricThirdParty.h"
 
-#if __has_include(<PINCache/PINCache.h>)
+#if DORIC_USE_PINCACHE
 
 #import <PINCache/PINCache.h>
 
@@ -64,7 +65,7 @@
 }
 @end
 
-#elif __has_include(<YYCache/YYCache.h>)
+#elif DORIC_USE_YYCACHE
 
 #import <YYCache/YYCache.h>
 
@@ -79,7 +80,7 @@
 }
 @end
 
-#elif __has_include(<TMCache/TMCache.h>)
+#elif DORIC_USE_TMCACHE
 
 #import <TMCache/TMCache.h>
 

@@ -660,10 +660,10 @@
     } else if ([params isKindOfClass:[NSDictionary class]]) {
         NSArray<NSDictionary *> *changeables = params[@"changeables"];
         CAAnimationGroup *animationGroup = [CAAnimationGroup animation];
-        NSMutableArray <CABasicAnimation *> *animations = [NSMutableArray new];
+        NSMutableArray <CAAnimation *> *animations = [NSMutableArray new];
 
         [changeables forEach:^(NSDictionary *obj) {
-            CABasicAnimation *animation = [self parseChangeable:obj fillMode:params[@"fillMode"]];
+            CAAnimation *animation = [self parseChangeable:obj fillMode:params[@"fillMode"]];
             if (params[@"timingFunction"]) {
                 animation.timingFunction = [self translateToTimingFunction:params[@"timingFunction"]];
             }
@@ -672,7 +672,7 @@
         animationGroup.animations = animations;
         animationGroup.delegate = [[AnimationCallback new] also:^(AnimationCallback *it) {
             it.startBlock = ^(AnimationCallback *callback) {
-                [[animations map:^id(CABasicAnimation *obj) {
+                [[animations map:^id(CAAnimation *obj) {
                     return obj.delegate;
                 }] forEach:^(AnimationCallback *obj) {
                     if (obj.startBlock) {
@@ -681,7 +681,7 @@
                 }];
             };
             it.endBlock = ^(AnimationCallback *callback) {
-                [[animations map:^id(CABasicAnimation *obj) {
+                [[animations map:^id(CAAnimation *obj) {
                     return obj.delegate;
                 }] forEach:^(AnimationCallback *obj) {
                     if (obj.endBlock) {
@@ -816,52 +816,101 @@
     }
 }
 
-- (CABasicAnimation *)parseChangeable:(NSDictionary *)params fillMode:(NSNumber *)fillMode {
+- (CAAnimation *)parseChangeable:(NSDictionary *)params fillMode:(NSNumber *)fillMode {
     NSString *key = params[@"key"];
-    CABasicAnimation *animation = [CABasicAnimation animation];
-    if ([@"translationX" isEqualToString:key]) {
-        animation.keyPath = @"transform.translation.x";
-        animation.fromValue = params[@"fromValue"];
-        animation.toValue = params[@"toValue"];
-    } else if ([@"translationY" isEqualToString:key]) {
-        animation.keyPath = @"transform.translation.y";
-        animation.fromValue = params[@"fromValue"];
-        animation.toValue = params[@"toValue"];
-    } else if ([@"scaleX" isEqualToString:key]) {
-        animation.keyPath = @"transform.scale.x";
-        animation.fromValue = params[@"fromValue"];
-        animation.toValue = params[@"toValue"];
-    } else if ([@"scaleY" isEqualToString:key]) {
-        animation.keyPath = @"transform.scale.y";
-        animation.fromValue = params[@"fromValue"];
-        animation.toValue = params[@"toValue"];
-    } else if ([@"rotation" isEqualToString:key]) {
-        animation.keyPath = @"transform.rotation.z";
-        animation.fromValue = @([params[@"fromValue"] floatValue] * M_PI);
-        animation.toValue = @([params[@"toValue"] floatValue] * M_PI);
-    } else if ([@"rotationX" isEqualToString:key]) {
-        animation.keyPath = @"transform.rotation.x";
-        animation.fromValue = @([params[@"fromValue"] floatValue] * M_PI);
-        animation.toValue = @([params[@"toValue"] floatValue] * M_PI);
-    } else if ([@"rotationY" isEqualToString:key]) {
-        animation.keyPath = @"transform.rotation.y";
-        animation.fromValue = @([params[@"fromValue"] floatValue] * M_PI);
-        animation.toValue = @([params[@"toValue"] floatValue] * M_PI);
-    } else if ([@"backgroundColor" isEqualToString:key]) {
-        animation.keyPath = @"backgroundColor";
-        animation.fromValue = (id)DoricColor(params[@"fromValue"]).CGColor;
-        animation.toValue = (id)DoricColor(params[@"toValue"]).CGColor;
-    } else if ([@"alpha" isEqualToString:key]) {
-        animation.keyPath = @"opacity";
-        animation.fromValue = params[@"fromValue"];
-        animation.toValue = params[@"toValue"];
+    NSArray *keyFrames = params[@"keyFrames"];
+    if (keyFrames && keyFrames.count > 0) {
+        CAKeyframeAnimation *animation = [CAKeyframeAnimation animation];
+        NSMutableArray *values = [NSMutableArray new];
+        NSMutableArray *times = [NSMutableArray new];
+
+        for (NSDictionary *keyFrame in keyFrames) {
+            if ([@"rotation" isEqualToString:key]
+                    || [@"rotationX" isEqualToString:key]
+                    || [@"rotationY" isEqualToString:key]) {
+                [values addObject:@([keyFrame[@"value"] floatValue] * M_PI)];
+            } else if ([@"backgroundColor" isEqualToString:key]) {
+                [values addObject:(id) DoricColor(keyFrame[@"value"]).CGColor];
+            } else {
+                [values addObject:keyFrame[@"value"]];
+            }
+            [times addObject:keyFrame[@"percent"]];
+        }
+        animation.keyTimes = times;
+        animation.values = values;
+        if ([@"translationX" isEqualToString:key]) {
+            animation.keyPath = @"transform.translation.x";
+        } else if ([@"translationY" isEqualToString:key]) {
+            animation.keyPath = @"transform.translation.y";
+        } else if ([@"scaleX" isEqualToString:key]) {
+            animation.keyPath = @"transform.scale.x";
+        } else if ([@"scaleY" isEqualToString:key]) {
+            animation.keyPath = @"transform.scale.y";
+        } else if ([@"rotation" isEqualToString:key]) {
+            animation.keyPath = @"transform.rotation.z";
+        } else if ([@"rotationX" isEqualToString:key]) {
+            animation.keyPath = @"transform.rotation.x";
+        } else if ([@"rotationY" isEqualToString:key]) {
+            animation.keyPath = @"transform.rotation.y";
+        } else if ([@"backgroundColor" isEqualToString:key]) {
+            animation.keyPath = @"backgroundColor";
+        } else if ([@"alpha" isEqualToString:key]) {
+            animation.keyPath = @"opacity";
+        }
+
+        [self setFillMode:animation
+                      key:key
+               startValue:params[@"fromValue"]
+                 endValue:params[@"toValue"]
+                 fillMode:fillMode];
+        return animation;
+    } else {
+        CABasicAnimation *animation = [CABasicAnimation animation];
+        if ([@"translationX" isEqualToString:key]) {
+            animation.keyPath = @"transform.translation.x";
+            animation.fromValue = params[@"fromValue"];
+            animation.toValue = params[@"toValue"];
+        } else if ([@"translationY" isEqualToString:key]) {
+            animation.keyPath = @"transform.translation.y";
+            animation.fromValue = params[@"fromValue"];
+            animation.toValue = params[@"toValue"];
+        } else if ([@"scaleX" isEqualToString:key]) {
+            animation.keyPath = @"transform.scale.x";
+            animation.fromValue = params[@"fromValue"];
+            animation.toValue = params[@"toValue"];
+        } else if ([@"scaleY" isEqualToString:key]) {
+            animation.keyPath = @"transform.scale.y";
+            animation.fromValue = params[@"fromValue"];
+            animation.toValue = params[@"toValue"];
+        } else if ([@"rotation" isEqualToString:key]) {
+            animation.keyPath = @"transform.rotation.z";
+            animation.fromValue = @([params[@"fromValue"] floatValue] * M_PI);
+            animation.toValue = @([params[@"toValue"] floatValue] * M_PI);
+        } else if ([@"rotationX" isEqualToString:key]) {
+            animation.keyPath = @"transform.rotation.x";
+            animation.fromValue = @([params[@"fromValue"] floatValue] * M_PI);
+            animation.toValue = @([params[@"toValue"] floatValue] * M_PI);
+        } else if ([@"rotationY" isEqualToString:key]) {
+            animation.keyPath = @"transform.rotation.y";
+            animation.fromValue = @([params[@"fromValue"] floatValue] * M_PI);
+            animation.toValue = @([params[@"toValue"] floatValue] * M_PI);
+        } else if ([@"backgroundColor" isEqualToString:key]) {
+            animation.keyPath = @"backgroundColor";
+            animation.fromValue = (id) DoricColor(params[@"fromValue"]).CGColor;
+            animation.toValue = (id) DoricColor(params[@"toValue"]).CGColor;
+        } else if ([@"alpha" isEqualToString:key]) {
+            animation.keyPath = @"opacity";
+            animation.fromValue = params[@"fromValue"];
+            animation.toValue = params[@"toValue"];
+        }
+        [self setFillMode:animation
+                      key:key
+               startValue:params[@"fromValue"]
+                 endValue:params[@"toValue"]
+                 fillMode:fillMode];
+        return animation;
     }
-    [self setFillMode:animation
-                  key:key
-           startValue:params[@"fromValue"]
-             endValue:params[@"toValue"]
-             fillMode:fillMode];
-    return animation;
+
 }
 
 - (CAMediaTimingFunction *)translateToTimingFunction:(NSNumber *)timingFunction {

@@ -354,6 +354,10 @@ declare module 'doric/lib/src/ui/animation' {
             key: AnimatedKey;
             repeatCount?: number;
             repeatMode?: RepeatMode;
+            keyFrames?: {
+                    percent: number;
+                    value: number;
+            }[];
     }
     export enum FillMode {
             /**
@@ -412,6 +416,10 @@ declare module 'doric/lib/src/ui/animation' {
                             key: AnimatedKey;
                             fromValue: number;
                             toValue: number;
+                            keyFrames: {
+                                    percent: number;
+                                    value: number;
+                            }[] | undefined;
                     }[];
                     repeatCount: number | undefined;
                     repeatMode: RepeatMode | undefined;
@@ -422,6 +430,14 @@ declare module 'doric/lib/src/ui/animation' {
     }
     export class ScaleAnimation extends Animation {
             constructor();
+            set xKeyFrames(keyFrames: {
+                    percent: number;
+                    value: number;
+            }[]);
+            set yKeyFrames(keyFrames: {
+                    percent: number;
+                    value: number;
+            }[]);
             set fromScaleX(v: number);
             get fromScaleX(): number;
             set toScaleX(v: number);
@@ -433,6 +449,14 @@ declare module 'doric/lib/src/ui/animation' {
     }
     export class TranslationAnimation extends Animation {
             constructor();
+            set xKeyFrames(keyFrames: {
+                    percent: number;
+                    value: number;
+            }[]);
+            set yKeyFrames(keyFrames: {
+                    percent: number;
+                    value: number;
+            }[]);
             set fromTranslationX(v: number);
             get fromTranslationX(): number;
             set toTranslationX(v: number);
@@ -451,6 +475,10 @@ declare module 'doric/lib/src/ui/animation' {
             get fromRotation(): number;
             set toRotation(v: number);
             get toRotation(): number;
+            set keyFrames(keyFrames: {
+                    percent: number;
+                    value: number;
+            }[]);
     }
     /**
         * Rotation range is [0..2]
@@ -461,6 +489,10 @@ declare module 'doric/lib/src/ui/animation' {
             get fromRotation(): number;
             set toRotation(v: number);
             get toRotation(): number;
+            set keyFrames(keyFrames: {
+                    percent: number;
+                    value: number;
+            }[]);
     }
     /**
         * Rotation range is [0..2]
@@ -471,6 +503,10 @@ declare module 'doric/lib/src/ui/animation' {
             get fromRotation(): number;
             set toRotation(v: number);
             get toRotation(): number;
+            set keyFrames(keyFrames: {
+                    percent: number;
+                    value: number;
+            }[]);
     }
     export class BackgroundColorAnimation extends Animation {
             constructor();
@@ -478,6 +514,10 @@ declare module 'doric/lib/src/ui/animation' {
             get fromColor(): Color;
             set toColor(v: Color);
             get toColor(): Color;
+            set keyFrames(keyFrames: {
+                    percent: number;
+                    value: Color;
+            }[]);
     }
     /**
         * Alpha range is [0..1]
@@ -488,6 +528,10 @@ declare module 'doric/lib/src/ui/animation' {
             get from(): number;
             set to(v: number);
             get to(): number;
+            set keyFrames(keyFrames: {
+                    percent: number;
+                    value: number;
+            }[]);
     }
     export class AnimationSet implements IAnimation {
             delay?: number;

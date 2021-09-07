@@ -37,6 +37,10 @@ export interface Changeable {
     key: AnimatedKey
     repeatCount?: number
     repeatMode?: RepeatMode
+    keyFrames?: {
+        percent: number,
+        value: number
+    }[]
 }
 export enum FillMode {
     /**
@@ -96,6 +100,7 @@ abstract class Animation implements IAnimation {
                 key: e.key,
                 fromValue: e.fromValue,
                 toValue: e.toValue,
+                keyFrames: e.keyFrames,
             })
         }
         return {
@@ -129,6 +134,12 @@ export class ScaleAnimation extends Animation {
         this.changeables.set("scaleY", this.scaleYChangeable)
     }
 
+    set xKeyFrames(keyFrames: { percent: number, value: number }[]) {
+        this.scaleXChangeable.keyFrames = keyFrames
+    }
+    set yKeyFrames(keyFrames: { percent: number, value: number }[]) {
+        this.scaleYChangeable.keyFrames = keyFrames
+    }
 
     set fromScaleX(v: number) {
         this.scaleXChangeable.fromValue = v
@@ -177,6 +188,14 @@ export class TranslationAnimation extends Animation {
         super()
         this.changeables.set("translationX", this.translationXChangeable)
         this.changeables.set("translationY", this.translationYChangeable)
+    }
+
+    set xKeyFrames(keyFrames: { percent: number, value: number }[]) {
+        this.translationXChangeable.keyFrames = keyFrames
+    }
+
+    set yKeyFrames(keyFrames: { percent: number, value: number }[]) {
+        this.translationYChangeable.keyFrames = keyFrames
     }
 
     set fromTranslationX(v: number) {
@@ -239,6 +258,10 @@ export class RotationAnimation extends Animation {
     get toRotation() {
         return this.rotationChaneable.toValue
     }
+
+    set keyFrames(keyFrames: { percent: number, value: number }[]) {
+        this.rotationChaneable.keyFrames = keyFrames
+    }
 }
 /**
  * Rotation range is [0..2]
@@ -268,6 +291,10 @@ export class RotationXAnimation extends Animation {
 
     get toRotation() {
         return this.rotationChaneable.toValue
+    }
+
+    set keyFrames(keyFrames: { percent: number, value: number }[]) {
+        this.rotationChaneable.keyFrames = keyFrames
     }
 }
 /**
@@ -299,6 +326,10 @@ export class RotationYAnimation extends Animation {
     get toRotation() {
         return this.rotationChaneable.toValue
     }
+
+    set keyFrames(keyFrames: { percent: number, value: number }[]) {
+        this.rotationChaneable.keyFrames = keyFrames
+    }
 }
 
 export class BackgroundColorAnimation extends Animation {
@@ -327,6 +358,10 @@ export class BackgroundColorAnimation extends Animation {
 
     get toColor() {
         return new Color(this.backgroundColorChangeable.toValue)
+    }
+
+    set keyFrames(keyFrames: { percent: number, value: Color }[]) {
+        this.backgroundColorChangeable.keyFrames = keyFrames.map(e => { return { percent: e.percent, value: e.value.toModel() } })
     }
 }
 
@@ -359,6 +394,9 @@ export class AlphaAnimation extends Animation {
 
     get to() {
         return this.opacityChangeable.toValue
+    }
+    set keyFrames(keyFrames: { percent: number, value: number }[]) {
+        this.opacityChangeable.keyFrames = keyFrames
     }
 }
 

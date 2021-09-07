@@ -24,8 +24,9 @@
 #import "DoricExtensions.h"
 #import "DoricUtil.h"
 #import "DoricSuperNode.h"
+#import "DoricThirdParty.h"
 
-#if __has_include(<YYWebImage/YYWebImage.h>)
+#if DORIC_USE_YYWEBIMAGE
 
 #import <YYWebImage/YYWebImage.h>
 #import <YYWebImage/_YYWebImageSetter.h>
@@ -47,7 +48,7 @@
 }
 @end
 
-#elif __has_include(<SDWebImage/SDWebImage.h>)
+#elif DORIC_USE_SDWEBIMAGE
 
 #import <SDWebImage/SDWebImage.h>
 
@@ -131,9 +132,9 @@
         }
         NSData *imageData = [[NSData alloc] initWithBase64EncodedString:base64
                                                                 options:NSDataBase64DecodingIgnoreUnknownCharacters];
-#if __has_include(<YYWebImage/YYWebImage.h>)
+#if DORIC_USE_YYWEBIMAGE
         YYImage *image = [YYImage imageWithData:imageData scale:self.imageScale];
-#elif __has_include(<SDWebImage/SDWebImage.h>)
+#elif DORIC_USE_SDWEBIMAGE
         UIImage *image = [SDAnimatedImage imageWithData:imageData scale:self.imageScale];
         if (!image) {
             image = [UIImage imageWithData:imageData scale:self.imageScale];
@@ -187,9 +188,9 @@
         }
         NSData *imageData = [[NSData alloc] initWithBase64EncodedString:base64
                                                                 options:NSDataBase64DecodingIgnoreUnknownCharacters];
-#if __has_include(<YYWebImage/YYWebImage.h>)
+#if DORIC_USE_YYWEBIMAGE
         YYImage *image = [YYImage imageWithData:imageData scale:self.imageScale];
-#elif __has_include(<SDWebImage/SDWebImage.h>)
+#elif DORIC_USE_SDWEBIMAGE
         UIImage *image = [SDAnimatedImage imageWithData:imageData scale:self.imageScale];
         if (!image) {
             image = [UIImage imageWithData:imageData scale:self.imageScale];
@@ -236,7 +237,7 @@
         __weak typeof(self) _self = self;
         __block BOOL async = NO;
         view.doricLayout.undefined = YES;
-#if __has_include(<YYWebImage/YYWebImage.h>)
+#if DORIC_USE_YYWEBIMAGE
         dispatch_async([_YYWebImageSetter setterQueue], ^{
             [view yy_cancelCurrentImageRequest];
             
@@ -273,7 +274,7 @@
                 }
             }];
         });
-#elif __has_include(<SDWebImage/SDWebImage.h>)
+#elif DORIC_USE_SDWEBIMAGE
         [view sd_setImageWithURL:[NSURL URLWithString:prop]
                 placeholderImage:[self currentPlaceHolderImage]
                          options:0
@@ -336,9 +337,9 @@
         }
         NSData *imageData = [[NSData alloc] initWithBase64EncodedString:base64
                                                                 options:NSDataBase64DecodingIgnoreUnknownCharacters];
-#if __has_include(<YYWebImage/YYWebImage.h>)
+#if DORIC_USE_YYWEBIMAGE
         YYImage *image = [YYImage imageWithData:imageData scale:self.imageScale];
-#elif __has_include(<SDWebImage/SDWebImage.h>)
+#elif DORIC_USE_SDWEBIMAGE
         UIImage *image = [SDAnimatedImage imageWithData:imageData scale:self.imageScale];
         if (!image) {
             image = [UIImage imageWithData:imageData scale:self.imageScale];
@@ -433,9 +434,9 @@
 }
 
 - (UIImage *)imageNamed:(NSString *)name {
-#if __has_include(<YYWebImage/YYWebImage.h>)
+#if DORIC_USE_YYWEBIMAGE
     YYImage *image = [YYImage imageNamed:name];
-#elif __has_include(<SDWebImage/SDWebImage.h>)
+#elif DORIC_USE_SDWEBIMAGE
     UIImage *image = [SDAnimatedImage imageNamed:name];
     if (!image) {
         image = [UIImage imageNamed:name];
@@ -447,9 +448,9 @@
 }
 
 - (UIImage *)imageFromData:(NSData *)imgData {
-#if __has_include(<YYWebImage/YYWebImage.h>)
+#if DORIC_USE_YYWEBIMAGE
     YYImage *image = [YYImage imageWithData:imgData scale:self.imageScale];
-#elif __has_include(<SDWebImage/SDWebImage.h>)
+#elif DORIC_USE_SDWEBIMAGE
     UIImage *image = [SDAnimatedImage imageWithData:imgData scale:self.imageScale];
     if (!image) {
         image = [UIImage imageWithData:imgData scale:self.imageScale];

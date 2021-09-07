@@ -48,8 +48,8 @@ Doric includes a scaffolding tool `doric-cli` and a debug tool `Devkit`, offerin
 > Documentation: [https://doric.pub](https://doric.pub)
 * Open the web page directly: [Doric Playgroud](https://p.doric.pub/play/?e=167#example/HelloDoric.ts) and experience coding style rapidly
 * With `doric-cli` command line interfaces, you can create Doric applications, reference here by [Installation & Usage](https://doric.pub/docs/index.html#%E5%AE%89%E8%A3%85Doric)
-* Use Doric in your existing Android project, reference here by [Use Doric in Android](https://doric.pub/api/android.html)
-* Use Doric in your existing iOS project, reference here by [Use Doric in iOS](https://doric.pub/api/ios.html)
+* Use Doric in your existing Android project, reference here by [Use Doric in Android](https://doric.pub/docs/android.html)
+* Use Doric in your existing iOS project, reference here by [Use Doric in iOS](https://doric.pub/docs/ios.html)
 
 ## Example code
 With the following different ways to experience code style in Doric

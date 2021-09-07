@@ -28,6 +28,7 @@
 #if __has_include(<YYWebImage/YYWebImage.h>)
 
 #import <YYWebImage/YYWebImage.h>
+#import <YYWebImage/_YYWebImageSetter.h>
 
 @interface DoricImageView : YYAnimatedImageView
 @end
@@ -236,38 +237,42 @@
         __block BOOL async = NO;
         view.doricLayout.undefined = YES;
 #if __has_include(<YYWebImage/YYWebImage.h>)
-        [view yy_setImageWithURL:[NSURL URLWithString:prop] placeholder:[self currentPlaceHolderImage] options:0 completion:^(UIImage *image, NSURL *url, YYWebImageFromType from, YYWebImageStage stage, NSError *error) {
-            __strong typeof(_self) self = _self;
-            if (self.placeHolderColor || self.errorColor) {
-                self.view.contentMode = self.contentMode;
-            }
-            self.view.doricLayout.undefined = NO;
-            if (error) {
-                [[self currentErrorImage] also:^(UIImage *it) {
-                    self.view.image = it;
-                }];
-                if (self.loadCallbackId.length > 0) {
-                    [self callJSResponse:self.loadCallbackId, nil];
+        dispatch_async([_YYWebImageSetter setterQueue], ^{
+            [view yy_cancelCurrentImageRequest];
+            
+            [view yy_setImageWithURL:[NSURL URLWithString:prop] placeholder:[self currentPlaceHolderImage] options:0 completion:^(UIImage *image, NSURL *url, YYWebImageFromType from, YYWebImageStage stage, NSError *error) {
+                __strong typeof(_self) self = _self;
+                if (self.placeHolderColor || self.errorColor) {
+                    self.view.contentMode = self.contentMode;
                 }
-            } else if (image && stage == YYWebImageStageFinished) {
-                if (image.scale != self.imageScale) {
-                    image = [YYImage imageWithCGImage:image.CGImage scale:self.imageScale orientation:image.imageOrientation];
-                    self.view.image = image;
-                }
-                if (self.loadCallbackId.length > 0) {
-                    [self callJSResponse:self.loadCallbackId,
-                                         @{@"width": @(image.size.width), @"height": @(image.size.height)},
-                                    nil];
-                }
-                if (async) {
-                    DoricSuperNode *node = self.superNode;
-                    while (node.superNode != nil) {
-                        node = node.superNode;
+                self.view.doricLayout.undefined = NO;
+                if (error) {
+                    [[self currentErrorImage] also:^(UIImage *it) {
+                        self.view.image = it;
+                    }];
+                    if (self.loadCallbackId.length > 0) {
+                        [self callJSResponse:self.loadCallbackId, nil];
                     }
-                    [node requestLayout];
+                } else if (image && stage == YYWebImageStageFinished) {
+                    if (image.scale != self.imageScale) {
+                        image = [YYImage imageWithCGImage:image.CGImage scale:self.imageScale orientation:image.imageOrientation];
+                        self.view.image = image;
+                    }
+                    if (self.loadCallbackId.length > 0) {
+                        [self callJSResponse:self.loadCallbackId,
+                                             @{@"width": @(image.size.width), @"height": @(image.size.height)},
+                                        nil];
+                    }
+                    if (async) {
+                        DoricSuperNode *node = self.superNode;
+                        while (node.superNode != nil) {
+                            node = node.superNode;
+                        }
+                        [node requestLayout];
+                    }
                 }
-            }
-        }];
+            }];
+        });
 #elif __has_include(<SDWebImage/SDWebImage.h>)
         [view sd_setImageWithURL:[NSURL URLWithString:prop]
                 placeholderImage:[self currentPlaceHolderImage]

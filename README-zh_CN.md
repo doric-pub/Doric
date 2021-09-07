@@ -48,8 +48,8 @@ Doric提供脚手架工具`doric-cli`及开发调试工具`Devkit`,提供热重�
 > 项目文档: [https://doric.pub](https://doric.pub)
 * 您可以直接打开网页[Doric Playgroud](https://p.doric.pub/play/?e=167#example/HelloDoric.ts)快速体验Doric中的风格
 * 您可以通过`doric-cli`命令行工具直接创建Doric应用,可参考[安装使用](https://doric.pub/docs/index.html#%E5%AE%89%E8%A3%85Doric)
-* 如果您需要在现有Android项目中接入使用Doric,可参考[在Android中使用Doric](https://doric.pub/api/android.html)
-* 如果您需要在现有iOS项目中接入使用Doric,可参考[在iOS中使用Doric](https://doric.pub/api/ios.html)
+* 如果您需要在现有Android项目中接入使用Doric,可参考[在Android中使用Doric](https://doric.pub/docs/android.html)
+* 如果您需要在现有iOS项目中接入使用Doric,可参考[在iOS中使用Doric](https://doric.pub/docs/ios.html)
 
 ## 示例代码
 您可以通过下方代码体验Doric中的编写风格

@@ -26,17 +26,31 @@
 #import "Doric.h"
 
 @interface DoricTextView : UILabel
+@property(nonatomic, assign) DoricGravity gravity;
 @end
 
 @implementation DoricTextView
 - (void)drawTextInRect:(CGRect)rect {
-    [super drawTextInRect:UIEdgeInsetsInsetRect(
+    rect = UIEdgeInsetsInsetRect(
             rect,
             UIEdgeInsetsMake(
                     self.doricLayout.paddingTop,
                     self.doricLayout.paddingLeft,
                     self.doricLayout.paddingBottom,
-                    self.doricLayout.paddingRight))];
+                    self.doricLayout.paddingRight));
+    if ((self.gravity & DoricGravityTop) == DoricGravityTop) {
+        CGRect realRect = [self textRectForBounds:rect
+                limitedToNumberOfLines:self.numberOfLines];
+        rect.origin.y = self.doricLayout.paddingTop;
+        rect.size.height = realRect.size.height;
+    } else if ((self.gravity & DoricGravityBottom) == DoricGravityBottom) {
+        CGRect realRect = [self textRectForBounds:rect
+                limitedToNumberOfLines:self.numberOfLines];
+        rect.origin.y = self.height - realRect.size.height - self.doricLayout.paddingBottom;
+        rect.size.height = realRect.size.height;
+    }
+    rect.size.width = MAX(0.01f,rect.size.width);
+    [super drawTextInRect:rect];
 }
 @end
 
@@ -93,6 +107,7 @@
         } else {
             view.textAlignment = alignment;
         }
+        ((DoricTextView *) view).gravity = gravity;
     } else if ([name isEqualToString:@"maxLines"]) {
         view.numberOfLines = [prop integerValue];
     } else if ([name isEqualToString:@"fontStyle"]) {
@@ -289,10 +304,10 @@
     if (@available(iOS 10.0, *)) {
         UIGraphicsImageRendererFormat *format = [[UIGraphicsImageRendererFormat alloc] init];
         format.scale = [UIScreen mainScreen].scale;
-        UIGraphicsImageRenderer *render = [[UIGraphicsImageRenderer alloc]initWithSize:imgSize format:format];
-        UIImage *image = [render imageWithActions:^(UIGraphicsImageRendererContext * _Nonnull rendererContext) {
+        UIGraphicsImageRenderer *render = [[UIGraphicsImageRenderer alloc] initWithSize:imgSize format:format];
+        UIImage *image = [render imageWithActions:^(UIGraphicsImageRendererContext *_Nonnull rendererContext) {
             CGContextRef context = rendererContext.CGContext;
-            
+
             CGContextSaveGState(context);
             CGColorSpaceRef colorSpace = CGColorGetColorSpace((__bridge CGColorRef) colors.lastObject);
             CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef) colors, locations);

@@ -31,8 +31,12 @@ typedef void (^onFocusChangeBlock)(BOOL focused, DoricInputNode *node);
 
 typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
 
-@implementation DoricInputView
 
+@interface DoricMultilineInput : UITextView
+@property(nonatomic, strong) UILabel *placeholderLabel;
+@end
+
+@implementation DoricMultilineInput
 - (instancetype)init {
     if (self = [super init]) {
         self.font = [UIFont systemFontOfSize:12];
@@ -56,10 +60,10 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
     UIEdgeInsets textContainerInset = self.textContainerInset;
     self.placeholderLabel.x = lineFragmentPadding + textContainerInset.left;
     self.placeholderLabel.y = textContainerInset.top;
-    
-    float desiredWidth = self.width - lineFragmentPadding * 2 - textContainerInset.left - textContainerInset.right;
+
+    CGFloat desiredWidth = self.width - lineFragmentPadding * 2 - textContainerInset.left - textContainerInset.right;
     CGSize fitSize = [self.placeholderLabel sizeThatFits:CGSizeMake(desiredWidth, 0)];
-    
+
     if (fitSize.width < desiredWidth) {
         self.placeholderLabel.width = desiredWidth;
     }
@@ -76,9 +80,162 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
     }
 }
 
+- (void)setTextAlignment:(NSTextAlignment)textAlignment {
+    [super setTextAlignment:textAlignment];
+    self.placeholderLabel.textAlignment = textAlignment;
+}
+
 @end
 
-@interface DoricInputNode () <UITextViewDelegate>
+@interface DoricInputView ()
+@property(nonatomic, strong) DoricMultilineInput *multiLineInput;
+@property(nonatomic, strong) UITextField *singleLineInput;
+@end
+
+@implementation DoricInputView
+- (instancetype)init {
+    if (self = [super init]) {
+        _multiLineInput = [DoricMultilineInput new];
+        _multiLineInput.backgroundColor = UIColor.clearColor;
+        [self addSubview:_multiLineInput];
+        _singleLineInput = [UITextField new];
+        _singleLineInput.backgroundColor = UIColor.clearColor;
+        [self addSubview:_singleLineInput];
+        self.multiline = YES;
+    }
+    return self;
+}
+
+- (void)setMultiline:(BOOL)multiline {
+    if (multiline == self.multiline) {
+        return;
+    }
+    self.singleLineInput.hidden = multiline;
+    self.multiLineInput.hidden = !multiline;
+}
+
+- (BOOL)multiline {
+    return self.singleLineInput.hidden;
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    if (self.multiline) {
+        self.multiLineInput.width = self.width;
+        self.multiLineInput.height = self.height;
+    } else {
+        self.singleLineInput.width = self.width;
+        self.singleLineInput.height = self.height;
+    }
+}
+
+- (CGSize)sizeThatFits:(CGSize)size {
+    if (self.multiline) {
+        return [self.multiLineInput sizeThatFits:size];
+    } else {
+        return [self.singleLineInput sizeThatFits:size];
+    }
+}
+
+- (void)setText:(NSString *)text {
+    self.multiLineInput.text = text;
+    self.singleLineInput.text = text;
+}
+
+- (NSString *)text {
+    if (self.multiline) {
+        return self.multiLineInput.text;
+    } else {
+        return self.singleLineInput.text;
+    }
+}
+
+- (void)setFont:(UIFont *)font {
+    self.multiLineInput.font = font;
+    self.singleLineInput.font = font;
+}
+
+- (UIFont *)font {
+    if (self.multiline) {
+        return self.multiLineInput.font;
+    } else {
+        return self.singleLineInput.font;
+    }
+}
+
+- (void)setTextColor:(UIColor *)color {
+    self.multiLineInput.textColor = color;
+    self.singleLineInput.textColor = color;
+}
+
+- (UIColor *)textColor {
+    if (self.multiline) {
+        return self.multiLineInput.textColor;
+    } else {
+        return self.singleLineInput.textColor;
+    }
+}
+
+- (void)setTextAlignment:(NSTextAlignment)textAlignment {
+    self.multiLineInput.textAlignment = textAlignment;
+    self.singleLineInput.textAlignment = textAlignment;
+}
+
+- (NSTextAlignment)textAlignment {
+    if (self.multiline) {
+        return self.multiLineInput.textAlignment;
+    } else {
+        return self.singleLineInput.textAlignment;
+    }
+}
+
+- (void)setHintText:(NSString *)text {
+    self.multiLineInput.placeholderLabel.text = text;
+    self.singleLineInput.placeholder = text;
+}
+
+- (NSString *)hintText {
+    if (self.multiline) {
+        return self.multiLineInput.placeholderLabel.text;
+    } else {
+        return self.singleLineInput.placeholder;
+    }
+}
+
+- (void)setHintTextColor:(UIColor *)color {
+    self.multiLineInput.placeholderLabel.textColor = color;
+    [self.singleLineInput setValue:color forKeyPath:@"_placeholderLabel.textColor"];
+}
+
+- (void)setHintFont:(UIFont *)font {
+    self.multiLineInput.placeholderLabel.font = font;
+    [self.singleLineInput setValue:font forKeyPath:@"_placeholderLabel.font"];
+}
+
+- (void)setKeyboardType:(UIKeyboardType)keyboardType {
+    self.multiLineInput.keyboardType = keyboardType;
+    self.singleLineInput.keyboardType = keyboardType;
+}
+
+- (void)setReturnKeyType:(UIReturnKeyType)returnKeyType {
+    self.multiLineInput.returnKeyType = returnKeyType;
+    self.singleLineInput.returnKeyType = returnKeyType;
+}
+
+- (void)setSecureTextEntry:(BOOL)secureTextEntry {
+    self.multiLineInput.secureTextEntry = secureTextEntry;
+    self.singleLineInput.secureTextEntry = secureTextEntry;
+}
+
+- (void)setEditable:(BOOL)editable {
+    self.multiLineInput.editable = editable;
+    self.singleLineInput.enabled = editable;
+}
+
+@end
+
+
+@interface DoricInputNode () <UITextViewDelegate, UITextFieldDelegate>
 @property(nonatomic, copy) onTextChangeBlock onTextChange;
 @property(nonatomic, copy) onFocusChangeBlock onFocusChange;
 @property(nonatomic, copy) onSubmitEditingBlock onSubmitEditing;
@@ -88,13 +245,14 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
 
 @implementation DoricInputNode
 - (DoricInputView *)build {
-    DoricInputView *v = [[DoricInputView alloc] init];
-    v.delegate = self;
-    v.textContainer.lineFragmentPadding = 0;
-    v.doricLayout.paddingTop = v.textContainerInset.top;
-    v.doricLayout.paddingBottom = v.textContainerInset.bottom;
-    v.doricLayout.paddingLeft = v.textContainerInset.left;
-    v.doricLayout.paddingRight = v.textContainerInset.right;
+    DoricInputView *v = [DoricInputView new];
+    v.singleLineInput.delegate = self;
+    v.multiLineInput.delegate = self;
+    v.multiLineInput.textContainer.lineFragmentPadding = 0;
+    v.doricLayout.paddingTop = v.multiLineInput.textContainerInset.top;
+    v.doricLayout.paddingBottom = v.multiLineInput.textContainerInset.bottom;
+    v.doricLayout.paddingLeft = v.multiLineInput.textContainerInset.left;
+    v.doricLayout.paddingRight = v.multiLineInput.textContainerInset.right;
     return v;
 }
 
@@ -119,7 +277,6 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
             alignment = NSTextAlignmentRight;
         }
         view.textAlignment = alignment;
-        view.placeholderLabel.textAlignment = alignment;
     } else if ([name isEqualToString:@"font"]) {
         NSString *iconfont = prop;
         UIFont *font = [UIFont fontWithName:[iconfont stringByReplacingOccurrencesOfString:@".ttf" withString:@""]
@@ -127,25 +284,18 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
         view.font = font;
     } else if ([name isEqualToString:@"multiline"]) {
         BOOL value = [(NSNumber *) prop boolValue];
-        if (!value) {
-            view.textContainer.maximumNumberOfLines = 1;
-            if (view.text.length > 0) {
-                view.text = [view.text stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
-            }
-        } else {
-            view.textContainer.maximumNumberOfLines = 0;
-        }
+        view.multiline = value;
     } else if ([name isEqualToString:@"beforeTextChange"]) {
         self.beforeTextChangeFuncId = prop;
     } else if ([name isEqualToString:@"hintText"]) {
-        view.placeholderLabel.text = (NSString *) prop;
+        view.hintText = (NSString *) prop;
     } else if ([name isEqualToString:@"hintTextColor"]) {
-        view.placeholderLabel.textColor = DoricColor(prop);
+        view.hintTextColor = DoricColor(prop);
     } else if ([name isEqualToString:@"hintFont"]) {
         NSString *iconfont = prop;
         UIFont *font = [UIFont fontWithName:[iconfont stringByReplacingOccurrencesOfString:@".ttf" withString:@""]
                                        size:view.font.pointSize];
-        view.placeholderLabel.font = font;
+        view.hintFont = font;
     } else if ([name isEqualToString:@"onTextChange"]) {
         if ([prop isKindOfClass:[NSString class]]) {
             self.onTextChange = ^(NSString *text, DoricInputNode *node) {
@@ -193,9 +343,6 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
     } else if ([name isEqualToString:@"editable"]) {
         view.editable = [(NSNumber *) prop boolValue];
     } else if ([name isEqualToString:@"returnKeyType"]) {
-        if (view.textContainer.maximumNumberOfLines == 1) {
-            return;
-        }
         switch ([(NSNumber *) prop integerValue]) {
             case 1:
                 view.returnKeyType = UIReturnKeyDone;
@@ -226,9 +373,9 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
             self.onSubmitEditing = nil;
         }
     } else if ([name isEqualToString:@"enableHorizontalScrollBar"]) {
-        view.showsHorizontalScrollIndicator = [prop boolValue];;
+        view.multiLineInput.showsHorizontalScrollIndicator = [prop boolValue];;
     } else if ([name isEqualToString:@"enableVerticalScrollBar"]) {
-        view.showsVerticalScrollIndicator = [prop boolValue];;
+        view.multiLineInput.showsVerticalScrollIndicator = [prop boolValue];;
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }
@@ -240,21 +387,22 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
 
 - (void)afterBlended:(NSDictionary *)props {
     [super afterBlended:props];
-    if (self.view.doricLayout.paddingTop != self.view.textContainerInset.top
-            || self.view.doricLayout.paddingLeft != self.view.textContainerInset.left
-            || self.view.doricLayout.paddingBottom != self.view.textContainerInset.bottom
-            || self.view.doricLayout.paddingRight != self.view.textContainerInset.right) {
-        self.view.textContainerInset = UIEdgeInsetsMake(self.view.doricLayout.paddingTop, self.view.doricLayout.paddingLeft, self.view.doricLayout.paddingBottom, self.view.doricLayout.paddingRight);
+    if (self.view.multiline) {
+        if (self.view.doricLayout.paddingTop != self.view.multiLineInput.textContainerInset.top
+                || self.view.doricLayout.paddingLeft != self.view.multiLineInput.textContainerInset.left
+                || self.view.doricLayout.paddingBottom != self.view.multiLineInput.textContainerInset.bottom
+                || self.view.doricLayout.paddingRight != self.view.multiLineInput.textContainerInset.right) {
+            self.view.multiLineInput.textContainerInset = UIEdgeInsetsMake(self.view.doricLayout.paddingTop, self.view.doricLayout.paddingLeft, self.view.doricLayout.paddingBottom, self.view.doricLayout.paddingRight);
+        }
+
+        UIFont *font = self.view.multiLineInput.placeholderLabel.font;
+        if (font) {
+            self.view.multiLineInput.placeholderLabel.font = [self.view.multiLineInput.placeholderLabel.font fontWithSize:self.view.font.pointSize];
+        } else {
+            self.view.multiLineInput.placeholderLabel.font = self.view.multiLineInput.font;
+        }
+        self.view.multiLineInput.placeholderLabel.numberOfLines = self.view.multiLineInput.textContainer.maximumNumberOfLines;
     }
-    
-    UIFont *font = self.view.placeholderLabel.font;
-    if (font) {
-        self.view.placeholderLabel.font = [self.view.placeholderLabel.font fontWithSize:self.view.font.pointSize];
-    } else {
-        self.view.placeholderLabel.font = self.view.font;
-    }
-    
-    self.view.placeholderLabel.numberOfLines = self.view.textContainer.maximumNumberOfLines;
 }
 
 - (void)requestLayout {
@@ -269,22 +417,39 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
 }
 
 - (void)setSelection:(NSDictionary *)params withPromise:(DoricPromise *)promise {
-    NSString *start = params[@"start"];
-    NSString *end = params[@"end"];
-
-    if (([start isKindOfClass:[NSString class]] || [start isKindOfClass:[NSNumber class]]) &&
-            ([start isKindOfClass:[NSString class]] || [start isKindOfClass:[NSNumber class]])) {
-        self.view.selectedRange = NSMakeRange(start.intValue, end.intValue - start.intValue);
+    NSNumber *start = params[@"start"];
+    NSNumber *end = params[@"end"];
+    if (self.view.multiline) {
+        self.view.multiLineInput.selectedRange = NSMakeRange(start.unsignedIntegerValue, end.unsignedIntegerValue - start.unsignedIntegerValue);
+    } else {
+        UITextPosition *startPos = [self.view.singleLineInput positionFromPosition:self.view.singleLineInput.beginningOfDocument
+                                                                            offset:start.unsignedIntegerValue];
+        UITextPosition *endPos = [self.view.singleLineInput positionFromPosition:self.view.singleLineInput.beginningOfDocument
+                                                                          offset:end.unsignedIntegerValue];
+        self.view.singleLineInput.selectedTextRange = [self.view.singleLineInput textRangeFromPosition:startPos
+                                                                                            toPosition:endPos];
     }
-
     [promise resolve:nil];
 }
 
 - (NSDictionary *)getSelection {
-    return @{
-            @"start": @([self.view offsetFromPosition:self.view.beginningOfDocument toPosition:self.view.selectedTextRange.start]),
-            @"end": @([self.view offsetFromPosition:self.view.beginningOfDocument toPosition:self.view.selectedTextRange.end]),
-    };
+    if (self.view.multiline) {
+        return @{
+                @"start": @([self.view.multiLineInput offsetFromPosition:self.view.multiLineInput.beginningOfDocument
+                                                              toPosition:self.view.multiLineInput.selectedTextRange.start]),
+                @"end": @([self.view.multiLineInput offsetFromPosition:self.view.multiLineInput.beginningOfDocument
+                                                            toPosition:self.view.multiLineInput.selectedTextRange.end]),
+        };
+    } else {
+        UITextRange *range = self.view.singleLineInput.selectedTextRange;
+        return @{
+                @"start": @( [self.view.singleLineInput offsetFromPosition:self.view.singleLineInput.beginningOfDocument
+                                                                toPosition:range.start]),
+                @"end": @( [self.view.singleLineInput offsetFromPosition:self.view.singleLineInput.beginningOfDocument
+                                                              toPosition:range.end]),
+        };
+    }
+
 }
 
 - (void)requestFocus {
@@ -312,15 +477,6 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
 }
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-    if ([text isEqualToString:@"\n"]) {
-        if (textView.textContainer.maximumNumberOfLines == 1) {
-            if (self.onSubmitEditing) {
-                self.onSubmitEditing(textView.text, self);
-            }
-            return NO;
-        }
-    }
-
     if (self.beforeTextChangeFuncId) {
         DoricAsyncResult *asyncResult = [self
                 pureCallJSResponse:self.beforeTextChangeFuncId,
@@ -341,11 +497,11 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
 
 - (void)textViewDidChange:(UITextView *)textView {
     if (textView.markedTextRange || textView.text.length > 0) {
-        self.view.placeholderLabel.hidden = YES;
+        self.view.multiLineInput.placeholderLabel.hidden = YES;
     } else {
-        self.view.placeholderLabel.hidden = NO;
+        self.view.multiLineInput.placeholderLabel.hidden = NO;
     }
-    
+
     if (textView.markedTextRange) return;
 
     if (self.maxLength) {
@@ -378,4 +534,44 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
                           }];
     return [text substringWithRange:NSMakeRange(0, subStringRangeLen)];
 }
+
+
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    if (self.maxLength) {
+        textField.text = [self limitToHansMaxLength:self.maxLength.unsignedIntValue text:textField.text];
+    }
+    if (self.onTextChange) {
+        self.onTextChange(textField.text, self);
+    }
+    [textField setNeedsLayout];
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    if (self.beforeTextChangeFuncId) {
+        DoricAsyncResult *asyncResult = [self
+                pureCallJSResponse:self.beforeTextChangeFuncId,
+                                   @{
+                                           @"editing": textField.text,
+                                           @"start": @(range.location),
+                                           @"length": @(range.length),
+                                           @"replacement": string,
+                                   },
+                        nil];
+        NSNumber *ret = [asyncResult waitUntilResult:^(JSValue *model) {
+            return [model toNumber];
+        }];
+        return [ret boolValue];
+    }
+    return YES;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    if (self.onSubmitEditing) {
+        self.onSubmitEditing(textField.text, self);
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
 @end

@@ -180,6 +180,16 @@
             }];
         }];
 
+    } else if ([name isEqualToString:@"shadow"]) {
+        NSDictionary *dic = prop;
+        CGFloat opacity = [(NSNumber *) dic[@"opacity"] floatValue];
+        if (opacity > CGFLOAT_MIN) {
+            UIColor *color = DoricColor((NSNumber *) dic[@"color"]);
+            view.layer.shadowColor = color.CGColor;
+            view.layer.shadowRadius = [(NSNumber *) dic[@"radius"] floatValue];
+            view.layer.shadowOffset = CGSizeMake([(NSNumber *) dic[@"offsetX"] floatValue], [(NSNumber *) dic[@"offsetY"] floatValue]);
+            view.layer.shadowOpacity = (float) opacity;
+        }
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }

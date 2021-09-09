@@ -153,6 +153,17 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
     if (multiline == self.multiline) {
         return;
     }
+    if (multiline) {
+        self.multiLineInput.text = self.singleLineInput.text;
+        if (self.singleLineInput.isFirstResponder) {
+            [self.multiLineInput becomeFirstResponder];
+        }
+    } else {
+        self.singleLineInput.text = self.multiLineInput.text;
+        if (self.multiLineInput.isFirstResponder) {
+            [self.singleLineInput becomeFirstResponder];
+        }
+    }
     self.singleLineInput.hidden = multiline;
     self.multiLineInput.hidden = !multiline;
 }
@@ -310,6 +321,7 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
 - (DoricInputView *)build {
     DoricInputView *v = [DoricInputView new];
     v.singleLineInput.delegate = self;
+    [v.singleLineInput addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
     v.multiLineInput.delegate = self;
     v.multiLineInput.textContainer.lineFragmentPadding = 0;
     v.doricLayout.paddingTop = v.multiLineInput.textContainerInset.top;
@@ -518,27 +530,33 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
 }
 
 - (void)requestFocus {
-    [self.view becomeFirstResponder];
+    if (self.view.multiline) {
+        [self.view.multiLineInput becomeFirstResponder];
+    } else {
+        [self.view.singleLineInput becomeFirstResponder];
+    }
 }
 
 - (void)releaseFocus {
-    [self.view resignFirstResponder];
+    if (self.view.multiline) {
+        [self.view.multiLineInput resignFirstResponder];
+    } else {
+        [self.view.singleLineInput resignFirstResponder];
+    }
 }
 
 #pragma mark - UITextViewDelegate
 
-- (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
+- (void)textViewDidBeginEditing:(UITextView *)textView {
     if (self.onFocusChange) {
         self.onFocusChange(YES, self);
     }
-    return YES;
 }
 
-- (BOOL)textViewShouldEndEditing:(UITextView *)textView {
+- (void)textViewDidEndEditing:(UITextView *)textView {
     if (self.onFocusChange) {
         self.onFocusChange(NO, self);
     }
-    return YES;
 }
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
@@ -600,13 +618,8 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
     return [text substringWithRange:NSMakeRange(0, subStringRangeLen)];
 }
 
-- (void)textFieldDidBeginEditing:(UITextField *)textField {
-    if (!textField.window.isKeyWindow) {
-        [textField.window makeKeyAndVisible];
-    }
-}
 
-- (void)textFieldDidEndEditing:(UITextField *)textField {
+- (void)textFieldDidChange:(UITextField *)textField {
     if (self.maxLength) {
         textField.text = [self limitToHansMaxLength:self.maxLength.unsignedIntValue text:textField.text];
     }
@@ -614,6 +627,18 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
         self.onTextChange(textField.text, self);
     }
     [textField setNeedsLayout];
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    if (self.onFocusChange) {
+        self.onFocusChange(YES, self);
+    }
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    if (self.onFocusChange) {
+        self.onFocusChange(NO, self);
+    }
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {

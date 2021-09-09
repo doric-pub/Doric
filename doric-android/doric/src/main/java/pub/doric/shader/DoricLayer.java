@@ -89,9 +89,26 @@ public class DoricLayer extends MaximumFrameLayout {
         if (mBorderPaint != null) {
             ((ViewGroup) getParent()).setClipChildren(false);
             if (mCornerRadii != null) {
-                canvas.drawRoundRect(mRect, mCornerRadii[0], mCornerRadii[1], mBorderPaint);
+                if (mCornerRadii.length == 8 && (
+                        mCornerRadii[0] != mCornerRadii[2]
+                                || mCornerRadii[0] != mCornerRadii[4]
+                                || mCornerRadii[0] != mCornerRadii[6]
+                )) {
+                    canvas.save();
+                    canvas.clipPath(mCornerPath);
+                    canvas.drawPath(mCornerPath, mBorderPaint);
+                    canvas.restore();
+                } else {
+                    canvas.save();
+                    canvas.clipPath(mCornerPath);
+                    canvas.drawRoundRect(mRect, mCornerRadii[0], mCornerRadii[1], mBorderPaint);
+                    canvas.restore();
+                }
             } else {
+                canvas.save();
+                canvas.clipRect(mRect);
                 canvas.drawRect(mRect, mBorderPaint);
+                canvas.restore();
             }
         }
         if (mShadowPaint != null) {
@@ -99,7 +116,15 @@ public class DoricLayer extends MaximumFrameLayout {
             canvas.save();
             if (mCornerRadii != null) {
                 canvas.clipPath(mCornerPath, Region.Op.DIFFERENCE);
-                canvas.drawRoundRect(mRect, mCornerRadii[0], mCornerRadii[1], mShadowPaint);
+                if (mCornerRadii.length == 8 && (
+                        mCornerRadii[0] != mCornerRadii[2]
+                                || mCornerRadii[0] != mCornerRadii[4]
+                                || mCornerRadii[0] != mCornerRadii[6]
+                )) {
+                    canvas.drawPath(mCornerPath, mShadowPaint);
+                } else {
+                    canvas.drawRoundRect(mRect, mCornerRadii[0], mCornerRadii[1], mShadowPaint);
+                }
             } else {
                 canvas.clipRect(mRect, Region.Op.DIFFERENCE);
                 canvas.drawRect(mRect, mShadowPaint);
@@ -128,7 +153,7 @@ public class DoricLayer extends MaximumFrameLayout {
             mBorderPaint.setAntiAlias(true);
             mBorderPaint.setStyle(Paint.Style.STROKE);
         }
-        mBorderPaint.setStrokeWidth(borderWidth);
+        mBorderPaint.setStrokeWidth(borderWidth * 2);
         mBorderPaint.setColor(borderColor);
     }
 

@@ -36,11 +36,6 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     NSArray<NSString *> *fonts = [UIFont familyNames];
-
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(localeChanged)
-                                                 name:UITextFieldTextDidChangeNotification
-                                               object:nil];
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.rootVC = [[ViewController alloc] init];
 

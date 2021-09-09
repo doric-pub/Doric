@@ -105,6 +105,9 @@ typedef NS_ENUM(NSInteger, DoricGravity) {
 
 @property(nonatomic, assign) UIEdgeInsets corners;
 
+@property(nonatomic, assign) CGFloat contentWidth;
+
+@property(nonatomic, assign) CGFloat contentHeight;
 - (instancetype)init;
 
 - (void)measure:(CGSize)targetSize;

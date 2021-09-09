@@ -31,8 +31,42 @@ typedef void (^onFocusChangeBlock)(BOOL focused, DoricInputNode *node);
 
 typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
 
+@interface DoricSingleLineInput : UITextField
+@property(nonatomic, assign) DoricGravity gravity;
+@end
+
+@implementation DoricSingleLineInput
+- (void)drawTextInRect:(CGRect)rect {
+    [super drawTextInRect:rect];
+}
+
+- (CGSize)sizeThatFits:(CGSize)size {
+    return [super sizeThatFits:size];
+}
+
+- (CGRect)textRectForBounds:(CGRect)bounds {
+    return UIEdgeInsetsInsetRect(
+            bounds,
+            UIEdgeInsetsMake(
+                    self.superview.doricLayout.paddingTop,
+                    self.superview.doricLayout.paddingLeft,
+                    self.superview.doricLayout.paddingBottom,
+                    self.superview.doricLayout.paddingRight));
+}
+
+- (CGRect)editingRectForBounds:(CGRect)bounds {
+    return UIEdgeInsetsInsetRect(
+            bounds,
+            UIEdgeInsetsMake(
+                    self.superview.doricLayout.paddingTop,
+                    self.superview.doricLayout.paddingLeft,
+                    self.superview.doricLayout.paddingBottom,
+                    self.superview.doricLayout.paddingRight));
+}
+@end
 
 @interface DoricMultilineInput : UITextView
+@property(nonatomic, assign) DoricGravity gravity;
 @property(nonatomic, strong) UILabel *placeholderLabel;
 @end
 
@@ -59,7 +93,6 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
     CGFloat lineFragmentPadding = self.textContainer.lineFragmentPadding;
     UIEdgeInsets textContainerInset = self.textContainerInset;
     self.placeholderLabel.x = lineFragmentPadding + textContainerInset.left;
-    self.placeholderLabel.y = textContainerInset.top;
 
     CGFloat desiredWidth = self.width - lineFragmentPadding * 2 - textContainerInset.left - textContainerInset.right;
     CGSize fitSize = [self.placeholderLabel sizeThatFits:CGSizeMake(desiredWidth, 0)];
@@ -68,6 +101,13 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
         self.placeholderLabel.width = desiredWidth;
     }
     self.placeholderLabel.height = fitSize.height;
+    if ((self.gravity & DoricGravityTop) == DoricGravityTop) {
+        self.placeholderLabel.y = textContainerInset.top;
+    } else if ((self.gravity & DoricGravityBottom) == DoricGravityBottom) {
+        self.placeholderLabel.y = self.height - textContainerInset.bottom - fitSize.height;
+    } else {
+        self.placeholderLabel.centerY = (self.height - textContainerInset.top - textContainerInset.bottom) / 2;
+    }
 }
 
 - (CGSize)sizeThatFits:(CGSize)size {
@@ -89,7 +129,7 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
 
 @interface DoricInputView ()
 @property(nonatomic, strong) DoricMultilineInput *multiLineInput;
-@property(nonatomic, strong) UITextField *singleLineInput;
+@property(nonatomic, strong) DoricSingleLineInput *singleLineInput;
 @end
 
 @implementation DoricInputView
@@ -98,7 +138,7 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
         _multiLineInput = [DoricMultilineInput new];
         _multiLineInput.backgroundColor = UIColor.clearColor;
         [self addSubview:_multiLineInput];
-        _singleLineInput = [UITextField new];
+        _singleLineInput = [DoricSingleLineInput new];
         _singleLineInput.backgroundColor = UIColor.clearColor;
         [self addSubview:_singleLineInput];
         self.multiline = YES;
@@ -118,15 +158,10 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
     return self.singleLineInput.hidden;
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    if (self.multiline) {
-        self.multiLineInput.width = self.width;
-        self.multiLineInput.height = self.height;
-    } else {
-        self.singleLineInput.width = self.width;
-        self.singleLineInput.height = self.height;
-    }
+- (void)setFrame:(CGRect)frame {
+    [super setFrame:frame];
+    self.singleLineInput.frame = frame;
+    self.multiLineInput.frame = frame;
 }
 
 - (CGSize)sizeThatFits:(CGSize)size {
@@ -152,6 +187,7 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
 
 - (void)setFont:(UIFont *)font {
     self.multiLineInput.font = font;
+    self.multiLineInput.placeholderLabel.font = font;
     self.singleLineInput.font = font;
 }
 
@@ -191,7 +227,13 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
 
 - (void)setHintText:(NSString *)text {
     self.multiLineInput.placeholderLabel.text = text;
-    self.singleLineInput.placeholder = text;
+    if (text) {
+        self.singleLineInput.attributedPlaceholder = [[NSAttributedString alloc]
+                initWithString:self.multiLineInput.placeholderLabel.text
+                    attributes:@{
+                            NSForegroundColorAttributeName: self.multiLineInput.placeholderLabel.textColor,
+                            NSFontAttributeName: self.multiLineInput.placeholderLabel.font}];
+    }
 }
 
 - (NSString *)hintText {
@@ -204,12 +246,24 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
 
 - (void)setHintTextColor:(UIColor *)color {
     self.multiLineInput.placeholderLabel.textColor = color;
-    [self.singleLineInput setValue:color forKeyPath:@"_placeholderLabel.textColor"];
+    if (self.multiLineInput.placeholderLabel.text) {
+        self.singleLineInput.attributedPlaceholder = [[NSAttributedString alloc]
+                initWithString:self.multiLineInput.placeholderLabel.text
+                    attributes:@{
+                            NSForegroundColorAttributeName: self.multiLineInput.placeholderLabel.textColor,
+                            NSFontAttributeName: self.multiLineInput.placeholderLabel.font}];
+    }
 }
 
 - (void)setHintFont:(UIFont *)font {
     self.multiLineInput.placeholderLabel.font = font;
-    [self.singleLineInput setValue:font forKeyPath:@"_placeholderLabel.font"];
+    if (self.multiLineInput.placeholderLabel.text) {
+        self.singleLineInput.attributedPlaceholder = [[NSAttributedString alloc]
+                initWithString:self.multiLineInput.placeholderLabel.text
+                    attributes:@{
+                            NSForegroundColorAttributeName: self.multiLineInput.placeholderLabel.textColor,
+                            NSFontAttributeName: self.multiLineInput.placeholderLabel.font}];
+    }
 }
 
 - (void)setKeyboardType:(UIKeyboardType)keyboardType {
@@ -277,6 +331,15 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
             alignment = NSTextAlignmentRight;
         }
         view.textAlignment = alignment;
+        view.multiLineInput.gravity = gravity;
+        view.singleLineInput.gravity = gravity;
+        UIControlContentVerticalAlignment verticalAlignment = UIControlContentVerticalAlignmentCenter;
+        if ((gravity & DoricGravityTop) == DoricGravityTop) {
+            verticalAlignment = UIControlContentVerticalAlignmentTop;
+        } else if ((gravity & DoricGravityBottom) == DoricGravityBottom) {
+            verticalAlignment = UIControlContentVerticalAlignmentBottom;
+        }
+        view.singleLineInput.contentVerticalAlignment = verticalAlignment;
     } else if ([name isEqualToString:@"font"]) {
         NSString *iconfont = prop;
         UIFont *font = [UIFont fontWithName:[iconfont stringByReplacingOccurrencesOfString:@".ttf" withString:@""]
@@ -535,6 +598,11 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
     return [text substringWithRange:NSMakeRange(0, subStringRangeLen)];
 }
 
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    if (!textField.window.isKeyWindow) {
+        [textField.window makeKeyAndVisible];
+    }
+}
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
     if (self.maxLength) {

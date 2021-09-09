@@ -129,6 +129,7 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
 @interface DoricInputView ()
 @property(nonatomic, strong) DoricMultilineInput *multiLineInput;
 @property(nonatomic, strong) DoricSingleLineInput *singleLineInput;
+@property(nonatomic, strong) UIFont *hintFont;
 @end
 
 @implementation DoricInputView
@@ -207,7 +208,6 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
 
 - (void)setFont:(UIFont *)font {
     self.multiLineInput.font = font;
-    self.multiLineInput.placeholderLabel.font = font;
     self.singleLineInput.font = font;
 }
 
@@ -247,13 +247,6 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
 
 - (void)setHintText:(NSString *)text {
     self.multiLineInput.placeholderLabel.text = text;
-    if (text) {
-        self.singleLineInput.attributedPlaceholder = [[NSAttributedString alloc]
-                initWithString:self.multiLineInput.placeholderLabel.text
-                    attributes:@{
-                            NSForegroundColorAttributeName: self.multiLineInput.placeholderLabel.textColor,
-                            NSFontAttributeName: self.multiLineInput.placeholderLabel.font}];
-    }
 }
 
 - (NSString *)hintText {
@@ -266,24 +259,11 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
 
 - (void)setHintTextColor:(UIColor *)color {
     self.multiLineInput.placeholderLabel.textColor = color;
-    if (self.multiLineInput.placeholderLabel.text) {
-        self.singleLineInput.attributedPlaceholder = [[NSAttributedString alloc]
-                initWithString:self.multiLineInput.placeholderLabel.text
-                    attributes:@{
-                            NSForegroundColorAttributeName: self.multiLineInput.placeholderLabel.textColor,
-                            NSFontAttributeName: self.multiLineInput.placeholderLabel.font}];
-    }
 }
 
 - (void)setHintFont:(UIFont *)font {
+    _hintFont = font;
     self.multiLineInput.placeholderLabel.font = font;
-    if (self.multiLineInput.placeholderLabel.text) {
-        self.singleLineInput.attributedPlaceholder = [[NSAttributedString alloc]
-                initWithString:self.multiLineInput.placeholderLabel.text
-                    attributes:@{
-                            NSForegroundColorAttributeName: self.multiLineInput.placeholderLabel.textColor,
-                            NSFontAttributeName: self.multiLineInput.placeholderLabel.font}];
-    }
 }
 
 - (void)setKeyboardType:(UIKeyboardType)keyboardType {
@@ -471,14 +451,19 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
 
 - (void)afterBlended:(NSDictionary *)props {
     [super afterBlended:props];
-    if (self.view.multiline) {
-        UIFont *font = self.view.multiLineInput.placeholderLabel.font;
-        if (font) {
-            self.view.multiLineInput.placeholderLabel.font = [self.view.multiLineInput.placeholderLabel.font fontWithSize:self.view.font.pointSize];
-        } else {
-            self.view.multiLineInput.placeholderLabel.font = self.view.multiLineInput.font;
-        }
-        self.view.multiLineInput.placeholderLabel.numberOfLines = self.view.multiLineInput.textContainer.maximumNumberOfLines;
+    UIFont *font = self.view.hintFont;
+    if (font) {
+        self.view.multiLineInput.placeholderLabel.font = [self.view.multiLineInput.placeholderLabel.font fontWithSize:self.view.font.pointSize];
+    } else {
+        self.view.multiLineInput.placeholderLabel.font = self.view.multiLineInput.font;
+    }
+    self.view.multiLineInput.placeholderLabel.numberOfLines = self.view.multiLineInput.textContainer.maximumNumberOfLines;
+    if (self.view.multiLineInput.placeholderLabel.text) {
+        self.view.singleLineInput.attributedPlaceholder = [[NSAttributedString alloc]
+                initWithString:self.view.multiLineInput.placeholderLabel.text
+                    attributes:@{
+                            NSForegroundColorAttributeName: self.view.multiLineInput.placeholderLabel.textColor,
+                            NSFontAttributeName: self.view.multiLineInput.placeholderLabel.font}];
     }
 }
 

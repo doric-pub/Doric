@@ -258,6 +258,23 @@ static const void *kLayoutConfig = &kLayoutConfig;
             CGPathRef path = DoricCreateRoundedRectPath(self.view.bounds,
                     self.corners.top, self.corners.left, self.corners.bottom, self.corners.right);
             shapeLayer.path = path;
+
+            if ((self.corners.left != self.corners.right
+                    || self.corners.left != self.corners.top
+                    || self.corners.left != self.corners.bottom)
+                    && self.view.layer.borderWidth > CGFLOAT_MIN) {
+                CAShapeLayer *lineLayer = [CAShapeLayer layer];
+                lineLayer.lineWidth = self.view.layer.borderWidth * 2;
+                lineLayer.strokeColor = self.view.layer.borderColor;
+                lineLayer.path = path;
+                lineLayer.fillColor = nil;
+                [[self.view.layer sublayers] forEach:^(__kindof CALayer *obj) {
+                    if ([obj isKindOfClass:CAShapeLayer.class] && ((CAShapeLayer *) obj).lineWidth > CGFLOAT_MIN) {
+                        [obj removeFromSuperlayer];
+                    }
+                }];
+                [self.view.layer addSublayer:lineLayer];
+            }
             CGPathRelease(path);
             self.view.layer.mask = shapeLayer;
         }

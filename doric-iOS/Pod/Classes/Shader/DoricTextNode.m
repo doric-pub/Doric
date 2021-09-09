@@ -39,18 +39,18 @@
                     self.doricLayout.paddingBottom,
                     self.doricLayout.paddingRight));
     if ((self.gravity & DoricGravityTop) == DoricGravityTop) {
-        CGRect realRect = [self textRectForBounds:rect
-                limitedToNumberOfLines:self.numberOfLines];
         rect.origin.y = self.doricLayout.paddingTop;
-        rect.size.height = realRect.size.height;
+        rect.size.height = self.doricLayout.contentHeight;
     } else if ((self.gravity & DoricGravityBottom) == DoricGravityBottom) {
-        CGRect realRect = [self textRectForBounds:rect
-                limitedToNumberOfLines:self.numberOfLines];
-        rect.origin.y = self.height - realRect.size.height - self.doricLayout.paddingBottom;
-        rect.size.height = realRect.size.height;
+        rect.origin.y = self.height - self.doricLayout.contentHeight - self.doricLayout.paddingBottom;
+        rect.size.height = self.doricLayout.contentHeight;
     }
-    rect.size.width = MAX(0.01f,rect.size.width);
+    rect.size.width = MAX(0.01f, rect.size.width);
     [super drawTextInRect:rect];
+}
+
+- (CGSize)sizeThatFits:(CGSize)size {
+    return [super sizeThatFits:size];
 }
 @end
 

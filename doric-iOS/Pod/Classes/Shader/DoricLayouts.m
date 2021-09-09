@@ -83,8 +83,6 @@ static const void *kLayoutConfig = &kLayoutConfig;
 @end
 
 @interface DoricLayout ()
-@property(nonatomic, assign) CGFloat contentWidth;
-@property(nonatomic, assign) CGFloat contentHeight;
 @end
 
 @implementation DoricLayout

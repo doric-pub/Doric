@@ -32,7 +32,6 @@ typedef void (^onFocusChangeBlock)(BOOL focused, DoricInputNode *node);
 typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
 
 @interface DoricSingleLineInput : UITextField
-@property(nonatomic, assign) DoricGravity gravity;
 @end
 
 @implementation DoricSingleLineInput
@@ -42,26 +41,6 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
 
 - (CGSize)sizeThatFits:(CGSize)size {
     return [super sizeThatFits:size];
-}
-
-- (CGRect)textRectForBounds:(CGRect)bounds {
-    return UIEdgeInsetsInsetRect(
-            bounds,
-            UIEdgeInsetsMake(
-                    self.superview.doricLayout.paddingTop,
-                    self.superview.doricLayout.paddingLeft,
-                    self.superview.doricLayout.paddingBottom,
-                    self.superview.doricLayout.paddingRight));
-}
-
-- (CGRect)editingRectForBounds:(CGRect)bounds {
-    return UIEdgeInsetsInsetRect(
-            bounds,
-            UIEdgeInsetsMake(
-                    self.superview.doricLayout.paddingTop,
-                    self.superview.doricLayout.paddingLeft,
-                    self.superview.doricLayout.paddingBottom,
-                    self.superview.doricLayout.paddingRight));
 }
 @end
 
@@ -87,26 +66,46 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
 - (void)layoutSubviews {
     [super layoutSubviews];
     self.placeholderLabel.hidden = self.text.length > 0;
-    if (self.placeholderLabel.hidden) {
-        return;
-    }
-    CGFloat lineFragmentPadding = self.textContainer.lineFragmentPadding;
-    UIEdgeInsets textContainerInset = self.textContainerInset;
-    self.placeholderLabel.x = lineFragmentPadding + textContainerInset.left;
+    if (!self.placeholderLabel.hidden) {
+        CGFloat lineFragmentPadding = self.textContainer.lineFragmentPadding;
+        UIEdgeInsets textContainerInset = self.textContainerInset;
+        self.placeholderLabel.x = lineFragmentPadding + textContainerInset.left;
 
-    CGFloat desiredWidth = self.width - lineFragmentPadding * 2 - textContainerInset.left - textContainerInset.right;
-    CGSize fitSize = [self.placeholderLabel sizeThatFits:CGSizeMake(desiredWidth, 0)];
+        CGFloat desiredWidth = self.width - lineFragmentPadding * 2 - textContainerInset.left - textContainerInset.right;
+        CGSize fitSize = [self.placeholderLabel sizeThatFits:CGSizeMake(desiredWidth, 0)];
 
-    if (fitSize.width < desiredWidth) {
-        self.placeholderLabel.width = desiredWidth;
+        if (fitSize.width < desiredWidth) {
+            self.placeholderLabel.width = desiredWidth;
+        }
+        self.placeholderLabel.height = fitSize.height;
+        if ((self.gravity & DoricGravityTop) == DoricGravityTop) {
+            self.placeholderLabel.y = textContainerInset.top;
+        } else if ((self.gravity & DoricGravityBottom) == DoricGravityBottom) {
+            self.placeholderLabel.y = self.height - textContainerInset.bottom - fitSize.height;
+        } else {
+            self.placeholderLabel.centerY = (self.height - textContainerInset.top - textContainerInset.bottom) / 2;
+        }
     }
-    self.placeholderLabel.height = fitSize.height;
-    if ((self.gravity & DoricGravityTop) == DoricGravityTop) {
-        self.placeholderLabel.y = textContainerInset.top;
-    } else if ((self.gravity & DoricGravityBottom) == DoricGravityBottom) {
-        self.placeholderLabel.y = self.height - textContainerInset.bottom - fitSize.height;
-    } else {
-        self.placeholderLabel.centerY = (self.height - textContainerInset.top - textContainerInset.bottom) / 2;
+    if (self.contentSize.height < self.height) {
+        if ((self.gravity & DoricGravityTop) == DoricGravityTop) {
+            self.contentInset = UIEdgeInsetsMake(
+                    0,
+                    self.contentInset.left,
+                    self.contentInset.bottom,
+                    self.contentInset.right);
+        } else if ((self.gravity & DoricGravityBottom) == DoricGravityBottom) {
+            self.contentInset = UIEdgeInsetsMake(
+                    self.height - self.contentSize.height,
+                    self.contentInset.left,
+                    self.contentInset.bottom,
+                    self.contentInset.right);
+        } else {
+            self.contentInset = UIEdgeInsetsMake(
+                    (self.height - self.contentSize.height) / 2,
+                    self.contentInset.left,
+                    self.contentInset.bottom,
+                    self.contentInset.right);
+        }
     }
 }
 
@@ -137,9 +136,13 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
     if (self = [super init]) {
         _multiLineInput = [DoricMultilineInput new];
         _multiLineInput.backgroundColor = UIColor.clearColor;
+        _multiLineInput.textAlignment = NSTextAlignmentLeft;
+        _multiLineInput.gravity = DoricGravityTop;
         [self addSubview:_multiLineInput];
         _singleLineInput = [DoricSingleLineInput new];
         _singleLineInput.backgroundColor = UIColor.clearColor;
+        _singleLineInput.textAlignment = NSTextAlignmentLeft;
+        _singleLineInput.contentVerticalAlignment = UIControlContentVerticalAlignmentTop;
         [self addSubview:_singleLineInput];
         self.multiline = YES;
     }
@@ -160,8 +163,14 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
 
 - (void)setFrame:(CGRect)frame {
     [super setFrame:frame];
-    self.singleLineInput.frame = frame;
-    self.multiLineInput.frame = frame;
+    self.singleLineInput.width = frame.size.width - self.doricLayout.paddingLeft - self.doricLayout.paddingRight;
+    self.singleLineInput.height = frame.size.height - self.doricLayout.paddingTop - self.doricLayout.paddingBottom;
+    self.singleLineInput.x = self.doricLayout.paddingLeft;
+    self.singleLineInput.y = self.doricLayout.paddingTop;
+    self.multiLineInput.width = frame.size.width - self.doricLayout.paddingLeft - self.doricLayout.paddingRight;
+    self.multiLineInput.height = frame.size.height - self.doricLayout.paddingTop - self.doricLayout.paddingBottom;
+    self.multiLineInput.x = self.doricLayout.paddingLeft;
+    self.multiLineInput.y = self.doricLayout.paddingTop;
 }
 
 - (CGSize)sizeThatFits:(CGSize)size {
@@ -307,6 +316,7 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
     v.doricLayout.paddingBottom = v.multiLineInput.textContainerInset.bottom;
     v.doricLayout.paddingLeft = v.multiLineInput.textContainerInset.left;
     v.doricLayout.paddingRight = v.multiLineInput.textContainerInset.right;
+    v.multiLineInput.textContainerInset = UIEdgeInsetsMake(0, 0, 0, 0);
     return v;
 }
 
@@ -332,7 +342,6 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
         }
         view.textAlignment = alignment;
         view.multiLineInput.gravity = gravity;
-        view.singleLineInput.gravity = gravity;
         UIControlContentVerticalAlignment verticalAlignment = UIControlContentVerticalAlignmentCenter;
         if ((gravity & DoricGravityTop) == DoricGravityTop) {
             verticalAlignment = UIControlContentVerticalAlignmentTop;
@@ -451,13 +460,6 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
 - (void)afterBlended:(NSDictionary *)props {
     [super afterBlended:props];
     if (self.view.multiline) {
-        if (self.view.doricLayout.paddingTop != self.view.multiLineInput.textContainerInset.top
-                || self.view.doricLayout.paddingLeft != self.view.multiLineInput.textContainerInset.left
-                || self.view.doricLayout.paddingBottom != self.view.multiLineInput.textContainerInset.bottom
-                || self.view.doricLayout.paddingRight != self.view.multiLineInput.textContainerInset.right) {
-            self.view.multiLineInput.textContainerInset = UIEdgeInsetsMake(self.view.doricLayout.paddingTop, self.view.doricLayout.paddingLeft, self.view.doricLayout.paddingBottom, self.view.doricLayout.paddingRight);
-        }
-
         UIFont *font = self.view.multiLineInput.placeholderLabel.font;
         if (font) {
             self.view.multiLineInput.placeholderLabel.font = [self.view.multiLineInput.placeholderLabel.font fontWithSize:self.view.font.pointSize];

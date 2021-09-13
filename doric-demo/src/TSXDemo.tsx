@@ -9,12 +9,19 @@ import {
   Text,
   createRef,
   Color,
-  loge,
+  statusbar,
+  navbar,
 } from "doric";
 
 @Entry
-class Counter extends Panel {
+class Timer extends Panel {
+  onShow() {
+    navbar(this.context).setHidden(true);
+    statusbar(this.context).setHidden(true);
+  }
+
   build(root: Group) {
+    statusbar(this.context).setHidden(true);
     root.backgroundColor = Color.BLACK;
     const hour1Ref = createRef<Text>();
     const hour2Ref = createRef<Text>();
@@ -36,7 +43,6 @@ class Counter extends Panel {
           textSize={40}
           ref={hour1Ref}
           textColor={Color.WHITE}
-          border={{ width: 1, color: Color.BLUE }}
           padding={{ left: 10, right: 10, top: 10, bottom: 10 }}
         >
           0
@@ -45,7 +51,6 @@ class Counter extends Panel {
           textSize={40}
           ref={hour2Ref}
           textColor={Color.WHITE}
-          border={{ width: 1, color: Color.BLUE }}
           padding={{ left: 10, right: 10, top: 10, bottom: 10 }}
         >
           0
@@ -62,7 +67,6 @@ class Counter extends Panel {
           textSize={40}
           ref={min1Ref}
           textColor={Color.WHITE}
-          border={{ width: 1, color: Color.BLUE }}
           padding={{ left: 10, right: 10, top: 10, bottom: 10 }}
         >
           0
@@ -71,7 +75,6 @@ class Counter extends Panel {
           textSize={40}
           ref={min2Ref}
           textColor={Color.WHITE}
-          border={{ width: 1, color: Color.BLUE }}
           padding={{ left: 10, right: 10, top: 10, bottom: 10 }}
         >
           0
@@ -88,7 +91,6 @@ class Counter extends Panel {
           textSize={40}
           ref={sec1Ref}
           textColor={Color.WHITE}
-          border={{ width: 1, color: Color.BLUE }}
           padding={{ left: 10, right: 10, top: 10, bottom: 10 }}
         >
           0
@@ -97,7 +99,6 @@ class Counter extends Panel {
           textSize={40}
           ref={sec2Ref}
           textColor={Color.WHITE}
-          border={{ width: 1, color: Color.BLUE }}
           padding={{ left: 10, right: 10, top: 10, bottom: 10 }}
         >
           0
@@ -118,7 +119,6 @@ class Counter extends Panel {
         sec2Ref,
       ].forEach((e) => {
         e.current.apply({
-          border: undefined,
           textSize: width / 10,
         });
       });

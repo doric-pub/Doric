@@ -101,7 +101,11 @@ public class DoricNativeDriver implements IDoricDriver {
             if (object == contextId) {
                 continue;
             }
-            stringBuilder.append(object.toString()).append(",");
+            if (object == null) {
+                stringBuilder.append("null").append(",");
+            } else {
+                stringBuilder.append(object.toString()).append(",");
+            }
         }
         final String anchorName = stringBuilder.toString();
         final DoricPerformanceProfile finalProfile = profile;

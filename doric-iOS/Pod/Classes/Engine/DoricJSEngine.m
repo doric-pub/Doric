@@ -171,9 +171,6 @@
             [self.registry onLog:DoricLogTypeDebug message:message];
         }
     }];
-    [self.jsExecutor injectGlobalJSObject:INJECT_EMPTY obj:^() {
-
-    }];
     [self.jsExecutor injectGlobalJSObject:INJECT_REQUIRE obj:^(NSString *name) {
         __strong typeof(_self) self = _self;
         if (!self) return NO;
@@ -262,11 +259,15 @@
         [array addObject:arg];
         arg = va_arg(args, JSValue *);
     }
-    return [self.jsExecutor invokeObject:GLOBAL_DORIC method:method args:array];
+    return [self invokeDoricMethod:method argumentsArray:array];
 }
 
 - (JSValue *)invokeDoricMethod:(NSString *)method argumentsArray:(NSArray *)args {
-    return [self.jsExecutor invokeObject:GLOBAL_DORIC method:method args:args];
+    JSValue *ret = [self.jsExecutor invokeObject:GLOBAL_DORIC method:method args:args];
+    if (![method isEqualToString:@"pureCallEntityMethod"]) {
+        [self.jsExecutor invokeObject:GLOBAL_DORIC method:DORIC_HOOK_NATIVE_CALL args:nil];
+    }
+    return ret;
 }
 
 - (NSString *)packageContextScript:(NSString *)contextId content:(NSString *)content {

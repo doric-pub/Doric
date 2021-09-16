@@ -33,7 +33,6 @@ public class DoricConstant {
     public static final String INJECT_TIMER_SET = "nativeSetTimer";
     public static final String INJECT_TIMER_CLEAR = "nativeClearTimer";
     public static final String INJECT_BRIDGE = "nativeBridge";
-    public static final String INJECT_EMPTY = "nativeEmpty";
 
     public static final String TEMPLATE_CONTEXT_CREATE = "Reflect.apply(" +
             "function(doric,context,Entry,require,exports){" + "\n" +
@@ -64,6 +63,7 @@ public class DoricConstant {
     public static final String DORIC_TIMER_CALLBACK = "jsCallbackTimer";
     public static final String DORIC_BRIDGE_RESOLVE = "jsCallResolve";
     public static final String DORIC_BRIDGE_REJECT = "jsCallReject";
+    public static final String DORIC_HOOK_NATIVE_CALL = "jsHookAfterNativeCall";
 
 
     public static final String DORIC_ENTITY_RESPONSE = "__response__";

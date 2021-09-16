@@ -59,12 +59,6 @@ function hookBeforeNativeCall(context?: Context) {
     }
 }
 
-function hookAfterNativeCall(context?: Context) {
-    if (context) {
-        context.hookAfterNativeCall()
-    }
-}
-
 function getContext(): Context | undefined {
     return Reflect.getMetadata('__doric_context__', global)
 }
@@ -90,7 +84,6 @@ export function jsCallResolve(contextId: string, callbackId: string, args?: any)
     }
     hookBeforeNativeCall(context)
     Reflect.apply(callback.resolve, context, argumentsList)
-    hookAfterNativeCall(context)
 }
 
 export function jsCallReject(contextId: string, callbackId: string, args?: any) {
@@ -110,7 +103,6 @@ export function jsCallReject(contextId: string, callbackId: string, args?: any) 
     }
     hookBeforeNativeCall(context)
     Reflect.apply(callback.reject, context.entity, argumentsList)
-    hookAfterNativeCall(context)
 }
 
 export class Context {
@@ -231,7 +223,6 @@ export function jsCallEntityMethod(contextId: string, methodName: string, args?:
         }
         hookBeforeNativeCall(context)
         const ret = Reflect.apply(Reflect.get(context.entity, methodName), context.entity, argumentsList)
-        hookAfterNativeCall(context)
         return ret
     } else {
         loge(`Cannot find method for context id:${contextId},method name is:${methodName}`)
@@ -392,8 +383,13 @@ export function jsCallbackTimer(timerId: number) {
         return
     }
     if (timerInfo.callback instanceof Function) {
+        setContext(timerInfo.context)
         hookBeforeNativeCall(timerInfo.context)
         Reflect.apply(timerInfo.callback, timerInfo.context, [])
-        hookAfterNativeCall(timerInfo.context)
     }
+}
+
+export function jsHookAfterNativeCall() {
+    const context = getContext()
+    context?.hookAfterNativeCall()
 }

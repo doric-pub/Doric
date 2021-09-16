@@ -57,9 +57,11 @@ class CounterVM extends ViewModel<CountModel, CounterView> {
   onAttached(s: CountModel, vh: CounterView) {
     vh.counter.onClick = () => {
       Promise.resolve(this.getState().count).then(count => {
-        this.updateState((state) => {
-          state.count = count + 1;
-        });
+        Promise.resolve().then(() => {
+          this.updateState((state) => {
+            state.count = count + 1;
+          });
+        })
       })
     };
   }

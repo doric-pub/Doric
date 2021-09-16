@@ -176,12 +176,6 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
                 return null;
             }
         });
-        mDoricJSE.injectGlobalJSFunction(DoricConstant.INJECT_EMPTY, new JavaFunction() {
-            @Override
-            public JavaValue exec(JSDecoder[] args) {
-                return null;
-            }
-        });
         mDoricJSE.injectGlobalJSFunction(DoricConstant.INJECT_REQUIRE, new JavaFunction() {
             @Override
             public JavaValue exec(JSDecoder[] args) {
@@ -292,8 +286,10 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
         for (Object arg : args) {
             values.add(DoricUtils.toJavaValue(arg));
         }
-        return mDoricJSE.invokeMethod(DoricConstant.GLOBAL_DORIC, method,
+        JSDecoder ret = mDoricJSE.invokeMethod(DoricConstant.GLOBAL_DORIC, method,
                 values.toArray(new JavaValue[0]), false);
+        mDoricJSE.invokeMethod(DoricConstant.GLOBAL_DORIC, DoricConstant.DORIC_HOOK_NATIVE_CALL, new JavaValue[0], false);
+        return ret;
     }
 
     @Override

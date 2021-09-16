@@ -32,7 +32,6 @@ extern NSString *const INJECT_REQUIRE;
 extern NSString *const INJECT_TIMER_SET;
 extern NSString *const INJECT_TIMER_CLEAR;
 extern NSString *const INJECT_BRIDGE;
-extern NSString *const INJECT_EMPTY;
 
 extern NSString *const TEMPLATE_CONTEXT_CREATE;
 
@@ -53,6 +52,8 @@ extern NSString *const DORIC_TIMER_CALLBACK;
 extern NSString *const DORIC_BRIDGE_RESOLVE;
 
 extern NSString *const DORIC_BRIDGE_REJECT;
+
+extern NSString *const DORIC_HOOK_NATIVE_CALL;
 
 extern NSString *const DORIC_ENTITY_RESPONSE;
 

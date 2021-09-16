@@ -33,7 +33,6 @@ NSString *const INJECT_REQUIRE = @"nativeRequire";
 NSString *const INJECT_TIMER_SET = @"nativeSetTimer";
 NSString *const INJECT_TIMER_CLEAR = @"nativeClearTimer";
 NSString *const INJECT_BRIDGE = @"nativeBridge";
-NSString *const INJECT_EMPTY = @"nativeEmpty";
 
 NSString *const TEMPLATE_CONTEXT_CREATE = @"Reflect.apply("
                                           "function(doric,context,Entry,require,exports){" "\n"
@@ -71,6 +70,8 @@ NSString *const DORIC_TIMER_CALLBACK = @"jsCallbackTimer";
 NSString *const DORIC_BRIDGE_RESOLVE = @"jsCallResolve";
 
 NSString *const DORIC_BRIDGE_REJECT = @"jsCallReject";
+
+NSString *const DORIC_HOOK_NATIVE_CALL = @"jsHookAfterNativeCall";
 
 NSString *const DORIC_ENTITY_RESPONSE = @"__response__";
 

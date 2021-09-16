@@ -1206,11 +1206,6 @@ var doric = (function (exports) {
             context.hookBeforeNativeCall();
         }
     }
-    function hookAfterNativeCall(context) {
-        if (context) {
-            context.hookAfterNativeCall();
-        }
-    }
     function getContext() {
         return Reflect.getMetadata('__doric_context__', global$1);
     }
@@ -1234,7 +1229,6 @@ var doric = (function (exports) {
         }
         hookBeforeNativeCall(context);
         Reflect.apply(callback.resolve, context, argumentsList);
-        hookAfterNativeCall(context);
     }
     function jsCallReject(contextId, callbackId, args) {
         const context = gContexts.get(contextId);
@@ -1253,7 +1247,6 @@ var doric = (function (exports) {
         }
         hookBeforeNativeCall(context);
         Reflect.apply(callback.reject, context.entity, argumentsList);
-        hookAfterNativeCall(context);
     }
     class Context {
         constructor(id) {
@@ -1392,7 +1385,6 @@ var doric = (function (exports) {
             }
             hookBeforeNativeCall(context);
             const ret = Reflect.apply(Reflect.get(context.entity, methodName), context.entity, argumentsList);
-            hookAfterNativeCall(context);
             return ret;
         }
         else {
@@ -1547,10 +1539,14 @@ var doric = (function (exports) {
             return;
         }
         if (timerInfo.callback instanceof Function) {
+            setContext(timerInfo.context);
             hookBeforeNativeCall(timerInfo.context);
             Reflect.apply(timerInfo.callback, timerInfo.context, []);
-            hookAfterNativeCall(timerInfo.context);
         }
+    }
+    function jsHookAfterNativeCall() {
+        const context = getContext();
+        context === null || context === void 0 ? void 0 : context.hookAfterNativeCall();
     }
 
     exports.Context = Context;
@@ -1560,6 +1556,7 @@ var doric = (function (exports) {
     exports.jsCallReject = jsCallReject;
     exports.jsCallResolve = jsCallResolve;
     exports.jsCallbackTimer = jsCallbackTimer;
+    exports.jsHookAfterNativeCall = jsHookAfterNativeCall;
     exports.jsObtainContext = jsObtainContext;
     exports.jsObtainEntry = jsObtainEntry;
     exports.jsRegisterModule = jsRegisterModule;
@@ -2574,7 +2571,7 @@ class Panel {
         const promises = [];
         if (Environment.platform !== 'web') {
             //Here insert a native call to ensure the promise is resolved done.
-            nativeEmpty();
+            //nativeEmpty()
             if (this.__root__.isDirty()) {
                 const model = this.__root__.toModel();
                 promises.push(this.nativeRender(model));

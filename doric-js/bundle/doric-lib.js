@@ -996,7 +996,7 @@ class Panel {
         const promises = [];
         if (Environment.platform !== 'web') {
             //Here insert a native call to ensure the promise is resolved done.
-            nativeEmpty();
+            //nativeEmpty()
             if (this.__root__.isDirty()) {
                 const model = this.__root__.toModel();
                 promises.push(this.nativeRender(model));

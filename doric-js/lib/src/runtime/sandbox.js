@@ -22,11 +22,6 @@ function hookBeforeNativeCall(context) {
         context.hookBeforeNativeCall();
     }
 }
-function hookAfterNativeCall(context) {
-    if (context) {
-        context.hookAfterNativeCall();
-    }
-}
 function getContext() {
     return Reflect.getMetadata('__doric_context__', global);
 }
@@ -50,7 +45,6 @@ export function jsCallResolve(contextId, callbackId, args) {
     }
     hookBeforeNativeCall(context);
     Reflect.apply(callback.resolve, context, argumentsList);
-    hookAfterNativeCall(context);
 }
 export function jsCallReject(contextId, callbackId, args) {
     const context = gContexts.get(contextId);
@@ -69,7 +63,6 @@ export function jsCallReject(contextId, callbackId, args) {
     }
     hookBeforeNativeCall(context);
     Reflect.apply(callback.reject, context.entity, argumentsList);
-    hookAfterNativeCall(context);
 }
 export class Context {
     constructor(id) {
@@ -208,7 +201,6 @@ export function jsCallEntityMethod(contextId, methodName, args) {
         }
         hookBeforeNativeCall(context);
         const ret = Reflect.apply(Reflect.get(context.entity, methodName), context.entity, argumentsList);
-        hookAfterNativeCall(context);
         return ret;
     }
     else {
@@ -363,8 +355,12 @@ export function jsCallbackTimer(timerId) {
         return;
     }
     if (timerInfo.callback instanceof Function) {
+        setContext(timerInfo.context);
         hookBeforeNativeCall(timerInfo.context);
         Reflect.apply(timerInfo.callback, timerInfo.context, []);
-        hookAfterNativeCall(timerInfo.context);
     }
+}
+export function jsHookAfterNativeCall() {
+    const context = getContext();
+    context === null || context === void 0 ? void 0 : context.hookAfterNativeCall();
 }

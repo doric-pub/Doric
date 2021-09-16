@@ -27,4 +27,5 @@ export declare function pureCallEntityMethod(contextId: string, methodName: stri
 declare type ClassType<T> = new (...args: any) => T;
 export declare function jsObtainEntry(contextId: string): () => ClassType<object> | ((constructor: ClassType<object>) => ClassType<object>);
 export declare function jsCallbackTimer(timerId: number): void;
+export declare function jsHookAfterNativeCall(): void;
 export {};

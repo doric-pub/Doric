@@ -288,7 +288,9 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
         }
         JSDecoder ret = mDoricJSE.invokeMethod(DoricConstant.GLOBAL_DORIC, method,
                 values.toArray(new JavaValue[0]), false);
-        mDoricJSE.invokeMethod(DoricConstant.GLOBAL_DORIC, DoricConstant.DORIC_HOOK_NATIVE_CALL, new JavaValue[0], false);
+        if (!DoricConstant.DORIC_CONTEXT_INVOKE_PURE.equals(method)) {
+            mDoricJSE.invokeMethod(DoricConstant.GLOBAL_DORIC, DoricConstant.DORIC_HOOK_NATIVE_CALL, new JavaValue[0], false);
+        }
         return ret;
     }
 

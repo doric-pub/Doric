@@ -31,17 +31,16 @@
         [view.doricLayout measure:size];
         [view configureLayoutWithBlock:^(YGLayout *layout) {
             layout.isEnabled = YES;
+            if (view.doricLayout.undefined) {
+                return;
+            }
             if (layout.width.unit == YGUnitUndefined
                     || layout.width.unit == YGUnitAuto) {
-                if (!view.doricLayout.undefined) {
-                    layout.width = YGPointValue(view.doricLayout.measuredWidth);
-                }
+                layout.width = YGPointValue(view.doricLayout.measuredWidth);
             }
             if (layout.height.unit == YGUnitUndefined
                     || layout.height.unit == YGUnitAuto) {
-                if (!view.doricLayout.undefined) {
-                    layout.height = YGPointValue(view.doricLayout.measuredHeight);
-                }
+                layout.height = YGPointValue(view.doricLayout.measuredHeight);
             }
         }];
     }
@@ -70,11 +69,26 @@
     }
 }
 
+- (void)afterBlended:(NSDictionary *)props {
+    [super afterBlended:props];
+    [self.childNodes forEach:^(DoricViewNode *viewNode) {
+        NSString *viewId = viewNode.viewId;
+        NSDictionary *model = [self subModelOf:viewId];
+        NSDictionary *dictionary = model[@"dictionary"];
+        if (!dictionary[@"flexConfig"]) {
+            viewNode.view.yoga.width = YGValueAuto;
+            viewNode.view.yoga.height = YGValueAuto;
+        }
+    }];
+}
+
 - (void)blendSubNode:(DoricViewNode *)subNode flexConfig:(NSDictionary *)flexConfig {
     [subNode.view configureLayoutWithBlock:^(YGLayout *_Nonnull layout) {
         layout.isEnabled = YES;
     }];
     subNode.view.doricLayout.disabled = YES;
+    subNode.view.yoga.width = YGValueAuto;
+    subNode.view.yoga.height = YGValueAuto;
     [self blendYoga:subNode.view.yoga from:flexConfig];
 }
 

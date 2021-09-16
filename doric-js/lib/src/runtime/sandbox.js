@@ -18,7 +18,7 @@ import { loge } from "../util/log";
 import "reflect-metadata";
 function hookBeforeNativeCall(context) {
     if (context) {
-        Reflect.defineMetadata('__doric_context__', context, global);
+        setContext(context);
         context.hookBeforeNativeCall();
     }
 }

@@ -195,14 +195,6 @@ export abstract class Panel {
     }
 
     private hookBeforeNativeCall() {
-        if (Environment.platform !== 'web') {
-            this.__root__.clean()
-            for (let map of this.headviews.values()) {
-                for (let v of map.values()) {
-                    v.clean()
-                }
-            }
-        }
     }
 
     private hookAfterNativeCall() {
@@ -210,58 +202,30 @@ export abstract class Panel {
             return
         }
         const promises: Promise<any>[] = []
-        if (Environment.platform !== 'web') {
-            //Here insert a native call to ensure the promise is resolved done.
-            //nativeEmpty()
-            if (this.__root__.isDirty()) {
-                const model = this.__root__.toModel()
-                promises.push(this.nativeRender(model))
-            }
-            for (let map of this.headviews.values()) {
-                for (let v of map.values()) {
-                    if (v.isDirty()) {
-                        const model = v.toModel()
-                        promises.push(this.nativeRender(model))
-                    }
-                }
-            }
-            if (this.__rendering__) {
-                //skip
-                Promise.all(promises).then(_ => {
-                })
-            } else {
-                this.__rendering__ = true
-                Promise.all(promises).then(_ => {
-                    this.__rendering__ = false
-                    this.onRenderFinished()
-                })
-            }
-        } else {
-            if (this.__rendering__) {
-                //skip
-                return;
-            }
-            this.__rendering__ = true
-            Function("return this")().setTimeout(() => {
-                if (this.__root__.isDirty()) {
-                    const model = this.__root__.toModel()
+        if (this.__root__.isDirty()) {
+            const model = this.__root__.toModel()
+            promises.push(this.nativeRender(model))
+            this.__root__.clean()
+        }
+        for (let map of this.headviews.values()) {
+            for (let v of map.values()) {
+                if (v.isDirty()) {
+                    const model = v.toModel()
                     promises.push(this.nativeRender(model))
-                    this.__root__.clean()
+                    v.clean()
                 }
-                for (let map of this.headviews.values()) {
-                    for (let v of map.values()) {
-                        if (v.isDirty()) {
-                            const model = v.toModel()
-                            promises.push(this.nativeRender(model))
-                            v.clean()
-                        }
-                    }
-                }
+            }
+        }
+        if (this.__rendering__) {
+            //skip
+            Promise.all(promises).then(_ => {
+            })
+        } else {
+            this.__rendering__ = true
+            Promise.all(promises).then(_ => {
                 this.__rendering__ = false
-                Promise.all(promises).then(_ => {
-                    this.onRenderFinished()
-                })
-            }, 0)
+                this.onRenderFinished()
+            })
         }
     }
 

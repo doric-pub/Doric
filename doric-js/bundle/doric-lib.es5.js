@@ -1275,138 +1275,59 @@ var Panel = /** @class */ (function () {
         return this.context.callNative("shader", "render", model);
     };
     Panel.prototype.hookBeforeNativeCall = function () {
-        var e_2, _a, e_3, _b;
-        if (Environment.platform !== 'web') {
-            this.__root__.clean();
-            try {
-                for (var _c = __values$3(this.headviews.values()), _d = _c.next(); !_d.done; _d = _c.next()) {
-                    var map = _d.value;
-                    try {
-                        for (var _e = (e_3 = void 0, __values$3(map.values())), _f = _e.next(); !_f.done; _f = _e.next()) {
-                            var v = _f.value;
-                            v.clean();
-                        }
-                    }
-                    catch (e_3_1) { e_3 = { error: e_3_1 }; }
-                    finally {
-                        try {
-                            if (_f && !_f.done && (_b = _e.return)) { _b.call(_e); }
-                        }
-                        finally { if (e_3) { throw e_3.error; } }
-                    }
-                }
-            }
-            catch (e_2_1) { e_2 = { error: e_2_1 }; }
-            finally {
-                try {
-                    if (_d && !_d.done && (_a = _c.return)) { _a.call(_c); }
-                }
-                finally { if (e_2) { throw e_2.error; } }
-            }
-        }
     };
     Panel.prototype.hookAfterNativeCall = function () {
-        var e_4, _a, e_5, _b;
+        var e_2, _a, e_3, _b;
         var _this = this;
         if (this.destroyed) {
             return;
         }
         var promises = [];
-        if (Environment.platform !== 'web') {
-            //Here insert a native call to ensure the promise is resolved done.
-            //nativeEmpty()
-            if (this.__root__.isDirty()) {
-                var model = this.__root__.toModel();
-                promises.push(this.nativeRender(model));
-            }
-            try {
-                for (var _c = __values$3(this.headviews.values()), _d = _c.next(); !_d.done; _d = _c.next()) {
-                    var map = _d.value;
-                    try {
-                        for (var _e = (e_5 = void 0, __values$3(map.values())), _f = _e.next(); !_f.done; _f = _e.next()) {
-                            var v = _f.value;
-                            if (v.isDirty()) {
-                                var model = v.toModel();
-                                promises.push(this.nativeRender(model));
-                            }
-                        }
-                    }
-                    catch (e_5_1) { e_5 = { error: e_5_1 }; }
-                    finally {
-                        try {
-                            if (_f && !_f.done && (_b = _e.return)) { _b.call(_e); }
-                        }
-                        finally { if (e_5) { throw e_5.error; } }
-                    }
-                }
-            }
-            catch (e_4_1) { e_4 = { error: e_4_1 }; }
-            finally {
-                try {
-                    if (_d && !_d.done && (_a = _c.return)) { _a.call(_c); }
-                }
-                finally { if (e_4) { throw e_4.error; } }
-            }
-            if (this.__rendering__) {
-                //skip
-                Promise.all(promises).then(function (_) {
-                });
-            }
-            else {
-                this.__rendering__ = true;
-                Promise.all(promises).then(function (_) {
-                    _this.__rendering__ = false;
-                    _this.onRenderFinished();
-                });
-            }
+        if (this.__root__.isDirty()) {
+            var model = this.__root__.toModel();
+            promises.push(this.nativeRender(model));
+            this.__root__.clean();
         }
-        else {
-            if (this.__rendering__) {
-                //skip
-                return;
-            }
-            this.__rendering__ = true;
-            Function("return this")().setTimeout(function () {
-                var e_6, _a, e_7, _b;
-                if (_this.__root__.isDirty()) {
-                    var model = _this.__root__.toModel();
-                    promises.push(_this.nativeRender(model));
-                    _this.__root__.clean();
-                }
+        try {
+            for (var _c = __values$3(this.headviews.values()), _d = _c.next(); !_d.done; _d = _c.next()) {
+                var map = _d.value;
                 try {
-                    for (var _c = __values$3(_this.headviews.values()), _d = _c.next(); !_d.done; _d = _c.next()) {
-                        var map = _d.value;
-                        try {
-                            for (var _e = (e_7 = void 0, __values$3(map.values())), _f = _e.next(); !_f.done; _f = _e.next()) {
-                                var v = _f.value;
-                                if (v.isDirty()) {
-                                    var model = v.toModel();
-                                    promises.push(_this.nativeRender(model));
-                                    v.clean();
-                                }
-                            }
-                        }
-                        catch (e_7_1) { e_7 = { error: e_7_1 }; }
-                        finally {
-                            try {
-                                if (_f && !_f.done && (_b = _e.return)) { _b.call(_e); }
-                            }
-                            finally { if (e_7) { throw e_7.error; } }
+                    for (var _e = (e_3 = void 0, __values$3(map.values())), _f = _e.next(); !_f.done; _f = _e.next()) {
+                        var v = _f.value;
+                        if (v.isDirty()) {
+                            var model = v.toModel();
+                            promises.push(this.nativeRender(model));
+                            v.clean();
                         }
                     }
                 }
-                catch (e_6_1) { e_6 = { error: e_6_1 }; }
+                catch (e_3_1) { e_3 = { error: e_3_1 }; }
                 finally {
                     try {
-                        if (_d && !_d.done && (_a = _c.return)) { _a.call(_c); }
+                        if (_f && !_f.done && (_b = _e.return)) { _b.call(_e); }
                     }
-                    finally { if (e_6) { throw e_6.error; } }
+                    finally { if (e_3) { throw e_3.error; } }
                 }
+            }
+        }
+        catch (e_2_1) { e_2 = { error: e_2_1 }; }
+        finally {
+            try {
+                if (_d && !_d.done && (_a = _c.return)) { _a.call(_c); }
+            }
+            finally { if (e_2) { throw e_2.error; } }
+        }
+        if (this.__rendering__) {
+            //skip
+            Promise.all(promises).then(function (_) {
+            });
+        }
+        else {
+            this.__rendering__ = true;
+            Promise.all(promises).then(function (_) {
                 _this.__rendering__ = false;
-                Promise.all(promises).then(function (_) {
-                    _this.onRenderFinished();
-                });
-            }, 0);
+                _this.onRenderFinished();
+            });
         }
     };
     Panel.prototype.onRenderFinished = function () {

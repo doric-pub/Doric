@@ -14,7 +14,6 @@ public:
 
   static const QString INJECT_ENVIRONMENT;
   static const QString INJECT_LOG;
-  static const QString INJECT_EMPTY;
   static const QString INJECT_REQUIRE;
   static const QString INJECT_TIMER_SET;
   static const QString INJECT_TIMER_CLEAR;
@@ -30,6 +29,7 @@ public:
   static const QString DORIC_TIMER_CALLBACK;
   static const QString DORIC_BRIDGE_RESOLVE;
   static const QString DORIC_BRIDGE_REJECT;
+  static const QString DORIC_HOOK_NATIVE_CALL;
 
   static const QString DORIC_ENTITY_RESPONSE;
   static const QString DORIC_ENTITY_CREATE;

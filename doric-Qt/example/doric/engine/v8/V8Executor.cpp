@@ -239,24 +239,6 @@ static void InjectedFunction(const v8::FunctionCallbackInfo<v8::Value> &args) {
         Q_ARG(QString, QString::fromUtf8(argString3.c_str())),
         Q_ARG(QString, QString::fromUtf8(argString4.c_str())));
   }
-
-  // begin check to perform micro task checkpoint
-
-  std::string objectNameString = "global";
-  std::string functionKeyString = "nativeEmpty";
-
-  int objectCompareResult = strncmp(objectKey.c_str(), objectNameString.c_str(),
-                                    strlen(objectKey.c_str()));
-
-  if (objectCompareResult == 0) {
-    int functionCompareResult =
-        strncmp(functionKey.c_str(), functionKeyString.c_str(),
-                strlen(functionKey.c_str()));
-    if (functionCompareResult == 0) {
-      isolate->PerformMicrotaskCheckpoint();
-    }
-  }
-  // end check
 }
 
 void V8Executor::injectFunctions(const char *objectName,

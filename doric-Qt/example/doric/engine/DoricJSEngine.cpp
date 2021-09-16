@@ -51,11 +51,6 @@ DoricJSEngine::DoricJSEngine(QObject *parent) : QObject(parent) {
       mJSE->injectGlobalJSFunction(DoricConstant::INJECT_LOG, nativeLog,
                                    "function");
 
-      // inject empty
-      DoricNativeEmpty *nativeEmpty = new DoricNativeEmpty();
-      mJSE->injectGlobalJSFunction(DoricConstant::INJECT_EMPTY, nativeEmpty,
-                                   "function");
-
       // inject require
       DoricNativeRequire *nativeRequire = new DoricNativeRequire();
       mJSE->injectGlobalJSFunction(DoricConstant::INJECT_REQUIRE, nativeRequire,
@@ -110,7 +105,15 @@ QString DoricJSEngine::destroyContext(QString contextId) {
 
 QString DoricJSEngine::invokeDoricMethod(QString method,
                                          QVariantList arguments) {
-  return mJSE->invokeObject(DoricConstant::GLOBAL_DORIC, method, arguments);
+  QString ret = mJSE->invokeObject(DoricConstant::GLOBAL_DORIC, method, arguments);
+
+  if (method != DoricConstant::DORIC_CONTEXT_INVOKE_PURE) {
+      QVariantList newArguments;
+      newArguments.append(0);
+      newArguments.append(false);
+      mJSE->invokeObject(DoricConstant::GLOBAL_DORIC, DoricConstant::DORIC_HOOK_NATIVE_CALL, newArguments);
+  }
+  return ret;
 }
 
 void DoricJSEngine::loadBuiltinJS(QString assetName) {

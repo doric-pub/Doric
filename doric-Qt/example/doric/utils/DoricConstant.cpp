@@ -6,7 +6,6 @@ const QString DoricConstant::DORIC_MODULE_LIB = "doric";
 
 const QString DoricConstant::INJECT_ENVIRONMENT = "Environment";
 const QString DoricConstant::INJECT_LOG = "nativeLog";
-const QString DoricConstant::INJECT_EMPTY = "nativeEmpty";
 const QString DoricConstant::INJECT_REQUIRE = "nativeRequire";
 const QString DoricConstant::INJECT_TIMER_SET = "nativeSetTimer";
 const QString DoricConstant::INJECT_TIMER_CLEAR = "nativeClearTimer";
@@ -31,6 +30,7 @@ const QString DoricConstant::DORIC_CONTEXT_INVOKE_PURE = "pureCallEntityMethod";
 const QString DoricConstant::DORIC_TIMER_CALLBACK = "jsCallbackTimer";
 const QString DoricConstant::DORIC_BRIDGE_RESOLVE = "jsCallResolve";
 const QString DoricConstant::DORIC_BRIDGE_REJECT = "jsCallReject";
+const QString DoricConstant::DORIC_HOOK_NATIVE_CALL = "jsHookAfterNativeCall";
 
 const QString DoricConstant::DORIC_ENTITY_RESPONSE = "__response__";
 const QString DoricConstant::DORIC_ENTITY_INIT = "__init__";

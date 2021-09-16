@@ -1200,7 +1200,7 @@ var doric = (function (exports) {
      */
     function hookBeforeNativeCall(context) {
         if (context) {
-            Reflect.defineMetadata('__doric_context__', context, global$1);
+            setContext(context);
             context.hookBeforeNativeCall();
         }
     }

@@ -1,4 +1,4 @@
-import { jsCallResolve, jsCallReject, jsCallbackTimer, jsReleaseContext } from 'doric/src/runtime/sandbox'
+import { jsCallResolve, jsCallReject, jsCallbackTimer, jsReleaseContext, jsHookAfterNativeCall } from 'doric/src/runtime/sandbox'
 import { acquireJSBundle, acquirePlugin } from './DoricRegistry'
 import { getDoricContext } from './DoricContext'
 import { DoricPlugin } from './DoricPlugin'
@@ -43,8 +43,6 @@ function initDoric() {
     injectGlobalObject("Environment", {
         platform: "web"
     })
-
-    injectGlobalObject("nativeEmpty", () => undefined)
 
     injectGlobalObject('nativeLog', (type: 'd' | 'w' | 'e', message: string) => {
         switch (type) {
@@ -99,13 +97,16 @@ function initDoric() {
             ret.then(
                 e => {
                     jsCallResolve(contextId, callbackId, e)
+                    markNeedHook()
                 },
                 e => {
                     jsCallReject(contextId, callbackId, e)
+                    markNeedHook()
                 })
         } else if (ret !== undefined) {
             Promise.resolve(ret).then((ret) => {
                 jsCallResolve(contextId, callbackId, ret)
+                markNeedHook()
             })
         }
         return true
@@ -115,11 +116,13 @@ function initDoric() {
         if (repeat) {
             const handleId = originSetInterval(() => {
                 jsCallbackTimer(timerId)
+                markNeedHook()
             }, time)
             timers.set(timerId, { handleId, repeat })
         } else {
             const handleId = originSetTimeout(() => {
                 jsCallbackTimer(timerId)
+                markNeedHook()
             }, time)
             timers.set(timerId, { handleId, repeat })
         }
@@ -145,5 +148,18 @@ export function destroyContext(contextId: string) {
     if (scriptElement) {
         document.body.removeChild(scriptElement)
     }
+}
+
+let requesting = false
+
+export function markNeedHook() {
+    if (requesting) {
+        return
+    }
+    requesting = true
+    requestAnimationFrame(() => {
+        jsHookAfterNativeCall()
+        requesting = false
+    })
 }
 initDoric()

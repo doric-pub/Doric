@@ -54,7 +54,7 @@ declare function nativeClearTimer(timerId: number): void
 
 function hookBeforeNativeCall(context?: Context) {
     if (context) {
-        Reflect.defineMetadata('__doric_context__', context, global)
+        setContext(context)
         context.hookBeforeNativeCall()
     }
 }

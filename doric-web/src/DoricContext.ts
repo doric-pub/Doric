@@ -1,7 +1,7 @@
 import { jsObtainContext, jsCallEntityMethod, pureCallEntityMethod } from 'doric/src/runtime/sandbox'
 import { Panel } from 'doric'
 import { DoricPlugin } from "./DoricPlugin"
-import { createContext, destroyContext } from "./DoricDriver"
+import { createContext, destroyContext, markNeedHook } from "./DoricDriver"
 import { DoricStackNode } from './shader/DoricStackNode'
 import { DoricViewNode } from './shader/DoricViewNode'
 const doricContexts: Map<string, DoricContext> = new Map
@@ -51,7 +51,9 @@ export class DoricContext {
         for (let i = 0; i < arguments.length; i++) {
             argumentsList.push(arguments[i])
         }
-        return Reflect.apply(jsCallEntityMethod, this.panel, argumentsList)
+        const ret = Reflect.apply(jsCallEntityMethod, this.panel, argumentsList)
+        markNeedHook()
+        return ret
     }
 
     pureInvokeEntityMethod(method: string, ...otherArgs: any) {

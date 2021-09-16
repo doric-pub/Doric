@@ -17,6 +17,7 @@ package pub.doric.plugin;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,17 +25,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import pub.doric.DoricContext;
-import pub.doric.R;
-import pub.doric.extension.bridge.DoricPlugin;
-import pub.doric.extension.bridge.DoricMethod;
-import pub.doric.extension.bridge.DoricPromise;
-import pub.doric.utils.DoricUtils;
-import pub.doric.utils.ThreadMode;
-
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 import com.github.pengfeizhou.jscore.JavaValue;
+
+import pub.doric.DoricContext;
+import pub.doric.R;
+import pub.doric.extension.bridge.DoricMethod;
+import pub.doric.extension.bridge.DoricPlugin;
+import pub.doric.extension.bridge.DoricPromise;
+import pub.doric.utils.DoricUtils;
+import pub.doric.utils.ThreadMode;
 
 /**
  * @Description: Doric
@@ -57,9 +58,18 @@ public class ModalPlugin extends DoricJavaPlugin {
             if (gravityVal.isNumber()) {
                 gravity = gravityVal.asNumber().toInt();
             }
-            Toast toast = Toast.makeText(getDoricContext().getContext(),
-                    msg,
-                    Toast.LENGTH_SHORT);
+            Toast toast;
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+                toast = Toast.makeText(getDoricContext().getContext(), msg, Toast.LENGTH_SHORT);
+            } else {
+                toast = new Toast(getDoricContext().getContext());
+                View view = LayoutInflater.from(getDoricContext().getContext()).inflate(R.layout.doric_modal_toast, null, false);
+                TextView msgTV = view.findViewById(R.id.tv_msg);
+                msgTV.setText(msg);
+                toast.setView(view);
+                toast.setDuration(Toast.LENGTH_SHORT);
+            }
+
             if ((gravity & Gravity.TOP) == Gravity.TOP) {
                 toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, DoricUtils.dp2px(50));
             } else if ((gravity & Gravity.BOTTOM) == Gravity.BOTTOM) {

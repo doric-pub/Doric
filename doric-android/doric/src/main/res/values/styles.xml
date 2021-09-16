@@ -10,6 +10,11 @@
 
     <style name="Theme.Doric.Modal.Prompt" parent="Theme.Doric.Modal" />
 
+    <style name="Theme.Doric.Modal.Toast" parent="Theme.Doric.Modal">
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
     <style name="Theme.Doric.Modal.Prompt.EditText" parent="Theme.AppCompat.Light" />
 </resources>
 

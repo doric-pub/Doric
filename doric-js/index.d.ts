@@ -95,6 +95,7 @@ declare module 'doric/lib/src/widget/index.widget' {
     export * from 'doric/lib/src/widget/nestedSlider';
     export * from 'doric/lib/src/widget/draggable';
     export * from 'doric/lib/src/widget/switch';
+    export * from 'doric/lib/src/widget/gesture';
 }
 
 declare module 'doric/lib/src/native/index.native' {
@@ -963,6 +964,44 @@ declare module 'doric/lib/src/widget/switch' {
             thumbTintColor?: Color;
     }
     export function switchView(config: Partial<Switch>): Switch;
+}
+
+declare module 'doric/lib/src/widget/gesture' {
+    import { View } from "doric/lib/src/ui/view";
+    import { Stack } from "doric/lib/src/widget/layouts";
+    export enum SwipeOrientation {
+            LEFT = 0,
+            RIGHT = 1,
+            TOP = 2,
+            BOTTOM = 3
+    }
+    export class GestureContainer extends Stack {
+            onSingleTap?: () => void;
+            onDoubleTap?: () => void;
+            onLongPress?: () => void;
+            /**
+                * Called when the fingers in pinching on screen
+                * @param scale: the numeric value of scale on pinch
+                */
+            onPinch?: (scale: number) => void;
+            /**
+                * Called when the fingers are scrolling or paning
+                * @param dx: the value of the change on the x-axis
+                * @param dy: the value of the change on the y-axis
+                */
+            onPan?: (dx: number, dy: number) => void;
+            /**
+                * Called when the fingers are scrolling or paning
+                * @param dAngle: the value of the angle change from last rotate in radian
+                */
+            onRotate?: (dAngle: number) => void;
+            /**
+                * Called when the fingers has swiped on screen
+                * @param orientation: the orientation of this swipe
+                */
+            onSwipe?: (orientation: SwipeOrientation) => void;
+    }
+    export function gestureContainer(views: View | View[], config?: Partial<GestureContainer>): GestureContainer;
 }
 
 declare module 'doric/lib/src/native/modal' {

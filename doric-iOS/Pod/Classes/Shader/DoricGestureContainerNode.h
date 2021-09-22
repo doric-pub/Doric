@@ -26,6 +26,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface DoricGestureContainerNode : DoricStackNode
 
+@property(nonatomic, strong) NSString *onTouchDown;
+@property(nonatomic, strong) NSString *onTouchMove;
+@property(nonatomic, strong) NSString *onTouchUp;
+@property(nonatomic, strong) NSString *onTouchCancel;
+
 @end
 
 NS_ASSUME_NONNULL_END

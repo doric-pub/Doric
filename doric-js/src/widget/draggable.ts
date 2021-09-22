@@ -17,11 +17,17 @@ import { Property, View } from "../ui/view"
 import { Stack } from "../widget/layouts"
 import { layoutConfig } from "../util/layoutconfig"
 
+/**
+ * @deprecated The class should not be used, please use GestureContainer class instead
+ */
 export class Draggable extends Stack {
     @Property
     onDrag?: (x: number, y: number) => void
 }
 
+/**
+ * @deprecated The function should not be used, please use gestureContainer function instead
+ */
 export function draggable(views: View | View[], config?: Partial<Draggable>) {
     const ret = new Draggable
     ret.layoutConfig = layoutConfig().fit()

@@ -55,6 +55,7 @@
 #import "DoricKeyboardPlugin.h"
 #import "DoricJSEngine.h"
 #import "DoricSingleton.h"
+#import "DoricGestureContainerNode.h"
 
 @interface DoricRegistry ()
 
@@ -125,6 +126,7 @@
     [self registerViewNode:DoricDraggableNode.class withName:@"Draggable"];
     [self registerViewNode:DoricSwitchNode.class withName:@"Switch"];
     [self registerViewNode:DoricFlexNode.class withName:@"FlexLayout"];
+    [self registerViewNode:DoricGestureContainerNode.class withName:@"GestureContainer"];
 }
 
 - (void)registerJSBundle:(NSString *)bundle withName:(NSString *)name {

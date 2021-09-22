@@ -52,6 +52,11 @@ public class GestureContainerNode extends StackNode {
         }
     }
 
+    private String onTouchDown;
+    private String onTouchMove;
+    private String onTouchUp;
+    private String onTouchCancel;
+
     private String onSingleTap;
     private String onDoubleTap;
     private String onLongPress;
@@ -112,6 +117,30 @@ public class GestureContainerNode extends StackNode {
                 onSwipe = prop.asString().value();
             } else {
                 onSwipe = null;
+            }
+        } else if ("onTouchDown".equals(name)) {
+            if (prop.isString()) {
+                onTouchDown = prop.asString().value();
+            } else {
+                onTouchDown = null;
+            }
+        } else if ("onTouchMove".equals(name)) {
+            if (prop.isString()) {
+                onTouchMove = prop.asString().value();
+            } else {
+                onTouchMove = null;
+            }
+        } else if ("onTouchUp".equals(name)) {
+            if (prop.isString()) {
+                onTouchUp = prop.asString().value();
+            } else {
+                onTouchUp = null;
+            }
+        } else if ("onTouchCancel".equals(name)) {
+            if (prop.isString()) {
+                onTouchCancel = prop.asString().value();
+            } else {
+                onTouchCancel = null;
             }
         } else {
             super.blend(view, name, prop);
@@ -230,13 +259,26 @@ public class GestureContainerNode extends StackNode {
         @Override
         public boolean onTouchEvent(MotionEvent event) {
             // handle touch event conflict when in a scroll view or other similar containers
+
             switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    if (onTouchDown != null)
+                        callJSResponse(onTouchDown, DoricUtils.px2dp(event.getX()), DoricUtils.px2dp(event.getY()));
+                    break;
                 case MotionEvent.ACTION_MOVE:
                     getParent().requestDisallowInterceptTouchEvent(true);
+
+                    if (onTouchMove != null)
+                        callJSResponse(onTouchMove, DoricUtils.px2dp(event.getX()), DoricUtils.px2dp(event.getY()));
                     break;
                 case MotionEvent.ACTION_UP:
+                    if (onTouchUp != null)
+                        callJSResponse(onTouchUp, DoricUtils.px2dp(event.getX()), DoricUtils.px2dp(event.getY()));
                 case MotionEvent.ACTION_CANCEL:
                     getParent().requestDisallowInterceptTouchEvent(false);
+
+                    if (onTouchCancel != null)
+                        callJSResponse(onTouchCancel, DoricUtils.px2dp(event.getX()), DoricUtils.px2dp(event.getY()));
                     break;
             }
 

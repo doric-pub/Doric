@@ -42,6 +42,7 @@ import pub.doric.plugin.StatusBarPlugin;
 import pub.doric.plugin.StoragePlugin;
 import pub.doric.refresh.RefreshableNode;
 import pub.doric.shader.DraggableNode;
+import pub.doric.shader.GestureContainerNode;
 import pub.doric.shader.HLayoutNode;
 import pub.doric.shader.ImageNode;
 import pub.doric.shader.InputNode;
@@ -121,6 +122,7 @@ public class DoricRegistry {
         this.registerViewNode(DraggableNode.class);
         this.registerViewNode(SwitchNode.class);
         this.registerViewNode(FlexNode.class);
+        this.registerViewNode(GestureContainerNode.class);
         initRegistry(this);
         doricJSEngine.setEnvironmentValue(DoricSingleton.getInstance().envMap);
         DoricSingleton.getInstance().registries.add(new WeakReference<>(this));

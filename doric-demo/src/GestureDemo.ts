@@ -4,6 +4,13 @@ import { colors } from "./utils";
 @Entry
 class SimpleDemo extends Panel {
     build(rootView: Group) {
+        let touchChild = stack([], {
+            layoutConfig: layoutConfig().just(),
+            width: 100,
+            height: 100,
+            backgroundColor: Color.WHITE,
+        })
+
         let pinchChild = stack([], {
             layoutConfig: layoutConfig().just().configAlignment(Gravity.Center),
             width: 100,
@@ -27,6 +34,43 @@ class SimpleDemo extends Panel {
 
         scroller(
             vlayout([
+                vlayout([
+                    text({
+                        text: "onTouch Demo",
+                        layoutConfig: layoutConfig().mostWidth(),
+                        textSize: 30,
+                        textColor: Color.WHITE,
+                        backgroundColor: colors[5],
+                        textAlignment: gravity().center(),
+                        height: 50,
+                    }),
+                    gestureContainer([
+                        touchChild
+                    ], {
+                        onTouchDown: (x: number, y: number) => {
+                            modal(context).toast("onTouchDown x=" + x + " y=" + y)
+                        },
+                        onTouchMove: (x: number, y: number) => {
+                            touchChild.x = x - 50
+                            touchChild.y = y - 50
+                        },
+                        onTouchUp: (x: number, y: number) => {
+                            modal(context).toast("onTouchUp x=" + x + " y=" + y)
+                        },
+                        onTouchCancel: (x: number, y: number) => {
+                            modal(context).toast("onTouchCancel x=" + x + " y=" + y)
+                        }
+                    }).apply({
+                        layoutConfig: layoutConfig().just().configAlignment(Gravity.Center),
+                        width: 300,
+                        height: 300,
+                        backgroundColor: Color.BLACK
+                    }),
+                ]).apply({
+                    layoutConfig: layoutConfig().mostWidth().fitHeight()
+                }),
+
+
                 vlayout([
                     text({
                         text: "SingleTap, DoubleTap, LongPress Demo",

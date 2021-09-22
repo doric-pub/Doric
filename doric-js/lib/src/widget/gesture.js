@@ -62,6 +62,22 @@ __decorate([
     Property,
     __metadata("design:type", Function)
 ], GestureContainer.prototype, "onSwipe", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Function)
+], GestureContainer.prototype, "onTouchDown", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Function)
+], GestureContainer.prototype, "onTouchMove", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Function)
+], GestureContainer.prototype, "onTouchUp", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Function)
+], GestureContainer.prototype, "onTouchCancel", void 0);
 export function gestureContainer(views, config) {
     const ret = new GestureContainer;
     ret.layoutConfig = layoutConfig().fit();

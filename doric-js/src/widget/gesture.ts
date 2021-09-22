@@ -59,6 +59,38 @@ export class GestureContainer extends Stack {
      */
     @Property
     onSwipe?: (orientation: SwipeOrientation) => void
+
+    /**
+     * Called when the finger touch down on the screen
+     * @param x: the value of event occurs on the x-axis
+     * @param y: the value of event occurs on the y-axis
+     */
+    @Property
+    onTouchDown?: (x: number, y: number) => void
+
+    /**
+     * Called when the finger moving on the screen
+     * @param x: the value of event occurs on the x-axis
+     * @param y: the value of event occurs on the y-axis
+     */
+    @Property
+    onTouchMove?: (x: number, y: number) => void
+
+    /**
+     * Called when the finger touch up off from the screen
+     * @param x: the value of event occurs on the x-axis
+     * @param y: the value of event occurs on the y-axis
+     */
+    @Property
+    onTouchUp?: (x: number, y: number) => void
+
+    /**
+     * Called when the finger leave from screen
+     * @param x: the value of event occurs on the x-axis
+     * @param y: the value of event occurs on the y-axis
+     */
+    @Property
+    onTouchCancel?: (x: number, y: number) => void
 }
 
 export function gestureContainer(views: View | View[], config?: Partial<GestureContainer>) {

@@ -25,12 +25,18 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { Property, View } from "../ui/view";
 import { Stack } from "../widget/layouts";
 import { layoutConfig } from "../util/layoutconfig";
+/**
+ * @deprecated The class should not be used, please use GestureContainer class instead
+ */
 export class Draggable extends Stack {
 }
 __decorate([
     Property,
     __metadata("design:type", Function)
 ], Draggable.prototype, "onDrag", void 0);
+/**
+ * @deprecated The function should not be used, please use gestureContainer function instead
+ */
 export function draggable(views, config) {
     const ret = new Draggable;
     ret.layoutConfig = layoutConfig().fit();

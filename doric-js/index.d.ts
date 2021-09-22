@@ -941,9 +941,15 @@ declare module 'doric/lib/src/widget/nestedSlider' {
 declare module 'doric/lib/src/widget/draggable' {
     import { View } from "doric/lib/src/ui/view";
     import { Stack } from "doric/lib/src/widget/layouts";
+    /**
+        * @deprecated The class should not be used, please use GestureContainer class instead
+        */
     export class Draggable extends Stack {
-        onDrag?: (x: number, y: number) => void;
+            onDrag?: (x: number, y: number) => void;
     }
+    /**
+        * @deprecated The function should not be used, please use gestureContainer function instead
+        */
     export function draggable(views: View | View[], config?: Partial<Draggable>): Draggable;
 }
 
@@ -1000,6 +1006,30 @@ declare module 'doric/lib/src/widget/gesture' {
                 * @param orientation: the orientation of this swipe
                 */
             onSwipe?: (orientation: SwipeOrientation) => void;
+            /**
+                * Called when the finger touch down on the screen
+                * @param x: the value of event occurs on the x-axis
+                * @param y: the value of event occurs on the y-axis
+                */
+            onTouchDown?: (x: number, y: number) => void;
+            /**
+                * Called when the finger moving on the screen
+                * @param x: the value of event occurs on the x-axis
+                * @param y: the value of event occurs on the y-axis
+                */
+            onTouchMove?: (x: number, y: number) => void;
+            /**
+                * Called when the finger touch up off from the screen
+                * @param x: the value of event occurs on the x-axis
+                * @param y: the value of event occurs on the y-axis
+                */
+            onTouchUp?: (x: number, y: number) => void;
+            /**
+                * Called when the finger leave from screen
+                * @param x: the value of event occurs on the x-axis
+                * @param y: the value of event occurs on the y-axis
+                */
+            onTouchCancel?: (x: number, y: number) => void;
     }
     export function gestureContainer(views: View | View[], config?: Partial<GestureContainer>): GestureContainer;
 }

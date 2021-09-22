@@ -3994,12 +3994,18 @@ var __decorate$2 = (undefined && undefined.__decorate) || function (decorators, 
 var __metadata$2 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+/**
+ * @deprecated The class should not be used, please use GestureContainer class instead
+ */
 class Draggable extends Stack {
 }
 __decorate$2([
     Property,
     __metadata$2("design:type", Function)
 ], Draggable.prototype, "onDrag", void 0);
+/**
+ * @deprecated The function should not be used, please use gestureContainer function instead
+ */
 function draggable(views, config) {
     const ret = new Draggable;
     ret.layoutConfig = layoutConfig().fit();
@@ -4103,6 +4109,22 @@ __decorate([
     Property,
     __metadata("design:type", Function)
 ], GestureContainer.prototype, "onSwipe", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Function)
+], GestureContainer.prototype, "onTouchDown", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Function)
+], GestureContainer.prototype, "onTouchMove", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Function)
+], GestureContainer.prototype, "onTouchUp", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Function)
+], GestureContainer.prototype, "onTouchCancel", void 0);
 function gestureContainer(views, config) {
     const ret = new GestureContainer;
     ret.layoutConfig = layoutConfig().fit();

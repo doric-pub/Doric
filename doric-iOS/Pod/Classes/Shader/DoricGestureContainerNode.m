@@ -20,8 +20,66 @@
 //  Created by jingpeng.wang on 2021/09/17.
 //
 
+#import "DoricExtensions.h"
 #import "DoricGestureContainerNode.h"
 
+@interface DoricGestureView : UIView
+    
+@property(nonatomic, weak) DoricGestureContainerNode *node;
+
+@end
+
+@implementation DoricGestureView
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesBegan:touches withEvent:event];
+    
+    [touches enumerateObjectsUsingBlock:^(UITouch * _Nonnull obj, BOOL * _Nonnull stop) {
+        if (self.node.onTouchDown) {
+            CGPoint currentLocation = [obj locationInView:self];
+            [self.node callJSResponse: self.node.onTouchDown, @(currentLocation.x), @(currentLocation.y), nil];
+            *stop = YES;
+        }
+    }];
+}
+
+- (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesMoved:touches withEvent:event];
+    
+    [touches enumerateObjectsUsingBlock:^(UITouch * _Nonnull obj, BOOL * _Nonnull stop) {
+        if (self.node.onTouchMove) {
+            CGPoint currentLocation = [obj locationInView:self];
+            [self.node callJSResponse: self.node.onTouchMove, @(currentLocation.x), @(currentLocation.y), nil];
+            *stop = YES;
+        }
+    }];
+}
+
+- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesEnded:touches withEvent:event];
+    
+    [touches enumerateObjectsUsingBlock:^(UITouch * _Nonnull obj, BOOL * _Nonnull stop) {
+        if (self.node.onTouchUp) {
+            CGPoint currentLocation = [obj locationInView:self];
+            [self.node callJSResponse: self.node.onTouchUp, @(currentLocation.x), @(currentLocation.y), nil];
+            *stop = YES;
+        }
+    }];
+}
+
+- (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesCancelled:touches withEvent:event];
+    
+    [touches enumerateObjectsUsingBlock:^(UITouch * _Nonnull obj, BOOL * _Nonnull stop) {
+        if (self.node.onTouchCancel) {
+            CGPoint currentLocation = [obj locationInView:self];
+            [self.node callJSResponse: self.node.onTouchCancel, @(currentLocation.x), @(currentLocation.y), nil];
+            *stop = YES;
+        }
+    }];
+}
+
+@end
 
 @interface DoricGestureContainerNode()
 
@@ -45,7 +103,10 @@
 
 @implementation DoricGestureContainerNode
 - (UIView *)build {
-    UIView *stackView = [super build];
+    UIView *stackView = [[DoricGestureView new] also:^(DoricGestureView *it) {
+        it.doricLayout.layoutType = DoricStack;
+        it.node = self;
+    }];
     
     UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapAction:)];
     [stackView addGestureRecognizer:singleTap];
@@ -63,6 +124,7 @@
     [stackView addGestureRecognizer:pinchGesture];
     
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panAction:)];
+    panGesture.cancelsTouchesInView = NO;
     [stackView addGestureRecognizer:panGesture];
     
     UIRotationGestureRecognizer *rotation = [[UIRotationGestureRecognizer alloc] initWithTarget:self action:@selector(rotationAction:)];
@@ -159,6 +221,14 @@
         self.onRotate = prop;
     } else if ([name isEqualToString:@"onSwipe"]) {
         self.onSwipe = prop;
+    } else if ([name isEqualToString:@"onTouchDown"]) {
+        self.onTouchDown = prop;
+    } else if ([name isEqualToString:@"onTouchMove"]) {
+        self.onTouchMove = prop;
+    } else if ([name isEqualToString:@"onTouchUp"]) {
+        self.onTouchUp = prop;
+    } else if ([name isEqualToString:@"onTouchCancel"]) {
+        self.onTouchCancel = prop;
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }

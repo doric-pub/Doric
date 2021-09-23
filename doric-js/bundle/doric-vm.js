@@ -4811,7 +4811,7 @@ function initNativeEnvironment(source) {
     return __awaiter(this, void 0, void 0, function* () {
         // dev kit client
         return new Promise((resolve, reject) => {
-            const ws = new WebSocket__default['default']('ws://localhost:7777')
+            const ws = new WebSocket__default["default"]('ws://localhost:7777')
                 .on('open', () => {
                 console.log('Connectted Devkit on port', '7777');
                 ws.send(JSON.stringify({
@@ -4947,7 +4947,7 @@ global$1.Entry = function () {
             Reflect.apply(jsObtainEntry(contextId), doric, args);
         });
         if (entryHooks.length <= 1) {
-            const source = path__default['default'].basename(jsFile);
+            const source = path__default["default"].basename(jsFile);
             console.log(`Debugging ${source}`);
             initNativeEnvironment(source).then(ret => {
                 contextId = ret;

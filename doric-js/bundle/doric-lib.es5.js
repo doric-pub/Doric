@@ -1115,10 +1115,14 @@ var __read$2 = (undefined && undefined.__read) || function (o, n) {
     }
     return ar;
 };
-var __spreadArray$2 = (undefined && undefined.__spreadArray) || function (to, from) {
-    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
-        { to[j] = from[i]; }
-    return to;
+var __spreadArray$2 = (undefined && undefined.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) { for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) { ar = Array.prototype.slice.call(from, 0, i); }
+            ar[i] = from[i];
+        }
+    } }
+    return to.concat(ar || Array.prototype.slice.call(from));
 };
 function NativeCall(target, propertyKey, descriptor) {
     var originVal = descriptor.value;
@@ -1263,7 +1267,7 @@ var Panel = /** @class */ (function () {
         return this.renderSnapshots.length;
     };
     Panel.prototype.__restoreRenderSnapshot__ = function (idx) {
-        return __spreadArray$2([], __read$2(this.renderSnapshots)).slice(0, idx);
+        return __spreadArray$2([], __read$2(this.renderSnapshots), false).slice(0, idx);
     };
     Panel.prototype.__enableSnapshot__ = function () {
         this.snapshotEnabled = true;
@@ -2287,10 +2291,14 @@ var __read$1 = (undefined && undefined.__read) || function (o, n) {
     }
     return ar;
 };
-var __spreadArray$1 = (undefined && undefined.__spreadArray) || function (to, from) {
-    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
-        { to[j] = from[i]; }
-    return to;
+var __spreadArray$1 = (undefined && undefined.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) { for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) { ar = Array.prototype.slice.call(from, 0, i); }
+            ar[i] = from[i];
+        }
+    } }
+    return to.concat(ar || Array.prototype.slice.call(from));
 };
 var ListItem = /** @class */ (function (_super) {
     __extends$c(ListItem, _super);
@@ -2318,7 +2326,7 @@ var List = /** @class */ (function (_super) {
     }
     List.prototype.allSubviews = function () {
         if (this.loadMoreView) {
-            return __spreadArray$1(__spreadArray$1([], __read$1(this.cachedViews.values())), [this.loadMoreView]);
+            return __spreadArray$1(__spreadArray$1([], __read$1(this.cachedViews.values()), false), [this.loadMoreView], false);
         }
         else {
             return this.cachedViews.values();
@@ -2889,10 +2897,14 @@ var __read = (undefined && undefined.__read) || function (o, n) {
     }
     return ar;
 };
-var __spreadArray = (undefined && undefined.__spreadArray) || function (to, from) {
-    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
-        { to[j] = from[i]; }
-    return to;
+var __spreadArray = (undefined && undefined.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) { for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) { ar = Array.prototype.slice.call(from, 0, i); }
+            ar[i] = from[i];
+        }
+    } }
+    return to.concat(ar || Array.prototype.slice.call(from));
 };
 var FlowLayoutItem = /** @class */ (function (_super) {
     __extends$7(FlowLayoutItem, _super);
@@ -2917,7 +2929,7 @@ var FlowLayout = /** @class */ (function (_super) {
     }
     FlowLayout.prototype.allSubviews = function () {
         if (this.loadMoreView) {
-            return __spreadArray(__spreadArray([], __read(this.cachedViews.values())), [this.loadMoreView]);
+            return __spreadArray(__spreadArray([], __read(this.cachedViews.values()), false), [this.loadMoreView], false);
         }
         else {
             return this.cachedViews.values();
@@ -3537,7 +3549,8 @@ function navigator(context) {
                 config.extra = JSON.stringify(config.extra);
             }
             return context.callNative(moduleName, 'push', {
-                source: source, config: config
+                source: source,
+                config: config
             });
         },
         pop: function (animated) {

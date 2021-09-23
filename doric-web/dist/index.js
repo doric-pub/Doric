@@ -1567,7 +1567,7 @@ var doric = (function (exports) {
 
     return exports;
 
-}({}));
+})({});
 
 /**--------SandBox--------*/
 
@@ -4049,7 +4049,7 @@ var __metadata$2 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 /**
- * @deprecated The class should not be used
+ * @deprecated The class should not be used, please use GestureContainer class instead
  */
 class Draggable extends Stack {
 }
@@ -4058,7 +4058,7 @@ __decorate$2([
     __metadata$2("design:type", Function)
 ], Draggable.prototype, "onDrag", void 0);
 /**
- * @deprecated The function should not be used
+ * @deprecated The function should not be used, please use gestureContainer function instead
  */
 function draggable(views, config) {
     const ret = new Draggable;
@@ -5421,7 +5421,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	    {
 	        filter: () => true,
 	        request: (source) => __awaiter$1(void 0, void 0, void 0, function* () {
-	            const result = yield axios__default['default'].get(source);
+	            const result = yield axios__default["default"].get(source);
 	            return result.data;
 	        })
 	    }
@@ -7884,7 +7884,7 @@ ${content}
 	registerDoricJSLoader({
 	    filter: (source) => source.startsWith("assets://"),
 	    request: (source) => __awaiter(void 0, void 0, void 0, function* () {
-	        const ret = yield axios__default['default'].get(source.replace("assets://", `${window.location.href}/../../doric-demo/bundle/`));
+	        const ret = yield axios__default["default"].get(source.replace("assets://", `${window.location.href}/../../doric-demo/bundle/`));
 	        return ret.data;
 	    })
 	});
@@ -7921,5 +7921,5 @@ ${content}
 
 	return exports;
 
-}({}, axios, doric));
+})({}, axios, doric);
 //# sourceMappingURL=index.js.map

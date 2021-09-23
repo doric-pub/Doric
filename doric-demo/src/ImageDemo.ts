@@ -75,28 +75,22 @@ class ImageDemo extends Panel {
                             bottom: 0
                         },
                         imageScale: 2,
+
                     }),
-                    label('Gif'),
+                    label('Gif '),
                     image({
-                        imageUrl: "https://misc.aotu.io/ONE-SUNDAY/world-cup_2014_42.gif",
+                        imageUrl: "https://www.w3.org/People/mimasa/test/imgformat/img/w3c_home_animation.gif",
                         scaleType: ScaleType.ScaleToFill,
-                        loadCallback: function (ret) {
-                            log('this')
-                            log('loadCallback', ret)
-                        },
-                        imageScale: 2,
+                        imageScale: 3,
                     }),
                     label('APNG'),
                     image({
-                        imageUrl: "https://misc.aotu.io/ONE-SUNDAY/world_cup_2014_42.png",
-                        loadCallback: (ret) => {
-                        }
+                        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/1/14/Animated_PNG_example_bouncing_beach_ball.png",
                     }),
                     label('Animated WebP'),
                     image({
                         imageUrl: "https://p.upyun.com/demo/webp/webp/animated-gif-0.webp",
-                        loadCallback: (ret) => {
-                        }
+
                     }),
                     label('WebP'),
                     imageView = image({
@@ -104,12 +98,12 @@ class ImageDemo extends Panel {
                         layoutConfig: layoutConfig().just(),
                         width: 200,
                         height: 200,
-                        // loadCallback: (ret) => {
-                        //     if (ret) {
-                        //         imageView.width = ret.width
-                        //         imageView.height = ret.height
-                        //     }
-                        // }
+                        loadCallback: (ret) => {
+                            if (ret) {
+                                imageView.width = ret.width
+                                imageView.height = ret.height
+                            }
+                        }
                     }),
                     label('ScaleToFill'),
                     image({

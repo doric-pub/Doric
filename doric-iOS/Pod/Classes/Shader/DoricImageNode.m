@@ -149,14 +149,14 @@
         UIColor *color = DoricColor(self.placeHolderColor);
         CGRect rect = CGRectMake(0, 0, 1, 1);
         self.view.contentMode = UIViewContentModeScaleToFill;
-        
+
         if (@available(iOS 10.0, *)) {
             UIGraphicsImageRendererFormat *format = [[UIGraphicsImageRendererFormat alloc] init];
             format.scale = [UIScreen mainScreen].scale;
-            UIGraphicsImageRenderer *render = [[UIGraphicsImageRenderer alloc]initWithSize:rect.size format:format];
-            UIImage *image = [render imageWithActions:^(UIGraphicsImageRendererContext * _Nonnull rendererContext) {
+            UIGraphicsImageRenderer *render = [[UIGraphicsImageRenderer alloc] initWithSize:rect.size format:format];
+            UIImage *image = [render imageWithActions:^(UIGraphicsImageRendererContext *_Nonnull rendererContext) {
                 CGContextRef context = rendererContext.CGContext;
-                
+
                 CGContextSetFillColorWithColor(context, color.CGColor);
                 CGContextFillRect(context, rect);
             }];
@@ -205,14 +205,14 @@
         UIColor *color = DoricColor(self.errorColor);
         CGRect rect = CGRectMake(0, 0, 1, 1);
         self.view.contentMode = UIViewContentModeScaleToFill;
-        
+
         if (@available(iOS 10.0, *)) {
             UIGraphicsImageRendererFormat *format = [[UIGraphicsImageRendererFormat alloc] init];
             format.scale = [UIScreen mainScreen].scale;
-            UIGraphicsImageRenderer *render = [[UIGraphicsImageRenderer alloc]initWithSize:rect.size format:format];
-            UIImage *image = [render imageWithActions:^(UIGraphicsImageRendererContext * _Nonnull rendererContext) {
+            UIGraphicsImageRenderer *render = [[UIGraphicsImageRenderer alloc] initWithSize:rect.size format:format];
+            UIImage *image = [render imageWithActions:^(UIGraphicsImageRendererContext *_Nonnull rendererContext) {
                 CGContextRef context = rendererContext.CGContext;
-                
+
                 CGContextSetFillColorWithColor(context, color.CGColor);
                 CGContextFillRect(context, rect);
             }];
@@ -240,7 +240,7 @@
 #if DORIC_USE_YYWEBIMAGE
         dispatch_async([_YYWebImageSetter setterQueue], ^{
             [view yy_cancelCurrentImageRequest];
-            
+
             [view yy_setImageWithURL:[NSURL URLWithString:prop] placeholder:[self currentPlaceHolderImage] options:0 completion:^(UIImage *image, NSURL *url, YYWebImageFromType from, YYWebImageStage stage, NSError *error) {
                 __strong typeof(_self) self = _self;
                 if (self.placeHolderColor || self.errorColor) {
@@ -256,12 +256,23 @@
                     }
                 } else if (image && stage == YYWebImageStageFinished) {
                     if (image.scale != self.imageScale) {
-                        image = [YYImage imageWithCGImage:image.CGImage scale:self.imageScale orientation:image.imageOrientation];
+                        if ([image isKindOfClass:YYImage.class] && ((YYImage *) image).animatedImageData != nil) {
+                            image = [YYImage imageWithData:((YYImage *) image).animatedImageData scale:self.imageScale];
+                        } else {
+                            image = [YYImage imageWithCGImage:image.CGImage scale:self.imageScale orientation:image.imageOrientation];
+                        }
                         self.view.image = image;
                     }
                     if (self.loadCallbackId.length > 0) {
                         [self callJSResponse:self.loadCallbackId,
-                                             @{@"width": @(image.size.width), @"height": @(image.size.height)},
+                                             @{
+                                                     @"width": @(image.size.width),
+                                                     @"height": @(image.size.height),
+                                                     @"animated": ([image isKindOfClass:YYImage.class]
+                                                     && ((YYImage *) image).animatedImageData != nil)
+                                                     ? @(YES)
+                                                     : @(NO),
+                                             },
                                         nil];
                     }
                     if (async) {
@@ -296,7 +307,14 @@
                            } else {
                                if (self.loadCallbackId.length > 0) {
                                    [self callJSResponse:self.loadCallbackId,
-                                                        @{@"width": @(image.size.width), @"height": @(image.size.height)},
+                                                        @{
+                                                                @"width": @(image.size.width),
+                                                                @"height": @(image.size.height),
+                                                                @"animated": ([image isKindOfClass:SDAnimatedImage.class]
+                                                                && ((SDAnimatedImage *) image).animatedImageFrameCount > 0)
+                                                                ? @(YES)
+                                                                : @(NO),
+                                                        },
                                                    nil];
                                }
                                if (async) {
@@ -348,6 +366,28 @@
         UIImage *image = [UIImage imageWithData:imageData scale:self.imageScale];
 #endif
         view.image = image;
+        if (self.loadCallbackId.length > 0) {
+            if (image) {
+                [self callJSResponse:self.loadCallbackId,
+                                     @{
+                                             @"width": @(image.size.width),
+                                             @"height": @(image.size.height),
+#if DORIC_USE_YYWEBIMAGE
+                                        @"animated": (image.animatedImageData != nil) ? @(YES) : @(NO),
+#elif DORIC_USE_SDWEBIMAGE
+                                        @"animated": ([image isKindOfClass:SDAnimatedImage.class]
+                                        && ((SDAnimatedImage *) image).animatedImageFrameCount > 0)
+                                        ? @(YES)
+                                        : @(NO),
+#else
+                                        @"animated": @(NO),
+#endif
+                                },
+                                nil];
+            } else {
+                [self callJSResponse:self.loadCallbackId, nil];
+            }
+        }
     } else if ([@"isBlur" isEqualToString:name]) {
         NSInteger value = [prop intValue];
         if (value == 1) {
@@ -389,7 +429,23 @@
         if (self.loadCallbackId.length > 0) {
             if (image) {
                 [self callJSResponse:self.loadCallbackId,
-                                     @{@"width": @(image.size.width), @"height": @(image.size.height)},
+                                     @{
+                                             @"width": @(image.size.width),
+                                             @"height": @(image.size.height),
+#if DORIC_USE_YYWEBIMAGE
+                                        @"animated": ([image isKindOfClass:YYImage.class]
+                                        && ((YYImage *) image).animatedImageData != nil)
+                                        ? @(YES)
+                                        : @(NO),
+#elif DORIC_USE_SDWEBIMAGE
+                                        @"animated": ([image isKindOfClass:SDAnimatedImage.class]
+                                        && ((SDAnimatedImage *) image).animatedImageFrameCount > 0)
+                                        ? @(YES)
+                                        : @(NO),
+#else
+                                        @"animated": @(NO),
+#endif
+                                },
                                 nil];
             } else {
                 [self callJSResponse:self.loadCallbackId, nil];
@@ -405,7 +461,23 @@
         if (self.loadCallbackId.length > 0) {
             if (image) {
                 [self callJSResponse:self.loadCallbackId,
-                                     @{@"width": @(image.size.width), @"height": @(image.size.height)},
+                                     @{
+                                             @"width": @(image.size.width),
+                                             @"height": @(image.size.height),
+#if DORIC_USE_YYWEBIMAGE
+                                        @"animated": ([image isKindOfClass:YYImage.class]
+                                        && ((YYImage *) image).animatedImageData != nil)
+                                        ? @(YES)
+                                        : @(NO),
+#elif DORIC_USE_SDWEBIMAGE
+                                        @"animated": ([image isKindOfClass:SDAnimatedImage.class]
+                                        && ((SDAnimatedImage *) image).animatedImageFrameCount > 0)
+                                        ? @(YES)
+                                        : @(NO),
+#else
+                                        @"animated": @(NO),
+#endif
+                                },
                                 nil];
             } else {
                 [self callJSResponse:self.loadCallbackId, nil];
@@ -418,7 +490,21 @@
         if (self.loadCallbackId.length > 0) {
             if (image) {
                 [self callJSResponse:self.loadCallbackId,
-                                     @{@"width": @(image.size.width), @"height": @(image.size.height)},
+                                     @{
+                                             @"width": @(image.size.width),
+                                             @"height": @(image.size.height),
+#if DORIC_USE_YYWEBIMAGE
+                                        @"animated": @([image isKindOfClass:YYImage.class] && ((YYImage *) image).animatedImageData != nil),
+#elif DORIC_USE_SDWEBIMAGE
+                                        @"animated": ([image isKindOfClass:SDAnimatedImage.class]
+                                        && ((SDAnimatedImage *) image).animatedImageFrameCount > 0)
+                                        ? @(YES)
+                                        : @(NO),
+#else
+                                        @"animated": @(false),
+#endif
+
+                                },
                                 nil];
             } else {
                 [self callJSResponse:self.loadCallbackId, nil];

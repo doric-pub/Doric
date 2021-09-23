@@ -36,24 +36,36 @@ export declare class GestureContainer extends Stack {
      * @param x: the value of event occurs on the x-axis
      * @param y: the value of event occurs on the y-axis
      */
-    onTouchDown?: (x: number, y: number) => void;
+    onTouchDown?: (event: {
+        x: number;
+        y: number;
+    }) => void;
     /**
      * Called when the finger moving on the screen
      * @param x: the value of event occurs on the x-axis
      * @param y: the value of event occurs on the y-axis
      */
-    onTouchMove?: (x: number, y: number) => void;
+    onTouchMove?: (event: {
+        x: number;
+        y: number;
+    }) => void;
     /**
      * Called when the finger touch up off from the screen
      * @param x: the value of event occurs on the x-axis
      * @param y: the value of event occurs on the y-axis
      */
-    onTouchUp?: (x: number, y: number) => void;
+    onTouchUp?: (event: {
+        x: number;
+        y: number;
+    }) => void;
     /**
      * Called when the finger leave from screen
      * @param x: the value of event occurs on the x-axis
      * @param y: the value of event occurs on the y-axis
      */
-    onTouchCancel?: (x: number, y: number) => void;
+    onTouchCancel?: (event: {
+        x: number;
+        y: number;
+    }) => void;
 }
 export declare function gestureContainer(views: View | View[], config?: Partial<GestureContainer>): GestureContainer;

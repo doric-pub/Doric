@@ -47,18 +47,18 @@ class SimpleDemo extends Panel {
                     gestureContainer([
                         touchChild
                     ], {
-                        onTouchDown: (x: number, y: number) => {
-                            modal(context).toast("onTouchDown x=" + x + " y=" + y)
+                        onTouchDown: (event: { x: number, y: number }) => {
+                            modal(context).toast("onTouchDown x=" + event.x + " y=" + event.y)
                         },
-                        onTouchMove: (x: number, y: number) => {
-                            touchChild.x = x - 50
-                            touchChild.y = y - 50
+                        onTouchMove: (event: { x: number, y: number }) => {
+                            touchChild.x = event.x - 50
+                            touchChild.y = event.y - 50
                         },
-                        onTouchUp: (x: number, y: number) => {
-                            modal(context).toast("onTouchUp x=" + x + " y=" + y)
+                        onTouchUp: (event: { x: number, y: number }) => {
+                            modal(context).toast("onTouchUp x=" + event.x + " y=" + event.y)
                         },
-                        onTouchCancel: (x: number, y: number) => {
-                            modal(context).toast("onTouchCancel x=" + x + " y=" + y)
+                        onTouchCancel: (event: { x: number, y: number }) => {
+                            modal(context).toast("onTouchCancel x=" + event.x + " y=" + event.y)
                         }
                     }).apply({
                         layoutConfig: layoutConfig().just().configAlignment(Gravity.Center),

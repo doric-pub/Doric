@@ -37,7 +37,7 @@
     [touches enumerateObjectsUsingBlock:^(UITouch * _Nonnull obj, BOOL * _Nonnull stop) {
         if (self.node.onTouchDown) {
             CGPoint currentLocation = [obj locationInView:self];
-            [self.node callJSResponse: self.node.onTouchDown, @(currentLocation.x), @(currentLocation.y), nil];
+            [self.node callJSResponse: self.node.onTouchDown, @{@"x": @(currentLocation.x), @"y": @(currentLocation.y)}, nil];
             *stop = YES;
         }
     }];
@@ -55,7 +55,7 @@
             __weak typeof(self) __self = self;
             [self.node.jsDispatcher dispatch:^DoricAsyncResult * {
                 __strong typeof(__self) self = __self;
-                return [self.node callJSResponse: self.node.onTouchMove, @(currentLocation.x), @(currentLocation.y), nil];
+                return [self.node callJSResponse: self.node.onTouchMove, @{@"x": @(currentLocation.x), @"y": @(currentLocation.y)}, nil];
             }];
             *stop = YES;
         }
@@ -68,7 +68,7 @@
     [touches enumerateObjectsUsingBlock:^(UITouch * _Nonnull obj, BOOL * _Nonnull stop) {
         if (self.node.onTouchUp) {
             CGPoint currentLocation = [obj locationInView:self];
-            [self.node callJSResponse: self.node.onTouchUp, @(currentLocation.x), @(currentLocation.y), nil];
+            [self.node callJSResponse: self.node.onTouchUp, @{@"x": @(currentLocation.x), @"y": @(currentLocation.y)}, nil];
             *stop = YES;
         }
     }];
@@ -80,7 +80,7 @@
     [touches enumerateObjectsUsingBlock:^(UITouch * _Nonnull obj, BOOL * _Nonnull stop) {
         if (self.node.onTouchCancel) {
             CGPoint currentLocation = [obj locationInView:self];
-            [self.node callJSResponse: self.node.onTouchCancel, @(currentLocation.x), @(currentLocation.y), nil];
+            [self.node callJSResponse: self.node.onTouchCancel, @{@"x": @(currentLocation.x), @"y": @(currentLocation.y)}, nil];
             *stop = YES;
         }
     }];
@@ -141,19 +141,22 @@
 }
 
 -(void)singleTapAction:(UITapGestureRecognizer *)sender{
-    if (self.onSingleTap)
+    if (self.onSingleTap) {
         [self callJSResponse:self.onSingleTap, nil];
+    }
 }
 
 -(void)doubleTapAction:(UITapGestureRecognizer *)sender{
-    if (self.onDoubleTap)
+    if (self.onDoubleTap) {
         [self callJSResponse:self.onDoubleTap, nil];
+    }
 }
 
 -(void)longPressAction:(UILongPressGestureRecognizer *)sender{
     if (sender.state == UIGestureRecognizerStateBegan) {
-        if (self.onLongPress)
+        if (self.onLongPress) {
             [self callJSResponse:self.onLongPress, nil];
+        }
     }
 }
 
@@ -198,17 +201,21 @@
         CGPoint vel = [sender velocityInView:sender.view];
 
         if (vel.x < SWIPE_LEFT_THRESHOLD) {
-            if (self.onSwipe)
+            if (self.onSwipe) {
                 [self callJSResponse:self.onSwipe, @(0), nil];
+            }
         } else if (vel.x > SWIPE_RIGHT_THRESHOLD) {
-            if (self.onSwipe)
+            if (self.onSwipe) {
                 [self callJSResponse:self.onSwipe, @(1), nil];
+            }
         } else if (vel.y < SWIPE_UP_THRESHOLD) {
-            if (self.onSwipe)
+            if (self.onSwipe) {
                 [self callJSResponse:self.onSwipe, @(2), nil];
+            }
         } else if (vel.y > SWIPE_DOWN_THRESHOLD) {
-            if (self.onSwipe)
+            if (self.onSwipe) {
                 [self callJSResponse:self.onSwipe, @(3), nil];
+            }
         } else {
             // TODO:
             // Here, the user lifted the finger/fingers but didn't swipe.

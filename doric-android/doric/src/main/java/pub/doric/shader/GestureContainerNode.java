@@ -24,6 +24,7 @@ import android.view.ScaleGestureDetector;
 import android.widget.FrameLayout;
 
 import com.github.pengfeizhou.jscore.JSDecoder;
+import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSValue;
 
 import java.util.concurrent.Callable;
@@ -169,23 +170,26 @@ public class GestureContainerNode extends StackNode {
 
                 @Override
                 public boolean onSingleTapConfirmed(MotionEvent e) {
-                    if (onSingleTap != null)
+                    if (onSingleTap != null) {
                         callJSResponse(onSingleTap);
+                    }
                     return super.onSingleTapConfirmed(e);
                 }
 
                 @Override
                 public boolean onDoubleTap(MotionEvent e) {
-                    if (onDoubleTap != null)
+                    if (onDoubleTap != null) {
                         callJSResponse(onDoubleTap);
+                    }
                     return super.onDoubleTap(e);
                 }
 
                 @Override
                 public void onLongPress(MotionEvent e) {
                     super.onLongPress(e);
-                    if (onLongPress != null)
+                    if (onLongPress != null) {
                         callJSResponse(onLongPress);
+                    }
                 }
 
                 @Override
@@ -196,13 +200,14 @@ public class GestureContainerNode extends StackNode {
                     }
 
                     // handle scrolling
-                    if (onPan != null)
+                    if (onPan != null) {
                         jsDispatcher.dispatch(new Callable<AsyncResult<JSDecoder>>() {
                             @Override
                             public AsyncResult<JSDecoder> call() throws Exception {
                                 return callJSResponse(onPan, DoricUtils.px2dp(distanceX), DoricUtils.px2dp(distanceY));
                             }
                         });
+                    }
 
                     return true;
                 }
@@ -240,13 +245,14 @@ public class GestureContainerNode extends StackNode {
             scaleGestureDetector = new ScaleGestureDetector(context, new ScaleGestureDetector.OnScaleGestureListener() {
                 @Override
                 public boolean onScale(final ScaleGestureDetector scaleGestureDetector) {
-                    if (onPinch != null)
+                    if (onPinch != null) {
                         jsDispatcher.dispatch(new Callable<AsyncResult<JSDecoder>>() {
                             @Override
                             public AsyncResult<JSDecoder> call() throws Exception {
                                 return callJSResponse(onPinch, scaleGestureDetector.getScaleFactor());
                             }
                         });
+                    }
 
                     return false;
                 }
@@ -266,13 +272,14 @@ public class GestureContainerNode extends StackNode {
 
                 @Override
                 public boolean onRotate(final float degrees, float focusX, float focusY) {
-                    if (onRotate != null)
+                    if (onRotate != null) {
                         jsDispatcher.dispatch(new Callable<AsyncResult<JSDecoder>>() {
                             @Override
                             public AsyncResult<JSDecoder> call() throws Exception {
                                 return callJSResponse(onRotate, degrees / 180f);
                             }
                         });
+                    }
 
                     return false;
                 }
@@ -283,34 +290,51 @@ public class GestureContainerNode extends StackNode {
         @Override
         public boolean onTouchEvent(MotionEvent event) {
             // handle touch event conflict when in a scroll view or other similar containers
+            final float x = DoricUtils.px2dp(event.getX());
+            final float y = DoricUtils.px2dp(event.getY());
 
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    if (onTouchDown != null)
-                        callJSResponse(onTouchDown, DoricUtils.px2dp(event.getX()), DoricUtils.px2dp(event.getY()));
+                    if (onTouchDown != null) {
+                        callJSResponse(onTouchDown, new JSONBuilder()
+                                .put("x", x)
+                                .put("y", y)
+                                .toJSONObject());
+                    }
                     break;
                 case MotionEvent.ACTION_MOVE:
                     getParent().requestDisallowInterceptTouchEvent(true);
 
-                    final float x = DoricUtils.px2dp(event.getX());
-                    final float y = DoricUtils.px2dp(event.getY());
-
-                    if (onTouchMove != null)
+                    if (onTouchMove != null) {
                         jsDispatcher.dispatch(new Callable<AsyncResult<JSDecoder>>() {
                             @Override
                             public AsyncResult<JSDecoder> call() throws Exception {
-                                return callJSResponse(onTouchMove, x, y);
+                                return callJSResponse(onTouchMove, new JSONBuilder()
+                                        .put("x", x)
+                                        .put("y", y)
+                                        .toJSONObject());
                             }
                         });
+                    }
+
                     break;
                 case MotionEvent.ACTION_UP:
-                    if (onTouchUp != null)
-                        callJSResponse(onTouchUp, DoricUtils.px2dp(event.getX()), DoricUtils.px2dp(event.getY()));
+                    if (onTouchUp != null) {
+                        callJSResponse(onTouchUp, new JSONBuilder()
+                                .put("x", x)
+                                .put("y", y)
+                                .toJSONObject());
+                    }
                 case MotionEvent.ACTION_CANCEL:
                     getParent().requestDisallowInterceptTouchEvent(false);
 
-                    if (onTouchCancel != null)
-                        callJSResponse(onTouchCancel, DoricUtils.px2dp(event.getX()), DoricUtils.px2dp(event.getY()));
+                    if (onTouchCancel != null) {
+                        callJSResponse(onTouchCancel, new JSONBuilder()
+                                .put("x", x)
+                                .put("y", y)
+                                .toJSONObject());
+                    }
+
                     break;
             }
 
@@ -322,23 +346,27 @@ public class GestureContainerNode extends StackNode {
         }
 
         private void onSwipeLeft() {
-            if (onSwipe != null)
+            if (onSwipe != null) {
                 callJSResponse(onSwipe, SwipeOrientation.LEFT.value);
+            }
         }
 
         private void onSwipeRight() {
-            if (onSwipe != null)
+            if (onSwipe != null) {
                 callJSResponse(onSwipe, SwipeOrientation.RIGHT.value);
+            }
         }
 
         private void onSwipeTop() {
-            if (onSwipe != null)
+            if (onSwipe != null) {
                 callJSResponse(onSwipe, SwipeOrientation.TOP.value);
+            }
         }
 
         private void onSwipeBottom() {
-            if (onSwipe != null)
+            if (onSwipe != null) {
                 callJSResponse(onSwipe, SwipeOrientation.BOTTOM.value);
+            }
         }
     }
 }

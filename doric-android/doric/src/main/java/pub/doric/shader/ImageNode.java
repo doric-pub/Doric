@@ -23,6 +23,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Rect;
+import android.graphics.drawable.Animatable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -284,11 +285,13 @@ public class ImageNode extends ViewNode<ImageView> {
                                 callJSResponse(loadCallbackId, new JSONBuilder()
                                         .put("width", DoricUtils.px2dp(bitmap.getWidth()))
                                         .put("height", DoricUtils.px2dp(bitmap.getHeight()))
+                                        .put("animated", resource instanceof Animatable)
                                         .toJSONObject());
                             } else {
                                 callJSResponse(loadCallbackId, new JSONBuilder()
                                         .put("width", DoricUtils.px2dp(resource.getIntrinsicWidth()))
                                         .put("height", DoricUtils.px2dp(resource.getIntrinsicHeight()))
+                                        .put("animated", resource instanceof Animatable)
                                         .toJSONObject());
                             }
                         }

@@ -53,6 +53,7 @@ export declare class Image extends View {
     loadCallback?: (image: {
         width: number;
         height: number;
+        animated: boolean;
     } | undefined) => void;
     /**
      * Default is Environment.screenScale.

@@ -659,6 +659,7 @@ declare module 'doric/lib/src/widget/image' {
             loadCallback?: (image: {
                     width: number;
                     height: number;
+                    animated: boolean;
             } | undefined) => void;
             /**
                 * Default is Environment.screenScale.

@@ -90,7 +90,7 @@ export class Image extends View {
     errorColor?: Color
 
     @Property
-    loadCallback?: (image: { width: number; height: number } | undefined) => void
+    loadCallback?: (image: { width: number; height: number; animated: boolean } | undefined) => void
 
     /**
      * Default is Environment.screenScale.

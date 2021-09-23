@@ -49,7 +49,14 @@
     [touches enumerateObjectsUsingBlock:^(UITouch * _Nonnull obj, BOOL * _Nonnull stop) {
         if (self.node.onTouchMove) {
             CGPoint currentLocation = [obj locationInView:self];
-            [self.node callJSResponse: self.node.onTouchMove, @(currentLocation.x), @(currentLocation.y), nil];
+            if (!self.node.jsDispatcher) {
+                self.node.jsDispatcher = [DoricJSDispatcher new];
+            }
+            __weak typeof(self) __self = self;
+            [self.node.jsDispatcher dispatch:^DoricAsyncResult * {
+                __strong typeof(__self) self = __self;
+                return [self.node callJSResponse: self.node.onTouchMove, @(currentLocation.x), @(currentLocation.y), nil];
+            }];
             *stop = YES;
         }
     }];
@@ -151,8 +158,16 @@
 }
 
 -(void)pinchAction:(UIPinchGestureRecognizer *)sender{
-    if (self.onPinch)
-        [self callJSResponse:self.onPinch, @(sender.scale), nil];
+    if (self.onPinch) {
+        if (!self.jsDispatcher) {
+            self.jsDispatcher = [DoricJSDispatcher new];
+        }
+        __weak typeof(self) __self = self;
+        [self.jsDispatcher dispatch:^DoricAsyncResult * {
+            __strong typeof(__self) self = __self;
+            return [self callJSResponse:self.onPinch, @(sender.scale), nil];
+        }];
+    }
 }
 
 -(void)panAction:(UIPanGestureRecognizer *)sender{
@@ -166,33 +181,42 @@
     
     self.startPanLocation = currentLocation;
     
-    if (self.onPan)
-        [self callJSResponse:self.onPan, @(dx), @(dy), nil];
-
-        // detect the swipe gesture
-        if (sender.state == UIGestureRecognizerStateEnded) {
-            CGPoint vel = [sender velocityInView:sender.view];
-
-            if (vel.x < SWIPE_LEFT_THRESHOLD) {
-                if (self.onSwipe)
-                    [self callJSResponse:self.onSwipe, @(0), nil];
-            } else if (vel.x > SWIPE_RIGHT_THRESHOLD) {
-                if (self.onSwipe)
-                    [self callJSResponse:self.onSwipe, @(1), nil];
-            } else if (vel.y < SWIPE_UP_THRESHOLD) {
-                if (self.onSwipe)
-                    [self callJSResponse:self.onSwipe, @(2), nil];
-            } else if (vel.y > SWIPE_DOWN_THRESHOLD) {
-                if (self.onSwipe)
-                    [self callJSResponse:self.onSwipe, @(3), nil];
-            } else {
-                // TODO:
-                // Here, the user lifted the finger/fingers but didn't swipe.
-                // If you need you can implement a snapping behaviour, where based on the location of your         targetView,
-                // you focus back on the targetView or on some next view.
-                // It's your call
-            }
+    if (self.onPan) {
+        if (!self.jsDispatcher) {
+            self.jsDispatcher = [DoricJSDispatcher new];
         }
+        __weak typeof(self) __self = self;
+        [self.jsDispatcher dispatch:^DoricAsyncResult * {
+            __strong typeof(__self) self = __self;
+            return [self callJSResponse:self.onPan, @(dx), @(dy), nil];
+        }];
+    }
+    
+    
+    // detect the swipe gesture
+    if (sender.state == UIGestureRecognizerStateEnded) {
+        CGPoint vel = [sender velocityInView:sender.view];
+
+        if (vel.x < SWIPE_LEFT_THRESHOLD) {
+            if (self.onSwipe)
+                [self callJSResponse:self.onSwipe, @(0), nil];
+        } else if (vel.x > SWIPE_RIGHT_THRESHOLD) {
+            if (self.onSwipe)
+                [self callJSResponse:self.onSwipe, @(1), nil];
+        } else if (vel.y < SWIPE_UP_THRESHOLD) {
+            if (self.onSwipe)
+                [self callJSResponse:self.onSwipe, @(2), nil];
+        } else if (vel.y > SWIPE_DOWN_THRESHOLD) {
+            if (self.onSwipe)
+                [self callJSResponse:self.onSwipe, @(3), nil];
+        } else {
+            // TODO:
+            // Here, the user lifted the finger/fingers but didn't swipe.
+            // If you need you can implement a snapping behaviour, where based on the location of your         targetView,
+            // you focus back on the targetView or on some next view.
+            // It's your call
+        }
+    }
 }
 
 -(void)rotationAction:(UIRotationGestureRecognizer *)sender{
@@ -202,8 +226,16 @@
     
     CGFloat diffRotation = sender.rotation - self.startRotationDegree;
     self.startRotationDegree = sender.rotation;
-    if (self.onRotate)
-        [self callJSResponse:self.onRotate, @(diffRotation), nil];
+    if (self.onRotate) {
+        if (!self.jsDispatcher) {
+            self.jsDispatcher = [DoricJSDispatcher new];
+        }
+        __weak typeof(self) __self = self;
+        [self.jsDispatcher dispatch:^DoricAsyncResult * {
+            __strong typeof(__self) self = __self;
+            return [self callJSResponse:self.onRotate, @(diffRotation), nil];
+        }];
+    }
 }
 
 - (void)blendView:(UIView *)view forPropName:(NSString *)name propValue:(id)prop {

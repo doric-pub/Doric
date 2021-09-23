@@ -20,11 +20,14 @@
 //  Created by jingpeng.wang on 2021/09/17.
 //
 
+#import "DoricJSDispatcher.h"
 #import "DoricStackNode.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface DoricGestureContainerNode : DoricStackNode
+
+@property(nonatomic, strong) DoricJSDispatcher *jsDispatcher;
 
 @property(nonatomic, strong) NSString *onTouchDown;
 @property(nonatomic, strong) NSString *onTouchMove;

@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import pub.doric.Doric;
+import pub.doric.DoricNativeDriver;
 import pub.doric.DoricRegistry;
 import pub.doric.DoricSingleton;
 
@@ -45,6 +46,7 @@ public class MyApplication extends Application {
                 DoricSingleton.getInstance().setEnvironmentValue(map);
             }
         }, intentFilter);
+        DoricNativeDriver.getInstance();
         Doric.enablePerformance(true);
         Doric.enableRenderSnapshot(true);
     }

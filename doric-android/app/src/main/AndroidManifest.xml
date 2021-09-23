@@ -2,8 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="pub.doric.demo">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -24,6 +22,12 @@
         <activity
             android:name=".DoricDebugActivity"
             android:theme="@style/Theme.Design.Light.NoActionBar" />
+
+        <activity
+            android:name=".DoricDebugTimingActivity"
+            android:theme="@style/Theme.Design.Light.NoActionBar" />
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

@@ -501,7 +501,7 @@
                                         ? @(YES)
                                         : @(NO),
 #else
-                                        @"animated": @(false),
+                                        @"animated": @(NO),
 #endif
 
                                 },
@@ -557,5 +557,22 @@
         UIImage *result = [self.view.image resizableImageWithCapInsets:UIEdgeInsetsMake(top / scale, left / scale, bottom / scale, right / scale) resizingMode:UIImageResizingModeStretch];
         self.view.image = result;
     }
+}
+
+
+- (NSNumber *)isAnimating {
+    if (self.view.animating) {
+        return @(YES);
+    } else {
+        return @(NO);
+    }
+}
+
+- (void)startAnimating {
+    [self.view startAnimating];
+}
+
+- (void)stopAnimating {
+    [self.view stopAnimating];
 }
 @end

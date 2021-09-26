@@ -1,5 +1,6 @@
 import { View } from "../ui/view";
 import { Color } from "../util/color";
+import { BridgeContext } from "../runtime/global";
 export declare enum ScaleType {
     ScaleToFill = 0,
     ScaleAspectFit = 1,
@@ -68,5 +69,8 @@ export declare class Image extends View {
         right: number;
         bottom: number;
     };
+    isAnimating(context: BridgeContext): Promise<boolean>;
+    startAnimating(context: BridgeContext): Promise<any>;
+    stopAnimating(context: BridgeContext): Promise<any>;
 }
 export declare function image(config: Partial<Image>): Image;

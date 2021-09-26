@@ -56,6 +56,7 @@ import java.io.File;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import pub.doric.DoricContext;
+import pub.doric.extension.bridge.DoricMethod;
 import pub.doric.extension.bridge.DoricPlugin;
 import pub.doric.shader.flex.FlexNode;
 import pub.doric.utils.DoricLog;
@@ -438,6 +439,31 @@ public class ImageNode extends ViewNode<ImageView> {
             default:
                 super.blend(view, name, prop);
                 break;
+        }
+    }
+
+    @DoricMethod
+    public boolean isAnimating() {
+        Drawable drawable = mView.getDrawable();
+        if (drawable instanceof Animatable) {
+            return ((Animatable) drawable).isRunning();
+        }
+        return false;
+    }
+
+    @DoricMethod
+    public void startAnimating() {
+        Drawable drawable = mView.getDrawable();
+        if (drawable instanceof Animatable) {
+            ((Animatable) drawable).start();
+        }
+    }
+
+    @DoricMethod
+    public void stopAnimating() {
+        Drawable drawable = mView.getDrawable();
+        if (drawable instanceof Animatable) {
+            ((Animatable) drawable).stop();
         }
     }
 }

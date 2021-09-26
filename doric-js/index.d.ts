@@ -606,6 +606,7 @@ declare module 'doric/lib/src/widget/text' {
 declare module 'doric/lib/src/widget/image' {
     import { View } from "doric/lib/src/ui/view";
     import { Color } from "doric/lib/src/util/color";
+    import { BridgeContext } from "doric/lib/src/runtime/global";
     export enum ScaleType {
             ScaleToFill = 0,
             ScaleAspectFit = 1,
@@ -674,6 +675,9 @@ declare module 'doric/lib/src/widget/image' {
                     right: number;
                     bottom: number;
             };
+            isAnimating(context: BridgeContext): Promise<boolean>;
+            startAnimating(context: BridgeContext): Promise<any>;
+            stopAnimating(context: BridgeContext): Promise<any>;
     }
     export function image(config: Partial<Image>): Image;
 }

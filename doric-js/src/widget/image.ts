@@ -16,6 +16,7 @@
 import { View, Property } from "../ui/view"
 import { layoutConfig } from "../util/layoutconfig"
 import { Color } from "../util/color"
+import { BridgeContext } from "../runtime/global"
 
 export enum ScaleType {
     ScaleToFill = 0,
@@ -106,6 +107,18 @@ export class Image extends View {
         top: number,
         right: number,
         bottom: number
+    }
+
+    isAnimating(context: BridgeContext) {
+        return this.nativeChannel(context, "isAnimating")() as Promise<boolean>
+    }
+
+    startAnimating(context: BridgeContext) {
+        return this.nativeChannel(context, "startAnimating")()
+    }
+
+    stopAnimating(context: BridgeContext) {
+        return this.nativeChannel(context, "stopAnimating")()
     }
 }
 

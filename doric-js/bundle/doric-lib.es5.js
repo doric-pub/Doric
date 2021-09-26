@@ -2154,6 +2154,15 @@ var Image = /** @class */ (function (_super) {
     function Image() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
+    Image.prototype.isAnimating = function (context) {
+        return this.nativeChannel(context, "isAnimating")();
+    };
+    Image.prototype.startAnimating = function (context) {
+        return this.nativeChannel(context, "startAnimating")();
+    };
+    Image.prototype.stopAnimating = function (context) {
+        return this.nativeChannel(context, "stopAnimating")();
+    };
     __decorate$a([
         Property,
         __metadata$a("design:type", String)

@@ -32,6 +32,15 @@ export var ScaleType;
     ScaleType[ScaleType["ScaleAspectFill"] = 2] = "ScaleAspectFill";
 })(ScaleType || (ScaleType = {}));
 export class Image extends View {
+    isAnimating(context) {
+        return this.nativeChannel(context, "isAnimating")();
+    }
+    startAnimating(context) {
+        return this.nativeChannel(context, "startAnimating")();
+    }
+    stopAnimating(context) {
+        return this.nativeChannel(context, "stopAnimating")();
+    }
 }
 __decorate([
     Property,

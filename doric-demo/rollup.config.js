@@ -104,37 +104,37 @@ export default allFiles
         console.warn(warning.message);
       },
     };
-  })
-  .concat(
-    allFiles
-      .map((e) => e.replace(/\.tsx?$/, ""))
-      .map((bundle) => {
-        return {
-          input: `build/${bundle}.js`,
-          output: {
-            format: "cjs",
-            file: `bundle/${bundle}.es5.js`,
-            sourcemap: true,
-          },
-          plugins: [
-            resolve({ mainFields: ["jsnext"] }),
-            commonjs(),
-            json(),
-            buble({
-              transforms: {
-                dangerousForOf: true,
-                generator: false,
-              },
-            }),
-            image(),
-          ],
-          external: ["reflect-metadata", "doric"],
-          onwarn: function (warning) {
-            if (warning.code === "THIS_IS_UNDEFINED") {
-              return;
-            }
-            console.warn(warning.message);
-          },
-        };
-      })
-  );
+  });
+// .concat(
+//   allFiles
+//     .map((e) => e.replace(/\.tsx?$/, ""))
+//     .map((bundle) => {
+//       return {
+//         input: `build/${bundle}.js`,
+//         output: {
+//           format: "cjs",
+//           file: `bundle/${bundle}.es5.js`,
+//           sourcemap: true,
+//         },
+//         plugins: [
+//           resolve({ mainFields: ["jsnext"] }),
+//           commonjs(),
+//           json(),
+//           buble({
+//             transforms: {
+//               dangerousForOf: true,
+//               generator: false,
+//             },
+//           }),
+//           image(),
+//         ],
+//         external: ["reflect-metadata", "doric"],
+//         onwarn: function (warning) {
+//           if (warning.code === "THIS_IS_UNDEFINED") {
+//             return;
+//           }
+//           console.warn(warning.message);
+//         },
+//       };
+//     })
+// );

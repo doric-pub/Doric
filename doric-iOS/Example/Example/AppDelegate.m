@@ -47,6 +47,12 @@
 #if __has_include(<SDWebImage/SDWebImage.h>)
     [SDImageCodersManager.sharedManager addCoder:SDImageWebPCoder.sharedCoder];
 #endif
+    UINavigationBar *bar = self.navigationController.navigationBar;
+    if (@available(iOS 15.0, *)) {
+        UINavigationBarAppearance *barAppearance = [UINavigationBarAppearance new];
+        barAppearance.backgroundColor = UIColor.whiteColor;
+        bar.scrollEdgeAppearance = bar.standardAppearance = barAppearance;
+    }
     return YES;
 }
 

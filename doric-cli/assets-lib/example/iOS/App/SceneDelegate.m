@@ -25,6 +25,12 @@
     doricViewController.navigationItem.rightBarButtonItem = rightBarItem;
 #endif
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:doricViewController];
+    UINavigationBar *bar = navigationController.navigationBar;
+    if (@available(iOS 15.0, *)) {
+        UINavigationBarAppearance *barAppearance = [UINavigationBarAppearance new];
+        barAppearance.backgroundColor = UIColor.whiteColor;
+        bar.scrollEdgeAppearance = bar.standardAppearance = barAppearance;
+    }
     UIWindow *window = [[UIWindow alloc] initWithWindowScene:windowScene];
     window.frame = windowScene.coordinateSpace.bounds;
     window.rootViewController = navigationController;

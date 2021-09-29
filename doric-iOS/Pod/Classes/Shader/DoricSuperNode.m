@@ -76,7 +76,8 @@
             if (subviews) {
                 for (NSDictionary *subview in subviews) {
                     NSString *viewId = subview[@"id"];
-                    [targetOri enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
+                    NSMutableArray *mutableTargetOri = [targetProp[@"subviews"] mutableCopy];
+                    [mutableTargetOri enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
                         if ([viewId isEqualToString:obj[@"id"]]) {
                             NSMutableDictionary *mutableDictionary = [obj mutableCopy];
                             [self recursiveMixin:subview to:mutableDictionary];
@@ -131,17 +132,17 @@
 
 - (NSArray *)getSubNodeViewIds {
     NSMutableArray *discardedItems = [NSMutableArray array];
-    
-    NSMutableArray *allKeys = [[NSMutableArray alloc]init];
+
+    NSMutableArray *allKeys = [[NSMutableArray alloc] init];
     allKeys = [NSMutableArray arrayWithArray:[self.subNodes allKeys]];
     for (NSString *key in allKeys) {
         if ([self subNodeWithViewId:key] == nil) {
             [discardedItems addObject:key];
         }
     }
-    
+
     [allKeys removeObjectsInArray:discardedItems];
-    
+
     return allKeys;
 }
 @end

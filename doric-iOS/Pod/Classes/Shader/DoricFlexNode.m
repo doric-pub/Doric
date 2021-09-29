@@ -74,7 +74,7 @@
     [self.childNodes forEach:^(DoricViewNode *viewNode) {
         NSString *viewId = viewNode.viewId;
         NSDictionary *model = [self subModelOf:viewId];
-        NSDictionary *dictionary = model[@"dictionary"];
+        NSDictionary *dictionary = model[@"props"];
         if (!dictionary[@"flexConfig"]) {
             viewNode.view.yoga.width = YGValueAuto;
             viewNode.view.yoga.height = YGValueAuto;

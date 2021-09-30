@@ -69,25 +69,24 @@
     NSDictionary *srcProp = srcModel[@"props"];
     NSMutableDictionary *targetProp = targetModel[@"props"];
     NSMutableArray *targetOri = targetProp[@"subviews"];
-
-    [srcProp enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
-        if ([@"subviews" isEqualToString:key]) {
-            NSArray *subviews = obj;
-            if (subviews) {
-                for (NSDictionary *subview in subviews) {
-                    NSString *viewId = subview[@"id"];
-                    NSMutableArray *mutableTargetOri = [targetProp[@"subviews"] mutableCopy];
-                    [mutableTargetOri enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
-                        if ([viewId isEqualToString:obj[@"id"]]) {
-                            NSMutableDictionary *mutableDictionary = [obj mutableCopy];
-                            [self recursiveMixin:subview to:mutableDictionary];
-                            targetOri[idx] = [mutableDictionary copy];
-                            *stop = YES;
-                        }
-                    }];
+    NSArray *srcSubviews = srcProp[@"subviews"];
+    if (srcSubviews && srcSubviews.count > 0) {
+        for (NSDictionary *subview in srcSubviews) {
+            NSString *viewId = subview[@"id"];
+            __block NSMutableDictionary *viewModel = nil;
+            [targetOri enumerateObjectsUsingBlock:^(NSMutableDictionary *obj, NSUInteger idx, BOOL *stop) {
+                if ([viewId isEqualToString:obj[@"id"]]) {
+                    viewModel = obj;
+                    *stop = YES;
                 }
+            }];
+            if (viewModel) {
+                [self recursiveMixin:subview to:viewModel];
             }
-        } else {
+        }
+    }
+    [srcProp enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
+        if (![@"subviews" isEqualToString:key]) {
             targetProp[key] = obj;
         }
     }];

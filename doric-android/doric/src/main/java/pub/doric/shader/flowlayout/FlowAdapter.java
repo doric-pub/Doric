@@ -62,7 +62,7 @@ class FlowAdapter extends RecyclerView.Adapter<FlowAdapter.DoricViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull DoricViewHolder holder, int position) {
         JSValue jsValue = getItemModel(position);
-        if (jsValue.isObject()) {
+        if (jsValue != null && jsValue.isObject()) {
             JSObject jsObject = jsValue.asObject();
             holder.flowLayoutItemNode.setId(jsObject.getProperty("id").asString().value());
             holder.flowLayoutItemNode.blend(jsObject.getProperty("props").asObject());

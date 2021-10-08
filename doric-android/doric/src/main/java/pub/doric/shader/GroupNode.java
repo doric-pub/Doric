@@ -108,15 +108,14 @@ public abstract class GroupNode<F extends ViewGroup> extends SuperNode<F> {
                         }
                         if (position >= 0) {
                             //Found swap idx,position
-                            ViewNode<?> reused = mChildNodes.remove(position);
-                            ViewNode<?> abandoned = mChildNodes.remove(idx);
+                            ViewNode<?> reused = mChildNodes.get(position);
                             mChildNodes.set(idx, reused);
-                            mChildNodes.set(position, abandoned);
+                            mChildNodes.set(position, oldNode);
                             //View swap index
                             mView.removeView(reused.getNodeView());
                             mView.addView(reused.getNodeView(), Math.min(idx, mView.getChildCount()));
-                            mView.removeView(abandoned.getNodeView());
-                            mView.addView(abandoned.getNodeView(), position);
+                            mView.removeView(oldNode.getNodeView());
+                            mView.addView(oldNode.getNodeView(), position);
                         } else {
                             //Not found,insert
                             ViewNode<?> newNode = ViewNode.create(getDoricContext(), type);

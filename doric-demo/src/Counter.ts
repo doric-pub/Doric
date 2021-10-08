@@ -16,6 +16,7 @@ import {
   layoutConfig,
   modal,
   Panel,
+  View,
 } from "doric";
 
 interface CountModel {
@@ -25,13 +26,29 @@ class CounterView extends ViewHolder {
   number!: Text;
   counter!: Text;
   build(root: Group) {
-    vlayout(
+    let group = vlayout(
       [
         text({
           text: `Current language is ${Environment.localeLanguage}`,
+          onClick: function () {
+            const v = this as View
+            group.removeChild(v)
+          }
         }),
         text({
           text: `Current country is ${Environment.localeCountry}`,
+          onClick: function () {
+            const v = this as View
+            group.removeChild(v)
+          }
+        }),
+        text({
+          text: "Click to remove",
+          textSize: 30,
+          onClick: function () {
+            const v = this as View
+            group.removeChild(v)
+          }
         }),
         this.number = text({
           textSize: 40,

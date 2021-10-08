@@ -97,18 +97,8 @@
                     if (position >= 0) {
                         ///Found ,swap idx,position
                         DoricViewNode *reused = childNodes[(NSUInteger) position];
-                        [childNodes removeObjectAtIndex:(NSUInteger) position];
-                        [childNodes removeObjectAtIndex:idx];
-                        if (idx >= childNodes.count) {
-                            [childNodes addObject:reused];
-                        } else {
-                            [childNodes insertObject:reused atIndex:idx];
-                        }
-                        if (position >= childNodes.count) {
-                            [childNodes addObject:oldNode];
-                        } else {
-                            [childNodes insertObject:oldNode atIndex:(NSUInteger) position];
-                        }
+                        childNodes[idx] = reused;
+                        childNodes[(NSUInteger) position] = oldNode;
                         ///View swap index
                         [reused.view removeFromSuperview];
                         [oldNode.view removeFromSuperview];

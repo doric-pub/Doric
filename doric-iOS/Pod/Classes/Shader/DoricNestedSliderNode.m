@@ -75,6 +75,7 @@
         node.view.left = idx * self.view.width;
     }];
     self.view.contentSize = CGSizeMake(self.childNodes.count * self.view.width, self.view.height);
+    [super requestLayout];
 }
 
 - (void)slidePage:(NSDictionary *)params withPromise:(DoricPromise *)promise {

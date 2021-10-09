@@ -144,6 +144,7 @@
     self.view.headerView.bottom = 0;
     self.view.headerView.centerX = self.view.width / 2;
     [self.view.contentView.doricLayout apply:self.view.frame.size];
+    [super requestLayout];
 }
 
 - (void)blendSubNode:(NSDictionary *)subModel {

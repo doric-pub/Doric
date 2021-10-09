@@ -124,6 +124,7 @@
 - (void)requestLayout {
     [self.childNode requestLayout];
     [self.view.contentView.doricLayout apply:self.view.frame.size];
+    [super requestLayout];
 }
 
 - (void)blendView:(DoricScrollView *)view forPropName:(NSString *)name propValue:(id)prop {

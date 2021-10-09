@@ -39,14 +39,16 @@ import pub.doric.shader.ViewNode;
  * @CreateDate: 2019-11-12
  */
 class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
-
+    private static final int TYPE_LOAD_MORE = -1;
+    private static final int TYPE_HEADER = -2;
+    private static final int TYPE_FOOTER = -3;
     private final ListNode listNode;
 
     ListAdapter(ListNode listNode) {
         this.listNode = listNode;
     }
 
-    private int itemCount = 0;
+    int itemCount = 0;
     private int loadAnchor = 0;
 
     @NonNull
@@ -65,21 +67,35 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
             holder.listItemNode.setId(jsObject.getProperty("id").asString().value());
             holder.listItemNode.blend(jsObject.getProperty("props").asObject());
         }
-        if (position >= this.listNode.itemCount && !TextUtils.isEmpty(this.listNode.onLoadMoreFuncId)) {
+        if (this.listNode.loadMore
+                && position == this.itemCount + (this.listNode.hasHeader() ? 1 : 0)
+                && !TextUtils.isEmpty(this.listNode.onLoadMoreFuncId)) {
             callLoadMore();
         }
     }
 
     @Override
     public int getItemCount() {
-        return this.itemCount;
+        return this.itemCount
+                + (this.listNode.loadMore ? 1 : 0)
+                + (this.listNode.hasHeader() ? 1 : 0)
+                + (this.listNode.hasFooter() ? 1 : 0);
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (position >= this.listNode.itemCount) {
-            return Integer.MAX_VALUE;
+        if (this.listNode.hasHeader() && position == 0) {
+            return TYPE_HEADER;
         }
+
+        if (this.listNode.hasFooter() && position == this.getItemCount() - 1) {
+            return TYPE_FOOTER;
+        }
+
+        if (position >= this.itemCount + (this.listNode.hasHeader() ? 1 : 0)) {
+            return TYPE_LOAD_MORE;
+        }
+
         JSValue value = getItemModel(position);
         if (value != null && value.isObject()) {
             if (value.asObject().getProperty("props").asObject().getProperty("identifier").isString()) {
@@ -89,13 +105,20 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
         return super.getItemViewType(position);
     }
 
-    public void setItemCount(int itemCount) {
-        this.itemCount = itemCount;
-    }
-
     private JSValue getItemModel(int position) {
-        if (position >= this.listNode.itemCount) {
+        if (this.listNode.hasHeader() && position == 0) {
+            return this.listNode.getSubModel(this.listNode.headerViewId);
+        }
+
+        if (this.listNode.hasFooter() && position == this.getItemCount() - 1) {
+            return this.listNode.getSubModel(this.listNode.footerViewId);
+        }
+
+        if (position >= this.itemCount + (this.listNode.hasHeader() ? 1 : 0)) {
             return this.listNode.getSubModel(this.listNode.loadMoreViewId);
+        }
+        if (this.listNode.hasHeader()) {
+            position--;
         }
         String id = listNode.itemValues.get(position);
         if (TextUtils.isEmpty(id)) {

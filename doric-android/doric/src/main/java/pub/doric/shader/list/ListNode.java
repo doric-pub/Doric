@@ -15,6 +15,7 @@
  */
 package pub.doric.shader.list;
 
+import android.annotation.SuppressLint;
 import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.GestureDetector;
@@ -61,6 +62,8 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
     SparseArray<String> itemValues = new SparseArray<>();
     boolean loadMore = false;
     String loadMoreViewId;
+    String headerViewId;
+    String footerViewId;
     private final Set<DoricScrollChangeListener> listeners = new HashSet<>();
     private String onScrollFuncId;
     private String onScrollEndFuncId;
@@ -167,9 +170,10 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
         super.blend(jsObject);
         if (mView != null) {
             mView.post(new Runnable() {
+                @SuppressLint("NotifyDataSetChanged")
                 @Override
                 public void run() {
-                    listAdapter.setItemCount(itemCount + (loadMore ? 1 : 0));
+                    listAdapter.itemCount = itemCount;
                     listAdapter.notifyDataSetChanged();
                 }
             });
@@ -239,6 +243,12 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
                         moveToPosition(prop.asNumber().toInt(), false);
                     }
                 });
+                break;
+            case "header":
+                this.headerViewId = prop.asString().value();
+                break;
+            case "footer":
+                this.footerViewId = prop.asString().value();
                 break;
             default:
                 super.blend(view, name, prop);
@@ -317,4 +327,11 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
         }
     }
 
+    boolean hasHeader() {
+        return !TextUtils.isEmpty(this.headerViewId);
+    }
+
+    boolean hasFooter() {
+        return !TextUtils.isEmpty(this.footerViewId);
+    }
 }

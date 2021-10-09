@@ -699,7 +699,7 @@ declare module 'doric/lib/src/widget/list' {
             }[];
     }
     export class List extends Superview {
-            allSubviews(): IterableIterator<ListItem> | ListItem[];
+            allSubviews(): ListItem[];
             itemCount: number;
             renderItem: (index: number) => ListItem;
             batchCount: number;
@@ -720,6 +720,8 @@ declare module 'doric/lib/src/widget/list' {
                 * Take effect only on iOS
                 */
             bounces?: boolean;
+            header?: ListItem;
+            footer?: ListItem;
             scrollToItem(context: BridgeContext, index: number, config?: {
                     animated?: boolean;
             }): Promise<any>;

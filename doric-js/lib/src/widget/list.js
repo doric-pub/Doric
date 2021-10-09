@@ -43,12 +43,17 @@ export class List extends Superview {
         this.batchCount = 15;
     }
     allSubviews() {
+        const ret = [...this.cachedViews.values()];
         if (this.loadMoreView) {
-            return [...this.cachedViews.values(), this.loadMoreView];
+            ret.push(this.loadMoreView);
         }
-        else {
-            return this.cachedViews.values();
+        if (this.header) {
+            ret.push(this.header);
         }
+        if (this.footer) {
+            ret.push(this.footer);
+        }
+        return ret;
     }
     scrollToItem(context, index, config) {
         const animated = config === null || config === void 0 ? void 0 : config.animated;
@@ -73,6 +78,12 @@ export class List extends Superview {
     toModel() {
         if (this.loadMoreView) {
             this.dirtyProps['loadMoreView'] = this.loadMoreView.viewId;
+        }
+        if (this.header) {
+            this.dirtyProps['header'] = this.header.viewId;
+        }
+        if (this.footer) {
+            this.dirtyProps['footer'] = this.footer.viewId;
         }
         return super.toModel();
     }
@@ -121,6 +132,14 @@ __decorate([
     Property,
     __metadata("design:type", Boolean)
 ], List.prototype, "bounces", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", ListItem)
+], List.prototype, "header", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", ListItem)
+], List.prototype, "footer", void 0);
 export function list(config) {
     const ret = new List;
     ret.apply(config);

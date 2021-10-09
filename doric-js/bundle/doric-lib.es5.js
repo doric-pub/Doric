@@ -2326,12 +2326,17 @@ var List = /** @class */ (function (_super) {
         return _this;
     }
     List.prototype.allSubviews = function () {
+        var ret = __spreadArray$1([], __read$1(this.cachedViews.values()));
         if (this.loadMoreView) {
-            return __spreadArray$1(__spreadArray$1([], __read$1(this.cachedViews.values())), [this.loadMoreView]);
+            ret.push(this.loadMoreView);
         }
-        else {
-            return this.cachedViews.values();
+        if (this.header) {
+            ret.push(this.header);
         }
+        if (this.footer) {
+            ret.push(this.footer);
+        }
+        return ret;
     };
     List.prototype.scrollToItem = function (context, index, config) {
         var animated = config === null || config === void 0 ? void 0 : config.animated;
@@ -2357,6 +2362,12 @@ var List = /** @class */ (function (_super) {
     List.prototype.toModel = function () {
         if (this.loadMoreView) {
             this.dirtyProps['loadMoreView'] = this.loadMoreView.viewId;
+        }
+        if (this.header) {
+            this.dirtyProps['header'] = this.header.viewId;
+        }
+        if (this.footer) {
+            this.dirtyProps['footer'] = this.footer.viewId;
         }
         return _super.prototype.toModel.call(this);
     };
@@ -2404,6 +2415,14 @@ var List = /** @class */ (function (_super) {
         Property,
         __metadata$9("design:type", Boolean)
     ], List.prototype, "bounces", void 0);
+    __decorate$9([
+        Property,
+        __metadata$9("design:type", ListItem)
+    ], List.prototype, "header", void 0);
+    __decorate$9([
+        Property,
+        __metadata$9("design:type", ListItem)
+    ], List.prototype, "footer", void 0);
     return List;
 }(Superview));
 function list(config) {

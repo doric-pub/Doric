@@ -47,6 +47,12 @@ class ListVH extends ViewHolder {
                     height: 50,
                 }),
                 this.list = list({
+                    header: listItem(text({
+                        text: "This is header",
+                    })),
+                    footer: listItem(text({
+                        text: "This is footer",
+                    })),
                     itemCount: 0,
                     layoutConfig: {
                         widthSpec: LayoutSpec.MOST,

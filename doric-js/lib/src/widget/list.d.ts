@@ -15,7 +15,7 @@ export declare class ListItem extends Stack {
 }
 export declare class List extends Superview {
     private cachedViews;
-    allSubviews(): IterableIterator<ListItem> | ListItem[];
+    allSubviews(): ListItem[];
     itemCount: number;
     renderItem: (index: number) => ListItem;
     batchCount: number;
@@ -36,6 +36,8 @@ export declare class List extends Superview {
      * Take effect only on iOS
      */
     bounces?: boolean;
+    header?: ListItem;
+    footer?: ListItem;
     scrollToItem(context: BridgeContext, index: number, config?: {
         animated?: boolean;
     }): Promise<any>;

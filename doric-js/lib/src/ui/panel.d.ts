@@ -10,6 +10,11 @@ export declare abstract class Panel {
     onShow(): void;
     onHidden(): void;
     onEnvChanged(): void;
+    /**
+     * Build view of the current Panel
+     * This could be called any times at any time when necessary.
+     * @param rootView root view of this panel
+     */
     abstract build(rootView: Group): void;
     private __data__?;
     private __root__;

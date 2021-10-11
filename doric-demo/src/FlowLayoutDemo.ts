@@ -43,7 +43,7 @@ class FlowDemo extends Panel {
                         layoutConfig: layoutConfig().configWidth(LayoutSpec.MOST),
                     })
             },
-            loadMore: false,
+            loadMore: true,
             onLoadMore: () => {
                 setTimeout(() => {
                     flowView.itemCount += 20

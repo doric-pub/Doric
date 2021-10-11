@@ -143,6 +143,11 @@ declare module 'doric/lib/src/ui/panel' {
         onShow(): void;
         onHidden(): void;
         onEnvChanged(): void;
+        /**
+          * Build view of the current Panel
+          * This could be called any times at any time when necessary.
+          * @param rootView root view of this panel
+          */
         abstract build(rootView: Group): void;
         addHeadView(type: string, v: View): void;
         allHeadViews(): IterableIterator<Map<string, View>>;

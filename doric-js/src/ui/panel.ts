@@ -43,6 +43,11 @@ export abstract class Panel {
         this.__root__.children.length = 0
         this.build(this.__root__)
     }
+    /**
+     * Build view of the current Panel
+     * This could be called any times at any time when necessary.
+     * @param rootView root view of this panel
+     */
     abstract build(rootView: Group): void
 
     private __data__?: object

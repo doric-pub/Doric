@@ -26,11 +26,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSNumber;
 import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
+
+import org.json.JSONObject;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -298,6 +301,47 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
         }
         JSNumber pos = params.getProperty("index").asNumber();
         moveToPosition(pos.toInt(), animated);
+    }
+
+    private int calibratePosition(int position) {
+        if (hasHeader() && position == 0) {
+            return -11;
+        }
+        if (hasFooter() && position == this.itemCount
+                + (this.loadMore ? 1 : 0)
+                + (this.hasHeader() ? 1 : 0)
+                + (this.hasFooter() ? 1 : 0) - 1) {
+            return -12;
+        }
+        if (position >= this.itemCount + (this.hasHeader() ? 1 : 0)) {
+            return -10;
+        }
+        if (this.hasHeader()) {
+            return position - 1;
+        }
+        return position;
+    }
+
+    @DoricMethod
+    public JSONObject findVisibleItems() {
+        LinearLayoutManager linearLayoutManager = (LinearLayoutManager) this.mView.getLayoutManager();
+        assert linearLayoutManager != null;
+        int startPos = linearLayoutManager.findFirstVisibleItemPosition();
+        int endPos = linearLayoutManager.findLastVisibleItemPosition();
+        return new JSONBuilder()
+                .put("first", calibratePosition(startPos))
+                .put("last", calibratePosition(endPos)).toJSONObject();
+    }
+
+    @DoricMethod
+    public JSONObject findCompletelyVisibleItems() {
+        LinearLayoutManager linearLayoutManager = (LinearLayoutManager) this.mView.getLayoutManager();
+        assert linearLayoutManager != null;
+        int startPos = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
+        int endPos = linearLayoutManager.findLastCompletelyVisibleItemPosition();
+        return new JSONBuilder()
+                .put("first", calibratePosition(startPos))
+                .put("last", calibratePosition(endPos)).toJSONObject();
     }
 
     private void moveToPosition(int pos, boolean smooth) {

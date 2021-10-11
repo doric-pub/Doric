@@ -20,6 +20,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -27,6 +28,9 @@ import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -36,6 +40,7 @@ import pub.doric.DoricContext;
 import pub.doric.DoricScrollChangeListener;
 import pub.doric.IDoricScrollable;
 import pub.doric.async.AsyncResult;
+import pub.doric.extension.bridge.DoricMethod;
 import pub.doric.extension.bridge.DoricPlugin;
 import pub.doric.shader.SuperNode;
 import pub.doric.shader.ViewNode;
@@ -324,6 +329,53 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
     @Override
     public void removeScrollChangeListener(DoricScrollChangeListener listener) {
         listeners.remove(listener);
+    }
+
+    private int calibratePosition(int position) {
+        if (hasHeader() && position == 0) {
+            return -11;
+        }
+        if (hasFooter() && position == this.itemCount
+                + (this.loadMore ? 1 : 0)
+                + (this.hasHeader() ? 1 : 0)
+                + (this.hasFooter() ? 1 : 0) - 1) {
+            return -12;
+        }
+        if (position >= this.itemCount + (this.hasHeader() ? 1 : 0)) {
+            return -10;
+        }
+        if (this.hasHeader()) {
+            return position - 1;
+        }
+        return position;
+    }
+
+    @DoricMethod
+    public JSONArray findVisibleItems() {
+        int[] startPos = staggeredGridLayoutManager.findFirstVisibleItemPositions(null);
+        int[] endPos = staggeredGridLayoutManager.findLastVisibleItemPositions(null);
+        JSONArray jsonArray = new JSONArray();
+        for (int i = 0; i < staggeredGridLayoutManager.getSpanCount(); i++) {
+            jsonArray.put(new JSONBuilder()
+                    .put("first", calibratePosition(startPos[i]))
+                    .put("last", calibratePosition(endPos[i]))
+                    .toJSONObject());
+        }
+        return jsonArray;
+    }
+
+    @DoricMethod
+    public JSONArray findCompletelyVisibleItems() {
+        int[] startPos = staggeredGridLayoutManager.findFirstCompletelyVisibleItemPositions(null);
+        int[] endPos = staggeredGridLayoutManager.findFirstCompletelyVisibleItemPositions(null);
+        JSONArray jsonArray = new JSONArray();
+        for (int i = 0; i < staggeredGridLayoutManager.getSpanCount(); i++) {
+            jsonArray.put(new JSONBuilder()
+                    .put("first", calibratePosition(startPos[i]))
+                    .put("last", calibratePosition(endPos[i]))
+                    .toJSONObject());
+        }
+        return jsonArray;
     }
 
     boolean hasHeader() {

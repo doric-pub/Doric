@@ -16,6 +16,7 @@
 import { Stack } from './layouts'
 import { Property, Superview, View, NativeViewModel } from '../ui/view'
 import { layoutConfig } from '../util/index.util'
+import { BridgeContext } from '../..'
 
 export class FlowLayoutItem extends Stack {
     /**
@@ -94,6 +95,21 @@ export class FlowLayout extends Superview {
 
     @Property
     footer?: FlowLayoutItem
+    /**
+     * @param context 
+     * @returns Returns the range of the visible views for each column.
+     */
+    findVisibleItems(context: BridgeContext) {
+        return this.nativeChannel(context, 'findVisibleItems')() as Promise<{ first: number, last: number }[]>
+    }
+    /**
+     * @param context 
+     * @returns Returns the range of the completely visible views for each column.
+     */
+    findCompletelyVisibleItems(context: BridgeContext) {
+        return this.nativeChannel(context, 'findCompletelyVisibleItems')() as Promise<{ first: number, last: number }[]>
+    }
+
 
     reset() {
         this.cachedViews.clear()

@@ -67,9 +67,11 @@ class FlowAdapter extends RecyclerView.Adapter<FlowAdapter.DoricViewHolder> {
             holder.flowLayoutItemNode.setId(jsObject.getProperty("id").asString().value());
             holder.flowLayoutItemNode.blend(jsObject.getProperty("props").asObject());
         }
-        if (holder.flowLayoutItemNode.fullSpan
-                || this.flowLayoutNode.loadMore
-                && position >= this.itemCount) {
+        boolean fullSpan = this.flowLayoutNode.loadMore && position >= this.itemCount;
+        if (holder.flowLayoutItemNode.fullSpan != null) {
+            fullSpan = holder.flowLayoutItemNode.fullSpan;
+        }
+        if (fullSpan) {
             StaggeredGridLayoutManager.LayoutParams layoutParams = new StaggeredGridLayoutManager.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     holder.itemView.getLayoutParams().height

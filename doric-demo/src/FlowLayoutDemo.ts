@@ -55,6 +55,7 @@ class FlowDemo extends Panel {
                 {
                     backgroundColor: colors[500 % colors.length],
                     height: 50,
+                    fullSpan: true,
                     layoutConfig: layoutConfig().configWidth(LayoutSpec.MOST),
                 })
         }).in(rootView)

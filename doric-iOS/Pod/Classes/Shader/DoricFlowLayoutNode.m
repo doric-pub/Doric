@@ -365,9 +365,12 @@
     DoricFlowLayoutItemNode *node = cell.viewNode;
     node.viewId = model[@"id"];
     [node blend:props];
-    BOOL fillWidth = [props[@"fullSpan"] boolValue]
-            || (self.loadMore && position >= self.itemCount);
-    if (fillWidth) {
+
+    BOOL fullSpan = self.loadMore && position >= self.itemCount;
+    if (props[@"fullSpan"]) {
+        fullSpan = [props[@"fullSpan"] boolValue];
+    }
+    if (fullSpan) {
         node.view.width = collectionView.width;
     } else {
         node.view.width = (collectionView.width - (self.columnCount - 1) * self.columnSpace) / self.columnCount;
@@ -413,12 +416,12 @@
 
 - (BOOL)doricFlowLayoutItemFullSpan:(NSIndexPath *)indexPath {
     NSUInteger position = (NSUInteger) indexPath.row;
-    if (self.loadMore && position >= self.itemCount) {
-        return YES;
-    } else {
-        NSDictionary *model = [self itemModelAt:position];
-        return [model[@"props"][@"fullSpan"] boolValue];
+    BOOL fullSpan = self.loadMore && position >= self.itemCount;
+    NSDictionary *model = [self itemModelAt:position];
+    if (model[@"props"][@"fullSpan"]) {
+        fullSpan = [model[@"props"][@"fullSpan"] boolValue];
     }
+    return fullSpan;
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {

@@ -41,6 +41,10 @@ class FlowDemo extends Panel {
                         backgroundColor: colors[idx % colors.length],
                         height: 50 + (idx % 3) * 20,
                         layoutConfig: layoutConfig().configWidth(LayoutSpec.MOST),
+                    }).also(it => {
+                        if (idx == 15) {
+                            it.fullSpan = true
+                        }
                     })
             },
             loadMore: true,

@@ -3732,6 +3732,10 @@ __decorate$5([
     Property,
     __metadata$5("design:type", String)
 ], FlowLayoutItem.prototype, "identifier", void 0);
+__decorate$5([
+    Property,
+    __metadata$5("design:type", Boolean)
+], FlowLayoutItem.prototype, "fullSpan", void 0);
 class FlowLayout extends Superview {
     constructor() {
         super(...arguments);

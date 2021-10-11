@@ -16,7 +16,7 @@
 import { Stack } from './layouts'
 import { Property, Superview, View, NativeViewModel } from '../ui/view'
 import { layoutConfig } from '../util/index.util'
-import { BridgeContext } from '../..'
+import { BridgeContext } from "../runtime/global";
 
 export class FlowLayoutItem extends Stack {
     /**
@@ -26,7 +26,7 @@ export class FlowLayoutItem extends Stack {
     identifier?: string
     /**
      * When set to true, the item will layout using all span area. 
-     * HeaderView, footerView or loadMoreView is always true by default.
+     * LoadMoreView is default to true.
      */
     @Property
     fullSpan?: boolean
@@ -39,12 +39,6 @@ export class FlowLayout extends Superview {
         const ret = [...this.cachedViews.values()]
         if (this.loadMoreView) {
             ret.push(this.loadMoreView)
-        }
-        if (this.header) {
-            ret.push(this.header)
-        }
-        if (this.footer) {
-            ret.push(this.footer)
         }
         return ret
     }
@@ -90,11 +84,6 @@ export class FlowLayout extends Superview {
     @Property
     bounces?: boolean
 
-    @Property
-    header?: FlowLayoutItem
-
-    @Property
-    footer?: FlowLayoutItem
     /**
      * @param context 
      * @returns Returns the range of the visible views for each column.
@@ -131,12 +120,6 @@ export class FlowLayout extends Superview {
     toModel(): NativeViewModel {
         if (this.loadMoreView) {
             this.dirtyProps['loadMoreView'] = this.loadMoreView.viewId
-        }
-        if (this.header) {
-            this.dirtyProps['header'] = this.header.viewId
-        }
-        if (this.footer) {
-            this.dirtyProps['footer'] = this.footer.viewId
         }
         return super.toModel()
     }

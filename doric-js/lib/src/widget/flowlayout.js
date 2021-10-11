@@ -48,13 +48,21 @@ export class FlowLayout extends Superview {
         if (this.loadMoreView) {
             ret.push(this.loadMoreView);
         }
-        if (this.header) {
-            ret.push(this.header);
-        }
-        if (this.footer) {
-            ret.push(this.footer);
-        }
         return ret;
+    }
+    /**
+     * @param context
+     * @returns Returns the range of the visible views for each column.
+     */
+    findVisibleItems(context) {
+        return this.nativeChannel(context, 'findVisibleItems')();
+    }
+    /**
+     * @param context
+     * @returns Returns the range of the completely visible views for each column.
+     */
+    findCompletelyVisibleItems(context) {
+        return this.nativeChannel(context, 'findCompletelyVisibleItems')();
     }
     reset() {
         this.cachedViews.clear();
@@ -75,12 +83,6 @@ export class FlowLayout extends Superview {
     toModel() {
         if (this.loadMoreView) {
             this.dirtyProps['loadMoreView'] = this.loadMoreView.viewId;
-        }
-        if (this.header) {
-            this.dirtyProps['header'] = this.header.viewId;
-        }
-        if (this.footer) {
-            this.dirtyProps['footer'] = this.footer.viewId;
         }
         return super.toModel();
     }
@@ -137,14 +139,6 @@ __decorate([
     Property,
     __metadata("design:type", Boolean)
 ], FlowLayout.prototype, "bounces", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", FlowLayoutItem)
-], FlowLayout.prototype, "header", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", FlowLayoutItem)
-], FlowLayout.prototype, "footer", void 0);
 export function flowlayout(config) {
     const ret = new FlowLayout;
     for (let key in config) {

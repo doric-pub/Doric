@@ -49,12 +49,6 @@ export class List extends Superview {
         if (this.loadMoreView) {
             ret.push(this.loadMoreView)
         }
-        if (this.header) {
-            ret.push(this.header)
-        }
-        if (this.footer) {
-            ret.push(this.footer)
-        }
         return ret
     }
 
@@ -92,12 +86,6 @@ export class List extends Superview {
      */
     @Property
     bounces?: boolean
-
-    @Property
-    header?: ListItem
-
-    @Property
-    footer?: ListItem
 
     scrollToItem(context: BridgeContext, index: number, config?: { animated?: boolean, }) {
         const animated = config?.animated
@@ -139,12 +127,6 @@ export class List extends Superview {
     toModel(): NativeViewModel {
         if (this.loadMoreView) {
             this.dirtyProps['loadMoreView'] = this.loadMoreView.viewId
-        }
-        if (this.header) {
-            this.dirtyProps['header'] = this.header.viewId
-        }
-        if (this.footer) {
-            this.dirtyProps['footer'] = this.footer.viewId
         }
         return super.toModel()
     }

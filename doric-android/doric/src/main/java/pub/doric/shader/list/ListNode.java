@@ -65,8 +65,6 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
     SparseArray<String> itemValues = new SparseArray<>();
     boolean loadMore = false;
     String loadMoreViewId;
-    String headerViewId;
-    String footerViewId;
     private final Set<DoricScrollChangeListener> listeners = new HashSet<>();
     private String onScrollFuncId;
     private String onScrollEndFuncId;
@@ -247,12 +245,6 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
                     }
                 });
                 break;
-            case "header":
-                this.headerViewId = prop.asString().value();
-                break;
-            case "footer":
-                this.footerViewId = prop.asString().value();
-                break;
             default:
                 super.blend(view, name, prop);
                 break;
@@ -304,21 +296,6 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
     }
 
     private int calibratePosition(int position) {
-        if (hasHeader() && position == 0) {
-            return -11;
-        }
-        if (hasFooter() && position == this.itemCount
-                + (this.loadMore ? 1 : 0)
-                + (this.hasHeader() ? 1 : 0)
-                + (this.hasFooter() ? 1 : 0) - 1) {
-            return -12;
-        }
-        if (position >= this.itemCount + (this.hasHeader() ? 1 : 0)) {
-            return -10;
-        }
-        if (this.hasHeader()) {
-            return position - 1;
-        }
         return position;
     }
 
@@ -369,13 +346,5 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
         } else {
             mView.scrollToPosition(pos);
         }
-    }
-
-    boolean hasHeader() {
-        return !TextUtils.isEmpty(this.headerViewId);
-    }
-
-    boolean hasFooter() {
-        return !TextUtils.isEmpty(this.footerViewId);
     }
 }

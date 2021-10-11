@@ -40,8 +40,6 @@ import pub.doric.shader.ViewNode;
  */
 class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
     private static final int TYPE_LOAD_MORE = -1;
-    private static final int TYPE_HEADER = -2;
-    private static final int TYPE_FOOTER = -3;
     private final ListNode listNode;
 
     ListAdapter(ListNode listNode) {
@@ -68,7 +66,7 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
             holder.listItemNode.blend(jsObject.getProperty("props").asObject());
         }
         if (this.listNode.loadMore
-                && position == this.itemCount + (this.listNode.hasHeader() ? 1 : 0)
+                && position >= this.itemCount
                 && !TextUtils.isEmpty(this.listNode.onLoadMoreFuncId)) {
             callLoadMore();
         }
@@ -76,23 +74,12 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
 
     @Override
     public int getItemCount() {
-        return this.itemCount
-                + (this.listNode.loadMore ? 1 : 0)
-                + (this.listNode.hasHeader() ? 1 : 0)
-                + (this.listNode.hasFooter() ? 1 : 0);
+        return this.itemCount + (this.listNode.loadMore ? 1 : 0);
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (this.listNode.hasHeader() && position == 0) {
-            return TYPE_HEADER;
-        }
-
-        if (this.listNode.hasFooter() && position == this.getItemCount() - 1) {
-            return TYPE_FOOTER;
-        }
-
-        if (position >= this.itemCount + (this.listNode.hasHeader() ? 1 : 0)) {
+        if (position >= this.itemCount) {
             return TYPE_LOAD_MORE;
         }
 
@@ -106,19 +93,8 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
     }
 
     private JSValue getItemModel(int position) {
-        if (this.listNode.hasHeader() && position == 0) {
-            return this.listNode.getSubModel(this.listNode.headerViewId);
-        }
-
-        if (this.listNode.hasFooter() && position == this.getItemCount() - 1) {
-            return this.listNode.getSubModel(this.listNode.footerViewId);
-        }
-
-        if (position >= this.itemCount + (this.listNode.hasHeader() ? 1 : 0)) {
+        if (position >= this.itemCount) {
             return this.listNode.getSubModel(this.listNode.loadMoreViewId);
-        }
-        if (this.listNode.hasHeader()) {
-            position--;
         }
         String id = listNode.itemValues.get(position);
         if (TextUtils.isEmpty(id)) {

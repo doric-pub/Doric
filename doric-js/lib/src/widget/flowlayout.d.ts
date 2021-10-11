@@ -8,7 +8,7 @@ export declare class FlowLayoutItem extends Stack {
     identifier?: string;
     /**
      * When set to true, the item will layout using all span area.
-     * HeaderView, footerView or loadMoreView is always true by default.
+     * LoadMoreView is default to true.
      */
     fullSpan?: boolean;
 }

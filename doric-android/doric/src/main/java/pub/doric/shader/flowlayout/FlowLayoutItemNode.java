@@ -32,7 +32,7 @@ import pub.doric.shader.StackNode;
 @DoricPlugin(name = "FlowLayoutItem")
 public class FlowLayoutItemNode extends StackNode {
     public String identifier = "";
-    public boolean fullSpan = false;
+    public Boolean fullSpan = null;
 
     public FlowLayoutItemNode(DoricContext doricContext) {
         super(doricContext);

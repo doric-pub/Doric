@@ -70,23 +70,20 @@ class FlowAdapter extends RecyclerView.Adapter<FlowAdapter.DoricViewHolder> {
             holder.flowLayoutItemNode.blend(jsObject.getProperty("props").asObject());
         }
         if ((this.flowLayoutNode.hasHeader() && position == 0)
-                || (this.flowLayoutNode.hasFooter() && position == this.getItemCount() - 1)) {
+                || (this.flowLayoutNode.hasFooter() && position == this.getItemCount() - 1)
+                || this.flowLayoutNode.loadMore
+                && position == this.itemCount + (this.flowLayoutNode.hasHeader() ? 1 : 0)) {
             StaggeredGridLayoutManager.LayoutParams layoutParams = new StaggeredGridLayoutManager.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     holder.itemView.getLayoutParams().height
             );
             layoutParams.setFullSpan(true);
             holder.itemView.setLayoutParams(layoutParams);
-        } else if (this.flowLayoutNode.loadMore
+        }
+        if (this.flowLayoutNode.loadMore
                 && position == this.itemCount + (this.flowLayoutNode.hasHeader() ? 1 : 0)
                 && !TextUtils.isEmpty(this.flowLayoutNode.onLoadMoreFuncId)) {
             callLoadMore();
-            StaggeredGridLayoutManager.LayoutParams layoutParams = new StaggeredGridLayoutManager.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    holder.itemView.getLayoutParams().height
-            );
-            layoutParams.setFullSpan(true);
-            holder.itemView.setLayoutParams(layoutParams);
         }
     }
 

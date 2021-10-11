@@ -168,7 +168,8 @@
             && position == self.itemCount
             + (self.loadMore ? 1 : 0)
             + (self.hasHeader ? 1 : 0)
-            + (self.hasFooter ? 1 : 0)) {
+            + (self.hasFooter ? 1 : 0)
+            - 1) {
         reuseId = @"doricFooterCell";
     } else if (self.loadMore
             && position == self.itemCount + (self.hasHeader ? 1 : 0)
@@ -269,8 +270,12 @@
             - 1) {
         return [self subModelOf:self.footerViewId];
     }
-    if (position >= self.itemCount + (self.hasHeader ? 1 : 0)) {
-        return [self subModelOf:self.loadMoreViewId];
+    if (self.loadMore && position >= self.itemCount + (self.hasHeader ? 1 : 0)) {
+        if (self.loadMoreViewId && self.loadMoreViewId.length > 0) {
+            return [self subModelOf:self.loadMoreViewId];
+        } else {
+            return nil;
+        }
     }
     if (self.hasHeader) {
         position--;

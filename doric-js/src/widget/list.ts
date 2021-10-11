@@ -35,6 +35,12 @@ export class ListItem extends Stack {
     }[]
 }
 
+export enum OtherItems {
+    LoadMore = -10,
+    Header = -11,
+    Footer = -12,
+}
+
 export class List extends Superview {
     private cachedViews: Map<string, ListItem> = new Map
 
@@ -96,6 +102,20 @@ export class List extends Superview {
     scrollToItem(context: BridgeContext, index: number, config?: { animated?: boolean, }) {
         const animated = config?.animated
         return this.nativeChannel(context, 'scrollToItem')({ index, animated, }) as Promise<any>
+    }
+    /**
+     * @param context 
+     * @returns Returns the range of the visible views.
+     */
+    findVisibleItems(context: BridgeContext) {
+        return this.nativeChannel(context, 'findVisibleItems')() as Promise<{ first: number, last: number }>
+    }
+    /**
+     * @param context 
+     * @returns Returns the range of the completely visible views.
+     */
+    findCompletelyVisibleItems(context: BridgeContext) {
+        return this.nativeChannel(context, 'findCompletelyVisibleItems')() as Promise<{ first: number, last: number }>
     }
 
     reset() {

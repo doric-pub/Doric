@@ -1,4 +1,5 @@
 import { Group, Panel, flowlayout, layoutConfig, FlowLayoutItem, text, Color, LayoutSpec, Gravity, flowItem, image } from "doric";
+import { loge } from "doric/lib/src/util/log";
 import { colors, label } from "./utils";
 
 const imageUrls = [
@@ -33,6 +34,10 @@ class FlowDemo extends Panel {
                         backgroundColor: colors[idx % colors.length],
                         height: 50 + (idx % 3) * 20,
                         layoutConfig: layoutConfig().configWidth(LayoutSpec.MOST),
+                        onClick: async () => {
+                            const ret = await flowView.findCompletelyVisibleItems(context)
+                            loge(ret)
+                        }
                     }).also(it => {
                         if (idx == 15) {
                             it.fullSpan = true

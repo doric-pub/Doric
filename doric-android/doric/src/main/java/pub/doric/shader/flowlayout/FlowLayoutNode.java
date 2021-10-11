@@ -343,7 +343,7 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
     @DoricMethod
     public JSONArray findCompletelyVisibleItems() {
         int[] startPos = staggeredGridLayoutManager.findFirstCompletelyVisibleItemPositions(null);
-        int[] endPos = staggeredGridLayoutManager.findFirstCompletelyVisibleItemPositions(null);
+        int[] endPos = staggeredGridLayoutManager.findLastCompletelyVisibleItemPositions(null);
         JSONArray jsonArray = new JSONArray();
         for (int i = 0; i < staggeredGridLayoutManager.getSpanCount(); i++) {
             jsonArray.put(new JSONBuilder()

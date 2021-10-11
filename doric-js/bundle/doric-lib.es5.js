@@ -2316,6 +2316,12 @@ var ListItem = /** @class */ (function (_super) {
     ], ListItem.prototype, "actions", void 0);
     return ListItem;
 }(Stack));
+exports.OtherItems = void 0;
+(function (OtherItems) {
+    OtherItems[OtherItems["LoadMore"] = -10] = "LoadMore";
+    OtherItems[OtherItems["Header"] = -11] = "Header";
+    OtherItems[OtherItems["Footer"] = -12] = "Footer";
+})(exports.OtherItems || (exports.OtherItems = {}));
 var List = /** @class */ (function (_super) {
     __extends$c(List, _super);
     function List() {
@@ -2330,17 +2336,25 @@ var List = /** @class */ (function (_super) {
         if (this.loadMoreView) {
             ret.push(this.loadMoreView);
         }
-        if (this.header) {
-            ret.push(this.header);
-        }
-        if (this.footer) {
-            ret.push(this.footer);
-        }
         return ret;
     };
     List.prototype.scrollToItem = function (context, index, config) {
         var animated = config === null || config === void 0 ? void 0 : config.animated;
         return this.nativeChannel(context, 'scrollToItem')({ index: index, animated: animated, });
+    };
+    /**
+     * @param context
+     * @returns Returns the range of the visible views.
+     */
+    List.prototype.findVisibleItems = function (context) {
+        return this.nativeChannel(context, 'findVisibleItems')();
+    };
+    /**
+     * @param context
+     * @returns Returns the range of the completely visible views.
+     */
+    List.prototype.findCompletelyVisibleItems = function (context) {
+        return this.nativeChannel(context, 'findCompletelyVisibleItems')();
     };
     List.prototype.reset = function () {
         this.cachedViews.clear();
@@ -2362,12 +2376,6 @@ var List = /** @class */ (function (_super) {
     List.prototype.toModel = function () {
         if (this.loadMoreView) {
             this.dirtyProps['loadMoreView'] = this.loadMoreView.viewId;
-        }
-        if (this.header) {
-            this.dirtyProps['header'] = this.header.viewId;
-        }
-        if (this.footer) {
-            this.dirtyProps['footer'] = this.footer.viewId;
         }
         return _super.prototype.toModel.call(this);
     };
@@ -2415,14 +2423,6 @@ var List = /** @class */ (function (_super) {
         Property,
         __metadata$9("design:type", Boolean)
     ], List.prototype, "bounces", void 0);
-    __decorate$9([
-        Property,
-        __metadata$9("design:type", ListItem)
-    ], List.prototype, "header", void 0);
-    __decorate$9([
-        Property,
-        __metadata$9("design:type", ListItem)
-    ], List.prototype, "footer", void 0);
     return List;
 }(Superview));
 function list(config) {
@@ -2952,13 +2952,21 @@ var FlowLayout = /** @class */ (function (_super) {
         if (this.loadMoreView) {
             ret.push(this.loadMoreView);
         }
-        if (this.header) {
-            ret.push(this.header);
-        }
-        if (this.footer) {
-            ret.push(this.footer);
-        }
         return ret;
+    };
+    /**
+     * @param context
+     * @returns Returns the range of the visible views for each column.
+     */
+    FlowLayout.prototype.findVisibleItems = function (context) {
+        return this.nativeChannel(context, 'findVisibleItems')();
+    };
+    /**
+     * @param context
+     * @returns Returns the range of the completely visible views for each column.
+     */
+    FlowLayout.prototype.findCompletelyVisibleItems = function (context) {
+        return this.nativeChannel(context, 'findCompletelyVisibleItems')();
     };
     FlowLayout.prototype.reset = function () {
         this.cachedViews.clear();
@@ -2980,12 +2988,6 @@ var FlowLayout = /** @class */ (function (_super) {
     FlowLayout.prototype.toModel = function () {
         if (this.loadMoreView) {
             this.dirtyProps['loadMoreView'] = this.loadMoreView.viewId;
-        }
-        if (this.header) {
-            this.dirtyProps['header'] = this.header.viewId;
-        }
-        if (this.footer) {
-            this.dirtyProps['footer'] = this.footer.viewId;
         }
         return _super.prototype.toModel.call(this);
     };
@@ -3041,14 +3043,6 @@ var FlowLayout = /** @class */ (function (_super) {
         Property,
         __metadata$5("design:type", Boolean)
     ], FlowLayout.prototype, "bounces", void 0);
-    __decorate$5([
-        Property,
-        __metadata$5("design:type", FlowLayoutItem)
-    ], FlowLayout.prototype, "header", void 0);
-    __decorate$5([
-        Property,
-        __metadata$5("design:type", FlowLayoutItem)
-    ], FlowLayout.prototype, "footer", void 0);
     return FlowLayout;
 }(Superview));
 function flowlayout(config) {

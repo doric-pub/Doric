@@ -703,6 +703,11 @@ declare module 'doric/lib/src/widget/list' {
                     callback: () => void;
             }[];
     }
+    export enum OtherItems {
+            LoadMore = -10,
+            Header = -11,
+            Footer = -12
+    }
     export class List extends Superview {
             allSubviews(): ListItem[];
             itemCount: number;
@@ -725,11 +730,25 @@ declare module 'doric/lib/src/widget/list' {
                 * Take effect only on iOS
                 */
             bounces?: boolean;
-            header?: ListItem;
-            footer?: ListItem;
             scrollToItem(context: BridgeContext, index: number, config?: {
                     animated?: boolean;
             }): Promise<any>;
+            /**
+                * @param context
+                * @returns Returns the range of the visible views.
+                */
+            findVisibleItems(context: BridgeContext): Promise<{
+                    first: number;
+                    last: number;
+            }>;
+            /**
+                * @param context
+                * @returns Returns the range of the completely visible views.
+                */
+            findCompletelyVisibleItems(context: BridgeContext): Promise<{
+                    first: number;
+                    last: number;
+            }>;
             reset(): void;
             toModel(): NativeViewModel;
     }
@@ -830,6 +849,7 @@ declare module 'doric/lib/src/widget/refreshable' {
 declare module 'doric/lib/src/widget/flowlayout' {
     import { Stack } from 'doric/lib/src/widget/layouts';
     import { Superview, View, NativeViewModel } from 'doric/lib/src/ui/view';
+    import { BridgeContext } from "doric/lib/src/runtime/global";
     export class FlowLayoutItem extends Stack {
             /**
              * Set to reuse native view
@@ -837,6 +857,7 @@ declare module 'doric/lib/src/widget/flowlayout' {
             identifier?: string;
             /**
                 * When set to true, the item will layout using all span area.
+                * HeaderView, footerView or loadMoreView is always true by default.
                 */
             fullSpan?: boolean;
     }
@@ -864,8 +885,22 @@ declare module 'doric/lib/src/widget/flowlayout' {
                 * Take effect only on iOS
                 */
             bounces?: boolean;
-            header?: FlowLayoutItem;
-            footer?: FlowLayoutItem;
+            /**
+                * @param context
+                * @returns Returns the range of the visible views for each column.
+                */
+            findVisibleItems(context: BridgeContext): Promise<{
+                    first: number;
+                    last: number;
+            }[]>;
+            /**
+                * @param context
+                * @returns Returns the range of the completely visible views for each column.
+                */
+            findCompletelyVisibleItems(context: BridgeContext): Promise<{
+                    first: number;
+                    last: number;
+            }[]>;
             reset(): void;
             toModel(): NativeViewModel;
     }

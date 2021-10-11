@@ -167,8 +167,6 @@
 
 @property(nonatomic, copy) NSString *onLoadMoreFuncId;
 @property(nonatomic, copy) NSString *loadMoreViewId;
-@property(nonatomic, copy) NSString *headerViewId;
-@property(nonatomic, copy) NSString *footerViewId;
 @property(nonatomic, assign) BOOL loadMore;
 @property(nonatomic, strong) NSMutableSet <DoricDidScrollBlock> *didScrollBlocks;
 @property(nonatomic, copy) NSString *onScrollFuncId;
@@ -205,14 +203,6 @@
                     it.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
                 }
             }];
-}
-
-- (BOOL)hasHeader {
-    return self.headerViewId && self.headerViewId.length > 0;
-}
-
-- (BOOL)hasFooter {
-    return self.footerViewId && self.footerViewId.length > 0;
 }
 
 - (void)blendView:(UICollectionView *)view forPropName:(NSString *)name propValue:(id)prop {
@@ -254,35 +244,18 @@
         self.onScrollFuncId = prop;
     } else if ([@"onScrollEnd" isEqualToString:name]) {
         self.onScrollEndFuncId = prop;
-    } else if ([@"header" isEqualToString:name]) {
-        self.headerViewId = prop;
-    } else if ([@"footer" isEqualToString:name]) {
-        self.footerViewId = prop;
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }
 }
 
 - (NSDictionary *)itemModelAt:(NSUInteger)position {
-    if (self.hasHeader && position == 0) {
-        return [self subModelOf:self.headerViewId];
-    }
-    if (self.hasFooter && position == self.itemCount
-            + (self.loadMore ? 1 : 0)
-            + (self.hasHeader ? 1 : 0)
-            + (self.hasFooter ? 1 : 0)
-            - 1) {
-        return [self subModelOf:self.footerViewId];
-    }
-    if (self.loadMore && position >= self.itemCount + (self.hasHeader ? 1 : 0)) {
+    if (self.loadMore && position >= self.itemCount) {
         if (self.loadMoreViewId && self.loadMoreViewId.length > 0) {
             return [self subModelOf:self.loadMoreViewId];
         } else {
             return nil;
         }
-    }
-    if (self.hasHeader) {
-        position--;
     }
     NSString *viewId = self.itemViewIds[@(position)];
     if (viewId && viewId.length > 0) {
@@ -366,7 +339,7 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return self.itemCount + (self.loadMore ? 1 : 0) + (self.hasHeader ? 1 : 0) + (self.hasFooter ? 1 : 0);
+    return self.itemCount + (self.loadMore ? 1 : 0);
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -374,17 +347,8 @@
     NSDictionary *model = [self itemModelAt:position];
     NSDictionary *props = model[@"props"];
     NSString *identifier = props[@"identifier"] ?: @"doricCell";
-    if (self.hasHeader && position == 0) {
-        identifier = @"doricHeaderCell";
-    } else if (self.hasFooter
-            && position == self.itemCount
-            + (self.loadMore ? 1 : 0)
-            + (self.hasHeader ? 1 : 0)
-            + (self.hasFooter ? 1 : 0)
-            - 1) {
-        identifier = @"doricFooterCell";
-    } else if (self.loadMore
-            && position == self.itemCount + (self.hasHeader ? 1 : 0)
+    if (self.loadMore
+            && position >= self.itemCount
             && self.onLoadMoreFuncId) {
         identifier = @"doricLoadMoreCell";
         [self callLoadMore];
@@ -402,15 +366,7 @@
     node.viewId = model[@"id"];
     [node blend:props];
     BOOL fillWidth = [props[@"fullSpan"] boolValue]
-            || (self.hasHeader && position == 0)
-            || (self.hasFooter
-            && position == self.itemCount
-            + (self.loadMore ? 1 : 0)
-            + (self.hasHeader ? 1 : 0)
-            + (self.hasFooter ? 1 : 0)
-            - 1)
-            || (self.loadMore
-            && position == self.itemCount + (self.hasHeader ? 1 : 0));
+            || (self.loadMore && position >= self.itemCount);
     if (fillWidth) {
         node.view.width = collectionView.width;
     } else {
@@ -457,15 +413,7 @@
 
 - (BOOL)doricFlowLayoutItemFullSpan:(NSIndexPath *)indexPath {
     NSUInteger position = (NSUInteger) indexPath.row;
-    if ((self.hasHeader && position == 0)
-            || (self.hasFooter
-            && position == self.itemCount
-            + (self.loadMore ? 1 : 0)
-            + (self.hasHeader ? 1 : 0)
-            + (self.hasFooter ? 1 : 0)
-            - 1)
-            || (self.loadMore
-            && position == self.itemCount + (self.hasHeader ? 1 : 0))) {
+    if (self.loadMore && position >= self.itemCount) {
         return YES;
     } else {
         NSDictionary *model = [self itemModelAt:position];

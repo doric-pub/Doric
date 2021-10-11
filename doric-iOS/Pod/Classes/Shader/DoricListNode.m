@@ -53,8 +53,6 @@
 @property(nonatomic, copy) NSString *onLoadMoreFuncId;
 @property(nonatomic, copy) NSString *renderItemFuncId;
 @property(nonatomic, copy) NSString *loadMoreViewId;
-@property(nonatomic, copy) NSString *headerViewId;
-@property(nonatomic, copy) NSString *footerViewId;
 @property(nonatomic, assign) BOOL loadMore;
 @property(nonatomic, assign) NSUInteger loadAnchor;
 @property(nonatomic, strong) NSMutableSet <DoricDidScrollBlock> *didScrollBlocks;
@@ -95,14 +93,6 @@
     }];
 }
 
-- (BOOL)hasHeader {
-    return self.headerViewId && self.headerViewId.length > 0;
-}
-
-- (BOOL)hasFooter {
-    return self.footerViewId && self.footerViewId.length > 0;
-}
-
 - (void)blendView:(UITableView *)view forPropName:(NSString *)name propValue:(id)prop {
     if ([@"scrollable" isEqualToString:name]) {
         self.view.scrollEnabled = [prop boolValue];
@@ -136,17 +126,13 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [view scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[prop unsignedIntegerValue] inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
         });
-    } else if ([@"header" isEqualToString:name]) {
-        self.headerViewId = prop;
-    } else if ([@"footer" isEqualToString:name]) {
-        self.footerViewId = prop;
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.itemCount + (self.loadMore ? 1 : 0) + (self.hasHeader ? 1 : 0) + (self.hasFooter ? 1 : 0);
+    return self.itemCount + (self.loadMore ? 1 : 0);
 }
 
 - (void)callLoadMore {
@@ -162,17 +148,8 @@
     NSDictionary *props = model[@"props"];
     NSString *reuseId = props[@"identifier"];
     self.itemActions[@(position)] = props[@"actions"];
-    if (self.hasHeader && position == 0) {
-        reuseId = @"doricHeaderCell";
-    } else if (self.hasFooter
-            && position == self.itemCount
-            + (self.loadMore ? 1 : 0)
-            + (self.hasHeader ? 1 : 0)
-            + (self.hasFooter ? 1 : 0)
-            - 1) {
-        reuseId = @"doricFooterCell";
-    } else if (self.loadMore
-            && position == self.itemCount + (self.hasHeader ? 1 : 0)
+    if (self.loadMore
+            && position >= self.itemCount
             && self.onLoadMoreFuncId) {
         reuseId = @"doricLoadMoreCell";
         [self callLoadMore];
@@ -260,25 +237,12 @@
 }
 
 - (NSDictionary *)itemModelAt:(NSUInteger)position {
-    if (self.hasHeader && position == 0) {
-        return [self subModelOf:self.headerViewId];
-    }
-    if (self.hasFooter && position == self.itemCount
-            + (self.loadMore ? 1 : 0)
-            + (self.hasHeader ? 1 : 0)
-            + (self.hasFooter ? 1 : 0)
-            - 1) {
-        return [self subModelOf:self.footerViewId];
-    }
-    if (self.loadMore && position >= self.itemCount + (self.hasHeader ? 1 : 0)) {
+    if (self.loadMore && position >= self.itemCount) {
         if (self.loadMoreViewId && self.loadMoreViewId.length > 0) {
             return [self subModelOf:self.loadMoreViewId];
         } else {
             return nil;
         }
-    }
-    if (self.hasHeader) {
-        position--;
     }
     NSString *viewId = self.itemViewIds[@(position)];
     if (viewId && viewId.length > 0) {

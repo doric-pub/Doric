@@ -1,5 +1,6 @@
 import { Stack } from './layouts';
 import { Superview, View, NativeViewModel } from '../ui/view';
+import { BridgeContext } from "../runtime/global";
 export declare class FlowLayoutItem extends Stack {
     /**
     * Set to reuse native view
@@ -7,6 +8,7 @@ export declare class FlowLayoutItem extends Stack {
     identifier?: string;
     /**
      * When set to true, the item will layout using all span area.
+     * HeaderView, footerView or loadMoreView is always true by default.
      */
     fullSpan?: boolean;
 }
@@ -35,8 +37,22 @@ export declare class FlowLayout extends Superview {
      * Take effect only on iOS
      */
     bounces?: boolean;
-    header?: FlowLayoutItem;
-    footer?: FlowLayoutItem;
+    /**
+     * @param context
+     * @returns Returns the range of the visible views for each column.
+     */
+    findVisibleItems(context: BridgeContext): Promise<{
+        first: number;
+        last: number;
+    }[]>;
+    /**
+     * @param context
+     * @returns Returns the range of the completely visible views for each column.
+     */
+    findCompletelyVisibleItems(context: BridgeContext): Promise<{
+        first: number;
+        last: number;
+    }[]>;
     reset(): void;
     private getItem;
     private renderBunchedItems;

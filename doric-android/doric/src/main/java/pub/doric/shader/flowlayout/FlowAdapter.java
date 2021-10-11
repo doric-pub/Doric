@@ -40,8 +40,6 @@ import pub.doric.shader.ViewNode;
  */
 class FlowAdapter extends RecyclerView.Adapter<FlowAdapter.DoricViewHolder> {
     private static final int TYPE_LOAD_MORE = -1;
-    private static final int TYPE_HEADER = -2;
-    private static final int TYPE_FOOTER = -3;
     private final FlowLayoutNode flowLayoutNode;
     String renderItemFuncId;
     int itemCount = 0;
@@ -70,10 +68,8 @@ class FlowAdapter extends RecyclerView.Adapter<FlowAdapter.DoricViewHolder> {
             holder.flowLayoutItemNode.blend(jsObject.getProperty("props").asObject());
         }
         if (holder.flowLayoutItemNode.fullSpan
-                || (this.flowLayoutNode.hasHeader() && position == 0)
-                || (this.flowLayoutNode.hasFooter() && position == this.getItemCount() - 1)
                 || this.flowLayoutNode.loadMore
-                && position == this.itemCount + (this.flowLayoutNode.hasHeader() ? 1 : 0)) {
+                && position >= this.itemCount) {
             StaggeredGridLayoutManager.LayoutParams layoutParams = new StaggeredGridLayoutManager.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     holder.itemView.getLayoutParams().height
@@ -82,7 +78,7 @@ class FlowAdapter extends RecyclerView.Adapter<FlowAdapter.DoricViewHolder> {
             holder.itemView.setLayoutParams(layoutParams);
         }
         if (this.flowLayoutNode.loadMore
-                && position == this.itemCount + (this.flowLayoutNode.hasHeader() ? 1 : 0)
+                && position >= this.itemCount
                 && !TextUtils.isEmpty(this.flowLayoutNode.onLoadMoreFuncId)) {
             callLoadMore();
         }
@@ -90,23 +86,12 @@ class FlowAdapter extends RecyclerView.Adapter<FlowAdapter.DoricViewHolder> {
 
     @Override
     public int getItemCount() {
-        return this.itemCount
-                + (this.flowLayoutNode.loadMore ? 1 : 0)
-                + (this.flowLayoutNode.hasHeader() ? 1 : 0)
-                + (this.flowLayoutNode.hasFooter() ? 1 : 0);
+        return this.itemCount + (this.flowLayoutNode.loadMore ? 1 : 0);
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (this.flowLayoutNode.hasHeader() && position == 0) {
-            return TYPE_HEADER;
-        }
-
-        if (this.flowLayoutNode.hasFooter() && position == this.getItemCount() - 1) {
-            return TYPE_FOOTER;
-        }
-
-        if (position >= this.itemCount + (this.flowLayoutNode.hasHeader() ? 1 : 0)) {
+        if (position >= this.itemCount) {
             return TYPE_LOAD_MORE;
         }
         JSValue value = getItemModel(position);
@@ -119,19 +104,8 @@ class FlowAdapter extends RecyclerView.Adapter<FlowAdapter.DoricViewHolder> {
     }
 
     private JSValue getItemModel(int position) {
-        if (this.flowLayoutNode.hasHeader() && position == 0) {
-            return this.flowLayoutNode.getSubModel(this.flowLayoutNode.headerViewId);
-        }
-
-        if (this.flowLayoutNode.hasFooter() && position == this.getItemCount() - 1) {
-            return this.flowLayoutNode.getSubModel(this.flowLayoutNode.footerViewId);
-        }
-
-        if (position >= this.itemCount + (this.flowLayoutNode.hasHeader() ? 1 : 0)) {
+        if (position >= this.itemCount) {
             return this.flowLayoutNode.getSubModel(this.flowLayoutNode.loadMoreViewId);
-        }
-        if (this.flowLayoutNode.hasHeader()) {
-            position--;
         }
         String id = itemValues.get(position);
         if (TextUtils.isEmpty(id)) {

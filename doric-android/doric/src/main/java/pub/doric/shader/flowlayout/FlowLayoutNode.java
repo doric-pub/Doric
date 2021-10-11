@@ -332,21 +332,6 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
     }
 
     private int calibratePosition(int position) {
-        if (hasHeader() && position == 0) {
-            return -11;
-        }
-        if (hasFooter() && position == this.itemCount
-                + (this.loadMore ? 1 : 0)
-                + (this.hasHeader() ? 1 : 0)
-                + (this.hasFooter() ? 1 : 0) - 1) {
-            return -12;
-        }
-        if (position >= this.itemCount + (this.hasHeader() ? 1 : 0)) {
-            return -10;
-        }
-        if (this.hasHeader()) {
-            return position - 1;
-        }
         return position;
     }
 
@@ -376,13 +361,5 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
                     .toJSONObject());
         }
         return jsonArray;
-    }
-
-    boolean hasHeader() {
-        return !TextUtils.isEmpty(this.headerViewId);
-    }
-
-    boolean hasFooter() {
-        return !TextUtils.isEmpty(this.footerViewId);
     }
 }

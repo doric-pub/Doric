@@ -1739,6 +1739,12 @@ __decorate$9([
     Property,
     __metadata$9("design:type", Array)
 ], ListItem.prototype, "actions", void 0);
+exports.OtherItems = void 0;
+(function (OtherItems) {
+    OtherItems[OtherItems["LoadMore"] = -10] = "LoadMore";
+    OtherItems[OtherItems["Header"] = -11] = "Header";
+    OtherItems[OtherItems["Footer"] = -12] = "Footer";
+})(exports.OtherItems || (exports.OtherItems = {}));
 class List extends Superview {
     constructor() {
         super(...arguments);
@@ -1751,17 +1757,25 @@ class List extends Superview {
         if (this.loadMoreView) {
             ret.push(this.loadMoreView);
         }
-        if (this.header) {
-            ret.push(this.header);
-        }
-        if (this.footer) {
-            ret.push(this.footer);
-        }
         return ret;
     }
     scrollToItem(context, index, config) {
         const animated = config === null || config === void 0 ? void 0 : config.animated;
         return this.nativeChannel(context, 'scrollToItem')({ index, animated, });
+    }
+    /**
+     * @param context
+     * @returns Returns the range of the visible views.
+     */
+    findVisibleItems(context) {
+        return this.nativeChannel(context, 'findVisibleItems')();
+    }
+    /**
+     * @param context
+     * @returns Returns the range of the completely visible views.
+     */
+    findCompletelyVisibleItems(context) {
+        return this.nativeChannel(context, 'findCompletelyVisibleItems')();
     }
     reset() {
         this.cachedViews.clear();
@@ -1782,12 +1796,6 @@ class List extends Superview {
     toModel() {
         if (this.loadMoreView) {
             this.dirtyProps['loadMoreView'] = this.loadMoreView.viewId;
-        }
-        if (this.header) {
-            this.dirtyProps['header'] = this.header.viewId;
-        }
-        if (this.footer) {
-            this.dirtyProps['footer'] = this.footer.viewId;
         }
         return super.toModel();
     }
@@ -1836,14 +1844,6 @@ __decorate$9([
     Property,
     __metadata$9("design:type", Boolean)
 ], List.prototype, "bounces", void 0);
-__decorate$9([
-    Property,
-    __metadata$9("design:type", ListItem)
-], List.prototype, "header", void 0);
-__decorate$9([
-    Property,
-    __metadata$9("design:type", ListItem)
-], List.prototype, "footer", void 0);
 function list(config) {
     const ret = new List;
     ret.apply(config);
@@ -2228,13 +2228,21 @@ class FlowLayout extends Superview {
         if (this.loadMoreView) {
             ret.push(this.loadMoreView);
         }
-        if (this.header) {
-            ret.push(this.header);
-        }
-        if (this.footer) {
-            ret.push(this.footer);
-        }
         return ret;
+    }
+    /**
+     * @param context
+     * @returns Returns the range of the visible views for each column.
+     */
+    findVisibleItems(context) {
+        return this.nativeChannel(context, 'findVisibleItems')();
+    }
+    /**
+     * @param context
+     * @returns Returns the range of the completely visible views for each column.
+     */
+    findCompletelyVisibleItems(context) {
+        return this.nativeChannel(context, 'findCompletelyVisibleItems')();
     }
     reset() {
         this.cachedViews.clear();
@@ -2255,12 +2263,6 @@ class FlowLayout extends Superview {
     toModel() {
         if (this.loadMoreView) {
             this.dirtyProps['loadMoreView'] = this.loadMoreView.viewId;
-        }
-        if (this.header) {
-            this.dirtyProps['header'] = this.header.viewId;
-        }
-        if (this.footer) {
-            this.dirtyProps['footer'] = this.footer.viewId;
         }
         return super.toModel();
     }
@@ -2317,14 +2319,6 @@ __decorate$5([
     Property,
     __metadata$5("design:type", Boolean)
 ], FlowLayout.prototype, "bounces", void 0);
-__decorate$5([
-    Property,
-    __metadata$5("design:type", FlowLayoutItem)
-], FlowLayout.prototype, "header", void 0);
-__decorate$5([
-    Property,
-    __metadata$5("design:type", FlowLayoutItem)
-], FlowLayout.prototype, "footer", void 0);
 function flowlayout(config) {
     const ret = new FlowLayout;
     for (let key in config) {

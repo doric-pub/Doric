@@ -13,6 +13,11 @@ export declare class ListItem extends Stack {
         callback: () => void;
     }[];
 }
+export declare enum OtherItems {
+    LoadMore = -10,
+    Header = -11,
+    Footer = -12
+}
 export declare class List extends Superview {
     private cachedViews;
     allSubviews(): ListItem[];
@@ -36,11 +41,25 @@ export declare class List extends Superview {
      * Take effect only on iOS
      */
     bounces?: boolean;
-    header?: ListItem;
-    footer?: ListItem;
     scrollToItem(context: BridgeContext, index: number, config?: {
         animated?: boolean;
     }): Promise<any>;
+    /**
+     * @param context
+     * @returns Returns the range of the visible views.
+     */
+    findVisibleItems(context: BridgeContext): Promise<{
+        first: number;
+        last: number;
+    }>;
+    /**
+     * @param context
+     * @returns Returns the range of the completely visible views.
+     */
+    findCompletelyVisibleItems(context: BridgeContext): Promise<{
+        first: number;
+        last: number;
+    }>;
     reset(): void;
     private getItem;
     private renderBunchedItems;

@@ -21,14 +21,6 @@ class FlowDemo extends Panel {
             columnCount: 3,
             columnSpace: 10,
             rowSpace: 10,
-            header: flowItem(image({
-                layoutConfig: layoutConfig().mostWidth().fitHeight(),
-                imageUrl: imageUrls[0]
-            })),
-            footer: flowItem(image({
-                layoutConfig: layoutConfig().mostWidth().fitHeight(),
-                imageUrl: imageUrls[1]
-            })),
             renderItem: (idx) => {
                 return flowItem(
                     text({

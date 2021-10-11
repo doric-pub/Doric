@@ -23,6 +23,12 @@ export class FlowLayoutItem extends Stack {
     */
     @Property
     identifier?: string
+    /**
+     * When set to true, the item will layout using all span area. 
+     * HeaderView, footerView or loadMoreView is always true by default.
+     */
+    @Property
+    fullSpan?: boolean
 }
 
 export class FlowLayout extends Superview {

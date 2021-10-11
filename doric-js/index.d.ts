@@ -835,6 +835,10 @@ declare module 'doric/lib/src/widget/flowlayout' {
              * Set to reuse native view
              */
             identifier?: string;
+            /**
+                * When set to true, the item will layout using all span area.
+                */
+            fullSpan?: boolean;
     }
     export class FlowLayout extends Superview {
             allSubviews(): FlowLayoutItem[];

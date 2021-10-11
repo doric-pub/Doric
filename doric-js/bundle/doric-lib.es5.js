@@ -2931,6 +2931,10 @@ var FlowLayoutItem = /** @class */ (function (_super) {
         Property,
         __metadata$5("design:type", String)
     ], FlowLayoutItem.prototype, "identifier", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", Boolean)
+    ], FlowLayoutItem.prototype, "fullSpan", void 0);
     return FlowLayoutItem;
 }(Stack));
 var FlowLayout = /** @class */ (function (_super) {

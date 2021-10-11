@@ -31,6 +31,10 @@ __decorate([
     Property,
     __metadata("design:type", String)
 ], FlowLayoutItem.prototype, "identifier", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Boolean)
+], FlowLayoutItem.prototype, "fullSpan", void 0);
 export class FlowLayout extends Superview {
     constructor() {
         super(...arguments);

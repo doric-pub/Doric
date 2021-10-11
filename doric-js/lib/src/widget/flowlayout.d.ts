@@ -5,6 +5,10 @@ export declare class FlowLayoutItem extends Stack {
     * Set to reuse native view
     */
     identifier?: string;
+    /**
+     * When set to true, the item will layout using all span area.
+     */
+    fullSpan?: boolean;
 }
 export declare class FlowLayout extends Superview {
     private cachedViews;

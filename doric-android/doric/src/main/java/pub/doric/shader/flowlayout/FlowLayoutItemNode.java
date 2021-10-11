@@ -32,6 +32,7 @@ import pub.doric.shader.StackNode;
 @DoricPlugin(name = "FlowLayoutItem")
 public class FlowLayoutItemNode extends StackNode {
     public String identifier = "";
+    public boolean fullSpan = false;
 
     public FlowLayoutItemNode(DoricContext doricContext) {
         super(doricContext);
@@ -42,6 +43,8 @@ public class FlowLayoutItemNode extends StackNode {
     protected void blend(FrameLayout view, String name, JSValue prop) {
         if ("identifier".equals(name)) {
             this.identifier = prop.asString().value();
+        } else if ("fullSpan".equals(name)) {
+            this.fullSpan = prop.asBoolean().value();
         } else {
             super.blend(view, name, prop);
         }

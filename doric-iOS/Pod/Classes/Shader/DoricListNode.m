@@ -171,7 +171,6 @@
             + (self.hasFooter ? 1 : 0)) {
         reuseId = @"doricFooterCell";
     } else if (self.loadMore
-            && position > 0
             && position == self.itemCount + (self.hasHeader ? 1 : 0)
             && self.onLoadMoreFuncId) {
         reuseId = @"doricLoadMoreCell";

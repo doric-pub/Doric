@@ -29,11 +29,17 @@ export class FlowLayout extends Superview {
     private cachedViews: Map<string, FlowLayoutItem> = new Map
 
     allSubviews() {
+        const ret = [...this.cachedViews.values()]
         if (this.loadMoreView) {
-            return [...this.cachedViews.values(), this.loadMoreView]
-        } else {
-            return this.cachedViews.values()
+            ret.push(this.loadMoreView)
         }
+        if (this.header) {
+            ret.push(this.header)
+        }
+        if (this.footer) {
+            ret.push(this.footer)
+        }
+        return ret
     }
 
     @Property
@@ -77,6 +83,12 @@ export class FlowLayout extends Superview {
     @Property
     bounces?: boolean
 
+    @Property
+    header?: FlowLayoutItem
+
+    @Property
+    footer?: FlowLayoutItem
+
     reset() {
         this.cachedViews.clear()
         this.itemCount = 0
@@ -97,6 +109,12 @@ export class FlowLayout extends Superview {
     toModel(): NativeViewModel {
         if (this.loadMoreView) {
             this.dirtyProps['loadMoreView'] = this.loadMoreView.viewId
+        }
+        if (this.header) {
+            this.dirtyProps['header'] = this.header.viewId
+        }
+        if (this.footer) {
+            this.dirtyProps['footer'] = this.footer.viewId
         }
         return super.toModel()
     }

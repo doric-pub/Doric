@@ -1,4 +1,4 @@
-import { Group, Panel, flowlayout, layoutConfig, FlowLayoutItem, text, Color, LayoutSpec, Gravity, flowItem } from "doric";
+import { Group, Panel, flowlayout, layoutConfig, FlowLayoutItem, text, Color, LayoutSpec, Gravity, flowItem, image } from "doric";
 import { colors, label } from "./utils";
 
 const imageUrls = [
@@ -17,10 +17,18 @@ class FlowDemo extends Panel {
     build(rootView: Group) {
         const flowView = flowlayout({
             layoutConfig: layoutConfig().most(),
-            itemCount: 100,
+            itemCount: 20,
             columnCount: 3,
             columnSpace: 10,
             rowSpace: 10,
+            header: flowItem(image({
+                layoutConfig: layoutConfig().mostWidth().fitHeight(),
+                imageUrl: imageUrls[0]
+            })),
+            footer: flowItem(image({
+                layoutConfig: layoutConfig().mostWidth().fitHeight(),
+                imageUrl: imageUrls[1]
+            })),
             renderItem: (idx) => {
                 return flowItem(
                     text({
@@ -35,7 +43,7 @@ class FlowDemo extends Panel {
                         layoutConfig: layoutConfig().configWidth(LayoutSpec.MOST),
                     })
             },
-            loadMore: true,
+            loadMore: false,
             onLoadMore: () => {
                 setTimeout(() => {
                     flowView.itemCount += 20

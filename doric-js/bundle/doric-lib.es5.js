@@ -2944,12 +2944,17 @@ var FlowLayout = /** @class */ (function (_super) {
         return _this;
     }
     FlowLayout.prototype.allSubviews = function () {
+        var ret = __spreadArray([], __read(this.cachedViews.values()));
         if (this.loadMoreView) {
-            return __spreadArray(__spreadArray([], __read(this.cachedViews.values())), [this.loadMoreView]);
+            ret.push(this.loadMoreView);
         }
-        else {
-            return this.cachedViews.values();
+        if (this.header) {
+            ret.push(this.header);
         }
+        if (this.footer) {
+            ret.push(this.footer);
+        }
+        return ret;
     };
     FlowLayout.prototype.reset = function () {
         this.cachedViews.clear();
@@ -2971,6 +2976,12 @@ var FlowLayout = /** @class */ (function (_super) {
     FlowLayout.prototype.toModel = function () {
         if (this.loadMoreView) {
             this.dirtyProps['loadMoreView'] = this.loadMoreView.viewId;
+        }
+        if (this.header) {
+            this.dirtyProps['header'] = this.header.viewId;
+        }
+        if (this.footer) {
+            this.dirtyProps['footer'] = this.footer.viewId;
         }
         return _super.prototype.toModel.call(this);
     };
@@ -3026,6 +3037,14 @@ var FlowLayout = /** @class */ (function (_super) {
         Property,
         __metadata$5("design:type", Boolean)
     ], FlowLayout.prototype, "bounces", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", FlowLayoutItem)
+    ], FlowLayout.prototype, "header", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", FlowLayoutItem)
+    ], FlowLayout.prototype, "footer", void 0);
     return FlowLayout;
 }(Superview));
 function flowlayout(config) {

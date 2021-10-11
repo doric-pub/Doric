@@ -99,6 +99,9 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
     private int itemCount = 0;
     private boolean scrollable = true;
 
+    String headerViewId;
+    String footerViewId;
+
     public FlowLayoutNode(DoricContext doricContext) {
         super(doricContext);
         this.flowAdapter = new FlowAdapter(this);
@@ -205,6 +208,12 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
                     return;
                 }
                 this.onScrollEndFuncId = prop.asString().value();
+                break;
+            case "header":
+                this.headerViewId = prop.asString().value();
+                break;
+            case "footer":
+                this.footerViewId = prop.asString().value();
                 break;
             default:
                 super.blend(view, name, prop);
@@ -315,5 +324,13 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
     @Override
     public void removeScrollChangeListener(DoricScrollChangeListener listener) {
         listeners.remove(listener);
+    }
+
+    boolean hasHeader() {
+        return !TextUtils.isEmpty(this.headerViewId);
+    }
+
+    boolean hasFooter() {
+        return !TextUtils.isEmpty(this.footerViewId);
     }
 }

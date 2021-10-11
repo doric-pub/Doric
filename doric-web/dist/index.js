@@ -3795,12 +3795,17 @@ class FlowLayout extends Superview {
         this.batchCount = 15;
     }
     allSubviews() {
+        const ret = [...this.cachedViews.values()];
         if (this.loadMoreView) {
-            return [...this.cachedViews.values(), this.loadMoreView];
+            ret.push(this.loadMoreView);
         }
-        else {
-            return this.cachedViews.values();
+        if (this.header) {
+            ret.push(this.header);
         }
+        if (this.footer) {
+            ret.push(this.footer);
+        }
+        return ret;
     }
     reset() {
         this.cachedViews.clear();
@@ -3821,6 +3826,12 @@ class FlowLayout extends Superview {
     toModel() {
         if (this.loadMoreView) {
             this.dirtyProps['loadMoreView'] = this.loadMoreView.viewId;
+        }
+        if (this.header) {
+            this.dirtyProps['header'] = this.header.viewId;
+        }
+        if (this.footer) {
+            this.dirtyProps['footer'] = this.footer.viewId;
         }
         return super.toModel();
     }
@@ -3877,6 +3888,14 @@ __decorate$5([
     Property,
     __metadata$5("design:type", Boolean)
 ], FlowLayout.prototype, "bounces", void 0);
+__decorate$5([
+    Property,
+    __metadata$5("design:type", FlowLayoutItem)
+], FlowLayout.prototype, "header", void 0);
+__decorate$5([
+    Property,
+    __metadata$5("design:type", FlowLayoutItem)
+], FlowLayout.prototype, "footer", void 0);
 function flowlayout(config) {
     const ret = new FlowLayout;
     for (let key in config) {

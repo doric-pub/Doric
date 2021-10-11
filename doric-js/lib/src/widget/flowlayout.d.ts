@@ -8,7 +8,7 @@ export declare class FlowLayoutItem extends Stack {
 }
 export declare class FlowLayout extends Superview {
     private cachedViews;
-    allSubviews(): IterableIterator<FlowLayoutItem> | FlowLayoutItem[];
+    allSubviews(): FlowLayoutItem[];
     columnCount: number;
     columnSpace?: number;
     rowSpace?: number;
@@ -31,6 +31,8 @@ export declare class FlowLayout extends Superview {
      * Take effect only on iOS
      */
     bounces?: boolean;
+    header?: FlowLayoutItem;
+    footer?: FlowLayoutItem;
     reset(): void;
     private getItem;
     private renderBunchedItems;

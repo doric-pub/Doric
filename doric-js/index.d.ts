@@ -832,7 +832,7 @@ declare module 'doric/lib/src/widget/flowlayout' {
             identifier?: string;
     }
     export class FlowLayout extends Superview {
-            allSubviews(): IterableIterator<FlowLayoutItem> | FlowLayoutItem[];
+            allSubviews(): FlowLayoutItem[];
             columnCount: number;
             columnSpace?: number;
             rowSpace?: number;
@@ -855,6 +855,8 @@ declare module 'doric/lib/src/widget/flowlayout' {
                 * Take effect only on iOS
                 */
             bounces?: boolean;
+            header?: FlowLayoutItem;
+            footer?: FlowLayoutItem;
             reset(): void;
             toModel(): NativeViewModel;
     }

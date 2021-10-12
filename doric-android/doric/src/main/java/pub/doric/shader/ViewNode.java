@@ -179,7 +179,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 if (!prop.isNumber()) {
                     return;
                 }
-                if (isAnimating()) {
+                if (isInAnimator()) {
                     addAnimator(ObjectAnimator.ofFloat(
                             this,
                             name,
@@ -193,7 +193,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 if (!prop.isNumber()) {
                     return;
                 }
-                if (isAnimating()) {
+                if (isInAnimator()) {
                     addAnimator(ObjectAnimator.ofFloat(
                             this,
                             name,
@@ -207,7 +207,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 if (!prop.isNumber()) {
                     return;
                 }
-                if (isAnimating()) {
+                if (isInAnimator()) {
                     addAnimator(ObjectAnimator.ofFloat(
                             this,
                             name,
@@ -221,7 +221,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 if (!prop.isNumber()) {
                     return;
                 }
-                if (isAnimating()) {
+                if (isInAnimator()) {
                     addAnimator(ObjectAnimator.ofFloat(
                             this,
                             name,
@@ -232,7 +232,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 }
                 break;
             case "backgroundColor":
-                if (isAnimating()) {
+                if (isInAnimator()) {
                     if (prop.isNumber()) {
                         ObjectAnimator animator = ObjectAnimator.ofInt(
                                 this,
@@ -343,7 +343,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 if (!prop.isNumber()) {
                     return;
                 }
-                if (isAnimating()) {
+                if (isInAnimator()) {
                     addAnimator(ObjectAnimator.ofFloat(
                             this,
                             name,
@@ -355,7 +355,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 break;
             case "corners":
                 if (prop.isNumber()) {
-                    if (isAnimating()) {
+                    if (isInAnimator()) {
                         addAnimator(ObjectAnimator.ofFloat(
                                 this,
                                 name,
@@ -392,7 +392,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 if (!prop.isNumber()) {
                     return;
                 }
-                if (isAnimating()) {
+                if (isInAnimator()) {
                     addAnimator(ObjectAnimator.ofFloat(
                             this,
                             name,
@@ -406,7 +406,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 if (!prop.isNumber()) {
                     return;
                 }
-                if (isAnimating()) {
+                if (isInAnimator()) {
                     addAnimator(ObjectAnimator.ofFloat(
                             this,
                             name,
@@ -420,7 +420,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 if (!prop.isNumber()) {
                     return;
                 }
-                if (isAnimating()) {
+                if (isInAnimator()) {
                     addAnimator(ObjectAnimator.ofFloat(
                             this,
                             name,
@@ -434,7 +434,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 if (!prop.isNumber()) {
                     return;
                 }
-                if (isAnimating()) {
+                if (isInAnimator()) {
                     addAnimator(ObjectAnimator.ofFloat(
                             this,
                             name,
@@ -448,7 +448,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 if (!prop.isNumber()) {
                     return;
                 }
-                if (isAnimating()) {
+                if (isInAnimator()) {
                     addAnimator(ObjectAnimator.ofFloat(
                             this,
                             name,
@@ -462,7 +462,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 if (!prop.isNumber()) {
                     return;
                 }
-                if (isAnimating()) {
+                if (isInAnimator()) {
                     addAnimator(ObjectAnimator.ofFloat(
                             this,
                             name,
@@ -476,7 +476,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 if (!prop.isNumber()) {
                     return;
                 }
-                if (isAnimating()) {
+                if (isInAnimator()) {
                     addAnimator(ObjectAnimator.ofFloat(
                             this,
                             name,
@@ -490,7 +490,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 if (!prop.isNumber()) {
                     return;
                 }
-                if (isAnimating()) {
+                if (isInAnimator()) {
                     addAnimator(ObjectAnimator.ofFloat(
                             this,
                             name,
@@ -504,7 +504,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 if (!prop.isNumber()) {
                     return;
                 }
-                if (isAnimating()) {
+                if (isInAnimator()) {
                     addAnimator(ObjectAnimator.ofFloat(
                             this,
                             name,
@@ -723,7 +723,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         }
     }
 
-    protected boolean isAnimating() {
+    protected boolean isInAnimator() {
         return getDoricContext().getAnimatorSet() != null;
     }
 

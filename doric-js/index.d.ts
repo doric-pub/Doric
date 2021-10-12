@@ -703,11 +703,6 @@ declare module 'doric/lib/src/widget/list' {
                     callback: () => void;
             }[];
     }
-    export enum OtherItems {
-            LoadMore = -10,
-            Header = -11,
-            Footer = -12
-    }
     export class List extends Superview {
             allSubviews(): ListItem[];
             itemCount: number;
@@ -735,20 +730,14 @@ declare module 'doric/lib/src/widget/list' {
             }): Promise<any>;
             /**
                 * @param context
-                * @returns Returns the range of the visible views.
+                * @returns Returns array of visible view's index.
                 */
-            findVisibleItems(context: BridgeContext): Promise<{
-                    first: number;
-                    last: number;
-            }>;
+            findVisibleItems(context: BridgeContext): Promise<number[]>;
             /**
                 * @param context
-                * @returns Returns the range of the completely visible views.
+                * @returns Returns array of completely visible view's index.
                 */
-            findCompletelyVisibleItems(context: BridgeContext): Promise<{
-                    first: number;
-                    last: number;
-            }>;
+            findCompletelyVisibleItems(context: BridgeContext): Promise<number[]>;
             reset(): void;
             toModel(): NativeViewModel;
     }
@@ -887,20 +876,14 @@ declare module 'doric/lib/src/widget/flowlayout' {
             bounces?: boolean;
             /**
                 * @param context
-                * @returns Returns the range of the visible views for each column.
+                * @returns Returns array of visible view's index.
                 */
-            findVisibleItems(context: BridgeContext): Promise<{
-                    first: number;
-                    last: number;
-            }[]>;
+            findVisibleItems(context: BridgeContext): Promise<number[]>;
             /**
                 * @param context
-                * @returns Returns the range of the completely visible views for each column.
+                * @returns Returns array of completely visible view's index.
                 */
-            findCompletelyVisibleItems(context: BridgeContext): Promise<{
-                    first: number;
-                    last: number;
-            }[]>;
+            findCompletelyVisibleItems(context: BridgeContext): Promise<number[]>;
             reset(): void;
             toModel(): NativeViewModel;
     }

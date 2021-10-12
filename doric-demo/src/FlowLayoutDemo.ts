@@ -41,6 +41,7 @@ class FlowDemo extends Panel {
                     }).also(it => {
                         if (idx == 15) {
                             it.fullSpan = true
+                            it.identifier = "fullSpan"
                         }
                     })
             },
@@ -62,7 +63,14 @@ class FlowDemo extends Panel {
                     height: 50,
                     fullSpan: true,
                     layoutConfig: layoutConfig().configWidth(LayoutSpec.MOST),
-                })
+                }),
+            onScrollEnd: async () => {
+                const ret = await flowView.findCompletelyVisibleItems(context)
+                loge('completelyVisible Items is:', ret)
+
+                const ret2 = await flowView.findVisibleItems(context)
+                loge('visible Items is:', ret2)
+            }
         }).in(rootView)
 
     }

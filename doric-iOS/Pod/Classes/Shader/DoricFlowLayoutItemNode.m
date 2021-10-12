@@ -31,4 +31,11 @@
     [super initWithSuperNode:superNode];
     self.reusable = YES;
 }
+
+- (void)blendView:(UIView *)view forPropName:(NSString *)name propValue:(id)prop {
+    if ([@"identifier" isEqualToString:name] || [@"fullSpan" isEqualToString:name]) {
+    } else {
+        [super blendView:view forPropName:name propValue:prop];
+    }
+}
 @end

@@ -39,20 +39,14 @@ export declare class FlowLayout extends Superview {
     bounces?: boolean;
     /**
      * @param context
-     * @returns Returns the range of the visible views for each column.
+     * @returns Returns array of visible view's index.
      */
-    findVisibleItems(context: BridgeContext): Promise<{
-        first: number;
-        last: number;
-    }[]>;
+    findVisibleItems(context: BridgeContext): Promise<number[]>;
     /**
      * @param context
-     * @returns Returns the range of the completely visible views for each column.
+     * @returns Returns array of completely visible view's index.
      */
-    findCompletelyVisibleItems(context: BridgeContext): Promise<{
-        first: number;
-        last: number;
-    }[]>;
+    findCompletelyVisibleItems(context: BridgeContext): Promise<number[]>;
     reset(): void;
     private getItem;
     private renderBunchedItems;

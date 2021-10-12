@@ -2316,12 +2316,6 @@ var ListItem = /** @class */ (function (_super) {
     ], ListItem.prototype, "actions", void 0);
     return ListItem;
 }(Stack));
-exports.OtherItems = void 0;
-(function (OtherItems) {
-    OtherItems[OtherItems["LoadMore"] = -10] = "LoadMore";
-    OtherItems[OtherItems["Header"] = -11] = "Header";
-    OtherItems[OtherItems["Footer"] = -12] = "Footer";
-})(exports.OtherItems || (exports.OtherItems = {}));
 var List = /** @class */ (function (_super) {
     __extends$c(List, _super);
     function List() {
@@ -2344,14 +2338,14 @@ var List = /** @class */ (function (_super) {
     };
     /**
      * @param context
-     * @returns Returns the range of the visible views.
+     * @returns Returns array of visible view's index.
      */
     List.prototype.findVisibleItems = function (context) {
         return this.nativeChannel(context, 'findVisibleItems')();
     };
     /**
      * @param context
-     * @returns Returns the range of the completely visible views.
+     * @returns Returns array of completely visible view's index.
      */
     List.prototype.findCompletelyVisibleItems = function (context) {
         return this.nativeChannel(context, 'findCompletelyVisibleItems')();
@@ -2956,14 +2950,14 @@ var FlowLayout = /** @class */ (function (_super) {
     };
     /**
      * @param context
-     * @returns Returns the range of the visible views for each column.
+     * @returns Returns array of visible view's index.
      */
     FlowLayout.prototype.findVisibleItems = function (context) {
         return this.nativeChannel(context, 'findVisibleItems')();
     };
     /**
      * @param context
-     * @returns Returns the range of the completely visible views for each column.
+     * @returns Returns array of completely visible view's index.
      */
     FlowLayout.prototype.findCompletelyVisibleItems = function (context) {
         return this.nativeChannel(context, 'findCompletelyVisibleItems')();

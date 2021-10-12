@@ -1739,12 +1739,6 @@ __decorate$9([
     Property,
     __metadata$9("design:type", Array)
 ], ListItem.prototype, "actions", void 0);
-exports.OtherItems = void 0;
-(function (OtherItems) {
-    OtherItems[OtherItems["LoadMore"] = -10] = "LoadMore";
-    OtherItems[OtherItems["Header"] = -11] = "Header";
-    OtherItems[OtherItems["Footer"] = -12] = "Footer";
-})(exports.OtherItems || (exports.OtherItems = {}));
 class List extends Superview {
     constructor() {
         super(...arguments);
@@ -1765,14 +1759,14 @@ class List extends Superview {
     }
     /**
      * @param context
-     * @returns Returns the range of the visible views.
+     * @returns Returns array of visible view's index.
      */
     findVisibleItems(context) {
         return this.nativeChannel(context, 'findVisibleItems')();
     }
     /**
      * @param context
-     * @returns Returns the range of the completely visible views.
+     * @returns Returns array of completely visible view's index.
      */
     findCompletelyVisibleItems(context) {
         return this.nativeChannel(context, 'findCompletelyVisibleItems')();
@@ -2232,14 +2226,14 @@ class FlowLayout extends Superview {
     }
     /**
      * @param context
-     * @returns Returns the range of the visible views for each column.
+     * @returns Returns array of visible view's index.
      */
     findVisibleItems(context) {
         return this.nativeChannel(context, 'findVisibleItems')();
     }
     /**
      * @param context
-     * @returns Returns the range of the completely visible views for each column.
+     * @returns Returns array of completely visible view's index.
      */
     findCompletelyVisibleItems(context) {
         return this.nativeChannel(context, 'findCompletelyVisibleItems')();

@@ -52,14 +52,14 @@ export class FlowLayout extends Superview {
     }
     /**
      * @param context
-     * @returns Returns the range of the visible views for each column.
+     * @returns Returns array of visible view's index.
      */
     findVisibleItems(context) {
         return this.nativeChannel(context, 'findVisibleItems')();
     }
     /**
      * @param context
-     * @returns Returns the range of the completely visible views for each column.
+     * @returns Returns array of completely visible view's index.
      */
     findCompletelyVisibleItems(context) {
         return this.nativeChannel(context, 'findCompletelyVisibleItems')();

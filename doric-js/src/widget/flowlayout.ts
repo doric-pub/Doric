@@ -86,17 +86,18 @@ export class FlowLayout extends Superview {
 
     /**
      * @param context 
-     * @returns Returns the range of the visible views for each column.
+     * @returns Returns array of visible view's index.
      */
     findVisibleItems(context: BridgeContext) {
-        return this.nativeChannel(context, 'findVisibleItems')() as Promise<{ first: number, last: number }[]>
+        return this.nativeChannel(context, 'findVisibleItems')() as Promise<number[]>
     }
+
     /**
      * @param context 
-     * @returns Returns the range of the completely visible views for each column.
+     * @returns Returns array of completely visible view's index.
      */
     findCompletelyVisibleItems(context: BridgeContext) {
-        return this.nativeChannel(context, 'findCompletelyVisibleItems')() as Promise<{ first: number, last: number }[]>
+        return this.nativeChannel(context, 'findCompletelyVisibleItems')() as Promise<number[]>
     }
 
 

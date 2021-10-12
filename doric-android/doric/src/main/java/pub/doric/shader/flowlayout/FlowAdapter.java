@@ -62,16 +62,20 @@ class FlowAdapter extends RecyclerView.Adapter<FlowAdapter.DoricViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull DoricViewHolder holder, int position) {
         JSValue jsValue = getItemModel(position);
+        boolean fullSpan = this.flowLayoutNode.loadMore && position >= this.itemCount;
         if (jsValue != null && jsValue.isObject()) {
             JSObject jsObject = jsValue.asObject();
             holder.flowLayoutItemNode.setId(jsObject.getProperty("id").asString().value());
-            holder.flowLayoutItemNode.blend(jsObject.getProperty("props").asObject());
+            JSObject props = jsObject.getProperty("props").asObject();
+            holder.flowLayoutItemNode.blend(props);
+            JSValue fullSpanValue = props.getProperty("fullSpan");
+            if (fullSpanValue.isBoolean()) {
+                fullSpan = fullSpanValue.asBoolean().value();
+            }
         }
-        boolean fullSpan = this.flowLayoutNode.loadMore && position >= this.itemCount;
-        if (holder.flowLayoutItemNode.fullSpan != null) {
-            fullSpan = holder.flowLayoutItemNode.fullSpan;
-        }
-        if (fullSpan) {
+        if (holder.itemView.getLayoutParams() instanceof StaggeredGridLayoutManager.LayoutParams) {
+            ((StaggeredGridLayoutManager.LayoutParams) holder.itemView.getLayoutParams()).setFullSpan(fullSpan);
+        } else if (fullSpan) {
             StaggeredGridLayoutManager.LayoutParams layoutParams = new StaggeredGridLayoutManager.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     holder.itemView.getLayoutParams().height

@@ -448,4 +448,18 @@
     }
 }
 
+- (NSArray *)findVisibleItems {
+    return [self.view.indexPathsForVisibleRows map:^id(NSIndexPath *obj) {
+        return @(obj.row);
+    }];
+}
+
+- (NSArray *)findCompletelyVisibleItems {
+    NSArray<__kindof UITableViewCell *> *items = [self.view.visibleCells filter:^BOOL(__kindof UITableViewCell *obj) {
+        return CGRectContainsRect(self.view.bounds, obj.frame);
+    }];
+    return [items map:^id(__kindof UITableViewCell *obj) {
+        return @([self.view indexPathForCell:obj].row);
+    }];
+}
 @end

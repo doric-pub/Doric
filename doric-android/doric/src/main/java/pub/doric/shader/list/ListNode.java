@@ -33,6 +33,7 @@ import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.HashSet;
@@ -300,25 +301,29 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
     }
 
     @DoricMethod
-    public JSONObject findVisibleItems() {
+    public JSONArray findVisibleItems() {
         LinearLayoutManager linearLayoutManager = (LinearLayoutManager) this.mView.getLayoutManager();
         assert linearLayoutManager != null;
         int startPos = linearLayoutManager.findFirstVisibleItemPosition();
         int endPos = linearLayoutManager.findLastVisibleItemPosition();
-        return new JSONBuilder()
-                .put("first", calibratePosition(startPos))
-                .put("last", calibratePosition(endPos)).toJSONObject();
+        JSONArray jsonArray = new JSONArray();
+        for (int i = startPos; i <= endPos; i++) {
+            jsonArray.put(i);
+        }
+        return jsonArray;
     }
 
     @DoricMethod
-    public JSONObject findCompletelyVisibleItems() {
+    public JSONArray findCompletelyVisibleItems() {
         LinearLayoutManager linearLayoutManager = (LinearLayoutManager) this.mView.getLayoutManager();
         assert linearLayoutManager != null;
         int startPos = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
         int endPos = linearLayoutManager.findLastCompletelyVisibleItemPosition();
-        return new JSONBuilder()
-                .put("first", calibratePosition(startPos))
-                .put("last", calibratePosition(endPos)).toJSONObject();
+        JSONArray jsonArray = new JSONArray();
+        for (int i = startPos; i <= endPos; i++) {
+            jsonArray.put(i);
+        }
+        return jsonArray;
     }
 
     private void moveToPosition(int pos, boolean smooth) {

@@ -32,7 +32,9 @@ import com.github.pengfeizhou.jscore.JSValue;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
@@ -328,28 +330,56 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
 
     @DoricMethod
     public JSONArray findVisibleItems() {
-        int[] startPos = staggeredGridLayoutManager.findFirstVisibleItemPositions(null);
-        int[] endPos = staggeredGridLayoutManager.findLastVisibleItemPositions(null);
+        int[] firstPositions = staggeredGridLayoutManager.findFirstVisibleItemPositions(null);
+        int[] lastPositions = staggeredGridLayoutManager.findLastVisibleItemPositions(null);
         JSONArray jsonArray = new JSONArray();
-        for (int i = 0; i < staggeredGridLayoutManager.getSpanCount(); i++) {
-            jsonArray.put(new JSONBuilder()
-                    .put("first", calibratePosition(startPos[i]))
-                    .put("last", calibratePosition(endPos[i]))
-                    .toJSONObject());
+        int first = firstPositions[0];
+        for (int firstPosition : firstPositions) {
+            first = Math.min(first, firstPosition);
+        }
+        int last = lastPositions[0];
+        for (int lastPosition : lastPositions) {
+            last = Math.max(last, lastPosition);
+        }
+        for (int i = first; i <= last; i++) {
+            jsonArray.put(i);
         }
         return jsonArray;
     }
 
     @DoricMethod
     public JSONArray findCompletelyVisibleItems() {
-        int[] startPos = staggeredGridLayoutManager.findFirstCompletelyVisibleItemPositions(null);
-        int[] endPos = staggeredGridLayoutManager.findLastCompletelyVisibleItemPositions(null);
-        JSONArray jsonArray = new JSONArray();
+        int[] firstPositions = staggeredGridLayoutManager.findFirstVisibleItemPositions(null);
+        int[] lastPositions = staggeredGridLayoutManager.findLastVisibleItemPositions(null);
+        Set<Integer> positions = new HashSet<>();
+        int first = firstPositions[0];
+        for (int firstPosition : firstPositions) {
+            first = Math.min(first, firstPosition);
+        }
+        int last = lastPositions[0];
+        for (int lastPosition : lastPositions) {
+            last = Math.max(last, lastPosition);
+        }
+        for (int i = first; i <= last; i++) {
+            positions.add(i);
+        }
+        int[] firstCompletelyVisibleItemPositions = staggeredGridLayoutManager.findFirstCompletelyVisibleItemPositions(null);
+        int[] lastCompletelyVisibleItemPositions = staggeredGridLayoutManager.findLastCompletelyVisibleItemPositions(null);
         for (int i = 0; i < staggeredGridLayoutManager.getSpanCount(); i++) {
-            jsonArray.put(new JSONBuilder()
-                    .put("first", calibratePosition(startPos[i]))
-                    .put("last", calibratePosition(endPos[i]))
-                    .toJSONObject());
+            int firstPosition = firstPositions[i];
+            int firstCompletelyVisibleItemPosition = firstCompletelyVisibleItemPositions[i];
+            if (firstCompletelyVisibleItemPosition != firstPosition) {
+                positions.remove(firstPosition);
+            }
+            int lastPosition = lastPositions[i];
+            int lastCompletelyVisibleItemPosition = lastCompletelyVisibleItemPositions[i];
+            if (lastCompletelyVisibleItemPosition != lastPosition) {
+                positions.remove(lastPosition);
+            }
+        }
+        JSONArray jsonArray = new JSONArray();
+        for (int position : positions) {
+            jsonArray.put(position);
         }
         return jsonArray;
     }

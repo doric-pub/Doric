@@ -111,6 +111,12 @@ class ListVM extends ViewModel<ListModel, ListVH> {
                     state.data = state.data.concat(ret.data)
                     state.offset = state.data.length
                 })
+            },
+            onScrollEnd: async () => {
+                const ret = await vh.list.findCompletelyVisibleItems(context)
+                loge('completelyVisible Items is:', ret)
+                const ret2 = await vh.list.findVisibleItems(context)
+                loge('visible Items is:', ret2)
             }
         })
         loadData(state.offset).then(ret => {

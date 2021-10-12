@@ -483,4 +483,37 @@
 - (void)removeDidScrollBlock:(__nonnull DoricDidScrollBlock)didScrollListener {
     [self.didScrollBlocks removeObject:didScrollListener];
 }
+
+- (NSArray *)findVisibleItems {
+    return [[self.view.indexPathsForVisibleItems map:^id(NSIndexPath *obj) {
+        return @(obj.row);
+    }] sortedArrayUsingComparator:^NSComparisonResult(NSNumber *obj1, NSNumber *obj2) {
+        if (obj1.unsignedIntegerValue > obj2.unsignedIntegerValue) {
+            return NSOrderedDescending;
+        } else if (obj1.unsignedIntegerValue < obj2.unsignedIntegerValue) {
+            return NSOrderedAscending;
+        } else {
+            return NSOrderedSame;
+        }
+
+    }];
+}
+
+- (NSArray *)findCompletelyVisibleItems {
+    NSArray<__kindof UICollectionViewCell *> *items = [self.view.visibleCells filter:^BOOL(__kindof UICollectionViewCell *obj) {
+        return CGRectContainsRect(self.view.bounds, obj.frame);
+    }];
+    return [[items map:^id(__kindof UICollectionViewCell *obj) {
+        return @([self.view indexPathForCell:obj].row);
+    }] sortedArrayUsingComparator:^NSComparisonResult(NSNumber *obj1, NSNumber *obj2) {
+        if (obj1.unsignedIntegerValue > obj2.unsignedIntegerValue) {
+            return NSOrderedDescending;
+        } else if (obj1.unsignedIntegerValue < obj2.unsignedIntegerValue) {
+            return NSOrderedAscending;
+        } else {
+            return NSOrderedSame;
+        }
+
+    }];
+}
 @end

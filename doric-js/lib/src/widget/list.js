@@ -35,12 +35,6 @@ __decorate([
     Property,
     __metadata("design:type", Array)
 ], ListItem.prototype, "actions", void 0);
-export var OtherItems;
-(function (OtherItems) {
-    OtherItems[OtherItems["LoadMore"] = -10] = "LoadMore";
-    OtherItems[OtherItems["Header"] = -11] = "Header";
-    OtherItems[OtherItems["Footer"] = -12] = "Footer";
-})(OtherItems || (OtherItems = {}));
 export class List extends Superview {
     constructor() {
         super(...arguments);
@@ -61,14 +55,14 @@ export class List extends Superview {
     }
     /**
      * @param context
-     * @returns Returns the range of the visible views.
+     * @returns Returns array of visible view's index.
      */
     findVisibleItems(context) {
         return this.nativeChannel(context, 'findVisibleItems')();
     }
     /**
      * @param context
-     * @returns Returns the range of the completely visible views.
+     * @returns Returns array of completely visible view's index.
      */
     findCompletelyVisibleItems(context) {
         return this.nativeChannel(context, 'findCompletelyVisibleItems')();

@@ -102,8 +102,8 @@ class FlowAdapter extends RecyclerView.Adapter<FlowAdapter.DoricViewHolder> {
         }
         JSValue value = getItemModel(position);
         if (value != null && value.isObject()) {
-            if (value.asObject().getProperty("identifier").isString()) {
-                return value.asObject().getProperty("identifier").asString().value().hashCode();
+            if (value.asObject().getProperty("props").asObject().getProperty("identifier").isString()) {
+                return value.asObject().getProperty("props").asObject().getProperty("identifier").asString().value().hashCode();
             }
         }
         return super.getItemViewType(position);

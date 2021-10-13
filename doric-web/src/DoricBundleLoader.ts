@@ -10,7 +10,7 @@ const loaders: DoricJSLoader[] = [
     {
         filter: () => true,
         request: async (source) => {
-            const result = await axios.get(source)
+            const result = await axios.get<string>(source)
             return result.data;
         }
     }

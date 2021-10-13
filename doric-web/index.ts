@@ -18,7 +18,7 @@ smoothscroll.polyfill();
 registerDoricJSLoader({
     filter: (source) => source.startsWith("assets://"),
     request: async (source) => {
-        const ret = await axios.get(source.replace("assets://", `${window.location.href}/../../doric-demo/bundle/`))
+        const ret = await axios.get<string>(source.replace("assets://", `${window.location.href}/../../doric-demo/bundle/`))
         return ret.data
     }
 })

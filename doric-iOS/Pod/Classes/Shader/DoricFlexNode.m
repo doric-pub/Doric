@@ -246,6 +246,15 @@
         self.view.yoga.marginEnd = YGValueZero;
         self.view.yoga.marginVertical = YGValueZero;
         self.view.yoga.marginHorizontal = YGValueZero;
+        CGSize size = self.view.yoga.intrinsicSize;
+        if (self.view.yoga.maxWidth.unit != YGUnitPoint
+            ||(self.view.yoga.maxWidth.unit == YGUnitPoint && self.view.yoga.maxWidth.value > size.width)){
+            self.view.yoga.maxWidth = YGValueUndefined;
+        }
+        if (self.view.yoga.maxHeight.unit != YGUnitPoint
+            ||(self.view.yoga.maxHeight.unit == YGUnitPoint && self.view.yoga.maxHeight.value > size.height)){
+            self.view.yoga.maxHeight = YGValueUndefined;
+        }
     }
     [self.view.yoga applyLayoutPreservingOrigin:YES];
     /// Need layout again.

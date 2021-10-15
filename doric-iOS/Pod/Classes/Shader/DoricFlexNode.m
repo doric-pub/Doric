@@ -236,6 +236,17 @@
     if (self.view.doricLayout.heightSpec != DoricLayoutFit) {
         self.view.yoga.height = YGPointValue(self.view.height);
     }
+    if (![self.superNode isKindOfClass:DoricFlexNode.class]) {
+        self.view.yoga.margin = YGValueZero;
+        self.view.yoga.marginLeft = YGValueZero;
+        self.view.yoga.marginRight = YGValueZero;
+        self.view.yoga.marginTop = YGValueZero;
+        self.view.yoga.marginBottom = YGValueZero;
+        self.view.yoga.marginStart = YGValueZero;
+        self.view.yoga.marginEnd = YGValueZero;
+        self.view.yoga.marginVertical = YGValueZero;
+        self.view.yoga.marginHorizontal = YGValueZero;
+    }
     [self.view.yoga applyLayoutPreservingOrigin:YES];
     /// Need layout again.
     for (UIView *view in self.view.subviews) {

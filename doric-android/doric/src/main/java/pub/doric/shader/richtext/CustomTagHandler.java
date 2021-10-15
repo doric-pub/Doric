@@ -30,12 +30,12 @@ import java.util.Stack;
  * @CreateDate: 2020-04-14
  */
 public class CustomTagHandler implements HtmlParser.TagHandler {
-    private Stack<Integer> startIndex = new Stack<>();
+    private final Stack<Integer> startIndex = new Stack<>();
 
     /**
      * html attribute value，like:<size value='16'></size>
      */
-    private Stack<String> propertyValue = new Stack<>();
+    private final Stack<String> propertyValue = new Stack<>();
 
     @Override
     public boolean handleTag(boolean opening, String tag, Editable output, Attributes attributes) {

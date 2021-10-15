@@ -24,6 +24,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.text.Layout;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -32,15 +33,20 @@ import android.widget.TextView;
 
 import androidx.core.content.res.ResourcesCompat;
 
+import com.bumptech.glide.Glide;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
+import java.util.concurrent.Callable;
+
 import pub.doric.DoricContext;
+import pub.doric.async.AsyncResult;
 import pub.doric.extension.bridge.DoricPlugin;
 import pub.doric.shader.richtext.CustomTagHandler;
 import pub.doric.shader.richtext.HtmlParser;
 import pub.doric.utils.DoricLog;
 import pub.doric.utils.DoricUtils;
+import pub.doric.utils.ThreadMode;
 
 /**
  * @Description: widget
@@ -277,15 +283,51 @@ public class TextNode extends ViewNode<TextView> {
                 break;
             case "htmlText":
                 if (prop.isString()) {
-                    view.setText(
-                            HtmlParser.buildSpannedText(prop.asString().value(),
+                    getDoricContext().getDriver().asyncCall(new Callable<Spanned>() {
+                        @Override
+                        public Spanned call() {
+                            return HtmlParser.buildSpannedText(prop.asString().value(),
                                     new Html.ImageGetter() {
                                         @Override
                                         public Drawable getDrawable(String source) {
+                                            try {
+                                                Drawable drawable = Glide.with(view)
+                                                        .asDrawable()
+                                                        .load(source)
+                                                        .submit()
+                                                        .get();
+                                                drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+                                                return drawable;
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
                                             return null;
                                         }
                                     },
-                                    new CustomTagHandler()));
+                                    new CustomTagHandler());
+                        }
+                    }, ThreadMode.INDEPENDENT)
+                            .setCallback(new AsyncResult.Callback<Spanned>() {
+                                @Override
+                                public void onResult(final Spanned result) {
+                                    view.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            view.setText(result);
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onError(Throwable t) {
+
+                                }
+
+                                @Override
+                                public void onFinish() {
+
+                                }
+                            });
                 }
                 break;
             case "truncateAt":

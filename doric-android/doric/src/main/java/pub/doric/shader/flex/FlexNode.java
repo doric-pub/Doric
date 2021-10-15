@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.facebook.yoga.YogaAlign;
+import com.facebook.yoga.YogaConstants;
 import com.facebook.yoga.YogaDirection;
 import com.facebook.yoga.YogaDisplay;
 import com.facebook.yoga.YogaEdge;
@@ -75,7 +76,7 @@ public class FlexNode extends GroupNode<YogaLayout> {
                                     MeasureSpec.AT_MOST);
                         } else if (layoutParams.width == ViewGroup.LayoutParams.WRAP_CONTENT) {
                             childWidthMeasureSpec = MeasureSpec.makeMeasureSpec(
-                                    getMeasuredHeight(),
+                                    0,
                                     MeasureSpec.UNSPECIFIED);
                         } else {
                             childWidthMeasureSpec = MeasureSpec.makeMeasureSpec(
@@ -85,7 +86,7 @@ public class FlexNode extends GroupNode<YogaLayout> {
 
                         if (layoutParams.height == ViewGroup.LayoutParams.MATCH_PARENT) {
                             childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(
-                                    0,
+                                    getMeasuredHeight(),
                                     MeasureSpec.AT_MOST);
                         } else if (layoutParams.height == ViewGroup.LayoutParams.WRAP_CONTENT) {
                             childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(
@@ -98,7 +99,7 @@ public class FlexNode extends GroupNode<YogaLayout> {
                         }
                         child.measure(childWidthMeasureSpec, childHeightMeasureSpec);
                         YogaNode node = getYogaNodeForView(child);
-                        if (node != null) {
+                        if (!(child instanceof YogaLayout) && node != null) {
                             JSObject flexConfig = childNode.getFlexConfig();
                             YogaUnit widthUnit = YogaUnit.AUTO;
                             YogaUnit heightUnit = YogaUnit.AUTO;

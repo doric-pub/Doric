@@ -64,7 +64,7 @@ public class FlexNode extends GroupNode<YogaLayout> {
             protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
                 for (int i = 0; i < getChildCount(); i++) {
                     View child = getChildAt(i);
-                    ViewNode childNode = (ViewNode) child.getTag(R.id.doric_node);
+                    ViewNode<?> childNode = (ViewNode<?>) child.getTag(R.id.doric_node);
                     if (childNode != null) {
                         ViewGroup.LayoutParams layoutParams = child.getLayoutParams();
                         int childWidthMeasureSpec;
@@ -161,6 +161,19 @@ public class FlexNode extends GroupNode<YogaLayout> {
                 if (heightUnit == YogaUnit.AUTO) {
                     getYogaNode().setHeightAuto();
                 }
+                if (!(getParent() instanceof YogaLayout)) {
+                    final int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+                    final int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+                    final int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+                    final int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+                    if (widthMode == MeasureSpec.AT_MOST) {
+                        widthMeasureSpec = MeasureSpec.makeMeasureSpec(widthSize, MeasureSpec.UNSPECIFIED);
+                    }
+                    if (heightMode == MeasureSpec.AT_MOST) {
+                        heightMeasureSpec = MeasureSpec.makeMeasureSpec(heightSize, MeasureSpec.UNSPECIFIED);
+                    }
+                }
+
                 super.onMeasure(widthMeasureSpec, heightMeasureSpec);
             }
         };

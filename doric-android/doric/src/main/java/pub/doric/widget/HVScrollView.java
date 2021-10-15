@@ -543,15 +543,15 @@ public class HVScrollView extends FrameLayout implements NestedScrollingParent,
             int childWidthMeasureSpec;
             int childHeightMeasureSpec;
             final FrameLayout.LayoutParams lp = (LayoutParams) child.getLayoutParams();
-            
-            if (child.getMeasuredWidth() < width && lp.width == ViewGroup.LayoutParams.MATCH_PARENT) {
+
+            if (lp.width == ViewGroup.LayoutParams.MATCH_PARENT) {
                 childWidthMeasureSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
             } else {
                 widthMeasureSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
                 childWidthMeasureSpec = getChildMeasureSpec(widthMeasureSpec,
                         getPaddingLeft() + getPaddingRight(), lp.width);
             }
-            if (child.getMeasuredHeight() < height && lp.height == ViewGroup.LayoutParams.MATCH_PARENT) {
+            if (lp.height == ViewGroup.LayoutParams.MATCH_PARENT) {
                 childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
             } else {
                 heightMeasureSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);

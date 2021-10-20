@@ -227,12 +227,22 @@
 - (void)blendSubNode:(NSDictionary *)subModel {
     NSString *viewId = subModel[@"id"];
     DoricViewNode *viewNode = [self subNodeWithViewId:viewId];
+    BOOL skipReload = NO;
     if (viewNode) {
+        CGSize originSize = viewNode.view.frame.size;
         [viewNode blend:subModel[@"props"]];
+        [viewNode.view.doricLayout apply:CGSizeMake(self.view.width, self.view.height)];
+        [viewNode requestLayout];
+        if (CGSizeEqualToSize(originSize, viewNode.view.frame.size)) {
+            skipReload = YES;
+        }
     } else {
         NSMutableDictionary *model = [[self subModelOf:viewId] mutableCopy];
         [self recursiveMixin:subModel to:model];
         [self setSubModel:model in:viewId];
+    }
+    if (skipReload) {
+        return;
     }
     [self.itemViewIds enumerateKeysAndObjectsUsingBlock:^(NSNumber *_Nonnull key, NSString *_Nonnull obj, BOOL *_Nonnull stop) {
         if ([viewId isEqualToString:obj]) {

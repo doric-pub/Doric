@@ -63,6 +63,11 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
     return self;
 }
 
+- (void)setText:(NSString *)text {
+    [super setText:text];
+    self.placeholderLabel.hidden = self.text.length > 0;
+}
+
 - (void)layoutSubviews {
     [super layoutSubviews];
     self.placeholderLabel.hidden = self.text.length > 0;

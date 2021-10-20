@@ -17,6 +17,7 @@ import { View, Property } from "../ui/view"
 import { layoutConfig } from "../util/layoutconfig"
 import { Color } from "../util/color"
 import { BridgeContext } from "../runtime/global"
+import { Resource } from "../util/resource"
 
 export enum ScaleType {
     ScaleToFill = 0,
@@ -25,9 +26,14 @@ export enum ScaleType {
 }
 
 export class Image extends View {
+    /** 
+     * This could be loaded by customized resource loader
+    */
+    @Property
+    image?: Resource
+
     @Property
     imageUrl?: string
-
     /** 
      * Read image from local file system.
     */

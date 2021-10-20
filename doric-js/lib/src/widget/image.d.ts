@@ -1,12 +1,17 @@
 import { View } from "../ui/view";
 import { Color } from "../util/color";
 import { BridgeContext } from "../runtime/global";
+import { Resource } from "../util/resource";
 export declare enum ScaleType {
     ScaleToFill = 0,
     ScaleAspectFit = 1,
     ScaleAspectFill = 2
 }
 export declare class Image extends View {
+    /**
+     * This could be loaded by customized resource loader
+    */
+    image?: Resource;
     imageUrl?: string;
     /**
      * Read image from local file system.

@@ -25,6 +25,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { View, Property } from "../ui/view";
 import { layoutConfig } from "../util/layoutconfig";
 import { Color } from "../util/color";
+import { Resource } from "../util/resource";
 export var ScaleType;
 (function (ScaleType) {
     ScaleType[ScaleType["ScaleToFill"] = 0] = "ScaleToFill";
@@ -42,6 +43,10 @@ export class Image extends View {
         return this.nativeChannel(context, "stopAnimating")();
     }
 }
+__decorate([
+    Property,
+    __metadata("design:type", Resource)
+], Image.prototype, "image", void 0);
 __decorate([
     Property,
     __metadata("design:type", String)

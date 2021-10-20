@@ -1603,6 +1603,19 @@ function text(config) {
     return ret;
 }
 
+class Resource {
+    constructor(type, identifier) {
+        this.type = type;
+        this.identifier = identifier;
+    }
+    toModel() {
+        return {
+            type: this.type,
+            identifier: this.identifier,
+        };
+    }
+}
+
 var __decorate$a = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1629,6 +1642,10 @@ class Image extends View {
         return this.nativeChannel(context, "stopAnimating")();
     }
 }
+__decorate$a([
+    Property,
+    __metadata$a("design:type", Resource)
+], Image.prototype, "image", void 0);
 __decorate$a([
     Property,
     __metadata$a("design:type", String)

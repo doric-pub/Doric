@@ -41,6 +41,11 @@ import pub.doric.plugin.ShaderPlugin;
 import pub.doric.plugin.StatusBarPlugin;
 import pub.doric.plugin.StoragePlugin;
 import pub.doric.refresh.RefreshableNode;
+import pub.doric.resource.DoricAssetsLoader;
+import pub.doric.resource.DoricAndroidLoader;
+import pub.doric.resource.DoricLocalLoader;
+import pub.doric.resource.DoricRemoteLoader;
+import pub.doric.resource.DoricResourceManager;
 import pub.doric.shader.DraggableNode;
 import pub.doric.shader.GestureContainerNode;
 import pub.doric.shader.HLayoutNode;
@@ -77,6 +82,7 @@ public class DoricRegistry {
     private Drawable defaultPlaceHolderDrawable = null;
 
     private Drawable defaultErrorDrawable = null;
+    private final DoricResourceManager doricResourceManager = new DoricResourceManager();
 
 
     private void initRegistry(DoricRegistry doricRegistry) {
@@ -123,6 +129,11 @@ public class DoricRegistry {
         this.registerViewNode(SwitchNode.class);
         this.registerViewNode(FlexNode.class);
         this.registerViewNode(GestureContainerNode.class);
+        this.getResourceManager().registerLoader(new DoricAndroidLoader("drawable"));
+        this.getResourceManager().registerLoader(new DoricAndroidLoader("raw"));
+        this.getResourceManager().registerLoader(new DoricAssetsLoader());
+        this.getResourceManager().registerLoader(new DoricLocalLoader());
+        this.getResourceManager().registerLoader(new DoricRemoteLoader());
         initRegistry(this);
         doricJSEngine.setEnvironmentValue(DoricSingleton.getInstance().envMap);
         DoricSingleton.getInstance().registries.add(new WeakReference<>(this));
@@ -217,5 +228,9 @@ public class DoricRegistry {
 
     public static void register(DoricLibrary doricLibrary) {
         DoricSingleton.getInstance().registerLibrary(doricLibrary);
+    }
+
+    public DoricResourceManager getResourceManager() {
+        return doricResourceManager;
     }
 }

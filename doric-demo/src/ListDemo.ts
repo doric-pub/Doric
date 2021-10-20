@@ -76,7 +76,9 @@ class ListVM extends ViewModel<ListModel, ListVH> {
                             heightSpec: LayoutSpec.JUST,
                         },
                         height: 50,
-                        onClick: () => { modal(context).alert(data.text) }
+                        onClick: function () {
+                            (this as Text).height += 10
+                        }
                     })
                 ]), {
                     layoutConfig: {

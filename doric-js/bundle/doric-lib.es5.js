@@ -139,7 +139,7 @@ function logw() {
     nativeLog('w', out);
 }
 
-var __extends$h = (undefined && undefined.__extends) || (function () {
+var __extends$i = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -571,7 +571,7 @@ var View = /** @class */ (function () {
     return View;
 }());
 var Superview = /** @class */ (function (_super) {
-    __extends$h(Superview, _super);
+    __extends$i(Superview, _super);
     function Superview() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -687,7 +687,7 @@ var Superview = /** @class */ (function (_super) {
     return Superview;
 }(View));
 var Group = /** @class */ (function (_super) {
-    __extends$h(Group, _super);
+    __extends$i(Group, _super);
     function Group() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.children = [];
@@ -905,7 +905,7 @@ function layoutConfig() {
     return new LayoutConfigImpl;
 }
 
-var __extends$g = (undefined && undefined.__extends) || (function () {
+var __extends$h = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -941,21 +941,21 @@ var __values$4 = (undefined && undefined.__values) || function(o) {
     throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 };
 var Stack = /** @class */ (function (_super) {
-    __extends$g(Stack, _super);
+    __extends$h(Stack, _super);
     function Stack() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     return Stack;
 }(Group));
 var Root = /** @class */ (function (_super) {
-    __extends$g(Root, _super);
+    __extends$h(Root, _super);
     function Root() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     return Root;
 }(Stack));
 var LinearLayout = /** @class */ (function (_super) {
-    __extends$g(LinearLayout, _super);
+    __extends$h(LinearLayout, _super);
     function LinearLayout() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -970,14 +970,14 @@ var LinearLayout = /** @class */ (function (_super) {
     return LinearLayout;
 }(Group));
 var VLayout = /** @class */ (function (_super) {
-    __extends$g(VLayout, _super);
+    __extends$h(VLayout, _super);
     function VLayout() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     return VLayout;
 }(LinearLayout));
 var HLayout = /** @class */ (function (_super) {
-    __extends$g(HLayout, _super);
+    __extends$h(HLayout, _super);
     function HLayout() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -1050,7 +1050,7 @@ function vlayout(views, config) {
     return ret;
 }
 var FlexLayout = /** @class */ (function (_super) {
-    __extends$g(FlexLayout, _super);
+    __extends$h(FlexLayout, _super);
     function FlexLayout() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -1499,7 +1499,7 @@ exports.GradientOrientation = void 0;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-var __extends$f = (undefined && undefined.__extends) || (function () {
+var __extends$g = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -1615,7 +1615,7 @@ var Animation = /** @class */ (function () {
     return Animation;
 }());
 var ScaleAnimation = /** @class */ (function (_super) {
-    __extends$f(ScaleAnimation, _super);
+    __extends$g(ScaleAnimation, _super);
     function ScaleAnimation() {
         var _this = _super.call(this) || this;
         _this.scaleXChangeable = {
@@ -1689,7 +1689,7 @@ var ScaleAnimation = /** @class */ (function (_super) {
     return ScaleAnimation;
 }(Animation));
 var TranslationAnimation = /** @class */ (function (_super) {
-    __extends$f(TranslationAnimation, _super);
+    __extends$g(TranslationAnimation, _super);
     function TranslationAnimation() {
         var _this = _super.call(this) || this;
         _this.translationXChangeable = {
@@ -1766,7 +1766,7 @@ var TranslationAnimation = /** @class */ (function (_super) {
  * Rotation range is [0..2]
  */
 var RotationAnimation = /** @class */ (function (_super) {
-    __extends$f(RotationAnimation, _super);
+    __extends$g(RotationAnimation, _super);
     function RotationAnimation() {
         var _this = _super.call(this) || this;
         _this.rotationChaneable = {
@@ -1810,7 +1810,7 @@ var RotationAnimation = /** @class */ (function (_super) {
  * Rotation range is [0..2]
  */
 var RotationXAnimation = /** @class */ (function (_super) {
-    __extends$f(RotationXAnimation, _super);
+    __extends$g(RotationXAnimation, _super);
     function RotationXAnimation() {
         var _this = _super.call(this) || this;
         _this.rotationChaneable = {
@@ -1854,7 +1854,7 @@ var RotationXAnimation = /** @class */ (function (_super) {
  * Rotation range is [0..2]
  */
 var RotationYAnimation = /** @class */ (function (_super) {
-    __extends$f(RotationYAnimation, _super);
+    __extends$g(RotationYAnimation, _super);
     function RotationYAnimation() {
         var _this = _super.call(this) || this;
         _this.rotationChaneable = {
@@ -1895,7 +1895,7 @@ var RotationYAnimation = /** @class */ (function (_super) {
     return RotationYAnimation;
 }(Animation));
 var BackgroundColorAnimation = /** @class */ (function (_super) {
-    __extends$f(BackgroundColorAnimation, _super);
+    __extends$g(BackgroundColorAnimation, _super);
     function BackgroundColorAnimation() {
         var _this = _super.call(this) || this;
         _this.backgroundColorChangeable = {
@@ -1939,7 +1939,7 @@ var BackgroundColorAnimation = /** @class */ (function (_super) {
  * Alpha range is [0..1]
  */
 var AlphaAnimation = /** @class */ (function (_super) {
-    __extends$f(AlphaAnimation, _super);
+    __extends$g(AlphaAnimation, _super);
     function AlphaAnimation() {
         var _this = _super.call(this) || this;
         _this.opacityChangeable = {
@@ -2011,7 +2011,7 @@ var AnimationSet = /** @class */ (function () {
     return AnimationSet;
 }());
 
-var __extends$e = (undefined && undefined.__extends) || (function () {
+var __extends$f = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -2043,7 +2043,7 @@ exports.TruncateAt = void 0;
     TruncateAt[TruncateAt["Clip"] = 3] = "Clip";
 })(exports.TruncateAt || (exports.TruncateAt = {}));
 var Text = /** @class */ (function (_super) {
-    __extends$e(Text, _super);
+    __extends$f(Text, _super);
     function Text() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -2119,6 +2119,76 @@ function text(config) {
     return ret;
 }
 
+var __extends$e = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) { if (Object.prototype.hasOwnProperty.call(b, p)) { d[p] = b[p]; } } };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            { throw new TypeError("Class extends value " + String(b) + " is not a constructor or null"); }
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var Resource = /** @class */ (function () {
+    function Resource(type, identifier) {
+        this.type = type;
+        this.identifier = identifier;
+    }
+    Resource.prototype.toModel = function () {
+        return {
+            type: this.type,
+            identifier: this.identifier,
+        };
+    };
+    return Resource;
+}());
+/** @class */ ((function (_super) {
+    __extends$e(FileResource, _super);
+    function FileResource(path) {
+        return _super.call(this, "file", path) || this;
+    }
+    return FileResource;
+})(Resource));
+/** @class */ ((function (_super) {
+    __extends$e(RemoteResource, _super);
+    function RemoteResource(url) {
+        return _super.call(this, "remote", url) || this;
+    }
+    return RemoteResource;
+})(Resource));
+/**
+ * This is for android platform
+ */
+/** @class */ ((function (_super) {
+    __extends$e(DrawableResource, _super);
+    function DrawableResource(url) {
+        return _super.call(this, "drawable", url) || this;
+    }
+    return DrawableResource;
+})(Resource));
+/** @class */ ((function (_super) {
+    __extends$e(AssetResource, _super);
+    function AssetResource(path) {
+        return _super.call(this, "assets", path) || this;
+    }
+    return AssetResource;
+})(Resource));
+/**
+ * This is for iOS platform
+ */
+/** @class */ ((function (_super) {
+    __extends$e(MainBundleResource, _super);
+    function MainBundleResource(path) {
+        return _super.call(this, "mainBundle", path) || this;
+    }
+    return MainBundleResource;
+})(Resource));
+
 var __extends$d = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -2163,6 +2233,10 @@ var Image = /** @class */ (function (_super) {
     Image.prototype.stopAnimating = function (context) {
         return this.nativeChannel(context, "stopAnimating")();
     };
+    __decorate$a([
+        Property,
+        __metadata$a("design:type", Resource)
+    ], Image.prototype, "image", void 0);
     __decorate$a([
         Property,
         __metadata$a("design:type", String)

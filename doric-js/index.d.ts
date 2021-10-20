@@ -612,12 +612,17 @@ declare module 'doric/lib/src/widget/image' {
     import { View } from "doric/lib/src/ui/view";
     import { Color } from "doric/lib/src/util/color";
     import { BridgeContext } from "doric/lib/src/runtime/global";
+    import { Resource } from "doric/lib/src/util/resource";
     export enum ScaleType {
             ScaleToFill = 0,
             ScaleAspectFit = 1,
             ScaleAspectFill = 2
     }
     export class Image extends View {
+            /**
+                * This could be loaded by customized resource loader
+             */
+            image?: Resource;
             imageUrl?: string;
             /**
                 * Read image from local file system.
@@ -1758,6 +1763,40 @@ declare module 'doric/lib/src/pattern/modular' {
             onShow(): void;
             onHidden(): void;
             onRenderFinished(): void;
+    }
+}
+
+declare module 'doric/lib/src/util/resource' {
+    import { Modeling } from "doric/lib/src/util/types";
+    export abstract class Resource implements Modeling {
+            type: string;
+            identifier: string;
+            constructor(type: string, identifier: string);
+            toModel(): {
+                    type: string;
+                    identifier: string;
+            };
+    }
+    export class FileResource extends Resource {
+            constructor(path: string);
+    }
+    export class RemoteResource extends Resource {
+            constructor(url: string);
+    }
+    /**
+        * This is for android platform
+        */
+    export class DrawableResource extends Resource {
+            constructor(url: string);
+    }
+    export class AssetResource extends Resource {
+            constructor(path: string);
+    }
+    /**
+        * This is for iOS platform
+        */
+    export class MainBundleResource extends Resource {
+            constructor(path: string);
     }
 }
 

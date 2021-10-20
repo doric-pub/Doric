@@ -53,11 +53,15 @@ import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
 import java.io.File;
+import java.io.InputStream;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import pub.doric.DoricContext;
+import pub.doric.DoricSingleton;
+import pub.doric.async.AsyncResult;
 import pub.doric.extension.bridge.DoricMethod;
 import pub.doric.extension.bridge.DoricPlugin;
+import pub.doric.resource.DoricResource;
 import pub.doric.shader.flex.FlexNode;
 import pub.doric.utils.DoricLog;
 import pub.doric.utils.DoricUtils;
@@ -358,6 +362,36 @@ public class ImageNode extends ViewNode<ImageView> {
     @Override
     protected void blend(ImageView view, String name, JSValue prop) {
         switch (name) {
+            case "image":
+                if (!prop.isObject()) {
+                    return;
+                }
+                JSObject resource = prop.asObject();
+                final String type = resource.getProperty("type").asString().value();
+                final String identifier = resource.getProperty("identifier").asString().value();
+                DoricResource doricResource = getDoricContext().getDriver().getRegistry().getResourceManager().load(getDoricContext(), type, identifier);
+                if (doricResource != null) {
+                    doricResource.asInputStream().setCallback(new AsyncResult.Callback<InputStream>() {
+                        @Override
+                        public void onResult(InputStream result) {
+                            loadIntoTarget(Glide.with(getContext()).load(result));
+                        }
+
+                        @Override
+                        public void onError(Throwable t) {
+                            t.printStackTrace();
+                            DoricLog.e("Cannot load resource type = %s, identifier = %s, %s", type, identifier, t.getLocalizedMessage());
+                        }
+
+                        @Override
+                        public void onFinish() {
+
+                        }
+                    });
+                } else {
+                    DoricLog.e("Cannot find loader for resource type = %s, identifier = %s", type, identifier);
+                }
+                break;
             case "imageUrl":
                 if (!prop.isString()) {
                     return;

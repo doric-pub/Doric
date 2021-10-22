@@ -6,3 +6,4 @@ export * from './types';
 export * from './uniqueId';
 export * from './flexbox';
 export * from './jsx';
+export * from './resource';

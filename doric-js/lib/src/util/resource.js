@@ -20,12 +20,22 @@ export class RemoteResource extends Resource {
         super("remote", url);
     }
 }
+export class Base64Resource extends Resource {
+    constructor(url) {
+        super("base64", url);
+    }
+}
 /**
  * This is for android platform
  */
 export class DrawableResource extends Resource {
     constructor(url) {
         super("drawable", url);
+    }
+}
+export class RawResource extends Resource {
+    constructor(url) {
+        super("raw", url);
     }
 }
 export class AssetResource extends Resource {

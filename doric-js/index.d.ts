@@ -122,6 +122,7 @@ declare module 'doric/lib/src/util/index.util' {
     export * from 'doric/lib/src/util/uniqueId';
     export * from 'doric/lib/src/util/flexbox';
     export * from 'doric/lib/src/util/jsx';
+    export * from 'doric/lib/src/util/resource';
 }
 
 declare module 'doric/lib/src/pattern/index.pattern' {
@@ -1623,6 +1624,46 @@ declare module 'doric/lib/src/util/jsx' {
     }
 }
 
+declare module 'doric/lib/src/util/resource' {
+    import { Modeling } from "doric/lib/src/util/types";
+    export abstract class Resource implements Modeling {
+            type: string;
+            identifier: string;
+            constructor(type: string, identifier: string);
+            toModel(): {
+                    type: string;
+                    identifier: string;
+            };
+    }
+    export class FileResource extends Resource {
+            constructor(path: string);
+    }
+    export class RemoteResource extends Resource {
+            constructor(url: string);
+    }
+    export class Base64Resource extends Resource {
+            constructor(url: string);
+    }
+    /**
+        * This is for android platform
+        */
+    export class DrawableResource extends Resource {
+            constructor(url: string);
+    }
+    export class RawResource extends Resource {
+            constructor(url: string);
+    }
+    export class AssetResource extends Resource {
+            constructor(path: string);
+    }
+    /**
+        * This is for iOS platform
+        */
+    export class MainBundleResource extends Resource {
+            constructor(path: string);
+    }
+}
+
 declare module 'doric/lib/src/pattern/candies' {
     export function take<T>(target: T): (block: (p: T) => void) => void;
     export function takeNonNull<T, R>(target?: T): (block: (p: T) => R) => R | undefined;
@@ -1763,40 +1804,6 @@ declare module 'doric/lib/src/pattern/modular' {
             onShow(): void;
             onHidden(): void;
             onRenderFinished(): void;
-    }
-}
-
-declare module 'doric/lib/src/util/resource' {
-    import { Modeling } from "doric/lib/src/util/types";
-    export abstract class Resource implements Modeling {
-            type: string;
-            identifier: string;
-            constructor(type: string, identifier: string);
-            toModel(): {
-                    type: string;
-                    identifier: string;
-            };
-    }
-    export class FileResource extends Resource {
-            constructor(path: string);
-    }
-    export class RemoteResource extends Resource {
-            constructor(url: string);
-    }
-    /**
-        * This is for android platform
-        */
-    export class DrawableResource extends Resource {
-            constructor(url: string);
-    }
-    export class AssetResource extends Resource {
-            constructor(path: string);
-    }
-    /**
-        * This is for iOS platform
-        */
-    export class MainBundleResource extends Resource {
-            constructor(path: string);
     }
 }
 

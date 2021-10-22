@@ -27,17 +27,23 @@ export class RemoteResource extends Resource {
     }
 }
 
+export class Base64Resource extends Resource {
+    constructor(content: string) {
+        super("base64", content)
+    }
+}
+
 /**
  * This is for android platform
  */
 export class DrawableResource extends Resource {
-    constructor(url: string) {
-        super("drawable", url)
+    constructor(name: string) {
+        super("drawable", name)
     }
 }
 export class RawResource extends Resource {
-    constructor(url: string) {
-        super("raw", url)
+    constructor(name: string) {
+        super("raw", name)
     }
 }
 

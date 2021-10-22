@@ -14,10 +14,16 @@ export declare class FileResource extends Resource {
 export declare class RemoteResource extends Resource {
     constructor(url: string);
 }
+export declare class Base64Resource extends Resource {
+    constructor(url: string);
+}
 /**
  * This is for android platform
  */
 export declare class DrawableResource extends Resource {
+    constructor(url: string);
+}
+export declare class RawResource extends Resource {
     constructor(url: string);
 }
 export declare class AssetResource extends Resource {

@@ -1,5 +1,5 @@
 /*
- * Copyright [2019] [Doric.Pub]
+ * Copyright [2021] [Doric.Pub]
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from './color';
-export * from './gravity';
-export * from './layoutconfig';
-export * from './log';
-export * from './types';
-export * from './uniqueId';
-export * from './flexbox';
-export * from './jsx';
-export * from './resource';
+package pub.doric.resource;
+
+import pub.doric.DoricContext;
+
+/**
+ * @Description: This loads base64 resource
+ * @Author: pengfei.zhou
+ * @CreateDate: 2021/10/22
+ */
+public class DoricBase64Loader implements DoricResourceLoader {
+    @Override
+    public String resourceType() {
+        return "base64";
+    }
+
+    @Override
+    public DoricResource load(DoricContext doricContext, String identifier) {
+        return new DoricBase64Resource(doricContext, identifier);
+    }
+}

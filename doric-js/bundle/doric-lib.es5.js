@@ -2147,47 +2147,61 @@ var Resource = /** @class */ (function () {
     };
     return Resource;
 }());
-/** @class */ ((function (_super) {
+var FileResource = /** @class */ (function (_super) {
     __extends$e(FileResource, _super);
     function FileResource(path) {
         return _super.call(this, "file", path) || this;
     }
     return FileResource;
-})(Resource));
-/** @class */ ((function (_super) {
+}(Resource));
+var RemoteResource = /** @class */ (function (_super) {
     __extends$e(RemoteResource, _super);
     function RemoteResource(url) {
         return _super.call(this, "remote", url) || this;
     }
     return RemoteResource;
-})(Resource));
+}(Resource));
+var Base64Resource = /** @class */ (function (_super) {
+    __extends$e(Base64Resource, _super);
+    function Base64Resource(url) {
+        return _super.call(this, "base64", url) || this;
+    }
+    return Base64Resource;
+}(Resource));
 /**
  * This is for android platform
  */
-/** @class */ ((function (_super) {
+var DrawableResource = /** @class */ (function (_super) {
     __extends$e(DrawableResource, _super);
     function DrawableResource(url) {
         return _super.call(this, "drawable", url) || this;
     }
     return DrawableResource;
-})(Resource));
-/** @class */ ((function (_super) {
+}(Resource));
+var RawResource = /** @class */ (function (_super) {
+    __extends$e(RawResource, _super);
+    function RawResource(url) {
+        return _super.call(this, "raw", url) || this;
+    }
+    return RawResource;
+}(Resource));
+var AssetResource = /** @class */ (function (_super) {
     __extends$e(AssetResource, _super);
     function AssetResource(path) {
         return _super.call(this, "assets", path) || this;
     }
     return AssetResource;
-})(Resource));
+}(Resource));
 /**
  * This is for iOS platform
  */
-/** @class */ ((function (_super) {
+var MainBundleResource = /** @class */ (function (_super) {
     __extends$e(MainBundleResource, _super);
     function MainBundleResource(path) {
         return _super.call(this, "mainBundle", path) || this;
     }
     return MainBundleResource;
-})(Resource));
+}(Resource));
 
 var __extends$d = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -4371,13 +4385,17 @@ var ModularPanel = /** @class */ (function (_super) {
 
 exports.AlphaAnimation = AlphaAnimation;
 exports.AnimationSet = AnimationSet;
+exports.AssetResource = AssetResource;
 exports.BOTTOM = BOTTOM;
 exports.BackgroundColorAnimation = BackgroundColorAnimation;
+exports.Base64Resource = Base64Resource;
 exports.CENTER = CENTER;
 exports.CENTER_X = CENTER_X;
 exports.CENTER_Y = CENTER_Y;
 exports.Color = Color;
 exports.Draggable = Draggable;
+exports.DrawableResource = DrawableResource;
+exports.FileResource = FileResource;
 exports.FlexLayout = FlexLayout;
 exports.FlexTypedValue = FlexTypedValue;
 exports.FlowLayout = FlowLayout;
@@ -4393,6 +4411,7 @@ exports.LEFT = LEFT;
 exports.LayoutConfigImpl = LayoutConfigImpl;
 exports.List = List;
 exports.ListItem = ListItem;
+exports.MainBundleResource = MainBundleResource;
 exports.ModularPanel = ModularPanel;
 exports.Module = Module;
 exports.Mutable = Mutable;
@@ -4403,8 +4422,11 @@ exports.Panel = Panel;
 exports.Property = Property;
 exports.Provider = Provider;
 exports.RIGHT = RIGHT;
+exports.RawResource = RawResource;
 exports.Ref = Ref;
 exports.Refreshable = Refreshable;
+exports.RemoteResource = RemoteResource;
+exports.Resource = Resource;
 exports.Root = Root;
 exports.RotationAnimation = RotationAnimation;
 exports.RotationXAnimation = RotationXAnimation;

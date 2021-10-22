@@ -1615,6 +1615,47 @@ class Resource {
         };
     }
 }
+class FileResource extends Resource {
+    constructor(path) {
+        super("file", path);
+    }
+}
+class RemoteResource extends Resource {
+    constructor(url) {
+        super("remote", url);
+    }
+}
+class Base64Resource extends Resource {
+    constructor(url) {
+        super("base64", url);
+    }
+}
+/**
+ * This is for android platform
+ */
+class DrawableResource extends Resource {
+    constructor(url) {
+        super("drawable", url);
+    }
+}
+class RawResource extends Resource {
+    constructor(url) {
+        super("raw", url);
+    }
+}
+class AssetResource extends Resource {
+    constructor(path) {
+        super("assets", path);
+    }
+}
+/**
+ * This is for iOS platform
+ */
+class MainBundleResource extends Resource {
+    constructor(path) {
+        super("mainBundle", path);
+    }
+}
 
 var __decorate$a = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -3327,13 +3368,17 @@ class ModularPanel extends Module {
 
 exports.AlphaAnimation = AlphaAnimation;
 exports.AnimationSet = AnimationSet;
+exports.AssetResource = AssetResource;
 exports.BOTTOM = BOTTOM;
 exports.BackgroundColorAnimation = BackgroundColorAnimation;
+exports.Base64Resource = Base64Resource;
 exports.CENTER = CENTER;
 exports.CENTER_X = CENTER_X;
 exports.CENTER_Y = CENTER_Y;
 exports.Color = Color;
 exports.Draggable = Draggable;
+exports.DrawableResource = DrawableResource;
+exports.FileResource = FileResource;
 exports.FlexLayout = FlexLayout;
 exports.FlexTypedValue = FlexTypedValue;
 exports.FlowLayout = FlowLayout;
@@ -3349,6 +3394,7 @@ exports.LEFT = LEFT;
 exports.LayoutConfigImpl = LayoutConfigImpl;
 exports.List = List;
 exports.ListItem = ListItem;
+exports.MainBundleResource = MainBundleResource;
 exports.ModularPanel = ModularPanel;
 exports.Module = Module;
 exports.Mutable = Mutable;
@@ -3359,8 +3405,11 @@ exports.Panel = Panel;
 exports.Property = Property;
 exports.Provider = Provider;
 exports.RIGHT = RIGHT;
+exports.RawResource = RawResource;
 exports.Ref = Ref;
 exports.Refreshable = Refreshable;
+exports.RemoteResource = RemoteResource;
+exports.Resource = Resource;
 exports.Root = Root;
 exports.RotationAnimation = RotationAnimation;
 exports.RotationXAnimation = RotationXAnimation;

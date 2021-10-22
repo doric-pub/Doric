@@ -1,0 +1,63 @@
+/*
+ * Copyright [2021] [Doric.Pub]
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package pub.doric.resource;
+
+import android.text.TextUtils;
+import android.util.Base64;
+import android.util.Pair;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
+import pub.doric.DoricContext;
+import pub.doric.async.AsyncResult;
+import pub.doric.utils.DoricUtils;
+
+/**
+ * @Description: This represents a base64 resource
+ * @Author: pengfei.zhou
+ * @CreateDate: 2021/10/22
+ */
+class DoricBase64Resource extends DoricResource {
+    private final String identifier;
+
+    public DoricBase64Resource(DoricContext doricContext, String identifier) {
+        super(doricContext);
+        this.identifier = identifier;
+    }
+
+    @Override
+    public AsyncResult<InputStream> asInputStream() {
+        AsyncResult<InputStream> ret = new AsyncResult<>();
+        Pair<String, String> result = DoricUtils.translateBase64(identifier);
+        if (result != null) {
+            String imageType = result.first;
+            String base64 = result.second;
+
+            if (!TextUtils.isEmpty(imageType) && !TextUtils.isEmpty(base64)) {
+                try {
+                    byte[] data = Base64.decode(base64, Base64.DEFAULT);
+                    ret.setResult(new ByteArrayInputStream(data));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            ret.setError(new Error("Base64 format error"));
+        }
+        return ret;
+    }
+}

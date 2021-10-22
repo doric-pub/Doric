@@ -374,7 +374,19 @@ public class ImageNode extends ViewNode<ImageView> {
                     doricResource.asInputStream().setCallback(new AsyncResult.Callback<InputStream>() {
                         @Override
                         public void onResult(InputStream result) {
-                            loadIntoTarget(Glide.with(getContext()).load(result));
+                            try {
+                                byte[] imageData = new byte[result.available()];
+                                result.read(imageData, 0, result.available());
+                                loadIntoTarget(Glide.with(getContext()).load(imageData));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            } finally {
+                                try {
+                                    result.close();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
                         }
 
                         @Override

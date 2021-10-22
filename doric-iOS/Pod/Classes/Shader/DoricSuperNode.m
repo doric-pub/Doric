@@ -57,17 +57,18 @@
 
 - (void)mixin:(NSDictionary *)srcModel to:(NSMutableDictionary *)targetModel {
     NSDictionary *srcProp = srcModel[@"props"];
-    NSMutableDictionary *targetProp = targetModel[@"props"];
+    NSMutableDictionary *targetProp = [targetModel[@"props"] mutableCopy];
     [srcProp enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
         if (![@"subviews" isEqualToString:key]) {
             targetProp[key] = obj;
         }
     }];
+    targetModel[@"props"] = targetProp;
 }
 
 - (void)recursiveMixin:(NSDictionary *)srcModel to:(NSMutableDictionary *)targetModel {
     NSDictionary *srcProp = srcModel[@"props"];
-    NSMutableDictionary *targetProp = targetModel[@"props"];
+    NSMutableDictionary *targetProp = [targetModel[@"props"] mutableCopy];
     NSMutableArray *targetOri = targetProp[@"subviews"];
     NSArray *srcSubviews = srcProp[@"subviews"];
     if (srcSubviews && srcSubviews.count > 0) {
@@ -90,6 +91,7 @@
             targetProp[key] = obj;
         }
     }];
+    targetModel[@"props"] = targetProp;
 }
 
 - (void)blendSubNode:(DoricViewNode *)subNode layoutConfig:(NSDictionary *)layoutConfig {

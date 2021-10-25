@@ -1652,8 +1652,13 @@ class AssetResource extends Resource {
  * This is for iOS platform
  */
 class MainBundleResource extends Resource {
-    constructor(path) {
-        super("mainBundle", path);
+    constructor(fileName) {
+        super("mainBundle", fileName);
+    }
+}
+class BundleResource extends Resource {
+    constructor(bundleName, fileName) {
+        super("bundle", `${bundleName}://${fileName}`);
     }
 }
 
@@ -3372,6 +3377,7 @@ exports.AssetResource = AssetResource;
 exports.BOTTOM = BOTTOM;
 exports.BackgroundColorAnimation = BackgroundColorAnimation;
 exports.Base64Resource = Base64Resource;
+exports.BundleResource = BundleResource;
 exports.CENTER = CENTER;
 exports.CENTER_X = CENTER_X;
 exports.CENTER_Y = CENTER_Y;

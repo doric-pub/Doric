@@ -2197,10 +2197,17 @@ var AssetResource = /** @class */ (function (_super) {
  */
 var MainBundleResource = /** @class */ (function (_super) {
     __extends$e(MainBundleResource, _super);
-    function MainBundleResource(path) {
-        return _super.call(this, "mainBundle", path) || this;
+    function MainBundleResource(fileName) {
+        return _super.call(this, "mainBundle", fileName) || this;
     }
     return MainBundleResource;
+}(Resource));
+var BundleResource = /** @class */ (function (_super) {
+    __extends$e(BundleResource, _super);
+    function BundleResource(bundleName, fileName) {
+        return _super.call(this, "bundle", bundleName + "://" + fileName) || this;
+    }
+    return BundleResource;
 }(Resource));
 
 var __extends$d = (undefined && undefined.__extends) || (function () {
@@ -4389,6 +4396,7 @@ exports.AssetResource = AssetResource;
 exports.BOTTOM = BOTTOM;
 exports.BackgroundColorAnimation = BackgroundColorAnimation;
 exports.Base64Resource = Base64Resource;
+exports.BundleResource = BundleResource;
 exports.CENTER = CENTER;
 exports.CENTER_X = CENTER_X;
 exports.CENTER_Y = CENTER_Y;

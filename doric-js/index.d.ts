@@ -1660,7 +1660,10 @@ declare module 'doric/lib/src/util/resource' {
         * This is for iOS platform
         */
     export class MainBundleResource extends Resource {
-            constructor(path: string);
+            constructor(fileName: string);
+    }
+    export class BundleResource extends Resource {
+            constructor(bundleName: string, fileName: string);
     }
 }
 

@@ -47,7 +47,12 @@ export class AssetResource extends Resource {
  * This is for iOS platform
  */
 export class MainBundleResource extends Resource {
-    constructor(path) {
-        super("mainBundle", path);
+    constructor(fileName) {
+        super("mainBundle", fileName);
+    }
+}
+export class BundleResource extends Resource {
+    constructor(bundleName, fileName) {
+        super("bundle", `${bundleName}://${fileName}`);
     }
 }

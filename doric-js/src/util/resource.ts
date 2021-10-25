@@ -41,6 +41,7 @@ export class DrawableResource extends Resource {
         super("drawable", name)
     }
 }
+
 export class RawResource extends Resource {
     constructor(name: string) {
         super("raw", name)
@@ -57,7 +58,13 @@ export class AssetResource extends Resource {
  * This is for iOS platform
  */
 export class MainBundleResource extends Resource {
-    constructor(path: string) {
-        super("mainBundle", path)
+    constructor(fileName: string) {
+        super("mainBundle", fileName)
+    }
+}
+
+export class BundleResource extends Resource {
+    constructor(bundleName: string, fileName: string) {
+        super("bundle", `${bundleName}://${fileName}`)
     }
 }

@@ -33,5 +33,8 @@ export declare class AssetResource extends Resource {
  * This is for iOS platform
  */
 export declare class MainBundleResource extends Resource {
-    constructor(path: string);
+    constructor(fileName: string);
+}
+export declare class BundleResource extends Resource {
+    constructor(bundleName: string, fileName: string);
 }

@@ -60,6 +60,7 @@
 #import "DoricBase64ResourceLoader.h"
 #import "DoricLocalResourceLoader.h"
 #import "DoricRemoteResourceLoader.h"
+#import "DoricCommonBundleResourceLoader.h"
 
 @interface DoricRegistry ()
 
@@ -139,6 +140,7 @@
     [self.loaderManager registerLoader:[DoricLocalResourceLoader new]];
     [self.loaderManager registerLoader:[DoricRemoteResourceLoader new]];
     [self.loaderManager registerLoader:[DoricBase64ResourceLoader new]];
+    [self.loaderManager registerLoader:[DoricCommonBundleResourceLoader new]];
 }
 
 - (void)registerJSBundle:(NSString *)bundle withName:(NSString *)name {

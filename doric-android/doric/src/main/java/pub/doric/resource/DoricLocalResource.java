@@ -28,18 +28,16 @@ import pub.doric.async.AsyncResult;
  * @CreateDate: 2021/10/20
  */
 public class DoricLocalResource extends DoricResource {
-    private final String filePath;
 
     public DoricLocalResource(DoricContext doricContext, String identifier) {
-        super(doricContext);
-        this.filePath = identifier;
+        super(doricContext, identifier);
     }
 
     @Override
     public AsyncResult<InputStream> asInputStream() {
         AsyncResult<InputStream> result = new AsyncResult<>();
         try {
-            result.setResult(new FileInputStream(filePath));
+            result.setResult(new FileInputStream(identifier));
         } catch (FileNotFoundException e) {
             result.setError(e);
         }

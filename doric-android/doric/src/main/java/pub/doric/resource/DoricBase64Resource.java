@@ -32,11 +32,9 @@ import pub.doric.utils.DoricUtils;
  * @CreateDate: 2021/10/22
  */
 class DoricBase64Resource extends DoricResource {
-    private final String identifier;
 
     public DoricBase64Resource(DoricContext doricContext, String identifier) {
-        super(doricContext);
-        this.identifier = identifier;
+        super(doricContext, identifier);
     }
 
     @Override

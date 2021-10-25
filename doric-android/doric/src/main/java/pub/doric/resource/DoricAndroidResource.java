@@ -27,12 +27,10 @@ import pub.doric.async.AsyncResult;
  */
 public class DoricAndroidResource extends DoricResource {
     private final String defType;
-    private final String identifier;
 
-    public DoricAndroidResource(String defType, String identifier, DoricContext doricContext) {
-        super(doricContext);
+    public DoricAndroidResource(String defType, DoricContext doricContext, String identifier) {
+        super(doricContext, identifier);
         this.defType = defType;
-        this.identifier = identifier;
     }
 
     @Override

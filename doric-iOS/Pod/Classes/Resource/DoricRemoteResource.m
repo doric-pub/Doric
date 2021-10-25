@@ -13,27 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pub.doric.resource;
+//
+// Created by pengfei.zhou on 2021/10/25.
+//
 
-import java.io.InputStream;
-
-import pub.doric.DoricContext;
-import pub.doric.async.AsyncResult;
+#import "DoricRemoteResource.h"
 
 
-/**
- * @Description: This represents a resource entity
- * @Author: pengfei.zhou
- * @CreateDate: 2021/10/20
- */
-public abstract class DoricResource {
-    protected final DoricContext doricContext;
-    protected final String identifier;
-
-    public DoricResource(DoricContext doricContext, String identifier) {
-        this.doricContext = doricContext;
-        this.identifier = identifier;
-    }
-
-    public abstract AsyncResult<byte[]> fetchRaw();
+@implementation DoricRemoteResource
+- (DoricAsyncResult <NSData *> *)fetchRaw {
+    DoricAsyncResult *result = [DoricAsyncResult new];
+    NSURL *url = [NSURL URLWithString:self.identifier];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSData *urlData = [NSData dataWithContentsOfURL:url];
+        [result setupResult:urlData];
+    });
+    return result;
 }
+@end

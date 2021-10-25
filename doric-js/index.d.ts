@@ -1635,23 +1635,23 @@ declare module 'doric/lib/src/util/resource' {
                     identifier: string;
             };
     }
-    export class FileResource extends Resource {
+    export class LocalResource extends Resource {
             constructor(path: string);
     }
     export class RemoteResource extends Resource {
             constructor(url: string);
     }
     export class Base64Resource extends Resource {
-            constructor(url: string);
+            constructor(content: string);
     }
     /**
         * This is for android platform
         */
     export class DrawableResource extends Resource {
-            constructor(url: string);
+            constructor(name: string);
     }
     export class RawResource extends Resource {
-            constructor(url: string);
+            constructor(name: string);
     }
     export class AssetResource extends Resource {
             constructor(path: string);

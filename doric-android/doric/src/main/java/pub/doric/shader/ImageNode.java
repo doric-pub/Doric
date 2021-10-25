@@ -57,7 +57,6 @@ import java.io.InputStream;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import pub.doric.DoricContext;
-import pub.doric.DoricSingleton;
 import pub.doric.async.AsyncResult;
 import pub.doric.extension.bridge.DoricMethod;
 import pub.doric.extension.bridge.DoricPlugin;
@@ -371,22 +370,10 @@ public class ImageNode extends ViewNode<ImageView> {
                 final String identifier = resource.getProperty("identifier").asString().value();
                 DoricResource doricResource = getDoricContext().getDriver().getRegistry().getResourceManager().load(getDoricContext(), type, identifier);
                 if (doricResource != null) {
-                    doricResource.asInputStream().setCallback(new AsyncResult.Callback<InputStream>() {
+                    doricResource.fetchRaw().setCallback(new AsyncResult.Callback<byte[]>() {
                         @Override
-                        public void onResult(InputStream result) {
-                            try {
-                                byte[] imageData = new byte[result.available()];
-                                result.read(imageData, 0, result.available());
-                                loadIntoTarget(Glide.with(getContext()).load(imageData));
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            } finally {
-                                try {
-                                    result.close();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
+                        public void onResult(byte[] imageData) {
+                            loadIntoTarget(Glide.with(getContext()).load(imageData));
                         }
 
                         @Override

@@ -2147,12 +2147,12 @@ var Resource = /** @class */ (function () {
     };
     return Resource;
 }());
-var FileResource = /** @class */ (function (_super) {
-    __extends$e(FileResource, _super);
-    function FileResource(path) {
-        return _super.call(this, "file", path) || this;
+var LocalResource = /** @class */ (function (_super) {
+    __extends$e(LocalResource, _super);
+    function LocalResource(path) {
+        return _super.call(this, "local", path) || this;
     }
-    return FileResource;
+    return LocalResource;
 }(Resource));
 var RemoteResource = /** @class */ (function (_super) {
     __extends$e(RemoteResource, _super);
@@ -2163,8 +2163,8 @@ var RemoteResource = /** @class */ (function (_super) {
 }(Resource));
 var Base64Resource = /** @class */ (function (_super) {
     __extends$e(Base64Resource, _super);
-    function Base64Resource(url) {
-        return _super.call(this, "base64", url) || this;
+    function Base64Resource(content) {
+        return _super.call(this, "base64", content) || this;
     }
     return Base64Resource;
 }(Resource));
@@ -2173,15 +2173,15 @@ var Base64Resource = /** @class */ (function (_super) {
  */
 var DrawableResource = /** @class */ (function (_super) {
     __extends$e(DrawableResource, _super);
-    function DrawableResource(url) {
-        return _super.call(this, "drawable", url) || this;
+    function DrawableResource(name) {
+        return _super.call(this, "drawable", name) || this;
     }
     return DrawableResource;
 }(Resource));
 var RawResource = /** @class */ (function (_super) {
     __extends$e(RawResource, _super);
-    function RawResource(url) {
-        return _super.call(this, "raw", url) || this;
+    function RawResource(name) {
+        return _super.call(this, "raw", name) || this;
     }
     return RawResource;
 }(Resource));
@@ -4395,7 +4395,6 @@ exports.CENTER_Y = CENTER_Y;
 exports.Color = Color;
 exports.Draggable = Draggable;
 exports.DrawableResource = DrawableResource;
-exports.FileResource = FileResource;
 exports.FlexLayout = FlexLayout;
 exports.FlexTypedValue = FlexTypedValue;
 exports.FlowLayout = FlowLayout;
@@ -4411,6 +4410,7 @@ exports.LEFT = LEFT;
 exports.LayoutConfigImpl = LayoutConfigImpl;
 exports.List = List;
 exports.ListItem = ListItem;
+exports.LocalResource = LocalResource;
 exports.MainBundleResource = MainBundleResource;
 exports.ModularPanel = ModularPanel;
 exports.Module = Module;

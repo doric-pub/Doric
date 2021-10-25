@@ -13,27 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pub.doric.resource;
+//
+// Created by pengfei.zhou on 2021/10/25.
+//
 
-import java.io.InputStream;
+#import "DoricBase64ResourceLoader.h"
+#import "DoricBase64Resource.h"
 
-import pub.doric.DoricContext;
-import pub.doric.async.AsyncResult;
-
-
-/**
- * @Description: This represents a resource entity
- * @Author: pengfei.zhou
- * @CreateDate: 2021/10/20
- */
-public abstract class DoricResource {
-    protected final DoricContext doricContext;
-    protected final String identifier;
-
-    public DoricResource(DoricContext doricContext, String identifier) {
-        this.doricContext = doricContext;
-        this.identifier = identifier;
-    }
-
-    public abstract AsyncResult<byte[]> fetchRaw();
+@implementation DoricBase64ResourceLoader
+- (NSString *)resourceType {
+    return @"base64";
 }
+
+- (__kindof DoricResource *)load:(NSString *)identifier withContext:(DoricContext *)context {
+    return [[DoricBase64Resource alloc] initWithContext:context identifier:identifier];
+}
+@end

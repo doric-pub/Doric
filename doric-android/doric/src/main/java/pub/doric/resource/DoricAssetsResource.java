@@ -32,13 +32,24 @@ public class DoricAssetsResource extends DoricResource {
     }
 
     @Override
-    public AsyncResult<InputStream> asInputStream() {
-        AsyncResult<InputStream> result = new AsyncResult<>();
+    public AsyncResult<byte[]> fetchRaw() {
+        AsyncResult<byte[]> result = new AsyncResult<>();
+        InputStream inputStream = null;
         try {
-            InputStream inputStream = doricContext.getContext().getAssets().open(identifier);
-            result.setResult(inputStream);
+            inputStream = doricContext.getContext().getAssets().open(identifier);
+            byte[] data = new byte[inputStream.available()];
+            inputStream.read(data);
+            result.setResult(data);
         } catch (IOException e) {
             result.setError(e);
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return result;
     }

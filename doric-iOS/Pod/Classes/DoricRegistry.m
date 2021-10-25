@@ -56,6 +56,10 @@
 #import "DoricJSEngine.h"
 #import "DoricSingleton.h"
 #import "DoricGestureContainerNode.h"
+#import "DoricBundleResourceLoader.h"
+#import "DoricBase64ResourceLoader.h"
+#import "DoricLocalResourceLoader.h"
+#import "DoricRemoteResourceLoader.h"
 
 @interface DoricRegistry ()
 
@@ -83,6 +87,7 @@
         _plugins = [NSMutableDictionary new];
         _nodes = [NSMutableDictionary new];
         _monitors = [NSMutableSet new];
+        _loaderManager = [DoricResourceLoaderManager new];
         [self innerRegister];
         [DoricSingleton.instance.libraries enumerateObjectsUsingBlock:^(DoricLibrary *obj, BOOL *stop) {
             [obj load:self];
@@ -127,6 +132,13 @@
     [self registerViewNode:DoricSwitchNode.class withName:@"Switch"];
     [self registerViewNode:DoricFlexNode.class withName:@"FlexLayout"];
     [self registerViewNode:DoricGestureContainerNode.class withName:@"GestureContainer"];
+
+    [self.loaderManager registerLoader:[[DoricBundleResourceLoader alloc]
+            initWithResourceType:@"mainBundle"
+                          bundle:[NSBundle mainBundle]]];
+    [self.loaderManager registerLoader:[DoricLocalResourceLoader new]];
+    [self.loaderManager registerLoader:[DoricRemoteResourceLoader new]];
+    [self.loaderManager registerLoader:[DoricBase64ResourceLoader new]];
 }
 
 - (void)registerJSBundle:(NSString *)bundle withName:(NSString *)name {

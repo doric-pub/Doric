@@ -10,9 +10,9 @@ export class Resource {
         };
     }
 }
-export class FileResource extends Resource {
+export class LocalResource extends Resource {
     constructor(path) {
-        super("file", path);
+        super("local", path);
     }
 }
 export class RemoteResource extends Resource {
@@ -21,21 +21,21 @@ export class RemoteResource extends Resource {
     }
 }
 export class Base64Resource extends Resource {
-    constructor(url) {
-        super("base64", url);
+    constructor(content) {
+        super("base64", content);
     }
 }
 /**
  * This is for android platform
  */
 export class DrawableResource extends Resource {
-    constructor(url) {
-        super("drawable", url);
+    constructor(name) {
+        super("drawable", name);
     }
 }
 export class RawResource extends Resource {
-    constructor(url) {
-        super("raw", url);
+    constructor(name) {
+        super("raw", name);
     }
 }
 export class AssetResource extends Resource {

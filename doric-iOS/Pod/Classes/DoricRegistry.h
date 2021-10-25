@@ -23,6 +23,7 @@
 #import <Foundation/Foundation.h>
 #import "DoricMonitorProtocol.h"
 #import <UIKit/UIKit.h>
+#import "DoricResourceLoaderManager.h"
 
 NS_ASSUME_NONNULL_BEGIN
 @class DoricLibrary;
@@ -33,6 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) UIImage *defaultPlaceHolderImage;
 @property(nonatomic, strong) UIImage *defaultErrorImage;
 @property(nonatomic, strong) id <DoricPerformanceGlobalAnchorHookProtocol> globalPerformanceAnchorHook;
+@property(nonatomic, strong) DoricResourceLoaderManager *loaderManager;
 
 - (instancetype)initWithJSEngine:(DoricJSEngine *)jsEngine;
 

@@ -15,9 +15,9 @@ export abstract class Resource implements Modeling {
     }
 }
 
-export class FileResource extends Resource {
+export class LocalResource extends Resource {
     constructor(path: string) {
-        super("file", path);
+        super("local", path);
     }
 }
 

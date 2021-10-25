@@ -13,27 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pub.doric.resource;
+//
+// Created by pengfei.zhou on 2021/10/22.
+//
 
-import java.io.InputStream;
+#import "DoricResource.h"
 
-import pub.doric.DoricContext;
-import pub.doric.async.AsyncResult;
-
-
-/**
- * @Description: This represents a resource entity
- * @Author: pengfei.zhou
- * @CreateDate: 2021/10/20
- */
-public abstract class DoricResource {
-    protected final DoricContext doricContext;
-    protected final String identifier;
-
-    public DoricResource(DoricContext doricContext, String identifier) {
-        this.doricContext = doricContext;
-        this.identifier = identifier;
+@implementation DoricResource
+- (instancetype)initWithContext:(DoricContext *)context identifier:(NSString *)identifier {
+    if (self = [super init]) {
+        _context = context;
+        _identifier = identifier;
     }
-
-    public abstract AsyncResult<byte[]> fetchRaw();
+    return self;
 }
+- (DoricAsyncResult<NSData *> *)fetchRaw {
+    return nil;
+}
+@end

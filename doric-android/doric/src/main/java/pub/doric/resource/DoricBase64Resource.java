@@ -19,9 +19,6 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Pair;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
 import pub.doric.DoricContext;
 import pub.doric.async.AsyncResult;
 import pub.doric.utils.DoricUtils;
@@ -38,8 +35,8 @@ class DoricBase64Resource extends DoricResource {
     }
 
     @Override
-    public AsyncResult<InputStream> asInputStream() {
-        AsyncResult<InputStream> ret = new AsyncResult<>();
+    public AsyncResult<byte[]> fetchRaw() {
+        AsyncResult<byte[]> ret = new AsyncResult<>();
         Pair<String, String> result = DoricUtils.translateBase64(identifier);
         if (result != null) {
             String imageType = result.first;
@@ -48,7 +45,7 @@ class DoricBase64Resource extends DoricResource {
             if (!TextUtils.isEmpty(imageType) && !TextUtils.isEmpty(base64)) {
                 try {
                     byte[] data = Base64.decode(base64, Base64.DEFAULT);
-                    ret.setResult(new ByteArrayInputStream(data));
+                    ret.setResult(data);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

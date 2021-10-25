@@ -233,7 +233,57 @@
 }
 
 - (void)blendView:(UIImageView *)view forPropName:(NSString *)name propValue:(id)prop {
-    if ([@"imageUrl" isEqualToString:name]) {
+    if ([@"image" isEqualToString:name]) {
+        NSString *type = prop[@"type"];
+        NSString *identifier = prop[@"identifier"];
+        DoricAsyncResult <NSData *> *asyncResult = [[self.doricContext.driver.registry.loaderManager
+                load:identifier withResourceType:type withContext:self.doricContext] fetchRaw];
+        [asyncResult setResultCallback:^(NSData *imageData) {
+            [self.doricContext dispatchToMainQueue:^{
+#if DORIC_USE_YYWEBIMAGE
+                YYImage *image = [YYImage imageWithData:imageData scale:self.imageScale];
+#elif DORIC_USE_SDWEBIMAGE
+                UIImage *image = [SDAnimatedImage imageWithData:imageData scale:self.imageScale];
+                if (!image) {
+                    image = [UIImage imageWithData:imageData scale:self.imageScale];
+                }
+#else
+                UIImage *image = [UIImage imageWithData:imageData scale:self.imageScale];
+#endif
+                view.image = image;
+                DoricSuperNode *node = self.superNode;
+                while (node.superNode != nil) {
+                    node = node.superNode;
+                }
+                [node requestLayout];
+                if (self.loadCallbackId.length > 0) {
+                    if (image) {
+                        [self callJSResponse:self.loadCallbackId,
+                                             @{
+                                                     @"width": @(image.size.width),
+                                                     @"height": @(image.size.height),
+#if DORIC_USE_YYWEBIMAGE
+                                                @"animated": (image.animatedImageData != nil) ? @(YES) : @(NO),
+#elif DORIC_USE_SDWEBIMAGE
+                                                @"animated": ([image isKindOfClass:SDAnimatedImage.class]
+                                                && ((SDAnimatedImage *) image).animatedImageFrameCount > 0)
+                                                ? @(YES)
+                                                : @(NO),
+#else
+                                                @"animated": @(NO),
+#endif
+                                        },
+                                        nil];
+                    } else {
+                        [self callJSResponse:self.loadCallbackId, nil];
+                    }
+                }
+            }];
+        }];
+        [asyncResult setExceptionCallback:^(NSException *e) {
+            DoricLog(@"Cannot load resource type = %@, identifier = %@, %@", type, identifier, e.reason);
+        }];
+    } else if ([@"imageUrl" isEqualToString:name]) {
         __weak typeof(self) _self = self;
         __block BOOL async = NO;
         view.doricLayout.undefined = YES;

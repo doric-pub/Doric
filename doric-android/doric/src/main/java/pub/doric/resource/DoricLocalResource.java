@@ -16,8 +16,7 @@
 package pub.doric.resource;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.IOException;
 
 import pub.doric.DoricContext;
 import pub.doric.async.AsyncResult;
@@ -34,12 +33,24 @@ public class DoricLocalResource extends DoricResource {
     }
 
     @Override
-    public AsyncResult<InputStream> asInputStream() {
-        AsyncResult<InputStream> result = new AsyncResult<>();
+    public AsyncResult<byte[]> fetchRaw() {
+        AsyncResult<byte[]> result = new AsyncResult<>();
+        FileInputStream fis = null;
         try {
-            result.setResult(new FileInputStream(identifier));
-        } catch (FileNotFoundException e) {
+             fis = new FileInputStream(identifier);
+            byte[] data = new byte[fis.available()];
+            fis.read(data);
+            result.setResult(data);
+        } catch (Exception e) {
             result.setError(e);
+        }finally {
+            if(fis!=null){
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return result;
     }

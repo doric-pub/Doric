@@ -8,23 +8,23 @@ export declare abstract class Resource implements Modeling {
         identifier: string;
     };
 }
-export declare class FileResource extends Resource {
+export declare class LocalResource extends Resource {
     constructor(path: string);
 }
 export declare class RemoteResource extends Resource {
     constructor(url: string);
 }
 export declare class Base64Resource extends Resource {
-    constructor(url: string);
+    constructor(content: string);
 }
 /**
  * This is for android platform
  */
 export declare class DrawableResource extends Resource {
-    constructor(url: string);
+    constructor(name: string);
 }
 export declare class RawResource extends Resource {
-    constructor(url: string);
+    constructor(name: string);
 }
 export declare class AssetResource extends Resource {
     constructor(path: string);

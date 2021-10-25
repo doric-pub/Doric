@@ -15,6 +15,7 @@
  */
 package pub.doric.resource;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import pub.doric.DoricContext;
@@ -34,14 +35,30 @@ public class DoricAndroidResource extends DoricResource {
     }
 
     @Override
-    public AsyncResult<InputStream> asInputStream() {
-        AsyncResult<InputStream> result = new AsyncResult<>();
+    public AsyncResult<byte[]> fetchRaw() {
+        AsyncResult<byte[]> result = new AsyncResult<>();
         int resId = doricContext.getContext().getResources().getIdentifier(
                 identifier,
                 defType,
                 doricContext.getContext().getPackageName());
         if (resId > 0) {
-            result.setResult(doricContext.getContext().getResources().openRawResource(resId));
+            InputStream inputStream = null;
+            try {
+                inputStream = doricContext.getContext().getResources().openRawResource(resId);
+                byte[] data = new byte[inputStream.available()];
+                inputStream.read(data);
+                result.setResult(data);
+            } catch (Exception e) {
+                result.setError(e);
+            } finally {
+                if (inputStream != null) {
+                    try {
+                        inputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         } else {
             result.setError(new Throwable("Cannot find resource for :" + identifier + ",type = " + defType));
         }

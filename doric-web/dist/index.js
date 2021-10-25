@@ -3190,9 +3190,9 @@ class Resource {
         };
     }
 }
-class FileResource extends Resource {
+class LocalResource extends Resource {
     constructor(path) {
-        super("file", path);
+        super("local", path);
     }
 }
 class RemoteResource extends Resource {
@@ -3201,21 +3201,21 @@ class RemoteResource extends Resource {
     }
 }
 class Base64Resource extends Resource {
-    constructor(url) {
-        super("base64", url);
+    constructor(content) {
+        super("base64", content);
     }
 }
 /**
  * This is for android platform
  */
 class DrawableResource extends Resource {
-    constructor(url) {
-        super("drawable", url);
+    constructor(name) {
+        super("drawable", name);
     }
 }
 class RawResource extends Resource {
-    constructor(url) {
-        super("raw", url);
+    constructor(name) {
+        super("raw", name);
     }
 }
 class AssetResource extends Resource {
@@ -4953,7 +4953,6 @@ exports.CENTER_Y = CENTER_Y;
 exports.Color = Color;
 exports.Draggable = Draggable;
 exports.DrawableResource = DrawableResource;
-exports.FileResource = FileResource;
 exports.FlexLayout = FlexLayout;
 exports.FlexTypedValue = FlexTypedValue;
 exports.FlowLayout = FlowLayout;
@@ -4969,6 +4968,7 @@ exports.LEFT = LEFT;
 exports.LayoutConfigImpl = LayoutConfigImpl;
 exports.List = List;
 exports.ListItem = ListItem;
+exports.LocalResource = LocalResource;
 exports.MainBundleResource = MainBundleResource;
 exports.ModularPanel = ModularPanel;
 exports.Module = Module;

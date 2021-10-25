@@ -23,8 +23,7 @@ import com.bumptech.glide.request.target.Target;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.IOException;
 
 import androidx.annotation.Nullable;
 import pub.doric.DoricContext;
@@ -42,8 +41,8 @@ public class DoricRemoteResource extends DoricResource {
     }
 
     @Override
-    public AsyncResult<InputStream> asInputStream() {
-        final AsyncResult<InputStream> result = new AsyncResult<>();
+    public AsyncResult<byte[]> fetchRaw() {
+        final AsyncResult<byte[]> result = new AsyncResult<>();
         Glide.with(doricContext.getContext()).download(identifier)
                 .listener(new RequestListener<File>() {
                     @Override
@@ -54,10 +53,22 @@ public class DoricRemoteResource extends DoricResource {
 
                     @Override
                     public boolean onResourceReady(File resource, Object model, Target<File> target, DataSource dataSource, boolean isFirstResource) {
+                        FileInputStream fis = null;
                         try {
-                            result.setResult(new FileInputStream(resource));
-                        } catch (FileNotFoundException e) {
+                            fis = new FileInputStream(resource);
+                            byte[] data = new byte[fis.available()];
+                            fis.read(data);
+                            result.setResult(data);
+                        } catch (Exception e) {
                             result.setError(e);
+                        } finally {
+                            if (fis != null) {
+                                try {
+                                    fis.close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
                         }
                         return false;
                     }

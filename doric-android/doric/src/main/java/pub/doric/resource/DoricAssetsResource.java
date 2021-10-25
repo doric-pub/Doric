@@ -27,18 +27,15 @@ import pub.doric.async.AsyncResult;
  * @CreateDate: 2021/10/20
  */
 public class DoricAssetsResource extends DoricResource {
-    private final String path;
-
-    public DoricAssetsResource(String path, DoricContext doricContext) {
-        super(doricContext);
-        this.path = path;
+    public DoricAssetsResource(DoricContext doricContext, String identifier) {
+        super(doricContext, identifier);
     }
 
     @Override
     public AsyncResult<InputStream> asInputStream() {
         AsyncResult<InputStream> result = new AsyncResult<>();
         try {
-            InputStream inputStream = doricContext.getContext().getAssets().open(path);
+            InputStream inputStream = doricContext.getContext().getAssets().open(identifier);
             result.setResult(inputStream);
         } catch (IOException e) {
             result.setError(e);

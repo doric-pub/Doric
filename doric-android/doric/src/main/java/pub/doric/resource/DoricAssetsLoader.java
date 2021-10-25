@@ -30,6 +30,6 @@ public class DoricAssetsLoader implements DoricResourceLoader {
 
     @Override
     public DoricResource load(DoricContext doricContext, String identifier) {
-        return new DoricAssetsResource(identifier, doricContext);
+        return new DoricAssetsResource(doricContext, identifier);
     }
 }

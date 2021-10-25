@@ -37,6 +37,6 @@ public class DoricAndroidLoader implements DoricResourceLoader {
 
     @Override
     public DoricResource load(DoricContext doricContext, String identifier) {
-        return new DoricAndroidResource(this.defType, identifier, doricContext);
+        return new DoricAndroidResource(this.defType, doricContext, identifier);
     }
 }

@@ -28,9 +28,11 @@ import pub.doric.async.AsyncResult;
  */
 public abstract class DoricResource {
     protected final DoricContext doricContext;
+    protected final String identifier;
 
-    public DoricResource(DoricContext doricContext) {
+    public DoricResource(DoricContext doricContext, String identifier) {
         this.doricContext = doricContext;
+        this.identifier = identifier;
     }
 
     public abstract AsyncResult<InputStream> asInputStream();

@@ -37,17 +37,14 @@ import pub.doric.async.AsyncResult;
  */
 public class DoricRemoteResource extends DoricResource {
 
-    private final String url;
-
     public DoricRemoteResource(DoricContext doricContext, String identifier) {
-        super(doricContext);
-        this.url = identifier;
+        super(doricContext, identifier);
     }
 
     @Override
     public AsyncResult<InputStream> asInputStream() {
         final AsyncResult<InputStream> result = new AsyncResult<>();
-        Glide.with(doricContext.getContext()).download(url)
+        Glide.with(doricContext.getContext()).download(identifier)
                 .listener(new RequestListener<File>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<File> target, boolean isFirstResource) {

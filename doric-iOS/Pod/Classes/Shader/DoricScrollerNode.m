@@ -236,6 +236,5 @@
     self.view.scrollEnabled = YES;
     self.onScrollEndFuncId = nil;
     self.onScrollFuncId = nil;
-    self.view.scrollEnabled = YES;
 }
 @end

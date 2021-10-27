@@ -636,5 +636,8 @@
     self.errorColor = nil;
     self.errorImage = nil;
     self.errorImageBase64 = nil;
+    self.imageScale = UIScreen.mainScreen.scale;
+    self.blurEffectView = nil;
+    self.view.contentMode = UIViewContentModeScaleAspectFill;
 }
 @end

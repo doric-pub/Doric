@@ -177,4 +177,9 @@ public class DoricLayer extends MaximumFrameLayout {
         return 0;
     }
 
+    public void reset() {
+        mCornerRadii = null;
+        mBorderPaint = null;
+        mShadowPaint = null;
+    }
 }

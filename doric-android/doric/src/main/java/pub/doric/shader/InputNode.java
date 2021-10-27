@@ -16,6 +16,7 @@
 package pub.doric.shader;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -477,5 +478,17 @@ public class InputNode extends ViewNode<EditText> implements TextWatcher, View.O
             e.printStackTrace();
         }
         return ret ? null : "";
+    }
+
+    @Override
+    protected void reset() {
+        super.reset();
+        mView.setText("");
+        mView.setTextColor(Color.BLACK);
+        mView.setHint("");
+        mView.setHintTextColor(Color.GRAY);
+        onTextChangeId = null;
+        onFocusChangeId = null;
+        beforeTextChangeId = null;
     }
 }

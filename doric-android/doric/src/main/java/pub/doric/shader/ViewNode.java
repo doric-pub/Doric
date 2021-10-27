@@ -144,6 +144,9 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     protected abstract T build();
 
     public void blend(JSObject jsObject) {
+        if (mSuperNode != null && mSuperNode.mReusable) {
+            reset();
+        }
         if (jsObject != null) {
             JSValue value = jsObject.getProperty("layoutConfig");
             if (value.isObject()) {
@@ -1185,5 +1188,35 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
                 .put("x", DoricUtils.px2dp(position[0]))
                 .put("y", DoricUtils.px2dp(position[1]))
                 .toJSONObject();
+    }
+
+    protected void reset() {
+        ViewGroup.LayoutParams layoutParams = getLayoutParams();
+        layoutParams.width = 0;
+        layoutParams.height = 0;
+        if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
+            ((ViewGroup.MarginLayoutParams) layoutParams).leftMargin = 0;
+            ((ViewGroup.MarginLayoutParams) layoutParams).rightMargin = 0;
+            ((ViewGroup.MarginLayoutParams) layoutParams).topMargin = 0;
+            ((ViewGroup.MarginLayoutParams) layoutParams).bottomMargin = 0;
+        }
+        setBackgroundColor(Color.TRANSPARENT);
+        setAlpha(1);
+        setTranslationX(0);
+        setTranslationY(0);
+        setScaleX(0);
+        setScaleY(0);
+        setRotation(0);
+        setRotationX(0);
+        setRotationY(0);
+        mView.setPadding(0, 0, 0, 0);
+        mView.setOnClickListener(null);
+        DoricLayer doricLayer = this.doricLayer;
+        if (mView instanceof DoricLayer) {
+            doricLayer = (DoricLayer) mView;
+        }
+        if (doricLayer != null) {
+            doricLayer.reset();
+        }
     }
 }

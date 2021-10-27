@@ -499,4 +499,20 @@ public class ImageNode extends ViewNode<ImageView> {
             ((Animatable) drawable).stop();
         }
     }
+
+    @Override
+    protected void reset() {
+        super.reset();
+        mView.setImageDrawable(null);
+        mView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        loadCallbackId = "";
+        isBlur = false;
+        placeHolderImage = null;
+        placeHolderColor = Color.TRANSPARENT;
+        placeHolderImageBase64 = null;
+        errorImage = null;
+        errorColor = Color.TRANSPARENT;
+        errorImageBase64 = null;
+        imageScale = DoricUtils.getScreenScale();
+    }
 }

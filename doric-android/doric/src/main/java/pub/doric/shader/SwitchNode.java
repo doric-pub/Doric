@@ -115,4 +115,11 @@ public class SwitchNode extends ViewNode<SwitchCompat> {
         mView.setThumbTintList(thumbTintList);
         mView.setTrackTintList(trackTintList);
     }
+
+    @Override
+    protected void reset() {
+        super.reset();
+        mView.setChecked(false);
+        mView.setOnCheckedChangeListener(null);
+    }
 }

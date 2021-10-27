@@ -383,4 +383,16 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
         }
         return jsonArray;
     }
+
+    @Override
+    protected void reset() {
+        super.reset();
+        scrollable = true;
+        loadMore = false;
+        loadMoreViewId = null;
+        onLoadMoreFuncId = null;
+        onScrollFuncId = null;
+        onScrollEndFuncId = null;
+        flowAdapter.renderItemFuncId = null;
+    }
 }

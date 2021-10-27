@@ -409,4 +409,18 @@ public class TextNode extends ViewNode<TextView> {
         textView.getPaint().setShader(textShader);
         textView.invalidate();
     }
+
+    @Override
+    protected void reset() {
+        super.reset();
+        mView.setText("");
+        mView.setTextColor(Color.BLACK);
+        mView.setGravity(Gravity.CENTER);
+        mView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+        mView.setMaxLines(1);
+        mView.setSingleLine(true);
+        mView.setEllipsize(TextUtils.TruncateAt.END);
+        mView.getPaint().setStrikeThruText(false);
+        mView.getPaint().setUnderlineText(false);
+    }
 }

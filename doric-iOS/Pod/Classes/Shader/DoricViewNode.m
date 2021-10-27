@@ -933,7 +933,11 @@
 
 - (void)reset {
     self.view.backgroundColor = UIColor.clearColor;
+    DoricLayoutType doricLayoutType = self.view.doricLayout.layoutType;
     self.view.doricLayout = [[DoricLayout new] also:^(DoricLayout *it) {
+        it.width = 0;
+        it.height = 0;
+        it.layoutType = doricLayoutType;
         it.view = self.view;
     }];
 

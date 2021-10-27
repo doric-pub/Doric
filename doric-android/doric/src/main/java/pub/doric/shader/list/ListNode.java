@@ -352,4 +352,16 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
             mView.scrollToPosition(pos);
         }
     }
+
+    @Override
+    protected void reset() {
+        super.reset();
+        scrollable = true;
+        loadMore = false;
+        loadMoreViewId = null;
+        onLoadMoreFuncId = null;
+        onScrollFuncId = null;
+        onScrollEndFuncId = null;
+        renderItemFuncId = null;
+    }
 }

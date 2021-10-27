@@ -248,4 +248,12 @@ public class SliderNode extends SuperNode<RecyclerView> {
             return pageIndex;
         }
     }
+
+    @Override
+    protected void reset() {
+        super.reset();
+        scrollable = true;
+        onPageSlidedFuncId = null;
+        renderPageFuncId = null;
+    }
 }

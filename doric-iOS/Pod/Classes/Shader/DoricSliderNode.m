@@ -309,7 +309,6 @@
     [super reset];
     self.view.scrollEnabled = YES;
     self.onPageSelectedFuncId = nil;
-    self.view.scrollEnabled = YES;
     self.propRenderPageFuncId = nil;
     self.renderPageFuncId = nil;
 }

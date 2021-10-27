@@ -52,7 +52,7 @@ public class ScrollerNode extends SuperNode<HVScrollView> implements IDoricScrol
     private final Set<DoricScrollChangeListener> listeners = new HashSet<>();
     private String onScrollFuncId;
     private String onScrollEndFuncId;
-    private DoricJSDispatcher jsDispatcher = new DoricJSDispatcher();
+    private final DoricJSDispatcher jsDispatcher = new DoricJSDispatcher();
 
     private static class MaximumScrollView extends HVScrollView {
         private int maxWidth = Integer.MAX_VALUE;
@@ -262,5 +262,12 @@ public class ScrollerNode extends SuperNode<HVScrollView> implements IDoricScrol
             this.mView.scrollBy(DoricUtils.dp2px(offset.getProperty("x").asNumber().toFloat()),
                     DoricUtils.dp2px(offset.getProperty("y").asNumber().toFloat()));
         }
+    }
+
+    @Override
+    protected void reset() {
+        super.reset();
+        onScrollFuncId = null;
+        onScrollEndFuncId = null;
     }
 }

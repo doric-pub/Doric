@@ -93,4 +93,11 @@
     NSUInteger pageIndex = (NSUInteger) (self.view.contentOffset.x / self.view.width);
     return @(pageIndex);
 }
+
+- (void)reset {
+    [super reset];
+    self.view.scrollEnabled = YES;
+    self.onPageSelectedFuncId = nil;
+}
+
 @end

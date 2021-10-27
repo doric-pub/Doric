@@ -103,6 +103,9 @@
 }
 
 - (void)blend:(NSDictionary *)props {
+    if (self.superNode.reusable) {
+        [self reset];
+    }
     for (NSString *key in props) {
         id value = props[key];
         if (!value || [value isKindOfClass:[NSNull class]]) {
@@ -925,6 +928,28 @@
             return [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
         default:
             return [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault];
+    }
+}
+
+- (void)reset {
+    self.view.backgroundColor = UIColor.clearColor;
+    self.view.doricLayout = [[DoricLayout new] also:^(DoricLayout *it) {
+        it.view = self.view;
+    }];
+
+    self.view.alpha = 1.0f;
+    self.view.hidden = NO;
+    self.view.layer.transform = CATransform3DIdentity;
+    self.view.transform = CGAffineTransformIdentity;
+
+    self.view.layer.cornerRadius = 0;
+    self.view.layer.mask = nil;
+    self.view.layer.borderWidth = 0;
+    self.view.layer.borderColor = UIColor.clearColor.CGColor;
+    for (UIGestureRecognizer *gestureRecognizer in  self.view.gestureRecognizers) {
+        if ([gestureRecognizer isKindOfClass:UITapGestureRecognizer.class]) {
+            [self.view removeGestureRecognizer:gestureRecognizer];
+        }
     }
 }
 

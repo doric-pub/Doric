@@ -659,4 +659,20 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
     }
 }
 
+- (void)reset {
+    [super reset];
+    self.view.multiline = NO;
+    self.view.text = nil;
+    self.view.font = nil;
+    self.view.secureTextEntry = NO;
+    self.view.textAlignment = NSTextAlignmentNatural;
+    self.view.hintText = nil;
+    self.view.hintTextColor = UIColor.grayColor;
+    self.view.hintFont = nil;
+    self.view.editable = YES;
+    self.onFocusChange = nil;
+    self.onSubmitEditing = nil;
+    self.onTextChange = nil;
+    self.maxLength = nil;
+}
 @end

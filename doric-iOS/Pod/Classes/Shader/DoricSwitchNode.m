@@ -70,4 +70,10 @@
 - (NSNumber *)getState {
     return @(self.view.isOn);
 }
+
+- (void)reset {
+    [super reset];
+    self.view.on = NO;
+    self.onSwitchFuncId = nil;
+}
 @end

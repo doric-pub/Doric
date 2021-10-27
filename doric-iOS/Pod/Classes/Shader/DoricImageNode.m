@@ -625,4 +625,16 @@
 - (void)stopAnimating {
     [self.view stopAnimating];
 }
+
+- (void)reset {
+    [super reset];
+    self.view.image = nil;
+    self.loadCallbackId = nil;
+    self.placeHolderColor = nil;
+    self.placeHolderImage = nil;
+    self.placeHolderImageBase64 = nil;
+    self.errorColor = nil;
+    self.errorImage = nil;
+    self.errorImageBase64 = nil;
+}
 @end

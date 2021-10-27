@@ -57,4 +57,6 @@
 - (void)blendLayoutConfig:(NSDictionary *)params;
 
 - (void)afterBlended:(NSDictionary *)props;
+
+- (void)reset;
 @end

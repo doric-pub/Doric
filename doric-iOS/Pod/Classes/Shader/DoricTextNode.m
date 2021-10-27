@@ -344,4 +344,17 @@
         return image;
     }
 }
+
+- (void)reset {
+    [super reset];
+    self.view.text = nil;
+    self.view.font = nil;
+    self.view.textColor = UIColor.blackColor;
+    self.view.textAlignment = NSTextAlignmentNatural;
+    self.view.numberOfLines = 1;
+    self.view.layer.shadowOpacity = 0;
+    self.view.layer.shadowRadius = 3;
+    self.view.layer.shadowOffset = CGSizeMake(0, -3);
+    self.view.lineBreakMode = NSLineBreakByTruncatingTail;
+}
 @end

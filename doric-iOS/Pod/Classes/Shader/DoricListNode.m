@@ -472,4 +472,16 @@
         return @([self.view indexPathForCell:obj].row);
     }];
 }
+
+- (void)reset {
+    [super reset];
+    self.view.scrollEnabled = YES;
+    self.renderItemFuncId = nil;
+    self.onLoadMoreFuncId = nil;
+    self.loadMoreViewId = nil;
+    self.onScrollFuncId = nil;
+    self.onScrollEndFuncId = nil;
+    self.loadMore = NO;
+}
+
 @end

@@ -231,4 +231,11 @@
     [self.didScrollBlocks removeObject:didScrollListener];
 }
 
+- (void)reset {
+    [super reset];
+    self.view.scrollEnabled = YES;
+    self.onScrollEndFuncId = nil;
+    self.onScrollFuncId = nil;
+    self.view.scrollEnabled = YES;
+}
 @end

@@ -226,6 +226,7 @@
     } else if ([@"renderItem" isEqualToString:name]) {
         if ([self.renderItemFuncId isEqualToString:prop]) {
         } else {
+            self.loadAnchor = -1;
             [self.itemViewIds removeAllObjects];
             [self clearSubModel];
             [self.view reloadData];

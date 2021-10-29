@@ -19,19 +19,22 @@
   },
   "homepage": "https://github.com/doric-pub/doric#readme",
   "dependencies": {
-    "@rollup/plugin-commonjs": "^14.0.0",
-    "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^8.4.0",
     "axios": ">=0.21.1",
-    "doric": "file:../doric-js",
-    "rollup": "^2.24.0",
-    "smoothscroll-polyfill": "^0.4.4",
-    "typescript": "^4.2.2"
+    "smoothscroll-polyfill": "^0.4.4"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
   },
+  "peerDependencies": {
+    "doric": ">=0.9.0"
+  },
   "devDependencies": {
-    "@types/smoothscroll-polyfill": "^0.3.1"
+    "typescript": "^4.2.2",
+    "rollup": "^2.24.0",
+    "doric": "file:../doric-js",
+    "@types/smoothscroll-polyfill": "^0.3.1",
+    "@rollup/plugin-commonjs": "^14.0.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^8.4.0"
   }
 }

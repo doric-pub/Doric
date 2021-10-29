@@ -1567,7 +1567,7 @@ var doric = (function (exports) {
 
     return exports;
 
-}({}));
+})({});
 
 /**--------SandBox--------*/
 

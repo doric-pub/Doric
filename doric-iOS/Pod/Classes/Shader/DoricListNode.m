@@ -54,7 +54,7 @@
 @property(nonatomic, copy) NSString *renderItemFuncId;
 @property(nonatomic, copy) NSString *loadMoreViewId;
 @property(nonatomic, assign) BOOL loadMore;
-@property(nonatomic, assign) NSUInteger loadAnchor;
+@property(nonatomic, assign) NSInteger loadAnchor;
 @property(nonatomic, strong) NSMutableSet <DoricDidScrollBlock> *didScrollBlocks;
 @property(nonatomic, copy) NSString *onScrollFuncId;
 @property(nonatomic, copy) NSString *onScrollEndFuncId;
@@ -68,6 +68,7 @@
         _itemHeights = [NSMutableDictionary new];
         _itemActions = [NSMutableDictionary new];
         _batchCount = 15;
+        _loadAnchor = -1;
     }
     return self;
 }
@@ -103,6 +104,7 @@
         [self.view reloadData];
     } else if ([@"renderItem" isEqualToString:name]) {
         if (![self.renderItemFuncId isEqualToString:prop]) {
+            self.loadAnchor = -1;
             self.renderItemFuncId = prop;
             [self.itemViewIds.allValues forEach:^(NSString *obj) {
                 [self removeSubModel:obj];

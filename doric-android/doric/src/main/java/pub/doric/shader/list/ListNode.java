@@ -296,10 +296,6 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
         moveToPosition(pos.toInt(), animated);
     }
 
-    private int calibratePosition(int position) {
-        return position;
-    }
-
     @DoricMethod
     public JSONArray findVisibleItems() {
         LinearLayoutManager linearLayoutManager = (LinearLayoutManager) this.mView.getLayoutManager();

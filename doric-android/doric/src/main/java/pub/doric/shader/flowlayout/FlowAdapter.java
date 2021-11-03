@@ -67,6 +67,7 @@ class FlowAdapter extends RecyclerView.Adapter<FlowAdapter.DoricViewHolder> {
             JSObject jsObject = jsValue.asObject();
             holder.flowLayoutItemNode.setId(jsObject.getProperty("id").asString().value());
             JSObject props = jsObject.getProperty("props").asObject();
+            holder.flowLayoutItemNode.reset();
             holder.flowLayoutItemNode.blend(props);
             JSValue fullSpanValue = props.getProperty("fullSpan");
             if (fullSpanValue.isBoolean()) {

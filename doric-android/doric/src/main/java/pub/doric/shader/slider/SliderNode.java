@@ -250,7 +250,7 @@ public class SliderNode extends SuperNode<RecyclerView> {
     }
 
     @Override
-    protected void reset() {
+    public void reset() {
         super.reset();
         scrollable = true;
         onPageSlidedFuncId = null;

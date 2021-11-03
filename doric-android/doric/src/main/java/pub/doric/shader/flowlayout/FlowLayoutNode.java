@@ -20,7 +20,6 @@ import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -30,11 +29,8 @@ import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
@@ -385,7 +381,7 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
     }
 
     @Override
-    protected void reset() {
+    public void reset() {
         super.reset();
         scrollable = true;
         loadMore = false;

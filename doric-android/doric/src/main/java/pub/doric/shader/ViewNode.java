@@ -144,9 +144,6 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     protected abstract T build();
 
     public void blend(JSObject jsObject) {
-        if (mSuperNode != null && mSuperNode.mReusable) {
-            reset();
-        }
         if (jsObject != null) {
             JSValue value = jsObject.getProperty("layoutConfig");
             if (value.isObject()) {

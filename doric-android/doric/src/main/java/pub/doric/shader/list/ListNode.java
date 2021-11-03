@@ -26,7 +26,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSNumber;
 import com.github.pengfeizhou.jscore.JSONBuilder;
@@ -34,7 +33,6 @@ import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -350,7 +348,7 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
     }
 
     @Override
-    protected void reset() {
+    public void reset() {
         super.reset();
         scrollable = true;
         loadMore = false;

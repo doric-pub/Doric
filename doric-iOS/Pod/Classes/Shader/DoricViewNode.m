@@ -103,9 +103,6 @@
 }
 
 - (void)blend:(NSDictionary *)props {
-    if (self.superNode.reusable) {
-        [self reset];
-    }
     for (NSString *key in props) {
         id value = props[key];
         if (!value || [value isKindOfClass:[NSNull class]]) {

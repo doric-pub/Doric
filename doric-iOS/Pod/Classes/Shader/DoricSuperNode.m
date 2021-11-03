@@ -146,4 +146,12 @@
 
     return allKeys;
 }
+
+- (void)reset {
+    [super reset];
+    for (NSString *viewId in self.subNodes.allKeys) {
+        [[self subNodeWithViewId:viewId] reset];
+    }
+
+}
 @end

@@ -371,6 +371,8 @@
         [itemNode initWithSuperNode:self];
         cell.viewNode = itemNode;
         [cell.contentView addSubview:itemNode.view];
+    } else {
+        [cell.viewNode reset];
     }
 
     DoricFlowLayoutItemNode *node = cell.viewNode;

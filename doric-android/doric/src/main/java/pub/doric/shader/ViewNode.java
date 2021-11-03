@@ -1201,8 +1201,8 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         setAlpha(1);
         setTranslationX(0);
         setTranslationY(0);
-        setScaleX(0);
-        setScaleY(0);
+        setScaleX(1);
+        setScaleY(1);
         setRotation(0);
         setRotationX(0);
         setRotationY(0);

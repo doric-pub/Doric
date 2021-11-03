@@ -165,6 +165,8 @@
         cell.backgroundColor = [UIColor clearColor];
         listItemNode.view.width = tableView.width;
         [cell.contentView addSubview:listItemNode.view];
+    } else {
+        [cell.doricListItemNode reset];
     }
     DoricListItemNode *node = cell.doricListItemNode;
     node.viewId = model[@"id"];

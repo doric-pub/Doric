@@ -163,6 +163,8 @@
         [slideItemNode initWithSuperNode:self];
         cell.doricSlideItemNode = slideItemNode;
         [cell.contentView addSubview:slideItemNode.view];
+    } else {
+        [cell.doricSlideItemNode reset];
     }
     DoricSlideItemNode *node = cell.doricSlideItemNode;
     node.viewId = model[@"id"];

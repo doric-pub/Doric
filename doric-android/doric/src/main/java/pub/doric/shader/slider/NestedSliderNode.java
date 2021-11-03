@@ -254,7 +254,7 @@ public class NestedSliderNode extends GroupNode<ViewPager> implements ViewPager.
     }
 
     @Override
-    protected void reset() {
+    public void reset() {
         super.reset();
         onPageSlidedFuncId = null;
         ((CustomViewPager) mView).setScrollable(true);

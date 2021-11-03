@@ -150,4 +150,15 @@ public abstract class SuperNode<V extends View> extends ViewNode<V> {
 
         return allKeys;
     }
+
+    @Override
+    public void reset() {
+        super.reset();
+        for (String viewId : subNodes.keySet()) {
+            ViewNode<?> viewNode = getSubNodeById(viewId);
+            if (viewNode != null) {
+                viewNode.reset();
+            }
+        }
+    }
 }

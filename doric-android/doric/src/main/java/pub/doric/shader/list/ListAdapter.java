@@ -63,6 +63,7 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
         if (jsValue != null && jsValue.isObject()) {
             JSObject jsObject = jsValue.asObject();
             holder.listItemNode.setId(jsObject.getProperty("id").asString().value());
+            holder.listItemNode.reset();
             holder.listItemNode.blend(jsObject.getProperty("props").asObject());
         }
         if (this.listNode.loadMore

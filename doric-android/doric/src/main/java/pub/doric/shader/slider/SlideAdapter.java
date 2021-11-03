@@ -65,6 +65,7 @@ class SlideAdapter extends RecyclerView.Adapter<SlideAdapter.DoricViewHolder> {
         if (jsValue != null && jsValue.isObject()) {
             JSObject jsObject = jsValue.asObject();
             holder.slideItemNode.setId(jsObject.getProperty("id").asString().value());
+            holder.slideItemNode.reset();
             holder.slideItemNode.blend(jsObject.getProperty("props").asObject());
         }
     }

@@ -265,7 +265,7 @@ public class ScrollerNode extends SuperNode<HVScrollView> implements IDoricScrol
     }
 
     @Override
-    protected void reset() {
+    public void reset() {
         super.reset();
         onScrollFuncId = null;
         onScrollEndFuncId = null;

@@ -1810,7 +1810,7 @@ var doric = (function (exports) {
     (module.exports = function (key, value) {
       return sharedStore[key] || (sharedStore[key] = value !== undefined ? value : {});
     })('versions', []).push({
-      version: '3.19.0',
+      version: '3.19.1',
       mode: 'global',
       copyright: '© 2021 Denis Pushkarev (zloirock.ru)'
     });
@@ -2321,14 +2321,14 @@ var doric = (function (exports) {
       return classofRaw(argument) == 'Array';
     };
 
-    var TO_STRING_TAG$8 = wellKnownSymbol('toStringTag');
+    var TO_STRING_TAG$9 = wellKnownSymbol('toStringTag');
     var test$2 = {};
 
-    test$2[TO_STRING_TAG$8] = 'z';
+    test$2[TO_STRING_TAG$9] = 'z';
 
     var toStringTagSupport = String(test$2) === '[object z]';
 
-    var TO_STRING_TAG$7 = wellKnownSymbol('toStringTag');
+    var TO_STRING_TAG$8 = wellKnownSymbol('toStringTag');
     var Object$4 = global_1.Object;
 
     // ES3 wrong here
@@ -2346,7 +2346,7 @@ var doric = (function (exports) {
       var O, tag, result;
       return it === undefined ? 'Undefined' : it === null ? 'Null'
         // @@toStringTag case
-        : typeof (tag = tryGet(O = Object$4(it), TO_STRING_TAG$7)) == 'string' ? tag
+        : typeof (tag = tryGet(O = Object$4(it), TO_STRING_TAG$8)) == 'string' ? tag
         // builtinTag case
         : CORRECT_ARGUMENTS ? classofRaw(O)
         // ES3 arguments fallback
@@ -2517,11 +2517,11 @@ var doric = (function (exports) {
 
 
 
-    var TO_STRING_TAG$6 = wellKnownSymbol('toStringTag');
+    var TO_STRING_TAG$7 = wellKnownSymbol('toStringTag');
 
     var setToStringTag = function (it, TAG, STATIC) {
-      if (it && !hasOwnProperty_1(it = STATIC ? it : it.prototype, TO_STRING_TAG$6)) {
-        defineProperty$d(it, TO_STRING_TAG$6, { configurable: true, value: TAG });
+      if (it && !hasOwnProperty_1(it = STATIC ? it : it.prototype, TO_STRING_TAG$7)) {
+        defineProperty$d(it, TO_STRING_TAG$7, { configurable: true, value: TAG });
       }
     };
 
@@ -3243,14 +3243,19 @@ var doric = (function (exports) {
       return error.stack !== 7;
     });
 
+    var TO_STRING_TAG$6 = wellKnownSymbol('toStringTag');
     var Error$2 = global_1.Error;
     var push$g = [].push;
 
     var $AggregateError = function AggregateError(errors, message /* , options */) {
-      var that = objectIsPrototypeOf(AggregateErrorPrototype, this) ? this : objectCreate(AggregateErrorPrototype);
       var options = arguments.length > 2 ? arguments[2] : undefined;
+      var isInstance = objectIsPrototypeOf(AggregateErrorPrototype, this);
+      var that;
       if (objectSetPrototypeOf) {
-        that = objectSetPrototypeOf(new Error$2(undefined), objectGetPrototypeOf(that));
+        that = objectSetPrototypeOf(new Error$2(undefined), isInstance ? objectGetPrototypeOf(this) : AggregateErrorPrototype);
+      } else {
+        that = isInstance ? this : objectCreate(AggregateErrorPrototype);
+        createNonEnumerableProperty(that, TO_STRING_TAG$6, 'Error');
       }
       createNonEnumerableProperty(that, 'message', normalizeStringArgument(message, ''));
       if (errorStackInstallable) { createNonEnumerableProperty(that, 'stack', clearErrorStack(that.stack, 1)); }
@@ -5319,6 +5324,29 @@ var doric = (function (exports) {
     // https://tc39.es/ecma262/#sec-json-@@tostringtag
     setToStringTag(global_1.JSON, 'JSON', true);
 
+    // FF26- bug: ArrayBuffers are non-extensible, but Object.isExtensible does not report it
+
+
+    var arrayBufferNonExtensible = fails(function () {
+      if (typeof ArrayBuffer == 'function') {
+        var buffer = new ArrayBuffer(8);
+        // eslint-disable-next-line es/no-object-isextensible, es/no-object-defineproperty -- safe
+        if (Object.isExtensible(buffer)) { Object.defineProperty(buffer, 'a', { value: 8 }); }
+      }
+    });
+
+    // eslint-disable-next-line es/no-object-isextensible -- safe
+    var $isExtensible = Object.isExtensible;
+    var FAILS_ON_PRIMITIVES$9 = fails(function () { $isExtensible(1); });
+
+    // `Object.isExtensible` method
+    // https://tc39.es/ecma262/#sec-object.isextensible
+    var objectIsExtensible = (FAILS_ON_PRIMITIVES$9 || arrayBufferNonExtensible) ? function isExtensible(it) {
+      if (!isObject(it)) { return false; }
+      if (arrayBufferNonExtensible && classofRaw(it) == 'ArrayBuffer') { return false; }
+      return $isExtensible ? $isExtensible(it) : true;
+    } : $isExtensible;
+
     var freezing = !fails(function () {
       // eslint-disable-next-line es/no-object-isextensible, es/no-object-preventextensions -- required for testing
       return Object.isExtensible(Object.preventExtensions({}));
@@ -5331,14 +5359,10 @@ var doric = (function (exports) {
 
 
 
+
     var REQUIRED = false;
     var METADATA = uid('meta');
     var id = 0;
-
-    // eslint-disable-next-line es/no-object-isextensible -- safe
-    var isExtensible = Object.isExtensible || function () {
-      return true;
-    };
 
     var setMetadata = function (it) {
       defineProperty(it, METADATA, { value: {
@@ -5352,7 +5376,7 @@ var doric = (function (exports) {
       if (!isObject(it)) { return typeof it == 'symbol' ? it : (typeof it == 'string' ? 'S' : 'P') + it; }
       if (!hasOwnProperty_1(it, METADATA)) {
         // can't set metadata to uncaught frozen object
-        if (!isExtensible(it)) { return 'F'; }
+        if (!objectIsExtensible(it)) { return 'F'; }
         // not necessary to add metadata
         if (!create) { return 'E'; }
         // add missing metadata
@@ -5364,7 +5388,7 @@ var doric = (function (exports) {
     var getWeakData = function (it, create) {
       if (!hasOwnProperty_1(it, METADATA)) {
         // can't set metadata to uncaught frozen object
-        if (!isExtensible(it)) { return true; }
+        if (!objectIsExtensible(it)) { return true; }
         // not necessary to add metadata
         if (!create) { return false; }
         // add missing metadata
@@ -5375,7 +5399,7 @@ var doric = (function (exports) {
 
     // add metadata on freeze-family methods calling
     var onFreeze = function (it) {
-      if (freezing && REQUIRED && isExtensible(it) && !hasOwnProperty_1(it, METADATA)) { setMetadata(it); }
+      if (freezing && REQUIRED && objectIsExtensible(it) && !hasOwnProperty_1(it, METADATA)) { setMetadata(it); }
       return it;
     };
 
@@ -6544,11 +6568,11 @@ var doric = (function (exports) {
 
     // eslint-disable-next-line es/no-object-freeze -- safe
     var $freeze = Object.freeze;
-    var FAILS_ON_PRIMITIVES$9 = fails(function () { $freeze(1); });
+    var FAILS_ON_PRIMITIVES$8 = fails(function () { $freeze(1); });
 
     // `Object.freeze` method
     // https://tc39.es/ecma262/#sec-object.freeze
-    _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES$9, sham: !freezing }, {
+    _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES$8, sham: !freezing }, {
       freeze: function freeze(it) {
         return $freeze && isObject(it) ? $freeze(onFreeze$2(it)) : it;
       }
@@ -6569,8 +6593,8 @@ var doric = (function (exports) {
     var nativeGetOwnPropertyDescriptor = objectGetOwnPropertyDescriptor.f;
 
 
-    var FAILS_ON_PRIMITIVES$8 = fails(function () { nativeGetOwnPropertyDescriptor(1); });
-    var FORCED$d = !descriptors || FAILS_ON_PRIMITIVES$8;
+    var FAILS_ON_PRIMITIVES$7 = fails(function () { nativeGetOwnPropertyDescriptor(1); });
+    var FORCED$d = !descriptors || FAILS_ON_PRIMITIVES$7;
 
     // `Object.getOwnPropertyDescriptor` method
     // https://tc39.es/ecma262/#sec-object.getownpropertydescriptor
@@ -6601,19 +6625,19 @@ var doric = (function (exports) {
     var getOwnPropertyNames$1 = objectGetOwnPropertyNamesExternal.f;
 
     // eslint-disable-next-line es/no-object-getownpropertynames -- required for testing
-    var FAILS_ON_PRIMITIVES$7 = fails(function () { return !Object.getOwnPropertyNames(1); });
+    var FAILS_ON_PRIMITIVES$6 = fails(function () { return !Object.getOwnPropertyNames(1); });
 
     // `Object.getOwnPropertyNames` method
     // https://tc39.es/ecma262/#sec-object.getownpropertynames
-    _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES$7 }, {
+    _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES$6 }, {
       getOwnPropertyNames: getOwnPropertyNames$1
     });
 
-    var FAILS_ON_PRIMITIVES$6 = fails(function () { objectGetPrototypeOf(1); });
+    var FAILS_ON_PRIMITIVES$5 = fails(function () { objectGetPrototypeOf(1); });
 
     // `Object.getPrototypeOf` method
     // https://tc39.es/ecma262/#sec-object.getprototypeof
-    _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES$6, sham: !correctPrototypeGetter }, {
+    _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES$5, sham: !correctPrototypeGetter }, {
       getPrototypeOf: function getPrototypeOf(it) {
         return objectGetPrototypeOf(toObject(it));
       }
@@ -6639,16 +6663,11 @@ var doric = (function (exports) {
       is: sameValue
     });
 
-    // eslint-disable-next-line es/no-object-isextensible -- safe
-    var $isExtensible = Object.isExtensible;
-    var FAILS_ON_PRIMITIVES$5 = fails(function () { $isExtensible(1); });
-
     // `Object.isExtensible` method
     // https://tc39.es/ecma262/#sec-object.isextensible
-    _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES$5 }, {
-      isExtensible: function isExtensible(it) {
-        return isObject(it) ? $isExtensible ? $isExtensible(it) : true : false;
-      }
+    // eslint-disable-next-line es/no-object-isextensible -- safe
+    _export({ target: 'Object', stat: true, forced: Object.isExtensible !== objectIsExtensible }, {
+      isExtensible: objectIsExtensible
     });
 
     // eslint-disable-next-line es/no-object-isfrozen -- safe
@@ -6657,9 +6676,11 @@ var doric = (function (exports) {
 
     // `Object.isFrozen` method
     // https://tc39.es/ecma262/#sec-object.isfrozen
-    _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES$4 }, {
+    _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES$4 || arrayBufferNonExtensible }, {
       isFrozen: function isFrozen(it) {
-        return isObject(it) ? $isFrozen ? $isFrozen(it) : false : true;
+        if (!isObject(it)) { return true; }
+        if (arrayBufferNonExtensible && classofRaw(it) == 'ArrayBuffer') { return true; }
+        return $isFrozen ? $isFrozen(it) : false;
       }
     });
 
@@ -6669,9 +6690,11 @@ var doric = (function (exports) {
 
     // `Object.isSealed` method
     // https://tc39.es/ecma262/#sec-object.issealed
-    _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES$3 }, {
+    _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES$3 || arrayBufferNonExtensible }, {
       isSealed: function isSealed(it) {
-        return isObject(it) ? $isSealed ? $isSealed(it) : false : true;
+        if (!isObject(it)) { return true; }
+        if (arrayBufferNonExtensible && classofRaw(it) == 'ArrayBuffer') { return true; }
+        return $isSealed ? $isSealed(it) : false;
       }
     });
 
@@ -7653,15 +7676,12 @@ var doric = (function (exports) {
       }
     });
 
-    // eslint-disable-next-line es/no-object-isextensible -- safe
-    var objectIsExtensible = Object.isExtensible;
-
     // `Reflect.isExtensible` method
     // https://tc39.es/ecma262/#sec-reflect.isextensible
     _export({ target: 'Reflect', stat: true }, {
       isExtensible: function isExtensible(target) {
         anObject(target);
-        return objectIsExtensible ? objectIsExtensible(target) : true;
+        return objectIsExtensible(target);
       }
     });
 
@@ -10390,8 +10410,6 @@ var doric = (function (exports) {
 
 
     var IS_IE11 = !global_1.ActiveXObject && 'ActiveXObject' in global_1;
-    // eslint-disable-next-line es/no-object-isextensible -- safe
-    var isExtensible = Object.isExtensible;
     var InternalWeakMap;
 
     var wrapper = function (init) {
@@ -10417,28 +10435,28 @@ var doric = (function (exports) {
       var nativeSet = functionUncurryThis(WeakMapPrototype.set);
       redefineAll(WeakMapPrototype, {
         'delete': function (key) {
-          if (isObject(key) && !isExtensible(key)) {
+          if (isObject(key) && !objectIsExtensible(key)) {
             var state = enforceIternalState(this);
             if (!state.frozen) { state.frozen = new InternalWeakMap(); }
             return nativeDelete(this, key) || state.frozen['delete'](key);
           } return nativeDelete(this, key);
         },
         has: function has(key) {
-          if (isObject(key) && !isExtensible(key)) {
+          if (isObject(key) && !objectIsExtensible(key)) {
             var state = enforceIternalState(this);
             if (!state.frozen) { state.frozen = new InternalWeakMap(); }
             return nativeHas(this, key) || state.frozen.has(key);
           } return nativeHas(this, key);
         },
         get: function get(key) {
-          if (isObject(key) && !isExtensible(key)) {
+          if (isObject(key) && !objectIsExtensible(key)) {
             var state = enforceIternalState(this);
             if (!state.frozen) { state.frozen = new InternalWeakMap(); }
             return nativeHas(this, key) ? nativeGet(this, key) : state.frozen.get(key);
           } return nativeGet(this, key);
         },
         set: function set(key, value) {
-          if (isObject(key) && !isExtensible(key)) {
+          if (isObject(key) && !objectIsExtensible(key)) {
             var state = enforceIternalState(this);
             if (!state.frozen) { state.frozen = new InternalWeakMap(); }
             nativeHas(this, key) ? nativeSet(this, key, value) : state.frozen.set(key, value);

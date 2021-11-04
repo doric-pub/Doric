@@ -17,13 +17,19 @@ package pub.doric.engine;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.webkit.ConsoleMessage;
 import android.webkit.JavascriptInterface;
+import android.webkit.JsResult;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSRuntimeException;
 import com.github.pengfeizhou.jscore.JavaFunction;
 import com.github.pengfeizhou.jscore.JavaValue;
+
+import pub.doric.utils.DoricLog;
 
 
 /**
@@ -41,10 +47,34 @@ public class DoricWebViewJSExecutor implements IDoricJSE {
         }
     }
 
-    @SuppressLint("JavascriptInterface")
+    private static class DoricWebChromeClient extends WebChromeClient {
+        @Override
+        public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
+            return super.onJsAlert(view, url, message, result);
+        }
+
+        @Override
+        public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
+            ConsoleMessage.MessageLevel messageLevel = consoleMessage.messageLevel();
+            if (messageLevel == ConsoleMessage.MessageLevel.ERROR) {
+                DoricLog.e(consoleMessage.message());
+            } else if (messageLevel == ConsoleMessage.MessageLevel.WARNING) {
+                DoricLog.w(consoleMessage.message());
+            } else {
+                DoricLog.d(consoleMessage.message());
+            }
+            return true;
+        }
+    }
+
+    @SuppressLint({"JavascriptInterface", "SetJavaScriptEnabled"})
     public DoricWebViewJSExecutor(Context context) {
         this.webView = new WebView(context.getApplicationContext());
-        this.webView.loadUrl("about:blank");
+        WebSettings webSettings = this.webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        this.webView.setWebChromeClient(new DoricWebChromeClient());
+        this.webView.loadUrl("https://m.baidu.com");
+        this.webView.loadUrl("javascript:alert(\"11111\")");
         WebViewCallback webViewCallback = new WebViewCallback();
         this.webView.addJavascriptInterface(webViewCallback, "callNative");
     }

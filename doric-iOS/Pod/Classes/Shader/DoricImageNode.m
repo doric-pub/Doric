@@ -619,6 +619,9 @@
 }
 
 - (void)startAnimating {
+#if DORIC_USE_YYWEBIMAGE
+    [(DoricImageView *)self.view setCurrentAnimatedImageIndex:0];
+#endif
     [self.view startAnimating];
 }
 

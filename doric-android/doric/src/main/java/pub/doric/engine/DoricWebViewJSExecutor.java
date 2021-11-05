@@ -150,7 +150,7 @@ public class DoricWebViewJSExecutor implements IDoricJSE {
                 for (int i = 0; i < length; i++) {
                     JSONObject jsonObject = jsonArray.optJSONObject(i);
                     Object object = unwrapJSObject(jsonObject);
-                    decoders[i] = new JavaJSDecoder(object);
+                    decoders[i] = new DoricJSDecoder(object);
                 }
                 JavaValue javaValue = javaFunction.exec(decoders);
                 return wrapJavaValue(javaValue).toString();
@@ -249,7 +249,7 @@ public class DoricWebViewJSExecutor implements IDoricJSE {
             try {
                 JSONObject jsonObject = new JSONObject(result);
                 Object object = unwrapJSObject(jsonObject);
-                return new JavaJSDecoder(object);
+                return new DoricJSDecoder(object);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

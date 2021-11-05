@@ -35,11 +35,11 @@ import java.util.Iterator;
  * @Author: pengfei.zhou
  * @CreateDate: 2021/11/5
  */
-public class JavaJSDecoder extends JSDecoder {
+public class DoricJSDecoder extends JSDecoder {
     private final Object value;
     private static final JSNull JS_NULL = new JSNull();
 
-    public JavaJSDecoder(Object object) {
+    public DoricJSDecoder(Object object) {
         super(null);
         this.value = object;
     }
@@ -109,7 +109,7 @@ public class JavaJSDecoder extends JSDecoder {
             while (it.hasNext()) {
                 String key = it.next();
                 Object o = jsonObject.opt(key);
-                JavaJSDecoder jsDecoder = new JavaJSDecoder(o);
+                DoricJSDecoder jsDecoder = new DoricJSDecoder(o);
                 JSValue jsValue = jsDecoder.decode();
                 jsObject.setProperty(key, jsValue);
             }
@@ -121,7 +121,7 @@ public class JavaJSDecoder extends JSDecoder {
             JSArray jsArray = new JSArray(length);
             for (int i = 0; i < length; i++) {
                 Object o = jsonArray.opt(i);
-                JavaJSDecoder jsDecoder = new JavaJSDecoder(o);
+                DoricJSDecoder jsDecoder = new DoricJSDecoder(o);
                 JSValue jsValue = jsDecoder.decode();
                 jsArray.put(i, jsValue);
             }

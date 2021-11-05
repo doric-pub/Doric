@@ -13,10 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pub.doric.engine.value;
+package com.github.pengfeizhou.jscore;
 
-public class JSRuntimeException extends RuntimeException {
-    public JSRuntimeException(String msg) {
-        super(msg);
+public class JSBoolean extends JSValue {
+    private final boolean mVal;
+
+    public JSBoolean(boolean b) {
+        this.mVal = b;
+    }
+
+    @Override
+    public JSType getJSType() {
+        return JSType.Boolean;
+    }
+
+    @Override
+    public Boolean value() {
+        return mVal;
     }
 }

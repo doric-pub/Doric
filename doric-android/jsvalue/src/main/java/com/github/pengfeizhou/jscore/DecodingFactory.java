@@ -13,22 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pub.doric.engine.value;
 
-public class JSBoolean extends JSValue {
-    private final boolean mVal;
+package com.github.pengfeizhou.jscore;
 
-    public JSBoolean(boolean b) {
-        this.mVal = b;
-    }
+public interface DecodingFactory<T> {
+    T createInstance();
 
-    @Override
-    public JSType getJSType() {
-        return JSType.Boolean;
-    }
-
-    @Override
-    public Boolean value() {
-        return mVal;
-    }
+    T[] createArray(int length);
 }

@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pub.doric.engine.value;
+package com.github.pengfeizhou.jscore;
 
-public abstract class JavaFunction {
-    public abstract JavaValue exec(JSDecoder[] args);
-
-    public boolean hashKey() {
-        return false;
+public class JSRuntimeException extends RuntimeException {
+    public JSRuntimeException(String msg) {
+        super(msg);
     }
 }

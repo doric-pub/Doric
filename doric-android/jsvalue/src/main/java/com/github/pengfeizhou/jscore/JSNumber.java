@@ -13,10 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pub.doric.engine.value;
+package com.github.pengfeizhou.jscore;
 
-public class ArchiveException extends Exception {
-    public ArchiveException(String str) {
-        super(str);
+public class JSNumber extends JSValue {
+    private final double mVal;
+
+    public JSNumber(double b) {
+        this.mVal = b;
+    }
+
+    @Override
+    public JSType getJSType() {
+        return JSType.Number;
+    }
+
+    @Override
+    public Double value() {
+        return mVal;
+    }
+
+    public int toInt() {
+        return (int) mVal;
+    }
+
+    public float toFloat() {
+        return (float) mVal;
+    }
+
+    public long toLong() {
+        return (long) mVal;
+    }
+
+    public double toDouble() {
+        return mVal;
     }
 }

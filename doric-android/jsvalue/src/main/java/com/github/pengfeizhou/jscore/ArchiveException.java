@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.github.pengfeizhou.jscore;
 
-package pub.doric.engine.value;
-
-public interface DecodingFactory<T> {
-    T createInstance();
-
-    T[] createArray(int length);
+public class ArchiveException extends Exception {
+    public ArchiveException(String str) {
+        super(str);
+    }
 }

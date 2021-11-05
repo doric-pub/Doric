@@ -13,9 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pub.doric.engine.value;
+package com.github.pengfeizhou.jscore;
 
+/**
+ * Define undefined or null
+ * Created by pengfei.zhou on 2018/12/12.
+ */
+public class JSNull extends JSValue {
+    @Override
+    public JSType getJSType() {
+        return JSType.Null;
+    }
 
-public interface Decoding {
-    void decode(JSDecoder u) throws ArchiveException;
+    @Override
+    public Object value() {
+        return null;
+    }
 }

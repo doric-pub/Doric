@@ -61,6 +61,7 @@ export default [
       }
       console.warn(warning.message);
     },
+    treeshake: false,
   },
   {
     input: "lib-es5/index.runtime.es5.js",

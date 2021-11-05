@@ -97,6 +97,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
 
     protected void initJSEngine() {
         mDoricJSE = new DoricWebViewJSExecutor(Doric.application());
+        loadBuiltinJS("doric-web.js");
     }
 
     public void setEnvironmentValue(Map<String, Object> values) {
@@ -239,9 +240,6 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
 
     private void initDoricRuntime() {
         try {
-            if (mDoricJSE instanceof DoricWebViewJSExecutor) {
-                loadBuiltinJS("doric-web.js");
-            }
             loadBuiltinJS(DoricConstant.DORIC_BUNDLE_SANDBOX);
             String libName = DoricConstant.DORIC_MODULE_LIB;
             String libJS = DoricUtils.readAssetFile(DoricConstant.DORIC_BUNDLE_LIB);

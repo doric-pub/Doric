@@ -43,7 +43,7 @@ import pub.doric.utils.DoricLog;
 
 
 /**
- * @Description: This contains a webView which is used for executing JavaScript
+ * @Description: This uses a webView to execute JavaScript
  * @Author: pengfei.zhou
  * @CreateDate: 2021/11/3
  */
@@ -215,12 +215,10 @@ public class DoricWebViewJSExecutor implements IDoricJSE {
     @Override
     public JSDecoder invokeMethod(String objectName, String functionName, JavaValue[] javaValues, boolean hashKey) throws JSRuntimeException {
         JSONArray jsonArray = new JSONArray();
-        for (int i = 0; i < javaValues.length; i++) {
-            JavaValue javaValue = javaValues[i];
+        for (JavaValue javaValue : javaValues) {
             JSONObject jsonObject = wrapJavaValue(javaValue);
             jsonArray.put(jsonObject);
         }
-
         returnFuture = new SettableFuture<>();
         String script = String.format(
                 "__invokeMethod('%s','%s','%s')",

@@ -83,6 +83,9 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
                 initJSEngine();
                 injectGlobal();
                 initDoricRuntime();
+                if (mDoricJSE instanceof DoricWebViewJSExecutor) {
+                    mDoricJSE.loadJS("_prepared();", "");
+                }
                 initialized = true;
                 globalProfile.end(DoricPerformanceProfile.PART_INIT);
             }

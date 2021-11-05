@@ -100,7 +100,10 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
 
     protected void initJSEngine() {
         mDoricJSE = new DoricWebViewJSExecutor(Doric.application());
-        loadBuiltinJS("doric-web.js");
+        //mDoricJSE = new DoricNativeJSExecutor();
+        if (mDoricJSE instanceof DoricWebViewJSExecutor) {
+            loadBuiltinJS("doric-web.js");
+        }
     }
 
     public void setEnvironmentValue(Map<String, Object> values) {

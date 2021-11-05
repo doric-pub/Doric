@@ -46,7 +46,7 @@ public class MyApplication extends Application {
                 DoricSingleton.getInstance().setEnvironmentValue(map);
             }
         }, intentFilter);
-        DoricNativeDriver.getInstance();
+//        DoricNativeDriver.getInstance();
         Doric.enablePerformance(true);
         Doric.enableRenderSnapshot(true);
     }

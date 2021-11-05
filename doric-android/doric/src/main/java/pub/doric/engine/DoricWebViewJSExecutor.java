@@ -17,6 +17,9 @@ package pub.doric.engine;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.webkit.ConsoleMessage;
 import android.webkit.JavascriptInterface;
@@ -48,8 +51,9 @@ import pub.doric.utils.DoricLog;
  * @CreateDate: 2021/11/3
  */
 public class DoricWebViewJSExecutor implements IDoricJSE {
-    private final WebView webView;
+    private WebView webView;
     private final Map<String, JavaFunction> globalFunctions = new HashMap<>();
+    private final Handler handler;
 
     private static Object unwrapJSObject(JSONObject jsonObject) {
         String type = jsonObject.optString("type");
@@ -127,6 +131,7 @@ public class DoricWebViewJSExecutor implements IDoricJSE {
 
         @JavascriptInterface
         public void returnNative(String result) {
+            DoricLog.d("return Native" + result);
             if (returnFuture != null) {
                 returnFuture.set(result);
             }
@@ -178,26 +183,39 @@ public class DoricWebViewJSExecutor implements IDoricJSE {
     }
 
     @SuppressLint({"JavascriptInterface", "SetJavaScriptEnabled"})
-    public DoricWebViewJSExecutor(Context context) {
-        this.webView = new WebView(context.getApplicationContext());
-        WebSettings webSettings = this.webView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-        this.webView.setWebChromeClient(new DoricWebChromeClient());
-        this.webView.loadUrl("about:blank");
-        WebViewCallback webViewCallback = new WebViewCallback();
-        this.webView.addJavascriptInterface(webViewCallback, "NativeClient");
-        WebView.setWebContentsDebuggingEnabled(true);
+    public DoricWebViewJSExecutor(final Context context) {
+        HandlerThread webViewHandlerThread = new HandlerThread("DoricWebViewJSExecutor");
+        webViewHandlerThread.start();
+        this.handler = new Handler(webViewHandlerThread.getLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                webView = new WebView(context.getApplicationContext());
+                WebSettings webSettings = webView.getSettings();
+                webSettings.setJavaScriptEnabled(true);
+                webView.setWebChromeClient(new DoricWebChromeClient());
+                webView.loadUrl("about:blank");
+                WebViewCallback webViewCallback = new WebViewCallback();
+                webView.addJavascriptInterface(webViewCallback, "NativeClient");
+                WebView.setWebContentsDebuggingEnabled(true);
+            }
+        });
     }
 
     @Override
-    public String loadJS(String script, String source) {
-        this.webView.evaluateJavascript(script, null);
+    public String loadJS(final String script, String source) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                webView.evaluateJavascript(script, null);
+            }
+        });
         return null;
     }
 
     @Override
     public JSDecoder evaluateJS(String script, String source, boolean hashKey) throws JSRuntimeException {
-        this.webView.evaluateJavascript(script, null);
+        loadJS(script, source);
         return null;
     }
 
@@ -209,7 +227,7 @@ public class DoricWebViewJSExecutor implements IDoricJSE {
 
     @Override
     public void injectGlobalJSObject(String name, JavaValue javaValue) {
-        loadJS(String.format("_injectGlobalObject('%s','%s')", name, javaValue.getValue()), "");
+        loadJS(String.format("__injectGlobalObject('%s','%s')", name, javaValue.getValue()), "");
     }
 
     @Override
@@ -220,13 +238,14 @@ public class DoricWebViewJSExecutor implements IDoricJSE {
             jsonArray.put(jsonObject);
         }
         returnFuture = new SettableFuture<>();
-        String script = String.format(
+        final String script = String.format(
                 "__invokeMethod('%s','%s','%s')",
                 objectName,
                 functionName,
                 jsonArray.toString());
         loadJS(script, "");
         String result = returnFuture.get();
+        returnFuture = null;
         if (!TextUtils.isEmpty(result)) {
             try {
                 JSONObject jsonObject = new JSONObject(result);

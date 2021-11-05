@@ -17,6 +17,7 @@ package pub.doric.engine;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.text.TextUtils;
 import android.webkit.ConsoleMessage;
 import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
@@ -37,6 +38,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import pub.doric.async.SettableFuture;
 import pub.doric.utils.DoricLog;
 
 
@@ -59,22 +61,83 @@ public class DoricWebViewJSExecutor implements IDoricJSE {
             case "boolean":
                 return jsonObject.optBoolean("value");
             case "object":
-                return jsonObject.optJSONObject("value");
+                try {
+                    return new JSONObject(jsonObject.optString("value"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return JSONObject.NULL;
+                }
             case "array":
-                return jsonObject.optJSONArray("value");
+                try {
+                    return new JSONArray(jsonObject.optString("value"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return JSONObject.NULL;
+                }
             default:
                 return JSONObject.NULL;
         }
     }
 
-    private static final String WRAPPED_NULL = new JSONBuilder().put("type", "null").toString();
+    private static JSONObject wrapJavaValue(JavaValue javaValue) {
+        if (javaValue == null || javaValue.getType() == 0) {
+            return WRAPPED_NULL;
+        }
+        if (javaValue.getType() == 1) {
+            Double value = Double.valueOf(javaValue.getValue());
+            return new JSONBuilder().put("type", "number").put("value", value).toJSONObject();
+        }
+        if (javaValue.getType() == 2) {
+            Boolean value = Boolean.valueOf(javaValue.getValue());
+            return new JSONBuilder().put("type", "boolean").put("value", value).toJSONObject();
+        }
+        if (javaValue.getType() == 3) {
+            String value = String.valueOf(javaValue.getValue());
+            return new JSONBuilder().put("type", "string").put("value", value).toJSONObject();
+        }
+        if (javaValue.getType() == 4) {
+            String value = String.valueOf(javaValue.getValue());
+            try {
+                return new JSONBuilder().put("type", "object").put("value", new JSONObject(value)).toJSONObject();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        if (javaValue.getType() == 5) {
+            String value = String.valueOf(javaValue.getValue());
+            try {
+                return new JSONBuilder().put("type", "array").put("value", new JSONArray(value)).toJSONObject();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return WRAPPED_NULL;
+    }
+
+    private static final JSONObject WRAPPED_NULL = new JSONBuilder().put("type", "null").toJSONObject();
+
+    private static final String WRAPPED_NULL_STRING = WRAPPED_NULL.toString();
+    private SettableFuture<String> returnFuture = null;
 
     public class WebViewCallback {
+        @JavascriptInterface
+        public void log(String message) {
+            DoricLog.d(message);
+        }
+
+        @JavascriptInterface
+        public void returnNative(String result) {
+            if (returnFuture != null) {
+                returnFuture.set(result);
+            }
+        }
+
         @JavascriptInterface
         public String callNative(String name, String arguments) {
             JavaFunction javaFunction = globalFunctions.get(name);
             if (javaFunction == null) {
-                return WRAPPED_NULL;
+                DoricLog.e("Cannot find global function %s", name);
+                return WRAPPED_NULL_STRING;
             }
             try {
                 JSONArray jsonArray = new JSONArray(arguments);
@@ -86,33 +149,11 @@ public class DoricWebViewJSExecutor implements IDoricJSE {
                     decoders[i] = new JavaJSDecoder(object);
                 }
                 JavaValue javaValue = javaFunction.exec(decoders);
-                if (javaValue.getType() == 0) {
-                    return WRAPPED_NULL;
-                }
-                if (javaValue.getType() == 1) {
-                    Double value = Double.valueOf(javaValue.getValue());
-                    return new JSONBuilder().put("type", "number").put("value", value).toString();
-                }
-                if (javaValue.getType() == 2) {
-                    Boolean value = Boolean.valueOf(javaValue.getValue());
-                    return new JSONBuilder().put("type", "boolean").put("value", value).toString();
-                }
-                if (javaValue.getType() == 3) {
-                    String value = String.valueOf(javaValue.getValue());
-                    return new JSONBuilder().put("type", "string").put("value", value).toString();
-                }
-                if (javaValue.getType() == 4) {
-                    String value = String.valueOf(javaValue.getValue());
-                    return new JSONBuilder().put("type", "object").put("value", value).toString();
-                }
-                if (javaValue.getType() == 5) {
-                    String value = String.valueOf(javaValue.getValue());
-                    return new JSONBuilder().put("type", "array").put("value", value).toString();
-                }
+                return wrapJavaValue(javaValue).toString();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            return WRAPPED_NULL;
+            return WRAPPED_NULL_STRING;
         }
     }
 
@@ -163,15 +204,40 @@ public class DoricWebViewJSExecutor implements IDoricJSE {
     @Override
     public void injectGlobalJSFunction(String name, JavaFunction javaFunction) {
         globalFunctions.put(name, javaFunction);
+        loadJS(String.format("__injectGlobalFunction('%s')", name), "");
     }
 
     @Override
     public void injectGlobalJSObject(String name, JavaValue javaValue) {
-
+        loadJS(String.format("_injectGlobalObject('%s','%s')", name, javaValue.getValue()), "");
     }
 
     @Override
     public JSDecoder invokeMethod(String objectName, String functionName, JavaValue[] javaValues, boolean hashKey) throws JSRuntimeException {
+        JSONArray jsonArray = new JSONArray();
+        for (int i = 0; i < javaValues.length; i++) {
+            JavaValue javaValue = javaValues[i];
+            JSONObject jsonObject = wrapJavaValue(javaValue);
+            jsonArray.put(jsonObject);
+        }
+
+        returnFuture = new SettableFuture<>();
+        String script = String.format(
+                "__invokeMethod('%s','%s','%s')",
+                objectName,
+                functionName,
+                jsonArray.toString());
+        loadJS(script, "");
+        String result = returnFuture.get();
+        if (!TextUtils.isEmpty(result)) {
+            try {
+                JSONObject jsonObject = new JSONObject(result);
+                Object object = unwrapJSObject(jsonObject);
+                return new JavaJSDecoder(object);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
         return null;
     }
 

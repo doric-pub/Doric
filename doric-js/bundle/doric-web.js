@@ -85,6 +85,9 @@ function _rawValue(v) {
             return v.value;
         case "object":
         case "array":
+            if (typeof v.value === 'string') {
+                return JSON.parse(v.value);
+            }
             return v.value;
         default:
             return undefined;
@@ -104,25 +107,23 @@ function __injectGlobalFunction(name) {
     });
 }
 function __invokeMethod(objectName, functionName, stringifiedArgs) {
-    NativeClient.log(`invoke:${objectName}.${functionName}(${stringifiedArgs})`);
     try {
         const thisObject = Reflect.get(window, objectName);
         const thisFunction = Reflect.get(thisObject, functionName);
         const args = JSON.parse(stringifiedArgs);
-        args.forEach(e => {
-            NativeClient.log(`Arg:${e},${typeof e}`);
-        });
         const rawArgs = args.map(e => _rawValue(e));
-        rawArgs.forEach(e => {
-            NativeClient.log(`RawArg:${e},${typeof e}`);
-        });
         const ret = Reflect.apply(thisFunction, thisObject, rawArgs);
-        const returnVal = JSON.stringify(_wrappedValue(ret));
-        NativeClient.log(`return:${returnVal}`);
+        const returnVal = ret ? JSON.stringify(_wrappedValue(ret)) : "";
         NativeClient.returnNative(returnVal);
     }
     catch (e) {
         NativeClient.log(`error:${e},${e.stack}`);
         NativeClient.returnNative("");
     }
+}
+function _prepared() {
+    window.setTimeout = Reflect.get(window, "doricSetTimeout");
+    window.setInterval = Reflect.get(window, "doricSetInterval");
+    window.clearTimeout = Reflect.get(window, "doricClearTimeout");
+    window.clearInterval = Reflect.get(window, "doricClearInterval");
 }

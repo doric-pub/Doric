@@ -119,18 +119,23 @@ function __injectGlobalFunction(name: string) {
 }
 
 function __invokeMethod(objectName: string, functionName: string, stringifiedArgs: string) {
-    NativeClient.log(`invoke:${objectName}.${functionName}(${stringifiedArgs})`)
     try {
         const thisObject = Reflect.get(window, objectName);
         const thisFunction = Reflect.get(thisObject, functionName);
         const args = JSON.parse(stringifiedArgs) as WrappedValue[];
         const rawArgs = args.map(e => _rawValue(e));
         const ret = Reflect.apply(thisFunction, thisObject, rawArgs);
-        const returnVal = JSON.stringify(_wrappedValue(ret))
-        NativeClient.log(`return:${returnVal}`)
+        const returnVal = ret ? JSON.stringify(_wrappedValue(ret)) : ""
         NativeClient.returnNative(returnVal)
     } catch (e) {
         NativeClient.log(`error:${e},${(e as any).stack}`)
         NativeClient.returnNative("")
     }
+}
+
+function _prepared() {
+    window.setTimeout = Reflect.get(window, "doricSetTimeout");
+    window.setInterval = Reflect.get(window, "doricSetInterval");
+    window.clearTimeout = Reflect.get(window, "doricClearTimeout");
+    window.clearInterval = Reflect.get(window, "doricClearInterval");
 }

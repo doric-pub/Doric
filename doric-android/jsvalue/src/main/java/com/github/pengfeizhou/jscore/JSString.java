@@ -13,43 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pub.doric.engine.value;
+package com.github.pengfeizhou.jscore;
 
+public class JSString extends JSValue {
+    private final String mVal;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-public class JSObject extends JSValue {
-    private final Map<String, JSValue> mVal;
-
-    public JSObject() {
-        this.mVal = new HashMap<>();
-    }
-
-    public void setProperty(String name, JSValue val) {
-        this.mVal.put(name, val);
-    }
-
-    public JSValue getProperty(String name) {
-        JSValue jsValue = this.mVal.get(name);
-        if (jsValue == null) {
-            jsValue = new JSNull();
-        }
-        return jsValue;
+    public JSString(String b) {
+        this.mVal = b;
     }
 
     @Override
     public JSType getJSType() {
-        return JSType.Object;
+        return JSType.String;
     }
 
     @Override
-    public Map<String, JSValue> value() {
+    public String value() {
         return mVal;
-    }
-
-    public Set<String> propertySet() {
-        return mVal.keySet();
     }
 }

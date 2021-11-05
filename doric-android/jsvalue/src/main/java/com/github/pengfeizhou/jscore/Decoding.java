@@ -13,22 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pub.doric.engine.value;
+package com.github.pengfeizhou.jscore;
 
-public class JSString extends JSValue {
-    private final String mVal;
 
-    public JSString(String b) {
-        this.mVal = b;
-    }
-
-    @Override
-    public JSType getJSType() {
-        return JSType.String;
-    }
-
-    @Override
-    public String value() {
-        return mVal;
-    }
+public interface Decoding {
+    void decode(JSDecoder u) throws ArchiveException;
 }

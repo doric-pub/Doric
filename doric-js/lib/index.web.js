@@ -91,7 +91,7 @@ function _rawValue(v) {
             return undefined;
     }
 }
-function _injectGlobalObject(name, args) {
+function __injectGlobalObject(name, args) {
     Reflect.set(window, name, JSON.parse(args));
 }
 function __injectGlobalFunction(name) {
@@ -105,6 +105,7 @@ function __injectGlobalFunction(name) {
     });
 }
 function __invokeMethod(objectName, functionName, stringifiedArgs) {
+    NativeClient.log(`invoke:${objectName}.${functionName}(${stringifiedArgs})`);
     try {
         const thisObject = Reflect.get(window, objectName);
         const thisFunction = Reflect.get(thisObject, functionName);
@@ -112,6 +113,7 @@ function __invokeMethod(objectName, functionName, stringifiedArgs) {
         const rawArgs = args.map(e => _rawValue(e));
         const ret = Reflect.apply(thisFunction, thisObject, rawArgs);
         const returnVal = ret ? JSON.stringify(_wrappedValue(ret)) : "";
+        NativeClient.log(`return:${returnVal}`);
         NativeClient.returnNative(returnVal);
     }
     catch (e) {

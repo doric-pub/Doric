@@ -23,7 +23,7 @@ declare function _binaryValue(v: RawValue): {
 };
 declare function _wrappedValue(v: RawValue): WrappedValue;
 declare function _rawValue(v: WrappedValue): RawValue;
-declare function _injectGlobalObject(name: string, args: string): void;
+declare function __injectGlobalObject(name: string, args: string): void;
 declare function __injectGlobalFunction(name: string): void;
 declare function __invokeMethod(objectName: string, functionName: string, stringifiedArgs: string): void;
 declare function _prepared(): void;

@@ -1,17 +1,66 @@
 "use strict";
-/*
- * Copyright [2021] [Doric.Pub]
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-console.log("Hello,WebView");
+function _wrappedValue(v) {
+    switch (typeof v) {
+        case "number":
+            return {
+                type: "number",
+                value: v
+            };
+        case "string":
+            return {
+                type: "string",
+                value: v
+            };
+        case "boolean":
+            return {
+                type: "boolean",
+                value: v
+            };
+        case "object":
+            if (v instanceof Array) {
+                return {
+                    type: "array",
+                    value: JSON.stringify(v)
+                };
+            }
+            else {
+                return {
+                    type: "object",
+                    value: JSON.stringify(v)
+                };
+            }
+        default:
+            return {
+                type: "null",
+                value: undefined
+            };
+    }
+}
+function _rawValue(v) {
+    switch (v.type) {
+        case "number":
+            return v.value;
+        case "string":
+            return v.value;
+        case "boolean":
+            return v.value;
+        case "object":
+        case "array":
+            return JSON.stringify(v.value);
+        default:
+            return undefined;
+    }
+}
+function __injectGlobalObject(name, args) {
+    Reflect.set(window, name, JSON.parse(args));
+}
+function __injectGlobalFunction(name) {
+    Reflect.set(window, name, function () {
+        const args = [];
+        for (let i = 0; i < arguments.length; i++) {
+            args.push(_wrappedValue(arguments[i]));
+        }
+        const ret = NativeClient.callNative(name, JSON.stringify(args));
+        return _rawValue(JSON.parse(ret));
+    });
+}

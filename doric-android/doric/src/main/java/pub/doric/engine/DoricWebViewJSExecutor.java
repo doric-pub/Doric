@@ -25,9 +25,17 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.github.pengfeizhou.jscore.JSDecoder;
+import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSRuntimeException;
 import com.github.pengfeizhou.jscore.JavaFunction;
 import com.github.pengfeizhou.jscore.JavaValue;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import pub.doric.utils.DoricLog;
 
@@ -39,11 +47,72 @@ import pub.doric.utils.DoricLog;
  */
 public class DoricWebViewJSExecutor implements IDoricJSE {
     private final WebView webView;
+    private final Map<String, JavaFunction> globalFunctions = new HashMap<>();
+
+    private static Object unwrapJSObject(JSONObject jsonObject) {
+        String type = jsonObject.optString("type");
+        switch (type) {
+            case "number":
+                return jsonObject.optDouble("value");
+            case "string":
+                return jsonObject.optString("value");
+            case "boolean":
+                return jsonObject.optBoolean("value");
+            case "object":
+                return jsonObject.optJSONObject("value");
+            case "array":
+                return jsonObject.optJSONArray("value");
+            default:
+                return JSONObject.NULL;
+        }
+    }
+
+    private static final String WRAPPED_NULL = new JSONBuilder().put("type", "null").toString();
 
     public class WebViewCallback {
         @JavascriptInterface
-        public void callNative(int command, String arguments) {
-
+        public String callNative(String name, String arguments) {
+            JavaFunction javaFunction = globalFunctions.get(name);
+            if (javaFunction == null) {
+                return WRAPPED_NULL;
+            }
+            try {
+                JSONArray jsonArray = new JSONArray(arguments);
+                int length = jsonArray.length();
+                JSDecoder[] decoders = new JSDecoder[length];
+                for (int i = 0; i < length; i++) {
+                    JSONObject jsonObject = jsonArray.optJSONObject(i);
+                    Object object = unwrapJSObject(jsonObject);
+                    decoders[i] = new JavaJSDecoder(object);
+                }
+                JavaValue javaValue = javaFunction.exec(decoders);
+                if (javaValue.getType() == 0) {
+                    return WRAPPED_NULL;
+                }
+                if (javaValue.getType() == 1) {
+                    Double value = Double.valueOf(javaValue.getValue());
+                    return new JSONBuilder().put("type", "number").put("value", value).toString();
+                }
+                if (javaValue.getType() == 2) {
+                    Boolean value = Boolean.valueOf(javaValue.getValue());
+                    return new JSONBuilder().put("type", "boolean").put("value", value).toString();
+                }
+                if (javaValue.getType() == 3) {
+                    String value = String.valueOf(javaValue.getValue());
+                    return new JSONBuilder().put("type", "string").put("value", value).toString();
+                }
+                if (javaValue.getType() == 4) {
+                    String value = String.valueOf(javaValue.getValue());
+                    return new JSONBuilder().put("type", "object").put("value", value).toString();
+                }
+                if (javaValue.getType() == 5) {
+                    String value = String.valueOf(javaValue.getValue());
+                    return new JSONBuilder().put("type", "array").put("value", value).toString();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return WRAPPED_NULL;
         }
     }
 
@@ -73,16 +142,16 @@ public class DoricWebViewJSExecutor implements IDoricJSE {
         WebSettings webSettings = this.webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         this.webView.setWebChromeClient(new DoricWebChromeClient());
-        this.webView.loadUrl("https://m.baidu.com");
-        this.webView.loadUrl("javascript:alert(\"11111\")");
+        this.webView.loadUrl("about:blank");
         WebViewCallback webViewCallback = new WebViewCallback();
-        this.webView.addJavascriptInterface(webViewCallback, "callNative");
+        this.webView.addJavascriptInterface(webViewCallback, "NativeClient");
+        WebView.setWebContentsDebuggingEnabled(true);
     }
 
     @Override
     public String loadJS(String script, String source) {
         this.webView.evaluateJavascript(script, null);
-        return script;
+        return null;
     }
 
     @Override
@@ -93,7 +162,7 @@ public class DoricWebViewJSExecutor implements IDoricJSE {
 
     @Override
     public void injectGlobalJSFunction(String name, JavaFunction javaFunction) {
-
+        globalFunctions.put(name, javaFunction);
     }
 
     @Override

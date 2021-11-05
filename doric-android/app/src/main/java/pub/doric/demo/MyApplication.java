@@ -28,6 +28,7 @@ import pub.doric.Doric;
 import pub.doric.DoricNativeDriver;
 import pub.doric.DoricRegistry;
 import pub.doric.DoricSingleton;
+import pub.doric.devkit.DoricDev;
 
 public class MyApplication extends Application {
     @Override
@@ -46,7 +47,7 @@ public class MyApplication extends Application {
                 DoricSingleton.getInstance().setEnvironmentValue(map);
             }
         }, intentFilter);
-//        DoricNativeDriver.getInstance();
+        DoricDev.getInstance();
         Doric.enablePerformance(true);
         Doric.enableRenderSnapshot(true);
     }

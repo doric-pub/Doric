@@ -36,8 +36,19 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation "com.google.android.material:material:1.1.0"
-    implementation "pub.doric:core:${rootProject.ext.Version}"
-    implementation "pub.doric:devkit:${rootProject.ext.Version}"
+    if (rootProject.ext.UseWebViewOnly) {
+        implementation("pub.doric:core:${rootProject.ext.Version}") {
+            exclude group: 'com.github.penfeizhou', module: 'jsc4a'
+        }
+        implementation("pub.doric:devkit:${rootProject.ext.Version}") {
+            exclude group: 'com.github.penfeizhou', module: 'jsc4a'
+        }
+        implementation "pub.doric:jse:${rootProject.ext.Version}"
+    } else {
+        implementation("pub.doric:core:${rootProject.ext.Version}")
+        implementation("pub.doric:devkit:${rootProject.ext.Version}")
+    }
+    implementation "com.google.android.material:material:1.1.0"
     implementation 'com.github.penfeizhou.android.animation:glide-plugin:2.5.0'
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     implementation 'com.github.bumptech.glide:annotations:4.11.0'

@@ -2,11 +2,12 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>这是一个HTML5的网页</title>
+    <title>Web shell for doric</title>
   </head>
   <body>
     <p>Hello HTML5</p>
   </body>
+  <script type="text/javascript" src="http://shell.doric/doric-web.js"></script>
   <script type="text/javascript">
     function addScriptElement(scriptId, source) {
       const scriptElement = document.createElement("script");
@@ -15,9 +16,12 @@
       scriptElement.src = source;
       document.body.appendChild(scriptElement);
     }
+
     function removeScriptElement(scriptId) {
       const scriptElement = document.getElementById(scriptId);
       document.body.removeChild(scriptElement);
     }
+
+    NativeClient.ready();
   </script>
 </html>

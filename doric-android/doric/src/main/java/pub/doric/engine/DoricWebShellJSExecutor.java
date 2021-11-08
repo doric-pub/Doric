@@ -25,8 +25,11 @@ import android.webkit.ConsoleMessage;
 import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSONBuilder;
@@ -38,12 +41,20 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import pub.doric.BuildConfig;
 import pub.doric.async.SettableFuture;
 import pub.doric.utils.DoricLog;
+import pub.doric.utils.DoricUtils;
 
 
 /**
@@ -128,6 +139,7 @@ public class DoricWebShellJSExecutor implements IDoricJSE {
         @JavascriptInterface
         public void ready() {
             DoricLog.d("Ready");
+            readyFuture.set(true);
         }
 
         @JavascriptInterface
@@ -188,54 +200,154 @@ public class DoricWebShellJSExecutor implements IDoricJSE {
         }
     }
 
-    @SuppressLint({"JavascriptInterface", "SetJavaScriptEnabled"})
+    private interface ResourceInterceptor {
+        boolean filter(String url);
+
+        WebResourceResponse onIntercept(String url);
+    }
+
+    private final SettableFuture<Boolean> readyFuture;
+    private final Set<ResourceInterceptor> resourceInterceptors = new HashSet<>();
+
+    private class DoricWebViewClient extends WebViewClient {
+        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+        @Nullable
+        @Override
+        public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+            String url = request.getUrl().toString();
+            for (ResourceInterceptor interceptor : resourceInterceptors) {
+                if (interceptor.filter(url)) {
+                    WebResourceResponse webResourceResponse = interceptor.onIntercept(url);
+                    if (webResourceResponse != null) {
+                        return webResourceResponse;
+                    }
+                }
+            }
+            return null;
+        }
+
+        @Nullable
+        @Override
+        public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+            for (ResourceInterceptor interceptor : resourceInterceptors) {
+                if (interceptor.filter(url)) {
+                    WebResourceResponse webResourceResponse = interceptor.onIntercept(url);
+                    if (webResourceResponse != null) {
+                        return webResourceResponse;
+                    }
+                }
+            }
+            return null;
+        }
+    }
+
+    private final String shellUrl = "http://shell.doric/";
+
+    private final Map<String, String> loadingScripts = new HashMap<>();
+    private final AtomicInteger scriptId = new AtomicInteger(0);
+
+    @SuppressLint({"JavascriptInterface", "SetJavaScriptEnabled", "AddJavascriptInterface"})
     public DoricWebShellJSExecutor(final Context context) {
+        resourceInterceptors.add(new ResourceInterceptor() {
+            @Override
+            public boolean filter(String url) {
+                return url.startsWith(shellUrl + "doric-web.html");
+            }
+
+            @Override
+            public WebResourceResponse onIntercept(String url) {
+                String content = DoricUtils.readAssetFile("doric-web.html");
+                InputStream inputStream = new ByteArrayInputStream(content.getBytes());
+                return new WebResourceResponse("text/html", "utf-8", inputStream);
+            }
+        });
+        resourceInterceptors.add(new ResourceInterceptor() {
+            @Override
+            public boolean filter(String url) {
+                return url.startsWith(shellUrl + "doric-web.js");
+            }
+
+            @Override
+            public WebResourceResponse onIntercept(String url) {
+                String content = DoricUtils.readAssetFile("doric-web.js");
+                InputStream inputStream = new ByteArrayInputStream(content.getBytes());
+                return new WebResourceResponse("text/javascript", "utf-8", inputStream);
+            }
+        });
+        resourceInterceptors.add(new ResourceInterceptor() {
+            @Override
+            public boolean filter(String url) {
+                return url.startsWith(shellUrl + "script/");
+            }
+
+            @Override
+            public WebResourceResponse onIntercept(String url) {
+                String script = loadingScripts.remove(url);
+                if (TextUtils.isEmpty(script)) {
+                    return null;
+                }
+                assert script != null;
+                InputStream inputStream = new ByteArrayInputStream(script.getBytes());
+                return new WebResourceResponse("text/javascript", "utf-8", inputStream);
+            }
+        });
+        readyFuture = new SettableFuture<>();
         HandlerThread webViewHandlerThread = new HandlerThread("DoricWebViewJSExecutor");
         webViewHandlerThread.start();
         this.handler = new Handler(webViewHandlerThread.getLooper());
-        handler.post(new Runnable() {
+        this.handler.post(new Runnable() {
             @Override
             public void run() {
                 webView = new WebView(context.getApplicationContext());
-                WebSettings webSettings = webView.getSettings();
-                webSettings.setJavaScriptEnabled(true);
-                webView.setWebChromeClient(new DoricWebChromeClient());
-                webView.loadUrl("about:blank");
-                WebViewCallback webViewCallback = new WebViewCallback();
-                webView.addJavascriptInterface(webViewCallback, "NativeClient");
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && BuildConfig.DEBUG) {
                     WebView.setWebContentsDebuggingEnabled(true);
                 }
+                WebSettings webSettings = webView.getSettings();
+                webSettings.setJavaScriptEnabled(true);
+                webView.setWebChromeClient(new DoricWebChromeClient());
+                webView.setWebViewClient(new DoricWebViewClient());
+                WebViewCallback webViewCallback = new WebViewCallback();
+                webView.addJavascriptInterface(webViewCallback, "NativeClient");
+                webView.loadUrl(shellUrl + "doric-web.html");
+            }
+        });
+        readyFuture.get();
+    }
+
+
+    private void execJS(final String script) {
+        this.handler.post(new Runnable() {
+            @Override
+            public void run() {
+                webView.loadUrl(String.format("javascript:%s", script));
             }
         });
     }
 
     @Override
     public String loadJS(final String script, String source) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                webView.evaluateJavascript(script, null);
-            }
-        });
+        String uniqueId = String.valueOf(scriptId.incrementAndGet());
+        String url = shellUrl + "script/" + uniqueId;
+        loadingScripts.put(url, script);
+        execJS(String.format("javascript:addScriptElement('%s','%s')", uniqueId, url));
         return null;
     }
 
     @Override
-    public JSDecoder evaluateJS(String script, String source, boolean hashKey) throws JSRuntimeException {
-        loadJS(script, source);
+    public JSDecoder evaluateJS(final String script, String source, boolean hashKey) throws JSRuntimeException {
+        execJS(script);
         return null;
     }
 
     @Override
     public void injectGlobalJSFunction(String name, JavaFunction javaFunction) {
         globalFunctions.put(name, javaFunction);
-        loadJS(String.format("__injectGlobalFunction('%s')", name), "");
+        execJS(String.format("__injectGlobalFunction('%s')", name));
     }
 
     @Override
     public void injectGlobalJSObject(String name, JavaValue javaValue) {
-        loadJS(String.format("__injectGlobalObject('%s','%s')", name, javaValue.getValue()), "");
+        execJS(String.format("__injectGlobalObject('%s','%s')", name, javaValue.getValue()));
     }
 
     @Override
@@ -251,7 +363,7 @@ public class DoricWebShellJSExecutor implements IDoricJSE {
                 objectName,
                 functionName,
                 jsonArray.toString());
-        loadJS(script, "");
+        execJS(script);
         String result = returnFuture.get();
         returnFuture = null;
         if (!TextUtils.isEmpty(result)) {

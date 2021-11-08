@@ -102,7 +102,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
         try {
             mDoricJSE = new DoricNativeJSExecutor();
         } catch (Throwable e) {
-            mDoricJSE = new DoricWebViewJSExecutor(Doric.application());
+            mDoricJSE = new DoricWebShellJSExecutor(Doric.application());
             loadBuiltinJS("doric-web.js");
         }
     }

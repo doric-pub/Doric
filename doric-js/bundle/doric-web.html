@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>这是一个HTML5的网页</title>
+  </head>
+  <body>
+    <p>Hello HTML5</p>
+  </body>
+  <script type="text/javascript">
+    function addScriptElement(scriptId, source) {
+      const scriptElement = document.createElement("script");
+      scriptElement.type = "text/javascript";
+      scriptElement.id = scriptId;
+      scriptElement.src = source;
+      document.body.appendChild(scriptElement);
+    }
+    function removeScriptElement(scriptId) {
+      const scriptElement = document.getElementById(scriptId);
+      document.body.removeChild(scriptElement);
+    }
+  </script>
+</html>

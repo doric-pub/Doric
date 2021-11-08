@@ -16,7 +16,6 @@
 package pub.doric.engine;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
@@ -52,8 +51,7 @@ import pub.doric.utils.DoricLog;
  * @Author: pengfei.zhou
  * @CreateDate: 2021/11/3
  */
-@TargetApi(Build.VERSION_CODES.KITKAT)
-public class DoricWebViewJSExecutor implements IDoricJSE {
+public class DoricWebShellJSExecutor implements IDoricJSE {
     private WebView webView;
     private final Map<String, JavaFunction> globalFunctions = new HashMap<>();
     private final Handler handler;
@@ -128,6 +126,11 @@ public class DoricWebViewJSExecutor implements IDoricJSE {
 
     public class WebViewCallback {
         @JavascriptInterface
+        public void ready() {
+            DoricLog.d("Ready");
+        }
+
+        @JavascriptInterface
         public void log(String message) {
             DoricLog.d(message);
         }
@@ -186,7 +189,7 @@ public class DoricWebViewJSExecutor implements IDoricJSE {
     }
 
     @SuppressLint({"JavascriptInterface", "SetJavaScriptEnabled"})
-    public DoricWebViewJSExecutor(final Context context) {
+    public DoricWebShellJSExecutor(final Context context) {
         HandlerThread webViewHandlerThread = new HandlerThread("DoricWebViewJSExecutor");
         webViewHandlerThread.start();
         this.handler = new Handler(webViewHandlerThread.getLooper());
@@ -200,7 +203,7 @@ public class DoricWebViewJSExecutor implements IDoricJSE {
                 webView.loadUrl("about:blank");
                 WebViewCallback webViewCallback = new WebViewCallback();
                 webView.addJavascriptInterface(webViewCallback, "NativeClient");
-                if (BuildConfig.DEBUG) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && BuildConfig.DEBUG) {
                     WebView.setWebContentsDebuggingEnabled(true);
                 }
             }

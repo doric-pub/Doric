@@ -6,8 +6,8 @@
   "types": "index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc -p tsconfig.es5.json && mv -f lib-es5/src/ui/view.es5.js lib-es5/src/ui/view.js && tsc -d -p . && rollup -c && dts-bundle --configJson dts-bundle.json && cat src/image.d.ts >> index.d.ts",
-    "build-win32": "tsc -p tsconfig.es5.json && tsc -d -p . && rollup -c && dts-bundle --configJson dts-bundle.json",
+    "build": "cp -rf index.web.html bundle/doric-web.html && tsc -p tsconfig.es5.json && mv -f lib-es5/src/ui/view.es5.js lib-es5/src/ui/view.js && tsc -d -p . && rollup -c && dts-bundle --configJson dts-bundle.json && cat src/image.d.ts >> index.d.ts",
+    "build-win32": "cp -rf index.web.html bundle/doric-web.html && tsc -p tsconfig.es5.json && tsc -d -p . && rollup -c && dts-bundle --configJson dts-bundle.json",
     "dev": "tsc -w -p . & rollup -c -w",
     "clean": "rm -rf lib && rm -rf lib-es5 &&  rm -rf bundle",
     "prepublish": "npm run build"

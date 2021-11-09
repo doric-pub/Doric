@@ -52,7 +52,7 @@ public class DoricNativeDriver implements IDoricDriver {
     private final Handler mUIHandler;
 
     public DoricNativeDriver() {
-        doricJSEngine = new DoricWebShellJSEngine();
+        doricJSEngine = new DoricJSEngine();
         mBridgeExecutor = Executors.newCachedThreadPool();
         mUIHandler = new Handler(Looper.getMainLooper());
         mJSHandler = doricJSEngine.getJSHandler();

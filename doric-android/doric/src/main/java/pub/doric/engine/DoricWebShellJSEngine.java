@@ -15,7 +15,11 @@
  */
 package pub.doric.engine;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import pub.doric.Doric;
+import pub.doric.utils.DoricConstant;
 
 /**
  * @Description: This uses DoricWebShellJSExecutor directly
@@ -23,8 +27,24 @@ import pub.doric.Doric;
  * @CreateDate: 2021/11/9
  */
 public class DoricWebShellJSEngine extends DoricJSEngine {
+    private final Map<String, String> scriptIdMap = new HashMap<>();
+
     @Override
     protected void initJSEngine() {
         mDoricJSE = new DoricWebShellJSExecutor(Doric.application());
+    }
+
+    @Override
+    public void prepareContext(String contextId, String script, String source) {
+        String scriptId = mDoricJSE.loadJS(packageContextScript(contextId, script), "Context://" + source);
+        scriptIdMap.put(contextId, scriptId);
+    }
+
+    @Override
+    public void destroyContext(String contextId) {
+        String scriptId = mDoricJSE.loadJS(String.format(DoricConstant.TEMPLATE_CONTEXT_DESTROY, contextId), "_Context://" + contextId);
+        ((DoricWebShellJSExecutor) mDoricJSE).removeScript(scriptId);
+        scriptId = scriptIdMap.get(contextId);
+        ((DoricWebShellJSExecutor) mDoricJSE).removeScript(scriptId);
     }
 }

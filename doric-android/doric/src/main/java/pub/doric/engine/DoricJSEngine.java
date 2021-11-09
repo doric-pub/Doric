@@ -33,6 +33,8 @@ import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JavaFunction;
 import com.github.pengfeizhou.jscore.JavaValue;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -103,11 +105,16 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
         try {
             mDoricJSE = new DoricNativeJSExecutor();
         } catch (Throwable e) {
+            StringWriter stringWriter = new StringWriter();
+            e.printStackTrace(new PrintWriter(stringWriter));
+            mDoricRegistry.onLog(Log.ERROR, stringWriter.toString());
             //In case some unexpected errors happened
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                mDoricRegistry.onLog(Log.WARN, "Use DoricWebViewJSExecutor");
                 mDoricJSE = new DoricWebViewJSExecutor(Doric.application());
                 loadBuiltinJS("doric-web.js");
             } else {
+                mDoricRegistry.onLog(Log.WARN, "Use DoricWebShellJSExecutor");
                 mDoricJSE = new DoricWebShellJSExecutor(Doric.application());
             }
         }

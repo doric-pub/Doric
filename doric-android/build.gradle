@@ -46,7 +46,7 @@ task clean(type: Delete) {
 Properties properties = new Properties()
 properties.load(project.rootProject.file('version.properties').newDataInputStream())
 ext {
-    UseWebViewOnly = true
+    UseWebViewOnly = false
     Version = properties.version
 }
 

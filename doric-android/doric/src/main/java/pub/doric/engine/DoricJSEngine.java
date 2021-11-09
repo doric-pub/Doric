@@ -287,11 +287,11 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
         mDoricJSE.loadJS(String.format(DoricConstant.TEMPLATE_CONTEXT_DESTROY, contextId), "_Context://" + contextId);
     }
 
-    private String packageContextScript(String contextId, String content) {
+    protected String packageContextScript(String contextId, String content) {
         return String.format(DoricConstant.TEMPLATE_CONTEXT_CREATE, content, contextId, contextId);
     }
 
-    private String packageModuleScript(String moduleName, String content) {
+    protected String packageModuleScript(String moduleName, String content) {
         return String.format(DoricConstant.TEMPLATE_MODULE, moduleName, content);
     }
 

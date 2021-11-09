@@ -324,13 +324,17 @@ public class DoricWebShellJSExecutor implements IDoricJSE {
         });
     }
 
+    public void removeScript(String scriptId) {
+        execJS(String.format("javascript:removeScriptElement('%s')", scriptId));
+    }
+
     @Override
     public String loadJS(final String script, String source) {
         String uniqueId = String.valueOf(scriptId.incrementAndGet());
         String url = shellUrl + "script/" + uniqueId;
         loadingScripts.put(url, script);
         execJS(String.format("javascript:addScriptElement('%s','%s')", uniqueId, url));
-        return null;
+        return uniqueId;
     }
 
     @Override

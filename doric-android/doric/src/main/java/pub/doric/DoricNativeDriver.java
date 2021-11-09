@@ -28,6 +28,8 @@ import java.util.concurrent.Executors;
 import pub.doric.async.AsyncCall;
 import pub.doric.async.AsyncResult;
 import pub.doric.engine.DoricJSEngine;
+import pub.doric.engine.DoricWebShellJSEngine;
+import pub.doric.engine.DoricWebViewJSEngine;
 import pub.doric.performance.DoricPerformanceProfile;
 import pub.doric.utils.DoricConstant;
 import pub.doric.utils.ThreadMode;
@@ -38,13 +40,19 @@ import pub.doric.utils.ThreadMode;
  * @CreateDate: 2019-07-18
  */
 public class DoricNativeDriver implements IDoricDriver {
-    private final DoricJSEngine doricJSEngine;
+    public enum JSEngineType {
+        JSE,
+        WebView,
+        WebShell
+    }
+
+    private DoricJSEngine doricJSEngine;
+    private Handler mJSHandler;
     private final ExecutorService mBridgeExecutor;
     private final Handler mUIHandler;
-    private final Handler mJSHandler;
 
     public DoricNativeDriver() {
-        doricJSEngine = new DoricJSEngine();
+        doricJSEngine = new DoricWebShellJSEngine();
         mBridgeExecutor = Executors.newCachedThreadPool();
         mUIHandler = new Handler(Looper.getMainLooper());
         mJSHandler = doricJSEngine.getJSHandler();
@@ -193,5 +201,31 @@ public class DoricNativeDriver implements IDoricDriver {
     @Override
     public DoricRegistry getRegistry() {
         return doricJSEngine.getRegistry();
+    }
+
+    public JSEngineType getJSEngineType() {
+        if (doricJSEngine instanceof DoricWebShellJSEngine) {
+            return JSEngineType.WebShell;
+        }
+        if (doricJSEngine instanceof DoricWebViewJSEngine) {
+            return JSEngineType.WebView;
+        }
+        return JSEngineType.JSE;
+    }
+
+    public void switchJSEngine(JSEngineType type) {
+        if (getJSEngineType() == type) {
+            return;
+        }
+        doricJSEngine.teardown();
+        mJSHandler.removeCallbacksAndMessages(null);
+        if (type == JSEngineType.WebView) {
+            doricJSEngine = new DoricWebViewJSEngine();
+        } else if (type == JSEngineType.WebShell) {
+            doricJSEngine = new DoricWebShellJSEngine();
+        } else {
+            doricJSEngine = new DoricJSEngine();
+        }
+        mJSHandler = doricJSEngine.getJSHandler();
     }
 }

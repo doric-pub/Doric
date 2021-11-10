@@ -80,3 +80,12 @@ Doric提供脚手架工具`doric-cli`及开发调试工具`Devkit`,提供热重�
 ## License
 
 [Apache License 2.0](LICENSE)
+
+
+## 欢迎扫码加入Doric社区讨论交流
+| 钉钉 | 微信 |
+| ---- | ---- |
+| !<img src="https://user-images.githubusercontent.com/9526211/141051788-c9df135b-bc88-4850-a2c8-b0a65f78fd57.png" height="500px"/> | <img src="https://user-images.githubusercontent.com/9526211/141051914-2f9e34c7-a4fc-446a-8d17-693cadee0d5b.png" height="500px"/>|
+
+
+

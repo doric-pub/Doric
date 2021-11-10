@@ -37,11 +37,12 @@
 @implementation DoricImageView
 - (void)displayLayer:(CALayer *)layer {
     if (@available(iOS 14.0, *)) {
-        if (self.isAnimating) {
+        if ([self.image isKindOfClass:YYImage.class]
+            && ((YYImage *) self.image).animatedImageData) {
             [super displayLayer:layer];
         } else {
             layer.contents = (__bridge id) self.image.CGImage;
-        };
+        }
     } else {
         [super displayLayer:layer];
     }

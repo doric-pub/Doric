@@ -30,11 +30,16 @@ import java.io.InputStreamReader;
 
 public class SimulatorUtil {
     public static boolean isSimulator(Context context) {
-        return notHasBlueTooth()
-                || notHasLightSensorManager(context)
-                || isFeatures()
-                || checkIsNotRealPhone()
-                || checkPipes();
+        try {
+            return notHasBlueTooth()
+                    || notHasLightSensorManager(context)
+                    || isFeatures()
+                    || checkIsNotRealPhone()
+                    || checkPipes();
+        } catch (Throwable e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     private static boolean notHasBlueTooth() {

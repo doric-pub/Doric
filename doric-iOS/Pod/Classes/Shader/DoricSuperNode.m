@@ -160,6 +160,9 @@
             || self.view.doricLayout.heightSpec == DoricLayoutFit)) {
         [self.superNode subNodeContentChanged:self];
     } else {
+        if (![self.type isEqualToString:@"Root"]) {
+            [self.view.doricLayout apply];
+        }
         [self requestLayout];
     }
 }

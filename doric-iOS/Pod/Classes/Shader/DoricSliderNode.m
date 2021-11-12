@@ -314,4 +314,9 @@
     self.propRenderPageFuncId = nil;
     self.renderPageFuncId = nil;
 }
+
+- (void)subNodeContentChanged:(DoricViewNode *)subNode {
+    [subNode.view.doricLayout apply];
+    [super subNodeContentChanged:subNode];
+}
 @end

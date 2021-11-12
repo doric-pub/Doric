@@ -252,11 +252,9 @@
                 UIImage *image = [UIImage imageWithData:imageData scale:self.imageScale];
 #endif
                 view.image = image;
-                DoricSuperNode *node = self.superNode;
-                while (node.superNode != nil) {
-                    node = node.superNode;
+                if (self.needReload) {
+                    [self.superNode subNodeContentChanged:self];
                 }
-                [node requestLayout];
                 if (self.loadCallbackId.length > 0) {
                     if (image) {
                         [self callJSResponse:self.loadCallbackId,
@@ -326,12 +324,8 @@
                                              },
                                         nil];
                     }
-                    if (async) {
-                        DoricSuperNode *node = self.superNode;
-                        while (node.superNode != nil) {
-                            node = node.superNode;
-                        }
-                        [node requestLayout];
+                    if (async && self.needReload) {
+                        [self.superNode subNodeContentChanged:self];
                     }
                 }
             }];
@@ -368,12 +362,8 @@
                                                         },
                                                    nil];
                                }
-                               if (async) {
-                                   DoricSuperNode *node = self.superNode;
-                                   while (node.superNode != nil) {
-                                       node = node.superNode;
-                                   }
-                                   [node requestLayout];
+                               if (async && self.needReload) {
+                                   [self.superNode subNodeContentChanged:self];
                                }
                            }
                        }];
@@ -643,5 +633,16 @@
     self.imageScale = UIScreen.mainScreen.scale;
     self.blurEffectView = nil;
     self.view.contentMode = UIViewContentModeScaleAspectFill;
+}
+
+- (BOOL)needReload {
+    if (self.view.doricLayout.widthSpec == DoricLayoutFit
+            || self.view.doricLayout.heightSpec == DoricLayoutFit) {
+        CGSize size = [self.view sizeThatFits:self.view.bounds.size];
+        if (!CGSizeEqualToSize(size, self.view.bounds.size)) {
+            return YES;
+        }
+    }
+    return NO;
 }
 @end

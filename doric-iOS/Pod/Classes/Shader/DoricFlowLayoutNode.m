@@ -540,4 +540,9 @@
     self.onScrollEndFuncId = nil;
     self.loadMore = NO;
 }
+
+- (void)subNodeContentChanged:(DoricViewNode *)subNode {
+    [subNode.view.doricLayout apply];
+    [super subNodeContentChanged:subNode];
+}
 @end

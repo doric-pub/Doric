@@ -40,4 +40,6 @@
 - (void)recursiveMixin:(NSDictionary *)srcModel to:(NSMutableDictionary *)targetModel;
 
 - (NSArray *)getSubNodeViewIds;
+
+- (void)subNodeContentChanged:(DoricViewNode *)subNode;
 @end

@@ -1207,7 +1207,9 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         setRotationX(0);
         setRotationY(0);
         mView.setPadding(0, 0, 0, 0);
-        mView.setOnClickListener(null);
+        if (mView.hasOnClickListeners()) {
+            mView.setOnClickListener(null);
+        }
         DoricLayer doricLayer = this.doricLayer;
         if (mView instanceof DoricLayer) {
             doricLayer = (DoricLayer) mView;

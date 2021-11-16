@@ -25,63 +25,65 @@
   </a>
 </div>
 <div align="center">
- <a href="README-zh_CN.md">
-     中文
+ <a href="README-en.md">
+     English
  </a>
 </div>
 
 # Doric
-Doric is a high-performance framework for cross-platform development. With TSX or TypeScript, a set of code can perform consistently across different platforms.
+Doric是一套高性能的跨平台开发框架,使用TSX/TypeScript开发,一套代码可在不同平台展示出同样的页面.
 
-## Feature
-### Cross-platform consistency
-Doric supports Android, iOS, Qt & Web, implements 'write once, run anywhere, perform consistently' across different platforms.
-### High-performance rendering
-Doric adopts native components or widgets on rendering views, provides a set of APIs under native standard. Doric architecture has multiple inner mechanism for efficient communication between 'Native' & 'JS', such as dirty-value detection、local-update on views, thus Doric pages will rival native pages on performance when rendering.
-### Light-weight & Easy-extensible
-Doric SDK follows fundamental principles, its core provides universal views, components and native modules, which can properly satisfy most scenarios.
-Moreover, Doric provides an integral mechanism for plugin development, you can register your libraries or plugins with Doric API to provide view components or other native abilities.
-### Easy to get started with sufficient toolchains
-Doric includes a scaffolding tool `doric-cli` and a debug tool `Devkit`, offering multiple tools, such as hot-reload、breakpoint debugging、waterfall-like performance profile、tree nodes viewer and so on, aiming at assisting developers building user interfaces, analyzing and debugging efficiently.
+## 特色
+### 跨平台统一
+Doric目前已支持Android、iOS、Qt、Web,可通过一套代码在各平台展示一致的前端页面.
+### 高性能渲染
+Doric渲染视图时使用原生组件,在API上遵循原生接口,在架构上采用脏值检测、局部更新等多种机制实现JS与原生间的高效通信,Doric页面的渲染及运行性能可真正达到与原生媲美.
+### 轻量化,易扩展
+Doric中遵循轻量化的原则,SDK提供核心能力及通用的视图组件和平台的原生能力模块,可以满足常用的需求.
+同时,Doric中也提供了完备的插件机制,您可以通过注册插件来向Doric中提供视图组件或原生能力.
+### 易上手,丰富的工具链
+Doric提供脚手架工具`doric-cli`及开发调试工具`Devkit`,提供热重载、断点调试、性能瀑布图、节点查看器等多种工具,帮助开发者更方便快捷地开发页面,并进行分析调试.
 
-## Get started
-> Documentation: [https://doric.pub](https://doric.pub)
-* Open the web page directly: [Doric Playgroud](https://p.doric.pub/play/?e=167#example/HelloDoric.ts) and experience coding style rapidly
-* With `doric-cli` command line interfaces, you can create Doric applications, reference here by [Installation & Usage](https://doric.pub/docs/index.html#%E5%AE%89%E8%A3%85Doric)
-* Use Doric in your existing Android project, reference here by [Use Doric in Android](https://doric.pub/docs/android.html)
-* Use Doric in your existing iOS project, reference here by [Use Doric in iOS](https://doric.pub/docs/ios.html)
+## 快速使用
+> 项目文档: [https://doric.pub](https://doric.pub)
+* 您可以直接打开网页[Doric Playgroud](https://p.doric.pub/play/?e=167#example/HelloDoric.ts)快速体验Doric中的风格
+* 您可以通过`doric-cli`命令行工具直接创建Doric应用,可参考[安装使用](https://doric.pub/docs/index.html#%E5%AE%89%E8%A3%85Doric)
+* 如果您需要在现有Android项目中接入使用Doric,可参考[在Android中使用Doric](https://doric.pub/docs/android.html)
+* 如果您需要在现有iOS项目中接入使用Doric,可参考[在iOS中使用Doric](https://doric.pub/docs/ios.html)
 
-## Example code
-With the following different ways to experience code style in Doric
-### Declarative UI
-Use TypeScript or TSX to write layout ui according to your preferences.
+## 示例代码
+您可以通过下方代码体验Doric中的编写风格
+### 声明式UI
+您可以根据喜好,使用TypeScript或TSX语法书写布局.
 | TypeScript | TSX |
 | ---- | ---- |
 | <img src="https://user-images.githubusercontent.com/9526211/132191388-6e3740ce-2ad6-4847-86f4-a1f94a5a3a77.png" height="300px" /> | <img src="https://user-images.githubusercontent.com/9526211/132192041-bb547cb8-574b-44bb-9d8f-071f4e235f3a.png" height="300px"/>|
 
-### Cross-platform consistency
-Snapshots on Android & iOS applications written in Doric
+### 跨平台统一
+下图为代码在Android及iOS应用上的运行截图
 | Android | iOS |
 | ---- | ---- |
 | !<img src="https://user-images.githubusercontent.com/9526211/132187361-dcafe2d1-120a-4145-ab98-3836b378576e.png" height="500px"/> | <img src="https://user-images.githubusercontent.com/9526211/132191681-0512abd2-0692-4e4f-9605-bf24d9b898c2.png" height="500px"/>|
 
-## Plugin library in common use
+## 常用插件库
 ### [DoricFs](https://github.com/doric-pub/DoricFs)
-Ability provided with file system read-write on different platforms. (Android+iOS)
+提供平台中读写文件系统的能力(Android+iOS)
 ### [DoricWebSocket](https://github.com/doric-pub/DoricWebSocket)
-Ability provided with web socket support. (Android+iOS)
+提供WebSocket能力支持(Android+iOS)
 ### [DoricImagePicker](https://github.com/doric-pub/DoricImagePicker)
-Ability provided with image picker and photograph. (Android+iOS)
+提供图片选择及拍照功能(Android+iOS)
 ### [DoricBarcodeScanner](https://github.com/doric-pub/DoricBarcodeScanner)
-Support for scanning bar code. (Android+iOS)
+提供扫码支持(Android+iOS)
 ### [DoricSQLite](https://github.com/doric-pub/DoricSQLite)
-Provided with SQLite database manipulation. (Android+iOS)
+提供SQLite数据库支持(Android+iOS)
 
 ## License
+
 [Apache License 2.0](LICENSE)
 
-## Welcome to join the Doric community 
-| DingTalk | WeChat |
+
+## 欢迎扫码加入Doric社区讨论交流
+| 钉钉 | 微信 |
 | ---- | ---- |
 | <img src="https://user-images.githubusercontent.com/9526211/141051788-c9df135b-bc88-4850-a2c8-b0a65f78fd57.png" height="500px"/> | <img src="https://user-images.githubusercontent.com/9526211/141051914-2f9e34c7-a4fc-446a-8d17-693cadee0d5b.png" height="500px"/>|
 

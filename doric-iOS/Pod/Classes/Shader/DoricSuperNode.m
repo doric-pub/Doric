@@ -152,6 +152,18 @@
     for (NSString *viewId in self.subNodes.allKeys) {
         [[self subNodeWithViewId:viewId] reset];
     }
+}
 
+- (void)subNodeContentChanged:(DoricViewNode *)subNode {
+    if (self.superNode
+            && (self.view.doricLayout.widthSpec == DoricLayoutFit
+            || self.view.doricLayout.heightSpec == DoricLayoutFit)) {
+        [self.superNode subNodeContentChanged:self];
+    } else {
+        if (![self.type isEqualToString:@"Root"]) {
+            [self.view.doricLayout apply];
+        }
+        [self requestLayout];
+    }
 }
 @end

@@ -251,7 +251,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
         originFrame = CGRectApplyAffineTransform(originFrame, self.view.transform);
         originFrame = CGRectOffset(originFrame, anchor.x * self.measuredWidth + self.measuredX, anchor.y * self.measuredHeight + self.measuredY);
     }
-    if ((!self.view.maskView && !UIEdgeInsetsEqualToEdgeInsets(self.corners, UIEdgeInsetsZero))
+    if ((!self.view.layer.mask && !UIEdgeInsetsEqualToEdgeInsets(self.corners, UIEdgeInsetsZero))
         || ![self rect:originFrame equalTo:self.view.frame]) {
         self.view.frame = originFrame;
         if (!UIEdgeInsetsEqualToEdgeInsets(self.corners, UIEdgeInsetsZero)) {

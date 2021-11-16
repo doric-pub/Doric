@@ -61,6 +61,10 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
 
 static const void *kLayoutConfig = &kLayoutConfig;
 
+@implementation DoricShapeLayer
+
+@end
+
 @implementation UIView (DoricLayout)
 @dynamic doricLayout;
 
@@ -253,32 +257,62 @@ static const void *kLayoutConfig = &kLayoutConfig;
     }
     if (![self rect:originFrame equalTo:self.view.frame]) {
         self.view.frame = originFrame;
-        if (!UIEdgeInsetsEqualToEdgeInsets(self.corners, UIEdgeInsetsZero)) {
-            CAShapeLayer *shapeLayer = [CAShapeLayer layer];
-            CGPathRef path = DoricCreateRoundedRectPath(self.view.bounds,
-                    self.corners.top, self.corners.left, self.corners.bottom, self.corners.right);
-            shapeLayer.path = path;
-
-            if ((self.corners.left != self.corners.right
-                    || self.corners.left != self.corners.top
-                    || self.corners.left != self.corners.bottom)
-                    && self.view.layer.borderWidth > CGFLOAT_MIN) {
-                CAShapeLayer *lineLayer = [CAShapeLayer layer];
-                lineLayer.lineWidth = self.view.layer.borderWidth * 2;
-                lineLayer.strokeColor = self.view.layer.borderColor;
-                lineLayer.path = path;
-                lineLayer.fillColor = nil;
-                [[self.view.layer sublayers] forEach:^(__kindof CALayer *obj) {
-                    if ([obj isKindOfClass:CAShapeLayer.class] && ((CAShapeLayer *) obj).lineWidth > CGFLOAT_MIN) {
-                        [obj removeFromSuperlayer];
-                    }
-                }];
-                [self.view.layer addSublayer:lineLayer];
+    }
+    if (!UIEdgeInsetsEqualToEdgeInsets(self.corners, UIEdgeInsetsZero)) {
+        if (self.view.layer.mask) {
+            if ([self.view.layer.mask isKindOfClass:[DoricShapeLayer class]]) {
+                DoricShapeLayer *shapeLayer = (DoricShapeLayer *)self.view.layer.mask;
+                if (![self compareCornersValue:shapeLayer.corners withCorners:self.corners]
+                    || !CGRectEqualToRect(self.view.bounds, shapeLayer.viewBounds)) {
+                    shapeLayer.corners = self.corners;
+                    shapeLayer.viewBounds = self.view.bounds;
+                    [self configMaskWithLayer:shapeLayer];
+                }
+            } else if (![self rect:originFrame equalTo:self.view.frame]) {
+                CAShapeLayer *shapeLayer = [CAShapeLayer layer];
+                [self configMaskWithLayer:shapeLayer];
             }
-            CGPathRelease(path);
-            self.view.layer.mask = shapeLayer;
+        } else {
+            DoricShapeLayer *shapeLayer = [DoricShapeLayer layer];
+            shapeLayer.corners = self.corners;
+            shapeLayer.viewBounds = self.view.bounds;
+            [self configMaskWithLayer:shapeLayer];
         }
     }
+}
+
+- (void)configMaskWithLayer:(CAShapeLayer *)shapeLayer {
+    CGPathRef path = DoricCreateRoundedRectPath(self.view.bounds,
+            self.corners.top, self.corners.left, self.corners.bottom, self.corners.right);
+    shapeLayer.path = path;
+    if ((self.corners.left != self.corners.right
+            || self.corners.left != self.corners.top
+            || self.corners.left != self.corners.bottom)
+            && self.view.layer.borderWidth > CGFLOAT_MIN) {
+        CAShapeLayer *lineLayer = [CAShapeLayer layer];
+        lineLayer.lineWidth = self.view.layer.borderWidth * 2;
+        lineLayer.strokeColor = self.view.layer.borderColor;
+        lineLayer.path = path;
+        lineLayer.fillColor = nil;
+        [[self.view.layer sublayers] forEach:^(__kindof CALayer *obj) {
+            if ([obj isKindOfClass:CAShapeLayer.class] && ((CAShapeLayer *) obj).lineWidth > CGFLOAT_MIN) {
+                [obj removeFromSuperlayer];
+            }
+        }];
+        [self.view.layer addSublayer:lineLayer];
+    }
+    CGPathRelease(path);
+    self.view.layer.mask = shapeLayer;
+}
+
+- (BOOL)compareCornersValue:(UIEdgeInsets)corners1 withCorners:(UIEdgeInsets)corners2 {
+    if (corners1.top == corners2.top
+        && corners1.left == corners2.left
+        && corners1.right == corners2.right
+        && corners1.bottom == corners2.bottom) {
+        return YES;
+    }
+    return NO;
 }
 
 - (void)measureUndefinedContent:(CGSize)targetSize {

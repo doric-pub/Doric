@@ -20,6 +20,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CoreGraphics.h>
 #import <UIKit/UIKit.h>
+#import <QuartzCore/QuartzCore.h>
 
 typedef UIEdgeInsets DoricMargin;
 typedef UIEdgeInsets DoricPadding;
@@ -121,3 +122,9 @@ typedef NS_ENUM(NSInteger, DoricGravity) {
 @interface UIView (DoricLayout)
 @property(nonatomic, strong) DoricLayout *doricLayout;
 @end
+
+@interface DoricShapeLayer : CAShapeLayer
+@property CGRect viewBounds;
+@property UIEdgeInsets corners;
+@end
+

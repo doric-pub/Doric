@@ -21,6 +21,7 @@
 #import <objc/runtime.h>
 #import "UIView+Doric.h"
 #import "DoricExtensions.h"
+#import <QuartzCore/QuartzCore.h>
 
 void DoricAddEllipticArcPath(CGMutablePathRef path,
         CGPoint origin,
@@ -61,8 +62,12 @@ CGPathRef DoricCreateRoundedRectPath(CGRect bounds,
 
 static const void *kLayoutConfig = &kLayoutConfig;
 
-@implementation DoricShapeLayer
+@interface DoricShapeLayer : CAShapeLayer
+@property CGRect viewBounds;
+@property UIEdgeInsets corners;
+@end
 
+@implementation DoricShapeLayer
 @end
 
 @implementation UIView (DoricLayout)
@@ -255,20 +260,21 @@ static const void *kLayoutConfig = &kLayoutConfig;
         originFrame = CGRectApplyAffineTransform(originFrame, self.view.transform);
         originFrame = CGRectOffset(originFrame, anchor.x * self.measuredWidth + self.measuredX, anchor.y * self.measuredHeight + self.measuredY);
     }
-    if (![self rect:originFrame equalTo:self.view.frame]) {
+    BOOL isFrameChange = ![self rect:originFrame equalTo:self.view.frame];
+    if (isFrameChange) {
         self.view.frame = originFrame;
     }
     if (!UIEdgeInsetsEqualToEdgeInsets(self.corners, UIEdgeInsetsZero)) {
         if (self.view.layer.mask) {
             if ([self.view.layer.mask isKindOfClass:[DoricShapeLayer class]]) {
                 DoricShapeLayer *shapeLayer = (DoricShapeLayer *)self.view.layer.mask;
-                if (![self compareCornersValue:shapeLayer.corners withCorners:self.corners]
+                if (!UIEdgeInsetsEqualToEdgeInsets(self.corners, shapeLayer.corners)
                     || !CGRectEqualToRect(self.view.bounds, shapeLayer.viewBounds)) {
                     shapeLayer.corners = self.corners;
                     shapeLayer.viewBounds = self.view.bounds;
                     [self configMaskWithLayer:shapeLayer];
                 }
-            } else if (![self rect:originFrame equalTo:self.view.frame]) {
+            } else if (isFrameChange) {
                 CAShapeLayer *shapeLayer = [CAShapeLayer layer];
                 [self configMaskWithLayer:shapeLayer];
             }
@@ -303,16 +309,6 @@ static const void *kLayoutConfig = &kLayoutConfig;
     }
     CGPathRelease(path);
     self.view.layer.mask = shapeLayer;
-}
-
-- (BOOL)compareCornersValue:(UIEdgeInsets)corners1 withCorners:(UIEdgeInsets)corners2 {
-    if (corners1.top == corners2.top
-        && corners1.left == corners2.left
-        && corners1.right == corners2.right
-        && corners1.bottom == corners2.bottom) {
-        return YES;
-    }
-    return NO;
 }
 
 - (void)measureUndefinedContent:(CGSize)targetSize {
@@ -634,3 +630,4 @@ static const void *kLayoutConfig = &kLayoutConfig;
 }
 
 @end
+

@@ -21,29 +21,48 @@
 
 @interface DoricResourceManager ()
 @property(nonatomic, strong) NSMutableDictionary <NSString *, id <DoricResourceLoader>> *loaders;
+@property(nonatomic, strong) NSMapTable <NSString *, __kindof DoricResource *> *cachedResources;
+@property(nonatomic, strong) dispatch_queue_t mapQueue;
 @end
 
 @implementation DoricResourceManager
 - (instancetype)init {
     if (self = [super init]) {
         _loaders = [NSMutableDictionary new];
+        _mapQueue = dispatch_queue_create("doric.resource", DISPATCH_QUEUE_SERIAL);
+        _cachedResources = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsCopyIn
+                                                     valueOptions:NSPointerFunctionsWeakMemory
+                                                         capacity:0];
     }
     return self;
 }
 
 - (void)registerLoader:(id <DoricResourceLoader>)loader {
-    self.loaders[loader.resourceType] = loader;
+    dispatch_sync(self.mapQueue, ^{
+        self.loaders[loader.resourceType] = loader;
+    });
 }
 
 - (void)unRegisterLoader:(id <DoricResourceLoader>)loader {
-    [self.loaders removeObjectForKey:loader.resourceType];
+    dispatch_sync(self.mapQueue, ^{
+        [self.loaders removeObjectForKey:loader.resourceType];
+    });
 }
 
-- (__kindof DoricResource *)load:(NSString *)identifier
+- (__kindof DoricResource *)load:(NSString *)resId
+                  withIdentifier:(NSString *)identifier
                 withResourceType:(NSString *)resourceType
                      withContext:(DoricContext *)context {
-    id <DoricResourceLoader> loader = self.loaders[resourceType];
-    return [loader load:identifier withContext:context];
+    __block __kindof DoricResource *resource;
+    dispatch_sync(self.mapQueue, ^() {
+        resource = [self.cachedResources objectForKey:resId];
+        if (!resource) {
+            id <DoricResourceLoader> loader = self.loaders[resourceType];
+            resource = [loader load:identifier withContext:context];
+            [self.cachedResources setObject:resource forKey:resId];
+        }
+    });
+    return resource;
 }
 
 @end

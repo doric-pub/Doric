@@ -2145,11 +2145,13 @@ var __extends$f = (undefined && undefined.__extends) || (function () {
 })();
 var Resource = /** @class */ (function () {
     function Resource(type, identifier) {
+        this.resId = uniqueId("resource");
         this.type = type;
         this.identifier = identifier;
     }
     Resource.prototype.toModel = function () {
         return {
+            resId: this.resId,
             type: this.type,
             identifier: this.identifier,
         };

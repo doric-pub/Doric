@@ -397,11 +397,13 @@ public class ImageNode extends ViewNode<ImageView> {
                     return;
                 }
                 JSObject resource = prop.asObject();
+                final String resourceId = resource.getProperty("resId").asString().value();
                 final String type = resource.getProperty("type").asString().value();
                 final String identifier = resource.getProperty("identifier").asString().value();
-                DoricResource doricResource = getDoricContext().getDriver().getRegistry().getResourceManager().load(getDoricContext(), type, identifier);
+                DoricResource doricResource = getDoricContext().getDriver().getRegistry().getResourceManager()
+                        .load(getDoricContext(), resourceId, type, identifier);
                 if (doricResource != null) {
-                    doricResource.fetchRaw().setCallback(new AsyncResult.Callback<byte[]>() {
+                    doricResource.fetch().setCallback(new AsyncResult.Callback<byte[]>() {
                         @Override
                         public void onResult(byte[] imageData) {
                             loadIntoTarget(Glide.with(getContext()).load(imageData));

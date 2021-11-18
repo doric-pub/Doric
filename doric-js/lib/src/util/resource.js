@@ -1,10 +1,13 @@
+import { uniqueId } from "./uniqueId";
 export class Resource {
     constructor(type, identifier) {
+        this.resId = uniqueId("resource");
         this.type = type;
         this.identifier = identifier;
     }
     toModel() {
         return {
+            resId: this.resId,
             type: this.type,
             identifier: this.identifier,
         };

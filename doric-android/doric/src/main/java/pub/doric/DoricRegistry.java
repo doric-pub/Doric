@@ -29,6 +29,7 @@ import pub.doric.performance.DoricPerformanceProfile;
 import pub.doric.plugin.AnimatePlugin;
 import pub.doric.plugin.CoordinatorPlugin;
 import pub.doric.plugin.DoricJavaPlugin;
+import pub.doric.plugin.ImageDecoderPlugin;
 import pub.doric.plugin.KeyboardPlugin;
 import pub.doric.plugin.ModalPlugin;
 import pub.doric.plugin.NavBarPlugin;
@@ -114,6 +115,7 @@ public class DoricRegistry {
         this.registerNativePlugin(NotchPlugin.class);
         this.registerNativePlugin(KeyboardPlugin.class);
         this.registerNativePlugin(ResourceLoaderPlugin.class);
+        this.registerNativePlugin(ImageDecoderPlugin.class);
 
         this.registerViewNode(RootNode.class);
         this.registerViewNode(TextNode.class);

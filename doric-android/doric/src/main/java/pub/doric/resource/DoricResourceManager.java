@@ -17,6 +17,7 @@ package pub.doric.resource;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,6 +30,7 @@ import pub.doric.DoricContext;
  */
 public class DoricResourceManager {
     private final Map<String, DoricResourceLoader> mResourceLoaders = new HashMap<>();
+    private final Map<String, DoricResource> cachedResources = new WeakHashMap<>();
 
     public void registerLoader(DoricResourceLoader loader) {
         mResourceLoaders.put(loader.resourceType(), loader);
@@ -39,11 +41,18 @@ public class DoricResourceManager {
     }
 
     @Nullable
-    public DoricResource load(@NonNull DoricContext doricContext, @NonNull String type, @NonNull String identifier) {
-        DoricResourceLoader loader = mResourceLoaders.get(type);
-        if (loader != null) {
-            return loader.load(doricContext, identifier);
+    public DoricResource load(@NonNull DoricContext doricContext,
+                              @NonNull String resId,
+                              @NonNull String type,
+                              @NonNull String identifier) {
+        DoricResource resource = cachedResources.get(resId);
+        if (resource == null) {
+            DoricResourceLoader loader = mResourceLoaders.get(type);
+            if (loader != null) {
+                resource = loader.load(doricContext, identifier);
+                cachedResources.put(resId, resource);
+            }
         }
-        return null;
+        return resource;
     }
 }

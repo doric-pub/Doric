@@ -1688,8 +1688,10 @@ declare module 'doric/lib/src/util/resource' {
     export abstract class Resource implements Modeling {
             type: string;
             identifier: string;
+            resId: string;
             constructor(type: string, identifier: string);
             toModel(): {
+                    resId: string;
                     type: string;
                     identifier: string;
             };

@@ -26,6 +26,7 @@ import pub.doric.async.AsyncResult;
 public abstract class DoricResource {
     protected final DoricContext doricContext;
     protected final String identifier;
+    private AsyncResult<byte[]> rawResult;
 
     public DoricResource(DoricContext doricContext, String identifier) {
         this.doricContext = doricContext;
@@ -33,4 +34,11 @@ public abstract class DoricResource {
     }
 
     public abstract AsyncResult<byte[]> fetchRaw();
+
+    public AsyncResult<byte[]> fetch() {
+        if (rawResult == null) {
+            rawResult = fetchRaw();
+        }
+        return rawResult;
+    }
 }

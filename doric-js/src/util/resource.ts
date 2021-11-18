@@ -1,14 +1,17 @@
 import { Modeling } from "./types";
+import { uniqueId } from "./uniqueId";
 
 export abstract class Resource implements Modeling {
     type: string;
     identifier: string;
+    resId = uniqueId("resource");
     constructor(type: string, identifier: string) {
         this.type = type;
         this.identifier = identifier;
     }
     toModel() {
         return {
+            resId: this.resId,
             type: this.type,
             identifier: this.identifier,
         }

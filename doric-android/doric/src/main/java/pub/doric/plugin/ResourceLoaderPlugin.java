@@ -15,9 +15,11 @@
  */
 package pub.doric.plugin;
 
-import com.bumptech.glide.Glide;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JavaValue;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import pub.doric.DoricContext;
 import pub.doric.async.AsyncResult;
@@ -34,6 +36,7 @@ import pub.doric.utils.DoricLog;
  */
 @DoricPlugin(name = "resourceLoader")
 public class ResourceLoaderPlugin extends DoricJavaPlugin {
+    private Map<String, DoricResource> cachedResources = new HashMap<>();
 
     public ResourceLoaderPlugin(DoricContext doricContext) {
         super(doricContext);
@@ -41,11 +44,16 @@ public class ResourceLoaderPlugin extends DoricJavaPlugin {
 
     @DoricMethod
     public void load(JSObject resource, final DoricPromise promise) {
+        final String resId = resource.getProperty("resId").asString().value();
         final String type = resource.getProperty("type").asString().value();
         final String identifier = resource.getProperty("identifier").asString().value();
-        DoricResource doricResource = getDoricContext().getDriver().getRegistry().getResourceManager().load(getDoricContext(), type, identifier);
+        DoricResource doricResource = getDoricContext().getDriver().getRegistry().getResourceManager().load(
+                getDoricContext(),
+                resId,
+                type,
+                identifier);
         if (doricResource != null) {
-            doricResource.fetchRaw().setCallback(new AsyncResult.Callback<byte[]>() {
+            doricResource.fetch().setCallback(new AsyncResult.Callback<byte[]>() {
                 @Override
                 public void onResult(byte[] rawData) {
                     promise.resolve(new JavaValue(rawData));

@@ -13,13 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 export function imageDecoder(context) {
     return {
-        getBitmapInfo: (resource) => {
-            return context.callNative('imageDecoder', 'getBitmapInfo', resource);
-        },
-        decodeToPixels: (resource) => {
-            return context.callNative('imageDecoder', 'decode', resource);
-        },
+        decode: (resource) => __awaiter(this, void 0, void 0, function* () {
+            yield context.callNative('imageDecoder', 'loadResource', resource);
+            const imageInfo = yield context.callNative('imageDecoder', 'getImageInfo', resource.resId);
+            const pixels = yield context.callNative('imageDecoder', 'decodeToPixels', resource.resId);
+            yield context.callNative('imageDecoder', 'releaseResource', resource.resId);
+            return Object.assign(Object.assign({}, imageInfo), { pixels });
+        }),
     };
 }

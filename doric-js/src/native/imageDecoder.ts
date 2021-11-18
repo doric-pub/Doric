@@ -19,26 +19,19 @@ import { BridgeContext } from "../runtime/global"
 
 export function imageDecoder(context: BridgeContext) {
     return {
-        decode: async (resource: Resource) => {
-            await context.callNative('imageDecoder', 'loadResource', resource);
-            const imageInfo = await context.callNative(
+        getImageInfo: (resource: Resource) => {
+            return context.callNative(
                 'imageDecoder',
                 'getImageInfo',
-                resource.resId) as Promise<
+                resource) as Promise<
                     {
                         width: number,
                         height: number,
-                        format: string,
+                        mimeType: string,
                     }>;
-            const pixels = await context.callNative(
-                'imageDecoder',
-                'decodeToPixels',
-                resource.resId) as Promise<ArrayBuffer>;
-            await context.callNative('imageDecoder', 'releaseResource', resource.resId);
-            return {
-                ...imageInfo,
-                pixels,
-            };
+        },
+        decodeToPixels: async (resource: Resource) => {
+            return context.callNative('imageDecoder', 'decodeToPixels', resource) as Promise<ArrayBuffer>;
         },
     }
 }

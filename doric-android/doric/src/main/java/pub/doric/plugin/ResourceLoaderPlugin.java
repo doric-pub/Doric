@@ -43,15 +43,9 @@ public class ResourceLoaderPlugin extends DoricJavaPlugin {
     }
 
     @DoricMethod
-    public void load(JSObject resource, final DoricPromise promise) {
-        final String resId = resource.getProperty("resId").asString().value();
-        final String type = resource.getProperty("type").asString().value();
-        final String identifier = resource.getProperty("identifier").asString().value();
+    public void load(final JSObject resource, final DoricPromise promise) {
         DoricResource doricResource = getDoricContext().getDriver().getRegistry().getResourceManager().load(
-                getDoricContext(),
-                resId,
-                type,
-                identifier);
+                getDoricContext(), resource);
         if (doricResource != null) {
             doricResource.fetch().setCallback(new AsyncResult.Callback<byte[]>() {
                 @Override
@@ -62,7 +56,7 @@ public class ResourceLoaderPlugin extends DoricJavaPlugin {
                 @Override
                 public void onError(Throwable t) {
                     t.printStackTrace();
-                    DoricLog.e("Cannot load resource type = %s, identifier = %s, %s", type, identifier, t.getLocalizedMessage());
+                    DoricLog.e("Cannot load resource %s, %s", resource.toString(), t.getLocalizedMessage());
                     promise.reject(new JavaValue("Load error"));
                 }
 
@@ -72,7 +66,7 @@ public class ResourceLoaderPlugin extends DoricJavaPlugin {
                 }
             });
         } else {
-            DoricLog.e("Cannot find loader for resource type = %s, identifier = %s", type, identifier);
+            DoricLog.e("Cannot find loader for resource %s", resource);
             promise.reject(new JavaValue("Load error"));
         }
     }

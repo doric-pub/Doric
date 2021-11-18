@@ -18,6 +18,7 @@ package pub.doric.resource;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,19 +33,19 @@ public class DoricResourceManager {
     private final Map<String, DoricResourceLoader> mResourceLoaders = new HashMap<>();
     private final Map<String, DoricResource> cachedResources = new WeakHashMap<>();
 
-    public void registerLoader(DoricResourceLoader loader) {
+    public synchronized void registerLoader(DoricResourceLoader loader) {
         mResourceLoaders.put(loader.resourceType(), loader);
     }
 
-    public void unRegisterLoader(DoricResourceLoader loader) {
+    public synchronized void unRegisterLoader(DoricResourceLoader loader) {
         mResourceLoaders.remove(loader.resourceType());
     }
 
     @Nullable
-    public DoricResource load(@NonNull DoricContext doricContext,
-                              @NonNull String resId,
-                              @NonNull String type,
-                              @NonNull String identifier) {
+    public synchronized DoricResource load(@NonNull DoricContext doricContext,
+                                           @NonNull String resId,
+                                           @NonNull String type,
+                                           @NonNull String identifier) {
         DoricResource resource = cachedResources.get(resId);
         if (resource == null) {
             DoricResourceLoader loader = mResourceLoaders.get(type);

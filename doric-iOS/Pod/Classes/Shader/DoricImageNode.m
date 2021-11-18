@@ -238,8 +238,12 @@
     if ([@"image" isEqualToString:name]) {
         NSString *type = prop[@"type"];
         NSString *identifier = prop[@"identifier"];
+        NSString *resId = prop[@"resId"];
         DoricAsyncResult <NSData *> *asyncResult = [[self.doricContext.driver.registry.loaderManager
-                load:identifier withResourceType:type withContext:self.doricContext] fetchRaw];
+                load:resId
+      withIdentifier:identifier
+    withResourceType:type
+         withContext:self.doricContext] fetchRaw];
         [asyncResult setResultCallback:^(NSData *imageData) {
             [self.doricContext dispatchToMainQueue:^{
 #if DORIC_USE_YYWEBIMAGE

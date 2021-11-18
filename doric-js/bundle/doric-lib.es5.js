@@ -4203,6 +4203,14 @@ function keyboard(context) {
     };
 }
 
+function resourceLoader(context) {
+    return {
+        load: function (resource) {
+            return context.callNative('resourceLoader', 'load', resource.toModel());
+        },
+    };
+}
+
 var __values = (undefined && undefined.__values) || function(o) {
     var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
     if (m) { return m.call(o); }
@@ -4628,6 +4636,7 @@ exports.popover = popover;
 exports.pullable = pullable;
 exports.refreshable = refreshable;
 exports.repeat = repeat;
+exports.resourceLoader = resourceLoader;
 exports.scroller = scroller;
 exports.slideItem = slideItem;
 exports.slider = slider;

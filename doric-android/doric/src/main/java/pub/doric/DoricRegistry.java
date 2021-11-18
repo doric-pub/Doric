@@ -37,6 +37,7 @@ import pub.doric.plugin.NetworkPlugin;
 import pub.doric.plugin.NotchPlugin;
 import pub.doric.plugin.NotificationPlugin;
 import pub.doric.plugin.PopoverPlugin;
+import pub.doric.plugin.ResourceLoaderPlugin;
 import pub.doric.plugin.ShaderPlugin;
 import pub.doric.plugin.StatusBarPlugin;
 import pub.doric.plugin.StoragePlugin;
@@ -112,6 +113,7 @@ public class DoricRegistry {
         this.registerNativePlugin(CoordinatorPlugin.class);
         this.registerNativePlugin(NotchPlugin.class);
         this.registerNativePlugin(KeyboardPlugin.class);
+        this.registerNativePlugin(ResourceLoaderPlugin.class);
 
         this.registerViewNode(RootNode.class);
         this.registerViewNode(TextNode.class);

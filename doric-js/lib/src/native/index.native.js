@@ -25,3 +25,4 @@ export * from './statusbar';
 export * from './coordinator';
 export * from './notch';
 export * from './keyboard';
+export * from './resourceLoader';

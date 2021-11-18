@@ -112,6 +112,7 @@ declare module 'doric/lib/src/native/index.native' {
     export * from 'doric/lib/src/native/coordinator';
     export * from 'doric/lib/src/native/notch';
     export * from 'doric/lib/src/native/keyboard';
+    export * from 'doric/lib/src/native/resourceLoader';
 }
 
 declare module 'doric/lib/src/util/index.util' {
@@ -1341,6 +1342,14 @@ declare module 'doric/lib/src/native/keyboard' {
             height: number;
         }) => void) => Promise<string>;
         unsubscribe: (subscribeId: string) => Promise<any>;
+    };
+}
+
+declare module 'doric/lib/src/native/resourceLoader' {
+    import { Resource } from "doric/lib/src/util/resource";
+    import { BridgeContext } from "doric/lib/src/runtime/global";
+    export function resourceLoader(context: BridgeContext): {
+        load: (resource: Resource) => Promise<ArrayBuffer>;
     };
 }
 

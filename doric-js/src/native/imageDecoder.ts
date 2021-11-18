@@ -1,5 +1,5 @@
 /*
- * Copyright [2019] [Doric.Pub]
+ * Copyright [2021] [Doric.Pub]
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from './modal'
-export * from './navbar'
-export * from './navigator'
-export * from './network'
-export * from './storage'
-export * from './popover'
-export * from './animate'
-export * from './notification'
-export * from './statusbar'
-export * from './coordinator'
-export * from './notch'
-export * from './keyboard'
-export * from './resourceLoader'
+
+import { Resource } from "../util/resource"
+import { BridgeContext } from "../runtime/global"
+
+export function imageDecoder(context: BridgeContext) {
+    return {
+        getBitmapInfo: (resource: Resource) => {
+            return context.callNative('imageDecoder', 'getBitmapInfo', resource) as Promise<ArrayBuffer>
+        },
+        decodeToPixels: (resource: Resource) => {
+            return context.callNative('imageDecoder', 'decode', resource) as Promise<ArrayBuffer>
+        },
+    }
+}

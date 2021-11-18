@@ -25,8 +25,6 @@
 
 - (void)unRegisterLoader:(id <DoricResourceLoader>)loader;
 
-- (__kindof DoricResource *)load:(NSString *)resId
-                  withIdentifier:(NSString *)identifier
-                withResourceType:(NSString *)resourceType
+- (__kindof DoricResource *)load:(NSDictionary *)resource
                      withContext:(DoricContext *)context;
 @end

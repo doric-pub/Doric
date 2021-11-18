@@ -49,20 +49,21 @@
     });
 }
 
-- (__kindof DoricResource *)load:(NSString *)resId
-                  withIdentifier:(NSString *)identifier
-                withResourceType:(NSString *)resourceType
+- (__kindof DoricResource *)load:(NSDictionary *)resource
                      withContext:(DoricContext *)context {
-    __block __kindof DoricResource *resource;
+    NSString *type = resource[@"type"];
+    NSString *identifier = resource[@"identifier"];
+    NSString *resId = resource[@"resId"];
+    __block __kindof DoricResource *doricResource;
     dispatch_sync(self.mapQueue, ^() {
-        resource = [self.cachedResources objectForKey:resId];
-        if (!resource) {
-            id <DoricResourceLoader> loader = self.loaders[resourceType];
-            resource = [loader load:identifier withContext:context];
-            [self.cachedResources setObject:resource forKey:resId];
+        doricResource = [self.cachedResources objectForKey:resId];
+        if (!doricResource) {
+            id <DoricResourceLoader> loader = self.loaders[type];
+            doricResource = [loader load:identifier withContext:context];
+            [self.cachedResources setObject:doricResource forKey:resId];
         }
     });
-    return resource;
+    return doricResource;
 }
 
 @end

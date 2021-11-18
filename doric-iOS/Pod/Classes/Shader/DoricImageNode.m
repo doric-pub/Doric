@@ -236,13 +236,8 @@
 
 - (void)blendView:(UIImageView *)view forPropName:(NSString *)name propValue:(id)prop {
     if ([@"image" isEqualToString:name]) {
-        NSString *type = prop[@"type"];
-        NSString *identifier = prop[@"identifier"];
-        NSString *resId = prop[@"resId"];
         DoricAsyncResult <NSData *> *asyncResult = [[self.doricContext.driver.registry.loaderManager
-                load:resId
-      withIdentifier:identifier
-    withResourceType:type
+                load:prop
          withContext:self.doricContext] fetchRaw];
         [asyncResult setResultCallback:^(NSData *imageData) {
             [self.doricContext dispatchToMainQueue:^{

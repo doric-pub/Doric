@@ -396,12 +396,9 @@ public class ImageNode extends ViewNode<ImageView> {
                 if (!prop.isObject()) {
                     return;
                 }
-                JSObject resource = prop.asObject();
-                final String resourceId = resource.getProperty("resId").asString().value();
-                final String type = resource.getProperty("type").asString().value();
-                final String identifier = resource.getProperty("identifier").asString().value();
+                final JSObject resource = prop.asObject();
                 DoricResource doricResource = getDoricContext().getDriver().getRegistry().getResourceManager()
-                        .load(getDoricContext(), resourceId, type, identifier);
+                        .load(getDoricContext(), resource);
                 if (doricResource != null) {
                     doricResource.fetch().setCallback(new AsyncResult.Callback<byte[]>() {
                         @Override
@@ -412,7 +409,7 @@ public class ImageNode extends ViewNode<ImageView> {
                         @Override
                         public void onError(Throwable t) {
                             t.printStackTrace();
-                            DoricLog.e("Cannot load resource type = %s, identifier = %s, %s", type, identifier, t.getLocalizedMessage());
+                            DoricLog.e("Cannot load resource %s,  %s", resource.toString(), t.getLocalizedMessage());
                         }
 
                         @Override
@@ -421,7 +418,7 @@ public class ImageNode extends ViewNode<ImageView> {
                         }
                     });
                 } else {
-                    DoricLog.e("Cannot find loader for resource type = %s, identifier = %s", type, identifier);
+                    DoricLog.e("Cannot find loader for resource %s", resource.toString());
                 }
                 break;
             case "imageUrl":

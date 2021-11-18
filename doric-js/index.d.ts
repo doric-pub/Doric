@@ -113,6 +113,7 @@ declare module 'doric/lib/src/native/index.native' {
     export * from 'doric/lib/src/native/notch';
     export * from 'doric/lib/src/native/keyboard';
     export * from 'doric/lib/src/native/resourceLoader';
+    export * from 'doric/lib/src/native/imageDecoder';
 }
 
 declare module 'doric/lib/src/util/index.util' {
@@ -1353,6 +1354,19 @@ declare module 'doric/lib/src/native/resourceLoader' {
     };
 }
 
+declare module 'doric/lib/src/native/imageDecoder' {
+    import { Resource } from "doric/lib/src/util/resource";
+    import { BridgeContext } from "doric/lib/src/runtime/global";
+    export function imageDecoder(context: BridgeContext): {
+        getImageInfo: (resource: Resource) => Promise<{
+            width: number;
+            height: number;
+            mimeType: string;
+        }>;
+        decodeToPixels: (resource: Resource) => Promise<ArrayBuffer>;
+    };
+}
+
 declare module 'doric/lib/src/util/color' {
     import { Modeling } from "doric/lib/src/util/types";
     /**
@@ -1735,6 +1749,9 @@ declare module 'doric/lib/src/util/resource' {
     }
     export class BundleResource extends iOSResource {
             constructor(bundleName: string, fileName: string);
+    }
+    export class ArrayBufferResource extends Resource {
+            constructor(data: ArrayBuffer);
     }
 }
 

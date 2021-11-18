@@ -24,12 +24,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 export function imageDecoder(context) {
     return {
-        decode: (resource) => __awaiter(this, void 0, void 0, function* () {
-            yield context.callNative('imageDecoder', 'loadResource', resource);
-            const imageInfo = yield context.callNative('imageDecoder', 'getImageInfo', resource.resId);
-            const pixels = yield context.callNative('imageDecoder', 'decodeToPixels', resource.resId);
-            yield context.callNative('imageDecoder', 'releaseResource', resource.resId);
-            return Object.assign(Object.assign({}, imageInfo), { pixels });
+        getImageInfo: (resource) => {
+            return context.callNative('imageDecoder', 'getImageInfo', resource);
+        },
+        decodeToPixels: (resource) => __awaiter(this, void 0, void 0, function* () {
+            return context.callNative('imageDecoder', 'decodeToPixels', resource);
         }),
     };
 }

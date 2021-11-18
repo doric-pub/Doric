@@ -15,6 +15,8 @@
  */
 package pub.doric.resource;
 
+import com.github.pengfeizhou.jscore.JSObject;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -43,17 +45,18 @@ public class DoricResourceManager {
 
     @Nullable
     public synchronized DoricResource load(@NonNull DoricContext doricContext,
-                                           @NonNull String resId,
-                                           @NonNull String type,
-                                           @NonNull String identifier) {
-        DoricResource resource = cachedResources.get(resId);
-        if (resource == null) {
+                                           @NonNull JSObject resource) {
+        String resId = resource.getProperty("resId").asString().value();
+        String type = resource.getProperty("type").asString().value();
+        String identifier = resource.getProperty("identifier").asString().value();
+        DoricResource doricResource = cachedResources.get(resId);
+        if (doricResource == null) {
             DoricResourceLoader loader = mResourceLoaders.get(type);
             if (loader != null) {
-                resource = loader.load(doricContext, identifier);
-                cachedResources.put(resId, resource);
+                doricResource = loader.load(doricContext, identifier);
+                cachedResources.put(resId, doricResource);
             }
         }
-        return resource;
+        return doricResource;
     }
 }

@@ -1680,6 +1680,11 @@ class BundleResource extends iOSResource {
         super("bundle", `${bundleName}://${fileName}`);
     }
 }
+class ArrayBufferResource extends Resource {
+    constructor(data) {
+        super("arrayBuffer", "");
+    }
+}
 
 var __decorate$b = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -3084,7 +3089,7 @@ function repeat(action) {
     };
 }
 
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+var __awaiter$1 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -3101,7 +3106,7 @@ function animate(context) {
     const entity = context.entity;
     if (entity instanceof Panel) {
         let panel = entity;
-        return (args) => __awaiter(this, void 0, void 0, function* () {
+        return (args) => __awaiter$1(this, void 0, void 0, function* () {
             yield context.callNative('animate', 'submit');
             args.animations();
             return takeLet(panel.getRootView())(root => {
@@ -3229,6 +3234,41 @@ function resourceLoader(context) {
         load: (resource) => {
             return context.callNative('resourceLoader', 'load', resource.toModel());
         },
+    };
+}
+
+/*
+ * Copyright [2021] [Doric.Pub]
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+function imageDecoder(context) {
+    return {
+        getImageInfo: (resource) => {
+            return context.callNative('imageDecoder', 'getImageInfo', resource);
+        },
+        decodeToPixels: (resource) => __awaiter(this, void 0, void 0, function* () {
+            return context.callNative('imageDecoder', 'decodeToPixels', resource);
+        }),
     };
 }
 
@@ -3470,7 +3510,12 @@ exports.AlphaAnimation = AlphaAnimation;
 exports.AndroidAssetsResource = AndroidAssetsResource;
 exports.AndroidResource = AndroidResource;
 exports.AnimationSet = AnimationSet;
+<<<<<<< HEAD
 exports.AssetsResource = AssetsResource;
+=======
+exports.ArrayBufferResource = ArrayBufferResource;
+exports.AssetResource = AssetResource;
+>>>>>>> f476a5b0... feat:android support ArrayBuffer Resource
 exports.BOTTOM = BOTTOM;
 exports.BackgroundColorAnimation = BackgroundColorAnimation;
 exports.Base64Resource = Base64Resource;
@@ -3549,6 +3594,7 @@ exports.gravity = gravity;
 exports.hlayout = hlayout;
 exports.iOSResource = iOSResource;
 exports.image = image;
+exports.imageDecoder = imageDecoder;
 exports.input = input;
 exports.internalScheme = internalScheme;
 exports.keyboard = keyboard;

@@ -4750,6 +4750,14 @@ function keyboard(context) {
     };
 }
 
+function resourceLoader(context) {
+    return {
+        load: (resource) => {
+            return context.callNative('resourceLoader', 'load', resource.toModel());
+        },
+    };
+}
+
 class Observable {
     constructor(provider, clz) {
         this.observers = new Set;
@@ -5328,6 +5336,7 @@ exports.popover = popover;
 exports.pullable = pullable;
 exports.refreshable = refreshable;
 exports.repeat = repeat;
+exports.resourceLoader = resourceLoader;
 exports.scroller = scroller;
 exports.slideItem = slideItem;
 exports.slider = slider;

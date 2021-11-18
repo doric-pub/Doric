@@ -15,11 +15,8 @@
  */
 package pub.doric.resource;
 
-import java.io.InputStream;
-
 import pub.doric.DoricContext;
 import pub.doric.async.AsyncResult;
-
 
 /**
  * @Description: This represents a resource entity

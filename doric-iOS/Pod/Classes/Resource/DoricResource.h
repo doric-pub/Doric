@@ -29,4 +29,6 @@
 - (instancetype)initWithContext:(DoricContext *)context identifier:(NSString *)identifier;
 
 - (DoricAsyncResult <NSData *> *)fetchRaw;
+
+- (DoricAsyncResult <NSData *> *)fetch;
 @end

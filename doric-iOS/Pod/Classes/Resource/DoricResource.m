@@ -19,6 +19,10 @@
 
 #import "DoricResource.h"
 
+@interface DoricResource ()
+@property(nonatomic, strong) DoricAsyncResult<NSData *> *result;
+@end
+
 @implementation DoricResource
 - (instancetype)initWithContext:(DoricContext *)context identifier:(NSString *)identifier {
     if (self = [super init]) {
@@ -27,7 +31,15 @@
     }
     return self;
 }
+
 - (DoricAsyncResult<NSData *> *)fetchRaw {
     return nil;
+}
+
+- (DoricAsyncResult <NSData *> *)fetch {
+    if (!self.result) {
+        self.result = [self fetchRaw];
+    }
+    return self.result;
 }
 @end

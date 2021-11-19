@@ -627,6 +627,14 @@ declare module 'doric/lib/src/widget/image' {
     }
     export class Image extends View {
             /**
+                * Set pixels for image directly
+             */
+            imagePixels?: {
+                    width: number;
+                    height: number;
+                    pixels: ArrayBuffer;
+            };
+            /**
                 * This could be loaded by customized resource loader
              */
             image?: Resource;
@@ -699,6 +707,12 @@ declare module 'doric/lib/src/widget/image' {
             isAnimating(context: BridgeContext): Promise<boolean>;
             startAnimating(context: BridgeContext): Promise<any>;
             stopAnimating(context: BridgeContext): Promise<any>;
+            getImageInfo(context: BridgeContext): Promise<{
+                    width: number;
+                    height: number;
+                    mimeType: string;
+            }>;
+            getImagePixels(context: BridgeContext): Promise<ArrayBuffer>;
     }
     export function image(config: Partial<Image>): Image;
 }
@@ -1751,7 +1765,14 @@ declare module 'doric/lib/src/util/resource' {
             constructor(bundleName: string, fileName: string);
     }
     export class ArrayBufferResource extends Resource {
+            data: ArrayBuffer;
             constructor(data: ArrayBuffer);
+            toModel(): {
+                    data: ArrayBuffer;
+                    resId: string;
+                    type: string;
+                    identifier: string;
+            };
     }
 }
 

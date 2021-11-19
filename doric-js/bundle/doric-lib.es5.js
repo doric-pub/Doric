@@ -2248,10 +2248,20 @@ var BundleResource = /** @class */ (function (_super) {
 =======
 }(Resource));
 var ArrayBufferResource = /** @class */ (function (_super) {
-    __extends$e(ArrayBufferResource, _super);
+    __extends$f(ArrayBufferResource, _super);
     function ArrayBufferResource(data) {
-        return _super.call(this, "arrayBuffer", "") || this;
+        var _this = _super.call(this, "arrayBuffer", "") || this;
+        _this.data = data;
+        return _this;
     }
+    ArrayBufferResource.prototype.toModel = function () {
+        return {
+            data: this.data,
+            resId: this.resId,
+            type: this.type,
+            identifier: this.identifier,
+        };
+    };
     return ArrayBufferResource;
 }(Resource));
 >>>>>>> f476a5b0... feat:android support ArrayBuffer Resource
@@ -2300,6 +2310,16 @@ var Image = /** @class */ (function (_super) {
     Image.prototype.stopAnimating = function (context) {
         return this.nativeChannel(context, "stopAnimating")();
     };
+    Image.prototype.getImageInfo = function (context) {
+        return this.nativeChannel(context, "getImageInfo")();
+    };
+    Image.prototype.getImagePixels = function (context) {
+        return this.nativeChannel(context, "getImagePixels")();
+    };
+    __decorate$b([
+        Property,
+        __metadata$b("design:type", Object)
+    ], Image.prototype, "imagePixels", void 0);
     __decorate$b([
         Property,
         __metadata$b("design:type", Resource)

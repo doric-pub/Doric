@@ -9,6 +9,14 @@ export declare enum ScaleType {
 }
 export declare class Image extends View {
     /**
+     * Set pixels for image directly
+    */
+    imagePixels?: {
+        width: number;
+        height: number;
+        pixels: ArrayBuffer;
+    };
+    /**
      * This could be loaded by customized resource loader
     */
     image?: Resource;
@@ -81,5 +89,11 @@ export declare class Image extends View {
     isAnimating(context: BridgeContext): Promise<boolean>;
     startAnimating(context: BridgeContext): Promise<any>;
     stopAnimating(context: BridgeContext): Promise<any>;
+    getImageInfo(context: BridgeContext): Promise<{
+        width: number;
+        height: number;
+        mimeType: string;
+    }>;
+    getImagePixels(context: BridgeContext): Promise<ArrayBuffer>;
 }
 export declare function image(config: Partial<Image>): Image;

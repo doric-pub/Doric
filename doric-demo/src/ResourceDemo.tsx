@@ -13,8 +13,6 @@ import {
   VLayout,
   Text,
   Gravity,
-  resourceLoader,
-  imageDecoder,
   createRef,
   loge,
 } from "doric";
@@ -25,6 +23,21 @@ import { img_base64 } from "./image_base64";
 export class ResourceDemo extends Panel {
   build(root: Group): void {
     const iv = createRef<Image>();
+    async function click() {
+      const imageInfo = await iv.current.getImageInfo(context);
+      loge(imageInfo);
+      const pixels = await iv.current.getImagePixels(context);
+      loge(pixels.byteLength);
+      const data = new Uint8Array(pixels);
+      for (let i = 0; i < data.length - 4; i += 4) {
+        data[i + 3] = 12;
+      }
+      iv.current.imagePixels = {
+        width: imageInfo.width,
+        height: imageInfo.height,
+        pixels: pixels,
+      };
+    }
     <Scroller parent={root} layoutConfig={layoutConfig().most()}>
       <VLayout
         layoutConfig={layoutConfig().mostWidth().fitHeight()}
@@ -39,7 +52,7 @@ export class ResourceDemo extends Panel {
           textAlignment={Gravity.Center}
           height={50}
         >
-          Image Demo
+          Resource Demo
         </Text>
         {label("Button")}
         <Image
@@ -50,30 +63,15 @@ export class ResourceDemo extends Panel {
           }
         />
         <Image
+          ref={iv}
           image={
             new RemoteResource("https://p.upyun.com/demo/webp/webp/jpg-0.webp")
           }
         />
         <Image
           image={new Base64Resource(img_base64[0])}
-          ref={iv}
           onClick={async () => {
-            const resource = new RemoteResource(
-              "https://p.upyun.com/demo/webp/webp/jpg-0.webp"
-            );
-            const rawData = await resourceLoader(context).load(resource);
-            loge(rawData.byteLength);
-            const imageInfo = await imageDecoder(context).getImageInfo(
-              resource
-            );
-            loge(imageInfo);
-            const pixels = await imageDecoder(context).decodeToPixels(resource);
-            const unit8Array = new Uint8Array(pixels);
-            for (let i = 0; i < unit8Array.length; i += 4) {
-              unit8Array[i] -= 20;
-            }
-            loge(pixels.byteLength);
-            iv.current.image = resource;
+            await click();
           }}
         />
       </VLayout>

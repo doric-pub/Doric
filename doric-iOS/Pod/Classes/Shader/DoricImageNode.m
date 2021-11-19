@@ -238,7 +238,7 @@
     if ([@"image" isEqualToString:name]) {
         DoricAsyncResult <NSData *> *asyncResult = [[self.doricContext.driver.registry.loaderManager
                 load:prop
-         withContext:self.doricContext] fetchRaw];
+         withContext:self.doricContext] fetch];
         [asyncResult setResultCallback:^(NSData *imageData) {
             [self.doricContext dispatchToMainQueue:^{
 #if DORIC_USE_YYWEBIMAGE

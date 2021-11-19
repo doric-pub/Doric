@@ -280,7 +280,7 @@
             }];
         }];
         [asyncResult setExceptionCallback:^(NSException *e) {
-            DoricLog(@"Cannot load resource type = %@, identifier = %@, %@", type, identifier, e.reason);
+            DoricLog(@"Cannot load resource %@, %@", prop, e.reason);
         }];
     } else if ([@"imageUrl" isEqualToString:name]) {
         __weak typeof(self) _self = self;

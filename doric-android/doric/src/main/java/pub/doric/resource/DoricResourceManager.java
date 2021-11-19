@@ -20,7 +20,6 @@ import com.github.pengfeizhou.jscore.JSObject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
-import java.util.concurrent.ConcurrentHashMap;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -51,10 +50,17 @@ public class DoricResourceManager {
         String identifier = resource.getProperty("identifier").asString().value();
         DoricResource doricResource = cachedResources.get(resId);
         if (doricResource == null) {
-            DoricResourceLoader loader = mResourceLoaders.get(type);
-            if (loader != null) {
-                doricResource = loader.load(doricContext, identifier);
-                cachedResources.put(resId, doricResource);
+            if ("arrayBuffer".equals(type)) {
+                doricResource = new DoricArrayBufferResource(
+                        doricContext,
+                        resource.getProperty("data").asArrayBuffer().value()
+                );
+            } else {
+                DoricResourceLoader loader = mResourceLoaders.get(type);
+                if (loader != null) {
+                    doricResource = loader.load(doricContext, identifier);
+                    cachedResources.put(resId, doricResource);
+                }
             }
         }
         return doricResource;

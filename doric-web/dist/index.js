@@ -3285,6 +3285,15 @@ class BundleResource extends iOSResource {
 class ArrayBufferResource extends Resource {
     constructor(data) {
         super("arrayBuffer", "");
+        this.data = data;
+    }
+    toModel() {
+        return {
+            data: this.data,
+            resId: this.resId,
+            type: this.type,
+            identifier: this.identifier,
+        };
     }
 }
 
@@ -3313,7 +3322,17 @@ class Image extends View {
     stopAnimating(context) {
         return this.nativeChannel(context, "stopAnimating")();
     }
+    getImageInfo(context) {
+        return this.nativeChannel(context, "getImageInfo")();
+    }
+    getImagePixels(context) {
+        return this.nativeChannel(context, "getImagePixels")();
+    }
 }
+__decorate$b([
+    Property,
+    __metadata$b("design:type", Object)
+], Image.prototype, "imagePixels", void 0);
 __decorate$b([
     Property,
     __metadata$b("design:type", Resource)

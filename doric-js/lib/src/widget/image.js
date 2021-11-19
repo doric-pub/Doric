@@ -42,7 +42,17 @@ export class Image extends View {
     stopAnimating(context) {
         return this.nativeChannel(context, "stopAnimating")();
     }
+    getImageInfo(context) {
+        return this.nativeChannel(context, "getImageInfo")();
+    }
+    getImagePixels(context) {
+        return this.nativeChannel(context, "getImagePixels")();
+    }
 }
+__decorate([
+    Property,
+    __metadata("design:type", Object)
+], Image.prototype, "imagePixels", void 0);
 __decorate([
     Property,
     __metadata("design:type", Resource)

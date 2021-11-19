@@ -27,6 +27,11 @@ export enum ScaleType {
 
 export class Image extends View {
     /** 
+     * Set pixels for image directly
+    */
+    @Property
+    imagePixels?: { width: number, height: number, pixels: ArrayBuffer }
+    /** 
      * This could be loaded by customized resource loader
     */
     @Property
@@ -131,6 +136,18 @@ export class Image extends View {
 
     stopAnimating(context: BridgeContext) {
         return this.nativeChannel(context, "stopAnimating")()
+    }
+
+    getImageInfo(context: BridgeContext): Promise<{
+        width: number,
+        height: number,
+        mimeType: string,
+    }> {
+        return this.nativeChannel(context, "getImageInfo")()
+    }
+
+    getImagePixels(context: BridgeContext): Promise<ArrayBuffer> {
+        return this.nativeChannel(context, "getImagePixels")()
     }
 }
 

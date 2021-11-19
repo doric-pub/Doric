@@ -55,10 +55,14 @@ import com.facebook.yoga.YogaNode;
 import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
+import com.github.pengfeizhou.jscore.JavaValue;
+
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.InputStream;
 import java.security.MessageDigest;
+import java.nio.ByteBuffer;
 
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat;
 import pub.doric.DoricContext;
@@ -514,6 +518,17 @@ public class ImageNode extends ViewNode<ImageView> {
                         callJSResponse(functionId);
                     }
                 };
+            case "imagePixels":
+                if (!prop.isObject()) {
+                    return;
+                }
+                int width = prop.asObject().getProperty("width").asNumber().toInt();
+                int height = prop.asObject().getProperty("height").asNumber().toInt();
+                byte[] pixels = prop.asObject().getProperty("pixels").asArrayBuffer().value();
+                Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+                ByteBuffer byteBuffer = ByteBuffer.wrap(pixels);
+                bitmap.copyPixelsFromBuffer(byteBuffer);
+                view.setImageBitmap(bitmap);
                 break;
             default:
                 super.blend(view, name, prop);
@@ -560,5 +575,35 @@ public class ImageNode extends ViewNode<ImageView> {
         errorColor = Color.TRANSPARENT;
         errorImageBase64 = null;
         imageScale = DoricUtils.getScreenScale();
+    }
+
+    @DoricMethod
+    public JSONObject getImageInfo() {
+        Drawable drawable = mView.getDrawable();
+        if (drawable instanceof BitmapDrawable) {
+            Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+            return new JSONBuilder()
+                    .put("width", bitmap.getWidth())
+                    .put("height", bitmap.getHeight())
+                    .toJSONObject();
+        } else {
+            return new JSONBuilder()
+                    .put("width", drawable.getIntrinsicWidth())
+                    .put("height", drawable.getIntrinsicHeight())
+                    .toJSONObject();
+        }
+    }
+
+    @DoricMethod
+    public JavaValue getImagePixels() {
+        Drawable drawable = mView.getDrawable();
+        if (drawable instanceof BitmapDrawable) {
+            Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+            ByteBuffer byteBuffer = ByteBuffer.allocate(bitmap.getByteCount());
+            bitmap.copyPixelsToBuffer(byteBuffer);
+            return new JavaValue(byteBuffer.array());
+        } else {
+            return new JavaValue();
+        }
     }
 }

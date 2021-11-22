@@ -201,6 +201,7 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
                 }
                 String funcId = prop.asString().value();
                 if (!funcId.equals(this.renderItemFuncId)) {
+                    this.listAdapter.loadAnchor = -1;
                     this.renderItemFuncId = funcId;
                     // If reset renderItem,should reset native cache.
                     for (int index = 0; index < this.itemValues.size(); index++) {

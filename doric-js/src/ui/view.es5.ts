@@ -144,7 +144,8 @@ export abstract class View implements Modeling {
     superview?: Superview
 
     callbacks!: Map<String, Function>
-    private callback2Id(f: Function) {
+
+    callback2Id(f: Function) {
         if (this.callbacks === undefined) {
             this.callbacks = new Map
         }

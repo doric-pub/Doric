@@ -30,7 +30,7 @@ export class ResourceDemo extends Panel {
       loge(pixels.byteLength);
       const data = new Uint8Array(pixels);
       for (let i = 0; i < data.length - 4; i += 4) {
-        data[i + 3] = 12;
+        data[i + 3] = 0xff / 3;
       }
       iv.current.imagePixels = {
         width: imageInfo.width,
@@ -63,12 +63,12 @@ export class ResourceDemo extends Panel {
           }
         />
         <Image
-          ref={iv}
           image={
             new RemoteResource("https://p.upyun.com/demo/webp/webp/jpg-0.webp")
           }
         />
         <Image
+          ref={iv}
           image={new Base64Resource(img_base64[0])}
           onClick={async () => {
             await click();

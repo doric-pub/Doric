@@ -3328,6 +3328,25 @@ class Image extends View {
     getImagePixels(context) {
         return this.nativeChannel(context, "getImagePixels")();
     }
+    setImagePixels(context, imagePixels) {
+        if (Environment.platform === 'iOS') {
+            imagePixels.pixels = context.function2Id(() => {
+                return imagePixels.pixels;
+            });
+        }
+        return this.nativeChannel(context, "setImagePixels")(imagePixels);
+    }
+    toModel() {
+        const ret = super.toModel();
+        if (Environment.platform === 'iOS') {
+            if (Reflect.has(ret.props, "imagePixels")) {
+                const imagePixels = Reflect.get(ret.props, "imagePixels");
+                const pixels = imagePixels.pixels;
+                imagePixels.pixels = this.callback2Id(() => pixels);
+            }
+        }
+        return ret;
+    }
 }
 __decorate$b([
     Property,

@@ -20,7 +20,13 @@
 //  Created by pengfei.zhou on 2019/7/25.
 //
 
+#import <DoricCore/DoricExtensions.h>
 #import "DoricJSCoreExecutor.h"
+
+void ReleaseArrayBufferData(void *bytes, void *deallocatorContext) {
+    id data = (__bridge_transfer id) deallocatorContext;
+    data = nil;
+}
 
 @interface DoricJSCoreExecutor ()
 
@@ -57,7 +63,19 @@
 
 - (JSValue *)invokeObject:(NSString *)objName method:(NSString *)funcName args:(NSArray *)args {
     JSValue *obj = [self.jsContext objectForKeyedSubscript:objName];
-    JSValue *ret = [obj invokeMethod:funcName withArguments:args];
+    JSValue *ret = [obj invokeMethod:funcName withArguments:[args map:^id(id obj) {
+        if ([obj isKindOfClass:NSData.class]) {
+            NSData *data = (NSData *) obj;
+            JSObjectRef jsObject = JSObjectMakeArrayBufferWithBytesNoCopy(self.jsContext.JSGlobalContextRef,
+                    (void *) data.bytes,
+                    data.length,
+                    ReleaseArrayBufferData,
+                    (__bridge_retained void *) data,
+                    NULL);
+            return [JSValue valueWithJSValueRef:jsObject inContext:self.jsContext];
+        }
+        return obj;
+    }]];
     [self checkJSException];
     return ret;
 }

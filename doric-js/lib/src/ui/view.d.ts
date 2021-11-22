@@ -62,7 +62,7 @@ export declare abstract class View implements Modeling {
     onClick?: Function;
     superview?: Superview;
     callbacks: Map<String, Function>;
-    private callback2Id;
+    callback2Id(f: Function): string;
     private id2Callback;
     findViewByTag(tag: string): View | undefined;
     constructor();

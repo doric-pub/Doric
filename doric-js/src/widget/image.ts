@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { View, Property } from "../ui/view"
+import { View, Property, NativeViewModel } from "../ui/view"
 import { layoutConfig } from "../util/layoutconfig"
 import { Color } from "../util/color"
 import { BridgeContext } from "../runtime/global"
@@ -148,6 +148,34 @@ export class Image extends View {
 
     getImagePixels(context: BridgeContext): Promise<ArrayBuffer> {
         return this.nativeChannel(context, "getImagePixels")()
+    }
+
+    setImagePixels(
+        context: BridgeContext,
+        imagePixels: {
+            width: number,
+            height: number,
+            pixels: ArrayBuffer
+        }): Promise<void> {
+        if (Environment.platform === 'iOS') {
+            (imagePixels.pixels as unknown as any) = context.function2Id(() => {
+                return imagePixels.pixels
+            })
+        }
+        return this.nativeChannel(context, "setImagePixels")(imagePixels)
+    }
+
+
+    toModel() {
+        const ret = super.toModel()
+        if (Environment.platform === 'iOS') {
+            if (Reflect.has(ret.props, "imagePixels")) {
+                const imagePixels = Reflect.get(ret.props, "imagePixels")
+                const pixels = imagePixels.pixels
+                imagePixels.pixels = this.callback2Id(() => pixels)
+            }
+        }
+        return ret
     }
 }
 

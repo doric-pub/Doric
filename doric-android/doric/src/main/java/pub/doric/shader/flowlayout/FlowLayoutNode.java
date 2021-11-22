@@ -165,6 +165,7 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
                 }
                 String funcId = prop.asString().value();
                 if (!funcId.equals(this.flowAdapter.renderItemFuncId)) {
+                    this.flowAdapter.loadAnchor = -1;
                     this.flowAdapter.renderItemFuncId = funcId;
                     // If reset renderItem,should reset native cache.
                     for (int index = 0; index < this.flowAdapter.itemValues.size(); index++) {

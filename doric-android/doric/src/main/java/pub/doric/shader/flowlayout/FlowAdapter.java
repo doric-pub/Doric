@@ -45,7 +45,7 @@ class FlowAdapter extends RecyclerView.Adapter<FlowAdapter.DoricViewHolder> {
     int itemCount = 0;
     int batchCount = 15;
     SparseArray<String> itemValues = new SparseArray<>();
-    private int loadAnchor = 0;
+    int loadAnchor = -1;
 
     FlowAdapter(FlowLayoutNode flowLayoutNode) {
         this.flowLayoutNode = flowLayoutNode;

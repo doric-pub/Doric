@@ -606,4 +606,15 @@ public class ImageNode extends ViewNode<ImageView> {
             return new JavaValue();
         }
     }
+
+    @DoricMethod
+    public void setImagePixels(JSObject prop) {
+        int width = prop.asObject().getProperty("width").asNumber().toInt();
+        int height = prop.asObject().getProperty("height").asNumber().toInt();
+        byte[] pixels = prop.asObject().getProperty("pixels").asArrayBuffer().value();
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        ByteBuffer byteBuffer = ByteBuffer.wrap(pixels);
+        bitmap.copyPixelsFromBuffer(byteBuffer);
+        mView.setImageBitmap(bitmap);
+    }
 }

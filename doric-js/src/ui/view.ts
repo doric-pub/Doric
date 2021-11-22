@@ -129,7 +129,7 @@ export abstract class View implements Modeling {
 
     callbacks: Map<String, Function> = new Map
 
-    private callback2Id(f: Function) {
+    callback2Id(f: Function) {
         const id = uniqueId('Function')
         this.callbacks.set(id, f)
         return id

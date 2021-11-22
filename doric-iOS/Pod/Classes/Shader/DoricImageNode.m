@@ -25,6 +25,8 @@
 #import "DoricUtil.h"
 #import "DoricSuperNode.h"
 #import "DoricThirdParty.h"
+#import <JavaScriptCore/JavaScriptCore.h>
+#import <JSValue+Doric.h>
 
 #if DORIC_USE_YYWEBIMAGE
 
@@ -576,6 +578,33 @@
                             options:NSKeyValueObservingOptionNew
                             context:nil];
 #endif
+    } else if ([@"imagePixels" isEqualToString:name]) {
+        NSDictionary *imagePixels = prop;
+        NSUInteger width = [imagePixels[@"width"] unsignedIntValue];
+        NSUInteger height = [imagePixels[@"height"] unsignedIntValue];
+        NSString *pixelsCallbackId = imagePixels[@"pixels"];
+        [[self callJSResponse:pixelsCallbackId, nil] setResultCallback:^(JSValue *pixelsValue) {
+            if (![pixelsValue isArrayBuffer]) {
+                return;
+            }
+            NSData *data = [pixelsValue toArrayBuffer];
+            [self.doricContext.driver ensureSyncInMainQueue:^{
+                CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+                CGContextRef context = CGBitmapContextCreate((void *) data.bytes,
+                        width,
+                        height,
+                        8,
+                        width * 4,
+                        colorSpace,
+                        kCGImageAlphaPremultipliedLast);
+                CGImageRef imageRef = CGBitmapContextCreateImage(context);
+                UIImage *image = [[UIImage alloc] initWithCGImage:imageRef scale:UIScreen.mainScreen.scale orientation:UIImageOrientationUp];
+                CGImageRelease(imageRef);
+                CGContextRelease(context);
+                CGColorSpaceRelease(colorSpace);
+                self.view.image = image;
+            }];
+        }];
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }
@@ -711,5 +740,35 @@
         [(DoricImageView *) self.view removeObserver:self forKeyPath:@"currentFrameIndex" context:nil];
 #endif
     }
+- (NSDictionary *)getImageInfo {
+    CGImageRef imageRef = [self.view.image CGImage];
+    return @{
+            @"width": @(CGImageGetWidth(imageRef)),
+            @"height": @(CGImageGetHeight(imageRef)),
+    };
+}
+
+- (NSData *)getImagePixels {
+    CGImageRef imageRef = [self.view.image CGImage];
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    size_t width = CGImageGetWidth(imageRef);
+    size_t height = CGImageGetHeight(imageRef);
+    size_t bytesPerPixel = 4;
+    size_t bytesPerRow = bytesPerPixel * width;
+
+    unsigned char *imageData = malloc(width * height * bytesPerPixel);
+    CGContextRef contextRef = CGBitmapContextCreate(
+            imageData,
+            width,
+            height,
+            8,
+            bytesPerRow,
+            colorSpace,
+            kCGImageAlphaPremultipliedLast);
+    CGContextDrawImage(contextRef, CGRectMake(0, 0, width, height), imageRef);
+    CGColorSpaceRelease(colorSpace);
+    CGContextRelease(contextRef);
+
+    return [[NSData alloc] initWithBytesNoCopy:imageData length:width * height * bytesPerPixel];
 }
 @end

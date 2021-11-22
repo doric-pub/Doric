@@ -248,6 +248,7 @@ declare module 'doric/lib/src/ui/view' {
             onClick?: Function;
             superview?: Superview;
             callbacks: Map<String, Function>;
+            callback2Id(f: Function): string;
             findViewByTag(tag: string): View | undefined;
             constructor();
             /** Anchor start*/
@@ -616,7 +617,7 @@ declare module 'doric/lib/src/widget/text' {
 }
 
 declare module 'doric/lib/src/widget/image' {
-    import { View } from "doric/lib/src/ui/view";
+    import { View, NativeViewModel } from "doric/lib/src/ui/view";
     import { Color } from "doric/lib/src/util/color";
     import { BridgeContext } from "doric/lib/src/runtime/global";
     import { Resource } from "doric/lib/src/util/resource";
@@ -713,6 +714,12 @@ declare module 'doric/lib/src/widget/image' {
                     mimeType: string;
             }>;
             getImagePixels(context: BridgeContext): Promise<ArrayBuffer>;
+            setImagePixels(context: BridgeContext, imagePixels: {
+                    width: number;
+                    height: number;
+                    pixels: ArrayBuffer;
+            }): Promise<void>;
+            toModel(): NativeViewModel;
     }
     export function image(config: Partial<Image>): Image;
 }

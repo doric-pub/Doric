@@ -47,7 +47,7 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
     }
 
     int itemCount = 0;
-    private int loadAnchor = 0;
+    int loadAnchor = -1;
 
     @NonNull
     @Override

@@ -11,6 +11,8 @@ import {
   Gravity,
   createRef,
   loge,
+  ViewComponent,
+  HLayout,
 } from "doric";
 import {
   binarization,
@@ -21,6 +23,18 @@ import {
   vampix,
 } from "./imageUtils";
 import { colors } from "./utils";
+
+@ViewComponent
+export class Label extends Text {
+  constructor() {
+    super();
+    this.width = 100;
+    this.height = 40;
+    this.backgroundColor = colors[1];
+    this.textColor = Color.WHITE;
+    this.textSize = 20;
+  }
+}
 
 @Entry
 export class ImageProcessorDemo extends Panel {
@@ -33,7 +47,6 @@ export class ImageProcessorDemo extends Panel {
     <Scroller parent={root} layoutConfig={layoutConfig().most()}>
       <VLayout
         layoutConfig={layoutConfig().mostWidth().fitHeight()}
-        space={20}
         gravity={Gravity.Center}
       >
         <Text
@@ -52,11 +65,32 @@ export class ImageProcessorDemo extends Panel {
           width={(Environment.screenWidth / 5) * 4}
           imageUrl={imageUrl}
         />
-        {(
-          [
-            [
-              "黑白化",
-              async () => {
+        <VLayout
+          layoutConfig={layoutConfig().mostWidth().fitHeight()}
+          padding={{ left: 10, right: 10, top: 10, bottom: 10 }}
+        >
+          <Label
+            backgroundColor={Color.RED}
+            layoutConfig={layoutConfig().just()}
+            onClick={async () => {
+              iv.current.imageUrl = undefined;
+              iv.current.imageUrl = imageUrl;
+            }}
+          >
+            重置
+          </Label>
+        </VLayout>
+        <VLayout
+          layoutConfig={layoutConfig().mostWidth().fitHeight()}
+          padding={{ left: 10, right: 10, top: 10, bottom: 10 }}
+          backgroundColor={colors[3].alpha(0.1)}
+          space={5}
+        >
+          <Text textSize={20}>简单</Text>
+          <HLayout space={10}>
+            <Label
+              layoutConfig={layoutConfig().just()}
+              onClick={async () => {
                 const imageInfo = await iv.current.getImageInfo(context);
                 const pixels = await iv.current.getImagePixels(context);
                 const data = new Uint32Array(pixels);
@@ -66,70 +100,13 @@ export class ImageProcessorDemo extends Panel {
                   height: imageInfo.height,
                   pixels: pixels,
                 };
-              },
-            ],
-            [
-              "二值化",
-              async () => {
-                const imageInfo = await iv.current.getImageInfo(context);
-                const pixels = await iv.current.getImagePixels(context);
-                const data = new Uint32Array(pixels);
-                extractGrayValue(data);
-                binarization(data, 127);
-                iv.current.imagePixels = {
-                  width: imageInfo.width,
-                  height: imageInfo.height,
-                  pixels: pixels,
-                };
-              },
-            ],
-            [
-              "OSTU",
-              async () => {
-                const imageInfo = await iv.current.getImageInfo(context);
-                const pixels = await iv.current.getImagePixels(context);
-                const data = new Uint32Array(pixels);
-                extractGrayValue(data);
-                const t = ostu(data);
-                binarization(data, t);
-                iv.current.imagePixels = {
-                  width: imageInfo.width,
-                  height: imageInfo.height,
-                  pixels: pixels,
-                };
-              },
-            ],
-            [
-              "FastBlur",
-              async () => {
-                const imageInfo = await iv.current.getImageInfo(context);
-                const pixels = await iv.current.getImagePixels(context);
-                const data = new Uint32Array(pixels);
-                fastBlur(data, imageInfo.width, imageInfo.height, 30);
-                iv.current.imagePixels = {
-                  width: imageInfo.width,
-                  height: imageInfo.height,
-                  pixels: pixels,
-                };
-              },
-            ],
-            [
-              "高斯模糊",
-              async () => {
-                const imageInfo = await iv.current.getImageInfo(context);
-                const pixels = await iv.current.getImagePixels(context);
-                const data = new Uint32Array(pixels);
-                gaussianBlur(data, imageInfo.width, imageInfo.height, 1);
-                iv.current.imagePixels = {
-                  width: imageInfo.width,
-                  height: imageInfo.height,
-                  pixels: pixels,
-                };
-              },
-            ],
-            [
-              "透明",
-              async () => {
+              }}
+            >
+              黑白
+            </Label>
+            <Label
+              layoutConfig={layoutConfig().just()}
+              onClick={async () => {
                 const imageInfo = await iv.current.getImageInfo(context);
                 loge(imageInfo);
                 const pixels = await iv.current.getImagePixels(context);
@@ -143,29 +120,99 @@ export class ImageProcessorDemo extends Panel {
                   height: imageInfo.height,
                   pixels: pixels,
                 };
-              },
-            ],
-            [
-              "重置",
-              async () => {
-                iv.current.imageUrl = undefined;
-                iv.current.imageUrl = imageUrl;
-              },
-            ],
-          ] as [string, () => {}][]
-        ).map((e) => (
-          <Text
-            layoutConfig={layoutConfig().just()}
-            width={100}
-            height={40}
-            backgroundColor={colors[1]}
-            textColor={Color.WHITE}
-            textSize={20}
-            onClick={e[1]}
-          >
-            {e[0]}
-          </Text>
-        ))}
+              }}
+            >
+              透明
+            </Label>
+          </HLayout>
+        </VLayout>
+        <VLayout
+          layoutConfig={layoutConfig().mostWidth().fitHeight()}
+          padding={{ left: 10, right: 10, top: 10, bottom: 10 }}
+          backgroundColor={colors[2].alpha(0.1)}
+          space={5}
+        >
+          <Text textSize={20}>模糊</Text>
+          <HLayout space={10}>
+            <Label
+              layoutConfig={layoutConfig().just()}
+              onClick={async () => {
+                const imageInfo = await iv.current.getImageInfo(context);
+                const pixels = await iv.current.getImagePixels(context);
+                const data = new Uint32Array(pixels);
+                fastBlur(data, imageInfo.width, imageInfo.height, 30);
+                iv.current.imagePixels = {
+                  width: imageInfo.width,
+                  height: imageInfo.height,
+                  pixels: pixels,
+                };
+              }}
+            >
+              FastBlur
+            </Label>
+            <Label
+              layoutConfig={layoutConfig().just()}
+              onClick={async () => {
+                const imageInfo = await iv.current.getImageInfo(context);
+                const pixels = await iv.current.getImagePixels(context);
+                const data = new Uint32Array(pixels);
+                gaussianBlur(data, imageInfo.width, imageInfo.height, 1);
+                iv.current.imagePixels = {
+                  width: imageInfo.width,
+                  height: imageInfo.height,
+                  pixels: pixels,
+                };
+              }}
+            >
+              高斯模糊
+            </Label>
+          </HLayout>
+        </VLayout>
+        <VLayout
+          layoutConfig={layoutConfig().mostWidth().fitHeight()}
+          padding={{ left: 10, right: 10, top: 10, bottom: 10 }}
+          backgroundColor={colors[3].alpha(0.1)}
+          space={5}
+        >
+          <Text textSize={20}>二值化</Text>
+          <HLayout space={10}>
+            <Label
+              layoutConfig={layoutConfig().just()}
+              onClick={async () => {
+                const imageInfo = await iv.current.getImageInfo(context);
+                const pixels = await iv.current.getImagePixels(context);
+                const data = new Uint32Array(pixels);
+                extractGrayValue(data);
+                binarization(data, 127);
+                iv.current.imagePixels = {
+                  width: imageInfo.width,
+                  height: imageInfo.height,
+                  pixels: pixels,
+                };
+              }}
+            >
+              普通
+            </Label>
+            <Label
+              layoutConfig={layoutConfig().just()}
+              onClick={async () => {
+                const imageInfo = await iv.current.getImageInfo(context);
+                const pixels = await iv.current.getImagePixels(context);
+                const data = new Uint32Array(pixels);
+                extractGrayValue(data);
+                const t = ostu(data);
+                binarization(data, t);
+                iv.current.imagePixels = {
+                  width: imageInfo.width,
+                  height: imageInfo.height,
+                  pixels: pixels,
+                };
+              }}
+            >
+              OSTU
+            </Label>
+          </HLayout>
+        </VLayout>
       </VLayout>
     </Scroller>;
   }

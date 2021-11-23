@@ -31,7 +31,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation 'androidx.appcompat:appcompat:1.3.1'
-    api 'com.github.penfeizhou:jsc4a:0.3.0'
+    api 'com.github.penfeizhou:jsc4a:0.3.2'
     //api "pub.doric:jse:${rootProject.ext.Version}"
     implementation 'com.squareup.okhttp3:okhttp:3.12.1'
     implementation('com.github.penfeizhou.android.animation:glide-plugin:2.17.0') {

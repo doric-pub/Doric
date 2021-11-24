@@ -34,19 +34,23 @@ import jp.wasabeef.glide.transformations.internal.SupportRSBlur;
  * @CreateDate: 2021/11/24
  */
 public class BlurEffectView extends DoricLayer {
-    private Rect effectiveRect = null;
+    private Rect mEffectiveRect = null;
 
     private int mRadius = 15;
 
-    private Bitmap mBitmap = null;
-    private Canvas mBlurCanvas = null;
+    private Bitmap mFullBitmap = null;
+    private Canvas mFullCanvas = null;
+    private Bitmap mRectBitmap = null;
+    private Canvas mRectCanvas = null;
+    private Rect mDstRect = null;
 
     public BlurEffectView(@NonNull Context context) {
         super(context);
     }
 
     public void setEffectiveRect(Rect rect) {
-        this.effectiveRect = rect;
+        this.mEffectiveRect = rect;
+        this.mDstRect = new Rect(0, 0, rect.width(), rect.height());
         invalidate();
     }
 
@@ -60,31 +64,53 @@ public class BlurEffectView extends DoricLayer {
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
-        if (mBitmap == null
-                || mBitmap.getWidth() != canvas.getWidth()
-                || mBitmap.getHeight() != canvas.getHeight()) {
-            mBitmap = Bitmap.createBitmap(canvas.getWidth(), canvas.getHeight(), Bitmap.Config.ARGB_8888);
-            mBlurCanvas = new Canvas(mBitmap);
+        if (mFullBitmap == null
+                || mFullBitmap.getWidth() != canvas.getWidth()
+                || mFullBitmap.getHeight() != canvas.getHeight()) {
+            mFullBitmap = Bitmap.createBitmap(canvas.getWidth(), canvas.getHeight(), Bitmap.Config.ARGB_8888);
+            mFullCanvas = new Canvas(mFullBitmap);
         }
-        mBlurCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-        super.dispatchDraw(mBlurCanvas);
-        Bitmap bitmap;
+        mFullCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+        super.dispatchDraw(mFullCanvas);
+        Bitmap blurringBitmap;
+        if (mEffectiveRect != null) {
+            if (mRectBitmap == null
+                    || mRectBitmap.getWidth() != mEffectiveRect.width()
+                    || mRectBitmap.getHeight() != mEffectiveRect.height()) {
+                mRectBitmap = Bitmap.createBitmap(mEffectiveRect.width(), mEffectiveRect.height(), Bitmap.Config.ARGB_8888);
+                mRectCanvas = new Canvas(mRectBitmap);
+            }
+            blurringBitmap = mRectBitmap;
+            mRectCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+            mRectCanvas.drawBitmap(mFullBitmap, mEffectiveRect, mDstRect, null);
+        } else {
+            blurringBitmap = mFullBitmap;
+        }
+        Bitmap blurredBitmap;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2
                 && mRadius <= 25) {
             try {
-                bitmap = SupportRSBlur.blur(getContext(), mBitmap, mRadius);
+                blurredBitmap = SupportRSBlur.blur(getContext(), blurringBitmap, mRadius);
             } catch (NoClassDefFoundError e) {
                 try {
-                    bitmap = RSBlur.blur(getContext(), mBitmap, mRadius);
+                    blurredBitmap = RSBlur.blur(getContext(), blurringBitmap, mRadius);
                 } catch (Exception ee) {
-                    bitmap = FastBlur.blur(mBitmap, mRadius, true);
+                    blurredBitmap = FastBlur.blur(blurringBitmap, mRadius, true);
                 }
             } catch (Exception e) {
-                bitmap = FastBlur.blur(mBitmap, mRadius, true);
+                blurredBitmap = FastBlur.blur(blurringBitmap, mRadius, true);
             }
         } else {
-            bitmap = FastBlur.blur(mBitmap, mRadius, true);
+            blurredBitmap = FastBlur.blur(blurringBitmap, mRadius, true);
         }
-        canvas.drawBitmap(bitmap, 0, 0, null);
+        Bitmap retBitmap;
+        if (mEffectiveRect != null) {
+            mFullCanvas.drawBitmap(blurredBitmap, mDstRect, mEffectiveRect, null);
+            retBitmap = mFullBitmap;
+        } else {
+            retBitmap = blurredBitmap;
+        }
+
+        canvas.drawBitmap(retBitmap, 0, 0, null);
     }
 }

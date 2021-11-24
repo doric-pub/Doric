@@ -34,7 +34,7 @@ import pub.doric.navbar.BaseDoricNavBar;
  */
 public class DoricDebugActivity extends DoricActivity {
     @Override
-    protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         BaseDoricNavBar doricNavBar = findViewById(R.id.doric_nav_bar);
         TextView textView = new TextView(this);

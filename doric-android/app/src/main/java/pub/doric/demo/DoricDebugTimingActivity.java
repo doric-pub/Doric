@@ -41,7 +41,7 @@ import pub.doric.utils.DoricLog;
  */
 public class DoricDebugTimingActivity extends AppCompatActivity {
     @Override
-    protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final long pefStart = System.currentTimeMillis();
         setContentView(R.layout.activity_debug_timing);

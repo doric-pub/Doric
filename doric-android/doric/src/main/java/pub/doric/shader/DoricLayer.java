@@ -73,7 +73,7 @@ public class DoricLayer extends MaximumFrameLayout {
         mRect.right = getWidth();
         mRect.top = 0;
         mRect.bottom = getHeight();
-        if (canvas.getSaveCount() > 1) {
+        if (mCornerRadii != null) {
             canvas.restore();
         }
         canvas.save();

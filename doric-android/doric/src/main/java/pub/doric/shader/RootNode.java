@@ -22,8 +22,6 @@ import android.widget.FrameLayout;
 import pub.doric.DoricContext;
 import pub.doric.extension.bridge.DoricPlugin;
 
-import com.github.pengfeizhou.jscore.JSObject;
-
 /**
  * @Description: com.github.penfeizhou.doric.widget
  * @Author: pengfei.zhou

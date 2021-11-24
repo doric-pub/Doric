@@ -15,12 +15,15 @@
  */
 package pub.doric.shader;
 
+import android.graphics.Rect;
 import android.widget.FrameLayout;
 
+import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
 import pub.doric.DoricContext;
 import pub.doric.extension.bridge.DoricPlugin;
+import pub.doric.utils.DoricUtils;
 
 /**
  * @Description: Describe the effect view
@@ -44,8 +47,22 @@ public class BlurEffectViewNode extends StackNode {
             if (prop.isNumber()) {
                 ((BlurEffectView) view).setRadius(prop.asNumber().toInt());
             }
+        } else if ("effectiveRect".equals(name)) {
+            if (prop.isObject()) {
+                int x = DoricUtils.dp2px(prop.asObject().getProperty("x").asNumber().toFloat());
+                int y = DoricUtils.dp2px(prop.asObject().getProperty("x").asNumber().toFloat());
+                int width = DoricUtils.dp2px(prop.asObject().getProperty("width").asNumber().toFloat());
+                int height = DoricUtils.dp2px(prop.asObject().getProperty("height").asNumber().toFloat());
+                ((BlurEffectView) view).setEffectiveRect(new Rect(x, y, x + width, y + height));
+            }
         } else {
             super.blend(view, name, prop);
         }
+    }
+
+    @Override
+    protected void blendSubNode(JSObject subProp) {
+        super.blendSubNode(subProp);
+        mView.invalidate();
     }
 }

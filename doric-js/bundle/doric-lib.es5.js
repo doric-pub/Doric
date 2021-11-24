@@ -139,7 +139,7 @@ function logw() {
     nativeLog('w', out);
 }
 
-var __extends$i = (undefined && undefined.__extends) || (function () {
+var __extends$j = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -154,13 +154,13 @@ var __extends$i = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate$e = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$f = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") { r = Reflect.decorate(decorators, target, key, desc); }
     else { for (var i = decorators.length - 1; i >= 0; i--) { if (d = decorators[i]) { r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r; } } }
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$e = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$f = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
 var __values$5 = (undefined && undefined.__values) || function(o) {
@@ -472,106 +472,106 @@ var View = /** @class */ (function () {
             }
         });
     };
-    __decorate$e([
+    __decorate$f([
         Property,
-        __metadata$e("design:type", Number)
+        __metadata$f("design:type", Number)
     ], View.prototype, "width", void 0);
-    __decorate$e([
+    __decorate$f([
         Property,
-        __metadata$e("design:type", Number)
+        __metadata$f("design:type", Number)
     ], View.prototype, "height", void 0);
-    __decorate$e([
+    __decorate$f([
         Property,
-        __metadata$e("design:type", Number)
+        __metadata$f("design:type", Number)
     ], View.prototype, "x", void 0);
-    __decorate$e([
+    __decorate$f([
         Property,
-        __metadata$e("design:type", Number)
+        __metadata$f("design:type", Number)
     ], View.prototype, "y", void 0);
-    __decorate$e([
+    __decorate$f([
         Property,
-        __metadata$e("design:type", Object)
+        __metadata$f("design:type", Object)
     ], View.prototype, "backgroundColor", void 0);
-    __decorate$e([
+    __decorate$f([
         Property,
-        __metadata$e("design:type", Object)
+        __metadata$f("design:type", Object)
     ], View.prototype, "corners", void 0);
-    __decorate$e([
+    __decorate$f([
         Property,
-        __metadata$e("design:type", Object)
+        __metadata$f("design:type", Object)
     ], View.prototype, "border", void 0);
-    __decorate$e([
+    __decorate$f([
         Property,
-        __metadata$e("design:type", Object)
+        __metadata$f("design:type", Object)
     ], View.prototype, "shadow", void 0);
-    __decorate$e([
+    __decorate$f([
         Property,
-        __metadata$e("design:type", Number)
+        __metadata$f("design:type", Number)
     ], View.prototype, "alpha", void 0);
-    __decorate$e([
+    __decorate$f([
         Property,
-        __metadata$e("design:type", Boolean)
+        __metadata$f("design:type", Boolean)
     ], View.prototype, "hidden", void 0);
-    __decorate$e([
+    __decorate$f([
         Property,
-        __metadata$e("design:type", Object)
+        __metadata$f("design:type", Object)
     ], View.prototype, "padding", void 0);
-    __decorate$e([
+    __decorate$f([
         Property,
-        __metadata$e("design:type", Object)
+        __metadata$f("design:type", Object)
     ], View.prototype, "layoutConfig", void 0);
-    __decorate$e([
+    __decorate$f([
         Property,
-        __metadata$e("design:type", Function)
+        __metadata$f("design:type", Function)
     ], View.prototype, "onClick", void 0);
-    __decorate$e([
+    __decorate$f([
         Property,
-        __metadata$e("design:type", Number)
+        __metadata$f("design:type", Number)
     ], View.prototype, "translationX", void 0);
-    __decorate$e([
+    __decorate$f([
         Property,
-        __metadata$e("design:type", Number)
+        __metadata$f("design:type", Number)
     ], View.prototype, "translationY", void 0);
-    __decorate$e([
+    __decorate$f([
         Property,
-        __metadata$e("design:type", Number)
+        __metadata$f("design:type", Number)
     ], View.prototype, "scaleX", void 0);
-    __decorate$e([
+    __decorate$f([
         Property,
-        __metadata$e("design:type", Number)
+        __metadata$f("design:type", Number)
     ], View.prototype, "scaleY", void 0);
-    __decorate$e([
+    __decorate$f([
         Property,
-        __metadata$e("design:type", Number)
+        __metadata$f("design:type", Number)
     ], View.prototype, "pivotX", void 0);
-    __decorate$e([
+    __decorate$f([
         Property,
-        __metadata$e("design:type", Number)
+        __metadata$f("design:type", Number)
     ], View.prototype, "pivotY", void 0);
-    __decorate$e([
+    __decorate$f([
         Property,
-        __metadata$e("design:type", Number)
+        __metadata$f("design:type", Number)
     ], View.prototype, "rotation", void 0);
-    __decorate$e([
+    __decorate$f([
         Property,
-        __metadata$e("design:type", Number)
+        __metadata$f("design:type", Number)
     ], View.prototype, "rotationX", void 0);
-    __decorate$e([
+    __decorate$f([
         Property,
-        __metadata$e("design:type", Number)
+        __metadata$f("design:type", Number)
     ], View.prototype, "rotationY", void 0);
-    __decorate$e([
+    __decorate$f([
         Property,
-        __metadata$e("design:type", Number)
+        __metadata$f("design:type", Number)
     ], View.prototype, "perspective", void 0);
-    __decorate$e([
+    __decorate$f([
         Property,
-        __metadata$e("design:type", Object)
+        __metadata$f("design:type", Object)
     ], View.prototype, "flexConfig", void 0);
     return View;
 }());
 var Superview = /** @class */ (function (_super) {
-    __extends$i(Superview, _super);
+    __extends$j(Superview, _super);
     function Superview() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -687,7 +687,7 @@ var Superview = /** @class */ (function (_super) {
     return Superview;
 }(View));
 var Group = /** @class */ (function (_super) {
-    __extends$i(Group, _super);
+    __extends$j(Group, _super);
     function Group() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.children = [];
@@ -905,7 +905,7 @@ function layoutConfig() {
     return new LayoutConfigImpl;
 }
 
-var __extends$h = (undefined && undefined.__extends) || (function () {
+var __extends$i = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -920,13 +920,13 @@ var __extends$h = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate$d = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$e = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") { r = Reflect.decorate(decorators, target, key, desc); }
     else { for (var i = decorators.length - 1; i >= 0; i--) { if (d = decorators[i]) { r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r; } } }
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$d = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$e = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
 var __values$4 = (undefined && undefined.__values) || function(o) {
@@ -941,43 +941,43 @@ var __values$4 = (undefined && undefined.__values) || function(o) {
     throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 };
 var Stack = /** @class */ (function (_super) {
-    __extends$h(Stack, _super);
+    __extends$i(Stack, _super);
     function Stack() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     return Stack;
 }(Group));
 var Root = /** @class */ (function (_super) {
-    __extends$h(Root, _super);
+    __extends$i(Root, _super);
     function Root() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     return Root;
 }(Stack));
 var LinearLayout = /** @class */ (function (_super) {
-    __extends$h(LinearLayout, _super);
+    __extends$i(LinearLayout, _super);
     function LinearLayout() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    __decorate$d([
+    __decorate$e([
         Property,
-        __metadata$d("design:type", Number)
+        __metadata$e("design:type", Number)
     ], LinearLayout.prototype, "space", void 0);
-    __decorate$d([
+    __decorate$e([
         Property,
-        __metadata$d("design:type", Gravity)
+        __metadata$e("design:type", Gravity)
     ], LinearLayout.prototype, "gravity", void 0);
     return LinearLayout;
 }(Group));
 var VLayout = /** @class */ (function (_super) {
-    __extends$h(VLayout, _super);
+    __extends$i(VLayout, _super);
     function VLayout() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     return VLayout;
 }(LinearLayout));
 var HLayout = /** @class */ (function (_super) {
-    __extends$h(HLayout, _super);
+    __extends$i(HLayout, _super);
     function HLayout() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -1050,7 +1050,7 @@ function vlayout(views, config) {
     return ret;
 }
 var FlexLayout = /** @class */ (function (_super) {
-    __extends$h(FlexLayout, _super);
+    __extends$i(FlexLayout, _super);
     function FlexLayout() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -1079,13 +1079,13 @@ function flexlayout(views, config) {
     return ret;
 }
 
-var __decorate$c = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$d = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") { r = Reflect.decorate(decorators, target, key, desc); }
     else { for (var i = decorators.length - 1; i >= 0; i--) { if (d = decorators[i]) { r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r; } } }
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$c = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$d = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
 var __values$3 = (undefined && undefined.__values) || function(o) {
@@ -1343,71 +1343,71 @@ var Panel = /** @class */ (function () {
     Panel.prototype.addOnRenderFinishedCallback = function (cb) {
         this.onRenderFinishedCallback.push(cb);
     };
-    __decorate$c([
+    __decorate$d([
         NativeCall,
-        __metadata$c("design:type", Function),
-        __metadata$c("design:paramtypes", [String]),
-        __metadata$c("design:returntype", void 0)
+        __metadata$d("design:type", Function),
+        __metadata$d("design:paramtypes", [String]),
+        __metadata$d("design:returntype", void 0)
     ], Panel.prototype, "__init__", null);
-    __decorate$c([
+    __decorate$d([
         NativeCall,
-        __metadata$c("design:type", Function),
-        __metadata$c("design:paramtypes", []),
-        __metadata$c("design:returntype", void 0)
+        __metadata$d("design:type", Function),
+        __metadata$d("design:paramtypes", []),
+        __metadata$d("design:returntype", void 0)
     ], Panel.prototype, "__onCreate__", null);
-    __decorate$c([
+    __decorate$d([
         NativeCall,
-        __metadata$c("design:type", Function),
-        __metadata$c("design:paramtypes", []),
-        __metadata$c("design:returntype", void 0)
+        __metadata$d("design:type", Function),
+        __metadata$d("design:paramtypes", []),
+        __metadata$d("design:returntype", void 0)
     ], Panel.prototype, "__onDestroy__", null);
-    __decorate$c([
+    __decorate$d([
         NativeCall,
-        __metadata$c("design:type", Function),
-        __metadata$c("design:paramtypes", []),
-        __metadata$c("design:returntype", void 0)
+        __metadata$d("design:type", Function),
+        __metadata$d("design:paramtypes", []),
+        __metadata$d("design:returntype", void 0)
     ], Panel.prototype, "__onShow__", null);
-    __decorate$c([
+    __decorate$d([
         NativeCall,
-        __metadata$c("design:type", Function),
-        __metadata$c("design:paramtypes", []),
-        __metadata$c("design:returntype", void 0)
+        __metadata$d("design:type", Function),
+        __metadata$d("design:paramtypes", []),
+        __metadata$d("design:returntype", void 0)
     ], Panel.prototype, "__onHidden__", null);
-    __decorate$c([
+    __decorate$d([
         NativeCall,
-        __metadata$c("design:type", Function),
-        __metadata$c("design:paramtypes", [Object]),
-        __metadata$c("design:returntype", void 0)
+        __metadata$d("design:type", Function),
+        __metadata$d("design:paramtypes", [Object]),
+        __metadata$d("design:returntype", void 0)
     ], Panel.prototype, "__build__", null);
-    __decorate$c([
+    __decorate$d([
         NativeCall,
-        __metadata$c("design:type", Function),
-        __metadata$c("design:paramtypes", []),
-        __metadata$c("design:returntype", void 0)
+        __metadata$d("design:type", Function),
+        __metadata$d("design:paramtypes", []),
+        __metadata$d("design:returntype", void 0)
     ], Panel.prototype, "__onEnvChanged__", null);
-    __decorate$c([
+    __decorate$d([
         NativeCall,
-        __metadata$c("design:type", Function),
-        __metadata$c("design:paramtypes", [Array, String]),
-        __metadata$c("design:returntype", void 0)
+        __metadata$d("design:type", Function),
+        __metadata$d("design:paramtypes", [Array, String]),
+        __metadata$d("design:returntype", void 0)
     ], Panel.prototype, "__response__", null);
-    __decorate$c([
+    __decorate$d([
         NativeCall,
-        __metadata$c("design:type", Function),
-        __metadata$c("design:paramtypes", []),
-        __metadata$c("design:returntype", void 0)
+        __metadata$d("design:type", Function),
+        __metadata$d("design:paramtypes", []),
+        __metadata$d("design:returntype", void 0)
     ], Panel.prototype, "__renderSnapshotDepth__", null);
-    __decorate$c([
+    __decorate$d([
         NativeCall,
-        __metadata$c("design:type", Function),
-        __metadata$c("design:paramtypes", [Number]),
-        __metadata$c("design:returntype", void 0)
+        __metadata$d("design:type", Function),
+        __metadata$d("design:paramtypes", [Number]),
+        __metadata$d("design:returntype", void 0)
     ], Panel.prototype, "__restoreRenderSnapshot__", null);
-    __decorate$c([
+    __decorate$d([
         NativeCall,
-        __metadata$c("design:type", Function),
-        __metadata$c("design:paramtypes", []),
-        __metadata$c("design:returntype", void 0)
+        __metadata$d("design:type", Function),
+        __metadata$d("design:paramtypes", []),
+        __metadata$d("design:returntype", void 0)
     ], Panel.prototype, "__enableSnapshot__", null);
     return Panel;
 }());
@@ -1503,7 +1503,7 @@ exports.GradientOrientation = void 0;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-var __extends$g = (undefined && undefined.__extends) || (function () {
+var __extends$h = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -1619,7 +1619,7 @@ var Animation = /** @class */ (function () {
     return Animation;
 }());
 var ScaleAnimation = /** @class */ (function (_super) {
-    __extends$g(ScaleAnimation, _super);
+    __extends$h(ScaleAnimation, _super);
     function ScaleAnimation() {
         var _this = _super.call(this) || this;
         _this.scaleXChangeable = {
@@ -1693,7 +1693,7 @@ var ScaleAnimation = /** @class */ (function (_super) {
     return ScaleAnimation;
 }(Animation));
 var TranslationAnimation = /** @class */ (function (_super) {
-    __extends$g(TranslationAnimation, _super);
+    __extends$h(TranslationAnimation, _super);
     function TranslationAnimation() {
         var _this = _super.call(this) || this;
         _this.translationXChangeable = {
@@ -1770,7 +1770,7 @@ var TranslationAnimation = /** @class */ (function (_super) {
  * Rotation range is [0..2]
  */
 var RotationAnimation = /** @class */ (function (_super) {
-    __extends$g(RotationAnimation, _super);
+    __extends$h(RotationAnimation, _super);
     function RotationAnimation() {
         var _this = _super.call(this) || this;
         _this.rotationChaneable = {
@@ -1814,7 +1814,7 @@ var RotationAnimation = /** @class */ (function (_super) {
  * Rotation range is [0..2]
  */
 var RotationXAnimation = /** @class */ (function (_super) {
-    __extends$g(RotationXAnimation, _super);
+    __extends$h(RotationXAnimation, _super);
     function RotationXAnimation() {
         var _this = _super.call(this) || this;
         _this.rotationChaneable = {
@@ -1858,7 +1858,7 @@ var RotationXAnimation = /** @class */ (function (_super) {
  * Rotation range is [0..2]
  */
 var RotationYAnimation = /** @class */ (function (_super) {
-    __extends$g(RotationYAnimation, _super);
+    __extends$h(RotationYAnimation, _super);
     function RotationYAnimation() {
         var _this = _super.call(this) || this;
         _this.rotationChaneable = {
@@ -1899,7 +1899,7 @@ var RotationYAnimation = /** @class */ (function (_super) {
     return RotationYAnimation;
 }(Animation));
 var BackgroundColorAnimation = /** @class */ (function (_super) {
-    __extends$g(BackgroundColorAnimation, _super);
+    __extends$h(BackgroundColorAnimation, _super);
     function BackgroundColorAnimation() {
         var _this = _super.call(this) || this;
         _this.backgroundColorChangeable = {
@@ -1943,7 +1943,7 @@ var BackgroundColorAnimation = /** @class */ (function (_super) {
  * Alpha range is [0..1]
  */
 var AlphaAnimation = /** @class */ (function (_super) {
-    __extends$g(AlphaAnimation, _super);
+    __extends$h(AlphaAnimation, _super);
     function AlphaAnimation() {
         var _this = _super.call(this) || this;
         _this.opacityChangeable = {
@@ -2015,7 +2015,7 @@ var AnimationSet = /** @class */ (function () {
     return AnimationSet;
 }());
 
-var __extends$f = (undefined && undefined.__extends) || (function () {
+var __extends$g = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -2030,13 +2030,13 @@ var __extends$f = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate$b = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$c = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") { r = Reflect.decorate(decorators, target, key, desc); }
     else { for (var i = decorators.length - 1; i >= 0; i--) { if (d = decorators[i]) { r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r; } } }
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$b = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$c = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
 exports.TruncateAt = void 0;
@@ -2047,7 +2047,7 @@ exports.TruncateAt = void 0;
     TruncateAt[TruncateAt["Clip"] = 3] = "Clip";
 })(exports.TruncateAt || (exports.TruncateAt = {}));
 var Text = /** @class */ (function (_super) {
-    __extends$f(Text, _super);
+    __extends$g(Text, _super);
     function Text() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -2058,61 +2058,61 @@ var Text = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
-    __decorate$b([
+    __decorate$c([
         Property,
-        __metadata$b("design:type", String)
+        __metadata$c("design:type", String)
     ], Text.prototype, "text", void 0);
-    __decorate$b([
+    __decorate$c([
         Property,
-        __metadata$b("design:type", Object)
+        __metadata$c("design:type", Object)
     ], Text.prototype, "textColor", void 0);
-    __decorate$b([
+    __decorate$c([
         Property,
-        __metadata$b("design:type", Number)
+        __metadata$c("design:type", Number)
     ], Text.prototype, "textSize", void 0);
-    __decorate$b([
+    __decorate$c([
         Property,
-        __metadata$b("design:type", Number)
+        __metadata$c("design:type", Number)
     ], Text.prototype, "maxLines", void 0);
-    __decorate$b([
+    __decorate$c([
         Property,
-        __metadata$b("design:type", Gravity)
+        __metadata$c("design:type", Gravity)
     ], Text.prototype, "textAlignment", void 0);
-    __decorate$b([
+    __decorate$c([
         Property,
-        __metadata$b("design:type", String)
+        __metadata$c("design:type", String)
     ], Text.prototype, "fontStyle", void 0);
-    __decorate$b([
+    __decorate$c([
         Property,
-        __metadata$b("design:type", String)
+        __metadata$c("design:type", String)
     ], Text.prototype, "font", void 0);
-    __decorate$b([
+    __decorate$c([
         Property,
-        __metadata$b("design:type", Number)
+        __metadata$c("design:type", Number)
     ], Text.prototype, "maxWidth", void 0);
-    __decorate$b([
+    __decorate$c([
         Property,
-        __metadata$b("design:type", Number)
+        __metadata$c("design:type", Number)
     ], Text.prototype, "maxHeight", void 0);
-    __decorate$b([
+    __decorate$c([
         Property,
-        __metadata$b("design:type", Number)
+        __metadata$c("design:type", Number)
     ], Text.prototype, "lineSpacing", void 0);
-    __decorate$b([
+    __decorate$c([
         Property,
-        __metadata$b("design:type", Boolean)
+        __metadata$c("design:type", Boolean)
     ], Text.prototype, "strikethrough", void 0);
-    __decorate$b([
+    __decorate$c([
         Property,
-        __metadata$b("design:type", Boolean)
+        __metadata$c("design:type", Boolean)
     ], Text.prototype, "underline", void 0);
-    __decorate$b([
+    __decorate$c([
         Property,
-        __metadata$b("design:type", String)
+        __metadata$c("design:type", String)
     ], Text.prototype, "htmlText", void 0);
-    __decorate$b([
+    __decorate$c([
         Property,
-        __metadata$b("design:type", Number)
+        __metadata$c("design:type", Number)
     ], Text.prototype, "truncateAt", void 0);
     return Text;
 }(View));
@@ -2123,7 +2123,7 @@ function text(config) {
     return ret;
 }
 
-var __extends$e = (undefined && undefined.__extends) || (function () {
+var __extends$f = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -2152,21 +2152,21 @@ var Resource = /** @class */ (function () {
     return Resource;
 }());
 var LocalResource = /** @class */ (function (_super) {
-    __extends$e(LocalResource, _super);
+    __extends$f(LocalResource, _super);
     function LocalResource(path) {
         return _super.call(this, "local", path) || this;
     }
     return LocalResource;
 }(Resource));
 var RemoteResource = /** @class */ (function (_super) {
-    __extends$e(RemoteResource, _super);
+    __extends$f(RemoteResource, _super);
     function RemoteResource(url) {
         return _super.call(this, "remote", url) || this;
     }
     return RemoteResource;
 }(Resource));
 var Base64Resource = /** @class */ (function (_super) {
-    __extends$e(Base64Resource, _super);
+    __extends$f(Base64Resource, _super);
     function Base64Resource(content) {
         return _super.call(this, "base64", content) || this;
     }
@@ -2176,21 +2176,21 @@ var Base64Resource = /** @class */ (function (_super) {
  * This is for android platform
  */
 var DrawableResource = /** @class */ (function (_super) {
-    __extends$e(DrawableResource, _super);
+    __extends$f(DrawableResource, _super);
     function DrawableResource(name) {
         return _super.call(this, "drawable", name) || this;
     }
     return DrawableResource;
 }(Resource));
 var RawResource = /** @class */ (function (_super) {
-    __extends$e(RawResource, _super);
+    __extends$f(RawResource, _super);
     function RawResource(name) {
         return _super.call(this, "raw", name) || this;
     }
     return RawResource;
 }(Resource));
 var AssetResource = /** @class */ (function (_super) {
-    __extends$e(AssetResource, _super);
+    __extends$f(AssetResource, _super);
     function AssetResource(path) {
         return _super.call(this, "assets", path) || this;
     }
@@ -2200,21 +2200,21 @@ var AssetResource = /** @class */ (function (_super) {
  * This is for iOS platform
  */
 var MainBundleResource = /** @class */ (function (_super) {
-    __extends$e(MainBundleResource, _super);
+    __extends$f(MainBundleResource, _super);
     function MainBundleResource(fileName) {
         return _super.call(this, "mainBundle", fileName) || this;
     }
     return MainBundleResource;
 }(Resource));
 var BundleResource = /** @class */ (function (_super) {
-    __extends$e(BundleResource, _super);
+    __extends$f(BundleResource, _super);
     function BundleResource(bundleName, fileName) {
         return _super.call(this, "bundle", bundleName + "://" + fileName) || this;
     }
     return BundleResource;
 }(Resource));
 
-var __extends$d = (undefined && undefined.__extends) || (function () {
+var __extends$e = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -2229,13 +2229,13 @@ var __extends$d = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate$a = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$b = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") { r = Reflect.decorate(decorators, target, key, desc); }
     else { for (var i = decorators.length - 1; i >= 0; i--) { if (d = decorators[i]) { r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r; } } }
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$a = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$b = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
 exports.ScaleType = void 0;
@@ -2245,7 +2245,7 @@ exports.ScaleType = void 0;
     ScaleType[ScaleType["ScaleAspectFill"] = 2] = "ScaleAspectFill";
 })(exports.ScaleType || (exports.ScaleType = {}));
 var Image = /** @class */ (function (_super) {
-    __extends$d(Image, _super);
+    __extends$e(Image, _super);
     function Image() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -2258,78 +2258,78 @@ var Image = /** @class */ (function (_super) {
     Image.prototype.stopAnimating = function (context) {
         return this.nativeChannel(context, "stopAnimating")();
     };
-    __decorate$a([
+    __decorate$b([
         Property,
-        __metadata$a("design:type", Resource)
+        __metadata$b("design:type", Resource)
     ], Image.prototype, "image", void 0);
-    __decorate$a([
+    __decorate$b([
         Property,
-        __metadata$a("design:type", String)
+        __metadata$b("design:type", String)
     ], Image.prototype, "imageUrl", void 0);
-    __decorate$a([
+    __decorate$b([
         Property,
-        __metadata$a("design:type", String)
+        __metadata$b("design:type", String)
     ], Image.prototype, "imageFilePath", void 0);
-    __decorate$a([
+    __decorate$b([
         Property,
-        __metadata$a("design:type", String)
+        __metadata$b("design:type", String)
     ], Image.prototype, "imagePath", void 0);
-    __decorate$a([
+    __decorate$b([
         Property,
-        __metadata$a("design:type", String)
+        __metadata$b("design:type", String)
     ], Image.prototype, "imageRes", void 0);
-    __decorate$a([
+    __decorate$b([
         Property,
-        __metadata$a("design:type", String)
+        __metadata$b("design:type", String)
     ], Image.prototype, "imageBase64", void 0);
-    __decorate$a([
+    __decorate$b([
         Property,
-        __metadata$a("design:type", Number)
+        __metadata$b("design:type", Number)
     ], Image.prototype, "scaleType", void 0);
-    __decorate$a([
+    __decorate$b([
         Property,
-        __metadata$a("design:type", Boolean)
+        __metadata$b("design:type", Boolean)
     ], Image.prototype, "isBlur", void 0);
-    __decorate$a([
+    __decorate$b([
         Property,
-        __metadata$a("design:type", String)
+        __metadata$b("design:type", String)
     ], Image.prototype, "placeHolderImage", void 0);
-    __decorate$a([
+    __decorate$b([
         Property,
-        __metadata$a("design:type", String)
+        __metadata$b("design:type", String)
     ], Image.prototype, "placeHolderImageBase64", void 0);
-    __decorate$a([
+    __decorate$b([
         Property,
-        __metadata$a("design:type", Color
+        __metadata$b("design:type", Color
         /**
          * Display while image is failed to load
          * It can be file name in local path
          */
         )
     ], Image.prototype, "placeHolderColor", void 0);
-    __decorate$a([
+    __decorate$b([
         Property,
-        __metadata$a("design:type", String)
+        __metadata$b("design:type", String)
     ], Image.prototype, "errorImage", void 0);
-    __decorate$a([
+    __decorate$b([
         Property,
-        __metadata$a("design:type", String)
+        __metadata$b("design:type", String)
     ], Image.prototype, "errorImageBase64", void 0);
-    __decorate$a([
+    __decorate$b([
         Property,
-        __metadata$a("design:type", Color)
+        __metadata$b("design:type", Color)
     ], Image.prototype, "errorColor", void 0);
-    __decorate$a([
+    __decorate$b([
         Property,
-        __metadata$a("design:type", Function)
+        __metadata$b("design:type", Function)
     ], Image.prototype, "loadCallback", void 0);
-    __decorate$a([
+    __decorate$b([
         Property,
-        __metadata$a("design:type", Number)
+        __metadata$b("design:type", Number)
     ], Image.prototype, "imageScale", void 0);
-    __decorate$a([
+    __decorate$b([
         Property,
-        __metadata$a("design:type", Object)
+        __metadata$b("design:type", Object)
     ], Image.prototype, "stretchInset", void 0);
     return Image;
 }(View));
@@ -2355,7 +2355,7 @@ function image(config) {
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-var __extends$c = (undefined && undefined.__extends) || (function () {
+var __extends$d = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -2370,13 +2370,13 @@ var __extends$c = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate$9 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$a = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") { r = Reflect.decorate(decorators, target, key, desc); }
     else { for (var i = decorators.length - 1; i >= 0; i--) { if (d = decorators[i]) { r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r; } } }
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$9 = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$a = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
 var __read$1 = (undefined && undefined.__read) || function (o, n) {
@@ -2405,22 +2405,22 @@ var __spreadArray$1 = (undefined && undefined.__spreadArray) || function (to, fr
     return to.concat(ar || Array.prototype.slice.call(from));
 };
 var ListItem = /** @class */ (function (_super) {
-    __extends$c(ListItem, _super);
+    __extends$d(ListItem, _super);
     function ListItem() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    __decorate$9([
+    __decorate$a([
         Property,
-        __metadata$9("design:type", String)
+        __metadata$a("design:type", String)
     ], ListItem.prototype, "identifier", void 0);
-    __decorate$9([
+    __decorate$a([
         Property,
-        __metadata$9("design:type", Array)
+        __metadata$a("design:type", Array)
     ], ListItem.prototype, "actions", void 0);
     return ListItem;
 }(Stack));
 var List = /** @class */ (function (_super) {
-    __extends$c(List, _super);
+    __extends$d(List, _super);
     function List() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.cachedViews = new Map;
@@ -2476,49 +2476,49 @@ var List = /** @class */ (function (_super) {
         }
         return _super.prototype.toModel.call(this);
     };
-    __decorate$9([
+    __decorate$a([
         Property,
-        __metadata$9("design:type", Object)
+        __metadata$a("design:type", Object)
     ], List.prototype, "itemCount", void 0);
-    __decorate$9([
+    __decorate$a([
         Property,
-        __metadata$9("design:type", Function)
+        __metadata$a("design:type", Function)
     ], List.prototype, "renderItem", void 0);
-    __decorate$9([
+    __decorate$a([
         Property,
-        __metadata$9("design:type", Object)
+        __metadata$a("design:type", Object)
     ], List.prototype, "batchCount", void 0);
-    __decorate$9([
+    __decorate$a([
         Property,
-        __metadata$9("design:type", Function)
+        __metadata$a("design:type", Function)
     ], List.prototype, "onLoadMore", void 0);
-    __decorate$9([
+    __decorate$a([
         Property,
-        __metadata$9("design:type", Boolean)
+        __metadata$a("design:type", Boolean)
     ], List.prototype, "loadMore", void 0);
-    __decorate$9([
+    __decorate$a([
         Property,
-        __metadata$9("design:type", ListItem)
+        __metadata$a("design:type", ListItem)
     ], List.prototype, "loadMoreView", void 0);
-    __decorate$9([
+    __decorate$a([
         Property,
-        __metadata$9("design:type", Function)
+        __metadata$a("design:type", Function)
     ], List.prototype, "onScroll", void 0);
-    __decorate$9([
+    __decorate$a([
         Property,
-        __metadata$9("design:type", Function)
+        __metadata$a("design:type", Function)
     ], List.prototype, "onScrollEnd", void 0);
-    __decorate$9([
+    __decorate$a([
         Property,
-        __metadata$9("design:type", Number)
+        __metadata$a("design:type", Number)
     ], List.prototype, "scrolledPosition", void 0);
-    __decorate$9([
+    __decorate$a([
         Property,
-        __metadata$9("design:type", Boolean)
+        __metadata$a("design:type", Boolean)
     ], List.prototype, "scrollable", void 0);
-    __decorate$9([
+    __decorate$a([
         Property,
-        __metadata$9("design:type", Boolean)
+        __metadata$a("design:type", Boolean)
     ], List.prototype, "bounces", void 0);
     return List;
 }(Superview));
@@ -2544,7 +2544,7 @@ function listItem(item, config) {
     });
 }
 
-var __extends$b = (undefined && undefined.__extends) || (function () {
+var __extends$c = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -2559,28 +2559,28 @@ var __extends$b = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate$8 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$9 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") { r = Reflect.decorate(decorators, target, key, desc); }
     else { for (var i = decorators.length - 1; i >= 0; i--) { if (d = decorators[i]) { r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r; } } }
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$8 = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$9 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
 var SlideItem = /** @class */ (function (_super) {
-    __extends$b(SlideItem, _super);
+    __extends$c(SlideItem, _super);
     function SlideItem() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    __decorate$8([
+    __decorate$9([
         Property,
-        __metadata$8("design:type", String)
+        __metadata$9("design:type", String)
     ], SlideItem.prototype, "identifier", void 0);
     return SlideItem;
 }(Stack));
 var Slider = /** @class */ (function (_super) {
-    __extends$b(Slider, _super);
+    __extends$c(Slider, _super);
     function Slider() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.cachedViews = new Map;
@@ -2611,33 +2611,33 @@ var Slider = /** @class */ (function (_super) {
     Slider.prototype.getSlidedPage = function (context) {
         return this.nativeChannel(context, "getSlidedPage")();
     };
-    __decorate$8([
+    __decorate$9([
         Property,
-        __metadata$8("design:type", Object)
+        __metadata$9("design:type", Object)
     ], Slider.prototype, "itemCount", void 0);
-    __decorate$8([
+    __decorate$9([
         Property,
-        __metadata$8("design:type", Function)
+        __metadata$9("design:type", Function)
     ], Slider.prototype, "renderPage", void 0);
-    __decorate$8([
+    __decorate$9([
         Property,
-        __metadata$8("design:type", Object)
+        __metadata$9("design:type", Object)
     ], Slider.prototype, "batchCount", void 0);
-    __decorate$8([
+    __decorate$9([
         Property,
-        __metadata$8("design:type", Function)
+        __metadata$9("design:type", Function)
     ], Slider.prototype, "onPageSlided", void 0);
-    __decorate$8([
+    __decorate$9([
         Property,
-        __metadata$8("design:type", Boolean)
+        __metadata$9("design:type", Boolean)
     ], Slider.prototype, "loop", void 0);
-    __decorate$8([
+    __decorate$9([
         Property,
-        __metadata$8("design:type", Boolean)
+        __metadata$9("design:type", Boolean)
     ], Slider.prototype, "scrollable", void 0);
-    __decorate$8([
+    __decorate$9([
         Property,
-        __metadata$8("design:type", Boolean)
+        __metadata$9("design:type", Boolean)
     ], Slider.prototype, "bounces", void 0);
     return Slider;
 }(Superview));
@@ -2665,6 +2665,87 @@ function slideItem(item, config) {
     });
 }
 
+var __extends$b = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) { if (Object.prototype.hasOwnProperty.call(b, p)) { d[p] = b[p]; } } };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            { throw new TypeError("Class extends value " + String(b) + " is not a constructor or null"); }
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __decorate$8 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") { r = Reflect.decorate(decorators, target, key, desc); }
+    else { for (var i = decorators.length - 1; i >= 0; i--) { if (d = decorators[i]) { r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r; } } }
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata$8 = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
+};
+function scroller(content, config) {
+    return (new Scroller).also(function (v) {
+        v.layoutConfig = layoutConfig().fit();
+        if (config) {
+            v.apply(config);
+        }
+        v.content = content;
+    });
+}
+var Scroller = /** @class */ (function (_super) {
+    __extends$b(Scroller, _super);
+    function Scroller() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Scroller.prototype.allSubviews = function () {
+        return [this.content];
+    };
+    Scroller.prototype.toModel = function () {
+        this.dirtyProps.content = this.content.viewId;
+        return _super.prototype.toModel.call(this);
+    };
+    Scroller.prototype.scrollTo = function (context, offset, animated) {
+        return this.nativeChannel(context, "scrollTo")({ offset: offset, animated: animated });
+    };
+    Scroller.prototype.scrollBy = function (context, offset, animated) {
+        return this.nativeChannel(context, "scrollBy")({ offset: offset, animated: animated });
+    };
+    Object.defineProperty(Scroller.prototype, "innerElement", {
+        set: function (e) {
+            this.content = e;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    __decorate$8([
+        Property,
+        __metadata$8("design:type", Object)
+    ], Scroller.prototype, "contentOffset", void 0);
+    __decorate$8([
+        Property,
+        __metadata$8("design:type", Function)
+    ], Scroller.prototype, "onScroll", void 0);
+    __decorate$8([
+        Property,
+        __metadata$8("design:type", Function)
+    ], Scroller.prototype, "onScrollEnd", void 0);
+    __decorate$8([
+        Property,
+        __metadata$8("design:type", Boolean)
+    ], Scroller.prototype, "scrollable", void 0);
+    __decorate$8([
+        Property,
+        __metadata$8("design:type", Boolean)
+    ], Scroller.prototype, "bounces", void 0);
+    return Scroller;
+}(Superview));
+
 var __extends$a = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -2689,89 +2770,8 @@ var __decorate$7 = (undefined && undefined.__decorate) || function (decorators, 
 var __metadata$7 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
-function scroller(content, config) {
-    return (new Scroller).also(function (v) {
-        v.layoutConfig = layoutConfig().fit();
-        if (config) {
-            v.apply(config);
-        }
-        v.content = content;
-    });
-}
-var Scroller = /** @class */ (function (_super) {
-    __extends$a(Scroller, _super);
-    function Scroller() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    Scroller.prototype.allSubviews = function () {
-        return [this.content];
-    };
-    Scroller.prototype.toModel = function () {
-        this.dirtyProps.content = this.content.viewId;
-        return _super.prototype.toModel.call(this);
-    };
-    Scroller.prototype.scrollTo = function (context, offset, animated) {
-        return this.nativeChannel(context, "scrollTo")({ offset: offset, animated: animated });
-    };
-    Scroller.prototype.scrollBy = function (context, offset, animated) {
-        return this.nativeChannel(context, "scrollBy")({ offset: offset, animated: animated });
-    };
-    Object.defineProperty(Scroller.prototype, "innerElement", {
-        set: function (e) {
-            this.content = e;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    __decorate$7([
-        Property,
-        __metadata$7("design:type", Object)
-    ], Scroller.prototype, "contentOffset", void 0);
-    __decorate$7([
-        Property,
-        __metadata$7("design:type", Function)
-    ], Scroller.prototype, "onScroll", void 0);
-    __decorate$7([
-        Property,
-        __metadata$7("design:type", Function)
-    ], Scroller.prototype, "onScrollEnd", void 0);
-    __decorate$7([
-        Property,
-        __metadata$7("design:type", Boolean)
-    ], Scroller.prototype, "scrollable", void 0);
-    __decorate$7([
-        Property,
-        __metadata$7("design:type", Boolean)
-    ], Scroller.prototype, "bounces", void 0);
-    return Scroller;
-}(Superview));
-
-var __extends$9 = (undefined && undefined.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) { if (Object.prototype.hasOwnProperty.call(b, p)) { d[p] = b[p]; } } };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        if (typeof b !== "function" && b !== null)
-            { throw new TypeError("Class extends value " + String(b) + " is not a constructor or null"); }
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __decorate$6 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") { r = Reflect.decorate(decorators, target, key, desc); }
-    else { for (var i = decorators.length - 1; i >= 0; i--) { if (d = decorators[i]) { r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r; } } }
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata$6 = (undefined && undefined.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
-};
 var Refreshable = /** @class */ (function (_super) {
-    __extends$9(Refreshable, _super);
+    __extends$a(Refreshable, _super);
     function Refreshable() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -2812,9 +2812,9 @@ var Refreshable = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
-    __decorate$6([
+    __decorate$7([
         Property,
-        __metadata$6("design:type", Function)
+        __metadata$7("design:type", Function)
     ], Refreshable.prototype, "onRefresh", void 0);
     return Refreshable;
 }(Superview));
@@ -2918,7 +2918,7 @@ exports.Display = void 0;
     Display[Display["NONE"] = 1] = "NONE";
 })(exports.Display || (exports.Display = {}));
 
-var __extends$8 = (undefined && undefined.__extends) || (function () {
+var __extends$9 = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -2965,7 +2965,7 @@ exports.jsx = void 0;
     }
     jsx.createElement = createElement;
     var Fragment = /** @class */ (function (_super) {
-        __extends$8(Fragment, _super);
+        __extends$9(Fragment, _super);
         function Fragment() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
@@ -2974,7 +2974,7 @@ exports.jsx = void 0;
     jsx.Fragment = Fragment;
 })(exports.jsx || (exports.jsx = {}));
 
-var __extends$7 = (undefined && undefined.__extends) || (function () {
+var __extends$8 = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -2989,13 +2989,13 @@ var __extends$7 = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate$5 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$6 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") { r = Reflect.decorate(decorators, target, key, desc); }
     else { for (var i = decorators.length - 1; i >= 0; i--) { if (d = decorators[i]) { r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r; } } }
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$5 = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$6 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
 var __read = (undefined && undefined.__read) || function (o, n) {
@@ -3024,22 +3024,22 @@ var __spreadArray = (undefined && undefined.__spreadArray) || function (to, from
     return to.concat(ar || Array.prototype.slice.call(from));
 };
 var FlowLayoutItem = /** @class */ (function (_super) {
-    __extends$7(FlowLayoutItem, _super);
+    __extends$8(FlowLayoutItem, _super);
     function FlowLayoutItem() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    __decorate$5([
+    __decorate$6([
         Property,
-        __metadata$5("design:type", String)
+        __metadata$6("design:type", String)
     ], FlowLayoutItem.prototype, "identifier", void 0);
-    __decorate$5([
+    __decorate$6([
         Property,
-        __metadata$5("design:type", Boolean)
+        __metadata$6("design:type", Boolean)
     ], FlowLayoutItem.prototype, "fullSpan", void 0);
     return FlowLayoutItem;
 }(Stack));
 var FlowLayout = /** @class */ (function (_super) {
-    __extends$7(FlowLayout, _super);
+    __extends$8(FlowLayout, _super);
     function FlowLayout() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.cachedViews = new Map;
@@ -3092,57 +3092,57 @@ var FlowLayout = /** @class */ (function (_super) {
         }
         return _super.prototype.toModel.call(this);
     };
-    __decorate$5([
+    __decorate$6([
         Property,
-        __metadata$5("design:type", Object)
+        __metadata$6("design:type", Object)
     ], FlowLayout.prototype, "columnCount", void 0);
-    __decorate$5([
+    __decorate$6([
         Property,
-        __metadata$5("design:type", Number)
+        __metadata$6("design:type", Number)
     ], FlowLayout.prototype, "columnSpace", void 0);
-    __decorate$5([
+    __decorate$6([
         Property,
-        __metadata$5("design:type", Number)
+        __metadata$6("design:type", Number)
     ], FlowLayout.prototype, "rowSpace", void 0);
-    __decorate$5([
+    __decorate$6([
         Property,
-        __metadata$5("design:type", Object)
+        __metadata$6("design:type", Object)
     ], FlowLayout.prototype, "itemCount", void 0);
-    __decorate$5([
+    __decorate$6([
         Property,
-        __metadata$5("design:type", Function)
+        __metadata$6("design:type", Function)
     ], FlowLayout.prototype, "renderItem", void 0);
-    __decorate$5([
+    __decorate$6([
         Property,
-        __metadata$5("design:type", Object)
+        __metadata$6("design:type", Object)
     ], FlowLayout.prototype, "batchCount", void 0);
-    __decorate$5([
+    __decorate$6([
         Property,
-        __metadata$5("design:type", Function)
+        __metadata$6("design:type", Function)
     ], FlowLayout.prototype, "onLoadMore", void 0);
-    __decorate$5([
+    __decorate$6([
         Property,
-        __metadata$5("design:type", Boolean)
+        __metadata$6("design:type", Boolean)
     ], FlowLayout.prototype, "loadMore", void 0);
-    __decorate$5([
+    __decorate$6([
         Property,
-        __metadata$5("design:type", FlowLayoutItem)
+        __metadata$6("design:type", FlowLayoutItem)
     ], FlowLayout.prototype, "loadMoreView", void 0);
-    __decorate$5([
+    __decorate$6([
         Property,
-        __metadata$5("design:type", Function)
+        __metadata$6("design:type", Function)
     ], FlowLayout.prototype, "onScroll", void 0);
-    __decorate$5([
+    __decorate$6([
         Property,
-        __metadata$5("design:type", Function)
+        __metadata$6("design:type", Function)
     ], FlowLayout.prototype, "onScrollEnd", void 0);
-    __decorate$5([
+    __decorate$6([
         Property,
-        __metadata$5("design:type", Boolean)
+        __metadata$6("design:type", Boolean)
     ], FlowLayout.prototype, "scrollable", void 0);
-    __decorate$5([
+    __decorate$6([
         Property,
-        __metadata$5("design:type", Boolean)
+        __metadata$6("design:type", Boolean)
     ], FlowLayout.prototype, "bounces", void 0);
     return FlowLayout;
 }(Superview));
@@ -3170,6 +3170,160 @@ function flowItem(item, config) {
     });
 }
 
+var __extends$7 = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) { if (Object.prototype.hasOwnProperty.call(b, p)) { d[p] = b[p]; } } };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            { throw new TypeError("Class extends value " + String(b) + " is not a constructor or null"); }
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __decorate$5 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") { r = Reflect.decorate(decorators, target, key, desc); }
+    else { for (var i = decorators.length - 1; i >= 0; i--) { if (d = decorators[i]) { r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r; } } }
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata$5 = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
+};
+exports.ReturnKeyType = void 0;
+(function (ReturnKeyType) {
+    ReturnKeyType[ReturnKeyType["Default"] = 0] = "Default";
+    ReturnKeyType[ReturnKeyType["Done"] = 1] = "Done";
+    ReturnKeyType[ReturnKeyType["Search"] = 2] = "Search";
+    ReturnKeyType[ReturnKeyType["Next"] = 3] = "Next";
+    ReturnKeyType[ReturnKeyType["Go"] = 4] = "Go";
+    ReturnKeyType[ReturnKeyType["Send"] = 5] = "Send";
+})(exports.ReturnKeyType || (exports.ReturnKeyType = {}));
+var Input = /** @class */ (function (_super) {
+    __extends$7(Input, _super);
+    function Input() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Input.prototype.getText = function (context) {
+        return this.nativeChannel(context, 'getText')();
+    };
+    Input.prototype.setSelection = function (context, start, end) {
+        if (end === void 0) { end = start; }
+        return this.nativeChannel(context, 'setSelection')({
+            start: start,
+            end: end,
+        });
+    };
+    Input.prototype.getSelection = function (context) {
+        return this.nativeChannel(context, 'getSelection')();
+    };
+    Input.prototype.requestFocus = function (context) {
+        return this.nativeChannel(context, 'requestFocus')();
+    };
+    Input.prototype.releaseFocus = function (context) {
+        return this.nativeChannel(context, 'releaseFocus')();
+    };
+    __decorate$5([
+        InconsistProperty,
+        __metadata$5("design:type", String)
+    ], Input.prototype, "text", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", Color)
+    ], Input.prototype, "textColor", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", Number)
+    ], Input.prototype, "textSize", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", String)
+    ], Input.prototype, "font", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", String)
+    ], Input.prototype, "hintText", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", String)
+    ], Input.prototype, "hintFont", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", Number)
+    ], Input.prototype, "inputType", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", Color)
+    ], Input.prototype, "hintTextColor", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", Boolean)
+    ], Input.prototype, "multiline", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", Gravity)
+    ], Input.prototype, "textAlignment", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", Function)
+    ], Input.prototype, "onTextChange", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", Function)
+    ], Input.prototype, "onFocusChange", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", Number)
+    ], Input.prototype, "maxLength", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", Boolean)
+    ], Input.prototype, "password", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", Boolean)
+    ], Input.prototype, "editable", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", Number)
+    ], Input.prototype, "returnKeyType", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", Function)
+    ], Input.prototype, "onSubmitEditing", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", Boolean)
+    ], Input.prototype, "enableHorizontalScrollBar", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", Boolean)
+    ], Input.prototype, "enableVerticalScrollBar", void 0);
+    __decorate$5([
+        Property,
+        __metadata$5("design:type", Function)
+    ], Input.prototype, "beforeTextChange", void 0);
+    return Input;
+}(View));
+exports.InputType = void 0;
+(function (InputType) {
+    InputType[InputType["Default"] = 0] = "Default";
+    InputType[InputType["Number"] = 1] = "Number";
+    InputType[InputType["Decimal"] = 2] = "Decimal";
+    InputType[InputType["Alphabet"] = 3] = "Alphabet";
+    InputType[InputType["Phone"] = 4] = "Phone";
+})(exports.InputType || (exports.InputType = {}));
+function input(config) {
+    var ret = new Input;
+    ret.layoutConfig = layoutConfig().just();
+    ret.apply(config);
+    return ret;
+}
+
 var __extends$6 = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -3194,135 +3348,35 @@ var __decorate$4 = (undefined && undefined.__decorate) || function (decorators, 
 var __metadata$4 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
-exports.ReturnKeyType = void 0;
-(function (ReturnKeyType) {
-    ReturnKeyType[ReturnKeyType["Default"] = 0] = "Default";
-    ReturnKeyType[ReturnKeyType["Done"] = 1] = "Done";
-    ReturnKeyType[ReturnKeyType["Search"] = 2] = "Search";
-    ReturnKeyType[ReturnKeyType["Next"] = 3] = "Next";
-    ReturnKeyType[ReturnKeyType["Go"] = 4] = "Go";
-    ReturnKeyType[ReturnKeyType["Send"] = 5] = "Send";
-})(exports.ReturnKeyType || (exports.ReturnKeyType = {}));
-var Input = /** @class */ (function (_super) {
-    __extends$6(Input, _super);
-    function Input() {
+var NestedSlider = /** @class */ (function (_super) {
+    __extends$6(NestedSlider, _super);
+    function NestedSlider() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    Input.prototype.getText = function (context) {
-        return this.nativeChannel(context, 'getText')();
+    NestedSlider.prototype.addSlideItem = function (view) {
+        this.addChild(view);
     };
-    Input.prototype.setSelection = function (context, start, end) {
-        if (end === void 0) { end = start; }
-        return this.nativeChannel(context, 'setSelection')({
-            start: start,
-            end: end,
-        });
+    NestedSlider.prototype.slidePage = function (context, page, smooth) {
+        if (smooth === void 0) { smooth = false; }
+        return this.nativeChannel(context, "slidePage")({ page: page, smooth: smooth });
     };
-    Input.prototype.getSelection = function (context) {
-        return this.nativeChannel(context, 'getSelection')();
+    NestedSlider.prototype.getSlidedPage = function (context) {
+        return this.nativeChannel(context, "getSlidedPage")();
     };
-    Input.prototype.requestFocus = function (context) {
-        return this.nativeChannel(context, 'requestFocus')();
-    };
-    Input.prototype.releaseFocus = function (context) {
-        return this.nativeChannel(context, 'releaseFocus')();
-    };
-    __decorate$4([
-        InconsistProperty,
-        __metadata$4("design:type", String)
-    ], Input.prototype, "text", void 0);
-    __decorate$4([
-        Property,
-        __metadata$4("design:type", Color)
-    ], Input.prototype, "textColor", void 0);
-    __decorate$4([
-        Property,
-        __metadata$4("design:type", Number)
-    ], Input.prototype, "textSize", void 0);
-    __decorate$4([
-        Property,
-        __metadata$4("design:type", String)
-    ], Input.prototype, "font", void 0);
-    __decorate$4([
-        Property,
-        __metadata$4("design:type", String)
-    ], Input.prototype, "hintText", void 0);
-    __decorate$4([
-        Property,
-        __metadata$4("design:type", String)
-    ], Input.prototype, "hintFont", void 0);
-    __decorate$4([
-        Property,
-        __metadata$4("design:type", Number)
-    ], Input.prototype, "inputType", void 0);
-    __decorate$4([
-        Property,
-        __metadata$4("design:type", Color)
-    ], Input.prototype, "hintTextColor", void 0);
-    __decorate$4([
-        Property,
-        __metadata$4("design:type", Boolean)
-    ], Input.prototype, "multiline", void 0);
-    __decorate$4([
-        Property,
-        __metadata$4("design:type", Gravity)
-    ], Input.prototype, "textAlignment", void 0);
     __decorate$4([
         Property,
         __metadata$4("design:type", Function)
-    ], Input.prototype, "onTextChange", void 0);
-    __decorate$4([
-        Property,
-        __metadata$4("design:type", Function)
-    ], Input.prototype, "onFocusChange", void 0);
-    __decorate$4([
-        Property,
-        __metadata$4("design:type", Number)
-    ], Input.prototype, "maxLength", void 0);
+    ], NestedSlider.prototype, "onPageSlided", void 0);
     __decorate$4([
         Property,
         __metadata$4("design:type", Boolean)
-    ], Input.prototype, "password", void 0);
+    ], NestedSlider.prototype, "scrollable", void 0);
     __decorate$4([
         Property,
         __metadata$4("design:type", Boolean)
-    ], Input.prototype, "editable", void 0);
-    __decorate$4([
-        Property,
-        __metadata$4("design:type", Number)
-    ], Input.prototype, "returnKeyType", void 0);
-    __decorate$4([
-        Property,
-        __metadata$4("design:type", Function)
-    ], Input.prototype, "onSubmitEditing", void 0);
-    __decorate$4([
-        Property,
-        __metadata$4("design:type", Boolean)
-    ], Input.prototype, "enableHorizontalScrollBar", void 0);
-    __decorate$4([
-        Property,
-        __metadata$4("design:type", Boolean)
-    ], Input.prototype, "enableVerticalScrollBar", void 0);
-    __decorate$4([
-        Property,
-        __metadata$4("design:type", Function)
-    ], Input.prototype, "beforeTextChange", void 0);
-    return Input;
-}(View));
-exports.InputType = void 0;
-(function (InputType) {
-    InputType[InputType["Default"] = 0] = "Default";
-    InputType[InputType["Number"] = 1] = "Number";
-    InputType[InputType["Decimal"] = 2] = "Decimal";
-    InputType[InputType["Alphabet"] = 3] = "Alphabet";
-    InputType[InputType["Phone"] = 4] = "Phone";
-})(exports.InputType || (exports.InputType = {}));
-function input(config) {
-    var ret = new Input;
-    ret.layoutConfig = layoutConfig().just();
-    ret.apply(config);
-    return ret;
-}
+    ], NestedSlider.prototype, "bounces", void 0);
+    return NestedSlider;
+}(Group));
 
 var __extends$5 = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -3348,35 +3402,39 @@ var __decorate$3 = (undefined && undefined.__decorate) || function (decorators, 
 var __metadata$3 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
-var NestedSlider = /** @class */ (function (_super) {
-    __extends$5(NestedSlider, _super);
-    function NestedSlider() {
+/**
+ * @deprecated The class should not be used, please use GestureContainer class instead
+ */
+var Draggable = /** @class */ (function (_super) {
+    __extends$5(Draggable, _super);
+    function Draggable() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    NestedSlider.prototype.addSlideItem = function (view) {
-        this.addChild(view);
-    };
-    NestedSlider.prototype.slidePage = function (context, page, smooth) {
-        if (smooth === void 0) { smooth = false; }
-        return this.nativeChannel(context, "slidePage")({ page: page, smooth: smooth });
-    };
-    NestedSlider.prototype.getSlidedPage = function (context) {
-        return this.nativeChannel(context, "getSlidedPage")();
-    };
     __decorate$3([
         Property,
         __metadata$3("design:type", Function)
-    ], NestedSlider.prototype, "onPageSlided", void 0);
-    __decorate$3([
-        Property,
-        __metadata$3("design:type", Boolean)
-    ], NestedSlider.prototype, "scrollable", void 0);
-    __decorate$3([
-        Property,
-        __metadata$3("design:type", Boolean)
-    ], NestedSlider.prototype, "bounces", void 0);
-    return NestedSlider;
-}(Group));
+    ], Draggable.prototype, "onDrag", void 0);
+    return Draggable;
+}(Stack));
+/**
+ * @deprecated The function should not be used, please use gestureContainer function instead
+ */
+function draggable(views, config) {
+    var ret = new Draggable;
+    ret.layoutConfig = layoutConfig().fit();
+    if (views instanceof View) {
+        ret.addChild(views);
+    }
+    else {
+        views.forEach(function (e) {
+            ret.addChild(e);
+        });
+    }
+    if (config) {
+        ret.apply(config);
+    }
+    return ret;
+}
 
 var __extends$4 = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -3402,37 +3460,39 @@ var __decorate$2 = (undefined && undefined.__decorate) || function (decorators, 
 var __metadata$2 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
-/**
- * @deprecated The class should not be used, please use GestureContainer class instead
- */
-var Draggable = /** @class */ (function (_super) {
-    __extends$4(Draggable, _super);
-    function Draggable() {
+var Switch = /** @class */ (function (_super) {
+    __extends$4(Switch, _super);
+    function Switch() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     __decorate$2([
+        InconsistProperty,
+        __metadata$2("design:type", Boolean)
+    ], Switch.prototype, "state", void 0);
+    __decorate$2([
         Property,
         __metadata$2("design:type", Function)
-    ], Draggable.prototype, "onDrag", void 0);
-    return Draggable;
-}(Stack));
-/**
- * @deprecated The function should not be used, please use gestureContainer function instead
- */
-function draggable(views, config) {
-    var ret = new Draggable;
-    ret.layoutConfig = layoutConfig().fit();
-    if (views instanceof View) {
-        ret.addChild(views);
-    }
-    else {
-        views.forEach(function (e) {
-            ret.addChild(e);
-        });
-    }
-    if (config) {
-        ret.apply(config);
-    }
+    ], Switch.prototype, "onSwitch", void 0);
+    __decorate$2([
+        Property,
+        __metadata$2("design:type", Color)
+    ], Switch.prototype, "offTintColor", void 0);
+    __decorate$2([
+        Property,
+        __metadata$2("design:type", Color)
+    ], Switch.prototype, "onTintColor", void 0);
+    __decorate$2([
+        Property,
+        __metadata$2("design:type", Color)
+    ], Switch.prototype, "thumbTintColor", void 0);
+    return Switch;
+}(View));
+function switchView(config) {
+    var ret = new Switch;
+    ret.layoutConfig = layoutConfig().just();
+    ret.width = 50;
+    ret.height = 30;
+    ret.apply(config);
     return ret;
 }
 
@@ -3460,39 +3520,78 @@ var __decorate$1 = (undefined && undefined.__decorate) || function (decorators, 
 var __metadata$1 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
-var Switch = /** @class */ (function (_super) {
-    __extends$3(Switch, _super);
-    function Switch() {
+exports.SwipeOrientation = void 0;
+(function (SwipeOrientation) {
+    SwipeOrientation[SwipeOrientation["LEFT"] = 0] = "LEFT";
+    SwipeOrientation[SwipeOrientation["RIGHT"] = 1] = "RIGHT";
+    SwipeOrientation[SwipeOrientation["TOP"] = 2] = "TOP";
+    SwipeOrientation[SwipeOrientation["BOTTOM"] = 3] = "BOTTOM";
+})(exports.SwipeOrientation || (exports.SwipeOrientation = {}));
+var GestureContainer = /** @class */ (function (_super) {
+    __extends$3(GestureContainer, _super);
+    function GestureContainer() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     __decorate$1([
-        InconsistProperty,
-        __metadata$1("design:type", Boolean)
-    ], Switch.prototype, "state", void 0);
+        Property,
+        __metadata$1("design:type", Function)
+    ], GestureContainer.prototype, "onSingleTap", void 0);
     __decorate$1([
         Property,
         __metadata$1("design:type", Function)
-    ], Switch.prototype, "onSwitch", void 0);
+    ], GestureContainer.prototype, "onDoubleTap", void 0);
     __decorate$1([
         Property,
-        __metadata$1("design:type", Color)
-    ], Switch.prototype, "offTintColor", void 0);
+        __metadata$1("design:type", Function)
+    ], GestureContainer.prototype, "onLongPress", void 0);
     __decorate$1([
         Property,
-        __metadata$1("design:type", Color)
-    ], Switch.prototype, "onTintColor", void 0);
+        __metadata$1("design:type", Function)
+    ], GestureContainer.prototype, "onPinch", void 0);
     __decorate$1([
         Property,
-        __metadata$1("design:type", Color)
-    ], Switch.prototype, "thumbTintColor", void 0);
-    return Switch;
-}(View));
-function switchView(config) {
-    var ret = new Switch;
-    ret.layoutConfig = layoutConfig().just();
-    ret.width = 50;
-    ret.height = 30;
-    ret.apply(config);
+        __metadata$1("design:type", Function)
+    ], GestureContainer.prototype, "onPan", void 0);
+    __decorate$1([
+        Property,
+        __metadata$1("design:type", Function)
+    ], GestureContainer.prototype, "onRotate", void 0);
+    __decorate$1([
+        Property,
+        __metadata$1("design:type", Function)
+    ], GestureContainer.prototype, "onSwipe", void 0);
+    __decorate$1([
+        Property,
+        __metadata$1("design:type", Function)
+    ], GestureContainer.prototype, "onTouchDown", void 0);
+    __decorate$1([
+        Property,
+        __metadata$1("design:type", Function)
+    ], GestureContainer.prototype, "onTouchMove", void 0);
+    __decorate$1([
+        Property,
+        __metadata$1("design:type", Function)
+    ], GestureContainer.prototype, "onTouchUp", void 0);
+    __decorate$1([
+        Property,
+        __metadata$1("design:type", Function)
+    ], GestureContainer.prototype, "onTouchCancel", void 0);
+    return GestureContainer;
+}(Stack));
+function gestureContainer(views, config) {
+    var ret = new GestureContainer;
+    ret.layoutConfig = layoutConfig().fit();
+    if (views instanceof View) {
+        ret.addChild(views);
+    }
+    else {
+        views.forEach(function (e) {
+            ret.addChild(e);
+        });
+    }
+    if (config) {
+        ret.apply(config);
+    }
     return ret;
 }
 
@@ -3520,66 +3619,23 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") { return Reflect.metadata(k, v); }
 };
-exports.SwipeOrientation = void 0;
-(function (SwipeOrientation) {
-    SwipeOrientation[SwipeOrientation["LEFT"] = 0] = "LEFT";
-    SwipeOrientation[SwipeOrientation["RIGHT"] = 1] = "RIGHT";
-    SwipeOrientation[SwipeOrientation["TOP"] = 2] = "TOP";
-    SwipeOrientation[SwipeOrientation["BOTTOM"] = 3] = "BOTTOM";
-})(exports.SwipeOrientation || (exports.SwipeOrientation = {}));
-var GestureContainer = /** @class */ (function (_super) {
-    __extends$2(GestureContainer, _super);
-    function GestureContainer() {
+var BlurEffect = /** @class */ (function (_super) {
+    __extends$2(BlurEffect, _super);
+    function BlurEffect() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     __decorate([
         Property,
-        __metadata("design:type", Function)
-    ], GestureContainer.prototype, "onSingleTap", void 0);
+        __metadata("design:type", Object)
+    ], BlurEffect.prototype, "effectiveRect", void 0);
     __decorate([
         Property,
-        __metadata("design:type", Function)
-    ], GestureContainer.prototype, "onDoubleTap", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", Function)
-    ], GestureContainer.prototype, "onLongPress", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", Function)
-    ], GestureContainer.prototype, "onPinch", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", Function)
-    ], GestureContainer.prototype, "onPan", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", Function)
-    ], GestureContainer.prototype, "onRotate", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", Function)
-    ], GestureContainer.prototype, "onSwipe", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", Function)
-    ], GestureContainer.prototype, "onTouchDown", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", Function)
-    ], GestureContainer.prototype, "onTouchMove", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", Function)
-    ], GestureContainer.prototype, "onTouchUp", void 0);
-    __decorate([
-        Property,
-        __metadata("design:type", Function)
-    ], GestureContainer.prototype, "onTouchCancel", void 0);
-    return GestureContainer;
+        __metadata("design:type", Number)
+    ], BlurEffect.prototype, "radius", void 0);
+    return BlurEffect;
 }(Stack));
-function gestureContainer(views, config) {
-    var ret = new GestureContainer;
+function blurEffect(views, config) {
+    var ret = new BlurEffect;
     ret.layoutConfig = layoutConfig().fit();
     if (views instanceof View) {
         ret.addChild(views);
@@ -4409,6 +4465,7 @@ exports.AssetResource = AssetResource;
 exports.BOTTOM = BOTTOM;
 exports.BackgroundColorAnimation = BackgroundColorAnimation;
 exports.Base64Resource = Base64Resource;
+exports.BlurEffect = BlurEffect;
 exports.BundleResource = BundleResource;
 exports.CENTER = CENTER;
 exports.CENTER_X = CENTER_X;
@@ -4470,6 +4527,7 @@ exports.ViewComponent = ViewComponent;
 exports.ViewHolder = ViewHolder;
 exports.ViewModel = ViewModel;
 exports.animate = animate;
+exports.blurEffect = blurEffect;
 exports.coordinator = coordinator;
 exports.createRef = createRef;
 exports.draggable = draggable;

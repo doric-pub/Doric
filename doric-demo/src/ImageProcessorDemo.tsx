@@ -13,6 +13,8 @@ import {
   loge,
   ViewComponent,
   HLayout,
+  Stack,
+  GestureContainer,
 } from "doric";
 import {
   binarization,
@@ -20,6 +22,7 @@ import {
   fastBlur,
   gaussianBlur,
   ostu,
+  pixelToRGBA,
   vampix,
 } from "./imageUtils";
 import { colors } from "./utils";
@@ -40,10 +43,7 @@ export class Label extends Text {
 export class ImageProcessorDemo extends Panel {
   build(root: Group): void {
     const iv = createRef<Image>();
-    // const imageUrl = "https://doric.pub/about/The_Parthenon_in_Athens.jpg";
-    const imageUrl =
-      "https://img-blog.csdn.net/20181022194542112?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzA0NjY1Mw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70";
-    //"https://doric.pub/logo.png";
+    const imageUrl = "https://doric.pub/about/The_Parthenon_in_Athens.jpg";
     <Scroller parent={root} layoutConfig={layoutConfig().most()}>
       <VLayout
         layoutConfig={layoutConfig().mostWidth().fitHeight()}
@@ -83,7 +83,173 @@ export class ImageProcessorDemo extends Panel {
         <VLayout
           layoutConfig={layoutConfig().mostWidth().fitHeight()}
           padding={{ left: 10, right: 10, top: 10, bottom: 10 }}
-          backgroundColor={colors[3].alpha(0.1)}
+          backgroundColor={colors[4].alpha(0.2)}
+          space={5}
+        >
+          <Text textSize={20}>透明度</Text>
+          {(() => {
+            const spinnerRef = createRef<Stack>();
+            const containerRef = createRef<GestureContainer>();
+            this.addOnRenderFinishedCallback(async () => {
+              const imageInfo = await iv.current.getImageInfo(context);
+              const pixels = await iv.current.getImagePixels(context);
+              const data = new Uint8Array(pixels);
+
+              async function changeAlpha(alpha: number) {
+                for (let i = 0; i < data.length - 4; i += 4) {
+                  data[i + 3] = alpha;
+                }
+                iv.current.imagePixels = {
+                  width: imageInfo.width,
+                  height: imageInfo.height,
+                  pixels: pixels,
+                };
+              }
+              const width = await containerRef.current.getWidth(this.context);
+              containerRef.current.onTouchDown = async (event) => {
+                spinnerRef.current.width = event.x;
+                await changeAlpha((1 - event.x / width) * 0xff);
+              };
+              containerRef.current.onTouchMove = async (event) => {
+                spinnerRef.current.width = event.x;
+                await changeAlpha((1 - event.x / width) * 0xff);
+              };
+            });
+            return (
+              <GestureContainer
+                layoutConfig={layoutConfig().mostWidth().fitHeight()}
+                ref={containerRef}
+                border={{
+                  width: 1,
+                  color: colors[0],
+                }}
+              >
+                <Stack
+                  ref={spinnerRef}
+                  backgroundColor={colors[4]}
+                  layoutConfig={layoutConfig().justWidth().justHeight()}
+                  height={40}
+                ></Stack>
+              </GestureContainer>
+            );
+          })()}
+        </VLayout>
+        <VLayout
+          layoutConfig={layoutConfig().mostWidth().fitHeight()}
+          padding={{ left: 10, right: 10, top: 10, bottom: 10 }}
+          backgroundColor={colors[4].alpha(0.2)}
+          space={5}
+        >
+          <Text textSize={20}>二值化</Text>
+          {(() => {
+            const spinnerRef = createRef<Stack>();
+            const containerRef = createRef<GestureContainer>();
+            this.addOnRenderFinishedCallback(async () => {
+              const imageInfo = await iv.current.getImageInfo(context);
+              const pixels = await iv.current.getImagePixels(context);
+              const data = new Uint32Array(pixels);
+              for (let i = 0; i < data.length; i++) {
+                let { r, g, b } = pixelToRGBA(data[i]);
+                data[i] = Math.floor(r * 0.2989 + g * 0.587 + b * 0.114);
+              }
+              async function binarizationImage(t: number) {
+                const arrayBuffer = pixels.slice(0);
+                const ret = new Uint32Array(arrayBuffer);
+                for (let i = 0; i < data.length; i++) {
+                  ret[i] = data[i] < t ? 0xff000000 : 0xffffffff;
+                }
+                iv.current.imagePixels = {
+                  width: imageInfo.width,
+                  height: imageInfo.height,
+                  pixels: arrayBuffer,
+                };
+              }
+              const width = await containerRef.current.getWidth(this.context);
+              containerRef.current.onTouchDown = async (event) => {
+                spinnerRef.current.width = event.x;
+                await binarizationImage((1 - event.x / width) * 0xff);
+              };
+              containerRef.current.onTouchMove = async (event) => {
+                spinnerRef.current.width = event.x;
+                await binarizationImage((1 - event.x / width) * 0xff);
+              };
+            });
+            return (
+              <GestureContainer
+                layoutConfig={layoutConfig().mostWidth().fitHeight()}
+                ref={containerRef}
+                border={{
+                  width: 1,
+                  color: colors[0],
+                }}
+              >
+                <Stack
+                  ref={spinnerRef}
+                  backgroundColor={colors[4]}
+                  layoutConfig={layoutConfig().justWidth().justHeight()}
+                  height={40}
+                ></Stack>
+              </GestureContainer>
+            );
+          })()}
+        </VLayout>
+        <VLayout
+          layoutConfig={layoutConfig().mostWidth().fitHeight()}
+          padding={{ left: 10, right: 10, top: 10, bottom: 10 }}
+          backgroundColor={colors[4].alpha(0.2)}
+          space={5}
+        >
+          <Text textSize={20}>模糊</Text>
+          {(() => {
+            const spinnerRef = createRef<Stack>();
+            const containerRef = createRef<GestureContainer>();
+            this.addOnRenderFinishedCallback(async () => {
+              const imageInfo = await iv.current.getImageInfo(context);
+              const rawPixels = await iv.current.getImagePixels(context);
+              async function blurEffect(radius: number) {
+                radius = Math.round(radius);
+                const buffer = rawPixels.slice(0);
+                const data = new Uint32Array(buffer);
+                fastBlur(data, imageInfo.width, imageInfo.height, radius);
+                iv.current.imagePixels = {
+                  width: imageInfo.width,
+                  height: imageInfo.height,
+                  pixels: buffer,
+                };
+              }
+              const width = await containerRef.current.getWidth(this.context);
+              containerRef.current.onTouchDown = async (event) => {
+                spinnerRef.current.width = event.x;
+                await blurEffect((event.x / width) * 100);
+              };
+              containerRef.current.onTouchMove = async (event) => {
+                spinnerRef.current.width = event.x;
+                await blurEffect((event.x / width) * 100);
+              };
+            });
+            return (
+              <GestureContainer
+                layoutConfig={layoutConfig().mostWidth().fitHeight()}
+                ref={containerRef}
+                border={{
+                  width: 1,
+                  color: colors[0],
+                }}
+              >
+                <Stack
+                  ref={spinnerRef}
+                  backgroundColor={colors[4]}
+                  layoutConfig={layoutConfig().justWidth().justHeight()}
+                  height={40}
+                ></Stack>
+              </GestureContainer>
+            );
+          })()}
+        </VLayout>
+        <VLayout
+          layoutConfig={layoutConfig().mostWidth().fitHeight()}
+          padding={{ left: 10, right: 10, top: 10, bottom: 10 }}
+          backgroundColor={colors[3].alpha(0.2)}
           space={5}
         >
           <Text textSize={20}>简单</Text>
@@ -102,7 +268,7 @@ export class ImageProcessorDemo extends Panel {
                 };
               }}
             >
-              黑白
+              灰度
             </Label>
             <Label
               layoutConfig={layoutConfig().just()}
@@ -129,7 +295,7 @@ export class ImageProcessorDemo extends Panel {
         <VLayout
           layoutConfig={layoutConfig().mostWidth().fitHeight()}
           padding={{ left: 10, right: 10, top: 10, bottom: 10 }}
-          backgroundColor={colors[2].alpha(0.1)}
+          backgroundColor={colors[4].alpha(0.2)}
           space={5}
         >
           <Text textSize={20}>模糊</Text>
@@ -171,7 +337,7 @@ export class ImageProcessorDemo extends Panel {
         <VLayout
           layoutConfig={layoutConfig().mostWidth().fitHeight()}
           padding={{ left: 10, right: 10, top: 10, bottom: 10 }}
-          backgroundColor={colors[3].alpha(0.1)}
+          backgroundColor={colors[3].alpha(0.2)}
           space={5}
         >
           <Text textSize={20}>二值化</Text>

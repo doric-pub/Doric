@@ -26,3 +26,4 @@ export * from './nestedSlider';
 export * from './draggable';
 export * from './switch';
 export * from './gesture';
+export * from './effect';

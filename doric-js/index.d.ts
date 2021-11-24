@@ -96,6 +96,7 @@ declare module 'doric/lib/src/widget/index.widget' {
     export * from 'doric/lib/src/widget/draggable';
     export * from 'doric/lib/src/widget/switch';
     export * from 'doric/lib/src/widget/gesture';
+    export * from 'doric/lib/src/widget/effect';
 }
 
 declare module 'doric/lib/src/native/index.native' {
@@ -1086,6 +1087,29 @@ declare module 'doric/lib/src/widget/gesture' {
             }) => void;
     }
     export function gestureContainer(views: View | View[], config?: Partial<GestureContainer>): GestureContainer;
+}
+
+declare module 'doric/lib/src/widget/effect' {
+    import { Stack } from "doric/lib/src/widget/layouts";
+    import { View } from "doric/lib/src/ui/view";
+    export class BlurEffect extends Stack {
+            /**
+                * Specify the effective rectangle.
+                * If not set, the default is the entire area.
+                */
+            effectiveRect?: {
+                    x: number;
+                    y: number;
+                    width: number;
+                    height: number;
+            };
+            /**
+                * Specify the radius of blur effect.
+                * If not set, the default is 15.
+                */
+            radius?: number;
+    }
+    export function blurEffect(views: View | View[], config?: Partial<BlurEffect>): BlurEffect;
 }
 
 declare module 'doric/lib/src/native/modal' {

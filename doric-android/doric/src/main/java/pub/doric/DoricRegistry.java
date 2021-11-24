@@ -47,6 +47,7 @@ import pub.doric.resource.DoricBase64Loader;
 import pub.doric.resource.DoricLocalLoader;
 import pub.doric.resource.DoricRemoteLoader;
 import pub.doric.resource.DoricResourceManager;
+import pub.doric.shader.BlurEffectViewNode;
 import pub.doric.shader.DraggableNode;
 import pub.doric.shader.GestureContainerNode;
 import pub.doric.shader.HLayoutNode;
@@ -130,6 +131,7 @@ public class DoricRegistry {
         this.registerViewNode(SwitchNode.class);
         this.registerViewNode(FlexNode.class);
         this.registerViewNode(GestureContainerNode.class);
+        this.registerViewNode(BlurEffectViewNode.class);
         this.getResourceManager().registerLoader(new DoricAndroidLoader("drawable"));
         this.getResourceManager().registerLoader(new DoricAndroidLoader("raw"));
         this.getResourceManager().registerLoader(new DoricAssetsLoader());

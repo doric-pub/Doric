@@ -80,29 +80,34 @@ public class AeroEffectView extends DoricLayer {
         }
         Bitmap blurredBitmap;
         int radius = 15;
-        float scale = Math.max(blurringBitmap.getWidth() / 50f, blurringBitmap.getHeight() / 50f);
+        Paint paint = new Paint();
+        paint.setAntiAlias(true);
+        float scale = Math.max(1, Math.max(blurringBitmap.getWidth() / 50f, blurringBitmap.getHeight() / 50f));
         int scaledWidth = (int) (blurringBitmap.getWidth() / scale);
         int scaledHeight = (int) (blurringBitmap.getHeight() / scale);
         if (mScaledBitmap == null
                 || mScaledBitmap.getWidth() != scaledWidth
                 || mScaledBitmap.getHeight() != scaledHeight) {
-            mScaledBitmap = Bitmap.createScaledBitmap(blurringBitmap, scaledWidth, scaledHeight, true);
+            mScaledBitmap = Bitmap.createBitmap(scaledWidth, scaledHeight, Bitmap.Config.ARGB_8888);
             mScaledCanvas = new Canvas(mScaledBitmap);
-        } else {
-            mScaledCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-            Matrix matrix = new Matrix();
-            matrix.setScale(1 / scale, 1 / scale);
-            mScaledCanvas.drawBitmap(blurringBitmap, matrix, null);
         }
+        mScaledCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+        mScaledCanvas.drawBitmap(blurringBitmap,
+                new Rect(0, 0, blurringBitmap.getWidth(), blurringBitmap.getHeight()),
+                new Rect(0, 0, scaledWidth, scaledHeight),
+                paint);
         blurredBitmap = DoricUtils.blur(getContext(), mScaledBitmap, radius);
         if (mEffectiveRect != null) {
+            mFullCanvas.save();
+            mFullCanvas.clipRect(mEffectiveRect);
+            mFullCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+            mFullCanvas.restore();
             mFullCanvas.drawBitmap(blurredBitmap,
                     new Rect(0, 0, blurredBitmap.getWidth(), blurredBitmap.getHeight()),
                     mEffectiveRect,
-                    null);
+                    paint);
         } else {
-            Paint paint = new Paint();
-            paint.setAntiAlias(true);
+            mFullCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
             mFullCanvas.drawBitmap(blurredBitmap,
                     new Rect(0, 0, blurredBitmap.getWidth(), blurredBitmap.getHeight()),
                     new Rect(0, 0, mFullBitmap.getWidth(), mFullBitmap.getHeight()),

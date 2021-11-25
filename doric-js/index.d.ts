@@ -1105,7 +1105,8 @@ declare module 'doric/lib/src/widget/effect' {
             };
             /**
                 * Specify the radius of blur effect.
-                * If not set, the default is 15.
+                * If not set, the default value is 15.
+                * Suggested value is from 1 to 25.
                 */
             radius?: number;
     }

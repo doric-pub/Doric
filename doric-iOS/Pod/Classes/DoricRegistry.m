@@ -61,6 +61,7 @@
 #import "DoricLocalResourceLoader.h"
 #import "DoricRemoteResourceLoader.h"
 #import "DoricCommonBundleResourceLoader.h"
+#import "DoricBlurEffectViewNode.h"
 
 @interface DoricRegistry ()
 
@@ -133,6 +134,7 @@
     [self registerViewNode:DoricSwitchNode.class withName:@"Switch"];
     [self registerViewNode:DoricFlexNode.class withName:@"FlexLayout"];
     [self registerViewNode:DoricGestureContainerNode.class withName:@"GestureContainer"];
+    [self registerViewNode:DoricBlurEffectViewNode .class withName:@"BlurEffect"];
 
     [self.loaderManager registerLoader:[[DoricBundleResourceLoader alloc]
             initWithResourceType:@"mainBundle"

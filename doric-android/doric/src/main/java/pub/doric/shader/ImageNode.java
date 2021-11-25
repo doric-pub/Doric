@@ -20,8 +20,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.BitmapDrawable;
@@ -42,6 +44,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.DrawableImageViewTarget;
@@ -54,8 +58,8 @@ import com.github.pengfeizhou.jscore.JSValue;
 
 import java.io.File;
 import java.io.InputStream;
+import java.security.MessageDigest;
 
-import jp.wasabeef.glide.transformations.BlurTransformation;
 import pub.doric.DoricContext;
 import pub.doric.async.AsyncResult;
 import pub.doric.extension.bridge.DoricMethod;
@@ -254,7 +258,29 @@ public class ImageNode extends ViewNode<ImageView> {
             if (isBlur) {
                 requestBuilder = requestBuilder
                         .apply(RequestOptions
-                                .bitmapTransform(new BlurTransformation(25, 3)));
+                                .bitmapTransform(new BitmapTransformation() {
+                                    @Override
+                                    protected Bitmap transform(@NonNull BitmapPool pool, @NonNull Bitmap toTransform, int outWidth, int outHeight) {
+                                        int width = toTransform.getWidth();
+                                        int height = toTransform.getHeight();
+                                        int sampling = 3;
+                                        int scaledWidth = width / sampling;
+                                        int scaledHeight = height / sampling;
+                                        Bitmap bitmap = pool.get(scaledWidth, scaledHeight, Bitmap.Config.ARGB_8888);
+                                        bitmap.setDensity(toTransform.getDensity());
+                                        Canvas canvas = new Canvas(bitmap);
+                                        canvas.scale(1 / (float) sampling, 1 / (float) sampling);
+                                        Paint paint = new Paint();
+                                        paint.setFlags(Paint.FILTER_BITMAP_FLAG);
+                                        canvas.drawBitmap(toTransform, 0, 0, paint);
+                                        return DoricUtils.blur(getContext(), bitmap, 25);
+                                    }
+
+                                    @Override
+                                    public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
+                                        messageDigest.update(("DoricBlurTransform").getBytes(CHARSET));
+                                    }
+                                }));
             }
             Drawable placeHolderDrawable = getPlaceHolderDrawable();
 

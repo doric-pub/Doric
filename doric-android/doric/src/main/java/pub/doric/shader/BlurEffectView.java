@@ -21,12 +21,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
-import android.os.Build;
 
 import androidx.annotation.NonNull;
-import jp.wasabeef.glide.transformations.internal.FastBlur;
-import jp.wasabeef.glide.transformations.internal.RSBlur;
-import jp.wasabeef.glide.transformations.internal.SupportRSBlur;
+import pub.doric.utils.DoricUtils;
 
 /**
  * @Description: This could blur what's contained.
@@ -86,23 +83,7 @@ public class BlurEffectView extends DoricLayer {
         } else {
             blurringBitmap = mFullBitmap;
         }
-        Bitmap blurredBitmap;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2
-                && mRadius <= 25) {
-            try {
-                blurredBitmap = SupportRSBlur.blur(getContext(), blurringBitmap, mRadius);
-            } catch (NoClassDefFoundError e) {
-                try {
-                    blurredBitmap = RSBlur.blur(getContext(), blurringBitmap, mRadius);
-                } catch (Exception ee) {
-                    blurredBitmap = FastBlur.blur(blurringBitmap, mRadius, true);
-                }
-            } catch (Exception e) {
-                blurredBitmap = FastBlur.blur(blurringBitmap, mRadius, true);
-            }
-        } else {
-            blurredBitmap = FastBlur.blur(blurringBitmap, mRadius, true);
-        }
+        Bitmap blurredBitmap = DoricUtils.blur(getContext(), blurringBitmap, mRadius);
         Bitmap retBitmap;
         if (mEffectiveRect != null) {
             mFullCanvas.drawBitmap(blurredBitmap, mDstRect, mEffectiveRect, null);

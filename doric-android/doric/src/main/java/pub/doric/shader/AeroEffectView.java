@@ -19,14 +19,13 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
-import android.os.Build;
 
 import androidx.annotation.NonNull;
-import jp.wasabeef.glide.transformations.internal.FastBlur;
-import jp.wasabeef.glide.transformations.internal.RSBlur;
-import jp.wasabeef.glide.transformations.internal.SupportRSBlur;
+import pub.doric.utils.DoricUtils;
 
 /**
  * @Description: This could blur what's contained.
@@ -41,6 +40,9 @@ public class AeroEffectView extends DoricLayer {
     private Bitmap mRectBitmap = null;
     private Canvas mRectCanvas = null;
     private Rect mDstRect = null;
+
+    private Bitmap mScaledBitmap = null;
+    private Canvas mScaledCanvas = null;
 
     public AeroEffectView(@NonNull Context context) {
         super(context);
@@ -78,29 +80,34 @@ public class AeroEffectView extends DoricLayer {
         }
         Bitmap blurredBitmap;
         int radius = 15;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            try {
-                blurredBitmap = SupportRSBlur.blur(getContext(), blurringBitmap, radius);
-            } catch (NoClassDefFoundError e) {
-                try {
-                    blurredBitmap = RSBlur.blur(getContext(), blurringBitmap, radius);
-                } catch (Exception ee) {
-                    blurredBitmap = FastBlur.blur(blurringBitmap, radius, true);
-                }
-            } catch (Exception e) {
-                blurredBitmap = FastBlur.blur(blurringBitmap, radius, true);
-            }
+        float scale = Math.max(blurringBitmap.getWidth() / 50f, blurringBitmap.getHeight() / 50f);
+        int scaledWidth = (int) (blurringBitmap.getWidth() / scale);
+        int scaledHeight = (int) (blurringBitmap.getHeight() / scale);
+        if (mScaledBitmap == null
+                || mScaledBitmap.getWidth() != scaledWidth
+                || mScaledBitmap.getHeight() != scaledHeight) {
+            mScaledBitmap = Bitmap.createScaledBitmap(blurringBitmap, scaledWidth, scaledHeight, true);
+            mScaledCanvas = new Canvas(mScaledBitmap);
         } else {
-            blurredBitmap = FastBlur.blur(blurringBitmap, radius, true);
+            mScaledCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+            Matrix matrix = new Matrix();
+            matrix.setScale(1 / scale, 1 / scale);
+            mScaledCanvas.drawBitmap(blurringBitmap, matrix, null);
         }
-        Bitmap retBitmap;
+        blurredBitmap = DoricUtils.blur(getContext(), mScaledBitmap, radius);
         if (mEffectiveRect != null) {
-            mFullCanvas.drawBitmap(blurredBitmap, mDstRect, mEffectiveRect, null);
-            retBitmap = mFullBitmap;
+            mFullCanvas.drawBitmap(blurredBitmap,
+                    new Rect(0, 0, blurredBitmap.getWidth(), blurredBitmap.getHeight()),
+                    mEffectiveRect,
+                    null);
         } else {
-            retBitmap = blurredBitmap;
+            Paint paint = new Paint();
+            paint.setAntiAlias(true);
+            mFullCanvas.drawBitmap(blurredBitmap,
+                    new Rect(0, 0, blurredBitmap.getWidth(), blurredBitmap.getHeight()),
+                    new Rect(0, 0, mFullBitmap.getWidth(), mFullBitmap.getHeight()),
+                    paint);
         }
-
-        canvas.drawBitmap(retBitmap, 0, 0, null);
+        canvas.drawBitmap(mFullBitmap, 0, 0, null);
     }
 }

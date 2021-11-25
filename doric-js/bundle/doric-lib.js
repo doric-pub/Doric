@@ -2742,8 +2742,30 @@ __decorate([
     Property,
     __metadata("design:type", Number)
 ], BlurEffect.prototype, "radius", void 0);
+class AeroEffect extends Stack {
+}
+__decorate([
+    Property,
+    __metadata("design:type", Object)
+], AeroEffect.prototype, "effectiveRect", void 0);
 function blurEffect(views, config) {
     const ret = new BlurEffect;
+    ret.layoutConfig = layoutConfig().fit();
+    if (views instanceof View) {
+        ret.addChild(views);
+    }
+    else {
+        views.forEach(e => {
+            ret.addChild(e);
+        });
+    }
+    if (config) {
+        ret.apply(config);
+    }
+    return ret;
+}
+function aeroEffect(views, config) {
+    const ret = new AeroEffect;
     ret.layoutConfig = layoutConfig().fit();
     if (views instanceof View) {
         ret.addChild(views);
@@ -3407,6 +3429,7 @@ class ModularPanel extends Module {
     }
 }
 
+exports.AeroEffect = AeroEffect;
 exports.AlphaAnimation = AlphaAnimation;
 exports.AnimationSet = AnimationSet;
 exports.AssetResource = AssetResource;
@@ -3474,6 +3497,7 @@ exports.View = View;
 exports.ViewComponent = ViewComponent;
 exports.ViewHolder = ViewHolder;
 exports.ViewModel = ViewModel;
+exports.aeroEffect = aeroEffect;
 exports.animate = animate;
 exports.blurEffect = blurEffect;
 exports.coordinator = coordinator;

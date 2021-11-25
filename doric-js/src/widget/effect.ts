@@ -38,8 +38,40 @@ export class BlurEffect extends Stack {
     radius?: number
 }
 
+
+export class AeroEffect extends Stack {
+    /**
+     * Specify the effective rectangle.
+     * If not set, the default is the entire area.
+     */
+    @Property
+    effectiveRect?: {
+        x: number,
+        y: number,
+        width: number,
+        height: number,
+    }
+}
+
+
 export function blurEffect(views: View | View[], config?: Partial<BlurEffect>) {
     const ret = new BlurEffect
+    ret.layoutConfig = layoutConfig().fit()
+    if (views instanceof View) {
+        ret.addChild(views)
+    } else {
+        views.forEach(e => {
+            ret.addChild(e)
+        })
+    }
+    if (config) {
+        ret.apply(config)
+    }
+    return ret
+}
+
+export function aeroEffect(views: View | View[], config?: Partial<AeroEffect>) {
+    const ret = new AeroEffect
     ret.layoutConfig = layoutConfig().fit()
     if (views instanceof View) {
         ret.addChild(views)

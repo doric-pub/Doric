@@ -20,5 +20,5 @@
 #import <Foundation/Foundation.h>
 #import "DoricStackNode.h"
 
-@interface DoricAreoEffectViewNode : DoricStackNode
+@interface DoricAeroEffectViewNode : DoricStackNode
 @end

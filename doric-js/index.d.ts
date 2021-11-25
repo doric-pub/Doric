@@ -1110,7 +1110,20 @@ declare module 'doric/lib/src/widget/effect' {
                 */
             radius?: number;
     }
+    export class AeroEffect extends Stack {
+            /**
+                * Specify the effective rectangle.
+                * If not set, the default is the entire area.
+                */
+            effectiveRect?: {
+                    x: number;
+                    y: number;
+                    width: number;
+                    height: number;
+            };
+    }
     export function blurEffect(views: View | View[], config?: Partial<BlurEffect>): BlurEffect;
+    export function aeroEffect(views: View | View[], config?: Partial<AeroEffect>): AeroEffect;
 }
 
 declare module 'doric/lib/src/native/modal' {

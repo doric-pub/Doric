@@ -18,4 +18,17 @@ export declare class BlurEffect extends Stack {
      */
     radius?: number;
 }
+export declare class AeroEffect extends Stack {
+    /**
+     * Specify the effective rectangle.
+     * If not set, the default is the entire area.
+     */
+    effectiveRect?: {
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+    };
+}
 export declare function blurEffect(views: View | View[], config?: Partial<BlurEffect>): BlurEffect;
+export declare function aeroEffect(views: View | View[], config?: Partial<AeroEffect>): AeroEffect;

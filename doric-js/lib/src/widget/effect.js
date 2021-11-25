@@ -35,8 +35,30 @@ __decorate([
     Property,
     __metadata("design:type", Number)
 ], BlurEffect.prototype, "radius", void 0);
+export class AeroEffect extends Stack {
+}
+__decorate([
+    Property,
+    __metadata("design:type", Object)
+], AeroEffect.prototype, "effectiveRect", void 0);
 export function blurEffect(views, config) {
     const ret = new BlurEffect;
+    ret.layoutConfig = layoutConfig().fit();
+    if (views instanceof View) {
+        ret.addChild(views);
+    }
+    else {
+        views.forEach(e => {
+            ret.addChild(e);
+        });
+    }
+    if (config) {
+        ret.apply(config);
+    }
+    return ret;
+}
+export function aeroEffect(views, config) {
+    const ret = new AeroEffect;
     ret.layoutConfig = layoutConfig().fit();
     if (views instanceof View) {
         ret.addChild(views);

@@ -17,13 +17,13 @@
 // Created by pengfei.zhou on 2021/11/24.
 //
 
-#import "DoricAreoEffectViewNode.h"
+#import "DoricAeroEffectViewNode.h"
 
-@interface DoricAreoEffectViewNode ()
+@interface DoricAeroEffectViewNode ()
 @property(nonatomic, strong) UIVisualEffectView *visualEffectView;
 @end
 
-@implementation DoricAreoEffectViewNode
+@implementation DoricAeroEffectViewNode
 
 - (UIView *)build {
     UIView *ret = [super build];

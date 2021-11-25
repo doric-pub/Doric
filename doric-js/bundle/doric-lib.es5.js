@@ -3634,8 +3634,35 @@ var BlurEffect = /** @class */ (function (_super) {
     ], BlurEffect.prototype, "radius", void 0);
     return BlurEffect;
 }(Stack));
+var AeroEffect = /** @class */ (function (_super) {
+    __extends$2(AeroEffect, _super);
+    function AeroEffect() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    __decorate([
+        Property,
+        __metadata("design:type", Object)
+    ], AeroEffect.prototype, "effectiveRect", void 0);
+    return AeroEffect;
+}(Stack));
 function blurEffect(views, config) {
     var ret = new BlurEffect;
+    ret.layoutConfig = layoutConfig().fit();
+    if (views instanceof View) {
+        ret.addChild(views);
+    }
+    else {
+        views.forEach(function (e) {
+            ret.addChild(e);
+        });
+    }
+    if (config) {
+        ret.apply(config);
+    }
+    return ret;
+}
+function aeroEffect(views, config) {
+    var ret = new AeroEffect;
     ret.layoutConfig = layoutConfig().fit();
     if (views instanceof View) {
         ret.addChild(views);
@@ -4459,6 +4486,7 @@ var ModularPanel = /** @class */ (function (_super) {
     return ModularPanel;
 }(Module));
 
+exports.AeroEffect = AeroEffect;
 exports.AlphaAnimation = AlphaAnimation;
 exports.AnimationSet = AnimationSet;
 exports.AssetResource = AssetResource;
@@ -4526,6 +4554,7 @@ exports.View = View;
 exports.ViewComponent = ViewComponent;
 exports.ViewHolder = ViewHolder;
 exports.ViewModel = ViewModel;
+exports.aeroEffect = aeroEffect;
 exports.animate = animate;
 exports.blurEffect = blurEffect;
 exports.coordinator = coordinator;

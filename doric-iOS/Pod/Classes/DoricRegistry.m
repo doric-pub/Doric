@@ -62,7 +62,7 @@
 #import "DoricRemoteResourceLoader.h"
 #import "DoricCommonBundleResourceLoader.h"
 #import "DoricBlurEffectViewNode.h"
-#import "DoricAreoEffectViewNode.h"
+#import "DoricAeroEffectViewNode.h"
 
 @interface DoricRegistry ()
 
@@ -136,7 +136,7 @@
     [self registerViewNode:DoricFlexNode.class withName:@"FlexLayout"];
     [self registerViewNode:DoricGestureContainerNode.class withName:@"GestureContainer"];
     [self registerViewNode:DoricBlurEffectViewNode.class withName:@"BlurEffect"];
-    [self registerViewNode:DoricAreoEffectViewNode.class withName:@"AreoEffect"];
+    [self registerViewNode:DoricAeroEffectViewNode.class withName:@"AeroEffect"];
 
     [self.loaderManager registerLoader:[[DoricBundleResourceLoader alloc]
             initWithResourceType:@"mainBundle"

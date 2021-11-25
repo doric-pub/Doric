@@ -19,7 +19,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
@@ -44,6 +43,8 @@ public class AeroEffectView extends DoricLayer {
     private Bitmap mScaledBitmap = null;
     private Canvas mScaledCanvas = null;
 
+    private String mStyle = null;
+
     public AeroEffectView(@NonNull Context context) {
         super(context);
     }
@@ -51,6 +52,11 @@ public class AeroEffectView extends DoricLayer {
     public void setEffectiveRect(Rect rect) {
         this.mEffectiveRect = rect;
         this.mDstRect = new Rect(0, 0, rect.width(), rect.height());
+        invalidate();
+    }
+
+    public void setStyle(String style) {
+        this.mStyle = style;
         invalidate();
     }
 
@@ -97,6 +103,11 @@ public class AeroEffectView extends DoricLayer {
                 new Rect(0, 0, scaledWidth, scaledHeight),
                 paint);
         blurredBitmap = DoricUtils.blur(getContext(), mScaledBitmap, radius);
+        if ("dark".equals(mStyle)) {
+            mScaledCanvas.drawColor(0x66000000, PorterDuff.Mode.SRC_OVER);
+        } else if ("extraLight".equals(mStyle)) {
+            mScaledCanvas.drawColor(0x99ffffff, PorterDuff.Mode.SRC_OVER);
+        }
         if (mEffectiveRect != null) {
             mFullCanvas.save();
             mFullCanvas.clipRect(mEffectiveRect);

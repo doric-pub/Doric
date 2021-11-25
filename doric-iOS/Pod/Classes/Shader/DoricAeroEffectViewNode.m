@@ -27,8 +27,8 @@
 
 - (UIView *)build {
     UIView *ret = [super build];
-    UIVisualEffect *endEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-    self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:endEffect];
+    UIVisualEffect *effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+    self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:effect];
     [ret addSubview:self.visualEffectView];
     self.visualEffectView.doricLayout.widthSpec = DoricLayoutMost;
     self.visualEffectView.doricLayout.heightSpec = DoricLayoutMost;
@@ -47,6 +47,15 @@
         self.visualEffectView.doricLayout.height = height;
         self.visualEffectView.doricLayout.marginLeft = x;
         self.visualEffectView.doricLayout.marginTop = y;
+    } else if ([name isEqualToString:@"style"]) {
+        UIBlurEffectStyle style = UIBlurEffectStyleLight;
+        if ([prop isEqualToString:@"dark"]) {
+            style = UIBlurEffectStyleDark;
+        } else if ([prop isEqualToString:@"extraLight"]) {
+            style = UIBlurEffectStyleExtraLight;
+        }
+        UIVisualEffect *effect = [UIBlurEffect effectWithStyle:style];
+        self.visualEffectView.effect = effect;
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }

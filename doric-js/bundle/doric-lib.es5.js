@@ -3643,6 +3643,10 @@ var AeroEffect = /** @class */ (function (_super) {
         Property,
         __metadata("design:type", Object)
     ], AeroEffect.prototype, "effectiveRect", void 0);
+    __decorate([
+        Property,
+        __metadata("design:type", String)
+    ], AeroEffect.prototype, "style", void 0);
     return AeroEffect;
 }(Stack));
 function blurEffect(views, config) {

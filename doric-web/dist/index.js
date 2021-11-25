@@ -4323,6 +4323,10 @@ __decorate([
     Property,
     __metadata("design:type", Object)
 ], AeroEffect.prototype, "effectiveRect", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", String)
+], AeroEffect.prototype, "style", void 0);
 function blurEffect(views, config) {
     const ret = new BlurEffect;
     ret.layoutConfig = layoutConfig().fit();

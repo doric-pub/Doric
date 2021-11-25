@@ -1121,6 +1121,11 @@ declare module 'doric/lib/src/widget/effect' {
                     width: number;
                     height: number;
             };
+            /**
+                * Specify the area of the view is lighter or darker than the underlying view.
+                * If not set, the default is light.
+                */
+            style?: "light" | "dark" | "extraLight";
     }
     export function blurEffect(views: View | View[], config?: Partial<BlurEffect>): BlurEffect;
     export function aeroEffect(views: View | View[], config?: Partial<AeroEffect>): AeroEffect;

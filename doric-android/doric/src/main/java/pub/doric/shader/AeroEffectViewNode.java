@@ -51,6 +51,12 @@ public class AeroEffectViewNode extends StackNode {
                 int height = DoricUtils.dp2px(prop.asObject().getProperty("height").asNumber().toFloat());
                 ((AeroEffectView) view).setEffectiveRect(new Rect(x, y, x + width, y + height));
             }
+        } else if ("style".equals(name)) {
+            if(prop.isString()){
+                ((AeroEffectView) view).setStyle(prop.asString().value());
+            }else{
+                ((AeroEffectView) view).setStyle(null);
+            }
         } else {
             super.blend(view, name, prop);
         }

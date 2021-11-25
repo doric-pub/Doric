@@ -29,6 +29,11 @@ export declare class AeroEffect extends Stack {
         width: number;
         height: number;
     };
+    /**
+     * Specify the area of the view is lighter or darker than the underlying view.
+     * If not set, the default is light.
+     */
+    style?: "light" | "dark" | "extraLight";
 }
 export declare function blurEffect(views: View | View[], config?: Partial<BlurEffect>): BlurEffect;
 export declare function aeroEffect(views: View | View[], config?: Partial<AeroEffect>): AeroEffect;

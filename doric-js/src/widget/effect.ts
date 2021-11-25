@@ -51,6 +51,12 @@ export class AeroEffect extends Stack {
         width: number,
         height: number,
     }
+    /**
+     * Specify the area of the view is lighter or darker than the underlying view.
+     * If not set, the default is light.
+     */
+    @Property
+    style?: "light" | "dark" | "extraLight"
 }
 
 

@@ -38,22 +38,18 @@ public class AeroEffectViewNode extends StackNode {
 
     @Override
     protected FrameLayout build() {
-        return new BlurEffectView(getContext());
+        return new AeroEffectView(getContext());
     }
 
     @Override
     protected void blend(FrameLayout view, String name, JSValue prop) {
-        if ("radius".equals(name)) {
-            if (prop.isNumber()) {
-                ((BlurEffectView) view).setRadius(prop.asNumber().toInt());
-            }
-        } else if ("effectiveRect".equals(name)) {
+        if ("effectiveRect".equals(name)) {
             if (prop.isObject()) {
                 int x = DoricUtils.dp2px(prop.asObject().getProperty("x").asNumber().toFloat());
                 int y = DoricUtils.dp2px(prop.asObject().getProperty("x").asNumber().toFloat());
                 int width = DoricUtils.dp2px(prop.asObject().getProperty("width").asNumber().toFloat());
                 int height = DoricUtils.dp2px(prop.asObject().getProperty("height").asNumber().toFloat());
-                ((BlurEffectView) view).setEffectiveRect(new Rect(x, y, x + width, y + height));
+                ((AeroEffectView) view).setEffectiveRect(new Rect(x, y, x + width, y + height));
             }
         } else {
             super.blend(view, name, prop);

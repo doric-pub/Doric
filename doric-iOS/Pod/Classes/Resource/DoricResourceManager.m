@@ -18,10 +18,10 @@
 //
 
 #import "DoricResourceManager.h"
+#import "DoricContext.h"
 
 @interface DoricResourceManager ()
 @property(nonatomic, strong) NSMutableDictionary <NSString *, id <DoricResourceLoader>> *loaders;
-@property(nonatomic, strong) NSMapTable <NSString *, __kindof DoricResource *> *cachedResources;
 @property(nonatomic, strong) dispatch_queue_t mapQueue;
 @end
 
@@ -30,9 +30,6 @@
     if (self = [super init]) {
         _loaders = [NSMutableDictionary new];
         _mapQueue = dispatch_queue_create("doric.resource", DISPATCH_QUEUE_SERIAL);
-        _cachedResources = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsCopyIn
-                                                     valueOptions:NSPointerFunctionsWeakMemory
-                                                         capacity:0];
     }
     return self;
 }
@@ -56,11 +53,11 @@
     NSString *resId = resource[@"resId"];
     __block __kindof DoricResource *doricResource;
     dispatch_sync(self.mapQueue, ^() {
-        doricResource = [self.cachedResources objectForKey:resId];
+        doricResource = [context.cachedResources objectForKey:resId];
         if (!doricResource) {
             id <DoricResourceLoader> loader = self.loaders[type];
             doricResource = [loader load:identifier withContext:context];
-            [self.cachedResources setObject:doricResource forKey:resId];
+            [context.cachedResources setObject:doricResource forKey:resId];
         }
     });
     return doricResource;

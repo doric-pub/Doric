@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.Callable;
 
 import pub.doric.async.AsyncResult;
@@ -42,6 +43,7 @@ import pub.doric.navbar.IDoricNavBar;
 import pub.doric.navigator.IDoricNavigator;
 import pub.doric.performance.DoricPerformanceProfile;
 import pub.doric.plugin.DoricJavaPlugin;
+import pub.doric.resource.DoricResource;
 import pub.doric.shader.RootNode;
 import pub.doric.shader.ViewNode;
 import pub.doric.utils.DoricConstant;
@@ -66,6 +68,7 @@ public class DoricContext {
     private final Map<String, Map<String, ViewNode<?>>> mHeadNodes = new HashMap<>();
     private final DoricPerformanceProfile performanceProfile;
     private final Map<String, Animator> animators = new HashMap<>();
+    private final Map<String, DoricResource> cachedResources = new WeakHashMap<>();
 
     public Collection<ViewNode<?>> allHeadNodes(String type) {
         Map<String, ViewNode<?>> headNode = mHeadNodes.get(type);
@@ -216,6 +219,7 @@ public class DoricContext {
                             javaPlugin.onTearDown();
                         }
                         mPluginMap.clear();
+                        cachedResources.clear();
                         return null;
                     }
                 }, ThreadMode.UI);
@@ -354,5 +358,13 @@ public class DoricContext {
 
     public void removeAnimator(String animatorId) {
         animators.remove(animatorId);
+    }
+
+    public void cacheResource(String resId, DoricResource doricResource) {
+        this.cachedResources.put(resId, doricResource);
+    }
+
+    public DoricResource getCachedResource(String resId) {
+        return this.cachedResources.get(resId);
     }
 }

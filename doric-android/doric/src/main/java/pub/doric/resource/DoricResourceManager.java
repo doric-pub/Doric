@@ -19,7 +19,6 @@ import com.github.pengfeizhou.jscore.JSObject;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,7 +31,6 @@ import pub.doric.DoricContext;
  */
 public class DoricResourceManager {
     private final Map<String, DoricResourceLoader> mResourceLoaders = new HashMap<>();
-    private final Map<String, DoricResource> cachedResources = new WeakHashMap<>();
 
     public synchronized void registerLoader(DoricResourceLoader loader) {
         mResourceLoaders.put(loader.resourceType(), loader);
@@ -48,7 +46,7 @@ public class DoricResourceManager {
         String resId = resource.getProperty("resId").asString().value();
         String type = resource.getProperty("type").asString().value();
         String identifier = resource.getProperty("identifier").asString().value();
-        DoricResource doricResource = cachedResources.get(resId);
+        DoricResource doricResource = doricContext.getCachedResource(resId);
         if (doricResource == null) {
             if ("arrayBuffer".equals(type)) {
                 doricResource = new DoricArrayBufferResource(
@@ -59,7 +57,7 @@ public class DoricResourceManager {
                 DoricResourceLoader loader = mResourceLoaders.get(type);
                 if (loader != null) {
                     doricResource = loader.load(doricContext, identifier);
-                    cachedResources.put(resId, doricResource);
+                    doricContext.cacheResource(resId, doricResource);
                 }
             }
         }

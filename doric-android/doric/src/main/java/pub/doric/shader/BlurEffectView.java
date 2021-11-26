@@ -61,6 +61,9 @@ public class BlurEffectView extends DoricLayer {
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
+        if (canvas.getWidth() <= 0 || canvas.getHeight() <= 0) {
+            return;
+        }
         if (mFullBitmap == null
                 || mFullBitmap.getWidth() != canvas.getWidth()
                 || mFullBitmap.getHeight() != canvas.getHeight()) {

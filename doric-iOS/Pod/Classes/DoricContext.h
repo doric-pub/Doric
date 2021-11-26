@@ -48,6 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy) NSString *extra;
 @property(nonatomic, assign) BOOL destroyed;
 @property(nonatomic, strong) DoricPerformanceProfile *performanceProfile;
+@property(nonatomic, strong) NSMapTable <NSString *, __kindof DoricResource *> *cachedResources;
 
 - (instancetype)initWithScript:(NSString *)script source:(NSString *)source extra:(NSString *)extra;
 

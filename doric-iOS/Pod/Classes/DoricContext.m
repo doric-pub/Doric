@@ -42,6 +42,9 @@
         _headNodes = [NSMutableDictionary new];
         DoricRootNode *rootNode = [[DoricRootNode alloc] initWithContext:self];
         _rootNode = rootNode;
+        _cachedResources = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsCopyIn
+                                                     valueOptions:NSPointerFunctionsWeakMemory
+                                                         capacity:0];
         [self init:extra];
         [self callEntity:DORIC_ENTITY_CREATE withArgumentsArray:@[]];
     }
@@ -66,6 +69,7 @@
     [[DoricContextManager instance] destroyContext:self];
     [self callEntity:DORIC_ENTITY_DESTROY withArgumentsArray:@[]];
     [self.driver destroyContext:self.contextId];
+    [self.cachedResources removeAllObjects];
 }
 
 - (DoricAsyncResult *)callEntity:(NSString *)method, ... {

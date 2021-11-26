@@ -52,9 +52,9 @@ public class AeroEffectViewNode extends StackNode {
                 ((AeroEffectView) view).setEffectiveRect(new Rect(x, y, x + width, y + height));
             }
         } else if ("style".equals(name)) {
-            if(prop.isString()){
+            if (prop.isString()) {
                 ((AeroEffectView) view).setStyle(prop.asString().value());
-            }else{
+            } else {
                 ((AeroEffectView) view).setStyle(null);
             }
         } else {

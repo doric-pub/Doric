@@ -29,6 +29,7 @@
     UIView *ret = [super build];
     UIVisualEffect *effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
     self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:effect];
+    self.visualEffectView.userInteractionEnabled = NO;
     [ret addSubview:self.visualEffectView];
     self.visualEffectView.doricLayout.widthSpec = DoricLayoutMost;
     self.visualEffectView.doricLayout.heightSpec = DoricLayoutMost;

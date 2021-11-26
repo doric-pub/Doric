@@ -20,18 +20,52 @@
 #import <DoricExtensions.h>
 #import "DoricBlurEffectViewNode.h"
 
+
+@interface DoricBlurEffectView : UIVisualEffectView
+@property(nonatomic, strong) UIViewPropertyAnimator *animator;
+@property(nonatomic, assign) NSUInteger radius;
+@end
+
+@implementation DoricBlurEffectView
+- (instancetype)initWithEffect:(UIVisualEffect *)effect {
+    if (self = [super initWithEffect:effect]) {
+        _animator = [[UIViewPropertyAnimator alloc]
+                initWithDuration:1
+                           curve:UIViewAnimationCurveLinear
+                      animations:^{
+                          self.effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+                      }];
+        _animator.fractionComplete = MIN(1, MAX(0, 15.0f / 200));
+        if (@available(iOS 11, *)) {
+            _animator.pausesOnCompletion = YES;
+        }
+    }
+    return self;
+}
+
+- (void)didMoveToWindow {
+    [super didMoveToWindow];
+}
+
+- (void)setRadius:(NSUInteger)radius {
+    _radius = radius;
+    self.animator.fractionComplete = MIN(1, MAX(0, (radius / 200.f)));
+}
+
+- (void)dealloc {
+    [self.animator stopAnimation:YES];
+}
+@end
+
 @interface DoricBlurEffectViewNode ()
-@property(nonatomic, strong) UIVisualEffectView *visualEffectView;
+@property(nonatomic, strong) DoricBlurEffectView *visualEffectView;
 @end
 
 @implementation DoricBlurEffectViewNode
-
 - (UIView *)build {
     UIView *ret = [super build];
-    UIVisualEffect *endEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-
-    self.visualEffectView = [[UIVisualEffectView alloc] initWithEffect:endEffect];
-
+    self.visualEffectView = [[DoricBlurEffectView alloc] initWithEffect:nil];
+    self.visualEffectView.userInteractionEnabled = NO;
     [ret addSubview:self.visualEffectView];
     self.visualEffectView.doricLayout.widthSpec = DoricLayoutMost;
     self.visualEffectView.doricLayout.heightSpec = DoricLayoutMost;
@@ -40,7 +74,7 @@
 
 - (void)blendView:(UIView *)view forPropName:(NSString *)name propValue:(id)prop {
     if ([name isEqualToString:@"radius"]) {
-
+        self.visualEffectView.radius = ((NSNumber *) prop).unsignedIntValue;
     } else if ([name isEqualToString:@"effectiveRect"]) {
         NSUInteger x = ((NSNumber *) prop[@"x"]).unsignedIntegerValue;
         NSUInteger y = ((NSNumber *) prop[@"y"]).unsignedIntegerValue;

@@ -40,6 +40,22 @@ var doric = (function (exports) {
             return message.toString();
         }
     }
+    function log$9() {
+        var arguments$1 = arguments;
+
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments$1[_i];
+        }
+        var out = "";
+        for (var i = 0; i < arguments.length; i++) {
+            if (i > 0) {
+                out += ',';
+            }
+            out += toString$2(arguments$1[i]);
+        }
+        nativeLog('d', out);
+    }
     function loge() {
         var arguments$1 = arguments;
 
@@ -55,6 +71,22 @@ var doric = (function (exports) {
             out += toString$2(arguments$1[i]);
         }
         nativeLog('e', out);
+    }
+    function logw() {
+        var arguments$1 = arguments;
+
+        var message = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            message[_i] = arguments$1[_i];
+        }
+        var out = "";
+        for (var i = 0; i < arguments.length; i++) {
+            if (i > 0) {
+                out += ',';
+            }
+            out += toString$2(arguments$1[i]);
+        }
+        nativeLog('w', out);
     }
 
     var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
@@ -1462,6 +1494,13 @@ var doric = (function (exports) {
         };
     }
     var global$2 = Function('return this')();
+    if (!Reflect.has(global$2, "console")) {
+        Reflect.set(global$2, "console", {
+            warn: logw,
+            error: loge,
+            log: log$9
+        });
+    }
     var __timerId__ = 1;
     var timerInfos = new Map;
     var _setTimeout = global$2.setTimeout;

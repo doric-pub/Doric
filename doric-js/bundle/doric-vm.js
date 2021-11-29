@@ -1487,6 +1487,13 @@ function jsObtainEntry(contextId) {
     };
 }
 const global$2 = Function('return this')();
+if (!Reflect.has(global$2, "console")) {
+    Reflect.set(global$2, "console", {
+        warn: logw,
+        error: loge,
+        log: log
+    });
+}
 let __timerId__ = 1;
 const timerInfos = new Map;
 const _setTimeout = global$2.setTimeout;

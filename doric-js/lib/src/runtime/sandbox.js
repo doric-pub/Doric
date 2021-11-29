@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { uniqueId } from "../util/uniqueId";
-import { loge } from "../util/log";
+import { loge, logw, log } from "../util/log";
 import "reflect-metadata";
 function hookBeforeNativeCall(context) {
     if (context) {
@@ -276,6 +276,13 @@ export function jsObtainEntry(contextId) {
     };
 }
 const global = Function('return this')();
+if (!Reflect.has(global, "console")) {
+    Reflect.set(global, "console", {
+        warn: logw,
+        error: loge,
+        log: log
+    });
+}
 let __timerId__ = 1;
 const timerInfos = new Map;
 const _setTimeout = global.setTimeout;

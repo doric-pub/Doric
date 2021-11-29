@@ -40,6 +40,16 @@ var doric = (function (exports) {
             return message.toString();
         }
     }
+    function log(...args) {
+        let out = "";
+        for (let i = 0; i < arguments.length; i++) {
+            if (i > 0) {
+                out += ',';
+            }
+            out += toString(arguments[i]);
+        }
+        nativeLog('d', out);
+    }
     function loge(...message) {
         let out = "";
         for (let i = 0; i < arguments.length; i++) {
@@ -49,6 +59,16 @@ var doric = (function (exports) {
             out += toString(arguments[i]);
         }
         nativeLog('e', out);
+    }
+    function logw(...message) {
+        let out = "";
+        for (let i = 0; i < arguments.length; i++) {
+            if (i > 0) {
+                out += ',';
+            }
+            out += toString(arguments[i]);
+        }
+        nativeLog('w', out);
     }
 
     /*! *****************************************************************************
@@ -1458,6 +1478,13 @@ var doric = (function (exports) {
         };
     }
     const global$1 = Function('return this')();
+    if (!Reflect.has(global$1, "console")) {
+        Reflect.set(global$1, "console", {
+            warn: logw,
+            error: loge,
+            log: log
+        });
+    }
     let __timerId__ = 1;
     const timerInfos = new Map;
     const _setTimeout = global$1.setTimeout;

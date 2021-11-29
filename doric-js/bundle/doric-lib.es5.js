@@ -2316,9 +2316,6 @@ var Image = /** @class */ (function (_super) {
     Image.prototype.getImagePixels = function (context) {
         return this.nativeChannel(context, "getImagePixels")();
     };
-<<<<<<< HEAD
-    __decorate$b([
-=======
     Image.prototype.setImagePixels = function (context, imagePixels) {
         if (Environment.platform === 'iOS') {
             imagePixels.pixels = context.function2Id(function () {
@@ -2338,8 +2335,7 @@ var Image = /** @class */ (function (_super) {
         }
         return ret;
     };
-    __decorate$a([
->>>>>>> 60c3fff0... iOS: implement Image Pixel
+    __decorate$b([
         Property,
         __metadata$b("design:type", Object)
     ], Image.prototype, "imagePixels", void 0);

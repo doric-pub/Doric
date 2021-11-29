@@ -168,6 +168,7 @@ public class DoricLayer extends MaximumFrameLayout {
                 rightBottom, rightBottom,
                 leftBottom, leftBottom,
         };
+        setWillNotDraw(false);
     }
 
     public float getCornerRadius() {

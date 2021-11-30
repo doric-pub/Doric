@@ -2316,14 +2316,6 @@ var Image = /** @class */ (function (_super) {
     Image.prototype.getImagePixels = function (context) {
         return this.nativeChannel(context, "getImagePixels")();
     };
-    Image.prototype.setImagePixels = function (context, imagePixels) {
-        if (Environment.platform === 'iOS') {
-            imagePixels.pixels = context.function2Id(function () {
-                return imagePixels.pixels;
-            });
-        }
-        return this.nativeChannel(context, "setImagePixels")(imagePixels);
-    };
     Image.prototype.toModel = function () {
         var ret = _super.prototype.toModel.call(this);
         if (Environment.platform === 'iOS') {

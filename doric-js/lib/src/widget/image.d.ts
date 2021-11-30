@@ -95,11 +95,6 @@ export declare class Image extends View {
         mimeType: string;
     }>;
     getImagePixels(context: BridgeContext): Promise<ArrayBuffer>;
-    setImagePixels(context: BridgeContext, imagePixels: {
-        width: number;
-        height: number;
-        pixels: ArrayBuffer;
-    }): Promise<void>;
     toModel(): NativeViewModel;
 }
 export declare function image(config: Partial<Image>): Image;

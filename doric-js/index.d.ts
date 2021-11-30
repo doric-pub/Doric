@@ -714,11 +714,6 @@ declare module 'doric/lib/src/widget/image' {
                     mimeType: string;
             }>;
             getImagePixels(context: BridgeContext): Promise<ArrayBuffer>;
-            setImagePixels(context: BridgeContext, imagePixels: {
-                    width: number;
-                    height: number;
-                    pixels: ArrayBuffer;
-            }): Promise<void>;
             toModel(): NativeViewModel;
     }
     export function image(config: Partial<Image>): Image;

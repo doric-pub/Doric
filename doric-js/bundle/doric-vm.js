@@ -3254,14 +3254,6 @@ class Image extends View {
     getImagePixels(context) {
         return this.nativeChannel(context, "getImagePixels")();
     }
-    setImagePixels(context, imagePixels) {
-        if (Environment.platform === 'iOS') {
-            imagePixels.pixels = context.function2Id(() => {
-                return imagePixels.pixels;
-            });
-        }
-        return this.nativeChannel(context, "setImagePixels")(imagePixels);
-    }
     toModel() {
         const ret = super.toModel();
         if (Environment.platform === 'iOS') {

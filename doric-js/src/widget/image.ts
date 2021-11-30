@@ -150,22 +150,6 @@ export class Image extends View {
         return this.nativeChannel(context, "getImagePixels")()
     }
 
-    setImagePixels(
-        context: BridgeContext,
-        imagePixels: {
-            width: number,
-            height: number,
-            pixels: ArrayBuffer
-        }): Promise<void> {
-        if (Environment.platform === 'iOS') {
-            (imagePixels.pixels as unknown as any) = context.function2Id(() => {
-                return imagePixels.pixels
-            })
-        }
-        return this.nativeChannel(context, "setImagePixels")(imagePixels)
-    }
-
-
     toModel() {
         const ret = super.toModel()
         if (Environment.platform === 'iOS') {

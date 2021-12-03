@@ -162,24 +162,24 @@ public class SliderNode extends SuperNode<RecyclerView> {
         }
 
         slideAdapter.loop = loop;
-
-        if (mView != null) {
-            mView.post(new Runnable() {
-                @Override
-                public void run() {
-                    slideAdapter.itemCount = itemCount;
-                    slideAdapter.notifyDataSetChanged();
-
-                    if (needToScroll) {
-                        mView.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                mView.scrollToPosition(1);
-                            }
-                        });
+        if (jsObject.propertySet().size() > 1 || !jsObject.propertySet().contains("subviews")) {
+            if (mView != null) {
+                mView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        slideAdapter.itemCount = itemCount;
+                        slideAdapter.notifyDataSetChanged();
+                        if (needToScroll) {
+                            mView.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mView.scrollToPosition(1);
+                                }
+                            });
+                        }
                     }
-                }
-            });
+                });
+            }
         }
     }
 

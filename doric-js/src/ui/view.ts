@@ -47,6 +47,8 @@ export type NativeViewModel = {
     };
 }
 
+type RefType<T> = T extends Ref<infer R> ? R : never;
+
 export class Ref<T extends View> {
     private view?: T;
 
@@ -59,6 +61,12 @@ export class Ref<T extends View> {
             throw new Error("Ref is empty")
         }
         return this.view
+    }
+
+    apply(config: Partial<RefType<this>>) {
+        if (this.view) {
+            this.view.apply(config)
+        }
     }
 }
 

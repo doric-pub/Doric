@@ -33,6 +33,11 @@ export class Ref {
         }
         return this.view;
     }
+    apply(config) {
+        if (this.view) {
+            this.view.apply(config);
+        }
+    }
 }
 export function createRef() {
     return new Ref;

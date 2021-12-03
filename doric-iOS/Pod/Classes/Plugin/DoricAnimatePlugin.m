@@ -44,6 +44,9 @@
                              } else {
                                  DoricViewNode *viewNode = [self.doricContext targetViewNode:viewId];
                                  [viewNode blend:props];
+                                 if(![viewNode isKindOfClass:DoricRootNode.class]){
+                                     [viewNode.view.doricLayout apply];
+                                 }
                                  [viewNode requestLayout];
                              }
                          }

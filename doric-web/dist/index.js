@@ -1753,6 +1753,11 @@ class Ref {
         }
         return this.view;
     }
+    apply(config) {
+        if (this.view) {
+            this.view.apply(config);
+        }
+    }
 }
 function createRef() {
     return new Ref;
@@ -4695,6 +4700,7 @@ function animate(context) {
                     for (let v of map.values()) {
                         if (v.isDirty()) {
                             const model_1 = v.toModel();
+                            model_1.duration = args.duration;
                             const ret_1 = context.callNative('animate', 'animateRender', model_1);
                             v.clean();
                             return ret_1;

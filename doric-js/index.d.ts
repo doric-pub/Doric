@@ -199,9 +199,11 @@ declare module 'doric/lib/src/ui/view' {
                     [index: string]: Model;
             };
     };
+    type RefType<T> = T extends Ref<infer R> ? R : never;
     export class Ref<T extends View> {
             set current(v: T);
             get current(): T;
+            apply(config: Partial<RefType<this>>): void;
     }
     export function createRef<T extends View>(): Ref<T>;
     export abstract class View implements Modeling {
@@ -341,6 +343,7 @@ declare module 'doric/lib/src/ui/view' {
             removeAllChildren(): void;
             set innerElement(e: View | ViewFragment | ViewFragment[] | undefined | null);
     }
+    export {};
 }
 
 declare module 'doric/lib/src/ui/animation' {

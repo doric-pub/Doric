@@ -14,10 +14,12 @@ export declare type NativeViewModel = {
         [index: string]: Model;
     };
 };
+declare type RefType<T> = T extends Ref<infer R> ? R : never;
 export declare class Ref<T extends View> {
     private view?;
     set current(v: T);
     get current(): T;
+    apply(config: Partial<RefType<this>>): void;
 }
 export declare function createRef<T extends View>(): Ref<T>;
 export declare abstract class View implements Modeling {
@@ -164,3 +166,4 @@ export declare abstract class Group extends Superview implements JSX.ElementChil
     private addInnerElement;
     set innerElement(e: View | ViewFragment | ViewFragment[] | undefined | null);
 }
+export {};

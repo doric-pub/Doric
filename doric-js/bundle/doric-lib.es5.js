@@ -221,6 +221,11 @@ var Ref = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    Ref.prototype.apply = function (config) {
+        if (this.view) {
+            this.view.apply(config);
+        }
+    };
     return Ref;
 }());
 function createRef() {
@@ -4044,6 +4049,7 @@ function animate(context) {
                                                 var v = _f.value;
                                                 if (v.isDirty()) {
                                                     var model_1 = v.toModel();
+                                                    model_1.duration = args.duration;
                                                     var ret_1 = context.callNative('animate', 'animateRender', model_1);
                                                     v.clean();
                                                     return ret_1;

@@ -236,14 +236,16 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
                 padding.top - rowSpace / 2,
                 padding.right - columnSpace / 2,
                 padding.bottom - rowSpace / 2);
-        if (mView != null) {
-            mView.post(new Runnable() {
-                @Override
-                public void run() {
-                    flowAdapter.itemCount = itemCount;
-                    flowAdapter.notifyDataSetChanged();
-                }
-            });
+        if (jsObject.propertySet().size() > 1 || !jsObject.propertySet().contains("subviews")) {
+            if (mView != null) {
+                mView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        flowAdapter.itemCount = itemCount;
+                        flowAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
         }
     }
 

@@ -41,7 +41,8 @@ export function animate(context: BridgeContext) {
                 for (let map of panel.allHeadViews()) {
                     for (let v of map.values()) {
                         if (v.isDirty()) {
-                            const model_1 = v.toModel()
+                            const model_1 = v.toModel();
+                            (model_1 as any).duration = args.duration
                             const ret_1 = context.callNative('animate', 'animateRender', model_1)
                             v.clean()
                             return ret_1

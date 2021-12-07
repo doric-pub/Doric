@@ -1638,7 +1638,7 @@ class Base64Resource extends Resource {
 /**
  * Resources belong to assets dir.
  */
-class DoricAssetsResource extends Resource {
+class AssetsResource extends Resource {
     constructor(content) {
         super("doric_assets", content);
     }
@@ -3456,6 +3456,7 @@ exports.AlphaAnimation = AlphaAnimation;
 exports.AndroidAssetsResource = AndroidAssetsResource;
 exports.AndroidResource = AndroidResource;
 exports.AnimationSet = AnimationSet;
+exports.AssetsResource = AssetsResource;
 exports.BOTTOM = BOTTOM;
 exports.BackgroundColorAnimation = BackgroundColorAnimation;
 exports.Base64Resource = Base64Resource;
@@ -3465,7 +3466,6 @@ exports.CENTER = CENTER;
 exports.CENTER_X = CENTER_X;
 exports.CENTER_Y = CENTER_Y;
 exports.Color = Color;
-exports.DoricAssetsResource = DoricAssetsResource;
 exports.Draggable = Draggable;
 exports.DrawableResource = DrawableResource;
 exports.FlexLayout = FlexLayout;

@@ -20,7 +20,7 @@ export declare class Base64Resource extends Resource {
 /**
  * Resources belong to assets dir.
  */
-export declare class DoricAssetsResource extends Resource {
+export declare class AssetsResource extends Resource {
     constructor(content: string);
 }
 export declare class AndroidResource extends Resource {

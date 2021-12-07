@@ -1693,7 +1693,7 @@ declare module 'doric/lib/src/util/resource' {
     /**
         * Resources belong to assets dir.
         */
-    export class DoricAssetsResource extends Resource {
+    export class AssetsResource extends Resource {
             constructor(content: string);
     }
     export class AndroidResource extends Resource {

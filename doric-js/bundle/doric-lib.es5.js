@@ -2180,12 +2180,12 @@ var Base64Resource = /** @class */ (function (_super) {
 /**
  * Resources belong to assets dir.
  */
-var DoricAssetsResource = /** @class */ (function (_super) {
-    __extends$f(DoricAssetsResource, _super);
-    function DoricAssetsResource(content) {
+var AssetsResource = /** @class */ (function (_super) {
+    __extends$f(AssetsResource, _super);
+    function AssetsResource(content) {
         return _super.call(this, "doric_assets", content) || this;
     }
-    return DoricAssetsResource;
+    return AssetsResource;
 }(Resource));
 var AndroidResource = /** @class */ (function (_super) {
     __extends$f(AndroidResource, _super);
@@ -4525,6 +4525,7 @@ exports.AlphaAnimation = AlphaAnimation;
 exports.AndroidAssetsResource = AndroidAssetsResource;
 exports.AndroidResource = AndroidResource;
 exports.AnimationSet = AnimationSet;
+exports.AssetsResource = AssetsResource;
 exports.BOTTOM = BOTTOM;
 exports.BackgroundColorAnimation = BackgroundColorAnimation;
 exports.Base64Resource = Base64Resource;
@@ -4534,7 +4535,6 @@ exports.CENTER = CENTER;
 exports.CENTER_X = CENTER_X;
 exports.CENTER_Y = CENTER_Y;
 exports.Color = Color;
-exports.DoricAssetsResource = DoricAssetsResource;
 exports.Draggable = Draggable;
 exports.DrawableResource = DrawableResource;
 exports.FlexLayout = FlexLayout;

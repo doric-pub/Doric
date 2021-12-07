@@ -35,7 +35,7 @@ export class Base64Resource extends Resource {
 /**
  * Resources belong to assets dir.
  */
-export class DoricAssetsResource extends Resource {
+export class AssetsResource extends Resource {
     constructor(content: string) {
         super("doric_assets", content)
     }

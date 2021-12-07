@@ -20,7 +20,7 @@
 #import <Foundation/Foundation.h>
 #import "DoricResourceLoader.h"
 
-@interface DoricResourceLoaderManager : NSObject
+@interface DoricResourceManager : NSObject
 - (void)registerLoader:(id <DoricResourceLoader>)loader;
 
 - (void)unRegisterLoader:(id <DoricResourceLoader>)loader;

@@ -70,6 +70,8 @@ public class DoricDev {
         DoricSingleton.getInstance().getNativeDriver().getRegistry().registerMonitor(new DoricDevMonitor());
         DoricSingleton.getInstance().getNativeDriver().getRegistry().setGlobalPerformanceAnchorHook(new DoricDevPerformanceAnchorHook());
         DoricSingleton.getInstance().getNativeDriver().getRegistry().registerNativePlugin(DoricDevkitPlugin.class);
+        //Replace loader
+        DoricSingleton.getInstance().getNativeDriver().getRegistry().getResourceManager().registerLoader(new DoricDevAssetsLoader());
     }
 
     public static DoricDev getInstance() {

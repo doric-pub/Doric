@@ -200,12 +200,12 @@ class TextDemo extends Panel {
                     text({
                         text: "Icon Font text from assets/fonts/  \ue631 ",
                         textSize: 10,
-                        font: 'fonts/assets_iconfont'
+                        font: 'assets/fonts/assets_iconfont'
                     }),
                     text({
                         text: "Icon Font text from assets/fonts/  \ue631 ",
                         textSize: 30,
-                        font: 'fonts/assets_iconfont.ttf'
+                        font: 'assets/fonts/assets_iconfont.ttf'
                     }),
                     text({
                         text: "This is line Spaceing 0,\nSecond line",

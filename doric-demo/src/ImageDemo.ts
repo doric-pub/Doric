@@ -1,4 +1,4 @@
-import { Base64Resource, Group, Panel, coordinator, text, gravity, Color, LayoutSpec, log, vlayout, scroller, layoutConfig, image, ScaleType, Image, modal, RemoteResource, MainBundleResource, AndroidAssetsResource, DoricAssetsResource } from "doric";
+import { Base64Resource, Group, Panel, coordinator, text, gravity, Color, LayoutSpec, log, vlayout, scroller, layoutConfig, image, ScaleType, Image, modal, RemoteResource, MainBundleResource, AndroidAssetsResource, AssetsResource } from "doric";
 import { colors, label } from "./utils";
 import { img_base64 } from "./image_base64";
 
@@ -6,7 +6,6 @@ const imageUrl = 'https://img.zcool.cn/community/01e75b5da933daa801209e1ffa4649.
 
 import logo from "./images/logo_w.png"
 import button from "./images/button.png"
-import { DrawableResource } from "doric/lib/src/util/resource";
 
 @Entry
 class ImageDemo extends Panel {
@@ -32,7 +31,7 @@ class ImageDemo extends Panel {
                             : new MainBundleResource("assets/The_Parthenon_in_Athens.jpeg"),
                     }),
                     image({
-                        image: new DoricAssetsResource("The_Parthenon_in_Athens.jpeg"),
+                        image: new AssetsResource("The_Parthenon_in_Athens.jpeg"),
                     }),
                     image({
                         image: new RemoteResource("https://p.upyun.com/demo/webp/webp/jpg-0.webp"),

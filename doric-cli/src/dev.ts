@@ -7,6 +7,7 @@ import { mergeMap } from "./actions";
 import os from "os";
 import qrcode from "qrcode-terminal";
 import keypress from "keypress";
+import { createResServer } from "./resourceServer"
 
 function getIPAdress() {
   const ret: string[] = [];
@@ -119,6 +120,7 @@ export default async function dev() {
     console.log(`IP:${e}`);
     qrcode.generate(e, { small: true });
   });
+  createResServer();
 }
 
 

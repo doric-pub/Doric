@@ -30,6 +30,7 @@
 #import "DoricDevMonitor.h"
 #import "DoricDevPerformanceAnchorHook.h"
 #import "DoricDevkitPlugin.h"
+#import "DoricDevAssetsLoader.h"
 
 @interface DoricContextDebuggable : NSObject
 @property(nonatomic, weak) DoricContext *doricContext;
@@ -83,6 +84,7 @@
         [DoricSingleton.instance.nativeDriver.registry registerMonitor:[DoricDevMonitor new]];
         DoricSingleton.instance.nativeDriver.registry.globalPerformanceAnchorHook = [DoricDevPerformanceAnchorHook new];
         [DoricSingleton.instance.nativeDriver.registry registerNativePlugin:DoricDevkitPlugin.class withName:@"devkit"];
+        [DoricSingleton.instance.nativeDriver.registry.loaderManager registerLoader:[DoricDevAssetsLoader new]];
     }
     return self;
 }

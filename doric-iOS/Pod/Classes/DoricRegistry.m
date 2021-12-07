@@ -90,7 +90,7 @@
         _plugins = [NSMutableDictionary new];
         _nodes = [NSMutableDictionary new];
         _monitors = [NSMutableSet new];
-        _loaderManager = [DoricResourceLoaderManager new];
+        _loaderManager = [DoricResourceManager new];
         [self innerRegister];
         [DoricSingleton.instance.libraries enumerateObjectsUsingBlock:^(DoricLibrary *obj, BOOL *stop) {
             [obj load:self];

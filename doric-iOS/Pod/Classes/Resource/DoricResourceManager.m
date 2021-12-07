@@ -17,13 +17,13 @@
 // Created by pengfei.zhou on 2021/10/22.
 //
 
-#import "DoricResourceLoaderManager.h"
+#import "DoricResourceManager.h"
 
-@interface DoricResourceLoaderManager ()
+@interface DoricResourceManager ()
 @property(nonatomic, strong) NSMutableDictionary <NSString *, id <DoricResourceLoader>> *loaders;
 @end
 
-@implementation DoricResourceLoaderManager
+@implementation DoricResourceManager
 - (instancetype)init {
     if (self = [super init]) {
         _loaders = [NSMutableDictionary new];

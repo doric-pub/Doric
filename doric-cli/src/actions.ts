@@ -30,10 +30,10 @@ export async function build() {
     }
     if (fs.existsSync("assets")) {
         const assets = await fs.promises.readdir("assets")
+        await Shell.exec("cp", ["-rf", "assets", "bundle/"]);
         for (let asset of assets) {
             const assetFile = path.resolve("assets", asset);
             const stat = await fs.promises.stat(assetFile);
-            await Shell.exec("cp", ["-rf", assetFile, "bundle"]);
             if (stat.isDirectory()) {
                 console.log(`Asset -> ${asset.yellow}`);
             } else {

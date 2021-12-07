@@ -78,10 +78,10 @@ export default async function dev() {
       }
     });
 
-  const tscProcess = exec("node node_modules/.bin/tsc -w -p .", {
+  const tscProcess = exec("node_modules/.bin/tsc -w -p .", {
     env: process.env,
   });
-  const rollupProcess = exec("node node_modules/.bin/rollup -c -w", {
+  const rollupProcess = exec("node_modules/.bin/rollup -c -w", {
     env: process.env,
   });
   [tscProcess, rollupProcess].forEach(e => {

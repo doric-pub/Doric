@@ -4,7 +4,7 @@ import fs from "fs";
 import { glob } from "./util";
 import path from "path";
 export async function build() {
-    let ret = await Shell.exec("node", ["node_modules/.bin/tsc", "-p", "."], {
+    let ret = await Shell.exec("node_modules/.bin/tsc", ["-p", "."], {
         env: process.env,
         consoleHandler: (info) => {
             console.log(info);
@@ -14,7 +14,7 @@ export async function build() {
         console.log("Compile error".red);
         return -1;
     }
-    ret = await Shell.exec("node", ["node_modules/.bin/rollup", "-c",], {
+    ret = await Shell.exec("node_modules/.bin/rollup", ["-c",], {
         env: process.env,
         consoleHandler: (info) => {
             console.log(info);

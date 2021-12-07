@@ -3238,32 +3238,44 @@ class Base64Resource extends Resource {
     }
 }
 /**
+ * Resources belong to assets dir.
+ */
+class DoricAssetsResource extends Resource {
+    constructor(content) {
+        super("doric_assets", content);
+    }
+}
+class AndroidResource extends Resource {
+}
+class iOSResource extends Resource {
+}
+/**
  * This is for android platform
  */
-class DrawableResource extends Resource {
+class DrawableResource extends AndroidResource {
     constructor(name) {
         super("drawable", name);
     }
 }
-class RawResource extends Resource {
+class RawResource extends AndroidResource {
     constructor(name) {
         super("raw", name);
     }
 }
-class AssetResource extends Resource {
+class AndroidAssetsResource extends AndroidResource {
     constructor(path) {
-        super("assets", path);
+        super("android_assets", path);
     }
 }
 /**
  * This is for iOS platform
  */
-class MainBundleResource extends Resource {
+class MainBundleResource extends iOSResource {
     constructor(fileName) {
         super("mainBundle", fileName);
     }
 }
-class BundleResource extends Resource {
+class BundleResource extends iOSResource {
     constructor(bundleName, fileName) {
         super("bundle", `${bundleName}://${fileName}`);
     }
@@ -5043,8 +5055,9 @@ class ModularPanel extends Module {
 
 exports.AeroEffect = AeroEffect;
 exports.AlphaAnimation = AlphaAnimation;
+exports.AndroidAssetsResource = AndroidAssetsResource;
+exports.AndroidResource = AndroidResource;
 exports.AnimationSet = AnimationSet;
-exports.AssetResource = AssetResource;
 exports.BOTTOM = BOTTOM;
 exports.BackgroundColorAnimation = BackgroundColorAnimation;
 exports.Base64Resource = Base64Resource;
@@ -5054,6 +5067,7 @@ exports.CENTER = CENTER;
 exports.CENTER_X = CENTER_X;
 exports.CENTER_Y = CENTER_Y;
 exports.Color = Color;
+exports.DoricAssetsResource = DoricAssetsResource;
 exports.Draggable = Draggable;
 exports.DrawableResource = DrawableResource;
 exports.FlexLayout = FlexLayout;
@@ -5121,6 +5135,7 @@ exports.flowlayout = flowlayout;
 exports.gestureContainer = gestureContainer;
 exports.gravity = gravity;
 exports.hlayout = hlayout;
+exports.iOSResource = iOSResource;
 exports.image = image;
 exports.input = input;
 exports.internalScheme = internalScheme;

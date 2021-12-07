@@ -18,23 +18,33 @@ export declare class Base64Resource extends Resource {
     constructor(content: string);
 }
 /**
+ * Resources belong to assets dir.
+ */
+export declare class DoricAssetsResource extends Resource {
+    constructor(content: string);
+}
+export declare class AndroidResource extends Resource {
+}
+export declare class iOSResource extends Resource {
+}
+/**
  * This is for android platform
  */
-export declare class DrawableResource extends Resource {
+export declare class DrawableResource extends AndroidResource {
     constructor(name: string);
 }
-export declare class RawResource extends Resource {
+export declare class RawResource extends AndroidResource {
     constructor(name: string);
 }
-export declare class AssetResource extends Resource {
+export declare class AndroidAssetsResource extends AndroidResource {
     constructor(path: string);
 }
 /**
  * This is for iOS platform
  */
-export declare class MainBundleResource extends Resource {
+export declare class MainBundleResource extends iOSResource {
     constructor(fileName: string);
 }
-export declare class BundleResource extends Resource {
+export declare class BundleResource extends iOSResource {
     constructor(bundleName: string, fileName: string);
 }

@@ -2178,6 +2178,30 @@ var Base64Resource = /** @class */ (function (_super) {
     return Base64Resource;
 }(Resource));
 /**
+ * Resources belong to assets dir.
+ */
+var DoricAssetsResource = /** @class */ (function (_super) {
+    __extends$f(DoricAssetsResource, _super);
+    function DoricAssetsResource(content) {
+        return _super.call(this, "doric_assets", content) || this;
+    }
+    return DoricAssetsResource;
+}(Resource));
+var AndroidResource = /** @class */ (function (_super) {
+    __extends$f(AndroidResource, _super);
+    function AndroidResource() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return AndroidResource;
+}(Resource));
+var iOSResource = /** @class */ (function (_super) {
+    __extends$f(iOSResource, _super);
+    function iOSResource() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return iOSResource;
+}(Resource));
+/**
  * This is for android platform
  */
 var DrawableResource = /** @class */ (function (_super) {
@@ -2186,21 +2210,21 @@ var DrawableResource = /** @class */ (function (_super) {
         return _super.call(this, "drawable", name) || this;
     }
     return DrawableResource;
-}(Resource));
+}(AndroidResource));
 var RawResource = /** @class */ (function (_super) {
     __extends$f(RawResource, _super);
     function RawResource(name) {
         return _super.call(this, "raw", name) || this;
     }
     return RawResource;
-}(Resource));
-var AssetResource = /** @class */ (function (_super) {
-    __extends$f(AssetResource, _super);
-    function AssetResource(path) {
-        return _super.call(this, "assets", path) || this;
+}(AndroidResource));
+var AndroidAssetsResource = /** @class */ (function (_super) {
+    __extends$f(AndroidAssetsResource, _super);
+    function AndroidAssetsResource(path) {
+        return _super.call(this, "android_assets", path) || this;
     }
-    return AssetResource;
-}(Resource));
+    return AndroidAssetsResource;
+}(AndroidResource));
 /**
  * This is for iOS platform
  */
@@ -2210,14 +2234,14 @@ var MainBundleResource = /** @class */ (function (_super) {
         return _super.call(this, "mainBundle", fileName) || this;
     }
     return MainBundleResource;
-}(Resource));
+}(iOSResource));
 var BundleResource = /** @class */ (function (_super) {
     __extends$f(BundleResource, _super);
     function BundleResource(bundleName, fileName) {
         return _super.call(this, "bundle", bundleName + "://" + fileName) || this;
     }
     return BundleResource;
-}(Resource));
+}(iOSResource));
 
 var __extends$e = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -4498,8 +4522,9 @@ var ModularPanel = /** @class */ (function (_super) {
 
 exports.AeroEffect = AeroEffect;
 exports.AlphaAnimation = AlphaAnimation;
+exports.AndroidAssetsResource = AndroidAssetsResource;
+exports.AndroidResource = AndroidResource;
 exports.AnimationSet = AnimationSet;
-exports.AssetResource = AssetResource;
 exports.BOTTOM = BOTTOM;
 exports.BackgroundColorAnimation = BackgroundColorAnimation;
 exports.Base64Resource = Base64Resource;
@@ -4509,6 +4534,7 @@ exports.CENTER = CENTER;
 exports.CENTER_X = CENTER_X;
 exports.CENTER_Y = CENTER_Y;
 exports.Color = Color;
+exports.DoricAssetsResource = DoricAssetsResource;
 exports.Draggable = Draggable;
 exports.DrawableResource = DrawableResource;
 exports.FlexLayout = FlexLayout;
@@ -4576,6 +4602,7 @@ exports.flowlayout = flowlayout;
 exports.gestureContainer = gestureContainer;
 exports.gravity = gravity;
 exports.hlayout = hlayout;
+exports.iOSResource = iOSResource;
 exports.image = image;
 exports.input = input;
 exports.internalScheme = internalScheme;

@@ -13,23 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pub.doric.resource;
+//
+// Created by pengfei.zhou on 2021/12/7.
+//
 
-import pub.doric.DoricContext;
+#import <Foundation/Foundation.h>
+#import "DoricResourceLoader.h"
 
-/**
- * @Description: This loads resource from doric project's assets/ file
- * @Author: pengfei.zhou
- * @CreateDate: 2021/10/20
- */
-public class DoricAssetsLoader implements DoricResourceLoader {
-    @Override
-    public String resourceType() {
-        return "doric_assets";
-    }
-
-    @Override
-    public DoricResource load(DoricContext doricContext, String identifier) {
-        return new DoricAssetsResource(doricContext, "assets/" + identifier);
-    }
-}
+@interface DoricAssetsResourceLoader : NSObject<DoricResourceLoader>
+@end

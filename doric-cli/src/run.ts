@@ -162,6 +162,15 @@ async function runiOS() {
     console.log("Cannot find iOS device".red);
     return;
   }
+  if (!selectedDevice.isSimulator) {
+    try {
+      await Shell.exec("ios-deploy", ["--version"])
+    } catch (e) {
+      console.log("Install ios-deploy first".green)
+      await Shell.exec("npm", ["install", "-g", "ios-deploy"])
+    }
+  }
+
   console.log("Waiting for building".green);
   console.log("====================");
   await Shell.exec("pod", ["install"], {
@@ -215,9 +224,8 @@ async function runiOS() {
     await Shell.exec("xcrun", ["simctl", "install", selectedDevice.deviceId, iOSAPP]);
     await Shell.exec("xcrun", ["simctl", "launch", selectedDevice.deviceId, bundleId || `pub.doric.ios.${scheme.toLowerCase()}`]);
   } else {
-    const iosDeploy = path.resolve("node_modules", ".bin", "ios-deploy")
     await Shell.exec(
-      iosDeploy,
+      "ios-deploy",
       [
         "--id", selectedDevice.deviceId,
         "--justlaunch",

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		95EDDB7EAB47A65821DBC7EC /* Pods_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB59FE64F1D814FD13C71BB2 /* Pods_Example.framework */; };
 		E2B059BF23C452BB007555C7 /* src in Resources */ = {isa = PBXBuildFile; fileRef = E2B059BE23C452BB007555C7 /* src */; };
+		E2EF0C17275F787F007801C5 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = E2EF0C16275F787F007801C5 /* assets */; };
 		E2F64CEF2399359C0006BD9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E2F64CEE2399359C0006BD9A /* AppDelegate.m */; };
 		E2F64CF22399359C0006BD9A /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E2F64CF12399359C0006BD9A /* SceneDelegate.m */; };
 		E2F64CFA2399359E0006BD9A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E2F64CF92399359E0006BD9A /* Assets.xcassets */; };
@@ -21,6 +22,7 @@
 		5D47A9D4EA2836D57373FDF6 /* Pods-Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.release.xcconfig"; path = "Target Support Files/Pods-Example/Pods-Example.release.xcconfig"; sourceTree = "<group>"; };
 		AB59FE64F1D814FD13C71BB2 /* Pods_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2B059BE23C452BB007555C7 /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; name = src; path = ../bundle/src; sourceTree = "<group>"; };
+		E2EF0C16275F787F007801C5 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = ../assets; sourceTree = "<group>"; };
 		E2F64CEA2399359C0006BD9A /* __$__.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = __$__.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2F64CED2399359C0006BD9A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		E2F64CEE2399359C0006BD9A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -56,6 +58,7 @@
 		E2F64CE12399359C0006BD9A = {
 			isa = PBXGroup;
 			children = (
+				E2EF0C16275F787F007801C5 /* assets */,
 				E2B059BE23C452BB007555C7 /* src */,
 				E2F64CEC2399359C0006BD9A /* App */,
 				E2F64CEB2399359C0006BD9A /* Products */,
@@ -155,6 +158,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E2EF0C17275F787F007801C5 /* assets in Resources */,
 				E2B059BF23C452BB007555C7 /* src in Resources */,
 				E2F64CFD2399359E0006BD9A /* LaunchScreen.storyboard in Resources */,
 				E2F64CFA2399359E0006BD9A /* Assets.xcassets in Resources */,
@@ -371,7 +375,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "pub.doric.ios.__$appKey__";
+				PRODUCT_BUNDLE_IDENTIFIER = pub.doric.ios.__$appKey__;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -390,7 +394,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "pub.doric.ios.__$appKey__";
+				PRODUCT_BUNDLE_IDENTIFIER = pub.doric.ios.__$appKey__;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

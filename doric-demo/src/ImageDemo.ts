@@ -1,4 +1,4 @@
-import { Base64Resource, Group, Panel, coordinator, text, gravity, Color, LayoutSpec, log, vlayout, scroller, layoutConfig, image, ScaleType, Image, modal, RemoteResource, MainBundleResource, AssetResource } from "doric";
+import { Base64Resource, Group, Panel, coordinator, text, gravity, Color, LayoutSpec, log, vlayout, scroller, layoutConfig, image, ScaleType, Image, modal, RemoteResource, MainBundleResource, AndroidAssetsResource, DoricAssetsResource } from "doric";
 import { colors, label } from "./utils";
 import { img_base64 } from "./image_base64";
 
@@ -28,8 +28,11 @@ class ImageDemo extends Panel {
                     label('Button'),
                     image({
                         image: Environment.platform === 'Android'
-                            ? new AssetResource("assets/The_Parthenon_in_Athens.jpeg")
+                            ? new AndroidAssetsResource("assets/The_Parthenon_in_Athens.jpeg")
                             : new MainBundleResource("assets/The_Parthenon_in_Athens.jpeg"),
+                    }),
+                    image({
+                        image: new DoricAssetsResource("The_Parthenon_in_Athens.jpeg"),
                     }),
                     image({
                         image: new RemoteResource("https://p.upyun.com/demo/webp/webp/jpg-0.webp"),

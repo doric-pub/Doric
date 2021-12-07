@@ -14,32 +14,22 @@
  * limitations under the License.
  */
 //
-// Created by pengfei.zhou on 2021/10/25.
+// Created by pengfei.zhou on 2021/12/7.
 //
 
-#import "DoricExtensions.h"
-#import "DoricBundleResourceLoader.h"
+#import "DoricAssetsResourceLoader.h"
 #import "DoricBundleResource.h"
 
-@interface DoricBundleResourceLoader ()
-@property(nonatomic, strong) NSBundle *bundle;
-@property(nonatomic, copy) NSString *resourceType;
-@end
-
-@implementation DoricBundleResourceLoader
-- (instancetype)initWithResourceType:(NSString *)resourceType bundle:(NSBundle *)bundle {
-    if (self = [super init]) {
-        _resourceType = resourceType;
-        _bundle = bundle;
-    }
-    return self;
+@implementation DoricAssetsResourceLoader
+- (NSString *)resourceType {
+    return @"doric_assets";
 }
 
 - (__kindof DoricResource *)load:(NSString *)identifier withContext:(DoricContext *)context {
-    return [[[DoricBundleResource alloc] initWithContext:context identifier:identifier]
-            also:^(DoricBundleResource *it) {
-                it.bundle = self.bundle;
-            }];
+    DoricBundleResource *resource = [[DoricBundleResource alloc] initWithContext:context
+                                                                      identifier:[NSString stringWithFormat:@"assets/%@", identifier]];
+    resource.bundle = NSBundle.mainBundle;
+    return resource;
 }
 
 @end

@@ -41,8 +41,9 @@ import pub.doric.plugin.ShaderPlugin;
 import pub.doric.plugin.StatusBarPlugin;
 import pub.doric.plugin.StoragePlugin;
 import pub.doric.refresh.RefreshableNode;
-import pub.doric.resource.DoricAssetsLoader;
+import pub.doric.resource.DoricAndroidAssetsLoader;
 import pub.doric.resource.DoricAndroidLoader;
+import pub.doric.resource.DoricAssetsLoader;
 import pub.doric.resource.DoricBase64Loader;
 import pub.doric.resource.DoricLocalLoader;
 import pub.doric.resource.DoricRemoteLoader;
@@ -136,6 +137,7 @@ public class DoricRegistry {
         this.registerViewNode(AeroEffectViewNode.class);
         this.getResourceManager().registerLoader(new DoricAndroidLoader("drawable"));
         this.getResourceManager().registerLoader(new DoricAndroidLoader("raw"));
+        this.getResourceManager().registerLoader(new DoricAndroidAssetsLoader());
         this.getResourceManager().registerLoader(new DoricAssetsLoader());
         this.getResourceManager().registerLoader(new DoricLocalLoader());
         this.getResourceManager().registerLoader(new DoricRemoteLoader());

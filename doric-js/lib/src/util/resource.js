@@ -26,32 +26,44 @@ export class Base64Resource extends Resource {
     }
 }
 /**
+ * Resources belong to assets dir.
+ */
+export class DoricAssetsResource extends Resource {
+    constructor(content) {
+        super("doric_assets", content);
+    }
+}
+export class AndroidResource extends Resource {
+}
+export class iOSResource extends Resource {
+}
+/**
  * This is for android platform
  */
-export class DrawableResource extends Resource {
+export class DrawableResource extends AndroidResource {
     constructor(name) {
         super("drawable", name);
     }
 }
-export class RawResource extends Resource {
+export class RawResource extends AndroidResource {
     constructor(name) {
         super("raw", name);
     }
 }
-export class AssetResource extends Resource {
+export class AndroidAssetsResource extends AndroidResource {
     constructor(path) {
-        super("assets", path);
+        super("android_assets", path);
     }
 }
 /**
  * This is for iOS platform
  */
-export class MainBundleResource extends Resource {
+export class MainBundleResource extends iOSResource {
     constructor(fileName) {
         super("mainBundle", fileName);
     }
 }
-export class BundleResource extends Resource {
+export class BundleResource extends iOSResource {
     constructor(bundleName, fileName) {
         super("bundle", `${bundleName}://${fileName}`);
     }

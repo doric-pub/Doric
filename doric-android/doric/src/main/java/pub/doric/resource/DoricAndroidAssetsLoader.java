@@ -18,18 +18,18 @@ package pub.doric.resource;
 import pub.doric.DoricContext;
 
 /**
- * @Description: This loads resource from doric project's assets/ file
+ * @Description: This loads resource from android's assets dir
  * @Author: pengfei.zhou
  * @CreateDate: 2021/10/20
  */
-public class DoricAssetsLoader implements DoricResourceLoader {
+public class DoricAndroidAssetsLoader implements DoricResourceLoader {
     @Override
     public String resourceType() {
-        return "doric_assets";
+        return "android_assets";
     }
 
     @Override
     public DoricResource load(DoricContext doricContext, String identifier) {
-        return new DoricAssetsResource(doricContext, "assets/" + identifier);
+        return new DoricAssetsResource(doricContext, identifier);
     }
 }

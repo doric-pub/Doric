@@ -8,6 +8,8 @@ import {
   Color,
   navbar,
   modal,
+  AssetsResource,
+  image,
 } from "doric";
 import { demoPlugin } from "__$__";
 
@@ -18,6 +20,9 @@ class Example extends Panel {
   }
   build(rootView: Group) {
     vlayout([
+      image({
+        image: new AssetsResource("logo_doric.png"),
+      }),
       text({
         text: "Click to call native plugin",
         textSize: 20,

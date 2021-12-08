@@ -1,4 +1,4 @@
-import { Panel, Group, vlayout, layoutConfig, Gravity, text, Text, Color, navbar } from "doric";
+import { Panel, Group, vlayout, layoutConfig, Gravity, text, Text, Color, navbar, AssetsResource, image } from "doric";
 
 @Entry
 class __$__ extends Panel {
@@ -9,6 +9,9 @@ class __$__ extends Panel {
         let number: Text
         let count = 0
         vlayout([
+            image({
+                image: new AssetsResource("logo_doric.png"),
+            }),
             number = text({
                 textSize: 40,
                 text: '0',

@@ -18,6 +18,7 @@ export async function createResServer() {
                 const resourcePath = path.join(dirPath, `${fileRealName}`);
                 if (fs.existsSync(resourcePath)) {
                     const data = fs.readFileSync(resourcePath);
+                    response.setHeader("content-length", data.length);
                     response.write(data);
                     response.end();
                 } else {

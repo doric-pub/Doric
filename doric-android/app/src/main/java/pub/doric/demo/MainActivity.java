@@ -15,6 +15,7 @@
  */
 package pub.doric.demo;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -102,9 +103,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
+            final TextView tv = (TextView) holder.itemView;
             if (position == 0) {
-                final TextView tv = (TextView) holder.itemView;
                 tv.setText("Dev Kit");
                 tv.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -113,14 +114,14 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
             } else {
-                final TextView tv = (TextView) holder.itemView;
                 tv.setText(data[position - 1]);
                 tv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(tv.getContext(), DoricDebugTimingActivity.class);
                         intent.putExtra("source", "assets://src/" + data[position - 1]);
-                        intent.putExtra("alias", data[position - 1].replace(".js", ""));
+                        //intent.putExtra("alias", data[position - 1].replace(".js", ""));
+                        intent.putExtra("alias", "__dev__");
                         tv.getContext().startActivity(intent);
                     }
                 });

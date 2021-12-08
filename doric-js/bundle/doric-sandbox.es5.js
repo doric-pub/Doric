@@ -18,7 +18,7 @@ var doric = (function (exports) {
      */
     var __uniqueId__ = 0;
     function uniqueId(prefix) {
-        return "__" + prefix + "_" + __uniqueId__++ + "__";
+        return "__".concat(prefix, "_").concat(__uniqueId__++, "__");
     }
 
     function toString$2(message) {
@@ -1269,12 +1269,12 @@ var doric = (function (exports) {
 
         var context = gContexts.get(contextId);
         if (context === undefined) {
-            loge("Cannot find context for context id:" + contextId);
+            loge("Cannot find context for context id:".concat(contextId));
             return;
         }
         var callback = context.callbacks.get(callbackId);
         if (callback === undefined) {
-            loge("Cannot find call for context id:" + contextId + ",callback id:" + callbackId);
+            loge("Cannot find call for context id:".concat(contextId, ",callback id:").concat(callbackId));
             return;
         }
         var argumentsList = [];
@@ -1289,12 +1289,12 @@ var doric = (function (exports) {
 
         var context = gContexts.get(contextId);
         if (context === undefined) {
-            loge("Cannot find context for context id:" + contextId);
+            loge("Cannot find context for context id:".concat(contextId));
             return;
         }
         var callback = context.callbacks.get(callbackId);
         if (callback === undefined) {
-            loge("Cannot find call for context id:" + contextId + ",callback id:" + callbackId);
+            loge("Cannot find call for context id:".concat(contextId, ",callback id:").concat(callbackId));
             return;
         }
         var argumentsList = [];
@@ -1402,11 +1402,11 @@ var doric = (function (exports) {
 
         var context = gContexts.get(contextId);
         if (context === undefined) {
-            loge("Cannot find context for context id:" + contextId);
+            loge("Cannot find context for context id:".concat(contextId));
             return;
         }
         if (context.entity === undefined) {
-            loge("Cannot find holder for context id:" + contextId);
+            loge("Cannot find holder for context id:".concat(contextId));
             return;
         }
         if (Reflect.has(context.entity, methodName)) {
@@ -1419,7 +1419,7 @@ var doric = (function (exports) {
             return ret;
         }
         else {
-            loge("Cannot find method for context id:" + contextId + ",method name is:" + methodName);
+            loge("Cannot find method for context id:".concat(contextId, ",method name is:").concat(methodName));
         }
     }
     function pureCallEntityMethod(contextId, methodName, args) {
@@ -1427,11 +1427,11 @@ var doric = (function (exports) {
 
         var context = gContexts.get(contextId);
         if (context === undefined) {
-            loge("Cannot find context for context id:" + contextId);
+            loge("Cannot find context for context id:".concat(contextId));
             return;
         }
         if (context.entity === undefined) {
-            loge("Cannot find holder for context id:" + contextId);
+            loge("Cannot find holder for context id:".concat(contextId));
             return;
         }
         if (Reflect.has(context.entity, methodName)) {
@@ -1442,7 +1442,7 @@ var doric = (function (exports) {
             return Reflect.apply(Reflect.get(context.entity, methodName), context.entity, argumentsList);
         }
         else {
-            loge("Cannot find method for context id:" + contextId + ",method name is:" + methodName);
+            loge("Cannot find method for context id:".concat(contextId, ",method name is:").concat(methodName));
         }
     }
     function jsObtainEntry(contextId) {
@@ -1481,15 +1481,15 @@ var doric = (function (exports) {
                         return exportFunc(clz);
                     }
                     else {
-                        throw new Error("Cannot find class:" + className + " in context:" + srcContextId);
+                        throw new Error("Cannot find class:".concat(className, " in context:").concat(srcContextId));
                     }
                 }
                 else {
-                    throw new Error("Cannot find context for " + srcContextId);
+                    throw new Error("Cannot find context for ".concat(srcContextId));
                 }
             }
             else {
-                throw new Error("Entry arguments error:" + arguments);
+                throw new Error("Entry arguments error:".concat(arguments));
             }
         };
     }
@@ -1849,7 +1849,7 @@ var doric = (function (exports) {
     (module.exports = function (key, value) {
       return sharedStore[key] || (sharedStore[key] = value !== undefined ? value : {});
     })('versions', []).push({
-      version: '3.19.0',
+      version: '3.19.3',
       mode: 'global',
       copyright: '© 2021 Denis Pushkarev (zloirock.ru)'
     });
@@ -2027,7 +2027,7 @@ var doric = (function (exports) {
       return has(it) ? get$2(it) : set$3(it, {});
     };
 
-    var getterFor = function (TYPE) {
+    var getterFor$1 = function (TYPE) {
       return function (it) {
         var state;
         if (!isObject(it) || (state = get$2(it)).type !== TYPE) {
@@ -2075,7 +2075,7 @@ var doric = (function (exports) {
       get: get$2,
       has: has,
       enforce: enforce,
-      getterFor: getterFor
+      getterFor: getterFor$1
     };
 
     var FunctionPrototype$3 = Function.prototype;
@@ -2146,7 +2146,7 @@ var doric = (function (exports) {
       return number !== number || number === 0 ? 0 : (number > 0 ? floor$a : ceil$2)(number);
     };
 
-    var max$6 = Math.max;
+    var max$7 = Math.max;
     var min$a = Math.min;
 
     // Helper for a popular repeating case of the spec:
@@ -2154,7 +2154,7 @@ var doric = (function (exports) {
     // If integer < 0, let result be max((length + integer), 0); else let result be min(integer, length).
     var toAbsoluteIndex = function (index, length) {
       var integer = toIntegerOrInfinity(index);
-      return integer < 0 ? max$6(integer + length, 0) : min$a(integer, length);
+      return integer < 0 ? max$7(integer + length, 0) : min$a(integer, length);
     };
 
     var min$9 = Math.min;
@@ -2360,14 +2360,14 @@ var doric = (function (exports) {
       return classofRaw(argument) == 'Array';
     };
 
-    var TO_STRING_TAG$8 = wellKnownSymbol('toStringTag');
+    var TO_STRING_TAG$9 = wellKnownSymbol('toStringTag');
     var test$2 = {};
 
-    test$2[TO_STRING_TAG$8] = 'z';
+    test$2[TO_STRING_TAG$9] = 'z';
 
     var toStringTagSupport = String(test$2) === '[object z]';
 
-    var TO_STRING_TAG$7 = wellKnownSymbol('toStringTag');
+    var TO_STRING_TAG$8 = wellKnownSymbol('toStringTag');
     var Object$4 = global_1.Object;
 
     // ES3 wrong here
@@ -2385,7 +2385,7 @@ var doric = (function (exports) {
       var O, tag, result;
       return it === undefined ? 'Undefined' : it === null ? 'Null'
         // @@toStringTag case
-        : typeof (tag = tryGet(O = Object$4(it), TO_STRING_TAG$7)) == 'string' ? tag
+        : typeof (tag = tryGet(O = Object$4(it), TO_STRING_TAG$8)) == 'string' ? tag
         // builtinTag case
         : CORRECT_ARGUMENTS ? classofRaw(O)
         // ES3 arguments fallback
@@ -2505,7 +2505,24 @@ var doric = (function (exports) {
       return Properties === undefined ? result : objectDefineProperties(result, Properties);
     };
 
-    var arraySlice$1 = functionUncurryThis([].slice);
+    var createProperty = function (object, key, value) {
+      var propertyKey = toPropertyKey(key);
+      if (propertyKey in object) { objectDefineProperty.f(object, propertyKey, createPropertyDescriptor(0, value)); }
+      else { object[propertyKey] = value; }
+    };
+
+    var Array$b = global_1.Array;
+    var max$6 = Math.max;
+
+    var arraySliceSimple = function (O, start, end) {
+      var length = lengthOfArrayLike(O);
+      var k = toAbsoluteIndex(start, length);
+      var fin = toAbsoluteIndex(end === undefined ? length : end, length);
+      var result = Array$b(max$6(fin - k, 0));
+      for (var n = 0; k < fin; k++, n++) { createProperty(result, n, O[k]); }
+      result.length = n;
+      return result;
+    };
 
     /* eslint-disable es/no-object-getownpropertynames -- safe */
 
@@ -2520,7 +2537,7 @@ var doric = (function (exports) {
       try {
         return $getOwnPropertyNames$1(it);
       } catch (error) {
-        return arraySlice$1(windowNames);
+        return arraySliceSimple(windowNames);
       }
     };
 
@@ -2534,6 +2551,8 @@ var doric = (function (exports) {
     var objectGetOwnPropertyNamesExternal = {
     	f: f$2
     };
+
+    var arraySlice$1 = functionUncurryThis([].slice);
 
     var f$1 = wellKnownSymbol;
 
@@ -2556,11 +2575,11 @@ var doric = (function (exports) {
 
 
 
-    var TO_STRING_TAG$6 = wellKnownSymbol('toStringTag');
+    var TO_STRING_TAG$7 = wellKnownSymbol('toStringTag');
 
     var setToStringTag = function (it, TAG, STATIC) {
-      if (it && !hasOwnProperty_1(it = STATIC ? it : it.prototype, TO_STRING_TAG$6)) {
-        defineProperty$d(it, TO_STRING_TAG$6, { configurable: true, value: TAG });
+      if (it && !hasOwnProperty_1(it = STATIC ? it : it.prototype, TO_STRING_TAG$7)) {
+        defineProperty$d(it, TO_STRING_TAG$7, { configurable: true, value: TAG });
       }
     };
 
@@ -2710,7 +2729,7 @@ var doric = (function (exports) {
     var TO_PRIMITIVE$1 = wellKnownSymbol('toPrimitive');
 
     var setInternalState$h = internalState.set;
-    var getInternalState$g = internalState.getterFor(SYMBOL);
+    var getInternalState$f = internalState.getterFor(SYMBOL);
 
     var ObjectPrototype$4 = Object[PROTOTYPE$1];
     var $Symbol = global_1.Symbol;
@@ -2847,7 +2866,7 @@ var doric = (function (exports) {
       SymbolPrototype$1 = $Symbol[PROTOTYPE$1];
 
       redefine(SymbolPrototype$1, 'toString', function toString() {
-        return getInternalState$g(this).tag;
+        return getInternalState$f(this).tag;
       });
 
       redefine($Symbol, 'withoutSetter', function (description) {
@@ -2869,7 +2888,7 @@ var doric = (function (exports) {
         nativeDefineProperty(SymbolPrototype$1, 'description', {
           configurable: true,
           get: function description() {
-            return getInternalState$g(this).description;
+            return getInternalState$f(this).description;
           }
         });
         {
@@ -3157,7 +3176,7 @@ var doric = (function (exports) {
       if (IS_V8_OR_CHAKRA_STACK) {
         while (dropEntries--) { stack = replace$9(stack, V8_OR_CHAKRA_STACK_ENTRY, ''); }
       } else if (IS_FIREFOX_OR_SAFARI_STACK) {
-        return join$7(arraySlice$1(split$3(stack, '\n'), dropEntries), '\n');
+        return join$7(arraySliceSimple(split$3(stack, '\n'), dropEntries), '\n');
       } return stack;
     };
 
@@ -3282,14 +3301,19 @@ var doric = (function (exports) {
       return error.stack !== 7;
     });
 
+    var TO_STRING_TAG$6 = wellKnownSymbol('toStringTag');
     var Error$2 = global_1.Error;
     var push$g = [].push;
 
     var $AggregateError = function AggregateError(errors, message /* , options */) {
-      var that = objectIsPrototypeOf(AggregateErrorPrototype, this) ? this : objectCreate(AggregateErrorPrototype);
       var options = arguments.length > 2 ? arguments[2] : undefined;
+      var isInstance = objectIsPrototypeOf(AggregateErrorPrototype, this);
+      var that;
       if (objectSetPrototypeOf) {
-        that = objectSetPrototypeOf(new Error$2(undefined), objectGetPrototypeOf(that));
+        that = objectSetPrototypeOf(new Error$2(undefined), isInstance ? objectGetPrototypeOf(this) : AggregateErrorPrototype);
+      } else {
+        that = isInstance ? this : objectCreate(AggregateErrorPrototype);
+        createNonEnumerableProperty(that, TO_STRING_TAG$6, 'Error');
       }
       createNonEnumerableProperty(that, 'message', normalizeStringArgument(message, ''));
       if (errorStackInstallable) { createNonEnumerableProperty(that, 'stack', clearErrorStack(that.stack, 1)); }
@@ -3345,12 +3369,6 @@ var doric = (function (exports) {
     });
 
     addToUnscopables('at');
-
-    var createProperty = function (object, key, value) {
-      var propertyKey = toPropertyKey(key);
-      if (propertyKey in object) { objectDefineProperty.f(object, propertyKey, createPropertyDescriptor(0, value)); }
-      else { object[propertyKey] = value; }
-    };
 
     var SPECIES$5 = wellKnownSymbol('species');
 
@@ -3811,9 +3829,9 @@ var doric = (function (exports) {
 
     var returnThis$1 = function () { return this; };
 
-    var createIteratorConstructor = function (IteratorConstructor, NAME, next) {
+    var createIteratorConstructor = function (IteratorConstructor, NAME, next, ENUMERABLE_NEXT) {
       var TO_STRING_TAG = NAME + ' Iterator';
-      IteratorConstructor.prototype = objectCreate(IteratorPrototype$4, { next: createPropertyDescriptor(1, next) });
+      IteratorConstructor.prototype = objectCreate(IteratorPrototype$4, { next: createPropertyDescriptor(+!ENUMERABLE_NEXT, next) });
       setToStringTag(IteratorConstructor, TO_STRING_TAG, false);
       iterators[TO_STRING_TAG] = returnThis$1;
       return IteratorConstructor;
@@ -3904,7 +3922,7 @@ var doric = (function (exports) {
 
     var ARRAY_ITERATOR = 'Array Iterator';
     var setInternalState$g = internalState.set;
-    var getInternalState$f = internalState.getterFor(ARRAY_ITERATOR);
+    var getInternalState$e = internalState.getterFor(ARRAY_ITERATOR);
 
     // `Array.prototype.entries` method
     // https://tc39.es/ecma262/#sec-array.prototype.entries
@@ -3926,7 +3944,7 @@ var doric = (function (exports) {
     // `%ArrayIteratorPrototype%.next` method
     // https://tc39.es/ecma262/#sec-%arrayiteratorprototype%.next
     }, function () {
-      var state = getInternalState$f(this);
+      var state = getInternalState$e(this);
       var target = state.target;
       var kind = state.kind;
       var index = state.index++;
@@ -4182,8 +4200,8 @@ var doric = (function (exports) {
       var middle = floor$9(length / 2);
       return length < 8 ? insertionSort(array, comparefn) : merge(
         array,
-        mergeSort(arraySlice$1(array, 0, middle), comparefn),
-        mergeSort(arraySlice$1(array, middle), comparefn),
+        mergeSort(arraySliceSimple(array, 0, middle), comparefn),
+        mergeSort(arraySliceSimple(array, middle), comparefn),
         comparefn
       );
     };
@@ -4467,7 +4485,8 @@ var doric = (function (exports) {
         exponent = eMax;
       } else {
         exponent = floor$8(log$8(number) / LN2$2);
-        if (number * (c = pow$4(2, -exponent)) < 1) {
+        c = pow$4(2, -exponent);
+        if (number * c < 1) {
           exponent--;
           c *= 2;
         }
@@ -4491,10 +4510,18 @@ var doric = (function (exports) {
           exponent = 0;
         }
       }
-      for (; mantissaLength >= 8; buffer[index++] = mantissa & 255, mantissa /= 256, mantissaLength -= 8){ }
+      while (mantissaLength >= 8) {
+        buffer[index++] = mantissa & 255;
+        mantissa /= 256;
+        mantissaLength -= 8;
+      }
       exponent = exponent << mantissaLength | mantissa;
       exponentLength += mantissaLength;
-      for (; exponentLength > 0; buffer[index++] = exponent & 255, exponent /= 256, exponentLength -= 8){ }
+      while (exponentLength > 0) {
+        buffer[index++] = exponent & 255;
+        exponent /= 256;
+        exponentLength -= 8;
+      }
       buffer[--index] |= sign * 128;
       return buffer;
     };
@@ -4510,11 +4537,17 @@ var doric = (function (exports) {
       var exponent = sign & 127;
       var mantissa;
       sign >>= 7;
-      for (; nBits > 0; exponent = exponent * 256 + buffer[index], index--, nBits -= 8){ }
+      while (nBits > 0) {
+        exponent = exponent * 256 + buffer[index--];
+        nBits -= 8;
+      }
       mantissa = exponent & (1 << -nBits) - 1;
       exponent >>= -nBits;
       nBits += mantissaLength;
-      for (; nBits > 0; mantissa = mantissa * 256 + buffer[index], index--, nBits -= 8){ }
+      while (nBits > 0) {
+        mantissa = mantissa * 256 + buffer[index--];
+        nBits -= 8;
+      }
       if (exponent === 0) {
         exponent = 1 - eBias;
       } else if (exponent === eMax) {
@@ -4539,7 +4572,7 @@ var doric = (function (exports) {
 
     var PROPER_FUNCTION_NAME$3 = functionName.PROPER;
     var CONFIGURABLE_FUNCTION_NAME = functionName.CONFIGURABLE;
-    var getInternalState$e = internalState.get;
+    var getInternalState$d = internalState.get;
     var setInternalState$f = internalState.set;
     var ARRAY_BUFFER$1 = 'ArrayBuffer';
     var DATA_VIEW = 'DataView';
@@ -4585,24 +4618,24 @@ var doric = (function (exports) {
     };
 
     var addGetter = function (Constructor, key) {
-      defineProperty$b(Constructor[PROTOTYPE], key, { get: function () { return getInternalState$e(this)[key]; } });
+      defineProperty$b(Constructor[PROTOTYPE], key, { get: function () { return getInternalState$d(this)[key]; } });
     };
 
     var get$1 = function (view, count, index, isLittleEndian) {
       var intIndex = toIndex(index);
-      var store = getInternalState$e(view);
+      var store = getInternalState$d(view);
       if (intIndex + count > store.byteLength) { throw RangeError$a(WRONG_INDEX); }
-      var bytes = getInternalState$e(store.buffer).bytes;
+      var bytes = getInternalState$d(store.buffer).bytes;
       var start = intIndex + store.byteOffset;
-      var pack = arraySlice$1(bytes, start, start + count);
+      var pack = arraySliceSimple(bytes, start, start + count);
       return isLittleEndian ? pack : reverse(pack);
     };
 
     var set$2 = function (view, count, index, conversion, value, isLittleEndian) {
       var intIndex = toIndex(index);
-      var store = getInternalState$e(view);
+      var store = getInternalState$d(view);
       if (intIndex + count > store.byteLength) { throw RangeError$a(WRONG_INDEX); }
-      var bytes = getInternalState$e(store.buffer).bytes;
+      var bytes = getInternalState$d(store.buffer).bytes;
       var start = intIndex + store.byteOffset;
       var pack = conversion(+value);
       for (var i = 0; i < count; i++) { bytes[start + i] = pack[isLittleEndian ? i : count - i - 1]; }
@@ -4624,7 +4657,7 @@ var doric = (function (exports) {
       $DataView = function DataView(buffer, byteOffset, byteLength) {
         anInstance(this, DataViewPrototype$1);
         anInstance(buffer, ArrayBufferPrototype);
-        var bufferLength = getInternalState$e(buffer).byteLength;
+        var bufferLength = getInternalState$d(buffer).byteLength;
         var offset = toIntegerOrInfinity(byteOffset);
         if (offset < 0 || offset > bufferLength) { throw RangeError$a('Wrong offset'); }
         byteLength = byteLength === undefined ? bufferLength - offset : toLength(byteLength);
@@ -5288,7 +5321,7 @@ var doric = (function (exports) {
 
     var FunctionPrototype = Function.prototype;
     var functionToString = functionUncurryThis(FunctionPrototype.toString);
-    var nameRE = /^\s*function ([^ (]*)/;
+    var nameRE = /function\b(?:\s|\/\*[\S\s]*?\*\/|\/\/[^\n\r]*[\n\r]+)*([^\s(/]*)/;
     var regExpExec = functionUncurryThis(nameRE.exec);
     var NAME = 'name';
 
@@ -5358,6 +5391,29 @@ var doric = (function (exports) {
     // https://tc39.es/ecma262/#sec-json-@@tostringtag
     setToStringTag(global_1.JSON, 'JSON', true);
 
+    // FF26- bug: ArrayBuffers are non-extensible, but Object.isExtensible does not report it
+
+
+    var arrayBufferNonExtensible = fails(function () {
+      if (typeof ArrayBuffer == 'function') {
+        var buffer = new ArrayBuffer(8);
+        // eslint-disable-next-line es/no-object-isextensible, es/no-object-defineproperty -- safe
+        if (Object.isExtensible(buffer)) { Object.defineProperty(buffer, 'a', { value: 8 }); }
+      }
+    });
+
+    // eslint-disable-next-line es/no-object-isextensible -- safe
+    var $isExtensible = Object.isExtensible;
+    var FAILS_ON_PRIMITIVES$9 = fails(function () { $isExtensible(1); });
+
+    // `Object.isExtensible` method
+    // https://tc39.es/ecma262/#sec-object.isextensible
+    var objectIsExtensible = (FAILS_ON_PRIMITIVES$9 || arrayBufferNonExtensible) ? function isExtensible(it) {
+      if (!isObject(it)) { return false; }
+      if (arrayBufferNonExtensible && classofRaw(it) == 'ArrayBuffer') { return false; }
+      return $isExtensible ? $isExtensible(it) : true;
+    } : $isExtensible;
+
     var freezing = !fails(function () {
       // eslint-disable-next-line es/no-object-isextensible, es/no-object-preventextensions -- required for testing
       return Object.isExtensible(Object.preventExtensions({}));
@@ -5370,14 +5426,10 @@ var doric = (function (exports) {
 
 
 
+
     var REQUIRED = false;
     var METADATA = uid('meta');
     var id = 0;
-
-    // eslint-disable-next-line es/no-object-isextensible -- safe
-    var isExtensible = Object.isExtensible || function () {
-      return true;
-    };
 
     var setMetadata = function (it) {
       defineProperty(it, METADATA, { value: {
@@ -5391,7 +5443,7 @@ var doric = (function (exports) {
       if (!isObject(it)) { return typeof it == 'symbol' ? it : (typeof it == 'string' ? 'S' : 'P') + it; }
       if (!hasOwnProperty_1(it, METADATA)) {
         // can't set metadata to uncaught frozen object
-        if (!isExtensible(it)) { return 'F'; }
+        if (!objectIsExtensible(it)) { return 'F'; }
         // not necessary to add metadata
         if (!create) { return 'E'; }
         // add missing metadata
@@ -5403,7 +5455,7 @@ var doric = (function (exports) {
     var getWeakData = function (it, create) {
       if (!hasOwnProperty_1(it, METADATA)) {
         // can't set metadata to uncaught frozen object
-        if (!isExtensible(it)) { return true; }
+        if (!objectIsExtensible(it)) { return true; }
         // not necessary to add metadata
         if (!create) { return false; }
         // add missing metadata
@@ -5414,7 +5466,7 @@ var doric = (function (exports) {
 
     // add metadata on freeze-family methods calling
     var onFreeze = function (it) {
-      if (freezing && REQUIRED && isExtensible(it) && !hasOwnProperty_1(it, METADATA)) { setMetadata(it); }
+      if (freezing && REQUIRED && objectIsExtensible(it) && !hasOwnProperty_1(it, METADATA)) { setMetadata(it); }
       return it;
     };
 
@@ -6583,11 +6635,11 @@ var doric = (function (exports) {
 
     // eslint-disable-next-line es/no-object-freeze -- safe
     var $freeze = Object.freeze;
-    var FAILS_ON_PRIMITIVES$9 = fails(function () { $freeze(1); });
+    var FAILS_ON_PRIMITIVES$8 = fails(function () { $freeze(1); });
 
     // `Object.freeze` method
     // https://tc39.es/ecma262/#sec-object.freeze
-    _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES$9, sham: !freezing }, {
+    _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES$8, sham: !freezing }, {
       freeze: function freeze(it) {
         return $freeze && isObject(it) ? $freeze(onFreeze$2(it)) : it;
       }
@@ -6608,8 +6660,8 @@ var doric = (function (exports) {
     var nativeGetOwnPropertyDescriptor = objectGetOwnPropertyDescriptor.f;
 
 
-    var FAILS_ON_PRIMITIVES$8 = fails(function () { nativeGetOwnPropertyDescriptor(1); });
-    var FORCED$d = !descriptors || FAILS_ON_PRIMITIVES$8;
+    var FAILS_ON_PRIMITIVES$7 = fails(function () { nativeGetOwnPropertyDescriptor(1); });
+    var FORCED$d = !descriptors || FAILS_ON_PRIMITIVES$7;
 
     // `Object.getOwnPropertyDescriptor` method
     // https://tc39.es/ecma262/#sec-object.getownpropertydescriptor
@@ -6640,19 +6692,19 @@ var doric = (function (exports) {
     var getOwnPropertyNames$1 = objectGetOwnPropertyNamesExternal.f;
 
     // eslint-disable-next-line es/no-object-getownpropertynames -- required for testing
-    var FAILS_ON_PRIMITIVES$7 = fails(function () { return !Object.getOwnPropertyNames(1); });
+    var FAILS_ON_PRIMITIVES$6 = fails(function () { return !Object.getOwnPropertyNames(1); });
 
     // `Object.getOwnPropertyNames` method
     // https://tc39.es/ecma262/#sec-object.getownpropertynames
-    _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES$7 }, {
+    _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES$6 }, {
       getOwnPropertyNames: getOwnPropertyNames$1
     });
 
-    var FAILS_ON_PRIMITIVES$6 = fails(function () { objectGetPrototypeOf(1); });
+    var FAILS_ON_PRIMITIVES$5 = fails(function () { objectGetPrototypeOf(1); });
 
     // `Object.getPrototypeOf` method
     // https://tc39.es/ecma262/#sec-object.getprototypeof
-    _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES$6, sham: !correctPrototypeGetter }, {
+    _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES$5, sham: !correctPrototypeGetter }, {
       getPrototypeOf: function getPrototypeOf(it) {
         return objectGetPrototypeOf(toObject(it));
       }
@@ -6678,16 +6730,11 @@ var doric = (function (exports) {
       is: sameValue
     });
 
-    // eslint-disable-next-line es/no-object-isextensible -- safe
-    var $isExtensible = Object.isExtensible;
-    var FAILS_ON_PRIMITIVES$5 = fails(function () { $isExtensible(1); });
-
     // `Object.isExtensible` method
     // https://tc39.es/ecma262/#sec-object.isextensible
-    _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES$5 }, {
-      isExtensible: function isExtensible(it) {
-        return isObject(it) ? $isExtensible ? $isExtensible(it) : true : false;
-      }
+    // eslint-disable-next-line es/no-object-isextensible -- safe
+    _export({ target: 'Object', stat: true, forced: Object.isExtensible !== objectIsExtensible }, {
+      isExtensible: objectIsExtensible
     });
 
     // eslint-disable-next-line es/no-object-isfrozen -- safe
@@ -6696,9 +6743,11 @@ var doric = (function (exports) {
 
     // `Object.isFrozen` method
     // https://tc39.es/ecma262/#sec-object.isfrozen
-    _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES$4 }, {
+    _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES$4 || arrayBufferNonExtensible }, {
       isFrozen: function isFrozen(it) {
-        return isObject(it) ? $isFrozen ? $isFrozen(it) : false : true;
+        if (!isObject(it)) { return true; }
+        if (arrayBufferNonExtensible && classofRaw(it) == 'ArrayBuffer') { return true; }
+        return $isFrozen ? $isFrozen(it) : false;
       }
     });
 
@@ -6708,9 +6757,11 @@ var doric = (function (exports) {
 
     // `Object.isSealed` method
     // https://tc39.es/ecma262/#sec-object.issealed
-    _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES$3 }, {
+    _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES$3 || arrayBufferNonExtensible }, {
       isSealed: function isSealed(it) {
-        return isObject(it) ? $isSealed ? $isSealed(it) : false : true;
+        if (!isObject(it)) { return true; }
+        if (arrayBufferNonExtensible && classofRaw(it) == 'ArrayBuffer') { return true; }
+        return $isSealed ? $isSealed(it) : false;
       }
     });
 
@@ -7087,7 +7138,7 @@ var doric = (function (exports) {
     var SPECIES$1 = wellKnownSymbol('species');
     var PROMISE = 'Promise';
 
-    var getInternalState$d = internalState.get;
+    var getInternalState$c = internalState.getterFor(PROMISE);
     var setInternalState$d = internalState.set;
     var getInternalPromiseState = internalState.getterFor(PROMISE);
     var NativePromisePrototype = nativePromiseConstructor && nativePromiseConstructor.prototype;
@@ -7290,7 +7341,7 @@ var doric = (function (exports) {
         anInstance(this, PromisePrototype);
         aCallable(executor);
         functionCall(Internal, this);
-        var state = getInternalState$d(this);
+        var state = getInternalState$c(this);
         try {
           executor(bind(internalResolve, state), bind(internalReject, state));
         } catch (error) {
@@ -7334,7 +7385,7 @@ var doric = (function (exports) {
       });
       OwnPromiseCapability = function () {
         var promise = new Internal();
-        var state = getInternalState$d(promise);
+        var state = getInternalState$c(promise);
         this.promise = promise;
         this.resolve = bind(internalResolve, state);
         this.reject = bind(internalReject, state);
@@ -7692,15 +7743,12 @@ var doric = (function (exports) {
       }
     });
 
-    // eslint-disable-next-line es/no-object-isextensible -- safe
-    var objectIsExtensible = Object.isExtensible;
-
     // `Reflect.isExtensible` method
     // https://tc39.es/ecma262/#sec-reflect.isextensible
     _export({ target: 'Reflect', stat: true }, {
       isExtensible: function isExtensible(target) {
         anObject(target);
-        return objectIsExtensible ? objectIsExtensible(target) : true;
+        return objectIsExtensible(target);
       }
     });
 
@@ -7811,13 +7859,19 @@ var doric = (function (exports) {
     // babel-minify and Closure Compiler transpiles RegExp('a', 'y') -> /a/y and it causes SyntaxError
     var $RegExp$2 = global_1.RegExp;
 
-    var UNSUPPORTED_Y$4 = fails(function () {
+    var UNSUPPORTED_Y$3 = fails(function () {
       var re = $RegExp$2('a', 'y');
       re.lastIndex = 2;
       return re.exec('abcd') != null;
     });
 
-    var BROKEN_CARET = fails(function () {
+    // UC Browser bug
+    // https://github.com/zloirock/core-js/issues/1008
+    var MISSED_STICKY$2 = UNSUPPORTED_Y$3 || fails(function () {
+      return !$RegExp$2('a', 'y').sticky;
+    });
+
+    var BROKEN_CARET = UNSUPPORTED_Y$3 || fails(function () {
       // https://bugzilla.mozilla.org/show_bug.cgi?id=773687
       var re = $RegExp$2('^r', 'gy');
       re.lastIndex = 2;
@@ -7825,8 +7879,9 @@ var doric = (function (exports) {
     });
 
     var regexpStickyHelpers = {
-    	UNSUPPORTED_Y: UNSUPPORTED_Y$4,
-    	BROKEN_CARET: BROKEN_CARET
+      BROKEN_CARET: BROKEN_CARET,
+      MISSED_STICKY: MISSED_STICKY$2,
+      UNSUPPORTED_Y: UNSUPPORTED_Y$3
     };
 
     // babel-minify and Closure Compiler transpiles RegExp('.', 's') -> /./s and it causes SyntaxError
@@ -7880,10 +7935,11 @@ var doric = (function (exports) {
     // "new" should create a new object, old webkit bug
     var CORRECT_NEW = new NativeRegExp(re1) !== re1;
 
-    var UNSUPPORTED_Y$3 = regexpStickyHelpers.UNSUPPORTED_Y;
+    var MISSED_STICKY$1 = regexpStickyHelpers.MISSED_STICKY;
+    var UNSUPPORTED_Y$2 = regexpStickyHelpers.UNSUPPORTED_Y;
 
     var BASE_FORCED = descriptors &&
-      (!CORRECT_NEW || UNSUPPORTED_Y$3 || regexpUnsupportedDotAll || regexpUnsupportedNcg || fails(function () {
+      (!CORRECT_NEW || MISSED_STICKY$1 || regexpUnsupportedDotAll || regexpUnsupportedNcg || fails(function () {
         re2[MATCH$1] = false;
         // RegExp constructor can alter flags and IsRegExp works correct with @@match
         return NativeRegExp(re1) != re1 || NativeRegExp(re2) == re2 || NativeRegExp(re1, 'i') != '/a/i';
@@ -7988,9 +8044,9 @@ var doric = (function (exports) {
 
         rawFlags = flags;
 
-        if (UNSUPPORTED_Y$3 && 'sticky' in re1) {
+        if (MISSED_STICKY$1 && 'sticky' in re1) {
           sticky = !!flags && stringIndexOf$4(flags, 'y') > -1;
-          if (sticky) { flags = replace$6(flags, /y/g, ''); }
+          if (sticky && UNSUPPORTED_Y$2) { flags = replace$6(flags, /y/g, ''); }
         }
 
         if (regexpUnsupportedNcg) {
@@ -8040,7 +8096,7 @@ var doric = (function (exports) {
     setSpecies('RegExp');
 
     var defineProperty$4 = objectDefineProperty.f;
-    var getInternalState$c = internalState.get;
+    var getInternalState$b = internalState.get;
 
     var RegExpPrototype$6 = RegExp.prototype;
     var TypeError$k = global_1.TypeError;
@@ -8055,7 +8111,7 @@ var doric = (function (exports) {
           // We can't use InternalStateModule.getterFor because
           // we don't add metadata for regexps created by a literal.
           if (classofRaw(this) === 'RegExp') {
-            return !!getInternalState$c(this).dotAll;
+            return !!getInternalState$b(this).dotAll;
           }
           throw TypeError$k('Incompatible receiver, RegExp required');
         }
@@ -8071,7 +8127,7 @@ var doric = (function (exports) {
 
 
 
-    var getInternalState$b = internalState.get;
+    var getInternalState$a = internalState.get;
 
 
 
@@ -8091,18 +8147,17 @@ var doric = (function (exports) {
       return re1.lastIndex !== 0 || re2.lastIndex !== 0;
     })();
 
-    var UNSUPPORTED_Y$2 = regexpStickyHelpers.UNSUPPORTED_Y || regexpStickyHelpers.BROKEN_CARET;
+    var UNSUPPORTED_Y$1 = regexpStickyHelpers.BROKEN_CARET;
 
     // nonparticipating capturing group, copied from es5-shim's String#split patch.
     var NPCG_INCLUDED = /()??/.exec('')[1] !== undefined;
 
-    var PATCH = UPDATES_LAST_INDEX_WRONG || NPCG_INCLUDED || UNSUPPORTED_Y$2 || regexpUnsupportedDotAll || regexpUnsupportedNcg;
+    var PATCH = UPDATES_LAST_INDEX_WRONG || NPCG_INCLUDED || UNSUPPORTED_Y$1 || regexpUnsupportedDotAll || regexpUnsupportedNcg;
 
     if (PATCH) {
-      // eslint-disable-next-line max-statements -- TODO
       patchedExec = function exec(string) {
         var re = this;
-        var state = getInternalState$b(re);
+        var state = getInternalState$a(re);
         var str = toString_1(string);
         var raw = state.raw;
         var result, reCopy, lastIndex, match, i, object, group;
@@ -8115,7 +8170,7 @@ var doric = (function (exports) {
         }
 
         var groups = state.groups;
-        var sticky = UNSUPPORTED_Y$2 && re.sticky;
+        var sticky = UNSUPPORTED_Y$1 && re.sticky;
         var flags = functionCall(regexpFlags, re);
         var source = re.source;
         var charsAdded = 0;
@@ -8202,17 +8257,17 @@ var doric = (function (exports) {
       get: regexpFlags
     }); }
 
-    var UNSUPPORTED_Y$1 = regexpStickyHelpers.UNSUPPORTED_Y;
+    var MISSED_STICKY = regexpStickyHelpers.MISSED_STICKY;
 
     var defineProperty$3 = objectDefineProperty.f;
-    var getInternalState$a = internalState.get;
+    var getInternalState$9 = internalState.get;
 
     var RegExpPrototype$4 = RegExp.prototype;
     var TypeError$j = global_1.TypeError;
 
     // `RegExp.prototype.sticky` getter
     // https://tc39.es/ecma262/#sec-get-regexp.prototype.sticky
-    if (descriptors && UNSUPPORTED_Y$1) {
+    if (descriptors && MISSED_STICKY) {
       defineProperty$3(RegExpPrototype$4, 'sticky', {
         configurable: true,
         get: function () {
@@ -8220,7 +8275,7 @@ var doric = (function (exports) {
           // We can't use InternalStateModule.getterFor because
           // we don't add metadata for regexps created by a literal.
           if (classofRaw(this) === 'RegExp') {
-            return !!getInternalState$a(this).sticky;
+            return !!getInternalState$9(this).sticky;
           }
           throw TypeError$j('Incompatible receiver, RegExp required');
         }
@@ -8467,7 +8522,7 @@ var doric = (function (exports) {
 
     var STRING_ITERATOR$1 = 'String Iterator';
     var setInternalState$c = internalState.set;
-    var getInternalState$9 = internalState.getterFor(STRING_ITERATOR$1);
+    var getInternalState$8 = internalState.getterFor(STRING_ITERATOR$1);
 
     // `String.prototype[@@iterator]` method
     // https://tc39.es/ecma262/#sec-string.prototype-@@iterator
@@ -8480,7 +8535,7 @@ var doric = (function (exports) {
     // `%StringIteratorPrototype%.next` method
     // https://tc39.es/ecma262/#sec-%stringiteratorprototype%.next
     }, function next() {
-      var state = getInternalState$9(this);
+      var state = getInternalState$8(this);
       var string = state.string;
       var index = state.index;
       var point;
@@ -8652,7 +8707,7 @@ var doric = (function (exports) {
     var REGEXP_STRING = 'RegExp String';
     var REGEXP_STRING_ITERATOR = REGEXP_STRING + ' Iterator';
     var setInternalState$b = internalState.set;
-    var getInternalState$8 = internalState.getterFor(REGEXP_STRING_ITERATOR);
+    var getInternalState$7 = internalState.getterFor(REGEXP_STRING_ITERATOR);
     var RegExpPrototype$1 = RegExp.prototype;
     var TypeError$g = global_1.TypeError;
     var getFlags$1 = functionUncurryThis(regexpFlags);
@@ -8673,7 +8728,7 @@ var doric = (function (exports) {
         done: false
       });
     }, REGEXP_STRING, function next() {
-      var state = getInternalState$8(this);
+      var state = getInternalState$7(this);
       if (state.done) { return { value: undefined, done: true }; }
       var R = state.regexp;
       var S = state.string;
@@ -9090,7 +9145,7 @@ var doric = (function (exports) {
             lastIndex = separatorCopy.lastIndex;
             if (lastIndex > lastLastIndex) {
               push$a(output, stringSlice$6(string, lastLastIndex, match.index));
-              if (match.length > 1 && match.index < string.length) { functionApply($push, output, arraySlice$1(match, 1)); }
+              if (match.length > 1 && match.index < string.length) { functionApply($push, output, arraySliceSimple(match, 1)); }
               lastLength = match[0].length;
               lastLastIndex = lastIndex;
               if (output.length >= lim) { break; }
@@ -9100,7 +9155,7 @@ var doric = (function (exports) {
           if (lastLastIndex === string.length) {
             if (lastLength || !exec$4(separatorCopy, '')) { push$a(output, ''); }
           } else { push$a(output, stringSlice$6(string, lastLastIndex)); }
-          return output.length > lim ? arraySlice$1(output, 0, lim) : output;
+          return output.length > lim ? arraySliceSimple(output, 0, lim) : output;
         };
       // Chakra, V8
       } else if ('0'.split(undefined, 0).length) {
@@ -10429,8 +10484,6 @@ var doric = (function (exports) {
 
 
     var IS_IE11 = !global_1.ActiveXObject && 'ActiveXObject' in global_1;
-    // eslint-disable-next-line es/no-object-isextensible -- safe
-    var isExtensible = Object.isExtensible;
     var InternalWeakMap;
 
     var wrapper = function (init) {
@@ -10456,28 +10509,28 @@ var doric = (function (exports) {
       var nativeSet = functionUncurryThis(WeakMapPrototype.set);
       redefineAll(WeakMapPrototype, {
         'delete': function (key) {
-          if (isObject(key) && !isExtensible(key)) {
+          if (isObject(key) && !objectIsExtensible(key)) {
             var state = enforceIternalState(this);
             if (!state.frozen) { state.frozen = new InternalWeakMap(); }
             return nativeDelete(this, key) || state.frozen['delete'](key);
           } return nativeDelete(this, key);
         },
         has: function has(key) {
-          if (isObject(key) && !isExtensible(key)) {
+          if (isObject(key) && !objectIsExtensible(key)) {
             var state = enforceIternalState(this);
             if (!state.frozen) { state.frozen = new InternalWeakMap(); }
             return nativeHas(this, key) || state.frozen.has(key);
           } return nativeHas(this, key);
         },
         get: function get(key) {
-          if (isObject(key) && !isExtensible(key)) {
+          if (isObject(key) && !objectIsExtensible(key)) {
             var state = enforceIternalState(this);
             if (!state.frozen) { state.frozen = new InternalWeakMap(); }
             return nativeHas(this, key) ? nativeGet(this, key) : state.frozen.get(key);
           } return nativeGet(this, key);
         },
         set: function set(key, value) {
-          if (isObject(key) && !isExtensible(key)) {
+          if (isObject(key) && !objectIsExtensible(key)) {
             var state = enforceIternalState(this);
             if (!state.frozen) { state.frozen = new InternalWeakMap(); }
             nativeHas(this, key) ? nativeSet(this, key, value) : state.frozen.set(key, value);
@@ -10523,8 +10576,9 @@ var doric = (function (exports) {
 
     var Promise$3 = getBuiltIn('Promise');
 
+    var ASYNC_FROM_SYNC_ITERATOR = 'AsyncFromSyncIterator';
     var setInternalState$9 = internalState.set;
-    var getInternalState$7 = internalState.get;
+    var getInternalState$6 = internalState.getterFor(ASYNC_FROM_SYNC_ITERATOR);
 
     var asyncFromSyncIteratorContinuation = function (result, resolve, reject) {
       var done = result.done;
@@ -10535,6 +10589,7 @@ var doric = (function (exports) {
 
     var AsyncFromSyncIterator = function AsyncIterator(iterator) {
       setInternalState$9(this, {
+        type: ASYNC_FROM_SYNC_ITERATOR,
         iterator: anObject(iterator),
         next: iterator.next
       });
@@ -10542,7 +10597,7 @@ var doric = (function (exports) {
 
     AsyncFromSyncIterator.prototype = redefineAll(objectCreate(asyncIteratorPrototype), {
       next: function next(arg) {
-        var state = getInternalState$7(this);
+        var state = getInternalState$6(this);
         var hasArg = !!arguments.length;
         return new Promise$3(function (resolve, reject) {
           var result = anObject(functionApply(state.next, state.iterator, hasArg ? [arg] : []));
@@ -10550,7 +10605,7 @@ var doric = (function (exports) {
         });
       },
       'return': function (arg) {
-        var iterator = getInternalState$7(this).iterator;
+        var iterator = getInternalState$6(this).iterator;
         var hasArg = !!arguments.length;
         return new Promise$3(function (resolve, reject) {
           var $return = getMethod(iterator, 'return');
@@ -10560,7 +10615,7 @@ var doric = (function (exports) {
         });
       },
       'throw': function (arg) {
-        var iterator = getInternalState$7(this).iterator;
+        var iterator = getInternalState$6(this).iterator;
         var hasArg = !!arguments.length;
         return new Promise$3(function (resolve, reject) {
           var $throw = getMethod(iterator, 'throw');
@@ -10966,13 +11021,15 @@ var doric = (function (exports) {
 
     var Promise$2 = getBuiltIn('Promise');
 
+    var ASYNC_ITERATOR_PROXY = 'AsyncIteratorProxy';
     var setInternalState$8 = internalState.set;
-    var getInternalState$6 = internalState.get;
+    var getInternalState$5 = internalState.getterFor(ASYNC_ITERATOR_PROXY);
 
     var TO_STRING_TAG$3 = wellKnownSymbol('toStringTag');
 
     var asyncIteratorCreateProxy = function (nextHandler, IS_ITERATOR) {
       var AsyncIteratorProxy = function AsyncIterator(state) {
+        state.type = ASYNC_ITERATOR_PROXY;
         state.next = aCallable(state.iterator.next);
         state.done = false;
         state.ignoreArgument = !IS_ITERATOR;
@@ -10984,7 +11041,7 @@ var doric = (function (exports) {
           var that = this;
           var hasArgument = !!arguments.length;
           return new Promise$2(function (resolve) {
-            var state = getInternalState$6(that);
+            var state = getInternalState$5(that);
             var args = hasArgument ? [state.ignoreArgument ? undefined : arg] : IS_ITERATOR ? [] : [undefined];
             state.ignoreArgument = false;
             resolve(state.done ? { done: true, value: undefined } : anObject(functionCall(nextHandler, state, Promise$2, args)));
@@ -10993,7 +11050,7 @@ var doric = (function (exports) {
         'return': function (value) {
           var that = this;
           return new Promise$2(function (resolve, reject) {
-            var state = getInternalState$6(that);
+            var state = getInternalState$5(that);
             var iterator = state.iterator;
             state.done = true;
             var $$return = getMethod(iterator, 'return');
@@ -11007,7 +11064,7 @@ var doric = (function (exports) {
         'throw': function (value) {
           var that = this;
           return new Promise$2(function (resolve, reject) {
-            var state = getInternalState$6(that);
+            var state = getInternalState$5(that);
             var iterator = state.iterator;
             state.done = true;
             var $$throw = getMethod(iterator, 'throw');
@@ -11407,7 +11464,7 @@ var doric = (function (exports) {
     var NUMERIC_RANGE_ITERATOR = 'NumericRangeIterator';
 
     var setInternalState$7 = internalState.set;
-    var getInternalState$5 = internalState.getterFor(NUMERIC_RANGE_ITERATOR);
+    var getInternalState$4 = internalState.getterFor(NUMERIC_RANGE_ITERATOR);
 
     var RangeError$2 = global_1.RangeError;
     var TypeError$c = global_1.TypeError;
@@ -11460,7 +11517,7 @@ var doric = (function (exports) {
         this.inclusive = inclusiveEnd;
       }
     }, NUMERIC_RANGE_ITERATOR, function next() {
-      var state = getInternalState$5(this);
+      var state = getInternalState$4(this);
       if (state.hitsEnd) { return { value: undefined, done: true }; }
       var start = state.start;
       var end = state.end;
@@ -11486,16 +11543,16 @@ var doric = (function (exports) {
     if (descriptors) {
       objectDefineProperties($RangeIterator.prototype, {
         start: getter(function () {
-          return getInternalState$5(this).start;
+          return getInternalState$4(this).start;
         }),
         end: getter(function () {
-          return getInternalState$5(this).end;
+          return getInternalState$4(this).end;
         }),
         inclusive: getter(function () {
-          return getInternalState$5(this).inclusiveEnd;
+          return getInternalState$4(this).inclusiveEnd;
         }),
         step: getter(function () {
-          return getInternalState$5(this).step;
+          return getInternalState$4(this).step;
         })
       });
     }
@@ -11633,13 +11690,15 @@ var doric = (function (exports) {
 
     var IteratorPrototype$1 = iteratorsCore.IteratorPrototype;
 
+    var ITERATOR_PROXY = 'IteratorProxy';
     var setInternalState$6 = internalState.set;
-    var getInternalState$4 = internalState.get;
+    var getInternalState$3 = internalState.getterFor(ITERATOR_PROXY);
 
     var TO_STRING_TAG$1 = wellKnownSymbol('toStringTag');
 
     var iteratorCreateProxy = function (nextHandler, IS_ITERATOR) {
       var IteratorProxy = function Iterator(state) {
+        state.type = ITERATOR_PROXY;
         state.next = aCallable(state.iterator.next);
         state.done = false;
         state.ignoreArg = !IS_ITERATOR;
@@ -11648,21 +11707,21 @@ var doric = (function (exports) {
 
       IteratorProxy.prototype = redefineAll(objectCreate(IteratorPrototype$1), {
         next: function next(arg) {
-          var state = getInternalState$4(this);
+          var state = getInternalState$3(this);
           var args = arguments.length ? [state.ignoreArg ? undefined : arg] : IS_ITERATOR ? [] : [undefined];
           state.ignoreArg = false;
           var result = state.done ? undefined : functionCall(nextHandler, state, args);
           return { done: state.done, value: result };
         },
         'return': function (value) {
-          var state = getInternalState$4(this);
+          var state = getInternalState$3(this);
           var iterator = state.iterator;
           state.done = true;
           var $$return = getMethod(iterator, 'return');
           return { done: true, value: $$return ? anObject(functionCall($$return, iterator, value)).value : value };
         },
         'throw': function (value) {
-          var state = getInternalState$4(this);
+          var state = getInternalState$3(this);
           var iterator = state.iterator;
           state.done = true;
           var $$throw = getMethod(iterator, 'throw');
@@ -12485,7 +12544,7 @@ var doric = (function (exports) {
     var SEEDED_RANDOM_GENERATOR = SEEDED_RANDOM + ' Generator';
     var SEED_TYPE_ERROR = 'Math.seededPRNG() argument should have a "seed" field with a finite value.';
     var setInternalState$5 = internalState.set;
-    var getInternalState$3 = internalState.getterFor(SEEDED_RANDOM_GENERATOR);
+    var getInternalState$2 = internalState.getterFor(SEEDED_RANDOM_GENERATOR);
     var TypeError$5 = global_1.TypeError;
 
     var $SeededRandomGenerator = createIteratorConstructor(function SeededRandomGenerator(seed) {
@@ -12494,7 +12553,7 @@ var doric = (function (exports) {
         seed: seed % 2147483647
       });
     }, SEEDED_RANDOM, function next() {
-      var state = getInternalState$3(this);
+      var state = getInternalState$2(this);
       var seed = state.seed = (state.seed * 1103515245 + 12345) % 2147483647;
       return { value: (seed & 1073741823) / 1073741823, done: false };
     });
@@ -12578,7 +12637,7 @@ var doric = (function (exports) {
 
     var OBJECT_ITERATOR = 'Object Iterator';
     var setInternalState$4 = internalState.set;
-    var getInternalState$2 = internalState.getterFor(OBJECT_ITERATOR);
+    var getInternalState$1 = internalState.getterFor(OBJECT_ITERATOR);
 
     var objectIterator = createIteratorConstructor(function ObjectIterator(source, mode) {
       var object = toObject(source);
@@ -12590,7 +12649,7 @@ var doric = (function (exports) {
         index: 0
       });
     }, 'Object', function next() {
-      var state = getInternalState$2(this);
+      var state = getInternalState$1(this);
       var keys = state.keys;
       while (true) {
         if (keys === null || state.index >= keys.length) {
@@ -12653,42 +12712,51 @@ var doric = (function (exports) {
 
 
 
-    var OBSERVABLE = wellKnownSymbol('observable');
-    var getInternalState$1 = internalState.get;
+    var $$OBSERVABLE = wellKnownSymbol('observable');
+    var OBSERVABLE = 'Observable';
+    var SUBSCRIPTION = 'Subscription';
+    var SUBSCRIPTION_OBSERVER = 'SubscriptionObserver';
+    var getterFor = internalState.getterFor;
     var setInternalState$3 = internalState.set;
+    var getObservableInternalState = getterFor(OBSERVABLE);
+    var getSubscriptionInternalState = getterFor(SUBSCRIPTION);
+    var getSubscriptionObserverInternalState = getterFor(SUBSCRIPTION_OBSERVER);
     var Array$1 = global_1.Array;
 
-    var cleanupSubscription = function (subscriptionState) {
-      var cleanup = subscriptionState.cleanup;
-      if (cleanup) {
-        subscriptionState.cleanup = undefined;
-        try {
-          cleanup();
-        } catch (error) {
-          hostReportErrors(error);
+    var SubscriptionState = function (observer) {
+      this.observer = anObject(observer);
+      this.cleanup = undefined;
+      this.subscriptionObserver = undefined;
+    };
+
+    SubscriptionState.prototype = {
+      type: SUBSCRIPTION,
+      clean: function () {
+        var cleanup = this.cleanup;
+        if (cleanup) {
+          this.cleanup = undefined;
+          try {
+            cleanup();
+          } catch (error) {
+            hostReportErrors(error);
+          }
         }
+      },
+      close: function () {
+        if (!descriptors) {
+          var subscription = this.facade;
+          var subscriptionObserver = this.subscriptionObserver;
+          subscription.closed = true;
+          if (subscriptionObserver) { subscriptionObserver.closed = true; }
+        } this.observer = undefined;
+      },
+      isClosed: function () {
+        return this.observer === undefined;
       }
     };
 
-    var subscriptionClosed = function (subscriptionState) {
-      return subscriptionState.observer === undefined;
-    };
-
-    var close = function (subscriptionState) {
-      var subscription = subscriptionState.facade;
-      if (!descriptors) {
-        subscription.closed = true;
-        var subscriptionObserver = subscriptionState.subscriptionObserver;
-        if (subscriptionObserver) { subscriptionObserver.closed = true; }
-      } subscriptionState.observer = undefined;
-    };
-
     var Subscription = function (observer, subscriber) {
-      var subscriptionState = setInternalState$3(this, {
-        cleanup: undefined,
-        observer: anObject(observer),
-        subscriptionObserver: undefined
-      });
+      var subscriptionState = setInternalState$3(this, new SubscriptionState(observer));
       var start;
       if (!descriptors) { this.closed = false; }
       try {
@@ -12696,8 +12764,8 @@ var doric = (function (exports) {
       } catch (error) {
         hostReportErrors(error);
       }
-      if (subscriptionClosed(subscriptionState)) { return; }
-      var subscriptionObserver = subscriptionState.subscriptionObserver = new SubscriptionObserver(this);
+      if (subscriptionState.isClosed()) { return; }
+      var subscriptionObserver = subscriptionState.subscriptionObserver = new SubscriptionObserver(subscriptionState);
       try {
         var cleanup = subscriber(subscriptionObserver);
         var subscription = cleanup;
@@ -12707,15 +12775,15 @@ var doric = (function (exports) {
       } catch (error$1) {
         subscriptionObserver.error(error$1);
         return;
-      } if (subscriptionClosed(subscriptionState)) { cleanupSubscription(subscriptionState); }
+      } if (subscriptionState.isClosed()) { subscriptionState.clean(); }
     };
 
     Subscription.prototype = redefineAll({}, {
       unsubscribe: function unsubscribe() {
-        var subscriptionState = getInternalState$1(this);
-        if (!subscriptionClosed(subscriptionState)) {
-          close(subscriptionState);
-          cleanupSubscription(subscriptionState);
+        var subscriptionState = getSubscriptionInternalState(this);
+        if (!subscriptionState.isClosed()) {
+          subscriptionState.close();
+          subscriptionState.clean();
         }
       }
     });
@@ -12723,19 +12791,22 @@ var doric = (function (exports) {
     if (descriptors) { defineProperty(Subscription.prototype, 'closed', {
       configurable: true,
       get: function () {
-        return subscriptionClosed(getInternalState$1(this));
+        return getSubscriptionInternalState(this).isClosed();
       }
     }); }
 
-    var SubscriptionObserver = function (subscription) {
-      setInternalState$3(this, { subscription: subscription });
+    var SubscriptionObserver = function (subscriptionState) {
+      setInternalState$3(this, {
+        type: SUBSCRIPTION_OBSERVER,
+        subscriptionState: subscriptionState
+      });
       if (!descriptors) { this.closed = false; }
     };
 
     SubscriptionObserver.prototype = redefineAll({}, {
       next: function next(value) {
-        var subscriptionState = getInternalState$1(getInternalState$1(this).subscription);
-        if (!subscriptionClosed(subscriptionState)) {
+        var subscriptionState = getSubscriptionObserverInternalState(this).subscriptionState;
+        if (!subscriptionState.isClosed()) {
           var observer = subscriptionState.observer;
           try {
             var nextMethod = getMethod(observer, 'next');
@@ -12746,30 +12817,30 @@ var doric = (function (exports) {
         }
       },
       error: function error(value) {
-        var subscriptionState = getInternalState$1(getInternalState$1(this).subscription);
-        if (!subscriptionClosed(subscriptionState)) {
+        var subscriptionState = getSubscriptionObserverInternalState(this).subscriptionState;
+        if (!subscriptionState.isClosed()) {
           var observer = subscriptionState.observer;
-          close(subscriptionState);
+          subscriptionState.close();
           try {
             var errorMethod = getMethod(observer, 'error');
             if (errorMethod) { functionCall(errorMethod, observer, value); }
             else { hostReportErrors(value); }
           } catch (err) {
             hostReportErrors(err);
-          } cleanupSubscription(subscriptionState);
+          } subscriptionState.clean();
         }
       },
       complete: function complete() {
-        var subscriptionState = getInternalState$1(getInternalState$1(this).subscription);
-        if (!subscriptionClosed(subscriptionState)) {
+        var subscriptionState = getSubscriptionObserverInternalState(this).subscriptionState;
+        if (!subscriptionState.isClosed()) {
           var observer = subscriptionState.observer;
-          close(subscriptionState);
+          subscriptionState.close();
           try {
             var completeMethod = getMethod(observer, 'complete');
             if (completeMethod) { functionCall(completeMethod, observer); }
           } catch (error) {
             hostReportErrors(error);
-          } cleanupSubscription(subscriptionState);
+          } subscriptionState.clean();
         }
       }
     });
@@ -12777,13 +12848,16 @@ var doric = (function (exports) {
     if (descriptors) { defineProperty(SubscriptionObserver.prototype, 'closed', {
       configurable: true,
       get: function () {
-        return subscriptionClosed(getInternalState$1(getInternalState$1(this).subscription));
+        return getSubscriptionObserverInternalState(this).subscriptionState.isClosed();
       }
     }); }
 
     var $Observable = function Observable(subscriber) {
       anInstance(this, ObservablePrototype);
-      setInternalState$3(this, { subscriber: aCallable(subscriber) });
+      setInternalState$3(this, {
+        type: OBSERVABLE,
+        subscriber: aCallable(subscriber)
+      });
     };
 
     var ObservablePrototype = $Observable.prototype;
@@ -12795,14 +12869,14 @@ var doric = (function (exports) {
           next: observer,
           error: length > 1 ? arguments[1] : undefined,
           complete: length > 2 ? arguments[2] : undefined
-        } : isObject(observer) ? observer : {}, getInternalState$1(this).subscriber);
+        } : isObject(observer) ? observer : {}, getObservableInternalState(this).subscriber);
       }
     });
 
     redefineAll($Observable, {
       from: function from(x) {
         var C = isConstructor(this) ? this : $Observable;
-        var observableMethod = getMethod(anObject(x), OBSERVABLE);
+        var observableMethod = getMethod(anObject(x), $$OBSERVABLE);
         if (observableMethod) {
           var observable = anObject(functionCall(observableMethod, x));
           return observable.constructor === C ? observable : new C(function (observer) {
@@ -12835,13 +12909,13 @@ var doric = (function (exports) {
       }
     });
 
-    redefine(ObservablePrototype, OBSERVABLE, function () { return this; });
+    redefine(ObservablePrototype, $$OBSERVABLE, function () { return this; });
 
     _export({ global: true }, {
       Observable: $Observable
     });
 
-    setSpecies('Observable');
+    setSpecies(OBSERVABLE);
 
     // `Promise.try` method
     // https://github.com/tc39/proposal-promise-try
@@ -13777,8 +13851,9 @@ var doric = (function (exports) {
       var k = 0;
       delta = firstTime ? floor$1(delta / damp) : delta >> 1;
       delta += floor$1(delta / numPoints);
-      for (; delta > baseMinusTMin * tMax >> 1; k += base) {
+      while (delta > baseMinusTMin * tMax >> 1) {
         delta = floor$1(delta / baseMinusTMin);
+        k += base;
       }
       return floor$1(k + (baseMinusTMin + 1) * delta / (delta + skew));
     };
@@ -13787,7 +13862,6 @@ var doric = (function (exports) {
      * Converts a string of Unicode symbols (e.g. a domain name label) to a
      * Punycode string of ASCII-only symbols.
      */
-    // eslint-disable-next-line max-statements -- TODO
     var encode = function (input) {
       var output = [];
 
@@ -13847,24 +13921,26 @@ var doric = (function (exports) {
           if (currentValue == n) {
             // Represent delta as a generalized variable-length integer.
             var q = delta;
-            for (var k = base; /* no condition */; k += base) {
+            var k = base;
+            while (true) {
               var t = k <= bias ? tMin : (k >= bias + tMax ? tMax : k - bias);
               if (q < t) { break; }
               var qMinusT = q - t;
               var baseMinusT = base - t;
               push$2(output, fromCharCode(digitToBasic(t + qMinusT % baseMinusT)));
               q = floor$1(qMinusT / baseMinusT);
+              k += base;
             }
 
             push$2(output, fromCharCode(digitToBasic(q)));
             bias = adapt(delta, handledCPCountPlusOne, handledCPCount == basicLength);
             delta = 0;
-            ++handledCPCount;
+            handledCPCount++;
           }
         }
 
-        ++delta;
-        ++n;
+        delta++;
+        n++;
       }
       return join$2(output, '');
     };
@@ -13980,29 +14056,6 @@ var doric = (function (exports) {
       return replace$1(encodeURIComponent$1(it), find, replacer);
     };
 
-    var parseSearchParams = function (result, query) {
-      if (query) {
-        var attributes = split$1(query, '&');
-        var index = 0;
-        var attribute, entry;
-        while (index < attributes.length) {
-          attribute = attributes[index++];
-          if (attribute.length) {
-            entry = split$1(attribute, '=');
-            push$1(result, {
-              key: deserialize(shift$1(entry)),
-              value: deserialize(join$1(entry, '='))
-            });
-          }
-        }
-      }
-    };
-
-    var updateSearchParams = function (query) {
-      this.entries.length = 0;
-      parseSearchParams(this.entries, query);
-    };
-
     var validateArgumentsLength = function (passed, required) {
       if (passed < required) { throw TypeError$2('Not enough arguments'); }
     };
@@ -14021,48 +14074,87 @@ var doric = (function (exports) {
       if (!step.done) {
         step.value = kind === 'keys' ? entry.key : kind === 'values' ? entry.value : [entry.key, entry.value];
       } return step;
-    });
+    }, true);
+
+    var URLSearchParamsState = function (init) {
+      this.entries = [];
+      this.url = null;
+
+      if (init !== undefined) {
+        if (isObject(init)) { this.parseObject(init); }
+        else { this.parseQuery(typeof init == 'string' ? charAt$1(init, 0) === '?' ? stringSlice$1(init, 1) : init : toString_1(init)); }
+      }
+    };
+
+    URLSearchParamsState.prototype = {
+      type: URL_SEARCH_PARAMS,
+      bindURL: function (url) {
+        this.url = url;
+        this.update();
+      },
+      parseObject: function (object) {
+        var iteratorMethod = getIteratorMethod(object);
+        var iterator, next, step, entryIterator, entryNext, first, second;
+
+        if (iteratorMethod) {
+          iterator = getIterator(object, iteratorMethod);
+          next = iterator.next;
+          while (!(step = functionCall(next, iterator)).done) {
+            entryIterator = getIterator(anObject(step.value));
+            entryNext = entryIterator.next;
+            if (
+              (first = functionCall(entryNext, entryIterator)).done ||
+              (second = functionCall(entryNext, entryIterator)).done ||
+              !functionCall(entryNext, entryIterator).done
+            ) { throw TypeError$2('Expected sequence with length 2'); }
+            push$1(this.entries, { key: toString_1(first.value), value: toString_1(second.value) });
+          }
+        } else { for (var key in object) { if (hasOwnProperty_1(object, key)) {
+          push$1(this.entries, { key: key, value: toString_1(object[key]) });
+        } } }
+      },
+      parseQuery: function (query) {
+        if (query) {
+          var attributes = split$1(query, '&');
+          var index = 0;
+          var attribute, entry;
+          while (index < attributes.length) {
+            attribute = attributes[index++];
+            if (attribute.length) {
+              entry = split$1(attribute, '=');
+              push$1(this.entries, {
+                key: deserialize(shift$1(entry)),
+                value: deserialize(join$1(entry, '='))
+              });
+            }
+          }
+        }
+      },
+      serialize: function () {
+        var entries = this.entries;
+        var result = [];
+        var index = 0;
+        var entry;
+        while (index < entries.length) {
+          entry = entries[index++];
+          push$1(result, serialize(entry.key) + '=' + serialize(entry.value));
+        } return join$1(result, '&');
+      },
+      update: function () {
+        this.entries.length = 0;
+        this.parseQuery(this.url.query);
+      },
+      updateURL: function () {
+        if (this.url) { this.url.update(); }
+      }
+    };
 
     // `URLSearchParams` constructor
     // https://url.spec.whatwg.org/#interface-urlsearchparams
     var URLSearchParamsConstructor = function URLSearchParams(/* init */) {
       anInstance(this, URLSearchParamsPrototype);
       var init = arguments.length > 0 ? arguments[0] : undefined;
-      var that = this;
-      var entries = [];
-      var iteratorMethod, iterator, next, step, entryIterator, entryNext, first, second, key;
-
-      setInternalState$1(that, {
-        type: URL_SEARCH_PARAMS,
-        entries: entries,
-        updateURL: function () { /* empty */ },
-        updateSearchParams: updateSearchParams
-      });
-
-      if (init !== undefined) {
-        if (isObject(init)) {
-          iteratorMethod = getIteratorMethod(init);
-          if (iteratorMethod) {
-            iterator = getIterator(init, iteratorMethod);
-            next = iterator.next;
-            while (!(step = functionCall(next, iterator)).done) {
-              entryIterator = getIterator(anObject(step.value));
-              entryNext = entryIterator.next;
-              if (
-                (first = functionCall(entryNext, entryIterator)).done ||
-                (second = functionCall(entryNext, entryIterator)).done ||
-                !functionCall(entryNext, entryIterator).done
-              ) { throw TypeError$2('Expected sequence with length 2'); }
-              push$1(entries, { key: toString_1(first.value), value: toString_1(second.value) });
-            }
-          } else { for (key in init) { if (hasOwnProperty_1(init, key)) { push$1(entries, { key: key, value: toString_1(init[key]) }); } } }
-        } else {
-          parseSearchParams(
-            entries,
-            typeof init == 'string' ? charAt$1(init, 0) === '?' ? stringSlice$1(init, 1) : init : toString_1(init)
-          );
-        }
-      }
+      setInternalState$1(this, new URLSearchParamsState(init));
     };
 
     var URLSearchParamsPrototype = URLSearchParamsConstructor.prototype;
@@ -14191,14 +14283,7 @@ var doric = (function (exports) {
     // `URLSearchParams.prototype.toString` method
     // https://url.spec.whatwg.org/#urlsearchparams-stringification-behavior
     redefine(URLSearchParamsPrototype, 'toString', function toString() {
-      var entries = getInternalParamsState(this).entries;
-      var result = [];
-      var index = 0;
-      var entry;
-      while (index < entries.length) {
-        entry = entries[index++];
-        push$1(result, serialize(entry.key) + '=' + serialize(entry.value));
-      } return join$1(result, '&');
+      return getInternalParamsState(this).serialize();
     }, { enumerable: true });
 
     setToStringTag(URLSearchParamsConstructor, URL_SEARCH_PARAMS);
@@ -14272,7 +14357,6 @@ var doric = (function (exports) {
 
 
 
-
     var codeAt = stringMultibyte.codeAt;
 
 
@@ -14324,31 +14408,7 @@ var doric = (function (exports) {
     /* eslint-enable regexp/no-control-character -- safe */
     var EOF;
 
-    var parseHost = function (url, input) {
-      var result, codePoints, index;
-      if (charAt(input, 0) == '[') {
-        if (charAt(input, input.length - 1) != ']') { return INVALID_HOST; }
-        result = parseIPv6(stringSlice(input, 1, -1));
-        if (!result) { return INVALID_HOST; }
-        url.host = result;
-      // opaque host
-      } else if (!isSpecial(url)) {
-        if (exec(FORBIDDEN_HOST_CODE_POINT_EXCLUDING_PERCENT, input)) { return INVALID_HOST; }
-        result = '';
-        codePoints = arrayFrom(input);
-        for (index = 0; index < codePoints.length; index++) {
-          result += percentEncode(codePoints[index], C0ControlPercentEncodeSet);
-        }
-        url.host = result;
-      } else {
-        input = stringPunycodeToAscii(input);
-        if (exec(FORBIDDEN_HOST_CODE_POINT, input)) { return INVALID_HOST; }
-        result = parseIPv4(input);
-        if (result === null) { return INVALID_HOST; }
-        url.host = result;
-      }
-    };
-
+    // https://url.spec.whatwg.org/#ipv4-number-parser
     var parseIPv4 = function (input) {
       var parts = split(input, '.');
       var partsLength, numbers, index, part, radix, number, ipv4;
@@ -14387,6 +14447,7 @@ var doric = (function (exports) {
       return ipv4;
     };
 
+    // https://url.spec.whatwg.org/#concept-ipv6-parser
     // eslint-disable-next-line max-statements -- TODO
     var parseIPv6 = function (input) {
       var address = [0, 0, 0, 0, 0, 0, 0, 0];
@@ -14490,6 +14551,7 @@ var doric = (function (exports) {
       return maxIndex;
     };
 
+    // https://url.spec.whatwg.org/#host-serializing
     var serializeHost = function (host) {
       var result, index, compress, ignore0;
       // ipv4
@@ -14534,6 +14596,7 @@ var doric = (function (exports) {
       return code > 0x20 && code < 0x7F && !hasOwnProperty_1(set, chr) ? chr : encodeURIComponent(chr);
     };
 
+    // https://url.spec.whatwg.org/#special-scheme
     var specialSchemes = {
       ftp: 21,
       file: null,
@@ -14543,24 +14606,14 @@ var doric = (function (exports) {
       wss: 443
     };
 
-    var isSpecial = function (url) {
-      return hasOwnProperty_1(specialSchemes, url.scheme);
-    };
-
-    var includesCredentials = function (url) {
-      return url.username != '' || url.password != '';
-    };
-
-    var cannotHaveUsernamePasswordPort = function (url) {
-      return !url.host || url.cannotBeABaseURL || url.scheme == 'file';
-    };
-
+    // https://url.spec.whatwg.org/#windows-drive-letter
     var isWindowsDriveLetter = function (string, normalized) {
       var second;
       return string.length == 2 && exec(ALPHA, charAt(string, 0))
         && ((second = charAt(string, 1)) == ':' || (!normalized && second == '|'));
     };
 
+    // https://url.spec.whatwg.org/#start-with-a-windows-drive-letter
     var startsWithWindowsDriveLetter = function (string) {
       var third;
       return string.length > 1 && isWindowsDriveLetter(stringSlice(string, 0, 2)) && (
@@ -14569,18 +14622,12 @@ var doric = (function (exports) {
       );
     };
 
-    var shortenURLsPath = function (url) {
-      var path = url.path;
-      var pathSize = path.length;
-      if (pathSize && (url.scheme != 'file' || pathSize != 1 || !isWindowsDriveLetter(path[0], true))) {
-        path.length--;
-      }
-    };
-
+    // https://url.spec.whatwg.org/#single-dot-path-segment
     var isSingleDot = function (segment) {
       return segment === '.' || toLowerCase(segment) === '%2e';
     };
 
+    // https://url.spec.whatwg.org/#double-dot-path-segment
     var isDoubleDot = function (segment) {
       segment = toLowerCase(segment);
       return segment === '..' || segment === '%2e.' || segment === '.%2e' || segment === '%2e%2e';
@@ -14609,402 +14656,625 @@ var doric = (function (exports) {
     var QUERY = {};
     var FRAGMENT = {};
 
-    // eslint-disable-next-line max-statements -- TODO
-    var parseURL = function (url, input, stateOverride, base) {
-      var state = stateOverride || SCHEME_START;
-      var pointer = 0;
-      var buffer = '';
-      var seenAt = false;
-      var seenBracket = false;
-      var seenPasswordToken = false;
-      var codePoints, chr, bufferCodePoints, failure;
-
-      if (!stateOverride) {
-        url.scheme = '';
-        url.username = '';
-        url.password = '';
-        url.host = null;
-        url.port = null;
-        url.path = [];
-        url.query = null;
-        url.fragment = null;
-        url.cannotBeABaseURL = false;
-        input = replace(input, LEADING_AND_TRAILING_C0_CONTROL_OR_SPACE, '');
+    var URLState = function (url, isBase, base) {
+      var urlString = toString_1(url);
+      var baseState, failure, searchParams;
+      if (isBase) {
+        failure = this.parse(urlString);
+        if (failure) { throw TypeError$1(failure); }
+        this.searchParams = null;
+      } else {
+        if (base !== undefined) { baseState = new URLState(base, true); }
+        failure = this.parse(urlString, null, baseState);
+        if (failure) { throw TypeError$1(failure); }
+        searchParams = getInternalSearchParamsState(new URLSearchParams$1());
+        searchParams.bindURL(this);
+        this.searchParams = searchParams;
       }
+    };
 
-      input = replace(input, TAB_AND_NEW_LINE, '');
+    URLState.prototype = {
+      type: 'URL',
+      // https://url.spec.whatwg.org/#url-parsing
+      // eslint-disable-next-line max-statements -- TODO
+      parse: function (input, stateOverride, base) {
+        var url = this;
+        var state = stateOverride || SCHEME_START;
+        var pointer = 0;
+        var buffer = '';
+        var seenAt = false;
+        var seenBracket = false;
+        var seenPasswordToken = false;
+        var codePoints, chr, bufferCodePoints, failure;
 
-      codePoints = arrayFrom(input);
+        input = toString_1(input);
 
-      while (pointer <= codePoints.length) {
-        chr = codePoints[pointer];
-        switch (state) {
-          case SCHEME_START:
-            if (chr && exec(ALPHA, chr)) {
-              buffer += toLowerCase(chr);
-              state = SCHEME;
-            } else if (!stateOverride) {
-              state = NO_SCHEME;
-              continue;
-            } else { return INVALID_SCHEME; }
-            break;
+        if (!stateOverride) {
+          url.scheme = '';
+          url.username = '';
+          url.password = '';
+          url.host = null;
+          url.port = null;
+          url.path = [];
+          url.query = null;
+          url.fragment = null;
+          url.cannotBeABaseURL = false;
+          input = replace(input, LEADING_AND_TRAILING_C0_CONTROL_OR_SPACE, '');
+        }
 
-          case SCHEME:
-            if (chr && (exec(ALPHANUMERIC, chr) || chr == '+' || chr == '-' || chr == '.')) {
-              buffer += toLowerCase(chr);
-            } else if (chr == ':') {
-              if (stateOverride && (
-                (isSpecial(url) != hasOwnProperty_1(specialSchemes, buffer)) ||
-                (buffer == 'file' && (includesCredentials(url) || url.port !== null)) ||
-                (url.scheme == 'file' && !url.host)
-              )) { return; }
-              url.scheme = buffer;
-              if (stateOverride) {
-                if (isSpecial(url) && specialSchemes[url.scheme] == url.port) { url.port = null; }
-                return;
+        input = replace(input, TAB_AND_NEW_LINE, '');
+
+        codePoints = arrayFrom(input);
+
+        while (pointer <= codePoints.length) {
+          chr = codePoints[pointer];
+          switch (state) {
+            case SCHEME_START:
+              if (chr && exec(ALPHA, chr)) {
+                buffer += toLowerCase(chr);
+                state = SCHEME;
+              } else if (!stateOverride) {
+                state = NO_SCHEME;
+                continue;
+              } else { return INVALID_SCHEME; }
+              break;
+
+            case SCHEME:
+              if (chr && (exec(ALPHANUMERIC, chr) || chr == '+' || chr == '-' || chr == '.')) {
+                buffer += toLowerCase(chr);
+              } else if (chr == ':') {
+                if (stateOverride && (
+                  (url.isSpecial() != hasOwnProperty_1(specialSchemes, buffer)) ||
+                  (buffer == 'file' && (url.includesCredentials() || url.port !== null)) ||
+                  (url.scheme == 'file' && !url.host)
+                )) { return; }
+                url.scheme = buffer;
+                if (stateOverride) {
+                  if (url.isSpecial() && specialSchemes[url.scheme] == url.port) { url.port = null; }
+                  return;
+                }
+                buffer = '';
+                if (url.scheme == 'file') {
+                  state = FILE;
+                } else if (url.isSpecial() && base && base.scheme == url.scheme) {
+                  state = SPECIAL_RELATIVE_OR_AUTHORITY;
+                } else if (url.isSpecial()) {
+                  state = SPECIAL_AUTHORITY_SLASHES;
+                } else if (codePoints[pointer + 1] == '/') {
+                  state = PATH_OR_AUTHORITY;
+                  pointer++;
+                } else {
+                  url.cannotBeABaseURL = true;
+                  push(url.path, '');
+                  state = CANNOT_BE_A_BASE_URL_PATH;
+                }
+              } else if (!stateOverride) {
+                buffer = '';
+                state = NO_SCHEME;
+                pointer = 0;
+                continue;
+              } else { return INVALID_SCHEME; }
+              break;
+
+            case NO_SCHEME:
+              if (!base || (base.cannotBeABaseURL && chr != '#')) { return INVALID_SCHEME; }
+              if (base.cannotBeABaseURL && chr == '#') {
+                url.scheme = base.scheme;
+                url.path = arraySliceSimple(base.path);
+                url.query = base.query;
+                url.fragment = '';
+                url.cannotBeABaseURL = true;
+                state = FRAGMENT;
+                break;
               }
-              buffer = '';
-              if (url.scheme == 'file') {
-                state = FILE;
-              } else if (isSpecial(url) && base && base.scheme == url.scheme) {
-                state = SPECIAL_RELATIVE_OR_AUTHORITY;
-              } else if (isSpecial(url)) {
-                state = SPECIAL_AUTHORITY_SLASHES;
-              } else if (codePoints[pointer + 1] == '/') {
-                state = PATH_OR_AUTHORITY;
+              state = base.scheme == 'file' ? FILE : RELATIVE;
+              continue;
+
+            case SPECIAL_RELATIVE_OR_AUTHORITY:
+              if (chr == '/' && codePoints[pointer + 1] == '/') {
+                state = SPECIAL_AUTHORITY_IGNORE_SLASHES;
                 pointer++;
               } else {
-                url.cannotBeABaseURL = true;
-                push(url.path, '');
-                state = CANNOT_BE_A_BASE_URL_PATH;
-              }
-            } else if (!stateOverride) {
-              buffer = '';
-              state = NO_SCHEME;
-              pointer = 0;
-              continue;
-            } else { return INVALID_SCHEME; }
-            break;
+                state = RELATIVE;
+                continue;
+              } break;
 
-          case NO_SCHEME:
-            if (!base || (base.cannotBeABaseURL && chr != '#')) { return INVALID_SCHEME; }
-            if (base.cannotBeABaseURL && chr == '#') {
+            case PATH_OR_AUTHORITY:
+              if (chr == '/') {
+                state = AUTHORITY;
+                break;
+              } else {
+                state = PATH;
+                continue;
+              }
+
+            case RELATIVE:
               url.scheme = base.scheme;
-              url.path = arraySlice$1(base.path);
-              url.query = base.query;
-              url.fragment = '';
-              url.cannotBeABaseURL = true;
-              state = FRAGMENT;
-              break;
-            }
-            state = base.scheme == 'file' ? FILE : RELATIVE;
-            continue;
-
-          case SPECIAL_RELATIVE_OR_AUTHORITY:
-            if (chr == '/' && codePoints[pointer + 1] == '/') {
-              state = SPECIAL_AUTHORITY_IGNORE_SLASHES;
-              pointer++;
-            } else {
-              state = RELATIVE;
-              continue;
-            } break;
-
-          case PATH_OR_AUTHORITY:
-            if (chr == '/') {
-              state = AUTHORITY;
-              break;
-            } else {
-              state = PATH;
-              continue;
-            }
-
-          case RELATIVE:
-            url.scheme = base.scheme;
-            if (chr == EOF) {
-              url.username = base.username;
-              url.password = base.password;
-              url.host = base.host;
-              url.port = base.port;
-              url.path = arraySlice$1(base.path);
-              url.query = base.query;
-            } else if (chr == '/' || (chr == '\\' && isSpecial(url))) {
-              state = RELATIVE_SLASH;
-            } else if (chr == '?') {
-              url.username = base.username;
-              url.password = base.password;
-              url.host = base.host;
-              url.port = base.port;
-              url.path = arraySlice$1(base.path);
-              url.query = '';
-              state = QUERY;
-            } else if (chr == '#') {
-              url.username = base.username;
-              url.password = base.password;
-              url.host = base.host;
-              url.port = base.port;
-              url.path = arraySlice$1(base.path);
-              url.query = base.query;
-              url.fragment = '';
-              state = FRAGMENT;
-            } else {
-              url.username = base.username;
-              url.password = base.password;
-              url.host = base.host;
-              url.port = base.port;
-              url.path = arraySlice$1(base.path);
-              url.path.length--;
-              state = PATH;
-              continue;
-            } break;
-
-          case RELATIVE_SLASH:
-            if (isSpecial(url) && (chr == '/' || chr == '\\')) {
-              state = SPECIAL_AUTHORITY_IGNORE_SLASHES;
-            } else if (chr == '/') {
-              state = AUTHORITY;
-            } else {
-              url.username = base.username;
-              url.password = base.password;
-              url.host = base.host;
-              url.port = base.port;
-              state = PATH;
-              continue;
-            } break;
-
-          case SPECIAL_AUTHORITY_SLASHES:
-            state = SPECIAL_AUTHORITY_IGNORE_SLASHES;
-            if (chr != '/' || charAt(buffer, pointer + 1) != '/') { continue; }
-            pointer++;
-            break;
-
-          case SPECIAL_AUTHORITY_IGNORE_SLASHES:
-            if (chr != '/' && chr != '\\') {
-              state = AUTHORITY;
-              continue;
-            } break;
-
-          case AUTHORITY:
-            if (chr == '@') {
-              if (seenAt) { buffer = '%40' + buffer; }
-              seenAt = true;
-              bufferCodePoints = arrayFrom(buffer);
-              for (var i = 0; i < bufferCodePoints.length; i++) {
-                var codePoint = bufferCodePoints[i];
-                if (codePoint == ':' && !seenPasswordToken) {
-                  seenPasswordToken = true;
-                  continue;
-                }
-                var encodedCodePoints = percentEncode(codePoint, userinfoPercentEncodeSet);
-                if (seenPasswordToken) { url.password += encodedCodePoints; }
-                else { url.username += encodedCodePoints; }
-              }
-              buffer = '';
-            } else if (
-              chr == EOF || chr == '/' || chr == '?' || chr == '#' ||
-              (chr == '\\' && isSpecial(url))
-            ) {
-              if (seenAt && buffer == '') { return INVALID_AUTHORITY; }
-              pointer -= arrayFrom(buffer).length + 1;
-              buffer = '';
-              state = HOST;
-            } else { buffer += chr; }
-            break;
-
-          case HOST:
-          case HOSTNAME:
-            if (stateOverride && url.scheme == 'file') {
-              state = FILE_HOST;
-              continue;
-            } else if (chr == ':' && !seenBracket) {
-              if (buffer == '') { return INVALID_HOST; }
-              failure = parseHost(url, buffer);
-              if (failure) { return failure; }
-              buffer = '';
-              state = PORT;
-              if (stateOverride == HOSTNAME) { return; }
-            } else if (
-              chr == EOF || chr == '/' || chr == '?' || chr == '#' ||
-              (chr == '\\' && isSpecial(url))
-            ) {
-              if (isSpecial(url) && buffer == '') { return INVALID_HOST; }
-              if (stateOverride && buffer == '' && (includesCredentials(url) || url.port !== null)) { return; }
-              failure = parseHost(url, buffer);
-              if (failure) { return failure; }
-              buffer = '';
-              state = PATH_START;
-              if (stateOverride) { return; }
-              continue;
-            } else {
-              if (chr == '[') { seenBracket = true; }
-              else if (chr == ']') { seenBracket = false; }
-              buffer += chr;
-            } break;
-
-          case PORT:
-            if (exec(DIGIT, chr)) {
-              buffer += chr;
-            } else if (
-              chr == EOF || chr == '/' || chr == '?' || chr == '#' ||
-              (chr == '\\' && isSpecial(url)) ||
-              stateOverride
-            ) {
-              if (buffer != '') {
-                var port = parseInt$1(buffer, 10);
-                if (port > 0xFFFF) { return INVALID_PORT; }
-                url.port = (isSpecial(url) && port === specialSchemes[url.scheme]) ? null : port;
-                buffer = '';
-              }
-              if (stateOverride) { return; }
-              state = PATH_START;
-              continue;
-            } else { return INVALID_PORT; }
-            break;
-
-          case FILE:
-            url.scheme = 'file';
-            if (chr == '/' || chr == '\\') { state = FILE_SLASH; }
-            else if (base && base.scheme == 'file') {
               if (chr == EOF) {
+                url.username = base.username;
+                url.password = base.password;
                 url.host = base.host;
-                url.path = arraySlice$1(base.path);
+                url.port = base.port;
+                url.path = arraySliceSimple(base.path);
                 url.query = base.query;
+              } else if (chr == '/' || (chr == '\\' && url.isSpecial())) {
+                state = RELATIVE_SLASH;
               } else if (chr == '?') {
+                url.username = base.username;
+                url.password = base.password;
                 url.host = base.host;
-                url.path = arraySlice$1(base.path);
+                url.port = base.port;
+                url.path = arraySliceSimple(base.path);
                 url.query = '';
                 state = QUERY;
               } else if (chr == '#') {
+                url.username = base.username;
+                url.password = base.password;
                 url.host = base.host;
-                url.path = arraySlice$1(base.path);
+                url.port = base.port;
+                url.path = arraySliceSimple(base.path);
                 url.query = base.query;
                 url.fragment = '';
                 state = FRAGMENT;
               } else {
-                if (!startsWithWindowsDriveLetter(join(arraySlice$1(codePoints, pointer), ''))) {
-                  url.host = base.host;
-                  url.path = arraySlice$1(base.path);
-                  shortenURLsPath(url);
-                }
+                url.username = base.username;
+                url.password = base.password;
+                url.host = base.host;
+                url.port = base.port;
+                url.path = arraySliceSimple(base.path);
+                url.path.length--;
                 state = PATH;
                 continue;
-              }
-            } else {
-              state = PATH;
-              continue;
-            } break;
+              } break;
 
-          case FILE_SLASH:
-            if (chr == '/' || chr == '\\') {
-              state = FILE_HOST;
-              break;
-            }
-            if (base && base.scheme == 'file' && !startsWithWindowsDriveLetter(join(arraySlice$1(codePoints, pointer), ''))) {
-              if (isWindowsDriveLetter(base.path[0], true)) { push(url.path, base.path[0]); }
-              else { url.host = base.host; }
-            }
-            state = PATH;
-            continue;
-
-          case FILE_HOST:
-            if (chr == EOF || chr == '/' || chr == '\\' || chr == '?' || chr == '#') {
-              if (!stateOverride && isWindowsDriveLetter(buffer)) {
-                state = PATH;
-              } else if (buffer == '') {
-                url.host = '';
-                if (stateOverride) { return; }
-                state = PATH_START;
+            case RELATIVE_SLASH:
+              if (url.isSpecial() && (chr == '/' || chr == '\\')) {
+                state = SPECIAL_AUTHORITY_IGNORE_SLASHES;
+              } else if (chr == '/') {
+                state = AUTHORITY;
               } else {
-                failure = parseHost(url, buffer);
+                url.username = base.username;
+                url.password = base.password;
+                url.host = base.host;
+                url.port = base.port;
+                state = PATH;
+                continue;
+              } break;
+
+            case SPECIAL_AUTHORITY_SLASHES:
+              state = SPECIAL_AUTHORITY_IGNORE_SLASHES;
+              if (chr != '/' || charAt(buffer, pointer + 1) != '/') { continue; }
+              pointer++;
+              break;
+
+            case SPECIAL_AUTHORITY_IGNORE_SLASHES:
+              if (chr != '/' && chr != '\\') {
+                state = AUTHORITY;
+                continue;
+              } break;
+
+            case AUTHORITY:
+              if (chr == '@') {
+                if (seenAt) { buffer = '%40' + buffer; }
+                seenAt = true;
+                bufferCodePoints = arrayFrom(buffer);
+                for (var i = 0; i < bufferCodePoints.length; i++) {
+                  var codePoint = bufferCodePoints[i];
+                  if (codePoint == ':' && !seenPasswordToken) {
+                    seenPasswordToken = true;
+                    continue;
+                  }
+                  var encodedCodePoints = percentEncode(codePoint, userinfoPercentEncodeSet);
+                  if (seenPasswordToken) { url.password += encodedCodePoints; }
+                  else { url.username += encodedCodePoints; }
+                }
+                buffer = '';
+              } else if (
+                chr == EOF || chr == '/' || chr == '?' || chr == '#' ||
+                (chr == '\\' && url.isSpecial())
+              ) {
+                if (seenAt && buffer == '') { return INVALID_AUTHORITY; }
+                pointer -= arrayFrom(buffer).length + 1;
+                buffer = '';
+                state = HOST;
+              } else { buffer += chr; }
+              break;
+
+            case HOST:
+            case HOSTNAME:
+              if (stateOverride && url.scheme == 'file') {
+                state = FILE_HOST;
+                continue;
+              } else if (chr == ':' && !seenBracket) {
+                if (buffer == '') { return INVALID_HOST; }
+                failure = url.parseHost(buffer);
                 if (failure) { return failure; }
-                if (url.host == 'localhost') { url.host = ''; }
-                if (stateOverride) { return; }
+                buffer = '';
+                state = PORT;
+                if (stateOverride == HOSTNAME) { return; }
+              } else if (
+                chr == EOF || chr == '/' || chr == '?' || chr == '#' ||
+                (chr == '\\' && url.isSpecial())
+              ) {
+                if (url.isSpecial() && buffer == '') { return INVALID_HOST; }
+                if (stateOverride && buffer == '' && (url.includesCredentials() || url.port !== null)) { return; }
+                failure = url.parseHost(buffer);
+                if (failure) { return failure; }
                 buffer = '';
                 state = PATH_START;
-              } continue;
-            } else { buffer += chr; }
-            break;
+                if (stateOverride) { return; }
+                continue;
+              } else {
+                if (chr == '[') { seenBracket = true; }
+                else if (chr == ']') { seenBracket = false; }
+                buffer += chr;
+              } break;
 
-          case PATH_START:
-            if (isSpecial(url)) {
-              state = PATH;
-              if (chr != '/' && chr != '\\') { continue; }
-            } else if (!stateOverride && chr == '?') {
-              url.query = '';
-              state = QUERY;
-            } else if (!stateOverride && chr == '#') {
-              url.fragment = '';
-              state = FRAGMENT;
-            } else if (chr != EOF) {
-              state = PATH;
-              if (chr != '/') { continue; }
-            } break;
-
-          case PATH:
-            if (
-              chr == EOF || chr == '/' ||
-              (chr == '\\' && isSpecial(url)) ||
-              (!stateOverride && (chr == '?' || chr == '#'))
-            ) {
-              if (isDoubleDot(buffer)) {
-                shortenURLsPath(url);
-                if (chr != '/' && !(chr == '\\' && isSpecial(url))) {
-                  push(url.path, '');
+            case PORT:
+              if (exec(DIGIT, chr)) {
+                buffer += chr;
+              } else if (
+                chr == EOF || chr == '/' || chr == '?' || chr == '#' ||
+                (chr == '\\' && url.isSpecial()) ||
+                stateOverride
+              ) {
+                if (buffer != '') {
+                  var port = parseInt$1(buffer, 10);
+                  if (port > 0xFFFF) { return INVALID_PORT; }
+                  url.port = (url.isSpecial() && port === specialSchemes[url.scheme]) ? null : port;
+                  buffer = '';
                 }
-              } else if (isSingleDot(buffer)) {
-                if (chr != '/' && !(chr == '\\' && isSpecial(url))) {
-                  push(url.path, '');
+                if (stateOverride) { return; }
+                state = PATH_START;
+                continue;
+              } else { return INVALID_PORT; }
+              break;
+
+            case FILE:
+              url.scheme = 'file';
+              if (chr == '/' || chr == '\\') { state = FILE_SLASH; }
+              else if (base && base.scheme == 'file') {
+                if (chr == EOF) {
+                  url.host = base.host;
+                  url.path = arraySliceSimple(base.path);
+                  url.query = base.query;
+                } else if (chr == '?') {
+                  url.host = base.host;
+                  url.path = arraySliceSimple(base.path);
+                  url.query = '';
+                  state = QUERY;
+                } else if (chr == '#') {
+                  url.host = base.host;
+                  url.path = arraySliceSimple(base.path);
+                  url.query = base.query;
+                  url.fragment = '';
+                  state = FRAGMENT;
+                } else {
+                  if (!startsWithWindowsDriveLetter(join(arraySliceSimple(codePoints, pointer), ''))) {
+                    url.host = base.host;
+                    url.path = arraySliceSimple(base.path);
+                    url.shortenPath();
+                  }
+                  state = PATH;
+                  continue;
                 }
               } else {
-                if (url.scheme == 'file' && !url.path.length && isWindowsDriveLetter(buffer)) {
-                  if (url.host) { url.host = ''; }
-                  buffer = charAt(buffer, 0) + ':'; // normalize windows drive letter
-                }
-                push(url.path, buffer);
+                state = PATH;
+                continue;
+              } break;
+
+            case FILE_SLASH:
+              if (chr == '/' || chr == '\\') {
+                state = FILE_HOST;
+                break;
               }
-              buffer = '';
-              if (url.scheme == 'file' && (chr == EOF || chr == '?' || chr == '#')) {
-                while (url.path.length > 1 && url.path[0] === '') {
-                  shift(url.path);
-                }
+              if (base && base.scheme == 'file' && !startsWithWindowsDriveLetter(join(arraySliceSimple(codePoints, pointer), ''))) {
+                if (isWindowsDriveLetter(base.path[0], true)) { push(url.path, base.path[0]); }
+                else { url.host = base.host; }
               }
+              state = PATH;
+              continue;
+
+            case FILE_HOST:
+              if (chr == EOF || chr == '/' || chr == '\\' || chr == '?' || chr == '#') {
+                if (!stateOverride && isWindowsDriveLetter(buffer)) {
+                  state = PATH;
+                } else if (buffer == '') {
+                  url.host = '';
+                  if (stateOverride) { return; }
+                  state = PATH_START;
+                } else {
+                  failure = url.parseHost(buffer);
+                  if (failure) { return failure; }
+                  if (url.host == 'localhost') { url.host = ''; }
+                  if (stateOverride) { return; }
+                  buffer = '';
+                  state = PATH_START;
+                } continue;
+              } else { buffer += chr; }
+              break;
+
+            case PATH_START:
+              if (url.isSpecial()) {
+                state = PATH;
+                if (chr != '/' && chr != '\\') { continue; }
+              } else if (!stateOverride && chr == '?') {
+                url.query = '';
+                state = QUERY;
+              } else if (!stateOverride && chr == '#') {
+                url.fragment = '';
+                state = FRAGMENT;
+              } else if (chr != EOF) {
+                state = PATH;
+                if (chr != '/') { continue; }
+              } break;
+
+            case PATH:
+              if (
+                chr == EOF || chr == '/' ||
+                (chr == '\\' && url.isSpecial()) ||
+                (!stateOverride && (chr == '?' || chr == '#'))
+              ) {
+                if (isDoubleDot(buffer)) {
+                  url.shortenPath();
+                  if (chr != '/' && !(chr == '\\' && url.isSpecial())) {
+                    push(url.path, '');
+                  }
+                } else if (isSingleDot(buffer)) {
+                  if (chr != '/' && !(chr == '\\' && url.isSpecial())) {
+                    push(url.path, '');
+                  }
+                } else {
+                  if (url.scheme == 'file' && !url.path.length && isWindowsDriveLetter(buffer)) {
+                    if (url.host) { url.host = ''; }
+                    buffer = charAt(buffer, 0) + ':'; // normalize windows drive letter
+                  }
+                  push(url.path, buffer);
+                }
+                buffer = '';
+                if (url.scheme == 'file' && (chr == EOF || chr == '?' || chr == '#')) {
+                  while (url.path.length > 1 && url.path[0] === '') {
+                    shift(url.path);
+                  }
+                }
+                if (chr == '?') {
+                  url.query = '';
+                  state = QUERY;
+                } else if (chr == '#') {
+                  url.fragment = '';
+                  state = FRAGMENT;
+                }
+              } else {
+                buffer += percentEncode(chr, pathPercentEncodeSet);
+              } break;
+
+            case CANNOT_BE_A_BASE_URL_PATH:
               if (chr == '?') {
                 url.query = '';
                 state = QUERY;
               } else if (chr == '#') {
                 url.fragment = '';
                 state = FRAGMENT;
-              }
-            } else {
-              buffer += percentEncode(chr, pathPercentEncodeSet);
-            } break;
+              } else if (chr != EOF) {
+                url.path[0] += percentEncode(chr, C0ControlPercentEncodeSet);
+              } break;
 
-          case CANNOT_BE_A_BASE_URL_PATH:
-            if (chr == '?') {
-              url.query = '';
-              state = QUERY;
-            } else if (chr == '#') {
-              url.fragment = '';
-              state = FRAGMENT;
-            } else if (chr != EOF) {
-              url.path[0] += percentEncode(chr, C0ControlPercentEncodeSet);
-            } break;
+            case QUERY:
+              if (!stateOverride && chr == '#') {
+                url.fragment = '';
+                state = FRAGMENT;
+              } else if (chr != EOF) {
+                if (chr == "'" && url.isSpecial()) { url.query += '%27'; }
+                else if (chr == '#') { url.query += '%23'; }
+                else { url.query += percentEncode(chr, C0ControlPercentEncodeSet); }
+              } break;
 
-          case QUERY:
-            if (!stateOverride && chr == '#') {
-              url.fragment = '';
-              state = FRAGMENT;
-            } else if (chr != EOF) {
-              if (chr == "'" && isSpecial(url)) { url.query += '%27'; }
-              else if (chr == '#') { url.query += '%23'; }
-              else { url.query += percentEncode(chr, C0ControlPercentEncodeSet); }
-            } break;
+            case FRAGMENT:
+              if (chr != EOF) { url.fragment += percentEncode(chr, fragmentPercentEncodeSet); }
+              break;
+          }
 
-          case FRAGMENT:
-            if (chr != EOF) { url.fragment += percentEncode(chr, fragmentPercentEncodeSet); }
-            break;
+          pointer++;
         }
-
-        pointer++;
+      },
+      // https://url.spec.whatwg.org/#host-parsing
+      parseHost: function (input) {
+        var result, codePoints, index;
+        if (charAt(input, 0) == '[') {
+          if (charAt(input, input.length - 1) != ']') { return INVALID_HOST; }
+          result = parseIPv6(stringSlice(input, 1, -1));
+          if (!result) { return INVALID_HOST; }
+          this.host = result;
+        // opaque host
+        } else if (!this.isSpecial()) {
+          if (exec(FORBIDDEN_HOST_CODE_POINT_EXCLUDING_PERCENT, input)) { return INVALID_HOST; }
+          result = '';
+          codePoints = arrayFrom(input);
+          for (index = 0; index < codePoints.length; index++) {
+            result += percentEncode(codePoints[index], C0ControlPercentEncodeSet);
+          }
+          this.host = result;
+        } else {
+          input = stringPunycodeToAscii(input);
+          if (exec(FORBIDDEN_HOST_CODE_POINT, input)) { return INVALID_HOST; }
+          result = parseIPv4(input);
+          if (result === null) { return INVALID_HOST; }
+          this.host = result;
+        }
+      },
+      // https://url.spec.whatwg.org/#cannot-have-a-username-password-port
+      cannotHaveUsernamePasswordPort: function () {
+        return !this.host || this.cannotBeABaseURL || this.scheme == 'file';
+      },
+      // https://url.spec.whatwg.org/#include-credentials
+      includesCredentials: function () {
+        return this.username != '' || this.password != '';
+      },
+      // https://url.spec.whatwg.org/#is-special
+      isSpecial: function () {
+        return hasOwnProperty_1(specialSchemes, this.scheme);
+      },
+      // https://url.spec.whatwg.org/#shorten-a-urls-path
+      shortenPath: function () {
+        var path = this.path;
+        var pathSize = path.length;
+        if (pathSize && (this.scheme != 'file' || pathSize != 1 || !isWindowsDriveLetter(path[0], true))) {
+          path.length--;
+        }
+      },
+      // https://url.spec.whatwg.org/#concept-url-serializer
+      serialize: function () {
+        var url = this;
+        var scheme = url.scheme;
+        var username = url.username;
+        var password = url.password;
+        var host = url.host;
+        var port = url.port;
+        var path = url.path;
+        var query = url.query;
+        var fragment = url.fragment;
+        var output = scheme + ':';
+        if (host !== null) {
+          output += '//';
+          if (url.includesCredentials()) {
+            output += username + (password ? ':' + password : '') + '@';
+          }
+          output += serializeHost(host);
+          if (port !== null) { output += ':' + port; }
+        } else if (scheme == 'file') { output += '//'; }
+        output += url.cannotBeABaseURL ? path[0] : path.length ? '/' + join(path, '/') : '';
+        if (query !== null) { output += '?' + query; }
+        if (fragment !== null) { output += '#' + fragment; }
+        return output;
+      },
+      // https://url.spec.whatwg.org/#dom-url-href
+      setHref: function (href) {
+        var failure = this.parse(href);
+        if (failure) { throw TypeError$1(failure); }
+        this.searchParams.update();
+      },
+      // https://url.spec.whatwg.org/#dom-url-origin
+      getOrigin: function () {
+        var scheme = this.scheme;
+        var port = this.port;
+        if (scheme == 'blob') { try {
+          return new URLConstructor(scheme.path[0]).origin;
+        } catch (error) {
+          return 'null';
+        } }
+        if (scheme == 'file' || !this.isSpecial()) { return 'null'; }
+        return scheme + '://' + serializeHost(this.host) + (port !== null ? ':' + port : '');
+      },
+      // https://url.spec.whatwg.org/#dom-url-protocol
+      getProtocol: function () {
+        return this.scheme + ':';
+      },
+      setProtocol: function (protocol) {
+        this.parse(toString_1(protocol) + ':', SCHEME_START);
+      },
+      // https://url.spec.whatwg.org/#dom-url-username
+      getUsername: function () {
+        return this.username;
+      },
+      setUsername: function (username) {
+        var codePoints = arrayFrom(toString_1(username));
+        if (this.cannotHaveUsernamePasswordPort()) { return; }
+        this.username = '';
+        for (var i = 0; i < codePoints.length; i++) {
+          this.username += percentEncode(codePoints[i], userinfoPercentEncodeSet);
+        }
+      },
+      // https://url.spec.whatwg.org/#dom-url-password
+      getPassword: function () {
+        return this.password;
+      },
+      setPassword: function (password) {
+        var codePoints = arrayFrom(toString_1(password));
+        if (this.cannotHaveUsernamePasswordPort()) { return; }
+        this.password = '';
+        for (var i = 0; i < codePoints.length; i++) {
+          this.password += percentEncode(codePoints[i], userinfoPercentEncodeSet);
+        }
+      },
+      // https://url.spec.whatwg.org/#dom-url-host
+      getHost: function () {
+        var host = this.host;
+        var port = this.port;
+        return host === null ? ''
+          : port === null ? serializeHost(host)
+          : serializeHost(host) + ':' + port;
+      },
+      setHost: function (host) {
+        if (this.cannotBeABaseURL) { return; }
+        this.parse(host, HOST);
+      },
+      // https://url.spec.whatwg.org/#dom-url-hostname
+      getHostname: function () {
+        var host = this.host;
+        return host === null ? '' : serializeHost(host);
+      },
+      setHostname: function (hostname) {
+        if (this.cannotBeABaseURL) { return; }
+        this.parse(hostname, HOSTNAME);
+      },
+      // https://url.spec.whatwg.org/#dom-url-port
+      getPort: function () {
+        var port = this.port;
+        return port === null ? '' : toString_1(port);
+      },
+      setPort: function (port) {
+        if (this.cannotHaveUsernamePasswordPort()) { return; }
+        port = toString_1(port);
+        if (port == '') { this.port = null; }
+        else { this.parse(port, PORT); }
+      },
+      // https://url.spec.whatwg.org/#dom-url-pathname
+      getPathname: function () {
+        var path = this.path;
+        return this.cannotBeABaseURL ? path[0] : path.length ? '/' + join(path, '/') : '';
+      },
+      setPathname: function (pathname) {
+        if (this.cannotBeABaseURL) { return; }
+        this.path = [];
+        this.parse(pathname, PATH_START);
+      },
+      // https://url.spec.whatwg.org/#dom-url-search
+      getSearch: function () {
+        var query = this.query;
+        return query ? '?' + query : '';
+      },
+      setSearch: function (search) {
+        search = toString_1(search);
+        if (search == '') {
+          this.query = null;
+        } else {
+          if ('?' == charAt(search, 0)) { search = stringSlice(search, 1); }
+          this.query = '';
+          this.parse(search, QUERY);
+        }
+        this.searchParams.update();
+      },
+      // https://url.spec.whatwg.org/#dom-url-searchparams
+      getSearchParams: function () {
+        return this.searchParams.facade;
+      },
+      // https://url.spec.whatwg.org/#dom-url-hash
+      getHash: function () {
+        var fragment = this.fragment;
+        return fragment ? '#' + fragment : '';
+      },
+      setHash: function (hash) {
+        hash = toString_1(hash);
+        if (hash == '') {
+          this.fragment = null;
+          return;
+        }
+        if ('#' == charAt(hash, 0)) { hash = stringSlice(hash, 1); }
+        this.fragment = '';
+        this.parse(hash, FRAGMENT);
+      },
+      update: function () {
+        this.query = this.searchParams.serialize() || null;
       }
     };
 
@@ -15013,252 +15283,89 @@ var doric = (function (exports) {
     var URLConstructor = function URL(url /* , base */) {
       var that = anInstance(this, URLPrototype);
       var base = arguments.length > 1 ? arguments[1] : undefined;
-      var urlString = toString_1(url);
-      var state = setInternalState(that, { type: 'URL' });
-      var baseState, failure;
-      if (base !== undefined) {
-        try {
-          baseState = getInternalURLState(base);
-        } catch (error) {
-          failure = parseURL(baseState = {}, toString_1(base));
-          if (failure) { throw TypeError$1(failure); }
-        }
-      }
-      failure = parseURL(state, urlString, null, baseState);
-      if (failure) { throw TypeError$1(failure); }
-      var searchParams = state.searchParams = new URLSearchParams$1();
-      var searchParamsState = getInternalSearchParamsState(searchParams);
-      searchParamsState.updateSearchParams(state.query);
-      searchParamsState.updateURL = function () {
-        state.query = toString_1(searchParams) || null;
-      };
+      var state = setInternalState(that, new URLState(url, false, base));
       if (!descriptors) {
-        that.href = functionCall(serializeURL, that);
-        that.origin = functionCall(getOrigin, that);
-        that.protocol = functionCall(getProtocol, that);
-        that.username = functionCall(getUsername, that);
-        that.password = functionCall(getPassword, that);
-        that.host = functionCall(getHost, that);
-        that.hostname = functionCall(getHostname, that);
-        that.port = functionCall(getPort, that);
-        that.pathname = functionCall(getPathname, that);
-        that.search = functionCall(getSearch, that);
-        that.searchParams = functionCall(getSearchParams, that);
-        that.hash = functionCall(getHash, that);
+        that.href = state.serialize();
+        that.origin = state.getOrigin();
+        that.protocol = state.getProtocol();
+        that.username = state.getUsername();
+        that.password = state.getPassword();
+        that.host = state.getHost();
+        that.hostname = state.getHostname();
+        that.port = state.getPort();
+        that.pathname = state.getPathname();
+        that.search = state.getSearch();
+        that.searchParams = state.getSearchParams();
+        that.hash = state.getHash();
       }
     };
 
     var URLPrototype = URLConstructor.prototype;
 
-    var serializeURL = function () {
-      var url = getInternalURLState(this);
-      var scheme = url.scheme;
-      var username = url.username;
-      var password = url.password;
-      var host = url.host;
-      var port = url.port;
-      var path = url.path;
-      var query = url.query;
-      var fragment = url.fragment;
-      var output = scheme + ':';
-      if (host !== null) {
-        output += '//';
-        if (includesCredentials(url)) {
-          output += username + (password ? ':' + password : '') + '@';
-        }
-        output += serializeHost(host);
-        if (port !== null) { output += ':' + port; }
-      } else if (scheme == 'file') { output += '//'; }
-      output += url.cannotBeABaseURL ? path[0] : path.length ? '/' + join(path, '/') : '';
-      if (query !== null) { output += '?' + query; }
-      if (fragment !== null) { output += '#' + fragment; }
-      return output;
-    };
-
-    var getOrigin = function () {
-      var url = getInternalURLState(this);
-      var scheme = url.scheme;
-      var port = url.port;
-      if (scheme == 'blob') { try {
-        return new URLConstructor(scheme.path[0]).origin;
-      } catch (error) {
-        return 'null';
-      } }
-      if (scheme == 'file' || !isSpecial(url)) { return 'null'; }
-      return scheme + '://' + serializeHost(url.host) + (port !== null ? ':' + port : '');
-    };
-
-    var getProtocol = function () {
-      return getInternalURLState(this).scheme + ':';
-    };
-
-    var getUsername = function () {
-      return getInternalURLState(this).username;
-    };
-
-    var getPassword = function () {
-      return getInternalURLState(this).password;
-    };
-
-    var getHost = function () {
-      var url = getInternalURLState(this);
-      var host = url.host;
-      var port = url.port;
-      return host === null ? ''
-        : port === null ? serializeHost(host)
-        : serializeHost(host) + ':' + port;
-    };
-
-    var getHostname = function () {
-      var host = getInternalURLState(this).host;
-      return host === null ? '' : serializeHost(host);
-    };
-
-    var getPort = function () {
-      var port = getInternalURLState(this).port;
-      return port === null ? '' : toString_1(port);
-    };
-
-    var getPathname = function () {
-      var url = getInternalURLState(this);
-      var path = url.path;
-      return url.cannotBeABaseURL ? path[0] : path.length ? '/' + join(path, '/') : '';
-    };
-
-    var getSearch = function () {
-      var query = getInternalURLState(this).query;
-      return query ? '?' + query : '';
-    };
-
-    var getSearchParams = function () {
-      return getInternalURLState(this).searchParams;
-    };
-
-    var getHash = function () {
-      var fragment = getInternalURLState(this).fragment;
-      return fragment ? '#' + fragment : '';
-    };
-
     var accessorDescriptor = function (getter, setter) {
-      return { get: getter, set: setter, configurable: true, enumerable: true };
+      return {
+        get: function () {
+          return getInternalURLState(this)[getter]();
+        },
+        set: setter && function (value) {
+          return getInternalURLState(this)[setter](value);
+        },
+        configurable: true,
+        enumerable: true
+      };
     };
 
     if (descriptors) {
       objectDefineProperties(URLPrototype, {
         // `URL.prototype.href` accessors pair
         // https://url.spec.whatwg.org/#dom-url-href
-        href: accessorDescriptor(serializeURL, function (href) {
-          var url = getInternalURLState(this);
-          var urlString = toString_1(href);
-          var failure = parseURL(url, urlString);
-          if (failure) { throw TypeError$1(failure); }
-          getInternalSearchParamsState(url.searchParams).updateSearchParams(url.query);
-        }),
+        href: accessorDescriptor('serialize', 'setHref'),
         // `URL.prototype.origin` getter
         // https://url.spec.whatwg.org/#dom-url-origin
-        origin: accessorDescriptor(getOrigin),
+        origin: accessorDescriptor('getOrigin'),
         // `URL.prototype.protocol` accessors pair
         // https://url.spec.whatwg.org/#dom-url-protocol
-        protocol: accessorDescriptor(getProtocol, function (protocol) {
-          var url = getInternalURLState(this);
-          parseURL(url, toString_1(protocol) + ':', SCHEME_START);
-        }),
+        protocol: accessorDescriptor('getProtocol', 'setProtocol'),
         // `URL.prototype.username` accessors pair
         // https://url.spec.whatwg.org/#dom-url-username
-        username: accessorDescriptor(getUsername, function (username) {
-          var url = getInternalURLState(this);
-          var codePoints = arrayFrom(toString_1(username));
-          if (cannotHaveUsernamePasswordPort(url)) { return; }
-          url.username = '';
-          for (var i = 0; i < codePoints.length; i++) {
-            url.username += percentEncode(codePoints[i], userinfoPercentEncodeSet);
-          }
-        }),
+        username: accessorDescriptor('getUsername', 'setUsername'),
         // `URL.prototype.password` accessors pair
         // https://url.spec.whatwg.org/#dom-url-password
-        password: accessorDescriptor(getPassword, function (password) {
-          var url = getInternalURLState(this);
-          var codePoints = arrayFrom(toString_1(password));
-          if (cannotHaveUsernamePasswordPort(url)) { return; }
-          url.password = '';
-          for (var i = 0; i < codePoints.length; i++) {
-            url.password += percentEncode(codePoints[i], userinfoPercentEncodeSet);
-          }
-        }),
+        password: accessorDescriptor('getPassword', 'setPassword'),
         // `URL.prototype.host` accessors pair
         // https://url.spec.whatwg.org/#dom-url-host
-        host: accessorDescriptor(getHost, function (host) {
-          var url = getInternalURLState(this);
-          if (url.cannotBeABaseURL) { return; }
-          parseURL(url, toString_1(host), HOST);
-        }),
+        host: accessorDescriptor('getHost', 'setHost'),
         // `URL.prototype.hostname` accessors pair
         // https://url.spec.whatwg.org/#dom-url-hostname
-        hostname: accessorDescriptor(getHostname, function (hostname) {
-          var url = getInternalURLState(this);
-          if (url.cannotBeABaseURL) { return; }
-          parseURL(url, toString_1(hostname), HOSTNAME);
-        }),
+        hostname: accessorDescriptor('getHostname', 'setHostname'),
         // `URL.prototype.port` accessors pair
         // https://url.spec.whatwg.org/#dom-url-port
-        port: accessorDescriptor(getPort, function (port) {
-          var url = getInternalURLState(this);
-          if (cannotHaveUsernamePasswordPort(url)) { return; }
-          port = toString_1(port);
-          if (port == '') { url.port = null; }
-          else { parseURL(url, port, PORT); }
-        }),
+        port: accessorDescriptor('getPort', 'setPort'),
         // `URL.prototype.pathname` accessors pair
         // https://url.spec.whatwg.org/#dom-url-pathname
-        pathname: accessorDescriptor(getPathname, function (pathname) {
-          var url = getInternalURLState(this);
-          if (url.cannotBeABaseURL) { return; }
-          url.path = [];
-          parseURL(url, toString_1(pathname), PATH_START);
-        }),
+        pathname: accessorDescriptor('getPathname', 'setPathname'),
         // `URL.prototype.search` accessors pair
         // https://url.spec.whatwg.org/#dom-url-search
-        search: accessorDescriptor(getSearch, function (search) {
-          var url = getInternalURLState(this);
-          search = toString_1(search);
-          if (search == '') {
-            url.query = null;
-          } else {
-            if ('?' == charAt(search, 0)) { search = stringSlice(search, 1); }
-            url.query = '';
-            parseURL(url, search, QUERY);
-          }
-          getInternalSearchParamsState(url.searchParams).updateSearchParams(url.query);
-        }),
+        search: accessorDescriptor('getSearch', 'setSearch'),
         // `URL.prototype.searchParams` getter
         // https://url.spec.whatwg.org/#dom-url-searchparams
-        searchParams: accessorDescriptor(getSearchParams),
+        searchParams: accessorDescriptor('getSearchParams'),
         // `URL.prototype.hash` accessors pair
         // https://url.spec.whatwg.org/#dom-url-hash
-        hash: accessorDescriptor(getHash, function (hash) {
-          var url = getInternalURLState(this);
-          hash = toString_1(hash);
-          if (hash == '') {
-            url.fragment = null;
-            return;
-          }
-          if ('#' == charAt(hash, 0)) { hash = stringSlice(hash, 1); }
-          url.fragment = '';
-          parseURL(url, hash, FRAGMENT);
-        })
+        hash: accessorDescriptor('getHash', 'setHash')
       });
     }
 
     // `URL.prototype.toJSON` method
     // https://url.spec.whatwg.org/#dom-url-tojson
     redefine(URLPrototype, 'toJSON', function toJSON() {
-      return functionCall(serializeURL, this);
+      return getInternalURLState(this).serialize();
     }, { enumerable: true });
 
     // `URL.prototype.toString` method
     // https://url.spec.whatwg.org/#URL-stringification-behavior
     redefine(URLPrototype, 'toString', function toString() {
-      return functionCall(serializeURL, this);
+      return getInternalURLState(this).serialize();
     }, { enumerable: true });
 
     if (NativeURL) {

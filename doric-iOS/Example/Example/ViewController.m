@@ -87,7 +87,7 @@
     NSString *file = self.demoFilePaths[(NSUInteger) indexPath.row];
     DoricViewController *doricViewController = [[DoricViewController alloc]
             initWithSource:[NSString stringWithFormat:@"assets://src/%@", file]
-                     alias:self.demoFilePaths[(NSUInteger) indexPath.row]
+                     alias:@"__dev__"//self.demoFilePaths[(NSUInteger) indexPath.row]
                      extra:nil
     ];
     UIBarButtonItem *rightBarItem = [[UIBarButtonItem alloc] initWithTitle:@"Devkit" style:UIBarButtonItemStylePlain target:self action:@selector(onOpenDevkit)];

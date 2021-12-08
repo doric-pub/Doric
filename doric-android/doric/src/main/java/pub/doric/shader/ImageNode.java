@@ -456,7 +456,11 @@ public class ImageNode extends ViewNode<ImageView> {
                     if (!TextUtils.isEmpty(imageType) && !TextUtils.isEmpty(base64)) {
                         try {
                             byte[] data = Base64.decode(base64, Base64.DEFAULT);
-                            loadIntoTarget(Glide.with(getContext()).load(data));
+                            Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                            view.setImageBitmap(bitmap);
+                            if (!TextUtils.isEmpty(loadCallbackId)) {
+                                callJSResponse(loadCallbackId);
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

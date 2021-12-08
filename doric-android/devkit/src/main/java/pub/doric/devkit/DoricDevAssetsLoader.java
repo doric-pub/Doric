@@ -17,7 +17,6 @@ package pub.doric.devkit;
 
 import pub.doric.DoricContext;
 import pub.doric.resource.DoricAssetsLoader;
-import pub.doric.resource.DoricAssetsResource;
 import pub.doric.resource.DoricRemoteResource;
 import pub.doric.resource.DoricResource;
 
@@ -37,6 +36,6 @@ public class DoricDevAssetsLoader extends DoricAssetsLoader {
                             identifier
                     ));
         }
-        return new DoricAssetsResource(doricContext, "assets/" + identifier);
+        return super.load(doricContext, identifier);
     }
 }

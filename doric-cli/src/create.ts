@@ -86,6 +86,7 @@ export async function create(name: string) {
     }
     await fs.promises.mkdir(name)
     console.log(`Create doric project at ${cwd}`);
+    await shellCopy(path.resolve(cwd, "assets"), path.resolve(targetJSPath, "assets"));
     await initJS(cwd, name)
     const androidDir = `${cwd}/android`
     if (fs.existsSync(androidDir)) {

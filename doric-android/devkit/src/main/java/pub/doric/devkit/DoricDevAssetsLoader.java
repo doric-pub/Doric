@@ -18,6 +18,7 @@ package pub.doric.devkit;
 import pub.doric.DoricContext;
 import pub.doric.resource.DoricAssetsLoader;
 import pub.doric.resource.DoricAssetsResource;
+import pub.doric.resource.DoricRemoteResource;
 import pub.doric.resource.DoricResource;
 
 /**
@@ -30,7 +31,11 @@ public class DoricDevAssetsLoader extends DoricAssetsLoader {
     @Override
     public DoricResource load(DoricContext doricContext, String identifier) {
         if (DoricDev.getInstance().isInDevMode()) {
-
+            return new DoricRemoteResource(doricContext,
+                    String.format("http://%s:7778/assets/%s",
+                            DoricDev.getInstance().getIP(),
+                            identifier
+                    ));
         }
         return new DoricAssetsResource(doricContext, "assets/" + identifier);
     }

@@ -115,6 +115,7 @@ async function modifyContent(cwd: string, name: string) {
     const dealingFiles = [
         "package.json",
         "rollup.config.js",
+        "android/src/main/AndroidManifest.xml",
         "android/src/main/java/pub/doric/library/TemplateLibrary.java",
         "iOS/Classes/TemplateLibrary.h",
         "iOS/Classes/TemplateLibrary.m",

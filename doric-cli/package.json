@@ -19,7 +19,7 @@
     "url": "git+ssh://git@github.com/penfeizhou/doric.git"
   },
   "author": "pengfei.zhou",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/penfeizhou/doric/issues"
   },

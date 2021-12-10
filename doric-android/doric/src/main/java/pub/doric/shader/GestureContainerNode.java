@@ -173,6 +173,10 @@ public class GestureContainerNode extends StackNode {
                     if (onSingleTap != null) {
                         callJSResponse(onSingleTap);
                     }
+                    if (mView.hasOnClickListeners()) {
+                        mView.performClick();
+                    }
+
                     return super.onSingleTapConfirmed(e);
                 }
 

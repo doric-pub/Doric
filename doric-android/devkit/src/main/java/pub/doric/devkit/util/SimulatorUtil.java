@@ -17,10 +17,7 @@ package pub.doric.devkit.util;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
-import android.hardware.Sensor;
-import android.hardware.SensorManager;
 import android.os.Build;
-import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -32,7 +29,6 @@ public class SimulatorUtil {
     public static boolean isSimulator(Context context) {
         try {
             return notHasBlueTooth()
-                    || notHasLightSensorManager(context)
                     || isFeatures()
                     || checkIsNotRealPhone()
                     || checkPipes();
@@ -44,21 +40,7 @@ public class SimulatorUtil {
 
     private static boolean notHasBlueTooth() {
         BluetoothAdapter ba = BluetoothAdapter.getDefaultAdapter();
-        if (ba == null) {
-            return true;
-        } else {
-            String name = ba.getName();
-            return TextUtils.isEmpty(name);
-        }
-    }
-
-    private static boolean notHasLightSensorManager(Context context) {
-        SensorManager sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-        Sensor sensor8 = null;
-        if (sensorManager != null) {
-            sensor8 = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
-        }
-        return null == sensor8;
+        return ba == null;
     }
 
     private static boolean isFeatures() {
@@ -98,7 +80,7 @@ public class SimulatorUtil {
         return result;
     }
 
-    private static String[] known_pipes = {"/dev/socket/qemud", "/dev/qemu_pipe"};
+    private static final String[] known_pipes = {"/dev/socket/qemud", "/dev/qemu_pipe"};
 
     private static boolean checkPipes() {
         for (String pipes : known_pipes) {

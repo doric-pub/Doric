@@ -38,7 +38,7 @@
 - (void)displayLayer:(CALayer *)layer {
     if (@available(iOS 14.0, *)) {
         if ([self.image isKindOfClass:YYImage.class]
-            && ((YYImage *) self.image).animatedImageData) {
+                && ((YYImage *) self.image).animatedImageData) {
             [super displayLayer:layer];
         } else {
             layer.contents = (__bridge id) self.image.CGImage;
@@ -71,6 +71,7 @@
 
 @interface DoricImageNode ()
 @property(nonatomic, copy) NSString *loadCallbackId;
+@property(nonatomic, copy) NSString *animationEndCallbackId;
 @property(nonatomic, assign) UIViewContentMode contentMode;
 @property(nonatomic, strong) NSNumber *placeHolderColor;
 @property(nonatomic, strong) NSString *placeHolderImage;
@@ -555,9 +556,51 @@
         self.stretchInsetDic = (NSDictionary *) prop;
     } else if ([@"imageScale" isEqualToString:name]) {
         //Do not need set
+    } else if ([@"onAnimationEnd" isEqualToString:name]) {
+        self.animationEndCallbackId = prop;
+        DoricImageView *doricImageView = (DoricImageView *) view;
+#if DORIC_USE_YYWEBIMAGE
+        [doricImageView addObserver:self
+                         forKeyPath:@"currentIsPlayingAnimation"
+                            options:NSKeyValueObservingOptionOld
+                            context:nil];
+#elif DORIC_USE_SDWEBIMAGE
+        [doricImageView addObserver:self
+                         forKeyPath:@"currentFrameIndex"
+                            options:NSKeyValueObservingOptionNew
+                            context:nil];
+#endif
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey, id> *)change context:(void *)context {
+    DoricImageView *doricImageView = (DoricImageView *) self.view;
+#if DORIC_USE_YYWEBIMAGE
+    if ([keyPath isEqualToString:@"currentIsPlayingAnimation"]) {
+        if (!self.animationEndCallbackId) {
+            return;
+        }
+        if (!doricImageView.currentIsPlayingAnimation
+                && [change[@"old"] boolValue]) {
+            [self callJSResponse:self.animationEndCallbackId, nil];
+        }
+    }
+#elif DORIC_USE_SDWEBIMAGE
+    if ([keyPath isEqualToString:@"currentFrameIndex"]) {
+        if (!self.animationEndCallbackId) {
+            return;
+        }
+        SDAnimatedImagePlayer *player = doricImageView.player;
+        if (player.totalLoopCount > 0
+                && player.currentLoopCount == player.totalLoopCount - 1
+                && player.currentFrameIndex == player.totalFrameCount - 1
+                ) {
+            [self callJSResponse:self.animationEndCallbackId, nil];
+        }
+    }
+#endif
 }
 
 - (UIImage *)imageNamed:(NSString *)name {
@@ -611,7 +654,7 @@
 
 - (void)startAnimating {
 #if DORIC_USE_YYWEBIMAGE
-    [(DoricImageView *)self.view setCurrentAnimatedImageIndex:0];
+    [(DoricImageView *) self.view setCurrentAnimatedImageIndex:0];
 #endif
     [self.view startAnimating];
 }
@@ -644,5 +687,13 @@
         }
     }
     return NO;
+}
+
+- (void)dealloc {
+#if DORIC_USE_YYWEBIMAGE
+    [(DoricImageView *) self.view removeObserver:self forKeyPath:@"currentIsPlayingAnimation" context:nil];
+#elif DORIC_USE_SDWEBIMAGE
+    [(DoricImageView *) self.view removeObserver:self forKeyPath:@"currentFrameIndex" context:nil];
+#endif
 }
 @end

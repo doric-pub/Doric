@@ -60,6 +60,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.security.MessageDigest;
 
+import androidx.vectordrawable.graphics.drawable.Animatable2Compat;
 import pub.doric.DoricContext;
 import pub.doric.async.AsyncResult;
 import pub.doric.extension.bridge.DoricMethod;
@@ -86,6 +87,7 @@ public class ImageNode extends ViewNode<ImageView> {
     private int errorColor = Color.TRANSPARENT;
     private JSObject stretchInset = null;
     private float imageScale = DoricUtils.getScreenScale();
+    private Animatable2Compat.AnimationCallback animationCallback = null;
 
     public ImageNode(DoricContext doricContext) {
         super(doricContext);
@@ -325,6 +327,9 @@ public class ImageNode extends ViewNode<ImageView> {
                                         .toJSONObject());
                             }
                         }
+                        if (resource instanceof Animatable2Compat && animationCallback != null) {
+                            ((Animatable2Compat) resource).registerAnimationCallback(animationCallback);
+                        }
                         return false;
                     }
                 }).into(new DrawableImageViewTarget(mView) {
@@ -498,6 +503,18 @@ public class ImageNode extends ViewNode<ImageView> {
                 String filePath = prop.asString().value();
                 File file = new File(filePath);
                 loadIntoTarget(Glide.with(getContext()).load(file));
+                break;
+            case "onAnimationEnd":
+                if (!prop.isString()) {
+                    return;
+                }
+                final String functionId = prop.asString().value();
+                animationCallback = new Animatable2Compat.AnimationCallback() {
+                    @Override
+                    public void onAnimationEnd(Drawable drawable) {
+                        callJSResponse(functionId);
+                    }
+                };
                 break;
             default:
                 super.blend(view, name, prop);

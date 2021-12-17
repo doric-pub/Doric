@@ -116,6 +116,10 @@ __decorate([
     Property,
     __metadata("design:type", Object)
 ], Image.prototype, "stretchInset", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Function)
+], Image.prototype, "onAnimationEnd", void 0);
 export function image(config) {
     const ret = new Image;
     ret.layoutConfig = layoutConfig().fit();

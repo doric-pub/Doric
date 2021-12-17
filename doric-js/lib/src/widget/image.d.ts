@@ -74,6 +74,10 @@ export declare class Image extends View {
         right: number;
         bottom: number;
     };
+    /**
+     * Called if loaded image is animated and played end.
+     */
+    onAnimationEnd?: () => void;
     isAnimating(context: BridgeContext): Promise<boolean>;
     startAnimating(context: BridgeContext): Promise<any>;
     stopAnimating(context: BridgeContext): Promise<any>;

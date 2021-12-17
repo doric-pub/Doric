@@ -18,7 +18,7 @@ var doric = (function (exports) {
      */
     var __uniqueId__ = 0;
     function uniqueId(prefix) {
-        return "__" + prefix + "_" + __uniqueId__++ + "__";
+        return "__".concat(prefix, "_").concat(__uniqueId__++, "__");
     }
 
     function toString$2(message) {
@@ -1269,12 +1269,12 @@ var doric = (function (exports) {
 
         var context = gContexts.get(contextId);
         if (context === undefined) {
-            loge("Cannot find context for context id:" + contextId);
+            loge("Cannot find context for context id:".concat(contextId));
             return;
         }
         var callback = context.callbacks.get(callbackId);
         if (callback === undefined) {
-            loge("Cannot find call for context id:" + contextId + ",callback id:" + callbackId);
+            loge("Cannot find call for context id:".concat(contextId, ",callback id:").concat(callbackId));
             return;
         }
         var argumentsList = [];
@@ -1289,12 +1289,12 @@ var doric = (function (exports) {
 
         var context = gContexts.get(contextId);
         if (context === undefined) {
-            loge("Cannot find context for context id:" + contextId);
+            loge("Cannot find context for context id:".concat(contextId));
             return;
         }
         var callback = context.callbacks.get(callbackId);
         if (callback === undefined) {
-            loge("Cannot find call for context id:" + contextId + ",callback id:" + callbackId);
+            loge("Cannot find call for context id:".concat(contextId, ",callback id:").concat(callbackId));
             return;
         }
         var argumentsList = [];
@@ -1402,11 +1402,11 @@ var doric = (function (exports) {
 
         var context = gContexts.get(contextId);
         if (context === undefined) {
-            loge("Cannot find context for context id:" + contextId);
+            loge("Cannot find context for context id:".concat(contextId));
             return;
         }
         if (context.entity === undefined) {
-            loge("Cannot find holder for context id:" + contextId);
+            loge("Cannot find holder for context id:".concat(contextId));
             return;
         }
         if (Reflect.has(context.entity, methodName)) {
@@ -1419,7 +1419,7 @@ var doric = (function (exports) {
             return ret;
         }
         else {
-            loge("Cannot find method for context id:" + contextId + ",method name is:" + methodName);
+            loge("Cannot find method for context id:".concat(contextId, ",method name is:").concat(methodName));
         }
     }
     function pureCallEntityMethod(contextId, methodName, args) {
@@ -1427,11 +1427,11 @@ var doric = (function (exports) {
 
         var context = gContexts.get(contextId);
         if (context === undefined) {
-            loge("Cannot find context for context id:" + contextId);
+            loge("Cannot find context for context id:".concat(contextId));
             return;
         }
         if (context.entity === undefined) {
-            loge("Cannot find holder for context id:" + contextId);
+            loge("Cannot find holder for context id:".concat(contextId));
             return;
         }
         if (Reflect.has(context.entity, methodName)) {
@@ -1442,7 +1442,7 @@ var doric = (function (exports) {
             return Reflect.apply(Reflect.get(context.entity, methodName), context.entity, argumentsList);
         }
         else {
-            loge("Cannot find method for context id:" + contextId + ",method name is:" + methodName);
+            loge("Cannot find method for context id:".concat(contextId, ",method name is:").concat(methodName));
         }
     }
     function jsObtainEntry(contextId) {
@@ -1481,15 +1481,15 @@ var doric = (function (exports) {
                         return exportFunc(clz);
                     }
                     else {
-                        throw new Error("Cannot find class:" + className + " in context:" + srcContextId);
+                        throw new Error("Cannot find class:".concat(className, " in context:").concat(srcContextId));
                     }
                 }
                 else {
-                    throw new Error("Cannot find context for " + srcContextId);
+                    throw new Error("Cannot find context for ".concat(srcContextId));
                 }
             }
             else {
-                throw new Error("Entry arguments error:" + arguments);
+                throw new Error("Entry arguments error:".concat(arguments));
             }
         };
     }
@@ -1639,15 +1639,15 @@ var doric = (function (exports) {
 
     var $propertyIsEnumerable$2 = {}.propertyIsEnumerable;
     // eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
-    var getOwnPropertyDescriptor$8 = Object.getOwnPropertyDescriptor;
+    var getOwnPropertyDescriptor$9 = Object.getOwnPropertyDescriptor;
 
     // Nashorn ~ JDK8 bug
-    var NASHORN_BUG = getOwnPropertyDescriptor$8 && !$propertyIsEnumerable$2.call({ 1: 2 }, 1);
+    var NASHORN_BUG = getOwnPropertyDescriptor$9 && !$propertyIsEnumerable$2.call({ 1: 2 }, 1);
 
     // `Object.prototype.propertyIsEnumerable` method implementation
     // https://tc39.es/ecma262/#sec-object.prototype.propertyisenumerable
     var f$7 = NASHORN_BUG ? function propertyIsEnumerable(V) {
-      var descriptor = getOwnPropertyDescriptor$8(this, V);
+      var descriptor = getOwnPropertyDescriptor$9(this, V);
       return !!descriptor && descriptor.enumerable;
     } : $propertyIsEnumerable$2;
 
@@ -1678,30 +1678,30 @@ var doric = (function (exports) {
     };
 
     var toString$1 = functionUncurryThis({}.toString);
-    var stringSlice$g = functionUncurryThis(''.slice);
+    var stringSlice$h = functionUncurryThis(''.slice);
 
     var classofRaw = function (it) {
-      return stringSlice$g(toString$1(it), 8, -1);
+      return stringSlice$h(toString$1(it), 8, -1);
     };
 
-    var Object$7 = global_1.Object;
-    var split$4 = functionUncurryThis(''.split);
+    var Object$8 = global_1.Object;
+    var split$3 = functionUncurryThis(''.split);
 
     // fallback for non-array-like ES3 and non-enumerable old V8 strings
     var indexedObject = fails(function () {
       // throws an error in rhino, see https://github.com/mozilla/rhino/issues/346
       // eslint-disable-next-line no-prototype-builtins -- safe
-      return !Object$7('z').propertyIsEnumerable(0);
+      return !Object$8('z').propertyIsEnumerable(0);
     }) ? function (it) {
-      return classofRaw(it) == 'String' ? split$4(it, '') : Object$7(it);
-    } : Object$7;
+      return classofRaw(it) == 'String' ? split$3(it, '') : Object$8(it);
+    } : Object$8;
 
-    var TypeError$F = global_1.TypeError;
+    var TypeError$H = global_1.TypeError;
 
     // `RequireObjectCoercible` abstract operation
     // https://tc39.es/ecma262/#sec-requireobjectcoercible
     var requireObjectCoercible = function (it) {
-      if (it == undefined) { throw TypeError$F("Can't call method on " + it); }
+      if (it == undefined) { throw TypeError$H("Can't call method on " + it); }
       return it;
     };
 
@@ -1781,31 +1781,31 @@ var doric = (function (exports) {
       && !Symbol.sham
       && typeof Symbol.iterator == 'symbol';
 
-    var Object$6 = global_1.Object;
+    var Object$7 = global_1.Object;
 
     var isSymbol = useSymbolAsUid ? function (it) {
       return typeof it == 'symbol';
     } : function (it) {
       var $Symbol = getBuiltIn('Symbol');
-      return isCallable($Symbol) && objectIsPrototypeOf($Symbol.prototype, Object$6(it));
+      return isCallable($Symbol) && objectIsPrototypeOf($Symbol.prototype, Object$7(it));
     };
 
-    var String$6 = global_1.String;
+    var String$7 = global_1.String;
 
     var tryToString = function (argument) {
       try {
-        return String$6(argument);
+        return String$7(argument);
       } catch (error) {
         return 'Object';
       }
     };
 
-    var TypeError$E = global_1.TypeError;
+    var TypeError$G = global_1.TypeError;
 
     // `Assert: IsCallable(argument) is true`
     var aCallable = function (argument) {
       if (isCallable(argument)) { return argument; }
-      throw TypeError$E(tryToString(argument) + ' is not a function');
+      throw TypeError$G(tryToString(argument) + ' is not a function');
     };
 
     // `GetMethod` abstract operation
@@ -1815,7 +1815,7 @@ var doric = (function (exports) {
       return func == null ? undefined : aCallable(func);
     };
 
-    var TypeError$D = global_1.TypeError;
+    var TypeError$F = global_1.TypeError;
 
     // `OrdinaryToPrimitive` abstract operation
     // https://tc39.es/ecma262/#sec-ordinarytoprimitive
@@ -1824,17 +1824,17 @@ var doric = (function (exports) {
       if (pref === 'string' && isCallable(fn = input.toString) && !isObject(val = functionCall(fn, input))) { return val; }
       if (isCallable(fn = input.valueOf) && !isObject(val = functionCall(fn, input))) { return val; }
       if (pref !== 'string' && isCallable(fn = input.toString) && !isObject(val = functionCall(fn, input))) { return val; }
-      throw TypeError$D("Can't convert object to primitive value");
+      throw TypeError$F("Can't convert object to primitive value");
     };
 
     var isPure = false;
 
     // eslint-disable-next-line es/no-object-defineproperty -- safe
-    var defineProperty$f = Object.defineProperty;
+    var defineProperty$i = Object.defineProperty;
 
     var setGlobal = function (key, value) {
       try {
-        defineProperty$f(global_1, key, { value: value, configurable: true, writable: true });
+        defineProperty$i(global_1, key, { value: value, configurable: true, writable: true });
       } catch (error) {
         global_1[key] = value;
       } return value;
@@ -1849,18 +1849,18 @@ var doric = (function (exports) {
     (module.exports = function (key, value) {
       return sharedStore[key] || (sharedStore[key] = value !== undefined ? value : {});
     })('versions', []).push({
-      version: '3.19.0',
+      version: '3.20.0',
       mode: 'global',
       copyright: '© 2021 Denis Pushkarev (zloirock.ru)'
     });
     });
 
-    var Object$5 = global_1.Object;
+    var Object$6 = global_1.Object;
 
     // `ToObject` abstract operation
     // https://tc39.es/ecma262/#sec-toobject
     var toObject = function (argument) {
-      return Object$5(requireObjectCoercible(argument));
+      return Object$6(requireObjectCoercible(argument));
     };
 
     var hasOwnProperty = functionUncurryThis({}.hasOwnProperty);
@@ -1897,7 +1897,7 @@ var doric = (function (exports) {
       } return WellKnownSymbolsStore$1[name];
     };
 
-    var TypeError$C = global_1.TypeError;
+    var TypeError$E = global_1.TypeError;
     var TO_PRIMITIVE$2 = wellKnownSymbol('toPrimitive');
 
     // `ToPrimitive` abstract operation
@@ -1910,7 +1910,7 @@ var doric = (function (exports) {
         if (pref === undefined) { pref = 'default'; }
         result = functionCall(exoticToPrim, input, pref);
         if (!isObject(result) || isSymbol(result)) { return result; }
-        throw TypeError$C("Can't convert object to primitive value");
+        throw TypeError$E("Can't convert object to primitive value");
       }
       if (pref === undefined) { pref = 'number'; }
       return ordinaryToPrimitive(input, pref);
@@ -1957,16 +1957,16 @@ var doric = (function (exports) {
     	f: f$6
     };
 
-    var String$5 = global_1.String;
-    var TypeError$B = global_1.TypeError;
+    var String$6 = global_1.String;
+    var TypeError$D = global_1.TypeError;
 
     // `Assert: Type(argument) is Object`
     var anObject = function (argument) {
       if (isObject(argument)) { return argument; }
-      throw TypeError$B(String$5(argument) + ' is not an object');
+      throw TypeError$D(String$6(argument) + ' is not an object');
     };
 
-    var TypeError$A = global_1.TypeError;
+    var TypeError$C = global_1.TypeError;
     // eslint-disable-next-line es/no-object-defineproperty -- safe
     var $defineProperty$1 = Object.defineProperty;
 
@@ -1979,7 +1979,7 @@ var doric = (function (exports) {
       if (ie8DomDefine) { try {
         return $defineProperty$1(O, P, Attributes);
       } catch (error) { /* empty */ } }
-      if ('get' in Attributes || 'set' in Attributes) { throw TypeError$A('Accessors not supported'); }
+      if ('get' in Attributes || 'set' in Attributes) { throw TypeError$C('Accessors not supported'); }
       if ('value' in Attributes) { O[P] = Attributes.value; }
       return O;
     };
@@ -2019,7 +2019,7 @@ var doric = (function (exports) {
     var hiddenKeys$1 = {};
 
     var OBJECT_ALREADY_INITIALIZED = 'Object already initialized';
-    var TypeError$z = global_1.TypeError;
+    var TypeError$B = global_1.TypeError;
     var WeakMap$3 = global_1.WeakMap;
     var set$3, get$2, has;
 
@@ -2027,11 +2027,11 @@ var doric = (function (exports) {
       return has(it) ? get$2(it) : set$3(it, {});
     };
 
-    var getterFor = function (TYPE) {
+    var getterFor$2 = function (TYPE) {
       return function (it) {
         var state;
         if (!isObject(it) || (state = get$2(it)).type !== TYPE) {
-          throw TypeError$z('Incompatible receiver, ' + TYPE + ' required');
+          throw TypeError$B('Incompatible receiver, ' + TYPE + ' required');
         } return state;
       };
     };
@@ -2042,7 +2042,7 @@ var doric = (function (exports) {
       var wmhas = functionUncurryThis(store$2.has);
       var wmset = functionUncurryThis(store$2.set);
       set$3 = function (it, metadata) {
-        if (wmhas(store$2, it)) { throw new TypeError$z(OBJECT_ALREADY_INITIALIZED); }
+        if (wmhas(store$2, it)) { throw new TypeError$B(OBJECT_ALREADY_INITIALIZED); }
         metadata.facade = it;
         wmset(store$2, it, metadata);
         return metadata;
@@ -2057,7 +2057,7 @@ var doric = (function (exports) {
       var STATE = sharedKey('state');
       hiddenKeys$1[STATE] = true;
       set$3 = function (it, metadata) {
-        if (hasOwnProperty_1(it, STATE)) { throw new TypeError$z(OBJECT_ALREADY_INITIALIZED); }
+        if (hasOwnProperty_1(it, STATE)) { throw new TypeError$B(OBJECT_ALREADY_INITIALIZED); }
         metadata.facade = it;
         createNonEnumerableProperty(it, STATE, metadata);
         return metadata;
@@ -2075,7 +2075,7 @@ var doric = (function (exports) {
       get: get$2,
       has: has,
       enforce: enforce,
-      getterFor: getterFor
+      getterFor: getterFor$2
     };
 
     var FunctionPrototype$3 = Function.prototype;
@@ -2136,33 +2136,33 @@ var doric = (function (exports) {
     });
 
     var ceil$2 = Math.ceil;
-    var floor$a = Math.floor;
+    var floor$b = Math.floor;
 
     // `ToIntegerOrInfinity` abstract operation
     // https://tc39.es/ecma262/#sec-tointegerorinfinity
     var toIntegerOrInfinity = function (argument) {
       var number = +argument;
       // eslint-disable-next-line no-self-compare -- safe
-      return number !== number || number === 0 ? 0 : (number > 0 ? floor$a : ceil$2)(number);
+      return number !== number || number === 0 ? 0 : (number > 0 ? floor$b : ceil$2)(number);
     };
 
-    var max$6 = Math.max;
-    var min$a = Math.min;
+    var max$8 = Math.max;
+    var min$b = Math.min;
 
     // Helper for a popular repeating case of the spec:
     // Let integer be ? ToInteger(index).
     // If integer < 0, let result be max((length + integer), 0); else let result be min(integer, length).
     var toAbsoluteIndex = function (index, length) {
       var integer = toIntegerOrInfinity(index);
-      return integer < 0 ? max$6(integer + length, 0) : min$a(integer, length);
+      return integer < 0 ? max$8(integer + length, 0) : min$b(integer, length);
     };
 
-    var min$9 = Math.min;
+    var min$a = Math.min;
 
     // `ToLength` abstract operation
     // https://tc39.es/ecma262/#sec-tolength
     var toLength = function (argument) {
-      return argument > 0 ? min$9(toIntegerOrInfinity(argument), 0x1FFFFFFFFFFFFF) : 0; // 2 ** 53 - 1 == 9007199254740991
+      return argument > 0 ? min$a(toIntegerOrInfinity(argument), 0x1FFFFFFFFFFFFF) : 0; // 2 ** 53 - 1 == 9007199254740991
     };
 
     // `LengthOfArrayLike` abstract operation
@@ -2203,17 +2203,17 @@ var doric = (function (exports) {
     var indexOf$2 = arrayIncludes.indexOf;
 
 
-    var push$j = functionUncurryThis([].push);
+    var push$m = functionUncurryThis([].push);
 
     var objectKeysInternal = function (object, names) {
       var O = toIndexedObject(object);
       var i = 0;
       var result = [];
       var key;
-      for (key in O) { !hasOwnProperty_1(hiddenKeys$1, key) && hasOwnProperty_1(O, key) && push$j(result, key); }
+      for (key in O) { !hasOwnProperty_1(hiddenKeys$1, key) && hasOwnProperty_1(O, key) && push$m(result, key); }
       // Don't enum bug & hidden keys
       while (names.length > i) { if (hasOwnProperty_1(O, key = names[i++])) {
-        ~indexOf$2(result, key) || push$j(result, key);
+        ~indexOf$2(result, key) || push$m(result, key);
       } }
       return result;
     };
@@ -2258,13 +2258,15 @@ var doric = (function (exports) {
       return getOwnPropertySymbols ? concat$4(keys, getOwnPropertySymbols(it)) : keys;
     };
 
-    var copyConstructorProperties = function (target, source) {
+    var copyConstructorProperties = function (target, source, exceptions) {
       var keys = ownKeys(source);
       var defineProperty = objectDefineProperty.f;
       var getOwnPropertyDescriptor = objectGetOwnPropertyDescriptor.f;
       for (var i = 0; i < keys.length; i++) {
         var key = keys[i];
-        if (!hasOwnProperty_1(target, key)) { defineProperty(target, key, getOwnPropertyDescriptor(source, key)); }
+        if (!hasOwnProperty_1(target, key) && !(exceptions && hasOwnProperty_1(exceptions, key))) {
+          defineProperty(target, key, getOwnPropertyDescriptor(source, key));
+        }
       }
     };
 
@@ -2288,7 +2290,7 @@ var doric = (function (exports) {
 
     var isForced_1 = isForced;
 
-    var getOwnPropertyDescriptor$7 = objectGetOwnPropertyDescriptor.f;
+    var getOwnPropertyDescriptor$8 = objectGetOwnPropertyDescriptor.f;
 
 
 
@@ -2325,7 +2327,7 @@ var doric = (function (exports) {
       if (target) { for (key in source) {
         sourceProperty = source[key];
         if (options.noTargetGet) {
-          descriptor = getOwnPropertyDescriptor$7(target, key);
+          descriptor = getOwnPropertyDescriptor$8(target, key);
           targetProperty = descriptor && descriptor.value;
         } else { targetProperty = target[key]; }
         FORCED = isForced_1(GLOBAL ? key : TARGET + (STATIC ? '.' : '#') + key, options.forced);
@@ -2360,15 +2362,15 @@ var doric = (function (exports) {
       return classofRaw(argument) == 'Array';
     };
 
-    var TO_STRING_TAG$8 = wellKnownSymbol('toStringTag');
+    var TO_STRING_TAG$9 = wellKnownSymbol('toStringTag');
     var test$2 = {};
 
-    test$2[TO_STRING_TAG$8] = 'z';
+    test$2[TO_STRING_TAG$9] = 'z';
 
     var toStringTagSupport = String(test$2) === '[object z]';
 
-    var TO_STRING_TAG$7 = wellKnownSymbol('toStringTag');
-    var Object$4 = global_1.Object;
+    var TO_STRING_TAG$8 = wellKnownSymbol('toStringTag');
+    var Object$5 = global_1.Object;
 
     // ES3 wrong here
     var CORRECT_ARGUMENTS = classofRaw(function () { return arguments; }()) == 'Arguments';
@@ -2385,24 +2387,24 @@ var doric = (function (exports) {
       var O, tag, result;
       return it === undefined ? 'Undefined' : it === null ? 'Null'
         // @@toStringTag case
-        : typeof (tag = tryGet(O = Object$4(it), TO_STRING_TAG$7)) == 'string' ? tag
+        : typeof (tag = tryGet(O = Object$5(it), TO_STRING_TAG$8)) == 'string' ? tag
         // builtinTag case
         : CORRECT_ARGUMENTS ? classofRaw(O)
         // ES3 arguments fallback
         : (result = classofRaw(O)) == 'Object' && isCallable(O.callee) ? 'Arguments' : result;
     };
 
-    var String$4 = global_1.String;
+    var String$5 = global_1.String;
 
     var toString_1 = function (argument) {
       if (classof(argument) === 'Symbol') { throw TypeError('Cannot convert a Symbol value to a string'); }
-      return String$4(argument);
+      return String$5(argument);
     };
 
     // `Object.keys` method
     // https://tc39.es/ecma262/#sec-object.keys
     // eslint-disable-next-line es/no-object-keys -- safe
-    var objectKeys = Object.keys || function keys(O) {
+    var objectKeys$1 = Object.keys || function keys(O) {
       return objectKeysInternal(O, enumBugKeys);
     };
 
@@ -2412,7 +2414,7 @@ var doric = (function (exports) {
     var objectDefineProperties = descriptors ? Object.defineProperties : function defineProperties(O, Properties) {
       anObject(O);
       var props = toIndexedObject(Properties);
-      var keys = objectKeys(Properties);
+      var keys = objectKeys$1(Properties);
       var length = keys.length;
       var index = 0;
       var key;
@@ -2505,7 +2507,24 @@ var doric = (function (exports) {
       return Properties === undefined ? result : objectDefineProperties(result, Properties);
     };
 
-    var arraySlice$1 = functionUncurryThis([].slice);
+    var createProperty = function (object, key, value) {
+      var propertyKey = toPropertyKey(key);
+      if (propertyKey in object) { objectDefineProperty.f(object, propertyKey, createPropertyDescriptor(0, value)); }
+      else { object[propertyKey] = value; }
+    };
+
+    var Array$f = global_1.Array;
+    var max$7 = Math.max;
+
+    var arraySliceSimple = function (O, start, end) {
+      var length = lengthOfArrayLike(O);
+      var k = toAbsoluteIndex(start, length);
+      var fin = toAbsoluteIndex(end === undefined ? length : end, length);
+      var result = Array$f(max$7(fin - k, 0));
+      for (var n = 0; k < fin; k++, n++) { createProperty(result, n, O[k]); }
+      result.length = n;
+      return result;
+    };
 
     /* eslint-disable es/no-object-getownpropertynames -- safe */
 
@@ -2520,7 +2539,7 @@ var doric = (function (exports) {
       try {
         return $getOwnPropertyNames$1(it);
       } catch (error) {
-        return arraySlice$1(windowNames);
+        return arraySliceSimple(windowNames);
       }
     };
 
@@ -2535,6 +2554,8 @@ var doric = (function (exports) {
     	f: f$2
     };
 
+    var arraySlice$1 = functionUncurryThis([].slice);
+
     var f$1 = wellKnownSymbol;
 
     var wellKnownSymbolWrapped = {
@@ -2543,24 +2564,25 @@ var doric = (function (exports) {
 
     var path = global_1;
 
-    var defineProperty$e = objectDefineProperty.f;
+    var defineProperty$h = objectDefineProperty.f;
 
     var defineWellKnownSymbol = function (NAME) {
       var Symbol = path.Symbol || (path.Symbol = {});
-      if (!hasOwnProperty_1(Symbol, NAME)) { defineProperty$e(Symbol, NAME, {
+      if (!hasOwnProperty_1(Symbol, NAME)) { defineProperty$h(Symbol, NAME, {
         value: wellKnownSymbolWrapped.f(NAME)
       }); }
     };
 
-    var defineProperty$d = objectDefineProperty.f;
+    var defineProperty$g = objectDefineProperty.f;
 
 
 
-    var TO_STRING_TAG$6 = wellKnownSymbol('toStringTag');
+    var TO_STRING_TAG$7 = wellKnownSymbol('toStringTag');
 
-    var setToStringTag = function (it, TAG, STATIC) {
-      if (it && !hasOwnProperty_1(it = STATIC ? it : it.prototype, TO_STRING_TAG$6)) {
-        defineProperty$d(it, TO_STRING_TAG$6, { configurable: true, value: TAG });
+    var setToStringTag = function (target, TAG, STATIC) {
+      if (target && !STATIC) { target = target.prototype; }
+      if (target && !hasOwnProperty_1(target, TO_STRING_TAG$7)) {
+        defineProperty$g(target, TO_STRING_TAG$7, { configurable: true, value: TAG });
       }
     };
 
@@ -2578,10 +2600,10 @@ var doric = (function (exports) {
     var empty = [];
     var construct$1 = getBuiltIn('Reflect', 'construct');
     var constructorRegExp = /^\s*(?:class|function)\b/;
-    var exec$9 = functionUncurryThis(constructorRegExp.exec);
-    var INCORRECT_TO_STRING = !constructorRegExp.exec(noop);
+    var exec$a = functionUncurryThis(constructorRegExp.exec);
+    var INCORRECT_TO_STRING$2 = !constructorRegExp.exec(noop);
 
-    var isConstructorModern = function (argument) {
+    var isConstructorModern = function isConstructor(argument) {
       if (!isCallable(argument)) { return false; }
       try {
         construct$1(noop, empty, argument);
@@ -2591,15 +2613,24 @@ var doric = (function (exports) {
       }
     };
 
-    var isConstructorLegacy = function (argument) {
+    var isConstructorLegacy = function isConstructor(argument) {
       if (!isCallable(argument)) { return false; }
       switch (classof(argument)) {
         case 'AsyncFunction':
         case 'GeneratorFunction':
         case 'AsyncGeneratorFunction': return false;
+      }
+      try {
         // we can't check .prototype since constructors produced by .bind haven't it
-      } return INCORRECT_TO_STRING || !!exec$9(constructorRegExp, inspectSource(argument));
+        // `Function#toString` throws on some built-it function in some legacy engines
+        // (for example, `DOMQuad` and similar in FF41-)
+        return INCORRECT_TO_STRING$2 || !!exec$a(constructorRegExp, inspectSource(argument));
+      } catch (error) {
+        return true;
+      }
     };
+
+    isConstructorLegacy.sham = true;
 
     // `IsConstructor` abstract operation
     // https://tc39.es/ecma262/#sec-isconstructor
@@ -2612,7 +2643,7 @@ var doric = (function (exports) {
     }) ? isConstructorLegacy : isConstructorModern;
 
     var SPECIES$6 = wellKnownSymbol('species');
-    var Array$a = global_1.Array;
+    var Array$e = global_1.Array;
 
     // a part of `ArraySpeciesCreate` abstract operation
     // https://tc39.es/ecma262/#sec-arrayspeciescreate
@@ -2621,12 +2652,12 @@ var doric = (function (exports) {
       if (isArray(originalArray)) {
         C = originalArray.constructor;
         // cross-realm fallback
-        if (isConstructor(C) && (C === Array$a || isArray(C.prototype))) { C = undefined; }
+        if (isConstructor(C) && (C === Array$e || isArray(C.prototype))) { C = undefined; }
         else if (isObject(C)) {
           C = C[SPECIES$6];
           if (C === null) { C = undefined; }
         }
-      } return C === undefined ? Array$a : C;
+      } return C === undefined ? Array$e : C;
     };
 
     // `ArraySpeciesCreate` abstract operation
@@ -2635,7 +2666,7 @@ var doric = (function (exports) {
       return new (arraySpeciesConstructor(originalArray))(length === 0 ? 0 : length);
     };
 
-    var push$i = functionUncurryThis([].push);
+    var push$l = functionUncurryThis([].push);
 
     // `Array.prototype.{ forEach, map, filter, some, every, find, findIndex, filterReject }` methods implementation
     var createMethod$7 = function (TYPE) {
@@ -2664,10 +2695,10 @@ var doric = (function (exports) {
               case 3: return true;              // some
               case 5: return value;             // find
               case 6: return index;             // findIndex
-              case 2: push$i(target, value);      // filter
+              case 2: push$l(target, value);      // filter
             } } else { switch (TYPE) {
               case 4: return false;             // every
-              case 7: push$i(target, value);      // filterReject
+              case 7: push$l(target, value);      // filterReject
             } }
           }
         } }
@@ -2709,20 +2740,20 @@ var doric = (function (exports) {
     var PROTOTYPE$1 = 'prototype';
     var TO_PRIMITIVE$1 = wellKnownSymbol('toPrimitive');
 
-    var setInternalState$h = internalState.set;
+    var setInternalState$i = internalState.set;
     var getInternalState$g = internalState.getterFor(SYMBOL);
 
     var ObjectPrototype$4 = Object[PROTOTYPE$1];
     var $Symbol = global_1.Symbol;
     var SymbolPrototype$1 = $Symbol && $Symbol[PROTOTYPE$1];
-    var TypeError$y = global_1.TypeError;
+    var TypeError$A = global_1.TypeError;
     var QObject = global_1.QObject;
     var $stringify$1 = getBuiltIn('JSON', 'stringify');
     var nativeGetOwnPropertyDescriptor$1 = objectGetOwnPropertyDescriptor.f;
     var nativeDefineProperty = objectDefineProperty.f;
     var nativeGetOwnPropertyNames = objectGetOwnPropertyNamesExternal.f;
     var nativePropertyIsEnumerable = objectPropertyIsEnumerable.f;
-    var push$h = functionUncurryThis([].push);
+    var push$k = functionUncurryThis([].push);
 
     var AllSymbols = shared('symbols');
     var ObjectPrototypeSymbols = shared('op-symbols');
@@ -2749,7 +2780,7 @@ var doric = (function (exports) {
 
     var wrap$1 = function (tag, description) {
       var symbol = AllSymbols[tag] = objectCreate(SymbolPrototype$1);
-      setInternalState$h(symbol, {
+      setInternalState$i(symbol, {
         type: SYMBOL,
         tag: tag,
         description: description
@@ -2777,7 +2808,7 @@ var doric = (function (exports) {
     var $defineProperties = function defineProperties(O, Properties) {
       anObject(O);
       var properties = toIndexedObject(Properties);
-      var keys = objectKeys(properties).concat($getOwnPropertySymbols(properties));
+      var keys = objectKeys$1(properties).concat($getOwnPropertySymbols(properties));
       $forEach$3(keys, function (key) {
         if (!descriptors || functionCall($propertyIsEnumerable$1, properties, key)) { $defineProperty(O, key, properties[key]); }
       });
@@ -2811,7 +2842,7 @@ var doric = (function (exports) {
       var names = nativeGetOwnPropertyNames(toIndexedObject(O));
       var result = [];
       $forEach$3(names, function (key) {
-        if (!hasOwnProperty_1(AllSymbols, key) && !hasOwnProperty_1(hiddenKeys$1, key)) { push$h(result, key); }
+        if (!hasOwnProperty_1(AllSymbols, key) && !hasOwnProperty_1(hiddenKeys$1, key)) { push$k(result, key); }
       });
       return result;
     };
@@ -2822,7 +2853,7 @@ var doric = (function (exports) {
       var result = [];
       $forEach$3(names, function (key) {
         if (hasOwnProperty_1(AllSymbols, key) && (!IS_OBJECT_PROTOTYPE || hasOwnProperty_1(ObjectPrototype$4, key))) {
-          push$h(result, AllSymbols[key]);
+          push$k(result, AllSymbols[key]);
         }
       });
       return result;
@@ -2832,7 +2863,7 @@ var doric = (function (exports) {
     // https://tc39.es/ecma262/#sec-symbol-constructor
     if (!nativeSymbol) {
       $Symbol = function Symbol() {
-        if (objectIsPrototypeOf(SymbolPrototype$1, this)) { throw TypeError$y('Symbol is not a constructor'); }
+        if (objectIsPrototypeOf(SymbolPrototype$1, this)) { throw TypeError$A('Symbol is not a constructor'); }
         var description = !arguments.length || arguments[0] === undefined ? undefined : toString_1(arguments[0]);
         var tag = uid(description);
         var setter = function (value) {
@@ -2882,7 +2913,7 @@ var doric = (function (exports) {
       Symbol: $Symbol
     });
 
-    $forEach$3(objectKeys(WellKnownSymbolsStore), function (name) {
+    $forEach$3(objectKeys$1(WellKnownSymbolsStore), function (name) {
       defineWellKnownSymbol(name);
     });
 
@@ -2900,7 +2931,7 @@ var doric = (function (exports) {
       // `Symbol.keyFor` method
       // https://tc39.es/ecma262/#sec-symbol.keyfor
       keyFor: function keyFor(sym) {
-        if (!isSymbol(sym)) { throw TypeError$y(sym + ' is not a symbol'); }
+        if (!isSymbol(sym)) { throw TypeError$A(sym + ' is not a symbol'); }
         if (hasOwnProperty_1(SymbolToStringRegistry, sym)) { return SymbolToStringRegistry[sym]; }
       },
       useSetter: function () { USE_SETTER = true; },
@@ -2984,7 +3015,7 @@ var doric = (function (exports) {
 
     hiddenKeys$1[HIDDEN] = true;
 
-    var defineProperty$c = objectDefineProperty.f;
+    var defineProperty$f = objectDefineProperty.f;
 
 
     var NativeSymbol = global_1.Symbol;
@@ -3015,15 +3046,15 @@ var doric = (function (exports) {
       var symbolValueOf = functionUncurryThis(SymbolPrototype.valueOf);
       var regexp = /^Symbol\((.*)\)[^)]+$/;
       var replace$a = functionUncurryThis(''.replace);
-      var stringSlice$f = functionUncurryThis(''.slice);
+      var stringSlice$g = functionUncurryThis(''.slice);
 
-      defineProperty$c(SymbolPrototype, 'description', {
+      defineProperty$f(SymbolPrototype, 'description', {
         configurable: true,
         get: function description() {
           var symbol = symbolValueOf(this);
           var string = symbolToString(symbol);
           if (hasOwnProperty_1(EmptyStringDescriptionStore, symbol)) { return ''; }
-          var desc = NATIVE_SYMBOL ? stringSlice$f(string, 7, -1) : replace$a(string, regexp, '$1');
+          var desc = NATIVE_SYMBOL ? stringSlice$g(string, 7, -1) : replace$a(string, regexp, '$1');
           return desc === '' ? undefined : desc;
         }
       });
@@ -3085,34 +3116,12 @@ var doric = (function (exports) {
     // https://tc39.es/ecma262/#sec-symbol.unscopables
     defineWellKnownSymbol('unscopables');
 
-    var correctPrototypeGetter = !fails(function () {
-      function F() { /* empty */ }
-      F.prototype.constructor = null;
-      // eslint-disable-next-line es/no-object-getprototypeof -- required for testing
-      return Object.getPrototypeOf(new F()) !== F.prototype;
-    });
-
-    var IE_PROTO = sharedKey('IE_PROTO');
-    var Object$3 = global_1.Object;
-    var ObjectPrototype$3 = Object$3.prototype;
-
-    // `Object.getPrototypeOf` method
-    // https://tc39.es/ecma262/#sec-object.getprototypeof
-    var objectGetPrototypeOf = correctPrototypeGetter ? Object$3.getPrototypeOf : function (O) {
-      var object = toObject(O);
-      if (hasOwnProperty_1(object, IE_PROTO)) { return object[IE_PROTO]; }
-      var constructor = object.constructor;
-      if (isCallable(constructor) && object instanceof constructor) {
-        return constructor.prototype;
-      } return object instanceof Object$3 ? ObjectPrototype$3 : null;
-    };
-
-    var String$3 = global_1.String;
-    var TypeError$x = global_1.TypeError;
+    var String$4 = global_1.String;
+    var TypeError$z = global_1.TypeError;
 
     var aPossiblePrototype = function (argument) {
       if (typeof argument == 'object' || isCallable(argument)) { return argument; }
-      throw TypeError$x("Can't set " + String$3(argument) + ' as a prototype');
+      throw TypeError$z("Can't set " + String$4(argument) + ' as a prototype');
     };
 
     /* eslint-disable no-proto -- safe */
@@ -3143,22 +3152,23 @@ var doric = (function (exports) {
       };
     }() : undefined);
 
-    var replace$9 = functionUncurryThis(''.replace);
-    var split$3 = functionUncurryThis(''.split);
-    var join$7 = functionUncurryThis([].join);
+    // makes subclassing work correct for wrapped built-ins
+    var inheritIfRequired = function ($this, dummy, Wrapper) {
+      var NewTarget, NewTargetPrototype;
+      if (
+        // it can work only with native `setPrototypeOf`
+        objectSetPrototypeOf &&
+        // we haven't completely correct pre-ES6 way for getting `new.target`, so use this
+        isCallable(NewTarget = dummy.constructor) &&
+        NewTarget !== Wrapper &&
+        isObject(NewTargetPrototype = NewTarget.prototype) &&
+        NewTargetPrototype !== Wrapper.prototype
+      ) { objectSetPrototypeOf($this, NewTargetPrototype); }
+      return $this;
+    };
 
-    var TEST = (function (arg) { return String(Error(arg).stack); })('zxcasd');
-    var V8_OR_CHAKRA_STACK_ENTRY = /\n\s*at [^:]*:[^\n]*/;
-    var IS_V8_OR_CHAKRA_STACK = V8_OR_CHAKRA_STACK_ENTRY.test(TEST);
-    var IS_FIREFOX_OR_SAFARI_STACK = /@[^\n]*\n/.test(TEST) && !/zxcasd/.test(TEST);
-
-    var clearErrorStack = function (stack, dropEntries) {
-      if (typeof stack != 'string') { return stack; }
-      if (IS_V8_OR_CHAKRA_STACK) {
-        while (dropEntries--) { stack = replace$9(stack, V8_OR_CHAKRA_STACK_ENTRY, ''); }
-      } else if (IS_FIREFOX_OR_SAFARI_STACK) {
-        return join$7(arraySlice$1(split$3(stack, '\n'), dropEntries), '\n');
-      } return stack;
+    var normalizeStringArgument = function (argument, $default) {
+      return argument === undefined ? arguments.length < 2 ? '' : $default : toString_1(argument);
     };
 
     // `InstallErrorCause` abstract operation
@@ -3169,14 +3179,192 @@ var doric = (function (exports) {
       }
     };
 
+    var replace$9 = functionUncurryThis(''.replace);
+
+    var TEST = (function (arg) { return String(Error(arg).stack); })('zxcasd');
+    var V8_OR_CHAKRA_STACK_ENTRY = /\n\s*at [^:]*:[^\n]*/;
+    var IS_V8_OR_CHAKRA_STACK = V8_OR_CHAKRA_STACK_ENTRY.test(TEST);
+
+    var clearErrorStack = function (stack, dropEntries) {
+      if (IS_V8_OR_CHAKRA_STACK && typeof stack == 'string') {
+        while (dropEntries--) { stack = replace$9(stack, V8_OR_CHAKRA_STACK_ENTRY, ''); }
+      } return stack;
+    };
+
+    var errorStackInstallable = !fails(function () {
+      var error = Error('a');
+      if (!('stack' in error)) { return true; }
+      // eslint-disable-next-line es/no-object-defineproperty -- safe
+      Object.defineProperty(error, 'stack', createPropertyDescriptor(1, 7));
+      return error.stack !== 7;
+    });
+
+    var wrapErrorConstructorWithCause = function (FULL_NAME, wrapper, FORCED, IS_AGGREGATE_ERROR) {
+      var OPTIONS_POSITION = IS_AGGREGATE_ERROR ? 2 : 1;
+      var path = FULL_NAME.split('.');
+      var ERROR_NAME = path[path.length - 1];
+      var OriginalError = getBuiltIn.apply(null, path);
+
+      if (!OriginalError) { return; }
+
+      var OriginalErrorPrototype = OriginalError.prototype;
+
+      // V8 9.3- bug https://bugs.chromium.org/p/v8/issues/detail?id=12006
+      if (hasOwnProperty_1(OriginalErrorPrototype, 'cause')) { delete OriginalErrorPrototype.cause; }
+
+      if (!FORCED) { return OriginalError; }
+
+      var BaseError = getBuiltIn('Error');
+
+      var WrappedError = wrapper(function (a, b) {
+        var message = normalizeStringArgument(IS_AGGREGATE_ERROR ? b : a, undefined);
+        var result = IS_AGGREGATE_ERROR ? new OriginalError(a) : new OriginalError();
+        if (message !== undefined) { createNonEnumerableProperty(result, 'message', message); }
+        if (errorStackInstallable) { createNonEnumerableProperty(result, 'stack', clearErrorStack(result.stack, 2)); }
+        if (this && objectIsPrototypeOf(OriginalErrorPrototype, this)) { inheritIfRequired(result, this, WrappedError); }
+        if (arguments.length > OPTIONS_POSITION) { installErrorCause(result, arguments[OPTIONS_POSITION]); }
+        return result;
+      });
+
+      WrappedError.prototype = OriginalErrorPrototype;
+
+      if (ERROR_NAME !== 'Error') {
+        if (objectSetPrototypeOf) { objectSetPrototypeOf(WrappedError, BaseError); }
+        else { copyConstructorProperties(WrappedError, BaseError, { name: true }); }
+      }
+
+      copyConstructorProperties(WrappedError, OriginalError);
+
+      { try {
+        // Safari 13- bug: WebAssembly errors does not have a proper `.name`
+        if (OriginalErrorPrototype.name !== ERROR_NAME) {
+          createNonEnumerableProperty(OriginalErrorPrototype, 'name', ERROR_NAME);
+        }
+        OriginalErrorPrototype.constructor = WrappedError;
+      } catch (error) { /* empty */ } }
+
+      return WrappedError;
+    };
+
+    /* eslint-disable no-unused-vars -- required for functions `.length` */
+
+
+
+
+
+    var WEB_ASSEMBLY = 'WebAssembly';
+    var WebAssembly$1 = global_1[WEB_ASSEMBLY];
+
+    var FORCED$t = Error('e', { cause: 7 }).cause !== 7;
+
+    var exportGlobalErrorCauseWrapper = function (ERROR_NAME, wrapper) {
+      var O = {};
+      O[ERROR_NAME] = wrapErrorConstructorWithCause(ERROR_NAME, wrapper, FORCED$t);
+      _export({ global: true, forced: FORCED$t }, O);
+    };
+
+    var exportWebAssemblyErrorCauseWrapper = function (ERROR_NAME, wrapper) {
+      if (WebAssembly$1 && WebAssembly$1[ERROR_NAME]) {
+        var O = {};
+        O[ERROR_NAME] = wrapErrorConstructorWithCause(WEB_ASSEMBLY + '.' + ERROR_NAME, wrapper, FORCED$t);
+        _export({ target: WEB_ASSEMBLY, stat: true, forced: FORCED$t }, O);
+      }
+    };
+
+    // https://github.com/tc39/proposal-error-cause
+    exportGlobalErrorCauseWrapper('Error', function (init) {
+      return function Error(message) { return functionApply(init, this, arguments); };
+    });
+    exportGlobalErrorCauseWrapper('EvalError', function (init) {
+      return function EvalError(message) { return functionApply(init, this, arguments); };
+    });
+    exportGlobalErrorCauseWrapper('RangeError', function (init) {
+      return function RangeError(message) { return functionApply(init, this, arguments); };
+    });
+    exportGlobalErrorCauseWrapper('ReferenceError', function (init) {
+      return function ReferenceError(message) { return functionApply(init, this, arguments); };
+    });
+    exportGlobalErrorCauseWrapper('SyntaxError', function (init) {
+      return function SyntaxError(message) { return functionApply(init, this, arguments); };
+    });
+    exportGlobalErrorCauseWrapper('TypeError', function (init) {
+      return function TypeError(message) { return functionApply(init, this, arguments); };
+    });
+    exportGlobalErrorCauseWrapper('URIError', function (init) {
+      return function URIError(message) { return functionApply(init, this, arguments); };
+    });
+    exportWebAssemblyErrorCauseWrapper('CompileError', function (init) {
+      return function CompileError(message) { return functionApply(init, this, arguments); };
+    });
+    exportWebAssemblyErrorCauseWrapper('LinkError', function (init) {
+      return function LinkError(message) { return functionApply(init, this, arguments); };
+    });
+    exportWebAssemblyErrorCauseWrapper('RuntimeError', function (init) {
+      return function RuntimeError(message) { return functionApply(init, this, arguments); };
+    });
+
+    var nativeErrorToString = Error.prototype.toString;
+
+    var INCORRECT_TO_STRING$1 = fails(function () {
+      if (descriptors) {
+        // Chrome 32- incorrectly call accessor
+        // eslint-disable-next-line es/no-object-defineproperty -- safe
+        var object = objectCreate(Object.defineProperty({}, 'name', { get: function () {
+          return this === object;
+        } }));
+        if (nativeErrorToString.call(object) !== 'true') { return true; }
+      }
+      // FF10- does not properly handle non-strings
+      return nativeErrorToString.call({ message: 1, name: 2 }) !== '2: 1'
+        // IE8 does not properly handle defaults
+        || nativeErrorToString.call({}) !== 'Error';
+    });
+
+    var errorToString = INCORRECT_TO_STRING$1 ? function toString() {
+      var O = anObject(this);
+      var name = normalizeStringArgument(O.name, 'Error');
+      var message = normalizeStringArgument(O.message);
+      return !name ? message : !message ? name : name + ': ' + message;
+    } : nativeErrorToString;
+
+    var ErrorPrototype$1 = Error.prototype;
+
+    // `Error.prototype.toString` method fix
+    // https://tc39.es/ecma262/#sec-error.prototype.tostring
+    if (ErrorPrototype$1.toString !== errorToString) {
+      redefine(ErrorPrototype$1, 'toString', errorToString);
+    }
+
+    var correctPrototypeGetter = !fails(function () {
+      function F() { /* empty */ }
+      F.prototype.constructor = null;
+      // eslint-disable-next-line es/no-object-getprototypeof -- required for testing
+      return Object.getPrototypeOf(new F()) !== F.prototype;
+    });
+
+    var IE_PROTO = sharedKey('IE_PROTO');
+    var Object$4 = global_1.Object;
+    var ObjectPrototype$3 = Object$4.prototype;
+
+    // `Object.getPrototypeOf` method
+    // https://tc39.es/ecma262/#sec-object.getprototypeof
+    var objectGetPrototypeOf = correctPrototypeGetter ? Object$4.getPrototypeOf : function (O) {
+      var object = toObject(O);
+      if (hasOwnProperty_1(object, IE_PROTO)) { return object[IE_PROTO]; }
+      var constructor = object.constructor;
+      if (isCallable(constructor) && object instanceof constructor) {
+        return constructor.prototype;
+      } return object instanceof Object$4 ? ObjectPrototype$3 : null;
+    };
+
     var iterators = {};
 
     var ITERATOR$a = wellKnownSymbol('iterator');
-    var ArrayPrototype$1 = Array.prototype;
+    var ArrayPrototype$2 = Array.prototype;
 
     // check on default Array iterator
     var isArrayIteratorMethod = function (it) {
-      return it !== undefined && (iterators.Array === it || ArrayPrototype$1[ITERATOR$a] === it);
+      return it !== undefined && (iterators.Array === it || ArrayPrototype$2[ITERATOR$a] === it);
     };
 
     var ITERATOR$9 = wellKnownSymbol('iterator');
@@ -3187,12 +3375,12 @@ var doric = (function (exports) {
         || iterators[classof(it)]; }
     };
 
-    var TypeError$w = global_1.TypeError;
+    var TypeError$y = global_1.TypeError;
 
     var getIterator = function (argument, usingIterator) {
       var iteratorMethod = arguments.length < 2 ? getIteratorMethod(argument) : usingIterator;
       if (aCallable(iteratorMethod)) { return anObject(functionCall(iteratorMethod, argument)); }
-      throw TypeError$w(tryToString(argument) + ' is not iterable');
+      throw TypeError$y(tryToString(argument) + ' is not iterable');
     };
 
     var iteratorClose = function (iterator, kind, value) {
@@ -3215,7 +3403,7 @@ var doric = (function (exports) {
       return value;
     };
 
-    var TypeError$v = global_1.TypeError;
+    var TypeError$x = global_1.TypeError;
 
     var Result = function (stopped, result) {
       this.stopped = stopped;
@@ -3248,7 +3436,7 @@ var doric = (function (exports) {
         iterator = iterable;
       } else {
         iterFn = getIteratorMethod(iterable);
-        if (!iterFn) { throw TypeError$v(tryToString(iterable) + ' is not iterable'); }
+        if (!iterFn) { throw TypeError$x(tryToString(iterable) + ' is not iterable'); }
         // optimisation for array iterators
         if (isArrayIteratorMethod(iterFn)) {
           for (index = 0, length = lengthOfArrayLike(iterable); length > index; index++) {
@@ -3270,41 +3458,34 @@ var doric = (function (exports) {
       } return new Result(false);
     };
 
-    var normalizeStringArgument = function (argument, $default) {
-      return argument === undefined ? arguments.length < 2 ? '' : $default : toString_1(argument);
-    };
+    var TO_STRING_TAG$6 = wellKnownSymbol('toStringTag');
+    var Error$5 = global_1.Error;
+    var push$j = [].push;
 
-    var errorStackInstallable = !fails(function () {
-      var error = Error('a');
-      if (!('stack' in error)) { return true; }
-      // eslint-disable-next-line es/no-object-defineproperty -- safe
-      Object.defineProperty(error, 'stack', createPropertyDescriptor(1, 7));
-      return error.stack !== 7;
-    });
-
-    var Error$2 = global_1.Error;
-    var push$g = [].push;
-
-    var $AggregateError = function AggregateError(errors, message /* , options */) {
-      var that = objectIsPrototypeOf(AggregateErrorPrototype, this) ? this : objectCreate(AggregateErrorPrototype);
+    var $AggregateError$1 = function AggregateError(errors, message /* , options */) {
       var options = arguments.length > 2 ? arguments[2] : undefined;
+      var isInstance = objectIsPrototypeOf(AggregateErrorPrototype, this);
+      var that;
       if (objectSetPrototypeOf) {
-        that = objectSetPrototypeOf(new Error$2(undefined), objectGetPrototypeOf(that));
+        that = objectSetPrototypeOf(new Error$5(), isInstance ? objectGetPrototypeOf(this) : AggregateErrorPrototype);
+      } else {
+        that = isInstance ? this : objectCreate(AggregateErrorPrototype);
+        createNonEnumerableProperty(that, TO_STRING_TAG$6, 'Error');
       }
-      createNonEnumerableProperty(that, 'message', normalizeStringArgument(message, ''));
+      if (message !== undefined) { createNonEnumerableProperty(that, 'message', normalizeStringArgument(message)); }
       if (errorStackInstallable) { createNonEnumerableProperty(that, 'stack', clearErrorStack(that.stack, 1)); }
       installErrorCause(that, options);
       var errorsArray = [];
-      iterate(errors, push$g, { that: errorsArray });
+      iterate(errors, push$j, { that: errorsArray });
       createNonEnumerableProperty(that, 'errors', errorsArray);
       return that;
     };
 
-    if (objectSetPrototypeOf) { objectSetPrototypeOf($AggregateError, Error$2); }
-    else { copyConstructorProperties($AggregateError, Error$2); }
+    if (objectSetPrototypeOf) { objectSetPrototypeOf($AggregateError$1, Error$5); }
+    else { copyConstructorProperties($AggregateError$1, Error$5, { name: true }); }
 
-    var AggregateErrorPrototype = $AggregateError.prototype = objectCreate(Error$2.prototype, {
-      constructor: createPropertyDescriptor(1, $AggregateError),
+    var AggregateErrorPrototype = $AggregateError$1.prototype = objectCreate(Error$5.prototype, {
+      constructor: createPropertyDescriptor(1, $AggregateError$1),
       message: createPropertyDescriptor(1, ''),
       name: createPropertyDescriptor(1, 'AggregateError')
     });
@@ -3312,16 +3493,32 @@ var doric = (function (exports) {
     // `AggregateError` constructor
     // https://tc39.es/ecma262/#sec-aggregate-error-constructor
     _export({ global: true }, {
-      AggregateError: $AggregateError
+      AggregateError: $AggregateError$1
+    });
+
+    var AGGREGATE_ERROR = 'AggregateError';
+    var $AggregateError = getBuiltIn(AGGREGATE_ERROR);
+    var FORCED$s = !fails(function () {
+      return $AggregateError([1]).errors[0] !== 1;
+    }) && fails(function () {
+      return $AggregateError([1], AGGREGATE_ERROR, { cause: 7 }).cause !== 7;
+    });
+
+    // https://github.com/tc39/proposal-error-cause
+    _export({ global: true, forced: FORCED$s }, {
+      AggregateError: wrapErrorConstructorWithCause(AGGREGATE_ERROR, function (init) {
+        // eslint-disable-next-line no-unused-vars -- required for functions `.length`
+        return function AggregateError(errors, message) { return functionApply(init, this, arguments); };
+      }, FORCED$s, true)
     });
 
     var UNSCOPABLES = wellKnownSymbol('unscopables');
-    var ArrayPrototype = Array.prototype;
+    var ArrayPrototype$1 = Array.prototype;
 
     // Array.prototype[@@unscopables]
     // https://tc39.es/ecma262/#sec-array.prototype-@@unscopables
-    if (ArrayPrototype[UNSCOPABLES] == undefined) {
-      objectDefineProperty.f(ArrayPrototype, UNSCOPABLES, {
+    if (ArrayPrototype$1[UNSCOPABLES] == undefined) {
+      objectDefineProperty.f(ArrayPrototype$1, UNSCOPABLES, {
         configurable: true,
         value: objectCreate(null)
       });
@@ -3329,7 +3526,7 @@ var doric = (function (exports) {
 
     // add a key to Array.prototype[@@unscopables]
     var addToUnscopables = function (key) {
-      ArrayPrototype[UNSCOPABLES][key] = true;
+      ArrayPrototype$1[UNSCOPABLES][key] = true;
     };
 
     // `Array.prototype.at` method
@@ -3345,12 +3542,6 @@ var doric = (function (exports) {
     });
 
     addToUnscopables('at');
-
-    var createProperty = function (object, key, value) {
-      var propertyKey = toPropertyKey(key);
-      if (propertyKey in object) { objectDefineProperty.f(object, propertyKey, createPropertyDescriptor(0, value)); }
-      else { object[propertyKey] = value; }
-    };
 
     var SPECIES$5 = wellKnownSymbol('species');
 
@@ -3371,7 +3562,7 @@ var doric = (function (exports) {
     var IS_CONCAT_SPREADABLE = wellKnownSymbol('isConcatSpreadable');
     var MAX_SAFE_INTEGER$2 = 0x1FFFFFFFFFFFFF;
     var MAXIMUM_ALLOWED_INDEX_EXCEEDED = 'Maximum allowed index exceeded';
-    var TypeError$u = global_1.TypeError;
+    var TypeError$w = global_1.TypeError;
 
     // We can't use this feature detection in V8 since it causes
     // deoptimization and serious performance degradation
@@ -3390,12 +3581,12 @@ var doric = (function (exports) {
       return spreadable !== undefined ? !!spreadable : isArray(O);
     };
 
-    var FORCED$q = !IS_CONCAT_SPREADABLE_SUPPORT || !SPECIES_SUPPORT;
+    var FORCED$r = !IS_CONCAT_SPREADABLE_SUPPORT || !SPECIES_SUPPORT;
 
     // `Array.prototype.concat` method
     // https://tc39.es/ecma262/#sec-array.prototype.concat
     // with adding support of @@isConcatSpreadable and @@species
-    _export({ target: 'Array', proto: true, forced: FORCED$q }, {
+    _export({ target: 'Array', proto: true, forced: FORCED$r }, {
       // eslint-disable-next-line no-unused-vars -- required for `.length`
       concat: function concat(arg) {
         var arguments$1 = arguments;
@@ -3408,10 +3599,10 @@ var doric = (function (exports) {
           E = i === -1 ? O : arguments$1[i];
           if (isConcatSpreadable(E)) {
             len = lengthOfArrayLike(E);
-            if (n + len > MAX_SAFE_INTEGER$2) { throw TypeError$u(MAXIMUM_ALLOWED_INDEX_EXCEEDED); }
+            if (n + len > MAX_SAFE_INTEGER$2) { throw TypeError$w(MAXIMUM_ALLOWED_INDEX_EXCEEDED); }
             for (k = 0; k < len; k++, n++) { if (k in E) { createProperty(A, n, E[k]); } }
           } else {
-            if (n >= MAX_SAFE_INTEGER$2) { throw TypeError$u(MAXIMUM_ALLOWED_INDEX_EXCEEDED); }
+            if (n >= MAX_SAFE_INTEGER$2) { throw TypeError$w(MAXIMUM_ALLOWED_INDEX_EXCEEDED); }
             createProperty(A, n++, E);
           }
         }
@@ -3420,7 +3611,7 @@ var doric = (function (exports) {
       }
     });
 
-    var min$8 = Math.min;
+    var min$9 = Math.min;
 
     // `Array.prototype.copyWithin` method implementation
     // https://tc39.es/ecma262/#sec-array.prototype.copywithin
@@ -3431,7 +3622,7 @@ var doric = (function (exports) {
       var to = toAbsoluteIndex(target, len);
       var from = toAbsoluteIndex(start, len);
       var end = arguments.length > 2 ? arguments[2] : undefined;
-      var count = min$8((end === undefined ? len : toAbsoluteIndex(end, len)) - from, len - to);
+      var count = min$9((end === undefined ? len : toAbsoluteIndex(end, len)) - from, len - to);
       var inc = 1;
       if (from < to && to < from + count) {
         inc = -1;
@@ -3552,7 +3743,7 @@ var doric = (function (exports) {
     // https://tc39.es/ecma262/#sec-array.prototype-@@unscopables
     addToUnscopables(FIND_INDEX);
 
-    var TypeError$t = global_1.TypeError;
+    var TypeError$v = global_1.TypeError;
 
     // `FlattenIntoArray` abstract operation
     // https://tc39.github.io/proposal-flatMap/#sec-FlattenIntoArray
@@ -3570,7 +3761,7 @@ var doric = (function (exports) {
             elementLen = lengthOfArrayLike(element);
             targetIndex = flattenIntoArray(target, original, element, elementLen, targetIndex, depth - 1) - 1;
           } else {
-            if (targetIndex >= 0x1FFFFFFFFFFFFF) { throw TypeError$t('Exceed the acceptable array length'); }
+            if (targetIndex >= 0x1FFFFFFFFFFFFF) { throw TypeError$v('Exceed the acceptable array length'); }
             target[targetIndex] = element;
           }
 
@@ -3638,7 +3829,7 @@ var doric = (function (exports) {
       }
     };
 
-    var Array$9 = global_1.Array;
+    var Array$d = global_1.Array;
 
     // `Array.from` method implementation
     // https://tc39.es/ecma262/#sec-array.from
@@ -3653,7 +3844,7 @@ var doric = (function (exports) {
       var index = 0;
       var length, result, step, iterator, next, value;
       // if the target is not iterable or it's an array with the default iterator - use a simple case
-      if (iteratorMethod && !(this == Array$9 && isArrayIteratorMethod(iteratorMethod))) {
+      if (iteratorMethod && !(this == Array$d && isArrayIteratorMethod(iteratorMethod))) {
         iterator = getIterator(O, iteratorMethod);
         next = iterator.next;
         result = IS_CONSTRUCTOR ? new this() : [];
@@ -3663,7 +3854,7 @@ var doric = (function (exports) {
         }
       } else {
         length = lengthOfArrayLike(O);
-        result = IS_CONSTRUCTOR ? new this(length) : Array$9(length);
+        result = IS_CONSTRUCTOR ? new this(length) : Array$d(length);
         for (;length > index; index++) {
           value = mapping ? mapfn(O[index], index) : O[index];
           createProperty(result, index, value);
@@ -3811,15 +4002,15 @@ var doric = (function (exports) {
 
     var returnThis$1 = function () { return this; };
 
-    var createIteratorConstructor = function (IteratorConstructor, NAME, next) {
+    var createIteratorConstructor = function (IteratorConstructor, NAME, next, ENUMERABLE_NEXT) {
       var TO_STRING_TAG = NAME + ' Iterator';
-      IteratorConstructor.prototype = objectCreate(IteratorPrototype$4, { next: createPropertyDescriptor(1, next) });
+      IteratorConstructor.prototype = objectCreate(IteratorPrototype$4, { next: createPropertyDescriptor(+!ENUMERABLE_NEXT, next) });
       setToStringTag(IteratorConstructor, TO_STRING_TAG, false);
       iterators[TO_STRING_TAG] = returnThis$1;
       return IteratorConstructor;
     };
 
-    var PROPER_FUNCTION_NAME$4 = functionName.PROPER;
+    var PROPER_FUNCTION_NAME$3 = functionName.PROPER;
     var CONFIGURABLE_FUNCTION_NAME$1 = functionName.CONFIGURABLE;
     var IteratorPrototype$3 = iteratorsCore.IteratorPrototype;
     var BUGGY_SAFARI_ITERATORS = iteratorsCore.BUGGY_SAFARI_ITERATORS;
@@ -3870,7 +4061,7 @@ var doric = (function (exports) {
       }
 
       // fix Array.prototype.{ values, @@iterator }.name in V8 / FF
-      if (PROPER_FUNCTION_NAME$4 && DEFAULT == VALUES && nativeIterator && nativeIterator.name !== VALUES) {
+      if (PROPER_FUNCTION_NAME$3 && DEFAULT == VALUES && nativeIterator && nativeIterator.name !== VALUES) {
         if (CONFIGURABLE_FUNCTION_NAME$1) {
           createNonEnumerableProperty(IterablePrototype, 'name', VALUES);
         } else {
@@ -3902,8 +4093,13 @@ var doric = (function (exports) {
       return methods;
     };
 
+    var defineProperty$e = objectDefineProperty.f;
+
+
+
+
     var ARRAY_ITERATOR = 'Array Iterator';
-    var setInternalState$g = internalState.set;
+    var setInternalState$h = internalState.set;
     var getInternalState$f = internalState.getterFor(ARRAY_ITERATOR);
 
     // `Array.prototype.entries` method
@@ -3917,7 +4113,7 @@ var doric = (function (exports) {
     // `CreateArrayIterator` internal method
     // https://tc39.es/ecma262/#sec-createarrayiterator
     var es_array_iterator = defineIterator(Array, 'Array', function (iterated, kind) {
-      setInternalState$g(this, {
+      setInternalState$h(this, {
         type: ARRAY_ITERATOR,
         target: toIndexedObject(iterated), // target
         index: 0,                          // next index
@@ -3942,12 +4138,17 @@ var doric = (function (exports) {
     // argumentsList[@@iterator] is %ArrayProto_values%
     // https://tc39.es/ecma262/#sec-createunmappedargumentsobject
     // https://tc39.es/ecma262/#sec-createmappedargumentsobject
-    iterators.Arguments = iterators.Array;
+    var values = iterators.Arguments = iterators.Array;
 
     // https://tc39.es/ecma262/#sec-array.prototype-@@unscopables
     addToUnscopables('keys');
     addToUnscopables('values');
     addToUnscopables('entries');
+
+    // V8 ~ Chrome 45- bug
+    if (descriptors && values.name !== 'values') { try {
+      defineProperty$e(values, 'name', { value: 'values' });
+    } catch (error) { /* empty */ } }
 
     var un$Join = functionUncurryThis([].join);
 
@@ -3969,21 +4170,21 @@ var doric = (function (exports) {
 
 
 
-    var min$7 = Math.min;
+    var min$8 = Math.min;
     var $lastIndexOf = [].lastIndexOf;
     var NEGATIVE_ZERO = !!$lastIndexOf && 1 / [1].lastIndexOf(1, -0) < 0;
     var STRICT_METHOD$4 = arrayMethodIsStrict('lastIndexOf');
-    var FORCED$p = NEGATIVE_ZERO || !STRICT_METHOD$4;
+    var FORCED$q = NEGATIVE_ZERO || !STRICT_METHOD$4;
 
     // `Array.prototype.lastIndexOf` method implementation
     // https://tc39.es/ecma262/#sec-array.prototype.lastindexof
-    var arrayLastIndexOf = FORCED$p ? function lastIndexOf(searchElement /* , fromIndex = @[*-1] */) {
+    var arrayLastIndexOf = FORCED$q ? function lastIndexOf(searchElement /* , fromIndex = @[*-1] */) {
       // convert -0 to +0
       if (NEGATIVE_ZERO) { return functionApply($lastIndexOf, this, arguments) || 0; }
       var O = toIndexedObject(this);
       var length = lengthOfArrayLike(O);
       var index = length - 1;
-      if (arguments.length > 1) { index = min$7(index, toIntegerOrInfinity(arguments[1])); }
+      if (arguments.length > 1) { index = min$8(index, toIntegerOrInfinity(arguments[1])); }
       if (index < 0) { index = length + index; }
       for (;index >= 0; index--) { if (index in O && O[index] === searchElement) { return index || 0; } }
       return -1;
@@ -4010,11 +4211,11 @@ var doric = (function (exports) {
       }
     });
 
-    var Array$8 = global_1.Array;
+    var Array$c = global_1.Array;
 
     var ISNT_GENERIC = fails(function () {
       function F() { /* empty */ }
-      return !(Array$8.of.call(F) instanceof F);
+      return !(Array$c.of.call(F) instanceof F);
     });
 
     // `Array.of` method
@@ -4026,14 +4227,14 @@ var doric = (function (exports) {
 
         var index = 0;
         var argumentsLength = arguments.length;
-        var result = new (isConstructor(this) ? this : Array$8)(argumentsLength);
+        var result = new (isConstructor(this) ? this : Array$c)(argumentsLength);
         while (argumentsLength > index) { createProperty(result, index, arguments$1[index++]); }
         result.length = argumentsLength;
         return result;
       }
     });
 
-    var TypeError$s = global_1.TypeError;
+    var TypeError$u = global_1.TypeError;
 
     // `Array.prototype.{ reduce, reduceRight }` methods implementation
     var createMethod$6 = function (IS_RIGHT) {
@@ -4052,7 +4253,7 @@ var doric = (function (exports) {
           }
           index += i;
           if (IS_RIGHT ? index < 0 : length <= index) {
-            throw TypeError$s('Reduce of empty array with no initial value');
+            throw TypeError$u('Reduce of empty array with no initial value');
           }
         } }
         for (;IS_RIGHT ? index >= 0 : length > index; index += i) { if (index in self) {
@@ -4128,8 +4329,8 @@ var doric = (function (exports) {
     var HAS_SPECIES_SUPPORT$1 = arrayMethodHasSpeciesSupport('slice');
 
     var SPECIES$4 = wellKnownSymbol('species');
-    var Array$7 = global_1.Array;
-    var max$5 = Math.max;
+    var Array$b = global_1.Array;
+    var max$6 = Math.max;
 
     // `Array.prototype.slice` method
     // https://tc39.es/ecma262/#sec-array.prototype.slice
@@ -4145,17 +4346,17 @@ var doric = (function (exports) {
         if (isArray(O)) {
           Constructor = O.constructor;
           // cross-realm fallback
-          if (isConstructor(Constructor) && (Constructor === Array$7 || isArray(Constructor.prototype))) {
+          if (isConstructor(Constructor) && (Constructor === Array$b || isArray(Constructor.prototype))) {
             Constructor = undefined;
           } else if (isObject(Constructor)) {
             Constructor = Constructor[SPECIES$4];
             if (Constructor === null) { Constructor = undefined; }
           }
-          if (Constructor === Array$7 || Constructor === undefined) {
+          if (Constructor === Array$b || Constructor === undefined) {
             return arraySlice$1(O, k, fin);
           }
         }
-        result = new (Constructor === undefined ? Array$7 : Constructor)(max$5(fin - k, 0));
+        result = new (Constructor === undefined ? Array$b : Constructor)(max$6(fin - k, 0));
         for (n = 0; k < fin; k++, n++) { if (k in O) { createProperty(result, n, O[k]); } }
         result.length = n;
         return result;
@@ -4175,15 +4376,15 @@ var doric = (function (exports) {
       }
     });
 
-    var floor$9 = Math.floor;
+    var floor$a = Math.floor;
 
     var mergeSort = function (array, comparefn) {
       var length = array.length;
-      var middle = floor$9(length / 2);
+      var middle = floor$a(length / 2);
       return length < 8 ? insertionSort(array, comparefn) : merge(
         array,
-        mergeSort(arraySlice$1(array, 0, middle), comparefn),
-        mergeSort(arraySlice$1(array, middle), comparefn),
+        mergeSort(arraySliceSimple(array, 0, middle), comparefn),
+        mergeSort(arraySliceSimple(array, middle), comparefn),
         comparefn
       );
     };
@@ -4230,7 +4431,7 @@ var doric = (function (exports) {
 
     var test = [];
     var un$Sort$1 = functionUncurryThis(test.sort);
-    var push$f = functionUncurryThis(test.push);
+    var push$i = functionUncurryThis(test.push);
 
     // IE8-
     var FAILS_ON_UNDEFINED = fails(function () {
@@ -4278,7 +4479,7 @@ var doric = (function (exports) {
       return result !== 'DGBEFHACIJK';
     });
 
-    var FORCED$o = FAILS_ON_UNDEFINED || !FAILS_ON_NULL || !STRICT_METHOD || !STABLE_SORT$1;
+    var FORCED$p = FAILS_ON_UNDEFINED || !FAILS_ON_NULL || !STRICT_METHOD || !STABLE_SORT$1;
 
     var getSortCompare$1 = function (comparefn) {
       return function (x, y) {
@@ -4291,7 +4492,7 @@ var doric = (function (exports) {
 
     // `Array.prototype.sort` method
     // https://tc39.es/ecma262/#sec-array.prototype.sort
-    _export({ target: 'Array', proto: true, forced: FORCED$o }, {
+    _export({ target: 'Array', proto: true, forced: FORCED$p }, {
       sort: function sort(comparefn) {
         if (comparefn !== undefined) { aCallable(comparefn); }
 
@@ -4304,7 +4505,7 @@ var doric = (function (exports) {
         var itemsLength, index;
 
         for (index = 0; index < arrayLength; index++) {
-          if (index in array) { push$f(items, array[index]); }
+          if (index in array) { push$i(items, array[index]); }
         }
 
         arraySort(items, getSortCompare$1(comparefn));
@@ -4339,9 +4540,9 @@ var doric = (function (exports) {
 
     var HAS_SPECIES_SUPPORT = arrayMethodHasSpeciesSupport('splice');
 
-    var TypeError$r = global_1.TypeError;
-    var max$4 = Math.max;
-    var min$6 = Math.min;
+    var TypeError$t = global_1.TypeError;
+    var max$5 = Math.max;
+    var min$7 = Math.min;
     var MAX_SAFE_INTEGER$1 = 0x1FFFFFFFFFFFFF;
     var MAXIMUM_ALLOWED_LENGTH_EXCEEDED = 'Maximum allowed length exceeded';
 
@@ -4364,10 +4565,10 @@ var doric = (function (exports) {
           actualDeleteCount = len - actualStart;
         } else {
           insertCount = argumentsLength - 2;
-          actualDeleteCount = min$6(max$4(toIntegerOrInfinity(deleteCount), 0), len - actualStart);
+          actualDeleteCount = min$7(max$5(toIntegerOrInfinity(deleteCount), 0), len - actualStart);
         }
         if (len + insertCount - actualDeleteCount > MAX_SAFE_INTEGER$1) {
-          throw TypeError$r(MAXIMUM_ALLOWED_LENGTH_EXCEEDED);
+          throw TypeError$t(MAXIMUM_ALLOWED_LENGTH_EXCEEDED);
         }
         A = arraySpeciesCreate(O, actualDeleteCount);
         for (k = 0; k < actualDeleteCount; k++) {
@@ -4421,14 +4622,14 @@ var doric = (function (exports) {
       return target;
     };
 
-    var TypeError$q = global_1.TypeError;
+    var TypeError$s = global_1.TypeError;
 
     var anInstance = function (it, Prototype) {
       if (objectIsPrototypeOf(Prototype, it)) { return it; }
-      throw TypeError$q('Incorrect invocation');
+      throw TypeError$s('Incorrect invocation');
     };
 
-    var RangeError$b = global_1.RangeError;
+    var RangeError$e = global_1.RangeError;
 
     // `ToIndex` abstract operation
     // https://tc39.es/ecma262/#sec-toindex
@@ -4436,45 +4637,46 @@ var doric = (function (exports) {
       if (it === undefined) { return 0; }
       var number = toIntegerOrInfinity(it);
       var length = toLength(number);
-      if (number !== length) { throw RangeError$b('Wrong length or index'); }
+      if (number !== length) { throw RangeError$e('Wrong length or index'); }
       return length;
     };
 
     // IEEE754 conversions based on https://github.com/feross/ieee754
 
 
-    var Array$6 = global_1.Array;
-    var abs$7 = Math.abs;
-    var pow$4 = Math.pow;
-    var floor$8 = Math.floor;
+    var Array$a = global_1.Array;
+    var abs$8 = Math.abs;
+    var pow$5 = Math.pow;
+    var floor$9 = Math.floor;
     var log$8 = Math.log;
     var LN2$2 = Math.LN2;
 
     var pack = function (number, mantissaLength, bytes) {
-      var buffer = Array$6(bytes);
+      var buffer = Array$a(bytes);
       var exponentLength = bytes * 8 - mantissaLength - 1;
       var eMax = (1 << exponentLength) - 1;
       var eBias = eMax >> 1;
-      var rt = mantissaLength === 23 ? pow$4(2, -24) - pow$4(2, -77) : 0;
+      var rt = mantissaLength === 23 ? pow$5(2, -24) - pow$5(2, -77) : 0;
       var sign = number < 0 || number === 0 && 1 / number < 0 ? 1 : 0;
       var index = 0;
       var exponent, mantissa, c;
-      number = abs$7(number);
+      number = abs$8(number);
       // eslint-disable-next-line no-self-compare -- NaN check
       if (number != number || number === Infinity) {
         // eslint-disable-next-line no-self-compare -- NaN check
         mantissa = number != number ? 1 : 0;
         exponent = eMax;
       } else {
-        exponent = floor$8(log$8(number) / LN2$2);
-        if (number * (c = pow$4(2, -exponent)) < 1) {
+        exponent = floor$9(log$8(number) / LN2$2);
+        c = pow$5(2, -exponent);
+        if (number * c < 1) {
           exponent--;
           c *= 2;
         }
         if (exponent + eBias >= 1) {
           number += rt / c;
         } else {
-          number += rt * pow$4(2, 1 - eBias);
+          number += rt * pow$5(2, 1 - eBias);
         }
         if (number * c >= 2) {
           exponent++;
@@ -4484,17 +4686,25 @@ var doric = (function (exports) {
           mantissa = 0;
           exponent = eMax;
         } else if (exponent + eBias >= 1) {
-          mantissa = (number * c - 1) * pow$4(2, mantissaLength);
+          mantissa = (number * c - 1) * pow$5(2, mantissaLength);
           exponent = exponent + eBias;
         } else {
-          mantissa = number * pow$4(2, eBias - 1) * pow$4(2, mantissaLength);
+          mantissa = number * pow$5(2, eBias - 1) * pow$5(2, mantissaLength);
           exponent = 0;
         }
       }
-      for (; mantissaLength >= 8; buffer[index++] = mantissa & 255, mantissa /= 256, mantissaLength -= 8){ }
+      while (mantissaLength >= 8) {
+        buffer[index++] = mantissa & 255;
+        mantissa /= 256;
+        mantissaLength -= 8;
+      }
       exponent = exponent << mantissaLength | mantissa;
       exponentLength += mantissaLength;
-      for (; exponentLength > 0; buffer[index++] = exponent & 255, exponent /= 256, exponentLength -= 8){ }
+      while (exponentLength > 0) {
+        buffer[index++] = exponent & 255;
+        exponent /= 256;
+        exponentLength -= 8;
+      }
       buffer[--index] |= sign * 128;
       return buffer;
     };
@@ -4510,19 +4720,25 @@ var doric = (function (exports) {
       var exponent = sign & 127;
       var mantissa;
       sign >>= 7;
-      for (; nBits > 0; exponent = exponent * 256 + buffer[index], index--, nBits -= 8){ }
+      while (nBits > 0) {
+        exponent = exponent * 256 + buffer[index--];
+        nBits -= 8;
+      }
       mantissa = exponent & (1 << -nBits) - 1;
       exponent >>= -nBits;
       nBits += mantissaLength;
-      for (; nBits > 0; mantissa = mantissa * 256 + buffer[index], index--, nBits -= 8){ }
+      while (nBits > 0) {
+        mantissa = mantissa * 256 + buffer[index--];
+        nBits -= 8;
+      }
       if (exponent === 0) {
         exponent = 1 - eBias;
       } else if (exponent === eMax) {
         return mantissa ? NaN : sign ? -Infinity : Infinity;
       } else {
-        mantissa = mantissa + pow$4(2, mantissaLength);
+        mantissa = mantissa + pow$5(2, mantissaLength);
         exponent = exponent - eBias;
-      } return (sign ? -1 : 1) * mantissa * pow$4(2, exponent - mantissaLength);
+      } return (sign ? -1 : 1) * mantissa * pow$5(2, exponent - mantissaLength);
     };
 
     var ieee754 = {
@@ -4531,16 +4747,16 @@ var doric = (function (exports) {
     };
 
     var getOwnPropertyNames$3 = objectGetOwnPropertyNames.f;
-    var defineProperty$b = objectDefineProperty.f;
+    var defineProperty$d = objectDefineProperty.f;
 
 
 
 
 
-    var PROPER_FUNCTION_NAME$3 = functionName.PROPER;
+    var PROPER_FUNCTION_NAME$2 = functionName.PROPER;
     var CONFIGURABLE_FUNCTION_NAME = functionName.CONFIGURABLE;
     var getInternalState$e = internalState.get;
-    var setInternalState$f = internalState.set;
+    var setInternalState$g = internalState.set;
     var ARRAY_BUFFER$1 = 'ArrayBuffer';
     var DATA_VIEW = 'DataView';
     var PROTOTYPE = 'prototype';
@@ -4552,8 +4768,8 @@ var doric = (function (exports) {
     var $DataView = global_1[DATA_VIEW];
     var DataViewPrototype$1 = $DataView && $DataView[PROTOTYPE];
     var ObjectPrototype$2 = Object.prototype;
-    var Array$5 = global_1.Array;
-    var RangeError$a = global_1.RangeError;
+    var Array$9 = global_1.Array;
+    var RangeError$d = global_1.RangeError;
     var fill = functionUncurryThis(arrayFill);
     var reverse = functionUncurryThis([].reverse);
 
@@ -4585,23 +4801,23 @@ var doric = (function (exports) {
     };
 
     var addGetter = function (Constructor, key) {
-      defineProperty$b(Constructor[PROTOTYPE], key, { get: function () { return getInternalState$e(this)[key]; } });
+      defineProperty$d(Constructor[PROTOTYPE], key, { get: function () { return getInternalState$e(this)[key]; } });
     };
 
     var get$1 = function (view, count, index, isLittleEndian) {
       var intIndex = toIndex(index);
       var store = getInternalState$e(view);
-      if (intIndex + count > store.byteLength) { throw RangeError$a(WRONG_INDEX); }
+      if (intIndex + count > store.byteLength) { throw RangeError$d(WRONG_INDEX); }
       var bytes = getInternalState$e(store.buffer).bytes;
       var start = intIndex + store.byteOffset;
-      var pack = arraySlice$1(bytes, start, start + count);
+      var pack = arraySliceSimple(bytes, start, start + count);
       return isLittleEndian ? pack : reverse(pack);
     };
 
     var set$2 = function (view, count, index, conversion, value, isLittleEndian) {
       var intIndex = toIndex(index);
       var store = getInternalState$e(view);
-      if (intIndex + count > store.byteLength) { throw RangeError$a(WRONG_INDEX); }
+      if (intIndex + count > store.byteLength) { throw RangeError$d(WRONG_INDEX); }
       var bytes = getInternalState$e(store.buffer).bytes;
       var start = intIndex + store.byteOffset;
       var pack = conversion(+value);
@@ -4612,8 +4828,8 @@ var doric = (function (exports) {
       $ArrayBuffer = function ArrayBuffer(length) {
         anInstance(this, ArrayBufferPrototype);
         var byteLength = toIndex(length);
-        setInternalState$f(this, {
-          bytes: fill(Array$5(byteLength), 0),
+        setInternalState$g(this, {
+          bytes: fill(Array$9(byteLength), 0),
           byteLength: byteLength
         });
         if (!descriptors) { this.byteLength = byteLength; }
@@ -4626,10 +4842,10 @@ var doric = (function (exports) {
         anInstance(buffer, ArrayBufferPrototype);
         var bufferLength = getInternalState$e(buffer).byteLength;
         var offset = toIntegerOrInfinity(byteOffset);
-        if (offset < 0 || offset > bufferLength) { throw RangeError$a('Wrong offset'); }
+        if (offset < 0 || offset > bufferLength) { throw RangeError$d('Wrong offset'); }
         byteLength = byteLength === undefined ? bufferLength - offset : toLength(byteLength);
-        if (offset + byteLength > bufferLength) { throw RangeError$a(WRONG_LENGTH); }
-        setInternalState$f(this, {
+        if (offset + byteLength > bufferLength) { throw RangeError$d(WRONG_LENGTH); }
+        setInternalState$g(this, {
           buffer: buffer,
           byteLength: byteLength,
           byteOffset: offset
@@ -4703,7 +4919,7 @@ var doric = (function (exports) {
         }
       });
     } else {
-      var INCORRECT_ARRAY_BUFFER_NAME = PROPER_FUNCTION_NAME$3 && NativeArrayBuffer$1.name !== ARRAY_BUFFER$1;
+      var INCORRECT_ARRAY_BUFFER_NAME = PROPER_FUNCTION_NAME$2 && NativeArrayBuffer$1.name !== ARRAY_BUFFER$1;
       /* eslint-disable no-new -- required for testing */
       if (!fails(function () {
         NativeArrayBuffer$1(1);
@@ -4723,9 +4939,9 @@ var doric = (function (exports) {
 
         $ArrayBuffer[PROTOTYPE] = ArrayBufferPrototype;
 
-        for (var keys$2 = getOwnPropertyNames$3(NativeArrayBuffer$1), j$1 = 0, key$1; keys$2.length > j$1;) {
-          if (!((key$1 = keys$2[j$1++]) in $ArrayBuffer)) {
-            createNonEnumerableProperty($ArrayBuffer, key$1, NativeArrayBuffer$1[key$1]);
+        for (var keys$2 = getOwnPropertyNames$3(NativeArrayBuffer$1), j$1 = 0, key$3; keys$2.length > j$1;) {
+          if (!((key$3 = keys$2[j$1++]) in $ArrayBuffer)) {
+            createNonEnumerableProperty($ArrayBuffer, key$3, NativeArrayBuffer$1[key$3]);
           }
         }
 
@@ -4774,7 +4990,7 @@ var doric = (function (exports) {
 
     setSpecies(ARRAY_BUFFER);
 
-    var defineProperty$a = objectDefineProperty.f;
+    var defineProperty$c = objectDefineProperty.f;
 
 
 
@@ -4786,13 +5002,13 @@ var doric = (function (exports) {
     var Uint8ClampedArray = global_1.Uint8ClampedArray;
     var Uint8ClampedArrayPrototype = Uint8ClampedArray && Uint8ClampedArray.prototype;
     var TypedArray = Int8Array$3 && objectGetPrototypeOf(Int8Array$3);
-    var TypedArrayPrototype = Int8ArrayPrototype && objectGetPrototypeOf(Int8ArrayPrototype);
+    var TypedArrayPrototype$1 = Int8ArrayPrototype && objectGetPrototypeOf(Int8ArrayPrototype);
     var ObjectPrototype$1 = Object.prototype;
-    var TypeError$p = global_1.TypeError;
+    var TypeError$r = global_1.TypeError;
 
     var TO_STRING_TAG$5 = wellKnownSymbol('toStringTag');
     var TYPED_ARRAY_TAG = uid('TYPED_ARRAY_TAG');
-    var TYPED_ARRAY_CONSTRUCTOR$1 = uid('TYPED_ARRAY_CONSTRUCTOR');
+    var TYPED_ARRAY_CONSTRUCTOR$5 = uid('TYPED_ARRAY_CONSTRUCTOR');
     // Fixing native typed arrays in Opera Presto crashes the browser, see #595
     var NATIVE_ARRAY_BUFFER_VIEWS$2 = arrayBufferNative && !!objectSetPrototypeOf && classof(global_1.opera) !== 'Opera';
     var TYPED_ARRAY_TAG_REQIRED = false;
@@ -4830,17 +5046,17 @@ var doric = (function (exports) {
         || hasOwnProperty_1(BigIntArrayConstructorsList, klass);
     };
 
-    var aTypedArray$t = function (it) {
+    var aTypedArray$x = function (it) {
       if (isTypedArray(it)) { return it; }
-      throw TypeError$p('Target is not a typed array');
+      throw TypeError$r('Target is not a typed array');
     };
 
     var aTypedArrayConstructor$4 = function (C) {
       if (isCallable(C) && (!objectSetPrototypeOf || objectIsPrototypeOf(TypedArray, C))) { return C; }
-      throw TypeError$p(tryToString(C) + ' is not a typed array constructor');
+      throw TypeError$r(tryToString(C) + ' is not a typed array constructor');
     };
 
-    var exportTypedArrayMethod$u = function (KEY, property, forced) {
+    var exportTypedArrayMethod$y = function (KEY, property, forced, options) {
       if (!descriptors) { return; }
       if (forced) { for (var ARRAY in TypedArrayConstructorsList) {
         var TypedArrayConstructor = global_1[ARRAY];
@@ -4848,9 +5064,9 @@ var doric = (function (exports) {
           delete TypedArrayConstructor.prototype[KEY];
         } catch (error) { /* empty */ } }
       } }
-      if (!TypedArrayPrototype[KEY] || forced) {
-        redefine(TypedArrayPrototype, KEY, forced ? property
-          : NATIVE_ARRAY_BUFFER_VIEWS$2 && Int8ArrayPrototype[KEY] || property);
+      if (!TypedArrayPrototype$1[KEY] || forced) {
+        redefine(TypedArrayPrototype$1, KEY, forced ? property
+          : NATIVE_ARRAY_BUFFER_VIEWS$2 && Int8ArrayPrototype[KEY] || property, options);
       }
     };
 
@@ -4882,42 +5098,42 @@ var doric = (function (exports) {
     for (NAME$1 in TypedArrayConstructorsList) {
       Constructor = global_1[NAME$1];
       Prototype = Constructor && Constructor.prototype;
-      if (Prototype) { createNonEnumerableProperty(Prototype, TYPED_ARRAY_CONSTRUCTOR$1, Constructor); }
+      if (Prototype) { createNonEnumerableProperty(Prototype, TYPED_ARRAY_CONSTRUCTOR$5, Constructor); }
       else { NATIVE_ARRAY_BUFFER_VIEWS$2 = false; }
     }
 
     for (NAME$1 in BigIntArrayConstructorsList) {
       Constructor = global_1[NAME$1];
       Prototype = Constructor && Constructor.prototype;
-      if (Prototype) { createNonEnumerableProperty(Prototype, TYPED_ARRAY_CONSTRUCTOR$1, Constructor); }
+      if (Prototype) { createNonEnumerableProperty(Prototype, TYPED_ARRAY_CONSTRUCTOR$5, Constructor); }
     }
 
     // WebKit bug - typed arrays constructors prototype is Object.prototype
     if (!NATIVE_ARRAY_BUFFER_VIEWS$2 || !isCallable(TypedArray) || TypedArray === Function.prototype) {
       // eslint-disable-next-line no-shadow -- safe
       TypedArray = function TypedArray() {
-        throw TypeError$p('Incorrect invocation');
+        throw TypeError$r('Incorrect invocation');
       };
       if (NATIVE_ARRAY_BUFFER_VIEWS$2) { for (NAME$1 in TypedArrayConstructorsList) {
         if (global_1[NAME$1]) { objectSetPrototypeOf(global_1[NAME$1], TypedArray); }
       } }
     }
 
-    if (!NATIVE_ARRAY_BUFFER_VIEWS$2 || !TypedArrayPrototype || TypedArrayPrototype === ObjectPrototype$1) {
-      TypedArrayPrototype = TypedArray.prototype;
+    if (!NATIVE_ARRAY_BUFFER_VIEWS$2 || !TypedArrayPrototype$1 || TypedArrayPrototype$1 === ObjectPrototype$1) {
+      TypedArrayPrototype$1 = TypedArray.prototype;
       if (NATIVE_ARRAY_BUFFER_VIEWS$2) { for (NAME$1 in TypedArrayConstructorsList) {
-        if (global_1[NAME$1]) { objectSetPrototypeOf(global_1[NAME$1].prototype, TypedArrayPrototype); }
+        if (global_1[NAME$1]) { objectSetPrototypeOf(global_1[NAME$1].prototype, TypedArrayPrototype$1); }
       } }
     }
 
     // WebKit bug - one more object in Uint8ClampedArray prototype chain
-    if (NATIVE_ARRAY_BUFFER_VIEWS$2 && objectGetPrototypeOf(Uint8ClampedArrayPrototype) !== TypedArrayPrototype) {
-      objectSetPrototypeOf(Uint8ClampedArrayPrototype, TypedArrayPrototype);
+    if (NATIVE_ARRAY_BUFFER_VIEWS$2 && objectGetPrototypeOf(Uint8ClampedArrayPrototype) !== TypedArrayPrototype$1) {
+      objectSetPrototypeOf(Uint8ClampedArrayPrototype, TypedArrayPrototype$1);
     }
 
-    if (descriptors && !hasOwnProperty_1(TypedArrayPrototype, TO_STRING_TAG$5)) {
+    if (descriptors && !hasOwnProperty_1(TypedArrayPrototype$1, TO_STRING_TAG$5)) {
       TYPED_ARRAY_TAG_REQIRED = true;
-      defineProperty$a(TypedArrayPrototype, TO_STRING_TAG$5, { get: function () {
+      defineProperty$c(TypedArrayPrototype$1, TO_STRING_TAG$5, { get: function () {
         return isObject(this) ? this[TYPED_ARRAY_TAG] : undefined;
       } });
       for (NAME$1 in TypedArrayConstructorsList) { if (global_1[NAME$1]) {
@@ -4927,16 +5143,16 @@ var doric = (function (exports) {
 
     var arrayBufferViewCore = {
       NATIVE_ARRAY_BUFFER_VIEWS: NATIVE_ARRAY_BUFFER_VIEWS$2,
-      TYPED_ARRAY_CONSTRUCTOR: TYPED_ARRAY_CONSTRUCTOR$1,
+      TYPED_ARRAY_CONSTRUCTOR: TYPED_ARRAY_CONSTRUCTOR$5,
       TYPED_ARRAY_TAG: TYPED_ARRAY_TAG_REQIRED && TYPED_ARRAY_TAG,
-      aTypedArray: aTypedArray$t,
+      aTypedArray: aTypedArray$x,
       aTypedArrayConstructor: aTypedArrayConstructor$4,
-      exportTypedArrayMethod: exportTypedArrayMethod$u,
+      exportTypedArrayMethod: exportTypedArrayMethod$y,
       exportTypedArrayStaticMethod: exportTypedArrayStaticMethod$3,
       isView: isView,
       isTypedArray: isTypedArray,
       TypedArray: TypedArray,
-      TypedArrayPrototype: TypedArrayPrototype
+      TypedArrayPrototype: TypedArrayPrototype$1
     };
 
     var NATIVE_ARRAY_BUFFER_VIEWS$1 = arrayBufferViewCore.NATIVE_ARRAY_BUFFER_VIEWS;
@@ -4947,12 +5163,12 @@ var doric = (function (exports) {
       isView: arrayBufferViewCore.isView
     });
 
-    var TypeError$o = global_1.TypeError;
+    var TypeError$q = global_1.TypeError;
 
     // `Assert: IsConstructor(argument) is true`
     var aConstructor = function (argument) {
       if (isConstructor(argument)) { return argument; }
-      throw TypeError$o(tryToString(argument) + ' is not a constructor');
+      throw TypeError$q(tryToString(argument) + ' is not a constructor');
     };
 
     var SPECIES$2 = wellKnownSymbol('species');
@@ -5002,7 +5218,7 @@ var doric = (function (exports) {
       DataView: arrayBuffer.DataView
     });
 
-    var FORCED$n = fails(function () {
+    var FORCED$o = fails(function () {
       return new Date(16e11).getYear() !== 120;
     });
 
@@ -5010,25 +5226,25 @@ var doric = (function (exports) {
 
     // `Date.prototype.getYear` method
     // https://tc39.es/ecma262/#sec-date.prototype.getyear
-    _export({ target: 'Date', proto: true, forced: FORCED$n }, {
+    _export({ target: 'Date', proto: true, forced: FORCED$o }, {
       getYear: function getYear() {
         return getFullYear(this) - 1900;
       }
     });
 
-    var Date$1 = global_1.Date;
-    var getTime$3 = functionUncurryThis(Date$1.prototype.getTime);
+    var Date$2 = global_1.Date;
+    var getTime$4 = functionUncurryThis(Date$2.prototype.getTime);
 
     // `Date.now` method
     // https://tc39.es/ecma262/#sec-date.now
     _export({ target: 'Date', stat: true }, {
       now: function now() {
-        return getTime$3(new Date$1());
+        return getTime$4(new Date$2());
       }
     });
 
     var DatePrototype$3 = Date.prototype;
-    var getTime$2 = functionUncurryThis(DatePrototype$3.getTime);
+    var getTime$3 = functionUncurryThis(DatePrototype$3.getTime);
     var setFullYear = functionUncurryThis(DatePrototype$3.setFullYear);
 
     // `Date.prototype.setYear` method
@@ -5036,7 +5252,7 @@ var doric = (function (exports) {
     _export({ target: 'Date', proto: true }, {
       setYear: function setYear(year) {
         // validate
-        getTime$2(this);
+        getTime$3(this);
         var yi = toIntegerOrInfinity(year);
         var yyyy = 0 <= yi && yi <= 99 ? yi + 1900 : yi;
         return setFullYear(this, yyyy);
@@ -5049,7 +5265,7 @@ var doric = (function (exports) {
       toGMTString: Date.prototype.toUTCString
     });
 
-    var RangeError$9 = global_1.RangeError;
+    var RangeError$c = global_1.RangeError;
 
     // `String.prototype.repeat` method implementation
     // https://tc39.es/ecma262/#sec-string.prototype.repeat
@@ -5057,7 +5273,7 @@ var doric = (function (exports) {
       var str = toString_1(requireObjectCoercible(this));
       var result = '';
       var n = toIntegerOrInfinity(count);
-      if (n < 0 || n == Infinity) { throw RangeError$9('Wrong number of repetitions'); }
+      if (n < 0 || n == Infinity) { throw RangeError$c('Wrong number of repetitions'); }
       for (;n > 0; (n >>>= 1) && (str += str)) { if (n & 1) { result += str; } }
       return result;
     };
@@ -5069,8 +5285,8 @@ var doric = (function (exports) {
 
 
 
-    var repeat$1 = functionUncurryThis(stringRepeat);
-    var stringSlice$e = functionUncurryThis(''.slice);
+    var repeat$2 = functionUncurryThis(stringRepeat);
+    var stringSlice$f = functionUncurryThis(''.slice);
     var ceil$1 = Math.ceil;
 
     // `String.prototype.{ padStart, padEnd }` methods implementation
@@ -5083,8 +5299,8 @@ var doric = (function (exports) {
         var fillLen, stringFiller;
         if (intMaxLength <= stringLength || fillStr == '') { return S; }
         fillLen = intMaxLength - stringLength;
-        stringFiller = repeat$1(fillStr, ceil$1(fillLen / fillStr.length));
-        if (stringFiller.length > fillLen) { stringFiller = stringSlice$e(stringFiller, 0, fillLen); }
+        stringFiller = repeat$2(fillStr, ceil$1(fillLen / fillStr.length));
+        if (stringFiller.length > fillLen) { stringFiller = stringSlice$f(stringFiller, 0, fillLen); }
         return IS_END ? S + stringFiller : stringFiller + S;
       };
     };
@@ -5100,11 +5316,11 @@ var doric = (function (exports) {
 
     var padStart = stringPad.start;
 
-    var RangeError$8 = global_1.RangeError;
-    var abs$6 = Math.abs;
+    var RangeError$b = global_1.RangeError;
+    var abs$7 = Math.abs;
     var DatePrototype$2 = Date.prototype;
     var n$DateToISOString = DatePrototype$2.toISOString;
-    var getTime$1 = functionUncurryThis(DatePrototype$2.getTime);
+    var getTime$2 = functionUncurryThis(DatePrototype$2.getTime);
     var getUTCDate = functionUncurryThis(DatePrototype$2.getUTCDate);
     var getUTCFullYear = functionUncurryThis(DatePrototype$2.getUTCFullYear);
     var getUTCHours = functionUncurryThis(DatePrototype$2.getUTCHours);
@@ -5121,12 +5337,12 @@ var doric = (function (exports) {
     }) || !fails(function () {
       n$DateToISOString.call(new Date(NaN));
     })) ? function toISOString() {
-      if (!isFinite(getTime$1(this))) { throw RangeError$8('Invalid time value'); }
+      if (!isFinite(getTime$2(this))) { throw RangeError$b('Invalid time value'); }
       var date = this;
       var year = getUTCFullYear(date);
       var milliseconds = getUTCMilliseconds(date);
       var sign = year < 0 ? '-' : year > 9999 ? '+' : '';
-      return sign + padStart(abs$6(year), sign ? 6 : 4, 0) +
+      return sign + padStart(abs$7(year), sign ? 6 : 4, 0) +
         '-' + padStart(getUTCMonth(date) + 1, 2, 0) +
         '-' + padStart(getUTCDate(date), 2, 0) +
         'T' + padStart(getUTCHours(date), 2, 0) +
@@ -5143,14 +5359,14 @@ var doric = (function (exports) {
       toISOString: dateToIsoString
     });
 
-    var FORCED$m = fails(function () {
+    var FORCED$n = fails(function () {
       return new Date(NaN).toJSON() !== null
         || Date.prototype.toJSON.call({ toISOString: function () { return 1; } }) !== 1;
     });
 
     // `Date.prototype.toJSON` method
     // https://tc39.es/ecma262/#sec-date.prototype.tojson
-    _export({ target: 'Date', proto: true, forced: FORCED$m }, {
+    _export({ target: 'Date', proto: true, forced: FORCED$n }, {
       // eslint-disable-next-line no-unused-vars -- required for `.length`
       toJSON: function toJSON(key) {
         var O = toObject(this);
@@ -5159,14 +5375,14 @@ var doric = (function (exports) {
       }
     });
 
-    var TypeError$n = global_1.TypeError;
+    var TypeError$p = global_1.TypeError;
 
     // `Date.prototype[@@toPrimitive](hint)` method implementation
     // https://tc39.es/ecma262/#sec-date.prototype-@@toprimitive
     var dateToPrimitive = function (hint) {
       anObject(this);
       if (hint === 'string' || hint === 'default') { hint = 'string'; }
-      else if (hint !== 'number') { throw TypeError$n('Incorrect hint'); }
+      else if (hint !== 'number') { throw TypeError$p('Incorrect hint'); }
       return ordinaryToPrimitive(this, hint);
     };
 
@@ -5183,13 +5399,13 @@ var doric = (function (exports) {
     var INVALID_DATE = 'Invalid Date';
     var TO_STRING$1 = 'toString';
     var un$DateToString = functionUncurryThis(DatePrototype[TO_STRING$1]);
-    var getTime = functionUncurryThis(DatePrototype.getTime);
+    var getTime$1 = functionUncurryThis(DatePrototype.getTime);
 
     // `Date.prototype.toString` method
     // https://tc39.es/ecma262/#sec-date.prototype.tostring
     if (String(new Date(NaN)) != INVALID_DATE) {
       redefine(DatePrototype, TO_STRING$1, function toString() {
-        var value = getTime(this);
+        var value = getTime$1(this);
         // eslint-disable-next-line no-self-compare -- NaN check
         return value === value ? un$DateToString(this) : INVALID_DATE;
       });
@@ -5197,7 +5413,7 @@ var doric = (function (exports) {
 
     var charAt$f = functionUncurryThis(''.charAt);
     var charCodeAt$4 = functionUncurryThis(''.charCodeAt);
-    var exec$8 = functionUncurryThis(/./.exec);
+    var exec$9 = functionUncurryThis(/./.exec);
     var numberToString$3 = functionUncurryThis(1.0.toString);
     var toUpperCase = functionUncurryThis(''.toUpperCase);
 
@@ -5220,7 +5436,7 @@ var doric = (function (exports) {
         var chr, code;
         while (index < length) {
           chr = charAt$f(str, index++);
-          if (exec$8(raw, chr)) {
+          if (exec$9(raw, chr)) {
             result += chr;
           } else {
             code = charCodeAt$4(chr, 0);
@@ -5236,13 +5452,13 @@ var doric = (function (exports) {
 
     var Function$3 = global_1.Function;
     var concat$3 = functionUncurryThis([].concat);
-    var join$6 = functionUncurryThis([].join);
+    var join$7 = functionUncurryThis([].join);
     var factories = {};
 
     var construct = function (C, argsLength, args) {
       if (!hasOwnProperty_1(factories, argsLength)) {
         for (var list = [], i = 0; i < argsLength; i++) { list[i] = 'a[' + i + ']'; }
-        factories[argsLength] = Function$3('C,a', 'return new C(' + join$6(list, ',') + ')');
+        factories[argsLength] = Function$3('C,a', 'return new C(' + join$7(list, ',') + ')');
       } return factories[argsLength](C, args);
     };
 
@@ -5284,18 +5500,18 @@ var doric = (function (exports) {
 
     var FUNCTION_NAME_EXISTS = functionName.EXISTS;
 
-    var defineProperty$9 = objectDefineProperty.f;
+    var defineProperty$b = objectDefineProperty.f;
 
     var FunctionPrototype = Function.prototype;
     var functionToString = functionUncurryThis(FunctionPrototype.toString);
-    var nameRE = /^\s*function ([^ (]*)/;
+    var nameRE = /function\b(?:\s|\/\*[\S\s]*?\*\/|\/\/[^\n\r]*[\n\r]+)*([^\s(/]*)/;
     var regExpExec = functionUncurryThis(nameRE.exec);
     var NAME = 'name';
 
     // Function instances `.name` property
     // https://tc39.es/ecma262/#sec-function-instances-name
     if (descriptors && !FUNCTION_NAME_EXISTS) {
-      defineProperty$9(FunctionPrototype, NAME, {
+      defineProperty$b(FunctionPrototype, NAME, {
         configurable: true,
         get: function () {
           try {
@@ -5313,9 +5529,9 @@ var doric = (function (exports) {
       globalThis: global_1
     });
 
-    var Array$4 = global_1.Array;
+    var Array$8 = global_1.Array;
     var $stringify = getBuiltIn('JSON', 'stringify');
-    var exec$7 = functionUncurryThis(/./.exec);
+    var exec$8 = functionUncurryThis(/./.exec);
     var charAt$e = functionUncurryThis(''.charAt);
     var charCodeAt$3 = functionUncurryThis(''.charCodeAt);
     var replace$8 = functionUncurryThis(''.replace);
@@ -5328,12 +5544,12 @@ var doric = (function (exports) {
     var fix = function (match, offset, string) {
       var prev = charAt$e(string, offset - 1);
       var next = charAt$e(string, offset + 1);
-      if ((exec$7(low, match) && !exec$7(hi, next)) || (exec$7(hi, match) && !exec$7(low, prev))) {
+      if ((exec$8(low, match) && !exec$8(hi, next)) || (exec$8(hi, match) && !exec$8(low, prev))) {
         return '\\u' + numberToString$2(charCodeAt$3(match, 0), 16);
       } return match;
     };
 
-    var FORCED$l = fails(function () {
+    var FORCED$m = fails(function () {
       return $stringify('\uDF06\uD834') !== '"\\udf06\\ud834"'
         || $stringify('\uDEAD') !== '"\\udead"';
     });
@@ -5342,12 +5558,12 @@ var doric = (function (exports) {
       // `JSON.stringify` method
       // https://tc39.es/ecma262/#sec-json.stringify
       // https://github.com/tc39/proposal-well-formed-stringify
-      _export({ target: 'JSON', stat: true, forced: FORCED$l }, {
+      _export({ target: 'JSON', stat: true, forced: FORCED$m }, {
         // eslint-disable-next-line no-unused-vars -- required for `.length`
         stringify: function stringify(it, replacer, space) {
           var arguments$1 = arguments;
 
-          for (var i = 0, l = arguments.length, args = Array$4(l); i < l; i++) { args[i] = arguments$1[i]; }
+          for (var i = 0, l = arguments.length, args = Array$8(l); i < l; i++) { args[i] = arguments$1[i]; }
           var result = functionApply($stringify, null, args);
           return typeof result == 'string' ? replace$8(result, tester, fix) : result;
         }
@@ -5357,6 +5573,29 @@ var doric = (function (exports) {
     // JSON[@@toStringTag] property
     // https://tc39.es/ecma262/#sec-json-@@tostringtag
     setToStringTag(global_1.JSON, 'JSON', true);
+
+    // FF26- bug: ArrayBuffers are non-extensible, but Object.isExtensible does not report it
+
+
+    var arrayBufferNonExtensible = fails(function () {
+      if (typeof ArrayBuffer == 'function') {
+        var buffer = new ArrayBuffer(8);
+        // eslint-disable-next-line es/no-object-isextensible, es/no-object-defineproperty -- safe
+        if (Object.isExtensible(buffer)) { Object.defineProperty(buffer, 'a', { value: 8 }); }
+      }
+    });
+
+    // eslint-disable-next-line es/no-object-isextensible -- safe
+    var $isExtensible = Object.isExtensible;
+    var FAILS_ON_PRIMITIVES$9 = fails(function () { $isExtensible(1); });
+
+    // `Object.isExtensible` method
+    // https://tc39.es/ecma262/#sec-object.isextensible
+    var objectIsExtensible = (FAILS_ON_PRIMITIVES$9 || arrayBufferNonExtensible) ? function isExtensible(it) {
+      if (!isObject(it)) { return false; }
+      if (arrayBufferNonExtensible && classofRaw(it) == 'ArrayBuffer') { return false; }
+      return $isExtensible ? $isExtensible(it) : true;
+    } : $isExtensible;
 
     var freezing = !fails(function () {
       // eslint-disable-next-line es/no-object-isextensible, es/no-object-preventextensions -- required for testing
@@ -5370,14 +5609,10 @@ var doric = (function (exports) {
 
 
 
+
     var REQUIRED = false;
     var METADATA = uid('meta');
     var id = 0;
-
-    // eslint-disable-next-line es/no-object-isextensible -- safe
-    var isExtensible = Object.isExtensible || function () {
-      return true;
-    };
 
     var setMetadata = function (it) {
       defineProperty(it, METADATA, { value: {
@@ -5391,7 +5626,7 @@ var doric = (function (exports) {
       if (!isObject(it)) { return typeof it == 'symbol' ? it : (typeof it == 'string' ? 'S' : 'P') + it; }
       if (!hasOwnProperty_1(it, METADATA)) {
         // can't set metadata to uncaught frozen object
-        if (!isExtensible(it)) { return 'F'; }
+        if (!objectIsExtensible(it)) { return 'F'; }
         // not necessary to add metadata
         if (!create) { return 'E'; }
         // add missing metadata
@@ -5403,7 +5638,7 @@ var doric = (function (exports) {
     var getWeakData = function (it, create) {
       if (!hasOwnProperty_1(it, METADATA)) {
         // can't set metadata to uncaught frozen object
-        if (!isExtensible(it)) { return true; }
+        if (!objectIsExtensible(it)) { return true; }
         // not necessary to add metadata
         if (!create) { return false; }
         // add missing metadata
@@ -5414,7 +5649,7 @@ var doric = (function (exports) {
 
     // add metadata on freeze-family methods calling
     var onFreeze = function (it) {
-      if (freezing && REQUIRED && isExtensible(it) && !hasOwnProperty_1(it, METADATA)) { setMetadata(it); }
+      if (freezing && REQUIRED && objectIsExtensible(it) && !hasOwnProperty_1(it, METADATA)) { setMetadata(it); }
       return it;
     };
 
@@ -5453,21 +5688,6 @@ var doric = (function (exports) {
 
     hiddenKeys$1[METADATA] = true;
     });
-
-    // makes subclassing work correct for wrapped built-ins
-    var inheritIfRequired = function ($this, dummy, Wrapper) {
-      var NewTarget, NewTargetPrototype;
-      if (
-        // it can work only with native `setPrototypeOf`
-        objectSetPrototypeOf &&
-        // we haven't completely correct pre-ES6 way for getting `new.target`, so use this
-        isCallable(NewTarget = dummy.constructor) &&
-        NewTarget !== Wrapper &&
-        isObject(NewTargetPrototype = NewTarget.prototype) &&
-        NewTargetPrototype !== Wrapper.prototype
-      ) { objectSetPrototypeOf($this, NewTargetPrototype); }
-      return $this;
-    };
 
     var collection = function (CONSTRUCTOR_NAME, wrapper, common) {
       var IS_MAP = CONSTRUCTOR_NAME.indexOf('Map') !== -1;
@@ -5559,7 +5779,7 @@ var doric = (function (exports) {
       return Constructor;
     };
 
-    var defineProperty$8 = objectDefineProperty.f;
+    var defineProperty$a = objectDefineProperty.f;
 
 
 
@@ -5571,14 +5791,14 @@ var doric = (function (exports) {
     var fastKey = internalMetadata.fastKey;
 
 
-    var setInternalState$e = internalState.set;
+    var setInternalState$f = internalState.set;
     var internalStateGetterFor$1 = internalState.getterFor;
 
     var collectionStrong = {
       getConstructor: function (wrapper, CONSTRUCTOR_NAME, IS_MAP, ADDER) {
         var Constructor = wrapper(function (that, iterable) {
           anInstance(that, Prototype);
-          setInternalState$e(that, {
+          setInternalState$f(that, {
             type: CONSTRUCTOR_NAME,
             index: objectCreate(null),
             first: undefined,
@@ -5710,7 +5930,7 @@ var doric = (function (exports) {
             return define(this, value = value === 0 ? 0 : value, value);
           }
         });
-        if (descriptors) { defineProperty$8(Prototype, 'size', {
+        if (descriptors) { defineProperty$a(Prototype, 'size', {
           get: function () {
             return getInternalState(this).size;
           }
@@ -5731,7 +5951,7 @@ var doric = (function (exports) {
         // https://tc39.es/ecma262/#sec-set.prototype.values
         // https://tc39.es/ecma262/#sec-set.prototype-@@iterator
         defineIterator(Constructor, CONSTRUCTOR_NAME, function (iterated, kind) {
-          setInternalState$e(this, {
+          setInternalState$f(this, {
             type: ITERATOR_NAME,
             target: iterated,
             state: getInternalCollectionState(iterated),
@@ -5784,7 +6004,7 @@ var doric = (function (exports) {
     var sqrt$2 = Math.sqrt;
     var LN2$1 = Math.LN2;
 
-    var FORCED$k = !$acosh
+    var FORCED$l = !$acosh
       // V8 bug: https://code.google.com/p/v8/issues/detail?id=3509
       || Math.floor($acosh(Number.MAX_VALUE)) != 710
       // Tor Browser bug: Math.acosh(Infinity) -> NaN
@@ -5792,7 +6012,7 @@ var doric = (function (exports) {
 
     // `Math.acosh` method
     // https://tc39.es/ecma262/#sec-math.acosh
-    _export({ target: 'Math', stat: true, forced: FORCED$k }, {
+    _export({ target: 'Math', stat: true, forced: FORCED$l }, {
       acosh: function acosh(x) {
         return (x = +x) < 1 ? NaN : x > 94906265.62425156
           ? log$6(x) + LN2$1
@@ -5837,18 +6057,18 @@ var doric = (function (exports) {
       return (x = +x) == 0 || x != x ? x : x < 0 ? -1 : 1;
     };
 
-    var abs$5 = Math.abs;
-    var pow$3 = Math.pow;
+    var abs$6 = Math.abs;
+    var pow$4 = Math.pow;
 
     // `Math.cbrt` method
     // https://tc39.es/ecma262/#sec-math.cbrt
     _export({ target: 'Math', stat: true }, {
       cbrt: function cbrt(x) {
-        return mathSign(x = +x) * pow$3(abs$5(x), 1 / 3);
+        return mathSign(x = +x) * pow$4(abs$6(x), 1 / 3);
       }
     });
 
-    var floor$7 = Math.floor;
+    var floor$8 = Math.floor;
     var log$3 = Math.log;
     var LOG2E = Math.LOG2E;
 
@@ -5856,7 +6076,7 @@ var doric = (function (exports) {
     // https://tc39.es/ecma262/#sec-math.clz32
     _export({ target: 'Math', stat: true }, {
       clz32: function clz32(x) {
-        return (x >>>= 0) ? 31 - floor$7(log$3(x + 0.5) * LOG2E) : 32;
+        return (x >>>= 0) ? 31 - floor$8(log$3(x + 0.5) * LOG2E) : 32;
       }
     });
 
@@ -5877,14 +6097,14 @@ var doric = (function (exports) {
 
     // eslint-disable-next-line es/no-math-cosh -- required for testing
     var $cosh = Math.cosh;
-    var abs$4 = Math.abs;
+    var abs$5 = Math.abs;
     var E$1 = Math.E;
 
     // `Math.cosh` method
     // https://tc39.es/ecma262/#sec-math.cosh
     _export({ target: 'Math', stat: true, forced: !$cosh || $cosh(710) === Infinity }, {
       cosh: function cosh(x) {
-        var t = mathExpm1(abs$4(x) - 1) + 1;
+        var t = mathExpm1(abs$5(x) - 1) + 1;
         return (t + 1 / (t * E$1 * E$1)) * (E$1 / 2);
       }
     });
@@ -5894,12 +6114,12 @@ var doric = (function (exports) {
     // eslint-disable-next-line es/no-math-expm1 -- required for testing
     _export({ target: 'Math', stat: true, forced: mathExpm1 != Math.expm1 }, { expm1: mathExpm1 });
 
-    var abs$3 = Math.abs;
-    var pow$2 = Math.pow;
-    var EPSILON = pow$2(2, -52);
-    var EPSILON32 = pow$2(2, -23);
-    var MAX32 = pow$2(2, 127) * (2 - EPSILON32);
-    var MIN32 = pow$2(2, -126);
+    var abs$4 = Math.abs;
+    var pow$3 = Math.pow;
+    var EPSILON = pow$3(2, -52);
+    var EPSILON32 = pow$3(2, -23);
+    var MAX32 = pow$3(2, 127) * (2 - EPSILON32);
+    var MIN32 = pow$3(2, -126);
 
     var roundTiesToEven = function (n) {
       return n + 1 / EPSILON - 1 / EPSILON;
@@ -5909,7 +6129,7 @@ var doric = (function (exports) {
     // https://tc39.es/ecma262/#sec-math.fround
     // eslint-disable-next-line es/no-math-fround -- safe
     var mathFround = Math.fround || function fround(x) {
-      var $abs = abs$3(x);
+      var $abs = abs$4(x);
       var $sign = mathSign(x);
       var a, result;
       if ($abs < MIN32) { return $sign * roundTiesToEven($abs / MIN32 / EPSILON32) * MIN32 * EPSILON32; }
@@ -5926,7 +6146,7 @@ var doric = (function (exports) {
 
     // eslint-disable-next-line es/no-math-hypot -- required for testing
     var $hypot = Math.hypot;
-    var abs$2 = Math.abs;
+    var abs$3 = Math.abs;
     var sqrt = Math.sqrt;
 
     // Chrome 77 bug
@@ -5946,7 +6166,7 @@ var doric = (function (exports) {
         var larg = 0;
         var arg, div;
         while (i < aLen) {
-          arg = abs$2(arguments$1[i++]);
+          arg = abs$3(arguments$1[i++]);
           if (larg < arg) {
             div = larg / arg;
             sum = sum * div * div + 1;
@@ -5963,14 +6183,14 @@ var doric = (function (exports) {
     // eslint-disable-next-line es/no-math-imul -- required for testing
     var $imul = Math.imul;
 
-    var FORCED$j = fails(function () {
+    var FORCED$k = fails(function () {
       return $imul(0xFFFFFFFF, 5) != -5 || $imul.length != 2;
     });
 
     // `Math.imul` method
     // https://tc39.es/ecma262/#sec-math.imul
     // some WebKit versions fails with big numbers, some has wrong arity
-    _export({ target: 'Math', stat: true, forced: FORCED$j }, {
+    _export({ target: 'Math', stat: true, forced: FORCED$k }, {
       imul: function imul(x, y) {
         var UINT16 = 0xFFFF;
         var xn = +x;
@@ -5984,12 +6204,15 @@ var doric = (function (exports) {
     var log$2 = Math.log;
     var LOG10E = Math.LOG10E;
 
+    // eslint-disable-next-line es/no-math-log10 -- safe
+    var mathLog10 = Math.log10 || function log10(x) {
+      return log$2(x) * LOG10E;
+    };
+
     // `Math.log10` method
     // https://tc39.es/ecma262/#sec-math.log10
     _export({ target: 'Math', stat: true }, {
-      log10: function log10(x) {
-        return log$2(x) * LOG10E;
-      }
+      log10: mathLog10
     });
 
     // `Math.log1p` method
@@ -6013,11 +6236,11 @@ var doric = (function (exports) {
       sign: mathSign
     });
 
-    var abs$1 = Math.abs;
+    var abs$2 = Math.abs;
     var exp$1 = Math.exp;
     var E = Math.E;
 
-    var FORCED$i = fails(function () {
+    var FORCED$j = fails(function () {
       // eslint-disable-next-line es/no-math-sinh -- required for testing
       return Math.sinh(-2e-17) != -2e-17;
     });
@@ -6025,9 +6248,9 @@ var doric = (function (exports) {
     // `Math.sinh` method
     // https://tc39.es/ecma262/#sec-math.sinh
     // V8 near Chromium 38 has a problem with very small numbers
-    _export({ target: 'Math', stat: true, forced: FORCED$i }, {
+    _export({ target: 'Math', stat: true, forced: FORCED$j }, {
       sinh: function sinh(x) {
-        return abs$1(x = +x) < 1 ? (mathExpm1(x) - mathExpm1(-x)) / 2 : (exp$1(x - 1) - exp$1(-x - 1)) * (E / 2);
+        return abs$2(x = +x) < 1 ? (mathExpm1(x) - mathExpm1(-x)) / 2 : (exp$1(x - 1) - exp$1(-x - 1)) * (E / 2);
       }
     });
 
@@ -6048,13 +6271,13 @@ var doric = (function (exports) {
     setToStringTag(Math, 'Math', true);
 
     var ceil = Math.ceil;
-    var floor$6 = Math.floor;
+    var floor$7 = Math.floor;
 
     // `Math.trunc` method
     // https://tc39.es/ecma262/#sec-math.trunc
     _export({ target: 'Math', stat: true }, {
       trunc: function trunc(it) {
-        return (it > 0 ? floor$6 : ceil)(it);
+        return (it > 0 ? floor$7 : ceil)(it);
       }
     });
 
@@ -6094,15 +6317,15 @@ var doric = (function (exports) {
     };
 
     var getOwnPropertyNames$2 = objectGetOwnPropertyNames.f;
-    var getOwnPropertyDescriptor$6 = objectGetOwnPropertyDescriptor.f;
-    var defineProperty$7 = objectDefineProperty.f;
+    var getOwnPropertyDescriptor$7 = objectGetOwnPropertyDescriptor.f;
+    var defineProperty$9 = objectDefineProperty.f;
 
     var trim$2 = stringTrim.trim;
 
     var NUMBER = 'Number';
     var NativeNumber = global_1[NUMBER];
     var NumberPrototype = NativeNumber.prototype;
-    var TypeError$m = global_1.TypeError;
+    var TypeError$o = global_1.TypeError;
     var arraySlice = functionUncurryThis(''.slice);
     var charCodeAt$2 = functionUncurryThis(''.charCodeAt);
 
@@ -6118,7 +6341,7 @@ var doric = (function (exports) {
     var toNumber = function (argument) {
       var it = toPrimitive(argument, 'number');
       var first, third, radix, maxCode, digits, length, index, code;
-      if (isSymbol(it)) { throw TypeError$m('Cannot convert a Symbol value to a number'); }
+      if (isSymbol(it)) { throw TypeError$o('Cannot convert a Symbol value to a number'); }
       if (typeof it == 'string' && it.length > 2) {
         it = trim$2(it);
         first = charCodeAt$2(it, 0);
@@ -6160,9 +6383,9 @@ var doric = (function (exports) {
         'EPSILON,MAX_SAFE_INTEGER,MIN_SAFE_INTEGER,isFinite,isInteger,isNaN,isSafeInteger,parseFloat,parseInt,' +
         // ESNext
         'fromString,range'
-      ).split(','), j = 0, key; keys$1.length > j; j++) {
-        if (hasOwnProperty_1(NativeNumber, key = keys$1[j]) && !hasOwnProperty_1(NumberWrapper, key)) {
-          defineProperty$7(NumberWrapper, key, getOwnPropertyDescriptor$6(NativeNumber, key));
+      ).split(','), j = 0, key$2; keys$1.length > j; j++) {
+        if (hasOwnProperty_1(NativeNumber, key$2 = keys$1[j]) && !hasOwnProperty_1(NumberWrapper, key$2)) {
+          defineProperty$9(NumberWrapper, key$2, getOwnPropertyDescriptor$7(NativeNumber, key$2));
         }
       }
       NumberWrapper.prototype = NumberPrototype;
@@ -6189,13 +6412,13 @@ var doric = (function (exports) {
     // https://tc39.es/ecma262/#sec-number.isfinite
     _export({ target: 'Number', stat: true }, { isFinite: numberIsFinite });
 
-    var floor$5 = Math.floor;
+    var floor$6 = Math.floor;
 
     // `IsIntegralNumber` abstract operation
     // https://tc39.es/ecma262/#sec-isintegralnumber
     // eslint-disable-next-line es/no-number-isinteger -- safe
     var isIntegralNumber = Number.isInteger || function isInteger(it) {
-      return !isObject(it) && isFinite(it) && floor$5(it) === it;
+      return !isObject(it) && isFinite(it) && floor$6(it) === it;
     };
 
     // `Number.isInteger` method
@@ -6213,13 +6436,13 @@ var doric = (function (exports) {
       }
     });
 
-    var abs = Math.abs;
+    var abs$1 = Math.abs;
 
     // `Number.isSafeInteger` method
     // https://tc39.es/ecma262/#sec-number.issafeinteger
     _export({ target: 'Number', stat: true }, {
       isSafeInteger: function isSafeInteger(number) {
-        return isIntegralNumber(number) && abs(number) <= 0x1FFFFFFFFFFFFF;
+        return isIntegralNumber(number) && abs$1(number) <= 0x1FFFFFFFFFFFFF;
       }
     });
 
@@ -6242,13 +6465,13 @@ var doric = (function (exports) {
     var n$ParseFloat = global_1.parseFloat;
     var Symbol$2 = global_1.Symbol;
     var ITERATOR$5 = Symbol$2 && Symbol$2.iterator;
-    var FORCED$h = 1 / n$ParseFloat(whitespaces + '-0') !== -Infinity
+    var FORCED$i = 1 / n$ParseFloat(whitespaces + '-0') !== -Infinity
       // MS Edge 18- broken with boxed symbols
       || (ITERATOR$5 && !fails(function () { n$ParseFloat(Object(ITERATOR$5)); }));
 
     // `parseFloat` method
     // https://tc39.es/ecma262/#sec-parsefloat-string
-    var numberParseFloat = FORCED$h ? function parseFloat(string) {
+    var numberParseFloat = FORCED$i ? function parseFloat(string) {
       var trimmedString = trim$1(toString_1(string));
       var result = n$ParseFloat(trimmedString);
       return result === 0 && charAt$d(trimmedString, 0) == '-' ? -0 : result;
@@ -6268,16 +6491,16 @@ var doric = (function (exports) {
     var Symbol$1 = global_1.Symbol;
     var ITERATOR$4 = Symbol$1 && Symbol$1.iterator;
     var hex = /^[+-]?0x/i;
-    var exec$6 = functionUncurryThis(hex.exec);
-    var FORCED$g = $parseInt(whitespaces + '08') !== 8 || $parseInt(whitespaces + '0x16') !== 22
+    var exec$7 = functionUncurryThis(hex.exec);
+    var FORCED$h = $parseInt(whitespaces + '08') !== 8 || $parseInt(whitespaces + '0x16') !== 22
       // MS Edge 18- broken with boxed symbols
       || (ITERATOR$4 && !fails(function () { $parseInt(Object(ITERATOR$4)); }));
 
     // `parseInt` method
     // https://tc39.es/ecma262/#sec-parseint-string-radix
-    var numberParseInt = FORCED$g ? function parseInt(string, radix) {
+    var numberParseInt = FORCED$h ? function parseInt(string, radix) {
       var S = trim(toString_1(string));
-      return $parseInt(S, (radix >>> 0) || (exec$6(hex, S) ? 16 : 10));
+      return $parseInt(S, (radix >>> 0) || (exec$7(hex, S) ? 16 : 10));
     } : $parseInt;
 
     // `Number.parseInt` method
@@ -6287,7 +6510,98 @@ var doric = (function (exports) {
       parseInt: numberParseInt
     });
 
-    var RangeError$7 = global_1.RangeError;
+    var RangeError$a = global_1.RangeError;
+    var String$3 = global_1.String;
+    var isFinite$1 = global_1.isFinite;
+    var abs = Math.abs;
+    var floor$5 = Math.floor;
+    var pow$2 = Math.pow;
+    var round = Math.round;
+    var un$ToExponential = functionUncurryThis(1.0.toExponential);
+    var repeat$1 = functionUncurryThis(stringRepeat);
+    var stringSlice$e = functionUncurryThis(''.slice);
+
+    // Edge 17-
+    var ROUNDS_PROPERLY = un$ToExponential(-6.9e-11, 4) === '-6.9000e-11'
+      // IE11- && Edge 14-
+      && un$ToExponential(1.255, 2) === '1.25e+0'
+      // FF86-, V8 ~ Chrome 49-50
+      && un$ToExponential(12345, 3) === '1.235e+4'
+      // FF86-, V8 ~ Chrome 49-50
+      && un$ToExponential(25, 0) === '3e+1';
+
+    // IE8-
+    var THROWS_ON_INFINITY_FRACTION = fails(function () {
+      un$ToExponential(1, Infinity);
+    }) && fails(function () {
+      un$ToExponential(1, -Infinity);
+    });
+
+    // Safari <11 && FF <50
+    var PROPER_NON_FINITE_THIS_CHECK = !fails(function () {
+      un$ToExponential(Infinity, Infinity);
+    }) && !fails(function () {
+      un$ToExponential(NaN, Infinity);
+    });
+
+    var FORCED$g = !ROUNDS_PROPERLY || !THROWS_ON_INFINITY_FRACTION || !PROPER_NON_FINITE_THIS_CHECK;
+
+    // `Number.prototype.toExponential` method
+    // https://tc39.es/ecma262/#sec-number.prototype.toexponential
+    _export({ target: 'Number', proto: true, forced: FORCED$g }, {
+      toExponential: function toExponential(fractionDigits) {
+        var x = thisNumberValue(this);
+        if (fractionDigits === undefined) { return un$ToExponential(x); }
+        var f = toIntegerOrInfinity(fractionDigits);
+        if (!isFinite$1(x)) { return String$3(x); }
+        // TODO: ES2018 increased the maximum number of fraction digits to 100, need to improve the implementation
+        if (f < 0 || f > 20) { throw RangeError$a('Incorrect fraction digits'); }
+        if (ROUNDS_PROPERLY) { return un$ToExponential(x, f); }
+        var s = '';
+        var m = '';
+        var e = 0;
+        var c = '';
+        var d = '';
+        if (x < 0) {
+          s = '-';
+          x = -x;
+        }
+        if (x === 0) {
+          e = 0;
+          m = repeat$1('0', f + 1);
+        } else {
+          // this block is based on https://gist.github.com/SheetJSDev/1100ad56b9f856c95299ed0e068eea08
+          // TODO: improve accuracy with big fraction digits
+          var l = mathLog10(x);
+          e = floor$5(l);
+          var n = 0;
+          var w = pow$2(10, e - f);
+          n = round(x / w);
+          if (2 * x >= (2 * n + 1) * w) {
+            n += 1;
+          }
+          if (n >= pow$2(10, f + 1)) {
+            n /= 10;
+            e += 1;
+          }
+          m = String$3(n);
+        }
+        if (f !== 0) {
+          m = stringSlice$e(m, 0, 1) + '.' + stringSlice$e(m, 1);
+        }
+        if (e === 0) {
+          c = '+';
+          d = '0';
+        } else {
+          c = e > 0 ? '+' : '-';
+          d = String$3(abs(e));
+        }
+        m += 'e' + c + d;
+        return s + m;
+      }
+    });
+
+    var RangeError$9 = global_1.RangeError;
     var String$2 = global_1.String;
     var floor$4 = Math.floor;
     var repeat = functionUncurryThis(stringRepeat);
@@ -6363,7 +6677,8 @@ var doric = (function (exports) {
         var result = '0';
         var e, z, j, k;
 
-        if (fractDigits < 0 || fractDigits > 20) { throw RangeError$7('Incorrect fraction digits'); }
+        // TODO: ES2018 increased the maximum number of fraction digits to 100, need to improve the implementation
+        if (fractDigits < 0 || fractDigits > 20) { throw RangeError$9('Incorrect fraction digits'); }
         // eslint-disable-next-line no-self-compare -- NaN check
         if (number != number) { return 'NaN'; }
         if (number <= -1e21 || number >= 1e21) { return String$2(number); }
@@ -6433,17 +6748,17 @@ var doric = (function (exports) {
     // eslint-disable-next-line es/no-object-assign -- safe
     var $assign = Object.assign;
     // eslint-disable-next-line es/no-object-defineproperty -- required for testing
-    var defineProperty$6 = Object.defineProperty;
+    var defineProperty$8 = Object.defineProperty;
     var concat$2 = functionUncurryThis([].concat);
 
     // `Object.assign` method
     // https://tc39.es/ecma262/#sec-object.assign
     var objectAssign = !$assign || fails(function () {
       // should have correct order of operations (Edge bug)
-      if (descriptors && $assign({ b: 1 }, $assign(defineProperty$6({}, 'a', {
+      if (descriptors && $assign({ b: 1 }, $assign(defineProperty$8({}, 'a', {
         enumerable: true,
         get: function () {
-          defineProperty$6(this, 'b', {
+          defineProperty$8(this, 'b', {
             value: 3,
             enumerable: false
           });
@@ -6457,7 +6772,7 @@ var doric = (function (exports) {
       var alphabet = 'abcdefghijklmnopqrst';
       A[symbol] = 7;
       alphabet.split('').forEach(function (chr) { B[chr] = chr; });
-      return $assign({}, A)[symbol] != 7 || objectKeys($assign({}, B)).join('') != alphabet;
+      return $assign({}, A)[symbol] != 7 || objectKeys$1($assign({}, B)).join('') != alphabet;
     }) ? function assign(target, source) {
       var arguments$1 = arguments;
      // eslint-disable-line no-unused-vars -- required for `.length`
@@ -6468,7 +6783,7 @@ var doric = (function (exports) {
       var propertyIsEnumerable = objectPropertyIsEnumerable.f;
       while (argumentsLength > index) {
         var S = indexedObject(arguments$1[index++]);
-        var keys = getOwnPropertySymbols ? concat$2(objectKeys(S), getOwnPropertySymbols(S)) : objectKeys(S);
+        var keys = getOwnPropertySymbols ? concat$2(objectKeys$1(S), getOwnPropertySymbols(S)) : objectKeys$1(S);
         var length = keys.length;
         var j = 0;
         var key;
@@ -6539,13 +6854,13 @@ var doric = (function (exports) {
     var $propertyIsEnumerable = objectPropertyIsEnumerable.f;
 
     var propertyIsEnumerable = functionUncurryThis($propertyIsEnumerable);
-    var push$e = functionUncurryThis([].push);
+    var push$h = functionUncurryThis([].push);
 
     // `Object.{ entries, values }` methods implementation
     var createMethod$3 = function (TO_ENTRIES) {
       return function (it) {
         var O = toIndexedObject(it);
-        var keys = objectKeys(O);
+        var keys = objectKeys$1(O);
         var length = keys.length;
         var i = 0;
         var result = [];
@@ -6553,7 +6868,7 @@ var doric = (function (exports) {
         while (length > i) {
           key = keys[i++];
           if (!descriptors || propertyIsEnumerable(O, key)) {
-            push$e(result, TO_ENTRIES ? [key, O[key]] : O[key]);
+            push$h(result, TO_ENTRIES ? [key, O[key]] : O[key]);
           }
         }
         return result;
@@ -6583,11 +6898,11 @@ var doric = (function (exports) {
 
     // eslint-disable-next-line es/no-object-freeze -- safe
     var $freeze = Object.freeze;
-    var FAILS_ON_PRIMITIVES$9 = fails(function () { $freeze(1); });
+    var FAILS_ON_PRIMITIVES$8 = fails(function () { $freeze(1); });
 
     // `Object.freeze` method
     // https://tc39.es/ecma262/#sec-object.freeze
-    _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES$9, sham: !freezing }, {
+    _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES$8, sham: !freezing }, {
       freeze: function freeze(it) {
         return $freeze && isObject(it) ? $freeze(onFreeze$2(it)) : it;
       }
@@ -6608,8 +6923,8 @@ var doric = (function (exports) {
     var nativeGetOwnPropertyDescriptor = objectGetOwnPropertyDescriptor.f;
 
 
-    var FAILS_ON_PRIMITIVES$8 = fails(function () { nativeGetOwnPropertyDescriptor(1); });
-    var FORCED$d = !descriptors || FAILS_ON_PRIMITIVES$8;
+    var FAILS_ON_PRIMITIVES$7 = fails(function () { nativeGetOwnPropertyDescriptor(1); });
+    var FORCED$d = !descriptors || FAILS_ON_PRIMITIVES$7;
 
     // `Object.getOwnPropertyDescriptor` method
     // https://tc39.es/ecma262/#sec-object.getownpropertydescriptor
@@ -6640,19 +6955,19 @@ var doric = (function (exports) {
     var getOwnPropertyNames$1 = objectGetOwnPropertyNamesExternal.f;
 
     // eslint-disable-next-line es/no-object-getownpropertynames -- required for testing
-    var FAILS_ON_PRIMITIVES$7 = fails(function () { return !Object.getOwnPropertyNames(1); });
+    var FAILS_ON_PRIMITIVES$6 = fails(function () { return !Object.getOwnPropertyNames(1); });
 
     // `Object.getOwnPropertyNames` method
     // https://tc39.es/ecma262/#sec-object.getownpropertynames
-    _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES$7 }, {
+    _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES$6 }, {
       getOwnPropertyNames: getOwnPropertyNames$1
     });
 
-    var FAILS_ON_PRIMITIVES$6 = fails(function () { objectGetPrototypeOf(1); });
+    var FAILS_ON_PRIMITIVES$5 = fails(function () { objectGetPrototypeOf(1); });
 
     // `Object.getPrototypeOf` method
     // https://tc39.es/ecma262/#sec-object.getprototypeof
-    _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES$6, sham: !correctPrototypeGetter }, {
+    _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES$5, sham: !correctPrototypeGetter }, {
       getPrototypeOf: function getPrototypeOf(it) {
         return objectGetPrototypeOf(toObject(it));
       }
@@ -6678,16 +6993,11 @@ var doric = (function (exports) {
       is: sameValue
     });
 
-    // eslint-disable-next-line es/no-object-isextensible -- safe
-    var $isExtensible = Object.isExtensible;
-    var FAILS_ON_PRIMITIVES$5 = fails(function () { $isExtensible(1); });
-
     // `Object.isExtensible` method
     // https://tc39.es/ecma262/#sec-object.isextensible
-    _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES$5 }, {
-      isExtensible: function isExtensible(it) {
-        return isObject(it) ? $isExtensible ? $isExtensible(it) : true : false;
-      }
+    // eslint-disable-next-line es/no-object-isextensible -- safe
+    _export({ target: 'Object', stat: true, forced: Object.isExtensible !== objectIsExtensible }, {
+      isExtensible: objectIsExtensible
     });
 
     // eslint-disable-next-line es/no-object-isfrozen -- safe
@@ -6696,9 +7006,11 @@ var doric = (function (exports) {
 
     // `Object.isFrozen` method
     // https://tc39.es/ecma262/#sec-object.isfrozen
-    _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES$4 }, {
+    _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES$4 || arrayBufferNonExtensible }, {
       isFrozen: function isFrozen(it) {
-        return isObject(it) ? $isFrozen ? $isFrozen(it) : false : true;
+        if (!isObject(it)) { return true; }
+        if (arrayBufferNonExtensible && classofRaw(it) == 'ArrayBuffer') { return true; }
+        return $isFrozen ? $isFrozen(it) : false;
       }
     });
 
@@ -6708,23 +7020,25 @@ var doric = (function (exports) {
 
     // `Object.isSealed` method
     // https://tc39.es/ecma262/#sec-object.issealed
-    _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES$3 }, {
+    _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES$3 || arrayBufferNonExtensible }, {
       isSealed: function isSealed(it) {
-        return isObject(it) ? $isSealed ? $isSealed(it) : false : true;
+        if (!isObject(it)) { return true; }
+        if (arrayBufferNonExtensible && classofRaw(it) == 'ArrayBuffer') { return true; }
+        return $isSealed ? $isSealed(it) : false;
       }
     });
 
-    var FAILS_ON_PRIMITIVES$2 = fails(function () { objectKeys(1); });
+    var FAILS_ON_PRIMITIVES$2 = fails(function () { objectKeys$1(1); });
 
     // `Object.keys` method
     // https://tc39.es/ecma262/#sec-object.keys
     _export({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES$2 }, {
       keys: function keys(it) {
-        return objectKeys(toObject(it));
+        return objectKeys$1(toObject(it));
       }
     });
 
-    var getOwnPropertyDescriptor$5 = objectGetOwnPropertyDescriptor.f;
+    var getOwnPropertyDescriptor$6 = objectGetOwnPropertyDescriptor.f;
 
     // `Object.prototype.__lookupGetter__` method
     // https://tc39.es/ecma262/#sec-object.prototype.__lookupGetter__
@@ -6735,13 +7049,13 @@ var doric = (function (exports) {
           var key = toPropertyKey(P);
           var desc;
           do {
-            if (desc = getOwnPropertyDescriptor$5(O, key)) { return desc.get; }
+            if (desc = getOwnPropertyDescriptor$6(O, key)) { return desc.get; }
           } while (O = objectGetPrototypeOf(O));
         }
       });
     }
 
-    var getOwnPropertyDescriptor$4 = objectGetOwnPropertyDescriptor.f;
+    var getOwnPropertyDescriptor$5 = objectGetOwnPropertyDescriptor.f;
 
     // `Object.prototype.__lookupSetter__` method
     // https://tc39.es/ecma262/#sec-object.prototype.__lookupSetter__
@@ -6752,7 +7066,7 @@ var doric = (function (exports) {
           var key = toPropertyKey(P);
           var desc;
           do {
-            if (desc = getOwnPropertyDescriptor$4(O, key)) { return desc.set; }
+            if (desc = getOwnPropertyDescriptor$5(O, key)) { return desc.set; }
           } while (O = objectGetPrototypeOf(O));
         }
       });
@@ -6940,7 +7254,7 @@ var doric = (function (exports) {
 
     var engineIsWebosWebkit = /web0s(?!.*chrome)/i.test(engineUserAgent);
 
-    var getOwnPropertyDescriptor$3 = objectGetOwnPropertyDescriptor.f;
+    var getOwnPropertyDescriptor$4 = objectGetOwnPropertyDescriptor.f;
     var macrotask = task$1.set;
 
 
@@ -6952,7 +7266,7 @@ var doric = (function (exports) {
     var process$3 = global_1.process;
     var Promise$4 = global_1.Promise;
     // Node.js 11 shows ExperimentalWarning on getting `queueMicrotask`
-    var queueMicrotaskDescriptor = getOwnPropertyDescriptor$3(global_1, 'queueMicrotask');
+    var queueMicrotaskDescriptor = getOwnPropertyDescriptor$4(global_1, 'queueMicrotask');
     var queueMicrotask = queueMicrotaskDescriptor && queueMicrotaskDescriptor.value;
 
     var flush, head, last, notify$1, toggle, node, promise, then;
@@ -7087,13 +7401,13 @@ var doric = (function (exports) {
     var SPECIES$1 = wellKnownSymbol('species');
     var PROMISE = 'Promise';
 
-    var getInternalState$d = internalState.get;
-    var setInternalState$d = internalState.set;
+    var getInternalState$d = internalState.getterFor(PROMISE);
+    var setInternalState$e = internalState.set;
     var getInternalPromiseState = internalState.getterFor(PROMISE);
     var NativePromisePrototype = nativePromiseConstructor && nativePromiseConstructor.prototype;
     var PromiseConstructor = nativePromiseConstructor;
     var PromisePrototype = NativePromisePrototype;
-    var TypeError$l = global_1.TypeError;
+    var TypeError$n = global_1.TypeError;
     var document$1 = global_1.document;
     var process$2 = global_1.process;
     var newPromiseCapability = newPromiseCapability$1.f;
@@ -7178,7 +7492,7 @@ var doric = (function (exports) {
                 }
               }
               if (result === reaction.promise) {
-                reject(TypeError$l('Promise-chain cycle'));
+                reject(TypeError$n('Promise-chain cycle'));
               } else if (then = isThenable(result)) {
                 functionCall(then, result, resolve, reject);
               } else { resolve(result); }
@@ -7259,7 +7573,7 @@ var doric = (function (exports) {
       state.done = true;
       if (unwrap) { state = unwrap; }
       try {
-        if (state.facade === value) { throw TypeError$l("Promise can't be resolved itself"); }
+        if (state.facade === value) { throw TypeError$n("Promise can't be resolved itself"); }
         var then = isThenable(value);
         if (then) {
           microtask(function () {
@@ -7300,7 +7614,7 @@ var doric = (function (exports) {
       PromisePrototype = PromiseConstructor.prototype;
       // eslint-disable-next-line no-unused-vars -- required for `.length`
       Internal = function Promise(executor) {
-        setInternalState$d(this, {
+        setInternalState$e(this, {
           type: PROMISE,
           done: false,
           notified: false,
@@ -7569,7 +7883,7 @@ var doric = (function (exports) {
 
     var nativeConstruct = getBuiltIn('Reflect', 'construct');
     var ObjectPrototype = Object.prototype;
-    var push$d = [].push;
+    var push$g = [].push;
 
     // `Reflect.construct` method
     // https://tc39.es/ecma262/#sec-reflect.construct
@@ -7603,7 +7917,7 @@ var doric = (function (exports) {
           }
           // w/o altered newTarget, lot of arguments case
           var $args = [null];
-          functionApply(push$d, $args, args);
+          functionApply(push$g, $args, args);
           return new (functionApply(functionBind, Target, $args))();
         }
         // with altered newTarget, not support built-in constructors
@@ -7636,13 +7950,13 @@ var doric = (function (exports) {
       }
     });
 
-    var getOwnPropertyDescriptor$2 = objectGetOwnPropertyDescriptor.f;
+    var getOwnPropertyDescriptor$3 = objectGetOwnPropertyDescriptor.f;
 
     // `Reflect.deleteProperty` method
     // https://tc39.es/ecma262/#sec-reflect.deleteproperty
     _export({ target: 'Reflect', stat: true }, {
       deleteProperty: function deleteProperty(target, propertyKey) {
-        var descriptor = getOwnPropertyDescriptor$2(anObject(target), propertyKey);
+        var descriptor = getOwnPropertyDescriptor$3(anObject(target), propertyKey);
         return descriptor && !descriptor.configurable ? false : delete target[propertyKey];
       }
     });
@@ -7692,15 +8006,12 @@ var doric = (function (exports) {
       }
     });
 
-    // eslint-disable-next-line es/no-object-isextensible -- safe
-    var objectIsExtensible = Object.isExtensible;
-
     // `Reflect.isExtensible` method
     // https://tc39.es/ecma262/#sec-reflect.isextensible
     _export({ target: 'Reflect', stat: true }, {
       isExtensible: function isExtensible(target) {
         anObject(target);
-        return objectIsExtensible ? objectIsExtensible(target) : true;
+        return objectIsExtensible(target);
       }
     });
 
@@ -7811,13 +8122,19 @@ var doric = (function (exports) {
     // babel-minify and Closure Compiler transpiles RegExp('a', 'y') -> /a/y and it causes SyntaxError
     var $RegExp$2 = global_1.RegExp;
 
-    var UNSUPPORTED_Y$4 = fails(function () {
+    var UNSUPPORTED_Y$3 = fails(function () {
       var re = $RegExp$2('a', 'y');
       re.lastIndex = 2;
       return re.exec('abcd') != null;
     });
 
-    var BROKEN_CARET = fails(function () {
+    // UC Browser bug
+    // https://github.com/zloirock/core-js/issues/1008
+    var MISSED_STICKY$2 = UNSUPPORTED_Y$3 || fails(function () {
+      return !$RegExp$2('a', 'y').sticky;
+    });
+
+    var BROKEN_CARET = UNSUPPORTED_Y$3 || fails(function () {
       // https://bugzilla.mozilla.org/show_bug.cgi?id=773687
       var re = $RegExp$2('^r', 'gy');
       re.lastIndex = 2;
@@ -7825,8 +8142,9 @@ var doric = (function (exports) {
     });
 
     var regexpStickyHelpers = {
-    	UNSUPPORTED_Y: UNSUPPORTED_Y$4,
-    	BROKEN_CARET: BROKEN_CARET
+      BROKEN_CARET: BROKEN_CARET,
+      MISSED_STICKY: MISSED_STICKY$2,
+      UNSUPPORTED_Y: UNSUPPORTED_Y$3
     };
 
     // babel-minify and Closure Compiler transpiles RegExp('.', 's') -> /./s and it causes SyntaxError
@@ -7846,7 +8164,7 @@ var doric = (function (exports) {
         'b'.replace(re, '$<a>c') !== 'bc';
     });
 
-    var defineProperty$5 = objectDefineProperty.f;
+    var defineProperty$7 = objectDefineProperty.f;
     var getOwnPropertyNames = objectGetOwnPropertyNames.f;
 
 
@@ -7865,9 +8183,9 @@ var doric = (function (exports) {
     var MATCH$1 = wellKnownSymbol('match');
     var NativeRegExp = global_1.RegExp;
     var RegExpPrototype$7 = NativeRegExp.prototype;
-    var SyntaxError$1 = global_1.SyntaxError;
-    var getFlags$3 = functionUncurryThis(regexpFlags);
-    var exec$5 = functionUncurryThis(RegExpPrototype$7.exec);
+    var SyntaxError$2 = global_1.SyntaxError;
+    var getFlags$4 = functionUncurryThis(regexpFlags);
+    var exec$6 = functionUncurryThis(RegExpPrototype$7.exec);
     var charAt$c = functionUncurryThis(''.charAt);
     var replace$6 = functionUncurryThis(''.replace);
     var stringIndexOf$4 = functionUncurryThis(''.indexOf);
@@ -7880,10 +8198,11 @@ var doric = (function (exports) {
     // "new" should create a new object, old webkit bug
     var CORRECT_NEW = new NativeRegExp(re1) !== re1;
 
-    var UNSUPPORTED_Y$3 = regexpStickyHelpers.UNSUPPORTED_Y;
+    var MISSED_STICKY$1 = regexpStickyHelpers.MISSED_STICKY;
+    var UNSUPPORTED_Y$2 = regexpStickyHelpers.UNSUPPORTED_Y;
 
     var BASE_FORCED = descriptors &&
-      (!CORRECT_NEW || UNSUPPORTED_Y$3 || regexpUnsupportedDotAll || regexpUnsupportedNcg || fails(function () {
+      (!CORRECT_NEW || MISSED_STICKY$1 || regexpUnsupportedDotAll || regexpUnsupportedNcg || fails(function () {
         re2[MATCH$1] = false;
         // RegExp constructor can alter flags and IsRegExp works correct with @@match
         return NativeRegExp(re1) != re1 || NativeRegExp(re2) == re2 || NativeRegExp(re1, 'i') != '/a/i';
@@ -7935,7 +8254,7 @@ var doric = (function (exports) {
             brackets = true;
             break;
           case chr === '(':
-            if (exec$5(IS_NCG, stringSlice$c(string, index + 1))) {
+            if (exec$6(IS_NCG, stringSlice$c(string, index + 1))) {
               index += 2;
               ncg = true;
             }
@@ -7944,7 +8263,7 @@ var doric = (function (exports) {
             continue;
           case chr === '>' && ncg:
             if (groupname === '' || hasOwnProperty_1(names, groupname)) {
-              throw new SyntaxError$1('Invalid capture group name');
+              throw new SyntaxError$2('Invalid capture group name');
             }
             names[groupname] = true;
             named[named.length] = [groupname, groupid];
@@ -7974,7 +8293,7 @@ var doric = (function (exports) {
 
         if (patternIsRegExp || objectIsPrototypeOf(RegExpPrototype$7, pattern)) {
           pattern = pattern.source;
-          if (flagsAreUndefined) { flags = 'flags' in rawPattern ? rawPattern.flags : getFlags$3(rawPattern); }
+          if (flagsAreUndefined) { flags = 'flags' in rawPattern ? rawPattern.flags : getFlags$4(rawPattern); }
         }
 
         pattern = pattern === undefined ? '' : toString_1(pattern);
@@ -7988,9 +8307,9 @@ var doric = (function (exports) {
 
         rawFlags = flags;
 
-        if (UNSUPPORTED_Y$3 && 'sticky' in re1) {
+        if (MISSED_STICKY$1 && 'sticky' in re1) {
           sticky = !!flags && stringIndexOf$4(flags, 'y') > -1;
-          if (sticky) { flags = replace$6(flags, /y/g, ''); }
+          if (sticky && UNSUPPORTED_Y$2) { flags = replace$6(flags, /y/g, ''); }
         }
 
         if (regexpUnsupportedNcg) {
@@ -8020,7 +8339,7 @@ var doric = (function (exports) {
       };
 
       var proxy = function (key) {
-        key in RegExpWrapper || defineProperty$5(RegExpWrapper, key, {
+        key in RegExpWrapper || defineProperty$7(RegExpWrapper, key, {
           configurable: true,
           get: function () { return NativeRegExp[key]; },
           set: function (it) { NativeRegExp[key] = it; }
@@ -8039,16 +8358,16 @@ var doric = (function (exports) {
     // https://tc39.es/ecma262/#sec-get-regexp-@@species
     setSpecies('RegExp');
 
-    var defineProperty$4 = objectDefineProperty.f;
+    var defineProperty$6 = objectDefineProperty.f;
     var getInternalState$c = internalState.get;
 
     var RegExpPrototype$6 = RegExp.prototype;
-    var TypeError$k = global_1.TypeError;
+    var TypeError$m = global_1.TypeError;
 
     // `RegExp.prototype.dotAll` getter
     // https://tc39.es/ecma262/#sec-get-regexp.prototype.dotall
     if (descriptors && regexpUnsupportedDotAll) {
-      defineProperty$4(RegExpPrototype$6, 'dotAll', {
+      defineProperty$6(RegExpPrototype$6, 'dotAll', {
         configurable: true,
         get: function () {
           if (this === RegExpPrototype$6) { return undefined; }
@@ -8057,7 +8376,7 @@ var doric = (function (exports) {
           if (classofRaw(this) === 'RegExp') {
             return !!getInternalState$c(this).dotAll;
           }
-          throw TypeError$k('Incompatible receiver, RegExp required');
+          throw TypeError$m('Incompatible receiver, RegExp required');
         }
       });
     }
@@ -8091,15 +8410,14 @@ var doric = (function (exports) {
       return re1.lastIndex !== 0 || re2.lastIndex !== 0;
     })();
 
-    var UNSUPPORTED_Y$2 = regexpStickyHelpers.UNSUPPORTED_Y || regexpStickyHelpers.BROKEN_CARET;
+    var UNSUPPORTED_Y$1 = regexpStickyHelpers.BROKEN_CARET;
 
     // nonparticipating capturing group, copied from es5-shim's String#split patch.
     var NPCG_INCLUDED = /()??/.exec('')[1] !== undefined;
 
-    var PATCH = UPDATES_LAST_INDEX_WRONG || NPCG_INCLUDED || UNSUPPORTED_Y$2 || regexpUnsupportedDotAll || regexpUnsupportedNcg;
+    var PATCH = UPDATES_LAST_INDEX_WRONG || NPCG_INCLUDED || UNSUPPORTED_Y$1 || regexpUnsupportedDotAll || regexpUnsupportedNcg;
 
     if (PATCH) {
-      // eslint-disable-next-line max-statements -- TODO
       patchedExec = function exec(string) {
         var re = this;
         var state = getInternalState$b(re);
@@ -8115,7 +8433,7 @@ var doric = (function (exports) {
         }
 
         var groups = state.groups;
-        var sticky = UNSUPPORTED_Y$2 && re.sticky;
+        var sticky = UNSUPPORTED_Y$1 && re.sticky;
         var flags = functionCall(regexpFlags, re);
         var source = re.source;
         var charsAdded = 0;
@@ -8202,18 +8520,18 @@ var doric = (function (exports) {
       get: regexpFlags
     }); }
 
-    var UNSUPPORTED_Y$1 = regexpStickyHelpers.UNSUPPORTED_Y;
+    var MISSED_STICKY = regexpStickyHelpers.MISSED_STICKY;
 
-    var defineProperty$3 = objectDefineProperty.f;
+    var defineProperty$5 = objectDefineProperty.f;
     var getInternalState$a = internalState.get;
 
     var RegExpPrototype$4 = RegExp.prototype;
-    var TypeError$j = global_1.TypeError;
+    var TypeError$l = global_1.TypeError;
 
     // `RegExp.prototype.sticky` getter
     // https://tc39.es/ecma262/#sec-get-regexp.prototype.sticky
-    if (descriptors && UNSUPPORTED_Y$1) {
-      defineProperty$3(RegExpPrototype$4, 'sticky', {
+    if (descriptors && MISSED_STICKY) {
+      defineProperty$5(RegExpPrototype$4, 'sticky', {
         configurable: true,
         get: function () {
           if (this === RegExpPrototype$4) { return undefined; }
@@ -8222,7 +8540,7 @@ var doric = (function (exports) {
           if (classofRaw(this) === 'RegExp') {
             return !!getInternalState$a(this).sticky;
           }
-          throw TypeError$j('Incompatible receiver, RegExp required');
+          throw TypeError$l('Incompatible receiver, RegExp required');
         }
       });
     }
@@ -8246,7 +8564,7 @@ var doric = (function (exports) {
       return re.test('abc') === true && execCalled;
     }();
 
-    var Error$1 = global_1.Error;
+    var Error$4 = global_1.Error;
     var un$Test = functionUncurryThis(/./.test);
 
     // `RegExp.prototype.test` method
@@ -8257,13 +8575,13 @@ var doric = (function (exports) {
         if (!isCallable(exec)) { return un$Test(this, str); }
         var result = functionCall(exec, this, str);
         if (result !== null && !isObject(result)) {
-          throw new Error$1('RegExp exec method returned something other than an Object or null');
+          throw new Error$4('RegExp exec method returned something other than an Object or null');
         }
         return !!result;
       }
     });
 
-    var PROPER_FUNCTION_NAME$2 = functionName.PROPER;
+    var PROPER_FUNCTION_NAME$1 = functionName.PROPER;
 
 
 
@@ -8274,11 +8592,11 @@ var doric = (function (exports) {
     var TO_STRING = 'toString';
     var RegExpPrototype$3 = RegExp.prototype;
     var n$ToString = RegExpPrototype$3[TO_STRING];
-    var getFlags$2 = functionUncurryThis(regexpFlags);
+    var getFlags$3 = functionUncurryThis(regexpFlags);
 
     var NOT_GENERIC = fails(function () { return n$ToString.call({ source: 'a', flags: 'b' }) != '/a/b'; });
     // FF44- RegExp#toString has a wrong name
-    var INCORRECT_NAME = PROPER_FUNCTION_NAME$2 && n$ToString.name != TO_STRING;
+    var INCORRECT_NAME = PROPER_FUNCTION_NAME$1 && n$ToString.name != TO_STRING;
 
     // `RegExp.prototype.toString` method
     // https://tc39.es/ecma262/#sec-regexp.prototype.tostring
@@ -8287,7 +8605,7 @@ var doric = (function (exports) {
         var R = anObject(this);
         var p = toString_1(R.source);
         var rf = R.flags;
-        var f = toString_1(rf === undefined && objectIsPrototypeOf(RegExpPrototype$3, R) && !('flags' in RegExpPrototype$3) ? getFlags$2(R) : rf);
+        var f = toString_1(rf === undefined && objectIsPrototypeOf(RegExpPrototype$3, R) && !('flags' in RegExpPrototype$3) ? getFlags$3(R) : rf);
         return '/' + p + '/' + f;
       }, { unsafe: true });
     }
@@ -8301,7 +8619,7 @@ var doric = (function (exports) {
     var charAt$a = functionUncurryThis(''.charAt);
 
     var FORCED$9 = fails(function () {
-      return '𠮷'.at(0) !== '\uD842';
+      return '𠮷'.at(-2) !== '\uD842';
     });
 
     // `String.prototype.at` method
@@ -8358,11 +8676,11 @@ var doric = (function (exports) {
       }
     });
 
-    var TypeError$i = global_1.TypeError;
+    var TypeError$k = global_1.TypeError;
 
     var notARegexp = function (it) {
       if (isRegexp(it)) {
-        throw TypeError$i("The method doesn't accept regular expressions");
+        throw TypeError$k("The method doesn't accept regular expressions");
       } return it;
     };
 
@@ -8380,7 +8698,7 @@ var doric = (function (exports) {
       } return false;
     };
 
-    var getOwnPropertyDescriptor$1 = objectGetOwnPropertyDescriptor.f;
+    var getOwnPropertyDescriptor$2 = objectGetOwnPropertyDescriptor.f;
 
 
 
@@ -8391,12 +8709,12 @@ var doric = (function (exports) {
     // eslint-disable-next-line es/no-string-prototype-endswith -- safe
     var un$EndsWith = functionUncurryThis(''.endsWith);
     var slice = functionUncurryThis(''.slice);
-    var min$5 = Math.min;
+    var min$6 = Math.min;
 
     var CORRECT_IS_REGEXP_LOGIC$1 = correctIsRegexpLogic('endsWith');
     // https://github.com/zloirock/core-js/pull/702
     var MDN_POLYFILL_BUG$1 = !CORRECT_IS_REGEXP_LOGIC$1 && !!function () {
-      var descriptor = getOwnPropertyDescriptor$1(String.prototype, 'endsWith');
+      var descriptor = getOwnPropertyDescriptor$2(String.prototype, 'endsWith');
       return descriptor && !descriptor.writable;
     }();
 
@@ -8408,7 +8726,7 @@ var doric = (function (exports) {
         notARegexp(searchString);
         var endPosition = arguments.length > 1 ? arguments[1] : undefined;
         var len = that.length;
-        var end = endPosition === undefined ? len : min$5(toLength(endPosition), len);
+        var end = endPosition === undefined ? len : min$6(toLength(endPosition), len);
         var search = toString_1(searchString);
         return un$EndsWith
           ? un$EndsWith(that, search, end)
@@ -8416,11 +8734,11 @@ var doric = (function (exports) {
       }
     });
 
-    var RangeError$6 = global_1.RangeError;
+    var RangeError$8 = global_1.RangeError;
     var fromCharCode$2 = String.fromCharCode;
     // eslint-disable-next-line es/no-string-fromcodepoint -- required for testing
     var $fromCodePoint = String.fromCodePoint;
-    var join$5 = functionUncurryThis([].join);
+    var join$6 = functionUncurryThis([].join);
 
     // length should be 1, old FF problem
     var INCORRECT_LENGTH = !!$fromCodePoint && $fromCodePoint.length != 1;
@@ -8438,11 +8756,11 @@ var doric = (function (exports) {
         var code;
         while (length > i) {
           code = +arguments$1[i++];
-          if (toAbsoluteIndex(code, 0x10FFFF) !== code) { throw RangeError$6(code + ' is not a valid code point'); }
+          if (toAbsoluteIndex(code, 0x10FFFF) !== code) { throw RangeError$8(code + ' is not a valid code point'); }
           elements[i] = code < 0x10000
             ? fromCharCode$2(code)
             : fromCharCode$2(((code -= 0x10000) >> 10) + 0xD800, code % 0x400 + 0xDC00);
-        } return join$5(elements, '');
+        } return join$6(elements, '');
       }
     });
 
@@ -8466,13 +8784,13 @@ var doric = (function (exports) {
 
 
     var STRING_ITERATOR$1 = 'String Iterator';
-    var setInternalState$c = internalState.set;
+    var setInternalState$d = internalState.set;
     var getInternalState$9 = internalState.getterFor(STRING_ITERATOR$1);
 
     // `String.prototype[@@iterator]` method
     // https://tc39.es/ecma262/#sec-string.prototype-@@iterator
     defineIterator(String, 'String', function (iterated) {
-      setInternalState$c(this, {
+      setInternalState$d(this, {
         type: STRING_ITERATOR$1,
         string: toString_1(iterated),
         index: 0
@@ -8572,7 +8890,7 @@ var doric = (function (exports) {
       return index + (unicode ? charAt$7(S, index).length : 1);
     };
 
-    var TypeError$h = global_1.TypeError;
+    var TypeError$j = global_1.TypeError;
 
     // `RegExpExec` abstract operation
     // https://tc39.es/ecma262/#sec-regexpexec
@@ -8584,7 +8902,7 @@ var doric = (function (exports) {
         return result;
       }
       if (classofRaw(R) === 'RegExp') { return functionCall(regexpExec, R, S); }
-      throw TypeError$h('RegExp#exec called on incompatible receiver');
+      throw TypeError$j('RegExp#exec called on incompatible receiver');
     };
 
     // @@match logic
@@ -8651,11 +8969,11 @@ var doric = (function (exports) {
     var MATCH_ALL = wellKnownSymbol('matchAll');
     var REGEXP_STRING = 'RegExp String';
     var REGEXP_STRING_ITERATOR = REGEXP_STRING + ' Iterator';
-    var setInternalState$b = internalState.set;
+    var setInternalState$c = internalState.set;
     var getInternalState$8 = internalState.getterFor(REGEXP_STRING_ITERATOR);
     var RegExpPrototype$1 = RegExp.prototype;
-    var TypeError$g = global_1.TypeError;
-    var getFlags$1 = functionUncurryThis(regexpFlags);
+    var TypeError$i = global_1.TypeError;
+    var getFlags$2 = functionUncurryThis(regexpFlags);
     var stringIndexOf$2 = functionUncurryThis(''.indexOf);
     var un$MatchAll = functionUncurryThis(''.matchAll);
 
@@ -8664,7 +8982,7 @@ var doric = (function (exports) {
     });
 
     var $RegExpStringIterator = createIteratorConstructor(function RegExpStringIterator(regexp, string, $global, fullUnicode) {
-      setInternalState$b(this, {
+      setInternalState$c(this, {
         type: REGEXP_STRING_ITERATOR,
         regexp: regexp,
         string: string,
@@ -8694,7 +9012,7 @@ var doric = (function (exports) {
       C = speciesConstructor(R, RegExp);
       flagsValue = R.flags;
       if (flagsValue === undefined && objectIsPrototypeOf(RegExpPrototype$1, R) && !('flags' in RegExpPrototype$1)) {
-        flagsValue = getFlags$1(R);
+        flagsValue = getFlags$2(R);
       }
       flags = flagsValue === undefined ? '' : toString_1(flagsValue);
       matcher = new C(C === RegExp ? R.source : R, flags);
@@ -8714,9 +9032,9 @@ var doric = (function (exports) {
           if (isRegexp(regexp)) {
             flags = toString_1(requireObjectCoercible('flags' in RegExpPrototype$1
               ? regexp.flags
-              : getFlags$1(regexp)
+              : getFlags$2(regexp)
             ));
-            if (!~stringIndexOf$2(flags, 'g')) { throw TypeError$g('`.matchAll` does not allow non-global regexes'); }
+            if (!~stringIndexOf$2(flags, 'g')) { throw TypeError$i('`.matchAll` does not allow non-global regexes'); }
           }
           if (WORKS_WITH_NON_GLOBAL_REGEX) { return un$MatchAll(O, regexp); }
           matcher = getMethod(regexp, MATCH_ALL);
@@ -8758,8 +9076,8 @@ var doric = (function (exports) {
       }
     });
 
-    var push$c = functionUncurryThis([].push);
-    var join$4 = functionUncurryThis([].join);
+    var push$f = functionUncurryThis([].push);
+    var join$5 = functionUncurryThis([].join);
 
     // `String.raw` method
     // https://tc39.es/ecma262/#sec-string.raw
@@ -8773,9 +9091,9 @@ var doric = (function (exports) {
         var elements = [];
         var i = 0;
         while (literalSegments > i) {
-          push$c(elements, toString_1(rawTemplate[i++]));
-          if (i === literalSegments) { return join$4(elements, ''); }
-          if (i < argumentsLength) { push$c(elements, toString_1(arguments$1[i])); }
+          push$f(elements, toString_1(rawTemplate[i++]));
+          if (i === literalSegments) { return join$5(elements, ''); }
+          if (i < argumentsLength) { push$f(elements, toString_1(arguments$1[i])); }
         }
       }
     });
@@ -8829,10 +9147,10 @@ var doric = (function (exports) {
     };
 
     var REPLACE$1 = wellKnownSymbol('replace');
-    var max$3 = Math.max;
-    var min$4 = Math.min;
+    var max$4 = Math.max;
+    var min$5 = Math.min;
     var concat$1 = functionUncurryThis([].concat);
-    var push$b = functionUncurryThis([].push);
+    var push$e = functionUncurryThis([].push);
     var stringIndexOf$1 = functionUncurryThis(''.indexOf);
     var stringSlice$8 = functionUncurryThis(''.slice);
 
@@ -8908,7 +9226,7 @@ var doric = (function (exports) {
             var result = regexpExecAbstract(rx, S);
             if (result === null) { break; }
 
-            push$b(results, result);
+            push$e(results, result);
             if (!global) { break; }
 
             var matchStr = toString_1(result[0]);
@@ -8921,18 +9239,18 @@ var doric = (function (exports) {
             result = results[i];
 
             var matched = toString_1(result[0]);
-            var position = max$3(min$4(toIntegerOrInfinity(result.index), S.length), 0);
+            var position = max$4(min$5(toIntegerOrInfinity(result.index), S.length), 0);
             var captures = [];
             // NOTE: This is equivalent to
             //   captures = result.slice(1).map(maybeToString)
             // but for some reason `nativeSlice.call(result, 1, result.length)` (called in
             // the slice polyfill when slicing native arrays) "doesn't work" in safari 9 and
             // causes a crash (https://pastebin.com/N21QzeQA) when trying to debug it.
-            for (var j = 1; j < result.length; j++) { push$b(captures, maybeToString(result[j])); }
+            for (var j = 1; j < result.length; j++) { push$e(captures, maybeToString(result[j])); }
             var namedCaptures = result.groups;
             if (functionalReplace) {
               var replacerArgs = concat$1([matched], captures, position, S);
-              if (namedCaptures !== undefined) { push$b(replacerArgs, namedCaptures); }
+              if (namedCaptures !== undefined) { push$e(replacerArgs, namedCaptures); }
               var replacement = toString_1(functionApply(replaceValue, undefined, replacerArgs));
             } else {
               replacement = getSubstitution(matched, S, position, captures, namedCaptures, replaceValue);
@@ -8949,12 +9267,12 @@ var doric = (function (exports) {
 
     var REPLACE = wellKnownSymbol('replace');
     var RegExpPrototype = RegExp.prototype;
-    var TypeError$f = global_1.TypeError;
-    var getFlags = functionUncurryThis(regexpFlags);
+    var TypeError$h = global_1.TypeError;
+    var getFlags$1 = functionUncurryThis(regexpFlags);
     var indexOf = functionUncurryThis(''.indexOf);
     functionUncurryThis(''.replace);
     var stringSlice$7 = functionUncurryThis(''.slice);
-    var max$2 = Math.max;
+    var max$3 = Math.max;
 
     var stringIndexOf = function (string, searchValue, fromIndex) {
       if (fromIndex > string.length) { return -1; }
@@ -8976,9 +9294,9 @@ var doric = (function (exports) {
           if (IS_REG_EXP) {
             flags = toString_1(requireObjectCoercible('flags' in RegExpPrototype
               ? searchValue.flags
-              : getFlags(searchValue)
+              : getFlags$1(searchValue)
             ));
-            if (!~indexOf(flags, 'g')) { throw TypeError$f('`.replaceAll` does not allow non-global regexes'); }
+            if (!~indexOf(flags, 'g')) { throw TypeError$h('`.replaceAll` does not allow non-global regexes'); }
           }
           replacer = getMethod(searchValue, REPLACE);
           if (replacer) {
@@ -8990,7 +9308,7 @@ var doric = (function (exports) {
         functionalReplace = isCallable(replaceValue);
         if (!functionalReplace) { replaceValue = toString_1(replaceValue); }
         searchLength = searchString.length;
-        advanceBy = max$2(1, searchLength);
+        advanceBy = max$3(1, searchLength);
         position = stringIndexOf(string, searchString, 0);
         while (position !== -1) {
           replacement = functionalReplace
@@ -9037,10 +9355,10 @@ var doric = (function (exports) {
 
     var UNSUPPORTED_Y = regexpStickyHelpers.UNSUPPORTED_Y;
     var MAX_UINT32 = 0xFFFFFFFF;
-    var min$3 = Math.min;
+    var min$4 = Math.min;
     var $push = [].push;
-    var exec$4 = functionUncurryThis(/./.exec);
-    var push$a = functionUncurryThis($push);
+    var exec$5 = functionUncurryThis(/./.exec);
+    var push$d = functionUncurryThis($push);
     var stringSlice$6 = functionUncurryThis(''.slice);
 
     // Chrome 51 has a buggy "split" implementation when RegExp#exec !== nativeExec
@@ -9089,8 +9407,8 @@ var doric = (function (exports) {
           while (match = functionCall(regexpExec, separatorCopy, string)) {
             lastIndex = separatorCopy.lastIndex;
             if (lastIndex > lastLastIndex) {
-              push$a(output, stringSlice$6(string, lastLastIndex, match.index));
-              if (match.length > 1 && match.index < string.length) { functionApply($push, output, arraySlice$1(match, 1)); }
+              push$d(output, stringSlice$6(string, lastLastIndex, match.index));
+              if (match.length > 1 && match.index < string.length) { functionApply($push, output, arraySliceSimple(match, 1)); }
               lastLength = match[0].length;
               lastLastIndex = lastIndex;
               if (output.length >= lim) { break; }
@@ -9098,9 +9416,9 @@ var doric = (function (exports) {
             if (separatorCopy.lastIndex === match.index) { separatorCopy.lastIndex++; } // Avoid an infinite loop
           }
           if (lastLastIndex === string.length) {
-            if (lastLength || !exec$4(separatorCopy, '')) { push$a(output, ''); }
-          } else { push$a(output, stringSlice$6(string, lastLastIndex)); }
-          return output.length > lim ? arraySlice$1(output, 0, lim) : output;
+            if (lastLength || !exec$5(separatorCopy, '')) { push$d(output, ''); }
+          } else { push$d(output, stringSlice$6(string, lastLastIndex)); }
+          return output.length > lim ? arraySliceSimple(output, 0, lim) : output;
         };
       // Chakra, V8
       } else if ('0'.split(undefined, 0).length) {
@@ -9154,26 +9472,26 @@ var doric = (function (exports) {
             var e;
             if (
               z === null ||
-              (e = min$3(toLength(splitter.lastIndex + (UNSUPPORTED_Y ? q : 0)), S.length)) === p
+              (e = min$4(toLength(splitter.lastIndex + (UNSUPPORTED_Y ? q : 0)), S.length)) === p
             ) {
               q = advanceStringIndex(S, q, unicodeMatching);
             } else {
-              push$a(A, stringSlice$6(S, p, q));
+              push$d(A, stringSlice$6(S, p, q));
               if (A.length === lim) { return A; }
               for (var i = 1; i <= z.length - 1; i++) {
-                push$a(A, z[i]);
+                push$d(A, z[i]);
                 if (A.length === lim) { return A; }
               }
               q = p = e;
             }
           }
-          push$a(A, stringSlice$6(S, p));
+          push$d(A, stringSlice$6(S, p));
           return A;
         }
       ];
     }, !SPLIT_WORKS_WITH_OVERWRITTEN_EXEC, UNSUPPORTED_Y);
 
-    var getOwnPropertyDescriptor = objectGetOwnPropertyDescriptor.f;
+    var getOwnPropertyDescriptor$1 = objectGetOwnPropertyDescriptor.f;
 
 
 
@@ -9184,12 +9502,12 @@ var doric = (function (exports) {
     // eslint-disable-next-line es/no-string-prototype-startswith -- safe
     var un$StartsWith = functionUncurryThis(''.startsWith);
     var stringSlice$5 = functionUncurryThis(''.slice);
-    var min$2 = Math.min;
+    var min$3 = Math.min;
 
     var CORRECT_IS_REGEXP_LOGIC = correctIsRegexpLogic('startsWith');
     // https://github.com/zloirock/core-js/pull/702
     var MDN_POLYFILL_BUG = !CORRECT_IS_REGEXP_LOGIC && !!function () {
-      var descriptor = getOwnPropertyDescriptor(String.prototype, 'startsWith');
+      var descriptor = getOwnPropertyDescriptor$1(String.prototype, 'startsWith');
       return descriptor && !descriptor.writable;
     }();
 
@@ -9199,7 +9517,7 @@ var doric = (function (exports) {
       startsWith: function startsWith(searchString /* , position = 0 */) {
         var that = toString_1(requireObjectCoercible(this));
         notARegexp(searchString);
-        var index = toLength(min$2(arguments.length > 1 ? arguments[1] : undefined, that.length));
+        var index = toLength(min$3(arguments.length > 1 ? arguments[1] : undefined, that.length));
         var search = toString_1(searchString);
         return un$StartsWith
           ? un$StartsWith(that, search, index)
@@ -9208,8 +9526,8 @@ var doric = (function (exports) {
     });
 
     var stringSlice$4 = functionUncurryThis(''.slice);
-    var max$1 = Math.max;
-    var min$1 = Math.min;
+    var max$2 = Math.max;
+    var min$2 = Math.min;
 
     // eslint-disable-next-line unicorn/prefer-string-slice -- required for testing
     var FORCED$8 = !''.substr || 'ab'.substr(-1) !== 'b';
@@ -9223,15 +9541,15 @@ var doric = (function (exports) {
         var intStart = toIntegerOrInfinity(start);
         var intLength, intEnd;
         if (intStart === Infinity) { intStart = 0; }
-        if (intStart < 0) { intStart = max$1(size + intStart, 0); }
+        if (intStart < 0) { intStart = max$2(size + intStart, 0); }
         intLength = length === undefined ? size : toIntegerOrInfinity(length);
         if (intLength <= 0 || intLength === Infinity) { return ''; }
-        intEnd = min$1(intStart + intLength, size);
+        intEnd = min$2(intStart + intLength, size);
         return intStart >= intEnd ? '' : stringSlice$4(that, intStart, intEnd);
       }
     });
 
-    var PROPER_FUNCTION_NAME$1 = functionName.PROPER;
+    var PROPER_FUNCTION_NAME = functionName.PROPER;
 
 
 
@@ -9243,7 +9561,7 @@ var doric = (function (exports) {
       return fails(function () {
         return !!whitespaces[METHOD_NAME]()
           || non[METHOD_NAME]() !== non
-          || (PROPER_FUNCTION_NAME$1 && whitespaces[METHOD_NAME].name !== METHOD_NAME);
+          || (PROPER_FUNCTION_NAME && whitespaces[METHOD_NAME].name !== METHOD_NAME);
       });
     };
 
@@ -9442,19 +9760,19 @@ var doric = (function (exports) {
       return new Int8Array$2(new ArrayBuffer$1(2), 1, undefined).length !== 1;
     });
 
-    var RangeError$5 = global_1.RangeError;
+    var RangeError$7 = global_1.RangeError;
 
     var toPositiveInteger = function (it) {
       var result = toIntegerOrInfinity(it);
-      if (result < 0) { throw RangeError$5("The argument can't be less than 0"); }
+      if (result < 0) { throw RangeError$7("The argument can't be less than 0"); }
       return result;
     };
 
-    var RangeError$4 = global_1.RangeError;
+    var RangeError$6 = global_1.RangeError;
 
     var toOffset = function (it, BYTES) {
       var offset = toPositiveInteger(it);
-      if (offset % BYTES) { throw RangeError$4('Wrong offset'); }
+      if (offset % BYTES) { throw RangeError$6('Wrong offset'); }
       return offset;
     };
 
@@ -9803,13 +10121,13 @@ var doric = (function (exports) {
       };
     });
 
-    var aTypedArray$s = arrayBufferViewCore.aTypedArray;
-    var exportTypedArrayMethod$t = arrayBufferViewCore.exportTypedArrayMethod;
+    var aTypedArray$w = arrayBufferViewCore.aTypedArray;
+    var exportTypedArrayMethod$x = arrayBufferViewCore.exportTypedArrayMethod;
 
     // `%TypedArray%.prototype.at` method
     // https://github.com/tc39/proposal-relative-indexing-method
-    exportTypedArrayMethod$t('at', function at(index) {
-      var O = aTypedArray$s(this);
+    exportTypedArrayMethod$x('at', function at(index) {
+      var O = aTypedArray$w(this);
       var len = lengthOfArrayLike(O);
       var relativeIndex = toIntegerOrInfinity(index);
       var k = relativeIndex >= 0 ? relativeIndex : len + relativeIndex;
@@ -9817,36 +10135,36 @@ var doric = (function (exports) {
     });
 
     var u$ArrayCopyWithin = functionUncurryThis(arrayCopyWithin);
-    var aTypedArray$r = arrayBufferViewCore.aTypedArray;
-    var exportTypedArrayMethod$s = arrayBufferViewCore.exportTypedArrayMethod;
+    var aTypedArray$v = arrayBufferViewCore.aTypedArray;
+    var exportTypedArrayMethod$w = arrayBufferViewCore.exportTypedArrayMethod;
 
     // `%TypedArray%.prototype.copyWithin` method
     // https://tc39.es/ecma262/#sec-%typedarray%.prototype.copywithin
-    exportTypedArrayMethod$s('copyWithin', function copyWithin(target, start /* , end */) {
-      return u$ArrayCopyWithin(aTypedArray$r(this), target, start, arguments.length > 2 ? arguments[2] : undefined);
+    exportTypedArrayMethod$w('copyWithin', function copyWithin(target, start /* , end */) {
+      return u$ArrayCopyWithin(aTypedArray$v(this), target, start, arguments.length > 2 ? arguments[2] : undefined);
     });
 
     var $every$1 = arrayIteration.every;
 
-    var aTypedArray$q = arrayBufferViewCore.aTypedArray;
-    var exportTypedArrayMethod$r = arrayBufferViewCore.exportTypedArrayMethod;
+    var aTypedArray$u = arrayBufferViewCore.aTypedArray;
+    var exportTypedArrayMethod$v = arrayBufferViewCore.exportTypedArrayMethod;
 
     // `%TypedArray%.prototype.every` method
     // https://tc39.es/ecma262/#sec-%typedarray%.prototype.every
-    exportTypedArrayMethod$r('every', function every(callbackfn /* , thisArg */) {
-      return $every$1(aTypedArray$q(this), callbackfn, arguments.length > 1 ? arguments[1] : undefined);
+    exportTypedArrayMethod$v('every', function every(callbackfn /* , thisArg */) {
+      return $every$1(aTypedArray$u(this), callbackfn, arguments.length > 1 ? arguments[1] : undefined);
     });
 
-    var aTypedArray$p = arrayBufferViewCore.aTypedArray;
-    var exportTypedArrayMethod$q = arrayBufferViewCore.exportTypedArrayMethod;
+    var aTypedArray$t = arrayBufferViewCore.aTypedArray;
+    var exportTypedArrayMethod$u = arrayBufferViewCore.exportTypedArrayMethod;
 
     // `%TypedArray%.prototype.fill` method
     // https://tc39.es/ecma262/#sec-%typedarray%.prototype.fill
-    exportTypedArrayMethod$q('fill', function fill(value /* , start, end */) {
+    exportTypedArrayMethod$u('fill', function fill(value /* , start, end */) {
       var length = arguments.length;
       return functionCall(
         arrayFill,
-        aTypedArray$p(this),
+        aTypedArray$t(this),
         value,
         length > 1 ? arguments[1] : undefined,
         length > 2 ? arguments[2] : undefined
@@ -9855,19 +10173,19 @@ var doric = (function (exports) {
 
     var arrayFromConstructorAndList = function (Constructor, list) {
       var index = 0;
-      var length = list.length;
+      var length = lengthOfArrayLike(list);
       var result = new Constructor(length);
       while (length > index) { result[index] = list[index++]; }
       return result;
     };
 
-    var TYPED_ARRAY_CONSTRUCTOR = arrayBufferViewCore.TYPED_ARRAY_CONSTRUCTOR;
+    var TYPED_ARRAY_CONSTRUCTOR$4 = arrayBufferViewCore.TYPED_ARRAY_CONSTRUCTOR;
     var aTypedArrayConstructor$2 = arrayBufferViewCore.aTypedArrayConstructor;
 
     // a part of `TypedArraySpeciesCreate` abstract operation
     // https://tc39.es/ecma262/#typedarray-species-create
     var typedArraySpeciesConstructor = function (originalArray) {
-      return aTypedArrayConstructor$2(speciesConstructor(originalArray, originalArray[TYPED_ARRAY_CONSTRUCTOR]));
+      return aTypedArrayConstructor$2(speciesConstructor(originalArray, originalArray[TYPED_ARRAY_CONSTRUCTOR$4]));
     };
 
     var typedArrayFromSpeciesAndList = function (instance, list) {
@@ -9877,47 +10195,47 @@ var doric = (function (exports) {
     var $filter = arrayIteration.filter;
 
 
-    var aTypedArray$o = arrayBufferViewCore.aTypedArray;
-    var exportTypedArrayMethod$p = arrayBufferViewCore.exportTypedArrayMethod;
+    var aTypedArray$s = arrayBufferViewCore.aTypedArray;
+    var exportTypedArrayMethod$t = arrayBufferViewCore.exportTypedArrayMethod;
 
     // `%TypedArray%.prototype.filter` method
     // https://tc39.es/ecma262/#sec-%typedarray%.prototype.filter
-    exportTypedArrayMethod$p('filter', function filter(callbackfn /* , thisArg */) {
-      var list = $filter(aTypedArray$o(this), callbackfn, arguments.length > 1 ? arguments[1] : undefined);
+    exportTypedArrayMethod$t('filter', function filter(callbackfn /* , thisArg */) {
+      var list = $filter(aTypedArray$s(this), callbackfn, arguments.length > 1 ? arguments[1] : undefined);
       return typedArrayFromSpeciesAndList(this, list);
     });
 
     var $find$1 = arrayIteration.find;
 
-    var aTypedArray$n = arrayBufferViewCore.aTypedArray;
-    var exportTypedArrayMethod$o = arrayBufferViewCore.exportTypedArrayMethod;
+    var aTypedArray$r = arrayBufferViewCore.aTypedArray;
+    var exportTypedArrayMethod$s = arrayBufferViewCore.exportTypedArrayMethod;
 
     // `%TypedArray%.prototype.find` method
     // https://tc39.es/ecma262/#sec-%typedarray%.prototype.find
-    exportTypedArrayMethod$o('find', function find(predicate /* , thisArg */) {
-      return $find$1(aTypedArray$n(this), predicate, arguments.length > 1 ? arguments[1] : undefined);
+    exportTypedArrayMethod$s('find', function find(predicate /* , thisArg */) {
+      return $find$1(aTypedArray$r(this), predicate, arguments.length > 1 ? arguments[1] : undefined);
     });
 
     var $findIndex = arrayIteration.findIndex;
 
-    var aTypedArray$m = arrayBufferViewCore.aTypedArray;
-    var exportTypedArrayMethod$n = arrayBufferViewCore.exportTypedArrayMethod;
+    var aTypedArray$q = arrayBufferViewCore.aTypedArray;
+    var exportTypedArrayMethod$r = arrayBufferViewCore.exportTypedArrayMethod;
 
     // `%TypedArray%.prototype.findIndex` method
     // https://tc39.es/ecma262/#sec-%typedarray%.prototype.findindex
-    exportTypedArrayMethod$n('findIndex', function findIndex(predicate /* , thisArg */) {
-      return $findIndex(aTypedArray$m(this), predicate, arguments.length > 1 ? arguments[1] : undefined);
+    exportTypedArrayMethod$r('findIndex', function findIndex(predicate /* , thisArg */) {
+      return $findIndex(aTypedArray$q(this), predicate, arguments.length > 1 ? arguments[1] : undefined);
     });
 
     var $forEach$1 = arrayIteration.forEach;
 
-    var aTypedArray$l = arrayBufferViewCore.aTypedArray;
-    var exportTypedArrayMethod$m = arrayBufferViewCore.exportTypedArrayMethod;
+    var aTypedArray$p = arrayBufferViewCore.aTypedArray;
+    var exportTypedArrayMethod$q = arrayBufferViewCore.exportTypedArrayMethod;
 
     // `%TypedArray%.prototype.forEach` method
     // https://tc39.es/ecma262/#sec-%typedarray%.prototype.foreach
-    exportTypedArrayMethod$m('forEach', function forEach(callbackfn /* , thisArg */) {
-      $forEach$1(aTypedArray$l(this), callbackfn, arguments.length > 1 ? arguments[1] : undefined);
+    exportTypedArrayMethod$q('forEach', function forEach(callbackfn /* , thisArg */) {
+      $forEach$1(aTypedArray$p(this), callbackfn, arguments.length > 1 ? arguments[1] : undefined);
     });
 
     var exportTypedArrayStaticMethod$2 = arrayBufferViewCore.exportTypedArrayStaticMethod;
@@ -9929,93 +10247,95 @@ var doric = (function (exports) {
 
     var $includes = arrayIncludes.includes;
 
-    var aTypedArray$k = arrayBufferViewCore.aTypedArray;
-    var exportTypedArrayMethod$l = arrayBufferViewCore.exportTypedArrayMethod;
+    var aTypedArray$o = arrayBufferViewCore.aTypedArray;
+    var exportTypedArrayMethod$p = arrayBufferViewCore.exportTypedArrayMethod;
 
     // `%TypedArray%.prototype.includes` method
     // https://tc39.es/ecma262/#sec-%typedarray%.prototype.includes
-    exportTypedArrayMethod$l('includes', function includes(searchElement /* , fromIndex */) {
-      return $includes(aTypedArray$k(this), searchElement, arguments.length > 1 ? arguments[1] : undefined);
+    exportTypedArrayMethod$p('includes', function includes(searchElement /* , fromIndex */) {
+      return $includes(aTypedArray$o(this), searchElement, arguments.length > 1 ? arguments[1] : undefined);
     });
 
     var $indexOf = arrayIncludes.indexOf;
 
-    var aTypedArray$j = arrayBufferViewCore.aTypedArray;
-    var exportTypedArrayMethod$k = arrayBufferViewCore.exportTypedArrayMethod;
+    var aTypedArray$n = arrayBufferViewCore.aTypedArray;
+    var exportTypedArrayMethod$o = arrayBufferViewCore.exportTypedArrayMethod;
 
     // `%TypedArray%.prototype.indexOf` method
     // https://tc39.es/ecma262/#sec-%typedarray%.prototype.indexof
-    exportTypedArrayMethod$k('indexOf', function indexOf(searchElement /* , fromIndex */) {
-      return $indexOf(aTypedArray$j(this), searchElement, arguments.length > 1 ? arguments[1] : undefined);
+    exportTypedArrayMethod$o('indexOf', function indexOf(searchElement /* , fromIndex */) {
+      return $indexOf(aTypedArray$n(this), searchElement, arguments.length > 1 ? arguments[1] : undefined);
     });
-
-    var PROPER_FUNCTION_NAME = functionName.PROPER;
-
-
-
 
     var ITERATOR$3 = wellKnownSymbol('iterator');
     var Uint8Array$2 = global_1.Uint8Array;
     var arrayValues = functionUncurryThis(es_array_iterator.values);
     var arrayKeys = functionUncurryThis(es_array_iterator.keys);
     var arrayEntries = functionUncurryThis(es_array_iterator.entries);
-    var aTypedArray$i = arrayBufferViewCore.aTypedArray;
-    var exportTypedArrayMethod$j = arrayBufferViewCore.exportTypedArrayMethod;
-    var nativeTypedArrayIterator = Uint8Array$2 && Uint8Array$2.prototype[ITERATOR$3];
+    var aTypedArray$m = arrayBufferViewCore.aTypedArray;
+    var exportTypedArrayMethod$n = arrayBufferViewCore.exportTypedArrayMethod;
+    var TypedArrayPrototype = Uint8Array$2 && Uint8Array$2.prototype;
 
-    var PROPER_ARRAY_VALUES_NAME = !!nativeTypedArrayIterator && nativeTypedArrayIterator.name === 'values';
+    var GENERIC = !fails(function () {
+      TypedArrayPrototype[ITERATOR$3].call([1]);
+    });
+
+    var ITERATOR_IS_VALUES = !!TypedArrayPrototype
+      && TypedArrayPrototype.values
+      && TypedArrayPrototype[ITERATOR$3] === TypedArrayPrototype.values
+      && TypedArrayPrototype.values.name === 'values';
 
     var typedArrayValues = function values() {
-      return arrayValues(aTypedArray$i(this));
+      return arrayValues(aTypedArray$m(this));
     };
 
     // `%TypedArray%.prototype.entries` method
     // https://tc39.es/ecma262/#sec-%typedarray%.prototype.entries
-    exportTypedArrayMethod$j('entries', function entries() {
-      return arrayEntries(aTypedArray$i(this));
-    });
+    exportTypedArrayMethod$n('entries', function entries() {
+      return arrayEntries(aTypedArray$m(this));
+    }, GENERIC);
     // `%TypedArray%.prototype.keys` method
     // https://tc39.es/ecma262/#sec-%typedarray%.prototype.keys
-    exportTypedArrayMethod$j('keys', function keys() {
-      return arrayKeys(aTypedArray$i(this));
-    });
+    exportTypedArrayMethod$n('keys', function keys() {
+      return arrayKeys(aTypedArray$m(this));
+    }, GENERIC);
     // `%TypedArray%.prototype.values` method
     // https://tc39.es/ecma262/#sec-%typedarray%.prototype.values
-    exportTypedArrayMethod$j('values', typedArrayValues, PROPER_FUNCTION_NAME && !PROPER_ARRAY_VALUES_NAME);
+    exportTypedArrayMethod$n('values', typedArrayValues, GENERIC || !ITERATOR_IS_VALUES, { name: 'values' });
     // `%TypedArray%.prototype[@@iterator]` method
     // https://tc39.es/ecma262/#sec-%typedarray%.prototype-@@iterator
-    exportTypedArrayMethod$j(ITERATOR$3, typedArrayValues, PROPER_FUNCTION_NAME && !PROPER_ARRAY_VALUES_NAME);
+    exportTypedArrayMethod$n(ITERATOR$3, typedArrayValues, GENERIC || !ITERATOR_IS_VALUES, { name: 'values' });
 
-    var aTypedArray$h = arrayBufferViewCore.aTypedArray;
-    var exportTypedArrayMethod$i = arrayBufferViewCore.exportTypedArrayMethod;
+    var aTypedArray$l = arrayBufferViewCore.aTypedArray;
+    var exportTypedArrayMethod$m = arrayBufferViewCore.exportTypedArrayMethod;
     var $join = functionUncurryThis([].join);
 
     // `%TypedArray%.prototype.join` method
     // https://tc39.es/ecma262/#sec-%typedarray%.prototype.join
-    exportTypedArrayMethod$i('join', function join(separator) {
-      return $join(aTypedArray$h(this), separator);
+    exportTypedArrayMethod$m('join', function join(separator) {
+      return $join(aTypedArray$l(this), separator);
     });
 
-    var aTypedArray$g = arrayBufferViewCore.aTypedArray;
-    var exportTypedArrayMethod$h = arrayBufferViewCore.exportTypedArrayMethod;
+    var aTypedArray$k = arrayBufferViewCore.aTypedArray;
+    var exportTypedArrayMethod$l = arrayBufferViewCore.exportTypedArrayMethod;
 
     // `%TypedArray%.prototype.lastIndexOf` method
     // https://tc39.es/ecma262/#sec-%typedarray%.prototype.lastindexof
-    exportTypedArrayMethod$h('lastIndexOf', function lastIndexOf(searchElement /* , fromIndex */) {
+    exportTypedArrayMethod$l('lastIndexOf', function lastIndexOf(searchElement /* , fromIndex */) {
       var length = arguments.length;
-      return functionApply(arrayLastIndexOf, aTypedArray$g(this), length > 1 ? [searchElement, arguments[1]] : [searchElement]);
+      return functionApply(arrayLastIndexOf, aTypedArray$k(this), length > 1 ? [searchElement, arguments[1]] : [searchElement]);
     });
 
     var $map = arrayIteration.map;
 
 
-    var aTypedArray$f = arrayBufferViewCore.aTypedArray;
-    var exportTypedArrayMethod$g = arrayBufferViewCore.exportTypedArrayMethod;
+    var aTypedArray$j = arrayBufferViewCore.aTypedArray;
+    var exportTypedArrayMethod$k = arrayBufferViewCore.exportTypedArrayMethod;
 
     // `%TypedArray%.prototype.map` method
     // https://tc39.es/ecma262/#sec-%typedarray%.prototype.map
-    exportTypedArrayMethod$g('map', function map(mapfn /* , thisArg */) {
-      return $map(aTypedArray$f(this), mapfn, arguments.length > 1 ? arguments[1] : undefined, function (O, length) {
+    exportTypedArrayMethod$k('map', function map(mapfn /* , thisArg */) {
+      return $map(aTypedArray$j(this), mapfn, arguments.length > 1 ? arguments[1] : undefined, function (O, length) {
         return new (typedArraySpeciesConstructor(O))(length);
       });
     });
@@ -10037,37 +10357,37 @@ var doric = (function (exports) {
 
     var $reduce = arrayReduce.left;
 
-    var aTypedArray$e = arrayBufferViewCore.aTypedArray;
-    var exportTypedArrayMethod$f = arrayBufferViewCore.exportTypedArrayMethod;
+    var aTypedArray$i = arrayBufferViewCore.aTypedArray;
+    var exportTypedArrayMethod$j = arrayBufferViewCore.exportTypedArrayMethod;
 
     // `%TypedArray%.prototype.reduce` method
     // https://tc39.es/ecma262/#sec-%typedarray%.prototype.reduce
-    exportTypedArrayMethod$f('reduce', function reduce(callbackfn /* , initialValue */) {
+    exportTypedArrayMethod$j('reduce', function reduce(callbackfn /* , initialValue */) {
       var length = arguments.length;
-      return $reduce(aTypedArray$e(this), callbackfn, length, length > 1 ? arguments[1] : undefined);
+      return $reduce(aTypedArray$i(this), callbackfn, length, length > 1 ? arguments[1] : undefined);
     });
 
     var $reduceRight = arrayReduce.right;
 
-    var aTypedArray$d = arrayBufferViewCore.aTypedArray;
-    var exportTypedArrayMethod$e = arrayBufferViewCore.exportTypedArrayMethod;
+    var aTypedArray$h = arrayBufferViewCore.aTypedArray;
+    var exportTypedArrayMethod$i = arrayBufferViewCore.exportTypedArrayMethod;
 
     // `%TypedArray%.prototype.reduceRicht` method
     // https://tc39.es/ecma262/#sec-%typedarray%.prototype.reduceright
-    exportTypedArrayMethod$e('reduceRight', function reduceRight(callbackfn /* , initialValue */) {
+    exportTypedArrayMethod$i('reduceRight', function reduceRight(callbackfn /* , initialValue */) {
       var length = arguments.length;
-      return $reduceRight(aTypedArray$d(this), callbackfn, length, length > 1 ? arguments[1] : undefined);
+      return $reduceRight(aTypedArray$h(this), callbackfn, length, length > 1 ? arguments[1] : undefined);
     });
 
-    var aTypedArray$c = arrayBufferViewCore.aTypedArray;
-    var exportTypedArrayMethod$d = arrayBufferViewCore.exportTypedArrayMethod;
+    var aTypedArray$g = arrayBufferViewCore.aTypedArray;
+    var exportTypedArrayMethod$h = arrayBufferViewCore.exportTypedArrayMethod;
     var floor$2 = Math.floor;
 
     // `%TypedArray%.prototype.reverse` method
     // https://tc39.es/ecma262/#sec-%typedarray%.prototype.reverse
-    exportTypedArrayMethod$d('reverse', function reverse() {
+    exportTypedArrayMethod$h('reverse', function reverse() {
       var that = this;
-      var length = aTypedArray$c(that).length;
+      var length = aTypedArray$g(that).length;
       var middle = floor$2(length / 2);
       var index = 0;
       var value;
@@ -10078,9 +10398,9 @@ var doric = (function (exports) {
       } return that;
     });
 
-    var RangeError$3 = global_1.RangeError;
-    var aTypedArray$b = arrayBufferViewCore.aTypedArray;
-    var exportTypedArrayMethod$c = arrayBufferViewCore.exportTypedArrayMethod;
+    var RangeError$5 = global_1.RangeError;
+    var aTypedArray$f = arrayBufferViewCore.aTypedArray;
+    var exportTypedArrayMethod$g = arrayBufferViewCore.exportTypedArrayMethod;
 
     var FORCED$5 = fails(function () {
       // eslint-disable-next-line es/no-typed-arrays -- required for testing
@@ -10089,19 +10409,19 @@ var doric = (function (exports) {
 
     // `%TypedArray%.prototype.set` method
     // https://tc39.es/ecma262/#sec-%typedarray%.prototype.set
-    exportTypedArrayMethod$c('set', function set(arrayLike /* , offset */) {
-      aTypedArray$b(this);
+    exportTypedArrayMethod$g('set', function set(arrayLike /* , offset */) {
+      aTypedArray$f(this);
       var offset = toOffset(arguments.length > 1 ? arguments[1] : undefined, 1);
       var length = this.length;
       var src = toObject(arrayLike);
       var len = lengthOfArrayLike(src);
       var index = 0;
-      if (len + offset > length) { throw RangeError$3('Wrong length'); }
+      if (len + offset > length) { throw RangeError$5('Wrong length'); }
       while (index < len) { this[offset + index] = src[index++]; }
     }, FORCED$5);
 
-    var aTypedArray$a = arrayBufferViewCore.aTypedArray;
-    var exportTypedArrayMethod$b = arrayBufferViewCore.exportTypedArrayMethod;
+    var aTypedArray$e = arrayBufferViewCore.aTypedArray;
+    var exportTypedArrayMethod$f = arrayBufferViewCore.exportTypedArrayMethod;
 
     var FORCED$4 = fails(function () {
       // eslint-disable-next-line es/no-typed-arrays -- required for testing
@@ -10110,8 +10430,8 @@ var doric = (function (exports) {
 
     // `%TypedArray%.prototype.slice` method
     // https://tc39.es/ecma262/#sec-%typedarray%.prototype.slice
-    exportTypedArrayMethod$b('slice', function slice(start, end) {
-      var list = arraySlice$1(aTypedArray$a(this), start, end);
+    exportTypedArrayMethod$f('slice', function slice(start, end) {
+      var list = arraySlice$1(aTypedArray$e(this), start, end);
       var C = typedArraySpeciesConstructor(this);
       var index = 0;
       var length = list.length;
@@ -10122,18 +10442,18 @@ var doric = (function (exports) {
 
     var $some$1 = arrayIteration.some;
 
-    var aTypedArray$9 = arrayBufferViewCore.aTypedArray;
-    var exportTypedArrayMethod$a = arrayBufferViewCore.exportTypedArrayMethod;
+    var aTypedArray$d = arrayBufferViewCore.aTypedArray;
+    var exportTypedArrayMethod$e = arrayBufferViewCore.exportTypedArrayMethod;
 
     // `%TypedArray%.prototype.some` method
     // https://tc39.es/ecma262/#sec-%typedarray%.prototype.some
-    exportTypedArrayMethod$a('some', function some(callbackfn /* , thisArg */) {
-      return $some$1(aTypedArray$9(this), callbackfn, arguments.length > 1 ? arguments[1] : undefined);
+    exportTypedArrayMethod$e('some', function some(callbackfn /* , thisArg */) {
+      return $some$1(aTypedArray$d(this), callbackfn, arguments.length > 1 ? arguments[1] : undefined);
     });
 
-    var Array$3 = global_1.Array;
-    var aTypedArray$8 = arrayBufferViewCore.aTypedArray;
-    var exportTypedArrayMethod$9 = arrayBufferViewCore.exportTypedArrayMethod;
+    var Array$7 = global_1.Array;
+    var aTypedArray$c = arrayBufferViewCore.aTypedArray;
+    var exportTypedArrayMethod$d = arrayBufferViewCore.exportTypedArrayMethod;
     var Uint16Array = global_1.Uint16Array;
     var un$Sort = Uint16Array && functionUncurryThis(Uint16Array.prototype.sort);
 
@@ -10152,7 +10472,7 @@ var doric = (function (exports) {
       if (engineWebkitVersion) { return engineWebkitVersion < 602; }
 
       var array = new Uint16Array(516);
-      var expected = Array$3(516);
+      var expected = Array$7(516);
       var index, mod;
 
       for (index = 0; index < 516; index++) {
@@ -10184,20 +10504,20 @@ var doric = (function (exports) {
 
     // `%TypedArray%.prototype.sort` method
     // https://tc39.es/ecma262/#sec-%typedarray%.prototype.sort
-    exportTypedArrayMethod$9('sort', function sort(comparefn) {
+    exportTypedArrayMethod$d('sort', function sort(comparefn) {
       if (comparefn !== undefined) { aCallable(comparefn); }
       if (STABLE_SORT) { return un$Sort(this, comparefn); }
 
-      return arraySort(aTypedArray$8(this), getSortCompare(comparefn));
+      return arraySort(aTypedArray$c(this), getSortCompare(comparefn));
     }, !STABLE_SORT || ACCEPT_INCORRECT_ARGUMENTS);
 
-    var aTypedArray$7 = arrayBufferViewCore.aTypedArray;
-    var exportTypedArrayMethod$8 = arrayBufferViewCore.exportTypedArrayMethod;
+    var aTypedArray$b = arrayBufferViewCore.aTypedArray;
+    var exportTypedArrayMethod$c = arrayBufferViewCore.exportTypedArrayMethod;
 
     // `%TypedArray%.prototype.subarray` method
     // https://tc39.es/ecma262/#sec-%typedarray%.prototype.subarray
-    exportTypedArrayMethod$8('subarray', function subarray(begin, end) {
-      var O = aTypedArray$7(this);
+    exportTypedArrayMethod$c('subarray', function subarray(begin, end) {
+      var O = aTypedArray$b(this);
       var length = O.length;
       var beginIndex = toAbsoluteIndex(begin, length);
       var C = typedArraySpeciesConstructor(O);
@@ -10209,8 +10529,8 @@ var doric = (function (exports) {
     });
 
     var Int8Array$1 = global_1.Int8Array;
-    var aTypedArray$6 = arrayBufferViewCore.aTypedArray;
-    var exportTypedArrayMethod$7 = arrayBufferViewCore.exportTypedArrayMethod;
+    var aTypedArray$a = arrayBufferViewCore.aTypedArray;
+    var exportTypedArrayMethod$b = arrayBufferViewCore.exportTypedArrayMethod;
     var $toLocaleString = [].toLocaleString;
 
     // iOS Safari 6.x fails here
@@ -10226,15 +10546,15 @@ var doric = (function (exports) {
 
     // `%TypedArray%.prototype.toLocaleString` method
     // https://tc39.es/ecma262/#sec-%typedarray%.prototype.tolocalestring
-    exportTypedArrayMethod$7('toLocaleString', function toLocaleString() {
+    exportTypedArrayMethod$b('toLocaleString', function toLocaleString() {
       return functionApply(
         $toLocaleString,
-        TO_LOCALE_STRING_BUG ? arraySlice$1(aTypedArray$6(this)) : aTypedArray$6(this),
+        TO_LOCALE_STRING_BUG ? arraySlice$1(aTypedArray$a(this)) : aTypedArray$a(this),
         arraySlice$1(arguments)
       );
     }, FORCED$3);
 
-    var exportTypedArrayMethod$6 = arrayBufferViewCore.exportTypedArrayMethod;
+    var exportTypedArrayMethod$a = arrayBufferViewCore.exportTypedArrayMethod;
 
 
 
@@ -10242,11 +10562,11 @@ var doric = (function (exports) {
     var Uint8Array$1 = global_1.Uint8Array;
     var Uint8ArrayPrototype = Uint8Array$1 && Uint8Array$1.prototype || {};
     var arrayToString = [].toString;
-    var join$3 = functionUncurryThis([].join);
+    var join$4 = functionUncurryThis([].join);
 
     if (fails(function () { arrayToString.call({}); })) {
       arrayToString = function toString() {
-        return join$3(this);
+        return join$4(this);
       };
     }
 
@@ -10254,11 +10574,11 @@ var doric = (function (exports) {
 
     // `%TypedArray%.prototype.toString` method
     // https://tc39.es/ecma262/#sec-%typedarray%.prototype.tostring
-    exportTypedArrayMethod$6('toString', arrayToString, IS_NOT_ARRAY_METHOD);
+    exportTypedArrayMethod$a('toString', arrayToString, IS_NOT_ARRAY_METHOD);
 
     var fromCharCode$1 = String.fromCharCode;
     var charAt$5 = functionUncurryThis(''.charAt);
-    var exec$3 = functionUncurryThis(/./.exec);
+    var exec$4 = functionUncurryThis(/./.exec);
     var stringSlice$3 = functionUncurryThis(''.slice);
 
     var hex2 = /^[\da-f]{2}$/i;
@@ -10278,14 +10598,14 @@ var doric = (function (exports) {
           if (chr === '%') {
             if (charAt$5(str, index) === 'u') {
               part = stringSlice$3(str, index + 1, index + 5);
-              if (exec$3(hex4, part)) {
+              if (exec$4(hex4, part)) {
                 result += fromCharCode$1(parseInt(part, 16));
                 index += 5;
                 continue;
               }
             } else {
               part = stringSlice$3(str, index, index + 2);
-              if (exec$3(hex2, part)) {
+              if (exec$4(hex2, part)) {
                 result += fromCharCode$1(parseInt(part, 16));
                 index += 2;
                 continue;
@@ -10306,7 +10626,7 @@ var doric = (function (exports) {
 
 
 
-    var setInternalState$a = internalState.set;
+    var setInternalState$b = internalState.set;
     var internalStateGetterFor = internalState.getterFor;
     var find$1 = arrayIteration.find;
     var findIndex = arrayIteration.findIndex;
@@ -10354,7 +10674,7 @@ var doric = (function (exports) {
       getConstructor: function (wrapper, CONSTRUCTOR_NAME, IS_MAP, ADDER) {
         var Constructor = wrapper(function (that, iterable) {
           anInstance(that, Prototype);
-          setInternalState$a(that, {
+          setInternalState$b(that, {
             type: CONSTRUCTOR_NAME,
             id: id++,
             frozen: undefined
@@ -10429,8 +10749,6 @@ var doric = (function (exports) {
 
 
     var IS_IE11 = !global_1.ActiveXObject && 'ActiveXObject' in global_1;
-    // eslint-disable-next-line es/no-object-isextensible -- safe
-    var isExtensible = Object.isExtensible;
     var InternalWeakMap;
 
     var wrapper = function (init) {
@@ -10456,28 +10774,28 @@ var doric = (function (exports) {
       var nativeSet = functionUncurryThis(WeakMapPrototype.set);
       redefineAll(WeakMapPrototype, {
         'delete': function (key) {
-          if (isObject(key) && !isExtensible(key)) {
+          if (isObject(key) && !objectIsExtensible(key)) {
             var state = enforceIternalState(this);
             if (!state.frozen) { state.frozen = new InternalWeakMap(); }
             return nativeDelete(this, key) || state.frozen['delete'](key);
           } return nativeDelete(this, key);
         },
         has: function has(key) {
-          if (isObject(key) && !isExtensible(key)) {
+          if (isObject(key) && !objectIsExtensible(key)) {
             var state = enforceIternalState(this);
             if (!state.frozen) { state.frozen = new InternalWeakMap(); }
             return nativeHas(this, key) || state.frozen.has(key);
           } return nativeHas(this, key);
         },
         get: function get(key) {
-          if (isObject(key) && !isExtensible(key)) {
+          if (isObject(key) && !objectIsExtensible(key)) {
             var state = enforceIternalState(this);
             if (!state.frozen) { state.frozen = new InternalWeakMap(); }
             return nativeHas(this, key) ? nativeGet(this, key) : state.frozen.get(key);
           } return nativeGet(this, key);
         },
         set: function set(key, value) {
-          if (isObject(key) && !isExtensible(key)) {
+          if (isObject(key) && !objectIsExtensible(key)) {
             var state = enforceIternalState(this);
             if (!state.frozen) { state.frozen = new InternalWeakMap(); }
             nativeHas(this, key) ? nativeSet(this, key, value) : state.frozen.set(key, value);
@@ -10523,8 +10841,9 @@ var doric = (function (exports) {
 
     var Promise$3 = getBuiltIn('Promise');
 
-    var setInternalState$9 = internalState.set;
-    var getInternalState$7 = internalState.get;
+    var ASYNC_FROM_SYNC_ITERATOR = 'AsyncFromSyncIterator';
+    var setInternalState$a = internalState.set;
+    var getInternalState$7 = internalState.getterFor(ASYNC_FROM_SYNC_ITERATOR);
 
     var asyncFromSyncIteratorContinuation = function (result, resolve, reject) {
       var done = result.done;
@@ -10534,7 +10853,8 @@ var doric = (function (exports) {
     };
 
     var AsyncFromSyncIterator = function AsyncIterator(iterator) {
-      setInternalState$9(this, {
+      setInternalState$a(this, {
+        type: ASYNC_FROM_SYNC_ITERATOR,
         iterator: anObject(iterator),
         next: iterator.next
       });
@@ -10594,7 +10914,7 @@ var doric = (function (exports) {
 
 
     var MAX_SAFE_INTEGER = 0x1FFFFFFFFFFFFF;
-    var TypeError$e = global_1.TypeError;
+    var TypeError$g = global_1.TypeError;
 
     var createMethod$1 = function (TYPE) {
       var IS_TO_ARRAY = TYPE == 0;
@@ -10632,7 +10952,7 @@ var doric = (function (exports) {
           var loop = function () {
             try {
               if (IS_TO_ARRAY && (index > MAX_SAFE_INTEGER) && MAPPING) {
-                throw TypeError$e('The allowed number of iterations has been exceeded');
+                throw TypeError$g('The allowed number of iterations has been exceeded');
               }
               Promise.resolve(anObject(functionCall(next, iterator))).then(function (step) {
                 try {
@@ -10794,8 +11114,8 @@ var doric = (function (exports) {
 
     addToUnscopables('findLastIndex');
 
-    var Array$2 = global_1.Array;
-    var push$9 = functionUncurryThis([].push);
+    var Array$6 = global_1.Array;
+    var push$c = functionUncurryThis([].push);
 
     var arrayGroupBy = function ($this, callbackfn, that, specificConstructor) {
       var O = toObject($this);
@@ -10810,12 +11130,13 @@ var doric = (function (exports) {
         key = toPropertyKey(boundFunction(value, index, O));
         // in some IE10 builds, `hasOwnProperty` returns incorrect result on integer keys
         // but since it's a `null` prototype object, we can safely use `in`
-        if (key in target) { push$9(target[key], value); }
+        if (key in target) { push$c(target[key], value); }
         else { target[key] = [value]; }
       }
+      // TODO: Remove this block from `core-js@4`
       if (specificConstructor) {
         Constructor = specificConstructor(O);
-        if (Constructor !== Array$2) {
+        if (Constructor !== Array$6) {
           for (key in target) { target[key] = arrayFromConstructorAndList(Constructor, target[key]); }
         }
       } return target;
@@ -10826,11 +11147,40 @@ var doric = (function (exports) {
     _export({ target: 'Array', proto: true }, {
       groupBy: function groupBy(callbackfn /* , thisArg */) {
         var thisArg = arguments.length > 1 ? arguments[1] : undefined;
-        return arrayGroupBy(this, callbackfn, thisArg, arraySpeciesConstructor);
+        return arrayGroupBy(this, callbackfn, thisArg);
       }
     });
 
     addToUnscopables('groupBy');
+
+    var Map$5 = getBuiltIn('Map');
+    var MapPrototype$2 = Map$5.prototype;
+    var mapGet$1 = functionUncurryThis(MapPrototype$2.get);
+    var mapHas$2 = functionUncurryThis(MapPrototype$2.has);
+    var mapSet$2 = functionUncurryThis(MapPrototype$2.set);
+    var push$b = functionUncurryThis([].push);
+
+    // `Array.prototype.groupByToMap` method
+    // https://github.com/tc39/proposal-array-grouping
+    _export({ target: 'Array', proto: true }, {
+      groupByToMap: function groupByToMap(callbackfn /* , thisArg */) {
+        var O = toObject(this);
+        var self = indexedObject(O);
+        var boundFunction = functionBindContext(callbackfn, arguments.length > 1 ? arguments[1] : undefined);
+        var map = new Map$5();
+        var length = lengthOfArrayLike(self);
+        var index = 0;
+        var key, value;
+        for (;length > index; index++) {
+          value = self[index];
+          key = boundFunction(value, index, O);
+          if (mapHas$2(map, key)) { push$b(mapGet$1(map, key), value); }
+          else { mapSet$2(map, key, [value]); }
+        } return map;
+      }
+    });
+
+    addToUnscopables('groupByToMap');
 
     // eslint-disable-next-line es/no-object-isfrozen -- safe
     var isFrozen = Object.isFrozen;
@@ -10859,12 +11209,12 @@ var doric = (function (exports) {
       }
     });
 
-    var defineProperty$2 = objectDefineProperty.f;
+    var defineProperty$4 = objectDefineProperty.f;
 
     // `Array.prototype.lastIndex` getter
     // https://github.com/keithamus/proposal-array-last
     if (descriptors && !('lastIndex' in [])) {
-      defineProperty$2(Array.prototype, 'lastIndex', {
+      defineProperty$4(Array.prototype, 'lastIndex', {
         configurable: true,
         get: function lastIndex() {
           var O = toObject(this);
@@ -10876,12 +11226,12 @@ var doric = (function (exports) {
       addToUnscopables('lastIndex');
     }
 
-    var defineProperty$1 = objectDefineProperty.f;
+    var defineProperty$3 = objectDefineProperty.f;
 
     // `Array.prototype.lastIndex` accessor
     // https://github.com/keithamus/proposal-array-last
     if (descriptors && !('lastItem' in [])) {
-      defineProperty$1(Array.prototype, 'lastItem', {
+      defineProperty$3(Array.prototype, 'lastItem', {
         configurable: true,
         get: function lastItem() {
           var O = toObject(this);
@@ -10898,12 +11248,95 @@ var doric = (function (exports) {
       addToUnscopables('lastItem');
     }
 
-    var Map$3 = getBuiltIn('Map');
-    var MapPrototype = Map$3.prototype;
-    var mapForEach = functionUncurryThis(MapPrototype.forEach);
-    var mapHas = functionUncurryThis(MapPrototype.has);
-    var mapSet = functionUncurryThis(MapPrototype.set);
-    var push$8 = functionUncurryThis([].push);
+    // https://tc39.es/proposal-change-array-by-copy/#sec-array.prototype.toReversed
+    // https://tc39.es/proposal-change-array-by-copy/#sec-%typedarray%.prototype.toReversed
+    var arrayToReversed = function (O, C) {
+      var len = lengthOfArrayLike(O);
+      var A = new C(len);
+      var k = 0;
+      for (; k < len; k++) { A[k] = O[len - k - 1]; }
+      return A;
+    };
+
+    var Array$5 = global_1.Array;
+
+    // `Array.prototype.toReversed` method
+    // https://tc39.es/proposal-change-array-by-copy/#sec-array.prototype.toReversed
+    _export({ target: 'Array', proto: true }, {
+      toReversed: function toReversed() {
+        return arrayToReversed(toIndexedObject(this), Array$5);
+      }
+    });
+
+    addToUnscopables('toReversed');
+
+    var Array$4 = global_1.Array;
+    var sort$1 = functionUncurryThis(entryVirtual('Array').sort);
+
+    // `Array.prototype.toSorted` method
+    // https://tc39.es/proposal-change-array-by-copy/#sec-array.prototype.toSorted
+    _export({ target: 'Array', proto: true }, {
+      toSorted: function toSorted(compareFn) {
+        if (compareFn !== undefined) { aCallable(compareFn); }
+        var O = toIndexedObject(this);
+        var A = arrayFromConstructorAndList(Array$4, O);
+        return sort$1(A, compareFn);
+      }
+    });
+
+    addToUnscopables('toSorted');
+
+    var max$1 = Math.max;
+    var min$1 = Math.min;
+
+    // https://tc39.es/proposal-change-array-by-copy/#sec-array.prototype.toSpliced
+    // https://tc39.es/proposal-change-array-by-copy/#sec-%typedarray%.prototype.toSpliced
+    var arrayToSpliced = function (O, C, args) {
+      var start = args[0];
+      var deleteCount = args[1];
+      var len = lengthOfArrayLike(O);
+      var actualStart = toAbsoluteIndex(start, len);
+      var argumentsLength = args.length;
+      var k = 0;
+      var insertCount, actualDeleteCount, newLen, A;
+      if (argumentsLength === 0) {
+        insertCount = actualDeleteCount = 0;
+      } else if (argumentsLength === 1) {
+        insertCount = 0;
+        actualDeleteCount = len - actualStart;
+      } else {
+        insertCount = argumentsLength - 2;
+        actualDeleteCount = min$1(max$1(toIntegerOrInfinity(deleteCount), 0), len - actualStart);
+      }
+      newLen = len + insertCount - actualDeleteCount;
+      A = new C(newLen);
+
+      for (; k < actualStart; k++) { A[k] = O[k]; }
+      for (; k < actualStart + insertCount; k++) { A[k] = args[k - actualStart + 2]; }
+      for (; k < newLen; k++) { A[k] = O[k + actualDeleteCount - insertCount]; }
+
+      return A;
+    };
+
+    var Array$3 = global_1.Array;
+
+    // `Array.prototype.toSpliced` method
+    // https://tc39.es/proposal-change-array-by-copy/#sec-array.prototype.toSpliced
+    _export({ target: 'Array', proto: true }, {
+      // eslint-disable-next-line no-unused-vars -- required for .length
+      toSpliced: function toSpliced(start, deleteCount /* , ...items */) {
+        return arrayToSpliced(toIndexedObject(this), Array$3, arraySlice$1(arguments));
+      }
+    });
+
+    addToUnscopables('toSpliced');
+
+    var Map$4 = getBuiltIn('Map');
+    var MapPrototype$1 = Map$4.prototype;
+    var mapForEach = functionUncurryThis(MapPrototype$1.forEach);
+    var mapHas$1 = functionUncurryThis(MapPrototype$1.has);
+    var mapSet$1 = functionUncurryThis(MapPrototype$1.set);
+    var push$a = functionUncurryThis([].push);
 
     // `Array.prototype.uniqueBy` method
     // https://github.com/tc39/proposal-array-unique
@@ -10911,7 +11344,7 @@ var doric = (function (exports) {
       var that = toObject(this);
       var length = lengthOfArrayLike(that);
       var result = arraySpeciesCreate(that, 0);
-      var map = new Map$3();
+      var map = new Map$4();
       var resolverFunction = resolver != null ? aCallable(resolver) : function (value) {
         return value;
       };
@@ -10919,10 +11352,10 @@ var doric = (function (exports) {
       for (index = 0; index < length; index++) {
         item = that[index];
         key = resolverFunction(item);
-        if (!mapHas(map, key)) { mapSet(map, key, item); }
+        if (!mapHas$1(map, key)) { mapSet$1(map, key, item); }
       }
       mapForEach(map, function (value) {
-        push$8(result, value);
+        push$a(result, value);
       });
       return result;
     };
@@ -10934,6 +11367,31 @@ var doric = (function (exports) {
     });
 
     addToUnscopables('uniqueBy');
+
+    var RangeError$4 = global_1.RangeError;
+
+    // https://tc39.es/proposal-change-array-by-copy/#sec-array.prototype.with
+    // https://tc39.es/proposal-change-array-by-copy/#sec-%typedarray%.prototype.with
+    var arrayWith = function (O, C, index, value) {
+      var len = lengthOfArrayLike(O);
+      var relativeIndex = toIntegerOrInfinity(index);
+      var actualIndex = relativeIndex < 0 ? len + relativeIndex : relativeIndex;
+      if (actualIndex >= len || actualIndex < 0) { throw RangeError$4('Incorrect index'); }
+      var A = new C(len);
+      var k = 0;
+      for (; k < len; k++) { A[k] = k === actualIndex ? value : O[k]; }
+      return A;
+    };
+
+    var Array$2 = global_1.Array;
+
+    // `Array.prototype.with` method
+    // https://tc39.es/proposal-change-array-by-copy/#sec-array.prototype.with
+    _export({ target: 'Array', proto: true }, {
+      'with': function (index, value) {
+        return arrayWith(toIndexedObject(this), Array$2, index, value);
+      }
+    });
 
     // https://github.com/tc39/proposal-iterator-helpers
 
@@ -10966,17 +11424,19 @@ var doric = (function (exports) {
 
     var Promise$2 = getBuiltIn('Promise');
 
-    var setInternalState$8 = internalState.set;
-    var getInternalState$6 = internalState.get;
+    var ASYNC_ITERATOR_PROXY = 'AsyncIteratorProxy';
+    var setInternalState$9 = internalState.set;
+    var getInternalState$6 = internalState.getterFor(ASYNC_ITERATOR_PROXY);
 
     var TO_STRING_TAG$3 = wellKnownSymbol('toStringTag');
 
     var asyncIteratorCreateProxy = function (nextHandler, IS_ITERATOR) {
       var AsyncIteratorProxy = function AsyncIterator(state) {
+        state.type = ASYNC_ITERATOR_PROXY;
         state.next = aCallable(state.iterator.next);
         state.done = false;
         state.ignoreArgument = !IS_ITERATOR;
-        setInternalState$8(this, state);
+        setInternalState$9(this, state);
       };
 
       AsyncIteratorProxy.prototype = redefineAll(objectCreate(asyncIteratorPrototype), {
@@ -11310,7 +11770,7 @@ var doric = (function (exports) {
 
 
     var Promise$1 = getBuiltIn('Promise');
-    var TypeError$d = global_1.TypeError;
+    var TypeError$f = global_1.TypeError;
 
     _export({ target: 'AsyncIterator', proto: true, real: true }, {
       reduce: function reduce(reducer /* , initialValue */) {
@@ -11326,7 +11786,7 @@ var doric = (function (exports) {
               Promise$1.resolve(anObject(functionCall(next, iterator))).then(function (step) {
                 try {
                   if (anObject(step).done) {
-                    noInitial ? reject(TypeError$d('Reduce of empty iterator with no initial value')) : resolve(accumulator);
+                    noInitial ? reject(TypeError$f('Reduce of empty iterator with no initial value')) : resolve(accumulator);
                   } else {
                     var value = step.value;
                     if (noInitial) {
@@ -11406,18 +11866,18 @@ var doric = (function (exports) {
     var INCORRECT_RANGE = 'Incorrect Number.range arguments';
     var NUMERIC_RANGE_ITERATOR = 'NumericRangeIterator';
 
-    var setInternalState$7 = internalState.set;
+    var setInternalState$8 = internalState.set;
     var getInternalState$5 = internalState.getterFor(NUMERIC_RANGE_ITERATOR);
 
-    var RangeError$2 = global_1.RangeError;
-    var TypeError$c = global_1.TypeError;
+    var RangeError$3 = global_1.RangeError;
+    var TypeError$e = global_1.TypeError;
 
     var $RangeIterator = createIteratorConstructor(function NumericRangeIterator(start, end, option, type, zero, one) {
       if (typeof start != type || (end !== Infinity && end !== -Infinity && typeof end != type)) {
-        throw new TypeError$c(INCORRECT_RANGE);
+        throw new TypeError$e(INCORRECT_RANGE);
       }
       if (start === Infinity || start === -Infinity) {
-        throw new RangeError$2(INCORRECT_RANGE);
+        throw new RangeError$3(INCORRECT_RANGE);
       }
       var ifIncrease = end > start;
       var inclusiveEnd = false;
@@ -11430,20 +11890,20 @@ var doric = (function (exports) {
       } else if (typeof option == type) {
         step = option;
       } else {
-        throw new TypeError$c(INCORRECT_RANGE);
+        throw new TypeError$e(INCORRECT_RANGE);
       }
       if (step == null) {
         step = ifIncrease ? one : -one;
       }
       if (typeof step != type) {
-        throw new TypeError$c(INCORRECT_RANGE);
+        throw new TypeError$e(INCORRECT_RANGE);
       }
       if (step === Infinity || step === -Infinity || (step === zero && start !== end)) {
-        throw new RangeError$2(INCORRECT_RANGE);
+        throw new RangeError$3(INCORRECT_RANGE);
       }
       // eslint-disable-next-line no-self-compare -- NaN check
       var hitsEnd = start != start || end != end || step != step || (end > start) !== (step > zero);
-      setInternalState$7(this, {
+      setInternalState$8(this, {
         type: NUMERIC_RANGE_ITERATOR,
         start: start,
         end: end,
@@ -11524,9 +11984,9 @@ var doric = (function (exports) {
 
 
 
-    var Object$2 = global_1.Object;
-    var TypeError$b = global_1.TypeError;
-    var Map$2 = getBuiltIn('Map');
+    var Object$3 = global_1.Object;
+    var TypeError$d = global_1.TypeError;
+    var Map$3 = getBuiltIn('Map');
     var WeakMap$2 = getBuiltIn('WeakMap');
 
     var Node = function () {
@@ -11545,7 +12005,7 @@ var doric = (function (exports) {
     Node.prototype.next = function (i, it, IS_OBJECT) {
       var store = IS_OBJECT
         ? this.objectsByIndex[i] || (this.objectsByIndex[i] = new WeakMap$2())
-        : this.primitives || (this.primitives = new Map$2());
+        : this.primitives || (this.primitives = new Map$3());
       var entry = store.get(it);
       if (!entry) { store.set(it, entry = new Node()); }
       return entry;
@@ -11563,13 +12023,13 @@ var doric = (function (exports) {
       for (i = 0; i < length; i++) {
         if (isObject(it = arguments$1[i])) { active = active.next(i, it, true); }
       }
-      if (this === Object$2 && active === root) { throw TypeError$b('Composite keys must contain a non-primitive component'); }
+      if (this === Object$3 && active === root) { throw TypeError$d('Composite keys must contain a non-primitive component'); }
       for (i = 0; i < length; i++) {
         if (!isObject(it = arguments$1[i])) { active = active.next(i, it, false); }
       } return active;
     };
 
-    var Object$1 = global_1.Object;
+    var Object$2 = global_1.Object;
 
     var initializer = function () {
       var freeze = getBuiltIn('Object', 'freeze');
@@ -11579,7 +12039,7 @@ var doric = (function (exports) {
     // https://github.com/tc39/proposal-richer-keys/tree/master/compositeKey
     _export({ global: true }, {
       compositeKey: function compositeKey$1() {
-        return functionApply(compositeKey, Object$1, arguments).get('object', initializer);
+        return functionApply(compositeKey, Object$2, arguments).get('object', initializer);
       }
     });
 
@@ -11588,6 +12048,43 @@ var doric = (function (exports) {
       compositeSymbol: function compositeSymbol() {
         if (arguments.length == 1 && typeof arguments[0] == 'string') { return getBuiltIn('Symbol')['for'](arguments[0]); }
         return functionApply(compositeKey, null, arguments).get('symbol', getBuiltIn('Symbol'));
+      }
+    });
+
+    // eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
+    var getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
+    var classRegExp = /^\s*class\b/;
+    var exec$3 = functionUncurryThis(classRegExp.exec);
+
+    var isClassConstructor = function (argument) {
+      try {
+        // `Function#toString` throws on some built-it function in some legacy engines
+        // (for example, `DOMQuad` and similar in FF41-)
+        if (!descriptors || !exec$3(classRegExp, inspectSource(argument))) { return false; }
+      } catch (error) { /* empty */ }
+      var prototype = getOwnPropertyDescriptor(argument, 'prototype');
+      return !!prototype && hasOwnProperty_1(prototype, 'writable') && !prototype.writable;
+    };
+
+    // `Function.isCallable` method
+    // https://github.com/caitp/TC39-Proposals/blob/trunk/tc39-reflect-isconstructor-iscallable.md
+    _export({ target: 'Function', stat: true, sham: true }, {
+      isCallable: function isCallable$1(argument) {
+        return isCallable(argument) && !isClassConstructor(argument);
+      }
+    });
+
+    // `Function.isConstructor` method
+    // https://github.com/caitp/TC39-Proposals/blob/trunk/tc39-reflect-isconstructor-iscallable.md
+    _export({ target: 'Function', stat: true }, {
+      isConstructor: isConstructor
+    });
+
+    // `Function.prototype.unThis` method
+    // https://github.com/js-choi/proposal-function-un-this
+    _export({ target: 'Function', proto: true }, {
+      unThis: function unThis() {
+        return functionUncurryThis(aCallable(this));
       }
     });
 
@@ -11633,17 +12130,19 @@ var doric = (function (exports) {
 
     var IteratorPrototype$1 = iteratorsCore.IteratorPrototype;
 
-    var setInternalState$6 = internalState.set;
-    var getInternalState$4 = internalState.get;
+    var ITERATOR_PROXY = 'IteratorProxy';
+    var setInternalState$7 = internalState.set;
+    var getInternalState$4 = internalState.getterFor(ITERATOR_PROXY);
 
     var TO_STRING_TAG$1 = wellKnownSymbol('toStringTag');
 
     var iteratorCreateProxy = function (nextHandler, IS_ITERATOR) {
       var IteratorProxy = function Iterator(state) {
+        state.type = ITERATOR_PROXY;
         state.next = aCallable(state.iterator.next);
         state.done = false;
         state.ignoreArg = !IS_ITERATOR;
-        setInternalState$6(this, state);
+        setInternalState$7(this, state);
       };
 
       IteratorProxy.prototype = redefineAll(objectCreate(IteratorPrototype$1), {
@@ -11804,7 +12303,7 @@ var doric = (function (exports) {
 
 
 
-    var TypeError$a = global_1.TypeError;
+    var TypeError$c = global_1.TypeError;
 
     var IteratorProxy$3 = iteratorCreateProxy(function () {
       var iterator = this.iterator;
@@ -11827,7 +12326,7 @@ var doric = (function (exports) {
           iteratorMethod = getIteratorMethod(mapped);
 
           if (!iteratorMethod) {
-            throw TypeError$a('.flatMap callback should return an iterable object');
+            throw TypeError$c('.flatMap callback should return an iterable object');
           }
 
           this.innerIterator = innerIterator = anObject(functionCall(iteratorMethod, mapped));
@@ -11922,7 +12421,7 @@ var doric = (function (exports) {
 
 
 
-    var TypeError$9 = global_1.TypeError;
+    var TypeError$b = global_1.TypeError;
 
     _export({ target: 'Iterator', proto: true, real: true }, {
       reduce: function reduce(reducer /* , initialValue */) {
@@ -11938,7 +12437,7 @@ var doric = (function (exports) {
             accumulator = reducer(accumulator, value);
           }
         }, { IS_ITERATOR: true });
-        if (noInitial) { throw TypeError$9('Reduce of empty iterator with no initial value'); }
+        if (noInitial) { throw TypeError$b('Reduce of empty iterator with no initial value'); }
         return accumulator;
       }
     });
@@ -11992,13 +12491,23 @@ var doric = (function (exports) {
 
 
 
-    var push$7 = [].push;
+    var push$9 = [].push;
 
     _export({ target: 'Iterator', proto: true, real: true }, {
       toArray: function toArray() {
         var result = [];
-        iterate(anObject(this), push$7, { that: result, IS_ITERATOR: true });
+        iterate(anObject(this), push$9, { that: result, IS_ITERATOR: true });
         return result;
+      }
+    });
+
+    // https://github.com/tc39/proposal-iterator-helpers
+
+
+
+    _export({ target: 'Iterator', proto: true, real: true }, {
+      toAsync: function toAsync() {
+        return new asyncFromSyncIterator(this);
       }
     });
 
@@ -12110,7 +12619,7 @@ var doric = (function (exports) {
 
 
 
-    var push$6 = [].push;
+    var push$8 = [].push;
 
     var collectionFrom = function from(source /* , mapFn, thisArg */) {
       var length = arguments.length;
@@ -12125,10 +12634,10 @@ var doric = (function (exports) {
         n = 0;
         boundFunction = functionBindContext(mapFn, length > 2 ? arguments[2] : undefined);
         iterate(source, function (nextItem) {
-          functionCall(push$6, array, boundFunction(nextItem, n++));
+          functionCall(push$8, array, boundFunction(nextItem, n++));
         });
       } else {
-        iterate(source, push$6, { that: array });
+        iterate(source, push$8, { that: array });
       }
       return new this(array);
     };
@@ -12139,7 +12648,7 @@ var doric = (function (exports) {
       from: collectionFrom
     });
 
-    var push$5 = functionUncurryThis([].push);
+    var push$7 = functionUncurryThis([].push);
 
     // `Map.groupBy` method
     // https://github.com/tc39/proposal-collection-methods
@@ -12154,7 +12663,7 @@ var doric = (function (exports) {
         iterate(iterator, function (element) {
           var derivedKey = keyDerivative(element);
           if (!functionCall(has, newMap, derivedKey)) { functionCall(set, newMap, derivedKey, [element]); }
-          else { push$5(functionCall(get, newMap, derivedKey), element); }
+          else { push$7(functionCall(get, newMap, derivedKey), element); }
         }, { IS_ITERATOR: true });
         return newMap;
       }
@@ -12262,7 +12771,7 @@ var doric = (function (exports) {
       of: collectionOf
     });
 
-    var TypeError$8 = global_1.TypeError;
+    var TypeError$a = global_1.TypeError;
 
     // `Map.prototype.reduce` method
     // https://github.com/tc39/proposal-collection-methods
@@ -12281,7 +12790,7 @@ var doric = (function (exports) {
             accumulator = callbackfn(accumulator, value, key, map);
           }
         }, { AS_ENTRIES: true, IS_ITERATOR: true });
-        if (noInitial) { throw TypeError$8('Reduce of empty map with no initial value'); }
+        if (noInitial) { throw TypeError$a('Reduce of empty map with no initial value'); }
         return accumulator;
       }
     });
@@ -12299,7 +12808,7 @@ var doric = (function (exports) {
       }
     });
 
-    var TypeError$7 = global_1.TypeError;
+    var TypeError$9 = global_1.TypeError;
 
     // `Set.prototype.update` method
     // https://github.com/tc39/proposal-collection-methods
@@ -12313,7 +12822,7 @@ var doric = (function (exports) {
         aCallable(callback);
         var isPresentInMap = functionCall(has, map, key);
         if (!isPresentInMap && length < 3) {
-          throw TypeError$7('Updating absent value');
+          throw TypeError$9('Updating absent value');
         }
         var value = isPresentInMap ? functionCall(get, map, key) : aCallable(length > 2 ? arguments[2] : undefined)(key, map);
         functionCall(set, map, key, callback(value, key, map));
@@ -12321,7 +12830,7 @@ var doric = (function (exports) {
       }
     });
 
-    var TypeError$6 = global_1.TypeError;
+    var TypeError$8 = global_1.TypeError;
 
     // `Map.prototype.upsert` method
     // https://github.com/thumbsupep/proposal-upsert
@@ -12333,7 +12842,7 @@ var doric = (function (exports) {
       var insertFn = arguments.length > 2 ? arguments[2] : undefined;
       var value;
       if (!isCallable(updateFn) && !isCallable(insertFn)) {
-        throw TypeError$6('At least one callback required');
+        throw TypeError$8('At least one callback required');
       }
       if (functionCall(has, map, key)) {
         value = functionCall(get, map, key);
@@ -12484,12 +12993,12 @@ var doric = (function (exports) {
     var SEEDED_RANDOM = 'Seeded Random';
     var SEEDED_RANDOM_GENERATOR = SEEDED_RANDOM + ' Generator';
     var SEED_TYPE_ERROR = 'Math.seededPRNG() argument should have a "seed" field with a finite value.';
-    var setInternalState$5 = internalState.set;
+    var setInternalState$6 = internalState.set;
     var getInternalState$3 = internalState.getterFor(SEEDED_RANDOM_GENERATOR);
-    var TypeError$5 = global_1.TypeError;
+    var TypeError$7 = global_1.TypeError;
 
     var $SeededRandomGenerator = createIteratorConstructor(function SeededRandomGenerator(seed) {
-      setInternalState$5(this, {
+      setInternalState$6(this, {
         type: SEEDED_RANDOM_GENERATOR,
         seed: seed % 2147483647
       });
@@ -12505,7 +13014,7 @@ var doric = (function (exports) {
     _export({ target: 'Math', stat: true, forced: true }, {
       seededPRNG: function seededPRNG(it) {
         var seed = anObject(it).seed;
-        if (!numberIsFinite(seed)) { throw TypeError$5(SEED_TYPE_ERROR); }
+        if (!numberIsFinite(seed)) { throw TypeError$7(SEED_TYPE_ERROR); }
         return new $SeededRandomGenerator(seed);
       }
     });
@@ -12537,9 +13046,9 @@ var doric = (function (exports) {
 
     var INVALID_NUMBER_REPRESENTATION = 'Invalid number representation';
     var INVALID_RADIX = 'Invalid radix';
-    var RangeError$1 = global_1.RangeError;
-    var SyntaxError = global_1.SyntaxError;
-    var TypeError$4 = global_1.TypeError;
+    var RangeError$2 = global_1.RangeError;
+    var SyntaxError$1 = global_1.SyntaxError;
+    var TypeError$6 = global_1.TypeError;
     var valid = /^[\da-z]+$/;
     var charAt$4 = functionUncurryThis(''.charAt);
     var exec$2 = functionUncurryThis(valid.exec);
@@ -12552,17 +13061,17 @@ var doric = (function (exports) {
       fromString: function fromString(string, radix) {
         var sign = 1;
         var R, mathNum;
-        if (typeof string != 'string') { throw TypeError$4(INVALID_NUMBER_REPRESENTATION); }
-        if (!string.length) { throw SyntaxError(INVALID_NUMBER_REPRESENTATION); }
+        if (typeof string != 'string') { throw TypeError$6(INVALID_NUMBER_REPRESENTATION); }
+        if (!string.length) { throw SyntaxError$1(INVALID_NUMBER_REPRESENTATION); }
         if (charAt$4(string, 0) == '-') {
           sign = -1;
           string = stringSlice$2(string, 1);
-          if (!string.length) { throw SyntaxError(INVALID_NUMBER_REPRESENTATION); }
+          if (!string.length) { throw SyntaxError$1(INVALID_NUMBER_REPRESENTATION); }
         }
         R = radix === undefined ? 10 : toIntegerOrInfinity(radix);
-        if (R < 2 || R > 36) { throw RangeError$1(INVALID_RADIX); }
+        if (R < 2 || R > 36) { throw RangeError$2(INVALID_RADIX); }
         if (!exec$2(valid, string) || numberToString$1(mathNum = numberParseInt(string, R), R) !== string) {
-          throw SyntaxError(INVALID_NUMBER_REPRESENTATION);
+          throw SyntaxError$1(INVALID_NUMBER_REPRESENTATION);
         }
         return sign * mathNum;
       }
@@ -12577,16 +13086,16 @@ var doric = (function (exports) {
     });
 
     var OBJECT_ITERATOR = 'Object Iterator';
-    var setInternalState$4 = internalState.set;
+    var setInternalState$5 = internalState.set;
     var getInternalState$2 = internalState.getterFor(OBJECT_ITERATOR);
 
     var objectIterator = createIteratorConstructor(function ObjectIterator(source, mode) {
       var object = toObject(source);
-      setInternalState$4(this, {
+      setInternalState$5(this, {
         type: OBJECT_ITERATOR,
         mode: mode,
         object: object,
-        keys: objectKeys(object),
+        keys: objectKeys$1(object),
         index: 0
       });
     }, 'Object', function next() {
@@ -12643,7 +13152,7 @@ var doric = (function (exports) {
 
 
 
-    var defineProperty = objectDefineProperty.f;
+    var defineProperty$2 = objectDefineProperty.f;
 
 
 
@@ -12653,42 +13162,51 @@ var doric = (function (exports) {
 
 
 
-    var OBSERVABLE = wellKnownSymbol('observable');
-    var getInternalState$1 = internalState.get;
-    var setInternalState$3 = internalState.set;
+    var $$OBSERVABLE = wellKnownSymbol('observable');
+    var OBSERVABLE = 'Observable';
+    var SUBSCRIPTION = 'Subscription';
+    var SUBSCRIPTION_OBSERVER = 'SubscriptionObserver';
+    var getterFor$1 = internalState.getterFor;
+    var setInternalState$4 = internalState.set;
+    var getObservableInternalState = getterFor$1(OBSERVABLE);
+    var getSubscriptionInternalState = getterFor$1(SUBSCRIPTION);
+    var getSubscriptionObserverInternalState = getterFor$1(SUBSCRIPTION_OBSERVER);
     var Array$1 = global_1.Array;
 
-    var cleanupSubscription = function (subscriptionState) {
-      var cleanup = subscriptionState.cleanup;
-      if (cleanup) {
-        subscriptionState.cleanup = undefined;
-        try {
-          cleanup();
-        } catch (error) {
-          hostReportErrors(error);
+    var SubscriptionState = function (observer) {
+      this.observer = anObject(observer);
+      this.cleanup = undefined;
+      this.subscriptionObserver = undefined;
+    };
+
+    SubscriptionState.prototype = {
+      type: SUBSCRIPTION,
+      clean: function () {
+        var cleanup = this.cleanup;
+        if (cleanup) {
+          this.cleanup = undefined;
+          try {
+            cleanup();
+          } catch (error) {
+            hostReportErrors(error);
+          }
         }
+      },
+      close: function () {
+        if (!descriptors) {
+          var subscription = this.facade;
+          var subscriptionObserver = this.subscriptionObserver;
+          subscription.closed = true;
+          if (subscriptionObserver) { subscriptionObserver.closed = true; }
+        } this.observer = undefined;
+      },
+      isClosed: function () {
+        return this.observer === undefined;
       }
     };
 
-    var subscriptionClosed = function (subscriptionState) {
-      return subscriptionState.observer === undefined;
-    };
-
-    var close = function (subscriptionState) {
-      var subscription = subscriptionState.facade;
-      if (!descriptors) {
-        subscription.closed = true;
-        var subscriptionObserver = subscriptionState.subscriptionObserver;
-        if (subscriptionObserver) { subscriptionObserver.closed = true; }
-      } subscriptionState.observer = undefined;
-    };
-
     var Subscription = function (observer, subscriber) {
-      var subscriptionState = setInternalState$3(this, {
-        cleanup: undefined,
-        observer: anObject(observer),
-        subscriptionObserver: undefined
-      });
+      var subscriptionState = setInternalState$4(this, new SubscriptionState(observer));
       var start;
       if (!descriptors) { this.closed = false; }
       try {
@@ -12696,8 +13214,8 @@ var doric = (function (exports) {
       } catch (error) {
         hostReportErrors(error);
       }
-      if (subscriptionClosed(subscriptionState)) { return; }
-      var subscriptionObserver = subscriptionState.subscriptionObserver = new SubscriptionObserver(this);
+      if (subscriptionState.isClosed()) { return; }
+      var subscriptionObserver = subscriptionState.subscriptionObserver = new SubscriptionObserver(subscriptionState);
       try {
         var cleanup = subscriber(subscriptionObserver);
         var subscription = cleanup;
@@ -12707,35 +13225,38 @@ var doric = (function (exports) {
       } catch (error$1) {
         subscriptionObserver.error(error$1);
         return;
-      } if (subscriptionClosed(subscriptionState)) { cleanupSubscription(subscriptionState); }
+      } if (subscriptionState.isClosed()) { subscriptionState.clean(); }
     };
 
     Subscription.prototype = redefineAll({}, {
       unsubscribe: function unsubscribe() {
-        var subscriptionState = getInternalState$1(this);
-        if (!subscriptionClosed(subscriptionState)) {
-          close(subscriptionState);
-          cleanupSubscription(subscriptionState);
+        var subscriptionState = getSubscriptionInternalState(this);
+        if (!subscriptionState.isClosed()) {
+          subscriptionState.close();
+          subscriptionState.clean();
         }
       }
     });
 
-    if (descriptors) { defineProperty(Subscription.prototype, 'closed', {
+    if (descriptors) { defineProperty$2(Subscription.prototype, 'closed', {
       configurable: true,
       get: function () {
-        return subscriptionClosed(getInternalState$1(this));
+        return getSubscriptionInternalState(this).isClosed();
       }
     }); }
 
-    var SubscriptionObserver = function (subscription) {
-      setInternalState$3(this, { subscription: subscription });
+    var SubscriptionObserver = function (subscriptionState) {
+      setInternalState$4(this, {
+        type: SUBSCRIPTION_OBSERVER,
+        subscriptionState: subscriptionState
+      });
       if (!descriptors) { this.closed = false; }
     };
 
     SubscriptionObserver.prototype = redefineAll({}, {
       next: function next(value) {
-        var subscriptionState = getInternalState$1(getInternalState$1(this).subscription);
-        if (!subscriptionClosed(subscriptionState)) {
+        var subscriptionState = getSubscriptionObserverInternalState(this).subscriptionState;
+        if (!subscriptionState.isClosed()) {
           var observer = subscriptionState.observer;
           try {
             var nextMethod = getMethod(observer, 'next');
@@ -12746,44 +13267,47 @@ var doric = (function (exports) {
         }
       },
       error: function error(value) {
-        var subscriptionState = getInternalState$1(getInternalState$1(this).subscription);
-        if (!subscriptionClosed(subscriptionState)) {
+        var subscriptionState = getSubscriptionObserverInternalState(this).subscriptionState;
+        if (!subscriptionState.isClosed()) {
           var observer = subscriptionState.observer;
-          close(subscriptionState);
+          subscriptionState.close();
           try {
             var errorMethod = getMethod(observer, 'error');
             if (errorMethod) { functionCall(errorMethod, observer, value); }
             else { hostReportErrors(value); }
           } catch (err) {
             hostReportErrors(err);
-          } cleanupSubscription(subscriptionState);
+          } subscriptionState.clean();
         }
       },
       complete: function complete() {
-        var subscriptionState = getInternalState$1(getInternalState$1(this).subscription);
-        if (!subscriptionClosed(subscriptionState)) {
+        var subscriptionState = getSubscriptionObserverInternalState(this).subscriptionState;
+        if (!subscriptionState.isClosed()) {
           var observer = subscriptionState.observer;
-          close(subscriptionState);
+          subscriptionState.close();
           try {
             var completeMethod = getMethod(observer, 'complete');
             if (completeMethod) { functionCall(completeMethod, observer); }
           } catch (error) {
             hostReportErrors(error);
-          } cleanupSubscription(subscriptionState);
+          } subscriptionState.clean();
         }
       }
     });
 
-    if (descriptors) { defineProperty(SubscriptionObserver.prototype, 'closed', {
+    if (descriptors) { defineProperty$2(SubscriptionObserver.prototype, 'closed', {
       configurable: true,
       get: function () {
-        return subscriptionClosed(getInternalState$1(getInternalState$1(this).subscription));
+        return getSubscriptionObserverInternalState(this).subscriptionState.isClosed();
       }
     }); }
 
     var $Observable = function Observable(subscriber) {
       anInstance(this, ObservablePrototype);
-      setInternalState$3(this, { subscriber: aCallable(subscriber) });
+      setInternalState$4(this, {
+        type: OBSERVABLE,
+        subscriber: aCallable(subscriber)
+      });
     };
 
     var ObservablePrototype = $Observable.prototype;
@@ -12795,14 +13319,14 @@ var doric = (function (exports) {
           next: observer,
           error: length > 1 ? arguments[1] : undefined,
           complete: length > 2 ? arguments[2] : undefined
-        } : isObject(observer) ? observer : {}, getInternalState$1(this).subscriber);
+        } : isObject(observer) ? observer : {}, getObservableInternalState(this).subscriber);
       }
     });
 
     redefineAll($Observable, {
       from: function from(x) {
         var C = isConstructor(this) ? this : $Observable;
-        var observableMethod = getMethod(anObject(x), OBSERVABLE);
+        var observableMethod = getMethod(anObject(x), $$OBSERVABLE);
         if (observableMethod) {
           var observable = anObject(functionCall(observableMethod, x));
           return observable.constructor === C ? observable : new C(function (observer) {
@@ -12835,13 +13359,13 @@ var doric = (function (exports) {
       }
     });
 
-    redefine(ObservablePrototype, OBSERVABLE, function () { return this; });
+    redefine(ObservablePrototype, $$OBSERVABLE, function () { return this; });
 
     _export({ global: true }, {
       Observable: $Observable
     });
 
-    setSpecies('Observable');
+    setSpecies(OBSERVABLE);
 
     // `Promise.try` method
     // https://github.com/tc39/proposal-promise-try
@@ -12861,9 +13385,9 @@ var doric = (function (exports) {
 
 
 
-    var Map$1 = getBuiltIn('Map');
+    var Map$2 = getBuiltIn('Map');
     var WeakMap$1 = getBuiltIn('WeakMap');
-    var push$4 = functionUncurryThis([].push);
+    var push$6 = functionUncurryThis([].push);
 
     var metadata = shared('metadata');
     var store$1 = metadata.store || (metadata.store = new WeakMap$1());
@@ -12872,12 +13396,12 @@ var doric = (function (exports) {
       var targetMetadata = store$1.get(target);
       if (!targetMetadata) {
         if (!create) { return; }
-        store$1.set(target, targetMetadata = new Map$1());
+        store$1.set(target, targetMetadata = new Map$2());
       }
       var keyMetadata = targetMetadata.get(targetKey);
       if (!keyMetadata) {
         if (!create) { return; }
-        targetMetadata.set(targetKey, keyMetadata = new Map$1());
+        targetMetadata.set(targetKey, keyMetadata = new Map$2());
       } return keyMetadata;
     };
 
@@ -12898,7 +13422,7 @@ var doric = (function (exports) {
     var ordinaryOwnMetadataKeys$2 = function (target, targetKey) {
       var metadataMap = getOrCreateMetadataMap$1(target, targetKey, false);
       var keys = [];
-      if (metadataMap) { metadataMap.forEach(function (_, key) { push$4(keys, key); }); }
+      if (metadataMap) { metadataMap.forEach(function (_, key) { push$6(keys, key); }); }
       return keys;
     };
 
@@ -13204,7 +13728,7 @@ var doric = (function (exports) {
     });
 
     var arrayJoin = functionUncurryThis([].join);
-    var push$3 = [].push;
+    var push$5 = [].push;
 
     // `Set.prototype.join` method
     // https://github.com/tc39/proposal-collection-methods
@@ -13214,7 +13738,7 @@ var doric = (function (exports) {
         var iterator = getSetIterator(set);
         var sep = separator === undefined ? ',' : toString_1(separator);
         var result = [];
-        iterate(iterator, push$3, { that: result, IS_ITERATOR: true });
+        iterate(iterator, push$5, { that: result, IS_ITERATOR: true });
         return arrayJoin(result, sep);
       }
     });
@@ -13241,7 +13765,7 @@ var doric = (function (exports) {
       of: collectionOf
     });
 
-    var TypeError$3 = global_1.TypeError;
+    var TypeError$5 = global_1.TypeError;
 
     // `Set.prototype.reduce` method
     // https://github.com/tc39/proposal-collection-methods
@@ -13260,7 +13784,7 @@ var doric = (function (exports) {
             accumulator = callbackfn(accumulator, value, value, set);
           }
         }, { IS_ITERATOR: true });
-        if (noInitial) { throw TypeError$3('Reduce of empty set with no initial value'); }
+        if (noInitial) { throw TypeError$5('Reduce of empty set with no initial value'); }
         return accumulator;
       }
     });
@@ -13307,33 +13831,66 @@ var doric = (function (exports) {
     var charAt$3 = stringMultibyte.charAt;
 
 
+
+
+
     var FORCED$1 = fails(function () {
-      return '𠮷'.at(0) !== '𠮷';
+      return '𠮷'.at(-2) !== '𠮷';
     });
 
     // `String.prototype.at` method
     // https://github.com/mathiasbynens/String.prototype.at
     _export({ target: 'String', proto: true, forced: FORCED$1 }, {
-      at: function at(pos) {
-        return charAt$3(this, pos);
+      at: function at(index) {
+        var S = toString_1(requireObjectCoercible(this));
+        var len = S.length;
+        var relativeIndex = toIntegerOrInfinity(index);
+        var k = relativeIndex >= 0 ? relativeIndex : len + relativeIndex;
+        return (k < 0 || k >= len) ? undefined : charAt$3(S, k);
+      }
+    });
+
+    var TypeError$4 = global_1.TypeError;
+    var ArrayPrototype = Array.prototype;
+    var push$4 = functionUncurryThis(ArrayPrototype.push);
+    var join$3 = functionUncurryThis(ArrayPrototype.join);
+
+    // `String.cooked` method
+    // https://github.com/tc39/proposal-string-cooked
+    _export({ target: 'String', stat: true }, {
+      cooked: function cooked(template /* , ...substitutions */) {
+        var arguments$1 = arguments;
+
+        var cookedTemplate = toIndexedObject(template);
+        var literalSegments = lengthOfArrayLike(cookedTemplate);
+        var argumentsLength = arguments.length;
+        var elements = [];
+        var i = 0;
+        while (literalSegments > i) {
+          var nextVal = cookedTemplate[i++];
+          if (nextVal === undefined) { throw TypeError$4('Incorrect template'); }
+          push$4(elements, toString_1(nextVal));
+          if (i === literalSegments) { return join$3(elements, ''); }
+          if (i < argumentsLength) { push$4(elements, toString_1(arguments$1[i])); }
+        }
       }
     });
 
     var codeAt$1 = stringMultibyte.codeAt;
     var charAt$2 = stringMultibyte.charAt;
     var STRING_ITERATOR = 'String Iterator';
-    var setInternalState$2 = internalState.set;
-    var getInternalState = internalState.getterFor(STRING_ITERATOR);
+    var setInternalState$3 = internalState.set;
+    var getInternalState$1 = internalState.getterFor(STRING_ITERATOR);
 
     // TODO: unify with String#@@iterator
     var $StringIterator = createIteratorConstructor(function StringIterator(string) {
-      setInternalState$2(this, {
+      setInternalState$3(this, {
         type: STRING_ITERATOR,
         string: string,
         index: 0
       });
     }, 'String', function next() {
-      var state = getInternalState(this);
+      var state = getInternalState$1(this);
       var string = state.string;
       var index = state.index;
       var point;
@@ -13383,6 +13940,14 @@ var doric = (function (exports) {
 
     defineWellKnownSymbol('replaceAll');
 
+    // TODO: Remove from `core-js@4`
+
+
+
+
+
+
+
     var aTypedArrayConstructor = arrayBufferViewCore.aTypedArrayConstructor;
     var exportTypedArrayStaticMethod = arrayBufferViewCore.exportTypedArrayStaticMethod;
 
@@ -13406,70 +13971,120 @@ var doric = (function (exports) {
     var $filterReject$1 = arrayIteration.filterReject;
 
 
-    var aTypedArray$5 = arrayBufferViewCore.aTypedArray;
-    var exportTypedArrayMethod$5 = arrayBufferViewCore.exportTypedArrayMethod;
+    var aTypedArray$9 = arrayBufferViewCore.aTypedArray;
+    var exportTypedArrayMethod$9 = arrayBufferViewCore.exportTypedArrayMethod;
 
     // `%TypedArray%.prototype.filterOut` method
     // https://github.com/tc39/proposal-array-filtering
-    exportTypedArrayMethod$5('filterOut', function filterOut(callbackfn /* , thisArg */) {
-      var list = $filterReject$1(aTypedArray$5(this), callbackfn, arguments.length > 1 ? arguments[1] : undefined);
+    exportTypedArrayMethod$9('filterOut', function filterOut(callbackfn /* , thisArg */) {
+      var list = $filterReject$1(aTypedArray$9(this), callbackfn, arguments.length > 1 ? arguments[1] : undefined);
       return typedArrayFromSpeciesAndList(this, list);
     });
 
     var $filterReject = arrayIteration.filterReject;
 
 
-    var aTypedArray$4 = arrayBufferViewCore.aTypedArray;
-    var exportTypedArrayMethod$4 = arrayBufferViewCore.exportTypedArrayMethod;
+    var aTypedArray$8 = arrayBufferViewCore.aTypedArray;
+    var exportTypedArrayMethod$8 = arrayBufferViewCore.exportTypedArrayMethod;
 
     // `%TypedArray%.prototype.filterReject` method
     // https://github.com/tc39/proposal-array-filtering
-    exportTypedArrayMethod$4('filterReject', function filterReject(callbackfn /* , thisArg */) {
-      var list = $filterReject(aTypedArray$4(this), callbackfn, arguments.length > 1 ? arguments[1] : undefined);
+    exportTypedArrayMethod$8('filterReject', function filterReject(callbackfn /* , thisArg */) {
+      var list = $filterReject(aTypedArray$8(this), callbackfn, arguments.length > 1 ? arguments[1] : undefined);
       return typedArrayFromSpeciesAndList(this, list);
     });
 
     var $findLast = arrayIterationFromLast.findLast;
 
-    var aTypedArray$3 = arrayBufferViewCore.aTypedArray;
-    var exportTypedArrayMethod$3 = arrayBufferViewCore.exportTypedArrayMethod;
+    var aTypedArray$7 = arrayBufferViewCore.aTypedArray;
+    var exportTypedArrayMethod$7 = arrayBufferViewCore.exportTypedArrayMethod;
 
     // `%TypedArray%.prototype.findLast` method
     // https://github.com/tc39/proposal-array-find-from-last
-    exportTypedArrayMethod$3('findLast', function findLast(predicate /* , thisArg */) {
-      return $findLast(aTypedArray$3(this), predicate, arguments.length > 1 ? arguments[1] : undefined);
+    exportTypedArrayMethod$7('findLast', function findLast(predicate /* , thisArg */) {
+      return $findLast(aTypedArray$7(this), predicate, arguments.length > 1 ? arguments[1] : undefined);
     });
 
     var $findLastIndex = arrayIterationFromLast.findLastIndex;
 
-    var aTypedArray$2 = arrayBufferViewCore.aTypedArray;
-    var exportTypedArrayMethod$2 = arrayBufferViewCore.exportTypedArrayMethod;
+    var aTypedArray$6 = arrayBufferViewCore.aTypedArray;
+    var exportTypedArrayMethod$6 = arrayBufferViewCore.exportTypedArrayMethod;
 
     // `%TypedArray%.prototype.findLastIndex` method
     // https://github.com/tc39/proposal-array-find-from-last
-    exportTypedArrayMethod$2('findLastIndex', function findLastIndex(predicate /* , thisArg */) {
-      return $findLastIndex(aTypedArray$2(this), predicate, arguments.length > 1 ? arguments[1] : undefined);
+    exportTypedArrayMethod$6('findLastIndex', function findLastIndex(predicate /* , thisArg */) {
+      return $findLastIndex(aTypedArray$6(this), predicate, arguments.length > 1 ? arguments[1] : undefined);
+    });
+
+    // TODO: Remove from `core-js@4`
+
+
+
+
+    var aTypedArray$5 = arrayBufferViewCore.aTypedArray;
+    var exportTypedArrayMethod$5 = arrayBufferViewCore.exportTypedArrayMethod;
+
+    // `%TypedArray%.prototype.groupBy` method
+    // https://github.com/tc39/proposal-array-grouping
+    exportTypedArrayMethod$5('groupBy', function groupBy(callbackfn /* , thisArg */) {
+      var thisArg = arguments.length > 1 ? arguments[1] : undefined;
+      return arrayGroupBy(aTypedArray$5(this), callbackfn, thisArg, typedArraySpeciesConstructor);
+    });
+
+    var aTypedArray$4 = arrayBufferViewCore.aTypedArray;
+    var exportTypedArrayMethod$4 = arrayBufferViewCore.exportTypedArrayMethod;
+    var TYPED_ARRAY_CONSTRUCTOR$3 = arrayBufferViewCore.TYPED_ARRAY_CONSTRUCTOR;
+
+    // `%TypedArray%.prototype.toReversed` method
+    // https://tc39.es/proposal-change-array-by-copy/#sec-%typedarray%.prototype.toReversed
+    exportTypedArrayMethod$4('toReversed', function toReversed() {
+      return arrayToReversed(aTypedArray$4(this), this[TYPED_ARRAY_CONSTRUCTOR$3]);
+    });
+
+    var aTypedArray$3 = arrayBufferViewCore.aTypedArray;
+    var exportTypedArrayMethod$3 = arrayBufferViewCore.exportTypedArrayMethod;
+    var TYPED_ARRAY_CONSTRUCTOR$2 = arrayBufferViewCore.TYPED_ARRAY_CONSTRUCTOR;
+    var sort = functionUncurryThis(arrayBufferViewCore.TypedArrayPrototype.sort);
+
+    // `%TypedArray%.prototype.toSorted` method
+    // https://tc39.es/proposal-change-array-by-copy/#sec-%typedarray%.prototype.toSorted
+    exportTypedArrayMethod$3('toSorted', function toSorted(compareFn) {
+      if (compareFn !== undefined) { aCallable(compareFn); }
+      var O = aTypedArray$3(this);
+      var A = arrayFromConstructorAndList(O[TYPED_ARRAY_CONSTRUCTOR$2], O);
+      return sort(A, compareFn);
+    });
+
+    var aTypedArray$2 = arrayBufferViewCore.aTypedArray;
+    var exportTypedArrayMethod$2 = arrayBufferViewCore.exportTypedArrayMethod;
+    var TYPED_ARRAY_CONSTRUCTOR$1 = arrayBufferViewCore.TYPED_ARRAY_CONSTRUCTOR;
+
+    // `%TypedArray%.prototype.toSpliced` method
+    // https://tc39.es/proposal-change-array-by-copy/#sec-%typedarray%.prototype.toSpliced
+    // eslint-disable-next-line no-unused-vars -- required for .length
+    exportTypedArrayMethod$2('toSpliced', function toSpliced(start, deleteCount /* , ...items */) {
+      return arrayToSpliced(aTypedArray$2(this), this[TYPED_ARRAY_CONSTRUCTOR$1], arraySlice$1(arguments));
     });
 
     var aTypedArray$1 = arrayBufferViewCore.aTypedArray;
     var exportTypedArrayMethod$1 = arrayBufferViewCore.exportTypedArrayMethod;
-
-    // `%TypedArray%.prototype.groupBy` method
-    // https://github.com/tc39/proposal-array-grouping
-    exportTypedArrayMethod$1('groupBy', function groupBy(callbackfn /* , thisArg */) {
-      var thisArg = arguments.length > 1 ? arguments[1] : undefined;
-      return arrayGroupBy(aTypedArray$1(this), callbackfn, thisArg, typedArraySpeciesConstructor);
-    });
-
-    var aTypedArray = arrayBufferViewCore.aTypedArray;
-    var exportTypedArrayMethod = arrayBufferViewCore.exportTypedArrayMethod;
     var arrayUniqueBy = functionUncurryThis(arrayUniqueBy$2);
 
     // `%TypedArray%.prototype.uniqueBy` method
     // https://github.com/tc39/proposal-array-unique
-    exportTypedArrayMethod('uniqueBy', function uniqueBy(resolver) {
-      return typedArrayFromSpeciesAndList(this, arrayUniqueBy(aTypedArray(this), resolver));
+    exportTypedArrayMethod$1('uniqueBy', function uniqueBy(resolver) {
+      return typedArrayFromSpeciesAndList(this, arrayUniqueBy(aTypedArray$1(this), resolver));
     });
+
+    var aTypedArray = arrayBufferViewCore.aTypedArray;
+    var exportTypedArrayMethod = arrayBufferViewCore.exportTypedArrayMethod;
+    var TYPED_ARRAY_CONSTRUCTOR = arrayBufferViewCore.TYPED_ARRAY_CONSTRUCTOR;
+
+    // `%TypedArray%.prototype.with` method
+    // https://tc39.es/proposal-change-array-by-copy/#sec-%typedarray%.prototype.with
+    exportTypedArrayMethod('with', { 'with': function (index, value) {
+      return arrayWith(aTypedArray(this), this[TYPED_ARRAY_CONSTRUCTOR], index, value);
+    } }['with']);
 
     // `WeakMap.prototype.deleteAll` method
     // https://github.com/tc39/proposal-collection-methods
@@ -13623,6 +14238,235 @@ var doric = (function (exports) {
 
     handlePrototype(domTokenListPrototype, 'DOMTokenList');
 
+    var tryNodeRequire = function (name) {
+      try {
+        // eslint-disable-next-line no-new-func -- safe
+        if (engineIsNode) { return Function('return require("' + name + '")')(); }
+      } catch (error) { /* empty */ }
+    };
+
+    var domExceptionConstants = {
+      IndexSizeError: { s: 'INDEX_SIZE_ERR', c: 1, m: 1 },
+      DOMStringSizeError: { s: 'DOMSTRING_SIZE_ERR', c: 2, m: 0 },
+      HierarchyRequestError: { s: 'HIERARCHY_REQUEST_ERR', c: 3, m: 1 },
+      WrongDocumentError: { s: 'WRONG_DOCUMENT_ERR', c: 4, m: 1 },
+      InvalidCharacterError: { s: 'INVALID_CHARACTER_ERR', c: 5, m: 1 },
+      NoDataAllowedError: { s: 'NO_DATA_ALLOWED_ERR', c: 6, m: 0 },
+      NoModificationAllowedError: { s: 'NO_MODIFICATION_ALLOWED_ERR', c: 7, m: 1 },
+      NotFoundError: { s: 'NOT_FOUND_ERR', c: 8, m: 1 },
+      NotSupportedError: { s: 'NOT_SUPPORTED_ERR', c: 9, m: 1 },
+      InUseAttributeError: { s: 'INUSE_ATTRIBUTE_ERR', c: 10, m: 1 },
+      InvalidStateError: { s: 'INVALID_STATE_ERR', c: 11, m: 1 },
+      SyntaxError: { s: 'SYNTAX_ERR', c: 12, m: 1 },
+      InvalidModificationError: { s: 'INVALID_MODIFICATION_ERR', c: 13, m: 1 },
+      NamespaceError: { s: 'NAMESPACE_ERR', c: 14, m: 1 },
+      InvalidAccessError: { s: 'INVALID_ACCESS_ERR', c: 15, m: 1 },
+      ValidationError: { s: 'VALIDATION_ERR', c: 16, m: 0 },
+      TypeMismatchError: { s: 'TYPE_MISMATCH_ERR', c: 17, m: 1 },
+      SecurityError: { s: 'SECURITY_ERR', c: 18, m: 1 },
+      NetworkError: { s: 'NETWORK_ERR', c: 19, m: 1 },
+      AbortError: { s: 'ABORT_ERR', c: 20, m: 1 },
+      URLMismatchError: { s: 'URL_MISMATCH_ERR', c: 21, m: 1 },
+      QuotaExceededError: { s: 'QUOTA_EXCEEDED_ERR', c: 22, m: 1 },
+      TimeoutError: { s: 'TIMEOUT_ERR', c: 23, m: 1 },
+      InvalidNodeTypeError: { s: 'INVALID_NODE_TYPE_ERR', c: 24, m: 1 },
+      DataCloneError: { s: 'DATA_CLONE_ERR', c: 25, m: 1 }
+    };
+
+    var defineProperty$1 = objectDefineProperty.f;
+
+
+
+
+
+
+
+
+
+
+
+
+
+    var DOM_EXCEPTION$2 = 'DOMException';
+    var DATA_CLONE_ERR = 'DATA_CLONE_ERR';
+    var Error$3 = getBuiltIn('Error');
+    // NodeJS < 17.0 does not expose `DOMException` to global
+    var NativeDOMException$1 = getBuiltIn(DOM_EXCEPTION$2) || (function () {
+      try {
+        // NodeJS < 15.0 does not expose `MessageChannel` to global
+        var MessageChannel = getBuiltIn('MessageChannel') || tryNodeRequire('worker_threads').MessageChannel;
+        // eslint-disable-next-line es/no-weak-map, unicorn/require-post-message-target-origin -- safe
+        new MessageChannel().port1.postMessage(new WeakMap());
+      } catch (error) {
+        if (error.name == DATA_CLONE_ERR && error.code == 25) { return error.constructor; }
+      }
+    })();
+    var NativeDOMExceptionPrototype = NativeDOMException$1 && NativeDOMException$1.prototype;
+    var ErrorPrototype = Error$3.prototype;
+    var setInternalState$2 = internalState.set;
+    var getInternalState = internalState.getterFor(DOM_EXCEPTION$2);
+    var HAS_STACK = 'stack' in Error$3(DOM_EXCEPTION$2);
+
+    var codeFor = function (name) {
+      return hasOwnProperty_1(domExceptionConstants, name) && domExceptionConstants[name].m ? domExceptionConstants[name].c : 0;
+    };
+
+    var $DOMException$1 = function DOMException() {
+      anInstance(this, DOMExceptionPrototype$1);
+      var argumentsLength = arguments.length;
+      var message = normalizeStringArgument(argumentsLength < 1 ? undefined : arguments[0]);
+      var name = normalizeStringArgument(argumentsLength < 2 ? undefined : arguments[1], 'Error');
+      var code = codeFor(name);
+      setInternalState$2(this, {
+        type: DOM_EXCEPTION$2,
+        name: name,
+        message: message,
+        code: code
+      });
+      if (!descriptors) {
+        this.name = name;
+        this.message = message;
+        this.code = code;
+      }
+      if (HAS_STACK) {
+        var error = Error$3(message);
+        error.name = DOM_EXCEPTION$2;
+        defineProperty$1(this, 'stack', createPropertyDescriptor(1, clearErrorStack(error.stack, 1)));
+      }
+    };
+
+    var DOMExceptionPrototype$1 = $DOMException$1.prototype = objectCreate(ErrorPrototype);
+
+    var createGetterDescriptor = function (get) {
+      return { enumerable: true, configurable: true, get: get };
+    };
+
+    var getterFor = function (key) {
+      return createGetterDescriptor(function () {
+        return getInternalState(this)[key];
+      });
+    };
+
+    if (descriptors) { objectDefineProperties(DOMExceptionPrototype$1, {
+      name: getterFor('name'),
+      message: getterFor('message'),
+      code: getterFor('code')
+    }); }
+
+    defineProperty$1(DOMExceptionPrototype$1, 'constructor', createPropertyDescriptor(1, $DOMException$1));
+
+    // FF36- DOMException is a function, but can't be constructed
+    var INCORRECT_CONSTRUCTOR = fails(function () {
+      return !(new NativeDOMException$1() instanceof Error$3);
+    });
+
+    // Safari 10.1 / Chrome 32- / IE8- DOMException.prototype.toString bugs
+    var INCORRECT_TO_STRING = INCORRECT_CONSTRUCTOR || fails(function () {
+      return ErrorPrototype.toString !== errorToString || String(new NativeDOMException$1(1, 2)) !== '2: 1';
+    });
+
+    // Deno 1.6.3- DOMException.prototype.code just missed
+    var INCORRECT_CODE = INCORRECT_CONSTRUCTOR || fails(function () {
+      return new NativeDOMException$1(1, 'DataCloneError').code !== 25;
+    });
+
+    // Deno 1.6.3- DOMException constants just missed
+    INCORRECT_CONSTRUCTOR
+      || NativeDOMException$1[DATA_CLONE_ERR] !== 25
+      || NativeDOMExceptionPrototype[DATA_CLONE_ERR] !== 25;
+
+    var FORCED_CONSTRUCTOR$1 = INCORRECT_CONSTRUCTOR;
+
+    // `DOMException` constructor
+    // https://webidl.spec.whatwg.org/#idl-DOMException
+    _export({ global: true, forced: FORCED_CONSTRUCTOR$1 }, {
+      DOMException: FORCED_CONSTRUCTOR$1 ? $DOMException$1 : NativeDOMException$1
+    });
+
+    var PolyfilledDOMException$1 = getBuiltIn(DOM_EXCEPTION$2);
+    var PolyfilledDOMExceptionPrototype$1 = PolyfilledDOMException$1.prototype;
+
+    if (INCORRECT_TO_STRING && (NativeDOMException$1 === PolyfilledDOMException$1)) {
+      redefine(PolyfilledDOMExceptionPrototype$1, 'toString', errorToString);
+    }
+
+    if (INCORRECT_CODE && descriptors && NativeDOMException$1 === PolyfilledDOMException$1) {
+      defineProperty$1(PolyfilledDOMExceptionPrototype$1, 'code', createGetterDescriptor(function () {
+        return codeFor(anObject(this).name);
+      }));
+    }
+
+    for (var key$1 in domExceptionConstants) { if (hasOwnProperty_1(domExceptionConstants, key$1)) {
+      var constant$1 = domExceptionConstants[key$1];
+      var constantName$1 = constant$1.s;
+      var descriptor = createPropertyDescriptor(6, constant$1.c);
+      if (!hasOwnProperty_1(PolyfilledDOMException$1, constantName$1)) {
+        defineProperty$1(PolyfilledDOMException$1, constantName$1, descriptor);
+      }
+      if (!hasOwnProperty_1(PolyfilledDOMExceptionPrototype$1, constantName$1)) {
+        defineProperty$1(PolyfilledDOMExceptionPrototype$1, constantName$1, descriptor);
+      }
+    } }
+
+    var defineProperty = objectDefineProperty.f;
+
+
+
+
+
+
+
+
+    var DOM_EXCEPTION$1 = 'DOMException';
+    var Error$2 = getBuiltIn('Error');
+    var NativeDOMException = getBuiltIn(DOM_EXCEPTION$1);
+
+    var $DOMException = function DOMException() {
+      anInstance(this, DOMExceptionPrototype);
+      var argumentsLength = arguments.length;
+      var message = normalizeStringArgument(argumentsLength < 1 ? undefined : arguments[0]);
+      var name = normalizeStringArgument(argumentsLength < 2 ? undefined : arguments[1], 'Error');
+      var that = new NativeDOMException(message, name);
+      var error = Error$2(message);
+      error.name = DOM_EXCEPTION$1;
+      defineProperty(that, 'stack', createPropertyDescriptor(1, clearErrorStack(error.stack, 1)));
+      inheritIfRequired(that, this, $DOMException);
+      return that;
+    };
+
+    var DOMExceptionPrototype = $DOMException.prototype = NativeDOMException.prototype;
+
+    var ERROR_HAS_STACK = 'stack' in Error$2(DOM_EXCEPTION$1);
+    var DOM_EXCEPTION_HAS_STACK = 'stack' in new NativeDOMException(1, 2);
+    var FORCED_CONSTRUCTOR = ERROR_HAS_STACK && !DOM_EXCEPTION_HAS_STACK;
+
+    // `DOMException` constructor patch for `.stack` where it's required
+    // https://webidl.spec.whatwg.org/#es-DOMException-specialness
+    _export({ global: true, forced: FORCED_CONSTRUCTOR }, { // TODO: fix export logic
+      DOMException: FORCED_CONSTRUCTOR ? $DOMException : NativeDOMException
+    });
+
+    var PolyfilledDOMException = getBuiltIn(DOM_EXCEPTION$1);
+    var PolyfilledDOMExceptionPrototype = PolyfilledDOMException.prototype;
+
+    if (PolyfilledDOMExceptionPrototype.constructor !== PolyfilledDOMException) {
+      {
+        defineProperty(PolyfilledDOMExceptionPrototype, 'constructor', createPropertyDescriptor(1, PolyfilledDOMException));
+      }
+
+      for (var key in domExceptionConstants) { if (hasOwnProperty_1(domExceptionConstants, key)) {
+        var constant = domExceptionConstants[key];
+        var constantName = constant.s;
+        if (!hasOwnProperty_1(PolyfilledDOMException, constantName)) {
+          defineProperty(PolyfilledDOMException, constantName, createPropertyDescriptor(6, constant.c));
+        }
+      } }
+    }
+
+    var DOM_EXCEPTION = 'DOMException';
+
+    setToStringTag(getBuiltIn(DOM_EXCEPTION), DOM_EXCEPTION);
+
     var FORCED = !global_1.setImmediate || !global_1.clearImmediate;
 
     // http://w3c.github.io/setImmediate/
@@ -13643,6 +14487,447 @@ var doric = (function (exports) {
       queueMicrotask: function queueMicrotask(fn) {
         var domain = engineIsNode && process$1.domain;
         microtask(domain ? domain.bind(fn) : fn);
+      }
+    });
+
+    var Object$1 = global_1.Object;
+    var Date$1 = global_1.Date;
+    var Error$1 = global_1.Error;
+    var EvalError = global_1.EvalError;
+    var RangeError$1 = global_1.RangeError;
+    var ReferenceError = global_1.ReferenceError;
+    var SyntaxError = global_1.SyntaxError;
+    var TypeError$3 = global_1.TypeError;
+    var URIError = global_1.URIError;
+    var PerformanceMark = global_1.PerformanceMark;
+    var WebAssembly = global_1.WebAssembly;
+    var CompileError = WebAssembly && WebAssembly.CompileError || Error$1;
+    var LinkError = WebAssembly && WebAssembly.LinkError || Error$1;
+    var RuntimeError = WebAssembly && WebAssembly.RuntimeError || Error$1;
+    var DOMException = getBuiltIn('DOMException');
+    var Set$1 = getBuiltIn('Set');
+    var Map$1 = getBuiltIn('Map');
+    var MapPrototype = Map$1.prototype;
+    var mapHas = functionUncurryThis(MapPrototype.has);
+    var mapGet = functionUncurryThis(MapPrototype.get);
+    var mapSet = functionUncurryThis(MapPrototype.set);
+    var setAdd = functionUncurryThis(Set$1.prototype.add);
+    var objectKeys = getBuiltIn('Object', 'keys');
+    var push$3 = functionUncurryThis([].push);
+    var bolleanValueOf = functionUncurryThis(true.valueOf);
+    var numberValueOf = functionUncurryThis(1.0.valueOf);
+    var stringValueOf = functionUncurryThis(''.valueOf);
+    var getFlags = functionUncurryThis(regexpFlags);
+    var getTime = functionUncurryThis(Date$1.prototype.getTime);
+    var PERFORMANCE_MARK = uid('structuredClone');
+    var DATA_CLONE_ERROR = 'DataCloneError';
+    var TRANSFERRING = 'Transferring';
+
+    var checkBasicSemantic = function (structuredCloneImplementation) {
+      return !fails(function () {
+        var set1 = new global_1.Set([7]);
+        var set2 = structuredCloneImplementation(set1);
+        var number = structuredCloneImplementation(Object$1(7));
+        return set2 == set1 || !set2.has(7) || typeof number != 'object' || number != 7;
+      }) && structuredCloneImplementation;
+    };
+
+    // https://github.com/whatwg/html/pull/5749
+    var checkNewErrorsSemantic = function (structuredCloneImplementation) {
+      return !fails(function () {
+        var test = structuredCloneImplementation(new global_1.AggregateError([1], PERFORMANCE_MARK, { cause: 3 }));
+        return test.name != 'AggregateError' || test.errors[0] != 1 || test.message != PERFORMANCE_MARK || test.cause != 3;
+      }) && structuredCloneImplementation;
+    };
+
+    // FF94+, Safari TP134+, Chrome Canary 98+, NodeJS 17.0+, Deno 1.13+
+    // current FF and Safari implementations can't clone errors
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=1556604
+    // no one of current implementations supports new (html/5749) error cloning semantic
+    var nativeStructuredClone = global_1.structuredClone;
+
+    var FORCED_REPLACEMENT = !checkNewErrorsSemantic(nativeStructuredClone);
+
+    // Chrome 82+, Safari 14.1+, Deno 1.11+
+    // Chrome 78-81 implementation swaps `.name` and `.message` of cloned `DOMException`
+    // Safari 14.1 implementation doesn't clone some `RegExp` flags, so requires a workaround
+    // current Safari implementation can't clone errors
+    // Deno 1.2-1.10 implementations too naive
+    // NodeJS 16.0+ does not have `PerformanceMark` constructor, structured cloning implementation
+    //   from `performance.mark` is too naive and can't clone, for example, `RegExp` or some boxed primitives
+    //   https://github.com/nodejs/node/issues/40840
+    // no one of current implementations supports new (html/5749) error cloning semantic
+    var structuredCloneFromMark = !nativeStructuredClone && checkBasicSemantic(function (value) {
+      return new PerformanceMark(PERFORMANCE_MARK, { detail: value }).detail;
+    });
+
+    var nativeRestrictedStructuredClone = checkBasicSemantic(nativeStructuredClone) || structuredCloneFromMark;
+
+    var throwUncloneable = function (type) {
+      throw new DOMException('Uncloneable type: ' + type, DATA_CLONE_ERROR);
+    };
+
+    var throwUnpolyfillable = function (type, kind) {
+      throw new DOMException((kind || 'Cloning') + ' of ' + type + ' cannot be properly polyfilled in this engine', DATA_CLONE_ERROR);
+    };
+
+    var structuredCloneInternal = function (value, map) {
+      if (isSymbol(value)) { throwUncloneable('Symbol'); }
+      if (!isObject(value)) { return value; }
+      // effectively preserves circular references
+      if (map) {
+        if (mapHas(map, value)) { return mapGet(map, value); }
+      } else { map = new Map$1(); }
+
+      var type = classof(value);
+      var deep = false;
+      var C, name, cloned, dataTransfer, i, length, keys, key, source, target;
+
+      switch (type) {
+        case 'Array':
+          cloned = [];
+          deep = true;
+          break;
+        case 'Object':
+          cloned = {};
+          deep = true;
+          break;
+        case 'Map':
+          cloned = new Map$1();
+          deep = true;
+          break;
+        case 'Set':
+          cloned = new Set$1();
+          deep = true;
+          break;
+        case 'RegExp':
+          // in this block because of a Safari 14.1 bug
+          // old FF does not clone regexes passed to the constructor, so get the source and flags directly
+          cloned = new RegExp(value.source, 'flags' in value ? value.flags : getFlags(value));
+          break;
+        case 'Error':
+          name = value.name;
+          switch (name) {
+            case 'AggregateError':
+              cloned = getBuiltIn('AggregateError')([]);
+              break;
+            case 'EvalError':
+              cloned = EvalError();
+              break;
+            case 'RangeError':
+              cloned = RangeError$1();
+              break;
+            case 'ReferenceError':
+              cloned = ReferenceError();
+              break;
+            case 'SyntaxError':
+              cloned = SyntaxError();
+              break;
+            case 'TypeError':
+              cloned = TypeError$3();
+              break;
+            case 'URIError':
+              cloned = URIError();
+              break;
+            case 'CompileError':
+              cloned = CompileError();
+              break;
+            case 'LinkError':
+              cloned = LinkError();
+              break;
+            case 'RuntimeError':
+              cloned = RuntimeError();
+              break;
+            default:
+              cloned = Error$1();
+          }
+          deep = true;
+          break;
+        case 'DOMException':
+          cloned = new DOMException(value.message, value.name);
+          deep = true;
+          break;
+        case 'DataView':
+        case 'Int8Array':
+        case 'Uint8Array':
+        case 'Uint8ClampedArray':
+        case 'Int16Array':
+        case 'Uint16Array':
+        case 'Int32Array':
+        case 'Uint32Array':
+        case 'Float32Array':
+        case 'Float64Array':
+        case 'BigInt64Array':
+        case 'BigUint64Array':
+          C = global_1[type];
+          // in some old engines like Safari 9, typeof C is 'object'
+          // on Uint8ClampedArray or some other constructors
+          if (!isObject(C)) { throwUnpolyfillable(type); }
+          cloned = new C(
+            // this is safe, since arraybuffer cannot have circular references
+            structuredCloneInternal(value.buffer, map),
+            value.byteOffset,
+            type === 'DataView' ? value.byteLength : value.length
+          );
+          break;
+        case 'DOMQuad':
+          try {
+            cloned = new DOMQuad(
+              structuredCloneInternal(value.p1, map),
+              structuredCloneInternal(value.p2, map),
+              structuredCloneInternal(value.p3, map),
+              structuredCloneInternal(value.p4, map)
+            );
+          } catch (error) {
+            if (nativeRestrictedStructuredClone) {
+              cloned = nativeRestrictedStructuredClone(value);
+            } else { throwUnpolyfillable(type); }
+          }
+          break;
+        case 'FileList':
+          C = global_1.DataTransfer;
+          if (isConstructor(C)) {
+            dataTransfer = new C();
+            for (i = 0, length = lengthOfArrayLike(value); i < length; i++) {
+              dataTransfer.items.add(structuredCloneInternal(value[i], map));
+            }
+            cloned = dataTransfer.files;
+          } else if (nativeRestrictedStructuredClone) {
+            cloned = nativeRestrictedStructuredClone(value);
+          } else { throwUnpolyfillable(type); }
+          break;
+        case 'ImageData':
+          // Safari 9 ImageData is a constructor, but typeof ImageData is 'object'
+          try {
+            cloned = new ImageData(
+              structuredCloneInternal(value.data, map),
+              value.width,
+              value.height,
+              { colorSpace: value.colorSpace }
+            );
+          } catch (error$1) {
+            if (nativeRestrictedStructuredClone) {
+              cloned = nativeRestrictedStructuredClone(value);
+            } else { throwUnpolyfillable(type); }
+          } break;
+        default:
+          if (nativeRestrictedStructuredClone) {
+            cloned = nativeRestrictedStructuredClone(value);
+          } else { switch (type) {
+            case 'BigInt':
+              // can be a 3rd party polyfill
+              cloned = Object$1(value.valueOf());
+              break;
+            case 'Boolean':
+              cloned = Object$1(bolleanValueOf(value));
+              break;
+            case 'Number':
+              cloned = Object$1(numberValueOf(value));
+              break;
+            case 'String':
+              cloned = Object$1(stringValueOf(value));
+              break;
+            case 'Date':
+              cloned = new Date$1(getTime(value));
+              break;
+            case 'ArrayBuffer':
+              C = global_1.DataView;
+              // `ArrayBuffer#slice` is not available in IE10
+              // `ArrayBuffer#slice` and `DataView` are not available in old FF
+              if (!C && typeof value.slice != 'function') { throwUnpolyfillable(type); }
+              // detached buffers throws in `DataView` and `.slice`
+              try {
+                if (typeof value.slice == 'function') {
+                  cloned = value.slice(0);
+                } else {
+                  length = value.byteLength;
+                  cloned = new ArrayBuffer(length);
+                  source = new C(value);
+                  target = new C(cloned);
+                  for (i = 0; i < length; i++) {
+                    target.setUint8(i, source.getUint8(i));
+                  }
+                }
+              } catch (error$2) {
+                throw new DOMException('ArrayBuffer is deatched', DATA_CLONE_ERROR);
+              } break;
+            case 'SharedArrayBuffer':
+              // SharedArrayBuffer should use shared memory, we can't polyfill it, so return the original
+              cloned = value;
+              break;
+            case 'Blob':
+              try {
+                cloned = value.slice(0, value.size, value.type);
+              } catch (error$3) {
+                throwUnpolyfillable(type);
+              } break;
+            case 'DOMPoint':
+            case 'DOMPointReadOnly':
+              C = global_1[type];
+              try {
+                cloned = C.fromPoint
+                  ? C.fromPoint(value)
+                  : new C(value.x, value.y, value.z, value.w);
+              } catch (error$4) {
+                throwUnpolyfillable(type);
+              } break;
+            case 'DOMRect':
+            case 'DOMRectReadOnly':
+              C = global_1[type];
+              try {
+                cloned = C.fromRect
+                  ? C.fromRect(value)
+                  : new C(value.x, value.y, value.width, value.height);
+              } catch (error$5) {
+                throwUnpolyfillable(type);
+              } break;
+            case 'DOMMatrix':
+            case 'DOMMatrixReadOnly':
+              C = global_1[type];
+              try {
+                cloned = C.fromMatrix
+                  ? C.fromMatrix(value)
+                  : new C(value);
+              } catch (error$6) {
+                throwUnpolyfillable(type);
+              } break;
+            case 'AudioData':
+            case 'VideoFrame':
+              if (!isCallable(value.clone)) { throwUnpolyfillable(type); }
+              try {
+                cloned = value.clone();
+              } catch (error$7) {
+                throwUncloneable(type);
+              } break;
+            case 'File':
+              try {
+                cloned = new File([value], value.name, value);
+              } catch (error$8) {
+                throwUnpolyfillable(type);
+              } break;
+            case 'CryptoKey':
+            case 'GPUCompilationMessage':
+            case 'GPUCompilationInfo':
+            case 'ImageBitmap':
+            case 'RTCCertificate':
+            case 'WebAssembly.Module':
+              throwUnpolyfillable(type);
+              // break omitted
+            default:
+              throwUncloneable(type);
+          } }
+      }
+
+      mapSet(map, value, cloned);
+
+      if (deep) { switch (type) {
+        case 'Array':
+        case 'Object':
+          keys = objectKeys(value);
+          for (i = 0, length = lengthOfArrayLike(keys); i < length; i++) {
+            key = keys[i];
+            createProperty(cloned, key, structuredCloneInternal(value[key], map));
+          } break;
+        case 'Map':
+          value.forEach(function (v, k) {
+            mapSet(cloned, structuredCloneInternal(k, map), structuredCloneInternal(v, map));
+          });
+          break;
+        case 'Set':
+          value.forEach(function (v) {
+            setAdd(cloned, structuredCloneInternal(v, map));
+          });
+          break;
+        case 'Error':
+          createNonEnumerableProperty(cloned, 'message', structuredCloneInternal(value.message, map));
+          if (hasOwnProperty_1(value, 'cause')) {
+            createNonEnumerableProperty(cloned, 'cause', structuredCloneInternal(value.cause, map));
+          }
+          if (name == 'AggregateError') {
+            cloned.errors = structuredCloneInternal(value.errors, map);
+          } // break omitted
+        case 'DOMException':
+          if (errorStackInstallable) {
+            createNonEnumerableProperty(cloned, 'stack', structuredCloneInternal(value.stack, map));
+          }
+      } }
+
+      return cloned;
+    };
+
+    var PROPER_TRANSFER = nativeStructuredClone && !fails(function () {
+      var buffer = new ArrayBuffer(8);
+      var clone = nativeStructuredClone(buffer, { transfer: [buffer] });
+      return buffer.byteLength != 0 || clone.byteLength != 8;
+    });
+
+    var tryToTransfer = function (rawTransfer, map) {
+      if (!isObject(rawTransfer)) { throw TypeError$3('Transfer option cannot be converted to a sequence'); }
+
+      var transfer = [];
+
+      iterate(rawTransfer, function (value) {
+        push$3(transfer, anObject(value));
+      });
+
+      var i = 0;
+      var length = lengthOfArrayLike(transfer);
+      var value, type, C, transferredArray, transferred, canvas, context;
+
+      if (PROPER_TRANSFER) {
+        transferredArray = nativeStructuredClone(transfer, { transfer: transfer });
+        while (i < length) { mapSet(map, transfer[i], transferredArray[i++]); }
+      } else { while (i < length) {
+        value = transfer[i++];
+        if (mapHas(map, value)) { throw new DOMException('Duplicate transferable', DATA_CLONE_ERROR); }
+
+        type = classof(value);
+
+        switch (type) {
+          case 'ImageBitmap':
+            C = global_1.OffscreenCanvas;
+            if (!isConstructor(C)) { throwUnpolyfillable(type, TRANSFERRING); }
+            try {
+              canvas = new C(value.width, value.height);
+              context = canvas.getContext('bitmaprenderer');
+              context.transferFromImageBitmap(value);
+              transferred = canvas.transferToImageBitmap();
+            } catch (error) { /* empty */ }
+            break;
+          case 'AudioData':
+          case 'VideoFrame':
+            if (!isCallable(value.clone) || !isCallable(value.close)) { throwUnpolyfillable(type, TRANSFERRING); }
+            try {
+              transferred = value.clone();
+              value.close();
+            } catch (error$1) { /* empty */ }
+            break;
+          case 'ArrayBuffer':
+          case 'MessagePort':
+          case 'OffscreenCanvas':
+          case 'ReadableStream':
+          case 'TransformStream':
+          case 'WritableStream':
+            throwUnpolyfillable(type, TRANSFERRING);
+        }
+
+        if (transferred === undefined) { throw new DOMException('This object cannot be transferred: ' + type, DATA_CLONE_ERROR); }
+        mapSet(map, value, transferred);
+      } }
+    };
+
+    _export({ global: true, enumerable: true, sham: !PROPER_TRANSFER, forced: FORCED_REPLACEMENT }, {
+      structuredClone: function structuredClone(value /* , { transfer } */) {
+        var options = arguments.length > 1 ? anObject(arguments[1]) : undefined;
+        var transfer = options ? options.transfer : undefined;
+        var map;
+
+        if (transfer !== undefined) {
+          map = new Map$1();
+          tryToTransfer(transfer, map);
+        }
+
+        return structuredCloneInternal(value, map);
       }
     });
 
@@ -13777,8 +15062,9 @@ var doric = (function (exports) {
       var k = 0;
       delta = firstTime ? floor$1(delta / damp) : delta >> 1;
       delta += floor$1(delta / numPoints);
-      for (; delta > baseMinusTMin * tMax >> 1; k += base) {
+      while (delta > baseMinusTMin * tMax >> 1) {
         delta = floor$1(delta / baseMinusTMin);
+        k += base;
       }
       return floor$1(k + (baseMinusTMin + 1) * delta / (delta + skew));
     };
@@ -13787,7 +15073,6 @@ var doric = (function (exports) {
      * Converts a string of Unicode symbols (e.g. a domain name label) to a
      * Punycode string of ASCII-only symbols.
      */
-    // eslint-disable-next-line max-statements -- TODO
     var encode = function (input) {
       var output = [];
 
@@ -13847,24 +15132,26 @@ var doric = (function (exports) {
           if (currentValue == n) {
             // Represent delta as a generalized variable-length integer.
             var q = delta;
-            for (var k = base; /* no condition */; k += base) {
+            var k = base;
+            while (true) {
               var t = k <= bias ? tMin : (k >= bias + tMax ? tMax : k - bias);
               if (q < t) { break; }
               var qMinusT = q - t;
               var baseMinusT = base - t;
               push$2(output, fromCharCode(digitToBasic(t + qMinusT % baseMinusT)));
               q = floor$1(qMinusT / baseMinusT);
+              k += base;
             }
 
             push$2(output, fromCharCode(digitToBasic(q)));
             bias = adapt(delta, handledCPCountPlusOne, handledCPCount == basicLength);
             delta = 0;
-            ++handledCPCount;
+            handledCPCount++;
           }
         }
 
-        ++delta;
-        ++n;
+        delta++;
+        n++;
       }
       return join$2(output, '');
     };
@@ -13980,29 +15267,6 @@ var doric = (function (exports) {
       return replace$1(encodeURIComponent$1(it), find, replacer);
     };
 
-    var parseSearchParams = function (result, query) {
-      if (query) {
-        var attributes = split$1(query, '&');
-        var index = 0;
-        var attribute, entry;
-        while (index < attributes.length) {
-          attribute = attributes[index++];
-          if (attribute.length) {
-            entry = split$1(attribute, '=');
-            push$1(result, {
-              key: deserialize(shift$1(entry)),
-              value: deserialize(join$1(entry, '='))
-            });
-          }
-        }
-      }
-    };
-
-    var updateSearchParams = function (query) {
-      this.entries.length = 0;
-      parseSearchParams(this.entries, query);
-    };
-
     var validateArgumentsLength = function (passed, required) {
       if (passed < required) { throw TypeError$2('Not enough arguments'); }
     };
@@ -14021,48 +15285,87 @@ var doric = (function (exports) {
       if (!step.done) {
         step.value = kind === 'keys' ? entry.key : kind === 'values' ? entry.value : [entry.key, entry.value];
       } return step;
-    });
+    }, true);
+
+    var URLSearchParamsState = function (init) {
+      this.entries = [];
+      this.url = null;
+
+      if (init !== undefined) {
+        if (isObject(init)) { this.parseObject(init); }
+        else { this.parseQuery(typeof init == 'string' ? charAt$1(init, 0) === '?' ? stringSlice$1(init, 1) : init : toString_1(init)); }
+      }
+    };
+
+    URLSearchParamsState.prototype = {
+      type: URL_SEARCH_PARAMS,
+      bindURL: function (url) {
+        this.url = url;
+        this.update();
+      },
+      parseObject: function (object) {
+        var iteratorMethod = getIteratorMethod(object);
+        var iterator, next, step, entryIterator, entryNext, first, second;
+
+        if (iteratorMethod) {
+          iterator = getIterator(object, iteratorMethod);
+          next = iterator.next;
+          while (!(step = functionCall(next, iterator)).done) {
+            entryIterator = getIterator(anObject(step.value));
+            entryNext = entryIterator.next;
+            if (
+              (first = functionCall(entryNext, entryIterator)).done ||
+              (second = functionCall(entryNext, entryIterator)).done ||
+              !functionCall(entryNext, entryIterator).done
+            ) { throw TypeError$2('Expected sequence with length 2'); }
+            push$1(this.entries, { key: toString_1(first.value), value: toString_1(second.value) });
+          }
+        } else { for (var key in object) { if (hasOwnProperty_1(object, key)) {
+          push$1(this.entries, { key: key, value: toString_1(object[key]) });
+        } } }
+      },
+      parseQuery: function (query) {
+        if (query) {
+          var attributes = split$1(query, '&');
+          var index = 0;
+          var attribute, entry;
+          while (index < attributes.length) {
+            attribute = attributes[index++];
+            if (attribute.length) {
+              entry = split$1(attribute, '=');
+              push$1(this.entries, {
+                key: deserialize(shift$1(entry)),
+                value: deserialize(join$1(entry, '='))
+              });
+            }
+          }
+        }
+      },
+      serialize: function () {
+        var entries = this.entries;
+        var result = [];
+        var index = 0;
+        var entry;
+        while (index < entries.length) {
+          entry = entries[index++];
+          push$1(result, serialize(entry.key) + '=' + serialize(entry.value));
+        } return join$1(result, '&');
+      },
+      update: function () {
+        this.entries.length = 0;
+        this.parseQuery(this.url.query);
+      },
+      updateURL: function () {
+        if (this.url) { this.url.update(); }
+      }
+    };
 
     // `URLSearchParams` constructor
     // https://url.spec.whatwg.org/#interface-urlsearchparams
     var URLSearchParamsConstructor = function URLSearchParams(/* init */) {
       anInstance(this, URLSearchParamsPrototype);
       var init = arguments.length > 0 ? arguments[0] : undefined;
-      var that = this;
-      var entries = [];
-      var iteratorMethod, iterator, next, step, entryIterator, entryNext, first, second, key;
-
-      setInternalState$1(that, {
-        type: URL_SEARCH_PARAMS,
-        entries: entries,
-        updateURL: function () { /* empty */ },
-        updateSearchParams: updateSearchParams
-      });
-
-      if (init !== undefined) {
-        if (isObject(init)) {
-          iteratorMethod = getIteratorMethod(init);
-          if (iteratorMethod) {
-            iterator = getIterator(init, iteratorMethod);
-            next = iterator.next;
-            while (!(step = functionCall(next, iterator)).done) {
-              entryIterator = getIterator(anObject(step.value));
-              entryNext = entryIterator.next;
-              if (
-                (first = functionCall(entryNext, entryIterator)).done ||
-                (second = functionCall(entryNext, entryIterator)).done ||
-                !functionCall(entryNext, entryIterator).done
-              ) { throw TypeError$2('Expected sequence with length 2'); }
-              push$1(entries, { key: toString_1(first.value), value: toString_1(second.value) });
-            }
-          } else { for (key in init) { if (hasOwnProperty_1(init, key)) { push$1(entries, { key: key, value: toString_1(init[key]) }); } } }
-        } else {
-          parseSearchParams(
-            entries,
-            typeof init == 'string' ? charAt$1(init, 0) === '?' ? stringSlice$1(init, 1) : init : toString_1(init)
-          );
-        }
-      }
+      setInternalState$1(this, new URLSearchParamsState(init));
     };
 
     var URLSearchParamsPrototype = URLSearchParamsConstructor.prototype;
@@ -14191,14 +15494,7 @@ var doric = (function (exports) {
     // `URLSearchParams.prototype.toString` method
     // https://url.spec.whatwg.org/#urlsearchparams-stringification-behavior
     redefine(URLSearchParamsPrototype, 'toString', function toString() {
-      var entries = getInternalParamsState(this).entries;
-      var result = [];
-      var index = 0;
-      var entry;
-      while (index < entries.length) {
-        entry = entries[index++];
-        push$1(result, serialize(entry.key) + '=' + serialize(entry.value));
-      } return join$1(result, '&');
+      return getInternalParamsState(this).serialize();
     }, { enumerable: true });
 
     setToStringTag(URLSearchParamsConstructor, URL_SEARCH_PARAMS);
@@ -14272,7 +15568,6 @@ var doric = (function (exports) {
 
 
 
-
     var codeAt = stringMultibyte.codeAt;
 
 
@@ -14324,31 +15619,7 @@ var doric = (function (exports) {
     /* eslint-enable regexp/no-control-character -- safe */
     var EOF;
 
-    var parseHost = function (url, input) {
-      var result, codePoints, index;
-      if (charAt(input, 0) == '[') {
-        if (charAt(input, input.length - 1) != ']') { return INVALID_HOST; }
-        result = parseIPv6(stringSlice(input, 1, -1));
-        if (!result) { return INVALID_HOST; }
-        url.host = result;
-      // opaque host
-      } else if (!isSpecial(url)) {
-        if (exec(FORBIDDEN_HOST_CODE_POINT_EXCLUDING_PERCENT, input)) { return INVALID_HOST; }
-        result = '';
-        codePoints = arrayFrom(input);
-        for (index = 0; index < codePoints.length; index++) {
-          result += percentEncode(codePoints[index], C0ControlPercentEncodeSet);
-        }
-        url.host = result;
-      } else {
-        input = stringPunycodeToAscii(input);
-        if (exec(FORBIDDEN_HOST_CODE_POINT, input)) { return INVALID_HOST; }
-        result = parseIPv4(input);
-        if (result === null) { return INVALID_HOST; }
-        url.host = result;
-      }
-    };
-
+    // https://url.spec.whatwg.org/#ipv4-number-parser
     var parseIPv4 = function (input) {
       var parts = split(input, '.');
       var partsLength, numbers, index, part, radix, number, ipv4;
@@ -14387,6 +15658,7 @@ var doric = (function (exports) {
       return ipv4;
     };
 
+    // https://url.spec.whatwg.org/#concept-ipv6-parser
     // eslint-disable-next-line max-statements -- TODO
     var parseIPv6 = function (input) {
       var address = [0, 0, 0, 0, 0, 0, 0, 0];
@@ -14490,6 +15762,7 @@ var doric = (function (exports) {
       return maxIndex;
     };
 
+    // https://url.spec.whatwg.org/#host-serializing
     var serializeHost = function (host) {
       var result, index, compress, ignore0;
       // ipv4
@@ -14534,6 +15807,7 @@ var doric = (function (exports) {
       return code > 0x20 && code < 0x7F && !hasOwnProperty_1(set, chr) ? chr : encodeURIComponent(chr);
     };
 
+    // https://url.spec.whatwg.org/#special-scheme
     var specialSchemes = {
       ftp: 21,
       file: null,
@@ -14543,24 +15817,14 @@ var doric = (function (exports) {
       wss: 443
     };
 
-    var isSpecial = function (url) {
-      return hasOwnProperty_1(specialSchemes, url.scheme);
-    };
-
-    var includesCredentials = function (url) {
-      return url.username != '' || url.password != '';
-    };
-
-    var cannotHaveUsernamePasswordPort = function (url) {
-      return !url.host || url.cannotBeABaseURL || url.scheme == 'file';
-    };
-
+    // https://url.spec.whatwg.org/#windows-drive-letter
     var isWindowsDriveLetter = function (string, normalized) {
       var second;
       return string.length == 2 && exec(ALPHA, charAt(string, 0))
         && ((second = charAt(string, 1)) == ':' || (!normalized && second == '|'));
     };
 
+    // https://url.spec.whatwg.org/#start-with-a-windows-drive-letter
     var startsWithWindowsDriveLetter = function (string) {
       var third;
       return string.length > 1 && isWindowsDriveLetter(stringSlice(string, 0, 2)) && (
@@ -14569,18 +15833,12 @@ var doric = (function (exports) {
       );
     };
 
-    var shortenURLsPath = function (url) {
-      var path = url.path;
-      var pathSize = path.length;
-      if (pathSize && (url.scheme != 'file' || pathSize != 1 || !isWindowsDriveLetter(path[0], true))) {
-        path.length--;
-      }
-    };
-
+    // https://url.spec.whatwg.org/#single-dot-path-segment
     var isSingleDot = function (segment) {
       return segment === '.' || toLowerCase(segment) === '%2e';
     };
 
+    // https://url.spec.whatwg.org/#double-dot-path-segment
     var isDoubleDot = function (segment) {
       segment = toLowerCase(segment);
       return segment === '..' || segment === '%2e.' || segment === '.%2e' || segment === '%2e%2e';
@@ -14609,402 +15867,625 @@ var doric = (function (exports) {
     var QUERY = {};
     var FRAGMENT = {};
 
-    // eslint-disable-next-line max-statements -- TODO
-    var parseURL = function (url, input, stateOverride, base) {
-      var state = stateOverride || SCHEME_START;
-      var pointer = 0;
-      var buffer = '';
-      var seenAt = false;
-      var seenBracket = false;
-      var seenPasswordToken = false;
-      var codePoints, chr, bufferCodePoints, failure;
-
-      if (!stateOverride) {
-        url.scheme = '';
-        url.username = '';
-        url.password = '';
-        url.host = null;
-        url.port = null;
-        url.path = [];
-        url.query = null;
-        url.fragment = null;
-        url.cannotBeABaseURL = false;
-        input = replace(input, LEADING_AND_TRAILING_C0_CONTROL_OR_SPACE, '');
+    var URLState = function (url, isBase, base) {
+      var urlString = toString_1(url);
+      var baseState, failure, searchParams;
+      if (isBase) {
+        failure = this.parse(urlString);
+        if (failure) { throw TypeError$1(failure); }
+        this.searchParams = null;
+      } else {
+        if (base !== undefined) { baseState = new URLState(base, true); }
+        failure = this.parse(urlString, null, baseState);
+        if (failure) { throw TypeError$1(failure); }
+        searchParams = getInternalSearchParamsState(new URLSearchParams$1());
+        searchParams.bindURL(this);
+        this.searchParams = searchParams;
       }
+    };
 
-      input = replace(input, TAB_AND_NEW_LINE, '');
+    URLState.prototype = {
+      type: 'URL',
+      // https://url.spec.whatwg.org/#url-parsing
+      // eslint-disable-next-line max-statements -- TODO
+      parse: function (input, stateOverride, base) {
+        var url = this;
+        var state = stateOverride || SCHEME_START;
+        var pointer = 0;
+        var buffer = '';
+        var seenAt = false;
+        var seenBracket = false;
+        var seenPasswordToken = false;
+        var codePoints, chr, bufferCodePoints, failure;
 
-      codePoints = arrayFrom(input);
+        input = toString_1(input);
 
-      while (pointer <= codePoints.length) {
-        chr = codePoints[pointer];
-        switch (state) {
-          case SCHEME_START:
-            if (chr && exec(ALPHA, chr)) {
-              buffer += toLowerCase(chr);
-              state = SCHEME;
-            } else if (!stateOverride) {
-              state = NO_SCHEME;
-              continue;
-            } else { return INVALID_SCHEME; }
-            break;
+        if (!stateOverride) {
+          url.scheme = '';
+          url.username = '';
+          url.password = '';
+          url.host = null;
+          url.port = null;
+          url.path = [];
+          url.query = null;
+          url.fragment = null;
+          url.cannotBeABaseURL = false;
+          input = replace(input, LEADING_AND_TRAILING_C0_CONTROL_OR_SPACE, '');
+        }
 
-          case SCHEME:
-            if (chr && (exec(ALPHANUMERIC, chr) || chr == '+' || chr == '-' || chr == '.')) {
-              buffer += toLowerCase(chr);
-            } else if (chr == ':') {
-              if (stateOverride && (
-                (isSpecial(url) != hasOwnProperty_1(specialSchemes, buffer)) ||
-                (buffer == 'file' && (includesCredentials(url) || url.port !== null)) ||
-                (url.scheme == 'file' && !url.host)
-              )) { return; }
-              url.scheme = buffer;
-              if (stateOverride) {
-                if (isSpecial(url) && specialSchemes[url.scheme] == url.port) { url.port = null; }
-                return;
+        input = replace(input, TAB_AND_NEW_LINE, '');
+
+        codePoints = arrayFrom(input);
+
+        while (pointer <= codePoints.length) {
+          chr = codePoints[pointer];
+          switch (state) {
+            case SCHEME_START:
+              if (chr && exec(ALPHA, chr)) {
+                buffer += toLowerCase(chr);
+                state = SCHEME;
+              } else if (!stateOverride) {
+                state = NO_SCHEME;
+                continue;
+              } else { return INVALID_SCHEME; }
+              break;
+
+            case SCHEME:
+              if (chr && (exec(ALPHANUMERIC, chr) || chr == '+' || chr == '-' || chr == '.')) {
+                buffer += toLowerCase(chr);
+              } else if (chr == ':') {
+                if (stateOverride && (
+                  (url.isSpecial() != hasOwnProperty_1(specialSchemes, buffer)) ||
+                  (buffer == 'file' && (url.includesCredentials() || url.port !== null)) ||
+                  (url.scheme == 'file' && !url.host)
+                )) { return; }
+                url.scheme = buffer;
+                if (stateOverride) {
+                  if (url.isSpecial() && specialSchemes[url.scheme] == url.port) { url.port = null; }
+                  return;
+                }
+                buffer = '';
+                if (url.scheme == 'file') {
+                  state = FILE;
+                } else if (url.isSpecial() && base && base.scheme == url.scheme) {
+                  state = SPECIAL_RELATIVE_OR_AUTHORITY;
+                } else if (url.isSpecial()) {
+                  state = SPECIAL_AUTHORITY_SLASHES;
+                } else if (codePoints[pointer + 1] == '/') {
+                  state = PATH_OR_AUTHORITY;
+                  pointer++;
+                } else {
+                  url.cannotBeABaseURL = true;
+                  push(url.path, '');
+                  state = CANNOT_BE_A_BASE_URL_PATH;
+                }
+              } else if (!stateOverride) {
+                buffer = '';
+                state = NO_SCHEME;
+                pointer = 0;
+                continue;
+              } else { return INVALID_SCHEME; }
+              break;
+
+            case NO_SCHEME:
+              if (!base || (base.cannotBeABaseURL && chr != '#')) { return INVALID_SCHEME; }
+              if (base.cannotBeABaseURL && chr == '#') {
+                url.scheme = base.scheme;
+                url.path = arraySliceSimple(base.path);
+                url.query = base.query;
+                url.fragment = '';
+                url.cannotBeABaseURL = true;
+                state = FRAGMENT;
+                break;
               }
-              buffer = '';
-              if (url.scheme == 'file') {
-                state = FILE;
-              } else if (isSpecial(url) && base && base.scheme == url.scheme) {
-                state = SPECIAL_RELATIVE_OR_AUTHORITY;
-              } else if (isSpecial(url)) {
-                state = SPECIAL_AUTHORITY_SLASHES;
-              } else if (codePoints[pointer + 1] == '/') {
-                state = PATH_OR_AUTHORITY;
+              state = base.scheme == 'file' ? FILE : RELATIVE;
+              continue;
+
+            case SPECIAL_RELATIVE_OR_AUTHORITY:
+              if (chr == '/' && codePoints[pointer + 1] == '/') {
+                state = SPECIAL_AUTHORITY_IGNORE_SLASHES;
                 pointer++;
               } else {
-                url.cannotBeABaseURL = true;
-                push(url.path, '');
-                state = CANNOT_BE_A_BASE_URL_PATH;
-              }
-            } else if (!stateOverride) {
-              buffer = '';
-              state = NO_SCHEME;
-              pointer = 0;
-              continue;
-            } else { return INVALID_SCHEME; }
-            break;
+                state = RELATIVE;
+                continue;
+              } break;
 
-          case NO_SCHEME:
-            if (!base || (base.cannotBeABaseURL && chr != '#')) { return INVALID_SCHEME; }
-            if (base.cannotBeABaseURL && chr == '#') {
+            case PATH_OR_AUTHORITY:
+              if (chr == '/') {
+                state = AUTHORITY;
+                break;
+              } else {
+                state = PATH;
+                continue;
+              }
+
+            case RELATIVE:
               url.scheme = base.scheme;
-              url.path = arraySlice$1(base.path);
-              url.query = base.query;
-              url.fragment = '';
-              url.cannotBeABaseURL = true;
-              state = FRAGMENT;
-              break;
-            }
-            state = base.scheme == 'file' ? FILE : RELATIVE;
-            continue;
-
-          case SPECIAL_RELATIVE_OR_AUTHORITY:
-            if (chr == '/' && codePoints[pointer + 1] == '/') {
-              state = SPECIAL_AUTHORITY_IGNORE_SLASHES;
-              pointer++;
-            } else {
-              state = RELATIVE;
-              continue;
-            } break;
-
-          case PATH_OR_AUTHORITY:
-            if (chr == '/') {
-              state = AUTHORITY;
-              break;
-            } else {
-              state = PATH;
-              continue;
-            }
-
-          case RELATIVE:
-            url.scheme = base.scheme;
-            if (chr == EOF) {
-              url.username = base.username;
-              url.password = base.password;
-              url.host = base.host;
-              url.port = base.port;
-              url.path = arraySlice$1(base.path);
-              url.query = base.query;
-            } else if (chr == '/' || (chr == '\\' && isSpecial(url))) {
-              state = RELATIVE_SLASH;
-            } else if (chr == '?') {
-              url.username = base.username;
-              url.password = base.password;
-              url.host = base.host;
-              url.port = base.port;
-              url.path = arraySlice$1(base.path);
-              url.query = '';
-              state = QUERY;
-            } else if (chr == '#') {
-              url.username = base.username;
-              url.password = base.password;
-              url.host = base.host;
-              url.port = base.port;
-              url.path = arraySlice$1(base.path);
-              url.query = base.query;
-              url.fragment = '';
-              state = FRAGMENT;
-            } else {
-              url.username = base.username;
-              url.password = base.password;
-              url.host = base.host;
-              url.port = base.port;
-              url.path = arraySlice$1(base.path);
-              url.path.length--;
-              state = PATH;
-              continue;
-            } break;
-
-          case RELATIVE_SLASH:
-            if (isSpecial(url) && (chr == '/' || chr == '\\')) {
-              state = SPECIAL_AUTHORITY_IGNORE_SLASHES;
-            } else if (chr == '/') {
-              state = AUTHORITY;
-            } else {
-              url.username = base.username;
-              url.password = base.password;
-              url.host = base.host;
-              url.port = base.port;
-              state = PATH;
-              continue;
-            } break;
-
-          case SPECIAL_AUTHORITY_SLASHES:
-            state = SPECIAL_AUTHORITY_IGNORE_SLASHES;
-            if (chr != '/' || charAt(buffer, pointer + 1) != '/') { continue; }
-            pointer++;
-            break;
-
-          case SPECIAL_AUTHORITY_IGNORE_SLASHES:
-            if (chr != '/' && chr != '\\') {
-              state = AUTHORITY;
-              continue;
-            } break;
-
-          case AUTHORITY:
-            if (chr == '@') {
-              if (seenAt) { buffer = '%40' + buffer; }
-              seenAt = true;
-              bufferCodePoints = arrayFrom(buffer);
-              for (var i = 0; i < bufferCodePoints.length; i++) {
-                var codePoint = bufferCodePoints[i];
-                if (codePoint == ':' && !seenPasswordToken) {
-                  seenPasswordToken = true;
-                  continue;
-                }
-                var encodedCodePoints = percentEncode(codePoint, userinfoPercentEncodeSet);
-                if (seenPasswordToken) { url.password += encodedCodePoints; }
-                else { url.username += encodedCodePoints; }
-              }
-              buffer = '';
-            } else if (
-              chr == EOF || chr == '/' || chr == '?' || chr == '#' ||
-              (chr == '\\' && isSpecial(url))
-            ) {
-              if (seenAt && buffer == '') { return INVALID_AUTHORITY; }
-              pointer -= arrayFrom(buffer).length + 1;
-              buffer = '';
-              state = HOST;
-            } else { buffer += chr; }
-            break;
-
-          case HOST:
-          case HOSTNAME:
-            if (stateOverride && url.scheme == 'file') {
-              state = FILE_HOST;
-              continue;
-            } else if (chr == ':' && !seenBracket) {
-              if (buffer == '') { return INVALID_HOST; }
-              failure = parseHost(url, buffer);
-              if (failure) { return failure; }
-              buffer = '';
-              state = PORT;
-              if (stateOverride == HOSTNAME) { return; }
-            } else if (
-              chr == EOF || chr == '/' || chr == '?' || chr == '#' ||
-              (chr == '\\' && isSpecial(url))
-            ) {
-              if (isSpecial(url) && buffer == '') { return INVALID_HOST; }
-              if (stateOverride && buffer == '' && (includesCredentials(url) || url.port !== null)) { return; }
-              failure = parseHost(url, buffer);
-              if (failure) { return failure; }
-              buffer = '';
-              state = PATH_START;
-              if (stateOverride) { return; }
-              continue;
-            } else {
-              if (chr == '[') { seenBracket = true; }
-              else if (chr == ']') { seenBracket = false; }
-              buffer += chr;
-            } break;
-
-          case PORT:
-            if (exec(DIGIT, chr)) {
-              buffer += chr;
-            } else if (
-              chr == EOF || chr == '/' || chr == '?' || chr == '#' ||
-              (chr == '\\' && isSpecial(url)) ||
-              stateOverride
-            ) {
-              if (buffer != '') {
-                var port = parseInt$1(buffer, 10);
-                if (port > 0xFFFF) { return INVALID_PORT; }
-                url.port = (isSpecial(url) && port === specialSchemes[url.scheme]) ? null : port;
-                buffer = '';
-              }
-              if (stateOverride) { return; }
-              state = PATH_START;
-              continue;
-            } else { return INVALID_PORT; }
-            break;
-
-          case FILE:
-            url.scheme = 'file';
-            if (chr == '/' || chr == '\\') { state = FILE_SLASH; }
-            else if (base && base.scheme == 'file') {
               if (chr == EOF) {
+                url.username = base.username;
+                url.password = base.password;
                 url.host = base.host;
-                url.path = arraySlice$1(base.path);
+                url.port = base.port;
+                url.path = arraySliceSimple(base.path);
                 url.query = base.query;
+              } else if (chr == '/' || (chr == '\\' && url.isSpecial())) {
+                state = RELATIVE_SLASH;
               } else if (chr == '?') {
+                url.username = base.username;
+                url.password = base.password;
                 url.host = base.host;
-                url.path = arraySlice$1(base.path);
+                url.port = base.port;
+                url.path = arraySliceSimple(base.path);
                 url.query = '';
                 state = QUERY;
               } else if (chr == '#') {
+                url.username = base.username;
+                url.password = base.password;
                 url.host = base.host;
-                url.path = arraySlice$1(base.path);
+                url.port = base.port;
+                url.path = arraySliceSimple(base.path);
                 url.query = base.query;
                 url.fragment = '';
                 state = FRAGMENT;
               } else {
-                if (!startsWithWindowsDriveLetter(join(arraySlice$1(codePoints, pointer), ''))) {
-                  url.host = base.host;
-                  url.path = arraySlice$1(base.path);
-                  shortenURLsPath(url);
-                }
+                url.username = base.username;
+                url.password = base.password;
+                url.host = base.host;
+                url.port = base.port;
+                url.path = arraySliceSimple(base.path);
+                url.path.length--;
                 state = PATH;
                 continue;
-              }
-            } else {
-              state = PATH;
-              continue;
-            } break;
+              } break;
 
-          case FILE_SLASH:
-            if (chr == '/' || chr == '\\') {
-              state = FILE_HOST;
-              break;
-            }
-            if (base && base.scheme == 'file' && !startsWithWindowsDriveLetter(join(arraySlice$1(codePoints, pointer), ''))) {
-              if (isWindowsDriveLetter(base.path[0], true)) { push(url.path, base.path[0]); }
-              else { url.host = base.host; }
-            }
-            state = PATH;
-            continue;
-
-          case FILE_HOST:
-            if (chr == EOF || chr == '/' || chr == '\\' || chr == '?' || chr == '#') {
-              if (!stateOverride && isWindowsDriveLetter(buffer)) {
-                state = PATH;
-              } else if (buffer == '') {
-                url.host = '';
-                if (stateOverride) { return; }
-                state = PATH_START;
+            case RELATIVE_SLASH:
+              if (url.isSpecial() && (chr == '/' || chr == '\\')) {
+                state = SPECIAL_AUTHORITY_IGNORE_SLASHES;
+              } else if (chr == '/') {
+                state = AUTHORITY;
               } else {
-                failure = parseHost(url, buffer);
+                url.username = base.username;
+                url.password = base.password;
+                url.host = base.host;
+                url.port = base.port;
+                state = PATH;
+                continue;
+              } break;
+
+            case SPECIAL_AUTHORITY_SLASHES:
+              state = SPECIAL_AUTHORITY_IGNORE_SLASHES;
+              if (chr != '/' || charAt(buffer, pointer + 1) != '/') { continue; }
+              pointer++;
+              break;
+
+            case SPECIAL_AUTHORITY_IGNORE_SLASHES:
+              if (chr != '/' && chr != '\\') {
+                state = AUTHORITY;
+                continue;
+              } break;
+
+            case AUTHORITY:
+              if (chr == '@') {
+                if (seenAt) { buffer = '%40' + buffer; }
+                seenAt = true;
+                bufferCodePoints = arrayFrom(buffer);
+                for (var i = 0; i < bufferCodePoints.length; i++) {
+                  var codePoint = bufferCodePoints[i];
+                  if (codePoint == ':' && !seenPasswordToken) {
+                    seenPasswordToken = true;
+                    continue;
+                  }
+                  var encodedCodePoints = percentEncode(codePoint, userinfoPercentEncodeSet);
+                  if (seenPasswordToken) { url.password += encodedCodePoints; }
+                  else { url.username += encodedCodePoints; }
+                }
+                buffer = '';
+              } else if (
+                chr == EOF || chr == '/' || chr == '?' || chr == '#' ||
+                (chr == '\\' && url.isSpecial())
+              ) {
+                if (seenAt && buffer == '') { return INVALID_AUTHORITY; }
+                pointer -= arrayFrom(buffer).length + 1;
+                buffer = '';
+                state = HOST;
+              } else { buffer += chr; }
+              break;
+
+            case HOST:
+            case HOSTNAME:
+              if (stateOverride && url.scheme == 'file') {
+                state = FILE_HOST;
+                continue;
+              } else if (chr == ':' && !seenBracket) {
+                if (buffer == '') { return INVALID_HOST; }
+                failure = url.parseHost(buffer);
                 if (failure) { return failure; }
-                if (url.host == 'localhost') { url.host = ''; }
-                if (stateOverride) { return; }
+                buffer = '';
+                state = PORT;
+                if (stateOverride == HOSTNAME) { return; }
+              } else if (
+                chr == EOF || chr == '/' || chr == '?' || chr == '#' ||
+                (chr == '\\' && url.isSpecial())
+              ) {
+                if (url.isSpecial() && buffer == '') { return INVALID_HOST; }
+                if (stateOverride && buffer == '' && (url.includesCredentials() || url.port !== null)) { return; }
+                failure = url.parseHost(buffer);
+                if (failure) { return failure; }
                 buffer = '';
                 state = PATH_START;
-              } continue;
-            } else { buffer += chr; }
-            break;
+                if (stateOverride) { return; }
+                continue;
+              } else {
+                if (chr == '[') { seenBracket = true; }
+                else if (chr == ']') { seenBracket = false; }
+                buffer += chr;
+              } break;
 
-          case PATH_START:
-            if (isSpecial(url)) {
-              state = PATH;
-              if (chr != '/' && chr != '\\') { continue; }
-            } else if (!stateOverride && chr == '?') {
-              url.query = '';
-              state = QUERY;
-            } else if (!stateOverride && chr == '#') {
-              url.fragment = '';
-              state = FRAGMENT;
-            } else if (chr != EOF) {
-              state = PATH;
-              if (chr != '/') { continue; }
-            } break;
-
-          case PATH:
-            if (
-              chr == EOF || chr == '/' ||
-              (chr == '\\' && isSpecial(url)) ||
-              (!stateOverride && (chr == '?' || chr == '#'))
-            ) {
-              if (isDoubleDot(buffer)) {
-                shortenURLsPath(url);
-                if (chr != '/' && !(chr == '\\' && isSpecial(url))) {
-                  push(url.path, '');
+            case PORT:
+              if (exec(DIGIT, chr)) {
+                buffer += chr;
+              } else if (
+                chr == EOF || chr == '/' || chr == '?' || chr == '#' ||
+                (chr == '\\' && url.isSpecial()) ||
+                stateOverride
+              ) {
+                if (buffer != '') {
+                  var port = parseInt$1(buffer, 10);
+                  if (port > 0xFFFF) { return INVALID_PORT; }
+                  url.port = (url.isSpecial() && port === specialSchemes[url.scheme]) ? null : port;
+                  buffer = '';
                 }
-              } else if (isSingleDot(buffer)) {
-                if (chr != '/' && !(chr == '\\' && isSpecial(url))) {
-                  push(url.path, '');
+                if (stateOverride) { return; }
+                state = PATH_START;
+                continue;
+              } else { return INVALID_PORT; }
+              break;
+
+            case FILE:
+              url.scheme = 'file';
+              if (chr == '/' || chr == '\\') { state = FILE_SLASH; }
+              else if (base && base.scheme == 'file') {
+                if (chr == EOF) {
+                  url.host = base.host;
+                  url.path = arraySliceSimple(base.path);
+                  url.query = base.query;
+                } else if (chr == '?') {
+                  url.host = base.host;
+                  url.path = arraySliceSimple(base.path);
+                  url.query = '';
+                  state = QUERY;
+                } else if (chr == '#') {
+                  url.host = base.host;
+                  url.path = arraySliceSimple(base.path);
+                  url.query = base.query;
+                  url.fragment = '';
+                  state = FRAGMENT;
+                } else {
+                  if (!startsWithWindowsDriveLetter(join(arraySliceSimple(codePoints, pointer), ''))) {
+                    url.host = base.host;
+                    url.path = arraySliceSimple(base.path);
+                    url.shortenPath();
+                  }
+                  state = PATH;
+                  continue;
                 }
               } else {
-                if (url.scheme == 'file' && !url.path.length && isWindowsDriveLetter(buffer)) {
-                  if (url.host) { url.host = ''; }
-                  buffer = charAt(buffer, 0) + ':'; // normalize windows drive letter
-                }
-                push(url.path, buffer);
+                state = PATH;
+                continue;
+              } break;
+
+            case FILE_SLASH:
+              if (chr == '/' || chr == '\\') {
+                state = FILE_HOST;
+                break;
               }
-              buffer = '';
-              if (url.scheme == 'file' && (chr == EOF || chr == '?' || chr == '#')) {
-                while (url.path.length > 1 && url.path[0] === '') {
-                  shift(url.path);
-                }
+              if (base && base.scheme == 'file' && !startsWithWindowsDriveLetter(join(arraySliceSimple(codePoints, pointer), ''))) {
+                if (isWindowsDriveLetter(base.path[0], true)) { push(url.path, base.path[0]); }
+                else { url.host = base.host; }
               }
+              state = PATH;
+              continue;
+
+            case FILE_HOST:
+              if (chr == EOF || chr == '/' || chr == '\\' || chr == '?' || chr == '#') {
+                if (!stateOverride && isWindowsDriveLetter(buffer)) {
+                  state = PATH;
+                } else if (buffer == '') {
+                  url.host = '';
+                  if (stateOverride) { return; }
+                  state = PATH_START;
+                } else {
+                  failure = url.parseHost(buffer);
+                  if (failure) { return failure; }
+                  if (url.host == 'localhost') { url.host = ''; }
+                  if (stateOverride) { return; }
+                  buffer = '';
+                  state = PATH_START;
+                } continue;
+              } else { buffer += chr; }
+              break;
+
+            case PATH_START:
+              if (url.isSpecial()) {
+                state = PATH;
+                if (chr != '/' && chr != '\\') { continue; }
+              } else if (!stateOverride && chr == '?') {
+                url.query = '';
+                state = QUERY;
+              } else if (!stateOverride && chr == '#') {
+                url.fragment = '';
+                state = FRAGMENT;
+              } else if (chr != EOF) {
+                state = PATH;
+                if (chr != '/') { continue; }
+              } break;
+
+            case PATH:
+              if (
+                chr == EOF || chr == '/' ||
+                (chr == '\\' && url.isSpecial()) ||
+                (!stateOverride && (chr == '?' || chr == '#'))
+              ) {
+                if (isDoubleDot(buffer)) {
+                  url.shortenPath();
+                  if (chr != '/' && !(chr == '\\' && url.isSpecial())) {
+                    push(url.path, '');
+                  }
+                } else if (isSingleDot(buffer)) {
+                  if (chr != '/' && !(chr == '\\' && url.isSpecial())) {
+                    push(url.path, '');
+                  }
+                } else {
+                  if (url.scheme == 'file' && !url.path.length && isWindowsDriveLetter(buffer)) {
+                    if (url.host) { url.host = ''; }
+                    buffer = charAt(buffer, 0) + ':'; // normalize windows drive letter
+                  }
+                  push(url.path, buffer);
+                }
+                buffer = '';
+                if (url.scheme == 'file' && (chr == EOF || chr == '?' || chr == '#')) {
+                  while (url.path.length > 1 && url.path[0] === '') {
+                    shift(url.path);
+                  }
+                }
+                if (chr == '?') {
+                  url.query = '';
+                  state = QUERY;
+                } else if (chr == '#') {
+                  url.fragment = '';
+                  state = FRAGMENT;
+                }
+              } else {
+                buffer += percentEncode(chr, pathPercentEncodeSet);
+              } break;
+
+            case CANNOT_BE_A_BASE_URL_PATH:
               if (chr == '?') {
                 url.query = '';
                 state = QUERY;
               } else if (chr == '#') {
                 url.fragment = '';
                 state = FRAGMENT;
-              }
-            } else {
-              buffer += percentEncode(chr, pathPercentEncodeSet);
-            } break;
+              } else if (chr != EOF) {
+                url.path[0] += percentEncode(chr, C0ControlPercentEncodeSet);
+              } break;
 
-          case CANNOT_BE_A_BASE_URL_PATH:
-            if (chr == '?') {
-              url.query = '';
-              state = QUERY;
-            } else if (chr == '#') {
-              url.fragment = '';
-              state = FRAGMENT;
-            } else if (chr != EOF) {
-              url.path[0] += percentEncode(chr, C0ControlPercentEncodeSet);
-            } break;
+            case QUERY:
+              if (!stateOverride && chr == '#') {
+                url.fragment = '';
+                state = FRAGMENT;
+              } else if (chr != EOF) {
+                if (chr == "'" && url.isSpecial()) { url.query += '%27'; }
+                else if (chr == '#') { url.query += '%23'; }
+                else { url.query += percentEncode(chr, C0ControlPercentEncodeSet); }
+              } break;
 
-          case QUERY:
-            if (!stateOverride && chr == '#') {
-              url.fragment = '';
-              state = FRAGMENT;
-            } else if (chr != EOF) {
-              if (chr == "'" && isSpecial(url)) { url.query += '%27'; }
-              else if (chr == '#') { url.query += '%23'; }
-              else { url.query += percentEncode(chr, C0ControlPercentEncodeSet); }
-            } break;
+            case FRAGMENT:
+              if (chr != EOF) { url.fragment += percentEncode(chr, fragmentPercentEncodeSet); }
+              break;
+          }
 
-          case FRAGMENT:
-            if (chr != EOF) { url.fragment += percentEncode(chr, fragmentPercentEncodeSet); }
-            break;
+          pointer++;
         }
-
-        pointer++;
+      },
+      // https://url.spec.whatwg.org/#host-parsing
+      parseHost: function (input) {
+        var result, codePoints, index;
+        if (charAt(input, 0) == '[') {
+          if (charAt(input, input.length - 1) != ']') { return INVALID_HOST; }
+          result = parseIPv6(stringSlice(input, 1, -1));
+          if (!result) { return INVALID_HOST; }
+          this.host = result;
+        // opaque host
+        } else if (!this.isSpecial()) {
+          if (exec(FORBIDDEN_HOST_CODE_POINT_EXCLUDING_PERCENT, input)) { return INVALID_HOST; }
+          result = '';
+          codePoints = arrayFrom(input);
+          for (index = 0; index < codePoints.length; index++) {
+            result += percentEncode(codePoints[index], C0ControlPercentEncodeSet);
+          }
+          this.host = result;
+        } else {
+          input = stringPunycodeToAscii(input);
+          if (exec(FORBIDDEN_HOST_CODE_POINT, input)) { return INVALID_HOST; }
+          result = parseIPv4(input);
+          if (result === null) { return INVALID_HOST; }
+          this.host = result;
+        }
+      },
+      // https://url.spec.whatwg.org/#cannot-have-a-username-password-port
+      cannotHaveUsernamePasswordPort: function () {
+        return !this.host || this.cannotBeABaseURL || this.scheme == 'file';
+      },
+      // https://url.spec.whatwg.org/#include-credentials
+      includesCredentials: function () {
+        return this.username != '' || this.password != '';
+      },
+      // https://url.spec.whatwg.org/#is-special
+      isSpecial: function () {
+        return hasOwnProperty_1(specialSchemes, this.scheme);
+      },
+      // https://url.spec.whatwg.org/#shorten-a-urls-path
+      shortenPath: function () {
+        var path = this.path;
+        var pathSize = path.length;
+        if (pathSize && (this.scheme != 'file' || pathSize != 1 || !isWindowsDriveLetter(path[0], true))) {
+          path.length--;
+        }
+      },
+      // https://url.spec.whatwg.org/#concept-url-serializer
+      serialize: function () {
+        var url = this;
+        var scheme = url.scheme;
+        var username = url.username;
+        var password = url.password;
+        var host = url.host;
+        var port = url.port;
+        var path = url.path;
+        var query = url.query;
+        var fragment = url.fragment;
+        var output = scheme + ':';
+        if (host !== null) {
+          output += '//';
+          if (url.includesCredentials()) {
+            output += username + (password ? ':' + password : '') + '@';
+          }
+          output += serializeHost(host);
+          if (port !== null) { output += ':' + port; }
+        } else if (scheme == 'file') { output += '//'; }
+        output += url.cannotBeABaseURL ? path[0] : path.length ? '/' + join(path, '/') : '';
+        if (query !== null) { output += '?' + query; }
+        if (fragment !== null) { output += '#' + fragment; }
+        return output;
+      },
+      // https://url.spec.whatwg.org/#dom-url-href
+      setHref: function (href) {
+        var failure = this.parse(href);
+        if (failure) { throw TypeError$1(failure); }
+        this.searchParams.update();
+      },
+      // https://url.spec.whatwg.org/#dom-url-origin
+      getOrigin: function () {
+        var scheme = this.scheme;
+        var port = this.port;
+        if (scheme == 'blob') { try {
+          return new URLConstructor(scheme.path[0]).origin;
+        } catch (error) {
+          return 'null';
+        } }
+        if (scheme == 'file' || !this.isSpecial()) { return 'null'; }
+        return scheme + '://' + serializeHost(this.host) + (port !== null ? ':' + port : '');
+      },
+      // https://url.spec.whatwg.org/#dom-url-protocol
+      getProtocol: function () {
+        return this.scheme + ':';
+      },
+      setProtocol: function (protocol) {
+        this.parse(toString_1(protocol) + ':', SCHEME_START);
+      },
+      // https://url.spec.whatwg.org/#dom-url-username
+      getUsername: function () {
+        return this.username;
+      },
+      setUsername: function (username) {
+        var codePoints = arrayFrom(toString_1(username));
+        if (this.cannotHaveUsernamePasswordPort()) { return; }
+        this.username = '';
+        for (var i = 0; i < codePoints.length; i++) {
+          this.username += percentEncode(codePoints[i], userinfoPercentEncodeSet);
+        }
+      },
+      // https://url.spec.whatwg.org/#dom-url-password
+      getPassword: function () {
+        return this.password;
+      },
+      setPassword: function (password) {
+        var codePoints = arrayFrom(toString_1(password));
+        if (this.cannotHaveUsernamePasswordPort()) { return; }
+        this.password = '';
+        for (var i = 0; i < codePoints.length; i++) {
+          this.password += percentEncode(codePoints[i], userinfoPercentEncodeSet);
+        }
+      },
+      // https://url.spec.whatwg.org/#dom-url-host
+      getHost: function () {
+        var host = this.host;
+        var port = this.port;
+        return host === null ? ''
+          : port === null ? serializeHost(host)
+          : serializeHost(host) + ':' + port;
+      },
+      setHost: function (host) {
+        if (this.cannotBeABaseURL) { return; }
+        this.parse(host, HOST);
+      },
+      // https://url.spec.whatwg.org/#dom-url-hostname
+      getHostname: function () {
+        var host = this.host;
+        return host === null ? '' : serializeHost(host);
+      },
+      setHostname: function (hostname) {
+        if (this.cannotBeABaseURL) { return; }
+        this.parse(hostname, HOSTNAME);
+      },
+      // https://url.spec.whatwg.org/#dom-url-port
+      getPort: function () {
+        var port = this.port;
+        return port === null ? '' : toString_1(port);
+      },
+      setPort: function (port) {
+        if (this.cannotHaveUsernamePasswordPort()) { return; }
+        port = toString_1(port);
+        if (port == '') { this.port = null; }
+        else { this.parse(port, PORT); }
+      },
+      // https://url.spec.whatwg.org/#dom-url-pathname
+      getPathname: function () {
+        var path = this.path;
+        return this.cannotBeABaseURL ? path[0] : path.length ? '/' + join(path, '/') : '';
+      },
+      setPathname: function (pathname) {
+        if (this.cannotBeABaseURL) { return; }
+        this.path = [];
+        this.parse(pathname, PATH_START);
+      },
+      // https://url.spec.whatwg.org/#dom-url-search
+      getSearch: function () {
+        var query = this.query;
+        return query ? '?' + query : '';
+      },
+      setSearch: function (search) {
+        search = toString_1(search);
+        if (search == '') {
+          this.query = null;
+        } else {
+          if ('?' == charAt(search, 0)) { search = stringSlice(search, 1); }
+          this.query = '';
+          this.parse(search, QUERY);
+        }
+        this.searchParams.update();
+      },
+      // https://url.spec.whatwg.org/#dom-url-searchparams
+      getSearchParams: function () {
+        return this.searchParams.facade;
+      },
+      // https://url.spec.whatwg.org/#dom-url-hash
+      getHash: function () {
+        var fragment = this.fragment;
+        return fragment ? '#' + fragment : '';
+      },
+      setHash: function (hash) {
+        hash = toString_1(hash);
+        if (hash == '') {
+          this.fragment = null;
+          return;
+        }
+        if ('#' == charAt(hash, 0)) { hash = stringSlice(hash, 1); }
+        this.fragment = '';
+        this.parse(hash, FRAGMENT);
+      },
+      update: function () {
+        this.query = this.searchParams.serialize() || null;
       }
     };
 
@@ -15013,252 +16494,89 @@ var doric = (function (exports) {
     var URLConstructor = function URL(url /* , base */) {
       var that = anInstance(this, URLPrototype);
       var base = arguments.length > 1 ? arguments[1] : undefined;
-      var urlString = toString_1(url);
-      var state = setInternalState(that, { type: 'URL' });
-      var baseState, failure;
-      if (base !== undefined) {
-        try {
-          baseState = getInternalURLState(base);
-        } catch (error) {
-          failure = parseURL(baseState = {}, toString_1(base));
-          if (failure) { throw TypeError$1(failure); }
-        }
-      }
-      failure = parseURL(state, urlString, null, baseState);
-      if (failure) { throw TypeError$1(failure); }
-      var searchParams = state.searchParams = new URLSearchParams$1();
-      var searchParamsState = getInternalSearchParamsState(searchParams);
-      searchParamsState.updateSearchParams(state.query);
-      searchParamsState.updateURL = function () {
-        state.query = toString_1(searchParams) || null;
-      };
+      var state = setInternalState(that, new URLState(url, false, base));
       if (!descriptors) {
-        that.href = functionCall(serializeURL, that);
-        that.origin = functionCall(getOrigin, that);
-        that.protocol = functionCall(getProtocol, that);
-        that.username = functionCall(getUsername, that);
-        that.password = functionCall(getPassword, that);
-        that.host = functionCall(getHost, that);
-        that.hostname = functionCall(getHostname, that);
-        that.port = functionCall(getPort, that);
-        that.pathname = functionCall(getPathname, that);
-        that.search = functionCall(getSearch, that);
-        that.searchParams = functionCall(getSearchParams, that);
-        that.hash = functionCall(getHash, that);
+        that.href = state.serialize();
+        that.origin = state.getOrigin();
+        that.protocol = state.getProtocol();
+        that.username = state.getUsername();
+        that.password = state.getPassword();
+        that.host = state.getHost();
+        that.hostname = state.getHostname();
+        that.port = state.getPort();
+        that.pathname = state.getPathname();
+        that.search = state.getSearch();
+        that.searchParams = state.getSearchParams();
+        that.hash = state.getHash();
       }
     };
 
     var URLPrototype = URLConstructor.prototype;
 
-    var serializeURL = function () {
-      var url = getInternalURLState(this);
-      var scheme = url.scheme;
-      var username = url.username;
-      var password = url.password;
-      var host = url.host;
-      var port = url.port;
-      var path = url.path;
-      var query = url.query;
-      var fragment = url.fragment;
-      var output = scheme + ':';
-      if (host !== null) {
-        output += '//';
-        if (includesCredentials(url)) {
-          output += username + (password ? ':' + password : '') + '@';
-        }
-        output += serializeHost(host);
-        if (port !== null) { output += ':' + port; }
-      } else if (scheme == 'file') { output += '//'; }
-      output += url.cannotBeABaseURL ? path[0] : path.length ? '/' + join(path, '/') : '';
-      if (query !== null) { output += '?' + query; }
-      if (fragment !== null) { output += '#' + fragment; }
-      return output;
-    };
-
-    var getOrigin = function () {
-      var url = getInternalURLState(this);
-      var scheme = url.scheme;
-      var port = url.port;
-      if (scheme == 'blob') { try {
-        return new URLConstructor(scheme.path[0]).origin;
-      } catch (error) {
-        return 'null';
-      } }
-      if (scheme == 'file' || !isSpecial(url)) { return 'null'; }
-      return scheme + '://' + serializeHost(url.host) + (port !== null ? ':' + port : '');
-    };
-
-    var getProtocol = function () {
-      return getInternalURLState(this).scheme + ':';
-    };
-
-    var getUsername = function () {
-      return getInternalURLState(this).username;
-    };
-
-    var getPassword = function () {
-      return getInternalURLState(this).password;
-    };
-
-    var getHost = function () {
-      var url = getInternalURLState(this);
-      var host = url.host;
-      var port = url.port;
-      return host === null ? ''
-        : port === null ? serializeHost(host)
-        : serializeHost(host) + ':' + port;
-    };
-
-    var getHostname = function () {
-      var host = getInternalURLState(this).host;
-      return host === null ? '' : serializeHost(host);
-    };
-
-    var getPort = function () {
-      var port = getInternalURLState(this).port;
-      return port === null ? '' : toString_1(port);
-    };
-
-    var getPathname = function () {
-      var url = getInternalURLState(this);
-      var path = url.path;
-      return url.cannotBeABaseURL ? path[0] : path.length ? '/' + join(path, '/') : '';
-    };
-
-    var getSearch = function () {
-      var query = getInternalURLState(this).query;
-      return query ? '?' + query : '';
-    };
-
-    var getSearchParams = function () {
-      return getInternalURLState(this).searchParams;
-    };
-
-    var getHash = function () {
-      var fragment = getInternalURLState(this).fragment;
-      return fragment ? '#' + fragment : '';
-    };
-
     var accessorDescriptor = function (getter, setter) {
-      return { get: getter, set: setter, configurable: true, enumerable: true };
+      return {
+        get: function () {
+          return getInternalURLState(this)[getter]();
+        },
+        set: setter && function (value) {
+          return getInternalURLState(this)[setter](value);
+        },
+        configurable: true,
+        enumerable: true
+      };
     };
 
     if (descriptors) {
       objectDefineProperties(URLPrototype, {
         // `URL.prototype.href` accessors pair
         // https://url.spec.whatwg.org/#dom-url-href
-        href: accessorDescriptor(serializeURL, function (href) {
-          var url = getInternalURLState(this);
-          var urlString = toString_1(href);
-          var failure = parseURL(url, urlString);
-          if (failure) { throw TypeError$1(failure); }
-          getInternalSearchParamsState(url.searchParams).updateSearchParams(url.query);
-        }),
+        href: accessorDescriptor('serialize', 'setHref'),
         // `URL.prototype.origin` getter
         // https://url.spec.whatwg.org/#dom-url-origin
-        origin: accessorDescriptor(getOrigin),
+        origin: accessorDescriptor('getOrigin'),
         // `URL.prototype.protocol` accessors pair
         // https://url.spec.whatwg.org/#dom-url-protocol
-        protocol: accessorDescriptor(getProtocol, function (protocol) {
-          var url = getInternalURLState(this);
-          parseURL(url, toString_1(protocol) + ':', SCHEME_START);
-        }),
+        protocol: accessorDescriptor('getProtocol', 'setProtocol'),
         // `URL.prototype.username` accessors pair
         // https://url.spec.whatwg.org/#dom-url-username
-        username: accessorDescriptor(getUsername, function (username) {
-          var url = getInternalURLState(this);
-          var codePoints = arrayFrom(toString_1(username));
-          if (cannotHaveUsernamePasswordPort(url)) { return; }
-          url.username = '';
-          for (var i = 0; i < codePoints.length; i++) {
-            url.username += percentEncode(codePoints[i], userinfoPercentEncodeSet);
-          }
-        }),
+        username: accessorDescriptor('getUsername', 'setUsername'),
         // `URL.prototype.password` accessors pair
         // https://url.spec.whatwg.org/#dom-url-password
-        password: accessorDescriptor(getPassword, function (password) {
-          var url = getInternalURLState(this);
-          var codePoints = arrayFrom(toString_1(password));
-          if (cannotHaveUsernamePasswordPort(url)) { return; }
-          url.password = '';
-          for (var i = 0; i < codePoints.length; i++) {
-            url.password += percentEncode(codePoints[i], userinfoPercentEncodeSet);
-          }
-        }),
+        password: accessorDescriptor('getPassword', 'setPassword'),
         // `URL.prototype.host` accessors pair
         // https://url.spec.whatwg.org/#dom-url-host
-        host: accessorDescriptor(getHost, function (host) {
-          var url = getInternalURLState(this);
-          if (url.cannotBeABaseURL) { return; }
-          parseURL(url, toString_1(host), HOST);
-        }),
+        host: accessorDescriptor('getHost', 'setHost'),
         // `URL.prototype.hostname` accessors pair
         // https://url.spec.whatwg.org/#dom-url-hostname
-        hostname: accessorDescriptor(getHostname, function (hostname) {
-          var url = getInternalURLState(this);
-          if (url.cannotBeABaseURL) { return; }
-          parseURL(url, toString_1(hostname), HOSTNAME);
-        }),
+        hostname: accessorDescriptor('getHostname', 'setHostname'),
         // `URL.prototype.port` accessors pair
         // https://url.spec.whatwg.org/#dom-url-port
-        port: accessorDescriptor(getPort, function (port) {
-          var url = getInternalURLState(this);
-          if (cannotHaveUsernamePasswordPort(url)) { return; }
-          port = toString_1(port);
-          if (port == '') { url.port = null; }
-          else { parseURL(url, port, PORT); }
-        }),
+        port: accessorDescriptor('getPort', 'setPort'),
         // `URL.prototype.pathname` accessors pair
         // https://url.spec.whatwg.org/#dom-url-pathname
-        pathname: accessorDescriptor(getPathname, function (pathname) {
-          var url = getInternalURLState(this);
-          if (url.cannotBeABaseURL) { return; }
-          url.path = [];
-          parseURL(url, toString_1(pathname), PATH_START);
-        }),
+        pathname: accessorDescriptor('getPathname', 'setPathname'),
         // `URL.prototype.search` accessors pair
         // https://url.spec.whatwg.org/#dom-url-search
-        search: accessorDescriptor(getSearch, function (search) {
-          var url = getInternalURLState(this);
-          search = toString_1(search);
-          if (search == '') {
-            url.query = null;
-          } else {
-            if ('?' == charAt(search, 0)) { search = stringSlice(search, 1); }
-            url.query = '';
-            parseURL(url, search, QUERY);
-          }
-          getInternalSearchParamsState(url.searchParams).updateSearchParams(url.query);
-        }),
+        search: accessorDescriptor('getSearch', 'setSearch'),
         // `URL.prototype.searchParams` getter
         // https://url.spec.whatwg.org/#dom-url-searchparams
-        searchParams: accessorDescriptor(getSearchParams),
+        searchParams: accessorDescriptor('getSearchParams'),
         // `URL.prototype.hash` accessors pair
         // https://url.spec.whatwg.org/#dom-url-hash
-        hash: accessorDescriptor(getHash, function (hash) {
-          var url = getInternalURLState(this);
-          hash = toString_1(hash);
-          if (hash == '') {
-            url.fragment = null;
-            return;
-          }
-          if ('#' == charAt(hash, 0)) { hash = stringSlice(hash, 1); }
-          url.fragment = '';
-          parseURL(url, hash, FRAGMENT);
-        })
+        hash: accessorDescriptor('getHash', 'setHash')
       });
     }
 
     // `URL.prototype.toJSON` method
     // https://url.spec.whatwg.org/#dom-url-tojson
     redefine(URLPrototype, 'toJSON', function toJSON() {
-      return functionCall(serializeURL, this);
+      return getInternalURLState(this).serialize();
     }, { enumerable: true });
 
     // `URL.prototype.toString` method
     // https://url.spec.whatwg.org/#URL-stringification-behavior
     redefine(URLPrototype, 'toString', function toString() {
-      return functionCall(serializeURL, this);
+      return getInternalURLState(this).serialize();
     }, { enumerable: true });
 
     if (NativeURL) {

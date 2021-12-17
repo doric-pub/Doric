@@ -683,6 +683,14 @@
     self.imageScale = UIScreen.mainScreen.scale;
     self.blurEffectView = nil;
     self.view.contentMode = UIViewContentModeScaleAspectFill;
+    if (self.animationEndCallbackId) {
+#if DORIC_USE_YYWEBIMAGE
+        [(DoricImageView *) self.view removeObserver:self forKeyPath:@"currentIsPlayingAnimation" context:nil];
+#elif DORIC_USE_SDWEBIMAGE
+        [(DoricImageView *) self.view removeObserver:self forKeyPath:@"currentFrameIndex" context:nil];
+#endif
+        self.animationEndCallbackId = nil;
+    }
 }
 
 - (BOOL)needReload {
@@ -697,10 +705,12 @@
 }
 
 - (void)dealloc {
+    if (self.animationEndCallbackId) {
 #if DORIC_USE_YYWEBIMAGE
-    [(DoricImageView *) self.view removeObserver:self forKeyPath:@"currentIsPlayingAnimation" context:nil];
+        [(DoricImageView *) self.view removeObserver:self forKeyPath:@"currentIsPlayingAnimation" context:nil];
 #elif DORIC_USE_SDWEBIMAGE
-    [(DoricImageView *) self.view removeObserver:self forKeyPath:@"currentFrameIndex" context:nil];
+        [(DoricImageView *) self.view removeObserver:self forKeyPath:@"currentFrameIndex" context:nil];
 #endif
+    }
 }
 @end

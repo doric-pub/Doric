@@ -2360,6 +2360,10 @@ var Image = /** @class */ (function (_super) {
         Property,
         __metadata$b("design:type", Object)
     ], Image.prototype, "stretchInset", void 0);
+    __decorate$b([
+        Property,
+        __metadata$b("design:type", Function)
+    ], Image.prototype, "onAnimationEnd", void 0);
     return Image;
 }(View));
 function image(config) {

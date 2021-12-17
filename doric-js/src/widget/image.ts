@@ -115,6 +115,12 @@ export class Image extends View {
         bottom: number
     }
 
+    /**
+     * Called if loaded image is animated and played end.
+     */
+    @Property
+    onAnimationEnd?: () => void
+
     isAnimating(context: BridgeContext) {
         return this.nativeChannel(context, "isAnimating")() as Promise<boolean>
     }

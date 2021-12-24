@@ -32,6 +32,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
@@ -191,7 +192,7 @@ public class DoricContext {
     }
 
     public void teardown() {
-        Set<String> animatorIds = animators.keySet();
+        Set<String> animatorIds = new HashSet<>(animators.keySet());
         for (String animatorId : animatorIds) {
             Animator animator = animators.remove(animatorId);
             if (animator != null) {

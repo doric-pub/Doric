@@ -15,6 +15,7 @@
  */
 package pub.doric;
 
+import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.content.Context;
 import android.content.Intent;
@@ -32,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.concurrent.Callable;
 
 import pub.doric.async.AsyncResult;
@@ -62,6 +64,7 @@ public class DoricContext {
     private IDoricDriver doricDriver;
     private final Map<String, Map<String, ViewNode<?>>> mHeadNodes = new HashMap<>();
     private final DoricPerformanceProfile performanceProfile;
+    private final Map<String, Animator> animators = new HashMap<>();
 
     public Collection<ViewNode<?>> allHeadNodes(String type) {
         Map<String, ViewNode<?>> headNode = mHeadNodes.get(type);
@@ -187,6 +190,10 @@ public class DoricContext {
     }
 
     public void teardown() {
+        for (Animator animator : animators.values()) {
+            animator.cancel();
+        }
+        animators.clear();
         callEntity(DoricConstant.DORIC_ENTITY_DESTROY).setCallback(new AsyncResult.Callback<JSDecoder>() {
             @Override
             public void onResult(JSDecoder result) {
@@ -331,5 +338,17 @@ public class DoricContext {
                 javaPlugin.onRequestPermissionsResult(requestCode, permissions, grantResults);
             }
         }
+    }
+
+    public void putAnimator(String animatorId, Animator animator) {
+        animators.put(animatorId, animator);
+    }
+
+    public Animator getAnimator(String animatorId) {
+        return animators.get(animatorId);
+    }
+
+    public void removeAnimator(String animatorId) {
+        animators.remove(animatorId);
     }
 }

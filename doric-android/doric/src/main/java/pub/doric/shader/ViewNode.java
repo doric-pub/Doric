@@ -80,7 +80,6 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     protected ViewGroup.LayoutParams mLayoutParams;
     private String mType;
     protected JSObject mFlexConfig;
-    private final WeakHashMap<String, Animator> animators = new WeakHashMap<>();
 
     public JSObject getFlexConfig() {
         return mFlexConfig;
@@ -942,18 +941,20 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     public void doAnimation(JSValue value, final DoricPromise promise) {
         Animator animator = parseAnimator(value);
         if (animator != null) {
-            String animatorId = value.asObject().getProperty("id").asString().value();
-            animators.put(animatorId, animator);
+            final String animatorId = value.asObject().getProperty("id").asString().value();
+            getDoricContext().putAnimator(animatorId, animator);
             animator.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationCancel(Animator animation) {
                     super.onAnimationCancel(animation);
+                    getDoricContext().removeAnimator(animatorId);
                     promise.reject(new JavaValue("Animation cancelled"));
                 }
 
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     super.onAnimationEnd(animation);
+                    getDoricContext().removeAnimator(animatorId);
                     JSONBuilder jsonBuilder = new JSONBuilder();
                     for (String key : animatedKeys) {
                         jsonBuilder.put(key, getAnimatedValue(key));
@@ -967,7 +968,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
 
     @DoricMethod
     public void clearAnimation(String id, final DoricPromise promise) {
-        Animator animator = animators.get(id);
+        Animator animator = getDoricContext().getAnimator(id);
         if (animator != null) {
             animator.cancel();
         }
@@ -976,7 +977,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
 
     @DoricMethod
     public void cancelAnimation(String id, final DoricPromise promise) {
-        Animator animator = animators.get(id);
+        Animator animator = getDoricContext().getAnimator(id);
         if (animator != null) {
             animator.cancel();
         }

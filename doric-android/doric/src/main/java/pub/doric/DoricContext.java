@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.Callable;
 
@@ -190,10 +191,13 @@ public class DoricContext {
     }
 
     public void teardown() {
-        for (Animator animator : animators.values()) {
-            animator.cancel();
+        Set<String> animatorIds = animators.keySet();
+        for (String animatorId : animatorIds) {
+            Animator animator = animators.remove(animatorId);
+            if (animator != null) {
+                animator.cancel();
+            }
         }
-        animators.clear();
         callEntity(DoricConstant.DORIC_ENTITY_DESTROY).setCallback(new AsyncResult.Callback<JSDecoder>() {
             @Override
             public void onResult(JSDecoder result) {

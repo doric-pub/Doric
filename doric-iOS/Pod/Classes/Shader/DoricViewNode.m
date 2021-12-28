@@ -946,6 +946,8 @@
 
     self.view.layer.cornerRadius = 0;
     self.view.layer.mask = nil;
+
+    self.view.layer.anchorPoint = CGPointMake(0.5f, 0.5f);
     self.view.layer.borderWidth = 0;
     self.view.layer.borderColor = UIColor.clearColor.CGColor;
     for (UIGestureRecognizer *gestureRecognizer in  self.view.gestureRecognizers) {

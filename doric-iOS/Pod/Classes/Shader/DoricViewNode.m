@@ -128,8 +128,9 @@
     if (self.rotation) {
         transform = CGAffineTransformRotate(transform, (self.rotation.floatValue ?: 0) * M_PI);
     }
-    self.view.layer.anchorPoint = CGPointMake(self.pivotX.floatValue
-            ?: 0.5f, self.pivotY.floatValue ?: 0.5f);
+    self.view.layer.anchorPoint = CGPointMake(
+            self.pivotX ? self.pivotX.floatValue : 0.5f,
+            self.pivotY ? self.pivotY.floatValue : 0.5f);
 
     if (self.rotationX || self.rotationY) {
         CATransform3D transform3D = CATransform3DMakeAffineTransform(transform);

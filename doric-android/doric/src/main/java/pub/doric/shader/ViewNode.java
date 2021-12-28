@@ -53,7 +53,6 @@ import com.github.pengfeizhou.jscore.JavaValue;
 import org.json.JSONObject;
 
 import java.util.LinkedList;
-import java.util.WeakHashMap;
 
 import pub.doric.DoricContext;
 import pub.doric.DoricRegistry;
@@ -80,6 +79,8 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
     protected ViewGroup.LayoutParams mLayoutParams;
     private String mType;
     protected JSObject mFlexConfig;
+    private Float mPivotX = null;
+    private Float mPivotY = null;
 
     public JSObject getFlexConfig() {
         return mFlexConfig;
@@ -881,6 +882,12 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
 
     @DoricMethod
     public void setRotation(float rotation) {
+        if (mPivotX != null) {
+            setPivotX(mPivotX);
+        }
+        if (mPivotY != null) {
+            setPivotY(mPivotY);
+        }
         getNodeView().setRotation(rotation * 180);
     }
 
@@ -911,6 +918,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
 
     @DoricMethod
     public void setPivotX(float v) {
+        mPivotX = v;
         getNodeView().setPivotX(v * getNodeView().getWidth());
     }
 
@@ -921,6 +929,7 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
 
     @DoricMethod
     public void setPivotY(float v) {
+        mPivotY = v;
         getNodeView().setPivotY(v * getNodeView().getHeight());
     }
 
@@ -1207,6 +1216,12 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
         setRotation(0);
         setRotationX(0);
         setRotationY(0);
+        if (mPivotX != null) {
+            mPivotX = 0.5f;
+        }
+        if (mPivotY != null) {
+            mPivotY = 0.5f;
+        }
         mView.setPadding(0, 0, 0, 0);
         if (mView.hasOnClickListeners()) {
             mView.setOnClickListener(null);

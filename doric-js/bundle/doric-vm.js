@@ -5309,12 +5309,8 @@ exports.AlphaAnimation = AlphaAnimation;
 exports.AndroidAssetsResource = AndroidAssetsResource;
 exports.AndroidResource = AndroidResource;
 exports.AnimationSet = AnimationSet;
-<<<<<<< HEAD
-exports.AssetsResource = AssetsResource;
-=======
 exports.ArrayBufferResource = ArrayBufferResource;
-exports.AssetResource = AssetResource;
->>>>>>> f476a5b0... feat:android support ArrayBuffer Resource
+exports.AssetsResource = AssetsResource;
 exports.BOTTOM = BOTTOM;
 exports.BackgroundColorAnimation = BackgroundColorAnimation;
 exports.Base64Resource = Base64Resource;

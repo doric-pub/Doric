@@ -63,4 +63,8 @@ public class DoricNativeJSExecutor implements IDoricJSE {
     public void teardown() {
         mJSExecutor.destroy();
     }
+
+    public JSExecutor getJSExecutor() {
+        return mJSExecutor;
+    }
 }

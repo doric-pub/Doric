@@ -228,4 +228,8 @@ public class DoricNativeDriver implements IDoricDriver {
         }
         mJSHandler = doricJSEngine.getJSHandler();
     }
+
+    public DoricJSEngine getDoricJSEngine() {
+        return doricJSEngine;
+    }
 }

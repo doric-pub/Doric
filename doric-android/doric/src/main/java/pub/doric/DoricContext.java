@@ -29,6 +29,7 @@ import com.github.pengfeizhou.jscore.JSONBuilder;
 
 import org.json.JSONObject;
 
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -69,6 +70,7 @@ public class DoricContext {
     private final DoricPerformanceProfile performanceProfile;
     private final Map<String, Animator> animators = new HashMap<>();
     private final Map<String, DoricResource> cachedResources = new WeakHashMap<>();
+    private final ArrayList<SoftReference<RetainedJavaValue>> retainedJavaValues = new ArrayList<>();
 
     public Collection<ViewNode<?>> allHeadNodes(String type) {
         Map<String, ViewNode<?>> headNode = mHeadNodes.get(type);
@@ -223,6 +225,8 @@ public class DoricContext {
                         return null;
                     }
                 }, ThreadMode.UI);
+
+                retainedJavaValues.clear();
             }
         });
         DoricContextManager.getInstance().destroyContext(this);
@@ -366,5 +370,13 @@ public class DoricContext {
 
     public DoricResource getCachedResource(String resId) {
         return this.cachedResources.get(resId);
+    }
+
+    public void retainJavaValue(SoftReference<RetainedJavaValue> retainedJavaValue) {
+        retainedJavaValues.add(retainedJavaValue);
+    }
+
+    public void releaseJavaValue(SoftReference<RetainedJavaValue> retainedJavaValue) {
+        retainedJavaValues.remove(retainedJavaValue);
     }
 }

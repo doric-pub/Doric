@@ -92,7 +92,9 @@ export class ImageProcessorDemo extends Panel {
             const containerRef = createRef<GestureContainer>();
             this.addOnRenderFinishedCallback(async () => {
               const imageInfo = await iv.current.getImageInfo(context);
-              const pixels = await iv.current.getImagePixels(context);
+              const pixels = (await iv.current.getImagePixels(context)).slice(
+                0
+              );
               const data = new Uint8Array(pixels);
 
               async function changeAlpha(alpha: number) {
@@ -146,7 +148,9 @@ export class ImageProcessorDemo extends Panel {
             const containerRef = createRef<GestureContainer>();
             this.addOnRenderFinishedCallback(async () => {
               const imageInfo = await iv.current.getImageInfo(context);
-              const pixels = await iv.current.getImagePixels(context);
+              const pixels = (await iv.current.getImagePixels(context)).slice(
+                0
+              );
               const data = new Uint32Array(pixels);
               for (let i = 0; i < data.length; i++) {
                 let { r, g, b } = pixelToRGBA(data[i]);
@@ -205,7 +209,9 @@ export class ImageProcessorDemo extends Panel {
             const containerRef = createRef<GestureContainer>();
             this.addOnRenderFinishedCallback(async () => {
               const imageInfo = await iv.current.getImageInfo(context);
-              const rawPixels = await iv.current.getImagePixels(context);
+              const rawPixels = (
+                await iv.current.getImagePixels(context)
+              ).slice(0);
               async function blurEffect(radius: number) {
                 radius = Math.round(radius);
                 const buffer = rawPixels.slice(0);
@@ -258,7 +264,9 @@ export class ImageProcessorDemo extends Panel {
               layoutConfig={layoutConfig().just()}
               onClick={async () => {
                 const imageInfo = await iv.current.getImageInfo(context);
-                const pixels = await iv.current.getImagePixels(context);
+                const pixels = (await iv.current.getImagePixels(context)).slice(
+                  0
+                );
                 const data = new Uint32Array(pixels);
                 vampix(data);
                 iv.current.imagePixels = {
@@ -275,7 +283,9 @@ export class ImageProcessorDemo extends Panel {
               onClick={async () => {
                 const imageInfo = await iv.current.getImageInfo(context);
                 loge(imageInfo);
-                const pixels = await iv.current.getImagePixels(context);
+                const pixels = (await iv.current.getImagePixels(context)).slice(
+                  0
+                );
                 loge(pixels.byteLength);
                 const data = new Uint8Array(pixels);
                 for (let i = 0; i < data.length - 4; i += 4) {
@@ -304,7 +314,9 @@ export class ImageProcessorDemo extends Panel {
               layoutConfig={layoutConfig().just()}
               onClick={async () => {
                 const imageInfo = await iv.current.getImageInfo(context);
-                const pixels = await iv.current.getImagePixels(context);
+                const pixels = (await iv.current.getImagePixels(context)).slice(
+                  0
+                );
                 const data = new Uint32Array(pixels);
                 fastBlur(data, imageInfo.width, imageInfo.height, 30);
                 iv.current.imagePixels = {
@@ -320,7 +332,9 @@ export class ImageProcessorDemo extends Panel {
               layoutConfig={layoutConfig().just()}
               onClick={async () => {
                 const imageInfo = await iv.current.getImageInfo(context);
-                const pixels = await iv.current.getImagePixels(context);
+                const pixels = (await iv.current.getImagePixels(context)).slice(
+                  0
+                );
                 const data = new Uint32Array(pixels);
                 gaussianBlur(data, imageInfo.width, imageInfo.height, 1);
                 iv.current.imagePixels = {
@@ -346,7 +360,9 @@ export class ImageProcessorDemo extends Panel {
               layoutConfig={layoutConfig().just()}
               onClick={async () => {
                 const imageInfo = await iv.current.getImageInfo(context);
-                const pixels = await iv.current.getImagePixels(context);
+                const pixels = (await iv.current.getImagePixels(context)).slice(
+                  0
+                );
                 const data = new Uint32Array(pixels);
                 extractGrayValue(data);
                 binarization(data, 127);
@@ -363,7 +379,9 @@ export class ImageProcessorDemo extends Panel {
               layoutConfig={layoutConfig().just()}
               onClick={async () => {
                 const imageInfo = await iv.current.getImageInfo(context);
-                const pixels = await iv.current.getImagePixels(context);
+                const pixels = (await iv.current.getImagePixels(context)).slice(
+                  0
+                );
                 const data = new Uint32Array(pixels);
                 extractGrayValue(data);
                 const t = ostu(data);

@@ -351,4 +351,8 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
                 break;
         }
     }
+
+    public IDoricJSE getDoricJSE() {
+        return mDoricJSE;
+    }
 }

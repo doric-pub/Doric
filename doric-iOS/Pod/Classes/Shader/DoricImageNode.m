@@ -732,14 +732,6 @@
     return NO;
 }
 
-- (void)dealloc {
-    if (self.animationEndCallbackId) {
-#if DORIC_USE_YYWEBIMAGE
-        [(DoricImageView *) self.view removeObserver:self forKeyPath:@"currentIsPlayingAnimation" context:nil];
-#elif DORIC_USE_SDWEBIMAGE
-        [(DoricImageView *) self.view removeObserver:self forKeyPath:@"currentFrameIndex" context:nil];
-#endif
-    }
 - (NSDictionary *)getImageInfo {
     CGImageRef imageRef = [self.view.image CGImage];
     return @{
@@ -771,4 +763,15 @@
 
     return [[NSData alloc] initWithBytesNoCopy:imageData length:width * height * bytesPerPixel];
 }
+
+- (void)dealloc {
+    if (self.animationEndCallbackId) {
+#if DORIC_USE_YYWEBIMAGE
+        [(DoricImageView *) self.view removeObserver:self forKeyPath:@"currentIsPlayingAnimation" context:nil];
+#elif DORIC_USE_SDWEBIMAGE
+        [(DoricImageView *) self.view removeObserver:self forKeyPath:@"currentFrameIndex" context:nil];
+#endif
+    }
+}
+
 @end

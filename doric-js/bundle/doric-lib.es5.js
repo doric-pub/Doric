@@ -2243,10 +2243,7 @@ var BundleResource = /** @class */ (function (_super) {
         return _super.call(this, "bundle", bundleName + "://" + fileName) || this;
     }
     return BundleResource;
-<<<<<<< HEAD
 }(iOSResource));
-=======
-}(Resource));
 var ArrayBufferResource = /** @class */ (function (_super) {
     __extends$f(ArrayBufferResource, _super);
     function ArrayBufferResource(data) {
@@ -2264,7 +2261,6 @@ var ArrayBufferResource = /** @class */ (function (_super) {
     };
     return ArrayBufferResource;
 }(Resource));
->>>>>>> f476a5b0... feat:android support ArrayBuffer Resource
 
 var __extends$e = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -4646,12 +4642,8 @@ exports.AlphaAnimation = AlphaAnimation;
 exports.AndroidAssetsResource = AndroidAssetsResource;
 exports.AndroidResource = AndroidResource;
 exports.AnimationSet = AnimationSet;
-<<<<<<< HEAD
-exports.AssetsResource = AssetsResource;
-=======
 exports.ArrayBufferResource = ArrayBufferResource;
-exports.AssetResource = AssetResource;
->>>>>>> f476a5b0... feat:android support ArrayBuffer Resource
+exports.AssetsResource = AssetsResource;
 exports.BOTTOM = BOTTOM;
 exports.BackgroundColorAnimation = BackgroundColorAnimation;
 exports.Base64Resource = Base64Resource;

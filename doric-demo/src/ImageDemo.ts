@@ -1,4 +1,4 @@
-import { Base64Resource, DrawableResource, Group, Panel, coordinator, text, gravity, Color, LayoutSpec, log, vlayout, scroller, layoutConfig, image, ScaleType, Image, modal, RemoteResource, MainBundleResource } from "doric";
+import { AssetsResource, AndroidAssetsResource, Base64Resource, DrawableResource, Group, Panel, coordinator, text, gravity, Color, LayoutSpec, log, vlayout, scroller, layoutConfig, image, ScaleType, Image, modal, RemoteResource, MainBundleResource } from "doric";
 import { colors, label } from "./utils";
 import { img_base64 } from "./image_base64";
 

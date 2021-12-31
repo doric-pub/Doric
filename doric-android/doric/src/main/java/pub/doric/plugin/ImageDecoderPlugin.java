@@ -25,7 +25,7 @@ import com.github.pengfeizhou.jscore.JavaValue;
 import java.nio.ByteBuffer;
 
 import pub.doric.DoricContext;
-import pub.doric.RetainedJavaValue;
+import pub.doric.engine.RetainedJavaValue;
 import pub.doric.async.AsyncResult;
 import pub.doric.extension.bridge.DoricMethod;
 import pub.doric.extension.bridge.DoricPlugin;

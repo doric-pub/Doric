@@ -17,6 +17,7 @@ package pub.doric.engine;
 
 import com.github.pengfeizhou.jscore.ArchiveException;
 import com.github.pengfeizhou.jscore.JSArray;
+import com.github.pengfeizhou.jscore.JSArrayBuffer;
 import com.github.pengfeizhou.jscore.JSBoolean;
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSNull;
@@ -126,6 +127,9 @@ public class DoricJSDecoder extends JSDecoder {
                 jsArray.put(i, jsValue);
             }
             return jsArray;
+        }
+        if (this.value instanceof byte[]) {
+            return new JSArrayBuffer((byte[]) this.value);
         }
         return JS_NULL;
     }

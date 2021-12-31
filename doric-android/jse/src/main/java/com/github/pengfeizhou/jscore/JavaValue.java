@@ -25,10 +25,14 @@ public class JavaValue {
     protected static final int TYPE_STRING = 3;
     protected static final int TYPE_OBJECT = 4;
     protected static final int TYPE_ARRAY = 5;
+    protected static final int TYPE_ARRAYBUFFER = 6;
+
     protected JavaFunction[] functions = null;
     protected String[] functionNames = null;
     protected int type;
     protected String value = "";
+    protected byte[] data = null;
+    protected MemoryReleaser memoryReleaser = null;
 
     public JavaValue() {
         this.type = TYPE_NULL;
@@ -75,11 +79,42 @@ public class JavaValue {
         this.value = jsonArray.toString();
     }
 
+    public JavaValue(byte[] data) {
+        this.type = TYPE_ARRAYBUFFER;
+        this.data = data;
+    }
+
+    public JavaValue(byte[] data, MemoryReleaser memoryReleaser) {
+        this.type = TYPE_ARRAYBUFFER;
+        this.data = data;
+        this.memoryReleaser = memoryReleaser;
+    }
+
     public int getType() {
         return type;
     }
 
     public String getValue() {
         return value;
+    }
+
+    public byte[] getByteData() {
+        return data;
+    }
+
+    public interface MemoryReleaser {
+        /**
+         * Called when JS deallocated the arraybuffer
+         */
+        void deallocate(byte[] data);
+    }
+
+    /**
+     * Called by JNI
+     */
+    private void onDeallocated() {
+        if (this.memoryReleaser != null) {
+            this.memoryReleaser.deallocate(this.data);
+        }
     }
 }

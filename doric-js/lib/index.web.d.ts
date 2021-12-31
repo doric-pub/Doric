@@ -2,25 +2,15 @@ declare module NativeClient {
     function log(message: string): void;
     function returnNative(ret: string): void;
     function callNative(name: string, args: string): string;
+    function fetchArrayBuffer(id: string): string;
 }
-declare type RawValue = number | string | boolean | object | undefined;
+declare type RawValue = number | string | boolean | object | undefined | ArrayBuffer;
 declare type WrappedValue = {
-    type: "number" | "string" | "boolean" | "object" | "array" | "null";
+    type: "number" | "string" | "boolean" | "object" | "array" | "null" | "arrayBuffer";
     value: RawValue;
 };
-declare function _binaryValue(v: RawValue): {
-    type: string;
-    value: number;
-} | {
-    type: string;
-    value: string;
-} | {
-    type: string;
-    value: boolean;
-} | {
-    type: string;
-    value: undefined;
-};
+declare function _arrayBufferToBase64(arrayBuffer: ArrayBuffer): string;
+declare function _base64ToArrayBuffer(v: string): ArrayBufferLike;
 declare function _wrappedValue(v: RawValue): WrappedValue;
 declare function _rawValue(v: WrappedValue): RawValue;
 declare function __injectGlobalObject(name: string, args: string): void;

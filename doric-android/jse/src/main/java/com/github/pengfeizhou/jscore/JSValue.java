@@ -25,6 +25,7 @@ public abstract class JSValue {
         String,
         Object,
         Array,
+        ArrayBuffer,
     }
 
     public abstract JSType getJSType();
@@ -55,6 +56,10 @@ public abstract class JSValue {
         return getJSType() == JSType.Array;
     }
 
+    public boolean isArrayBuffer() {
+        return getJSType() == JSType.ArrayBuffer;
+    }
+
     public JSNull asNull() {
         return (JSNull) this;
     }
@@ -77,6 +82,10 @@ public abstract class JSValue {
 
     public JSArray asArray() {
         return (JSArray) this;
+    }
+
+    public JSArrayBuffer asArrayBuffer() {
+        return (JSArrayBuffer) this;
     }
 
     @Override

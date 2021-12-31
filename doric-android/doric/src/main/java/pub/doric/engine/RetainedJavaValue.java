@@ -1,9 +1,11 @@
-package pub.doric;
+package pub.doric.engine;
 
 import com.github.pengfeizhou.jscore.JavaValue;
 
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
+
+import pub.doric.DoricContext;
 
 public class RetainedJavaValue extends JavaValue {
     private final WeakReference<DoricContext> contextRef;

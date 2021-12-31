@@ -70,7 +70,7 @@ public class DoricContext {
     private final DoricPerformanceProfile performanceProfile;
     private final Map<String, Animator> animators = new HashMap<>();
     private final Map<String, DoricResource> cachedResources = new WeakHashMap<>();
-    private final ArrayList<SoftReference<RetainedJavaValue>> retainedJavaValues = new ArrayList<>();
+    private final Set<SoftReference<RetainedJavaValue>> retainedJavaValues = new HashSet<>();
 
     public Collection<ViewNode<?>> allHeadNodes(String type) {
         Map<String, ViewNode<?>> headNode = mHeadNodes.get(type);
@@ -225,7 +225,6 @@ public class DoricContext {
                         return null;
                     }
                 }, ThreadMode.UI);
-
                 retainedJavaValues.clear();
             }
         });

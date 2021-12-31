@@ -22,7 +22,6 @@ import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JavaValue;
 
-import java.lang.ref.WeakReference;
 import java.nio.ByteBuffer;
 
 import pub.doric.DoricContext;
@@ -97,8 +96,7 @@ public class ImageDecoderPlugin extends DoricJavaPlugin {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(rawData, 0, rawData.length);
                     ByteBuffer buffer = ByteBuffer.allocate(bitmap.getByteCount());
                     bitmap.copyPixelsToBuffer(buffer);
-
-                    RetainedJavaValue retainedJavaValue = new RetainedJavaValue(new WeakReference<DoricContext>(getDoricContext()), buffer.array());
+                    RetainedJavaValue retainedJavaValue = new RetainedJavaValue(getDoricContext(), buffer.array());
                     promise.resolve(retainedJavaValue);
                 }
 

@@ -21,6 +21,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.webkit.ConsoleMessage;
 import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
@@ -43,6 +44,7 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.lang.ref.SoftReference;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -66,6 +68,8 @@ public class DoricWebShellJSExecutor implements IDoricJSE {
     private WebView webView;
     private final Map<String, JavaFunction> globalFunctions = new HashMap<>();
     private final Handler handler;
+    private static final Map<String, SoftReference<byte[]>> arrayBuffers = new HashMap<>();
+    private static final AtomicInteger arrayBufferId = new AtomicInteger();
 
     private static Object unwrapJSObject(JSONObject jsonObject) {
         String type = jsonObject.optString("type");
@@ -90,6 +94,9 @@ public class DoricWebShellJSExecutor implements IDoricJSE {
                     e.printStackTrace();
                     return JSONObject.NULL;
                 }
+            case "arrayBuffer":
+                String base64 = jsonObject.optString("value");
+                return Base64.decode(base64, Base64.NO_WRAP);
             default:
                 return JSONObject.NULL;
         }
@@ -127,6 +134,12 @@ public class DoricWebShellJSExecutor implements IDoricJSE {
                 e.printStackTrace();
             }
         }
+        if (javaValue.getType() == 6) {
+            byte[] data = javaValue.getByteData();
+            String id = String.valueOf(arrayBufferId.incrementAndGet());
+            arrayBuffers.put(id, new SoftReference<>(data));
+            return new JSONBuilder().put("type", "arrayBuffer").put("value", id).toJSONObject();
+        }
         return WRAPPED_NULL;
     }
 
@@ -140,6 +153,16 @@ public class DoricWebShellJSExecutor implements IDoricJSE {
         public void ready() {
             DoricLog.d("Ready");
             readyFuture.set(true);
+        }
+
+        @JavascriptInterface
+        public String fetchArrayBuffer(String arrayBufferId) {
+            SoftReference<byte[]> ref = arrayBuffers.remove(arrayBufferId);
+            if (ref != null && ref.get() != null) {
+                byte[] data = ref.get();
+                return Base64.encodeToString(data, Base64.NO_WRAP);
+            }
+            return "";
         }
 
         @JavascriptInterface

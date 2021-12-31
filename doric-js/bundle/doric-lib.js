@@ -1728,12 +1728,10 @@ class Image extends View {
     }
     toModel() {
         const ret = super.toModel();
-        if (Environment.platform === 'iOS') {
-            if (Reflect.has(ret.props, "imagePixels")) {
-                const imagePixels = Reflect.get(ret.props, "imagePixels");
-                const pixels = imagePixels.pixels;
-                imagePixels.pixels = this.callback2Id(() => pixels);
-            }
+        if (Reflect.has(ret.props, "imagePixels")) {
+            const imagePixels = Reflect.get(ret.props, "imagePixels");
+            const pixels = imagePixels.pixels;
+            imagePixels.pixels = this.callback2Id(() => pixels);
         }
         return ret;
     }

@@ -52,6 +52,8 @@ import com.bumptech.glide.request.target.DrawableImageViewTarget;
 import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.bumptech.glide.request.target.Target;
 import com.facebook.yoga.YogaNode;
+import com.github.pengfeizhou.jscore.ArchiveException;
+import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
@@ -394,7 +396,7 @@ public class ImageNode extends ViewNode<ImageView> {
     }
 
     @Override
-    protected void blend(ImageView view, String name, JSValue prop) {
+    protected void blend(final ImageView view, String name, JSValue prop) {
         switch (name) {
             case "image":
                 if (!prop.isObject()) {
@@ -522,13 +524,46 @@ public class ImageNode extends ViewNode<ImageView> {
                 if (!prop.isObject()) {
                     return;
                 }
-                int width = prop.asObject().getProperty("width").asNumber().toInt();
-                int height = prop.asObject().getProperty("height").asNumber().toInt();
-                byte[] pixels = prop.asObject().getProperty("pixels").asArrayBuffer().value();
-                Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-                ByteBuffer byteBuffer = ByteBuffer.wrap(pixels);
-                bitmap.copyPixelsFromBuffer(byteBuffer);
-                view.setImageBitmap(bitmap);
+                final int width = prop.asObject().getProperty("width").asNumber().toInt();
+                final int height = prop.asObject().getProperty("height").asNumber().toInt();
+                JSValue pixelsValue = prop.asObject().getProperty("pixels");
+                if (pixelsValue.isArrayBuffer()) {
+                    byte[] pixels = prop.asObject().getProperty("pixels").asArrayBuffer().value();
+                    Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+                    ByteBuffer byteBuffer = ByteBuffer.wrap(pixels);
+                    bitmap.copyPixelsFromBuffer(byteBuffer);
+                    view.setImageBitmap(bitmap);
+                } else if (pixelsValue.isString()) {
+                    String pixelsCallbackId = pixelsValue.asString().value();
+                    callJSResponse(pixelsCallbackId).setCallback(new AsyncResult.Callback<JSDecoder>() {
+                        @Override
+                        public void onResult(JSDecoder result) {
+                            try {
+                                JSValue value = result.decode();
+                                if (value.isArrayBuffer()) {
+                                    byte[] pixels = value.asArrayBuffer().value();
+                                    Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+                                    ByteBuffer byteBuffer = ByteBuffer.wrap(pixels);
+                                    bitmap.copyPixelsFromBuffer(byteBuffer);
+                                    view.setImageBitmap(bitmap);
+                                }
+                            } catch (ArchiveException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                        @Override
+                        public void onError(Throwable t) {
+
+                        }
+
+                        @Override
+                        public void onFinish() {
+
+                        }
+                    });
+                }
                 break;
             default:
                 super.blend(view, name, prop);

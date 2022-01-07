@@ -47,7 +47,6 @@
 @property(nonatomic, strong) NSMutableDictionary <NSNumber *, NSTimer *> *timers;
 @property(nonatomic, strong) DoricBridgeExtension *bridgeExtension;
 @property(nonatomic, strong) NSMutableDictionary *environmentDictionary;
-@property(nonatomic, strong) NSThread *jsThread;
 @property(nonatomic, assign) BOOL destroyed;
 @property(nonatomic, assign) BOOL initialized;
 @property(nonatomic, strong) DoricPerformanceProfile *profile;

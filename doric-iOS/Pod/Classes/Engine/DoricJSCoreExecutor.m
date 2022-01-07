@@ -30,8 +30,6 @@ void ReleaseArrayBufferData(void *bytes, void *deallocatorContext) {
 
 @interface DoricJSCoreExecutor ()
 
-@property(nonatomic, strong) JSContext *jsContext;
-
 @end
 
 @implementation DoricJSCoreExecutor

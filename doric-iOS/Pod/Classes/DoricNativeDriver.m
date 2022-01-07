@@ -28,7 +28,6 @@
 #import "DoricSingleton.h"
 
 @interface DoricNativeDriver ()
-@property(nonatomic, strong) DoricJSEngine *jsExecutor;
 @end
 
 @implementation DoricNativeDriver

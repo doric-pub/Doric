@@ -27,6 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface DoricJSCoreExecutor : NSObject <DoricJSExecutorProtocol>
 
+@property(nonatomic, strong) JSContext *jsContext;
+
 @end
 
 NS_ASSUME_NONNULL_END

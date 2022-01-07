@@ -32,6 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, strong) id <DoricJSExecutorProtocol> jsExecutor;
 
+@property(nonatomic, strong) NSThread *jsThread;
 
 @property(nonatomic, strong) DoricRegistry *registry;
 

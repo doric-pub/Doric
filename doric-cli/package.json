@@ -27,7 +27,7 @@
   "dependencies": {
     "child_process": "^1.0.2",
     "chokidar": "^3.4.1",
-    "colors": "^1.4.0",
+    "colors": "1.4.0",
     "commander": "^6.0.0",
     "glob": "^7.1.6",
     "inquirer": "^8.0.0",

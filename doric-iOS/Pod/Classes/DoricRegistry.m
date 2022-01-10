@@ -42,6 +42,8 @@
 #import "DoricFlowLayoutNode.h"
 #import "DoricPopoverPlugin.h"
 #import "DoricAnimatePlugin.h"
+#import "DoricResourceLoaderPlugin.h"
+#import "DoricImageDecoderPlugin.h"
 #import "DoricNestedSliderNode.h"
 #import "DoricInputNode.h"
 #import "DoricDraggableNode.h"
@@ -116,6 +118,8 @@
     [self registerNativePlugin:DoricStatusBarPlugin.class withName:@"statusbar"];
     [self registerNativePlugin:DoricCoordinatorPlugin.class withName:@"coordinator"];
     [self registerNativePlugin:DoricNotchPlugin.class withName:@"notch"];
+    [self registerNativePlugin:DoricResourceLoaderPlugin.class withName:@"resourceLoader"];
+    [self registerNativePlugin:DoricImageDecoderPlugin.class withName:@"imageDecoder"];
 
     [self registerViewNode:DoricStackNode.class withName:@"Stack"];
     [self registerViewNode:DoricVLayoutNode.class withName:@"VLayout"];

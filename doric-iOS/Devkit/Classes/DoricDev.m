@@ -187,8 +187,13 @@
                                       withString:@""
     ];
     for (DoricContext *context in [DoricContextManager.instance aliveContexts]) {
-        NSString *contextSource = [[context.source stringByReplacingOccurrencesOfString:@".js"
-                                                                             withString:@""]
+        NSString *contextSource = context.source;
+        NSArray<NSString *> *split = [contextSource componentsSeparatedByString:@";"];
+        if (split.count > 1) {
+            contextSource = split[0];
+        }
+        contextSource = [[contextSource stringByReplacingOccurrencesOfString:@".js"
+                                                                  withString:@""]
                 stringByReplacingOccurrencesOfString:@".ts"
                                           withString:@""
         ];
@@ -288,7 +293,7 @@ UIViewController *_Nonnull findBestViewController(UIViewController *_Nonnull vc)
         // Return presented view controller
         return findBestViewController(vc.presentedViewController);
     } else if ([vc isKindOfClass:[UISplitViewController class]]) {
-        // Return right hand side
+        // Return right-hand side
         UISplitViewController *svc = (UISplitViewController *) vc;
         if (svc.viewControllers.count > 0)
             return findBestViewController(svc.viewControllers.lastObject);

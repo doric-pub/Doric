@@ -240,7 +240,12 @@ public class DoricDev {
         List<DoricContext> list = new ArrayList<>();
         source = source.replace(".js", "").replace(".ts", "");
         for (DoricContext context : DoricContextManager.aliveContexts()) {
-            String doricSource = context.getSource().replace(".js", "").replace(".ts", "");
+            String doricSource = context.getSource();
+            String[] split = doricSource.split(";");
+            if (split.length > 1) {
+                doricSource = split[0];
+            }
+            doricSource = doricSource.replace(".js", "").replace(".ts", "");
             if (source.equals(doricSource) || doricSource.equals("__dev__")) {
                 list.add(context);
             }

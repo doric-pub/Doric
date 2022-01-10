@@ -33,6 +33,9 @@
                 @"height": @(image.size.height)
             }];
         }];
+        [asyncResult setExceptionCallback:^(NSException * _Nonnull e) {
+            DoricLog(@"Cannot load resource %s, %s", resource.description, e.description);
+        }];
     } else {
         DoricLog(@"Cannot find loader for resource %s", resource.description);
         [promise reject:@"Load error"];
@@ -65,6 +68,9 @@
             NSData* data = [NSData dataWithBytes:(const void *)imageBytes length:sizeof(unsigned char) * iWidth * iHeight * iBytesPerPixel];
             
             [promise resolve:data];
+        }];
+        [asyncResult setExceptionCallback:^(NSException * _Nonnull e) {
+            DoricLog(@"Cannot load resource %s, %s", resource.description, e.description);
         }];
     } else {
         DoricLog(@"Cannot find loader for resource %s", resource.description);

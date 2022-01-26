@@ -2244,23 +2244,6 @@ var BundleResource = /** @class */ (function (_super) {
     }
     return BundleResource;
 }(iOSResource));
-var ArrayBufferResource = /** @class */ (function (_super) {
-    __extends$f(ArrayBufferResource, _super);
-    function ArrayBufferResource(data) {
-        var _this = _super.call(this, "arrayBuffer", "") || this;
-        _this.data = data;
-        return _this;
-    }
-    ArrayBufferResource.prototype.toModel = function () {
-        return {
-            data: this.data,
-            resId: this.resId,
-            type: this.type,
-            identifier: this.identifier,
-        };
-    };
-    return ArrayBufferResource;
-}(Resource));
 
 var __extends$e = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -4640,7 +4623,6 @@ exports.AlphaAnimation = AlphaAnimation;
 exports.AndroidAssetsResource = AndroidAssetsResource;
 exports.AndroidResource = AndroidResource;
 exports.AnimationSet = AnimationSet;
-exports.ArrayBufferResource = ArrayBufferResource;
 exports.AssetsResource = AssetsResource;
 exports.BOTTOM = BOTTOM;
 exports.BackgroundColorAnimation = BackgroundColorAnimation;

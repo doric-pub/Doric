@@ -3208,20 +3208,6 @@ class BundleResource extends iOSResource {
         super("bundle", `${bundleName}://${fileName}`);
     }
 }
-class ArrayBufferResource extends Resource {
-    constructor(data) {
-        super("arrayBuffer", "");
-        this.data = data;
-    }
-    toModel() {
-        return {
-            data: this.data,
-            resId: this.resId,
-            type: this.type,
-            identifier: this.identifier,
-        };
-    }
-}
 
 var __decorate$b = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -5307,7 +5293,6 @@ exports.AlphaAnimation = AlphaAnimation;
 exports.AndroidAssetsResource = AndroidAssetsResource;
 exports.AndroidResource = AndroidResource;
 exports.AnimationSet = AnimationSet;
-exports.ArrayBufferResource = ArrayBufferResource;
 exports.AssetsResource = AssetsResource;
 exports.BOTTOM = BOTTOM;
 exports.BackgroundColorAnimation = BackgroundColorAnimation;

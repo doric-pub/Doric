@@ -48,17 +48,10 @@ public class DoricResourceManager {
         String identifier = resource.getProperty("identifier").asString().value();
         DoricResource doricResource = doricContext.getCachedResource(resId);
         if (doricResource == null) {
-            if ("arrayBuffer".equals(type)) {
-                doricResource = new DoricArrayBufferResource(
-                        doricContext,
-                        resource.getProperty("data").asArrayBuffer().value()
-                );
-            } else {
-                DoricResourceLoader loader = mResourceLoaders.get(type);
-                if (loader != null) {
-                    doricResource = loader.load(doricContext, identifier);
-                    doricContext.cacheResource(resId, doricResource);
-                }
+            DoricResourceLoader loader = mResourceLoaders.get(type);
+            if (loader != null) {
+                doricResource = loader.load(doricContext, identifier);
+                doricContext.cacheResource(resId, doricResource);
             }
         }
         return doricResource;

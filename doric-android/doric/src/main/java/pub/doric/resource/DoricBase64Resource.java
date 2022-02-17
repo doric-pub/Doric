@@ -37,18 +37,13 @@ class DoricBase64Resource extends DoricResource {
     @Override
     public AsyncResult<byte[]> fetchRaw() {
         AsyncResult<byte[]> ret = new AsyncResult<>();
-        Pair<String, String> result = DoricUtils.translateBase64(identifier);
-        if (result != null) {
-            String imageType = result.first;
-            String base64 = result.second;
-
-            if (!TextUtils.isEmpty(imageType) && !TextUtils.isEmpty(base64)) {
-                try {
-                    byte[] data = Base64.decode(base64, Base64.DEFAULT);
-                    ret.setResult(data);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        String[] split = identifier.split(",");
+        if (split.length > 0) {
+            try {
+                byte[] data = Base64.decode(split[split.length - 1], Base64.DEFAULT);
+                ret.setResult(data);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         } else {
             ret.setError(new Error("Base64 format error"));

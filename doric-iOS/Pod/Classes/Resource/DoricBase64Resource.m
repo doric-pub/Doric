@@ -23,10 +23,7 @@
 @implementation DoricBase64Resource
 - (DoricAsyncResult <NSData *> *)fetchRaw {
     DoricAsyncResult *result = [DoricAsyncResult new];
-    NSString *inString = nil;
-    if ([self.identifier hasPrefix:@"data:image"]) {
-        inString = [self.identifier componentsSeparatedByString:@","].lastObject;
-    }
+    NSString *inString = [self.identifier componentsSeparatedByString:@","].lastObject;
     NSData *data = [[NSData alloc] initWithBase64EncodedString:inString
                                                        options:NSDataBase64DecodingIgnoreUnknownCharacters];
     [result setupResult:data];

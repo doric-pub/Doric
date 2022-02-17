@@ -15,13 +15,10 @@
  */
 package pub.doric.resource;
 
-import android.text.TextUtils;
 import android.util.Base64;
-import android.util.Pair;
 
 import pub.doric.DoricContext;
 import pub.doric.async.AsyncResult;
-import pub.doric.utils.DoricUtils;
 
 /**
  * @Description: This represents a base64 resource

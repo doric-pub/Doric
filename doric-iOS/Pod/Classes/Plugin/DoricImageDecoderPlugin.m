@@ -26,14 +26,14 @@
     DoricResource *doricResource = [self.doricContext.driver.registry.loaderManager load:resource withContext:self.doricContext];
     if (doricResource != nil) {
         DoricAsyncResult *asyncResult = [doricResource fetch];
-        [asyncResult setResultCallback:^(id  _Nonnull result) {
+        [asyncResult setResultCallback:^(id _Nonnull result) {
             UIImage *image = [UIImage imageWithData:result];
             [promise resolve:@{
-                @"width": @(image.size.width),
-                @"height": @(image.size.height)
+                    @"width": @(image.size.width),
+                    @"height": @(image.size.height)
             }];
         }];
-        [asyncResult setExceptionCallback:^(NSException * _Nonnull e) {
+        [asyncResult setExceptionCallback:^(NSException *_Nonnull e) {
             DoricLog(@"Cannot load resource %s, %s", resource.description, e.description);
         }];
     } else {
@@ -46,9 +46,9 @@
     DoricResource *doricResource = [self.doricContext.driver.registry.loaderManager load:resource withContext:self.doricContext];
     if (doricResource != nil) {
         DoricAsyncResult *asyncResult = [doricResource fetch];
-        [asyncResult setResultCallback:^(id  _Nonnull result) {
+        [asyncResult setResultCallback:^(id _Nonnull result) {
             UIImage *image = [UIImage imageWithData:result];
-            
+
             CGImageRef imageRef = image.CGImage;
             NSUInteger iWidth = CGImageGetWidth(imageRef);
             NSUInteger iHeight = CGImageGetHeight(imageRef);
@@ -56,20 +56,19 @@
             NSUInteger iBytesPerRow = iBytesPerPixel * iWidth;
             NSUInteger iBitsPerComponent = 8;
             unsigned char *imageBytes = malloc(iWidth * iHeight * iBytesPerPixel);
-                
+
             CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
-                
+
             CGContextRef context = CGBitmapContextCreate(imageBytes, iWidth, iHeight, iBitsPerComponent, iBytesPerRow, colorspace, kCGImageAlphaPremultipliedLast);
             CGRect rect = CGRectMake(0, 0, iWidth, iHeight);
             CGContextDrawImage(context, rect, imageRef);
             CGColorSpaceRelease(colorspace);
             CGContextRelease(context);
-            
-            NSData* data = [NSData dataWithBytes:(const void *)imageBytes length:sizeof(unsigned char) * iWidth * iHeight * iBytesPerPixel];
-            
+
+            NSData *data = [NSData dataWithBytesNoCopy:(void *) imageBytes length:sizeof(unsigned char) * iWidth * iHeight * iBytesPerPixel freeWhenDone:YES];
             [promise resolve:data];
         }];
-        [asyncResult setExceptionCallback:^(NSException * _Nonnull e) {
+        [asyncResult setExceptionCallback:^(NSException *_Nonnull e) {
             DoricLog(@"Cannot load resource %s, %s", resource.description, e.description);
         }];
     } else {

@@ -761,7 +761,7 @@
     CGColorSpaceRelease(colorSpace);
     CGContextRelease(contextRef);
 
-    return [[NSData alloc] initWithBytesNoCopy:imageData length:width * height * bytesPerPixel];
+    return [[NSData alloc] initWithBytesNoCopy:imageData length:width * height * bytesPerPixel freeWhenDone:YES];
 }
 
 - (void)dealloc {

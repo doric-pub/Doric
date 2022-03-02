@@ -28,6 +28,7 @@ import android.text.Html;
 import android.text.Layout;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.ViewTreeObserver;
@@ -258,6 +259,7 @@ public class TextNode extends ViewNode<TextView> {
                     }
                 } else if (prop.isObject()) {
                     final JSObject resource = prop.asObject();
+                    final String identifier = resource.getProperty("identifier").asString().value();
                     final DoricResource doricResource = getDoricContext().getDriver().getRegistry().getResourceManager()
                             .load(getDoricContext(), resource);
                     if (doricResource != null) {
@@ -271,7 +273,7 @@ public class TextNode extends ViewNode<TextView> {
                                     } else {
                                         filePath = getContext().getFilesDir().getPath() + "/customFonts";
                                     }
-                                    File file = createFile(fontData, filePath, "tempFont.ttf");
+                                    File file = createFile(fontData, filePath, (identifier == null) ? "tempFont.ttf" : identifier);
                                     Typeface customFont = Typeface.createFromFile(file);
                                     view.setTypeface(customFont);
                                 } catch (Exception e) {
@@ -461,6 +463,7 @@ public class TextNode extends ViewNode<TextView> {
             if(!dir.exists()&&dir.isDirectory()){ // 判断文件目录是否存在
                 dir.mkdirs();
             }
+            Log.d("font", fileName);
             file = new File(filePath+"\\"+fileName);
             fos = new FileOutputStream(file);
             bos = new BufferedOutputStream(fos);

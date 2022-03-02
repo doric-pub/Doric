@@ -63,7 +63,7 @@ __decorate([
 ], Text.prototype, "fontStyle", void 0);
 __decorate([
     Property,
-    __metadata("design:type", String)
+    __metadata("design:type", Object)
 ], Text.prototype, "font", void 0);
 __decorate([
     Property,

@@ -24,6 +24,7 @@
 #import "DoricUtil.h"
 #import "DoricGroupNode.h"
 #import "Doric.h"
+#import <CoreText/CoreText.h>
 
 @interface DoricTextView : UILabel
 @property(nonatomic, assign) DoricGravity gravity;
@@ -60,6 +61,7 @@
 @property(nonatomic, copy) NSNumber *strikethrough;
 @property(nonatomic, strong) NSDictionary *textGradientProps;
 @property(nonatomic, assign) CGSize textGradientSize;
+@property(nonatomic, assign) CGFloat textSize;
 @end
 
 @implementation DoricTextNode
@@ -82,6 +84,7 @@
         } else {
             view.font = [UIFont systemFontOfSize:[(NSNumber *) prop floatValue]];
         }
+        self.textSize = [(NSNumber *) prop floatValue];
     } else if ([name isEqualToString:@"textColor"]) {
         if ([prop isKindOfClass:[NSNumber class]]) {
             view.textColor = DoricColor(prop);
@@ -134,10 +137,24 @@
     } else if ([name isEqualToString:@"maxHeight"]) {
         view.doricLayout.maxHeight = [prop floatValue];
     } else if ([name isEqualToString:@"font"]) {
-        NSString *iconfont = prop;
-        UIFont *font = [UIFont fontWithName:[iconfont stringByReplacingOccurrencesOfString:@".ttf" withString:@""]
-                                       size:view.font.pointSize];
-        view.font = font;
+        if ([prop isKindOfClass:[NSString class]]) {
+            NSString *iconfont = prop;
+            UIFont *font = [UIFont fontWithName:[iconfont stringByReplacingOccurrencesOfString:@".ttf" withString:@""]
+                                           size:view.font.pointSize];
+            view.font = font;
+        } else if ([prop isKindOfClass:[NSDictionary class]]) {
+            DoricAsyncResult <NSData *> *asyncResult = [[self.doricContext.driver.registry.loaderManager
+                    load:prop
+             withContext:self.doricContext] fetch];
+            [asyncResult setResultCallback:^(NSData *fontData) {
+                [self.doricContext dispatchToMainQueue:^{
+                    view.font = [self registerFontWithFontData:fontData fontSize:self.textSize > 0 ? self.textSize : 12];
+                }];
+            }];
+            [asyncResult setExceptionCallback:^(NSException *e) {
+                DoricLog(@"Cannot load resource %@, %@", prop, e.reason);
+            }];
+        }
     } else if ([name isEqualToString:@"lineSpacing"]) {
         [[self ensureParagraphStyle] also:^(NSMutableParagraphStyle *it) {
             [it setLineSpacing:[prop floatValue]];
@@ -305,6 +322,19 @@
         self.view.textColor = [UIColor colorWithPatternImage:gradientImage];
     }];
 }
+
+- (UIFont *)registerFontWithFontData:(NSData *)fontData fontSize:(CGFloat)fontSize{
+    CGDataProviderRef fontDataProvider = CGDataProviderCreateWithCFData((__bridge CFDataRef)fontData);
+    CGFontRef fontRef = CGFontCreateWithDataProvider(fontDataProvider);
+    [UIFont familyNames];
+    CGDataProviderRelease(fontDataProvider);
+    CTFontManagerRegisterGraphicsFont(fontRef, NULL);
+    NSString *fontName = CFBridgingRelease(CGFontCopyPostScriptName(fontRef));
+    UIFont *font = [UIFont fontWithName:fontName size:fontSize];
+    CGFontRelease(fontRef);
+    return font;
+}
+
 
 - (UIImage *)gradientImageFromColors:(NSArray *)colors
                            locations:(CGFloat *)locations

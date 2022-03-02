@@ -1,6 +1,7 @@
 import { View } from "../ui/view";
 import { Color, GradientColor } from "../util/color";
 import { Gravity } from "../util/gravity";
+import { Resource } from "../util/resource";
 export declare enum TruncateAt {
     End = 0,
     Middle = 1,
@@ -14,7 +15,7 @@ export declare class Text extends View implements JSX.ElementChildrenAttribute {
     maxLines?: number;
     textAlignment?: Gravity;
     fontStyle?: "normal" | "bold" | "italic" | "bold_italic";
-    font?: string;
+    font?: string | Resource;
     maxWidth?: number;
     maxHeight?: number;
     lineSpacing?: number;

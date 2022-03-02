@@ -1,4 +1,4 @@
-import { Panel, Group, scroller, vlayout, layoutConfig, LayoutSpec, Input, Gravity, log, input, text, Color, Text, InputType, hlayout, GradientOrientation } from "doric";
+import { Panel, Group, scroller, vlayout, layoutConfig, LayoutSpec, Input, Gravity, log, input, text, Color, Text, InputType, hlayout, GradientOrientation, AssetsResource } from "doric";
 import { title } from "./utils";
 @Entry
 class TextDemo extends Panel {
@@ -206,6 +206,17 @@ class TextDemo extends Panel {
                         text: "Icon Font text from assets/fonts/  \ue631 ",
                         textSize: 30,
                         font: 'assets/fonts/assets_iconfont.ttf'
+                    }),
+                    text({
+                        text: "Font from custom loader.",
+                        textSize: 10,
+                        font: 'Hanabi'
+                    }),
+                    text({
+                        text: "Font from custom loader.",
+                        textSize: 30,
+                        textColor: Color.BLUE,
+                        font: new AssetsResource('Hanabi.ttf')
                     }),
                     text({
                         text: "This is line Spaceing 0,\nSecond line",

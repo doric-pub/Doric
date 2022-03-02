@@ -590,6 +590,7 @@ declare module 'doric/lib/src/widget/text' {
     import { View } from "doric/lib/src/ui/view";
     import { Color, GradientColor } from "doric/lib/src/util/color";
     import { Gravity } from "doric/lib/src/util/gravity";
+    import { Resource } from "doric/lib/src/util/resource";
     export enum TruncateAt {
         End = 0,
         Middle = 1,
@@ -603,7 +604,7 @@ declare module 'doric/lib/src/widget/text' {
         maxLines?: number;
         textAlignment?: Gravity;
         fontStyle?: "normal" | "bold" | "italic" | "bold_italic";
-        font?: string;
+        font?: string | Resource;
         maxWidth?: number;
         maxHeight?: number;
         lineSpacing?: number;

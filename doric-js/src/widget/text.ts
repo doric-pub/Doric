@@ -17,6 +17,7 @@ import { View, Property } from "../ui/view"
 import { Color, GradientColor } from "../util/color"
 import { Gravity } from "../util/gravity"
 import { layoutConfig } from "../util/layoutconfig"
+import { Resource } from "../util/resource"
 
 export enum TruncateAt {
     End = 0,
@@ -45,7 +46,7 @@ export class Text extends View implements JSX.ElementChildrenAttribute {
     fontStyle?: "normal" | "bold" | "italic" | "bold_italic"
 
     @Property
-    font?: string
+    font?: string | Resource
 
     @Property
     maxWidth?: number

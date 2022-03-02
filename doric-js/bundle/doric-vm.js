@@ -3099,7 +3099,7 @@ __decorate$c([
 ], Text.prototype, "fontStyle", void 0);
 __decorate$c([
     Property,
-    __metadata$c("design:type", String)
+    __metadata$c("design:type", Object)
 ], Text.prototype, "font", void 0);
 __decorate$c([
     Property,

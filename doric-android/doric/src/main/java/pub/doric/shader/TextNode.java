@@ -22,6 +22,8 @@ import android.graphics.Rect;
 import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.os.Environment;
 import android.text.Html;
 import android.text.Layout;
 import android.text.Spanned;
@@ -37,11 +39,17 @@ import com.bumptech.glide.Glide;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.concurrent.Callable;
 
 import pub.doric.DoricContext;
 import pub.doric.async.AsyncResult;
 import pub.doric.extension.bridge.DoricPlugin;
+import pub.doric.resource.DoricAssetsResource;
+import pub.doric.resource.DoricResource;
 import pub.doric.shader.richtext.CustomTagHandler;
 import pub.doric.shader.richtext.HtmlParser;
 import pub.doric.utils.DoricLog;
@@ -84,7 +92,7 @@ public class TextNode extends ViewNode<TextView> {
     }
 
     @Override
-    protected void blend(final TextView view, String name, final JSValue prop) {
+    protected void blend(final TextView view, final String name, final JSValue prop) {
         switch (name) {
             case "text":
                 if (!prop.isString()) {
@@ -210,48 +218,82 @@ public class TextNode extends ViewNode<TextView> {
                 }
                 break;
             case "font":
-                if (!prop.isString()) {
-                    return;
-                }
-                String font = prop.asString().toString();
-                String fontPath = "";
-                String fontName = font;
-                if (font.contains("/")) {
-                    int separatorIndex = font.lastIndexOf("/");
-                    fontPath = font.substring(0, separatorIndex + 1);
-                    fontName = font.substring(separatorIndex + 1);
-                }
-
-                if (fontName.endsWith(".ttf")) {
-                    fontName = fontName.replace(".ttf", "");
-                }
-
-                int resId = getContext().getResources().getIdentifier(
-                        fontName.toLowerCase(),
-                        "font",
-                        getContext().getPackageName());
-                if (resId > 0) {
-                    try {
-                        Typeface iconFont = ResourcesCompat.getFont(getContext(), resId);
-                        view.setTypeface(iconFont);
-                    } catch (Exception e) {
-                        DoricLog.e("Error Font asset  " + font + " in res/font");
+                if (prop.isString()) {
+                    String font = prop.asString().toString();
+                    String fontPath = "";
+                    String fontName = font;
+                    if (font.contains("/")) {
+                        int separatorIndex = font.lastIndexOf("/");
+                        fontPath = font.substring(0, separatorIndex + 1);
+                        fontName = font.substring(separatorIndex + 1);
                     }
 
-                } else {
-                    fontName = fontPath +
-                            fontName +
-                            ".ttf";
-                    try {
-                        Typeface iconFont = Typeface.createFromAsset(getContext().getAssets(), fontName);
-                        view.setTypeface(iconFont);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        DoricLog.e(font + " not found in Assets");
+                    if (fontName.endsWith(".ttf")) {
+                        fontName = fontName.replace(".ttf", "");
                     }
 
-                }
+                    int resId = getContext().getResources().getIdentifier(
+                            fontName.toLowerCase(),
+                            "font",
+                            getContext().getPackageName());
+                    if (resId > 0) {
+                        try {
+                            Typeface iconFont = ResourcesCompat.getFont(getContext(), resId);
+                            view.setTypeface(iconFont);
+                        } catch (Exception e) {
+                            DoricLog.e("Error Font asset  " + font + " in res/font");
+                        }
 
+                    } else {
+                        fontName = fontPath +
+                                fontName +
+                                ".ttf";
+                        try {
+                            Typeface iconFont = Typeface.createFromAsset(getContext().getAssets(), fontName);
+                            view.setTypeface(iconFont);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            DoricLog.e(font + " not found in Assets");
+                        }
+                    }
+                } else if (prop.isObject()) {
+                    final JSObject resource = prop.asObject();
+                    final DoricResource doricResource = getDoricContext().getDriver().getRegistry().getResourceManager()
+                            .load(getDoricContext(), resource);
+                    if (doricResource != null) {
+                        doricResource.fetch().setCallback(new AsyncResult.Callback<byte[]>() {
+                            @Override
+                            public void onResult(byte[] fontData) {
+                                try {
+                                    String filePath;
+                                    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED) && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                                         filePath = Environment.getExternalStorageDirectory().getPath() + "/customFonts";
+                                    } else {
+                                        filePath = getContext().getFilesDir().getPath() + "/customFonts";
+                                    }
+                                    File file = createFile(fontData, filePath, "tempFont.ttf");
+                                    Typeface customFont = Typeface.createFromFile(file);
+                                    view.setTypeface(customFont);
+                                } catch (Exception e) {
+                                    DoricLog.e("Error Font asset load resource %s", resource.toString());
+                                }
+                            }
+
+                            @Override
+                            public void onError(Throwable t) {
+                                t.printStackTrace();
+                                DoricLog.e("Cannot load resource %s,  %s", resource.toString(), t.getLocalizedMessage());
+                            }
+
+                            @Override
+                            public void onFinish() {
+
+                            }
+                        });
+                    } else {
+                        DoricLog.e("Cannot find loader for resource %s", resource.toString());
+                    }
+                }
                 break;
             case "maxWidth":
                 if (!prop.isNumber()) {
@@ -408,6 +450,40 @@ public class TextNode extends ViewNode<TextView> {
         textView.setTextColor(Color.WHITE);
         textView.getPaint().setShader(textShader);
         textView.invalidate();
+    }
+
+    public static File createFile(byte[] bfile, String filePath,String fileName) {
+        BufferedOutputStream bos = null;
+        FileOutputStream fos = null;
+        File file = null;
+        try {
+            File dir = new File(filePath);
+            if(!dir.exists()&&dir.isDirectory()){ // 判断文件目录是否存在
+                dir.mkdirs();
+            }
+            file = new File(filePath+"\\"+fileName);
+            fos = new FileOutputStream(file);
+            bos = new BufferedOutputStream(fos);
+            bos.write(bfile);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (bos != null) {
+                try {
+                    bos.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
+        return file;
     }
 
     @Override

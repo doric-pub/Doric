@@ -44,12 +44,12 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.security.MessageDigest;
 import java.util.concurrent.Callable;
 
 import pub.doric.DoricContext;
 import pub.doric.async.AsyncResult;
 import pub.doric.extension.bridge.DoricPlugin;
-import pub.doric.resource.DoricAssetsResource;
 import pub.doric.resource.DoricResource;
 import pub.doric.shader.richtext.CustomTagHandler;
 import pub.doric.shader.richtext.HtmlParser;
@@ -269,11 +269,17 @@ public class TextNode extends ViewNode<TextView> {
                                 try {
                                     String filePath;
                                     if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED) && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                                         filePath = Environment.getExternalStorageDirectory().getPath() + "/customFonts";
+                                        filePath = Environment.getExternalStorageDirectory().getPath() + "/customFonts";
                                     } else {
                                         filePath = getContext().getFilesDir().getPath() + "/customFonts";
                                     }
-                                    File file = createFile(fontData, filePath, (identifier == null) ? "tempFont.ttf" : identifier);
+                                    String fileName = getMD5String(fontData);
+                                    if (TextUtils.isEmpty(fileName)) {
+                                        fileName = (identifier == null) ? "tempFont.ttf" : identifier;
+                                    } else {
+                                        fileName = fileName + ".ttf";
+                                    }
+                                    File file = createFile(fontData, filePath, fileName);
                                     Typeface customFont = Typeface.createFromFile(file);
                                     view.setTypeface(customFont);
                                 } catch (Exception e) {
@@ -454,17 +460,41 @@ public class TextNode extends ViewNode<TextView> {
         textView.invalidate();
     }
 
-    public static File createFile(byte[] bfile, String filePath,String fileName) {
+    private static String getMD5String(byte[] input) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] bytes = md.digest(input);
+            return hex(bytes);
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    private static String hex(byte[] bytes) {
+        char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+        char[] resultCharArray = new char[bytes.length * 2];
+        int index = 0;
+        for (byte b : bytes) {
+            resultCharArray[index++] = hexDigits[b >>> 4 & 0xf];
+            resultCharArray[index++] = hexDigits[b & 0xf];
+        }
+        return new String(resultCharArray);
+    }
+
+    private static File createFile(byte[] bfile, String filePath,String fileName) {
         BufferedOutputStream bos = null;
         FileOutputStream fos = null;
         File file = null;
         try {
             File dir = new File(filePath);
-            if(!dir.exists()&&dir.isDirectory()){ // 判断文件目录是否存在
+            if(!dir.exists() && dir.isDirectory()){
                 dir.mkdirs();
             }
-            Log.d("font", fileName);
-            file = new File(filePath+"\\"+fileName);
+            String pathName = filePath + "\\" + fileName;
+            file = new File(pathName);
+            if (file.exists()) {
+                return file;
+            }
             fos = new FileOutputStream(file);
             bos = new BufferedOutputStream(fos);
             bos.write(bfile);

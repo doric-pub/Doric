@@ -61,7 +61,6 @@
 @property(nonatomic, copy) NSNumber *strikethrough;
 @property(nonatomic, strong) NSDictionary *textGradientProps;
 @property(nonatomic, assign) CGSize textGradientSize;
-@property(nonatomic, assign) CGFloat textSize;
 @end
 
 @implementation DoricTextNode
@@ -84,7 +83,6 @@
         } else {
             view.font = [UIFont systemFontOfSize:[(NSNumber *) prop floatValue]];
         }
-        self.textSize = [(NSNumber *) prop floatValue];
     } else if ([name isEqualToString:@"textColor"]) {
         if ([prop isKindOfClass:[NSNumber class]]) {
             view.textColor = DoricColor(prop);
@@ -148,12 +146,14 @@
              withContext:self.doricContext] fetch];
             [asyncResult setResultCallback:^(NSData *fontData) {
                 [self.doricContext dispatchToMainQueue:^{
-                    view.font = [self registerFontWithFontData:fontData fontSize:self.textSize > 0 ? self.textSize : 12];
+                    view.font = [self registerFontWithFontData:fontData fontSize:view.font.pointSize];
                 }];
             }];
             [asyncResult setExceptionCallback:^(NSException *e) {
                 DoricLog(@"Cannot load resource %@, %@", prop, e.reason);
             }];
+        } else {
+            DoricLog(@"load resource error for View Type :%@, prop is %@", self.class, name);
         }
     } else if ([name isEqualToString:@"lineSpacing"]) {
         [[self ensureParagraphStyle] also:^(NSMutableParagraphStyle *it) {
@@ -326,6 +326,8 @@
 - (UIFont *)registerFontWithFontData:(NSData *)fontData fontSize:(CGFloat)fontSize{
     CGDataProviderRef fontDataProvider = CGDataProviderCreateWithCFData((__bridge CFDataRef)fontData);
     CGFontRef fontRef = CGFontCreateWithDataProvider(fontDataProvider);
+    // THE NEXT LINE IS RELEVANT PART
+    // https://stackoverflow.com/questions/24900979/cgfontcreatewithdataprovider-hangs-in-airplane-mode
     [UIFont familyNames];
     CGDataProviderRelease(fontDataProvider);
     CTFontManagerRegisterGraphicsFont(fontRef, NULL);

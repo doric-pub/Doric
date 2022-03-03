@@ -22,13 +22,10 @@ import android.graphics.Rect;
 import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.os.Environment;
 import android.text.Html;
 import android.text.Layout;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.ViewTreeObserver;
@@ -44,7 +41,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.security.MessageDigest;
+import java.net.URLEncoder;
 import java.util.concurrent.Callable;
 
 import pub.doric.DoricContext;
@@ -260,6 +257,7 @@ public class TextNode extends ViewNode<TextView> {
                 } else if (prop.isObject()) {
                     final JSObject resource = prop.asObject();
                     final String identifier = resource.getProperty("identifier").asString().value();
+                    final String type = resource.getProperty("type").asString().value();
                     final DoricResource doricResource = getDoricContext().getDriver().getRegistry().getResourceManager()
                             .load(getDoricContext(), resource);
                     if (doricResource != null) {
@@ -268,20 +266,20 @@ public class TextNode extends ViewNode<TextView> {
                             public void onResult(byte[] fontData) {
                                 try {
                                     String filePath;
-                                    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED) && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                                        filePath = Environment.getExternalStorageDirectory().getPath() + "/customFonts";
-                                    } else {
-                                        filePath = getContext().getFilesDir().getPath() + "/customFonts";
-                                    }
-                                    String fileName = getMD5String(fontData);
+                                    filePath = getContext().getCacheDir().getPath() + File.separator + "DoricTextFonts";
+                                    String fileName = URLEncoder.encode(type + identifier, "UTF-8");
                                     if (TextUtils.isEmpty(fileName)) {
                                         fileName = (identifier == null) ? "tempFont.ttf" : identifier;
                                     } else {
                                         fileName = fileName + ".ttf";
                                     }
                                     File file = createFile(fontData, filePath, fileName);
-                                    Typeface customFont = Typeface.createFromFile(file);
-                                    view.setTypeface(customFont);
+                                    if (file == null) {
+                                        DoricLog.e("Error Font file load resource %s", resource.toString());
+                                    } else  {
+                                        Typeface customFont = Typeface.createFromFile(file);
+                                        view.setTypeface(customFont);
+                                    }
                                 } catch (Exception e) {
                                     DoricLog.e("Error Font asset load resource %s", resource.toString());
                                 }
@@ -460,37 +458,16 @@ public class TextNode extends ViewNode<TextView> {
         textView.invalidate();
     }
 
-    private static String getMD5String(byte[] input) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] bytes = md.digest(input);
-            return hex(bytes);
-        } catch (Exception e) {
-            return "";
-        }
-    }
-
-    private static String hex(byte[] bytes) {
-        char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
-        char[] resultCharArray = new char[bytes.length * 2];
-        int index = 0;
-        for (byte b : bytes) {
-            resultCharArray[index++] = hexDigits[b >>> 4 & 0xf];
-            resultCharArray[index++] = hexDigits[b & 0xf];
-        }
-        return new String(resultCharArray);
-    }
-
-    private static File createFile(byte[] bfile, String filePath,String fileName) {
+    private static File createFile(byte[] bfile, String filePath,String fileName) throws IOException {
         BufferedOutputStream bos = null;
         FileOutputStream fos = null;
         File file = null;
         try {
             File dir = new File(filePath);
-            if(!dir.exists() && dir.isDirectory()){
+            if(!dir.exists()){
                 dir.mkdirs();
             }
-            String pathName = filePath + "\\" + fileName;
+            String pathName = filePath + File.separator + fileName;
             file = new File(pathName);
             if (file.exists()) {
                 return file;
@@ -500,6 +477,7 @@ public class TextNode extends ViewNode<TextView> {
             bos.write(bfile);
         } catch (Exception e) {
             e.printStackTrace();
+            throw e;
         } finally {
             if (bos != null) {
                 try {

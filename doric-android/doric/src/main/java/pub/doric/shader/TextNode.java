@@ -460,13 +460,12 @@ public class TextNode extends ViewNode<TextView> {
         BufferedOutputStream bos = null;
         FileOutputStream fos = null;
         try {
-            File file = null;
             File dir = new File(filePath);
             if(!dir.exists()){
                 dir.mkdirs();
             }
             String pathName = filePath + File.separator + fileName;
-            file = new File(pathName);
+            File file = new File(pathName);
             if (file.exists()) {
                 return file;
             }
@@ -475,7 +474,6 @@ public class TextNode extends ViewNode<TextView> {
             bos.write(bfile);
             return file;
         } catch (Exception e) {
-            e.printStackTrace();
             throw e;
         } finally {
             if (bos != null) {

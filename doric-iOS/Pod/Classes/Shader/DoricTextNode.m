@@ -325,10 +325,10 @@
 
 - (UIFont *)registerFontWithFontData:(NSData *)fontData fontSize:(CGFloat)fontSize{
     CGDataProviderRef fontDataProvider = CGDataProviderCreateWithCFData((__bridge CFDataRef)fontData);
-    CGFontRef fontRef = CGFontCreateWithDataProvider(fontDataProvider);
     // THE NEXT LINE IS RELEVANT PART
     // https://stackoverflow.com/questions/24900979/cgfontcreatewithdataprovider-hangs-in-airplane-mode
     [UIFont familyNames];
+    CGFontRef fontRef = CGFontCreateWithDataProvider(fontDataProvider);
     CGDataProviderRelease(fontDataProvider);
     CTFontManagerRegisterGraphicsFont(fontRef, NULL);
     NSString *fontName = CFBridgingRelease(CGFontCopyPostScriptName(fontRef));

@@ -212,7 +212,7 @@ class TextDemo extends Panel {
                         textSize: 10,
                     }),
                     text({
-                        text: "Font from custom loader.",
+                        text: "Hanabi.ttf",
                         textSize: 30,
                         textColor: Color.BLUE,
                         font: new AssetsResource('Hanabi.ttf')
@@ -222,10 +222,10 @@ class TextDemo extends Panel {
                         textSize: 10,
                     }),
                     text({
-                        text: "Font from custom loader.",
+                        text: "Alibaba-PuHuiTi-Bold.ttf",
                         textSize: 30,
                         textColor: Color.BLUE,
-                        font: new AssetsResource('DINPro.ttf')
+                        font: new AssetsResource('Alibaba-PuHuiTi-Bold.ttf')
                     }),
                     text({
                         text: "This is line Spaceing 0,\nSecond line",

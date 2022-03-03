@@ -2295,14 +2295,8 @@ var Image = /** @class */ (function (_super) {
     Image.prototype.getImagePixels = function (context) {
         return this.nativeChannel(context, "getImagePixels")();
     };
-    Image.prototype.toModel = function () {
-        var ret = _super.prototype.toModel.call(this);
-        if (Reflect.has(ret.props, "imagePixels")) {
-            var imagePixels = Reflect.get(ret.props, "imagePixels");
-            var pixels_1 = imagePixels.pixels;
-            imagePixels.pixels = this.callback2Id(function () { return pixels_1; });
-        }
-        return ret;
+    Image.prototype.setImagePixels = function (context, image) {
+        return this.nativeChannel(context, "setImagePixels")(image);
     };
     __decorate$b([
         Property,

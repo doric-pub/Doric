@@ -44,6 +44,8 @@ export class ImageProcessorDemo extends Panel {
   build(root: Group): void {
     const iv = createRef<Image>();
     const imageUrl = "https://doric.pub/about/The_Parthenon_in_Athens.jpg";
+    let imageInfo: { width: number; height: number };
+    let pixels: ArrayBuffer;
     <Scroller parent={root} layoutConfig={layoutConfig().most()}>
       <VLayout
         layoutConfig={layoutConfig().mostWidth().fitHeight()}
@@ -64,6 +66,10 @@ export class ImageProcessorDemo extends Panel {
           layoutConfig={layoutConfig().justWidth().fitHeight()}
           width={(Environment.screenWidth / 5) * 4}
           imageUrl={imageUrl}
+          loadCallback={async () => {
+            imageInfo = await iv.current.getImageInfo(context);
+            pixels = (await iv.current.getImagePixels(context)).slice(0);
+          }}
         />
         <VLayout
           layoutConfig={layoutConfig().mostWidth().fitHeight()}
@@ -91,13 +97,8 @@ export class ImageProcessorDemo extends Panel {
             const spinnerRef = createRef<Stack>();
             const containerRef = createRef<GestureContainer>();
             this.addOnRenderFinishedCallback(async () => {
-              const imageInfo = await iv.current.getImageInfo(context);
-              const pixels = (await iv.current.getImagePixels(context)).slice(
-                0
-              );
-              const data = new Uint8Array(pixels);
-
               async function changeAlpha(alpha: number) {
+                const data = new Uint8Array(pixels);
                 for (let i = 0; i < data.length - 4; i += 4) {
                   data[i + 3] = alpha;
                 }
@@ -147,21 +148,25 @@ export class ImageProcessorDemo extends Panel {
             const spinnerRef = createRef<Stack>();
             const containerRef = createRef<GestureContainer>();
             this.addOnRenderFinishedCallback(async () => {
-              const imageInfo = await iv.current.getImageInfo(context);
-              const pixels = (await iv.current.getImagePixels(context)).slice(
-                0
-              );
-              const data = new Uint32Array(pixels);
-              for (let i = 0; i < data.length; i++) {
-                let { r, g, b } = pixelToRGBA(data[i]);
-                data[i] = Math.floor(r * 0.2989 + g * 0.587 + b * 0.114);
-              }
+              let data: Uint32Array | undefined = undefined;
               async function binarizationImage(t: number) {
+                if (!!!data) {
+                  data = new Uint32Array(pixels);
+                  for (let i = 0; i < data.length; i++) {
+                    let { r, g, b } = pixelToRGBA(data[i]);
+                    data[i] = Math.floor(r * 0.2989 + g * 0.587 + b * 0.114);
+                  }
+                }
                 const arrayBuffer = pixels.slice(0);
                 const ret = new Uint32Array(arrayBuffer);
                 for (let i = 0; i < data.length; i++) {
                   ret[i] = data[i] < t ? 0xff000000 : 0xffffffff;
                 }
+                iv.current.setImagePixels(context, {
+                  width: imageInfo.width,
+                  height: imageInfo.height,
+                  pixels: arrayBuffer,
+                });
                 iv.current.imagePixels = {
                   width: imageInfo.width,
                   height: imageInfo.height,
@@ -208,13 +213,9 @@ export class ImageProcessorDemo extends Panel {
             const spinnerRef = createRef<Stack>();
             const containerRef = createRef<GestureContainer>();
             this.addOnRenderFinishedCallback(async () => {
-              const imageInfo = await iv.current.getImageInfo(context);
-              const rawPixels = (
-                await iv.current.getImagePixels(context)
-              ).slice(0);
               async function blurEffect(radius: number) {
                 radius = Math.round(radius);
-                const buffer = rawPixels.slice(0);
+                const buffer = pixels.slice(0);
                 const data = new Uint32Array(buffer);
                 fastBlur(data, imageInfo.width, imageInfo.height, radius);
                 iv.current.imagePixels = {

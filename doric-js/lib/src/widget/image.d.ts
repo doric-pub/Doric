@@ -1,4 +1,4 @@
-import { View, NativeViewModel } from "../ui/view";
+import { View } from "../ui/view";
 import { Color } from "../util/color";
 import { BridgeContext } from "../runtime/global";
 import { Resource } from "../util/resource";
@@ -95,6 +95,10 @@ export declare class Image extends View {
         mimeType: string;
     }>;
     getImagePixels(context: BridgeContext): Promise<ArrayBuffer>;
-    toModel(): NativeViewModel;
+    setImagePixels(context: BridgeContext, image: {
+        width: number;
+        height: number;
+        pixels: ArrayBuffer;
+    }): Promise<void>;
 }
 export declare function image(config: Partial<Image>): Image;

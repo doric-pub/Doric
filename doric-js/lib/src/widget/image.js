@@ -48,14 +48,8 @@ export class Image extends View {
     getImagePixels(context) {
         return this.nativeChannel(context, "getImagePixels")();
     }
-    toModel() {
-        const ret = super.toModel();
-        if (Reflect.has(ret.props, "imagePixels")) {
-            const imagePixels = Reflect.get(ret.props, "imagePixels");
-            const pixels = imagePixels.pixels;
-            imagePixels.pixels = this.callback2Id(() => pixels);
-        }
-        return ret;
+    setImagePixels(context, image) {
+        return this.nativeChannel(context, "setImagePixels")(image);
     }
 }
 __decorate([

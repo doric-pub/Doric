@@ -6,9 +6,5 @@
 #import <JavaScriptCore/JavaScriptCore.h>
 
 @interface JSValue (Doric)
-- (BOOL)isArrayBuffer;
-
-- (NSData *)toArrayBuffer;
-
 - (id)toObjectWithArrayBuffer;
 @end

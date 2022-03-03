@@ -150,14 +150,12 @@ export class Image extends View {
         return this.nativeChannel(context, "getImagePixels")()
     }
 
-    toModel(): NativeViewModel {
-        const ret = super.toModel()
-        if (Reflect.has(ret.props, "imagePixels")) {
-            const imagePixels = Reflect.get(ret.props, "imagePixels")
-            const pixels = imagePixels.pixels
-            imagePixels.pixels = this.callback2Id(() => pixels)
-        }
-        return ret
+    setImagePixels(context: BridgeContext, image: {
+        width: number,
+        height: number,
+        pixels: ArrayBuffer
+    }): Promise<void> {
+        return this.nativeChannel(context, "setImagePixels",)(image)
     }
 }
 

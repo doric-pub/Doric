@@ -159,29 +159,6 @@ id valueToObject(JSContext *context, JSValueRef value) {
     return containerValueToObject([context JSGlobalContextRef], result);
 }
 
-- (BOOL)isArrayBuffer {
-    JSContextRef ctx = self.context.JSGlobalContextRef;
-    JSValueRef jsValueRef = self.JSValueRef;
-    if (self.isObject) {
-        JSTypedArrayType type = JSValueGetTypedArrayType(ctx, jsValueRef, NULL);
-        return type == kJSTypedArrayTypeArrayBuffer;
-    }
-    return NO;
-}
-
-- (NSData *)toArrayBuffer {
-    if (!self.isArrayBuffer) {
-        return nil;
-    }
-    JSContextRef ctx = self.context.JSGlobalContextRef;
-    JSValueRef jsValueRef = self.JSValueRef;
-    JSObjectRef ref = JSValueToObject(ctx, jsValueRef, NULL);
-    size_t size = JSObjectGetArrayBufferByteLength(ctx, ref, NULL);
-    void *ptr = JSObjectGetArrayBufferBytesPtr(ctx, ref, NULL);
-
-    return [[NSData alloc] initWithBytesNoCopy:ptr length:size freeWhenDone:NO];
-}
-
 - (id)toObjectWithArrayBuffer {
     return valueToObject(self.context, self.JSValueRef);
 }

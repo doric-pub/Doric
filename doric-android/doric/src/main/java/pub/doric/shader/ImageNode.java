@@ -71,6 +71,7 @@ import pub.doric.DoricContext;
 import pub.doric.async.AsyncResult;
 import pub.doric.extension.bridge.DoricMethod;
 import pub.doric.extension.bridge.DoricPlugin;
+import pub.doric.extension.bridge.DoricPromise;
 import pub.doric.resource.DoricResource;
 import pub.doric.shader.flex.FlexNode;
 import pub.doric.utils.DoricLog;
@@ -527,43 +528,11 @@ public class ImageNode extends ViewNode<ImageView> {
                 final int width = prop.asObject().getProperty("width").asNumber().toInt();
                 final int height = prop.asObject().getProperty("height").asNumber().toInt();
                 JSValue pixelsValue = prop.asObject().getProperty("pixels");
-                if (pixelsValue.isArrayBuffer()) {
-                    byte[] pixels = prop.asObject().getProperty("pixels").asArrayBuffer().value();
-                    Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-                    ByteBuffer byteBuffer = ByteBuffer.wrap(pixels);
-                    bitmap.copyPixelsFromBuffer(byteBuffer);
-                    view.setImageBitmap(bitmap);
-                } else if (pixelsValue.isString()) {
-                    String pixelsCallbackId = pixelsValue.asString().value();
-                    callJSResponse(pixelsCallbackId).setCallback(new AsyncResult.Callback<JSDecoder>() {
-                        @Override
-                        public void onResult(JSDecoder result) {
-                            try {
-                                JSValue value = result.decode();
-                                if (value.isArrayBuffer()) {
-                                    byte[] pixels = value.asArrayBuffer().value();
-                                    Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-                                    ByteBuffer byteBuffer = ByteBuffer.wrap(pixels);
-                                    bitmap.copyPixelsFromBuffer(byteBuffer);
-                                    view.setImageBitmap(bitmap);
-                                }
-                            } catch (ArchiveException e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-
-                        @Override
-                        public void onError(Throwable t) {
-
-                        }
-
-                        @Override
-                        public void onFinish() {
-
-                        }
-                    });
-                }
+                byte[] pixels = prop.asObject().getProperty("pixels").asArrayBuffer().value();
+                Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+                ByteBuffer byteBuffer = ByteBuffer.wrap(pixels);
+                bitmap.copyPixelsFromBuffer(byteBuffer);
+                view.setImageBitmap(bitmap);
                 break;
             default:
                 super.blend(view, name, prop);
@@ -640,5 +609,18 @@ public class ImageNode extends ViewNode<ImageView> {
         } else {
             return new JavaValue();
         }
+    }
+
+    @DoricMethod
+    public void setImagePixels(JSObject imagePixels, DoricPromise promise) {
+        final int width = imagePixels.asObject().getProperty("width").asNumber().toInt();
+        final int height = imagePixels.asObject().getProperty("height").asNumber().toInt();
+        JSValue pixelsValue = imagePixels.asObject().getProperty("pixels");
+        byte[] pixels = imagePixels.asObject().getProperty("pixels").asArrayBuffer().value();
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        ByteBuffer byteBuffer = ByteBuffer.wrap(pixels);
+        bitmap.copyPixelsFromBuffer(byteBuffer);
+        mView.setImageBitmap(bitmap);
+        promise.resolve();
     }
 }

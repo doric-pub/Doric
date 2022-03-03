@@ -618,7 +618,7 @@ declare module 'doric/lib/src/widget/text' {
 }
 
 declare module 'doric/lib/src/widget/image' {
-    import { View, NativeViewModel } from "doric/lib/src/ui/view";
+    import { View } from "doric/lib/src/ui/view";
     import { Color } from "doric/lib/src/util/color";
     import { BridgeContext } from "doric/lib/src/runtime/global";
     import { Resource } from "doric/lib/src/util/resource";
@@ -715,7 +715,11 @@ declare module 'doric/lib/src/widget/image' {
                     mimeType: string;
             }>;
             getImagePixels(context: BridgeContext): Promise<ArrayBuffer>;
-            toModel(): NativeViewModel;
+            setImagePixels(context: BridgeContext, image: {
+                    width: number;
+                    height: number;
+                    pixels: ArrayBuffer;
+            }): Promise<void>;
     }
     export function image(config: Partial<Image>): Image;
 }

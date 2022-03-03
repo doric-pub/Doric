@@ -54,6 +54,7 @@
 #elif DORIC_USE_SDWEBIMAGE
 
 #import <SDWebImage/SDWebImage.h>
+#import <DoricPromise.h>
 
 @interface DoricImageView : SDAnimatedImageView
 @end
@@ -582,29 +583,21 @@
         NSDictionary *imagePixels = prop;
         NSUInteger width = [imagePixels[@"width"] unsignedIntValue];
         NSUInteger height = [imagePixels[@"height"] unsignedIntValue];
-        NSString *pixelsCallbackId = imagePixels[@"pixels"];
-        [[self callJSResponse:pixelsCallbackId, nil] setResultCallback:^(JSValue *pixelsValue) {
-            if (![pixelsValue isArrayBuffer]) {
-                return;
-            }
-            NSData *data = [pixelsValue toArrayBuffer];
-            [self.doricContext.driver ensureSyncInMainQueue:^{
-                CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-                CGContextRef context = CGBitmapContextCreate((void *) data.bytes,
-                        width,
-                        height,
-                        8,
-                        width * 4,
-                        colorSpace,
-                        kCGImageAlphaPremultipliedLast);
-                CGImageRef imageRef = CGBitmapContextCreateImage(context);
-                UIImage *image = [[UIImage alloc] initWithCGImage:imageRef scale:UIScreen.mainScreen.scale orientation:UIImageOrientationUp];
-                CGImageRelease(imageRef);
-                CGContextRelease(context);
-                CGColorSpaceRelease(colorSpace);
-                self.view.image = image;
-            }];
-        }];
+        NSData *pixels = imagePixels[@"pixels"];
+        CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+        CGContextRef context = CGBitmapContextCreate((void *) pixels.bytes,
+                width,
+                height,
+                8,
+                width * 4,
+                colorSpace,
+                kCGImageAlphaPremultipliedLast);
+        CGImageRef imageRef = CGBitmapContextCreateImage(context);
+        UIImage *image = [[UIImage alloc] initWithCGImage:imageRef scale:UIScreen.mainScreen.scale orientation:UIImageOrientationUp];
+        CGImageRelease(imageRef);
+        CGContextRelease(context);
+        CGColorSpaceRelease(colorSpace);
+        view.image = image;
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }
@@ -741,6 +734,9 @@
 }
 
 - (NSData *)getImagePixels {
+    if (!self.view.image) {
+        return nil;
+    }
     CGImageRef imageRef = [self.view.image CGImage];
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
     size_t width = CGImageGetWidth(imageRef);
@@ -760,8 +756,28 @@
     CGContextDrawImage(contextRef, CGRectMake(0, 0, width, height), imageRef);
     CGColorSpaceRelease(colorSpace);
     CGContextRelease(contextRef);
-
     return [[NSData alloc] initWithBytesNoCopy:imageData length:width * height * bytesPerPixel freeWhenDone:YES];
+}
+
+- (void)setImagePixels:(NSDictionary *)imagePixels withPromise:(DoricPromise *)promise {
+    NSUInteger width = [imagePixels[@"width"] unsignedIntValue];
+    NSUInteger height = [imagePixels[@"height"] unsignedIntValue];
+    NSData *pixels = imagePixels[@"pixels"];
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGContextRef context = CGBitmapContextCreate((void *) pixels.bytes,
+            width,
+            height,
+            8,
+            width * 4,
+            colorSpace,
+            kCGImageAlphaPremultipliedLast);
+    CGImageRef imageRef = CGBitmapContextCreateImage(context);
+    UIImage *image = [[UIImage alloc] initWithCGImage:imageRef scale:UIScreen.mainScreen.scale orientation:UIImageOrientationUp];
+    CGImageRelease(imageRef);
+    CGContextRelease(context);
+    CGColorSpaceRelease(colorSpace);
+    self.view.image = image;
+    [promise resolve:nil];
 }
 
 - (void)dealloc {

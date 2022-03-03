@@ -269,12 +269,8 @@ public class TextNode extends ViewNode<TextView> {
                                     filePath = getContext().getCacheDir().getPath() + File.separator + "DoricTextFonts";
                                     String fileName = URLEncoder.encode(type + "_" + identifier, "UTF-8");
                                     File file = createFile(fontData, filePath, fileName);
-                                    if (file == null) {
-                                        DoricLog.e("Error Font file load resource %s", resource.toString());
-                                    } else  {
-                                        Typeface customFont = Typeface.createFromFile(file);
-                                        view.setTypeface(customFont);
-                                    }
+                                    Typeface customFont = Typeface.createFromFile(file);
+                                    view.setTypeface(customFont);
                                 } catch (Exception e) {
                                     DoricLog.e("Error Font asset load resource %s", resource.toString());
                                 }

@@ -8,9 +8,9 @@ target 'Example' do
   pod 'DoricCore', :path => '../../'
   pod 'DoricDevkit', :path => '../../'
 
-  pod 'YYWebImage'
+  #pod 'YYWebImage'
   
-  pod 'YYImage/WebP'
+  #pod 'YYImage/WebP'
 
   pod 'SDWebImage'
 

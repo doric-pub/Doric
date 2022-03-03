@@ -29,6 +29,7 @@
 #import "DoricContext.h"
 #import "DoricContextManager.h"
 #import "DoricPerformanceProfile.h"
+#import "JSValue+Doric.h"
 
 @interface DoricDefaultMonitor : NSObject <DoricMonitorProtocol>
 @end
@@ -210,8 +211,8 @@
                                           }
                                       }];
 
-    [self.jsExecutor injectGlobalJSObject:INJECT_BRIDGE obj:^(NSString *contextId, NSString *module, NSString *method, NSString *callbackId, id argument) {
-        return [self.bridgeExtension callNativeWithContextId:contextId module:module method:method callbackId:callbackId argument:argument];
+    [self.jsExecutor injectGlobalJSObject:INJECT_BRIDGE obj:^(NSString *contextId, NSString *module, NSString *method, NSString *callbackId, JSValue *argument) {
+        return [self.bridgeExtension callNativeWithContextId:contextId module:module method:method callbackId:callbackId argument:[self jsValueToObject:argument]];
     }];
 }
 
@@ -264,7 +265,7 @@
 - (JSValue *)invokeDoricMethod:(NSString *)method argumentsArray:(NSArray *)args {
     JSValue *ret = [self.jsExecutor invokeObject:GLOBAL_DORIC method:method args:args];
     if (![method isEqualToString:@"pureCallEntityMethod"]) {
-        [self.jsExecutor invokeObject:GLOBAL_DORIC method:DORIC_HOOK_NATIVE_CALL args:nil];
+        [self.jsExecutor invokeObject:GLOBAL_DORIC method:DORIC_HOOK_NATIVE_CALL args:@[]];
     }
     return ret;
 }
@@ -310,5 +311,9 @@
             [self.timers removeObjectForKey:timerId];
         }
     }];
+}
+
+- (id)jsValueToObject:(JSValue *)jsValue {
+    return [jsValue toObjectWithArrayBuffer];
 }
 @end

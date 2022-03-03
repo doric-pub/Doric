@@ -9,4 +9,6 @@
 - (BOOL)isArrayBuffer;
 
 - (NSData *)toArrayBuffer;
+
+- (id)toObjectWithArrayBuffer;
 @end

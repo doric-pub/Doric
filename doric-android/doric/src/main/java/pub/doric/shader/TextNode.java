@@ -267,11 +267,9 @@ public class TextNode extends ViewNode<TextView> {
                                 try {
                                     String filePath;
                                     filePath = getContext().getCacheDir().getPath() + File.separator + "DoricTextFonts";
-                                    String fileName = URLEncoder.encode(type + identifier, "UTF-8");
+                                    String fileName = URLEncoder.encode(type + "_" + identifier, "UTF-8");
                                     if (TextUtils.isEmpty(fileName)) {
                                         fileName = (identifier == null) ? "tempFont.ttf" : identifier;
-                                    } else {
-                                        fileName = fileName + ".ttf";
                                     }
                                     File file = createFile(fontData, filePath, fileName);
                                     if (file == null) {
@@ -461,8 +459,8 @@ public class TextNode extends ViewNode<TextView> {
     private static File createFile(byte[] bfile, String filePath,String fileName) throws IOException {
         BufferedOutputStream bos = null;
         FileOutputStream fos = null;
-        File file = null;
         try {
+            File file = null;
             File dir = new File(filePath);
             if(!dir.exists()){
                 dir.mkdirs();
@@ -475,6 +473,7 @@ public class TextNode extends ViewNode<TextView> {
             fos = new FileOutputStream(file);
             bos = new BufferedOutputStream(fos);
             bos.write(bfile);
+            return file;
         } catch (Exception e) {
             e.printStackTrace();
             throw e;
@@ -494,7 +493,6 @@ public class TextNode extends ViewNode<TextView> {
                 }
             }
         }
-        return file;
     }
 
     @Override

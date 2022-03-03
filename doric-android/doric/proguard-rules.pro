@@ -19,15 +19,13 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
--keep class pub.doric.extension.bridge.DoricPlugin
--keep class pub.doric.extension.bridge.DoricMethod
 
--keep @pub.doric.extension.bridge.DoricPlugin class * {*;}
+-keepclassmembers @pub.doric.extension.bridge.DoricPlugin class ** {
+    <init>(*);
+}
 
--keepclasseswithmembers @pub.doric.extension.bridge.DoricPlugin class * {*;}
-
--keep class * {
-@pub.doric.extension.bridge.DoricMethod <fields>;
+-keepclassmembers class * {
+    @pub.doric.extension.bridge.DoricMethod <methods>;
 }
 
 -keep class com.facebook.yoga.** {*;}

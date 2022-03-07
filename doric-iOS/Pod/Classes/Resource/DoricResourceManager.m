@@ -19,6 +19,7 @@
 
 #import "DoricResourceManager.h"
 #import "DoricContext.h"
+#import "DoricArrayBufferResource.h"
 
 @interface DoricResourceManager ()
 @property(nonatomic, strong) NSMutableDictionary <NSString *, id <DoricResourceLoader>> *loaders;
@@ -57,6 +58,9 @@
         if (!doricResource) {
             id <DoricResourceLoader> loader = self.loaders[type];
             doricResource = [loader load:identifier withContext:context];
+            if ([doricResource isKindOfClass:DoricArrayBufferResource.class]) {
+                ((DoricArrayBufferResource *) doricResource).data = resource[@"data"];
+            }
             [context.cachedResources setObject:doricResource forKey:resId];
         }
     });

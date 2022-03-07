@@ -15,6 +15,7 @@
  */
 package pub.doric.resource;
 
+import com.github.pengfeizhou.jscore.JSArrayBuffer;
 import com.github.pengfeizhou.jscore.JSObject;
 
 import java.util.HashMap;
@@ -22,6 +23,7 @@ import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
 import pub.doric.DoricContext;
 
 /**
@@ -41,6 +43,7 @@ public class DoricResourceManager {
     }
 
     @Nullable
+    @UiThread
     public synchronized DoricResource load(@NonNull DoricContext doricContext,
                                            @NonNull JSObject resource) {
         String resId = resource.getProperty("resId").asString().value();
@@ -51,6 +54,10 @@ public class DoricResourceManager {
             DoricResourceLoader loader = mResourceLoaders.get(type);
             if (loader != null) {
                 doricResource = loader.load(doricContext, identifier);
+                if (doricResource instanceof DoricArrayBufferResource) {
+                    JSArrayBuffer buffer = resource.getProperty("data").asArrayBuffer();
+                    ((DoricArrayBufferResource) doricResource).setValue(buffer);
+                }
                 doricContext.cacheResource(resId, doricResource);
             }
         }

@@ -45,6 +45,7 @@ import pub.doric.plugin.StoragePlugin;
 import pub.doric.refresh.RefreshableNode;
 import pub.doric.resource.DoricAndroidAssetsLoader;
 import pub.doric.resource.DoricAndroidLoader;
+import pub.doric.resource.DoricArrayBufferLoader;
 import pub.doric.resource.DoricAssetsLoader;
 import pub.doric.resource.DoricBase64Loader;
 import pub.doric.resource.DoricLocalLoader;
@@ -146,6 +147,8 @@ public class DoricRegistry {
         this.getResourceManager().registerLoader(new DoricLocalLoader());
         this.getResourceManager().registerLoader(new DoricRemoteLoader());
         this.getResourceManager().registerLoader(new DoricBase64Loader());
+        this.getResourceManager().registerLoader(new DoricArrayBufferLoader());
+
         initRegistry(this);
         doricJSEngine.setEnvironmentValue(DoricSingleton.getInstance().envMap);
         DoricSingleton.getInstance().registries.add(new WeakReference<>(this));

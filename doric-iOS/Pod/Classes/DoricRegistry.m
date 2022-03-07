@@ -66,6 +66,7 @@
 #import "DoricBlurEffectViewNode.h"
 #import "DoricAeroEffectViewNode.h"
 #import "DoricAssetsResourceLoader.h"
+#import "DoricArrayBufferResourceLoader.h"
 
 @interface DoricRegistry ()
 
@@ -151,6 +152,7 @@
     [self.loaderManager registerLoader:[DoricBase64ResourceLoader new]];
     [self.loaderManager registerLoader:[DoricCommonBundleResourceLoader new]];
     [self.loaderManager registerLoader:[DoricAssetsResourceLoader new]];
+    [self.loaderManager registerLoader:[DoricArrayBufferResourceLoader new]];
 }
 
 - (void)registerJSBundle:(NSString *)bundle withName:(NSString *)name {

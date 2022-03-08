@@ -143,6 +143,9 @@ public class DoricPanelFragment extends Fragment implements IDoricNavigator {
         AsyncCall.ensureRunInHandler(uiHandler, new Callable<Object>() {
             @Override
             public Object call() {
+                if (maskView == null) {
+                    return null;
+                }
                 maskView.setVisibility(View.GONE);
                 return null;
             }
@@ -153,9 +156,18 @@ public class DoricPanelFragment extends Fragment implements IDoricNavigator {
         AsyncCall.ensureRunInHandler(uiHandler, new Callable<Object>() {
             @Override
             public Object call() {
+                if (maskView == null) {
+                    return null;
+                }
                 maskView.setVisibility(View.VISIBLE);
-                maskView.findViewById(R.id.doric_mask_loading).setVisibility(View.VISIBLE);
-                maskView.findViewById(R.id.doric_mask_error).setVisibility(View.GONE);
+                View loading = maskView.findViewById(R.id.doric_mask_loading);
+                View error = maskView.findViewById(R.id.doric_mask_error);
+                if (loading != null) {
+                    loading.setVisibility(View.VISIBLE);
+                }
+                if (error != null) {
+                    error.setVisibility(View.GONE);
+                }
                 return null;
             }
         });
@@ -165,9 +177,18 @@ public class DoricPanelFragment extends Fragment implements IDoricNavigator {
         AsyncCall.ensureRunInHandler(uiHandler, new Callable<Object>() {
             @Override
             public Object call() {
+                if (maskView == null) {
+                    return null;
+                }
+                View loading = maskView.findViewById(R.id.doric_mask_loading);
+                View error = maskView.findViewById(R.id.doric_mask_error);
                 maskView.setVisibility(View.VISIBLE);
-                maskView.findViewById(R.id.doric_mask_loading).setVisibility(View.GONE);
-                maskView.findViewById(R.id.doric_mask_error).setVisibility(View.VISIBLE);
+                if (loading != null) {
+                    loading.setVisibility(View.GONE);
+                }
+                if (error != null) {
+                    error.setVisibility(View.VISIBLE);
+                }
                 View retryView = maskView.findViewById(R.id.doric_mask_error_retry);
                 if (retryView != null) {
                     retryView.setOnClickListener(new View.OnClickListener() {

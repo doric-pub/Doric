@@ -20,7 +20,9 @@ public class MainActivity extends AppCompatActivity {
         getIntent().putExtra("alias", BUNDLE_NAME);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        this.getSupportFragmentManager().beginTransaction().add(R.id.container, new DoricFragment()).commit();
+        if (savedInstanceState == null) {
+            this.getSupportFragmentManager().beginTransaction().add(R.id.container, new DoricFragment()).commit();
+        }
         BaseDoricNavBar doricNavBar = findViewById(R.id.doric_nav_bar);
         doricNavBar.setBackIconVisible(false);
 

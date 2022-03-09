@@ -50,3 +50,12 @@ export declare class MainBundleResource extends iOSResource {
 export declare class BundleResource extends iOSResource {
     constructor(bundleName: string, fileName: string);
 }
+export declare class ArrayBufferResource extends Resource {
+    data: ArrayBuffer;
+    constructor(data: ArrayBuffer);
+    toModel(): {
+        resId: string;
+        type: string;
+        identifier: string;
+    };
+}

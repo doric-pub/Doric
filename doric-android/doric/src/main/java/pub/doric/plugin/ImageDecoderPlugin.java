@@ -32,6 +32,7 @@ import pub.doric.extension.bridge.DoricPlugin;
 import pub.doric.extension.bridge.DoricPromise;
 import pub.doric.resource.DoricResource;
 import pub.doric.utils.DoricLog;
+import pub.doric.utils.ThreadMode;
 
 /**
  * @Description: This is for loading resource into js as ArrayBuffer
@@ -45,7 +46,7 @@ public class ImageDecoderPlugin extends DoricJavaPlugin {
         super(doricContext);
     }
 
-    @DoricMethod
+    @DoricMethod(thread = ThreadMode.UI)
     public void getImageInfo(final JSObject resource, final DoricPromise promise) {
         DoricResource doricResource = getDoricContext().getDriver().getRegistry().getResourceManager().load(
                 getDoricContext(),
@@ -82,7 +83,8 @@ public class ImageDecoderPlugin extends DoricJavaPlugin {
         }
     }
 
-    @DoricMethod
+
+    @DoricMethod(thread = ThreadMode.UI)
     public void decodeToPixels(final JSObject resource, final DoricPromise promise) {
         DoricResource doricResource = getDoricContext().getDriver().getRegistry().getResourceManager().load(
                 getDoricContext(),
@@ -90,13 +92,13 @@ public class ImageDecoderPlugin extends DoricJavaPlugin {
         if (doricResource != null) {
             doricResource.fetch().setCallback(new AsyncResult.Callback<byte[]>() {
                 @Override
-                public void onResult(byte[] rawData) {
+                public void onResult(final byte[] rawData) {
                     BitmapFactory.Options options = new BitmapFactory.Options();
                     options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(rawData, 0, rawData.length);
-                    ByteBuffer buffer = ByteBuffer.allocate(bitmap.getByteCount());
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(rawData, 0, rawData.length, options);
+                    ByteBuffer buffer = ByteBuffer.allocateDirect(bitmap.getByteCount());
                     bitmap.copyPixelsToBuffer(buffer);
-                    RetainedJavaValue retainedJavaValue = new RetainedJavaValue(getDoricContext(), buffer.array());
+                    final RetainedJavaValue retainedJavaValue = new RetainedJavaValue(getDoricContext(), buffer);
                     promise.resolve(retainedJavaValue);
                 }
 

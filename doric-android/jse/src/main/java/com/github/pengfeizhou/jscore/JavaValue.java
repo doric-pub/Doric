@@ -18,6 +18,8 @@ package com.github.pengfeizhou.jscore;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.nio.ByteBuffer;
+
 public class JavaValue {
     protected static final int TYPE_NULL = 0;
     protected static final int TYPE_NUMBER = 1;
@@ -31,7 +33,7 @@ public class JavaValue {
     protected String[] functionNames = null;
     protected int type;
     protected String value = "";
-    protected byte[] data = null;
+    protected ByteBuffer data = null;
     protected MemoryReleaser memoryReleaser = null;
 
     public JavaValue() {
@@ -79,16 +81,23 @@ public class JavaValue {
         this.value = jsonArray.toString();
     }
 
-    public JavaValue(byte[] data) {
+    public JavaValue(byte[] data, MemoryReleaser memoryReleaser) {
         this.type = TYPE_ARRAYBUFFER;
-        this.data = data;
+        this.data = ByteBuffer.allocateDirect(data.length);
+        this.data.put(data);
+        this.memoryReleaser = memoryReleaser;
     }
 
-    public JavaValue(byte[] data, MemoryReleaser memoryReleaser) {
+    public JavaValue(ByteBuffer data, MemoryReleaser memoryReleaser) {
         this.type = TYPE_ARRAYBUFFER;
         this.data = data;
         this.memoryReleaser = memoryReleaser;
     }
+
+    public JavaValue(byte[] data) {
+        this(data, null);
+    }
+
 
     public int getType() {
         return type;
@@ -99,14 +108,15 @@ public class JavaValue {
     }
 
     public byte[] getByteData() {
-        return data;
+        return data.array();
     }
+
 
     public interface MemoryReleaser {
         /**
          * Called when JS deallocated the arraybuffer
          */
-        void deallocate(byte[] data);
+        void deallocate(ByteBuffer data);
     }
 
     /**

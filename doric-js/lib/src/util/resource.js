@@ -71,3 +71,14 @@ export class BundleResource extends iOSResource {
         super("bundle", `${bundleName}://${fileName}`);
     }
 }
+export class ArrayBufferResource extends Resource {
+    constructor(data) {
+        super("arrayBuffer", uniqueId("buffer"));
+        this.data = data;
+    }
+    toModel() {
+        const ret = super.toModel();
+        ret.data = this.data;
+        return ret;
+    }
+}

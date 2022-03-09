@@ -15,6 +15,8 @@
  */
 package pub.doric.engine;
 
+import android.util.Base64;
+
 import com.github.pengfeizhou.jscore.ArchiveException;
 import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSArrayBuffer;
@@ -98,6 +100,11 @@ public class DoricJSDecoder extends JSDecoder {
             return new JSBoolean((Boolean) this.value);
         }
         if (isString()) {
+            if (((String) this.value).startsWith("__buffer_")) {
+                String base64String = ((String) this.value).substring("__buffer_".length());
+                byte[] data = Base64.decode(base64String, 0);
+                return new DoricJSArrayBuffer(data);
+            }
             return new JSString((String) this.value);
         }
         if (isNumber()) {
@@ -129,8 +136,22 @@ public class DoricJSDecoder extends JSDecoder {
             return jsArray;
         }
         if (this.value instanceof byte[]) {
-            return new JSArrayBuffer((byte[]) this.value);
+            return new DoricJSArrayBuffer((byte[]) this.value);
         }
         return JS_NULL;
+    }
+
+    private static class DoricJSArrayBuffer extends JSArrayBuffer {
+        private final byte[] data;
+
+        public DoricJSArrayBuffer(byte[] data) {
+            super(0, data.length);
+            this.data = data;
+        }
+
+        @Override
+        public byte[] value() {
+            return this.data;
+        }
     }
 }

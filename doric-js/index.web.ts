@@ -94,11 +94,15 @@ function _wrappedValue(v: RawValue): WrappedValue {
                     value: _arrayBufferToBase64(v)
                 };
             } else if (v instanceof Array) {
+                v.forEach(e => {
+                    traverse(e)
+                })
                 return {
                     type: "array",
                     value: JSON.stringify(v)
                 };
             } else {
+                traverse(v)
                 return {
                     type: "object",
                     value: JSON.stringify(v)
@@ -110,6 +114,31 @@ function _wrappedValue(v: RawValue): WrappedValue {
                 value: undefined
             };
     }
+}
+const cachedArrayBuffer: Map<string, ArrayBuffer> = new Map;
+let bufferId = 0;
+
+function traverse(obj: object) {
+    if (obj instanceof ArrayBuffer) {
+        return
+    }
+    if (obj instanceof Array) {
+        obj.forEach(e => { traverse(e) })
+        return
+    }
+    Object.entries(obj).forEach(([k, v]) => {
+        if (typeof v !== "object") {
+            return
+        }
+        if (v instanceof ArrayBuffer) {
+
+            const id = `__buffer_${++bufferId}`;
+            (obj as any)[k] = `__buffer_${_arrayBufferToBase64(v)}`;
+            cachedArrayBuffer.set(id, v);
+        } else {
+            traverse(v)
+        }
+    })
 }
 
 function _rawValue(v: WrappedValue): RawValue {

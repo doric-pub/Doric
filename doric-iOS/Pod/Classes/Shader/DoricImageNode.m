@@ -27,6 +27,7 @@
 #import "DoricThirdParty.h"
 #import <JavaScriptCore/JavaScriptCore.h>
 #import <JSValue+Doric.h>
+#import <DoricPromise.h>
 
 #if DORIC_USE_YYWEBIMAGE
 
@@ -54,7 +55,6 @@
 #elif DORIC_USE_SDWEBIMAGE
 
 #import <SDWebImage/SDWebImage.h>
-#import <DoricPromise.h>
 
 @interface DoricImageView : SDAnimatedImageView
 @end

@@ -74,12 +74,16 @@ function _wrappedValue(v) {
                 };
             }
             else if (v instanceof Array) {
+                v.forEach(e => {
+                    traverse(e);
+                });
                 return {
                     type: "array",
                     value: JSON.stringify(v)
                 };
             }
             else {
+                traverse(v);
                 return {
                     type: "object",
                     value: JSON.stringify(v)
@@ -91,6 +95,30 @@ function _wrappedValue(v) {
                 value: undefined
             };
     }
+}
+const cachedArrayBuffer = new Map;
+let bufferId = 0;
+function traverse(obj) {
+    if (obj instanceof ArrayBuffer) {
+        return;
+    }
+    if (obj instanceof Array) {
+        obj.forEach(e => { traverse(e); });
+        return;
+    }
+    Object.entries(obj).forEach(([k, v]) => {
+        if (typeof v !== "object") {
+            return;
+        }
+        if (v instanceof ArrayBuffer) {
+            const id = `__buffer_${++bufferId}`;
+            obj[k] = `__buffer_${_arrayBufferToBase64(v)}`;
+            cachedArrayBuffer.set(id, v);
+        }
+        else {
+            traverse(v);
+        }
+    });
 }
 function _rawValue(v) {
     switch (v.type) {

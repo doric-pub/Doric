@@ -1771,6 +1771,15 @@ declare module 'doric/lib/src/util/resource' {
     export class BundleResource extends iOSResource {
             constructor(bundleName: string, fileName: string);
     }
+    export class ArrayBufferResource extends Resource {
+            data: ArrayBuffer;
+            constructor(data: ArrayBuffer);
+            toModel(): {
+                    resId: string;
+                    type: string;
+                    identifier: string;
+            };
+    }
 }
 
 declare module 'doric/lib/src/pattern/candies' {

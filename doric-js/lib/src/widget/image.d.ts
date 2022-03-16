@@ -82,6 +82,12 @@ export declare class Image extends View {
         right: number;
         bottom: number;
     };
+    tileInset?: {
+        left: number;
+        top: number;
+        right: number;
+        bottom: number;
+    };
     /**
      * Called if loaded image is animated and played end.
      */

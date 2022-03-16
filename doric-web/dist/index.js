@@ -3408,6 +3408,10 @@ __decorate$b([
 ], Image.prototype, "stretchInset", void 0);
 __decorate$b([
     Property,
+    __metadata$b("design:type", Object)
+], Image.prototype, "tileInset", void 0);
+__decorate$b([
+    Property,
     __metadata$b("design:type", Function)
 ], Image.prototype, "onAnimationEnd", void 0);
 function image(config) {

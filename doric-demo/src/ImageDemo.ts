@@ -179,6 +179,28 @@ class ImageDemo extends Panel {
                             bottom: 0
                         }
                     }),
+                    label('tileInset'),
+                    image({
+                        imageBase64: img_base64[1],
+                        height: 66,
+                        width: 147,
+                        scaleType: ScaleType.ScaleAspectFill,
+                        layoutConfig: layoutConfig().just(),
+                    }),
+                    image({
+                        imageBase64: img_base64[1],
+                        height: 66 * 2,
+                        width: 147 * 2,
+                        backgroundColor: Color.CYAN,
+                        scaleType: ScaleType.ScaleToFill,
+                        layoutConfig: layoutConfig().just(),
+                        tileInset: {
+                            left: 0,
+                            top: 0,
+                            right: 83,
+                            bottom: 0
+                        }
+                    }),
                 ],
                 {
                     layoutConfig: layoutConfig().most().configHeight(LayoutSpec.FIT),

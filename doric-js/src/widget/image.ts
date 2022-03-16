@@ -120,6 +120,14 @@ export class Image extends View {
         bottom: number
     }
 
+    @Property
+    tileInset?: {
+        left: number,
+        top: number,
+        right: number,
+        bottom: number
+    }
+
     /**
      * Called if loaded image is animated and played end.
      */

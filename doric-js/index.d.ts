@@ -702,6 +702,12 @@ declare module 'doric/lib/src/widget/image' {
                     right: number;
                     bottom: number;
             };
+            tileInset?: {
+                    left: number;
+                    top: number;
+                    right: number;
+                    bottom: number;
+            };
             /**
                 * Called if loaded image is animated and played end.
                 */

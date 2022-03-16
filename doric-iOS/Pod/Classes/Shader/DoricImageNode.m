@@ -84,6 +84,7 @@
 @property(nonatomic, strong) NSString *errorImageBase64;
 @property(nonatomic, strong) UIVisualEffectView *blurEffectView;
 @property(nonatomic, strong) NSDictionary *stretchInsetDic;
+@property(nonatomic, strong) NSDictionary *tileInsetDic;
 @property(nonatomic, assign) CGFloat imageScale;
 @end
 
@@ -556,6 +557,8 @@
         }
     } else if ([@"stretchInset" isEqualToString:name]) {
         self.stretchInsetDic = (NSDictionary *) prop;
+    } else if ([@"tileInset" isEqualToString:name]) {
+        self.tileInsetDic = (NSDictionary *) prop;
     } else if ([@"imageScale" isEqualToString:name]) {
         //Do not need set
     } else if ([@"onAnimationEnd" isEqualToString:name]) {
@@ -667,6 +670,14 @@
         CGFloat bottom = [self.stretchInsetDic[@"bottom"] floatValue];
         CGFloat scale = self.imageScale;
         UIImage *result = [self.view.image resizableImageWithCapInsets:UIEdgeInsetsMake(top / scale, left / scale, bottom / scale, right / scale) resizingMode:UIImageResizingModeStretch];
+        self.view.image = result;
+    } else if (self.tileInsetDic != nil) {
+        CGFloat left = [self.tileInsetDic[@"left"] floatValue];
+        CGFloat top = [self.tileInsetDic[@"top"] floatValue];
+        CGFloat right = [self.tileInsetDic[@"right"] floatValue];
+        CGFloat bottom = [self.tileInsetDic[@"bottom"] floatValue];
+        CGFloat scale = self.imageScale;
+        UIImage *result = [self.view.image resizableImageWithCapInsets:UIEdgeInsetsMake(top / scale, left / scale, bottom / scale, right / scale) resizingMode:UIImageResizingModeTile];
         self.view.image = result;
     }
 }

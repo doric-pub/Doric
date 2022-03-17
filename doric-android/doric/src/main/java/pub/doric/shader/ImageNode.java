@@ -93,6 +93,7 @@ public class ImageNode extends ViewNode<ImageView> {
     private int placeHolderColor = Color.TRANSPARENT;
     private int errorColor = Color.TRANSPARENT;
     private JSObject stretchInset = null;
+    private JSObject tileInset = null;
     private float imageScale = DoricUtils.getScreenScale();
     private Animatable2Compat.AnimationCallback animationCallback = null;
 
@@ -160,6 +161,10 @@ public class ImageNode extends ViewNode<ImageView> {
             JSValue stretchInsetValue = jsObject.getProperty("stretchInset");
             if (stretchInsetValue.isObject()) {
                 this.stretchInset = stretchInsetValue.asObject();
+            }
+            JSValue tileInsetValue = jsObject.getProperty("tileInset");
+            if (tileInsetValue.isObject()) {
+                this.tileInset = tileInsetValue.asObject();
             }
             JSValue imageScaleValue = jsObject.getProperty("imageScale");
             if (imageScaleValue.isNumber()) {
@@ -363,6 +368,27 @@ public class ImageNode extends ViewNode<ImageView> {
                         float top = stretchInset.getProperty("top").asNumber().toFloat() * scale;
                         float right = stretchInset.getProperty("right").asNumber().toFloat() * scale;
                         float bottom = stretchInset.getProperty("bottom").asNumber().toFloat() * scale;
+
+                        Rect rect = new Rect(
+                                (int) left,
+                                (int) top,
+                                (int) (bitmap.getWidth() - right),
+                                (int) (bitmap.getHeight() - bottom)
+                        );
+
+                        NinePatchDrawable ninePatchDrawable = new NinePatchDrawable(
+                                getContext().getResources(),
+                                bitmap,
+                                DoricUtils.getNinePatchChunk(rect),
+                                rect,
+                                null
+                        );
+                        super.setResource(ninePatchDrawable);
+                    } else if (tileInset != null) {
+                        float left = tileInset.getProperty("left").asNumber().toFloat() * scale;
+                        float top = tileInset.getProperty("top").asNumber().toFloat() * scale;
+                        float right = tileInset.getProperty("right").asNumber().toFloat() * scale;
+                        float bottom = tileInset.getProperty("bottom").asNumber().toFloat() * scale;
 
                         Rect rect = new Rect(
                                 (int) left,

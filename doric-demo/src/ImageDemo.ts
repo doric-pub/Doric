@@ -158,7 +158,7 @@ class ImageDemo extends Panel {
                         scaleType: ScaleType.ScaleAspectFill,
                         layoutConfig: layoutConfig().just(),
                     }),
-                    label('StretchInset'),
+                    label('StretchInset1'),
                     image({
                         imageBase64: img_base64[1],
                         height: 60,
@@ -179,25 +179,51 @@ class ImageDemo extends Panel {
                             bottom: 0
                         }
                     }),
-                    label('tileInset'),
+
+                    label('StretchInset 2'),
                     image({
-                        imageBase64: img_base64[1],
-                        height: 66,
-                        width: 147,
+                        image: new AssetsResource("coupon_bg2.png"),
+                        height: 48,
+                        width: 78,
                         scaleType: ScaleType.ScaleAspectFill,
                         layoutConfig: layoutConfig().just(),
                     }),
                     image({
-                        imageBase64: img_base64[1],
-                        height: 66 * 2,
-                        width: 147 * 2,
-                        backgroundColor: Color.CYAN,
+                        image: new AssetsResource("coupon_bg2.png"),
+                        height: 48,
+                        width: 78*3,
+                        scaleType: ScaleType.ScaleToFill,
+                        imageScale:1,
+                        layoutConfig: layoutConfig().just(),
+                        stretchInset: {
+                            left: 0,
+                            top: 0,
+                            right: 76,
+                            bottom: 0
+                        }
+                    }),
+
+                    label('tileInset'),
+                    image({
+                        image: new AssetsResource("dididi.png"),
+                        height: 78,
+                        width: 84,
+                        backgroundColor: Color.BLACK,
+                        scaleType: ScaleType.ScaleAspectFill,
+                        layoutConfig: layoutConfig().just(),
+                    }),
+                    image({
+                        image: new AssetsResource("dididi.png"),
+                        height: 78 * 1,
+                        width: 84 * 3,
+                        imageScale:1,
+                        backgroundColor: Color.BLACK,
                         scaleType: ScaleType.ScaleToFill,
                         layoutConfig: layoutConfig().just(),
                         tileInset: {
                             left: 0,
                             top: 0,
-                            right: 83,
+                            right: 0,
                             bottom: 0
                         }
                     }),

@@ -86,6 +86,8 @@
 @property(nonatomic, strong) NSDictionary *stretchInsetDic;
 @property(nonatomic, strong) NSDictionary *tileInsetDic;
 @property(nonatomic, assign) CGFloat imageScale;
+@property(nonatomic, strong) NSDictionary *props;
+
 @end
 
 @implementation DoricImageNode
@@ -123,6 +125,7 @@
     [props[@"loadCallback"] also:^(NSString *it) {
         self.loadCallbackId = it;
     }];
+    self.props = props;
     [super blend:props];
 }
 
@@ -281,6 +284,7 @@
                         [self callJSResponse:self.loadCallbackId, nil];
                     }
                 }
+                [self afterBlended:self.props];
             }];
         }];
         [asyncResult setExceptionCallback:^(NSException *e) {
@@ -331,6 +335,7 @@
                     if (async && self.needReload) {
                         [self.superNode subNodeContentChanged:self];
                     }
+                    [self afterBlended:self.props];
                 }
             }];
         });
@@ -370,7 +375,8 @@
                                    [self.superNode subNodeContentChanged:self];
                                }
                            }
-                       }];
+            [self afterBlended:self.props];
+        }];
 #else
         DoricLog(@"Do not support load image url");
 #endif
@@ -663,6 +669,9 @@
 }
 
 - (void)afterBlended:(NSDictionary *)props {
+    if (CGSizeEqualToSize(self.view.image.size, CGSizeZero)) {
+        return;
+    }
     if (self.stretchInsetDic != nil) {
         CGFloat left = [self.stretchInsetDic[@"left"] floatValue];
         CGFloat top = [self.stretchInsetDic[@"top"] floatValue];
@@ -681,7 +690,6 @@
         self.view.image = result;
     }
 }
-
 
 - (NSNumber *)isAnimating {
     if (self.view.animating) {

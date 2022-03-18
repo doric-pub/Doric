@@ -564,7 +564,18 @@
     } else if ([@"stretchInset" isEqualToString:name]) {
         self.stretchInsetDic = (NSDictionary *) prop;
     } else if ([@"tileInset" isEqualToString:name]) {
-        self.tileInsetDic = (NSDictionary *) prop;
+        if ([prop isKindOfClass:[NSNumber class]]) {
+            NSInteger value = [prop intValue];
+            if (value == 1) {
+                self.tileInsetDic = @{@"left": @0, @"top": @0, @"right": @0, @"bottom": @0};
+            } else {
+                self.tileInsetDic = nil;
+            }
+        } else if ([prop isKindOfClass:[NSDictionary class]]) {
+            self.tileInsetDic = (NSDictionary *) prop;
+        } else {
+            DoricLog(@"set tileInset error for View Type :%@, prop is %@", self.class, name);
+        }
     } else if ([@"imageScale" isEqualToString:name]) {
         //Do not need set
     } else if ([@"onAnimationEnd" isEqualToString:name]) {

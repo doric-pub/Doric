@@ -25,6 +25,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Shader;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
@@ -52,8 +53,8 @@ import com.bumptech.glide.request.target.DrawableImageViewTarget;
 import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.bumptech.glide.request.target.Target;
 import com.facebook.yoga.YogaNode;
-import com.github.pengfeizhou.jscore.ArchiveException;
-import com.github.pengfeizhou.jscore.JSDecoder;
+import com.github.pengfeizhou.jscore.JSBoolean;
+import com.github.pengfeizhou.jscore.JSNumber;
 import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
@@ -62,7 +63,6 @@ import com.github.pengfeizhou.jscore.JavaValue;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.InputStream;
 import java.security.MessageDigest;
 import java.nio.ByteBuffer;
 
@@ -162,10 +162,25 @@ public class ImageNode extends ViewNode<ImageView> {
             if (stretchInsetValue.isObject()) {
                 this.stretchInset = stretchInsetValue.asObject();
             }
+
             JSValue tileInsetValue = jsObject.getProperty("tileInset");
-            if (tileInsetValue.isObject()) {
+            if (tileInsetValue.isBoolean()) {
+                if (tileInsetValue.asBoolean().value()) {
+                    // If boolean value 'true' is passed, it equals { left: 0, top: 0, right: 0, bottom: 0 }
+                    JSObject obj = new JSObject();
+                    JSNumber zero = new JSNumber(0);
+                    obj.setProperty("top", zero);
+                    obj.setProperty("left", zero);
+                    obj.setProperty("right", zero);
+                    obj.setProperty("bottom", zero);
+                    this.tileInset = obj;
+                } else {
+                    this.tileInset = null;
+                }
+            } else if (tileInsetValue.isObject()) {
                 this.tileInset = tileInsetValue.asObject();
-            }
+            } else { }
+
             JSValue imageScaleValue = jsObject.getProperty("imageScale");
             if (imageScaleValue.isNumber()) {
                 this.imageScale = imageScaleValue.asNumber().toFloat();
@@ -397,14 +412,13 @@ public class ImageNode extends ViewNode<ImageView> {
                                 (int) (bitmap.getHeight() - bottom)
                         );
 
-                        NinePatchDrawable ninePatchDrawable = new NinePatchDrawable(
-                                getContext().getResources(),
-                                bitmap,
-                                DoricUtils.getNinePatchChunk(rect),
-                                rect,
-                                null
-                        );
-                        super.setResource(ninePatchDrawable);
+                        Matrix matrix = new Matrix();
+                        matrix.setScale(1, 1);
+                        bitmap = Bitmap.createBitmap(bitmap, rect.left, rect.top, rect.width(), rect.height(), matrix, true);
+                        BitmapDrawable drawable = new BitmapDrawable(getContext().getResources(),bitmap);
+                        drawable.setTileModeXY(Shader.TileMode.REPEAT , Shader.TileMode.REPEAT);
+                        drawable.setDither(true);
+                        super.setResource(drawable);
                     } else {
                         super.setResource(resource);
                     }

@@ -625,7 +625,8 @@ declare module 'doric/lib/src/widget/image' {
     export enum ScaleType {
             ScaleToFill = 0,
             ScaleAspectFit = 1,
-            ScaleAspectFill = 2
+            ScaleAspectFill = 2,
+            ScaleToTile = 3
     }
     export class Image extends View {
             /**
@@ -702,19 +703,6 @@ declare module 'doric/lib/src/widget/image' {
                     right: number;
                     bottom: number;
             };
-            /**
-             * image tile
-             *
-             * If boolean value 'true' is passed, it equals { left: 0, top: 0, right: 0, bottom: 0 }
-             * Android: only support all area tile, so you'd better pass boolean value.
-             * iOS: support custom area tile, so you can pass object value and boolean value.
-             */
-            tileInset?: {
-                    left: number;
-                    top: number;
-                    right: number;
-                    bottom: number;
-            } | boolean;
             /**
                 * Called if loaded image is animated and played end.
                 */

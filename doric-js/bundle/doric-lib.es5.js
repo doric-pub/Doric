@@ -2288,6 +2288,7 @@ exports.ScaleType = void 0;
     ScaleType[ScaleType["ScaleToFill"] = 0] = "ScaleToFill";
     ScaleType[ScaleType["ScaleAspectFit"] = 1] = "ScaleAspectFit";
     ScaleType[ScaleType["ScaleAspectFill"] = 2] = "ScaleAspectFill";
+    ScaleType[ScaleType["ScaleToTile"] = 3] = "ScaleToTile";
 })(exports.ScaleType || (exports.ScaleType = {}));
 var Image = /** @class */ (function (_super) {
     __extends$e(Image, _super);
@@ -2389,10 +2390,6 @@ var Image = /** @class */ (function (_super) {
         Property,
         __metadata$b("design:type", Object)
     ], Image.prototype, "stretchInset", void 0);
-    __decorate$b([
-        Property,
-        __metadata$b("design:type", Object)
-    ], Image.prototype, "tileInset", void 0);
     __decorate$b([
         Property,
         __metadata$b("design:type", Function)

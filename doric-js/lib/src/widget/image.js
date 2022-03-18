@@ -31,6 +31,7 @@ export var ScaleType;
     ScaleType[ScaleType["ScaleToFill"] = 0] = "ScaleToFill";
     ScaleType[ScaleType["ScaleAspectFit"] = 1] = "ScaleAspectFit";
     ScaleType[ScaleType["ScaleAspectFill"] = 2] = "ScaleAspectFill";
+    ScaleType[ScaleType["ScaleToTile"] = 3] = "ScaleToTile";
 })(ScaleType || (ScaleType = {}));
 export class Image extends View {
     isAnimating(context) {
@@ -129,10 +130,6 @@ __decorate([
     Property,
     __metadata("design:type", Object)
 ], Image.prototype, "stretchInset", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Object)
-], Image.prototype, "tileInset", void 0);
 __decorate([
     Property,
     __metadata("design:type", Function)

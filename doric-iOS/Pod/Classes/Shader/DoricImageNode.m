@@ -84,9 +84,9 @@
 @property(nonatomic, strong) NSString *errorImageBase64;
 @property(nonatomic, strong) UIVisualEffectView *blurEffectView;
 @property(nonatomic, strong) NSDictionary *stretchInsetDic;
-@property(nonatomic, strong) NSDictionary *tileInsetDic;
 @property(nonatomic, assign) CGFloat imageScale;
 @property(nonatomic, strong) NSDictionary *props;
+@property(nonatomic, assign) NSInteger scaleType;
 
 @end
 
@@ -382,13 +382,18 @@
 #endif
         async = YES;
     } else if ([@"scaleType" isEqualToString:name]) {
-        switch ([prop integerValue]) {
+        self.scaleType = [prop integerValue];
+        switch (self.scaleType) {
             case 1: {
                 self.view.contentMode = UIViewContentModeScaleAspectFit;
                 break;
             }
             case 2: {
                 self.view.contentMode = UIViewContentModeScaleAspectFill;
+                break;
+            }
+            case 3: { // image tile
+                self.view.contentMode = UIViewContentModeScaleToFill;
                 break;
             }
             default: {
@@ -563,19 +568,6 @@
         }
     } else if ([@"stretchInset" isEqualToString:name]) {
         self.stretchInsetDic = (NSDictionary *) prop;
-    } else if ([@"tileInset" isEqualToString:name]) {
-        if ([prop isKindOfClass:[NSNumber class]]) {
-            NSInteger value = [prop intValue];
-            if (value == 1) {
-                self.tileInsetDic = @{@"left": @0, @"top": @0, @"right": @0, @"bottom": @0};
-            } else {
-                self.tileInsetDic = nil;
-            }
-        } else if ([prop isKindOfClass:[NSDictionary class]]) {
-            self.tileInsetDic = (NSDictionary *) prop;
-        } else {
-            DoricLog(@"set tileInset error for View Type :%@, prop is %@", self.class, name);
-        }
     } else if ([@"imageScale" isEqualToString:name]) {
         //Do not need set
     } else if ([@"onAnimationEnd" isEqualToString:name]) {
@@ -683,21 +675,16 @@
     if (CGSizeEqualToSize(self.view.image.size, CGSizeZero)) {
         return;
     }
-    if (self.stretchInsetDic != nil) {
+    if (self.scaleType == 3) {  // image tile
+        UIImage *result = [self.view.image resizableImageWithCapInsets:UIEdgeInsetsZero resizingMode:UIImageResizingModeTile];
+        self.view.image = result;
+    } else if (self.stretchInsetDic != nil) {
         CGFloat left = [self.stretchInsetDic[@"left"] floatValue];
         CGFloat top = [self.stretchInsetDic[@"top"] floatValue];
         CGFloat right = [self.stretchInsetDic[@"right"] floatValue];
         CGFloat bottom = [self.stretchInsetDic[@"bottom"] floatValue];
         CGFloat scale = self.imageScale;
         UIImage *result = [self.view.image resizableImageWithCapInsets:UIEdgeInsetsMake(top / scale, left / scale, bottom / scale, right / scale) resizingMode:UIImageResizingModeStretch];
-        self.view.image = result;
-    } else if (self.tileInsetDic != nil) {
-        CGFloat left = [self.tileInsetDic[@"left"] floatValue];
-        CGFloat top = [self.tileInsetDic[@"top"] floatValue];
-        CGFloat right = [self.tileInsetDic[@"right"] floatValue];
-        CGFloat bottom = [self.tileInsetDic[@"bottom"] floatValue];
-        CGFloat scale = self.imageScale;
-        UIImage *result = [self.view.image resizableImageWithCapInsets:UIEdgeInsetsMake(top / scale, left / scale, bottom / scale, right / scale) resizingMode:UIImageResizingModeTile];
         self.view.image = result;
     }
 }

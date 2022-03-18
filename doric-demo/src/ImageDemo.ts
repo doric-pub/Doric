@@ -225,9 +225,8 @@ class ImageDemo extends Panel {
                 width: 84 * 3,
                 imageScale: 1,
                 backgroundColor: Color.BLACK,
-                scaleType: ScaleType.ScaleToFill,
+                scaleType: ScaleType.ScaleToTile,
                 layoutConfig: layoutConfig().just(),
-                tileInset: true,
               }),
 
               label("tileInset 2"),
@@ -243,17 +242,8 @@ class ImageDemo extends Panel {
                 height: 288,
                 width: 154,
                 imageScale: 2,
-                scaleType: ScaleType.ScaleToFill,
+                scaleType: ScaleType.ScaleToTile,
                 layoutConfig: layoutConfig().just(),
-                tileInset:
-                  Environment.platform === "Android"
-                    ? true
-                    : {
-                        left: 0,
-                        top: 70,
-                        right: 0,
-                        bottom: 0,
-                      },
               }),
             ],
             {

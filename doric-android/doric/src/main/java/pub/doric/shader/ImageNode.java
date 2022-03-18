@@ -53,7 +53,6 @@ import com.bumptech.glide.request.target.DrawableImageViewTarget;
 import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.bumptech.glide.request.target.Target;
 import com.facebook.yoga.YogaNode;
-import com.github.pengfeizhou.jscore.JSBoolean;
 import com.github.pengfeizhou.jscore.JSNumber;
 import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSObject;
@@ -93,9 +92,9 @@ public class ImageNode extends ViewNode<ImageView> {
     private int placeHolderColor = Color.TRANSPARENT;
     private int errorColor = Color.TRANSPARENT;
     private JSObject stretchInset = null;
-    private JSObject tileInset = null;
     private float imageScale = DoricUtils.getScreenScale();
     private Animatable2Compat.AnimationCallback animationCallback = null;
+    private int scaleType = 0;
 
     public ImageNode(DoricContext doricContext) {
         super(doricContext);
@@ -162,24 +161,6 @@ public class ImageNode extends ViewNode<ImageView> {
             if (stretchInsetValue.isObject()) {
                 this.stretchInset = stretchInsetValue.asObject();
             }
-
-            JSValue tileInsetValue = jsObject.getProperty("tileInset");
-            if (tileInsetValue.isBoolean()) {
-                if (tileInsetValue.asBoolean().value()) {
-                    // If boolean value 'true' is passed, it equals { left: 0, top: 0, right: 0, bottom: 0 }
-                    JSObject obj = new JSObject();
-                    JSNumber zero = new JSNumber(0);
-                    obj.setProperty("top", zero);
-                    obj.setProperty("left", zero);
-                    obj.setProperty("right", zero);
-                    obj.setProperty("bottom", zero);
-                    this.tileInset = obj;
-                } else {
-                    this.tileInset = null;
-                }
-            } else if (tileInsetValue.isObject()) {
-                this.tileInset = tileInsetValue.asObject();
-            } else { }
 
             JSValue imageScaleValue = jsObject.getProperty("imageScale");
             if (imageScaleValue.isNumber()) {
@@ -378,7 +359,13 @@ public class ImageNode extends ViewNode<ImageView> {
                         bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
                         resource = new BitmapDrawable(getContext().getResources(), bitmap);
                     }
-                    if (stretchInset != null) {
+
+                    if (scaleType == 3) { // image tile
+                        BitmapDrawable drawable = new BitmapDrawable(getContext().getResources(),bitmap);
+                        drawable.setTileModeXY(Shader.TileMode.REPEAT , Shader.TileMode.REPEAT);
+                        drawable.setDither(true);
+                        super.setResource(drawable);
+                    } else if (stretchInset != null) {
                         float left = stretchInset.getProperty("left").asNumber().toFloat() * scale;
                         float top = stretchInset.getProperty("top").asNumber().toFloat() * scale;
                         float right = stretchInset.getProperty("right").asNumber().toFloat() * scale;
@@ -399,26 +386,6 @@ public class ImageNode extends ViewNode<ImageView> {
                                 null
                         );
                         super.setResource(ninePatchDrawable);
-                    } else if (tileInset != null) {
-                        float left = tileInset.getProperty("left").asNumber().toFloat() * scale;
-                        float top = tileInset.getProperty("top").asNumber().toFloat() * scale;
-                        float right = tileInset.getProperty("right").asNumber().toFloat() * scale;
-                        float bottom = tileInset.getProperty("bottom").asNumber().toFloat() * scale;
-
-                        Rect rect = new Rect(
-                                (int) left,
-                                (int) top,
-                                (int) (bitmap.getWidth() - right),
-                                (int) (bitmap.getHeight() - bottom)
-                        );
-
-                        Matrix matrix = new Matrix();
-                        matrix.setScale(1, 1);
-                        bitmap = Bitmap.createBitmap(bitmap, rect.left, rect.top, rect.width(), rect.height(), matrix, true);
-                        BitmapDrawable drawable = new BitmapDrawable(getContext().getResources(),bitmap);
-                        drawable.setTileModeXY(Shader.TileMode.REPEAT , Shader.TileMode.REPEAT);
-                        drawable.setDither(true);
-                        super.setResource(drawable);
                     } else {
                         super.setResource(resource);
                     }
@@ -478,7 +445,7 @@ public class ImageNode extends ViewNode<ImageView> {
                 if (!prop.isNumber()) {
                     return;
                 }
-                int scaleType = prop.asNumber().toInt();
+                scaleType =  prop.asNumber().toInt();
                 switch (scaleType) {
                     case 1:
                         view.setScaleType(ImageView.ScaleType.FIT_CENTER);

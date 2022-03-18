@@ -225,7 +225,7 @@ class ImageDemo extends Panel {
                 width: 84 * 3,
                 imageScale: 1,
                 backgroundColor: Color.BLACK,
-                scaleType: ScaleType.ScaleToTile,
+                scaleType: ScaleType.Tile,
                 layoutConfig: layoutConfig().just(),
               }),
 
@@ -242,7 +242,7 @@ class ImageDemo extends Panel {
                 height: 288,
                 width: 154,
                 imageScale: 2,
-                scaleType: ScaleType.ScaleToTile,
+                scaleType: ScaleType.Tile,
                 layoutConfig: layoutConfig().just(),
               }),
             ],

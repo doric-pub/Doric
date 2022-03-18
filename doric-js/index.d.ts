@@ -626,7 +626,7 @@ declare module 'doric/lib/src/widget/image' {
             ScaleToFill = 0,
             ScaleAspectFit = 1,
             ScaleAspectFill = 2,
-            ScaleToTile = 3
+            Tile = 3
     }
     export class Image extends View {
             /**

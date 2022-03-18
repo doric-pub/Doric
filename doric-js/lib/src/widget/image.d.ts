@@ -6,7 +6,7 @@ export declare enum ScaleType {
     ScaleToFill = 0,
     ScaleAspectFit = 1,
     ScaleAspectFill = 2,
-    ScaleToTile = 3
+    Tile = 3
 }
 export declare class Image extends View {
     /**

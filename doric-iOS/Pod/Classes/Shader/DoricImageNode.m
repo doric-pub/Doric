@@ -85,7 +85,6 @@
 @property(nonatomic, strong) UIVisualEffectView *blurEffectView;
 @property(nonatomic, strong) NSDictionary *stretchInsetDic;
 @property(nonatomic, assign) CGFloat imageScale;
-@property(nonatomic, strong) NSDictionary *props;
 @property(nonatomic, assign) NSInteger scaleType;
 
 @end
@@ -125,7 +124,6 @@
     [props[@"loadCallback"] also:^(NSString *it) {
         self.loadCallbackId = it;
     }];
-    self.props = props;
     [super blend:props];
 }
 
@@ -284,7 +282,7 @@
                         [self callJSResponse:self.loadCallbackId, nil];
                     }
                 }
-                [self afterBlended:self.props];
+                [self resizingImageIfNeeded];
             }];
         }];
         [asyncResult setExceptionCallback:^(NSException *e) {
@@ -335,7 +333,7 @@
                     if (async && self.needReload) {
                         [self.superNode subNodeContentChanged:self];
                     }
-                    [self afterBlended:self.props];
+                    [self resizingImageIfNeeded];
                 }
             }];
         });
@@ -375,7 +373,7 @@
                                    [self.superNode subNodeContentChanged:self];
                                }
                            }
-            [self afterBlended:self.props];
+            [self resizingImageIfNeeded];
         }];
 #else
         DoricLog(@"Do not support load image url");
@@ -672,6 +670,10 @@
 }
 
 - (void)afterBlended:(NSDictionary *)props {
+    [self resizingImageIfNeeded];
+}
+
+- (void)resizingImageIfNeeded {
     if (CGSizeEqualToSize(self.view.image.size, CGSizeZero)) {
         return;
     }

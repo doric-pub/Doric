@@ -26,7 +26,7 @@ import pub.doric.async.AsyncResult;
  * @Author: pengfei.zhou
  * @CreateDate: 2022/2/28
  */
-class DoricArrayBufferResource extends DoricResource {
+public class DoricArrayBufferResource extends DoricResource {
     private JSArrayBuffer value;
 
     public DoricArrayBufferResource(DoricContext doricContext, String identifier) {
@@ -35,6 +35,10 @@ class DoricArrayBufferResource extends DoricResource {
 
     public void setValue(JSArrayBuffer value) {
         this.value = value;
+    }
+
+    public JSArrayBuffer getValue() {
+        return this.value;
     }
 
     @Override

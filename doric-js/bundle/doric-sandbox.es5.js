@@ -1855,10 +1855,10 @@ var doric = (function (exports) {
     (module.exports = function (key, value) {
       return sharedStore[key] || (sharedStore[key] = value !== undefined ? value : {});
     })('versions', []).push({
-      version: '3.20.3',
+      version: '3.21.1',
       mode: 'global',
       copyright: '© 2014-2022 Denis Pushkarev (zloirock.ru)',
-      license: 'https://github.com/zloirock/core-js/blob/v3.20.3/LICENSE',
+      license: 'https://github.com/zloirock/core-js/blob/v3.21.1/LICENSE',
       source: 'https://github.com/zloirock/core-js'
     });
     });
@@ -2641,7 +2641,7 @@ var doric = (function (exports) {
     var empty = [];
     var construct$1 = getBuiltIn('Reflect', 'construct');
     var constructorRegExp = /^\s*(?:class|function)\b/;
-    var exec$a = functionUncurryThis(constructorRegExp.exec);
+    var exec$b = functionUncurryThis(constructorRegExp.exec);
     var INCORRECT_TO_STRING$2 = !constructorRegExp.exec(noop);
 
     var isConstructorModern = function isConstructor(argument) {
@@ -2665,7 +2665,7 @@ var doric = (function (exports) {
         // we can't check .prototype since constructors produced by .bind haven't it
         // `Function#toString` throws on some built-it function in some legacy engines
         // (for example, `DOMQuad` and similar in FF41-)
-        return INCORRECT_TO_STRING$2 || !!exec$a(constructorRegExp, inspectSource(argument));
+        return INCORRECT_TO_STRING$2 || !!exec$b(constructorRegExp, inspectSource(argument));
       } catch (error) {
         return true;
       }
@@ -3087,7 +3087,7 @@ var doric = (function (exports) {
       var symbolToString = functionUncurryThis(SymbolPrototype.toString);
       var symbolValueOf = functionUncurryThis(SymbolPrototype.valueOf);
       var regexp = /^Symbol\((.*)\)[^)]+$/;
-      var replace$a = functionUncurryThis(''.replace);
+      var replace$b = functionUncurryThis(''.replace);
       var stringSlice$g = functionUncurryThis(''.slice);
 
       defineProperty$g(SymbolPrototype, 'description', {
@@ -3096,7 +3096,7 @@ var doric = (function (exports) {
           var symbol = symbolValueOf(this);
           var string = symbolToString(symbol);
           if (hasOwnProperty_1(EmptyStringDescriptionStore, symbol)) { return ''; }
-          var desc = NATIVE_SYMBOL ? stringSlice$g(string, 7, -1) : replace$a(string, regexp, '$1');
+          var desc = NATIVE_SYMBOL ? stringSlice$g(string, 7, -1) : replace$b(string, regexp, '$1');
           return desc === '' ? undefined : desc;
         }
       });
@@ -3221,7 +3221,7 @@ var doric = (function (exports) {
       }
     };
 
-    var replace$9 = functionUncurryThis(''.replace);
+    var replace$a = functionUncurryThis(''.replace);
 
     var TEST = (function (arg) { return String(Error(arg).stack); })('zxcasd');
     var V8_OR_CHAKRA_STACK_ENTRY = /\n\s*at [^:]*:[^\n]*/;
@@ -3229,7 +3229,7 @@ var doric = (function (exports) {
 
     var clearErrorStack = function (stack, dropEntries) {
       if (IS_V8_OR_CHAKRA_STACK && typeof stack == 'string') {
-        while (dropEntries--) { stack = replace$9(stack, V8_OR_CHAKRA_STACK_ENTRY, ''); }
+        while (dropEntries--) { stack = replace$a(stack, V8_OR_CHAKRA_STACK_ENTRY, ''); }
       } return stack;
     };
 
@@ -3691,8 +3691,8 @@ var doric = (function (exports) {
     var arrayMethodIsStrict = function (METHOD_NAME, argument) {
       var method = [][METHOD_NAME];
       return !!method && fails(function () {
-        // eslint-disable-next-line no-useless-call,no-throw-literal -- required for testing
-        method.call(null, argument || function () { throw 1; }, 1);
+        // eslint-disable-next-line no-useless-call -- required for testing
+        method.call(null, argument || function () { return 1; }, 1);
       });
     };
 
@@ -5458,9 +5458,9 @@ var doric = (function (exports) {
       });
     }
 
-    var charAt$f = functionUncurryThis(''.charAt);
-    var charCodeAt$4 = functionUncurryThis(''.charCodeAt);
-    var exec$9 = functionUncurryThis(/./.exec);
+    var charAt$h = functionUncurryThis(''.charAt);
+    var charCodeAt$5 = functionUncurryThis(''.charCodeAt);
+    var exec$a = functionUncurryThis(/./.exec);
     var numberToString$3 = functionUncurryThis(1.0.toString);
     var toUpperCase = functionUncurryThis(''.toUpperCase);
 
@@ -5482,11 +5482,11 @@ var doric = (function (exports) {
         var index = 0;
         var chr, code;
         while (index < length) {
-          chr = charAt$f(str, index++);
-          if (exec$9(raw, chr)) {
+          chr = charAt$h(str, index++);
+          if (exec$a(raw, chr)) {
             result += chr;
           } else {
-            code = charCodeAt$4(chr, 0);
+            code = charCodeAt$5(chr, 0);
             if (code < 256) {
               result += '%' + hex$1(code, 2);
             } else {
@@ -5578,10 +5578,10 @@ var doric = (function (exports) {
 
     var Array$8 = global_1.Array;
     var $stringify = getBuiltIn('JSON', 'stringify');
-    var exec$8 = functionUncurryThis(/./.exec);
-    var charAt$e = functionUncurryThis(''.charAt);
-    var charCodeAt$3 = functionUncurryThis(''.charCodeAt);
-    var replace$8 = functionUncurryThis(''.replace);
+    var exec$9 = functionUncurryThis(/./.exec);
+    var charAt$g = functionUncurryThis(''.charAt);
+    var charCodeAt$4 = functionUncurryThis(''.charCodeAt);
+    var replace$9 = functionUncurryThis(''.replace);
     var numberToString$2 = functionUncurryThis(1.0.toString);
 
     var tester = /[\uD800-\uDFFF]/g;
@@ -5589,10 +5589,10 @@ var doric = (function (exports) {
     var hi = /^[\uDC00-\uDFFF]$/;
 
     var fix = function (match, offset, string) {
-      var prev = charAt$e(string, offset - 1);
-      var next = charAt$e(string, offset + 1);
-      if ((exec$8(low, match) && !exec$8(hi, next)) || (exec$8(hi, match) && !exec$8(low, prev))) {
-        return '\\u' + numberToString$2(charCodeAt$3(match, 0), 16);
+      var prev = charAt$g(string, offset - 1);
+      var next = charAt$g(string, offset + 1);
+      if ((exec$9(low, match) && !exec$9(hi, next)) || (exec$9(hi, match) && !exec$9(low, prev))) {
+        return '\\u' + numberToString$2(charCodeAt$4(match, 0), 16);
       } return match;
     };
 
@@ -5612,7 +5612,7 @@ var doric = (function (exports) {
 
           for (var i = 0, l = arguments.length, args = Array$8(l); i < l; i++) { args[i] = arguments$1[i]; }
           var result = functionApply($stringify, null, args);
-          return typeof result == 'string' ? replace$8(result, tester, fix) : result;
+          return typeof result == 'string' ? replace$9(result, tester, fix) : result;
         }
       });
     }
@@ -6333,11 +6333,11 @@ var doric = (function (exports) {
     var thisNumberValue = functionUncurryThis(1.0.valueOf);
 
     // a string of all valid unicode whitespaces
-    var whitespaces = '\u0009\u000A\u000B\u000C\u000D\u0020\u00A0\u1680\u2000\u2001\u2002' +
+    var whitespaces$1 = '\u0009\u000A\u000B\u000C\u000D\u0020\u00A0\u1680\u2000\u2001\u2002' +
       '\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF';
 
-    var replace$7 = functionUncurryThis(''.replace);
-    var whitespace = '[' + whitespaces + ']';
+    var replace$8 = functionUncurryThis(''.replace);
+    var whitespace = '[' + whitespaces$1 + ']';
     var ltrim = RegExp('^' + whitespace + whitespace + '*');
     var rtrim = RegExp(whitespace + whitespace + '*$');
 
@@ -6345,8 +6345,8 @@ var doric = (function (exports) {
     var createMethod$4 = function (TYPE) {
       return function ($this) {
         var string = toString_1(requireObjectCoercible($this));
-        if (TYPE & 1) { string = replace$7(string, ltrim, ''); }
-        if (TYPE & 2) { string = replace$7(string, rtrim, ''); }
+        if (TYPE & 1) { string = replace$8(string, ltrim, ''); }
+        if (TYPE & 2) { string = replace$8(string, rtrim, ''); }
         return string;
       };
     };
@@ -6374,7 +6374,7 @@ var doric = (function (exports) {
     var NumberPrototype = NativeNumber.prototype;
     var TypeError$p = global_1.TypeError;
     var arraySlice = functionUncurryThis(''.slice);
-    var charCodeAt$2 = functionUncurryThis(''.charCodeAt);
+    var charCodeAt$3 = functionUncurryThis(''.charCodeAt);
 
     // `ToNumeric` abstract operation
     // https://tc39.es/ecma262/#sec-tonumeric
@@ -6391,12 +6391,12 @@ var doric = (function (exports) {
       if (isSymbol(it)) { throw TypeError$p('Cannot convert a Symbol value to a number'); }
       if (typeof it == 'string' && it.length > 2) {
         it = trim$2(it);
-        first = charCodeAt$2(it, 0);
+        first = charCodeAt$3(it, 0);
         if (first === 43 || first === 45) {
-          third = charCodeAt$2(it, 2);
+          third = charCodeAt$3(it, 2);
           if (third === 88 || third === 120) { return NaN; } // Number('+0x1') should be NaN, old V8 fix
         } else if (first === 48) {
-          switch (charCodeAt$2(it, 1)) {
+          switch (charCodeAt$3(it, 1)) {
             case 66: case 98: radix = 2; maxCode = 49; break; // fast equal of /^0b[01]+$/i
             case 79: case 111: radix = 8; maxCode = 55; break; // fast equal of /^0o[0-7]+$/i
             default: return +it;
@@ -6404,7 +6404,7 @@ var doric = (function (exports) {
           digits = arraySlice(it, 2);
           length = digits.length;
           for (index = 0; index < length; index++) {
-            code = charCodeAt$2(digits, index);
+            code = charCodeAt$3(digits, index);
             // parseInt parses a string to a first unavailable symbol
             // but ToNumber should return NaN if a string contains unavailable symbols
             if (code < 48 || code > maxCode) { return NaN; }
@@ -6508,11 +6508,11 @@ var doric = (function (exports) {
     var trim$1 = stringTrim.trim;
 
 
-    var charAt$d = functionUncurryThis(''.charAt);
+    var charAt$f = functionUncurryThis(''.charAt);
     var n$ParseFloat = global_1.parseFloat;
     var Symbol$2 = global_1.Symbol;
     var ITERATOR$5 = Symbol$2 && Symbol$2.iterator;
-    var FORCED$h = 1 / n$ParseFloat(whitespaces + '-0') !== -Infinity
+    var FORCED$h = 1 / n$ParseFloat(whitespaces$1 + '-0') !== -Infinity
       // MS Edge 18- broken with boxed symbols
       || (ITERATOR$5 && !fails(function () { n$ParseFloat(Object(ITERATOR$5)); }));
 
@@ -6521,7 +6521,7 @@ var doric = (function (exports) {
     var numberParseFloat = FORCED$h ? function parseFloat(string) {
       var trimmedString = trim$1(toString_1(string));
       var result = n$ParseFloat(trimmedString);
-      return result === 0 && charAt$d(trimmedString, 0) == '-' ? -0 : result;
+      return result === 0 && charAt$f(trimmedString, 0) == '-' ? -0 : result;
     } : n$ParseFloat;
 
     // `Number.parseFloat` method
@@ -6538,8 +6538,8 @@ var doric = (function (exports) {
     var Symbol$1 = global_1.Symbol;
     var ITERATOR$4 = Symbol$1 && Symbol$1.iterator;
     var hex = /^[+-]?0x/i;
-    var exec$7 = functionUncurryThis(hex.exec);
-    var FORCED$g = $parseInt(whitespaces + '08') !== 8 || $parseInt(whitespaces + '0x16') !== 22
+    var exec$8 = functionUncurryThis(hex.exec);
+    var FORCED$g = $parseInt(whitespaces$1 + '08') !== 8 || $parseInt(whitespaces$1 + '0x16') !== 22
       // MS Edge 18- broken with boxed symbols
       || (ITERATOR$4 && !fails(function () { $parseInt(Object(ITERATOR$4)); }));
 
@@ -6547,7 +6547,7 @@ var doric = (function (exports) {
     // https://tc39.es/ecma262/#sec-parseint-string-radix
     var numberParseInt = FORCED$g ? function parseInt(string, radix) {
       var S = trim(toString_1(string));
-      return $parseInt(S, (radix >>> 0) || (exec$7(hex, S) ? 16 : 10));
+      return $parseInt(S, (radix >>> 0) || (exec$8(hex, S) ? 16 : 10));
     } : $parseInt;
 
     // `Number.parseInt` method
@@ -7199,6 +7199,13 @@ var doric = (function (exports) {
 
     var nativePromiseConstructor = global_1.Promise;
 
+    var TypeError$o = global_1.TypeError;
+
+    var validateArgumentsLength = function (passed, required) {
+      if (passed < required) { throw TypeError$o('Not enough arguments'); }
+      return passed;
+    };
+
     var engineIsIos = /(?:ipad|iphone|ipod).*applewebkit/i.test(engineUserAgent);
 
     var set$1 = global_1.setImmediate;
@@ -7243,10 +7250,12 @@ var doric = (function (exports) {
 
     // Node.js 0.9+ & IE10+ has setImmediate, otherwise:
     if (!set$1 || !clear) {
-      set$1 = function setImmediate(fn) {
+      set$1 = function setImmediate(handler) {
+        validateArgumentsLength(arguments.length, 1);
+        var fn = isCallable(handler) ? handler : Function$2(handler);
         var args = arraySlice$1(arguments, 1);
         queue$1[++counter] = function () {
-          functionApply(isCallable(fn) ? fn : Function$2(fn), undefined, args);
+          functionApply(fn, undefined, args);
         };
         defer(counter);
         return counter;
@@ -7485,7 +7494,7 @@ var doric = (function (exports) {
     var NativePromisePrototype = nativePromiseConstructor && nativePromiseConstructor.prototype;
     var PromiseConstructor = nativePromiseConstructor;
     var PromisePrototype = NativePromisePrototype;
-    var TypeError$o = global_1.TypeError;
+    var TypeError$n = global_1.TypeError;
     var document$1 = global_1.document;
     var process$2 = global_1.process;
     var newPromiseCapability = newPromiseCapability$1.f;
@@ -7562,7 +7571,7 @@ var doric = (function (exports) {
             }
           }
           if (result === reaction.promise) {
-            reject(TypeError$o('Promise-chain cycle'));
+            reject(TypeError$n('Promise-chain cycle'));
           } else if (then = isThenable(result)) {
             functionCall(then, result, resolve, reject);
           } else { resolve(result); }
@@ -7652,7 +7661,7 @@ var doric = (function (exports) {
       state.done = true;
       if (unwrap) { state = unwrap; }
       try {
-        if (state.facade === value) { throw TypeError$o("Promise can't be resolved itself"); }
+        if (state.facade === value) { throw TypeError$n("Promise can't be resolved itself"); }
         var then = isThenable(value);
         if (then) {
           microtask(function () {
@@ -8267,9 +8276,9 @@ var doric = (function (exports) {
     var RegExpPrototype$7 = NativeRegExp.prototype;
     var SyntaxError$2 = global_1.SyntaxError;
     var getFlags$4 = functionUncurryThis(regexpFlags);
-    var exec$6 = functionUncurryThis(RegExpPrototype$7.exec);
-    var charAt$c = functionUncurryThis(''.charAt);
-    var replace$6 = functionUncurryThis(''.replace);
+    var exec$7 = functionUncurryThis(RegExpPrototype$7.exec);
+    var charAt$e = functionUncurryThis(''.charAt);
+    var replace$7 = functionUncurryThis(''.replace);
     var stringIndexOf$4 = functionUncurryThis(''.indexOf);
     var stringSlice$c = functionUncurryThis(''.slice);
     // TODO: Use only propper RegExpIdentifierName
@@ -8297,9 +8306,9 @@ var doric = (function (exports) {
       var brackets = false;
       var chr;
       for (; index <= length; index++) {
-        chr = charAt$c(string, index);
+        chr = charAt$e(string, index);
         if (chr === '\\') {
-          result += chr + charAt$c(string, ++index);
+          result += chr + charAt$e(string, ++index);
           continue;
         }
         if (!brackets && chr === '.') {
@@ -8326,9 +8335,9 @@ var doric = (function (exports) {
       var groupname = '';
       var chr;
       for (; index <= length; index++) {
-        chr = charAt$c(string, index);
+        chr = charAt$e(string, index);
         if (chr === '\\') {
-          chr = chr + charAt$c(string, ++index);
+          chr = chr + charAt$e(string, ++index);
         } else if (chr === ']') {
           brackets = false;
         } else if (!brackets) { switch (true) {
@@ -8336,7 +8345,7 @@ var doric = (function (exports) {
             brackets = true;
             break;
           case chr === '(':
-            if (exec$6(IS_NCG, stringSlice$c(string, index + 1))) {
+            if (exec$7(IS_NCG, stringSlice$c(string, index + 1))) {
               index += 2;
               ncg = true;
             }
@@ -8384,14 +8393,14 @@ var doric = (function (exports) {
 
         if (regexpUnsupportedDotAll && 'dotAll' in re1) {
           dotAll = !!flags && stringIndexOf$4(flags, 's') > -1;
-          if (dotAll) { flags = replace$6(flags, /s/g, ''); }
+          if (dotAll) { flags = replace$7(flags, /s/g, ''); }
         }
 
         rawFlags = flags;
 
         if (MISSED_STICKY$1 && 'sticky' in re1) {
           sticky = !!flags && stringIndexOf$4(flags, 'y') > -1;
-          if (sticky && UNSUPPORTED_Y$2) { flags = replace$6(flags, /y/g, ''); }
+          if (sticky && UNSUPPORTED_Y$2) { flags = replace$7(flags, /y/g, ''); }
         }
 
         if (regexpUnsupportedNcg) {
@@ -8428,8 +8437,8 @@ var doric = (function (exports) {
         });
       };
 
-      for (var keys = getOwnPropertyNames(NativeRegExp), index = 0; keys.length > index;) {
-        proxy(keys[index++]);
+      for (var keys = getOwnPropertyNames(NativeRegExp), index$1 = 0; keys.length > index$1;) {
+        proxy(keys[index$1++]);
       }
 
       RegExpPrototype$7.constructor = RegExpWrapper;
@@ -8444,7 +8453,7 @@ var doric = (function (exports) {
     var getInternalState$c = internalState.get;
 
     var RegExpPrototype$6 = RegExp.prototype;
-    var TypeError$n = global_1.TypeError;
+    var TypeError$m = global_1.TypeError;
 
     // `RegExp.prototype.dotAll` getter
     // https://tc39.es/ecma262/#sec-get-regexp.prototype.dotall
@@ -8458,7 +8467,7 @@ var doric = (function (exports) {
           if (classofRaw(this) === 'RegExp') {
             return !!getInternalState$c(this).dotAll;
           }
-          throw TypeError$n('Incompatible receiver, RegExp required');
+          throw TypeError$m('Incompatible receiver, RegExp required');
         }
       });
     }
@@ -8479,9 +8488,9 @@ var doric = (function (exports) {
     var nativeReplace = shared('native-string-replace', String.prototype.replace);
     var nativeExec = RegExp.prototype.exec;
     var patchedExec = nativeExec;
-    var charAt$b = functionUncurryThis(''.charAt);
+    var charAt$d = functionUncurryThis(''.charAt);
     var indexOf$1 = functionUncurryThis(''.indexOf);
-    var replace$5 = functionUncurryThis(''.replace);
+    var replace$6 = functionUncurryThis(''.replace);
     var stringSlice$b = functionUncurryThis(''.slice);
 
     var UPDATES_LAST_INDEX_WRONG = (function () {
@@ -8522,14 +8531,14 @@ var doric = (function (exports) {
         var strCopy = str;
 
         if (sticky) {
-          flags = replace$5(flags, 'y', '');
+          flags = replace$6(flags, 'y', '');
           if (indexOf$1(flags, 'g') === -1) {
             flags += 'g';
           }
 
           strCopy = stringSlice$b(str, re.lastIndex);
           // Support anchored sticky behavior.
-          if (re.lastIndex > 0 && (!re.multiline || re.multiline && charAt$b(str, re.lastIndex - 1) !== '\n')) {
+          if (re.lastIndex > 0 && (!re.multiline || re.multiline && charAt$d(str, re.lastIndex - 1) !== '\n')) {
             source = '(?: ' + source + ')';
             strCopy = ' ' + strCopy;
             charsAdded++;
@@ -8608,7 +8617,7 @@ var doric = (function (exports) {
     var getInternalState$a = internalState.get;
 
     var RegExpPrototype$4 = RegExp.prototype;
-    var TypeError$m = global_1.TypeError;
+    var TypeError$l = global_1.TypeError;
 
     // `RegExp.prototype.sticky` getter
     // https://tc39.es/ecma262/#sec-get-regexp.prototype.sticky
@@ -8622,7 +8631,7 @@ var doric = (function (exports) {
           if (classofRaw(this) === 'RegExp') {
             return !!getInternalState$a(this).sticky;
           }
-          throw TypeError$m('Incompatible receiver, RegExp required');
+          throw TypeError$l('Incompatible receiver, RegExp required');
         }
       });
     }
@@ -8698,7 +8707,7 @@ var doric = (function (exports) {
       return function Set() { return init(this, arguments.length ? arguments[0] : undefined); };
     }, collectionStrong);
 
-    var charAt$a = functionUncurryThis(''.charAt);
+    var charAt$c = functionUncurryThis(''.charAt);
 
     var FORCED$8 = fails(function () {
       return '𠮷'.at(-2) !== '\uD842';
@@ -8712,12 +8721,12 @@ var doric = (function (exports) {
         var len = S.length;
         var relativeIndex = toIntegerOrInfinity(index);
         var k = relativeIndex >= 0 ? relativeIndex : len + relativeIndex;
-        return (k < 0 || k >= len) ? undefined : charAt$a(S, k);
+        return (k < 0 || k >= len) ? undefined : charAt$c(S, k);
       }
     });
 
-    var charAt$9 = functionUncurryThis(''.charAt);
-    var charCodeAt$1 = functionUncurryThis(''.charCodeAt);
+    var charAt$b = functionUncurryThis(''.charAt);
+    var charCodeAt$2 = functionUncurryThis(''.charCodeAt);
     var stringSlice$a = functionUncurryThis(''.slice);
 
     var createMethod$2 = function (CONVERT_TO_STRING) {
@@ -8727,11 +8736,11 @@ var doric = (function (exports) {
         var size = S.length;
         var first, second;
         if (position < 0 || position >= size) { return CONVERT_TO_STRING ? '' : undefined; }
-        first = charCodeAt$1(S, position);
+        first = charCodeAt$2(S, position);
         return first < 0xD800 || first > 0xDBFF || position + 1 === size
-          || (second = charCodeAt$1(S, position + 1)) < 0xDC00 || second > 0xDFFF
+          || (second = charCodeAt$2(S, position + 1)) < 0xDC00 || second > 0xDFFF
             ? CONVERT_TO_STRING
-              ? charAt$9(S, position)
+              ? charAt$b(S, position)
               : first
             : CONVERT_TO_STRING
               ? stringSlice$a(S, position, position + 2)
@@ -8758,11 +8767,11 @@ var doric = (function (exports) {
       }
     });
 
-    var TypeError$l = global_1.TypeError;
+    var TypeError$k = global_1.TypeError;
 
     var notARegexp = function (it) {
       if (isRegexp(it)) {
-        throw TypeError$l("The method doesn't accept regular expressions");
+        throw TypeError$k("The method doesn't accept regular expressions");
       } return it;
     };
 
@@ -8817,7 +8826,7 @@ var doric = (function (exports) {
     });
 
     var RangeError$8 = global_1.RangeError;
-    var fromCharCode$2 = String.fromCharCode;
+    var fromCharCode$3 = String.fromCharCode;
     // eslint-disable-next-line es/no-string-fromcodepoint -- required for testing
     var $fromCodePoint = String.fromCodePoint;
     var join$6 = functionUncurryThis([].join);
@@ -8840,8 +8849,8 @@ var doric = (function (exports) {
           code = +arguments$1[i++];
           if (toAbsoluteIndex(code, 0x10FFFF) !== code) { throw RangeError$8(code + ' is not a valid code point'); }
           elements[i] = code < 0x10000
-            ? fromCharCode$2(code)
-            : fromCharCode$2(((code -= 0x10000) >> 10) + 0xD800, code % 0x400 + 0xDC00);
+            ? fromCharCode$3(code)
+            : fromCharCode$3(((code -= 0x10000) >> 10) + 0xD800, code % 0x400 + 0xDC00);
         } return join$6(elements, '');
       }
     });
@@ -8860,7 +8869,7 @@ var doric = (function (exports) {
       }
     });
 
-    var charAt$8 = stringMultibyte.charAt;
+    var charAt$a = stringMultibyte.charAt;
 
 
 
@@ -8885,7 +8894,7 @@ var doric = (function (exports) {
       var index = state.index;
       var point;
       if (index >= string.length) { return { value: undefined, done: true }; }
-      point = charAt$8(string, index);
+      point = charAt$a(string, index);
       state.index += point.length;
       return { value: point, done: false };
     });
@@ -8964,15 +8973,15 @@ var doric = (function (exports) {
       if (SHAM) { createNonEnumerableProperty(RegExpPrototype$2[SYMBOL], 'sham', true); }
     };
 
-    var charAt$7 = stringMultibyte.charAt;
+    var charAt$9 = stringMultibyte.charAt;
 
     // `AdvanceStringIndex` abstract operation
     // https://tc39.es/ecma262/#sec-advancestringindex
     var advanceStringIndex = function (S, index, unicode) {
-      return index + (unicode ? charAt$7(S, index).length : 1);
+      return index + (unicode ? charAt$9(S, index).length : 1);
     };
 
-    var TypeError$k = global_1.TypeError;
+    var TypeError$j = global_1.TypeError;
 
     // `RegExpExec` abstract operation
     // https://tc39.es/ecma262/#sec-regexpexec
@@ -8984,7 +8993,7 @@ var doric = (function (exports) {
         return result;
       }
       if (classofRaw(R) === 'RegExp') { return functionCall(regexpExec, R, S); }
-      throw TypeError$k('RegExp#exec called on incompatible receiver');
+      throw TypeError$j('RegExp#exec called on incompatible receiver');
     };
 
     // @@match logic
@@ -9054,7 +9063,7 @@ var doric = (function (exports) {
     var setInternalState$c = internalState.set;
     var getInternalState$8 = internalState.getterFor(REGEXP_STRING_ITERATOR);
     var RegExpPrototype$1 = RegExp.prototype;
-    var TypeError$j = global_1.TypeError;
+    var TypeError$i = global_1.TypeError;
     var getFlags$2 = functionUncurryThis(regexpFlags);
     var stringIndexOf$2 = functionUncurryThis(''.indexOf);
     var un$MatchAll = functionUncurryThis(''.matchAll);
@@ -9116,7 +9125,7 @@ var doric = (function (exports) {
               ? regexp.flags
               : getFlags$2(regexp)
             ));
-            if (!~stringIndexOf$2(flags, 'g')) { throw TypeError$j('`.matchAll` does not allow non-global regexes'); }
+            if (!~stringIndexOf$2(flags, 'g')) { throw TypeError$i('`.matchAll` does not allow non-global regexes'); }
           }
           if (WORKS_WITH_NON_GLOBAL_REGEX) { return un$MatchAll(O, regexp); }
           matcher = getMethod(regexp, MATCH_ALL);
@@ -9187,8 +9196,8 @@ var doric = (function (exports) {
     });
 
     var floor$3 = Math.floor;
-    var charAt$6 = functionUncurryThis(''.charAt);
-    var replace$4 = functionUncurryThis(''.replace);
+    var charAt$8 = functionUncurryThis(''.charAt);
+    var replace$5 = functionUncurryThis(''.replace);
     var stringSlice$9 = functionUncurryThis(''.slice);
     var SUBSTITUTION_SYMBOLS = /\$([$&'`]|\d{1,2}|<[^>]*>)/g;
     var SUBSTITUTION_SYMBOLS_NO_NAMED = /\$([$&'`]|\d{1,2})/g;
@@ -9203,9 +9212,9 @@ var doric = (function (exports) {
         namedCaptures = toObject(namedCaptures);
         symbols = SUBSTITUTION_SYMBOLS;
       }
-      return replace$4(replacement, symbols, function (match, ch) {
+      return replace$5(replacement, symbols, function (match, ch) {
         var capture;
-        switch (charAt$6(ch, 0)) {
+        switch (charAt$8(ch, 0)) {
           case '$': return '$';
           case '&': return matched;
           case '`': return stringSlice$9(str, 0, position);
@@ -9219,7 +9228,7 @@ var doric = (function (exports) {
             if (n > m) {
               var f = floor$3(n / 10);
               if (f === 0) { return match; }
-              if (f <= m) { return captures[f - 1] === undefined ? charAt$6(ch, 1) : captures[f - 1] + charAt$6(ch, 1); }
+              if (f <= m) { return captures[f - 1] === undefined ? charAt$8(ch, 1) : captures[f - 1] + charAt$8(ch, 1); }
               return match;
             }
             capture = captures[n - 1];
@@ -9349,7 +9358,7 @@ var doric = (function (exports) {
 
     var REPLACE = wellKnownSymbol('replace');
     var RegExpPrototype = RegExp.prototype;
-    var TypeError$i = global_1.TypeError;
+    var TypeError$h = global_1.TypeError;
     var getFlags$1 = functionUncurryThis(regexpFlags);
     var indexOf = functionUncurryThis(''.indexOf);
     functionUncurryThis(''.replace);
@@ -9378,7 +9387,7 @@ var doric = (function (exports) {
               ? searchValue.flags
               : getFlags$1(searchValue)
             ));
-            if (!~indexOf(flags, 'g')) { throw TypeError$i('`.replaceAll` does not allow non-global regexes'); }
+            if (!~indexOf(flags, 'g')) { throw TypeError$h('`.replaceAll` does not allow non-global regexes'); }
           }
           replacer = getMethod(searchValue, REPLACE);
           if (replacer) {
@@ -9439,7 +9448,7 @@ var doric = (function (exports) {
     var MAX_UINT32 = 0xFFFFFFFF;
     var min$4 = Math.min;
     var $push = [].push;
-    var exec$5 = functionUncurryThis(/./.exec);
+    var exec$6 = functionUncurryThis(/./.exec);
     var push$d = functionUncurryThis($push);
     var stringSlice$6 = functionUncurryThis(''.slice);
 
@@ -9498,7 +9507,7 @@ var doric = (function (exports) {
             if (separatorCopy.lastIndex === match.index) { separatorCopy.lastIndex++; } // Avoid an infinite loop
           }
           if (lastLastIndex === string.length) {
-            if (lastLength || !exec$5(separatorCopy, '')) { push$d(output, ''); }
+            if (lastLength || !exec$6(separatorCopy, '')) { push$d(output, ''); }
           } else { push$d(output, stringSlice$6(string, lastLastIndex)); }
           return output.length > lim ? arraySliceSimple(output, 0, lim) : output;
         };
@@ -9641,9 +9650,9 @@ var doric = (function (exports) {
     // of whitespaces and has a correct name
     var stringTrimForced = function (METHOD_NAME) {
       return fails(function () {
-        return !!whitespaces[METHOD_NAME]()
+        return !!whitespaces$1[METHOD_NAME]()
           || non[METHOD_NAME]() !== non
-          || (PROPER_FUNCTION_NAME && whitespaces[METHOD_NAME].name !== METHOD_NAME);
+          || (PROPER_FUNCTION_NAME && whitespaces$1[METHOD_NAME].name !== METHOD_NAME);
       });
     };
 
@@ -9695,14 +9704,14 @@ var doric = (function (exports) {
     });
 
     var quot = /"/g;
-    var replace$3 = functionUncurryThis(''.replace);
+    var replace$4 = functionUncurryThis(''.replace);
 
     // `CreateHTML` abstract operation
     // https://tc39.es/ecma262/#sec-createhtml
     var createHtml = function (string, tag, attribute, value) {
       var S = toString_1(requireObjectCoercible(string));
       var p1 = '<' + tag;
-      if (attribute !== '') { p1 += ' ' + attribute + '="' + replace$3(toString_1(value), quot, '&quot;') + '"'; }
+      if (attribute !== '') { p1 += ' ' + attribute + '="' + replace$4(toString_1(value), quot, '&quot;') + '"'; }
       return p1 + '>' + S + '</' + tag + '>';
     };
 
@@ -10672,9 +10681,9 @@ var doric = (function (exports) {
     // https://tc39.es/ecma262/#sec-%typedarray%.prototype.tostring
     exportTypedArrayMethod$a('toString', arrayToString, IS_NOT_ARRAY_METHOD);
 
-    var fromCharCode$1 = String.fromCharCode;
-    var charAt$5 = functionUncurryThis(''.charAt);
-    var exec$4 = functionUncurryThis(/./.exec);
+    var fromCharCode$2 = String.fromCharCode;
+    var charAt$7 = functionUncurryThis(''.charAt);
+    var exec$5 = functionUncurryThis(/./.exec);
     var stringSlice$3 = functionUncurryThis(''.slice);
 
     var hex2 = /^[\da-f]{2}$/i;
@@ -10690,19 +10699,19 @@ var doric = (function (exports) {
         var index = 0;
         var chr, part;
         while (index < length) {
-          chr = charAt$5(str, index++);
+          chr = charAt$7(str, index++);
           if (chr === '%') {
-            if (charAt$5(str, index) === 'u') {
+            if (charAt$7(str, index) === 'u') {
               part = stringSlice$3(str, index + 1, index + 5);
-              if (exec$4(hex4, part)) {
-                result += fromCharCode$1(parseInt(part, 16));
+              if (exec$5(hex4, part)) {
+                result += fromCharCode$2(parseInt(part, 16));
                 index += 5;
                 continue;
               }
             } else {
               part = stringSlice$3(str, index, index + 2);
-              if (exec$4(hex2, part)) {
-                result += fromCharCode$1(parseInt(part, 16));
+              if (exec$5(hex2, part)) {
+                result += fromCharCode$2(parseInt(part, 16));
                 index += 2;
                 continue;
               }
@@ -11010,7 +11019,7 @@ var doric = (function (exports) {
 
 
     var MAX_SAFE_INTEGER = 0x1FFFFFFFFFFFFF;
-    var TypeError$h = global_1.TypeError;
+    var TypeError$g = global_1.TypeError;
 
     var createMethod$1 = function (TYPE) {
       var IS_TO_ARRAY = TYPE == 0;
@@ -11048,7 +11057,7 @@ var doric = (function (exports) {
           var loop = function () {
             try {
               if (IS_TO_ARRAY && (index > MAX_SAFE_INTEGER) && MAPPING) {
-                throw TypeError$h('The allowed number of iterations has been exceeded');
+                throw TypeError$g('The allowed number of iterations has been exceeded');
               }
               Promise.resolve(anObject(functionCall(next, iterator))).then(function (step) {
                 try {
@@ -11122,7 +11131,7 @@ var doric = (function (exports) {
 
     // `Array.fromAsync` method
     // https://github.com/tc39/proposal-array-from-async
-    _export({ target: 'Array', stat: true }, {
+    _export({ target: 'Array', stat: true, forced: true }, {
       fromAsync: arrayFromAsync
     });
 
@@ -11133,7 +11142,7 @@ var doric = (function (exports) {
 
     // `Array.prototype.filterOut` method
     // https://github.com/tc39/proposal-array-filtering
-    _export({ target: 'Array', proto: true }, {
+    _export({ target: 'Array', proto: true, forced: true }, {
       filterOut: function filterOut(callbackfn /* , thisArg */) {
         return $filterReject$3(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
       }
@@ -11146,7 +11155,7 @@ var doric = (function (exports) {
 
     // `Array.prototype.filterReject` method
     // https://github.com/tc39/proposal-array-filtering
-    _export({ target: 'Array', proto: true }, {
+    _export({ target: 'Array', proto: true, forced: true }, {
       filterReject: function filterReject(callbackfn /* , thisArg */) {
         return $filterReject$2(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
       }
@@ -11240,7 +11249,8 @@ var doric = (function (exports) {
 
     // `Array.prototype.groupBy` method
     // https://github.com/tc39/proposal-array-grouping
-    _export({ target: 'Array', proto: true }, {
+    // https://bugs.webkit.org/show_bug.cgi?id=236541
+    _export({ target: 'Array', proto: true, forced: !arrayMethodIsStrict('groupBy') }, {
       groupBy: function groupBy(callbackfn /* , thisArg */) {
         var thisArg = arguments.length > 1 ? arguments[1] : undefined;
         return arrayGroupBy(this, callbackfn, thisArg);
@@ -11258,7 +11268,8 @@ var doric = (function (exports) {
 
     // `Array.prototype.groupByToMap` method
     // https://github.com/tc39/proposal-array-grouping
-    _export({ target: 'Array', proto: true }, {
+    // https://bugs.webkit.org/show_bug.cgi?id=236541
+    _export({ target: 'Array', proto: true, forced: !arrayMethodIsStrict('groupByToMap') }, {
       groupByToMap: function groupByToMap(callbackfn /* , thisArg */) {
         var O = toObject(this);
         var self = indexedObject(O);
@@ -11296,7 +11307,7 @@ var doric = (function (exports) {
 
     // `Array.isTemplateObject` method
     // https://github.com/tc39/proposal-array-is-template-object
-    _export({ target: 'Array', stat: true }, {
+    _export({ target: 'Array', stat: true, sham: true, forced: true }, {
       isTemplateObject: function isTemplateObject(value) {
         if (!isFrozenStringArray(value, true)) { return false; }
         var raw = value.raw;
@@ -11309,7 +11320,7 @@ var doric = (function (exports) {
 
     // `Array.prototype.lastIndex` getter
     // https://github.com/keithamus/proposal-array-last
-    if (descriptors && !('lastIndex' in [])) {
+    if (descriptors) {
       defineProperty$4(Array.prototype, 'lastIndex', {
         configurable: true,
         get: function lastIndex() {
@@ -11326,7 +11337,7 @@ var doric = (function (exports) {
 
     // `Array.prototype.lastIndex` accessor
     // https://github.com/keithamus/proposal-array-last
-    if (descriptors && !('lastItem' in [])) {
+    if (descriptors) {
       defineProperty$3(Array.prototype, 'lastItem', {
         configurable: true,
         get: function lastItem() {
@@ -11358,7 +11369,7 @@ var doric = (function (exports) {
 
     // `Array.prototype.toReversed` method
     // https://tc39.es/proposal-change-array-by-copy/#sec-array.prototype.toReversed
-    _export({ target: 'Array', proto: true }, {
+    _export({ target: 'Array', proto: true, forced: true }, {
       toReversed: function toReversed() {
         return arrayToReversed(toIndexedObject(this), Array$5);
       }
@@ -11371,7 +11382,7 @@ var doric = (function (exports) {
 
     // `Array.prototype.toSorted` method
     // https://tc39.es/proposal-change-array-by-copy/#sec-array.prototype.toSorted
-    _export({ target: 'Array', proto: true }, {
+    _export({ target: 'Array', proto: true, forced: true }, {
       toSorted: function toSorted(compareFn) {
         if (compareFn !== undefined) { aCallable(compareFn); }
         var O = toIndexedObject(this);
@@ -11418,7 +11429,7 @@ var doric = (function (exports) {
 
     // `Array.prototype.toSpliced` method
     // https://tc39.es/proposal-change-array-by-copy/#sec-array.prototype.toSpliced
-    _export({ target: 'Array', proto: true }, {
+    _export({ target: 'Array', proto: true, forced: true }, {
       // eslint-disable-next-line no-unused-vars -- required for .length
       toSpliced: function toSpliced(start, deleteCount /* , ...items */) {
         return arrayToSpliced(toIndexedObject(this), Array$3, arraySlice$1(arguments));
@@ -11458,7 +11469,7 @@ var doric = (function (exports) {
 
     // `Array.prototype.uniqueBy` method
     // https://github.com/tc39/proposal-array-unique
-    _export({ target: 'Array', proto: true }, {
+    _export({ target: 'Array', proto: true, forced: true }, {
       uniqueBy: arrayUniqueBy$2
     });
 
@@ -11483,7 +11494,7 @@ var doric = (function (exports) {
 
     // `Array.prototype.with` method
     // https://tc39.es/proposal-change-array-by-copy/#sec-array.prototype.with
-    _export({ target: 'Array', proto: true }, {
+    _export({ target: 'Array', proto: true, forced: true }, {
       'with': function (index, value) {
         return arrayWith(toIndexedObject(this), Array$2, index, value);
       }
@@ -11599,7 +11610,7 @@ var doric = (function (exports) {
       });
     });
 
-    _export({ target: 'AsyncIterator', proto: true, real: true }, {
+    _export({ target: 'AsyncIterator', proto: true, real: true, forced: true }, {
       asIndexedPairs: function asIndexedPairs() {
         return new AsyncIteratorProxy$6({
           iterator: anObject(this),
@@ -11641,7 +11652,7 @@ var doric = (function (exports) {
       });
     });
 
-    _export({ target: 'AsyncIterator', proto: true, real: true }, {
+    _export({ target: 'AsyncIterator', proto: true, real: true, forced: true }, {
       drop: function drop(limit) {
         return new AsyncIteratorProxy$5({
           iterator: anObject(this),
@@ -11654,7 +11665,7 @@ var doric = (function (exports) {
 
     var $every = asyncIteratorIteration.every;
 
-    _export({ target: 'AsyncIterator', proto: true, real: true }, {
+    _export({ target: 'AsyncIterator', proto: true, real: true, forced: true }, {
       every: function every(fn) {
         return $every(this, fn);
       }
@@ -11694,7 +11705,7 @@ var doric = (function (exports) {
       });
     });
 
-    _export({ target: 'AsyncIterator', proto: true, real: true }, {
+    _export({ target: 'AsyncIterator', proto: true, real: true, forced: true }, {
       filter: function filter(filterer) {
         return new AsyncIteratorProxy$4({
           iterator: anObject(this),
@@ -11707,7 +11718,7 @@ var doric = (function (exports) {
 
     var $find = asyncIteratorIteration.find;
 
-    _export({ target: 'AsyncIterator', proto: true, real: true }, {
+    _export({ target: 'AsyncIterator', proto: true, real: true, forced: true }, {
       find: function find(fn) {
         return $find(this, fn);
       }
@@ -11767,7 +11778,7 @@ var doric = (function (exports) {
       });
     });
 
-    _export({ target: 'AsyncIterator', proto: true, real: true }, {
+    _export({ target: 'AsyncIterator', proto: true, real: true, forced: true }, {
       flatMap: function flatMap(mapper) {
         return new AsyncIteratorProxy$3({
           iterator: anObject(this),
@@ -11782,7 +11793,7 @@ var doric = (function (exports) {
 
     var $forEach = asyncIteratorIteration.forEach;
 
-    _export({ target: 'AsyncIterator', proto: true, real: true }, {
+    _export({ target: 'AsyncIterator', proto: true, real: true, forced: true }, {
       forEach: function forEach(fn) {
         return $forEach(this, fn);
       }
@@ -11809,7 +11820,7 @@ var doric = (function (exports) {
       return anObject(functionApply(this.next, this.iterator, args));
     }, true);
 
-    _export({ target: 'AsyncIterator', stat: true }, {
+    _export({ target: 'AsyncIterator', stat: true, forced: true }, {
       from: function from(O) {
         var object = toObject(O);
         var usingIterator = getMethod(object, ASYNC_ITERATOR);
@@ -11848,7 +11859,7 @@ var doric = (function (exports) {
       });
     });
 
-    _export({ target: 'AsyncIterator', proto: true, real: true }, {
+    _export({ target: 'AsyncIterator', proto: true, real: true, forced: true }, {
       map: function map(mapper) {
         return new AsyncIteratorProxy$1({
           iterator: anObject(this),
@@ -11866,9 +11877,9 @@ var doric = (function (exports) {
 
 
     var Promise$1 = getBuiltIn('Promise');
-    var TypeError$g = global_1.TypeError;
+    var TypeError$f = global_1.TypeError;
 
-    _export({ target: 'AsyncIterator', proto: true, real: true }, {
+    _export({ target: 'AsyncIterator', proto: true, real: true, forced: true }, {
       reduce: function reduce(reducer /* , initialValue */) {
         var iterator = anObject(this);
         var next = aCallable(iterator.next);
@@ -11882,7 +11893,7 @@ var doric = (function (exports) {
               Promise$1.resolve(anObject(functionCall(next, iterator))).then(function (step) {
                 try {
                   if (anObject(step).done) {
-                    noInitial ? reject(TypeError$g('Reduce of empty iterator with no initial value')) : resolve(accumulator);
+                    noInitial ? reject(TypeError$f('Reduce of empty iterator with no initial value')) : resolve(accumulator);
                   } else {
                     var value = step.value;
                     if (noInitial) {
@@ -11910,7 +11921,7 @@ var doric = (function (exports) {
 
     var $some = asyncIteratorIteration.some;
 
-    _export({ target: 'AsyncIterator', proto: true, real: true }, {
+    _export({ target: 'AsyncIterator', proto: true, real: true, forced: true }, {
       some: function some(fn) {
         return $some(this, fn);
       }
@@ -11940,7 +11951,7 @@ var doric = (function (exports) {
       } return functionApply(this.next, iterator, args);
     });
 
-    _export({ target: 'AsyncIterator', proto: true, real: true }, {
+    _export({ target: 'AsyncIterator', proto: true, real: true, forced: true }, {
       take: function take(limit) {
         return new AsyncIteratorProxy({
           iterator: anObject(this),
@@ -11953,7 +11964,7 @@ var doric = (function (exports) {
 
     var $toArray = asyncIteratorIteration.toArray;
 
-    _export({ target: 'AsyncIterator', proto: true, real: true }, {
+    _export({ target: 'AsyncIterator', proto: true, real: true, forced: true }, {
       toArray: function toArray() {
         return $toArray(this, undefined, []);
       }
@@ -11969,11 +11980,11 @@ var doric = (function (exports) {
     var getInternalState$5 = internalState.getterFor(NUMERIC_RANGE_ITERATOR);
 
     var RangeError$3 = global_1.RangeError;
-    var TypeError$f = global_1.TypeError;
+    var TypeError$e = global_1.TypeError;
 
     var $RangeIterator = createIteratorConstructor(function NumericRangeIterator(start, end, option, type, zero, one) {
       if (typeof start != type || (end !== Infinity && end !== -Infinity && typeof end != type)) {
-        throw new TypeError$f(INCORRECT_RANGE);
+        throw new TypeError$e(INCORRECT_RANGE);
       }
       if (start === Infinity || start === -Infinity) {
         throw new RangeError$3(INCORRECT_RANGE);
@@ -11989,13 +12000,13 @@ var doric = (function (exports) {
       } else if (typeof option == type) {
         step = option;
       } else {
-        throw new TypeError$f(INCORRECT_RANGE);
+        throw new TypeError$e(INCORRECT_RANGE);
       }
       if (step == null) {
         step = ifIncrease ? one : -one;
       }
       if (typeof step != type) {
-        throw new TypeError$f(INCORRECT_RANGE);
+        throw new TypeError$e(INCORRECT_RANGE);
       }
       if (step === Infinity || step === -Infinity || (step === zero && start !== end)) {
         throw new RangeError$3(INCORRECT_RANGE);
@@ -12068,7 +12079,7 @@ var doric = (function (exports) {
     // `BigInt.range` method
     // https://github.com/tc39/proposal-Number.range
     if (typeof BigInt == 'function') {
-      _export({ target: 'BigInt', stat: true }, {
+      _export({ target: 'BigInt', stat: true, forced: true }, {
         range: function range(start, end, option) {
           return new numericRangeIterator(start, end, option, 'bigint', BigInt(0), BigInt(1));
         }
@@ -12084,7 +12095,7 @@ var doric = (function (exports) {
 
 
     var Object$3 = global_1.Object;
-    var TypeError$e = global_1.TypeError;
+    var TypeError$d = global_1.TypeError;
     var Map$3 = getBuiltIn('Map');
     var WeakMap$2 = getBuiltIn('WeakMap');
 
@@ -12122,7 +12133,7 @@ var doric = (function (exports) {
       for (i = 0; i < length; i++) {
         if (isObject(it = arguments$1[i])) { active = active.next(i, it, true); }
       }
-      if (this === Object$3 && active === root) { throw TypeError$e('Composite keys must contain a non-primitive component'); }
+      if (this === Object$3 && active === root) { throw TypeError$d('Composite keys must contain a non-primitive component'); }
       for (i = 0; i < length; i++) {
         if (!isObject(it = arguments$1[i])) { active = active.next(i, it, false); }
       } return active;
@@ -12136,14 +12147,14 @@ var doric = (function (exports) {
     };
 
     // https://github.com/tc39/proposal-richer-keys/tree/master/compositeKey
-    _export({ global: true }, {
+    _export({ global: true, forced: true }, {
       compositeKey: function compositeKey$1() {
         return functionApply(compositeKey, Object$2, arguments).get('object', initializer);
       }
     });
 
     // https://github.com/tc39/proposal-richer-keys/tree/master/compositeKey
-    _export({ global: true }, {
+    _export({ global: true, forced: true }, {
       compositeSymbol: function compositeSymbol() {
         if (arguments.length == 1 && typeof arguments[0] == 'string') { return getBuiltIn('Symbol')['for'](arguments[0]); }
         return functionApply(compositeKey, null, arguments).get('symbol', getBuiltIn('Symbol'));
@@ -12153,13 +12164,13 @@ var doric = (function (exports) {
     // eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
     var getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
     var classRegExp = /^\s*class\b/;
-    var exec$3 = functionUncurryThis(classRegExp.exec);
+    var exec$4 = functionUncurryThis(classRegExp.exec);
 
     var isClassConstructor = function (argument) {
       try {
         // `Function#toString` throws on some built-it function in some legacy engines
         // (for example, `DOMQuad` and similar in FF41-)
-        if (!descriptors || !exec$3(classRegExp, inspectSource(argument))) { return false; }
+        if (!descriptors || !exec$4(classRegExp, inspectSource(argument))) { return false; }
       } catch (error) { /* empty */ }
       var prototype = getOwnPropertyDescriptor(argument, 'prototype');
       return !!prototype && hasOwnProperty_1(prototype, 'writable') && !prototype.writable;
@@ -12167,7 +12178,7 @@ var doric = (function (exports) {
 
     // `Function.isCallable` method
     // https://github.com/caitp/TC39-Proposals/blob/trunk/tc39-reflect-isconstructor-iscallable.md
-    _export({ target: 'Function', stat: true, sham: true }, {
+    _export({ target: 'Function', stat: true, sham: true, forced: true }, {
       isCallable: function isCallable$1(argument) {
         return isCallable(argument) && !isClassConstructor(argument);
       }
@@ -12175,13 +12186,13 @@ var doric = (function (exports) {
 
     // `Function.isConstructor` method
     // https://github.com/caitp/TC39-Proposals/blob/trunk/tc39-reflect-isconstructor-iscallable.md
-    _export({ target: 'Function', stat: true }, {
+    _export({ target: 'Function', stat: true, forced: true }, {
       isConstructor: isConstructor
     });
 
     // `Function.prototype.unThis` method
     // https://github.com/js-choi/proposal-function-un-this
-    _export({ target: 'Function', proto: true }, {
+    _export({ target: 'Function', proto: true, forced: true }, {
       unThis: function unThis() {
         return functionUncurryThis(aCallable(this));
       }
@@ -12288,7 +12299,7 @@ var doric = (function (exports) {
       if (!done) { return [this.index++, result.value]; }
     });
 
-    _export({ target: 'Iterator', proto: true, real: true }, {
+    _export({ target: 'Iterator', proto: true, real: true, forced: true }, {
       asIndexedPairs: function asIndexedPairs() {
         return new IteratorProxy$6({
           iterator: anObject(this),
@@ -12320,7 +12331,7 @@ var doric = (function (exports) {
       if (!done) { return result.value; }
     });
 
-    _export({ target: 'Iterator', proto: true, real: true }, {
+    _export({ target: 'Iterator', proto: true, real: true, forced: true }, {
       drop: function drop(limit) {
         return new IteratorProxy$5({
           iterator: anObject(this),
@@ -12335,7 +12346,7 @@ var doric = (function (exports) {
 
 
 
-    _export({ target: 'Iterator', proto: true, real: true }, {
+    _export({ target: 'Iterator', proto: true, real: true, forced: true }, {
       every: function every(fn) {
         anObject(this);
         aCallable(fn);
@@ -12367,7 +12378,7 @@ var doric = (function (exports) {
       }
     });
 
-    _export({ target: 'Iterator', proto: true, real: true }, {
+    _export({ target: 'Iterator', proto: true, real: true, forced: true }, {
       filter: function filter(filterer) {
         return new IteratorProxy$4({
           iterator: anObject(this),
@@ -12382,7 +12393,7 @@ var doric = (function (exports) {
 
 
 
-    _export({ target: 'Iterator', proto: true, real: true }, {
+    _export({ target: 'Iterator', proto: true, real: true, forced: true }, {
       find: function find(fn) {
         anObject(this);
         aCallable(fn);
@@ -12402,7 +12413,7 @@ var doric = (function (exports) {
 
 
 
-    var TypeError$d = global_1.TypeError;
+    var TypeError$c = global_1.TypeError;
 
     var IteratorProxy$3 = iteratorCreateProxy(function () {
       var iterator = this.iterator;
@@ -12425,7 +12436,7 @@ var doric = (function (exports) {
           iteratorMethod = getIteratorMethod(mapped);
 
           if (!iteratorMethod) {
-            throw TypeError$d('.flatMap callback should return an iterable object');
+            throw TypeError$c('.flatMap callback should return an iterable object');
           }
 
           this.innerIterator = innerIterator = anObject(functionCall(iteratorMethod, mapped));
@@ -12436,7 +12447,7 @@ var doric = (function (exports) {
       }
     });
 
-    _export({ target: 'Iterator', proto: true, real: true }, {
+    _export({ target: 'Iterator', proto: true, real: true, forced: true }, {
       flatMap: function flatMap(mapper) {
         return new IteratorProxy$3({
           iterator: anObject(this),
@@ -12452,7 +12463,7 @@ var doric = (function (exports) {
 
 
 
-    _export({ target: 'Iterator', proto: true, real: true }, {
+    _export({ target: 'Iterator', proto: true, real: true, forced: true }, {
       forEach: function forEach(fn) {
         iterate(anObject(this), fn, { IS_ITERATOR: true });
       }
@@ -12475,7 +12486,7 @@ var doric = (function (exports) {
       if (!done) { return result.value; }
     }, true);
 
-    _export({ target: 'Iterator', stat: true }, {
+    _export({ target: 'Iterator', stat: true, forced: true }, {
       from: function from(O) {
         var object = toObject(O);
         var usingIterator = getIteratorMethod(object);
@@ -12504,7 +12515,7 @@ var doric = (function (exports) {
       if (!done) { return callWithSafeIterationClosing(iterator, this.mapper, result.value); }
     });
 
-    _export({ target: 'Iterator', proto: true, real: true }, {
+    _export({ target: 'Iterator', proto: true, real: true, forced: true }, {
       map: function map(mapper) {
         return new IteratorProxy$1({
           iterator: anObject(this),
@@ -12520,9 +12531,9 @@ var doric = (function (exports) {
 
 
 
-    var TypeError$c = global_1.TypeError;
+    var TypeError$b = global_1.TypeError;
 
-    _export({ target: 'Iterator', proto: true, real: true }, {
+    _export({ target: 'Iterator', proto: true, real: true, forced: true }, {
       reduce: function reduce(reducer /* , initialValue */) {
         anObject(this);
         aCallable(reducer);
@@ -12536,7 +12547,7 @@ var doric = (function (exports) {
             accumulator = reducer(accumulator, value);
           }
         }, { IS_ITERATOR: true });
-        if (noInitial) { throw TypeError$c('Reduce of empty iterator with no initial value'); }
+        if (noInitial) { throw TypeError$b('Reduce of empty iterator with no initial value'); }
         return accumulator;
       }
     });
@@ -12547,7 +12558,7 @@ var doric = (function (exports) {
 
 
 
-    _export({ target: 'Iterator', proto: true, real: true }, {
+    _export({ target: 'Iterator', proto: true, real: true, forced: true }, {
       some: function some(fn) {
         anObject(this);
         aCallable(fn);
@@ -12576,7 +12587,7 @@ var doric = (function (exports) {
       if (!done) { return result.value; }
     });
 
-    _export({ target: 'Iterator', proto: true, real: true }, {
+    _export({ target: 'Iterator', proto: true, real: true, forced: true }, {
       take: function take(limit) {
         return new IteratorProxy({
           iterator: anObject(this),
@@ -12592,7 +12603,7 @@ var doric = (function (exports) {
 
     var push$9 = [].push;
 
-    _export({ target: 'Iterator', proto: true, real: true }, {
+    _export({ target: 'Iterator', proto: true, real: true, forced: true }, {
       toArray: function toArray() {
         var result = [];
         iterate(anObject(this), push$9, { that: result, IS_ITERATOR: true });
@@ -12604,7 +12615,7 @@ var doric = (function (exports) {
 
 
 
-    _export({ target: 'Iterator', proto: true, real: true }, {
+    _export({ target: 'Iterator', proto: true, real: true, forced: true }, {
       toAsync: function toAsync() {
         return new asyncFromSyncIterator(this);
       }
@@ -12627,7 +12638,7 @@ var doric = (function (exports) {
 
     // `Map.prototype.deleteAll` method
     // https://github.com/tc39/proposal-collection-methods
-    _export({ target: 'Map', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'Map', proto: true, real: true, forced: true }, {
       deleteAll: collectionDeleteAll
     });
 
@@ -12647,7 +12658,7 @@ var doric = (function (exports) {
 
     // `Map.prototype.emplace` method
     // https://github.com/thumbsupep/proposal-upsert
-    _export({ target: 'Map', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'Map', proto: true, real: true, forced: true }, {
       emplace: mapEmplace
     });
 
@@ -12658,7 +12669,7 @@ var doric = (function (exports) {
 
     // `Map.prototype.every` method
     // https://github.com/tc39/proposal-collection-methods
-    _export({ target: 'Map', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'Map', proto: true, real: true, forced: true }, {
       every: function every(callbackfn /* , thisArg */) {
         var map = anObject(this);
         var iterator = getMapIterator(map);
@@ -12671,7 +12682,7 @@ var doric = (function (exports) {
 
     // `Map.prototype.filter` method
     // https://github.com/tc39/proposal-collection-methods
-    _export({ target: 'Map', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'Map', proto: true, real: true, forced: true }, {
       filter: function filter(callbackfn /* , thisArg */) {
         var map = anObject(this);
         var iterator = getMapIterator(map);
@@ -12687,7 +12698,7 @@ var doric = (function (exports) {
 
     // `Map.prototype.find` method
     // https://github.com/tc39/proposal-collection-methods
-    _export({ target: 'Map', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'Map', proto: true, real: true, forced: true }, {
       find: function find(callbackfn /* , thisArg */) {
         var map = anObject(this);
         var iterator = getMapIterator(map);
@@ -12700,7 +12711,7 @@ var doric = (function (exports) {
 
     // `Map.prototype.findKey` method
     // https://github.com/tc39/proposal-collection-methods
-    _export({ target: 'Map', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'Map', proto: true, real: true, forced: true }, {
       findKey: function findKey(callbackfn /* , thisArg */) {
         var map = anObject(this);
         var iterator = getMapIterator(map);
@@ -12743,7 +12754,7 @@ var doric = (function (exports) {
 
     // `Map.from` method
     // https://tc39.github.io/proposal-setmap-offrom/#sec-map.from
-    _export({ target: 'Map', stat: true }, {
+    _export({ target: 'Map', stat: true, forced: true }, {
       from: collectionFrom
     });
 
@@ -12751,7 +12762,7 @@ var doric = (function (exports) {
 
     // `Map.groupBy` method
     // https://github.com/tc39/proposal-collection-methods
-    _export({ target: 'Map', stat: true }, {
+    _export({ target: 'Map', stat: true, forced: true }, {
       groupBy: function groupBy(iterable, keyDerivative) {
         aCallable(keyDerivative);
         var iterator = getIterator(iterable);
@@ -12777,7 +12788,7 @@ var doric = (function (exports) {
 
     // `Map.prototype.includes` method
     // https://github.com/tc39/proposal-collection-methods
-    _export({ target: 'Map', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'Map', proto: true, real: true, forced: true }, {
       includes: function includes(searchElement) {
         return iterate(getMapIterator(anObject(this)), function (key, value, stop) {
           if (sameValueZero(value, searchElement)) { return stop(); }
@@ -12787,7 +12798,7 @@ var doric = (function (exports) {
 
     // `Map.keyBy` method
     // https://github.com/tc39/proposal-collection-methods
-    _export({ target: 'Map', stat: true }, {
+    _export({ target: 'Map', stat: true, forced: true }, {
       keyBy: function keyBy(iterable, keyDerivative) {
         var newMap = new this();
         aCallable(keyDerivative);
@@ -12801,7 +12812,7 @@ var doric = (function (exports) {
 
     // `Map.prototype.keyOf` method
     // https://github.com/tc39/proposal-collection-methods
-    _export({ target: 'Map', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'Map', proto: true, real: true, forced: true }, {
       keyOf: function keyOf(searchElement) {
         return iterate(getMapIterator(anObject(this)), function (key, value, stop) {
           if (value === searchElement) { return stop(key); }
@@ -12811,7 +12822,7 @@ var doric = (function (exports) {
 
     // `Map.prototype.mapKeys` method
     // https://github.com/tc39/proposal-collection-methods
-    _export({ target: 'Map', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'Map', proto: true, real: true, forced: true }, {
       mapKeys: function mapKeys(callbackfn /* , thisArg */) {
         var map = anObject(this);
         var iterator = getMapIterator(map);
@@ -12827,7 +12838,7 @@ var doric = (function (exports) {
 
     // `Map.prototype.mapValues` method
     // https://github.com/tc39/proposal-collection-methods
-    _export({ target: 'Map', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'Map', proto: true, real: true, forced: true }, {
       mapValues: function mapValues(callbackfn /* , thisArg */) {
         var map = anObject(this);
         var iterator = getMapIterator(map);
@@ -12843,7 +12854,7 @@ var doric = (function (exports) {
 
     // `Map.prototype.merge` method
     // https://github.com/tc39/proposal-collection-methods
-    _export({ target: 'Map', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'Map', proto: true, real: true, forced: true }, {
       // eslint-disable-next-line no-unused-vars -- required for `.length`
       merge: function merge(iterable /* ...iterables */) {
         var arguments$1 = arguments;
@@ -12866,15 +12877,15 @@ var doric = (function (exports) {
 
     // `Map.of` method
     // https://tc39.github.io/proposal-setmap-offrom/#sec-map.of
-    _export({ target: 'Map', stat: true }, {
+    _export({ target: 'Map', stat: true, forced: true }, {
       of: collectionOf
     });
 
-    var TypeError$b = global_1.TypeError;
+    var TypeError$a = global_1.TypeError;
 
     // `Map.prototype.reduce` method
     // https://github.com/tc39/proposal-collection-methods
-    _export({ target: 'Map', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'Map', proto: true, real: true, forced: true }, {
       reduce: function reduce(callbackfn /* , initialValue */) {
         var map = anObject(this);
         var iterator = getMapIterator(map);
@@ -12889,14 +12900,14 @@ var doric = (function (exports) {
             accumulator = callbackfn(accumulator, value, key, map);
           }
         }, { AS_ENTRIES: true, IS_ITERATOR: true });
-        if (noInitial) { throw TypeError$b('Reduce of empty map with no initial value'); }
+        if (noInitial) { throw TypeError$a('Reduce of empty map with no initial value'); }
         return accumulator;
       }
     });
 
     // `Set.prototype.some` method
     // https://github.com/tc39/proposal-collection-methods
-    _export({ target: 'Map', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'Map', proto: true, real: true, forced: true }, {
       some: function some(callbackfn /* , thisArg */) {
         var map = anObject(this);
         var iterator = getMapIterator(map);
@@ -12907,11 +12918,11 @@ var doric = (function (exports) {
       }
     });
 
-    var TypeError$a = global_1.TypeError;
+    var TypeError$9 = global_1.TypeError;
 
     // `Set.prototype.update` method
     // https://github.com/tc39/proposal-collection-methods
-    _export({ target: 'Map', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'Map', proto: true, real: true, forced: true }, {
       update: function update(key, callback /* , thunk */) {
         var map = anObject(this);
         var get = aCallable(map.get);
@@ -12921,7 +12932,7 @@ var doric = (function (exports) {
         aCallable(callback);
         var isPresentInMap = functionCall(has, map, key);
         if (!isPresentInMap && length < 3) {
-          throw TypeError$a('Updating absent value');
+          throw TypeError$9('Updating absent value');
         }
         var value = isPresentInMap ? functionCall(get, map, key) : aCallable(length > 2 ? arguments[2] : undefined)(key, map);
         functionCall(set, map, key, callback(value, key, map));
@@ -12929,7 +12940,7 @@ var doric = (function (exports) {
       }
     });
 
-    var TypeError$9 = global_1.TypeError;
+    var TypeError$8 = global_1.TypeError;
 
     // `Map.prototype.upsert` method
     // https://github.com/thumbsupep/proposal-upsert
@@ -12941,7 +12952,7 @@ var doric = (function (exports) {
       var insertFn = arguments.length > 2 ? arguments[2] : undefined;
       var value;
       if (!isCallable(updateFn) && !isCallable(insertFn)) {
-        throw TypeError$9('At least one callback required');
+        throw TypeError$8('At least one callback required');
       }
       if (functionCall(has, map, key)) {
         value = functionCall(get, map, key);
@@ -12959,10 +12970,9 @@ var doric = (function (exports) {
 
 
 
-
     // `Map.prototype.updateOrInsert` method (replaced by `Map.prototype.emplace`)
     // https://github.com/thumbsupep/proposal-upsert
-    _export({ target: 'Map', proto: true, real: true, name: 'upsert', forced: isPure }, {
+    _export({ target: 'Map', proto: true, real: true, name: 'upsert', forced: true }, {
       updateOrInsert: mapUpsert
     });
 
@@ -12970,10 +12980,9 @@ var doric = (function (exports) {
 
 
 
-
     // `Map.prototype.upsert` method (replaced by `Map.prototype.emplace`)
     // https://github.com/thumbsupep/proposal-upsert
-    _export({ target: 'Map', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'Map', proto: true, real: true, forced: true }, {
       upsert: mapUpsert
     });
 
@@ -12982,7 +12991,7 @@ var doric = (function (exports) {
 
     // `Math.clamp` method
     // https://rwaldron.github.io/proposal-math-extensions/
-    _export({ target: 'Math', stat: true }, {
+    _export({ target: 'Math', stat: true, forced: true }, {
       clamp: function clamp(x, lower, upper) {
         return min(upper, max(lower, x));
       }
@@ -12990,7 +12999,7 @@ var doric = (function (exports) {
 
     // `Math.DEG_PER_RAD` constant
     // https://rwaldron.github.io/proposal-math-extensions/
-    _export({ target: 'Math', stat: true }, {
+    _export({ target: 'Math', stat: true, forced: true }, {
       DEG_PER_RAD: Math.PI / 180
     });
 
@@ -12998,7 +13007,7 @@ var doric = (function (exports) {
 
     // `Math.degrees` method
     // https://rwaldron.github.io/proposal-math-extensions/
-    _export({ target: 'Math', stat: true }, {
+    _export({ target: 'Math', stat: true, forced: true }, {
       degrees: function degrees(radians) {
         return radians * RAD_PER_DEG;
       }
@@ -13020,7 +13029,7 @@ var doric = (function (exports) {
 
     // `Math.fscale` method
     // https://rwaldron.github.io/proposal-math-extensions/
-    _export({ target: 'Math', stat: true }, {
+    _export({ target: 'Math', stat: true, forced: true }, {
       fscale: function fscale(x, inLow, inHigh, outLow, outHigh) {
         return mathFround(mathScale(x, inLow, inHigh, outLow, outHigh));
       }
@@ -13029,7 +13038,7 @@ var doric = (function (exports) {
     // `Math.iaddh` method
     // https://gist.github.com/BrendanEich/4294d5c212a6d2254703
     // TODO: Remove from `core-js@4`
-    _export({ target: 'Math', stat: true }, {
+    _export({ target: 'Math', stat: true, forced: true }, {
       iaddh: function iaddh(x0, x1, y0, y1) {
         var $x0 = x0 >>> 0;
         var $x1 = x1 >>> 0;
@@ -13041,7 +13050,7 @@ var doric = (function (exports) {
     // `Math.imulh` method
     // https://gist.github.com/BrendanEich/4294d5c212a6d2254703
     // TODO: Remove from `core-js@4`
-    _export({ target: 'Math', stat: true }, {
+    _export({ target: 'Math', stat: true, forced: true }, {
       imulh: function imulh(u, v) {
         var UINT16 = 0xFFFF;
         var $u = +u;
@@ -13058,7 +13067,7 @@ var doric = (function (exports) {
     // `Math.isubh` method
     // https://gist.github.com/BrendanEich/4294d5c212a6d2254703
     // TODO: Remove from `core-js@4`
-    _export({ target: 'Math', stat: true }, {
+    _export({ target: 'Math', stat: true, forced: true }, {
       isubh: function isubh(x0, x1, y0, y1) {
         var $x0 = x0 >>> 0;
         var $x1 = x1 >>> 0;
@@ -13069,7 +13078,7 @@ var doric = (function (exports) {
 
     // `Math.RAD_PER_DEG` constant
     // https://rwaldron.github.io/proposal-math-extensions/
-    _export({ target: 'Math', stat: true }, {
+    _export({ target: 'Math', stat: true, forced: true }, {
       RAD_PER_DEG: 180 / Math.PI
     });
 
@@ -13077,7 +13086,7 @@ var doric = (function (exports) {
 
     // `Math.radians` method
     // https://rwaldron.github.io/proposal-math-extensions/
-    _export({ target: 'Math', stat: true }, {
+    _export({ target: 'Math', stat: true, forced: true }, {
       radians: function radians(degrees) {
         return degrees * DEG_PER_RAD;
       }
@@ -13085,7 +13094,7 @@ var doric = (function (exports) {
 
     // `Math.scale` method
     // https://rwaldron.github.io/proposal-math-extensions/
-    _export({ target: 'Math', stat: true }, {
+    _export({ target: 'Math', stat: true, forced: true }, {
       scale: mathScale
     });
 
@@ -13094,7 +13103,7 @@ var doric = (function (exports) {
     var SEED_TYPE_ERROR = 'Math.seededPRNG() argument should have a "seed" field with a finite value.';
     var setInternalState$6 = internalState.set;
     var getInternalState$3 = internalState.getterFor(SEEDED_RANDOM_GENERATOR);
-    var TypeError$8 = global_1.TypeError;
+    var TypeError$7 = global_1.TypeError;
 
     var $SeededRandomGenerator = createIteratorConstructor(function SeededRandomGenerator(seed) {
       setInternalState$6(this, {
@@ -13113,14 +13122,14 @@ var doric = (function (exports) {
     _export({ target: 'Math', stat: true, forced: true }, {
       seededPRNG: function seededPRNG(it) {
         var seed = anObject(it).seed;
-        if (!numberIsFinite(seed)) { throw TypeError$8(SEED_TYPE_ERROR); }
+        if (!numberIsFinite(seed)) { throw TypeError$7(SEED_TYPE_ERROR); }
         return new $SeededRandomGenerator(seed);
       }
     });
 
     // `Math.signbit` method
     // https://github.com/tc39/proposal-Math.signbit
-    _export({ target: 'Math', stat: true }, {
+    _export({ target: 'Math', stat: true, forced: true }, {
       signbit: function signbit(x) {
         return (x = +x) == x && x == 0 ? 1 / x == -Infinity : x < 0;
       }
@@ -13129,7 +13138,7 @@ var doric = (function (exports) {
     // `Math.umulh` method
     // https://gist.github.com/BrendanEich/4294d5c212a6d2254703
     // TODO: Remove from `core-js@4`
-    _export({ target: 'Math', stat: true }, {
+    _export({ target: 'Math', stat: true, forced: true }, {
       umulh: function umulh(u, v) {
         var UINT16 = 0xFFFF;
         var $u = +u;
@@ -13147,29 +13156,29 @@ var doric = (function (exports) {
     var INVALID_RADIX = 'Invalid radix';
     var RangeError$2 = global_1.RangeError;
     var SyntaxError$1 = global_1.SyntaxError;
-    var TypeError$7 = global_1.TypeError;
+    var TypeError$6 = global_1.TypeError;
     var valid = /^[\da-z]+$/;
-    var charAt$4 = functionUncurryThis(''.charAt);
-    var exec$2 = functionUncurryThis(valid.exec);
+    var charAt$6 = functionUncurryThis(''.charAt);
+    var exec$3 = functionUncurryThis(valid.exec);
     var numberToString$1 = functionUncurryThis(1.0.toString);
     var stringSlice$2 = functionUncurryThis(''.slice);
 
     // `Number.fromString` method
     // https://github.com/tc39/proposal-number-fromstring
-    _export({ target: 'Number', stat: true }, {
+    _export({ target: 'Number', stat: true, forced: true }, {
       fromString: function fromString(string, radix) {
         var sign = 1;
         var R, mathNum;
-        if (typeof string != 'string') { throw TypeError$7(INVALID_NUMBER_REPRESENTATION); }
+        if (typeof string != 'string') { throw TypeError$6(INVALID_NUMBER_REPRESENTATION); }
         if (!string.length) { throw SyntaxError$1(INVALID_NUMBER_REPRESENTATION); }
-        if (charAt$4(string, 0) == '-') {
+        if (charAt$6(string, 0) == '-') {
           sign = -1;
           string = stringSlice$2(string, 1);
           if (!string.length) { throw SyntaxError$1(INVALID_NUMBER_REPRESENTATION); }
         }
         R = radix === undefined ? 10 : toIntegerOrInfinity(radix);
         if (R < 2 || R > 36) { throw RangeError$2(INVALID_RADIX); }
-        if (!exec$2(valid, string) || numberToString$1(mathNum = numberParseInt(string, R), R) !== string) {
+        if (!exec$3(valid, string) || numberToString$1(mathNum = numberParseInt(string, R), R) !== string) {
           throw SyntaxError$1(INVALID_NUMBER_REPRESENTATION);
         }
         return sign * mathNum;
@@ -13178,7 +13187,7 @@ var doric = (function (exports) {
 
     // `Number.range` method
     // https://github.com/tc39/proposal-Number.range
-    _export({ target: 'Number', stat: true }, {
+    _export({ target: 'Number', stat: true, forced: true }, {
       range: function range(start, end, option) {
         return new numericRangeIterator(start, end, option, 'number', 0, 1);
       }
@@ -13217,7 +13226,7 @@ var doric = (function (exports) {
 
     // `Object.iterateEntries` method
     // https://github.com/tc39/proposal-object-iteration
-    _export({ target: 'Object', stat: true }, {
+    _export({ target: 'Object', stat: true, forced: true }, {
       iterateEntries: function iterateEntries(object) {
         return new objectIterator(object, 'entries');
       }
@@ -13225,7 +13234,7 @@ var doric = (function (exports) {
 
     // `Object.iterateKeys` method
     // https://github.com/tc39/proposal-object-iteration
-    _export({ target: 'Object', stat: true }, {
+    _export({ target: 'Object', stat: true, forced: true }, {
       iterateKeys: function iterateKeys(object) {
         return new objectIterator(object, 'keys');
       }
@@ -13233,7 +13242,7 @@ var doric = (function (exports) {
 
     // `Object.iterateValues` method
     // https://github.com/tc39/proposal-object-iteration
-    _export({ target: 'Object', stat: true }, {
+    _export({ target: 'Object', stat: true, forced: true }, {
       iterateValues: function iterateValues(object) {
         return new objectIterator(object, 'values');
       }
@@ -13271,6 +13280,14 @@ var doric = (function (exports) {
     var getSubscriptionInternalState = getterFor$1(SUBSCRIPTION);
     var getSubscriptionObserverInternalState = getterFor$1(SUBSCRIPTION_OBSERVER);
     var Array$1 = global_1.Array;
+    var NativeObservable = global_1.Observable;
+    var NativeObservablePrototype = NativeObservable && NativeObservable.prototype;
+
+    var FORCED$1 = !isCallable(NativeObservable)
+      || !isCallable(NativeObservable.from)
+      || !isCallable(NativeObservable.of)
+      || !isCallable(NativeObservablePrototype.subscribe)
+      || !isCallable(NativeObservablePrototype[$$OBSERVABLE]);
 
     var SubscriptionState = function (observer) {
       this.observer = anObject(observer);
@@ -13460,7 +13477,7 @@ var doric = (function (exports) {
 
     redefine(ObservablePrototype, $$OBSERVABLE, function () { return this; });
 
-    _export({ global: true }, {
+    _export({ global: true, forced: FORCED$1 }, {
       Observable: $Observable
     });
 
@@ -13468,7 +13485,7 @@ var doric = (function (exports) {
 
     // `Promise.try` method
     // https://github.com/tc39/proposal-promise-try
-    _export({ target: 'Promise', stat: true }, {
+    _export({ target: 'Promise', stat: true, forced: true }, {
       'try': function (callbackfn) {
         var promiseCapability = newPromiseCapability$1.f(this);
         var result = perform(callbackfn);
@@ -13693,19 +13710,19 @@ var doric = (function (exports) {
 
     // `Set.prototype.addAll` method
     // https://github.com/tc39/proposal-collection-methods
-    _export({ target: 'Set', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'Set', proto: true, real: true, forced: true }, {
       addAll: collectionAddAll
     });
 
     // `Set.prototype.deleteAll` method
     // https://github.com/tc39/proposal-collection-methods
-    _export({ target: 'Set', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'Set', proto: true, real: true, forced: true }, {
       deleteAll: collectionDeleteAll
     });
 
     // `Set.prototype.difference` method
     // https://github.com/tc39/proposal-set-methods
-    _export({ target: 'Set', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'Set', proto: true, real: true, forced: true }, {
       difference: function difference(iterable) {
         var set = anObject(this);
         var newSet = new (speciesConstructor(set, getBuiltIn('Set')))(set);
@@ -13724,7 +13741,7 @@ var doric = (function (exports) {
 
     // `Set.prototype.every` method
     // https://github.com/tc39/proposal-collection-methods
-    _export({ target: 'Set', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'Set', proto: true, real: true, forced: true }, {
       every: function every(callbackfn /* , thisArg */) {
         var set = anObject(this);
         var iterator = getSetIterator(set);
@@ -13737,7 +13754,7 @@ var doric = (function (exports) {
 
     // `Set.prototype.filter` method
     // https://github.com/tc39/proposal-collection-methods
-    _export({ target: 'Set', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'Set', proto: true, real: true, forced: true }, {
       filter: function filter(callbackfn /* , thisArg */) {
         var set = anObject(this);
         var iterator = getSetIterator(set);
@@ -13753,7 +13770,7 @@ var doric = (function (exports) {
 
     // `Set.prototype.find` method
     // https://github.com/tc39/proposal-collection-methods
-    _export({ target: 'Set', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'Set', proto: true, real: true, forced: true }, {
       find: function find(callbackfn /* , thisArg */) {
         var set = anObject(this);
         var iterator = getSetIterator(set);
@@ -13766,13 +13783,13 @@ var doric = (function (exports) {
 
     // `Set.from` method
     // https://tc39.github.io/proposal-setmap-offrom/#sec-set.from
-    _export({ target: 'Set', stat: true }, {
+    _export({ target: 'Set', stat: true, forced: true }, {
       from: collectionFrom
     });
 
     // `Set.prototype.intersection` method
     // https://github.com/tc39/proposal-set-methods
-    _export({ target: 'Set', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'Set', proto: true, real: true, forced: true }, {
       intersection: function intersection(iterable) {
         var set = anObject(this);
         var newSet = new (speciesConstructor(set, getBuiltIn('Set')))();
@@ -13787,7 +13804,7 @@ var doric = (function (exports) {
 
     // `Set.prototype.isDisjointFrom` method
     // https://tc39.github.io/proposal-set-methods/#Set.prototype.isDisjointFrom
-    _export({ target: 'Set', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'Set', proto: true, real: true, forced: true }, {
       isDisjointFrom: function isDisjointFrom(iterable) {
         var set = anObject(this);
         var hasCheck = aCallable(set.has);
@@ -13799,7 +13816,7 @@ var doric = (function (exports) {
 
     // `Set.prototype.isSubsetOf` method
     // https://tc39.github.io/proposal-set-methods/#Set.prototype.isSubsetOf
-    _export({ target: 'Set', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'Set', proto: true, real: true, forced: true }, {
       isSubsetOf: function isSubsetOf(iterable) {
         var iterator = getIterator(this);
         var otherSet = anObject(iterable);
@@ -13816,7 +13833,7 @@ var doric = (function (exports) {
 
     // `Set.prototype.isSupersetOf` method
     // https://tc39.github.io/proposal-set-methods/#Set.prototype.isSupersetOf
-    _export({ target: 'Set', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'Set', proto: true, real: true, forced: true }, {
       isSupersetOf: function isSupersetOf(iterable) {
         var set = anObject(this);
         var hasCheck = aCallable(set.has);
@@ -13831,7 +13848,7 @@ var doric = (function (exports) {
 
     // `Set.prototype.join` method
     // https://github.com/tc39/proposal-collection-methods
-    _export({ target: 'Set', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'Set', proto: true, real: true, forced: true }, {
       join: function join(separator) {
         var set = anObject(this);
         var iterator = getSetIterator(set);
@@ -13844,7 +13861,7 @@ var doric = (function (exports) {
 
     // `Set.prototype.map` method
     // https://github.com/tc39/proposal-collection-methods
-    _export({ target: 'Set', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'Set', proto: true, real: true, forced: true }, {
       map: function map(callbackfn /* , thisArg */) {
         var set = anObject(this);
         var iterator = getSetIterator(set);
@@ -13860,15 +13877,15 @@ var doric = (function (exports) {
 
     // `Set.of` method
     // https://tc39.github.io/proposal-setmap-offrom/#sec-set.of
-    _export({ target: 'Set', stat: true }, {
+    _export({ target: 'Set', stat: true, forced: true }, {
       of: collectionOf
     });
 
-    var TypeError$6 = global_1.TypeError;
+    var TypeError$5 = global_1.TypeError;
 
     // `Set.prototype.reduce` method
     // https://github.com/tc39/proposal-collection-methods
-    _export({ target: 'Set', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'Set', proto: true, real: true, forced: true }, {
       reduce: function reduce(callbackfn /* , initialValue */) {
         var set = anObject(this);
         var iterator = getSetIterator(set);
@@ -13883,14 +13900,14 @@ var doric = (function (exports) {
             accumulator = callbackfn(accumulator, value, value, set);
           }
         }, { IS_ITERATOR: true });
-        if (noInitial) { throw TypeError$6('Reduce of empty set with no initial value'); }
+        if (noInitial) { throw TypeError$5('Reduce of empty set with no initial value'); }
         return accumulator;
       }
     });
 
     // `Set.prototype.some` method
     // https://github.com/tc39/proposal-collection-methods
-    _export({ target: 'Set', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'Set', proto: true, real: true, forced: true }, {
       some: function some(callbackfn /* , thisArg */) {
         var set = anObject(this);
         var iterator = getSetIterator(set);
@@ -13903,7 +13920,7 @@ var doric = (function (exports) {
 
     // `Set.prototype.symmetricDifference` method
     // https://github.com/tc39/proposal-set-methods
-    _export({ target: 'Set', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'Set', proto: true, real: true, forced: true }, {
       symmetricDifference: function symmetricDifference(iterable) {
         var set = anObject(this);
         var newSet = new (speciesConstructor(set, getBuiltIn('Set')))(set);
@@ -13918,7 +13935,7 @@ var doric = (function (exports) {
 
     // `Set.prototype.union` method
     // https://github.com/tc39/proposal-set-methods
-    _export({ target: 'Set', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'Set', proto: true, real: true, forced: true }, {
       union: function union(iterable) {
         var set = anObject(this);
         var newSet = new (speciesConstructor(set, getBuiltIn('Set')))(set);
@@ -13927,36 +13944,31 @@ var doric = (function (exports) {
       }
     });
 
-    var charAt$3 = stringMultibyte.charAt;
+    var charAt$5 = stringMultibyte.charAt;
 
 
 
-
-
-    var FORCED$1 = fails(function () {
-      return '𠮷'.at(-2) !== '𠮷';
-    });
 
     // `String.prototype.at` method
     // https://github.com/mathiasbynens/String.prototype.at
-    _export({ target: 'String', proto: true, forced: FORCED$1 }, {
+    _export({ target: 'String', proto: true, forced: true }, {
       at: function at(index) {
         var S = toString_1(requireObjectCoercible(this));
         var len = S.length;
         var relativeIndex = toIntegerOrInfinity(index);
         var k = relativeIndex >= 0 ? relativeIndex : len + relativeIndex;
-        return (k < 0 || k >= len) ? undefined : charAt$3(S, k);
+        return (k < 0 || k >= len) ? undefined : charAt$5(S, k);
       }
     });
 
-    var TypeError$5 = global_1.TypeError;
+    var TypeError$4 = global_1.TypeError;
     var ArrayPrototype = Array.prototype;
     var push$4 = functionUncurryThis(ArrayPrototype.push);
     var join$3 = functionUncurryThis(ArrayPrototype.join);
 
     // `String.cooked` method
     // https://github.com/tc39/proposal-string-cooked
-    _export({ target: 'String', stat: true }, {
+    _export({ target: 'String', stat: true, forced: true }, {
       cooked: function cooked(template /* , ...substitutions */) {
         var arguments$1 = arguments;
 
@@ -13967,7 +13979,7 @@ var doric = (function (exports) {
         var i = 0;
         while (literalSegments > i) {
           var nextVal = cookedTemplate[i++];
-          if (nextVal === undefined) { throw TypeError$5('Incorrect template'); }
+          if (nextVal === undefined) { throw TypeError$4('Incorrect template'); }
           push$4(elements, toString_1(nextVal));
           if (i === literalSegments) { return join$3(elements, ''); }
           if (i < argumentsLength) { push$4(elements, toString_1(arguments$1[i])); }
@@ -13976,7 +13988,7 @@ var doric = (function (exports) {
     });
 
     var codeAt$1 = stringMultibyte.codeAt;
-    var charAt$2 = stringMultibyte.charAt;
+    var charAt$4 = stringMultibyte.charAt;
     var STRING_ITERATOR = 'String Iterator';
     var setInternalState$3 = internalState.set;
     var getInternalState$1 = internalState.getterFor(STRING_ITERATOR);
@@ -13994,14 +14006,14 @@ var doric = (function (exports) {
       var index = state.index;
       var point;
       if (index >= string.length) { return { value: undefined, done: true }; }
-      point = charAt$2(string, index);
+      point = charAt$4(string, index);
       state.index += point.length;
       return { value: { codePoint: codeAt$1(point, 0), position: index }, done: false };
     });
 
     // `String.prototype.codePoints` method
     // https://github.com/tc39/proposal-string-prototype-codepoints
-    _export({ target: 'String', proto: true }, {
+    _export({ target: 'String', proto: true, forced: true }, {
       codePoints: function codePoints() {
         return new $StringIterator(toString_1(requireObjectCoercible(this)));
       }
@@ -14046,7 +14058,6 @@ var doric = (function (exports) {
 
 
 
-
     var aTypedArrayConstructor = arrayBufferViewCore.aTypedArrayConstructor;
     var exportTypedArrayStaticMethod = arrayBufferViewCore.exportTypedArrayStaticMethod;
 
@@ -14063,7 +14074,7 @@ var doric = (function (exports) {
       }).then(function (list) {
         return arrayFromConstructorAndList(aTypedArrayConstructor(C), list);
       });
-    }, typedArrayConstructorsRequireWrappers);
+    }, true);
 
     // TODO: Remove from `core-js@4`
 
@@ -14078,7 +14089,7 @@ var doric = (function (exports) {
     exportTypedArrayMethod$9('filterOut', function filterOut(callbackfn /* , thisArg */) {
       var list = $filterReject$1(aTypedArray$9(this), callbackfn, arguments.length > 1 ? arguments[1] : undefined);
       return typedArrayFromSpeciesAndList(this, list);
-    });
+    }, true);
 
     var $filterReject = arrayIteration.filterReject;
 
@@ -14091,7 +14102,7 @@ var doric = (function (exports) {
     exportTypedArrayMethod$8('filterReject', function filterReject(callbackfn /* , thisArg */) {
       var list = $filterReject(aTypedArray$8(this), callbackfn, arguments.length > 1 ? arguments[1] : undefined);
       return typedArrayFromSpeciesAndList(this, list);
-    });
+    }, true);
 
     var $findLast = arrayIterationFromLast.findLast;
 
@@ -14128,7 +14139,7 @@ var doric = (function (exports) {
     exportTypedArrayMethod$5('groupBy', function groupBy(callbackfn /* , thisArg */) {
       var thisArg = arguments.length > 1 ? arguments[1] : undefined;
       return arrayGroupBy(aTypedArray$5(this), callbackfn, thisArg, typedArraySpeciesConstructor);
-    });
+    }, true);
 
     var aTypedArray$4 = arrayBufferViewCore.aTypedArray;
     var exportTypedArrayMethod$4 = arrayBufferViewCore.exportTypedArrayMethod;
@@ -14138,7 +14149,7 @@ var doric = (function (exports) {
     // https://tc39.es/proposal-change-array-by-copy/#sec-%typedarray%.prototype.toReversed
     exportTypedArrayMethod$4('toReversed', function toReversed() {
       return arrayToReversed(aTypedArray$4(this), this[TYPED_ARRAY_CONSTRUCTOR$3]);
-    });
+    }, true);
 
     var aTypedArray$3 = arrayBufferViewCore.aTypedArray;
     var exportTypedArrayMethod$3 = arrayBufferViewCore.exportTypedArrayMethod;
@@ -14152,7 +14163,7 @@ var doric = (function (exports) {
       var O = aTypedArray$3(this);
       var A = arrayFromConstructorAndList(O[TYPED_ARRAY_CONSTRUCTOR$2], O);
       return sort(A, compareFn);
-    });
+    }, true);
 
     var aTypedArray$2 = arrayBufferViewCore.aTypedArray;
     var exportTypedArrayMethod$2 = arrayBufferViewCore.exportTypedArrayMethod;
@@ -14163,7 +14174,7 @@ var doric = (function (exports) {
     // eslint-disable-next-line no-unused-vars -- required for .length
     exportTypedArrayMethod$2('toSpliced', function toSpliced(start, deleteCount /* , ...items */) {
       return arrayToSpliced(aTypedArray$2(this), this[TYPED_ARRAY_CONSTRUCTOR$1], arraySlice$1(arguments));
-    });
+    }, true);
 
     var aTypedArray$1 = arrayBufferViewCore.aTypedArray;
     var exportTypedArrayMethod$1 = arrayBufferViewCore.exportTypedArrayMethod;
@@ -14173,7 +14184,7 @@ var doric = (function (exports) {
     // https://github.com/tc39/proposal-array-unique
     exportTypedArrayMethod$1('uniqueBy', function uniqueBy(resolver) {
       return typedArrayFromSpeciesAndList(this, arrayUniqueBy(aTypedArray$1(this), resolver));
-    });
+    }, true);
 
     var aTypedArray = arrayBufferViewCore.aTypedArray;
     var exportTypedArrayMethod = arrayBufferViewCore.exportTypedArrayMethod;
@@ -14183,29 +14194,29 @@ var doric = (function (exports) {
     // https://tc39.es/proposal-change-array-by-copy/#sec-%typedarray%.prototype.with
     exportTypedArrayMethod('with', { 'with': function (index, value) {
       return arrayWith(aTypedArray(this), this[TYPED_ARRAY_CONSTRUCTOR], index, value);
-    } }['with']);
+    } }['with'], true);
 
     // `WeakMap.prototype.deleteAll` method
     // https://github.com/tc39/proposal-collection-methods
-    _export({ target: 'WeakMap', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'WeakMap', proto: true, real: true, forced: true }, {
       deleteAll: collectionDeleteAll
     });
 
     // `WeakMap.from` method
     // https://tc39.github.io/proposal-setmap-offrom/#sec-weakmap.from
-    _export({ target: 'WeakMap', stat: true }, {
+    _export({ target: 'WeakMap', stat: true, forced: true }, {
       from: collectionFrom
     });
 
     // `WeakMap.of` method
     // https://tc39.github.io/proposal-setmap-offrom/#sec-weakmap.of
-    _export({ target: 'WeakMap', stat: true }, {
+    _export({ target: 'WeakMap', stat: true, forced: true }, {
       of: collectionOf
     });
 
     // `WeakMap.prototype.emplace` method
     // https://github.com/tc39/proposal-upsert
-    _export({ target: 'WeakMap', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'WeakMap', proto: true, real: true, forced: true }, {
       emplace: mapEmplace
     });
 
@@ -14213,35 +14224,122 @@ var doric = (function (exports) {
 
 
 
-
     // `WeakMap.prototype.upsert` method (replaced by `WeakMap.prototype.emplace`)
     // https://github.com/tc39/proposal-upsert
-    _export({ target: 'WeakMap', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'WeakMap', proto: true, real: true, forced: true }, {
       upsert: mapUpsert
     });
 
     // `WeakSet.prototype.addAll` method
     // https://github.com/tc39/proposal-collection-methods
-    _export({ target: 'WeakSet', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'WeakSet', proto: true, real: true, forced: true }, {
       addAll: collectionAddAll
     });
 
     // `WeakSet.prototype.deleteAll` method
     // https://github.com/tc39/proposal-collection-methods
-    _export({ target: 'WeakSet', proto: true, real: true, forced: isPure }, {
+    _export({ target: 'WeakSet', proto: true, real: true, forced: true }, {
       deleteAll: collectionDeleteAll
     });
 
     // `WeakSet.from` method
     // https://tc39.github.io/proposal-setmap-offrom/#sec-weakset.from
-    _export({ target: 'WeakSet', stat: true }, {
+    _export({ target: 'WeakSet', stat: true, forced: true }, {
       from: collectionFrom
     });
 
     // `WeakSet.of` method
     // https://tc39.github.io/proposal-setmap-offrom/#sec-weakset.of
-    _export({ target: 'WeakSet', stat: true }, {
+    _export({ target: 'WeakSet', stat: true, forced: true }, {
       of: collectionOf
+    });
+
+    var itoc$1 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+    var ctoi$1 = {};
+
+    for (var index = 0; index < 66; index++) { ctoi$1[itoc$1.charAt(index)] = index; }
+
+    var base64Map = {
+      itoc: itoc$1,
+      ctoi: ctoi$1
+    };
+
+    var ctoi = base64Map.ctoi;
+
+    var disallowed = /[^\d+/a-z]/i;
+    var whitespaces = /[\t\n\f\r ]+/g;
+    var finalEq = /[=]+$/;
+
+    var $atob = getBuiltIn('atob');
+    var fromCharCode$1 = String.fromCharCode;
+    var charAt$3 = functionUncurryThis(''.charAt);
+    var replace$3 = functionUncurryThis(''.replace);
+    var exec$2 = functionUncurryThis(disallowed.exec);
+
+    var NO_SPACES_IGNORE = fails(function () {
+      return atob(' ') !== '';
+    });
+
+    var NO_ARG_RECEIVING_CHECK$1 = !NO_SPACES_IGNORE && !fails(function () {
+      $atob();
+    });
+
+    // `atob` method
+    // https://html.spec.whatwg.org/multipage/webappapis.html#dom-atob
+    _export({ global: true, enumerable: true, forced: NO_SPACES_IGNORE || NO_ARG_RECEIVING_CHECK$1 }, {
+      atob: function atob(data) {
+        validateArgumentsLength(arguments.length, 1);
+        if (NO_ARG_RECEIVING_CHECK$1) { return $atob(data); }
+        var string = replace$3(toString_1(data), whitespaces, '');
+        var output = '';
+        var position = 0;
+        var bc = 0;
+        var chr, bs;
+        if (string.length % 4 == 0) {
+          string = replace$3(string, finalEq, '');
+        }
+        if (string.length % 4 == 1 || exec$2(disallowed, string)) {
+          throw new (getBuiltIn('DOMException'))('The string is not correctly encoded', 'InvalidCharacterError');
+        }
+        while (chr = charAt$3(string, position++)) {
+          if (hasOwnProperty_1(ctoi, chr)) {
+            bs = bc % 4 ? bs * 64 + ctoi[chr] : ctoi[chr];
+            if (bc++ % 4) { output += fromCharCode$1(255 & bs >> (-2 * bc & 6)); }
+          }
+        } return output;
+      }
+    });
+
+    var itoc = base64Map.itoc;
+
+    var $btoa = getBuiltIn('btoa');
+    var charAt$2 = functionUncurryThis(''.charAt);
+    var charCodeAt$1 = functionUncurryThis(''.charCodeAt);
+
+    var NO_ARG_RECEIVING_CHECK = !!$btoa && !fails(function () {
+      $btoa();
+    });
+
+    // `btoa` method
+    // https://html.spec.whatwg.org/multipage/webappapis.html#dom-btoa
+    _export({ global: true, enumerable: true, forced: NO_ARG_RECEIVING_CHECK }, {
+      btoa: function btoa(data) {
+        validateArgumentsLength(arguments.length, 1);
+        if (NO_ARG_RECEIVING_CHECK) { return $btoa(data); }
+        var string = toString_1(data);
+        var output = '';
+        var position = 0;
+        var map = itoc;
+        var block, charCode;
+        while (charAt$2(string, position) || (map = '=', position % 1)) {
+          charCode = charCodeAt$1(string, position += 3 / 4);
+          if (charCode > 0xFF) {
+            throw new (getBuiltIn('DOMException'))('The string contains characters outside of the Latin1 range', 'InvalidCharacterError');
+          }
+          block = block << 8 | charCode;
+          output += charAt$2(map, 63 & block >> 8 - position % 1 * 8);
+        } return output;
+      }
     });
 
     // iterable DOM collections
@@ -14584,17 +14682,12 @@ var doric = (function (exports) {
     // https://html.spec.whatwg.org/multipage/timers-and-user-prompts.html#dom-queuemicrotask
     _export({ global: true, enumerable: true, noTargetGet: true }, {
       queueMicrotask: function queueMicrotask(fn) {
+        validateArgumentsLength(arguments.length, 1);
+        aCallable(fn);
         var domain = engineIsNode && process$1.domain;
         microtask(domain ? domain.bind(fn) : fn);
       }
     });
-
-    var TypeError$4 = global_1.TypeError;
-
-    var validateArgumentsLength = function (passed, required) {
-      if (passed < required) { throw TypeError$4('Not enough arguments'); }
-      return passed;
-    };
 
     var Object$1 = global_1.Object;
     var Date$1 = global_1.Date;
@@ -15042,11 +15135,12 @@ var doric = (function (exports) {
 
     var wrap = function (scheduler) {
       return function (handler, timeout /* , ...arguments */) {
-        var boundArgs = arguments.length > 2;
+        var boundArgs = validateArgumentsLength(arguments.length, 1) > 2;
+        var fn = isCallable(handler) ? handler : Function$1(handler);
         var args = boundArgs ? arraySlice$1(arguments, 2) : undefined;
         return scheduler(boundArgs ? function () {
-          functionApply(isCallable(handler) ? handler : Function$1(handler), this, args);
-        } : handler, timeout);
+          functionApply(fn, this, args);
+        } : fn, timeout);
       };
     };
 
@@ -15673,6 +15767,7 @@ var doric = (function (exports) {
 
 
     var codeAt = stringMultibyte.codeAt;
+
 
 
 
@@ -16597,7 +16692,7 @@ var doric = (function (exports) {
     // https://url.spec.whatwg.org/#url-class
     var URLConstructor = function URL(url /* , base */) {
       var that = anInstance(this, URLPrototype);
-      var base = arguments.length > 1 ? arguments[1] : undefined;
+      var base = validateArgumentsLength(arguments.length, 1) > 1 ? arguments[1] : undefined;
       var state = setInternalState(that, new URLState(url, false, base));
       if (!descriptors) {
         that.href = state.serialize();

@@ -754,6 +754,10 @@ class LayoutConfigImpl {
             margin: this.margin,
             alignment: this.alignment ? this.alignment.toModel() : undefined,
             weight: this.weight,
+            minWidth: this.minWidth,
+            maxWidth: this.maxWidth,
+            minHeight: this.minHeight,
+            maxHeight: this.maxHeight
         };
     }
 }

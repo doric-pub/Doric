@@ -79,6 +79,10 @@ export declare class LayoutConfigImpl implements LayoutConfig, Modeling {
         } | undefined;
         alignment: number | undefined;
         weight: number | undefined;
+        minWidth: number | undefined;
+        maxWidth: number | undefined;
+        minHeight: number | undefined;
+        maxHeight: number | undefined;
     };
 }
 export declare function layoutConfig(): LayoutConfigImpl;

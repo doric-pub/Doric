@@ -1553,6 +1553,10 @@ declare module 'doric/lib/src/util/layoutconfig' {
                     } | undefined;
                     alignment: number | undefined;
                     weight: number | undefined;
+                    minWidth: number | undefined;
+                    maxWidth: number | undefined;
+                    minHeight: number | undefined;
+                    maxHeight: number | undefined;
             };
     }
     export function layoutConfig(): LayoutConfigImpl;

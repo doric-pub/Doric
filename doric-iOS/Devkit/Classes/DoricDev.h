@@ -19,7 +19,7 @@
 //
 //  Created by jingpeng.wang on 2020/2/25.
 //
-#import "DoricWSClient.h"
+#import <DoricCore/Doric.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -578,7 +578,9 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
     if (textView.markedTextRange) return;
 
     if (self.maxLength) {
+        UITextRange *range = textView.selectedTextRange;
         textView.text = [self limitToHansMaxLength:self.maxLength.unsignedIntValue text:textView.text];
+        textView.selectedTextRange = range;
     }
     if (self.onTextChange) {
         self.onTextChange(textView.text, self);
@@ -611,7 +613,9 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
 
 - (void)textFieldDidChange:(UITextField *)textField {
     if (self.maxLength) {
+        UITextRange *range = textField.selectedTextRange;
         textField.text = [self limitToHansMaxLength:self.maxLength.unsignedIntValue text:textField.text];
+        textField.selectedTextRange = range;
     }
     if (self.onTextChange) {
         self.onTextChange(textField.text, self);

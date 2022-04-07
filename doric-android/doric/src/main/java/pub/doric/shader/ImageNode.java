@@ -249,7 +249,7 @@ public class ImageNode extends ViewNode<ImageView> {
         }
     }
 
-    private void loadImageUrl(String url) {
+    protected void loadImageUrl(String url) {
         Context context = DoricUtils.unwrap(getContext());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             if (context instanceof Activity && ((Activity) context).isDestroyed()) {
@@ -262,7 +262,7 @@ public class ImageNode extends ViewNode<ImageView> {
     }
 
 
-    private void loadIntoTarget(RequestBuilder<Drawable> requestBuilder) {
+    protected void loadIntoTarget(RequestBuilder<Drawable> requestBuilder) {
         try {
             requestBuilder = requestBuilder.apply(new RequestOptions().override(Target.SIZE_ORIGINAL));
             if (isBlur) {

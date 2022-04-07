@@ -74,7 +74,7 @@ import pub.doric.utils.DoricUtils;
  */
 public abstract class ViewNode<T extends View> extends DoricContextHolder {
     protected T mView;
-    SuperNode<?> mSuperNode;
+    protected SuperNode<?> mSuperNode;
     String mId;
     protected ViewGroup.LayoutParams mLayoutParams;
     private String mType;

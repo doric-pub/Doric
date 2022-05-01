@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) id <DoricDriverProtocol> driver;
 @property(nonatomic, strong) NSMutableDictionary *pluginInstanceMap;
 @property(nonatomic, strong) NSString *source;
-@property(nonatomic, strong) NSString *script;;
+@property(nonatomic, strong) NSString *script;
 @property(nonatomic, strong) NSMutableDictionary *initialParams;
 @property(nonatomic, strong) DoricRootNode *rootNode;
 @property(nonatomic, strong) NSMutableDictionary <NSString *, NSMutableDictionary <NSString *, DoricViewNode *> *> *headNodes;

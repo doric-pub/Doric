@@ -42,6 +42,8 @@ public class DoricPanel extends FrameLayout implements LifecycleObserver {
     private int renderedWidth = -1;
     private int renderedHeight = -1;
 
+    private LifecycleOwner lifecycleOwner = null;
+
     public DoricPanel(@NonNull Context context) {
         this(context, null);
     }
@@ -53,15 +55,22 @@ public class DoricPanel extends FrameLayout implements LifecycleObserver {
     public DoricPanel(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         if (getContext() instanceof LifecycleOwner) {
-            ((LifecycleOwner) getContext()).getLifecycle().addObserver(this);
+            setLifecycleOwner((LifecycleOwner) getContext());
         }
     }
 
+    public void setLifecycleOwner(LifecycleOwner owner) {
+        if (this.lifecycleOwner != null) {
+            this.lifecycleOwner.getLifecycle().removeObserver(this);
+        }
+        this.lifecycleOwner = owner;
+        this.lifecycleOwner.getLifecycle().addObserver(this);
+    }
 
     public void config(String script, String alias, String extra) {
         DoricContext doricContext = DoricContext.create(getContext(), script, alias, extra);
         config(doricContext);
-        if (getContext() instanceof LifecycleOwner && ((LifecycleOwner) getContext()).getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+        if (lifecycleOwner != null && lifecycleOwner.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
             doricContext.onShow();
         }
     }

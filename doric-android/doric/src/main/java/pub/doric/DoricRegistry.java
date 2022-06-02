@@ -248,4 +248,12 @@ public class DoricRegistry {
     public DoricResourceManager getResourceManager() {
         return doricResourceManager;
     }
+
+    public Set<String> allPlugins() {
+        return pluginInfoMap.keySet();
+    }
+
+    public Set<String> allViewNodes() {
+        return nodeInfoMap.keySet();
+    }
 }

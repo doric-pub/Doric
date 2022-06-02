@@ -56,6 +56,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)register:(DoricLibrary *)library;
 
+-(NSArray <NSString *>*)allPlugins;
+
+-(NSArray <NSString *>*)allViewNodes;
 @end
 
 NS_ASSUME_NONNULL_END

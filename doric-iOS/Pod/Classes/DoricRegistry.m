@@ -198,4 +198,12 @@
         [monitor onLog:type message:message];
     }
 }
+
+- (NSArray <NSString *> *)allPlugins {
+    return self.plugins.allKeys;
+}
+
+- (NSArray <NSString *> *)allViewNodes {
+    return self.nodes.allKeys;
+}
 @end

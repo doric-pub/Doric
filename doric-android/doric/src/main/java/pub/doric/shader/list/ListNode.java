@@ -168,7 +168,8 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
     @Override
     public void blend(JSObject jsObject) {
         super.blend(jsObject);
-        if (jsObject.propertySet().size() > 1 || !jsObject.propertySet().contains("subviews")) {
+        int limit = jsObject.propertySet().contains("loadMoreView") ? 2 : 1;
+        if (jsObject.propertySet().size() > limit || !jsObject.propertySet().contains("subviews")) {
             if (mView != null) {
                 mView.post(new Runnable() {
                     @SuppressLint("NotifyDataSetChanged")

@@ -92,6 +92,7 @@
 @implementation DoricImageNode
 
 - (UIImageView *)build {
+    self.scaleType = 2;
     self.imageScale = UIScreen.mainScreen.scale;
     return [[DoricImageView new] also:^(UIImageView *it) {
         it.clipsToBounds = YES;
@@ -125,9 +126,15 @@
         self.loadCallbackId = it;
     }];
     [super blend:props];
+    if(self.scaleType == 2 && self.view.contentMode != UIViewContentModeScaleAspectFill) {
+        self.view.contentMode = UIViewContentModeScaleAspectFill;
+    }
 }
 
 - (UIImage *)currentPlaceHolderImage {
+    if (self.view.image) {
+        return self.view.image;
+    }
     if (self.placeHolderImage) {
         return [UIImage imageNamed:self.placeHolderImage];
     }
@@ -156,7 +163,7 @@
         UIColor *color = DoricColor(self.placeHolderColor);
         CGRect rect = CGRectMake(0, 0, 1, 1);
         self.view.contentMode = UIViewContentModeScaleToFill;
-
+        self.scaleType = 0;
         if (@available(iOS 10.0, *)) {
             UIGraphicsImageRendererFormat *format = [[UIGraphicsImageRendererFormat alloc] init];
             format.scale = [UIScreen mainScreen].scale;
@@ -212,7 +219,7 @@
         UIColor *color = DoricColor(self.errorColor);
         CGRect rect = CGRectMake(0, 0, 1, 1);
         self.view.contentMode = UIViewContentModeScaleToFill;
-
+        self.scaleType = 0;
         if (@available(iOS 10.0, *)) {
             UIGraphicsImageRendererFormat *format = [[UIGraphicsImageRendererFormat alloc] init];
             format.scale = [UIScreen mainScreen].scale;
@@ -236,7 +243,36 @@
             return image;
         }
     }
-    return self.doricContext.driver.registry.defaultErrorImage;
+    UIImage *image = self.doricContext.driver.registry.defaultErrorImage;
+    if (!image) {
+        UIColor *color = UIColor.clearColor;
+        CGRect rect = CGRectMake(0, 0, 1, 1);
+        self.view.contentMode = UIViewContentModeScaleToFill;
+        self.scaleType = 0;
+        if (@available(iOS 10.0, *)) {
+            UIGraphicsImageRendererFormat *format = [[UIGraphicsImageRendererFormat alloc] init];
+            format.scale = [UIScreen mainScreen].scale;
+            UIGraphicsImageRenderer *render = [[UIGraphicsImageRenderer alloc] initWithSize:rect.size format:format];
+            UIImage *image = [render imageWithActions:^(UIGraphicsImageRendererContext *_Nonnull rendererContext) {
+                CGContextRef context = rendererContext.CGContext;
+
+                CGContextSetFillColorWithColor(context, color.CGColor);
+                CGContextFillRect(context, rect);
+            }];
+            return image;
+        } else {
+            UIGraphicsBeginImageContextWithOptions(rect.size, NO, [UIScreen mainScreen].scale);
+
+            CGContextRef context = UIGraphicsGetCurrentContext();
+            CGContextSetFillColorWithColor(context, color.CGColor);
+            CGContextFillRect(context, rect);
+
+            UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
+            return image;
+        }
+    }
+    return image;
 }
 
 - (void)blendView:(UIImageView *)view forPropName:(NSString *)name propValue:(id)prop {
@@ -287,6 +323,7 @@
         }];
         [asyncResult setExceptionCallback:^(NSException *e) {
             DoricLog(@"Cannot load resource %@, %@", prop, e.reason);
+            self.view.image = nil;
         }];
     } else if ([@"imageUrl" isEqualToString:name]) {
         __weak typeof(self) _self = self;
@@ -373,8 +410,8 @@
                                    [self.superNode subNodeContentChanged:self];
                                }
                            }
-            [self resizingImageIfNeeded];
-        }];
+                           [self resizingImageIfNeeded];
+                       }];
 #else
         DoricLog(@"Do not support load image url");
 #endif
@@ -712,7 +749,7 @@
 
 - (void)reset {
     [super reset];
-    self.view.image = nil;
+    self.scaleType = 2;
     self.loadCallbackId = nil;
     self.placeHolderColor = nil;
     self.placeHolderImage = nil;
@@ -722,7 +759,6 @@
     self.errorImageBase64 = nil;
     self.imageScale = UIScreen.mainScreen.scale;
     self.blurEffectView = nil;
-    self.view.contentMode = UIViewContentModeScaleAspectFill;
     if (self.animationEndCallbackId) {
 #if DORIC_USE_YYWEBIMAGE
         [(DoricImageView *) self.view removeObserver:self forKeyPath:@"currentIsPlayingAnimation" context:nil];

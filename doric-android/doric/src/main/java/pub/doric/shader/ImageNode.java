@@ -94,7 +94,7 @@ public class ImageNode extends ViewNode<ImageView> {
     private JSObject stretchInset = null;
     private float imageScale = DoricUtils.getScreenScale();
     private Animatable2Compat.AnimationCallback animationCallback = null;
-    private int scaleType = 0;
+    private int scaleType = 2;
 
     public ImageNode(DoricContext doricContext) {
         super(doricContext);
@@ -170,9 +170,11 @@ public class ImageNode extends ViewNode<ImageView> {
             if (loadCallback.isString()) {
                 this.loadCallbackId = loadCallback.asString().value();
             }
-
         }
         super.blend(jsObject);
+        if (scaleType == 2 && mView.getScaleType() != ImageView.ScaleType.CENTER_CROP) {
+            mView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        }
     }
 
     private Drawable getPlaceHolderDrawable() {
@@ -292,16 +294,20 @@ public class ImageNode extends ViewNode<ImageView> {
                                     }
                                 }));
             }
-            Drawable placeHolderDrawable = getPlaceHolderDrawable();
-
+            Drawable placeHolderDrawable = null;
+            if (mView.getDrawable() != null) {
+                placeHolderDrawable = mView.getDrawable();
+            } else {
+                placeHolderDrawable = getPlaceHolderDrawable();
+            }
             if (placeHolderDrawable != null) {
                 requestBuilder = requestBuilder.apply(RequestOptions.placeholderOf(placeHolderDrawable));
             }
-
             Drawable errorDrawable = getErrorDrawable();
-            if (errorDrawable != null) {
-                requestBuilder = requestBuilder.apply(RequestOptions.errorOf(errorDrawable));
+            if (errorDrawable == null) {
+                errorDrawable = new ColorDrawable(Color.TRANSPARENT);
             }
+            requestBuilder = requestBuilder.apply(RequestOptions.errorOf(errorDrawable));
         } catch (Throwable e) {
             e.printStackTrace();
             DoricLog.e("ImageNode blend error, please check the glide version");
@@ -361,8 +367,8 @@ public class ImageNode extends ViewNode<ImageView> {
                     }
 
                     if (scaleType == 3) { // image tile
-                        BitmapDrawable drawable = new BitmapDrawable(getContext().getResources(),bitmap);
-                        drawable.setTileModeXY(Shader.TileMode.REPEAT , Shader.TileMode.REPEAT);
+                        BitmapDrawable drawable = new BitmapDrawable(getContext().getResources(), bitmap);
+                        drawable.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
                         drawable.setDither(true);
                         super.setResource(drawable);
                     } else if (stretchInset != null) {
@@ -424,6 +430,7 @@ public class ImageNode extends ViewNode<ImageView> {
                         public void onError(Throwable t) {
                             t.printStackTrace();
                             DoricLog.e("Cannot load resource %s,  %s", resource.toString(), t.getLocalizedMessage());
+                            view.setImageDrawable(null);
                         }
 
                         @Override
@@ -445,7 +452,7 @@ public class ImageNode extends ViewNode<ImageView> {
                 if (!prop.isNumber()) {
                     return;
                 }
-                scaleType =  prop.asNumber().toInt();
+                scaleType = prop.asNumber().toInt();
                 switch (scaleType) {
                     case 1:
                         view.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -575,8 +582,7 @@ public class ImageNode extends ViewNode<ImageView> {
     @Override
     protected void reset() {
         super.reset();
-        mView.setImageDrawable(null);
-        mView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        scaleType = 2;
         loadCallbackId = "";
         isBlur = false;
         placeHolderImage = null;

@@ -24,6 +24,7 @@ import com.github.pengfeizhou.jscore.JSValue;
 import pub.doric.DoricContext;
 import pub.doric.extension.bridge.DoricPlugin;
 import pub.doric.shader.StackNode;
+import pub.doric.shader.SuperNode;
 
 /**
  * @Description: com.github.penfeizhou.doric.widget
@@ -36,7 +37,12 @@ public class SlideItemNode extends StackNode {
 
     public SlideItemNode(DoricContext doricContext) {
         super(doricContext);
-        this.mReusable = true;
+    }
+
+    @Override
+    public void init(SuperNode<?> superNode) {
+        super.init(superNode);
+        mReusable = true;
     }
 
     @Override

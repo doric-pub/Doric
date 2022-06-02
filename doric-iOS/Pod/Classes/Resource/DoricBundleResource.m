@@ -25,7 +25,13 @@
     NSString *path = [self.bundle bundlePath];
     NSString *fullPath = [path stringByAppendingPathComponent:self.identifier];
     NSData *imgData = [[NSData alloc] initWithContentsOfFile:fullPath];
-    [result setupResult:imgData];
+    if (imgData) {
+        [result setupResult:imgData];
+    } else {
+        [result setupError:[NSException exceptionWithName:@"ResourceLoadError"
+                                                   reason:@"Load resource error"
+                                                 userInfo:nil]];
+    }
     return result;
 }
 @end

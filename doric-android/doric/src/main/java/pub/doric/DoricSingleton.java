@@ -33,8 +33,8 @@ import pub.doric.loader.DoricJSLoaderManager;
 public class DoricSingleton {
 
     final Map<String, String> bundles = new ConcurrentHashMap<>();
-    final Set<DoricLibrary> doricLibraries = new HashSet<>();
-    final List<WeakReference<DoricRegistry>> registries = new ArrayList<>();
+    public final Set<DoricLibrary> libraries = new HashSet<>();
+    public final List<WeakReference<DoricRegistry>> registries = new ArrayList<>();
     final Map<String, Object> envMap = new ConcurrentHashMap<>();
 
     private final DoricJSLoaderManager jsLoaderManager = new DoricJSLoaderManager();
@@ -58,7 +58,7 @@ public class DoricSingleton {
 
 
     public void registerLibrary(DoricLibrary doricLibrary) {
-        doricLibraries.add(doricLibrary);
+        libraries.add(doricLibrary);
         for (WeakReference<DoricRegistry> registryWeakReference : registries) {
             DoricRegistry registry = registryWeakReference.get();
             if (registry != null) {

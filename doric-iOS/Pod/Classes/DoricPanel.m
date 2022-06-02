@@ -23,6 +23,7 @@
 @interface DoricPanel ()
 @property(nonatomic, assign) CGFloat renderedWidth;
 @property(nonatomic, assign) CGFloat renderedHeight;
+@property(nonatomic, assign) BOOL isShow;
 @end
 
 @implementation DoricPanel
@@ -47,9 +48,6 @@
             [self.view addSubview:it];
         }]];
     }];
-    if (self.parentViewController != nil) {
-        [self.doricContext onShow];
-    }
 }
 
 - (void)viewWillLayoutSubviews {
@@ -58,17 +56,27 @@
         self.renderedWidth = self.view.width;
         self.renderedHeight = self.view.height;
         [self.doricContext build:CGSizeMake(self.renderedWidth, self.renderedHeight)];
+        if (!self.isShow) {
+            self.isShow = YES;
+            [self.doricContext onShow];
+        }
     }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self.doricContext onShow];
+    if (self.doricContext && !self.isShow) {
+        self.isShow = YES;
+        [self.doricContext onShow];
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    [self.doricContext onHidden];
+    if (self.isShow) {
+        self.isShow = NO;
+        [self.doricContext onHidden];
+    }
 }
 
 @end

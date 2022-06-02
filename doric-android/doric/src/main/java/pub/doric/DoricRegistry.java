@@ -93,7 +93,7 @@ public class DoricRegistry {
 
 
     private void initRegistry(DoricRegistry doricRegistry) {
-        for (DoricLibrary library : DoricSingleton.getInstance().doricLibraries) {
+        for (DoricLibrary library : DoricSingleton.getInstance().libraries) {
             library.load(doricRegistry);
         }
     }

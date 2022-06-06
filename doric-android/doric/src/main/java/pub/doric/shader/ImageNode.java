@@ -297,6 +297,11 @@ public class ImageNode extends ViewNode<ImageView> {
             Drawable placeHolderDrawable = null;
             if (mView.getDrawable() != null) {
                 placeHolderDrawable = mView.getDrawable();
+                if (placeHolderDrawable instanceof BitmapDrawable) {
+                    Bitmap bitmap = ((BitmapDrawable) placeHolderDrawable).getBitmap();
+                    Bitmap newBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, false);
+                    placeHolderDrawable = new BitmapDrawable(newBitmap);
+                }
             } else {
                 placeHolderDrawable = getPlaceHolderDrawable();
             }

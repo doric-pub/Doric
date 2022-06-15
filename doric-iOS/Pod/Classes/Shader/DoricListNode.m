@@ -125,16 +125,16 @@
     } else if ([@"onScrollEnd" isEqualToString:name]) {
         self.onScrollEndFuncId = prop;
     } else if ([@"scrolledPosition" isEqualToString:name]) {
-        NSUInteger position = [prop unsignedIntegerValue];
-        NSUInteger count = [self tableView:view numberOfRowsInSection:0];
-        if (position < count) {
-            dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSUInteger position = [prop unsignedIntegerValue];
+            NSUInteger count = [self tableView:view numberOfRowsInSection:0];
+            if (position < count) {
                 [view scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:position inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
-            });
-        } else {
-            [self.doricContext.driver.registry onLog:DoricLogTypeError
-                                             message:[NSString stringWithFormat:@"scrolledPosition Error:%@", @"scrolledPosition range error"]];
-        }
+            } else {
+                [self.doricContext.driver.registry onLog:DoricLogTypeError
+                                                 message:[NSString stringWithFormat:@"scrolledPosition Error:%@", @"scrolledPosition range error"]];
+            }
+        });
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }

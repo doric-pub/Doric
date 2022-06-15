@@ -125,9 +125,16 @@
     } else if ([@"onScrollEnd" isEqualToString:name]) {
         self.onScrollEndFuncId = prop;
     } else if ([@"scrolledPosition" isEqualToString:name]) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [view scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[prop unsignedIntegerValue] inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
-        });
+        NSUInteger position = [prop unsignedIntegerValue];
+        NSUInteger count = [self tableView:view numberOfRowsInSection:0];
+        if (position < count) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [view scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:position inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+            });
+        } else {
+            [self.doricContext.driver.registry onLog:DoricLogTypeError
+                                             message:[NSString stringWithFormat:@"scrolledPosition Error:%@", @"scrolledPosition range error"]];
+        }
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }
@@ -309,13 +316,14 @@
                         [self.view reloadData];
                         return;
                     }
-                    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[key integerValue] inSection:0];
-                    @try {
+                    [self safeUpdateTableView:^{
+                        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[key integerValue] inSection:0];
                         [self.view reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-                    }
-                    @catch (id exception) {
-                        [self.doricContext.driver.registry onException:exception inContext:self.doricContext];
-                    }
+                    } complete:^(NSException *exception) {
+                        if (exception) {
+                            [self.doricContext.driver.registry onException:exception inContext:self.doricContext];
+                        }
+                    }];
                 }];
             }
         }];
@@ -345,13 +353,14 @@
                     [self.view reloadData];
                     return;
                 }
-                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:position inSection:0];
-                @try {
+                [self safeUpdateTableView:^{
+                    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:position inSection:0];
                     [self.view reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-                }
-                @catch (id exception) {
-                    [self.doricContext.driver.registry onException:exception inContext:self.doricContext];
-                }
+                } complete:^(NSException *exception) {
+                    if (exception) {
+                        [self.doricContext.driver.registry onException:exception inContext:self.doricContext];
+                    }
+                }];
             }];
         });
     } else {
@@ -365,6 +374,51 @@
             }
             [self.view reloadData];
         });
+    }
+}
+
+- (void)safeUpdateTableView:(void(^)(void))block complete:(void(^)(NSException *))complete {
+    if ([NSThread isMainThread]) {
+        [self realUpdateTableView:block complete:complete];
+    } else {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self realUpdateTableView:block complete:complete];
+        });
+    }
+}
+
+- (void)realUpdateTableView:(void(^)(void))block complete:(void(^)(NSException *))complete {
+    if (@available(iOS 11.0, *)) {
+        @try {
+            [self.view performBatchUpdates:^{
+                if (block) {
+                    block();
+                }
+            } completion:^(BOOL finished) {
+                if (complete) {
+                    complete(nil);
+                }
+            }];
+        } @catch (NSException *exception) {
+            if (complete) {
+                complete(exception);
+            }
+        }
+    } else {
+        @try {
+            [self.view beginUpdates];
+            if (block) {
+                block();
+            }
+            [self.view endUpdates];
+            if (complete) {
+                complete(nil);
+            }
+        } @catch (NSException *exception) {
+            if (complete) {
+                complete(exception);
+            }
+        }
     }
 }
 

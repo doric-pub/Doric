@@ -67,12 +67,22 @@ public class DoricPerformanceProfile {
         return this.name;
     }
 
-    public void addAnchorHook(AnchorHook hook) {
-        this.hooks.add(hook);
+    public void addAnchorHook(final AnchorHook hook) {
+        performanceHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                hooks.add(hook);
+            }
+        });
     }
 
-    public void removeAnchorHook(AnchorHook hook) {
-        this.hooks.remove(hook);
+    public void removeAnchorHook(final AnchorHook hook) {
+        performanceHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                hooks.remove(hook);
+            }
+        });
     }
 
     public void enable(boolean enable) {

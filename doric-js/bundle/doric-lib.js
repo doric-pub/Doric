@@ -1953,6 +1953,18 @@ __decorate$a([
     Property,
     __metadata$a("design:type", Boolean)
 ], List.prototype, "bounces", void 0);
+__decorate$a([
+    Property,
+    __metadata$a("design:type", Boolean)
+], List.prototype, "canDrag", void 0);
+__decorate$a([
+    Property,
+    __metadata$a("design:type", Function)
+], List.prototype, "onDragging", void 0);
+__decorate$a([
+    Property,
+    __metadata$a("design:type", Function)
+], List.prototype, "onDragged", void 0);
 function list(config) {
     const ret = new List;
     ret.apply(config);

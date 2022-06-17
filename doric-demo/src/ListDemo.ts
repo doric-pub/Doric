@@ -65,6 +65,13 @@ class ListVH extends ViewHolder {
 class ListVM extends ViewModel<ListModel, ListVH> {
     onAttached(state: ListModel, vh: ListVH) {
         vh.list.apply({
+            canDrag: true,
+            onDragging: (from, to) => {
+                log(`onDragging, from: ${from}, to: ${to}`)
+            },
+            onDragged: (from, to) => {
+                log(`onDragged, from: ${from}, to: ${to}`)
+            },
             renderItem: (index) => {
                 const data = state.data[index]
                 return listItem(stack([

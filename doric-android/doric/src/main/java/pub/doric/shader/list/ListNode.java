@@ -23,6 +23,8 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -75,6 +77,38 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
     }
 
     private boolean scrollable = true;
+
+    private final DoricItemTouchHelperCallback doricItemTouchHelperCallback = new DoricItemTouchHelperCallback(
+            new OnItemTouchCallbackListener() {
+                @Override
+                public void onSwiped(int adapterPosition) {
+
+                }
+
+                @Override
+                public boolean onMove(int srcPosition, int targetPosition) {
+                    String srcValue = itemValues.valueAt(srcPosition);
+                    String targetValue = itemValues.valueAt(targetPosition);
+                    itemValues.setValueAt(srcPosition, targetValue);
+                    itemValues.setValueAt(targetPosition, srcValue);
+                    listAdapter.notifyItemMoved(srcPosition, targetPosition);
+                    if (!TextUtils.isEmpty(onDraggingFuncId)) {
+                        callJSResponse(onDraggingFuncId, srcPosition, targetPosition);
+                    }
+                    return true;
+                }
+
+                @Override
+                public void onMoved(int fromPos, int toPos) {
+                    if (!TextUtils.isEmpty(onDraggedFuncId)) {
+                        callJSResponse(onDraggedFuncId, fromPos, toPos);
+                    }
+                }
+            }
+    );
+
+    private String onDraggingFuncId;
+    private String onDraggedFuncId;
 
     @Override
     protected void blendSubNode(JSObject subProperties) {
@@ -162,6 +196,11 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
                 return gestureDetector.onTouchEvent(e);
             }
         });
+
+        DoricItemTouchHelper doricItemTouchHelper = new DoricItemTouchHelper(doricItemTouchHelperCallback);
+
+        doricItemTouchHelper.attachToRecyclerView(recyclerView);
+
         return recyclerView;
     }
 
@@ -248,6 +287,25 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
                         moveToPosition(prop.asNumber().toInt(), false);
                     }
                 });
+                break;
+            case "canDrag":
+                if (!prop.isBoolean()) {
+                    return;
+                }
+                boolean canDrag = prop.asBoolean().value();
+                doricItemTouchHelperCallback.setDragEnable(canDrag);
+                break;
+            case "onDragging":
+                if (!prop.isString()) {
+                    return;
+                }
+                this.onDraggingFuncId = prop.asString().value();
+                break;
+            case "onDragged":
+                if (!prop.isString()) {
+                    return;
+                }
+                this.onDraggedFuncId = prop.asString().value();
                 break;
             default:
                 super.blend(view, name, prop);
@@ -362,5 +420,120 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
         onScrollFuncId = null;
         onScrollEndFuncId = null;
         renderItemFuncId = null;
+        onDraggedFuncId = null;
+        onDraggingFuncId = null;
     }
+
+    private static class DoricItemTouchHelper extends ItemTouchHelper {
+
+        /**
+         * Creates an ItemTouchHelper that will work with the given Callback.
+         * <p>
+         * You can attach ItemTouchHelper to a RecyclerView via
+         * {@link #attachToRecyclerView(RecyclerView)}. Upon attaching, it will add an item decoration,
+         * an onItemTouchListener and a Child attach / detach listener to the RecyclerView.
+         *
+         * @param callback The Callback which controls the behavior of this touch helper.
+         */
+        public DoricItemTouchHelper(@NonNull Callback callback) {
+            super(callback);
+        }
+    }
+
+    private static class DoricItemTouchHelperCallback extends ItemTouchHelper.Callback {
+
+        private OnItemTouchCallbackListener onItemTouchCallbackListener;
+
+        private boolean isCanDrag = false;
+        private boolean isCanSwipe = false;
+
+        private int fromPos;
+        private int toPos;
+
+        public DoricItemTouchHelperCallback(OnItemTouchCallbackListener onItemTouchCallbackListener) {
+            this.onItemTouchCallbackListener = onItemTouchCallbackListener;
+        }
+
+        public void setOnItemTouchCallbackListener(OnItemTouchCallbackListener onItemTouchCallbackListener) {
+            this.onItemTouchCallbackListener = onItemTouchCallbackListener;
+        }
+
+        public void setDragEnable(boolean canDrag) {
+            isCanDrag = canDrag;
+        }
+
+        public void setSwipeEnable(boolean canSwipe) {
+            isCanSwipe = canSwipe;
+        }
+
+        @Override
+        public boolean isLongPressDragEnabled() {
+            return isCanDrag;
+        }
+
+        @Override
+
+        public boolean isItemViewSwipeEnabled() {
+            return isCanSwipe;
+        }
+
+        @Override
+        public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+            RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+            if (layoutManager instanceof LinearLayoutManager) {
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
+                int orientation = linearLayoutManager.getOrientation();
+                int dragFlag = 0;
+                int swipeFlag = 0;
+                if (orientation == LinearLayoutManager.VERTICAL) {
+                    dragFlag = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+                    swipeFlag = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
+                }
+                return makeMovementFlags(dragFlag, swipeFlag);
+            }
+            return 0;
+        }
+
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            if (onItemTouchCallbackListener != null) {
+                return onItemTouchCallbackListener.onMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+            }
+            return false;
+        }
+
+        @Override
+        public void onSelectedChanged(@Nullable RecyclerView.ViewHolder viewHolder, int actionState) {
+            super.onSelectedChanged(viewHolder, actionState);
+            if (viewHolder != null) {
+                fromPos = viewHolder.getAdapterPosition();
+            }
+        }
+
+        @Override
+        public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+            super.clearView(recyclerView, viewHolder);
+            toPos = viewHolder.getAdapterPosition();
+
+            if (onItemTouchCallbackListener != null) {
+                onItemTouchCallbackListener.onMoved(fromPos, toPos);
+            }
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            if (onItemTouchCallbackListener != null) {
+                onItemTouchCallbackListener.onSwiped(viewHolder.getAdapterPosition());
+            }
+        }
+    }
+
+    private interface OnItemTouchCallbackListener {
+        void onSwiped(int adapterPosition);
+
+        boolean onMove(int srcPosition, int targetPosition);
+
+        void onMoved(int fromPos, int toPos);
+    }
+
 }

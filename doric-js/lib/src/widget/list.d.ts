@@ -36,6 +36,9 @@ export declare class List extends Superview {
      * Take effect only on iOS
      */
     bounces?: boolean;
+    canDrag?: boolean;
+    onDragging?: (from: number, to: number) => void;
+    onDragged?: (from: number, to: number) => void;
     scrollToItem(context: BridgeContext, index: number, config?: {
         animated?: boolean;
     }): Promise<any>;

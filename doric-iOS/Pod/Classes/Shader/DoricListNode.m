@@ -59,6 +59,12 @@
 @property(nonatomic, copy) NSString *onScrollFuncId;
 @property(nonatomic, copy) NSString *onScrollEndFuncId;
 @property(nonatomic, strong) DoricJSDispatcher *jsDispatcher;
+
+@property(nonatomic, strong) UILongPressGestureRecognizer *longPress;
+@property(nonatomic, strong) NSIndexPath *initialDragIndexPath;
+@property(nonatomic, strong) NSIndexPath *currentDragIndexPath;
+@property(nonatomic, copy) NSString *onDraggingFuncId;
+@property(nonatomic, copy) NSString *onDraggedFuncId;
 @end
 
 @implementation DoricListNode
@@ -91,7 +97,38 @@
         if (@available(iOS 11, *)) {
             it.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }
+        self.longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressAction:)];
+        [it addGestureRecognizer:self.longPress];
+        [self.longPress setEnabled:NO];
     }];
+}
+
+-(void)longPressAction:(UILongPressGestureRecognizer *)sender{
+    CGPoint locationInView = [sender locationInView:self.view];
+    NSIndexPath *indexPath = [self.view indexPathForRowAtPoint:locationInView];
+    if (sender.state == UIGestureRecognizerStateBegan) {
+        if (indexPath != nil) {
+            self.initialDragIndexPath = indexPath;
+            self.currentDragIndexPath = indexPath;
+        }
+    } else if (sender.state == UIGestureRecognizerStateChanged) {
+        if ((indexPath != nil) && (indexPath != self.currentDragIndexPath)) {
+            NSString *fromValue = self.itemViewIds[@(self.currentDragIndexPath.row)];
+            NSString *toValue = self.itemViewIds[@(indexPath.row)];
+            self.itemViewIds[@(self.currentDragIndexPath.row)] = toValue;
+            self.itemViewIds[@(indexPath.row)] = fromValue;
+            
+            [self.view moveRowAtIndexPath:self.currentDragIndexPath toIndexPath:indexPath];
+            if (self.onDraggingFuncId != nil) {
+                [self callJSResponse:self.onDraggingFuncId, @(self.currentDragIndexPath.row), @(indexPath.row), nil];
+            }
+            self.currentDragIndexPath = indexPath;
+        }
+    } else if (sender.state == UIGestureRecognizerStateEnded) {
+        if (self.onDraggedFuncId != nil) {
+            [self callJSResponse:self.onDraggedFuncId, @(self.initialDragIndexPath.row), @(self.currentDragIndexPath.row), nil];
+        }
+    }
 }
 
 - (void)blendView:(UITableView *)view forPropName:(NSString *)name propValue:(id)prop {
@@ -128,6 +165,13 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [view scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[prop unsignedIntegerValue] inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
         });
+    } else if ([@"canDrag" isEqualToString:name]) {
+        bool canDrag = [prop boolValue];
+        [self.longPress setEnabled:canDrag];
+    } else if ([@"onDragging" isEqualToString:name]) {
+        self.onDraggingFuncId = prop;
+    } else if ([@"onDragged" isEqualToString:name]) {
+        self.onDraggedFuncId = prop;
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }
@@ -485,6 +529,8 @@
     self.loadMoreViewId = nil;
     self.onScrollFuncId = nil;
     self.onScrollEndFuncId = nil;
+    self.onDraggingFuncId = nil;
+    self.onDraggedFuncId = nil;
     self.loadMore = NO;
 }
 

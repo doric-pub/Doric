@@ -767,6 +767,12 @@
 #endif
         self.animationEndCallbackId = nil;
     }
+    
+#if DORIC_USE_YYWEBIMAGE
+    [self.view yy_cancelCurrentImageRequest];
+#elif DORIC_USE_SDWEBIMAGE
+    [self.view sd_cancelCurrentImageLoad];
+#endif
 }
 
 - (BOOL)needReload {

@@ -173,7 +173,8 @@ public class SliderNode extends SuperNode<RecyclerView> {
                             mView.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mView.scrollToPosition(1);
+                                    int position = slideAdapter.loop ? 1 : 0;
+                                    mView.scrollToPosition(position);
                                 }
                             });
                         }

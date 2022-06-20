@@ -37,11 +37,12 @@
 @property(nonatomic, assign) NSUInteger propItemCount;
 @property(nonatomic, assign) NSUInteger batchCount;
 @property(nonatomic, copy) NSString *onPageSelectedFuncId;
-@property(nonatomic) BOOL loop;
-@property(nonatomic) BOOL propLoop;
+@property(nonatomic, assign) BOOL loop;
+@property(nonatomic, assign) BOOL propLoop;
 @property(nonatomic, assign) NSUInteger lastPosition;
 @property(nonatomic, copy) NSString *renderPageFuncId;
 @property(nonatomic, copy) NSString *propRenderPageFuncId;
+@property(nonatomic, assign) BOOL needResetScroll;
 @end
 
 @interface DoricSliderView : UICollectionView
@@ -101,7 +102,8 @@
 - (void)afterBlended:(NSDictionary *)props {
     bool needToScroll = (self.propLoop && !self.loop)
             || (![self.renderPageFuncId isEqualToString:self.propRenderPageFuncId])
-            || (self.itemCount == 0 && self.propItemCount > 0);
+            || (self.itemCount == 0 && self.propItemCount > 0)
+            || self.needResetScroll;
 
     // handle item count
     if (self.itemCount != self.propItemCount) {
@@ -121,6 +123,7 @@
 
     // handle loop
     self.loop = self.propLoop;
+    
 
     __weak typeof(self) _self = self;
     if (needToScroll) {
@@ -128,7 +131,14 @@
             __strong typeof(_self) self = _self;
 
             [self.view reloadData];
-            [self.view setContentOffset:CGPointMake(1 * self.view.width, self.view.contentOffset.y) animated:false];
+            
+            int position = self.loop ? 1 : 0;
+            if (self.view.width == 0) {
+                self.needResetScroll = true;
+            } else {
+                self.needResetScroll = false;
+                [self.view setContentOffset:CGPointMake(position * self.view.width, self.view.contentOffset.y) animated:false];
+            }
         });
     }
 }

@@ -12,7 +12,6 @@
     <img alt="Actions" src="https://github.com/doric-pub/Doric/workflows/Release/badge.svg" />
 </a>
 </div>
-
 <div align="center">
   <a href= "https://www.npmjs.com/package/doric">
      <img src="https://img.shields.io/npm/v/doric"/>
@@ -24,6 +23,10 @@
     <img src="https://img.shields.io/cocoapods/v/DoricCore"/>
   </a>
 </div>
+
+<div align="center">
+ <a href="https://www.oscs1024.com/project/oscs/doric-pub/Doric?ref=badge_small" alt="OSCS Status"><img src="https://www.oscs1024.com/platform/badge/doric-pub/Doric.svg?size=small"/></a>
+</div>
 <div align="center">
  <a href="README-en.md">
      English
@@ -32,6 +35,9 @@
 
 # Doric
 Doric是一套高性能的跨平台开发框架,使用TSX/TypeScript开发,一套代码可在不同平台展示出同样的页面.
+
+## OSCS
+[![OSCS Status](https://www.oscs1024.com/platform/badge/doric-pub/Doric.svg?size=large)](https://www.oscs1024.com/project/doric-pub/Doric?ref=badge_large)
 
 ## 特色
 ### 跨平台统一
@@ -86,4 +92,5 @@ Doric提供脚手架工具`doric-cli`及开发调试工具`Devkit`,提供热重�
 | 钉钉 | 微信 |
 | ---- | ---- |
 | <img src="https://user-images.githubusercontent.com/9526211/141051788-c9df135b-bc88-4850-a2c8-b0a65f78fd57.png" height="500px"/> | <img src="https://user-images.githubusercontent.com/9526211/154933741-b5df7ebd-6866-4835-9ece-bc35b3ecdaed.png" height="500px"/>|
+
 

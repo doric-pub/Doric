@@ -59,7 +59,11 @@ public class DoricLayer extends MaximumFrameLayout {
             mCornerPath.addRoundRect(mRect, mCornerRadii, Path.Direction.CW);
             canvas.clipPath(mCornerPath);
         }
-        super.draw(canvas);
+        try {
+            super.draw(canvas);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

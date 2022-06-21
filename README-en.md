@@ -25,6 +25,9 @@
   </a>
 </div>
 <div align="center">
+ <a href="https://www.oscs1024.com/project/oscs/doric-pub/Doric?ref=badge_small" alt="OSCS Status"><img src="https://www.oscs1024.com/platform/badge/doric-pub/Doric.svg?size=small"/></a>
+</div>
+<div align="center">
  <a href="README.md">
      中文
  </a>
@@ -32,6 +35,9 @@
 
 # Doric
 Doric is a high-performance framework for cross-platform development. With TSX or TypeScript, a set of code can perform consistently across different platforms.
+
+## OSCS
+[![OSCS Status](https://www.oscs1024.com/platform/badge/doric-pub/Doric.svg?size=large)](https://www.oscs1024.com/project/doric-pub/Doric?ref=badge_large)
 
 ## Feature
 ### Cross-platform consistency

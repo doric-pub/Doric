@@ -1841,10 +1841,10 @@ var doric = (function (exports) {
     (module.exports = function (key, value) {
       return sharedStore[key] || (sharedStore[key] = value !== undefined ? value : {});
     })('versions', []).push({
-      version: '3.23.1',
+      version: '3.23.2',
       mode: 'global',
       copyright: '© 2014-2022 Denis Pushkarev (zloirock.ru)',
-      license: 'https://github.com/zloirock/core-js/blob/v3.23.1/LICENSE',
+      license: 'https://github.com/zloirock/core-js/blob/v3.23.2/LICENSE',
       source: 'https://github.com/zloirock/core-js'
     });
     });
@@ -2807,7 +2807,7 @@ var doric = (function (exports) {
     var PROTOTYPE$1 = 'prototype';
 
     var setInternalState$i = internalState.set;
-    var getInternalState$f = internalState.getterFor(SYMBOL);
+    var getInternalState$g = internalState.getterFor(SYMBOL);
 
     var ObjectPrototype$4 = Object[PROTOTYPE$1];
     var $Symbol = global_1.Symbol;
@@ -2941,7 +2941,7 @@ var doric = (function (exports) {
       SymbolPrototype$1 = $Symbol[PROTOTYPE$1];
 
       defineBuiltIn(SymbolPrototype$1, 'toString', function toString() {
-        return getInternalState$f(this).tag;
+        return getInternalState$g(this).tag;
       });
 
       defineBuiltIn($Symbol, 'withoutSetter', function (description) {
@@ -2964,7 +2964,7 @@ var doric = (function (exports) {
         nativeDefineProperty(SymbolPrototype$1, 'description', {
           configurable: true,
           get: function description() {
-            return getInternalState$f(this).description;
+            return getInternalState$g(this).description;
           }
         });
         {
@@ -4313,7 +4313,7 @@ var doric = (function (exports) {
 
     var ARRAY_ITERATOR = 'Array Iterator';
     var setInternalState$h = internalState.set;
-    var getInternalState$e = internalState.getterFor(ARRAY_ITERATOR);
+    var getInternalState$f = internalState.getterFor(ARRAY_ITERATOR);
 
     // `Array.prototype.entries` method
     // https://tc39.es/ecma262/#sec-array.prototype.entries
@@ -4335,7 +4335,7 @@ var doric = (function (exports) {
     // `%ArrayIteratorPrototype%.next` method
     // https://tc39.es/ecma262/#sec-%arrayiteratorprototype%.next
     }, function () {
-      var state = getInternalState$e(this);
+      var state = getInternalState$f(this);
       var target = state.target;
       var kind = state.kind;
       var index = state.index++;
@@ -5035,7 +5035,7 @@ var doric = (function (exports) {
 
     var PROPER_FUNCTION_NAME$2 = functionName.PROPER;
     var CONFIGURABLE_FUNCTION_NAME = functionName.CONFIGURABLE;
-    var getInternalState$d = internalState.get;
+    var getInternalState$e = internalState.get;
     var setInternalState$g = internalState.set;
     var ARRAY_BUFFER$1 = 'ArrayBuffer';
     var DATA_VIEW = 'DataView';
@@ -5081,14 +5081,14 @@ var doric = (function (exports) {
     };
 
     var addGetter = function (Constructor, key) {
-      defineProperty$8(Constructor[PROTOTYPE], key, { get: function () { return getInternalState$d(this)[key]; } });
+      defineProperty$8(Constructor[PROTOTYPE], key, { get: function () { return getInternalState$e(this)[key]; } });
     };
 
     var get$1 = function (view, count, index, isLittleEndian) {
       var intIndex = toIndex(index);
-      var store = getInternalState$d(view);
+      var store = getInternalState$e(view);
       if (intIndex + count > store.byteLength) { throw RangeError$3(WRONG_INDEX); }
-      var bytes = getInternalState$d(store.buffer).bytes;
+      var bytes = getInternalState$e(store.buffer).bytes;
       var start = intIndex + store.byteOffset;
       var pack = arraySliceSimple(bytes, start, start + count);
       return isLittleEndian ? pack : reverse(pack);
@@ -5096,9 +5096,9 @@ var doric = (function (exports) {
 
     var set$2 = function (view, count, index, conversion, value, isLittleEndian) {
       var intIndex = toIndex(index);
-      var store = getInternalState$d(view);
+      var store = getInternalState$e(view);
       if (intIndex + count > store.byteLength) { throw RangeError$3(WRONG_INDEX); }
-      var bytes = getInternalState$d(store.buffer).bytes;
+      var bytes = getInternalState$e(store.buffer).bytes;
       var start = intIndex + store.byteOffset;
       var pack = conversion(+value);
       for (var i = 0; i < count; i++) { bytes[start + i] = pack[isLittleEndian ? i : count - i - 1]; }
@@ -5120,7 +5120,7 @@ var doric = (function (exports) {
       $DataView = function DataView(buffer, byteOffset, byteLength) {
         anInstance(this, DataViewPrototype$1);
         anInstance(buffer, ArrayBufferPrototype);
-        var bufferLength = getInternalState$d(buffer).byteLength;
+        var bufferLength = getInternalState$e(buffer).byteLength;
         var offset = toIntegerOrInfinity(byteOffset);
         if (offset < 0 || offset > bufferLength) { throw RangeError$3('Wrong offset'); }
         byteLength = byteLength === undefined ? bufferLength - offset : toLength(byteLength);
@@ -5277,6 +5277,9 @@ var doric = (function (exports) {
 
 
 
+
+    var enforceInternalState$2 = internalState.enforce;
+    var getInternalState$d = internalState.get;
     var Int8Array$4 = global_1.Int8Array;
     var Int8ArrayPrototype$1 = Int8Array$4 && Int8Array$4.prototype;
     var Uint8ClampedArray$1 = global_1.Uint8ClampedArray;
@@ -5288,7 +5291,7 @@ var doric = (function (exports) {
 
     var TO_STRING_TAG$5 = wellKnownSymbol('toStringTag');
     var TYPED_ARRAY_TAG = uid('TYPED_ARRAY_TAG');
-    var TYPED_ARRAY_CONSTRUCTOR$5 = uid('TYPED_ARRAY_CONSTRUCTOR');
+    var TYPED_ARRAY_CONSTRUCTOR = 'TypedArrayConstructor';
     // Fixing native typed arrays in Opera Presto crashes the browser, see #595
     var NATIVE_ARRAY_BUFFER_VIEWS$2 = arrayBufferNative && !!objectSetPrototypeOf && classof(global_1.opera) !== 'Opera';
     var TYPED_ARRAY_TAG_REQUIRED = false;
@@ -5317,6 +5320,13 @@ var doric = (function (exports) {
       return klass === 'DataView'
         || hasOwnProperty_1(TypedArrayConstructorsList, klass)
         || hasOwnProperty_1(BigIntArrayConstructorsList, klass);
+    };
+
+    var getTypedArrayConstructor$5 = function (it) {
+      var proto = objectGetPrototypeOf(it);
+      if (!isObject(proto)) { return; }
+      var state = getInternalState$d(proto);
+      return (state && hasOwnProperty_1(state, TYPED_ARRAY_CONSTRUCTOR)) ? state[TYPED_ARRAY_CONSTRUCTOR] : getTypedArrayConstructor$5(proto);
     };
 
     var isTypedArray = function (it) {
@@ -5383,14 +5393,14 @@ var doric = (function (exports) {
     for (NAME$1 in TypedArrayConstructorsList) {
       Constructor = global_1[NAME$1];
       Prototype = Constructor && Constructor.prototype;
-      if (Prototype) { createNonEnumerableProperty(Prototype, TYPED_ARRAY_CONSTRUCTOR$5, Constructor); }
+      if (Prototype) { enforceInternalState$2(Prototype)[TYPED_ARRAY_CONSTRUCTOR] = Constructor; }
       else { NATIVE_ARRAY_BUFFER_VIEWS$2 = false; }
     }
 
     for (NAME$1 in BigIntArrayConstructorsList) {
       Constructor = global_1[NAME$1];
       Prototype = Constructor && Constructor.prototype;
-      if (Prototype) { createNonEnumerableProperty(Prototype, TYPED_ARRAY_CONSTRUCTOR$5, Constructor); }
+      if (Prototype) { enforceInternalState$2(Prototype)[TYPED_ARRAY_CONSTRUCTOR] = Constructor; }
     }
 
     // WebKit bug - typed arrays constructors prototype is Object.prototype
@@ -5428,12 +5438,12 @@ var doric = (function (exports) {
 
     var arrayBufferViewCore = {
       NATIVE_ARRAY_BUFFER_VIEWS: NATIVE_ARRAY_BUFFER_VIEWS$2,
-      TYPED_ARRAY_CONSTRUCTOR: TYPED_ARRAY_CONSTRUCTOR$5,
       TYPED_ARRAY_TAG: TYPED_ARRAY_TAG_REQUIRED && TYPED_ARRAY_TAG,
       aTypedArray: aTypedArray$x,
       aTypedArrayConstructor: aTypedArrayConstructor$4,
       exportTypedArrayMethod: exportTypedArrayMethod$y,
       exportTypedArrayStaticMethod: exportTypedArrayStaticMethod$3,
+      getTypedArrayConstructor: getTypedArrayConstructor$5,
       isView: isView,
       isTypedArray: isTypedArray,
       TypedArray: TypedArray,
@@ -10232,6 +10242,7 @@ var doric = (function (exports) {
 
     var getInternalState = internalState.get;
     var setInternalState = internalState.set;
+    var enforceInternalState = internalState.enforce;
     var nativeDefineProperty = objectDefineProperty.f;
     var nativeGetOwnPropertyDescriptor = objectGetOwnPropertyDescriptor.f;
     var round = Math.round;
@@ -10240,7 +10251,6 @@ var doric = (function (exports) {
     var ArrayBufferPrototype = ArrayBuffer.prototype;
     var DataView = arrayBuffer.DataView;
     var NATIVE_ARRAY_BUFFER_VIEWS = arrayBufferViewCore.NATIVE_ARRAY_BUFFER_VIEWS;
-    var TYPED_ARRAY_CONSTRUCTOR = arrayBufferViewCore.TYPED_ARRAY_CONSTRUCTOR;
     var TYPED_ARRAY_TAG = arrayBufferViewCore.TYPED_ARRAY_TAG;
     var TypedArray = arrayBufferViewCore.TypedArray;
     var TypedArrayPrototype = arrayBufferViewCore.TypedArrayPrototype;
@@ -10417,7 +10427,7 @@ var doric = (function (exports) {
           createNonEnumerableProperty(TypedArrayConstructorPrototype, 'constructor', TypedArrayConstructor);
         }
 
-        createNonEnumerableProperty(TypedArrayConstructorPrototype, TYPED_ARRAY_CONSTRUCTOR, TypedArrayConstructor);
+        enforceInternalState(TypedArrayConstructorPrototype).TypedArrayConstructor = TypedArrayConstructor;
 
         if (TYPED_ARRAY_TAG) {
           createNonEnumerableProperty(TypedArrayConstructorPrototype, TYPED_ARRAY_TAG, CONSTRUCTOR_NAME);
@@ -10588,13 +10598,13 @@ var doric = (function (exports) {
       return result;
     };
 
-    var TYPED_ARRAY_CONSTRUCTOR$4 = arrayBufferViewCore.TYPED_ARRAY_CONSTRUCTOR;
     var aTypedArrayConstructor$2 = arrayBufferViewCore.aTypedArrayConstructor;
+    var getTypedArrayConstructor$4 = arrayBufferViewCore.getTypedArrayConstructor;
 
     // a part of `TypedArraySpeciesCreate` abstract operation
     // https://tc39.es/ecma262/#typedarray-species-create
     var typedArraySpeciesConstructor = function (originalArray) {
-      return aTypedArrayConstructor$2(speciesConstructor(originalArray, originalArray[TYPED_ARRAY_CONSTRUCTOR$4]));
+      return aTypedArrayConstructor$2(speciesConstructor(originalArray, getTypedArrayConstructor$4(originalArray)));
     };
 
     var typedArrayFromSpeciesAndList = function (instance, list) {
@@ -13315,21 +13325,19 @@ var doric = (function (exports) {
       }
     });
 
-    var DEG_PER_RAD$1 = Math.PI / 180;
-
     // `Math.DEG_PER_RAD` constant
     // https://rwaldron.github.io/proposal-math-extensions/
-    _export({ target: 'Math', stat: true, nonConfigurable: true, nonWritable: true, forced: Math.DEG_PER_RAD !== DEG_PER_RAD$1 }, {
-      DEG_PER_RAD: DEG_PER_RAD$1
+    _export({ target: 'Math', stat: true, nonConfigurable: true, nonWritable: true }, {
+      DEG_PER_RAD: Math.PI / 180
     });
 
-    var RAD_PER_DEG$1 = 180 / Math.PI;
+    var RAD_PER_DEG = 180 / Math.PI;
 
     // `Math.degrees` method
     // https://rwaldron.github.io/proposal-math-extensions/
     _export({ target: 'Math', stat: true, forced: true }, {
       degrees: function degrees(radians) {
-        return radians * RAD_PER_DEG$1;
+        return radians * RAD_PER_DEG;
       }
     });
 
@@ -13396,12 +13404,10 @@ var doric = (function (exports) {
       }
     });
 
-    var RAD_PER_DEG = 180 / Math.PI;
-
     // `Math.RAD_PER_DEG` constant
     // https://rwaldron.github.io/proposal-math-extensions/
-    _export({ target: 'Math', stat: true, nonConfigurable: true, nonWritable: true, forced: Math.RAD_PER_DEG !== RAD_PER_DEG }, {
-      RAD_PER_DEG: RAD_PER_DEG
+    _export({ target: 'Math', stat: true, nonConfigurable: true, nonWritable: true }, {
+      RAD_PER_DEG: 180 / Math.PI
     });
 
     var DEG_PER_RAD = Math.PI / 180;
@@ -14520,17 +14526,17 @@ var doric = (function (exports) {
 
     var aTypedArray$4 = arrayBufferViewCore.aTypedArray;
     var exportTypedArrayMethod$4 = arrayBufferViewCore.exportTypedArrayMethod;
-    var TYPED_ARRAY_CONSTRUCTOR$3 = arrayBufferViewCore.TYPED_ARRAY_CONSTRUCTOR;
+    var getTypedArrayConstructor$3 = arrayBufferViewCore.getTypedArrayConstructor;
 
     // `%TypedArray%.prototype.toReversed` method
     // https://tc39.es/proposal-change-array-by-copy/#sec-%typedarray%.prototype.toReversed
     exportTypedArrayMethod$4('toReversed', function toReversed() {
-      return arrayToReversed(aTypedArray$4(this), this[TYPED_ARRAY_CONSTRUCTOR$3]);
+      return arrayToReversed(aTypedArray$4(this), getTypedArrayConstructor$3(this));
     });
 
     var aTypedArray$3 = arrayBufferViewCore.aTypedArray;
+    var getTypedArrayConstructor$2 = arrayBufferViewCore.getTypedArrayConstructor;
     var exportTypedArrayMethod$3 = arrayBufferViewCore.exportTypedArrayMethod;
-    var TYPED_ARRAY_CONSTRUCTOR$2 = arrayBufferViewCore.TYPED_ARRAY_CONSTRUCTOR;
     var sort = functionUncurryThis(arrayBufferViewCore.TypedArrayPrototype.sort);
 
     // `%TypedArray%.prototype.toSorted` method
@@ -14538,19 +14544,19 @@ var doric = (function (exports) {
     exportTypedArrayMethod$3('toSorted', function toSorted(compareFn) {
       if (compareFn !== undefined) { aCallable(compareFn); }
       var O = aTypedArray$3(this);
-      var A = arrayFromConstructorAndList(O[TYPED_ARRAY_CONSTRUCTOR$2], O);
+      var A = arrayFromConstructorAndList(getTypedArrayConstructor$2(O), O);
       return sort(A, compareFn);
     });
 
     var aTypedArray$2 = arrayBufferViewCore.aTypedArray;
+    var getTypedArrayConstructor$1 = arrayBufferViewCore.getTypedArrayConstructor;
     var exportTypedArrayMethod$2 = arrayBufferViewCore.exportTypedArrayMethod;
-    var TYPED_ARRAY_CONSTRUCTOR$1 = arrayBufferViewCore.TYPED_ARRAY_CONSTRUCTOR;
 
     // `%TypedArray%.prototype.toSpliced` method
     // https://tc39.es/proposal-change-array-by-copy/#sec-%typedarray%.prototype.toSpliced
     // eslint-disable-next-line no-unused-vars -- required for .length
     exportTypedArrayMethod$2('toSpliced', function toSpliced(start, deleteCount /* , ...items */) {
-      return arrayToSpliced(aTypedArray$2(this), this[TYPED_ARRAY_CONSTRUCTOR$1], arraySlice$1(arguments));
+      return arrayToSpliced(aTypedArray$2(this), getTypedArrayConstructor$1(this), arraySlice$1(arguments));
     }, { arity: 2 });
 
     var aTypedArray$1 = arrayBufferViewCore.aTypedArray;
@@ -14564,8 +14570,8 @@ var doric = (function (exports) {
     }, true);
 
     var aTypedArray = arrayBufferViewCore.aTypedArray;
+    var getTypedArrayConstructor = arrayBufferViewCore.getTypedArrayConstructor;
     var exportTypedArrayMethod = arrayBufferViewCore.exportTypedArrayMethod;
-    var TYPED_ARRAY_CONSTRUCTOR = arrayBufferViewCore.TYPED_ARRAY_CONSTRUCTOR;
     var slice = functionUncurryThis(''.slice);
 
     var PROPER_ORDER = !!function () {
@@ -14585,7 +14591,7 @@ var doric = (function (exports) {
       aTypedArray(this);
       var relativeIndex = toIntegerOrInfinity(index);
       var actualValue = slice(classof(this), 0, 3) === 'Big' ? toBigInt(value) : +value;
-      return arrayWith(this, this[TYPED_ARRAY_CONSTRUCTOR], relativeIndex, actualValue);
+      return arrayWith(this, getTypedArrayConstructor(this), relativeIndex, actualValue);
     } }['with'], !PROPER_ORDER);
 
     // `WeakMap.prototype.deleteAll` method

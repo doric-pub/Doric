@@ -322,9 +322,9 @@ public class DoricWebShellJSExecutor implements IDoricJSE {
             @Override
             public void run() {
                 webView = new WebView(context.getApplicationContext());
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && BuildConfig.DEBUG) {
-                    WebView.setWebContentsDebuggingEnabled(true);
-                }
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && BuildConfig.DEBUG) {
+//                    WebView.setWebContentsDebuggingEnabled(true);
+//                }
                 WebSettings webSettings = webView.getSettings();
                 webSettings.setJavaScriptEnabled(true);
                 webView.setWebChromeClient(new DoricWebChromeClient());

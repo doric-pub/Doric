@@ -224,9 +224,9 @@ public class DoricWebViewJSExecutor implements IDoricJSE {
                 webView.loadUrl("about:blank");
                 WebViewCallback webViewCallback = new WebViewCallback();
                 webView.addJavascriptInterface(webViewCallback, "NativeClient");
-                if (BuildConfig.DEBUG) {
-                    WebView.setWebContentsDebuggingEnabled(true);
-                }
+//                if (BuildConfig.DEBUG) {
+//                    WebView.setWebContentsDebuggingEnabled(true);
+//                }
             }
         });
     }

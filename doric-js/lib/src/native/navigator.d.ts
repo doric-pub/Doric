@@ -4,11 +4,11 @@ import { ClassType } from "../util/types";
 export declare function internalScheme(context: BridgeContext, panelClass: ClassType<Panel>): string;
 export declare function navigator(context: BridgeContext): {
     push: (source: string | ClassType<Panel>, config?: {
-        alias?: string;
-        animated?: boolean;
-        extra?: object;
-        singlePage?: boolean;
-    }) => Promise<any>;
+        alias?: string | undefined;
+        animated?: boolean | undefined;
+        extra?: object | undefined;
+        singlePage?: boolean | undefined;
+    } | undefined) => Promise<any>;
     pop: (animated?: boolean) => Promise<any>;
     popSelf: (animated?: boolean) => Promise<any>;
     popToRoot: (animated?: boolean) => Promise<any>;

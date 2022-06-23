@@ -20,8 +20,8 @@ export interface IResponse {
 }
 export declare function network(context: BridgeContext): {
     request: (config: IRequest) => Promise<IResponse>;
-    get: (url: string, config?: IRequest) => Promise<IResponse>;
-    post: (url: string, data?: object | string, config?: IRequest) => Promise<IResponse>;
-    put: (url: string, data?: object | string, config?: IRequest) => Promise<IResponse>;
-    delete: (url: string, data?: object | string, config?: IRequest) => Promise<IResponse>;
+    get: (url: string, config?: IRequest | undefined) => Promise<IResponse>;
+    post: (url: string, data?: string | object | undefined, config?: IRequest | undefined) => Promise<IResponse>;
+    put: (url: string, data?: string | object | undefined, config?: IRequest | undefined) => Promise<IResponse>;
+    delete: (url: string, data?: string | object | undefined, config?: IRequest | undefined) => Promise<IResponse>;
 };

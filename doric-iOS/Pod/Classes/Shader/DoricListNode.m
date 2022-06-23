@@ -103,7 +103,7 @@
     }];
 }
 
--(void)longPressAction:(UILongPressGestureRecognizer *)sender{
+- (void)longPressAction:(UILongPressGestureRecognizer *)sender {
     CGPoint locationInView = [sender locationInView:self.view];
     NSIndexPath *indexPath = [self.view indexPathForRowAtPoint:locationInView];
     if (sender.state == UIGestureRecognizerStateBegan) {
@@ -117,7 +117,7 @@
             NSString *toValue = self.itemViewIds[@(indexPath.row)];
             self.itemViewIds[@(self.currentDragIndexPath.row)] = toValue;
             self.itemViewIds[@(indexPath.row)] = fromValue;
-            
+
             [self.view moveRowAtIndexPath:self.currentDragIndexPath toIndexPath:indexPath];
             if (self.onDraggingFuncId != nil) {
                 [self callJSResponse:self.onDraggingFuncId, @(self.currentDragIndexPath.row), @(indexPath.row), nil];
@@ -156,7 +156,11 @@
     } else if ([@"loadMoreView" isEqualToString:name]) {
         self.loadMoreViewId = prop;
     } else if ([@"loadMore" isEqualToString:name]) {
-        self.loadMore = [prop boolValue];
+        BOOL loadMore = [prop boolValue];
+        if (loadMore != self.loadMore) {
+            self.loadMore = loadMore;
+            [self.view reloadData];
+        }
     } else if ([@"onScroll" isEqualToString:name]) {
         self.onScrollFuncId = prop;
     } else if ([@"onScrollEnd" isEqualToString:name]) {

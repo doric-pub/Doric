@@ -240,7 +240,11 @@
     } else if ([@"loadMoreView" isEqualToString:name]) {
         self.loadMoreViewId = prop;
     } else if ([@"loadMore" isEqualToString:name]) {
-        self.loadMore = [prop boolValue];
+        BOOL loadMore = [prop boolValue];
+        if (loadMore != self.loadMore) {
+            self.loadMore = loadMore;
+            [self.view reloadData];
+        }
     } else if ([@"onScroll" isEqualToString:name]) {
         self.onScrollFuncId = prop;
     } else if ([@"onScrollEnd" isEqualToString:name]) {

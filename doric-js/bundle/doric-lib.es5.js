@@ -68,7 +68,7 @@ var Mutable = /** @class */ (function () {
  */
 var __uniqueId__ = 0;
 function uniqueId(prefix) {
-    return "__".concat(prefix, "_").concat(__uniqueId__++, "__");
+    return "__" + prefix + "_" + __uniqueId__++ + "__";
 }
 
 function toString(message) {
@@ -92,6 +92,11 @@ function toString(message) {
 }
 function log() {
     var arguments$1 = arguments;
+
+    var args = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        args[_i] = arguments$1[_i];
+    }
     var out = "";
     for (var i = 0; i < arguments.length; i++) {
         if (i > 0) {
@@ -103,6 +108,11 @@ function log() {
 }
 function loge() {
     var arguments$1 = arguments;
+
+    var message = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        message[_i] = arguments$1[_i];
+    }
     var out = "";
     for (var i = 0; i < arguments.length; i++) {
         if (i > 0) {
@@ -114,6 +124,11 @@ function loge() {
 }
 function logw() {
     var arguments$1 = arguments;
+
+    var message = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        message[_i] = arguments$1[_i];
+    }
     var out = "";
     for (var i = 0; i < arguments.length; i++) {
         if (i > 0) {
@@ -162,11 +177,11 @@ var __values$5 = (undefined && undefined.__values) || function(o) {
 function Property(target, propKey) {
     Object.defineProperty(target, propKey, {
         get: function () {
-            return Reflect.get(this, "__prop__".concat(propKey), this);
+            return Reflect.get(this, "__prop__" + propKey, this);
         },
         set: function (v) {
-            var oldV = Reflect.get(this, "__prop__".concat(propKey), this);
-            Reflect.set(this, "__prop__".concat(propKey), v, this);
+            var oldV = Reflect.get(this, "__prop__" + propKey, this);
+            Reflect.set(this, "__prop__" + propKey, v, this);
             if (oldV !== v) {
                 Reflect.apply(this.onPropertyChanged, this, [propKey, oldV, v]);
             }
@@ -176,11 +191,11 @@ function Property(target, propKey) {
 function InconsistProperty(target, propKey) {
     Object.defineProperty(target, propKey, {
         get: function () {
-            return Reflect.get(this, "__prop__".concat(propKey), this);
+            return Reflect.get(this, "__prop__" + propKey, this);
         },
         set: function (v) {
-            var oldV = Reflect.get(this, "__prop__".concat(propKey), this);
-            Reflect.set(this, "__prop__".concat(propKey), v, this);
+            var oldV = Reflect.get(this, "__prop__" + propKey, this);
+            Reflect.set(this, "__prop__" + propKey, v, this);
             Reflect.apply(this.onPropertyChanged, this, [propKey, oldV, v]);
         },
     });
@@ -344,6 +359,11 @@ var View = /** @class */ (function () {
     };
     View.prototype.responseCallback = function (id) {
         var arguments$1 = arguments;
+
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments$1[_i];
+        }
         var f = this.id2Callback(id);
         if (f instanceof Function) {
             var argumentsList = [];
@@ -353,7 +373,7 @@ var View = /** @class */ (function () {
             return Reflect.apply(f, this, argumentsList);
         }
         else {
-            loge("Cannot find callback:".concat(id, " for ").concat(JSON.stringify(this.toModel())));
+            loge("Cannot find callback:" + id + " for " + JSON.stringify(this.toModel()));
         }
     };
     View.prototype.toModel = function () {
@@ -694,7 +714,7 @@ var Group = /** @class */ (function (_super) {
             this.addChild(e);
         }
         else {
-            loge("Not allowed to add ".concat(typeof e));
+            loge("Not allowed to add " + typeof e);
         }
     };
     Object.defineProperty(Group.prototype, "innerElement", {
@@ -1209,7 +1229,7 @@ var Panel = /** @class */ (function () {
 
         var v = this.retrospectView(viewIds);
         if (v === undefined) {
-            loge("Cannot find view for ".concat(viewIds));
+            loge("Cannot find view for " + viewIds);
         }
         else {
             var argumentsList = [callbackId];
@@ -1411,7 +1431,7 @@ var Color = /** @class */ (function () {
     }
     Color.parse = function (str) {
         if (!str.startsWith("#")) {
-            throw new Error("Parse color error with ".concat(str));
+            throw new Error("Parse color error with " + str);
         }
         var val = parseInt(str.substr(1), 16);
         if (str.length === 7) {
@@ -1421,7 +1441,7 @@ var Color = /** @class */ (function () {
             return new Color(val);
         }
         else {
-            throw new Error("Parse color error with ".concat(str));
+            throw new Error("Parse color error with " + str);
         }
     };
     Color.safeParse = function (str, defVal) {
@@ -2224,7 +2244,7 @@ var MainBundleResource = /** @class */ (function (_super) {
 var BundleResource = /** @class */ (function (_super) {
     __extends$f(BundleResource, _super);
     function BundleResource(bundleName, fileName) {
-        return _super.call(this, "bundle", "".concat(bundleName, "://").concat(fileName)) || this;
+        return _super.call(this, "bundle", bundleName + "://" + fileName) || this;
     }
     return BundleResource;
 }(iOSResource));
@@ -2507,7 +2527,7 @@ var List = /** @class */ (function (_super) {
     List.prototype.getItem = function (itemIdx) {
         var view = this.renderItem(itemIdx);
         view.superview = this;
-        this.cachedViews.set("".concat(itemIdx), view);
+        this.cachedViews.set("" + itemIdx, view);
         return view;
     };
     List.prototype.renderBunchedItems = function (start, length) {
@@ -2653,7 +2673,7 @@ var Slider = /** @class */ (function (_super) {
     Slider.prototype.getItem = function (itemIdx) {
         var view = this.renderPage(itemIdx);
         view.superview = this;
-        this.cachedViews.set("".concat(itemIdx), view);
+        this.cachedViews.set("" + itemIdx, view);
         return view;
     };
     Slider.prototype.renderBunchedItems = function (start, length) {
@@ -3017,7 +3037,7 @@ exports.jsx = void 0;
                 Reflect.set(e, "innerElement", children, e);
             }
             else {
-                throw new Error("Do not support ".concat(constructor.name, " for ").concat(children));
+                throw new Error("Do not support " + constructor.name + " for " + children);
             }
         }
         return e;
@@ -3135,7 +3155,7 @@ var FlowLayout = /** @class */ (function (_super) {
     FlowLayout.prototype.getItem = function (itemIdx) {
         var view = this.renderItem(itemIdx);
         view.superview = this;
-        this.cachedViews.set("".concat(itemIdx), view);
+        this.cachedViews.set("" + itemIdx, view);
         return view;
     };
     FlowLayout.prototype.renderBunchedItems = function (start, length) {
@@ -3816,7 +3836,7 @@ function navbar(context) {
 }
 
 function internalScheme(context, panelClass) {
-    return "_internal_://export?class=".concat(encodeURIComponent(panelClass.name), "&context=").concat(context.id);
+    return "_internal_://export?class=" + encodeURIComponent(panelClass.name) + "&context=" + context.id;
 }
 function navigator(context) {
     var moduleName = "navigator";
@@ -3856,9 +3876,9 @@ function transformRequest(request) {
     if (request.params !== undefined) {
         var queryStrings = [];
         for (var key in request.params) {
-            queryStrings.push("".concat(key, "=").concat(encodeURIComponent(request.params[key])));
+            queryStrings.push(key + "=" + encodeURIComponent(request.params[key]));
         }
-        request.url = "".concat(request.url).concat(url.indexOf('?') >= 0 ? '&' : '?').concat(queryStrings.join('&'));
+        request.url = "" + request.url + (url.indexOf('?') >= 0 ? '&' : '?') + queryStrings.join('&');
     }
     if (typeof request.data === 'object') {
         request.data = JSON.stringify(request.data);
@@ -4134,7 +4154,7 @@ function animate(context) {
     }
     else {
         return function (args) {
-            return Promise.reject("Cannot find panel in Context:".concat(context.id));
+            return Promise.reject("Cannot find panel in Context:" + context.id);
         };
     }
 }

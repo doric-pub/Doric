@@ -93,7 +93,7 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
         }
     };
     String onLoadMoreFuncId;
-    boolean loadMore = false;
+    private boolean loadMore = false;
     String loadMoreViewId;
     private final Set<DoricScrollChangeListener> listeners = new HashSet<>();
     private String onScrollFuncId;
@@ -241,6 +241,7 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
                 mView.post(new Runnable() {
                     @Override
                     public void run() {
+                        flowAdapter.loadMore = loadMore;
                         flowAdapter.itemCount = itemCount;
                         flowAdapter.notifyDataSetChanged();
                     }

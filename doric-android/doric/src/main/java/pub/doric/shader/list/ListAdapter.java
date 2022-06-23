@@ -48,7 +48,7 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
 
     int itemCount = 0;
     int loadAnchor = -1;
-
+    boolean loadMore = false;
     @NonNull
     @Override
     public DoricViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -66,7 +66,7 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
             holder.listItemNode.reset();
             holder.listItemNode.blend(jsObject.getProperty("props").asObject());
         }
-        if (this.listNode.loadMore
+        if (this.loadMore
                 && position >= this.itemCount
                 && !TextUtils.isEmpty(this.listNode.onLoadMoreFuncId)) {
             callLoadMore();
@@ -75,7 +75,7 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
 
     @Override
     public int getItemCount() {
-        return this.itemCount + (this.listNode.loadMore ? 1 : 0);
+        return this.itemCount + (this.loadMore ? 1 : 0);
     }
 
     @Override

@@ -64,7 +64,7 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
     int itemCount = 0;
     int batchCount = 15;
     SparseArray<String> itemValues = new SparseArray<>();
-    boolean loadMore = false;
+    private boolean loadMore = false;
     String loadMoreViewId;
     private final Set<DoricScrollChangeListener> listeners = new HashSet<>();
     private String onScrollFuncId;
@@ -214,6 +214,7 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
                     @SuppressLint("NotifyDataSetChanged")
                     @Override
                     public void run() {
+                        listAdapter.loadMore = loadMore;
                         listAdapter.itemCount = itemCount;
                         listAdapter.notifyDataSetChanged();
                     }

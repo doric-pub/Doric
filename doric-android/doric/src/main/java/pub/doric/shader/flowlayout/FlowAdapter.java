@@ -46,6 +46,7 @@ class FlowAdapter extends RecyclerView.Adapter<FlowAdapter.DoricViewHolder> {
     int batchCount = 15;
     SparseArray<String> itemValues = new SparseArray<>();
     int loadAnchor = -1;
+    boolean loadMore = false;
 
     FlowAdapter(FlowLayoutNode flowLayoutNode) {
         this.flowLayoutNode = flowLayoutNode;
@@ -62,7 +63,7 @@ class FlowAdapter extends RecyclerView.Adapter<FlowAdapter.DoricViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull DoricViewHolder holder, int position) {
         JSValue jsValue = getItemModel(position);
-        boolean fullSpan = this.flowLayoutNode.loadMore && position >= this.itemCount;
+        boolean fullSpan = this.loadMore && position >= this.itemCount;
         if (jsValue != null && jsValue.isObject()) {
             JSObject jsObject = jsValue.asObject();
             holder.flowLayoutItemNode.setId(jsObject.getProperty("id").asString().value());
@@ -84,7 +85,7 @@ class FlowAdapter extends RecyclerView.Adapter<FlowAdapter.DoricViewHolder> {
             layoutParams.setFullSpan(true);
             holder.itemView.setLayoutParams(layoutParams);
         }
-        if (this.flowLayoutNode.loadMore
+        if (this.loadMore
                 && position >= this.itemCount
                 && !TextUtils.isEmpty(this.flowLayoutNode.onLoadMoreFuncId)) {
             callLoadMore();
@@ -93,7 +94,7 @@ class FlowAdapter extends RecyclerView.Adapter<FlowAdapter.DoricViewHolder> {
 
     @Override
     public int getItemCount() {
-        return this.itemCount + (this.flowLayoutNode.loadMore ? 1 : 0);
+        return this.itemCount + (this.loadMore ? 1 : 0);
     }
 
     @Override

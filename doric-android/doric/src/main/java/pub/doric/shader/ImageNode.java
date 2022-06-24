@@ -40,6 +40,7 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.vectordrawable.graphics.drawable.Animatable2Compat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
@@ -53,7 +54,6 @@ import com.bumptech.glide.request.target.DrawableImageViewTarget;
 import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.bumptech.glide.request.target.Target;
 import com.facebook.yoga.YogaNode;
-import com.github.pengfeizhou.jscore.JSNumber;
 import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
@@ -62,10 +62,9 @@ import com.github.pengfeizhou.jscore.JavaValue;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.security.MessageDigest;
 import java.nio.ByteBuffer;
+import java.security.MessageDigest;
 
-import androidx.vectordrawable.graphics.drawable.Animatable2Compat;
 import pub.doric.DoricContext;
 import pub.doric.async.AsyncResult;
 import pub.doric.extension.bridge.DoricMethod;
@@ -353,65 +352,65 @@ public class ImageNode extends ViewNode<ImageView> {
                     }
                 }).into(new DrawableImageViewTarget(mView) {
 
-            @SuppressLint("MissingSuperCall")
-            @Override
-            public void getSize(@NonNull SizeReadyCallback cb) {
-                cb.onSizeReady(SIZE_ORIGINAL, SIZE_ORIGINAL);
-            }
-
-            @Override
-            protected void setResource(@Nullable Drawable resource) {
-                if (resource instanceof BitmapDrawable) {
-                    Bitmap bitmap = ((BitmapDrawable) resource).getBitmap();
-                    float scale = DoricUtils.getScreenScale() / imageScale;
-                    if (imageScale != DoricUtils.getScreenScale()) {
-                        Matrix matrix = new Matrix();
-                        matrix.setScale(scale, scale);
-                        bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-                        resource = new BitmapDrawable(getContext().getResources(), bitmap);
+                    @SuppressLint("MissingSuperCall")
+                    @Override
+                    public void getSize(@NonNull SizeReadyCallback cb) {
+                        cb.onSizeReady(SIZE_ORIGINAL, SIZE_ORIGINAL);
                     }
 
-                    if (scaleType == 3) { // image tile
-                        BitmapDrawable drawable = new BitmapDrawable(getContext().getResources(), bitmap);
-                        drawable.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
-                        drawable.setDither(true);
-                        super.setResource(drawable);
-                    } else if (stretchInset != null) {
-                        float left = stretchInset.getProperty("left").asNumber().toFloat() * scale;
-                        float top = stretchInset.getProperty("top").asNumber().toFloat() * scale;
-                        float right = stretchInset.getProperty("right").asNumber().toFloat() * scale;
-                        float bottom = stretchInset.getProperty("bottom").asNumber().toFloat() * scale;
+                    @Override
+                    protected void setResource(@Nullable Drawable resource) {
+                        if (resource instanceof BitmapDrawable) {
+                            Bitmap bitmap = ((BitmapDrawable) resource).getBitmap();
+                            float scale = DoricUtils.getScreenScale() / imageScale;
+                            if (imageScale != DoricUtils.getScreenScale()) {
+                                Matrix matrix = new Matrix();
+                                matrix.setScale(scale, scale);
+                                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+                                resource = new BitmapDrawable(getContext().getResources(), bitmap);
+                            }
 
-                        Rect rect = new Rect(
-                                (int) left,
-                                (int) top,
-                                (int) (bitmap.getWidth() - right),
-                                (int) (bitmap.getHeight() - bottom)
-                        );
+                            if (scaleType == 3) { // image tile
+                                BitmapDrawable drawable = new BitmapDrawable(getContext().getResources(), bitmap);
+                                drawable.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+                                drawable.setDither(true);
+                                super.setResource(drawable);
+                            } else if (stretchInset != null) {
+                                float left = stretchInset.getProperty("left").asNumber().toFloat() * scale;
+                                float top = stretchInset.getProperty("top").asNumber().toFloat() * scale;
+                                float right = stretchInset.getProperty("right").asNumber().toFloat() * scale;
+                                float bottom = stretchInset.getProperty("bottom").asNumber().toFloat() * scale;
 
-                        NinePatchDrawable ninePatchDrawable = new NinePatchDrawable(
-                                getContext().getResources(),
-                                bitmap,
-                                DoricUtils.getNinePatchChunk(rect),
-                                rect,
-                                null
-                        );
-                        super.setResource(ninePatchDrawable);
-                    } else {
-                        super.setResource(resource);
+                                Rect rect = new Rect(
+                                        (int) left,
+                                        (int) top,
+                                        (int) (bitmap.getWidth() - right),
+                                        (int) (bitmap.getHeight() - bottom)
+                                );
+
+                                NinePatchDrawable ninePatchDrawable = new NinePatchDrawable(
+                                        getContext().getResources(),
+                                        bitmap,
+                                        DoricUtils.getNinePatchChunk(rect),
+                                        rect,
+                                        null
+                                );
+                                super.setResource(ninePatchDrawable);
+                            } else {
+                                super.setResource(resource);
+                            }
+                        } else {
+                            super.setResource(resource);
+                        }
+                        if (mSuperNode instanceof FlexNode) {
+                            YogaNode node = ((FlexNode) mSuperNode).mView.getYogaNodeForView(mView);
+                            if (node != null) {
+                                node.dirty();
+                            }
+                            mView.requestLayout();
+                        }
                     }
-                } else {
-                    super.setResource(resource);
-                }
-                if (mSuperNode instanceof FlexNode) {
-                    YogaNode node = ((FlexNode) mSuperNode).mView.getYogaNodeForView(mView);
-                    if (node != null) {
-                        node.dirty();
-                    }
-                    mView.requestLayout();
-                }
-            }
-        });
+                });
     }
 
     @Override

@@ -376,6 +376,8 @@ public class ImageNode extends ViewNode<ImageView> {
                                 drawable.setDither(true);
                                 super.setResource(drawable);
                             } else if (stretchInset != null) {
+                                Bitmap newBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, false);
+
                                 float left = stretchInset.getProperty("left").asNumber().toFloat() * scale;
                                 float top = stretchInset.getProperty("top").asNumber().toFloat() * scale;
                                 float right = stretchInset.getProperty("right").asNumber().toFloat() * scale;
@@ -384,13 +386,13 @@ public class ImageNode extends ViewNode<ImageView> {
                                 Rect rect = new Rect(
                                         (int) left,
                                         (int) top,
-                                        (int) (bitmap.getWidth() - right),
-                                        (int) (bitmap.getHeight() - bottom)
+                                        (int) (newBitmap.getWidth() - right),
+                                        (int) (newBitmap.getHeight() - bottom)
                                 );
 
                                 NinePatchDrawable ninePatchDrawable = new NinePatchDrawable(
                                         getContext().getResources(),
-                                        bitmap,
+                                        newBitmap,
                                         DoricUtils.getNinePatchChunk(rect),
                                         rect,
                                         null

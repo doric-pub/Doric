@@ -89,7 +89,7 @@ Provided with SQLite database manipulation. (Android+iOS)
 ## Welcome to join the Doric community 
 | DingTalk | WeChat |
 | ---- | ---- |
-| <img src="https://user-images.githubusercontent.com/9526211/141051788-c9df135b-bc88-4850-a2c8-b0a65f78fd57.png" height="500px"/> | <img src="https://user-images.githubusercontent.com/9526211/142347218-b55e3755-8c29-49c6-89bc-75f2ede834ed.png" height="500px"/>|
+| <img src="https://user-images.githubusercontent.com/9526211/141051788-c9df135b-bc88-4850-a2c8-b0a65f78fd57.png" height="500px"/> | <img src="https://user-images.githubusercontent.com/9526211/176334714-4e6bff05-a1d5-4dbc-a41b-04ead5a50462.png" height="500px"/>|
 
 
 

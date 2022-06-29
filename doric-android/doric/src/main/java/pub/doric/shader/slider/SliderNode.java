@@ -15,11 +15,14 @@
  */
 package pub.doric.shader.slider;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -58,6 +61,7 @@ public class SliderNode extends SuperNode<RecyclerView> {
     protected RecyclerView build() {
         RecyclerView recyclerView = new RecyclerView(getContext());
 
+
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext()) {
             @Override
             public boolean canScrollHorizontally() {
@@ -66,7 +70,19 @@ public class SliderNode extends SuperNode<RecyclerView> {
                 }
                 return super.canScrollHorizontally();
             }
+
+            @Override
+            public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state, int position) {
+                if (scrollable) {
+                    super.smoothScrollToPosition(recyclerView, state, position);
+                } else {
+                    DoricLinearSmoothScroller linearSmoothScroller = new DoricLinearSmoothScroller(recyclerView.getContext());
+                    linearSmoothScroller.setTargetPosition(position);
+                    startSmoothScroll(linearSmoothScroller);
+                }
+            }
         };
+
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(layoutManager);
         final PagerSnapHelper snapHelper = new PagerSnapHelper();
@@ -165,6 +181,7 @@ public class SliderNode extends SuperNode<RecyclerView> {
         if (jsObject.propertySet().size() > 1 || !jsObject.propertySet().contains("subviews")) {
             if (mView != null) {
                 mView.post(new Runnable() {
+                    @SuppressLint("NotifyDataSetChanged")
                     @Override
                     public void run() {
                         slideAdapter.itemCount = itemCount;
@@ -256,5 +273,27 @@ public class SliderNode extends SuperNode<RecyclerView> {
         scrollable = true;
         onPageSlidedFuncId = null;
         renderPageFuncId = null;
+    }
+
+    private static class DoricLinearSmoothScroller extends LinearSmoothScroller {
+
+        public DoricLinearSmoothScroller(Context context) {
+            super(context);
+        }
+
+        @Override
+        public int calculateDxToMakeVisible(View view, int snapPreference) {
+            final RecyclerView.LayoutManager layoutManager = getLayoutManager();
+            if (layoutManager == null) {
+                return 0;
+            }
+            final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams)
+                    view.getLayoutParams();
+            final int left = layoutManager.getDecoratedLeft(view) - params.leftMargin;
+            final int right = layoutManager.getDecoratedRight(view) + params.rightMargin;
+            final int start = layoutManager.getPaddingLeft();
+            final int end = layoutManager.getWidth() - layoutManager.getPaddingRight();
+            return calculateDtToFit(left, right, start, end, snapPreference);
+        }
     }
 }

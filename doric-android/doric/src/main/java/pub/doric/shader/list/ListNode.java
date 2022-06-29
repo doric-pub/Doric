@@ -16,6 +16,7 @@
 package pub.doric.shader.list;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.GestureDetector;
@@ -26,6 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.pengfeizhou.jscore.JSDecoder;
@@ -135,6 +137,17 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
                     return false;
                 }
                 return super.canScrollVertically();
+            }
+
+            @Override
+            public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state, int position) {
+                if (scrollable) {
+                    super.smoothScrollToPosition(recyclerView, state, position);
+                } else {
+                    DoricLinearSmoothScroller linearSmoothScroller = new DoricLinearSmoothScroller(recyclerView.getContext());
+                    linearSmoothScroller.setTargetPosition(position);
+                    startSmoothScroll(linearSmoothScroller);
+                }
             }
         });
         recyclerView.setAdapter(this.listAdapter);
@@ -537,4 +550,25 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
         void onMoved(int fromPos, int toPos);
     }
 
+    private static class DoricLinearSmoothScroller extends LinearSmoothScroller {
+
+        public DoricLinearSmoothScroller(Context context) {
+            super(context);
+        }
+
+        @Override
+        public int calculateDyToMakeVisible(View view, int snapPreference) {
+            final RecyclerView.LayoutManager layoutManager = getLayoutManager();
+            if (layoutManager == null) {
+                return 0;
+            }
+            final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams)
+                    view.getLayoutParams();
+            final int top = layoutManager.getDecoratedTop(view) - params.topMargin;
+            final int bottom = layoutManager.getDecoratedBottom(view) + params.bottomMargin;
+            final int start = layoutManager.getPaddingTop();
+            final int end = layoutManager.getHeight() - layoutManager.getPaddingBottom();
+            return calculateDtToFit(top, bottom, start, end, snapPreference);
+        }
+    }
 }

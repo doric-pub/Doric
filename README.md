@@ -89,9 +89,9 @@ Doric提供脚手架工具`doric-cli`及开发调试工具`Devkit`,提供热重�
 
 
 ## 欢迎扫码加入Doric社区讨论交流
-| 钉钉 | 微信 |
-| ---- | ---- |
-| <img src="https://user-images.githubusercontent.com/9526211/141051788-c9df135b-bc88-4850-a2c8-b0a65f78fd57.png" height="500px"/> | <img src="https://user-images.githubusercontent.com/9526211/176334714-4e6bff05-a1d5-4dbc-a41b-04ead5a50462.png" height="500px"/>|
+|QQ | 钉钉 | 微信|
+| ---- | ---- | ---- |
+| <img src="https://user-images.githubusercontent.com/9526211/176337486-f836298a-a26a-4513-9cdd-9f8af9fd1cfb.png" height="400px"/> | <img src="https://user-images.githubusercontent.com/9526211/141051788-c9df135b-bc88-4850-a2c8-b0a65f78fd57.png" height="400px"/> | <img src="https://user-images.githubusercontent.com/9526211/176334714-4e6bff05-a1d5-4dbc-a41b-04ead5a50462.png" height="400px"/>|
 
 
 

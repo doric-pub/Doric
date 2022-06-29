@@ -101,6 +101,30 @@ class SliderPanel extends Panel {
             }),
             hlayout([
                 text({
+                    text: "Scrollable",
+                    layoutConfig: {
+                        widthSpec: LayoutSpec.FIT,
+                        heightSpec: LayoutSpec.JUST,
+                    },
+                    textSize: 20,
+                    textColor: Color.BLACK,
+                    textAlignment: gravity().center(),
+                    height: 50,
+                }),
+                switchView({
+                    state: true,
+                    onSwitch: (state) => {
+                        pager.scrollable = state
+                    },
+                }),
+            ], {
+                layoutConfig: layoutConfig().most().configHeight(LayoutSpec.FIT),
+                gravity: gravity().center(),
+                space: 10,
+                backgroundColor: Color.RED,
+            }),
+            hlayout([
+                text({
                     text: "Bounces",
                     layoutConfig: {
                         widthSpec: LayoutSpec.FIT,

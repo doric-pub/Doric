@@ -20,8 +20,12 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+-keep class pub.doric.extension.bridge.DoricPlugin{*;}
+-keep class pub.doric.extension.bridge.DoricMethod{*;}
+-keep class pub.doric.utils.ThreadMode {*;}
+
 -keepclassmembers @pub.doric.extension.bridge.DoricPlugin class ** {
-    <init>(*);
+    <init>(...);
 }
 
 -keepclassmembers class * {
@@ -29,3 +33,5 @@
 }
 
 -keep class com.facebook.yoga.** {*;}
+
+-dontwarn com.facebook.yoga.**

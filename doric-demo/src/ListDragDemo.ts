@@ -27,7 +27,15 @@ class ListDragDemo extends Panel {
                     },
                     layoutConfig: layoutConfig().most(),
                     canDrag: true,
+                    beforeDragging: (from) => {
+                        loge(`beforeDragging from: ${from}`)
+                    },
+                    onDragging: (from, to) => {
+                        loge(`onDragging from: ${from}, to: ${to}`)
+                    },
                     onDragged: (from, to) => {
+                        loge(`onDragged from: ${from}, to: ${to}`)
+
                         const tmp = this.data[from]
                         this.data.splice(from, 1)
                         insertAt(this.data, to, tmp)

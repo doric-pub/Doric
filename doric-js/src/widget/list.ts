@@ -85,6 +85,9 @@ export class List extends Superview {
     canDrag?: boolean
 
     @Property
+    beforeDragging?: (from: number) => void
+
+    @Property
     onDragging?: (from: number, to: number) => void
 
     @Property

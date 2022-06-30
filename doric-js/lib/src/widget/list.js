@@ -141,6 +141,10 @@ __decorate([
 __decorate([
     Property,
     __metadata("design:type", Function)
+], List.prototype, "beforeDragging", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Function)
 ], List.prototype, "onDragging", void 0);
 __decorate([
     Property,

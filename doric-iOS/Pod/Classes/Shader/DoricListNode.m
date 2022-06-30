@@ -63,6 +63,7 @@
 @property(nonatomic, strong) UILongPressGestureRecognizer *longPress;
 @property(nonatomic, strong) NSIndexPath *initialDragIndexPath;
 @property(nonatomic, strong) NSIndexPath *currentDragIndexPath;
+@property(nonatomic, copy) NSString *beforeDraggingFuncId;
 @property(nonatomic, copy) NSString *onDraggingFuncId;
 @property(nonatomic, copy) NSString *onDraggedFuncId;
 @end
@@ -110,6 +111,9 @@
         if (indexPath != nil) {
             self.initialDragIndexPath = indexPath;
             self.currentDragIndexPath = indexPath;
+            if (self.beforeDraggingFuncId != nil) {
+                [self callJSResponse:self.beforeDraggingFuncId, @(indexPath.row), nil];
+            }
         }
     } else if (sender.state == UIGestureRecognizerStateChanged) {
         if ((indexPath != nil) && (indexPath != self.currentDragIndexPath)) {
@@ -172,6 +176,8 @@
     } else if ([@"canDrag" isEqualToString:name]) {
         bool canDrag = [prop boolValue];
         [self.longPress setEnabled:canDrag];
+    } else if ([@"beforeDragging" isEqualToString:name]) {
+        self.beforeDraggingFuncId = prop;
     } else if ([@"onDragging" isEqualToString:name]) {
         self.onDraggingFuncId = prop;
     } else if ([@"onDragged" isEqualToString:name]) {
@@ -533,6 +539,7 @@
     self.loadMoreViewId = nil;
     self.onScrollFuncId = nil;
     self.onScrollEndFuncId = nil;
+    self.beforeDraggingFuncId = nil;
     self.onDraggingFuncId = nil;
     self.onDraggedFuncId = nil;
     self.loadMore = NO;

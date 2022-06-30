@@ -764,6 +764,7 @@ declare module 'doric/lib/src/widget/list' {
                 */
             bounces?: boolean;
             canDrag?: boolean;
+            beforeDragging?: (from: number) => void;
             onDragging?: (from: number, to: number) => void;
             onDragged?: (from: number, to: number) => void;
             scrollToItem(context: BridgeContext, index: number, config?: {
@@ -1214,11 +1215,11 @@ declare module 'doric/lib/src/native/navigator' {
     export function internalScheme(context: BridgeContext, panelClass: ClassType<Panel>): string;
     export function navigator(context: BridgeContext): {
         push: (source: string | ClassType<Panel>, config?: {
-            alias?: string | undefined;
-            animated?: boolean | undefined;
-            extra?: object | undefined;
-            singlePage?: boolean | undefined;
-        } | undefined) => Promise<any>;
+            alias?: string;
+            animated?: boolean;
+            extra?: object;
+            singlePage?: boolean;
+        }) => Promise<any>;
         pop: (animated?: boolean) => Promise<any>;
         popSelf: (animated?: boolean) => Promise<any>;
         popToRoot: (animated?: boolean) => Promise<any>;
@@ -1249,19 +1250,19 @@ declare module 'doric/lib/src/native/network' {
     }
     export function network(context: BridgeContext): {
         request: (config: IRequest) => Promise<IResponse>;
-        get: (url: string, config?: IRequest | undefined) => Promise<IResponse>;
-        post: (url: string, data?: string | object | undefined, config?: IRequest | undefined) => Promise<IResponse>;
-        put: (url: string, data?: string | object | undefined, config?: IRequest | undefined) => Promise<IResponse>;
-        delete: (url: string, data?: string | object | undefined, config?: IRequest | undefined) => Promise<IResponse>;
+        get: (url: string, config?: IRequest) => Promise<IResponse>;
+        post: (url: string, data?: object | string, config?: IRequest) => Promise<IResponse>;
+        put: (url: string, data?: object | string, config?: IRequest) => Promise<IResponse>;
+        delete: (url: string, data?: object | string, config?: IRequest) => Promise<IResponse>;
     };
 }
 
 declare module 'doric/lib/src/native/storage' {
     import { BridgeContext } from "doric/lib/src/runtime/global";
     export function storage(context: BridgeContext): {
-        setItem: (key: string, value: string, zone?: string | undefined) => Promise<any>;
-        getItem: (key: string, zone?: string | undefined) => Promise<string>;
-        remove: (key: string, zone?: string | undefined) => Promise<any>;
+        setItem: (key: string, value: string, zone?: string) => Promise<any>;
+        getItem: (key: string, zone?: string) => Promise<string>;
+        remove: (key: string, zone?: string) => Promise<any>;
         clear: (zone: string) => Promise<any>;
     };
 }

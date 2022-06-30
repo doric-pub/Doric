@@ -3562,6 +3562,10 @@ __decorate$a([
 __decorate$a([
     Property,
     __metadata$a("design:type", Function)
+], List.prototype, "beforeDragging", void 0);
+__decorate$a([
+    Property,
+    __metadata$a("design:type", Function)
 ], List.prototype, "onDragging", void 0);
 __decorate$a([
     Property,

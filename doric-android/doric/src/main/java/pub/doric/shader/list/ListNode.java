@@ -15,6 +15,8 @@
  */
 package pub.doric.shader.list;
 
+import static androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_DRAG;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
@@ -88,6 +90,13 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
                 }
 
                 @Override
+                public void beforeMove(int fromPos) {
+                    if (!TextUtils.isEmpty(beforeDraggingFuncId)) {
+                        callJSResponse(beforeDraggingFuncId, fromPos);
+                    }
+                }
+
+                @Override
                 public boolean onMove(int srcPosition, int targetPosition) {
                     String srcValue = itemValues.valueAt(srcPosition);
                     String targetValue = itemValues.valueAt(targetPosition);
@@ -109,6 +118,7 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
             }
     );
 
+    private String beforeDraggingFuncId;
     private String onDraggingFuncId;
     private String onDraggedFuncId;
 
@@ -309,6 +319,12 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
                 boolean canDrag = prop.asBoolean().value();
                 doricItemTouchHelperCallback.setDragEnable(canDrag);
                 break;
+            case "beforeDragging":
+                if (!prop.isString()) {
+                    return;
+                }
+                this.beforeDraggingFuncId = prop.asString().value();
+                break;
             case "onDragging":
                 if (!prop.isString()) {
                     return;
@@ -434,8 +450,9 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
         onScrollFuncId = null;
         onScrollEndFuncId = null;
         renderItemFuncId = null;
-        onDraggedFuncId = null;
+        beforeDraggingFuncId = null;
         onDraggingFuncId = null;
+        onDraggedFuncId = null;
     }
 
     private static class DoricItemTouchHelper extends ItemTouchHelper {
@@ -522,6 +539,12 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
             if (viewHolder != null) {
                 fromPos = viewHolder.getAdapterPosition();
             }
+
+            if (actionState == ACTION_STATE_DRAG) {
+                if (onItemTouchCallbackListener != null) {
+                    onItemTouchCallbackListener.beforeMove(fromPos);
+                }
+            }
         }
 
         @Override
@@ -544,6 +567,8 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
 
     private interface OnItemTouchCallbackListener {
         void onSwiped(int adapterPosition);
+
+        void beforeMove(int fromPos);
 
         boolean onMove(int srcPosition, int targetPosition);
 

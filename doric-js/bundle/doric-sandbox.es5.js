@@ -1841,10 +1841,10 @@ var doric = (function (exports) {
     (module.exports = function (key, value) {
       return sharedStore[key] || (sharedStore[key] = value !== undefined ? value : {});
     })('versions', []).push({
-      version: '3.23.1',
+      version: '3.23.3',
       mode: 'global',
       copyright: '© 2014-2022 Denis Pushkarev (zloirock.ru)',
-      license: 'https://github.com/zloirock/core-js/blob/v3.23.1/LICENSE',
+      license: 'https://github.com/zloirock/core-js/blob/v3.23.3/LICENSE',
       source: 'https://github.com/zloirock/core-js'
     });
     });
@@ -2141,7 +2141,8 @@ var doric = (function (exports) {
       if (options && options.getter) { name = 'get ' + name; }
       if (options && options.setter) { name = 'set ' + name; }
       if (!hasOwnProperty_1(value, 'name') || (CONFIGURABLE_FUNCTION_NAME && value.name !== name)) {
-        defineProperty(value, 'name', { value: name, configurable: true });
+        if (descriptors) { defineProperty(value, 'name', { value: name, configurable: true }); }
+        else { value.name = name; }
       }
       if (CONFIGURABLE_LENGTH && options && hasOwnProperty_1(options, 'arity') && value.length !== options.arity) {
         defineProperty(value, 'length', { value: options.arity });
@@ -2174,8 +2175,10 @@ var doric = (function (exports) {
         if (simple) { O[key] = value; }
         else { defineGlobalProperty(key, value); }
       } else {
-        if (!options.unsafe) { delete O[key]; }
-        else if (O[key]) { simple = true; }
+        try {
+          if (!options.unsafe) { delete O[key]; }
+          else if (O[key]) { simple = true; }
+        } catch (error) { /* empty */ }
         if (simple) { O[key] = value; }
         else { objectDefineProperty.f(O, key, {
           value: value,
@@ -2205,23 +2208,23 @@ var doric = (function (exports) {
       return number !== number || number === 0 ? 0 : mathTrunc(number);
     };
 
-    var max$8 = Math.max;
-    var min$b = Math.min;
+    var max$9 = Math.max;
+    var min$c = Math.min;
 
     // Helper for a popular repeating case of the spec:
     // Let integer be ? ToInteger(index).
     // If integer < 0, let result be max((length + integer), 0); else let result be min(integer, length).
     var toAbsoluteIndex = function (index, length) {
       var integer = toIntegerOrInfinity(index);
-      return integer < 0 ? max$8(integer + length, 0) : min$b(integer, length);
+      return integer < 0 ? max$9(integer + length, 0) : min$c(integer, length);
     };
 
-    var min$a = Math.min;
+    var min$b = Math.min;
 
     // `ToLength` abstract operation
     // https://tc39.es/ecma262/#sec-tolength
     var toLength = function (argument) {
-      return argument > 0 ? min$a(toIntegerOrInfinity(argument), 0x1FFFFFFFFFFFFF) : 0; // 2 ** 53 - 1 == 9007199254740991
+      return argument > 0 ? min$b(toIntegerOrInfinity(argument), 0x1FFFFFFFFFFFFF) : 0; // 2 ** 53 - 1 == 9007199254740991
     };
 
     // `LengthOfArrayLike` abstract operation
@@ -2560,13 +2563,13 @@ var doric = (function (exports) {
     };
 
     var $Array$a = Array;
-    var max$7 = Math.max;
+    var max$8 = Math.max;
 
     var arraySliceSimple = function (O, start, end) {
       var length = lengthOfArrayLike(O);
       var k = toAbsoluteIndex(start, length);
       var fin = toAbsoluteIndex(end === undefined ? length : end, length);
-      var result = $Array$a(max$7(fin - k, 0));
+      var result = $Array$a(max$8(fin - k, 0));
       for (var n = 0; k < fin; k++, n++) { createProperty(result, n, O[k]); }
       result.length = n;
       return result;
@@ -2807,7 +2810,7 @@ var doric = (function (exports) {
     var PROTOTYPE$1 = 'prototype';
 
     var setInternalState$i = internalState.set;
-    var getInternalState$f = internalState.getterFor(SYMBOL);
+    var getInternalState$g = internalState.getterFor(SYMBOL);
 
     var ObjectPrototype$4 = Object[PROTOTYPE$1];
     var $Symbol = global_1.Symbol;
@@ -2941,7 +2944,7 @@ var doric = (function (exports) {
       SymbolPrototype$1 = $Symbol[PROTOTYPE$1];
 
       defineBuiltIn(SymbolPrototype$1, 'toString', function toString() {
-        return getInternalState$f(this).tag;
+        return getInternalState$g(this).tag;
       });
 
       defineBuiltIn($Symbol, 'withoutSetter', function (description) {
@@ -2964,7 +2967,7 @@ var doric = (function (exports) {
         nativeDefineProperty(SymbolPrototype$1, 'description', {
           configurable: true,
           get: function description() {
-            return getInternalState$f(this).description;
+            return getInternalState$g(this).description;
           }
         });
         {
@@ -3764,7 +3767,7 @@ var doric = (function (exports) {
       if (!delete O[P]) { throw $TypeError$p('Cannot delete property ' + tryToString(P) + ' of ' + tryToString(O)); }
     };
 
-    var min$9 = Math.min;
+    var min$a = Math.min;
 
     // `Array.prototype.copyWithin` method implementation
     // https://tc39.es/ecma262/#sec-array.prototype.copywithin
@@ -3775,7 +3778,7 @@ var doric = (function (exports) {
       var to = toAbsoluteIndex(target, len);
       var from = toAbsoluteIndex(start, len);
       var end = arguments.length > 2 ? arguments[2] : undefined;
-      var count = min$9((end === undefined ? len : toAbsoluteIndex(end, len)) - from, len - to);
+      var count = min$a((end === undefined ? len : toAbsoluteIndex(end, len)) - from, len - to);
       var inc = 1;
       if (from < to && to < from + count) {
         inc = -1;
@@ -4313,7 +4316,7 @@ var doric = (function (exports) {
 
     var ARRAY_ITERATOR = 'Array Iterator';
     var setInternalState$h = internalState.set;
-    var getInternalState$e = internalState.getterFor(ARRAY_ITERATOR);
+    var getInternalState$f = internalState.getterFor(ARRAY_ITERATOR);
 
     // `Array.prototype.entries` method
     // https://tc39.es/ecma262/#sec-array.prototype.entries
@@ -4335,7 +4338,7 @@ var doric = (function (exports) {
     // `%ArrayIteratorPrototype%.next` method
     // https://tc39.es/ecma262/#sec-%arrayiteratorprototype%.next
     }, function () {
-      var state = getInternalState$e(this);
+      var state = getInternalState$f(this);
       var target = state.target;
       var kind = state.kind;
       var index = state.index++;
@@ -4383,7 +4386,7 @@ var doric = (function (exports) {
 
 
 
-    var min$8 = Math.min;
+    var min$9 = Math.min;
     var $lastIndexOf = [].lastIndexOf;
     var NEGATIVE_ZERO = !!$lastIndexOf && 1 / [1].lastIndexOf(1, -0) < 0;
     var STRICT_METHOD$4 = arrayMethodIsStrict('lastIndexOf');
@@ -4397,7 +4400,7 @@ var doric = (function (exports) {
       var O = toIndexedObject(this);
       var length = lengthOfArrayLike(O);
       var index = length - 1;
-      if (arguments.length > 1) { index = min$8(index, toIntegerOrInfinity(arguments[1])); }
+      if (arguments.length > 1) { index = min$9(index, toIntegerOrInfinity(arguments[1])); }
       if (index < 0) { index = length + index; }
       for (;index >= 0; index--) { if (index in O && O[index] === searchElement) { return index || 0; } }
       return -1;
@@ -4579,7 +4582,7 @@ var doric = (function (exports) {
 
     var SPECIES$4 = wellKnownSymbol('species');
     var $Array$6 = Array;
-    var max$6 = Math.max;
+    var max$7 = Math.max;
 
     // `Array.prototype.slice` method
     // https://tc39.es/ecma262/#sec-array.prototype.slice
@@ -4605,7 +4608,7 @@ var doric = (function (exports) {
             return arraySlice$1(O, k, fin);
           }
         }
-        result = new (Constructor === undefined ? $Array$6 : Constructor)(max$6(fin - k, 0));
+        result = new (Constructor === undefined ? $Array$6 : Constructor)(max$7(fin - k, 0));
         for (n = 0; k < fin; k++, n++) { if (k in O) { createProperty(result, n, O[k]); } }
         result.length = n;
         return result;
@@ -4789,8 +4792,8 @@ var doric = (function (exports) {
 
     var HAS_SPECIES_SUPPORT = arrayMethodHasSpeciesSupport('splice');
 
-    var max$5 = Math.max;
-    var min$7 = Math.min;
+    var max$6 = Math.max;
+    var min$8 = Math.min;
 
     // `Array.prototype.splice` method
     // https://tc39.es/ecma262/#sec-array.prototype.splice
@@ -4811,7 +4814,7 @@ var doric = (function (exports) {
           actualDeleteCount = len - actualStart;
         } else {
           insertCount = argumentsLength - 2;
-          actualDeleteCount = min$7(max$5(toIntegerOrInfinity(deleteCount), 0), len - actualStart);
+          actualDeleteCount = min$8(max$6(toIntegerOrInfinity(deleteCount), 0), len - actualStart);
         }
         doesNotExceedSafeInteger(len + insertCount - actualDeleteCount);
         A = arraySpeciesCreate(O, actualDeleteCount);
@@ -5035,7 +5038,7 @@ var doric = (function (exports) {
 
     var PROPER_FUNCTION_NAME$2 = functionName.PROPER;
     var CONFIGURABLE_FUNCTION_NAME = functionName.CONFIGURABLE;
-    var getInternalState$d = internalState.get;
+    var getInternalState$e = internalState.get;
     var setInternalState$g = internalState.set;
     var ARRAY_BUFFER$1 = 'ArrayBuffer';
     var DATA_VIEW = 'DataView';
@@ -5081,14 +5084,14 @@ var doric = (function (exports) {
     };
 
     var addGetter = function (Constructor, key) {
-      defineProperty$8(Constructor[PROTOTYPE], key, { get: function () { return getInternalState$d(this)[key]; } });
+      defineProperty$8(Constructor[PROTOTYPE], key, { get: function () { return getInternalState$e(this)[key]; } });
     };
 
     var get$1 = function (view, count, index, isLittleEndian) {
       var intIndex = toIndex(index);
-      var store = getInternalState$d(view);
+      var store = getInternalState$e(view);
       if (intIndex + count > store.byteLength) { throw RangeError$3(WRONG_INDEX); }
-      var bytes = getInternalState$d(store.buffer).bytes;
+      var bytes = getInternalState$e(store.buffer).bytes;
       var start = intIndex + store.byteOffset;
       var pack = arraySliceSimple(bytes, start, start + count);
       return isLittleEndian ? pack : reverse(pack);
@@ -5096,9 +5099,9 @@ var doric = (function (exports) {
 
     var set$2 = function (view, count, index, conversion, value, isLittleEndian) {
       var intIndex = toIndex(index);
-      var store = getInternalState$d(view);
+      var store = getInternalState$e(view);
       if (intIndex + count > store.byteLength) { throw RangeError$3(WRONG_INDEX); }
-      var bytes = getInternalState$d(store.buffer).bytes;
+      var bytes = getInternalState$e(store.buffer).bytes;
       var start = intIndex + store.byteOffset;
       var pack = conversion(+value);
       for (var i = 0; i < count; i++) { bytes[start + i] = pack[isLittleEndian ? i : count - i - 1]; }
@@ -5120,7 +5123,7 @@ var doric = (function (exports) {
       $DataView = function DataView(buffer, byteOffset, byteLength) {
         anInstance(this, DataViewPrototype$1);
         anInstance(buffer, ArrayBufferPrototype);
-        var bufferLength = getInternalState$d(buffer).byteLength;
+        var bufferLength = getInternalState$e(buffer).byteLength;
         var offset = toIntegerOrInfinity(byteOffset);
         if (offset < 0 || offset > bufferLength) { throw RangeError$3('Wrong offset'); }
         byteLength = byteLength === undefined ? bufferLength - offset : toLength(byteLength);
@@ -5277,6 +5280,9 @@ var doric = (function (exports) {
 
 
 
+
+    var enforceInternalState$2 = internalState.enforce;
+    var getInternalState$d = internalState.get;
     var Int8Array$4 = global_1.Int8Array;
     var Int8ArrayPrototype$1 = Int8Array$4 && Int8Array$4.prototype;
     var Uint8ClampedArray$1 = global_1.Uint8ClampedArray;
@@ -5288,7 +5294,7 @@ var doric = (function (exports) {
 
     var TO_STRING_TAG$5 = wellKnownSymbol('toStringTag');
     var TYPED_ARRAY_TAG = uid('TYPED_ARRAY_TAG');
-    var TYPED_ARRAY_CONSTRUCTOR$5 = uid('TYPED_ARRAY_CONSTRUCTOR');
+    var TYPED_ARRAY_CONSTRUCTOR = 'TypedArrayConstructor';
     // Fixing native typed arrays in Opera Presto crashes the browser, see #595
     var NATIVE_ARRAY_BUFFER_VIEWS$2 = arrayBufferNative && !!objectSetPrototypeOf && classof(global_1.opera) !== 'Opera';
     var TYPED_ARRAY_TAG_REQUIRED = false;
@@ -5317,6 +5323,13 @@ var doric = (function (exports) {
       return klass === 'DataView'
         || hasOwnProperty_1(TypedArrayConstructorsList, klass)
         || hasOwnProperty_1(BigIntArrayConstructorsList, klass);
+    };
+
+    var getTypedArrayConstructor$5 = function (it) {
+      var proto = objectGetPrototypeOf(it);
+      if (!isObject(proto)) { return; }
+      var state = getInternalState$d(proto);
+      return (state && hasOwnProperty_1(state, TYPED_ARRAY_CONSTRUCTOR)) ? state[TYPED_ARRAY_CONSTRUCTOR] : getTypedArrayConstructor$5(proto);
     };
 
     var isTypedArray = function (it) {
@@ -5383,14 +5396,14 @@ var doric = (function (exports) {
     for (NAME$1 in TypedArrayConstructorsList) {
       Constructor = global_1[NAME$1];
       Prototype = Constructor && Constructor.prototype;
-      if (Prototype) { createNonEnumerableProperty(Prototype, TYPED_ARRAY_CONSTRUCTOR$5, Constructor); }
+      if (Prototype) { enforceInternalState$2(Prototype)[TYPED_ARRAY_CONSTRUCTOR] = Constructor; }
       else { NATIVE_ARRAY_BUFFER_VIEWS$2 = false; }
     }
 
     for (NAME$1 in BigIntArrayConstructorsList) {
       Constructor = global_1[NAME$1];
       Prototype = Constructor && Constructor.prototype;
-      if (Prototype) { createNonEnumerableProperty(Prototype, TYPED_ARRAY_CONSTRUCTOR$5, Constructor); }
+      if (Prototype) { enforceInternalState$2(Prototype)[TYPED_ARRAY_CONSTRUCTOR] = Constructor; }
     }
 
     // WebKit bug - typed arrays constructors prototype is Object.prototype
@@ -5428,12 +5441,12 @@ var doric = (function (exports) {
 
     var arrayBufferViewCore = {
       NATIVE_ARRAY_BUFFER_VIEWS: NATIVE_ARRAY_BUFFER_VIEWS$2,
-      TYPED_ARRAY_CONSTRUCTOR: TYPED_ARRAY_CONSTRUCTOR$5,
       TYPED_ARRAY_TAG: TYPED_ARRAY_TAG_REQUIRED && TYPED_ARRAY_TAG,
       aTypedArray: aTypedArray$x,
       aTypedArrayConstructor: aTypedArrayConstructor$4,
       exportTypedArrayMethod: exportTypedArrayMethod$y,
       exportTypedArrayStaticMethod: exportTypedArrayStaticMethod$3,
+      getTypedArrayConstructor: getTypedArrayConstructor$5,
       isView: isView,
       isTypedArray: isTypedArray,
       TypedArray: TypedArray,
@@ -9093,7 +9106,7 @@ var doric = (function (exports) {
     // eslint-disable-next-line es-x/no-string-prototype-endswith -- safe
     var un$EndsWith = functionUncurryThis(''.endsWith);
     var slice$2 = functionUncurryThis(''.slice);
-    var min$6 = Math.min;
+    var min$7 = Math.min;
 
     var CORRECT_IS_REGEXP_LOGIC$1 = correctIsRegexpLogic('endsWith');
     // https://github.com/zloirock/core-js/pull/702
@@ -9110,7 +9123,7 @@ var doric = (function (exports) {
         notARegexp(searchString);
         var endPosition = arguments.length > 1 ? arguments[1] : undefined;
         var len = that.length;
-        var end = endPosition === undefined ? len : min$6(toLength(endPosition), len);
+        var end = endPosition === undefined ? len : min$7(toLength(endPosition), len);
         var search = toString_1(searchString);
         return un$EndsWith
           ? un$EndsWith(that, search, end)
@@ -9521,8 +9534,8 @@ var doric = (function (exports) {
     };
 
     var REPLACE$1 = wellKnownSymbol('replace');
-    var max$4 = Math.max;
-    var min$5 = Math.min;
+    var max$5 = Math.max;
+    var min$6 = Math.min;
     var concat$1 = functionUncurryThis([].concat);
     var push$e = functionUncurryThis([].push);
     var stringIndexOf$1 = functionUncurryThis(''.indexOf);
@@ -9613,7 +9626,7 @@ var doric = (function (exports) {
             result = results[i];
 
             var matched = toString_1(result[0]);
-            var position = max$4(min$5(toIntegerOrInfinity(result.index), S.length), 0);
+            var position = max$5(min$6(toIntegerOrInfinity(result.index), S.length), 0);
             var captures = [];
             // NOTE: This is equivalent to
             //   captures = result.slice(1).map(maybeToString)
@@ -9644,7 +9657,7 @@ var doric = (function (exports) {
     var indexOf = functionUncurryThis(''.indexOf);
     functionUncurryThis(''.replace);
     var stringSlice$7 = functionUncurryThis(''.slice);
-    var max$3 = Math.max;
+    var max$4 = Math.max;
 
     var stringIndexOf = function (string, searchValue, fromIndex) {
       if (fromIndex > string.length) { return -1; }
@@ -9677,7 +9690,7 @@ var doric = (function (exports) {
         functionalReplace = isCallable(replaceValue);
         if (!functionalReplace) { replaceValue = toString_1(replaceValue); }
         searchLength = searchString.length;
-        advanceBy = max$3(1, searchLength);
+        advanceBy = max$4(1, searchLength);
         position = stringIndexOf(string, searchString, 0);
         while (position !== -1) {
           replacement = functionalReplace
@@ -9724,7 +9737,7 @@ var doric = (function (exports) {
 
     var UNSUPPORTED_Y = regexpStickyHelpers.UNSUPPORTED_Y;
     var MAX_UINT32 = 0xFFFFFFFF;
-    var min$4 = Math.min;
+    var min$5 = Math.min;
     var $push = [].push;
     var exec$6 = functionUncurryThis(/./.exec);
     var push$d = functionUncurryThis($push);
@@ -9841,7 +9854,7 @@ var doric = (function (exports) {
             var e;
             if (
               z === null ||
-              (e = min$4(toLength(splitter.lastIndex + (UNSUPPORTED_Y ? q : 0)), S.length)) === p
+              (e = min$5(toLength(splitter.lastIndex + (UNSUPPORTED_Y ? q : 0)), S.length)) === p
             ) {
               q = advanceStringIndex(S, q, unicodeMatching);
             } else {
@@ -9871,7 +9884,7 @@ var doric = (function (exports) {
     // eslint-disable-next-line es-x/no-string-prototype-startswith -- safe
     var un$StartsWith = functionUncurryThis(''.startsWith);
     var stringSlice$5 = functionUncurryThis(''.slice);
-    var min$3 = Math.min;
+    var min$4 = Math.min;
 
     var CORRECT_IS_REGEXP_LOGIC = correctIsRegexpLogic('startsWith');
     // https://github.com/zloirock/core-js/pull/702
@@ -9886,7 +9899,7 @@ var doric = (function (exports) {
       startsWith: function startsWith(searchString /* , position = 0 */) {
         var that = toString_1(requireObjectCoercible(this));
         notARegexp(searchString);
-        var index = toLength(min$3(arguments.length > 1 ? arguments[1] : undefined, that.length));
+        var index = toLength(min$4(arguments.length > 1 ? arguments[1] : undefined, that.length));
         var search = toString_1(searchString);
         return un$StartsWith
           ? un$StartsWith(that, search, index)
@@ -9895,8 +9908,8 @@ var doric = (function (exports) {
     });
 
     var stringSlice$4 = functionUncurryThis(''.slice);
-    var max$2 = Math.max;
-    var min$2 = Math.min;
+    var max$3 = Math.max;
+    var min$3 = Math.min;
 
     // eslint-disable-next-line unicorn/prefer-string-slice, es-x/no-string-prototype-substr -- required for testing
     var FORCED$3 = !''.substr || 'ab'.substr(-1) !== 'b';
@@ -9910,10 +9923,10 @@ var doric = (function (exports) {
         var intStart = toIntegerOrInfinity(start);
         var intLength, intEnd;
         if (intStart === Infinity) { intStart = 0; }
-        if (intStart < 0) { intStart = max$2(size + intStart, 0); }
+        if (intStart < 0) { intStart = max$3(size + intStart, 0); }
         intLength = length === undefined ? size : toIntegerOrInfinity(length);
         if (intLength <= 0 || intLength === Infinity) { return ''; }
-        intEnd = min$2(intStart + intLength, size);
+        intEnd = min$3(intStart + intLength, size);
         return intStart >= intEnd ? '' : stringSlice$4(that, intStart, intEnd);
       }
     });
@@ -10232,6 +10245,7 @@ var doric = (function (exports) {
 
     var getInternalState = internalState.get;
     var setInternalState = internalState.set;
+    var enforceInternalState = internalState.enforce;
     var nativeDefineProperty = objectDefineProperty.f;
     var nativeGetOwnPropertyDescriptor = objectGetOwnPropertyDescriptor.f;
     var round = Math.round;
@@ -10240,7 +10254,6 @@ var doric = (function (exports) {
     var ArrayBufferPrototype = ArrayBuffer.prototype;
     var DataView = arrayBuffer.DataView;
     var NATIVE_ARRAY_BUFFER_VIEWS = arrayBufferViewCore.NATIVE_ARRAY_BUFFER_VIEWS;
-    var TYPED_ARRAY_CONSTRUCTOR = arrayBufferViewCore.TYPED_ARRAY_CONSTRUCTOR;
     var TYPED_ARRAY_TAG = arrayBufferViewCore.TYPED_ARRAY_TAG;
     var TypedArray = arrayBufferViewCore.TypedArray;
     var TypedArrayPrototype = arrayBufferViewCore.TypedArrayPrototype;
@@ -10417,7 +10430,7 @@ var doric = (function (exports) {
           createNonEnumerableProperty(TypedArrayConstructorPrototype, 'constructor', TypedArrayConstructor);
         }
 
-        createNonEnumerableProperty(TypedArrayConstructorPrototype, TYPED_ARRAY_CONSTRUCTOR, TypedArrayConstructor);
+        enforceInternalState(TypedArrayConstructorPrototype).TypedArrayConstructor = TypedArrayConstructor;
 
         if (TYPED_ARRAY_TAG) {
           createNonEnumerableProperty(TypedArrayConstructorPrototype, TYPED_ARRAY_TAG, CONSTRUCTOR_NAME);
@@ -10588,13 +10601,13 @@ var doric = (function (exports) {
       return result;
     };
 
-    var TYPED_ARRAY_CONSTRUCTOR$4 = arrayBufferViewCore.TYPED_ARRAY_CONSTRUCTOR;
     var aTypedArrayConstructor$2 = arrayBufferViewCore.aTypedArrayConstructor;
+    var getTypedArrayConstructor$4 = arrayBufferViewCore.getTypedArrayConstructor;
 
     // a part of `TypedArraySpeciesCreate` abstract operation
     // https://tc39.es/ecma262/#typedarray-species-create
     var typedArraySpeciesConstructor = function (originalArray) {
-      return aTypedArrayConstructor$2(speciesConstructor(originalArray, originalArray[TYPED_ARRAY_CONSTRUCTOR$4]));
+      return aTypedArrayConstructor$2(speciesConstructor(originalArray, getTypedArrayConstructor$4(originalArray)));
     };
 
     var typedArrayFromSpeciesAndList = function (instance, list) {
@@ -11715,46 +11728,39 @@ var doric = (function (exports) {
 
     addToUnscopables('toSorted');
 
-    var max$1 = Math.max;
-    var min$1 = Math.min;
-
-    // https://tc39.es/proposal-change-array-by-copy/#sec-array.prototype.toSpliced
-    // https://tc39.es/proposal-change-array-by-copy/#sec-%typedarray%.prototype.toSpliced
-    var arrayToSpliced = function (O, C, args) {
-      var start = args[0];
-      var deleteCount = args[1];
-      var len = lengthOfArrayLike(O);
-      var actualStart = toAbsoluteIndex(start, len);
-      var argumentsLength = args.length;
-      var k = 0;
-      var insertCount, actualDeleteCount, newLen, A;
-      if (argumentsLength === 0) {
-        insertCount = actualDeleteCount = 0;
-      } else if (argumentsLength === 1) {
-        insertCount = 0;
-        actualDeleteCount = len - actualStart;
-      } else {
-        insertCount = argumentsLength - 2;
-        actualDeleteCount = min$1(max$1(toIntegerOrInfinity(deleteCount), 0), len - actualStart);
-      }
-      newLen = doesNotExceedSafeInteger(len + insertCount - actualDeleteCount);
-      A = new C(newLen);
-
-      for (; k < actualStart; k++) { A[k] = O[k]; }
-      for (; k < actualStart + insertCount; k++) { A[k] = args[k - actualStart + 2]; }
-      for (; k < newLen; k++) { A[k] = O[k + actualDeleteCount - insertCount]; }
-
-      return A;
-    };
-
     var $Array$1 = Array;
+    var max$2 = Math.max;
+    var min$2 = Math.min;
 
     // `Array.prototype.toSpliced` method
     // https://tc39.es/proposal-change-array-by-copy/#sec-array.prototype.toSpliced
-    _export({ target: 'Array', proto: true, arity: 2 }, {
-      // eslint-disable-next-line no-unused-vars -- required for .length
+    _export({ target: 'Array', proto: true }, {
       toSpliced: function toSpliced(start, deleteCount /* , ...items */) {
-        return arrayToSpliced(toIndexedObject(this), $Array$1, arraySlice$1(arguments));
+        var arguments$1 = arguments;
+
+        var O = toIndexedObject(this);
+        var len = lengthOfArrayLike(O);
+        var actualStart = toAbsoluteIndex(start, len);
+        var argumentsLength = arguments.length;
+        var k = 0;
+        var insertCount, actualDeleteCount, newLen, A;
+        if (argumentsLength === 0) {
+          insertCount = actualDeleteCount = 0;
+        } else if (argumentsLength === 1) {
+          insertCount = 0;
+          actualDeleteCount = len - actualStart;
+        } else {
+          insertCount = argumentsLength - 2;
+          actualDeleteCount = min$2(max$2(toIntegerOrInfinity(deleteCount), 0), len - actualStart);
+        }
+        newLen = doesNotExceedSafeInteger(len + insertCount - actualDeleteCount);
+        A = $Array$1(newLen);
+
+        for (; k < actualStart; k++) { A[k] = O[k]; }
+        for (; k < actualStart + insertCount; k++) { A[k] = arguments$1[k - actualStart + 2]; }
+        for (; k < newLen; k++) { A[k] = O[k + actualDeleteCount - insertCount]; }
+
+        return A;
       }
     });
 
@@ -13304,32 +13310,30 @@ var doric = (function (exports) {
       upsert: mapUpsert
     });
 
-    var min = Math.min;
-    var max = Math.max;
+    var min$1 = Math.min;
+    var max$1 = Math.max;
 
     // `Math.clamp` method
     // https://rwaldron.github.io/proposal-math-extensions/
     _export({ target: 'Math', stat: true, forced: true }, {
       clamp: function clamp(x, lower, upper) {
-        return min(upper, max(lower, x));
+        return min$1(upper, max$1(lower, x));
       }
     });
 
-    var DEG_PER_RAD$1 = Math.PI / 180;
-
     // `Math.DEG_PER_RAD` constant
     // https://rwaldron.github.io/proposal-math-extensions/
-    _export({ target: 'Math', stat: true, nonConfigurable: true, nonWritable: true, forced: Math.DEG_PER_RAD !== DEG_PER_RAD$1 }, {
-      DEG_PER_RAD: DEG_PER_RAD$1
+    _export({ target: 'Math', stat: true, nonConfigurable: true, nonWritable: true }, {
+      DEG_PER_RAD: Math.PI / 180
     });
 
-    var RAD_PER_DEG$1 = 180 / Math.PI;
+    var RAD_PER_DEG = 180 / Math.PI;
 
     // `Math.degrees` method
     // https://rwaldron.github.io/proposal-math-extensions/
     _export({ target: 'Math', stat: true, forced: true }, {
       degrees: function degrees(radians) {
-        return radians * RAD_PER_DEG$1;
+        return radians * RAD_PER_DEG;
       }
     });
 
@@ -13396,12 +13400,10 @@ var doric = (function (exports) {
       }
     });
 
-    var RAD_PER_DEG = 180 / Math.PI;
-
     // `Math.RAD_PER_DEG` constant
     // https://rwaldron.github.io/proposal-math-extensions/
-    _export({ target: 'Math', stat: true, nonConfigurable: true, nonWritable: true, forced: Math.RAD_PER_DEG !== RAD_PER_DEG }, {
-      RAD_PER_DEG: RAD_PER_DEG
+    _export({ target: 'Math', stat: true, nonConfigurable: true, nonWritable: true }, {
+      RAD_PER_DEG: 180 / Math.PI
     });
 
     var DEG_PER_RAD = Math.PI / 180;
@@ -14520,17 +14522,17 @@ var doric = (function (exports) {
 
     var aTypedArray$4 = arrayBufferViewCore.aTypedArray;
     var exportTypedArrayMethod$4 = arrayBufferViewCore.exportTypedArrayMethod;
-    var TYPED_ARRAY_CONSTRUCTOR$3 = arrayBufferViewCore.TYPED_ARRAY_CONSTRUCTOR;
+    var getTypedArrayConstructor$3 = arrayBufferViewCore.getTypedArrayConstructor;
 
     // `%TypedArray%.prototype.toReversed` method
     // https://tc39.es/proposal-change-array-by-copy/#sec-%typedarray%.prototype.toReversed
     exportTypedArrayMethod$4('toReversed', function toReversed() {
-      return arrayToReversed(aTypedArray$4(this), this[TYPED_ARRAY_CONSTRUCTOR$3]);
+      return arrayToReversed(aTypedArray$4(this), getTypedArrayConstructor$3(this));
     });
 
     var aTypedArray$3 = arrayBufferViewCore.aTypedArray;
+    var getTypedArrayConstructor$2 = arrayBufferViewCore.getTypedArrayConstructor;
     var exportTypedArrayMethod$3 = arrayBufferViewCore.exportTypedArrayMethod;
-    var TYPED_ARRAY_CONSTRUCTOR$2 = arrayBufferViewCore.TYPED_ARRAY_CONSTRUCTOR;
     var sort = functionUncurryThis(arrayBufferViewCore.TypedArrayPrototype.sort);
 
     // `%TypedArray%.prototype.toSorted` method
@@ -14538,20 +14540,67 @@ var doric = (function (exports) {
     exportTypedArrayMethod$3('toSorted', function toSorted(compareFn) {
       if (compareFn !== undefined) { aCallable(compareFn); }
       var O = aTypedArray$3(this);
-      var A = arrayFromConstructorAndList(O[TYPED_ARRAY_CONSTRUCTOR$2], O);
+      var A = arrayFromConstructorAndList(getTypedArrayConstructor$2(O), O);
       return sort(A, compareFn);
     });
 
     var aTypedArray$2 = arrayBufferViewCore.aTypedArray;
+    var getTypedArrayConstructor$1 = arrayBufferViewCore.getTypedArrayConstructor;
     var exportTypedArrayMethod$2 = arrayBufferViewCore.exportTypedArrayMethod;
-    var TYPED_ARRAY_CONSTRUCTOR$1 = arrayBufferViewCore.TYPED_ARRAY_CONSTRUCTOR;
+    var max = Math.max;
+    var min = Math.min;
+
+    // some early implementations, like WebKit, does not follow the final semantic
+    var PROPER_ORDER$1 = !fails(function () {
+      // eslint-disable-next-line es-x/no-typed-arrays -- required for testing
+      var array = new Int8Array([1]);
+
+      var spliced = array.toSpliced(1, 0, {
+        valueOf: function () {
+          array[0] = 2;
+          return 3;
+        }
+      });
+
+      return spliced[0] !== 2 || spliced[1] !== 3;
+    });
 
     // `%TypedArray%.prototype.toSpliced` method
     // https://tc39.es/proposal-change-array-by-copy/#sec-%typedarray%.prototype.toSpliced
-    // eslint-disable-next-line no-unused-vars -- required for .length
     exportTypedArrayMethod$2('toSpliced', function toSpliced(start, deleteCount /* , ...items */) {
-      return arrayToSpliced(aTypedArray$2(this), this[TYPED_ARRAY_CONSTRUCTOR$1], arraySlice$1(arguments));
-    }, { arity: 2 });
+      var arguments$1 = arguments;
+
+      var O = aTypedArray$2(this);
+      var C = getTypedArrayConstructor$1(O);
+      var len = lengthOfArrayLike(O);
+      var actualStart = toAbsoluteIndex(start, len);
+      var argumentsLength = arguments.length;
+      var k = 0;
+      var insertCount, actualDeleteCount, convertedItems, newLen, A;
+      if (argumentsLength === 0) {
+        insertCount = actualDeleteCount = 0;
+      } else if (argumentsLength === 1) {
+        insertCount = 0;
+        actualDeleteCount = len - actualStart;
+      } else {
+        actualDeleteCount = min(max(toIntegerOrInfinity(deleteCount), 0), len - actualStart);
+        insertCount = argumentsLength - 2;
+        if (insertCount) {
+          convertedItems = new C(insertCount);
+          for (var i = 2; i < argumentsLength; i++) {
+            convertedItems[i - 2] = arguments$1[i];
+          }
+        }
+      }
+      newLen = len + insertCount - actualDeleteCount;
+      A = new C(newLen);
+
+      for (; k < actualStart; k++) { A[k] = O[k]; }
+      for (; k < actualStart + insertCount; k++) { A[k] = convertedItems[k - actualStart]; }
+      for (; k < newLen; k++) { A[k] = O[k + actualDeleteCount - insertCount]; }
+
+      return A;
+    }, !PROPER_ORDER$1);
 
     var aTypedArray$1 = arrayBufferViewCore.aTypedArray;
     var exportTypedArrayMethod$1 = arrayBufferViewCore.exportTypedArrayMethod;
@@ -14563,10 +14612,15 @@ var doric = (function (exports) {
       return typedArrayFromSpeciesAndList(this, arrayUniqueBy(aTypedArray$1(this), resolver));
     }, true);
 
-    var aTypedArray = arrayBufferViewCore.aTypedArray;
-    var exportTypedArrayMethod = arrayBufferViewCore.exportTypedArrayMethod;
-    var TYPED_ARRAY_CONSTRUCTOR = arrayBufferViewCore.TYPED_ARRAY_CONSTRUCTOR;
     var slice = functionUncurryThis(''.slice);
+
+    var isBigIntArray = function (it) {
+      return slice(classof(it), 0, 3) === 'Big';
+    };
+
+    var aTypedArray = arrayBufferViewCore.aTypedArray;
+    var getTypedArrayConstructor = arrayBufferViewCore.getTypedArrayConstructor;
+    var exportTypedArrayMethod = arrayBufferViewCore.exportTypedArrayMethod;
 
     var PROPER_ORDER = !!function () {
       try {
@@ -14582,10 +14636,10 @@ var doric = (function (exports) {
     // `%TypedArray%.prototype.with` method
     // https://tc39.es/proposal-change-array-by-copy/#sec-%typedarray%.prototype.with
     exportTypedArrayMethod('with', { 'with': function (index, value) {
-      aTypedArray(this);
+      var O = aTypedArray(this);
       var relativeIndex = toIntegerOrInfinity(index);
-      var actualValue = slice(classof(this), 0, 3) === 'Big' ? toBigInt(value) : +value;
-      return arrayWith(this, this[TYPED_ARRAY_CONSTRUCTOR], relativeIndex, actualValue);
+      var actualValue = isBigIntArray(O) ? toBigInt(value) : +value;
+      return arrayWith(O, getTypedArrayConstructor(O), relativeIndex, actualValue);
     } }['with'], !PROPER_ORDER);
 
     // `WeakMap.prototype.deleteAll` method

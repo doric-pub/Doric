@@ -253,6 +253,9 @@ export class View {
             }
         });
     }
+    static isViewClass() {
+        return true;
+    }
 }
 __decorate([
     Property,

@@ -145,6 +145,7 @@ export declare abstract class View implements Modeling {
     doAnimation(context: BridgeContext, animation: IAnimation): Promise<void>;
     clearAnimation(context: BridgeContext, animation: IAnimation): Promise<void>;
     cancelAnimation(context: BridgeContext, animation: IAnimation): Promise<void>;
+    static isViewClass(): boolean;
 }
 export declare abstract class Superview extends View {
     subviewById(id: string): View | undefined;

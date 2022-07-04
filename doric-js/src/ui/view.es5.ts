@@ -412,6 +412,9 @@ export abstract class View implements Modeling {
             }
         })
     }
+    static isViewClass() {
+        return true
+    }
 }
 
 export abstract class Superview extends View {

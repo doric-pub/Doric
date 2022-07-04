@@ -1899,6 +1899,9 @@ class View {
             }
         });
     }
+    static isViewClass() {
+        return true;
+    }
 }
 __decorate$f([
     Property,
@@ -3822,26 +3825,47 @@ exports.Display = void 0;
 exports.jsx = void 0;
 (function (jsx) {
     function createElement(constructor, config, ...children) {
-        const e = new constructor();
-        if (e instanceof Fragment) {
-            return children;
-        }
-        e.layoutConfig = layoutConfig().fit();
-        if (config) {
-            e.apply(config);
-        }
-        if (children && children.length > 0) {
-            if (children.length === 1) {
-                children = children[0];
+        if (!!constructor.isViewClass) {
+            const e = new constructor();
+            if (e instanceof Fragment) {
+                return children;
             }
-            if (Reflect.has(e, "innerElement")) {
-                Reflect.set(e, "innerElement", children, e);
+            e.layoutConfig = layoutConfig().fit();
+            if (config) {
+                e.apply(config);
             }
-            else {
-                throw new Error(`Do not support ${constructor.name} for ${children}`);
+            if (children && children.length > 0) {
+                if (children.length === 1) {
+                    children = children[0];
+                }
+                if (Reflect.has(e, "innerElement")) {
+                    Reflect.set(e, "innerElement", children, e);
+                }
+                else {
+                    throw new Error(`Do not support ${constructor.name} for ${children}`);
+                }
             }
+            return e;
         }
-        return e;
+        else {
+            const f = constructor;
+            const e = Reflect.apply(f, undefined, [config]);
+            if (e instanceof Fragment) {
+                return children;
+            }
+            if (children && children.length > 0) {
+                if (children.length === 1) {
+                    children = children[0];
+                }
+                if (Reflect.has(e, "innerElement")) {
+                    Reflect.set(e, "innerElement", children, e);
+                }
+                else {
+                    throw new Error(`Do not support add child for ${e.viewType()}`);
+                }
+            }
+            return e;
+        }
     }
     jsx.createElement = createElement;
     class Fragment extends Group {

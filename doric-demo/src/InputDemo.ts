@@ -38,6 +38,10 @@ function getInput(c: Partial<Input>) {
   inputView.onSubmitEditing = (text) => {
     inputed.text = `Submited: ${text}`
   };
+  inputView.beforeTextChange = (change) => {
+    log(`beforeTextChange  ${JSON.stringify(change)}`);
+    return true;
+  };
 
 
 

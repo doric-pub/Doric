@@ -569,14 +569,16 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
 }
 
 - (void)textViewDidChange:(UITextView *)textView {
-    if (textView.markedTextRange || textView.text.length > 0) {
+    UITextRange *textRange = textView.markedTextRange;
+    if (textRange || textView.text.length > 0) {
         self.view.multiLineInput.placeholderLabel.hidden = YES;
     } else {
         self.view.multiLineInput.placeholderLabel.hidden = NO;
     }
-
-    if (textView.markedTextRange) return;
-
+    if (textRange) {
+        NSString *text = [textView textInRange:textRange];
+        if (text.length) return;
+    }
     if (self.maxLength) {
         UITextRange *range = textView.selectedTextRange;
         textView.text = [self limitToHansMaxLength:self.maxLength.unsignedIntValue text:textView.text];
@@ -612,6 +614,11 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
 
 
 - (void)textFieldDidChange:(UITextField *)textField {
+    UITextRange *textRange = textField.markedTextRange;
+    if (textRange) {
+        NSString *text = [textField textInRange:textRange];
+        if (text.length) return;
+    }
     if (self.maxLength) {
         UITextRange *range = textField.selectedTextRange;
         textField.text = [self limitToHansMaxLength:self.maxLength.unsignedIntValue text:textField.text];

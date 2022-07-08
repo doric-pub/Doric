@@ -9,6 +9,7 @@ import {
   Color,
   input,
   text,
+  log,
 } from "doric";
 import { preferenceView } from "./components/PreferenceView";
 import { title } from "./utils";

@@ -70,27 +70,6 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.placeholderLabel.hidden = self.text.length > 0;
-    if (!self.placeholderLabel.hidden) {
-        CGFloat lineFragmentPadding = self.textContainer.lineFragmentPadding;
-        UIEdgeInsets textContainerInset = self.textContainerInset;
-        self.placeholderLabel.x = lineFragmentPadding + textContainerInset.left;
-
-        CGFloat desiredWidth = self.width - lineFragmentPadding * 2 - textContainerInset.left - textContainerInset.right;
-        CGSize fitSize = [self.placeholderLabel sizeThatFits:CGSizeMake(desiredWidth, 0)];
-
-        if (fitSize.width < desiredWidth) {
-            self.placeholderLabel.width = desiredWidth;
-        }
-        self.placeholderLabel.height = fitSize.height;
-        if ((self.gravity & DoricGravityTop) == DoricGravityTop) {
-            self.placeholderLabel.y = textContainerInset.top;
-        } else if ((self.gravity & DoricGravityBottom) == DoricGravityBottom) {
-            self.placeholderLabel.y = self.height - textContainerInset.bottom - fitSize.height;
-        } else {
-            self.placeholderLabel.centerY = (self.height - textContainerInset.top - textContainerInset.bottom) / 2;
-        }
-    }
     if (self.contentSize.height < self.height) {
         if ((self.gravity & DoricGravityTop) == DoricGravityTop) {
             self.contentInset = UIEdgeInsetsMake(
@@ -110,6 +89,31 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
                     self.contentInset.left,
                     self.contentInset.bottom,
                     self.contentInset.right);
+        }
+    }
+        
+    self.placeholderLabel.hidden = self.text.length > 0;
+    if (!self.placeholderLabel.hidden) {
+        CGFloat lineFragmentPadding = self.textContainer.lineFragmentPadding;
+        UIEdgeInsets textContainerInset = self.textContainerInset;
+        self.placeholderLabel.x = lineFragmentPadding + textContainerInset.left;
+
+        CGFloat desiredWidth = self.width - lineFragmentPadding * 2 - textContainerInset.left - textContainerInset.right;
+        CGSize fitSize = [self.placeholderLabel sizeThatFits:CGSizeMake(desiredWidth, 0)];
+
+        if (fitSize.width < desiredWidth) {
+            self.placeholderLabel.width = desiredWidth;
+        }
+        self.placeholderLabel.height = fitSize.height;
+        if ((self.gravity & DoricGravityTop) == DoricGravityTop) {
+            self.placeholderLabel.y = textContainerInset.top;
+        } else if ((self.gravity & DoricGravityBottom) == DoricGravityBottom) {
+            self.placeholderLabel.y = self.height - textContainerInset.bottom - fitSize.height ;
+        } else {
+            self.placeholderLabel.centerY = (self.height - textContainerInset.top - textContainerInset.bottom) / 2 ;
+        }
+        if (self.contentInset.top > 0) {
+            self.placeholderLabel.y = self.placeholderLabel.y - self.contentInset.top;
         }
     }
 }

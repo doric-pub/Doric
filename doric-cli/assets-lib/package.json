@@ -11,11 +11,10 @@
     "ios": "cd example && doric run iOS"
   },
   "license": "Apache-2.0",
-  "dependencies": {
-    "doric": ">=__$Version__",
-    "doric-cli": ">=__$Version__"
-  },
+  "dependencies": {},
   "devDependencies": {
+    "doric": ">=__$Version__",
+    "doric-cli": ">=__$Version__",
     "typescript": "^4.2.2",
     "rollup": "^2.24.0",
     "@rollup/plugin-buble": "^0.21.3",
@@ -23,5 +22,8 @@
     "@rollup/plugin-image": "^2.0.5",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^8.4.0"
+  },
+  "peerDependencies": {
+    "doric": ">=__$Version__"
   }
 }

@@ -34,13 +34,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import pub.doric.DoricActivity;
 import pub.doric.devkit.DoricDev;
 import pub.doric.refresh.DoricSwipeLayout;
 import pub.doric.utils.DoricUtils;
 
 public class MainActivity extends AppCompatActivity {
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    public static class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private final String[] data;
 
@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
                     DoricUtils.dp2px(50)));
             textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
             return new RecyclerView.ViewHolder(textView) {
+                @NonNull
                 @Override
                 public String toString() {
                     return super.toString();
@@ -102,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
             };
         }
 
+        @SuppressLint("SetTextI18n")
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
             final TextView tv = (TextView) holder.itemView;
@@ -113,13 +115,22 @@ public class MainActivity extends AppCompatActivity {
                         DoricDev.getInstance().openDevMode();
                     }
                 });
+            } else if (position == 1) {
+                tv.setText("Doric Panel List");
+                tv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(tv.getContext(), DoricPanelListActivity.class);
+                        tv.getContext().startActivity(intent);
+                    }
+                });
             } else {
-                tv.setText(data[position - 1]);
+                tv.setText(data[position - 2]);
                 tv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(tv.getContext(), DoricDebugTimingActivity.class);
-                        intent.putExtra("source", "assets://src/" + data[position - 1]);
+                        intent.putExtra("source", "assets://src/" + data[position - 2]);
                         //intent.putExtra("alias", data[position - 1].replace(".js", ""));
                         intent.putExtra("alias", "__dev__");
                         tv.getContext().startActivity(intent);
@@ -130,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return data.length + 1;
+            return data.length + 2;
         }
     }
 }

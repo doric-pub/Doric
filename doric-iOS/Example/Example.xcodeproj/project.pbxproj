@@ -11,6 +11,7 @@
 		1BCA4753C9D35032A0288028 /* libPods-ExampleUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FD2D6CCC8DCDABA7F86EAE7C /* libPods-ExampleUITests.a */; };
 		52F56220E3A039DD5E3EA3B2 /* libPods-Example.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4650C6577493F533466F084B /* libPods-Example.a */; };
 		8BCADA7C23CD5B65005EEF96 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BCADA7B23CD5B64005EEF96 /* NavigationController.m */; };
+		8BE3A340287C098100D399FA /* DoricPanelListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BE3A33E287C098000D399FA /* DoricPanelListViewController.m */; };
 		D751D4B065D8D4FA6594B5EE /* DemoVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D751D19E97EF4EDD7588FEBE /* DemoVC.m */; };
 		D751DDB012BAF476A252CD93 /* DemoLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = D751D2175D09F2C10691FB81 /* DemoLibrary.m */; };
 		E2334AF022E9D2060098A085 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E2334AEF22E9D2060098A085 /* AppDelegate.m */; };
@@ -51,6 +52,8 @@
 		8A68295410FE7498FAFBB726 /* libPods-ExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8BCADA7A23CD5B5F005EEF96 /* NavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NavigationController.h; sourceTree = "<group>"; };
 		8BCADA7B23CD5B64005EEF96 /* NavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
+		8BE3A33E287C098000D399FA /* DoricPanelListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DoricPanelListViewController.m; sourceTree = "<group>"; };
+		8BE3A33F287C098100D399FA /* DoricPanelListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DoricPanelListViewController.h; sourceTree = "<group>"; };
 		B93423722F2E06DC238CDD18 /* Pods-ExampleUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExampleUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ExampleUITests/Pods-ExampleUITests.release.xcconfig"; sourceTree = "<group>"; };
 		B93D4DB00FD244178B7CE7C4 /* Pods-ExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExampleTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ExampleTests/Pods-ExampleTests.release.xcconfig"; sourceTree = "<group>"; };
 		D751D19E97EF4EDD7588FEBE /* DemoVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoVC.m; sourceTree = "<group>"; };
@@ -170,6 +173,8 @@
 				E2334AFC22E9D2070098A085 /* Info.plist */,
 				E2334AF922E9D2070098A085 /* LaunchScreen.storyboard */,
 				E2334AFD22E9D2070098A085 /* main.m */,
+				8BE3A33F287C098100D399FA /* DoricPanelListViewController.h */,
+				8BE3A33E287C098000D399FA /* DoricPanelListViewController.m */,
 				D751D19E97EF4EDD7588FEBE /* DemoVC.m */,
 				D751DDEC114E037231257E64 /* DemoVC.h */,
 				D751D2175D09F2C10691FB81 /* DemoLibrary.m */,
@@ -439,6 +444,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8BE3A340287C098100D399FA /* DoricPanelListViewController.m in Sources */,
 				E2334AF322E9D2060098A085 /* ViewController.m in Sources */,
 				E2334AFE22E9D2070098A085 /* main.m in Sources */,
 				E2334AF022E9D2060098A085 /* AppDelegate.m in Sources */,

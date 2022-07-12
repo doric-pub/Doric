@@ -7,12 +7,11 @@
 //
 
 #import <DoricCore/Doric.h>
-
 #import <DoricDevkit/DoricDev.h>
 
 #import "ViewController.h"
-
 #import "DemoLibrary.h"
+#import "DoricPanelListViewController.h""
 
 @interface ViewController () <UITableViewDelegate, UITableViewDataSource>
 @property(nonatomic, copy) NSArray <NSString *> *demoFilePaths;
@@ -38,6 +37,7 @@
         return [obj1 compare:obj2 options:comparisonOptions range:range];
     }];
     [tmp insertObject:@"Dev Kit" atIndex:0];
+    [tmp insertObject:@"Doric Panel List" atIndex:1];
     self.demoFilePaths = tmp;
 
     [Doric registerLibrary:[DemoLibrary new]];
@@ -82,6 +82,19 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row == 0) {
         [[DoricDev instance] openDevMode:self];
+        return;
+    }
+    if (indexPath.row == 1) {
+        DoricPanelListViewController *panelListViewController = [DoricPanelListViewController new];
+
+        UIViewController *viewController = [UIApplication sharedApplication].delegate.window.rootViewController;
+        UINavigationController *navigationController;
+        if ([viewController isKindOfClass:[UINavigationController class]]) {
+            navigationController = (UINavigationController *) viewController;
+        } else {
+            navigationController = viewController.navigationController;
+        }
+        [navigationController pushViewController:panelListViewController animated:NO];
         return;
     }
     NSString *file = self.demoFilePaths[(NSUInteger) indexPath.row];

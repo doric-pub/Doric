@@ -161,4 +161,8 @@ public abstract class SuperNode<V extends View> extends ViewNode<V> {
             }
         }
     }
+
+    public void setReusable(boolean reusable) {
+        this.mReusable = reusable;
+    }
 }

@@ -11,7 +11,8 @@
 
 #import "ViewController.h"
 #import "DemoLibrary.h"
-#import "DoricPanelListViewController.h""
+#import "DoricPanelListViewController.h"
+#import "DoricEmbeddedExampleVC.h"
 
 @interface ViewController () <UITableViewDelegate, UITableViewDataSource>
 @property(nonatomic, copy) NSArray <NSString *> *demoFilePaths;
@@ -38,6 +39,8 @@
     }];
     [tmp insertObject:@"Dev Kit" atIndex:0];
     [tmp insertObject:@"Doric Panel List" atIndex:1];
+    [tmp insertObject:@"Doric Embedded Example" atIndex:2];
+
     self.demoFilePaths = tmp;
 
     [Doric registerLibrary:[DemoLibrary new]];
@@ -95,6 +98,18 @@
             navigationController = viewController.navigationController;
         }
         [navigationController pushViewController:panelListViewController animated:NO];
+        return;
+    } else if (indexPath.row == 2) {
+        DoricEmbeddedExampleVC *vc = [DoricEmbeddedExampleVC new];
+
+        UIViewController *viewController = [UIApplication sharedApplication].delegate.window.rootViewController;
+        UINavigationController *navigationController;
+        if ([viewController isKindOfClass:[UINavigationController class]]) {
+            navigationController = (UINavigationController *) viewController;
+        } else {
+            navigationController = viewController.navigationController;
+        }
+        [navigationController pushViewController:vc animated:NO];
         return;
     }
     NSString *file = self.demoFilePaths[(NSUInteger) indexPath.row];

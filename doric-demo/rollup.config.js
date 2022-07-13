@@ -1,6 +1,6 @@
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
-import bundles from "./build/index";
+import bundles from "./.dxx/index";
 import fs from "fs";
 import path from "path";
 import buble from "@rollup/plugin-buble";
@@ -38,14 +38,14 @@ function mkdirsSync(dirname) {
 }
 
 allImages.forEach((value) => {
-  let path = __dirname + "/build/" + value;
+  let path = __dirname + "/.dxx/" + value;
   path = path.split("\\").join("/");
   let index = path.lastIndexOf("/");
   mkdirsSync(path.substring(0, index));
 
   fs.copyFile(
     __dirname + "/" + value,
-    __dirname + "/build/" + value,
+    __dirname + "/.dxx/" + value,
     (error) => {
       if (error) console.log(error);
     }
@@ -84,7 +84,7 @@ export default allFiles
   .map((e) => e.replace(/\.tsx?$/, ""))
   .map((bundle) => {
     return {
-      input: `build/${bundle}.js`,
+      input: `.dxx/${bundle}.js`,
       output: {
         format: "cjs",
         file: `bundle/${bundle}.js`,
@@ -110,7 +110,7 @@ export default allFiles
 //     .map((e) => e.replace(/\.tsx?$/, ""))
 //     .map((bundle) => {
 //       return {
-//         input: `build/${bundle}.js`,
+//         input: `.dxx/${bundle}.js`,
 //         output: {
 //           format: "cjs",
 //           file: `bundle/${bundle}.es5.js`,

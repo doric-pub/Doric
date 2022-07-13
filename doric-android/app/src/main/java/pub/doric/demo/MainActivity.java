@@ -124,7 +124,16 @@ public class MainActivity extends AppCompatActivity {
                         tv.getContext().startActivity(intent);
                     }
                 });
-            } else {
+            } else if (position == 2) {
+                tv.setText("Embedded Example");
+                tv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(tv.getContext(), DoricEmbeddedActivity.class);
+                        tv.getContext().startActivity(intent);
+                    }
+                });
+            }else {
                 tv.setText(data[position - 2]);
                 tv.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -141,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return data.length + 2;
+            return data.length + 3;
         }
     }
 }

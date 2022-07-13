@@ -126,7 +126,12 @@ UIImage *UIImageWithColor(UIColor *color) {
 
 BOOL hasNotch() {
     if (@available(iOS 11.0, *)) {
-        CGFloat height = [[UIApplication sharedApplication] delegate].window.safeAreaInsets.bottom;
+        CGFloat height;
+        if ([[UIApplication sharedApplication] delegate].window) {
+            height = [[UIApplication sharedApplication] delegate].window.safeAreaInsets.bottom;
+        } else {
+            height = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
+        }
         return (height > 0);
     } else {
         return NO;

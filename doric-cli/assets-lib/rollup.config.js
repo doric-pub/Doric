@@ -3,7 +3,7 @@ import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 export default [
   {
-    input: `build/index.js`,
+    input: `.dxx/index.js`,
     output: {
       format: "cjs",
       file: `dist/bundle___$__.js`,

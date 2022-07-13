@@ -126,7 +126,7 @@
         self.loadCallbackId = it;
     }];
     [super blend:props];
-    if(self.scaleType == 2 && self.view.contentMode != UIViewContentModeScaleAspectFill) {
+    if (self.scaleType == 2 && self.view.contentMode != UIViewContentModeScaleAspectFill) {
         self.view.contentMode = UIViewContentModeScaleAspectFill;
     }
 }
@@ -330,10 +330,11 @@
         __block BOOL async = NO;
         view.doricLayout.undefined = YES;
 #if DORIC_USE_YYWEBIMAGE
+        UIImage *image = [self currentPlaceHolderImage];
         dispatch_async([_YYWebImageSetter setterQueue], ^{
             [view yy_cancelCurrentImageRequest];
 
-            [view yy_setImageWithURL:[NSURL URLWithString:prop] placeholder:[self currentPlaceHolderImage] options:0 completion:^(UIImage *image, NSURL *url, YYWebImageFromType from, YYWebImageStage stage, NSError *error) {
+            [view yy_setImageWithURL:[NSURL URLWithString:prop] placeholder:image options:0 completion:^(UIImage *image, NSURL *url, YYWebImageFromType from, YYWebImageStage stage, NSError *error) {
                 __strong typeof(_self) self = _self;
                 if (self.placeHolderColor || self.errorColor) {
                     self.view.contentMode = self.contentMode;
@@ -767,7 +768,7 @@
 #endif
         self.animationEndCallbackId = nil;
     }
-    
+
 #if DORIC_USE_YYWEBIMAGE
     [self.view yy_cancelCurrentImageRequest];
 #elif DORIC_USE_SDWEBIMAGE

@@ -41,6 +41,9 @@ export default async function dev() {
       alwaysStat: true,
     })
     .on("change", (jsFile) => {
+      if (!jsFile.endsWith(".js") && !jsFile.endsWith(".map")) {
+        return;
+      }
       const content = fs.readFileSync(jsFile, "utf-8");
       if (cachedContents[jsFile]) {
         if (content.indexOf(cachedContents[jsFile]) >= 0) {

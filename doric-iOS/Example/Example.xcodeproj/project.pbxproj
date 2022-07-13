@@ -22,6 +22,7 @@
 		E2334AFE22E9D2070098A085 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E2334AFD22E9D2070098A085 /* main.m */; };
 		E2334B0822E9D2070098A085 /* ExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E2334B0722E9D2070098A085 /* ExampleTests.m */; };
 		E2334B1322E9D2070098A085 /* ExampleUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = E2334B1222E9D2070098A085 /* ExampleUITests.m */; };
+		E24217DA287E999900F4DBEA /* DoricEmbeddedExampleVC.m in Sources */ = {isa = PBXBuildFile; fileRef = E24217D9287E999900F4DBEA /* DoricEmbeddedExampleVC.m */; };
 		E2C9315923B0A263007933D9 /* src in Resources */ = {isa = PBXBuildFile; fileRef = E2C9315823B0A263007933D9 /* src */; };
 		E2EF0C0F275F6702007801C5 /* iconfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2EF0C0E275F6702007801C5 /* iconfont.ttf */; };
 		E2EF0C13275F6934007801C5 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = E2EF0C12275F6934007801C5 /* assets */; };
@@ -77,6 +78,8 @@
 		E2334B0E22E9D2070098A085 /* ExampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ExampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2334B1222E9D2070098A085 /* ExampleUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExampleUITests.m; sourceTree = "<group>"; };
 		E2334B1422E9D2070098A085 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E24217D9287E999900F4DBEA /* DoricEmbeddedExampleVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DoricEmbeddedExampleVC.m; sourceTree = "<group>"; };
+		E24217DB287E99D100F4DBEA /* DoricEmbeddedExampleVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DoricEmbeddedExampleVC.h; sourceTree = "<group>"; };
 		E2C9315823B0A263007933D9 /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; name = src; path = "../../../doric-demo/bundle/src"; sourceTree = "<group>"; };
 		E2EF0C0E275F6702007801C5 /* iconfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = iconfont.ttf; path = "../../doric-demo/bundle/assets/iconfont.ttf"; sourceTree = "<group>"; };
 		E2EF0C12275F6934007801C5 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = "../../../doric-demo/bundle/assets"; sourceTree = "<group>"; };
@@ -179,6 +182,8 @@
 				D751DDEC114E037231257E64 /* DemoVC.h */,
 				D751D2175D09F2C10691FB81 /* DemoLibrary.m */,
 				D751DB0CB3009E12990F661E /* DemoLibrary.h */,
+				E24217D9287E999900F4DBEA /* DoricEmbeddedExampleVC.m */,
+				E24217DB287E99D100F4DBEA /* DoricEmbeddedExampleVC.h */,
 			);
 			path = Example;
 			sourceTree = "<group>";
@@ -447,6 +452,7 @@
 				8BE3A340287C098100D399FA /* DoricPanelListViewController.m in Sources */,
 				E2334AF322E9D2060098A085 /* ViewController.m in Sources */,
 				E2334AFE22E9D2070098A085 /* main.m in Sources */,
+				E24217DA287E999900F4DBEA /* DoricEmbeddedExampleVC.m in Sources */,
 				E2334AF022E9D2060098A085 /* AppDelegate.m in Sources */,
 				D751D4B065D8D4FA6594B5EE /* DemoVC.m in Sources */,
 				D751DDB012BAF476A252CD93 /* DemoLibrary.m in Sources */,

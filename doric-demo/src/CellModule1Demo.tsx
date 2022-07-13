@@ -10,16 +10,20 @@ import {
   Gravity,
   Color,
   createRef,
+  Ref,
 } from "doric";
 
 @Entry
 export class Cell1 extends Panel {
-  imageRef = createRef<Image>();
-  titleRef = createRef<Text>();
-  contentRef = createRef<Text>();
+  imageRef?: Ref<Image>;
+  titleRef?: Ref<Text>;
+  contentRef?: Ref<Text>;
   data?: { imageUrl: string; title: string; content: string };
 
   build(root: Group) {
+    this.imageRef = createRef<Image>();
+    this.titleRef = createRef<Text>();
+    this.contentRef = createRef<Text>();
     <VLayout parent={root} layoutConfig={layoutConfig().most()} space={20}>
       <Text
         layoutConfig={layoutConfig().mostWidth().justHeight()}
@@ -77,11 +81,7 @@ export class Cell1 extends Panel {
   //从客户端直接调用方法
   setData(data: { imageUrl: string; title: string; content: string }) {
     this.data = data;
-    if (
-      this.imageRef.current &&
-      this.titleRef.current &&
-      this.contentRef.current
-    ) {
+    if (this.imageRef && this.titleRef && this.contentRef) {
       const { imageUrl, title, content } = data;
       this.imageRef.current.imageUrl = imageUrl;
       this.titleRef.current.text = title;

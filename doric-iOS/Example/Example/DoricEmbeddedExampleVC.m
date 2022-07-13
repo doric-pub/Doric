@@ -148,6 +148,7 @@
                         [it config:script alias:alias extra:nil];
                     }];
             [cell.panel.doricContext callEntity:@"setData", data, nil];
+            cell.panel.doricContext.rootNode.reusable = YES;
         }];
     }
     if (cell.panel.doricContext != nil) {

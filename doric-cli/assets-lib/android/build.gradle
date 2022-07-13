@@ -1,7 +1,7 @@
 import groovy.json.JsonSlurper
 
 def model = new JsonSlurper().parse(new File(project.getProjectDir().parent + File.separator + "package.json"))
-def doricSDKVersion = model.dependencies.doric.replace("^", "").replace(">=","")
+def doricSDKVersion = model.peerDependencies.doric.replace("^", "").replace(">=","")
 
 println("Doric Version:" + doricSDKVersion)
 

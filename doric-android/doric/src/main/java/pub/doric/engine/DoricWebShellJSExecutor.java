@@ -20,6 +20,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.webkit.ConsoleMessage;
@@ -53,7 +54,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import pub.doric.BuildConfig;
 import pub.doric.async.SettableFuture;
 import pub.doric.utils.DoricLog;
 import pub.doric.utils.DoricUtils;
@@ -314,23 +314,24 @@ public class DoricWebShellJSExecutor implements IDoricJSE {
                 return new WebResourceResponse("text/javascript", "utf-8", inputStream);
             }
         });
-        readyFuture = new SettableFuture<>();
+
         HandlerThread webViewHandlerThread = new HandlerThread("DoricWebViewJSExecutor");
         webViewHandlerThread.start();
-        this.handler = new Handler(webViewHandlerThread.getLooper());
-        this.handler.post(new Runnable() {
+        readyFuture = new SettableFuture<>();
+        handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
             @Override
             public void run() {
                 webView = new WebView(context.getApplicationContext());
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && BuildConfig.DEBUG) {
-//                    WebView.setWebContentsDebuggingEnabled(true);
-//                }
                 WebSettings webSettings = webView.getSettings();
                 webSettings.setJavaScriptEnabled(true);
                 webView.setWebChromeClient(new DoricWebChromeClient());
                 webView.setWebViewClient(new DoricWebViewClient());
                 WebViewCallback webViewCallback = new WebViewCallback();
                 webView.addJavascriptInterface(webViewCallback, "NativeClient");
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && BuildConfig.DEBUG) {
+//                    WebView.setWebContentsDebuggingEnabled(true);
+//                }
                 webView.loadUrl(shellUrl + "doric-web.html");
             }
         });

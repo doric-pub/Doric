@@ -21,6 +21,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.webkit.ConsoleMessage;
@@ -45,7 +46,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import pub.doric.BuildConfig;
 import pub.doric.async.SettableFuture;
 import pub.doric.utils.DoricLog;
 
@@ -213,10 +213,13 @@ public class DoricWebViewJSExecutor implements IDoricJSE {
     public DoricWebViewJSExecutor(final Context context) {
         HandlerThread webViewHandlerThread = new HandlerThread("DoricWebViewJSExecutor");
         webViewHandlerThread.start();
-        this.handler = new Handler(webViewHandlerThread.getLooper());
+        this.handler = new Handler(Looper.getMainLooper());
         handler.post(new Runnable() {
             @Override
             public void run() {
+//                if (BuildConfig.DEBUG) {
+//                    WebView.setWebContentsDebuggingEnabled(true);
+//                }
                 webView = new WebView(context.getApplicationContext());
                 WebSettings webSettings = webView.getSettings();
                 webSettings.setJavaScriptEnabled(true);
@@ -224,16 +227,13 @@ public class DoricWebViewJSExecutor implements IDoricJSE {
                 webView.loadUrl("about:blank");
                 WebViewCallback webViewCallback = new WebViewCallback();
                 webView.addJavascriptInterface(webViewCallback, "NativeClient");
-//                if (BuildConfig.DEBUG) {
-//                    WebView.setWebContentsDebuggingEnabled(true);
-//                }
             }
         });
     }
 
     @Override
     public String loadJS(final String script, String source) {
-        handler.post(new Runnable() {
+        handler.post(   new Runnable() {
             @Override
             public void run() {
                 webView.evaluateJavascript(script, null);

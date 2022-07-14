@@ -171,35 +171,31 @@ public class DoricDevActivity extends AppCompatActivity implements DoricDev.Stat
         tvInput.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View clickView) {
-                if (DoricDev.getInstance().isRunningInEmulator) {
-                    DoricDev.getInstance().connectDevKit("ws://" + "10.0.2.2" + ":7777");
-                } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(DoricDevActivity.this, R.style.Theme_Doric_Modal_Prompt);
-                    builder.setTitle("Please input devkit ip");
-                    View v = LayoutInflater.from(DoricDevActivity.this).inflate(R.layout.doric_modal_prompt, null);
-                    final EditText editText = v.findViewById(R.id.edit_input);
-                    editText.setHint("192.168.1.1");
-                    String ip = DoricDev.getInstance().getIP();
-                    if (!TextUtils.isEmpty(ip)) {
-                        editText.setText(ip);
-                        editText.setSelection(ip.length());
-                    }
-                    builder.setView(v);
-                    builder
-                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    String ip = editText.getText().toString();
-                                    DoricDev.getInstance().connectDevKit("ws://" + ip + ":7777");
-                                }
-                            })
-                            .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                }
-                            });
-                    builder.show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(DoricDevActivity.this, R.style.Theme_Doric_Modal_Prompt);
+                builder.setTitle("Please input devkit ip");
+                View v = LayoutInflater.from(DoricDevActivity.this).inflate(R.layout.doric_modal_prompt, null);
+                final EditText editText = v.findViewById(R.id.edit_input);
+                editText.setHint("192.168.1.1");
+                String ip = DoricDev.getInstance().getIP();
+                if (!TextUtils.isEmpty(ip)) {
+                    editText.setText(ip);
+                    editText.setSelection(ip.length());
                 }
+                builder.setView(v);
+                builder
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String ip = editText.getText().toString();
+                                DoricDev.getInstance().connectDevKit("ws://" + ip + ":7777");
+                            }
+                        })
+                        .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        });
+                builder.show();
             }
         });
         tvDisconnect.setOnClickListener(new View.OnClickListener() {

@@ -302,38 +302,32 @@
 }
 
 - (void)input {
-    if (self.isSimulator) {
-        NSString *result = @"127.0.0.1";
-        [[DoricDev instance] connectDevKit:[NSString stringWithFormat:@"ws://%@:7777", result]];
-        ShowToast([NSString stringWithFormat:@"Connecting to %@", result], DoricGravityBottom);
-    } else {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Please input devkit ip"
-                                                                       message:@""
-                                                                preferredStyle:UIAlertControllerStyleAlert];
-        [alert addTextFieldWithConfigurationHandler:^(UITextField *_Nonnull textField) {
-            textField.placeholder = @"192.168.1.1";
-            if (DoricDev.instance.ip) {
-                textField.text = DoricDev.instance.ip;
-            }
-        }];
-        __weak typeof(alert) _alert = alert;
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Please input devkit ip"
+                                                                   message:@""
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    [alert addTextFieldWithConfigurationHandler:^(UITextField *_Nonnull textField) {
+        textField.placeholder = @"192.168.1.1";
+        if (DoricDev.instance.ip) {
+            textField.text = DoricDev.instance.ip;
+        }
+    }];
+    __weak typeof(alert) _alert = alert;
 
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil)
-                                                               style:UIAlertActionStyleDefault
-                                                             handler:nil];
-        [alert addAction:cancelAction];
-
-        UIAlertAction *okAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", nil)
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil)
                                                            style:UIAlertActionStyleDefault
-                                                         handler:^(UIAlertAction *action) {
-                                                             __strong typeof(_alert) alert = _alert;
-                                                             NSString *ip = alert.textFields.lastObject.text;
-                                                             [[DoricDev instance] connectDevKit:[NSString stringWithFormat:@"ws://%@:7777", ip]];
-                                                         }];
-        [alert addAction:okAction];
+                                                         handler:nil];
+    [alert addAction:cancelAction];
 
-        [self presentViewController:alert animated:YES completion:nil];
-    }
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Ok", nil)
+                                                       style:UIAlertActionStyleDefault
+                                                     handler:^(UIAlertAction *action) {
+                                                         __strong typeof(_alert) alert = _alert;
+                                                         NSString *ip = alert.textFields.lastObject.text;
+                                                         [[DoricDev instance] connectDevKit:[NSString stringWithFormat:@"ws://%@:7777", ip]];
+                                                     }];
+    [alert addAction:okAction];
+
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)scan {

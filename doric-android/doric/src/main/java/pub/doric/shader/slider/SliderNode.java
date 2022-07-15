@@ -51,8 +51,8 @@ public class SliderNode extends SuperNode<RecyclerView> {
     private String renderPageFuncId;
     private boolean scrollable = true;
     private String slideStyle = null;
-    private static final float MIN_SCALE = 0.5f;
-    private static final float MAX_SCALE = 1;
+    private float minScale = 0.618f;
+    private float maxScale = 1;
 
     public SliderNode(DoricContext doricContext) {
         super(doricContext);
@@ -133,9 +133,10 @@ public class SliderNode extends SuperNode<RecyclerView> {
                         if (child.getWidth() == 0) {
                             return;
                         }
-                        float centerX = (child.getLeft() + child.getRight()) / 2.f;
-                        float percent = 1 - Math.abs(recyclerView.getWidth() / 2f - centerX) / recyclerView.getWidth() / 2f;
-                        float scaleFactor = MIN_SCALE + Math.abs(percent) * (MAX_SCALE - MIN_SCALE);
+                        float centerX = recyclerView.getWidth() / 2.f;
+                        float vCenterX = (child.getLeft() + child.getRight()) / 2.f;
+                        float percent = 1 - Math.abs(centerX - vCenterX) / centerX;
+                        float scaleFactor = minScale + Math.abs(percent) * (maxScale - minScale);
                         child.setLayoutParams(lp);
                         child.setScaleY(scaleFactor);
                         child.setScaleX(scaleFactor);
@@ -246,6 +247,10 @@ public class SliderNode extends SuperNode<RecyclerView> {
             case "slideStyle":
                 if (prop.isString()) {
                     this.slideStyle = prop.asString().value();
+                } else if (prop.isObject()) {
+                    this.slideStyle = prop.asObject().getProperty("type").asString().value();
+                    this.maxScale = prop.asObject().getProperty("maxScale").asNumber().toFloat();
+                    this.minScale = prop.asObject().getProperty("minScale").asNumber().toFloat();
                 }
                 break;
             default:

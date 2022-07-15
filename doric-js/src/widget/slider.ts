@@ -56,9 +56,12 @@ export class Slider extends Superview {
      */
     @Property
     bounces?: boolean
-
+    /**
+     * Set the effect when sliding
+     * ZoomOut is currently supported
+     */
     @Property
-    slideStyle?: "zoomOut"
+    slideStyle?: "zoomOut" | { type: "zoomOut", minScale: number, maxScale: number }
 
     private getItem(itemIdx: number) {
         let view = this.renderPage(itemIdx)

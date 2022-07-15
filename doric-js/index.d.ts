@@ -810,7 +810,15 @@ declare module 'doric/lib/src/widget/slider' {
                 * Take effect only on iOS
                 */
             bounces?: boolean;
-            slideStyle?: "zoomOut";
+            /**
+                * Set the effect when sliding
+                * ZoomOut is currently supported
+                */
+            slideStyle?: "zoomOut" | {
+                    type: "zoomOut";
+                    minScale: number;
+                    maxScale: number;
+            };
             slidePage(context: BridgeContext, page: number, smooth?: boolean): Promise<any>;
             getSlidedPage(context: BridgeContext): Promise<number>;
     }

@@ -2727,7 +2727,7 @@ var Slider = /** @class */ (function (_super) {
     ], Slider.prototype, "bounces", void 0);
     __decorate$9([
         Property,
-        __metadata$9("design:type", String)
+        __metadata$9("design:type", Object)
     ], Slider.prototype, "slideStyle", void 0);
     return Slider;
 }(Superview));

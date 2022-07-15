@@ -20,7 +20,15 @@ export declare class Slider extends Superview {
      * Take effect only on iOS
      */
     bounces?: boolean;
-    slideStyle?: "zoomOut";
+    /**
+     * Set the effect when sliding
+     * ZoomOut is currently supported
+     */
+    slideStyle?: "zoomOut" | {
+        type: "zoomOut";
+        minScale: number;
+        maxScale: number;
+    };
     private getItem;
     private renderBunchedItems;
     slidePage(context: BridgeContext, page: number, smooth?: boolean): Promise<any>;

@@ -208,8 +208,8 @@
 }
 
 - (void)callLoadMore {
-    if (self.itemCount != self.loadAnchor) {
-        self.loadAnchor = self.itemCount;
+    if (self.rowCount - 1 != self.loadAnchor) {
+        self.loadAnchor = self.rowCount - 1;
         [self callJSResponse:self.onLoadMoreFuncId, nil];
     }
 }
@@ -221,7 +221,7 @@
     NSString *reuseId = props[@"identifier"];
     self.itemActions[@(position)] = props[@"actions"];
     if (self.loadMore
-            && position >= self.itemCount
+            && position >= self.rowCount - 1
             && self.onLoadMoreFuncId) {
         reuseId = @"doricLoadMoreCell";
         [self callLoadMore];
@@ -311,7 +311,7 @@
 }
 
 - (NSDictionary *)itemModelAt:(NSUInteger)position {
-    if (self.loadMore && position >= self.itemCount) {
+    if (self.loadMore && position >= self.rowCount - 1) {
         if (self.loadMoreViewId && self.loadMoreViewId.length > 0) {
             return [self subModelOf:self.loadMoreViewId];
         } else {
@@ -349,7 +349,7 @@
 
 - (void)blendSubNode:(NSDictionary *)subModel {
     ///Here async blend sub node because the item count need to be applied first.
-    NSUInteger currentCount = self.itemCount + (self.loadMore ? 1 : 0);
+    NSUInteger currentCount = self.rowCount;
     NSString *viewId = subModel[@"id"];
     DoricViewNode *viewNode = [self subNodeWithViewId:viewId];
     BOOL skipReload = NO;
@@ -517,7 +517,7 @@
     BOOL animated = [params[@"animated"] boolValue];
     NSUInteger scrolledPosition = [params[@"index"] unsignedIntegerValue];
 
-    if (scrolledPosition < self.itemCount && scrolledPosition >= 0) {
+    if (scrolledPosition < self.rowCount && scrolledPosition >= 0) {
         for (int i = 0; i <= scrolledPosition; i++) {
             [self tableView:self.view cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
         }

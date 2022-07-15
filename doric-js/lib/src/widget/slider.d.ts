@@ -20,7 +20,7 @@ export declare class Slider extends Superview {
      * Take effect only on iOS
      */
     bounces?: boolean;
-    pageTransformer?: "zoomout";
+    slideStyle?: "zoomOut";
     private getItem;
     private renderBunchedItems;
     slidePage(context: BridgeContext, page: number, smooth?: boolean): Promise<any>;

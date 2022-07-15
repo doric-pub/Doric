@@ -58,7 +58,7 @@ export class Slider extends Superview {
     bounces?: boolean
 
     @Property
-    pageTransformer?: "zoomout"
+    slideStyle?: "zoomOut"
 
     private getItem(itemIdx: number) {
         let view = this.renderPage(itemIdx)

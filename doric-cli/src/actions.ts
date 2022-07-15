@@ -77,7 +77,7 @@ export async function mergeMap(mapFile: string) {
     }
     await fs.promises.writeFile(lockFile, (new Date).toString(), "utf-8")
     try {
-        const buildMap = mapFile.replace(/bundle\//, 'build/')
+        const buildMap = mapFile.replace(/bundle\//, '.dxx/')
         if (fs.existsSync(buildMap)) {
             const mergedMap = createMergedSourceMapFromFiles([
                 buildMap,

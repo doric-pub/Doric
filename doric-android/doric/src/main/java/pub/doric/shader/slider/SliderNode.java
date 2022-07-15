@@ -301,6 +301,9 @@ public class SliderNode extends SuperNode<RecyclerView> {
         scrollable = true;
         onPageSlidedFuncId = null;
         renderPageFuncId = null;
+        slideStyle = null;
+        minScale = .618f;
+        maxScale = 1.f;
     }
 
     private static class DoricLinearSmoothScroller extends LinearSmoothScroller {

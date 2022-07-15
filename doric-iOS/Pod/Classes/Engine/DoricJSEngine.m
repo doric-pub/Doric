@@ -335,6 +335,9 @@
 }
 
 - (id)jsValueToObject:(JSValue *)jsValue {
+    if([jsValue isKindOfClass:NSDictionary.class]){
+        return jsValue;
+    }
     return [jsValue toObjectWithArrayBuffer];
 }
 @end

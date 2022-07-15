@@ -134,12 +134,12 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
             }else {
-                tv.setText(data[position - 2]);
+                tv.setText(data[position - 3]);
                 tv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(tv.getContext(), DoricDebugTimingActivity.class);
-                        intent.putExtra("source", "assets://src/" + data[position - 2]);
+                        intent.putExtra("source", "assets://src/" + data[position - 3]);
                         //intent.putExtra("alias", data[position - 1].replace(".js", ""));
                         intent.putExtra("alias", "__dev__");
                         tv.getContext().startActivity(intent);

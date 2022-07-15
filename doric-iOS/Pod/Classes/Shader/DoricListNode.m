@@ -200,7 +200,6 @@
         });
     }
     self.needReload = false;
-
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

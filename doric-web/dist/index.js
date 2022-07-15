@@ -3670,8 +3670,8 @@ __decorate$9([
 ], Slider.prototype, "bounces", void 0);
 __decorate$9([
     Property,
-    __metadata$9("design:type", String)
-], Slider.prototype, "pageTransformer", void 0);
+    __metadata$9("design:type", Object)
+], Slider.prototype, "slideStyle", void 0);
 function slider(config) {
     const ret = new Slider;
     ret.apply(config);

@@ -40,7 +40,6 @@ import pub.doric.shader.ViewNode;
  * @Description: pub.doric.shader.slider
  * @Author: pengfei.zhou
  * @CreateDate: 2019-11-19
- * @UpdateDate: 2020-04-09
  */
 @DoricPlugin(name = "Slider")
 public class SliderNode extends SuperNode<RecyclerView> {
@@ -51,6 +50,9 @@ public class SliderNode extends SuperNode<RecyclerView> {
     private boolean loop = false;
     private String renderPageFuncId;
     private boolean scrollable = true;
+    private String slideStyle = null;
+    private static final float MIN_SCALE = 0.5f;
+    private static final float MAX_SCALE = 1;
 
     public SliderNode(DoricContext doricContext) {
         super(doricContext);
@@ -123,13 +125,29 @@ public class SliderNode extends SuperNode<RecyclerView> {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                if ("zoomOut".equals(slideStyle)) {
+                    final int childCount = recyclerView.getChildCount();
+                    for (int i = 0; i < childCount; i++) {
+                        View child = recyclerView.getChildAt(i);
+                        RecyclerView.LayoutParams lp = (RecyclerView.LayoutParams) child.getLayoutParams();
+                        if (child.getWidth() == 0) {
+                            return;
+                        }
+                        float centerX = (child.getLeft() + child.getRight()) / 2.f;
+                        float percent = 1 - Math.abs(recyclerView.getWidth() / 2f - centerX) / recyclerView.getWidth() / 2f;
+                        float scaleFactor = MIN_SCALE + Math.abs(percent) * (MAX_SCALE - MIN_SCALE);
+                        child.setLayoutParams(lp);
+                        child.setScaleY(scaleFactor);
+                        child.setScaleX(scaleFactor);
+                    }
+                }
             }
         });
         return recyclerView;
     }
 
     @Override
-    public ViewNode getSubNodeById(String id) {
+    public ViewNode<?> getSubNodeById(String id) {
         RecyclerView.LayoutManager manager = mView.getLayoutManager();
         if (manager == null) {
             return null;
@@ -150,7 +168,7 @@ public class SliderNode extends SuperNode<RecyclerView> {
     @Override
     protected void blendSubNode(JSObject subProperties) {
         String viewId = subProperties.getProperty("id").asString().value();
-        ViewNode node = getSubNodeById(viewId);
+        ViewNode<?> node = getSubNodeById(viewId);
         if (node != null) {
             node.blend(subProperties.getProperty("props").asObject());
         } else {
@@ -224,6 +242,11 @@ public class SliderNode extends SuperNode<RecyclerView> {
                 break;
             case "loop":
                 this.loop = prop.asBoolean().value();
+                break;
+            case "slideStyle":
+                if (prop.isString()) {
+                    this.slideStyle = prop.asString().value();
+                }
                 break;
             default:
                 super.blend(view, name, prop);

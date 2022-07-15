@@ -38,6 +38,7 @@
                                                    valueOptions:NSPointerFunctionsWeakMemory
                                                        capacity:0];
         _bundles = [NSMutableDictionary new];
+        _legacyMode = NO;
     }
     return self;
 }

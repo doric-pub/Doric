@@ -88,6 +88,10 @@ __decorate([
     Property,
     __metadata("design:type", Boolean)
 ], Slider.prototype, "bounces", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", String)
+], Slider.prototype, "pageTransformer", void 0);
 export function slider(config) {
     const ret = new Slider;
     ret.apply(config);

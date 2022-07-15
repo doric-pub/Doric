@@ -22,7 +22,9 @@ package pub.doric.utils;
  */
 public class DoricConstant {
     public static final String DORIC_BUNDLE_SANDBOX = "doric-sandbox.js";
+    public static final String DORIC_BUNDLE_SANDBOX_ES5 = "doric-sandbox.es5.js";
     public static final String DORIC_BUNDLE_LIB = "doric-lib.js";
+    public static final String DORIC_BUNDLE_LIB_ES5 = "doric-lib.es5.js";
     public static final String DORIC_MODULE_LIB = "doric";
 
 

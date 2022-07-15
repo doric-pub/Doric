@@ -30,6 +30,7 @@
 #import "DoricContextManager.h"
 #import "DoricPerformanceProfile.h"
 #import "JSValue+Doric.h"
+#import "DoricSingleton.h"
 
 @interface DoricDefaultMonitor : NSObject <DoricMonitorProtocol>
 @end
@@ -220,10 +221,20 @@
     @try {
         [self loadBuiltinJS:DORIC_BUNDLE_SANDBOX];
         NSString *path;
+        BOOL useLegacy;
         if (@available(iOS 10.0, *)) {
-            path = [DoricBundle() pathForResource:DORIC_BUNDLE_LIB ofType:@"js"];
+            if (DoricSingleton.instance.legacyMode) {
+                useLegacy = YES;
+            } else {
+                useLegacy = NO;
+            }
         } else {
+            useLegacy = NO;
+        }
+        if (useLegacy) {
             path = [DoricBundle() pathForResource:[NSString stringWithFormat:@"%@.es5", DORIC_BUNDLE_LIB] ofType:@"js"];
+        } else {
+            path = [DoricBundle() pathForResource:DORIC_BUNDLE_LIB ofType:@"js"];
         }
         NSString *jsContent = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
         [self.jsExecutor loadJSScript:[self packageModuleScript:DORIC_MODULE_LIB content:jsContent]
@@ -235,10 +246,20 @@
 
 - (void)loadBuiltinJS:(NSString *)fileName {
     NSString *path;
+    BOOL useLegacy;
     if (@available(iOS 10.0, *)) {
-        path = [DoricBundle() pathForResource:DORIC_BUNDLE_SANDBOX ofType:@"js"];
+        if (DoricSingleton.instance.legacyMode) {
+            useLegacy = YES;
+        } else {
+            useLegacy = NO;
+        }
     } else {
+        useLegacy = NO;
+    }
+    if (useLegacy) {
         path = [DoricBundle() pathForResource:[NSString stringWithFormat:@"%@.es5", DORIC_BUNDLE_SANDBOX] ofType:@"js"];
+    } else {
+        path = [DoricBundle() pathForResource:DORIC_BUNDLE_SANDBOX ofType:@"js"];
     }
     NSString *jsContent = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
     [self.jsExecutor loadJSScript:jsContent source:[@"Assets://" stringByAppendingString:fileName]];

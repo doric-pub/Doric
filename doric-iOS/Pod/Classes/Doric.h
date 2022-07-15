@@ -61,4 +61,9 @@
 + (void)setEnvironmentValue:(NSDictionary *)value;
 
 + (DoricJSLoaderManager *)jsLoaderManager;
+
+/**
+ * Set legacy mode to compat es5 code
+ * */
++ (void)setLegacyMode:(BOOL)legacy;
 @end

@@ -43,6 +43,9 @@
 @property(nonatomic, copy) NSString *renderPageFuncId;
 @property(nonatomic, copy) NSString *propRenderPageFuncId;
 @property(nonatomic, assign) BOOL needResetScroll;
+@property(nonatomic, strong) NSString *slideStyle;
+@property(nonatomic, assign) CGFloat minScale;
+@property(nonatomic, assign) CGFloat maxScale;
 @end
 
 @interface DoricSliderView : UICollectionView
@@ -56,6 +59,8 @@
     if (self = [super initWithContext:doricContext]) {
         _itemViewIds = [NSMutableDictionary new];
         _batchCount = 15;
+        _minScale = .618f;
+        _maxScale = 1.f;
     }
     return self;
 }
@@ -94,6 +99,14 @@
         self.propLoop = [prop boolValue];
     } else if ([@"bounces" isEqualToString:name]) {
         self.view.bounces = [prop boolValue];
+    } else if ([@"slideStyle" isEqualToString:name]) {
+        if ([prop isKindOfClass:NSDictionary.class]) {
+            self.slideStyle = prop[@"type"];
+            self.maxScale = [prop[@"maxScale"] floatValue];
+            self.minScale = [prop[@"minScale"] floatValue];
+        } else if ([prop isKindOfClass:NSString.class]) {
+            self.slideStyle = prop;
+        }
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }
@@ -123,7 +136,7 @@
 
     // handle loop
     self.loop = self.propLoop;
-    
+
 
     __weak typeof(self) _self = self;
     if (needToScroll) {
@@ -131,7 +144,7 @@
             __strong typeof(_self) self = _self;
 
             [self.view reloadData];
-            
+
             int position = self.loop ? 1 : 0;
             if (self.view.width == 0) {
                 self.needResetScroll = true;
@@ -265,6 +278,19 @@
             }];
         }
     }];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if ([self.slideStyle isEqualToString:@"zoomOut"]) {
+        CGFloat centerX = scrollView.width / 2.f;
+        [self.view.visibleCells forEach:^(__kindof UICollectionViewCell *obj) {
+            CGFloat vCenterX = obj.centerX - scrollView.contentOffset.x;
+            CGFloat percent = ABS(vCenterX - centerX) / centerX;
+            CGFloat scale = self.maxScale - (self.maxScale - self.minScale) * percent;
+            obj.transform = CGAffineTransformScale(CGAffineTransformIdentity, scale, scale);
+            obj.layer.anchorPoint = CGPointMake(0.5f, 0.5f);
+        }];
+    }
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {

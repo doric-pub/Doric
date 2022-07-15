@@ -3597,7 +3597,7 @@ __decorate$9([
 __decorate$9([
     Property,
     __metadata$9("design:type", String)
-], Slider.prototype, "pageTransformer", void 0);
+], Slider.prototype, "slideStyle", void 0);
 function slider(config) {
     const ret = new Slider;
     ret.apply(config);

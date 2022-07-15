@@ -2728,7 +2728,7 @@ var Slider = /** @class */ (function (_super) {
     __decorate$9([
         Property,
         __metadata$9("design:type", String)
-    ], Slider.prototype, "pageTransformer", void 0);
+    ], Slider.prototype, "slideStyle", void 0);
     return Slider;
 }(Superview));
 function slider(config) {

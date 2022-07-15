@@ -174,7 +174,10 @@
         self.onScrollEndFuncId = prop;
     } else if ([@"scrolledPosition" isEqualToString:name]) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [view scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[prop unsignedIntegerValue] inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+            NSUInteger pos = [prop unsignedIntegerValue];
+            if (pos < self.rowCount && pos >= 0) {
+                [view scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:pos inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+            }
         });
     } else if ([@"canDrag" isEqualToString:name]) {
         bool canDrag = [prop boolValue];

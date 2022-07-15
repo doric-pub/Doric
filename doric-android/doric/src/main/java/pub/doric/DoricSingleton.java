@@ -44,6 +44,7 @@ public class DoricSingleton {
     boolean enableRenderSnapshot = false;
     private DoricNativeDriver nativeDriver;
     private final DoricContextManager doricContextManager = new DoricContextManager();
+    public boolean legacyMode = false;
 
     private static class Inner {
         private static final DoricSingleton sInstance = new DoricSingleton();

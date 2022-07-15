@@ -92,4 +92,8 @@ public class Doric {
     public static DoricJSLoaderManager getJSLoaderManager() {
         return DoricSingleton.getInstance().getJSLoaderManager();
     }
+
+    public static void setLegacyMode(boolean legacyMode) {
+        DoricSingleton.getInstance().legacyMode = legacyMode;
+    }
 }

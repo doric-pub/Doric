@@ -43,6 +43,7 @@ import pub.doric.Doric;
 import pub.doric.DoricContext;
 import pub.doric.DoricContextManager;
 import pub.doric.DoricRegistry;
+import pub.doric.DoricSingleton;
 import pub.doric.IDoricMonitor;
 import pub.doric.extension.bridge.DoricBridgeExtension;
 import pub.doric.extension.timer.DoricTimerExtension;
@@ -109,14 +110,14 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
             e.printStackTrace(new PrintWriter(stringWriter));
             mDoricRegistry.onLog(Log.ERROR, stringWriter.toString());
             //In case some unexpected errors happened
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//                mDoricRegistry.onLog(Log.WARN, "Use DoricWebViewJSExecutor");
-//                mDoricJSE = new DoricWebViewJSExecutor(Doric.application());
-//                loadBuiltinJS("doric-web.js");
-//            } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                mDoricRegistry.onLog(Log.WARN, "Use DoricWebViewJSExecutor");
+                mDoricJSE = new DoricWebViewJSExecutor(Doric.application());
+                loadBuiltinJS("doric-web.js");
+            } else {
                 mDoricRegistry.onLog(Log.WARN, "Use DoricWebShellJSExecutor");
                 mDoricJSE = new DoricWebShellJSExecutor(Doric.application());
-//            }
+            }
         }
     }
 
@@ -260,9 +261,10 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
 
     private void initDoricRuntime() {
         try {
-            loadBuiltinJS(DoricConstant.DORIC_BUNDLE_SANDBOX);
+            boolean legacy = DoricSingleton.getInstance().legacyMode;
+            loadBuiltinJS(legacy ? DoricConstant.DORIC_BUNDLE_SANDBOX_ES5 : DoricConstant.DORIC_BUNDLE_SANDBOX);
             String libName = DoricConstant.DORIC_MODULE_LIB;
-            String libJS = DoricUtils.readAssetFile(DoricConstant.DORIC_BUNDLE_LIB);
+            String libJS = DoricUtils.readAssetFile(legacy ? DoricConstant.DORIC_BUNDLE_LIB_ES5 : DoricConstant.DORIC_BUNDLE_LIB);
             mDoricJSE.loadJS(packageModuleScript(libName, libJS), "Module://" + libName);
         } catch (Exception e) {
             mDoricRegistry.onException(null, e);

@@ -810,6 +810,7 @@ declare module 'doric/lib/src/widget/slider' {
                 * Take effect only on iOS
                 */
             bounces?: boolean;
+            pageTransformer?: "zoomout";
             slidePage(context: BridgeContext, page: number, smooth?: boolean): Promise<any>;
             getSlidedPage(context: BridgeContext): Promise<number>;
     }

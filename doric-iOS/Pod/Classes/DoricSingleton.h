@@ -32,6 +32,7 @@
 @property(nonatomic, strong) NSMutableDictionary *envDic;
 @property(nonatomic, assign) BOOL enablePerformance;
 @property(nonatomic, assign) BOOL enableRecordSnapshot;
+@property(nonatomic, assign) BOOL legacyMode;
 @property(nonatomic, strong) DoricJSLoaderManager *jsLoaderManager;
 @property(nonatomic, strong) DoricNativeDriver *nativeDriver;
 @property(nonatomic, strong) DoricContextManager *contextManager;

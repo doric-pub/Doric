@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import 'core-js';
 class ProxyPolyfill {
     __target__: object
     __handler__: ProxyHandler<object>
@@ -53,6 +54,4 @@ class ProxyPolyfill {
 }
 const global = Function('return this')()
 global.Proxy = ProxyPolyfill
-
 export * from './src/runtime/sandbox.es5'
-export * from 'core-js'

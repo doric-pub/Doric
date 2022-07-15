@@ -55,4 +55,8 @@
 + (DoricJSLoaderManager *)jsLoaderManager {
     return DoricSingleton.instance.jsLoaderManager;
 }
+
++ (void)setLegacyMode:(BOOL)legacy {
+    [DoricSingleton.instance setLegacyMode:legacy];
+}
 @end

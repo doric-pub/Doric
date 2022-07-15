@@ -123,12 +123,14 @@ static JSContainerConvertor::Task valueToObjectWithoutCopy(JSGlobalContextRef co
     }
 
     JSObjectRef object = JSValueToObject(context, value, 0);
-    JSTypedArrayType type = JSValueGetTypedArrayType(context, value, NULL);
-    if (type == kJSTypedArrayTypeArrayBuffer) {
-        size_t size = JSObjectGetArrayBufferByteLength(context, object, NULL);
-        void *ptr = JSObjectGetArrayBufferBytesPtr(context, object, NULL);
-        id primitive = [[NSData alloc] initWithBytesNoCopy:ptr length:size freeWhenDone:NO];
-        return {value, primitive, ContainerNone};
+    if (@available(iOS 10.0, *)) {
+        JSTypedArrayType type = JSValueGetTypedArrayType(context, value, NULL);
+        if (type == kJSTypedArrayTypeArrayBuffer) {
+            size_t size = JSObjectGetArrayBufferByteLength(context, object, NULL);
+            void *ptr = JSObjectGetArrayBufferBytesPtr(context, object, NULL);
+            id primitive = [[NSData alloc] initWithBytesNoCopy:ptr length:size freeWhenDone:NO];
+            return {value, primitive, ContainerNone};
+        }
     }
     if (JSValueIsArray(context, value))
         return {object, [NSMutableArray array], ContainerArray};

@@ -66,6 +66,9 @@
 @property(nonatomic, copy) NSString *beforeDraggingFuncId;
 @property(nonatomic, copy) NSString *onDraggingFuncId;
 @property(nonatomic, copy) NSString *onDraggedFuncId;
+
+@property(nonatomic, assign) NSUInteger rowCount;
+@property(nonatomic, assign) BOOL needReload;
 @end
 
 @implementation DoricListNode
@@ -142,7 +145,7 @@
         self.view.bounces = [prop boolValue];
     } else if ([@"itemCount" isEqualToString:name]) {
         self.itemCount = [prop unsignedIntegerValue];
-        [self.view reloadData];
+        self.needReload = true;
     } else if ([@"renderItem" isEqualToString:name]) {
         if (![self.renderItemFuncId isEqualToString:prop]) {
             self.loadAnchor = -1;
@@ -151,7 +154,7 @@
                 [self removeSubModel:obj];
             }];
             [self.itemViewIds removeAllObjects];
-            [self.view reloadData];
+            self.needReload = true;
         }
     } else if ([@"batchCount" isEqualToString:name]) {
         self.batchCount = [prop unsignedIntegerValue];
@@ -163,7 +166,7 @@
         BOOL loadMore = [prop boolValue];
         if (loadMore != self.loadMore) {
             self.loadMore = loadMore;
-            [self.view reloadData];
+            self.needReload = true;
         }
     } else if ([@"onScroll" isEqualToString:name]) {
         self.onScrollFuncId = prop;
@@ -187,8 +190,21 @@
     }
 }
 
+- (void)blend:(NSDictionary *)props {
+    self.needReload = false;
+    [super blend:props];
+    if (self.needReload) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.rowCount = self.itemCount + (self.loadMore ? 1 : 0);
+            [self.view reloadData];
+        });
+    }
+    self.needReload = false;
+
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.itemCount + (self.loadMore ? 1 : 0);
+    return self.rowCount;
 }
 
 - (void)callLoadMore {
@@ -358,7 +374,7 @@
             if ([viewId isEqualToString:obj]) {
                 *stop = YES;
                 [UIView performWithoutAnimation:^{
-                    NSUInteger itemCount = self.itemCount + (self.loadMore ? 1 : 0);
+                    NSUInteger itemCount = self.rowCount;
                     if (itemCount <= [key integerValue] || currentCount != itemCount) {
                         [self.view reloadData];
                         return;
@@ -382,7 +398,7 @@
     if (old && [old isEqualToNumber:@(height)]) {
         return;
     }
-    NSUInteger currentCount = self.itemCount + (self.loadMore ? 1 : 0);
+    NSUInteger currentCount = self.rowCount;
     self.itemHeights[@(position)] = @(height);
     if (@available(iOS 12.0, *)) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -394,9 +410,8 @@
                 [node requestLayout];
             }
             [UIView performWithoutAnimation:^{
-                NSUInteger itemCount = self.itemCount + (self.loadMore ? 1 : 0);
+                NSUInteger itemCount = self.rowCount;
                 if (itemCount <= position || currentCount != itemCount) {
-                    [self.view reloadData];
                     return;
                 }
                 NSIndexPath *indexPath = [NSIndexPath indexPathForRow:position inSection:0];

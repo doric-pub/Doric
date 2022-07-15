@@ -349,6 +349,9 @@
     self.onPageSelectedFuncId = nil;
     self.propRenderPageFuncId = nil;
     self.renderPageFuncId = nil;
+    self.slideStyle = nil;
+    self.minScale = .618f;
+    self.maxScale = 1.f;
 }
 
 - (void)subNodeContentChanged:(DoricViewNode *)subNode {

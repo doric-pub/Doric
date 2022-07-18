@@ -47,7 +47,22 @@
     if (self.yoga.isLeaf) {
         return CGSizeZero;
     }
-    return [self.yoga intrinsicSize];
+    YGValue maxWidth = self.yoga.maxWidth;
+    YGValue maxHeight = self.yoga.maxHeight;
+    if (maxWidth.unit == YGUnitPoint) {
+        self.yoga.maxWidth = YGPointValue(MIN(maxWidth.value, size.width));
+    } else {
+        self.yoga.maxWidth = YGPointValue(size.width);
+    }
+    if (maxHeight.unit == YGUnitPoint) {
+        self.yoga.maxHeight = YGPointValue(MIN(maxHeight.value, size.height));
+    } else {
+        self.yoga.maxHeight = YGPointValue(size.height);
+    }
+    CGSize ret = [self.yoga intrinsicSize];
+    self.yoga.maxWidth = maxWidth;
+    self.yoga.maxHeight = maxHeight;
+    return ret;
 }
 @end
 
@@ -248,11 +263,11 @@
         self.view.yoga.marginHorizontal = YGValueZero;
         CGSize size = self.view.yoga.intrinsicSize;
         if (self.view.yoga.maxWidth.unit != YGUnitPoint
-            ||(self.view.yoga.maxWidth.unit == YGUnitPoint && self.view.yoga.maxWidth.value > size.width)){
+                || (self.view.yoga.maxWidth.unit == YGUnitPoint && self.view.yoga.maxWidth.value > size.width)) {
             self.view.yoga.maxWidth = YGValueUndefined;
         }
         if (self.view.yoga.maxHeight.unit != YGUnitPoint
-            ||(self.view.yoga.maxHeight.unit == YGUnitPoint && self.view.yoga.maxHeight.value > size.height)){
+                || (self.view.yoga.maxHeight.unit == YGUnitPoint && self.view.yoga.maxHeight.value > size.height)) {
             self.view.yoga.maxHeight = YGValueUndefined;
         }
     }

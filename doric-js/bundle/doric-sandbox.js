@@ -1478,7 +1478,9 @@ var doric = (function (exports) {
         };
     }
     const global$1 = Function('return this')();
-    if (!Reflect.has(global$1, "console")) {
+    if (Environment.platform === 'Android'
+        || Environment.platform === 'iOS'
+        || Environment.platform === 'Qt') {
         Reflect.set(global$1, "console", {
             warn: logw,
             error: loge,

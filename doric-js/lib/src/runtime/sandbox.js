@@ -276,7 +276,9 @@ export function jsObtainEntry(contextId) {
     };
 }
 const global = Function('return this')();
-if (!Reflect.has(global, "console")) {
+if (Environment.platform === 'Android'
+    || Environment.platform === 'iOS'
+    || Environment.platform === 'Qt') {
     Reflect.set(global, "console", {
         warn: logw,
         error: loge,

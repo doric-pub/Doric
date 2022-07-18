@@ -69,7 +69,7 @@ public class Doric {
         DoricSingleton.getInstance().getJSLoaderManager().addJSLoader(jsLoader);
     }
 
-    public void setEnvironmentValue(Map<String, Object> value) {
+    public static void setEnvironmentValue(Map<String, Object> value) {
         DoricSingleton.getInstance().setEnvironmentValue(value);
     }
 

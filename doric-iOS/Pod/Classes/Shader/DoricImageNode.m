@@ -75,7 +75,6 @@
 @interface DoricImageNode ()
 @property(nonatomic, copy) NSString *loadCallbackId;
 @property(nonatomic, copy) NSString *animationEndCallbackId;
-@property(nonatomic, assign) UIViewContentMode contentMode;
 @property(nonatomic, strong) NSNumber *placeHolderColor;
 @property(nonatomic, strong) NSString *placeHolderImage;
 @property(nonatomic, strong) NSString *placeHolderImageBase64;
@@ -163,7 +162,6 @@
         UIColor *color = DoricColor(self.placeHolderColor);
         CGRect rect = CGRectMake(0, 0, 1, 1);
         self.view.contentMode = UIViewContentModeScaleToFill;
-        self.scaleType = 0;
         if (@available(iOS 10.0, *)) {
             UIGraphicsImageRendererFormat *format = [[UIGraphicsImageRendererFormat alloc] init];
             format.scale = [UIScreen mainScreen].scale;
@@ -219,7 +217,6 @@
         UIColor *color = DoricColor(self.errorColor);
         CGRect rect = CGRectMake(0, 0, 1, 1);
         self.view.contentMode = UIViewContentModeScaleToFill;
-        self.scaleType = 0;
         if (@available(iOS 10.0, *)) {
             UIGraphicsImageRendererFormat *format = [[UIGraphicsImageRendererFormat alloc] init];
             format.scale = [UIScreen mainScreen].scale;
@@ -248,7 +245,6 @@
         UIColor *color = UIColor.clearColor;
         CGRect rect = CGRectMake(0, 0, 1, 1);
         self.view.contentMode = UIViewContentModeScaleToFill;
-        self.scaleType = 0;
         if (@available(iOS 10.0, *)) {
             UIGraphicsImageRendererFormat *format = [[UIGraphicsImageRendererFormat alloc] init];
             format.scale = [UIScreen mainScreen].scale;
@@ -336,9 +332,6 @@
 
             [view yy_setImageWithURL:[NSURL URLWithString:prop] placeholder:image options:0 completion:^(UIImage *image, NSURL *url, YYWebImageFromType from, YYWebImageStage stage, NSError *error) {
                 __strong typeof(_self) self = _self;
-                if (self.placeHolderColor || self.errorColor) {
-                    self.view.contentMode = self.contentMode;
-                }
                 self.view.doricLayout.undefined = NO;
                 if (error) {
                     [[self currentErrorImage] also:^(UIImage *it) {
@@ -348,6 +341,7 @@
                         [self callJSResponse:self.loadCallbackId, nil];
                     }
                 } else if (image && stage == YYWebImageStageFinished) {
+                    [self updateScaleType];
                     if (image.scale != self.imageScale) {
                         if ([image isKindOfClass:YYImage.class] && ((YYImage *) image).animatedImageData != nil) {
                             image = [YYImage imageWithData:((YYImage *) image).animatedImageData scale:self.imageScale];
@@ -383,9 +377,6 @@
                         progress:nil
                        completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
                            __strong typeof(_self) self = _self;
-                           if (self.placeHolderColor || self.errorColor) {
-                               self.view.contentMode = self.contentMode;
-                           }
                            self.view.doricLayout.undefined = NO;
                            if (error) {
                                [[self currentErrorImage] also:^(UIImage *it) {
@@ -395,6 +386,7 @@
                                    [self callJSResponse:self.loadCallbackId, nil];
                                }
                            } else {
+                               [self updateScaleType];
                                if (self.loadCallbackId.length > 0) {
                                    [self callJSResponse:self.loadCallbackId,
                                                         @{
@@ -419,25 +411,7 @@
         async = YES;
     } else if ([@"scaleType" isEqualToString:name]) {
         self.scaleType = [prop integerValue];
-        switch (self.scaleType) {
-            case 1: {
-                self.view.contentMode = UIViewContentModeScaleAspectFit;
-                break;
-            }
-            case 2: {
-                self.view.contentMode = UIViewContentModeScaleAspectFill;
-                break;
-            }
-            case 3: { // image tile
-                self.view.contentMode = UIViewContentModeScaleToFill;
-                break;
-            }
-            default: {
-                self.view.contentMode = UIViewContentModeScaleToFill;
-                break;
-            }
-        }
-        self.contentMode = self.view.contentMode;
+        [self updateScaleType];
     } else if ([@"loadCallback" isEqualToString:name]) {
         // Do not need set
     } else if ([@"imageBase64" isEqualToString:name]) {
@@ -726,6 +700,28 @@
         CGFloat scale = self.imageScale;
         UIImage *result = [self.view.image resizableImageWithCapInsets:UIEdgeInsetsMake(top / scale, left / scale, bottom / scale, right / scale) resizingMode:UIImageResizingModeStretch];
         self.view.image = result;
+    }
+}
+
+- (void)updateScaleType {
+    if (!self.view) return;
+    switch (self.scaleType) {
+        case 1: {
+            self.view.contentMode = UIViewContentModeScaleAspectFit;
+            break;
+        }
+        case 2: {
+            self.view.contentMode = UIViewContentModeScaleAspectFill;
+            break;
+        }
+        case 3: { // image tile
+            self.view.contentMode = UIViewContentModeScaleToFill;
+            break;
+        }
+        default: {
+            self.view.contentMode = UIViewContentModeScaleToFill;
+            break;
+        }
     }
 }
 

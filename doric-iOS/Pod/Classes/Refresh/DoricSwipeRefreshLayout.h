@@ -3,6 +3,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @protocol DoricSwipePullingDelegate <NSObject>
 - (void)startAnimation;

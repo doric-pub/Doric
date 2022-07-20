@@ -576,7 +576,7 @@ class Group extends Superview {
         else if (e instanceof View) {
             this.addChild(e);
         }
-        else {
+        else if (!!e) {
             loge(`Not allowed to add ${typeof e}`);
         }
     }

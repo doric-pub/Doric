@@ -27,20 +27,16 @@ export var jsx;
         }
         else {
             const f = constructor;
-            const e = Reflect.apply(f, undefined, [config]);
-            if (e instanceof Fragment) {
-                return children;
-            }
+            const args = config !== null && config !== void 0 ? config : {};
             if (children && children.length > 0) {
                 if (children.length === 1) {
                     children = children[0];
                 }
-                if (Reflect.has(e, "innerElement")) {
-                    Reflect.set(e, "innerElement", children, e);
-                }
-                else {
-                    throw new Error(`Do not support add child for ${e.viewType()}`);
-                }
+                args.innerElement = children;
+            }
+            const e = Reflect.apply(f, undefined, [args]);
+            if (e instanceof Fragment) {
+                return children;
             }
             return e;
         }

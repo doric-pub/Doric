@@ -479,7 +479,7 @@ export abstract class Superview extends View {
 }
 export type ViewArray = View[]
 
-export type ViewFragment = View | ViewArray
+export type ViewFragment = View | ViewArray | undefined | null
 
 export abstract class Group extends Superview {
 
@@ -499,7 +499,7 @@ export abstract class Group extends Superview {
             e.forEach(e => this.addInnerElement(e))
         } else if (e instanceof View) {
             this.addChild(e)
-        } else {
+        } else if (!!e) {
             loge(`Not allowed to add ${typeof e}`)
         }
     }

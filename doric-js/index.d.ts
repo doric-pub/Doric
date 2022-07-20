@@ -338,7 +338,7 @@ declare module 'doric/lib/src/ui/view' {
             toModel(): NativeViewModel;
     }
     export type ViewArray = View[];
-    export type ViewFragment = View | ViewArray;
+    export type ViewFragment = View | ViewArray | undefined | null;
     export abstract class Group extends Superview implements JSX.ElementChildrenAttribute {
             readonly children: View[];
             allSubviews(): View[];

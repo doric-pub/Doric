@@ -566,6 +566,7 @@
                 originDelegate.endBlock(callback);
             }
             [self transformProperties];
+            [self.view.layer removeAnimationForKey:params[@"id"]];
             [promise resolve:self.transformation];
         };
         it.cancelBlock = ^{
@@ -582,7 +583,7 @@
     if (params[@"delay"]) {
         animation.beginTime = CACurrentMediaTime() + [params[@"delay"] floatValue] / 1000;
     }
-    animation.removedOnCompletion = YES;
+    animation.removedOnCompletion = NO;
     animation.fillMode = kCAFillModeForwards;
     if (animation.duration == 0) {
         animation.duration = FLT_MIN;

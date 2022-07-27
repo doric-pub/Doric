@@ -29,60 +29,56 @@
 
 @implementation DoricShaderPlugin
 
+- (DoricThreadMode)threadMode:(NSString *)method {
+    return DoricThreadModeUI;
+}
+
 - (void)render:(NSDictionary *)argument withPromise:(DoricPromise *)promise {
     if (!argument) {
         return;
     }
     [self.doricContext.performanceProfile prepare:@"Render"];
-    __weak typeof(self) _self = self;
-    [self.doricContext dispatchToMainQueue:^{
-        __strong typeof(_self) self = _self;
-        if (self.doricContext == nil) {
-            return;
-        }
-        [self.doricContext.performanceProfile start:@"Render"];
-        NSString *viewId = [argument optString:@"id"];
+    if (self.doricContext == nil) {
+        return;
+    }
+    [self.doricContext.performanceProfile start:@"Render"];
+    NSString *viewId = [argument optString:@"id"];
 
-        if (self.doricContext.rootNode.viewId == nil && [@"Root" isEqualToString:[argument optString:@"type"]]) {
-            self.doricContext.rootNode.viewId = viewId;
-            [self.doricContext.rootNode blend:[argument optObject:@"props"]];
-            [self.doricContext.rootNode requestLayout];
-        } else {
-            DoricViewNode *viewNode = [self.doricContext targetViewNode:viewId];
-            [viewNode blend:[argument optObject:@"props"]];
-            [viewNode requestLayout];
-        }
-        [promise resolve:nil];
-        [self.doricContext.performanceProfile end:@"Render"];
-    }];
+    if (self.doricContext.rootNode.viewId == nil && [@"Root" isEqualToString:[argument optString:@"type"]]) {
+        self.doricContext.rootNode.viewId = viewId;
+        [self.doricContext.rootNode blend:[argument optObject:@"props"]];
+        [self.doricContext.rootNode requestLayout];
+    } else {
+        DoricViewNode *viewNode = [self.doricContext targetViewNode:viewId];
+        [viewNode blend:[argument optObject:@"props"]];
+        [viewNode requestLayout];
+    }
+    [promise resolve:nil];
+    [self.doricContext.performanceProfile end:@"Render"];
 }
 
 - (void)command:(NSDictionary *)argument withPromise:(DoricPromise *)promise {
-    __weak typeof(self) _self = self;
-    [self.doricContext dispatchToMainQueue:^{
-        __strong typeof(_self) self = _self;
-        if (self.doricContext == nil) {
-            return;
-        }
-        NSArray *viewIds = [argument optArray:@"viewIds"];
-        id args = argument[@"args"];
-        NSString *name = [argument optString:@"name"];
-        DoricViewNode *viewNode = nil;
-        for (NSString *viewId in viewIds) {
-            if (!viewNode) {
-                viewNode = [self.doricContext targetViewNode:viewId];
-            } else {
-                if ([viewNode isKindOfClass:[DoricSuperNode class]]) {
-                    viewNode = [((DoricSuperNode *) viewNode) subNodeWithViewId:viewId];
-                }
+    if (self.doricContext == nil) {
+        return;
+    }
+    NSArray *viewIds = [argument optArray:@"viewIds"];
+    id args = argument[@"args"];
+    NSString *name = [argument optString:@"name"];
+    DoricViewNode *viewNode = nil;
+    for (NSString *viewId in viewIds) {
+        if (!viewNode) {
+            viewNode = [self.doricContext targetViewNode:viewId];
+        } else {
+            if ([viewNode isKindOfClass:[DoricSuperNode class]]) {
+                viewNode = [((DoricSuperNode *) viewNode) subNodeWithViewId:viewId];
             }
         }
-        if (!viewNode) {
-            [promise reject:@"Cannot find opposite view"];
-        } else {
-            [self findClass:[viewNode class] target:viewNode method:name promise:promise argument:args];
-        }
-    }];
+    }
+    if (!viewNode) {
+        [promise reject:@"Cannot find opposite view"];
+    } else {
+        [self findClass:[viewNode class] target:viewNode method:name promise:promise argument:args];
+    }
 }
 
 - (id)createParamWithMethodName:(NSString *)method promise:(DoricPromise *)promise argument:(id)argument {

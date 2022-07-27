@@ -109,7 +109,14 @@
                     const char *retType = methodSignature.methodReturnType;
                     if (!strcmp(retType, @encode(void))) {
                         ret = nil;
-                        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), block);
+                        DoricThreadMode mode = [target threadMode:methodName];
+                        if (mode == DoricThreadModeUI) {
+                            dispatch_async(dispatch_get_main_queue(), block);
+                        } else if (mode == DoricThreadModeJS) {
+                            block();
+                        } else {
+                            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), block);
+                        }
                     } else if (!strcmp(retType, @encode(id))) {
                         void *retValue;
                         block();

@@ -23,5 +23,7 @@
 #import "DoricNativePlugin.h"
 
 @implementation DoricNativePlugin
-
+- (DoricThreadMode)threadMode:(NSString *)method {
+    return DoricThreadModeIndependent;
+}
 @end

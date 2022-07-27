@@ -25,10 +25,21 @@
 #import "DoricPromise.h"
 #import "DoricRegistry.h"
 
+typedef NS_ENUM(NSUInteger, DoricThreadMode) {
+    DoricThreadModeUI = 1,
+    DoricThreadModeJS = 2,
+    DoricThreadModeIndependent = 3,
+};
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface DoricNativePlugin : DoricContextHolder
-
+/**
+ * Determines which thread this method should run on
+ * @param method name of method
+ * @return thread where this method should run on,default is DoricThreadModeIndependent
+ * */
+- (DoricThreadMode)threadMode:(NSString *)method;
 @end
 
 NS_ASSUME_NONNULL_END

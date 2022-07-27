@@ -53,7 +53,7 @@ public class ShaderPlugin extends DoricJavaPlugin {
         super(doricContext);
     }
 
-    @DoricMethod
+    @DoricMethod(thread = ThreadMode.UI)
     public void render(final JSObject jsObject, final DoricPromise promise) {
         final DoricPerformanceProfile profile = getDoricContext().getPerformanceProfile();
         profile.prepare(DoricPerformanceProfile.STEP_RENDER);
@@ -120,7 +120,7 @@ public class ShaderPlugin extends DoricJavaPlugin {
         });
     }
 
-    @DoricMethod
+    @DoricMethod(thread = ThreadMode.UI)
     public void command(final JSObject jsObject, final DoricPromise doricPromise) {
         getDoricContext().getDriver().asyncCall(new Callable<Object>() {
             @Override

@@ -561,14 +561,11 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
                 consumed[1] = dy - (int) mTotalUnconsumed;
                 mTotalUnconsumed = 0;
             } else {
-                if (dy > 3) {
-                    mTotalUnconsumed -= dy;
-                    consumed[1] = dy;
-                }
+                mTotalUnconsumed -= dy;
+                consumed[1] = dy;
             }
             moveSpinner(mTotalUnconsumed);
         }
-
         // If a client layout is using a custom start position for the circle
         // view, they mean to hide it again before scrolling the child view
         // If we get back to mTotalUnconsumed == 0 and there is more to go, hide
@@ -619,7 +616,7 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
         // This is a decent indication of whether we should take over the event stream or not.
         final int dy = dyUnconsumed + mParentOffsetInWindow[1];
         if (dy < 0 && !canChildScrollUp()) {
-            mTotalUnconsumed += Math.abs(dy);
+            mTotalUnconsumed -= dy;
             moveSpinner(mTotalUnconsumed);
         }
     }
@@ -872,6 +869,9 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
     void setTargetOffsetTopAndBottom(int offset) {
         mRefreshView.bringToFront();
         ViewCompat.offsetTopAndBottom(mRefreshView, offset);
+        if (mTarget != null) {
+            ViewCompat.offsetTopAndBottom(mTarget, offset);
+        }
         mCurrentTargetOffsetTop = mRefreshView.getTop();
         if (mRefreshView.getMeasuredHeight() > 0) {
             mRefreshView.setPullingDistance(DoricUtils.px2dp(mRefreshView.getBottom()));

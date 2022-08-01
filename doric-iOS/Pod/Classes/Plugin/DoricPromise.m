@@ -41,7 +41,7 @@
 
 - (void)resolve:(id)result {
     __weak typeof(self) __self = self;
-    if (self.context == nil) {
+    if (self.context == nil || self.context.destroyed) {
         return;
     }
     [[self.context.driver invokeDoricMethod:DORIC_BRIDGE_RESOLVE
@@ -58,7 +58,7 @@
 
 - (void)reject:(id)result {
     __weak typeof(self) __self = self;
-    if (self.context == nil) {
+    if (self.context == nil || self.context.destroyed) {
         return;
     }
     [[self.context.driver invokeDoricMethod:DORIC_BRIDGE_REJECT

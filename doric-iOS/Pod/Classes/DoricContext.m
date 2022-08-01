@@ -107,18 +107,22 @@
 }
 
 - (void)reload:(NSString *)script {
-    [self.driver destroyContext:self.contextId];
+    [[self.driver destroyContext:self.contextId] waitUntilResult];
     self.rootNode.viewId = nil;
     [self.rootNode clearSubModel];
     [self.rootNode.view.subviews forEach:^(__kindof UIView *obj) {
         [obj removeFromSuperview];
     }];
     self.script = script;
-    [self.driver createContext:self.contextId script:script source:self.source];
-    [self init:self.extra];
-    [self callEntity:DORIC_ENTITY_CREATE withArgumentsArray:@[]];
-    [self callEntity:DORIC_ENTITY_BUILD withArgumentsArray:@[self.initialParams]];
-    [self onShow];
+    _destroyed = YES;
+    [self dispatchToMainQueue:^{
+        _destroyed = NO;
+        [self.driver createContext:self.contextId script:script source:self.source];
+        [self init:self.extra];
+        [self callEntity:DORIC_ENTITY_CREATE withArgumentsArray:@[]];
+        [self callEntity:DORIC_ENTITY_BUILD withArgumentsArray:@[self.initialParams]];
+        [self onShow];
+    }];
 }
 
 - (void)onShow {

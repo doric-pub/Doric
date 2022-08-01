@@ -232,4 +232,8 @@ public class DoricNativeDriver implements IDoricDriver {
     public DoricJSEngine getDoricJSEngine() {
         return doricJSEngine;
     }
+
+    public void clearPendingJobs() {
+        this.mUIHandler.removeCallbacksAndMessages(null);
+    }
 }

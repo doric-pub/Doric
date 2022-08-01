@@ -18,6 +18,8 @@ package pub.doric.shader;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -44,7 +46,7 @@ import pub.doric.utils.DoricUtils;
 @DoricPlugin(name = "GestureContainer")
 public class GestureContainerNode extends StackNode {
 
-    private DoricJSDispatcher jsDispatcher = new DoricJSDispatcher();
+    private final DoricJSDispatcher jsDispatcher = new DoricJSDispatcher();
 
     private enum SwipeOrientation {
         LEFT(0), RIGHT(1), TOP(2), BOTTOM(3);
@@ -252,7 +254,7 @@ public class GestureContainerNode extends StackNode {
                     if (onPinch != null) {
                         jsDispatcher.dispatch(new Callable<AsyncResult<JSDecoder>>() {
                             @Override
-                            public AsyncResult<JSDecoder> call() throws Exception {
+                            public AsyncResult<JSDecoder> call() {
                                 return callJSResponse(onPinch, scaleGestureDetector.getScaleFactor());
                             }
                         });
@@ -307,8 +309,9 @@ public class GestureContainerNode extends StackNode {
                     }
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    getParent().requestDisallowInterceptTouchEvent(true);
-
+                    if (shouldRequestDisallowInterceptTouchEvent(event)) {
+                        getParent().requestDisallowInterceptTouchEvent(true);
+                    }
                     if (onTouchMove != null) {
                         jsDispatcher.dispatch(new Callable<AsyncResult<JSDecoder>>() {
                             @Override
@@ -323,6 +326,9 @@ public class GestureContainerNode extends StackNode {
 
                     break;
                 case MotionEvent.ACTION_UP:
+                    if (shouldRequestDisallowInterceptTouchEvent(event)) {
+                        getParent().requestDisallowInterceptTouchEvent(false);
+                    }
                     if (onTouchUp != null) {
                         callJSResponse(onTouchUp, new JSONBuilder()
                                 .put("x", x)
@@ -330,8 +336,9 @@ public class GestureContainerNode extends StackNode {
                                 .toJSONObject());
                     }
                 case MotionEvent.ACTION_CANCEL:
-                    getParent().requestDisallowInterceptTouchEvent(false);
-
+                    if (shouldRequestDisallowInterceptTouchEvent(event)) {
+                        getParent().requestDisallowInterceptTouchEvent(false);
+                    }
                     if (onTouchCancel != null) {
                         callJSResponse(onTouchCancel, new JSONBuilder()
                                 .put("x", x)
@@ -343,10 +350,19 @@ public class GestureContainerNode extends StackNode {
             }
 
             // handle gesture
-            boolean scaleRet = scaleGestureDetector.onTouchEvent(event);
-            boolean rotateRet = rotateGestureDetector.onTouchEvent(event);
+            boolean scaleRet = !TextUtils.isEmpty(onPinch) && scaleGestureDetector.onTouchEvent(event);
+            boolean rotateRet = !TextUtils.isEmpty(onRotate) && rotateGestureDetector.onTouchEvent(event);
             boolean commonRet = gestureDetector.onTouchEvent(event);
-            return (scaleRet || rotateRet || commonRet) || super.onTouchEvent(event);
+            if (scaleRet || rotateRet) {
+                int pointerIndex = (event.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
+                int action = (event.getAction() & MotionEvent.ACTION_MASK);
+                if (action == MotionEvent.ACTION_POINTER_DOWN && pointerIndex == 1) {
+                    getParent().requestDisallowInterceptTouchEvent(true);
+                } else if (action == MotionEvent.ACTION_POINTER_UP && pointerIndex == 1) {
+                    getParent().requestDisallowInterceptTouchEvent(false);
+                }
+            }
+            return (scaleRet || rotateRet || commonRet) || super.onTouchEvent(event) || event.getAction() == MotionEvent.ACTION_DOWN;
         }
 
         private void onSwipeLeft() {
@@ -372,5 +388,11 @@ public class GestureContainerNode extends StackNode {
                 callJSResponse(onSwipe, SwipeOrientation.BOTTOM.value);
             }
         }
+    }
+
+    private boolean shouldRequestDisallowInterceptTouchEvent(MotionEvent event) {
+        return !TextUtils.isEmpty(onPan)
+                || !TextUtils.isEmpty(onSwipe)
+                || !TextUtils.isEmpty(onTouchMove);
     }
 }

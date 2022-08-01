@@ -16,7 +16,9 @@
 package pub.doric.resource;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
@@ -35,15 +37,26 @@ import pub.doric.async.AsyncResult;
  * @CreateDate: 2021/10/20
  */
 public class DoricRemoteResource extends DoricResource {
+    private final boolean needCache;
+
+    public DoricRemoteResource(DoricContext doricContext, String identifier, boolean needCache) {
+        super(doricContext, identifier);
+        this.needCache = needCache;
+    }
 
     public DoricRemoteResource(DoricContext doricContext, String identifier) {
-        super(doricContext, identifier);
+        this(doricContext, identifier, true);
     }
 
     @Override
     public AsyncResult<byte[]> fetchRaw() {
         final AsyncResult<byte[]> result = new AsyncResult<>();
-        Glide.with(doricContext.getContext()).download(identifier)
+        RequestBuilder<File> requestBuilder = Glide.with(doricContext.getContext()).download(identifier);
+        if (!this.needCache) {
+            requestBuilder = requestBuilder.diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true);
+        }
+        requestBuilder
                 .listener(new RequestListener<File>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<File> target, boolean isFirstResource) {

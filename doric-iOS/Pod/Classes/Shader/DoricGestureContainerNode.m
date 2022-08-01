@@ -24,7 +24,7 @@
 #import "DoricGestureContainerNode.h"
 
 @interface DoricGestureView : UIView
-    
+
 @property(nonatomic, weak) DoricGestureContainerNode *node;
 
 @end
@@ -33,11 +33,11 @@
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     [super touchesBegan:touches withEvent:event];
-    
-    [touches enumerateObjectsUsingBlock:^(UITouch * _Nonnull obj, BOOL * _Nonnull stop) {
+
+    [touches enumerateObjectsUsingBlock:^(UITouch *_Nonnull obj, BOOL *_Nonnull stop) {
         if (self.node.onTouchDown) {
             CGPoint currentLocation = [obj locationInView:self];
-            [self.node callJSResponse: self.node.onTouchDown, @{@"x": @(currentLocation.x), @"y": @(currentLocation.y)}, nil];
+            [self.node callJSResponse:self.node.onTouchDown, @{@"x": @(currentLocation.x), @"y": @(currentLocation.y)}, nil];
             *stop = YES;
         }
     }];
@@ -45,8 +45,8 @@
 
 - (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     [super touchesMoved:touches withEvent:event];
-    
-    [touches enumerateObjectsUsingBlock:^(UITouch * _Nonnull obj, BOOL * _Nonnull stop) {
+
+    [touches enumerateObjectsUsingBlock:^(UITouch *_Nonnull obj, BOOL *_Nonnull stop) {
         if (self.node.onTouchMove) {
             CGPoint currentLocation = [obj locationInView:self];
             if (!self.node.jsDispatcher) {
@@ -55,7 +55,7 @@
             __weak typeof(self) __self = self;
             [self.node.jsDispatcher dispatch:^DoricAsyncResult * {
                 __strong typeof(__self) self = __self;
-                return [self.node callJSResponse: self.node.onTouchMove, @{@"x": @(currentLocation.x), @"y": @(currentLocation.y)}, nil];
+                return [self.node callJSResponse:self.node.onTouchMove, @{@"x": @(currentLocation.x), @"y": @(currentLocation.y)}, nil];
             }];
             *stop = YES;
         }
@@ -64,11 +64,11 @@
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     [super touchesEnded:touches withEvent:event];
-    
-    [touches enumerateObjectsUsingBlock:^(UITouch * _Nonnull obj, BOOL * _Nonnull stop) {
+
+    [touches enumerateObjectsUsingBlock:^(UITouch *_Nonnull obj, BOOL *_Nonnull stop) {
         if (self.node.onTouchUp) {
             CGPoint currentLocation = [obj locationInView:self];
-            [self.node callJSResponse: self.node.onTouchUp, @{@"x": @(currentLocation.x), @"y": @(currentLocation.y)}, nil];
+            [self.node callJSResponse:self.node.onTouchUp, @{@"x": @(currentLocation.x), @"y": @(currentLocation.y)}, nil];
             *stop = YES;
         }
     }];
@@ -76,11 +76,11 @@
 
 - (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     [super touchesCancelled:touches withEvent:event];
-    
-    [touches enumerateObjectsUsingBlock:^(UITouch * _Nonnull obj, BOOL * _Nonnull stop) {
+
+    [touches enumerateObjectsUsingBlock:^(UITouch *_Nonnull obj, BOOL *_Nonnull stop) {
         if (self.node.onTouchCancel) {
             CGPoint currentLocation = [obj locationInView:self];
-            [self.node callJSResponse: self.node.onTouchCancel, @{@"x": @(currentLocation.x), @"y": @(currentLocation.y)}, nil];
+            [self.node callJSResponse:self.node.onTouchCancel, @{@"x": @(currentLocation.x), @"y": @(currentLocation.y)}, nil];
             *stop = YES;
         }
     }];
@@ -88,7 +88,7 @@
 
 @end
 
-@interface DoricGestureContainerNode()
+@interface DoricGestureContainerNode ()
 
 @property(nonatomic, strong) NSString *onSingleTap;
 @property(nonatomic, strong) NSString *onDoubleTap;
@@ -100,7 +100,12 @@
 
 @property(nonatomic) CGPoint startPanLocation;
 @property(nonatomic) CGFloat startRotationDegree;
-
+@property(nonatomic, strong) UIGestureRecognizer *singleTapGesture;
+@property(nonatomic, strong) UITapGestureRecognizer *doubleTapGesture;
+@property(nonatomic, strong) UIGestureRecognizer *longPress;
+@property(nonatomic, strong) UIGestureRecognizer *pinchGesture;
+@property(nonatomic, strong) UIGestureRecognizer *panGesture;
+@property(nonatomic, strong) UIGestureRecognizer *rotationGesture;
 @end
 
 #define SWIPE_UP_THRESHOLD -1000.0f
@@ -114,45 +119,22 @@
         it.doricLayout.layoutType = DoricStack;
         it.node = self;
     }];
-    
-    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapAction:)];
-    [stackView addGestureRecognizer:singleTap];
-    
-    UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapAction:)];
-        doubleTap.numberOfTapsRequired = 2;
-    [stackView addGestureRecognizer:doubleTap];
-    
-    [singleTap requireGestureRecognizerToFail:doubleTap];
-    
-    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressAction:)];
-    [stackView addGestureRecognizer:longPress];
-    
-    UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchAction:)];
-    [stackView addGestureRecognizer:pinchGesture];
-    
-    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panAction:)];
-    panGesture.cancelsTouchesInView = NO;
-    [stackView addGestureRecognizer:panGesture];
-    
-    UIRotationGestureRecognizer *rotation = [[UIRotationGestureRecognizer alloc] initWithTarget:self action:@selector(rotationAction:)];
-    [stackView addGestureRecognizer:rotation];
-    
     return stackView;
 }
 
--(void)singleTapAction:(UITapGestureRecognizer *)sender{
+- (void)singleTapAction:(UITapGestureRecognizer *)sender {
     if (self.onSingleTap) {
         [self callJSResponse:self.onSingleTap, nil];
     }
 }
 
--(void)doubleTapAction:(UITapGestureRecognizer *)sender{
+- (void)doubleTapAction:(UITapGestureRecognizer *)sender {
     if (self.onDoubleTap) {
         [self callJSResponse:self.onDoubleTap, nil];
     }
 }
 
--(void)longPressAction:(UILongPressGestureRecognizer *)sender{
+- (void)longPressAction:(UILongPressGestureRecognizer *)sender {
     if (sender.state == UIGestureRecognizerStateBegan) {
         if (self.onLongPress) {
             [self callJSResponse:self.onLongPress, nil];
@@ -160,7 +142,7 @@
     }
 }
 
--(void)pinchAction:(UIPinchGestureRecognizer *)sender{
+- (void)pinchAction:(UIPinchGestureRecognizer *)sender {
     if (self.onPinch) {
         if (!self.jsDispatcher) {
             self.jsDispatcher = [DoricJSDispatcher new];
@@ -173,17 +155,17 @@
     }
 }
 
--(void)panAction:(UIPanGestureRecognizer *)sender{
-    if (sender.state == UIGestureRecognizerStateBegan)  {
+- (void)panAction:(UIPanGestureRecognizer *)sender {
+    if (sender.state == UIGestureRecognizerStateBegan) {
         self.startPanLocation = [sender locationInView:self.view];
     }
     CGPoint currentLocation = [sender locationInView:self.view];
-    
+
     CGFloat dx = self.startPanLocation.x - currentLocation.x;
     CGFloat dy = self.startPanLocation.y - currentLocation.y;
-    
+
     self.startPanLocation = currentLocation;
-    
+
     if (self.onPan) {
         if (!self.jsDispatcher) {
             self.jsDispatcher = [DoricJSDispatcher new];
@@ -194,8 +176,8 @@
             return [self callJSResponse:self.onPan, @(dx), @(dy), nil];
         }];
     }
-    
-    
+
+
     // detect the swipe gesture
     if (sender.state == UIGestureRecognizerStateEnded) {
         CGPoint vel = [sender velocityInView:sender.view];
@@ -226,11 +208,11 @@
     }
 }
 
--(void)rotationAction:(UIRotationGestureRecognizer *)sender{
-    if (sender.state == UIGestureRecognizerStateBegan)  {
+- (void)rotationAction:(UIRotationGestureRecognizer *)sender {
+    if (sender.state == UIGestureRecognizerStateBegan) {
         self.startRotationDegree = sender.rotation;
     }
-    
+
     CGFloat diffRotation = sender.rotation - self.startRotationDegree;
     self.startRotationDegree = sender.rotation;
     if (self.onRotate) {
@@ -245,25 +227,84 @@
     }
 }
 
+- (UIGestureRecognizer *)singleTapGesture {
+    if (_singleTapGesture == nil) {
+        _singleTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapAction:)];
+    }
+    return _singleTapGesture;
+}
+
+
+- (UITapGestureRecognizer *)doubleTapGesture {
+    if (_doubleTapGesture == nil) {
+        _doubleTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapAction:)];
+        _doubleTapGesture.numberOfTapsRequired = 2;
+    }
+    return _doubleTapGesture;
+}
+
+- (UIGestureRecognizer *)longPress {
+    if (_longPress == nil) {
+        _longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressAction:)];
+    }
+    return _longPress;
+}
+
+- (UIGestureRecognizer *)pinchGesture {
+    if (_pinchGesture == nil) {
+        _pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchAction:)];
+    }
+    return _pinchGesture;
+}
+
+- (UIGestureRecognizer *)panGesture {
+    if (_panGesture == nil) {
+        _panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panAction:)];
+        _panGesture.cancelsTouchesInView = NO;
+    }
+    return _panGesture;
+}
+
+- (UIGestureRecognizer *)rotationGesture {
+    if (_rotationGesture == nil) {
+        _rotationGesture = [[UIRotationGestureRecognizer alloc] initWithTarget:self action:@selector(rotationAction:)];
+    }
+    return _rotationGesture;
+}
+
 - (void)blendView:(UIView *)view forPropName:(NSString *)name propValue:(id)prop {
     if ([name isEqualToString:@"onSingleTap"]) {
         self.onSingleTap = prop;
+        [view addGestureRecognizer:self.singleTapGesture];
     } else if ([name isEqualToString:@"onDoubleTap"]) {
         self.onDoubleTap = prop;
+        [view removeGestureRecognizer:self.singleTapGesture];
+        [view addGestureRecognizer:self.singleTapGesture];
+        [view addGestureRecognizer:self.doubleTapGesture];
+        [self.singleTapGesture requireGestureRecognizerToFail:self.doubleTapGesture];
     } else if ([name isEqualToString:@"onLongPress"]) {
         self.onLongPress = prop;
+        [view addGestureRecognizer:self.longPress];
     } else if ([name isEqualToString:@"onPinch"]) {
         self.onPinch = prop;
+        [view addGestureRecognizer:self.pinchGesture];
     } else if ([name isEqualToString:@"onPan"]) {
         self.onPan = prop;
+        [view removeGestureRecognizer:self.panGesture];
+        [view addGestureRecognizer:self.panGesture];
     } else if ([name isEqualToString:@"onRotate"]) {
         self.onRotate = prop;
+        [view addGestureRecognizer:self.rotationGesture];
     } else if ([name isEqualToString:@"onSwipe"]) {
         self.onSwipe = prop;
+        [view removeGestureRecognizer:self.panGesture];
+        [view addGestureRecognizer:self.panGesture];
     } else if ([name isEqualToString:@"onTouchDown"]) {
         self.onTouchDown = prop;
     } else if ([name isEqualToString:@"onTouchMove"]) {
         self.onTouchMove = prop;
+        [view removeGestureRecognizer:self.panGesture];
+        [view addGestureRecognizer:self.panGesture];
     } else if ([name isEqualToString:@"onTouchUp"]) {
         self.onTouchUp = prop;
     } else if ([name isEqualToString:@"onTouchCancel"]) {

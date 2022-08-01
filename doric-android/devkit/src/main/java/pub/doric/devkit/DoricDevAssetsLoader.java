@@ -33,8 +33,8 @@ public class DoricDevAssetsLoader extends DoricAssetsLoader {
             return new DoricRemoteResource(doricContext,
                     String.format("http://%s:7778/assets/%s",
                             DoricDev.getInstance().getIP(),
-                            identifier
-                    ));
+                            identifier),
+                    false);
         }
         return super.load(doricContext, identifier);
     }

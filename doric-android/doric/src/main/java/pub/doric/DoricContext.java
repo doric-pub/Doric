@@ -245,16 +245,20 @@ public class DoricContext {
 
     public void reload(String script) {
         retainedJavaValues.clear();
-        getDriver().destroyContext(getContextId());
+        IDoricDriver driver = getDriver();
+        driver.destroyContext(getContextId()).synchronous().get();
         for (DoricJavaPlugin javaPlugin : mPluginMap.values()) {
             javaPlugin.onTearDown();
         }
         mPluginMap.clear();
+        if (driver instanceof DoricNativeDriver) {
+            ((DoricNativeDriver) driver).clearPendingJobs();
+        }
         this.script = script;
         this.mRootNode.setId("");
         this.mRootNode.clearSubModel();
         this.mRootNode.getView().removeAllViews();
-        getDriver().createContext(mContextId, script, source);
+        driver.createContext(mContextId, script, source);
         init(this.extra);
         callEntity(DoricConstant.DORIC_ENTITY_CREATE);
         callEntity(DoricConstant.DORIC_ENTITY_BUILD, this.initParams);

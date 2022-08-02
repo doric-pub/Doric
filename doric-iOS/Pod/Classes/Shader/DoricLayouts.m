@@ -262,14 +262,21 @@ static const void *kLayoutConfig = &kLayoutConfig;
     }
     BOOL isFrameChange = ![self rect:originFrame equalTo:self.view.frame];
     if (isFrameChange) {
+        if (isnan(originFrame.origin.x) || isinf(originFrame.origin.x)
+                || isnan(originFrame.origin.y) || isinf(originFrame.origin.y)
+                || isnan(originFrame.size.width) || isinf(originFrame.size.width)
+                || isnan(originFrame.size.height) || isinf(originFrame.size.height)
+                ) {
+            return;
+        }
         self.view.frame = originFrame;
     }
     if (!UIEdgeInsetsEqualToEdgeInsets(self.corners, UIEdgeInsetsZero)) {
         if (self.view.layer.mask) {
             if ([self.view.layer.mask isKindOfClass:[DoricShapeLayer class]]) {
-                DoricShapeLayer *shapeLayer = (DoricShapeLayer *)self.view.layer.mask;
+                DoricShapeLayer *shapeLayer = (DoricShapeLayer *) self.view.layer.mask;
                 if (!UIEdgeInsetsEqualToEdgeInsets(self.corners, shapeLayer.corners)
-                    || !CGRectEqualToRect(self.view.bounds, shapeLayer.viewBounds)) {
+                        || !CGRectEqualToRect(self.view.bounds, shapeLayer.viewBounds)) {
                     shapeLayer.corners = self.corners;
                     shapeLayer.viewBounds = self.view.bounds;
                     [self configMaskWithLayer:shapeLayer];

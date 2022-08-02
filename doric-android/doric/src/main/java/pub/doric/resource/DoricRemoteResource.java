@@ -18,15 +18,19 @@ package pub.doric.resource;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.Key;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.signature.ObjectKey;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.security.MessageDigest;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import pub.doric.DoricContext;
 import pub.doric.async.AsyncResult;
@@ -51,10 +55,15 @@ public class DoricRemoteResource extends DoricResource {
     @Override
     public AsyncResult<byte[]> fetchRaw() {
         final AsyncResult<byte[]> result = new AsyncResult<>();
-        RequestBuilder<File> requestBuilder = Glide.with(doricContext.getContext()).download(identifier);
+        RequestBuilder<File> requestBuilder = Glide.with(doricContext.getContext())
+                .download(identifier);
         if (!this.needCache) {
-            requestBuilder = requestBuilder.diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .skipMemoryCache(true);
+            requestBuilder = requestBuilder.skipMemoryCache(true).signature(new Key() {
+                @Override
+                public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
+                    messageDigest.update(toString().getBytes(CHARSET));
+                }
+            });
         }
         requestBuilder
                 .listener(new RequestListener<File>() {
@@ -82,6 +91,9 @@ public class DoricRemoteResource extends DoricResource {
                                     e.printStackTrace();
                                 }
                             }
+                        }
+                        if (!needCache) {
+                            resource.delete();
                         }
                         return false;
                     }

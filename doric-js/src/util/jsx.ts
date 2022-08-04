@@ -13,7 +13,7 @@ export namespace jsx {
             if (e instanceof Fragment) {
                 return children
             }
-            e.layoutConfig = layoutConfig().fit()
+            e.layoutConfig = e.layoutConfig ?? layoutConfig().fit()
             if (config) {
                 e.apply(config)
             }

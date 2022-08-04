@@ -3028,6 +3028,7 @@ exports.jsx = void 0;
     function createElement(constructor, config) {
         var arguments$1 = arguments;
 
+        var _a;
         var children = [];
         for (var _i = 2; _i < arguments.length; _i++) {
             children[_i - 2] = arguments$1[_i];
@@ -3037,7 +3038,7 @@ exports.jsx = void 0;
             if (e instanceof Fragment) {
                 return children;
             }
-            e.layoutConfig = layoutConfig().fit();
+            e.layoutConfig = (_a = e.layoutConfig) !== null && _a !== void 0 ? _a : layoutConfig().fit();
             if (config) {
                 e.apply(config);
             }

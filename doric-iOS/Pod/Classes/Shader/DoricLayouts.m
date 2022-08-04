@@ -92,6 +92,8 @@ static const void *kLayoutConfig = &kLayoutConfig;
 @end
 
 @interface DoricLayout ()
+@property(nonatomic,assign) BOOL reassignWidth;
+@property(nonatomic,assign) BOOL reassignHeight;
 @end
 
 @implementation DoricLayout
@@ -103,6 +105,8 @@ static const void *kLayoutConfig = &kLayoutConfig;
         _maxHeight = CGFLOAT_MAX;
         _minWidth = CGFLOAT_MIN;
         _minHeight = CGFLOAT_MIN;
+        _reassignWidth = NO;
+        _reassignHeight = NO;
     }
     return self;
 }
@@ -192,6 +196,8 @@ static const void *kLayoutConfig = &kLayoutConfig;
 }
 
 - (void)measureContent:(CGSize)targetSize {
+    self.reassignWidth = NO;
+    self.reassignHeight = NO;
     switch (self.layoutType) {
         case DoricStack: {
             [self measureStackContent:targetSize];
@@ -217,6 +223,23 @@ static const void *kLayoutConfig = &kLayoutConfig;
 
     if (self.view.superview.doricLayout.heightSpec == DoricLayoutFit && self.heightSpec == DoricLayoutMost) {
         self.measuredHeight = self.contentHeight + self.paddingTop + self.paddingBottom;
+    }
+
+    if (self.view.superview.doricLayout.layoutType == DoricHLayout
+            && self.view.superview.doricLayout.widthSpec == DoricLayoutFit
+            && self.weight > 0
+            && self.widthSpec == DoricLayoutJust
+            ) {
+        self.measuredWidth = self.contentWidth + self.paddingLeft + self.paddingRight + self.width;
+        self.reassignWidth = YES;
+    }
+    if (self.view.superview.doricLayout.layoutType == DoricVLayout
+            && self.view.superview.doricLayout.heightSpec == DoricLayoutFit
+            && self.weight > 0
+            && self.heightSpec == DoricLayoutJust
+            ) {
+        self.measuredHeight = self.contentHeight + self.paddingTop + self.paddingBottom + self.height;
+        self.reassignHeight = YES;
     }
 }
 
@@ -401,7 +424,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
         contentHeight -= self.spacing;
     }
 
-    if (contentWeight > 0) {
+    if (contentWeight > 0 && self.heightSpec != DoricLayoutFit) {
         CGFloat remaining = targetSize.height - contentHeight;
         contentWidth = 0;
         contentHeight = 0;
@@ -459,7 +482,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
         contentWidth -= self.spacing;
     }
 
-    if (contentWeight > 0) {
+    if (contentWeight > 0 && self.widthSpec != DoricLayoutFit) {
         CGFloat remaining = targetSize.width - contentWidth;
         contentWidth = 0;
         contentHeight = 0;
@@ -504,10 +527,10 @@ static const void *kLayoutConfig = &kLayoutConfig;
         if (layout.disabled) {
             continue;
         }
-        if (self.widthSpec == DoricLayoutFit && layout.widthSpec == DoricLayoutMost) {
+        if ((self.widthSpec == DoricLayoutFit || self.reassignWidth) && layout.widthSpec == DoricLayoutMost) {
             layout.measuredWidth = self.contentWidth - layout.marginLeft - layout.marginRight;
         }
-        if (self.heightSpec == DoricLayoutFit && layout.heightSpec == DoricLayoutMost) {
+        if ((self.heightSpec == DoricLayoutFit || self.reassignHeight) && layout.heightSpec == DoricLayoutMost) {
             layout.measuredHeight = self.contentHeight - layout.marginTop - layout.marginBottom;
         }
         [layout layout];
@@ -563,7 +586,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
         if (layout.disabled) {
             continue;
         }
-        if (self.widthSpec == DoricLayoutFit && layout.widthSpec == DoricLayoutMost) {
+        if ((self.widthSpec == DoricLayoutFit || self.reassignWidth) && layout.widthSpec == DoricLayoutMost) {
             layout.measuredWidth = self.contentWidth - layout.marginLeft - layout.marginRight;
         }
         [layout layout];
@@ -606,7 +629,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
             continue;
         }
 
-        if (self.heightSpec == DoricLayoutFit && layout.heightSpec == DoricLayoutMost) {
+        if ((self.heightSpec == DoricLayoutFit || self.reassignHeight) && layout.heightSpec == DoricLayoutMost) {
             layout.measuredHeight = self.contentHeight - layout.marginTop - layout.marginBottom;
         }
 

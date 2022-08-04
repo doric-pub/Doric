@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { loadDoricJSBundle } from './DoricBundleLoader'
 import { DoricContext } from './DoricContext'
 

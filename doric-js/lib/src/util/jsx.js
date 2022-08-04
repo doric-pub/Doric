@@ -3,12 +3,13 @@ import { layoutConfig } from "./layoutconfig";
 export var jsx;
 (function (jsx) {
     function createElement(constructor, config, ...children) {
+        var _a;
         if (!!constructor.isViewClass) {
             const e = new constructor();
             if (e instanceof Fragment) {
                 return children;
             }
-            e.layoutConfig = layoutConfig().fit();
+            e.layoutConfig = (_a = e.layoutConfig) !== null && _a !== void 0 ? _a : layoutConfig().fit();
             if (config) {
                 e.apply(config);
             }

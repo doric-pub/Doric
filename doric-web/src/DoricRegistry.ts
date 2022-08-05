@@ -20,6 +20,7 @@ import { DoricSwitchNode } from "./shader/DoricSwitchNode"
 import { DoricSliderNode } from "./shader/DoricSliderNode"
 import { DoricSlideItemNode } from "./shader/DoricSlideItemNode"
 import { NotificationPlugin } from "./plugins/NotificationPlugin"
+import { NetworkPlugin } from "./plugins/NetworkPlugin"
 
 const bundles: Map<string, string> = new Map
 
@@ -61,6 +62,7 @@ registerPlugin('navigator', NavigatorPlugin)
 registerPlugin('popover', PopoverPlugin)
 registerPlugin('animate', AnimatePlugin)
 registerPlugin('notification', NotificationPlugin)
+registerPlugin('network', NetworkPlugin)
 
 registerViewNode('Stack', DoricStackNode)
 registerViewNode('VLayout', DoricVLayoutNode)

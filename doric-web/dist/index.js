@@ -5760,7 +5760,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	}());
 	});
 
-	var __awaiter$1 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+	var __awaiter$2 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
 	    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
 	    return new (P || (P = Promise))(function (resolve, reject) {
 	        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -5772,7 +5772,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	const loaders = [
 	    {
 	        filter: () => true,
-	        request: (source) => __awaiter$1(void 0, void 0, void 0, function* () {
+	        request: (source) => __awaiter$2(void 0, void 0, void 0, function* () {
 	            const result = yield axios__default["default"].get(source);
 	            return result.data;
 	        })
@@ -5782,7 +5782,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	    loaders.push(loader);
 	}
 	function loadDoricJSBundle(source) {
-	    return __awaiter$1(this, void 0, void 0, function* () {
+	    return __awaiter$2(this, void 0, void 0, function* () {
 	        const matched = loaders.filter(e => e.filter(source));
 	        if (matched.length > 0) {
 	            return matched[matched.length - 1].request(source);
@@ -7853,6 +7853,75 @@ var doric_web = (function (exports, axios, sandbox) {
 	    }
 	}
 
+	var __awaiter$1 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+	    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+	    return new (P || (P = Promise))(function (resolve, reject) {
+	        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+	        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+	        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+	        step((generator = generator.apply(thisArg, _arguments || [])).next());
+	    });
+	};
+	class NetworkPlugin extends DoricPlugin {
+	    request(args) {
+	        return __awaiter$1(this, void 0, void 0, function* () {
+	            let result;
+	            let error;
+	            if (args.method.toLowerCase() === "get") {
+	                try {
+	                    result = yield axios__default["default"].get(args.url, {
+	                        headers: args.headers ? args.headers : {},
+	                        timeout: args.timeout
+	                    });
+	                }
+	                catch (exception) {
+	                    error = exception;
+	                }
+	            }
+	            else if (args.method.toLowerCase() === "post") {
+	                try {
+	                    result = yield axios__default["default"].post(args.url, args.data, {
+	                        headers: args.headers ? args.headers : {},
+	                        timeout: args.timeout
+	                    });
+	                }
+	                catch (exception) {
+	                    error = exception;
+	                }
+	            }
+	            else if (args.method.toLowerCase() === "put") {
+	                try {
+	                    result = yield axios__default["default"].put(args.url, args.data, {
+	                        headers: args.headers ? args.headers : {},
+	                        timeout: args.timeout
+	                    });
+	                }
+	                catch (exception) {
+	                    error = exception;
+	                }
+	            }
+	            else if (args.method.toLowerCase() === "delete") {
+	                try {
+	                    result = yield axios__default["default"].delete(args.url, {
+	                        headers: args.headers ? args.headers : {},
+	                        timeout: args.timeout
+	                    });
+	                }
+	                catch (exception) {
+	                    error = exception;
+	                }
+	            }
+	            result.data = JSON.stringify(result.data);
+	            if (result) {
+	                return Promise.resolve(result);
+	            }
+	            if (error) {
+	                return Promise.reject(error);
+	            }
+	        });
+	    }
+	}
+
 	const bundles = new Map;
 	const plugins = new Map;
 	const nodes = new Map;
@@ -7881,6 +7950,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	registerPlugin('popover', PopoverPlugin);
 	registerPlugin('animate', AnimatePlugin);
 	registerPlugin('notification', NotificationPlugin);
+	registerPlugin('network', NetworkPlugin);
 	registerViewNode('Stack', DoricStackNode);
 	registerViewNode('VLayout', DoricVLayoutNode);
 	registerViewNode('HLayout', DoricHLayoutNode);

@@ -19,12 +19,15 @@ function Grid(props: { title: string; innerElement: JSX.Element }) {
         text={props.title}
         backgroundColor={Color.parse("#3498db")}
         textColor={Color.WHITE}
-        textAlignment={Gravity.CenterX}
-        layoutConfig={layoutConfig().mostWidth().justHeight()}
-        height={30}
+        textAlignment={Gravity.CenterY.left()}
+        layoutConfig={layoutConfig()
+          .mostWidth()
+          .fitHeight()
+          .configMinHeight(30)}
+        maxLines={0}
       />
       <Stack
-        layoutConfig={layoutConfig().just()}
+        layoutConfig={layoutConfig().just().fitHeight()}
         width={300}
         height={300}
         backgroundColor={Color.parse("#ecf0f1")}
@@ -169,6 +172,70 @@ class LayoutTest extends Panel {
         gravity={Gravity.Center}
         space={20}
       >
+        <Grid
+          title={`
+VLayout(w=fit, h=fit)
+
+> VLayout(w=fit ,h=just&weight)
+> > Text(w=fit, h=fit)
+> > Stack(w=most, h=just)
+> Stack(w=most, h=just)
+`}
+        >
+          <VLayout>
+            <VLayout
+              layoutConfig={layoutConfig()
+                .fitWidth()
+                .justHeight()
+                .configWeight(1)}
+            >
+              <Text>Content</Text>
+              <Stack
+                layoutConfig={layoutConfig().mostWidth().justHeight()}
+                height={20}
+                backgroundColor={Color.RED.alpha(0.1)}
+              />
+            </VLayout>
+            <Stack
+              layoutConfig={layoutConfig().mostWidth().justHeight()}
+              height={20}
+              backgroundColor={Color.BLUE.alpha(0.1)}
+            ></Stack>
+          </VLayout>
+        </Grid>
+
+        <Grid
+          title={`
+HLayout(w=fit, h=fit)
+
+> VLayout(w=fit ,h=just&weight)
+> > Text(w=fit, h=fit)
+> > Stack(w=most, h=just)
+> Stack(w=most, h=just)
+`}
+        >
+          <HLayout>
+            <VLayout
+              layoutConfig={layoutConfig()
+                .justWidth()
+                .fitHeight()
+                .configWeight(1)}
+            >
+              <Text>Content</Text>
+              <Stack
+                layoutConfig={layoutConfig().mostWidth().justHeight()}
+                height={20}
+                backgroundColor={Color.RED.alpha(0.1)}
+              />
+            </VLayout>
+            <Stack
+              layoutConfig={layoutConfig().mostHeight().justWidth()}
+              width={20}
+              backgroundColor={Color.BLUE.alpha(0.1)}
+            ></Stack>
+          </HLayout>
+        </Grid>
+
         <Grid title="VLayout fit -> VLayout weight -> fit , most">
           <VLayout>
             <VLayout

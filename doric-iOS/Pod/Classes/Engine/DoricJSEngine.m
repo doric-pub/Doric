@@ -100,6 +100,7 @@
                 @"localeLanguage": [[NSLocale currentLocale] objectForKey:NSLocaleLanguageCode] ?: @"",
                 @"localeCountry": [[NSLocale currentLocale] objectForKey:NSLocaleCountryCode] ?: @"",
         }.mutableCopy;
+        [self.registry registerMonitor:[DoricDefaultMonitor new]];
         [self ensureRunOnJSThread:^() {
             [self.profile start:@"Init"];
             self.timers = [[NSMutableDictionary alloc] init];
@@ -111,7 +112,6 @@
             self.initialized = YES;
             [self.profile end:@"Init"];
         }];
-        [self.registry registerMonitor:[DoricDefaultMonitor new]];
     }
     return self;
 }

@@ -72,7 +72,7 @@
 
 @property(nonatomic, strong) NSMutableDictionary *plugins;
 @property(nonatomic, strong) NSMutableDictionary *nodes;
-@property(nonatomic, strong) NSMutableSet <id <DoricMonitorProtocol>> *monitors;
+@property(nonatomic, copy) NSSet <id <DoricMonitorProtocol>> *monitors;
 @property(nonatomic, weak) DoricJSEngine *jsEngine;
 @end
 
@@ -93,7 +93,7 @@
         _jsEngine = jsEngine;
         _plugins = [NSMutableDictionary new];
         _nodes = [NSMutableDictionary new];
-        _monitors = [NSMutableSet new];
+        _monitors = [NSSet new];
         _loaderManager = [DoricResourceManager new];
         [self innerRegister];
         [DoricSingleton.instance.libraries enumerateObjectsUsingBlock:^(DoricLibrary *obj, BOOL *stop) {
@@ -184,7 +184,9 @@
 }
 
 - (void)registerMonitor:(id <DoricMonitorProtocol>)monitor {
-    [self.monitors addObject:monitor];
+    NSMutableSet *mutableSet = [self.monitors mutableCopy];
+    [mutableSet addObject:monitor];
+    self.monitors = mutableSet;
 }
 
 - (void)onException:(NSException *)exception inContext:(DoricContext *)context {

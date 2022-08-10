@@ -59,5 +59,13 @@ public class FlowLayoutItemNode extends StackNode {
         super.blend(jsObject);
         getNodeView().getLayoutParams().width = getLayoutParams().width;
         getNodeView().getLayoutParams().height = getLayoutParams().height;
+        if (mSuperNode instanceof FlowLayoutNode) {
+            if (getNodeView().getLayoutParams().width > 0) {
+                getNodeView().getLayoutParams().width += ((FlowLayoutNode) mSuperNode).columnSpace;
+            }
+            if (getNodeView().getLayoutParams().height > 0) {
+                getNodeView().getLayoutParams().height += ((FlowLayoutNode) mSuperNode).rowSpace;
+            }
+        }
     }
 }

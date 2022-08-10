@@ -96,8 +96,8 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
             }
         }
     };
-    private int columnSpace = 0;
-    private int rowSpace = 0;
+    int columnSpace = 0;
+    int rowSpace = 0;
     private final Rect padding = new Rect();
     private final RecyclerView.ItemDecoration spacingItemDecoration = new RecyclerView.ItemDecoration() {
         @Override
@@ -335,10 +335,6 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
     @Override
     public void removeScrollChangeListener(DoricScrollChangeListener listener) {
         listeners.remove(listener);
-    }
-
-    private int calibratePosition(int position) {
-        return position;
     }
 
     @DoricMethod

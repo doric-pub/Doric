@@ -31,14 +31,14 @@ class CounterView extends ViewHolder {
         text({
           text: `Current language is ${Environment.localeLanguage}`,
           onClick: function () {
-            const v = this as View
+            const v = this as unknown as View
             group.removeChild(v)
           }
         }),
         text({
           text: `Current country is ${Environment.localeCountry}`,
           onClick: function () {
-            const v = this as View
+            const v = this as unknown as View
             group.removeChild(v)
           }
         }),
@@ -46,7 +46,7 @@ class CounterView extends ViewHolder {
           text: "Click to remove",
           textSize: 30,
           onClick: function () {
-            const v = this as View
+            const v = this as unknown as View
             group.removeChild(v)
           }
         }),

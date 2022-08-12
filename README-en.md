@@ -17,6 +17,9 @@
   <a href= "https://www.npmjs.com/package/doric">
      <img src="https://img.shields.io/npm/v/doric"/>
   </a>
+  <a href="https://www.npmjs.com/package/doric">
+    <img src="https://img.shields.io/npm/dm/doric.svg?maxAge=43200&style=flat-square"/>
+  </a>
   <a href="https://mvnrepository.com/artifact/pub.doric/core">
     <img src="https://img.shields.io/maven-central/v/pub.doric/core"/>
   </a>

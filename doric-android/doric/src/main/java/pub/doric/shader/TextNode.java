@@ -490,7 +490,7 @@ public class TextNode extends ViewNode<TextView> {
     protected void reset() {
         super.reset();
         mView.setText("");
-        mView.setTextColor(Color.BLACK);
+        mView.setTextColor(Color.GRAY);
         mView.setGravity(Gravity.CENTER);
         mView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
         mView.setMaxLines(1);

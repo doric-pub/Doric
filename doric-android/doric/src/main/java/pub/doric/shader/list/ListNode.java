@@ -413,6 +413,24 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
         return jsonArray;
     }
 
+    @DoricMethod
+    public void reload() {
+        this.listAdapter.loadAnchor = -1;
+        // If reload,should reset native cache.
+        for (int index = 0; index < this.itemValues.size(); index++) {
+            removeSubModel(this.itemValues.valueAt(index));
+        }
+        this.itemValues.clear();
+        mView.post(new Runnable() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void run() {
+                listAdapter.notifyDataSetChanged();
+            }
+        });
+
+    }
+
     private void moveToPosition(int pos, boolean smooth) {
         if (mView.getLayoutManager() == null) {
             return;

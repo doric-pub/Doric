@@ -116,6 +116,11 @@ export class List extends Superview {
         this.cachedViews.clear()
         this.itemCount = 0
     }
+
+    reload(context: BridgeContext) {
+        return this.nativeChannel(context, 'reload')() as Promise<void>
+    }
+
     private getItem(itemIdx: number) {
         let view = this.renderItem(itemIdx)
         view.superview = this

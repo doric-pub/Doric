@@ -83,8 +83,9 @@ class ListVM extends ViewModel<ListModel, ListVH> {
                             heightSpec: LayoutSpec.JUST,
                         },
                         height: 50,
-                        onClick: function () {
-                            (this as Text).height += 10
+                        onClick: () => {
+                            data.text += "1"
+                            vh.list.reload(this.context)
                         }
                     })
                 ]), {

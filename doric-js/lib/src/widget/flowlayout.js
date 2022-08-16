@@ -64,6 +64,14 @@ export class FlowLayout extends Superview {
     findCompletelyVisibleItems(context) {
         return this.nativeChannel(context, 'findCompletelyVisibleItems')();
     }
+    /**
+     * Reload all list items.
+     * @param context
+     * @returns
+     */
+    reload(context) {
+        return this.nativeChannel(context, 'reload')();
+    }
     reset() {
         this.cachedViews.clear();
         this.itemCount = 0;

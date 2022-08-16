@@ -41,6 +41,18 @@ export class Slider extends Superview {
     allSubviews() {
         return this.cachedViews.values();
     }
+    /**
+     * Reload all list items.
+     * @param context
+     * @returns
+     */
+    reload(context) {
+        return this.nativeChannel(context, 'reload')();
+    }
+    reset() {
+        this.cachedViews.clear();
+        this.itemCount = 0;
+    }
     getItem(itemIdx) {
         let view = this.renderPage(itemIdx);
         view.superview = this;

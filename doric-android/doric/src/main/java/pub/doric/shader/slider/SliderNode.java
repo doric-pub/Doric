@@ -295,6 +295,21 @@ public class SliderNode extends SuperNode<RecyclerView> {
         }
     }
 
+
+    @DoricMethod
+    public void reload() {
+        slideAdapter.itemValues.clear();
+        clearSubModel();
+        mView.post(new Runnable() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void run() {
+                slideAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+
     @Override
     public void reset() {
         super.reset();

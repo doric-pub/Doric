@@ -2503,12 +2503,17 @@ var List = /** @class */ (function (_super) {
     List.prototype.findCompletelyVisibleItems = function (context) {
         return this.nativeChannel(context, 'findCompletelyVisibleItems')();
     };
+    /**
+     * Reload all list items.
+     * @param context
+     * @returns
+     */
+    List.prototype.reload = function (context) {
+        return this.nativeChannel(context, 'reload')();
+    };
     List.prototype.reset = function () {
         this.cachedViews.clear();
         this.itemCount = 0;
-    };
-    List.prototype.reload = function (context) {
-        return this.nativeChannel(context, 'reload')();
     };
     List.prototype.getItem = function (itemIdx) {
         var view = this.renderItem(itemIdx);
@@ -2659,6 +2664,18 @@ var Slider = /** @class */ (function (_super) {
     }
     Slider.prototype.allSubviews = function () {
         return this.cachedViews.values();
+    };
+    /**
+     * Reload all list items.
+     * @param context
+     * @returns
+     */
+    Slider.prototype.reload = function (context) {
+        return this.nativeChannel(context, 'reload')();
+    };
+    Slider.prototype.reset = function () {
+        this.cachedViews.clear();
+        this.itemCount = 0;
     };
     Slider.prototype.getItem = function (itemIdx) {
         var view = this.renderPage(itemIdx);
@@ -3159,6 +3176,14 @@ var FlowLayout = /** @class */ (function (_super) {
      */
     FlowLayout.prototype.findCompletelyVisibleItems = function (context) {
         return this.nativeChannel(context, 'findCompletelyVisibleItems')();
+    };
+    /**
+     * Reload all list items.
+     * @param context
+     * @returns
+     */
+    FlowLayout.prototype.reload = function (context) {
+        return this.nativeChannel(context, 'reload')();
     };
     FlowLayout.prototype.reset = function () {
         this.cachedViews.clear();

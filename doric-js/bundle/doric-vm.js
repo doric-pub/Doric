@@ -3419,12 +3419,17 @@ class List extends Superview {
     findCompletelyVisibleItems(context) {
         return this.nativeChannel(context, 'findCompletelyVisibleItems')();
     }
+    /**
+     * Reload all list items.
+     * @param context
+     * @returns
+     */
+    reload(context) {
+        return this.nativeChannel(context, 'reload')();
+    }
     reset() {
         this.cachedViews.clear();
         this.itemCount = 0;
-    }
-    reload(context) {
-        return this.nativeChannel(context, 'reload')();
     }
     getItem(itemIdx) {
         let view = this.renderItem(itemIdx);
@@ -3551,6 +3556,18 @@ class Slider extends Superview {
     }
     allSubviews() {
         return this.cachedViews.values();
+    }
+    /**
+     * Reload all list items.
+     * @param context
+     * @returns
+     */
+    reload(context) {
+        return this.nativeChannel(context, 'reload')();
+    }
+    reset() {
+        this.cachedViews.clear();
+        this.itemCount = 0;
     }
     getItem(itemIdx) {
         let view = this.renderPage(itemIdx);
@@ -3926,6 +3943,14 @@ class FlowLayout extends Superview {
      */
     findCompletelyVisibleItems(context) {
         return this.nativeChannel(context, 'findCompletelyVisibleItems')();
+    }
+    /**
+     * Reload all list items.
+     * @param context
+     * @returns
+     */
+    reload(context) {
+        return this.nativeChannel(context, 'reload')();
     }
     reset() {
         this.cachedViews.clear();

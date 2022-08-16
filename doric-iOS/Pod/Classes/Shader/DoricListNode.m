@@ -566,4 +566,16 @@
     [subNode.view.doricLayout apply];
     [super subNodeContentChanged:subNode];
 }
+
+- (void)reload {
+    self.loadAnchor = -1;
+    [self.itemViewIds.allValues forEach:^(NSString *obj) {
+        [self removeSubModel:obj];
+    }];
+    [self.itemViewIds removeAllObjects];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.rowCount = self.itemCount + (self.loadMore ? 1 : 0);
+        [self.view reloadData];
+    });
+}
 @end

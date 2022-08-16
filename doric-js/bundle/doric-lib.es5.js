@@ -2507,6 +2507,9 @@ var List = /** @class */ (function (_super) {
         this.cachedViews.clear();
         this.itemCount = 0;
     };
+    List.prototype.reload = function (context) {
+        return this.nativeChannel(context, 'reload')();
+    };
     List.prototype.getItem = function (itemIdx) {
         var view = this.renderItem(itemIdx);
         view.superview = this;

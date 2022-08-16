@@ -1039,8 +1039,13 @@ declare module "doric" {
 		 * @returns Returns array of completely visible view's index.
 		 */
 		findCompletelyVisibleItems(context: BridgeContext): Promise<number[]>;
-		reset(): void;
+		/**
+		 * Reload all list items.
+		 * @param context
+		 * @returns
+		 */
 		reload(context: BridgeContext): Promise<void>;
+		reset(): void;
 		private getItem;
 		private renderBunchedItems;
 		toModel(): NativeViewModel;
@@ -1075,6 +1080,13 @@ declare module "doric" {
 			minScale: number;
 			maxScale: number;
 		};
+		/**
+		 * Reload all list items.
+		 * @param context
+		 * @returns
+		 */
+		reload(context: BridgeContext): Promise<void>;
+		reset(): void;
 		private getItem;
 		private renderBunchedItems;
 		slidePage(context: BridgeContext, page: number, smooth?: boolean): Promise<any>;
@@ -1182,6 +1194,12 @@ declare module "doric" {
 		 * @returns Returns array of completely visible view's index.
 		 */
 		findCompletelyVisibleItems(context: BridgeContext): Promise<number[]>;
+		/**
+		 * Reload all list items.
+		 * @param context
+		 * @returns
+		 */
+		reload(context: BridgeContext): Promise<void>;
 		reset(): void;
 		private getItem;
 		private renderBunchedItems;

@@ -100,6 +100,14 @@ export class FlowLayout extends Superview {
         return this.nativeChannel(context, 'findCompletelyVisibleItems')() as Promise<number[]>
     }
 
+    /**
+     * Reload all list items.
+     * @param context 
+     * @returns 
+     */
+    reload(context: BridgeContext) {
+        return this.nativeChannel(context, 'reload')() as Promise<void>
+    }
 
     reset() {
         this.cachedViews.clear()

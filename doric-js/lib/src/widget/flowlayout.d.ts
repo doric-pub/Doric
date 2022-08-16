@@ -47,6 +47,12 @@ export declare class FlowLayout extends Superview {
      * @returns Returns array of completely visible view's index.
      */
     findCompletelyVisibleItems(context: BridgeContext): Promise<number[]>;
+    /**
+     * Reload all list items.
+     * @param context
+     * @returns
+     */
+    reload(context: BridgeContext): Promise<void>;
     reset(): void;
     private getItem;
     private renderBunchedItems;

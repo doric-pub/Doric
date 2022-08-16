@@ -63,6 +63,20 @@ export class Slider extends Superview {
     @Property
     slideStyle?: "zoomOut" | { type: "zoomOut", minScale: number, maxScale: number }
 
+    /**
+     * Reload all list items.
+     * @param context 
+     * @returns 
+     */
+    reload(context: BridgeContext) {
+        return this.nativeChannel(context, 'reload')() as Promise<void>
+    }
+
+    reset() {
+        this.cachedViews.clear()
+        this.itemCount = 0
+    }
+
     private getItem(itemIdx: number) {
         let view = this.renderPage(itemIdx)
         view.superview = this

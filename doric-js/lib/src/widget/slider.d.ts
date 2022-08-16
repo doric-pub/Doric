@@ -29,6 +29,13 @@ export declare class Slider extends Superview {
         minScale: number;
         maxScale: number;
     };
+    /**
+     * Reload all list items.
+     * @param context
+     * @returns
+     */
+    reload(context: BridgeContext): Promise<void>;
+    reset(): void;
     private getItem;
     private renderBunchedItems;
     slidePage(context: BridgeContext, page: number, smooth?: boolean): Promise<any>;

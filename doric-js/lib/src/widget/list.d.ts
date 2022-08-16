@@ -53,8 +53,13 @@ export declare class List extends Superview {
      * @returns Returns array of completely visible view's index.
      */
     findCompletelyVisibleItems(context: BridgeContext): Promise<number[]>;
-    reset(): void;
+    /**
+     * Reload all list items.
+     * @param context
+     * @returns
+     */
     reload(context: BridgeContext): Promise<void>;
+    reset(): void;
     private getItem;
     private renderBunchedItems;
     toModel(): NativeViewModel;

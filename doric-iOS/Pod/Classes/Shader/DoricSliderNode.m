@@ -358,4 +358,12 @@
     [subNode.view.doricLayout apply];
     [super subNodeContentChanged:subNode];
 }
+
+- (void)reload {
+    [self.itemViewIds removeAllObjects];
+    [self clearSubModel];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.view reloadData];
+    });
+}
 @end

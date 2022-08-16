@@ -15,6 +15,7 @@
  */
 package pub.doric.shader.flowlayout;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Rect;
 import android.text.TextUtils;
@@ -391,6 +392,23 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
             jsonArray.put(position);
         }
         return jsonArray;
+    }
+
+    @DoricMethod
+    public void reload() {
+        this.flowAdapter.loadAnchor = -1;
+        // If reload,should reset native cache.
+        for (int index = 0; index < this.flowAdapter.itemValues.size(); index++) {
+            removeSubModel(this.flowAdapter.itemValues.valueAt(index));
+        }
+        this.flowAdapter.itemValues.clear();
+        mView.post(new Runnable() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void run() {
+                flowAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     @Override

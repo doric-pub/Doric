@@ -298,7 +298,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
         self.measuredHeight = self.contentHeight + self.paddingTop + self.paddingBottom;
     }
 
-    if (self.view.superview.doricLayout.layoutType == DoricHLayout
+    if (self.inHLayout
             && self.view.superview.doricLayout.widthSpec == DoricLayoutFit
             && self.weight > 0
             && self.widthSpec == DoricLayoutJust
@@ -461,7 +461,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
         if (layout.disabled) {
             continue;
         }
-        [layout measure:[layout removeMargin:targetSize]];
+        [layout measureSelf:[layout removeMargin:targetSize]];
         contentWidth = MAX(contentWidth, layout.takenWidth);
         contentHeight = MAX(contentHeight, layout.takenHeight);
     }
@@ -487,7 +487,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
             continue;
         }
         had = YES;
-        [layout measure:[layout removeMargin:CGSizeMake(
+        [layout measureSelf:[layout removeMargin:CGSizeMake(
                 targetSize.width,
                 layout.weight > 0 ? targetSize.height : targetSize.height - contentHeight)]];
         contentWidth = MAX(contentWidth, layout.takenWidth);
@@ -547,7 +547,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
             continue;
         }
         had = YES;
-        [layout measure:[layout removeMargin:CGSizeMake(
+        [layout measureSelf:[layout removeMargin:CGSizeMake(
                 layout.weight > 0 ? targetSize.width : targetSize.width - contentWidth,
                 targetSize.height)]];
         contentWidth += layout.takenWidth + self.spacing;

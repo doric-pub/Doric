@@ -92,8 +92,6 @@ static const void *kLayoutConfig = &kLayoutConfig;
 @end
 
 @interface DoricLayout ()
-@property(nonatomic, assign) BOOL reassignWidth;
-@property(nonatomic, assign) BOOL reassignHeight;
 @end
 
 @implementation DoricLayout
@@ -103,10 +101,8 @@ static const void *kLayoutConfig = &kLayoutConfig;
         _heightSpec = DoricLayoutJust;
         _maxWidth = CGFLOAT_MAX;
         _maxHeight = CGFLOAT_MAX;
-        _minWidth = CGFLOAT_MIN;
-        _minHeight = CGFLOAT_MIN;
-        _reassignWidth = NO;
-        _reassignHeight = NO;
+        _minWidth = -1;
+        _minHeight = -1;
     }
     return self;
 }
@@ -226,7 +222,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
             targetSize.height - self.marginTop - self.marginBottom);
 }
 
-- (BOOL)restrainSize {
+- (BOOL)restrain:(CGSize)limit {
     BOOL needRemeasure = NO;
     if (self.measuredWidth > self.maxWidth) {
         self.measuredWidth = self.maxWidth;
@@ -244,6 +240,17 @@ static const void *kLayoutConfig = &kLayoutConfig;
         self.measuredHeight = self.minHeight;
         needRemeasure = YES;
     }
+
+    if (self.measuredWidth > limit.width && !self.hasWidthWeight && !self.inScrollable) {
+        self.measuredWidth = MIN(limit.width, self.measuredWidth);
+        needRemeasure = YES;
+    }
+
+    if (self.measuredHeight > limit.height && !self.hasHeightWeight && !self.inScrollable) {
+        self.measuredHeight = MIN(limit.height, self.measuredHeight);
+        needRemeasure = YES;
+    }
+
     return needRemeasure;
 }
 
@@ -254,166 +261,200 @@ static const void *kLayoutConfig = &kLayoutConfig;
             && ABS(rect1.size.height - rect2.size.height) < 0.00001f;
 }
 
+- (CGSize)removeSizePadding:(CGSize)size {
+    return CGSizeMake([self removeWidthPadding:size.width],
+            [self removeHeightPadding:size.height]);
+}
+
+- (CGFloat)removeWidthPadding:(CGFloat)size {
+    return size - self.paddingLeft - self.paddingRight;
+}
+
+- (CGFloat)removeHeightPadding:(CGFloat)size {
+    return size - self.paddingTop - self.paddingBottom;
+}
+
+- (CGFloat)addWidthPadding:(CGFloat)size {
+    return size + self.paddingLeft + self.paddingRight;
+}
+
+- (CGFloat)addHeightPadding:(CGFloat)size {
+    return size + self.paddingTop + self.paddingBottom;
+}
+
+- (bool)needFitWidth {
+    return self.widthSpec == DoricLayoutFit
+            || (self.widthSpec == DoricLayoutMost && self.superLayout.needFitWidth)
+            || (self.widthSpec == DoricLayoutJust && self.hasWidthWeight);
+}
+
+- (bool)needFitHeight {
+    return self.heightSpec == DoricLayoutFit
+            || (self.heightSpec == DoricLayoutMost && self.superLayout.needFitHeight)
+            || (self.heightSpec == DoricLayoutJust && self.hasHeightWeight);
+}
+
+
+- (NSString *)getLayoutType {
+    switch (self.layoutType) {
+        case DoricVLayout:
+            return @"VLayout";
+        case DoricHLayout:
+            return @"HLayout";
+        case DoricStack:
+            return @"Stack";
+        default:
+            return [NSString stringWithFormat:@"Undefined:%@", self.view.class];
+    }
+}
+
+
+- (NSString *)getSpecType:(DoricLayoutSpec)spec {
+    switch (spec) {
+        case DoricLayoutJust:
+            return @"JUST";
+        case DoricLayoutMost:
+            return @"MOST";
+        default:
+            return @"FIT";
+    }
+}
+
+- (NSString *)toString {
+    return [NSString stringWithFormat:@"%@[width:%@,height:%@]",
+                                      [self getLayoutType],
+                                      [self getSpecType:self.widthSpec],
+                                      [self getSpecType:self.heightSpec]
+    ];
+}
+
 #pragma measureSelf
 
-- (void)measureSelf:(CGSize)targetSize {
-    CGFloat width;
-    CGFloat height;
+- (void)measureSelf:(CGSize)remainingSize {
+    CGFloat limitWidth = remainingSize.width;
+    CGFloat limitHeight = remainingSize.height;
 
-    if (self.mostWidth) {
-        if (self.superFitWidth) {
-            width = targetSize.width;
-        } else {
-            width = self.measuredWidth = targetSize.width;
+    if (self.inScrollable) {
+        if (self.fitWidth) {
+            limitWidth = CGFLOAT_MAX;
         }
-    } else if (self.justWidth) {
+        if (self.fitHeight) {
+            limitHeight = CGFLOAT_MAX;
+        }
+    }
+
+    [self measureSelf:remainingSize
+              limitTo:CGSizeMake(limitWidth, limitHeight)];
+}
+
+- (void)measureSelf:(CGSize)remainingSize limitTo:(CGSize)limitSize {
+
+    CGFloat remainingWidth = remainingSize.width;
+    CGFloat remainingHeight = remainingSize.height;
+
+    CGFloat limitWidth = limitSize.width;
+    CGFloat limitHeight = limitSize.height;
+
+    if (self.justWidth && !self.hasWidthWeight) {
+        remainingWidth = limitWidth = self.width;
+    }
+
+    if (self.justHeight && !self.hasHeightWeight) {
+        remainingHeight = limitHeight = self.height;
+    }
+
+    [self measureSelf:CGSizeMake(remainingWidth, remainingHeight)
+              limitTo:CGSizeMake(limitWidth, limitHeight)
+             restrain:YES];
+}
+
+- (void)measureSelf:(CGSize)remainingSize limitTo:(CGSize)limitSize restrain:(bool)needRestrain {
+    [self measureContent:[self removeSizePadding:remainingSize]
+                 limitTo:[self removeSizePadding:limitSize]];
+
+    if (self.needFitWidth) {
+        if ([self.view isKindOfClass:[UIImageView class]]
+                && self.heightSpec != DoricLayoutFit && self.contentHeight > 0) {
+            self.measuredWidth = self.contentWidth / self.contentHeight * self.measuredHeight
+                    + self.paddingLeft + self.paddingRight;
+        } else {
+            self.measuredWidth = self.contentWidth
+                    + self.paddingLeft + self.paddingRight
+                    + (self.justWidth ? self.width : 0);
+        }
+    } else if (self.mostWidth) {
+        self.measuredWidth = remainingSize.width;
+    } else {
         self.measuredWidth = self.width;
-        if (self.hasWidthWeight) {
-            width = targetSize.width;
-        } else {
-            width = self.width;
-        }
-    } else {
-        if (self.inScrollable) {
-            width = CGFLOAT_MAX;
-        } else {
-            width = targetSize.width;
-        }
     }
 
-    if (self.mostHeight) {
-        if (self.superFitHeight) {
-            height = targetSize.height;
+    if (self.needFitHeight) {
+        if ([self.view isKindOfClass:[UIImageView class]]
+                && self.widthSpec != DoricLayoutFit && self.contentHeight > 0) {
+            self.measuredHeight = self.contentHeight / self.contentWidth * self.measuredWidth
+                    + self.paddingLeft + self.paddingRight;
         } else {
-            height = self.measuredHeight = targetSize.height;
+            self.measuredHeight = self.contentHeight
+                    + self.paddingTop + self.paddingBottom
+                    + (self.justHeight ? self.height : 0);
         }
-    } else if (self.justHeight) {
-        if (self.hasHeightWeight) {
-            height = targetSize.height;
-        } else {
-            height = self.height;
-        }
+    } else if (self.mostHeight) {
+        self.measuredHeight = remainingSize.height;
+    } else {
         self.measuredHeight = self.height;
-    } else {
-        if (self.inScrollable) {
-            height = CGFLOAT_MAX;
-        } else {
-            height = targetSize.height;
-        }
     }
 
-    [self measureContent:CGSizeMake(
-            width - self.paddingLeft - self.paddingRight,
-            height - self.paddingTop - self.paddingBottom)];
-
-
-    if ([self restrainSize]) {
-        [self measureContent:CGSizeMake(
-                self.measuredWidth - self.paddingLeft - self.paddingRight,
-                self.measuredHeight - self.paddingTop - self.paddingBottom)];
+    if (needRestrain && [self restrain:limitSize] && self.layoutType != DoricUndefined) {
+        CGSize size = [self removeSizePadding:CGSizeMake(
+                self.measuredWidth,
+                self.measuredHeight)];
+        [self measureSelf:size limitTo:size restrain:NO];
     }
-
-    if (self.measuredWidth > width && !self.hasWidthWeight) {
-        self.measuredWidth = MIN(width, self.measuredWidth);
-    }
-
-    if (self.measuredHeight > height && !self.hasHeightWeight) {
-        self.measuredHeight = MIN(height, self.measuredHeight);
-    }
-
-    [self restrainSize];
 }
 
 #pragma measureContent
 
-- (void)measureContent:(CGSize)targetSize {
-    self.reassignWidth = NO;
-    self.reassignHeight = NO;
+- (void)measureContent:(CGSize)remaining limitTo:(CGSize)limit {
     switch (self.layoutType) {
         case DoricStack: {
-            [self measureStackContent:targetSize];
+            [self measureStackContent:remaining limitTo:limit];
             break;
         }
         case DoricVLayout: {
-            [self measureVLayoutContent:targetSize];
+            [self measureVLayoutContent:remaining limitTo:limit];
             break;
         }
         case DoricHLayout: {
-            [self measureHLayoutContent:targetSize];
+            [self measureHLayoutContent:remaining limitTo:limit];
             break;
         }
         default: {
-            [self measureUndefinedContent:targetSize];
+            [self measureUndefinedContent:remaining];
             break;
         }
-    }
-
-    if ((self.superFitWidth || self.superLayout.hasWidthWeight) && self.mostWidth) {
-        self.measuredWidth = self.contentWidth + self.paddingLeft + self.paddingRight;
-    }
-
-    if ((self.superFitHeight || self.superLayout.hasHeightWeight) && self.mostHeight) {
-        self.measuredHeight = self.contentHeight + self.paddingTop + self.paddingBottom;
-    }
-
-    if (self.superFitWidth
-            && self.hasWidthWeight
-            && self.justWidth) {
-        self.measuredWidth = self.contentWidth + self.paddingLeft + self.paddingRight + self.width;
-        self.reassignWidth = YES;
-    }
-    if (self.superFitHeight
-            && self.hasHeightWeight
-            && self.justHeight) {
-        self.measuredHeight = self.contentHeight + self.paddingTop + self.paddingBottom + self.height;
-        self.reassignHeight = YES;
     }
 }
 
 
 - (void)measureUndefinedContent:(CGSize)targetSize {
     CGSize measuredSize = [self.view sizeThatFits:targetSize];
-    if (self.fitWidth) {
-        if ([self.view isKindOfClass:[UIImageView class]]
-                && self.heightSpec != DoricLayoutFit && measuredSize.height > 0) {
-            self.measuredWidth = measuredSize.width / measuredSize.height * self.measuredHeight
-                    + self.paddingLeft + self.paddingRight;
-        } else {
-            self.measuredWidth = measuredSize.width + self.paddingLeft + self.paddingRight;
-        }
-    }
-    if (self.fitHeight) {
-        if ([self.view isKindOfClass:[UIImageView class]]
-                && self.widthSpec != DoricLayoutFit && measuredSize.width > 0) {
-            self.measuredHeight = measuredSize.height / measuredSize.width * self.measuredWidth
-                    + self.paddingTop + self.paddingBottom;
-        } else {
-            self.measuredHeight = measuredSize.height + self.paddingTop + self.paddingBottom;
-        }
-    }
 
     self.contentWidth = measuredSize.width;
-
     self.contentHeight = measuredSize.height;
 }
 
-- (void)measureStackContent:(CGSize)targetSize {
+- (void)measureStackContent:(CGSize)remaining limitTo:(CGSize)limit {
     CGFloat contentWidth = 0, contentHeight = 0;
     for (__kindof UIView *subview in self.view.subviews) {
         DoricLayout *layout = subview.doricLayout;
         if (layout.disabled) {
             continue;
         }
-        [layout measureSelf:[layout removeMargin:targetSize]];
+        CGSize childRemaining = [layout removeMargin:remaining];
+        CGSize childLimit = [layout removeMargin:limit];
+        [layout measureSelf:childRemaining limitTo:childLimit];
         contentWidth = MAX(contentWidth, layout.takenWidth);
         contentHeight = MAX(contentHeight, layout.takenHeight);
-    }
-    if (self.fitWidth) {
-        self.measuredWidth = contentWidth + self.paddingLeft + self.paddingRight;
-    }
-
-    if (self.fitHeight) {
-        self.measuredHeight = contentHeight + self.paddingTop + self.paddingBottom;
     }
 
     self.contentWidth = contentWidth;
@@ -421,7 +462,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
     self.contentHeight = contentHeight;
 }
 
-- (void)measureVLayoutContent:(CGSize)targetSize {
+- (void)measureVLayoutContent:(CGSize)remaining limitTo:(CGSize)limit {
     CGFloat contentWidth = 0, contentHeight = 0, contentWeight = 0;
     BOOL had = NO;
     for (__kindof UIView *subview in self.view.subviews) {
@@ -430,9 +471,14 @@ static const void *kLayoutConfig = &kLayoutConfig;
             continue;
         }
         had = YES;
-        [layout measureSelf:[layout removeMargin:CGSizeMake(
-                targetSize.width,
-                layout.weight > 0 ? targetSize.height : targetSize.height - contentHeight)]];
+        CGSize childRemaining = [layout removeMargin:CGSizeMake(
+                remaining.width,
+                layout.hasHeightWeight ? remaining.height : remaining.height - contentHeight)];
+        CGSize childLimit = [layout removeMargin:CGSizeMake(
+                limit.width,
+                layout.hasHeightWeight ? limit.height : limit.height - contentHeight)];
+        [layout measureSelf:childRemaining limitTo:childLimit];
+
         contentWidth = MAX(contentWidth, layout.takenWidth);
         contentHeight += layout.takenHeight + self.spacing;
         contentWeight += layout.weight;
@@ -443,7 +489,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
     }
 
     if (contentWeight > 0 && !self.fitHeight) {
-        CGFloat remaining = targetSize.height - contentHeight;
+        CGFloat extra = remaining.height - contentHeight;
         contentWidth = 0;
         contentHeight = 0;
         had = NO;
@@ -453,13 +499,14 @@ static const void *kLayoutConfig = &kLayoutConfig;
                 continue;
             }
             had = YES;
-            CGFloat measuredHeight = layout.measuredHeight + remaining / contentWeight * layout.weight;
+            CGFloat measuredHeight = layout.measuredHeight + extra / contentWeight * layout.weight;
             layout.measuredHeight = measuredHeight;
+
             //Need Remeasure
-            [layout measureContent:CGSizeMake(
-                    layout.measuredWidth - layout.paddingLeft - layout.paddingRight,
-                    measuredHeight - layout.paddingTop - layout.paddingBottom)];
-            layout.measuredHeight = measuredHeight;
+            CGSize childRemaining = CGSizeMake(
+                    [layout removeWidthPadding:layout.measuredWidth],
+                    [layout removeHeightPadding:measuredHeight]);
+            [layout measureContent:childRemaining limitTo:childRemaining];
             contentWidth = MAX(contentWidth, layout.takenWidth);
             contentHeight += layout.takenHeight + self.spacing;
         }
@@ -468,20 +515,12 @@ static const void *kLayoutConfig = &kLayoutConfig;
         }
     }
 
-    if (self.fitWidth) {
-        self.measuredWidth = contentWidth + self.paddingLeft + self.paddingRight;
-    }
-
-    if (self.fitHeight) {
-        self.measuredHeight = contentHeight + self.paddingTop + self.paddingBottom;
-    }
-
     self.contentWidth = contentWidth;
 
     self.contentHeight = contentHeight;
 }
 
-- (void)measureHLayoutContent:(CGSize)targetSize {
+- (void)measureHLayoutContent:(CGSize)remaining limitTo:(CGSize)limit {
     CGFloat contentWidth = 0, contentHeight = 0, contentWeight = 0;;
     BOOL had = NO;
     for (__kindof UIView *subview in self.view.subviews) {
@@ -490,9 +529,13 @@ static const void *kLayoutConfig = &kLayoutConfig;
             continue;
         }
         had = YES;
-        [layout measureSelf:[layout removeMargin:CGSizeMake(
-                layout.weight > 0 ? targetSize.width : targetSize.width - contentWidth,
-                targetSize.height)]];
+        CGSize childRemaining = [layout removeMargin:CGSizeMake(
+                layout.hasWidthWeight ? remaining.width : remaining.width - contentWidth,
+                remaining.height)];
+        CGSize childLimit = [layout removeMargin:CGSizeMake(
+                layout.hasWidthWeight ? limit.width : limit.width - contentWidth,
+                limit.height)];
+        [layout measureSelf:childRemaining limitTo:childLimit];
         contentWidth += layout.takenWidth + self.spacing;
         contentHeight = MAX(contentHeight, layout.takenHeight);
         contentWeight += layout.weight;
@@ -503,7 +546,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
     }
 
     if (contentWeight > 0 && !self.fitWidth) {
-        CGFloat remaining = targetSize.width - contentWidth;
+        CGFloat extra = remaining.width - contentWidth;
         contentWidth = 0;
         contentHeight = 0;
         had = NO;
@@ -513,13 +556,13 @@ static const void *kLayoutConfig = &kLayoutConfig;
                 continue;
             }
             had = YES;
-            CGFloat measuredWidth = layout.measuredWidth + remaining / contentWeight * layout.weight;
+            CGFloat measuredWidth = layout.measuredWidth + extra / contentWeight * layout.weight;
             layout.measuredWidth = measuredWidth;
             //Need Remeasure
-            [layout measureContent:CGSizeMake(
-                    measuredWidth - layout.paddingLeft - layout.paddingRight,
-                    layout.measuredHeight - layout.paddingTop - layout.paddingBottom)];
-            layout.measuredWidth = measuredWidth;
+            CGSize childRemaining = CGSizeMake(
+                    [layout removeWidthPadding:measuredWidth],
+                    [layout removeHeightPadding:layout.measuredHeight]);
+            [layout measureContent:childRemaining limitTo:childRemaining];
             contentWidth += layout.takenWidth + self.spacing;
             contentHeight = MAX(contentHeight, layout.takenHeight);
         }
@@ -528,16 +571,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
         }
     }
 
-    if (self.fitWidth) {
-        self.measuredWidth = contentWidth + self.paddingLeft + self.paddingRight;
-    }
-
-    if (self.fitHeight) {
-        self.measuredHeight = contentHeight + self.paddingTop + self.paddingBottom;
-    }
-
     self.contentWidth = contentWidth;
-
     self.contentHeight = contentHeight;
 }
 
@@ -643,10 +677,10 @@ static const void *kLayoutConfig = &kLayoutConfig;
         if (layout.disabled) {
             continue;
         }
-        if ((self.fitWidth || self.reassignWidth) && layout.mostWidth) {
+        if (self.needFitWidth && layout.mostWidth) {
             layout.measuredWidth = self.contentWidth - layout.marginLeft - layout.marginRight;
         }
-        if ((self.fitHeight || self.reassignHeight) && layout.mostHeight) {
+        if (self.needFitHeight && layout.mostHeight) {
             layout.measuredHeight = self.contentHeight - layout.marginTop - layout.marginBottom;
         }
         [layout layout];
@@ -702,7 +736,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
         if (layout.disabled) {
             continue;
         }
-        if ((self.fitWidth || self.reassignWidth) && layout.mostWidth) {
+        if (self.needFitWidth && layout.mostWidth) {
             layout.measuredWidth = self.contentWidth - layout.marginLeft - layout.marginRight;
         }
         [layout layout];
@@ -745,7 +779,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
             continue;
         }
 
-        if ((self.fitHeight || self.reassignHeight) && layout.mostHeight) {
+        if (self.needFitHeight && layout.mostHeight) {
             layout.measuredHeight = self.contentHeight - layout.marginTop - layout.marginBottom;
         }
 

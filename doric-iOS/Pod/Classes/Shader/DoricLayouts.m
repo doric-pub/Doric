@@ -92,6 +92,8 @@ static const void *kLayoutConfig = &kLayoutConfig;
 @end
 
 @interface DoricLayout ()
+@property(nonatomic, assign) bool needRemeasure;
+@property(nonatomic, assign) bool remeasuring;
 @end
 
 @implementation DoricLayout
@@ -103,6 +105,8 @@ static const void *kLayoutConfig = &kLayoutConfig;
         _maxHeight = CGFLOAT_MAX;
         _minWidth = -1;
         _minHeight = -1;
+        _needRemeasure = NO;
+        _remeasuring = NO;
     }
     return self;
 }
@@ -284,13 +288,15 @@ static const void *kLayoutConfig = &kLayoutConfig;
 
 - (bool)needFitWidth {
     return self.widthSpec == DoricLayoutFit
-            || (self.widthSpec == DoricLayoutMost && self.superLayout.needFitWidth)
+            || (self.widthSpec == DoricLayoutMost && self.superLayout.needFitWidth
+            && (!self.superLayout.remeasuring || self.inHLayout))
             || (self.widthSpec == DoricLayoutJust && self.hasWidthWeight);
 }
 
 - (bool)needFitHeight {
     return self.heightSpec == DoricLayoutFit
-            || (self.heightSpec == DoricLayoutMost && self.superLayout.needFitHeight)
+            || (self.heightSpec == DoricLayoutMost && self.superLayout.needFitHeight
+            && (!self.superLayout.remeasuring || self.inVLayout))
             || (self.heightSpec == DoricLayoutJust && self.hasHeightWeight);
 }
 
@@ -369,6 +375,8 @@ static const void *kLayoutConfig = &kLayoutConfig;
 }
 
 - (void)measureSelf:(CGSize)remainingSize limitTo:(CGSize)limitSize restrain:(bool)needRestrain {
+    self.needRemeasure = NO;
+    self.remeasuring = NO;
     [self measureContent:[self removeSizePadding:remainingSize]
                  limitTo:[self removeSizePadding:limitSize]];
 
@@ -404,11 +412,29 @@ static const void *kLayoutConfig = &kLayoutConfig;
         self.measuredHeight = self.height;
     }
 
-    if (needRestrain && [self restrain:limitSize] && self.layoutType != DoricUndefined) {
+    if (needRestrain
+            && [self restrain:limitSize]
+            && self.layoutType != DoricUndefined
+            ) {
         CGSize size = [self removeSizePadding:CGSizeMake(
                 self.measuredWidth,
                 self.measuredHeight)];
         [self measureSelf:size limitTo:size restrain:NO];
+    }
+
+    if (self.needRemeasure) {
+        CGSize size = [self removeSizePadding:CGSizeMake(
+                self.measuredWidth,
+                self.measuredHeight)];
+        self.remeasuring = YES;
+        [self measureContent:size
+                     limitTo:size];
+        self.remeasuring = NO;
+    }
+
+    if ((self.mostWidth && self.superLayout.needFitWidth)
+            || (self.mostHeight && self.superLayout.needFitHeight)) {
+        self.superLayout.needRemeasure = YES;
     }
 }
 
@@ -487,8 +513,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
     if (had) {
         contentHeight -= self.spacing;
     }
-
-    if (contentWeight > 0 && !self.fitHeight) {
+    if (contentWeight > 0 && !self.fitHeight && !self.hasHeightWeight) {
         CGFloat extra = remaining.height - contentHeight;
         contentWidth = 0;
         contentHeight = 0;
@@ -677,12 +702,6 @@ static const void *kLayoutConfig = &kLayoutConfig;
         if (layout.disabled) {
             continue;
         }
-        if (self.needFitWidth && layout.mostWidth) {
-            layout.measuredWidth = self.contentWidth - layout.marginLeft - layout.marginRight;
-        }
-        if (self.needFitHeight && layout.mostHeight) {
-            layout.measuredHeight = self.contentHeight - layout.marginTop - layout.marginBottom;
-        }
         [layout layout];
         DoricGravity gravity = layout.alignment;
         if ((gravity & DoricGravityLeft) == DoricGravityLeft) {
@@ -736,9 +755,6 @@ static const void *kLayoutConfig = &kLayoutConfig;
         if (layout.disabled) {
             continue;
         }
-        if (self.needFitWidth && layout.mostWidth) {
-            layout.measuredWidth = self.contentWidth - layout.marginLeft - layout.marginRight;
-        }
         [layout layout];
         DoricGravity gravity = layout.alignment | self.gravity;
         if ((gravity & DoricGravityLeft) == DoricGravityLeft) {
@@ -777,10 +793,6 @@ static const void *kLayoutConfig = &kLayoutConfig;
         DoricLayout *layout = child.doricLayout;
         if (layout.disabled) {
             continue;
-        }
-
-        if (self.needFitHeight && layout.mostHeight) {
-            layout.measuredHeight = self.contentHeight - layout.marginTop - layout.marginBottom;
         }
 
         [layout layout];

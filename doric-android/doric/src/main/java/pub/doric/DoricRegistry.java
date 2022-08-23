@@ -68,6 +68,8 @@ import pub.doric.shader.ViewNode;
 import pub.doric.shader.flex.FlexNode;
 import pub.doric.shader.flowlayout.FlowLayoutItemNode;
 import pub.doric.shader.flowlayout.FlowLayoutNode;
+import pub.doric.shader.horizontallist.HorizontalListItemNode;
+import pub.doric.shader.horizontallist.HorizontalListNode;
 import pub.doric.shader.list.ListItemNode;
 import pub.doric.shader.list.ListNode;
 import pub.doric.shader.slider.NestedSliderNode;
@@ -140,6 +142,8 @@ public class DoricRegistry {
         this.registerViewNode(GestureContainerNode.class);
         this.registerViewNode(BlurEffectViewNode.class);
         this.registerViewNode(AeroEffectViewNode.class);
+        this.registerViewNode(HorizontalListNode.class);
+        this.registerViewNode(HorizontalListItemNode.class);
         this.getResourceManager().registerLoader(new DoricAndroidLoader("drawable"));
         this.getResourceManager().registerLoader(new DoricAndroidLoader("raw"));
         this.getResourceManager().registerLoader(new DoricAndroidAssetsLoader());

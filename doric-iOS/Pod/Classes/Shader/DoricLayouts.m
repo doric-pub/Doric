@@ -624,15 +624,6 @@ static const void *kLayoutConfig = &kLayoutConfig;
         contentWeight += layout.weight;
     }
     self.contentWeight = contentWeight;
-    if (!existsContent) {
-        for (__kindof UIView *subview in self.view.subviews) {
-            DoricLayout *layout = subview.doricLayout;
-            if (layout.disabled) {
-                continue;
-            }
-            contentWidth = MAX(contentWidth, layout.takenWidth);
-        }
-    }
     if (had) {
         contentHeight -= self.spacing;
     }
@@ -679,6 +670,17 @@ static const void *kLayoutConfig = &kLayoutConfig;
             contentHeight -= self.spacing;
         }
     }
+    
+    if (!existsContent) {
+        for (__kindof UIView *subview in self.view.subviews) {
+            DoricLayout *layout = subview.doricLayout;
+            if (layout.disabled) {
+                continue;
+            }
+            contentWidth = MAX(contentWidth, layout.takenWidth);
+        }
+    }
+    
     self.contentWidth = contentWidth;
 
     self.contentHeight = contentHeight;
@@ -709,15 +711,6 @@ static const void *kLayoutConfig = &kLayoutConfig;
         contentWeight += layout.weight;
     }
     self.contentWeight = contentWeight;
-    if (!existsContent) {
-        for (__kindof UIView *subview in self.view.subviews) {
-            DoricLayout *layout = subview.doricLayout;
-            if (layout.disabled) {
-                continue;
-            }
-            contentHeight = MAX(contentHeight, layout.takenHeight);
-        }
-    }
     if (had) {
         contentWidth -= self.spacing;
     }
@@ -761,7 +754,17 @@ static const void *kLayoutConfig = &kLayoutConfig;
             contentWidth -= self.spacing;
         }
     }
-
+    
+    if (!existsContent) {
+        for (__kindof UIView *subview in self.view.subviews) {
+            DoricLayout *layout = subview.doricLayout;
+            if (layout.disabled) {
+                continue;
+            }
+            contentHeight = MAX(contentHeight, layout.takenHeight);
+        }
+    }
+    
     self.contentWidth = contentWidth;
     self.contentHeight = contentHeight;
 }

@@ -137,6 +137,10 @@ static const void *kLayoutConfig = &kLayoutConfig;
 
 #pragma helper
 
+- (BOOL)remeasuring {
+    return _remeasuring || [self.superLayout remeasuring];
+}
+
 - (BOOL)hasWidthWeight {
     return self.inHLayout && self.weight > 0;
 }
@@ -210,6 +214,10 @@ static const void *kLayoutConfig = &kLayoutConfig;
 
 - (BOOL)inHLayout {
     return self.superLayout.layoutType == DoricHLayout;
+}
+
+- (BOOL)inStack {
+    return self.superLayout.layoutType == DoricStack;
 }
 
 - (CGFloat)takenWidth {
@@ -287,17 +295,65 @@ static const void *kLayoutConfig = &kLayoutConfig;
 }
 
 - (BOOL)needFitWidth {
-    return self.widthSpec == DoricLayoutFit
-            || (self.widthSpec == DoricLayoutMost && self.superLayout.needFitWidth
-            && (!self.superLayout.remeasuring || self.inHLayout))
-            || (self.widthSpec == DoricLayoutJust && self.hasWidthWeight);
+    if (self.widthSpec == DoricLayoutFit) {
+        return YES;
+    }
+    if (self.widthSpec == DoricLayoutJust) {
+        return self.hasWidthWeight;
+    }
+    if (self.widthSpec == DoricLayoutMost) {
+        if (self.superLayout.needFitWidth) {
+            if (!self.remeasuring) {
+                return YES;
+            }
+            if (self.inHLayout) {
+                if (self.superLayout.fitWidth) {
+                    return YES;
+                }
+                if (!self.superLayout.inHLayout) {
+                    return YES;
+                }
+                if (self.superLayout.superLayout.inStack) {
+                    return YES;
+                }
+                if (self.superLayout.superLayout.superMostHeight) {
+                    return YES;
+                }
+            }
+        }
+    }
+    return NO;
 }
 
 - (BOOL)needFitHeight {
-    return self.heightSpec == DoricLayoutFit
-            || (self.heightSpec == DoricLayoutMost && self.superLayout.needFitHeight
-            && (!self.superLayout.remeasuring || self.inVLayout))
-            || (self.heightSpec == DoricLayoutJust && self.hasHeightWeight);
+    if (self.heightSpec == DoricLayoutFit) {
+        return YES;
+    }
+    if (self.heightSpec == DoricLayoutJust) {
+        return self.hasHeightWeight;
+    }
+    if (self.heightSpec == DoricLayoutMost) {
+        if (self.superLayout.needFitHeight) {
+            if (!self.remeasuring) {
+                return YES;
+            }
+            if (self.inVLayout) {
+                if (self.superLayout.fitHeight) {
+                    return YES;
+                }
+                if (!self.superLayout.inVLayout) {
+                    return YES;
+                }
+                if (self.superLayout.superLayout.inStack) {
+                    return YES;
+                }
+                if (self.superLayout.superLayout.superMostWidth) {
+                    return YES;
+                }
+            }
+        }
+    }
+    return NO;
 }
 
 
@@ -555,10 +611,10 @@ static const void *kLayoutConfig = &kLayoutConfig;
         had = YES;
         CGSize childRemaining = [layout removeMargin:CGSizeMake(
                 remaining.width,
-                layout.hasHeightWeight ? remaining.height : remaining.height - contentHeight)];
+                (self.contentWeight > 0 || layout.hasHeightWeight) ? remaining.height : remaining.height - contentHeight)];
         CGSize childLimit = [layout removeMargin:CGSizeMake(
                 limit.width,
-                layout.hasHeightWeight ? limit.height : limit.height - contentHeight)];
+                (self.contentWeight > 0 || layout.hasHeightWeight) ? limit.height : limit.height - contentHeight)];
         [layout measureSelf:childRemaining limitTo:childLimit];
         if (!(layout.mostWidth && self.fitWidth)) {
             existsContent = YES;
@@ -567,6 +623,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
         contentHeight += layout.takenHeight + self.spacing;
         contentWeight += layout.weight;
     }
+    self.contentWeight = contentWeight;
     if (!existsContent) {
         for (__kindof UIView *subview in self.view.subviews) {
             DoricLayout *layout = subview.doricLayout;
@@ -579,7 +636,22 @@ static const void *kLayoutConfig = &kLayoutConfig;
     if (had) {
         contentHeight -= self.spacing;
     }
-    if (contentWeight > 0 && !self.fitHeight && !self.hasHeightWeight) {
+    BOOL reassign = NO;
+    if (contentWeight > 0) {
+        if (self.needFitHeight && self.inVLayout) {
+            if (self.remeasuring) {
+                reassign = YES;
+            } else {
+                self.superLayout.needRemeasure = YES;
+            }
+        }
+
+        if (!self.needFitHeight && !self.hasHeightWeight) {
+            reassign = YES;
+        }
+    }
+
+    if (reassign) {
         CGFloat extra = remaining.height - contentHeight;
         contentWidth = 0;
         contentHeight = 0;
@@ -607,7 +679,6 @@ static const void *kLayoutConfig = &kLayoutConfig;
             contentHeight -= self.spacing;
         }
     }
-
     self.contentWidth = contentWidth;
 
     self.contentHeight = contentHeight;
@@ -624,10 +695,10 @@ static const void *kLayoutConfig = &kLayoutConfig;
         }
         had = YES;
         CGSize childRemaining = [layout removeMargin:CGSizeMake(
-                layout.hasWidthWeight ? remaining.width : remaining.width - contentWidth,
+                (self.contentWeight > 0 || layout.hasWidthWeight) ? remaining.width : remaining.width - contentWidth,
                 remaining.height)];
         CGSize childLimit = [layout removeMargin:CGSizeMake(
-                layout.hasWidthWeight ? limit.width : limit.width - contentWidth,
+                (self.contentWeight > 0 || layout.hasWidthWeight) ? limit.width : limit.width - contentWidth,
                 limit.height)];
         [layout measureSelf:childRemaining limitTo:childLimit];
         contentWidth += layout.takenWidth + self.spacing;
@@ -637,6 +708,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
         }
         contentWeight += layout.weight;
     }
+    self.contentWeight = contentWeight;
     if (!existsContent) {
         for (__kindof UIView *subview in self.view.subviews) {
             DoricLayout *layout = subview.doricLayout;
@@ -649,8 +721,20 @@ static const void *kLayoutConfig = &kLayoutConfig;
     if (had) {
         contentWidth -= self.spacing;
     }
-
-    if (contentWeight > 0 && !self.fitWidth) {
+    BOOL reassign = NO;
+    if (contentWeight > 0) {
+        if (self.needFitWidth && self.inHLayout) {
+            if (self.remeasuring) {
+                reassign = YES;
+            } else {
+                self.superLayout.needRemeasure = YES;
+            }
+        }
+        if (!self.needFitWidth && !self.hasWidthWeight) {
+            reassign = YES;
+        }
+    }
+    if (reassign) {
         CGFloat extra = remaining.width - contentWidth;
         contentWidth = 0;
         contentHeight = 0;

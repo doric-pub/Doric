@@ -13,56 +13,59 @@ class ScrollerInListDemo extends Panel {
                     itemCount: this.data.length,
                     renderItem: (idx) => {
                         if (idx % 3 === 0) {
-                            return listItem(scroller(
-                                hlayout([
-                                    stack([]).apply({
-                                        layoutConfig: layoutConfig().justWidth().justHeight(),
-                                        height: 80,
-                                        width: 160,
-                                        backgroundColor: colors[idx % colors.length],
-                                    }),
-                                    stack([]).apply({
-                                        layoutConfig: layoutConfig().justWidth().justHeight(),
-                                        height: 80,
-                                        width: 160,
-                                        backgroundColor: colors[idx % colors.length],
-                                    }),
-                                    stack([]).apply({
-                                        layoutConfig: layoutConfig().justWidth().justHeight(),
-                                        height: 80,
-                                        width: 160,
-                                        backgroundColor: colors[idx % colors.length],
-                                    }),
-                                    stack([]).apply({
-                                        layoutConfig: layoutConfig().justWidth().justHeight(),
-                                        height: 80,
-                                        width: 160,
-                                        backgroundColor: colors[idx % colors.length],
-                                    }),
-                                    stack([]).apply({
-                                        layoutConfig: layoutConfig().justWidth().justHeight(),
-                                        height: 80,
-                                        width: 160,
-                                        backgroundColor: colors[idx % colors.length],
-                                    }),
-                                    stack([]).apply({
-                                        layoutConfig: layoutConfig().justWidth().justHeight(),
-                                        height: 80,
-                                        width: 160,
-                                        backgroundColor: colors[idx % colors.length],
+                            return listItem(
+                                scroller(
+                                    hlayout([
+                                        stack([]).apply({
+                                            layoutConfig: layoutConfig().justWidth().justHeight(),
+                                            height: 80,
+                                            width: 160,
+                                            backgroundColor: colors[idx % colors.length],
+                                        }),
+                                        stack([]).apply({
+                                            layoutConfig: layoutConfig().justWidth().justHeight(),
+                                            height: 80,
+                                            width: 160,
+                                            backgroundColor: colors[idx % colors.length],
+                                        }),
+                                        stack([]).apply({
+                                            layoutConfig: layoutConfig().justWidth().justHeight(),
+                                            height: 80,
+                                            width: 160,
+                                            backgroundColor: colors[idx % colors.length],
+                                        }),
+                                        stack([]).apply({
+                                            layoutConfig: layoutConfig().justWidth().justHeight(),
+                                            height: 80,
+                                            width: 160,
+                                            backgroundColor: colors[idx % colors.length],
+                                        }),
+                                        stack([]).apply({
+                                            layoutConfig: layoutConfig().justWidth().justHeight(),
+                                            height: 80,
+                                            width: 160,
+                                            backgroundColor: colors[idx % colors.length],
+                                        }),
+                                        stack([]).apply({
+                                            layoutConfig: layoutConfig().justWidth().justHeight(),
+                                            height: 80,
+                                            width: 160,
+                                            backgroundColor: colors[idx % colors.length],
+                                        })
+                                    ]).apply({
+                                        space: 10,
                                     })
-                                ]).apply({
-                                    space: 10,
+                                ).apply({
+                                    layoutConfig: layoutConfig().just(),
+                                    height: 80,
+                                    width: Environment.screenWidth,
                                 })
-                            ).apply({
-                                layoutConfig: layoutConfig().fitWidth().justHeight(),
-                                height: 100,
-                            }))
+                            )
                         } else {
-                            return listItem(scroller(
+                            return listItem(
                                 hlayout([
                                     stack([]).apply({
-                                        layoutConfig: layoutConfig().justWidth().justHeight(),
+                                        layoutConfig: layoutConfig().just(),
                                         height: 80,
                                         width: Environment.screenWidth,
                                         backgroundColor: colors[idx % colors.length],
@@ -70,10 +73,7 @@ class ScrollerInListDemo extends Panel {
                                 ]).apply({
                                     space: 10,
                                 })
-                            ).apply({
-                                layoutConfig: layoutConfig().fitWidth().justHeight(),
-                                height: 100,
-                            }))
+                            )
                         }
                     },
                     layoutConfig: layoutConfig().most(),

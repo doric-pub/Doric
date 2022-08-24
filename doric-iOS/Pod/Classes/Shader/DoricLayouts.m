@@ -104,6 +104,13 @@ struct DoricMeasureSpec {
 
 typedef struct DoricMeasureSpec DoricMeasureSpec;
 
+struct DoricSizeAndState {
+    NSUInteger state;
+    CGFloat size;
+};
+
+typedef struct DoricSizeAndState DoricSizeAndState;
+
 DoricMeasureSpec DoricMeasureSpecMake(DoricMeasureSpecMode mode, CGFloat size) {
     DoricMeasureSpec spec;
     spec.mode = mode;
@@ -111,7 +118,18 @@ DoricMeasureSpec DoricMeasureSpecMake(DoricMeasureSpecMode mode, CGFloat size) {
     return spec;
 }
 
+NSUInteger DORIC_MEASURED_STATE_MASK = 0x11;
+
+NSUInteger DORIC_MEASURED_HEIGHT_STATE_SHIFT = 8;
+
+NSUInteger DORIC_MEASURED_STATE_TOO_SMALL = 0x01;
+
 @interface DoricLayout ()
+/**
+ * width-height
+ * 0xff--ff
+ * */
+@property(nonatomic, assign) NSUInteger measuredState;
 @end
 
 @implementation DoricLayout
@@ -123,6 +141,7 @@ DoricMeasureSpec DoricMeasureSpecMake(DoricMeasureSpecMode mode, CGFloat size) {
         _maxHeight = CGFLOAT_MAX;
         _minWidth = -1;
         _minHeight = -1;
+        _measuredState = 0;
     }
     return self;
 }
@@ -278,42 +297,50 @@ DoricMeasureSpec DoricMeasureSpecMake(DoricMeasureSpecMode mode, CGFloat size) {
           heightSpec:(DoricMeasureSpec)heightSpec
           usedHeight:(CGFloat)usedHeight {
 
-    DoricMeasureSpec childWidthSpec = [self getChildMeasureSpec:widthSpec
-                                                        padding:self.paddingLeft + self.paddingRight
-                                                                + child.marginLeft + child.marginRight
-                                                                + usedWidth
-                                                childLayoutSpec:child.widthSpec
-                                                      childSize:child.width];
+    DoricMeasureSpec childWidthSpec =
+            [self getChildMeasureSpec:widthSpec
+                              padding:self.paddingLeft + self.paddingRight
+                                      + child.marginLeft + child.marginRight
+                                      + usedWidth
+                      childLayoutSpec:child.widthSpec
+                            childSize:child.width];
 
-    DoricMeasureSpec childHeightSpec = [self getChildMeasureSpec:heightSpec
-                                                         padding:self.paddingTop + self.paddingBottom
-                                                                 + child.marginTop + child.marginBottom
-                                                                 + usedHeight
-                                                 childLayoutSpec:child.heightSpec
-                                                       childSize:child.height];
+    DoricMeasureSpec childHeightSpec =
+            [self getChildMeasureSpec:heightSpec
+                              padding:self.paddingTop + self.paddingBottom
+                                      + child.marginTop + child.marginBottom
+                                      + usedHeight
+                      childLayoutSpec:child.heightSpec
+                            childSize:child.height];
     [child measureWidth:childWidthSpec height:childHeightSpec];
 }
 
-- (CGFloat)resolveSize:(CGFloat)size spec:(DoricMeasureSpec)measureSpec {
+
+- (DoricSizeAndState)resolveSizeAndState:(CGFloat)size
+                                    spec:(DoricMeasureSpec)measureSpec
+                      childMeasuredState:(NSUInteger)state {
+    DoricSizeAndState result;
     DoricMeasureSpecMode specMode = measureSpec.mode;
     CGFloat specSize = measureSpec.size;
-    CGFloat result;
+    result.state = 0;
     switch (specMode) {
         case DoricMeasureAtMost:
             if (specSize < size) {
-                result = specSize;
+                result.size = specSize;
+                result.state = DORIC_MEASURED_STATE_TOO_SMALL;
             } else {
-                result = size;
+                result.size = size;
             }
             break;
         case DoricMeasureExactly:
-            result = specSize;
+            result.size = specSize;
             break;
         case DoricMeasureUnspecified:
         default:
-            result = size;
+            result.size = size;
             break;
     }
+    result.state = result.state | (state & DORIC_MEASURED_STATE_MASK);
     return result;
 }
 
@@ -334,7 +361,8 @@ DoricMeasureSpec DoricMeasureSpecMake(DoricMeasureSpecMode mode, CGFloat size) {
 }
 
 - (void)forceUniformWidth:(DoricMeasureSpec)heightMeasureSpec {
-    DoricMeasureSpec uniformMeasureSpec = DoricMeasureSpecMake(DoricMeasureExactly, self.measuredWidth);
+    DoricMeasureSpec uniformMeasureSpec = DoricMeasureSpecMake(DoricMeasureExactly,
+            self.measuredWidth);
     for (__kindof UIView *subview in self.view.subviews) {
         DoricLayout *childLayout = subview.doricLayout;
         if (childLayout.disabled) {
@@ -366,7 +394,8 @@ DoricMeasureSpec DoricMeasureSpecMake(DoricMeasureSpecMode mode, CGFloat size) {
     // Pretend that the linear layout has an exact size. This is the measured height of
     // ourselves. The measured height should be the max height of the children, changed
     // to accommodate the heightMeasureSpec from the parent
-    DoricMeasureSpec uniformMeasureSpec = DoricMeasureSpecMake(DoricMeasureExactly, self.measuredHeight);
+    DoricMeasureSpec uniformMeasureSpec
+            = DoricMeasureSpecMake(DoricMeasureExactly, self.measuredHeight);
     for (__kindof UIView *subview in self.view.subviews) {
         DoricLayout *childLayout = subview.doricLayout;
         if (childLayout.disabled) {
@@ -415,7 +444,8 @@ DoricMeasureSpec DoricMeasureSpecMake(DoricMeasureSpecMode mode, CGFloat size) {
     }
 }
 
-- (void)verticalMeasureWidth:(DoricMeasureSpec)widthMeasureSpec height:(DoricMeasureSpec)heightMeasureSpec {
+- (void)verticalMeasureWidth:(DoricMeasureSpec)widthMeasureSpec
+                      height:(DoricMeasureSpec)heightMeasureSpec {
     CGFloat maxWidth = 0, totalLength = 0;
     NSUInteger totalWeight = 0;
     BOOL hadExtraSpace = NO;
@@ -429,7 +459,7 @@ DoricMeasureSpec DoricMeasureSpecMake(DoricMeasureSpecMode mode, CGFloat size) {
 
     CGFloat weightedMaxWidth = 0;
     CGFloat alternativeMaxWidth = 0;
-
+    NSUInteger childState = 0;
     // See how tall everyone is. Also remember max width.
 
     for (__kindof UIView *subview in self.view.subviews) {
@@ -448,7 +478,8 @@ DoricMeasureSpec DoricMeasureSpecMake(DoricMeasureSpecMode mode, CGFloat size) {
             // Optimization: don't bother measuring children who are going to use
             // leftover space. These views will get measured again down below if
             // there is any leftover space.
-            totalLength = MAX(totalLength, totalLength + childLayout.marginTop + childLayout.marginBottom);
+            totalLength = MAX(totalLength, totalLength
+                    +childLayout.marginTop + childLayout.marginBottom);
             skippedMeasure = YES;
         } else {
             CGFloat oldHeight = CGFLOAT_MIN;
@@ -497,15 +528,19 @@ DoricMeasureSpec DoricMeasureSpecMake(DoricMeasureSpecMode mode, CGFloat size) {
         CGFloat measuredWidth = childLayout.measuredWidth + margin;
         maxWidth = MAX(maxWidth, measuredWidth);
 
+        childState = childState | childLayout.measuredState;
+
         allFillParent = allFillParent && childLayout.widthSpec == DoricLayoutMost;
         if (childLayout.weight > 0) {
             /*
              * Widths of weighted Views are bogus if we end up
              * remeasuring, so keep them separate.
              */
-            weightedMaxWidth = MAX(weightedMaxWidth, matchWidthLocally ? margin : measuredWidth);
+            weightedMaxWidth
+                    = MAX(weightedMaxWidth, matchWidthLocally ? margin : measuredWidth);
         } else {
-            alternativeMaxWidth = MAX(alternativeMaxWidth, matchWidthLocally ? margin : measuredWidth);
+            alternativeMaxWidth
+                    = MAX(alternativeMaxWidth, matchWidthLocally ? margin : measuredWidth);
         }
     }
 
@@ -521,7 +556,10 @@ DoricMeasureSpec DoricMeasureSpecMake(DoricMeasureSpecMode mode, CGFloat size) {
     heightSize = MAX(heightSize, self.minHeight);
 
     // Reconcile our calculated size with the heightMeasureSpec
-    heightSize = [self resolveSize:heightSize spec:heightMeasureSpec];
+    DoricSizeAndState heightSizeAndState = [self resolveSizeAndState:heightSize
+                                                                spec:heightMeasureSpec
+                                                  childMeasuredState:0];
+    heightSize = heightSizeAndState.size;
 
     // Either expand children with weight to take up available space or
     // shrink them if they extend beyond our current bounds. If we skipped
@@ -541,11 +579,13 @@ DoricMeasureSpec DoricMeasureSpecMake(DoricMeasureSpecMode mode, CGFloat size) {
                 CGFloat share = childExtra * delta / weightSum;
                 weightSum -= childExtra;
                 delta -= share;
-                DoricMeasureSpec childWidthMeasureSpec = [self getChildMeasureSpec:widthMeasureSpec
-                                                                           padding:self.paddingLeft + self.paddingRight
-                                                                                   + childLayout.marginLeft + childLayout.marginRight
-                                                                   childLayoutSpec:childLayout.widthSpec
-                                                                         childSize:childLayout.width];
+                DoricMeasureSpec childWidthMeasureSpec =
+                        [self getChildMeasureSpec:widthMeasureSpec
+                                          padding:self.paddingLeft + self.paddingRight
+                                                  + childLayout.marginLeft
+                                                  + childLayout.marginRight
+                                  childLayoutSpec:childLayout.widthSpec
+                                        childSize:childLayout.width];
                 // TODO: Use a field like lp.isMeasured to figure out if this
                 // child has been previously measured
                 if (!(childLayout.heightSpec == DoricLayoutJust && childLayout.height == 0)
@@ -557,13 +597,19 @@ DoricMeasureSpec DoricMeasureSpecMake(DoricMeasureSpecMode mode, CGFloat size) {
                         childHeight = 0;
                     }
                     [childLayout measureWidth:childWidthMeasureSpec
-                                       height:DoricMeasureSpecMake(DoricMeasureExactly, childHeight)];
+                                       height:DoricMeasureSpecMake(DoricMeasureExactly,
+                                               childHeight)];
                 } else {
                     // child was skipped in the loop above.
                     // Measure for this first time here
                     [childLayout measureWidth:childWidthMeasureSpec
-                                       height:DoricMeasureSpecMake(DoricMeasureExactly, share > 0 ? share : 0)];
+                                       height:DoricMeasureSpecMake(DoricMeasureExactly,
+                                               share > 0 ? share : 0)];
                 }
+
+                // Child may now not fit in vertical dimension.
+                childState = childState | (childLayout.measuredState
+                        & (DORIC_MEASURED_STATE_MASK >> DORIC_MEASURED_HEIGHT_STATE_SHIFT));
             }
 
 
@@ -571,9 +617,11 @@ DoricMeasureSpec DoricMeasureSpecMake(DoricMeasureSpecMode mode, CGFloat size) {
             CGFloat measuredWidth = childLayout.measuredWidth + margin;
             maxWidth = MAX(maxWidth, measuredWidth);
 
-            BOOL matchWidthLocally = widthMode != DoricMeasureExactly && childLayout.widthSpec == DoricLayoutMost;
+            BOOL matchWidthLocally = widthMode != DoricMeasureExactly
+                    && childLayout.widthSpec == DoricLayoutMost;
 
-            alternativeMaxWidth = MAX(alternativeMaxWidth, matchWidthLocally ? margin : measuredWidth);
+            alternativeMaxWidth = MAX(alternativeMaxWidth,
+                    matchWidthLocally ? margin : measuredWidth);
 
             allFillParent = allFillParent && childLayout.widthSpec == DoricLayoutMost;
 
@@ -598,9 +646,16 @@ DoricMeasureSpec DoricMeasureSpecMake(DoricMeasureSpecMode mode, CGFloat size) {
     // Check against our minimum width
     maxWidth = MAX(maxWidth, self.minWidth);
 
-    self.measuredWidth = [self resolveSize:maxWidth spec:widthMeasureSpec];
+    DoricSizeAndState widthSizeAndState = [self resolveSizeAndState:maxWidth
+                                                               spec:widthMeasureSpec
+                                                 childMeasuredState:childState];
+
+    self.measuredWidth = widthSizeAndState.size;
+
     self.measuredHeight = heightSize;
 
+    self.measuredState = (widthSizeAndState.state
+            << DORIC_MEASURED_HEIGHT_STATE_SHIFT) | heightSizeAndState.state;
     if (matchWidth) {
         [self forceUniformWidth:heightMeasureSpec];
     }
@@ -608,11 +663,11 @@ DoricMeasureSpec DoricMeasureSpecMake(DoricMeasureSpecMode mode, CGFloat size) {
 }
 
 
-- (void)horizontalMeasureWidth:(DoricMeasureSpec)widthMeasureSpec height:(DoricMeasureSpec)heightMeasureSpec {
+- (void)horizontalMeasureWidth:(DoricMeasureSpec)widthMeasureSpec
+                        height:(DoricMeasureSpec)heightMeasureSpec {
     CGFloat maxHeight = 0, totalLength = 0;
     NSUInteger totalWeight = 0;
     BOOL hadExtraSpace = NO;
-    BOOL existsContent = NO;
 
     DoricMeasureSpecMode widthMode = widthMeasureSpec.mode;
     DoricMeasureSpecMode heightMode = heightMeasureSpec.mode;
@@ -624,6 +679,9 @@ DoricMeasureSpec DoricMeasureSpecMake(DoricMeasureSpecMode mode, CGFloat size) {
     CGFloat weightedMaxHeight = 0;
     CGFloat alternativeMaxHeight = 0;
     BOOL isExactly = widthMode == DoricMeasureExactly;
+
+    NSUInteger childState = 0;
+
     // See how wide everyone is. Also remember max height.
     for (__kindof UIView *subview in self.view.subviews) {
         DoricLayout *childLayout = subview.doricLayout;
@@ -644,7 +702,8 @@ DoricMeasureSpec DoricMeasureSpecMake(DoricMeasureSpecMode mode, CGFloat size) {
             if (isExactly) {
                 totalLength += childLayout.marginLeft + childLayout.marginRight;
             } else {
-                totalLength = MAX(totalLength, totalLength + childLayout.marginLeft + childLayout.marginRight);
+                totalLength = MAX(totalLength, totalLength
+                        +childLayout.marginLeft + childLayout.marginRight);
             }
             skippedMeasure = YES;
         } else {
@@ -695,6 +754,9 @@ DoricMeasureSpec DoricMeasureSpecMake(DoricMeasureSpecMode mode, CGFloat size) {
 
         CGFloat margin = childLayout.marginTop + childLayout.marginBottom;
         CGFloat childHeight = childLayout.measuredHeight + margin;
+
+        childState = childState | childLayout.measuredState;
+
         maxHeight = MAX(maxHeight, childHeight);
 
         allFillParent = allFillParent && childLayout.heightSpec == DoricLayoutMost;
@@ -706,7 +768,8 @@ DoricMeasureSpec DoricMeasureSpecMake(DoricMeasureSpecMode mode, CGFloat size) {
              */
             weightedMaxHeight = MAX(weightedMaxHeight, matchHeightLocally ? margin : childHeight);
         } else {
-            alternativeMaxHeight = MAX(alternativeMaxHeight, matchHeightLocally ? margin : childHeight);
+            alternativeMaxHeight = MAX(alternativeMaxHeight,
+                    matchHeightLocally ? margin : childHeight);
         }
     }
 
@@ -722,7 +785,10 @@ DoricMeasureSpec DoricMeasureSpecMake(DoricMeasureSpecMode mode, CGFloat size) {
     widthSize = MAX(widthSize, self.minWidth);
 
     // Reconcile our calculated size with the widthMeasureSpec
-    widthSize = [self resolveSize:widthSize spec:widthMeasureSpec];
+    DoricSizeAndState widthSizeAndState = [self resolveSizeAndState:widthSize
+                                                               spec:widthMeasureSpec
+                                                 childMeasuredState:0];
+    widthSize = widthSizeAndState.size;
 
     // Either expand children with weight to take up available space or
     // shrink them if they extend beyond our current bounds. If we skipped
@@ -743,11 +809,13 @@ DoricMeasureSpec DoricMeasureSpecMake(DoricMeasureSpecMode mode, CGFloat size) {
                 weightSum -= childExtra;
                 delta -= share;
 
-                DoricMeasureSpec childHeightMeasureSpec = [self getChildMeasureSpec:heightMeasureSpec
-                                                                            padding:self.paddingTop + self.paddingBottom
-                                                                                    + childLayout.marginTop + childLayout.marginBottom
-                                                                    childLayoutSpec:childLayout.heightSpec
-                                                                          childSize:childLayout.height];
+                DoricMeasureSpec childHeightMeasureSpec
+                        = [self getChildMeasureSpec:heightMeasureSpec
+                                            padding:self.paddingTop + self.paddingBottom
+                                                    + childLayout.marginTop
+                                                    + childLayout.marginBottom
+                                    childLayoutSpec:childLayout.heightSpec
+                                          childSize:childLayout.height];
 
                 // TODO: Use a field like lp.isMeasured to figure out if this
                 // child has been previously measured
@@ -763,19 +831,24 @@ DoricMeasureSpec DoricMeasureSpecMake(DoricMeasureSpecMode mode, CGFloat size) {
                                        height:childHeightMeasureSpec];
                 } else {
                     // child was skipped in the loop above. Measure for this first time here
-                    [childLayout measureWidth:DoricMeasureSpecMake(DoricMeasureExactly, share > 0 ? share : 0)
+                    [childLayout measureWidth:DoricMeasureSpecMake(DoricMeasureExactly,
+                                    share > 0 ? share : 0)
                                        height:childHeightMeasureSpec];
                 }
+                // Child may now not fit in horizontal dimension.
+                childState = childState | (childLayout.measuredState & DORIC_MEASURED_STATE_MASK);
             }
             if (isExactly) {
-                totalLength += childLayout.measuredWidth + childLayout.marginLeft + childLayout.marginRight;
+                totalLength += childLayout.measuredWidth
+                        + childLayout.marginLeft + childLayout.marginRight;
             } else {
                 totalLength = MAX(totalLength, totalLength + childLayout.measuredWidth
                         + childLayout.marginLeft + childLayout.marginRight);
             }
             totalLength += self.spacing;
 
-            BOOL matchHeightLocally = heightMode != DoricMeasureExactly && childLayout.heightSpec == DoricLayoutMost;
+            BOOL matchHeightLocally = heightMode != DoricMeasureExactly
+                    && childLayout.heightSpec == DoricLayoutMost;
 
             CGFloat margin = childLayout.marginTop + childLayout.marginBottom;
 
@@ -783,7 +856,8 @@ DoricMeasureSpec DoricMeasureSpecMake(DoricMeasureSpecMode mode, CGFloat size) {
 
             maxHeight = MAX(maxHeight, childHeight);
 
-            alternativeMaxHeight = MAX(alternativeMaxHeight, matchHeightLocally ? margin : childHeight);
+            alternativeMaxHeight = MAX(alternativeMaxHeight,
+                    matchHeightLocally ? margin : childHeight);
 
             allFillParent = allFillParent && childLayout.heightSpec == DoricLayoutMost;
         }
@@ -809,7 +883,15 @@ DoricMeasureSpec DoricMeasureSpecMake(DoricMeasureSpecMode mode, CGFloat size) {
     maxHeight = MAX(maxHeight, self.minHeight);
 
     self.measuredWidth = widthSize;
-    self.measuredHeight = [self resolveSize:maxHeight spec:heightMeasureSpec];
+    DoricSizeAndState heightSizeAndState = [self resolveSizeAndState:maxHeight
+                                                                spec:heightMeasureSpec
+                                                  childMeasuredState:childState
+                                                          << DORIC_MEASURED_HEIGHT_STATE_SHIFT];
+
+    self.measuredHeight = heightSizeAndState.size;
+
+    self.measuredState = ((widthSizeAndState.state | (childState & DORIC_MEASURED_STATE_MASK))
+            << DORIC_MEASURED_HEIGHT_STATE_SHIFT) | heightSizeAndState.state;
 
     if (matchHeight) {
         [self forceUniformHeight:widthMeasureSpec];
@@ -817,12 +899,14 @@ DoricMeasureSpec DoricMeasureSpecMake(DoricMeasureSpecMode mode, CGFloat size) {
     self.totalLength = totalLength;
 }
 
-- (void)stackMeasureWidth:(DoricMeasureSpec)widthMeasureSpec height:(DoricMeasureSpec)heightMeasureSpec {
+- (void)stackMeasureWidth:(DoricMeasureSpec)widthMeasureSpec
+                   height:(DoricMeasureSpec)heightMeasureSpec {
     CGFloat maxWidth = 0;
     CGFloat maxHeight = 0;
     BOOL measureMatchParentChildren = widthMeasureSpec.mode != DoricMeasureExactly
             || heightMeasureSpec.mode != DoricMeasureExactly;
     NSMutableArray *matchParentChildren = [NSMutableArray new];
+    NSUInteger childState = 0;
     for (__kindof UIView *subview in self.view.subviews) {
         DoricLayout *childLayout = subview.doricLayout;
         if (childLayout.disabled) {
@@ -831,10 +915,14 @@ DoricMeasureSpec DoricMeasureSpecMake(DoricMeasureSpecMode mode, CGFloat size) {
         [self measureChild:childLayout
                  widthSpec:widthMeasureSpec usedWidth:0
                 heightSpec:heightMeasureSpec usedHeight:0];
-        maxWidth = MAX(maxWidth, childLayout.measuredWidth + childLayout.marginLeft + childLayout.marginRight);
-        maxHeight = MAX(maxHeight, childLayout.measuredHeight + childLayout.marginTop + childLayout.marginBottom);
+        maxWidth = MAX(maxWidth, childLayout.measuredWidth
+                + childLayout.marginLeft + childLayout.marginRight);
+        maxHeight = MAX(maxHeight, childLayout.measuredHeight
+                + childLayout.marginTop + childLayout.marginBottom);
+        childState = childState | childLayout.measuredState;
         if (measureMatchParentChildren) {
-            if (childLayout.widthSpec == DoricLayoutMost || childLayout.heightSpec == DoricLayoutMost) {
+            if (childLayout.widthSpec == DoricLayoutMost
+                    || childLayout.heightSpec == DoricLayoutMost) {
                 [matchParentChildren addObject:childLayout];
             }
         }
@@ -848,46 +936,69 @@ DoricMeasureSpec DoricMeasureSpecMake(DoricMeasureSpecMode mode, CGFloat size) {
     maxWidth = MAX(maxWidth, self.minWidth);
     maxHeight = MAX(maxHeight, self.minHeight);
 
-    self.measuredWidth = [self resolveSize:maxWidth spec:widthMeasureSpec];
-    self.measuredHeight = [self resolveSize:maxHeight spec:heightMeasureSpec];
+    DoricSizeAndState widthSizeAndState = [self resolveSizeAndState:maxWidth
+                                                               spec:widthMeasureSpec
+                                                 childMeasuredState:childState];
+    DoricSizeAndState heightSizeAndState = [self resolveSizeAndState:maxHeight
+                                                                spec:heightMeasureSpec
+                                                  childMeasuredState:childState
+                                                          << DORIC_MEASURED_HEIGHT_STATE_SHIFT];
+    self.measuredWidth = widthSizeAndState.size;
+    self.measuredHeight = heightSizeAndState.size;
+
+    self.measuredState = (widthSizeAndState.state
+            << DORIC_MEASURED_HEIGHT_STATE_SHIFT) | heightSizeAndState.state;
 
     if (matchParentChildren.count > 1) {
         for (DoricLayout *child in matchParentChildren) {
             DoricMeasureSpec childWidthMeasureSpec;
             if (child.widthSpec == DoricLayoutMost) {
-                childWidthMeasureSpec.size = MAX(0, self.measuredWidth - self.paddingLeft - self.paddingRight
-                        - child.marginLeft - child.marginRight);
+                childWidthMeasureSpec.size = MAX(0,
+                        self.measuredWidth - self.paddingLeft - self.paddingRight
+                                - child.marginLeft - child.marginRight);
                 childWidthMeasureSpec.mode = DoricMeasureExactly;
             } else {
-                childWidthMeasureSpec = [self getChildMeasureSpec:widthMeasureSpec
-                                                          padding:self.paddingLeft + self.paddingRight
-                                                                  + child.marginLeft + child.marginRight
-                                                  childLayoutSpec:child.widthSpec
-                                                        childSize:child.width];
+                childWidthMeasureSpec
+                        = [self getChildMeasureSpec:widthMeasureSpec
+                                            padding:self.paddingLeft + self.paddingRight
+                                                    + child.marginLeft + child.marginRight
+                                    childLayoutSpec:child.widthSpec
+                                          childSize:child.width];
             }
             DoricMeasureSpec childHeightMeasureSpec;
             if (child.heightSpec == DoricLayoutMost) {
-                childHeightMeasureSpec.size = MAX(0, self.measuredHeight - self.paddingTop - self.paddingBottom
+                childHeightMeasureSpec.size
+                        = MAX(0, self.measuredHeight - self.paddingTop - self.paddingBottom
                         - child.marginTop - child.marginBottom);
                 childHeightMeasureSpec.mode = DoricMeasureExactly;
             } else {
-                childHeightMeasureSpec = [self getChildMeasureSpec:heightMeasureSpec
-                                                           padding:self.paddingTop + self.paddingBottom
-                                                                   + child.marginTop + child.marginBottom
-                                                   childLayoutSpec:child.heightSpec
-                                                         childSize:child.height];
+                childHeightMeasureSpec
+                        = [self getChildMeasureSpec:heightMeasureSpec
+                                            padding:self.paddingTop + self.paddingBottom
+                                                    + child.marginTop + child.marginBottom
+                                    childLayoutSpec:child.heightSpec
+                                          childSize:child.height];
             }
             [child measureWidth:childWidthMeasureSpec height:childHeightMeasureSpec];
         }
     }
 }
 
-- (void)undefinedMeasureWidth:(DoricMeasureSpec)widthMeasureSpec height:(DoricMeasureSpec)heightMeasureSpec {
+- (void)undefinedMeasureWidth:(DoricMeasureSpec)widthMeasureSpec
+                       height:(DoricMeasureSpec)heightMeasureSpec {
     CGSize targetSize = CGSizeMake(widthMeasureSpec.size, heightMeasureSpec.size);
     //TODO should check this
     CGSize measuredSize = [self.view sizeThatFits:targetSize];
-    self.measuredWidth = [self resolveSize:measuredSize.width spec:widthMeasureSpec];
-    self.measuredHeight = [self resolveSize:measuredSize.height spec:heightMeasureSpec];
+    DoricSizeAndState widthSizeAndState = [self resolveSizeAndState:measuredSize.width
+                                                               spec:widthMeasureSpec
+                                                 childMeasuredState:0];
+    DoricSizeAndState heightSizeAndState = [self resolveSizeAndState:measuredSize.height
+                                                                spec:heightMeasureSpec
+                                                  childMeasuredState:0];
+    self.measuredWidth = widthSizeAndState.size;
+    self.measuredHeight = heightSizeAndState.size;
+    self.measuredState = (widthSizeAndState.state
+            << DORIC_MEASURED_HEIGHT_STATE_SHIFT) | heightSizeAndState.state;
 }
 
 #pragma layout
@@ -920,12 +1031,17 @@ DoricMeasureSpec DoricMeasureSpecMake(DoricMeasureSpecMode mode, CGFloat size) {
             [obj.doricLayout setFrame];
         }];
     }
-    CGRect originFrame = CGRectMake(self.measuredX, self.measuredY, self.measuredWidth, self.measuredHeight);
+    CGRect originFrame = CGRectMake(self.measuredX, self.measuredY,
+            self.measuredWidth, self.measuredHeight);
     if (!CGAffineTransformEqualToTransform(self.view.transform, CGAffineTransformIdentity)) {
         CGPoint anchor = self.view.layer.anchorPoint;
-        originFrame = CGRectOffset(originFrame, -anchor.x * self.measuredWidth - self.measuredX, -anchor.y * self.measuredHeight - self.measuredY);
+        originFrame = CGRectOffset(originFrame,
+                -anchor.x * self.measuredWidth - self.measuredX,
+                -anchor.y * self.measuredHeight - self.measuredY);
         originFrame = CGRectApplyAffineTransform(originFrame, self.view.transform);
-        originFrame = CGRectOffset(originFrame, anchor.x * self.measuredWidth + self.measuredX, anchor.y * self.measuredHeight + self.measuredY);
+        originFrame = CGRectOffset(originFrame,
+                anchor.x * self.measuredWidth + self.measuredX,
+                anchor.y * self.measuredHeight + self.measuredY);
     }
     BOOL isFrameChange = ![self rect:originFrame equalTo:self.view.frame];
     if (isFrameChange) {
@@ -975,7 +1091,8 @@ DoricMeasureSpec DoricMeasureSpecMake(DoricMeasureSpecMode mode, CGFloat size) {
         lineLayer.path = path;
         lineLayer.fillColor = nil;
         [[self.view.layer sublayers] forEach:^(__kindof CALayer *obj) {
-            if ([obj isKindOfClass:CAShapeLayer.class] && ((CAShapeLayer *) obj).lineWidth > CGFLOAT_MIN) {
+            if ([obj isKindOfClass:CAShapeLayer.class]
+                    && ((CAShapeLayer *) obj).lineWidth > CGFLOAT_MIN) {
                 [obj removeFromSuperlayer];
             }
         }];
@@ -1038,7 +1155,8 @@ DoricMeasureSpec DoricMeasureSpecMake(DoricMeasureSpecMode mode, CGFloat size) {
     } else if ((self.gravity & DoricGravityBottom) == DoricGravityBottom) {
         yStart = self.measuredHeight - self.totalLength - self.paddingBottom;
     } else if ((self.gravity & DoricGravityCenterY) == DoricGravityCenterY) {
-        yStart = (self.measuredHeight - self.totalLength - self.paddingTop - self.paddingBottom) / 2 + self.paddingTop;
+        yStart = (self.measuredHeight - self.totalLength
+                - self.paddingTop - self.paddingBottom) / 2 + self.paddingTop;
     }
     for (UIView *child in self.view.subviews) {
         DoricLayout *layout = child.doricLayout;
@@ -1077,7 +1195,8 @@ DoricMeasureSpec DoricMeasureSpecMake(DoricMeasureSpecMode mode, CGFloat size) {
     } else if ((self.gravity & DoricGravityRight) == DoricGravityRight) {
         xStart = self.measuredWidth - self.totalLength - self.paddingRight;
     } else if ((self.gravity & DoricGravityCenterX) == DoricGravityCenterX) {
-        xStart = (self.measuredWidth - self.totalLength - self.paddingLeft - self.paddingRight) / 2 + self.paddingLeft;
+        xStart = (self.measuredWidth - self.totalLength
+                - self.paddingLeft - self.paddingRight) / 2 + self.paddingLeft;
     }
     for (UIView *child in self.view.subviews) {
         DoricLayout *layout = child.doricLayout;

@@ -130,6 +130,7 @@ NSUInteger DORIC_MEASURED_STATE_TOO_SMALL = 0x01;
  * 0xff--ff
  * */
 @property(nonatomic, assign) NSUInteger measuredState;
+@property(nonatomic, strong) NSMutableDictionary *measuredCache;
 @end
 
 @implementation DoricLayout
@@ -142,6 +143,7 @@ NSUInteger DORIC_MEASURED_STATE_TOO_SMALL = 0x01;
         _minWidth = -1;
         _minHeight = -1;
         _measuredState = 0;
+        _measuredCache = [NSMutableDictionary new];
     }
     return self;
 }
@@ -166,9 +168,34 @@ NSUInteger DORIC_MEASURED_STATE_TOO_SMALL = 0x01;
 }
 
 - (void)measure:(CGSize)targetSize {
-    [self measureWidth:DoricMeasureSpecMake(DoricMeasureExactly, targetSize.width)
-                height:DoricMeasureSpecMake(DoricMeasureExactly, targetSize.height)];
+    [self doMeasure:targetSize];
     [self layout];
+}
+
+- (DoricMeasureSpec)getRootMeasureSpec:(CGFloat)targetSize
+                            layoutSpec:(DoricLayoutSpec)spec
+                                  size:(CGFloat)size {
+
+    switch (spec) {
+        case DoricLayoutMost:
+            return DoricMeasureSpecMake(DoricMeasureExactly, targetSize);
+        case DoricLayoutFit:
+            return DoricMeasureSpecMake(DoricMeasureAtMost, targetSize);
+        default:
+            return DoricMeasureSpecMake(DoricMeasureExactly, size);
+    }
+
+}
+
+- (void)doMeasure:(CGSize)targetSize {
+    DoricMeasureSpec widthSpec = [self getRootMeasureSpec:targetSize.width
+                                               layoutSpec:self.widthSpec
+                                                     size:self.width];
+    DoricMeasureSpec heightSpec = [self getRootMeasureSpec:targetSize.height
+                                                layoutSpec:self.heightSpec
+                                                      size:self.height];
+    [self measureWidth:widthSpec
+                height:heightSpec];
 }
 
 #pragma helper
@@ -424,6 +451,20 @@ NSUInteger DORIC_MEASURED_STATE_TOO_SMALL = 0x01;
 }
 
 - (void)measureWidth:(DoricMeasureSpec)widthSpec height:(DoricMeasureSpec)heightSpec {
+//    NSString *measuredKey = [NSString stringWithFormat:@"%@;%@;%@;%@",
+//                                                       @(widthSpec.mode), @(widthSpec.size),
+//                                                       @(heightSpec.mode), @(heightSpec.size)];
+//
+//    NSString *cached = self.measuredCache[measuredKey];
+//    if (cached) {
+//        NSArray <NSString *> *nums = [cached componentsSeparatedByString:@":"];
+//        if (nums.count == 2) {
+//            self.measuredWidth = nums[0].floatValue;
+//            self.measuredHeight = nums[1].floatValue;
+//            return;
+//        }
+//    }
+
     switch (self.layoutType) {
         case DoricStack: {
             [self stackMeasureWidth:widthSpec height:heightSpec];
@@ -442,6 +483,10 @@ NSUInteger DORIC_MEASURED_STATE_TOO_SMALL = 0x01;
             break;
         }
     }
+
+//    self.measuredCache[measuredKey] = [NSString stringWithFormat:@"%@;%@",
+//                                                                 @(self.measuredWidth),
+//                                                                 @(self.measuredHeight)];
 }
 
 - (void)verticalMeasureWidth:(DoricMeasureSpec)widthMeasureSpec
@@ -734,7 +779,7 @@ NSUInteger DORIC_MEASURED_STATE_TOO_SMALL = 0x01;
                 childLayout.width = oldWidth;
             }
 
-            CGFloat childWidth = childLayout.measuredHeight;
+            CGFloat childWidth = childLayout.measuredWidth;
             if (isExactly) {
                 totalLength += childWidth + childLayout.marginLeft + childLayout.marginRight;
             } else {
@@ -986,13 +1031,16 @@ NSUInteger DORIC_MEASURED_STATE_TOO_SMALL = 0x01;
 
 - (void)undefinedMeasureWidth:(DoricMeasureSpec)widthMeasureSpec
                        height:(DoricMeasureSpec)heightMeasureSpec {
-    CGSize targetSize = CGSizeMake(widthMeasureSpec.size, heightMeasureSpec.size);
+    CGSize targetSize = CGSizeMake(widthMeasureSpec.size - self.paddingLeft - self.paddingRight,
+            heightMeasureSpec.size - self.paddingTop - self.paddingBottom);
     //TODO should check this
     CGSize measuredSize = [self.view sizeThatFits:targetSize];
     DoricSizeAndState widthSizeAndState = [self resolveSizeAndState:measuredSize.width
+                    + self.paddingLeft + self.paddingRight
                                                                spec:widthMeasureSpec
                                                  childMeasuredState:0];
     DoricSizeAndState heightSizeAndState = [self resolveSizeAndState:measuredSize.height
+                    + self.paddingTop + self.paddingBottom
                                                                 spec:heightMeasureSpec
                                                   childMeasuredState:0];
     self.measuredWidth = widthSizeAndState.size;

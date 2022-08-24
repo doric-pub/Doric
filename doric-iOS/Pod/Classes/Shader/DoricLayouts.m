@@ -180,6 +180,9 @@ NSUInteger DORIC_MEASURED_STATE_TOO_SMALL = 0x01;
         case DoricLayoutMost:
             return DoricMeasureSpecMake(DoricMeasureExactly, targetSize);
         case DoricLayoutFit:
+            if ([self.view.superview isKindOfClass:UIScrollView.class]) {
+                return DoricMeasureSpecMake(DoricMeasureAtMost, CGFLOAT_MAX);
+            }
             return DoricMeasureSpecMake(DoricMeasureAtMost, targetSize);
         default:
             return DoricMeasureSpecMake(DoricMeasureExactly, size);
@@ -483,7 +486,12 @@ NSUInteger DORIC_MEASURED_STATE_TOO_SMALL = 0x01;
             break;
         }
     }
-
+    if (self.measuredWidth > self.maxWidth || self.measuredHeight > self.measuredHeight) {
+        [self measureWidth:DoricMeasureSpecMake(DoricMeasureAtMost,
+                        MIN(self.measuredWidth, self.maxWidth))
+                    height:DoricMeasureSpecMake(DoricMeasureAtMost,
+                            MIN(self.measuredHeight, self.maxHeight))];
+    }
 //    self.measuredCache[measuredKey] = [NSString stringWithFormat:@"%@;%@",
 //                                                                 @(self.measuredWidth),
 //                                                                 @(self.measuredHeight)];
@@ -994,7 +1002,7 @@ NSUInteger DORIC_MEASURED_STATE_TOO_SMALL = 0x01;
     self.measuredState = (widthSizeAndState.state
             << DORIC_MEASURED_HEIGHT_STATE_SHIFT) | heightSizeAndState.state;
 
-    if (matchParentChildren.count > 1) {
+    if (matchParentChildren.count > 0) {
         for (DoricLayout *child in matchParentChildren) {
             DoricMeasureSpec childWidthMeasureSpec;
             if (child.widthSpec == DoricLayoutMost) {

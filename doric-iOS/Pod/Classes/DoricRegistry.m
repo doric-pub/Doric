@@ -31,6 +31,8 @@
 #import "DoricImageNode.h"
 #import "DoricListNode.h"
 #import "DoricListItemNode.h"
+#import "DoricHorizontalListNode.h"
+#import "DoricHorizontalListItemNode.h"
 #import "DoricScrollerNode.h"
 #import "DoricSliderNode.h"
 #import "DoricSlideItemNode.h"
@@ -143,6 +145,8 @@
     [self registerViewNode:DoricGestureContainerNode.class withName:@"GestureContainer"];
     [self registerViewNode:DoricBlurEffectViewNode.class withName:@"BlurEffect"];
     [self registerViewNode:DoricAeroEffectViewNode.class withName:@"AeroEffect"];
+    [self registerViewNode:DoricHorizontalListItemNode.class withName:@"HorizontalListItem"];
+    [self registerViewNode:DoricHorizontalListNode.class withName:@"HorizontalList"];
 
     [self.loaderManager registerLoader:[[DoricBundleResourceLoader alloc]
             initWithResourceType:@"mainBundle"

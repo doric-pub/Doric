@@ -28,6 +28,7 @@
 
 @interface DoricTextView : UILabel
 @property(nonatomic, assign) DoricGravity gravity;
+@property(nonatomic, assign) CGFloat contentHeight;
 @end
 
 @implementation DoricTextView
@@ -41,17 +42,19 @@
                     self.doricLayout.paddingRight));
     if ((self.gravity & DoricGravityTop) == DoricGravityTop) {
         rect.origin.y = self.doricLayout.paddingTop;
-        rect.size.height = self.doricLayout.contentHeight;
+        rect.size.height = self.contentHeight;
     } else if ((self.gravity & DoricGravityBottom) == DoricGravityBottom) {
-        rect.origin.y = self.height - self.doricLayout.contentHeight - self.doricLayout.paddingBottom;
-        rect.size.height = self.doricLayout.contentHeight;
+        rect.origin.y = self.height - self.contentHeight - self.doricLayout.paddingBottom;
+        rect.size.height = self.contentHeight;
     }
     rect.size.width = MAX(0.01f, rect.size.width);
     [super drawTextInRect:rect];
 }
 
 - (CGSize)sizeThatFits:(CGSize)size {
-    return [super sizeThatFits:size];
+    CGSize result = [super sizeThatFits:size];
+    self.contentHeight = result.height;
+    return result;
 }
 @end
 
@@ -323,8 +326,8 @@
     }];
 }
 
-- (UIFont *)registerFontWithFontData:(NSData *)fontData fontSize:(CGFloat)fontSize{
-    CGDataProviderRef fontDataProvider = CGDataProviderCreateWithCFData((__bridge CFDataRef)fontData);
+- (UIFont *)registerFontWithFontData:(NSData *)fontData fontSize:(CGFloat)fontSize {
+    CGDataProviderRef fontDataProvider = CGDataProviderCreateWithCFData((__bridge CFDataRef) fontData);
     // THE NEXT LINE IS RELEVANT PART
     // https://stackoverflow.com/questions/24900979/cgfontcreatewithdataprovider-hangs-in-airplane-mode
     [UIFont familyNames];

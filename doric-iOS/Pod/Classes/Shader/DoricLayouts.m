@@ -1043,11 +1043,45 @@ NSUInteger DORIC_MEASURED_STATE_TOO_SMALL = 0x01;
             heightMeasureSpec.size - self.paddingTop - self.paddingBottom);
     //TODO should check this
     CGSize measuredSize = [self.view sizeThatFits:targetSize];
-    DoricSizeAndState widthSizeAndState = [self resolveSizeAndState:measuredSize.width
+
+    CGFloat contentWidth = measuredSize.width;
+    CGFloat contentHeight = measuredSize.height;
+
+    if ([self.view isKindOfClass:UIImageView.class]) {
+        if (self.widthSpec == DoricLayoutFit
+                && self.heightSpec != DoricLayoutFit && measuredSize.height > 0) {
+            DoricSizeAndState preHeightSizeAndState = [self resolveSizeAndState:contentHeight
+                            + self.paddingTop + self.paddingBottom
+                                                                           spec:heightMeasureSpec
+                                                             childMeasuredState:0];
+            contentWidth = measuredSize.width / measuredSize.height
+                    * (preHeightSizeAndState.size - self.paddingBottom - self.paddingBottom);
+            self.measuredWidth = contentWidth + self.paddingLeft + self.paddingBottom;
+            self.measuredHeight = preHeightSizeAndState.size;
+            self.measuredState = 0;
+            return;
+        }
+
+        if (self.heightSpec == DoricLayoutFit
+                && self.widthSpec != DoricLayoutFit && measuredSize.width > 0) {
+            DoricSizeAndState preWidthSizeAndState = [self resolveSizeAndState:contentWidth
+                            + self.paddingLeft + self.paddingRight
+                                                                          spec:widthMeasureSpec
+                                                            childMeasuredState:0];
+            contentHeight = measuredSize.height / measuredSize.width
+                    * (preWidthSizeAndState.size - self.paddingLeft - self.paddingRight);
+            self.measuredWidth = preWidthSizeAndState.size;
+            self.measuredHeight = contentHeight + self.paddingTop + self.paddingBottom;
+            self.measuredState = 0;
+            return;
+        }
+    }
+
+    DoricSizeAndState widthSizeAndState = [self resolveSizeAndState:contentWidth
                     + self.paddingLeft + self.paddingRight
                                                                spec:widthMeasureSpec
                                                  childMeasuredState:0];
-    DoricSizeAndState heightSizeAndState = [self resolveSizeAndState:measuredSize.height
+    DoricSizeAndState heightSizeAndState = [self resolveSizeAndState:contentHeight
                     + self.paddingTop + self.paddingBottom
                                                                 spec:heightMeasureSpec
                                                   childMeasuredState:0];

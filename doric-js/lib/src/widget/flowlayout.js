@@ -147,6 +147,22 @@ __decorate([
     Property,
     __metadata("design:type", Boolean)
 ], FlowLayout.prototype, "bounces", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Boolean)
+], FlowLayout.prototype, "canDrag", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Function)
+], FlowLayout.prototype, "beforeDragging", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Function)
+], FlowLayout.prototype, "onDragging", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Function)
+], FlowLayout.prototype, "onDragged", void 0);
 export function flowlayout(config) {
     const ret = new FlowLayout;
     for (let key in config) {

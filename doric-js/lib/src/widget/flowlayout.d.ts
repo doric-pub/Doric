@@ -37,6 +37,10 @@ export declare class FlowLayout extends Superview {
      * Take effect only on iOS
      */
     bounces?: boolean;
+    canDrag?: boolean;
+    beforeDragging?: (from: number) => void;
+    onDragging?: (from: number, to: number) => void;
+    onDragged?: (from: number, to: number) => void;
     /**
      * @param context
      * @returns Returns array of visible view's index.

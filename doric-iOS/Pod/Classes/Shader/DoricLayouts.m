@@ -1085,8 +1085,8 @@ NSUInteger DORIC_MEASURED_STATE_TOO_SMALL = 0x01;
                     + self.paddingTop + self.paddingBottom
                                                                 spec:heightMeasureSpec
                                                   childMeasuredState:0];
-    self.measuredWidth = widthSizeAndState.size;
-    self.measuredHeight = heightSizeAndState.size;
+    self.measuredWidth = MAX(widthSizeAndState.size, self.minWidth);
+    self.measuredHeight = MAX(heightSizeAndState.size, self.minHeight);
     self.measuredState = (widthSizeAndState.state
             << DORIC_MEASURED_HEIGHT_STATE_SHIFT) | heightSizeAndState.state;
 }

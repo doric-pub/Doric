@@ -39,7 +39,11 @@
 
 @implementation DoricTableView
 - (CGSize)sizeThatFits:(CGSize)size {
-    return [super sizeThatFits:size];
+    CGSize result = [super sizeThatFits:size];
+    if(self.doricLayout.widthSpec == DoricLayoutFit && self.contentSize.width>0){
+        return CGSizeMake(self.contentSize.width, result.height);
+    }
+    return result;
 }
 @end
 
@@ -200,6 +204,13 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             self.rowCount = self.itemCount + (self.loadMore ? 1 : 0);
             [self.view reloadData];
+            if (self.view.height == 0 && self.view.doricLayout.heightSpec == DoricLayoutFit) {
+                DoricSuperNode *node = self.superNode;
+                while (node.superNode != nil) {
+                    node = node.superNode;
+                }
+                [node requestLayout];
+            }
         });
     }
     self.needReload = false;
@@ -404,12 +415,24 @@
     self.itemHeights[@(position)] = @(height);
     if (@available(iOS 12.0, *)) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (self.view.doricLayout.heightSpec == DoricLayoutFit) {
+            if (self.view.doricLayout.widthSpec == DoricLayoutFit
+                    || self.view.doricLayout.heightSpec == DoricLayoutFit) {
                 DoricSuperNode *node = self.superNode;
                 while (node.superNode != nil) {
                     node = node.superNode;
                 }
                 [node requestLayout];
+                if (self.view.doricLayout.widthSpec == DoricLayoutFit) {
+                    CGFloat width = 0;
+                    for (UITableViewCell *tableViewCell in self.view.visibleCells) {
+                        if ([tableViewCell isKindOfClass:[DoricTableViewCell class]]) {
+                            DoricListItemNode *node = ((DoricTableViewCell *) tableViewCell)
+                                    .doricListItemNode;
+                            width = MAX(width, node.view.width);
+                        }
+                    }
+                    self.view.width = width;
+                }
             }
             [UIView performWithoutAnimation:^{
                 NSUInteger itemCount = self.rowCount;
@@ -427,12 +450,24 @@
         });
     } else {
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (self.view.doricLayout.heightSpec == DoricLayoutFit) {
+            if (self.view.doricLayout.widthSpec == DoricLayoutFit
+                    || self.view.doricLayout.heightSpec == DoricLayoutFit) {
                 DoricSuperNode *node = self.superNode;
                 while (node.superNode != nil) {
                     node = node.superNode;
                 }
                 [node requestLayout];
+                if (self.view.doricLayout.widthSpec == DoricLayoutFit) {
+                    CGFloat width = 0;
+                    for (UITableViewCell *tableViewCell in self.view.visibleCells) {
+                        if ([tableViewCell isKindOfClass:[DoricTableViewCell class]]) {
+                            DoricListItemNode *node = ((DoricTableViewCell *) tableViewCell)
+                                    .doricListItemNode;
+                            width = MAX(width, node.view.width);
+                        }
+                    }
+                    self.view.width = width;
+                }
             }
             [self.view reloadData];
         });

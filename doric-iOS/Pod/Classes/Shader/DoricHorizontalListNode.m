@@ -39,6 +39,18 @@
 
 @implementation DoricHorizontalTableView
 - (CGSize)sizeThatFits:(CGSize)size {
+    if (self.doricLayout.widthSpec == DoricLayoutFit
+            || self.doricLayout.heightSpec == DoricLayoutFit) {
+        CGFloat width = size.width;
+        CGFloat height = size.height;
+        if (self.doricLayout.widthSpec == DoricLayoutFit && self.contentSize.width > 0) {
+            width = self.contentSize.width;
+        }
+        if (self.doricLayout.heightSpec == DoricLayoutFit && self.contentSize.height > 0) {
+            height = self.contentSize.height;
+        }
+        return CGSizeMake(width, height);
+    }
     return [super sizeThatFits:size];
 }
 @end
@@ -200,6 +212,14 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             self.rowCount = self.itemCount + (self.loadMore ? 1 : 0);
             [self.view reloadData];
+            if ((self.view.width == 0 && self.view.doricLayout.widthSpec == DoricLayoutFit)
+                    || (self.view.height == 0 && self.view.doricLayout.heightSpec == DoricLayoutFit)) {
+                DoricSuperNode *node = self.superNode;
+                while (node.superNode != nil) {
+                    node = node.superNode;
+                }
+                [node requestLayout];
+            }
         });
     }
     self.needReload = false;
@@ -256,12 +276,12 @@
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     NSUInteger position = (NSUInteger) indexPath.row;
     NSNumber *widthNumber = self.itemWidths[@(position)];
-    
+
     float width = 44.f;
     if (widthNumber) {
         width = [widthNumber floatValue];
     }
-    
+
     return CGSizeMake(width, collectionView.height);
 }
 
@@ -362,12 +382,27 @@
     self.itemWidths[@(position)] = @(width);
     if (@available(iOS 12.0, *)) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (self.view.doricLayout.heightSpec == DoricLayoutFit) {
+            if (self.view.doricLayout.widthSpec == DoricLayoutFit
+                    || self.view.doricLayout.heightSpec == DoricLayoutFit) {
                 DoricSuperNode *node = self.superNode;
                 while (node.superNode != nil) {
                     node = node.superNode;
                 }
                 [node requestLayout];
+                if (self.view.doricLayout.heightSpec == DoricLayoutFit) {
+                    CGFloat height = 0;
+                    for (UICollectionViewCell *tableViewCell in self.view.visibleCells) {
+                        if ([tableViewCell isKindOfClass:[DoricHorizontalTableViewCell class]]) {
+                            DoricHorizontalListItemNode *node = ((DoricHorizontalTableViewCell *) tableViewCell)
+                                    .doricHorizontalListItemNode;
+                            height = MAX(height, node.view.height);
+                        }
+                    }
+                    self.view.height = height;
+                }
+                if (self.view.doricLayout.widthSpec == DoricLayoutFit) {
+                    self.view.width = self.view.contentSize.width;
+                }
             }
             [UIView performWithoutAnimation:^{
                 NSUInteger itemCount = self.rowCount;

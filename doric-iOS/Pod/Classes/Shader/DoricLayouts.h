@@ -26,12 +26,25 @@ typedef UIEdgeInsets DoricPadding;
 
 DoricMargin DoricMarginMake(CGFloat left, CGFloat top, CGFloat right, CGFloat bottom);
 
+typedef NS_ENUM(NSInteger, DoricMeasureSpecMode) {
+    DoricMeasureUnspecified = 0,
+    DoricMeasureExactly = 1,
+    DoricMeasureAtMost = 2,
+};
+
+struct DoricMeasureSpec {
+    DoricMeasureSpecMode mode;
+    CGFloat size;
+};
+
+typedef struct DoricMeasureSpec DoricMeasureSpec;
 
 typedef NS_ENUM(NSInteger, DoricLayoutType) {
     DoricUndefined = 0,
     DoricStack = 1,
     DoricVLayout = 2,
     DoricHLayout = 3,
+    DoricScroller = 4,
 };
 
 typedef NS_ENUM(NSInteger, DoricLayoutSpec) {
@@ -121,3 +134,6 @@ typedef NS_ENUM(NSInteger, DoricGravity) {
 @property(nonatomic, strong) DoricLayout *doricLayout;
 @end
 
+@interface DoricScrollView : UIScrollView
+@property(nonatomic, strong) UIView *contentView;
+@end

@@ -93,6 +93,10 @@ __decorate([
     Property,
     __metadata("design:type", Number)
 ], Text.prototype, "truncateAt", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Object)
+], Text.prototype, "padding", void 0);
 export function text(config) {
     const ret = new Text;
     ret.layoutConfig = layoutConfig().fit();

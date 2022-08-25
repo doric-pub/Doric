@@ -503,10 +503,6 @@ var View = /** @class */ (function () {
     __decorate$g([
         Property,
         __metadata$g("design:type", Object)
-    ], View.prototype, "padding", void 0);
-    __decorate$g([
-        Property,
-        __metadata$g("design:type", Object)
     ], View.prototype, "layoutConfig", void 0);
     __decorate$g([
         Property,
@@ -707,6 +703,10 @@ var Group = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
+    __decorate$g([
+        Property,
+        __metadata$g("design:type", Object)
+    ], Group.prototype, "padding", void 0);
     return Group;
 }(Superview));
 
@@ -2106,6 +2106,10 @@ var Text = /** @class */ (function (_super) {
         Property,
         __metadata$d("design:type", Number)
     ], Text.prototype, "truncateAt", void 0);
+    __decorate$d([
+        Property,
+        __metadata$d("design:type", Object)
+    ], Text.prototype, "padding", void 0);
     return Text;
 }(View));
 function text(config) {
@@ -3423,6 +3427,10 @@ var Input = /** @class */ (function (_super) {
         Property,
         __metadata$6("design:type", Function)
     ], Input.prototype, "beforeTextChange", void 0);
+    __decorate$6([
+        Property,
+        __metadata$6("design:type", Object)
+    ], Input.prototype, "padding", void 0);
     return Input;
 }(View));
 exports.InputType = void 0;

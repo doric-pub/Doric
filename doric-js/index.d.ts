@@ -565,12 +565,6 @@ declare module "doric" {
 		hidden?: boolean;
 		viewId: string;
 		tag?: string;
-		padding?: {
-			left?: number;
-			right?: number;
-			top?: number;
-			bottom?: number;
-		};
 		layoutConfig?: LayoutConfig;
 		onClick?: Function;
 		superview?: Superview;
@@ -672,6 +666,12 @@ declare module "doric" {
 	export type ViewArray = View[];
 	export type ViewFragment = View | ViewArray | undefined | null;
 	export abstract class Group extends Superview implements JSX.ElementChildrenAttribute {
+		padding?: {
+			left?: number;
+			right?: number;
+			top?: number;
+			bottom?: number;
+		};
 		readonly children: View[];
 		allSubviews(): View[];
 		addChild(view: View): void;
@@ -884,6 +884,12 @@ declare module "doric" {
 		underline?: boolean;
 		htmlText?: string;
 		truncateAt?: TruncateAt;
+		padding?: {
+			left?: number;
+			right?: number;
+			top?: number;
+			bottom?: number;
+		};
 		set innerElement(e: string);
 	}
 	export function text(config: Partial<Text>): Text;
@@ -1250,6 +1256,12 @@ declare module "doric" {
 			length: number;
 			replacement: string;
 		}) => boolean;
+		padding?: {
+			left?: number;
+			right?: number;
+			top?: number;
+			bottom?: number;
+		};
 		getText(context: BridgeContext): Promise<string>;
 		setSelection(context: BridgeContext, start: number, end?: number): Promise<any>;
 		getSelection(context: BridgeContext): Promise<{

@@ -128,14 +128,6 @@ export abstract class View implements Modeling {
     viewId = uniqueId('ViewId')
 
     @Property
-    padding?: {
-        left?: number,
-        right?: number,
-        top?: number,
-        bottom?: number,
-    }
-
-    @Property
     layoutConfig?: LayoutConfig
 
     @Property
@@ -482,6 +474,14 @@ export type ViewArray = View[]
 export type ViewFragment = View | ViewArray | undefined | null
 
 export abstract class Group extends Superview {
+
+    @Property
+    padding?: {
+        left?: number,
+        right?: number,
+        top?: number,
+        bottom?: number,
+    }
 
     readonly children: View[] = []
 

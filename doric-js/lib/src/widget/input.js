@@ -135,6 +135,10 @@ __decorate([
     Property,
     __metadata("design:type", Function)
 ], Input.prototype, "beforeTextChange", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Object)
+], Input.prototype, "padding", void 0);
 export var InputType;
 (function (InputType) {
     InputType[InputType["Default"] = 0] = "Default";

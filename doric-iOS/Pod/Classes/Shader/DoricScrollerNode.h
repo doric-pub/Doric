@@ -23,9 +23,5 @@
 #import "DoricSuperNode.h"
 #import "DoricScrollableProtocol.h"
 
-@interface DoricScrollView : UIScrollView
-@property(nonatomic, strong) UIView *contentView;
-@end
-
 @interface DoricScrollerNode : DoricSuperNode<DoricScrollView *> <DoricScrollableProtocol>
 @end

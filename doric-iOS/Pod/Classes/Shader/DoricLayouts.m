@@ -91,19 +91,6 @@ static const void *kLayoutConfig = &kLayoutConfig;
 
 @end
 
-typedef NS_ENUM(NSInteger, DoricMeasureSpecMode) {
-    DoricMeasureUnspecified = 0,
-    DoricMeasureExactly = 1,
-    DoricMeasureAtMost = 2,
-};
-
-struct DoricMeasureSpec {
-    DoricMeasureSpecMode mode;
-    CGFloat size;
-};
-
-typedef struct DoricMeasureSpec DoricMeasureSpec;
-
 struct DoricSizeAndState {
     NSUInteger state;
     CGFloat size;
@@ -181,7 +168,7 @@ NSUInteger DORIC_MEASURED_STATE_TOO_SMALL = 0x01;
             return DoricMeasureSpecMake(DoricMeasureExactly, targetSize);
         case DoricLayoutFit:
             if ([self.view.superview isKindOfClass:UIScrollView.class]) {
-                return DoricMeasureSpecMake(DoricMeasureAtMost, CGFLOAT_MAX);
+                return DoricMeasureSpecMake(DoricMeasureUnspecified, 0);
             }
             return DoricMeasureSpecMake(DoricMeasureAtMost, targetSize);
         default:
@@ -479,6 +466,10 @@ NSUInteger DORIC_MEASURED_STATE_TOO_SMALL = 0x01;
         }
         case DoricHLayout: {
             [self horizontalMeasureWidth:widthSpec height:heightSpec];
+            break;
+        }
+        case DoricScroller: {
+            [self scrollerMeasureWidth:widthSpec height:heightSpec];
             break;
         }
         default: {
@@ -1037,11 +1028,71 @@ NSUInteger DORIC_MEASURED_STATE_TOO_SMALL = 0x01;
     }
 }
 
+- (void)scrollerMeasureWidth:(DoricMeasureSpec)widthMeasureSpec
+                      height:(DoricMeasureSpec)heightMeasureSpec {
+    DoricScrollView *scrollView = (DoricScrollView *) self.view;
+    DoricLayout *childLayout = scrollView.contentView.doricLayout;
+
+    [self measureChild:childLayout
+             widthSpec:widthMeasureSpec usedWidth:0
+            heightSpec:heightMeasureSpec usedHeight:0];
+
+    CGFloat maxWidth, maxHeight;
+
+    maxWidth = childLayout.measuredWidth
+            + childLayout.marginLeft + childLayout.marginRight;
+    maxHeight = childLayout.measuredHeight
+            + childLayout.marginTop + childLayout.marginBottom;
+
+    maxWidth += self.paddingLeft + self.paddingRight;
+    maxHeight += self.paddingTop + self.paddingBottom;
+
+    maxWidth = MAX(maxWidth, self.minWidth);
+    maxHeight = MAX(maxHeight, self.minHeight);
+
+    DoricSizeAndState widthSizeAndState = [self resolveSizeAndState:maxWidth
+                                                               spec:widthMeasureSpec
+                                                 childMeasuredState:0];
+    DoricSizeAndState heightSizeAndState = [self resolveSizeAndState:maxHeight
+                                                                spec:heightMeasureSpec
+                                                  childMeasuredState:0];
+    self.measuredWidth = widthSizeAndState.size;
+    self.measuredHeight = heightSizeAndState.size;
+
+    if (widthMeasureSpec.mode == DoricMeasureUnspecified
+            && heightMeasureSpec.mode == DoricMeasureUnspecified) {
+        return;
+    }
+
+    CGFloat width = self.measuredWidth - self.paddingLeft - self.paddingRight;
+    CGFloat height = self.measuredHeight - self.paddingTop - self.paddingBottom;
+    DoricMeasureSpec childWidthMeasureSpec, childHeightMeasureSpec;
+    if (childLayout.widthSpec == DoricLayoutMost) {
+        childWidthMeasureSpec = DoricMeasureSpecMake(DoricMeasureExactly, width);
+    } else {
+        widthMeasureSpec = DoricMeasureSpecMake(DoricMeasureUnspecified, 0);
+        childWidthMeasureSpec = [self getChildMeasureSpec:widthMeasureSpec
+                                                  padding:self.paddingLeft + self.paddingRight
+                                          childLayoutSpec:childLayout.widthSpec
+                                                childSize:childLayout.width];
+    }
+
+    if (childLayout.heightSpec == DoricLayoutMost) {
+        childHeightMeasureSpec = DoricMeasureSpecMake(DoricMeasureExactly, height);
+    } else {
+        heightMeasureSpec = DoricMeasureSpecMake(DoricMeasureUnspecified, 0);
+        childHeightMeasureSpec = [self getChildMeasureSpec:heightMeasureSpec
+                                                   padding:self.paddingTop + self.paddingBottom
+                                           childLayoutSpec:childLayout.heightSpec
+                                                 childSize:childLayout.height];
+    }
+    [childLayout measureWidth:childWidthMeasureSpec height:childHeightMeasureSpec];
+}
+
 - (void)undefinedMeasureWidth:(DoricMeasureSpec)widthMeasureSpec
                        height:(DoricMeasureSpec)heightMeasureSpec {
     CGSize targetSize = CGSizeMake(widthMeasureSpec.size - self.paddingLeft - self.paddingRight,
             heightMeasureSpec.size - self.paddingTop - self.paddingBottom);
-    //TODO should check this
     CGSize measuredSize = [self.view sizeThatFits:targetSize];
 
     CGFloat contentWidth = measuredSize.width;
@@ -1107,6 +1158,10 @@ NSUInteger DORIC_MEASURED_STATE_TOO_SMALL = 0x01;
             [self layoutHLayout];
             break;
         }
+        case DoricScroller: {
+            [self layoutScroller];
+            break;
+        }
         default: {
             break;
         }
@@ -1116,7 +1171,9 @@ NSUInteger DORIC_MEASURED_STATE_TOO_SMALL = 0x01;
 #pragma setFrame
 
 - (void)setFrame {
-    if (self.layoutType != DoricUndefined) {
+    if (self.layoutType == DoricScroller) {
+        [((DoricScrollView *) self.view).contentView.doricLayout setFrame];
+    } else if (self.layoutType != DoricUndefined) {
         [self.view.subviews forEach:^(__kindof UIView *obj) {
             [obj.doricLayout setFrame];
         }];
@@ -1320,5 +1377,29 @@ NSUInteger DORIC_MEASURED_STATE_TOO_SMALL = 0x01;
     }
 }
 
+- (void)layoutScroller {
+    DoricScrollView *scrollView = (DoricScrollView *) self.view;
+    DoricLayout *layout = scrollView.contentView.doricLayout;
+    if (layout.disabled) {
+        return;
+    }
+    [layout layout];
+}
 @end
 
+
+@implementation DoricScrollView
+
+- (void)setContentView:(UIView *)contentView {
+    if (_contentView) {
+        [_contentView removeFromSuperview];
+    }
+    _contentView = contentView;
+    [self addSubview:contentView];
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    self.contentSize = self.contentView.frame.size;
+}
+@end

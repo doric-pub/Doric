@@ -25,34 +25,6 @@
 #import "DoricPromise.h"
 #import "DoricJSDispatcher.h"
 
-@implementation DoricScrollView
-
-- (void)setContentView:(UIView *)contentView {
-    if (_contentView) {
-        [_contentView removeFromSuperview];
-    }
-    _contentView = contentView;
-    [self addSubview:contentView];
-}
-
-- (CGSize)sizeThatFits:(CGSize)size {
-    if (self.contentView) {
-        if (!self.contentView.doricLayout.resolved) {
-            [self.contentView.doricLayout apply:size];
-        }
-        return CGSizeMake(
-                self.contentView.doricLayout.measuredWidth,
-                self.contentView.doricLayout.measuredHeight);
-    }
-    return CGSizeZero;
-}
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    self.contentSize = self.contentView.frame.size;
-}
-@end
-
 @interface DoricScrollerNode () <UIScrollViewDelegate>
 @property(nonatomic, strong) DoricViewNode *childNode;
 @property(nonatomic, copy) NSString *childViewId;
@@ -71,6 +43,7 @@
         if (@available(iOS 11, *)) {
             it.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }
+        it.doricLayout.layoutType = DoricScroller;
     }];
 }
 
@@ -123,7 +96,6 @@
 
 - (void)requestLayout {
     [self.childNode requestLayout];
-    [self.view.contentView.doricLayout apply:self.view.frame.size];
     [super requestLayout];
 }
 

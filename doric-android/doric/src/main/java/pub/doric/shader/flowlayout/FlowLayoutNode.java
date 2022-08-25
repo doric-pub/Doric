@@ -15,6 +15,8 @@
  */
 package pub.doric.shader.flowlayout;
 
+import static androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_DRAG;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Rect;
@@ -22,6 +24,8 @@ import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -115,6 +119,46 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
     private final DoricJSDispatcher jsDispatcher = new DoricJSDispatcher();
     private int itemCount = 0;
     private boolean scrollable = true;
+
+    private final DoricItemTouchHelperCallback doricItemTouchHelperCallback = new DoricItemTouchHelperCallback(
+            new OnItemTouchCallbackListener() {
+                @Override
+                public void onSwiped(int adapterPosition) {
+
+                }
+
+                @Override
+                public void beforeMove(int fromPos) {
+                    if (!TextUtils.isEmpty(beforeDraggingFuncId)) {
+                        callJSResponse(beforeDraggingFuncId, fromPos);
+                    }
+                }
+
+                @Override
+                public boolean onMove(int srcPosition, int targetPosition) {
+                    String srcValue = flowAdapter.itemValues.valueAt(srcPosition);
+                    String targetValue = flowAdapter.itemValues.valueAt(targetPosition);
+                    flowAdapter.itemValues.setValueAt(srcPosition, targetValue);
+                    flowAdapter.itemValues.setValueAt(targetPosition, srcValue);
+                    flowAdapter.notifyItemMoved(srcPosition, targetPosition);
+                    if (!TextUtils.isEmpty(onDraggingFuncId)) {
+                        callJSResponse(onDraggingFuncId, srcPosition, targetPosition);
+                    }
+                    return true;
+                }
+
+                @Override
+                public void onMoved(int fromPos, int toPos) {
+                    if (!TextUtils.isEmpty(onDraggedFuncId)) {
+                        callJSResponse(onDraggedFuncId, fromPos, toPos);
+                    }
+                }
+            }
+    );
+
+    private String beforeDraggingFuncId;
+    private String onDraggingFuncId;
+    private String onDraggedFuncId;
 
     public FlowLayoutNode(DoricContext doricContext) {
         super(doricContext);
@@ -224,6 +268,31 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
                 }
                 this.onScrollEndFuncId = prop.asString().value();
                 break;
+            case "canDrag":
+                if (!prop.isBoolean()) {
+                    return;
+                }
+                boolean canDrag = prop.asBoolean().value();
+                doricItemTouchHelperCallback.setDragEnable(canDrag);
+                break;
+            case "beforeDragging":
+                if (!prop.isString()) {
+                    return;
+                }
+                this.beforeDraggingFuncId = prop.asString().value();
+                break;
+            case "onDragging":
+                if (!prop.isString()) {
+                    return;
+                }
+                this.onDraggingFuncId = prop.asString().value();
+                break;
+            case "onDragged":
+                if (!prop.isString()) {
+                    return;
+                }
+                this.onDraggedFuncId = prop.asString().value();
+                break;
             default:
                 super.blend(view, name, prop);
                 break;
@@ -324,6 +393,10 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
                 }
             }
         });
+
+        DoricItemTouchHelper doricItemTouchHelper = new DoricItemTouchHelper(doricItemTouchHelperCallback);
+
+        doricItemTouchHelper.attachToRecyclerView(recyclerView);
         return recyclerView;
     }
 
@@ -421,6 +494,120 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
         onScrollFuncId = null;
         onScrollEndFuncId = null;
         flowAdapter.renderItemFuncId = null;
+        beforeDraggingFuncId = null;
+        onDraggingFuncId = null;
+        onDraggedFuncId = null;
+    }
+
+    private static class DoricItemTouchHelper extends ItemTouchHelper {
+
+        /**
+         * Creates an ItemTouchHelper that will work with the given Callback.
+         * <p>
+         * You can attach ItemTouchHelper to a RecyclerView via
+         * {@link #attachToRecyclerView(RecyclerView)}. Upon attaching, it will add an item decoration,
+         * an onItemTouchListener and a Child attach / detach listener to the RecyclerView.
+         *
+         * @param callback The Callback which controls the behavior of this touch helper.
+         */
+        public DoricItemTouchHelper(@NonNull Callback callback) {
+            super(callback);
+        }
+    }
+
+    private static class DoricItemTouchHelperCallback extends ItemTouchHelper.Callback {
+
+        private OnItemTouchCallbackListener onItemTouchCallbackListener;
+
+        private boolean isCanDrag = false;
+        private boolean isCanSwipe = false;
+
+        private int fromPos;
+        private int toPos;
+
+        public DoricItemTouchHelperCallback(OnItemTouchCallbackListener onItemTouchCallbackListener) {
+            this.onItemTouchCallbackListener = onItemTouchCallbackListener;
+        }
+
+        public void setOnItemTouchCallbackListener(OnItemTouchCallbackListener onItemTouchCallbackListener) {
+            this.onItemTouchCallbackListener = onItemTouchCallbackListener;
+        }
+
+        public void setDragEnable(boolean canDrag) {
+            isCanDrag = canDrag;
+        }
+
+        public void setSwipeEnable(boolean canSwipe) {
+            isCanSwipe = canSwipe;
+        }
+
+        @Override
+        public boolean isLongPressDragEnabled() {
+            return isCanDrag;
+        }
+
+        @Override
+
+        public boolean isItemViewSwipeEnabled() {
+            return isCanSwipe;
+        }
+
+        @Override
+        public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+            int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN |
+                    ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
+            int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
+            return makeMovementFlags(dragFlags, swipeFlags);
+        }
+
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            if (onItemTouchCallbackListener != null) {
+                return onItemTouchCallbackListener.onMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+            }
+            return false;
+        }
+
+        @Override
+        public void onSelectedChanged(@Nullable RecyclerView.ViewHolder viewHolder, int actionState) {
+            super.onSelectedChanged(viewHolder, actionState);
+            if (viewHolder != null) {
+                fromPos = viewHolder.getAdapterPosition();
+            }
+
+            if (actionState == ACTION_STATE_DRAG) {
+                if (onItemTouchCallbackListener != null) {
+                    onItemTouchCallbackListener.beforeMove(fromPos);
+                }
+            }
+        }
+
+        @Override
+        public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+            super.clearView(recyclerView, viewHolder);
+            toPos = viewHolder.getAdapterPosition();
+
+            if (onItemTouchCallbackListener != null) {
+                onItemTouchCallbackListener.onMoved(fromPos, toPos);
+            }
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            if (onItemTouchCallbackListener != null) {
+                onItemTouchCallbackListener.onSwiped(viewHolder.getAdapterPosition());
+            }
+        }
+    }
+
+    private interface OnItemTouchCallbackListener {
+        void onSwiped(int adapterPosition);
+
+        void beforeMove(int fromPos);
+
+        boolean onMove(int srcPosition, int targetPosition);
+
+        void onMoved(int fromPos, int toPos);
     }
 
     private static class DoricLinearSmoothScroller extends LinearSmoothScroller {

@@ -300,10 +300,6 @@ __decorate([
 __decorate([
     Property,
     __metadata("design:type", Object)
-], View.prototype, "padding", void 0);
-__decorate([
-    Property,
-    __metadata("design:type", Object)
 ], View.prototype, "layoutConfig", void 0);
 __decorate([
     Property,
@@ -466,3 +462,7 @@ export class Group extends Superview {
         this.addInnerElement(e);
     }
 }
+__decorate([
+    Property,
+    __metadata("design:type", Object)
+], Group.prototype, "padding", void 0);

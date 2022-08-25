@@ -111,13 +111,6 @@ export abstract class View implements Modeling {
 
     tag?: string
 
-    @Property
-    padding?: {
-        left?: number,
-        right?: number,
-        top?: number,
-        bottom?: number,
-    }
 
     @Property
     layoutConfig?: LayoutConfig
@@ -507,6 +500,14 @@ export type ViewArray = View[]
 export type ViewFragment = View | ViewArray | undefined | null
 
 export abstract class Group extends Superview implements JSX.ElementChildrenAttribute {
+
+    @Property
+    padding?: {
+        left?: number,
+        right?: number,
+        top?: number,
+        bottom?: number,
+    }
 
     readonly children: View[] = new Proxy([], {
         set: (target, index, value) => {

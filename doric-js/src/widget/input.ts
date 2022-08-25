@@ -104,6 +104,14 @@ export class Input extends View {
         replacement: string,
     }) => boolean
 
+    @Property
+    padding?: {
+        left?: number,
+        right?: number,
+        top?: number,
+        bottom?: number,
+    }
+
     getText(context: BridgeContext) {
         return this.nativeChannel(context, 'getText')() as Promise<string>
     }

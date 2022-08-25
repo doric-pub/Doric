@@ -45,6 +45,12 @@ export declare class Input extends View {
         length: number;
         replacement: string;
     }) => boolean;
+    padding?: {
+        left?: number;
+        right?: number;
+        top?: number;
+        bottom?: number;
+    };
     getText(context: BridgeContext): Promise<string>;
     setSelection(context: BridgeContext, start: number, end?: number): Promise<any>;
     getSelection(context: BridgeContext): Promise<{

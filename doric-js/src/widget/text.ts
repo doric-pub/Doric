@@ -69,6 +69,14 @@ export class Text extends View implements JSX.ElementChildrenAttribute {
     @Property
     truncateAt?: TruncateAt
 
+    @Property
+    padding?: {
+        left?: number,
+        right?: number,
+        top?: number,
+        bottom?: number,
+    }
+
     set innerElement(e: string) {
         this.text = e
     }

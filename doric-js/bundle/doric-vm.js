@@ -1948,10 +1948,6 @@ __decorate$g([
 __decorate$g([
     Property,
     __metadata$g("design:type", Object)
-], View.prototype, "padding", void 0);
-__decorate$g([
-    Property,
-    __metadata$g("design:type", Object)
 ], View.prototype, "layoutConfig", void 0);
 __decorate$g([
     Property,
@@ -2114,6 +2110,10 @@ class Group extends Superview {
         this.addInnerElement(e);
     }
 }
+__decorate$g([
+    Property,
+    __metadata$g("design:type", Object)
+], Group.prototype, "padding", void 0);
 
 const SPECIFIED = 1;
 const START = 1 << 1;
@@ -3138,6 +3138,10 @@ __decorate$d([
     Property,
     __metadata$d("design:type", Number)
 ], Text.prototype, "truncateAt", void 0);
+__decorate$d([
+    Property,
+    __metadata$d("design:type", Object)
+], Text.prototype, "padding", void 0);
 function text(config) {
     const ret = new Text;
     ret.layoutConfig = layoutConfig().fit();
@@ -4169,6 +4173,10 @@ __decorate$6([
     Property,
     __metadata$6("design:type", Function)
 ], Input.prototype, "beforeTextChange", void 0);
+__decorate$6([
+    Property,
+    __metadata$6("design:type", Object)
+], Input.prototype, "padding", void 0);
 exports.InputType = void 0;
 (function (InputType) {
     InputType[InputType["Default"] = 0] = "Default";

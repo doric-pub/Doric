@@ -52,12 +52,6 @@ export declare abstract class View implements Modeling {
     hidden?: boolean;
     viewId: string;
     tag?: string;
-    padding?: {
-        left?: number;
-        right?: number;
-        top?: number;
-        bottom?: number;
-    };
     layoutConfig?: LayoutConfig;
     onClick?: Function;
     superview?: Superview;
@@ -159,6 +153,12 @@ export declare abstract class Superview extends View {
 export declare type ViewArray = View[];
 export declare type ViewFragment = View | ViewArray | undefined | null;
 export declare abstract class Group extends Superview implements JSX.ElementChildrenAttribute {
+    padding?: {
+        left?: number;
+        right?: number;
+        top?: number;
+        bottom?: number;
+    };
     readonly children: View[];
     allSubviews(): View[];
     addChild(view: View): void;

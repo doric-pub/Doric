@@ -23,6 +23,12 @@ export declare class Text extends View implements JSX.ElementChildrenAttribute {
     underline?: boolean;
     htmlText?: string;
     truncateAt?: TruncateAt;
+    padding?: {
+        left?: number;
+        right?: number;
+        top?: number;
+        bottom?: number;
+    };
     set innerElement(e: string);
 }
 export declare function text(config: Partial<Text>): Text;

@@ -84,6 +84,18 @@ export class FlowLayout extends Superview {
     @Property
     bounces?: boolean
 
+    @Property
+    canDrag?: boolean
+
+    @Property
+    beforeDragging?: (from: number) => void
+
+    @Property
+    onDragging?: (from: number, to: number) => void
+
+    @Property
+    onDragged?: (from: number, to: number) => void
+
     /**
      * @param context 
      * @returns Returns array of visible view's index.

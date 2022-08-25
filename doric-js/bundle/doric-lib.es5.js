@@ -3264,6 +3264,22 @@ var FlowLayout = /** @class */ (function (_super) {
         Property,
         __metadata$7("design:type", Boolean)
     ], FlowLayout.prototype, "bounces", void 0);
+    __decorate$7([
+        Property,
+        __metadata$7("design:type", Boolean)
+    ], FlowLayout.prototype, "canDrag", void 0);
+    __decorate$7([
+        Property,
+        __metadata$7("design:type", Function)
+    ], FlowLayout.prototype, "beforeDragging", void 0);
+    __decorate$7([
+        Property,
+        __metadata$7("design:type", Function)
+    ], FlowLayout.prototype, "onDragging", void 0);
+    __decorate$7([
+        Property,
+        __metadata$7("design:type", Function)
+    ], FlowLayout.prototype, "onDragged", void 0);
     return FlowLayout;
 }(Superview));
 function flowlayout(config) {

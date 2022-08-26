@@ -84,8 +84,19 @@ export class HorizontalList extends Superview {
     @Property
     canDrag?: boolean
 
+    /**
+     * @param from 
+     * @returns Returns the item of index which can dragged or not.
+     */
+     @Property
+     itemCanDrag?: (from: number) => boolean
+
+    /**
+     * @param from 
+     * @returns Returns an array of index which can not be swap during dragging.
+     */
     @Property
-    beforeDragging?: (from: number) => void
+    beforeDragging?: (from: number) => (Array<number> | void)
 
     @Property
     onDragging?: (from: number, to: number) => void

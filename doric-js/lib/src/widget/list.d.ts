@@ -37,7 +37,16 @@ export declare class List extends Superview {
      */
     bounces?: boolean;
     canDrag?: boolean;
-    beforeDragging?: (from: number) => void;
+    /**
+     * @param from
+     * @returns Returns the item of index which can dragged or not.
+     */
+    itemCanDrag?: (from: number) => boolean;
+    /**
+     * @param from
+     * @returns Returns an array of index which can not be swap during dragging.
+     */
+    beforeDragging?: (from: number) => (Array<number> | void);
     onDragging?: (from: number, to: number) => void;
     onDragged?: (from: number, to: number) => void;
     scrollToItem(context: BridgeContext, index: number, config?: {

@@ -154,6 +154,10 @@ __decorate([
 __decorate([
     Property,
     __metadata("design:type", Function)
+], FlowLayout.prototype, "itemCanDrag", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Function)
 ], FlowLayout.prototype, "beforeDragging", void 0);
 __decorate([
     Property,

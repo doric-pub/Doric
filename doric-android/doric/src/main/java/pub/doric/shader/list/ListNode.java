@@ -32,6 +32,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.pengfeizhou.jscore.ArchiveException;
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSNumber;
 import com.github.pengfeizhou.jscore.JSONBuilder;
@@ -81,6 +82,7 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
     }
 
     private boolean scrollable = true;
+    private final Set<Integer> swapDisabled = new HashSet<>();
 
     private final DoricItemTouchHelperCallback doricItemTouchHelperCallback = new DoricItemTouchHelperCallback(
             new OnItemTouchCallbackListener() {
@@ -90,14 +92,45 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
                 }
 
                 @Override
+                public Boolean itemCanDrag(int fromPos) {
+                    AsyncResult<JSDecoder> asyncResult = callJSResponse(itemCanDragFuncId, fromPos);
+                    JSDecoder jsDecoder = asyncResult.synchronous().get();
+                    try {
+                        JSValue jsValue = jsDecoder.decode();
+                        if (jsValue.isBoolean()) {
+                            return jsValue.asBoolean().value();
+                        }
+                    } catch (ArchiveException e) {
+                        e.printStackTrace();
+                    }
+                    return true;
+                }
+
+                @Override
                 public void beforeMove(int fromPos) {
+                    swapDisabled.clear();
                     if (!TextUtils.isEmpty(beforeDraggingFuncId)) {
-                        callJSResponse(beforeDraggingFuncId, fromPos);
+                        AsyncResult<JSDecoder> asyncResult = callJSResponse(beforeDraggingFuncId, fromPos);
+                        JSDecoder jsDecoder = asyncResult.synchronous().get();
+                        try {
+                            JSValue jsValue = jsDecoder.decode();
+                            if (jsValue.isArray()) {
+                                int[] intArray = jsValue.asArray().toIntArray();
+                                for (int i = 0; i != intArray.length; i++) {
+                                    swapDisabled.add(intArray[i]);
+                                }
+                            }
+                        } catch (ArchiveException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
 
                 @Override
                 public boolean onMove(int srcPosition, int targetPosition) {
+                    if (swapDisabled.contains(targetPosition)) {
+                        return false;
+                    }
                     String srcValue = itemValues.valueAt(srcPosition);
                     String targetValue = itemValues.valueAt(targetPosition);
                     itemValues.setValueAt(srcPosition, targetValue);
@@ -118,6 +151,7 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
             }
     );
 
+    private String itemCanDragFuncId;
     private String beforeDraggingFuncId;
     private String onDraggingFuncId;
     private String onDraggedFuncId;
@@ -319,6 +353,12 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
                 boolean canDrag = prop.asBoolean().value();
                 doricItemTouchHelperCallback.setDragEnable(canDrag);
                 break;
+            case "itemCanDrag":
+                if (!prop.isString()) {
+                    return;
+                }
+                this.itemCanDragFuncId = prop.asString().value();
+                break;
             case "beforeDragging":
                 if (!prop.isString()) {
                     return;
@@ -468,6 +508,7 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
         onScrollFuncId = null;
         onScrollEndFuncId = null;
         renderItemFuncId = null;
+        itemCanDragFuncId = null;
         beforeDraggingFuncId = null;
         onDraggingFuncId = null;
         onDraggedFuncId = null;
@@ -538,7 +579,16 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
                     dragFlag = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
                     swipeFlag = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
                 }
-                return makeMovementFlags(dragFlag, swipeFlag);
+
+                if (onItemTouchCallbackListener != null) {
+                    if (onItemTouchCallbackListener.itemCanDrag(viewHolder.getAdapterPosition())) {
+                        return makeMovementFlags(dragFlag, swipeFlag);
+                    } else {
+                        return 0;
+                    }
+                } else {
+                    return makeMovementFlags(dragFlag, swipeFlag);
+                }
             }
             return 0;
         }
@@ -585,6 +635,8 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
 
     private interface OnItemTouchCallbackListener {
         void onSwiped(int adapterPosition);
+
+        Boolean itemCanDrag(int fromPos);
 
         void beforeMove(int fromPos);
 

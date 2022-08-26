@@ -44,8 +44,19 @@ class FlowLayoutDragDemo extends Panel {
                 loge('visible Items is:', ret2)
             },
             canDrag: true,
+            itemCanDrag: (from) => {
+                if (from === 0) {
+                    return false;
+                } else {
+                    return true;
+                }
+            },
             beforeDragging: (from) => {
+                if (from === 0) {
+                    return new Array(this.data.length + 1).fill(0).map((_, index) => index)
+                }
                 loge(`beforeDragging from: ${from}`)
+                return [0, 1, 2, 9, 10, 15]
             },
             onDragging: (from, to) => {
                 loge(`onDragging from: ${from}, to: ${to}`)

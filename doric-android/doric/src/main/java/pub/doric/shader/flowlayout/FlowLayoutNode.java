@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.github.pengfeizhou.jscore.ArchiveException;
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSObject;
@@ -119,6 +120,7 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
     private final DoricJSDispatcher jsDispatcher = new DoricJSDispatcher();
     private int itemCount = 0;
     private boolean scrollable = true;
+    private final Set<Integer> swapDisabled = new HashSet<>();
 
     private final DoricItemTouchHelperCallback doricItemTouchHelperCallback = new DoricItemTouchHelperCallback(
             new OnItemTouchCallbackListener() {
@@ -128,14 +130,45 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
                 }
 
                 @Override
+                public Boolean itemCanDrag(int fromPos) {
+                    AsyncResult<JSDecoder> asyncResult = callJSResponse(itemCanDragFuncId, fromPos);
+                    JSDecoder jsDecoder = asyncResult.synchronous().get();
+                    try {
+                        JSValue jsValue = jsDecoder.decode();
+                        if (jsValue.isBoolean()) {
+                            return jsValue.asBoolean().value();
+                        }
+                    } catch (ArchiveException e) {
+                        e.printStackTrace();
+                    }
+                    return true;
+                }
+
+                @Override
                 public void beforeMove(int fromPos) {
+                    swapDisabled.clear();
                     if (!TextUtils.isEmpty(beforeDraggingFuncId)) {
-                        callJSResponse(beforeDraggingFuncId, fromPos);
+                        AsyncResult<JSDecoder> asyncResult = callJSResponse(beforeDraggingFuncId, fromPos);
+                        JSDecoder jsDecoder = asyncResult.synchronous().get();
+                        try {
+                            JSValue jsValue = jsDecoder.decode();
+                            if (jsValue.isArray()) {
+                                int[] intArray = jsValue.asArray().toIntArray();
+                                for (int i = 0; i != intArray.length; i++) {
+                                    swapDisabled.add(intArray[i]);
+                                }
+                            }
+                        } catch (ArchiveException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
 
                 @Override
                 public boolean onMove(int srcPosition, int targetPosition) {
+                    if (swapDisabled.contains(targetPosition)) {
+                        return false;
+                    }
                     String srcValue = flowAdapter.itemValues.valueAt(srcPosition);
                     String targetValue = flowAdapter.itemValues.valueAt(targetPosition);
                     flowAdapter.itemValues.setValueAt(srcPosition, targetValue);
@@ -156,6 +189,7 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
             }
     );
 
+    private String itemCanDragFuncId;
     private String beforeDraggingFuncId;
     private String onDraggingFuncId;
     private String onDraggedFuncId;
@@ -275,6 +309,12 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
                 boolean canDrag = prop.asBoolean().value();
                 doricItemTouchHelperCallback.setDragEnable(canDrag);
                 break;
+            case "itemCanDrag":
+                if (!prop.isString()) {
+                    return;
+                }
+                this.itemCanDragFuncId = prop.asString().value();
+                break;
             case "beforeDragging":
                 if (!prop.isString()) {
                     return;
@@ -322,6 +362,7 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
         if (jsObject.propertySet().size() > 1 || !jsObject.propertySet().contains("subviews")) {
             if (mView != null) {
                 mView.post(new Runnable() {
+                    @SuppressLint("NotifyDataSetChanged")
                     @Override
                     public void run() {
                         flowAdapter.loadMore = loadMore;
@@ -494,6 +535,7 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
         onScrollFuncId = null;
         onScrollEndFuncId = null;
         flowAdapter.renderItemFuncId = null;
+        itemCanDragFuncId = null;
         beforeDraggingFuncId = null;
         onDraggingFuncId = null;
         onDraggedFuncId = null;
@@ -557,7 +599,17 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
             int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN |
                     ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
             int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
-            return makeMovementFlags(dragFlags, swipeFlags);
+
+            if (onItemTouchCallbackListener != null) {
+                if (onItemTouchCallbackListener.itemCanDrag(viewHolder.getAdapterPosition())) {
+                    return makeMovementFlags(dragFlags, swipeFlags);
+                } else {
+                    return 0;
+                }
+            } else {
+                return makeMovementFlags(dragFlags, swipeFlags);
+            }
+
         }
 
         @Override
@@ -602,6 +654,8 @@ public class FlowLayoutNode extends SuperNode<RecyclerView> implements IDoricScr
 
     private interface OnItemTouchCallbackListener {
         void onSwiped(int adapterPosition);
+
+        Boolean itemCanDrag(int fromPos);
 
         void beforeMove(int fromPos);
 

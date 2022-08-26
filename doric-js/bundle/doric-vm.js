@@ -3505,6 +3505,10 @@ __decorate$b([
 __decorate$b([
     Property,
     __metadata$b("design:type", Function)
+], List.prototype, "itemCanDrag", void 0);
+__decorate$b([
+    Property,
+    __metadata$b("design:type", Function)
 ], List.prototype, "beforeDragging", void 0);
 __decorate$b([
     Property,
@@ -4035,6 +4039,10 @@ __decorate$7([
     Property,
     __metadata$7("design:type", Boolean)
 ], FlowLayout.prototype, "canDrag", void 0);
+__decorate$7([
+    Property,
+    __metadata$7("design:type", Function)
+], FlowLayout.prototype, "itemCanDrag", void 0);
 __decorate$7([
     Property,
     __metadata$7("design:type", Function)
@@ -4601,6 +4609,10 @@ __decorate([
     Property,
     __metadata("design:type", Boolean)
 ], HorizontalList.prototype, "canDrag", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Function)
+], HorizontalList.prototype, "itemCanDrag", void 0);
 __decorate([
     Property,
     __metadata("design:type", Function)

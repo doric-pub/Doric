@@ -145,6 +145,10 @@ __decorate([
 __decorate([
     Property,
     __metadata("design:type", Function)
+], HorizontalList.prototype, "itemCanDrag", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Function)
 ], HorizontalList.prototype, "beforeDragging", void 0);
 __decorate([
     Property,

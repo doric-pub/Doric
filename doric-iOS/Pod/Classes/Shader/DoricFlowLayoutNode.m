@@ -17,6 +17,7 @@
 // Created by pengfei.zhou on 2019/11/28.
 //
 
+#import <DoricCore/Doric.h>
 #import "DoricFlowLayoutNode.h"
 #import "DoricFlowLayoutItemNode.h"
 #import "DoricExtensions.h"
@@ -44,6 +45,9 @@
 @property(nonatomic, readonly) CGFloat rowSpace;
 @property(nonatomic, strong) NSMutableDictionary <NSNumber *, NSNumber *> *columnHeightInfo;
 @property(nonatomic, weak) id <DoricFlowLayoutDelegate> delegate;
+@property(nonatomic, copy) NSArray<UICollectionViewLayoutAttributes*> *layoutAttributes;
+@property(nonatomic, copy) NSArray<NSValue*> *unionRects;
+@property(nonatomic, strong) NSArray *swapDisabled;
 @end
 
 @implementation DoricFlowLayout
@@ -75,61 +79,102 @@
     for (int i = 0; i < self.columnCount; i++) {
         self.columnHeightInfo[@(i)] = @(0);
     }
-}
-
-- (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect {
-    for (int i = 0; i < self.columnCount; i++) {
-        self.columnHeightInfo[@(i)] = @(0);
-    }
     NSMutableArray *array = [NSMutableArray array];
     NSInteger count = [self.collectionView numberOfItemsInSection:0];
-    for (int i = 0; i < count; i++) {
-        UICollectionViewLayoutAttributes *attrs = [self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:i inSection:0]];
-        [array addObject:attrs];
-    }
-    return array;
-}
-
-- (UICollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath {
+    
     NSNumber *minYOfColumn = @(0);
     NSArray<NSNumber *> *keys = self.columnHeightInfo.allKeys;
     NSArray<NSNumber *> *sortedKeys = [keys sortedArrayUsingComparator:^NSComparisonResult(NSNumber *obj1, NSNumber *obj2) {
         return ([obj1 intValue] <= [obj2 intValue] ? NSOrderedAscending : NSOrderedDescending);
     }];
-
-    for (NSNumber *key in sortedKeys) {
-        if ([self.columnHeightInfo[key] floatValue] < [self.columnHeightInfo[minYOfColumn] floatValue]) {
-            minYOfColumn = key;
-        }
-    }
-    CGFloat width = [self.delegate doricFlowLayoutItemWidthAtIndexPath:indexPath];
-    CGFloat height = [self.delegate doricFlowLayoutItemHeightAtIndexPath:indexPath];
-    CGFloat x = 0;
-    CGFloat y = [self.columnHeightInfo[minYOfColumn] floatValue];
-    if (y > 0) {
-        y += self.rowSpace;
-    }
-
-    if ([self.delegate doricFlowLayoutItemFullSpan:indexPath]) {
-        NSNumber *maxYColumn = @(0);
+    
+    for (int i = 0; i < count; i++) {
+        minYOfColumn = @(0);
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0] ;
+        
+        UICollectionViewLayoutAttributes *attrs = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
+        
         for (NSNumber *key in sortedKeys) {
-            if ([self.columnHeightInfo[key] floatValue] > [self.columnHeightInfo[maxYColumn] floatValue]) {
-                maxYColumn = key;
+            if ([self.columnHeightInfo[key] floatValue] < [self.columnHeightInfo[minYOfColumn] floatValue]) {
+                minYOfColumn = key;
             }
         }
-        CGFloat maxY = [self.columnHeightInfo[maxYColumn] floatValue];
-        y = maxY + self.rowSpace;
-        for (NSNumber *key in self.columnHeightInfo.allKeys) {
-            self.columnHeightInfo[key] = @(y + height);
+        
+        CGFloat width = [self.delegate doricFlowLayoutItemWidthAtIndexPath:indexPath];
+        CGFloat height = [self.delegate doricFlowLayoutItemHeightAtIndexPath:indexPath];
+        CGFloat x = 0;
+        CGFloat y = [self.columnHeightInfo[minYOfColumn] floatValue];
+        if (y > 0) {
+            y += self.rowSpace;
         }
-    } else {
-        CGFloat columnWidth = (self.collectionView.width - (self.columnCount - 1) * self.columnSpace) / self.columnCount;
-        x = (columnWidth + self.columnSpace) * [minYOfColumn integerValue];
-        self.columnHeightInfo[minYOfColumn] = @(y + height);
+
+        if ([self.delegate doricFlowLayoutItemFullSpan:indexPath]) {
+            NSNumber *maxYColumn = @(0);
+            for (NSNumber *key in sortedKeys) {
+                if ([self.columnHeightInfo[key] floatValue] > [self.columnHeightInfo[maxYColumn] floatValue]) {
+                    maxYColumn = key;
+                }
+            }
+            CGFloat maxY = [self.columnHeightInfo[maxYColumn] floatValue];
+            y = maxY + self.rowSpace;
+            for (NSNumber *key in self.columnHeightInfo.allKeys) {
+                self.columnHeightInfo[key] = @(y + height);
+            }
+        } else {
+            CGFloat columnWidth = (self.collectionView.width - (self.columnCount - 1) * self.columnSpace) / self.columnCount;
+            x = (columnWidth + self.columnSpace) * [minYOfColumn integerValue];
+            self.columnHeightInfo[minYOfColumn] = @(y + height);
+        }
+        attrs.frame = CGRectMake(x, y, width, height);
+        
+        [array addObject:attrs];
     }
-    UICollectionViewLayoutAttributes *attrs = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
-    attrs.frame = CGRectMake(x, y, width, height);
+    self.layoutAttributes = array;
+    
+    NSMutableArray *mutableCopy = [NSMutableArray array];
+    long idx = 0;
+    NSInteger itemCounts = count;
+    while(idx < itemCounts){
+        CGRect rect1 = self.layoutAttributes[idx].frame;
+        idx = MIN(idx + count, itemCounts) - 1;
+        CGRect rect2 = self.layoutAttributes[idx].frame;
+        [mutableCopy addObject:[NSValue valueWithCGRect:CGRectUnion(rect1, rect2)]];
+        idx += 1;
+    }
+    self.unionRects = mutableCopy;
+}
+
+- (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect {
+    NSInteger begin = 0;
+    NSInteger end = self.unionRects.count;
+    NSMutableArray<UICollectionViewLayoutAttributes*> *attrs = [NSMutableArray array];
+    
+    for (int i = 0; i < end; i++) {
+        if (CGRectIntersectsRect(rect, [self.unionRects[i] CGRectValue])) {
+            begin = i * self.layoutAttributes.count;
+            break;
+        }
+    }
+    
+    for (long i = self.unionRects.count - 1; i >= 0; i--) {
+        if (CGRectIntersectsRect(rect, [self.unionRects[i] CGRectValue])) {
+            end = MIN((i + 1) * self.layoutAttributes.count, self.layoutAttributes.count);
+            break;
+        }
+    }
+    
+    for (NSInteger i = begin; i < end; i++) {
+        UICollectionViewLayoutAttributes *attr = self.layoutAttributes[i];
+        if (CGRectIntersectsRect(rect, attr.frame)) {
+            [attrs addObject:attr];
+        }
+    }
+    
     return attrs;
+}
+
+- (UICollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath {
+    return self.layoutAttributes[indexPath.row];
 }
 
 - (CGSize)collectionViewContentSize {
@@ -175,11 +220,12 @@
 @property(nonatomic, assign) NSInteger loadAnchor;
 
 @property(nonatomic, strong) UILongPressGestureRecognizer *longPress;
-@property(nonatomic, strong) NSIndexPath *initialDragIndexPath;
 @property(nonatomic, strong) NSIndexPath *currentDragIndexPath;
+@property(nonatomic, copy) NSString *itemCanDragFuncId;
 @property(nonatomic, copy) NSString *beforeDraggingFuncId;
 @property(nonatomic, copy) NSString *onDraggingFuncId;
 @property(nonatomic, copy) NSString *onDraggedFuncId;
+@property(nonatomic, strong) NSArray *swapDisabled;
 @end
 
 @implementation DoricFlowLayoutNode
@@ -221,29 +267,29 @@
     NSIndexPath *indexPath = [self.view indexPathForItemAtPoint:locationInView];
     if (sender.state == UIGestureRecognizerStateBegan) {
         if (indexPath != nil) {
-            self.initialDragIndexPath = indexPath;
+            [self.view beginInteractiveMovementForItemAtIndexPath:indexPath];
+            
             self.currentDragIndexPath = indexPath;
+            
             if (self.beforeDraggingFuncId != nil) {
-                [self callJSResponse:self.beforeDraggingFuncId, @(indexPath.row), nil];
+                DoricAsyncResult *asyncResult = [self callJSResponse:self.beforeDraggingFuncId, @(indexPath.row), nil];
+                JSValue *model = [asyncResult waitUntilResult];
+                if (model.isArray) {
+                    self.swapDisabled = [model toArray];
+                }
             }
         }
     } else if (sender.state == UIGestureRecognizerStateChanged) {
+        [self.view updateInteractiveMovementTargetPosition:[sender locationInView:self.view]];
         if ((indexPath != nil) && (indexPath != self.currentDragIndexPath)) {
-            NSString *fromValue = self.itemViewIds[@(self.currentDragIndexPath.row)];
-            NSString *toValue = self.itemViewIds[@(indexPath.row)];
-            self.itemViewIds[@(self.currentDragIndexPath.row)] = toValue;
-            self.itemViewIds[@(indexPath.row)] = fromValue;
-
-            [self.view moveItemAtIndexPath:self.currentDragIndexPath toIndexPath:indexPath];
             if (self.onDraggingFuncId != nil) {
                 [self callJSResponse:self.onDraggingFuncId, @(self.currentDragIndexPath.row), @(indexPath.row), nil];
             }
-            self.currentDragIndexPath = indexPath;
         }
     } else if (sender.state == UIGestureRecognizerStateEnded) {
-        if (self.onDraggedFuncId != nil) {
-            [self callJSResponse:self.onDraggedFuncId, @(self.initialDragIndexPath.row), @(self.currentDragIndexPath.row), nil];
-        }
+        [self.view endInteractiveMovement];
+    } else {
+        [self.view cancelInteractiveMovement];
     }
 }
 
@@ -294,6 +340,8 @@
     } else if ([@"canDrag" isEqualToString:name]) {
         bool canDrag = [prop boolValue];
         [self.longPress setEnabled:canDrag];
+    } else if ([@"itemCanDrag" isEqualToString:name]) {
+        self.itemCanDragFuncId = prop;
     } else if ([@"beforeDragging" isEqualToString:name]) {
         self.beforeDraggingFuncId = prop;
     } else if ([@"onDragging" isEqualToString:name]) {
@@ -449,6 +497,17 @@
     return cell;
 }
 
+- (NSIndexPath *)collectionView:(UICollectionView *)collectionView targetIndexPathForMoveFromItemAtIndexPath:(NSIndexPath *)currentIndexPath toProposedIndexPath:(NSIndexPath *)proposedIndexPath {
+    if (self.swapDisabled != nil) {
+        for (int i = 0; i != self.swapDisabled.count; i++) {
+            if (proposedIndexPath.row == [self.swapDisabled[i] intValue]) {
+                return currentIndexPath;
+            }
+        }
+    }
+    return proposedIndexPath;
+}
+
 - (CGFloat)doricFlowLayoutItemHeightAtIndexPath:(NSIndexPath *)indexPath {
     NSUInteger position = (NSUInteger) indexPath.row;
     NSValue *value = self.itemSizeInfo[@(position)];
@@ -593,6 +652,7 @@
     self.loadMoreViewId = nil;
     self.onScrollFuncId = nil;
     self.onScrollEndFuncId = nil;
+    self.itemCanDragFuncId = nil;
     self.beforeDraggingFuncId = nil;
     self.onDraggingFuncId = nil;
     self.onDraggedFuncId = nil;
@@ -613,5 +673,26 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.view reloadData];
     });
+}
+
+- (BOOL)collectionView:(UICollectionView *)collectionView canMoveItemAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.itemCanDragFuncId != nil) {
+        DoricAsyncResult *asyncResult = [self callJSResponse:self.itemCanDragFuncId, @(indexPath.row), nil];
+        JSValue *model = [asyncResult waitUntilResult];
+        if (model.isBoolean) {
+            return [model toBool];
+        }
+    }
+    return true;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView moveItemAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
+    NSString *fromValue = self.itemViewIds[@(sourceIndexPath.row)];
+    NSString *toValue = self.itemViewIds[@(destinationIndexPath.row)];
+    self.itemViewIds[@(sourceIndexPath.row)] = toValue;
+    self.itemViewIds[@(destinationIndexPath.row)] = fromValue;
+    if (self.onDraggedFuncId != nil) {
+        [self callJSResponse:self.onDraggedFuncId, @(sourceIndexPath.row), @(destinationIndexPath.row), nil];
+    }
 }
 @end

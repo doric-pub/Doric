@@ -67,9 +67,11 @@
 @property(nonatomic, strong) UILongPressGestureRecognizer *longPress;
 @property(nonatomic, strong) NSIndexPath *initialDragIndexPath;
 @property(nonatomic, strong) NSIndexPath *currentDragIndexPath;
+@property(nonatomic, copy) NSString *itemCanDragFuncId;
 @property(nonatomic, copy) NSString *beforeDraggingFuncId;
 @property(nonatomic, copy) NSString *onDraggingFuncId;
 @property(nonatomic, copy) NSString *onDraggedFuncId;
+@property(nonatomic, strong) NSArray *swapDisabled;
 
 @property(nonatomic, assign) NSUInteger rowCount;
 @property(nonatomic, assign) BOOL needReload;
@@ -119,11 +121,21 @@
             self.initialDragIndexPath = indexPath;
             self.currentDragIndexPath = indexPath;
             if (self.beforeDraggingFuncId != nil) {
-                [self callJSResponse:self.beforeDraggingFuncId, @(indexPath.row), nil];
+                DoricAsyncResult *asyncResult = [self callJSResponse:self.beforeDraggingFuncId, @(indexPath.row), nil];
+                JSValue *model = [asyncResult waitUntilResult];
+                if (model.isArray) {
+                    self.swapDisabled = [model toArray];
+                }
             }
         }
     } else if (sender.state == UIGestureRecognizerStateChanged) {
         if ((indexPath != nil) && (indexPath != self.currentDragIndexPath)) {
+            for (int i = 0; i < self.swapDisabled.count; i++) {
+                if (indexPath.row == [self.swapDisabled[i] intValue]) {
+                    return;
+                }
+            }
+            
             NSString *fromValue = self.itemViewIds[@(self.currentDragIndexPath.row)];
             NSString *toValue = self.itemViewIds[@(indexPath.row)];
             self.itemViewIds[@(self.currentDragIndexPath.row)] = toValue;
@@ -186,6 +198,8 @@
     } else if ([@"canDrag" isEqualToString:name]) {
         bool canDrag = [prop boolValue];
         [self.longPress setEnabled:canDrag];
+    } else if ([@"itemCanDrag" isEqualToString:name]) {
+        self.itemCanDragFuncId = prop;
     } else if ([@"beforeDragging" isEqualToString:name]) {
         self.beforeDraggingFuncId = prop;
     } else if ([@"onDragging" isEqualToString:name]) {
@@ -535,6 +549,17 @@
     }
 }
 
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.itemCanDragFuncId != nil) {
+        DoricAsyncResult *asyncResult = [self callJSResponse:self.itemCanDragFuncId, @(indexPath.row), nil];
+        JSValue *model = [asyncResult waitUntilResult];
+        if (model.isBoolean) {
+            return [model toBool];
+        }
+    }
+    return true;
+}
+
 - (NSMutableSet<DoricDidScrollBlock> *)didScrollBlocks {
     if (!_didScrollBlocks) {
         _didScrollBlocks = [NSMutableSet new];
@@ -591,6 +616,7 @@
     self.loadMoreViewId = nil;
     self.onScrollFuncId = nil;
     self.onScrollEndFuncId = nil;
+    self.itemCanDragFuncId = nil;
     self.beforeDraggingFuncId = nil;
     self.onDraggingFuncId = nil;
     self.onDraggedFuncId = nil;

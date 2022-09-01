@@ -27,8 +27,15 @@ class ListDragDemo extends Panel {
                     },
                     layoutConfig: layoutConfig().most(),
                     canDrag: true,
+                    itemCanDrag: (from) => {
+                        if (from === 0) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    },
                     beforeDragging: (from) => {
-                        loge(`beforeDragging from: ${from}`)
+                        return [0, 1, 2]
                     },
                     onDragging: (from, to) => {
                         loge(`onDragging from: ${from}, to: ${to}`)

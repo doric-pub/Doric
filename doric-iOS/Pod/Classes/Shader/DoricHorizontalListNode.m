@@ -72,11 +72,12 @@
 @property(nonatomic, strong) DoricJSDispatcher *jsDispatcher;
 
 @property(nonatomic, strong) UILongPressGestureRecognizer *longPress;
-@property(nonatomic, strong) NSIndexPath *initialDragIndexPath;
 @property(nonatomic, strong) NSIndexPath *currentDragIndexPath;
+@property(nonatomic, copy) NSString *itemCanDragFuncId;
 @property(nonatomic, copy) NSString *beforeDraggingFuncId;
 @property(nonatomic, copy) NSString *onDraggingFuncId;
 @property(nonatomic, copy) NSString *onDraggedFuncId;
+@property(nonatomic, strong) NSArray *swapDisabled;
 
 @property(nonatomic, assign) NSUInteger rowCount;
 @property(nonatomic, assign) BOOL needReload;
@@ -124,29 +125,29 @@
     NSIndexPath *indexPath = [self.view indexPathForItemAtPoint:locationInView];
     if (sender.state == UIGestureRecognizerStateBegan) {
         if (indexPath != nil) {
-            self.initialDragIndexPath = indexPath;
+            [self.view beginInteractiveMovementForItemAtIndexPath:indexPath];
+            
             self.currentDragIndexPath = indexPath;
             if (self.beforeDraggingFuncId != nil) {
-                [self callJSResponse:self.beforeDraggingFuncId, @(indexPath.row), nil];
+                DoricAsyncResult *asyncResult = [self callJSResponse:self.beforeDraggingFuncId, @(indexPath.row), nil];
+                JSValue *model = [asyncResult waitUntilResult];
+                if (model.isArray) {
+                    self.swapDisabled = [model toArray];
+                }
             }
         }
     } else if (sender.state == UIGestureRecognizerStateChanged) {
+        [self.view updateInteractiveMovementTargetPosition:[sender locationInView:self.view]];
         if ((indexPath != nil) && (indexPath != self.currentDragIndexPath)) {
-            NSString *fromValue = self.itemViewIds[@(self.currentDragIndexPath.row)];
-            NSString *toValue = self.itemViewIds[@(indexPath.row)];
-            self.itemViewIds[@(self.currentDragIndexPath.row)] = toValue;
-            self.itemViewIds[@(indexPath.row)] = fromValue;
-
-            [self.view moveItemAtIndexPath:self.currentDragIndexPath toIndexPath:indexPath];
             if (self.onDraggingFuncId != nil) {
                 [self callJSResponse:self.onDraggingFuncId, @(self.currentDragIndexPath.row), @(indexPath.row), nil];
             }
             self.currentDragIndexPath = indexPath;
         }
     } else if (sender.state == UIGestureRecognizerStateEnded) {
-        if (self.onDraggedFuncId != nil) {
-            [self callJSResponse:self.onDraggedFuncId, @(self.initialDragIndexPath.row), @(self.currentDragIndexPath.row), nil];
-        }
+        [self.view endInteractiveMovement];
+    } else {
+        [self.view cancelInteractiveMovement];
     }
 }
 
@@ -194,6 +195,8 @@
     } else if ([@"canDrag" isEqualToString:name]) {
         bool canDrag = [prop boolValue];
         [self.longPress setEnabled:canDrag];
+    } else if ([@"itemCanDrag" isEqualToString:name]) {
+        self.itemCanDragFuncId = prop;
     } else if ([@"beforeDragging" isEqualToString:name]) {
         self.beforeDraggingFuncId = prop;
     } else if ([@"onDragging" isEqualToString:name]) {
@@ -493,6 +496,38 @@
     }
 }
 
+- (NSIndexPath *)collectionView:(UICollectionView *)collectionView targetIndexPathForMoveFromItemAtIndexPath:(NSIndexPath *)currentIndexPath toProposedIndexPath:(NSIndexPath *)proposedIndexPath {
+    if (self.swapDisabled != nil) {
+        for (int i = 0; i != self.swapDisabled.count; i++) {
+            if (proposedIndexPath.row == [self.swapDisabled[i] intValue]) {
+                return currentIndexPath;
+            }
+        }
+    }
+    return proposedIndexPath;
+}
+
+- (BOOL)collectionView:(UICollectionView *)collectionView canMoveItemAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.itemCanDragFuncId != nil) {
+        DoricAsyncResult *asyncResult = [self callJSResponse:self.itemCanDragFuncId, @(indexPath.row), nil];
+        JSValue *model = [asyncResult waitUntilResult];
+        if (model.isBoolean) {
+            return [model toBool];
+        }
+    }
+    return true;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView moveItemAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
+    NSString *fromValue = self.itemViewIds[@(sourceIndexPath.row)];
+    NSString *toValue = self.itemViewIds[@(destinationIndexPath.row)];
+    self.itemViewIds[@(sourceIndexPath.row)] = toValue;
+    self.itemViewIds[@(destinationIndexPath.row)] = fromValue;
+    if (self.onDraggedFuncId != nil) {
+        [self callJSResponse:self.onDraggedFuncId, @(sourceIndexPath.row), @(destinationIndexPath.row), nil];
+    }
+}
+
 - (NSMutableSet<DoricDidScrollBlock> *)didScrollBlocks {
     if (!_didScrollBlocks) {
         _didScrollBlocks = [NSMutableSet new];
@@ -549,6 +584,7 @@
     self.loadMoreViewId = nil;
     self.onScrollFuncId = nil;
     self.onScrollEndFuncId = nil;
+    self.itemCanDragFuncId = nil;
     self.beforeDraggingFuncId = nil;
     self.onDraggingFuncId = nil;
     self.onDraggedFuncId = nil;

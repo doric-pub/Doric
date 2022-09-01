@@ -66,11 +66,21 @@ class ListVM extends ViewModel<ListModel, ListVH> {
     onAttached(state: ListModel, vh: ListVH) {
         vh.list.apply({
             canDrag: true,
+            itemCanDrag: (from) => {
+                if (from === 0) {
+                    return false;
+                } else {
+                    return true;
+                }
+            },
+            beforeDragging: (from) => {
+                return [0, 1, 2]
+            },
             onDragging: (from, to) => {
-                log(`onDragging, from: ${from}, to: ${to}`)
+                loge(`onDragging from: ${from}, to: ${to}`)
             },
             onDragged: (from, to) => {
-                log(`onDragged, from: ${from}, to: ${to}`)
+                loge(`onDragged from: ${from}, to: ${to}`)
             },
             renderItem: (index) => {
                 const data = state.data[index]

@@ -48,7 +48,7 @@ export class Observable<M> implements IObservable<M>{
         const oldV = this.provider.acquire(this.clz)
         const newV = updater(oldV)
         if (newV !== undefined) {
-            this.provider.provide(newV)
+            this.provider.provide(newV as Object)
         }
         for (let observer of this.observers) {
             observer(newV)

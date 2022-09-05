@@ -22,8 +22,12 @@
 #import "UIView+Doric.h"
 #import "DoricExtensions.h"
 #import <YogaKit/UIView+Yoga.h>
-#import <YogaKit/YGLayout+Private.h>
 #import <QuartzCore/QuartzCore.h>
+#import <yoga/Yoga.h>
+
+@interface YGLayout ()
+@property (nonatomic, assign, readonly) YGNodeRef node;
+@end
 
 void DoricAddEllipticArcPath(CGMutablePathRef path,
         CGPoint origin,

@@ -21,6 +21,8 @@
 #import <objc/runtime.h>
 #import "UIView+Doric.h"
 #import "DoricExtensions.h"
+#import <YogaKit/UIView+Yoga.h>
+#import <YogaKit/YGLayout+Private.h>
 #import <QuartzCore/QuartzCore.h>
 
 void DoricAddEllipticArcPath(CGMutablePathRef path,
@@ -470,6 +472,10 @@ NSUInteger DORIC_MEASURED_STATE_TOO_SMALL = 0x01;
         }
         case DoricScroller: {
             [self scrollerMeasureWidth:widthSpec height:heightSpec];
+            break;
+        }
+        case DoricFlexLayout: {
+            [self flexMeasureWidth:widthSpec height:heightSpec];
             break;
         }
         default: {
@@ -1089,6 +1095,134 @@ NSUInteger DORIC_MEASURED_STATE_TOO_SMALL = 0x01;
     [childLayout measureWidth:childWidthMeasureSpec height:childHeightMeasureSpec];
 }
 
+- (void)flexMeasureWidth:(DoricMeasureSpec)widthMeasureSpec
+                  height:(DoricMeasureSpec)heightMeasureSpec {
+
+    for (__kindof UIView *subview in self.view.subviews) {
+        DoricLayout *childDoricLayout = subview.doricLayout;
+        YGLayout *childYGLayout = subview.yoga;
+        DoricMeasureSpec childWidthMeasureSpec;
+        DoricMeasureSpec childHeightMeasureSpec;
+        if (childDoricLayout.widthSpec == DoricLayoutMost) {
+            childWidthMeasureSpec = DoricMeasureSpecMake(DoricMeasureAtMost, self.measuredWidth);
+        } else if (childDoricLayout.widthSpec == DoricLayoutFit) {
+            childWidthMeasureSpec = DoricMeasureSpecMake(DoricMeasureUnspecified, 0);
+        } else {
+            childWidthMeasureSpec = DoricMeasureSpecMake(DoricMeasureExactly, childDoricLayout.width);
+        }
+
+        if (childDoricLayout.heightSpec == DoricLayoutMost) {
+            childHeightMeasureSpec = DoricMeasureSpecMake(DoricMeasureAtMost, self.measuredHeight);
+        } else if (childDoricLayout.heightSpec == DoricLayoutFit) {
+            childHeightMeasureSpec = DoricMeasureSpecMake(DoricMeasureUnspecified, 0);
+        } else {
+            childHeightMeasureSpec = DoricMeasureSpecMake(DoricMeasureExactly, childDoricLayout.height);
+        }
+        [childDoricLayout measureWidth:childWidthMeasureSpec height:childHeightMeasureSpec];
+        if (childDoricLayout.layoutType != DoricFlexLayout) {
+            YGUnit widthUnit = YGUnitAuto;
+            YGUnit heightUnit = YGUnitAuto;
+            if (childDoricLayout.flexConfig) {
+                id widthValue = childDoricLayout.flexConfig[@"width"];
+                if ([widthValue isKindOfClass:NSNumber.class]) {
+                    widthUnit = YGUnitPoint;
+                } else if ([widthValue isKindOfClass:NSDictionary.class]) {
+                    id type = widthValue[@"type"];
+                    if ([type isKindOfClass:NSNumber.class]) {
+                        widthUnit = (YGUnit) [type integerValue];
+                    }
+                }
+
+                id heightValue = childDoricLayout.flexConfig[@"height"];
+                if ([heightValue isKindOfClass:NSNumber.class]) {
+                    heightUnit = YGUnitPoint;
+                } else if ([heightValue isKindOfClass:NSDictionary.class]) {
+                    id type = heightValue[@"type"];
+                    if ([type isKindOfClass:NSNumber.class]) {
+                        heightUnit = (YGUnit) [type integerValue];
+                    }
+                }
+            }
+            if (widthUnit == YGUnitAuto) {
+                childYGLayout.width = YGPointValue(childDoricLayout.measuredWidth);
+            }
+
+            if (heightUnit == YGUnitAuto) {
+                childYGLayout.height = YGPointValue(childDoricLayout.measuredHeight);
+            }
+        }
+    }
+
+
+    YGUnit widthUnit = YGUnitAuto;
+    YGUnit heightUnit = YGUnitAuto;
+    if (self.flexConfig) {
+        id widthValue = self.flexConfig[@"width"];
+        if ([widthValue isKindOfClass:NSNumber.class]) {
+            widthUnit = YGUnitPoint;
+        } else if ([widthValue isKindOfClass:NSDictionary.class]) {
+            id type = widthValue[@"type"];
+            if ([type isKindOfClass:NSNumber.class]) {
+                widthUnit = (YGUnit) [type integerValue];
+            }
+        }
+
+        id heightValue = self.flexConfig[@"height"];
+        if ([heightValue isKindOfClass:NSNumber.class]) {
+            heightUnit = YGUnitPoint;
+        } else if ([heightValue isKindOfClass:NSDictionary.class]) {
+            id type = heightValue[@"type"];
+            if ([type isKindOfClass:NSNumber.class]) {
+                heightUnit = (YGUnit) [type integerValue];
+            }
+        }
+    }
+    if (widthUnit == YGUnitAuto) {
+        self.view.yoga.width = YGValueAuto;
+    }
+
+    if (heightUnit == YGUnitAuto) {
+        self.view.yoga.height = YGValueAuto;
+    }
+
+    if (self.view.superview.doricLayout.layoutType != DoricFlexLayout) {
+        if (heightMeasureSpec.mode == DoricMeasureAtMost) {
+            heightMeasureSpec = DoricMeasureSpecMake(DoricMeasureUnspecified, heightMeasureSpec.size);
+        }
+
+        if (widthMeasureSpec.mode == DoricMeasureAtMost) {
+            widthMeasureSpec = DoricMeasureSpecMake(DoricMeasureUnspecified, widthMeasureSpec.size);
+        }
+
+        if (heightMeasureSpec.mode == DoricMeasureExactly) {
+            self.view.yoga.height = YGPointValue(heightMeasureSpec.size);
+        }
+        if (widthMeasureSpec.mode == DoricMeasureExactly) {
+            self.view.yoga.width = YGPointValue(widthMeasureSpec.size);
+        }
+
+        if (heightMeasureSpec.mode == DoricMeasureAtMost) {
+            self.view.yoga.maxHeight = YGPointValue(heightMeasureSpec.size);
+        }
+
+        if (widthMeasureSpec.mode == DoricMeasureAtMost) {
+            self.view.yoga.maxWidth = YGPointValue(widthMeasureSpec.size);
+        }
+
+        [self.view.yoga intrinsicSize];
+    }
+
+
+    DoricSizeAndState widthSizeAndState = [self resolveSizeAndState:YGNodeLayoutGetWidth(self.view.yoga.node)
+                                                               spec:widthMeasureSpec
+                                                 childMeasuredState:0];
+    self.measuredWidth = widthSizeAndState.size;
+    DoricSizeAndState heightSizeAndState = [self resolveSizeAndState:YGNodeLayoutGetHeight(self.view.yoga.node)
+                                                                spec:heightMeasureSpec
+                                                  childMeasuredState:0];
+    self.measuredHeight = heightSizeAndState.size;
+}
+
 - (void)undefinedMeasureWidth:(DoricMeasureSpec)widthMeasureSpec
                        height:(DoricMeasureSpec)heightMeasureSpec {
     CGSize targetSize = CGSizeMake(widthMeasureSpec.size - self.paddingLeft - self.paddingRight,
@@ -1160,6 +1294,10 @@ NSUInteger DORIC_MEASURED_STATE_TOO_SMALL = 0x01;
         }
         case DoricScroller: {
             [self layoutScroller];
+            break;
+        }
+        case DoricFlexLayout: {
+            [self layoutFlex];
             break;
         }
         default: {
@@ -1384,6 +1522,24 @@ NSUInteger DORIC_MEASURED_STATE_TOO_SMALL = 0x01;
         return;
     }
     [layout layout];
+}
+
+- (void)layoutFlex {
+    for (UIView *child in self.view.subviews) {
+        DoricLayout *layout = child.doricLayout;
+        if (layout.disabled) {
+            continue;
+        }
+        if (layout.layoutType == DoricFlexLayout) {
+            [layout measureWidth:DoricMeasureSpecMake(DoricMeasureExactly,
+                            YGNodeLayoutGetWidth(child.yoga.node))
+                          height:DoricMeasureSpecMake(DoricMeasureExactly,
+                                  YGNodeLayoutGetHeight(child.yoga.node))];
+        }
+        [layout layout];
+        layout.measuredX = YGNodeLayoutGetLeft(child.yoga.node);
+        layout.measuredY = YGNodeLayoutGetTop(child.yoga.node);
+    }
 }
 @end
 

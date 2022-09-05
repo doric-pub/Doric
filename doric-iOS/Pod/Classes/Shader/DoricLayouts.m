@@ -1530,15 +1530,14 @@ NSUInteger DORIC_MEASURED_STATE_TOO_SMALL = 0x01;
         if (layout.disabled) {
             continue;
         }
-        if (layout.layoutType == DoricFlexLayout) {
-            [layout measureWidth:DoricMeasureSpecMake(DoricMeasureExactly,
-                            YGNodeLayoutGetWidth(child.yoga.node))
-                          height:DoricMeasureSpecMake(DoricMeasureExactly,
-                                  YGNodeLayoutGetHeight(child.yoga.node))];
-        }
-        [layout layout];
         layout.measuredX = YGNodeLayoutGetLeft(child.yoga.node);
         layout.measuredY = YGNodeLayoutGetTop(child.yoga.node);
+        CGSize size = child.yoga.intrinsicSize; 
+        [layout measureWidth:DoricMeasureSpecMake(DoricMeasureExactly,
+                                                  size.width)
+                      height:DoricMeasureSpecMake(DoricMeasureExactly,
+                                                  size.height)];
+        [layout layout];
     }
 }
 @end

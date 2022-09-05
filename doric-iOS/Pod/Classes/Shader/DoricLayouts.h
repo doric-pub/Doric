@@ -45,6 +45,7 @@ typedef NS_ENUM(NSInteger, DoricLayoutType) {
     DoricVLayout = 2,
     DoricHLayout = 3,
     DoricScroller = 4,
+    DoricFlexLayout = 5,
 };
 
 typedef NS_ENUM(NSInteger, DoricLayoutSpec) {
@@ -119,6 +120,8 @@ typedef NS_ENUM(NSInteger, DoricGravity) {
 @property(nonatomic, assign) UIEdgeInsets corners;
 
 @property(nonatomic, assign) CGFloat totalLength;
+
+@property(nonatomic, assign) NSDictionary *flexConfig;
 
 - (instancetype)init;
 

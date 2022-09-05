@@ -262,6 +262,7 @@
             if ([self.superNode isKindOfClass:[DoricFlexNode class]]) {
                 [((DoricFlexNode *) self.superNode) blendSubNode:self flexConfig:prop];
             }
+            self.view.doricLayout.flexConfig = prop;
         }
     } else {
         DoricLog(@"Blend View error for View Type :%@, prop is %@", self.class, name);

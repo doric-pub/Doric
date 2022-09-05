@@ -20,56 +20,19 @@
 #import <YogaKit/UIView+Yoga.h>
 #import "DoricFlexNode.h"
 #import "DoricExtensions.h"
-#import "UIView+Yoga.h"
+#import <YogaKit/UIView+Yoga.h>
 
 @interface DoricFlexView : UIView
 @end
 
 @implementation DoricFlexView
-- (CGSize)sizeThatFits:(CGSize)size {
-    for (UIView *view in self.subviews) {
-        [view.doricLayout measure:size];
-        [view configureLayoutWithBlock:^(YGLayout *layout) {
-            layout.isEnabled = YES;
-            if (view.doricLayout.undefined) {
-                return;
-            }
-            if (layout.width.unit == YGUnitUndefined
-                    || layout.width.unit == YGUnitAuto) {
-                layout.width = YGPointValue(view.doricLayout.measuredWidth);
-            }
-            if (layout.height.unit == YGUnitUndefined
-                    || layout.height.unit == YGUnitAuto) {
-                layout.height = YGPointValue(view.doricLayout.measuredHeight);
-            }
-        }];
-    }
-    if (self.yoga.isLeaf) {
-        return CGSizeZero;
-    }
-    YGValue maxWidth = self.yoga.maxWidth;
-    YGValue maxHeight = self.yoga.maxHeight;
-    if (maxWidth.unit == YGUnitPoint) {
-        self.yoga.maxWidth = YGPointValue(MIN(maxWidth.value, size.width));
-    } else {
-        self.yoga.maxWidth = YGPointValue(size.width);
-    }
-    if (maxHeight.unit == YGUnitPoint) {
-        self.yoga.maxHeight = YGPointValue(MIN(maxHeight.value, size.height));
-    } else {
-        self.yoga.maxHeight = YGPointValue(size.height);
-    }
-    CGSize ret = [self.yoga intrinsicSize];
-    self.yoga.maxWidth = maxWidth;
-    self.yoga.maxHeight = maxHeight;
-    return ret;
-}
 @end
 
 @implementation DoricFlexNode
 - (UIView *)build {
     return [[DoricFlexView new] also:^(DoricFlexView *it) {
         it.clipsToBounds = YES;
+        it.doricLayout.layoutType = DoricFlexLayout;
         [it configureLayoutWithBlock:^(YGLayout *_Nonnull layout) {
             layout.isEnabled = YES;
         }];
@@ -78,6 +41,7 @@
 
 - (void)blendView:(UIView *)view forPropName:(NSString *)name propValue:(id)prop {
     if ([name isEqualToString:@"flexConfig"]) {
+        view.doricLayout.flexConfig = prop;
         [self blendYoga:view.yoga from:prop];
     } else {
         [super blendView:view forPropName:name propValue:prop];
@@ -94,6 +58,7 @@
             viewNode.view.yoga.width = YGValueAuto;
             viewNode.view.yoga.height = YGValueAuto;
         }
+        viewNode.view.yoga.isEnabled = YES;
     }];
 }
 
@@ -101,7 +66,6 @@
     [subNode.view configureLayoutWithBlock:^(YGLayout *_Nonnull layout) {
         layout.isEnabled = YES;
     }];
-    subNode.view.doricLayout.disabled = YES;
     subNode.view.yoga.width = YGValueAuto;
     subNode.view.yoga.height = YGValueAuto;
     [self blendYoga:subNode.view.yoga from:flexConfig];
@@ -242,54 +206,5 @@
     } else {
         return YGValueAuto;
     }
-}
-
-- (void)requestLayout {
-    if (self.view.doricLayout.widthSpec != DoricLayoutFit) {
-        self.view.yoga.width = YGPointValue(self.view.width);
-    }
-    if (self.view.doricLayout.heightSpec != DoricLayoutFit) {
-        self.view.yoga.height = YGPointValue(self.view.height);
-    }
-    if (![self.superNode isKindOfClass:DoricFlexNode.class]) {
-        self.view.yoga.margin = YGValueZero;
-        self.view.yoga.marginLeft = YGValueZero;
-        self.view.yoga.marginRight = YGValueZero;
-        self.view.yoga.marginTop = YGValueZero;
-        self.view.yoga.marginBottom = YGValueZero;
-        self.view.yoga.marginStart = YGValueZero;
-        self.view.yoga.marginEnd = YGValueZero;
-        self.view.yoga.marginVertical = YGValueZero;
-        self.view.yoga.marginHorizontal = YGValueZero;
-        CGSize size = self.view.yoga.intrinsicSize;
-        if (self.view.yoga.maxWidth.unit != YGUnitPoint
-                || (self.view.yoga.maxWidth.unit == YGUnitPoint && self.view.yoga.maxWidth.value > size.width)) {
-            self.view.yoga.maxWidth = YGValueUndefined;
-        }
-        if (self.view.yoga.maxHeight.unit != YGUnitPoint
-                || (self.view.yoga.maxHeight.unit == YGUnitPoint && self.view.yoga.maxHeight.value > size.height)) {
-            self.view.yoga.maxHeight = YGValueUndefined;
-        }
-    }
-    [self.view.yoga applyLayoutPreservingOrigin:YES];
-    /// Need layout again.
-    for (UIView *view in self.view.subviews) {
-        if ([view isKindOfClass:[DoricFlexView class]]) {
-            continue;
-        }
-        if (view.doricLayout.undefined) {
-            continue;
-        }
-        if (view.doricLayout.measuredWidth != view.width || view.doricLayout.measuredHeight != view.height) {
-            view.doricLayout.widthSpec = DoricLayoutJust;
-            view.doricLayout.heightSpec = DoricLayoutJust;
-            view.doricLayout.width = view.width;
-            view.doricLayout.height = view.height;
-        }
-        view.doricLayout.measuredX = view.left;
-        view.doricLayout.measuredY = view.top;
-        [view.doricLayout apply];
-    }
-    [super requestLayout];
 }
 @end

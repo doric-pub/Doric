@@ -40,7 +40,7 @@
 @implementation DoricTableView
 - (CGSize)sizeThatFits:(CGSize)size {
     CGSize result = [super sizeThatFits:size];
-    if(self.doricLayout.widthSpec == DoricLayoutFit && self.contentSize.width>0){
+    if (self.doricLayout.widthSpec == DoricLayoutFit && self.contentSize.width > 0) {
         return CGSizeMake(self.contentSize.width, result.height);
     }
     return result;
@@ -135,7 +135,7 @@
                     return;
                 }
             }
-            
+
             NSString *fromValue = self.itemViewIds[@(self.currentDragIndexPath.row)];
             NSString *toValue = self.itemViewIds[@(indexPath.row)];
             self.itemViewIds[@(self.currentDragIndexPath.row)] = toValue;
@@ -268,7 +268,8 @@
     DoricListItemNode *node = cell.doricListItemNode;
     node.viewId = model[@"id"];
     [node blend:props];
-    [node.view.doricLayout apply:CGSizeMake(tableView.width, tableView.height)];
+    CGFloat height = node.view.doricLayout.heightSpec == DoricLayoutFit ? CGFLOAT_MAX : tableView.height;
+    [node.view.doricLayout apply:CGSizeMake(tableView.width, height)];
     [node requestLayout];
     [self callItem:position height:node.view.height];
     return cell;

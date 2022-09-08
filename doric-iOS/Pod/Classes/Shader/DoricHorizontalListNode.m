@@ -126,7 +126,7 @@
     if (sender.state == UIGestureRecognizerStateBegan) {
         if (indexPath != nil) {
             [self.view beginInteractiveMovementForItemAtIndexPath:indexPath];
-            
+
             self.currentDragIndexPath = indexPath;
             if (self.beforeDraggingFuncId != nil) {
                 DoricAsyncResult *asyncResult = [self callJSResponse:self.beforeDraggingFuncId, @(indexPath.row), nil];
@@ -266,7 +266,8 @@
     DoricHorizontalListItemNode *node = cell.doricHorizontalListItemNode;
     node.viewId = model[@"id"];
     [node blend:props];
-    [node.view.doricLayout apply:CGSizeMake(collectionView.width, collectionView.height)];
+    CGFloat width = node.view.doricLayout.widthSpec == DoricLayoutFit ? CGFLOAT_MAX : collectionView.width;
+    [node.view.doricLayout apply:CGSizeMake(width, collectionView.height)];
     [node requestLayout];
     [self callItem:position width:node.view.width];
     return cell;

@@ -1536,11 +1536,10 @@ NSUInteger DORIC_MEASURED_STATE_TOO_SMALL = 0x01;
         }
         layout.measuredX = YGNodeLayoutGetLeft(child.yoga.node);
         layout.measuredY = YGNodeLayoutGetTop(child.yoga.node);
-        CGSize size = child.yoga.intrinsicSize; 
         [layout measureWidth:DoricMeasureSpecMake(DoricMeasureExactly,
-                                                  size.width)
+                                                  YGNodeLayoutGetWidth(child.yoga.node))
                       height:DoricMeasureSpecMake(DoricMeasureExactly,
-                                                  size.height)];
+                                                  YGNodeLayoutGetHeight(child.yoga.node))];
         [layout layout];
     }
 }

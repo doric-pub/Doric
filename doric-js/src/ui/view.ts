@@ -382,8 +382,11 @@ export abstract class View implements Modeling {
         this.in(v)
     }
 
+    private _ref?: Ref<this>;
+
     set ref(ref: Ref<this>) {
         ref.current = this
+        this._ref = ref;
     }
 
     doAnimation(context: BridgeContext, animation: IAnimation) {

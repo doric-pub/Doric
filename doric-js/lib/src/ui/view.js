@@ -227,6 +227,7 @@ export class View {
     }
     set ref(ref) {
         ref.current = this;
+        this._ref = ref;
     }
     doAnimation(context, animation) {
         return this.nativeChannel(context, "doAnimation")(animation.toModel()).then((args) => {

@@ -135,6 +135,7 @@ export declare abstract class View implements Modeling {
     flexConfig?: FlexConfig;
     set props(props: Partial<this>);
     set parent(v: Group);
+    private _ref?;
     set ref(ref: Ref<this>);
     doAnimation(context: BridgeContext, animation: IAnimation): Promise<void>;
     clearAnimation(context: BridgeContext, animation: IAnimation): Promise<void>;

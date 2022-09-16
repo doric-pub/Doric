@@ -425,6 +425,7 @@ var View = /** @class */ (function () {
     Object.defineProperty(View.prototype, "ref", {
         set: function (ref) {
             ref.current = this;
+            this._ref = ref;
         },
         enumerable: false,
         configurable: true

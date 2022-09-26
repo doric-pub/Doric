@@ -58,7 +58,10 @@
         ret = [DoricAsyncResult new];
         __block NSString *contextId = nil;
         __block NSString *className = nil;
-        NSURLComponents *components = [NSURLComponents componentsWithString:source];
+
+        NSURLComponents *components = [NSURLComponents componentsWithString:
+                                       [source stringByReplacingOccurrencesOfString:@"_internal_://"
+                                                                          withString:@"internal://"]];
         [components.queryItems forEach:^(NSURLQueryItem *obj) {
             if ([obj.name isEqualToString:@"class"]) {
                 className = obj.value;

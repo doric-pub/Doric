@@ -23,7 +23,7 @@ var doric = (function (exports) {
 
 	// https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
 	var global_1 =
-	  // eslint-disable-next-line es-x/no-global-this -- safe
+	  // eslint-disable-next-line es/no-global-this -- safe
 	  check(typeof globalThis == 'object' && globalThis) ||
 	  check(typeof window == 'object' && window) ||
 	  // eslint-disable-next-line no-restricted-globals -- safe
@@ -42,12 +42,12 @@ var doric = (function (exports) {
 
 	// Detect IE8's incomplete defineProperty implementation
 	var descriptors = !fails(function () {
-	  // eslint-disable-next-line es-x/no-object-defineproperty -- required for testing
+	  // eslint-disable-next-line es/no-object-defineproperty -- required for testing
 	  return Object.defineProperty({}, 1, { get: function () { return 7; } })[1] != 7;
 	});
 
 	var functionBindNative = !fails(function () {
-	  // eslint-disable-next-line es-x/no-function-prototype-bind -- safe
+	  // eslint-disable-next-line es/no-function-prototype-bind -- safe
 	  var test = (function () { /* empty */ }).bind();
 	  // eslint-disable-next-line no-prototype-builtins -- safe
 	  return typeof test != 'function' || test.hasOwnProperty('prototype');
@@ -60,16 +60,16 @@ var doric = (function (exports) {
 	};
 
 	var $propertyIsEnumerable$2 = {}.propertyIsEnumerable;
-	// eslint-disable-next-line es-x/no-object-getownpropertydescriptor -- safe
-	var getOwnPropertyDescriptor$a = Object.getOwnPropertyDescriptor;
+	// eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
+	var getOwnPropertyDescriptor$b = Object.getOwnPropertyDescriptor;
 
 	// Nashorn ~ JDK8 bug
-	var NASHORN_BUG = getOwnPropertyDescriptor$a && !$propertyIsEnumerable$2.call({ 1: 2 }, 1);
+	var NASHORN_BUG = getOwnPropertyDescriptor$b && !$propertyIsEnumerable$2.call({ 1: 2 }, 1);
 
 	// `Object.prototype.propertyIsEnumerable` method implementation
 	// https://tc39.es/ecma262/#sec-object.prototype.propertyisenumerable
 	var f$8 = NASHORN_BUG ? function propertyIsEnumerable(V) {
-	  var descriptor = getOwnPropertyDescriptor$a(this, V);
+	  var descriptor = getOwnPropertyDescriptor$b(this, V);
 	  return !!descriptor && descriptor.enumerable;
 	} : $propertyIsEnumerable$2;
 
@@ -118,12 +118,18 @@ var doric = (function (exports) {
 	  return classofRaw(it) == 'String' ? split$3(it, '') : $Object$6(it);
 	} : $Object$6;
 
-	var $TypeError$z = TypeError;
+	// we can't use just `it == null` since of `document.all` special case
+	// https://tc39.es/ecma262/#sec-IsHTMLDDA-internal-slot-aec
+	var isNullOrUndefined = function (it) {
+	  return it === null || it === undefined;
+	};
+
+	var $TypeError$A = TypeError;
 
 	// `RequireObjectCoercible` abstract operation
 	// https://tc39.es/ecma262/#sec-requireobjectcoercible
 	var requireObjectCoercible = function (it) {
-	  if (it == undefined) { throw $TypeError$z("Can't call method on " + it); }
+	  if (isNullOrUndefined(it)) { throw $TypeError$A("Can't call method on " + it); }
 	  return it;
 	};
 
@@ -135,13 +141,31 @@ var doric = (function (exports) {
 	  return indexedObject(requireObjectCoercible(it));
 	};
 
+	var documentAll$2 = typeof document == 'object' && document.all;
+
+	// https://tc39.es/ecma262/#sec-IsHTMLDDA-internal-slot
+	var IS_HTMLDDA = typeof documentAll$2 == 'undefined' && documentAll$2 !== undefined;
+
+	var documentAll_1 = {
+	  all: documentAll$2,
+	  IS_HTMLDDA: IS_HTMLDDA
+	};
+
+	var documentAll$1 = documentAll_1.all;
+
 	// `IsCallable` abstract operation
 	// https://tc39.es/ecma262/#sec-iscallable
-	var isCallable = function (argument) {
+	var isCallable = documentAll_1.IS_HTMLDDA ? function (argument) {
+	  return typeof argument == 'function' || argument === documentAll$1;
+	} : function (argument) {
 	  return typeof argument == 'function';
 	};
 
-	var isObject = function (it) {
+	var documentAll = documentAll_1.all;
+
+	var isObject = documentAll_1.IS_HTMLDDA ? function (it) {
+	  return typeof it == 'object' ? it !== null : isCallable(it) || it === documentAll;
+	} : function (it) {
 	  return typeof it == 'object' ? it !== null : isCallable(it);
 	};
 
@@ -182,12 +206,12 @@ var doric = (function (exports) {
 
 	var engineV8Version = version;
 
-	/* eslint-disable es-x/no-symbol -- required for testing */
+	/* eslint-disable es/no-symbol -- required for testing */
 
 
 
-	// eslint-disable-next-line es-x/no-object-getownpropertysymbols -- required for testing
-	var nativeSymbol = !!Object.getOwnPropertySymbols && !fails(function () {
+	// eslint-disable-next-line es/no-object-getownpropertysymbols -- required for testing
+	var symbolConstructorDetection = !!Object.getOwnPropertySymbols && !fails(function () {
 	  var symbol = Symbol();
 	  // Chrome 38 Symbol has incorrect toString conversion
 	  // `get-own-property-symbols` polyfill symbols converted to object are not Symbol instances
@@ -196,10 +220,10 @@ var doric = (function (exports) {
 	    !Symbol.sham && engineV8Version && engineV8Version < 41;
 	});
 
-	/* eslint-disable es-x/no-symbol -- required for testing */
+	/* eslint-disable es/no-symbol -- required for testing */
 
 
-	var useSymbolAsUid = nativeSymbol
+	var useSymbolAsUid = symbolConstructorDetection
 	  && !Symbol.sham
 	  && typeof Symbol.iterator == 'symbol';
 
@@ -222,22 +246,22 @@ var doric = (function (exports) {
 	  }
 	};
 
-	var $TypeError$y = TypeError;
+	var $TypeError$z = TypeError;
 
 	// `Assert: IsCallable(argument) is true`
 	var aCallable = function (argument) {
 	  if (isCallable(argument)) { return argument; }
-	  throw $TypeError$y(tryToString(argument) + ' is not a function');
+	  throw $TypeError$z(tryToString(argument) + ' is not a function');
 	};
 
 	// `GetMethod` abstract operation
 	// https://tc39.es/ecma262/#sec-getmethod
 	var getMethod = function (V, P) {
 	  var func = V[P];
-	  return func == null ? undefined : aCallable(func);
+	  return isNullOrUndefined(func) ? undefined : aCallable(func);
 	};
 
-	var $TypeError$x = TypeError;
+	var $TypeError$y = TypeError;
 
 	// `OrdinaryToPrimitive` abstract operation
 	// https://tc39.es/ecma262/#sec-ordinarytoprimitive
@@ -246,12 +270,12 @@ var doric = (function (exports) {
 	  if (pref === 'string' && isCallable(fn = input.toString) && !isObject(val = functionCall(fn, input))) { return val; }
 	  if (isCallable(fn = input.valueOf) && !isObject(val = functionCall(fn, input))) { return val; }
 	  if (pref !== 'string' && isCallable(fn = input.toString) && !isObject(val = functionCall(fn, input))) { return val; }
-	  throw $TypeError$x("Can't convert object to primitive value");
+	  throw $TypeError$y("Can't convert object to primitive value");
 	};
 
 	var isPure = false;
 
-	// eslint-disable-next-line es-x/no-object-defineproperty -- safe
+	// eslint-disable-next-line es/no-object-defineproperty -- safe
 	var defineProperty$f = Object.defineProperty;
 
 	var defineGlobalProperty = function (key, value) {
@@ -271,10 +295,10 @@ var doric = (function (exports) {
 	(module.exports = function (key, value) {
 	  return sharedStore[key] || (sharedStore[key] = value !== undefined ? value : {});
 	})('versions', []).push({
-	  version: '3.24.1',
+	  version: '3.25.3',
 	  mode: 'global',
 	  copyright: '© 2014-2022 Denis Pushkarev (zloirock.ru)',
-	  license: 'https://github.com/zloirock/core-js/blob/v3.24.1/LICENSE',
+	  license: 'https://github.com/zloirock/core-js/blob/v3.25.3/LICENSE',
 	  source: 'https://github.com/zloirock/core-js'
 	});
 	});
@@ -291,7 +315,7 @@ var doric = (function (exports) {
 
 	// `HasOwnProperty` abstract operation
 	// https://tc39.es/ecma262/#sec-hasownproperty
-	// eslint-disable-next-line es-x/no-object-hasown -- safe
+	// eslint-disable-next-line es/no-object-hasown -- safe
 	var hasOwnProperty_1 = Object.hasOwn || function hasOwn(it, key) {
 	  return hasOwnProperty(toObject(it), key);
 	};
@@ -310,9 +334,9 @@ var doric = (function (exports) {
 	var createWellKnownSymbol = useSymbolAsUid ? Symbol$3 : Symbol$3 && Symbol$3.withoutSetter || uid;
 
 	var wellKnownSymbol = function (name) {
-	  if (!hasOwnProperty_1(WellKnownSymbolsStore$1, name) || !(nativeSymbol || typeof WellKnownSymbolsStore$1[name] == 'string')) {
+	  if (!hasOwnProperty_1(WellKnownSymbolsStore$1, name) || !(symbolConstructorDetection || typeof WellKnownSymbolsStore$1[name] == 'string')) {
 	    var description = 'Symbol.' + name;
-	    if (nativeSymbol && hasOwnProperty_1(Symbol$3, name)) {
+	    if (symbolConstructorDetection && hasOwnProperty_1(Symbol$3, name)) {
 	      WellKnownSymbolsStore$1[name] = Symbol$3[name];
 	    } else if (useSymbolAsUid && symbolFor) {
 	      WellKnownSymbolsStore$1[name] = symbolFor(description);
@@ -322,7 +346,7 @@ var doric = (function (exports) {
 	  } return WellKnownSymbolsStore$1[name];
 	};
 
-	var $TypeError$w = TypeError;
+	var $TypeError$x = TypeError;
 	var TO_PRIMITIVE$1 = wellKnownSymbol('toPrimitive');
 
 	// `ToPrimitive` abstract operation
@@ -335,7 +359,7 @@ var doric = (function (exports) {
 	    if (pref === undefined) { pref = 'default'; }
 	    result = functionCall(exoticToPrim, input, pref);
 	    if (!isObject(result) || isSymbol(result)) { return result; }
-	    throw $TypeError$w("Can't convert object to primitive value");
+	    throw $TypeError$x("Can't convert object to primitive value");
 	  }
 	  if (pref === undefined) { pref = 'number'; }
 	  return ordinaryToPrimitive(input, pref);
@@ -358,13 +382,13 @@ var doric = (function (exports) {
 
 	// Thanks to IE8 for its funny defineProperty
 	var ie8DomDefine = !descriptors && !fails(function () {
-	  // eslint-disable-next-line es-x/no-object-defineproperty -- required for testing
+	  // eslint-disable-next-line es/no-object-defineproperty -- required for testing
 	  return Object.defineProperty(documentCreateElement('div'), 'a', {
 	    get: function () { return 7; }
 	  }).a != 7;
 	});
 
-	// eslint-disable-next-line es-x/no-object-getownpropertydescriptor -- safe
+	// eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
 	var $getOwnPropertyDescriptor$2 = Object.getOwnPropertyDescriptor;
 
 	// `Object.getOwnPropertyDescriptor` method
@@ -385,7 +409,7 @@ var doric = (function (exports) {
 	// V8 ~ Chrome 36-
 	// https://bugs.chromium.org/p/v8/issues/detail?id=3334
 	var v8PrototypeDefineBug = descriptors && fails(function () {
-	  // eslint-disable-next-line es-x/no-object-defineproperty -- required for testing
+	  // eslint-disable-next-line es/no-object-defineproperty -- required for testing
 	  return Object.defineProperty(function () { /* empty */ }, 'prototype', {
 	    value: 42,
 	    writable: false
@@ -393,18 +417,18 @@ var doric = (function (exports) {
 	});
 
 	var $String$4 = String;
-	var $TypeError$v = TypeError;
+	var $TypeError$w = TypeError;
 
 	// `Assert: Type(argument) is Object`
 	var anObject = function (argument) {
 	  if (isObject(argument)) { return argument; }
-	  throw $TypeError$v($String$4(argument) + ' is not an object');
+	  throw $TypeError$w($String$4(argument) + ' is not an object');
 	};
 
-	var $TypeError$u = TypeError;
-	// eslint-disable-next-line es-x/no-object-defineproperty -- safe
+	var $TypeError$v = TypeError;
+	// eslint-disable-next-line es/no-object-defineproperty -- safe
 	var $defineProperty$1 = Object.defineProperty;
-	// eslint-disable-next-line es-x/no-object-getownpropertydescriptor -- safe
+	// eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
 	var $getOwnPropertyDescriptor$1 = Object.getOwnPropertyDescriptor;
 	var ENUMERABLE = 'enumerable';
 	var CONFIGURABLE$1 = 'configurable';
@@ -434,7 +458,7 @@ var doric = (function (exports) {
 	  if (ie8DomDefine) { try {
 	    return $defineProperty$1(O, P, Attributes);
 	  } catch (error) { /* empty */ } }
-	  if ('get' in Attributes || 'set' in Attributes) { throw $TypeError$u('Accessors not supported'); }
+	  if ('get' in Attributes || 'set' in Attributes) { throw $TypeError$v('Accessors not supported'); }
 	  if ('value' in Attributes) { O[P] = Attributes.value; }
 	  return O;
 	};
@@ -451,7 +475,7 @@ var doric = (function (exports) {
 	};
 
 	var FunctionPrototype$3 = Function.prototype;
-	// eslint-disable-next-line es-x/no-object-getownpropertydescriptor -- safe
+	// eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
 	var getDescriptor = descriptors && Object.getOwnPropertyDescriptor;
 
 	var EXISTS = hasOwnProperty_1(FunctionPrototype$3, 'name');
@@ -478,7 +502,7 @@ var doric = (function (exports) {
 
 	var WeakMap$4 = global_1.WeakMap;
 
-	var nativeWeakMap = isCallable(WeakMap$4) && /native code/.test(inspectSource(WeakMap$4));
+	var weakMapBasicDetection = isCallable(WeakMap$4) && /native code/.test(String(WeakMap$4));
 
 	var keys$3 = shared('keys');
 
@@ -506,13 +530,13 @@ var doric = (function (exports) {
 	  };
 	};
 
-	if (nativeWeakMap || sharedStore.state) {
+	if (weakMapBasicDetection || sharedStore.state) {
 	  var store$2 = sharedStore.state || (sharedStore.state = new WeakMap$3());
 	  var wmget = functionUncurryThis(store$2.get);
 	  var wmhas = functionUncurryThis(store$2.has);
 	  var wmset = functionUncurryThis(store$2.set);
 	  set$3 = function (it, metadata) {
-	    if (wmhas(store$2, it)) { throw new TypeError$8(OBJECT_ALREADY_INITIALIZED); }
+	    if (wmhas(store$2, it)) { throw TypeError$8(OBJECT_ALREADY_INITIALIZED); }
 	    metadata.facade = it;
 	    wmset(store$2, it, metadata);
 	    return metadata;
@@ -527,7 +551,7 @@ var doric = (function (exports) {
 	  var STATE = sharedKey('state');
 	  hiddenKeys$1[STATE] = true;
 	  set$3 = function (it, metadata) {
-	    if (hasOwnProperty_1(it, STATE)) { throw new TypeError$8(OBJECT_ALREADY_INITIALIZED); }
+	    if (hasOwnProperty_1(it, STATE)) { throw TypeError$8(OBJECT_ALREADY_INITIALIZED); }
 	    metadata.facade = it;
 	    createNonEnumerableProperty(it, STATE, metadata);
 	    return metadata;
@@ -555,7 +579,7 @@ var doric = (function (exports) {
 
 	var enforceInternalState = internalState.enforce;
 	var getInternalState = internalState.get;
-	// eslint-disable-next-line es-x/no-object-defineproperty -- safe
+	// eslint-disable-next-line es/no-object-defineproperty -- safe
 	var defineProperty = Object.defineProperty;
 
 	var CONFIGURABLE_LENGTH = descriptors && !fails(function () {
@@ -624,7 +648,7 @@ var doric = (function (exports) {
 
 	// `Math.trunc` method
 	// https://tc39.es/ecma262/#sec-math.trunc
-	// eslint-disable-next-line es-x/no-math-trunc -- safe
+	// eslint-disable-next-line es/no-math-trunc -- safe
 	var mathTrunc = Math.trunc || function trunc(x) {
 	  var n = +x;
 	  return (n > 0 ? floor$a : ceil$1)(n);
@@ -725,7 +749,7 @@ var doric = (function (exports) {
 
 	// `Object.getOwnPropertyNames` method
 	// https://tc39.es/ecma262/#sec-object.getownpropertynames
-	// eslint-disable-next-line es-x/no-object-getownpropertynames -- safe
+	// eslint-disable-next-line es/no-object-getownpropertynames -- safe
 	var f$5 = Object.getOwnPropertyNames || function getOwnPropertyNames(O) {
 	  return objectKeysInternal(O, hiddenKeys);
 	};
@@ -734,7 +758,7 @@ var doric = (function (exports) {
 		f: f$5
 	};
 
-	// eslint-disable-next-line es-x/no-object-getownpropertysymbols -- safe
+	// eslint-disable-next-line es/no-object-getownpropertysymbols -- safe
 	var f$4 = Object.getOwnPropertySymbols;
 
 	var objectGetOwnPropertySymbols = {
@@ -782,7 +806,7 @@ var doric = (function (exports) {
 
 	var isForced_1 = isForced;
 
-	var getOwnPropertyDescriptor$9 = objectGetOwnPropertyDescriptor.f;
+	var getOwnPropertyDescriptor$a = objectGetOwnPropertyDescriptor.f;
 
 
 
@@ -819,7 +843,7 @@ var doric = (function (exports) {
 	  if (target) { for (key in source) {
 	    sourceProperty = source[key];
 	    if (options.dontCallGetSet) {
-	      descriptor = getOwnPropertyDescriptor$9(target, key);
+	      descriptor = getOwnPropertyDescriptor$a(target, key);
 	      targetProperty = descriptor && descriptor.value;
 	    } else { targetProperty = target[key]; }
 	    FORCED = isForced_1(GLOBAL ? key : TARGET + (STATIC ? '.' : '#') + key, options.forced);
@@ -877,14 +901,14 @@ var doric = (function (exports) {
 
 	// `Object.keys` method
 	// https://tc39.es/ecma262/#sec-object.keys
-	// eslint-disable-next-line es-x/no-object-keys -- safe
+	// eslint-disable-next-line es/no-object-keys -- safe
 	var objectKeys$1 = Object.keys || function keys(O) {
 	  return objectKeysInternal(O, enumBugKeys);
 	};
 
 	// `Object.defineProperties` method
 	// https://tc39.es/ecma262/#sec-object.defineproperties
-	// eslint-disable-next-line es-x/no-object-defineproperties -- safe
+	// eslint-disable-next-line es/no-object-defineproperties -- safe
 	var f$3 = descriptors && !v8PrototypeDefineBug ? Object.defineProperties : function defineProperties(O, Properties) {
 	  anObject(O);
 	  var props = toIndexedObject(Properties);
@@ -973,7 +997,7 @@ var doric = (function (exports) {
 
 	// `Object.create` method
 	// https://tc39.es/ecma262/#sec-object.create
-	// eslint-disable-next-line es-x/no-object-create -- safe
+	// eslint-disable-next-line es/no-object-create -- safe
 	var objectCreate = Object.create || function create(O, Properties) {
 	  var result;
 	  if (O !== null) {
@@ -1005,7 +1029,7 @@ var doric = (function (exports) {
 	  return result;
 	};
 
-	/* eslint-disable es-x/no-object-getownpropertynames -- safe */
+	/* eslint-disable es/no-object-getownpropertynames -- safe */
 
 
 	var $getOwnPropertyNames$1 = objectGetOwnPropertyNames.f;
@@ -1043,7 +1067,7 @@ var doric = (function (exports) {
 
 	var defineProperty$e = objectDefineProperty.f;
 
-	var defineWellKnownSymbol = function (NAME) {
+	var wellKnownSymbolDefine = function (NAME) {
 	  var Symbol = path.Symbol || (path.Symbol = {});
 	  if (!hasOwnProperty_1(Symbol, NAME)) { defineProperty$e(Symbol, NAME, {
 	    value: wellKnownSymbolWrapped.f(NAME)
@@ -1091,7 +1115,7 @@ var doric = (function (exports) {
 
 	// `IsArray` abstract operation
 	// https://tc39.es/ecma262/#sec-isarray
-	// eslint-disable-next-line es-x/no-array-isarray -- safe
+	// eslint-disable-next-line es/no-array-isarray -- safe
 	var isArray = Array.isArray || function isArray(argument) {
 	  return classofRaw(argument) == 'Array';
 	};
@@ -1242,7 +1266,7 @@ var doric = (function (exports) {
 	var setInternalState$i = internalState.set;
 	var getInternalState$e = internalState.getterFor(SYMBOL);
 
-	var ObjectPrototype$4 = Object[PROTOTYPE$1];
+	var ObjectPrototype$5 = Object[PROTOTYPE$1];
 	var $Symbol = global_1.Symbol;
 	var SymbolPrototype$1 = $Symbol && $Symbol[PROTOTYPE$1];
 	var TypeError$7 = global_1.TypeError;
@@ -1266,11 +1290,11 @@ var doric = (function (exports) {
 	    get: function () { return nativeDefineProperty(this, 'a', { value: 7 }).a; }
 	  })).a != 7;
 	}) ? function (O, P, Attributes) {
-	  var ObjectPrototypeDescriptor = nativeGetOwnPropertyDescriptor$1(ObjectPrototype$4, P);
-	  if (ObjectPrototypeDescriptor) { delete ObjectPrototype$4[P]; }
+	  var ObjectPrototypeDescriptor = nativeGetOwnPropertyDescriptor$1(ObjectPrototype$5, P);
+	  if (ObjectPrototypeDescriptor) { delete ObjectPrototype$5[P]; }
 	  nativeDefineProperty(O, P, Attributes);
-	  if (ObjectPrototypeDescriptor && O !== ObjectPrototype$4) {
-	    nativeDefineProperty(ObjectPrototype$4, P, ObjectPrototypeDescriptor);
+	  if (ObjectPrototypeDescriptor && O !== ObjectPrototype$5) {
+	    nativeDefineProperty(ObjectPrototype$5, P, ObjectPrototypeDescriptor);
 	  }
 	} : nativeDefineProperty;
 
@@ -1286,7 +1310,7 @@ var doric = (function (exports) {
 	};
 
 	var $defineProperty = function defineProperty(O, P, Attributes) {
-	  if (O === ObjectPrototype$4) { $defineProperty(ObjectPrototypeSymbols, P, Attributes); }
+	  if (O === ObjectPrototype$5) { $defineProperty(ObjectPrototypeSymbols, P, Attributes); }
 	  anObject(O);
 	  var key = toPropertyKey(P);
 	  anObject(Attributes);
@@ -1318,7 +1342,7 @@ var doric = (function (exports) {
 	var $propertyIsEnumerable$1 = function propertyIsEnumerable(V) {
 	  var P = toPropertyKey(V);
 	  var enumerable = functionCall(nativePropertyIsEnumerable, this, P);
-	  if (this === ObjectPrototype$4 && hasOwnProperty_1(AllSymbols, P) && !hasOwnProperty_1(ObjectPrototypeSymbols, P)) { return false; }
+	  if (this === ObjectPrototype$5 && hasOwnProperty_1(AllSymbols, P) && !hasOwnProperty_1(ObjectPrototypeSymbols, P)) { return false; }
 	  return enumerable || !hasOwnProperty_1(this, P) || !hasOwnProperty_1(AllSymbols, P) || hasOwnProperty_1(this, HIDDEN) && this[HIDDEN][P]
 	    ? enumerable : true;
 	};
@@ -1326,7 +1350,7 @@ var doric = (function (exports) {
 	var $getOwnPropertyDescriptor = function getOwnPropertyDescriptor(O, P) {
 	  var it = toIndexedObject(O);
 	  var key = toPropertyKey(P);
-	  if (it === ObjectPrototype$4 && hasOwnProperty_1(AllSymbols, key) && !hasOwnProperty_1(ObjectPrototypeSymbols, key)) { return; }
+	  if (it === ObjectPrototype$5 && hasOwnProperty_1(AllSymbols, key) && !hasOwnProperty_1(ObjectPrototypeSymbols, key)) { return; }
 	  var descriptor = nativeGetOwnPropertyDescriptor$1(it, key);
 	  if (descriptor && hasOwnProperty_1(AllSymbols, key) && !(hasOwnProperty_1(it, HIDDEN) && it[HIDDEN][key])) {
 	    descriptor.enumerable = true;
@@ -1344,11 +1368,11 @@ var doric = (function (exports) {
 	};
 
 	var $getOwnPropertySymbols = function (O) {
-	  var IS_OBJECT_PROTOTYPE = O === ObjectPrototype$4;
+	  var IS_OBJECT_PROTOTYPE = O === ObjectPrototype$5;
 	  var names = nativeGetOwnPropertyNames(IS_OBJECT_PROTOTYPE ? ObjectPrototypeSymbols : toIndexedObject(O));
 	  var result = [];
 	  $forEach$3(names, function (key) {
-	    if (hasOwnProperty_1(AllSymbols, key) && (!IS_OBJECT_PROTOTYPE || hasOwnProperty_1(ObjectPrototype$4, key))) {
+	    if (hasOwnProperty_1(AllSymbols, key) && (!IS_OBJECT_PROTOTYPE || hasOwnProperty_1(ObjectPrototype$5, key))) {
 	      push$k(result, AllSymbols[key]);
 	    }
 	  });
@@ -1357,17 +1381,17 @@ var doric = (function (exports) {
 
 	// `Symbol` constructor
 	// https://tc39.es/ecma262/#sec-symbol-constructor
-	if (!nativeSymbol) {
+	if (!symbolConstructorDetection) {
 	  $Symbol = function Symbol() {
 	    if (objectIsPrototypeOf(SymbolPrototype$1, this)) { throw TypeError$7('Symbol is not a constructor'); }
 	    var description = !arguments.length || arguments[0] === undefined ? undefined : toString_1(arguments[0]);
 	    var tag = uid(description);
 	    var setter = function (value) {
-	      if (this === ObjectPrototype$4) { functionCall(setter, ObjectPrototypeSymbols, value); }
+	      if (this === ObjectPrototype$5) { functionCall(setter, ObjectPrototypeSymbols, value); }
 	      if (hasOwnProperty_1(this, HIDDEN) && hasOwnProperty_1(this[HIDDEN], tag)) { this[HIDDEN][tag] = false; }
 	      setSymbolDescriptor(this, tag, createPropertyDescriptor(1, value));
 	    };
-	    if (descriptors && USE_SETTER) { setSymbolDescriptor(ObjectPrototype$4, tag, { configurable: true, set: setter }); }
+	    if (descriptors && USE_SETTER) { setSymbolDescriptor(ObjectPrototype$5, tag, { configurable: true, set: setter }); }
 	    return wrap$1(tag, description);
 	  };
 
@@ -1401,25 +1425,25 @@ var doric = (function (exports) {
 	      }
 	    });
 	    {
-	      defineBuiltIn(ObjectPrototype$4, 'propertyIsEnumerable', $propertyIsEnumerable$1, { unsafe: true });
+	      defineBuiltIn(ObjectPrototype$5, 'propertyIsEnumerable', $propertyIsEnumerable$1, { unsafe: true });
 	    }
 	  }
 	}
 
-	_export({ global: true, constructor: true, wrap: true, forced: !nativeSymbol, sham: !nativeSymbol }, {
+	_export({ global: true, constructor: true, wrap: true, forced: !symbolConstructorDetection, sham: !symbolConstructorDetection }, {
 	  Symbol: $Symbol
 	});
 
 	$forEach$3(objectKeys$1(WellKnownSymbolsStore), function (name) {
-	  defineWellKnownSymbol(name);
+	  wellKnownSymbolDefine(name);
 	});
 
-	_export({ target: SYMBOL, stat: true, forced: !nativeSymbol }, {
+	_export({ target: SYMBOL, stat: true, forced: !symbolConstructorDetection }, {
 	  useSetter: function () { USE_SETTER = true; },
 	  useSimple: function () { USE_SETTER = false; }
 	});
 
-	_export({ target: 'Object', stat: true, forced: !nativeSymbol, sham: !descriptors }, {
+	_export({ target: 'Object', stat: true, forced: !symbolConstructorDetection, sham: !descriptors }, {
 	  // `Object.create` method
 	  // https://tc39.es/ecma262/#sec-object.create
 	  create: $create,
@@ -1434,7 +1458,7 @@ var doric = (function (exports) {
 	  getOwnPropertyDescriptor: $getOwnPropertyDescriptor
 	});
 
-	_export({ target: 'Object', stat: true, forced: !nativeSymbol }, {
+	_export({ target: 'Object', stat: true, forced: !symbolConstructorDetection }, {
 	  // `Object.getOwnPropertyNames` method
 	  // https://tc39.es/ecma262/#sec-object.getownpropertynames
 	  getOwnPropertyNames: $getOwnPropertyNames
@@ -1450,15 +1474,15 @@ var doric = (function (exports) {
 
 	hiddenKeys$1[HIDDEN] = true;
 
-	/* eslint-disable es-x/no-symbol -- safe */
-	var nativeSymbolRegistry = nativeSymbol && !!Symbol['for'] && !!Symbol.keyFor;
+	/* eslint-disable es/no-symbol -- safe */
+	var symbolRegistryDetection = symbolConstructorDetection && !!Symbol['for'] && !!Symbol.keyFor;
 
 	var StringToSymbolRegistry = shared('string-to-symbol-registry');
 	var SymbolToStringRegistry$1 = shared('symbol-to-string-registry');
 
 	// `Symbol.for` method
 	// https://tc39.es/ecma262/#sec-symbol.for
-	_export({ target: 'Symbol', stat: true, forced: !nativeSymbolRegistry }, {
+	_export({ target: 'Symbol', stat: true, forced: !symbolRegistryDetection }, {
 	  'for': function (key) {
 	    var string = toString_1(key);
 	    if (hasOwnProperty_1(StringToSymbolRegistry, string)) { return StringToSymbolRegistry[string]; }
@@ -1473,7 +1497,7 @@ var doric = (function (exports) {
 
 	// `Symbol.keyFor` method
 	// https://tc39.es/ecma262/#sec-symbol.keyfor
-	_export({ target: 'Symbol', stat: true, forced: !nativeSymbolRegistry }, {
+	_export({ target: 'Symbol', stat: true, forced: !symbolRegistryDetection }, {
 	  keyFor: function keyFor(sym) {
 	    if (!isSymbol(sym)) { throw TypeError(tryToString(sym) + ' is not a symbol'); }
 	    if (hasOwnProperty_1(SymbolToStringRegistry, sym)) { return SymbolToStringRegistry[sym]; }
@@ -1484,7 +1508,7 @@ var doric = (function (exports) {
 	var apply = FunctionPrototype$2.apply;
 	var call = FunctionPrototype$2.call;
 
-	// eslint-disable-next-line es-x/no-reflect -- safe
+	// eslint-disable-next-line es/no-reflect -- safe
 	var functionApply = typeof Reflect == 'object' && Reflect.apply || (functionBindNative ? call.bind(apply) : function () {
 	  return call.apply(apply, arguments);
 	});
@@ -1502,7 +1526,7 @@ var doric = (function (exports) {
 	var low = /^[\uD800-\uDBFF]$/;
 	var hi = /^[\uDC00-\uDFFF]$/;
 
-	var WRONG_SYMBOLS_CONVERSION = !nativeSymbol || fails(function () {
+	var WRONG_SYMBOLS_CONVERSION = !symbolConstructorDetection || fails(function () {
 	  var symbol = getBuiltIn('Symbol')();
 	  // MS Edge converts symbol values to JSON as {}
 	  return $stringify([symbol]) != '[null]'
@@ -1553,7 +1577,7 @@ var doric = (function (exports) {
 
 	// V8 ~ Chrome 38 and 39 `Object.getOwnPropertySymbols` fails on primitives
 	// https://bugs.chromium.org/p/v8/issues/detail?id=3443
-	var FORCED$n = !nativeSymbol || fails(function () { objectGetOwnPropertySymbols.f(1); });
+	var FORCED$n = !symbolConstructorDetection || fails(function () { objectGetOwnPropertySymbols.f(1); });
 
 	// `Object.getOwnPropertySymbols` method
 	// https://tc39.es/ecma262/#sec-object.getownpropertysymbols
@@ -1591,8 +1615,8 @@ var doric = (function (exports) {
 	  SymbolPrototype.constructor = SymbolWrapper;
 
 	  var NATIVE_SYMBOL = String(NativeSymbol('test')) == 'Symbol(test)';
-	  var symbolToString = functionUncurryThis(SymbolPrototype.toString);
-	  var symbolValueOf = functionUncurryThis(SymbolPrototype.valueOf);
+	  var thisSymbolValue = functionUncurryThis(SymbolPrototype.valueOf);
+	  var symbolDescriptiveString = functionUncurryThis(SymbolPrototype.toString);
 	  var regexp = /^Symbol\((.*)\)[^)]+$/;
 	  var replace$a = functionUncurryThis(''.replace);
 	  var stringSlice$g = functionUncurryThis(''.slice);
@@ -1600,9 +1624,9 @@ var doric = (function (exports) {
 	  defineProperty$c(SymbolPrototype, 'description', {
 	    configurable: true,
 	    get: function description() {
-	      var symbol = symbolValueOf(this);
-	      var string = symbolToString(symbol);
+	      var symbol = thisSymbolValue(this);
 	      if (hasOwnProperty_1(EmptyStringDescriptionStore, symbol)) { return ''; }
+	      var string = symbolDescriptiveString(symbol);
 	      var desc = NATIVE_SYMBOL ? stringSlice$g(string, 7, -1) : replace$a(string, regexp, '$1');
 	      return desc === '' ? undefined : desc;
 	    }
@@ -1615,47 +1639,47 @@ var doric = (function (exports) {
 
 	// `Symbol.asyncIterator` well-known symbol
 	// https://tc39.es/ecma262/#sec-symbol.asynciterator
-	defineWellKnownSymbol('asyncIterator');
+	wellKnownSymbolDefine('asyncIterator');
 
 	// `Symbol.hasInstance` well-known symbol
 	// https://tc39.es/ecma262/#sec-symbol.hasinstance
-	defineWellKnownSymbol('hasInstance');
+	wellKnownSymbolDefine('hasInstance');
 
 	// `Symbol.isConcatSpreadable` well-known symbol
 	// https://tc39.es/ecma262/#sec-symbol.isconcatspreadable
-	defineWellKnownSymbol('isConcatSpreadable');
+	wellKnownSymbolDefine('isConcatSpreadable');
 
 	// `Symbol.iterator` well-known symbol
 	// https://tc39.es/ecma262/#sec-symbol.iterator
-	defineWellKnownSymbol('iterator');
+	wellKnownSymbolDefine('iterator');
 
 	// `Symbol.match` well-known symbol
 	// https://tc39.es/ecma262/#sec-symbol.match
-	defineWellKnownSymbol('match');
+	wellKnownSymbolDefine('match');
 
 	// `Symbol.matchAll` well-known symbol
 	// https://tc39.es/ecma262/#sec-symbol.matchall
-	defineWellKnownSymbol('matchAll');
+	wellKnownSymbolDefine('matchAll');
 
 	// `Symbol.replace` well-known symbol
 	// https://tc39.es/ecma262/#sec-symbol.replace
-	defineWellKnownSymbol('replace');
+	wellKnownSymbolDefine('replace');
 
 	// `Symbol.search` well-known symbol
 	// https://tc39.es/ecma262/#sec-symbol.search
-	defineWellKnownSymbol('search');
+	wellKnownSymbolDefine('search');
 
 	// `Symbol.species` well-known symbol
 	// https://tc39.es/ecma262/#sec-symbol.species
-	defineWellKnownSymbol('species');
+	wellKnownSymbolDefine('species');
 
 	// `Symbol.split` well-known symbol
 	// https://tc39.es/ecma262/#sec-symbol.split
-	defineWellKnownSymbol('split');
+	wellKnownSymbolDefine('split');
 
 	// `Symbol.toPrimitive` well-known symbol
 	// https://tc39.es/ecma262/#sec-symbol.toprimitive
-	defineWellKnownSymbol('toPrimitive');
+	wellKnownSymbolDefine('toPrimitive');
 
 	// `Symbol.prototype[@@toPrimitive]` method
 	// https://tc39.es/ecma262/#sec-symbol.prototype-@@toprimitive
@@ -1663,7 +1687,7 @@ var doric = (function (exports) {
 
 	// `Symbol.toStringTag` well-known symbol
 	// https://tc39.es/ecma262/#sec-symbol.tostringtag
-	defineWellKnownSymbol('toStringTag');
+	wellKnownSymbolDefine('toStringTag');
 
 	// `Symbol.prototype[@@toStringTag]` property
 	// https://tc39.es/ecma262/#sec-symbol.prototype-@@tostringtag
@@ -1671,14 +1695,14 @@ var doric = (function (exports) {
 
 	// `Symbol.unscopables` well-known symbol
 	// https://tc39.es/ecma262/#sec-symbol.unscopables
-	defineWellKnownSymbol('unscopables');
+	wellKnownSymbolDefine('unscopables');
 
 	var $String$2 = String;
-	var $TypeError$t = TypeError;
+	var $TypeError$u = TypeError;
 
 	var aPossiblePrototype = function (argument) {
 	  if (typeof argument == 'object' || isCallable(argument)) { return argument; }
-	  throw $TypeError$t("Can't set " + $String$2(argument) + ' as a prototype');
+	  throw $TypeError$u("Can't set " + $String$2(argument) + ' as a prototype');
 	};
 
 	/* eslint-disable no-proto -- safe */
@@ -1689,13 +1713,13 @@ var doric = (function (exports) {
 	// `Object.setPrototypeOf` method
 	// https://tc39.es/ecma262/#sec-object.setprototypeof
 	// Works with __proto__ only. Old v8 can't work with null proto objects.
-	// eslint-disable-next-line es-x/no-object-setprototypeof -- safe
+	// eslint-disable-next-line es/no-object-setprototypeof -- safe
 	var objectSetPrototypeOf = Object.setPrototypeOf || ('__proto__' in {} ? function () {
 	  var CORRECT_SETTER = false;
 	  var test = {};
 	  var setter;
 	  try {
-	    // eslint-disable-next-line es-x/no-object-getownpropertydescriptor -- safe
+	    // eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
 	    setter = functionUncurryThis(Object.getOwnPropertyDescriptor(Object.prototype, '__proto__').set);
 	    setter(test, []);
 	    CORRECT_SETTER = test instanceof Array;
@@ -1753,7 +1777,7 @@ var doric = (function (exports) {
 	var V8_OR_CHAKRA_STACK_ENTRY = /\n\s*at [^:]*:[^\n]*/;
 	var IS_V8_OR_CHAKRA_STACK = V8_OR_CHAKRA_STACK_ENTRY.test(TEST);
 
-	var clearErrorStack = function (stack, dropEntries) {
+	var errorStackClear = function (stack, dropEntries) {
 	  if (IS_V8_OR_CHAKRA_STACK && typeof stack == 'string' && !$Error$1.prepareStackTrace) {
 	    while (dropEntries--) { stack = replace$9(stack, V8_OR_CHAKRA_STACK_ENTRY, ''); }
 	  } return stack;
@@ -1762,7 +1786,7 @@ var doric = (function (exports) {
 	var errorStackInstallable = !fails(function () {
 	  var error = Error('a');
 	  if (!('stack' in error)) { return true; }
-	  // eslint-disable-next-line es-x/no-object-defineproperty -- safe
+	  // eslint-disable-next-line es/no-object-defineproperty -- safe
 	  Object.defineProperty(error, 'stack', createPropertyDescriptor(1, 7));
 	  return error.stack !== 7;
 	});
@@ -1789,7 +1813,7 @@ var doric = (function (exports) {
 	    var message = normalizeStringArgument(IS_AGGREGATE_ERROR ? b : a, undefined);
 	    var result = IS_AGGREGATE_ERROR ? new OriginalError(a) : new OriginalError();
 	    if (message !== undefined) { createNonEnumerableProperty(result, 'message', message); }
-	    if (errorStackInstallable) { createNonEnumerableProperty(result, 'stack', clearErrorStack(result.stack, 2)); }
+	    if (errorStackInstallable) { createNonEnumerableProperty(result, 'stack', errorStackClear(result.stack, 2)); }
 	    if (this && objectIsPrototypeOf(OriginalErrorPrototype, this)) { inheritIfRequired(result, this, WrappedError); }
 	    if (arguments.length > OPTIONS_POSITION) { installErrorCause(result, arguments[OPTIONS_POSITION]); }
 	    return result;
@@ -1880,7 +1904,7 @@ var doric = (function (exports) {
 	var INCORRECT_TO_STRING$1 = fails(function () {
 	  if (descriptors) {
 	    // Chrome 32- incorrectly call accessor
-	    // eslint-disable-next-line es-x/no-object-defineproperty -- safe
+	    // eslint-disable-next-line es/no-object-defineproperty -- safe
 	    var object = objectCreate(Object.defineProperty({}, 'name', { get: function () {
 	      return this === object;
 	    } }));
@@ -1910,24 +1934,24 @@ var doric = (function (exports) {
 	var correctPrototypeGetter = !fails(function () {
 	  function F() { /* empty */ }
 	  F.prototype.constructor = null;
-	  // eslint-disable-next-line es-x/no-object-getprototypeof -- required for testing
+	  // eslint-disable-next-line es/no-object-getprototypeof -- required for testing
 	  return Object.getPrototypeOf(new F()) !== F.prototype;
 	});
 
 	var IE_PROTO = sharedKey('IE_PROTO');
 	var $Object$2 = Object;
-	var ObjectPrototype$3 = $Object$2.prototype;
+	var ObjectPrototype$4 = $Object$2.prototype;
 
 	// `Object.getPrototypeOf` method
 	// https://tc39.es/ecma262/#sec-object.getprototypeof
-	// eslint-disable-next-line es-x/no-object-getprototypeof -- safe
+	// eslint-disable-next-line es/no-object-getprototypeof -- safe
 	var objectGetPrototypeOf = correctPrototypeGetter ? $Object$2.getPrototypeOf : function (O) {
 	  var object = toObject(O);
 	  if (hasOwnProperty_1(object, IE_PROTO)) { return object[IE_PROTO]; }
 	  var constructor = object.constructor;
 	  if (isCallable(constructor) && object instanceof constructor) {
 	    return constructor.prototype;
-	  } return object instanceof $Object$2 ? ObjectPrototype$3 : null;
+	  } return object instanceof $Object$2 ? ObjectPrototype$4 : null;
 	};
 
 	var iterators = {};
@@ -1943,17 +1967,17 @@ var doric = (function (exports) {
 	var ITERATOR$9 = wellKnownSymbol('iterator');
 
 	var getIteratorMethod = function (it) {
-	  if (it != undefined) { return getMethod(it, ITERATOR$9)
+	  if (!isNullOrUndefined(it)) { return getMethod(it, ITERATOR$9)
 	    || getMethod(it, '@@iterator')
 	    || iterators[classof(it)]; }
 	};
 
-	var $TypeError$s = TypeError;
+	var $TypeError$t = TypeError;
 
 	var getIterator = function (argument, usingIterator) {
 	  var iteratorMethod = arguments.length < 2 ? getIteratorMethod(argument) : usingIterator;
 	  if (aCallable(iteratorMethod)) { return anObject(functionCall(iteratorMethod, argument)); }
-	  throw $TypeError$s(tryToString(argument) + ' is not iterable');
+	  throw $TypeError$t(tryToString(argument) + ' is not iterable');
 	};
 
 	var iteratorClose = function (iterator, kind, value) {
@@ -1976,7 +2000,7 @@ var doric = (function (exports) {
 	  return value;
 	};
 
-	var $TypeError$r = TypeError;
+	var $TypeError$s = TypeError;
 
 	var Result = function (stopped, result) {
 	  this.stopped = stopped;
@@ -2012,7 +2036,7 @@ var doric = (function (exports) {
 	    iterator = iterable;
 	  } else {
 	    iterFn = getIteratorMethod(iterable);
-	    if (!iterFn) { throw $TypeError$r(tryToString(iterable) + ' is not iterable'); }
+	    if (!iterFn) { throw $TypeError$s(tryToString(iterable) + ' is not iterable'); }
 	    // optimisation for array iterators
 	    if (isArrayIteratorMethod(iterFn)) {
 	      for (index = 0, length = lengthOfArrayLike(iterable); length > index; index++) {
@@ -2043,13 +2067,13 @@ var doric = (function (exports) {
 	  var isInstance = objectIsPrototypeOf(AggregateErrorPrototype, this);
 	  var that;
 	  if (objectSetPrototypeOf) {
-	    that = objectSetPrototypeOf(new $Error(), isInstance ? objectGetPrototypeOf(this) : AggregateErrorPrototype);
+	    that = objectSetPrototypeOf($Error(), isInstance ? objectGetPrototypeOf(this) : AggregateErrorPrototype);
 	  } else {
 	    that = isInstance ? this : objectCreate(AggregateErrorPrototype);
 	    createNonEnumerableProperty(that, TO_STRING_TAG$6, 'Error');
 	  }
 	  if (message !== undefined) { createNonEnumerableProperty(that, 'message', normalizeStringArgument(message)); }
-	  if (errorStackInstallable) { createNonEnumerableProperty(that, 'stack', clearErrorStack(that.stack, 1)); }
+	  if (errorStackInstallable) { createNonEnumerableProperty(that, 'stack', errorStackClear(that.stack, 1)); }
 	  installErrorCause(that, options);
 	  var errorsArray = [];
 	  iterate(errors, push$j, { that: errorsArray });
@@ -2074,6 +2098,7 @@ var doric = (function (exports) {
 
 	var AGGREGATE_ERROR = 'AggregateError';
 	var $AggregateError = getBuiltIn(AGGREGATE_ERROR);
+
 	var FORCED$l = !fails(function () {
 	  return $AggregateError([1]).errors[0] !== 1;
 	}) && fails(function () {
@@ -2121,11 +2146,11 @@ var doric = (function (exports) {
 
 	addToUnscopables('at');
 
-	var $TypeError$q = TypeError;
+	var $TypeError$r = TypeError;
 	var MAX_SAFE_INTEGER = 0x1FFFFFFFFFFFFF; // 2 ** 53 - 1 == 9007199254740991
 
 	var doesNotExceedSafeInteger = function (it) {
-	  if (it > MAX_SAFE_INTEGER) { throw $TypeError$q('Maximum allowed index exceeded'); }
+	  if (it > MAX_SAFE_INTEGER) { throw $TypeError$r('Maximum allowed index exceeded'); }
 	  return it;
 	};
 
@@ -2194,17 +2219,17 @@ var doric = (function (exports) {
 	  }
 	});
 
-	var $TypeError$p = TypeError;
+	var $TypeError$q = TypeError;
 
 	var deletePropertyOrThrow = function (O, P) {
-	  if (!delete O[P]) { throw $TypeError$p('Cannot delete property ' + tryToString(P) + ' of ' + tryToString(O)); }
+	  if (!delete O[P]) { throw $TypeError$q('Cannot delete property ' + tryToString(P) + ' of ' + tryToString(O)); }
 	};
 
 	var min$a = Math.min;
 
 	// `Array.prototype.copyWithin` method implementation
 	// https://tc39.es/ecma262/#sec-array.prototype.copywithin
-	// eslint-disable-next-line es-x/no-array-prototype-copywithin -- safe
+	// eslint-disable-next-line es/no-array-prototype-copywithin -- safe
 	var arrayCopyWithin = [].copyWithin || function copyWithin(target /* = 0 */, start /* = 0, end = @length */) {
 	  var O = toObject(this);
 	  var len = lengthOfArrayLike(O);
@@ -2453,12 +2478,12 @@ var doric = (function (exports) {
 	// https://tc39.es/ecma262/#sec-array.prototype.foreach
 	var arrayForEach = !STRICT_METHOD$7 ? function forEach(callbackfn /* , thisArg */) {
 	  return $forEach$2(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
-	// eslint-disable-next-line es-x/no-array-prototype-foreach -- safe
+	// eslint-disable-next-line es/no-array-prototype-foreach -- safe
 	} : [].forEach;
 
 	// `Array.prototype.forEach` method
 	// https://tc39.es/ecma262/#sec-array.prototype.foreach
-	// eslint-disable-next-line es-x/no-array-prototype-foreach -- safe
+	// eslint-disable-next-line es/no-array-prototype-foreach -- safe
 	_export({ target: 'Array', proto: true, forced: [].forEach != arrayForEach }, {
 	  forEach: arrayForEach
 	});
@@ -2523,7 +2548,7 @@ var doric = (function (exports) {
 	  iteratorWithReturn[ITERATOR$8] = function () {
 	    return this;
 	  };
-	  // eslint-disable-next-line es-x/no-array-from, no-throw-literal -- required for testing
+	  // eslint-disable-next-line es/no-array-from, no-throw-literal -- required for testing
 	  Array.from(iteratorWithReturn, function () { throw 2; });
 	} catch (error) { /* empty */ }
 
@@ -2545,7 +2570,7 @@ var doric = (function (exports) {
 	};
 
 	var INCORRECT_ITERATION = !checkCorrectnessOfIteration(function (iterable) {
-	  // eslint-disable-next-line es-x/no-array-from -- required for testing
+	  // eslint-disable-next-line es/no-array-from -- required for testing
 	  Array.from(iterable);
 	});
 
@@ -2575,15 +2600,15 @@ var doric = (function (exports) {
 	// https://tc39.es/ecma262/#sec-array.prototype-@@unscopables
 	addToUnscopables('includes');
 
-	/* eslint-disable es-x/no-array-prototype-indexof -- required for testing */
+	/* eslint-disable es/no-array-prototype-indexof -- required for testing */
 
 
-	var $IndexOf = arrayIncludes.indexOf;
+	var $indexOf$1 = arrayIncludes.indexOf;
 
 
-	var un$IndexOf = functionUncurryThis([].indexOf);
+	var nativeIndexOf = functionUncurryThis([].indexOf);
 
-	var NEGATIVE_ZERO$1 = !!un$IndexOf && 1 / un$IndexOf([1], 1, -0) < 0;
+	var NEGATIVE_ZERO$1 = !!nativeIndexOf && 1 / nativeIndexOf([1], 1, -0) < 0;
 	var STRICT_METHOD$6 = arrayMethodIsStrict('indexOf');
 
 	// `Array.prototype.indexOf` method
@@ -2593,8 +2618,8 @@ var doric = (function (exports) {
 	    var fromIndex = arguments.length > 1 ? arguments[1] : undefined;
 	    return NEGATIVE_ZERO$1
 	      // convert -0 to +0
-	      ? un$IndexOf(this, searchElement, fromIndex) || 0
-	      : $IndexOf(this, searchElement, fromIndex);
+	      ? nativeIndexOf(this, searchElement, fromIndex) || 0
+	      : $indexOf$1(this, searchElement, fromIndex);
 	  }
 	});
 
@@ -2611,7 +2636,7 @@ var doric = (function (exports) {
 	// https://tc39.es/ecma262/#sec-%iteratorprototype%-object
 	var IteratorPrototype$5, PrototypeOfArrayIteratorPrototype, arrayIterator$1;
 
-	/* eslint-disable es-x/no-array-prototype-keys -- safe */
+	/* eslint-disable es/no-array-prototype-keys -- safe */
 	if ([].keys) {
 	  arrayIterator$1 = [].keys();
 	  // Safari 8 has buggy iterators w/o `next`
@@ -2622,7 +2647,7 @@ var doric = (function (exports) {
 	  }
 	}
 
-	var NEW_ITERATOR_PROTOTYPE = IteratorPrototype$5 == undefined || fails(function () {
+	var NEW_ITERATOR_PROTOTYPE = !isObject(IteratorPrototype$5) || fails(function () {
 	  var test = {};
 	  // FF44- legacy iterators case
 	  return IteratorPrototype$5[ITERATOR$7].call(test) !== test;
@@ -2651,7 +2676,7 @@ var doric = (function (exports) {
 
 	var returnThis$1 = function () { return this; };
 
-	var createIteratorConstructor = function (IteratorConstructor, NAME, next, ENUMERABLE_NEXT) {
+	var iteratorCreateConstructor = function (IteratorConstructor, NAME, next, ENUMERABLE_NEXT) {
 	  var TO_STRING_TAG = NAME + ' Iterator';
 	  IteratorConstructor.prototype = objectCreate(IteratorPrototype$4, { next: createPropertyDescriptor(+!ENUMERABLE_NEXT, next) });
 	  setToStringTag(IteratorConstructor, TO_STRING_TAG, false);
@@ -2670,8 +2695,8 @@ var doric = (function (exports) {
 
 	var returnThis = function () { return this; };
 
-	var defineIterator = function (Iterable, NAME, IteratorConstructor, next, DEFAULT, IS_SET, FORCED) {
-	  createIteratorConstructor(IteratorConstructor, NAME, next);
+	var iteratorDefine = function (Iterable, NAME, IteratorConstructor, next, DEFAULT, IS_SET, FORCED) {
+	  iteratorCreateConstructor(IteratorConstructor, NAME, next);
 
 	  var getIterationMethod = function (KIND) {
 	    if (KIND === DEFAULT && defaultIterator) { return defaultIterator; }
@@ -2742,7 +2767,14 @@ var doric = (function (exports) {
 	  return methods;
 	};
 
+	// `CreateIterResultObject` abstract operation
+	// https://tc39.es/ecma262/#sec-createiterresultobject
+	var createIterResultObject = function (value, done) {
+	  return { value: value, done: done };
+	};
+
 	var defineProperty$9 = objectDefineProperty.f;
+
 
 
 
@@ -2761,7 +2793,7 @@ var doric = (function (exports) {
 	// https://tc39.es/ecma262/#sec-array.prototype-@@iterator
 	// `CreateArrayIterator` internal method
 	// https://tc39.es/ecma262/#sec-createarrayiterator
-	var es_array_iterator = defineIterator(Array, 'Array', function (iterated, kind) {
+	var es_array_iterator = iteratorDefine(Array, 'Array', function (iterated, kind) {
 	  setInternalState$h(this, {
 	    type: ARRAY_ITERATOR,
 	    target: toIndexedObject(iterated), // target
@@ -2777,11 +2809,11 @@ var doric = (function (exports) {
 	  var index = state.index++;
 	  if (!target || index >= target.length) {
 	    state.target = undefined;
-	    return { value: undefined, done: true };
+	    return createIterResultObject(undefined, true);
 	  }
-	  if (kind == 'keys') { return { value: index, done: false }; }
-	  if (kind == 'values') { return { value: target[index], done: false }; }
-	  return { value: [index, target[index]], done: false };
+	  if (kind == 'keys') { return createIterResultObject(index, false); }
+	  if (kind == 'values') { return createIterResultObject(target[index], false); }
+	  return createIterResultObject([index, target[index]], false);
 	}, 'values');
 
 	// argumentsList[@@iterator] is %ArrayProto_values%
@@ -2799,7 +2831,7 @@ var doric = (function (exports) {
 	  defineProperty$9(values, 'name', { value: 'values' });
 	} catch (error) { /* empty */ } }
 
-	var un$Join = functionUncurryThis([].join);
+	var nativeJoin = functionUncurryThis([].join);
 
 	var ES3_STRINGS = indexedObject != Object;
 	var STRICT_METHOD$5 = arrayMethodIsStrict('join', ',');
@@ -2808,11 +2840,11 @@ var doric = (function (exports) {
 	// https://tc39.es/ecma262/#sec-array.prototype.join
 	_export({ target: 'Array', proto: true, forced: ES3_STRINGS || !STRICT_METHOD$5 }, {
 	  join: function join(separator) {
-	    return un$Join(toIndexedObject(this), separator === undefined ? ',' : separator);
+	    return nativeJoin(toIndexedObject(this), separator === undefined ? ',' : separator);
 	  }
 	});
 
-	/* eslint-disable es-x/no-array-prototype-lastindexof -- safe */
+	/* eslint-disable es/no-array-prototype-lastindexof -- safe */
 
 
 
@@ -2841,7 +2873,7 @@ var doric = (function (exports) {
 
 	// `Array.prototype.lastIndexOf` method
 	// https://tc39.es/ecma262/#sec-array.prototype.lastindexof
-	// eslint-disable-next-line es-x/no-array-prototype-lastindexof -- required for testing
+	// eslint-disable-next-line es/no-array-prototype-lastindexof -- required for testing
 	_export({ target: 'Array', proto: true, forced: arrayLastIndexOf !== [].lastIndexOf }, {
 	  lastIndexOf: arrayLastIndexOf
 	});
@@ -2864,7 +2896,7 @@ var doric = (function (exports) {
 
 	var ISNT_GENERIC = fails(function () {
 	  function F() { /* empty */ }
-	  // eslint-disable-next-line es-x/no-array-of -- safe
+	  // eslint-disable-next-line es/no-array-of -- safe
 	  return !($Array$7.of.call(F) instanceof F);
 	});
 
@@ -2884,6 +2916,30 @@ var doric = (function (exports) {
 	  }
 	});
 
+	var $TypeError$p = TypeError;
+	// eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
+	var getOwnPropertyDescriptor$9 = Object.getOwnPropertyDescriptor;
+
+	// Safari < 13 does not throw an error in this case
+	var SILENT_ON_NON_WRITABLE_LENGTH_SET = descriptors && !function () {
+	  // makes no sense without proper strict mode support
+	  if (this !== undefined) { return true; }
+	  try {
+	    // eslint-disable-next-line es/no-object-defineproperty -- safe
+	    Object.defineProperty([], 'length', { writable: false }).length = 1;
+	  } catch (error) {
+	    return error instanceof TypeError;
+	  }
+	}();
+
+	var arraySetLength = SILENT_ON_NON_WRITABLE_LENGTH_SET ? function (O, length) {
+	  if (isArray(O) && !getOwnPropertyDescriptor$9(O, 'length').writable) {
+	    throw $TypeError$p('Cannot set read only .length');
+	  } return O.length = length;
+	} : function (O, length) {
+	  return O.length = length;
+	};
+
 	var INCORRECT_TO_LENGTH = fails(function () {
 	  return [].push.call({ length: 0x100000000 }, 1) !== 4294967297;
 	});
@@ -2892,7 +2948,7 @@ var doric = (function (exports) {
 	// https://bugs.chromium.org/p/v8/issues/detail?id=12681
 	var SILENT_ON_NON_WRITABLE_LENGTH$1 = !function () {
 	  try {
-	    // eslint-disable-next-line es-x/no-object-defineproperty -- safe
+	    // eslint-disable-next-line es/no-object-defineproperty -- safe
 	    Object.defineProperty([], 'length', { writable: false }).push();
 	  } catch (error) {
 	    return error instanceof TypeError;
@@ -2914,7 +2970,7 @@ var doric = (function (exports) {
 	      O[len] = arguments$1[i];
 	      len++;
 	    }
-	    O.length = len;
+	    arraySetLength(O, len);
 	    return len;
 	  }
 	});
@@ -2996,7 +3052,7 @@ var doric = (function (exports) {
 	  }
 	});
 
-	var un$Reverse = functionUncurryThis([].reverse);
+	var nativeReverse = functionUncurryThis([].reverse);
 	var test$1 = [1, 2];
 
 	// `Array.prototype.reverse` method
@@ -3007,7 +3063,7 @@ var doric = (function (exports) {
 	  reverse: function reverse() {
 	    // eslint-disable-next-line no-self-assign -- dirty hack
 	    if (isArray(this)) { this.length = this.length; }
-	    return un$Reverse(this);
+	    return nativeReverse(this);
 	  }
 	});
 
@@ -3115,7 +3171,7 @@ var doric = (function (exports) {
 	var engineWebkitVersion = !!webkit && +webkit[1];
 
 	var test = [];
-	var un$Sort$1 = functionUncurryThis(test.sort);
+	var nativeSort$1 = functionUncurryThis(test.sort);
 	var push$i = functionUncurryThis(test.push);
 
 	// IE8-
@@ -3183,7 +3239,7 @@ var doric = (function (exports) {
 
 	    var array = toObject(this);
 
-	    if (STABLE_SORT$1) { return comparefn === undefined ? un$Sort$1(array) : un$Sort$1(array, comparefn); }
+	    if (STABLE_SORT$1) { return comparefn === undefined ? nativeSort$1(array) : nativeSort$1(array, comparefn); }
 
 	    var items = [];
 	    var arrayLength = lengthOfArrayLike(array);
@@ -3195,7 +3251,7 @@ var doric = (function (exports) {
 
 	    arraySort(items, getSortCompare$1(comparefn));
 
-	    itemsLength = items.length;
+	    itemsLength = lengthOfArrayLike(items);
 	    index = 0;
 
 	    while (index < itemsLength) { array[index] = items[index++]; }
@@ -3275,7 +3331,7 @@ var doric = (function (exports) {
 	    for (k = 0; k < insertCount; k++) {
 	      O[k + actualStart] = arguments$1[k + 2];
 	    }
-	    O.length = len - actualDeleteCount + insertCount;
+	    arraySetLength(O, len - actualDeleteCount + insertCount);
 	    return A;
 	  }
 	});
@@ -3300,7 +3356,7 @@ var doric = (function (exports) {
 	// V8 ~ Chrome < 71 and Safari <= 15.4, FF < 23 throws InternalError
 	var SILENT_ON_NON_WRITABLE_LENGTH = !function () {
 	  try {
-	    // eslint-disable-next-line es-x/no-object-defineproperty -- safe
+	    // eslint-disable-next-line es/no-object-defineproperty -- safe
 	    Object.defineProperty([], 'length', { writable: false }).unshift();
 	  } catch (error) {
 	    return error instanceof TypeError;
@@ -3328,12 +3384,12 @@ var doric = (function (exports) {
 	      for (var j = 0; j < argCount; j++) {
 	        O[j] = arguments$1[j];
 	      }
-	    } return O.length = len + argCount;
+	    } return arraySetLength(O, len + argCount);
 	  }
 	});
 
-	// eslint-disable-next-line es-x/no-typed-arrays -- safe
-	var arrayBufferNative = typeof ArrayBuffer != 'undefined' && typeof DataView != 'undefined';
+	// eslint-disable-next-line es/no-typed-arrays -- safe
+	var arrayBufferBasicDetection = typeof ArrayBuffer != 'undefined' && typeof DataView != 'undefined';
 
 	var defineBuiltIns = function (target, src, options) {
 	  for (var key in src) { defineBuiltIn(target, key, src[key], options); }
@@ -3483,7 +3539,7 @@ var doric = (function (exports) {
 	var ArrayBufferPrototype = $ArrayBuffer && $ArrayBuffer[PROTOTYPE];
 	var $DataView = global_1[DATA_VIEW];
 	var DataViewPrototype$1 = $DataView && $DataView[PROTOTYPE];
-	var ObjectPrototype$2 = Object.prototype;
+	var ObjectPrototype$3 = Object.prototype;
 	var Array$2 = global_1.Array;
 	var RangeError$3 = global_1.RangeError;
 	var fill = functionUncurryThis(arrayFill);
@@ -3540,7 +3596,7 @@ var doric = (function (exports) {
 	  for (var i = 0; i < count; i++) { bytes[start + i] = pack[isLittleEndian ? i : count - i - 1]; }
 	};
 
-	if (!arrayBufferNative) {
+	if (!arrayBufferBasicDetection) {
 	  $ArrayBuffer = function ArrayBuffer(length) {
 	    anInstance(this, ArrayBufferPrototype);
 	    var byteLength = toIndex(length);
@@ -3645,9 +3701,9 @@ var doric = (function (exports) {
 	    new NativeArrayBuffer$1();
 	    new NativeArrayBuffer$1(1.5);
 	    new NativeArrayBuffer$1(NaN);
-	    return INCORRECT_ARRAY_BUFFER_NAME && !CONFIGURABLE_FUNCTION_NAME;
+	    return NativeArrayBuffer$1.length != 1 || INCORRECT_ARRAY_BUFFER_NAME && !CONFIGURABLE_FUNCTION_NAME;
 	  })) {
-	  /* eslint-enable no-new -- required for testing */
+	    /* eslint-enable no-new -- required for testing */
 	    $ArrayBuffer = function ArrayBuffer(length) {
 	      anInstance(this, ArrayBufferPrototype);
 	      return new NativeArrayBuffer$1(toIndex(length));
@@ -3667,8 +3723,8 @@ var doric = (function (exports) {
 	  }
 
 	  // WebKit bug - the same parent prototype for typed arrays and data view
-	  if (objectSetPrototypeOf && objectGetPrototypeOf(DataViewPrototype$1) !== ObjectPrototype$2) {
-	    objectSetPrototypeOf(DataViewPrototype$1, ObjectPrototype$2);
+	  if (objectSetPrototypeOf && objectGetPrototypeOf(DataViewPrototype$1) !== ObjectPrototype$3) {
+	    objectSetPrototypeOf(DataViewPrototype$1, ObjectPrototype$3);
 	  }
 
 	  // iOS Safari 7.x bug
@@ -3722,14 +3778,14 @@ var doric = (function (exports) {
 	var Uint8ClampedArrayPrototype = Uint8ClampedArray$1 && Uint8ClampedArray$1.prototype;
 	var TypedArray = Int8Array$4 && objectGetPrototypeOf(Int8Array$4);
 	var TypedArrayPrototype$1 = Int8ArrayPrototype$1 && objectGetPrototypeOf(Int8ArrayPrototype$1);
-	var ObjectPrototype$1 = Object.prototype;
+	var ObjectPrototype$2 = Object.prototype;
 	var TypeError$6 = global_1.TypeError;
 
 	var TO_STRING_TAG$5 = wellKnownSymbol('toStringTag');
 	var TYPED_ARRAY_TAG = uid('TYPED_ARRAY_TAG');
 	var TYPED_ARRAY_CONSTRUCTOR = 'TypedArrayConstructor';
 	// Fixing native typed arrays in Opera Presto crashes the browser, see #595
-	var NATIVE_ARRAY_BUFFER_VIEWS$2 = arrayBufferNative && !!objectSetPrototypeOf && classof(global_1.opera) !== 'Opera';
+	var NATIVE_ARRAY_BUFFER_VIEWS$2 = arrayBufferBasicDetection && !!objectSetPrototypeOf && classof(global_1.opera) !== 'Opera';
 	var TYPED_ARRAY_TAG_REQUIRED = false;
 	var NAME$1, Constructor, Prototype;
 
@@ -3850,7 +3906,7 @@ var doric = (function (exports) {
 	  } }
 	}
 
-	if (!NATIVE_ARRAY_BUFFER_VIEWS$2 || !TypedArrayPrototype$1 || TypedArrayPrototype$1 === ObjectPrototype$1) {
+	if (!NATIVE_ARRAY_BUFFER_VIEWS$2 || !TypedArrayPrototype$1 || TypedArrayPrototype$1 === ObjectPrototype$2) {
 	  TypedArrayPrototype$1 = TypedArray.prototype;
 	  if (NATIVE_ARRAY_BUFFER_VIEWS$2) { for (NAME$1 in TypedArrayConstructorsList) {
 	    if (global_1[NAME$1]) { objectSetPrototypeOf(global_1[NAME$1].prototype, TypedArrayPrototype$1); }
@@ -3909,13 +3965,13 @@ var doric = (function (exports) {
 	var speciesConstructor = function (O, defaultConstructor) {
 	  var C = anObject(O).constructor;
 	  var S;
-	  return C === undefined || (S = anObject(C)[SPECIES$2]) == undefined ? defaultConstructor : aConstructor(S);
+	  return C === undefined || isNullOrUndefined(S = anObject(C)[SPECIES$2]) ? defaultConstructor : aConstructor(S);
 	};
 
 	var ArrayBuffer$2 = arrayBuffer.ArrayBuffer;
 	var DataView$1 = arrayBuffer.DataView;
 	var DataViewPrototype = DataView$1.prototype;
-	var un$ArrayBufferSlice = functionUncurryThis(ArrayBuffer$2.prototype.slice);
+	var nativeArrayBufferSlice = functionUncurryThis(ArrayBuffer$2.prototype.slice);
 	var getUint8 = functionUncurryThis(DataViewPrototype.getUint8);
 	var setUint8 = functionUncurryThis(DataViewPrototype.setUint8);
 
@@ -3927,8 +3983,8 @@ var doric = (function (exports) {
 	// https://tc39.es/ecma262/#sec-arraybuffer.prototype.slice
 	_export({ target: 'ArrayBuffer', proto: true, unsafe: true, forced: INCORRECT_SLICE }, {
 	  slice: function slice(start, end) {
-	    if (un$ArrayBufferSlice && end === undefined) {
-	      return un$ArrayBufferSlice(anObject(this), start); // FF fix
+	    if (nativeArrayBufferSlice && end === undefined) {
+	      return nativeArrayBufferSlice(anObject(this), start); // FF fix
 	    }
 	    var length = anObject(this).byteLength;
 	    var first = toAbsoluteIndex(start, length);
@@ -3945,7 +4001,7 @@ var doric = (function (exports) {
 
 	// `DataView` constructor
 	// https://tc39.es/ecma262/#sec-dataview-constructor
-	_export({ global: true, constructor: true, forced: !arrayBufferNative }, {
+	_export({ global: true, constructor: true, forced: !arrayBufferBasicDetection }, {
 	  DataView: arrayBuffer.DataView
 	});
 
@@ -3968,18 +4024,18 @@ var doric = (function (exports) {
 
 
 	var $Date = Date;
-	var getTime$4 = functionUncurryThis($Date.prototype.getTime);
+	var thisTimeValue$4 = functionUncurryThis($Date.prototype.getTime);
 
 	// `Date.now` method
 	// https://tc39.es/ecma262/#sec-date.now
 	_export({ target: 'Date', stat: true }, {
 	  now: function now() {
-	    return getTime$4(new $Date());
+	    return thisTimeValue$4(new $Date());
 	  }
 	});
 
 	var DatePrototype$3 = Date.prototype;
-	var getTime$3 = functionUncurryThis(DatePrototype$3.getTime);
+	var thisTimeValue$3 = functionUncurryThis(DatePrototype$3.getTime);
 	var setFullYear = functionUncurryThis(DatePrototype$3.setFullYear);
 
 	// `Date.prototype.setYear` method
@@ -3987,7 +4043,7 @@ var doric = (function (exports) {
 	_export({ target: 'Date', proto: true }, {
 	  setYear: function setYear(year) {
 	    // validate
-	    getTime$3(this);
+	    thisTimeValue$3(this);
 	    var yi = toIntegerOrInfinity(year);
 	    var yyyy = 0 <= yi && yi <= 99 ? yi + 1900 : yi;
 	    return setFullYear(this, yyyy);
@@ -4052,10 +4108,11 @@ var doric = (function (exports) {
 	var padStart = stringPad.start;
 
 	var $RangeError$a = RangeError;
+	var $isFinite$1 = isFinite;
 	var abs$7 = Math.abs;
 	var DatePrototype$2 = Date.prototype;
-	var n$DateToISOString = DatePrototype$2.toISOString;
-	var getTime$2 = functionUncurryThis(DatePrototype$2.getTime);
+	var nativeDateToISOString = DatePrototype$2.toISOString;
+	var thisTimeValue$2 = functionUncurryThis(DatePrototype$2.getTime);
 	var getUTCDate = functionUncurryThis(DatePrototype$2.getUTCDate);
 	var getUTCFullYear = functionUncurryThis(DatePrototype$2.getUTCFullYear);
 	var getUTCHours = functionUncurryThis(DatePrototype$2.getUTCHours);
@@ -4068,11 +4125,11 @@ var doric = (function (exports) {
 	// https://tc39.es/ecma262/#sec-date.prototype.toisostring
 	// PhantomJS / old WebKit fails here:
 	var dateToIsoString = (fails(function () {
-	  return n$DateToISOString.call(new Date(-5e13 - 1)) != '0385-07-25T07:06:39.999Z';
+	  return nativeDateToISOString.call(new Date(-5e13 - 1)) != '0385-07-25T07:06:39.999Z';
 	}) || !fails(function () {
-	  n$DateToISOString.call(new Date(NaN));
+	  nativeDateToISOString.call(new Date(NaN));
 	})) ? function toISOString() {
-	  if (!isFinite(getTime$2(this))) { throw $RangeError$a('Invalid time value'); }
+	  if (!$isFinite$1(thisTimeValue$2(this))) { throw $RangeError$a('Invalid time value'); }
 	  var date = this;
 	  var year = getUTCFullYear(date);
 	  var milliseconds = getUTCMilliseconds(date);
@@ -4085,7 +4142,7 @@ var doric = (function (exports) {
 	    ':' + padStart(getUTCSeconds(date), 2, 0) +
 	    '.' + padStart(milliseconds, 3, 0) +
 	    'Z';
-	} : n$DateToISOString;
+	} : nativeDateToISOString;
 
 	// `Date.prototype.toISOString` method
 	// https://tc39.es/ecma262/#sec-date.prototype.toisostring
@@ -4137,16 +4194,16 @@ var doric = (function (exports) {
 	var DatePrototype = Date.prototype;
 	var INVALID_DATE = 'Invalid Date';
 	var TO_STRING$1 = 'toString';
-	var un$DateToString = functionUncurryThis(DatePrototype[TO_STRING$1]);
-	var getTime$1 = functionUncurryThis(DatePrototype.getTime);
+	var nativeDateToString = functionUncurryThis(DatePrototype[TO_STRING$1]);
+	var thisTimeValue$1 = functionUncurryThis(DatePrototype.getTime);
 
 	// `Date.prototype.toString` method
 	// https://tc39.es/ecma262/#sec-date.prototype.tostring
 	if (String(new Date(NaN)) != INVALID_DATE) {
 	  defineBuiltIn(DatePrototype, TO_STRING$1, function toString() {
-	    var value = getTime$1(this);
+	    var value = thisTimeValue$1(this);
 	    // eslint-disable-next-line no-self-compare -- NaN check
-	    return value === value ? un$DateToString(this) : INVALID_DATE;
+	    return value === value ? nativeDateToString(this) : INVALID_DATE;
 	  });
 	}
 
@@ -4268,7 +4325,7 @@ var doric = (function (exports) {
 
 	// `globalThis` object
 	// https://tc39.es/ecma262/#sec-globalthis
-	_export({ global: true }, {
+	_export({ global: true, forced: global_1.globalThis !== global_1 }, {
 	  globalThis: global_1
 	});
 
@@ -4282,12 +4339,12 @@ var doric = (function (exports) {
 	var arrayBufferNonExtensible = fails(function () {
 	  if (typeof ArrayBuffer == 'function') {
 	    var buffer = new ArrayBuffer(8);
-	    // eslint-disable-next-line es-x/no-object-isextensible, es-x/no-object-defineproperty -- safe
+	    // eslint-disable-next-line es/no-object-isextensible, es/no-object-defineproperty -- safe
 	    if (Object.isExtensible(buffer)) { Object.defineProperty(buffer, 'a', { value: 8 }); }
 	  }
 	});
 
-	// eslint-disable-next-line es-x/no-object-isextensible -- safe
+	// eslint-disable-next-line es/no-object-isextensible -- safe
 	var $isExtensible = Object.isExtensible;
 	var FAILS_ON_PRIMITIVES$9 = fails(function () { $isExtensible(1); });
 
@@ -4300,7 +4357,7 @@ var doric = (function (exports) {
 	} : $isExtensible;
 
 	var freezing = !fails(function () {
-	  // eslint-disable-next-line es-x/no-object-isextensible, es-x/no-object-preventextensions -- required for testing
+	  // eslint-disable-next-line es/no-object-isextensible, es/no-object-preventextensions -- required for testing
 	  return Object.isExtensible(Object.preventExtensions({}));
 	});
 
@@ -4452,7 +4509,7 @@ var doric = (function (exports) {
 	      Constructor = wrapper(function (dummy, iterable) {
 	        anInstance(dummy, NativePrototype);
 	        var that = inheritIfRequired(new NativeConstructor(), dummy, Constructor);
-	        if (iterable != undefined) { iterate(iterable, that[ADDER], { that: that, AS_ENTRIES: IS_MAP }); }
+	        if (!isNullOrUndefined(iterable)) { iterate(iterable, that[ADDER], { that: that, AS_ENTRIES: IS_MAP }); }
 	        return that;
 	      });
 	      Constructor.prototype = NativePrototype;
@@ -4490,6 +4547,8 @@ var doric = (function (exports) {
 
 
 
+
+
 	var fastKey = internalMetadata.fastKey;
 
 
@@ -4508,7 +4567,7 @@ var doric = (function (exports) {
 	        size: 0
 	      });
 	      if (!descriptors) { that.size = 0; }
-	      if (iterable != undefined) { iterate(iterable, that[ADDER], { that: that, AS_ENTRIES: IS_MAP }); }
+	      if (!isNullOrUndefined(iterable)) { iterate(iterable, that[ADDER], { that: that, AS_ENTRIES: IS_MAP }); }
 	    });
 
 	    var Prototype = Constructor.prototype;
@@ -4652,7 +4711,7 @@ var doric = (function (exports) {
 	    // https://tc39.es/ecma262/#sec-set.prototype.keys
 	    // https://tc39.es/ecma262/#sec-set.prototype.values
 	    // https://tc39.es/ecma262/#sec-set.prototype-@@iterator
-	    defineIterator(Constructor, CONSTRUCTOR_NAME, function (iterated, kind) {
+	    iteratorDefine(Constructor, CONSTRUCTOR_NAME, function (iterated, kind) {
 	      setInternalState$f(this, {
 	        type: ITERATOR_NAME,
 	        target: iterated,
@@ -4670,12 +4729,12 @@ var doric = (function (exports) {
 	      if (!state.target || !(state.last = entry = entry ? entry.next : state.state.first)) {
 	        // or finish the iteration
 	        state.target = undefined;
-	        return { value: undefined, done: true };
+	        return createIterResultObject(undefined, true);
 	      }
 	      // return step by kind
-	      if (kind == 'keys') { return { value: entry.key, done: false }; }
-	      if (kind == 'values') { return { value: entry.value, done: false }; }
-	      return { value: [entry.key, entry.value], done: false };
+	      if (kind == 'keys') { return createIterResultObject(entry.key, false); }
+	      if (kind == 'values') { return createIterResultObject(entry.value, false); }
+	      return createIterResultObject([entry.key, entry.value], false);
 	    }, IS_MAP ? 'entries' : 'values', !IS_MAP, true);
 
 	    // `{ Map, Set }.prototype[@@species]` accessors
@@ -4695,13 +4754,13 @@ var doric = (function (exports) {
 
 	// `Math.log1p` method implementation
 	// https://tc39.es/ecma262/#sec-math.log1p
-	// eslint-disable-next-line es-x/no-math-log1p -- safe
+	// eslint-disable-next-line es/no-math-log1p -- safe
 	var mathLog1p = Math.log1p || function log1p(x) {
 	  var n = +x;
 	  return n > -1e-8 && n < 1e-8 ? n - n * n / 2 : log$8(1 + n);
 	};
 
-	// eslint-disable-next-line es-x/no-math-acosh -- required for testing
+	// eslint-disable-next-line es/no-math-acosh -- required for testing
 	var $acosh = Math.acosh;
 	var log$7 = Math.log;
 	var sqrt$2 = Math.sqrt;
@@ -4724,7 +4783,7 @@ var doric = (function (exports) {
 	  }
 	});
 
-	// eslint-disable-next-line es-x/no-math-asinh -- required for testing
+	// eslint-disable-next-line es/no-math-asinh -- required for testing
 	var $asinh = Math.asinh;
 	var log$6 = Math.log;
 	var sqrt$1 = Math.sqrt;
@@ -4741,7 +4800,7 @@ var doric = (function (exports) {
 	  asinh: asinh
 	});
 
-	// eslint-disable-next-line es-x/no-math-atanh -- required for testing
+	// eslint-disable-next-line es/no-math-atanh -- required for testing
 	var $atanh = Math.atanh;
 	var log$5 = Math.log;
 
@@ -4757,7 +4816,7 @@ var doric = (function (exports) {
 
 	// `Math.sign` method implementation
 	// https://tc39.es/ecma262/#sec-math.sign
-	// eslint-disable-next-line es-x/no-math-sign -- safe
+	// eslint-disable-next-line es/no-math-sign -- safe
 	var mathSign = Math.sign || function sign(x) {
 	  var n = +x;
 	  // eslint-disable-next-line no-self-compare -- NaN check
@@ -4789,7 +4848,7 @@ var doric = (function (exports) {
 	  }
 	});
 
-	// eslint-disable-next-line es-x/no-math-expm1 -- safe
+	// eslint-disable-next-line es/no-math-expm1 -- safe
 	var $expm1 = Math.expm1;
 	var exp$2 = Math.exp;
 
@@ -4805,7 +4864,7 @@ var doric = (function (exports) {
 	  return n == 0 ? n : n > -1e-6 && n < 1e-6 ? n + n * n / 2 : exp$2(n) - 1;
 	} : $expm1;
 
-	// eslint-disable-next-line es-x/no-math-cosh -- required for testing
+	// eslint-disable-next-line es/no-math-cosh -- required for testing
 	var $cosh = Math.cosh;
 	var abs$5 = Math.abs;
 	var E$1 = Math.E;
@@ -4821,7 +4880,7 @@ var doric = (function (exports) {
 
 	// `Math.expm1` method
 	// https://tc39.es/ecma262/#sec-math.expm1
-	// eslint-disable-next-line es-x/no-math-expm1 -- required for testing
+	// eslint-disable-next-line es/no-math-expm1 -- required for testing
 	_export({ target: 'Math', stat: true, forced: mathExpm1 != Math.expm1 }, { expm1: mathExpm1 });
 
 	var abs$4 = Math.abs;
@@ -4837,7 +4896,7 @@ var doric = (function (exports) {
 
 	// `Math.fround` method implementation
 	// https://tc39.es/ecma262/#sec-math.fround
-	// eslint-disable-next-line es-x/no-math-fround -- safe
+	// eslint-disable-next-line es/no-math-fround -- safe
 	var mathFround = Math.fround || function fround(x) {
 	  var n = +x;
 	  var $abs = abs$4(n);
@@ -4855,7 +4914,7 @@ var doric = (function (exports) {
 	// https://tc39.es/ecma262/#sec-math.fround
 	_export({ target: 'Math', stat: true }, { fround: mathFround });
 
-	// eslint-disable-next-line es-x/no-math-hypot -- required for testing
+	// eslint-disable-next-line es/no-math-hypot -- required for testing
 	var $hypot = Math.hypot;
 	var abs$3 = Math.abs;
 	var sqrt = Math.sqrt;
@@ -4891,7 +4950,7 @@ var doric = (function (exports) {
 	  }
 	});
 
-	// eslint-disable-next-line es-x/no-math-imul -- required for testing
+	// eslint-disable-next-line es/no-math-imul -- required for testing
 	var $imul = Math.imul;
 
 	var FORCED$e = fails(function () {
@@ -4915,7 +4974,7 @@ var doric = (function (exports) {
 	var log$3 = Math.log;
 	var LOG10E = Math.LOG10E;
 
-	// eslint-disable-next-line es-x/no-math-log10 -- safe
+	// eslint-disable-next-line es/no-math-log10 -- safe
 	var mathLog10 = Math.log10 || function log10(x) {
 	  return log$3(x) * LOG10E;
 	};
@@ -4952,7 +5011,7 @@ var doric = (function (exports) {
 	var E = Math.E;
 
 	var FORCED$d = fails(function () {
-	  // eslint-disable-next-line es-x/no-math-sinh -- required for testing
+	  // eslint-disable-next-line es/no-math-sinh -- required for testing
 	  return Math.sinh(-2e-17) != -2e-17;
 	});
 
@@ -4991,7 +5050,7 @@ var doric = (function (exports) {
 
 	// `thisNumberValue` abstract operation
 	// https://tc39.es/ecma262/#sec-thisnumbervalue
-	var thisNumberValue = functionUncurryThis(1.0.valueOf);
+	var thisNumberValue$1 = functionUncurryThis(1.0.valueOf);
 
 	// a string of all valid unicode whitespaces
 	var whitespaces$1 = '\u0009\u000A\u000B\u000C\u000D\u0020\u00A0\u1680\u2000\u2001\u2002' +
@@ -5081,7 +5140,7 @@ var doric = (function (exports) {
 	    var n = arguments.length < 1 ? 0 : NativeNumber(toNumeric(value));
 	    var dummy = this;
 	    // check on 1..constructor(foo) case
-	    return objectIsPrototypeOf(NumberPrototype, dummy) && fails(function () { thisNumberValue(dummy); })
+	    return objectIsPrototypeOf(NumberPrototype, dummy) && fails(function () { thisNumberValue$1(dummy); })
 	      ? inheritIfRequired(Object(n), dummy, NumberWrapper) : n;
 	  };
 	  for (var keys$1 = descriptors ? getOwnPropertyNames$2(NativeNumber) : (
@@ -5111,7 +5170,7 @@ var doric = (function (exports) {
 
 	// `Number.isFinite` method
 	// https://tc39.es/ecma262/#sec-number.isfinite
-	// eslint-disable-next-line es-x/no-number-isfinite -- safe
+	// eslint-disable-next-line es/no-number-isfinite -- safe
 	var numberIsFinite = Number.isFinite || function isFinite(it) {
 	  return typeof it == 'number' && globalIsFinite(it);
 	};
@@ -5124,7 +5183,7 @@ var doric = (function (exports) {
 
 	// `IsIntegralNumber` abstract operation
 	// https://tc39.es/ecma262/#sec-isintegralnumber
-	// eslint-disable-next-line es-x/no-number-isinteger -- safe
+	// eslint-disable-next-line es/no-number-isinteger -- safe
 	var isIntegralNumber = Number.isInteger || function isInteger(it) {
 	  return !isObject(it) && isFinite(it) && floor$6(it) === it;
 	};
@@ -5170,24 +5229,24 @@ var doric = (function (exports) {
 
 
 	var charAt$f = functionUncurryThis(''.charAt);
-	var n$ParseFloat = global_1.parseFloat;
+	var $parseFloat = global_1.parseFloat;
 	var Symbol$2 = global_1.Symbol;
 	var ITERATOR$5 = Symbol$2 && Symbol$2.iterator;
-	var FORCED$c = 1 / n$ParseFloat(whitespaces$1 + '-0') !== -Infinity
+	var FORCED$c = 1 / $parseFloat(whitespaces$1 + '-0') !== -Infinity
 	  // MS Edge 18- broken with boxed symbols
-	  || (ITERATOR$5 && !fails(function () { n$ParseFloat(Object(ITERATOR$5)); }));
+	  || (ITERATOR$5 && !fails(function () { $parseFloat(Object(ITERATOR$5)); }));
 
 	// `parseFloat` method
 	// https://tc39.es/ecma262/#sec-parsefloat-string
 	var numberParseFloat = FORCED$c ? function parseFloat(string) {
 	  var trimmedString = trim$1(toString_1(string));
-	  var result = n$ParseFloat(trimmedString);
+	  var result = $parseFloat(trimmedString);
 	  return result === 0 && charAt$f(trimmedString, 0) == '-' ? -0 : result;
-	} : n$ParseFloat;
+	} : $parseFloat;
 
 	// `Number.parseFloat` method
 	// https://tc39.es/ecma262/#sec-number.parseFloat
-	// eslint-disable-next-line es-x/no-number-parsefloat -- required for testing
+	// eslint-disable-next-line es/no-number-parsefloat -- required for testing
 	_export({ target: 'Number', stat: true, forced: Number.parseFloat != numberParseFloat }, {
 	  parseFloat: numberParseFloat
 	});
@@ -5213,7 +5272,7 @@ var doric = (function (exports) {
 
 	// `Number.parseInt` method
 	// https://tc39.es/ecma262/#sec-number.parseint
-	// eslint-disable-next-line es-x/no-number-parseint -- required for testing
+	// eslint-disable-next-line es/no-number-parseint -- required for testing
 	_export({ target: 'Number', stat: true, forced: Number.parseInt != numberParseInt }, {
 	  parseInt: numberParseInt
 	});
@@ -5225,31 +5284,31 @@ var doric = (function (exports) {
 	var floor$5 = Math.floor;
 	var pow$2 = Math.pow;
 	var round = Math.round;
-	var un$ToExponential = functionUncurryThis(1.0.toExponential);
+	var nativeToExponential = functionUncurryThis(1.0.toExponential);
 	var repeat$1 = functionUncurryThis(stringRepeat);
 	var stringSlice$e = functionUncurryThis(''.slice);
 
 	// Edge 17-
-	var ROUNDS_PROPERLY = un$ToExponential(-6.9e-11, 4) === '-6.9000e-11'
+	var ROUNDS_PROPERLY = nativeToExponential(-6.9e-11, 4) === '-6.9000e-11'
 	  // IE11- && Edge 14-
-	  && un$ToExponential(1.255, 2) === '1.25e+0'
+	  && nativeToExponential(1.255, 2) === '1.25e+0'
 	  // FF86-, V8 ~ Chrome 49-50
-	  && un$ToExponential(12345, 3) === '1.235e+4'
+	  && nativeToExponential(12345, 3) === '1.235e+4'
 	  // FF86-, V8 ~ Chrome 49-50
-	  && un$ToExponential(25, 0) === '3e+1';
+	  && nativeToExponential(25, 0) === '3e+1';
 
 	// IE8-
 	var THROWS_ON_INFINITY_FRACTION = fails(function () {
-	  un$ToExponential(1, Infinity);
+	  nativeToExponential(1, Infinity);
 	}) && fails(function () {
-	  un$ToExponential(1, -Infinity);
+	  nativeToExponential(1, -Infinity);
 	});
 
 	// Safari <11 && FF <50
 	var PROPER_NON_FINITE_THIS_CHECK = !fails(function () {
-	  un$ToExponential(Infinity, Infinity);
+	  nativeToExponential(Infinity, Infinity);
 	}) && !fails(function () {
-	  un$ToExponential(NaN, Infinity);
+	  nativeToExponential(NaN, Infinity);
 	});
 
 	var FORCED$a = !ROUNDS_PROPERLY || !THROWS_ON_INFINITY_FRACTION || !PROPER_NON_FINITE_THIS_CHECK;
@@ -5258,13 +5317,13 @@ var doric = (function (exports) {
 	// https://tc39.es/ecma262/#sec-number.prototype.toexponential
 	_export({ target: 'Number', proto: true, forced: FORCED$a }, {
 	  toExponential: function toExponential(fractionDigits) {
-	    var x = thisNumberValue(this);
-	    if (fractionDigits === undefined) { return un$ToExponential(x); }
+	    var x = thisNumberValue$1(this);
+	    if (fractionDigits === undefined) { return nativeToExponential(x); }
 	    var f = toIntegerOrInfinity(fractionDigits);
 	    if (!$isFinite(x)) { return String(x); }
 	    // TODO: ES2018 increased the maximum number of fraction digits to 100, need to improve the implementation
 	    if (f < 0 || f > 20) { throw $RangeError$9('Incorrect fraction digits'); }
-	    if (ROUNDS_PROPERLY) { return un$ToExponential(x, f); }
+	    if (ROUNDS_PROPERLY) { return nativeToExponential(x, f); }
 	    var s = '';
 	    var m = '';
 	    var e = 0;
@@ -5314,7 +5373,7 @@ var doric = (function (exports) {
 	var floor$4 = Math.floor;
 	var repeat = functionUncurryThis(stringRepeat);
 	var stringSlice$d = functionUncurryThis(''.slice);
-	var un$ToFixed = functionUncurryThis(1.0.toFixed);
+	var nativeToFixed = functionUncurryThis(1.0.toFixed);
 
 	var pow$1 = function (x, n, acc) {
 	  return n === 0 ? acc : n % 2 === 1 ? pow$1(x, n - 1, acc * x) : pow$1(x * x, n / 2, acc);
@@ -5365,20 +5424,20 @@ var doric = (function (exports) {
 	};
 
 	var FORCED$9 = fails(function () {
-	  return un$ToFixed(0.00008, 3) !== '0.000' ||
-	    un$ToFixed(0.9, 0) !== '1' ||
-	    un$ToFixed(1.255, 2) !== '1.25' ||
-	    un$ToFixed(1000000000000000128.0, 0) !== '1000000000000000128';
+	  return nativeToFixed(0.00008, 3) !== '0.000' ||
+	    nativeToFixed(0.9, 0) !== '1' ||
+	    nativeToFixed(1.255, 2) !== '1.25' ||
+	    nativeToFixed(1000000000000000128.0, 0) !== '1000000000000000128';
 	}) || !fails(function () {
 	  // V8 ~ Android 4.3-
-	  un$ToFixed({});
+	  nativeToFixed({});
 	});
 
 	// `Number.prototype.toFixed` method
 	// https://tc39.es/ecma262/#sec-number.prototype.tofixed
 	_export({ target: 'Number', proto: true, forced: FORCED$9 }, {
 	  toFixed: function toFixed(fractionDigits) {
-	    var number = thisNumberValue(this);
+	    var number = thisNumberValue$1(this);
 	    var fractDigits = toIntegerOrInfinity(fractionDigits);
 	    var data = [0, 0, 0, 0, 0, 0];
 	    var sign = '';
@@ -5433,14 +5492,14 @@ var doric = (function (exports) {
 	  }
 	});
 
-	var un$ToPrecision = functionUncurryThis(1.0.toPrecision);
+	var nativeToPrecision = functionUncurryThis(1.0.toPrecision);
 
 	var FORCED$8 = fails(function () {
 	  // IE7-
-	  return un$ToPrecision(1, undefined) !== '1';
+	  return nativeToPrecision(1, undefined) !== '1';
 	}) || !fails(function () {
 	  // V8 ~ Android 4.3-
-	  un$ToPrecision({});
+	  nativeToPrecision({});
 	});
 
 	// `Number.prototype.toPrecision` method
@@ -5448,14 +5507,14 @@ var doric = (function (exports) {
 	_export({ target: 'Number', proto: true, forced: FORCED$8 }, {
 	  toPrecision: function toPrecision(precision) {
 	    return precision === undefined
-	      ? un$ToPrecision(thisNumberValue(this))
-	      : un$ToPrecision(thisNumberValue(this), precision);
+	      ? nativeToPrecision(thisNumberValue$1(this))
+	      : nativeToPrecision(thisNumberValue$1(this), precision);
 	  }
 	});
 
-	// eslint-disable-next-line es-x/no-object-assign -- safe
+	// eslint-disable-next-line es/no-object-assign -- safe
 	var $assign = Object.assign;
-	// eslint-disable-next-line es-x/no-object-defineproperty -- required for testing
+	// eslint-disable-next-line es/no-object-defineproperty -- required for testing
 	var defineProperty$3 = Object.defineProperty;
 	var concat$2 = functionUncurryThis([].concat);
 
@@ -5475,7 +5534,7 @@ var doric = (function (exports) {
 	  // should work with symbols and should have deterministic property order (V8 bug)
 	  var A = {};
 	  var B = {};
-	  // eslint-disable-next-line es-x/no-symbol -- safe
+	  // eslint-disable-next-line es/no-symbol -- safe
 	  var symbol = Symbol();
 	  var alphabet = 'abcdefghijklmnopqrst';
 	  A[symbol] = 7;
@@ -5504,7 +5563,7 @@ var doric = (function (exports) {
 
 	// `Object.assign` method
 	// https://tc39.es/ecma262/#sec-object.assign
-	// eslint-disable-next-line es-x/no-object-assign -- required for testing
+	// eslint-disable-next-line es/no-object-assign -- required for testing
 	_export({ target: 'Object', stat: true, arity: 2, forced: Object.assign !== objectAssign }, {
 	  assign: objectAssign
 	});
@@ -5527,7 +5586,7 @@ var doric = (function (exports) {
 	  if (engineWebkitVersion && engineWebkitVersion < 535) { return; }
 	  var key = Math.random();
 	  // In FF throws only define methods
-	  // eslint-disable-next-line no-undef, no-useless-call, es-x/no-legacy-object-prototype-accessor-methods -- required for testing
+	  // eslint-disable-next-line no-undef, no-useless-call, es/no-legacy-object-prototype-accessor-methods -- required for testing
 	  __defineSetter__.call(null, key, function () { /* empty */ });
 	  delete global_1[key];
 	});
@@ -5546,7 +5605,7 @@ var doric = (function (exports) {
 
 	// `Object.defineProperties` method
 	// https://tc39.es/ecma262/#sec-object.defineproperties
-	// eslint-disable-next-line es-x/no-object-defineproperties -- safe
+	// eslint-disable-next-line es/no-object-defineproperties -- safe
 	_export({ target: 'Object', stat: true, forced: Object.defineProperties !== defineProperties$1, sham: !descriptors }, {
 	  defineProperties: defineProperties$1
 	});
@@ -5555,7 +5614,7 @@ var doric = (function (exports) {
 
 	// `Object.defineProperty` method
 	// https://tc39.es/ecma262/#sec-object.defineproperty
-	// eslint-disable-next-line es-x/no-object-defineproperty -- safe
+	// eslint-disable-next-line es/no-object-defineproperty -- safe
 	_export({ target: 'Object', stat: true, forced: Object.defineProperty !== defineProperty$2, sham: !descriptors }, {
 	  defineProperty: defineProperty$2
 	});
@@ -5615,7 +5674,7 @@ var doric = (function (exports) {
 
 	var onFreeze$2 = internalMetadata.onFreeze;
 
-	// eslint-disable-next-line es-x/no-object-freeze -- safe
+	// eslint-disable-next-line es/no-object-freeze -- safe
 	var $freeze = Object.freeze;
 	var FAILS_ON_PRIMITIVES$8 = fails(function () { $freeze(1); });
 
@@ -5673,7 +5732,7 @@ var doric = (function (exports) {
 
 	var getOwnPropertyNames$1 = objectGetOwnPropertyNamesExternal.f;
 
-	// eslint-disable-next-line es-x/no-object-getownpropertynames -- required for testing
+	// eslint-disable-next-line es/no-object-getownpropertynames -- required for testing
 	var FAILS_ON_PRIMITIVES$6 = fails(function () { return !Object.getOwnPropertyNames(1); });
 
 	// `Object.getOwnPropertyNames` method
@@ -5700,7 +5759,7 @@ var doric = (function (exports) {
 
 	// `SameValue` abstract operation
 	// https://tc39.es/ecma262/#sec-samevalue
-	// eslint-disable-next-line es-x/no-object-is -- safe
+	// eslint-disable-next-line es/no-object-is -- safe
 	var sameValue = Object.is || function is(x, y) {
 	  // eslint-disable-next-line no-self-compare -- NaN check
 	  return x === y ? x !== 0 || 1 / x === 1 / y : x != x && y != y;
@@ -5714,12 +5773,12 @@ var doric = (function (exports) {
 
 	// `Object.isExtensible` method
 	// https://tc39.es/ecma262/#sec-object.isextensible
-	// eslint-disable-next-line es-x/no-object-isextensible -- safe
+	// eslint-disable-next-line es/no-object-isextensible -- safe
 	_export({ target: 'Object', stat: true, forced: Object.isExtensible !== objectIsExtensible }, {
 	  isExtensible: objectIsExtensible
 	});
 
-	// eslint-disable-next-line es-x/no-object-isfrozen -- safe
+	// eslint-disable-next-line es/no-object-isfrozen -- safe
 	var $isFrozen = Object.isFrozen;
 	var FAILS_ON_PRIMITIVES$4 = fails(function () { $isFrozen(1); });
 
@@ -5733,7 +5792,7 @@ var doric = (function (exports) {
 	  }
 	});
 
-	// eslint-disable-next-line es-x/no-object-issealed -- safe
+	// eslint-disable-next-line es/no-object-issealed -- safe
 	var $isSealed = Object.isSealed;
 	var FAILS_ON_PRIMITIVES$3 = fails(function () { $isSealed(1); });
 
@@ -5795,7 +5854,7 @@ var doric = (function (exports) {
 
 
 
-	// eslint-disable-next-line es-x/no-object-preventextensions -- safe
+	// eslint-disable-next-line es/no-object-preventextensions -- safe
 	var $preventExtensions = Object.preventExtensions;
 	var FAILS_ON_PRIMITIVES$1 = fails(function () { $preventExtensions(1); });
 
@@ -5807,11 +5866,40 @@ var doric = (function (exports) {
 	  }
 	});
 
+	var defineBuiltInAccessor = function (target, name, descriptor) {
+	  if (descriptor.get) { makeBuiltIn_1(descriptor.get, name, { getter: true }); }
+	  if (descriptor.set) { makeBuiltIn_1(descriptor.set, name, { setter: true }); }
+	  return objectDefineProperty.f(target, name, descriptor);
+	};
+
+	// eslint-disable-next-line es/no-object-getprototypeof -- safe
+	var getPrototypeOf = Object.getPrototypeOf;
+	// eslint-disable-next-line es/no-object-setprototypeof -- safe
+	var setPrototypeOf = Object.setPrototypeOf;
+	var ObjectPrototype$1 = Object.prototype;
+	var PROTO = '__proto__';
+
+	// `Object.prototype.__proto__` accessor
+	// https://tc39.es/ecma262/#sec-object.prototype.__proto__
+	if (descriptors && getPrototypeOf && setPrototypeOf && !(PROTO in ObjectPrototype$1)) { try {
+	  defineBuiltInAccessor(ObjectPrototype$1, PROTO, {
+	    configurable: true,
+	    get: function __proto__() {
+	      return getPrototypeOf(toObject(this));
+	    },
+	    set: function __proto__(proto) {
+	      var O = requireObjectCoercible(this);
+	      if (!isObject(proto) && proto !== null || !isObject(O)) { return; }
+	      setPrototypeOf(O, proto);
+	    }
+	  });
+	} catch (error) { /* empty */ } }
+
 	var onFreeze = internalMetadata.onFreeze;
 
 
 
-	// eslint-disable-next-line es-x/no-object-seal -- safe
+	// eslint-disable-next-line es/no-object-seal -- safe
 	var $seal = Object.seal;
 	var FAILS_ON_PRIMITIVES = fails(function () { $seal(1); });
 
@@ -5882,11 +5970,11 @@ var doric = (function (exports) {
 	var counter = 0;
 	var queue$1 = {};
 	var ONREADYSTATECHANGE = 'onreadystatechange';
-	var location, defer, channel, port;
+	var $location, defer, channel, port;
 
 	try {
 	  // Deno throws a ReferenceError on `location` access without `--location` flag
-	  location = global_1.location;
+	  $location = global_1.location;
 	} catch (error) { /* empty */ }
 
 	var run = function (id) {
@@ -5909,7 +5997,7 @@ var doric = (function (exports) {
 
 	var post = function (id) {
 	  // old engines have not location.origin
-	  global_1.postMessage(String$1(id), location.protocol + '//' + location.host);
+	  global_1.postMessage(String$1(id), $location.protocol + '//' + $location.host);
 	};
 
 	// Node.js 0.9+ & IE10+ has setImmediate, otherwise:
@@ -5950,7 +6038,7 @@ var doric = (function (exports) {
 	    global_1.addEventListener &&
 	    isCallable(global_1.postMessage) &&
 	    !global_1.importScripts &&
-	    location && location.protocol !== 'file:' &&
+	    $location && $location.protocol !== 'file:' &&
 	    !fails(post)
 	  ) {
 	    defer = post;
@@ -6147,10 +6235,12 @@ var doric = (function (exports) {
 	  SUBCLASSING: SUBCLASSING
 	};
 
+	var $TypeError$j = TypeError;
+
 	var PromiseCapability = function (C) {
 	  var resolve, reject;
 	  this.promise = new C(function ($$resolve, $$reject) {
-	    if (resolve !== undefined || reject !== undefined) { throw TypeError('Bad Promise constructor'); }
+	    if (resolve !== undefined || reject !== undefined) { throw $TypeError$j('Bad Promise constructor'); }
 	    resolve = $$resolve;
 	    reject = $$reject;
 	  });
@@ -6665,7 +6755,7 @@ var doric = (function (exports) {
 
 	// MS Edge argumentsList argument is optional
 	var OPTIONAL_ARGUMENTS_LIST = !fails(function () {
-	  // eslint-disable-next-line es-x/no-reflect -- required for testing
+	  // eslint-disable-next-line es/no-reflect -- required for testing
 	  Reflect.apply(function () { /* empty */ });
 	});
 
@@ -6726,7 +6816,7 @@ var doric = (function (exports) {
 
 	// MS Edge has broken Reflect.defineProperty - throwing instead of returning false
 	var ERROR_INSTEAD_OF_FALSE = fails(function () {
-	  // eslint-disable-next-line es-x/no-reflect -- required for testing
+	  // eslint-disable-next-line es/no-reflect -- required for testing
 	  Reflect.defineProperty(objectDefineProperty.f({}, 1, { value: 1 }), 1, { value: 2 });
 	});
 
@@ -6863,7 +6953,7 @@ var doric = (function (exports) {
 	var MS_EDGE_BUG = fails(function () {
 	  var Constructor = function () { /* empty */ };
 	  var object = objectDefineProperty.f(new Constructor(), 'a', { configurable: true });
-	  // eslint-disable-next-line es-x/no-reflect -- required for testing
+	  // eslint-disable-next-line es/no-reflect -- required for testing
 	  return Reflect.set(Constructor.prototype, 'a', 1, object) !== false;
 	});
 
@@ -7155,16 +7245,10 @@ var doric = (function (exports) {
 	// https://tc39.es/ecma262/#sec-get-regexp-@@species
 	setSpecies('RegExp');
 
-	var defineBuiltInAccessor = function (target, name, descriptor) {
-	  if (descriptor.get) { makeBuiltIn_1(descriptor.get, name, { getter: true }); }
-	  if (descriptor.set) { makeBuiltIn_1(descriptor.set, name, { setter: true }); }
-	  return objectDefineProperty.f(target, name, descriptor);
-	};
-
 	var getInternalState$a = internalState.get;
 
 	var RegExpPrototype$5 = RegExp.prototype;
-	var $TypeError$j = TypeError;
+	var $TypeError$i = TypeError;
 
 	// `RegExp.prototype.dotAll` getter
 	// https://tc39.es/ecma262/#sec-get-regexp.prototype.dotall
@@ -7178,7 +7262,7 @@ var doric = (function (exports) {
 	      if (classofRaw(this) === 'RegExp') {
 	        return !!getInternalState$a(this).dotAll;
 	      }
-	      throw $TypeError$j('Incompatible receiver, RegExp required');
+	      throw $TypeError$i('Incompatible receiver, RegExp required');
 	    }
 	  });
 	}
@@ -7326,7 +7410,7 @@ var doric = (function (exports) {
 	  var expected = INDICES_SUPPORT ? 'dgimsy' : 'gimsy';
 
 	  var addGetter = function (key, chr) {
-	    // eslint-disable-next-line es-x/no-object-defineproperty -- safe
+	    // eslint-disable-next-line es/no-object-defineproperty -- safe
 	    Object.defineProperty(O, key, { get: function () {
 	      calls += chr;
 	      return true;
@@ -7345,7 +7429,7 @@ var doric = (function (exports) {
 
 	  for (var key in pairs) { addGetter(key, pairs[key]); }
 
-	  // eslint-disable-next-line es-x/no-object-getownpropertydescriptor -- safe
+	  // eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
 	  var result = Object.getOwnPropertyDescriptor(RegExpPrototype$4, 'flags').get.call(O);
 
 	  return result !== expected || calls !== expected;
@@ -7364,7 +7448,7 @@ var doric = (function (exports) {
 	var getInternalState$8 = internalState.get;
 
 	var RegExpPrototype$3 = RegExp.prototype;
-	var $TypeError$i = TypeError;
+	var $TypeError$h = TypeError;
 
 	// `RegExp.prototype.sticky` getter
 	// https://tc39.es/ecma262/#sec-get-regexp.prototype.sticky
@@ -7378,7 +7462,7 @@ var doric = (function (exports) {
 	      if (classofRaw(this) === 'RegExp') {
 	        return !!getInternalState$8(this).sticky;
 	      }
-	      throw $TypeError$i('Incompatible receiver, RegExp required');
+	      throw $TypeError$h('Incompatible receiver, RegExp required');
 	    }
 	  });
 	}
@@ -7401,20 +7485,20 @@ var doric = (function (exports) {
 	  return re.test('abc') === true && execCalled;
 	}();
 
-	var $TypeError$h = TypeError;
-	var un$Test = functionUncurryThis(/./.test);
+	var nativeTest = /./.test;
 
 	// `RegExp.prototype.test` method
 	// https://tc39.es/ecma262/#sec-regexp.prototype.test
 	_export({ target: 'RegExp', proto: true, forced: !DELEGATES_TO_EXEC }, {
-	  test: function (str) {
-	    var exec = this.exec;
-	    if (!isCallable(exec)) { return un$Test(this, str); }
-	    var result = functionCall(exec, this, str);
-	    if (result !== null && !isObject(result)) {
-	      throw new $TypeError$h('RegExp exec method returned something other than an Object or null');
-	    }
-	    return !!result;
+	  test: function (S) {
+	    var R = anObject(this);
+	    var string = toString_1(S);
+	    var exec = R.exec;
+	    if (!isCallable(exec)) { return functionCall(nativeTest, R, string); }
+	    var result = functionCall(exec, R, string);
+	    if (result === null) { return false; }
+	    anObject(result);
+	    return true;
 	  }
 	});
 
@@ -7427,11 +7511,11 @@ var doric = (function (exports) {
 
 	var TO_STRING = 'toString';
 	var RegExpPrototype$2 = RegExp.prototype;
-	var n$ToString = RegExpPrototype$2[TO_STRING];
+	var nativeToString = RegExpPrototype$2[TO_STRING];
 
-	var NOT_GENERIC = fails(function () { return n$ToString.call({ source: 'a', flags: 'b' }) != '/a/b'; });
+	var NOT_GENERIC = fails(function () { return nativeToString.call({ source: 'a', flags: 'b' }) != '/a/b'; });
 	// FF44- RegExp#toString has a wrong name
-	var INCORRECT_NAME = PROPER_FUNCTION_NAME$1 && n$ToString.name != TO_STRING;
+	var INCORRECT_NAME = PROPER_FUNCTION_NAME$1 && nativeToString.name != TO_STRING;
 
 	// `RegExp.prototype.toString` method
 	// https://tc39.es/ecma262/#sec-regexp.prototype.tostring
@@ -7453,7 +7537,7 @@ var doric = (function (exports) {
 	var charAt$c = functionUncurryThis(''.charAt);
 
 	var FORCED$4 = fails(function () {
-	  // eslint-disable-next-line es-x/no-array-string-prototype-at -- safe
+	  // eslint-disable-next-line es/no-array-string-prototype-at -- safe
 	  return '𠮷'.at(-2) !== '\uD842';
 	});
 
@@ -7541,8 +7625,8 @@ var doric = (function (exports) {
 
 
 
-	// eslint-disable-next-line es-x/no-string-prototype-endswith -- safe
-	var un$EndsWith = functionUncurryThis(''.endsWith);
+	// eslint-disable-next-line es/no-string-prototype-endswith -- safe
+	var nativeEndsWith = functionUncurryThis(''.endsWith);
 	var slice$2 = functionUncurryThis(''.slice);
 	var min$7 = Math.min;
 
@@ -7563,15 +7647,15 @@ var doric = (function (exports) {
 	    var len = that.length;
 	    var end = endPosition === undefined ? len : min$7(toLength(endPosition), len);
 	    var search = toString_1(searchString);
-	    return un$EndsWith
-	      ? un$EndsWith(that, search, end)
+	    return nativeEndsWith
+	      ? nativeEndsWith(that, search, end)
 	      : slice$2(that, end - search.length, end) === search;
 	  }
 	});
 
 	var $RangeError$7 = RangeError;
 	var fromCharCode$3 = String.fromCharCode;
-	// eslint-disable-next-line es-x/no-string-fromcodepoint -- required for testing
+	// eslint-disable-next-line es/no-string-fromcodepoint -- required for testing
 	var $fromCodePoint = String.fromCodePoint;
 	var join$6 = functionUncurryThis([].join);
 
@@ -7618,13 +7702,14 @@ var doric = (function (exports) {
 
 
 
+
 	var STRING_ITERATOR$1 = 'String Iterator';
 	var setInternalState$d = internalState.set;
 	var getInternalState$7 = internalState.getterFor(STRING_ITERATOR$1);
 
 	// `String.prototype[@@iterator]` method
 	// https://tc39.es/ecma262/#sec-string.prototype-@@iterator
-	defineIterator(String, 'String', function (iterated) {
+	iteratorDefine(String, 'String', function (iterated) {
 	  setInternalState$d(this, {
 	    type: STRING_ITERATOR$1,
 	    string: toString_1(iterated),
@@ -7637,10 +7722,10 @@ var doric = (function (exports) {
 	  var string = state.string;
 	  var index = state.index;
 	  var point;
-	  if (index >= string.length) { return { value: undefined, done: true }; }
+	  if (index >= string.length) { return createIterResultObject(undefined, true); }
 	  point = charAt$a(string, index);
 	  state.index += point.length;
-	  return { value: point, done: false };
+	  return createIterResultObject(point, false);
 	});
 
 	// TODO: Remove from `core-js@4` since it's moved to entry points
@@ -7747,7 +7832,7 @@ var doric = (function (exports) {
 	    // https://tc39.es/ecma262/#sec-string.prototype.match
 	    function match(regexp) {
 	      var O = requireObjectCoercible(this);
-	      var matcher = regexp == undefined ? undefined : getMethod(regexp, MATCH);
+	      var matcher = isNullOrUndefined(regexp) ? undefined : getMethod(regexp, MATCH);
 	      return matcher ? functionCall(matcher, regexp, O) : new RegExp(regexp)[MATCH](toString_1(O));
 	    },
 	    // `RegExp.prototype[@@match]` method
@@ -7777,7 +7862,9 @@ var doric = (function (exports) {
 	  ];
 	});
 
-	/* eslint-disable es-x/no-string-prototype-matchall -- safe */
+	/* eslint-disable es/no-string-prototype-matchall -- safe */
+
+
 
 
 
@@ -7807,13 +7894,13 @@ var doric = (function (exports) {
 	var RegExpPrototype = RegExp.prototype;
 	var $TypeError$e = TypeError;
 	var stringIndexOf$2 = functionUncurryThis(''.indexOf);
-	var un$MatchAll = functionUncurryThis(''.matchAll);
+	var nativeMatchAll = functionUncurryThis(''.matchAll);
 
-	var WORKS_WITH_NON_GLOBAL_REGEX = !!un$MatchAll && !fails(function () {
-	  un$MatchAll('a', /./);
+	var WORKS_WITH_NON_GLOBAL_REGEX = !!nativeMatchAll && !fails(function () {
+	  nativeMatchAll('a', /./);
 	});
 
-	var $RegExpStringIterator = createIteratorConstructor(function RegExpStringIterator(regexp, string, $global, fullUnicode) {
+	var $RegExpStringIterator = iteratorCreateConstructor(function RegExpStringIterator(regexp, string, $global, fullUnicode) {
 	  setInternalState$c(this, {
 	    type: REGEXP_STRING_ITERATOR,
 	    regexp: regexp,
@@ -7824,17 +7911,20 @@ var doric = (function (exports) {
 	  });
 	}, REGEXP_STRING, function next() {
 	  var state = getInternalState$6(this);
-	  if (state.done) { return { value: undefined, done: true }; }
+	  if (state.done) { return createIterResultObject(undefined, true); }
 	  var R = state.regexp;
 	  var S = state.string;
 	  var match = regexpExecAbstract(R, S);
-	  if (match === null) { return { value: undefined, done: state.done = true }; }
+	  if (match === null) {
+	    state.done = true;
+	    return createIterResultObject(undefined, true);
+	  }
 	  if (state.global) {
 	    if (toString_1(match[0]) === '') { R.lastIndex = advanceStringIndex(S, toLength(R.lastIndex), state.unicode); }
-	    return { value: match, done: false };
+	    return createIterResultObject(match, false);
 	  }
 	  state.done = true;
-	  return { value: match, done: false };
+	  return createIterResultObject(match, false);
 	});
 
 	var $matchAll = function (string) {
@@ -7856,16 +7946,16 @@ var doric = (function (exports) {
 	  matchAll: function matchAll(regexp) {
 	    var O = requireObjectCoercible(this);
 	    var flags, S, matcher, rx;
-	    if (regexp != null) {
+	    if (!isNullOrUndefined(regexp)) {
 	      if (isRegexp(regexp)) {
 	        flags = toString_1(requireObjectCoercible(regexpGetFlags(regexp)));
 	        if (!~stringIndexOf$2(flags, 'g')) { throw $TypeError$e('`.matchAll` does not allow non-global regexes'); }
 	      }
-	      if (WORKS_WITH_NON_GLOBAL_REGEX) { return un$MatchAll(O, regexp); }
+	      if (WORKS_WITH_NON_GLOBAL_REGEX) { return nativeMatchAll(O, regexp); }
 	      matcher = getMethod(regexp, MATCH_ALL);
 	      if (matcher === undefined && isPure && classofRaw(regexp) == 'RegExp') { matcher = $matchAll; }
 	      if (matcher) { return functionCall(matcher, regexp, O); }
-	    } else if (WORKS_WITH_NON_GLOBAL_REGEX) { return un$MatchAll(O, regexp); }
+	    } else if (WORKS_WITH_NON_GLOBAL_REGEX) { return nativeMatchAll(O, regexp); }
 	    S = toString_1(O);
 	    rx = new RegExp(regexp, 'g');
 	    return rx[MATCH_ALL](S);
@@ -8018,7 +8108,7 @@ var doric = (function (exports) {
 	    // https://tc39.es/ecma262/#sec-string.prototype.replace
 	    function replace(searchValue, replaceValue) {
 	      var O = requireObjectCoercible(this);
-	      var replacer = searchValue == undefined ? undefined : getMethod(searchValue, REPLACE$1);
+	      var replacer = isNullOrUndefined(searchValue) ? undefined : getMethod(searchValue, REPLACE$1);
 	      return replacer
 	        ? functionCall(replacer, searchValue, O, replaceValue)
 	        : functionCall(nativeReplace, toString_1(O), searchValue, replaceValue);
@@ -8112,7 +8202,7 @@ var doric = (function (exports) {
 	    var position = 0;
 	    var endOfLastMatch = 0;
 	    var result = '';
-	    if (searchValue != null) {
+	    if (!isNullOrUndefined(searchValue)) {
 	      IS_REG_EXP = isRegexp(searchValue);
 	      if (IS_REG_EXP) {
 	        flags = toString_1(requireObjectCoercible(regexpGetFlags(searchValue)));
@@ -8152,7 +8242,7 @@ var doric = (function (exports) {
 	    // https://tc39.es/ecma262/#sec-string.prototype.search
 	    function search(regexp) {
 	      var O = requireObjectCoercible(this);
-	      var searcher = regexp == undefined ? undefined : getMethod(regexp, SEARCH);
+	      var searcher = isNullOrUndefined(regexp) ? undefined : getMethod(regexp, SEARCH);
 	      return searcher ? functionCall(searcher, regexp, O) : new RegExp(regexp)[SEARCH](toString_1(O));
 	    },
 	    // `RegExp.prototype[@@search]` method
@@ -8252,7 +8342,7 @@ var doric = (function (exports) {
 	    // https://tc39.es/ecma262/#sec-string.prototype.split
 	    function split(separator, limit) {
 	      var O = requireObjectCoercible(this);
-	      var splitter = separator == undefined ? undefined : getMethod(separator, SPLIT);
+	      var splitter = isNullOrUndefined(separator) ? undefined : getMethod(separator, SPLIT);
 	      return splitter
 	        ? functionCall(splitter, separator, O, limit)
 	        : functionCall(internalSplit, toString_1(O), separator, limit);
@@ -8319,8 +8409,8 @@ var doric = (function (exports) {
 
 
 
-	// eslint-disable-next-line es-x/no-string-prototype-startswith -- safe
-	var un$StartsWith = functionUncurryThis(''.startsWith);
+	// eslint-disable-next-line es/no-string-prototype-startswith -- safe
+	var nativeStartsWith = functionUncurryThis(''.startsWith);
 	var stringSlice$5 = functionUncurryThis(''.slice);
 	var min$4 = Math.min;
 
@@ -8339,8 +8429,8 @@ var doric = (function (exports) {
 	    notARegexp(searchString);
 	    var index = toLength(min$4(arguments.length > 1 ? arguments[1] : undefined, that.length));
 	    var search = toString_1(searchString);
-	    return un$StartsWith
-	      ? un$StartsWith(that, search, index)
+	    return nativeStartsWith
+	      ? nativeStartsWith(that, search, index)
 	      : stringSlice$5(that, index, index + search.length) === search;
 	  }
 	});
@@ -8349,7 +8439,7 @@ var doric = (function (exports) {
 	var max$3 = Math.max;
 	var min$3 = Math.min;
 
-	// eslint-disable-next-line unicorn/prefer-string-slice, es-x/no-string-prototype-substr -- required for testing
+	// eslint-disable-next-line unicorn/prefer-string-slice, es/no-string-prototype-substr -- required for testing
 	var FORCED$3 = !''.substr || 'ab'.substr(-1) !== 'b';
 
 	// `String.prototype.substr` method
@@ -8404,12 +8494,12 @@ var doric = (function (exports) {
 	// https://tc39.es/ecma262/#String.prototype.trimright
 	var stringTrimEnd = stringTrimForced('trimEnd') ? function trimEnd() {
 	  return $trimEnd(this);
-	// eslint-disable-next-line es-x/no-string-prototype-trimstart-trimend -- safe
+	// eslint-disable-next-line es/no-string-prototype-trimstart-trimend -- safe
 	} : ''.trimEnd;
 
 	// `String.prototype.trimRight` method
 	// https://tc39.es/ecma262/#sec-string.prototype.trimend
-	// eslint-disable-next-line es-x/no-string-prototype-trimleft-trimright -- safe
+	// eslint-disable-next-line es/no-string-prototype-trimleft-trimright -- safe
 	_export({ target: 'String', proto: true, name: 'trimEnd', forced: ''.trimRight !== stringTrimEnd }, {
 	  trimRight: stringTrimEnd
 	});
@@ -8421,7 +8511,7 @@ var doric = (function (exports) {
 
 	// `String.prototype.trimEnd` method
 	// https://tc39.es/ecma262/#sec-string.prototype.trimend
-	// eslint-disable-next-line es-x/no-string-prototype-trimstart-trimend -- safe
+	// eslint-disable-next-line es/no-string-prototype-trimstart-trimend -- safe
 	_export({ target: 'String', proto: true, name: 'trimEnd', forced: ''.trimEnd !== stringTrimEnd }, {
 	  trimEnd: stringTrimEnd
 	});
@@ -8434,12 +8524,12 @@ var doric = (function (exports) {
 	// https://tc39.es/ecma262/#String.prototype.trimleft
 	var stringTrimStart = stringTrimForced('trimStart') ? function trimStart() {
 	  return $trimStart(this);
-	// eslint-disable-next-line es-x/no-string-prototype-trimstart-trimend -- safe
+	// eslint-disable-next-line es/no-string-prototype-trimstart-trimend -- safe
 	} : ''.trimStart;
 
 	// `String.prototype.trimLeft` method
 	// https://tc39.es/ecma262/#sec-string.prototype.trimleft
-	// eslint-disable-next-line es-x/no-string-prototype-trimleft-trimright -- safe
+	// eslint-disable-next-line es/no-string-prototype-trimleft-trimright -- safe
 	_export({ target: 'String', proto: true, name: 'trimStart', forced: ''.trimLeft !== stringTrimStart }, {
 	  trimLeft: stringTrimStart
 	});
@@ -8451,7 +8541,7 @@ var doric = (function (exports) {
 
 	// `String.prototype.trimStart` method
 	// https://tc39.es/ecma262/#sec-string.prototype.trimstart
-	// eslint-disable-next-line es-x/no-string-prototype-trimstart-trimend -- safe
+	// eslint-disable-next-line es/no-string-prototype-trimstart-trimend -- safe
 	_export({ target: 'String', proto: true, name: 'trimStart', forced: ''.trimStart !== stringTrimStart }, {
 	  trimStart: stringTrimStart
 	});
@@ -8620,7 +8710,25 @@ var doric = (function (exports) {
 	  return offset;
 	};
 
+	var slice$1 = functionUncurryThis(''.slice);
+
+	var isBigIntArray = function (it) {
+	  return slice$1(classof(it), 0, 3) === 'Big';
+	};
+
+	var $TypeError$c = TypeError;
+
+	// `ToBigInt` abstract operation
+	// https://tc39.es/ecma262/#sec-tobigint
+	var toBigInt = function (argument) {
+	  var prim = toPrimitive(argument, 'number');
+	  if (typeof prim == 'number') { throw $TypeError$c("Can't convert number to bigint"); }
+	  // eslint-disable-next-line es/no-bigint -- safe
+	  return BigInt(prim);
+	};
+
 	var aTypedArrayConstructor$3 = arrayBufferViewCore.aTypedArrayConstructor;
+
 
 	var typedArrayFrom = function from(source /* , mapfn, thisArg */) {
 	  var C = aConstructor(this);
@@ -8629,7 +8737,7 @@ var doric = (function (exports) {
 	  var mapfn = argumentsLength > 1 ? arguments[1] : undefined;
 	  var mapping = mapfn !== undefined;
 	  var iteratorMethod = getIteratorMethod(O);
-	  var i, length, result, step, iterator, next;
+	  var i, length, result, thisIsBigIntArray, value, step, iterator, next;
 	  if (iteratorMethod && !isArrayIteratorMethod(iteratorMethod)) {
 	    iterator = getIterator(O, iteratorMethod);
 	    next = iterator.next;
@@ -8643,8 +8751,11 @@ var doric = (function (exports) {
 	  }
 	  length = lengthOfArrayLike(O);
 	  result = new (aTypedArrayConstructor$3(C))(length);
+	  thisIsBigIntArray = isBigIntArray(result);
 	  for (i = 0; length > i; i++) {
-	    result[i] = mapping ? mapfn(O[i], i) : O[i];
+	    value = mapping ? mapfn(O[i], i) : O[i];
+	    // FF30- typed arrays doesn't properly convert objects to typed array values
+	    result[i] = thisIsBigIntArray ? toBigInt(value) : +value;
 	  }
 	  return result;
 	};
@@ -8999,25 +9110,14 @@ var doric = (function (exports) {
 	  return $every$1(aTypedArray$u(this), callbackfn, arguments.length > 1 ? arguments[1] : undefined);
 	});
 
-	var $TypeError$c = TypeError;
-
-	// `ToBigInt` abstract operation
-	// https://tc39.es/ecma262/#sec-tobigint
-	var toBigInt = function (argument) {
-	  var prim = toPrimitive(argument, 'number');
-	  if (typeof prim == 'number') { throw $TypeError$c("Can't convert number to bigint"); }
-	  // eslint-disable-next-line es-x/no-bigint -- safe
-	  return BigInt(prim);
-	};
-
 	var aTypedArray$t = arrayBufferViewCore.aTypedArray;
 	var exportTypedArrayMethod$u = arrayBufferViewCore.exportTypedArrayMethod;
-	var slice$1 = functionUncurryThis(''.slice);
+	var slice = functionUncurryThis(''.slice);
 
 	// V8 ~ Chrome < 59, Safari < 14.1, FF < 55, Edge <=18
 	var CONVERSION_BUG = fails(function () {
 	  var count = 0;
-	  // eslint-disable-next-line es-x/no-typed-arrays -- safe
+	  // eslint-disable-next-line es/no-typed-arrays -- safe
 	  new Int8Array(2).fill({ valueOf: function () { return count++; } });
 	  return count !== 1;
 	});
@@ -9027,7 +9127,7 @@ var doric = (function (exports) {
 	exportTypedArrayMethod$u('fill', function fill(value /* , start, end */) {
 	  var length = arguments.length;
 	  aTypedArray$t(this);
-	  var actualValue = slice$1(classof(this), 0, 3) === 'Big' ? toBigInt(value) : +value;
+	  var actualValue = slice(classof(this), 0, 3) === 'Big' ? toBigInt(value) : +value;
 	  return functionCall(arrayFill, this, actualValue, length > 1 ? arguments[1] : undefined, length > 2 ? arguments[2] : undefined);
 	}, CONVERSION_BUG);
 
@@ -9288,7 +9388,7 @@ var doric = (function (exports) {
 	var exportTypedArrayMethod$e = arrayBufferViewCore.exportTypedArrayMethod;
 
 	var WORKS_WITH_OBJECTS_AND_GEERIC_ON_TYPED_ARRAYS = !fails(function () {
-	  // eslint-disable-next-line es-x/no-typed-arrays -- required for testing
+	  // eslint-disable-next-line es/no-typed-arrays -- required for testing
 	  var array = new Uint8ClampedArray(2);
 	  functionCall($set, array, { length: 1, 0: 3 }, 1);
 	  return array[1] !== 3;
@@ -9320,7 +9420,7 @@ var doric = (function (exports) {
 	var exportTypedArrayMethod$d = arrayBufferViewCore.exportTypedArrayMethod;
 
 	var FORCED$2 = fails(function () {
-	  // eslint-disable-next-line es-x/no-typed-arrays -- required for testing
+	  // eslint-disable-next-line es/no-typed-arrays -- required for testing
 	  new Int8Array(1).slice();
 	});
 
@@ -9350,16 +9450,16 @@ var doric = (function (exports) {
 	var aTypedArray$a = arrayBufferViewCore.aTypedArray;
 	var exportTypedArrayMethod$b = arrayBufferViewCore.exportTypedArrayMethod;
 	var Uint16Array = global_1.Uint16Array;
-	var un$Sort = Uint16Array && functionUncurryThis(Uint16Array.prototype.sort);
+	var nativeSort = Uint16Array && functionUncurryThis(Uint16Array.prototype.sort);
 
 	// WebKit
-	var ACCEPT_INCORRECT_ARGUMENTS = !!un$Sort && !(fails(function () {
-	  un$Sort(new Uint16Array(2), null);
+	var ACCEPT_INCORRECT_ARGUMENTS = !!nativeSort && !(fails(function () {
+	  nativeSort(new Uint16Array(2), null);
 	}) && fails(function () {
-	  un$Sort(new Uint16Array(2), {});
+	  nativeSort(new Uint16Array(2), {});
 	}));
 
-	var STABLE_SORT = !!un$Sort && !fails(function () {
+	var STABLE_SORT = !!nativeSort && !fails(function () {
 	  // feature detection can be too slow, so check engines versions
 	  if (engineV8Version) { return engineV8Version < 74; }
 	  if (engineFfVersion) { return engineFfVersion < 67; }
@@ -9376,7 +9476,7 @@ var doric = (function (exports) {
 	    expected[index] = index - 2 * mod + 3;
 	  }
 
-	  un$Sort(array, function (a, b) {
+	  nativeSort(array, function (a, b) {
 	    return (a / 4 | 0) - (b / 4 | 0);
 	  });
 
@@ -9401,7 +9501,7 @@ var doric = (function (exports) {
 	// https://tc39.es/ecma262/#sec-%typedarray%.prototype.sort
 	exportTypedArrayMethod$b('sort', function sort(comparefn) {
 	  if (comparefn !== undefined) { aCallable(comparefn); }
-	  if (STABLE_SORT) { return un$Sort(this, comparefn); }
+	  if (STABLE_SORT) { return nativeSort(this, comparefn); }
 
 	  return arraySort(aTypedArray$a(this), getSortCompare(comparefn));
 	}, !STABLE_SORT || ACCEPT_INCORRECT_ARGUMENTS);
@@ -9521,6 +9621,7 @@ var doric = (function (exports) {
 
 
 
+
 	var setInternalState$b = internalState.set;
 	var internalStateGetterFor = internalState.getterFor;
 	var find$1 = arrayIteration.find;
@@ -9574,7 +9675,7 @@ var doric = (function (exports) {
 	        id: id++,
 	        frozen: undefined
 	      });
-	      if (iterable != undefined) { iterate(iterable, that[ADDER], { that: that, AS_ENTRIES: IS_MAP }); }
+	      if (!isNullOrUndefined(iterable)) { iterate(iterable, that[ADDER], { that: that, AS_ENTRIES: IS_MAP }); }
 	    });
 
 	    var Prototype = Constructor.prototype;
@@ -9659,7 +9760,7 @@ var doric = (function (exports) {
 	// IE11 WeakMap frozen keys fix
 	// We can't use feature detection because it crash some old IE builds
 	// https://github.com/zloirock/core-js/issues/485
-	if (nativeWeakMap && IS_IE11) {
+	if (weakMapBasicDetection && IS_IE11) {
 	  InternalWeakMap = collectionWeak.getConstructor(wrapper, 'WeakMap', true);
 	  internalMetadata.enable();
 	  var WeakMapPrototype = $WeakMap.prototype;
@@ -9743,7 +9844,7 @@ var doric = (function (exports) {
 	var asyncFromSyncIteratorContinuation = function (result, resolve, reject) {
 	  var done = result.done;
 	  Promise$3.resolve(result.value).then(function (value) {
-	    resolve({ done: done, value: value });
+	    resolve(createIterResultObject(value, done));
 	  }, reject);
 	};
 
@@ -9767,7 +9868,7 @@ var doric = (function (exports) {
 	    var iterator = getInternalState$5(this).iterator;
 	    return new Promise$3(function (resolve, reject) {
 	      var $return = getMethod(iterator, 'return');
-	      if ($return === undefined) { return resolve({ done: true, value: undefined }); }
+	      if ($return === undefined) { return resolve(createIterResultObject(undefined, true)); }
 	      var result = anObject(functionCall($return, iterator));
 	      asyncFromSyncIteratorContinuation(result, resolve, reject);
 	    });
@@ -10039,6 +10140,7 @@ var doric = (function (exports) {
 
 
 
+
 	// `Array.prototype.groupByToMap` method
 	// https://github.com/tc39/proposal-array-grouping
 	// https://bugs.webkit.org/show_bug.cgi?id=236541
@@ -10050,13 +10152,13 @@ var doric = (function (exports) {
 
 	// `Array.prototype.groupToMap` method
 	// https://github.com/tc39/proposal-array-grouping
-	_export({ target: 'Array', proto: true }, {
+	_export({ target: 'Array', proto: true, forced: isPure }, {
 	  groupToMap: arrayGroupToMap
 	});
 
 	addToUnscopables('groupToMap');
 
-	// eslint-disable-next-line es-x/no-object-isfrozen -- safe
+	// eslint-disable-next-line es/no-object-isfrozen -- safe
 	var isFrozen = Object.isFrozen;
 
 	var isFrozenStringArray = function (array, allowUndefined) {
@@ -10066,7 +10168,7 @@ var doric = (function (exports) {
 	  var element;
 	  while (index < length) {
 	    element = array[index++];
-	    if (!(typeof element == 'string' || (allowUndefined && typeof element == 'undefined'))) {
+	    if (!(typeof element == 'string' || (allowUndefined && element === undefined))) {
 	      return false;
 	    }
 	  } return length !== 0;
@@ -10221,7 +10323,7 @@ var doric = (function (exports) {
 	  var length = lengthOfArrayLike(that);
 	  var result = arraySpeciesCreate(that, 0);
 	  var map = new Map$4();
-	  var resolverFunction = resolver != null ? aCallable(resolver) : function (value) {
+	  var resolverFunction = !isNullOrUndefined(resolver) ? aCallable(resolver) : function (value) {
 	    return value;
 	  };
 	  var index, item, key;
@@ -10321,7 +10423,7 @@ var doric = (function (exports) {
 	    var state = stateCompletion.value;
 
 	    if (stateError || (IS_GENERATOR && state.done)) {
-	      return { exit: true, value: stateError ? Promise$2.reject(state) : Promise$2.resolve({ done: true, value: undefined }) };
+	      return { exit: true, value: stateError ? Promise$2.reject(state) : Promise$2.resolve(createIterResultObject(undefined, true)) };
 	    } return { exit: false, value: state };
 	  };
 
@@ -10362,21 +10464,29 @@ var doric = (function (exports) {
 	      var state = stateCompletion.value;
 
 	      return exit ? state : enqueue(state, function () {
-	        return new Promise$2(function (resolve, reject) {
-	          var iterator = state.iterator;
-	          var innerIterator = state.innerIterator;
-	          state.done = true;
+	        state.done = true;
+	        var iterator = state.iterator;
+	        var innerIterator = state.innerIterator;
+	        var returnMethod, result;
+	        var completion = perform(function () {
 	          if (innerIterator) { try {
 	            iteratorClose(innerIterator, 'return');
 	          } catch (error) {
 	            return iteratorClose(iterator, 'throw', error);
 	          } }
-	          var $$return = getMethod(iterator, 'return');
-	          if ($$return === undefined) { return resolve({ done: true, value: undefined }); }
-	          Promise$2.resolve(functionCall($$return, iterator)).then(function (result) {
-	            anObject(result);
-	            resolve({ done: true, value: undefined });
-	          }, reject);
+	          return getMethod(iterator, 'return');
+	        });
+	        returnMethod = result = completion.value;
+	        if (completion.error) { return Promise$2.reject(result); }
+	        if (returnMethod === undefined) { return Promise$2.resolve(createIterResultObject(undefined, true)); }
+	        completion = perform(function () {
+	          return functionCall(returnMethod, iterator);
+	        });
+	        result = completion.value;
+	        if (completion.error) { return Promise$2.reject(result); }
+	        return IS_ITERATOR ? Promise$2.resolve(result) : Promise$2.resolve(result).then(function (resolved) {
+	          anObject(resolved);
+	          return createIterResultObject(undefined, true);
 	        });
 	      });
 	    }
@@ -10418,6 +10528,7 @@ var doric = (function (exports) {
 
 
 
+
 	var AsyncIteratorProxy$5 = asyncIteratorCreateProxy(function (Promise) {
 	  var state = this;
 	  var iterator = state.iterator;
@@ -10425,9 +10536,9 @@ var doric = (function (exports) {
 	  return Promise.resolve(anObject(functionCall(state.next, iterator))).then(function (step) {
 	    if (anObject(step).done) {
 	      state.done = true;
-	      return { done: true, value: undefined };
+	      return createIterResultObject(undefined, true);
 	    }
-	    return { done: false, value: [state.index++, step.value] };
+	    return createIterResultObject([state.index++, step.value], false);
 	  }).then(null, function (error) {
 	    state.done = true;
 	    throw error;
@@ -10466,6 +10577,7 @@ var doric = (function (exports) {
 
 
 
+
 	var AsyncIteratorProxy$4 = asyncIteratorCreateProxy(function (Promise) {
 	  var state = this;
 
@@ -10481,11 +10593,11 @@ var doric = (function (exports) {
 	          try {
 	            if (anObject(step).done) {
 	              state.done = true;
-	              resolve({ done: true, value: undefined });
+	              resolve(createIterResultObject(undefined, true));
 	            } else if (state.remaining) {
 	              state.remaining--;
 	              loop();
-	            } else { resolve({ done: false, value: step.value }); }
+	            } else { resolve(createIterResultObject(step.value, false)); }
 	          } catch (err) { doneAndReject(err); }
 	        }, doneAndReject);
 	      } catch (error) { doneAndReject(error); }
@@ -10522,6 +10634,7 @@ var doric = (function (exports) {
 
 
 
+
 	var AsyncIteratorProxy$3 = asyncIteratorCreateProxy(function (Promise) {
 	  var state = this;
 	  var iterator = state.iterator;
@@ -10543,12 +10656,12 @@ var doric = (function (exports) {
 	          try {
 	            if (anObject(step).done) {
 	              state.done = true;
-	              resolve({ done: true, value: undefined });
+	              resolve(createIterResultObject(undefined, true));
 	            } else {
 	              var value = step.value;
 	              try {
 	                Promise.resolve(filterer(value)).then(function (selected) {
-	                  selected ? resolve({ done: false, value: value }) : loop();
+	                  selected ? resolve(createIterResultObject(value, false)) : loop();
 	                }, ifAbruptCloseAsyncIterator);
 	              } catch (error3) { ifAbruptCloseAsyncIterator(error3); }
 	            }
@@ -10589,6 +10702,7 @@ var doric = (function (exports) {
 
 
 
+
 	var AsyncIteratorProxy$2 = asyncIteratorCreateProxy(function (Promise) {
 	  var state = this;
 	  var iterator = state.iterator;
@@ -10611,7 +10725,7 @@ var doric = (function (exports) {
 	          try {
 	            if (anObject(step).done) {
 	              state.done = true;
-	              resolve({ done: true, value: undefined });
+	              resolve(createIterResultObject(undefined, true));
 	            } else {
 	              var value = step.value;
 	              try {
@@ -10637,7 +10751,7 @@ var doric = (function (exports) {
 	              if (anObject(result).done) {
 	                state.innerIterator = state.innerNext = null;
 	                outerLoop();
-	              } else { resolve({ done: false, value: result.value }); }
+	              } else { resolve(createIterResultObject(result.value, false)); }
 	            } catch (error1) { ifAbruptCloseAsyncIterator(error1); }
 	          }, ifAbruptCloseAsyncIterator);
 	        } catch (error) { ifAbruptCloseAsyncIterator(error); }
@@ -10722,6 +10836,7 @@ var doric = (function (exports) {
 
 
 
+
 	var AsyncIteratorProxy$1 = asyncIteratorCreateProxy(function (Promise) {
 	  var state = this;
 	  var iterator = state.iterator;
@@ -10741,12 +10856,12 @@ var doric = (function (exports) {
 	      try {
 	        if (anObject(step).done) {
 	          state.done = true;
-	          resolve({ done: true, value: undefined });
+	          resolve(createIterResultObject(undefined, true));
 	        } else {
 	          var value = step.value;
 	          try {
 	            Promise.resolve(mapper(value)).then(function (mapped) {
-	              resolve({ done: false, value: mapped });
+	              resolve(createIterResultObject(mapped, false));
 	            }, ifAbruptCloseAsyncIterator);
 	          } catch (error2) { ifAbruptCloseAsyncIterator(error2); }
 	        }
@@ -10837,13 +10952,14 @@ var doric = (function (exports) {
 
 
 
+
 	var AsyncIteratorProxy = asyncIteratorCreateProxy(function (Promise) {
 	  var state = this;
 	  var iterator = state.iterator;
 	  var returnMethod;
 
 	  if (!state.remaining--) {
-	    var resultDone = { done: true, value: undefined };
+	    var resultDone = createIterResultObject(undefined, true);
 	    state.done = true;
 	    returnMethod = iterator['return'];
 	    if (returnMethod !== undefined) {
@@ -10855,8 +10971,8 @@ var doric = (function (exports) {
 	  } return Promise.resolve(functionCall(state.next, iterator)).then(function (step) {
 	    if (anObject(step).done) {
 	      state.done = true;
-	      return { done: true, value: undefined };
-	    } return { done: false, value: step.value };
+	      return createIterResultObject(undefined, true);
+	    } return createIterResultObject(step.value, false);
 	  }).then(null, function (error) {
 	    state.done = true;
 	    throw error;
@@ -10893,12 +11009,12 @@ var doric = (function (exports) {
 	var $RangeError$2 = RangeError;
 	var $TypeError$a = TypeError;
 
-	var $RangeIterator = createIteratorConstructor(function NumericRangeIterator(start, end, option, type, zero, one) {
+	var $RangeIterator = iteratorCreateConstructor(function NumericRangeIterator(start, end, option, type, zero, one) {
 	  if (typeof start != type || (end !== Infinity && end !== -Infinity && typeof end != type)) {
-	    throw new $TypeError$a(INCORRECT_RANGE);
+	    throw $TypeError$a(INCORRECT_RANGE);
 	  }
 	  if (start === Infinity || start === -Infinity) {
-	    throw new $RangeError$2(INCORRECT_RANGE);
+	    throw $RangeError$2(INCORRECT_RANGE);
 	  }
 	  var ifIncrease = end > start;
 	  var inclusiveEnd = false;
@@ -10911,16 +11027,16 @@ var doric = (function (exports) {
 	  } else if (typeof option == type) {
 	    step = option;
 	  } else {
-	    throw new $TypeError$a(INCORRECT_RANGE);
+	    throw $TypeError$a(INCORRECT_RANGE);
 	  }
-	  if (step == null) {
+	  if (isNullOrUndefined(step)) {
 	    step = ifIncrease ? one : -one;
 	  }
 	  if (typeof step != type) {
-	    throw new $TypeError$a(INCORRECT_RANGE);
+	    throw $TypeError$a(INCORRECT_RANGE);
 	  }
 	  if (step === Infinity || step === -Infinity || (step === zero && start !== end)) {
-	    throw new $RangeError$2(INCORRECT_RANGE);
+	    throw $RangeError$2(INCORRECT_RANGE);
 	  }
 	  // eslint-disable-next-line no-self-compare -- NaN check
 	  var hitsEnd = start != start || end != end || step != step || (end > start) !== (step > zero);
@@ -10942,7 +11058,7 @@ var doric = (function (exports) {
 	  }
 	}, NUMERIC_RANGE_ITERATOR, function next() {
 	  var state = getInternalState$4(this);
-	  if (state.hitsEnd) { return { value: undefined, done: true }; }
+	  if (state.hitsEnd) { return createIterResultObject(undefined, true); }
 	  var start = state.start;
 	  var end = state.end;
 	  var step = state.step;
@@ -10956,8 +11072,9 @@ var doric = (function (exports) {
 	    endCondition = inclusiveEnd ? end > currentYieldingValue : end >= currentYieldingValue;
 	  }
 	  if (endCondition) {
-	    return { value: undefined, done: state.hitsEnd = true };
-	  } return { value: currentYieldingValue, done: false };
+	    state.hitsEnd = true;
+	    return createIterResultObject(undefined, true);
+	  } return createIterResultObject(currentYieldingValue, false);
 	});
 
 	var getter = function (fn) {
@@ -10983,7 +11100,7 @@ var doric = (function (exports) {
 
 	var numericRangeIterator = $RangeIterator;
 
-	/* eslint-disable es-x/no-bigint -- safe */
+	/* eslint-disable es/no-bigint -- safe */
 
 
 
@@ -11071,7 +11188,7 @@ var doric = (function (exports) {
 	  }
 	});
 
-	// eslint-disable-next-line es-x/no-object-getownpropertydescriptor -- safe
+	// eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
 	var getOwnPropertyDescriptor$1 = Object.getOwnPropertyDescriptor;
 	var classRegExp = /^\s*class\b/;
 	var exec$4 = functionUncurryThis(classRegExp.exec);
@@ -11151,6 +11268,7 @@ var doric = (function (exports) {
 	var IteratorPrototype$1 = iteratorsCore.IteratorPrototype;
 
 
+
 	var ITERATOR_HELPER = 'IteratorHelper';
 	var WRAP_FOR_VALID_ITERATOR = 'WrapForValidIterator';
 	var setInternalState$7 = internalState.set;
@@ -11171,7 +11289,7 @@ var doric = (function (exports) {
 	      if (IS_ITERATOR) { return state.nextHandler(); }
 	      try {
 	        var result = state.done ? undefined : state.nextHandler();
-	        return { done: state.done, value: result };
+	        return createIterResultObject(result, state.done);
 	      } catch (error) {
 	        state.done = true;
 	        throw error;
@@ -11180,15 +11298,19 @@ var doric = (function (exports) {
 	    'return': function () {
 	      var state = getInternalState(this);
 	      var iterator = state.iterator;
-	      var innerIterator = state.innerIterator;
 	      state.done = true;
+	      if (IS_ITERATOR) {
+	        var returnMethod = getMethod(iterator, 'return');
+	        return returnMethod ? functionCall(returnMethod, iterator) : createIterResultObject(undefined, true);
+	      }
+	      var innerIterator = state.innerIterator;
 	      if (innerIterator) { try {
 	        iteratorClose(innerIterator, 'return');
 	      } catch (error) {
 	        return iteratorClose(iterator, 'throw', error);
 	      } }
-	      var $$return = getMethod(iterator, 'return');
-	      return { done: true, value: $$return ? anObject(functionCall($$return, iterator)).value : undefined };
+	      iteratorClose(iterator, 'return');
+	      return createIterResultObject(undefined, true);
 	    }
 	  });
 
@@ -11614,7 +11736,7 @@ var doric = (function (exports) {
 	});
 
 	var getMapIterator = function (it) {
-	  // eslint-disable-next-line es-x/no-map -- safe
+	  // eslint-disable-next-line es/no-map -- safe
 	  return functionCall(Map.prototype.entries, it);
 	};
 
@@ -11680,6 +11802,7 @@ var doric = (function (exports) {
 
 
 
+
 	var push$8 = [].push;
 
 	var collectionFrom = function from(source /* , mapFn, thisArg */) {
@@ -11689,7 +11812,7 @@ var doric = (function (exports) {
 	  aConstructor(this);
 	  mapping = mapFn !== undefined;
 	  if (mapping) { aCallable(mapFn); }
-	  if (source == undefined) { return new this(); }
+	  if (isNullOrUndefined(source)) { return new this(); }
 	  array = [];
 	  if (mapping) {
 	    n = 0;
@@ -12056,7 +12179,7 @@ var doric = (function (exports) {
 	var getInternalState$3 = internalState.getterFor(SEEDED_RANDOM_GENERATOR);
 	var $TypeError$3 = TypeError;
 
-	var $SeededRandomGenerator = createIteratorConstructor(function SeededRandomGenerator(seed) {
+	var $SeededRandomGenerator = iteratorCreateConstructor(function SeededRandomGenerator(seed) {
 	  setInternalState$6(this, {
 	    type: SEEDED_RANDOM_GENERATOR,
 	    seed: seed % 2147483647
@@ -12064,7 +12187,7 @@ var doric = (function (exports) {
 	}, SEEDED_RANDOM, function next() {
 	  var state = getInternalState$3(this);
 	  var seed = state.seed = (state.seed * 1103515245 + 12345) % 2147483647;
-	  return { value: (seed & 1073741823) / 1073741823, done: false };
+	  return createIterResultObject((seed & 1073741823) / 1073741823, false);
 	});
 
 	// `Math.seededPRNG` method
@@ -12150,7 +12273,7 @@ var doric = (function (exports) {
 	var setInternalState$5 = internalState.set;
 	var getInternalState$2 = internalState.getterFor(OBJECT_ITERATOR);
 
-	var objectIterator = createIteratorConstructor(function ObjectIterator(source, mode) {
+	var objectIterator = iteratorCreateConstructor(function ObjectIterator(source, mode) {
 	  var object = toObject(source);
 	  setInternalState$5(this, {
 	    type: OBJECT_ITERATOR,
@@ -12165,15 +12288,15 @@ var doric = (function (exports) {
 	  while (true) {
 	    if (keys === null || state.index >= keys.length) {
 	      state.object = state.keys = null;
-	      return { value: undefined, done: true };
+	      return createIterResultObject(undefined, true);
 	    }
 	    var key = keys[state.index++];
 	    var object = state.object;
 	    if (!hasOwnProperty_1(object, key)) { continue; }
 	    switch (state.mode) {
-	      case 'keys': return { value: key, done: false };
-	      case 'values': return { value: object[key], done: false };
-	    } /* entries */ return { value: [key, object[key]], done: false };
+	      case 'keys': return createIterResultObject(key, false);
+	      case 'values': return createIterResultObject(object[key], false);
+	    } /* entries */ return createIterResultObject([key, object[key]], false);
 	  }
 	});
 
@@ -12224,6 +12347,7 @@ var doric = (function (exports) {
 	  || !isCallable(NativeObservablePrototype[$$OBSERVABLE$2]);
 
 	// https://github.com/tc39/proposal-observable
+
 
 
 
@@ -12298,7 +12422,7 @@ var doric = (function (exports) {
 	  try {
 	    var cleanup = subscriber(subscriptionObserver);
 	    var subscription = cleanup;
-	    if (cleanup != null) { subscriptionState.cleanup = isCallable(cleanup.unsubscribe)
+	    if (!isNullOrUndefined(cleanup)) { subscriptionState.cleanup = isCallable(cleanup.unsubscribe)
 	      ? function () { subscription.unsubscribe(); }
 	      : aCallable(cleanup); }
 	  } catch (error$1) {
@@ -12754,7 +12878,7 @@ var doric = (function (exports) {
 	});
 
 	var getSetIterator = function (it) {
-	  // eslint-disable-next-line es-x/no-set -- safe
+	  // eslint-disable-next-line es/no-set -- safe
 	  return functionCall(Set.prototype.values, it);
 	};
 
@@ -13015,7 +13139,7 @@ var doric = (function (exports) {
 	var getInternalState$1 = internalState.getterFor(STRING_ITERATOR);
 
 	// TODO: unify with String#@@iterator
-	var $StringIterator = createIteratorConstructor(function StringIterator(string) {
+	var $StringIterator = iteratorCreateConstructor(function StringIterator(string) {
 	  setInternalState$3(this, {
 	    type: STRING_ITERATOR,
 	    string: string,
@@ -13026,10 +13150,10 @@ var doric = (function (exports) {
 	  var string = state.string;
 	  var index = state.index;
 	  var point;
-	  if (index >= string.length) { return { value: undefined, done: true }; }
+	  if (index >= string.length) { return createIterResultObject(undefined, true); }
 	  point = charAt$4(string, index);
 	  state.index += point.length;
-	  return { value: { codePoint: codeAt$1(point, 0), position: index }, done: false };
+	  return createIterResultObject({ codePoint: codeAt$1(point, 0), position: index }, false);
 	});
 
 	// `String.prototype.codePoints` method
@@ -13042,42 +13166,42 @@ var doric = (function (exports) {
 
 	// `Symbol.asyncDispose` well-known symbol
 	// https://github.com/tc39/proposal-using-statement
-	defineWellKnownSymbol('asyncDispose');
+	wellKnownSymbolDefine('asyncDispose');
 
 	// `Symbol.dispose` well-known symbol
 	// https://github.com/tc39/proposal-using-statement
-	defineWellKnownSymbol('dispose');
+	wellKnownSymbolDefine('dispose');
 
 	// `Symbol.matcher` well-known symbol
 	// https://github.com/tc39/proposal-pattern-matching
-	defineWellKnownSymbol('matcher');
+	wellKnownSymbolDefine('matcher');
 
 	// TODO: Remove from `core-js@4`
 
 
 	// `Symbol.metadata` well-known symbol
 	// https://github.com/tc39/proposal-decorators
-	defineWellKnownSymbol('metadata');
+	wellKnownSymbolDefine('metadata');
 
 	// `Symbol.metadataKey` well-known symbol
 	// https://github.com/tc39/proposal-decorator-metadata
-	defineWellKnownSymbol('metadataKey');
+	wellKnownSymbolDefine('metadataKey');
 
 	// `Symbol.observable` well-known symbol
 	// https://github.com/tc39/proposal-observable
-	defineWellKnownSymbol('observable');
+	wellKnownSymbolDefine('observable');
 
 	// TODO: remove from `core-js@4`
 
 
 	// `Symbol.patternMatch` well-known symbol
 	// https://github.com/tc39/proposal-pattern-matching
-	defineWellKnownSymbol('patternMatch');
+	wellKnownSymbolDefine('patternMatch');
 
 	// TODO: remove from `core-js@4`
 
 
-	defineWellKnownSymbol('replaceAll');
+	wellKnownSymbolDefine('replaceAll');
 
 	// TODO: Remove from `core-js@4`
 
@@ -13178,6 +13302,8 @@ var doric = (function (exports) {
 
 
 
+
+
 	var aTypedArray$2 = arrayBufferViewCore.aTypedArray;
 	var getTypedArrayConstructor$1 = arrayBufferViewCore.getTypedArrayConstructor;
 	var exportTypedArrayMethod$2 = arrayBufferViewCore.exportTypedArrayMethod;
@@ -13186,7 +13312,7 @@ var doric = (function (exports) {
 
 	// some early implementations, like WebKit, does not follow the final semantic
 	var PROPER_ORDER$1 = !fails(function () {
-	  // eslint-disable-next-line es-x/no-typed-arrays -- required for testing
+	  // eslint-disable-next-line es/no-typed-arrays -- required for testing
 	  var array = new Int8Array([1]);
 
 	  var spliced = array.toSpliced(1, 0, {
@@ -13210,7 +13336,7 @@ var doric = (function (exports) {
 	  var actualStart = toAbsoluteIndex(start, len);
 	  var argumentsLength = arguments.length;
 	  var k = 0;
-	  var insertCount, actualDeleteCount, convertedItems, newLen, A;
+	  var insertCount, actualDeleteCount, thisIsBigIntArray, convertedItems, value, newLen, A;
 	  if (argumentsLength === 0) {
 	    insertCount = actualDeleteCount = 0;
 	  } else if (argumentsLength === 1) {
@@ -13221,8 +13347,11 @@ var doric = (function (exports) {
 	    insertCount = argumentsLength - 2;
 	    if (insertCount) {
 	      convertedItems = new C(insertCount);
+	      thisIsBigIntArray = isBigIntArray(convertedItems);
 	      for (var i = 2; i < argumentsLength; i++) {
-	        convertedItems[i - 2] = arguments$1[i];
+	        value = arguments$1[i];
+	        // FF30- typed arrays doesn't properly convert objects to typed array values
+	        convertedItems[i - 2] = thisIsBigIntArray ? toBigInt(value) : +value;
 	      }
 	    }
 	  }
@@ -13246,19 +13375,13 @@ var doric = (function (exports) {
 	  return typedArrayFromSpeciesAndList(this, arrayUniqueBy(aTypedArray$1(this), resolver));
 	}, true);
 
-	var slice = functionUncurryThis(''.slice);
-
-	var isBigIntArray = function (it) {
-	  return slice(classof(it), 0, 3) === 'Big';
-	};
-
 	var aTypedArray = arrayBufferViewCore.aTypedArray;
 	var getTypedArrayConstructor = arrayBufferViewCore.getTypedArrayConstructor;
 	var exportTypedArrayMethod = arrayBufferViewCore.exportTypedArrayMethod;
 
 	var PROPER_ORDER = !!function () {
 	  try {
-	    // eslint-disable-next-line no-throw-literal, es-x/no-typed-arrays -- required for testing
+	    // eslint-disable-next-line no-throw-literal, es/no-typed-arrays -- required for testing
 	    new Int8Array(1)['with'](2, { valueOf: function () { throw 8; } });
 	  } catch (error) {
 	    // some early implementations, like WebKit, does not follow the final semantic
@@ -13584,7 +13707,7 @@ var doric = (function (exports) {
 	  try {
 	    // NodeJS < 15.0 does not expose `MessageChannel` to global
 	    var MessageChannel = getBuiltIn('MessageChannel') || tryNodeRequire('worker_threads').MessageChannel;
-	    // eslint-disable-next-line es-x/no-weak-map, unicorn/require-post-message-target-origin -- safe
+	    // eslint-disable-next-line es/no-weak-map, unicorn/require-post-message-target-origin -- safe
 	    new MessageChannel().port1.postMessage(new WeakMap());
 	  } catch (error) {
 	    if (error.name == DATA_CLONE_ERR && error.code == 25) { return error.constructor; }
@@ -13620,7 +13743,7 @@ var doric = (function (exports) {
 	  if (HAS_STACK) {
 	    var error = Error$3(message);
 	    error.name = DOM_EXCEPTION$2;
-	    defineProperty$1(this, 'stack', createPropertyDescriptor(1, clearErrorStack(error.stack, 1)));
+	    defineProperty$1(this, 'stack', createPropertyDescriptor(1, errorStackClear(error.stack, 1)));
 	  }
 	};
 
@@ -13719,7 +13842,7 @@ var doric = (function (exports) {
 	  var that = new NativeDOMException(message, name);
 	  var error = Error$2(message);
 	  error.name = DOM_EXCEPTION$1;
-	  defineProperty(that, 'stack', createPropertyDescriptor(1, clearErrorStack(error.stack, 1)));
+	  defineProperty(that, 'stack', createPropertyDescriptor(1, errorStackClear(error.stack, 1)));
 	  inheritIfRequired(that, this, $DOMException);
 	  return that;
 	};
@@ -13729,7 +13852,7 @@ var doric = (function (exports) {
 	var ERROR_HAS_STACK = 'stack' in Error$2(DOM_EXCEPTION$1);
 	var DOM_EXCEPTION_HAS_STACK = 'stack' in new NativeDOMException(1, 2);
 
-	// eslint-disable-next-line es-x/no-object-getownpropertydescriptor -- safe
+	// eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
 	var descriptor = NativeDOMException && descriptors && Object.getOwnPropertyDescriptor(global_1, DOM_EXCEPTION$1);
 
 	// Bun ~ 0.1.1 DOMException have incorrect descriptor and we can't redefine it
@@ -13818,10 +13941,10 @@ var doric = (function (exports) {
 	var setAdd = functionUncurryThis(Set$1.prototype.add);
 	var objectKeys = getBuiltIn('Object', 'keys');
 	var push$3 = functionUncurryThis([].push);
-	var booleanValueOf = functionUncurryThis(true.valueOf);
-	var numberValueOf = functionUncurryThis(1.0.valueOf);
-	var stringValueOf = functionUncurryThis(''.valueOf);
-	var getTime = functionUncurryThis(Date$1.prototype.getTime);
+	var thisBooleanValue = functionUncurryThis(true.valueOf);
+	var thisNumberValue = functionUncurryThis(1.0.valueOf);
+	var thisStringValue = functionUncurryThis(''.valueOf);
+	var thisTimeValue = functionUncurryThis(Date$1.prototype.getTime);
 	var PERFORMANCE_MARK = uid('structuredClone');
 	var DATA_CLONE_ERROR = 'DataCloneError';
 	var TRANSFERRING = 'Transferring';
@@ -13890,8 +14013,20 @@ var doric = (function (exports) {
 	  throw new DOMException('Uncloneable type: ' + type, DATA_CLONE_ERROR);
 	};
 
-	var throwUnpolyfillable = function (type, kind) {
-	  throw new DOMException((kind || 'Cloning') + ' of ' + type + ' cannot be properly polyfilled in this engine', DATA_CLONE_ERROR);
+	var throwUnpolyfillable = function (type, action) {
+	  throw new DOMException((action || 'Cloning') + ' of ' + type + ' cannot be properly polyfilled in this engine', DATA_CLONE_ERROR);
+	};
+
+	var createDataTransfer = function () {
+	  var dataTransfer;
+	  try {
+	    dataTransfer = new global_1.DataTransfer();
+	  } catch (error) {
+	    try {
+	      dataTransfer = new global_1.ClipboardEvent('').clipboardData;
+	    } catch (error2) { /* empty */ }
+	  }
+	  return dataTransfer && dataTransfer.items && dataTransfer.files ? dataTransfer : null;
 	};
 
 	var structuredCloneInternal = function (value, map) {
@@ -14008,9 +14143,8 @@ var doric = (function (exports) {
 	      }
 	      break;
 	    case 'FileList':
-	      C = global_1.DataTransfer;
-	      if (isConstructor(C)) {
-	        dataTransfer = new C();
+	      dataTransfer = createDataTransfer();
+	      if (dataTransfer) {
 	        for (i = 0, length = lengthOfArrayLike(value); i < length; i++) {
 	          dataTransfer.items.add(structuredCloneInternal(value[i], map));
 	        }
@@ -14042,16 +14176,16 @@ var doric = (function (exports) {
 	          cloned = Object$1(value.valueOf());
 	          break;
 	        case 'Boolean':
-	          cloned = Object$1(booleanValueOf(value));
+	          cloned = Object$1(thisBooleanValue(value));
 	          break;
 	        case 'Number':
-	          cloned = Object$1(numberValueOf(value));
+	          cloned = Object$1(thisNumberValue(value));
 	          break;
 	        case 'String':
-	          cloned = Object$1(stringValueOf(value));
+	          cloned = Object$1(thisStringValue(value));
 	          break;
 	        case 'Date':
-	          cloned = new Date$1(getTime(value));
+	          cloned = new Date$1(thisTimeValue(value));
 	          break;
 	        case 'ArrayBuffer':
 	          C = global_1.DataView;
@@ -14244,7 +14378,7 @@ var doric = (function (exports) {
 
 	_export({ global: true, enumerable: true, sham: !PROPER_TRANSFER, forced: FORCED_REPLACEMENT }, {
 	  structuredClone: function structuredClone(value /* , { transfer } */) {
-	    var options = validateArgumentsLength(arguments.length, 1) > 1 && arguments[1] != null ? anObject(arguments[1]) : undefined;
+	    var options = validateArgumentsLength(arguments.length, 1) > 1 && !isNullOrUndefined(arguments[1]) ? anObject(arguments[1]) : undefined;
 	    var transfer = options ? options.transfer : undefined;
 	    var map;
 
@@ -14300,7 +14434,7 @@ var doric = (function (exports) {
 
 	var ITERATOR$1 = wellKnownSymbol('iterator');
 
-	var nativeUrl = !fails(function () {
+	var urlConstructorDetection = !fails(function () {
 	  // eslint-disable-next-line unicorn/relative-url-style -- required for testing
 	  var url = new URL('b?a=1&b=2&c=3', 'http://a');
 	  var searchParams = url.searchParams;
@@ -14545,7 +14679,7 @@ var doric = (function (exports) {
 	var setInternalState$1 = internalState.set;
 	var getInternalParamsState = internalState.getterFor(URL_SEARCH_PARAMS);
 	var getInternalIteratorState = internalState.getterFor(URL_SEARCH_PARAMS_ITERATOR);
-	// eslint-disable-next-line es-x/no-object-getownpropertydescriptor -- safe
+	// eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
 	var getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
 
 	// Avoid NodeJS experimental warning
@@ -14620,7 +14754,7 @@ var doric = (function (exports) {
 	  return replace$1(encodeURIComponent$1(it), find, replacer);
 	};
 
-	var URLSearchParamsIterator = createIteratorConstructor(function Iterator(params, kind) {
+	var URLSearchParamsIterator = iteratorCreateConstructor(function Iterator(params, kind) {
 	  setInternalState$1(this, {
 	    type: URL_SEARCH_PARAMS_ITERATOR,
 	    iterator: getIterator(getInternalParamsState(params).entries),
@@ -14848,12 +14982,12 @@ var doric = (function (exports) {
 
 	setToStringTag(URLSearchParamsConstructor, URL_SEARCH_PARAMS);
 
-	_export({ global: true, constructor: true, forced: !nativeUrl }, {
+	_export({ global: true, constructor: true, forced: !urlConstructorDetection }, {
 	  URLSearchParams: URLSearchParamsConstructor
 	});
 
 	// Wrap `fetch` and `Request` for correct work with polyfilled `URLSearchParams`
-	if (!nativeUrl && isCallable(Headers)) {
+	if (!urlConstructorDetection && isCallable(Headers)) {
 	  var headersHas = functionUncurryThis(HeadersPrototype.has);
 	  var headersSet = functionUncurryThis(HeadersPrototype.set);
 
@@ -15940,7 +16074,7 @@ var doric = (function (exports) {
 
 	setToStringTag(URLConstructor, 'URL');
 
-	_export({ global: true, constructor: true, forced: !nativeUrl, sham: !descriptors }, {
+	_export({ global: true, constructor: true, forced: !urlConstructorDetection, sham: !descriptors }, {
 	  URL: URLConstructor
 	});
 

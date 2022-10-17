@@ -325,6 +325,7 @@ public class DoricWebShellJSExecutor implements IDoricJSE {
                 webView = new WebView(context.getApplicationContext());
                 WebSettings webSettings = webView.getSettings();
                 webSettings.setJavaScriptEnabled(true);
+                webSettings.setSavePassword(false);
                 webView.setWebChromeClient(new DoricWebChromeClient());
                 webView.setWebViewClient(new DoricWebViewClient());
                 WebViewCallback webViewCallback = new WebViewCallback();

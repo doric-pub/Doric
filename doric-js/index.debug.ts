@@ -17,6 +17,10 @@ import * as doric from './src/runtime/sandbox'
 import WebSocket from "ws"
 import path from 'path'
 import { Panel } from './src/ui/panel';
+import { layoutConfig } from "./src/util/layoutconfig";
+import fs from "fs";
+//Is in SSR Build Mode
+const inSSRBuild = process.env["SSR_BUILD"] === "1";
 
 type MSG = {
   type: "D2C" | "C2D" | "C2S" | "D2S" | "S2C" | "S2D",
@@ -164,15 +168,34 @@ global.Entry = function () {
     })
     if (entryHooks.length <= 1) {
       const source = path.basename(jsFile)
-      console.log(`Debugging ${source}`)
-      initNativeEnvironment(source).then(ret => {
-        contextId = ret;
-        console.log("debugging context id: " + contextId);
+      if (inSSRBuild) {
+        console.log(`SSR build ${source} start`)
+        contextId = "SSR_CONTEXT";
         const realContext = doric.jsObtainContext(contextId);
         global.context.id = contextId;
         global.context = realContext;
-        entryHooks.forEach(e => e(contextId))
-      });
+        entryHooks.forEach(e => e(contextId));
+        const panel = realContext?.entity as Panel;
+        panel.getRootView().apply({
+          layoutConfig: layoutConfig().most()
+        });
+        panel.onCreate();
+        panel.onShow();
+        panel.build(panel.getRootView());
+        fs.writeFileSync(jsFile.replace(".js", ".ssr.json"),
+          JSON.stringify(panel.getRootView().toModel()));
+        console.log(`SSR build ${source} end`);
+      } else {
+        console.log(`Debugging ${source}`)
+        initNativeEnvironment(source).then(ret => {
+          contextId = ret;
+          console.log("debugging context id: " + contextId);
+          const realContext = doric.jsObtainContext(contextId);
+          global.context.id = contextId;
+          global.context = realContext;
+          entryHooks.forEach(e => e(contextId));
+        });
+      }
       return arguments[0];
     }
   }
@@ -206,12 +229,20 @@ global.nativeLog = (type: string, msg: string) => {
 }
 
 global.nativeRequire = () => {
+  if (inSSRBuild) {
+    console.error("Do not support nativeRequire in ssr mode", new Error().stack)
+    return false;
+  }
   console.error("nativeRequire", new Error().stack);
   console.error("Do not call here in debugging");
   return false;
 }
 
 global.nativeBridge = () => {
+  if (inSSRBuild) {
+    console.error("Do not support nativeBridge in ssr mode", new Error().stack)
+    return false;
+  }
   console.error("nativeBridge", new Error().stack);
   console.error("Do not call here in debugging");
   return false;
@@ -219,13 +250,21 @@ global.nativeBridge = () => {
 
 global.Environment = new Proxy({}, {
   get: (target, p, receiver) => {
+    if (inSSRBuild) {
+      console.error("Do not support Environment in ssr mode", new Error().stack)
+      return undefined;
+    }
     console.error("Environment Getter", new Error().stack);
     console.error("Do not call here in debugging");
     return undefined
   },
   set: (target, p, v, receiver) => {
-    console.error("Environment Setter", new Error().stack)
-    console.error("Do not call here in debugging");
+    if (inSSRBuild) {
+      console.error("Do not support Environment in ssr mode", new Error().stack)
+    } else {
+      console.error("Environment Setter", new Error().stack)
+      console.error("Do not call here in debugging");
+    }
     return Reflect.set(target, p, v, receiver);
   }
 })

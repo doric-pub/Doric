@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import commander from "commander"
-import { build, clean } from "./actions";
+import { build, clean, ssr } from "./actions";
 import { create, createLib } from "./create"
 import dev from "./dev"
 import { run } from "./run";
@@ -41,7 +41,18 @@ commander
     .action(async function () {
         await clean();
     })
-
+commander
+    .command('ssr <action>')
+    .action(async function (action) {
+        if (action === 'build') {
+            const ret = await ssr();
+            if (ret != 0) {
+                process.exit(ret)
+            }
+        } else {
+            console.error("Do not support in ssr mode ", action)
+        }
+    })
 commander
     .command('run <platform>')
     .action(async function (platform, cmd) {

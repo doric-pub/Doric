@@ -17414,9 +17414,10 @@ var doric = (function (exports) {
 	    };
 	}
 	var global$2 = Function('return this')();
-	if (Environment.platform === 'Android'
-	    || Environment.platform === 'iOS'
-	    || Environment.platform === 'Qt') {
+	if (global$2.Envrionemnt &&
+	    (Environment.platform === 'Android'
+	        || Environment.platform === 'iOS'
+	        || Environment.platform === 'Qt')) {
 	    Reflect.set(global$2, "console", {
 	        warn: logw,
 	        error: loge,

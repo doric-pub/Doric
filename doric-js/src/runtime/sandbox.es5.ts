@@ -295,9 +295,10 @@ export function jsObtainEntry(contextId: string) {
 }
 
 const global = Function('return this')()
-if (Environment.platform === 'Android'
-    || Environment.platform === 'iOS'
-    || Environment.platform === 'Qt') {
+if (global.Envrionemnt &&
+    (Environment.platform === 'Android'
+        || Environment.platform === 'iOS'
+        || Environment.platform === 'Qt')) {
     Reflect.set(global, "console", {
         warn: logw,
         error: loge,

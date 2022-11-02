@@ -25,15 +25,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import pub.doric.devkit.DoricDev;
 import pub.doric.refresh.DoricSwipeLayout;
 import pub.doric.utils.DoricUtils;
@@ -133,13 +132,22 @@ public class MainActivity extends AppCompatActivity {
                         tv.getContext().startActivity(intent);
                     }
                 });
-            }else {
-                tv.setText(data[position - 3]);
+            } else if (position == 3) {
+                tv.setText("SSR Example");
+                tv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(tv.getContext(), DoricSSRActivity.class);
+                        tv.getContext().startActivity(intent);
+                    }
+                });
+            } else {
+                tv.setText(data[position - 4]);
                 tv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(tv.getContext(), DoricDebugTimingActivity.class);
-                        intent.putExtra("source", "assets://src/" + data[position - 3]);
+                        intent.putExtra("source", "assets://src/" + data[position - 4]);
                         //intent.putExtra("alias", data[position - 1].replace(".js", ""));
                         intent.putExtra("alias", "__dev__");
                         tv.getContext().startActivity(intent);
@@ -150,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return data.length + 3;
+            return data.length + 4;
         }
     }
 }

@@ -92,3 +92,24 @@ export async function mergeMap(mapFile: string) {
     }
 
 }
+
+export async function ssr() {
+    const ret = await build();
+    if (ret != 0) {
+        return ret;
+    }
+    console.log("Start generate ssr data");
+    const bundleFiles = await glob("bundle/**/*.js");
+    process.env["SSR_BUILD"] = "1";
+    for (let bundleFile of bundleFiles) {
+        console.log(bundleFile);
+        await Shell.exec("node", [bundleFile], {
+            env: process.env,
+            consoleHandler: (info) => {
+                console.log(info);
+            }
+        });
+    }
+
+    return 0;
+}

@@ -1483,9 +1483,10 @@ var doric = (function (exports) {
         };
     }
     const global$1 = Function('return this')();
-    if (Environment.platform === 'Android'
-        || Environment.platform === 'iOS'
-        || Environment.platform === 'Qt') {
+    if (global$1.Environment
+        && (Environment.platform === 'Android'
+            || Environment.platform === 'iOS'
+            || Environment.platform === 'Qt')) {
         Reflect.set(global$1, "console", {
             warn: logw,
             error: loge,
@@ -1952,6 +1953,7 @@ class View {
     }
     set ref(ref) {
         ref.current = this;
+        this._ref = ref;
     }
     doAnimation(context, animation) {
         return this.nativeChannel(context, "doAnimation")(animation.toModel()).then((args) => {

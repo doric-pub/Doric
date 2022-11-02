@@ -26,8 +26,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-
 import com.github.pengfeizhou.jscore.ArchiveException;
 import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSDecoder;
@@ -35,6 +33,7 @@ import com.github.pengfeizhou.jscore.JSObject;
 
 import java.util.concurrent.Callable;
 
+import androidx.annotation.NonNull;
 import pub.doric.DoricContext;
 import pub.doric.async.AsyncResult;
 import pub.doric.devkit.R;
@@ -156,7 +155,7 @@ public class DoricSnapshotView extends DoricFloatingView {
                                     rootNode.setId(viewId);
                                     rootNode.blend(jsObject.getProperty("props").asObject());
                                 } else {
-                                    ViewNode viewNode = doricContext.targetViewNode(viewId);
+                                    ViewNode<?> viewNode = doricContext.targetViewNode(viewId);
                                     if (viewNode != null) {
                                         viewNode.blend(jsObject.getProperty("props").asObject());
                                     }

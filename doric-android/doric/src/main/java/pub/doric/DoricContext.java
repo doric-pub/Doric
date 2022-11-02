@@ -17,12 +17,10 @@ package pub.doric;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSONBuilder;
@@ -39,6 +37,8 @@ import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.Callable;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import pub.doric.async.AsyncResult;
 import pub.doric.engine.RetainedJavaValue;
 import pub.doric.navbar.IDoricNavBar;
@@ -72,6 +72,8 @@ public class DoricContext {
     private final Map<String, Animator> animators = new HashMap<>();
     private final Map<String, DoricResource> cachedResources = new WeakHashMap<>();
     private final Set<SoftReference<RetainedJavaValue>> retainedJavaValues = new HashSet<>();
+    @SuppressLint("StaticFieldLeak")
+    public static final DoricContext MOCK_CONTEXT = new DoricContext(Doric.application(), "", "", "");
 
     public Collection<ViewNode<?>> allHeadNodes(String type) {
         Map<String, ViewNode<?>> headNode = mHeadNodes.get(type);

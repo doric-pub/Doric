@@ -4,11 +4,13 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 var WebSocket = require('ws');
 var path = require('path');
+var fs = require('fs');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
 var WebSocket__default = /*#__PURE__*/_interopDefaultLegacy(WebSocket);
 var path__default = /*#__PURE__*/_interopDefaultLegacy(path);
+var fs__default = /*#__PURE__*/_interopDefaultLegacy(fs);
 
 /*
  * Copyright [2019] [Doric.Pub]
@@ -1487,9 +1489,10 @@ function jsObtainEntry(contextId) {
     };
 }
 const global$2 = Function('return this')();
-if (Environment.platform === 'Android'
-    || Environment.platform === 'iOS'
-    || Environment.platform === 'Qt') {
+if (global$2.Environment
+    && (Environment.platform === 'Android'
+        || Environment.platform === 'iOS'
+        || Environment.platform === 'Qt')) {
     Reflect.set(global$2, "console", {
         warn: logw,
         error: loge,
@@ -5349,6 +5352,8 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+//Is in SSR Build Mode
+const inSSRBuild = process.env["SSR_BUILD"] === "1";
 let contextId = undefined;
 let global$1 = new Function('return this')();
 const originSetTimeout = global$1.setTimeout;
@@ -5498,15 +5503,34 @@ global$1.Entry = function () {
         });
         if (entryHooks.length <= 1) {
             const source = path__default["default"].basename(jsFile);
-            console.log(`Debugging ${source}`);
-            initNativeEnvironment(source).then(ret => {
-                contextId = ret;
-                console.log("debugging context id: " + contextId);
+            if (inSSRBuild) {
+                console.log(`SSR build ${source} start`);
+                contextId = "SSR_CONTEXT";
                 const realContext = jsObtainContext(contextId);
                 global$1.context.id = contextId;
                 global$1.context = realContext;
                 entryHooks.forEach(e => e(contextId));
-            });
+                const panel = realContext === null || realContext === void 0 ? void 0 : realContext.entity;
+                panel.getRootView().apply({
+                    layoutConfig: layoutConfig().most()
+                });
+                panel.onCreate();
+                panel.onShow();
+                panel.build(panel.getRootView());
+                fs__default["default"].writeFileSync(jsFile.replace(".js", ".ssr.json"), JSON.stringify(panel.getRootView().toModel()));
+                console.log(`SSR build ${source} end`);
+            }
+            else {
+                console.log(`Debugging ${source}`);
+                initNativeEnvironment(source).then(ret => {
+                    contextId = ret;
+                    console.log("debugging context id: " + contextId);
+                    const realContext = jsObtainContext(contextId);
+                    global$1.context.id = contextId;
+                    global$1.context = realContext;
+                    entryHooks.forEach(e => e(contextId));
+                });
+            }
             return arguments[0];
         }
     }
@@ -5535,24 +5559,41 @@ global$1.nativeLog = (type, msg) => {
     }
 };
 global$1.nativeRequire = () => {
+    if (inSSRBuild) {
+        console.error("Do not support nativeRequire in ssr mode", new Error().stack);
+        return false;
+    }
     console.error("nativeRequire", new Error().stack);
     console.error("Do not call here in debugging");
     return false;
 };
 global$1.nativeBridge = () => {
+    if (inSSRBuild) {
+        console.error("Do not support nativeBridge in ssr mode", new Error().stack);
+        return false;
+    }
     console.error("nativeBridge", new Error().stack);
     console.error("Do not call here in debugging");
     return false;
 };
 global$1.Environment = new Proxy({}, {
     get: (target, p, receiver) => {
+        if (inSSRBuild) {
+            console.error("Do not support Environment in ssr mode", new Error().stack);
+            return undefined;
+        }
         console.error("Environment Getter", new Error().stack);
         console.error("Do not call here in debugging");
         return undefined;
     },
     set: (target, p, v, receiver) => {
-        console.error("Environment Setter", new Error().stack);
-        console.error("Do not call here in debugging");
+        if (inSSRBuild) {
+            console.error("Do not support Environment in ssr mode", new Error().stack);
+        }
+        else {
+            console.error("Environment Setter", new Error().stack);
+            console.error("Do not call here in debugging");
+        }
         return Reflect.set(target, p, v, receiver);
     }
 });

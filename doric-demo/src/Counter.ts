@@ -87,6 +87,7 @@ class CounterVM extends ViewModel<CountModel, CounterView> {
     log(`Current count  is ${s.count}`);
     logw(`Current count is ${s.count}`);
     loge(`Current count is ${s.count}`);
+    console.log("This is from console.log")
   }
 }
 

@@ -7,6 +7,31 @@ class TextDemo extends Panel {
             vlayout(
                 [
                     title("Text Demo"),
+                    text({
+                        text: '十万钻石场',
+                        textSize: 60,
+                        font: 'PingFangSC-Medium',
+                        textAlignment: Gravity.Center,
+                        shadow: {
+                            color: Color.parse('#640000'),
+                            opacity: 0.49,
+                            radius: 0.5,
+                            offsetX: 0,
+                            offsetY: 1,
+                        },
+                        textColor: {
+                            colors: [Color.parse('#FFFFFF'), Color.parse('#FFE6A5'), Color.parse('#FFE39B'), Color.parse('#FFF0CE')],
+                            locations: [0.0, 0.7, 0.9, 1.0],
+                            orientation: GradientOrientation.TOP_BOTTOM,
+                        }
+                    }).apply({
+                        layoutConfig: {
+                            widthSpec: LayoutSpec.FIT,
+                            heightSpec: LayoutSpec.FIT,
+                            margin: { top: 131 },
+                            alignment: Gravity.CenterX,
+                        }
+                    }),
                     input({
                         width: 100,
                         height: 100,

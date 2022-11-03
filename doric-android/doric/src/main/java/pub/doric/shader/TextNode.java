@@ -16,20 +16,14 @@
 package pub.doric.shader;
 
 import android.graphics.Color;
-import android.graphics.LinearGradient;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
-import android.text.Layout;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.ViewTreeObserver;
-import android.widget.TextView;
 
 import androidx.core.content.res.ResourcesCompat;
 
@@ -60,14 +54,14 @@ import pub.doric.utils.ThreadMode;
  * @CreateDate: 2019-07-20
  */
 @DoricPlugin(name = "Text")
-public class TextNode extends ViewNode<TextView> {
+public class TextNode extends ViewNode<DoricTextView> {
     public TextNode(DoricContext doricContext) {
         super(doricContext);
     }
 
     @Override
-    protected TextView build() {
-        TextView tv = new TextView(getContext());
+    protected DoricTextView build() {
+        DoricTextView tv = new DoricTextView(getContext());
         tv.setGravity(Gravity.CENTER);
         tv.setMaxLines(1);
         tv.setSingleLine(true);
@@ -90,7 +84,7 @@ public class TextNode extends ViewNode<TextView> {
     }
 
     @Override
-    protected void blend(final TextView view, final String name, final JSValue prop) {
+    protected void blend(final DoricTextView view, final String name, final JSValue prop) {
         switch (name) {
             case "text":
                 if (!prop.isString()) {
@@ -178,7 +172,7 @@ public class TextNode extends ViewNode<TextView> {
                                 }
                             }
 
-                            setGradientTextColor(view, angle, colors, locations);
+                            mView.setGradient(angle, colors, locations);
 
                             return true;
                         }
@@ -312,40 +306,40 @@ public class TextNode extends ViewNode<TextView> {
                 break;
             case "strikethrough":
                 if (prop.isBoolean()) {
-                    view.getPaint().setStrikeThruText(prop.asBoolean().value());
+                    view.setStrikethrough(prop.asBoolean().value());
                 }
                 break;
             case "underline":
                 if (prop.isBoolean()) {
-                    view.getPaint().setUnderlineText(prop.asBoolean().value());
+                    view.setUnderline(prop.asBoolean().value());
                 }
                 break;
             case "htmlText":
                 if (prop.isString()) {
                     getDoricContext().getDriver().asyncCall(new Callable<Spanned>() {
-                        @Override
-                        public Spanned call() {
-                            return HtmlParser.buildSpannedText(prop.asString().value(),
-                                    new Html.ImageGetter() {
-                                        @Override
-                                        public Drawable getDrawable(String source) {
-                                            try {
-                                                Drawable drawable = Glide.with(view)
-                                                        .asDrawable()
-                                                        .load(source)
-                                                        .submit()
-                                                        .get();
-                                                drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-                                                return drawable;
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-                                            return null;
-                                        }
-                                    },
-                                    new CustomTagHandler());
-                        }
-                    }, ThreadMode.INDEPENDENT)
+                                @Override
+                                public Spanned call() {
+                                    return HtmlParser.buildSpannedText(prop.asString().value(),
+                                            new Html.ImageGetter() {
+                                                @Override
+                                                public Drawable getDrawable(String source) {
+                                                    try {
+                                                        Drawable drawable = Glide.with(view)
+                                                                .asDrawable()
+                                                                .load(source)
+                                                                .submit()
+                                                                .get();
+                                                        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+                                                        return drawable;
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                    return null;
+                                                }
+                                            },
+                                            new CustomTagHandler());
+                                }
+                            }, ThreadMode.INDEPENDENT)
                             .setCallback(new AsyncResult.Callback<Spanned>() {
                                 @Override
                                 public void onResult(final Spanned result) {
@@ -389,8 +383,8 @@ public class TextNode extends ViewNode<TextView> {
                 break;
             case "shadow":
                 if (prop.isObject()) {
-                    mView.setAlpha((prop.asObject().getProperty("opacity").asNumber().toFloat()));
-                    mView.setShadowLayer(
+                    mView.setShadow(
+                            prop.asObject().getProperty("opacity").asNumber().toFloat(),
                             prop.asObject().getProperty("radius").asNumber().toFloat(),
                             DoricUtils.dp2px(prop.asObject().getProperty("offsetX").asNumber().toFloat()),
                             DoricUtils.dp2px(prop.asObject().getProperty("offsetY").asNumber().toFloat()),
@@ -404,57 +398,13 @@ public class TextNode extends ViewNode<TextView> {
         }
     }
 
-    public static void setGradientTextColor(final TextView textView, final float angle, final int[] colors, final float[] positions) {
-        final Rect textBound = new Rect(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE);
 
-        final Layout layout = textView.getLayout();
-
-        if (layout == null) {
-            return;
-        }
-
-        for (int i = 0; i < textView.getLineCount(); i++) {
-            float left = layout.getLineLeft(i);
-            float right = layout.getLineRight(i);
-            if (left < textBound.left) textBound.left = (int) left;
-            if (right > textBound.right) textBound.right = (int) right;
-        }
-        textBound.top = layout.getLineTop(0);
-        textBound.bottom = layout.getLineBottom(textView.getLineCount() - 1);
-        if (textView.getIncludeFontPadding()) {
-            Paint.FontMetrics fontMetrics = textView.getPaint().getFontMetrics();
-            textBound.top += (fontMetrics.ascent - fontMetrics.top);
-            textBound.bottom -= (fontMetrics.bottom - fontMetrics.descent);
-        }
-
-        double angleInRadians = Math.toRadians(angle);
-
-        double r = Math.sqrt(Math.pow(textBound.bottom - textBound.top, 2) +
-                Math.pow(textBound.right - textBound.left, 2)) / 2;
-
-        float centerX = textBound.left + (textBound.right - textBound.left) / 2.f;
-        float centerY = textBound.top + (textBound.bottom - textBound.top) / 2.f;
-
-        float startX = (float) (centerX - r * Math.cos(angleInRadians));
-        float startY = (float) (centerY + r * Math.sin(angleInRadians));
-
-        float endX = (float) (centerX + r * Math.cos(angleInRadians));
-        float endY = (float) (centerY - r * Math.sin(angleInRadians));
-
-        Shader textShader = new LinearGradient(startX, startY, endX, endY, colors, positions,
-                Shader.TileMode.CLAMP);
-
-        textView.setTextColor(Color.WHITE);
-        textView.getPaint().setShader(textShader);
-        textView.invalidate();
-    }
-
-    private static File createFile(byte[] bfile, String filePath,String fileName) throws IOException {
+    private static File createFile(byte[] bfile, String filePath, String fileName) throws IOException {
         BufferedOutputStream bos = null;
         FileOutputStream fos = null;
         try {
             File dir = new File(filePath);
-            if(!dir.exists()){
+            if (!dir.exists()) {
                 dir.mkdirs();
             }
             String pathName = filePath + File.separator + fileName;
@@ -496,7 +446,5 @@ public class TextNode extends ViewNode<TextView> {
         mView.setMaxLines(1);
         mView.setSingleLine(true);
         mView.setEllipsize(TextUtils.TruncateAt.END);
-        mView.getPaint().setStrikeThruText(false);
-        mView.getPaint().setUnderlineText(false);
     }
 }

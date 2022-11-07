@@ -26,6 +26,7 @@
 		E2C9315923B0A263007933D9 /* src in Resources */ = {isa = PBXBuildFile; fileRef = E2C9315823B0A263007933D9 /* src */; };
 		E2EF0C0F275F6702007801C5 /* iconfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2EF0C0E275F6702007801C5 /* iconfont.ttf */; };
 		E2EF0C13275F6934007801C5 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = E2EF0C12275F6934007801C5 /* assets */; };
+		E2F3CCB02918B44800772FF1 /* DemoSSRVC.m in Sources */ = {isa = PBXBuildFile; fileRef = E2F3CCAF2918B44800772FF1 /* DemoSSRVC.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,6 +84,8 @@
 		E2C9315823B0A263007933D9 /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; name = src; path = "../../../doric-demo/bundle/src"; sourceTree = "<group>"; };
 		E2EF0C0E275F6702007801C5 /* iconfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = iconfont.ttf; path = "../../doric-demo/bundle/assets/iconfont.ttf"; sourceTree = "<group>"; };
 		E2EF0C12275F6934007801C5 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = "../../../doric-demo/bundle/assets"; sourceTree = "<group>"; };
+		E2F3CCAF2918B44800772FF1 /* DemoSSRVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DemoSSRVC.m; sourceTree = "<group>"; };
+		E2F3CCB12918B49500772FF1 /* DemoSSRVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DemoSSRVC.h; sourceTree = "<group>"; };
 		FD2D6CCC8DCDABA7F86EAE7C /* libPods-ExampleUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ExampleUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -184,6 +187,8 @@
 				D751DB0CB3009E12990F661E /* DemoLibrary.h */,
 				E24217D9287E999900F4DBEA /* DoricEmbeddedExampleVC.m */,
 				E24217DB287E99D100F4DBEA /* DoricEmbeddedExampleVC.h */,
+				E2F3CCAF2918B44800772FF1 /* DemoSSRVC.m */,
+				E2F3CCB12918B49500772FF1 /* DemoSSRVC.h */,
 			);
 			path = Example;
 			sourceTree = "<group>";
@@ -454,6 +459,7 @@
 				E2334AFE22E9D2070098A085 /* main.m in Sources */,
 				E24217DA287E999900F4DBEA /* DoricEmbeddedExampleVC.m in Sources */,
 				E2334AF022E9D2060098A085 /* AppDelegate.m in Sources */,
+				E2F3CCB02918B44800772FF1 /* DemoSSRVC.m in Sources */,
 				D751D4B065D8D4FA6594B5EE /* DemoVC.m in Sources */,
 				D751DDB012BAF476A252CD93 /* DemoLibrary.m in Sources */,
 				8BCADA7C23CD5B65005EEF96 /* NavigationController.m in Sources */,

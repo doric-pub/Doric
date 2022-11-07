@@ -63,7 +63,8 @@ public class DoricSSRActivity extends AppCompatActivity {
         final DoricPanel doricPanel = findViewById(R.id.doric_panel);
         RootNode rootNode = new RootNode(DoricContext.MOCK_CONTEXT);
         rootNode.setRootView(doricPanel);
-        String json = DoricUtils.readAssetFile("src/LayoutDemo.ssr.json");
+        String filePath = getIntent().getStringExtra("file");
+        String json = DoricUtils.readAssetFile("src/"+filePath);
         try {
             long start = System.currentTimeMillis();
             JSONObject jsonObject = new JSONObject(json);

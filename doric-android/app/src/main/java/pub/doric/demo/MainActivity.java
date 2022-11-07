@@ -66,7 +66,8 @@ public class MainActivity extends AppCompatActivity {
                 if (str.endsWith(".es5.js")) {
                     continue;
                 }
-                if (str.endsWith("js")) {
+                if (str.endsWith(".js")
+                        || str.endsWith(".json")) {
                     ret.add(str);
                 }
             }
@@ -132,25 +133,23 @@ public class MainActivity extends AppCompatActivity {
                         tv.getContext().startActivity(intent);
                     }
                 });
-            } else if (position == 3) {
-                tv.setText("SSR Example");
-                tv.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(tv.getContext(), DoricSSRActivity.class);
-                        tv.getContext().startActivity(intent);
-                    }
-                });
             } else {
-                tv.setText(data[position - 4]);
+                tv.setText(data[position - 3]);
                 tv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(tv.getContext(), DoricDebugTimingActivity.class);
-                        intent.putExtra("source", "assets://src/" + data[position - 4]);
-                        //intent.putExtra("alias", data[position - 1].replace(".js", ""));
-                        intent.putExtra("alias", "__dev__");
-                        tv.getContext().startActivity(intent);
+                        String filePath = data[position - 3];
+                        if (filePath.endsWith(".json")) {
+                            Intent intent = new Intent(tv.getContext(), DoricSSRActivity.class);
+                            intent.putExtra("file", filePath);
+                            tv.getContext().startActivity(intent);
+                        } else {
+                            Intent intent = new Intent(tv.getContext(), DoricDebugTimingActivity.class);
+                            intent.putExtra("source", "assets://src/" + data[position - 3]);
+                            //intent.putExtra("alias", data[position - 1].replace(".js", ""));
+                            intent.putExtra("alias", "__dev__");
+                            tv.getContext().startActivity(intent);
+                        }
                     }
                 });
             }
@@ -158,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return data.length + 4;
+            return data.length + 3;
         }
     }
 }

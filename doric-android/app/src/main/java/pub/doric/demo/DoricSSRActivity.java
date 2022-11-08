@@ -61,10 +61,11 @@ public class DoricSSRActivity extends AppCompatActivity {
                 ViewGroup.LayoutParams.WRAP_CONTENT));
         doricNavBar.setRight(textView);
         final DoricPanel doricPanel = findViewById(R.id.doric_panel);
-        RootNode rootNode = new RootNode(DoricContext.MOCK_CONTEXT);
+        DoricContext doricContext = DoricContext.create(this, "", "", "");
+        RootNode rootNode = new RootNode(doricContext);
         rootNode.setRootView(doricPanel);
         String filePath = getIntent().getStringExtra("file");
-        String json = DoricUtils.readAssetFile("src/"+filePath);
+        String json = DoricUtils.readAssetFile("src/" + filePath);
         try {
             long start = System.currentTimeMillis();
             JSONObject jsonObject = new JSONObject(json);
@@ -76,6 +77,8 @@ public class DoricSSRActivity extends AppCompatActivity {
             Log.d("Timing", "SSR cost " + (System.currentTimeMillis() - start) + " ms");
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            doricContext.teardown();
         }
     }
 }

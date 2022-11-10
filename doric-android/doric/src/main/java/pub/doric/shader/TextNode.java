@@ -24,6 +24,7 @@ import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.ViewTreeObserver;
+import android.widget.TextView;
 
 import androidx.core.content.res.ResourcesCompat;
 
@@ -54,13 +55,13 @@ import pub.doric.utils.ThreadMode;
  * @CreateDate: 2019-07-20
  */
 @DoricPlugin(name = "Text")
-public class TextNode extends ViewNode<DoricTextView> {
+public class TextNode extends ViewNode<TextView> {
     public TextNode(DoricContext doricContext) {
         super(doricContext);
     }
 
     @Override
-    protected DoricTextView build() {
+    protected TextView build() {
         DoricTextView tv = new DoricTextView(getContext());
         tv.setGravity(Gravity.CENTER);
         tv.setMaxLines(1);
@@ -84,7 +85,7 @@ public class TextNode extends ViewNode<DoricTextView> {
     }
 
     @Override
-    protected void blend(final DoricTextView view, final String name, final JSValue prop) {
+    protected void blend(final TextView view, final String name, final JSValue prop) {
         switch (name) {
             case "text":
                 if (!prop.isString()) {
@@ -172,7 +173,9 @@ public class TextNode extends ViewNode<DoricTextView> {
                                 }
                             }
 
-                            mView.setGradient(angle, colors, locations);
+                            if (mView instanceof DoricTextView) {
+                                ((DoricTextView) mView).setGradient(angle, colors, locations);
+                            }
 
                             return true;
                         }
@@ -306,12 +309,16 @@ public class TextNode extends ViewNode<DoricTextView> {
                 break;
             case "strikethrough":
                 if (prop.isBoolean()) {
-                    view.setStrikethrough(prop.asBoolean().value());
+                    if (mView instanceof DoricTextView) {
+                        ((DoricTextView) view).setStrikethrough(prop.asBoolean().value());
+                    }
                 }
                 break;
             case "underline":
                 if (prop.isBoolean()) {
-                    view.setUnderline(prop.asBoolean().value());
+                    if (mView instanceof DoricTextView) {
+                        ((DoricTextView) view).setUnderline(prop.asBoolean().value());
+                    }
                 }
                 break;
             case "htmlText":
@@ -383,13 +390,15 @@ public class TextNode extends ViewNode<DoricTextView> {
                 break;
             case "shadow":
                 if (prop.isObject()) {
-                    mView.setShadow(
-                            prop.asObject().getProperty("opacity").asNumber().toFloat(),
-                            prop.asObject().getProperty("radius").asNumber().toFloat(),
-                            DoricUtils.dp2px(prop.asObject().getProperty("offsetX").asNumber().toFloat()),
-                            DoricUtils.dp2px(prop.asObject().getProperty("offsetY").asNumber().toFloat()),
-                            prop.asObject().getProperty("color").asNumber().toInt()
-                    );
+                    if (mView instanceof DoricTextView) {
+                        ((DoricTextView) mView).setShadow(
+                                prop.asObject().getProperty("opacity").asNumber().toFloat(),
+                                prop.asObject().getProperty("radius").asNumber().toFloat(),
+                                DoricUtils.dp2px(prop.asObject().getProperty("offsetX").asNumber().toFloat()),
+                                DoricUtils.dp2px(prop.asObject().getProperty("offsetY").asNumber().toFloat()),
+                                prop.asObject().getProperty("color").asNumber().toInt()
+                        );
+                    }
                 }
                 break;
             default:

@@ -253,6 +253,12 @@ class TextDemo extends Panel {
                         font: new AssetsResource('Alibaba-PuHuiTi-Bold.ttf')
                     }),
                     text({
+                        text: "DINMedium.otf",
+                        textSize: 30,
+                        textColor: Color.BLUE,
+                        font: new AssetsResource('DINMedium.otf')
+                    }),
+                    text({
                         text: "This is line Spaceing 0,\nSecond line",
                         maxLines: 0,
                     }),

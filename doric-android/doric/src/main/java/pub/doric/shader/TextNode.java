@@ -223,8 +223,13 @@ public class TextNode extends ViewNode<TextView> {
                         fontName = font.substring(separatorIndex + 1);
                     }
 
-                    if (fontName.endsWith(".ttf")) {
-                        fontName = fontName.replace(".ttf", "");
+                    String suffix = null;
+                    int lastDotIndex = fontName.lastIndexOf(".");
+                    if (lastDotIndex != -1) {
+                        suffix = fontName.substring(lastDotIndex);
+                    }
+                    if (suffix != null && fontName.endsWith(suffix)) {
+                        fontName = fontName.replace(suffix, "");
                     }
 
                     int resId = getContext().getResources().getIdentifier(
@@ -242,7 +247,7 @@ public class TextNode extends ViewNode<TextView> {
                     } else {
                         fontName = fontPath +
                                 fontName +
-                                ".ttf";
+                                (suffix == null ? "" : suffix);
                         try {
                             Typeface iconFont = Typeface.createFromAsset(getContext().getAssets(), fontName);
                             view.setTypeface(iconFont);

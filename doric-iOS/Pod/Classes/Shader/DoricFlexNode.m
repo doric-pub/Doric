@@ -21,8 +21,9 @@
 #import "DoricFlexNode.h"
 #import "DoricExtensions.h"
 #import <YogaKit/UIView+Yoga.h>
+#import "DoricUIView.h"
 
-@interface DoricFlexView : UIView
+@interface DoricFlexView : DoricUIView
 @end
 
 @implementation DoricFlexView

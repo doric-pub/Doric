@@ -22,11 +22,12 @@
 
 #import "DoricVLayoutNode.h"
 #import "DoricExtensions.h"
+#import "DoricUIView.h"
 
 @implementation DoricVLayoutNode
 
 - (UIView *)build {
-    return [[UIView new] also:^(UIView *it) {
+    return [[DoricUIView new] also:^(DoricUIView *it) {
         it.doricLayout.layoutType = DoricVLayout;
     }];
 }

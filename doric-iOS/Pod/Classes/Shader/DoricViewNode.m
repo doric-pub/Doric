@@ -30,6 +30,7 @@
 #import "DoricPromise.h"
 #import "DoricFlexNode.h"
 #import "DoricErrorHintNode.h"
+#import "DoricUIView.h"
 
 @interface AnimationCallback : NSObject <CAAnimationDelegate>
 @property(nonatomic, strong) NSMutableDictionary *dictionary;

@@ -22,11 +22,12 @@
 
 #import "DoricStackNode.h"
 #import "DoricExtensions.h"
+#import "DoricUIView.h"
 
 @implementation DoricStackNode
 
 - (UIView *)build {
-    return [[UIView new] also:^(UIView *it) {
+    return [[DoricUIView new] also:^(DoricUIView *it) {
         it.doricLayout.layoutType = DoricStack;
     }];
 }

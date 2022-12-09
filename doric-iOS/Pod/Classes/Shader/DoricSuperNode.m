@@ -83,6 +83,8 @@
             }];
             if (viewModel) {
                 [self recursiveMixin:subview to:viewModel];
+            } else {
+                [targetOri addObject:subview];
             }
         }
     }

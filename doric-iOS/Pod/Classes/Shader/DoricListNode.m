@@ -381,6 +381,11 @@
     NSString *viewId = subModel[@"id"];
     DoricViewNode *viewNode = [self subNodeWithViewId:viewId];
     BOOL skipReload = NO;
+    
+    NSMutableDictionary *model = [[self subModelOf:viewId] mutableCopy];
+    [self recursiveMixin:subModel to:model];
+    [self setSubModel:model in:viewId];
+    
     if (viewNode) {
         CGSize originSize = viewNode.view.frame.size;
         [viewNode blend:subModel[@"props"]];
@@ -389,11 +394,8 @@
         if (CGSizeEqualToSize(originSize, viewNode.view.frame.size)) {
             skipReload = YES;
         }
-    } else {
-        NSMutableDictionary *model = [[self subModelOf:viewId] mutableCopy];
-        [self recursiveMixin:subModel to:model];
-        [self setSubModel:model in:viewId];
     }
+
     if (skipReload) {
         return;
     }

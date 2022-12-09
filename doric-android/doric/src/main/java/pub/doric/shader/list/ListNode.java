@@ -160,13 +160,13 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
     protected void blendSubNode(JSObject subProperties) {
         String viewId = subProperties.getProperty("id").asString().value();
         ViewNode<?> node = getSubNodeById(viewId);
+        JSObject oldModel = getSubModel(viewId);
+        if (oldModel != null) {
+            recursiveMixin(subProperties, oldModel);
+        }
         if (node != null) {
             node.blend(subProperties.getProperty("props").asObject());
         } else {
-            JSObject oldModel = getSubModel(viewId);
-            if (oldModel != null) {
-                recursiveMixin(subProperties, oldModel);
-            }
             listAdapter.blendSubNode(subProperties);
         }
     }

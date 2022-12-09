@@ -22,8 +22,10 @@ import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -118,20 +120,37 @@ public abstract class SuperNode<V extends View> extends ViewNode<V> {
         JSObject srcProps = src.getProperty("props").asObject();
         JSObject targetProps = target.getProperty("props").asObject();
         JSValue oriSubviews = targetProps.getProperty("subviews");
+
         for (String key : srcProps.propertySet()) {
             JSValue jsValue = srcProps.getProperty(key);
             if ("subviews".equals(key) && jsValue.isArray()) {
                 JSValue[] subviews = jsValue.asArray().toArray();
+
+                List<JSValue> finalTarget = new ArrayList<>();
+
                 for (JSValue subview : subviews) {
+                    boolean find = false;
                     if (oriSubviews.isArray()) {
                         for (JSValue targetSubview : oriSubviews.asArray().toArray()) {
                             if (viewIdIsEqual(subview.asObject(), targetSubview.asObject())) {
+                                find = true;
                                 recursiveMixin(subview.asObject(), targetSubview.asObject());
+                                finalTarget.add(targetSubview);
                                 break;
                             }
                         }
                     }
+
+                    if (!find) {
+                        finalTarget.add(subview);
+                    }
                 }
+
+                JSArray jsArray = new JSArray(finalTarget.size());
+                for (int i = 0; i < jsArray.size(); i++) {
+                    jsArray.put(i, finalTarget.get(i));
+                }
+                targetProps.asObject().setProperty(key, jsArray);
                 continue;
             }
             targetProps.asObject().setProperty(key, jsValue);

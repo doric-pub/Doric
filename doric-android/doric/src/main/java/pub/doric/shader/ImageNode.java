@@ -32,15 +32,11 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.NinePatchDrawable;
 import android.os.Build;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Pair;
 import android.widget.ImageView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.vectordrawable.graphics.drawable.Animatable2Compat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
@@ -65,6 +61,10 @@ import java.io.File;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.vectordrawable.graphics.drawable.Animatable2Compat;
 import pub.doric.DoricContext;
 import pub.doric.async.AsyncResult;
 import pub.doric.extension.bridge.DoricMethod;
@@ -428,15 +428,33 @@ public class ImageNode extends ViewNode<ImageView> {
                 if (doricResource != null) {
                     doricResource.fetch().setCallback(new AsyncResult.Callback<byte[]>() {
                         @Override
-                        public void onResult(byte[] imageData) {
-                            loadIntoTarget(Glide.with(getContext()).load(imageData));
+                        public void onResult(final byte[] imageData) {
+                            if (Looper.getMainLooper() != Looper.myLooper()) {
+                                mView.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        loadIntoTarget(Glide.with(getContext()).load(imageData));
+                                    }
+                                });
+                            } else {
+                                loadIntoTarget(Glide.with(getContext()).load(imageData));
+                            }
                         }
 
                         @Override
                         public void onError(Throwable t) {
                             t.printStackTrace();
                             DoricLog.e("Cannot load resource %s,  %s", resource.toString(), t.getLocalizedMessage());
-                            view.setImageDrawable(null);
+                            if (Looper.getMainLooper() != Looper.myLooper()) {
+                                mView.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        view.setImageDrawable(null);
+                                    }
+                                });
+                            } else {
+                                view.setImageDrawable(null);
+                            }
                         }
 
                         @Override

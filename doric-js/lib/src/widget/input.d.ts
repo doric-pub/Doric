@@ -40,10 +40,10 @@ export declare class Input extends View {
      * @returns: true means the replacement will take effect, otherwise does not
      */
     beforeTextChange?: (change: {
-        editing: string;
+        editing?: string;
         start: number;
         length: number;
-        replacement: string;
+        replacement?: string;
     }) => boolean;
     padding?: {
         left?: number;

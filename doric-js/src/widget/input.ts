@@ -98,10 +98,10 @@ export class Input extends View {
      */
     @Property
     beforeTextChange?: (change: {
-        editing: string,
+        editing?: string,
         start: number,
         length: number,
-        replacement: string,
+        replacement?: string,
     }) => boolean
 
     @Property

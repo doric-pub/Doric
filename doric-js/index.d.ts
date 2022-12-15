@@ -1255,13 +1255,13 @@ declare module "doric" {
 		hintTextColor?: Color;
 		multiline?: boolean;
 		textAlignment?: Gravity;
-		onTextChange?: (text: string) => void;
+		onTextChange?: (text?: string) => void;
 		onFocusChange?: (focused: boolean) => void;
 		maxLength?: number;
 		password?: boolean;
 		editable?: boolean;
 		returnKeyType?: ReturnKeyType;
-		onSubmitEditing?: (text: string) => void;
+		onSubmitEditing?: (text?: string) => void;
 		enableHorizontalScrollBar?: boolean;
 		enableVerticalScrollBar?: boolean;
 		/**

@@ -61,7 +61,7 @@ export class Input extends View {
     textAlignment?: Gravity
 
     @Property
-    onTextChange?: (text: string) => void
+    onTextChange?: (text?: string) => void
 
     @Property
     onFocusChange?: (focused: boolean) => void
@@ -79,7 +79,7 @@ export class Input extends View {
     returnKeyType?: ReturnKeyType
 
     @Property
-    onSubmitEditing?: (text: string) => void
+    onSubmitEditing?: (text?: string) => void
 
     @Property
     enableHorizontalScrollBar?: boolean

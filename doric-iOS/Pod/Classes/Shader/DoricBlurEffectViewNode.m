@@ -29,10 +29,12 @@
 @implementation DoricBlurEffectView
 - (instancetype)initWithEffect:(UIVisualEffect *)effect {
     if (self = [super initWithEffect:effect]) {
+        __weak typeof(self) weakSelf = self;
         _animator = [[UIViewPropertyAnimator alloc]
                 initWithDuration:1
                            curve:UIViewAnimationCurveLinear
                       animations:^{
+                          __strong typeof(weakSelf) self = weakSelf;
                           self.effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
                       }];
         _animator.fractionComplete = MIN(1, MAX(0, 15.0f / 200));
@@ -52,9 +54,6 @@
     self.animator.fractionComplete = MIN(1, MAX(0, (radius / 200.f)));
 }
 
-- (void)dealloc {
-    [self.animator stopAnimation:YES];
-}
 @end
 
 @interface DoricBlurEffectViewNode ()
@@ -90,4 +89,8 @@
         [super blendView:view forPropName:name propValue:prop];
     }
 }
+
+- (void)dealloc {
+    [self.visualEffectView.animator stopAnimation:YES];
+};
 @end

@@ -84,6 +84,7 @@ export function jsCallResolve(contextId: string, callbackId: string, args?: any)
     }
     hookBeforeNativeCall(context)
     Reflect.apply(callback.resolve, context, argumentsList)
+    context.callbacks.delete(callbackId)
 }
 
 export function jsCallReject(contextId: string, callbackId: string, args?: any) {
@@ -103,6 +104,7 @@ export function jsCallReject(contextId: string, callbackId: string, args?: any) 
     }
     hookBeforeNativeCall(context)
     Reflect.apply(callback.reject, context.entity, argumentsList)
+    context.callbacks.delete(callbackId)
 }
 
 export class Context {

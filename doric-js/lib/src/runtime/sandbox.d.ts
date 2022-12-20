@@ -7,6 +7,7 @@ export declare class Context {
     callbacks: Map<string, {
         resolve: Function;
         reject: Function;
+        retained?: boolean;
     }>;
     classes: Map<string, ClassType<object>>;
     hookBeforeNativeCall(): void;

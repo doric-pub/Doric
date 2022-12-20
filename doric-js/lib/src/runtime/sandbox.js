@@ -45,6 +45,9 @@ export function jsCallResolve(contextId, callbackId, args) {
     }
     hookBeforeNativeCall(context);
     Reflect.apply(callback.resolve, context, argumentsList);
+    if (callback.retained !== true) {
+        context.callbacks.delete(callbackId);
+    }
 }
 export function jsCallReject(contextId, callbackId, args) {
     const context = gContexts.get(contextId);
@@ -63,6 +66,9 @@ export function jsCallReject(contextId, callbackId, args) {
     }
     hookBeforeNativeCall(context);
     Reflect.apply(callback.reject, context.entity, argumentsList);
+    if (callback.retained !== true) {
+        context.callbacks.delete(callbackId);
+    }
 }
 export class Context {
     constructor(id) {
@@ -126,7 +132,8 @@ export class Context {
         const functionId = uniqueId('function');
         this.callbacks.set(functionId, {
             resolve: func,
-            reject: () => { loge("This should not be called"); }
+            reject: () => { loge("This should not be called"); },
+            retained: true,
         });
         return functionId;
     }

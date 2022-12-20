@@ -95,6 +95,9 @@ export function jsCallResolve(contextId: string, callbackId: string, args?: any)
     }
     hookBeforeNativeCall(context)
     Reflect.apply(callback.resolve, context, argumentsList)
+    if (callback.retained !== true) {
+        context.callbacks.delete(callbackId)
+    }
 }
 
 export function jsCallReject(contextId: string, callbackId: string, args?: any) {
@@ -114,12 +117,15 @@ export function jsCallReject(contextId: string, callbackId: string, args?: any) 
     }
     hookBeforeNativeCall(context)
     Reflect.apply(callback.reject, context.entity, argumentsList)
+    if (callback.retained !== true) {
+        context.callbacks.delete(callbackId)
+    }
 }
 
 export class Context {
     entity: any
     id: string
-    callbacks: Map<string, { resolve: Function, reject: Function }> = new Map
+    callbacks: Map<string, { resolve: Function, reject: Function, retained?: boolean }> = new Map
     classes: Map<string, ClassType<object>> = new Map
 
     hookBeforeNativeCall() {
@@ -182,7 +188,8 @@ export class Context {
         const functionId = uniqueId('function')
         this.callbacks.set(functionId, {
             resolve: func,
-            reject: () => { loge("This should not be called") }
+            reject: () => { loge("This should not be called") },
+            retained: true,
         })
         return functionId
     }

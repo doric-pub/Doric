@@ -17203,6 +17203,7 @@ var doric = (function (exports) {
 	    }
 	    hookBeforeNativeCall(context);
 	    Reflect.apply(callback.resolve, context, argumentsList);
+	    context.callbacks.delete(callbackId);
 	}
 	function jsCallReject(contextId, callbackId, args) {
 	    var arguments$1 = arguments;
@@ -17223,6 +17224,7 @@ var doric = (function (exports) {
 	    }
 	    hookBeforeNativeCall(context);
 	    Reflect.apply(callback.reject, context.entity, argumentsList);
+	    context.callbacks.delete(callbackId);
 	}
 	var Context = /** @class */ (function () {
 	    function Context(id) {

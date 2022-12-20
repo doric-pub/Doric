@@ -1252,6 +1252,7 @@ var doric = (function (exports) {
         }
         hookBeforeNativeCall(context);
         Reflect.apply(callback.resolve, context, argumentsList);
+        context.callbacks.delete(callbackId);
     }
     function jsCallReject(contextId, callbackId, args) {
         const context = gContexts.get(contextId);
@@ -1270,6 +1271,7 @@ var doric = (function (exports) {
         }
         hookBeforeNativeCall(context);
         Reflect.apply(callback.reject, context.entity, argumentsList);
+        context.callbacks.delete(callbackId);
     }
     class Context {
         constructor(id) {

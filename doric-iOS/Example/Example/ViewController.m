@@ -46,10 +46,7 @@
     [Doric registerLibrary:[DemoLibrary new]];
     [Doric enablePerformance:YES];
     [Doric enableRenderSnapshot:YES];
-}
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
     [self.view addSubview:[[UITableView new] also:^(UITableView *it) {
         it.width = self.view.width;
         it.height = self.view.height;
@@ -57,6 +54,10 @@
         it.dataSource = self;
         it.delegate = self;
     }]];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

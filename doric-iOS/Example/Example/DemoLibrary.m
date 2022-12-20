@@ -11,8 +11,11 @@
 
 @implementation DoricDemoPlugin
 - (void)test {
+}
+
+- (void)test2:(NSString *)val withPromise:(DoricPromise *)promise {
     dispatch_async(dispatch_get_main_queue(), ^{
-        ShowToast(@"Test called", DoricGravityCenter);
+        [promise resolve:nil];
     });
 }
 @end

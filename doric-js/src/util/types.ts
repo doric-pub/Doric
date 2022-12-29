@@ -23,7 +23,7 @@ export function obj2Model(obj: Model, convertor: (v: Function) => string): Model
         return obj.map(e => obj2Model(e, convertor)) as Model
     } else if (obj instanceof Object) {
         if (Reflect.has(obj, 'toModel') && Reflect.get(obj, 'toModel') instanceof Function) {
-            obj = Reflect.apply(Reflect.get(obj, 'toModel'), obj, [])
+            obj = Reflect.apply(Reflect.get(obj, 'toModel') as Function, obj, [])
             return obj
         } else {
             for (let key in obj) {

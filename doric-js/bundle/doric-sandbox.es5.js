@@ -17203,7 +17203,9 @@ var doric = (function (exports) {
 	    }
 	    hookBeforeNativeCall(context);
 	    Reflect.apply(callback.resolve, context, argumentsList);
-	    context.callbacks.delete(callbackId);
+	    if (callback.retained !== true) {
+	        context.callbacks.delete(callbackId);
+	    }
 	}
 	function jsCallReject(contextId, callbackId, args) {
 	    var arguments$1 = arguments;
@@ -17224,7 +17226,9 @@ var doric = (function (exports) {
 	    }
 	    hookBeforeNativeCall(context);
 	    Reflect.apply(callback.reject, context.entity, argumentsList);
-	    context.callbacks.delete(callbackId);
+	    if (callback.retained !== true) {
+	        context.callbacks.delete(callbackId);
+	    }
 	}
 	var Context = /** @class */ (function () {
 	    function Context(id) {
@@ -17260,7 +17264,8 @@ var doric = (function (exports) {
 	        var functionId = uniqueId('function');
 	        this.callbacks.set(functionId, {
 	            resolve: func,
-	            reject: function () { loge("This should not be called"); }
+	            reject: function () { loge("This should not be called"); },
+	            retained: true,
 	        });
 	        return functionId;
 	    };

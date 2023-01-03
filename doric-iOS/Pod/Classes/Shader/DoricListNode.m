@@ -242,37 +242,42 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSUInteger position = (NSUInteger) indexPath.row;
-    NSDictionary *model = [self itemModelAt:position];
-    NSDictionary *props = model[@"props"];
-    NSString *reuseId = props[@"identifier"];
-    self.itemActions[@(position)] = props[@"actions"];
-    if (self.loadMore
-            && position >= self.rowCount - 1
-            && self.onLoadMoreFuncId) {
-        reuseId = @"doricLoadMoreCell";
-        [self callLoadMore];
+    @try {
+        NSUInteger position = (NSUInteger) indexPath.row;
+        NSDictionary *model = [self itemModelAt:position];
+        NSDictionary *props = model[@"props"];
+        NSString *reuseId = props[@"identifier"];
+        self.itemActions[@(position)] = props[@"actions"];
+        if (self.loadMore
+                && position >= self.rowCount - 1
+                && self.onLoadMoreFuncId) {
+            reuseId = @"doricLoadMoreCell";
+            [self callLoadMore];
+        }
+        DoricTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseId ?: @"doricCell"];
+        if (!cell) {
+            cell = [[DoricTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseId ?: @"doricCell"];
+            DoricListItemNode *listItemNode = (DoricListItemNode *) [DoricViewNode create:self.doricContext withType:@"ListItem"];
+            [listItemNode initWithSuperNode:self];
+            cell.doricListItemNode = listItemNode;
+            cell.backgroundColor = [UIColor clearColor];
+            listItemNode.view.width = tableView.width;
+            [cell.contentView addSubview:listItemNode.view];
+        } else {
+            [cell.doricListItemNode reset];
+        }
+        DoricListItemNode *node = cell.doricListItemNode;
+        node.viewId = model[@"id"];
+        [node blend:props];
+        CGFloat height = node.view.doricLayout.heightSpec == DoricLayoutFit ? CGFLOAT_MAX : tableView.height;
+        [node.view.doricLayout apply:CGSizeMake(tableView.width, height)];
+        [node requestLayout];
+        [self callItem:position height:node.view.height];
+        return cell;
+    } @catch (NSException *exception) {
+        [self.doricContext.driver.registry onException:exception inContext:self.doricContext];
+        return nil;
     }
-    DoricTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseId ?: @"doricCell"];
-    if (!cell) {
-        cell = [[DoricTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseId ?: @"doricCell"];
-        DoricListItemNode *listItemNode = (DoricListItemNode *) [DoricViewNode create:self.doricContext withType:@"ListItem"];
-        [listItemNode initWithSuperNode:self];
-        cell.doricListItemNode = listItemNode;
-        cell.backgroundColor = [UIColor clearColor];
-        listItemNode.view.width = tableView.width;
-        [cell.contentView addSubview:listItemNode.view];
-    } else {
-        [cell.doricListItemNode reset];
-    }
-    DoricListItemNode *node = cell.doricListItemNode;
-    node.viewId = model[@"id"];
-    [node blend:props];
-    CGFloat height = node.view.doricLayout.heightSpec == DoricLayoutFit ? CGFLOAT_MAX : tableView.height;
-    [node.view.doricLayout apply:CGSizeMake(tableView.width, height)];
-    [node requestLayout];
-    [self callItem:position height:node.view.height];
-    return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -381,11 +386,11 @@
     NSString *viewId = subModel[@"id"];
     DoricViewNode *viewNode = [self subNodeWithViewId:viewId];
     BOOL skipReload = NO;
-    
+
     NSMutableDictionary *model = [[self subModelOf:viewId] mutableCopy];
     [self recursiveMixin:subModel to:model];
     [self setSubModel:model in:viewId];
-    
+
     if (viewNode) {
         CGSize originSize = viewNode.view.frame.size;
         [viewNode blend:subModel[@"props"]];

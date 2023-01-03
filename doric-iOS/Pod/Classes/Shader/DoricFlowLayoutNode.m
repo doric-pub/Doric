@@ -399,11 +399,11 @@
     NSString *viewId = subModel[@"id"];
     DoricViewNode *viewNode = [self subNodeWithViewId:viewId];
     BOOL skipReload = NO;
-    
+
     NSMutableDictionary *model = [[self subModelOf:viewId] mutableCopy];
     [self recursiveMixin:subModel to:model];
     [self setSubModel:model in:viewId];
-    
+
     if (viewNode) {
         CGSize originSize = viewNode.view.frame.size;
         [viewNode blend:subModel[@"props"]];
@@ -413,7 +413,7 @@
             skipReload = YES;
         }
     }
-    
+
     if (skipReload) {
         return;
     }
@@ -459,41 +459,46 @@
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    NSUInteger position = (NSUInteger) indexPath.row;
-    NSDictionary *model = [self itemModelAt:position];
-    NSDictionary *props = model[@"props"];
-    NSString *identifier = props[@"identifier"] ?: @"doricCell";
-    if (self.loadMore
-            && position >= self.itemCount
-            && self.onLoadMoreFuncId) {
-        identifier = @"doricLoadMoreCell";
-        [self callLoadMore];
-    }
-    [collectionView registerClass:[DoricFlowLayoutViewCell class] forCellWithReuseIdentifier:identifier];
-    DoricFlowLayoutViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
-    if (!cell.viewNode) {
-        DoricFlowLayoutItemNode *itemNode = (DoricFlowLayoutItemNode *) [DoricViewNode create:self.doricContext withType:@"FlowLayoutItem"];
-        [itemNode initWithSuperNode:self];
-        cell.viewNode = itemNode;
-        [cell.contentView addSubview:itemNode.view];
-    } else {
-        [cell.viewNode reset];
-    }
+    @try {
+        NSUInteger position = (NSUInteger) indexPath.row;
+        NSDictionary *model = [self itemModelAt:position];
+        NSDictionary *props = model[@"props"];
+        NSString *identifier = props[@"identifier"] ?: @"doricCell";
+        if (self.loadMore
+                && position >= self.itemCount
+                && self.onLoadMoreFuncId) {
+            identifier = @"doricLoadMoreCell";
+            [self callLoadMore];
+        }
+        [collectionView registerClass:[DoricFlowLayoutViewCell class] forCellWithReuseIdentifier:identifier];
+        DoricFlowLayoutViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+        if (!cell.viewNode) {
+            DoricFlowLayoutItemNode *itemNode = (DoricFlowLayoutItemNode *) [DoricViewNode create:self.doricContext withType:@"FlowLayoutItem"];
+            [itemNode initWithSuperNode:self];
+            cell.viewNode = itemNode;
+            [cell.contentView addSubview:itemNode.view];
+        } else {
+            [cell.viewNode reset];
+        }
 
-    DoricFlowLayoutItemNode *node = cell.viewNode;
-    node.viewId = model[@"id"];
-    [node blend:props];
+        DoricFlowLayoutItemNode *node = cell.viewNode;
+        node.viewId = model[@"id"];
+        [node blend:props];
 
-    BOOL fullSpan = self.loadMore && position >= self.itemCount;
-    if (props[@"fullSpan"]) {
-        fullSpan = [props[@"fullSpan"] boolValue];
+        BOOL fullSpan = self.loadMore && position >= self.itemCount;
+        if (props[@"fullSpan"]) {
+            fullSpan = [props[@"fullSpan"] boolValue];
+        }
+        CGFloat width = fullSpan ? collectionView.width : (collectionView.width - (self.columnCount - 1) * self.columnSpace) / self.columnCount;
+        CGFloat height = node.view.doricLayout.heightSpec == DoricLayoutFit ? CGFLOAT_MAX : collectionView.height;
+        [node.view.doricLayout apply:CGSizeMake(width, height)];
+        [node requestLayout];
+        [self callItem:position size:node.view.frame.size];
+        return cell;
+    } @catch (NSException *exception) {
+        [self.doricContext.driver.registry onException:exception inContext:self.doricContext];
+        return nil;
     }
-    CGFloat width = fullSpan ? collectionView.width : (collectionView.width - (self.columnCount - 1) * self.columnSpace) / self.columnCount;
-    CGFloat height = node.view.doricLayout.heightSpec == DoricLayoutFit ? CGFLOAT_MAX : collectionView.height;
-    [node.view.doricLayout apply:CGSizeMake(width, height)];
-    [node requestLayout];
-    [self callItem:position size:node.view.frame.size];
-    return cell;
 }
 
 - (NSIndexPath *)collectionView:(UICollectionView *)collectionView targetIndexPathForMoveFromItemAtIndexPath:(NSIndexPath *)currentIndexPath toProposedIndexPath:(NSIndexPath *)proposedIndexPath {

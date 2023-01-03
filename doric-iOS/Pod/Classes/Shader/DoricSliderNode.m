@@ -177,24 +177,29 @@
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    NSUInteger position = (NSUInteger) indexPath.row;
-    NSDictionary *model = [self itemModelAt:position];
-    NSDictionary *props = model[@"props"];
-    DoricSliderViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"doricCell" forIndexPath:indexPath];
-    if (!cell.doricSlideItemNode) {
-        DoricSlideItemNode *slideItemNode = (DoricSlideItemNode *) [DoricViewNode create:self.doricContext withType:@"SlideItem"];
-        [slideItemNode initWithSuperNode:self];
-        cell.doricSlideItemNode = slideItemNode;
-        [cell.contentView addSubview:slideItemNode.view];
-    } else {
-        [cell.doricSlideItemNode reset];
+    @try {
+        NSUInteger position = (NSUInteger) indexPath.row;
+        NSDictionary *model = [self itemModelAt:position];
+        NSDictionary *props = model[@"props"];
+        DoricSliderViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"doricCell" forIndexPath:indexPath];
+        if (!cell.doricSlideItemNode) {
+            DoricSlideItemNode *slideItemNode = (DoricSlideItemNode *) [DoricViewNode create:self.doricContext withType:@"SlideItem"];
+            [slideItemNode initWithSuperNode:self];
+            cell.doricSlideItemNode = slideItemNode;
+            [cell.contentView addSubview:slideItemNode.view];
+        } else {
+            [cell.doricSlideItemNode reset];
+        }
+        DoricSlideItemNode *node = cell.doricSlideItemNode;
+        node.viewId = model[@"id"];
+        [node blend:props];
+        [node.view.doricLayout apply:CGSizeMake(collectionView.width, collectionView.height)];
+        [node requestLayout];
+        return cell;
+    } @catch (NSException *exception) {
+        [self.doricContext.driver.registry onException:exception inContext:self.doricContext];
+        return nil;
     }
-    DoricSlideItemNode *node = cell.doricSlideItemNode;
-    node.viewId = model[@"id"];
-    [node blend:props];
-    [node.view.doricLayout apply:CGSizeMake(collectionView.width, collectionView.height)];
-    [node requestLayout];
-    return cell;
 }
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -253,11 +258,11 @@
     NSString *viewId = subModel[@"id"];
     DoricViewNode *viewNode = [self subNodeWithViewId:viewId];
     BOOL skipReload = NO;
-    
+
     NSMutableDictionary *model = [[self subModelOf:viewId] mutableCopy];
     [self recursiveMixin:subModel to:model];
     [self setSubModel:model in:viewId];
-    
+
     if (viewNode) {
         CGSize originSize = viewNode.view.frame.size;
         [viewNode blend:subModel[@"props"]];

@@ -21,15 +21,14 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSNull;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import pub.doric.async.AsyncResult;
 import pub.doric.shader.ViewNode;
 
@@ -49,6 +48,7 @@ class HorizontalListAdapter extends RecyclerView.Adapter<HorizontalListAdapter.D
     int itemCount = 0;
     int loadAnchor = -1;
     boolean loadMore = false;
+
     @NonNull
     @Override
     public DoricViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -59,17 +59,21 @@ class HorizontalListAdapter extends RecyclerView.Adapter<HorizontalListAdapter.D
 
     @Override
     public void onBindViewHolder(@NonNull DoricViewHolder holder, int position) {
-        JSValue jsValue = getItemModel(position);
-        if (jsValue != null && jsValue.isObject()) {
-            JSObject jsObject = jsValue.asObject();
-            holder.horizontalListItemNode.setId(jsObject.getProperty("id").asString().value());
-            holder.horizontalListItemNode.reset();
-            holder.horizontalListItemNode.blend(jsObject.getProperty("props").asObject());
-        }
-        if (this.loadMore
-                && position >= this.itemCount
-                && !TextUtils.isEmpty(this.horizontalListNode.onLoadMoreFuncId)) {
-            callLoadMore();
+        try {
+            JSValue jsValue = getItemModel(position);
+            if (jsValue != null && jsValue.isObject()) {
+                JSObject jsObject = jsValue.asObject();
+                holder.horizontalListItemNode.setId(jsObject.getProperty("id").asString().value());
+                holder.horizontalListItemNode.reset();
+                holder.horizontalListItemNode.blend(jsObject.getProperty("props").asObject());
+            }
+            if (this.loadMore
+                    && position >= this.itemCount
+                    && !TextUtils.isEmpty(this.horizontalListNode.onLoadMoreFuncId)) {
+                callLoadMore();
+            }
+        } catch (Exception e) {
+            horizontalListNode.getDoricContext().getDriver().getRegistry().onException(horizontalListNode.getDoricContext(), e);
         }
     }
 

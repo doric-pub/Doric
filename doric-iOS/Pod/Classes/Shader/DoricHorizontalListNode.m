@@ -240,37 +240,42 @@
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    NSUInteger position = (NSUInteger) indexPath.row;
-    NSDictionary *model = [self itemModelAt:position];
-    NSDictionary *props = model[@"props"];
-    NSString *identifier = props[@"identifier"] ?: @"doricCell";
-    self.itemActions[@(position)] = props[@"actions"];
-    if (self.loadMore
-            && position >= self.rowCount - 1
-            && self.onLoadMoreFuncId) {
-        identifier = @"doricLoadMoreCell";
-        [self callLoadMore];
+    @try {
+        NSUInteger position = (NSUInteger) indexPath.row;
+        NSDictionary *model = [self itemModelAt:position];
+        NSDictionary *props = model[@"props"];
+        NSString *identifier = props[@"identifier"] ?: @"doricCell";
+        self.itemActions[@(position)] = props[@"actions"];
+        if (self.loadMore
+                && position >= self.rowCount - 1
+                && self.onLoadMoreFuncId) {
+            identifier = @"doricLoadMoreCell";
+            [self callLoadMore];
+        }
+        [collectionView registerClass:[DoricHorizontalTableViewCell class] forCellWithReuseIdentifier:identifier];
+        DoricHorizontalTableViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+        if (!cell.doricHorizontalListItemNode) {
+            DoricHorizontalListItemNode *itemNode = (DoricHorizontalListItemNode *) [DoricViewNode create:self.doricContext withType:@"HorizontalListItem"];
+            [itemNode initWithSuperNode:self];
+            cell.doricHorizontalListItemNode = itemNode;
+            cell.backgroundColor = [UIColor clearColor];
+            itemNode.view.height = collectionView.height;
+            [cell.contentView addSubview:itemNode.view];
+        } else {
+            [cell.doricHorizontalListItemNode reset];
+        }
+        DoricHorizontalListItemNode *node = cell.doricHorizontalListItemNode;
+        node.viewId = model[@"id"];
+        [node blend:props];
+        CGFloat width = node.view.doricLayout.widthSpec == DoricLayoutFit ? CGFLOAT_MAX : collectionView.width;
+        [node.view.doricLayout apply:CGSizeMake(width, collectionView.height)];
+        [node requestLayout];
+        [self callItem:position width:node.view.width];
+        return cell;
+    } @catch (NSException *exception) {
+        [self.doricContext.driver.registry onException:exception inContext:self.doricContext];
+        return nil;
     }
-    [collectionView registerClass:[DoricHorizontalTableViewCell class] forCellWithReuseIdentifier:identifier];
-    DoricHorizontalTableViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
-    if (!cell.doricHorizontalListItemNode) {
-        DoricHorizontalListItemNode *itemNode = (DoricHorizontalListItemNode *) [DoricViewNode create:self.doricContext withType:@"HorizontalListItem"];
-        [itemNode initWithSuperNode:self];
-        cell.doricHorizontalListItemNode = itemNode;
-        cell.backgroundColor = [UIColor clearColor];
-        itemNode.view.height = collectionView.height;
-        [cell.contentView addSubview:itemNode.view];
-    } else {
-        [cell.doricHorizontalListItemNode reset];
-    }
-    DoricHorizontalListItemNode *node = cell.doricHorizontalListItemNode;
-    node.viewId = model[@"id"];
-    [node blend:props];
-    CGFloat width = node.view.doricLayout.widthSpec == DoricLayoutFit ? CGFLOAT_MAX : collectionView.width;
-    [node.view.doricLayout apply:CGSizeMake(width, collectionView.height)];
-    [node requestLayout];
-    [self callItem:position width:node.view.width];
-    return cell;
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
@@ -337,11 +342,11 @@
     NSString *viewId = subModel[@"id"];
     DoricViewNode *viewNode = [self subNodeWithViewId:viewId];
     BOOL skipReload = NO;
-    
+
     NSMutableDictionary *model = [[self subModelOf:viewId] mutableCopy];
     [self recursiveMixin:subModel to:model];
     [self setSubModel:model in:viewId];
-    
+
     if (viewNode) {
         CGSize originSize = viewNode.view.frame.size;
         [viewNode blend:subModel[@"props"]];
@@ -351,7 +356,7 @@
             skipReload = YES;
         }
     }
-    
+
     if (skipReload) {
         return;
     }

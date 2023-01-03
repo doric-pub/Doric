@@ -21,15 +21,14 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSNull;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import pub.doric.async.AsyncResult;
 import pub.doric.shader.ViewNode;
 
@@ -49,6 +48,7 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
     int itemCount = 0;
     int loadAnchor = -1;
     boolean loadMore = false;
+
     @NonNull
     @Override
     public DoricViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -59,17 +59,21 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull DoricViewHolder holder, int position) {
-        JSValue jsValue = getItemModel(position);
-        if (jsValue != null && jsValue.isObject()) {
-            JSObject jsObject = jsValue.asObject();
-            holder.listItemNode.setId(jsObject.getProperty("id").asString().value());
-            holder.listItemNode.reset();
-            holder.listItemNode.blend(jsObject.getProperty("props").asObject());
-        }
-        if (this.loadMore
-                && position >= this.itemCount
-                && !TextUtils.isEmpty(this.listNode.onLoadMoreFuncId)) {
-            callLoadMore();
+        try {
+            JSValue jsValue = getItemModel(position);
+            if (jsValue != null && jsValue.isObject()) {
+                JSObject jsObject = jsValue.asObject();
+                holder.listItemNode.setId(jsObject.getProperty("id").asString().value());
+                holder.listItemNode.reset();
+                holder.listItemNode.blend(jsObject.getProperty("props").asObject());
+            }
+            if (this.loadMore
+                    && position >= this.itemCount
+                    && !TextUtils.isEmpty(this.listNode.onLoadMoreFuncId)) {
+                callLoadMore();
+            }
+        } catch (Exception e) {
+            listNode.getDoricContext().getDriver().getRegistry().onException(listNode.getDoricContext(), e);
         }
     }
 

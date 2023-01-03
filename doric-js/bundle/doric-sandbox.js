@@ -1273,6 +1273,16 @@ var doric = (function (exports) {
         }
     }
     class Context {
+        hookBeforeNativeCall() {
+            if (this.entity && Reflect.has(this.entity, 'hookBeforeNativeCall')) {
+                Reflect.apply(Reflect.get(this.entity, 'hookBeforeNativeCall'), this.entity, []);
+            }
+        }
+        hookAfterNativeCall() {
+            if (this.entity && Reflect.has(this.entity, 'hookAfterNativeCall')) {
+                Reflect.apply(Reflect.get(this.entity, 'hookAfterNativeCall'), this.entity, []);
+            }
+        }
         constructor(id) {
             this.callbacks = new Map;
             this.classes = new Map;
@@ -1306,16 +1316,6 @@ var doric = (function (exports) {
                     }
                 }
             });
-        }
-        hookBeforeNativeCall() {
-            if (this.entity && Reflect.has(this.entity, 'hookBeforeNativeCall')) {
-                Reflect.apply(Reflect.get(this.entity, 'hookBeforeNativeCall'), this.entity, []);
-            }
-        }
-        hookAfterNativeCall() {
-            if (this.entity && Reflect.has(this.entity, 'hookAfterNativeCall')) {
-                Reflect.apply(Reflect.get(this.entity, 'hookAfterNativeCall'), this.entity, []);
-            }
         }
         callNative(namespace, method, args) {
             const callbackId = uniqueId('callback');

@@ -20,15 +20,14 @@ import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSNull;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import pub.doric.async.AsyncResult;
 import pub.doric.shader.ViewNode;
 
@@ -61,12 +60,16 @@ class SlideAdapter extends RecyclerView.Adapter<SlideAdapter.DoricViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull DoricViewHolder holder, int position) {
-        JSValue jsValue = getItemModel(position);
-        if (jsValue != null && jsValue.isObject()) {
-            JSObject jsObject = jsValue.asObject();
-            holder.slideItemNode.setId(jsObject.getProperty("id").asString().value());
-            holder.slideItemNode.reset();
-            holder.slideItemNode.blend(jsObject.getProperty("props").asObject());
+        try {
+            JSValue jsValue = getItemModel(position);
+            if (jsValue != null && jsValue.isObject()) {
+                JSObject jsObject = jsValue.asObject();
+                holder.slideItemNode.setId(jsObject.getProperty("id").asString().value());
+                holder.slideItemNode.reset();
+                holder.slideItemNode.blend(jsObject.getProperty("props").asObject());
+            }
+        } catch (Exception e) {
+            sliderNode.getDoricContext().getDriver().getRegistry().onException(sliderNode.getDoricContext(), e);
         }
     }
 

@@ -20,16 +20,15 @@ import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-
 import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSNull;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import pub.doric.async.AsyncResult;
 import pub.doric.shader.ViewNode;
 
@@ -62,33 +61,37 @@ class FlowAdapter extends RecyclerView.Adapter<FlowAdapter.DoricViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull DoricViewHolder holder, int position) {
-        JSValue jsValue = getItemModel(position);
-        boolean fullSpan = this.loadMore && position >= this.itemCount;
-        if (jsValue != null && jsValue.isObject()) {
-            JSObject jsObject = jsValue.asObject();
-            holder.flowLayoutItemNode.setId(jsObject.getProperty("id").asString().value());
-            JSObject props = jsObject.getProperty("props").asObject();
-            holder.flowLayoutItemNode.reset();
-            holder.flowLayoutItemNode.blend(props);
-            JSValue fullSpanValue = props.getProperty("fullSpan");
-            if (fullSpanValue.isBoolean()) {
-                fullSpan = fullSpanValue.asBoolean().value();
+        try {
+            JSValue jsValue = getItemModel(position);
+            boolean fullSpan = this.loadMore && position >= this.itemCount;
+            if (jsValue != null && jsValue.isObject()) {
+                JSObject jsObject = jsValue.asObject();
+                holder.flowLayoutItemNode.setId(jsObject.getProperty("id").asString().value());
+                JSObject props = jsObject.getProperty("props").asObject();
+                holder.flowLayoutItemNode.reset();
+                holder.flowLayoutItemNode.blend(props);
+                JSValue fullSpanValue = props.getProperty("fullSpan");
+                if (fullSpanValue.isBoolean()) {
+                    fullSpan = fullSpanValue.asBoolean().value();
+                }
             }
-        }
-        if (holder.itemView.getLayoutParams() instanceof StaggeredGridLayoutManager.LayoutParams) {
-            ((StaggeredGridLayoutManager.LayoutParams) holder.itemView.getLayoutParams()).setFullSpan(fullSpan);
-        } else if (fullSpan) {
-            StaggeredGridLayoutManager.LayoutParams layoutParams = new StaggeredGridLayoutManager.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    holder.itemView.getLayoutParams().height
-            );
-            layoutParams.setFullSpan(true);
-            holder.itemView.setLayoutParams(layoutParams);
-        }
-        if (this.loadMore
-                && position >= this.itemCount
-                && !TextUtils.isEmpty(this.flowLayoutNode.onLoadMoreFuncId)) {
-            callLoadMore();
+            if (holder.itemView.getLayoutParams() instanceof StaggeredGridLayoutManager.LayoutParams) {
+                ((StaggeredGridLayoutManager.LayoutParams) holder.itemView.getLayoutParams()).setFullSpan(fullSpan);
+            } else if (fullSpan) {
+                StaggeredGridLayoutManager.LayoutParams layoutParams = new StaggeredGridLayoutManager.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        holder.itemView.getLayoutParams().height
+                );
+                layoutParams.setFullSpan(true);
+                holder.itemView.setLayoutParams(layoutParams);
+            }
+            if (this.loadMore
+                    && position >= this.itemCount
+                    && !TextUtils.isEmpty(this.flowLayoutNode.onLoadMoreFuncId)) {
+                callLoadMore();
+            }
+        } catch (Exception e) {
+            flowLayoutNode.getDoricContext().getDriver().getRegistry().onException(flowLayoutNode.getDoricContext(), e);
         }
     }
 

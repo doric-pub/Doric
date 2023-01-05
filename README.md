@@ -42,6 +42,9 @@ Doric是一套高性能的跨平台开发框架,使用TSX/TypeScript开发,一�
 ## OSCS
 [![OSCS Status](https://www.oscs1024.com/platform/badge/doric-pub/Doric.svg?size=large)](https://www.oscs1024.com/project/doric-pub/Doric?ref=badge_large)
 
+## Murphysec
+[![Security Status](https://www.murphysec.com/platform3/v3/badge/1608990415081447424.svg)](https://www.murphysec.com/accept?code=933ad32fd0af5a1633e85dffbbb5f45c&type=1&from=2&t=1)
+
 ## 特色
 ### 跨平台统一
 Doric目前已支持Android、iOS、Qt、Web,可通过一套代码在各平台展示一致的前端页面.

@@ -61,6 +61,9 @@ export class Input extends View {
     textAlignment?: Gravity
 
     @Property
+    fontStyle?: "normal" | "bold" | "italic" | "bold_italic"
+
+    @Property
     onTextChange?: (text?: string) => void
 
     @Property

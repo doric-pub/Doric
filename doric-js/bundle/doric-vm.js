@@ -1284,6 +1284,16 @@ function jsCallReject(contextId, callbackId, args) {
     }
 }
 class Context {
+    hookBeforeNativeCall() {
+        if (this.entity && Reflect.has(this.entity, 'hookBeforeNativeCall')) {
+            Reflect.apply(Reflect.get(this.entity, 'hookBeforeNativeCall'), this.entity, []);
+        }
+    }
+    hookAfterNativeCall() {
+        if (this.entity && Reflect.has(this.entity, 'hookAfterNativeCall')) {
+            Reflect.apply(Reflect.get(this.entity, 'hookAfterNativeCall'), this.entity, []);
+        }
+    }
     constructor(id) {
         this.callbacks = new Map;
         this.classes = new Map;
@@ -1317,16 +1327,6 @@ class Context {
                 }
             }
         });
-    }
-    hookBeforeNativeCall() {
-        if (this.entity && Reflect.has(this.entity, 'hookBeforeNativeCall')) {
-            Reflect.apply(Reflect.get(this.entity, 'hookBeforeNativeCall'), this.entity, []);
-        }
-    }
-    hookAfterNativeCall() {
-        if (this.entity && Reflect.has(this.entity, 'hookAfterNativeCall')) {
-            Reflect.apply(Reflect.get(this.entity, 'hookAfterNativeCall'), this.entity, []);
-        }
     }
     callNative(namespace, method, args) {
         const callbackId = uniqueId('callback');
@@ -1701,6 +1701,24 @@ function createRef() {
     return new Ref;
 }
 class View {
+    callback2Id(f) {
+        const id = uniqueId('Function');
+        this.callbacks.set(id, f);
+        return id;
+    }
+    id2Callback(id) {
+        let f = this.callbacks.get(id);
+        if (f === undefined) {
+            f = Reflect.get(this, id);
+        }
+        return f;
+    }
+    findViewByTag(tag) {
+        if (tag === this.tag) {
+            return this;
+        }
+        return undefined;
+    }
     constructor() {
         this.width = 0;
         this.height = 0;
@@ -1731,24 +1749,6 @@ class View {
                 return ret;
             }
         });
-    }
-    callback2Id(f) {
-        const id = uniqueId('Function');
-        this.callbacks.set(id, f);
-        return id;
-    }
-    id2Callback(id) {
-        let f = this.callbacks.get(id);
-        if (f === undefined) {
-            f = Reflect.get(this, id);
-        }
-        return f;
-    }
-    findViewByTag(tag) {
-        if (tag === this.tag) {
-            return this;
-        }
-        return undefined;
     }
     /** Anchor start*/
     get left() {
@@ -4168,6 +4168,10 @@ __decorate$6([
     Property,
     __metadata$6("design:type", Gravity)
 ], Input.prototype, "textAlignment", void 0);
+__decorate$6([
+    Property,
+    __metadata$6("design:type", String)
+], Input.prototype, "fontStyle", void 0);
 __decorate$6([
     Property,
     __metadata$6("design:type", Function)

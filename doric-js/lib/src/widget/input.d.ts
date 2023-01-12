@@ -21,6 +21,7 @@ export declare class Input extends View {
     hintTextColor?: Color;
     multiline?: boolean;
     textAlignment?: Gravity;
+    fontStyle?: "normal" | "bold" | "italic" | "bold_italic";
     onTextChange?: (text?: string) => void;
     onFocusChange?: (focused: boolean) => void;
     maxLength?: number;

@@ -97,6 +97,10 @@ __decorate([
 ], Input.prototype, "textAlignment", void 0);
 __decorate([
     Property,
+    __metadata("design:type", String)
+], Input.prototype, "fontStyle", void 0);
+__decorate([
+    Property,
     __metadata("design:type", Function)
 ], Input.prototype, "onTextChange", void 0);
 __decorate([

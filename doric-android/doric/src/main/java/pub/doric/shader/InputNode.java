@@ -181,6 +181,21 @@ public class InputNode extends ViewNode<EditText> implements TextWatcher, View.O
             case "textAlignment":
                 view.setGravity(prop.asNumber().toInt());
                 break;
+            case "fontStyle":
+                if (prop.isString()) {
+                    if ("bold".equals(prop.asString().value())) {
+                        view.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+                    } else if ("italic".equals(prop.asString().value())) {
+                        view.setTypeface(Typeface.defaultFromStyle(Typeface.ITALIC));
+                    } else if ("bold_italic".equals(prop.asString().value())) {
+                        view.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD_ITALIC));
+                    } else {
+                        view.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+                    }
+                } else {
+                    view.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+                }
+                break;
             case "font":
                 if (!prop.isString()) {
                     return;

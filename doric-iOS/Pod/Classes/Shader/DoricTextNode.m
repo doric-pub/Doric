@@ -64,6 +64,7 @@
 @property(nonatomic, copy) NSNumber *strikethrough;
 @property(nonatomic, strong) NSDictionary *textGradientProps;
 @property(nonatomic, assign) CGSize textGradientSize;
+@property(nonatomic, assign) BOOL customizedFont;
 @end
 
 @implementation DoricTextNode
@@ -130,7 +131,12 @@
         if (fontDescriptor) {
             font = [UIFont fontWithDescriptor:fontDescriptor size:0];
         } else {
-            font = [UIFont fontWithName:font.fontName size:font.pointSize];
+            if (self.customizedFont) {
+                font = [UIFont fontWithName:font.fontName size:font.pointSize];
+            } else {
+                UIFont *systemFont = [UIFont systemFontOfSize:[UIFont systemFontSize]];
+                font = [UIFont fontWithName:systemFont.fontName size:font.pointSize];
+            }
         }
         view.font = font;
     } else if ([name isEqualToString:@"maxWidth"]) {
@@ -143,6 +149,7 @@
             UIFont *font = [UIFont fontWithName:[iconfont stringByReplacingOccurrencesOfString:@".ttf" withString:@""]
                                            size:view.font.pointSize];
             view.font = font;
+            self.customizedFont = YES;
         } else if ([prop isKindOfClass:[NSDictionary class]]) {
             DoricAsyncResult <NSData *> *asyncResult = [[self.doricContext.driver.registry.loaderManager
                     load:prop
@@ -150,6 +157,7 @@
             [asyncResult setResultCallback:^(NSData *fontData) {
                 [self.doricContext dispatchToMainQueue:^{
                     view.font = [self registerFontWithFontData:fontData fontSize:view.font.pointSize];
+                    self.customizedFont = YES;
                 }];
             }];
             [asyncResult setExceptionCallback:^(NSException *e) {
@@ -391,5 +399,6 @@
     self.view.layer.shadowRadius = 3;
     self.view.layer.shadowOffset = CGSizeMake(0, -3);
     self.view.lineBreakMode = NSLineBreakByTruncatingTail;
+    self.customizedFont = NO;
 }
 @end

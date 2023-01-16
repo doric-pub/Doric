@@ -280,6 +280,21 @@
     }
 }
 
+- (void)calculateCellHeightItemNode:(DoricListItemNode *)node atIndexPath:(NSIndexPath *)indexPath {
+    NSUInteger position = (NSUInteger) indexPath.row;
+    if (self.itemHeights[@(position)]) {
+        return;
+    }
+    NSDictionary *model = [self itemModelAt:position];
+    NSDictionary *props = model[@"props"];
+    [node blend:props];
+    CGFloat height = node.view.doricLayout.heightSpec == DoricLayoutFit ? CGFLOAT_MAX : self.view.height;
+    [node.view.doricLayout apply:CGSizeMake(self.view.width, height)];
+    [node requestLayout];
+    
+    self.itemHeights[@(position)] = @(node.view.height);
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSUInteger position = (NSUInteger) indexPath.row;
     NSNumber *heightNumber = self.itemHeights[@(position)];
@@ -288,6 +303,17 @@
     } else {
         return 44.f;
     }
+}
+
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSUInteger position = (NSUInteger) indexPath.row;
+    if (position < self.itemHeights.count) {
+        NSNumber *heightNumber = self.itemHeights[@(position)];
+        if (heightNumber) {
+            return [heightNumber floatValue];
+        }
+    }
+    return 44.f;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -588,11 +614,13 @@
     NSUInteger scrolledPosition = [params[@"index"] unsignedIntegerValue];
 
     if (scrolledPosition < self.rowCount && scrolledPosition >= 0) {
-        for (int i = 0; i <= scrolledPosition; i++) {
-            [self tableView:self.view cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-        }
 
         dispatch_async(dispatch_get_main_queue(), ^{
+            DoricListItemNode *node = (DoricListItemNode *) [DoricViewNode create:self.doricContext withType:@"ListItem"];
+            [node initWithSuperNode:self];
+            for (int i = 0; i <= scrolledPosition; i++) {
+                [self calculateCellHeightItemNode:node atIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+            }
             [self.view scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:scrolledPosition inSection:0] atScrollPosition:UITableViewScrollPositionNone animated:animated];
         });
     } else {

@@ -304,6 +304,7 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
 @property(nonatomic, copy) onSubmitEditingBlock onSubmitEditing;
 @property(nonatomic, strong) NSNumber *maxLength;
 @property(nonatomic, copy) NSString *beforeTextChangeFuncId;
+@property(nonatomic, assign) BOOL customizedFont;
 @end
 
 @implementation DoricInputNode
@@ -350,11 +351,36 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
             verticalAlignment = UIControlContentVerticalAlignmentBottom;
         }
         view.singleLineInput.contentVerticalAlignment = verticalAlignment;
+    } else if ([name isEqualToString:@"fontStyle"]) {
+        UIFont *font = view.font;
+        if (!font) {
+            font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
+        }
+        UIFontDescriptor *fontDescriptor = nil;
+        if ([@"bold" isEqualToString:prop]) {
+            fontDescriptor = [font.fontDescriptor fontDescriptorWithSymbolicTraits:UIFontDescriptorTraitBold];
+        } else if ([@"italic" isEqualToString:prop]) {
+            fontDescriptor = [font.fontDescriptor fontDescriptorWithSymbolicTraits:UIFontDescriptorTraitItalic];
+        } else if ([@"bold_italic" isEqualToString:prop]) {
+            fontDescriptor = [font.fontDescriptor fontDescriptorWithSymbolicTraits:UIFontDescriptorTraitBold | UIFontDescriptorTraitItalic];
+        }
+        if (fontDescriptor) {
+            font = [UIFont fontWithDescriptor:fontDescriptor size:0];
+        } else {
+            if (self.customizedFont) {
+                font = [UIFont fontWithName:font.fontName size:font.pointSize];
+            } else {
+                UIFont *systemFont = [UIFont systemFontOfSize:[UIFont systemFontSize]];
+                font = [UIFont fontWithName:systemFont.fontName size:font.pointSize];
+            }
+        }
+        view.font = font;
     } else if ([name isEqualToString:@"font"]) {
         NSString *iconfont = prop;
         UIFont *font = [UIFont fontWithName:[iconfont stringByReplacingOccurrencesOfString:@".ttf" withString:@""]
                                        size:view.font.pointSize];
         view.font = font;
+        self.customizedFont = YES;
     } else if ([name isEqualToString:@"multiline"]) {
         BOOL value = [(NSNumber *) prop boolValue];
         view.multiline = value;
@@ -689,5 +715,6 @@ typedef void (^onSubmitEditingBlock)(NSString *text, DoricInputNode *node);
     self.onSubmitEditing = nil;
     self.onTextChange = nil;
     self.maxLength = nil;
+    self.customizedFont = NO;
 }
 @end

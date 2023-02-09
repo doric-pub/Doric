@@ -7,14 +7,14 @@ import { FlexConfig } from "../util/flexbox";
 export declare function Property(target: Object, propKey: string): void;
 export declare function InconsistProperty(target: Object, propKey: string): void;
 export declare function ViewComponent(constructor: ClassType<any>): void;
-export type NativeViewModel = {
+export declare type NativeViewModel = {
     id: string;
     type: string;
     props: {
         [index: string]: Model;
     };
 };
-type RefType<T> = T extends Ref<infer R> ? R : never;
+declare type RefType<T> = T extends Ref<infer R> ? R : never;
 export declare class Ref<T extends View> {
     private view?;
     set current(v: T);
@@ -151,8 +151,8 @@ export declare abstract class Superview extends View {
     clean(): void;
     toModel(): NativeViewModel;
 }
-export type ViewArray = View[];
-export type ViewFragment = View | ViewArray | undefined | null;
+export declare type ViewArray = View[];
+export declare type ViewFragment = View | ViewArray | undefined | null;
 export declare abstract class Group extends Superview implements JSX.ElementChildrenAttribute {
     padding?: {
         left?: number;

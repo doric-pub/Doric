@@ -5,7 +5,7 @@ import { ClassType } from "../util/types";
 export declare abstract class ViewHolder {
     abstract build(root: Group): void;
 }
-export type Setter<M> = (state: M) => void;
+export declare type Setter<M> = (state: M) => void;
 export declare abstract class ViewModel<M extends Object, V extends ViewHolder> {
     context: BridgeContext;
     private state;

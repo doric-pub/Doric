@@ -41,7 +41,17 @@
 }
 
 - (void)onLog:(DoricLogType)type message:(NSString *)message {
-    DoricLog(message);
+    switch (type) {
+        case DoricLogTypeWarning:
+            DoricSafeLog([@"Doric-W: " stringByAppendingString:message]);
+            break;
+        case DoricLogTypeError:
+            DoricSafeLog([@"Doric-E: " stringByAppendingString:message]);
+            break;
+        default:
+            DoricSafeLog([@"Doric-D: " stringByAppendingString:message]);
+            break;
+    }
 }
 @end
 
@@ -335,7 +345,7 @@
 }
 
 - (id)jsValueToObject:(JSValue *)jsValue {
-    if([jsValue isKindOfClass:NSDictionary.class]){
+    if ([jsValue isKindOfClass:NSDictionary.class]) {
         return jsValue;
     }
     return [jsValue toObjectWithArrayBuffer];

@@ -31,6 +31,10 @@ void DoricLog(NSString *_Nonnull format, ...) {
     va_end(args);
 }
 
+void DoricSafeLog(NSString *_Nonnull message) {
+    NSLog(@"%@", message);
+}
+
 UIColor *DoricColor(NSNumber *number) {
     CGFloat r, g, b, a;
     long colorValue = [number longValue];

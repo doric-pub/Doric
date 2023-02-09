@@ -1,6 +1,6 @@
 import { Panel } from "../ui/panel";
 import { ClassType } from "../util/types";
-export type BridgeContext = {
+export declare type BridgeContext = {
     /**
      * The identify of current context
      */

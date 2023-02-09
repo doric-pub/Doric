@@ -27,7 +27,10 @@
 extern "C"
 {
 #endif
+
 void DoricLog(NSString *_Nonnull format, ...);
+
+void DoricSafeLog(NSString *_Nonnull message);
 
 UIColor *_Nonnull DoricColor(NSNumber *_Nonnull number);
 
@@ -50,6 +53,7 @@ void ShowToastInVC(UIViewController *_Nonnull vc, NSString *_Nonnull text, Doric
 UIImage *_Nonnull UIImageWithColor(UIColor *_Nonnull color);
 
 BOOL hasNotch(void);
+
 #ifdef __cplusplus
 }
 #endif

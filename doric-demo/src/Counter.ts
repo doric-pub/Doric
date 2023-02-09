@@ -73,29 +73,12 @@ class CounterView extends ViewHolder {
 class CounterVM extends ViewModel<CountModel, CounterView> {
   onAttached(s: CountModel, vh: CounterView) {
     vh.counter.onClick = () => {
-      setInterval(() => {
-        // this.updateState(state => {
-        //   state.count++
-        // })
-        this.context.callNative("demo", "test2", "sdfsf")
-        //loge("setInterval")
-      }, 1)
+      this.updateState(state => state.count++)
     };
-    vh.number.onClick = () => {
-      setInterval(() => {
-        // this.updateState(state => {
-        //   state.count++
-        // })
-        this.context.callNative("demo", "test")
-      }, 1)
-    }
   }
   onBind(s: CountModel, vh: CounterView) {
     vh.number.text = `${s.count}`;
-    log(`Current count  is ${s.count}`);
-    logw(`Current count is ${s.count}`);
-    loge(`Current count is ${s.count}`);
-    console.log("This is from console.log")
+    console.error(` select * from production  %d where (title like '%s%' or rawHtml like '%s%') and id > 39  limit 15`)
   }
 }
 

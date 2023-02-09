@@ -4,8 +4,8 @@ declare module NativeClient {
     function callNative(name: string, args: string): string;
     function fetchArrayBuffer(id: string): string;
 }
-type RawValue = number | string | boolean | object | undefined | ArrayBuffer;
-type WrappedValue = {
+declare type RawValue = number | string | boolean | object | undefined | ArrayBuffer;
+declare type WrappedValue = {
     type: "number" | "string" | "boolean" | "object" | "array" | "null" | "arrayBuffer";
     value: RawValue;
 };

@@ -59,6 +59,9 @@ public class DoricLog {
     }
 
     private static String format(String message, Object... args) {
-        return String.format(message, args);
+        if (args.length > 0) {
+            return String.format(message, args);
+        }
+        return message;
     }
 }

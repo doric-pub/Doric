@@ -24,7 +24,6 @@ import java.io.StringWriter;
 
 import pub.doric.DoricContext;
 import pub.doric.IDoricMonitor;
-import pub.doric.utils.DoricLog;
 
 /**
  * @Description: pub.doric.devkit
@@ -55,15 +54,12 @@ public class DoricDevMonitor implements IDoricMonitor {
         String typeString = "DEFAULT";
         switch (type) {
             case Log.ERROR:
-                DoricLog.suffix_e("_js", message);
                 typeString = "ERROR";
                 break;
             case Log.WARN:
-                DoricLog.suffix_w("_js", message);
                 typeString = "WARN";
                 break;
             default:
-                DoricLog.suffix_d("_js", message);
                 break;
         }
         DoricDev.getInstance().sendDevCommand(

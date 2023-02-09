@@ -26,8 +26,6 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 
-import androidx.annotation.Nullable;
-
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JavaFunction;
@@ -39,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import androidx.annotation.Nullable;
 import pub.doric.Doric;
 import pub.doric.DoricContext;
 import pub.doric.DoricContextManager;
@@ -343,13 +342,13 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
     public void onLog(int type, String message) {
         switch (type) {
             case Log.ERROR:
-                DoricLog.suffix_e("_js", "%s", message);
+                DoricLog.suffix_e("_js", message);
                 break;
             case Log.WARN:
-                DoricLog.suffix_w("_js", "%s", message);
+                DoricLog.suffix_w("_js", message);
                 break;
             default:
-                DoricLog.suffix_d("_js", "%s", message);
+                DoricLog.suffix_d("_js", message);
                 break;
         }
     }

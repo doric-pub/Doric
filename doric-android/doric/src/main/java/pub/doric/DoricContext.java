@@ -21,8 +21,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import com.github.pengfeizhou.jscore.ArchiveException;
+import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSONBuilder;
+import com.github.pengfeizhou.jscore.JSObject;
+import com.github.pengfeizhou.jscore.JSValue;
 
 import org.json.JSONObject;
 
@@ -44,6 +48,7 @@ import pub.doric.navbar.IDoricNavBar;
 import pub.doric.navigator.IDoricNavigator;
 import pub.doric.performance.DoricPerformanceProfile;
 import pub.doric.plugin.DoricJavaPlugin;
+import pub.doric.plugin.ShaderPlugin;
 import pub.doric.resource.DoricResource;
 import pub.doric.shader.RootNode;
 import pub.doric.shader.ViewNode;
@@ -382,5 +387,51 @@ public class DoricContext {
 
     public void releaseJavaValue(SoftReference<RetainedJavaValue> retainedJavaValue) {
         retainedJavaValues.remove(retainedJavaValue);
+    }
+
+    public AsyncResult<JSDecoder> pureCallEntity(String methodName, Object... args) {
+        final AsyncResult<JSDecoder> asyncResult = new AsyncResult<>();
+        final Object[] nArgs = new Object[args.length + 2];
+        nArgs[0] = getContextId();
+        nArgs[1] = methodName;
+        if (args.length > 0) {
+            System.arraycopy(args, 0, nArgs, 2, args.length);
+        }
+        getDriver().invokeDoricMethod(DoricConstant.DORIC_CONTEXT_INVOKE_PURE, nArgs).setCallback(new AsyncResult.Callback<JSDecoder>() {
+            @Override
+            public void onResult(JSDecoder result) {
+                asyncResult.setResult(result);
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                getDriver().getRegistry().onException(DoricContext.this, t instanceof Exception ? (Exception) t : new RuntimeException(t));
+                asyncResult.setError(t);
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        });
+        return asyncResult;
+    }
+
+    public void renderSynchronously() {
+        AsyncResult<JSDecoder> asyncResult = pureCallEntity(DoricConstant.DORIC_ENTITY_FETCH_DIRTY_DATA);
+        JSDecoder jsDecoder = asyncResult.synchronous().get();
+        DoricJavaPlugin shaderPlugin = obtainPlugin(getDriver().getRegistry().acquirePluginInfo("Shader"));
+        try {
+            JSValue result = jsDecoder.decode();
+            if (shaderPlugin instanceof ShaderPlugin && result.isArray()) {
+                JSArray jsArray = result.asArray();
+                for (int i = 0; i < jsArray.size(); i++) {
+                    JSObject model = jsArray.get(i).asObject();
+                    ((ShaderPlugin) shaderPlugin).render(model, null);
+                }
+            }
+        } catch (ArchiveException e) {
+            e.printStackTrace();
+        }
     }
 }

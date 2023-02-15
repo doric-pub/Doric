@@ -19,6 +19,7 @@
 
 #import "DoricPanel.h"
 #import "Doric.h"
+#import "DoricConstant.h"
 
 @interface DoricPanel ()
 @property(nonatomic, assign) CGFloat renderedWidth;
@@ -79,4 +80,17 @@
     }
 }
 
+- (void)renderSynchronously {
+    [self.doricContext renderSynchronously];
+    CGSize newSize = self.doricContext.rootNode.view.frame.size;
+    if (self.renderedWidth != newSize.width || self.renderedWidth != newSize.height) {
+        self.renderedWidth = newSize.width;
+        self.renderedHeight = newSize.height;
+        self.view.width = newSize.width;
+        self.view.height = newSize.height;
+        if (self.frameChangedBlock) {
+            self.frameChangedBlock(newSize);
+        }
+    }
+}
 @end

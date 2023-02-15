@@ -1327,6 +1327,48 @@ var Panel = /** @class */ (function () {
             });
         }
     };
+    Panel.prototype.__fetchEffectiveData__ = function () {
+        var e_4, _a, e_5, _b;
+        var diryData = [];
+        if (this.destroyed) {
+            return diryData;
+        }
+        if (this.__root__.isDirty()) {
+            var model = this.__root__.toModel();
+            diryData.push(JSON.parse(JSON.stringify(model)));
+            this.__root__.clean();
+        }
+        try {
+            for (var _c = __values$3(this.headviews.values()), _d = _c.next(); !_d.done; _d = _c.next()) {
+                var map = _d.value;
+                try {
+                    for (var _e = (e_5 = void 0, __values$3(map.values())), _f = _e.next(); !_f.done; _f = _e.next()) {
+                        var v = _f.value;
+                        if (v.isDirty()) {
+                            var model = v.toModel();
+                            diryData.push(JSON.parse(JSON.stringify(model)));
+                            v.clean();
+                        }
+                    }
+                }
+                catch (e_5_1) { e_5 = { error: e_5_1 }; }
+                finally {
+                    try {
+                        if (_f && !_f.done && (_b = _e.return)) { _b.call(_e); }
+                    }
+                    finally { if (e_5) { throw e_5.error; } }
+                }
+            }
+        }
+        catch (e_4_1) { e_4 = { error: e_4_1 }; }
+        finally {
+            try {
+                if (_d && !_d.done && (_a = _c.return)) { _a.call(_c); }
+            }
+            finally { if (e_4) { throw e_4.error; } }
+        }
+        return diryData;
+    };
     Panel.prototype.onRenderFinished = function () {
         this.onRenderFinishedCallback.forEach(function (e) {
             e();

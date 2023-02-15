@@ -2641,6 +2641,27 @@ class Panel {
             });
         }
     }
+    __fetchEffectiveData__() {
+        const diryData = [];
+        if (this.destroyed) {
+            return diryData;
+        }
+        if (this.__root__.isDirty()) {
+            const model = this.__root__.toModel();
+            diryData.push(JSON.parse(JSON.stringify(model)));
+            this.__root__.clean();
+        }
+        for (let map of this.headviews.values()) {
+            for (let v of map.values()) {
+                if (v.isDirty()) {
+                    const model = v.toModel();
+                    diryData.push(JSON.parse(JSON.stringify(model)));
+                    v.clean();
+                }
+            }
+        }
+        return diryData;
+    }
     onRenderFinished() {
         this.onRenderFinishedCallback.forEach(e => {
             e();

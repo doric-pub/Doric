@@ -1,6 +1,6 @@
 import { Color } from "../util/color";
 import { Modeling, Model } from "../util/types";
-export declare type AnimatedKey = "translationX" | "translationY" | "scaleX" | "scaleY" | "rotation" | "pivotX" | "pivotY" | "rotationX" | "rotationY" | "backgroundColor" | "alpha";
+export type AnimatedKey = "translationX" | "translationY" | "scaleX" | "scaleY" | "rotation" | "pivotX" | "pivotY" | "rotationX" | "rotationY" | "backgroundColor" | "alpha";
 export declare enum RepeatMode {
     RESTART = 1,
     REVERSE = 2

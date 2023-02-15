@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { View, Group } from "./view"
+import { View, Group, NativeViewModel } from "./view"
 import { loge } from '../util/log'
 import { Model } from '../util/types'
 import { Root } from '../widget/layouts'
@@ -232,6 +232,28 @@ export abstract class Panel {
                 this.onRenderFinished()
             })
         }
+    }
+
+    private __fetchEffectiveData__() {
+        const diryData: NativeViewModel[] = [];
+        if (this.destroyed) {
+            return diryData;
+        }
+        if (this.__root__.isDirty()) {
+            const model = this.__root__.toModel()
+            diryData.push(JSON.parse(JSON.stringify(model)));
+            this.__root__.clean();
+        }
+        for (let map of this.headviews.values()) {
+            for (let v of map.values()) {
+                if (v.isDirty()) {
+                    const model = v.toModel()
+                    diryData.push(JSON.parse(JSON.stringify(model)));
+                    v.clean();
+                }
+            }
+        }
+        return diryData;
     }
 
     onRenderFinished() {

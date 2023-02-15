@@ -76,4 +76,5 @@ public class DoricConstant {
     public static final String DORIC_ENTITY_HIDDEN = "__onHidden__";
     public static final String DORIC_ENTITY_BUILD = "__build__";
     public static final String DORIC_ENTITY_ENV_CHANGE = "__onEnvChanged__";
+    public static final String DORIC_ENTITY_FETCH_DIRTY_DATA = "__fetchEffectiveData__";
 }

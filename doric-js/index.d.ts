@@ -741,6 +741,7 @@ declare module "doric" {
 		private nativeRender;
 		private hookBeforeNativeCall;
 		private hookAfterNativeCall;
+		private __fetchEffectiveData__;
 		onRenderFinished(): void;
 		addOnRenderFinishedCallback(cb: () => void): void;
 	}

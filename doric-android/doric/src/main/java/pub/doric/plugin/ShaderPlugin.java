@@ -29,6 +29,7 @@ import com.github.pengfeizhou.jscore.JavaValue;
 import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
 
+import androidx.annotation.Nullable;
 import pub.doric.DoricContext;
 import pub.doric.async.AsyncResult;
 import pub.doric.extension.bridge.DoricMethod;
@@ -54,7 +55,7 @@ public class ShaderPlugin extends DoricJavaPlugin {
     }
 
     @DoricMethod(thread = ThreadMode.UI)
-    public void render(final JSObject jsObject, final DoricPromise promise) {
+    public void render(final JSObject jsObject, @Nullable final DoricPromise promise) {
         final DoricPerformanceProfile profile = getDoricContext().getPerformanceProfile();
         profile.prepare(DoricPerformanceProfile.STEP_RENDER);
         getDoricContext().getDriver().asyncCall(new Callable<Object>() {
@@ -90,7 +91,9 @@ public class ShaderPlugin extends DoricJavaPlugin {
                         targetView.post(new Runnable() {
                             @Override
                             public void run() {
-                                promise.resolve();
+                                if (promise != null) {
+                                    promise.resolve();
+                                }
                             }
                         });
                     }

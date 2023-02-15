@@ -23,10 +23,6 @@
 #import <Foundation/Foundation.h>
 #import "DoricNativePlugin.h"
 
-NS_ASSUME_NONNULL_BEGIN
-
 @interface DoricShaderPlugin : DoricNativePlugin
-
+- (void)render:(NSDictionary *)argument withPromise:(DoricPromise *)promise;
 @end
-
-NS_ASSUME_NONNULL_END

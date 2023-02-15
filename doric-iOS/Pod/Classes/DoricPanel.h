@@ -27,4 +27,6 @@
 @property(nonatomic, strong) void (^frameChangedBlock)(CGSize frameSize);
 
 - (void)config:(NSString *)script alias:(NSString *)alias extra:(NSString *)extra;
+
+- (void)renderSynchronously;
 @end

@@ -28,6 +28,8 @@
 #import "DoricNativeDriver.h"
 #import "DoricUtil.h"
 #import "DoricSingleton.h"
+#import "DoricShaderPlugin.h"
+#import <JavaScriptCore/JavaScriptCore.h>
 
 @implementation DoricContext
 
@@ -154,4 +156,36 @@
         }
     });
 }
+
+- (DoricAsyncResult *)pureCallEntity:(NSString *)method withArgumentsArray:(NSArray *)args {
+    NSMutableArray *array = [[NSMutableArray alloc] init];
+    [array addObject:self.contextId];
+    [array addObject:method];
+    [array addObjectsFromArray:args];
+    DoricAsyncResult *ret = [self.driver invokeDoricMethod:DORIC_CONTEXT_INVOKE_PURE argumentsArray:array];
+    __weak typeof(self) __self = self;
+    ret.exceptionCallback = ^(NSException *e) {
+        __strong typeof(__self) self = __self;
+        [self.driver.registry
+                onException:e
+                  inContext:self];
+    };
+    return ret;
+}
+
+- (void)renderSynchronously {
+    DoricAsyncResult *ret = [self pureCallEntity:DORIC_ENTITY_FETCH_DIRTY_DATA withArgumentsArray:@[]];
+    NSArray *array = [ret waitUntilResult:^(JSValue *models) {
+        return [models toArray];
+    }];
+    DoricShaderPlugin *shaderPlugin = self.pluginInstanceMap[@"Shader"];
+    if (!shaderPlugin) {
+        shaderPlugin = [[DoricShaderPlugin alloc] initWithContext:self];
+        self.pluginInstanceMap[@"Shader"] = shaderPlugin;
+    }
+    for (NSDictionary *model in array) {
+        [shaderPlugin render:model withPromise:nil];
+    }
+}
+
 @end

@@ -69,7 +69,7 @@
 - (instancetype)init {
     if (self = [super init]) {
         _initialized = NO;
-        _registry = [[DoricRegistry alloc] initWithJSEngine:self];
+        
         _profile = [[DoricPerformanceProfile alloc] initWithName:@"JSEngine"];
         if (_registry.globalPerformanceAnchorHook) {
             [_profile addAnchorHook:_registry.globalPerformanceAnchorHook];
@@ -110,7 +110,10 @@
                 @"localeLanguage": [[NSLocale currentLocale] objectForKey:NSLocaleLanguageCode] ?: @"",
                 @"localeCountry": [[NSLocale currentLocale] objectForKey:NSLocaleCountryCode] ?: @"",
         }.mutableCopy;
+        
+        _registry = [[DoricRegistry alloc] initWithJSEngine:self];
         [self.registry registerMonitor:[DoricDefaultMonitor new]];
+        
         [self ensureRunOnJSThread:^() {
             [self.profile start:@"Init"];
             self.timers = [[NSMutableDictionary alloc] init];

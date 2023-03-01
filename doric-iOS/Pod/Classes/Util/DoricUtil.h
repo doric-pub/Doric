@@ -54,6 +54,14 @@ UIImage *_Nonnull UIImageWithColor(UIColor *_Nonnull color);
 
 BOOL hasNotch(void);
 
+CGFloat systemStatusBarHeight(void);
+
+CGFloat statusBarHeightFixed(void);
+
+BOOL isDynamicIslandDevice(void);
+
+BOOL isX(void);
+
 #ifdef __cplusplus
 }
 #endif

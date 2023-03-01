@@ -23,6 +23,7 @@
 #import "DoricUtil.h"
 #import "DoricContext.h"
 #import "UIView+Doric.h"
+#import <sys/utsname.h>
 
 void DoricLog(NSString *_Nonnull format, ...) {
     va_list args;
@@ -140,4 +141,53 @@ BOOL hasNotch() {
     } else {
         return NO;
     }
+}
+
+CGFloat systemStatusBarHeight() {
+    CGFloat statusBarHeight = 0;
+    if (@available(iOS 13.0, *)) {
+        UIStatusBarManager *statusBarManager = [UIApplication sharedApplication].windows.firstObject.windowScene.statusBarManager;
+        statusBarHeight = statusBarManager.statusBarFrame.size.height;
+    } else {
+        statusBarHeight = [UIApplication sharedApplication].statusBarFrame.size.height;
+    }
+    statusBarHeight = statusBarHeight > 0 ? statusBarHeight : statusBarHeightFixed();
+    return statusBarHeight;
+
+}
+
+CGFloat statusBarHeightFixed() {
+    if (isDynamicIslandDevice()) {
+        return 54.0f;
+    }
+    return isX() ? 44.0f : 20.0f;
+}
+
+BOOL isDynamicIslandDevice() {
+    struct utsname systemInfo;
+    uname(&systemInfo);
+    NSString *platform = [NSString stringWithCString:systemInfo.machine encoding:NSASCIIStringEncoding];
+    if (TARGET_OS_SIMULATOR == 1) {
+        platform = [NSProcessInfo new].environment[@"SIMULATOR_MODEL_IDENTIFIER"];
+    }
+    
+    if ([platform isEqualToString:@"iPhone15,2"] || [platform isEqualToString:@"iPhone15,3"]) {
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
+BOOL isX() {
+    BOOL iPhoneXSeries = NO;
+    if (UIDevice.currentDevice.userInterfaceIdiom != UIUserInterfaceIdiomPhone) {
+        return iPhoneXSeries;
+    }
+    if (@available(iOS 11.0, *)) {
+        UIWindow *mainWindow = [UIApplication sharedApplication].windows.firstObject;
+        if (mainWindow.safeAreaInsets.bottom > 0) {
+            iPhoneXSeries = YES;
+        }
+    }
+    return iPhoneXSeries;
 }

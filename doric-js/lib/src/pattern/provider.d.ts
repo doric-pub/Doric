@@ -1,5 +1,5 @@
-export declare type Observer<T> = (v: T) => void;
-export declare type Updater<T> = (v: T) => T;
+export type Observer<T> = (v: T) => void;
+export type Updater<T> = (v: T) => T;
 export interface IObservable<T> {
     addObserver(observer: Observer<T | undefined>): void;
     removeObserver(observer: Observer<T | undefined>): void;

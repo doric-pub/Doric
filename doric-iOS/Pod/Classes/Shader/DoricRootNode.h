@@ -28,6 +28,8 @@
 
 @interface DoricRootNode : DoricStackNode
 
+@property(nonatomic, assign) CGSize mostFrameSize;
+
 - (void)setupRootView:(UIView *)view;
 
 @end

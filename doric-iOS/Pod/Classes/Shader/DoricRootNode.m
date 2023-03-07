@@ -54,13 +54,25 @@
 @end
 
 @implementation DoricRootNode
+
+- (instancetype)initWithContext:(DoricContext *)doricContext {
+    if (self = [super initWithContext:doricContext]) {
+        _mostFrameSize = CGSizeZero;
+    }
+    return self;
+}
+
 - (void)setupRootView:(UIView *)view {
     view.doricLayout.layoutType = DoricStack;
     self.view = view;
 }
 
 - (void)requestLayout {
-    [self.view.doricLayout apply];
+    if (CGSizeEqualToSize(self.mostFrameSize, CGSizeZero)) {
+        [self.view.doricLayout apply];
+    } else {
+        [self.view.doricLayout apply:self.mostFrameSize];
+    }
     [super requestLayout];
 }
 @end

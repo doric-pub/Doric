@@ -76,6 +76,8 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
     private String onScrollEndFuncId;
     private final DoricJSDispatcher jsDispatcher = new DoricJSDispatcher();
 
+    int preloadItemCount = 0;
+
     public ListNode(DoricContext doricContext) {
         super(doricContext);
         this.listAdapter = new ListAdapter(this);
@@ -376,6 +378,12 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
                     return;
                 }
                 this.onDraggedFuncId = prop.asString().value();
+                break;
+            case "preloadItemCount":
+                if (!prop.isNumber()) {
+                    return;
+                }
+                this.preloadItemCount = prop.asNumber().toInt();
                 break;
             default:
                 super.blend(view, name, prop);

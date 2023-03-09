@@ -20,8 +20,8 @@ async function loadData(offset: number): Promise<{
     }>(resolve => {
         setTimeout(() => {
             resolve({
-                isEnd: offset > 100,
-                data: new Array(5).fill(offset).map((e, idx) => {
+                isEnd: offset > 1000,
+                data: new Array(15).fill(offset).map((e, idx) => {
                     return { text: `Item: ${e + idx}` }
                 })
             })
@@ -65,6 +65,7 @@ class ListVH extends ViewHolder {
 class ListVM extends ViewModel<ListModel, ListVH> {
     onAttached(state: ListModel, vh: ListVH) {
         vh.list.apply({
+            preloadItemCount: 5,
             canDrag: true,
             onDragging: (from, to) => {
                 log(`onDragging, from: ${from}, to: ${to}`)
@@ -127,7 +128,14 @@ class ListVM extends ViewModel<ListModel, ListVH> {
                 loge('completelyVisible Items is:', ret)
                 const ret2 = await vh.list.findVisibleItems(context)
                 loge('visible Items is:', ret2)
-            }
+            },
+            loadMoreView: listItem(text({
+                text: "LoadMore",
+            }), {
+                layoutConfig: layoutConfig().mostWidth().justHeight(),
+                height: 30,
+                backgroundColor: Color.YELLOW,
+            })
         })
         loadData(state.offset).then(ret => {
             this.updateState(state => {

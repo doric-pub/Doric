@@ -75,6 +75,7 @@
 
 @property(nonatomic, assign) NSUInteger rowCount;
 @property(nonatomic, assign) BOOL needReload;
+@property(nonatomic, assign) NSUInteger preloadItemCount;
 @end
 
 @implementation DoricListNode
@@ -85,6 +86,7 @@
         _itemActions = [NSMutableDictionary new];
         _batchCount = 15;
         _loadAnchor = -1;
+        _preloadItemCount = 0;
     }
     return self;
 }
@@ -206,6 +208,8 @@
         self.onDraggingFuncId = prop;
     } else if ([@"onDragged" isEqualToString:name]) {
         self.onDraggedFuncId = prop;
+    } else if ([@"preloadItemCount" isEqualToString:name]) {
+        self.preloadItemCount = [prop unsignedIntegerValue];
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }
@@ -249,7 +253,7 @@
         NSString *reuseId = props[@"identifier"];
         self.itemActions[@(position)] = props[@"actions"];
         if (self.loadMore
-                && position >= self.rowCount - 1
+                && position >= self.rowCount - 1 - self.preloadItemCount
                 && self.onLoadMoreFuncId) {
             reuseId = @"doricLoadMoreCell";
             [self callLoadMore];
@@ -291,7 +295,7 @@
     CGFloat height = node.view.doricLayout.heightSpec == DoricLayoutFit ? CGFLOAT_MAX : self.view.height;
     [node.view.doricLayout apply:CGSizeMake(self.view.width, height)];
     [node requestLayout];
-    
+
     self.itemHeights[@(position)] = @(node.view.height);
 }
 

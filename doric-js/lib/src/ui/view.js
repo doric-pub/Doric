@@ -43,6 +43,24 @@ export function createRef() {
     return new Ref;
 }
 export class View {
+    callback2Id(f) {
+        const id = uniqueId('Function');
+        this.callbacks.set(id, f);
+        return id;
+    }
+    id2Callback(id) {
+        let f = this.callbacks.get(id);
+        if (f === undefined) {
+            f = Reflect.get(this, id);
+        }
+        return f;
+    }
+    findViewByTag(tag) {
+        if (tag === this.tag) {
+            return this;
+        }
+        return undefined;
+    }
     constructor() {
         this.width = 0;
         this.height = 0;
@@ -73,24 +91,6 @@ export class View {
                 return ret;
             }
         });
-    }
-    callback2Id(f) {
-        const id = uniqueId('Function');
-        this.callbacks.set(id, f);
-        return id;
-    }
-    id2Callback(id) {
-        let f = this.callbacks.get(id);
-        if (f === undefined) {
-            f = Reflect.get(this, id);
-        }
-        return f;
-    }
-    findViewByTag(tag) {
-        if (tag === this.tag) {
-            return this;
-        }
-        return undefined;
     }
     /** Anchor start*/
     get left() {

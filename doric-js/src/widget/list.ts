@@ -88,8 +88,8 @@ export class List extends Superview {
      * @param from 
      * @returns Returns the item of index which can dragged or not.
      */
-     @Property
-     itemCanDrag?: (from: number) => boolean
+    @Property
+    itemCanDrag?: (from: number) => boolean
 
     /**
      * @param from 
@@ -103,6 +103,9 @@ export class List extends Superview {
 
     @Property
     onDragged?: (from: number, to: number) => void
+
+    @Property
+    preloadItemCount?: number
 
     scrollToItem(context: BridgeContext, index: number, config?: { animated?: boolean, }) {
         const animated = config?.animated

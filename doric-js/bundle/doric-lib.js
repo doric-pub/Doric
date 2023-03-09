@@ -161,6 +161,24 @@ function createRef() {
     return new Ref;
 }
 class View {
+    callback2Id(f) {
+        const id = uniqueId('Function');
+        this.callbacks.set(id, f);
+        return id;
+    }
+    id2Callback(id) {
+        let f = this.callbacks.get(id);
+        if (f === undefined) {
+            f = Reflect.get(this, id);
+        }
+        return f;
+    }
+    findViewByTag(tag) {
+        if (tag === this.tag) {
+            return this;
+        }
+        return undefined;
+    }
     constructor() {
         this.width = 0;
         this.height = 0;
@@ -191,24 +209,6 @@ class View {
                 return ret;
             }
         });
-    }
-    callback2Id(f) {
-        const id = uniqueId('Function');
-        this.callbacks.set(id, f);
-        return id;
-    }
-    id2Callback(id) {
-        let f = this.callbacks.get(id);
-        if (f === undefined) {
-            f = Reflect.get(this, id);
-        }
-        return f;
-    }
-    findViewByTag(tag) {
-        if (tag === this.tag) {
-            return this;
-        }
-        return undefined;
     }
     /** Anchor start*/
     get left() {
@@ -2010,6 +2010,10 @@ __decorate$b([
     Property,
     __metadata$b("design:type", Function)
 ], List.prototype, "onDragged", void 0);
+__decorate$b([
+    Property,
+    __metadata$b("design:type", Number)
+], List.prototype, "preloadItemCount", void 0);
 function list(config) {
     const ret = new List;
     ret.apply(config);

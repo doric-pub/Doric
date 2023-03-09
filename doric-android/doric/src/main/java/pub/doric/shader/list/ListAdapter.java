@@ -68,7 +68,7 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.DoricViewHolder> {
                 holder.listItemNode.blend(jsObject.getProperty("props").asObject());
             }
             if (this.loadMore
-                    && position >= this.itemCount
+                    && position >= this.itemCount - this.listNode.preloadItemCount
                     && !TextUtils.isEmpty(this.listNode.onLoadMoreFuncId)) {
                 callLoadMore();
             }

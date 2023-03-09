@@ -64,7 +64,7 @@ export declare enum Display {
     FLEX = 0,
     NONE = 1
 }
-export declare type FlexValue = FlexTypedValue | number;
+export type FlexValue = FlexTypedValue | number;
 export interface FlexConfig {
     direction?: Direction;
     flexDirection?: FlexDirection;

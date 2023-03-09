@@ -162,6 +162,10 @@ __decorate([
     Property,
     __metadata("design:type", Function)
 ], List.prototype, "onDragged", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Number)
+], List.prototype, "preloadItemCount", void 0);
 export function list(config) {
     const ret = new List;
     ret.apply(config);

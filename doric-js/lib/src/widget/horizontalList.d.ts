@@ -30,6 +30,10 @@ export declare class HorizontalList extends Superview {
      * Take effect only on iOS
      */
     bounces?: boolean;
+    /**
+    * Take effect only on iOS
+    */
+    scrollsToTop?: boolean;
     canDrag?: boolean;
     /**
      * @param from

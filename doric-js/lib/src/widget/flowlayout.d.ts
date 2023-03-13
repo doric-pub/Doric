@@ -37,6 +37,10 @@ export declare class FlowLayout extends Superview {
      * Take effect only on iOS
      */
     bounces?: boolean;
+    /**
+    * Take effect only on iOS
+    */
+    scrollsToTop?: boolean;
     canDrag?: boolean;
     /**
      * @param from

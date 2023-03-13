@@ -99,6 +99,8 @@
         self.propLoop = [prop boolValue];
     } else if ([@"bounces" isEqualToString:name]) {
         self.view.bounces = [prop boolValue];
+    } else if ([@"scrollsToTop" isEqualToString:name]) {
+        self.view.scrollsToTop = [prop boolValue];
     } else if ([@"slideStyle" isEqualToString:name]) {
         if ([prop isKindOfClass:NSDictionary.class]) {
             self.slideStyle = prop[@"type"];

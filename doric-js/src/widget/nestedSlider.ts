@@ -29,6 +29,12 @@ export class NestedSlider extends Group {
     @Property
     bounces?: boolean
 
+    /**
+    * Take effect only on iOS
+    */
+    @Property
+    scrollsToTop?: boolean
+
     addSlideItem(view: View) {
         this.addChild(view)
     }

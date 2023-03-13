@@ -21,6 +21,10 @@ export declare class Slider extends Superview {
      */
     bounces?: boolean;
     /**
+    * Take effect only on iOS
+    */
+    scrollsToTop?: boolean;
+    /**
      * Set the effect when sliding
      * ZoomOut is currently supported
      */

@@ -81,6 +81,12 @@ export class HorizontalList extends Superview {
     @Property
     bounces?: boolean
 
+    /**
+    * Take effect only on iOS
+    */
+    @Property
+    scrollsToTop?: boolean
+
     @Property
     canDrag?: boolean
 
@@ -88,8 +94,8 @@ export class HorizontalList extends Superview {
      * @param from 
      * @returns Returns the item of index which can dragged or not.
      */
-     @Property
-     itemCanDrag?: (from: number) => boolean
+    @Property
+    itemCanDrag?: (from: number) => boolean
 
     /**
      * @param from 

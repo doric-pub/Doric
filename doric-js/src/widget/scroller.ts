@@ -42,11 +42,18 @@ export class Scroller extends Superview implements JSX.ElementChildrenAttribute 
 
     @Property
     scrollable?: boolean
+
     /**
      * Take effect only on iOS
      */
     @Property
     bounces?: boolean
+
+    /**
+     * Take effect only on iOS
+     */
+    @Property
+    scrollsToTop?: boolean
 
     allSubviews() {
         return [this.content]

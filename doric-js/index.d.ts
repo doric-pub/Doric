@@ -1030,6 +1030,10 @@ declare module "doric" {
 		 * Take effect only on iOS
 		 */
 		bounces?: boolean;
+		/**
+		 * Take effect only on iOS
+		 */
+		scrollsToTop?: boolean;
 		canDrag?: boolean;
 		/**
 		 * @param from
@@ -1090,6 +1094,10 @@ declare module "doric" {
 		 */
 		bounces?: boolean;
 		/**
+		* Take effect only on iOS
+		*/
+		scrollsToTop?: boolean;
+		/**
 		 * Set the effect when sliding
 		 * ZoomOut is currently supported
 		 */
@@ -1132,6 +1140,10 @@ declare module "doric" {
 		 * Take effect only on iOS
 		 */
 		bounces?: boolean;
+		/**
+		 * Take effect only on iOS
+		 */
+		scrollsToTop?: boolean;
 		allSubviews(): View[];
 		toModel(): NativeViewModel;
 		scrollTo(context: BridgeContext, offset: {
@@ -1202,6 +1214,10 @@ declare module "doric" {
 		 * Take effect only on iOS
 		 */
 		bounces?: boolean;
+		/**
+		* Take effect only on iOS
+		*/
+		scrollsToTop?: boolean;
 		canDrag?: boolean;
 		/**
 		 * @param from
@@ -1312,6 +1328,10 @@ declare module "doric" {
 		 * Take effect only on iOS
 		 */
 		bounces?: boolean;
+		/**
+		* Take effect only on iOS
+		*/
+		scrollsToTop?: boolean;
 		addSlideItem(view: View): void;
 		slidePage(context: BridgeContext, page: number, smooth?: boolean): Promise<any>;
 		getSlidedPage(context: BridgeContext): Promise<number>;
@@ -1475,6 +1495,10 @@ declare module "doric" {
 		 * Take effect only on iOS
 		 */
 		bounces?: boolean;
+		/**
+		* Take effect only on iOS
+		*/
+		scrollsToTop?: boolean;
 		canDrag?: boolean;
 		/**
 		 * @param from

@@ -3533,6 +3533,10 @@ __decorate$b([
 __decorate$b([
     Property,
     __metadata$b("design:type", Boolean)
+], List.prototype, "scrollsToTop", void 0);
+__decorate$b([
+    Property,
+    __metadata$b("design:type", Boolean)
 ], List.prototype, "canDrag", void 0);
 __decorate$b([
     Property,
@@ -3662,6 +3666,10 @@ __decorate$a([
 ], Slider.prototype, "bounces", void 0);
 __decorate$a([
     Property,
+    __metadata$a("design:type", Boolean)
+], Slider.prototype, "scrollsToTop", void 0);
+__decorate$a([
+    Property,
     __metadata$a("design:type", Object)
 ], Slider.prototype, "slideStyle", void 0);
 function slider(config) {
@@ -3744,6 +3752,10 @@ __decorate$9([
     Property,
     __metadata$9("design:type", Boolean)
 ], Scroller.prototype, "bounces", void 0);
+__decorate$9([
+    Property,
+    __metadata$9("design:type", Boolean)
+], Scroller.prototype, "scrollsToTop", void 0);
 
 var __decorate$8 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -4074,6 +4086,10 @@ __decorate$7([
 __decorate$7([
     Property,
     __metadata$7("design:type", Boolean)
+], FlowLayout.prototype, "scrollsToTop", void 0);
+__decorate$7([
+    Property,
+    __metadata$7("design:type", Boolean)
 ], FlowLayout.prototype, "canDrag", void 0);
 __decorate$7([
     Property,
@@ -4288,6 +4304,10 @@ __decorate$5([
     Property,
     __metadata$5("design:type", Boolean)
 ], NestedSlider.prototype, "bounces", void 0);
+__decorate$5([
+    Property,
+    __metadata$5("design:type", Boolean)
+], NestedSlider.prototype, "scrollsToTop", void 0);
 
 var __decorate$4 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -4645,6 +4665,10 @@ __decorate([
     Property,
     __metadata("design:type", Boolean)
 ], HorizontalList.prototype, "bounces", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Boolean)
+], HorizontalList.prototype, "scrollsToTop", void 0);
 __decorate([
     Property,
     __metadata("design:type", Boolean)

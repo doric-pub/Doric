@@ -141,6 +141,10 @@ __decorate([
 __decorate([
     Property,
     __metadata("design:type", Boolean)
+], HorizontalList.prototype, "scrollsToTop", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Boolean)
 ], HorizontalList.prototype, "canDrag", void 0);
 __decorate([
     Property,

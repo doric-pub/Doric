@@ -298,6 +298,8 @@
         self.view.scrollEnabled = [prop boolValue];
     } else if ([@"bounces" isEqualToString:name]) {
         self.view.bounces = [prop boolValue];
+    } else if ([@"scrollsToTop" isEqualToString:name]) {
+        self.view.scrollsToTop = [prop boolValue];
     } else if ([@"columnSpace" isEqualToString:name]) {
         self.columnSpace = [prop floatValue];
         [self.view.collectionViewLayout invalidateLayout];

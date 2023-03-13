@@ -20,6 +20,10 @@ export declare class Scroller extends Superview implements JSX.ElementChildrenAt
      * Take effect only on iOS
      */
     bounces?: boolean;
+    /**
+     * Take effect only on iOS
+     */
+    scrollsToTop?: boolean;
     allSubviews(): View[];
     toModel(): NativeViewModel;
     scrollTo(context: BridgeContext, offset: {

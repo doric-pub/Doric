@@ -150,6 +150,10 @@ __decorate([
 __decorate([
     Property,
     __metadata("design:type", Boolean)
+], FlowLayout.prototype, "scrollsToTop", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Boolean)
 ], FlowLayout.prototype, "canDrag", void 0);
 __decorate([
     Property,

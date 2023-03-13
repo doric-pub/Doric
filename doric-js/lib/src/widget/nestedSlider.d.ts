@@ -7,6 +7,10 @@ export declare class NestedSlider extends Group {
      * Take effect only on iOS
      */
     bounces?: boolean;
+    /**
+    * Take effect only on iOS
+    */
+    scrollsToTop?: boolean;
     addSlideItem(view: View): void;
     slidePage(context: BridgeContext, page: number, smooth?: boolean): Promise<any>;
     getSlidedPage(context: BridgeContext): Promise<number>;

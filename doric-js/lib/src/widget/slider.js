@@ -102,6 +102,10 @@ __decorate([
 ], Slider.prototype, "bounces", void 0);
 __decorate([
     Property,
+    __metadata("design:type", Boolean)
+], Slider.prototype, "scrollsToTop", void 0);
+__decorate([
+    Property,
     __metadata("design:type", Object)
 ], Slider.prototype, "slideStyle", void 0);
 export function slider(config) {

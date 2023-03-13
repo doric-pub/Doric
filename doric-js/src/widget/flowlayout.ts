@@ -84,6 +84,12 @@ export class FlowLayout extends Superview {
     @Property
     bounces?: boolean
 
+    /**
+    * Take effect only on iOS
+    */
+    @Property
+    scrollsToTop?: boolean
+
     @Property
     canDrag?: boolean
 

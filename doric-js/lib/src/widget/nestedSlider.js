@@ -46,3 +46,7 @@ __decorate([
     Property,
     __metadata("design:type", Boolean)
 ], NestedSlider.prototype, "bounces", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Boolean)
+], NestedSlider.prototype, "scrollsToTop", void 0);

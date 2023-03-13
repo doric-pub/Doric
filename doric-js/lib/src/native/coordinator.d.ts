@@ -18,4 +18,10 @@ export declare function coordinator(context: BridgeContext): {
             end: number | Color;
         };
     }) => void;
+    observeScrollingInterval: (argument: {
+        scrollable: Scroller | List | FlowLayout;
+        observingInterval: number[];
+        inclusive?: "Left" | "Right" | undefined;
+        onScrolledInterval: (n: number) => void;
+    }) => void;
 };

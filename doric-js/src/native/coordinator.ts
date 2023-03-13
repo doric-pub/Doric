@@ -48,21 +48,45 @@ export function coordinator(context: BridgeContext) {
                 },
             }) => {
             if (context.entity instanceof Panel) {
-                const panel = context.entity
+                const panel = context.entity;
                 panel.addOnRenderFinishedCallback(() => {
-                    (argument as any).scrollable = viewIdChains(argument.scrollable)
+                    (argument as any).scrollable = viewIdChains(argument.scrollable);
                     if (argument.target instanceof View) {
-                        (argument as any).target = viewIdChains(argument.target)
+                        (argument as any).target = viewIdChains(argument.target);
                     }
                     if (argument.changing.start instanceof Color) {
-                        argument.changing.start = argument.changing.start.toModel()
+                        argument.changing.start = argument.changing.start.toModel();
                     }
                     if (argument.changing.end instanceof Color) {
-                        argument.changing.end = argument.changing.end.toModel()
+                        argument.changing.end = argument.changing.end.toModel();
                     }
-                    context.callNative("coordinator", "verticalScrolling", argument)
-                })
+                    context.callNative("coordinator", "verticalScrolling", argument);
+                });
             }
-        }
+        },
+        observeScrollingInterval: (
+            argument: {
+                scrollable: Scroller | List | FlowLayout,
+                // [a_0, a_1, ...a_n] a_n-1<a_n
+                // It represents interval (-∞,a_0),(a_0,a_1), ... (a_n-1,a_n), (a_n, +∞)
+                // the real interval's length is n+1
+                observingInterval: number[],
+                // Left means interval is Left closed right open interval
+                // Right means interval is Left open right closed interval
+                // Default is Right
+                inclusive?: "Left" | "Right",
+                // When scroll accross an,call this function
+                // The argument means that it is scrolled to interval (a_n-1,a_n)
+                onScrolledInterval: (n: number) => void,
+            }) => {
+            if (context.entity instanceof Panel) {
+                const panel = context.entity;
+                panel.addOnRenderFinishedCallback(() => {
+                    (argument as any).scrollable = viewIdChains(argument.scrollable);
+                    (argument as any).onScrolledInterval = context.function2Id(argument.onScrolledInterval);
+                    context.callNative("coordinator", "observeScrollingInterval", argument)
+                });
+            }
+        },
     }
 }

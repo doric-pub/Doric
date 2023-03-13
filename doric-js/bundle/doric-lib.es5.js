@@ -4597,7 +4597,17 @@ function coordinator(context) {
                     context.callNative("coordinator", "verticalScrolling", argument);
                 });
             }
-        }
+        },
+        observeScrollingInterval: function (argument) {
+            if (context.entity instanceof Panel) {
+                var panel = context.entity;
+                panel.addOnRenderFinishedCallback(function () {
+                    argument.scrollable = viewIdChains(argument.scrollable);
+                    argument.onScrolledInterval = context.function2Id(argument.onScrolledInterval);
+                    context.callNative("coordinator", "observeScrollingInterval", argument);
+                });
+            }
+        },
     };
 }
 

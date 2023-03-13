@@ -18,10 +18,14 @@ package pub.doric.plugin;
 import android.graphics.Color;
 import android.view.View;
 
+import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSNumber;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
+import com.github.pengfeizhou.jscore.JavaValue;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import pub.doric.DoricContext;
@@ -172,5 +176,87 @@ public class CoordinatorPlugin extends DoricJavaPlugin {
             jsObject.setProperty(name, jsNumber);
             viewNode.blend(jsObject);
         }
+    }
+
+
+    @DoricMethod(thread = ThreadMode.UI)
+    public void observeScrollingInterval(final JSObject argument, final DoricPromise doricPromise) {
+        getDoricContext().getDriver().asyncCall(new Callable<Object>() {
+            @Override
+            public Object call() throws Exception {
+                JSValue[] scrollableIds = argument.getProperty("scrollable").asArray().toArray();
+                ViewNode<?> scrollNode = null;
+                for (JSValue value : scrollableIds) {
+                    if (scrollNode == null) {
+                        scrollNode = getDoricContext().targetViewNode(value.asString().value());
+                    } else {
+                        if (value.isString() && scrollNode instanceof SuperNode) {
+                            String viewId = value.asString().value();
+                            scrollNode = ((SuperNode<?>) scrollNode).getSubNodeById(viewId);
+                        }
+                    }
+                }
+                if (scrollNode == null) {
+                    throw new Exception("Cannot find scrollable view");
+                }
+                String callbackId = argument.getProperty("onScrolledInterval").asString().value();
+                final DoricPromise currentPromise = new DoricPromise(getDoricContext(), callbackId);
+                JSArray observingInterval = argument.getProperty("observingInterval").asArray();
+                final List<Float> interval = new ArrayList<>();
+                for (int i = 0; i < observingInterval.size(); i++) {
+                    interval.add(observingInterval.get(i).asNumber().toFloat());
+                }
+
+                JSValue inclusive = argument.getProperty("inclusive");
+
+                final boolean leftInclusive = inclusive.isString() && "Left".equals(inclusive.asString().value());
+
+                final ViewNode<?> finalScrollNode = scrollNode;
+                final int[] rangeIdx = {0};
+                if (finalScrollNode instanceof IDoricScrollable) {
+                    ((IDoricScrollable) finalScrollNode).addScrollChangeListener(new DoricScrollChangeListener() {
+                        @Override
+                        public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                            int currentRangeIdx = interval.size();
+                            for (int i = 0; i < interval.size(); i++) {
+                                if (leftInclusive) {
+                                    if (scrollY < interval.get(i)) {
+                                        currentRangeIdx = i;
+                                        break;
+                                    }
+                                } else {
+                                    if (scrollY <= interval.get(i)) {
+                                        currentRangeIdx = i;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (rangeIdx[0] != currentRangeIdx) {
+                                rangeIdx[0] = currentRangeIdx;
+                                currentPromise.resolve(new JavaValue(rangeIdx[0]));
+                            }
+                        }
+                    });
+                    return null;
+                } else {
+                    throw new Exception("Scroller type error");
+                }
+            }
+        }, ThreadMode.UI).setCallback(new AsyncResult.Callback<Object>() {
+            @Override
+            public void onResult(Object result) {
+                doricPromise.resolve();
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                doricPromise.reject();
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        });
     }
 }

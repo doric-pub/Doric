@@ -1666,6 +1666,12 @@ declare module "doric" {
 				end: number | Color;
 			};
 		}) => void;
+		observeScrollingInterval: (argument: {
+			scrollable: Scroller | List | FlowLayout;
+			observingInterval: number[];
+			inclusive?: "Left" | "Right" | undefined;
+			onScrolledInterval: (n: number) => void;
+		}) => void;
 	};
 	export function notch(context: BridgeContext): {
 		inset: () => Promise<{

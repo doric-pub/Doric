@@ -1,4 +1,4 @@
-import { Group, Panel, List, text, gravity, Color, LayoutSpec, list, listItem, log, vlayout, Gravity, hlayout, Text, refreshable, Refreshable, ListItem, layoutConfig, ViewHolder, ViewModel, VMPanel, loge, modal, stack } from "doric";
+import { Group, Panel, List, text, gravity, Color, LayoutSpec, list, listItem, log, vlayout, Gravity, hlayout, Text, refreshable, Refreshable, ListItem, layoutConfig, ViewHolder, ViewModel, VMPanel, loge, modal, stack, coordinator } from "doric";
 
 interface ItemModel {
     text: string
@@ -64,6 +64,13 @@ class ListVH extends ViewHolder {
 
 class ListVM extends ViewModel<ListModel, ListVH> {
     onAttached(state: ListModel, vh: ListVH) {
+        coordinator(this.context).observeScrollingInterval({
+            scrollable: vh.list,
+            observingInterval: [0],
+            onScrolledInterval: (n) => {
+                console.log("onScrolledInterval", n)
+            }
+        });
         vh.list.apply({
             preloadItemCount: 5,
             canDrag: true,

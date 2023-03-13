@@ -5178,7 +5178,17 @@ function coordinator(context) {
                     context.callNative("coordinator", "verticalScrolling", argument);
                 });
             }
-        }
+        },
+        observeScrollingInterval: (argument) => {
+            if (context.entity instanceof Panel) {
+                const panel = context.entity;
+                panel.addOnRenderFinishedCallback(() => {
+                    argument.scrollable = viewIdChains(argument.scrollable);
+                    argument.onScrolledInterval = context.function2Id(argument.onScrolledInterval);
+                    context.callNative("coordinator", "observeScrollingInterval", argument);
+                });
+            }
+        },
     };
 }
 

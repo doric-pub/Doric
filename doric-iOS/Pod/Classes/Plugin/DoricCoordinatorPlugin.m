@@ -119,4 +119,57 @@
     }
 }
 
+- (void)observeScrollingInterval:(NSDictionary *)params withPromise:(DoricPromise *)promise {
+    __weak typeof(self) _self = self;
+    [self.doricContext dispatchToMainQueue:^{
+        __strong typeof(_self) self = _self;
+        NSArray <NSString *> *scrollableIds = [params optArray:@"scrollable"];
+        DoricViewNode *scrollNode = nil;
+        for (NSString *value in scrollableIds) {
+            if (!scrollNode) {
+                scrollNode = [self.doricContext targetViewNode:value];
+            } else {
+                if ([scrollNode isKindOfClass:[DoricSuperNode class]]) {
+                    scrollNode = [((DoricSuperNode *) scrollNode) subNodeWithViewId:value];
+                }
+            }
+        }
+        if (!scrollNode) {
+            [promise reject:@"Cannot find scrollable view"];
+            return;
+        }
+        NSString *callbackId = [params optString:@"onScrolledInterval"];
+        NSArray *observingInterval = [params optArray:@"observingInterval"];
+        DoricPromise *currentPromise = [[DoricPromise alloc] initWithContext:self.doricContext
+                                                                  callbackId:callbackId];
+        BOOL leftInclusive = [[params optString:@"inclusive"] isEqualToString:@"Left"];
+        if ([scrollNode conformsToProtocol:@protocol(DoricScrollableProtocol)]) {
+            __block NSUInteger rangeIdx = 0;
+            [(id <DoricScrollableProtocol>) scrollNode addDidScrollBlock:^(UIScrollView *scrollView) {
+                CGFloat scrollY = scrollView.contentOffset.y;
+                __block NSUInteger currentRangeIdx = observingInterval.count;
+                [observingInterval enumerateObjectsUsingBlock:^(NSNumber *obj, NSUInteger idx, BOOL *stop) {
+                    if (leftInclusive) {
+                        if (scrollY < obj.floatValue) {
+                            currentRangeIdx = idx;
+                            *stop = YES;
+                        }
+                    } else {
+                        if (scrollY <= obj.floatValue) {
+                            currentRangeIdx = idx;
+                            *stop = YES;
+                        }
+                    }
+                }];
+                if (rangeIdx != currentRangeIdx) {
+                    rangeIdx = currentRangeIdx;
+                    [currentPromise resolve:@(rangeIdx)];
+                }
+            }];
+        } else {
+            [promise reject:@"Scroller type error"];
+        }
+    }];
+}
+
 @end

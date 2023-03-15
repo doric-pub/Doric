@@ -84,4 +84,8 @@ public class DoricJSDispatcher implements AsyncResult.Callback<JSDecoder> {
             });
         }
     }
+
+    public void clear() {
+        blocks.clear();
+    }
 }

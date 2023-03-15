@@ -934,6 +934,8 @@
 
 - (void)reset {
     self.view.backgroundColor = UIColor.clearColor;
+    self.gradientProps = nil;
+    self.gradientSize = CGSizeZero;
     DoricLayoutType doricLayoutType = self.view.doricLayout.layoutType;
     self.view.doricLayout = [[DoricLayout new] also:^(DoricLayout *it) {
         it.width = 0;

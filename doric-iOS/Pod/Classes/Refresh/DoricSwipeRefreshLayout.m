@@ -112,7 +112,12 @@
     } else if (scrollView.contentOffset.y + scrollView.height > scrollView.contentSize.height) {
         if ([self.contentView isKindOfClass:UIScrollView.class]
                 && ((UIScrollView *) self.contentView).contentOffset.y + self.contentView.height < ((UIScrollView *) self.contentView).contentSize.height) {
-            scrollView.contentOffset = (CGPoint) {0, scrollView.contentSize.height - scrollView.height};
+            self.bounces = NO;
+            [UIView animateWithDuration:0.2f animations:^{
+                scrollView.contentOffset = (CGPoint) {0, scrollView.contentSize.height - scrollView.height};
+            }                completion:^(BOOL finished) {
+                self.bounces = YES;
+            }];
         }
     }
 }

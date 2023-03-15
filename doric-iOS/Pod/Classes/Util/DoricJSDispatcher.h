@@ -22,4 +22,6 @@
 
 @interface DoricJSDispatcher : NSObject
 - (void)dispatch:(DoricAsyncResult *(^)(void))block;
+
+- (void)clear;
 @end

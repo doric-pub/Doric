@@ -19,16 +19,20 @@
 
 #import "DoricRefreshableNode.h"
 #import "Doric.h"
+#import "DoricJSDispatcher.h"
 
 @interface DoricRefreshableNode () <DoricSwipePullingDelegate>
 @property(nonatomic, strong) DoricViewNode *contentNode;
 @property(nonatomic, copy) NSString *contentViewId;
 @property(nonatomic, strong) DoricViewNode *headerNode;
 @property(nonatomic, copy) NSString *headerViewId;
+
+@property(nonatomic, strong) DoricJSDispatcher *jsDispatcher;
 @end
 
 @implementation DoricRefreshableNode
 - (DoricSwipeRefreshLayout *)build {
+    self.jsDispatcher = [DoricJSDispatcher new];
     return [[DoricSwipeRefreshLayout new] also:^(DoricSwipeRefreshLayout *it) {
         it.swipePullingDelegate = self;
     }];
@@ -152,15 +156,21 @@
 }
 
 - (void)startAnimation {
+    [self.jsDispatcher clear];
     [self.headerNode callJSResponse:@"startAnimation", nil];
 }
 
 - (void)stopAnimation {
+    [self.jsDispatcher clear];
     [self.headerNode callJSResponse:@"stopAnimation", nil];
 }
 
 - (void)setPullingDistance:(CGFloat)distance {
-    [self.headerNode callJSResponse:@"setPullingDistance", @(distance), nil];
+    __weak typeof(self) __self = self;
+    [self.jsDispatcher dispatch:^DoricAsyncResult * {
+        __strong typeof(__self) self = __self;
+        return [self.headerNode callJSResponse:@"setPullingDistance", @(distance), nil];
+    }];
 }
 
 - (void)setRefreshing:(NSNumber *)refreshable withPromise:(DoricPromise *)promise {

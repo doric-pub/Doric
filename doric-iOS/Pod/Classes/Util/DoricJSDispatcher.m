@@ -56,4 +56,8 @@
         self.consuming = NO;
     }
 }
+
+- (void)clear {
+    [self.blocks removeAllObjects];
+}
 @end

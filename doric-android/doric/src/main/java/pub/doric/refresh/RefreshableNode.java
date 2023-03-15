@@ -1,15 +1,20 @@
 package pub.doric.refresh;
 
+import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 import com.github.pengfeizhou.jscore.JavaValue;
 
+import java.util.concurrent.Callable;
+
 import pub.doric.DoricContext;
+import pub.doric.async.AsyncResult;
 import pub.doric.extension.bridge.DoricMethod;
 import pub.doric.extension.bridge.DoricPlugin;
 import pub.doric.extension.bridge.DoricPromise;
 import pub.doric.shader.SuperNode;
 import pub.doric.shader.ViewNode;
+import pub.doric.utils.DoricJSDispatcher;
 
 /**
  * @Description: pub.doric.pullable
@@ -24,6 +29,8 @@ public class RefreshableNode extends SuperNode<DoricSwipeLayout> implements Pull
 
     private String mHeaderViewId;
     private ViewNode<?> mHeaderNode;
+
+    private final DoricJSDispatcher jsDispatcher = new DoricJSDispatcher();
 
     public RefreshableNode(DoricContext doricContext) {
         super(doricContext);
@@ -184,6 +191,7 @@ public class RefreshableNode extends SuperNode<DoricSwipeLayout> implements Pull
 
     @Override
     public void startAnimation() {
+        jsDispatcher.clear();
         if (mHeaderNode != null) {
             mHeaderNode.callJSResponse("startAnimation");
         }
@@ -191,15 +199,21 @@ public class RefreshableNode extends SuperNode<DoricSwipeLayout> implements Pull
 
     @Override
     public void stopAnimation() {
+        jsDispatcher.clear();
         if (mHeaderNode != null) {
             mHeaderNode.callJSResponse("stopAnimation");
         }
     }
 
     @Override
-    public void setPullingDistance(float rotation) {
+    public void setPullingDistance(final float rotation) {
         if (mHeaderNode != null) {
-            mHeaderNode.callJSResponse("setPullingDistance", rotation);
+            jsDispatcher.dispatch(new Callable<AsyncResult<JSDecoder>>() {
+                @Override
+                public AsyncResult<JSDecoder> call() throws Exception {
+                    return mHeaderNode.callJSResponse("setPullingDistance", rotation);
+                }
+            });
         }
     }
 }

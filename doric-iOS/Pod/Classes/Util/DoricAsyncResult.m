@@ -86,6 +86,13 @@
     self.resultCallback = ^(id r) {
         dispatch_semaphore_signal(semaphore);
     };
+    void (^originExceptionCallback)(NSException *e) = self.exceptionCallback;
+    self.exceptionCallback = ^(NSException * e) {
+        if(originExceptionCallback){
+            originExceptionCallback(e);
+        }
+        dispatch_semaphore_signal(semaphore);
+    };
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
     return self.result;
 }
@@ -99,6 +106,13 @@
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     self.resultCallback = ^(id r) {
         ret = transformer(r);
+        dispatch_semaphore_signal(semaphore);
+    };
+    void (^originExceptionCallback)(NSException *e) = self.exceptionCallback;
+    self.exceptionCallback = ^(NSException * e) {
+        if(originExceptionCallback){
+            originExceptionCallback(e);
+        }
         dispatch_semaphore_signal(semaphore);
     };
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);

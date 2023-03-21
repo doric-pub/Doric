@@ -282,13 +282,13 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     @try {
-        NSUInteger position = (NSUInteger) indexPath.row;
+        NSInteger position = (NSInteger) indexPath.row;
         NSDictionary *model = [self itemModelAt:position];
         NSDictionary *props = model[@"props"];
         NSString *reuseId = props[@"identifier"];
         self.itemActions[@(position)] = props[@"actions"];
         if (self.loadMore
-                && position >= self.rowCount - 1 - self.preloadItemCount
+                && position >= MAX(0, (NSInteger) self.rowCount - 1 - (NSInteger) self.preloadItemCount)
                 && self.onLoadMoreFuncId) {
             reuseId = @"doricLoadMoreCell";
             [self callLoadMore];
@@ -493,7 +493,7 @@
 
 }
 
-- (void)callItem:(NSUInteger)position height:(CGFloat)height {
+- (void)callItem:(NSInteger)position height:(CGFloat)height {
     NSNumber *old = self.itemHeights[@(position)];
     if (old && [old isEqualToNumber:@(height)]) {
         return;

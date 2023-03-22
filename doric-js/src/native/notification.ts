@@ -16,13 +16,21 @@
 import { BridgeContext } from "../runtime/global"
 export function notification(context: BridgeContext) {
     return {
-        publish: (args: { biz?: string, name: string, data?: object, androidSystem?: boolean, permission?: string }) => {
+        /**
+         * @param androidSystem: when set true, using global broadcast instead of local broadcast by default
+         * @param iosUsingObject: when set true, using object instead of userInfo by default
+         */
+        publish: (args: { biz?: string, name: string, data?: object, androidSystem?: boolean, iosUsingObject?: boolean, permission?: string }) => {
             if (args.data !== undefined) {
                 (args as any).data = JSON.stringify(args.data)
             }
             return context.callNative('notification', 'publish', args)
         },
-        subscribe: (args: { biz?: string, name: string, callback: (data?: any) => void, androidSystem?: boolean, permission?: string }) => {
+        /**
+         * @param androidSystem: when set true, using global broadcast instead of local broadcast by default
+         * @param iosUsingObject: when set true, using object instead of userInfo by default
+         */
+        subscribe: (args: { biz?: string, name: string, callback: (data?: any) => void, androidSystem?: boolean, iosUsingObject?: boolean, permission?: string }) => {
             (args as any).callback = context.function2Id(args.callback)
             return context.callNative('notification', 'subscribe', args) as Promise<string>
         },

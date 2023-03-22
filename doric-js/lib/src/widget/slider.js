@@ -25,6 +25,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { Superview, View, Property } from "../ui/view";
 import { Stack } from "./layouts";
 import { layoutConfig } from "../util/layoutconfig";
+import { deepClone } from "./utils";
 export class SlideItem extends Stack {
 }
 __decorate([
@@ -60,10 +61,11 @@ export class Slider extends Superview {
         return view;
     }
     renderBunchedItems(start, length) {
-        return new Array(Math.min(length, this.itemCount - start)).fill(0).map((_, idx) => {
-            const slideItem = this.getItem(start + idx);
-            return slideItem.toModel();
-        });
+        const items = new Array(Math.max(0, Math.min(length, this.itemCount - start)))
+            .fill(0).map((_, idx) => this.getItem(start + idx));
+        const ret = items.map(e => deepClone(e.toModel()));
+        items.forEach(e => e.clean());
+        return ret;
     }
     slidePage(context, page, smooth = false) {
         return this.nativeChannel(context, "slidePage")({ page, smooth });

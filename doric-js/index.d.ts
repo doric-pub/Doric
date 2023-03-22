@@ -1632,6 +1632,7 @@ declare module "doric" {
 			name: string;
 			data?: object;
 			androidSystem?: boolean;
+			iosUsingObject?: boolean;
 			permission?: string;
 		}) => Promise<any>;
 		subscribe: (args: {
@@ -1639,6 +1640,7 @@ declare module "doric" {
 			name: string;
 			callback: (data?: any) => void;
 			androidSystem?: boolean | undefined;
+			iosUsingObject?: boolean | undefined;
 			permission?: string | undefined;
 		}) => Promise<string>;
 		unsubscribe: (subscribeId: string) => Promise<any>;

@@ -46,6 +46,7 @@
 - (void)publish:(NSDictionary *)dic withPromise:(DoricPromise *)promise {
     NSString *biz = [dic optString:@"biz"];
     NSString *name = [dic optString:@"name"];
+    BOOL usingObject = [dic optBool:@"iosUsingObject"];
     if (biz) {
         name = [NSString stringWithFormat:@"__doric__%@#%@", biz, name];
     }
@@ -58,13 +59,18 @@
                                                   options:NSJSONReadingMutableContainers
                                                     error:&err];
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:name object:nil userInfo:dataDic];
+    if (usingObject) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:name object:dataDic userInfo:nil];
+    } else {
+        [[NSNotificationCenter defaultCenter] postNotificationName:name object:nil userInfo:dataDic];
+    }
     [promise resolve:nil];
 }
 
 - (void)subscribe:(NSDictionary *)dic withPromise:(DoricPromise *)promise {
     NSString *biz = [dic optString:@"biz"];
     NSString *name = [dic optString:@"name"];
+    BOOL usingObject = [dic optBool:@"iosUsingObject"];
     if (biz) {
         name = [NSString stringWithFormat:@"__doric__%@#%@", biz, name];
     }
@@ -77,7 +83,7 @@
                     usingBlock:^(NSNotification *note) {
                         __strong typeof(_self) self = _self;
                         DoricPromise *currentPromise = [[DoricPromise alloc] initWithContext:self.doricContext callbackId:callbackId];
-                        [currentPromise resolve:note.userInfo];
+                        [currentPromise resolve:usingObject ? note.object : note.userInfo];
                     }];
 
     dispatch_barrier_async(self.syncQueue, ^{

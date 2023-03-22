@@ -3389,6 +3389,19 @@ function image(config) {
     return ret;
 }
 
+function deepClone(nativeViewModel) {
+    const ret = {
+        id: nativeViewModel.id,
+        type: nativeViewModel.type,
+        props: Object.assign({}, nativeViewModel.props),
+    };
+    if (nativeViewModel.props.subviews) {
+        ret.props.subviews = nativeViewModel.props.subviews
+            .map(e => deepClone(e));
+    }
+    return ret;
+}
+
 /*
  * Copyright [2019] [Doric.Pub]
  *
@@ -3474,10 +3487,11 @@ class List extends Superview {
         return view;
     }
     renderBunchedItems(start, length) {
-        return new Array(Math.max(0, Math.min(length, this.itemCount - start))).fill(0).map((_, idx) => {
-            const listItem = this.getItem(start + idx);
-            return listItem.toModel();
-        });
+        const items = new Array(Math.max(0, Math.min(length, this.itemCount - start)))
+            .fill(0).map((_, idx) => this.getItem(start + idx));
+        const ret = items.map(e => deepClone(e.toModel()));
+        items.forEach(e => e.clean());
+        return ret;
     }
     toModel() {
         if (this.loadMoreView) {
@@ -3624,10 +3638,11 @@ class Slider extends Superview {
         return view;
     }
     renderBunchedItems(start, length) {
-        return new Array(Math.min(length, this.itemCount - start)).fill(0).map((_, idx) => {
-            const slideItem = this.getItem(start + idx);
-            return slideItem.toModel();
-        });
+        const items = new Array(Math.max(0, Math.min(length, this.itemCount - start)))
+            .fill(0).map((_, idx) => this.getItem(start + idx));
+        const ret = items.map(e => deepClone(e.toModel()));
+        items.forEach(e => e.clean());
+        return ret;
     }
     slidePage(context, page, smooth = false) {
         return this.nativeChannel(context, "slidePage")({ page, smooth });
@@ -4019,10 +4034,11 @@ class FlowLayout extends Superview {
         return view;
     }
     renderBunchedItems(start, length) {
-        return new Array(Math.min(length, this.itemCount - start)).fill(0).map((_, idx) => {
-            const listItem = this.getItem(start + idx);
-            return listItem.toModel();
-        });
+        const items = new Array(Math.max(0, Math.min(length, this.itemCount - start)))
+            .fill(0).map((_, idx) => this.getItem(start + idx));
+        const ret = items.map(e => deepClone(e.toModel()));
+        items.forEach(e => e.clean());
+        return ret;
     }
     toModel() {
         if (this.loadMoreView) {
@@ -4609,10 +4625,11 @@ class HorizontalList extends Superview {
         return view;
     }
     renderBunchedItems(start, length) {
-        return new Array(Math.max(0, Math.min(length, this.itemCount - start))).fill(0).map((_, idx) => {
-            const listItem = this.getItem(start + idx);
-            return listItem.toModel();
-        });
+        const items = new Array(Math.max(0, Math.min(length, this.itemCount - start)))
+            .fill(0).map((_, idx) => this.getItem(start + idx));
+        const ret = items.map(e => deepClone(e.toModel()));
+        items.forEach(e => e.clean());
+        return ret;
     }
     toModel() {
         if (this.loadMoreView) {

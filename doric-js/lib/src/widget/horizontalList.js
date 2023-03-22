@@ -25,6 +25,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { View, Property, Superview } from "../ui/view";
 import { Stack } from "./layouts";
 import { layoutConfig } from "../util/layoutconfig";
+import { deepClone } from "./utils";
 export class HorizontalListItem extends Stack {
 }
 __decorate([
@@ -82,10 +83,11 @@ export class HorizontalList extends Superview {
         return view;
     }
     renderBunchedItems(start, length) {
-        return new Array(Math.max(0, Math.min(length, this.itemCount - start))).fill(0).map((_, idx) => {
-            const listItem = this.getItem(start + idx);
-            return listItem.toModel();
-        });
+        const items = new Array(Math.max(0, Math.min(length, this.itemCount - start)))
+            .fill(0).map((_, idx) => this.getItem(start + idx));
+        const ret = items.map(e => deepClone(e.toModel()));
+        items.forEach(e => e.clean());
+        return ret;
     }
     toModel() {
         if (this.loadMoreView) {

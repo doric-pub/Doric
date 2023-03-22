@@ -17,6 +17,7 @@ import { Stack } from './layouts'
 import { Property, Superview, View, NativeViewModel } from '../ui/view'
 import { layoutConfig } from '../util/index.util'
 import { BridgeContext } from "../runtime/global";
+import { deepClone } from './utils';
 
 export class FlowLayoutItem extends Stack {
     /**
@@ -142,17 +143,20 @@ export class FlowLayout extends Superview {
         this.cachedViews.clear()
         this.itemCount = 0
     }
+
     private getItem(itemIdx: number) {
         let view = this.renderItem(itemIdx)
         view.superview = this
         this.cachedViews.set(`${itemIdx}`, view)
         return view
     }
+
     private renderBunchedItems(start: number, length: number) {
-        return new Array(Math.min(length, this.itemCount - start)).fill(0).map((_, idx) => {
-            const listItem = this.getItem(start + idx)
-            return listItem.toModel()
-        })
+        const items = new Array(Math.max(0, Math.min(length, this.itemCount - start)))
+            .fill(0).map((_, idx) => this.getItem(start + idx))
+        const ret = items.map(e => deepClone(e.toModel()))
+        items.forEach(e => e.clean())
+        return ret
     }
 
     toModel(): NativeViewModel {

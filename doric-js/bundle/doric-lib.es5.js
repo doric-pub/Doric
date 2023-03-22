@@ -2437,6 +2437,32 @@ function image(config) {
     return ret;
 }
 
+var __assign = (undefined && undefined.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        var arguments$1 = arguments;
+
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments$1[i];
+            for (var p in s) { if (Object.prototype.hasOwnProperty.call(s, p))
+                { t[p] = s[p]; } }
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+function deepClone(nativeViewModel) {
+    var ret = {
+        id: nativeViewModel.id,
+        type: nativeViewModel.type,
+        props: __assign({}, nativeViewModel.props),
+    };
+    if (nativeViewModel.props.subviews) {
+        ret.props.subviews = nativeViewModel.props.subviews
+            .map(function (e) { return deepClone(e); });
+    }
+    return ret;
+}
+
 /*
  * Copyright [2019] [Doric.Pub]
  *
@@ -2570,10 +2596,11 @@ var List = /** @class */ (function (_super) {
     };
     List.prototype.renderBunchedItems = function (start, length) {
         var _this = this;
-        return new Array(Math.max(0, Math.min(length, this.itemCount - start))).fill(0).map(function (_, idx) {
-            var listItem = _this.getItem(start + idx);
-            return listItem.toModel();
-        });
+        var items = new Array(Math.max(0, Math.min(length, this.itemCount - start)))
+            .fill(0).map(function (_, idx) { return _this.getItem(start + idx); });
+        var ret = items.map(function (e) { return deepClone(e.toModel()); });
+        items.forEach(function (e) { return e.clean(); });
+        return ret;
     };
     List.prototype.toModel = function () {
         if (this.loadMoreView) {
@@ -2744,10 +2771,11 @@ var Slider = /** @class */ (function (_super) {
     };
     Slider.prototype.renderBunchedItems = function (start, length) {
         var _this = this;
-        return new Array(Math.min(length, this.itemCount - start)).fill(0).map(function (_, idx) {
-            var slideItem = _this.getItem(start + idx);
-            return slideItem.toModel();
-        });
+        var items = new Array(Math.max(0, Math.min(length, this.itemCount - start)))
+            .fill(0).map(function (_, idx) { return _this.getItem(start + idx); });
+        var ret = items.map(function (e) { return deepClone(e.toModel()); });
+        items.forEach(function (e) { return e.clean(); });
+        return ret;
     };
     Slider.prototype.slidePage = function (context, page, smooth) {
         if (smooth === void 0) { smooth = false; }
@@ -3264,10 +3292,11 @@ var FlowLayout = /** @class */ (function (_super) {
     };
     FlowLayout.prototype.renderBunchedItems = function (start, length) {
         var _this = this;
-        return new Array(Math.min(length, this.itemCount - start)).fill(0).map(function (_, idx) {
-            var listItem = _this.getItem(start + idx);
-            return listItem.toModel();
-        });
+        var items = new Array(Math.max(0, Math.min(length, this.itemCount - start)))
+            .fill(0).map(function (_, idx) { return _this.getItem(start + idx); });
+        var ret = items.map(function (e) { return deepClone(e.toModel()); });
+        items.forEach(function (e) { return e.clean(); });
+        return ret;
     };
     FlowLayout.prototype.toModel = function () {
         if (this.loadMoreView) {
@@ -4030,10 +4059,11 @@ var HorizontalList = /** @class */ (function (_super) {
     };
     HorizontalList.prototype.renderBunchedItems = function (start, length) {
         var _this = this;
-        return new Array(Math.max(0, Math.min(length, this.itemCount - start))).fill(0).map(function (_, idx) {
-            var listItem = _this.getItem(start + idx);
-            return listItem.toModel();
-        });
+        var items = new Array(Math.max(0, Math.min(length, this.itemCount - start)))
+            .fill(0).map(function (_, idx) { return _this.getItem(start + idx); });
+        var ret = items.map(function (e) { return deepClone(e.toModel()); });
+        items.forEach(function (e) { return e.clean(); });
+        return ret;
     };
     HorizontalList.prototype.toModel = function () {
         if (this.loadMoreView) {

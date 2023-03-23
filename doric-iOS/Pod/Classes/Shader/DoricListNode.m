@@ -219,11 +219,44 @@
 
 - (void)blend:(NSDictionary *)props {
     self.needReload = false;
+    NSUInteger oldItemCount = self.itemCount;
+    BOOL oldLoadMore = self.loadMore;
     [super blend:props];
     if (self.needReload) {
         dispatch_async(dispatch_get_main_queue(), ^{
             self.rowCount = self.itemCount + (self.loadMore ? 1 : 0);
-            [self.view reloadData];
+            if (self.itemViewIds.count != 0 && self.itemCount > oldItemCount && oldItemCount > 0){
+                NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
+                for (NSUInteger l = oldItemCount; l < self.itemCount; l++) {
+                    NSIndexPath *p = [NSIndexPath indexPathForRow:l inSection:0];
+                    [indexPaths addObject:p];
+                }
+                
+                if (@available(iOS 11.0, *)) {
+                    [self.view performBatchUpdates:^{
+                        @try {
+                            if (oldLoadMore != self.loadMore){
+                                if (self.loadMore) {
+                                    [self.view insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+                                    [self.view insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.itemCount inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+                                }else {
+                                    [self.view deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:oldItemCount inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+                                    [self.view insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+                                }
+                            }else {
+                                [self.view insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+                            }
+                        } @catch (NSException *exception) {
+                            [self.view reloadData];
+                        }
+                    } completion:nil];
+                } else {
+                    [self.view reloadData];
+                }
+            }else {
+                [self.view reloadData];
+            }
+            
             if (self.view.height == 0 && self.view.doricLayout.heightSpec == DoricLayoutFit) {
                 DoricSuperNode *node = self.superNode;
                 while (node.superNode != nil) {

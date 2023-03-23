@@ -121,7 +121,7 @@ typedef NS_ENUM(NSInteger, DoricGravity) {
 
 @property(nonatomic, assign) CGFloat totalLength;
 
-@property(nonatomic, assign) NSDictionary *flexConfig;
+@property(nonatomic, copy) NSDictionary *flexConfig;
 
 - (instancetype)init;
 

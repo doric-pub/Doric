@@ -157,6 +157,9 @@
 }
 
 - (void)subNodeContentChanged:(DoricViewNode *)subNode {
+    if (self.doricContext.destroyed) {
+        return;
+    }
     if (self.superNode
             && (self.view.doricLayout.widthSpec == DoricLayoutFit
             || self.view.doricLayout.heightSpec == DoricLayoutFit)) {

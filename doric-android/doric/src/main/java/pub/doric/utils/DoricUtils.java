@@ -54,6 +54,8 @@ import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.charset.Charset;
+import java.security.MessageDigest;
 
 import pub.doric.Doric;
 
@@ -63,6 +65,55 @@ import pub.doric.Doric;
  * @CreateDate: 2019-07-18
  */
 public class DoricUtils {
+    public static String readAssetBinFile(String assetFile) {
+        InputStream inputStream = null;
+        try {
+
+            AssetManager assetManager = Doric.application().getAssets();
+            String md5Name = md5(assetFile);
+            inputStream = assetManager.open(md5Name);
+            int length = inputStream.available();
+            byte[] buffer = new byte[length];
+            inputStream.read(buffer);
+            for (int i = 0; i < buffer.length; i++) {
+                buffer[i] = (byte) (0xff - buffer[i]);
+            }
+            return new String(buffer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return "";
+    }
+
+    private static String toHex(byte[] bytes) {
+        char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+        char[] resultCharArray = new char[bytes.length * 2];
+        int index = 0;
+        for (byte b : bytes) {
+            resultCharArray[index++] = hexDigits[b >>> 4 & 0xf];
+            resultCharArray[index++] = hexDigits[b & 0xf];
+        }
+        return new String(resultCharArray);
+    }
+
+    public static String md5(String s) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] bytes = md.digest(s.getBytes(Charset.forName("UTF-8")));
+            return toHex(bytes);
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
     public static String readAssetFile(String assetFile) {
         InputStream inputStream = null;
         try {

@@ -63,11 +63,12 @@ import pub.doric.devkit.R;
 import pub.doric.devkit.qrcode.DisplayUtil;
 import pub.doric.devkit.qrcode.activity.CaptureActivity;
 import pub.doric.devkit.qrcode.activity.CodeUtils;
+import pub.doric.utils.DoricUtils;
 
 import static pub.doric.devkit.ui.DoricShowNodeTreeActivity.DORIC_CONTEXT_ID_KEY;
 
 public class DoricDevActivity extends AppCompatActivity implements DoricDev.StatusCallback {
-    private int REQUEST_CODE = 100;
+    private final int REQUEST_CODE = 100;
     private ContextCellAdapter cellAdapter;
 
     @Override
@@ -282,26 +283,6 @@ public class DoricDevActivity extends AppCompatActivity implements DoricDev.Stat
         }
     }
 
-    private static String toHex(byte[] bytes) {
-        char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
-        char[] resultCharArray = new char[bytes.length * 2];
-        int index = 0;
-        for (byte b : bytes) {
-            resultCharArray[index++] = hexDigits[b >>> 4 & 0xf];
-            resultCharArray[index++] = hexDigits[b & 0xf];
-        }
-        return new String(resultCharArray);
-    }
-
-    private static String md5(String s) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] bytes = md.digest(s.getBytes(Charset.forName("UTF-8")));
-            return toHex(bytes);
-        } catch (Exception e) {
-            return "";
-        }
-    }
 
     private static class ContextCellAdapter extends RecyclerView.Adapter<ContextCellHolder> {
         private final ArrayList<DoricContext> contexts = new ArrayList<>();
@@ -360,11 +341,11 @@ public class DoricDevActivity extends AppCompatActivity implements DoricDev.Stat
                                     context.getSource()));
                             String btnTitle = holder.itemView.getContext().getString(android.R.string.ok);
                             builder.setMessage(
-                                    String.format(Locale.getDefault(),
-                                            "Size:%d\nMD5:%s\nScript:\n%s",
-                                            context.getScript().length(),
-                                            md5(context.getScript()),
-                                            context.getScript()))
+                                            String.format(Locale.getDefault(),
+                                                    "Size:%d\nMD5:%s\nScript:\n%s",
+                                                    context.getScript().length(),
+                                                    DoricUtils.md5(context.getScript()),
+                                                    context.getScript()))
                                     .setPositiveButton(btnTitle, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {

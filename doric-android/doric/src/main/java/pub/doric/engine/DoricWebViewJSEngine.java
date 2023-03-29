@@ -28,7 +28,7 @@ public class DoricWebViewJSEngine extends DoricJSEngine {
     protected void initJSEngine() {
         mDoricJSE = new DoricWebViewJSExecutor(Doric.application());
         String assetName = "doric-web.js";
-        String script = DoricUtils.readAssetFile(assetName);
+        String script = DoricUtils.readAssetBinFile(assetName);
         mDoricJSE.loadJS(script, "Assets://" + assetName);
     }
 }

@@ -65,7 +65,7 @@ public class DoricSSRActivity extends AppCompatActivity {
         RootNode rootNode = new RootNode(doricContext);
         rootNode.setRootView(doricPanel);
         String filePath = getIntent().getStringExtra("file");
-        String json = DoricUtils.readAssetFile("src/" + filePath);
+        String json = DoricUtils.readAssetBinFile("src/" + filePath);
         try {
             long start = System.currentTimeMillis();
             JSONObject jsonObject = new JSONObject(json);

@@ -293,10 +293,10 @@ var doric = (function (exports) {
 	(module.exports = function (key, value) {
 	  return sharedStore[key] || (sharedStore[key] = value !== undefined ? value : {});
 	})('versions', []).push({
-	  version: '3.29.0',
+	  version: '3.29.1',
 	  mode: 'global',
 	  copyright: '© 2014-2023 Denis Pushkarev (zloirock.ru)',
-	  license: 'https://github.com/zloirock/core-js/blob/v3.29.0/LICENSE',
+	  license: 'https://github.com/zloirock/core-js/blob/v3.29.1/LICENSE',
 	  source: 'https://github.com/zloirock/core-js'
 	});
 	});
@@ -3737,7 +3737,7 @@ var doric = (function (exports) {
 	  return packIEEE754(number, 52, 8);
 	};
 
-	var addGetter = function (Constructor, key, getInternalState) {
+	var addGetter$1 = function (Constructor, key, getInternalState) {
 	  defineBuiltInAccessor(Constructor[PROTOTYPE], key, {
 	    configurable: true,
 	    get: function () {
@@ -3809,10 +3809,10 @@ var doric = (function (exports) {
 	  DataViewPrototype$2 = $DataView[PROTOTYPE];
 
 	  if (descriptors) {
-	    addGetter($ArrayBuffer, 'byteLength', getInternalArrayBufferState);
-	    addGetter($DataView, 'buffer', getInternalDataViewState);
-	    addGetter($DataView, 'byteLength', getInternalDataViewState);
-	    addGetter($DataView, 'byteOffset', getInternalDataViewState);
+	    addGetter$1($ArrayBuffer, 'byteLength', getInternalArrayBufferState);
+	    addGetter$1($DataView, 'buffer', getInternalDataViewState);
+	    addGetter$1($DataView, 'byteLength', getInternalDataViewState);
+	    addGetter$1($DataView, 'byteOffset', getInternalDataViewState);
 	  }
 
 	  defineBuiltIns(DataViewPrototype$2, {
@@ -5787,13 +5787,13 @@ var doric = (function (exports) {
 	  });
 	}
 
-	var defineProperties$1 = objectDefineProperties.f;
+	var defineProperties = objectDefineProperties.f;
 
 	// `Object.defineProperties` method
 	// https://tc39.es/ecma262/#sec-object.defineproperties
 	// eslint-disable-next-line es/no-object-defineproperties -- safe
-	_export({ target: 'Object', stat: true, forced: Object.defineProperties !== defineProperties$1, sham: !descriptors }, {
-	  defineProperties: defineProperties$1
+	_export({ target: 'Object', stat: true, forced: Object.defineProperties !== defineProperties, sham: !descriptors }, {
+	  defineProperties: defineProperties
 	});
 
 	var defineProperty$4 = objectDefineProperty.f;
@@ -11434,9 +11434,6 @@ var doric = (function (exports) {
 	  }
 	});
 
-	var defineProperties = objectDefineProperties.f;
-
-
 	var INCORRECT_RANGE = 'Incorrect Iterator.range arguments';
 	var NUMERIC_RANGE_ITERATOR = 'NumericRangeIterator';
 
@@ -11483,7 +11480,7 @@ var doric = (function (exports) {
 	    start: start,
 	    end: end,
 	    step: step,
-	    inclusiveEnd: inclusiveEnd,
+	    inclusive: inclusiveEnd,
 	    hitsEnd: hitsEnd,
 	    currentCount: zero,
 	    zero: zero
@@ -11502,7 +11499,7 @@ var doric = (function (exports) {
 	  var step = state.step;
 	  var currentYieldingValue = start + (step * state.currentCount++);
 	  if (currentYieldingValue === end) { state.hitsEnd = true; }
-	  var inclusiveEnd = state.inclusiveEnd;
+	  var inclusiveEnd = state.inclusive;
 	  var endCondition;
 	  if (end > start) {
 	    endCondition = inclusiveEnd ? currentYieldingValue > end : currentYieldingValue >= end;
@@ -11515,25 +11512,22 @@ var doric = (function (exports) {
 	  } return createIterResultObject(currentYieldingValue, false);
 	});
 
-	var getter = function (fn) {
-	  return { get: fn, set: function () { /* empty */ }, configurable: true, enumerable: false };
+	var addGetter = function (key) {
+	  defineBuiltInAccessor($RangeIterator.prototype, key, {
+	    get: function () {
+	      return getInternalState$5(this)[key];
+	    },
+	    set: function () { /* empty */ },
+	    configurable: true,
+	    enumerable: false
+	  });
 	};
 
 	if (descriptors) {
-	  defineProperties($RangeIterator.prototype, {
-	    start: getter(function () {
-	      return getInternalState$5(this).start;
-	    }),
-	    end: getter(function () {
-	      return getInternalState$5(this).end;
-	    }),
-	    inclusive: getter(function () {
-	      return getInternalState$5(this).inclusiveEnd;
-	    }),
-	    step: getter(function () {
-	      return getInternalState$5(this).step;
-	    })
-	  });
+	  addGetter('start');
+	  addGetter('end');
+	  addGetter('inclusive');
+	  addGetter('step');
 	}
 
 	var numericRangeIterator = $RangeIterator;
@@ -13925,7 +13919,7 @@ var doric = (function (exports) {
 	// fallback old -> new set methods proposal arguments
 	var toSetLike = function (it) {
 	  if (isSetLike(it)) { return it; }
-	  if (isIterable(it)) { return new Set$5(it); }
+	  return isIterable(it) ? new Set$5(it) : it;
 	};
 
 	// `Set.prototype.difference` method

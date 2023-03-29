@@ -20,11 +20,6 @@ android {
             consumerProguardFiles 'proguard-rules.pro'
         }
     }
-    sourceSets {
-        main {
-            assets.srcDirs = ["../../doric-js/bundle"]
-        }
-    }
 }
 
 dependencies {

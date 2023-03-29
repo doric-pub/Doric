@@ -263,7 +263,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
             boolean legacy = DoricSingleton.getInstance().legacyMode;
             loadBuiltinJS(legacy ? DoricConstant.DORIC_BUNDLE_SANDBOX_ES5 : DoricConstant.DORIC_BUNDLE_SANDBOX);
             String libName = DoricConstant.DORIC_MODULE_LIB;
-            String libJS = DoricUtils.readAssetFile(legacy ? DoricConstant.DORIC_BUNDLE_LIB_ES5 : DoricConstant.DORIC_BUNDLE_LIB);
+            String libJS = DoricUtils.readAssetBinFile(legacy ? DoricConstant.DORIC_BUNDLE_LIB_ES5 : DoricConstant.DORIC_BUNDLE_LIB);
             mDoricJSE.loadJS(packageModuleScript(libName, libJS), "Module://" + libName);
         } catch (Exception e) {
             mDoricRegistry.onException(null, e);
@@ -283,7 +283,7 @@ public class DoricJSEngine implements Handler.Callback, DoricTimerExtension.Time
     }
 
     private void loadBuiltinJS(String assetName) {
-        String script = DoricUtils.readAssetFile(assetName);
+        String script = DoricUtils.readAssetBinFile(assetName);
         mDoricJSE.loadJS(script, "Assets://" + assetName);
     }
 

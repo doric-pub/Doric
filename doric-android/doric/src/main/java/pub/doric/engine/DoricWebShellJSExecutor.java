@@ -279,7 +279,7 @@ public class DoricWebShellJSExecutor implements IDoricJSE {
 
             @Override
             public WebResourceResponse onIntercept(String url) {
-                String content = DoricUtils.readAssetFile("doric-web.html");
+                String content = DoricUtils.readAssetBinFile("doric-web.html");
                 InputStream inputStream = new ByteArrayInputStream(content.getBytes());
                 return new WebResourceResponse("text/html", "utf-8", inputStream);
             }
@@ -292,7 +292,7 @@ public class DoricWebShellJSExecutor implements IDoricJSE {
 
             @Override
             public WebResourceResponse onIntercept(String url) {
-                String content = DoricUtils.readAssetFile("doric-web.js");
+                String content = DoricUtils.readAssetBinFile("doric-web.js");
                 InputStream inputStream = new ByteArrayInputStream(content.getBytes());
                 return new WebResourceResponse("text/javascript", "utf-8", inputStream);
             }

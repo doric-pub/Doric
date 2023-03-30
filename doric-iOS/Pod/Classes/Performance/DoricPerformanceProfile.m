@@ -44,11 +44,23 @@
 }
 
 - (void)addAnchorHook:(id)hook {
-    [self.hooks addObject:hook];
+    __weak typeof(self) _self = self;
+    dispatch_async(self.anchorQueue, ^{
+        __strong typeof(_self) self = _self;
+        if (!self) return;
+        
+        [self.hooks addObject:hook];
+    });
 }
 
 - (void)removeAnchorHook:(id)hook {
-    [self.hooks removeObject:hook];
+    __weak typeof(self) _self = self;
+    dispatch_async(self.anchorQueue, ^{
+        __strong typeof(_self) self = _self;
+        if (!self) return;
+        
+        [self.hooks removeObject:hook];
+    });
 }
 
 - (void)enable:(bool)enable {
@@ -95,7 +107,11 @@
     if (!self.enable) {
         return;
     }
+    __weak typeof(self) _self = self;
     dispatch_async(self.anchorQueue, ^{
+        __strong typeof(_self) self = _self;
+        if (!self) return;
+        
         NSNumber *prepare = self.anchorMap[[self getPrepareAnchor:anchorName]];
         NSNumber *start = self.anchorMap[[self getStartAnchor:anchorName]];
         NSNumber *end = self.anchorMap[[self getEndAnchor:anchorName]];

@@ -231,10 +231,10 @@
                     NSIndexPath *p = [NSIndexPath indexPathForRow:l inSection:0];
                     [indexPaths addObject:p];
                 }
-
                 if (@available(iOS 11.0, *)) {
-                    [self.view performBatchUpdates:^{
-                        @try {
+                    @try {
+                        [self.view performBatchUpdates:^{
+
                             if (oldLoadMore != self.loadMore) {
                                 if (self.loadMore) {
                                     [self.view insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
@@ -246,10 +246,10 @@
                             } else {
                                 [self.view insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
                             }
-                        } @catch (NSException *exception) {
-                            [self.view reloadData];
-                        }
-                    }                   completion:nil];
+                        }                   completion:nil];
+                    } @catch (NSException *exception) {
+                        [self.view reloadData];
+                    }
                 } else {
                     [self.view reloadData];
                 }

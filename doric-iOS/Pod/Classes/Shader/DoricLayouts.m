@@ -26,7 +26,7 @@
 #import <yoga/Yoga.h>
 
 @interface YGLayout ()
-@property (nonatomic, assign, readonly) YGNodeRef node;
+@property(nonatomic, assign, readonly) YGNodeRef node;
 @end
 
 void DoricAddEllipticArcPath(CGMutablePathRef path,
@@ -1537,9 +1537,9 @@ NSUInteger DORIC_MEASURED_STATE_TOO_SMALL = 0x01;
         layout.measuredX = YGNodeLayoutGetLeft(child.yoga.node);
         layout.measuredY = YGNodeLayoutGetTop(child.yoga.node);
         [layout measureWidth:DoricMeasureSpecMake(DoricMeasureExactly,
-                                                  YGNodeLayoutGetWidth(child.yoga.node))
+                        YGNodeLayoutGetWidth(child.yoga.node))
                       height:DoricMeasureSpecMake(DoricMeasureExactly,
-                                                  YGNodeLayoutGetHeight(child.yoga.node))];
+                              YGNodeLayoutGetHeight(child.yoga.node))];
         [layout layout];
     }
 }

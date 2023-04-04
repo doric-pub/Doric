@@ -138,6 +138,12 @@ public class NestedSliderNode extends GroupNode<ViewPager> implements ViewPager.
             case "onPageSlided":
                 this.onPageSlidedFuncId = prop.asString().toString();
                 break;
+            case "slidePosition":
+                if (prop.isNumber()) {
+                    int position = prop.asNumber().toInt();
+                    mView.setCurrentItem(position, false);
+                }
+                break;
             default:
                 super.blend(view, name, prop);
                 break;

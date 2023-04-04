@@ -25,6 +25,13 @@
 @end
 
 @implementation DoricNestedSliderView
+- (CGSize)sizeThatFits:(CGSize)size {
+    CGSize result = [super sizeThatFits:size];
+    if (self.doricLayout.heightSpec == DoricLayoutFit && self.contentSize.height > 0) {
+        return CGSizeMake(result.width, self.contentSize.height);
+    }
+    return result;
+}
 @end
 
 @interface DoricNestedSliderNode () <UIScrollViewDelegate>

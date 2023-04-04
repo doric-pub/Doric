@@ -1993,7 +1993,7 @@ __decorate$b([
     __metadata$b("design:type", Function)
 ], List.prototype, "onScrollEnd", void 0);
 __decorate$b([
-    Property,
+    InconsistProperty,
     __metadata$b("design:type", Number)
 ], List.prototype, "scrolledPosition", void 0);
 __decorate$b([
@@ -2147,6 +2147,10 @@ __decorate$a([
     Property,
     __metadata$a("design:type", Object)
 ], Slider.prototype, "slideStyle", void 0);
+__decorate$a([
+    InconsistProperty,
+    __metadata$a("design:type", Number)
+], Slider.prototype, "slidePosition", void 0);
 function slider(config) {
     const ret = new Slider;
     ret.apply(config);

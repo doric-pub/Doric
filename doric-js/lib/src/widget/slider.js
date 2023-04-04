@@ -22,7 +22,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Superview, View, Property } from "../ui/view";
+import { Superview, View, Property, InconsistProperty } from "../ui/view";
 import { Stack } from "./layouts";
 import { layoutConfig } from "../util/layoutconfig";
 import { deepClone } from "./utils";
@@ -110,6 +110,10 @@ __decorate([
     Property,
     __metadata("design:type", Object)
 ], Slider.prototype, "slideStyle", void 0);
+__decorate([
+    InconsistProperty,
+    __metadata("design:type", Number)
+], Slider.prototype, "slidePosition", void 0);
 export function slider(config) {
     const ret = new Slider;
     ret.apply(config);

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Superview, View, Property } from "../ui/view";
+import { Superview, View, Property, InconsistProperty } from "../ui/view";
 import { Stack } from "./layouts";
 import { layoutConfig } from "../util/layoutconfig";
 import { BridgeContext } from "../runtime/global";
@@ -70,6 +70,9 @@ export class Slider extends Superview {
      */
     @Property
     slideStyle?: "zoomOut" | { type: "zoomOut", minScale: number, maxScale: number }
+
+    @InconsistProperty
+    slidePosition?: number
 
     /**
      * Reload all list items.

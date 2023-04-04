@@ -22,7 +22,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { View, Property, Superview } from "../ui/view";
+import { View, Property, Superview, InconsistProperty } from "../ui/view";
 import { Stack } from "./layouts";
 import { layoutConfig } from "../util/layoutconfig";
 import { deepClone } from "./utils";
@@ -133,7 +133,7 @@ __decorate([
     __metadata("design:type", Function)
 ], List.prototype, "onScrollEnd", void 0);
 __decorate([
-    Property,
+    InconsistProperty,
     __metadata("design:type", Number)
 ], List.prototype, "scrolledPosition", void 0);
 __decorate([

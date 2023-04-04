@@ -15,7 +15,7 @@ Doric iOS SDK for cross platform develpment
 
   s.ios.deployment_target = '8.0'
 
-  s.source_files = 'doric-iOS/Pod/Classes/**/*','doric-iOS/Pod/Yoga/**/*.h'
+  s.source_files = 'doric-iOS/Pod/Classes/**/*','doric-iOS/Pod/Yoga/**/*'
   s.resource_bundles = {
     'Doric' => ['doric-js/bundle/**/*']
   }

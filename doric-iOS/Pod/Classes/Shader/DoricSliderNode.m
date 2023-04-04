@@ -36,6 +36,7 @@
 @property(nonatomic, assign) NSUInteger itemCount;
 @property(nonatomic, assign) NSUInteger propItemCount;
 @property(nonatomic, assign) NSUInteger batchCount;
+@property(nonatomic, assign) NSUInteger slidePosition;
 @property(nonatomic, copy) NSString *onPageSelectedFuncId;
 @property(nonatomic, assign) BOOL loop;
 @property(nonatomic, assign) BOOL propLoop;
@@ -46,12 +47,20 @@
 @property(nonatomic, strong) NSString *slideStyle;
 @property(nonatomic, assign) CGFloat minScale;
 @property(nonatomic, assign) CGFloat maxScale;
+@property(nonatomic, assign) BOOL scheduledLayout;
 @end
 
 @interface DoricSliderView : UICollectionView
 @end
 
 @implementation DoricSliderView
+- (CGSize)sizeThatFits:(CGSize)size {
+    CGSize result = [super sizeThatFits:size];
+    if (self.doricLayout.heightSpec == DoricLayoutFit && self.contentSize.height > 0) {
+        return CGSizeMake(result.width, self.contentSize.height);
+    }
+    return result;
+}
 @end
 
 @implementation DoricSliderNode
@@ -109,6 +118,12 @@
         } else if ([prop isKindOfClass:NSString.class]) {
             self.slideStyle = prop;
         }
+    } else if ([@"slidePosition" isEqualToString:name]) {
+        self.slidePosition = [prop unsignedIntegerValue];
+        if (self.view.width > 0 && ((NSUInteger) self.view.contentOffset.x / self.view.width) == self.slidePosition) {
+        } else {
+            self.needResetScroll = YES;
+        }
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }
@@ -144,10 +159,8 @@
     if (needToScroll) {
         dispatch_async(dispatch_get_main_queue(), ^{
             __strong typeof(_self) self = _self;
-
             [self.view reloadData];
-
-            int position = self.loop ? 1 : 0;
+            NSUInteger position = (self.loop ? 1 : 0) + self.slidePosition;
             if (self.view.width == 0) {
                 self.needResetScroll = true;
             } else {
@@ -197,11 +210,39 @@
         [node blend:props];
         [node.view.doricLayout apply:CGSizeMake(collectionView.width, collectionView.height)];
         [node requestLayout];
+        BOOL needLayout = NO;
+        if (self.view.doricLayout.widthSpec == DoricLayoutFit && self.view.width < node.view.width) {
+            self.view.width = node.view.width;
+            needLayout = YES;
+        }
+        if (self.view.doricLayout.heightSpec == DoricLayoutFit && self.view.height < node.view.height) {
+            self.view.height = node.view.height;
+            needLayout = YES;
+        }
+        if (needLayout) {
+            [self scheduleLayout];
+        }
         return cell;
     } @catch (NSException *exception) {
         [self.doricContext.driver.registry onException:exception inContext:self.doricContext];
         return nil;
     }
+}
+
+- (void)scheduleLayout {
+    if (self.scheduledLayout) {
+        return;
+    }
+    self.scheduledLayout = YES;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.scheduledLayout = NO;
+        DoricSuperNode *node = self.superNode;
+        while (node.superNode != nil) {
+            node = node.superNode;
+        }
+        [node requestLayout];
+        [self.view reloadData];
+    });
 }
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -361,6 +402,7 @@
     self.slideStyle = nil;
     self.minScale = .618f;
     self.maxScale = 1.f;
+    self.slidePosition = 0;
 }
 
 - (void)subNodeContentChanged:(DoricViewNode *)subNode {

@@ -1106,6 +1106,7 @@ declare module "doric" {
 			minScale: number;
 			maxScale: number;
 		};
+		slidePosition?: number;
 		/**
 		 * Reload all list items.
 		 * @param context

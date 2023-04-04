@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { View, Property, Superview, NativeViewModel } from "../ui/view";
+import { View, Property, Superview, NativeViewModel, InconsistProperty } from "../ui/view";
 import { Stack } from "./layouts";
 import { layoutConfig } from "../util/layoutconfig";
 import { BridgeContext } from "../runtime/global";
@@ -71,7 +71,7 @@ export class List extends Superview {
     @Property
     onScrollEnd?: (offset: { x: number, y: number }) => void
 
-    @Property
+    @InconsistProperty
     scrolledPosition?: number
 
     @Property

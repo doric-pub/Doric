@@ -21,9 +21,9 @@
 #import <objc/runtime.h>
 #import "UIView+Doric.h"
 #import "DoricExtensions.h"
-#import <YogaKit/UIView+Yoga.h>
+#import "UIView+Yoga.h"
 #import <QuartzCore/QuartzCore.h>
-#import <yoga/Yoga.h>
+#import "Yoga.h"
 
 @interface YGLayout ()
 @property(nonatomic, assign, readonly) YGNodeRef node;

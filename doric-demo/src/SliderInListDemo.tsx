@@ -9,6 +9,7 @@ import {
   SlideItem,
   Image,
   Color,
+  createRef,
 } from "doric";
 const imageUrls = [
   "http://b.hiphotos.baidu.com/image/pic/item/908fa0ec08fa513db777cf78376d55fbb3fbd9b3.jpg",
@@ -33,18 +34,19 @@ export class SliderInListDemo extends Panel {
       parent={root}
       layoutConfig={layoutConfig().most()}
       itemCount={50}
-      renderItem={() =>
-        (
+      renderItem={() => {
+        const sliderRef = createRef<Slider>();
+        return (
           <ListItem layoutConfig={layoutConfig().mostWidth().fitHeight()}>
             <Slider
+              ref={sliderRef}
               layoutConfig={layoutConfig()
                 .mostWidth()
                 .fitHeight()
                 .configMinHeight(1)}
               itemCount={imageUrls.length}
-              onPageSlided={function (idx) {
-                const sliderView = this as unknown as Slider;
-                sliderView.slidePosition = idx;
+              onPageSlided={(idx) => {
+                sliderRef.current.slidePosition = idx;
               }}
               renderPage={(idx) =>
                 (
@@ -61,8 +63,8 @@ export class SliderInListDemo extends Panel {
               }
             />
           </ListItem>
-        ) as ListItem
-      }
+        ) as ListItem;
+      }}
     />;
   }
 }

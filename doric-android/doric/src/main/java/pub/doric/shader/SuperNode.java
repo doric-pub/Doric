@@ -127,7 +127,12 @@ public abstract class SuperNode<V extends View> extends ViewNode<V> {
                 JSValue[] subviews = jsValue.asArray().toArray();
 
                 List<JSValue> finalTarget = new ArrayList<>();
-
+                if (oriSubviews.isArray()) {
+                    JSArray array = oriSubviews.asArray();
+                    for (int i = 0; i < array.size(); i++) {
+                        finalTarget.add(array.get(i));
+                    }
+                }
                 for (JSValue subview : subviews) {
                     boolean find = false;
                     if (oriSubviews.isArray()) {
@@ -135,7 +140,6 @@ public abstract class SuperNode<V extends View> extends ViewNode<V> {
                             if (viewIdIsEqual(subview.asObject(), targetSubview.asObject())) {
                                 find = true;
                                 recursiveMixin(subview.asObject(), targetSubview.asObject());
-                                finalTarget.add(targetSubview);
                                 break;
                             }
                         }

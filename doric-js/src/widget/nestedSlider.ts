@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Group, View, Property } from '../ui/view'
+import { Group, View, Property, InconsistProperty } from '../ui/view'
 import { BridgeContext } from '../runtime/global'
 
 
@@ -34,6 +34,9 @@ export class NestedSlider extends Group {
     */
     @Property
     scrollsToTop?: boolean
+
+    @InconsistProperty
+    slidePosition?: number
 
     addSlideItem(view: View) {
         this.addChild(view)

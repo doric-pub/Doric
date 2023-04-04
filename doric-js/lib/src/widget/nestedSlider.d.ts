@@ -11,6 +11,7 @@ export declare class NestedSlider extends Group {
     * Take effect only on iOS
     */
     scrollsToTop?: boolean;
+    slidePosition?: number;
     addSlideItem(view: View): void;
     slidePage(context: BridgeContext, page: number, smooth?: boolean): Promise<any>;
     getSlidedPage(context: BridgeContext): Promise<number>;

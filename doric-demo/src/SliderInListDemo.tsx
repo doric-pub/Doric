@@ -37,9 +37,10 @@ export class SliderInListDemo extends Panel {
         (
           <ListItem layoutConfig={layoutConfig().mostWidth().fitHeight()}>
             <Slider
-              layoutConfig={layoutConfig().mostWidth().justHeight()}
-              height={50}
-              backgroundColor={Color.RED}
+              layoutConfig={layoutConfig()
+                .mostWidth()
+                .fitHeight()
+                .configMinHeight(1)}
               itemCount={imageUrls.length}
               onPageSlided={function (idx) {
                 const sliderView = this as unknown as Slider;

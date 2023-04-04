@@ -3608,7 +3608,7 @@ __decorate$b([
     __metadata$b("design:type", Function)
 ], List.prototype, "onScrollEnd", void 0);
 __decorate$b([
-    Property,
+    InconsistProperty,
     __metadata$b("design:type", Number)
 ], List.prototype, "scrolledPosition", void 0);
 __decorate$b([
@@ -3762,6 +3762,10 @@ __decorate$a([
     Property,
     __metadata$a("design:type", Object)
 ], Slider.prototype, "slideStyle", void 0);
+__decorate$a([
+    InconsistProperty,
+    __metadata$a("design:type", Number)
+], Slider.prototype, "slidePosition", void 0);
 function slider(config) {
     const ret = new Slider;
     ret.apply(config);
@@ -4399,6 +4403,10 @@ __decorate$5([
     Property,
     __metadata$5("design:type", Boolean)
 ], NestedSlider.prototype, "scrollsToTop", void 0);
+__decorate$5([
+    InconsistProperty,
+    __metadata$5("design:type", Number)
+], NestedSlider.prototype, "slidePosition", void 0);
 
 var __decorate$4 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;

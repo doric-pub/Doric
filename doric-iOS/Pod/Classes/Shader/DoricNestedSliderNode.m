@@ -61,6 +61,15 @@
         self.view.scrollsToTop = [prop boolValue];
     } else if ([@"onPageSlided" isEqualToString:name]) {
         self.onPageSelectedFuncId = prop;
+    } else if ([@"slidePosition" isEqualToString:name]) {
+        NSUInteger slidePosition = [prop unsignedIntegerValue];
+        if (self.view.width > 0 && ((NSUInteger) self.view.contentOffset.x / self.view.width) == slidePosition) {
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.view setContentOffset:CGPointMake(slidePosition * self.view.width, self.view.contentOffset.y)
+                                   animated:NO];
+            });
+        }
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }

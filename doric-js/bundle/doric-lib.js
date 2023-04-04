@@ -2788,6 +2788,10 @@ __decorate$5([
     Property,
     __metadata$5("design:type", Boolean)
 ], NestedSlider.prototype, "scrollsToTop", void 0);
+__decorate$5([
+    InconsistProperty,
+    __metadata$5("design:type", Number)
+], NestedSlider.prototype, "slidePosition", void 0);
 
 var __decorate$4 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;

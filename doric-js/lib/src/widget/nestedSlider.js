@@ -22,7 +22,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Group, Property } from '../ui/view';
+import { Group, Property, InconsistProperty } from '../ui/view';
 export class NestedSlider extends Group {
     addSlideItem(view) {
         this.addChild(view);
@@ -50,3 +50,7 @@ __decorate([
     Property,
     __metadata("design:type", Boolean)
 ], NestedSlider.prototype, "scrollsToTop", void 0);
+__decorate([
+    InconsistProperty,
+    __metadata("design:type", Number)
+], NestedSlider.prototype, "slidePosition", void 0);

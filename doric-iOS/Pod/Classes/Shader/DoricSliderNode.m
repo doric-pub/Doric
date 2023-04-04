@@ -208,15 +208,23 @@
         DoricSlideItemNode *node = cell.doricSlideItemNode;
         node.viewId = model[@"id"];
         [node blend:props];
-        [node.view.doricLayout apply:CGSizeMake(collectionView.width, collectionView.height)];
+        CGFloat maxWidth = collectionView.width;
+        if (collectionView.doricLayout.widthSpec == DoricLayoutFit) {
+            maxWidth = [[UIScreen mainScreen] bounds].size.width;
+        }
+        CGFloat maxHeight = collectionView.height;
+        if (collectionView.doricLayout.heightSpec == DoricLayoutFit) {
+            maxHeight = [[UIScreen mainScreen] bounds].size.height;
+        }
+        [node.view.doricLayout apply:CGSizeMake(maxWidth, maxHeight)];
         [node requestLayout];
         BOOL needLayout = NO;
-        if (self.view.doricLayout.widthSpec == DoricLayoutFit && self.view.width < node.view.width) {
+        if (collectionView.doricLayout.widthSpec == DoricLayoutFit && collectionView.width < node.view.width) {
             self.view.width = node.view.width;
             needLayout = YES;
         }
-        if (self.view.doricLayout.heightSpec == DoricLayoutFit && self.view.height < node.view.height) {
-            self.view.height = node.view.height;
+        if (collectionView.doricLayout.heightSpec == DoricLayoutFit && collectionView.height < node.view.height) {
+            collectionView.height = node.view.height;
             needLayout = YES;
         }
         if (needLayout) {
@@ -238,6 +246,11 @@
         self.scheduledLayout = NO;
         DoricSuperNode *node = self.superNode;
         while (node.superNode != nil) {
+            if ([node.view isKindOfClass:UITableView.class]) {
+                UITableView *tableView = (UITableView *) node.view;
+                [tableView reloadData];
+                return;
+            }
             node = node.superNode;
         }
         [node requestLayout];

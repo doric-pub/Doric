@@ -3627,6 +3627,10 @@ var NestedSlider = /** @class */ (function (_super) {
         Property,
         __metadata$5("design:type", Boolean)
     ], NestedSlider.prototype, "scrollsToTop", void 0);
+    __decorate$5([
+        InconsistProperty,
+        __metadata$5("design:type", Number)
+    ], NestedSlider.prototype, "slidePosition", void 0);
     return NestedSlider;
 }(Group));
 

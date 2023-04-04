@@ -54,6 +54,9 @@ public class SliderNode extends SuperNode<RecyclerView> {
     private float minScale = 0.618f;
     private float maxScale = 1;
 
+    private int slidePosition;
+    private boolean needSlideToPosition;
+
     public SliderNode(DoricContext doricContext) {
         super(doricContext);
         this.slideAdapter = new SlideAdapter(this);
@@ -187,7 +190,8 @@ public class SliderNode extends SuperNode<RecyclerView> {
 
         final boolean needToScroll = (loop && !slideAdapter.loop)
                 || (!renderPageFuncId.equals(slideAdapter.renderPageFuncId))
-                || (slideAdapter.itemCount == 0 && itemCount > 0);
+                || (slideAdapter.itemCount == 0 && itemCount > 0)
+                || needSlideToPosition;
 
         // If reset renderItem,should reset native cache.
         if (!renderPageFuncId.equals(slideAdapter.renderPageFuncId)) {
@@ -209,8 +213,10 @@ public class SliderNode extends SuperNode<RecyclerView> {
                             mView.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    int position = slideAdapter.loop ? 1 : 0;
+                                    int position = (slideAdapter.loop ? 1 : 0) + SliderNode.this.slidePosition;
                                     mView.scrollToPosition(position);
+
+                                    needSlideToPosition = false;
                                 }
                             });
                         }
@@ -251,6 +257,17 @@ public class SliderNode extends SuperNode<RecyclerView> {
                     this.slideStyle = prop.asObject().getProperty("type").asString().value();
                     this.maxScale = prop.asObject().getProperty("maxScale").asNumber().toFloat();
                     this.minScale = prop.asObject().getProperty("minScale").asNumber().toFloat();
+                }
+                break;
+            case "slidePosition":
+                if (prop.isNumber()) {
+                    int newSlidePosition = prop.asNumber().toInt();
+                    if (this.slidePosition == newSlidePosition) {
+
+                    } else {
+                        needSlideToPosition = true;
+                    }
+                    this.slidePosition = newSlidePosition;
                 }
                 break;
             default:
@@ -319,6 +336,7 @@ public class SliderNode extends SuperNode<RecyclerView> {
         slideStyle = null;
         minScale = .618f;
         maxScale = 1.f;
+        slidePosition = 0;
     }
 
     private static class DoricLinearSmoothScroller extends LinearSmoothScroller {

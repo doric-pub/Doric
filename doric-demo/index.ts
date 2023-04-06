@@ -1,3 +1,7 @@
 export default [
-    'src/SliderInListDemo',
+    'src/Counter',
+    'src/Snake',
+    'src/ComplicatedAnimations',
+    'src/.*Demo',
+    'src/Gobang',
 ]

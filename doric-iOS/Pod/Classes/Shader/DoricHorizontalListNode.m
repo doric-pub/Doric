@@ -104,6 +104,8 @@
 
 - (UICollectionView *)build {
     UICollectionViewFlowLayout *collectionViewFlowLayout = [[UICollectionViewFlowLayout alloc] init];
+    [collectionViewFlowLayout setMinimumInteritemSpacing:0];
+    [collectionViewFlowLayout setMinimumLineSpacing:0];
     [collectionViewFlowLayout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
     return [[[DoricHorizontalTableView alloc] initWithFrame:CGRectZero
                                        collectionViewLayout:collectionViewFlowLayout] also:^(UICollectionView *it) {

@@ -30,7 +30,7 @@ var doric = (function (exports) {
 	  check(typeof self == 'object' && self) ||
 	  check(typeof commonjsGlobal == 'object' && commonjsGlobal) ||
 	  // eslint-disable-next-line no-new-func -- fallback
-	  (function () { return this; })() || Function('return this')();
+	  (function () { return this; })() || commonjsGlobal || Function('return this')();
 
 	var fails = function (exec) {
 	  try {
@@ -208,12 +208,17 @@ var doric = (function (exports) {
 
 
 
+
+	var $String$8 = global_1.String;
+
 	// eslint-disable-next-line es/no-object-getownpropertysymbols -- required for testing
 	var symbolConstructorDetection = !!Object.getOwnPropertySymbols && !fails(function () {
 	  var symbol = Symbol();
 	  // Chrome 38 Symbol has incorrect toString conversion
 	  // `get-own-property-symbols` polyfill symbols converted to object are not Symbol instances
-	  return !String(symbol) || !(Object(symbol) instanceof Symbol) ||
+	  // nb: Do not call `String` directly to avoid this being optimized out to `symbol+''` which will,
+	  // of course, fail.
+	  return !$String$8(symbol) || !(Object(symbol) instanceof Symbol) ||
 	    // Chrome 38-40 symbols are not inherited from DOM collections prototypes to instances
 	    !Symbol.sham && engineV8Version && engineV8Version < 41;
 	});
@@ -293,10 +298,10 @@ var doric = (function (exports) {
 	(module.exports = function (key, value) {
 	  return sharedStore[key] || (sharedStore[key] = value !== undefined ? value : {});
 	})('versions', []).push({
-	  version: '3.29.0',
+	  version: '3.30.2',
 	  mode: 'global',
 	  copyright: '© 2014-2023 Denis Pushkarev (zloirock.ru)',
-	  license: 'https://github.com/zloirock/core-js/blob/v3.29.0/LICENSE',
+	  license: 'https://github.com/zloirock/core-js/blob/v3.30.2/LICENSE',
 	  source: 'https://github.com/zloirock/core-js'
 	});
 	});
@@ -2372,6 +2377,7 @@ var doric = (function (exports) {
 	var SKIPS_HOLES$1 = true;
 
 	// Shouldn't skip holes
+	// eslint-disable-next-line es/no-array-prototype-find -- testing
 	if (FIND in []) { Array(1)[FIND](function () { SKIPS_HOLES$1 = false; }); }
 
 	// `Array.prototype.find` method
@@ -2392,6 +2398,7 @@ var doric = (function (exports) {
 	var SKIPS_HOLES = true;
 
 	// Shouldn't skip holes
+	// eslint-disable-next-line es/no-array-prototype-findindex -- testing
 	if (FIND_INDEX in []) { Array(1)[FIND_INDEX](function () { SKIPS_HOLES = false; }); }
 
 	// `Array.prototype.findIndex` method
@@ -3737,7 +3744,7 @@ var doric = (function (exports) {
 	  return packIEEE754(number, 52, 8);
 	};
 
-	var addGetter = function (Constructor, key, getInternalState) {
+	var addGetter$1 = function (Constructor, key, getInternalState) {
 	  defineBuiltInAccessor(Constructor[PROTOTYPE], key, {
 	    configurable: true,
 	    get: function () {
@@ -3809,10 +3816,10 @@ var doric = (function (exports) {
 	  DataViewPrototype$2 = $DataView[PROTOTYPE];
 
 	  if (descriptors) {
-	    addGetter($ArrayBuffer, 'byteLength', getInternalArrayBufferState);
-	    addGetter($DataView, 'buffer', getInternalDataViewState);
-	    addGetter($DataView, 'byteLength', getInternalDataViewState);
-	    addGetter($DataView, 'byteOffset', getInternalDataViewState);
+	    addGetter$1($ArrayBuffer, 'byteLength', getInternalArrayBufferState);
+	    addGetter$1($DataView, 'buffer', getInternalDataViewState);
+	    addGetter$1($DataView, 'byteLength', getInternalDataViewState);
+	    addGetter$1($DataView, 'byteOffset', getInternalDataViewState);
 	  }
 
 	  defineBuiltIns(DataViewPrototype$2, {
@@ -5787,13 +5794,13 @@ var doric = (function (exports) {
 	  });
 	}
 
-	var defineProperties$1 = objectDefineProperties.f;
+	var defineProperties = objectDefineProperties.f;
 
 	// `Object.defineProperties` method
 	// https://tc39.es/ecma262/#sec-object.defineproperties
 	// eslint-disable-next-line es/no-object-defineproperties -- safe
-	_export({ target: 'Object', stat: true, forced: Object.defineProperties !== defineProperties$1, sham: !descriptors }, {
-	  defineProperties: defineProperties$1
+	_export({ target: 'Object', stat: true, forced: Object.defineProperties !== defineProperties, sham: !descriptors }, {
+	  defineProperties: defineProperties
 	});
 
 	var defineProperty$4 = objectDefineProperty.f;
@@ -10015,7 +10022,7 @@ var doric = (function (exports) {
 	  InternalWeakMap = collectionWeak.getConstructor(wrapper, 'WeakMap', true);
 	  internalMetadata.enable();
 	  var nativeDelete = functionUncurryThis(WeakMapPrototype$1['delete']);
-	  var nativeHas$1 = functionUncurryThis(WeakMapPrototype$1.has);
+	  var nativeHas = functionUncurryThis(WeakMapPrototype$1.has);
 	  var nativeGet = functionUncurryThis(WeakMapPrototype$1.get);
 	  defineBuiltIns(WeakMapPrototype$1, {
 	    'delete': function (key) {
@@ -10029,21 +10036,21 @@ var doric = (function (exports) {
 	      if (isObject(key) && !isExtensible(key)) {
 	        var state = enforceInternalState(this);
 	        if (!state.frozen) { state.frozen = new InternalWeakMap(); }
-	        return nativeHas$1(this, key) || state.frozen.has(key);
-	      } return nativeHas$1(this, key);
+	        return nativeHas(this, key) || state.frozen.has(key);
+	      } return nativeHas(this, key);
 	    },
 	    get: function get(key) {
 	      if (isObject(key) && !isExtensible(key)) {
 	        var state = enforceInternalState(this);
 	        if (!state.frozen) { state.frozen = new InternalWeakMap(); }
-	        return nativeHas$1(this, key) ? nativeGet(this, key) : state.frozen.get(key);
+	        return nativeHas(this, key) ? nativeGet(this, key) : state.frozen.get(key);
 	      } return nativeGet(this, key);
 	    },
 	    set: function set(key, value) {
 	      if (isObject(key) && !isExtensible(key)) {
 	        var state = enforceInternalState(this);
 	        if (!state.frozen) { state.frozen = new InternalWeakMap(); }
-	        nativeHas$1(this, key) ? nativeSet(this, key, value) : state.frozen.set(key, value);
+	        nativeHas(this, key) ? nativeSet(this, key, value) : state.frozen.set(key, value);
 	      } else { nativeSet(this, key, value); }
 	      return this;
 	    }
@@ -10175,7 +10182,7 @@ var doric = (function (exports) {
 	var getIteratorDirect = function (obj) {
 	  return {
 	    iterator: obj,
-	    next: aCallable(anObject(obj).next)
+	    next: aCallable(obj.next)
 	  };
 	};
 
@@ -10218,13 +10225,14 @@ var doric = (function (exports) {
 	  var IS_EVERY = TYPE == 2;
 	  var IS_SOME = TYPE == 3;
 	  return function (object, fn, target) {
+	    anObject(object);
+	    var MAPPING = fn !== undefined;
+	    if (MAPPING || !IS_TO_ARRAY) { aCallable(fn); }
 	    var record = getIteratorDirect(object);
 	    var Promise = getBuiltIn('Promise');
 	    var iterator = record.iterator;
 	    var next = record.next;
 	    var counter = 0;
-	    var MAPPING = fn !== undefined;
-	    if (MAPPING || !IS_TO_ARRAY) { aCallable(fn); }
 
 	    return new Promise(function (resolve, reject) {
 	      var ifAbruptCloseAsyncIterator = function (error) {
@@ -10722,11 +10730,9 @@ var doric = (function (exports) {
 	  var resource;
 	  if (!method) {
 	    if (isNullOrUndefined(V)) { return; }
-	    resource = createDisposableResource(V, hint);
-	  } else if (isNullOrUndefined(V)) {
-	    resource = createDisposableResource(undefined, hint, method);
+	    resource = createDisposableResource(anObject(V), hint);
 	  } else {
-	    resource = createDisposableResource(anObject(V), hint, method);
+	    resource = createDisposableResource(undefined, hint, method);
 	  }
 
 	  push$c(disposable.stack, resource);
@@ -10760,7 +10766,11 @@ var doric = (function (exports) {
 	var DISPOSED$1 = 'disposed';
 	var PENDING$1 = 'pending';
 
-	var ALREADY_DISPOSED$1 = ASYNC_DISPOSABLE_STACK + ' already disposed';
+	var getPendingAsyncDisposableStackInternalState = function (stack) {
+	  var internalState = getAsyncDisposableStackInternalState(stack);
+	  if (internalState.state == DISPOSED$1) { throw $ReferenceError$1(ASYNC_DISPOSABLE_STACK + ' already disposed'); }
+	  return internalState;
+	};
 
 	var $AsyncDisposableStack = function AsyncDisposableStack() {
 	  setInternalState$c(anInstance(this, AsyncDisposableStackPrototype), {
@@ -10817,14 +10827,11 @@ var doric = (function (exports) {
 	    });
 	  },
 	  use: function use(value) {
-	    var internalState = getAsyncDisposableStackInternalState(this);
-	    if (internalState.state == DISPOSED$1) { throw $ReferenceError$1(ALREADY_DISPOSED$1); }
-	    addDisposableResource(internalState, value, HINT$1);
+	    addDisposableResource(getPendingAsyncDisposableStackInternalState(this), value, HINT$1);
 	    return value;
 	  },
 	  adopt: function adopt(value, onDispose) {
-	    var internalState = getAsyncDisposableStackInternalState(this);
-	    if (internalState.state == DISPOSED$1) { throw $ReferenceError$1(ALREADY_DISPOSED$1); }
+	    var internalState = getPendingAsyncDisposableStackInternalState(this);
 	    aCallable(onDispose);
 	    addDisposableResource(internalState, undefined, HINT$1, function () {
 	      onDispose(value);
@@ -10832,17 +10839,17 @@ var doric = (function (exports) {
 	    return value;
 	  },
 	  defer: function defer(onDispose) {
-	    var internalState = getAsyncDisposableStackInternalState(this);
-	    if (internalState.state == DISPOSED$1) { throw $ReferenceError$1(ALREADY_DISPOSED$1); }
+	    var internalState = getPendingAsyncDisposableStackInternalState(this);
 	    aCallable(onDispose);
 	    addDisposableResource(internalState, undefined, HINT$1, onDispose);
 	  },
 	  move: function move() {
-	    var internalState = getAsyncDisposableStackInternalState(this);
-	    if (internalState.state == DISPOSED$1) { throw $ReferenceError$1(ALREADY_DISPOSED$1); }
+	    var internalState = getPendingAsyncDisposableStackInternalState(this);
 	    var newAsyncDisposableStack = new $AsyncDisposableStack();
 	    getAsyncDisposableStackInternalState(newAsyncDisposableStack).stack = internalState.stack;
 	    internalState.stack = [];
+	    internalState.state = DISPOSED$1;
+	    if (!descriptors) { this.disposed = true; }
 	    return newAsyncDisposableStack;
 	  }
 	});
@@ -11015,8 +11022,10 @@ var doric = (function (exports) {
 	// `AsyncIterator.prototype.map` method
 	// https://github.com/tc39/proposal-iterator-helpers
 	var asyncIteratorMap = function map(mapper) {
+	  anObject(this);
+	  aCallable(mapper);
 	  return new AsyncIteratorProxy$4(getIteratorDirect(this), {
-	    mapper: aCallable(mapper)
+	    mapper: mapper
 	  });
 	};
 
@@ -11107,8 +11116,10 @@ var doric = (function (exports) {
 	// https://github.com/tc39/proposal-async-iterator-helpers
 	_export({ target: 'AsyncIterator', proto: true, real: true }, {
 	  drop: function drop(limit) {
+	    anObject(this);
+	    var remaining = toPositiveInteger(notANan(+limit));
 	    return new AsyncIteratorProxy$3(getIteratorDirect(this), {
-	      remaining: toPositiveInteger(notANan(+limit))
+	      remaining: remaining
 	    });
 	  }
 	});
@@ -11171,8 +11182,10 @@ var doric = (function (exports) {
 	// https://github.com/tc39/proposal-async-iterator-helpers
 	_export({ target: 'AsyncIterator', proto: true, real: true }, {
 	  filter: function filter(predicate) {
+	    anObject(this);
+	    aCallable(predicate);
 	    return new AsyncIteratorProxy$2(getIteratorDirect(this), {
-	      predicate: aCallable(predicate)
+	      predicate: predicate
 	    });
 	  }
 	});
@@ -11198,7 +11211,7 @@ var doric = (function (exports) {
 	    method = getIteratorMethod(object);
 	    alreadyAsync = false;
 	  }
-	  if (isCallable(method)) {
+	  if (method !== undefined) {
 	    iterator = functionCall(method, object);
 	  } else {
 	    iterator = object;
@@ -11275,8 +11288,10 @@ var doric = (function (exports) {
 	// https://github.com/tc39/proposal-async-iterator-helpers
 	_export({ target: 'AsyncIterator', proto: true, real: true }, {
 	  flatMap: function flatMap(mapper) {
+	    anObject(this);
+	    aCallable(mapper);
 	    return new AsyncIteratorProxy$1(getIteratorDirect(this), {
-	      mapper: aCallable(mapper),
+	      mapper: mapper,
 	      inner: null
 	    });
 	  }
@@ -11330,13 +11345,14 @@ var doric = (function (exports) {
 	// https://github.com/tc39/proposal-async-iterator-helpers
 	_export({ target: 'AsyncIterator', proto: true, real: true }, {
 	  reduce: function reduce(reducer /* , initialValue */) {
+	    anObject(this);
+	    aCallable(reducer);
 	    var record = getIteratorDirect(this);
 	    var iterator = record.iterator;
 	    var next = record.next;
 	    var noInitial = arguments.length < 2;
 	    var accumulator = noInitial ? undefined : arguments[1];
 	    var counter = 0;
-	    aCallable(reducer);
 
 	    return new Promise$1(function (resolve, reject) {
 	      var ifAbruptCloseAsyncIterator = function (error) {
@@ -11418,8 +11434,10 @@ var doric = (function (exports) {
 	// https://github.com/tc39/proposal-async-iterator-helpers
 	_export({ target: 'AsyncIterator', proto: true, real: true }, {
 	  take: function take(limit) {
+	    anObject(this);
+	    var remaining = toPositiveInteger(notANan(+limit));
 	    return new AsyncIteratorProxy(getIteratorDirect(this), {
-	      remaining: toPositiveInteger(notANan(+limit))
+	      remaining: remaining
 	    });
 	  }
 	});
@@ -11433,9 +11451,6 @@ var doric = (function (exports) {
 	    return $toArray(this, undefined, []);
 	  }
 	});
-
-	var defineProperties = objectDefineProperties.f;
-
 
 	var INCORRECT_RANGE = 'Incorrect Iterator.range arguments';
 	var NUMERIC_RANGE_ITERATOR = 'NumericRangeIterator';
@@ -11483,7 +11498,7 @@ var doric = (function (exports) {
 	    start: start,
 	    end: end,
 	    step: step,
-	    inclusiveEnd: inclusiveEnd,
+	    inclusive: inclusiveEnd,
 	    hitsEnd: hitsEnd,
 	    currentCount: zero,
 	    zero: zero
@@ -11502,7 +11517,7 @@ var doric = (function (exports) {
 	  var step = state.step;
 	  var currentYieldingValue = start + (step * state.currentCount++);
 	  if (currentYieldingValue === end) { state.hitsEnd = true; }
-	  var inclusiveEnd = state.inclusiveEnd;
+	  var inclusiveEnd = state.inclusive;
 	  var endCondition;
 	  if (end > start) {
 	    endCondition = inclusiveEnd ? currentYieldingValue > end : currentYieldingValue >= end;
@@ -11515,25 +11530,22 @@ var doric = (function (exports) {
 	  } return createIterResultObject(currentYieldingValue, false);
 	});
 
-	var getter = function (fn) {
-	  return { get: fn, set: function () { /* empty */ }, configurable: true, enumerable: false };
+	var addGetter = function (key) {
+	  defineBuiltInAccessor($RangeIterator.prototype, key, {
+	    get: function () {
+	      return getInternalState$5(this)[key];
+	    },
+	    set: function () { /* empty */ },
+	    configurable: true,
+	    enumerable: false
+	  });
 	};
 
 	if (descriptors) {
-	  defineProperties($RangeIterator.prototype, {
-	    start: getter(function () {
-	      return getInternalState$5(this).start;
-	    }),
-	    end: getter(function () {
-	      return getInternalState$5(this).end;
-	    }),
-	    inclusive: getter(function () {
-	      return getInternalState$5(this).inclusiveEnd;
-	    }),
-	    step: getter(function () {
-	      return getInternalState$5(this).step;
-	    })
-	  });
+	  addGetter('start');
+	  addGetter('end');
+	  addGetter('inclusive');
+	  addGetter('step');
 	}
 
 	var numericRangeIterator = $RangeIterator;
@@ -11654,7 +11666,11 @@ var doric = (function (exports) {
 	var DISPOSED = 'disposed';
 	var PENDING = 'pending';
 
-	var ALREADY_DISPOSED = DISPOSABLE_STACK + ' already disposed';
+	var getPendingDisposableStackInternalState = function (stack) {
+	  var internalState = getDisposableStackInternalState(stack);
+	  if (internalState.state == DISPOSED) { throw $ReferenceError(DISPOSABLE_STACK + ' already disposed'); }
+	  return internalState;
+	};
 
 	var $DisposableStack = function DisposableStack() {
 	  setInternalState$9(anInstance(this, DisposableStackPrototype), {
@@ -11696,14 +11712,11 @@ var doric = (function (exports) {
 	    if (thrown) { throw suppressed; }
 	  },
 	  use: function use(value) {
-	    var internalState = getDisposableStackInternalState(this);
-	    if (internalState.state == DISPOSED) { throw $ReferenceError(ALREADY_DISPOSED); }
-	    addDisposableResource(internalState, value, HINT);
+	    addDisposableResource(getPendingDisposableStackInternalState(this), value, HINT);
 	    return value;
 	  },
 	  adopt: function adopt(value, onDispose) {
-	    var internalState = getDisposableStackInternalState(this);
-	    if (internalState.state == DISPOSED) { throw $ReferenceError(ALREADY_DISPOSED); }
+	    var internalState = getPendingDisposableStackInternalState(this);
 	    aCallable(onDispose);
 	    addDisposableResource(internalState, undefined, HINT, function () {
 	      onDispose(value);
@@ -11711,17 +11724,17 @@ var doric = (function (exports) {
 	    return value;
 	  },
 	  defer: function defer(onDispose) {
-	    var internalState = getDisposableStackInternalState(this);
-	    if (internalState.state == DISPOSED) { throw $ReferenceError(ALREADY_DISPOSED); }
+	    var internalState = getPendingDisposableStackInternalState(this);
 	    aCallable(onDispose);
 	    addDisposableResource(internalState, undefined, HINT, onDispose);
 	  },
 	  move: function move() {
-	    var internalState = getDisposableStackInternalState(this);
-	    if (internalState.state == DISPOSED) { throw $ReferenceError(ALREADY_DISPOSED); }
+	    var internalState = getPendingDisposableStackInternalState(this);
 	    var newDisposableStack = new $DisposableStack();
 	    getDisposableStackInternalState(newDisposableStack).stack = internalState.stack;
 	    internalState.stack = [];
+	    internalState.state = DISPOSED;
+	    if (!descriptors) { this.disposed = true; }
 	    return newDisposableStack;
 	  }
 	});
@@ -11898,8 +11911,10 @@ var doric = (function (exports) {
 	// `Iterator.prototype.map` method
 	// https://github.com/tc39/proposal-iterator-helpers
 	var iteratorMap = function map(mapper) {
+	  anObject(this);
+	  aCallable(mapper);
 	  return new IteratorProxy$5(getIteratorDirect(this), {
-	    mapper: aCallable(mapper)
+	    mapper: mapper
 	  });
 	};
 
@@ -11959,8 +11974,10 @@ var doric = (function (exports) {
 	// https://github.com/tc39/proposal-iterator-helpers
 	_export({ target: 'Iterator', proto: true, real: true }, {
 	  drop: function drop(limit) {
+	    anObject(this);
+	    var remaining = toPositiveInteger(notANan(+limit));
 	    return new IteratorProxy$4(getIteratorDirect(this), {
-	      remaining: toPositiveInteger(notANan(+limit))
+	      remaining: remaining
 	    });
 	  }
 	});
@@ -11969,9 +11986,10 @@ var doric = (function (exports) {
 	// https://github.com/tc39/proposal-iterator-helpers
 	_export({ target: 'Iterator', proto: true, real: true }, {
 	  every: function every(predicate) {
+	    anObject(this);
+	    aCallable(predicate);
 	    var record = getIteratorDirect(this);
 	    var counter = 0;
-	    aCallable(predicate);
 	    return !iterate(record, function (value, stop) {
 	      if (!predicate(value, counter++)) { return stop(); }
 	    }, { IS_RECORD: true, INTERRUPTED: true }).stopped;
@@ -11996,8 +12014,10 @@ var doric = (function (exports) {
 	// https://github.com/tc39/proposal-iterator-helpers
 	_export({ target: 'Iterator', proto: true, real: true }, {
 	  filter: function filter(predicate) {
+	    anObject(this);
+	    aCallable(predicate);
 	    return new IteratorProxy$3(getIteratorDirect(this), {
-	      predicate: aCallable(predicate)
+	      predicate: predicate
 	    });
 	  }
 	});
@@ -12006,9 +12026,10 @@ var doric = (function (exports) {
 	// https://github.com/tc39/proposal-iterator-helpers
 	_export({ target: 'Iterator', proto: true, real: true }, {
 	  find: function find(predicate) {
+	    anObject(this);
+	    aCallable(predicate);
 	    var record = getIteratorDirect(this);
 	    var counter = 0;
-	    aCallable(predicate);
 	    return iterate(record, function (value, stop) {
 	      if (predicate(value, counter++)) { return stop(value); }
 	    }, { IS_RECORD: true, INTERRUPTED: true }).result;
@@ -12018,7 +12039,7 @@ var doric = (function (exports) {
 	var getIteratorFlattenable = function (obj) {
 	  var object = anObject(obj);
 	  var method = getIteratorMethod(object);
-	  return getIteratorDirect(anObject(isCallable(method) ? functionCall(method, object) : object));
+	  return getIteratorDirect(anObject(method !== undefined ? functionCall(method, object) : object));
 	};
 
 	var IteratorProxy$2 = iteratorCreateProxy(function () {
@@ -12047,8 +12068,10 @@ var doric = (function (exports) {
 	// https://github.com/tc39/proposal-iterator-helpers
 	_export({ target: 'Iterator', proto: true, real: true }, {
 	  flatMap: function flatMap(mapper) {
+	    anObject(this);
+	    aCallable(mapper);
 	    return new IteratorProxy$2(getIteratorDirect(this), {
-	      mapper: aCallable(mapper),
+	      mapper: mapper,
 	      inner: null
 	    });
 	  }
@@ -12058,9 +12081,10 @@ var doric = (function (exports) {
 	// https://github.com/tc39/proposal-iterator-helpers
 	_export({ target: 'Iterator', proto: true, real: true }, {
 	  forEach: function forEach(fn) {
+	    anObject(this);
+	    aCallable(fn);
 	    var record = getIteratorDirect(this);
 	    var counter = 0;
-	    aCallable(fn);
 	    iterate(record, function (value) {
 	      fn(value, counter++);
 	    }, { IS_RECORD: true });
@@ -12124,8 +12148,9 @@ var doric = (function (exports) {
 	// https://github.com/tc39/proposal-iterator-helpers
 	_export({ target: 'Iterator', proto: true, real: true }, {
 	  reduce: function reduce(reducer /* , initialValue */) {
-	    var record = getIteratorDirect(this);
+	    anObject(this);
 	    aCallable(reducer);
+	    var record = getIteratorDirect(this);
 	    var noInitial = arguments.length < 2;
 	    var accumulator = noInitial ? undefined : arguments[1];
 	    var counter = 0;
@@ -12147,9 +12172,10 @@ var doric = (function (exports) {
 	// https://github.com/tc39/proposal-iterator-helpers
 	_export({ target: 'Iterator', proto: true, real: true }, {
 	  some: function some(predicate) {
+	    anObject(this);
+	    aCallable(predicate);
 	    var record = getIteratorDirect(this);
 	    var counter = 0;
-	    aCallable(predicate);
 	    return iterate(record, function (value, stop) {
 	      if (predicate(value, counter++)) { return stop(); }
 	    }, { IS_RECORD: true, INTERRUPTED: true }).stopped;
@@ -12171,8 +12197,10 @@ var doric = (function (exports) {
 	// https://github.com/tc39/proposal-iterator-helpers
 	_export({ target: 'Iterator', proto: true, real: true }, {
 	  take: function take(limit) {
+	    anObject(this);
+	    var remaining = toPositiveInteger(notANan(+limit));
 	    return new IteratorProxy(getIteratorDirect(this), {
-	      remaining: toPositiveInteger(notANan(+limit))
+	      remaining: remaining
 	    });
 	  }
 	});
@@ -12184,7 +12212,7 @@ var doric = (function (exports) {
 	_export({ target: 'Iterator', proto: true, real: true }, {
 	  toArray: function toArray() {
 	    var result = [];
-	    iterate(getIteratorDirect(this), push$b, { that: result, IS_RECORD: true });
+	    iterate(getIteratorDirect(anObject(this)), push$b, { that: result, IS_RECORD: true });
 	    return result;
 	  }
 	});
@@ -12193,7 +12221,7 @@ var doric = (function (exports) {
 	// https://github.com/tc39/proposal-async-iterator-helpers
 	_export({ target: 'Iterator', proto: true, real: true }, {
 	  toAsync: function toAsync() {
-	    return new asyncIteratorWrap(getIteratorDirect(new asyncFromSyncIterator(getIteratorDirect(this))));
+	    return new asyncIteratorWrap(getIteratorDirect(new asyncFromSyncIterator(getIteratorDirect(anObject(this)))));
 	  }
 	});
 
@@ -13746,9 +13774,7 @@ var doric = (function (exports) {
 	  add: functionUncurryThis(SetPrototype$1.add),
 	  has: functionUncurryThis(SetPrototype$1.has),
 	  remove: functionUncurryThis(SetPrototype$1['delete']),
-	  proto: SetPrototype$1,
-	  $has: SetPrototype$1.has,
-	  $keys: SetPrototype$1.keys
+	  proto: SetPrototype$1
 	};
 
 	var has$8 = setHelpers.has;
@@ -13925,7 +13951,7 @@ var doric = (function (exports) {
 	// fallback old -> new set methods proposal arguments
 	var toSetLike = function (it) {
 	  if (isSetLike(it)) { return it; }
-	  if (isIterable(it)) { return new Set$5(it); }
+	  return isIterable(it) ? new Set$5(it) : it;
 	};
 
 	// `Set.prototype.difference` method
@@ -13988,12 +14014,6 @@ var doric = (function (exports) {
 	var Set$3 = setHelpers.Set;
 	var add$4 = setHelpers.add;
 	var has$6 = setHelpers.has;
-	var nativeHas = setHelpers.$has;
-	var nativeKeys = setHelpers.$keys;
-
-	var isNativeSetRecord = function (record) {
-	  return record.has === nativeHas && record.keys === nativeKeys;
-	};
 
 	// `Set.prototype.intersection` method
 	// https://github.com/tc39/proposal-set-methods
@@ -14002,18 +14022,9 @@ var doric = (function (exports) {
 	  var otherRec = getSetRecord(other);
 	  var result = new Set$3();
 
-	  // observable side effects
-	  if (!isNativeSetRecord(otherRec) && setSize(O) > otherRec.size) {
+	  if (setSize(O) > otherRec.size) {
 	    iterateSimple(otherRec.getIterator(), function (e) {
 	      if (has$6(O, e)) { add$4(result, e); }
-	    });
-
-	    if (setSize(result) < 2) { return result; }
-
-	    var disordered = result;
-	    result = new Set$3();
-	    setIterate(O, function (e) {
-	      if (has$6(disordered, e)) { add$4(result, e); }
 	    });
 	  } else {
 	    setIterate(O, function (e) {
@@ -14024,9 +14035,14 @@ var doric = (function (exports) {
 	  return result;
 	};
 
+	var INCORRECT = !setMethodAcceptSetLike('intersection') || fails(function () {
+	  // eslint-disable-next-line es/no-array-from, es/no-set -- testing
+	  return Array.from(new Set([1, 2, 3]).intersection(new Set([3, 2]))) != '3,2';
+	});
+
 	// `Set.prototype.intersection` method
 	// https://github.com/tc39/proposal-set-methods
-	_export({ target: 'Set', proto: true, real: true, forced: !setMethodAcceptSetLike('intersection') }, {
+	_export({ target: 'Set', proto: true, real: true, forced: INCORRECT }, {
 	  intersection: setIntersection
 	});
 
@@ -15682,6 +15698,11 @@ var doric = (function (exports) {
 	  throw new DOMException((action || 'Cloning') + ' of ' + type + ' cannot be properly polyfilled in this engine', DATA_CLONE_ERROR);
 	};
 
+	var tryNativeRestrictedStructuredClone = function (value, type) {
+	  if (!nativeRestrictedStructuredClone) { throwUnpolyfillable(type); }
+	  return nativeRestrictedStructuredClone(value);
+	};
+
 	var createDataTransfer = function () {
 	  var dataTransfer;
 	  try {
@@ -15802,10 +15823,19 @@ var doric = (function (exports) {
 	          structuredCloneInternal(value.p4, map)
 	        );
 	      } catch (error) {
-	        if (nativeRestrictedStructuredClone) {
-	          cloned = nativeRestrictedStructuredClone(value);
-	        } else { throwUnpolyfillable(type); }
+	        cloned = tryNativeRestrictedStructuredClone(value, type);
 	      }
+	      break;
+	    case 'File':
+	      if (nativeRestrictedStructuredClone) { try {
+	        cloned = nativeRestrictedStructuredClone(value);
+	        // NodeJS 20.0.0 bug, https://github.com/nodejs/node/issues/47612
+	        if (classof(cloned) !== type) { cloned = undefined; }
+	      } catch (error$1) { /* empty */ } }
+	      if (!cloned) { try {
+	        cloned = new File([value], value.name, value);
+	      } catch (error$2) { /* empty */ } }
+	      if (!cloned) { throwUnpolyfillable(type); }
 	      break;
 	    case 'FileList':
 	      dataTransfer = createDataTransfer();
@@ -15814,9 +15844,7 @@ var doric = (function (exports) {
 	          dataTransfer.items.add(structuredCloneInternal(value[i], map));
 	        }
 	        cloned = dataTransfer.files;
-	      } else if (nativeRestrictedStructuredClone) {
-	        cloned = nativeRestrictedStructuredClone(value);
-	      } else { throwUnpolyfillable(type); }
+	      } else { cloned = tryNativeRestrictedStructuredClone(value, type); }
 	      break;
 	    case 'ImageData':
 	      // Safari 9 ImageData is a constructor, but typeof ImageData is 'object'
@@ -15827,10 +15855,8 @@ var doric = (function (exports) {
 	          value.height,
 	          { colorSpace: value.colorSpace }
 	        );
-	      } catch (error$1) {
-	        if (nativeRestrictedStructuredClone) {
-	          cloned = nativeRestrictedStructuredClone(value);
-	        } else { throwUnpolyfillable(type); }
+	      } catch (error$3) {
+	        cloned = tryNativeRestrictedStructuredClone(value, type);
 	      } break;
 	    default:
 	      if (nativeRestrictedStructuredClone) {
@@ -15871,7 +15897,7 @@ var doric = (function (exports) {
 	                target.setUint8(i, source.getUint8(i));
 	              }
 	            }
-	          } catch (error$2) {
+	          } catch (error$4) {
 	            throw new DOMException('ArrayBuffer is detached', DATA_CLONE_ERROR);
 	          } break;
 	        case 'SharedArrayBuffer':
@@ -15881,7 +15907,7 @@ var doric = (function (exports) {
 	        case 'Blob':
 	          try {
 	            cloned = value.slice(0, value.size, value.type);
-	          } catch (error$3) {
+	          } catch (error$5) {
 	            throwUnpolyfillable(type);
 	          } break;
 	        case 'DOMPoint':
@@ -15891,7 +15917,7 @@ var doric = (function (exports) {
 	            cloned = C.fromPoint
 	              ? C.fromPoint(value)
 	              : new C(value.x, value.y, value.z, value.w);
-	          } catch (error$4) {
+	          } catch (error$6) {
 	            throwUnpolyfillable(type);
 	          } break;
 	        case 'DOMRect':
@@ -15901,7 +15927,7 @@ var doric = (function (exports) {
 	            cloned = C.fromRect
 	              ? C.fromRect(value)
 	              : new C(value.x, value.y, value.width, value.height);
-	          } catch (error$5) {
+	          } catch (error$7) {
 	            throwUnpolyfillable(type);
 	          } break;
 	        case 'DOMMatrix':
@@ -15911,7 +15937,7 @@ var doric = (function (exports) {
 	            cloned = C.fromMatrix
 	              ? C.fromMatrix(value)
 	              : new C(value);
-	          } catch (error$6) {
+	          } catch (error$8) {
 	            throwUnpolyfillable(type);
 	          } break;
 	        case 'AudioData':
@@ -15919,14 +15945,8 @@ var doric = (function (exports) {
 	          if (!isCallable(value.clone)) { throwUnpolyfillable(type); }
 	          try {
 	            cloned = value.clone();
-	          } catch (error$7) {
+	          } catch (error$9) {
 	            throwUncloneable(type);
-	          } break;
-	        case 'File':
-	          try {
-	            cloned = new File([value], value.name, value);
-	          } catch (error$8) {
-	            throwUnpolyfillable(type);
 	          } break;
 	        case 'CropTarget':
 	        case 'CryptoKey':
@@ -17736,6 +17756,29 @@ var doric = (function (exports) {
 
 	_export({ global: true, constructor: true, forced: !urlConstructorDetection, sham: !descriptors }, {
 	  URL: URLConstructor
+	});
+
+	var URL$1 = getBuiltIn('URL');
+
+	// https://github.com/nodejs/node/issues/47505
+	// https://github.com/denoland/deno/issues/18893
+	var THROWS_WITHOUT_ARGUMENTS = urlConstructorDetection && fails(function () {
+	  URL$1.canParse();
+	});
+
+	// `URL.canParse` method
+	// https://url.spec.whatwg.org/#dom-url-canparse
+	_export({ target: 'URL', stat: true, forced: !THROWS_WITHOUT_ARGUMENTS }, {
+	  canParse: function canParse(url) {
+	    var length = validateArgumentsLength(arguments.length, 1);
+	    var urlString = toString_1(url);
+	    var base = length < 2 || arguments[1] === undefined ? undefined : toString_1(arguments[1]);
+	    try {
+	      return !!new URL$1(urlString, base);
+	    } catch (error) {
+	      return false;
+	    }
+	  }
 	});
 
 	// `URL.prototype.toJSON` method

@@ -22,42 +22,57 @@
 @interface DoricJSDispatcher ()
 @property(nonatomic, strong) NSMutableArray <DoricAsyncResult *(^)(void)> *blocks;
 @property(nonatomic, assign) BOOL consuming;
+@property(nonatomic, strong) dispatch_queue_t syncQueue;
 @end
 
 @implementation DoricJSDispatcher
+- (instancetype)init {
+    if (self = [super init]) {
+        _syncQueue = dispatch_queue_create("DoricJSDispatcher", DISPATCH_QUEUE_CONCURRENT);
+    }
+    return self;
+}
+
 - (void)dispatch:(DoricAsyncResult *(^)(void))block {
-    if (!self.blocks) {
-        self.blocks = [@[block] mutableCopy];
-    } else {
-        if (self.blocks.count > 0) {
-            [self.blocks removeAllObjects];
+    dispatch_barrier_async(self.syncQueue, ^{
+        if (!self.blocks) {
+            self.blocks = [@[block] mutableCopy];
+        } else {
+            if (self.blocks.count > 0) {
+                [self.blocks removeAllObjects];
+            }
+            [self.blocks insertObject:block atIndex:0];
         }
-        [self.blocks insertObject:block atIndex:0];
-    }
-    if (!self.consuming) {
-        [self consume];
-    }
+        if (!self.consuming) {
+            [self consume];
+        }
+    });
+
 }
 
 - (void)consume {
-    DoricAsyncResult *(^block )(void) = self.blocks.lastObject;
-    if (block) {
-        self.consuming = YES;
-        [self.blocks removeLastObject];
-        DoricAsyncResult *result = block();
-        __weak typeof(self) __self = self;
-        result.finishCallback = ^{
-            dispatch_async(dispatch_get_main_queue(), ^{
-                __strong typeof(__self) self = __self;
-                [self consume];
-            });
-        };
-    } else {
-        self.consuming = NO;
-    }
+    dispatch_barrier_async(self.syncQueue, ^{
+        DoricAsyncResult *(^block )(void) = self.blocks.lastObject;
+        if (block) {
+            self.consuming = YES;
+            [self.blocks removeLastObject];
+            DoricAsyncResult *result = block();
+            __weak typeof(self) __self = self;
+            result.finishCallback = ^{
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    __strong typeof(__self) self = __self;
+                    [self consume];
+                });
+            };
+        } else {
+            self.consuming = NO;
+        }
+    });
 }
 
 - (void)clear {
-    [self.blocks removeAllObjects];
+    dispatch_barrier_async(self.syncQueue, ^{
+        [self.blocks removeAllObjects];
+    });
 }
 @end

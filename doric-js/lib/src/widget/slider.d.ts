@@ -32,6 +32,11 @@ export declare class Slider extends Superview {
         type: "zoomOut";
         minScale: number;
         maxScale: number;
+    } | {
+        type: "gallery";
+        itemWidth: number;
+        minScale: number;
+        minAlpha: number;
     };
     slidePosition?: number;
     /**

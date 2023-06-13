@@ -69,7 +69,7 @@ export class Slider extends Superview {
      * ZoomOut is currently supported
      */
     @Property
-    slideStyle?: "zoomOut" | { type: "zoomOut", minScale: number, maxScale: number }
+    slideStyle?: "zoomOut" | { type: "zoomOut", minScale: number, maxScale: number } | { type: "gallery", itemWidth: number, minScale: number, minAlpha: number }
 
     @InconsistProperty
     slidePosition?: number

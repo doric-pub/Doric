@@ -131,6 +131,7 @@
                 layout.galleryItemWidth = self.galleryItemWidth;
                 layout.galleryMinScale = self.galleryMinScale;
                 layout.galleryMinAlpha = self.galleryMinAlpha;
+                layout.enableGallery = YES;
             }
             
         } else if ([prop isKindOfClass:NSString.class]) {

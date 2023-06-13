@@ -293,10 +293,10 @@ var doric = (function (exports) {
 	(module.exports = function (key, value) {
 	  return sharedStore[key] || (sharedStore[key] = value !== undefined ? value : {});
 	})('versions', []).push({
-	  version: '3.29.0',
+	  version: '3.28.0',
 	  mode: 'global',
 	  copyright: '© 2014-2023 Denis Pushkarev (zloirock.ru)',
-	  license: 'https://github.com/zloirock/core-js/blob/v3.29.0/LICENSE',
+	  license: 'https://github.com/zloirock/core-js/blob/v3.28.0/LICENSE',
 	  source: 'https://github.com/zloirock/core-js'
 	});
 	});
@@ -9562,7 +9562,7 @@ var doric = (function (exports) {
 	var aTypedArray$d = arrayBufferViewCore.aTypedArray;
 	var exportTypedArrayMethod$e = arrayBufferViewCore.exportTypedArrayMethod;
 
-	var WORKS_WITH_OBJECTS_AND_GENERIC_ON_TYPED_ARRAYS = !fails(function () {
+	var WORKS_WITH_OBJECTS_AND_GEERIC_ON_TYPED_ARRAYS = !fails(function () {
 	  // eslint-disable-next-line es/no-typed-arrays -- required for testing
 	  var array = new Uint8ClampedArray(2);
 	  functionCall($set, array, { length: 1, 0: 3 }, 1);
@@ -9570,7 +9570,7 @@ var doric = (function (exports) {
 	});
 
 	// https://bugs.chromium.org/p/v8/issues/detail?id=11294 and other
-	var TO_OBJECT_BUG = WORKS_WITH_OBJECTS_AND_GENERIC_ON_TYPED_ARRAYS && arrayBufferViewCore.NATIVE_ARRAY_BUFFER_VIEWS && fails(function () {
+	var TO_OBJECT_BUG = WORKS_WITH_OBJECTS_AND_GEERIC_ON_TYPED_ARRAYS && arrayBufferViewCore.NATIVE_ARRAY_BUFFER_VIEWS && fails(function () {
 	  var array = new Int8Array$2(2);
 	  array.set(1);
 	  array.set('2', 1);
@@ -9583,13 +9583,13 @@ var doric = (function (exports) {
 	  aTypedArray$d(this);
 	  var offset = toOffset(arguments.length > 1 ? arguments[1] : undefined, 1);
 	  var src = toObject(arrayLike);
-	  if (WORKS_WITH_OBJECTS_AND_GENERIC_ON_TYPED_ARRAYS) { return functionCall($set, this, src, offset); }
+	  if (WORKS_WITH_OBJECTS_AND_GEERIC_ON_TYPED_ARRAYS) { return functionCall($set, this, src, offset); }
 	  var length = this.length;
 	  var len = lengthOfArrayLike(src);
 	  var index = 0;
 	  if (len + offset > length) { throw RangeError$2('Wrong length'); }
 	  while (index < len) { this[offset + index] = src[index++]; }
-	}, !WORKS_WITH_OBJECTS_AND_GENERIC_ON_TYPED_ARRAYS || TO_OBJECT_BUG);
+	}, !WORKS_WITH_OBJECTS_AND_GEERIC_ON_TYPED_ARRAYS || TO_OBJECT_BUG);
 
 	var aTypedArray$c = arrayBufferViewCore.aTypedArray;
 	var exportTypedArrayMethod$d = arrayBufferViewCore.exportTypedArrayMethod;
@@ -10566,14 +10566,14 @@ var doric = (function (exports) {
 
 	var Map$a = mapHelpers.Map;
 	var MapPrototype = mapHelpers.proto;
-	var forEach$2 = functionUncurryThis(MapPrototype.forEach);
+	var forEach$1 = functionUncurryThis(MapPrototype.forEach);
 	var entries = functionUncurryThis(MapPrototype.entries);
 	var next$1 = entries(new Map$a()).next;
 
 	var mapIterate = function (map, fn, interruptible) {
 	  return interruptible ? iterateSimple(entries(map), function (entry) {
 	    return fn(entry[1], entry[0]);
-	  }, next$1) : forEach$2(map, fn);
+	  }, next$1) : forEach$1(map, fn);
 	};
 
 	var Map$9 = mapHelpers.Map;
@@ -11447,7 +11447,7 @@ var doric = (function (exports) {
 	var $TypeError$d = TypeError;
 
 	var $RangeIterator = iteratorCreateConstructor(function NumericRangeIterator(start, end, option, type, zero, one) {
-	  // TODO: Drop the first `typeof` check after removing legacy methods in `core-js@4`
+	  // TODO: Drop the first `typeof` check after removing lagacy methods in `core-js@4`
 	  if (typeof start != type || (end !== Infinity && end !== -Infinity && typeof end != type)) {
 	    throw $TypeError$d(INCORRECT_RANGE);
 	  }
@@ -12363,21 +12363,31 @@ var doric = (function (exports) {
 	    var i = this.skip(IS_WHITESPACE$1, this.index);
 	    var fork = this.fork(i);
 	    var chr = at$1(source, i);
-	    if (exec$6(IS_NUMBER_START, chr)) { return fork.number(); }
-	    switch (chr) {
+	    var result;
+	    if (exec$6(IS_NUMBER_START, chr)) { result = fork.number(); }
+	    else { switch (chr) {
 	      case '{':
-	        return fork.object();
+	        result = fork.object();
+	        break;
 	      case '[':
-	        return fork.array();
+	        result = fork.array();
+	        break;
 	      case '"':
-	        return fork.string();
+	        result = fork.string();
+	        break;
 	      case 't':
-	        return fork.keyword(true);
+	        result = fork.keyword(true);
+	        break;
 	      case 'f':
-	        return fork.keyword(false);
+	        result = fork.keyword(false);
+	        break;
 	      case 'n':
-	        return fork.keyword(null);
-	    } throw SyntaxError$2('Unexpected character: "' + chr + '" at: ' + i);
+	        result = fork.keyword(null);
+	        break;
+	      default:
+	        throw SyntaxError$2('Unexpected character: "' + chr + '" at: ' + i);
+	    } }
+	    return result;
 	  },
 	  node: function (type, value, start, end, nodes) {
 	    return new Node(value, end, type ? null : slice$1(this.source, start, end), nodes);
@@ -13794,12 +13804,12 @@ var doric = (function (exports) {
 
 	var Set$7 = setHelpers.Set;
 	var SetPrototype = setHelpers.proto;
-	var forEach$1 = functionUncurryThis(SetPrototype.forEach);
+	var forEach = functionUncurryThis(SetPrototype.forEach);
 	var keys = functionUncurryThis(SetPrototype.keys);
 	var next = keys(new Set$7()).next;
 
 	var setIterate = function (set, fn, interruptible) {
-	  return interruptible ? iterateSimple(keys(set), fn, next) : forEach$1(set, fn);
+	  return interruptible ? iterateSimple(keys(set), fn, next) : forEach(set, fn);
 	};
 
 	var Set$6 = setHelpers.Set;
@@ -15704,7 +15714,7 @@ var doric = (function (exports) {
 
 	  var type = classof(value);
 	  var deep = false;
-	  var C, name, cloned, dataTransfer, i, length, keys, key, source, target, options;
+	  var C, name, cloned, dataTransfer, i, length, keys, key, source, target;
 
 	  switch (type) {
 	    case 'Array':
@@ -15859,12 +15869,11 @@ var doric = (function (exports) {
 	          if (!C && typeof value.slice != 'function') { throwUnpolyfillable(type); }
 	          // detached buffers throws in `DataView` and `.slice`
 	          try {
-	            if (typeof value.slice == 'function' && !value.resizable) {
+	            if (typeof value.slice == 'function') {
 	              cloned = value.slice(0);
 	            } else {
 	              length = value.byteLength;
-	              options = 'maxByteLength' in value ? { maxByteLength: value.maxByteLength } : undefined;
-	              cloned = new ArrayBuffer(length, options);
+	              cloned = new ArrayBuffer(length);
 	              source = new C(value);
 	              target = new C(cloned);
 	              for (i = 0; i < length; i++) {
@@ -16087,7 +16096,6 @@ var doric = (function (exports) {
 	    result += key + value;
 	  });
 	  return (isPure && !url.toJSON)
-	    || (!searchParams.size && (isPure || !descriptors))
 	    || !searchParams.sort
 	    || url.href !== 'http://a/c%20d?a=1&c=3'
 	    || searchParams.get('c') !== '3'
@@ -16316,7 +16324,6 @@ var doric = (function (exports) {
 
 
 
-
 	var ITERATOR = wellKnownSymbol('iterator');
 	var URL_SEARCH_PARAMS = 'URLSearchParams';
 	var URL_SEARCH_PARAMS_ITERATOR = URL_SEARCH_PARAMS + 'Iterator';
@@ -16490,22 +16497,20 @@ var doric = (function (exports) {
 	// `URLSearchParams` constructor
 	// https://url.spec.whatwg.org/#interface-urlsearchparams
 	var URLSearchParamsConstructor = function URLSearchParams(/* init */) {
-	  anInstance(this, URLSearchParamsPrototype$1);
+	  anInstance(this, URLSearchParamsPrototype);
 	  var init = arguments.length > 0 ? arguments[0] : undefined;
-	  var state = setInternalState$1(this, new URLSearchParamsState(init));
-	  if (!descriptors) { this.length = state.entries.length; }
+	  setInternalState$1(this, new URLSearchParamsState(init));
 	};
 
-	var URLSearchParamsPrototype$1 = URLSearchParamsConstructor.prototype;
+	var URLSearchParamsPrototype = URLSearchParamsConstructor.prototype;
 
-	defineBuiltIns(URLSearchParamsPrototype$1, {
+	defineBuiltIns(URLSearchParamsPrototype, {
 	  // `URLSearchParams.prototype.append` method
 	  // https://url.spec.whatwg.org/#dom-urlsearchparams-append
 	  append: function append(name, value) {
 	    validateArgumentsLength(arguments.length, 2);
 	    var state = getInternalParamsState(this);
 	    push$1(state.entries, { key: toString_1(name), value: toString_1(value) });
-	    if (!descriptors) { this.length++; }
 	    state.updateURL();
 	  },
 	  // `URLSearchParams.prototype.delete` method
@@ -16520,7 +16525,6 @@ var doric = (function (exports) {
 	      if (entries[index].key === key) { splice(entries, index, 1); }
 	      else { index++; }
 	    }
-	    if (!descriptors) { this.length = entries.length; }
 	    state.updateURL();
 	  },
 	  // `URLSearchParams.prototype.get` method
@@ -16582,7 +16586,6 @@ var doric = (function (exports) {
 	      }
 	    }
 	    if (!found) { push$1(entries, { key: key, value: val }); }
-	    if (!descriptors) { this.length = entries.length; }
 	    state.updateURL();
 	  },
 	  // `URLSearchParams.prototype.sort` method
@@ -16620,23 +16623,13 @@ var doric = (function (exports) {
 	}, { enumerable: true });
 
 	// `URLSearchParams.prototype[@@iterator]` method
-	defineBuiltIn(URLSearchParamsPrototype$1, ITERATOR, URLSearchParamsPrototype$1.entries, { name: 'entries' });
+	defineBuiltIn(URLSearchParamsPrototype, ITERATOR, URLSearchParamsPrototype.entries, { name: 'entries' });
 
 	// `URLSearchParams.prototype.toString` method
 	// https://url.spec.whatwg.org/#urlsearchparams-stringification-behavior
-	defineBuiltIn(URLSearchParamsPrototype$1, 'toString', function toString() {
+	defineBuiltIn(URLSearchParamsPrototype, 'toString', function toString() {
 	  return getInternalParamsState(this).serialize();
 	}, { enumerable: true });
-
-	// `URLSearchParams.prototype.size` getter
-	// https://github.com/whatwg/url/pull/734
-	if (descriptors) { defineBuiltInAccessor(URLSearchParamsPrototype$1, 'size', {
-	  get: function size() {
-	    return getInternalParamsState(this).entries.length;
-	  },
-	  configurable: true,
-	  enumerable: true
-	}); }
 
 	setToStringTag(URLSearchParamsConstructor, URL_SEARCH_PARAMS);
 
@@ -17745,23 +17738,6 @@ var doric = (function (exports) {
 	    return functionCall(URL.prototype.toString, this);
 	  }
 	});
-
-	var URLSearchParamsPrototype = URLSearchParams.prototype;
-	var forEach = functionUncurryThis(URLSearchParamsPrototype.forEach);
-
-	// `URLSearchParams.prototype.size` getter
-	// https://github.com/whatwg/url/pull/734
-	if (descriptors && !('size' in URLSearchParamsPrototype)) {
-	  defineBuiltInAccessor(URLSearchParamsPrototype, 'size', {
-	    get: function size() {
-	      var count = 0;
-	      forEach(this, function () { count++; });
-	      return count;
-	    },
-	    configurable: true,
-	    enumerable: true
-	  });
-	}
 
 	/*
 	 * Copyright [2019] [Doric.Pub]

@@ -1105,6 +1105,11 @@ declare module "doric" {
 			type: "zoomOut";
 			minScale: number;
 			maxScale: number;
+		} | {
+			type: "gallery";
+			itemWidth: number;
+			minScale: number;
+			minAlpha: number;
 		};
 		slidePosition?: number;
 		/**

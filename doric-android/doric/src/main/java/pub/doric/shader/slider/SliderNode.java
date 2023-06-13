@@ -17,6 +17,7 @@ package pub.doric.shader.slider;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Rect;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -35,6 +36,7 @@ import pub.doric.extension.bridge.DoricPlugin;
 import pub.doric.extension.bridge.DoricPromise;
 import pub.doric.shader.SuperNode;
 import pub.doric.shader.ViewNode;
+import pub.doric.utils.DoricUtils;
 
 /**
  * @Description: pub.doric.shader.slider
@@ -50,9 +52,10 @@ public class SliderNode extends SuperNode<RecyclerView> {
     private boolean loop = false;
     private String renderPageFuncId;
     private boolean scrollable = true;
-    private String slideStyle = null;
+    String slideStyle = null;
     private float minScale = 0.618f;
     private float maxScale = 1;
+    private float galleryItemWidth = -1f;
 
     private int slidePosition;
     private boolean needSlideToPosition;
@@ -64,10 +67,10 @@ public class SliderNode extends SuperNode<RecyclerView> {
 
     @Override
     protected RecyclerView build() {
-        RecyclerView recyclerView = new RecyclerView(getContext());
+        final RecyclerView recyclerView = new RecyclerView(getContext());
 
 
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext()) {
+        final SliderLayoutManager layoutManager = new SliderLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false) {
             @Override
             public boolean canScrollHorizontally() {
                 if (!scrollable) {
@@ -88,10 +91,28 @@ public class SliderNode extends SuperNode<RecyclerView> {
             }
         };
 
-        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(layoutManager);
         final PagerSnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
+
+        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                if (slideStyle.equals("gallery")) {
+                    int position = parent.getChildAdapterPosition(view);
+
+                    LinearLayoutManager layoutManager = (LinearLayoutManager) parent.getLayoutManager();
+                    assert layoutManager != null;
+                    int count = layoutManager.getItemCount();
+                    int interval = (recyclerView.getWidth() - DoricUtils.dp2px(SliderNode.this.galleryItemWidth)) / 2;
+                    if (position == 0) {
+                        outRect.left = interval;
+                    } else if (position == count - 1) {
+                        outRect.right = interval;
+                    }
+                }
+            }
+        });
         recyclerView.setAdapter(this.slideAdapter);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -255,8 +276,24 @@ public class SliderNode extends SuperNode<RecyclerView> {
                     this.slideStyle = prop.asString().value();
                 } else if (prop.isObject()) {
                     this.slideStyle = prop.asObject().getProperty("type").asString().value();
-                    this.maxScale = prop.asObject().getProperty("maxScale").asNumber().toFloat();
-                    this.minScale = prop.asObject().getProperty("minScale").asNumber().toFloat();
+                    if (this.slideStyle.equals("zoomOut")) {
+                        this.maxScale = prop.asObject().getProperty("maxScale").asNumber().toFloat();
+                        this.minScale = prop.asObject().getProperty("minScale").asNumber().toFloat();
+                    } else if (this.slideStyle.equals("gallery")) {
+                        float galleryMinScale = prop.asObject().getProperty("minScale").asNumber().toFloat();
+                        float galleryMinAlpha = prop.asObject().getProperty("minAlpha").asNumber().toFloat();
+                        this.galleryItemWidth = prop.asObject().getProperty("itemWidth").asNumber().toFloat();
+
+                        SliderLayoutManager layoutManager = (SliderLayoutManager) mView.getLayoutManager();
+                        if (layoutManager != null) {
+                            layoutManager.setEnableGallery(true);
+                            layoutManager.setMinScale(galleryMinScale);
+                            layoutManager.setMinAlpha(galleryMinAlpha);
+                            layoutManager.setItemWidth(this.galleryItemWidth);
+                            this.slideAdapter.setItemWidth(this.galleryItemWidth);
+                        }
+
+                    }
                 }
                 break;
             case "slidePosition":

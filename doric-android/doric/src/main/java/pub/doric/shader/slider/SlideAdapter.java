@@ -20,16 +20,18 @@ import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSDecoder;
 import com.github.pengfeizhou.jscore.JSNull;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import pub.doric.async.AsyncResult;
 import pub.doric.shader.ViewNode;
+import pub.doric.utils.DoricUtils;
 
 /**
  * @Description: pub.doric.shader.slider
@@ -45,6 +47,8 @@ class SlideAdapter extends RecyclerView.Adapter<SlideAdapter.DoricViewHolder> {
     SparseArray<String> itemValues = new SparseArray<>();
     String renderPageFuncId;
     boolean loop;
+
+    float itemWidth;
 
     SlideAdapter(SliderNode sliderNode) {
         this.sliderNode = sliderNode;
@@ -70,6 +74,10 @@ class SlideAdapter extends RecyclerView.Adapter<SlideAdapter.DoricViewHolder> {
             }
         } catch (Exception e) {
             sliderNode.getDoricContext().getDriver().getRegistry().onException(sliderNode.getDoricContext(), e);
+        }
+
+        if (sliderNode.slideStyle.equals("gallery")) {
+            holder.itemView.getLayoutParams().width = DoricUtils.dp2px(this.itemWidth);
         }
     }
 
@@ -147,6 +155,10 @@ class SlideAdapter extends RecyclerView.Adapter<SlideAdapter.DoricViewHolder> {
                 notifyItemChanged(i);
             }
         }
+    }
+
+    void setItemWidth(float itemWidth) {
+        this.itemWidth = itemWidth;
     }
 
     static class DoricViewHolder extends RecyclerView.ViewHolder {

@@ -110,6 +110,8 @@ public class SliderNode extends SuperNode<RecyclerView> {
                     } else if (position == count - 1) {
                         outRect.right = interval;
                     }
+                } else {
+                    super.getItemOffsets(outRect, view, parent, state);
                 }
             }
         });

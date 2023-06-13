@@ -23,6 +23,7 @@
 #import "DoricSliderNode.h"
 #import "Doric.h"
 #import "DoricSlideItemNode.h"
+#import "DoricSliderLayout.h"
 
 @interface DoricSliderViewCell : UICollectionViewCell
 @property(nonatomic, strong) DoricSlideItemNode *doricSlideItemNode;
@@ -47,7 +48,11 @@
 @property(nonatomic, strong) NSString *slideStyle;
 @property(nonatomic, assign) CGFloat minScale;
 @property(nonatomic, assign) CGFloat maxScale;
+@property(nonatomic, assign) CGFloat galleryMinScale;
+@property(nonatomic, assign) CGFloat galleryMinAlpha;
+@property(nonatomic, assign) CGFloat galleryItemWidth;
 @property(nonatomic, assign) BOOL scheduledLayout;
+@property (nonatomic, assign) NSInteger currentPage;
 @end
 
 @interface DoricSliderView : UICollectionView
@@ -75,7 +80,7 @@
 }
 
 - (UICollectionView *)build {
-    UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
+    DoricSliderLayout *flowLayout = [[DoricSliderLayout alloc] init];
     [flowLayout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
     return [[[DoricSliderView alloc] initWithFrame:CGRectZero
                               collectionViewLayout:flowLayout]
@@ -113,8 +118,21 @@
     } else if ([@"slideStyle" isEqualToString:name]) {
         if ([prop isKindOfClass:NSDictionary.class]) {
             self.slideStyle = prop[@"type"];
-            self.maxScale = [prop[@"maxScale"] floatValue];
-            self.minScale = [prop[@"minScale"] floatValue];
+            if ([self.slideStyle isEqualToString:@"zoomOut"]) {
+                self.maxScale = [prop[@"maxScale"] floatValue];
+                self.minScale = [prop[@"minScale"] floatValue];
+            } else if([self.slideStyle isEqualToString:@"gallery"]) {
+                self.galleryMinScale = [prop[@"minScale"] floatValue];
+                self.galleryMinAlpha = [prop[@"minAlpha"] floatValue];
+                self.galleryItemWidth = [prop[@"itemWidth"] floatValue];
+                self.view.pagingEnabled = NO;
+                
+                DoricSliderLayout *layout = (DoricSliderLayout*)self.view.collectionViewLayout;
+                layout.galleryItemWidth = self.galleryItemWidth;
+                layout.galleryMinScale = self.galleryMinScale;
+                layout.galleryMinAlpha = self.galleryMinAlpha;
+            }
+            
         } else if ([prop isKindOfClass:NSString.class]) {
             self.slideStyle = prop;
         }
@@ -161,11 +179,18 @@
             __strong typeof(_self) self = _self;
             [self.view reloadData];
             NSUInteger position = (self.loop ? 1 : 0) + self.slidePosition;
-            if (self.view.width == 0) {
+            float itemWidth;
+            if ([self.slideStyle isEqualToString:@"gallery"]) {
+                itemWidth = self.galleryItemWidth;
+            } else {
+                itemWidth = self.view.width;
+            }
+            
+            if (itemWidth == 0) {
                 self.needResetScroll = true;
             } else {
                 self.needResetScroll = false;
-                [self.view setContentOffset:CGPointMake(position * self.view.width, self.view.contentOffset.y) animated:false];
+                [self.view setContentOffset:CGPointMake(position * itemWidth, self.view.contentOffset.y) animated:false];
             }
         });
     }
@@ -180,6 +205,12 @@
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+    if ([self.slideStyle isEqualToString:@"gallery"]) {
+        UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout *)self.view.collectionViewLayout;
+        int margin = (self.view.width - self.galleryItemWidth) / 2;
+        layout.sectionInset = UIEdgeInsetsMake(0, margin, 0, margin);
+        return CGSizeMake(self.galleryItemWidth, self.view.height);
+    }
     return CGSizeMake(self.view.width, self.view.height);
 }
 
@@ -208,7 +239,12 @@
         DoricSlideItemNode *node = cell.doricSlideItemNode;
         node.viewId = model[@"id"];
         [node blend:props];
-        CGFloat maxWidth = collectionView.width;
+        CGFloat maxWidth;
+        if ([self.slideStyle isEqualToString:@"gallery"]) {
+            maxWidth = self.galleryItemWidth;
+        } else {
+            maxWidth = collectionView.width;
+        }
         if (collectionView.doricLayout.widthSpec == DoricLayoutFit) {
             maxWidth = [[UIScreen mainScreen] bounds].size.width;
         }
@@ -322,7 +358,12 @@
     if (viewNode) {
         CGSize originSize = viewNode.view.frame.size;
         [viewNode blend:subModel[@"props"]];
-        [viewNode.view.doricLayout apply:CGSizeMake(self.view.width, self.view.height)];
+        
+        if ([self.slideStyle isEqualToString:@"gallery"]) {
+            [viewNode.view.doricLayout apply:CGSizeMake(self.galleryItemWidth, self.view.height)];
+        } else {
+            [viewNode.view.doricLayout apply:CGSizeMake(self.view.width, self.view.height)];
+        }
         [viewNode requestLayout];
         if (CGSizeEqualToSize(originSize, viewNode.view.frame.size)) {
             skipReload = YES;
@@ -343,6 +384,39 @@
     }];
 }
 
+//paging by cell | paging with one cell at a time
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    if ([self.slideStyle isEqualToString:@"gallery"]) {
+        CGFloat cellWidth = self.galleryItemWidth;
+        self.currentPage = (scrollView.contentOffset.x - cellWidth / 2) / (cellWidth) + 1;
+    }
+}
+
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
+{
+    if ([self.slideStyle isEqualToString:@"gallery"]) {
+        CGFloat cellWidth = self.galleryItemWidth;
+        NSInteger page = (scrollView.contentOffset.x - cellWidth / 2) / (cellWidth) + 1;
+
+        if (velocity.x > 0) page++;
+        if (velocity.x < 0) page--;
+        page = MAX(page, 0);
+        
+        NSInteger prePage = self.currentPage - 1;
+        if(prePage > 0 && page < prePage){
+            page = prePage;
+        } else if (page > self.currentPage + 1){
+            page = self.currentPage + 1;
+        }
+        
+        self.currentPage = page;
+        
+        CGFloat newOffset = page * (cellWidth);
+        targetContentOffset->x = newOffset;
+    }
+}
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if ([self.slideStyle isEqualToString:@"zoomOut"]) {
         CGFloat centerX = scrollView.width / 2.f;
@@ -357,15 +431,28 @@
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    NSUInteger pageIndex = (NSUInteger) (scrollView.contentOffset.x / scrollView.width);
-    scrollView.contentOffset = CGPointMake(pageIndex * scrollView.width, scrollView.contentOffset.y);
+    NSUInteger pageIndex;
+    if ([self.slideStyle isEqualToString:@"gallery"]) {
+        pageIndex = (NSUInteger) (scrollView.contentOffset.x / self.galleryItemWidth);
+        scrollView.contentOffset = CGPointMake(pageIndex * self.galleryItemWidth, scrollView.contentOffset.y);
+    } else {
+        pageIndex = (NSUInteger) (scrollView.contentOffset.x / scrollView.width);
+        scrollView.contentOffset = CGPointMake(pageIndex * scrollView.width, scrollView.contentOffset.y);
+    }
+
 
     if (self.loop) {
+        float itemWidth;
+        if ([self.slideStyle isEqualToString:@"gallery"]) {
+            itemWidth = self.galleryItemWidth;
+        } else {
+            itemWidth = self.view.width;
+        }
         if (pageIndex == 0) {
-            [self.view setContentOffset:CGPointMake(self.itemCount * self.view.width, self.view.contentOffset.y) animated:false];
+            [self.view setContentOffset:CGPointMake(self.itemCount * itemWidth, self.view.contentOffset.y) animated:false];
             pageIndex = self.itemCount - 1;
         } else if (pageIndex == self.itemCount + 1) {
-            [self.view setContentOffset:CGPointMake(1 * self.view.width, self.view.contentOffset.y) animated:false];
+            [self.view setContentOffset:CGPointMake(1 * itemWidth, self.view.contentOffset.y) animated:false];
             pageIndex = 0;
         } else {
             pageIndex = pageIndex - 1;
@@ -384,10 +471,17 @@
     NSUInteger pageIndex = [params[@"page"] unsignedIntegerValue];
     BOOL smooth = [params[@"smooth"] boolValue];
 
-    if (self.loop) {
-        [self.view setContentOffset:CGPointMake((pageIndex + 1) * self.view.width, self.view.contentOffset.y) animated:smooth];
+    float itemWidth;
+    if ([self.slideStyle isEqualToString:@"gallery"]) {
+        itemWidth = self.galleryItemWidth;
     } else {
-        [self.view setContentOffset:CGPointMake(pageIndex * self.view.width, self.view.contentOffset.y) animated:smooth];
+        itemWidth = self.view.width;
+    }
+    
+    if (self.loop) {
+        [self.view setContentOffset:CGPointMake((pageIndex + 1) * itemWidth, self.view.contentOffset.y) animated:smooth];
+    } else {
+        [self.view setContentOffset:CGPointMake(pageIndex * itemWidth, self.view.contentOffset.y) animated:smooth];
     }
 
     [promise resolve:nil];
@@ -398,7 +492,13 @@
 }
 
 - (NSNumber *)getSlidedPage {
-    NSUInteger pageIndex = (NSUInteger) (self.view.contentOffset.x / self.view.width);
+    NSUInteger pageIndex;
+    if ([self.slideStyle isEqualToString:@"gallery"]) {
+        pageIndex = (NSUInteger) (self.view.contentOffset.x / self.galleryItemWidth);
+    } else {
+        pageIndex = (NSUInteger) (self.view.contentOffset.x / self.view.width);
+    }
+    
     if (self.loop) {
         return @(pageIndex - 1);
     } else {

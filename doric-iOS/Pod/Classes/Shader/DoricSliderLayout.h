@@ -25,5 +25,6 @@
 @property(nonatomic, assign) CGFloat galleryItemWidth;
 @property(nonatomic, assign) CGFloat galleryMinScale;
 @property(nonatomic, assign) CGFloat galleryMinAlpha;
+@property(nonatomic, assign) BOOL enableGallery;
 @end
 

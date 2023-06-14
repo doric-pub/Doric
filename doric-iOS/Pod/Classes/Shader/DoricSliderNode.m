@@ -317,17 +317,24 @@
     if (viewId && viewId.length > 0) {
         return [self subModelOf:viewId];
     } else {
-        DoricAsyncResult *result = [self pureCallJSResponse:@"renderBunchedItems", @(index), @(self.batchCount), nil];
+        NSInteger batchCount = self.batchCount;
+        NSInteger start = position;
+        while (start > 0 && self.itemViewIds[@(start - 1)] == nil) {
+            start--;
+            batchCount++;
+        }
+        DoricAsyncResult *result = [self pureCallJSResponse:@"renderBunchedItems", @(start), @(batchCount), nil];
         NSArray *array = [result waitUntilResult:^(JSValue *models) {
             return [models toArray];
         }];
         [array enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL *stop) {
             NSString *thisViewId = obj[@"id"];
             [self setSubModel:obj in:thisViewId];
-            NSUInteger pos = index + idx;
+            NSUInteger pos = start + idx;
             self.itemViewIds[@(pos)] = thisViewId;
         }];
-        return array[0];
+        viewId = self.itemViewIds[@(position)];
+        return viewId && viewId.length > 0 ? [self subModelOf:viewId] : nil;
     }
 }
 

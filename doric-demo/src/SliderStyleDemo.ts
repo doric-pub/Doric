@@ -33,5 +33,9 @@ class SliderStyleDemo extends Panel {
                 heightSpec: LayoutSpec.MOST,
             }
         }))
+
+        setTimeout(() => {
+            pager.slidePage(this.context, 2, false);
+        }, 200)
     }
 }

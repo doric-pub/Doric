@@ -60,6 +60,8 @@ public class SliderNode extends SuperNode<RecyclerView> {
     private int slidePosition;
     private boolean needSlideToPosition;
 
+    private PagerSnapHelper snapHelper;
+
     public SliderNode(DoricContext doricContext) {
         super(doricContext);
         this.slideAdapter = new SlideAdapter(this);
@@ -68,7 +70,6 @@ public class SliderNode extends SuperNode<RecyclerView> {
     @Override
     protected RecyclerView build() {
         final RecyclerView recyclerView = new RecyclerView(getContext());
-
 
         final SliderLayoutManager layoutManager = new SliderLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false) {
             @Override
@@ -92,7 +93,7 @@ public class SliderNode extends SuperNode<RecyclerView> {
         };
 
         recyclerView.setLayoutManager(layoutManager);
-        final PagerSnapHelper snapHelper = new PagerSnapHelper();
+        snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
 
         recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
@@ -332,6 +333,20 @@ public class SliderNode extends SuperNode<RecyclerView> {
             } else {
                 mView.scrollToPosition(page);
             }
+
+            if (slideStyle.equals("gallery")) {
+                mView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        View snapView = snapHelper.findSnapView(mView.getLayoutManager());
+                        if (snapView != null) {
+                            int[] distance = snapHelper.calculateDistanceToFinalSnap(mView.getLayoutManager(), snapView);
+                            mView.smoothScrollBy(distance[0], distance[1]);
+                        }
+                    }
+                });
+            }
+
         }
         if (!TextUtils.isEmpty(onPageSlidedFuncId)) {
             callJSResponse(onPageSlidedFuncId, page);

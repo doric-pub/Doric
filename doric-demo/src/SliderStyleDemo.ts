@@ -34,8 +34,8 @@ class SliderStyleDemo extends Panel {
             }
         }))
 
-        setTimeout(() => {
-            pager.slidePage(this.context, 2, false);
-        }, 200)
+        // setTimeout(() => {
+        //     pager.slidePage(this.context, 2, false);
+        // }, 200)
     }
 }

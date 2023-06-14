@@ -434,7 +434,7 @@
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     NSUInteger pageIndex;
     if ([self.slideStyle isEqualToString:@"gallery"]) {
-        pageIndex = (NSUInteger) (scrollView.contentOffset.x / self.galleryItemWidth);
+        pageIndex = (NSUInteger) (scrollView.contentOffset.x / self.galleryItemWidth + 0.5f);
         scrollView.contentOffset = CGPointMake(pageIndex * self.galleryItemWidth, scrollView.contentOffset.y);
     } else {
         pageIndex = (NSUInteger) (scrollView.contentOffset.x / scrollView.width);

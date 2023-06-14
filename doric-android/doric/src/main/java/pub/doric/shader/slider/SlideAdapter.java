@@ -117,9 +117,15 @@ class SlideAdapter extends RecyclerView.Adapter<SlideAdapter.DoricViewHolder> {
 
         String id = itemValues.get(index);
         if (TextUtils.isEmpty(id)) {
+            int batchCount = this.batchCount;
+            int start = position;
+            while (start > 0 && TextUtils.isEmpty(itemValues.get(start - 1))) {
+                start--;
+                batchCount++;
+            }
             AsyncResult<JSDecoder> asyncResult = sliderNode.pureCallJSResponse(
                     "renderBunchedItems",
-                    index,
+                    start,
                     batchCount);
             try {
                 JSDecoder jsDecoder = asyncResult.synchronous().get();
@@ -129,7 +135,7 @@ class SlideAdapter extends RecyclerView.Adapter<SlideAdapter.DoricViewHolder> {
                     for (int i = 0; i < jsArray.size(); i++) {
                         JSObject itemModel = jsArray.get(i).asObject();
                         String itemId = itemModel.getProperty("id").asString().value();
-                        itemValues.put(i + index, itemId);
+                        itemValues.put(i + start, itemId);
                         sliderNode.setSubModel(itemId, itemModel);
                     }
                     return sliderNode.getSubModel(itemValues.get(index));

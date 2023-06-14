@@ -99,7 +99,7 @@ public class SliderNode extends SuperNode<RecyclerView> {
         recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-                if (slideStyle.equals("gallery")) {
+                if ("gallery".equals(slideStyle)) {
                     int position = parent.getChildAdapterPosition(view);
 
                     LinearLayoutManager layoutManager = (LinearLayoutManager) parent.getLayoutManager();
@@ -334,7 +334,7 @@ public class SliderNode extends SuperNode<RecyclerView> {
                 mView.scrollToPosition(page);
             }
 
-            if (slideStyle.equals("gallery")) {
+            if ("gallery".equals(slideStyle)) {
                 mView.post(new Runnable() {
                     @Override
                     public void run() {

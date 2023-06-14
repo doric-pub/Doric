@@ -76,7 +76,7 @@ class SlideAdapter extends RecyclerView.Adapter<SlideAdapter.DoricViewHolder> {
             sliderNode.getDoricContext().getDriver().getRegistry().onException(sliderNode.getDoricContext(), e);
         }
 
-        if (sliderNode.slideStyle.equals("gallery")) {
+        if ("gallery".equals(sliderNode.slideStyle)) {
             holder.itemView.getLayoutParams().width = DoricUtils.dp2px(this.itemWidth);
         }
     }

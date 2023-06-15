@@ -30,7 +30,7 @@ var doric = (function (exports) {
 	  check(typeof self == 'object' && self) ||
 	  check(typeof commonjsGlobal == 'object' && commonjsGlobal) ||
 	  // eslint-disable-next-line no-new-func -- fallback
-	  (function () { return this; })() || Function('return this')();
+	  (function () { return this; })() || commonjsGlobal || Function('return this')();
 
 	var fails = function (exec) {
 	  try {
@@ -86,9 +86,9 @@ var doric = (function (exports) {
 	  };
 	};
 
-	var FunctionPrototype$4 = Function.prototype;
-	var call$1 = FunctionPrototype$4.call;
-	var uncurryThisWithBind = functionBindNative && FunctionPrototype$4.bind.bind(call$1, call$1);
+	var FunctionPrototype$5 = Function.prototype;
+	var call$1 = FunctionPrototype$5.call;
+	var uncurryThisWithBind = functionBindNative && FunctionPrototype$5.bind.bind(call$1, call$1);
 
 	var functionUncurryThis = functionBindNative ? uncurryThisWithBind : function (fn) {
 	  return function () {
@@ -208,12 +208,17 @@ var doric = (function (exports) {
 
 
 
+
+	var $String$8 = global_1.String;
+
 	// eslint-disable-next-line es/no-object-getownpropertysymbols -- required for testing
 	var symbolConstructorDetection = !!Object.getOwnPropertySymbols && !fails(function () {
 	  var symbol = Symbol();
 	  // Chrome 38 Symbol has incorrect toString conversion
 	  // `get-own-property-symbols` polyfill symbols converted to object are not Symbol instances
-	  return !String(symbol) || !(Object(symbol) instanceof Symbol) ||
+	  // nb: Do not call `String` directly to avoid this being optimized out to `symbol+''` which will,
+	  // of course, fail.
+	  return !$String$8(symbol) || !(Object(symbol) instanceof Symbol) ||
 	    // Chrome 38-40 symbols are not inherited from DOM collections prototypes to instances
 	    !Symbol.sham && engineV8Version && engineV8Version < 41;
 	});
@@ -274,11 +279,11 @@ var doric = (function (exports) {
 	var isPure = false;
 
 	// eslint-disable-next-line es/no-object-defineproperty -- safe
-	var defineProperty$c = Object.defineProperty;
+	var defineProperty$d = Object.defineProperty;
 
 	var defineGlobalProperty = function (key, value) {
 	  try {
-	    defineProperty$c(global_1, key, { value: value, configurable: true, writable: true });
+	    defineProperty$d(global_1, key, { value: value, configurable: true, writable: true });
 	  } catch (error) {
 	    global_1[key] = value;
 	  } return value;
@@ -293,10 +298,10 @@ var doric = (function (exports) {
 	(module.exports = function (key, value) {
 	  return sharedStore[key] || (sharedStore[key] = value !== undefined ? value : {});
 	})('versions', []).push({
-	  version: '3.28.0',
+	  version: '3.31.0',
 	  mode: 'global',
 	  copyright: '© 2014-2023 Denis Pushkarev (zloirock.ru)',
-	  license: 'https://github.com/zloirock/core-js/blob/v3.28.0/LICENSE',
+	  license: 'https://github.com/zloirock/core-js/blob/v3.31.0/LICENSE',
 	  source: 'https://github.com/zloirock/core-js'
 	});
 	});
@@ -466,14 +471,14 @@ var doric = (function (exports) {
 	  return object;
 	};
 
-	var FunctionPrototype$3 = Function.prototype;
+	var FunctionPrototype$4 = Function.prototype;
 	// eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
 	var getDescriptor = descriptors && Object.getOwnPropertyDescriptor;
 
-	var EXISTS = hasOwnProperty_1(FunctionPrototype$3, 'name');
+	var EXISTS = hasOwnProperty_1(FunctionPrototype$4, 'name');
 	// additional protection from minified / mangled / dropped function names
 	var PROPER = EXISTS && (function something() { /* empty */ }).name === 'something';
-	var CONFIGURABLE = EXISTS && (!descriptors || (descriptors && getDescriptor(FunctionPrototype$3, 'name').configurable));
+	var CONFIGURABLE = EXISTS && (!descriptors || (descriptors && getDescriptor(FunctionPrototype$4, 'name').configurable));
 
 	var functionName = {
 	  EXISTS: EXISTS,
@@ -507,16 +512,16 @@ var doric = (function (exports) {
 	var OBJECT_ALREADY_INITIALIZED = 'Object already initialized';
 	var TypeError$9 = global_1.TypeError;
 	var WeakMap$4 = global_1.WeakMap;
-	var set$a, get$5, has$c;
+	var set$b, get$6, has$d;
 
 	var enforce = function (it) {
-	  return has$c(it) ? get$5(it) : set$a(it, {});
+	  return has$d(it) ? get$6(it) : set$b(it, {});
 	};
 
 	var getterFor$2 = function (TYPE) {
 	  return function (it) {
 	    var state;
-	    if (!isObject(it) || (state = get$5(it)).type !== TYPE) {
+	    if (!isObject(it) || (state = get$6(it)).type !== TYPE) {
 	      throw TypeError$9('Incompatible receiver, ' + TYPE + ' required');
 	    } return state;
 	  };
@@ -529,39 +534,39 @@ var doric = (function (exports) {
 	  store$2.has = store$2.has;
 	  store$2.set = store$2.set;
 	  /* eslint-enable no-self-assign -- prototype methods protection */
-	  set$a = function (it, metadata) {
+	  set$b = function (it, metadata) {
 	    if (store$2.has(it)) { throw TypeError$9(OBJECT_ALREADY_INITIALIZED); }
 	    metadata.facade = it;
 	    store$2.set(it, metadata);
 	    return metadata;
 	  };
-	  get$5 = function (it) {
+	  get$6 = function (it) {
 	    return store$2.get(it) || {};
 	  };
-	  has$c = function (it) {
+	  has$d = function (it) {
 	    return store$2.has(it);
 	  };
 	} else {
 	  var STATE = sharedKey('state');
 	  hiddenKeys$1[STATE] = true;
-	  set$a = function (it, metadata) {
+	  set$b = function (it, metadata) {
 	    if (hasOwnProperty_1(it, STATE)) { throw TypeError$9(OBJECT_ALREADY_INITIALIZED); }
 	    metadata.facade = it;
 	    createNonEnumerableProperty(it, STATE, metadata);
 	    return metadata;
 	  };
-	  get$5 = function (it) {
+	  get$6 = function (it) {
 	    return hasOwnProperty_1(it, STATE) ? it[STATE] : {};
 	  };
-	  has$c = function (it) {
+	  has$d = function (it) {
 	    return hasOwnProperty_1(it, STATE);
 	  };
 	}
 
 	var internalState = {
-	  set: set$a,
-	  get: get$5,
-	  has: has$c,
+	  set: set$b,
+	  get: get$6,
+	  has: has$d,
 	  enforce: enforce,
 	  getterFor: getterFor$2
 	};
@@ -717,17 +722,17 @@ var doric = (function (exports) {
 	var indexOf$2 = arrayIncludes.indexOf;
 
 
-	var push$q = functionUncurryThis([].push);
+	var push$s = functionUncurryThis([].push);
 
 	var objectKeysInternal = function (object, names) {
 	  var O = toIndexedObject(object);
 	  var i = 0;
 	  var result = [];
 	  var key;
-	  for (key in O) { !hasOwnProperty_1(hiddenKeys$1, key) && hasOwnProperty_1(O, key) && push$q(result, key); }
+	  for (key in O) { !hasOwnProperty_1(hiddenKeys$1, key) && hasOwnProperty_1(O, key) && push$s(result, key); }
 	  // Don't enum bug & hidden keys
 	  while (names.length > i) { if (hasOwnProperty_1(O, key = names[i++])) {
-	    ~indexOf$2(result, key) || push$q(result, key);
+	    ~indexOf$2(result, key) || push$s(result, key);
 	  } }
 	  return result;
 	};
@@ -1069,11 +1074,11 @@ var doric = (function (exports) {
 
 	var path = global_1;
 
-	var defineProperty$b = objectDefineProperty.f;
+	var defineProperty$c = objectDefineProperty.f;
 
 	var wellKnownSymbolDefine = function (NAME) {
 	  var Symbol = path.Symbol || (path.Symbol = {});
-	  if (!hasOwnProperty_1(Symbol, NAME)) { defineProperty$b(Symbol, NAME, {
+	  if (!hasOwnProperty_1(Symbol, NAME)) { defineProperty$c(Symbol, NAME, {
 	    value: wellKnownSymbolWrapped.f(NAME)
 	  }); }
 	};
@@ -1094,7 +1099,7 @@ var doric = (function (exports) {
 	  }
 	};
 
-	var defineProperty$a = objectDefineProperty.f;
+	var defineProperty$b = objectDefineProperty.f;
 
 
 
@@ -1103,7 +1108,7 @@ var doric = (function (exports) {
 	var setToStringTag = function (target, TAG, STATIC) {
 	  if (target && !STATIC) { target = target.prototype; }
 	  if (target && !hasOwnProperty_1(target, TO_STRING_TAG$a)) {
-	    defineProperty$a(target, TO_STRING_TAG$a, { configurable: true, value: TAG });
+	    defineProperty$b(target, TO_STRING_TAG$a, { configurable: true, value: TAG });
 	  }
 	};
 
@@ -1201,7 +1206,7 @@ var doric = (function (exports) {
 	  return new (arraySpeciesConstructor(originalArray))(length === 0 ? 0 : length);
 	};
 
-	var push$p = functionUncurryThis([].push);
+	var push$r = functionUncurryThis([].push);
 
 	// `Array.prototype.{ forEach, map, filter, some, every, find, findIndex, filterReject }` methods implementation
 	var createMethod$7 = function (TYPE) {
@@ -1230,10 +1235,10 @@ var doric = (function (exports) {
 	          case 3: return true;              // some
 	          case 5: return value;             // find
 	          case 6: return index;             // findIndex
-	          case 2: push$p(target, value);      // filter
+	          case 2: push$r(target, value);      // filter
 	        } } else { switch (TYPE) {
 	          case 4: return false;             // every
-	          case 7: push$p(target, value);      // filterReject
+	          case 7: push$r(target, value);      // filterReject
 	        } }
 	      }
 	    } }
@@ -1286,7 +1291,7 @@ var doric = (function (exports) {
 	var nativeDefineProperty = objectDefineProperty.f;
 	var nativeGetOwnPropertyNames = objectGetOwnPropertyNamesExternal.f;
 	var nativePropertyIsEnumerable = objectPropertyIsEnumerable.f;
-	var push$o = functionUncurryThis([].push);
+	var push$q = functionUncurryThis([].push);
 
 	var AllSymbols = shared('symbols');
 	var ObjectPrototypeSymbols = shared('op-symbols');
@@ -1373,7 +1378,7 @@ var doric = (function (exports) {
 	  var names = nativeGetOwnPropertyNames(toIndexedObject(O));
 	  var result = [];
 	  $forEach$3(names, function (key) {
-	    if (!hasOwnProperty_1(AllSymbols, key) && !hasOwnProperty_1(hiddenKeys$1, key)) { push$o(result, key); }
+	    if (!hasOwnProperty_1(AllSymbols, key) && !hasOwnProperty_1(hiddenKeys$1, key)) { push$q(result, key); }
 	  });
 	  return result;
 	};
@@ -1384,7 +1389,7 @@ var doric = (function (exports) {
 	  var result = [];
 	  $forEach$3(names, function (key) {
 	    if (hasOwnProperty_1(AllSymbols, key) && (!IS_OBJECT_PROTOTYPE || hasOwnProperty_1(ObjectPrototype$5, key))) {
-	      push$o(result, AllSymbols[key]);
+	      push$q(result, AllSymbols[key]);
 	    }
 	  });
 	  return result;
@@ -1515,9 +1520,9 @@ var doric = (function (exports) {
 	  }
 	});
 
-	var FunctionPrototype$2 = Function.prototype;
-	var apply = FunctionPrototype$2.apply;
-	var call = FunctionPrototype$2.call;
+	var FunctionPrototype$3 = Function.prototype;
+	var apply = FunctionPrototype$3.apply;
+	var call = FunctionPrototype$3.call;
 
 	// eslint-disable-next-line es/no-reflect -- safe
 	var functionApply = typeof Reflect == 'object' && Reflect.apply || (functionBindNative ? call.bind(apply) : function () {
@@ -1526,7 +1531,7 @@ var doric = (function (exports) {
 
 	var arraySlice = functionUncurryThis([].slice);
 
-	var push$n = functionUncurryThis([].push);
+	var push$p = functionUncurryThis([].push);
 
 	var getJsonReplacerFunction = function (replacer) {
 	  if (isCallable(replacer)) { return replacer; }
@@ -1535,8 +1540,8 @@ var doric = (function (exports) {
 	  var keys = [];
 	  for (var i = 0; i < rawLength; i++) {
 	    var element = replacer[i];
-	    if (typeof element == 'string') { push$n(keys, element); }
-	    else if (typeof element == 'number' || classofRaw(element) == 'Number' || classofRaw(element) == 'String') { push$n(keys, toString_1(element)); }
+	    if (typeof element == 'string') { push$p(keys, element); }
+	    else if (typeof element == 'number' || classofRaw(element) == 'Number' || classofRaw(element) == 'String') { push$p(keys, toString_1(element)); }
 	  }
 	  var keysLength = keys.length;
 	  var root = true;
@@ -1772,10 +1777,10 @@ var doric = (function (exports) {
 	  };
 	}() : undefined);
 
-	var defineProperty$9 = objectDefineProperty.f;
+	var defineProperty$a = objectDefineProperty.f;
 
 	var proxyAccessor = function (Target, Source, key) {
-	  key in Target || defineProperty$9(Target, key, {
+	  key in Target || defineProperty$a(Target, key, {
 	    configurable: true,
 	    get: function () { return Source[key]; },
 	    set: function (it) { Source[key] = it; }
@@ -2111,7 +2116,7 @@ var doric = (function (exports) {
 
 	var TO_STRING_TAG$9 = wellKnownSymbol('toStringTag');
 	var $Error$1 = Error;
-	var push$m = [].push;
+	var push$o = [].push;
 
 	var $AggregateError$1 = function AggregateError(errors, message /* , options */) {
 	  var isInstance = objectIsPrototypeOf(AggregateErrorPrototype, this);
@@ -2126,7 +2131,7 @@ var doric = (function (exports) {
 	  errorStackInstall(that, $AggregateError$1, that.stack, 1);
 	  if (arguments.length > 2) { installErrorCause(that, arguments[2]); }
 	  var errorsArray = [];
-	  iterate(errors, push$m, { that: errorsArray });
+	  iterate(errors, push$o, { that: errorsArray });
 	  createNonEnumerableProperty(that, 'errors', errorsArray);
 	  return that;
 	};
@@ -2163,7 +2168,7 @@ var doric = (function (exports) {
 	  }, FORCED$y, true)
 	});
 
-	var defineProperty$8 = objectDefineProperty.f;
+	var defineProperty$9 = objectDefineProperty.f;
 
 	var UNSCOPABLES = wellKnownSymbol('unscopables');
 	var ArrayPrototype = Array.prototype;
@@ -2171,7 +2176,7 @@ var doric = (function (exports) {
 	// Array.prototype[@@unscopables]
 	// https://tc39.es/ecma262/#sec-array.prototype-@@unscopables
 	if (ArrayPrototype[UNSCOPABLES] == undefined) {
-	  defineProperty$8(ArrayPrototype, UNSCOPABLES, {
+	  defineProperty$9(ArrayPrototype, UNSCOPABLES, {
 	    configurable: true,
 	    value: objectCreate(null)
 	  });
@@ -2372,6 +2377,7 @@ var doric = (function (exports) {
 	var SKIPS_HOLES$1 = true;
 
 	// Shouldn't skip holes
+	// eslint-disable-next-line es/no-array-prototype-find -- testing
 	if (FIND in []) { Array(1)[FIND](function () { SKIPS_HOLES$1 = false; }); }
 
 	// `Array.prototype.find` method
@@ -2392,6 +2398,7 @@ var doric = (function (exports) {
 	var SKIPS_HOLES = true;
 
 	// Shouldn't skip holes
+	// eslint-disable-next-line es/no-array-prototype-findindex -- testing
 	if (FIND_INDEX in []) { Array(1)[FIND_INDEX](function () { SKIPS_HOLES = false; }); }
 
 	// `Array.prototype.findIndex` method
@@ -2822,7 +2829,7 @@ var doric = (function (exports) {
 	  return { value: value, done: done };
 	};
 
-	var defineProperty$7 = objectDefineProperty.f;
+	var defineProperty$8 = objectDefineProperty.f;
 
 
 
@@ -2877,7 +2884,7 @@ var doric = (function (exports) {
 
 	// V8 ~ Chrome 45- bug
 	if (descriptors && values.name !== 'values') { try {
-	  defineProperty$7(values, 'name', { value: 'values' });
+	  defineProperty$8(values, 'name', { value: 'values' });
 	} catch (error) { /* empty */ } }
 
 	var nativeJoin = functionUncurryThis([].join);
@@ -3223,7 +3230,7 @@ var doric = (function (exports) {
 
 	var test = [];
 	var nativeSort$1 = functionUncurryThis(test.sort);
-	var push$l = functionUncurryThis(test.push);
+	var push$n = functionUncurryThis(test.push);
 
 	// IE8-
 	var FAILS_ON_UNDEFINED = fails(function () {
@@ -3297,7 +3304,7 @@ var doric = (function (exports) {
 	    var itemsLength, index;
 
 	    for (index = 0; index < arrayLength; index++) {
-	      if (index in array) { push$l(items, array[index]); }
+	      if (index in array) { push$n(items, array[index]); }
 	    }
 
 	    arraySort(items, getSortCompare$1(comparefn));
@@ -3737,7 +3744,7 @@ var doric = (function (exports) {
 	  return packIEEE754(number, 52, 8);
 	};
 
-	var addGetter = function (Constructor, key, getInternalState) {
+	var addGetter$1 = function (Constructor, key, getInternalState) {
 	  defineBuiltInAccessor(Constructor[PROTOTYPE], key, {
 	    configurable: true,
 	    get: function () {
@@ -3746,7 +3753,7 @@ var doric = (function (exports) {
 	  });
 	};
 
-	var get$4 = function (view, count, index, isLittleEndian) {
+	var get$5 = function (view, count, index, isLittleEndian) {
 	  var intIndex = toIndex(index);
 	  var store = getInternalDataViewState(view);
 	  if (intIndex + count > store.byteLength) { throw RangeError$3(WRONG_INDEX); }
@@ -3756,7 +3763,7 @@ var doric = (function (exports) {
 	  return isLittleEndian ? pack : reverse(pack);
 	};
 
-	var set$9 = function (view, count, index, conversion, value, isLittleEndian) {
+	var set$a = function (view, count, index, conversion, value, isLittleEndian) {
 	  var intIndex = toIndex(index);
 	  var store = getInternalDataViewState(view);
 	  if (intIndex + count > store.byteLength) { throw RangeError$3(WRONG_INDEX); }
@@ -3809,62 +3816,62 @@ var doric = (function (exports) {
 	  DataViewPrototype$2 = $DataView[PROTOTYPE];
 
 	  if (descriptors) {
-	    addGetter($ArrayBuffer, 'byteLength', getInternalArrayBufferState);
-	    addGetter($DataView, 'buffer', getInternalDataViewState);
-	    addGetter($DataView, 'byteLength', getInternalDataViewState);
-	    addGetter($DataView, 'byteOffset', getInternalDataViewState);
+	    addGetter$1($ArrayBuffer, 'byteLength', getInternalArrayBufferState);
+	    addGetter$1($DataView, 'buffer', getInternalDataViewState);
+	    addGetter$1($DataView, 'byteLength', getInternalDataViewState);
+	    addGetter$1($DataView, 'byteOffset', getInternalDataViewState);
 	  }
 
 	  defineBuiltIns(DataViewPrototype$2, {
 	    getInt8: function getInt8(byteOffset) {
-	      return get$4(this, 1, byteOffset)[0] << 24 >> 24;
+	      return get$5(this, 1, byteOffset)[0] << 24 >> 24;
 	    },
 	    getUint8: function getUint8(byteOffset) {
-	      return get$4(this, 1, byteOffset)[0];
+	      return get$5(this, 1, byteOffset)[0];
 	    },
 	    getInt16: function getInt16(byteOffset /* , littleEndian */) {
-	      var bytes = get$4(this, 2, byteOffset, arguments.length > 1 ? arguments[1] : undefined);
+	      var bytes = get$5(this, 2, byteOffset, arguments.length > 1 ? arguments[1] : undefined);
 	      return (bytes[1] << 8 | bytes[0]) << 16 >> 16;
 	    },
 	    getUint16: function getUint16(byteOffset /* , littleEndian */) {
-	      var bytes = get$4(this, 2, byteOffset, arguments.length > 1 ? arguments[1] : undefined);
+	      var bytes = get$5(this, 2, byteOffset, arguments.length > 1 ? arguments[1] : undefined);
 	      return bytes[1] << 8 | bytes[0];
 	    },
 	    getInt32: function getInt32(byteOffset /* , littleEndian */) {
-	      return unpackInt32(get$4(this, 4, byteOffset, arguments.length > 1 ? arguments[1] : undefined));
+	      return unpackInt32(get$5(this, 4, byteOffset, arguments.length > 1 ? arguments[1] : undefined));
 	    },
 	    getUint32: function getUint32(byteOffset /* , littleEndian */) {
-	      return unpackInt32(get$4(this, 4, byteOffset, arguments.length > 1 ? arguments[1] : undefined)) >>> 0;
+	      return unpackInt32(get$5(this, 4, byteOffset, arguments.length > 1 ? arguments[1] : undefined)) >>> 0;
 	    },
 	    getFloat32: function getFloat32(byteOffset /* , littleEndian */) {
-	      return unpackIEEE754(get$4(this, 4, byteOffset, arguments.length > 1 ? arguments[1] : undefined), 23);
+	      return unpackIEEE754(get$5(this, 4, byteOffset, arguments.length > 1 ? arguments[1] : undefined), 23);
 	    },
 	    getFloat64: function getFloat64(byteOffset /* , littleEndian */) {
-	      return unpackIEEE754(get$4(this, 8, byteOffset, arguments.length > 1 ? arguments[1] : undefined), 52);
+	      return unpackIEEE754(get$5(this, 8, byteOffset, arguments.length > 1 ? arguments[1] : undefined), 52);
 	    },
 	    setInt8: function setInt8(byteOffset, value) {
-	      set$9(this, 1, byteOffset, packInt8, value);
+	      set$a(this, 1, byteOffset, packInt8, value);
 	    },
 	    setUint8: function setUint8(byteOffset, value) {
-	      set$9(this, 1, byteOffset, packInt8, value);
+	      set$a(this, 1, byteOffset, packInt8, value);
 	    },
 	    setInt16: function setInt16(byteOffset, value /* , littleEndian */) {
-	      set$9(this, 2, byteOffset, packInt16, value, arguments.length > 2 ? arguments[2] : undefined);
+	      set$a(this, 2, byteOffset, packInt16, value, arguments.length > 2 ? arguments[2] : undefined);
 	    },
 	    setUint16: function setUint16(byteOffset, value /* , littleEndian */) {
-	      set$9(this, 2, byteOffset, packInt16, value, arguments.length > 2 ? arguments[2] : undefined);
+	      set$a(this, 2, byteOffset, packInt16, value, arguments.length > 2 ? arguments[2] : undefined);
 	    },
 	    setInt32: function setInt32(byteOffset, value /* , littleEndian */) {
-	      set$9(this, 4, byteOffset, packInt32, value, arguments.length > 2 ? arguments[2] : undefined);
+	      set$a(this, 4, byteOffset, packInt32, value, arguments.length > 2 ? arguments[2] : undefined);
 	    },
 	    setUint32: function setUint32(byteOffset, value /* , littleEndian */) {
-	      set$9(this, 4, byteOffset, packInt32, value, arguments.length > 2 ? arguments[2] : undefined);
+	      set$a(this, 4, byteOffset, packInt32, value, arguments.length > 2 ? arguments[2] : undefined);
 	    },
 	    setFloat32: function setFloat32(byteOffset, value /* , littleEndian */) {
-	      set$9(this, 4, byteOffset, packFloat32, value, arguments.length > 2 ? arguments[2] : undefined);
+	      set$a(this, 4, byteOffset, packFloat32, value, arguments.length > 2 ? arguments[2] : undefined);
 	    },
 	    setFloat64: function setFloat64(byteOffset, value /* , littleEndian */) {
-	      set$9(this, 8, byteOffset, packFloat64, value, arguments.length > 2 ? arguments[2] : undefined);
+	      set$a(this, 8, byteOffset, packFloat64, value, arguments.length > 2 ? arguments[2] : undefined);
 	    }
 	  });
 	} else {
@@ -4459,12 +4466,12 @@ var doric = (function (exports) {
 	});
 
 	var HAS_INSTANCE = wellKnownSymbol('hasInstance');
-	var FunctionPrototype$1 = Function.prototype;
+	var FunctionPrototype$2 = Function.prototype;
 
 	// `Function.prototype[@@hasInstance]` method
 	// https://tc39.es/ecma262/#sec-function.prototype-@@hasinstance
-	if (!(HAS_INSTANCE in FunctionPrototype$1)) {
-	  objectDefineProperty.f(FunctionPrototype$1, HAS_INSTANCE, { value: makeBuiltIn_1(function (O) {
+	if (!(HAS_INSTANCE in FunctionPrototype$2)) {
+	  objectDefineProperty.f(FunctionPrototype$2, HAS_INSTANCE, { value: makeBuiltIn_1(function (O) {
 	    if (!isCallable(this) || !isObject(O)) { return false; }
 	    var P = this.prototype;
 	    if (!isObject(P)) { return O instanceof this; }
@@ -4478,8 +4485,8 @@ var doric = (function (exports) {
 
 
 
-	var FunctionPrototype = Function.prototype;
-	var functionToString = functionUncurryThis(FunctionPrototype.toString);
+	var FunctionPrototype$1 = Function.prototype;
+	var functionToString = functionUncurryThis(FunctionPrototype$1.toString);
 	var nameRE = /function\b(?:\s|\/\*[\S\s]*?\*\/|\/\/[^\n\r]*[\n\r]+)*([^\s(/]*)/;
 	var regExpExec = functionUncurryThis(nameRE.exec);
 	var NAME = 'name';
@@ -4487,7 +4494,7 @@ var doric = (function (exports) {
 	// Function instances `.name` property
 	// https://tc39.es/ecma262/#sec-function-instances-name
 	if (descriptors && !FUNCTION_NAME_EXISTS) {
-	  defineBuiltInAccessor(FunctionPrototype, NAME, {
+	  defineBuiltInAccessor(FunctionPrototype$1, NAME, {
 	    configurable: true,
 	    get: function () {
 	      try {
@@ -5256,7 +5263,7 @@ var doric = (function (exports) {
 
 	var getOwnPropertyNames$3 = objectGetOwnPropertyNames.f;
 	var getOwnPropertyDescriptor$9 = objectGetOwnPropertyDescriptor.f;
-	var defineProperty$6 = objectDefineProperty.f;
+	var defineProperty$7 = objectDefineProperty.f;
 
 	var trim$2 = stringTrim.trim;
 
@@ -5337,7 +5344,7 @@ var doric = (function (exports) {
 	    'fromString,range'
 	  ).split(','), j = 0, key; keys.length > j; j++) {
 	    if (hasOwnProperty_1(source, key = keys[j]) && !hasOwnProperty_1(target, key)) {
-	      defineProperty$6(target, key, getOwnPropertyDescriptor$9(source, key));
+	      defineProperty$7(target, key, getOwnPropertyDescriptor$9(source, key));
 	    }
 	  }
 	};
@@ -5701,17 +5708,17 @@ var doric = (function (exports) {
 	// eslint-disable-next-line es/no-object-assign -- safe
 	var $assign = Object.assign;
 	// eslint-disable-next-line es/no-object-defineproperty -- required for testing
-	var defineProperty$5 = Object.defineProperty;
+	var defineProperty$6 = Object.defineProperty;
 	var concat$2 = functionUncurryThis([].concat);
 
 	// `Object.assign` method
 	// https://tc39.es/ecma262/#sec-object.assign
 	var objectAssign = !$assign || fails(function () {
 	  // should have correct order of operations (Edge bug)
-	  if (descriptors && $assign({ b: 1 }, $assign(defineProperty$5({}, 'a', {
+	  if (descriptors && $assign({ b: 1 }, $assign(defineProperty$6({}, 'a', {
 	    enumerable: true,
 	    get: function () {
-	      defineProperty$5(this, 'b', {
+	      defineProperty$6(this, 'b', {
 	        value: 3,
 	        enumerable: false
 	      });
@@ -5787,22 +5794,22 @@ var doric = (function (exports) {
 	  });
 	}
 
-	var defineProperties$1 = objectDefineProperties.f;
+	var defineProperties = objectDefineProperties.f;
 
 	// `Object.defineProperties` method
 	// https://tc39.es/ecma262/#sec-object.defineproperties
 	// eslint-disable-next-line es/no-object-defineproperties -- safe
-	_export({ target: 'Object', stat: true, forced: Object.defineProperties !== defineProperties$1, sham: !descriptors }, {
-	  defineProperties: defineProperties$1
+	_export({ target: 'Object', stat: true, forced: Object.defineProperties !== defineProperties, sham: !descriptors }, {
+	  defineProperties: defineProperties
 	});
 
-	var defineProperty$4 = objectDefineProperty.f;
+	var defineProperty$5 = objectDefineProperty.f;
 
 	// `Object.defineProperty` method
 	// https://tc39.es/ecma262/#sec-object.defineproperty
 	// eslint-disable-next-line es/no-object-defineproperty -- safe
-	_export({ target: 'Object', stat: true, forced: Object.defineProperty !== defineProperty$4, sham: !descriptors }, {
-	  defineProperty: defineProperty$4
+	_export({ target: 'Object', stat: true, forced: Object.defineProperty !== defineProperty$5, sham: !descriptors }, {
+	  defineProperty: defineProperty$5
 	});
 
 	// `Object.prototype.__defineSetter__` method
@@ -5818,21 +5825,31 @@ var doric = (function (exports) {
 	var $propertyIsEnumerable = objectPropertyIsEnumerable.f;
 
 	var propertyIsEnumerable = functionUncurryThis($propertyIsEnumerable);
-	var push$k = functionUncurryThis([].push);
+	var push$m = functionUncurryThis([].push);
+
+	// in some IE versions, `propertyIsEnumerable` returns incorrect result on integer keys
+	// of `null` prototype objects
+	var IE_BUG = descriptors && fails(function () {
+	  // eslint-disable-next-line es/no-object-create -- safe
+	  var O = Object.create(null);
+	  O[2] = 2;
+	  return !propertyIsEnumerable(O, 2);
+	});
 
 	// `Object.{ entries, values }` methods implementation
 	var createMethod$2 = function (TO_ENTRIES) {
 	  return function (it) {
 	    var O = toIndexedObject(it);
 	    var keys = objectKeys$1(O);
+	    var IE_WORKAROUND = IE_BUG && objectGetPrototypeOf(O) === null;
 	    var length = keys.length;
 	    var i = 0;
 	    var result = [];
 	    var key;
 	    while (length > i) {
 	      key = keys[i++];
-	      if (!descriptors || propertyIsEnumerable(O, key)) {
-	        push$k(result, TO_ENTRIES ? [key, O[key]] : O[key]);
+	      if (!descriptors || (IE_WORKAROUND ? key in O : propertyIsEnumerable(O, key))) {
+	        push$m(result, TO_ENTRIES ? [key, O[key]] : O[key]);
 	      }
 	    }
 	    return result;
@@ -6142,7 +6159,7 @@ var doric = (function (exports) {
 	// eslint-disable-next-line redos/no-vulnerable -- safe
 	var engineIsIos = /(?:ipad|iphone|ipod).*applewebkit/i.test(engineUserAgent);
 
-	var set$8 = global_1.setImmediate;
+	var set$9 = global_1.setImmediate;
 	var clear = global_1.clearImmediate;
 	var process$4 = global_1.process;
 	var Dispatch = global_1.Dispatch;
@@ -6183,8 +6200,8 @@ var doric = (function (exports) {
 	};
 
 	// Node.js 0.9+ & IE10+ has setImmediate, otherwise:
-	if (!set$8 || !clear) {
-	  set$8 = function setImmediate(handler) {
+	if (!set$9 || !clear) {
+	  set$9 = function setImmediate(handler) {
 	    validateArgumentsLength(arguments.length, 1);
 	    var fn = isCallable(handler) ? handler : Function$2(handler);
 	    var args = arraySlice(arguments, 1);
@@ -6242,7 +6259,7 @@ var doric = (function (exports) {
 	}
 
 	var task$1 = {
-	  set: set$8,
+	  set: set$9,
 	  clear: clear
 	};
 
@@ -6947,7 +6964,7 @@ var doric = (function (exports) {
 
 	var nativeConstruct = getBuiltIn('Reflect', 'construct');
 	var ObjectPrototype = Object.prototype;
-	var push$j = [].push;
+	var push$l = [].push;
 
 	// `Reflect.construct` method
 	// https://tc39.es/ecma262/#sec-reflect.construct
@@ -6981,7 +6998,7 @@ var doric = (function (exports) {
 	      }
 	      // w/o altered newTarget, lot of arguments case
 	      var $args = [null];
-	      functionApply(push$j, $args, args);
+	      functionApply(push$l, $args, args);
 	      return new (functionApply(functionBind, Target, $args))();
 	    }
 	    // with altered newTarget, not support built-in constructors
@@ -7031,7 +7048,7 @@ var doric = (function (exports) {
 
 	// `Reflect.get` method
 	// https://tc39.es/ecma262/#sec-reflect.get
-	function get$3(target, propertyKey /* , receiver */) {
+	function get$4(target, propertyKey /* , receiver */) {
 	  var receiver = arguments.length < 3 ? target : arguments[2];
 	  var descriptor, prototype;
 	  if (anObject(target) === receiver) { return target[propertyKey]; }
@@ -7039,11 +7056,11 @@ var doric = (function (exports) {
 	  if (descriptor) { return isDataDescriptor(descriptor)
 	    ? descriptor.value
 	    : descriptor.get === undefined ? undefined : functionCall(descriptor.get, receiver); }
-	  if (isObject(prototype = objectGetPrototypeOf(target))) { return get$3(prototype, propertyKey, receiver); }
+	  if (isObject(prototype = objectGetPrototypeOf(target))) { return get$4(prototype, propertyKey, receiver); }
 	}
 
 	_export({ target: 'Reflect', stat: true }, {
-	  get: get$3
+	  get: get$4
 	});
 
 	// `Reflect.getOwnPropertyDescriptor` method
@@ -7102,13 +7119,13 @@ var doric = (function (exports) {
 
 	// `Reflect.set` method
 	// https://tc39.es/ecma262/#sec-reflect.set
-	function set$7(target, propertyKey, V /* , receiver */) {
+	function set$8(target, propertyKey, V /* , receiver */) {
 	  var receiver = arguments.length < 4 ? target : arguments[3];
 	  var ownDescriptor = objectGetOwnPropertyDescriptor.f(anObject(target), propertyKey);
 	  var existingDescriptor, prototype, setter;
 	  if (!ownDescriptor) {
 	    if (isObject(prototype = objectGetPrototypeOf(target))) {
-	      return set$7(prototype, propertyKey, V, receiver);
+	      return set$8(prototype, propertyKey, V, receiver);
 	    }
 	    ownDescriptor = createPropertyDescriptor(0);
 	  }
@@ -7136,7 +7153,7 @@ var doric = (function (exports) {
 	});
 
 	_export({ target: 'Reflect', stat: true, forced: MS_EDGE_BUG }, {
-	  set: set$7
+	  set: set$8
 	});
 
 	// `Reflect.setPrototypeOf` method
@@ -7875,6 +7892,24 @@ var doric = (function (exports) {
 	  }
 	});
 
+	var charCodeAt$4 = functionUncurryThis(''.charCodeAt);
+
+	// `String.prototype.isWellFormed` method
+	// https://github.com/tc39/proposal-is-usv-string
+	_export({ target: 'String', proto: true }, {
+	  isWellFormed: function isWellFormed() {
+	    var S = toString_1(requireObjectCoercible(this));
+	    var length = S.length;
+	    for (var i = 0; i < length; i++) {
+	      var charCode = charCodeAt$4(S, i);
+	      // single UTF-16 code unit
+	      if ((charCode & 0xF800) != 0xD800) { continue; }
+	      // unpaired surrogate
+	      if (charCode >= 0xDC00 || ++i >= length || (charCodeAt$4(S, i) & 0xFC00) != 0xDC00) { return false; }
+	    } return true;
+	  }
+	});
+
 	var charAt$d = stringMultibyte.charAt;
 
 
@@ -8169,7 +8204,7 @@ var doric = (function (exports) {
 	  }
 	});
 
-	var push$i = functionUncurryThis([].push);
+	var push$k = functionUncurryThis([].push);
 	var join$6 = functionUncurryThis([].join);
 
 	// `String.raw` method
@@ -8185,9 +8220,9 @@ var doric = (function (exports) {
 	    var elements = [];
 	    var i = 0;
 	    while (true) {
-	      push$i(elements, toString_1(rawTemplate[i++]));
+	      push$k(elements, toString_1(rawTemplate[i++]));
 	      if (i === literalSegments) { return join$6(elements, ''); }
-	      if (i < argumentsLength) { push$i(elements, toString_1(arguments$1[i])); }
+	      if (i < argumentsLength) { push$k(elements, toString_1(arguments$1[i])); }
 	    }
 	  }
 	});
@@ -8245,7 +8280,7 @@ var doric = (function (exports) {
 	var max$5 = Math.max;
 	var min$7 = Math.min;
 	var concat$1 = functionUncurryThis([].concat);
-	var push$h = functionUncurryThis([].push);
+	var push$j = functionUncurryThis([].push);
 	var stringIndexOf$2 = functionUncurryThis(''.indexOf);
 	var stringSlice$a = functionUncurryThis(''.slice);
 
@@ -8321,7 +8356,7 @@ var doric = (function (exports) {
 	        var result = regexpExecAbstract(rx, S);
 	        if (result === null) { break; }
 
-	        push$h(results, result);
+	        push$j(results, result);
 	        if (!global) { break; }
 
 	        var matchStr = toString_1(result[0]);
@@ -8341,11 +8376,11 @@ var doric = (function (exports) {
 	        // but for some reason `nativeSlice.call(result, 1, result.length)` (called in
 	        // the slice polyfill when slicing native arrays) "doesn't work" in safari 9 and
 	        // causes a crash (https://pastebin.com/N21QzeQA) when trying to debug it.
-	        for (var j = 1; j < result.length; j++) { push$h(captures, maybeToString(result[j])); }
+	        for (var j = 1; j < result.length; j++) { push$j(captures, maybeToString(result[j])); }
 	        var namedCaptures = result.groups;
 	        if (functionalReplace) {
 	          var replacerArgs = concat$1([matched], captures, position, S);
-	          if (namedCaptures !== undefined) { push$h(replacerArgs, namedCaptures); }
+	          if (namedCaptures !== undefined) { push$j(replacerArgs, namedCaptures); }
 	          var replacement = toString_1(functionApply(replaceValue, undefined, replacerArgs));
 	        } else {
 	          replacement = getSubstitution(matched, S, position, captures, namedCaptures, replaceValue);
@@ -8448,7 +8483,7 @@ var doric = (function (exports) {
 	var min$6 = Math.min;
 	var $push = [].push;
 	var exec$a = functionUncurryThis(/./.exec);
-	var push$g = functionUncurryThis($push);
+	var push$i = functionUncurryThis($push);
 	var stringSlice$8 = functionUncurryThis(''.slice);
 
 	// Chrome 51 has a buggy "split" implementation when RegExp#exec !== nativeExec
@@ -8497,7 +8532,7 @@ var doric = (function (exports) {
 	      while (match = functionCall(regexpExec, separatorCopy, string)) {
 	        lastIndex = separatorCopy.lastIndex;
 	        if (lastIndex > lastLastIndex) {
-	          push$g(output, stringSlice$8(string, lastLastIndex, match.index));
+	          push$i(output, stringSlice$8(string, lastLastIndex, match.index));
 	          if (match.length > 1 && match.index < string.length) { functionApply($push, output, arraySliceSimple(match, 1)); }
 	          lastLength = match[0].length;
 	          lastLastIndex = lastIndex;
@@ -8506,8 +8541,8 @@ var doric = (function (exports) {
 	        if (separatorCopy.lastIndex === match.index) { separatorCopy.lastIndex++; } // Avoid an infinite loop
 	      }
 	      if (lastLastIndex === string.length) {
-	        if (lastLength || !exec$a(separatorCopy, '')) { push$g(output, ''); }
-	      } else { push$g(output, stringSlice$8(string, lastLastIndex)); }
+	        if (lastLength || !exec$a(separatorCopy, '')) { push$i(output, ''); }
+	      } else { push$i(output, stringSlice$8(string, lastLastIndex)); }
 	      return output.length > lim ? arraySliceSimple(output, 0, lim) : output;
 	    };
 	  // Chakra, V8
@@ -8566,16 +8601,16 @@ var doric = (function (exports) {
 	        ) {
 	          q = advanceStringIndex(S, q, unicodeMatching);
 	        } else {
-	          push$g(A, stringSlice$8(S, p, q));
+	          push$i(A, stringSlice$8(S, p, q));
 	          if (A.length === lim) { return A; }
 	          for (var i = 1; i <= z.length - 1; i++) {
-	            push$g(A, z[i]);
+	            push$i(A, z[i]);
 	            if (A.length === lim) { return A; }
 	          }
 	          q = p = e;
 	        }
 	      }
-	      push$g(A, stringSlice$8(S, p));
+	      push$i(A, stringSlice$8(S, p));
 	      return A;
 	    }
 	  ];
@@ -8636,6 +8671,42 @@ var doric = (function (exports) {
 	    if (intLength <= 0 || intLength === Infinity) { return ''; }
 	    intEnd = min$4(intStart + intLength, size);
 	    return intStart >= intEnd ? '' : stringSlice$6(that, intStart, intEnd);
+	  }
+	});
+
+	var $Array$2 = Array;
+	var charAt$a = functionUncurryThis(''.charAt);
+	var charCodeAt$3 = functionUncurryThis(''.charCodeAt);
+	var join$5 = functionUncurryThis([].join);
+	// eslint-disable-next-line es/no-string-prototype-iswellformed-towellformed -- safe
+	var $toWellFormed = ''.toWellFormed;
+	var REPLACEMENT_CHARACTER = '\uFFFD';
+
+	// Safari bug
+	var TO_STRING_CONVERSION_BUG = $toWellFormed && fails(function () {
+	  return functionCall($toWellFormed, 1) !== '1';
+	});
+
+	// `String.prototype.toWellFormed` method
+	// https://github.com/tc39/proposal-is-usv-string
+	_export({ target: 'String', proto: true, forced: TO_STRING_CONVERSION_BUG }, {
+	  toWellFormed: function toWellFormed() {
+	    var S = toString_1(requireObjectCoercible(this));
+	    if (TO_STRING_CONVERSION_BUG) { return functionCall($toWellFormed, S); }
+	    var length = S.length;
+	    var result = $Array$2(length);
+	    for (var i = 0; i < length; i++) {
+	      var charCode = charCodeAt$3(S, i);
+	      // single UTF-16 code unit
+	      if ((charCode & 0xF800) != 0xD800) { result[i] = charAt$a(S, i); }
+	      // unpaired surrogate
+	      else if (charCode >= 0xDC00 || i + 1 >= length || (charCodeAt$3(S, i + 1) & 0xFC00) != 0xDC00) { result[i] = REPLACEMENT_CHARACTER; }
+	      // surrogate pair
+	      else {
+	        result[i] = charAt$a(S, i);
+	        result[++i] = charAt$a(S, i);
+	      }
+	    } return join$5(result, '');
 	  }
 	});
 
@@ -9562,7 +9633,7 @@ var doric = (function (exports) {
 	var aTypedArray$d = arrayBufferViewCore.aTypedArray;
 	var exportTypedArrayMethod$e = arrayBufferViewCore.exportTypedArrayMethod;
 
-	var WORKS_WITH_OBJECTS_AND_GEERIC_ON_TYPED_ARRAYS = !fails(function () {
+	var WORKS_WITH_OBJECTS_AND_GENERIC_ON_TYPED_ARRAYS = !fails(function () {
 	  // eslint-disable-next-line es/no-typed-arrays -- required for testing
 	  var array = new Uint8ClampedArray(2);
 	  functionCall($set, array, { length: 1, 0: 3 }, 1);
@@ -9570,7 +9641,7 @@ var doric = (function (exports) {
 	});
 
 	// https://bugs.chromium.org/p/v8/issues/detail?id=11294 and other
-	var TO_OBJECT_BUG = WORKS_WITH_OBJECTS_AND_GEERIC_ON_TYPED_ARRAYS && arrayBufferViewCore.NATIVE_ARRAY_BUFFER_VIEWS && fails(function () {
+	var TO_OBJECT_BUG = WORKS_WITH_OBJECTS_AND_GENERIC_ON_TYPED_ARRAYS && arrayBufferViewCore.NATIVE_ARRAY_BUFFER_VIEWS && fails(function () {
 	  var array = new Int8Array$2(2);
 	  array.set(1);
 	  array.set('2', 1);
@@ -9583,13 +9654,13 @@ var doric = (function (exports) {
 	  aTypedArray$d(this);
 	  var offset = toOffset(arguments.length > 1 ? arguments[1] : undefined, 1);
 	  var src = toObject(arrayLike);
-	  if (WORKS_WITH_OBJECTS_AND_GEERIC_ON_TYPED_ARRAYS) { return functionCall($set, this, src, offset); }
+	  if (WORKS_WITH_OBJECTS_AND_GENERIC_ON_TYPED_ARRAYS) { return functionCall($set, this, src, offset); }
 	  var length = this.length;
 	  var len = lengthOfArrayLike(src);
 	  var index = 0;
 	  if (len + offset > length) { throw RangeError$2('Wrong length'); }
 	  while (index < len) { this[offset + index] = src[index++]; }
-	}, !WORKS_WITH_OBJECTS_AND_GEERIC_ON_TYPED_ARRAYS || TO_OBJECT_BUG);
+	}, !WORKS_WITH_OBJECTS_AND_GENERIC_ON_TYPED_ARRAYS || TO_OBJECT_BUG);
 
 	var aTypedArray$c = arrayBufferViewCore.aTypedArray;
 	var exportTypedArrayMethod$d = arrayBufferViewCore.exportTypedArrayMethod;
@@ -9756,11 +9827,11 @@ var doric = (function (exports) {
 	var Uint8Array$1 = global_1.Uint8Array;
 	var Uint8ArrayPrototype = Uint8Array$1 && Uint8Array$1.prototype || {};
 	var arrayToString = [].toString;
-	var join$5 = functionUncurryThis([].join);
+	var join$4 = functionUncurryThis([].join);
 
 	if (fails(function () { arrayToString.call({}); })) {
 	  arrayToString = function toString() {
-	    return join$5(this);
+	    return join$4(this);
 	  };
 	}
 
@@ -9795,7 +9866,7 @@ var doric = (function (exports) {
 	} }['with'], !PROPER_ORDER$1);
 
 	var fromCharCode$4 = String.fromCharCode;
-	var charAt$a = functionUncurryThis(''.charAt);
+	var charAt$9 = functionUncurryThis(''.charAt);
 	var exec$9 = functionUncurryThis(/./.exec);
 	var stringSlice$5 = functionUncurryThis(''.slice);
 
@@ -9812,9 +9883,9 @@ var doric = (function (exports) {
 	    var index = 0;
 	    var chr, part;
 	    while (index < length) {
-	      chr = charAt$a(str, index++);
+	      chr = charAt$9(str, index++);
 	      if (chr === '%') {
-	        if (charAt$a(str, index) === 'u') {
+	        if (charAt$9(str, index) === 'u') {
 	          part = stringSlice$5(str, index + 1, index + 5);
 	          if (exec$9(hex4, part)) {
 	            result += fromCharCode$4(parseInt(part, 16));
@@ -10015,7 +10086,7 @@ var doric = (function (exports) {
 	  InternalWeakMap = collectionWeak.getConstructor(wrapper, 'WeakMap', true);
 	  internalMetadata.enable();
 	  var nativeDelete = functionUncurryThis(WeakMapPrototype$1['delete']);
-	  var nativeHas$1 = functionUncurryThis(WeakMapPrototype$1.has);
+	  var nativeHas = functionUncurryThis(WeakMapPrototype$1.has);
 	  var nativeGet = functionUncurryThis(WeakMapPrototype$1.get);
 	  defineBuiltIns(WeakMapPrototype$1, {
 	    'delete': function (key) {
@@ -10029,21 +10100,21 @@ var doric = (function (exports) {
 	      if (isObject(key) && !isExtensible(key)) {
 	        var state = enforceInternalState(this);
 	        if (!state.frozen) { state.frozen = new InternalWeakMap(); }
-	        return nativeHas$1(this, key) || state.frozen.has(key);
-	      } return nativeHas$1(this, key);
+	        return nativeHas(this, key) || state.frozen.has(key);
+	      } return nativeHas(this, key);
 	    },
 	    get: function get(key) {
 	      if (isObject(key) && !isExtensible(key)) {
 	        var state = enforceInternalState(this);
 	        if (!state.frozen) { state.frozen = new InternalWeakMap(); }
-	        return nativeHas$1(this, key) ? nativeGet(this, key) : state.frozen.get(key);
+	        return nativeHas(this, key) ? nativeGet(this, key) : state.frozen.get(key);
 	      } return nativeGet(this, key);
 	    },
 	    set: function set(key, value) {
 	      if (isObject(key) && !isExtensible(key)) {
 	        var state = enforceInternalState(this);
 	        if (!state.frozen) { state.frozen = new InternalWeakMap(); }
-	        nativeHas$1(this, key) ? nativeSet(this, key, value) : state.frozen.set(key, value);
+	        nativeHas(this, key) ? nativeSet(this, key, value) : state.frozen.set(key, value);
 	      } else { nativeSet(this, key, value); }
 	      return this;
 	    }
@@ -10172,10 +10243,13 @@ var doric = (function (exports) {
 
 	var asyncFromSyncIterator = AsyncFromSyncIterator;
 
+	// `GetIteratorDirect(obj)` abstract operation
+	// https://tc39.es/proposal-iterator-helpers/#sec-getiteratordirect
 	var getIteratorDirect = function (obj) {
 	  return {
 	    iterator: obj,
-	    next: aCallable(anObject(obj).next)
+	    next: obj.next,
+	    done: false
 	  };
 	};
 
@@ -10218,13 +10292,14 @@ var doric = (function (exports) {
 	  var IS_EVERY = TYPE == 2;
 	  var IS_SOME = TYPE == 3;
 	  return function (object, fn, target) {
+	    anObject(object);
+	    var MAPPING = fn !== undefined;
+	    if (MAPPING || !IS_TO_ARRAY) { aCallable(fn); }
 	    var record = getIteratorDirect(object);
 	    var Promise = getBuiltIn('Promise');
 	    var iterator = record.iterator;
 	    var next = record.next;
 	    var counter = 0;
-	    var MAPPING = fn !== undefined;
-	    if (MAPPING || !IS_TO_ARRAY) { aCallable(fn); }
 
 	    return new Promise(function (resolve, reject) {
 	      var ifAbruptCloseAsyncIterator = function (error) {
@@ -10362,8 +10437,8 @@ var doric = (function (exports) {
 
 	addToUnscopables('filterReject');
 
-	var $Array$2 = Array;
-	var push$f = functionUncurryThis([].push);
+	var $Array$1 = Array;
+	var push$h = functionUncurryThis([].push);
 
 	var arrayGroup = function ($this, callbackfn, that, specificConstructor) {
 	  var O = toObject($this);
@@ -10376,15 +10451,15 @@ var doric = (function (exports) {
 	  for (;length > index; index++) {
 	    value = self[index];
 	    key = toPropertyKey(boundFunction(value, index, O));
-	    // in some IE10 builds, `hasOwnProperty` returns incorrect result on integer keys
+	    // in some IE versions, `hasOwnProperty` returns incorrect result on integer keys
 	    // but since it's a `null` prototype object, we can safely use `in`
-	    if (key in target) { push$f(target[key], value); }
+	    if (key in target) { push$h(target[key], value); }
 	    else { target[key] = [value]; }
 	  }
 	  // TODO: Remove this block from `core-js@4`
 	  if (specificConstructor) {
 	    Constructor = specificConstructor(O);
-	    if (Constructor !== $Array$2) {
+	    if (Constructor !== $Array$1) {
 	      for (key in target) { target[key] = arrayFromConstructorAndList(Constructor, target[key]); }
 	    }
 	  } return target;
@@ -10436,7 +10511,7 @@ var doric = (function (exports) {
 	var mapGet$1 = mapHelpers.get;
 	var mapHas$2 = mapHelpers.has;
 	var mapSet$2 = mapHelpers.set;
-	var push$e = functionUncurryThis([].push);
+	var push$g = functionUncurryThis([].push);
 
 	// `Array.prototype.groupToMap` method
 	// https://github.com/tc39/proposal-array-grouping
@@ -10451,7 +10526,7 @@ var doric = (function (exports) {
 	  for (;length > index; index++) {
 	    value = self[index];
 	    key = boundFunction(value, index, O);
-	    if (mapHas$2(map, key)) { push$e(mapGet$1(map, key), value); }
+	    if (mapHas$2(map, key)) { push$g(mapGet$1(map, key), value); }
 	    else { mapSet$2(map, key, [value]); }
 	  } return map;
 	};
@@ -10566,20 +10641,20 @@ var doric = (function (exports) {
 
 	var Map$a = mapHelpers.Map;
 	var MapPrototype = mapHelpers.proto;
-	var forEach$1 = functionUncurryThis(MapPrototype.forEach);
+	var forEach$3 = functionUncurryThis(MapPrototype.forEach);
 	var entries = functionUncurryThis(MapPrototype.entries);
 	var next$1 = entries(new Map$a()).next;
 
 	var mapIterate = function (map, fn, interruptible) {
 	  return interruptible ? iterateSimple(entries(map), function (entry) {
 	    return fn(entry[1], entry[0]);
-	  }, next$1) : forEach$1(map, fn);
+	  }, next$1) : forEach$3(map, fn);
 	};
 
 	var Map$9 = mapHelpers.Map;
 	var mapHas$1 = mapHelpers.has;
 	var mapSet$1 = mapHelpers.set;
-	var push$d = functionUncurryThis([].push);
+	var push$f = functionUncurryThis([].push);
 
 	// `Array.prototype.uniqueBy` method
 	// https://github.com/tc39/proposal-array-unique
@@ -10598,7 +10673,7 @@ var doric = (function (exports) {
 	    if (!mapHas$1(map, key)) { mapSet$1(map, key, item); }
 	  }
 	  mapIterate(map, function (value) {
-	    push$d(result, value);
+	    push$f(result, value);
 	  });
 	  return result;
 	};
@@ -10670,16 +10745,18 @@ var doric = (function (exports) {
 
 	var arrayBufferTransfer = structuredCloneProperTransfer && function (arrayBuffer, newLength, preserveResizability) {
 	  var byteLength = arrayBufferByteLength(arrayBuffer);
-	  var newByteLength = newLength === undefined ? byteLength : min$3(toIndex(newLength), byteLength);
+	  var newByteLength = newLength === undefined ? byteLength : toIndex(newLength);
 	  var fixedLength = !isResizable || !isResizable(arrayBuffer);
 	  if (arrayBufferIsDetached(arrayBuffer)) { throw TypeError$4('ArrayBuffer is detached'); }
 	  var newBuffer = structuredClone(arrayBuffer, { transfer: [arrayBuffer] });
 	  if (byteLength == newByteLength && (preserveResizability || fixedLength)) { return newBuffer; }
-	  if (!preserveResizability || fixedLength) { return slice$3(newBuffer, 0, newByteLength); }
-	  var newNewBuffer = new ArrayBuffer$1(newByteLength, maxByteLength && { maxByteLength: maxByteLength(newBuffer) });
+	  if (byteLength >= newByteLength && (!preserveResizability || fixedLength)) { return slice$3(newBuffer, 0, newByteLength); }
+	  var options = (preserveResizability && !fixedLength) && maxByteLength ? { maxByteLength: maxByteLength(newBuffer) } : undefined;
+	  var newNewBuffer = new ArrayBuffer$1(newByteLength, options);
 	  var a = new DataView$1(newBuffer);
 	  var b = new DataView$1(newNewBuffer);
-	  for (var i = 0; i < newByteLength; i++) { setInt8(b, i, getInt8(a, i)); }
+	  var copyLength = min$3(newByteLength, byteLength);
+	  for (var i = 0; i < copyLength; i++) { setInt8(b, i, getInt8(a, i)); }
 	  return newNewBuffer;
 	};
 
@@ -10702,7 +10779,7 @@ var doric = (function (exports) {
 	var ASYNC_DISPOSE$2 = wellKnownSymbol('asyncDispose');
 	var DISPOSE$2 = wellKnownSymbol('dispose');
 
-	var push$c = functionUncurryThis([].push);
+	var push$e = functionUncurryThis([].push);
 
 	var getDisposeMethod = function (V, hint) {
 	  if (hint == 'async-dispose') {
@@ -10722,14 +10799,12 @@ var doric = (function (exports) {
 	  var resource;
 	  if (!method) {
 	    if (isNullOrUndefined(V)) { return; }
-	    resource = createDisposableResource(V, hint);
-	  } else if (isNullOrUndefined(V)) {
-	    resource = createDisposableResource(undefined, hint, method);
+	    resource = createDisposableResource(anObject(V), hint);
 	  } else {
-	    resource = createDisposableResource(anObject(V), hint, method);
+	    resource = createDisposableResource(undefined, hint, method);
 	  }
 
-	  push$c(disposable.stack, resource);
+	  push$e(disposable.stack, resource);
 	};
 
 	// https://github.com/tc39/proposal-async-explicit-resource-management
@@ -10760,7 +10835,11 @@ var doric = (function (exports) {
 	var DISPOSED$1 = 'disposed';
 	var PENDING$1 = 'pending';
 
-	var ALREADY_DISPOSED$1 = ASYNC_DISPOSABLE_STACK + ' already disposed';
+	var getPendingAsyncDisposableStackInternalState = function (stack) {
+	  var internalState = getAsyncDisposableStackInternalState(stack);
+	  if (internalState.state == DISPOSED$1) { throw $ReferenceError$1(ASYNC_DISPOSABLE_STACK + ' already disposed'); }
+	  return internalState;
+	};
 
 	var $AsyncDisposableStack = function AsyncDisposableStack() {
 	  setInternalState$c(anInstance(this, AsyncDisposableStackPrototype), {
@@ -10817,32 +10896,29 @@ var doric = (function (exports) {
 	    });
 	  },
 	  use: function use(value) {
-	    var internalState = getAsyncDisposableStackInternalState(this);
-	    if (internalState.state == DISPOSED$1) { throw $ReferenceError$1(ALREADY_DISPOSED$1); }
-	    addDisposableResource(internalState, value, HINT$1);
+	    addDisposableResource(getPendingAsyncDisposableStackInternalState(this), value, HINT$1);
 	    return value;
 	  },
 	  adopt: function adopt(value, onDispose) {
-	    var internalState = getAsyncDisposableStackInternalState(this);
-	    if (internalState.state == DISPOSED$1) { throw $ReferenceError$1(ALREADY_DISPOSED$1); }
+	    var internalState = getPendingAsyncDisposableStackInternalState(this);
 	    aCallable(onDispose);
 	    addDisposableResource(internalState, undefined, HINT$1, function () {
-	      onDispose(value);
+	      return onDispose(value);
 	    });
 	    return value;
 	  },
 	  defer: function defer(onDispose) {
-	    var internalState = getAsyncDisposableStackInternalState(this);
-	    if (internalState.state == DISPOSED$1) { throw $ReferenceError$1(ALREADY_DISPOSED$1); }
+	    var internalState = getPendingAsyncDisposableStackInternalState(this);
 	    aCallable(onDispose);
 	    addDisposableResource(internalState, undefined, HINT$1, onDispose);
 	  },
 	  move: function move() {
-	    var internalState = getAsyncDisposableStackInternalState(this);
-	    if (internalState.state == DISPOSED$1) { throw $ReferenceError$1(ALREADY_DISPOSED$1); }
+	    var internalState = getPendingAsyncDisposableStackInternalState(this);
 	    var newAsyncDisposableStack = new $AsyncDisposableStack();
 	    getAsyncDisposableStackInternalState(newAsyncDisposableStack).stack = internalState.stack;
 	    internalState.stack = [];
+	    internalState.state = DISPOSED$1;
+	    if (!descriptors) { this.disposed = true; }
 	    return newAsyncDisposableStack;
 	  }
 	});
@@ -11015,8 +11091,10 @@ var doric = (function (exports) {
 	// `AsyncIterator.prototype.map` method
 	// https://github.com/tc39/proposal-iterator-helpers
 	var asyncIteratorMap = function map(mapper) {
+	  anObject(this);
+	  aCallable(mapper);
 	  return new AsyncIteratorProxy$4(getIteratorDirect(this), {
-	    mapper: aCallable(mapper)
+	    mapper: mapper
 	  });
 	};
 
@@ -11107,8 +11185,10 @@ var doric = (function (exports) {
 	// https://github.com/tc39/proposal-async-iterator-helpers
 	_export({ target: 'AsyncIterator', proto: true, real: true }, {
 	  drop: function drop(limit) {
+	    anObject(this);
+	    var remaining = toPositiveInteger(notANan(+limit));
 	    return new AsyncIteratorProxy$3(getIteratorDirect(this), {
-	      remaining: toPositiveInteger(notANan(+limit))
+	      remaining: remaining
 	    });
 	  }
 	});
@@ -11171,8 +11251,10 @@ var doric = (function (exports) {
 	// https://github.com/tc39/proposal-async-iterator-helpers
 	_export({ target: 'AsyncIterator', proto: true, real: true }, {
 	  filter: function filter(predicate) {
+	    anObject(this);
+	    aCallable(predicate);
 	    return new AsyncIteratorProxy$2(getIteratorDirect(this), {
-	      predicate: aCallable(predicate)
+	      predicate: predicate
 	    });
 	  }
 	});
@@ -11198,7 +11280,7 @@ var doric = (function (exports) {
 	    method = getIteratorMethod(object);
 	    alreadyAsync = false;
 	  }
-	  if (isCallable(method)) {
+	  if (method !== undefined) {
 	    iterator = functionCall(method, object);
 	  } else {
 	    iterator = object;
@@ -11275,8 +11357,10 @@ var doric = (function (exports) {
 	// https://github.com/tc39/proposal-async-iterator-helpers
 	_export({ target: 'AsyncIterator', proto: true, real: true }, {
 	  flatMap: function flatMap(mapper) {
+	    anObject(this);
+	    aCallable(mapper);
 	    return new AsyncIteratorProxy$1(getIteratorDirect(this), {
-	      mapper: aCallable(mapper),
+	      mapper: mapper,
 	      inner: null
 	    });
 	  }
@@ -11330,13 +11414,14 @@ var doric = (function (exports) {
 	// https://github.com/tc39/proposal-async-iterator-helpers
 	_export({ target: 'AsyncIterator', proto: true, real: true }, {
 	  reduce: function reduce(reducer /* , initialValue */) {
+	    anObject(this);
+	    aCallable(reducer);
 	    var record = getIteratorDirect(this);
 	    var iterator = record.iterator;
 	    var next = record.next;
 	    var noInitial = arguments.length < 2;
 	    var accumulator = noInitial ? undefined : arguments[1];
 	    var counter = 0;
-	    aCallable(reducer);
 
 	    return new Promise$1(function (resolve, reject) {
 	      var ifAbruptCloseAsyncIterator = function (error) {
@@ -11418,8 +11503,10 @@ var doric = (function (exports) {
 	// https://github.com/tc39/proposal-async-iterator-helpers
 	_export({ target: 'AsyncIterator', proto: true, real: true }, {
 	  take: function take(limit) {
+	    anObject(this);
+	    var remaining = toPositiveInteger(notANan(+limit));
 	    return new AsyncIteratorProxy(getIteratorDirect(this), {
-	      remaining: toPositiveInteger(notANan(+limit))
+	      remaining: remaining
 	    });
 	  }
 	});
@@ -11434,9 +11521,6 @@ var doric = (function (exports) {
 	  }
 	});
 
-	var defineProperties = objectDefineProperties.f;
-
-
 	var INCORRECT_RANGE = 'Incorrect Iterator.range arguments';
 	var NUMERIC_RANGE_ITERATOR = 'NumericRangeIterator';
 
@@ -11447,7 +11531,7 @@ var doric = (function (exports) {
 	var $TypeError$d = TypeError;
 
 	var $RangeIterator = iteratorCreateConstructor(function NumericRangeIterator(start, end, option, type, zero, one) {
-	  // TODO: Drop the first `typeof` check after removing lagacy methods in `core-js@4`
+	  // TODO: Drop the first `typeof` check after removing legacy methods in `core-js@4`
 	  if (typeof start != type || (end !== Infinity && end !== -Infinity && typeof end != type)) {
 	    throw $TypeError$d(INCORRECT_RANGE);
 	  }
@@ -11483,7 +11567,7 @@ var doric = (function (exports) {
 	    start: start,
 	    end: end,
 	    step: step,
-	    inclusiveEnd: inclusiveEnd,
+	    inclusive: inclusiveEnd,
 	    hitsEnd: hitsEnd,
 	    currentCount: zero,
 	    zero: zero
@@ -11502,7 +11586,7 @@ var doric = (function (exports) {
 	  var step = state.step;
 	  var currentYieldingValue = start + (step * state.currentCount++);
 	  if (currentYieldingValue === end) { state.hitsEnd = true; }
-	  var inclusiveEnd = state.inclusiveEnd;
+	  var inclusiveEnd = state.inclusive;
 	  var endCondition;
 	  if (end > start) {
 	    endCondition = inclusiveEnd ? currentYieldingValue > end : currentYieldingValue >= end;
@@ -11515,25 +11599,22 @@ var doric = (function (exports) {
 	  } return createIterResultObject(currentYieldingValue, false);
 	});
 
-	var getter = function (fn) {
-	  return { get: fn, set: function () { /* empty */ }, configurable: true, enumerable: false };
+	var addGetter = function (key) {
+	  defineBuiltInAccessor($RangeIterator.prototype, key, {
+	    get: function () {
+	      return getInternalState$5(this)[key];
+	    },
+	    set: function () { /* empty */ },
+	    configurable: true,
+	    enumerable: false
+	  });
 	};
 
 	if (descriptors) {
-	  defineProperties($RangeIterator.prototype, {
-	    start: getter(function () {
-	      return getInternalState$5(this).start;
-	    }),
-	    end: getter(function () {
-	      return getInternalState$5(this).end;
-	    }),
-	    inclusive: getter(function () {
-	      return getInternalState$5(this).inclusiveEnd;
-	    }),
-	    step: getter(function () {
-	      return getInternalState$5(this).step;
-	    })
-	  });
+	  addGetter('start');
+	  addGetter('end');
+	  addGetter('inclusive');
+	  addGetter('step');
 	}
 
 	var numericRangeIterator = $RangeIterator;
@@ -11654,7 +11735,11 @@ var doric = (function (exports) {
 	var DISPOSED = 'disposed';
 	var PENDING = 'pending';
 
-	var ALREADY_DISPOSED = DISPOSABLE_STACK + ' already disposed';
+	var getPendingDisposableStackInternalState = function (stack) {
+	  var internalState = getDisposableStackInternalState(stack);
+	  if (internalState.state == DISPOSED) { throw $ReferenceError(DISPOSABLE_STACK + ' already disposed'); }
+	  return internalState;
+	};
 
 	var $DisposableStack = function DisposableStack() {
 	  setInternalState$9(anInstance(this, DisposableStackPrototype), {
@@ -11696,14 +11781,11 @@ var doric = (function (exports) {
 	    if (thrown) { throw suppressed; }
 	  },
 	  use: function use(value) {
-	    var internalState = getDisposableStackInternalState(this);
-	    if (internalState.state == DISPOSED) { throw $ReferenceError(ALREADY_DISPOSED); }
-	    addDisposableResource(internalState, value, HINT);
+	    addDisposableResource(getPendingDisposableStackInternalState(this), value, HINT);
 	    return value;
 	  },
 	  adopt: function adopt(value, onDispose) {
-	    var internalState = getDisposableStackInternalState(this);
-	    if (internalState.state == DISPOSED) { throw $ReferenceError(ALREADY_DISPOSED); }
+	    var internalState = getPendingDisposableStackInternalState(this);
 	    aCallable(onDispose);
 	    addDisposableResource(internalState, undefined, HINT, function () {
 	      onDispose(value);
@@ -11711,17 +11793,17 @@ var doric = (function (exports) {
 	    return value;
 	  },
 	  defer: function defer(onDispose) {
-	    var internalState = getDisposableStackInternalState(this);
-	    if (internalState.state == DISPOSED) { throw $ReferenceError(ALREADY_DISPOSED); }
+	    var internalState = getPendingDisposableStackInternalState(this);
 	    aCallable(onDispose);
 	    addDisposableResource(internalState, undefined, HINT, onDispose);
 	  },
 	  move: function move() {
-	    var internalState = getDisposableStackInternalState(this);
-	    if (internalState.state == DISPOSED) { throw $ReferenceError(ALREADY_DISPOSED); }
+	    var internalState = getPendingDisposableStackInternalState(this);
 	    var newDisposableStack = new $DisposableStack();
 	    getDisposableStackInternalState(newDisposableStack).stack = internalState.stack;
 	    internalState.stack = [];
+	    internalState.state = DISPOSED;
+	    if (!descriptors) { this.disposed = true; }
 	    return newDisposableStack;
 	  }
 	});
@@ -11778,6 +11860,19 @@ var doric = (function (exports) {
 	_export({ target: 'Function', stat: true, forced: true }, {
 	  isConstructor: isConstructor
 	});
+
+	var defineProperty$4 = objectDefineProperty.f;
+
+	var METADATA = wellKnownSymbol('metadata');
+	var FunctionPrototype = Function.prototype;
+
+	// Function.prototype[@@metadata]
+	// https://github.com/tc39/proposal-decorator-metadata
+	if (FunctionPrototype[METADATA] === undefined) {
+	  defineProperty$4(FunctionPrototype, METADATA, {
+	    value: null
+	  });
+	}
 
 	// `Function.prototype.unThis` method
 	// https://github.com/js-choi/proposal-function-demethodize
@@ -11898,8 +11993,10 @@ var doric = (function (exports) {
 	// `Iterator.prototype.map` method
 	// https://github.com/tc39/proposal-iterator-helpers
 	var iteratorMap = function map(mapper) {
+	  anObject(this);
+	  aCallable(mapper);
 	  return new IteratorProxy$5(getIteratorDirect(this), {
-	    mapper: aCallable(mapper)
+	    mapper: mapper
 	  });
 	};
 
@@ -11959,8 +12056,10 @@ var doric = (function (exports) {
 	// https://github.com/tc39/proposal-iterator-helpers
 	_export({ target: 'Iterator', proto: true, real: true }, {
 	  drop: function drop(limit) {
+	    anObject(this);
+	    var remaining = toPositiveInteger(notANan(+limit));
 	    return new IteratorProxy$4(getIteratorDirect(this), {
-	      remaining: toPositiveInteger(notANan(+limit))
+	      remaining: remaining
 	    });
 	  }
 	});
@@ -11969,9 +12068,10 @@ var doric = (function (exports) {
 	// https://github.com/tc39/proposal-iterator-helpers
 	_export({ target: 'Iterator', proto: true, real: true }, {
 	  every: function every(predicate) {
+	    anObject(this);
+	    aCallable(predicate);
 	    var record = getIteratorDirect(this);
 	    var counter = 0;
-	    aCallable(predicate);
 	    return !iterate(record, function (value, stop) {
 	      if (!predicate(value, counter++)) { return stop(); }
 	    }, { IS_RECORD: true, INTERRUPTED: true }).stopped;
@@ -11996,8 +12096,10 @@ var doric = (function (exports) {
 	// https://github.com/tc39/proposal-iterator-helpers
 	_export({ target: 'Iterator', proto: true, real: true }, {
 	  filter: function filter(predicate) {
+	    anObject(this);
+	    aCallable(predicate);
 	    return new IteratorProxy$3(getIteratorDirect(this), {
-	      predicate: aCallable(predicate)
+	      predicate: predicate
 	    });
 	  }
 	});
@@ -12006,9 +12108,10 @@ var doric = (function (exports) {
 	// https://github.com/tc39/proposal-iterator-helpers
 	_export({ target: 'Iterator', proto: true, real: true }, {
 	  find: function find(predicate) {
+	    anObject(this);
+	    aCallable(predicate);
 	    var record = getIteratorDirect(this);
 	    var counter = 0;
-	    aCallable(predicate);
 	    return iterate(record, function (value, stop) {
 	      if (predicate(value, counter++)) { return stop(value); }
 	    }, { IS_RECORD: true, INTERRUPTED: true }).result;
@@ -12018,7 +12121,7 @@ var doric = (function (exports) {
 	var getIteratorFlattenable = function (obj) {
 	  var object = anObject(obj);
 	  var method = getIteratorMethod(object);
-	  return getIteratorDirect(anObject(isCallable(method) ? functionCall(method, object) : object));
+	  return getIteratorDirect(anObject(method !== undefined ? functionCall(method, object) : object));
 	};
 
 	var IteratorProxy$2 = iteratorCreateProxy(function () {
@@ -12047,8 +12150,10 @@ var doric = (function (exports) {
 	// https://github.com/tc39/proposal-iterator-helpers
 	_export({ target: 'Iterator', proto: true, real: true }, {
 	  flatMap: function flatMap(mapper) {
+	    anObject(this);
+	    aCallable(mapper);
 	    return new IteratorProxy$2(getIteratorDirect(this), {
-	      mapper: aCallable(mapper),
+	      mapper: mapper,
 	      inner: null
 	    });
 	  }
@@ -12058,9 +12163,10 @@ var doric = (function (exports) {
 	// https://github.com/tc39/proposal-iterator-helpers
 	_export({ target: 'Iterator', proto: true, real: true }, {
 	  forEach: function forEach(fn) {
+	    anObject(this);
+	    aCallable(fn);
 	    var record = getIteratorDirect(this);
 	    var counter = 0;
-	    aCallable(fn);
 	    iterate(record, function (value) {
 	      fn(value, counter++);
 	    }, { IS_RECORD: true });
@@ -12124,8 +12230,9 @@ var doric = (function (exports) {
 	// https://github.com/tc39/proposal-iterator-helpers
 	_export({ target: 'Iterator', proto: true, real: true }, {
 	  reduce: function reduce(reducer /* , initialValue */) {
-	    var record = getIteratorDirect(this);
+	    anObject(this);
 	    aCallable(reducer);
+	    var record = getIteratorDirect(this);
 	    var noInitial = arguments.length < 2;
 	    var accumulator = noInitial ? undefined : arguments[1];
 	    var counter = 0;
@@ -12147,9 +12254,10 @@ var doric = (function (exports) {
 	// https://github.com/tc39/proposal-iterator-helpers
 	_export({ target: 'Iterator', proto: true, real: true }, {
 	  some: function some(predicate) {
+	    anObject(this);
+	    aCallable(predicate);
 	    var record = getIteratorDirect(this);
 	    var counter = 0;
-	    aCallable(predicate);
 	    return iterate(record, function (value, stop) {
 	      if (predicate(value, counter++)) { return stop(); }
 	    }, { IS_RECORD: true, INTERRUPTED: true }).stopped;
@@ -12171,20 +12279,22 @@ var doric = (function (exports) {
 	// https://github.com/tc39/proposal-iterator-helpers
 	_export({ target: 'Iterator', proto: true, real: true }, {
 	  take: function take(limit) {
+	    anObject(this);
+	    var remaining = toPositiveInteger(notANan(+limit));
 	    return new IteratorProxy(getIteratorDirect(this), {
-	      remaining: toPositiveInteger(notANan(+limit))
+	      remaining: remaining
 	    });
 	  }
 	});
 
-	var push$b = [].push;
+	var push$d = [].push;
 
 	// `Iterator.prototype.toArray` method
 	// https://github.com/tc39/proposal-iterator-helpers
 	_export({ target: 'Iterator', proto: true, real: true }, {
 	  toArray: function toArray() {
 	    var result = [];
-	    iterate(getIteratorDirect(this), push$b, { that: result, IS_RECORD: true });
+	    iterate(getIteratorDirect(anObject(this)), push$d, { that: result, IS_RECORD: true });
 	    return result;
 	  }
 	});
@@ -12193,7 +12303,7 @@ var doric = (function (exports) {
 	// https://github.com/tc39/proposal-async-iterator-helpers
 	_export({ target: 'Iterator', proto: true, real: true }, {
 	  toAsync: function toAsync() {
-	    return new asyncIteratorWrap(getIteratorDirect(new asyncFromSyncIterator(getIteratorDirect(this))));
+	    return new asyncIteratorWrap(getIteratorDirect(new asyncFromSyncIterator(getIteratorDirect(anObject(this)))));
 	  }
 	});
 
@@ -12284,7 +12394,7 @@ var doric = (function (exports) {
 	var at$1 = functionUncurryThis(''.charAt);
 	var slice$1 = functionUncurryThis(''.slice);
 	var exec$6 = functionUncurryThis(/./.exec);
-	var push$a = functionUncurryThis([].push);
+	var push$c = functionUncurryThis([].push);
 
 	var IS_DIGIT = /^\d$/;
 	var IS_NON_ZERO_DIGIT = /^[1-9]$/;
@@ -12363,31 +12473,21 @@ var doric = (function (exports) {
 	    var i = this.skip(IS_WHITESPACE$1, this.index);
 	    var fork = this.fork(i);
 	    var chr = at$1(source, i);
-	    var result;
-	    if (exec$6(IS_NUMBER_START, chr)) { result = fork.number(); }
-	    else { switch (chr) {
+	    if (exec$6(IS_NUMBER_START, chr)) { return fork.number(); }
+	    switch (chr) {
 	      case '{':
-	        result = fork.object();
-	        break;
+	        return fork.object();
 	      case '[':
-	        result = fork.array();
-	        break;
+	        return fork.array();
 	      case '"':
-	        result = fork.string();
-	        break;
+	        return fork.string();
 	      case 't':
-	        result = fork.keyword(true);
-	        break;
+	        return fork.keyword(true);
 	      case 'f':
-	        result = fork.keyword(false);
-	        break;
+	        return fork.keyword(false);
 	      case 'n':
-	        result = fork.keyword(null);
-	        break;
-	      default:
-	        throw SyntaxError$2('Unexpected character: "' + chr + '" at: ' + i);
-	    } }
-	    return result;
+	        return fork.keyword(null);
+	    } throw SyntaxError$2('Unexpected character: "' + chr + '" at: ' + i);
 	  },
 	  node: function (type, value, start, end, nodes) {
 	    return new Node(value, end, type ? null : slice$1(this.source, start, end), nodes);
@@ -12439,8 +12539,8 @@ var doric = (function (exports) {
 	        break;
 	      }
 	      var result = this.fork(i).parse();
-	      push$a(nodes, result);
-	      push$a(array, result.value);
+	      push$c(nodes, result);
+	      push$c(array, result.value);
 	      i = this.until([',', ']'], result.end);
 	      if (at$1(source, i) == ',') {
 	        expectElement = true;
@@ -12524,12 +12624,12 @@ var doric = (function (exports) {
 	var $SyntaxError$1 = SyntaxError;
 	var parse = getBuiltIn('JSON', 'parse');
 	var $stringify = getBuiltIn('JSON', 'stringify');
-	var create = getBuiltIn('Object', 'create');
+	var create$1 = getBuiltIn('Object', 'create');
 	var freeze$1 = getBuiltIn('Object', 'freeze');
 	var at = functionUncurryThis(''.charAt);
 	var slice = functionUncurryThis(''.slice);
 	var exec$5 = functionUncurryThis(/./.exec);
-	var push$9 = functionUncurryThis([].push);
+	var push$b = functionUncurryThis([].push);
 
 	var MARK = uid();
 	var MARK_LENGTH = MARK.length;
@@ -12547,7 +12647,7 @@ var doric = (function (exports) {
 	    }
 	    var parsed = parse(jsonString);
 	    if (typeof parsed == 'object' && parsed !== null) { throw $SyntaxError$1(ERROR_MESSAGE); }
-	    var obj = create(null);
+	    var obj = create$1(null);
 	    setInternalState$7(obj, { type: 'RawJSON' });
 	    createProperty(obj, 'rawJSON', jsonString);
 	    return freezing ? freeze$1(obj) : obj;
@@ -12565,7 +12665,7 @@ var doric = (function (exports) {
 	    var json = $stringify(text, function (key, value) {
 	      // some old implementations (like WebKit) could pass numbers as keys
 	      var v = isCallable(replacerFunction) ? functionCall(replacerFunction, this, $String(key), value) : value;
-	      return isRawJson(v) ? MARK + (push$9(rawStrings, v.rawJSON) - 1) : v;
+	      return isRawJson(v) ? MARK + (push$b(rawStrings, v.rawJSON) - 1) : v;
 	    }, space);
 
 	    if (typeof json != 'string') { return json; }
@@ -12589,11 +12689,11 @@ var doric = (function (exports) {
 	  }
 	}); }
 
-	var has$b = mapHelpers.has;
+	var has$c = mapHelpers.has;
 
 	// Perform ? RequireInternalSlot(M, [[MapData]])
 	var aMap = function (it) {
-	  has$b(it);
+	  has$c(it);
 	  return it;
 	};
 
@@ -12615,9 +12715,9 @@ var doric = (function (exports) {
 	  }
 	});
 
-	var get$2 = mapHelpers.get;
-	var has$a = mapHelpers.has;
-	var set$6 = mapHelpers.set;
+	var get$3 = mapHelpers.get;
+	var has$b = mapHelpers.has;
+	var set$7 = mapHelpers.set;
 
 	// `Map.prototype.emplace` method
 	// https://github.com/tc39/proposal-upsert
@@ -12625,15 +12725,15 @@ var doric = (function (exports) {
 	  emplace: function emplace(key, handler) {
 	    var map = aMap(this);
 	    var value, inserted;
-	    if (has$a(map, key)) {
-	      value = get$2(map, key);
+	    if (has$b(map, key)) {
+	      value = get$3(map, key);
 	      if ('update' in handler) {
 	        value = handler.update(value, key, map);
-	        set$6(map, key, value);
+	        set$7(map, key, value);
 	      } return value;
 	    }
 	    inserted = handler.insert(key, map);
-	    set$6(map, key, inserted);
+	    set$7(map, key, inserted);
 	    return inserted;
 	  }
 	});
@@ -12651,7 +12751,7 @@ var doric = (function (exports) {
 	});
 
 	var Map$7 = mapHelpers.Map;
-	var set$5 = mapHelpers.set;
+	var set$6 = mapHelpers.set;
 
 	// `Map.prototype.filter` method
 	// https://github.com/tc39/proposal-collection-methods
@@ -12661,7 +12761,7 @@ var doric = (function (exports) {
 	    var boundFunction = functionBindContext(callbackfn, arguments.length > 1 ? arguments[1] : undefined);
 	    var newMap = new Map$7();
 	    mapIterate(map, function (value, key) {
-	      if (boundFunction(value, key, map)) { set$5(newMap, key, value); }
+	      if (boundFunction(value, key, map)) { set$6(newMap, key, value); }
 	    });
 	    return newMap;
 	  }
@@ -12701,7 +12801,7 @@ var doric = (function (exports) {
 
 
 
-	var push$8 = [].push;
+	var push$a = [].push;
 
 	var collectionFrom = function from(source /* , mapFn, thisArg */) {
 	  var length = arguments.length;
@@ -12716,10 +12816,10 @@ var doric = (function (exports) {
 	    n = 0;
 	    boundFunction = functionBindContext(mapFn, length > 2 ? arguments[2] : undefined);
 	    iterate(source, function (nextItem) {
-	      functionCall(push$8, array, boundFunction(nextItem, n++));
+	      functionCall(push$a, array, boundFunction(nextItem, n++));
 	    });
 	  } else {
-	    iterate(source, push$8, { that: array });
+	    iterate(source, push$a, { that: array });
 	  }
 	  return new this(array);
 	};
@@ -12731,25 +12831,25 @@ var doric = (function (exports) {
 	});
 
 	var Map$6 = mapHelpers.Map;
-
-	var push$7 = functionUncurryThis([].push);
+	var has$a = mapHelpers.has;
+	var get$2 = mapHelpers.get;
+	var set$5 = mapHelpers.set;
+	var push$9 = functionUncurryThis([].push);
 
 	// `Map.groupBy` method
-	// https://github.com/tc39/proposal-collection-methods
+	// https://github.com/tc39/proposal-array-grouping
 	_export({ target: 'Map', stat: true, forced: true }, {
-	  groupBy: function groupBy(iterable, keyDerivative) {
-	    var C = isCallable(this) ? this : Map$6;
-	    var newMap = new C();
-	    aCallable(keyDerivative);
-	    var has = aCallable(newMap.has);
-	    var get = aCallable(newMap.get);
-	    var set = aCallable(newMap.set);
-	    iterate(iterable, function (element) {
-	      var derivedKey = keyDerivative(element);
-	      if (!functionCall(has, newMap, derivedKey)) { functionCall(set, newMap, derivedKey, [element]); }
-	      else { push$7(functionCall(get, newMap, derivedKey), element); }
+	  groupBy: function groupBy(items, callbackfn) {
+	    requireObjectCoercible(items);
+	    aCallable(callbackfn);
+	    var map = new Map$6();
+	    var k = 0;
+	    iterate(items, function (value) {
+	      var key = callbackfn(value, k++);
+	      if (!has$a(map, key)) { set$5(map, key, [value]); }
+	      else { push$9(get$2(map, key), value); }
 	    });
-	    return newMap;
+	    return map;
 	  }
 	});
 
@@ -13141,7 +13241,7 @@ var doric = (function (exports) {
 	var $SyntaxError = SyntaxError;
 	var $TypeError$5 = TypeError;
 	var valid = /^[\da-z]+$/;
-	var charAt$9 = functionUncurryThis(''.charAt);
+	var charAt$8 = functionUncurryThis(''.charAt);
 	var exec$4 = functionUncurryThis(valid.exec);
 	var numberToString$1 = functionUncurryThis(1.0.toString);
 	var stringSlice$4 = functionUncurryThis(''.slice);
@@ -13154,7 +13254,7 @@ var doric = (function (exports) {
 	    var R, mathNum;
 	    if (typeof string != 'string') { throw $TypeError$5(INVALID_NUMBER_REPRESENTATION); }
 	    if (!string.length) { throw $SyntaxError(INVALID_NUMBER_REPRESENTATION); }
-	    if (charAt$9(string, 0) == '-') {
+	    if (charAt$8(string, 0) == '-') {
 	      sign = -1;
 	      string = stringSlice$4(string, 1);
 	      if (!string.length) { throw $SyntaxError(INVALID_NUMBER_REPRESENTATION); }
@@ -13241,6 +13341,28 @@ var doric = (function (exports) {
 	_export({ target: 'Object', stat: true, forced: true }, {
 	  iterateValues: function iterateValues(object) {
 	    return new objectIterator(object, 'values');
+	  }
+	});
+
+	var create = getBuiltIn('Object', 'create');
+	var push$8 = functionUncurryThis([].push);
+
+	// `Object.groupBy` method
+	// https://github.com/tc39/proposal-array-grouping
+	_export({ target: 'Object', stat: true, forced: true }, {
+	  groupBy: function groupBy(items, callbackfn) {
+	    requireObjectCoercible(items);
+	    aCallable(callbackfn);
+	    var obj = create(null);
+	    var k = 0;
+	    iterate(items, function (value) {
+	      var key = toPropertyKey(callbackfn(value, k++));
+	      // in some IE versions, `hasOwnProperty` returns incorrect result on integer keys
+	      // but since it's a `null` prototype object, we can safely use `in`
+	      if (key in obj) { push$8(obj[key], value); }
+	      else { obj[key] = [value]; }
+	    });
+	    return obj;
 	  }
 	});
 
@@ -13505,6 +13627,19 @@ var doric = (function (exports) {
 	  }
 	});
 
+	// `Promise.withResolvers` method
+	// https://github.com/tc39/proposal-promise-with-resolvers
+	_export({ target: 'Promise', stat: true, forced: true }, {
+	  withResolvers: function withResolvers() {
+	    var promiseCapability = newPromiseCapability$1.f(this);
+	    return {
+	      promise: promiseCapability.promise,
+	      resolve: promiseCapability.resolve,
+	      reject: promiseCapability.reject
+	    };
+	  }
+	});
+
 	// TODO: in core-js@4, move /modules/ dependencies to public entries for better optimization by tools like `preset-env`
 
 
@@ -13514,7 +13649,7 @@ var doric = (function (exports) {
 
 	var Map$2 = getBuiltIn('Map');
 	var WeakMap$2 = getBuiltIn('WeakMap');
-	var push$6 = functionUncurryThis([].push);
+	var push$7 = functionUncurryThis([].push);
 
 	var metadata = shared('metadata');
 	var store$1 = metadata.store || (metadata.store = new WeakMap$2());
@@ -13549,7 +13684,7 @@ var doric = (function (exports) {
 	var ordinaryOwnMetadataKeys$2 = function (target, targetKey) {
 	  var metadataMap = getOrCreateMetadataMap$1(target, targetKey, false);
 	  var keys = [];
-	  if (metadataMap) { metadataMap.forEach(function (_, key) { push$6(keys, key); }); }
+	  if (metadataMap) { metadataMap.forEach(function (_, key) { push$7(keys, key); }); }
 	  return keys;
 	};
 
@@ -13756,9 +13891,7 @@ var doric = (function (exports) {
 	  add: functionUncurryThis(SetPrototype$1.add),
 	  has: functionUncurryThis(SetPrototype$1.has),
 	  remove: functionUncurryThis(SetPrototype$1['delete']),
-	  proto: SetPrototype$1,
-	  $has: SetPrototype$1.has,
-	  $keys: SetPrototype$1.keys
+	  proto: SetPrototype$1
 	};
 
 	var has$8 = setHelpers.has;
@@ -13804,12 +13937,12 @@ var doric = (function (exports) {
 
 	var Set$7 = setHelpers.Set;
 	var SetPrototype = setHelpers.proto;
-	var forEach = functionUncurryThis(SetPrototype.forEach);
+	var forEach$2 = functionUncurryThis(SetPrototype.forEach);
 	var keys = functionUncurryThis(SetPrototype.keys);
 	var next = keys(new Set$7()).next;
 
 	var setIterate = function (set, fn, interruptible) {
-	  return interruptible ? iterateSimple(keys(set), fn, next) : forEach(set, fn);
+	  return interruptible ? iterateSimple(keys(set), fn, next) : forEach$2(set, fn);
 	};
 
 	var Set$6 = setHelpers.Set;
@@ -13935,7 +14068,7 @@ var doric = (function (exports) {
 	// fallback old -> new set methods proposal arguments
 	var toSetLike = function (it) {
 	  if (isSetLike(it)) { return it; }
-	  if (isIterable(it)) { return new Set$5(it); }
+	  return isIterable(it) ? new Set$5(it) : it;
 	};
 
 	// `Set.prototype.difference` method
@@ -13998,12 +14131,6 @@ var doric = (function (exports) {
 	var Set$3 = setHelpers.Set;
 	var add$4 = setHelpers.add;
 	var has$6 = setHelpers.has;
-	var nativeHas = setHelpers.$has;
-	var nativeKeys = setHelpers.$keys;
-
-	var isNativeSetRecord = function (record) {
-	  return record.has === nativeHas && record.keys === nativeKeys;
-	};
 
 	// `Set.prototype.intersection` method
 	// https://github.com/tc39/proposal-set-methods
@@ -14012,18 +14139,9 @@ var doric = (function (exports) {
 	  var otherRec = getSetRecord(other);
 	  var result = new Set$3();
 
-	  // observable side effects
-	  if (!isNativeSetRecord(otherRec) && setSize(O) > otherRec.size) {
+	  if (setSize(O) > otherRec.size) {
 	    iterateSimple(otherRec.getIterator(), function (e) {
 	      if (has$6(O, e)) { add$4(result, e); }
-	    });
-
-	    if (setSize(result) < 2) { return result; }
-
-	    var disordered = result;
-	    result = new Set$3();
-	    setIterate(O, function (e) {
-	      if (has$6(disordered, e)) { add$4(result, e); }
 	    });
 	  } else {
 	    setIterate(O, function (e) {
@@ -14034,9 +14152,14 @@ var doric = (function (exports) {
 	  return result;
 	};
 
+	var INCORRECT = !setMethodAcceptSetLike('intersection') || fails(function () {
+	  // eslint-disable-next-line es/no-array-from, es/no-set -- testing
+	  return Array.from(new Set([1, 2, 3]).intersection(new Set([3, 2]))) != '3,2';
+	});
+
 	// `Set.prototype.intersection` method
 	// https://github.com/tc39/proposal-set-methods
-	_export({ target: 'Set', proto: true, real: true, forced: !setMethodAcceptSetLike('intersection') }, {
+	_export({ target: 'Set', proto: true, real: true, forced: INCORRECT }, {
 	  intersection: setIntersection
 	});
 
@@ -14145,7 +14268,7 @@ var doric = (function (exports) {
 	});
 
 	var arrayJoin = functionUncurryThis([].join);
-	var push$5 = functionUncurryThis([].push);
+	var push$6 = functionUncurryThis([].push);
 
 	// `Set.prototype.join` method
 	// https://github.com/tc39/proposal-collection-methods
@@ -14155,7 +14278,7 @@ var doric = (function (exports) {
 	    var sep = separator === undefined ? ',' : toString_1(separator);
 	    var array = [];
 	    setIterate(set, function (value) {
-	      push$5(array, value);
+	      push$6(array, value);
 	    });
 	    return arrayJoin(array, sep);
 	  }
@@ -14285,7 +14408,7 @@ var doric = (function (exports) {
 
 	// TODO: Remove from `core-js@4`
 
-	var charAt$8 = stringMultibyte.charAt;
+	var charAt$7 = stringMultibyte.charAt;
 
 
 
@@ -14298,13 +14421,13 @@ var doric = (function (exports) {
 	    var len = S.length;
 	    var relativeIndex = toIntegerOrInfinity(index);
 	    var k = relativeIndex >= 0 ? relativeIndex : len + relativeIndex;
-	    return (k < 0 || k >= len) ? undefined : charAt$8(S, k);
+	    return (k < 0 || k >= len) ? undefined : charAt$7(S, k);
 	  }
 	});
 
 	var $TypeError$2 = TypeError;
-	var push$4 = functionUncurryThis([].push);
-	var join$4 = functionUncurryThis([].join);
+	var push$5 = functionUncurryThis([].push);
+	var join$3 = functionUncurryThis([].join);
 
 	// `String.cooked` method
 	// https://tc39.es/proposal-string-cooked/
@@ -14320,9 +14443,9 @@ var doric = (function (exports) {
 	  while (true) {
 	    var nextVal = cookedTemplate[i++];
 	    if (nextVal === undefined) { throw $TypeError$2('Incorrect template'); }
-	    push$4(elements, toString_1(nextVal));
-	    if (i === literalSegments) { return join$4(elements, ''); }
-	    if (i < argumentsLength) { push$4(elements, toString_1(arguments$1[i])); }
+	    push$5(elements, toString_1(nextVal));
+	    if (i === literalSegments) { return join$3(elements, ''); }
+	    if (i < argumentsLength) { push$5(elements, toString_1(arguments$1[i])); }
 	  }
 	};
 
@@ -14333,7 +14456,7 @@ var doric = (function (exports) {
 	});
 
 	var codeAt$1 = stringMultibyte.codeAt;
-	var charAt$7 = stringMultibyte.charAt;
+	var charAt$6 = stringMultibyte.charAt;
 	var STRING_ITERATOR = 'String Iterator';
 	var setInternalState$3 = internalState.set;
 	var getInternalState$1 = internalState.getterFor(STRING_ITERATOR);
@@ -14351,7 +14474,7 @@ var doric = (function (exports) {
 	  var index = state.index;
 	  var point;
 	  if (index >= string.length) { return createIterResultObject(undefined, true); }
-	  point = charAt$7(string, index);
+	  point = charAt$6(string, index);
 	  state.index += point.length;
 	  return createIterResultObject({ codePoint: codeAt$1(point, 0), position: index }, false);
 	});
@@ -14370,8 +14493,8 @@ var doric = (function (exports) {
 
 	var fromCharCode$2 = String.fromCharCode;
 	var fromCodePoint = getBuiltIn('String', 'fromCodePoint');
-	var charAt$6 = functionUncurryThis(''.charAt);
-	var charCodeAt$4 = functionUncurryThis(''.charCodeAt);
+	var charAt$5 = functionUncurryThis(''.charAt);
+	var charCodeAt$2 = functionUncurryThis(''.charCodeAt);
 	var stringIndexOf = functionUncurryThis(''.indexOf);
 	var stringSlice$3 = functionUncurryThis(''.slice);
 
@@ -14383,7 +14506,7 @@ var doric = (function (exports) {
 	var UPPER_F_CODE = 70;
 
 	var isDigit = function (str, index) {
-	  var c = charCodeAt$4(str, index);
+	  var c = charCodeAt$2(str, index);
 	  return c >= ZERO_CODE && c <= NINE_CODE;
 	};
 
@@ -14391,7 +14514,7 @@ var doric = (function (exports) {
 	  if (end >= str.length) { return -1; }
 	  var n = 0;
 	  for (; index < end; index++) {
-	    var c = hexToInt(charCodeAt$4(str, index));
+	    var c = hexToInt(charCodeAt$2(str, index));
 	    if (c === -1) { return -1; }
 	    n = n * 16 + c;
 	  }
@@ -14417,7 +14540,7 @@ var doric = (function (exports) {
 	    // This can't actually happen in a tagged template literal, but could happen if you manually
 	    // invoked the tag with an array.
 	    if (++i === raw.length) { return; }
-	    var next = charAt$6(raw, i++);
+	    var next = charAt$5(raw, i++);
 	    switch (next) {
 	      // Escaped control codes need to be individually processed.
 	      case 'b':
@@ -14441,7 +14564,7 @@ var doric = (function (exports) {
 	      // Escaped line terminators just skip the char.
 	      case '\r':
 	        // Treat `\r\n` as a single terminator.
-	        if (i < raw.length && charAt$6(raw, i) === '\n') { ++i; }
+	        if (i < raw.length && charAt$5(raw, i) === '\n') { ++i; }
 	      // break omitted
 	      case '\n':
 	      case '\u2028':
@@ -14462,7 +14585,7 @@ var doric = (function (exports) {
 	      // Unicode escapes contain either 4 chars, or an unlimited number between `{` and `}`.
 	      // The hex value must not overflow 0x10FFFF.
 	      case 'u':
-	        if (i < raw.length && charAt$6(raw, i) === '{') {
+	        if (i < raw.length && charAt$5(raw, i) === '{') {
 	          var end = stringIndexOf(raw, '}', ++i);
 	          if (end === -1) { return; }
 	          n = parseHex(raw, i, end);
@@ -14498,14 +14621,14 @@ var doric = (function (exports) {
 	globalDedentRegistry.set = globalDedentRegistry.set;
 	/* eslint-enable no-self-assign -- prototype methods protection */
 
-	var $Array$1 = Array;
+	var $Array = Array;
 	var $TypeError$1 = TypeError;
 	// eslint-disable-next-line es/no-object-freeze -- safe
 	var freeze = Object.freeze || Object;
 	// eslint-disable-next-line es/no-object-isfrozen -- safe
 	var isFrozen = Object.isFrozen;
 	var min$1 = Math.min;
-	var charAt$5 = functionUncurryThis(''.charAt);
+	var charAt$4 = functionUncurryThis(''.charAt);
 	var stringSlice$2 = functionUncurryThis(''.slice);
 	var split$3 = functionUncurryThis(''.split);
 	var exec$3 = functionUncurryThis(/./.exec);
@@ -14535,8 +14658,8 @@ var doric = (function (exports) {
 	var dedentStringsArray = function (template) {
 	  var t = toObject(template);
 	  var length = lengthOfArrayLike(t);
-	  var blocks = $Array$1(length);
-	  var dedented = $Array$1(length);
+	  var blocks = $Array(length);
+	  var dedented = $Array(length);
 	  var i = 0;
 	  var lines, common;
 
@@ -14593,13 +14716,13 @@ var doric = (function (exports) {
 	  if (b === undefined || a === b) { return a; }
 	  var i = 0;
 	  for (var len = min$1(a.length, b.length); i < len; i++) {
-	    if (charAt$5(a, i) !== charAt$5(b, i)) { break; }
+	    if (charAt$4(a, i) !== charAt$4(b, i)) { break; }
 	  }
 	  return stringSlice$2(a, 0, i);
 	};
 
 	var cookStrings = function (raw) {
-	  for (var i = 0, length = raw.length, result = $Array$1(length); i < length; i++) {
+	  for (var i = 0, length = raw.length, result = $Array(length); i < length; i++) {
 	    result[i] = stringParse(raw[i]);
 	  } return result;
 	};
@@ -14624,59 +14747,6 @@ var doric = (function (exports) {
 	  }
 	});
 
-	var charCodeAt$3 = functionUncurryThis(''.charCodeAt);
-
-	// `String.prototype.isWellFormed` method
-	// https://github.com/tc39/proposal-is-usv-string
-	_export({ target: 'String', proto: true }, {
-	  isWellFormed: function isWellFormed() {
-	    var S = toString_1(requireObjectCoercible(this));
-	    var length = S.length;
-	    for (var i = 0; i < length; i++) {
-	      var charCode = charCodeAt$3(S, i);
-	      // single UTF-16 code unit
-	      if ((charCode & 0xF800) != 0xD800) { continue; }
-	      // unpaired surrogate
-	      if (charCode >= 0xDC00 || ++i >= length || (charCodeAt$3(S, i) & 0xFC00) != 0xDC00) { return false; }
-	    } return true;
-	  }
-	});
-
-	var $Array = Array;
-	var charAt$4 = functionUncurryThis(''.charAt);
-	var charCodeAt$2 = functionUncurryThis(''.charCodeAt);
-	var join$3 = functionUncurryThis([].join);
-	var $toWellFormed = ''.toWellFormed;
-	var REPLACEMENT_CHARACTER = '\uFFFD';
-
-	// Safari bug
-	var TO_STRING_CONVERSION_BUG = $toWellFormed && fails(function () {
-	  return functionCall($toWellFormed, 1) !== '1';
-	});
-
-	// `String.prototype.toWellFormed` method
-	// https://github.com/tc39/proposal-is-usv-string
-	_export({ target: 'String', proto: true, forced: TO_STRING_CONVERSION_BUG }, {
-	  toWellFormed: function toWellFormed() {
-	    var S = toString_1(requireObjectCoercible(this));
-	    if (TO_STRING_CONVERSION_BUG) { return functionCall($toWellFormed, S); }
-	    var length = S.length;
-	    var result = $Array(length);
-	    for (var i = 0; i < length; i++) {
-	      var charCode = charCodeAt$2(S, i);
-	      // single UTF-16 code unit
-	      if ((charCode & 0xF800) != 0xD800) { result[i] = charAt$4(S, i); }
-	      // unpaired surrogate
-	      else if (charCode >= 0xDC00 || i + 1 >= length || (charCodeAt$2(S, i + 1) & 0xFC00) != 0xDC00) { result[i] = REPLACEMENT_CHARACTER; }
-	      // surrogate pair
-	      else {
-	        result[i] = charAt$4(S, i);
-	        result[++i] = charAt$4(S, i);
-	      }
-	    } return join$3(result, '');
-	  }
-	});
-
 	// `Symbol.asyncDispose` well-known symbol
 	// https://github.com/tc39/proposal-async-explicit-resource-management
 	wellKnownSymbolDefine('asyncDispose');
@@ -14689,20 +14759,30 @@ var doric = (function (exports) {
 	var keyFor = Symbol$2.keyFor;
 	var thisSymbolValue$1 = functionUncurryThis(Symbol$2.prototype.valueOf);
 
-	// `Symbol.isRegistered` method
-	// https://tc39.es/proposal-symbol-predicates/#sec-symbol-isregistered
-	_export({ target: 'Symbol', stat: true }, {
-	  isRegistered: function isRegistered(value) {
-	    try {
-	      return keyFor(thisSymbolValue$1(value)) !== undefined;
-	    } catch (error) {
-	      return false;
-	    }
+	// `Symbol.isRegisteredSymbol` method
+	// https://tc39.es/proposal-symbol-predicates/#sec-symbol-isregisteredsymbol
+	var symbolIsRegistered = Symbol$2.isRegisteredSymbol || function isRegisteredSymbol(value) {
+	  try {
+	    return keyFor(thisSymbolValue$1(value)) !== undefined;
+	  } catch (error) {
+	    return false;
 	  }
+	};
+
+	// `Symbol.isRegisteredSymbol` method
+	// https://tc39.es/proposal-symbol-predicates/#sec-symbol-isregisteredsymbol
+	_export({ target: 'Symbol', stat: true }, {
+	  isRegisteredSymbol: symbolIsRegistered
+	});
+
+	// `Symbol.isRegistered` method
+	// obsolete version of https://tc39.es/proposal-symbol-predicates/#sec-symbol-isregisteredsymbol
+	_export({ target: 'Symbol', stat: true, name: 'isRegisteredSymbol' }, {
+	  isRegistered: symbolIsRegistered
 	});
 
 	var Symbol$1 = getBuiltIn('Symbol');
-	var $isWellKnown = Symbol$1.isWellKnown;
+	var $isWellKnownSymbol = Symbol$1.isWellKnownSymbol;
 	var getOwnPropertyNames = getBuiltIn('Object', 'getOwnPropertyNames');
 	var thisSymbolValue = functionUncurryThis(Symbol$1.prototype.valueOf);
 	var WellKnownSymbolsStore = shared('wks');
@@ -14715,20 +14795,32 @@ var doric = (function (exports) {
 	  } catch (error) { /* empty */ }
 	}
 
-	// `Symbol.isWellKnown` method
-	// https://tc39.es/proposal-symbol-predicates/#sec-symbol-iswellknown
+	// `Symbol.isWellKnownSymbol` method
+	// https://tc39.es/proposal-symbol-predicates/#sec-symbol-iswellknownsymbol
+	// We should patch it for newly added well-known symbols. If it's not required, this module just will not be injected
+	var symbolIsWellKnown = function isWellKnownSymbol(value) {
+	  if ($isWellKnownSymbol && $isWellKnownSymbol(value)) { return true; }
+	  try {
+	    var symbol = thisSymbolValue(value);
+	    for (var j = 0, keys = getOwnPropertyNames(WellKnownSymbolsStore), keysLength = keys.length; j < keysLength; j++) {
+	      if (WellKnownSymbolsStore[keys[j]] == symbol) { return true; }
+	    }
+	  } catch (error) { /* empty */ }
+	  return false;
+	};
+
+	// `Symbol.isWellKnownSymbol` method
+	// https://tc39.es/proposal-symbol-predicates/#sec-symbol-iswellknownsymbol
 	// We should patch it for newly added well-known symbols. If it's not required, this module just will not be injected
 	_export({ target: 'Symbol', stat: true, forced: true }, {
-	  isWellKnown: function isWellKnown(value) {
-	    if ($isWellKnown && $isWellKnown(value)) { return true; }
-	    try {
-	      var symbol = thisSymbolValue(value);
-	      for (var j = 0, keys = getOwnPropertyNames(WellKnownSymbolsStore), keysLength = keys.length; j < keysLength; j++) {
-	        if (WellKnownSymbolsStore[keys[j]] == symbol) { return true; }
-	      }
-	    } catch (error) { /* empty */ }
-	    return false;
-	  }
+	  isWellKnownSymbol: symbolIsWellKnown
+	});
+
+	// `Symbol.isWellKnown` method
+	// obsolete version of https://tc39.es/proposal-symbol-predicates/#sec-symbol-iswellknownsymbol
+	// We should patch it for newly added well-known symbols. If it's not required, this module just will not be injected
+	_export({ target: 'Symbol', stat: true, name: 'isWellKnownSymbol', forced: true }, {
+	  isWellKnown: symbolIsWellKnown
 	});
 
 	// `Symbol.matcher` well-known symbol
@@ -15615,7 +15707,7 @@ var doric = (function (exports) {
 	var Set$1 = setHelpers.Set;
 	var setAdd = setHelpers.add;
 	var objectKeys = getBuiltIn('Object', 'keys');
-	var push$3 = functionUncurryThis([].push);
+	var push$4 = functionUncurryThis([].push);
 	var thisBooleanValue = functionUncurryThis(true.valueOf);
 	var thisNumberValue = functionUncurryThis(1.0.valueOf);
 	var thisStringValue = functionUncurryThis(''.valueOf);
@@ -15692,6 +15784,11 @@ var doric = (function (exports) {
 	  throw new DOMException((action || 'Cloning') + ' of ' + type + ' cannot be properly polyfilled in this engine', DATA_CLONE_ERROR);
 	};
 
+	var tryNativeRestrictedStructuredClone = function (value, type) {
+	  if (!nativeRestrictedStructuredClone) { throwUnpolyfillable(type); }
+	  return nativeRestrictedStructuredClone(value);
+	};
+
 	var createDataTransfer = function () {
 	  var dataTransfer;
 	  try {
@@ -15714,7 +15811,7 @@ var doric = (function (exports) {
 
 	  var type = classof(value);
 	  var deep = false;
-	  var C, name, cloned, dataTransfer, i, length, keys, key, source, target;
+	  var C, name, cloned, dataTransfer, i, length, keys, key, source, target, options;
 
 	  switch (type) {
 	    case 'Array':
@@ -15812,10 +15909,19 @@ var doric = (function (exports) {
 	          structuredCloneInternal(value.p4, map)
 	        );
 	      } catch (error) {
-	        if (nativeRestrictedStructuredClone) {
-	          cloned = nativeRestrictedStructuredClone(value);
-	        } else { throwUnpolyfillable(type); }
+	        cloned = tryNativeRestrictedStructuredClone(value, type);
 	      }
+	      break;
+	    case 'File':
+	      if (nativeRestrictedStructuredClone) { try {
+	        cloned = nativeRestrictedStructuredClone(value);
+	        // NodeJS 20.0.0 bug, https://github.com/nodejs/node/issues/47612
+	        if (classof(cloned) !== type) { cloned = undefined; }
+	      } catch (error$1) { /* empty */ } }
+	      if (!cloned) { try {
+	        cloned = new File([value], value.name, value);
+	      } catch (error$2) { /* empty */ } }
+	      if (!cloned) { throwUnpolyfillable(type); }
 	      break;
 	    case 'FileList':
 	      dataTransfer = createDataTransfer();
@@ -15824,9 +15930,7 @@ var doric = (function (exports) {
 	          dataTransfer.items.add(structuredCloneInternal(value[i], map));
 	        }
 	        cloned = dataTransfer.files;
-	      } else if (nativeRestrictedStructuredClone) {
-	        cloned = nativeRestrictedStructuredClone(value);
-	      } else { throwUnpolyfillable(type); }
+	      } else { cloned = tryNativeRestrictedStructuredClone(value, type); }
 	      break;
 	    case 'ImageData':
 	      // Safari 9 ImageData is a constructor, but typeof ImageData is 'object'
@@ -15837,10 +15941,8 @@ var doric = (function (exports) {
 	          value.height,
 	          { colorSpace: value.colorSpace }
 	        );
-	      } catch (error$1) {
-	        if (nativeRestrictedStructuredClone) {
-	          cloned = nativeRestrictedStructuredClone(value);
-	        } else { throwUnpolyfillable(type); }
+	      } catch (error$3) {
+	        cloned = tryNativeRestrictedStructuredClone(value, type);
 	      } break;
 	    default:
 	      if (nativeRestrictedStructuredClone) {
@@ -15869,18 +15971,19 @@ var doric = (function (exports) {
 	          if (!C && typeof value.slice != 'function') { throwUnpolyfillable(type); }
 	          // detached buffers throws in `DataView` and `.slice`
 	          try {
-	            if (typeof value.slice == 'function') {
+	            if (typeof value.slice == 'function' && !value.resizable) {
 	              cloned = value.slice(0);
 	            } else {
 	              length = value.byteLength;
-	              cloned = new ArrayBuffer(length);
+	              options = 'maxByteLength' in value ? { maxByteLength: value.maxByteLength } : undefined;
+	              cloned = new ArrayBuffer(length, options);
 	              source = new C(value);
 	              target = new C(cloned);
 	              for (i = 0; i < length; i++) {
 	                target.setUint8(i, source.getUint8(i));
 	              }
 	            }
-	          } catch (error$2) {
+	          } catch (error$4) {
 	            throw new DOMException('ArrayBuffer is detached', DATA_CLONE_ERROR);
 	          } break;
 	        case 'SharedArrayBuffer':
@@ -15890,7 +15993,7 @@ var doric = (function (exports) {
 	        case 'Blob':
 	          try {
 	            cloned = value.slice(0, value.size, value.type);
-	          } catch (error$3) {
+	          } catch (error$5) {
 	            throwUnpolyfillable(type);
 	          } break;
 	        case 'DOMPoint':
@@ -15900,7 +16003,7 @@ var doric = (function (exports) {
 	            cloned = C.fromPoint
 	              ? C.fromPoint(value)
 	              : new C(value.x, value.y, value.z, value.w);
-	          } catch (error$4) {
+	          } catch (error$6) {
 	            throwUnpolyfillable(type);
 	          } break;
 	        case 'DOMRect':
@@ -15910,7 +16013,7 @@ var doric = (function (exports) {
 	            cloned = C.fromRect
 	              ? C.fromRect(value)
 	              : new C(value.x, value.y, value.width, value.height);
-	          } catch (error$5) {
+	          } catch (error$7) {
 	            throwUnpolyfillable(type);
 	          } break;
 	        case 'DOMMatrix':
@@ -15920,7 +16023,7 @@ var doric = (function (exports) {
 	            cloned = C.fromMatrix
 	              ? C.fromMatrix(value)
 	              : new C(value);
-	          } catch (error$6) {
+	          } catch (error$8) {
 	            throwUnpolyfillable(type);
 	          } break;
 	        case 'AudioData':
@@ -15928,14 +16031,8 @@ var doric = (function (exports) {
 	          if (!isCallable(value.clone)) { throwUnpolyfillable(type); }
 	          try {
 	            cloned = value.clone();
-	          } catch (error$7) {
+	          } catch (error$9) {
 	            throwUncloneable(type);
-	          } break;
-	        case 'File':
-	          try {
-	            cloned = new File([value], value.name, value);
-	          } catch (error$8) {
-	            throwUnpolyfillable(type);
 	          } break;
 	        case 'CropTarget':
 	        case 'CryptoKey':
@@ -15997,7 +16094,7 @@ var doric = (function (exports) {
 	  var transfer = [];
 
 	  iterate(rawTransfer, function (value) {
-	    push$3(transfer, anObject(value));
+	    push$4(transfer, anObject(value));
 	  });
 
 	  var i = 0;
@@ -16089,13 +16186,16 @@ var doric = (function (exports) {
 	  // eslint-disable-next-line unicorn/relative-url-style -- required for testing
 	  var url = new URL('b?a=1&b=2&c=3', 'http://a');
 	  var searchParams = url.searchParams;
+	  var searchParams2 = new URLSearchParams('a=1&a=2');
 	  var result = '';
 	  url.pathname = 'c%20d';
 	  searchParams.forEach(function (value, key) {
 	    searchParams['delete']('b');
 	    result += key + value;
 	  });
-	  return (isPure && !url.toJSON)
+	  searchParams2['delete']('a', 2);
+	  return (isPure && (!url.toJSON || !searchParams2.has('a', 1) || searchParams2.has('a', 2)))
+	    || (!searchParams.size && (isPure || !descriptors))
 	    || !searchParams.sort
 	    || url.href !== 'http://a/c%20d?a=1&c=3'
 	    || searchParams.get('c') !== '3'
@@ -16137,7 +16237,7 @@ var doric = (function (exports) {
 	var fromCharCode = String.fromCharCode;
 	var charCodeAt = functionUncurryThis(''.charCodeAt);
 	var join$2 = functionUncurryThis([].join);
-	var push$2 = functionUncurryThis([].push);
+	var push$3 = functionUncurryThis([].push);
 	var replace$2 = functionUncurryThis(''.replace);
 	var split$2 = functionUncurryThis(''.split);
 	var toLowerCase$1 = functionUncurryThis(''.toLowerCase);
@@ -16159,15 +16259,15 @@ var doric = (function (exports) {
 	      // It's a high surrogate, and there is a next character.
 	      var extra = charCodeAt(string, counter++);
 	      if ((extra & 0xFC00) == 0xDC00) { // Low surrogate.
-	        push$2(output, ((value & 0x3FF) << 10) + (extra & 0x3FF) + 0x10000);
+	        push$3(output, ((value & 0x3FF) << 10) + (extra & 0x3FF) + 0x10000);
 	      } else {
 	        // It's an unmatched surrogate; only append this code unit, in case the
 	        // next code unit is the high surrogate of a surrogate pair.
-	        push$2(output, value);
+	        push$3(output, value);
 	        counter--;
 	      }
 	    } else {
-	      push$2(output, value);
+	      push$3(output, value);
 	    }
 	  }
 	  return output;
@@ -16220,7 +16320,7 @@ var doric = (function (exports) {
 	  for (i = 0; i < input.length; i++) {
 	    currentValue = input[i];
 	    if (currentValue < 0x80) {
-	      push$2(output, fromCharCode(currentValue));
+	      push$3(output, fromCharCode(currentValue));
 	    }
 	  }
 
@@ -16229,7 +16329,7 @@ var doric = (function (exports) {
 
 	  // Finish the basic string with a delimiter unless it's empty.
 	  if (basicLength) {
-	    push$2(output, delimiter);
+	    push$3(output, delimiter);
 	  }
 
 	  // Main encoding loop:
@@ -16266,12 +16366,12 @@ var doric = (function (exports) {
 	          if (q < t) { break; }
 	          var qMinusT = q - t;
 	          var baseMinusT = base - t;
-	          push$2(output, fromCharCode(digitToBasic(t + qMinusT % baseMinusT)));
+	          push$3(output, fromCharCode(digitToBasic(t + qMinusT % baseMinusT)));
 	          q = floor$1(qMinusT / baseMinusT);
 	          k += base;
 	        }
 
-	        push$2(output, fromCharCode(digitToBasic(q)));
+	        push$3(output, fromCharCode(digitToBasic(q)));
 	        bias = adapt(delta, handledCPCountPlusOne, handledCPCount == basicLength);
 	        delta = 0;
 	        handledCPCount++;
@@ -16290,12 +16390,13 @@ var doric = (function (exports) {
 	  var i, label;
 	  for (i = 0; i < labels.length; i++) {
 	    label = labels[i];
-	    push$2(encoded, exec$1(regexNonASCII, label) ? 'xn--' + encode(label) : label);
+	    push$3(encoded, exec$1(regexNonASCII, label) ? 'xn--' + encode(label) : label);
 	  }
 	  return join$2(encoded, '.');
 	};
 
 	// TODO: in core-js@4, move /modules/ dependencies to public entries for better optimization by tools like `preset-env`
+
 
 
 
@@ -16351,7 +16452,7 @@ var doric = (function (exports) {
 	var encodeURIComponent$1 = global_1.encodeURIComponent;
 	var charAt$1 = functionUncurryThis(''.charAt);
 	var join$1 = functionUncurryThis([].join);
-	var push$1 = functionUncurryThis([].push);
+	var push$2 = functionUncurryThis([].push);
 	var replace$1 = functionUncurryThis(''.replace);
 	var shift$1 = functionUncurryThis([].shift);
 	var splice = functionUncurryThis([].splice);
@@ -16452,10 +16553,10 @@ var doric = (function (exports) {
 	          (second = functionCall(entryNext, entryIterator)).done ||
 	          !functionCall(entryNext, entryIterator).done
 	        ) { throw TypeError$2('Expected sequence with length 2'); }
-	        push$1(this.entries, { key: toString_1(first.value), value: toString_1(second.value) });
+	        push$2(this.entries, { key: toString_1(first.value), value: toString_1(second.value) });
 	      }
 	    } else { for (var key in object) { if (hasOwnProperty_1(object, key)) {
-	      push$1(this.entries, { key: key, value: toString_1(object[key]) });
+	      push$2(this.entries, { key: key, value: toString_1(object[key]) });
 	    } } }
 	  },
 	  parseQuery: function (query) {
@@ -16467,7 +16568,7 @@ var doric = (function (exports) {
 	        attribute = attributes[index++];
 	        if (attribute.length) {
 	          entry = split$1(attribute, '=');
-	          push$1(this.entries, {
+	          push$2(this.entries, {
 	            key: deserialize(shift$1(entry)),
 	            value: deserialize(join$1(entry, '='))
 	          });
@@ -16482,7 +16583,7 @@ var doric = (function (exports) {
 	    var entry;
 	    while (index < entries.length) {
 	      entry = entries[index++];
-	      push$1(result, serialize(entry.key) + '=' + serialize(entry.value));
+	      push$2(result, serialize(entry.key) + '=' + serialize(entry.value));
 	    } return join$1(result, '&');
 	  },
 	  update: function () {
@@ -16497,41 +16598,49 @@ var doric = (function (exports) {
 	// `URLSearchParams` constructor
 	// https://url.spec.whatwg.org/#interface-urlsearchparams
 	var URLSearchParamsConstructor = function URLSearchParams(/* init */) {
-	  anInstance(this, URLSearchParamsPrototype);
+	  anInstance(this, URLSearchParamsPrototype$3);
 	  var init = arguments.length > 0 ? arguments[0] : undefined;
-	  setInternalState$1(this, new URLSearchParamsState(init));
+	  var state = setInternalState$1(this, new URLSearchParamsState(init));
+	  if (!descriptors) { this.size = state.entries.length; }
 	};
 
-	var URLSearchParamsPrototype = URLSearchParamsConstructor.prototype;
+	var URLSearchParamsPrototype$3 = URLSearchParamsConstructor.prototype;
 
-	defineBuiltIns(URLSearchParamsPrototype, {
+	defineBuiltIns(URLSearchParamsPrototype$3, {
 	  // `URLSearchParams.prototype.append` method
 	  // https://url.spec.whatwg.org/#dom-urlsearchparams-append
 	  append: function append(name, value) {
-	    validateArgumentsLength(arguments.length, 2);
 	    var state = getInternalParamsState(this);
-	    push$1(state.entries, { key: toString_1(name), value: toString_1(value) });
+	    validateArgumentsLength(arguments.length, 2);
+	    push$2(state.entries, { key: toString_1(name), value: toString_1(value) });
+	    if (!descriptors) { this.length++; }
 	    state.updateURL();
 	  },
 	  // `URLSearchParams.prototype.delete` method
 	  // https://url.spec.whatwg.org/#dom-urlsearchparams-delete
-	  'delete': function (name) {
-	    validateArgumentsLength(arguments.length, 1);
+	  'delete': function (name /* , value */) {
 	    var state = getInternalParamsState(this);
+	    var length = validateArgumentsLength(arguments.length, 1);
 	    var entries = state.entries;
 	    var key = toString_1(name);
+	    var $value = length < 2 ? undefined : arguments[1];
+	    var value = $value === undefined ? $value : toString_1($value);
 	    var index = 0;
 	    while (index < entries.length) {
-	      if (entries[index].key === key) { splice(entries, index, 1); }
-	      else { index++; }
+	      var entry = entries[index];
+	      if (entry.key === key && (value === undefined || entry.value === value)) {
+	        splice(entries, index, 1);
+	        if (value !== undefined) { break; }
+	      } else { index++; }
 	    }
+	    if (!descriptors) { this.size = entries.length; }
 	    state.updateURL();
 	  },
 	  // `URLSearchParams.prototype.get` method
 	  // https://url.spec.whatwg.org/#dom-urlsearchparams-get
 	  get: function get(name) {
-	    validateArgumentsLength(arguments.length, 1);
 	    var entries = getInternalParamsState(this).entries;
+	    validateArgumentsLength(arguments.length, 1);
 	    var key = toString_1(name);
 	    var index = 0;
 	    for (; index < entries.length; index++) {
@@ -16542,33 +16651,36 @@ var doric = (function (exports) {
 	  // `URLSearchParams.prototype.getAll` method
 	  // https://url.spec.whatwg.org/#dom-urlsearchparams-getall
 	  getAll: function getAll(name) {
-	    validateArgumentsLength(arguments.length, 1);
 	    var entries = getInternalParamsState(this).entries;
+	    validateArgumentsLength(arguments.length, 1);
 	    var key = toString_1(name);
 	    var result = [];
 	    var index = 0;
 	    for (; index < entries.length; index++) {
-	      if (entries[index].key === key) { push$1(result, entries[index].value); }
+	      if (entries[index].key === key) { push$2(result, entries[index].value); }
 	    }
 	    return result;
 	  },
 	  // `URLSearchParams.prototype.has` method
 	  // https://url.spec.whatwg.org/#dom-urlsearchparams-has
-	  has: function has(name) {
-	    validateArgumentsLength(arguments.length, 1);
+	  has: function has(name /* , value */) {
 	    var entries = getInternalParamsState(this).entries;
+	    var length = validateArgumentsLength(arguments.length, 1);
 	    var key = toString_1(name);
+	    var $value = length < 2 ? undefined : arguments[1];
+	    var value = $value === undefined ? $value : toString_1($value);
 	    var index = 0;
 	    while (index < entries.length) {
-	      if (entries[index++].key === key) { return true; }
+	      var entry = entries[index++];
+	      if (entry.key === key && (value === undefined || entry.value === value)) { return true; }
 	    }
 	    return false;
 	  },
 	  // `URLSearchParams.prototype.set` method
 	  // https://url.spec.whatwg.org/#dom-urlsearchparams-set
 	  set: function set(name, value) {
-	    validateArgumentsLength(arguments.length, 1);
 	    var state = getInternalParamsState(this);
+	    validateArgumentsLength(arguments.length, 1);
 	    var entries = state.entries;
 	    var found = false;
 	    var key = toString_1(name);
@@ -16585,7 +16697,8 @@ var doric = (function (exports) {
 	        }
 	      }
 	    }
-	    if (!found) { push$1(entries, { key: key, value: val }); }
+	    if (!found) { push$2(entries, { key: key, value: val }); }
+	    if (!descriptors) { this.size = entries.length; }
 	    state.updateURL();
 	  },
 	  // `URLSearchParams.prototype.sort` method
@@ -16623,13 +16736,23 @@ var doric = (function (exports) {
 	}, { enumerable: true });
 
 	// `URLSearchParams.prototype[@@iterator]` method
-	defineBuiltIn(URLSearchParamsPrototype, ITERATOR, URLSearchParamsPrototype.entries, { name: 'entries' });
+	defineBuiltIn(URLSearchParamsPrototype$3, ITERATOR, URLSearchParamsPrototype$3.entries, { name: 'entries' });
 
 	// `URLSearchParams.prototype.toString` method
 	// https://url.spec.whatwg.org/#urlsearchparams-stringification-behavior
-	defineBuiltIn(URLSearchParamsPrototype, 'toString', function toString() {
+	defineBuiltIn(URLSearchParamsPrototype$3, 'toString', function toString() {
 	  return getInternalParamsState(this).serialize();
 	}, { enumerable: true });
+
+	// `URLSearchParams.prototype.size` getter
+	// https://github.com/whatwg/url/pull/734
+	if (descriptors) { defineBuiltInAccessor(URLSearchParamsPrototype$3, 'size', {
+	  get: function size() {
+	    return getInternalParamsState(this).entries.length;
+	  },
+	  configurable: true,
+	  enumerable: true
+	}); }
 
 	setToStringTag(URLSearchParamsConstructor, URL_SEARCH_PARAMS);
 
@@ -16725,7 +16848,7 @@ var doric = (function (exports) {
 	var join = functionUncurryThis([].join);
 	var numberToString = functionUncurryThis(1.0.toString);
 	var pop = functionUncurryThis([].pop);
-	var push = functionUncurryThis([].push);
+	var push$1 = functionUncurryThis([].push);
 	var replace = functionUncurryThis(''.replace);
 	var shift = functionUncurryThis([].shift);
 	var split = functionUncurryThis(''.split);
@@ -16779,7 +16902,7 @@ var doric = (function (exports) {
 	      if (!exec(radix == 10 ? DEC : radix == 8 ? OCT : HEX, part)) { return input; }
 	      number = parseInt$1(part, radix);
 	    }
-	    push(numbers, number);
+	    push$1(numbers, number);
 	  }
 	  for (index = 0; index < partsLength; index++) {
 	    number = numbers[index];
@@ -17093,7 +17216,7 @@ var doric = (function (exports) {
 	              pointer++;
 	            } else {
 	              url.cannotBeABaseURL = true;
-	              push(url.path, '');
+	              push$1(url.path, '');
 	              state = CANNOT_BE_A_BASE_URL_PATH;
 	            }
 	          } else if (!stateOverride) {
@@ -17317,7 +17440,7 @@ var doric = (function (exports) {
 	            break;
 	          }
 	          if (base && base.scheme == 'file' && !startsWithWindowsDriveLetter(join(arraySliceSimple(codePoints, pointer), ''))) {
-	            if (isWindowsDriveLetter(base.path[0], true)) { push(url.path, base.path[0]); }
+	            if (isWindowsDriveLetter(base.path[0], true)) { push$1(url.path, base.path[0]); }
 	            else { url.host = base.host; }
 	          }
 	          state = PATH;
@@ -17366,18 +17489,18 @@ var doric = (function (exports) {
 	            if (isDoubleDot(buffer)) {
 	              url.shortenPath();
 	              if (chr != '/' && !(chr == '\\' && url.isSpecial())) {
-	                push(url.path, '');
+	                push$1(url.path, '');
 	              }
 	            } else if (isSingleDot(buffer)) {
 	              if (chr != '/' && !(chr == '\\' && url.isSpecial())) {
-	                push(url.path, '');
+	                push$1(url.path, '');
 	              }
 	            } else {
 	              if (url.scheme == 'file' && !url.path.length && isWindowsDriveLetter(buffer)) {
 	                if (url.host) { url.host = ''; }
 	                buffer = charAt(buffer, 0) + ':'; // normalize windows drive letter
 	              }
-	              push(url.path, buffer);
+	              push$1(url.path, buffer);
 	            }
 	            buffer = '';
 	            if (url.scheme == 'file' && (chr == EOF || chr == '?' || chr == '#')) {
@@ -17731,6 +17854,29 @@ var doric = (function (exports) {
 	  URL: URLConstructor
 	});
 
+	var URL$1 = getBuiltIn('URL');
+
+	// https://github.com/nodejs/node/issues/47505
+	// https://github.com/denoland/deno/issues/18893
+	var THROWS_WITHOUT_ARGUMENTS = urlConstructorDetection && fails(function () {
+	  URL$1.canParse();
+	});
+
+	// `URL.canParse` method
+	// https://url.spec.whatwg.org/#dom-url-canparse
+	_export({ target: 'URL', stat: true, forced: !THROWS_WITHOUT_ARGUMENTS }, {
+	  canParse: function canParse(url) {
+	    var length = validateArgumentsLength(arguments.length, 1);
+	    var urlString = toString_1(url);
+	    var base = length < 2 || arguments[1] === undefined ? undefined : toString_1(arguments[1]);
+	    try {
+	      return !!new URL$1(urlString, base);
+	    } catch (error) {
+	      return false;
+	    }
+	  }
+	});
+
 	// `URL.prototype.toJSON` method
 	// https://url.spec.whatwg.org/#dom-url-tojson
 	_export({ target: 'URL', proto: true, enumerable: true }, {
@@ -17738,6 +17884,85 @@ var doric = (function (exports) {
 	    return functionCall(URL.prototype.toString, this);
 	  }
 	});
+
+	var $URLSearchParams$1 = URLSearchParams;
+	var URLSearchParamsPrototype$2 = $URLSearchParams$1.prototype;
+	var append = functionUncurryThis(URLSearchParamsPrototype$2.append);
+	var $delete = functionUncurryThis(URLSearchParamsPrototype$2['delete']);
+	var forEach$1 = functionUncurryThis(URLSearchParamsPrototype$2.forEach);
+	var push = functionUncurryThis([].push);
+	var params$1 = new $URLSearchParams$1('a=1&a=2');
+
+	params$1['delete']('a', 1);
+
+	if (params$1 + '' !== 'a=2') {
+	  defineBuiltIn(URLSearchParamsPrototype$2, 'delete', function (name /* , value */) {
+	    var length = arguments.length;
+	    var $value = length < 2 ? undefined : arguments[1];
+	    if (length && $value === undefined) { return $delete(this, name); }
+	    var entries = [];
+	    forEach$1(this, function (v, k) { // also validates `this`
+	      push(entries, { key: k, value: v });
+	    });
+	    validateArgumentsLength(length, 1);
+	    var key = toString_1(name);
+	    var value = toString_1($value);
+	    var index = 0;
+	    var dindex = 0;
+	    var found = false;
+	    var entriesLength = entries.length;
+	    var entry;
+	    while (index < entriesLength) {
+	      entry = entries[index++];
+	      if (found || entry.key === key) {
+	        found = true;
+	        $delete(this, entry.key);
+	      } else { dindex++; }
+	    }
+	    while (dindex < entriesLength) {
+	      entry = entries[dindex++];
+	      if (!(entry.key === key && entry.value === value)) { append(this, entry.key, entry.value); }
+	    }
+	  }, { enumerable: true, unsafe: true });
+	}
+
+	var $URLSearchParams = URLSearchParams;
+	var URLSearchParamsPrototype$1 = $URLSearchParams.prototype;
+	var getAll = functionUncurryThis(URLSearchParamsPrototype$1.getAll);
+	var $has = functionUncurryThis(URLSearchParamsPrototype$1.has);
+	var params = new $URLSearchParams('a=1');
+
+	if (params.has('a', 2)) {
+	  defineBuiltIn(URLSearchParamsPrototype$1, 'has', function has(name /* , value */) {
+	    var length = arguments.length;
+	    var $value = length < 2 ? undefined : arguments[1];
+	    if (length && $value === undefined) { return $has(this, name); }
+	    var values = getAll(this, name); // also validates `this`
+	    validateArgumentsLength(length, 1);
+	    var value = toString_1($value);
+	    var index = 0;
+	    while (index < values.length) {
+	      if (values[index++] === value) { return true; }
+	    } return false;
+	  }, { enumerable: true, unsafe: true });
+	}
+
+	var URLSearchParamsPrototype = URLSearchParams.prototype;
+	var forEach = functionUncurryThis(URLSearchParamsPrototype.forEach);
+
+	// `URLSearchParams.prototype.size` getter
+	// https://github.com/whatwg/url/pull/734
+	if (descriptors && !('size' in URLSearchParamsPrototype)) {
+	  defineBuiltInAccessor(URLSearchParamsPrototype, 'size', {
+	    get: function size() {
+	      var count = 0;
+	      forEach(this, function () { count++; });
+	      return count;
+	    },
+	    configurable: true,
+	    enumerable: true
+	  });
+	}
 
 	/*
 	 * Copyright [2019] [Doric.Pub]

@@ -197,10 +197,6 @@ public class DoricSwipeLayout extends ViewGroup implements NestedScrollingParent
             public void onAnimationEnd(Animator animation) {
                 mRefreshView.stopAnimation();
                 mRefreshView.setVisibility(View.GONE);
-                // Return the circle to its start position
-
-                setTargetOffsetTopAndBottom(mOriginalOffsetTop - mCurrentTargetOffsetTop);
-                mCurrentTargetOffsetTop = mRefreshView.getTop();
             }
 
             @Override

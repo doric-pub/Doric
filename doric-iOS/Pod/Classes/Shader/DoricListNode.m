@@ -290,7 +290,9 @@
         if (self.loadMore
                 && position >= MAX(0, (NSInteger) self.rowCount - 1 - (NSInteger) self.preloadItemCount)
                 && self.onLoadMoreFuncId) {
-            reuseId = @"doricLoadMoreCell";
+            if (reuseId == nil) {
+                reuseId = @"doricLoadMoreCell";
+            }
             [self callLoadMore];
         }
         DoricTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseId ?: @"doricCell"];

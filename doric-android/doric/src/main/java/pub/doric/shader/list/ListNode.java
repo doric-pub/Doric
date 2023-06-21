@@ -41,7 +41,9 @@ import com.github.pengfeizhou.jscore.JSValue;
 
 import org.json.JSONArray;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
@@ -183,6 +185,42 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
                     return false;
                 }
                 return super.canScrollVertically();
+            }
+
+            private final Map<Integer, Integer> heightMap = new HashMap<>();
+
+            @Override
+            public void onLayoutCompleted(RecyclerView.State state) {
+                super.onLayoutCompleted(state);
+                int count = getChildCount();
+                for (int i = 0; i < count; i++) {
+                    View view = getChildAt(i);
+                    if (view != null) {
+                        heightMap.put(recyclerView.getChildAdapterPosition(view), view.getHeight());
+                    }
+                }
+            }
+
+            @Override
+            public int computeVerticalScrollOffset(RecyclerView.State state) {
+                if (getChildCount() == 0) {
+                    return 0;
+                }
+                try {
+                    int firstVisiblePosition = findFirstVisibleItemPosition();
+                    View firstVisibleView = findViewByPosition(firstVisiblePosition);
+                    int offsetY = 0;
+                    if (firstVisibleView != null) {
+                        offsetY = -(int) (firstVisibleView.getY());
+                    }
+                    for (int i = 0; i < firstVisiblePosition; i++) {
+                        Integer height = heightMap.get(i);
+                        offsetY += height == null ? 0 : height;
+                    }
+                    return offsetY;
+                } catch (Exception e) {
+                    return 0;
+                }
             }
 
             @Override

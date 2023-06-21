@@ -202,9 +202,9 @@ public class CoordinatorPlugin extends DoricJavaPlugin {
                 String callbackId = argument.getProperty("onScrolledInterval").asString().value();
                 final DoricPromise currentPromise = new DoricPromise(getDoricContext(), callbackId);
                 JSArray observingInterval = argument.getProperty("observingInterval").asArray();
-                final List<Float> interval = new ArrayList<>();
+                final List<Integer> interval = new ArrayList<>();
                 for (int i = 0; i < observingInterval.size(); i++) {
-                    interval.add(observingInterval.get(i).asNumber().toFloat());
+                    interval.add(DoricUtils.dp2px(observingInterval.get(i).asNumber().toFloat()));
                 }
 
                 JSValue inclusive = argument.getProperty("inclusive");

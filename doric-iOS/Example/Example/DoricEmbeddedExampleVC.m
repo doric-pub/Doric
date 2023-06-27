@@ -89,7 +89,7 @@
 
 
 @interface MyCollectionViewCell : UICollectionViewCell
-@property(nonatomic, strong) DoricPanel *panel;
+@property(nonatomic, strong) DoricPanelView *panel;
 @end
 
 @implementation MyCollectionViewCell
@@ -138,17 +138,17 @@
             @"content": [NSString stringWithFormat:@"第%@项\n++++++++可填充内容++++++++%@", @(indexPath.row + 1), (indexPath.row % 2 == 0) ? @"\n+++再加一行+++" : @""],
     };
     if (cell.panel == nil) {
-        cell.panel = [[DoricPanel new] also:^(DoricPanel *it) {
-            it.view.width = self.view.width / 2;
-            it.view.height = 200;
+        cell.panel = [[DoricPanelView new] also:^(DoricPanelView *it) {
+            it.width = self.view.width / 2;
+            it.height = 200;
             NSString *scheme = (indexPath.row % 2 == 0) ? @"assets://src/CellModule1Demo.js" : @"assets://src/CellModule2Demo.js";
             NSString *alias = (indexPath.row % 2 == 0) ? @"CellModule1Demo.js" : @"CellModule2Demo.js";
             [[DoricSingleton.instance.jsLoaderManager request:scheme]
                     setResultCallback:^(NSString *script) {
                         [it config:script alias:alias extra:nil];
                     }];
-            [cell.panel.doricContext callEntity:@"setData", data, nil];
-            cell.panel.doricContext.rootNode.reusable = YES;
+            [it.doricContext callEntity:@"setData", data, nil];
+            it.doricContext.rootNode.reusable = YES;
         }];
     }
     if (cell.panel.doricContext != nil) {
@@ -162,7 +162,7 @@
         c.contentView.width = c.width;
         c.contentView.height = c.height;
     };
-    [cell.contentView addSubview:cell.panel.view];
+    [cell.contentView addSubview:cell.panel];
     return cell;
 }
 

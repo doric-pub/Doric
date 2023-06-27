@@ -28,6 +28,7 @@
 #import "UIView+Doric.h"
 #import "DoricUtil.h"
 #import "DoricPanel.h"
+#import "DoricPanelView.h"
 #import "DoricJSLoaderManager.h"
 #import "DoricNavigatorDelegate.h"
 #import "DoricNavBarDelegate.h"

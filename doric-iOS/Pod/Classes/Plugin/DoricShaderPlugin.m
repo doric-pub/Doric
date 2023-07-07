@@ -85,7 +85,7 @@
 }
 
 - (id)createParamWithMethodName:(NSString *)method promise:(DoricPromise *)promise argument:(id)argument {
-    if ([method isEqualToString:@"withPromise"]) {
+    if ([method isEqualToString:@"withPromise"] || [method isEqualToString:@"promise"]) {
         return promise;
     }
     return argument;
@@ -99,7 +99,11 @@
         NSString *methodName = [NSString stringWithCString:sel_getName(method_getName(methods[i])) encoding:NSUTF8StringEncoding];
         NSArray *array = [methodName componentsSeparatedByString:@":"];
         if (array && [array count] > 0) {
-            if ([array[0] isEqualToString:name]) {
+            NSString *firstPart = array[0];
+            if (![firstPart isEqualToString:name]) {
+                firstPart = [firstPart componentsSeparatedByString:@"With"][0];
+            }
+            if ([firstPart isEqualToString:name]) {
                 isFound = YES;
                 SEL selector = NSSelectorFromString(methodName);
                 NSMethodSignature *methodSignature = [target methodSignatureForSelector:selector];

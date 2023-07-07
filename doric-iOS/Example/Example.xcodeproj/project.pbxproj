@@ -13,6 +13,7 @@
 		8BCADA7C23CD5B65005EEF96 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BCADA7B23CD5B64005EEF96 /* NavigationController.m */; };
 		8BE3A340287C098100D399FA /* DoricPanelListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BE3A33E287C098000D399FA /* DoricPanelListViewController.m */; };
 		D751D4B065D8D4FA6594B5EE /* DemoVC.m in Sources */ = {isa = PBXBuildFile; fileRef = D751D19E97EF4EDD7588FEBE /* DemoVC.m */; };
+		D751D7B06B4A1305879FCAA0 /* DemoSwiftLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = D751D9EDC0E8CEFFABAF3DEA /* DemoSwiftLibrary.swift */; };
 		D751DDB012BAF476A252CD93 /* DemoLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = D751D2175D09F2C10691FB81 /* DemoLibrary.m */; };
 		E2334AF022E9D2060098A085 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E2334AEF22E9D2060098A085 /* AppDelegate.m */; };
 		E2334AF322E9D2060098A085 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2334AF222E9D2060098A085 /* ViewController.m */; };
@@ -23,6 +24,7 @@
 		E2334B0822E9D2070098A085 /* ExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E2334B0722E9D2070098A085 /* ExampleTests.m */; };
 		E2334B1322E9D2070098A085 /* ExampleUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = E2334B1222E9D2070098A085 /* ExampleUITests.m */; };
 		E24217DA287E999900F4DBEA /* DoricEmbeddedExampleVC.m in Sources */ = {isa = PBXBuildFile; fileRef = E24217D9287E999900F4DBEA /* DoricEmbeddedExampleVC.m */; };
+		E29908682A57C48A00272415 /* DemoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E29908672A57C48A00272415 /* DemoVC.swift */; };
 		E2C9315923B0A263007933D9 /* src in Resources */ = {isa = PBXBuildFile; fileRef = E2C9315823B0A263007933D9 /* src */; };
 		E2EF0C0F275F6702007801C5 /* iconfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2EF0C0E275F6702007801C5 /* iconfont.ttf */; };
 		E2EF0C13275F6934007801C5 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = E2EF0C12275F6934007801C5 /* assets */; };
@@ -60,6 +62,7 @@
 		B93D4DB00FD244178B7CE7C4 /* Pods-ExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExampleTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ExampleTests/Pods-ExampleTests.release.xcconfig"; sourceTree = "<group>"; };
 		D751D19E97EF4EDD7588FEBE /* DemoVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoVC.m; sourceTree = "<group>"; };
 		D751D2175D09F2C10691FB81 /* DemoLibrary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoLibrary.m; sourceTree = "<group>"; };
+		D751D9EDC0E8CEFFABAF3DEA /* DemoSwiftLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoSwiftLibrary.swift; sourceTree = "<group>"; };
 		D751DB0CB3009E12990F661E /* DemoLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoLibrary.h; sourceTree = "<group>"; };
 		D751DDEC114E037231257E64 /* DemoVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoVC.h; sourceTree = "<group>"; };
 		D91241144B5A3356A3C60644 /* Pods-ExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExampleTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ExampleTests/Pods-ExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -81,6 +84,8 @@
 		E2334B1422E9D2070098A085 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E24217D9287E999900F4DBEA /* DoricEmbeddedExampleVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DoricEmbeddedExampleVC.m; sourceTree = "<group>"; };
 		E24217DB287E99D100F4DBEA /* DoricEmbeddedExampleVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DoricEmbeddedExampleVC.h; sourceTree = "<group>"; };
+		E29908672A57C48A00272415 /* DemoVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoVC.swift; sourceTree = "<group>"; };
+		E29908692A57C4DF00272415 /* Example-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Example-Bridging-Header.h"; sourceTree = "<group>"; };
 		E2C9315823B0A263007933D9 /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; name = src; path = "../../../doric-demo/bundle/src"; sourceTree = "<group>"; };
 		E2EF0C0E275F6702007801C5 /* iconfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = iconfont.ttf; path = "../../doric-demo/bundle/assets/iconfont.ttf"; sourceTree = "<group>"; };
 		E2EF0C12275F6934007801C5 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = "../../../doric-demo/bundle/assets"; sourceTree = "<group>"; };
@@ -189,6 +194,9 @@
 				E24217DB287E99D100F4DBEA /* DoricEmbeddedExampleVC.h */,
 				E2F3CCAF2918B44800772FF1 /* DemoSSRVC.m */,
 				E2F3CCB12918B49500772FF1 /* DemoSSRVC.h */,
+				E29908672A57C48A00272415 /* DemoVC.swift */,
+				E29908692A57C4DF00272415 /* Example-Bridging-Header.h */,
+				D751D9EDC0E8CEFFABAF3DEA /* DemoSwiftLibrary.swift */,
 			);
 			path = Example;
 			sourceTree = "<group>";
@@ -457,12 +465,14 @@
 				8BE3A340287C098100D399FA /* DoricPanelListViewController.m in Sources */,
 				E2334AF322E9D2060098A085 /* ViewController.m in Sources */,
 				E2334AFE22E9D2070098A085 /* main.m in Sources */,
+				E29908682A57C48A00272415 /* DemoVC.swift in Sources */,
 				E24217DA287E999900F4DBEA /* DoricEmbeddedExampleVC.m in Sources */,
 				E2334AF022E9D2060098A085 /* AppDelegate.m in Sources */,
 				E2F3CCB02918B44800772FF1 /* DemoSSRVC.m in Sources */,
 				D751D4B065D8D4FA6594B5EE /* DemoVC.m in Sources */,
 				D751DDB012BAF476A252CD93 /* DemoLibrary.m in Sources */,
 				8BCADA7C23CD5B65005EEF96 /* NavigationController.m in Sources */,
+				D751D7B06B4A1305879FCAA0 /* DemoSwiftLibrary.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -636,6 +646,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 7EE2RX3L3P;
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				INFOPLIST_FILE = Example/Info.plist;
@@ -660,6 +671,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 7EE2RX3L3P;
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				INFOPLIST_FILE = Example/Info.plist;
@@ -680,6 +692,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D91241144B5A3356A3C60644 /* Pods-ExampleTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = ExampleTests/Info.plist;
@@ -699,6 +712,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B93D4DB00FD244178B7CE7C4 /* Pods-ExampleTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = ExampleTests/Info.plist;
@@ -718,6 +732,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 016E930415B91D826F9FFF47 /* Pods-ExampleUITests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = ExampleUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -736,6 +751,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B93423722F2E06DC238CDD18 /* Pods-ExampleUITests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = ExampleUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

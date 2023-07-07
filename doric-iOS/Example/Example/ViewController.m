@@ -13,6 +13,7 @@
 #import "DoricPanelListViewController.h"
 #import "DoricEmbeddedExampleVC.h"
 #import "DemoSSRVC.h"
+#import "Doric_Playground-Swift.h"
 
 @interface ViewController () <UITableViewDelegate, UITableViewDataSource>
 @property(nonatomic, copy) NSArray <NSString *> *demoFilePaths;
@@ -44,6 +45,7 @@
     self.demoFilePaths = tmp;
 
     [Doric registerLibrary:[DemoLibrary new]];
+    [Doric registerLibrary:[DemoSwiftLibrary new]];
     [Doric enablePerformance:YES];
     [Doric enableRenderSnapshot:YES];
 
@@ -118,11 +120,12 @@
         DemoSSRVC *vc = [[DemoSSRVC alloc] initWithPath:file];
         [self.navigationController pushViewController:vc animated:NO];
     } else {
-        DoricViewController *doricViewController = [[DoricViewController alloc]
-                initWithSource:[NSString stringWithFormat:@"assets://src/%@", file]
-                         alias:@"__dev__"//self.demoFilePaths[(NSUInteger) indexPath.row]
-                         extra:nil
-        ];
+        DemoVC *doricViewController = [[DemoVC alloc] initWithPath:file];
+//        DemoVC *doricViewController = [[DemoVC alloc]
+//                initWithSource:[NSString stringWithFormat:@"assets://src/%@", file]
+//                         alias:@"__dev__"//self.demoFilePaths[(NSUInteger) indexPath.row]
+//                         extra:nil
+//        ];
         UIBarButtonItem *rightBarItem = [[UIBarButtonItem alloc] initWithTitle:@"Devkit" style:UIBarButtonItemStylePlain target:self action:@selector(onOpenDevkit)];
         doricViewController.navigationItem.rightBarButtonItem = rightBarItem;
         [self.navigationController pushViewController:doricViewController animated:NO];

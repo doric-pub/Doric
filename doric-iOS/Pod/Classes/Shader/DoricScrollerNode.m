@@ -136,15 +136,16 @@
         if (!self.jsDispatcher) {
             self.jsDispatcher = [DoricJSDispatcher new];
         }
+        
+        NSDictionary *offset = @{
+            @"x": @(self.view.contentOffset.x),
+            @"y": @(self.view.contentOffset.y),
+        };
+        
         __weak typeof(self) __self = self;
         [self.jsDispatcher dispatch:^DoricAsyncResult * {
             __strong typeof(__self) self = __self;
-            return [self callJSResponse:self.onScrollFuncId,
-                                        @{
-                                                @"x": @(self.view.contentOffset.x),
-                                                @"y": @(self.view.contentOffset.y),
-                                        },
-                            nil];
+            return [self callJSResponse:self.onScrollFuncId, offset, nil];
         }];
     }
 }

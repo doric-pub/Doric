@@ -76,7 +76,7 @@ static const void *kLayoutConfig = &kLayoutConfig;
 @implementation DoricShapeLayer
 @end
 
-@implementation UIView (DoricLayout)
+@implementation UIView (DoricLayoutCategory)
 @dynamic doricLayout;
 
 - (void)setDoricLayout:(DoricLayout *)doricLayout {

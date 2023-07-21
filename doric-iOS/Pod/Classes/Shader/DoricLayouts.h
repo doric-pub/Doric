@@ -133,7 +133,7 @@ typedef NS_ENUM(NSInteger, DoricGravity) {
 @end
 
 
-@interface UIView (DoricLayout)
+@interface UIView (DoricLayouts)
 @property(nonatomic, strong) DoricLayout *doricLayout;
 @end
 

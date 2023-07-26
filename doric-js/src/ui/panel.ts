@@ -58,6 +58,8 @@ export abstract class Panel {
 
     private __rendering__ = false
 
+    private callingRenderFinishedCallback = false
+
     addHeadView(type: string, v: View) {
         let map = this.headviews.get(type)
         if (map) {
@@ -257,13 +259,18 @@ export abstract class Panel {
     }
 
     onRenderFinished() {
+        this.callingRenderFinishedCallback = false
         this.onRenderFinishedCallback.forEach(e => {
             e()
         })
         this.onRenderFinishedCallback.length = 0
+        this.callingRenderFinishedCallback = true
     }
 
     addOnRenderFinishedCallback(cb: () => void) {
+        if (this.callingRenderFinishedCallback) {
+            loge("Do not call addOnRenderFinishedCallback recursively")
+        }
         this.onRenderFinishedCallback.push(cb)
     }
 }

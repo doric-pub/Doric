@@ -377,7 +377,10 @@
             NSUInteger pos = position + idx;
             self.itemViewIds[@(pos)] = thisViewId;
         }];
-        return array[0];
+        if (array.count > 0 ) {
+            return array[0];
+        }
+        return nil;
     }
 }
 

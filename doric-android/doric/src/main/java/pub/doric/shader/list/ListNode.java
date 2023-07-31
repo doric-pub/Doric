@@ -382,7 +382,9 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
                 view.post(new Runnable() {
                     @Override
                     public void run() {
-                        moveToPosition(prop.asNumber().toInt(), false);
+                        LinearLayoutManager layoutManager = (LinearLayoutManager) mView.getLayoutManager();
+                        assert layoutManager != null;
+                        layoutManager.scrollToPositionWithOffset(prop.asNumber().toInt(), 0);
                     }
                 });
                 break;

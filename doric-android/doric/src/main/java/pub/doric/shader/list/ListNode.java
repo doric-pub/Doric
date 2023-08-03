@@ -44,6 +44,7 @@ import org.json.JSONArray;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
@@ -472,7 +473,12 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
             animated = params.getProperty("animated").asBoolean().value();
         }
         JSNumber pos = params.getProperty("index").asNumber();
-        moveToPosition(pos.toInt(), animated);
+        JSValue topOffsetValue = params.getProperty("topOffset");
+        if (topOffsetValue.isNumber()) {
+            moveToPositionWithTopOffset(pos.toInt(), animated, topOffsetValue.asNumber().toFloat());
+        } else {
+            moveToPosition(pos.toInt(), animated);
+        }
     }
 
     @DoricMethod
@@ -537,6 +543,11 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
         }
     }
 
+    private void moveToPositionWithTopOffset(int pos, boolean animated, float topOffset) {
+        RecyclerView.SmoothScroller smoothScroller = new OffsetLinearSmoothScroller(getContext(), DoricUtils.dp2px(-topOffset));
+        smoothScroller.setTargetPosition(pos);
+        Objects.requireNonNull(mView.getLayoutManager()).startSmoothScroll(smoothScroller);
+    }
 
     private void defaultScrollTo(int pos, boolean b) {
         if (b) {
@@ -712,6 +723,25 @@ public class ListNode extends SuperNode<RecyclerView> implements IDoricScrollabl
             final int start = layoutManager.getPaddingTop();
             final int end = layoutManager.getHeight() - layoutManager.getPaddingBottom();
             return calculateDtToFit(top, bottom, start, end, snapPreference);
+        }
+    }
+
+    private static class OffsetLinearSmoothScroller extends LinearSmoothScroller {
+        private final int offset;
+
+        public OffsetLinearSmoothScroller(Context context, int offset) {
+            super(context);
+            this.offset = offset;
+        }
+
+        @Override
+        public int calculateDtToFit(int viewStart, int viewEnd, int boxStart, int boxEnd, int snapPreference) {
+            return boxStart - viewStart + offset;
+        }
+
+        @Override
+        protected int getVerticalSnapPreference() {
+            return LinearSmoothScroller.SNAP_TO_START;
         }
     }
 }

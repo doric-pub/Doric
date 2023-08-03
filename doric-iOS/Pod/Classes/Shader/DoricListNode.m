@@ -663,7 +663,18 @@
             for (int i = 0; i <= scrolledPosition; i++) {
                 [self calculateCellHeightItemNode:node atIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
             }
-            [self.view scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:scrolledPosition inSection:0] atScrollPosition:UITableViewScrollPositionNone animated:animated];
+            
+            if (params[@"topOffset"] != nil) {
+                CGFloat topOffset = [params[@"topOffset"] floatValue];
+                [self.view layoutIfNeeded];
+                NSIndexPath *targetIndexPath = [NSIndexPath indexPathForRow:scrolledPosition inSection:0];
+                CGRect rect = [self.view rectForRowAtIndexPath:targetIndexPath];
+                CGPoint newContentOffset = CGPointMake(self.view.contentOffset.x, rect.origin.y + topOffset);
+                
+                [self.view setContentOffset:newContentOffset animated:animated];
+            } else {
+                [self.view scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:scrolledPosition inSection:0] atScrollPosition:UITableViewScrollPositionNone animated:animated];
+            }
         });
     } else {
         [self.doricContext.driver.registry onLog:DoricLogTypeError

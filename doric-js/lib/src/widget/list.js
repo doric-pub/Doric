@@ -50,9 +50,13 @@ export class List extends Superview {
         }
         return ret;
     }
+    /**
+     * @param {number} config.topOffset - 目标位置cell的顶部偏移量
+     */
     scrollToItem(context, index, config) {
         const animated = config === null || config === void 0 ? void 0 : config.animated;
-        return this.nativeChannel(context, 'scrollToItem')({ index, animated, });
+        const topOffset = config === null || config === void 0 ? void 0 : config.topOffset;
+        return this.nativeChannel(context, 'scrollToItem')({ index, animated, topOffset });
     }
     /**
      * @param context

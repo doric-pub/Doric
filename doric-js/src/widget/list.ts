@@ -114,9 +114,19 @@ export class List extends Superview {
     @Property
     preloadItemCount?: number
 
-    scrollToItem(context: BridgeContext, index: number, config?: { animated?: boolean, }) {
+    /**
+     * @param {number} config.topOffset - 目标位置cell的顶部偏移量
+     */
+    scrollToItem(context: BridgeContext,
+        index: number,
+        config?: {
+            animated?: boolean,
+            topOffset?: number
+        }) {
         const animated = config?.animated
-        return this.nativeChannel(context, 'scrollToItem')({ index, animated, }) as Promise<any>
+        const topOffset = config?.topOffset;
+
+        return this.nativeChannel(context, 'scrollToItem')({ index, animated, topOffset }) as Promise<any>
     }
     /**
      * @param context 

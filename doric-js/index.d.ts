@@ -718,6 +718,7 @@ declare module "doric" {
 		private headviews;
 		private onRenderFinishedCallback;
 		private __rendering__;
+		private callingRenderFinishedCallback;
 		addHeadView(type: string, v: View): void;
 		allHeadViews(): IterableIterator<Map<string, View>>;
 		removeHeadView(type: string, v: View | string): void;
@@ -1048,8 +1049,12 @@ declare module "doric" {
 		onDragging?: (from: number, to: number) => void;
 		onDragged?: (from: number, to: number) => void;
 		preloadItemCount?: number;
+		/**
+		 * @param {number} config.topOffset - 目标位置cell的顶部偏移量
+		 */
 		scrollToItem(context: BridgeContext, index: number, config?: {
 			animated?: boolean;
+			topOffset?: number;
 		}): Promise<any>;
 		/**
 		 * @param context

@@ -2482,6 +2482,7 @@ class Panel {
         this.headviews = new Map;
         this.onRenderFinishedCallback = [];
         this.__rendering__ = false;
+        this.callingRenderFinishedCallback = false;
         this.snapshotEnabled = false;
         this.renderSnapshots = [];
     }
@@ -2663,12 +2664,17 @@ class Panel {
         return diryData;
     }
     onRenderFinished() {
+        this.callingRenderFinishedCallback = false;
         this.onRenderFinishedCallback.forEach(e => {
             e();
         });
         this.onRenderFinishedCallback.length = 0;
+        this.callingRenderFinishedCallback = true;
     }
     addOnRenderFinishedCallback(cb) {
+        if (this.callingRenderFinishedCallback) {
+            loge("Do not call addOnRenderFinishedCallback recursively");
+        }
         this.onRenderFinishedCallback.push(cb);
     }
 }
@@ -3525,9 +3531,13 @@ class List extends Superview {
         }
         return ret;
     }
+    /**
+     * @param {number} config.topOffset - 目标位置cell的顶部偏移量
+     */
     scrollToItem(context, index, config) {
         const animated = config === null || config === void 0 ? void 0 : config.animated;
-        return this.nativeChannel(context, 'scrollToItem')({ index, animated, });
+        const topOffset = config === null || config === void 0 ? void 0 : config.topOffset;
+        return this.nativeChannel(context, 'scrollToItem')({ index, animated, topOffset });
     }
     /**
      * @param context

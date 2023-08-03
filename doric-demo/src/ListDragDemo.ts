@@ -1,10 +1,12 @@
-import { Panel, Group, layoutConfig, Color, stack, list, listItem, text, loge } from "doric"
+import { Panel, Group, layoutConfig, Color, stack, list, listItem, text, loge, List } from "doric"
 import { colors } from "./utils"
 
 @Entry
 class ListDragDemo extends Panel {
 
     private data = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+
+    private list?: List
 
     build(root: Group) {
         function insertAt(array: Array<any>, index: number, ...elements: Array<any>) {
@@ -13,7 +15,7 @@ class ListDragDemo extends Panel {
 
         stack(
             [
-                list({
+                this.list = list({
                     itemCount: this.data.length,
                     renderItem: (idx) => {
                         return listItem(text({
@@ -54,5 +56,12 @@ class ListDragDemo extends Panel {
                 layoutConfig: layoutConfig().most()
             }
         ).in(root)
+
+        setTimeout(() => {
+            this.list!.scrollToItem(this.context, 3, {
+                animated: true,
+                topOffset: 0
+            })
+        }, 3000)
     }
 }

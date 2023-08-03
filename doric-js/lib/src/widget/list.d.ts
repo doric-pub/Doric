@@ -54,8 +54,12 @@ export declare class List extends Superview {
     onDragging?: (from: number, to: number) => void;
     onDragged?: (from: number, to: number) => void;
     preloadItemCount?: number;
+    /**
+     * @param {number} config.topOffset - 目标位置cell的顶部偏移量
+     */
     scrollToItem(context: BridgeContext, index: number, config?: {
         animated?: boolean;
+        topOffset?: number;
     }): Promise<any>;
     /**
      * @param context

@@ -40,6 +40,7 @@ export class Panel {
         this.headviews = new Map;
         this.onRenderFinishedCallback = [];
         this.__rendering__ = false;
+        this.callingRenderFinishedCallback = false;
         this.snapshotEnabled = false;
         this.renderSnapshots = [];
     }
@@ -221,12 +222,17 @@ export class Panel {
         return diryData;
     }
     onRenderFinished() {
+        this.callingRenderFinishedCallback = false;
         this.onRenderFinishedCallback.forEach(e => {
             e();
         });
         this.onRenderFinishedCallback.length = 0;
+        this.callingRenderFinishedCallback = true;
     }
     addOnRenderFinishedCallback(cb) {
+        if (this.callingRenderFinishedCallback) {
+            loge("Do not call addOnRenderFinishedCallback recursively");
+        }
         this.onRenderFinishedCallback.push(cb);
     }
 }

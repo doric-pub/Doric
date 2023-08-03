@@ -1132,6 +1132,7 @@ var Panel = /** @class */ (function () {
         this.headviews = new Map;
         this.onRenderFinishedCallback = [];
         this.__rendering__ = false;
+        this.callingRenderFinishedCallback = false;
         this.snapshotEnabled = false;
         this.renderSnapshots = [];
     }
@@ -1370,12 +1371,17 @@ var Panel = /** @class */ (function () {
         return diryData;
     };
     Panel.prototype.onRenderFinished = function () {
+        this.callingRenderFinishedCallback = false;
         this.onRenderFinishedCallback.forEach(function (e) {
             e();
         });
         this.onRenderFinishedCallback.length = 0;
+        this.callingRenderFinishedCallback = true;
     };
     Panel.prototype.addOnRenderFinishedCallback = function (cb) {
+        if (this.callingRenderFinishedCallback) {
+            loge("Do not call addOnRenderFinishedCallback recursively");
+        }
         this.onRenderFinishedCallback.push(cb);
     };
     __decorate$e([
@@ -2558,9 +2564,13 @@ var List = /** @class */ (function (_super) {
         }
         return ret;
     };
+    /**
+     * @param {number} config.topOffset - 目标位置cell的顶部偏移量
+     */
     List.prototype.scrollToItem = function (context, index, config) {
         var animated = config === null || config === void 0 ? void 0 : config.animated;
-        return this.nativeChannel(context, 'scrollToItem')({ index: index, animated: animated, });
+        var topOffset = config === null || config === void 0 ? void 0 : config.topOffset;
+        return this.nativeChannel(context, 'scrollToItem')({ index: index, animated: animated, topOffset: topOffset });
     };
     /**
      * @param context

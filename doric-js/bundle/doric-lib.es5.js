@@ -1371,12 +1371,12 @@ var Panel = /** @class */ (function () {
         return diryData;
     };
     Panel.prototype.onRenderFinished = function () {
-        this.callingRenderFinishedCallback = false;
+        this.callingRenderFinishedCallback = true;
         this.onRenderFinishedCallback.forEach(function (e) {
             e();
         });
         this.onRenderFinishedCallback.length = 0;
-        this.callingRenderFinishedCallback = true;
+        this.callingRenderFinishedCallback = false;
     };
     Panel.prototype.addOnRenderFinishedCallback = function (cb) {
         if (this.callingRenderFinishedCallback) {

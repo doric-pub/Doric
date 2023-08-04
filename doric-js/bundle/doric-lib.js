@@ -1049,12 +1049,12 @@ class Panel {
         return diryData;
     }
     onRenderFinished() {
-        this.callingRenderFinishedCallback = false;
+        this.callingRenderFinishedCallback = true;
         this.onRenderFinishedCallback.forEach(e => {
             e();
         });
         this.onRenderFinishedCallback.length = 0;
-        this.callingRenderFinishedCallback = true;
+        this.callingRenderFinishedCallback = false;
     }
     addOnRenderFinishedCallback(cb) {
         if (this.callingRenderFinishedCallback) {

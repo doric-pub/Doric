@@ -25,8 +25,14 @@ commander
     })
 commander
     .command('dev')
-    .action(async function () {
-        await dev()
+    .option('--proxy', 'Link proxy')
+    .action(async function (cmd, args) {
+        const [proxy] = args
+        if (proxy) {
+            console.log("Running in proxy mode", proxy)
+        } else {
+            await dev()
+        }
     })
 commander
     .command('build')
@@ -57,6 +63,11 @@ commander
     .command('run <platform>')
     .action(async function (platform, cmd) {
         await run(platform);
+    })
+commander
+    .command('proxy')
+    .action(async function () {
+        await dev()
     })
 commander.parse(process.argv)
 

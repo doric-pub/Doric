@@ -30,9 +30,8 @@ function getIPAdress() {
   return ret;
 }
 
-export default async function dev() {
-  const server = await createServer()
-
+export default async function dev(serverPort = 7777, resourcePort = 7778) {
+  const server = await createServer(serverPort)
 
   const cachedContents: Record<string, string> = {}
   chokidar
@@ -123,7 +122,7 @@ export default async function dev() {
     console.log(`IP:${e}`);
     qrcode.generate(e, { small: true });
   });
-  createResServer();
+  await createResServer(resourcePort);
 }
 
 

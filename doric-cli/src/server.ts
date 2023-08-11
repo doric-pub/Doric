@@ -12,12 +12,12 @@ export type MSG = {
     payload: { [index: string]: string }
 }
 
-export async function createServer() {
+export async function createServer(port: number) {
     let client: WebSocket | undefined = undefined;
     let debug: WebSocket | undefined = undefined;
     let deviceId = 0
     let debugProcess: ChildProcess | undefined = undefined;
-    const wss = new WebSocket.Server({ port: 7777 })
+    const wss = new WebSocket.Server({ port })
         .on("connection", (ws, request) => {
             let thisDeviceId: string
             console.log('Connected', request.headers.host)

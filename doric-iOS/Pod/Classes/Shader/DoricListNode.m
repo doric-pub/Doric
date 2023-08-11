@@ -174,6 +174,7 @@
                 [self removeSubModel:obj];
             }];
             [self.itemViewIds removeAllObjects];
+            [self.itemHeights removeAllObjects];
             self.needReload = true;
         }
     } else if ([@"batchCount" isEqualToString:name]) {
@@ -723,6 +724,7 @@
         [self removeSubModel:obj];
     }];
     [self.itemViewIds removeAllObjects];
+    [self.itemHeights removeAllObjects];
     dispatch_async(dispatch_get_main_queue(), ^{
         self.rowCount = self.itemCount + (self.loadMore ? 1 : 0);
         [self.view reloadData];

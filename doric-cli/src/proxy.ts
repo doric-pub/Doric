@@ -1,5 +1,6 @@
 import WebSocket from "ws"
 import { MSG } from "./server"
+import qrcode from "qrcode-terminal";
 
 export async function linkProxyServer(server: string, proxy: string) {
     console.log("Running in proxy mode", proxy)
@@ -38,6 +39,16 @@ export async function linkProxyServer(server: string, proxy: string) {
                 const transferAddr = proxy.replace(/:[0-9]*/, "") + ":" + nextPort
                 console.log("Get proxy UserId", proxyUserId, "addr", transferAddr)
                 transferConnector = new WebSocket("ws://" + transferAddr)
+                setTimeout(() => {
+                    console.log("PROXY ADDRESS: " + transferAddr.green)
+                    qrcode.generate(transferAddr, { small: true });
+                    process.stdin.on("keypress", function (ch, key) {
+                        if (key && key.ctrl && key.name == "p") {
+                            console.log("PROXY ADDRESS: " + transferAddr.green)
+                            qrcode.generate(transferAddr, { small: true });
+                        }
+                    });
+                }, 3000)
             }
         })
         controlConnector.on('error', (error) => {

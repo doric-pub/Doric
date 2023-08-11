@@ -174,7 +174,13 @@
                 [self removeSubModel:obj];
             }];
             [self.itemViewIds removeAllObjects];
-            [self.itemHeights removeAllObjects];
+            NSMutableDictionary *map = self.itemHeights.mutableCopy;
+            [self.itemHeights enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, NSNumber *obj, BOOL * _Nonnull stop) {
+                if ([obj isEqualToNumber:@(0)]) {
+                    [map removeObjectForKey:key];
+                }
+            }];
+            self.itemHeights = map.mutableCopy;
             self.needReload = true;
         }
     } else if ([@"batchCount" isEqualToString:name]) {
@@ -724,7 +730,13 @@
         [self removeSubModel:obj];
     }];
     [self.itemViewIds removeAllObjects];
-    [self.itemHeights removeAllObjects];
+    NSMutableDictionary *map = self.itemHeights.mutableCopy;
+    [self.itemHeights enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, NSNumber *obj, BOOL * _Nonnull stop) {
+        if ([obj isEqualToNumber:@(0)]) {
+            [map removeObjectForKey:key];
+        }
+    }];
+    self.itemHeights = map.mutableCopy;
     dispatch_async(dispatch_get_main_queue(), ^{
         self.rowCount = self.itemCount + (self.loadMore ? 1 : 0);
         [self.view reloadData];

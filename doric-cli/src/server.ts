@@ -20,8 +20,10 @@ export async function createServer(port: number) {
     const wss = new WebSocket.Server({ port })
         .on("connection", (ws, request) => {
             let thisDeviceId: string
-            console.log('Connected', request.headers.host)
-            if (request.headers.host?.startsWith("localhost")) {
+            if (request.headers["role"] === "PROXY") {
+                thisDeviceId = `Client#${deviceId++}`
+                console.log(`PROXY ${thisDeviceId} attached to dev kit`.green)
+            } else if (request.headers["role"] === "DEBUGGER" || request.headers.host?.startsWith("localhost")) {
                 thisDeviceId = `Debugger#${deviceId++}`
                 console.log(`${thisDeviceId} attached to dev kit`.green)
                 debug = ws;

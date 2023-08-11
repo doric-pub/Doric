@@ -5,6 +5,8 @@ import { build, clean, ssr } from "./actions";
 import { create, createLib } from "./create"
 import dev from "./dev"
 import { run } from "./run";
+import { linkProxyServer } from "./proxy";
+import { createControlServer, startProxyServer } from "./proxyServer";
 
 (process.env.FORCE_COLOR as any) = true
 
@@ -26,13 +28,20 @@ commander
 commander
     .command('dev')
     .option('--proxy', 'Link proxy')
-    .action(async function (cmd, args) {
-        const [proxy] = args
+    .action(async function (_, args) {
+        const serverPort = 7777, resourcePort = 7778
+        await dev(serverPort, resourcePort)
+        const [proxy] = args ?? []
         if (proxy) {
-            console.log("Running in proxy mode", proxy)
-        } else {
-            await dev()
+            await linkProxyServer(`localhost:${serverPort}`, proxy)
         }
+    })
+commander
+    .command('proxy')
+    .option('--port', 'Link port')
+    .action(async function (_, args) {
+        const [proxy] = args ?? ["7780"]
+        await startProxyServer(parseInt(proxy))
     })
 commander
     .command('build')

@@ -5479,7 +5479,11 @@ function initNativeEnvironment(source) {
     return __awaiter(this, void 0, void 0, function* () {
         // dev kit client
         return new Promise((resolve, reject) => {
-            const ws = new WebSocket__default["default"]('ws://localhost:7777')
+            const ws = new WebSocket__default["default"]('ws://localhost:7777', {
+                headers: {
+                    "role": "DEBUGGER"
+                }
+            })
                 .on('open', () => {
                 console.log('Connectted Devkit on port', '7777');
                 ws.send(JSON.stringify({

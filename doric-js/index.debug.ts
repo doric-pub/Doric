@@ -42,7 +42,11 @@ global.doric = doric
 async function initNativeEnvironment(source: string) {
   // dev kit client
   return new Promise<string>((resolve, reject) => {
-    const ws = new WebSocket('ws://localhost:7777')
+    const ws = new WebSocket('ws://localhost:7777', {
+      headers: {
+        "role": "DEBUGGER"
+      }
+    })
       .on('open', () => {
         console.log('Connectted Devkit on port', '7777')
         ws.send(JSON.stringify({

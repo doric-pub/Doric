@@ -322,8 +322,14 @@
                                                        style:UIAlertActionStyleDefault
                                                      handler:^(UIAlertAction *action) {
                                                          __strong typeof(_alert) alert = _alert;
-                                                         NSString *ip = alert.textFields.lastObject.text;
-                                                         [[DoricDev instance] connectDevKit:[NSString stringWithFormat:@"ws://%@:7777", ip]];
+                                                         NSString *url = alert.textFields.lastObject.text;
+                                                         if (![url containsString:@":"]) {
+                                                             url = [NSString stringWithFormat:@"%@:7777", url];
+                                                         }
+                                                         if (![url containsString:@"://"]) {
+                                                             url = [NSString stringWithFormat:@"ws://%@", url];
+                                                         }
+                                                         [[DoricDev instance] connectDevKit:url];
                                                      }];
     [alert addAction:okAction];
 

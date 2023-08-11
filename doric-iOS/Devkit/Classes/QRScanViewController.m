@@ -101,10 +101,16 @@
     [self.session stopRunning];
     if ([metadataObjects count] >= 1) {
         AVMetadataMachineReadableCodeObject *qrObject = [metadataObjects lastObject];
-        NSString *result = qrObject.stringValue;
-        NSLog(@"Scan result is %@", result);
-        [[DoricDev instance] connectDevKit:[NSString stringWithFormat:@"ws://%@:7777", result]];
-        ShowToast([NSString stringWithFormat:@"Connected to %@", result], DoricGravityBottom);
+        NSString *url = qrObject.stringValue;
+        NSLog(@"Scan result is %@", url);
+        if (![url containsString:@":"]) {
+            url = [NSString stringWithFormat:@"%@:7777", url];
+        }
+        if (![url containsString:@"://"]) {
+            url = [NSString stringWithFormat:@"ws://%@", url];
+        }
+        [[DoricDev instance] connectDevKit:url];
+        ShowToast([NSString stringWithFormat:@"Connected to %@", url], DoricGravityBottom);
         [self.navigationController popViewControllerAnimated:NO];
     }
 }

@@ -2,8 +2,7 @@ import fs from "fs"
 import path from "path"
 import http from "http";
 import { IncomingMessage, ServerResponse } from "http";
-export async function createResServer() {
-    const port = 7778;
+export async function createResServer(port: number) {
     const server = http.createServer();
     server.listen(port);
     console.log(`resource server is listening on port ${port} !`.green);

@@ -85,8 +85,8 @@ public class DoricDev {
     }
 
     public void closeDevMode() {
-        stopDebugging(true);
         if (wsClient != null) {
+            stopDebugging(true);
             wsClient.close();
             wsClient = null;
         }
@@ -172,9 +172,11 @@ public class DoricDev {
     }
 
     public void stopDebugging(final boolean resume) {
-        wsClient.sendToDebugger("DEBUG_STOP", new JSONBuilder()
-                .put("msg", "Stop debugging")
-                .toJSONObject());
+        if (wsClient != null) {
+            wsClient.sendToDebugger("DEBUG_STOP", new JSONBuilder()
+                    .put("msg", "Stop debugging")
+                    .toJSONObject());
+        }
         if (debuggable != null) {
             uiHandler.post(new Runnable() {
                 @Override

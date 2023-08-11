@@ -122,7 +122,13 @@ public class DoricDevActivity extends AppCompatActivity implements DoricDev.Stat
             }
             if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
                 String result = bundle.getString(CodeUtils.RESULT_STRING);
-                DoricDev.getInstance().connectDevKit("ws://" + result + ":7777");
+                if (!result.contains(":")) {
+                    result = result + ":7777";
+                }
+                if (!result.contains("://")) {
+                    result = "ws://" + result;
+                }
+                DoricDev.getInstance().connectDevKit(result);
             }
         }
     }
@@ -187,8 +193,14 @@ public class DoricDevActivity extends AppCompatActivity implements DoricDev.Stat
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                String ip = editText.getText().toString();
-                                DoricDev.getInstance().connectDevKit("ws://" + ip + ":7777");
+                                String url = editText.getText().toString();
+                                if (!url.contains(":")) {
+                                    url = url + ":7777";
+                                }
+                                if (!url.contains("://")) {
+                                    url = "ws://" + url;
+                                }
+                                DoricDev.getInstance().connectDevKit(url);
                             }
                         })
                         .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {

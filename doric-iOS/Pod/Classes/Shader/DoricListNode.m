@@ -76,6 +76,7 @@
 @property(nonatomic, assign) NSUInteger rowCount;
 @property(nonatomic, assign) BOOL needReload;
 @property(nonatomic, assign) NSUInteger preloadItemCount;
+@property(nonatomic, strong) NSMutableArray *toReloadItems;
 @end
 
 @implementation DoricListNode
@@ -87,6 +88,7 @@
         _batchCount = 15;
         _loadAnchor = -1;
         _preloadItemCount = 0;
+        _toReloadItems = [NSMutableArray new];
     }
     return self;
 }
@@ -507,67 +509,51 @@
     if (old && [old isEqualToNumber:@(height)]) {
         return;
     }
-    NSUInteger currentCount = self.rowCount;
     self.itemHeights[@(position)] = @(height);
-    if (@available(iOS 12.0, *)) {
+    if (self.toReloadItems.count == 0) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (self.view.doricLayout.widthSpec == DoricLayoutFit
-                    || self.view.doricLayout.heightSpec == DoricLayoutFit) {
-                DoricSuperNode *node = self.superNode;
-                while (node.superNode != nil) {
-                    node = node.superNode;
-                }
-                [node requestLayout];
-                if (self.view.doricLayout.widthSpec == DoricLayoutFit) {
-                    CGFloat width = 0;
-                    for (UITableViewCell *tableViewCell in self.view.visibleCells) {
-                        if ([tableViewCell isKindOfClass:[DoricTableViewCell class]]) {
-                            DoricListItemNode *node = ((DoricTableViewCell *) tableViewCell)
-                                    .doricListItemNode;
-                            width = MAX(width, node.view.width);
+                    if (self.view.doricLayout.widthSpec == DoricLayoutFit
+                            || self.view.doricLayout.heightSpec == DoricLayoutFit) {
+                        DoricSuperNode *node = self.superNode;
+                        while (node.superNode != nil) {
+                            node = node.superNode;
+                        }
+                        [node requestLayout];
+                        if (self.view.doricLayout.widthSpec == DoricLayoutFit) {
+                            CGFloat width = 0;
+                            for (UITableViewCell *tableViewCell in self.view.visibleCells) {
+                                if ([tableViewCell isKindOfClass:[DoricTableViewCell class]]) {
+                                    DoricListItemNode *node = ((DoricTableViewCell *) tableViewCell)
+                                            .doricListItemNode;
+                                    width = MAX(width, node.view.width);
+                                }
+                            }
+                            self.view.width = width;
                         }
                     }
-                    self.view.width = width;
-                }
-            }
-            [UIView performWithoutAnimation:^{
-                NSUInteger itemCount = self.rowCount;
-                if (itemCount <= position || currentCount != itemCount) {
-                    return;
-                }
-                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:position inSection:0];
-                @try {
-                    [self.view reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-                }
-                @catch (id exception) {
-                    [self.doricContext.driver.registry onException:exception inContext:self.doricContext];
-                }
-            }];
-        });
-    } else {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (self.view.doricLayout.widthSpec == DoricLayoutFit
-                    || self.view.doricLayout.heightSpec == DoricLayoutFit) {
-                DoricSuperNode *node = self.superNode;
-                while (node.superNode != nil) {
-                    node = node.superNode;
-                }
-                [node requestLayout];
-                if (self.view.doricLayout.widthSpec == DoricLayoutFit) {
-                    CGFloat width = 0;
-                    for (UITableViewCell *tableViewCell in self.view.visibleCells) {
-                        if ([tableViewCell isKindOfClass:[DoricTableViewCell class]]) {
-                            DoricListItemNode *node = ((DoricTableViewCell *) tableViewCell)
-                                    .doricListItemNode;
-                            width = MAX(width, node.view.width);
+                    NSArray<NSIndexPath *> *indexPaths = [self.toReloadItems copy];
+                    if (@available(iOS 11.0, *)) {
+                        @try {
+                            [self.view performBatchUpdates:^{
+                                @try {
+                                    [self.view reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+                                }
+                                @catch (id exception) {
+                                    [self.doricContext.driver.registry onException:exception inContext:self.doricContext];
+                                }
+                            }          completion:nil];
+                        } @catch (NSException *exception) {
+                            [self.view reloadData];
                         }
+                    } else {
+                        [self.view reloadData];
                     }
-                    self.view.width = width;
+
+                    [self.toReloadItems removeAllObjects];
                 }
-            }
-            [self.view reloadData];
-        });
+        );
     }
+    [self.toReloadItems addObject:[NSIndexPath indexPathForRow:position inSection:0]];
 }
 
 - (DoricViewNode *)subNodeWithViewId:(NSString *)viewId {
@@ -594,12 +580,12 @@
         if (!self.jsDispatcher) {
             self.jsDispatcher = [DoricJSDispatcher new];
         }
-        
+
         NSDictionary *offset = @{
-            @"x": @(self.view.contentOffset.x),
-            @"y": @(self.view.contentOffset.y),
+                @"x": @(self.view.contentOffset.x),
+                @"y": @(self.view.contentOffset.y),
         };
-        
+
         __weak typeof(self) __self = self;
         [self.jsDispatcher dispatch:^DoricAsyncResult * {
             __strong typeof(__self) self = __self;
@@ -670,14 +656,14 @@
             for (int i = 0; i <= scrolledPosition; i++) {
                 [self calculateCellHeightItemNode:node atIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
             }
-            
+
             if (params[@"topOffset"] != nil) {
                 CGFloat topOffset = [params[@"topOffset"] floatValue];
                 [self.view layoutIfNeeded];
                 NSIndexPath *targetIndexPath = [NSIndexPath indexPathForRow:scrolledPosition inSection:0];
                 CGRect rect = [self.view rectForRowAtIndexPath:targetIndexPath];
                 CGPoint newContentOffset = CGPointMake(self.view.contentOffset.x, rect.origin.y + topOffset);
-                
+
                 [self.view setContentOffset:newContentOffset animated:animated];
             } else {
                 [self.view scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:scrolledPosition inSection:0] atScrollPosition:UITableViewScrollPositionNone animated:animated];

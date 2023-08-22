@@ -1431,6 +1431,7 @@ var doric = (function (exports) {
             for (let i = 2; i < arguments.length; i++) {
                 argumentsList.push(arguments[i]);
             }
+            hookBeforeNativeCall(context);
             return Reflect.apply(Reflect.get(context.entity, methodName), context.entity, argumentsList);
         }
         else {

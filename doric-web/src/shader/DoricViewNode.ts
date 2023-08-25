@@ -360,7 +360,6 @@ export abstract class DoricViewNode {
     }
 
     set backgroundColor(v: number | GradientColor) {
-        console.log('background')
         if (typeof v === 'number') {
             this.applyCSSStyle({ backgroundColor: toRGBAString(v) });
         } else {

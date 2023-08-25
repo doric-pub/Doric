@@ -21,6 +21,7 @@ import { DoricSliderNode } from "./shader/DoricSliderNode"
 import { DoricSlideItemNode } from "./shader/DoricSlideItemNode"
 import { NotificationPlugin } from "./plugins/NotificationPlugin"
 import { NetworkPlugin } from "./plugins/NetworkPlugin"
+import { DoricNestedSliderNode } from "./shader/DoricNestedSliderNode"
 
 const bundles: Map<string, string> = new Map
 
@@ -77,3 +78,4 @@ registerViewNode('Refreshable', DoricRefreshableNode)
 registerViewNode('Switch', DoricSwitchNode)
 registerViewNode('Slider', DoricSliderNode)
 registerViewNode('SlideItem', DoricSlideItemNode)
+registerViewNode('NestedSlider', DoricNestedSliderNode)

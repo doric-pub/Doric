@@ -1,4 +1,5 @@
-import { DoricViewNode, toRGBAString } from "./DoricViewNode";
+import { DoricViewNode } from "./DoricViewNode";
+import { toRGBAString } from "../utils/color";
 
 export class DoricSwitchNode extends DoricViewNode {
     input?: HTMLInputElement

@@ -6158,6 +6158,65 @@ var doric_web = (function (exports, axios, sandbox) {
 	    }
 	}
 
+	var GradientOrientation;
+	(function (GradientOrientation) {
+	    /** draw the gradient from the top to the bottom */
+	    GradientOrientation[GradientOrientation["TOP_BOTTOM"] = 0] = "TOP_BOTTOM";
+	    /** draw the gradient from the top-right to the bottom-left */
+	    GradientOrientation[GradientOrientation["TR_BL"] = 1] = "TR_BL";
+	    /** draw the gradient from the right to the left */
+	    GradientOrientation[GradientOrientation["RIGHT_LEFT"] = 2] = "RIGHT_LEFT";
+	    /** draw the gradient from the bottom-right to the top-left */
+	    GradientOrientation[GradientOrientation["BR_TL"] = 3] = "BR_TL";
+	    /** draw the gradient from the bottom to the top */
+	    GradientOrientation[GradientOrientation["BOTTOM_TOP"] = 4] = "BOTTOM_TOP";
+	    /** draw the gradient from the bottom-left to the top-right */
+	    GradientOrientation[GradientOrientation["BL_TR"] = 5] = "BL_TR";
+	    /** draw the gradient from the left to the right */
+	    GradientOrientation[GradientOrientation["LEFT_RIGHT"] = 6] = "LEFT_RIGHT";
+	    /** draw the gradient from the top-left to the bottom-right */
+	    GradientOrientation[GradientOrientation["TL_BR"] = 7] = "TL_BR";
+	})(GradientOrientation || (GradientOrientation = {}));
+	function toRGBAString(color) {
+	    let strs = [];
+	    for (let i = 0; i < 32; i += 8) {
+	        strs.push(((color >> i) & 0xff));
+	    }
+	    strs = strs.reverse();
+	    /// RGBAd
+	    return `rgba(${strs[1]},${strs[2]},${strs[3]},${strs[0] / 255})`;
+	}
+	function generateGradientColorDesc(colors, locations) {
+	    if (!locations) {
+	        return colors.join(', ');
+	    }
+	    if (colors.length !== locations.length) {
+	        throw new Error("Colors and locations arrays must have the same length.");
+	    }
+	    const gradientStops = colors.map((color, index) => `${color} ${locations[index] * 100}%`);
+	    return gradientStops.join(", ");
+	}
+	function generateGradientOrientationDesc(orientation) {
+	    switch (orientation) {
+	        case GradientOrientation.TR_BL:
+	            return 'to bottom left';
+	        case GradientOrientation.RIGHT_LEFT:
+	            return 'to left';
+	        case GradientOrientation.BR_TL:
+	            return 'to top left';
+	        case GradientOrientation.BOTTOM_TOP:
+	            return 'to top';
+	        case GradientOrientation.BL_TR:
+	            return 'to top right';
+	        case GradientOrientation.LEFT_RIGHT:
+	            return 'to right';
+	        case GradientOrientation.TL_BR:
+	            return 'to bottom right';
+	        default:
+	            return 'to bottom';
+	    }
+	}
+
 	exports.LayoutSpec = void 0;
 	(function (LayoutSpec) {
 	    LayoutSpec[LayoutSpec["EXACTLY"] = 0] = "EXACTLY";
@@ -6181,15 +6240,6 @@ var doric_web = (function (exports, axios, sandbox) {
 	}
 	function pixelString2Number(v) {
 	    return parseFloat(v.substring(0, v.indexOf("px")));
-	}
-	function toRGBAString(color) {
-	    let strs = [];
-	    for (let i = 0; i < 32; i += 8) {
-	        strs.push(((color >> i) & 0xff));
-	    }
-	    strs = strs.reverse();
-	    /// RGBAd
-	    return `rgba(${strs[1]},${strs[2]},${strs[3]},${strs[0] / 255})`;
 	}
 	class DoricViewNode {
 	    constructor(context) {
@@ -6469,46 +6519,11 @@ var doric_web = (function (exports, axios, sandbox) {
 	                    return toRGBAString(c);
 	                });
 	            }
-	            else if (start && end) {
+	            else if (typeof start === 'number' && typeof end === 'number') {
 	                colorsParam.push(...[toRGBAString(start), toRGBAString(end)]);
 	            }
-	            switch (orientation) {
-	                case 1:
-	                    this.applyCSSStyle({ backgroundImage: `linear-gradient(to bottom left, ${this.generateGradient(colorsParam, locations)})` });
-	                    break;
-	                case 2:
-	                    this.applyCSSStyle({ backgroundImage: `linear-gradient(to left, ${this.generateGradient(colorsParam, locations)})` });
-	                    break;
-	                case 3:
-	                    this.applyCSSStyle({ backgroundImage: `linear-gradient(to top left, ${this.generateGradient(colorsParam, locations)})` });
-	                    break;
-	                case 4:
-	                    this.applyCSSStyle({ backgroundImage: `linear-gradient(to top, ${this.generateGradient(colorsParam, locations)})` });
-	                    break;
-	                case 5:
-	                    this.applyCSSStyle({ backgroundImage: `linear-gradient(to top right, ${this.generateGradient(colorsParam, locations)})` });
-	                    break;
-	                case 6:
-	                    this.applyCSSStyle({ backgroundImage: `linear-gradient(to right, ${this.generateGradient(colorsParam, locations)})` });
-	                    break;
-	                case 7:
-	                    this.applyCSSStyle({ backgroundImage: `linear-gradient(to bottom right, ${this.generateGradient(colorsParam, locations)})` });
-	                    break;
-	                default:
-	                    this.applyCSSStyle({ backgroundImage: `linear-gradient(to bottom, ${this.generateGradient(colorsParam, locations)})` });
-	                    break;
-	            }
+	            this.applyCSSStyle({ backgroundImage: `linear-gradient(${generateGradientOrientationDesc(orientation)}, ${generateGradientColorDesc(colorsParam, locations)})` });
 	        }
-	    }
-	    generateGradient(colors, locations) {
-	        if (!locations) {
-	            return colors.join(', ');
-	        }
-	        if (colors.length !== locations.length) {
-	            throw new Error("Colors and locations arrays must have the same length.");
-	        }
-	        const gradientStops = colors.map((color, index) => `${color} ${locations[index] * 100}%`);
-	        return gradientStops.join(", ");
 	    }
 	    static create(context, type) {
 	        const viewNodeClass = acquireViewNode(type);
@@ -8845,7 +8860,6 @@ ${content}
 	exports.registerPlugin = registerPlugin;
 	exports.registerViewNode = registerViewNode;
 	exports.toPixelString = toPixelString;
-	exports.toRGBAString = toRGBAString;
 
 	Object.defineProperty(exports, '__esModule', { value: true });
 

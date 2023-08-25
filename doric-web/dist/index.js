@@ -6457,7 +6457,58 @@ var doric_web = (function (exports, axios, sandbox) {
 	        }
 	    }
 	    set backgroundColor(v) {
-	        this.applyCSSStyle({ backgroundColor: toRGBAString(v) });
+	        console.log('background');
+	        if (typeof v === 'number') {
+	            this.applyCSSStyle({ backgroundColor: toRGBAString(v) });
+	        }
+	        else {
+	            let colorsParam = [];
+	            const { start, end, colors, locations, orientation = 0 } = v;
+	            if (colors) {
+	                colorsParam = colors.map((c) => {
+	                    return toRGBAString(c);
+	                });
+	            }
+	            else if (start && end) {
+	                colorsParam.push(...[toRGBAString(start), toRGBAString(end)]);
+	            }
+	            switch (orientation) {
+	                case 1:
+	                    this.applyCSSStyle({ backgroundImage: `linear-gradient(to bottom left, ${this.generateGradient(colorsParam, locations)})` });
+	                    break;
+	                case 2:
+	                    this.applyCSSStyle({ backgroundImage: `linear-gradient(to left, ${this.generateGradient(colorsParam, locations)})` });
+	                    break;
+	                case 3:
+	                    this.applyCSSStyle({ backgroundImage: `linear-gradient(to top left, ${this.generateGradient(colorsParam, locations)})` });
+	                    break;
+	                case 4:
+	                    this.applyCSSStyle({ backgroundImage: `linear-gradient(to top, ${this.generateGradient(colorsParam, locations)})` });
+	                    break;
+	                case 5:
+	                    this.applyCSSStyle({ backgroundImage: `linear-gradient(to top right, ${this.generateGradient(colorsParam, locations)})` });
+	                    break;
+	                case 6:
+	                    this.applyCSSStyle({ backgroundImage: `linear-gradient(to right, ${this.generateGradient(colorsParam, locations)})` });
+	                    break;
+	                case 7:
+	                    this.applyCSSStyle({ backgroundImage: `linear-gradient(to bottom right, ${this.generateGradient(colorsParam, locations)})` });
+	                    break;
+	                default:
+	                    this.applyCSSStyle({ backgroundImage: `linear-gradient(to bottom, ${this.generateGradient(colorsParam, locations)})` });
+	                    break;
+	            }
+	        }
+	    }
+	    generateGradient(colors, locations) {
+	        if (!locations) {
+	            return colors.join(', ');
+	        }
+	        if (colors.length !== locations.length) {
+	            throw new Error("Colors and locations arrays must have the same length.");
+	        }
+	        const gradientStops = colors.map((color, index) => `${color} ${locations[index] * 100}%`);
+	        return gradientStops.join(", ");
 	    }
 	    static create(context, type) {
 	        const viewNodeClass = acquireViewNode(type);

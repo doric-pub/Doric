@@ -245,6 +245,15 @@ class ImageDemo extends Panel {
             scaleType: ScaleType.Tile,
             layoutConfig: layoutConfig().just(),
           }),
+          label("placeHolder"),
+          image({
+            imageUrl: "https://p.upyun.com/eror.404",
+            layoutConfig: layoutConfig().just(),
+            height: 100,
+            width: 100,
+            placeHolderColor: Color.GREEN,
+            errorColor: Color.RED,
+          }),
         ],
         {
           layoutConfig: layoutConfig().most().configHeight(LayoutSpec.FIT),

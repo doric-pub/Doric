@@ -6507,7 +6507,6 @@ var doric_web = (function (exports, axios, sandbox) {
 	        }
 	    }
 	    set backgroundColor(v) {
-	        console.log('background');
 	        if (typeof v === 'number') {
 	            this.applyCSSStyle({ backgroundColor: toRGBAString(v) });
 	        }
@@ -7238,21 +7237,30 @@ var doric_web = (function (exports, axios, sandbox) {
 	        ret.style.objectFit = "fill";
 	        return ret;
 	    }
+	    blend(props) {
+	        this.placeHolderImage = props['placeHolderImage'];
+	        this.placeHolderImageBase64 = props['placeHolderImageBase64'];
+	        this.placeHolderColor = props['placeHolderColor'];
+	        this.errorImage = props['errorImage'];
+	        this.errorImageBase64 = props['errorImageBase64'];
+	        this.errorColor = props['errorColor'];
+	        super.blend(props);
+	    }
 	    blendProps(v, propName, prop) {
 	        switch (propName) {
 	            case 'imageUrl':
-	                v.setAttribute('src', prop);
-	                break;
 	            case 'imageBase64':
-	                v.setAttribute('src', prop);
+	                this.loadIntoTarget(v, prop);
+	                break;
+	            case 'placeHolderImage':
+	            case 'placeHolderImageBase64':
+	            case 'placeHolderColor':
+	            case 'errorImage':
+	            case 'errorImageBase64':
+	            case 'errorColor':
 	                break;
 	            case 'loadCallback':
-	                v.onload = () => {
-	                    this.callJSResponse(prop, {
-	                        width: v.width,
-	                        height: v.height
-	                    });
-	                };
+	                this.onloadFuncId = prop;
 	                break;
 	            case 'scaleType':
 	                switch (prop) {
@@ -7279,6 +7287,65 @@ var doric_web = (function (exports, axios, sandbox) {
 	                super.blendProps(v, propName, prop);
 	                break;
 	        }
+	    }
+	    loadIntoTarget(v, src) {
+	        if (this.placeHolderImage) {
+	            v.src = this.placeHolderImage;
+	        }
+	        else if (this.placeHolderImageBase64) {
+	            v.src = this.placeHolderImageBase64;
+	        }
+	        else if (this.placeHolderColor) {
+	            v.style.backgroundColor = toRGBAString(this.placeHolderColor);
+	        }
+	        v.onload = () => {
+	            if (this.placeHolderColor) {
+	                v.style.removeProperty('background-color');
+	            }
+	            if (this.onloadFuncId) {
+	                this.callJSResponse(this.onloadFuncId, {
+	                    width: v.width,
+	                    height: v.height,
+	                });
+	            }
+	        };
+	        v.onerror = () => {
+	            const error = this.getError(v.offsetWidth, v.offsetHeight);
+	            if (!error)
+	                return;
+	            const same = src === error;
+	            const srcLoadError = v.src === src;
+	            if (same || !srcLoadError)
+	                return;
+	            v.src = error;
+	        };
+	        setTimeout(() => {
+	            v.src = src;
+	        });
+	    }
+	    getError(width, height) {
+	        if (this.errorImage) {
+	            return this.errorImage;
+	        }
+	        else if (this.errorImageBase64) {
+	            return this.errorImageBase64;
+	        }
+	        else if (this.errorColor && this.view) {
+	            return this.createColoredCanvas(width, height, this.errorColor);
+	        }
+	        return null;
+	    }
+	    createColoredCanvas(width, height, color) {
+	        const canvas = document.createElement('canvas');
+	        canvas.width = width;
+	        canvas.height = height;
+	        const context = canvas.getContext('2d');
+	        if (context) {
+	            context.fillStyle = toRGBAString(color);
+	            context.fillRect(0, 0, width, height);
+	            return canvas.toDataURL('image/png');
+	        }
+	        return null;
 	    }
 	}
 

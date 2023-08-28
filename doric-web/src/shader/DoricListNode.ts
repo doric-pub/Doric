@@ -31,6 +31,9 @@ export class DoricListNode extends DoricSuperNode {
             case "loadMore":
                 this.loadMore = prop as boolean
                 break
+            case 'scrollable':
+                v.style.overflow = prop ? 'scroll' : 'hidden'
+                break
             default:
                 super.blendProps(v, propName, prop)
                 break

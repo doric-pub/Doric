@@ -7636,6 +7636,9 @@ var doric_web = (function (exports, axios, sandbox) {
 	            case "loadMore":
 	                this.loadMore = prop;
 	                break;
+	            case 'scrollable':
+	                v.style.overflow = prop ? 'scroll' : 'hidden';
+	                break;
 	            default:
 	                super.blendProps(v, propName, prop);
 	                break;

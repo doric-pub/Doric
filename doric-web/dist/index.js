@@ -7153,6 +7153,12 @@ var doric_web = (function (exports, axios, sandbox) {
 	                        break;
 	                }
 	                break;
+	            case "maxLines":
+	                v.style.webkitLineClamp = prop;
+	                v.style.display = "-webkit-box";
+	                v.style.overflow = "hidden";
+	                v.style.textOverflow = "ellipsis";
+	                v.style.webkitBoxOrient = "vertical";
 	            default:
 	                super.blendProps(v, propName, prop);
 	                break;

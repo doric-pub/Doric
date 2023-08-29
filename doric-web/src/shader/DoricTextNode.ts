@@ -60,6 +60,12 @@ export class DoricTextNode extends DoricViewNode {
                         break
                 }
                 break
+            case "maxLines":
+                v.style.webkitLineClamp = prop as string
+                v.style.display = "-webkit-box"
+                v.style.overflow = "hidden"
+                v.style.textOverflow = "ellipsis"
+                v.style.webkitBoxOrient = "vertical"
             default:
                 super.blendProps(v, propName, prop)
                 break

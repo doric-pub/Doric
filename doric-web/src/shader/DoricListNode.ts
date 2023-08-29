@@ -40,10 +40,24 @@ export class DoricListNode extends DoricSuperNode {
         }
     }
 
+    reload() {
+        this.reset()
+        const ret = this.pureCallJSResponse("renderBunchedItems", 0, this.itemCount) as DVModel[]
+        ret.forEach(e => {
+            const viewNode = DoricViewNode.create(this.context, e.type) as DoricListItemNode
+            viewNode.viewId = e.id
+            viewNode.init(this)
+            viewNode.blend(e.props)
+            this.view.appendChild(viewNode.view)
+            return viewNode
+        })
+    }
+
     reset() {
         while (this.view.lastElementChild) {
             this.view.removeChild(this.view.lastElementChild)
         }
+        this.childNodes = []
     }
 
     onBlending() {
@@ -74,9 +88,6 @@ export class DoricListNode extends DoricSuperNode {
             }
             if (this.loadMoreViewNode) {
                 this.view.appendChild(this.loadMoreViewNode.view)
-            }
-            if (this.view.scrollTop + this.view.offsetHeight === this.view.scrollHeight) {
-                this.onScrollToEnd()
             }
         }
     }

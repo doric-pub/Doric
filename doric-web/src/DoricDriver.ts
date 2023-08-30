@@ -26,7 +26,7 @@ export function loadJS(contextId: string, script: string) {
 }
 
 function packageModuleScript(name: string, content: string) {
-    return `Reflect.apply(doric.jsRegisterModule,this,[${name},Reflect.apply(function(__module){(function(module,exports,require,setTimeout,setInterval,clearTimeout,clearInterval){
+    return `Reflect.apply(doric.jsRegisterModule,this,["${name}",Reflect.apply(function(__module){(function(module,exports,require,setTimeout,setInterval,clearTimeout,clearInterval){
 ${content}
 })(__module,__module.exports,doric.__require__,doricSetTimeout,doricSetInterval,doricClearTimeout,doricClearInterval);
 return __module.exports;},this,[{exports:{}}])])`

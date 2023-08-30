@@ -31,16 +31,33 @@ export class DoricListNode extends DoricSuperNode {
             case "loadMore":
                 this.loadMore = prop as boolean
                 break
+            case 'scrollable':
+                v.style.overflow = prop ? 'scroll' : 'hidden'
+                break
             default:
                 super.blendProps(v, propName, prop)
                 break
         }
     }
 
+    reload() {
+        this.reset()
+        const ret = this.pureCallJSResponse("renderBunchedItems", 0, this.itemCount) as DVModel[]
+        ret.forEach(e => {
+            const viewNode = DoricViewNode.create(this.context, e.type) as DoricListItemNode
+            viewNode.viewId = e.id
+            viewNode.init(this)
+            viewNode.blend(e.props)
+            this.view.appendChild(viewNode.view)
+            return viewNode
+        })
+    }
+
     reset() {
         while (this.view.lastElementChild) {
             this.view.removeChild(this.view.lastElementChild)
         }
+        this.childNodes = []
     }
 
     onBlending() {

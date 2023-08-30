@@ -1,5 +1,7 @@
 import { DoricContext } from "../DoricContext";
 import { acquireViewNode } from "../DoricRegistry";
+import { GradientColor, GradientOrientation, generateGradientColorDesc, generateGradientOrientationDesc } from "../utils/color";
+import { toRGBAString } from "../utils/color";
 
 export enum LayoutSpec {
     EXACTLY = 0,
@@ -36,17 +38,6 @@ export function toPixelString(v: number) {
 export function pixelString2Number(v: string) {
     return parseFloat(v.substring(0, v.indexOf("px")))
 }
-
-export function toRGBAString(color: number) {
-    let strs = []
-    for (let i = 0; i < 32; i += 8) {
-        strs.push(((color >> i) & 0xff))
-    }
-    strs = strs.reverse()
-    /// RGBAd
-    return `rgba(${strs[1]},${strs[2]},${strs[3]},${strs[0] / 255})`
-}
-
 
 export type DoricViewNodeClass = { new(...args: any[]): {} }
 
@@ -261,7 +252,8 @@ export abstract class DoricViewNode {
                 this.frameHeight = prop as number
                 break
             case 'backgroundColor':
-                this.backgroundColor = prop as number
+                this.backgroundColor = prop
+                
                 break
             case 'layoutConfig':
                 const layoutConfig = prop
@@ -367,8 +359,21 @@ export abstract class DoricViewNode {
         }
     }
 
-    set backgroundColor(v: number) {
-        this.applyCSSStyle({ backgroundColor: toRGBAString(v) })
+    set backgroundColor(v: number | GradientColor) {
+        if (typeof v === 'number') {
+            this.applyCSSStyle({ backgroundColor: toRGBAString(v) });
+        } else {
+            let colorsParam:string[] = []
+            const {start, end, colors, locations, orientation = 0} = v
+            if (colors) {
+                colorsParam = colors.map((c:number) => {
+                    return toRGBAString(c)
+                })
+            } else if (typeof start === 'number' && typeof end === 'number') {                  
+                colorsParam.push(...[toRGBAString(start), toRGBAString(end)])
+            }
+            this.applyCSSStyle({ backgroundImage: `linear-gradient(${generateGradientOrientationDesc(orientation)}, ${generateGradientColorDesc(colorsParam, locations)})`})
+        }  
     }
 
     static create(context: DoricContext, type: string) {
@@ -488,7 +493,7 @@ export abstract class DoricViewNode {
         return this.view.style.backgroundColor
     }
 
-    setBackgroundColor(v: number) {
+    setBackgroundColor(v: number | GradientColor) {
         this.backgroundColor = v
     }
 

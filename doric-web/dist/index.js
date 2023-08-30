@@ -6158,6 +6158,65 @@ var doric_web = (function (exports, axios, sandbox) {
 	    }
 	}
 
+	var GradientOrientation;
+	(function (GradientOrientation) {
+	    /** draw the gradient from the top to the bottom */
+	    GradientOrientation[GradientOrientation["TOP_BOTTOM"] = 0] = "TOP_BOTTOM";
+	    /** draw the gradient from the top-right to the bottom-left */
+	    GradientOrientation[GradientOrientation["TR_BL"] = 1] = "TR_BL";
+	    /** draw the gradient from the right to the left */
+	    GradientOrientation[GradientOrientation["RIGHT_LEFT"] = 2] = "RIGHT_LEFT";
+	    /** draw the gradient from the bottom-right to the top-left */
+	    GradientOrientation[GradientOrientation["BR_TL"] = 3] = "BR_TL";
+	    /** draw the gradient from the bottom to the top */
+	    GradientOrientation[GradientOrientation["BOTTOM_TOP"] = 4] = "BOTTOM_TOP";
+	    /** draw the gradient from the bottom-left to the top-right */
+	    GradientOrientation[GradientOrientation["BL_TR"] = 5] = "BL_TR";
+	    /** draw the gradient from the left to the right */
+	    GradientOrientation[GradientOrientation["LEFT_RIGHT"] = 6] = "LEFT_RIGHT";
+	    /** draw the gradient from the top-left to the bottom-right */
+	    GradientOrientation[GradientOrientation["TL_BR"] = 7] = "TL_BR";
+	})(GradientOrientation || (GradientOrientation = {}));
+	function toRGBAString(color) {
+	    let strs = [];
+	    for (let i = 0; i < 32; i += 8) {
+	        strs.push(((color >> i) & 0xff));
+	    }
+	    strs = strs.reverse();
+	    /// RGBAd
+	    return `rgba(${strs[1]},${strs[2]},${strs[3]},${strs[0] / 255})`;
+	}
+	function generateGradientColorDesc(colors, locations) {
+	    if (!locations) {
+	        return colors.join(', ');
+	    }
+	    if (colors.length !== locations.length) {
+	        throw new Error("Colors and locations arrays must have the same length.");
+	    }
+	    const gradientStops = colors.map((color, index) => `${color} ${locations[index] * 100}%`);
+	    return gradientStops.join(", ");
+	}
+	function generateGradientOrientationDesc(orientation) {
+	    switch (orientation) {
+	        case GradientOrientation.TR_BL:
+	            return 'to bottom left';
+	        case GradientOrientation.RIGHT_LEFT:
+	            return 'to left';
+	        case GradientOrientation.BR_TL:
+	            return 'to top left';
+	        case GradientOrientation.BOTTOM_TOP:
+	            return 'to top';
+	        case GradientOrientation.BL_TR:
+	            return 'to top right';
+	        case GradientOrientation.LEFT_RIGHT:
+	            return 'to right';
+	        case GradientOrientation.TL_BR:
+	            return 'to bottom right';
+	        default:
+	            return 'to bottom';
+	    }
+	}
+
 	exports.LayoutSpec = void 0;
 	(function (LayoutSpec) {
 	    LayoutSpec[LayoutSpec["EXACTLY"] = 0] = "EXACTLY";
@@ -6181,15 +6240,6 @@ var doric_web = (function (exports, axios, sandbox) {
 	}
 	function pixelString2Number(v) {
 	    return parseFloat(v.substring(0, v.indexOf("px")));
-	}
-	function toRGBAString(color) {
-	    let strs = [];
-	    for (let i = 0; i < 32; i += 8) {
-	        strs.push(((color >> i) & 0xff));
-	    }
-	    strs = strs.reverse();
-	    /// RGBAd
-	    return `rgba(${strs[1]},${strs[2]},${strs[3]},${strs[0] / 255})`;
 	}
 	class DoricViewNode {
 	    constructor(context) {
@@ -6457,7 +6507,22 @@ var doric_web = (function (exports, axios, sandbox) {
 	        }
 	    }
 	    set backgroundColor(v) {
-	        this.applyCSSStyle({ backgroundColor: toRGBAString(v) });
+	        if (typeof v === 'number') {
+	            this.applyCSSStyle({ backgroundColor: toRGBAString(v) });
+	        }
+	        else {
+	            let colorsParam = [];
+	            const { start, end, colors, locations, orientation = 0 } = v;
+	            if (colors) {
+	                colorsParam = colors.map((c) => {
+	                    return toRGBAString(c);
+	                });
+	            }
+	            else if (typeof start === 'number' && typeof end === 'number') {
+	                colorsParam.push(...[toRGBAString(start), toRGBAString(end)]);
+	            }
+	            this.applyCSSStyle({ backgroundImage: `linear-gradient(${generateGradientOrientationDesc(orientation)}, ${generateGradientColorDesc(colorsParam, locations)})` });
+	        }
 	    }
 	    static create(context, type) {
 	        const viewNodeClass = acquireViewNode(type);
@@ -7227,21 +7292,30 @@ var doric_web = (function (exports, axios, sandbox) {
 	        ret.style.objectFit = "fill";
 	        return ret;
 	    }
+	    blend(props) {
+	        this.placeHolderImage = props['placeHolderImage'];
+	        this.placeHolderImageBase64 = props['placeHolderImageBase64'];
+	        this.placeHolderColor = props['placeHolderColor'];
+	        this.errorImage = props['errorImage'];
+	        this.errorImageBase64 = props['errorImageBase64'];
+	        this.errorColor = props['errorColor'];
+	        super.blend(props);
+	    }
 	    blendProps(v, propName, prop) {
 	        switch (propName) {
 	            case 'imageUrl':
-	                v.setAttribute('src', prop);
-	                break;
 	            case 'imageBase64':
-	                v.setAttribute('src', prop);
+	                this.loadIntoTarget(v, prop);
+	                break;
+	            case 'placeHolderImage':
+	            case 'placeHolderImageBase64':
+	            case 'placeHolderColor':
+	            case 'errorImage':
+	            case 'errorImageBase64':
+	            case 'errorColor':
 	                break;
 	            case 'loadCallback':
-	                v.onload = () => {
-	                    this.callJSResponse(prop, {
-	                        width: v.width,
-	                        height: v.height
-	                    });
-	                };
+	                this.onloadFuncId = prop;
 	                break;
 	            case 'scaleType':
 	                switch (prop) {
@@ -7268,6 +7342,65 @@ var doric_web = (function (exports, axios, sandbox) {
 	                super.blendProps(v, propName, prop);
 	                break;
 	        }
+	    }
+	    loadIntoTarget(v, src) {
+	        if (this.placeHolderImage) {
+	            v.src = this.placeHolderImage;
+	        }
+	        else if (this.placeHolderImageBase64) {
+	            v.src = this.placeHolderImageBase64;
+	        }
+	        else if (this.placeHolderColor) {
+	            v.style.backgroundColor = toRGBAString(this.placeHolderColor);
+	        }
+	        v.onload = () => {
+	            if (this.placeHolderColor) {
+	                v.style.removeProperty('background-color');
+	            }
+	            if (this.onloadFuncId) {
+	                this.callJSResponse(this.onloadFuncId, {
+	                    width: v.width,
+	                    height: v.height,
+	                });
+	            }
+	        };
+	        v.onerror = () => {
+	            const error = this.getError(v.offsetWidth, v.offsetHeight);
+	            if (!error)
+	                return;
+	            const same = src === error;
+	            const srcLoadError = v.src === src;
+	            if (same || !srcLoadError)
+	                return;
+	            v.src = error;
+	        };
+	        setTimeout(() => {
+	            v.src = src;
+	        });
+	    }
+	    getError(width, height) {
+	        if (this.errorImage) {
+	            return this.errorImage;
+	        }
+	        else if (this.errorImageBase64) {
+	            return this.errorImageBase64;
+	        }
+	        else if (this.errorColor && this.view) {
+	            return this.createColoredCanvas(width, height, this.errorColor);
+	        }
+	        return null;
+	    }
+	    createColoredCanvas(width, height, color) {
+	        const canvas = document.createElement('canvas');
+	        canvas.width = width;
+	        canvas.height = height;
+	        const context = canvas.getContext('2d');
+	        if (context) {
+	            context.fillStyle = toRGBAString(color);
+	            context.fillRect(0, 0, width, height);
+	            return canvas.toDataURL('image/png');
+	        }
+	        return null;
 	    }
 	}
 
@@ -7557,6 +7690,9 @@ var doric_web = (function (exports, axios, sandbox) {
 	                break;
 	            case "loadMore":
 	                this.loadMore = prop;
+	                break;
+	            case 'scrollable':
+	                v.style.overflow = prop ? 'scroll' : 'hidden';
 	                break;
 	            default:
 	                super.blendProps(v, propName, prop);
@@ -8495,7 +8631,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	    document.body.appendChild(scriptElement);
 	}
 	function packageModuleScript(name, content) {
-	    return `Reflect.apply(doric.jsRegisterModule,this,[${name},Reflect.apply(function(__module){(function(module,exports,require,setTimeout,setInterval,clearTimeout,clearInterval){
+	    return `Reflect.apply(doric.jsRegisterModule,this,["${name}",Reflect.apply(function(__module){(function(module,exports,require,setTimeout,setInterval,clearTimeout,clearInterval){
 ${content}
 })(__module,__module.exports,doric.__require__,doricSetTimeout,doricSetInterval,doricClearTimeout,doricClearInterval);
 return __module.exports;},this,[{exports:{}}])])`;
@@ -8849,7 +8985,6 @@ ${content}
 	exports.registerPlugin = registerPlugin;
 	exports.registerViewNode = registerViewNode;
 	exports.toPixelString = toPixelString;
-	exports.toRGBAString = toRGBAString;
 
 	Object.defineProperty(exports, '__esModule', { value: true });
 

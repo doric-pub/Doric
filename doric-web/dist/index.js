@@ -7092,6 +7092,11 @@ var doric_web = (function (exports, axios, sandbox) {
 	}
 
 	class DoricTextNode extends DoricViewNode {
+	    constructor() {
+	        super(...arguments);
+	        this.maxLines = 0;
+	        this.maxHeight = 0;
+	    }
 	    build() {
 	        const div = document.createElement('div');
 	        div.style.display = "flex";
@@ -7154,15 +7159,60 @@ var doric_web = (function (exports, axios, sandbox) {
 	                }
 	                break;
 	            case "maxLines":
-	                v.style.webkitLineClamp = prop;
-	                v.style.display = "-webkit-box";
-	                v.style.overflow = "hidden";
-	                v.style.textOverflow = "ellipsis";
-	                v.style.webkitBoxOrient = "vertical";
+	                this.maxLines = prop;
 	            default:
 	                super.blendProps(v, propName, prop);
 	                break;
 	        }
+	    }
+	    layout() {
+	        super.layout();
+	        Promise.resolve().then(_ => {
+	            this.configSize();
+	        });
+	    }
+	    configSize() {
+	        if (this.maxLines > 0) {
+	            const currentHeight = this.view.offsetHeight;
+	            const computedStyle = window.getComputedStyle(this.view);
+	            this.maxHeight = this.getLineHeight(computedStyle) * this.maxLines;
+	            if (currentHeight > this.maxHeight) {
+	                this.view.style.height = toPixelString(this.maxHeight);
+	                this.view.style.alignItems = "flex-start";
+	                this.view.style.overflow = 'hidden';
+	                this.view.textContent = this.getTruncationText(computedStyle);
+	            }
+	        }
+	    }
+	    getLineHeight(style) {
+	        const tempEle = document.createElement('div');
+	        tempEle.style.cssText = style.cssText;
+	        tempEle.textContent = 'Test';
+	        document.body.appendChild(tempEle);
+	        const lineHeight = tempEle.offsetHeight;
+	        document.body.removeChild(tempEle);
+	        return lineHeight;
+	    }
+	    getTruncationText(style) {
+	        const originalText = this.view.textContent;
+	        let start = 0, end = originalText.length;
+	        const tempEle = document.createElement('div');
+	        tempEle.style.cssText = style.cssText;
+	        tempEle.style.alignItems = "flex-start";
+	        tempEle.style.width = this.view.style.width;
+	        document.body.appendChild(tempEle);
+	        while (start <= end) {
+	            const mid = Math.floor((start + end) / 2);
+	            tempEle.textContent = originalText.slice(0, mid) + '...';
+	            if (tempEle.offsetHeight > this.maxHeight) {
+	                end = mid - 1;
+	            }
+	            else {
+	                start = mid + 1;
+	            }
+	        }
+	        document.body.removeChild(tempEle);
+	        return `${originalText.slice(0, end) + '...'}`;
 	    }
 	}
 

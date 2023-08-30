@@ -20,6 +20,7 @@ class NaivgatorDemo extends Panel {
                 'AnimatorDemo',
                 'Gobang',
                 'NotificationDemo',
+                'TextDemo',
                 'SwitchDemo',
                 'SliderDemo',
                 'NavbarDemo',

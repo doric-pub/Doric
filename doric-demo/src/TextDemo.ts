@@ -1,4 +1,4 @@
-import { Panel, Group, scroller, vlayout, layoutConfig, LayoutSpec, Input, Gravity, log, input, text, Color, Text, InputType, hlayout, GradientOrientation, AssetsResource } from "doric";
+import { Panel, Group, scroller, vlayout, layoutConfig, LayoutSpec, Input, Gravity, input, text, Color, Text, InputType, hlayout, GradientOrientation, AssetsResource } from "doric";
 import { title } from "./utils";
 @Entry
 class TextDemo extends Panel {

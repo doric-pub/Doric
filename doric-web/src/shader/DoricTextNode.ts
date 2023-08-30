@@ -2,6 +2,7 @@ import { DoricViewNode, LEFT, RIGHT, CENTER_X, CENTER_Y, TOP, BOTTOM, toPixelStr
 import { toRGBAString } from "../utils/color";
 
 export class DoricTextNode extends DoricViewNode {
+    maxLines = 0
     textElement!: HTMLElement
     build(): HTMLElement {
         const div = document.createElement('div')
@@ -61,10 +62,66 @@ export class DoricTextNode extends DoricViewNode {
                         break
                 }
                 break
+            case "maxLines":
+                this.maxLines = prop as number
+                break
             default:
                 super.blendProps(v, propName, prop)
                 break
         }
     }
 
+    layout() {
+        super.layout()
+        Promise.resolve().then(_ => {
+            this.configSize()
+        })
+    }
+
+    configSize() {
+        if (this.maxLines > 0) {
+            const currentHeight = this.view.offsetHeight
+            const computedStyle = window.getComputedStyle(this.view)
+            const maxHeight = this.getLineHeight(computedStyle) * this.maxLines
+            if (currentHeight > maxHeight) {
+                this.view.style.height = toPixelString(maxHeight)
+                this.view.style.alignItems = "flex-start"
+                this.view.style.overflow = 'hidden'
+                this.view.textContent = this.getTruncationText(computedStyle, maxHeight)
+            }
+        } 
+    }
+
+    getLineHeight(style:CSSStyleDeclaration) {
+        const tempEle = document.createElement('div')
+        tempEle.style.cssText = style.cssText
+        tempEle.textContent = 'Test'
+        document.body.appendChild(tempEle);
+        const lineHeight = tempEle.offsetHeight;
+        document.body.removeChild(tempEle);
+        return lineHeight;
+    }
+
+    getTruncationText(style:CSSStyleDeclaration, maxHeight:number) {
+        const originalText = this.view.textContent!
+        let start = 0, end = originalText.length
+
+        const tempEle = document.createElement('div')
+        tempEle.style.cssText = style.cssText
+        tempEle.style.alignItems = "flex-start"
+        tempEle.style.width = this.view.style.width
+        document.body.appendChild(tempEle);
+
+        while(start <= end) {
+            const mid = Math.floor((start + end) / 2)
+            tempEle.textContent = originalText.slice(0,mid) + '...'
+            if (tempEle.offsetHeight > maxHeight) {
+                end = mid - 1
+            } else {
+                start = mid + 1
+            }
+        }
+        document.body.removeChild(tempEle)
+        return `${originalText.slice(0, end) + '...'}`
+    }
 }

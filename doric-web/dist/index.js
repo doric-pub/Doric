@@ -7202,6 +7202,13 @@ var doric_web = (function (exports, axios, sandbox) {
 	                    v.style.alignItems = "center";
 	                }
 	                break;
+	            case "font":
+	                const fontLink = document.createElement('link');
+	                fontLink.rel = 'stylesheet';
+	                fontLink.href = `${prop}.css`;
+	                document.head.appendChild(fontLink);
+	                this.view.classList.add(prop);
+	                break;
 	            case "fontStyle":
 	                switch (prop) {
 	                    case "bold":
@@ -7245,7 +7252,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	                this.view.style.height = toPixelString(maxHeight);
 	                this.view.style.alignItems = "flex-start";
 	                this.view.style.overflow = 'hidden';
-	                this.view.textContent = this.getTruncationText(computedStyle, maxHeight);
+	                this.textElement.innerText = this.getTruncationText(computedStyle, maxHeight);
 	            }
 	        }
 	    }
@@ -7259,7 +7266,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	        return lineHeight;
 	    }
 	    getTruncationText(style, maxHeight) {
-	        const originalText = this.view.textContent;
+	        const originalText = this.textElement.innerText;
 	        let start = 0, end = originalText.length;
 	        const tempEle = document.createElement('div');
 	        tempEle.style.cssText = style.cssText;

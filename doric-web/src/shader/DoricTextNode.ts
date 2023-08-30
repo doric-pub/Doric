@@ -3,7 +3,6 @@ import { DoricViewNode, LEFT, RIGHT, CENTER_X, CENTER_Y, TOP, BOTTOM, toPixelStr
 
 export class DoricTextNode extends DoricViewNode {
     maxLines = 0
-    maxHeight = 0
 
     textElement!: HTMLElement
     build(): HTMLElement {
@@ -83,12 +82,12 @@ export class DoricTextNode extends DoricViewNode {
         if (this.maxLines > 0) {
             const currentHeight = this.view.offsetHeight
             const computedStyle = window.getComputedStyle(this.view)
-            this.maxHeight = this.getLineHeight(computedStyle) * this.maxLines
-            if (currentHeight > this.maxHeight) {
-                this.view.style.height = toPixelString(this.maxHeight)
+            const maxHeight = this.getLineHeight(computedStyle) * this.maxLines
+            if (currentHeight > maxHeight) {
+                this.view.style.height = toPixelString(maxHeight)
                 this.view.style.alignItems = "flex-start"
                 this.view.style.overflow = 'hidden'
-                this.view.textContent = this.getTruncationText(computedStyle)
+                this.view.textContent = this.getTruncationText(computedStyle, maxHeight)
             }
         } 
     }
@@ -103,7 +102,7 @@ export class DoricTextNode extends DoricViewNode {
         return lineHeight;
     }
 
-    getTruncationText(style:CSSStyleDeclaration) {
+    getTruncationText(style:CSSStyleDeclaration, maxHeight:number) {
         const originalText = this.view.textContent!
         let start = 0, end = originalText.length
         
@@ -116,7 +115,7 @@ export class DoricTextNode extends DoricViewNode {
         while(start <= end) {
             const mid = Math.floor((start + end) / 2)
             tempEle.textContent = originalText.slice(0,mid) + '...'
-            if (tempEle.offsetHeight > this.maxHeight) {
+            if (tempEle.offsetHeight > maxHeight) {
                 end = mid - 1
             } else {
                 start = mid + 1

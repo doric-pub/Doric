@@ -7095,7 +7095,6 @@ var doric_web = (function (exports, axios, sandbox) {
 	    constructor() {
 	        super(...arguments);
 	        this.maxLines = 0;
-	        this.maxHeight = 0;
 	    }
 	    build() {
 	        const div = document.createElement('div');
@@ -7175,12 +7174,12 @@ var doric_web = (function (exports, axios, sandbox) {
 	        if (this.maxLines > 0) {
 	            const currentHeight = this.view.offsetHeight;
 	            const computedStyle = window.getComputedStyle(this.view);
-	            this.maxHeight = this.getLineHeight(computedStyle) * this.maxLines;
-	            if (currentHeight > this.maxHeight) {
-	                this.view.style.height = toPixelString(this.maxHeight);
+	            const maxHeight = this.getLineHeight(computedStyle) * this.maxLines;
+	            if (currentHeight > maxHeight) {
+	                this.view.style.height = toPixelString(maxHeight);
 	                this.view.style.alignItems = "flex-start";
 	                this.view.style.overflow = 'hidden';
-	                this.view.textContent = this.getTruncationText(computedStyle);
+	                this.view.textContent = this.getTruncationText(computedStyle, maxHeight);
 	            }
 	        }
 	    }
@@ -7193,7 +7192,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	        document.body.removeChild(tempEle);
 	        return lineHeight;
 	    }
-	    getTruncationText(style) {
+	    getTruncationText(style, maxHeight) {
 	        const originalText = this.view.textContent;
 	        let start = 0, end = originalText.length;
 	        const tempEle = document.createElement('div');
@@ -7204,7 +7203,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	        while (start <= end) {
 	            const mid = Math.floor((start + end) / 2);
 	            tempEle.textContent = originalText.slice(0, mid) + '...';
-	            if (tempEle.offsetHeight > this.maxHeight) {
+	            if (tempEle.offsetHeight > maxHeight) {
 	                end = mid - 1;
 	            }
 	            else {

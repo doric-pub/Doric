@@ -61,7 +61,14 @@ class TextDemo extends Panel {
                         layoutConfig: layoutConfig().configWidth(LayoutSpec.MOST).configHeight(LayoutSpec.JUST),
                     }),
                     text({
-                        text: "This is normal text",
+                        text: "This is normal text! This is normal text! This is normal text! This is normal text! This is normal text! This is normal text! ",
+                        maxLines: 2,
+                        backgroundColor: Color.LTGRAY,
+                        layoutConfig:layoutConfig().configWidth(LayoutSpec.JUST).configHeight(LayoutSpec.FIT),
+                        width:320,
+                        border:{"width":1, "color":Color.RED},
+                        margin:{left:15,right:17}
+
                     }),
                     hlayout([
                         text({

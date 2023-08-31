@@ -7203,11 +7203,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	                }
 	                break;
 	            case "font":
-	                const fontLink = document.createElement('link');
-	                fontLink.rel = 'stylesheet';
-	                fontLink.href = `${prop}.css`;
-	                document.head.appendChild(fontLink);
-	                this.view.classList.add(prop);
+	                this.view.style.fontFamily = prop;
 	                break;
 	            case "fontStyle":
 	                switch (prop) {

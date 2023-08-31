@@ -5,6 +5,7 @@ export class DoricListNode extends DoricSuperNode {
     itemCount = 0
     renderItemFuncId?: string
     onLoadMoreFuncId?: string
+    onScrollFuncId?: string
     loadMoreViewId?: string
     batchCount = 15
     loadMore = false
@@ -21,6 +22,9 @@ export class DoricListNode extends DoricSuperNode {
                 break
             case "onLoadMore":
                 this.onLoadMoreFuncId = prop as string
+                break
+            case "onScroll":
+                this.onScrollFuncId = prop as string
                 break
             case "loadMoreView":
                 this.loadMoreViewId = prop as string
@@ -114,7 +118,11 @@ export class DoricListNode extends DoricSuperNode {
     build() {
         const ret = document.createElement('div')
         ret.style.overflow = "scroll"
-        ret.addEventListener("scroll", () => {
+        ret.addEventListener("scroll", event => {
+            if (this.onScrollFuncId) {
+                this.callJSResponse(this.onScrollFuncId,
+                    { x: (event.target as HTMLElement).scrollLeft || 0, y: (event.target as HTMLElement).scrollTop })
+            }
             if (this.loadMore) {
                 if (ret.scrollTop + ret.offsetHeight === ret.scrollHeight) {
                     this.onScrollToEnd()

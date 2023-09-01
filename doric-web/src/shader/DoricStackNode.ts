@@ -46,16 +46,24 @@ export class DoricStackNode extends DoricGroupViewNode {
             if ((gravity & LEFT) === LEFT) {
                 left = toPixelString(0)
             } else if ((gravity & RIGHT) === RIGHT) {
-                left = toPixelString(this.view.offsetWidth - e.view.offsetWidth)
+                //ignore marginLeft
+                const childMarginRight = pixelString2Number(window.getComputedStyle(e.view).marginRight)
+                left = toPixelString(this.view.offsetWidth - e.view.offsetWidth - childMarginRight)
             } else if ((gravity & CENTER_X) === CENTER_X) {
-                left = toPixelString(this.view.offsetWidth / 2 - e.view.offsetWidth / 2)
+                const childMarginLeft = pixelString2Number(window.getComputedStyle(e.view).marginLeft)
+                const childMarginRight = pixelString2Number(window.getComputedStyle(e.view).marginRight)
+                left = toPixelString(this.view.offsetWidth / 2 - e.view.offsetWidth / 2 + childMarginLeft - childMarginRight)
             }
             if ((gravity & TOP) === TOP) {
                 top = toPixelString(0)
             } else if ((gravity & BOTTOM) === BOTTOM) {
-                top = toPixelString(this.view.offsetHeight - e.view.offsetHeight)
+                //ignore marginTop
+                const childMarginTop = pixelString2Number(window.getComputedStyle(e.view).marginBottom)
+                top = toPixelString(this.view.offsetHeight - e.view.offsetHeight - childMarginTop)
             } else if ((gravity & CENTER_Y) === CENTER_Y) {
-                top = toPixelString(this.view.offsetHeight / 2 - e.view.offsetHeight / 2)
+                const childMarginTop = pixelString2Number(window.getComputedStyle(e.view).marginTop)
+                const childMarginBottom = pixelString2Number(window.getComputedStyle(e.view).marginBottom)
+                top = toPixelString(this.view.offsetHeight / 2 - e.view.offsetHeight / 2 + childMarginTop - childMarginBottom)
             }
             e.applyCSSStyle({
                 position,

@@ -6996,19 +6996,27 @@ var doric_web = (function (exports, axios, sandbox) {
 	                left = toPixelString(0);
 	            }
 	            else if ((gravity & RIGHT) === RIGHT) {
-	                left = toPixelString(this.view.offsetWidth - e.view.offsetWidth);
+	                //ignore marginLeft
+	                const childMarginRight = pixelString2Number(window.getComputedStyle(e.view).marginRight);
+	                left = toPixelString(this.view.offsetWidth - e.view.offsetWidth - childMarginRight);
 	            }
 	            else if ((gravity & CENTER_X) === CENTER_X) {
-	                left = toPixelString(this.view.offsetWidth / 2 - e.view.offsetWidth / 2);
+	                const childMarginLeft = pixelString2Number(window.getComputedStyle(e.view).marginLeft);
+	                const childMarginRight = pixelString2Number(window.getComputedStyle(e.view).marginRight);
+	                left = toPixelString(this.view.offsetWidth / 2 - e.view.offsetWidth / 2 + childMarginLeft - childMarginRight);
 	            }
 	            if ((gravity & TOP) === TOP) {
 	                top = toPixelString(0);
 	            }
 	            else if ((gravity & BOTTOM) === BOTTOM) {
-	                top = toPixelString(this.view.offsetHeight - e.view.offsetHeight);
+	                //ignore marginTop
+	                const childMarginTop = pixelString2Number(window.getComputedStyle(e.view).marginBottom);
+	                top = toPixelString(this.view.offsetHeight - e.view.offsetHeight - childMarginTop);
 	            }
 	            else if ((gravity & CENTER_Y) === CENTER_Y) {
-	                top = toPixelString(this.view.offsetHeight / 2 - e.view.offsetHeight / 2);
+	                const childMarginTop = pixelString2Number(window.getComputedStyle(e.view).marginTop);
+	                const childMarginBottom = pixelString2Number(window.getComputedStyle(e.view).marginBottom);
+	                top = toPixelString(this.view.offsetHeight / 2 - e.view.offsetHeight / 2 + childMarginTop - childMarginBottom);
 	            }
 	            e.applyCSSStyle({
 	                position,
@@ -7164,6 +7172,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	    build() {
 	        const div = document.createElement('div');
 	        div.style.display = "flex";
+	        div.style.overflow = "hidden";
 	        this.textElement = document.createElement('span');
 	        div.appendChild(this.textElement);
 	        div.style.justifyContent = "center";
@@ -7686,6 +7695,9 @@ var doric_web = (function (exports, axios, sandbox) {
 	            case "onLoadMore":
 	                this.onLoadMoreFuncId = prop;
 	                break;
+	            case "onScroll":
+	                this.onScrollFuncId = prop;
+	                break;
 	            case "loadMoreView":
 	                this.loadMoreViewId = prop;
 	                break;
@@ -7774,7 +7786,10 @@ var doric_web = (function (exports, axios, sandbox) {
 	    build() {
 	        const ret = document.createElement('div');
 	        ret.style.overflow = "scroll";
-	        ret.addEventListener("scroll", () => {
+	        ret.addEventListener("scroll", event => {
+	            if (this.onScrollFuncId) {
+	                this.callJSResponse(this.onScrollFuncId, { x: event.target.scrollLeft || 0, y: event.target.scrollTop });
+	            }
 	            if (this.loadMore) {
 	                if (ret.scrollTop + ret.offsetHeight === ret.scrollHeight) {
 	                    this.onScrollToEnd();

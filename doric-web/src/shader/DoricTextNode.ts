@@ -7,6 +7,7 @@ export class DoricTextNode extends DoricViewNode {
     build(): HTMLElement {
         const div = document.createElement('div')
         div.style.display = "flex"
+        div.style.overflow = "hidden"
         this.textElement = document.createElement('span')
         div.appendChild(this.textElement)
         div.style.justifyContent = "center"

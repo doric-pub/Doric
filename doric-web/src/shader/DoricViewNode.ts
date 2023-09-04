@@ -64,8 +64,13 @@ export abstract class DoricViewNode {
             right: 0,
             top: 0,
             bottom: 0
-        }
+        },
+        maxWidth: -1,
+        maxHeight: -1,
+        minWidth: -1,
+        minHeight: -1
     }
+
     padding = {
         left: 0,
         right: 0,
@@ -186,6 +191,29 @@ export abstract class DoricViewNode {
         this.applyCSSStyle({ width })
     }
 
+    configSizeConstraints() {
+        if (this.layoutConfig.maxWidth && this.layoutConfig.maxWidth !== -1) {
+            this.applyCSSStyle({ maxWidth: toPixelString(this.layoutConfig.maxWidth) })
+        } else {
+            this.view.style.removeProperty('max-width')
+        }
+        if (this.layoutConfig.maxHeight && this.layoutConfig.maxHeight !== -1) {
+            this.applyCSSStyle({ maxHeight: toPixelString(this.layoutConfig.maxHeight) })
+        } else {
+            this.view.style.removeProperty('max-height')
+        }
+        if (this.layoutConfig.minWidth && this.layoutConfig.minWidth !== -1) {
+            this.applyCSSStyle({ minWidth: toPixelString(this.layoutConfig.minWidth) })
+        } else {
+            this.view.style.removeProperty('min-width')
+        }
+        if (this.layoutConfig.minHeight && this.layoutConfig.minHeight !== -1) {
+            this.applyCSSStyle({ minHeight: toPixelString(this.layoutConfig.minHeight) })
+        } else {
+            this.view.style.removeProperty('min-height')
+        }
+    }
+
     configHeight() {
         let height
         switch (this.layoutConfig.heightSpec) {
@@ -235,6 +263,7 @@ export abstract class DoricViewNode {
         this.configPadding()
         this.configWidth()
         this.configHeight()
+        this.configSizeConstraints()
     }
 
     blendProps(v: HTMLElement, propName: string, prop: any) {

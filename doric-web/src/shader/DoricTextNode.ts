@@ -69,6 +69,20 @@ export class DoricTextNode extends DoricViewNode {
             case "maxLines":
                 this.maxLines = prop as number
                 break
+            case "maxWidth":
+                if (prop) {
+                    this.layoutConfig.maxWidth = prop
+                } else {
+                    this.layoutConfig.maxWidth = -1
+                }
+                break
+            case "maxHeight":
+                if (prop) {
+                    this.layoutConfig.maxHeight = prop
+                } else {
+                    this.layoutConfig.maxHeight = -1
+                }
+                break
             default:
                 super.blendProps(v, propName, prop)
                 break

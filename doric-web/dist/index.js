@@ -6255,7 +6255,11 @@ var doric_web = (function (exports, axios, sandbox) {
 	                right: 0,
 	                top: 0,
 	                bottom: 0
-	            }
+	            },
+	            maxWidth: -1,
+	            maxHeight: -1,
+	            minWidth: -1,
+	            minHeight: -1
 	        };
 	        this.padding = {
 	            left: 0,
@@ -6337,6 +6341,32 @@ var doric_web = (function (exports, axios, sandbox) {
 	        }
 	        this.applyCSSStyle({ width });
 	    }
+	    configSizeConstraints() {
+	        if (this.layoutConfig.maxWidth && this.layoutConfig.maxWidth !== -1) {
+	            this.applyCSSStyle({ maxWidth: toPixelString(this.layoutConfig.maxWidth) });
+	        }
+	        else {
+	            this.view.style.removeProperty('max-width');
+	        }
+	        if (this.layoutConfig.maxHeight && this.layoutConfig.maxHeight !== -1) {
+	            this.applyCSSStyle({ maxHeight: toPixelString(this.layoutConfig.maxHeight) });
+	        }
+	        else {
+	            this.view.style.removeProperty('max-height');
+	        }
+	        if (this.layoutConfig.minWidth && this.layoutConfig.minWidth !== -1) {
+	            this.applyCSSStyle({ minWidth: toPixelString(this.layoutConfig.minWidth) });
+	        }
+	        else {
+	            this.view.style.removeProperty('min-width');
+	        }
+	        if (this.layoutConfig.minHeight && this.layoutConfig.minHeight !== -1) {
+	            this.applyCSSStyle({ minHeight: toPixelString(this.layoutConfig.minHeight) });
+	        }
+	        else {
+	            this.view.style.removeProperty('min-height');
+	        }
+	    }
 	    configHeight() {
 	        let height;
 	        switch (this.layoutConfig.heightSpec) {
@@ -6381,6 +6411,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	        this.configPadding();
 	        this.configWidth();
 	        this.configHeight();
+	        this.configSizeConstraints();
 	    }
 	    blendProps(v, propName, prop) {
 	        switch (propName) {
@@ -7236,6 +7267,22 @@ var doric_web = (function (exports, axios, sandbox) {
 	                break;
 	            case "maxLines":
 	                this.maxLines = prop;
+	                break;
+	            case "maxWidth":
+	                if (prop) {
+	                    this.layoutConfig.maxWidth = prop;
+	                }
+	                else {
+	                    this.layoutConfig.maxWidth = -1;
+	                }
+	                break;
+	            case "maxHeight":
+	                if (prop) {
+	                    this.layoutConfig.maxHeight = prop;
+	                }
+	                else {
+	                    this.layoutConfig.maxHeight = -1;
+	                }
 	                break;
 	            default:
 	                super.blendProps(v, propName, prop);

@@ -9,6 +9,7 @@ export * from './src/DoricPlugin'
 export * from './src/DoricRegistry'
 export * from './src/DoricDriver'
 export * from './src/shader/DoricViewNode'
+export * from './src/resource/DoricResourceLoader'
 
 window.customElements.define('doric-div', DoricElement);
 window.customElements.define('doric-navigation', NavigationElement);

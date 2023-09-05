@@ -1,5 +1,6 @@
 import { DoricViewNode, LEFT, RIGHT, CENTER_X, CENTER_Y, TOP, BOTTOM, toPixelString } from './DoricViewNode'
 import { toRGBAString } from '../utils/color'
+import { resourceManager } from '../DoricRegistry'
 
 enum ScaleType {
     ScaleToFill = 0,
@@ -34,6 +35,13 @@ export class DoricImageNode extends DoricViewNode {
 
     blendProps(v: HTMLImageElement, propName: string, prop: any) {
         switch (propName) {
+            case 'image':
+                resourceManager.load(prop)?.then(e => {
+                    this.loadIntoTarget(v, e)
+                }).catch(e => {
+                    this.loadIntoTarget(v, '')
+                })
+                break
             case 'imageUrl':
             case 'imageBase64':
                 this.loadIntoTarget(v, prop)
@@ -75,34 +83,36 @@ export class DoricImageNode extends DoricViewNode {
     }
 
     private loadIntoTarget(v: HTMLImageElement, src: any) {
-        let placeHolderSrc = ''
+        v.style.removeProperty('background-color')
         if (this.placeHolderImage) {
-            placeHolderSrc = v.src = this.placeHolderImage
+            v.src = this.placeHolderImage
         } else if (this.placeHolderImageBase64) {
-            placeHolderSrc = v.src = this.placeHolderImageBase64
+            v.src = this.placeHolderImageBase64
         } else if (this.placeHolderColor) {
             v.style.backgroundColor = toRGBAString(this.placeHolderColor)
         }
         v.onload = () => {
-            if (this.placeHolderColor) {
-                v.style.removeProperty('background-color')
-            }
-            if (this.onloadFuncId) {
+            v.style.removeProperty('background-color')
+            if (v.src === src && this.onloadFuncId) {
                 this.callJSResponse(this.onloadFuncId, {
-                    width: v.width,
-                    height: v.height,
+                    width: v.naturalWidth,
+                    height: v.naturalHeight,
                 })
             }
         }
         v.onerror = () => {
+            v.style.removeProperty('background-color')
             const error = this.getError(v.offsetWidth, v.offsetHeight)
             if (!error) return
             const same = src === error
-            const srcLoadError = v.src === src
+            const srcLoadError = v.src.length === 0 || v.src === src
             if (same || !srcLoadError) return
             v.src = error
+            if (this.onloadFuncId) {
+                this.callJSResponse(this.onloadFuncId)
+            }
         }
-        setTimeout(() => {
+        Promise.resolve().then(e => {
             v.src = src
         })
     }

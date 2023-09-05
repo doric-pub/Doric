@@ -7362,7 +7362,15 @@ var doric_web = (function (exports, axios, sandbox) {
 	        super.blend(props);
 	    }
 	    blendProps(v, propName, prop) {
+	        var _a;
 	        switch (propName) {
+	            case 'image':
+	                (_a = resourceManager.load(prop)) === null || _a === void 0 ? void 0 : _a.then(e => {
+	                    this.loadIntoTarget(v, e);
+	                }).catch(e => {
+	                    this.loadIntoTarget(v, '');
+	                });
+	                break;
 	            case 'imageUrl':
 	            case 'imageBase64':
 	                this.loadIntoTarget(v, prop);
@@ -7404,6 +7412,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	        }
 	    }
 	    loadIntoTarget(v, src) {
+	        v.style.removeProperty('background-color');
 	        if (this.placeHolderImage) {
 	            v.src = this.placeHolderImage;
 	        }
@@ -7414,27 +7423,29 @@ var doric_web = (function (exports, axios, sandbox) {
 	            v.style.backgroundColor = toRGBAString(this.placeHolderColor);
 	        }
 	        v.onload = () => {
-	            if (this.placeHolderColor) {
-	                v.style.removeProperty('background-color');
-	            }
-	            if (this.onloadFuncId) {
+	            v.style.removeProperty('background-color');
+	            if (v.src === src && this.onloadFuncId) {
 	                this.callJSResponse(this.onloadFuncId, {
-	                    width: v.width,
-	                    height: v.height,
+	                    width: v.naturalWidth,
+	                    height: v.naturalHeight,
 	                });
 	            }
 	        };
 	        v.onerror = () => {
+	            v.style.removeProperty('background-color');
 	            const error = this.getError(v.offsetWidth, v.offsetHeight);
 	            if (!error)
 	                return;
 	            const same = src === error;
-	            const srcLoadError = v.src === src;
+	            const srcLoadError = v.src.length === 0 || v.src === src;
 	            if (same || !srcLoadError)
 	                return;
 	            v.src = error;
+	            if (this.onloadFuncId) {
+	                this.callJSResponse(this.onloadFuncId);
+	            }
 	        };
-	        setTimeout(() => {
+	        Promise.resolve().then(e => {
 	            v.src = src;
 	        });
 	    }
@@ -8648,9 +8659,23 @@ var doric_web = (function (exports, axios, sandbox) {
 	    }
 	}
 
+	class DoricResourceManager {
+	    constructor() {
+	        this.resourceLoaders = new Map();
+	    }
+	    registerLoader(loader) {
+	        this.resourceLoaders.set(loader.resourceType(), loader);
+	    }
+	    load(resource) {
+	        var _a;
+	        return (_a = this.resourceLoaders.get(resource.type)) === null || _a === void 0 ? void 0 : _a.load(resource.identifier);
+	    }
+	}
+
 	const bundles = new Map;
 	const plugins = new Map;
 	const nodes = new Map;
+	const resourceManager = new DoricResourceManager();
 	function acquireJSBundle(name) {
 	    return bundles.get(name);
 	}
@@ -9063,6 +9088,7 @@ ${content}
 	exports.registerJSBundle = registerJSBundle;
 	exports.registerPlugin = registerPlugin;
 	exports.registerViewNode = registerViewNode;
+	exports.resourceManager = resourceManager;
 	exports.toPixelString = toPixelString;
 
 	Object.defineProperty(exports, '__esModule', { value: true });

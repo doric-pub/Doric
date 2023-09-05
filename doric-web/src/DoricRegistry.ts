@@ -22,6 +22,7 @@ import { DoricSlideItemNode } from "./shader/DoricSlideItemNode"
 import { NotificationPlugin } from "./plugins/NotificationPlugin"
 import { NetworkPlugin } from "./plugins/NetworkPlugin"
 import { DoricNestedSliderNode } from "./shader/DoricNestedSliderNode"
+import DoricResourceManager from "./resource/DoricResourceManager"
 
 const bundles: Map<string, string> = new Map
 
@@ -29,6 +30,7 @@ const plugins: Map<string, DoricPluginClass> = new Map
 
 const nodes: Map<string, DoricViewNodeClass> = new Map
 
+export const resourceManager = new DoricResourceManager()
 
 export function acquireJSBundle(name: string) {
     return bundles.get(name)

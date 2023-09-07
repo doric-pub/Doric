@@ -7,7 +7,13 @@ enum ScaleType {
     ScaleAspectFit,
     ScaleAspectFill,
 }
-
+type StretchInset = {
+    left: number,
+    top: number,
+    right: number,
+    bottom: number
+}
+const transparentBase64 = "data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="
 export class DoricImageNode extends DoricViewNode {
     onloadFuncId?: string
     placeHolderImage?: string
@@ -16,10 +22,11 @@ export class DoricImageNode extends DoricViewNode {
     errorImage?: string
     errorImageBase64?: string
     errorColor?: number
+    stretchInset?: StretchInset
 
     build(): HTMLElement {
         const ret = document.createElement('img')
-        ret.style.objectFit = "fill"
+        ret.style.objectFit = 'fill'
         return ret
     }
 
@@ -30,6 +37,7 @@ export class DoricImageNode extends DoricViewNode {
         this.errorImage = props['errorImage']
         this.errorImageBase64 = props['errorImageBase64']
         this.errorColor = props['errorColor']
+        this.stretchInset = props['stretchInset']
         super.blend(props)
     }
 
@@ -52,6 +60,8 @@ export class DoricImageNode extends DoricViewNode {
             case 'errorImage':
             case 'errorImageBase64':
             case 'errorColor':
+                break
+            case 'stretchInset':
                 break
             case 'loadCallback':
                 this.onloadFuncId = prop
@@ -82,8 +92,52 @@ export class DoricImageNode extends DoricViewNode {
         }
     }
 
-    private loadIntoTarget(v: HTMLImageElement, src: any) {
-        v.style.removeProperty('background-color')
+    private loadIntoTarget(targetElement: HTMLImageElement, src: any) {
+        this.clearStretchElementAttributes(targetElement)
+        this.loadPlaceHolder(targetElement)
+        let tempLoadElement = this.stretchInset ? document.createElement('img') : targetElement
+        tempLoadElement.onload = () => {
+            //remove placeHolderColor
+            targetElement.style.removeProperty('background-color')
+            if (tempLoadElement.src === src && this.onloadFuncId) {
+                this.callJSResponse(this.onloadFuncId, {
+                    width: tempLoadElement.naturalWidth,
+                    height: tempLoadElement.naturalHeight,
+                })
+            }
+        }
+        tempLoadElement.onerror = () => {
+            this.clearStretchElementAttributes(targetElement)
+            const error = this.getError(targetElement.offsetWidth, targetElement.offsetHeight)
+            if (!error) return
+            const same = src === error
+            const srcLoadError = tempLoadElement.src.length === 0 || tempLoadElement.src === src
+            if (same || !srcLoadError) return
+            targetElement.src = error
+            if (this.onloadFuncId) {
+                this.callJSResponse(this.onloadFuncId)
+            }
+        }
+        Promise.resolve().then(e => {
+            tempLoadElement.src = src
+            if (this.stretchInset) {
+                this.loadImageWithStretch(targetElement, src, this.stretchInset)
+            }
+        })
+    }
+
+    private loadImageWithStretch(v: HTMLImageElement, src: any, stretchInset: StretchInset) {
+        v.src = transparentBase64
+        v.style.borderImageSource = `url(${src})`
+        v.style.borderImageSlice = `${stretchInset.top} ${stretchInset.right} ${stretchInset.bottom} ${stretchInset.left} fill`
+        const top = toPixelString(stretchInset.top)
+        const right = toPixelString(stretchInset.right)
+        const bottom = toPixelString(stretchInset.bottom)
+        const left = toPixelString(stretchInset.left)
+        v.style.borderImageWidth = `${top} ${right} ${bottom} ${left}`
+    }
+
+    private loadPlaceHolder(v: HTMLImageElement) {
         if (this.placeHolderImage) {
             v.src = this.placeHolderImage
         } else if (this.placeHolderImageBase64) {
@@ -91,30 +145,13 @@ export class DoricImageNode extends DoricViewNode {
         } else if (this.placeHolderColor) {
             v.style.backgroundColor = toRGBAString(this.placeHolderColor)
         }
-        v.onload = () => {
-            v.style.removeProperty('background-color')
-            if (v.src === src && this.onloadFuncId) {
-                this.callJSResponse(this.onloadFuncId, {
-                    width: v.naturalWidth,
-                    height: v.naturalHeight,
-                })
-            }
-        }
-        v.onerror = () => {
-            v.style.removeProperty('background-color')
-            const error = this.getError(v.offsetWidth, v.offsetHeight)
-            if (!error) return
-            const same = src === error
-            const srcLoadError = v.src.length === 0 || v.src === src
-            if (same || !srcLoadError) return
-            v.src = error
-            if (this.onloadFuncId) {
-                this.callJSResponse(this.onloadFuncId)
-            }
-        }
-        Promise.resolve().then(e => {
-            v.src = src
-        })
+    }
+
+    private clearStretchElementAttributes(v: HTMLImageElement) {
+        v.style.removeProperty('background-color')
+        v.style.removeProperty('border-image-source')
+        v.style.removeProperty('border-image-slice')
+        v.style.removeProperty('border-image-width')
     }
 
     private getError(width: number, height: number) {

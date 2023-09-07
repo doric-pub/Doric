@@ -7346,10 +7346,11 @@ var doric_web = (function (exports, axios, sandbox) {
 	    ScaleType[ScaleType["ScaleAspectFit"] = 1] = "ScaleAspectFit";
 	    ScaleType[ScaleType["ScaleAspectFill"] = 2] = "ScaleAspectFill";
 	})(ScaleType || (ScaleType = {}));
+	const transparentBase64 = "data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==";
 	class DoricImageNode extends DoricViewNode {
 	    build() {
 	        const ret = document.createElement('img');
-	        ret.style.objectFit = "fill";
+	        ret.style.objectFit = 'fill';
 	        return ret;
 	    }
 	    blend(props) {
@@ -7359,6 +7360,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	        this.errorImage = props['errorImage'];
 	        this.errorImageBase64 = props['errorImageBase64'];
 	        this.errorColor = props['errorColor'];
+	        this.stretchInset = props['stretchInset'];
 	        super.blend(props);
 	    }
 	    blendProps(v, propName, prop) {
@@ -7381,6 +7383,8 @@ var doric_web = (function (exports, axios, sandbox) {
 	            case 'errorImage':
 	            case 'errorImageBase64':
 	            case 'errorColor':
+	                break;
+	            case 'stretchInset':
 	                break;
 	            case 'loadCallback':
 	                this.onloadFuncId = prop;
@@ -7411,8 +7415,52 @@ var doric_web = (function (exports, axios, sandbox) {
 	                break;
 	        }
 	    }
-	    loadIntoTarget(v, src) {
-	        v.style.removeProperty('background-color');
+	    loadIntoTarget(targetElement, src) {
+	        this.clearStretchElementAttributes(targetElement);
+	        this.loadPlaceHolder(targetElement);
+	        let tempLoadElement = this.stretchInset ? document.createElement('img') : targetElement;
+	        tempLoadElement.onload = () => {
+	            //remove placeHolderColor
+	            targetElement.style.removeProperty('background-color');
+	            if (tempLoadElement.src === src && this.onloadFuncId) {
+	                this.callJSResponse(this.onloadFuncId, {
+	                    width: tempLoadElement.naturalWidth,
+	                    height: tempLoadElement.naturalHeight,
+	                });
+	            }
+	        };
+	        tempLoadElement.onerror = () => {
+	            this.clearStretchElementAttributes(targetElement);
+	            const error = this.getError(targetElement.offsetWidth, targetElement.offsetHeight);
+	            if (!error)
+	                return;
+	            const same = src === error;
+	            const srcLoadError = tempLoadElement.src.length === 0 || tempLoadElement.src === src;
+	            if (same || !srcLoadError)
+	                return;
+	            targetElement.src = error;
+	            if (this.onloadFuncId) {
+	                this.callJSResponse(this.onloadFuncId);
+	            }
+	        };
+	        Promise.resolve().then(e => {
+	            tempLoadElement.src = src;
+	            if (this.stretchInset) {
+	                this.loadImageWithStretch(targetElement, src, this.stretchInset);
+	            }
+	        });
+	    }
+	    loadImageWithStretch(v, src, stretchInset) {
+	        v.src = transparentBase64;
+	        v.style.borderImageSource = `url(${src})`;
+	        v.style.borderImageSlice = `${stretchInset.top} ${stretchInset.right} ${stretchInset.bottom} ${stretchInset.left} fill`;
+	        const top = toPixelString(stretchInset.top);
+	        const right = toPixelString(stretchInset.right);
+	        const bottom = toPixelString(stretchInset.bottom);
+	        const left = toPixelString(stretchInset.left);
+	        v.style.borderImageWidth = `${top} ${right} ${bottom} ${left}`;
+	    }
+	    loadPlaceHolder(v) {
 	        if (this.placeHolderImage) {
 	            v.src = this.placeHolderImage;
 	        }
@@ -7422,32 +7470,12 @@ var doric_web = (function (exports, axios, sandbox) {
 	        else if (this.placeHolderColor) {
 	            v.style.backgroundColor = toRGBAString(this.placeHolderColor);
 	        }
-	        v.onload = () => {
-	            v.style.removeProperty('background-color');
-	            if (v.src === src && this.onloadFuncId) {
-	                this.callJSResponse(this.onloadFuncId, {
-	                    width: v.naturalWidth,
-	                    height: v.naturalHeight,
-	                });
-	            }
-	        };
-	        v.onerror = () => {
-	            v.style.removeProperty('background-color');
-	            const error = this.getError(v.offsetWidth, v.offsetHeight);
-	            if (!error)
-	                return;
-	            const same = src === error;
-	            const srcLoadError = v.src.length === 0 || v.src === src;
-	            if (same || !srcLoadError)
-	                return;
-	            v.src = error;
-	            if (this.onloadFuncId) {
-	                this.callJSResponse(this.onloadFuncId);
-	            }
-	        };
-	        Promise.resolve().then(e => {
-	            v.src = src;
-	        });
+	    }
+	    clearStretchElementAttributes(v) {
+	        v.style.removeProperty('background-color');
+	        v.style.removeProperty('border-image-source');
+	        v.style.removeProperty('border-image-slice');
+	        v.style.removeProperty('border-image-width');
 	    }
 	    getError(width, height) {
 	        if (this.errorImage) {

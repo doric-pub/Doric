@@ -8590,6 +8590,66 @@ var doric_web = (function (exports, axios, sandbox) {
 	    }
 	}
 
+	function getX(ev) {
+	    return ev instanceof MouseEvent ? ev.pageX : ev.touches[0].pageX;
+	}
+	function getY(ev) {
+	    return ev instanceof MouseEvent ? ev.pageY : ev.touches[0].pageY;
+	}
+	function NestedSliderView(props) {
+	    const ret = document.createElement("div");
+	    ret.style.overflow = "hidden";
+	    ret.style.display = "inline";
+	    ret.style.whiteSpace = "nowrap";
+	    let touch = {
+	        touchStartX: 0,
+	        touchStartY: 0,
+	        currentIndex: 0,
+	        isDragging: false,
+	        horizontal: true
+	    };
+	    ret.ontouchstart = ret.onmousedown = (ev) => {
+	        if (!props.scrollable())
+	            return;
+	        touch = Object.assign(Object.assign({}, touch), { currentIndex: Math.round(ret.scrollLeft / ret.offsetWidth), touchStartX: getX(ev), touchStartY: getY(ev), isDragging: true });
+	    };
+	    ret.ontouchmove = ret.onmousemove = (ev) => {
+	        if (!props.scrollable() || !touch.isDragging)
+	            return;
+	        if (!touch.horizontal) {
+	            return;
+	        }
+	        if (Math.abs(getX(ev) - touch.touchStartX) < Math.abs(getY(ev) - touch.touchStartY)) {
+	            touch.horizontal = false;
+	            return;
+	        }
+	        const offsetX = (touch.touchStartX - getX(ev)) * 1.2;
+	        ret.scrollTo({
+	            left: touch.currentIndex * ret.offsetWidth + offsetX,
+	        });
+	    };
+	    ret.onmouseup = ret.ontouchcancel = ret.ontouchend = () => {
+	        if (!props.scrollable())
+	            return;
+	        touch = Object.assign(Object.assign({}, touch), { isDragging: false, horizontal: true });
+	        let originIndex = touch.currentIndex;
+	        if (Math.abs(ret.scrollLeft - originIndex * ret.offsetWidth) > ret.offsetWidth / 5) {
+	            const positionOffset = Math.abs(ret.scrollLeft) > originIndex * ret.offsetWidth ? 1 : -1;
+	            touch.currentIndex += positionOffset;
+	        }
+	        ret.scrollTo({
+	            left: touch.currentIndex * ret.offsetWidth,
+	            behavior: "smooth",
+	        });
+	        if (originIndex !== touch.currentIndex) {
+	            if (props.onPageSelected) {
+	                props.onPageSelected(touch.currentIndex);
+	            }
+	        }
+	    };
+	    return ret;
+	}
+
 	class DoricNestedSliderNode extends DoricGroupViewNode {
 	    constructor() {
 	        super(...arguments);
@@ -8613,50 +8673,13 @@ var doric_web = (function (exports, axios, sandbox) {
 	        }
 	    }
 	    build() {
-	        const ret = document.createElement("div");
-	        ret.style.overflow = "hidden";
-	        ret.style.display = "inline";
-	        ret.style.whiteSpace = "nowrap";
-	        let touchStartX = 0;
-	        let currentIndex = 0;
-	        let isDragging = false;
-	        const handleTouchStart = (x) => {
-	            if (!this.scrollable)
-	                return;
-	            currentIndex = Math.round(ret.scrollLeft / ret.offsetWidth);
-	            touchStartX = x;
-	            isDragging = true;
-	        };
-	        ret.onmousedown = (ev) => handleTouchStart(ev.pageX);
-	        ret.ontouchstart = (ev) => handleTouchStart(ev.touches[0].pageX);
-	        const handleTouchMove = (x) => {
-	            if (!this.scrollable || !isDragging)
-	                return;
-	            const offsetX = (touchStartX - x) * 3;
-	            ret.scrollTo({
-	                left: currentIndex * ret.offsetWidth + offsetX,
-	            });
-	        };
-	        ret.onmousemove = (ev) => handleTouchMove(ev.pageX);
-	        ret.ontouchmove = (ev) => handleTouchMove(ev.touches[0].pageX);
-	        const handleTouchCancel = () => {
-	            if (!this.scrollable)
-	                return;
-	            isDragging = false;
-	            let originInndex = currentIndex;
-	            currentIndex = Math.round(ret.scrollLeft / ret.offsetWidth);
-	            ret.scrollTo({
-	                left: currentIndex * ret.offsetWidth,
-	                behavior: "smooth",
-	            });
-	            if (originInndex !== currentIndex) {
+	        return NestedSliderView({
+	            scrollable: () => this.scrollable, onPageSelected: index => {
 	                if (this.onPageSelectedFuncId.length > 0) {
-	                    this.callJSResponse(this.onPageSelectedFuncId, currentIndex);
+	                    this.callJSResponse(this.onPageSelectedFuncId, index);
 	                }
 	            }
-	        };
-	        ret.onmouseup = ret.ontouchcancel = ret.ontouchend = handleTouchCancel;
-	        return ret;
+	        });
 	    }
 	    layout() {
 	        super.layout();

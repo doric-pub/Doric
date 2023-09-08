@@ -1,4 +1,6 @@
+import { horizontalList } from 'doric';
 import { DoricGroupViewNode } from "./DoricViewNode";
+import { NestedSliderView } from '../widgets/NestedSliderView';
 
 export class DoricNestedSliderNode extends DoricGroupViewNode {
   onPageSelectedFuncId = "";
@@ -19,47 +21,13 @@ export class DoricNestedSliderNode extends DoricGroupViewNode {
   }
 
   build() {
-    const ret = document.createElement("div");
-    ret.style.overflow = "hidden";
-    ret.style.display = "inline";
-    ret.style.whiteSpace = "nowrap";
-    let touchStartX = 0;
-    let currentIndex = 0;
-    let isDragging = false;
-    const handleTouchStart = (x: number) => {
-      if (!this.scrollable) return;
-      currentIndex = Math.round(ret.scrollLeft / ret.offsetWidth);
-      touchStartX = x;
-      isDragging = true;
-    };
-    ret.onmousedown = (ev) => handleTouchStart(ev.pageX);
-    ret.ontouchstart = (ev) => handleTouchStart(ev.touches[0].pageX);
-    const handleTouchMove = (x: number) => {
-      if (!this.scrollable || !isDragging) return;
-      const offsetX = (touchStartX - x) * 3;
-      ret.scrollTo({
-        left: currentIndex * ret.offsetWidth + offsetX,
-      });
-    };
-    ret.onmousemove = (ev) => handleTouchMove(ev.pageX);
-    ret.ontouchmove = (ev) => handleTouchMove(ev.touches[0].pageX);
-    const handleTouchCancel = () => {
-      if (!this.scrollable) return;
-      isDragging = false;
-      let originInndex = currentIndex;
-      currentIndex = Math.round(ret.scrollLeft / ret.offsetWidth);
-      ret.scrollTo({
-        left: currentIndex * ret.offsetWidth,
-        behavior: "smooth",
-      });
-      if (originInndex !== currentIndex) {
+    return NestedSliderView({
+      scrollable: () => this.scrollable, onPageSelected: index => {
         if (this.onPageSelectedFuncId.length > 0) {
-          this.callJSResponse(this.onPageSelectedFuncId, currentIndex);
+          this.callJSResponse(this.onPageSelectedFuncId, index);
         }
       }
-    };
-    ret.onmouseup = ret.ontouchcancel = ret.ontouchend = handleTouchCancel;
-    return ret;
+    });
   }
 
   layout(): void {

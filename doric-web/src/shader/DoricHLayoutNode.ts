@@ -43,9 +43,9 @@ export class DoricHLayoutNode extends DoricGroupViewNode {
                 e.view.style.flex = `${e.layoutConfig?.weight}`
             }
             e.view.style.marginLeft = toPixelString(e.layoutConfig?.margin?.left || 0)
+            const rightMargin = e.layoutConfig?.margin?.right || 0
             e.view.style.marginRight = toPixelString(
-                (idx === this.childNodes.length - 1) ? 0 : this.space
-                    + (e.layoutConfig?.margin?.right || 0))
+                (idx === this.childNodes.length - 1) ? rightMargin : this.space + rightMargin)
             e.view.style.marginTop = toPixelString(e.layoutConfig?.margin?.top || 0)
             e.view.style.marginBottom = toPixelString(e.layoutConfig?.margin?.bottom || 0)
             if ((e.layoutConfig.alignment & TOP) === TOP) {

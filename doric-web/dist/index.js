@@ -7109,8 +7109,8 @@ var doric_web = (function (exports, axios, sandbox) {
 	                e.view.style.flex = `${(_b = e.layoutConfig) === null || _b === void 0 ? void 0 : _b.weight}`;
 	            }
 	            e.view.style.marginTop = toPixelString(((_d = (_c = e.layoutConfig) === null || _c === void 0 ? void 0 : _c.margin) === null || _d === void 0 ? void 0 : _d.top) || 0);
-	            e.view.style.marginBottom = toPixelString((idx === this.childNodes.length - 1) ? 0 : this.space
-	                + (((_f = (_e = e.layoutConfig) === null || _e === void 0 ? void 0 : _e.margin) === null || _f === void 0 ? void 0 : _f.bottom) || 0));
+	            const bottomMargin = ((_f = (_e = e.layoutConfig) === null || _e === void 0 ? void 0 : _e.margin) === null || _f === void 0 ? void 0 : _f.bottom) || 0;
+	            e.view.style.marginBottom = toPixelString((idx === this.childNodes.length - 1) ? bottomMargin : this.space + bottomMargin);
 	            e.view.style.marginLeft = toPixelString(((_h = (_g = e.layoutConfig) === null || _g === void 0 ? void 0 : _g.margin) === null || _h === void 0 ? void 0 : _h.left) || 0);
 	            e.view.style.marginRight = toPixelString(((_k = (_j = e.layoutConfig) === null || _j === void 0 ? void 0 : _j.margin) === null || _k === void 0 ? void 0 : _k.right) || 0);
 	            if ((e.layoutConfig.alignment & LEFT) === LEFT) {
@@ -7178,8 +7178,8 @@ var doric_web = (function (exports, axios, sandbox) {
 	                e.view.style.flex = `${(_b = e.layoutConfig) === null || _b === void 0 ? void 0 : _b.weight}`;
 	            }
 	            e.view.style.marginLeft = toPixelString(((_d = (_c = e.layoutConfig) === null || _c === void 0 ? void 0 : _c.margin) === null || _d === void 0 ? void 0 : _d.left) || 0);
-	            e.view.style.marginRight = toPixelString((idx === this.childNodes.length - 1) ? 0 : this.space
-	                + (((_f = (_e = e.layoutConfig) === null || _e === void 0 ? void 0 : _e.margin) === null || _f === void 0 ? void 0 : _f.right) || 0));
+	            const rightMargin = ((_f = (_e = e.layoutConfig) === null || _e === void 0 ? void 0 : _e.margin) === null || _f === void 0 ? void 0 : _f.right) || 0;
+	            e.view.style.marginRight = toPixelString((idx === this.childNodes.length - 1) ? rightMargin : this.space + rightMargin);
 	            e.view.style.marginTop = toPixelString(((_h = (_g = e.layoutConfig) === null || _g === void 0 ? void 0 : _g.margin) === null || _h === void 0 ? void 0 : _h.top) || 0);
 	            e.view.style.marginBottom = toPixelString(((_k = (_j = e.layoutConfig) === null || _j === void 0 ? void 0 : _j.margin) === null || _k === void 0 ? void 0 : _k.bottom) || 0);
 	            if ((e.layoutConfig.alignment & TOP) === TOP) {

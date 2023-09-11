@@ -6903,7 +6903,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	                            newNode.viewId = childViewId;
 	                            newNode.init(this);
 	                            newNode.blend(model.props);
-	                            this.childNodes[index] = newNode;
+	                            this.childNodes.splice(index, 0, newNode);
 	                            this.view.insertBefore(newNode.view, this.view.children[index]);
 	                        }
 	                    }

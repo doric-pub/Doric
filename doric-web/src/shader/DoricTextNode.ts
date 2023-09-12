@@ -102,7 +102,7 @@ export class DoricTextNode extends DoricViewNode {
         if (this.maxLines > 0) {
             const computedStyle = window.getComputedStyle(this.view)
             const currentContentHeight = this.view.clientHeight - pixelString2Number(computedStyle.paddingTop) - pixelString2Number(computedStyle.paddingBottom)
-            let maxHeight = parseFloat(computedStyle.getPropertyValue('font-size')) * this.lineHeight() * this.maxLines 
+            let maxHeight = Math.ceil(parseFloat(computedStyle.getPropertyValue('font-size')) * this.lineHeight() * this.maxLines)
             if (currentContentHeight > 0) {
                 maxHeight = Math.min(maxHeight, Math.ceil(currentContentHeight))
             }
@@ -115,12 +115,14 @@ export class DoricTextNode extends DoricViewNode {
     lineHeight() {
         return 1.3
     }
-
+ 
     computedHeight(style:CSSStyleDeclaration) {
         const tempEle = document.createElement('div')
         tempEle.style.font = style.font
         tempEle.textContent = this.textElement.innerText
         tempEle.style.whiteSpace = 'normal'
+        this.view.style.overflow = 'hidden'
+        tempEle.style.lineHeight = `${this.lineHeight()}em`
         tempEle.style.width = this.view.style.width
         document.body.appendChild(tempEle)
         
@@ -137,6 +139,7 @@ export class DoricTextNode extends DoricViewNode {
         tempEle.style.font = style.font
         tempEle.style.whiteSpace = 'normal'
         this.view.style.overflow = 'hidden'
+        tempEle.style.lineHeight = `${this.lineHeight()}em`
         tempEle.style.width = this.view.style.width
         document.body.appendChild(tempEle);
 

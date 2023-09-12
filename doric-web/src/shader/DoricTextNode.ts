@@ -1,4 +1,4 @@
-import { DoricViewNode, LEFT, RIGHT, CENTER_X, CENTER_Y, TOP, BOTTOM, toPixelString } from "./DoricViewNode";
+import { DoricViewNode, LEFT, RIGHT, CENTER_X, CENTER_Y, TOP, BOTTOM, toPixelString, pixelString2Number } from "./DoricViewNode";
 import { toRGBAString } from "../utils/color";
 
 export class DoricTextNode extends DoricViewNode {
@@ -68,6 +68,8 @@ export class DoricTextNode extends DoricViewNode {
                 break
             case "maxLines":
                 this.maxLines = prop as number
+                this.view.style.whiteSpace = 'normal'
+                this.view.style.overflow = 'hidden'
                 break
             case "maxWidth":
                 if (prop) {
@@ -98,35 +100,56 @@ export class DoricTextNode extends DoricViewNode {
 
     configSize() {
         if (this.maxLines > 0) {
-            const currentHeight = this.view.offsetHeight
             const computedStyle = window.getComputedStyle(this.view)
-            const maxHeight = this.getLineHeight(computedStyle) * this.maxLines
-            if (currentHeight > maxHeight) {
-                this.view.style.height = toPixelString(maxHeight)
-                this.view.style.alignItems = "flex-start"
-                this.view.style.overflow = 'hidden'
-                this.textElement.innerText = this.getTruncationText(computedStyle, maxHeight)
+            const currentContentHeight = this.view.clientHeight - pixelString2Number(computedStyle.paddingTop) - pixelString2Number(computedStyle.paddingBottom)
+            let maxHeight = this.maxLinesHeight(computedStyle)
+            if (currentContentHeight > 0) {
+                maxHeight = Math.min(maxHeight, Math.ceil(currentContentHeight))
+            }
+            if (this.computedHeight(computedStyle) > maxHeight) {
+                this.textElement.innerText = this.truncationText(computedStyle, maxHeight)
             }
         } 
     }
 
-    getLineHeight(style:CSSStyleDeclaration) {
+    computedHeight(style:CSSStyleDeclaration) {
         const tempEle = document.createElement('div')
-        tempEle.style.cssText = style.cssText
-        tempEle.textContent = 'Test'
-        document.body.appendChild(tempEle);
-        const lineHeight = tempEle.offsetHeight;
-        document.body.removeChild(tempEle);
-        return lineHeight;
+        tempEle.style.font = style.font
+        tempEle.textContent = this.textElement.innerText
+        tempEle.style.whiteSpace = 'normal'
+        tempEle.style.width = this.view.style.width
+        document.body.appendChild(tempEle)
+        
+        const height = tempEle.offsetHeight
+        document.body.removeChild(tempEle)
+        return height
     }
 
-    getTruncationText(style:CSSStyleDeclaration, maxHeight:number) {
+    maxLinesHeight(style:CSSStyleDeclaration) {
+        let text = ''
+        for (let i = 0; i < this.maxLines; i++) {
+            text += 'Test测试😊\n'
+        }
+        const tempEle = document.createElement('div')
+        tempEle.style.font = style.font
+        tempEle.textContent = text
+        tempEle.style.width = this.view.style.width
+        tempEle.style.whiteSpace = 'pre';
+        tempEle.style.overflow = 'hidden';
+        document.body.appendChild(tempEle)
+        const height = tempEle.offsetHeight
+        document.body.removeChild(tempEle)
+        return height
+    }
+
+    truncationText(style:CSSStyleDeclaration, maxHeight:number) {
         const originalText = this.textElement.innerText
         let start = 0, end = originalText.length
 
         const tempEle = document.createElement('div')
-        tempEle.style.cssText = style.cssText
-        tempEle.style.alignItems = "flex-start"
+        tempEle.style.font = style.font
+        tempEle.style.whiteSpace = 'normal'
+        this.view.style.overflow = 'hidden'
         tempEle.style.width = this.view.style.width
         document.body.appendChild(tempEle);
 

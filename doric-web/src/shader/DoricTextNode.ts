@@ -8,6 +8,7 @@ export class DoricTextNode extends DoricViewNode {
         const div = document.createElement('div')
         div.style.display = "flex"
         div.style.overflow = "hidden"
+        div.style.lineHeight = `${this.lineHeight()}em`
         this.textElement = document.createElement('span')
         div.appendChild(this.textElement)
         div.style.justifyContent = "center"
@@ -69,7 +70,6 @@ export class DoricTextNode extends DoricViewNode {
             case "maxLines":
                 this.maxLines = prop as number
                 this.view.style.whiteSpace = 'normal'
-                this.view.style.overflow = 'hidden'
                 break
             case "maxWidth":
                 if (prop) {
@@ -102,7 +102,7 @@ export class DoricTextNode extends DoricViewNode {
         if (this.maxLines > 0) {
             const computedStyle = window.getComputedStyle(this.view)
             const currentContentHeight = this.view.clientHeight - pixelString2Number(computedStyle.paddingTop) - pixelString2Number(computedStyle.paddingBottom)
-            let maxHeight = this.maxLinesHeight(computedStyle)
+            let maxHeight = parseFloat(computedStyle.getPropertyValue('font-size')) * this.lineHeight() * this.maxLines 
             if (currentContentHeight > 0) {
                 maxHeight = Math.min(maxHeight, Math.ceil(currentContentHeight))
             }
@@ -110,6 +110,10 @@ export class DoricTextNode extends DoricViewNode {
                 this.textElement.innerText = this.truncationText(computedStyle, maxHeight)
             }
         } 
+    }
+
+    lineHeight() {
+        return 1.3
     }
 
     computedHeight(style:CSSStyleDeclaration) {
@@ -120,23 +124,6 @@ export class DoricTextNode extends DoricViewNode {
         tempEle.style.width = this.view.style.width
         document.body.appendChild(tempEle)
         
-        const height = tempEle.offsetHeight
-        document.body.removeChild(tempEle)
-        return height
-    }
-
-    maxLinesHeight(style:CSSStyleDeclaration) {
-        let text = ''
-        for (let i = 0; i < this.maxLines; i++) {
-            text += 'Test测试😊\n'
-        }
-        const tempEle = document.createElement('div')
-        tempEle.style.font = style.font
-        tempEle.textContent = text
-        tempEle.style.width = this.view.style.width
-        tempEle.style.whiteSpace = 'pre';
-        tempEle.style.overflow = 'hidden';
-        document.body.appendChild(tempEle)
         const height = tempEle.offsetHeight
         document.body.removeChild(tempEle)
         return height

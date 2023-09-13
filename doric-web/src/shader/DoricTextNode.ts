@@ -8,7 +8,6 @@ export class DoricTextNode extends DoricViewNode {
         const div = document.createElement('div')
         div.style.display = "flex"
         div.style.overflow = "hidden"
-        div.style.lineHeight = `${this.lineHeight()}em`
         this.textElement = document.createElement('span')
         div.appendChild(this.textElement)
         div.style.justifyContent = "center"
@@ -100,30 +99,39 @@ export class DoricTextNode extends DoricViewNode {
 
     configSize() {
         if (this.maxLines > 0) {
-            const computedStyle = window.getComputedStyle(this.view)
-            const currentContentHeight = this.view.clientHeight - pixelString2Number(computedStyle.paddingTop) - pixelString2Number(computedStyle.paddingBottom)
-            let maxHeight = Math.ceil(parseFloat(computedStyle.getPropertyValue('font-size')) * this.lineHeight() * this.maxLines)
-            if (currentContentHeight > 0) {
-                maxHeight = Math.min(maxHeight, Math.ceil(currentContentHeight))
+            const computedStyle = window.getComputedStyle(this.view) 
+            const lineHeight = this.lineHeight(computedStyle)
+            let allowedMaxLines = this.maxLines
+           
+            const contentHeight = this.view.clientHeight - pixelString2Number(computedStyle.paddingTop) - pixelString2Number(computedStyle.paddingBottom)
+            if (contentHeight > 0) {
+                const contentAllowedLines = Math.floor(contentHeight / lineHeight)
+                allowedMaxLines = Math.min(this.maxLines, contentAllowedLines)
             }
-            if (this.computedHeight(computedStyle) > maxHeight) {
-                this.textElement.innerText = this.truncationText(computedStyle, maxHeight)
+
+            const originalLines = Math.floor(this.originalHeight(computedStyle) / lineHeight)
+            if (originalLines > allowedMaxLines) {
+                this.textElement.innerText = this.truncationText(computedStyle, lineHeight, allowedMaxLines)
             }
         } 
     }
 
-    lineHeight() {
-        return 1.3
+    lineHeight(style: CSSStyleDeclaration) {
+        const canvas = document.createElement('canvas')
+        const ctx = canvas.getContext('2d')
+        ctx!.font = style.font
+        const pureText = this.textElement.innerText.replace(/\n/g, '')
+        const metrics = ctx!.measureText(pureText)
+        return metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent
     }
  
-    computedHeight(style:CSSStyleDeclaration) {
+    originalHeight(style:CSSStyleDeclaration) {
         const tempEle = document.createElement('div')
         tempEle.style.font = style.font
         tempEle.textContent = this.textElement.innerText
-        tempEle.style.whiteSpace = 'normal'
-        this.view.style.overflow = 'hidden'
-        tempEle.style.lineHeight = `${this.lineHeight()}em`
-        tempEle.style.width = this.view.style.width
+        tempEle.style.whiteSpace = style.whiteSpace
+        this.view.style.overflow = style.overflow
+        tempEle.style.width = style.width
         document.body.appendChild(tempEle)
         
         const height = tempEle.offsetHeight
@@ -131,22 +139,22 @@ export class DoricTextNode extends DoricViewNode {
         return height
     }
 
-    truncationText(style:CSSStyleDeclaration, maxHeight:number) {
+    truncationText(style:CSSStyleDeclaration, lineHeight:number, maxLines:number) {
         const originalText = this.textElement.innerText
         let start = 0, end = originalText.length
 
         const tempEle = document.createElement('div')
         tempEle.style.font = style.font
-        tempEle.style.whiteSpace = 'normal'
-        this.view.style.overflow = 'hidden'
-        tempEle.style.lineHeight = `${this.lineHeight()}em`
-        tempEle.style.width = this.view.style.width
+        tempEle.style.whiteSpace = style.whiteSpace
+        this.view.style.overflow = style.overflow
+        tempEle.style.width = style.width
         document.body.appendChild(tempEle);
 
         while(start <= end) {
             const mid = Math.floor((start + end) / 2)
             tempEle.textContent = originalText.slice(0,mid) + '...'
-            if (tempEle.offsetHeight > maxHeight) {
+            const lines = Math.floor(tempEle.offsetHeight / lineHeight)
+            if (lines > maxLines) {
                 end = mid - 1
             } else {
                 start = mid + 1

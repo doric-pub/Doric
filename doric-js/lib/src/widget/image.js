@@ -32,6 +32,8 @@ export var ScaleType;
     ScaleType[ScaleType["ScaleAspectFit"] = 1] = "ScaleAspectFit";
     ScaleType[ScaleType["ScaleAspectFill"] = 2] = "ScaleAspectFill";
     ScaleType[ScaleType["Tile"] = 3] = "Tile";
+    ScaleType[ScaleType["ScaleAspectFitStart"] = 4] = "ScaleAspectFitStart";
+    ScaleType[ScaleType["ScaleAspectFitEnd"] = 5] = "ScaleAspectFitEnd";
 })(ScaleType || (ScaleType = {}));
 export class Image extends View {
     isAnimating(context) {

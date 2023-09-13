@@ -2,7 +2,8 @@ import { AssetsResource, AndroidAssetsResource, Base64Resource, DrawableResource
 import { colors, label } from "./utils";
 import { img_base64 } from "./image_base64";
 
-const imageUrl = 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic.jj20.com%2Fup%2Fallimg%2F1112%2F12101P11147%2F1Q210011147-3.jpg&refer=http%3A%2F%2Fpic.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1662787633&t=99942c90360f55bbcfe00fa140d1c1df'
+const landscapeImageUrl = 'https://www.adorama.com/alc/wp-content/uploads/2018/11/landscape-photography-tips-yosemite-valley-feature.jpg'
+const portraitImageUrl = 'https://i0.wp.com/digital-photography-school.com/wp-content/uploads/2018/05/portrait-lighting-landscape-photography-dps-4.jpg?w=500&ssl=1'
 
 import logo from "./images/logo_w.png"
 import button from "./images/button.png"
@@ -115,9 +116,9 @@ class ImageDemo extends Panel {
               }
             },
           })),
-          label("ScaleToFill"),
+          label("Blur"),
           image({
-            imageUrl,
+            imageUrl: landscapeImageUrl,
             width: 300,
             height: 300,
             isBlur: true,
@@ -129,9 +130,22 @@ class ImageDemo extends Panel {
             layoutConfig: layoutConfig().just(),
             loadCallback: (ret) => { },
           }),
+          label("ScaleToFill"),
+          image({
+            imageUrl: landscapeImageUrl,
+            width: 300,
+            height: 300,
+            border: {
+              width: 2,
+              color: Color.GRAY,
+            },
+            scaleType: ScaleType.ScaleToFill,
+            layoutConfig: layoutConfig().just(),
+            loadCallback: (ret) => { },
+          }),
           label("ScaleAspectFit"),
           image({
-            imageUrl,
+            imageUrl: landscapeImageUrl,
             width: 300,
             height: 300,
             border: {
@@ -143,7 +157,7 @@ class ImageDemo extends Panel {
           }),
           label("ScaleAspectFill"),
           image({
-            imageUrl,
+            imageUrl: landscapeImageUrl,
             width: 300,
             height: 300,
             border: {
@@ -151,6 +165,52 @@ class ImageDemo extends Panel {
               color: Color.GRAY,
             },
             scaleType: ScaleType.ScaleAspectFill,
+            layoutConfig: layoutConfig().just(),
+          }),
+          label("ScaleAspectFitStart"),
+          image({
+            imageUrl: landscapeImageUrl,
+            width: 300,
+            height: 300,
+            border: {
+              width: 2,
+              color: Color.GRAY,
+            },
+            scaleType: ScaleType.ScaleAspectFitStart,
+            layoutConfig: layoutConfig().just(),
+          }),
+          image({
+            imageUrl: portraitImageUrl,
+            width: 300,
+            height: 300,
+            border: {
+              width: 2,
+              color: Color.GRAY,
+            },
+            scaleType: ScaleType.ScaleAspectFitStart,
+            layoutConfig: layoutConfig().just(),
+          }),
+          label("ScaleAspectFitEnd"),
+          image({
+            imageUrl: landscapeImageUrl,
+            width: 300,
+            height: 300,
+            border: {
+              width: 2,
+              color: Color.GRAY,
+            },
+            scaleType: ScaleType.ScaleAspectFitEnd,
+            layoutConfig: layoutConfig().just(),
+          }),
+          image({
+            imageUrl: portraitImageUrl,
+            width: 300,
+            height: 300,
+            border: {
+              width: 2,
+              color: Color.GRAY,
+            },
+            scaleType: ScaleType.ScaleAspectFitEnd,
             layoutConfig: layoutConfig().just(),
           }),
           label("ImageBase64"),

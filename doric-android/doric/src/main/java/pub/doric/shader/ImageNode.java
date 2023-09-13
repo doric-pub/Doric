@@ -484,6 +484,12 @@ public class ImageNode extends ViewNode<ImageView> {
                     case 2:
                         view.setScaleType(ImageView.ScaleType.CENTER_CROP);
                         break;
+                    case 4:
+                        view.setScaleType(ImageView.ScaleType.FIT_START);
+                        break;
+                    case 5:
+                        view.setScaleType(ImageView.ScaleType.FIT_END);
+                        break;
                     default:
                         view.setScaleType(ImageView.ScaleType.FIT_XY);
                         break;

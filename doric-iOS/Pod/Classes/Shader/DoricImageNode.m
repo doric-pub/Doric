@@ -50,6 +50,31 @@
         [super displayLayer:layer];
     }
 }
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    if (self.contentMode == UIViewContentModeTopLeft || self.contentMode == UIViewContentModeBottomRight) {
+        UIImage *image = self.image;
+        if (!image) { return; }
+        
+        CGSize viewSize = self.bounds.size;
+        CGSize imageSize = image.size;
+        
+        // Calculate the scale proportionally to fit the image within the view.
+        CGFloat scale = MIN(viewSize.width / imageSize.width, viewSize.height / imageSize.height);
+        
+        // Resize the image using the calculated scale factor.
+        CGSize newImageSize = CGSizeMake(imageSize.width * scale, imageSize.height * scale);
+        
+        UIGraphicsBeginImageContextWithOptions(newImageSize, NO, 0.0);
+        [image drawInRect:CGRectMake(0, 0, newImageSize.width, newImageSize.height)];
+        UIImage *scaledImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+        // Set the new scaled image and use UIViewContentModeTopLeft content mode.
+        self.image = scaledImage;
+    }
+}
 @end
 
 #elif DORIC_USE_SDWEBIMAGE
@@ -60,6 +85,32 @@
 @end
 
 @implementation DoricImageView
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    if (self.contentMode == UIViewContentModeTopLeft || self.contentMode == UIViewContentModeBottomRight) {
+        UIImage *image = self.image;
+        if (!image) { return; }
+        
+        CGSize viewSize = self.bounds.size;
+        CGSize imageSize = image.size;
+        
+        // Calculate the scale proportionally to fit the image within the view.
+        CGFloat scale = MIN(viewSize.width / imageSize.width, viewSize.height / imageSize.height);
+        
+        // Resize the image using the calculated scale factor.
+        CGSize newImageSize = CGSizeMake(imageSize.width * scale, imageSize.height * scale);
+        
+        UIGraphicsBeginImageContextWithOptions(newImageSize, NO, 0.0);
+        [image drawInRect:CGRectMake(0, 0, newImageSize.width, newImageSize.height)];
+        UIImage *scaledImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+        // Set the new scaled image and use UIViewContentModeTopLeft content mode.
+        self.image = scaledImage;
+    }
+}
+
 @end
 
 #else
@@ -67,6 +118,32 @@
 @end
 
 @implementation DoricImageView
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    if (self.contentMode == UIViewContentModeTopLeft || self.contentMode == UIViewContentModeBottomRight) {
+        UIImage *image = self.image;
+        if (!image) { return; }
+        
+        CGSize viewSize = self.bounds.size;
+        CGSize imageSize = image.size;
+        
+        // Calculate the scale proportionally to fit the image within the view.
+        CGFloat scale = MIN(viewSize.width / imageSize.width, viewSize.height / imageSize.height);
+        
+        // Resize the image using the calculated scale factor.
+        CGSize newImageSize = CGSizeMake(imageSize.width * scale, imageSize.height * scale);
+        
+        UIGraphicsBeginImageContextWithOptions(newImageSize, NO, 0.0);
+        [image drawInRect:CGRectMake(0, 0, newImageSize.width, newImageSize.height)];
+        UIImage *scaledImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+        // Set the new scaled image and use UIViewContentModeTopLeft content mode.
+        self.image = scaledImage;
+    }
+}
+
 @end
 
 #endif
@@ -716,6 +793,14 @@
         }
         case 3: { // image tile
             self.view.contentMode = UIViewContentModeScaleToFill;
+            break;
+        }
+        case 4: {
+            self.view.contentMode = UIViewContentModeTopLeft;
+            break;
+        }
+        case 5: {
+            self.view.contentMode = UIViewContentModeBottomRight;
             break;
         }
         default: {

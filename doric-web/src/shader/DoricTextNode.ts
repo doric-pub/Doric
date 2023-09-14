@@ -8,6 +8,7 @@ export class DoricTextNode extends DoricViewNode {
         const div = document.createElement('div')
         div.style.display = "flex"
         div.style.overflow = "hidden"
+        div.style.lineHeight = `${this.lineHeight()}em`
         this.textElement = document.createElement('span')
         div.appendChild(this.textElement)
         div.style.justifyContent = "center"
@@ -100,29 +101,24 @@ export class DoricTextNode extends DoricViewNode {
     configSize() {
         if (this.maxLines > 0) {
             const computedStyle = window.getComputedStyle(this.view) 
-            const lineHeight = this.lineHeight(computedStyle)
+            const lineHeight = this.lineHeight() * parseFloat(computedStyle.getPropertyValue('font-size'))
             let allowedMaxLines = this.maxLines
            
             const contentHeight = this.view.clientHeight - pixelString2Number(computedStyle.paddingTop) - pixelString2Number(computedStyle.paddingBottom)
             if (contentHeight > 0) {
-                const contentAllowedLines = Math.floor(contentHeight / lineHeight)
+                const contentAllowedLines = Math.round(contentHeight / lineHeight)
                 allowedMaxLines = Math.min(this.maxLines, contentAllowedLines)
             }
 
-            const originalLines = Math.floor(this.originalHeight(computedStyle) / lineHeight)
+            const originalLines = Math.round(this.originalHeight(computedStyle) / lineHeight)
             if (originalLines > allowedMaxLines) {
                 this.textElement.innerText = this.truncationText(computedStyle, lineHeight, allowedMaxLines)
             }
         } 
     }
 
-    lineHeight(style: CSSStyleDeclaration) {
-        const canvas = document.createElement('canvas')
-        const ctx = canvas.getContext('2d')
-        ctx!.font = style.font
-        const pureText = this.textElement.innerText.replace(/\n/g, '')
-        const metrics = ctx!.measureText(pureText)
-        return metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent
+    lineHeight() {
+        return 1.3
     }
  
     originalHeight(style:CSSStyleDeclaration) {
@@ -130,7 +126,8 @@ export class DoricTextNode extends DoricViewNode {
         tempEle.style.font = style.font
         tempEle.textContent = this.textElement.innerText
         tempEle.style.whiteSpace = style.whiteSpace
-        this.view.style.overflow = style.overflow
+        tempEle.style.overflow = style.overflow
+        tempEle.style.lineHeight = style.lineHeight
         tempEle.style.width = style.width
         document.body.appendChild(tempEle)
         
@@ -146,14 +143,15 @@ export class DoricTextNode extends DoricViewNode {
         const tempEle = document.createElement('div')
         tempEle.style.font = style.font
         tempEle.style.whiteSpace = style.whiteSpace
-        this.view.style.overflow = style.overflow
+        tempEle.style.overflow = style.overflow
+        tempEle.style.lineHeight = style.lineHeight
         tempEle.style.width = style.width
         document.body.appendChild(tempEle);
 
         while(start <= end) {
             const mid = Math.floor((start + end) / 2)
             tempEle.textContent = originalText.slice(0,mid) + '...'
-            const lines = Math.floor(tempEle.offsetHeight / lineHeight)
+            const lines = Math.round(tempEle.offsetHeight / lineHeight)
             if (lines > maxLines) {
                 end = mid - 1
             } else {

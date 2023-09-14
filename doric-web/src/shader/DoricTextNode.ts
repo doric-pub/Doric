@@ -8,7 +8,6 @@ export class DoricTextNode extends DoricViewNode {
         const div = document.createElement('div')
         div.style.display = "flex"
         div.style.overflow = "hidden"
-        div.style.lineHeight = `${this.lineHeight()}em`
         this.textElement = document.createElement('span')
         div.appendChild(this.textElement)
         div.style.justifyContent = "center"
@@ -70,6 +69,7 @@ export class DoricTextNode extends DoricViewNode {
             case "maxLines":
                 this.maxLines = prop as number
                 this.view.style.whiteSpace = 'normal'
+                this.view.style.lineHeight = `${this.lineHeight()}em`
                 break
             case "maxWidth":
                 if (prop) {

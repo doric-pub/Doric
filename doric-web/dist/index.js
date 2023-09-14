@@ -7204,7 +7204,6 @@ var doric_web = (function (exports, axios, sandbox) {
 	        const div = document.createElement('div');
 	        div.style.display = "flex";
 	        div.style.overflow = "hidden";
-	        div.style.lineHeight = `${this.lineHeight()}em`;
 	        this.textElement = document.createElement('span');
 	        div.appendChild(this.textElement);
 	        div.style.justifyContent = "center";
@@ -7269,6 +7268,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	            case "maxLines":
 	                this.maxLines = prop;
 	                this.view.style.whiteSpace = 'normal';
+	                this.view.style.lineHeight = `${this.lineHeight()}em`;
 	                break;
 	            case "maxWidth":
 	                if (prop) {

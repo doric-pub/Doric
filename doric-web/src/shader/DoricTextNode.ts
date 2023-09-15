@@ -69,7 +69,6 @@ export class DoricTextNode extends DoricViewNode {
             case "maxLines":
                 this.maxLines = prop as number
                 this.view.style.whiteSpace = 'normal'
-                this.view.style.lineHeight = `${this.lineHeight()}em`
                 break
             case "maxWidth":
                 if (prop) {
@@ -100,8 +99,9 @@ export class DoricTextNode extends DoricViewNode {
 
     configSize() {
         if (this.maxLines > 0) {
-            const computedStyle = window.getComputedStyle(this.view) 
-            const lineHeight = this.lineHeight() * parseFloat(computedStyle.getPropertyValue('font-size'))
+            const computedStyle = window.getComputedStyle(this.view)
+            const lineHeight = this.defaultLineHeightInPixels(computedStyle)
+            this.view.style.lineHeight = lineHeight + 'px'
             let allowedMaxLines = this.maxLines
            
             const contentHeight = this.view.clientHeight - pixelString2Number(computedStyle.paddingTop) - pixelString2Number(computedStyle.paddingBottom)
@@ -117,8 +117,14 @@ export class DoricTextNode extends DoricViewNode {
         } 
     }
 
-    lineHeight() {
-        return 1.3
+    defaultLineHeightInPixels(style:CSSStyleDeclaration) {
+        const tempEle = document.createElement('div')
+        tempEle.style.font = style.font
+        tempEle.innerText = "&nbsp;"
+        document.body.appendChild(tempEle)
+        const lineHeightInPixels = tempEle.offsetHeight
+        document.body.removeChild(tempEle)
+        return lineHeightInPixels
     }
  
     originalHeight(style:CSSStyleDeclaration) {

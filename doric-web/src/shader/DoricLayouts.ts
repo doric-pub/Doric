@@ -17,10 +17,10 @@ interface DoricSizeAndState {
 }
 
 enum DoricLayoutType {
-    DoricUndefined = 0,
-    DoricStack = 1,
-    DoricVLayout = 2,
-    DoricHLayout = 3,
+    Undefined = 0,
+    Stack = 1,
+    VLayout = 2,
+    HLayout = 3,
 }
 
 export enum DoricGravity {
@@ -60,7 +60,7 @@ export class DoricLayout {
     weight: number = 0;
     view: HTMLElement | undefined;
 
-    layoutType: DoricLayoutType = DoricLayoutType.DoricUndefined;
+    layoutType: DoricLayoutType = DoricLayoutType.Undefined;
     disabled: boolean = false;
 
     maxWidth: number = Number.MAX_VALUE;
@@ -135,13 +135,13 @@ export class DoricLayout {
 
     measureSelf(widthSpec:DoricMeasureSpec, heightSpec:DoricMeasureSpec) {
         switch(this.layoutType) {
-            case DoricLayoutType.DoricStack:
+            case DoricLayoutType.Stack:
                 this.stackMeasure(widthSpec, heightSpec)
                 break
-            case DoricLayoutType.DoricVLayout: 
+            case DoricLayoutType.VLayout: 
                 this.verticalMeasure(widthSpec, heightSpec)
                 break
-            case DoricLayoutType.DoricHLayout:
+            case DoricLayoutType.HLayout:
                 this.horizontalMeasure(widthSpec, heightSpec)
                 break
             default:
@@ -185,13 +185,13 @@ export class DoricLayout {
 
     layout() {
         switch (this.layoutType) {
-            case DoricLayoutType.DoricStack:
+            case DoricLayoutType.Stack:
                 this.layoutStack()
                 break
-            case DoricLayoutType.DoricHLayout:
+            case DoricLayoutType.HLayout:
                 this.layoutHLayout()
                 break
-            case DoricLayoutType.DoricVLayout:
+            case DoricLayoutType.VLayout:
                 this.layoutVLayout()
                 break
             default:

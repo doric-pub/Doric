@@ -1,6 +1,7 @@
 import { DoricViewNode, LEFT, RIGHT, CENTER_X, CENTER_Y, TOP, BOTTOM, toPixelString } from './DoricViewNode'
 import { toRGBAString } from '../utils/color'
 import { resourceManager } from '../DoricRegistry'
+import Size from '../utils/Size'
 
 enum ScaleType {
     ScaleToFill = 0,
@@ -8,6 +9,7 @@ enum ScaleType {
     ScaleAspectFill,
 }
 type StretchInset = {
+    [key: string]: number;
     left: number,
     top: number,
     right: number,
@@ -23,6 +25,7 @@ export class DoricImageNode extends DoricViewNode {
     errorImageBase64?: string
     errorColor?: number
     stretchInset?: StretchInset
+    resizeObserver?: ResizeObserver | null
 
     build(): HTMLElement {
         const ret = document.createElement('img')
@@ -97,6 +100,15 @@ export class DoricImageNode extends DoricViewNode {
         this.loadPlaceHolder(targetElement)
         let tempLoadElement = this.stretchInset ? document.createElement('img') : targetElement
         tempLoadElement.onload = () => {
+            if (this.stretchInset) {
+                if (!this.resizeObserver) {
+                    this.resizeObserver = new ResizeObserver(entry => {
+                        this.onResize.call(this, { width: tempLoadElement.naturalWidth, height: tempLoadElement.naturalHeight })
+                    })
+                    this.resizeObserver.observe(targetElement)
+                }
+                this.onResize({ width: tempLoadElement.naturalWidth, height: tempLoadElement.naturalHeight })
+            }
             //remove placeHolderColor
             targetElement.style.removeProperty('background-color')
             if (tempLoadElement.src === src && this.onloadFuncId) {
@@ -130,11 +142,18 @@ export class DoricImageNode extends DoricViewNode {
         v.src = transparentBase64
         v.style.borderImageSource = `url(${src})`
         v.style.borderImageSlice = `${stretchInset.top} ${stretchInset.right} ${stretchInset.bottom} ${stretchInset.left} fill`
-        const top = toPixelString(stretchInset.top)
-        const right = toPixelString(stretchInset.right)
-        const bottom = toPixelString(stretchInset.bottom)
-        const left = toPixelString(stretchInset.left)
-        v.style.borderImageWidth = `${top} ${right} ${bottom} ${left}`
+    }
+
+    private calculateStretchBorderWidth(originalSize: Size, targetSize: Size, stretchInset: StretchInset) {
+        const widthRatio = targetSize.width / originalSize.width
+        const heightRatio = targetSize.height / originalSize.height
+        const scaleFactor = Math.min(widthRatio, heightRatio)
+        const scaledStretchInset: { [key: string]: number; } = {}
+        for (const key in stretchInset) {
+            scaledStretchInset[key] = Math.round(stretchInset[key] * scaleFactor)
+        }
+        return scaledStretchInset
+
     }
 
     private loadPlaceHolder(v: HTMLImageElement) {
@@ -180,6 +199,23 @@ export class DoricImageNode extends DoricViewNode {
         }
 
         return null
+    }
+
+    private onResize(originalSize: Size) {
+        if (!this.stretchInset) {
+            return
+        }
+        if (this.view.offsetWidth !== 0 || this.view.offsetHeight !== 0) {
+            const scaledStretchInset = this.calculateStretchBorderWidth(
+                { width: originalSize.width, height: originalSize.height },
+                { width: this.view.offsetWidth, height: this.view.offsetHeight },
+                this.stretchInset)
+            const top = toPixelString(scaledStretchInset.top)
+            const right = toPixelString(scaledStretchInset.right)
+            const bottom = toPixelString(scaledStretchInset.bottom)
+            const left = toPixelString(scaledStretchInset.left)
+            this.view.style.borderImageWidth = `${top} ${right} ${bottom} ${left}`
+        }
     }
 
 }

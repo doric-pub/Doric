@@ -6308,8 +6308,14 @@ var doric_web = (function (exports, axios, sandbox) {
 	    set measuredWidth(measuredWidth) {
 	        this._measuredWidth = Math.max(0, measuredWidth);
 	    }
+	    get measuredWidth() {
+	        return this._measuredWidth;
+	    }
 	    set measuredHeight(measuredHeight) {
 	        this._measuredHeight = Math.max(0, measuredHeight);
+	    }
+	    get measuredHeight() {
+	        return this._measuredHeight;
 	    }
 	    applyWithSize(frameSize) {
 	        this.resolved = false;

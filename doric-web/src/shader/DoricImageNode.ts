@@ -1,5 +1,5 @@
 import { DoricViewNode } from './DoricViewNode'
-import { LEFT, RIGHT, CENTER_X, CENTER_Y, TOP, BOTTOM, toPixelString } from './DoricLayouts'
+import { toPixelString } from './DoricLayouts'
 import { toRGBAString } from '../utils/color'
 import { resourceManager } from '../DoricRegistry'
 import Size from '../utils/Size'

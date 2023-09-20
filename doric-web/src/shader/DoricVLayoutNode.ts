@@ -1,4 +1,5 @@
-import { DoricGroupViewNode, LEFT, RIGHT, CENTER_X, CENTER_Y, TOP, BOTTOM, toPixelString } from "./DoricViewNode";
+import { DoricGroupViewNode } from "./DoricViewNode";
+import {  LEFT, RIGHT, CENTER_X, CENTER_Y, TOP, BOTTOM, toPixelString } from "./DoricLayouts";
 
 export class DoricVLayoutNode extends DoricGroupViewNode {
     space = 0

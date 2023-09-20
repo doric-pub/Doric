@@ -1,4 +1,5 @@
-import { LEFT, RIGHT, CENTER_X, CENTER_Y, TOP, BOTTOM, toPixelString, DoricSuperNode, DVModel, DoricViewNode } from "./DoricViewNode";
+import { DoricSuperNode, DVModel, DoricViewNode } from "./DoricViewNode";
+import { LEFT, RIGHT, CENTER_X, CENTER_Y, TOP, BOTTOM, toPixelString } from "./DoricLayouts";
 
 export class DoricScrollerNode extends DoricSuperNode {
 

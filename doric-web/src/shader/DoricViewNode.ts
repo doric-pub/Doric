@@ -2,42 +2,7 @@ import { DoricContext } from "../DoricContext";
 import { acquireViewNode } from "../DoricRegistry";
 import { GradientColor, GradientOrientation, generateGradientColorDesc, generateGradientOrientationDesc } from "../utils/color";
 import { toRGBAString } from "../utils/color";
-
-export enum LayoutSpec {
-    EXACTLY = 0,
-    WRAP_CONTENT = 1,
-    AT_MOST = 2,
-}
-
-const SPECIFIED = 1
-const START = 1 << 1
-const END = 1 << 2
-
-const SHIFT_X = 0
-const SHIFT_Y = 4
-
-export const LEFT = (START | SPECIFIED) << SHIFT_X
-export const RIGHT = (END | SPECIFIED) << SHIFT_X
-
-export const TOP = (START | SPECIFIED) << SHIFT_Y
-export const BOTTOM = (END | SPECIFIED) << SHIFT_Y
-
-export const CENTER_X = SPECIFIED << SHIFT_X
-export const CENTER_Y = SPECIFIED << SHIFT_Y
-
-export const CENTER = CENTER_X | CENTER_Y
-
-export type FrameSize = {
-    width: number,
-    height: number,
-}
-export function toPixelString(v: number) {
-    return `${v}px`
-}
-
-export function pixelString2Number(v: string) {
-    return parseFloat(v.substring(0, v.indexOf("px")))
-}
+import { LayoutSpec, toPixelString } from "./DoricLayouts";
 
 export type DoricViewNodeClass = { new(...args: any[]): {} }
 

@@ -125,10 +125,18 @@ export class DoricLayout {
         this._measuredWidth = Math.max(0, measuredWidth);
     }
 
+    get measuredWidth() {
+        return this._measuredWidth;
+    }
+
     set measuredHeight(measuredHeight: number) {
         this._measuredHeight = Math.max(0, measuredHeight);
     }
 
+    get measuredHeight() {
+        return this._measuredHeight;
+    }
+    
     applyWithSize(frameSize: FrameSize) {
         this.resolved = false
         this.measure(frameSize)

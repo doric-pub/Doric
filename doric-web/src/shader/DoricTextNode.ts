@@ -1,5 +1,6 @@
-import { DoricViewNode, LEFT, RIGHT, CENTER_X, CENTER_Y, TOP, BOTTOM, toPixelString, pixelString2Number } from "./DoricViewNode";
+import { DoricViewNode } from "./DoricViewNode";
 import { toRGBAString } from "../utils/color";
+import { LEFT, RIGHT, CENTER_X, CENTER_Y, TOP, BOTTOM, toPixelString, pixelString2Number } from "./DoricLayouts";
 
 export class DoricTextNode extends DoricViewNode {
     maxLines = 0

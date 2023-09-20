@@ -1,5 +1,5 @@
 import { DoricPlugin } from '../DoricPlugin'
-import { TOP, CENTER_Y, BOTTOM, toPixelString } from '../shader/DoricViewNode'
+import { TOP, CENTER_Y, BOTTOM, toPixelString } from '../shader/DoricLayouts'
 
 export class ModalPlugin extends DoricPlugin {
     toast(args: {

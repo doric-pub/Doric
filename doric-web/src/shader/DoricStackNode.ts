@@ -1,4 +1,5 @@
-import { DoricGroupViewNode, LayoutSpec, FrameSize, LEFT, RIGHT, CENTER_X, CENTER_Y, TOP, BOTTOM, toPixelString, pixelString2Number } from "./DoricViewNode";
+import { DoricGroupViewNode } from "./DoricViewNode";
+import { LayoutSpec, FrameSize, LEFT, RIGHT, CENTER_X, CENTER_Y, TOP, BOTTOM, toPixelString, pixelString2Number } from "./DoricLayouts";
 
 export class DoricStackNode extends DoricGroupViewNode {
 

@@ -6217,12 +6217,30 @@ var doric_web = (function (exports, axios, sandbox) {
 	    }
 	}
 
-	exports.LayoutSpec = void 0;
+	Object.defineProperty(HTMLElement.prototype, "doricLayout", {
+	    get() {
+	        let layout = this.getAttribute("__doric_layout__");
+	        if (!layout) {
+	            layout = new DoricLayout();
+	            layout.width = this.style.width;
+	            layout.height = this.style.height;
+	            layout.view = this;
+	            this.setAttribute("__doric_layout__", JSON.stringify(layout));
+	        }
+	        return this._doricLayout;
+	    },
+	    set(layout) {
+	        this.setAttribute("__doric_layout__", JSON.stringify(layout));
+	    },
+	    enumerable: false,
+	    configurable: true
+	});
+	var LayoutSpec;
 	(function (LayoutSpec) {
 	    LayoutSpec[LayoutSpec["EXACTLY"] = 0] = "EXACTLY";
 	    LayoutSpec[LayoutSpec["WRAP_CONTENT"] = 1] = "WRAP_CONTENT";
 	    LayoutSpec[LayoutSpec["AT_MOST"] = 2] = "AT_MOST";
-	})(exports.LayoutSpec || (exports.LayoutSpec = {}));
+	})(LayoutSpec || (LayoutSpec = {}));
 	const SPECIFIED = 1;
 	const START = 1 << 1;
 	const END = 1 << 2;
@@ -6234,20 +6252,172 @@ var doric_web = (function (exports, axios, sandbox) {
 	const BOTTOM = (END | SPECIFIED) << SHIFT_Y;
 	const CENTER_X = SPECIFIED << SHIFT_X;
 	const CENTER_Y = SPECIFIED << SHIFT_Y;
-	const CENTER = CENTER_X | CENTER_Y;
 	function toPixelString(v) {
 	    return `${v}px`;
 	}
 	function pixelString2Number(v) {
 	    return parseFloat(v.substring(0, v.indexOf("px")));
 	}
+	var DoricMeasureSpecMode;
+	(function (DoricMeasureSpecMode) {
+	    DoricMeasureSpecMode[DoricMeasureSpecMode["Unspecified"] = 0] = "Unspecified";
+	    DoricMeasureSpecMode[DoricMeasureSpecMode["Exactly"] = 1] = "Exactly";
+	    DoricMeasureSpecMode[DoricMeasureSpecMode["AtMost"] = 2] = "AtMost";
+	})(DoricMeasureSpecMode || (DoricMeasureSpecMode = {}));
+	var DoricLayoutType;
+	(function (DoricLayoutType) {
+	    DoricLayoutType[DoricLayoutType["Undefined"] = 0] = "Undefined";
+	    DoricLayoutType[DoricLayoutType["Stack"] = 1] = "Stack";
+	    DoricLayoutType[DoricLayoutType["VLayout"] = 2] = "VLayout";
+	    DoricLayoutType[DoricLayoutType["HLayout"] = 3] = "HLayout";
+	})(DoricLayoutType || (DoricLayoutType = {}));
+	class DoricLayout {
+	    constructor() {
+	        this.widthSpec = LayoutSpec.EXACTLY;
+	        this.heightSpec = LayoutSpec.EXACTLY;
+	        this.alignment = LEFT | TOP;
+	        this.gravity = LEFT | TOP;
+	        this.width = 0;
+	        this.height = 0;
+	        this.spacing = 0;
+	        this.marginLeft = 0;
+	        this.marginTop = 0;
+	        this.marginRight = 0;
+	        this.marginBottom = 0;
+	        this.paddingLeft = 0;
+	        this.paddingTop = 0;
+	        this.paddingRight = 0;
+	        this.paddingBottom = 0;
+	        this.weight = 0;
+	        this.layoutType = DoricLayoutType.Undefined;
+	        this.disabled = false;
+	        this.maxWidth = Number.MAX_VALUE;
+	        this.maxHeight = Number.MAX_VALUE;
+	        this.minWidth = -1;
+	        this.minheight = -1;
+	        this.resolved = false;
+	        this._measuredWidth = 0;
+	        this._measuredHeight = 0;
+	        this.measuredX = 0;
+	        this.measuredY = 0;
+	        this.undefined = false;
+	        this.corners = [];
+	        this.totalLength = 0;
+	        this.measuredState = 0;
+	    }
+	    set measuredWidth(measuredWidth) {
+	        this._measuredWidth = Math.max(0, measuredWidth);
+	    }
+	    set measuredHeight(measuredHeight) {
+	        this._measuredHeight = Math.max(0, measuredHeight);
+	    }
+	    applyWithSize(frameSize) {
+	        this.resolved = false;
+	        this.measure(frameSize);
+	        this.setFrame();
+	        this.resolved = true;
+	    }
+	    apply() {
+	        this.applyWithSize({ width: pixelString2Number(this.view.style.width),
+	            height: pixelString2Number(this.view.style.height) });
+	    }
+	    measure(targetSize) {
+	        this.doMeasure(targetSize);
+	        this.layout();
+	    }
+	    getRootMeasureSpec(targetSize, spec, size) {
+	        switch (spec) {
+	            case LayoutSpec.AT_MOST:
+	                return this.doricMeasureSpecMake(DoricMeasureSpecMode.Exactly, targetSize);
+	            case LayoutSpec.WRAP_CONTENT:
+	                return this.doricMeasureSpecMake(DoricMeasureSpecMode.AtMost, targetSize);
+	            default:
+	                return this.doricMeasureSpecMake(DoricMeasureSpecMode.Exactly, size);
+	        }
+	    }
+	    doMeasure(targetSize) {
+	        const widthSpec = this.getRootMeasureSpec(targetSize.width, this.widthSpec, this.width);
+	        const HeightSpec = this.getRootMeasureSpec(targetSize.height, this.heightSpec, this.height);
+	        this.measureSelf(widthSpec, HeightSpec);
+	    }
+	    takenWidth() {
+	        return this.measuredWidth + this.marginLeft + this.marginRight;
+	    }
+	    takenHeight() {
+	        return this.measuredHeight + this.marginTop + this.marginBottom;
+	    }
+	    measureSelf(widthSpec, heightSpec) {
+	        switch (this.layoutType) {
+	            case DoricLayoutType.Stack:
+	                this.stackMeasure(widthSpec, heightSpec);
+	                break;
+	            case DoricLayoutType.VLayout:
+	                this.verticalMeasure(widthSpec, heightSpec);
+	                break;
+	            case DoricLayoutType.HLayout:
+	                this.horizontalMeasure(widthSpec, heightSpec);
+	                break;
+	            default:
+	                this.undefinedMeasure(widthSpec, heightSpec);
+	                break;
+	        }
+	        if (this.measuredWidth > this.maxWidth || this.measuredHeight > this.maxHeight) {
+	            const widthSpec = this.doricMeasureSpecMake(DoricMeasureSpecMode.AtMost, Math.min(this.measuredWidth, this.maxWidth));
+	            const heightSpec = this.doricMeasureSpecMake(DoricMeasureSpecMode.AtMost, Math.min(this.measuredHeight, this.maxHeight));
+	            this.measureSelf(widthSpec, heightSpec);
+	        }
+	    }
+	    stackMeasure(widthMeasureSpec, heightMeasureSpec) {
+	    }
+	    verticalMeasure(widthMeasureSpec, heightMeasureSpec) {
+	    }
+	    horizontalMeasure(widthMeasureSpec, heightMeasureSpec) {
+	    }
+	    undefinedMeasure(widthMeasureSpec, heightMeasureSpec) {
+	    }
+	    getChildMeasureSpec(spec, padding, childLayoutSpec, childSize) {
+	    }
+	    measureChild(child, widthSpec, usedWidth, heightSpec, usedHeight) {
+	    }
+	    resolveSizeAndState(size, spec, childMeasuredState) {
+	    }
+	    layout() {
+	        switch (this.layoutType) {
+	            case DoricLayoutType.Stack:
+	                this.layoutStack();
+	                break;
+	            case DoricLayoutType.HLayout:
+	                this.layoutHLayout();
+	                break;
+	            case DoricLayoutType.VLayout:
+	                this.layoutVLayout();
+	                break;
+	        }
+	    }
+	    setFrame() {
+	    }
+	    layoutStack() {
+	    }
+	    layoutHLayout() {
+	    }
+	    layoutVLayout() {
+	    }
+	    doricMeasureSpecMake(mode, size) {
+	        const measureSpec = {
+	            mode: mode,
+	            size: size,
+	        };
+	        return measureSpec;
+	    }
+	}
+
 	class DoricViewNode {
 	    constructor(context) {
 	        this.viewId = "";
 	        this.viewType = "View";
 	        this.layoutConfig = {
-	            widthSpec: exports.LayoutSpec.EXACTLY,
-	            heightSpec: exports.LayoutSpec.EXACTLY,
+	            widthSpec: LayoutSpec.EXACTLY,
+	            heightSpec: LayoutSpec.EXACTLY,
 	            alignment: 0,
 	            weight: 0,
 	            margin: {
@@ -6326,13 +6496,13 @@ var doric_web = (function (exports, axios, sandbox) {
 	    configWidth() {
 	        let width;
 	        switch (this.layoutConfig.widthSpec) {
-	            case exports.LayoutSpec.WRAP_CONTENT:
+	            case LayoutSpec.WRAP_CONTENT:
 	                width = "max-content";
 	                break;
-	            case exports.LayoutSpec.AT_MOST:
+	            case LayoutSpec.AT_MOST:
 	                width = "100%";
 	                break;
-	            case exports.LayoutSpec.EXACTLY:
+	            case LayoutSpec.EXACTLY:
 	            default:
 	                width = toPixelString(this.frameWidth
 	                    - this.paddingLeft - this.paddingRight
@@ -6370,13 +6540,13 @@ var doric_web = (function (exports, axios, sandbox) {
 	    configHeight() {
 	        let height;
 	        switch (this.layoutConfig.heightSpec) {
-	            case exports.LayoutSpec.WRAP_CONTENT:
+	            case LayoutSpec.WRAP_CONTENT:
 	                height = "max-content";
 	                break;
-	            case exports.LayoutSpec.AT_MOST:
+	            case LayoutSpec.AT_MOST:
 	                height = "100%";
 	                break;
-	            case exports.LayoutSpec.EXACTLY:
+	            case LayoutSpec.EXACTLY:
 	            default:
 	                height = toPixelString(this.frameHeight
 	                    - this.paddingTop - this.paddingBottom
@@ -6998,7 +7168,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	        });
 	    }
 	    configSize() {
-	        if (this.layoutConfig.widthSpec === exports.LayoutSpec.WRAP_CONTENT) {
+	        if (this.layoutConfig.widthSpec === LayoutSpec.WRAP_CONTENT) {
 	            const width = this.childNodes.reduce((prev, current) => {
 	                const computedStyle = window.getComputedStyle(current.view);
 	                return Math.max(prev, current.view.offsetWidth
@@ -7007,7 +7177,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	            }, 0);
 	            this.view.style.width = toPixelString(width);
 	        }
-	        if (this.layoutConfig.heightSpec === exports.LayoutSpec.WRAP_CONTENT) {
+	        if (this.layoutConfig.heightSpec === LayoutSpec.WRAP_CONTENT) {
 	            const height = this.childNodes.reduce((prev, current) => {
 	                const computedStyle = window.getComputedStyle(current.view);
 	                return Math.max(prev, current.view.offsetHeight
@@ -9162,19 +9332,12 @@ ${content}
 	    })
 	});
 
-	exports.BOTTOM = BOTTOM;
-	exports.CENTER = CENTER;
-	exports.CENTER_X = CENTER_X;
-	exports.CENTER_Y = CENTER_Y;
 	exports.DoricElement = DoricElement;
 	exports.DoricGroupViewNode = DoricGroupViewNode;
 	exports.DoricPlugin = DoricPlugin;
 	exports.DoricSuperNode = DoricSuperNode;
 	exports.DoricViewNode = DoricViewNode;
-	exports.LEFT = LEFT;
 	exports.NavigationElement = NavigationElement;
-	exports.RIGHT = RIGHT;
-	exports.TOP = TOP;
 	exports.acquireJSBundle = acquireJSBundle;
 	exports.acquirePlugin = acquirePlugin;
 	exports.acquireViewNode = acquireViewNode;
@@ -9183,12 +9346,10 @@ ${content}
 	exports.injectGlobalObject = injectGlobalObject;
 	exports.loadJS = loadJS;
 	exports.markNeedHook = markNeedHook;
-	exports.pixelString2Number = pixelString2Number;
 	exports.registerJSBundle = registerJSBundle;
 	exports.registerPlugin = registerPlugin;
 	exports.registerViewNode = registerViewNode;
 	exports.resourceManager = resourceManager;
-	exports.toPixelString = toPixelString;
 
 	Object.defineProperty(exports, '__esModule', { value: true });
 

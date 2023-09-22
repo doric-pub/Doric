@@ -908,8 +908,10 @@ declare module "doric" {
 		ScaleAspectFit = 1,
 		ScaleAspectFill = 2,
 		Tile = 3,
-		ScaleAspectFitStart = 4,
-		ScaleAspectFitEnd = 5
+		ScaleAspectFitLeftTop = 4,
+		ScaleAspectFitLeftBottom = 5,
+		ScaleAspectFitRightTop = 6,
+		ScaleAspectFitRightBottom = 7
 	}
 	export class Image extends View {
 		/**

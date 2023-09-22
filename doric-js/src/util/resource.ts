@@ -25,8 +25,17 @@ export class LocalResource extends Resource {
 }
 
 export class RemoteResource extends Resource {
+    headers?: Record<string, string>
+
     constructor(url: string) {
         super("remote", url)
+    }
+
+    toModel() {
+        return {
+            ...super.toModel(),
+            headers: this.headers
+        }
     }
 }
 

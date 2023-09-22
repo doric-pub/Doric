@@ -1670,6 +1670,9 @@ class RemoteResource extends Resource {
     constructor(url) {
         super("remote", url);
     }
+    toModel() {
+        return Object.assign(Object.assign({}, super.toModel()), { headers: this.headers });
+    }
 }
 class Base64Resource extends Resource {
     constructor(content) {

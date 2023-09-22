@@ -2183,6 +2183,19 @@ var __extends$g = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign$1 = (undefined && undefined.__assign) || function () {
+    __assign$1 = Object.assign || function(t) {
+        var arguments$1 = arguments;
+
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments$1[i];
+            for (var p in s) { if (Object.prototype.hasOwnProperty.call(s, p))
+                { t[p] = s[p]; } }
+        }
+        return t;
+    };
+    return __assign$1.apply(this, arguments);
+};
 var Resource = /** @class */ (function () {
     function Resource(type, identifier) {
         this.resId = uniqueId("resource");
@@ -2210,6 +2223,9 @@ var RemoteResource = /** @class */ (function (_super) {
     function RemoteResource(url) {
         return _super.call(this, "remote", url) || this;
     }
+    RemoteResource.prototype.toModel = function () {
+        return __assign$1(__assign$1({}, _super.prototype.toModel.call(this)), { headers: this.headers });
+    };
     return RemoteResource;
 }(Resource));
 var Base64Resource = /** @class */ (function (_super) {

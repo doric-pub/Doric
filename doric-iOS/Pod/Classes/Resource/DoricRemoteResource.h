@@ -21,4 +21,5 @@
 #import "DoricResource.h"
 
 @interface DoricRemoteResource : DoricResource
+- (void)setHeaderWithKey:(NSString *)key withValue:(NSString *)value;
 @end

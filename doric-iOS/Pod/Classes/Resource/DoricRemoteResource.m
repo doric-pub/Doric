@@ -19,15 +19,35 @@
 
 #import "DoricRemoteResource.h"
 
+@interface DoricRemoteResource ()
+@property(nonatomic, strong) NSMutableDictionary *headers;
+@end
 
 @implementation DoricRemoteResource
+- (void)setHeaderWithKey:(NSString *)key withValue:(NSString *)value {
+    if (!self.headers) {
+        self.headers = [NSMutableDictionary new];
+    }
+    self.headers[key] = value;
+}
+
 - (DoricAsyncResult <NSData *> *)fetchRaw {
     DoricAsyncResult *result = [DoricAsyncResult new];
-    NSURL *url = [NSURL URLWithString:self.identifier];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSData *urlData = [NSData dataWithContentsOfURL:url];
-        [result setupResult:urlData];
-    });
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:self.identifier]];
+    if (self.headers) {
+        [self.headers enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL *stop) {
+            [request setValue:obj forHTTPHeaderField:key];
+        }];
+    }
+    [[[NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]]
+            dataTaskWithRequest:request
+              completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                  if (!error) {
+                      [result setupResult:data];
+                  } else {
+                      [result setupError:(id) error.description];
+                  }
+              }] resume];
     return result;
 }
 @end

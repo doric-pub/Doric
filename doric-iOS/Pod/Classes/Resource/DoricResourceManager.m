@@ -20,6 +20,7 @@
 #import "DoricResourceManager.h"
 #import "DoricContext.h"
 #import "DoricArrayBufferResource.h"
+#import "DoricRemoteResource.h"
 
 @interface DoricResourceManager ()
 @property(nonatomic, strong) NSMutableDictionary <NSString *, id <DoricResourceLoader>> *loaders;
@@ -60,6 +61,14 @@
             doricResource = [loader load:identifier withContext:context];
             if ([doricResource isKindOfClass:DoricArrayBufferResource.class]) {
                 ((DoricArrayBufferResource *) doricResource).data = resource[@"data"];
+            } else if ([doricResource isKindOfClass:DoricRemoteResource.class]) {
+                NSDictionary *headers = resource[@"headers"];
+                if (headers) {
+                    [headers enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *value, BOOL *stop) {
+                        [(DoricRemoteResource *) doricResource setHeaderWithKey:key
+                                                                      withValue:value];
+                    }];
+                }
             }
             [context.cachedResources setObject:doricResource forKey:resId];
         }

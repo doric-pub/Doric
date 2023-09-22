@@ -17,6 +17,7 @@ package pub.doric.resource;
 
 import com.github.pengfeizhou.jscore.JSArrayBuffer;
 import com.github.pengfeizhou.jscore.JSObject;
+import com.github.pengfeizhou.jscore.JSValue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -57,6 +58,15 @@ public class DoricResourceManager {
                 if (doricResource instanceof DoricArrayBufferResource) {
                     JSArrayBuffer buffer = resource.getProperty("data").asArrayBuffer();
                     ((DoricArrayBufferResource) doricResource).setValue(buffer);
+                } else if (doricResource instanceof DoricRemoteResource) {
+                    JSValue headers = resource.getProperty("headers");
+                    if (headers.isObject()) {
+                        JSObject headersObject = headers.asObject();
+                        for (Map.Entry<String, JSValue> entry : headersObject.value().entrySet()) {
+                            ((DoricRemoteResource) doricResource).setHeader(entry.getKey(),
+                                    entry.getValue().asString().value());
+                        }
+                    }
                 }
                 doricContext.cacheResource(resId, doricResource);
             }

@@ -19,16 +19,18 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.Key;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.bumptech.glide.signature.ObjectKey;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.MessageDigest;
+import java.util.HashMap;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -42,6 +44,7 @@ import pub.doric.async.AsyncResult;
  */
 public class DoricRemoteResource extends DoricResource {
     private final boolean needCache;
+    private final Map<String, String> headers = new HashMap<>();
 
     public DoricRemoteResource(DoricContext doricContext, String identifier, boolean needCache) {
         super(doricContext, identifier);
@@ -52,11 +55,19 @@ public class DoricRemoteResource extends DoricResource {
         this(doricContext, identifier, true);
     }
 
+    public void setHeader(String k, String v) {
+        this.headers.put(k, v);
+    }
+
     @Override
     public AsyncResult<byte[]> fetchRaw() {
         final AsyncResult<byte[]> result = new AsyncResult<>();
+        LazyHeaders.Builder builder = new LazyHeaders.Builder();
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
+            builder.addHeader(entry.getKey(), entry.getValue());
+        }
         RequestBuilder<File> requestBuilder = Glide.with(doricContext.getContext())
-                .download(identifier);
+                .download(new GlideUrl(identifier, builder.build()));
         if (!this.needCache) {
             requestBuilder = requestBuilder.skipMemoryCache(true).signature(new Key() {
                 @Override

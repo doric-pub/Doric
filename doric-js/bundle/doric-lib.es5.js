@@ -2345,8 +2345,10 @@ exports.ScaleType = void 0;
     ScaleType[ScaleType["ScaleAspectFit"] = 1] = "ScaleAspectFit";
     ScaleType[ScaleType["ScaleAspectFill"] = 2] = "ScaleAspectFill";
     ScaleType[ScaleType["Tile"] = 3] = "Tile";
-    ScaleType[ScaleType["ScaleAspectFitStart"] = 4] = "ScaleAspectFitStart";
-    ScaleType[ScaleType["ScaleAspectFitEnd"] = 5] = "ScaleAspectFitEnd";
+    ScaleType[ScaleType["ScaleAspectFitLeftTop"] = 4] = "ScaleAspectFitLeftTop";
+    ScaleType[ScaleType["ScaleAspectFitLeftBottom"] = 5] = "ScaleAspectFitLeftBottom";
+    ScaleType[ScaleType["ScaleAspectFitRightTop"] = 6] = "ScaleAspectFitRightTop";
+    ScaleType[ScaleType["ScaleAspectFitRightBottom"] = 7] = "ScaleAspectFitRightBottom";
 })(exports.ScaleType || (exports.ScaleType = {}));
 var Image = /** @class */ (function (_super) {
     __extends$f(Image, _super);

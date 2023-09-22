@@ -53,7 +53,7 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    if (self.contentMode == UIViewContentModeTopLeft || self.contentMode == UIViewContentModeBottomRight) {
+    if (self.contentMode == UIViewContentModeTopLeft || self.contentMode == UIViewContentModeBottomLeft || self.contentMode == UIViewContentModeTopRight || self.contentMode == UIViewContentModeBottomRight) {
         UIImage *image = self.image;
         if (!image) { return; }
         
@@ -88,7 +88,7 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    if (self.contentMode == UIViewContentModeTopLeft || self.contentMode == UIViewContentModeBottomRight) {
+    if (self.contentMode == UIViewContentModeTopLeft || self.contentMode == UIViewContentModeBottomLeft || self.contentMode == UIViewContentModeTopRight || self.contentMode == UIViewContentModeBottomRight) {
         UIImage *image = self.image;
         if (!image) { return; }
         
@@ -121,7 +121,7 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    if (self.contentMode == UIViewContentModeTopLeft || self.contentMode == UIViewContentModeBottomRight) {
+    if (self.contentMode == UIViewContentModeTopLeft || self.contentMode == UIViewContentModeBottomLeft || self.contentMode == UIViewContentModeTopRight || self.contentMode == UIViewContentModeBottomRight) {
         UIImage *image = self.image;
         if (!image) { return; }
         
@@ -800,6 +800,14 @@
             break;
         }
         case 5: {
+            self.view.contentMode = UIViewContentModeBottomLeft;
+            break;
+        }
+        case 6: {
+            self.view.contentMode = UIViewContentModeTopRight;
+            break;
+        }
+        case 7: {
             self.view.contentMode = UIViewContentModeBottomRight;
             break;
         }

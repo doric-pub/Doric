@@ -34,9 +34,15 @@ import android.graphics.drawable.NinePatchDrawable;
 import android.os.Build;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.AttributeSet;
 import android.util.Base64;
 import android.util.Pair;
 import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.vectordrawable.graphics.drawable.Animatable2Compat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
@@ -61,10 +67,6 @@ import java.io.File;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.vectordrawable.graphics.drawable.Animatable2Compat;
 import pub.doric.DoricContext;
 import pub.doric.async.AsyncResult;
 import pub.doric.extension.bridge.DoricMethod;
@@ -93,7 +95,18 @@ public class ImageNode extends ViewNode<ImageView> {
     private JSObject stretchInset = null;
     private float imageScale = DoricUtils.getScreenScale();
     private Animatable2Compat.AnimationCallback animationCallback = null;
-    private int scaleType = 2;
+
+    static class ScaleType {
+        public static final int ScaleAspectFit = 1;
+        public static final int ScaleAspectFill = 2;
+        public static final int Tile = 3;
+        public static final int ScaleAspectFitLeftTop = 4;
+        public static final int ScaleAspectFitLeftBottom = 5;
+        public static final int ScaleAspectFitRightTop = 6;
+        public static final int ScaleAspectFitRightBottom = 7;
+    }
+
+    private int scaleType = ScaleType.ScaleAspectFill;
 
     public ImageNode(DoricContext doricContext) {
         super(doricContext);
@@ -112,14 +125,78 @@ public class ImageNode extends ViewNode<ImageView> {
         }
     }
 
+    class DoricImageView extends AppCompatImageView {
+
+        public DoricImageView(@NonNull Context context) {
+            super(context);
+        }
+
+        public DoricImageView(@NonNull Context context, @Nullable AttributeSet attrs) {
+            super(context, attrs);
+        }
+
+        public DoricImageView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+            super(context, attrs, defStyleAttr);
+        }
+
+        @Override
+        protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+            if (scaleType == ImageNode.ScaleType.ScaleAspectFitLeftBottom) {
+                fitLeftBottom();
+            }
+            if (scaleType == ImageNode.ScaleType.ScaleAspectFitRightTop) {
+                fitRightTop();
+            }
+        }
+
+        public void fitLeftBottom() {
+            if (getDrawable() == null) {
+                return;
+            }
+            int drawableWidth = getDrawable().getIntrinsicWidth();
+            int drawableHeight = getDrawable().getIntrinsicHeight();
+
+            float widthPercentage = (float) getMeasuredWidth() / (float) drawableWidth;
+            float heightPercentage = (float) getMeasuredHeight() / (float) drawableHeight;
+            float minPercentage = Math.min(widthPercentage, heightPercentage);
+
+            Matrix matrix = new Matrix();
+            int targetHeight = Math.round(minPercentage * drawableHeight);
+
+            matrix.setScale(minPercentage, minPercentage);
+            matrix.postTranslate(0, (float) (getMeasuredHeight() - targetHeight));
+
+            setScaleType(ImageView.ScaleType.MATRIX);
+            setImageMatrix(matrix);
+        }
+
+        public void fitRightTop() {
+            if (getDrawable() == null) {
+                return;
+            }
+            int drawableWidth = getDrawable().getIntrinsicWidth();
+            int drawableHeight = getDrawable().getIntrinsicHeight();
+
+            float widthPercentage = (float) getMeasuredWidth() / (float) drawableWidth;
+            float heightPercentage = (float) getMeasuredHeight() / (float) drawableHeight;
+            float minPercentage = Math.min(widthPercentage, heightPercentage);
+
+            Matrix matrix = new Matrix();
+            int targetWidth = Math.round(minPercentage * drawableWidth);
+
+            matrix.setScale(minPercentage, minPercentage);
+            matrix.postTranslate((float) (getMeasuredWidth() - targetWidth), 0);
+
+            setScaleType(ImageView.ScaleType.MATRIX);
+            setImageMatrix(matrix);
+        }
+    }
+
     @Override
     protected ImageView build() {
-        ImageView imageView = new AppCompatImageView(getContext()) {
-            @Override
-            protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-                super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-            }
-        };
+        ImageView imageView = new DoricImageView(getContext());
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         imageView.setAdjustViewBounds(true);
         return imageView;
@@ -171,7 +248,7 @@ public class ImageNode extends ViewNode<ImageView> {
             }
         }
         super.blend(jsObject);
-        if (scaleType == 2 && mView.getScaleType() != ImageView.ScaleType.CENTER_CROP) {
+        if (scaleType == ScaleType.ScaleAspectFill && mView.getScaleType() != ImageView.ScaleType.CENTER_CROP) {
             mView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
     }
@@ -370,7 +447,7 @@ public class ImageNode extends ViewNode<ImageView> {
                                 resource = new BitmapDrawable(getContext().getResources(), bitmap);
                             }
 
-                            if (scaleType == 3) { // image tile
+                            if (scaleType == ScaleType.Tile) { // image tile
                                 BitmapDrawable drawable = new BitmapDrawable(getContext().getResources(), bitmap);
                                 drawable.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
                                 drawable.setDither(true);
@@ -404,6 +481,7 @@ public class ImageNode extends ViewNode<ImageView> {
                         } else {
                             super.setResource(resource);
                         }
+
                         if (mSuperNode instanceof FlexNode) {
                             YogaNode node = ((FlexNode) mSuperNode).mView.getYogaNodeForView(mView);
                             if (node != null) {
@@ -478,16 +556,19 @@ public class ImageNode extends ViewNode<ImageView> {
                 }
                 scaleType = prop.asNumber().toInt();
                 switch (scaleType) {
-                    case 1:
+                    case ScaleType.ScaleAspectFit:
                         view.setScaleType(ImageView.ScaleType.FIT_CENTER);
                         break;
-                    case 2:
+                    case ScaleType.ScaleAspectFill:
                         view.setScaleType(ImageView.ScaleType.CENTER_CROP);
                         break;
-                    case 4:
+                    case ScaleType.ScaleAspectFitLeftTop:
                         view.setScaleType(ImageView.ScaleType.FIT_START);
                         break;
-                    case 5:
+                    case ScaleType.ScaleAspectFitLeftBottom:
+                    case ScaleType.ScaleAspectFitRightTop:
+                        break;
+                    case ScaleType.ScaleAspectFitRightBottom:
                         view.setScaleType(ImageView.ScaleType.FIT_END);
                         break;
                     default:
@@ -612,7 +693,7 @@ public class ImageNode extends ViewNode<ImageView> {
     @Override
     protected void reset() {
         super.reset();
-        scaleType = 2;
+        scaleType = ScaleType.ScaleAspectFill;
         loadCallbackId = "";
         isBlur = false;
         placeHolderImage = null;

@@ -14,7 +14,14 @@ export declare class LocalResource extends Resource {
     constructor(path: string);
 }
 export declare class RemoteResource extends Resource {
+    headers?: Record<string, string>;
     constructor(url: string);
+    toModel(): {
+        headers: Record<string, string> | undefined;
+        resId: string;
+        type: string;
+        identifier: string;
+    };
 }
 export declare class Base64Resource extends Resource {
     constructor(content: string);

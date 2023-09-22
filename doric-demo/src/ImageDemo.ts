@@ -1,4 +1,4 @@
-import { AssetsResource, AndroidAssetsResource, Base64Resource, DrawableResource, Group, Panel, coordinator, text, gravity, Color, LayoutSpec, log, vlayout, scroller, layoutConfig, image, ScaleType, Image, modal, RemoteResource, MainBundleResource } from "doric";
+import { AssetsResource, AndroidAssetsResource, Base64Resource, DrawableResource, Group, Panel, coordinator, text, gravity, Color, LayoutSpec, log, vlayout, scroller, layoutConfig, image, ScaleType, Image, modal, RemoteResource, MainBundleResource, hlayout } from "doric";
 import { colors, label } from "./utils";
 import { img_base64 } from "./image_base64";
 
@@ -167,52 +167,111 @@ class ImageDemo extends Panel {
             scaleType: ScaleType.ScaleAspectFill,
             layoutConfig: layoutConfig().just(),
           }),
-          label("ScaleAspectFitStart"),
-          image({
-            imageUrl: landscapeImageUrl,
-            width: 300,
-            height: 300,
-            border: {
-              width: 2,
-              color: Color.GRAY,
-            },
-            scaleType: ScaleType.ScaleAspectFitStart,
-            layoutConfig: layoutConfig().just(),
-          }),
-          image({
-            imageUrl: portraitImageUrl,
-            width: 300,
-            height: 300,
-            border: {
-              width: 2,
-              color: Color.GRAY,
-            },
-            scaleType: ScaleType.ScaleAspectFitStart,
-            layoutConfig: layoutConfig().just(),
-          }),
-          label("ScaleAspectFitEnd"),
-          image({
-            imageUrl: landscapeImageUrl,
-            width: 300,
-            height: 300,
-            border: {
-              width: 2,
-              color: Color.GRAY,
-            },
-            scaleType: ScaleType.ScaleAspectFitEnd,
-            layoutConfig: layoutConfig().just(),
-          }),
-          image({
-            imageUrl: portraitImageUrl,
-            width: 300,
-            height: 300,
-            border: {
-              width: 2,
-              color: Color.GRAY,
-            },
-            scaleType: ScaleType.ScaleAspectFitEnd,
-            layoutConfig: layoutConfig().just(),
-          }),
+
+          label("ScaleAspectFitLeftTop"),
+          hlayout([
+            image({
+              imageUrl: landscapeImageUrl,
+              width: 150,
+              height: 150,
+              border: {
+                width: 2,
+                color: Color.GRAY,
+              },
+              scaleType: ScaleType.ScaleAspectFitLeftTop,
+              layoutConfig: layoutConfig().just(),
+            }),
+            image({
+              imageUrl: portraitImageUrl,
+              width: 150,
+              height: 150,
+              border: {
+                width: 2,
+                color: Color.GRAY,
+              },
+              scaleType: ScaleType.ScaleAspectFitLeftTop,
+              layoutConfig: layoutConfig().just(),
+            }),
+          ], { space: 30 }),
+
+          label("ScaleAspectFitLeftBottom"),
+          hlayout([
+            image({
+              imageUrl: landscapeImageUrl,
+              width: 150,
+              height: 150,
+              border: {
+                width: 2,
+                color: Color.GRAY,
+              },
+              scaleType: ScaleType.ScaleAspectFitLeftBottom,
+              layoutConfig: layoutConfig().just(),
+            }),
+            image({
+              imageUrl: portraitImageUrl,
+              width: 150,
+              height: 150,
+              border: {
+                width: 2,
+                color: Color.GRAY,
+              },
+              scaleType: ScaleType.ScaleAspectFitLeftBottom,
+              layoutConfig: layoutConfig().just(),
+            }),
+          ], { space: 30 }),
+
+          label("ScaleAspectFitRightTop"),
+          hlayout([
+            image({
+              imageUrl: landscapeImageUrl,
+              width: 150,
+              height: 150,
+              border: {
+                width: 2,
+                color: Color.GRAY,
+              },
+              scaleType: ScaleType.ScaleAspectFitRightTop,
+              layoutConfig: layoutConfig().just(),
+            }),
+            image({
+              imageUrl: portraitImageUrl,
+              width: 150,
+              height: 150,
+              border: {
+                width: 2,
+                color: Color.GRAY,
+              },
+              scaleType: ScaleType.ScaleAspectFitRightTop,
+              layoutConfig: layoutConfig().just(),
+            }),
+          ], { space: 30 }),
+
+          label("ScaleAspectFitRightBottom"),
+          hlayout([
+            image({
+              imageUrl: landscapeImageUrl,
+              width: 150,
+              height: 150,
+              border: {
+                width: 2,
+                color: Color.GRAY,
+              },
+              scaleType: ScaleType.ScaleAspectFitRightBottom,
+              layoutConfig: layoutConfig().just(),
+            }),
+            image({
+              imageUrl: portraitImageUrl,
+              width: 150,
+              height: 150,
+              border: {
+                width: 2,
+                color: Color.GRAY,
+              },
+              scaleType: ScaleType.ScaleAspectFitRightBottom,
+              layoutConfig: layoutConfig().just(),
+            }),
+          ], { space: 30 }),
+
           label("ImageBase64"),
           image({
             imageBase64: img_base64[0],

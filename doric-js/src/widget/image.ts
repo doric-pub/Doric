@@ -23,9 +23,11 @@ export enum ScaleType {
     ScaleToFill = 0,
     ScaleAspectFit,
     ScaleAspectFill,
-    Tile,  // image tile mode
-    ScaleAspectFitStart,
-    ScaleAspectFitEnd,
+    Tile, // image tile mode
+    ScaleAspectFitLeftTop,
+    ScaleAspectFitLeftBottom,
+    ScaleAspectFitRightTop,
+    ScaleAspectFitRightBottom,
 }
 
 export class Image extends View {

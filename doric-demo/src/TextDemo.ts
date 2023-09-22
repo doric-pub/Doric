@@ -67,7 +67,6 @@ class TextDemo extends Panel {
                         layoutConfig:layoutConfig().configWidth(LayoutSpec.JUST).configHeight(LayoutSpec.FIT),
                         width:320,
                         border:{"width":1, "color":Color.RED},
-                        margin:{left:15,right:17}
 
                     }),
                     hlayout([

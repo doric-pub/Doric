@@ -4,21 +4,24 @@ import fs from "fs";
 import { glob } from "./util";
 import path from "path";
 export async function build() {
-    let ret = await Shell.exec("node_modules/.bin/tsc", ["-p", "."], {
+    const rootDir = path.dirname(__dirname);
+    let ret = await Shell.exec(rootDir + "/node_modules/.bin/tsc", ["-p", "."], {
         env: process.env,
         consoleHandler: (info) => {
             console.log(info);
-        }
+        },
+        shell: true,
     });
     if (ret !== 0) {
         console.log("Compile error".red);
         return -1;
     }
-    ret = await Shell.exec("node_modules/.bin/rollup", ["-c",], {
+    ret = await Shell.exec(rootDir + "/node_modules/.bin/rollup", ["-c",], {
         env: process.env,
         consoleHandler: (info) => {
             console.log(info);
-        }
+        },
+        shell: true,
     });
     if (ret !== 0) {
         console.log("Compile error".red);
@@ -30,7 +33,7 @@ export async function build() {
     }
     if (fs.existsSync("assets")) {
         const assets = await fs.promises.readdir("assets")
-        await Shell.exec("cp", ["-rf", "assets", "bundle/"]);
+        await Shell.exec("cp", ["-rf", "assets", "bundle/"], { shell: true });
         for (let asset of assets) {
             const assetFile = path.resolve("assets", asset);
             const stat = await fs.promises.stat(assetFile);

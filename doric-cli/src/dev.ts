@@ -8,6 +8,7 @@ import os from "os";
 import qrcode from "qrcode-terminal";
 import keypress from "keypress";
 import { createResServer } from "./resourceServer"
+import path from "path";
 
 function getIPAdress() {
   const ret: string[] = [];
@@ -34,6 +35,7 @@ export default async function dev(serverPort = 7777, resourcePort = 7778) {
   const server = await createServer(serverPort)
 
   const cachedContents: Record<string, string> = {}
+  console.log(process.cwd() + "/bundle")
   chokidar
     .watch(process.cwd() + "/bundle", {
       ignored: /.*?\.map/,
@@ -81,10 +83,11 @@ export default async function dev(serverPort = 7777, resourcePort = 7778) {
       }
     });
 
-  const tscProcess = exec("node_modules/.bin/tsc -w -p .", {
+  const rootDir = path.dirname(__dirname);
+  const tscProcess = exec(rootDir + "/node_modules/.bin/tsc -w -p .", {
     env: process.env,
   });
-  const rollupProcess = exec("node_modules/.bin/rollup -c -w", {
+  const rollupProcess = exec(rootDir + "/node_modules/.bin/rollup -c -w", {
     env: process.env,
   });
   [tscProcess, rollupProcess].forEach(e => {

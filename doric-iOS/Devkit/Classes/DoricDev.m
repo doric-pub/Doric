@@ -23,6 +23,8 @@
 #import <DoricCore/DoricSingleton.h>
 #import <DoricCore/DoricNativeDriver.h>
 #import <DoricCore/DoricContextManager.h>
+#import <DoricCore/DoricJSEngine.h>
+#import <DoricCore/DoricJSCoreExecutor.h>
 
 #import "DoricDev.h"
 #import "DoricDebugDriver.h"
@@ -122,6 +124,13 @@
         navigationController = viewController.navigationController;
     }
     [navigationController pushViewController:devViewController animated:NO];
+    if (@available(iOS 16.4, *)) {
+        DoricJSEngine *jsEngine = DoricSingleton.instance.nativeDriver.jsExecutor;
+        if ([jsEngine.jsExecutor isKindOfClass:DoricJSCoreExecutor.class]) {
+            DoricJSCoreExecutor *jsCoreExecutor = jsEngine.jsExecutor;
+            jsCoreExecutor.jsContext.inspectable = YES;
+        }
+    }
 }
 
 - (void)closeDevMode {

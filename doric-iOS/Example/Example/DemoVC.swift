@@ -33,6 +33,6 @@ class DemoVC: UIViewController {
         doricPanel.view.height = view.height
         view.addSubview(doricPanel.view)
         addChild(doricPanel)
-        doricPanel.config(jsContent, alias: filePath, extra: nil)
+        doricPanel.config(jsContent, alias: "__dev__", extra: nil)
     }
 }

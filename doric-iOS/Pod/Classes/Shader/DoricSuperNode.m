@@ -162,7 +162,8 @@
     }
     if (self.superNode
             && (self.view.doricLayout.widthSpec == DoricLayoutFit
-            || self.view.doricLayout.heightSpec == DoricLayoutFit)) {
+            || self.view.doricLayout.heightSpec == DoricLayoutFit
+            || self.view.doricLayout.weight > 0)) {
         [self.superNode subNodeContentChanged:self];
     } else {
         if (![self.type isEqualToString:@"Root"]) {

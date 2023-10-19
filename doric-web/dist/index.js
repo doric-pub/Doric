@@ -6219,15 +6219,23 @@ var doric_web = (function (exports, axios, sandbox) {
 
 	Object.defineProperty(HTMLElement.prototype, "doricLayout", {
 	    get() {
-	        let layout = this.getAttribute("__doric_layout__");
-	        if (!layout) {
-	            layout = new DoricLayout();
-	            layout.width = this.style.width;
-	            layout.height = this.style.height;
+	        const archivedLayout = this.getAttribute("__doric_layout__");
+	        const layout = new DoricLayout();
+	        if (archivedLayout) {
+	            const archivedLayoutObj = JSON.parse(archivedLayout);
+	            for (let key in archivedLayoutObj) {
+	                Reflect.set(layout, key, Reflect.get(archivedLayoutObj, key, archivedLayoutObj));
+	            }
+	            layout.view = this;
+	            return layout;
+	        }
+	        else {
+	            layout.width = this.offsetWidth;
+	            layout.height = this.offsetHeight;
 	            layout.view = this;
 	            this.setAttribute("__doric_layout__", JSON.stringify(layout));
 	        }
-	        return this._doricLayout;
+	        return layout;
 	    },
 	    set(layout) {
 	        this.setAttribute("__doric_layout__", JSON.stringify(layout));
@@ -6271,6 +6279,9 @@ var doric_web = (function (exports, axios, sandbox) {
 	    DoricLayoutType[DoricLayoutType["VLayout"] = 2] = "VLayout";
 	    DoricLayoutType[DoricLayoutType["HLayout"] = 3] = "HLayout";
 	})(DoricLayoutType || (DoricLayoutType = {}));
+	const DORIC_MEASURED_STATE_MASK = 0x11;
+	const DORIC_MEASURED_HEIGHT_STATE_SHIFT = 8;
+	const DORIC_MEASURED_STATE_TOO_SMALL = 0x01;
 	class DoricLayout {
 	    constructor() {
 	        this.widthSpec = LayoutSpec.EXACTLY;
@@ -6294,7 +6305,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	        this.maxWidth = Number.MAX_VALUE;
 	        this.maxHeight = Number.MAX_VALUE;
 	        this.minWidth = -1;
-	        this.minheight = -1;
+	        this.minHeight = -1;
 	        this.resolved = false;
 	        this._measuredWidth = 0;
 	        this._measuredHeight = 0;
@@ -6324,8 +6335,8 @@ var doric_web = (function (exports, axios, sandbox) {
 	        this.resolved = true;
 	    }
 	    apply() {
-	        this.applyWithSize({ width: pixelString2Number(this.view.style.width),
-	            height: pixelString2Number(this.view.style.height) });
+	        this.applyWithSize({ width: this.view.offsetWidth,
+	            height: this.view.offsetHeight });
 	    }
 	    measure(targetSize) {
 	        this.doMeasure(targetSize);
@@ -6374,18 +6385,411 @@ var doric_web = (function (exports, axios, sandbox) {
 	        }
 	    }
 	    stackMeasure(widthMeasureSpec, heightMeasureSpec) {
+	        let maxWidth = 0;
+	        let maxHeight = 0;
+	        let childState = 0;
+	        const measureMatchParentChildren = widthMeasureSpec.mode !== DoricMeasureSpecMode.Exactly || heightMeasureSpec.mode !== DoricMeasureSpecMode.Exactly;
+	        const matchParentChildren = [];
+	        const children = Array.from(this.view.children);
+	        for (const subView of children) {
+	            const childLayout = subView.doricLayout;
+	            if (childLayout.disabled) {
+	                continue;
+	            }
+	            this.measureChild(childLayout, widthMeasureSpec, 0, heightMeasureSpec, 0);
+	            maxWidth = Math.max(maxWidth, childLayout.measuredWidth + childLayout.marginLeft + childLayout.marginRight);
+	            maxHeight = Math.max(maxHeight, childLayout.measuredHeight + childLayout.marginTop + childLayout.marginBottom);
+	            childState = childState | childLayout.measuredState;
+	            if (measureMatchParentChildren) {
+	                if (childLayout.widthSpec === LayoutSpec.AT_MOST || childLayout.heightSpec === LayoutSpec.AT_MOST) {
+	                    matchParentChildren.push(childLayout);
+	                }
+	            }
+	        }
+	        maxWidth += this.paddingLeft + this.paddingRight;
+	        maxHeight += this.paddingTop + this.paddingBottom;
+	        maxWidth = Math.max(maxWidth, this.minWidth);
+	        maxHeight = Math.max(maxHeight, this.minHeight);
+	        const widthSizeAndState = this.resolveSizeAndState(maxWidth, widthMeasureSpec, childState);
+	        const heightSizeAndState = this.resolveSizeAndState(maxHeight, heightMeasureSpec, childState << DORIC_MEASURED_HEIGHT_STATE_SHIFT);
+	        this.measuredWidth = widthSizeAndState.size;
+	        this.measuredHeight = heightSizeAndState.size;
+	        this.measuredState = (widthSizeAndState.state << DORIC_MEASURED_HEIGHT_STATE_SHIFT) | heightSizeAndState.state;
+	        if (matchParentChildren.length > 0) {
+	            for (const childLayout of matchParentChildren) {
+	                let childWidthMeasureSpec = {
+	                    mode: DoricMeasureSpecMode.Unspecified,
+	                    size: 0,
+	                };
+	                if (childLayout.widthSpec === LayoutSpec.AT_MOST) {
+	                    childWidthMeasureSpec.mode = DoricMeasureSpecMode.Exactly;
+	                    childWidthMeasureSpec.size = Math.max(0, this.measuredWidth - this.paddingLeft - this.paddingRight - childLayout.marginLeft - childLayout.marginRight);
+	                }
+	                else {
+	                    childWidthMeasureSpec = this.getChildMeasureSpec(widthMeasureSpec, this.paddingLeft + this.paddingRight + childLayout.marginLeft + childLayout.marginRight, childLayout.widthSpec, childLayout.width);
+	                }
+	                let childHeightMeasureSpec = {
+	                    mode: DoricMeasureSpecMode.Unspecified,
+	                    size: 0,
+	                };
+	                if (childLayout.heightSpec === LayoutSpec.AT_MOST) {
+	                    childHeightMeasureSpec.mode = DoricMeasureSpecMode.Exactly;
+	                    childHeightMeasureSpec.size = Math.max(0, this.measuredHeight - this.paddingTop - this.paddingBottom - childLayout.marginTop - childLayout.marginBottom);
+	                }
+	                else {
+	                    childHeightMeasureSpec = this.getChildMeasureSpec(heightMeasureSpec, this.paddingTop + this.paddingBottom + childLayout.marginTop + childLayout.marginBottom, childLayout.heightSpec, childLayout.height);
+	                }
+	                childLayout.measureSelf(childWidthMeasureSpec, childHeightMeasureSpec);
+	            }
+	        }
 	    }
 	    verticalMeasure(widthMeasureSpec, heightMeasureSpec) {
+	        let maxWidth = 0;
+	        let totalLength = 0;
+	        let totalWeight = 0;
+	        let hadExtraSpace = false;
+	        let widthMode = widthMeasureSpec.mode;
+	        let heightMode = heightMeasureSpec.mode;
+	        let skippedMeasure = false;
+	        let matchWidth = false;
+	        let allFillParent = true;
+	        let weightedMaxWidth = 0;
+	        let alternativeMaxWidth = 0;
+	        let childState = 0;
+	        const children = Array.from(this.view.children);
+	        for (const subView of children) {
+	            const childLayout = subView.doricLayout;
+	            if (childLayout.disabled) {
+	                continue;
+	            }
+	            hadExtraSpace = true;
+	            totalLength += this.spacing;
+	            totalWeight += childLayout.weight;
+	            if (heightMode === DoricMeasureSpecMode.Exactly && childLayout.heightSpec === LayoutSpec.EXACTLY && childLayout.height === 0 && childLayout.weight > 0) {
+	                totalLength = Math.max(totalLength, totalLength + childLayout.marginTop + childLayout.marginBottom);
+	                skippedMeasure = true;
+	            }
+	            else {
+	                let oldHeight = Number.MIN_VALUE;
+	                if (childLayout.heightSpec === LayoutSpec.EXACTLY && childLayout.height === 0 && childLayout.weight > 0) {
+	                    oldHeight = 0;
+	                    childLayout.heightSpec = LayoutSpec.WRAP_CONTENT;
+	                }
+	                this.measureChild(childLayout, widthMeasureSpec, 0, heightMeasureSpec, totalWeight === 0 ? totalLength : 0);
+	                if (oldHeight !== Number.MIN_VALUE) {
+	                    childLayout.heightSpec = LayoutSpec.EXACTLY;
+	                    childLayout.height = oldHeight;
+	                }
+	                const childHeight = childLayout.measuredHeight;
+	                totalLength = Math.max(totalLength, totalLength + childHeight + childLayout.marginTop + childLayout.marginBottom);
+	            }
+	            let matchWidthLocally = false;
+	            if (widthMode !== DoricMeasureSpecMode.Exactly && childLayout.widthSpec === LayoutSpec.AT_MOST) {
+	                matchWidth = true;
+	                matchWidthLocally = true;
+	            }
+	            const margin = childLayout.marginLeft + childLayout.marginRight;
+	            const measuredWidth = childLayout.measuredWidth + margin;
+	            maxWidth = Math.max(maxWidth, measuredWidth);
+	            childState = childState | childLayout.measuredState;
+	            allFillParent = allFillParent && childLayout.widthSpec === LayoutSpec.AT_MOST;
+	            if (childLayout.weight > 0) {
+	                weightedMaxWidth = Math.max(weightedMaxWidth, matchWidthLocally ? margin : measuredWidth);
+	            }
+	            else {
+	                alternativeMaxWidth = Math.max(alternativeMaxWidth, matchWidthLocally ? margin : measuredWidth);
+	            }
+	        }
+	        if (hadExtraSpace) {
+	            totalLength -= this.spacing;
+	        }
+	        totalLength += this.paddingTop + this.paddingBottom;
+	        let heightSize = totalLength;
+	        heightSize = Math.max(heightSize, this.minHeight);
+	        const heightSizeAndState = this.resolveSizeAndState(heightSize, heightMeasureSpec, 0);
+	        heightSize = heightSizeAndState.size;
+	        let delta = heightSize - totalLength;
+	        if (skippedMeasure || (delta !== 0 && totalWeight > 0)) {
+	            let weightSum = totalWeight;
+	            totalLength = 0;
+	            const children = Array.from(this.view.children);
+	            for (const subView of children) {
+	                const childLayout = subView.doricLayout;
+	                if (childLayout.disabled) {
+	                    continue;
+	                }
+	                const childExtra = childLayout.weight;
+	                if (childExtra > 0) {
+	                    const share = childExtra * delta / weightSum;
+	                    weightSum -= childExtra;
+	                    delta -= share;
+	                    const childWidthMeasureSpec = this.getChildMeasureSpec(widthMeasureSpec, this.paddingLeft + this.paddingRight + childLayout.marginLeft + childLayout.marginRight, childLayout.widthSpec, childLayout.width);
+	                    if (!(childLayout.heightSpec === LayoutSpec.WRAP_CONTENT && childLayout.height === 0) || heightMode !== DoricMeasureSpecMode.Exactly) {
+	                        let childHeight = childLayout.measuredHeight + share;
+	                        if (childHeight < 0) {
+	                            childHeight = 0;
+	                        }
+	                        childLayout.measureSelf(childWidthMeasureSpec, this.doricMeasureSpecMake(DoricMeasureSpecMode.Exactly, childHeight));
+	                    }
+	                    else {
+	                        childLayout.measureSelf(childWidthMeasureSpec, this.doricMeasureSpecMake(DoricMeasureSpecMode.Exactly, share > 0 ? share : 0));
+	                    }
+	                    childState = childState | (childLayout.measuredState & (DORIC_MEASURED_STATE_MASK >> DORIC_MEASURED_HEIGHT_STATE_SHIFT));
+	                }
+	                const margin = childLayout.marginLeft + childLayout.marginRight;
+	                const measuredWidth = childLayout.measuredWidth + margin;
+	                maxWidth = Math.max(maxWidth, measuredWidth);
+	                const matchWidthLocally = widthMode !== DoricMeasureSpecMode.Exactly && childLayout.widthSpec === LayoutSpec.AT_MOST;
+	                alternativeMaxWidth = Math.max(alternativeMaxWidth, matchWidthLocally ? margin : measuredWidth);
+	                allFillParent = allFillParent && childLayout.widthSpec === LayoutSpec.AT_MOST;
+	                totalLength = Math.max(totalLength, totalLength + childLayout.measuredHeight + childLayout.marginTop + childLayout.marginBottom);
+	                totalLength += this.spacing;
+	            }
+	            if (hadExtraSpace) {
+	                totalLength -= this.spacing;
+	            }
+	            totalLength += this.paddingTop + this.paddingBottom;
+	        }
+	        else {
+	            alternativeMaxWidth = Math.max(alternativeMaxWidth, weightedMaxWidth);
+	        }
+	        if (!allFillParent && widthMode !== DoricMeasureSpecMode.Exactly) {
+	            maxWidth = alternativeMaxWidth;
+	        }
+	        maxWidth += this.paddingLeft + this.paddingRight;
+	        maxWidth = Math.max(maxWidth, this.minWidth);
+	        const widthSizeAndState = this.resolveSizeAndState(maxWidth, widthMeasureSpec, childState);
+	        this.measuredWidth = widthSizeAndState.size;
+	        this.measuredHeight = heightSize;
+	        this.measuredState = (widthSizeAndState.state << DORIC_MEASURED_HEIGHT_STATE_SHIFT) | heightSizeAndState.state;
+	        if (matchWidth) {
+	            this.forceUniformWidth(heightMeasureSpec);
+	        }
+	        this.totalLength = totalLength;
 	    }
 	    horizontalMeasure(widthMeasureSpec, heightMeasureSpec) {
+	        let maxHeight = 0;
+	        let totalLength = 0;
+	        let totalWeight = 0;
+	        let hadExtraSpace = false;
+	        const widthMode = widthMeasureSpec.mode;
+	        const heightMode = heightMeasureSpec.mode;
+	        let skippedMeasure = false;
+	        let matchHeight = false;
+	        let allFillParent = true;
+	        let weightedMaxHeight = 0;
+	        let alternativeMaxHeight = 0;
+	        let isExactly = widthMode === DoricMeasureSpecMode.Exactly;
+	        let childState = 0;
+	        const children = Array.from(this.view.children);
+	        for (const subview of children) {
+	            const childLayout = subview.doricLayout;
+	            if (childLayout.disabled) {
+	                continue;
+	            }
+	            hadExtraSpace = true;
+	            totalLength += this.spacing;
+	            totalWeight += childLayout.weight;
+	            if (widthMode === DoricMeasureSpecMode.Exactly && childLayout.widthSpec === LayoutSpec.EXACTLY && childLayout.width === 0 && childLayout.weight > 0) {
+	                if (isExactly) {
+	                    totalLength += childLayout.marginLeft + childLayout.marginRight;
+	                }
+	                else {
+	                    totalLength = Math.max(totalLength, totalLength + childLayout.marginLeft + childLayout.marginRight);
+	                }
+	                skippedMeasure = true;
+	            }
+	            else {
+	                let oldWidth = Number.MIN_VALUE;
+	                if (childLayout.widthSpec === LayoutSpec.EXACTLY && childLayout.width === 0 && childLayout.weight > 0) {
+	                    oldWidth = 0;
+	                    childLayout.widthSpec = LayoutSpec.WRAP_CONTENT;
+	                }
+	                this.measureChild(childLayout, widthMeasureSpec, totalWeight === 0 ? totalWeight : 0, heightMeasureSpec, 0);
+	                if (oldWidth !== Number.MIN_VALUE) {
+	                    childLayout.widthSpec = LayoutSpec.EXACTLY;
+	                    childLayout.width = oldWidth;
+	                }
+	                const childWidth = childLayout.measuredWidth;
+	                if (isExactly) {
+	                    totalLength += childWidth + childLayout.marginLeft + childLayout.marginRight;
+	                }
+	                else {
+	                    totalLength = Math.max(totalLength, totalLength + childWidth + childLayout.marginLeft + childLayout.marginRight);
+	                }
+	            }
+	            let matchHeightLocally = false;
+	            if (heightMode !== DoricMeasureSpecMode.Exactly && childLayout.heightSpec === LayoutSpec.AT_MOST) {
+	                matchHeight = true;
+	                matchHeightLocally = true;
+	            }
+	            const margin = childLayout.marginTop + childLayout.marginBottom;
+	            const childHeight = childLayout.measuredHeight + margin;
+	            childState = childState | childLayout.measuredState;
+	            maxHeight = Math.max(maxHeight, childHeight);
+	            allFillParent = allFillParent && childLayout.heightSpec === LayoutSpec.AT_MOST;
+	            if (childLayout.weight > 0) {
+	                weightedMaxHeight = Math.max(weightedMaxHeight, matchHeightLocally ? margin : childHeight);
+	            }
+	            else {
+	                alternativeMaxHeight = Math.max(alternativeMaxHeight, matchHeightLocally ? margin : childHeight);
+	            }
+	        }
+	        if (hadExtraSpace) {
+	            totalLength -= this.spacing;
+	        }
+	        totalLength += this.paddingLeft + this.paddingRight;
+	        let widthSize = totalLength;
+	        widthSize = Math.max(widthSize, this.minWidth);
+	        const widthSizeAndState = this.resolveSizeAndState(widthSize, widthMeasureSpec, 0);
+	        widthSize = widthSizeAndState.size;
+	        let delta = widthSize - totalLength;
+	        if (skippedMeasure || (delta !== 0 && totalWeight > 0)) {
+	            let weightSum = totalWeight;
+	            totalLength = 0;
+	            const children = Array.from(this.view.children);
+	            for (const subview of children) {
+	                const childLayout = subview.doricLayout;
+	                if (childLayout.disabled) {
+	                    continue;
+	                }
+	                const childExtra = childLayout.weight;
+	                if (childExtra > 0) {
+	                    const share = childExtra * delta / weightSum;
+	                    weightSum -= childExtra;
+	                    delta -= share;
+	                    const childHeightMeasureSpec = this.getChildMeasureSpec(heightMeasureSpec, this.paddingTop + this.paddingBottom + childLayout.marginTop + childLayout.marginBottom, childLayout.heightSpec, childLayout.height);
+	                    if (!(childLayout.widthSpec === LayoutSpec.EXACTLY && childLayout.width === 0) || widthMode !== DoricMeasureSpecMode.Exactly) {
+	                        let childWidth = childLayout.measuredWidth + share;
+	                        if (childWidth < 0) {
+	                            childWidth = 0;
+	                        }
+	                        childLayout.measureSelf(this.doricMeasureSpecMake(DoricMeasureSpecMode.Exactly, childWidth), childHeightMeasureSpec);
+	                    }
+	                    else {
+	                        childLayout.measureSelf(this.doricMeasureSpecMake(DoricMeasureSpecMode.Exactly, share > 0 ? share : 0), childHeightMeasureSpec);
+	                    }
+	                    childState = childState | (childLayout.measuredState & DORIC_MEASURED_STATE_MASK);
+	                }
+	                if (isExactly) {
+	                    totalLength += childLayout.measuredWidth + childLayout.marginLeft + childLayout.marginRight;
+	                }
+	                else {
+	                    totalLength = Math.max(totalLength, totalLength + childLayout.measuredWidth + childLayout.marginLeft + childLayout.marginRight);
+	                }
+	                totalLength += this.spacing;
+	                const matchHeightLocally = heightMode !== DoricMeasureSpecMode.Exactly && childLayout.heightSpec === LayoutSpec.AT_MOST;
+	                const margin = childLayout.marginTop + childLayout.marginBottom;
+	                const childHeight = childLayout.measuredHeight + margin;
+	                maxHeight = Math.max(maxHeight, childHeight);
+	                alternativeMaxHeight = Math.max(alternativeMaxHeight, matchHeightLocally ? margin : childHeight);
+	                allFillParent = allFillParent && childLayout.heightSpec === LayoutSpec.AT_MOST;
+	            }
+	            if (hadExtraSpace) {
+	                totalLength -= this.spacing;
+	            }
+	            totalLength += this.paddingLeft + this.paddingRight;
+	        }
+	        else {
+	            alternativeMaxHeight = Math.max(alternativeMaxHeight, weightedMaxHeight);
+	        }
+	        if (!allFillParent && heightMode !== DoricMeasureSpecMode.Exactly) {
+	            maxHeight = alternativeMaxHeight;
+	        }
+	        maxHeight += this.paddingTop + this.paddingBottom;
+	        maxHeight = Math.max(maxHeight, this.minHeight);
+	        this.measuredWidth = widthSize;
+	        const heightSizeAndState = this.resolveSizeAndState(maxHeight, heightMeasureSpec, childState << DORIC_MEASURED_HEIGHT_STATE_SHIFT);
+	        this.measuredHeight = heightSizeAndState.size;
+	        this.measuredState = ((widthSizeAndState.state | (childState & DORIC_MEASURED_STATE_MASK)) << DORIC_MEASURED_HEIGHT_STATE_SHIFT) | heightSizeAndState.state;
+	        if (matchHeight) {
+	            this.forceUniformWidth(widthMeasureSpec);
+	        }
+	        this.totalLength = totalLength;
 	    }
 	    undefinedMeasure(widthMeasureSpec, heightMeasureSpec) {
 	    }
 	    getChildMeasureSpec(spec, padding, childLayoutSpec, childSize) {
+	        const specMode = spec.mode;
+	        const specSize = spec.size;
+	        const size = Math.max(0, specSize - padding);
+	        let resultSize = 0;
+	        let resultMode = 0;
+	        switch (specMode) {
+	            case DoricMeasureSpecMode.Exactly:
+	                if (childLayoutSpec === LayoutSpec.EXACTLY) {
+	                    resultSize = childSize;
+	                    resultMode = DoricMeasureSpecMode.Exactly;
+	                }
+	                else if (childLayoutSpec === LayoutSpec.AT_MOST) {
+	                    resultSize = size;
+	                    resultMode = DoricMeasureSpecMode.Exactly;
+	                }
+	                else if (childLayoutSpec === LayoutSpec.WRAP_CONTENT) {
+	                    resultSize = size;
+	                    resultMode = DoricMeasureSpecMode.AtMost;
+	                }
+	                break;
+	            case DoricMeasureSpecMode.AtMost:
+	                if (childLayoutSpec === LayoutSpec.EXACTLY) {
+	                    resultSize = childSize;
+	                    resultMode = DoricMeasureSpecMode.Exactly;
+	                }
+	                else if (childLayoutSpec === LayoutSpec.AT_MOST) {
+	                    resultSize = size;
+	                    resultMode = DoricMeasureSpecMode.AtMost;
+	                }
+	                else if (childLayoutSpec === LayoutSpec.WRAP_CONTENT) {
+	                    resultSize = size;
+	                    resultMode = DoricMeasureSpecMode.AtMost;
+	                }
+	                break;
+	            case DoricMeasureSpecMode.Unspecified:
+	                if (childLayoutSpec === LayoutSpec.EXACTLY) {
+	                    resultSize = childSize;
+	                    resultMode = DoricMeasureSpecMode.Exactly;
+	                }
+	                else if (childLayoutSpec === LayoutSpec.AT_MOST) {
+	                    resultSize = size;
+	                    resultMode = DoricMeasureSpecMode.Unspecified;
+	                }
+	                else if (childLayoutSpec === LayoutSpec.WRAP_CONTENT) {
+	                    resultSize = size;
+	                    resultMode = DoricMeasureSpecMode.Unspecified;
+	                }
+	                break;
+	        }
+	        return this.doricMeasureSpecMake(resultMode, resultSize);
 	    }
 	    measureChild(child, widthSpec, usedWidth, heightSpec, usedHeight) {
+	        const childWidthMeasureSpec = this.getChildMeasureSpec(widthSpec, this.paddingLeft + this.paddingRight + this.marginLeft + this.marginRight + usedWidth, child.widthSpec, child.width);
+	        const childHeightMeasureSpec = this.getChildMeasureSpec(heightSpec, this.paddingTop + this.paddingBottom + this.marginTop + this.marginBottom + usedHeight, child.heightSpec, child.height);
+	        child.measureSelf(childWidthMeasureSpec, childHeightMeasureSpec);
 	    }
 	    resolveSizeAndState(size, spec, childMeasuredState) {
+	        let result = { size: 0, state: 0 };
+	        const specMode = spec.mode;
+	        const specSize = spec.size;
+	        switch (specMode) {
+	            case DoricMeasureSpecMode.AtMost:
+	                if (specSize < size) {
+	                    result.size = specSize;
+	                    result.state = DORIC_MEASURED_STATE_TOO_SMALL;
+	                }
+	                else {
+	                    result.size = size;
+	                }
+	                break;
+	            case DoricMeasureSpecMode.Exactly:
+	                result.size = specSize;
+	                break;
+	            case DoricMeasureSpecMode.Unspecified:
+	            default:
+	                result.size = size;
+	                break;
+	        }
+	        result.state = result.state | (childMeasuredState & DORIC_MEASURED_STATE_MASK);
+	        return result;
 	    }
 	    layout() {
 	        switch (this.layoutType) {
@@ -6401,12 +6805,155 @@ var doric_web = (function (exports, axios, sandbox) {
 	        }
 	    }
 	    setFrame() {
+	        if (this.layoutType !== DoricLayoutType.Undefined) {
+	            const children = Array.from(this.view.children);
+	            for (const subView of children) {
+	                const childLayout = subView.doricLayout;
+	                childLayout.setFrame();
+	            }
+	        }
+	        this.measuredX;
+	        this.measuredY;
+	        this.measuredWidth;
+	        this.measuredHeight;
 	    }
 	    layoutStack() {
+	        const children = Array.from(this.view.children);
+	        for (const subView of children) {
+	            const layout = subView.doricLayout;
+	            if (layout.disabled) {
+	                continue;
+	            }
+	            layout.layout();
+	            let gravity = layout.alignment;
+	            if ((gravity & LEFT) === LEFT) {
+	                layout.measuredX = this.paddingLeft;
+	            }
+	            else if ((gravity & RIGHT) === RIGHT) {
+	                layout.measuredX = this.measuredWidth - this.paddingRight - layout.measuredWidth;
+	            }
+	            else if ((gravity & CENTER_X) === CENTER_X) {
+	                layout.measuredX = (this.measuredWidth - layout.measuredWidth) / 2;
+	            }
+	            else {
+	                layout.measuredX = this.paddingLeft;
+	            }
+	            if ((gravity & TOP) === TOP) {
+	                layout.measuredY = this.paddingTop;
+	            }
+	            else if ((gravity & BOTTOM) === BOTTOM) {
+	                layout.measuredY = this.measuredHeight - this.paddingBottom - layout.measuredHeight;
+	            }
+	            else if ((gravity & CENTER_Y) === CENTER_Y) {
+	                layout.measuredY = (this.measuredHeight - layout.measuredHeight) / 2;
+	            }
+	            else {
+	                layout.measuredY = this.paddingTop;
+	            }
+	            if (!gravity) {
+	                gravity = LEFT | TOP;
+	            }
+	            if (layout.marginLeft && !((gravity & RIGHT) === RIGHT)) {
+	                layout.measuredX += layout.marginLeft;
+	            }
+	            if (layout.marginRight && !((gravity & LEFT) === LEFT)) {
+	                layout.measuredX -= layout.marginRight;
+	            }
+	            if (layout.marginTop && !((gravity & BOTTOM) === BOTTOM)) {
+	                layout.measuredY += layout.marginTop;
+	            }
+	            if (layout.marginBottom && !((gravity & TOP) === TOP)) {
+	                layout.measuredY -= layout.marginBottom;
+	            }
+	        }
 	    }
 	    layoutHLayout() {
+	        let xStart = this.paddingLeft;
+	        if ((this.gravity & LEFT) === LEFT) {
+	            xStart = this.paddingLeft;
+	        }
+	        else if ((this.gravity & RIGHT) === RIGHT) {
+	            xStart = this.measuredWidth - this.totalLength - this.paddingRight;
+	        }
+	        else if ((this.gravity & CENTER_X) === CENTER_X) {
+	            xStart = (this.measuredWidth - this.totalLength - this.paddingLeft - this.paddingRight) / 2 + this.paddingLeft;
+	        }
+	        const children = Array.from(this.view.children);
+	        for (const subView of children) {
+	            const layout = subView.doricLayout;
+	            if (layout.disabled) {
+	                continue;
+	            }
+	            layout.layout();
+	            let gravity = layout.alignment | this.gravity;
+	            if ((gravity & TOP) === TOP) {
+	                layout.measuredY = this.paddingTop;
+	            }
+	            else if ((gravity & BOTTOM) === BOTTOM) {
+	                layout.measuredY = this.measuredHeight - this.paddingBottom - layout.measuredHeight;
+	            }
+	            else if ((gravity & CENTER_Y) === CENTER_Y) {
+	                layout.measuredY = (this.measuredHeight - layout.measuredHeight) / 2;
+	            }
+	            else {
+	                this.measuredY = this.paddingTop;
+	            }
+	            if (!gravity) {
+	                gravity = TOP;
+	            }
+	            if (layout.marginTop && !((gravity & BOTTOM) === BOTTOM)) {
+	                layout.measuredY += layout.marginTop;
+	            }
+	            if (layout.marginBottom && !((gravity & TOP) === TOP)) {
+	                layout.measuredY -= layout.marginBottom;
+	            }
+	            layout.measuredX = xStart + layout.marginLeft;
+	            xStart += this.spacing + layout.takenWidth();
+	        }
 	    }
 	    layoutVLayout() {
+	        let yStart = this.paddingTop;
+	        if ((this.gravity & TOP) === TOP) {
+	            yStart = this.paddingTop;
+	        }
+	        else if ((this.gravity & BOTTOM) === BOTTOM) {
+	            yStart = this.measuredHeight - this.totalLength - this.paddingBottom;
+	        }
+	        else if ((this.gravity & CENTER_Y) === CENTER_Y) {
+	            yStart = (this.measuredHeight - this.totalLength - this.paddingTop - this.paddingBottom) / 2 + this.paddingTop;
+	        }
+	        const children = Array.from(this.view.children);
+	        for (const subView of children) {
+	            const layout = subView.doricLayout;
+	            if (layout.disabled) {
+	                continue;
+	            }
+	            layout.layout();
+	            let gravity = layout.alignment | this.gravity;
+	            if ((gravity & LEFT) === LEFT) {
+	                layout.measuredX = this.paddingLeft;
+	            }
+	            else if ((gravity & RIGHT) === RIGHT) {
+	                layout.measuredX = this.measuredWidth - this.paddingRight - layout.measuredWidth;
+	            }
+	            else if ((gravity & CENTER_X) === CENTER_X) {
+	                layout.measuredX = (this.measuredWidth - layout.measuredWidth) / 2;
+	            }
+	            else {
+	                layout.measuredX = this.paddingLeft;
+	            }
+	            if (!gravity) {
+	                gravity = LEFT;
+	            }
+	            if (layout.marginLeft && !((gravity & RIGHT) === RIGHT)) {
+	                layout.measuredX += layout.marginLeft;
+	            }
+	            if (layout.marginRight && !((gravity & LEFT) === LEFT)) {
+	                layout.measuredX -= layout.marginRight;
+	            }
+	            layout.measuredY = yStart + layout.marginTop;
+	            yStart += this.spacing + layout.takenHeight();
+	        }
 	    }
 	    doricMeasureSpecMake(mode, size) {
 	        const measureSpec = {
@@ -6414,6 +6961,28 @@ var doric_web = (function (exports, axios, sandbox) {
 	            size: size,
 	        };
 	        return measureSpec;
+	    }
+	    forceUniformWidth(heightMeasureSpec) {
+	        let uniformMeasureSpec = {
+	            mode: DoricMeasureSpecMode.Exactly,
+	            size: this.measuredWidth
+	        };
+	        const children = Array.from(this.view.children);
+	        for (const subview of children) {
+	            const childLayout = subview.doricLayout;
+	            if (childLayout.disabled) {
+	                continue;
+	            }
+	            if (childLayout.widthSpec === LayoutSpec.AT_MOST) {
+	                const oldHeight = childLayout.height;
+	                const oldHeightSpec = childLayout.heightSpec;
+	                childLayout.height = childLayout.measuredHeight;
+	                childLayout.heightSpec = LayoutSpec.EXACTLY;
+	                this.measureChild(childLayout, uniformMeasureSpec, 0, heightMeasureSpec, 0);
+	                childLayout.height = oldHeight;
+	                childLayout.heightSpec = oldHeightSpec;
+	            }
+	        }
 	    }
 	}
 
@@ -6500,22 +7069,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	        }
 	    }
 	    configWidth() {
-	        let width;
-	        switch (this.layoutConfig.widthSpec) {
-	            case LayoutSpec.WRAP_CONTENT:
-	                width = "max-content";
-	                break;
-	            case LayoutSpec.AT_MOST:
-	                width = "100%";
-	                break;
-	            case LayoutSpec.EXACTLY:
-	            default:
-	                width = toPixelString(this.frameWidth
-	                    - this.paddingLeft - this.paddingRight
-	                    - this.borderWidth * 2);
-	                break;
-	        }
-	        this.applyCSSStyle({ width });
+	        this.view.doricLayout.widthSpec = this.layoutConfig.widthSpec;
 	    }
 	    configSizeConstraints() {
 	        if (this.layoutConfig.maxWidth && this.layoutConfig.maxWidth !== -1) {
@@ -6542,43 +7096,28 @@ var doric_web = (function (exports, axios, sandbox) {
 	        else {
 	            this.view.style.removeProperty('min-height');
 	        }
+	        this.view.doricLayout.maxWidth = this.layoutConfig.maxWidth;
+	        this.view.doricLayout.maxHeight = this.layoutConfig.maxHeight;
+	        this.view.doricLayout.minWidth = this.layoutConfig.minWidth;
+	        this.view.doricLayout.minHeight = this.layoutConfig.minHeight;
 	    }
 	    configHeight() {
-	        let height;
-	        switch (this.layoutConfig.heightSpec) {
-	            case LayoutSpec.WRAP_CONTENT:
-	                height = "max-content";
-	                break;
-	            case LayoutSpec.AT_MOST:
-	                height = "100%";
-	                break;
-	            case LayoutSpec.EXACTLY:
-	            default:
-	                height = toPixelString(this.frameHeight
-	                    - this.paddingTop - this.paddingBottom
-	                    - this.borderWidth * 2);
-	                break;
-	        }
-	        this.applyCSSStyle({ height });
+	        this.view.doricLayout.heightSpec = this.layoutConfig.heightSpec;
 	    }
 	    configMargin() {
 	        if (this.layoutConfig.margin) {
-	            this.applyCSSStyle({
-	                marginLeft: toPixelString(this.layoutConfig.margin.left || 0),
-	                marginRight: toPixelString(this.layoutConfig.margin.right || 0),
-	                marginTop: toPixelString(this.layoutConfig.margin.top || 0),
-	                marginBottom: toPixelString(this.layoutConfig.margin.bottom || 0),
-	            });
+	            this.view.doricLayout.marginLeft = this.layoutConfig.margin.left || 0;
+	            this.view.doricLayout.marginRight = this.layoutConfig.margin.right || 0;
+	            this.view.doricLayout.marginTop = this.layoutConfig.margin.top || 0;
+	            this.view.doricLayout.marginBottom = this.layoutConfig.margin.bottom || 0;
 	        }
 	    }
 	    configPadding() {
 	        if (this.padding) {
-	            this.applyCSSStyle({
-	                paddingLeft: toPixelString(this.paddingLeft),
-	                paddingRight: toPixelString(this.paddingRight),
-	                paddingTop: toPixelString(this.paddingTop),
-	                paddingBottom: toPixelString(this.paddingBottom),
-	            });
+	            this.view.doricLayout.paddingLeft = this.paddingLeft;
+	            this.view.doricLayout.paddingRight = this.paddingRight;
+	            this.view.doricLayout.paddingTop = this.paddingTop;
+	            this.view.doricLayout.paddingBottom = this.paddingBottom;
 	        }
 	    }
 	    layout() {
@@ -6598,10 +7137,10 @@ var doric_web = (function (exports, axios, sandbox) {
 	                this.padding = prop;
 	                break;
 	            case 'width':
-	                this.frameWidth = prop;
+	                v.doricLayout.width = prop;
 	                break;
 	            case 'height':
-	                this.frameHeight = prop;
+	                v.doricLayout.height = prop;
 	                break;
 	            case 'backgroundColor':
 	                this.backgroundColor = prop;
@@ -6613,10 +7152,10 @@ var doric_web = (function (exports, axios, sandbox) {
 	                }
 	                break;
 	            case 'x':
-	                this.offsetX = prop;
+	                v.doricLayout.marginLeft = prop;
 	                break;
 	            case 'y':
-	                this.offsetY = prop;
+	                v.doricLayout.marginTop = prop;
 	                break;
 	            case 'onClick':
 	                this.view.onclick = (event) => {
@@ -6632,6 +7171,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	                        borderBottomRightRadius: toPixelString(prop.rightBottom),
 	                        borderBottomLeftRadius: toPixelString(prop.leftBottom),
 	                    });
+	                    // TODO
 	                }
 	                else {
 	                    this.applyCSSStyle({ borderRadius: toPixelString(prop) });
@@ -6704,9 +7244,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	                }
 	                break;
 	            case 'hidden':
-	                this.applyCSSStyle({
-	                    display: prop === true ? "none" : this._originDisplay
-	                });
+	                this.view.doricLayout.disabled = prop;
 	                break;
 	            default:
 	                console.error(`Cannot blend prop for ${propName}`);
@@ -6936,6 +7474,8 @@ var doric_web = (function (exports, axios, sandbox) {
 	        }
 	        this.updateTransform();
 	    }
+	    requestLayout() {
+	    }
 	}
 	class DoricSuperNode extends DoricViewNode {
 	    constructor() {
@@ -7111,6 +7651,43 @@ var doric_web = (function (exports, axios, sandbox) {
 	    getSubNodeById(viewId) {
 	        return this.childNodes.filter(e => e.viewId === viewId)[0];
 	    }
+	    requestLayout() {
+	        super.requestLayout();
+	        for (let node of this.childNodes) {
+	            node.requestLayout();
+	        }
+	    }
+	}
+
+	class DoricStackNode extends DoricGroupViewNode {
+	    build() {
+	        const ret = document.createElement('div');
+	        // ret.style.position = "relative"
+	        ret.doricLayout.layoutType = DoricLayoutType.Stack;
+	        return ret;
+	    }
+	}
+	class DoricRootNode extends DoricStackNode {
+	    constructor() {
+	        super(...arguments);
+	        this.mostFrameSize = { width: 0, height: 0 };
+	    }
+	    setupRootView(rootView) {
+	        rootView.doricLayout.layoutType = DoricLayoutType.Stack;
+	        this.view = rootView;
+	    }
+	    requestLayout() {
+	        if (this.isSizeEqual({ width: 0, height: 0 })) {
+	            this.view.doricLayout.apply();
+	        }
+	        else {
+	            this.view.doricLayout.applyWithSize(this.mostFrameSize);
+	        }
+	        super.requestLayout();
+	    }
+	    isSizeEqual(frameSize) {
+	        return this.mostFrameSize.width === frameSize.width && this.mostFrameSize.height === frameSize.height;
+	    }
 	}
 
 	class ShaderPlugin extends DoricPlugin {
@@ -7120,11 +7697,16 @@ var doric_web = (function (exports, axios, sandbox) {
 	            const viewNode = this.context.targetViewNode(ret.id);
 	            viewNode === null || viewNode === void 0 ? void 0 : viewNode.blend(ret.props);
 	            viewNode === null || viewNode === void 0 ? void 0 : viewNode.onBlended();
+	            viewNode === null || viewNode === void 0 ? void 0 : viewNode.requestLayout();
 	        }
 	        else {
 	            this.context.rootNode.viewId = ret.id;
 	            this.context.rootNode.blend(ret.props);
 	            this.context.rootNode.onBlended();
+	            if (!(this.context.rootNode instanceof DoricRootNode)) {
+	                this.context.rootNode.view.doricLayout.apply();
+	            }
+	            this.context.rootNode.requestLayout();
 	        }
 	    }
 	    command(options) {
@@ -7160,145 +7742,52 @@ var doric_web = (function (exports, axios, sandbox) {
 	    }
 	}
 
-	class DoricStackNode extends DoricGroupViewNode {
-	    build() {
-	        const ret = document.createElement('div');
-	        ret.style.position = "relative";
-	        return ret;
-	    }
-	    layout() {
-	        super.layout();
-	        Promise.resolve().then(_ => {
-	            this.configSize();
-	            this.configOffset();
-	        });
-	    }
-	    configSize() {
-	        if (this.layoutConfig.widthSpec === LayoutSpec.WRAP_CONTENT) {
-	            const width = this.childNodes.reduce((prev, current) => {
-	                const computedStyle = window.getComputedStyle(current.view);
-	                return Math.max(prev, current.view.offsetWidth
-	                    + pixelString2Number(computedStyle.marginLeft)
-	                    + pixelString2Number(computedStyle.marginRight));
-	            }, 0);
-	            this.view.style.width = toPixelString(width);
-	        }
-	        if (this.layoutConfig.heightSpec === LayoutSpec.WRAP_CONTENT) {
-	            const height = this.childNodes.reduce((prev, current) => {
-	                const computedStyle = window.getComputedStyle(current.view);
-	                return Math.max(prev, current.view.offsetHeight
-	                    + pixelString2Number(computedStyle.marginTop)
-	                    + pixelString2Number(computedStyle.marginBottom));
-	            }, 0);
-	            this.view.style.height = toPixelString(height);
-	        }
-	    }
-	    configOffset() {
-	        this.childNodes.forEach(e => {
-	            const position = "absolute";
-	            let left = toPixelString(e.offsetX + this.paddingLeft);
-	            let top = toPixelString(e.offsetY + this.paddingTop);
-	            const gravity = e.layoutConfig.alignment;
-	            if ((gravity & LEFT) === LEFT) {
-	                left = toPixelString(0);
-	            }
-	            else if ((gravity & RIGHT) === RIGHT) {
-	                //ignore marginLeft
-	                const childMarginRight = pixelString2Number(window.getComputedStyle(e.view).marginRight);
-	                left = toPixelString(this.view.offsetWidth - e.view.offsetWidth - childMarginRight);
-	            }
-	            else if ((gravity & CENTER_X) === CENTER_X) {
-	                const childMarginLeft = pixelString2Number(window.getComputedStyle(e.view).marginLeft);
-	                const childMarginRight = pixelString2Number(window.getComputedStyle(e.view).marginRight);
-	                left = toPixelString(this.view.offsetWidth / 2 - e.view.offsetWidth / 2 + childMarginLeft - childMarginRight);
-	            }
-	            if ((gravity & TOP) === TOP) {
-	                top = toPixelString(0);
-	            }
-	            else if ((gravity & BOTTOM) === BOTTOM) {
-	                //ignore marginTop
-	                const childMarginTop = pixelString2Number(window.getComputedStyle(e.view).marginBottom);
-	                top = toPixelString(this.view.offsetHeight - e.view.offsetHeight - childMarginTop);
-	            }
-	            else if ((gravity & CENTER_Y) === CENTER_Y) {
-	                const childMarginTop = pixelString2Number(window.getComputedStyle(e.view).marginTop);
-	                const childMarginBottom = pixelString2Number(window.getComputedStyle(e.view).marginBottom);
-	                top = toPixelString(this.view.offsetHeight / 2 - e.view.offsetHeight / 2 + childMarginTop - childMarginBottom);
-	            }
-	            e.applyCSSStyle({
-	                position,
-	                left,
-	                top,
-	            });
-	        });
-	    }
-	}
-
 	class DoricVLayoutNode extends DoricGroupViewNode {
 	    constructor() {
 	        super(...arguments);
 	        this.space = 0;
 	        this.gravity = 0;
+	        // layout() {
+	        //     super.layout()
+	        //     this.childNodes.forEach((e, idx) => {
+	        //         e.view.style.flexShrink = "0"
+	        //         if (e.layoutConfig?.weight) {
+	        //             e.view.style.flex = `${e.layoutConfig?.weight}`
+	        //         }
+	        //         e.view.style.marginTop = toPixelString(e.layoutConfig?.margin?.top || 0)
+	        //         const bottomMargin = e.layoutConfig?.margin?.bottom || 0
+	        //         e.view.style.marginBottom = toPixelString(
+	        //             (idx === this.childNodes.length - 1) ? bottomMargin: this.space + bottomMargin)
+	        //         e.view.style.marginLeft = toPixelString(e.layoutConfig?.margin?.left || 0)
+	        //         e.view.style.marginRight = toPixelString(e.layoutConfig?.margin?.right || 0)
+	        //         if ((e.layoutConfig.alignment & LEFT) === LEFT) {
+	        //             e.view.style.alignSelf = "flex-start"
+	        //         } else if ((e.layoutConfig.alignment & RIGHT) === RIGHT) {
+	        //             e.view.style.alignSelf = "flex-end"
+	        //         } else if ((e.layoutConfig.alignment & CENTER_X) === CENTER_X) {
+	        //             e.view.style.alignSelf = "center"
+	        //         }
+	        //     })
+	        // }
 	    }
 	    build() {
 	        const ret = document.createElement('div');
-	        ret.style.display = "flex";
-	        ret.style.flexDirection = "column";
-	        ret.style.flexWrap = "nowrap";
+	        // ret.style.display = "flex"
+	        // ret.style.flexDirection = "column"
+	        // ret.style.flexWrap = "nowrap"
+	        ret.doricLayout.layoutType = DoricLayoutType.VLayout;
 	        return ret;
 	    }
 	    blendProps(v, propName, prop) {
 	        if (propName === 'space') {
-	            this.space = prop;
+	            this.view.doricLayout.spacing = prop;
 	        }
 	        else if (propName === 'gravity') {
-	            this.gravity = prop;
-	            if ((this.gravity & LEFT) === LEFT) {
-	                this.view.style.alignItems = "flex-start";
-	            }
-	            else if ((this.gravity & RIGHT) === RIGHT) {
-	                this.view.style.alignItems = "flex-end";
-	            }
-	            else if ((this.gravity & CENTER_X) === CENTER_X) {
-	                this.view.style.alignItems = "center";
-	            }
-	            if ((this.gravity & TOP) === TOP) {
-	                this.view.style.justifyContent = "flex-start";
-	            }
-	            else if ((this.gravity & BOTTOM) === BOTTOM) {
-	                this.view.style.justifyContent = "flex-end";
-	            }
-	            else if ((this.gravity & CENTER_Y) === CENTER_Y) {
-	                this.view.style.justifyContent = "center";
-	            }
+	            this.view.doricLayout.gravity = prop;
 	        }
 	        else {
 	            super.blendProps(v, propName, prop);
 	        }
-	    }
-	    layout() {
-	        super.layout();
-	        this.childNodes.forEach((e, idx) => {
-	            var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
-	            e.view.style.flexShrink = "0";
-	            if ((_a = e.layoutConfig) === null || _a === void 0 ? void 0 : _a.weight) {
-	                e.view.style.flex = `${(_b = e.layoutConfig) === null || _b === void 0 ? void 0 : _b.weight}`;
-	            }
-	            e.view.style.marginTop = toPixelString(((_d = (_c = e.layoutConfig) === null || _c === void 0 ? void 0 : _c.margin) === null || _d === void 0 ? void 0 : _d.top) || 0);
-	            const bottomMargin = ((_f = (_e = e.layoutConfig) === null || _e === void 0 ? void 0 : _e.margin) === null || _f === void 0 ? void 0 : _f.bottom) || 0;
-	            e.view.style.marginBottom = toPixelString((idx === this.childNodes.length - 1) ? bottomMargin : this.space + bottomMargin);
-	            e.view.style.marginLeft = toPixelString(((_h = (_g = e.layoutConfig) === null || _g === void 0 ? void 0 : _g.margin) === null || _h === void 0 ? void 0 : _h.left) || 0);
-	            e.view.style.marginRight = toPixelString(((_k = (_j = e.layoutConfig) === null || _j === void 0 ? void 0 : _j.margin) === null || _k === void 0 ? void 0 : _k.right) || 0);
-	            if ((e.layoutConfig.alignment & LEFT) === LEFT) {
-	                e.view.style.alignSelf = "flex-start";
-	            }
-	            else if ((e.layoutConfig.alignment & RIGHT) === RIGHT) {
-	                e.view.style.alignSelf = "flex-end";
-	            }
-	            else if ((e.layoutConfig.alignment & CENTER_X) === CENTER_X) {
-	                e.view.style.alignSelf = "center";
-	            }
-	        });
 	    }
 	}
 
@@ -7307,67 +7796,47 @@ var doric_web = (function (exports, axios, sandbox) {
 	        super(...arguments);
 	        this.space = 0;
 	        this.gravity = 0;
+	        // layout() {
+	        //     super.layout()
+	        //     this.childNodes.forEach((e, idx) => {
+	        //         e.view.style.flexShrink = "0"
+	        //         if (e.layoutConfig?.weight) {
+	        //             e.view.style.flex = `${e.layoutConfig?.weight}`
+	        //         }
+	        //         e.view.style.marginLeft = toPixelString(e.layoutConfig?.margin?.left || 0)
+	        //         const rightMargin = e.layoutConfig?.margin?.right || 0
+	        //         e.view.style.marginRight = toPixelString(
+	        //             (idx === this.childNodes.length - 1) ? rightMargin : this.space + rightMargin)
+	        //         e.view.style.marginTop = toPixelString(e.layoutConfig?.margin?.top || 0)
+	        //         e.view.style.marginBottom = toPixelString(e.layoutConfig?.margin?.bottom || 0)
+	        //         if ((e.layoutConfig.alignment & TOP) === TOP) {
+	        //             e.view.style.alignSelf = "flex-start"
+	        //         } else if ((e.layoutConfig.alignment & BOTTOM) === BOTTOM) {
+	        //             e.view.style.alignSelf = "flex-end"
+	        //         } else if ((e.layoutConfig.alignment & CENTER_Y) === CENTER_Y) {
+	        //             e.view.style.alignSelf = "center"
+	        //         }
+	        //     })
+	        // }
 	    }
 	    build() {
 	        const ret = document.createElement('div');
-	        ret.style.display = "flex";
-	        ret.style.flexDirection = "row";
-	        ret.style.flexWrap = "nowrap";
+	        // ret.style.display = "flex"
+	        // ret.style.flexDirection = "row"
+	        // ret.style.flexWrap = "nowrap"
+	        ret.doricLayout.layoutType = DoricLayoutType.HLayout;
 	        return ret;
 	    }
 	    blendProps(v, propName, prop) {
 	        if (propName === 'space') {
-	            this.space = prop;
+	            this.view.doricLayout.spacing = prop;
 	        }
 	        else if (propName === 'gravity') {
-	            this.gravity = prop;
-	            this.gravity = prop;
-	            if ((this.gravity & LEFT) === LEFT) {
-	                this.view.style.justifyContent = "flex-start";
-	            }
-	            else if ((this.gravity & RIGHT) === RIGHT) {
-	                this.view.style.justifyContent = "flex-end";
-	            }
-	            else if ((this.gravity & CENTER_X) === CENTER_X) {
-	                this.view.style.justifyContent = "center";
-	            }
-	            if ((this.gravity & TOP) === TOP) {
-	                this.view.style.alignItems = "flex-start";
-	            }
-	            else if ((this.gravity & BOTTOM) === BOTTOM) {
-	                this.view.style.alignItems = "flex-end";
-	            }
-	            else if ((this.gravity & CENTER_Y) === CENTER_Y) {
-	                this.view.style.alignItems = "center";
-	            }
+	            this.view.doricLayout.gravity = prop;
 	        }
 	        else {
 	            super.blendProps(v, propName, prop);
 	        }
-	    }
-	    layout() {
-	        super.layout();
-	        this.childNodes.forEach((e, idx) => {
-	            var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
-	            e.view.style.flexShrink = "0";
-	            if ((_a = e.layoutConfig) === null || _a === void 0 ? void 0 : _a.weight) {
-	                e.view.style.flex = `${(_b = e.layoutConfig) === null || _b === void 0 ? void 0 : _b.weight}`;
-	            }
-	            e.view.style.marginLeft = toPixelString(((_d = (_c = e.layoutConfig) === null || _c === void 0 ? void 0 : _c.margin) === null || _d === void 0 ? void 0 : _d.left) || 0);
-	            const rightMargin = ((_f = (_e = e.layoutConfig) === null || _e === void 0 ? void 0 : _e.margin) === null || _f === void 0 ? void 0 : _f.right) || 0;
-	            e.view.style.marginRight = toPixelString((idx === this.childNodes.length - 1) ? rightMargin : this.space + rightMargin);
-	            e.view.style.marginTop = toPixelString(((_h = (_g = e.layoutConfig) === null || _g === void 0 ? void 0 : _g.margin) === null || _h === void 0 ? void 0 : _h.top) || 0);
-	            e.view.style.marginBottom = toPixelString(((_k = (_j = e.layoutConfig) === null || _j === void 0 ? void 0 : _j.margin) === null || _k === void 0 ? void 0 : _k.bottom) || 0);
-	            if ((e.layoutConfig.alignment & TOP) === TOP) {
-	                e.view.style.alignSelf = "flex-start";
-	            }
-	            else if ((e.layoutConfig.alignment & BOTTOM) === BOTTOM) {
-	                e.view.style.alignSelf = "flex-end";
-	            }
-	            else if ((e.layoutConfig.alignment & CENTER_Y) === CENTER_Y) {
-	                e.view.style.alignSelf = "center";
-	            }
-	        });
 	    }
 	}
 
@@ -9157,7 +9626,7 @@ ${content}
 	        this.headNodes = new Map;
 	        createContext(this.contextId, content);
 	        doricContexts.set(this.contextId, this);
-	        this.rootNode = new DoricStackNode(this);
+	        this.rootNode = new DoricRootNode(this);
 	    }
 	    targetViewNode(viewId) {
 	        if (this.rootNode.viewId === viewId) {
@@ -9273,7 +9742,7 @@ ${content}
 	        divElement.style.position = 'relative';
 	        divElement.style.height = '100%';
 	        this.append(divElement);
-	        this.context.rootNode.view = divElement;
+	        this.context.rootNode.setupRootView(divElement);
 	        this.context.build({
 	            width: divElement.offsetWidth,
 	            height: divElement.offsetHeight,

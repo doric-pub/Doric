@@ -61,7 +61,7 @@ export class DoricElement extends HTMLElement {
         divElement.style.position = 'relative'
         divElement.style.height = '100%'
         this.append(divElement)
-        this.context.rootNode.view = divElement
+        this.context.rootNode.setupRootView(divElement)
         this.context.build({
             width: divElement.offsetWidth,
             height: divElement.offsetHeight,

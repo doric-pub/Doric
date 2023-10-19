@@ -2,7 +2,7 @@ import { jsObtainContext, jsCallEntityMethod, pureCallEntityMethod } from 'doric
 import { Panel } from 'doric'
 import { DoricPlugin } from "./DoricPlugin"
 import { createContext, destroyContext, markNeedHook } from "./DoricDriver"
-import { DoricStackNode } from './shader/DoricStackNode'
+import { DoricRootNode, DoricStackNode } from './shader/DoricStackNode'
 import { DoricViewNode } from './shader/DoricViewNode'
 const doricContexts: Map<string, DoricContext> = new Map
 
@@ -18,7 +18,7 @@ export function getDoricContext(contextId: string) {
 export class DoricContext {
     contextId = getContextId()
     pluginInstances: Map<string, DoricPlugin> = new Map
-    rootNode: DoricStackNode
+    rootNode: DoricRootNode
     headNodes: Map<string, Map<string, DoricViewNode>> = new Map
     animationSet?: {
         viewNode: DoricViewNode,
@@ -28,7 +28,7 @@ export class DoricContext {
     constructor(content: string) {
         createContext(this.contextId, content)
         doricContexts.set(this.contextId, this)
-        this.rootNode = new DoricStackNode(this)
+        this.rootNode = new DoricRootNode(this)
     }
 
     targetViewNode(viewId: string) {

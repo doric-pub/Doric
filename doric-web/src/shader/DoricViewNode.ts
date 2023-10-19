@@ -1,6 +1,6 @@
 import { DoricContext } from "../DoricContext";
 import { acquireViewNode } from "../DoricRegistry";
-import { GradientColor, GradientOrientation, generateGradientColorDesc, generateGradientOrientationDesc } from "../utils/color";
+import { GradientColor, generateGradientColorDesc, generateGradientOrientationDesc } from "../utils/color";
 import { toRGBAString } from "../utils/color";
 import { LayoutSpec, toPixelString } from "./DoricLayouts";
 
@@ -136,24 +136,7 @@ export abstract class DoricViewNode {
     }
 
     configWidth() {
-        let width: string
-        switch (this.layoutConfig.widthSpec) {
-            case LayoutSpec.WRAP_CONTENT:
-                width = "max-content"
-                break
-
-            case LayoutSpec.AT_MOST:
-                width = "100%"
-                break
-
-            case LayoutSpec.EXACTLY:
-            default:
-                width = toPixelString(this.frameWidth
-                    - this.paddingLeft - this.paddingRight
-                    - this.borderWidth * 2)
-                break
-        }
-        this.applyCSSStyle({ width })
+        this.view.doricLayout.widthSpec = this.layoutConfig.widthSpec
     }
 
     configSizeConstraints() {
@@ -177,48 +160,31 @@ export abstract class DoricViewNode {
         } else {
             this.view.style.removeProperty('min-height')
         }
+        this.view.doricLayout.maxWidth = this.layoutConfig.maxWidth
+        this.view.doricLayout.maxHeight = this.layoutConfig.maxHeight
+        this.view.doricLayout.minWidth = this.layoutConfig.minWidth
+        this.view.doricLayout.minHeight = this.layoutConfig.minHeight
     }
 
     configHeight() {
-        let height
-        switch (this.layoutConfig.heightSpec) {
-            case LayoutSpec.WRAP_CONTENT:
-                height = "max-content"
-                break
-
-            case LayoutSpec.AT_MOST:
-                height = "100%"
-                break
-
-            case LayoutSpec.EXACTLY:
-            default:
-                height = toPixelString(this.frameHeight
-                    - this.paddingTop - this.paddingBottom
-                    - this.borderWidth * 2)
-                break
-        }
-        this.applyCSSStyle({ height })
+        this.view.doricLayout.heightSpec = this.layoutConfig.heightSpec
     }
 
     configMargin() {
         if (this.layoutConfig.margin) {
-            this.applyCSSStyle({
-                marginLeft: toPixelString(this.layoutConfig.margin.left || 0),
-                marginRight: toPixelString(this.layoutConfig.margin.right || 0),
-                marginTop: toPixelString(this.layoutConfig.margin.top || 0),
-                marginBottom: toPixelString(this.layoutConfig.margin.bottom || 0),
-            })
+            this.view.doricLayout.marginLeft = this.layoutConfig.margin.left || 0
+            this.view.doricLayout.marginRight = this.layoutConfig.margin.right || 0
+            this.view.doricLayout.marginTop = this.layoutConfig.margin.top || 0
+            this.view.doricLayout.marginBottom = this.layoutConfig.margin.bottom || 0
         }
     }
 
     configPadding() {
         if (this.padding) {
-            this.applyCSSStyle({
-                paddingLeft: toPixelString(this.paddingLeft),
-                paddingRight: toPixelString(this.paddingRight),
-                paddingTop: toPixelString(this.paddingTop),
-                paddingBottom: toPixelString(this.paddingBottom),
-            })
+            this.view.doricLayout.paddingLeft = this.paddingLeft
+            this.view.doricLayout.paddingRight = this.paddingRight
+            this.view.doricLayout.paddingTop = this.paddingTop
+            this.view.doricLayout.paddingBottom = this.paddingBottom
         }
     }
 
@@ -240,10 +206,10 @@ export abstract class DoricViewNode {
                 this.padding = prop
                 break
             case 'width':
-                this.frameWidth = prop as number
+                v.doricLayout.width = prop as number
                 break
             case 'height':
-                this.frameHeight = prop as number
+                v.doricLayout.height = prop as number
                 break
             case 'backgroundColor':
                 this.backgroundColor = prop
@@ -256,10 +222,10 @@ export abstract class DoricViewNode {
                 }
                 break
             case 'x':
-                this.offsetX = prop as number
+                v.doricLayout.marginLeft = prop as number
                 break
             case 'y':
-                this.offsetY = prop as number
+                v.doricLayout.marginTop = prop as number
                 break
             case 'onClick':
                 this.view.onclick = (event: Event) => {
@@ -275,6 +241,7 @@ export abstract class DoricViewNode {
                         borderBottomRightRadius: toPixelString(prop.rightBottom),
                         borderBottomLeftRadius: toPixelString(prop.leftBottom),
                     })
+                    // TODO
                 } else {
                     this.applyCSSStyle({ borderRadius: toPixelString(prop) })
                 }
@@ -343,9 +310,7 @@ export abstract class DoricViewNode {
                 }
                 break
             case 'hidden':
-                this.applyCSSStyle({
-                    display: prop === true ? "none" : this._originDisplay
-                })
+                this.view.doricLayout.disabled = prop
                 break
             default:
                 console.error(`Cannot blend prop for ${propName}`)
@@ -609,6 +574,10 @@ export abstract class DoricViewNode {
         }
         this.updateTransform()
     }
+
+    requestLayout() {
+
+    }
     /** ----------call from doric ----------*/
 }
 
@@ -792,6 +761,13 @@ export abstract class DoricGroupViewNode extends DoricSuperNode {
 
     getSubNodeById(viewId: string) {
         return this.childNodes.filter(e => e.viewId === viewId)[0]
+    }
+
+    requestLayout() {
+        super.requestLayout()
+        for (let node of this.childNodes) {
+            node.requestLayout()
+        }
     }
 
 }

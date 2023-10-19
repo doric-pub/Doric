@@ -1,5 +1,5 @@
 interface HTMLElement {
-    doricLayout: any;
+    doricLayout: DoricLayout;
 }
 
 declare enum LayoutSpec {
@@ -17,6 +17,23 @@ declare enum DoricLayoutType {
     VLayout = 2,
     HLayout = 3
 }
+
+interface DoricMeasureSpec {
+    mode: DoricMeasureSpecMode;
+    size: number;
+}
+
+declare enum DoricMeasureSpecMode {
+    Unspecified = 0,
+    Exactly = 1,
+    AtMost = 2
+}
+
+interface DoricSizeAndState { 
+    size: number;
+    state: number;
+}
+
 declare class DoricLayout {
     widthSpec: LayoutSpec;
     heightSpec: LayoutSpec;
@@ -40,8 +57,10 @@ declare class DoricLayout {
     maxWidth: number;
     maxHeight: number;
     minWidth: number;
-    minheight: number;
+    minHeight: number;
     resolved: boolean;
+    _measuredWidth: number;
+    _measuredHeight: number;
     measuredX: number;
     measuredY: number;
     undefined: boolean;
@@ -55,4 +74,23 @@ declare class DoricLayout {
     applyWithSize(frameSize: FrameSize): void;
     apply(): void;
     measure(targetSize: FrameSize): void;
+    getRootMeasureSpec(targetSize:number, spec:LayoutSpec, size:number):DoricMeasureSpec;
+    doMeasure(targetSize: FrameSize): void;
+    measureSelf(widthSpec:DoricMeasureSpec, heightSpec:DoricMeasureSpec): void;
+    layout(): void;
+    takenWidth(): number;
+    takenHeight(): number;
+    stackMeasure(widthMeasureSpec: DoricMeasureSpec, heightMeasureSpec: DoricMeasureSpec): void;
+    verticalMeasure(widthMeasureSpec: DoricMeasureSpec, heightMeasureSpec: DoricMeasureSpec): void;
+    horizontalMeasure(widthMeasureSpec: DoricMeasureSpec, heightMeasureSpec: DoricMeasureSpec): void;
+    undefinedMeasure(widthMeasureSpec: DoricMeasureSpec, heightMeasureSpec: DoricMeasureSpec): void;
+    getChildMeasureSpec(spec:DoricMeasureSpec, padding:number, childLayoutSpec: LayoutSpec, childSize:number): DoricMeasureSpec;
+    measureChild(child:DoricLayout, widthSpec:DoricMeasureSpec, usedWidth:number, heightSpec:DoricMeasureSpec, usedHeight:number): void;
+    resolveSizeAndState(size:number, spec:DoricMeasureSpec, childMeasuredState:number):DoricSizeAndState;
+    setFrame():void;
+    layoutStack(): void;
+    layoutHLayout(): void;
+    layoutVLayout(): void;
+    doricMeasureSpecMake(mode:DoricMeasureSpecMode, size:number):DoricMeasureSpec;
+    forceUniformWidth(heightMeasureSpec:DoricMeasureSpec):DoricMeasureSpec;
 }

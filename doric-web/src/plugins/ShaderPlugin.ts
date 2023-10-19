@@ -1,4 +1,5 @@
 import { DoricPlugin } from "../DoricPlugin";
+import { DoricRootNode, DoricStackNode } from "../shader/DoricStackNode";
 import { DoricSuperNode, DoricViewNode, DVModel } from "../shader/DoricViewNode";
 
 export class ShaderPlugin extends DoricPlugin {
@@ -7,10 +8,15 @@ export class ShaderPlugin extends DoricPlugin {
             const viewNode = this.context.targetViewNode(ret.id)
             viewNode?.blend(ret.props)
             viewNode?.onBlended()
+            viewNode?.requestLayout()
         } else {
             this.context.rootNode.viewId = ret.id
             this.context.rootNode.blend(ret.props)
             this.context.rootNode.onBlended()
+            if (!(this.context.rootNode instanceof DoricRootNode)) {
+                (this.context.rootNode as DoricStackNode).view.doricLayout.apply()
+            }
+            this.context.rootNode.requestLayout()
         }
     }
 

@@ -11,17 +11,17 @@
 
 - (instancetype)init {
     if (self = [super init]) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillActive) name:UIApplicationWillEnterForegroundNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillTerminate) name:UIApplicationDidEnterBackgroundNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
     }
     return self;
 }
 
-- (void)appWillActive {
+- (void)appWillEnterForeground {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"DoricAppWillEnterForeground" object:nil];
 }
 
-- (void)appWillTerminate {
+- (void)appDidEnterBackground {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"DoricAppDidEnterBackground" object:nil];
 }
 

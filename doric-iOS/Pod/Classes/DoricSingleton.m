@@ -22,6 +22,11 @@
 #import "DoricJSLoaderManager.h"
 #import "DoricNativeDriver.h"
 #import "DoricContextManager.h"
+#import "DoricLifeCycleManager.h"
+
+@interface DoricSingleton ()
+@property (nonatomic, strong) DoricLifeCycleManager *lifeCycleManager;
+@end
 
 @implementation DoricSingleton
 
@@ -39,6 +44,8 @@
                                                        capacity:0];
         _bundles = [NSMutableDictionary new];
         _legacyMode = NO;
+        _lifeCycleManager = [DoricLifeCycleManager new];
+
     }
     return self;
 }

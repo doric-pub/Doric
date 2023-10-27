@@ -89,6 +89,12 @@ export class DoricImageNode extends DoricViewNode {
                     v.style.filter = ''
                 }
                 break
+            case 'hidden':
+                super.blendProps(v, propName, prop);
+                if (prop == true) {
+                    this.loadIntoTarget(v, '');
+                }
+                break;
             default:
                 super.blendProps(v, propName, prop)
                 break
@@ -96,46 +102,52 @@ export class DoricImageNode extends DoricViewNode {
     }
 
     private loadIntoTarget(targetElement: HTMLImageElement, src: any) {
-        this.clearStretchElementAttributes(targetElement)
-        this.loadPlaceHolder(targetElement)
-        let tempLoadElement = this.stretchInset ? document.createElement('img') : targetElement
-        tempLoadElement.onload = () => {
-            if (this.stretchInset) {
-                if (!this.resizeObserver) {
-                    this.resizeObserver = new ResizeObserver(entry => {
-                        this.onResize.call(this, { width: tempLoadElement.naturalWidth, height: tempLoadElement.naturalHeight })
-                    })
-                    this.resizeObserver.observe(targetElement)
-                }
-                this.onResize({ width: tempLoadElement.naturalWidth, height: tempLoadElement.naturalHeight })
-            }
-            //remove placeHolderColor
-            targetElement.style.removeProperty('background-color')
-            if (tempLoadElement.src === src && this.onloadFuncId) {
-                this.callJSResponse(this.onloadFuncId, {
-                    width: tempLoadElement.naturalWidth,
-                    height: tempLoadElement.naturalHeight,
-                })
-            }
-        }
-        tempLoadElement.onerror = () => {
+        if (src) {
             this.clearStretchElementAttributes(targetElement)
-            const error = this.getError(targetElement.offsetWidth, targetElement.offsetHeight)
-            if (!error) return
-            const same = src === error
-            const srcLoadError = tempLoadElement.src.length === 0 || tempLoadElement.src === src
-            if (same || !srcLoadError) return
-            targetElement.src = error
-            if (this.onloadFuncId) {
-                this.callJSResponse(this.onloadFuncId)
+            this.loadPlaceHolder(targetElement)
+            let tempLoadElement = this.stretchInset ? document.createElement('img') : targetElement
+            tempLoadElement.onload = () => {
+                if (this.stretchInset) {
+                    if (!this.resizeObserver) {
+                        this.resizeObserver = new ResizeObserver(entry => {
+                            this.onResize.call(this, { width: tempLoadElement.naturalWidth, height: tempLoadElement.naturalHeight })
+                        })
+                        this.resizeObserver.observe(targetElement)
+                    }
+                    this.onResize({ width: tempLoadElement.naturalWidth, height: tempLoadElement.naturalHeight })
+                }
+                //remove placeHolderColor
+                targetElement.style.removeProperty('background-color')
+                if (tempLoadElement.src === src && this.onloadFuncId) {
+                    this.callJSResponse(this.onloadFuncId, {
+                        width: tempLoadElement.naturalWidth,
+                        height: tempLoadElement.naturalHeight,
+                    })
+                }
             }
+            tempLoadElement.onerror = () => {
+                this.clearStretchElementAttributes(targetElement)
+                const error = this.getError(targetElement.offsetWidth, targetElement.offsetHeight)
+                if (!error) return
+                const same = src === error
+                const srcLoadError = tempLoadElement.src.length === 0 || tempLoadElement.src === src
+                if (same || !srcLoadError) return
+                targetElement.src = error
+                if (this.onloadFuncId) {
+                    this.callJSResponse(this.onloadFuncId)
+                }
+            }
+            Promise.resolve().then(e => {
+                tempLoadElement.src = src
+                if (this.stretchInset) {
+                    this.loadImageWithStretch(targetElement, src, this.stretchInset)
+                }
+            })
+        } else {
+            this.clearStretchElementAttributes(targetElement)
+            targetElement.style.display = 'none';
+            return;
         }
-        Promise.resolve().then(e => {
-            tempLoadElement.src = src
-            if (this.stretchInset) {
-                this.loadImageWithStretch(targetElement, src, this.stretchInset)
-            }
-        })
     }
 
     private loadImageWithStretch(v: HTMLImageElement, src: any, stretchInset: StretchInset) {

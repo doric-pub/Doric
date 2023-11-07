@@ -28,6 +28,7 @@
 #import <JavaScriptCore/JavaScriptCore.h>
 #import <JSValue+Doric.h>
 #import <DoricPromise.h>
+#import "DoricSingleton.h"
 
 #if DORIC_USE_YYWEBIMAGE
 
@@ -85,6 +86,14 @@
 @end
 
 @implementation DoricImageView
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.clearBufferWhenStopped = DoricSingleton.instance.imageClearBufferWhenStopped;
+    }
+    return self;
+}
 
 - (void)layoutSubviews {
     [super layoutSubviews];

@@ -39,6 +39,7 @@
                                                        capacity:0];
         _bundles = [NSMutableDictionary new];
         _legacyMode = NO;
+        _imageClearBufferWhenStopped = NO;
     }
     return self;
 }

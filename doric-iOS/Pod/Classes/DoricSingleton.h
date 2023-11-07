@@ -37,6 +37,7 @@
 @property(nonatomic, strong) DoricNativeDriver *nativeDriver;
 @property(nonatomic, strong) DoricContextManager *contextManager;
 @property(nonatomic, strong) NSMapTable<NSString *, id> *storageCaches;
+@property(nonatomic, assign) BOOL imageClearBufferWhenStopped;
 
 + (instancetype)instance;
 

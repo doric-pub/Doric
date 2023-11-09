@@ -61,6 +61,10 @@
         CGSize viewSize = self.bounds.size;
         CGSize imageSize = image.size;
         
+        if (imageSize.width == 0 || imageSize.height == 0 || viewSize.width == 0 || viewSize.height == 0) {
+            return;
+        }
+        
         // Calculate the scale proportionally to fit the image within the view.
         CGFloat scale = MIN(viewSize.width / imageSize.width, viewSize.height / imageSize.height);
         
@@ -104,6 +108,10 @@
         CGSize viewSize = self.bounds.size;
         CGSize imageSize = image.size;
         
+        if (imageSize.width == 0 || imageSize.height == 0 || viewSize.width == 0 || viewSize.height == 0) {
+            return;
+        }
+        
         // Calculate the scale proportionally to fit the image within the view.
         CGFloat scale = MIN(viewSize.width / imageSize.width, viewSize.height / imageSize.height);
         
@@ -136,6 +144,10 @@
         
         CGSize viewSize = self.bounds.size;
         CGSize imageSize = image.size;
+        
+        if (imageSize.width == 0 || imageSize.height == 0 || viewSize.width == 0 || viewSize.height == 0) {
+            return;
+        }
         
         // Calculate the scale proportionally to fit the image within the view.
         CGFloat scale = MIN(viewSize.width / imageSize.width, viewSize.height / imageSize.height);

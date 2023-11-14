@@ -46,6 +46,7 @@ import androidx.vectordrawable.graphics.drawable.Animatable2Compat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
@@ -334,7 +335,7 @@ public class ImageNode extends ViewNode<ImageView> {
                 return;
             }
         }
-        RequestBuilder<Drawable> requestBuilder = Glide.with(context)
+        RequestBuilder<Drawable> requestBuilder = getRequestManager(context)
                 .load(url);
         loadIntoTarget(requestBuilder);
     }
@@ -511,11 +512,11 @@ public class ImageNode extends ViewNode<ImageView> {
                                 mView.post(new Runnable() {
                                     @Override
                                     public void run() {
-                                        loadIntoTarget(Glide.with(getContext()).load(imageData));
+                                        loadIntoTarget(getRequestManager(getContext()).load(imageData));
                                     }
                                 });
                             } else {
-                                loadIntoTarget(Glide.with(getContext()).load(imageData));
+                                loadIntoTarget(getRequestManager(getContext()).load(imageData));
                             }
                         }
 
@@ -620,7 +621,7 @@ public class ImageNode extends ViewNode<ImageView> {
                         "drawable",
                         getDoricContext().getContext().getPackageName());
                 if (resId > 0) {
-                    loadIntoTarget(Glide.with(getContext()).load(resId));
+                    loadIntoTarget(getRequestManager(getContext()).load(resId));
                 } else {
                     if (!TextUtils.isEmpty(loadCallbackId)) {
                         callJSResponse(loadCallbackId);
@@ -633,7 +634,7 @@ public class ImageNode extends ViewNode<ImageView> {
                 }
                 String filePath = prop.asString().value();
                 File file = new File(filePath);
-                loadIntoTarget(Glide.with(getContext()).load(file));
+                loadIntoTarget(getRequestManager(getContext()).load(file));
                 break;
             case "onAnimationEnd":
                 if (!prop.isString()) {
@@ -746,5 +747,14 @@ public class ImageNode extends ViewNode<ImageView> {
         bitmap.copyPixelsFromBuffer(byteBuffer);
         mView.setImageBitmap(bitmap);
         promise.resolve();
+    }
+
+    private RequestManager getRequestManager(Context context) {
+        RequestManager requestManager = getDoricContext().getImageRequestManager();
+        if (requestManager != null) {
+            return requestManager;
+        } else {
+            return Glide.with(context);
+        }
     }
 }

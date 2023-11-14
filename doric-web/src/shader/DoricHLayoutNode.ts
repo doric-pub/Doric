@@ -7,9 +7,6 @@ export class DoricHLayoutNode extends DoricGroupViewNode {
     gravity = 0
     build() {
         const ret = document.createElement('div')
-        // ret.style.display = "flex"
-        // ret.style.flexDirection = "row"
-        // ret.style.flexWrap = "nowrap"
         ret.doricLayout.layoutType = DoricLayoutType.HLayout
         return ret
     }

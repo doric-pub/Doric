@@ -7,6 +7,7 @@ export class DoricTextNode extends DoricViewNode {
     textElement!: HTMLElement
     build(): HTMLElement {
         const div = document.createElement('div')
+        div.viewNode = this
         div.style.display = "flex"
         div.style.overflow = "hidden"
         this.textElement = document.createElement('span')
@@ -116,6 +117,16 @@ export class DoricTextNode extends DoricViewNode {
                 this.textElement.innerText = this.truncationText(computedStyle, lineHeight, allowedMaxLines)
             }
         } 
+    }
+
+    measureSize(): FrameSize {
+        const computedStyle = window.getComputedStyle(this.view)
+        const canvas = document.createElement('canvas')
+        const ctx = canvas.getContext('2d')
+        ctx!.font = computedStyle.font
+        const metrics = ctx!.measureText(this.textElement.innerText)
+        const frameSize: FrameSize = {width:metrics.width,height:metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent}
+        return frameSize
     }
 
     defaultLineHeightInPixels(style:CSSStyleDeclaration) {

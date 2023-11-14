@@ -1,27 +1,27 @@
 Object.defineProperty(HTMLElement.prototype, "doricLayout", {
     get() {
-        // const archivedLayout: string = this.getAttribute("__doric_layout__");
-        // const layout = new DoricLayout();
-        // if (archivedLayout) {
-        //     const archivedLayoutObj = JSON.parse(archivedLayout)
-            
-        //     for (let key in archivedLayoutObj) {
-        //         Reflect.set(layout, key, Reflect.get(archivedLayoutObj, key, archivedLayoutObj))
-        //     }
-        //     layout.view = this
-        //     return layout
-        // } else {
-        //     layout.width = this.offsetWidth
-        //     layout.height = this.offsetHeight
-        //     layout.view = this
-        //     this.setAttribute("__doric_layout__", JSON.stringify(layout))
-        // }
-        // return layout
+        if (!this._doricLayout) {
+            this._doricLayout = new DoricLayout(this)
+        }
+        return this._doricLayout
     },
 
-    set(layout: DoricLayout) {
-        // this.setAttribute("__doric_layout__", JSON.stringify(layout))   
-        this._dor
+    set(layout: DoricLayout) { 
+        this._doricLayout = layout
+    },
+    enumerable: false,
+    configurable: true
+})
+
+Object.defineProperty(HTMLElement.prototype, "viewNode", {
+    get() {
+        if (!this._viewNode) {
+            this._viewNode = new DoricViewNode()
+        }
+        return this._viewNode
+    },
+    set(viewNode: DoricViewNode) {
+        this._viewNode = viewNode
     },
     enumerable: false,
     configurable: true
@@ -95,8 +95,8 @@ const DORIC_MEASURED_STATE_TOO_SMALL = 0x01;
 export class DoricLayout {
     widthSpec: LayoutSpec = LayoutSpec.EXACTLY;
     heightSpec: LayoutSpec = LayoutSpec.EXACTLY;
-    alignment = LEFT | TOP;
-    gravity = LEFT | TOP;
+    alignment = 0;
+    gravity = 0;
     width: number = 0;
     height: number = 0;
     spacing: number = 0;
@@ -117,10 +117,10 @@ export class DoricLayout {
     layoutType: DoricLayoutType = DoricLayoutType.Undefined;
     disabled: boolean = false;
 
-    maxWidth: number = Number.MAX_VALUE;
-    maxHeight: number = Number.MAX_VALUE;
-    minWidth: number = -1;
-    minHeight: number = -1;
+    _maxWidth: number = Number.MAX_VALUE;
+    _maxHeight: number = Number.MAX_VALUE;
+    _minWidth: number = -1;
+    _minHeight: number = -1;
 
     resolved: boolean = false;
 
@@ -135,6 +135,45 @@ export class DoricLayout {
 
     measuredState: number = 0;
 
+    constructor(view?: HTMLElement) {
+        if (view) {
+            this.width = view.offsetWidth
+            this.height = view.offsetHeight
+            this.view = view
+        }
+    }
+    set maxWidth(maxWidth: number) {
+        if (maxWidth && maxWidth !== -1) {
+            this._maxWidth = maxWidth
+        } else {
+            this._maxWidth = Number.MAX_VALUE
+        }
+    }
+    get maxWidth() {
+        return this._maxWidth
+    }
+    set maxHeight(maxHeight: number) {
+        if (maxHeight && maxHeight !== -1) {
+            this._maxHeight = maxHeight
+        } else {
+            this._maxHeight = Number.MAX_VALUE
+        }
+    }
+    get maxHeight() {
+        return this._maxHeight
+    }
+    set minWidth(minWidth: number) {
+        this._minWidth = minWidth || -1
+    }
+    get minWidth() {
+        return this._minWidth
+    }
+    set minHeight(minHeight: number) {
+        this._minHeight = minHeight || -1
+    }
+    get minHeight() {
+        return this._minHeight
+    }
     set measuredWidth(measuredWidth: number) {
         this._measuredWidth = Math.max(0, measuredWidth);
     }
@@ -563,7 +602,18 @@ export class DoricLayout {
     }
 
     undefinedMeasure(widthMeasureSpec: DoricMeasureSpec, heightMeasureSpec: DoricMeasureSpec) {
-
+        const targetSize:FrameSize = {
+            width: widthMeasureSpec.size - this.paddingLeft - this.paddingRight,
+            height: heightMeasureSpec.size - this.paddingTop - this.paddingBottom
+        }        
+        const measuredSize = this.view.viewNode.measureSize()
+        const contentWidth = measuredSize.width
+        const contentHeight = measuredSize.height
+        const widthSizeAndState = this.resolveSizeAndState(contentWidth + this.paddingLeft + this.paddingRight, widthMeasureSpec, 0)
+        const heightSizeAndState = this.resolveSizeAndState(contentHeight + this.paddingTop + this.paddingBottom, heightMeasureSpec, 0)
+        this.measuredWidth = Math.max(widthSizeAndState.size, this.minWidth)
+        this.measuredHeight = Math.max(heightSizeAndState.size, this.minHeight)
+        this.measuredState = (widthSizeAndState.state << DORIC_MEASURED_HEIGHT_STATE_SHIFT) | heightSizeAndState.state
     }
 
     getChildMeasureSpec(spec:DoricMeasureSpec, padding:number, childLayoutSpec: LayoutSpec, childSize:number) {
@@ -676,9 +726,12 @@ export class DoricLayout {
         const originalX = this.measuredX
         const originalY = this.measuredY
         const originalWidth = this.measuredWidth
-        const originalHeight = this.measuredHeight
-        
-        
+        const originalHeight = this.measuredHeight 
+        this.view.style.position = 'absolute'
+        this.view.style.width = toPixelString(this.measuredWidth)
+        this.view.style.height = toPixelString(this.measuredHeight)
+        this.view.style.left = toPixelString(this.measuredX)
+        this.view.style.top = toPixelString(this.measuredY)
     }
 
     layoutStack() {

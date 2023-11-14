@@ -1,5 +1,6 @@
 import { DoricGroupViewNode } from "./DoricViewNode";
 import {  DoricLayoutType } from "./DoricLayouts";
+import { CENTER_X, LEFT, RIGHT } from "doric";
 
 export class DoricVLayoutNode extends DoricGroupViewNode {
     space = 0
@@ -23,26 +24,19 @@ export class DoricVLayoutNode extends DoricGroupViewNode {
         }
     }
 
-    // layout() {
-    //     super.layout()
-    //     this.childNodes.forEach((e, idx) => {
-    //         e.view.style.flexShrink = "0"
-    //         if (e.layoutConfig?.weight) {
-    //             e.view.style.flex = `${e.layoutConfig?.weight}`
-    //         }
-    //         e.view.style.marginTop = toPixelString(e.layoutConfig?.margin?.top || 0)
-    //         const bottomMargin = e.layoutConfig?.margin?.bottom || 0
-    //         e.view.style.marginBottom = toPixelString(
-    //             (idx === this.childNodes.length - 1) ? bottomMargin: this.space + bottomMargin)
-    //         e.view.style.marginLeft = toPixelString(e.layoutConfig?.margin?.left || 0)
-    //         e.view.style.marginRight = toPixelString(e.layoutConfig?.margin?.right || 0)
-    //         if ((e.layoutConfig.alignment & LEFT) === LEFT) {
-    //             e.view.style.alignSelf = "flex-start"
-    //         } else if ((e.layoutConfig.alignment & RIGHT) === RIGHT) {
-    //             e.view.style.alignSelf = "flex-end"
-    //         } else if ((e.layoutConfig.alignment & CENTER_X) === CENTER_X) {
-    //             e.view.style.alignSelf = "center"
-    //         }
-    //     })
-    // }
+    layout() {
+        super.layout()
+        this.childNodes.forEach((e, idx) => {
+            e.view.style.flexShrink = "0"
+            if (e.layoutConfig?.weight) {
+                e.view.doricLayout.weight = e.layoutConfig?.weight
+            }
+            e.view.doricLayout.marginTop = e.layoutConfig?.margin?.top || 0
+            const bottomMargin = e.layoutConfig?.margin?.bottom || 0
+            e.view.doricLayout.marginBottom = (idx === this.childNodes.length - 1) ? bottomMargin : this.space + bottomMargin
+            e.view.doricLayout.marginLeft = e.layoutConfig?.margin?.left || 0
+            e.view.doricLayout.marginRight = e.layoutConfig?.margin?.right || 0
+            e.view.doricLayout.alignment = e.layoutConfig?.alignment || 0    
+        })
+    }
 }

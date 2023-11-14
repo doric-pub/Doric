@@ -89,6 +89,9 @@ export abstract class DoricViewNode {
 
     abstract build(): HTMLElement
 
+    sizeThatFit(size: FrameSize) {
+        return {width: 0, height: 0}
+    }
     get paddingLeft() {
         return this.padding.left || 0
     }

@@ -1,5 +1,9 @@
 interface HTMLElement {
+    _doricLayout: DoricLayout
     doricLayout: DoricLayout;
+    
+    _viewNode: DoricViewNode
+    viewNode: DoricViewNode;
 }
 
 declare enum LayoutSpec {
@@ -34,6 +38,9 @@ interface DoricSizeAndState {
     state: number;
 }
 
+declare class DoricViewNode {
+    measureSize: () => FrameSize;
+}
 declare class DoricLayout {
     widthSpec: LayoutSpec;
     heightSpec: LayoutSpec;
@@ -54,10 +61,10 @@ declare class DoricLayout {
     view: HTMLElement;
     layoutType: DoricLayoutType;
     disabled: boolean;
-    maxWidth: number;
-    maxHeight: number;
-    minWidth: number;
-    minHeight: number;
+    _maxWidth: number;
+    _maxHeight: number
+    _minWidth: number;
+    _minHeight: number;
     resolved: boolean;
     _measuredWidth: number;
     _measuredHeight: number;
@@ -67,6 +74,14 @@ declare class DoricLayout {
     corners: number[];
     totalLength: number;
     measuredState: number;
+    set maxHeight(maxheight: number);
+    get maxHeight(): number;
+    set maxWidth(maxwidth: number);
+    get maxwidth(): number;
+    set minWidth(minWidth: number);
+    get minWidth(): number;
+    set minHeight(minHeight: number);
+    get minHeight(): number;
     set measuredWidth(measuredWidth: number);
     get measuredWidth(): number;
     set measuredHeight(measuredHeight: number);

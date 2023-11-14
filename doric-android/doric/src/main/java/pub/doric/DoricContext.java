@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import com.bumptech.glide.RequestManager;
 import com.github.pengfeizhou.jscore.ArchiveException;
 import com.github.pengfeizhou.jscore.JSArray;
 import com.github.pengfeizhou.jscore.JSDecoder;
@@ -76,6 +77,8 @@ public class DoricContext {
     private final Map<String, Animator> animators = new HashMap<>();
     private final Map<String, DoricResource> cachedResources = new WeakHashMap<>();
     private final Set<SoftReference<RetainedJavaValue>> retainedJavaValues = new HashSet<>();
+
+    private RequestManager imageRequestManager;
 
     public Collection<ViewNode<?>> allHeadNodes(String type) {
         Map<String, ViewNode<?>> headNode = mHeadNodes.get(type);
@@ -433,5 +436,13 @@ public class DoricContext {
         } catch (ArchiveException e) {
             e.printStackTrace();
         }
+    }
+
+    public RequestManager getImageRequestManager() {
+        return imageRequestManager;
+    }
+
+    public void setImageRequestManager(RequestManager imageRequestManager) {
+        this.imageRequestManager = imageRequestManager;
     }
 }

@@ -89,7 +89,7 @@ export abstract class DoricViewNode {
 
     abstract build(): HTMLElement
 
-    sizeThatFit(size: FrameSize) {
+    measureSize(): FrameSize {
         return {width: 0, height: 0}
     }
     get paddingLeft() {
@@ -244,7 +244,6 @@ export abstract class DoricViewNode {
                         borderBottomRightRadius: toPixelString(prop.rightBottom),
                         borderBottomLeftRadius: toPixelString(prop.leftBottom),
                     })
-                    // TODO
                 } else {
                     this.applyCSSStyle({ borderRadius: toPixelString(prop) })
                 }

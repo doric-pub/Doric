@@ -5,7 +5,6 @@ export class DoricStackNode extends DoricGroupViewNode {
 
     build() {
         const ret = document.createElement('div')
-        // ret.style.position = "relative"
         ret.doricLayout.layoutType = DoricLayoutType.Stack
         return ret
     }

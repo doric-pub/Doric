@@ -3,8 +3,10 @@ import { toRGBAString } from "../utils/color";
 import { LEFT, RIGHT, CENTER_X, CENTER_Y, TOP, BOTTOM, toPixelString, pixelString2Number } from "./DoricLayouts";
 
 export class DoricTextNode extends DoricViewNode {
+    private static canvasCtx: CanvasRenderingContext2D
     maxLines = 0
     textElement!: HTMLElement
+
     build(): HTMLElement {
         const div = document.createElement('div')
         div.viewNode = this
@@ -99,6 +101,13 @@ export class DoricTextNode extends DoricViewNode {
         })
     }
 
+    private static getCanvasCtx() {
+        if (!DoricTextNode.canvasCtx) {
+            DoricTextNode.canvasCtx = document.createElement('canvas').getContext('2d')!
+        }
+        return DoricTextNode.canvasCtx
+    }
+
     configSize() {
         if (this.maxLines > 0) {
             const computedStyle = window.getComputedStyle(this.view)
@@ -120,11 +129,10 @@ export class DoricTextNode extends DoricViewNode {
     }
 
     measureSize(): FrameSize {
+        const canvasCtx = DoricTextNode.getCanvasCtx()
         const computedStyle = window.getComputedStyle(this.view)
-        const canvas = document.createElement('canvas')
-        const ctx = canvas.getContext('2d')
-        ctx!.font = computedStyle.font
-        const metrics = ctx!.measureText(this.textElement.innerText)
+        canvasCtx!.font = computedStyle.font
+        const metrics = canvasCtx!.measureText(this.textElement.innerText)
         const frameSize: FrameSize = {width:metrics.width,height:metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent}
         return frameSize
     }

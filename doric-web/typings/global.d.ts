@@ -2,8 +2,8 @@ interface HTMLElement {
     _doricLayout: DoricLayout
     doricLayout: DoricLayout;
     
-    _viewNode: DoricViewNode
-    viewNode: DoricViewNode;
+    _viewNode?: DoricViewNode
+    viewNode?: DoricViewNode;
 }
 
 declare enum LayoutSpec {

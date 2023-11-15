@@ -15,9 +15,6 @@ Object.defineProperty(HTMLElement.prototype, "doricLayout", {
 
 Object.defineProperty(HTMLElement.prototype, "viewNode", {
     get() {
-        if (!this._viewNode) {
-            this._viewNode = new DoricViewNode()
-        }
         return this._viewNode
     },
     set(viewNode: DoricViewNode) {
@@ -606,7 +603,7 @@ export class DoricLayout {
             width: widthMeasureSpec.size - this.paddingLeft - this.paddingRight,
             height: heightMeasureSpec.size - this.paddingTop - this.paddingBottom
         }        
-        const measuredSize = this.view.viewNode.measureSize()
+        const measuredSize = this.view.viewNode ? this.view.viewNode.measureSize() : {width:0, height:0}
         const contentWidth = measuredSize.width
         const contentHeight = measuredSize.height
         const widthSizeAndState = this.resolveSizeAndState(contentWidth + this.paddingLeft + this.paddingRight, widthMeasureSpec, 0)

@@ -12,7 +12,7 @@ Doric iOS Devkit for debugging & hotload.
   s.author           = { 'Jingpeng Wang' => 'jingpeng.wang@outlook.com' }
   s.source           = { :git => 'https://github.com/doric-pub/doric.git', :tag => s.version.to_s }
 
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '10.0'
 
   s.source_files = 'doric-iOS/Devkit/Classes/**/*'
   

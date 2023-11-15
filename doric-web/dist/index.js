@@ -6232,9 +6232,6 @@ var doric_web = (function (exports, axios, sandbox) {
 	});
 	Object.defineProperty(HTMLElement.prototype, "viewNode", {
 	    get() {
-	        if (!this._viewNode) {
-	            this._viewNode = new DoricViewNode();
-	        }
 	        return this._viewNode;
 	    },
 	    set(viewNode) {
@@ -6751,7 +6748,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	            width: widthMeasureSpec.size - this.paddingLeft - this.paddingRight,
 	            height: heightMeasureSpec.size - this.paddingTop - this.paddingBottom
 	        });
-	        const measuredSize = this.view.viewNode.measureSize();
+	        const measuredSize = this.view.viewNode ? this.view.viewNode.measureSize() : { width: 0, height: 0 };
 	        const contentWidth = measuredSize.width;
 	        const contentHeight = measuredSize.height;
 	        const widthSizeAndState = this.resolveSizeAndState(contentWidth + this.paddingLeft + this.paddingRight, widthMeasureSpec, 0);
@@ -7042,7 +7039,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	    }
 	}
 
-	class DoricViewNode$1 {
+	class DoricViewNode {
 	    constructor(context) {
 	        this.viewId = "";
 	        this.viewType = "View";
@@ -7086,7 +7083,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	        this.view = this.build();
 	        this._originDisplay = this.view.style.display;
 	    }
-	    sizeThatFit(size) {
+	    measureSize() {
 	        return { width: 0, height: 0 };
 	    }
 	    get paddingLeft() {
@@ -7230,7 +7227,6 @@ var doric_web = (function (exports, axios, sandbox) {
 	                        borderBottomRightRadius: toPixelString(prop.rightBottom),
 	                        borderBottomLeftRadius: toPixelString(prop.leftBottom),
 	                    });
-	                    // TODO
 	                }
 	                else {
 	                    this.applyCSSStyle({ borderRadius: toPixelString(prop) });
@@ -7536,7 +7532,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	    requestLayout() {
 	    }
 	}
-	class DoricSuperNode extends DoricViewNode$1 {
+	class DoricSuperNode extends DoricViewNode {
 	    constructor() {
 	        super(...arguments);
 	        this.reusable = false;
@@ -7632,7 +7628,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	                        else {
 	                            //Replace this view
 	                            this.view.removeChild(oldNode.view);
-	                            const newNode = DoricViewNode$1.create(this.context, model.type);
+	                            const newNode = DoricViewNode.create(this.context, model.type);
 	                            if (newNode === undefined) {
 	                                return;
 	                            }
@@ -7671,7 +7667,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	                        }
 	                        else {
 	                            //Not found,insert
-	                            const newNode = DoricViewNode$1.create(this.context, model.type);
+	                            const newNode = DoricViewNode.create(this.context, model.type);
 	                            if (newNode === undefined) {
 	                                return;
 	                            }
@@ -7686,7 +7682,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	            }
 	            else {
 	                //Insert
-	                const newNode = DoricViewNode$1.create(this.context, model.type);
+	                const newNode = DoricViewNode.create(this.context, model.type);
 	                if (newNode === undefined) {
 	                    return;
 	                }
@@ -7721,7 +7717,6 @@ var doric_web = (function (exports, axios, sandbox) {
 	class DoricStackNode extends DoricGroupViewNode {
 	    build() {
 	        const ret = document.createElement('div');
-	        // ret.style.position = "relative"
 	        ret.doricLayout.layoutType = DoricLayoutType.Stack;
 	        return ret;
 	    }
@@ -7809,9 +7804,6 @@ var doric_web = (function (exports, axios, sandbox) {
 	    }
 	    build() {
 	        const ret = document.createElement('div');
-	        // ret.style.display = "flex"
-	        // ret.style.flexDirection = "column"
-	        // ret.style.flexWrap = "nowrap"
 	        ret.doricLayout.layoutType = DoricLayoutType.VLayout;
 	        return ret;
 	    }
@@ -7829,7 +7821,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	    layout() {
 	        super.layout();
 	        this.childNodes.forEach((e, idx) => {
-	            var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
+	            var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
 	            e.view.style.flexShrink = "0";
 	            if ((_a = e.layoutConfig) === null || _a === void 0 ? void 0 : _a.weight) {
 	                e.view.doricLayout.weight = (_b = e.layoutConfig) === null || _b === void 0 ? void 0 : _b.weight;
@@ -7839,13 +7831,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	            e.view.doricLayout.marginBottom = (idx === this.childNodes.length - 1) ? bottomMargin : this.space + bottomMargin;
 	            e.view.doricLayout.marginLeft = ((_h = (_g = e.layoutConfig) === null || _g === void 0 ? void 0 : _g.margin) === null || _h === void 0 ? void 0 : _h.left) || 0;
 	            e.view.doricLayout.marginRight = ((_k = (_j = e.layoutConfig) === null || _j === void 0 ? void 0 : _j.margin) === null || _k === void 0 ? void 0 : _k.right) || 0;
-	            // if ((e.layoutConfig.alignment & LEFT) === LEFT) {
-	            //     e.view.style.alignSelf = "flex-start"
-	            // } else if ((e.layoutConfig.alignment & RIGHT) === RIGHT) {
-	            //     e.view.style.alignSelf = "flex-end"
-	            // } else if ((e.layoutConfig.alignment & CENTER_X) === CENTER_X) {
-	            //     e.view.style.alignSelf = "center"
-	            // }
+	            e.view.doricLayout.alignment = ((_l = e.layoutConfig) === null || _l === void 0 ? void 0 : _l.alignment) || 0;
 	        });
 	    }
 	}
@@ -7858,9 +7844,6 @@ var doric_web = (function (exports, axios, sandbox) {
 	    }
 	    build() {
 	        const ret = document.createElement('div');
-	        // ret.style.display = "flex"
-	        // ret.style.flexDirection = "row"
-	        // ret.style.flexWrap = "nowrap"
 	        ret.doricLayout.layoutType = DoricLayoutType.HLayout;
 	        return ret;
 	    }
@@ -7878,7 +7861,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	    layout() {
 	        super.layout();
 	        this.childNodes.forEach((e, idx) => {
-	            var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
+	            var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
 	            e.view.style.flexShrink = "0";
 	            if ((_a = e.layoutConfig) === null || _a === void 0 ? void 0 : _a.weight) {
 	                e.view.doricLayout.weight = (_b = e.layoutConfig) === null || _b === void 0 ? void 0 : _b.weight;
@@ -7888,18 +7871,12 @@ var doric_web = (function (exports, axios, sandbox) {
 	            e.view.doricLayout.marginRight = (idx === this.childNodes.length - 1) ? rightMargin : this.space + rightMargin;
 	            e.view.doricLayout.marginTop = ((_h = (_g = e.layoutConfig) === null || _g === void 0 ? void 0 : _g.margin) === null || _h === void 0 ? void 0 : _h.top) || 0;
 	            e.view.doricLayout.marginBottom = ((_k = (_j = e.layoutConfig) === null || _j === void 0 ? void 0 : _j.margin) === null || _k === void 0 ? void 0 : _k.bottom) || 0;
-	            // if ((e.layoutConfig.alignment & TOP) === TOP) {
-	            //     e.view.style.alignSelf = "flex-start"
-	            // } else if ((e.layoutConfig.alignment & BOTTOM) === BOTTOM) {
-	            //     e.view.style.alignSelf = "flex-end"
-	            // } else if ((e.layoutConfig.alignment & CENTER_Y) === CENTER_Y) {
-	            //     e.view.style.alignSelf = "center"
-	            // }
+	            e.view.doricLayout.alignment = ((_l = e.layoutConfig) === null || _l === void 0 ? void 0 : _l.alignment) || 0;
 	        });
 	    }
 	}
 
-	class DoricTextNode extends DoricViewNode$1 {
+	class DoricTextNode extends DoricViewNode {
 	    constructor() {
 	        super(...arguments);
 	        this.maxLines = 0;
@@ -8001,6 +7978,12 @@ var doric_web = (function (exports, axios, sandbox) {
 	            this.configSize();
 	        });
 	    }
+	    static getCanvasCtx() {
+	        if (!DoricTextNode.canvasCtx) {
+	            DoricTextNode.canvasCtx = document.createElement('canvas').getContext('2d');
+	        }
+	        return DoricTextNode.canvasCtx;
+	    }
 	    configSize() {
 	        if (this.maxLines > 0) {
 	            const computedStyle = window.getComputedStyle(this.view);
@@ -8019,11 +8002,10 @@ var doric_web = (function (exports, axios, sandbox) {
 	        }
 	    }
 	    measureSize() {
+	        const canvasCtx = DoricTextNode.getCanvasCtx();
 	        const computedStyle = window.getComputedStyle(this.view);
-	        const canvas = document.createElement('canvas');
-	        const ctx = canvas.getContext('2d');
-	        ctx.font = computedStyle.font;
-	        const metrics = ctx.measureText(this.textElement.innerText);
+	        canvasCtx.font = computedStyle.font;
+	        const metrics = canvasCtx.measureText(this.textElement.innerText);
 	        const frameSize = { width: metrics.width, height: metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent };
 	        return frameSize;
 	    }
@@ -8082,7 +8064,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	    ScaleType[ScaleType["ScaleAspectFill"] = 2] = "ScaleAspectFill";
 	})(ScaleType || (ScaleType = {}));
 	const transparentBase64 = "data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==";
-	class DoricImageNode extends DoricViewNode$1 {
+	class DoricImageNode extends DoricViewNode {
 	    build() {
 	        const ret = document.createElement('img');
 	        ret.style.objectFit = 'fill';
@@ -8305,7 +8287,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	                }
 	                else {
 	                    this.view.removeChild(this.childNode.view);
-	                    const childNode = DoricViewNode$1.create(this.context, model.type);
+	                    const childNode = DoricViewNode.create(this.context, model.type);
 	                    if (childNode === undefined) {
 	                        return;
 	                    }
@@ -8318,7 +8300,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	            }
 	        }
 	        else {
-	            const childNode = DoricViewNode$1.create(this.context, model.type);
+	            const childNode = DoricViewNode.create(this.context, model.type);
 	            if (childNode === undefined) {
 	                return;
 	            }
@@ -8457,7 +8439,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	        this.fullScreen.style.height = "100%";
 	    }
 	    show(model) {
-	        const viewNode = DoricViewNode$1.create(this.context, model.type);
+	        const viewNode = DoricViewNode.create(this.context, model.type);
 	        if (viewNode === undefined) {
 	            return Promise.reject(`Cannot create ViewNode for ${model.type}`);
 	        }
@@ -8567,7 +8549,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	        this.reset();
 	        const ret = this.pureCallJSResponse("renderBunchedItems", 0, this.itemCount);
 	        ret.forEach(e => {
-	            const viewNode = DoricViewNode$1.create(this.context, e.type);
+	            const viewNode = DoricViewNode.create(this.context, e.type);
 	            viewNode.viewId = e.id;
 	            viewNode.init(this);
 	            viewNode.blend(e.props);
@@ -8586,7 +8568,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	        if (this.childNodes.length !== this.itemCount) {
 	            const ret = this.pureCallJSResponse("renderBunchedItems", this.childNodes.length, this.itemCount);
 	            this.childNodes = this.childNodes.concat(ret.map(e => {
-	                const viewNode = DoricViewNode$1.create(this.context, e.type);
+	                const viewNode = DoricViewNode.create(this.context, e.type);
 	                viewNode.viewId = e.id;
 	                viewNode.init(this);
 	                viewNode.blend(e.props);
@@ -8601,7 +8583,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	            if (!this.loadMoreViewNode) {
 	                const loadMoreViewModel = this.getSubModel(this.loadMoreViewId || "");
 	                if (loadMoreViewModel) {
-	                    this.loadMoreViewNode = DoricViewNode$1.create(this.context, loadMoreViewModel.type);
+	                    this.loadMoreViewNode = DoricViewNode.create(this.context, loadMoreViewModel.type);
 	                    this.loadMoreViewNode.viewId = loadMoreViewModel.id;
 	                    this.loadMoreViewNode.init(this);
 	                    this.loadMoreViewNode.blend(loadMoreViewModel.props);
@@ -8827,7 +8809,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	                        }
 	                        else {
 	                            (_a = this.headerContainer) === null || _a === void 0 ? void 0 : _a.removeChild(this.headerNode.view);
-	                            const headerNode = DoricViewNode$1.create(this.context, headerModel.type);
+	                            const headerNode = DoricViewNode.create(this.context, headerModel.type);
 	                            if (headerNode) {
 	                                headerNode.viewId = headerModel.id;
 	                                headerNode.init(this);
@@ -8839,7 +8821,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	                    }
 	                }
 	                else {
-	                    const headerNode = DoricViewNode$1.create(this.context, headerModel.type);
+	                    const headerNode = DoricViewNode.create(this.context, headerModel.type);
 	                    if (headerNode) {
 	                        headerNode.viewId = headerModel.id;
 	                        headerNode.init(this);
@@ -8861,7 +8843,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	                        }
 	                        else {
 	                            (_d = this.contentContainer) === null || _d === void 0 ? void 0 : _d.removeChild(this.contentNode.view);
-	                            const contentNode = DoricViewNode$1.create(this.context, contentModel.type);
+	                            const contentNode = DoricViewNode.create(this.context, contentModel.type);
 	                            if (contentNode) {
 	                                contentNode.viewId = contentModel.id;
 	                                contentNode.init(this);
@@ -8873,7 +8855,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	                    }
 	                }
 	                else {
-	                    const contentNode = DoricViewNode$1.create(this.context, contentModel.type);
+	                    const contentNode = DoricViewNode.create(this.context, contentModel.type);
 	                    if (contentNode) {
 	                        contentNode.viewId = contentModel.id;
 	                        contentNode.init(this);
@@ -8984,7 +8966,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	    }
 	}
 
-	class DoricSwitchNode extends DoricViewNode$1 {
+	class DoricSwitchNode extends DoricViewNode {
 	    constructor() {
 	        super(...arguments);
 	        this.offTintColor = "#e6e6e6";
@@ -9143,7 +9125,7 @@ var doric_web = (function (exports, axios, sandbox) {
 	        if (this.childNodes.length !== this.itemCount) {
 	            const ret = this.pureCallJSResponse("renderBunchedItems", this.childNodes.length, this.itemCount);
 	            this.childNodes = this.childNodes.concat(ret.map(e => {
-	                const viewNode = DoricViewNode$1.create(this.context, e.type);
+	                const viewNode = DoricViewNode.create(this.context, e.type);
 	                viewNode.viewId = e.id;
 	                viewNode.init(this);
 	                viewNode.blend(e.props);
@@ -9880,7 +9862,7 @@ ${content}
 	exports.DoricGroupViewNode = DoricGroupViewNode;
 	exports.DoricPlugin = DoricPlugin;
 	exports.DoricSuperNode = DoricSuperNode;
-	exports.DoricViewNode = DoricViewNode$1;
+	exports.DoricViewNode = DoricViewNode;
 	exports.NavigationElement = NavigationElement;
 	exports.acquireJSBundle = acquireJSBundle;
 	exports.acquirePlugin = acquirePlugin;

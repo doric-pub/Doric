@@ -13,7 +13,7 @@ Doric iOS SDK for cross platform develpment
   s.author           = { 'pengfei.zhou' => 'pengfeizhou@foxmail.com' }
   s.source           = { :git => 'https://github.com/doric-pub/doric.git', :tag => s.version.to_s }
 
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '10.0'
 
   s.source_files = 'doric-iOS/Pod/Classes/**/*','doric-iOS/Pod/Yoga/**/*'
   s.resource_bundles = {

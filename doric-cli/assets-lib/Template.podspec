@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
     s.author           = { 'xxx' => 'xxx@xxx' }
     s.source           = { :git => 'git@xxx', :tag => s.version.to_s }
   
-    s.ios.deployment_target = '9.0'
+    s.ios.deployment_target = '10.0'
   
     s.source_files = 'iOS/Classes/**/*'
     s.resource     =  "dist/**/*"

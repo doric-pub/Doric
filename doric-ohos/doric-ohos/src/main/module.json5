@@ -1,0 +1,7 @@
+{
+  module: {
+    name: "doric-ohos",
+    type: "har",
+    deviceTypes: ["default", "tablet"],
+  },
+}

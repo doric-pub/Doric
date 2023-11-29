@@ -6,6 +6,7 @@
   "repository": {},
   "version": "1.0.0",
   "dependencies": {
-    "doric": "file:../doric"
+    "doric": "file:../doric",
+    "@doric/ohos": "file:../doric-ohos"
   }
 }

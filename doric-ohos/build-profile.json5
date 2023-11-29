@@ -40,6 +40,10 @@
     {
       "name": "doric",
       "srcPath": "./doric"
+    },
+    {
+      "name": "doric-ohos",
+      "srcPath": "./doric-ohos"
     }
   ]
 }

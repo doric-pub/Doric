@@ -1,4 +1,4 @@
-import {layoutConfig} from "@ohos/doric"
+import {layoutConfig} from "doric"
 
 
 @Entry

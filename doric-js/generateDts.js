@@ -18,7 +18,7 @@ ${imageDts}
   const destFile = "../doric-ohos/doric/index.d.ts";
   await fs.promises.writeFile(
     destFile,
-    `declare module "@ohos/doric" {
+    `declare module "doric" {
     ${indexDts
       .replace(/\sdeclare\s/g, " ")
       .split("\n")

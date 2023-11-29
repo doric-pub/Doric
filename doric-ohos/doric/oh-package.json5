@@ -20,5 +20,5 @@
   "dependencies": {},
   "license": "Apache-2.0",
   "devDependencies": {},
-  "name": "@ohos/doric"
+  "name": "doric"
 }

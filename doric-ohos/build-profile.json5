@@ -1,0 +1,45 @@
+{
+  "app": {
+    "products": [
+      {
+        "name": "default",
+        "signingConfig": "default"
+      }
+    ],
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "/Users/pengfei/.ohos/config/auto_debug_doric-ohos_com.example.doric_openharmony_260086000102488829.cer",
+          "storePassword": "0000001B70F9BBBDF02682807F631145AF47CB82E75D3E0EA8D34E099CA8E0E1DF356A25A36C4625E25761",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001B2D50812264582725B689159FB2D009313D292AF3C0B60CA899C11D7560999D83A3934A16A8EDCA",
+          "profile": "/Users/pengfei/.ohos/config/auto_debug_doric-ohos_com.example.doric_openharmony_260086000102488829.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "/Users/pengfei/.ohos/config/auto_debug_doric-ohos_com.example.doric_openharmony_260086000102488829.p12"
+        }
+      }
+    ],
+    "compileSdkVersion": 9,
+    "compatibleSdkVersion": 9
+  },
+  "modules": [
+    {
+      "name": "entry",
+      "srcPath": "./entry",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "doric",
+      "srcPath": "./doric"
+    }
+  ]
+}

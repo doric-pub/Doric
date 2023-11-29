@@ -103,4 +103,18 @@ export default [
       console.warn(warning.message);
     },
   },
+  {
+    input: "lib/index.oh.js",
+    output: {
+      format: "cjs",
+      file: "../doric-ohos/doric/index.js",
+    },
+    plugins: [resolve({ mainFields: ["jsnext"] })],
+    onwarn: function (warning) {
+      if (warning.code === "THIS_IS_UNDEFINED") {
+        return;
+      }
+      console.warn(warning.message);
+    },
+  },
 ];

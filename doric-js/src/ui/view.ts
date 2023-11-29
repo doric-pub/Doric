@@ -279,11 +279,14 @@ export abstract class View implements Modeling {
         return this
     }
 
-    in(group: Group) {
+    // in(group: Group) {
+    //     group.addChild(this)
+    //     return this
+    // }
+    into(group: Group) {
         group.addChild(this)
         return this
     }
-
     nativeChannel(context: BridgeContext, name: string) {
         let thisView: View | undefined = this
         return function (args: any = undefined) {
@@ -385,7 +388,7 @@ export abstract class View implements Modeling {
     }
 
     set parent(v: Group) {
-        this.in(v)
+        v.addChild(this)
     }
 
     private _ref?: Ref<this>;

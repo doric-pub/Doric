@@ -1843,7 +1843,11 @@ class View {
         }
         return this;
     }
-    in(group) {
+    // in(group: Group) {
+    //     group.addChild(this)
+    //     return this
+    // }
+    into(group) {
         group.addChild(this);
         return this;
     }
@@ -1882,7 +1886,7 @@ class View {
         this.apply(props);
     }
     set parent(v) {
-        this.in(v);
+        v.addChild(this);
     }
     set ref(ref) {
         ref.current = this;

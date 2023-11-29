@@ -1,0 +1,7 @@
+{
+  module: {
+    name: "doric",
+    type: "har",
+    deviceTypes: ["default", "tablet"],
+  },
+}

@@ -15,6 +15,19 @@ ${indexDts
 ${imageDts}
   `;
   await fs.promises.writeFile("index.d.ts", content);
+  const destFile = "../doric-ohos/doric/index.d.ts";
+  await fs.promises.writeFile(
+    destFile,
+    `declare module "@ohos/doric" {
+    ${indexDts
+      .replace(/\sdeclare\s/g, " ")
+      .split("\n")
+      .map((e) => `	${e}`)
+      .join("\n")}
+    }
+    ${imageDts}
+      `
+  );
   const files = [
     "bundle/doric-lib.js",
     "bundle/doric-sandbox.js",

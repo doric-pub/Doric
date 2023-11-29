@@ -88,7 +88,7 @@ export declare abstract class View implements Modeling {
     let(block: (it: this) => void): void;
     also(block: (it: this) => void): this;
     apply(config: Partial<this>): this;
-    in(group: Group): this;
+    into(group: Group): this;
     nativeChannel(context: BridgeContext, name: string): (args?: any) => Promise<any>;
     getWidth(context: BridgeContext): Promise<number>;
     getHeight(context: BridgeContext): Promise<number>;

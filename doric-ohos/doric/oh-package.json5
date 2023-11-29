@@ -1,0 +1,24 @@
+{
+  "keywords": [
+    "OpenHarmony",
+    "HarmonyOS",
+    "doric"
+  ],
+  "author": "pengfei.zhou",
+  "description": "Doric是一个跨平台框架。本库基于原库进行适配，使其可以运行在 OpenHarmony，并沿用其现有用法和特性。",
+  "ohos": {
+    "org": "opensource"
+  },
+  "main": "index.js",
+  "types": "index.d.ts",
+  "repository": "https://github.com/doric-pub/Doric.git",
+  "type": "module",
+  "version": "0.0.1",
+  "tags": [
+    "doric"
+  ],
+  "dependencies": {},
+  "license": "Apache-2.0",
+  "devDependencies": {},
+  "name": "@ohos/doric"
+}

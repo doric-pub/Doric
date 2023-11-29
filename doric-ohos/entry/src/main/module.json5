@@ -36,7 +36,7 @@
     "requestPermissions": [
       {
         "name": "ohos.permission.INTERNET",
-      },
+      }
     ],
     "metadata": [
       {

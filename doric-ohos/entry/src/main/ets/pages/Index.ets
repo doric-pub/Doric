@@ -1,4 +1,5 @@
 import {ContainerPage} from "@doric/ohos"
+import { HelloDoric } from '../panel/HelloDoric';
 
 @Entry
 @Component
@@ -9,7 +10,7 @@ struct CounterPage {
 
   build() {
     Column() {
-      ContainerPage()
+      ContainerPage({clz: HelloDoric })
       // Text(`Counter ${this.countData.counted}`)
       //   .fontSize(16)
       //   .fontColor(Color.Black)

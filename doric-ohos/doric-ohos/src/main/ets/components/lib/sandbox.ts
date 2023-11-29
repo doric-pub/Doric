@@ -1,0 +1,159 @@
+import { BridgeContext, uniqueId, ClassType } from 'doric';
+import { ViewPU } from './Container';
+
+function toString(message: any) {
+  if (message instanceof Function) {
+    return message.toString()
+  } else if (message instanceof Object) {
+    try {
+      return JSON.stringify(message)
+    } catch (e) {
+      return message.toString()
+    }
+  } else if (message === undefined) {
+    return "undefined"
+  } else {
+    return message.toString()
+  }
+}
+
+export function log(...args: any) {
+  let out = ""
+  for (let i = 0; i < arguments.length; i++) {
+    if (i > 0) {
+      out += ','
+    }
+    out += toString(arguments[i])
+  }
+  console.log(out)
+}
+
+export function loge(...message: any) {
+  let out = ""
+  for (let i = 0; i < arguments.length; i++) {
+    if (i > 0) {
+      out += ','
+    }
+    out += toString(arguments[i])
+  }
+  console.error(out)
+}
+
+export function logw(...message: any) {
+  let out = ""
+  for (let i = 0; i < arguments.length; i++) {
+    if (i > 0) {
+      out += ','
+    }
+    out += toString(arguments[i])
+  }
+  console.warn(out)
+}
+
+
+export class DoricContext implements BridgeContext {
+  entity: any
+  id: string
+  callbacks: Map<string, {
+    resolve: Function,
+    reject: Function,
+    retained?: boolean
+  }> = new Map
+  classes: Map<string, ClassType<object>> = new Map
+  viewPU: ViewPU
+
+  pluginInstances: Map<string, DoricPlugin> = new Map
+
+  constructor(viewPU: ViewPU, id?: string) {
+    this.id = id??uniqueId("Context")
+    this.viewPU = viewPU
+  }
+
+  hookBeforeNativeCall() {
+    if (this.entity && Reflect.has(this.entity, 'hookBeforeNativeCall')) {
+      Reflect.apply(Reflect.get(this.entity, 'hookBeforeNativeCall'), this.entity, [])
+    }
+  }
+
+  hookAfterNativeCall() {
+    if (this.entity && Reflect.has(this.entity, 'hookAfterNativeCall')) {
+      Reflect.apply(Reflect.get(this.entity, 'hookAfterNativeCall'), this.entity, [])
+    }
+  }
+
+  async callNative(namespace: string, method: string, args?: any) {
+    try {
+      let plugin = this.pluginInstances.get(namespace);
+      if (!plugin) {
+        const pluginClz = pluginMetaInfo.get(namespace);
+        if (!pluginClz) {
+          throw (`Plugin ${namespace} is not implemented`)
+          return
+        }
+        plugin = new pluginClz(this);
+        this.pluginInstances.set(namespace, plugin);
+      }
+
+      const methodFunc = Reflect.get(plugin, method);
+      if (!methodFunc) {
+        throw (`Plugin ${namespace}'s method: ${method} is not implemented`)
+      }
+      return Reflect.apply(methodFunc, plugin, [args])
+    } catch (e) {
+      console.error(e)
+      throw e
+    }
+  }
+
+  register(instance: Object) {
+    this.entity = instance
+  }
+
+  function2Id(func: Function) {
+    const functionId = uniqueId('function')
+    this.callbacks.set(functionId, {
+      resolve: func,
+      reject: () => {
+        loge("This should not be called")
+      },
+      retained: true,
+    })
+    return functionId
+  }
+
+  removeFuncById(funcId: string) {
+    this.callbacks.delete(funcId)
+  }
+
+  callEntityMethod(methodName: string, args?: any) {
+    if (this.entity === undefined) {
+      loge(`Cannot find holder for context id:${this.id}`)
+      return
+    }
+    if (Reflect.has(this.entity, methodName)) {
+      const argumentsList: any = []
+      for (let i = 1; i < arguments.length; i++) {
+        argumentsList.push(arguments[i])
+      }
+      this.hookBeforeNativeCall()
+      const ret = Reflect.apply(Reflect.get(this.entity, methodName), this.entity, argumentsList)
+      return ret
+    } else {
+      loge(`Cannot find method for context id:${this.id},method name is:${methodName}`)
+    }
+  }
+}
+
+export abstract class DoricPlugin {
+  context: DoricContext
+
+  constructor(context: DoricContext) {
+    this.context = context
+  }
+}
+
+const pluginMetaInfo: Map<string, ClassType<DoricPlugin>> = new Map
+
+export function registerDoricPlugin(name: string, pluginClz: ClassType<DoricPlugin>) {
+  pluginMetaInfo.set(name, pluginClz)
+}

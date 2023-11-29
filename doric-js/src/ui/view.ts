@@ -232,7 +232,15 @@ export abstract class View implements Modeling {
             newV = obj2Model(newV, (v) => this.callback2Id(v))
         }
         this.__dirty_props__[propKey] = newV
+        this.needUpdate()
     }
+
+    needUpdate() {
+        if (this.superview) {
+            this.superview.needUpdate()
+        }
+    }
+
 
     clean() {
         for (const key in this.__dirty_props__) {

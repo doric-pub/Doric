@@ -1,19 +1,53 @@
-import { injectViewPU } from './Container';
+import window from '@ohos.window';
 
-/**
- * This template implements the business card function and consists of three components.The top part is the
- * title, and the bottom part is the Tab. The middle card content shows the business information.
- * Developers can enrich the function of title and Tab, and add relevant business information to the list.
- */
+import { ClassType } from "doric"
+import { DoricPanel, ViewPU } from './Container';
+import { initDoric } from './DoricInit';
+import { DoricContext } from './sandbox';
+
+
+initDoric();
 
 @Component
 export struct ContainerPage {
+  clz: ClassType<DoricPanel>;
+  extra: any
+  private doricContext: DoricContext
 
-  initialRenderView(){
-    // @ts-ignore
-    injectViewPU(this)
+  initialRenderView() {
+    this.doricContext = new DoricContext(this as any)
+    const instance = new this.clz();
+    instance.context = this.doricContext;
+    (instance.getRootView() as any).needUpdate = ()=>{
+      console.log("Root needUpdate");
+      (this as unknown as ViewPU).markNeedUpdate();
+    }
+    this.doricContext.entity = instance;
+    this.doricContext.callEntityMethod("__init__", this.extra)
+    this.doricContext.callEntityMethod("__onCreate__")
+    this.doricContext.callEntityMethod("__onShow__")
+    window.getLastWindow(getContext(this)).then(window => {
+      const rect = window.getWindowProperties().windowRect
+      console.log("rect", rect.left, rect.top, rect.width, rect.height)
+      this.doricContext.callEntityMethod("__build__", { width: rect.width, height: rect.height })
+    })
     // @ts-ignore
     super.initialRenderView()
+  }
+
+  updateDirtyElements(){
+    console.log("updateDirtyElements")
+    // @ts-ignore
+    super.updateDirtyElements()
+    this.doricContext.hookAfterNativeCall()
+  }
+
+  onPageShow() {
+    this.doricContext.callEntityMethod("__onShow__")
+  }
+
+  onPageHide() {
+    this.doricContext.callEntityMethod("__onHidden__")
   }
 
   build() {

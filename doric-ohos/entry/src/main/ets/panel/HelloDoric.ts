@@ -1,8 +1,8 @@
 import { Panel, Group, vlayout, layoutConfig, Gravity, text, Text, Color, navbar, AssetsResource, image } from "doric";
 
-export class DoricArkUI extends Panel {
+export class HelloDoric extends Panel {
     onShow() {
-        navbar(context).setTitle("doric-arkui")
+        navbar(this.context).setTitle("doric-arkui")
     }
     build(rootView: Group): void {
         let number: Text
@@ -40,6 +40,9 @@ export class DoricArkUI extends Panel {
                 gravity: Gravity.Center,
             })
             .into(rootView)
+        setInterval(()=>{
+            number.text = `${++count}`
+        },1000)
     }
 
 }

@@ -1,4 +1,7 @@
-import { DoricArkUI } from "./ext";
+
+import { Panel } from 'doric';
+
+export type DoricPanel = Panel
 
 declare const ViewStackProcessor: any;
 declare const Column: any;
@@ -12,7 +15,7 @@ declare function loadDocument(instance: ViewPU): void;
 
 type UpdateFunc = (elmtId: number, isFirstRender: boolean) => void;
 
-declare abstract class ViewPU {
+export declare abstract class ViewPU {
   constructor(parent: ViewPU, localStorage: any, elmtId?: number)
 
   markNeedUpdate(): void;
@@ -43,7 +46,6 @@ declare abstract class ViewPU {
 
 
 export function injectViewPU(view: ViewPU) {
-  console.log("view", typeof view, typeof DoricArkUI);
   view.initialRender = () => {
     view.observeComponentCreation((elmtId, isInitialRender) => {
       ViewStackProcessor.StartGetAccessRecordingFor(elmtId);

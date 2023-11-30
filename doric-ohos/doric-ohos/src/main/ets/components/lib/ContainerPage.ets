@@ -8,21 +8,11 @@ import { DoricContext } from './sandbox';
 
 initDoric();
 
-// declare const Column: any;
-//
-// declare const ViewStackProcessor: any;
-//
-// declare const Stack: any;
-//
-// declare const Text: any;
-//
-// declare const ForEach: any;
-
 @Component
 export struct ContainerPage {
   clz: ClassType<DoricPanel>;
   extra: any
-  @State simpleList: Array<Array<string>> = [['one', 'two', 'three'], ['one', 'two', 'three']];
+  // @State simpleList: Array<Array<string>> = [['one', 'two', 'three'], ['one', 'two', 'three']];
   private doricContext: DoricContext
 
   initialRenderView() {
@@ -38,7 +28,7 @@ export struct ContainerPage {
     this.doricContext.callEntityMethod("__onShow__")
     window.getLastWindow(getContext(this)).then(window => {
       const rect = window.getWindowProperties().windowRect
-      console.log("rect", rect.left, rect.top, rect.width, rect.height)
+//      console.log("rect", rect.left, rect.top, rect.width, rect.height)
       this.doricContext.callEntityMethod("__build__", { width: rect.width, height: rect.height })
     });
 

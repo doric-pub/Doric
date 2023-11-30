@@ -18,7 +18,6 @@ export class HelloDoric extends Panel {
   }
 
   build(rootView: Group): void {
-    rootView.backgroundColor = Color.RED;
     let number: Text;
     let count = 0;
     let container = vlayout([
@@ -56,21 +55,8 @@ export class HelloDoric extends Panel {
         }
       })
       .into(rootView)
-
-    // container.addChild(text({
-    //   text: "This"
-    // }))
-    // setTimeout(()=>{
-    //   container.removeAllChildren()
-    //   container.addChild(text({
-    //     text: "This is new"
-    //   }))
-    //   container.addChild(text({
-    //     text: "This is new sssss"
-    //   }))
-    // },1000)
-    // setInterval(() => {
-    //   number.text = `${++count}`
-    // }, 1000)
+    setInterval(() => {
+      number.text = `${++count}`
+    }, 1000)
   }
 }

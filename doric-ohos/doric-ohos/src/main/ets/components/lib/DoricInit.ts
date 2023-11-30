@@ -3,6 +3,7 @@ import { RootNode, StackNode } from '../node/StackNode'
 import { ShaderPlugin } from '../plugin/ShaderPlugin'
 import { TextNode } from '../node/TextNode'
 import { VLayoutNode } from '../node/VLayoutNode'
+import { ImageNode } from '../node/ImageNode'
 
 export function initDoric() {
   registerDoricPlugin("shader", ShaderPlugin)
@@ -10,4 +11,5 @@ export function initDoric() {
   registerDoricViewNode("VLayout", VLayoutNode)
   registerDoricViewNode("Text", TextNode)
   registerDoricViewNode("Stack", StackNode)
+  registerDoricViewNode("Image", ImageNode)
 }

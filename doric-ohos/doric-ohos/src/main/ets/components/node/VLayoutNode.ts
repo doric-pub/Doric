@@ -13,7 +13,7 @@ export class VLayoutNode extends GroupNode<VLayout> {
   }
 
   blend(v: VLayout) {
-    Column.create(v.space);
+    Column.create({ space: v.space });
 
     const gravity = (v.gravity??Gravity.Center).toModel();
     Column.align(gravityToAlignment(gravity));

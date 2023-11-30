@@ -1,51 +1,62 @@
-import { View } from 'doric';
+import { Color, View } from 'doric';
 import { DoricContext, ViewStackProcessor } from './sandbox';
 
 
 export abstract class DoricViewNode<T extends View> {
-    context: DoricContext;
+  context: DoricContext;
 
-    elmtId?: number;
-    view: T;
+  elmtId?: number;
+  view: T;
 
-    firstRender = false;
+  firstRender = false;
 
-    constructor(context: DoricContext, t: T) {
-        this.context = context;
-        this.view = t;
+  TAG: any
+
+  constructor(context: DoricContext, t: T) {
+    this.context = context;
+    this.view = t;
+  }
+
+  render() {
+    const firstRender = this.elmtId === undefined;
+    if (firstRender) {
+      this.elmtId = ViewStackProcessor.AllocateNewElmetIdForNextComponent();
     }
-
-    render() {
-        const firstRender = this.elmtId === undefined;
-        if (firstRender) {
-            this.elmtId = ViewStackProcessor.AllocateNewElmetIdForNextComponent();
-        }
-        if (firstRender || this.isDirty()) {
-            ViewStackProcessor.StartGetAccessRecordingFor(this.elmtId);
-            if (firstRender || this.isDirty()) {
-                this.blend(this.view);
-            }
-            if (!firstRender) {
-                this.pop();
-            }
-            ViewStackProcessor.StopGetAccessRecording();
-            if (!firstRender) {
-                this.context.viewPU.finishUpdateFunc(this.elmtId);
-            }
-        }
-        this.pushing(this.view);
-        if (firstRender) {
-            this.pop();
-        }
+    if (firstRender || this.isDirty()) {
+      ViewStackProcessor.StartGetAccessRecordingFor(this.elmtId);
+      if (firstRender || this.isDirty()) {
+        this.blend(this.view);
+      }
+      if (!firstRender) {
+        this.pop();
+      }
+      ViewStackProcessor.StopGetAccessRecording();
+      if (!firstRender) {
+        this.context.viewPU.finishUpdateFunc(this.elmtId);
+      }
     }
-
-    isDirty() {
-        return Object.keys(this.view.dirtyProps).filter(e => e !== "children" && e !== "subviews").length > 0;
+    this.pushing(this.view);
+    if (firstRender) {
+      this.pop();
     }
+  }
 
-    abstract pushing(v: T);
+  isDirty() {
+    return Object.keys(this.view.dirtyProps).filter(e => e !== "children" && e !== "subviews").length > 0;
+  }
 
-    abstract blend(v: T);
+  abstract pushing(v: T);
 
-    abstract pop();
+  abstract blend(v: T);
+
+  abstract pop();
+
+  commonConfig(v: T) {
+    if (v.onClick) {
+      this.TAG.onClick(v.onClick);
+    }
+    if (v.backgroundColor instanceof Color) {
+      this.TAG.backgroundColor(v.backgroundColor.toModel());
+    }
+  }
 }

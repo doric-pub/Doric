@@ -1,5 +1,5 @@
 import { Panel } from 'doric';
-import { DoricPlugin } from './sandbox';
+import { DoricPlugin } from '../lib/sandbox';
 
 export class ShaderPlugin extends DoricPlugin {
   async render(props: any) {

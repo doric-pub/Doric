@@ -1,7 +1,7 @@
 import { BridgeContext, uniqueId, } from 'doric';
 import { DoricPanel, ViewPU } from './Container';
 import { createDoricPlugin } from './Registry';
-import { RootNode } from './RootNode';
+import { RootNode } from '../node/StackNode';
 
 
 function wrapFunction(name: string, func: Function, thisArgument: any) {
@@ -15,7 +15,7 @@ function wrapFunction(name: string, func: Function, thisArgument: any) {
   }
 }
 
-function getGlobalObject(name: string) {
+export function getGlobalObject(name: string) {
   return new Proxy(Reflect.get(globalThis, name), {
     get(target, p, receiver) {
       const raw = Reflect.get(target, p, receiver);
@@ -27,11 +27,8 @@ function getGlobalObject(name: string) {
   })
 }
 
-export const ForEach = getGlobalObject("ForEach");
 
-export const Column = getGlobalObject("Column");
 
-export const Stack = getGlobalObject("Stack");
 
 export const Text = getGlobalObject("Text");
 

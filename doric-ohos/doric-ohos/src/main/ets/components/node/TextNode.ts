@@ -1,10 +1,12 @@
 import { Text as DoricText } from 'doric';
-import { Text } from './sandbox';
-import { DoricViewNode } from './DoricViewNode';
+import { Text } from '../lib/sandbox';
+import { DoricViewNode } from '../lib/DoricViewNode';
 
 declare const Alignment: any;
 
 export class TextNode extends DoricViewNode<DoricText> {
+  TAG = Text;
+
   pushing(v: DoricText) {
   }
 
@@ -21,8 +23,6 @@ export class TextNode extends DoricViewNode<DoricText> {
     Text.margin({
       top: 20
     });
-    if (v.onClick) {
-      Text.onClick(v.onClick);
-    }
+    this.commonConfig(v)
   }
 }

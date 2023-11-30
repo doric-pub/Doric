@@ -2102,6 +2102,7 @@ class Group extends Superview {
             set: (target, index, value) => {
                 const ret = Reflect.set(target, index, value);
                 // Let getDirty return true
+                this.needUpdate();
                 this.dirtyProps.children = target.map(e => e.viewId);
                 return ret;
             }

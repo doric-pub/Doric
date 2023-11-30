@@ -533,6 +533,7 @@ export abstract class Group extends Superview implements JSX.ElementChildrenAttr
         set: (target, index, value) => {
             const ret = Reflect.set(target, index, value)
             // Let getDirty return true
+            this.needUpdate()
             this.dirtyProps.children = (target as View[]).map(e => e.viewId)
             return ret
         }

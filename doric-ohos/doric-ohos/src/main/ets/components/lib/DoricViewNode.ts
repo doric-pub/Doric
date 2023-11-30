@@ -1,4 +1,4 @@
-import { Color, View } from 'doric';
+import { Color, View, LayoutSpec, } from 'doric';
 import { DoricContext, ViewStackProcessor } from './sandbox';
 
 
@@ -10,7 +10,7 @@ export abstract class DoricViewNode<T extends View> {
 
   firstRender = false;
 
-  TAG: any
+  abstract TAG: any
 
   constructor(context: DoricContext, t: T) {
     this.context = context;
@@ -58,5 +58,38 @@ export abstract class DoricViewNode<T extends View> {
     if (v.backgroundColor instanceof Color) {
       this.TAG.backgroundColor(v.backgroundColor.toModel());
     }
+
+    if (v.alpha !== undefined) {
+      this.TAG.opacity(v.alpha)
+    }
+    if (v.layoutConfig?.margin) {
+      this.TAG.margin(v.layoutConfig?.margin)
+    }
+    const widthSpec = v.layoutConfig?.widthSpec?? LayoutSpec.JUST;
+    const heightSpec = v.layoutConfig?.heightSpec?? LayoutSpec.JUST;
+    switch (widthSpec) {
+      case LayoutSpec.FIT:
+        break;
+      case LayoutSpec.MOST:
+        this.TAG.width("100%");
+        break;
+      case LayoutSpec.JUST:
+      default:
+        this.TAG.width(v.width);
+        break;
+    }
+
+    switch (heightSpec) {
+      case LayoutSpec.MOST:
+        this.TAG.height("100%");
+        break;
+      case LayoutSpec.FIT:
+        break;
+      case LayoutSpec.JUST:
+      default:
+        this.TAG.height(v.height);
+        break;
+    }
+
   }
 }

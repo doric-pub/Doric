@@ -1,6 +1,7 @@
-import { VLayout, } from 'doric';
+import { VLayout, Gravity } from 'doric';
 import { getGlobalObject } from '../lib/sandbox';
 import { GroupNode } from '../lib/GroupNode';
+import { gravityToAlignment } from '../lib/util';
 
 const Column = getGlobalObject("Column");
 
@@ -12,10 +13,13 @@ export class VLayoutNode extends GroupNode<VLayout> {
   }
 
   blend(v: VLayout) {
-    Column.create();
-    Column.width('100%');
-    Column.height(`50%`);
-    Column.padding({ top: 100 });
+    Column.create(v.space);
+
+    const gravity = (v.gravity??Gravity.Center).toModel();
+    Column.align(gravityToAlignment(gravity));
+    if (v.padding) {
+      Column.padding(v.padding);
+    }
     this.commonConfig(v)
   }
 }

@@ -52,7 +52,8 @@ export class HelloDoric extends Panel {
           container.addChild(text({
             text: `This is new ${count++}`
           }))
-        }
+        },
+        backgroundColor:Color.YELLOW
       })
       .into(rootView)
     setInterval(() => {

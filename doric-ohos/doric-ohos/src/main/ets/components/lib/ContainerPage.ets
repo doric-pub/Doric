@@ -27,8 +27,10 @@ export struct ContainerPage {
     this.doricContext.callEntityMethod("__onShow__")
     window.getLastWindow(getContext(this)).then(window => {
       const rect = window.getWindowProperties().windowRect
-//      console.log("rect", rect.left, rect.top, rect.width, rect.height)
-      this.doricContext.callEntityMethod("__build__", { width: rect.width, height: rect.height })
+      //      console.log("rect", rect.left, rect.top, rect.width, rect.height)
+      this.doricContext.callEntityMethod("__build__",
+        { width: px2vp(rect.width),
+          height: px2vp(rect.height) })
     });
     // @ts-ignore
     super.initialRenderView()
@@ -51,5 +53,6 @@ export struct ContainerPage {
   }
 
   build() {
+    //Column().width("100%")
   }
 }

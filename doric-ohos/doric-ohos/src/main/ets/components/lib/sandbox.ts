@@ -3,6 +3,7 @@ import { DoricPanel, ViewPU } from './Container';
 import { createDoricPlugin } from './Registry';
 import { RootNode } from '../node/StackNode';
 
+export const Alignment = getGlobalObject("Alignment");
 
 function wrapFunction(name: string, func: Function, thisArgument: any) {
   return function () {
@@ -30,7 +31,6 @@ export function getGlobalObject(name: string) {
 
 
 
-export const Text = getGlobalObject("Text");
 
 export const ViewStackProcessor = getGlobalObject("ViewStackProcessor");
 

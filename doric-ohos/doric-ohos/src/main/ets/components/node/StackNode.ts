@@ -14,11 +14,14 @@ export class StackNode extends GroupNode<DoricStack> {
 
   blend(v: Root) {
     Stack.create();
-    Stack.width('100%');
-    Stack.height(`100%`);
     this.commonConfig(v)
   }
 }
 
 export class RootNode extends StackNode {
+  blend(v: Root) {
+    Stack.create();
+    console.log("RootNode",v.width,v.height)
+    this.commonConfig(v)
+  }
 }

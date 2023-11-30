@@ -1,8 +1,10 @@
-import { Text as DoricText } from 'doric';
-import { Text } from '../lib/sandbox';
+import { Color, Gravity, Text as DoricText } from 'doric';
+import { Alignment, getGlobalObject } from '../lib/sandbox';
 import { DoricViewNode } from '../lib/DoricViewNode';
 
-declare const Alignment: any;
+const Text = getGlobalObject("Text");
+
+const TextAlign = getGlobalObject("TextAlign");
 
 export class TextNode extends DoricViewNode<DoricText> {
   TAG = Text;
@@ -16,13 +18,30 @@ export class TextNode extends DoricViewNode<DoricText> {
 
   blend(v: DoricText) {
     Text.create(v.text);
-    Text.fontSize("20fp");
-    Text.fontColor("#000000");
-    Text.fontWeight(500);
-    Text.align(Alignment.Center);
-    Text.margin({
-      top: 20
-    });
+    const textAlignment = (v.textAlignment??Gravity.Center).toModel();
+    if ((textAlignment & Gravity.Top.val) === Gravity.Top.val) {
+      //top
+      Text.align(Alignment.Top);
+    } else if ((textAlignment & Gravity.Bottom.val) === Gravity.Bottom.val) {
+      //bottom
+      Text.align(Alignment.Bottom);
+    } else {
+      Text.align(Alignment.Center);
+    }
+    if ((textAlignment & Gravity.Left.val) === Gravity.Left.val) {
+      //left
+      Text.textAlign(TextAlign.Start);
+    } else if ((textAlignment & Gravity.Right.val) === Gravity.Right.val) {
+      //right
+      Text.textAlign(TextAlign.End);
+    } else {
+      Text.textAlign(TextAlign.Center);
+    }
+
+    Text.fontSize(v.textSize);
+    if (v.textColor instanceof Color) {
+      Text.fontColor(v.textColor.toModel())
+    }
     this.commonConfig(v)
   }
 }

@@ -1,63 +1,42 @@
 import {
-  Panel,
-  Group,
+  image,
+  text,
+  Gravity,
+  Color,
   vlayout,
   layoutConfig,
-  Gravity,
-  text,
-  Text,
-  Color,
-  navbar,
-  AssetsResource,
-  image
+  Panel,
+  Group,
 } from "doric";
 
 export class HelloDoric extends Panel {
-  onShow() {
-    navbar(this.context).setTitle("doric-arkui")
-  }
-
-  build(rootView: Group): void {
-    let number: Text;
-    let count = 0;
-    let container = vlayout([
-      number = text({
-        textSize: 40,
-        text: '0',
+  build(root: Group) {
+    vlayout(
+      [
+      image({
+        imageUrl: "https://doric.pub/logo.png",
       }),
-    text({
-      text: "Click to count",
-      textSize: 20,
-      backgroundColor: Color.parse('#70a1ff'),
-      textColor: Color.WHITE,
-      onClick: () => {
-        number.text = `${++count}`
-      },
-      layoutConfig: layoutConfig().just(),
-      width: 200,
-      height: 50,
-    }),
-    ])
-      .apply({
-        layoutConfig: layoutConfig().just().configAlignment(Gravity.Center),
-        width: 200,
-        height: 200,
+      text({
+        text: "Hello,    Doric",
+        textSize: 12,
+        textColor: Color.RED,
+      }),
+      text({
+        text: "Hello,Doric",
+        textSize: 16,
+        textColor: Color.BLUE,
+      }),
+      text({
+        text: "Hello,Doric",
+        textSize: 20,
+        textColor: Color.GREEN,
+      }),
+      ],
+      {
+        layoutConfig: layoutConfig().most(),
         space: 20,
-        border: {
-          color: Color.BLUE,
-          width: 1,
-        },
         gravity: Gravity.Center,
-        onClick: () => {
-          container.addChild(text({
-            text: `This is new ${count++}`
-          }))
-        },
-        backgroundColor:Color.YELLOW
-      })
-      .into(rootView)
-    setInterval(() => {
-      number.text = `${++count}`
-    }, 1000)
+      }
+    ).into(root);
   }
 }

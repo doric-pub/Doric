@@ -1,47 +1,47 @@
-import { VLayout, Gravity } from 'doric';
+import { HLayout, Gravity } from 'doric';
 import { getGlobalObject } from '../lib/sandbox';
 import { GroupNode } from '../lib/GroupNode';
-import { gravityToAlignment } from '../lib/util';
 
-const Column = getGlobalObject("Column");
-const HorizontalAlign = getGlobalObject("HorizontalAlign");
+const Row = getGlobalObject("Row");
+const VerticalAlign = getGlobalObject("VerticalAlign");
 const FlexAlign = getGlobalObject("FlexAlign");
 
-export class VLayoutNode extends GroupNode<VLayout> {
-  TAG = Column;
+export class HLayoutNode extends GroupNode<HLayout> {
+  TAG = Row;
 
   pop() {
-    Column.pop();
+    Row.pop();
   }
 
-  blend(v: VLayout) {
-    Column.create({ space: v.space });
+  blend(v: HLayout) {
+    Row.create({ space: v.space });
 
     // gravity
     const gravity = (v.gravity??Gravity.Left.top()).toModel();
 
     let flexAlign = FlexAlign.Start
-    let horizontalAlign = HorizontalAlign.Start
+    let verticalAlign = VerticalAlign.Top
+
     if ((gravity & Gravity.Top.val) === Gravity.Top.val) {
-      flexAlign = FlexAlign.Start
+      verticalAlign = VerticalAlign.Top
     } else if ((gravity & Gravity.Bottom.val) === Gravity.Bottom.val) {
-      flexAlign = FlexAlign.End
+      verticalAlign = VerticalAlign.Bottom
     } else if ((gravity & Gravity.CenterY.val) === Gravity.CenterY.val) {
-      flexAlign = FlexAlign.Center
+      verticalAlign = VerticalAlign.Center
     }
     if ((gravity & Gravity.Left.val) === Gravity.Left.val) {
-      horizontalAlign = HorizontalAlign.Start
+      flexAlign = FlexAlign.Start
     } else if ((gravity & Gravity.Right.val) === Gravity.Right.val) {
-      horizontalAlign = HorizontalAlign.End
+      flexAlign = FlexAlign.End
     } else if ((gravity & Gravity.CenterX.val) === Gravity.CenterX.val) {
-      horizontalAlign = HorizontalAlign.Center
+      flexAlign = FlexAlign.Center
     }
-    Column.justifyContent(flexAlign)
-    Column.alignItems(horizontalAlign)
+    Row.justifyContent(flexAlign)
+    Row.alignItems(verticalAlign)
 
     // padding
     if (v.padding) {
-      Column.padding(v.padding);
+      Row.padding(v.padding);
     }
 
     // commonConfig

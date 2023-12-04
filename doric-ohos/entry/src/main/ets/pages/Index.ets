@@ -1,5 +1,7 @@
 import {ContainerPage} from "@doric/ohos"
 import { HelloDoric } from '../panel/HelloDoric';
+import { LayoutDemo } from '../panel/LayoutDemo';
+import { ScrollerDemo } from '../panel/ScrollerDemo';
 
 @Entry
 @Component
@@ -10,29 +12,9 @@ struct CounterPage {
 
   build() {
     Column() {
-      ContainerPage({clz: HelloDoric })
-      // Text(`Counter ${this.countData.counted}`)
-      //   .fontSize(16)
-      //   .fontColor(Color.Black)
-      //   .fontWeight(500)
-      //   .align(Alignment.Center)
-      // Text('Click to count')
-      //   .fontSize("20fp")
-      //   .fontColor("#FFFFFF")
-      //   .fontWeight(500)
-      //   .align(Alignment.Center)
-      //   .margin({
-      //     top:20
-      //   })
-      //   .padding({
-      //     left:20,right:20,top:20,bottom:20
-      //   })
-      //   .backgroundColor("#3498db")
-      //   .onClick(()=>{
-      //     console.log("click1")
-      //     console.log("panel", a)
-      //     this.countData.counted++;
-      //   })
+      // ContainerPage({clz: HelloDoric })
+      ContainerPage({clz: LayoutDemo })
+      // ContainerPage({clz: ScrollerDemo })
     }
     .width('100%')
     .height(`100%`)

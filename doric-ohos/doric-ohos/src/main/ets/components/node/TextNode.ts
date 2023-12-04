@@ -38,7 +38,10 @@ export class TextNode extends DoricViewNode<DoricText> {
       Text.textAlign(TextAlign.Center);
     }
 
-    Text.fontSize(v.textSize);
+    if (v.textSize) {
+      Text.fontSize(v.textSize);
+    }
+
     if (v.textColor instanceof Color) {
       Text.fontColor(v.textColor.toModel())
     }

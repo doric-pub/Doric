@@ -1,7 +1,6 @@
 import { Gravity } from 'doric';
 import { Alignment } from './sandbox';
 
-
 export function gravityToAlignment(gravity: number) {
   if ((gravity & Gravity.Top.val) === Gravity.Top.val) {
     if ((gravity & Gravity.Left.val) === Gravity.Center.val) {

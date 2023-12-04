@@ -52,19 +52,33 @@ export abstract class DoricViewNode<T extends View> {
   abstract pop();
 
   commonConfig(v: T) {
+    this.TAG.id(v.viewId) // for inspector
+
+    // onClick
     if (v.onClick) {
       this.TAG.onClick(v.onClick);
     }
+
+    // backgroundColor
     if (v.backgroundColor instanceof Color) {
       this.TAG.backgroundColor(v.backgroundColor.toModel());
     }
 
+    // alpha
     if (v.alpha !== undefined) {
       this.TAG.opacity(v.alpha)
     }
+
+    // layoutConfig
+    /// margin
     if (v.layoutConfig?.margin) {
       this.TAG.margin(v.layoutConfig?.margin)
     }
+    /// weight
+    if (v.layoutConfig?.weight) {
+      this.TAG.layoutWeight(v.layoutConfig?.weight)
+    }
+
     const widthSpec = v.layoutConfig?.widthSpec?? LayoutSpec.JUST;
     const heightSpec = v.layoutConfig?.heightSpec?? LayoutSpec.JUST;
     switch (widthSpec) {

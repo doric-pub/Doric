@@ -1,9 +1,9 @@
-import { Color, GradientColor } from "../util/color";
-import { Modeling, Model, ClassType } from "../util/types";
 import { BridgeContext } from "../runtime/global";
-import { LayoutConfig } from '../util/layoutconfig';
-import { IAnimation } from "./animation";
+import { Color, GradientColor } from "../util/color";
 import { FlexConfig } from "../util/flexbox";
+import { LayoutConfig } from '../util/layoutconfig';
+import { ClassType, Model, Modeling } from "../util/types";
+import { IAnimation } from "./animation";
 export declare function Property(target: Object, propKey: string): void;
 export declare function InconsistProperty(target: Object, propKey: string): void;
 export declare function ViewComponent(constructor: ClassType<any>): void;
@@ -133,6 +133,10 @@ export declare abstract class View implements Modeling {
      * Only affected when its superview or itself is FlexLayout.
      */
     flexConfig?: FlexConfig;
+    /**
+     * take effect on Android
+     */
+    transitionName?: string;
     set props(props: Partial<this>);
     set parent(v: Group);
     private _ref?;

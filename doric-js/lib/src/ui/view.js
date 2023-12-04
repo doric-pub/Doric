@@ -7,9 +7,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+import { loge } from "../util/log";
 import { obj2Model } from "../util/types";
 import { uniqueId } from "../util/uniqueId";
-import { loge } from "../util/log";
 const PROP_CONSIST = 1;
 const PROP_INCONSIST = 2;
 const PROP_KEY_VIEW_TYPE = "ViewType";
@@ -350,6 +350,10 @@ __decorate([
     Property,
     __metadata("design:type", Object)
 ], View.prototype, "flexConfig", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", String)
+], View.prototype, "transitionName", void 0);
 export class Superview extends View {
     subviewById(id) {
         for (let v of this.allSubviews()) {

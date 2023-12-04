@@ -2,6 +2,56 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
+function toString(message) {
+    if (message instanceof Function) {
+        return message.toString();
+    }
+    else if (message instanceof Object) {
+        try {
+            return JSON.stringify(message);
+        }
+        catch (e) {
+            return message.toString();
+        }
+    }
+    else if (message === undefined) {
+        return "undefined";
+    }
+    else {
+        return message.toString();
+    }
+}
+function log(...args) {
+    let out = "";
+    for (let i = 0; i < arguments.length; i++) {
+        if (i > 0) {
+            out += ',';
+        }
+        out += toString(arguments[i]);
+    }
+    nativeLog('d', out);
+}
+function loge(...message) {
+    let out = "";
+    for (let i = 0; i < arguments.length; i++) {
+        if (i > 0) {
+            out += ',';
+        }
+        out += toString(arguments[i]);
+    }
+    nativeLog('e', out);
+}
+function logw(...message) {
+    let out = "";
+    for (let i = 0; i < arguments.length; i++) {
+        if (i > 0) {
+            out += ',';
+        }
+        out += toString(arguments[i]);
+    }
+    nativeLog('w', out);
+}
+
 function obj2Model(obj, convertor) {
     if (obj instanceof Function) {
         return convertor(obj);
@@ -67,56 +117,6 @@ class Mutable {
 let __uniqueId__ = 0;
 function uniqueId(prefix) {
     return `__${prefix}_${__uniqueId__++}__`;
-}
-
-function toString(message) {
-    if (message instanceof Function) {
-        return message.toString();
-    }
-    else if (message instanceof Object) {
-        try {
-            return JSON.stringify(message);
-        }
-        catch (e) {
-            return message.toString();
-        }
-    }
-    else if (message === undefined) {
-        return "undefined";
-    }
-    else {
-        return message.toString();
-    }
-}
-function log(...args) {
-    let out = "";
-    for (let i = 0; i < arguments.length; i++) {
-        if (i > 0) {
-            out += ',';
-        }
-        out += toString(arguments[i]);
-    }
-    nativeLog('d', out);
-}
-function loge(...message) {
-    let out = "";
-    for (let i = 0; i < arguments.length; i++) {
-        if (i > 0) {
-            out += ',';
-        }
-        out += toString(arguments[i]);
-    }
-    nativeLog('e', out);
-}
-function logw(...message) {
-    let out = "";
-    for (let i = 0; i < arguments.length; i++) {
-        if (i > 0) {
-            out += ',';
-        }
-        out += toString(arguments[i]);
-    }
-    nativeLog('w', out);
 }
 
 var __decorate$g = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
@@ -468,6 +468,10 @@ __decorate$g([
     Property,
     __metadata$g("design:type", Object)
 ], View.prototype, "flexConfig", void 0);
+__decorate$g([
+    Property,
+    __metadata$g("design:type", String)
+], View.prototype, "transitionName", void 0);
 class Superview extends View {
     subviewById(id) {
         for (let v of this.allSubviews()) {

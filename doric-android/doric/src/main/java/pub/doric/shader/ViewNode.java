@@ -41,6 +41,7 @@ import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.DoricLinearLayoutCompat;
+import androidx.core.view.ViewCompat;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 
 import com.github.pengfeizhou.jscore.JSArray;
@@ -535,6 +536,11 @@ public abstract class ViewNode<T extends View> extends DoricContextHolder {
             case "perspective":
                 if (prop.isNumber()) {
                     getNodeView().setCameraDistance(getContext().getResources().getDisplayMetrics().densityDpi * prop.asNumber().toFloat() / 25);
+                }
+                break;
+            case "transitionName":
+                if(prop.isString()) {
+                    ViewCompat.setTransitionName(view, prop.asString().value());
                 }
                 break;
             default:

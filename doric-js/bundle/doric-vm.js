@@ -2009,6 +2009,10 @@ __decorate$g([
     Property,
     __metadata$g("design:type", Object)
 ], View.prototype, "flexConfig", void 0);
+__decorate$g([
+    Property,
+    __metadata$g("design:type", String)
+], View.prototype, "transitionName", void 0);
 class Superview extends View {
     subviewById(id) {
         for (let v of this.allSubviews()) {

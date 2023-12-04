@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Color, GradientColor } from "../util/color"
-import { Modeling, Model, obj2Model, ClassType } from "../util/types";
-import { uniqueId } from "../util/uniqueId";
-import { loge } from "../util/log";
 import { BridgeContext } from "../runtime/global";
-import { LayoutConfig } from '../util/layoutconfig'
-import { IAnimation } from "./animation";
+import { Color, GradientColor } from "../util/color";
 import { FlexConfig } from "../util/flexbox";
+import { LayoutConfig } from '../util/layoutconfig';
+import { loge } from "../util/log";
+import { ClassType, Model, Modeling, obj2Model } from "../util/types";
+import { uniqueId } from "../util/uniqueId";
+import { IAnimation } from "./animation";
 
 const PROP_CONSIST = 1;
 const PROP_INCONSIST = 2;
@@ -373,6 +373,12 @@ export abstract class View implements Modeling {
      */
     @Property
     flexConfig?: FlexConfig
+
+    /**
+     * take effect on Android
+     */
+    @Property
+    transitionName?: string
 
     set props(props: Partial<this>) {
         this.apply(props)

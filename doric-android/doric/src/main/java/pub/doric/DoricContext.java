@@ -176,6 +176,14 @@ public class DoricContext {
         callEntity(DoricConstant.DORIC_ENTITY_BUILD, this.initParams);
     }
 
+    public void pureBuild(float width, float height) {
+        this.initParams = new JSONBuilder()
+                .put("width", width)
+                .put("height", height)
+                .toJSONObject();
+        pureCallEntity(DoricConstant.DORIC_ENTITY_BUILD, this.initParams);
+    }
+
     public AsyncResult<JSDecoder> callEntity(String methodName, Object... args) {
         return getDriver().invokeContextEntityMethod(mContextId, methodName, args);
     }
@@ -423,7 +431,7 @@ public class DoricContext {
     public void renderSynchronously() {
         AsyncResult<JSDecoder> asyncResult = pureCallEntity(DoricConstant.DORIC_ENTITY_FETCH_DIRTY_DATA);
         JSDecoder jsDecoder = asyncResult.synchronous().get();
-        DoricJavaPlugin shaderPlugin = obtainPlugin(getDriver().getRegistry().acquirePluginInfo("Shader"));
+        DoricJavaPlugin shaderPlugin = obtainPlugin(getDriver().getRegistry().acquirePluginInfo("shader"));
         try {
             JSValue result = jsDecoder.decode();
             if (shaderPlugin instanceof ShaderPlugin && result.isArray()) {

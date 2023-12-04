@@ -1,4 +1,4 @@
-import { Image as DoricImage } from 'doric';
+import { AssetsResource, Image as DoricImage, Resource } from 'doric';
 import { DoricViewNode } from '../lib/DoricViewNode';
 import { getGlobalObject } from '../lib/sandbox';
 
@@ -15,7 +15,14 @@ export class ImageNode extends DoricViewNode<DoricImage> {
   }
 
   blend(v: DoricImage) {
-    Image.create(v.imageUrl)
+    if (v.imageUrl) {
+      Image.create(v.imageUrl)
+    } else if (v.image) {
+      if (v.image instanceof Resource) {
+        Image.create("")
+      }
+    }
+
     Image.fitOriginalSize(true);
     this.commonConfig(v)
   }

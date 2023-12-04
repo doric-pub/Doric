@@ -3,6 +3,7 @@ import { HelloDoric } from '../panel/HelloDoric';
 import { LayoutDemo } from '../panel/LayoutDemo';
 import { ScrollerDemo } from '../panel/ScrollerDemo';
 import { EffectsDemo } from '../panel/EffectsDemo';
+import { ImageDemo } from '../panel/ImageDemo';
 
 @Entry
 @Component
@@ -13,8 +14,9 @@ struct CounterPage {
 
   build() {
     Column() {
-      ContainerPage({ clz: EffectsDemo })
+      // ContainerPage({ clz: EffectsDemo })
       // ContainerPage({ clz: HelloDoric })
+      ContainerPage({ clz: ImageDemo })
       // ContainerPage({ clz: LayoutDemo })
       // ContainerPage({ clz: ScrollerDemo })
     }

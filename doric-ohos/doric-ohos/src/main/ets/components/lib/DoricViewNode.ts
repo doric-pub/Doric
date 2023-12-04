@@ -1,6 +1,7 @@
-import { Color, View, LayoutSpec, } from 'doric';
-import { DoricContext, ViewStackProcessor } from './sandbox';
+import { Color, GradientColor, GradientOrientation, LayoutSpec, View, } from 'doric';
+import { DoricContext, getGlobalObject, ViewStackProcessor } from './sandbox';
 
+const GradientDirection = getGlobalObject("GradientDirection");
 
 export abstract class DoricViewNode<T extends View> {
   context: DoricContext;
@@ -61,12 +62,95 @@ export abstract class DoricViewNode<T extends View> {
 
     // backgroundColor
     if (v.backgroundColor instanceof Color) {
+      /// pure color
       this.TAG.backgroundColor(v.backgroundColor.toModel());
+    } else if (v.backgroundColor instanceof Object) {
+      /// gradient color
+      const gradientColor = v.backgroundColor as GradientColor
+
+      let direction;
+      switch (gradientColor.orientation) {
+        case GradientOrientation.TOP_BOTTOM:
+          direction = GradientDirection.Bottom
+          break
+        case GradientOrientation.TR_BL:
+          direction = GradientDirection.LeftBottom
+          break
+        case GradientOrientation.RIGHT_LEFT:
+          direction = GradientDirection.Left
+          break
+        case GradientOrientation.BR_TL:
+          direction = GradientDirection.LeftTop
+          break
+        case GradientOrientation.BOTTOM_TOP:
+          direction = GradientDirection.Top
+          break
+        case GradientOrientation.BL_TR:
+          direction = GradientDirection.RightTop
+          break
+        case GradientOrientation.LEFT_RIGHT:
+          direction = GradientDirection.Right
+          break
+        case GradientOrientation.TL_BR:
+          direction = GradientDirection.RightBottom
+          break
+      }
+
+      const colors = []
+      if (gradientColor.start && gradientColor.end) {
+        colors.push([gradientColor.start, 0])
+        colors.push([gradientColor.end, 1])
+      } else if (gradientColor.colors) {
+        if (gradientColor.locations && gradientColor.colors.length === gradientColor.locations.length) {
+          gradientColor.colors.forEach((color, index) => {
+            colors.push([color, gradientColor.locations[index]])
+          })
+        } else {
+          gradientColor.colors.forEach((color, index) => {
+            colors.push([color, 0 + 1 / (gradientColor.colors.length - 1) * index])
+          })
+        }
+      }
+      this.TAG.linearGradient({
+        direction: direction,
+        colors: colors
+      })
     }
 
     // alpha
     if (v.alpha !== undefined) {
       this.TAG.opacity(v.alpha)
+    }
+
+    // border
+    if (v.border) {
+      this.TAG.borderWidth(v.border.width)
+      this.TAG.borderColor(v.border.color)
+    }
+
+    // corners
+    if (v.corners) {
+      if (typeof v.corners === "number") {
+        this.TAG.borderRadius(v.corners)
+      } else if (typeof v.corners === "object") {
+        const corners = v.corners as {
+          leftTop?: number;
+          rightTop?: number;
+          leftBottom?: number;
+          rightBottom?: number;
+        }
+        this.TAG.borderRadius({
+          topLeft: corners.leftTop?? 0,
+          topRight: corners.rightTop?? 0,
+          bottomLeft: corners.leftBottom?? 0,
+          bottomRight: corners.rightBottom?? 0,
+        })
+      }
+    }
+
+    // shadow
+    if (v.shadow) {
+      this.TAG.shadow(v.shadow)
     }
 
     // layoutConfig

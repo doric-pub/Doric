@@ -6,6 +6,8 @@ import { createDoricViewNode } from '../lib/Registry';
 const ForEach = getGlobalObject("ForEach");
 const Scroll = getGlobalObject("Scroll");
 const Alignment = getGlobalObject("Alignment");
+const ScrollDirection = getGlobalObject("ScrollDirection");
+const BarState = getGlobalObject("BarState");
 
 export class ScrollerNode extends DoricViewNode<Scroller> {
   TAG = Scroll;
@@ -68,7 +70,11 @@ export class ScrollerNode extends DoricViewNode<Scroller> {
 
   blend(v: Scroller) {
     Scroll.create()
+    Scroll.scrollBar(BarState.Off)
     Scroll.align(Alignment.TopStart) // align to top start, otherwise default is center x
+    Scroll.scrollable(ScrollDirection.Vertical)
+
+    // commonConfig
     this.commonConfig(v)
   }
 }

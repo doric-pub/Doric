@@ -18,10 +18,10 @@ struct CounterPage {
 
   build() {
     Column() {
-      ContainerPage({ clz: ComponentDemo })
+      // ContainerPage({ clz: ComponentDemo })
       // ContainerPage({ clz: EffectsDemo })
       // ContainerPage({ clz: HelloDoric })
-      // ContainerPage({ clz: ImageDemo })
+      ContainerPage({ clz: ImageDemo })
       // ContainerPage({ clz: InputDemo })
       // ContainerPage({ clz: LayoutDemo })
       // ContainerPage({ clz: ScrollerDemo })

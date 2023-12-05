@@ -8,6 +8,7 @@ import { ImageNode } from '../node/ImageNode'
 import { ScrollerNode } from '../node/ScrollerNode'
 import { InputNode } from '../node/InputNode'
 import { SwitchNode } from '../node/SwitchNode'
+import { FlexLayoutNode } from '../node/FlexLayoutNode'
 
 export function initDoric() {
   registerDoricPlugin("shader", ShaderPlugin)
@@ -21,4 +22,5 @@ export function initDoric() {
   registerDoricViewNode("Image", ImageNode)
   registerDoricViewNode("Input", InputNode)
   registerDoricViewNode("Switch", SwitchNode)
+  registerDoricViewNode("FlexLayout", FlexLayoutNode)
 }

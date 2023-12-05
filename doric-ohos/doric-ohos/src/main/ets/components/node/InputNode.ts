@@ -15,7 +15,24 @@ export class InputNode extends DoricViewNode<Input> {
   }
 
   blend(v: Input) {
-    TextInput.create()
+    TextInput.create({ text: v.text??"", placeholder: v.hintText??"" })
+
+    if (v.hintTextColor) {
+      TextInput.placeholderColor(v.hintTextColor.toModel())
+    }
+
+    if (v.onFocusChange) {
+      TextInput.onFocus(() => {
+        v.onFocusChange(true)
+      })
+      TextInput.onBlur(() => {
+        v.onFocusChange(false)
+      })
+    }
+
+    if (v.onTextChange) {
+      TextInput.onChange(v.onTextChange)
+    }
 
     // commonConfig
     this.commonConfig(v)

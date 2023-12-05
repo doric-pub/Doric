@@ -20,11 +20,11 @@ struct CounterPage {
       // ContainerPage({ clz: EffectsDemo })
       // ContainerPage({ clz: HelloDoric })
       // ContainerPage({ clz: ImageDemo })
-      // ContainerPage({ clz: InputDemo })
+      ContainerPage({ clz: InputDemo })
       // ContainerPage({ clz: LayoutDemo })
       // ContainerPage({ clz: ScrollerDemo })
       // ContainerPage({ clz: SwitchDemo })
-      ContainerPage({ clz: TextDemo })
+      // ContainerPage({ clz: TextDemo })
     }
     .width('100%')
     .height(`100%`)

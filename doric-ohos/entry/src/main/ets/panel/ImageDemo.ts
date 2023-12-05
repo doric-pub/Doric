@@ -1,32 +1,12 @@
-import {
-  AndroidAssetsResource,
-  AssetsResource,
-  Base64Resource,
-  Color,
-  coordinator,
-  DrawableResource,
-  gravity,
-  Group,
-  hlayout,
-  image,
-  Image,
-  layoutConfig,
-  LayoutSpec,
-  log,
-  MainBundleResource,
-  modal,
-  Panel,
-  RemoteResource,
-  ScaleType,
-  scroller,
-  text,
-  vlayout
-} from 'doric';
-import { colors, label } from './utils';
-import { img_base64 } from './image_base64';
+import { AssetsResource, AndroidAssetsResource, Base64Resource, DrawableResource, Group, Panel, coordinator, text, gravity, Color, LayoutSpec, log, vlayout, scroller, layoutConfig, image, ScaleType, Image, modal, RemoteResource, MainBundleResource, hlayout } from "doric";
+import { colors, label } from "./utils";
+import { img_base64 } from "./image_base64";
 
 const landscapeImageUrl = 'https://www.adorama.com/alc/wp-content/uploads/2018/11/landscape-photography-tips-yosemite-valley-feature.jpg'
 const portraitImageUrl = 'https://i0.wp.com/digital-photography-school.com/wp-content/uploads/2018/05/portrait-lighting-landscape-photography-dps-4.jpg?w=500&ssl=1'
+
+// import logo from "./images/logo_w.png"
+// import button from "./images/button.png"
 
 export class ImageDemo extends Panel {
   build(rootView: Group): void {
@@ -44,6 +24,17 @@ export class ImageDemo extends Panel {
           height: 50,
         }),
 
+        label("Button"),
+        image({
+          image:
+            (Environment as any).platform === "Android"
+            ? new AndroidAssetsResource(
+                "assets/The_Parthenon_in_Athens.jpeg"
+              )
+            : new MainBundleResource(
+                "assets/The_Parthenon_in_Athens.jpeg"
+              ),
+        }),
         image({
           image: new AssetsResource("The_Parthenon_in_Athens.jpeg"),
         }),
@@ -60,6 +51,40 @@ export class ImageDemo extends Panel {
             heightSpec: LayoutSpec.FIT,
           },
         }),
+        // image({
+        //   imageBase64: button,
+        //   scaleType: ScaleType.ScaleToFill,
+        //   layoutConfig: {
+        //     widthSpec: LayoutSpec.JUST,
+        //     heightSpec: LayoutSpec.JUST,
+        //   },
+        //   width: 200,
+        //   height: 150 / 2.75,
+        //   stretchInset: {
+        //     left: 100,
+        //     top: 0,
+        //     right: 100,
+        //     bottom: 0,
+        //   },
+        //   imageScale: 2.75,
+        // }),
+        // image({
+        //   imageBase64: button,
+        //   scaleType: ScaleType.ScaleToFill,
+        //   layoutConfig: {
+        //     widthSpec: LayoutSpec.JUST,
+        //     heightSpec: LayoutSpec.JUST,
+        //   },
+        //   width: 200,
+        //   height: 75,
+        //   stretchInset: {
+        //     left: 100,
+        //     top: 0,
+        //     right: 100,
+        //     bottom: 0,
+        //   },
+        //   imageScale: 2,
+        // }),
         label("Gif "),
         image({
           imageUrl:
@@ -358,37 +383,36 @@ export class ImageDemo extends Panel {
         layoutConfig: layoutConfig().most(),
       }
     )
-      // .also((it) => {
-      //   coordinator(context).verticalScrolling({
-      //     scrollable: it,
-      //     scrollRange: {
-      //       start: 0,
-      //       end: 100,
-      //     },
-      //     target: "NavBar",
-      //     changing: {
-      //       name: "backgroundColor",
-      //       start: Color.WHITE,
-      //       end: Color.RED,
-      //     },
-      //   });
-      //   coordinator(context).verticalScrolling({
-      //     scrollable: it,
-      //     scrollRange: {
-      //       start: 0,
-      //       end: 100,
-      //     },
-      //     target: imageView,
-      //     changing: {
-      //       name: "width",
-      //       start: 10,
-      //       end: 200,
-      //     },
-      //   });
-      // })
+      .also((it) => {
+        // coordinator(context).verticalScrolling({
+        //   scrollable: it,
+        //   scrollRange: {
+        //     start: 0,
+        //     end: 100,
+        //   },
+        //   target: "NavBar",
+        //   changing: {
+        //     name: "backgroundColor",
+        //     start: Color.WHITE,
+        //     end: Color.RED,
+        //   },
+        // });
+        // coordinator(context).verticalScrolling({
+        //   scrollable: it,
+        //   scrollRange: {
+        //     start: 0,
+        //     end: 100,
+        //   },
+        //   target: imageView,
+        //   changing: {
+        //     name: "width",
+        //     start: 10,
+        //     end: 200,
+        //   },
+        // });
+      })
       .into(rootView);
   }
-
   onDestroy() {
     modal(context).toast('onDestroy')
   }

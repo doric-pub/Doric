@@ -11,6 +11,7 @@ import { InputDemo } from '../panel/InputDemo';
 import { SwitchDemo } from '../panel/SwitchDemo';
 import { ComponentDemo } from '../panel/ComponentDemo';
 import { FlexDemo } from '../panel/FlexDemo';
+import { SnakePanel } from '../panel/Snake';
 
 @Entry
 @Component
@@ -25,6 +26,7 @@ struct Demo {
     InputDemo,
     LayoutDemo,
     ScrollerDemo,
+    SnakePanel,
     SwitchDemo,
     TextDemo
   ]

@@ -15,6 +15,8 @@ export struct ContainerPage {
   private doricContext: DoricContext
 
   initialRenderView() {
+    globalThis.nativeLog = () => {}
+
     const instance = new this.clz();
     this.doricContext = new DoricContext(this as any, instance);
     instance.context = this.doricContext;

@@ -66,6 +66,25 @@ export abstract class DoricViewNode<T extends View> {
   commonConfig(v: T) {
     this.TAG.id(v.viewId) // for inspector
 
+    this.TAG.clip(true)
+
+    // x
+    let marginLeft
+    if (v.x) {
+      marginLeft = v.x
+    }
+
+    // y
+    let marginTop
+    if (v.y) {
+      marginTop = v.y
+    }
+
+    this.TAG.margin({
+      left: marginLeft ?? 0,
+      top: marginTop ?? 0,
+    })
+
     // onClick
     if (v.onClick) {
       this.TAG.onClick(v.onClick)

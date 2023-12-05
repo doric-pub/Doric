@@ -17,7 +17,7 @@ export class TextNode extends DoricViewNode<DoricText> {
   }
 
   blend(v: DoricText) {
-    Text.create(v.text);
+    Text.create(v.text??"");
     const textAlignment = (v.textAlignment??Gravity.Center).toModel();
     if ((textAlignment & Gravity.Top.val) === Gravity.Top.val) {
       //top

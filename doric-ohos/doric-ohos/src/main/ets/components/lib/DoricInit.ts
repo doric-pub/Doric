@@ -6,9 +6,12 @@ import { VLayoutNode } from '../node/VLayoutNode'
 import { HLayoutNode } from '../node/HLayoutNode'
 import { ImageNode } from '../node/ImageNode'
 import { ScrollerNode } from '../node/ScrollerNode'
+import { InputNode } from '../node/InputNode'
+import { SwitchNode } from '../node/SwitchNode'
 
 export function initDoric() {
   registerDoricPlugin("shader", ShaderPlugin)
+
   registerDoricViewNode("Root", RootNode)
   registerDoricViewNode("Stack", StackNode)
   registerDoricViewNode("VLayout", VLayoutNode)
@@ -16,4 +19,6 @@ export function initDoric() {
   registerDoricViewNode("Scroller", ScrollerNode)
   registerDoricViewNode("Text", TextNode)
   registerDoricViewNode("Image", ImageNode)
+  registerDoricViewNode("Input", InputNode)
+  registerDoricViewNode("Switch", SwitchNode)
 }

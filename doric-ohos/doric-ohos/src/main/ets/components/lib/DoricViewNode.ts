@@ -2,6 +2,7 @@ import { Color, GradientColor, GradientOrientation, LayoutSpec, View, } from 'do
 import { DoricContext, getGlobalObject, ViewStackProcessor } from './sandbox';
 
 const GradientDirection = getGlobalObject("GradientDirection");
+const Visibility = getGlobalObject("Visibility");
 
 export abstract class DoricViewNode<T extends View> {
   context: DoricContext;
@@ -151,6 +152,12 @@ export abstract class DoricViewNode<T extends View> {
     // shadow
     if (v.shadow) {
       this.TAG.shadow(v.shadow)
+    }
+
+    if (v.hidden) {
+      this.TAG.visibility(Visibility.None)
+    } else {
+      this.TAG.visibility(Visibility.Visible)
     }
 
     // layoutConfig

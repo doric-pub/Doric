@@ -7,6 +7,7 @@ import { ImageDemo } from '../panel/ImageDemo';
 import { TextDemo } from '../panel/TextDemo';
 import { InputDemo } from '../panel/InputDemo';
 import { SwitchDemo } from '../panel/SwitchDemo';
+import { ComponentDemo } from '../panel/ComponentDemo';
 
 @Entry
 @Component
@@ -17,10 +18,11 @@ struct CounterPage {
 
   build() {
     Column() {
+      ContainerPage({ clz: ComponentDemo })
       // ContainerPage({ clz: EffectsDemo })
       // ContainerPage({ clz: HelloDoric })
       // ContainerPage({ clz: ImageDemo })
-      ContainerPage({ clz: InputDemo })
+      // ContainerPage({ clz: InputDemo })
       // ContainerPage({ clz: LayoutDemo })
       // ContainerPage({ clz: ScrollerDemo })
       // ContainerPage({ clz: SwitchDemo })

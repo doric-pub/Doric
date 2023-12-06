@@ -346,7 +346,7 @@ class GoBangVM extends ViewModel<GoBangState, GoBangVH>{
                 }
                 const zoneState = state.matrix.get(idx)
                 if (zoneState === State.BLACK || zoneState === State.WHITE) {
-                    modal(context).toast('This position had been token.')
+                    modal(this.context).toast('This position had been token.')
                     return
                 }
                 if (state.anchor === undefined || state.anchor != idx) {
@@ -364,7 +364,7 @@ class GoBangVM extends ViewModel<GoBangState, GoBangVH>{
                         }
                         it.anchor = undefined
                         if (this.checkResult(idx)) {
-                            modal(context).toast(`恭喜获胜方${it.role === 'white' ? "黑方" : "白方"}`)
+                            modal(this.context).toast(`恭喜获胜方${it.role === 'white' ? "黑方" : "白方"}`)
                             it.gameState = it.role === 'white' ? 'blackWin' : 'whiteWin'
                         } else {
                             if (it.role === 'black' && it.gameMode === GameMode.C2P) {
@@ -382,7 +382,7 @@ class GoBangVM extends ViewModel<GoBangState, GoBangVH>{
             }
         })
         vh.gameMode.onClick = () => {
-            popover(context).show(vlayout(
+            popover(this.context).show(vlayout(
                 [
                     ...[
                         {
@@ -410,14 +410,14 @@ class GoBangVM extends ViewModel<GoBangState, GoBangVH>{
                                 s.gameMode = e.mode
                                 this.reset(s)
                             })
-                            popover(context).dismiss()
+                            popover(this.context).dismiss()
                         },
                     }))
                 ],
                 {
                     layoutConfig: layoutConfig().most(),
                     onClick: () => {
-                        popover(context).dismiss()
+                        popover(this.context).dismiss()
                     },
                     gravity: Gravity.Center,
                 })
@@ -479,7 +479,7 @@ class GoBangVM extends ViewModel<GoBangState, GoBangVH>{
             state.matrix.set(idx, state.role === 'black' ? State.BLACK : State.WHITE)
             state.role = state.role === 'black' ? 'white' : 'black'
             if (this.checkResult(idx)) {
-                modal(context).toast(`恭喜获胜方${it.role === 'white' ? "黑方" : "白方"}`)
+                modal(this.context).toast(`恭喜获胜方${it.role === 'white' ? "黑方" : "白方"}`)
                 it.gameState = it.role === 'white' ? 'blackWin' : 'whiteWin'
             }
         })

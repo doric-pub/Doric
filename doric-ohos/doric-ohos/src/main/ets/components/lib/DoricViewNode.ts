@@ -1,5 +1,5 @@
 import {
-  Color,
+  Color as DoricColor,
   Align as DoricAlign,
   FlexTypedValue,
   FlexValue,
@@ -13,6 +13,7 @@ import { DoricContext, getGlobalObject, ViewStackProcessor } from './sandbox'
 const GradientDirection = getGlobalObject("GradientDirection")
 const Visibility = getGlobalObject("Visibility")
 const ItemAlign = getGlobalObject("ItemAlign")
+const Color = getGlobalObject("Color")
 
 export abstract class DoricViewNode<T extends View> {
   context: DoricContext
@@ -91,9 +92,13 @@ export abstract class DoricViewNode<T extends View> {
     }
 
     // backgroundColor
-    if (v.backgroundColor instanceof Color) {
+    if (v.backgroundColor instanceof DoricColor) {
       /// pure color
-      this.TAG.backgroundColor(v.backgroundColor.toModel())
+      if (v.backgroundColor !== DoricColor.TRANSPARENT) {
+        this.TAG.backgroundColor(v.backgroundColor.toModel())
+      } else {
+        this.TAG.backgroundColor(Color.Transparent)
+      }
     } else if (v.backgroundColor instanceof Object) {
       /// gradient color
       const gradientColor = v.backgroundColor as GradientColor

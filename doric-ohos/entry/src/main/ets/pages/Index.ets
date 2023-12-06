@@ -7,6 +7,7 @@ struct Index {
     "ComponentDemo",
     "EffectsDemo",
     "FlexDemo",
+    "Gobang",
     "HelloDoric",
     "ImageDemo",
     "InputDemo",

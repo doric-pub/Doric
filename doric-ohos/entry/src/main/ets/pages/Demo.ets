@@ -12,6 +12,7 @@ import { SwitchDemo } from '../panel/SwitchDemo';
 import { ComponentDemo } from '../panel/ComponentDemo';
 import { FlexDemo } from '../panel/FlexDemo';
 import { SnakePanel } from '../panel/Snake';
+import { Gobang } from '../panel/Gobang';
 
 @Entry
 @Component
@@ -21,6 +22,7 @@ struct Demo {
     ComponentDemo,
     EffectsDemo,
     FlexDemo,
+    Gobang,
     HelloDoric,
     ImageDemo,
     InputDemo,

@@ -66,6 +66,7 @@
 
 @interface DoricViewNode ()
 @property(nonatomic, strong) NSMutableDictionary *callbackIds;
+@property(nonatomic, strong) UITapGestureRecognizer *onClickGesture;
 @property(nonatomic, copy) NSNumber *translationX;
 @property(nonatomic, copy) NSNumber *translationY;
 @property(nonatomic, copy) NSNumber *scaleX;
@@ -183,8 +184,10 @@
     } else if ([name isEqualToString:@"onClick"]) {
         self.callbackIds[@"onClick"] = prop;
         view.userInteractionEnabled = YES;
-        UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onClick:)];
-        [view addGestureRecognizer:tapGestureRecognizer];
+        if (!self.onClickGesture) {
+            self.onClickGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onClick:)];
+        }
+        [view addGestureRecognizer:self.onClickGesture];
     } else if ([name isEqualToString:@"border"]) {
         NSDictionary *dic = prop;
         CGFloat width = [(NSNumber *) dic[@"width"] floatValue];

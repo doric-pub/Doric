@@ -14,6 +14,7 @@ import { FlexDemo } from '../panel/FlexDemo';
 import { SnakePanel } from '../panel/Snake';
 import { Gobang } from '../panel/Gobang';
 import { ListDragDemo } from '../panel/ListDragDemo';
+import { ListPanel } from '../panel/ListDemo';
 
 @Entry
 @Component
@@ -28,6 +29,7 @@ struct Demo {
     ImageDemo,
     InputDemo,
     LayoutDemo,
+    ListPanel,
     ListDragDemo,
     ScrollerDemo,
     SnakePanel,

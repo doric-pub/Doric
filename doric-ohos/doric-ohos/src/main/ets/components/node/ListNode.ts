@@ -44,10 +44,6 @@ export class ListNode extends DoricViewNode<DoricList> {
     if (firstRender) {
       this.lazyForEachElmtId = this.view.viewId + "_lazy_for_each"
 
-      for (let i = 0;i != this.view.itemCount; i++) {
-        this.dataSource.pushData(i)
-      }
-
       LazyForEach.create(this.lazyForEachElmtId, this, this.dataSource, (index: number) => {
         const child = this.view.renderItem(index)
         const childNode = createDoricViewNode(this.context, child)
@@ -55,7 +51,7 @@ export class ListNode extends DoricViewNode<DoricList> {
       })
       LazyForEach.pop()
     } else {
-
+      console.log("")
     }
   }
 
@@ -65,6 +61,14 @@ export class ListNode extends DoricViewNode<DoricList> {
 
   blend(v: DoricList) {
     List.create()
+
+    if (v.itemCount) {
+      if (this.dataSource.totalCount() < v.itemCount) {
+        for (let i = this.dataSource.totalCount();i != this.view.itemCount; i++) {
+          this.dataSource.pushData(i)
+        }
+      }
+    }
 
     // commonConfig
     this.commonConfig(v)

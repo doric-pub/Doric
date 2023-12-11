@@ -12,6 +12,7 @@ struct Index {
     "ImageDemo",
     "InputDemo",
     "LayoutDemo",
+    "ListDemo",
     "ListDragDemo",
     "ScrollerDemo",
     "Snake",

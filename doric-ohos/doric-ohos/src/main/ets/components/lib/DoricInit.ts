@@ -10,6 +10,8 @@ import { ScrollerNode } from '../node/ScrollerNode'
 import { InputNode } from '../node/InputNode'
 import { SwitchNode } from '../node/SwitchNode'
 import { FlexLayoutNode } from '../node/FlexLayoutNode'
+import { ListNode } from '../node/ListNode'
+import { ListItemNode } from '../node/ListItemNode'
 
 function injectGlobalFunction() {
   globalThis.nativeLog = (type: string, log: any) => {
@@ -46,4 +48,6 @@ export function initDoric() {
   registerDoricViewNode("Input", InputNode)
   registerDoricViewNode("Switch", SwitchNode)
   registerDoricViewNode("FlexLayout", FlexLayoutNode)
+  registerDoricViewNode("List", ListNode)
+  registerDoricViewNode("ListItem", ListItemNode)
 }

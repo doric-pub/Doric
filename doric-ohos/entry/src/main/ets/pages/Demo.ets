@@ -13,6 +13,7 @@ import { ComponentDemo } from '../panel/ComponentDemo';
 import { FlexDemo } from '../panel/FlexDemo';
 import { SnakePanel } from '../panel/Snake';
 import { Gobang } from '../panel/Gobang';
+import { ListDragDemo } from '../panel/ListDragDemo';
 
 @Entry
 @Component
@@ -27,6 +28,7 @@ struct Demo {
     ImageDemo,
     InputDemo,
     LayoutDemo,
+    ListDragDemo,
     ScrollerDemo,
     SnakePanel,
     SwitchDemo,

@@ -52,6 +52,5 @@ export struct ContainerPage {
   }
 
   build() {
-    //Column().width("100%")
   }
 }

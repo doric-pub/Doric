@@ -1,7 +1,7 @@
-import { BridgeContext, uniqueId, } from 'doric';
+import { BridgeContext, layoutConfig, stack, uniqueId, } from 'doric';
 import { DoricPanel, ViewPU } from './Container';
 import { createDoricPlugin } from './Registry';
-import { RootNode } from '../node/StackNode';
+import { PopoverRootNode, RootNode } from '../node/StackNode';
 
 export const Alignment = getGlobalObject("Alignment");
 
@@ -27,9 +27,6 @@ export function getGlobalObject(name: string) {
     }
   })
 }
-
-
-
 
 
 export const ViewStackProcessor = getGlobalObject("ViewStackProcessor");
@@ -101,12 +98,19 @@ export class DoricContext implements BridgeContext {
 
   rootNode: RootNode
 
+  popoverRootNode: PopoverRootNode
+
   constructor(viewPU: ViewPU, entity: any, id?: string) {
     this.id = id ?? uniqueId("Context")
     this.viewPU = viewPU
     this.entity = entity
     this.rootNode = new RootNode(this, (entity as DoricPanel).getRootView())
     this.rootNode.render()
+
+    this.popoverRootNode = new PopoverRootNode(this, stack([], {
+      layoutConfig: layoutConfig().most(),
+    }))
+    this.popoverRootNode.render()
   }
 
   hookBeforeNativeCall() {

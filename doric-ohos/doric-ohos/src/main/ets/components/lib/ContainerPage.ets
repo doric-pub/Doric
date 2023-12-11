@@ -1,10 +1,9 @@
 import window from '@ohos.window';
 
-import { ClassType } from "doric"
+import { ClassType } from 'doric'
 import { DoricPanel, ViewPU } from './Container';
 import { initDoric } from './DoricInit';
 import { DoricContext } from './sandbox';
-
 
 initDoric();
 
@@ -15,8 +14,6 @@ export struct ContainerPage {
   private doricContext: DoricContext
 
   initialRenderView() {
-    globalThis.nativeLog = () => {}
-
     const instance = new this.clz();
     this.doricContext = new DoricContext(this as any, instance);
     instance.context = this.doricContext;

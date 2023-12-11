@@ -29,3 +29,19 @@ export class RootNode extends StackNode {
     this.commonConfig(v)
   }
 }
+
+export class PopoverRootNode extends StackNode {
+
+  blend(v: Root) {
+    Stack.create();
+    Stack.alignContent(Alignment.TopStart)
+
+    if (this.view.children.length === 0) {
+      this.view.hidden = true
+    } else {
+      this.view.hidden = false
+    }
+
+    this.commonConfig(v)
+  }
+}

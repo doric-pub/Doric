@@ -59,7 +59,7 @@ export class ListNode extends SuperNode<DoricList> {
 
   private dataSource: ViewDataSource = new ViewDataSource()
   private lazyForEachElmtId?: string
-  private renderItemVersion: number = 0
+  private reloadVersion: number = 0
 
   private onLoadMore?: () => void
 
@@ -98,8 +98,8 @@ export class ListNode extends SuperNode<DoricList> {
           }
         },
         (item: string) => {
-          console.log("DoricTag", this.renderItemVersion.toString())
-          return (item + "_" + this.renderItemVersion)
+          console.log("DoricTag", this.reloadVersion.toString())
+          return (item + "_" + this.reloadVersion)
         },
       )
       LazyForEach.pop()
@@ -130,7 +130,7 @@ export class ListNode extends SuperNode<DoricList> {
 
     // renderItem
     if (v.renderItem) {
-      this.renderItemVersion++
+      this.reloadVersion++
       this.dataSource.reloadData()
     }
 
@@ -149,7 +149,8 @@ export class ListNode extends SuperNode<DoricList> {
   }
 
   private reload() {
-    this.renderItemVersion++
+    this.reloadVersion++
+    ((this.view as any).cachedViews as Map<string, View>).clear()
     this.dataSource.reloadData()
   }
 }

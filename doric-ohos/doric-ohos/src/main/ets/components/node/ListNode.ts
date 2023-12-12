@@ -7,15 +7,26 @@ import { getGlobalObject } from '../lib/sandbox'
 const List = getGlobalObject("List")
 const LazyForEach = getGlobalObject("LazyForEach")
 
+const LOAD_MORE_DATA = "loadMore"
+
 class ViewDataSource extends BasicDataSource<string> {
   private dataArray: string[] = []
+  public loadMore: boolean = false
 
   public totalCount(): number {
-    return this.dataArray.length
+    return this.dataArray.length + ((this.loadMore) ? 1 : 0)
   }
 
   public getData(index: number): string {
-    return this.dataArray[index]
+    if (this.loadMore) {
+      if (index >= this.dataArray.length) {
+        return LOAD_MORE_DATA
+      } else {
+        return this.dataArray[index]
+      }
+    } else {
+      return this.dataArray[index]
+    }
   }
 
   public addData(index: number, data: string): void {
@@ -49,7 +60,6 @@ export class ListNode extends DoricViewNode<DoricList> {
   private lazyForEachElmtId?: string
   private renderItemVersion: number = 0
 
-  private loadMore?: boolean
   private onLoadMore?: () => void
 
   pushing(v: DoricList) {
@@ -66,11 +76,18 @@ export class ListNode extends DoricViewNode<DoricList> {
         this,
         this.dataSource,
         (item: string, position: number) => {
-          const child = this.view.renderItem(position)
-          const childNode = createDoricViewNode(this.context, child)
-          childNode.render()
+          if (item === LOAD_MORE_DATA) {
+            const child = this.view.loadMoreView
+            const childNode = createDoricViewNode(this.context, child)
+            childNode.render()
+          } else {
+            const child = this.view.renderItem(position)
+            const childNode = createDoricViewNode(this.context, child)
+            childNode.render()
+          }
 
-          if (this.loadMore && position >= (this.dataSource.totalCount() - 1) && this.onLoadMore) {
+          // call onLoadMore
+          if (this.dataSource.loadMore && position >= (this.dataSource.totalCount() - 1) && this.onLoadMore) {
             this.onLoadMore()
           }
         },
@@ -118,7 +135,7 @@ export class ListNode extends DoricViewNode<DoricList> {
 
     // loadMore
     if (v.loadMore) {
-      this.loadMore = v.loadMore
+      this.dataSource.loadMore = v.loadMore
     }
 
     // commonConfig

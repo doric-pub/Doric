@@ -45,16 +45,17 @@ export class SliderPanel extends Panel {
         weight: 1,
       },
       onPageSlided: (index) => {
-        modal(context).toast(index.toString())
+        modal(this.context).toast(index.toString())
       }
     })
 
     let pageIndexInput = input({
       backgroundColor: Color.WHITE,
       layoutConfig: {
-        widthSpec: LayoutSpec.FIT,
+        widthSpec: LayoutSpec.JUST,
         heightSpec: LayoutSpec.FIT,
       },
+      width: 150,
       hintText: "Page index",
       inputType: InputType.Number,
       textAlignment: Gravity.Center,
@@ -178,8 +179,8 @@ export class SliderPanel extends Panel {
       textAlignment: gravity().center(),
       height: 40,
       onClick: async () => {
-        let index = await pageIndexInput.getText(context);
-        await pager.slidePage(context, parseInt(index), true)
+        let index = await pageIndexInput.getText(this.context);
+        await pager.slidePage(this.context, parseInt(index), true)
       }
     }),
     ], {
@@ -200,8 +201,8 @@ export class SliderPanel extends Panel {
       textAlignment: gravity().center(),
       height: 50,
       onClick: async () => {
-        let index = await pager.getSlidedPage(context);
-        modal(context).toast(index.toString())
+        let index = await pager.getSlidedPage(this.context);
+        modal(this.context).toast(index.toString())
       }
     }),
     ], {

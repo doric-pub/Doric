@@ -33,7 +33,7 @@ export class ShaderPlugin extends DoricPlugin {
         reject("Cannot find opposite view")
       } else {
         try {
-          resolve(Reflect.apply(viewNode[name], viewNode, args ? [...args] : []))
+          resolve(Reflect.apply(viewNode[name], viewNode, args ? [args] : []))
         } catch (error) {
           reject(error)
         }

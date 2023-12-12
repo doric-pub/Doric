@@ -218,12 +218,12 @@ export class InputNode extends DoricViewNode<Input> {
     }
 
     // onTextChange
-    if (v.onTextChange) {
-      tag.onChange((value) => {
-        this.value = value
+    tag.onChange((value) => {
+      this.value = value
+      if (v.onTextChange) {
         v.onTextChange(value)
-      })
-    }
+      }
+    })
 
     // onFocusChange
     if (v.onFocusChange) {
@@ -282,6 +282,11 @@ export class InputNode extends DoricViewNode<Input> {
         })
       }
     }
+  }
 
+  private getText() {
+    return new Promise((resolve, reject) => {
+      resolve(this.value)
+    })
   }
 }

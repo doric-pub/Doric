@@ -1,24 +1,27 @@
-import { Slider, View } from 'doric';
-import { createDoricViewNode } from '../lib/Registry';
+import { Slider } from 'doric'
+import { createDoricViewNode } from '../lib/Registry'
 import { getGlobalObject, ViewStackProcessor } from '../lib/sandbox'
-import { SuperNode } from '../lib/SuperNode';
+import { SuperNode } from '../lib/SuperNode'
 
-const Swiper = getGlobalObject("Swiper");
-const ForEach = getGlobalObject("ForEach");
+const Swiper = getGlobalObject("Swiper")
+const ForEach = getGlobalObject("ForEach")
+const SwiperController = getGlobalObject("SwiperController")
 
 export class SliderNode extends SuperNode<Slider> {
-  TAG = Swiper;
+  TAG = Swiper
 
-  forEachElmtId?: number;
+  forEachElmtId?: number
+
+  private swiperController = new SwiperController()
 
   pushing(v: Slider) {
-    const firstRender = this.forEachElmtId === undefined;
+    const firstRender = this.forEachElmtId === undefined
     if (!firstRender && !this.view.isDirty()) {
-      return;
+      return
     }
 
     if (firstRender) {
-      this.forEachElmtId = ViewStackProcessor.AllocateNewElmetIdForNextComponent();
+      this.forEachElmtId = ViewStackProcessor.AllocateNewElmetIdForNextComponent()
     }
 
     const children = []
@@ -34,51 +37,95 @@ export class SliderNode extends SuperNode<Slider> {
     }
 
     children.forEach((child) => {
-      let childNode = this.childNodes.get(child.viewId);
+      let childNode = this.childNodes.get(child.viewId)
       if (childNode) {
-        childNode.render();
+        childNode.render()
       }
-    });
+    })
 
-    ViewStackProcessor.StartGetAccessRecordingFor(this.forEachElmtId);
-    ForEach.create();
-    let diffIndexArray = []; // New indexes compared to old one.
-    let newIdArray = children.map(e => e.viewId);
-    let idDuplicates = [];
+    ViewStackProcessor.StartGetAccessRecordingFor(this.forEachElmtId)
+    ForEach.create()
+    let diffIndexArray = [] // New indexes compared to old one.
+    let newIdArray = children.map(e => e.viewId)
+    let idDuplicates = []
 
-    ForEach.setIdArray(this.forEachElmtId, newIdArray, diffIndexArray, idDuplicates);
+    ForEach.setIdArray(this.forEachElmtId, newIdArray, diffIndexArray, idDuplicates)
 
     diffIndexArray.forEach((idx) => {
-      const child = children[idx];
-      let childNode = this.childNodes.get(child.viewId);
+      const child = children[idx]
+      let childNode = this.childNodes.get(child.viewId)
       if (!childNode) {
-        childNode = createDoricViewNode(this.context, child);
-        this.childNodes.set(child.viewId, childNode);
+        childNode = createDoricViewNode(this.context, child)
+        this.childNodes.set(child.viewId, childNode)
       }
-      ForEach.createNewChildStart(childNode.view.viewId, this.context.viewPU);
-      childNode.render();
-      ForEach.createNewChildFinish(childNode.view.viewId, this.context.viewPU);
-    });
+      ForEach.createNewChildStart(childNode.view.viewId, this.context.viewPU)
+      childNode.render()
+      ForEach.createNewChildFinish(childNode.view.viewId, this.context.viewPU)
+    })
 
     if (!firstRender) {
-      ForEach.pop();
+      ForEach.pop()
     }
-    ViewStackProcessor.StopGetAccessRecording();
+    ViewStackProcessor.StopGetAccessRecording()
     if (firstRender) {
-      ForEach.pop();
+      ForEach.pop()
     } else {
-      this.context.viewPU.finishUpdateFunc(this.forEachElmtId);
+      this.context.viewPU.finishUpdateFunc(this.forEachElmtId)
     }
   }
 
   pop() {
-    Swiper.pop();
+    Swiper.pop()
   }
 
   blend(v: Slider) {
-    Swiper.create();
+    Swiper.create(this.swiperController)
+    Swiper.indicator(false)
+
+    // onPageSlided
+    if (v.onPageSlided) {
+      Swiper.onChange((index) => {
+        v.onPageSlided(index)
+      })
+    }
+
+    // loop
+    if (v.loop !== undefined) {
+      Swiper.loop(v.loop)
+    }
+
+    // scrollable
+    if (v.scrollable !== undefined) {
+      Swiper.disableSwipe(!v.scrollable)
+    }
 
     // commonConfig
     this.commonConfig(v)
+  }
+
+  private slidePage(props: any) {
+    return new Promise((resolve, reject) => {
+      const result = getInspectorByKey(this.view.viewId)
+      let currentIndex = parseInt(JSON.parse(result).$attrs.index)
+
+      if (props.page) {
+        if (props.page > currentIndex) {
+          for (let index = 0; index < (props.page - currentIndex); index++) {
+            this.swiperController.showNext()
+          }
+        } else {
+          for (let index = 0; index < (currentIndex - props.page); index++) {
+            this.swiperController.showPrevious()
+          }
+        }
+      }
+    })
+  }
+
+  private getSlidedPage() {
+    return new Promise((resolve, reject) => {
+      const result = getInspectorByKey(this.view.viewId)
+      resolve(parseInt(JSON.parse(result).$attrs.index))
+    })
   }
 }

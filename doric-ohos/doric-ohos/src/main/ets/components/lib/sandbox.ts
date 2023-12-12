@@ -180,6 +180,17 @@ export class DoricContext implements BridgeContext {
       loge(`Cannot find method for context id:${this.id},method name is:${methodName}`)
     }
   }
+
+  targetViewNode(id: string) {
+    if (id == this.rootNode.view.viewId) {
+      return this.rootNode;
+    }
+    for (const key in this.popoverRootNode.childNodes.keys()) {
+      if (id === this.popoverRootNode.childNodes.get(id).view.viewId) {
+        return this.popoverRootNode.childNodes.get(id);
+      }
+    }
+  }
 }
 
 export abstract class DoricPlugin {

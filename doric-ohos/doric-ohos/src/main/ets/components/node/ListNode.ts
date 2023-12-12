@@ -1,8 +1,9 @@
-import { List as DoricList } from 'doric'
+import { List as DoricList, View } from 'doric'
 import { BasicDataSource } from '../lib/BasicDataSource'
 import { DoricViewNode } from '../lib/DoricViewNode'
 import { createDoricViewNode } from '../lib/Registry'
 import { getGlobalObject } from '../lib/sandbox'
+import { SuperNode } from '../lib/SuperNode'
 
 const List = getGlobalObject("List")
 const LazyForEach = getGlobalObject("LazyForEach")
@@ -53,7 +54,7 @@ class ViewDataSource extends BasicDataSource<string> {
   }
 }
 
-export class ListNode extends DoricViewNode<DoricList> {
+export class ListNode extends SuperNode<DoricList> {
   TAG = List
 
   private dataSource: ViewDataSource = new ViewDataSource()
@@ -76,15 +77,15 @@ export class ListNode extends DoricViewNode<DoricList> {
         this,
         this.dataSource,
         (item: string, position: number) => {
+          let child: View
           if (item === LOAD_MORE_DATA) {
-            const child = this.view.loadMoreView
-            const childNode = createDoricViewNode(this.context, child)
-            childNode.render()
+            child = this.view.loadMoreView
           } else {
-            const child = this.view.renderItem(position)
-            const childNode = createDoricViewNode(this.context, child)
-            childNode.render()
+            child = this.view.renderItem(position)
           }
+          const childNode = createDoricViewNode(this.context, child)
+          this.childNodes.set(child.viewId, childNode)
+          childNode.render()
 
           // call onLoadMore
           if (this.dataSource.loadMore && position >= (this.dataSource.totalCount() - 1) && this.onLoadMore) {
@@ -140,5 +141,10 @@ export class ListNode extends DoricViewNode<DoricList> {
 
     // commonConfig
     this.commonConfig(v)
+  }
+
+  private reload() {
+    this.renderItemVersion++
+    this.dataSource.reloadData()
   }
 }

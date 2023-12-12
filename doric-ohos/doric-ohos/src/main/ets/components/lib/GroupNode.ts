@@ -1,12 +1,13 @@
 import { Group } from 'doric';
 import { DoricViewNode } from './DoricViewNode';
 import { createDoricViewNode } from './Registry';
-import { ViewStackProcessor, getGlobalObject } from './sandbox';
+import { getGlobalObject, ViewStackProcessor } from './sandbox';
+import { SuperNode } from './SuperNode';
 
 const ForEach = getGlobalObject("ForEach");
 
-export abstract class GroupNode<T extends Group> extends DoricViewNode<T> {
-  childNodes: Map<string, DoricViewNode<any>> = new Map;
+export abstract class GroupNode<T extends Group> extends SuperNode<T> {
+
   forEachElmtId?: number;
 
   pushing(v: T) {

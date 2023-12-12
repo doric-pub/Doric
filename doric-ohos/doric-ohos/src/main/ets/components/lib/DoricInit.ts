@@ -12,6 +12,7 @@ import { SwitchNode } from '../node/SwitchNode'
 import { FlexLayoutNode } from '../node/FlexLayoutNode'
 import { ListNode } from '../node/ListNode'
 import { ListItemNode } from '../node/ListItemNode'
+import { ModalPlugin } from '../plugin/ModalPlugin'
 
 function injectGlobalFunction() {
   globalThis.nativeLog = (type: string, log: any) => {
@@ -37,6 +38,7 @@ export function initDoric() {
 
   registerDoricPlugin("shader", ShaderPlugin)
   registerDoricPlugin("popover", PopoverPlugin)
+  registerDoricPlugin("modal", ModalPlugin)
 
   registerDoricViewNode("Root", RootNode)
   registerDoricViewNode("Stack", StackNode)

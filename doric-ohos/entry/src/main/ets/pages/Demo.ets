@@ -16,6 +16,7 @@ import { Gobang } from '../panel/Gobang';
 import { ListDragDemo } from '../panel/ListDragDemo';
 import { ListPanel } from '../panel/ListDemo';
 import { ModalDemo } from '../panel/ModalDemo';
+import { SliderPanel } from '../panel/SliderDemo';
 
 @Entry
 @Component
@@ -34,6 +35,7 @@ struct Demo {
     ListDragDemo,
     ModalDemo,
     ScrollerDemo,
+    SliderPanel,
     SnakePanel,
     SwitchDemo,
     TextDemo

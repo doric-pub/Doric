@@ -13,6 +13,8 @@ import { FlexLayoutNode } from '../node/FlexLayoutNode'
 import { ListNode } from '../node/ListNode'
 import { ListItemNode } from '../node/ListItemNode'
 import { ModalPlugin } from '../plugin/ModalPlugin'
+import { SlideItemNode } from '../node/SlideItemNode'
+import { SliderNode } from '../node/SliderNode'
 
 function injectGlobalFunction() {
   globalThis.nativeLog = (type: string, log: any) => {
@@ -52,4 +54,6 @@ export function initDoric() {
   registerDoricViewNode("FlexLayout", FlexLayoutNode)
   registerDoricViewNode("List", ListNode)
   registerDoricViewNode("ListItem", ListItemNode)
+  registerDoricViewNode("Slider", SliderNode)
+  registerDoricViewNode("SlideItem", SlideItemNode)
 }

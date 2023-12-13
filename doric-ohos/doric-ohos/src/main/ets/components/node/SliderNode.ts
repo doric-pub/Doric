@@ -21,9 +21,15 @@ export class SliderNode extends SuperNode<Slider> {
       this.forEachElmtId = ViewStackProcessor.AllocateNewElmetIdForNextComponent();
     }
 
-    const children: View[] = []
-    for (let i = 0;i != v.itemCount; i++) {
-      const child = v.renderPage(i)
+    const children = []
+    for (let itemIdx = 0;itemIdx != v.itemCount; itemIdx++) {
+      const cachedView = (v as any).cachedViews.get(`${itemIdx}`)
+      let child
+      if (cachedView) {
+        child = cachedView
+      } else {
+        child = (v as any).getItem(itemIdx)
+      }
       children.push(child)
     }
 

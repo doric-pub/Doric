@@ -65,12 +65,12 @@ export class ListNode extends SuperNode<DoricList> {
 
   pushing(v: DoricList) {
     const firstRender = this.lazyForEachElmtId === undefined
-    if (!firstRender && !this.view.isDirty()) {
+    if (!firstRender && !v.isDirty()) {
       return
     }
 
     if (firstRender) {
-      this.lazyForEachElmtId = this.view.viewId + "_lazy_for_each"
+      this.lazyForEachElmtId = v.viewId + "_lazy_for_each"
 
       LazyForEach.create(
         this.lazyForEachElmtId,
@@ -79,9 +79,14 @@ export class ListNode extends SuperNode<DoricList> {
         (item: string, position: number) => {
           let child: View
           if (item === LOAD_MORE_DATA) {
-            child = this.view.loadMoreView
+            child = v.loadMoreView
           } else {
-            child = this.view.renderItem(position)
+            const cachedView = (v as any).cachedViews.get(`${position}`)
+            if (cachedView) {
+              child = cachedView
+            } else {
+              child = (v as any).getItem(position)
+            }
           }
           const childNode = createDoricViewNode(this.context, child)
           this.childNodes.set(child.viewId, childNode)
@@ -113,11 +118,11 @@ export class ListNode extends SuperNode<DoricList> {
     // itemCount
     if (v.itemCount) {
       if (this.dataSource.totalCount() < v.itemCount) {
-        for (let i = this.dataSource.totalCount();i != this.view.itemCount; i++) {
+        for (let i = this.dataSource.totalCount();i != v.itemCount; i++) {
           this.dataSource.pushData(i.toString())
         }
       } else {
-        for (let i = this.dataSource.totalCount();i != this.view.itemCount; i--) {
+        for (let i = this.dataSource.totalCount();i != v.itemCount; i--) {
           this.dataSource.deleteData(this.dataSource.totalCount() - 1)
         }
       }

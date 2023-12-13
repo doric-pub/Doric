@@ -17,6 +17,7 @@ import { ListDragDemo } from '../panel/ListDragDemo';
 import { ListPanel } from '../panel/ListDemo';
 import { ModalDemo } from '../panel/ModalDemo';
 import { SliderPanel } from '../panel/SliderDemo';
+import { CounterPage } from '../panel/Counter';
 
 @Entry
 @Component
@@ -24,6 +25,7 @@ struct Demo {
   private index: number = (router.getParams() as any).index;
   private classMap = [
     ComponentDemo,
+    CounterPage,
     EffectsDemo,
     FlexDemo,
     Gobang,

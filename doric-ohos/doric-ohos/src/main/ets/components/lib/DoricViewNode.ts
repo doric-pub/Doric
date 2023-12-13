@@ -1,6 +1,6 @@
 import {
-  Color as DoricColor,
   Align as DoricAlign,
+  Color as DoricColor,
   FlexTypedValue,
   FlexValue,
   GradientColor,
@@ -88,7 +88,9 @@ export abstract class DoricViewNode<T extends View> {
 
     // onClick
     if (v.onClick) {
-      this.TAG.onClick(v.onClick)
+      this.TAG.onClick(() => {
+        Reflect.apply(v.onClick, v, [])
+      })
     }
 
     // backgroundColor

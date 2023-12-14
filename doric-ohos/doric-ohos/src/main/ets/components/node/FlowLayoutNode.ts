@@ -7,26 +7,15 @@ import { SuperNode } from '../lib/SuperNode'
 const WaterFlow = getGlobalObject("WaterFlow")
 const LazyForEach = getGlobalObject("LazyForEach")
 
-const LOAD_MORE_DATA = "loadMore"
-
 class ViewDataSource extends BasicDataSource<string> {
   private dataArray: string[] = []
-  public loadMore: boolean = false
 
   public totalCount(): number {
-    return this.dataArray.length + ((this.loadMore) ? 1 : 0)
+    return this.dataArray.length
   }
 
   public getData(index: number): string {
-    if (this.loadMore) {
-      if (index >= this.dataArray.length) {
-        return LOAD_MORE_DATA
-      } else {
-        return this.dataArray[index]
-      }
-    } else {
-      return this.dataArray[index]
-    }
+    return this.dataArray[index]
   }
 
   public addData(index: number, data: string): void {
@@ -79,15 +68,11 @@ export class FlowLayoutNode extends SuperNode<FlowLayout> {
         (item: string, position: number) => {
           console.log("DoricTag", `itemGen item: ${item}, position: ${position}`)
           let child: View
-          if (item === LOAD_MORE_DATA) {
-            child = v.loadMoreView
+          const cachedView = (v as any).cachedViews.get(`${position}`) as FlowLayoutItem
+          if (cachedView) {
+            child = cachedView
           } else {
-            const cachedView = (v as any).cachedViews.get(`${position}`) as FlowLayoutItem
-            if (cachedView) {
-              child = cachedView
-            } else {
-              child = (v as any).getItem(position)
-            }
+            child = (v as any).getItem(position)
           }
 
           const childNode = createDoricViewNode(this.context, child)
@@ -95,7 +80,7 @@ export class FlowLayoutNode extends SuperNode<FlowLayout> {
           childNode.render()
 
           // call onLoadMore
-          if (this.dataSource.loadMore && position >= (this.dataSource.totalCount() - 1) && this.onLoadMore) {
+          if (v.loadMore && position >= (this.dataSource.totalCount() - 1) && this.onLoadMore) {
             this.onLoadMore()
           }
         },
@@ -116,7 +101,7 @@ export class FlowLayoutNode extends SuperNode<FlowLayout> {
   }
 
   blend(v: FlowLayout) {
-    WaterFlow.create()
+    WaterFlow.create({ footer: this.footer.bind(this) })
 
     // columnCount
     if (v.columnCount && v.columnCount >= 1) {
@@ -165,11 +150,6 @@ export class FlowLayoutNode extends SuperNode<FlowLayout> {
       this.onLoadMore = v.onLoadMore
     }
 
-    // loadMore
-    if (v.loadMore) {
-      this.dataSource.loadMore = v.loadMore
-    }
-
     // commonConfig
     this.commonConfig(v);
 
@@ -185,6 +165,12 @@ export class FlowLayoutNode extends SuperNode<FlowLayout> {
         console.log("DoricTag", `isDirty key: ${key}`)
       }
     })
+  }
+
+  private footer() {
+    const childNode = createDoricViewNode(this.context, this.view.loadMoreView)
+    this.childNodes.set(this.view.loadMoreView.viewId, childNode)
+    childNode.render()
   }
 
   private reload() {

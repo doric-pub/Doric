@@ -17,6 +17,8 @@ import { SlideItemNode } from '../node/SlideItemNode'
 import { SliderNode } from '../node/SliderNode'
 import { FlowLayoutItemNode } from '../node/FlowLayoutItemNode'
 import { FlowLayoutNode } from '../node/FlowLayoutNode'
+import { HorizontalListNode } from '../node/HorizontalListNode'
+import { HorizontalListItemNode } from '../node/HorizontalListItemNode'
 
 function injectGlobalFunction() {
   globalThis.nativeLog = (type: string, log: any) => {
@@ -56,6 +58,8 @@ export function initDoric() {
   registerDoricViewNode("FlexLayout", FlexLayoutNode)
   registerDoricViewNode("List", ListNode)
   registerDoricViewNode("ListItem", ListItemNode)
+  registerDoricViewNode("HorizontalList", HorizontalListNode)
+  registerDoricViewNode("HorizontalListItem", HorizontalListItemNode)
   registerDoricViewNode("Slider", SliderNode)
   registerDoricViewNode("SlideItem", SlideItemNode)
   registerDoricViewNode("FlowLayout", FlowLayoutNode)

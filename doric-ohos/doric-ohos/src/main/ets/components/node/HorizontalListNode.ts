@@ -1,4 +1,4 @@
-import { List as DoricList, ListItem as DoricListItem, View } from 'doric'
+import { HorizontalList, HorizontalListItem, View } from 'doric'
 import { BasicDataSource } from '../lib/BasicDataSource'
 import { createDoricViewNode } from '../lib/Registry'
 import { getGlobalObject } from '../lib/sandbox'
@@ -6,6 +6,7 @@ import { SuperNode } from '../lib/SuperNode'
 
 const List = getGlobalObject("List")
 const LazyForEach = getGlobalObject("LazyForEach")
+const Axis = getGlobalObject("Axis")
 
 const LOAD_MORE_DATA = "loadMore"
 
@@ -53,7 +54,7 @@ class ViewDataSource extends BasicDataSource<string> {
   }
 }
 
-export class ListNode extends SuperNode<DoricList> {
+export class HorizontalListNode extends SuperNode<HorizontalList> {
   TAG = List
 
   private dataSource: ViewDataSource = new ViewDataSource()
@@ -61,9 +62,9 @@ export class ListNode extends SuperNode<DoricList> {
   private reloadVersion: number = 0
   private dirtyVersion: Map<string, number> = new Map()
   private onLoadMore?: () => void
-  private renderItem?: (index: number) => DoricListItem
+  private renderItem?: (index: number) => HorizontalListItem
 
-  pushing(v: DoricList) {
+  pushing(v: HorizontalList) {
     const firstRender = this.lazyForEachElmtId === undefined
     if (!firstRender && !v.isDirty()) {
       return
@@ -83,10 +84,10 @@ export class ListNode extends SuperNode<DoricList> {
             if (v.loadMoreView) {
               child = v.loadMoreView
             } else {
-              child = new DoricListItem()
+              child = new HorizontalListItem()
             }
           } else {
-            const cachedView = (v as any).cachedViews.get(`${position}`) as DoricListItem
+            const cachedView = (v as any).cachedViews.get(`${position}`) as HorizontalListItem
             if (cachedView) {
               child = cachedView
             } else {
@@ -119,8 +120,9 @@ export class ListNode extends SuperNode<DoricList> {
     List.pop()
   }
 
-  blend(v: DoricList) {
+  blend(v: HorizontalList) {
     List.create()
+    List.listDirection(Axis.Horizontal)
 
     // itemCount
     if (v.itemCount) {

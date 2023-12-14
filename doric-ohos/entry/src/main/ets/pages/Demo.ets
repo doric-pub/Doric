@@ -19,6 +19,7 @@ import { ModalDemo } from '../panel/ModalDemo';
 import { SliderPanel } from '../panel/SliderDemo';
 import { CounterPage } from '../panel/Counter';
 import { FlowLayoutDemo } from '../panel/FlowLayoutDemo';
+import { HorizontalListPanel } from '../panel/HorizontalListDemo';
 
 @Entry
 @Component
@@ -32,6 +33,7 @@ struct Demo {
     FlowLayoutDemo,
     Gobang,
     HelloDoric,
+    HorizontalListPanel,
     ImageDemo,
     InputDemo,
     LayoutDemo,

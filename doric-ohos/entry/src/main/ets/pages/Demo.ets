@@ -20,6 +20,7 @@ import { SliderPanel } from '../panel/SliderDemo';
 import { CounterPage } from '../panel/Counter';
 import { FlowLayoutDemo } from '../panel/FlowLayoutDemo';
 import { HorizontalListPanel } from '../panel/HorizontalListDemo';
+import { NetworkDemo } from '../panel/NetworkDemo';
 
 @Entry
 @Component
@@ -40,6 +41,7 @@ struct Demo {
     ListPanel,
     ListDragDemo,
     ModalDemo,
+    NetworkDemo,
     ScrollerDemo,
     SliderPanel,
     SnakePanel,

@@ -19,6 +19,7 @@ import { FlowLayoutItemNode } from '../node/FlowLayoutItemNode'
 import { FlowLayoutNode } from '../node/FlowLayoutNode'
 import { HorizontalListNode } from '../node/HorizontalListNode'
 import { HorizontalListItemNode } from '../node/HorizontalListItemNode'
+import { NetworkPlugin } from '../plugin/NetworkPlugin'
 
 function injectGlobalFunction() {
   globalThis.nativeLog = (type: string, log: any) => {
@@ -45,6 +46,7 @@ export function initDoric() {
   registerDoricPlugin("shader", ShaderPlugin)
   registerDoricPlugin("popover", PopoverPlugin)
   registerDoricPlugin("modal", ModalPlugin)
+  registerDoricPlugin("network", NetworkPlugin)
 
   registerDoricViewNode("Root", RootNode)
   registerDoricViewNode("Stack", StackNode)

@@ -1,4 +1,4 @@
-import { List as DoricList, View } from 'doric'
+import { List as DoricList, ListItem as DoricListItem, View } from 'doric'
 import { BasicDataSource } from '../lib/BasicDataSource'
 import { DoricViewNode } from '../lib/DoricViewNode'
 import { createDoricViewNode } from '../lib/Registry'
@@ -60,8 +60,9 @@ export class ListNode extends SuperNode<DoricList> {
   private dataSource: ViewDataSource = new ViewDataSource()
   private lazyForEachElmtId?: string
   private reloadVersion: number = 0
-
+  private dirtyVersion: Map<string, number> = new Map()
   private onLoadMore?: () => void
+  private renderItem?: (index: number) => DoricListItem
 
   pushing(v: DoricList) {
     const firstRender = this.lazyForEachElmtId === undefined
@@ -77,17 +78,19 @@ export class ListNode extends SuperNode<DoricList> {
         this,
         this.dataSource,
         (item: string, position: number) => {
+          console.log("DoricTag", `itemGen item: ${item}, position: ${position}`)
           let child: View
           if (item === LOAD_MORE_DATA) {
             child = v.loadMoreView
           } else {
-            const cachedView = (v as any).cachedViews.get(`${position}`)
+            const cachedView = (v as any).cachedViews.get(`${position}`) as DoricListItem
             if (cachedView) {
               child = cachedView
             } else {
               child = (v as any).getItem(position)
             }
           }
+
           const childNode = createDoricViewNode(this.context, child)
           this.childNodes.set(child.viewId, childNode)
           childNode.render()
@@ -97,9 +100,10 @@ export class ListNode extends SuperNode<DoricList> {
             this.onLoadMore()
           }
         },
-        (item: string) => {
-          console.log("DoricTag", this.reloadVersion.toString())
-          return (item + "_" + this.reloadVersion)
+        (item: string, position: number) => {
+          const key = item + "_" + this.reloadVersion + "_" + this.dirtyVersion.get(item)
+          console.log("DoricTag", `keyGen item: ${key}`)
+          return key
         },
       )
       LazyForEach.pop()
@@ -130,8 +134,12 @@ export class ListNode extends SuperNode<DoricList> {
 
     // renderItem
     if (v.renderItem) {
-      this.reloadVersion++
-      this.dataSource.reloadData()
+      if (this.renderItem !== v.renderItem) {
+        this.renderItem = v.renderItem
+        this.dataSourceReload()
+      } else {
+        console.log("DoricTag", "renderItem are the same")
+      }
     }
 
     // onLoadMore
@@ -145,12 +153,29 @@ export class ListNode extends SuperNode<DoricList> {
     }
 
     // commonConfig
-    this.commonConfig(v)
+    this.commonConfig(v);
+
+    (v as any).cachedViews.forEach((cachedView, key) => {
+      if (cachedView.isDirty()) {
+        const existedVersion = this.dirtyVersion.get(key.toString())
+        if (existedVersion) {
+          this.dirtyVersion.set(key.toString(), existedVersion + 1)
+          this.dataSource.notifyDataChange(key)
+        } else {
+          this.dirtyVersion.set(key.toString(), 1)
+        }
+        console.log("DoricTag", `isDirty key: ${key}`)
+      }
+    })
   }
 
   private reload() {
-    this.reloadVersion++
     ((this.view as any).cachedViews as Map<string, View>).clear()
+    this.dataSourceReload()
+  }
+
+  private dataSourceReload() {
+    this.reloadVersion++
     this.dataSource.reloadData()
   }
 }

@@ -8,6 +8,7 @@ struct Index {
     "Counter",
     "EffectsDemo",
     "FlexDemo",
+    "FlowLayoutDemo",
     "Gobang",
     "HelloDoric",
     "ImageDemo",

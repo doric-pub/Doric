@@ -18,6 +18,7 @@ import { ListPanel } from '../panel/ListDemo';
 import { ModalDemo } from '../panel/ModalDemo';
 import { SliderPanel } from '../panel/SliderDemo';
 import { CounterPage } from '../panel/Counter';
+import { FlowLayoutDemo } from '../panel/FlowLayoutDemo';
 
 @Entry
 @Component
@@ -28,6 +29,7 @@ struct Demo {
     CounterPage,
     EffectsDemo,
     FlexDemo,
+    FlowLayoutDemo,
     Gobang,
     HelloDoric,
     ImageDemo,

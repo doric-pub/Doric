@@ -1,14 +1,20 @@
-import { ListItem } from 'doric';
-import { getGlobalObject } from '../lib/sandbox';
-import { StackNode } from './StackNode';
+import { ListItem as DoricListItem } from 'doric'
+import { GroupNode } from '../lib/GroupNode'
+import { getGlobalObject } from '../lib/sandbox'
 
-const Stack = getGlobalObject("Stack");
-const Alignment = getGlobalObject("Alignment");
+const ListItem = getGlobalObject("ListItem")
+const Alignment = getGlobalObject("Alignment")
 
-export class ListItemNode extends StackNode {
-  blend(v: ListItem) {
-    Stack.create();
-    Stack.alignContent(Alignment.TopStart)
+export class ListItemNode extends GroupNode<DoricListItem> {
+  TAG = ListItem
+
+  pop() {
+    ListItem.pop()
+  }
+
+  blend(v: DoricListItem) {
+    ListItem.create()
+    ListItem.align(Alignment.TopStart)
 
     this.commonConfig(v)
   }

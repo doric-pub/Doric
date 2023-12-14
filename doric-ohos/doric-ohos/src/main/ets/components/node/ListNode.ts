@@ -1,6 +1,5 @@
 import { List as DoricList, ListItem as DoricListItem, View } from 'doric'
 import { BasicDataSource } from '../lib/BasicDataSource'
-import { DoricViewNode } from '../lib/DoricViewNode'
 import { createDoricViewNode } from '../lib/Registry'
 import { getGlobalObject } from '../lib/sandbox'
 import { SuperNode } from '../lib/SuperNode'

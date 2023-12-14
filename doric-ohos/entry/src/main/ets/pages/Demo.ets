@@ -21,6 +21,7 @@ import { CounterPage } from '../panel/Counter';
 import { FlowLayoutDemo } from '../panel/FlowLayoutDemo';
 import { HorizontalListPanel } from '../panel/HorizontalListDemo';
 import { NetworkDemo } from '../panel/NetworkDemo';
+import { NotchDemo } from '../panel/NotchDemo';
 
 @Entry
 @Component
@@ -42,6 +43,7 @@ struct Demo {
     ListDragDemo,
     ModalDemo,
     NetworkDemo,
+    NotchDemo,
     ScrollerDemo,
     SliderPanel,
     SnakePanel,

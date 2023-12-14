@@ -20,6 +20,7 @@ import { FlowLayoutNode } from '../node/FlowLayoutNode'
 import { HorizontalListNode } from '../node/HorizontalListNode'
 import { HorizontalListItemNode } from '../node/HorizontalListItemNode'
 import { NetworkPlugin } from '../plugin/NetworkPlugin'
+import { NotchPlugin } from '../plugin/NotchPlugin'
 
 function injectGlobalFunction() {
   globalThis.nativeLog = (type: string, log: any) => {
@@ -47,6 +48,7 @@ export function initDoric() {
   registerDoricPlugin("popover", PopoverPlugin)
   registerDoricPlugin("modal", ModalPlugin)
   registerDoricPlugin("network", NetworkPlugin)
+  registerDoricPlugin("notch", NotchPlugin)
 
   registerDoricViewNode("Root", RootNode)
   registerDoricViewNode("Stack", StackNode)

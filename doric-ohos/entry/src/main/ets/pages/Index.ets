@@ -19,6 +19,7 @@ struct Index {
     "ListDragDemo",
     "ModalDemo",
     "NetworkDemo",
+    "NotchDemo",
     "ScrollerDemo",
     "SliderDemo",
     "Snake",

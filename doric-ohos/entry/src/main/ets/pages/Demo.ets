@@ -22,12 +22,14 @@ import { FlowLayoutDemo } from '../panel/FlowLayoutDemo';
 import { HorizontalListPanel } from '../panel/HorizontalListDemo';
 import { NetworkDemo } from '../panel/NetworkDemo';
 import { NotchDemo } from '../panel/NotchDemo';
+import { AnimationsDemo } from '../panel/AnimationsDemo';
 
 @Entry
 @Component
 struct Demo {
   private index: number = (router.getParams() as any).index;
   private classMap = [
+    AnimationsDemo,
     ComponentDemo,
     CounterPage,
     EffectsDemo,

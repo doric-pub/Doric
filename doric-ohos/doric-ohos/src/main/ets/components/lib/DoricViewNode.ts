@@ -408,4 +408,25 @@ export abstract class DoricViewNode<T extends View> {
       }
     }
   }
+
+  private doAnimation(props: any) {
+    const changeables = props.changeables as Array<{
+      key: string,
+      keyFrames: any,
+      fromValue: any,
+      toValue: any
+    }>
+    const delay = props.delay
+    const duration = props.duration
+    const fillMode = props.fillMode
+    const id = props.id
+    const repeatCount = props.repeatCount
+    const repeatMode = props.repeatMode
+    const timingFunction = props.timingFunction
+    const type = props.type
+
+    return new Promise((resolve, reject) => {
+      console.log("")
+    })
+  }
 }

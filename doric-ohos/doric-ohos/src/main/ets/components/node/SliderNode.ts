@@ -108,7 +108,7 @@ export class SliderNode extends SuperNode<Slider> {
       const result = getInspectorByKey(this.view.viewId)
       let currentIndex = parseInt(JSON.parse(result).$attrs.index)
 
-      if (props.page) {
+      if (props.page !== undefined) {
         if (props.page > currentIndex) {
           for (let index = 0; index < (props.page - currentIndex); index++) {
             this.swiperController.showNext()

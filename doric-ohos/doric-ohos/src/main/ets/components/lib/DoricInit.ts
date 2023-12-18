@@ -21,6 +21,7 @@ import { HorizontalListNode } from '../node/HorizontalListNode'
 import { HorizontalListItemNode } from '../node/HorizontalListItemNode'
 import { NetworkPlugin } from '../plugin/NetworkPlugin'
 import { NotchPlugin } from '../plugin/NotchPlugin'
+import { NestedSliderNode } from '../node/NestedSliderNode'
 
 function injectGlobalFunction() {
   globalThis.nativeLog = (type: string, log: any) => {
@@ -68,4 +69,5 @@ export function initDoric() {
   registerDoricViewNode("SlideItem", SlideItemNode)
   registerDoricViewNode("FlowLayout", FlowLayoutNode)
   registerDoricViewNode("FlowLayoutItem", FlowLayoutItemNode)
+  registerDoricViewNode("NestedSlider", NestedSliderNode)
 }

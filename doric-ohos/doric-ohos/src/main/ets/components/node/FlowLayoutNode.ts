@@ -168,9 +168,11 @@ export class FlowLayoutNode extends SuperNode<FlowLayout> {
   }
 
   private footer() {
-    const childNode = createDoricViewNode(this.context, this.view.loadMoreView)
-    this.childNodes.set(this.view.loadMoreView.viewId, childNode)
-    childNode.render()
+    if (this.view.loadMoreView) {
+      const childNode = createDoricViewNode(this.context, this.view.loadMoreView)
+      this.childNodes.set(this.view.loadMoreView.viewId, childNode)
+      childNode.render()
+    }
   }
 
   private reload() {

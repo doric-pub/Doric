@@ -24,6 +24,7 @@ struct Index {
     "ScrollerDemo",
     "SliderDemo",
     "Snake",
+    "StickDemo",
     "SwitchDemo",
     "TextDemo"
   ]

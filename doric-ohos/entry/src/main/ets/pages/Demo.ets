@@ -23,6 +23,7 @@ import { HorizontalListPanel } from '../panel/HorizontalListDemo';
 import { NetworkDemo } from '../panel/NetworkDemo';
 import { NotchDemo } from '../panel/NotchDemo';
 import { AnimationsDemo } from '../panel/AnimationsDemo';
+import { StickDemo } from '../panel/StickDemo';
 
 @Entry
 @Component
@@ -49,6 +50,7 @@ struct Demo {
     ScrollerDemo,
     SliderPanel,
     SnakePanel,
+    StickDemo,
     SwitchDemo,
     TextDemo
   ]

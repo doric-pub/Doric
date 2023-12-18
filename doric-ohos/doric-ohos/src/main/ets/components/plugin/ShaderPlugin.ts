@@ -2,6 +2,7 @@ import { Panel, View } from 'doric'
 import { DoricViewNode } from '../lib/DoricViewNode'
 import { GroupNode } from '../lib/GroupNode'
 import { DoricPlugin } from '../lib/sandbox'
+import { SuperNode } from '../lib/SuperNode'
 
 export class ShaderPlugin extends DoricPlugin {
   async render(props: any) {
@@ -22,7 +23,7 @@ export class ShaderPlugin extends DoricPlugin {
       if (viewNode == null) {
         viewNode = this.context.targetViewNode(viewId);
       } else {
-        if (viewNode instanceof GroupNode) {
+        if (viewNode instanceof SuperNode) {
           viewNode = viewNode.getSubNodeById(viewId);
         }
       }

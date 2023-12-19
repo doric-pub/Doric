@@ -41,9 +41,9 @@ export class InputNode extends DoricViewNode<Input> {
     if (firstRender) {
       this.textInputElmtId = ViewStackProcessor.AllocateNewElmetIdForNextComponent()
     }
-    if (firstRender || this.isDirty()) {
+    if (firstRender || this.isSelfDirty()) {
       ViewStackProcessor.StartGetAccessRecordingFor(this.textInputElmtId)
-      if (firstRender || this.isDirty()) {
+      if (firstRender || this.isSelfDirty()) {
         this.blendTextInput(this.view)
       }
       if (!firstRender) {
@@ -72,9 +72,9 @@ export class InputNode extends DoricViewNode<Input> {
     if (firstRender) {
       this.textAreaElmtId = ViewStackProcessor.AllocateNewElmetIdForNextComponent()
     }
-    if (firstRender || this.isDirty()) {
+    if (firstRender || this.isSelfDirty()) {
       ViewStackProcessor.StartGetAccessRecordingFor(this.textAreaElmtId)
-      if (firstRender || this.isDirty()) {
+      if (firstRender || this.isSelfDirty()) {
         this.blendTextArea(this.view)
       }
       if (!firstRender) {

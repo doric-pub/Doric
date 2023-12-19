@@ -91,7 +91,8 @@ export class HorizontalListNode extends SuperNode<HorizontalList> {
             if (cachedView) {
               child = cachedView
             } else {
-              child = (v as any).getItem(position)
+              (v as any).renderBunchedItems(position, 1)
+              child = (v as any).cachedViews.get(`${position}`) as HorizontalListItem
             }
           }
 
@@ -111,9 +112,9 @@ export class HorizontalListNode extends SuperNode<HorizontalList> {
         },
       )
       LazyForEach.pop()
-    } else {
-      console.log("")
     }
+
+    super.pushing(v)
   }
 
   pop() {
@@ -142,8 +143,6 @@ export class HorizontalListNode extends SuperNode<HorizontalList> {
       if (this.renderItem !== v.renderItem) {
         this.renderItem = v.renderItem
         this.dataSourceReload()
-      } else {
-        console.log("DoricTag", "renderItem are the same")
       }
     }
 
@@ -159,16 +158,18 @@ export class HorizontalListNode extends SuperNode<HorizontalList> {
 
     // commonConfig
     this.commonConfig(v);
+  }
 
+  blendSubNodes(v: HorizontalList) {
     (v as any).cachedViews.forEach((cachedView, key) => {
       if (cachedView.isDirty()) {
         const existedVersion = this.dirtyVersion.get(key.toString())
         if (existedVersion) {
           this.dirtyVersion.set(key.toString(), existedVersion + 1)
-          this.dataSource.notifyDataChange(key)
         } else {
           this.dirtyVersion.set(key.toString(), 1)
         }
+        this.dataSource.notifyDataChange(key)
         console.log("DoricTag", `isDirty key: ${key}`)
       }
     })

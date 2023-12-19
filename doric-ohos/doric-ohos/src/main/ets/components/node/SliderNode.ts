@@ -103,6 +103,10 @@ export class SliderNode extends SuperNode<Slider> {
     this.commonConfig(v)
   }
 
+  blendSubNodes(v: Slider) {
+
+  }
+
   private slidePage(props: any) {
     return new Promise((resolve, reject) => {
       const result = getInspectorByKey(this.view.viewId)

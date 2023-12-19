@@ -90,7 +90,8 @@ export class ListNode extends SuperNode<DoricList> {
             if (cachedView) {
               child = cachedView
             } else {
-              child = (v as any).getItem(position)
+              (v as any).renderBunchedItems(position, 1)
+              child = (v as any).cachedViews.get(`${position}`) as DoricListItem
             }
           }
 
@@ -110,9 +111,9 @@ export class ListNode extends SuperNode<DoricList> {
         },
       )
       LazyForEach.pop()
-    } else {
-      console.log("")
     }
+
+    super.pushing(v)
   }
 
   pop() {
@@ -140,8 +141,6 @@ export class ListNode extends SuperNode<DoricList> {
       if (this.renderItem !== v.renderItem) {
         this.renderItem = v.renderItem
         this.dataSourceReload()
-      } else {
-        console.log("DoricTag", "renderItem are the same")
       }
     }
 
@@ -157,16 +156,18 @@ export class ListNode extends SuperNode<DoricList> {
 
     // commonConfig
     this.commonConfig(v);
+  }
 
+  blendSubNodes(v: DoricList) {
     (v as any).cachedViews.forEach((cachedView, key) => {
       if (cachedView.isDirty()) {
         const existedVersion = this.dirtyVersion.get(key.toString())
         if (existedVersion) {
           this.dirtyVersion.set(key.toString(), existedVersion + 1)
-          this.dataSource.notifyDataChange(key)
         } else {
           this.dirtyVersion.set(key.toString(), 1)
         }
+        this.dataSource.notifyDataChange(key)
         console.log("DoricTag", `isDirty key: ${key}`)
       }
     })

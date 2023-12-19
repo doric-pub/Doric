@@ -35,9 +35,9 @@ export abstract class DoricViewNode<T extends View> {
     if (firstRender) {
       this.elmtId = ViewStackProcessor.AllocateNewElmetIdForNextComponent()
     }
-    if (firstRender || this.isDirty()) {
+    if (firstRender || this.isSelfDirty()) {
       ViewStackProcessor.StartGetAccessRecordingFor(this.elmtId)
-      if (firstRender || this.isDirty()) {
+      if (firstRender || this.isSelfDirty()) {
         this.blend(this.view)
       }
       if (!firstRender) {
@@ -54,8 +54,8 @@ export abstract class DoricViewNode<T extends View> {
     }
   }
 
-  isDirty() {
-    return Object.keys(this.view.dirtyProps).filter(e => e !== "children" && e !== "subviews").length > 0
+  isSelfDirty() {
+    return this.view.isDirty()
   }
 
   abstract pushing(v: T)

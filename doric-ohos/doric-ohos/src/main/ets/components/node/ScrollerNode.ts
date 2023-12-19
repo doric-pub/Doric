@@ -79,4 +79,8 @@ export class ScrollerNode extends SuperNode<DoricScroller> {
     // commonConfig
     this.commonConfig(v)
   }
+
+  blendSubNodes(v: DoricScroller) {
+
+  }
 }

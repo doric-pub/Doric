@@ -72,7 +72,8 @@ export class FlowLayoutNode extends SuperNode<FlowLayout> {
           if (cachedView) {
             child = cachedView
           } else {
-            child = (v as any).getItem(position)
+            (v as any).renderBunchedItems(position, 1)
+            child = (v as any).cachedViews.get(`${position}`) as FlowLayoutItem
           }
 
           const childNode = createDoricViewNode(this.context, child)
@@ -91,9 +92,9 @@ export class FlowLayoutNode extends SuperNode<FlowLayout> {
         },
       )
       LazyForEach.pop()
-    } else {
-      console.log("")
     }
+
+    super.pushing(v)
   }
 
   pop() {
@@ -140,8 +141,6 @@ export class FlowLayoutNode extends SuperNode<FlowLayout> {
       if (this.renderItem !== v.renderItem) {
         this.renderItem = v.renderItem
         this.dataSourceReload()
-      } else {
-        console.log("DoricTag", "renderItem are the same")
       }
     }
 
@@ -152,19 +151,6 @@ export class FlowLayoutNode extends SuperNode<FlowLayout> {
 
     // commonConfig
     this.commonConfig(v);
-
-    (v as any).cachedViews.forEach((cachedView, key) => {
-      if (cachedView.isDirty()) {
-        const existedVersion = this.dirtyVersion.get(key.toString())
-        if (existedVersion) {
-          this.dirtyVersion.set(key.toString(), existedVersion + 1)
-          this.dataSource.notifyDataChange(key)
-        } else {
-          this.dirtyVersion.set(key.toString(), 1)
-        }
-        console.log("DoricTag", `isDirty key: ${key}`)
-      }
-    })
   }
 
   private footer() {
@@ -173,6 +159,21 @@ export class FlowLayoutNode extends SuperNode<FlowLayout> {
       this.childNodes.set(this.view.loadMoreView.viewId, childNode)
       childNode.render()
     }
+  }
+
+  blendSubNodes(v: FlowLayout) {
+    (v as any).cachedViews.forEach((cachedView, key) => {
+      if (cachedView.isDirty()) {
+        const existedVersion = this.dirtyVersion.get(key.toString())
+        if (existedVersion) {
+          this.dirtyVersion.set(key.toString(), existedVersion + 1)
+        } else {
+          this.dirtyVersion.set(key.toString(), 1)
+        }
+        this.dataSource.notifyDataChange(key)
+        console.log("DoricTag", `isDirty key: ${key}`)
+      }
+    })
   }
 
   private reload() {

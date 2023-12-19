@@ -7,7 +7,6 @@ import { SuperNode } from './SuperNode';
 const ForEach = getGlobalObject("ForEach");
 
 export abstract class GroupNode<T extends Group> extends SuperNode<T> {
-
   forEachElmtId?: number;
 
   pushing(v: T) {
@@ -57,5 +56,13 @@ export abstract class GroupNode<T extends Group> extends SuperNode<T> {
     } else {
       this.context.viewPU.finishUpdateFunc(this.forEachElmtId);
     }
+  }
+
+  isSelfDirty() {
+    return Object.keys(this.view.dirtyProps).filter(e => e !== "children" && e !== "subviews").length > 0
+  }
+
+  blendSubNodes(v: T) {
+
   }
 }

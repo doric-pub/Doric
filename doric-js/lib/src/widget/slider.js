@@ -73,6 +73,10 @@ export class Slider extends Superview {
     getSlidedPage(context) {
         return this.nativeChannel(context, "getSlidedPage")();
     }
+    scrollBy(context, dx, config) {
+        const animated = config === null || config === void 0 ? void 0 : config.animated;
+        return this.nativeChannel(context, 'scrollBy')({ dx, animated });
+    }
 }
 __decorate([
     Property,

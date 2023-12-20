@@ -147,7 +147,7 @@ var Reflect$1;
         };
         // Load global or shim versions of Map, Set, and WeakMap
         var functionPrototype = Object.getPrototypeOf(Function);
-        var usePolyfill = typeof process === "object" && process.env && process.env["REFLECT_METADATA_USE_MAP_POLYFILL"] === "true";
+        var usePolyfill = typeof process === "object" && process["env" + ""] && process["env" + ""]["REFLECT_METADATA_USE_MAP_POLYFILL"] === "true";
         var _Map = !usePolyfill && typeof Map === "function" && typeof Map.prototype.entries === "function" ? Map : CreateMapPolyfill();
         var _Set = !usePolyfill && typeof Set === "function" && typeof Set.prototype.entries === "function" ? Set : CreateSetPolyfill();
         var _WeakMap = !usePolyfill && typeof WeakMap === "function" ? WeakMap : CreateWeakMapPolyfill();
@@ -3671,6 +3671,10 @@ class Slider extends Superview {
     }
     getSlidedPage(context) {
         return this.nativeChannel(context, "getSlidedPage")();
+    }
+    scrollBy(context, dx, config) {
+        const animated = config === null || config === void 0 ? void 0 : config.animated;
+        return this.nativeChannel(context, 'scrollBy')({ dx, animated });
     }
 }
 __decorate$a([

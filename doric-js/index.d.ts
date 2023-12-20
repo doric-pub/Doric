@@ -911,7 +911,7 @@ declare module "doric" {
 		ScaleToFill = 0,
 		ScaleAspectFit = 1,
 		ScaleAspectFill = 2,
-		Tile = 3,
+		Tile = 3,// image tile mode
 		ScaleAspectFitLeftTop = 4,
 		ScaleAspectFitLeftBottom = 5,
 		ScaleAspectFitRightTop = 6,
@@ -1143,6 +1143,9 @@ declare module "doric" {
 		private renderBunchedItems;
 		slidePage(context: BridgeContext, page: number, smooth?: boolean): Promise<any>;
 		getSlidedPage(context: BridgeContext): Promise<number>;
+		scrollBy(context: BridgeContext, dx: number, config?: {
+			animated?: boolean;
+		}): Promise<void>;
 	}
 	export function slider(config: Partial<Slider>): Slider;
 	export function slideItem(item: View | View[], config?: Partial<SlideItem>): SlideItem;

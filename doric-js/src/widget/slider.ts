@@ -111,6 +111,10 @@ export class Slider extends Superview {
         return this.nativeChannel(context, "getSlidedPage")() as Promise<number>
     }
 
+    scrollBy(context: BridgeContext, dx: number, config?: { animated?: boolean }) {
+        const animated = config?.animated
+        return this.nativeChannel(context, 'scrollBy')({ dx, animated }) as Promise<void>
+    }
 }
 
 export function slider(config: Partial<Slider>) {

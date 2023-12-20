@@ -2814,6 +2814,10 @@ var Slider = /** @class */ (function (_super) {
     Slider.prototype.getSlidedPage = function (context) {
         return this.nativeChannel(context, "getSlidedPage")();
     };
+    Slider.prototype.scrollBy = function (context, dx, config) {
+        var animated = config === null || config === void 0 ? void 0 : config.animated;
+        return this.nativeChannel(context, 'scrollBy')({ dx: dx, animated: animated });
+    };
     __decorate$a([
         Property,
         __metadata$a("design:type", Object)

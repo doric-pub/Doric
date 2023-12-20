@@ -50,6 +50,9 @@ export declare class Slider extends Superview {
     private renderBunchedItems;
     slidePage(context: BridgeContext, page: number, smooth?: boolean): Promise<any>;
     getSlidedPage(context: BridgeContext): Promise<number>;
+    scrollBy(context: BridgeContext, dx: number, config?: {
+        animated?: boolean;
+    }): Promise<void>;
 }
 export declare function slider(config: Partial<Slider>): Slider;
 export declare function slideItem(item: View | View[], config?: Partial<SlideItem>): SlideItem;

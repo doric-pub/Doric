@@ -538,4 +538,18 @@
         [self.view reloadData];
     });
 }
+
+- (void)scrollBy:(NSDictionary *)params {
+    __weak typeof(self) __self = self;
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(__self) self = __self;
+        
+        BOOL animated = [params[@"animated"] boolValue];
+        float dx = [params[@"dx"] floatValue];
+        
+        [self.view setContentOffset:CGPointMake(self.view.contentOffset.x + dx, self.view.contentOffset.y) animated:animated];
+    });
+    
+}
 @end

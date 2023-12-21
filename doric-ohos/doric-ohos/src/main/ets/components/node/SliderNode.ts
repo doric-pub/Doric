@@ -1,4 +1,4 @@
-import { Slider } from 'doric'
+import { SlideItem, Slider } from 'doric'
 import { createDoricViewNode } from '../lib/Registry'
 import { getGlobalObject, ViewStackProcessor } from '../lib/sandbox'
 import { SuperNode } from '../lib/SuperNode'
@@ -31,7 +31,8 @@ export class SliderNode extends SuperNode<Slider> {
       if (cachedView) {
         child = cachedView
       } else {
-        child = (v as any).getItem(itemIdx)
+        (v as any).renderBunchedItems(itemIdx, 1)
+        child = (v as any).cachedViews.get(`${itemIdx}`) as SlideItem
       }
       children.push(child)
     }

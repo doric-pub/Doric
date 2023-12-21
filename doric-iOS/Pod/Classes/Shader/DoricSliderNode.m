@@ -24,6 +24,7 @@
 #import "Doric.h"
 #import "DoricSlideItemNode.h"
 #import "DoricSliderLayout.h"
+#import "DoricJSDispatcher.h"
 
 @interface DoricSliderViewCell : UICollectionViewCell
 @property(nonatomic, strong) DoricSlideItemNode *doricSlideItemNode;
@@ -53,6 +54,9 @@
 @property(nonatomic, assign) CGFloat galleryItemWidth;
 @property(nonatomic, assign) BOOL scheduledLayout;
 @property (nonatomic, assign) NSInteger currentPage;
+@property(nonatomic, strong) DoricJSDispatcher *jsDispatcher;
+@property(nonatomic, copy) NSString *onScrollStartFuncId;
+@property(nonatomic, copy) NSString *onScrollFuncId;
 @end
 
 @interface DoricSliderView : UICollectionView
@@ -143,6 +147,10 @@
         } else {
             self.needResetScroll = YES;
         }
+    } else if ([@"onScrollStart" isEqualToString:name]) {
+        self.onScrollStartFuncId = prop;
+    } else if ([@"onScroll" isEqualToString:name]) {
+        self.onScrollFuncId = prop;
     } else {
         [super blendView:view forPropName:name propValue:prop];
     }
@@ -399,6 +407,15 @@
         CGFloat cellWidth = self.galleryItemWidth;
         self.currentPage = (scrollView.contentOffset.x - cellWidth / 2) / (cellWidth) + 1;
     }
+    
+    if (self.onScrollStartFuncId) {
+        NSDictionary *offset = @{
+            @"x": @(self.view.contentOffset.x),
+            @"y": @(self.view.contentOffset.y),
+        };
+        
+        [self callJSResponse:self.onScrollStartFuncId, offset, nil];
+    }
 }
 
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
@@ -434,6 +451,23 @@
             CGFloat scale = self.maxScale - (self.maxScale - self.minScale) * percent;
             obj.transform = CGAffineTransformScale(CGAffineTransformIdentity, scale, scale);
             obj.layer.anchorPoint = CGPointMake(0.5f, 0.5f);
+        }];
+    }
+    
+    if (self.onScrollFuncId) {
+        if (!self.jsDispatcher) {
+            self.jsDispatcher = [DoricJSDispatcher new];
+        }
+        
+        NSDictionary *offset = @{
+            @"x": @(self.view.contentOffset.x),
+            @"y": @(self.view.contentOffset.y),
+        };
+        
+        __weak typeof(self) __self = self;
+        [self.jsDispatcher dispatch:^DoricAsyncResult * {
+            __strong typeof(__self) self = __self;
+            return [self callJSResponse:self.onScrollFuncId, offset, nil];
         }];
     }
 }
@@ -524,6 +558,8 @@
     self.minScale = .618f;
     self.maxScale = 1.f;
     self.slidePosition = 0;
+    self.onScrollStartFuncId = nil;
+    self.onScrollFuncId = nil;
 }
 
 - (void)subNodeContentChanged:(DoricViewNode *)subNode {

@@ -141,7 +141,7 @@ var doric = (function (exports) {
             };
             // Load global or shim versions of Map, Set, and WeakMap
             var functionPrototype = Object.getPrototypeOf(Function);
-            var usePolyfill = typeof process === "object" && process["env" + ""] && process["env" + ""]["REFLECT_METADATA_USE_MAP_POLYFILL"] === "true";
+            var usePolyfill = typeof process === "object" && process.env && process.env["REFLECT_METADATA_USE_MAP_POLYFILL"] === "true";
             var _Map = !usePolyfill && typeof Map === "function" && typeof Map.prototype.entries === "function" ? Map : CreateMapPolyfill();
             var _Set = !usePolyfill && typeof Set === "function" && typeof Set.prototype.entries === "function" ? Set : CreateSetPolyfill();
             var _WeakMap = !usePolyfill && typeof WeakMap === "function" ? WeakMap : CreateWeakMapPolyfill();
@@ -3792,6 +3792,14 @@ __decorate$a([
     InconsistProperty,
     __metadata$a("design:type", Number)
 ], Slider.prototype, "slidePosition", void 0);
+__decorate$a([
+    Property,
+    __metadata$a("design:type", Function)
+], Slider.prototype, "onScrollStart", void 0);
+__decorate$a([
+    Property,
+    __metadata$a("design:type", Function)
+], Slider.prototype, "onScroll", void 0);
 function slider(config) {
     const ret = new Slider;
     ret.apply(config);

@@ -27,15 +27,22 @@ import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.pengfeizhou.jscore.JSDecoder;
+import com.github.pengfeizhou.jscore.JSONBuilder;
 import com.github.pengfeizhou.jscore.JSObject;
 import com.github.pengfeizhou.jscore.JSValue;
 
+import java.util.concurrent.Callable;
+
 import pub.doric.DoricContext;
+import pub.doric.DoricScrollChangeListener;
+import pub.doric.async.AsyncResult;
 import pub.doric.extension.bridge.DoricMethod;
 import pub.doric.extension.bridge.DoricPlugin;
 import pub.doric.extension.bridge.DoricPromise;
 import pub.doric.shader.SuperNode;
 import pub.doric.shader.ViewNode;
+import pub.doric.utils.DoricJSDispatcher;
 import pub.doric.utils.DoricUtils;
 import pub.doric.utils.ThreadMode;
 
@@ -62,6 +69,10 @@ public class SliderNode extends SuperNode<RecyclerView> {
     private boolean needSlideToPosition;
 
     private PagerSnapHelper snapHelper;
+
+    private String onScrollStartFuncId;
+    private String onScrollFuncId;
+    private final DoricJSDispatcher jsDispatcher = new DoricJSDispatcher();
 
     public SliderNode(DoricContext doricContext) {
         super(doricContext);
@@ -148,6 +159,17 @@ public class SliderNode extends SuperNode<RecyclerView> {
                         }
                     }
                 }
+
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    final int offsetX = recyclerView.computeHorizontalScrollOffset();
+                    final int offsetY = recyclerView.computeVerticalScrollOffset();
+                    if (!TextUtils.isEmpty(onScrollStartFuncId)) {
+                        callJSResponse(onScrollStartFuncId, new JSONBuilder()
+                                .put("x", DoricUtils.px2dp(offsetX))
+                                .put("y", DoricUtils.px2dp(offsetY))
+                                .toJSONObject());
+                    }
+                }
             }
 
             @Override
@@ -169,6 +191,20 @@ public class SliderNode extends SuperNode<RecyclerView> {
                         child.setScaleY(scaleFactor);
                         child.setScaleX(scaleFactor);
                     }
+                }
+
+                final int offsetX = recyclerView.computeHorizontalScrollOffset();
+                final int offsetY = recyclerView.computeVerticalScrollOffset();
+                if (!TextUtils.isEmpty(onScrollFuncId)) {
+                    jsDispatcher.dispatch(new Callable<AsyncResult<JSDecoder>>() {
+                        @Override
+                        public AsyncResult<JSDecoder> call() {
+                            return callJSResponse(onScrollFuncId, new JSONBuilder()
+                                    .put("x", DoricUtils.px2dp(offsetX))
+                                    .put("y", DoricUtils.px2dp(offsetY))
+                                    .toJSONObject());
+                        }
+                    });
                 }
             }
         });
@@ -311,6 +347,18 @@ public class SliderNode extends SuperNode<RecyclerView> {
                     this.slidePosition = newSlidePosition;
                 }
                 break;
+            case "onScroll":
+                if (!prop.isString()) {
+                    return;
+                }
+                this.onScrollFuncId = prop.asString().value();
+                break;
+            case "onScrollStart":
+                if (!prop.isString()) {
+                    return;
+                }
+                this.onScrollStartFuncId = prop.asString().value();
+                break;
             default:
                 super.blend(view, name, prop);
                 break;
@@ -405,6 +453,8 @@ public class SliderNode extends SuperNode<RecyclerView> {
         minScale = .618f;
         maxScale = 1.f;
         slidePosition = 0;
+        onScrollStartFuncId = null;
+        onScrollFuncId = null;
     }
 
     private static class DoricLinearSmoothScroller extends LinearSmoothScroller {

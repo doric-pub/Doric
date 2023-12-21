@@ -22,6 +22,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DoricPagerSnapHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.PagerSnapHelper;
@@ -35,7 +36,6 @@ import com.github.pengfeizhou.jscore.JSValue;
 import java.util.concurrent.Callable;
 
 import pub.doric.DoricContext;
-import pub.doric.DoricScrollChangeListener;
 import pub.doric.async.AsyncResult;
 import pub.doric.extension.bridge.DoricMethod;
 import pub.doric.extension.bridge.DoricPlugin;
@@ -68,7 +68,7 @@ public class SliderNode extends SuperNode<RecyclerView> {
     private int slidePosition;
     private boolean needSlideToPosition;
 
-    private PagerSnapHelper snapHelper;
+    private DoricPagerSnapHelper snapHelper;
 
     private String onScrollStartFuncId;
     private String onScrollFuncId;
@@ -105,7 +105,7 @@ public class SliderNode extends SuperNode<RecyclerView> {
         };
 
         recyclerView.setLayoutManager(layoutManager);
-        snapHelper = new PagerSnapHelper();
+        snapHelper = new DoricPagerSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
 
         recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
@@ -437,6 +437,7 @@ public class SliderNode extends SuperNode<RecyclerView> {
         }
         float dx = params.getProperty("dx").asNumber().toFloat();
         if (animated) {
+            snapHelper.setScrollTriggeredManually();
             mView.smoothScrollBy(DoricUtils.dp2px(dx), 0);
         } else {
             mView.scrollBy(DoricUtils.dp2px(dx), 0);

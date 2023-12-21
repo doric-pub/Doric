@@ -2858,6 +2858,14 @@ var Slider = /** @class */ (function (_super) {
         InconsistProperty,
         __metadata$a("design:type", Number)
     ], Slider.prototype, "slidePosition", void 0);
+    __decorate$a([
+        Property,
+        __metadata$a("design:type", Function)
+    ], Slider.prototype, "onScrollStart", void 0);
+    __decorate$a([
+        Property,
+        __metadata$a("design:type", Function)
+    ], Slider.prototype, "onScroll", void 0);
     return Slider;
 }(Superview));
 function slider(config) {

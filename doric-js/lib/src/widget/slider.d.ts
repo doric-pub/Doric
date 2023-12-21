@@ -39,6 +39,14 @@ export declare class Slider extends Superview {
         minAlpha: number;
     };
     slidePosition?: number;
+    onScrollStart?: (offset: {
+        x: number;
+        y: number;
+    }) => void;
+    onScroll?: (offset: {
+        x: number;
+        y: number;
+    }) => void;
     /**
      * Reload all list items.
      * @param context

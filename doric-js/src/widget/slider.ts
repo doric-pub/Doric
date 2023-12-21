@@ -74,6 +74,12 @@ export class Slider extends Superview {
     @InconsistProperty
     slidePosition?: number
 
+    @Property
+    onScrollStart?: (offset: { x: number, y: number }) => void
+
+    @Property
+    onScroll?: (offset: { x: number, y: number }) => void
+
     /**
      * Reload all list items.
      * @param context 

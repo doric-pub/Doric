@@ -118,6 +118,14 @@ __decorate([
     InconsistProperty,
     __metadata("design:type", Number)
 ], Slider.prototype, "slidePosition", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Function)
+], Slider.prototype, "onScrollStart", void 0);
+__decorate([
+    Property,
+    __metadata("design:type", Function)
+], Slider.prototype, "onScroll", void 0);
 export function slider(config) {
     const ret = new Slider;
     ret.apply(config);

@@ -2176,6 +2176,14 @@ __decorate$a([
     InconsistProperty,
     __metadata$a("design:type", Number)
 ], Slider.prototype, "slidePosition", void 0);
+__decorate$a([
+    Property,
+    __metadata$a("design:type", Function)
+], Slider.prototype, "onScrollStart", void 0);
+__decorate$a([
+    Property,
+    __metadata$a("design:type", Function)
+], Slider.prototype, "onScroll", void 0);
 function slider(config) {
     const ret = new Slider;
     ret.apply(config);

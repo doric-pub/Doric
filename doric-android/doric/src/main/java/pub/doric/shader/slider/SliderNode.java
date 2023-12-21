@@ -37,6 +37,7 @@ import pub.doric.extension.bridge.DoricPromise;
 import pub.doric.shader.SuperNode;
 import pub.doric.shader.ViewNode;
 import pub.doric.utils.DoricUtils;
+import pub.doric.utils.ThreadMode;
 
 /**
  * @Description: pub.doric.shader.slider
@@ -380,6 +381,19 @@ public class SliderNode extends SuperNode<RecyclerView> {
         });
     }
 
+    @DoricMethod(thread = ThreadMode.UI)
+    public void scrollBy(JSObject params) {
+        boolean animated = false;
+        if (params.getProperty("animated").isBoolean()) {
+            animated = params.getProperty("animated").asBoolean().value();
+        }
+        float dx = params.getProperty("dx").asNumber().toFloat();
+        if (animated) {
+            mView.smoothScrollBy(DoricUtils.dp2px(dx), 0);
+        } else {
+            mView.scrollBy(DoricUtils.dp2px(dx), 0);
+        }
+    }
 
     @Override
     public void reset() {

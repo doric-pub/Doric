@@ -95,9 +95,13 @@
 - (void)unsubscribe:(NSString *)subscribeId withPromise:(DoricPromise *)promise {
     dispatch_barrier_async(self.syncQueue, ^{
         id observer = self.observers[subscribeId];
-        [[NSNotificationCenter defaultCenter] removeObserver:observer];
-        [self.observers removeObjectForKey:subscribeId];
-        [promise resolve:nil];
+        if (observer) {
+            [[NSNotificationCenter defaultCenter] removeObserver:observer];
+            [self.observers removeObjectForKey:subscribeId];
+            [promise resolve:nil];
+        } else {
+            [promise reject:@"no observer to unsubscribe"];
+        }
     });
 }
 

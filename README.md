@@ -75,7 +75,7 @@ Doric提供脚手架工具`doric-cli`及开发调试工具`Devkit`,提供热重�
 下图为代码在Android及iOS应用上的运行截图
 | Android | iOS |
 | ---- | ---- |
-| !<img src="https://user-images.githubusercontent.com/9526211/132187361-dcafe2d1-120a-4145-ab98-3836b378576e.png" height="500px"/> | <img src="https://user-images.githubusercontent.com/9526211/132191681-0512abd2-0692-4e4f-9605-bf24d9b898c2.png" height="500px"/>|
+| <img src="https://user-images.githubusercontent.com/9526211/132187361-dcafe2d1-120a-4145-ab98-3836b378576e.png" height="500px"/> | <img src="https://user-images.githubusercontent.com/9526211/132191681-0512abd2-0692-4e4f-9605-bf24d9b898c2.png" height="500px"/>|
 
 ## 常用插件库
 ### [DoricFs](https://github.com/doric-pub/DoricFs)

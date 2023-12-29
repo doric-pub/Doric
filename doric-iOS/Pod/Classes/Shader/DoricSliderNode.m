@@ -307,6 +307,10 @@
     return NO;
 }
 
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
+    return NO;
+}
+
 - (NSDictionary *)itemModelAt:(NSUInteger)position {
     NSUInteger index;
     if (self.loop) {

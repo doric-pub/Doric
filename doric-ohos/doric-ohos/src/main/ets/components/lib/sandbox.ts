@@ -2,6 +2,7 @@ import { BridgeContext, layoutConfig, stack, uniqueId, } from 'doric';
 import { DoricPanel, ViewPU } from './Container';
 import { createDoricPlugin } from './Registry';
 import { PopoverRootNode, RootNode } from '../node/StackNode';
+import { AnimatorResult } from '@ohos.animator';
 
 export const Alignment = getGlobalObject("Alignment");
 
@@ -100,10 +101,15 @@ export class DoricContext implements BridgeContext {
 
   popoverRootNode: PopoverRootNode
 
+  animators: Map<string, AnimatorResult>
+
   constructor(viewPU: ViewPU, entity: any, id?: string) {
     this.id = id ?? uniqueId("Context")
     this.viewPU = viewPU
     this.entity = entity
+
+    this.animators = new Map
+
     this.rootNode = new RootNode(this, (entity as DoricPanel).getRootView())
     this.rootNode.render()
 

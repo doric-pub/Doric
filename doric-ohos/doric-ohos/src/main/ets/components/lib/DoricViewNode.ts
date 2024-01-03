@@ -8,6 +8,7 @@ import {
   LayoutSpec,
   View,
 } from 'doric'
+import Animator, { AnimatorOptions } from '@ohos.animator'
 import { DoricContext, getGlobalObject, ViewStackProcessor } from './sandbox'
 
 const GradientDirection = getGlobalObject("GradientDirection")
@@ -188,6 +189,18 @@ export abstract class DoricViewNode<T extends View> {
     // shadow
     if (v.shadow) {
       this.TAG.shadow(v.shadow)
+    }
+
+    // translationX & translationY
+    if (v.translationX || v.translationY) {
+      const translateOptions = {} as any
+      if (v.translationX) {
+        translateOptions.x = v.translationX
+      }
+      if (v.translationX) {
+        translateOptions.y = v.translationY
+      }
+      this.TAG.translate(translateOptions)
     }
 
     // hidden
@@ -425,8 +438,127 @@ export abstract class DoricViewNode<T extends View> {
     const timingFunction = props.timingFunction
     const type = props.type
 
+    let ease = "ease"
+    switch (timingFunction) {
+      case 0:
+        ease = "ease"
+        break
+      case 1:
+        ease = "linear"
+        break
+      case 2:
+        ease = "ease-in"
+        break
+      case 3:
+        ease = "ease-out"
+        break
+      case 4:
+        ease = "ease-in-out"
+        break
+      default:
+        ease = "ease"
+        break
+    }
+
+    let fill: "none" | "forwards" | "backwards" | "both" = "forwards"
+    switch (fillMode) {
+      case 0:
+        fill = "none"
+        break
+      case 1:
+        fill = "forwards"
+        break
+      case 2:
+        fill = "backwards"
+        break
+      case 3:
+        fill = "both"
+        break
+      default:
+        fill = "forwards"
+        break
+    }
+
+    let direction: "normal" | "reverse" | "alternate" | "alternate-reverse" = "normal"
+    switch (repeatMode) {
+      case 1:
+        direction = "normal"
+        break
+      case 2:
+        direction = "reverse"
+        break
+      default:
+        direction = "normal"
+        break
+    }
+
     return new Promise((resolve, reject) => {
-      console.log("")
+      let options: AnimatorOptions = {
+        duration: duration,
+        easing: ease,
+        delay: delay ?? 0,
+        fill: fill,
+        direction: direction,
+        iterations: repeatCount ?? 1,
+        begin: 0.0,
+        end: 1.0
+      }
+
+      const animator = Animator.create(options)
+
+      this.context.animators.set(id, animator)
+
+      animator.onframe = (progress: number) => {
+
+        changeables.forEach((changeable) => {
+          const frameValue = changeable.fromValue + progress * (changeable.toValue - changeable.fromValue)
+
+          switch (type) {
+            case "TranslationAnimation":
+              switch (changeable.key) {
+                case "translationX":
+                  this.view.translationX = frameValue
+                  break
+                case "translationY":
+                  this.view.translationY = frameValue
+                  break
+              }
+              break
+          }
+        })
+      }
+      animator.oncancel = () => {
+        this.context.animators.delete(id)
+        reject("Animation cancelled")
+      }
+      animator.onfinish = () => {
+        animator.cancel()
+
+        this.context.animators.delete(id)
+
+        resolve({})
+      }
+      animator.play()
+    })
+  }
+
+  private cancelAnimation(props: any) {
+    return new Promise((resolve, reject) => {
+      const id = props
+      const animator = this.context.animators.get(id)
+      if (animator) {
+        animator.cancel()
+      }
+    })
+  }
+
+  private clearAnimation(props: any) {
+    return new Promise((resolve, reject) => {
+      const id = props
+      const animator = this.context.animators.get(id)
+      if (animator) {
+        animator.cancel()
+      }
     })
   }
 }

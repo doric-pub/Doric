@@ -24,6 +24,7 @@ import { NetworkDemo } from '../panel/NetworkDemo';
 import { NotchDemo } from '../panel/NotchDemo';
 import { AnimationsDemo } from '../panel/AnimationsDemo';
 import { StickDemo } from '../panel/StickDemo';
+import { ComplicatedAnimations } from '../panel/ComplicatedAnimations';
 
 @Entry
 @Component
@@ -31,6 +32,7 @@ struct Demo {
   private index: number = (router.getParams() as any).index;
   private classMap = [
     AnimationsDemo,
+    ComplicatedAnimations,
     ComponentDemo,
     CounterPage,
     EffectsDemo,

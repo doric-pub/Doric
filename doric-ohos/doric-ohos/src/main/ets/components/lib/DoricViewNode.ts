@@ -203,6 +203,18 @@ export abstract class DoricViewNode<T extends View> {
       this.TAG.translate(translateOptions)
     }
 
+    // scaleX & scaleY
+    if (v.scaleY || v.scaleX) {
+      const scaleOptions = {} as any
+      if (v.scaleX) {
+        scaleOptions.x = v.scaleX
+      }
+      if (v.scaleY) {
+        scaleOptions.y = v.scaleY
+      }
+      this.TAG.scale(scaleOptions)
+    }
+
     // hidden
     this.TAG.visibility(v.hidden ? Visibility.None : Visibility.Visible)
 
@@ -521,6 +533,16 @@ export abstract class DoricViewNode<T extends View> {
                   break
                 case "translationY":
                   this.view.translationY = frameValue
+                  break
+              }
+              break
+            case "ScaleAnimation":
+              switch (changeable.key) {
+                case "scaleX":
+                  this.view.scaleX = frameValue
+                  break
+                case "scaleY":
+                  this.view.scaleY = frameValue
                   break
               }
               break

@@ -5,6 +5,7 @@ import router from '@ohos.router';
 struct Index {
   @State demo: Array<String> = [
     "AnimationsDemo",
+    "ComplicatedAnimations",
     "ComponentDemo",
     "Counter",
     "EffectsDemo",

@@ -239,7 +239,7 @@ export abstract class DoricViewNode<T extends View> {
         x: 1,
         y: 0,
         z: 0,
-        angle: v.rotationX * 180 / Math.PI
+        angle: v.rotationX * 180
       })
     }
 
@@ -249,7 +249,7 @@ export abstract class DoricViewNode<T extends View> {
         x: 0,
         y: 1,
         z: 0,
-        angle: v.rotationY * 180 / Math.PI
+        angle: v.rotationY * 180
       })
     }
 
@@ -608,6 +608,20 @@ export abstract class DoricViewNode<T extends View> {
                 switch (changeable.key) {
                   case "rotation":
                     this.view.rotation = frameValue
+                    break
+                }
+                break
+              case "RotationXAnimation":
+                switch (changeable.key) {
+                  case "rotationX":
+                    this.view.rotationX = frameValue
+                    break
+                }
+                break
+              case "RotationYAnimation":
+                switch (changeable.key) {
+                  case "rotationY":
+                    this.view.rotationY = frameValue
                     break
                 }
                 break

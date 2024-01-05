@@ -26,6 +26,7 @@ import { AnimationsDemo } from '../panel/AnimationsDemo';
 import { StickDemo } from '../panel/StickDemo';
 import { ComplicatedAnimations } from '../panel/ComplicatedAnimations';
 import { AnimatorDemo } from '../panel/AnimatorDemo';
+import { ScrollerInListDemo } from '../panel/ScrollerInListDemo';
 
 @Entry
 @Component
@@ -52,6 +53,7 @@ struct Demo {
     NetworkDemo,
     NotchDemo,
     ScrollerDemo,
+    ScrollerInListDemo,
     SliderPanel,
     SnakePanel,
     StickDemo,

@@ -24,6 +24,7 @@ struct Index {
     "NetworkDemo",
     "NotchDemo",
     "ScrollerDemo",
+    "ScrollerInListDemo",
     "SliderDemo",
     "Snake",
     "StickDemo",

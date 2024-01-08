@@ -8,7 +8,7 @@ import {
   LayoutSpec,
   View,
 } from 'doric'
-import Animator, { AnimatorOptions } from '@ohos.animator'
+import Animator, { AnimatorOptions, AnimatorResult } from '@ohos.animator'
 import { DoricContext, getGlobalObject, ViewStackProcessor } from './sandbox'
 
 const GradientDirection = getGlobalObject("GradientDirection")
@@ -473,13 +473,17 @@ export abstract class DoricViewNode<T extends View> {
   }
 
   private parseAnimator(props: any) {
+    const animatorSet = []
     if (props.animations) {
       const promises = []
       for (let index = 0; index < props.animations.length; index++) {
         const animation = props.animations[index];
-        const promise = this.parseAnimator(animation)
+        const promise = this.parseSingleAnimator(animation, animatorSet)
         promises.push(promise)
       }
+
+      this.context.animators.set(props.id, animatorSet)
+
       return new Promise((resolve, reject) => {
         Promise.all(promises)
           .then(() => {
@@ -494,158 +498,164 @@ export abstract class DoricViewNode<T extends View> {
           })
       })
     } else {
-      const changeables = props.changeables as Array<{
-        key: string,
-        keyFrames: any,
-        fromValue: any,
-        toValue: any
-      }>
-      const delay = props.delay
-      const duration = props.duration
-      const fillMode = props.fillMode
-      const id = props.id
-      const repeatCount = props.repeatCount
-      const repeatMode = props.repeatMode
-      const timingFunction = props.timingFunction
-      const type = props.type
-
-      let ease = "ease"
-      switch (timingFunction) {
-        case 0:
-          ease = "ease"
-          break
-        case 1:
-          ease = "linear"
-          break
-        case 2:
-          ease = "ease-in"
-          break
-        case 3:
-          ease = "ease-out"
-          break
-        case 4:
-          ease = "ease-in-out"
-          break
-        default:
-          ease = "ease"
-          break
-      }
-
-      let fill: "none" | "forwards" | "backwards" | "both" = "forwards"
-      switch (fillMode) {
-        case 0:
-          fill = "none"
-          break
-        case 1:
-          fill = "forwards"
-          break
-        case 2:
-          fill = "backwards"
-          break
-        case 3:
-          fill = "both"
-          break
-        default:
-          fill = "forwards"
-          break
-      }
-
-      let direction: "normal" | "reverse" | "alternate" | "alternate-reverse" = "normal"
-      switch (repeatMode) {
-        case 1:
-          direction = "normal"
-          break
-        case 2:
-          direction = "reverse"
-          break
-        default:
-          direction = "normal"
-          break
-      }
-
-      return new Promise((resolve, reject) => {
-        let options: AnimatorOptions = {
-          duration: duration,
-          easing: ease,
-          delay: delay ?? 0,
-          fill: fill,
-          direction: direction,
-          iterations: repeatCount ?? 1,
-          begin: 0.0,
-          end: 1.0
-        }
-
-        const animator = Animator.create(options)
-
-        this.context.animators.set(id, animator)
-
-        animator.onframe = (progress: number) => {
-          changeables.forEach((changeable) => {
-            const frameValue = changeable.fromValue + progress * (changeable.toValue - changeable.fromValue)
-
-            switch (type) {
-              case "TranslationAnimation":
-                switch (changeable.key) {
-                  case "translationX":
-                    this.view.translationX = frameValue
-                    break
-                  case "translationY":
-                    this.view.translationY = frameValue
-                    break
-                }
-                break
-              case "ScaleAnimation":
-                switch (changeable.key) {
-                  case "scaleX":
-                    this.view.scaleX = frameValue
-                    break
-                  case "scaleY":
-                    this.view.scaleY = frameValue
-                    break
-                }
-                break
-              case "RotationAnimation":
-                switch (changeable.key) {
-                  case "rotation":
-                    this.view.rotation = frameValue
-                    break
-                }
-                break
-              case "RotationXAnimation":
-                switch (changeable.key) {
-                  case "rotationX":
-                    this.view.rotationX = frameValue
-                    break
-                }
-                break
-              case "RotationYAnimation":
-                switch (changeable.key) {
-                  case "rotationY":
-                    this.view.rotationY = frameValue
-                    break
-                }
-                break
-            }
-          })
-        }
-        animator.oncancel = () => {
-          this.context.animators.delete(id)
-          reject("Animation cancelled")
-        }
-        animator.onfinish = () => {
-          animator.cancel()
-
-          this.context.animators.delete(id)
-
-          const result = {}
-          animatedKeys.forEach((animatedKey) => {
-            result[animatedKey] = this.getAnimatedValue(animatedKey)
-          })
-          resolve(result)
-        }
-        animator.play()
-      })
+      this.parseSingleAnimator(props, animatorSet)
+      
+      this.context.animators.set(props.id, animatorSet)
     }
+  }
+
+  private parseSingleAnimator(props: any, animatorSet: AnimatorResult[]) {
+    const changeables = props.changeables as Array<{
+      key: string,
+      keyFrames: any,
+      fromValue: any,
+      toValue: any
+    }>
+    const delay = props.delay
+    const duration = props.duration
+    const fillMode = props.fillMode
+    const id = props.id
+    const repeatCount = props.repeatCount
+    const repeatMode = props.repeatMode
+    const timingFunction = props.timingFunction
+    const type = props.type
+
+    let ease = "ease"
+    switch (timingFunction) {
+      case 0:
+        ease = "ease"
+        break
+      case 1:
+        ease = "linear"
+        break
+      case 2:
+        ease = "ease-in"
+        break
+      case 3:
+        ease = "ease-out"
+        break
+      case 4:
+        ease = "ease-in-out"
+        break
+      default:
+        ease = "ease"
+        break
+    }
+
+    let fill: "none" | "forwards" | "backwards" | "both" = "forwards"
+    switch (fillMode) {
+      case 0:
+        fill = "none"
+        break
+      case 1:
+        fill = "forwards"
+        break
+      case 2:
+        fill = "backwards"
+        break
+      case 3:
+        fill = "both"
+        break
+      default:
+        fill = "forwards"
+        break
+    }
+
+    let direction: "normal" | "reverse" | "alternate" | "alternate-reverse" = "normal"
+    switch (repeatMode) {
+      case 1:
+        direction = "normal"
+        break
+      case 2:
+        direction = "reverse"
+        break
+      default:
+        direction = "normal"
+        break
+    }
+
+    return new Promise((resolve, reject) => {
+      let options: AnimatorOptions = {
+        duration: duration,
+        easing: ease,
+        delay: delay ?? 0,
+        fill: fill,
+        direction: direction,
+        iterations: repeatCount ?? 1,
+        begin: 0.0,
+        end: 1.0
+      }
+
+      const animator = Animator.create(options)
+
+      animatorSet.push(animator)
+
+      animator.onframe = (progress: number) => {
+        changeables.forEach((changeable) => {
+          const frameValue = changeable.fromValue + progress * (changeable.toValue - changeable.fromValue)
+
+          switch (type) {
+            case "TranslationAnimation":
+              switch (changeable.key) {
+                case "translationX":
+                  this.view.translationX = frameValue
+                  break
+                case "translationY":
+                  this.view.translationY = frameValue
+                  break
+              }
+              break
+            case "ScaleAnimation":
+              switch (changeable.key) {
+                case "scaleX":
+                  this.view.scaleX = frameValue
+                  break
+                case "scaleY":
+                  this.view.scaleY = frameValue
+                  break
+              }
+              break
+            case "RotationAnimation":
+              switch (changeable.key) {
+                case "rotation":
+                  this.view.rotation = frameValue
+                  break
+              }
+              break
+            case "RotationXAnimation":
+              switch (changeable.key) {
+                case "rotationX":
+                  this.view.rotationX = frameValue
+                  break
+              }
+              break
+            case "RotationYAnimation":
+              switch (changeable.key) {
+                case "rotationY":
+                  this.view.rotationY = frameValue
+                  break
+              }
+              break
+          }
+        })
+      }
+      animator.oncancel = () => {
+        this.context.animators.delete(id)
+        reject("Animation cancelled")
+      }
+      animator.onfinish = () => {
+        animator.cancel()
+
+        this.context.animators.delete(id)
+
+        const result = {}
+        animatedKeys.forEach((animatedKey) => {
+          result[animatedKey] = this.getAnimatedValue(animatedKey)
+        })
+        resolve(result)
+      }
+      animator.play()
+    })
   }
 
   private doAnimation(props: any) {
@@ -655,9 +665,11 @@ export abstract class DoricViewNode<T extends View> {
   private cancelAnimation(props: any) {
     return new Promise((resolve, reject) => {
       const id = props
-      const animator = this.context.animators.get(id)
-      if (animator) {
-        animator.cancel()
+      const animatorSet = this.context.animators.get(id)
+      if (animatorSet) {
+        animatorSet.forEach((animator) => {
+          animator.cancel()
+        })
       }
     })
   }
@@ -665,9 +677,11 @@ export abstract class DoricViewNode<T extends View> {
   private clearAnimation(props: any) {
     return new Promise((resolve, reject) => {
       const id = props
-      const animator = this.context.animators.get(id)
-      if (animator) {
-        animator.cancel()
+      const animatorSet = this.context.animators.get(id)
+      if (animatorSet) {
+        animatorSet.forEach((animator) => {
+          animator.cancel()
+        })
       }
     })
   }

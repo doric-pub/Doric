@@ -101,7 +101,7 @@ export class DoricContext implements BridgeContext {
 
   popoverRootNode: PopoverRootNode
 
-  animators: Map<string, AnimatorResult>
+  animators: Map<string, AnimatorResult[]>
 
   constructor(viewPU: ViewPU, entity: any, id?: string) {
     this.id = id ?? uniqueId("Context")
